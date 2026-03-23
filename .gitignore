@@ -1,0 +1,60 @@
+# Secrets
+.env
+*.env
+!example.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv
+.uv/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# Type checking
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# macOS
+.DS_Store
+
+# Editors
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Data & outputs (large files)
+data/
+outputs/
+*.fits
+*.npy
+*.npz
+*.hdf5
+*.h5
+*.csv
+!tests/**/*.csv
