@@ -1,9 +1,16 @@
 [project]
 name = "sk-eft-hawking-paper"
 version = "0.1.0"
-description = "Add your description here"
+description = "Dissipative EFT Corrections to Analog Hawking Radiation: Computation and Formalization"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "aristotlelib>=1.0.0",
+    "numpy>=2.0",
+    "scipy>=1.14",
+    "pytest>=8.0",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

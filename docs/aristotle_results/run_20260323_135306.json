@@ -1,0 +1,11 @@
+{
+  "project_id": "run_20260323_135306",
+  "timestamp": "20260323_135306",
+  "prompt": "Fill in the following sorry gaps (priority \u2264 1):\n- SKEFTHawking.AcousticMetric.acousticMetric_det: 2x2 determinant of the acoustic metric equals -\u03c1\u00b2\n- SKEFTHawking.AcousticMetric.acousticMetric_inv_correct: Inverse acoustic metric is correct: g \u00b7 g\u207b\u00b9 = I\n- SKEFTHawking.AcousticMetric.acoustic_metric_lorentzian: Acoustic metric has negative determinant (Lorentzian signature)\n- SKEFTHawking.SKDoubling.firstOrder_positivity: Im I_SK \u2265 0 from \u03b3\u2081,\u03b3\u2082 \u2265 0 and \u03b2 > 0\n\nFor each, the strategy hint is provided in the Lean comments. Focus on algebraic and linear algebra proofs first.",
+  "sorries_filled": [],
+  "sorries_remaining": [],
+  "errors": [
+    "Timed out after 600s"
+  ],
+  "raw_output": ""
+}
