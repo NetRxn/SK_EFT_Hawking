@@ -1,18 +1,15 @@
-"""
-SK-EFT Hawking Paper: Python Computation Layer
+"""SK-EFT Hawking: Dissipative EFT Corrections to Analog Hawking Radiation.
 
-This package provides:
-1. Symbolic computation of the SK-EFT action expansion around a transonic background
-2. Numerical evaluation of the dissipative correction δ_diss for BEC parameters
-3. Interface to the Aristotle API for Lean sorry-filling
+A unified project encompassing:
+  - Phase 1 (first-order): Two transport coefficients (γ₁, γ₂),
+    frequency-independent δ_diss = Γ_H/κ correction.
+  - Phase 2 (second-order): Two additional coefficients (γ_{2,1}, γ_{2,2}),
+    frequency-dependent ω³ spectral distortion, WKB mode analysis.
 
-The Lean formalization (in ../lean/) provides the formal verification backbone.
-This Python layer provides the computational engine that drives the physics.
+Lean 4 formalization: 35/35 theorems proved via Aristotle, zero sorry.
 
-Package structure:
-- transonic_background: Solve the 1D Euler+continuity for a step potential
-- sk_action: SK-EFT action construction and expansion to quadratic order
-- greens_functions: Retarded and Keldysh propagator computation
-- aristotle_interface: Submit Lean projects to Aristotle for sorry-filling
-- experimental_params: BEC parameter sets (Steinhauer, Heidelberg, Trento)
+Subpackages:
+    src.core          — Shared infrastructure (transonic solver, Aristotle, viz)
+    src.first_order   — First-order specific analysis
+    src.second_order  — Second-order enumeration, coefficients, WKB
 """

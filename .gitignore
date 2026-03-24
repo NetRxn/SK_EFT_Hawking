@@ -58,3 +58,6 @@ outputs/
 *.h5
 *.csv
 !tests/**/*.csv
+
+# cache files
+pytest-cache-files-1k3by_ri

@@ -30,9 +30,8 @@ import os
 import sys
 import json
 
-# Add src to path for imports
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from transonic_background import (
+# Import from the core package (sibling module)
+from src.core.transonic_background import (
     BECParameters, TransonicBackground,
     steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
     solve_transonic_background, compute_dissipative_correction,

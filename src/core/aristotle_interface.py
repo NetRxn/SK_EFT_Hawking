@@ -33,8 +33,9 @@ from pathlib import Path
 from typing import Optional
 
 
-# Project paths (relative to the SK_EFT_Hawking_Paper root)
-PROJECT_ROOT = Path(__file__).parent.parent
+# Project paths (relative to the project root)
+# src/core/aristotle_interface.py → parent.parent.parent = project root
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 LEAN_DIR = PROJECT_ROOT / "lean"
 RESULTS_DIR = PROJECT_ROOT / "docs" / "aristotle_results"
 

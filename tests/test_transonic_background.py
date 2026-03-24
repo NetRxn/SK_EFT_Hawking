@@ -12,7 +12,7 @@ Validates:
 
 import numpy as np
 import pytest
-from src.transonic_background import (
+from src.core.transonic_background import (
     BECParameters,
     steinhauer_Rb87,
     heidelberg_K39,

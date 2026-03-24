@@ -51,7 +51,7 @@ LEAN_DIR = PROJECT_ROOT / "lean"
 RESULTS_DIR = PROJECT_ROOT / "docs" / "aristotle_results"
 
 sys.path.insert(0, str(PROJECT_ROOT))
-from src.aristotle_interface import AristotleRunner, SORRY_GAPS
+from src.core.aristotle_interface import AristotleRunner, SORRY_GAPS
 
 
 def load_api_key() -> str:
