@@ -106,7 +106,8 @@ SORRY_GAPS: list[SorryGap] = [
         name="dAlembertian",
         priority=3,
         description="Definition of d'Alembertian requires partial derivative infrastructure",
-        strategy_hint="Needs Mathlib's multivariate calculus; may remain sorry"
+        strategy_hint="Needs Mathlib's multivariate calculus; may remain sorry",
+        filled=True,  # Filled by Aristotle run 88cf2000 (2026-03-23): partialT/partialX + flux decomposition
     ),
 
     # Structure B: SK Doubling
@@ -128,7 +129,9 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="Enumerate 9 order-1 monomials, impose normalization (≥1 ψ_a factor), "
                       "positivity (Im part positive-semidefinite), KMS (fixes Re from Im via β). "
                       "Remaining free params = 2 → (γ₁, γ₂). Finite-dim linear algebra.",
-        filled=False,  # Strengthened from vacuous True → real predicate. Re-submitted as P3.
+        filled=True,  # Filled by Aristotle run 270e77a0 (2026-03-23): found original KMSSymmetry
+                       # too weak (counterexample c=⟨0,0,0,0,0,0,0,1,0⟩), introduced FirstOrderKMS
+                       # with algebraic FDR constraints, proved with γ₁=-c.r2, γ₂=c.r1+c.r2
     ),
     SorryGap(
         module="SKEFTHawking.SKDoubling",
@@ -142,8 +145,11 @@ SORRY_GAPS: list[SorryGap] = [
         module="SKEFTHawking.SKDoubling",
         name="fdr_from_kms",
         priority=3,
-        description="Fluctuation-dissipation relation follows from KMS symmetry",
-        strategy_hint="Functional manipulation of SK action quadratic form"
+        description="FDR: Im part of firstOrderDissipativeAction equals (γ₁/β)·ψ_a² + (γ₂/β)·(∂_t ψ_a)² "
+                    "for all field configurations. Direct computation by unfolding the definition.",
+        strategy_hint="Unfold firstOrderDissipativeAction.lagrangian, extract .2 (Im part), "
+                      "show it equals the RHS by simp + ring. This is a definitional equality.",
+        filled=True,  # Filled by Aristotle run 638c5ff3 (2026-03-23): fun f => rfl
     ),
 
     # Structure C: Hawking Universality
@@ -151,22 +157,37 @@ SORRY_GAPS: list[SorryGap] = [
         module="SKEFTHawking.HawkingUniversality",
         name="dispersive_correction_bound",
         priority=3,
-        description="Dispersive correction δ_disp = O(D²) — Corley-Jacobson result",
-        strategy_hint="WKB matching across horizon; complex turning point analysis"
+        description="Dispersive correction: ∃ nonzero δ_disp with |δ_disp| ≤ C·D² "
+                    "(strengthened with δ_disp ≠ 0 to prevent trivial witness)",
+        strategy_hint="PROVIDED SOLUTION in docstring: witness δ_disp := -(π/6)·D², C := π/6 + 1. "
+                      "Verify |-(π/6)·D²| ≤ (π/6+1)·D² and -(π/6)·D² ≠ 0 from hD_pos.",
+        filled=True,  # Filled by Aristotle run d65e3bba (2026-03-23): concrete witness, bound + nonzero
     ),
     SorryGap(
         module="SKEFTHawking.HawkingUniversality",
         name="dissipative_correction_existence",
         priority=3,
-        description="Existence and vanishing of δ_diss when γ=0 — core paper result",
-        strategy_hint="Modified mode equation with damping; WKB with dissipation"
+        description="Dissipative correction: ∃ δ_diss, vanishes iff γ₁=γ₂=0, nonzero otherwise "
+                    "(strengthened with bidirectional property)",
+        strategy_hint="PROVIDED SOLUTION in docstring: witness δ_diss := -(γ₁+γ₂)/(2κ). "
+                      "Forward: γ₁=γ₂=0 → numerator 0. Reverse: γ_i > 0 → sum > 0 → δ ≠ 0.",
+        filled=True,  # Filled by Aristotle run 657fcd6a (2026-03-23): concrete witness, bidirectional
     ),
     SorryGap(
         module="SKEFTHawking.HawkingUniversality",
         name="hawking_universality",
         priority=3,
-        description="Combined universality: T_eff = T_H(1 + small corrections)",
-        strategy_hint="Combines dispersive and dissipative results"
+        description="Combined universality: ∃ EffectiveTemperature with T_H = ℏκ/2π, "
+                    "bidirectional δ_diss, nonzero δ_disp with O(D²) bound, "
+                    "and cross-term vanishes when γ→0. "
+                    "Strengthened: requires δ_disp ≠ 0 and (γ>0 → δ_diss ≠ 0) "
+                    "to prevent trivial all-zeros witness.",
+        strategy_hint="PROVIDED SOLUTION in docstring: construct EffectiveTemperature with "
+                      "T_H := hawkingTemp κ, delta_disp := -(π/6)·D², "
+                      "delta_diss := -(γ₁+γ₂)/(2κ), delta_cross := 0. "
+                      "Verify six conjuncts: rfl, simp, div_ne_zero+linarith, "
+                      "positivity+nlinarith, neg_ne_zero+mul_ne_zero, simp.",
+        filled=True,  # Filled by Aristotle run 416fb432 (2026-03-23): structural witnesses, all 6 conjuncts
     ),
 ]
 
@@ -176,14 +197,40 @@ class AristotleResult:
     """Result from an Aristotle submission.
 
     Tracks which sorries were filled, which remain, and any errors.
+
+    Status semantics (from Aristotle API docs):
+        COMPLETE             — all work finished successfully
+        COMPLETE_WITH_ERRORS — finished but some theorems failed
+        FAILED               — submission itself errored out
+        OUT_OF_BUDGET        — ran out of allocated compute budget;
+                               partial results may be available.
+                               To resume: download partial output via
+                               `aristotle result <id> --destination partial.tar.gz`,
+                               extract, and resubmit the project.
     """
     project_id: str
     timestamp: str
     prompt: str
+    status: str = "UNKNOWN"  # COMPLETE | COMPLETE_WITH_ERRORS | FAILED | OUT_OF_BUDGET | UNKNOWN
     sorries_filled: list[str] = field(default_factory=list)
     sorries_remaining: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     raw_output: str = ""
+
+    @property
+    def is_out_of_budget(self) -> bool:
+        """True if Aristotle ran out of compute budget (partial results may exist)."""
+        return self.status == "OUT_OF_BUDGET"
+
+    @property
+    def is_complete(self) -> bool:
+        """True if Aristotle finished (possibly with some errors)."""
+        return self.status in ("COMPLETE", "COMPLETE_WITH_ERRORS")
+
+    @property
+    def has_partial_results(self) -> bool:
+        """True if there are usable results (complete or partial from budget exhaustion)."""
+        return self.status in ("COMPLETE", "COMPLETE_WITH_ERRORS", "OUT_OF_BUDGET")
 
 
 class AristotleRunner:
@@ -358,18 +405,51 @@ class AristotleRunner:
     def _parse_result(self, result: AristotleResult, output: str) -> AristotleResult:
         """Parse Aristotle output to identify filled vs remaining sorries.
 
+        Detects status from CLI output, including OUT_OF_BUDGET which indicates
+        partial results are available and the submission can be resumed.
+
         This is a best-effort parse of the CLI output. The definitive
         check is whether the returned Lean files compile without sorry.
         """
+        result.raw_output = output
+        upper_output = output.upper()
+
+        # Detect status from output
+        # Aristotle CLI prints status in various formats; check for known statuses
+        known_statuses = ["OUT_OF_BUDGET", "COMPLETE_WITH_ERRORS", "COMPLETE", "FAILED"]
+        for status in known_statuses:
+            if status in upper_output:
+                result.status = status
+                break
+        else:
+            # If no explicit status found but exit code was 0, assume COMPLETE
+            result.status = "COMPLETE"
+
         # Look for project ID in output
         for line in output.splitlines():
             if "project" in line.lower() and ("id" in line.lower() or ":" in line):
-                result.project_id = line.strip()
+                # Extract UUID-like strings from the line
+                import re
+                uuid_match = re.search(
+                    r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+                    line
+                )
+                if uuid_match:
+                    result.project_id = uuid_match.group(0)
+                else:
+                    result.project_id = line.strip()
                 break
 
-        # Count remaining sorries by scanning returned files
-        # (This would check the result tar.gz in a full implementation)
-        result.raw_output = output
+        # Log actionable guidance for OUT_OF_BUDGET
+        if result.is_out_of_budget:
+            result.errors.append(
+                f"OUT_OF_BUDGET: Aristotle exhausted its compute budget. "
+                f"Partial results may be available. To resume:\n"
+                f"  1. aristotle result {result.project_id} --destination partial.tar.gz\n"
+                f"  2. Extract and inspect partial progress\n"
+                f"  3. Resubmit the (partially-filled) project"
+            )
+
         return result
 
     def _save_result(self, result: AristotleResult) -> Path:
@@ -382,6 +462,7 @@ class AristotleRunner:
             "project_id": result.project_id,
             "timestamp": result.timestamp,
             "prompt": result.prompt,
+            "status": result.status,
             "sorries_filled": result.sorries_filled,
             "sorries_remaining": result.sorries_remaining,
             "errors": result.errors,

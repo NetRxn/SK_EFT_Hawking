@@ -1,5 +1,6 @@
 import SKEFTHawking.Basic
-import Mathlib
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.Data.Matrix.Basic
 
 /-!
 # Structure A: The Acoustic Metric Theorem
@@ -106,9 +107,7 @@ noncomputable def acousticMetricInv (v cs rho : ℝ) : Matrix (Fin 2) (Fin 2) �
     | ⟨i + 2, hi⟩, _ => absurd hi (by omega)
     | _, ⟨j + 2, hj⟩ => absurd hj (by omega)
 
-/-
-PROBLEM
-Determinant of the acoustic metric:
+/-- Determinant of the acoustic metric:
     det(g) = -(ρ/c_s)² · c_s² = -ρ² · c_s⁰ = -(ρ/c_s)² · c_s²
 
     More precisely: det g = (ρ/c_s)² · [-(c_s² - v²) · 1 - (-v)²]
@@ -118,42 +117,29 @@ Determinant of the acoustic metric:
     (using the Painlevé-Gullstrand form).
 
     This is a key check: the determinant is negative (Lorentzian signature)
-    and depends only on ρ, not on v or c_s separately.
-
-PROVIDED SOLUTION
-Expand the 2×2 determinant using `Matrix.det_fin_two`. The acoustic metric entries are:
-- g₀₀ = (rho/cs) * (-(cs² - v²))
-- g₀₁ = (rho/cs) * (-v)
-- g₁₀ = (rho/cs) * (-v)
-- g₁₁ = (rho/cs) * 1
-
-So det = g₀₀*g₁₁ - g₀₁*g₁₀ = (rho/cs)² * [-(cs² - v²) - v²] = (rho/cs)² * (-cs²) = -rho².
-
-Key steps: unfold acousticMetric, simp the Matrix.of entries using fin_cases or direct evaluation, apply det_fin_two, then use field_simp with hcs to clear denominators, and ring.
--/
+    and depends only on ρ, not on v or c_s separately. -/
 theorem acousticMetric_det (v cs rho : ℝ) (hcs : cs ≠ 0) :
     (acousticMetric v cs rho).det = -(rho ^ 2) := by
-  rw [ Matrix.det_fin_two, show ( acousticMetric v cs rho ) = Matrix.of ![![ rho / cs * ( - ( cs^2 - v^2 ) ), rho / cs * ( -v ) ], ![ rho / cs * ( -v ), rho / cs * 1 ] ] from by ext i j; fin_cases i <;> fin_cases j <;> rfl ] ; norm_num ; ring;
-  norm_num [ hcs ]
+  -- Proof by Aristotle: expand 2×2 determinant via det_fin_two, simplify
+  rw [Matrix.det_fin_two,
+    show (acousticMetric v cs rho) = Matrix.of ![![rho / cs * (-(cs ^ 2 - v ^ 2)),
+      rho / cs * (-v)], ![rho / cs * (-v), rho / cs * 1]] from
+      by ext i j; fin_cases i <;> fin_cases j <;> rfl]
+  norm_num
+  ring_nf
+  norm_num [hcs]
 
-/-
-PROBLEM
-Algebraic computation: expand 2×2 determinant, simplify
-This is a priority target for Aristotle sorry-filling
-
-The inverse metric is indeed the inverse of the metric.
-    g_{μα} g^{αν} = δ^ν_μ
-
-PROVIDED SOLUTION
-We need to show that the matrix product g * g⁻¹ = I where g = acousticMetric and g⁻¹ = acousticMetricInv. This is a 2×2 matrix multiplication. Use ext to reduce to checking each entry, then unfold the definitions, use simp with Matrix.mul_apply and Fin.sum_univ_two (or Finset.univ_fin2) to expand the dot products, then field_simp with hcs and hrho to clear denominators, and ring.
--/
+/-- The inverse metric is indeed the inverse of the metric.
+    g_{μα} g^{αν} = δ^ν_μ -/
 theorem acousticMetric_inv_correct (v cs rho : ℝ) (hcs : cs ≠ 0) (hrho : rho ≠ 0) :
     acousticMetric v cs rho * acousticMetricInv v cs rho = 1 := by
-  unfold acousticMetric acousticMetricInv;
-  ext i j ; fin_cases i <;> fin_cases j <;> norm_num [ div_eq_mul_inv, Matrix.mul_apply ] <;> ring_nf <;> aesop ( simp_config := { decide := true } ) ;
-
--- Matrix multiplication + algebraic simplification
-  -- Priority target for Aristotle sorry-filling
+  -- Proof by Aristotle: ext + fin_cases on 2×2 entries, algebraic simplification
+  unfold acousticMetric acousticMetricInv
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [div_eq_mul_inv, Matrix.mul_apply] <;>
+    ring_nf <;>
+    aesop (simp_config := { decide := true })
 
 /-!
 ## The Phonon EOM from Son's EFT
@@ -173,20 +159,39 @@ We show this equals the curved-space Klein-Gordon equation
 with the acoustic metric defined above.
 -/
 
+/-- Partial time derivative of a scalar field on 1+1D spacetime. -/
+noncomputable def partialT (f : Spacetime1D → ℝ) (p : Spacetime1D) : ℝ :=
+  deriv (fun t' => f ⟨t', p.x⟩) p.t
+
+/-- Partial spatial derivative of a scalar field on 1+1D spacetime. -/
+noncomputable def partialX (f : Spacetime1D → ℝ) (p : Spacetime1D) : ℝ :=
+  deriv (fun x' => f ⟨p.t, x'⟩) p.x
+
 /-- The d'Alembertian operator for the acoustic metric, acting on a scalar
     field π(t,x). This is the covariant Klein-Gordon operator:
 
     □_g π = (1/√|det g|) ∂_μ(√|det g| · g^{μν} · ∂_ν π)
 
-    We express this in terms of the fluid variables (v, c_s, ρ). -/
+    We express this in terms of the fluid variables (v, c_s, ρ).
+
+    Using √|det g| = ρ and the inverse metric components, the flux
+    vector J^μ = √|g| g^{μν} ∂_ν π has components:
+      J^0 = (-1/c_s) ∂_t π + (-v/c_s) ∂_x π
+      J^1 = (-v/c_s) ∂_t π + ((c_s² - v²)/c_s) ∂_x π
+    and □_g π = (1/ρ)(∂_t J^0 + ∂_x J^1). -/
 noncomputable def dAlembertian
     (v : ℝ → ℝ) (cs : ℝ → ℝ) (rho : ℝ → ℝ)
-    (pi_field : Spacetime1D → ℝ) : Spacetime1D → ℝ := by
-  sorry -- Definition requires partial derivatives of π
-  -- The explicit form in fluid variables is:
-  -- □_g π = (c_s/ρ) · [∂_t(ρ/c_s² · ∂_t π + ρv/c_s² · ∂_x π)
-  --                    + ∂_x(ρv/c_s² · ∂_t π + ρ(v²-c_s²)/c_s² · ∂_x π)]
-  -- This requires Mathlib's partial derivative infrastructure
+    (pi_field : Spacetime1D → ℝ) : Spacetime1D → ℝ :=
+  fun p =>
+    -- Flux components: J^μ = √|g| g^{μν} ∂_ν π
+    let J0 : Spacetime1D → ℝ := fun q =>
+      (-1 / cs q.x) * partialT pi_field q +
+      (-v q.x / cs q.x) * partialX pi_field q
+    let J1 : Spacetime1D → ℝ := fun q =>
+      (-v q.x / cs q.x) * partialT pi_field q +
+      ((cs q.x ^ 2 - v q.x ^ 2) / cs q.x) * partialX pi_field q
+    -- □π = (1/√|g|) ∂_μ J^μ = (1/ρ) (∂_t J^0 + ∂_x J^1)
+    (1 / rho p.x) * (partialT J0 p + partialX J1 p)
 
 /-- **The phonon EOM from Son's EFT.**
 
@@ -235,30 +240,19 @@ This is the central result of Structure A.
 theorem acoustic_metric_theorem
     (eos : EquationOfState) (bg : FluidBackground) :
     ∃ (phonon_eom : PhononEOM eos bg), True := by
-  sorry
+  -- Proof by Aristotle: construct PhononEOM with coefficient matrix ρ(x)·g⁻¹_{μν}
+  -- The phonon wave operator in the EFT expansion IS the inverse acoustic metric
+  -- scaled by density, so the proof obligation reduces to rfl.
+  exact ⟨⟨fun x => bg.density x • acousticMetricInv (bg.velocity x) (bg.soundSpeed x) (bg.density x),
+    fun _ => rfl⟩, trivial⟩
 
-/-
-PROBLEM
-The construction of PhononEOM from the EFT expansion
-Step 1: Compute X = -（μ + ∂_t π)² + (∂_x π)² + 2v(μ + ∂_t π)∂_x π
-on the background with flow velocity v(x)
-Step 2: Expand P(X) to quadratic order using P', P''
-Step 3: Compute Euler-Lagrange equation for π
-Step 4: Identify coefficient matrix with acoustic metric components
-Each step is algebraic manipulation
-
-The acoustic metric has Lorentzian signature: one negative and one
-    positive eigenvalue. This ensures the phonon EOM is hyperbolic.
-
-PROVIDED SOLUTION
-Use acousticMetric_det to rewrite the determinant as -(rho²), then show -(rho²) < 0 using hrho (rho > 0 implies rho² > 0, so -rho² < 0). Use neg_neg_of_neg or Left.neg_neg with sq_pos_of_pos.
--/
+/-- The acoustic metric has Lorentzian signature: one negative and one
+    positive eigenvalue. This ensures the phonon EOM is hyperbolic. -/
 theorem acoustic_metric_lorentzian (v cs rho : ℝ)
     (hcs : 0 < cs) (hrho : 0 < rho) (hsub : v ^ 2 < cs ^ 2) :
     (acousticMetric v cs rho).det < 0 := by
-  rw [ acousticMetric_det ] <;> aesop
-
--- Follows from acousticMetric_det and rho ≠ 0
+  -- Proof by Aristotle: rewrite with acousticMetric_det, then negativity from ρ > 0
+  rw [acousticMetric_det] <;> aesop
 
 /-- **Sound speed from the EFT.**
 

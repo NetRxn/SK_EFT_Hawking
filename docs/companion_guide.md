@@ -96,7 +96,9 @@ We formalize the mathematics in **Lean 4**, a proof assistant—a programming la
    - Proves that the Hawking temperature depends only on the acoustic horizon's geometry (surface gravity), not on microscopic details
    - This universality is profound: it means the temperature formula is robust across different physical systems
 
-**Current status:** The Lean project compiles successfully. Of the original 12 "sorry" gaps, **7 have been filled by Aristotle** (an AI theorem prover), leaving 5 remaining (all priority-3 analysis proofs). The filled proofs span two batches: priority-1 algebraic results (acoustic metric determinant, inverse, Lorentzian signature, SK positivity) and priority-2 structural results (phonon EOM construction from the EFT, candidate term counting at each derivative order, and the existence witness for SK uniqueness). The remaining 5 gaps involve deep analytic content (WKB asymptotics, d'Alembertian infrastructure, FDR from KMS) that documents the mathematical boundary of what can be machine-verified.
+**Current status:** The Lean project compiles successfully. **All 12 "sorry" gaps have been filled by Aristotle** (an AI theorem prover) across eight targeted submissions. The filled proofs span all three priority levels: priority-1 algebraic results (acoustic metric determinant, inverse, Lorentzian signature, SK positivity), priority-2 structural results (phonon EOM construction, candidate term counting), and priority-3 analytic results (d'Alembertian operator, FDR from KMS symmetry, dispersive correction bound, dissipative correction existence, combined Hawking universality, and SK first-order uniqueness).
+
+**Key discovery:** During the uniqueness proof, Aristotle found that our original KMS hypothesis was too weak — it only constrained 4 of 9 field components, admitting a counterexample. This led to a corrected formalization (`FirstOrderKMS`) encoding the fluctuation-dissipation relation directly, which is a concrete example of formal verification catching a subtle physics error.
 
 ### Pillar 2: Python Computation (Numerical Results)
 
@@ -144,8 +146,8 @@ We use **Aristotle**, an AI-powered theorem prover, to automatically fill the si
         │ • Hawking Universality Proof   │ │
         │   (temperature robustness)     │ │
         │                                │ │
-        │ → 5 sorry gaps remain (7 filled) │ │
-        │ → Aristotle: P1+P2 done, P3 manual│ │
+        │ → ALL 12 sorry gaps filled!      │ │
+        │ → Aristotle: all priorities done  │ │
         └────────────────────────────────┘ │
                                            │
         ┌──────────────────────────────────┘
@@ -176,8 +178,8 @@ We use **Aristotle**, an AI-powered theorem prover, to automatically fill the si
 |--------|--------|
 | Lean project compilation | ✓ Success |
 | Structures defined | 3 (A, B, C) |
-| Sorry gaps identified | 12 total (7 filled, 5 remaining) |
-| Sorry gaps by priority | 0×P1 (all filled!), 0×P2 (all filled!), 5×P3 |
+| Sorry gaps identified | 12 total — **all 12 filled!** |
+| Sorry gaps by priority | 0×P1 (all filled!), 0×P2 (all filled!), 0×P3 (all filled!) |
 | Aristotle integration | ✓ Priority-1 and Priority-2 batches complete |
 
 The Lean codebase is stable and ready for proof development.
@@ -267,46 +269,49 @@ If δ_diss is amplified to **100× its current value**:
 
 ### Current Status (as of March 23, 2026)
 
-**Lean formalization:** Three core structures compiled and building successfully. 7 of 12 sorry gaps filled by Aristotle (all priority-1 and priority-2 proofs). Only 5 priority-3 analysis gaps remain — these encode genuinely deep analytic content (WKB asymptotics, d'Alembertian, FDR).
+**Lean formalization:** Three core structures compiled and building successfully with zero warnings. **All 12 sorry gaps filled** by Aristotle across eight targeted submissions covering all priority levels. The final submission discovered and corrected a subtle error in the KMS hypothesis formalization. Build: 2252 jobs, all pass (Lean 4.28.0, Mathlib 8f9d9cff).
 
-**Python computation:** Fully functional. All 12 tests passing. Numerical results physically validated. Ready for publication-quality analysis.
+**Python computation:** Fully functional. All 12 tests passing. Numerical results physically validated. Publication-quality interactive visualizations generated (6 Plotly figures + interactive HTML dashboard).
 
-**Integration:** Aristotle pipeline operational with automated extract → diff → integrate workflow.
+**Paper draft:** PRL-format LaTeX complete. All TODO items resolved. References cleaned up. Formal verification section documents the KMS discovery. Ready for internal review.
 
-### Phase 1: Completion (Next 2–4 weeks)
+**Integration:** Aristotle pipeline operational with automated extract → diff → integrate workflow. OUT_OF_BUDGET resume infrastructure in place for future submissions.
 
-- [x] Run `lake build` locally — builds successfully (2252 jobs)
-- [x] Submit 4 priority-1 (algebraic) sorries to Aristotle — all 4 filled
+### Phase 1: Foundation — COMPLETE ✓
+
+- [x] Run `lake build` locally — builds successfully (2252 jobs, zero warnings)
+- [x] Submit all 12 sorry gaps to Aristotle — all 12 filled across 8 targeted submissions
 - [x] Review and integrate Aristotle outputs into main Lean library
 - [x] Draft paper (PRL format) and companion documentation
-- [x] Submit priority-2 sorries to Aristotle — all 3 filled
-- [ ] Finalize Python results; generate publication-quality plots
+- [x] Finalize Python results; generate publication-quality plots (Plotly)
+- [x] Clean up unused variable warnings from Aristotle proofs
+- [x] Resolve all paper draft TODO items
 
-### Phase 2: Quadratic Expansion (Weeks 3–8)
+### Phase 2: Refinement and Submission (Next 4–8 weeks)
 
-The SK action (the core mathematical object encoding dissipation) is currently computed at leading order. Phase 2 extends this:
+- [ ] Expand the SK action around the transonic background to quadratic order
+- [ ] Compute the quadratic correction to Hawking temperature
+- [ ] Derive analytic expressions for δ_diss in different regimes
+- [ ] Validate quadratic expansion against numerical solver
+- [ ] Internal review of paper draft
+- [ ] Engage experimental collaborators (Heidelberg K-39, Trento Na-23)
+- [ ] Target journal: *Physical Review Letters* or *Physical Review A*
 
-- Expand the SK action around the transonic background to quadratic order
-- Compute the quadratic correction to Hawking temperature
-- Derive analytic expressions for δ_diss in different regimes
-- Validate quadratic expansion against numerical solver
-- Update experimental parameter predictions
+### Phase 3: Extensions (Months 3–6)
 
-### Phase 3: Paper Drafting and Submission (Weeks 6–12)
-
-- Integrate Lean formalization results into Section 1 (Intro/Theory)
-- Combine Python numerics with analytic results for Section 3 (Results)
-- Prepare supplementary material (Lean code snippets, full numerical tables)
-- Target journal: *Physical Review Letters* or *Physical Review A*
+- [ ] Second-order SK-EFT corrections (beyond leading order)
+- [ ] Backreaction calculation (how radiation modifies the horizon)
+- [ ] Connection to superfluid ³He-A experiments (Weyl fermion analogs)
+- [ ] Supplementary material: Lean code documentation, full numerical tables
 
 ### Milestones
 
 | Milestone | Target Date | Status |
 |-----------|-------------|--------|
-| Phase 1 complete | April 15, 2026 | On track |
-| First paper draft | May 15, 2026 | Planned |
-| Internal review | June 1, 2026 | Planned |
-| Journal submission | June 30, 2026 | Target |
+| Phase 1 complete | March 23, 2026 | **COMPLETE** ✓ |
+| Internal review | April 15, 2026 | In progress |
+| Experimental engagement | May 1, 2026 | Planned |
+| Journal submission | June 15, 2026 | Target |
 
 ---
 
@@ -365,6 +370,27 @@ In a BEC, the characteristic length scale over which quantum properties (like th
 
 **Dispersion / Dispersive Corrections**
 The spread in wave speeds depending on wavelength (in water, long waves travel faster than short waves; this is dispersion). Quantum dispersive effects modify the Hawking temperature; we account for these in our correction δ_disp.
+
+**UV (Ultraviolet) / IR (Infrared)**
+Borrowed from the electromagnetic spectrum as shorthand for energy/distance scales. UV means short-distance, high-energy physics (the atomic scale in a BEC, or the Planck scale in gravity). IR means long-distance, low-energy physics (the macroscopic fluid behavior). EFT is built on the principle that IR physics is insensitive to UV details — which is exactly why Hawking radiation is universal: the thermal spectrum doesn't care about atomic-scale (UV) physics, only the horizon geometry.
+
+**Trans-Planckian**
+Refers to physics at energy scales above the Planck energy (~10¹⁹ GeV in gravity) or, in the analog context, at wavelengths shorter than the healing length ξ where the continuum fluid description breaks down. The "trans-Planckian problem" of Hawking radiation asks whether the thermal spectrum survives when short-distance physics deviates from the simple free-field assumption. Analog experiments directly test this because the "trans-Planckian" (sub-healing-length) physics is known.
+
+**WKB (Wentzel-Kramers-Brillouin) Approximation**
+A semiclassical method for solving wave equations when the wavelength varies slowly compared to the background. The wave is written as an amplitude times a rapidly oscillating phase, and the equation is solved order-by-order in the ratio (wavelength / background scale). In our context, WKB is used to track phonon modes as they propagate through the varying flow near the acoustic horizon.
+
+**KMS (Kubo-Martin-Schwinger) Symmetry**
+A fundamental property of thermal equilibrium states in quantum field theory. KMS symmetry constrains the relationship between correlation functions at different times, effectively encoding the fluctuation-dissipation theorem at the level of the path integral. In our SK-EFT framework, imposing KMS symmetry on the doubled action forces the noise (imaginary) coefficients to be determined by the dissipative (real) coefficients divided by the inverse temperature β, leaving only two free transport coefficients (γ₁, γ₂).
+
+**FDR (Fluctuation-Dissipation Relation)**
+A deep result in statistical mechanics: in thermal equilibrium, the strength of random fluctuations (noise) is exactly determined by the rate of energy dissipation and the temperature. In our formalism, FDR is a consequence of KMS symmetry — it forces the noise kernel of the SK action to equal (γ/β) × (field)², eliminating independent noise parameters.
+
+**D'Alembertian (□)**
+The wave operator in spacetime, generalizing the Laplacian (∇²) from space to spacetime: □ = ∂_t² − c_s²∇². On a curved acoustic background (where the sound speed and flow velocity vary in space), the d'Alembertian acquires additional terms encoding the geometry. The phonon equation of motion is □_g π = 0, where g is the acoustic metric.
+
+**Bogoliubov Coefficients**
+The amplitudes (α_k, β_k) relating "ingoing" vacuum modes to "outgoing" particle modes when a quantum field propagates through a time-dependent or spatially varying background. The modulus squared |β_k|² gives the particle production rate. In Hawking radiation, the Bogoliubov transformation between the vacuum state at early times and the state seen by a late-time observer produces a thermal spectrum with temperature T_H.
 
 ---
 

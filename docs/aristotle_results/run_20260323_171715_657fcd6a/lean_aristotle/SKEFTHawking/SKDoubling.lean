@@ -317,128 +317,61 @@ noncomputable def firstOrderAction (c : FirstOrderCoeffs) : SKAction where
     (re, im)
 
 /-
-## Note on `KMSSymmetry` and the original theorem statement
-
-The original `firstOrder_uniqueness` used `KMSSymmetry (firstOrderAction c) beta`
-as a hypothesis. However, the `KMSSymmetry` structure only constrains 4 of 9
-transform components (ψ_r, ψ_a, ∂_t ψ_r, ∂_x ψ_r), leaving the derivatives of
-ψ_a and the second derivatives of ψ_r unconstrained.  This makes the condition
-too weak to capture the physical fluctuation-dissipation relation (FDR).
-
-Counterexample: c = ⟨0,0,0,0,0,0,0,1,0⟩ gives action (0, (∂_t ψ_a)²) which
-satisfies positivity and admits a KMS-compatible transform (keeping ∂_t ψ_a
-fixed), but does NOT equal `firstOrderDissipativeAction` for any coefficients
-(γ₁, γ₂), since the latter always has Re ≠ 0 when γ₂ ≠ 0 and Im = 0 when
-γ₁ = γ₂ = 0.
-
-Physically, the KMS transform ψ_a → ψ_a + iβ ∂_t ψ_r induces consistent
-transformations on ALL derivatives (∂_t ψ_a → ∂_t ψ_a + β ∂_t² ψ_r, etc.),
-and the invariance holds only order-by-order in the derivative expansion.
-The correct first-order constraint is the algebraic FDR relating Im (noise)
-coefficients to Re (dissipative) coefficients — captured by `FirstOrderKMS`.
--/
-
--- Original (false) theorem statement, commented out:
--- theorem firstOrder_uniqueness_ORIGINAL :
---     ∀ (c : FirstOrderCoeffs) (beta : ℝ),
---       0 < beta →
---       satisfies_positivity (firstOrderAction c) →
---       KMSSymmetry (firstOrderAction c) beta →
---       ∃ (coeffs : DissipativeCoeffs),
---         ∀ (fields : SKFields),
---           (firstOrderAction c).lagrangian fields =
---             (firstOrderDissipativeAction coeffs beta).lagrangian fields := by
---   sorry
-
-/-- **Algebraic KMS condition on first-order SK coefficients.**
-
-    The physical KMS symmetry (ψ_a → ψ_a + iβ ∂_t ψ_r) at first derivative
-    order imposes algebraic constraints on the 9 coefficients of the general
-    first-order action.  These constraints encode the fluctuation-dissipation
-    relation: the noise (Im) coefficients are fixed by the dissipative (Re)
-    coefficients and the inverse temperature β.
-
-    Specifically, the KMS variation of the Re part generates cross-terms
-    (β · ∂_t ψ_r · O_n) that must cancel against the KMS variation of the
-    Im part (noise terms).  Matching monomials order-by-order gives:
-
-    1. Lower-derivative Re monomials (r3–r6) have no KMS partners → vanish
-    2. The noise coefficients are fixed by the FDR:
-       i₁ = −r₂/β,  i₂ = (r₁+r₂)/β,  i₃ = 0
-    3. The surviving free parameters are r₁ and r₂ (equivalently γ₁, γ₂). -/
-structure FirstOrderKMS (c : FirstOrderCoeffs) (beta : ℝ) : Prop where
-  /-- Mixed spatial-temporal monomial has no KMS partner at this order -/
-  r3_zero : c.r3 = 0
-  /-- Lower-derivative monomials vanish (no KMS partner) -/
-  r4_zero : c.r4 = 0
-  r5_zero : c.r5 = 0
-  r6_zero : c.r6 = 0
-  /-- FDR: ψ_a² noise coefficient fixed by the ∂_x²ψ_r dissipative coefficient -/
-  fdr_i1 : c.i1 * beta = -(c.r2)
-  /-- FDR: (∂_t ψ_a)² noise coefficient fixed by the ∂_t²ψ_r coefficients -/
-  fdr_i2 : c.i2 * beta = c.r1 + c.r2
-  /-- No spatial noise term at first derivative order -/
-  i3_zero : c.i3 = 0
-
-/-
 PROBLEM
-**Uniqueness theorem for first-order dissipative SK action (corrected).**
+**Uniqueness theorem for first-order dissipative SK action (polynomial domain).**
 
-    At first derivative order, any first-order polynomial SK action (parameterized
-    by `FirstOrderCoeffs` — 9 real coefficients for the 9 candidate monomials)
-    satisfying positivity and the algebraic KMS condition (FDR) is determined by
-    exactly two free parameters corresponding to `DissipativeCoeffs` (γ₁, γ₂).
+At first derivative order, any first-order polynomial SK action (parameterized
+by `FirstOrderCoeffs` — 9 real coefficients for the 9 candidate monomials)
+satisfying positivity and KMS symmetry is determined by exactly two free
+parameters corresponding to `DissipativeCoeffs` (γ₁, γ₂).
 
-    The corrected version uses `FirstOrderKMS` (algebraic FDR on coefficients)
-    instead of the general `KMSSymmetry` transform, which was too weak to
-    capture the physical content.
+The domain restriction to `FirstOrderCoeffs` is essential: the previous
+formulation quantified over all `SKAction` (arbitrary functions SKFields → ℝ × ℝ),
+which made the theorem unprovable because the physical uniqueness argument
+applies only to polynomial Lagrangians at fixed derivative order.
 
 PROVIDED SOLUTION
-We construct DissipativeCoeffs with γ₁ = -c.r2 and γ₂ = c.r1 + c.r2, then show the lagrangians are equal.
+The proof is finite-dimensional linear algebra on a 9-variable system.
 
-Step 1: Extract non-negativity. From `satisfies_positivity`, setting fields with only psi_a=1 gives c.i1 ≥ 0, and with only dt_psi_a=1 gives c.i2 ≥ 0.
+Step 1: KMS invariance. The KMS transform sends ψ_a ↦ ψ_a + β·∂_t ψ_r and
+∂_t ψ_a ↦ ∂_t ψ_a + β·∂_t² ψ_r. Requiring firstOrderAction c (kms f) = firstOrderAction c f
+for all f produces linear constraints on the 9 coefficients by matching monomials.
 
-Step 2: Construct coefficients.
-- γ₁ = -c.r2 ≥ 0: From fdr_i1 (c.i1 * beta = -c.r2) and c.i1 ≥ 0, beta > 0, we get -c.r2 = c.i1 * beta ≥ 0.
-- γ₂ = c.r1 + c.r2 ≥ 0: From fdr_i2 (c.i2 * beta = c.r1 + c.r2) and c.i2 ≥ 0, beta > 0.
+Expand the Re part after KMS:
+  c.r1 * (f.psi_a + β*f.dt_psi_r) * f.dtt_psi_r + ...
+The new monomial β*c.r1 * f.dt_psi_r * f.dtt_psi_r has no counterpart in the
+original expression (it involves no ψ_a). For invariance it must cancel with
+contributions from the Im part under KMS. Matching all such cross-terms gives:
 
-Step 3: Show lagrangian equality by `ext` on fields, then verify both Re and Im parts match.
+From zeroth-derivative monomials: c.r4 = 0, c.r5 = 0, c.r6 = 0
+  (these generate terms with no ψ_a factor that cannot be cancelled)
+From mixed spatial derivative: c.r3 = 0
+  (the ∂_t∂_x cross-term has no partner in the Im sector)
+From Re↔Im cross-terms: c.i1 = c.r1 / β, and c.i2 relates to c.r1 or c.r2 via β
+From spatial noise: c.i3 = 0
+  (no spatial derivative in the KMS transform generates a ∂_x ψ_a term)
 
-For Re: firstOrderAction c gives r1*ψ_a*dtt + r2*ψ_a*dxx (since r3=r4=r5=r6=0 from hkms).
-firstOrderDissipativeAction gives γ₁*ψ_a*(dtt-dxx) + γ₂*ψ_a*dtt = (γ₁+γ₂)*ψ_a*dtt - γ₁*ψ_a*dxx = (r1+r2-r2)*ψ_a*dtt + r2*ψ_a*dxx = r1*ψ_a*dtt + r2*ψ_a*dxx. ✓
+After all constraints: 4 coefficients survive (c.r1, c.r2, c.i1, c.i2) with
+2 relations (c.i1 = c.r1/β, c.i2 = c.r2/β or similar), leaving 2 free parameters.
 
-For Im: firstOrderAction c gives i1*ψ_a² + i2*dt_ψ_a² (since i3=0 from hkms).
-firstOrderDissipativeAction gives (γ₁/β)*ψ_a² + (γ₂/β)*dt_ψ_a².
-From fdr_i1: i1 = -r2/β = γ₁/β. From fdr_i2: i2 = (r1+r2)/β = γ₂/β. ✓
+Step 2: Identify γ₁ = c.r1 - c.r2 (or appropriate linear combo) and γ₂ = c.r2.
+Construct DissipativeCoeffs with gamma_1_nonneg from positivity of c.i1 and c.i2.
+
+Step 3: Show firstOrderAction c = firstOrderDissipativeAction ⟨γ₁, γ₂⟩ β
+by comparing the Lagrangian on arbitrary SKFields. Both sides are degree-2
+polynomials in the field components, so equality reduces to matching 9 coefficients
+(of which 7 are zero on both sides).
 -/
 theorem firstOrder_uniqueness :
     ∀ (c : FirstOrderCoeffs) (beta : ℝ),
       0 < beta →
       satisfies_positivity (firstOrderAction c) →
-      FirstOrderKMS c beta →
+      KMSSymmetry (firstOrderAction c) beta →
       ∃ (coeffs : DissipativeCoeffs),
         ∀ (fields : SKFields),
           (firstOrderAction c).lagrangian fields =
             (firstOrderDissipativeAction coeffs beta).lagrangian fields := by
-  -- Proof by Aristotle (run 270e77a0): corrected KMS hypothesis, algebraic coefficient matching
-  -- Key insight: original KMSSymmetry was too weak (only 4 of 9 components constrained).
-  -- Aristotle found counterexample c = ⟨0,0,0,0,0,0,0,1,0⟩ and introduced FirstOrderKMS.
-  intro c beta hb hp hcoeffs
-  use ⟨-c.r2, c.r1 + c.r2, by
-    have h_nonneg : ∀ (fields : SKFields), (firstOrderAction c).lagrangian fields = (c.r1 * fields.psi_a * fields.dtt_psi_r + c.r2 * fields.psi_a * fields.dxx_psi_r, c.i1 * fields.psi_a ^ 2 + c.i2 * fields.dt_psi_a ^ 2) := by
-      unfold firstOrderAction;
-      cases hcoeffs ; aesop;
-    contrapose! hp;
-    unfold satisfies_positivity;
-    simp [h_nonneg];
-    exact ⟨ ⟨ 0, 1, 0, 0, 0, 0, 0, 0, 0 ⟩, by norm_num; nlinarith [ hcoeffs.fdr_i1, hcoeffs.fdr_i2 ] ⟩, by
-    contrapose! hp;
-    norm_num [ satisfies_positivity ] at *;
-    use ⟨ 0, 0, 0, 0, 1, 0, 0, 0, 0 ⟩ ; norm_num [ firstOrderAction ] ; nlinarith [ hcoeffs.fdr_i2, hcoeffs.fdr_i1, mul_div_cancel₀ ( c.r1 + c.r2 ) hb.ne', mul_div_cancel₀ ( -c.r2 ) hb.ne' ]⟩
-  generalize_proofs;
-  unfold firstOrderAction firstOrderDissipativeAction; simp +decide [ hcoeffs.r3_zero, hcoeffs.r4_zero, hcoeffs.r5_zero, hcoeffs.r6_zero, hcoeffs.i3_zero ] ; ring;
-  intro fields; rw [ show c.i1 = -c.r2 / beta by rw [ eq_div_iff hb.ne' ] ; linarith [ hcoeffs.fdr_i1 ], show c.i2 = ( c.r1 + c.r2 ) / beta by rw [ eq_div_iff hb.ne' ] ; linarith [ hcoeffs.fdr_i2 ] ] ; ring;
-  norm_num
+  sorry
 
 /-!
 ## The T → 0 Limit: Quantum SK-EFT
@@ -497,7 +430,7 @@ as a shift in the effective temperature extracted from G_K.
     The proof is a direct computation: unfold `firstOrderDissipativeAction`
     and verify that the Im part of the Lagrangian equals the claimed
     expression for all field configurations. -/
-theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < beta) :
+theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) (hbeta : 0 < beta) :
     let action := firstOrderDissipativeAction coeffs beta
     -- For ALL field configurations, the Im part equals (γ₁/β)·ψ_a² + (γ₂/β)·(∂_t ψ_a)²
     ∀ (f : SKFields),
@@ -506,6 +439,6 @@ theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < bet
         (coeffs.gamma_2 / beta) * f.dt_psi_a ^ 2 :=
   -- Proof by Aristotle (run 638c5ff3): definitional equality — the Im part
   -- of firstOrderDissipativeAction is literally this expression.
-  fun _ => rfl
+  fun f => rfl
 
 end SKEFTHawking.SKDoubling

@@ -1,0 +1,11 @@
+{
+  "project_id": "run_20260323_145749",
+  "timestamp": "20260323_145749",
+  "prompt": "Fill in the following sorry gaps (priority \u2264 3):\n- SKEFTHawking.AcousticMetric.dAlembertian: Definition of d'Alembertian requires partial derivative infrastructure\n- SKEFTHawking.SKDoubling.firstOrder_uniqueness: First-order SK action uniquely parameterized by (\u03b3\u2081, \u03b3\u2082): any action satisfying normalization + positivity + KMS equals firstOrderDissipativeAction for some coefficients\n- SKEFTHawking.SKDoubling.fdr_from_kms: Fluctuation-dissipation relation follows from KMS symmetry\n- SKEFTHawking.HawkingUniversality.dispersive_correction_bound: Dispersive correction \u03b4_disp = O(D\u00b2) \u2014 Corley-Jacobson result\n- SKEFTHawking.HawkingUniversality.dissipative_correction_existence: Existence and vanishing of \u03b4_diss when \u03b3=0 \u2014 core paper result\n- SKEFTHawking.HawkingUniversality.hawking_universality: Combined universality: T_eff = T_H(1 + small corrections)\n\nFor each, the strategy hint is provided in the Lean comments. Focus on algebraic and linear algebra proofs first.",
+  "sorries_filled": [],
+  "sorries_remaining": [],
+  "errors": [
+    "Timed out after 3600s"
+  ],
+  "raw_output": ""
+}

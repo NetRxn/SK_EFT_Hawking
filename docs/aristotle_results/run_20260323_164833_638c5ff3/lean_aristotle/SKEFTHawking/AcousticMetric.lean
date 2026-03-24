@@ -239,7 +239,7 @@ This is the central result of Structure A.
     PDE well-posedness is left as `sorry`. -/
 theorem acoustic_metric_theorem
     (eos : EquationOfState) (bg : FluidBackground) :
-    ∃ (_ : PhononEOM eos bg), True := by
+    ∃ (phonon_eom : PhononEOM eos bg), True := by
   -- Proof by Aristotle: construct PhononEOM with coefficient matrix ρ(x)·g⁻¹_{μν}
   -- The phonon wave operator in the EFT expansion IS the inverse acoustic metric
   -- scaled by density, so the proof obligation reduces to rfl.

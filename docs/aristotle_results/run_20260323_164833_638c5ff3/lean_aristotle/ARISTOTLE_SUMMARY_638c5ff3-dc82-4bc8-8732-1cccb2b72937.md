@@ -1,0 +1,2 @@
+# Summary of changes
+Proved `fdr_from_kms` in `SKEFTHawking/SKDoubling.lean`. The theorem states that the imaginary part of the first-order dissipative SK action's Lagrangian equals `(γ₁/β)·ψ_a² + (γ₂/β)·(∂_t ψ_a)²` for all field configurations. This is a definitional equality — the Im part is literally defined as that expression in `firstOrderDissipativeAction` — so the proof is simply `fun f => rfl`. The module builds successfully.

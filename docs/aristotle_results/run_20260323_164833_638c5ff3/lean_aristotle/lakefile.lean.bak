@@ -1,0 +1,23 @@
+import Lake
+open Lake DSL
+
+-- SK-EFT Hawking Paper: Lean 4 Formalization
+-- Blueprint+sorry approach for three mathematical structures:
+--   A. Acoustic metric theorem
+--   B. Schwinger-Keldysh doubling constraints
+--   C. Hawking temperature universality
+
+package «sk-eft-hawking» where
+  leanOptions := #[
+    ⟨`autoImplicit, false⟩
+  ]
+
+-- Pinned to the Mathlib commit that Aristotle uses for best sorry-filling compatibility.
+-- See: https://aristotle.harmonic.fun/dashboard/docs/toolchain
+require mathlib from git
+  "https://github.com/leanprover-community/mathlib4" @ "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+
+@[default_target]
+lean_lib SKEFTHawking where
+  srcDir := "."
+  roots := #[`SKEFTHawking]

@@ -1,0 +1,37 @@
+--- a/SKEFTHawking/HawkingUniversality.lean
++++ b/SKEFTHawking/HawkingUniversality.lean
+@@ -295,6 +295,16 @@
+ 
+ The proof uses: add_pos_of_pos_of_nonneg or add_pos_of_nonneg_of_pos for the
+ sum, div_neg for the sign, and ne_of_lt for the final ≠ 0.
++
++Witness delta_diss := -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa).
++
++Forward direction (gamma_1 = 0 ∧ gamma_2 = 0 → delta_diss = 0): substitute gamma_1 = 0, gamma_2 = 0, numerator becomes 0, so delta_diss = 0. Use `simp` or `field_simp` after substituting.
++
++Reverse direction (0 < gamma_1 ∨ 0 < gamma_2 → delta_diss ≠ 0):
++- Both gamma_1 and gamma_2 are ≥ 0 (from coeffs.gamma_1_nonneg and coeffs.gamma_2_nonneg).
++- If 0 < gamma_1, then gamma_1 + gamma_2 > 0 by add_pos_of_pos_of_nonneg.
++- If 0 < gamma_2, then gamma_1 + gamma_2 > 0 by add_pos_of_nonneg_of_pos.
++- So gamma_1 + gamma_2 > 0, hence -(gamma_1 + gamma_2) < 0, and dividing by 2*kappa > 0 gives delta_diss < 0, hence ≠ 0.
+ -/
+ theorem dissipative_correction_existence
+     (mdr : ModifiedDispersion) (coeffs : DissipativeCoeffs) (kappa : ℝ)
+@@ -302,7 +312,9 @@
+     ∃ (delta_diss : ℝ),
+       ((coeffs.gamma_1 = 0 ∧ coeffs.gamma_2 = 0) → delta_diss = 0) ∧
+       ((0 < coeffs.gamma_1 ∨ 0 < coeffs.gamma_2) → delta_diss ≠ 0) := by
+-  sorry
++  -- Set delta_diss to be -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa).
++  use -(coeffs.gamma_1 + coeffs.gamma_2) / (2 * kappa);
++  exact ⟨ fun h => by simp +decide [ h ], fun h => div_ne_zero ( by cases h <;> linarith [ coeffs.gamma_1_nonneg, coeffs.gamma_2_nonneg ] ) ( by positivity ) ⟩
+ 
+ /-
+ PROBLEM
+@@ -382,4 +394,4 @@
+ noncomputable def trento_spin_sonic_enhancement : ℝ := 100
+   -- Enhancement factor: (c_density/c_spin)² relative to single-component
+ 
+-end SKEFTHawking.HawkingUniversality
++end SKEFTHawking.HawkingUniversality
+\ No newline at end of file

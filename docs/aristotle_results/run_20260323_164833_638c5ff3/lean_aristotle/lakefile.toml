@@ -1,0 +1,15 @@
+name = "sk-eft-hawking"
+defaultTargets = ["SKEFTHawking"]
+
+[leanOptions]
+autoImplicit = false
+
+# Pinned to the Mathlib commit that Aristotle uses for best sorry-filling compatibility.
+# See: https://aristotle.harmonic.fun/dashboard/docs/toolchain
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+
+[[lean_lib]]
+name = "SKEFTHawking"

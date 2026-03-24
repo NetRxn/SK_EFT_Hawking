@@ -22,6 +22,9 @@ Usage:
     # Retrieve a previous run by project ID:
     python scripts/submit_to_aristotle.py --retrieve 082e6776-42d7-469d-be9d-064c328540cf
 
+    # Resume from an OUT_OF_BUDGET run (retrieve partial, integrate, resubmit):
+    python scripts/submit_to_aristotle.py --resume 082e6776-42d7-469d-be9d-064c328540cf
+
 Requires:
     - aristotlelib installed: pip install aristotlelib
     - ARISTOTLE_API_KEY in .env or environment
@@ -218,6 +221,10 @@ def main():
         "--integrate", action="store_true",
         help="Auto-integrate patched files into lean/ (review diff first!)"
     )
+    parser.add_argument(
+        "--resume", type=str, default=None,
+        help="Resume from an OUT_OF_BUDGET run: retrieve partial results, integrate, resubmit"
+    )
     args = parser.parse_args()
 
     api_key = load_api_key()
@@ -277,6 +284,44 @@ def main():
                 print("\nNo files needed updating.")
         return
 
+    # --- Resume mode (for OUT_OF_BUDGET recovery) ---
+    if args.resume:
+        print(f"Resuming from OUT_OF_BUDGET run: {args.resume}")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        dest = RESULTS_DIR / f"run_{timestamp}_{args.resume[:8]}_partial"
+        patched_dir = retrieve_result(args.resume, dest, api_key)
+
+        # Show what Aristotle managed before budget exhaustion
+        print_summary(patched_dir)
+        diff_path = dest / "diff.patch"
+        diff_text = generate_diff(patched_dir, LEAN_DIR, diff_path)
+        if diff_text:
+            print(f"\nPartial progress diff saved to: {diff_path}")
+            print(f"\n{'='*60}\nPARTIAL DIFF PREVIEW (first 2000 chars)\n{'='*60}")
+            print(diff_text[:2000])
+        else:
+            print("\nNo partial progress found (files identical). Nothing to resume.")
+            return
+
+        sorries = count_sorries(patched_dir)
+        if sorries:
+            print(f"\nRemaining sorries in partial output:")
+            for f, c in sorries.items():
+                print(f"  {f}: {c}")
+
+        # Integrate partial results
+        updated = integrate_proofs(patched_dir, LEAN_DIR)
+        if updated:
+            print(f"\nIntegrated {len(updated)} partially-filled files:")
+            for f in updated:
+                print(f"  ✓ {f}")
+            print("\n⚠️  Run `lake build` to verify partial progress compiles!")
+            print("Then resubmit remaining sorries with:")
+            print(f"  python scripts/submit_to_aristotle.py --priority 3")
+        else:
+            print("\nNo files changed from partial results.")
+        return
+
     # --- Submit mode ---
     print("=" * 60)
     print("SK-EFT Hawking Paper: Aristotle Submission")
@@ -320,9 +365,21 @@ def main():
     # Report
     print(f"\n{'='*60}\nRESULTS\n{'='*60}")
     print(f"Project ID: {result.project_id}")
+    print(f"Status: {result.status}")
+
+    # Handle OUT_OF_BUDGET — partial results may still be usable
+    if result.is_out_of_budget:
+        print(f"\n⚠️  OUT_OF_BUDGET: Aristotle exhausted its compute budget.")
+        print(f"   Partial results may be available. Next steps:")
+        print(f"   1. Retrieve partial output:")
+        print(f"      aristotle result {result.project_id} --destination partial.tar.gz")
+        print(f"   2. Or use this script:")
+        print(f"      python scripts/submit_to_aristotle.py --retrieve {result.project_id}")
+        print(f"   3. Inspect the diff for any useful partial progress")
+        print(f"   4. Resubmit the (partially-filled) project to continue\n")
 
     if result.errors:
-        print(f"\nErrors:")
+        print(f"\nErrors/Warnings:")
         for e in result.errors:
             print(f"  - {e}")
         if "Timed out" in str(result.errors):
@@ -330,9 +387,13 @@ def main():
             print(f"  aristotle list --limit 5")
             print(f"Then retrieve with:")
             print(f"  python scripts/submit_to_aristotle.py --retrieve <PROJECT_ID>")
+
+    # If there are no usable results at all, stop here
+    if not result.has_partial_results and result.errors:
         return
 
     # Try to find and process the result files
+    # (Both COMPLETE and OUT_OF_BUDGET runs may have downloadable artifacts)
     patched_dirs = list(RESULTS_DIR.glob(f"patched_*"))
     if patched_dirs:
         latest = sorted(patched_dirs)[-1]

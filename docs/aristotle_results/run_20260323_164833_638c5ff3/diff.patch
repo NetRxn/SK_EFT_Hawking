@@ -1,0 +1,43 @@
+--- a/SKEFTHawking/SKDoubling.lean
++++ b/SKEFTHawking/SKDoubling.lean
+@@ -358,7 +358,9 @@
+ as a shift in the effective temperature extracted from G_K.
+ -/
+ 
+-/-- **The fluctuation-dissipation relation (algebraic, position-space form).**
++/-
++PROBLEM
++**The fluctuation-dissipation relation (algebraic, position-space form).**
+ 
+     For the first-order dissipative SK action, KMS symmetry at temperature
+     1/β forces the noise (imaginary) sector to be entirely determined by
+@@ -372,20 +374,18 @@
+ 
+     The proof is a direct computation: unfold `firstOrderDissipativeAction`
+     and verify that the Im part of the Lagrangian equals the claimed
+-    expression for all field configurations. -/
++    expression for all field configurations.
++
++PROVIDED SOLUTION
++This is a definitional equality. The Im part (.2) of firstOrderDissipativeAction's lagrangian is defined as (coeffs.gamma_1 / beta) * fields.psi_a ^ 2 + (coeffs.gamma_2 / beta) * fields.dt_psi_a ^ 2, which is exactly the RHS. Just intro f, then simp [firstOrderDissipativeAction] or unfold and rfl.
++-/
+ theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) (hbeta : 0 < beta) :
+     let action := firstOrderDissipativeAction coeffs beta
+     -- For ALL field configurations, the Im part equals (γ₁/β)·ψ_a² + (γ₂/β)·(∂_t ψ_a)²
+     ∀ (f : SKFields),
+       (action.lagrangian f).2 =
+         (coeffs.gamma_1 / beta) * f.psi_a ^ 2 +
+-        (coeffs.gamma_2 / beta) * f.dt_psi_a ^ 2 := by
+-  sorry -- Direct computation:
+-  -- Unfold firstOrderDissipativeAction.lagrangian for arbitrary f.
+-  -- The Im part is defined as:
+-  --   im_part := (coeffs.gamma_1 / beta) * f.psi_a ^ 2
+-  --            + (coeffs.gamma_2 / beta) * f.dt_psi_a ^ 2
+-  -- which is identical to the RHS.
+-  -- Tactic: intro f; simp [firstOrderDissipativeAction]; ring
++        (coeffs.gamma_2 / beta) * f.dt_psi_a ^ 2 :=
++  fun f => rfl
+ 
+-end SKEFTHawking.SKDoubling
++end SKEFTHawking.SKDoubling
+\ No newline at end of file
