@@ -202,10 +202,11 @@ def hawking_correction_first_order(
     Returns:
         δ_diss (dimensionless correction to T_H).
     """
-    # The effective damping rate Γ_H depends on the mode structure at the horizon.
-    # From Phase 1: Γ_H ∝ (γ₁ + γ₂) · κ² / c_s (Beliaev damping scaling)
-    gamma_eff = gamma_1 + gamma_2
-    Gamma_H = gamma_eff * kappa**2 / c_s
+    # The effective damping rate at the horizon, evaluated at ω = κ, k_H = κ/c_s:
+    #   Γ_H = γ₁·k_H² + γ₂·ω²/c_s² = (γ₁ + γ₂)·(κ/c_s)²
+    # Matches WKBAnalysis.lean: dampingRate(k_H, κ) with first-order terms.
+    k_H = kappa / c_s
+    Gamma_H = (gamma_1 + gamma_2) * k_H**2
     return Gamma_H / kappa
 
 

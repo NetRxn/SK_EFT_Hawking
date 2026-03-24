@@ -352,7 +352,7 @@ def compute_dissipative_correction(
     # Dispersive correction: δ_disp ~ (κξ/c_s)² (Coutant-Parentani)
     # The coefficient depends on the dispersion type (sub/superluminal)
     D = bg.adiabaticity
-    delta_disp = D**2  # Leading order; exact coefficient from Heun analysis
+    delta_disp = -(np.pi / 6) * D**2  # Corley-Jacobson; matches formulas.dispersive_correction
 
     # Cross-term: δ_cross ~ δ_disp · δ_diss
     delta_cross = delta_disp * delta_diss

@@ -1,0 +1,52 @@
+{
+  "timestamp": "20260324T193610Z",
+  "project_root": "/sessions/laughing-practical-allen/mnt/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "formulas": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "count_coefficients",
+          "passed": true,
+          "message": "Refs: secondOrder_count, counting_formula_N2, counting_formula_N3"
+        },
+        {
+          "name": "enumerate_monomials",
+          "passed": true,
+          "message": "Refs: spatial_parity_eliminates_second_order, parity_null_test"
+        },
+        {
+          "name": "damping_rate",
+          "passed": true,
+          "message": "Refs: dampingRate_eq_zero_iff"
+        },
+        {
+          "name": "dispersive_correction",
+          "passed": true,
+          "message": "Refs: dispersive_bound, dispersive_bound_tight"
+        },
+        {
+          "name": "first_order_correction",
+          "passed": true,
+          "message": "Refs: firstOrder_correction_zero_iff"
+        },
+        {
+          "name": "effective_temperature_ratio",
+          "passed": true,
+          "message": "Refs: effective_temperature_well_defined"
+        },
+        {
+          "name": "turning_point_shift",
+          "passed": true,
+          "message": "Refs: turning_point_shift_nonzero, turning_point_shift_nonzero_strengthened"
+        }
+      ]
+    },
+    "numerical": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Steinhauer.c_s",
+          "passed": 
