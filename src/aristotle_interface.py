@@ -152,6 +152,30 @@ SORRY_GAPS: list[SorryGap] = [
         filled=True,  # Filled by Aristotle run 638c5ff3 (2026-03-23): fun f => rfl
     ),
 
+    # Structure B (continued): Per-sector FDR decomposition
+    SorryGap(
+        module="SKEFTHawking.SKDoubling",
+        name="fdr_from_kms_gamma1",
+        priority=1,
+        description="Per-sector FDR for γ₁: Im part at pure ψ_a point equals γ₁/β. "
+                    "Evaluates firstOrderDissipativeAction at ⟨0,1,0,0,0,0,0,0,0⟩.",
+        strategy_hint="Unfold firstOrderDissipativeAction.lagrangian at the structured literal, "
+                      "extract .2 (Im part), simplify 0^2→0, 1^2→1, then ring. "
+                      "Alternative: instantiate fdr_from_kms at this field config and simplify.",
+        filled=True,  # Filled by Aristotle run 20556034 (2026-03-23): unfold + aesop
+    ),
+    SorryGap(
+        module="SKEFTHawking.SKDoubling",
+        name="fdr_from_kms_gamma2",
+        priority=1,
+        description="Per-sector FDR for γ₂: Im part at pure ∂_t ψ_a point equals γ₂/β. "
+                    "Evaluates firstOrderDissipativeAction at ⟨0,0,0,0,1,0,0,0,0⟩.",
+        strategy_hint="Unfold firstOrderDissipativeAction.lagrangian at the structured literal, "
+                      "extract .2 (Im part), simplify 0^2→0, 1^2→1, then ring. "
+                      "Alternative: instantiate fdr_from_kms at this field config and simplify.",
+        filled=True,  # Filled by Aristotle run 20556034 (2026-03-23): simp [firstOrderDissipativeAction]
+    ),
+
     # Structure C: Hawking Universality
     SorryGap(
         module="SKEFTHawking.HawkingUniversality",

@@ -177,11 +177,12 @@ The sign of δ_diss is physically meaningful: if dissipation REDUCES T_eff, Hawk
 1. ✅ Son EFT L = P(X) formalized in Lean; phonon dispersion verified
 2. ✅ CGL SK action written and constrained (three axioms formalized)
 3. ✅ 1D transonic background solver implemented (Python, 3 experimental setups)
-4. ✅ All 12 Lean sorry gaps filled by Aristotle (8 targeted submissions)
+4. ✅ All 14 Lean proof obligations filled by Aristotle (9 targeted submissions, zero sorry remaining)
 5. ✅ KMS bug discovered and corrected (FirstOrderKMS introduced)
-6. ✅ PRL-format paper draft complete; all TODOs resolved
-7. ✅ Publication-quality interactive visualizations (6 Plotly figures + dashboard)
-8. ✅ Build verified: 2252 jobs, zero warnings (Lean 4.28.0, Mathlib 8f9d9cff)
+6. ✅ Per-sector FDR decomposition formalized (γ₁ and γ₂ sectors independently verified)
+7. ✅ PRL-format paper draft complete; all TODOs resolved
+8. ✅ Publication-quality interactive visualizations (6 Plotly figures + dashboard)
+9. ✅ Build verified: 2252 jobs, zero warnings (Lean 4.28.0, Mathlib 8f9d9cff)
 
 ### Phase 2: Refinement (Next 4–8 weeks)
 9. Expand the SK action around the transonic background to quadratic order
@@ -213,10 +214,12 @@ Three mathematical structures have been **fully formalized and verified** in Lea
 - Phonon EOM: coefficient matrix equals ρ(x)·g^{μν}_inv
 
 ### Structure B: The SK doubling structure — COMPLETE ✓
-**SKDoubling.lean** — 4 theorems proved:
+**SKDoubling.lean** — 6 theorems proved:
 - Candidate term count: 9 structures (6 real + 3 imaginary) at first derivative order
 - First-order positivity: Im I_SK ≥ 0 from γ₁,₂ ≥ 0 and β > 0
-- FDR from KMS: noise kernel = (γ_i/β)·(field)² — proved by `rfl` (definitional equality)
+- Per-sector FDR (γ₁): noise coefficient at pure ψ_a point = γ₁/β — proved by `unfold; aesop`
+- Per-sector FDR (γ₂): noise coefficient at pure ∂_t ψ_a point = γ₂/β — proved by `simp`
+- Combined FDR from KMS: full noise kernel = (γ₁/β)·ψ_a² + (γ₂/β)·(∂_t ψ_a)² — proved by `rfl` (definitional equality)
 - **First-order uniqueness:** Any action satisfying positivity + algebraic KMS is determined by (γ₁, γ₂)
 
 **Key discovery:** Aristotle found the original `KMSSymmetry` was too weak (only constrains 4/9 components). Counterexample: c = ⟨0,0,0,0,0,0,0,1,0⟩. Corrected with `FirstOrderKMS` encoding FDR directly on all 9 coefficients. This is a concrete example of formal verification catching a subtle physics error.
@@ -226,6 +229,8 @@ Three mathematical structures have been **fully formalized and verified** in Lea
 - Dispersive correction bound: ∃ δ_disp ≠ 0 with |δ_disp| ≤ C·D² (witness: -(π/6)D²)
 - Dissipative correction existence: ∃ δ_diss that vanishes iff γ₁=γ₂=0 (witness: -(γ₁+γ₂)/(2κ))
 - Combined universality: T_eff = T_H(1 + δ_disp + δ_diss + δ_cross) with all structural constraints
+
+**Total: 14 theorems across 3 structures, all verified with zero sorry remaining.**
 
 **Actual Lean effort: ~3 weeks with Aristotle-assisted proving, vs. 3–5 person-months estimated. The automation dramatically accelerated the formalization process.**
 

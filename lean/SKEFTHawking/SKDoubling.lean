@@ -482,6 +482,35 @@ spectrum at temperature T_H. The dissipative correction δ_diss appears
 as a shift in the effective temperature extracted from G_K.
 -/
 
+/-- **FDR for the γ₁ sector: the ψ_a² noise term has coefficient γ₁/β.**
+
+    Evaluating the Im part of `firstOrderDissipativeAction` at the "pure ψ_a"
+    point (ψ_a = 1, all other fields zero) extracts the γ₁/β coefficient.
+    This encodes coth(βω/2) → 1/β at leading (frequency-independent) order
+    for the bulk damping sector. -/
+theorem fdr_from_kms_gamma1 (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < beta) :
+    let action := firstOrderDissipativeAction coeffs beta
+    (action.lagrangian ⟨0, 1, 0, 0, 0, 0, 0, 0, 0⟩).2 =
+      coeffs.gamma_1 / beta := by
+  -- Im part at (ψ_r=0, ψ_a=1, rest=0):
+  -- (γ₁/β)·1² + (γ₂/β)·0² = γ₁/β
+  -- Proof by Aristotle (run 20556034): unfold + aesop
+  unfold firstOrderDissipativeAction ; aesop
+
+/-- **FDR for the γ₂ sector: the (∂_t ψ_a)² noise term has coefficient γ₂/β.**
+
+    Evaluating the Im part at the "pure ∂_t ψ_a" point extracts γ₂/β.
+    This encodes the FDR for the anisotropic damping sector along the
+    superfluid flow direction. -/
+theorem fdr_from_kms_gamma2 (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < beta) :
+    let action := firstOrderDissipativeAction coeffs beta
+    (action.lagrangian ⟨0, 0, 0, 0, 1, 0, 0, 0, 0⟩).2 =
+      coeffs.gamma_2 / beta := by
+  -- Im part at (dt_ψ_a=1, rest=0):
+  -- (γ₁/β)·0² + (γ₂/β)·1² = γ₂/β
+  -- Proof by Aristotle (run 20556034): simp on definition
+  simp [firstOrderDissipativeAction]
+
 /-- **The fluctuation-dissipation relation (algebraic, position-space form).**
 
     For the first-order dissipative SK action, KMS symmetry at temperature

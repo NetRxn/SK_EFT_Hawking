@@ -283,12 +283,11 @@ This would amplify $\delta_{\text{diss}}$ to
 \begin{equation}
 \delta_{\text{diss}}^{\text{spin}} \sim 100 \times 10^{-3} \sim O(10^{-1} \text{ to } 10^{-2}),
 \end{equation}
-Detailed numerical estimates using $^{23}$Na scattering parameters and projected Trento trap geometries are presented in the supplemental material and interactive visualization dashboard accompanying this work.
-which is now potentially experimentally accessible if noise can be reduced to the $\sim 10^{-3}$ level.
+which is now potentially experimentally accessible if noise can be reduced to the $\sim 10^{-3}$ level. Detailed numerical estimates using $^{23}$Na scattering parameters and projected Trento trap geometries are presented in the supplemental material and interactive visualization dashboard accompanying this work.
 
 \subsection{Formal Verification}
 
-The core mathematical structures underlying the main result have been formally verified in Lean~4 proof code (v4.28.0, Mathlib). All 12 original proof gaps (``sorry'' placeholders) have been machine-verified via the Aristotle automated theorem prover across eight targeted submissions:
+The core mathematical structures underlying the main result have been formally verified in Lean~4 proof code (v4.28.0, Mathlib). All 14 proof obligations (``sorry'' placeholders) have been machine-verified via the Aristotle automated theorem prover across nine targeted submissions, with zero remaining gaps:
 
 \textit{Priority-1 (algebraic):}
 \begin{itemize}
@@ -296,6 +295,7 @@ The core mathematical structures underlying the main result have been formally v
 \item The inverse metric identity: $g_{\mu\alpha}\, g^{\alpha\nu} = \delta^\nu_\mu$ for all $c_s \neq 0$, $\rho \neq 0$.
 \item Lorentzian signature: $\det g < 0$ for subsonic flow ($v^2 < c_s^2$, $\rho > 0$).
 \item SK positivity: $\mathrm{Im}\, I_{\text{SK}} \geq 0$ from $\gamma_{1,2} \geq 0$ and $\beta > 0$.
+\item Per-sector FDR decomposition: the $\gamma_1$ noise coefficient equals $\gamma_1/\beta$ and the $\gamma_2$ noise coefficient equals $\gamma_2/\beta$, each verified by evaluating the action at isolated field configurations.
 \end{itemize}
 
 \textit{Priority-2 (structural):}
@@ -307,7 +307,7 @@ The core mathematical structures underlying the main result have been formally v
 \textit{Priority-3 (analytic):}
 \begin{itemize}
 \item D'Alembertian operator: partial derivative infrastructure with flux decomposition for curved acoustic backgrounds.
-\item Fluctuation-dissipation relation (FDR): KMS (Kubo--Martin--Schwinger) symmetry forces the noise kernel to equal $(\gamma_i / \beta) \cdot (\text{field})^2$---a definitional equality proved by \texttt{rfl}.
+\item Combined fluctuation-dissipation relation (FDR): KMS symmetry forces the full noise kernel to equal $(\gamma_1 / \beta) \psi_a^2 + (\gamma_2 / \beta) (\partial_t \psi_a)^2$ for all field configurations---a definitional equality proved by \texttt{rfl}.
 \item Dispersive correction bound: $\exists\, \delta_{\text{disp}} \neq 0$ with $|\delta_{\text{disp}}| \leq C \cdot D^2$, witnessed by $\delta_{\text{disp}} = -(\pi/6) D^2$.
 \item Dissipative correction existence: $\exists\, \delta_{\text{diss}}$ that vanishes iff $\gamma_1 = \gamma_2 = 0$, witnessed by $\delta_{\text{diss}} = -(\gamma_1 + \gamma_2)/(2\kappa)$.
 \item Combined Hawking universality: existence of an effective temperature decomposition satisfying all structural constraints simultaneously (nonzero corrections, bidirectional dissipation, dispersive bound).

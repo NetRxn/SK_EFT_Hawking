@@ -3,7 +3,7 @@
 ## How the Current Work Fits the Bigger Picture
 
 **Date:** March 23, 2026
-**Context:** This memo connects the SK-EFT analog Hawking paper (**Phase 1 COMPLETE** as of March 23, 2026 — all 12 Lean proofs verified, paper draft finalized, interactive visualizations generated) to the broader fluid-based approach to fundamental physics, as assessed in the Consolidated Critical Review v3, the Feasibility Study, and the full Tier 1/Tier 2 literature search.
+**Context:** This memo connects the SK-EFT analog Hawking paper (**Phase 1 COMPLETE** as of March 23, 2026 — all 14 Lean proofs verified, paper draft finalized, interactive visualizations generated) to the broader fluid-based approach to fundamental physics, as assessed in the Consolidated Critical Review v3, the Feasibility Study, and the full Tier 1/Tier 2 literature search.
 
 ---
 
@@ -31,7 +31,7 @@ The Consolidated Critical Review v3 identifies the SK-EFT dissipative correction
 
 **It bridges two major theoretical frameworks.** SK-EFT is the modern language for dissipative quantum systems, used across heavy-ion physics, condensed matter, and cosmology. Analog gravity is a mature experimental program with confirmed Hawking radiation. Connecting them creates a new intersection that neither community has explored.
 
-**It is formally verified.** The Lean 4 + Mathlib + Aristotle pipeline has produced the first theoretical physics paper with **100% machine-verified** mathematical content (12/12 proofs, zero warnings). During verification, Aristotle discovered and corrected a subtle error in the KMS hypothesis formalization — a concrete demonstration that formal verification catches bugs that would pass peer review.
+**It is formally verified.** The Lean 4 + Mathlib + Aristotle pipeline has produced the first theoretical physics paper with **100% machine-verified** mathematical content (14/14 proofs, zero warnings). During verification, Aristotle discovered and corrected a subtle error in the KMS hypothesis formalization — a concrete demonstration that formal verification catches bugs that would pass peer review.
 
 **It requires no new physics.** Everything needed — Son's superfluid EFT, SK doubling, the acoustic metric, BEC platforms — already exists. The contribution is the calculation itself and the prediction it yields.
 
@@ -101,7 +101,7 @@ Drawing from the Critical Review's careful delineation:
 
 - The first calculation of dissipative corrections to analog Hawking radiation from first-principles SK-EFT
 - A concrete experimental prediction (δ_diss) testable in current BEC platforms
-- The first **100% formally verified** (Lean 4 + Aristotle, 12/12 proofs, zero warnings) theoretical physics paper at this level of complexity
+- The first **100% formally verified** (Lean 4 + Aristotle, 14/14 proofs, zero warnings) theoretical physics paper at this level of complexity
 - A scientific discovery from formal verification: the original KMS hypothesis was mathematically too weak, caught by Aristotle's counterexample
 - A demonstration that the Layer 2→3 bridge (fluid dynamics → emergent quantum gravity phenomenology) is operational and produces new physics
 
@@ -122,7 +122,7 @@ The SK-EFT Hawking paper is the strongest card the program has. It demonstrates 
 
 The fluid-based approach to fundamental physics is not a single theory but a research program organized around a structural insight: the same mathematics (EFT, symmetry breaking, topological order) that describes emergent physics in condensed matter also describes the Standard Model and general relativity. The three-layer hybrid architecture is the honest attempt to map which parts of this correspondence are rigorous, which are plausible, and which face structural obstructions.
 
-The SK-EFT paper is the program's first **completed** end-to-end deliverable: a new theoretical prediction, formally verified (100%, with a scientific discovery from the verification process itself), experimentally testable, filling a confirmed literature gap, at the layer transition where the program is strongest. Phase 1 is complete — all 12 Lean proofs verified, paper draft finalized, publication-quality interactive visualizations generated. It is the proof that the approach works where it should work — and the foundation for pushing into the harder territory beyond.
+The SK-EFT paper is the program's first **completed** end-to-end deliverable: a new theoretical prediction, formally verified (100%, with a scientific discovery from the verification process itself), experimentally testable, filling a confirmed literature gap, at the layer transition where the program is strongest. Phase 1 is complete — all 14 Lean proofs verified, paper draft finalized, publication-quality interactive visualizations generated. It is the proof that the approach works where it should work — and the foundation for pushing into the harder territory beyond.
 
 ### What would change the picture
 

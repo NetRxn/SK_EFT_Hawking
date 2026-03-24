@@ -106,7 +106,7 @@ The Lean 4 formalization of this paper establishes a methodology that could tran
 
 | Component | Status | Detail |
 |---|---|---|
-| Lean 4 formalization | **100% verified** | **All 12/12 sorry gaps filled** by Aristotle across 8 submissions |
+| Lean 4 formalization | **100% verified** | **All 14/14 proof obligations filled** by Aristotle across 9 submissions — zero sorry remaining |
 | Python computation | Complete | Transonic solver, 12/12 tests passing |
 | Paper draft (PRL format) | **Finalized** | revtex4-2, all TODOs resolved, references cleaned |
 | Visualizations | **Complete** | 6 Plotly figures (static + interactive) + HTML dashboard |
