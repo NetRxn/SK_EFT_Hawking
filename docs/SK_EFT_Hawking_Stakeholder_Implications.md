@@ -24,9 +24,15 @@ In 1981, William Unruh showed that sound waves in a flowing fluid obey the same 
 
 This has been observed experimentally in Bose-Einstein condensates (Jeff Steinhauer, Technion, 2016–2019), confirming the basic phenomenon. However, all existing theoretical calculations treat the system as ideal — no friction, no dissipation, no energy loss. Real fluids dissipate energy. Our research asks: how does dissipation modify the Hawking temperature?
 
-### The SK-EFT Framework
+### The SK-EFT Framework: Two Ideas That Fit Together
 
-Schwinger-Keldysh effective field theory is the modern framework for describing dissipative quantum systems. It doubles the degrees of freedom into "retarded" and "advanced" copies and imposes three axioms: normalization (physical consistency), positivity (entropy increases), and KMS symmetry (thermal equilibrium). These axioms uniquely determine the structure of dissipative corrections at each order in derivatives — the number of free transport coefficients is fixed by symmetry, not by microscopic details.
+The name "SK-EFT" combines two distinct theoretical frameworks. Understanding what each one does — and why their combination is greater than the sum of its parts — is essential to understanding the significance of this work.
+
+**Effective Field Theory (EFT)** is a philosophy for doing physics without needing to know everything. The core insight: at long distances (low energies), the details of short-distance (high-energy) physics become irrelevant. You can write down the most general theory consistent with the symmetries of your system, organized as a series of terms with increasing numbers of derivatives. Terms with fewer derivatives dominate at long wavelengths; higher-derivative terms are progressively smaller corrections. At each order in this "derivative expansion," only a finite number of free parameters — transport coefficients — survive, and their count is fixed by symmetry alone. For our system, this means the Hawking spectrum doesn't depend on atomic-scale details of the BEC; it depends only on a few macroscopic parameters (sound speed, surface gravity, and transport coefficients).
+
+**Schwinger-Keldysh (SK) formalism** is the standard modern framework for dissipative quantum systems. Developed independently by Julian Schwinger and Leonid Keldysh in the 1960s, it handles a problem that standard quantum field theory cannot: energy loss. The technique is to double every degree of freedom into "forward" and "backward" copies (ψ₁ and ψ₂) evolving along a closed time contour. In a perfectly isolated system, the two copies evolve identically. Dissipation appears as the mismatch between them — a direct measure of how much energy leaks out. The formalism then imposes three fundamental axioms: (1) normalization — probabilities must sum to 1; (2) positivity — entropy can only increase, ensuring dissipation removes energy rather than creating it; (3) KMS symmetry — in thermal equilibrium, the fluctuation-dissipation relation must hold, tying noise strength to the dissipation rate and temperature. These three axioms are not optional extras; they encode the basic requirements of quantum mechanics and thermodynamics.
+
+**SK-EFT** is the combination: apply the EFT derivative expansion within the SK doubled-field formalism, subject to all three axioms. The result is remarkably constraining. At each derivative order, you start with many possible terms. Normalization eliminates terms without the right field content. KMS symmetry fixes all noise coefficients in terms of the dissipative ones. Positivity restricts the signs and relationships between the survivors. At first order, this machinery leaves exactly two free parameters: the transport coefficients γ₁ and γ₂. Everything else — the noise structure, the fluctuation-dissipation relations, the functional form of the corrections — is determined by the three axioms and the symmetries of the acoustic metric.
 
 Our contribution is to apply this framework to the acoustic metric — the effective curved spacetime experienced by phonons — and extract the modification to the Hawking spectrum. The result is a correction δ_diss to the Hawking temperature that depends on the dissipative transport coefficients (γ₁, γ₂) and is independent of UV physics (lattice spacing, atomic details). This is a genuinely new prediction: no one has computed it before.
 
@@ -114,6 +120,21 @@ The Lean 4 formalization of this paper establishes a methodology that could tran
 | Lean build | **Clean** | 2252 jobs, zero warnings (Lean 4.28.0, Mathlib 8f9d9cff) |
 
 **Key achievement:** Aristotle discovered and corrected a subtle error in the KMS hypothesis formalization — the original `KMSSymmetry` only constrained 4/9 components, admitting a counterexample. The corrected `FirstOrderKMS` structure is a genuine scientific contribution from formal verification.
+
+**Robustness stress tests (Round 4 — COMPLETE):** All 9 stress tests proved by Aristotle (run 3eedcabb, March 24, 2026), including two new Phase 1 tests and seven Phase 2 tests:
+
+- `firstOrder_KMS_optimal`: **Proved.** FirstOrderKMS is the strongest possible constraint at first order. Biconditional: positivity ↔ (i₁≥0 ∧ i₂≥0), with no hidden additional relations.
+- `firstOrder_altSign_uniqueness_test`: **Proved as NEGATION.** Wrong FDR sign (i₁·β = +r₂) fails via counterexample c=⟨1,1,0,0,0,0,1,2,0⟩, β=1. Confirms the minus sign in i₁·β = -r₂ is physically determined.
+
+Phase 2 tests: all 7 proved, including two wrong-sign FDR tests at second order that proved as negations (confirming j_tx·β = s₁+s₃ is unique), relaxed positivity (confirmed PSD relaxation), and no-dissipation sanity checks (all vanish correctly).
+
+**Total-division gap closure (Round 5 — COMPLETE ✓):** Three new sorry gaps proved to strengthen hypotheses (Aristotle run 518636d7, March 24, 2026). Key insight: Lean 4's total division (0/0 = 0) meant theorems with κ > 0 hypotheses could be satisfied vacuously. Round 5 closes the gap:
+
+- `turning_point_shift_nonzero`: Nonzero damping Γ_H > 0 implies nonzero shift δx_imag > 0 (requires κ > 0) — **✓ PROVED**
+- `firstOrder_correction_zero_iff`: True biconditional δ_diss = 0 ↔ Γ_H = 0 (requires κ > 0 to distinguish) — **✓ PROVED**
+- `dampingRate_eq_zero_iff`: True biconditional Γ(k,ω) = 0 for all k,ω ↔ all γᵢ = 0 (requires c_s ≠ 0) — **✓ PROVED**
+
+Also cleaned up: removed unused hN from transport_coefficient_count, stripped unnecessary simp args. **Status: 35/35 ALL PROVED ✓ ZERO SORRY REMAINING**
 
 ---
 

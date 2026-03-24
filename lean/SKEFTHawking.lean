@@ -1,7 +1,9 @@
 import SKEFTHawking.Basic
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
+import SKEFTHawking.SecondOrderSK
 import SKEFTHawking.HawkingUniversality
+import SKEFTHawking.WKBAnalysis
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

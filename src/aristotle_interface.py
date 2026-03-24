@@ -213,6 +213,252 @@ SORRY_GAPS: list[SorryGap] = [
                       "positivity+nlinarith, neg_ne_zero+mul_ne_zero, simp.",
         filled=True,  # Filled by Aristotle run 416fb432 (2026-03-23): structural witnesses, all 6 conjuncts
     ),
+
+    # Structure B (Phase 2): Second-Order SK-EFT
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="transport_coefficient_count",
+        priority=1,
+        description="General counting formula: number of (m,n) pairs with m+n=N+1, m even, "
+                    "equals ⌊(N+1)/2⌋+1. Combinatorial identity on Finset.Icc.",
+        strategy_hint="Filter Finset.Icc (0,0) (N+1,N+1) by p.1+p.2=N+1 ∧ p.1%2=0, "
+                      "then show card = (N+1)/2 + 1. For small N, decide; "
+                      "for general N, induction on N with case split on parity.",
+        filled=True,  # Filled by Aristotle run d61290fd (2026-03-24): bijection with Finset.range
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="firstOrder_count",
+        priority=1,
+        description="At order 1 (L=2): exactly 2 free transport coefficients. "
+                    "Card of filter on Finset.Icc (0,0) (2,2) = 2.",
+        strategy_hint="Finite decidable computation: enumerate pairs in Icc, "
+                      "filter by sum=2 and even first component, count. Should be native_decide or decide.",
+        filled=True,  # Filled by Aristotle run d61290fd (2026-03-24): native_decide
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="secondOrder_count",
+        priority=1,
+        description="At order 2 (L=3): exactly 2 new transport coefficients. "
+                    "Card of filter on Finset.Icc (0,0) (3,3) = 2.",
+        strategy_hint="Finite decidable computation: enumerate pairs in Icc, "
+                      "filter by sum=3 and even first component, count. Should be native_decide or decide.",
+        filled=True,  # Filled by Aristotle run d61290fd (2026-03-24): native_decide
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="secondOrder_count_with_parity",
+        priority=1,
+        description="With spatial parity (m even AND n even), ZERO new coefficients at order 2. "
+                    "Card of filter on Finset.Icc (0,0) (3,3) with sum=3, m%2=0, n%2=0 = 0.",
+        strategy_hint="Finite decidable: no (m,n) with m+n=3 and both even exists "
+                      "(odd total precludes both even). native_decide or decide.",
+        filled=True,  # Filled by Aristotle run d61290fd (2026-03-24): native_decide
+    ),
+
+    # Structure B (Phase 2): Full Second-Order Strong Uniqueness
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="fullSecondOrder_uniqueness",
+        priority=2,
+        description="Strong uniqueness: any FullSecondOrderCoeffs satisfying positivity + "
+                    "FullSecondOrderKMS is determined by 4 transport coefficients "
+                    "(CombinedDissipativeCoeffs). Analog of Phase 1 firstOrder_uniqueness.",
+        strategy_hint="Construct CombinedDissipativeCoeffs with γ₁=-c.r2, γ₂=c.r1+c.r2, "
+                      "γ_{2,1}=c.s1, γ_{2,2}=c.s3. Non-negativity from positivity at "
+                      "specific field configs + FDR. Lagrangian equality by field_simp/ring.",
+        filled=True,  # Proved by Aristotle run c4d73ca8 (March 24, 2026)
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="combined_positivity_constraint",
+        priority=2,
+        description="Positivity forces γ_{2,1}+γ_{2,2}=0 at this truncation. "
+                    "The 3×3 imaginary quadratic form has zero (3,3) entry, "
+                    "so the off-diagonal cross-term must vanish for PSD.",
+        strategy_hint="By contradiction: if c = γ_{2,1}+γ_{2,2} ≠ 0, construct field config "
+                      "with dt_ψ_a=1, dx_ψ_a=-(γ₂+1)/c making Im part = -1/β < 0.",
+        filled=True,  # Proved by Aristotle run c4d73ca8 (March 24, 2026)
+    ),
+
+    # Direction A (Phase 2): WKB Analysis
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="turning_point_shift",
+        priority=3,
+        description="Dissipation shifts the WKB turning point into the complex plane: "
+                    "∃ tp, tp.x_imag = dampingRate / (κ·c_s). Complex WKB analysis.",
+        strategy_hint="Pure witness construction: "
+                      "exact ⟨⟨0, ddr.dampingRate k_horizon omega / (kappa * ddr.cs)⟩, rfl⟩",
+        filled=True,  # Proved by Aristotle run c4d73ca8 (March 24, 2026)
+    ),
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="dampingRate_firstOrder_nonneg",
+        priority=1,
+        description="Damping rate is non-negative at first order (γ_{2,1}=γ_{2,2}=0): "
+                    "γ₁·k² + γ₂·ω²/c_s² ≥ 0 from γ₁≥0, γ₂≥0.",
+        strategy_hint="After rewriting h21, h22 to zero the second-order terms, "
+                      "add_nonneg of (mul_nonneg gamma_nonneg sq_nonneg) for each term. "
+                      "May need div_nonneg for the ω²/c_s² term.",
+        filled=True,  # Proven inline in WKBAnalysis.lean (not sorry)
+    ),
+    # ============================================================
+    # Phase 3: Stress Test Suite (bulletproofing)
+    # ============================================================
+    # SecondOrderSK.lean stress tests
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="altFDR_uniqueness_test",
+        priority=2,
+        description="Stress test: does uniqueness hold under WRONG FDR j_tx·β = s1-s3? "
+                    "Expected: COUNTEREXAMPLE proving the FDR sign matters.",
+        strategy_hint="Try constructing c with s1=1, s3=0, j_tx = 1/beta (from s1-s3=1). "
+                      "The combinedDissipativeAction uses (s1+s3)/beta for j_tx, so the "
+                      "Lagrangians won't match. Construct explicit counterexample.",
+        filled=True,  # Proved (NEGATION) by Aristotle run 3eedcabb (March 24, 2026)
+                      # Counterexample: c=⟨1,-1,0,0,0,0,1,0,0,1,0,1,0,0⟩, β=1
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="relaxed_uniqueness_test",
+        priority=2,
+        description="Stress test: with nonzero i3 (relaxed KMS), does uniqueness hold "
+                    "with 5 free params (including spatial noise coefficient)?",
+        strategy_hint="Construct CombinedDissipativeCoeffs_relaxed with gamma_x = c.i3. "
+                      "Same approach as fullSecondOrder_uniqueness but with extra parameter.",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+                      # 5-param witness with γ_x = c.i3
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="relaxed_positivity_weakens",
+        priority=2,
+        description="With nonzero i3/gamma_x, positivity constraint relaxes from "
+                    "(γ_{2,1}+γ_{2,2})=0 to (γ_{2,1}+γ_{2,2})²≤4·γ₂·γ_x·β.",
+        strategy_hint="The 3x3 matrix PSD condition: 2x2 minor det ≥ 0 gives the "
+                      "inequality. Proof by contradiction: if violated, construct "
+                      "field config making Im < 0.",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+                      # PSD bound (γ_{2,1}+γ_{2,2})²≤4·γ₂·γ_x·β by contradiction
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="thirdOrder_count",
+        priority=1,
+        description="count(3) = 3: Finset cardinality of third-order monomials "
+                    "equals (3+1)/2+1 = 3.",
+        strategy_hint="native_decide on Finset.Icc filter (same pattern as "
+                      "firstOrder_count, secondOrder_count)",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+                      # native_decide
+    ),
+    SorryGap(
+        module="SKEFTHawking.SecondOrderSK",
+        name="cumulative_count_through_3",
+        priority=1,
+        description="Total transport coefficients through order 3 = 2+2+3 = 7. "
+                    "Now stated as pure arithmetic on (N+1)/2+1 values.",
+        strategy_hint="norm_num (no sorry remaining — proved inline)",
+        filled=True,  # Proved by norm_num (March 24, 2026)
+    ),
+    # SKDoubling.lean stress tests
+    SorryGap(
+        module="SKEFTHawking.SKDoubling",
+        name="firstOrder_KMS_optimal",
+        priority=2,
+        description="FirstOrderKMS + positivity ↔ i1≥0 ∧ i2≥0. Tests whether "
+                    "FirstOrderKMS is the optimal first-order constraint.",
+        strategy_hint="Forward: positivity at pure-psi_a and pure-dt_psi_a configs. "
+                      "Backward: i1≥0,i2≥0 + KMS constraints → sum of nonneg squares.",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+                      # Biconditional: positivity ↔ i1≥0 ∧ i2≥0
+    ),
+    SorryGap(
+        module="SKEFTHawking.SKDoubling",
+        name="firstOrder_altSign_uniqueness_test",
+        priority=2,
+        description="Stress test: does uniqueness hold with WRONG FDR sign "
+                    "i1·β = +r2 instead of -r2? Expected: COUNTEREXAMPLE.",
+        strategy_hint="Counterexample: c = ⟨1,-1,0,0,0,0,-1/β,(0)/β,0⟩ satisfies "
+                      "alt-FDR but not the real DissipativeCoeffs structure (gamma_1 "
+                      "would be +r2 = -1 < 0, violating non-negativity).",
+        filled=True,  # Proved (NEGATION) by Aristotle run 3eedcabb (March 24, 2026)
+                      # Counterexample: c=⟨1,1,0,0,0,0,1,2,0⟩, β=1
+    ),
+    # WKBAnalysis.lean stress tests
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="no_dissipation_zero_damping",
+        priority=1,
+        description="When γ₁=γ₂=γ_{2,1}=γ_{2,2}=0, dampingRate(k,ω)=0 for all k,ω. "
+                    "(Aristotle corrected: all 4 gammas needed, not just 2.)",
+        strategy_hint="Unfold dampingRate, substitute h1-h4 to zero all terms, ring.",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+                      # Signature corrected to require h3, h4 for γ_{2,1}, γ_{2,2}
+    ),
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="turning_point_no_shift",
+        priority=1,
+        description="When γ₁=γ₂=γ_{2,1}=γ_{2,2}=0, the turning point shift is zero. "
+                    "(Aristotle corrected: all 4 gammas needed.)",
+        strategy_hint="Use no_dissipation_zero_damping with h1-h4, then simp.",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+    ),
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="firstOrder_correction_zero_iff_no_dissipation",
+        priority=1,
+        description="When γ₁=γ₂=γ_{2,1}=γ_{2,2}=0, firstOrderCorrection=0. "
+                    "(Aristotle corrected: all 4 gammas needed.)",
+        strategy_hint="Unfold firstOrderCorrection, use no_dissipation_zero_damping with h1-h4, simp.",
+        filled=True,  # Proved by Aristotle run 3eedcabb (March 24, 2026)
+    ),
+    # ============================================================
+    # Phase 4: Total-Division Strengthening (Round 5)
+    # ============================================================
+    # These theorems close the gap where hk : 0 < kappa was unused
+    # in Round 4 proofs due to Lean's total division (0/0 = 0).
+    # Each genuinely requires κ > 0 or c_s ≠ 0 in the proof.
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="turning_point_shift_nonzero",
+        priority=2,
+        description="Nonzero damping rate → nonzero turning point shift, given κ>0 and c_s>0. "
+                    "Exercises hk that was unused in turning_point_no_shift.",
+        strategy_hint="div_ne_zero from mul_ne_zero (ne_of_gt hk) (ne_of_gt hcs), "
+                      "paired with hrate.",
+        filled=True,  # Proved by Aristotle run 518636d7 (March 24, 2026)
+                      # One-liner: div_ne_zero hrate (mul_ne_zero hk.ne' hcs.ne')
+    ),
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="firstOrder_correction_zero_iff",
+        priority=2,
+        description="firstOrderCorrection = 0 ↔ dampingRate = 0, given κ>0. "
+                    "True biconditional completing the forward-only Round 4 theorem. "
+                    "Backward direction needs κ≠0 to invert Γ_H/κ = 0.",
+        strategy_hint="Forward: unfold, div_eq_zero_iff, use ne_of_gt hk. "
+                      "Backward: unfold, rewrite, simp.",
+        filled=True,  # Proved by Aristotle run 518636d7 (March 24, 2026)
+                      # unfold + div_eq_iff hk.ne' + aesop
+    ),
+    SorryGap(
+        module="SKEFTHawking.WKBAnalysis",
+        name="dampingRate_eq_zero_iff",
+        priority=2,
+        description="dampingRate = 0 for all (k,ω) ↔ all 4 gammas = 0, given c_s≠0. "
+                    "Closes the chain: correction=0 ↔ damping=0 ↔ no dissipation.",
+        strategy_hint="Backward: no_dissipation_zero_damping. Forward: evaluate at "
+                      "(k=1,ω=0), (k=2,ω=0) to get γ₁=0, γ_{2,1}=0; then (k=0,ω=1) "
+                      "for γ₂=0; then (k=1,ω=1) for γ_{2,2}=0. Needs c_s≠0 for the "
+                      "ω²/c_s² and ω²k/c_s² terms.",
+        filled=True,  # Proved by Aristotle run 518636d7 (March 24, 2026)
+                      # Forward: evaluate at 4 points to isolate each γᵢ
+                      # Backward: unfold + aesop
+    ),
 ]
 
 

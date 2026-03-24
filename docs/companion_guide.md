@@ -40,18 +40,45 @@ The question we answer is: **How much does dissipation change the Hawking temper
 
 This is not a trivial correction. Previous work established the basic physics of analog Hawking radiation. But to make precision predictions—especially for next-generation experiments designed to measure these tiny effects—we need to understand every source of correction. Our work fills this gap.
 
-### The Mathematical Machinery: Schwinger-Keldysh Formalism
+### The Mathematical Machinery: What is SK-EFT?
 
-To calculate dissipation effects, we use the Schwinger-Keldysh (SK) formalism, a powerful framework in quantum field theory designed specifically for calculating real-world effects (like dissipation) in quantum systems. Think of it like this:
+The name "SK-EFT" combines two powerful frameworks in theoretical physics. Understanding each one — and why they fit together — is key to understanding this project.
 
-- **Standard quantum field theory** describes ideal, isolated systems. Particles are created and destroyed perfectly.
-- **Schwinger-Keldysh** adds "friction" into the quantum description. It tracks energy flow in and out of the system, allowing us to compute how dissipation affects observable quantities like temperature.
+#### Part 1: Effective Field Theory (EFT) — Ignoring What Doesn't Matter
 
-The SK formalism uses a clever mathematical trick: double every degree of freedom (create a "forward" and "backward" copy of each quantum field) and then impose constraints that ensure energy is dissipated in the right way. It's like checking your work in a ledger by writing things down twice and verifying they match.
+Effective Field Theory is a philosophy as much as a technique. The core idea: you don't need to know everything about a system to make precise predictions about the things you care about.
+
+Consider water waves on the ocean. To predict how a 10-meter wave behaves, you don't need to track every water molecule. The atomic details are irrelevant at the scale of ocean waves — what matters is the water's density, its surface tension, and the depth of the ocean. EFT formalizes this intuition into a systematic mathematical framework.
+
+In an EFT, you write down the most general theory consistent with the symmetries of your system, organized by a "derivative expansion" — terms with fewer derivatives (smoother, longer-wavelength physics) come first, and terms with more derivatives (sharper, shorter-wavelength physics) are progressively smaller corrections. The beauty is that this works without knowing the microscopic theory at all. You parameterize your ignorance with a finite number of "transport coefficients" at each order, and symmetry constrains how many there can be.
+
+For our BEC system: the microscopic theory involves billions of interacting rubidium (or potassium, or sodium) atoms obeying the Gross-Pitaevskii equation. The EFT description replaces all that complexity with a handful of parameters — the speed of sound, the surface gravity, and the transport coefficients γ₁, γ₂ — that capture everything the Hawking spectrum cares about. This is why the prediction is robust: it doesn't depend on atomic-scale details.
+
+#### Part 2: Schwinger-Keldysh (SK) Formalism — Handling Dissipation Quantum-Mechanically
+
+Standard quantum field theory is built for isolated systems in perfect equilibrium. It describes particles being created and destroyed without any energy leaking out. But real systems lose energy — to friction, viscosity, radiation, coupling to the environment. Standard methods can't handle this.
+
+The Schwinger-Keldysh formalism (developed independently by Julian Schwinger and Leonid Keldysh in the 1960s) solves this problem with an elegant trick: double every degree of freedom. Instead of one quantum field ψ, you work with two copies: ψ₁ (evolving "forward" in time) and ψ₂ (evolving "backward"). The key insight is that dissipation shows up as a mismatch between these two copies. In a perfectly isolated system, the forward and backward evolutions are identical. When energy leaks out, they differ — and that difference encodes exactly how much energy is lost and where it goes.
+
+To make this concrete, think of double-entry bookkeeping. A business tracks money flowing in (revenue) and money flowing out (expenses) in parallel ledgers. Any discrepancy between the two reveals where money was gained or lost. The SK formalism does the same thing for quantum energy flow: the "forward" and "backward" field copies are two ledgers, and dissipation appears as the discrepancy between them.
+
+The SK formalism then imposes three fundamental axioms that any physically sensible dissipative theory must satisfy:
+
+1. **Normalization:** Probabilities must add up to 1. This eliminates unphysical terms in the action.
+2. **Positivity:** Entropy can only increase (the second law of thermodynamics at the quantum level). This ensures dissipation always removes energy from the system, never adds it.
+3. **KMS Symmetry:** In thermal equilibrium, the fluctuation-dissipation relation must hold — the strength of random noise is exactly determined by the dissipation rate and the temperature. This is the quantum version of Einstein's 1905 insight that Brownian motion and viscosity are two sides of the same coin.
+
+#### Part 3: SK-EFT — The Combination
+
+SK-EFT combines these two frameworks: use the EFT philosophy (write down the most general theory organized by derivatives) within the SK formalism (double the fields and impose the three axioms). The result is remarkably constraining.
+
+At each derivative order N, you start with many possible terms in the action. The SK axioms then eliminate most of them. Normalization kills terms without the right field content. KMS symmetry (the fluctuation-dissipation relation) fixes all the noise coefficients in terms of the dissipative ones. Positivity constrains the signs and relationships between what remains. The end result is that at first order, only two free parameters survive: the transport coefficients γ₁ and γ₂. Everything else is determined by symmetry.
+
+This is the power of SK-EFT: it turns a problem with potentially infinite complexity (how does dissipation affect a quantum field on a curved background?) into one with a finite, small number of free parameters at each order. And those parameters have clear physical meaning — they measure the strength of specific types of friction in the quantum fluid.
 
 ### What We Computed
 
-We applied SK-EFT (Effective Field Theory) to acoustic Hawking radiation and computed the **dissipative correction to the Hawking temperature**:
+We applied SK-EFT to acoustic Hawking radiation and computed the **dissipative correction to the Hawking temperature**:
 
 **δ_diss** ≈ 0.001% to 0.1% for current experiments
 
@@ -277,6 +304,17 @@ If δ_diss is amplified to **100× its current value**:
 
 **Integration:** Aristotle pipeline operational with automated extract → diff → integrate workflow. OUT_OF_BUDGET resume infrastructure in place for future submissions.
 
+**Robustness stress tests (Round 4 — COMPLETE):** All 9 stress tests proved by Aristotle (run 3eedcabb, March 24, 2026). Two Phase 1 tests and seven Phase 2 tests confirmed optimal framework:
+- `firstOrder_KMS_optimal`: Proved. FirstOrderKMS is optimal (positivity ↔ i₁≥0 ∧ i₂≥0).
+- `firstOrder_altSign_uniqueness_test`: Proved as negation. Wrong FDR sign fails via counterexample c=⟨1,1,0,0,0,0,1,2,0⟩, β=1, confirming i₁·β = -r₂ is unique.
+- Phase 2 tests: all 7 proved, including two FDR sign tests (proved as negations confirming j_tx·β = s₁+s₃ is unique), relaxed positivity (PSD bound verified), and no-dissipation sanity checks.
+
+**Total-division gap closure (Round 5 — COMPLETE ✓):** Three new sorry gaps closed by Aristotle (run 518636d7, March 24, 2026). These theorems close the gap between "proof is valid" and "proof exercises all the physics." Key insight: Lean 4's total division (0/0 = 0) meant theorems with κ > 0 hypotheses could be satisfied vacuously when unused. Round 5 adds theorems where κ > 0 is genuinely load-bearing:
+- `turning_point_shift_nonzero`: Nonzero damping Γ_H > 0 implies nonzero shift δx_imag > 0 — **✓ PROVED**
+- `firstOrder_correction_zero_iff`: True biconditional δ_diss = 0 ↔ Γ_H = 0 (requires κ > 0 to distinguish) — **✓ PROVED**
+- `dampingRate_eq_zero_iff`: Γ(k,ω) = 0 for all k,ω ↔ all γᵢ = 0 (requires c_s ≠ 0) — **✓ PROVED**
+Status: 35/35 ALL PROVED; current tally: 32 proved + 3 Round 5 = 35 total ✓ ZERO SORRY REMAINING
+
 ### Phase 1: Foundation — COMPLETE ✓
 
 - [x] Run `lake build` locally — builds successfully (2252 jobs, zero warnings)
@@ -340,13 +378,13 @@ In general relativity, the strength of gravity at the surface of an object (e.g.
 ### Theoretical Framework Terms
 
 **EFT (Effective Field Theory)**
-A systematic approach to physics that separates "high-energy" and "low-energy" phenomena. You ignore details at the highest energies and focus on the regime you care about, using a simplified theory that captures the essential physics. It's like ignoring atomic-scale details when describing fluid dynamics. EFT is powerful because it's simpler and often leads to universal predictions (many systems behave identically at low energies, despite different microscopic details).
+A systematic approach to physics that separates "high-energy" (short-distance, microscopic) phenomena from "low-energy" (long-distance, macroscopic) phenomena. Rather than solving the full microscopic theory, you write down the most general theory consistent with the system's symmetries, organized as a "derivative expansion" — terms with fewer derivatives capture smoother, longer-wavelength physics and come first; terms with more derivatives are progressively smaller corrections. The unknown microscopic details are absorbed into a finite number of free parameters (transport coefficients) at each order. EFT is powerful because it leads to universal predictions: many microscopically different systems behave identically at long distances, and the number of free parameters is fixed by symmetry, not by the complexity of the underlying theory. (See Section 2 for a full explanation with examples.)
 
 **Schwinger-Keldysh (SK) Formalism**
-A mathematical framework for computing dissipative effects in quantum systems. Instead of describing a perfect, isolated system, SK tracks energy flow and loss. It's based on doubling degrees of freedom (forward and backward amplitudes) and carefully tracking how they decohere through dissipation. Essential for real-world quantum systems where loss is unavoidable.
+A quantum field theory framework developed by Julian Schwinger and Leonid Keldysh in the 1960s for computing dissipative and non-equilibrium effects. The key technique: double every degree of freedom into "forward" (ψ₁) and "backward" (ψ₂) copies evolving along a closed time contour. In an isolated system, these copies evolve identically; dissipation appears as the mismatch between them. The formalism imposes three axioms — normalization (probabilities sum to 1), positivity (entropy increases), and KMS symmetry (fluctuation-dissipation relation in thermal equilibrium) — that severely constrain the allowed form of the dissipative action. This is the standard modern framework for open quantum systems and non-equilibrium quantum field theory. (See Section 2 for a detailed walkthrough.)
 
-**SK-EFT**
-The combination of SK formalism with EFT: using effective field theory while properly accounting for dissipation. This is a powerful toolbox for systems that are nearly isolated but have small dissipative losses.
+**SK-EFT (Schwinger-Keldysh Effective Field Theory)**
+The combination of the SK formalism with the EFT derivative expansion. You write down the most general dissipative action consistent with all symmetries, organized order-by-order in derivatives, with the SK axioms eliminating most possible terms at each order. The result is a systematic, symmetry-constrained description of dissipation in quantum systems with a small, finite number of free transport coefficients at each derivative order. This is the framework we apply to the acoustic metric to compute dissipative corrections to Hawking radiation. (See Section 2 for the full story of why these two frameworks fit together.)
 
 ### Technical/Project Terms
 

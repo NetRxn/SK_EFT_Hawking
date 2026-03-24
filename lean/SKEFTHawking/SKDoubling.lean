@@ -537,4 +537,109 @@ theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < bet
   -- of firstOrderDissipativeAction is literally this expression.
   fun _ => rfl
 
+/-!
+## Stress Test: Strongest Possible First-Order KMS
+
+Phase 1 used `FirstOrderKMS` (7 constraints on 9 coefficients → 2 free params).
+Is this the STRONGEST constraint, or could there be additional relations
+we're missing?
+
+### Test: Hermiticity of the Imaginary Sector
+
+The Im part of the SK action defines a quadratic form on ψ_a fields.
+For physical consistency (probabilistic interpretation), this quadratic
+form should be symmetric (Hermitian in the real case). At first order,
+Im = i1·ψ_a² + i2·(∂_t ψ_a)² + i3·(∂_x ψ_a)² is manifestly symmetric.
+But is there an additional constraint from requiring the FULL action
+(Re + Im) to be consistent with the Hermiticity of the density matrix?
+
+If so, we might find that i3 = 0 is not just a KMS consequence but
+also a Hermiticity consequence — providing an independent derivation.
+-/
+
+/-- **Strongest KMS test**: Any first-order SK action satisfying
+    FirstOrderKMS also satisfies positivity IFF γ₁ ≥ 0 AND γ₂ ≥ 0.
+
+    This verifies that FirstOrderKMS + positivity is equivalent to
+    the DissipativeCoeffs parameterization (which has γ₁ ≥ 0, γ₂ ≥ 0
+    built in). No additional constraints are needed.
+
+    If Aristotle proves this, FirstOrderKMS is the optimal constraint
+    at first order. If a counterexample is found, we need stronger KMS. -/
+theorem firstOrder_KMS_optimal :
+    ∀ (c : FirstOrderCoeffs) (beta : ℝ),
+      0 < beta →
+      FirstOrderKMS c beta →
+      (satisfies_positivity (firstOrderAction c) ↔
+        (0 ≤ c.i1 ∧ 0 ≤ c.i2)) := by
+  -- Aristotle run 3eedcabb: proved biconditional.
+  -- Forward: specialize positivity at specific field configs to extract i1≥0, i2≥0.
+  -- Backward: under KMS, Im = i1·ψ_a² + i2·(∂_t ψ_a)² is sum of nonneg terms.
+  intro c beta hb hkms
+  constructor
+  · intro hp
+    constructor
+    · have := hp ⟨0, 1, 0, 0, 0, 0, 0, 0, 0⟩
+      simp [firstOrderAction, hkms.i3_zero] at this
+      linarith
+    · have := hp ⟨0, 0, 0, 0, 1, 0, 0, 0, 0⟩
+      simp [firstOrderAction, hkms.i3_zero] at this
+      linarith
+  · intro ⟨h1, h2⟩ fields
+    simp [firstOrderAction, hkms.i3_zero]
+    exact add_nonneg (mul_nonneg h1 (sq_nonneg _)) (mul_nonneg h2 (sq_nonneg _))
+
+/-- **Alternative FDR sign test at first order**: What if fdr_i1 had the
+    wrong sign? i.e., i1·β = +r2 instead of -r2.
+
+    Under this alternative, does uniqueness still hold?
+    Expected: Aristotle should find a COUNTEREXAMPLE. -/
+structure FirstOrderKMS_altSign (c : FirstOrderCoeffs) (beta : ℝ) : Prop where
+  r3_zero : c.r3 = 0
+  r4_zero : c.r4 = 0
+  r5_zero : c.r5 = 0
+  r6_zero : c.r6 = 0
+  /-- ALTERNATIVE: wrong sign on FDR for i1 -/
+  fdr_i1_alt : c.i1 * beta = c.r2  -- Note: +r2 instead of -r2
+  fdr_i2 : c.i2 * beta = c.r1 + c.r2
+  i3_zero : c.i3 = 0
+
+/-- The original statement claimed uniqueness under the wrong FDR sign.
+    This is FALSE: the wrong sign i1·β = +r2 allows r2 > 0, forcing γ₁ = -r2 < 0,
+    which violates gamma_1_nonneg in DissipativeCoeffs.
+    Counterexample: c = ⟨1, 1, 0, 0, 0, 0, 1, 2, 0⟩, β = 1. -/
+-- Original (false) statement:
+-- theorem firstOrder_altSign_uniqueness_test :
+--     ∀ (c : FirstOrderCoeffs) (beta : ℝ),
+--       0 < beta →
+--       satisfies_positivity (firstOrderAction c) →
+--       FirstOrderKMS_altSign c beta →
+--       ∃ (coeffs : DissipativeCoeffs),
+--         ∀ (fields : SKFields),
+--           (firstOrderAction c).lagrangian fields =
+--             (firstOrderDissipativeAction coeffs beta).lagrangian fields := by
+--   sorry
+
+theorem firstOrder_altSign_uniqueness_test :
+    ¬ (∀ (c : FirstOrderCoeffs) (beta : ℝ),
+      0 < beta →
+      satisfies_positivity (firstOrderAction c) →
+      FirstOrderKMS_altSign c beta →
+      ∃ (coeffs : DissipativeCoeffs),
+        ∀ (fields : SKFields),
+          (firstOrderAction c).lagrangian fields =
+            (firstOrderDissipativeAction coeffs beta).lagrangian fields) := by
+  -- Aristotle run 3eedcabb: proved negation with counterexample.
+  -- c = ⟨1, 1, 0, 0, 0, 0, 1, 2, 0⟩, β = 1 satisfies alt-FDR and positivity,
+  -- but forces γ₁ = -r2 = -1 < 0, violating DissipativeCoeffs.gamma_1_nonneg.
+  intro h
+  have hkms : FirstOrderKMS_altSign ⟨1, 1, 0, 0, 0, 0, 1, 2, 0⟩ 1 :=
+    ⟨rfl, rfl, rfl, rfl, by norm_num, by norm_num, rfl⟩
+  have hpos : satisfies_positivity (firstOrderAction ⟨1, 1, 0, 0, 0, 0, 1, 2, 0⟩) := by
+    intro f; simp [firstOrderAction]; nlinarith [sq_nonneg f.psi_a, sq_nonneg f.dt_psi_a]
+  obtain ⟨coeffs, hcoeffs⟩ := h ⟨1, 1, 0, 0, 0, 0, 1, 2, 0⟩ 1 one_pos hpos hkms
+  have h1 := hcoeffs ⟨0, 1, 0, 0, 0, 0, 0, 0, 1⟩
+  simp [firstOrderAction, firstOrderDissipativeAction] at h1
+  linarith [coeffs.gamma_1_nonneg]
+
 end SKEFTHawking.SKDoubling
