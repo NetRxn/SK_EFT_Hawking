@@ -552,6 +552,35 @@ def heidelberg_params() -> WKBParameters:
     )
 
 
+def trento_params() -> WKBParameters:
+    """WKB parameters for the projected Trento ²³Na spin-sonic BEC experiment.
+
+    Physical values from constants.py (trento_spin_sonic factory):
+        κ_phys ≈ 21 s⁻¹, c_s ≈ 2.19 mm/s, ξ ≈ 1.26 μm
+        D = κξ/c_s ≈ 0.014
+
+    The Beliaev damping is weak for ²³Na (small a_s):
+        γ̃ = Γ_Bel/κ ≈ 1.4e-5
+
+    Spin-sonic enhancement: in a two-component BEC, spin waves
+    propagate at c_spin ≪ c_density. The ratio c_density/c_spin
+    can enhance T_H and δ_diss by ~100×, potentially making
+    second-order corrections accessible.
+    """
+    D = 0.014
+    profile = TransonicProfile(
+        kappa=1.0,
+        c_s=1.0,
+        xi=D,
+    )
+    gamma_dim = 1.4e-5
+    return WKBParameters(
+        profile=profile,
+        gamma_1=gamma_dim / 2,
+        gamma_2=gamma_dim / 2,
+    )
+
+
 # ═══════════════════════════════════════════════════════════════════
 # Quick validation
 # ═══════════════════════════════════════════════════════════════════

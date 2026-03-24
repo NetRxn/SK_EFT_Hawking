@@ -223,7 +223,11 @@ Using the positivity constraint $\gamma_{2,2} = -\gamma_{2,1}$, this simplifies 
 \delta^{(2)}(\omega) = \frac{\gamma_{2,1}}{\kappa} \left(\frac{\omega}{\Lambda}\right)^2 \left[\frac{\omega}{\Lambda} - \frac{\omega}{\Lambda_x}\right].
 \end{equation}
 
-\stub{Insert numerical estimates for Steinhauer, Heidelberg, and Trento setups.}
+A key consequence of the positivity constraint is that $\delta^{(2)}(\omega)$ \textit{vanishes identically} for on-shell acoustic modes ($k = \omega/c_s$), since the bracketed factor $[\omega/\Lambda - \omega/\Lambda_x]$ reduces to $k^2 - \omega^2/c_s^2 = 0$. The correction becomes nonzero only when the Bogoliubov dispersion relation shifts the horizon wavenumber off the acoustic shell:
+\begin{equation}
+k_H \approx \frac{\omega}{c_s}\left(1 - \tfrac{1}{2}\frac{\omega^2 \xi^2}{c_s^2}\right),
+\end{equation}
+producing a doubly-suppressed correction $\delta^{(2)} \propto D^2 \cdot \Gamma_{\text{Bel}}/\kappa$. Using Beliaev damping estimates for each experimental configuration, this yields $|\delta^{(2)}| \sim 10^{-12}$--$10^{-8}$ at $\omega = \kappa$--$5\kappa$ (Table~\ref{tab:corrections}), far below the first-order $\delta_{\text{diss}} \sim 10^{-5}$--$10^{-3}$.
 
 \subsection{Spectral Distortion}
 
@@ -244,7 +248,20 @@ T_{\text{eff}}(\omega) = T_H \left(1 + \delta_{\text{disp}} + \delta_{\text{diss
 \end{equation}
 where the frequency dependence enters only at second order and beyond.
 
-\stub{Insert Table: numerical estimates for $\delta^{(2)}$ at $\omega = T_H, 2T_H, 5T_H$ for each experimental setup.}
+\begin{table}
+\centering
+\begin{tabular}{lcccccc}
+\hline
+Experiment & $D$ & $\Gamma_{\text{Bel}}/\kappa$ & $\delta_{\text{disp}}$ & $\delta_{\text{diss}}(\kappa)$ & $\delta^{(2)}(\kappa)$ & $\delta^{(2)}(5\kappa)$ \\
+\hline
+Steinhauer ${}^{87}$Rb & 0.013 & $5.9 \times 10^{-5}$ & $-9.4 \times 10^{-5}$ & $5.9 \times 10^{-5}$ & $-2.4 \times 10^{-12}$ & $-7.4 \times 10^{-9}$ \\
+Heidelberg ${}^{39}$K  & 0.012 & $1.6 \times 10^{-3}$ & $-7.3 \times 10^{-5}$ & $1.6 \times 10^{-3}$ & $-9.9 \times 10^{-12}$ & $-3.1 \times 10^{-8}$ \\
+Trento ${}^{23}$Na     & 0.014 & $1.4 \times 10^{-5}$ & $-9.9 \times 10^{-5}$ & $1.4 \times 10^{-5}$ & $-6.3 \times 10^{-13}$ & $-2.0 \times 10^{-9}$ \\
+\hline
+\end{tabular}
+\caption{Correction hierarchy for three BEC experiments. The first-order corrections $\delta_{\text{disp}}$ and $\delta_{\text{diss}}$ are evaluated at $\omega = \kappa$. The second-order correction $\delta^{(2)}$ uses the Bogoliubov-corrected horizon wavenumber $k_H$; it vanishes on the acoustic shell ($k = \omega/c_s$) due to the positivity constraint $\gamma_{2,1} + \gamma_{2,2} = 0$. All transport coefficients estimated from Beliaev damping.}
+\label{tab:corrections}
+\end{table}
 
 \subsection{Hierarchy of Corrections}
 
@@ -300,7 +317,7 @@ All three gaps were submitted to Aristotle and proved, closing the gap between w
 
 \textbf{Key discovery:} WKB analysis revealed that the damping rate $\Gamma_H$ depends on all four gammas $(\gamma_1, \gamma_2, \gamma_{2,1}, \gamma_{2,2})$, not just the first-order coefficients. This is an important finding: the second-order transport coefficients modify the dissipative dispersion relation in a non-trivial way.
 
-\textbf{Status:} All 9 stress tests proved. Combined Phase 1+2+4: $22 + 9 = 31/31$ proofs, zero sorry remaining.
+\textbf{Status:} All stress tests proved. Combined tally: $35/35$ proofs across 5 Aristotle rounds (14 Phase~1 core $+$ 8 Phase~2 core $+$ 10 Round~4 stress tests $+$ 3 Round~5 total-division strengthening). Zero sorry remaining.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -320,15 +337,14 @@ The positivity constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ is a non-trivial con
 \subsection{Open Questions}
 
 \begin{enumerate}
-\item Does the positivity constraint persist when additional imaginary monomials (e.g., $(\partial_x \psi_a)^2$ at level 2) are included in the truncation? \textit{Under active Aristotle stress test: \texttt{relaxed\_positivity\_weakens} tests the PSD relaxation.}
-\item What is the correct second-order FDR relation? The conjectured $j_{tx} \cdot \beta = s_1 + s_3$ is tested against the alternative $s_1 - s_3$. \textit{Under active Aristotle stress test: \texttt{altFDR\_uniqueness\_test}.}
-\item Can the spectral distortion $\Delta n(\omega) \propto \omega^3$ be detected in current or near-future BEC experiments?
-\item Is the first-order \texttt{FirstOrderKMS} the optimal constraint, or are additional relations hidden at this order? \textit{Under active test: \texttt{firstOrder\_KMS\_optimal}.}
+\item When additional imaginary monomials (e.g., $(\partial_x \psi_a)^2$ at level 2) are included, the strict constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ relaxes to the inequality $(\gamma_{2,1} + \gamma_{2,2})^2 \leq 4\gamma_2 \gamma_x \beta$ (Aristotle run \texttt{3eedcabb}, theorem \texttt{relaxed\_positivity\_weakens}). A first-principles derivation of the complete second-order FDR from the CGL transformation remains open (Direction~D).
+\item Can the spectral distortion $\Delta n(\omega) \propto \omega^3$ be detected in current or near-future BEC experiments? Our estimates (Table~\ref{tab:corrections}) indicate $|\delta^{(2)}| \sim 10^{-12}$--$10^{-8}$, far below current sensitivity. Spin-sonic BEC systems with enhanced $c_{\text{density}}/c_{\text{spin}}$ ratios offer the most promising avenue.
+\item Do boundary terms near the horizon modify the imaginary-sector IBP reduction at second order? The analysis assumes $\psi_a \cdot \partial_t^2 \psi_a$ reduces to $-(\partial_t \psi_a)^2$ globally. If horizon boundary terms contribute, additional imaginary monomials may enter, relaxing the positivity constraint as in item~1.
 \end{enumerate}
 
 \section{Conclusion}
 
-We have extended the SK-EFT analysis of dissipative Hawking radiation to second order in the derivative expansion, establishing the counting formula for transport coefficients, the role of spatial parity, the positivity constraint, and the frequency-dependent spectral distortion. The formal verification program now includes 9 additional stress tests (Aristotle Round~4) probing FDR sign sensitivity, relaxed positivity, KMS optimality, and the no-dissipation limit. Together with the 22 proofs already completed, this provides the theoretical framework for precision measurements of the Hawking spectrum in next-generation BEC experiments.
+We have extended the SK-EFT analysis of dissipative Hawking radiation to second order in the derivative expansion, establishing the counting formula for transport coefficients, the role of spatial parity, the positivity constraint, and the frequency-dependent spectral distortion. A key finding is that the positivity constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ causes the second-order correction $\delta^{(2)}(\omega)$ to vanish on the acoustic shell, making it observable only through Bogoliubov dispersion at the level of $10^{-12}$--$10^{-8}$ for current experiments. The formal verification program comprises 35 Lean~4 theorems proved across 5 Aristotle rounds, including stress tests of FDR sign sensitivity, relaxed positivity, KMS optimality, and the no-dissipation limit. This provides the theoretical framework for precision measurements of the Hawking spectrum in next-generation BEC experiments, with spin-sonic systems offering the most promising path to observing second-order effects.
 
 \begin{acknowledgments}
 We thank the developers of Lean~4 and Mathlib for the formal verification infrastructure, and the Harmonic team for access to the Aristotle automated theorem prover.

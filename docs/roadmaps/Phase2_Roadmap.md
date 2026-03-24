@@ -45,7 +45,7 @@ The SK positivity axiom forces γ_{2,1} + γ_{2,2} = 0, reducing the free second
 
 ### Direction A: WKB Mode Analysis (SecondOrderSK + WKBAnalysis)
 
-**Status: Code complete, Lean formalization complete, Aristotle submission pending.**
+**Status: Complete. Code, Lean formalization, and all Aristotle submissions done.**
 
 The WKB analysis extends the Phase 1 connection formula to include second-order dissipative corrections. The key new physics is the complex turning-point shift:
 
@@ -54,9 +54,9 @@ The WKB analysis extends the Phase 1 connection formula to include second-order 
 where Γ_H now includes frequency-dependent second-order terms. The connection formula yields modified Bogoliubov coefficients with ω-dependent corrections.
 
 Implementation:
-- `SK_EFT_Phase2/src/wkb_analysis.py` — Full WKB solver with TransonicProfile, WKBParameters, BogoliubovResult
-- `SK_EFT_Phase2/src/second_order_sk.py` — Coefficient structures and action constructors
-- `SK_EFT_Hawking_Paper/lean/SKEFTHawking/WKBAnalysis.lean` — Lean formalization with DissipativeDispersion, TurningPoint
+- `src/second_order/wkb_analysis.py` — Full WKB solver with TransonicProfile, WKBParameters, BogoliubovResult
+- `src/second_order/coefficients.py` — Coefficient structures and action constructors
+- `lean/SKEFTHawking/WKBAnalysis.lean` — Lean formalization with DissipativeDispersion, TurningPoint
 
 ### Direction B: Second-Order Monomial Enumeration
 
@@ -65,12 +65,12 @@ Implementation:
 Systematic enumeration of all monomials at each derivative level, with constraints from normalization, KMS time-reversal parity, and FDR.
 
 Implementation:
-- `SK_EFT_Phase2/src/second_order_enumeration.py` — Validated: reproduces count(1)=2, count(2)=2
-- `SK_EFT_Hawking_Paper/lean/SKEFTHawking/SecondOrderSK.lean` — Full Lean formalization
+- `src/second_order/enumeration.py` — Validated: reproduces count(1)=2, count(2)=2
+- `lean/SKEFTHawking/SecondOrderSK.lean` — Full Lean formalization
 
 ### Direction C: Lean Enhancement and Aristotle Stress-Testing
 
-**Status: Lean modules compiled (2254 jobs), Aristotle submission prepared.**
+**Status: Complete. All 35/35 theorems proved across 5 Aristotle rounds (zero sorry remaining).**
 
 Two new Lean modules extend the Phase 1 formalization:
 
@@ -173,7 +173,7 @@ Also in this round: removed truly unused `hN` from `transport_coefficient_count`
 The Phase 2 Lean code builds directly on Phase 1:
 
 ```
-SK_EFT_Hawking_Paper/lean/SKEFTHawking/
+lean/SKEFTHawking/
 ├── Basic.lean                    (Phase 1: foundations)
 ├── AcousticMetric.lean           (Phase 1: metric theorems)
 ├── SKDoubling.lean               (Phase 1: first-order SK, uniqueness)
@@ -190,11 +190,11 @@ Phase 2 imports `SKDoubling.lean` to access `FirstOrderCoeffs`, `SKFields`, and 
 
 | Component | File | Status |
 |---|---|---|
-| Second-order enumeration | `SK_EFT_Phase2/src/second_order_enumeration.py` | ✓ Validated |
-| Coefficient structures | `SK_EFT_Phase2/src/second_order_sk.py` | ✓ Working |
-| WKB solver | `SK_EFT_Phase2/src/wkb_analysis.py` | ✓ Working (natural units) |
-| Aristotle interface | `SK_EFT_Hawking_Paper/src/aristotle_interface.py` | ✓ Updated with 7+9+3 gaps (31 filled + 3 Round 5 pending) |
-| Submission script | `SK_EFT_Hawking_Paper/scripts/submit_to_aristotle.py` | ✓ Dry-run verified |
+| Second-order enumeration | `src/second_order/enumeration.py` | ✓ Validated |
+| Coefficient structures | `src/second_order/coefficients.py` | ✓ Working |
+| WKB solver | `src/second_order/wkb_analysis.py` | ✓ Working (natural units) |
+| Aristotle interface | `src/core/aristotle_interface.py` | ✓ All 35/35 gaps filled |
+| Submission script | `scripts/submit_to_aristotle.py` | ✓ All rounds complete |
 
 ---
 
@@ -202,13 +202,13 @@ Phase 2 imports `SKDoubling.lean` to access `FirstOrderCoeffs`, `SKFields`, and 
 
 ### Theoretical Risks
 
-1. **Is the second-order FDR correct?** The conjectured relation j_tx · β = s₁ + s₃ is patterned on the first-order FDR but hasn't been derived from the CGL transformation. *Now under active stress test: `altFDR_uniqueness_test` tests the alternative sign s₁ - s₃.*
+1. **Is the second-order FDR correct?** The conjectured relation j_tx · β = s₁ + s₃ is patterned on the first-order FDR but hasn't been derived from the CGL transformation. *Resolved: `altFDR_uniqueness_test` (Aristotle run 3eedcabb) proved ¬(∀...) via counterexample, confirming the signed FDR is unique. Remains open: first-principles derivation from CGL (Direction D).*
 
-2. **Does the positivity constraint persist with more imaginary monomials?** Adding (∂_x ψ_a)² to the imaginary sector would give the matrix a nonzero (3,3) entry, potentially relaxing γ_{2,1} + γ_{2,2} = 0 to an inequality. *Now under active stress test: `relaxed_positivity_weakens` tests the predicted PSD relaxation.*
+2. **Does the positivity constraint persist with more imaginary monomials?** Adding (∂_x ψ_a)² to the imaginary sector would give the matrix a nonzero (3,3) entry, potentially relaxing γ_{2,1} + γ_{2,2} = 0 to an inequality. *Resolved: `relaxed_positivity_weakens` (Aristotle run 3eedcabb) proved the relaxed bound (γ_{2,1}+γ_{2,2})² ≤ 4·γ₂·γ_x·β.*
 
-3. **Are there additional second-order imaginary monomials?** The enumeration assumes ψ_a · ∂_t² ψ_a reduces to -(∂_t ψ_a)² by integration by parts. This is correct for action integrals but the boundary terms may matter near the horizon. *Now partially addressed: `relaxed_uniqueness_test` includes the (∂_x ψ_a)² term as a 5th free parameter.*
+3. **Are there additional second-order imaginary monomials?** The enumeration assumes ψ_a · ∂_t² ψ_a reduces to -(∂_t ψ_a)² by integration by parts. This is correct for action integrals but the boundary terms may matter near the horizon. *Partially resolved: `relaxed_uniqueness_test` (Aristotle run 3eedcabb) proved a 5-param witness with γ_x = c.i3. Boundary term analysis remains open.*
 
-4. **Is FirstOrderKMS the optimal constraint at first order?** *Now under active test: `firstOrder_KMS_optimal` tests whether positivity + KMS is equivalent to non-negativity of i₁, i₂.*
+4. **Is FirstOrderKMS the optimal constraint at first order?** *Resolved: `firstOrder_KMS_optimal` (Aristotle run 3eedcabb) proved positivity ↔ (i1≥0 ∧ i2≥0).*
 
 ### Experimental Prospects
 
@@ -232,4 +232,4 @@ The spectral distortion δ^(2)(ω) ∝ ω³ is suppressed by (ω/Λ)³ relative 
 
 ---
 
-*This roadmap documents the Phase 2 extension of the SK-EFT Hawking paper, covering second-order derivative expansion, frequency-dependent corrections, and Aristotle stress-testing of the algebraic KMS structure. Last updated: March 24, 2026 (added Round 5 total-division strengthening).*
+*This roadmap documents the Phase 2 extension of the SK-EFT Hawking paper, covering second-order derivative expansion, frequency-dependent corrections, and Aristotle stress-testing of the algebraic KMS structure. Last updated: March 24, 2026 (synced file paths to consolidated repo, updated all direction statuses and resolved risks).*

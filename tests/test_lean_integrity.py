@@ -73,32 +73,39 @@ def test_lean_toolchain():
 def test_no_active_sorry():
     """Verify no active sorry statements in Lean modules.
 
-    Grep for 'sorry' that is NOT inside a comment (--) or docstring (/-! ... -/).
-    This is a heuristic check — `lake build` is the definitive test.
+    Checks for 'sorry' outside of line comments (--) and block comments
+    (/- ... -/). This is a heuristic check — `lake build` is the
+    definitive test.
     """
     lean_dir = LEAN_DIR / "SKEFTHawking"
     for lean_file in lean_dir.glob("*.lean"):
         content = lean_file.read_text()
+        in_block_comment = 0  # nesting depth
         for i, line in enumerate(content.splitlines(), 1):
             stripped = line.strip()
-            # Skip comment lines
-            if stripped.startswith("--") or stripped.startswith("/-"):
+
+            # Track block comment nesting: any line that starts inside
+            # a block comment or opens/closes one is skipped
+            was_in_block = in_block_comment > 0
+            in_block_comment += line.count("/-") - line.count("-/")
+            if was_in_block or in_block_comment > 0:
                 continue
-            # Skip lines inside block comments (heuristic: contains sorry
-            # but also contains -- before it)
+
+            # Skip line comments
+            if stripped.startswith("--"):
+                continue
+
             if "sorry" in stripped:
-                before_sorry = stripped[:stripped.index("sorry")]
-                if "--" in before_sorry:
+                # Only consider text before any inline comment
+                code_part = stripped.split("--")[0]
+                if "sorry" not in code_part:
                     continue
-                # Check if this looks like an active sorry
-                # (not in a string or comment)
-                if stripped == "sorry" or "sorry" in stripped.split("--")[0]:
-                    # Allow 'sorry' in string literals
-                    if '"sorry"' in stripped or "'sorry'" in stripped:
-                        continue
-                    pytest.fail(
-                        f"Active sorry found in {lean_file.name}:{i}: {stripped}"
-                    )
+                # Allow 'sorry' in string literals
+                if '"sorry"' in code_part or "'sorry'" in code_part:
+                    continue
+                pytest.fail(
+                    f"Active sorry found in {lean_file.name}:{i}: {stripped}"
+                )
 
 
 def test_sorry_gap_registry():
