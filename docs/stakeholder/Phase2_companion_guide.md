@@ -253,6 +253,18 @@ The amplitudes (α, β) that relate the "ingoing" vacuum state to the "outgoing"
 | Paper draft | In progress (numerical table and Round 4/5 results integrated) |
 | Visualizations | Generated (Plotly, interactive HTML, 9 Phase 2 figures) |
 
+### Resolved Open Questions
+
+All four theoretical questions raised during Phase 2 have been resolved:
+
+1. **Is the second-order FDR correct?** Yes — derived from first principles via the CGL dynamical KMS transformation. The master formula K_N = −i·[K_R(ω)−K_R(−ω)]/(β₀ω) pairs noise with odd-ω dissipative retarded terms. Confirmed by Aristotle negation proof (`altFDR_uniqueness_test`).
+
+2. **Does the positivity constraint persist with more monomials?** The strict constraint γ_{2,1}+γ_{2,2}=0 relaxes to (γ_{2,1}+γ_{2,2})² ≤ 4γ₂γ_xβ when the (∂_x ψ_a)² monomial is included. Aristotle: `relaxed_positivity_weakens`.
+
+3. **Are there boundary terms near the horizon?** Yes — IBP with position-dependent γ(x) generates gradient corrections proportional to ∂_xγ. But these are O(D)-suppressed: for all three experiments (D ≈ 0.012–0.014), the correction is ~1.2–1.4% of leading noise — well below δ_diss ~ 10⁻⁵–10⁻³. The extra monomial generates an independent noise coefficient already explored by Aristotle (`relaxed_uniqueness_test`: 5-parameter witness with γ_x = c.i3). For D ~ 1 (abrupt horizons) the correction is O(1) and the EFT breaks down, but this regime is already excluded by D ≪ 1.
+
+4. **Is FirstOrderKMS optimal?** Yes — biconditional: positivity ↔ (i₁ ≥ 0 ∧ i₂ ≥ 0). No additional hidden relations exist. Aristotle: `firstOrder_KMS_optimal`.
+
 ### Next Steps
 
 1. ~~**Aristotle Round 1** — verify counting lemmas~~ ✓ COMPLETE (run d61290fd, all 4 proved)

@@ -1,0 +1,292 @@
+{
+  "review_date": "2026-03-25T16:00:00+00:00",
+  "figures_reviewed": 12,
+  "overall_status": "issues_found",
+  "figures": [
+    {
+      "name": "fig1_transonic_profiles",
+      "status": "warning",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Three-panel layout (velocity/sound speed, Mach number, density) is clear. Axis labels are readable: 'Velocity (mm/s)', 'Mach number M', 'Density (10^6 m^-1)', 'Position x/xi'. Subplot titles (a), (b), (c) present."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "Velocities in mm/s range (1-5) are physically reasonable for BEC transonic flows. Mach number crosses 1 as expected at the sonic horizon (x=0). Density profiles are all positive and show the expected decrease through the horizon (continuity). The tanh transition is smooth. All three experiments (Rb87, K39, Na23) show qualitatively correct behavior."
+      },
+      "style": {
+        "color_conventions_followed": "warning",
+        "notes": "Figure renders in grayscale/monochrome. The three experiments are distinguished by line style (solid vs dashed, labeling) rather than by the project color convention (Steinhauer=#2E86AB steel blue, Heidelberg=#A23B72 berry, Trento=#F18F01 amber). The source code does assign colors from the COLORS dict, so this may be a Plotly PNG export issue where the colors appear very muted/dark. The legend entries are present and correctly labeled with experiment names."
+      },
+      "notes": "The grayscale appearance in the PNG may be a rendering/export artifact. The HTML version likely shows colors correctly. Verify that the Plotly PNG export engine (kaleido/orca) is rendering colors. Otherwise, physics and layout are solid."
+    },
+    {
+      "name": "fig2_correction_hierarchy",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Grouped bar chart with log y-axis. Axis label 'Correction magnitude' is readable. Numeric annotations (9.4e-05, 6.5e-05, 7.5e-05, 1.8e-03, 1.3e-07, 9.8e-05, 1.5e-03, 1.3e-07) on bars are helpful. X-axis labels show experiment names clearly."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "Correction magnitudes are in the 10^-7 to 10^-3 range, which is physically reasonable for EFT corrections. The dissipative correction delta_diss is smaller than delta_disp for Rb87 (as required by the physics check). For Heidelberg K39, delta_diss (1.8e-03) exceeds delta_disp (7.5e-05), consistent with the larger damping in that system. Cross-term delta_cross is many orders smaller (10^-7), as expected for a subdominant correction."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Colors correctly match conventions: dispersive bars are sage green (#5C946E), dissipative bars are carmine red (#E63946), cross-term bars are cool grey (#8D99AE). Legend entries are clear with labels 'Dispersive delta_disp', 'Dissipative delta_diss (NEW)', 'Cross-term delta_cross'. The dashed red horizontal line for sensitivity threshold is a useful addition."
+      },
+      "notes": "Well-executed figure. The hierarchy is immediately visually apparent. Good use of log scale with numeric annotations."
+    },
+    {
+      "name": "fig3_parameter_space",
+      "status": "warning",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": false,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "2D contour plot with experimental star markers. Axis labels 'log10(D) -- Adiabaticity parameter' and 'log10(gamma/kappa) -- Dissipation strength' are readable. Color bar 'log10(delta_total)' on the right."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "Parameter space shows log10(D) from -3 to 0 and log10(gamma/kappa) from -7 to -1. The EFT boundary at D=1 (log10(D)=0) is marked with a red dashed vertical line on the right edge. Contour levels show correction magnitude increasing toward the upper-right corner as expected (stronger dissipation and closer to EFT breakdown). All three experimental points are in the well-controlled regime (D << 1)."
+      },
+      "style": {
+        "color_conventions_followed": "warning",
+        "notes": "The contour fill uses a blue colorscale, which is reasonable for a heatmap but deviates from the project color scheme. Experimental star markers are present but their colors are difficult to distinguish against the blue background -- the labels (Steinhauer, Heidelberg, Trento) appear as small text near each star but are somewhat hard to read. One star appears amber (Trento) but the others are not clearly steel blue and berry against the blue contour background. Consider adding a legend or using higher-contrast marker colors."
+      },
+      "notes": "The contour plot conveys the physics well but the experimental point markers could have better visual contrast against the blue background. A discrete legend for the three experiments would improve readability."
+    },
+    {
+      "name": "fig4_spin_sonic_enhancement",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Log-log plot showing enhancement factor vs velocity ratio. Axes 'Velocity ratio c_density/c_spin' and '|delta_diss|' are readable. Three annotated points (single-component Steinhauer, Trento projected ratio ~10, Optimistic ratio ~30) provide experimental context."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "Enhancement is monotonically increasing with c_density/c_spin ratio, consistent with quadratic scaling delta_diss x (c_dens/c_spin)^2. The slope on the log-log plot is approximately 2, confirming the expected power law. The shaded region below the curve effectively highlights the accessible parameter space."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Main curve uses carmine red (#E63946) for the dissipative correction, matching convention. The shaded fill region is a light red, consistent with the dissipative color scheme. Annotated experimental points use appropriate colors (blue for Steinhauer at ratio=1, amber for Trento, teal for optimistic)."
+      },
+      "notes": "Clean, effective figure. The log-log presentation with annotated experimental points clearly communicates the enhancement mechanism."
+    },
+    {
+      "name": "fig5_temperature_decomposition",
+      "status": "warning",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": false,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Three-panel figure (one per experiment) with bar charts. Y-axis 'Temperature contribution (nK)' is readable. Numeric annotations on bars are present but some are quite small (sub-picokelvin values). The three panels are titled with experiment names."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "T_H dominates massively (0.027-0.134 nK range), which is correct. The correction contributions (delta_disp, delta_diss, delta_cross) are many orders of magnitude smaller (picokelvin to sub-picokelvin), demonstrating the hierarchy. The dissipative correction for Heidelberg (red bar) is visually largest among corrections, consistent with fig2."
+      },
+      "style": {
+        "color_conventions_followed": "warning",
+        "notes": "T_H bars are black (matching 'horizon' color convention). The delta_diss bar for Steinhauer panel appears clearly red/carmine. However, the delta_disp and delta_cross bars in the Heidelberg and Trento panels are very thin and nearly invisible due to the enormous scale difference. The visual dynamic range makes it hard to read the correction bars -- they appear as hairlines at the bottom. This is inherent to the log scale showing 6+ orders of magnitude difference, but consider insets or a separate zoomed view."
+      },
+      "notes": "The extreme hierarchy (T_H >> corrections) makes the correction bars nearly invisible despite the log scale. Consider adding inset panels zooming into the correction terms, or a separate subplot showing only the corrections. The physics message is correct but the visualization could be more informative."
+    },
+    {
+      "name": "fig6_kappa_scaling",
+      "status": "fail",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": false,
+        "no_artifacts": false,
+        "notes": "Log-log plot of corrections vs surface gravity kappa. The x-axis range extends to 10^198 s^-1, which is vastly beyond any physical scale. The curves appear compressed into a narrow vertical band near the left edge, with most of the plot area showing nearly flat lines. The crossing point at kappa* ~ 221 s^-1 is annotated but difficult to see due to the extreme x-axis range."
+      },
+      "physics": {
+        "data_ranges_reasonable": false,
+        "qualitative_behavior_correct": "partially",
+        "notes": "CRITICAL ISSUE: The x-axis extends to 10^198 s^-1, which is about 10^155 times the Planck frequency. No physical system has surface gravity remotely close to this. The physically relevant range for BEC analog gravity is roughly 10^0 to 10^6 s^-1. At such extreme kappa values, the EFT breaks down catastrophically. While the qualitative scaling (delta_disp ~ kappa^2 up, delta_diss ~ 1/kappa down) is correct in principle, showing it over such an unphysical range is misleading. The experimental point markers (vertical colored lines for Steinhauer, Heidelberg, Trento) are bunched at the far left and hard to distinguish."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Colors are correct: delta_disp in sage green (dispersive), delta_diss in carmine red (dissipative). The crossing marker 'X' is black. Experimental kappa values use appropriate colors. However, the extreme axis range renders the color coding nearly useless as everything is compressed into a sliver."
+      },
+      "notes": "NEEDS REVISION: The x-axis range must be reduced to a physically meaningful domain, e.g., kappa from 10^0 to 10^6 s^-1 (or at most 10^8 to show the crossing clearly). The current range to 10^198 is unphysical and makes the figure unreadable. The crossing point -- the key physics result -- is lost in the compression. This is the most significant issue found in the review."
+    },
+    {
+      "name": "fig7_cgl_fdr_pattern",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Grouped bar chart with dashed line overlay. X-axis 'EFT Order N' (0-6), Y-axis 'Number of independent terms'. Legend clearly shows four categories: Dissipative (odd-omega), Conservative (even-omega), Noise bilinears (FDR-determined), and count(N) = floor((N+1)/2) + 1."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "The counting pattern is correct: at each order N, the number of dissipative terms increases with N, conservative terms are always >= dissipative (even-omega contributes at every order), and noise bilinears follow the FDR constraint. The dashed line count(N) = floor((N+1)/2) + 1 correctly matches the total independent coefficient count. At N=0: count=1, N=1: count=2, N=2: count=2, N=3: count=3, N=4: count=3, N=5: count=4, N=6: count=4. The noise terms appear only at even orders, consistent with the T-parity constraint."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Dissipative bars use carmine red (#E63946), conservative bars use sage green (#5C946E), noise bilinears use an amber/tan color (distinct but harmonious), and the count line uses black with diamond markers. Colors are consistent with the project's dispersive=green, dissipative=red convention."
+      },
+      "notes": "Excellent Phase 2 figure. The monomial counting pattern is clearly presented and the floor formula overlay validates the enumeration. No issues found."
+    },
+    {
+      "name": "fig8_even_vs_odd_kernel",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": false,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Four-panel figure with clear subplot titles: (a) K_R^even -- Conservative, (b) Im[K_R^odd] -- Dissipative, (c) CGL FDR formula, (d) Summary bar chart. Each panel has appropriate axis labels. Panel (c) shows the noise kernel K_N with a shaded region. Panel (d) is a clear summary bar showing Even-omega -> 0 noise vs Odd-omega -> finite noise."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "Panel (a): K_R^even shows a symmetric parabolic shape (~ -omega^2 + c_s^2 k^2), which is the correct conservative part. Panel (b): Im[K_R^odd] is linear in omega (~ gamma*omega), which is the correct dissipative part. Panel (c): The noise kernel K_N = -i[K_R(omega)-K_R(-omega)]/(beta_0 omega) is constant (horizontal line), correctly showing that only the odd part contributes. Panel (d): Summary correctly shows K_N = 0 for conservative and K_N = 2*gamma/beta_0 for dissipative."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Conservative/even-omega panel uses sage green (#5C946E), dissipative/odd-omega panel uses carmine red (#E63946). Summary bar chart uses the same color coding. The CGL FDR panel uses a light fill that harmonizes with the color scheme."
+      },
+      "notes": "Very well-designed pedagogical figure. The four-panel layout builds up the CGL FDR derivation step by step. The even/odd decomposition is visually immediate. The summary bar chart in panel (d) delivers the punchline clearly: only dissipative terms produce noise."
+    },
+    {
+      "name": "fig9_boundary_term_suppression",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Log-log plot of IBP correction (%) vs adiabaticity parameter D. Red line with shaded fill shows the linear scaling. Vertical dashed red line marks EFT breakdown at D=1. Experimental points are marked with star symbols near D~0.01."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "The IBP correction scales linearly with D (slope ~1 on the log-log plot), confirming the O(D) suppression claim. All three experimental points cluster near D~0.01 with IBP corrections around 1-2%, which is well below the 2% threshold required by the physics check. The EFT breakdown boundary at D=1 corresponds to ~100% correction, correctly showing where the expansion fails. The shaded forbidden region above D=1 is clearly marked."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Main curve and fill use carmine red/light red for the dissipative correction, consistent with convention. Experimental star markers appear to use project colors (steel blue, berry, amber) though they are closely clustered and somewhat hard to distinguish individually. The EFT breakdown line is appropriately marked."
+      },
+      "notes": "Clean figure that effectively demonstrates the boundary term suppression. The clustering of all experiments well within the EFT validity regime is visually clear. Minor suggestion: slightly offset the experimental point labels to reduce overlap."
+    },
+    {
+      "name": "fig10_positivity_constraint",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "2D constraint plot in the (gamma_2,1, gamma_2,2) plane. Axes are clearly labeled. The strict constraint line (black) and relaxed bound (red contours/bands) are distinguishable. Shaded regions indicate allowed (green) and forbidden (red-tinted) parameter space."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "The strict positivity constraint gamma_2,1 + gamma_2,2 = 0 is shown as a straight line with slope -1, correctly passing through the origin. The relaxed bound creates parallel bands around the strict line, defining the allowed parameter space. The 'Forbidden (unitarity violated)' region is correctly positioned. The constraint geometry is consistent with the SK positivity requirement from Lean theorem 'sk_positivity'."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "Strict constraint line uses black (horizon color), relaxed bound uses carmine red (dissipative), allowed region is shaded sage green (dispersive). The 'Forbidden' annotation is in red and 'Allowed' in green, providing immediate visual comprehension. Good use of the project color scheme for physics semantics."
+      },
+      "notes": "Effective visualization of the positivity constraint. The strict vs relaxed distinction is clear. The color coding of allowed/forbidden regions is intuitive and consistent with project conventions."
+    },
+    {
+      "name": "fig11_on_shell_vanishing",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": false,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Single-curve plot of delta^(2)(k) vs k/k_acoustic. Y-axis 'delta^(2) -- Second-order correction' and x-axis 'k/k_acoustic' are readable. The vertical dashed line at k/k_acoustic = 1 marks the acoustic shell. A shaded blue band around k=1 highlights the near-shell region."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "CRITICAL PHYSICS RESULT VERIFIED: delta^(2) crosses zero precisely at k = omega/c_s (i.e., k/k_acoustic = 1), confirming the on-shell vanishing theorem. The curve is negative for k < k_acoustic (off-shell below) and positive for k > k_acoustic (off-shell above), with a smooth zero crossing. The annotation 'Near-shell ~10^-7 to 10^-5' indicates the additional suppression near the acoustic shell, consistent with the project's key finding of ~7 orders additional suppression from unitarity."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "The delta^(2) curve uses carmine red (#E63946), appropriate since this is a dissipative correction. The acoustic shell marker uses black dashed line (horizon convention). The near-shell shaded band uses a light blue, providing visual emphasis without color conflict."
+      },
+      "notes": "This is arguably the most important figure in the paper -- it visually demonstrates the key finding that the second-order correction vanishes on the acoustic shell. The zero crossing is crisp and unambiguous. The annotation quantifying the near-shell suppression connects directly to the project's central result."
+    },
+    {
+      "name": "fig12_einstein_relation",
+      "status": "pass",
+      "rendering": {
+        "axes_labels_readable": true,
+        "legends_present": true,
+        "no_clipping": true,
+        "no_artifacts": true,
+        "notes": "Linear plot of noise strength sigma vs temperature T. Three lines for gamma=0.5, 1.0, 2.0 are shown with solid, dashed, and dotted line styles. Axes labeled 'Temperature T (k_B = 1)' and 'Noise strength sigma'. Annotation box shows the CGL master formula."
+      },
+      "physics": {
+        "data_ranges_reasonable": true,
+        "qualitative_behavior_correct": true,
+        "notes": "All three lines pass through the origin (sigma=0 at T=0), confirming no noise at zero temperature. The lines are strictly linear in T with slopes proportional to gamma (sigma = gamma*T), verifying the Einstein relation. The slope ordering (gamma=2.0 steepest, gamma=0.5 shallowest) is correct. The annotation box correctly references the CGL master formula K_N = -i[K_R(omega)-K_R(-omega)]/(beta_0 omega) and its simplest case K_N = 2*gamma/beta_0."
+      },
+      "style": {
+        "color_conventions_followed": true,
+        "notes": "All three lines use carmine red (#E63946) with different dash patterns (solid, dashed, dotted) to distinguish gamma values. This is appropriate since all represent the same type of physics (dissipative noise). The annotation box has a red border matching the dissipative color scheme."
+      },
+      "notes": "Clean, simple figure that communicates the Einstein relation clearly. Using the same color with different dash patterns for different gamma values is a good choice. The annotation connecting to the CGL master formula provides theoretical context."
+    }
+  ],
+  "summary": "11 of 12 figures pass or have minor warnings. 1 figure (fig6_kappa_scaling) has a critical issue requiring revision. The 6 new Phase 2 figures (fig7-fig12) are all high quality with correct physics and consistent styling. The key physics result -- on-shell vanishing of delta^(2) at k = omega/c_s -- is compellingly visualized in fig11.",
+  "recommendations": [
+    {
+      "priority": "CRITICAL",
+      "figure": "fig6_kappa_scaling",
+      "issue": "X-axis extends to kappa = 10^198 s^-1, which is ~10^155 times the Planck frequency. This makes the crossing point nearly invisible and shows the curves over a physically meaningless range.",
+      "fix": "Restrict x-axis to kappa in [10^0, 10^6] s^-1 (or 10^8 at most). This range covers all BEC experiments and clearly shows the delta_disp ~ kappa^2 vs delta_diss ~ 1/kappa crossing. Ensure the crossing point kappa* ~ 221 s^-1 is prominently visible."
+    },
+    {
+      "priority": "MODERATE",
+      "figure": "fig1_transonic_profiles",
+      "issue": "PNG rendering appears grayscale/monochrome despite color assignments in source code. The three experiments are not easily distinguishable by color.",
+      "fix": "Verify Plotly PNG export engine (kaleido) is correctly rendering colors. If the issue is in the static export, consider increasing line widths or using more distinctive line styles in addition to colors. Check the HTML version to confirm colors render there."
+    },
+    {
+      "priority": "MODERATE",
+      "figure": "fig5_temperature_decomposition",
+      "issue": "The correction bars (delta_disp, delta_diss, delta_cross) are nearly invisible against the dominant T_H bar due to 6+ orders of magnitude difference, even on a log scale.",
+      "fix": "Add inset panels or a separate row showing only the correction terms (excluding T_H) at a zoomed scale. Alternatively, normalize corrections as fractions of T_H and use a linear scale for the correction subplot."
+    },
+    {
+      "priority": "MINOR",
+      "figure": "fig3_parameter_space",
+      "issue": "Experimental star markers are hard to distinguish against the blue contour background. No discrete legend maps markers to experiments.",
+      "fix": "Add a discrete legend for the three experiments. Consider using marker edge colors (white or black outlines) to improve contrast against the blue contour background."
+    },
+    {
+      "priority": "MINOR",
+      "figure": "fig9_boundary_term_suppression",
+      "issue": "Three experimental point labels overlap slightly near D~0.01.",
+      "fix": "Offset the text annotations vertically or use leader lines to separate the labels."
+    }
+  ]
+}

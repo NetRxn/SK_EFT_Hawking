@@ -147,7 +147,11 @@
 - `cross`: #8D99AE (cool grey)
 - `horizon`: #000000 (black)
 
-**Figure Generators (6 main figures):**
+**Color Palette additions:**
+- `noise`: #D4A574 (warm tan — noise/FDR terms)
+- `sensitivity`: #CCCCCC (grey — experimental bands)
+
+**Figure Generators (12 figures: 6 Phase 1 + 6 Phase 2):**
 
 1. **`fig_transonic_profiles(experiments)`**
    - 3-panel: v(x) & c_s(x), Mach number, density
@@ -177,10 +181,32 @@
    - Marks crossing point κ*
    - Vertical lines for experimental κ values
 
+7. **`fig_cgl_fdr_pattern()`** (Phase 2)
+   - Bar chart: dissipative, conservative, noise counts at each EFT order N=0..6
+   - Overlays counting formula count(N) = ⌊(N+1)/2⌋ + 1
+
+8. **`fig_even_vs_odd_kernel()`** (Phase 2)
+   - 4-panel: even-ω kernel, odd-ω kernel, CGL noise result, summary
+   - Shows how CGL FDR extracts only odd-ω part
+
+9. **`fig_boundary_term_suppression()`** (Phase 2)
+   - IBP correction vs adiabaticity D with experimental points
+   - Shows O(D) ~ 1% suppression
+
+10. **`fig_positivity_constraint()`** (Phase 2)
+    - 2D parameter space γ_{2,1} vs γ_{2,2}
+    - Strict line γ_{2,1}+γ_{2,2}=0 and relaxed region
+
+11. **`fig_on_shell_vanishing()`** (Phase 2)
+    - δ^(2)(k) vs k/k_acoustic showing zero crossing at acoustic shell
+
+12. **`fig_einstein_relation()`** (Phase 2)
+    - σ = γT for multiple γ values, CGL master formula annotation
+
 **Interactive Dashboard:**
 
 - **`build_interactive_dashboard(experiments, output_dir)`** → HTML file
-  - Combines all 6 figures with navigation
+  - Combines all 12 figures with navigation
   - Style: professional header, sticky nav, dark theme
   - Includes numerical summary table
   - Single-file self-contained (Plotly CDN)
@@ -432,6 +458,9 @@ The three SK axioms constrain transport coefficients:
 - **`verify_first_order_bec()`** → bool — K_N = 2Γ/β₀ for BEC with damping
 - **`verify_second_order_fdr()`** → bool — second-order noise kernel is real
 - **`discover_general_pattern(N_max)`** → str — general FDR pattern through order N
+- **`connect_to_lean_fdr()`** → str — shows how CGL connects to Lean FirstOrderKMS
+- **`boundary_term_estimate(D, gamma_ratio)`** → dict — IBP gradient correction at given adiabaticity D
+- **`boundary_term_analysis(verbose)`** → str — full IBP analysis for all 3 experiments, resolves open question #3
 
 **Key Finding:** The CGL FDR pairs noise with ODD-in-ω dissipative retarded terms only.
 Even-in-ω (conservative) terms are unconstrained by the FDR. The existing FirstOrderKMS
@@ -1054,6 +1083,27 @@ All in `tests/` directory.
 
 ---
 
+### `tests/test_cgl_derivation.py` (289 lines)
+
+**Test Classes (26 tests):**
+
+- **TestKernelConstruction** (4): Wave equation, friction, even/odd kernel properties
+- **TestCGLFDR** (6): Even→zero noise, Einstein relation, BEC FDR, second-order real, linearity, 1/β proportionality
+- **TestKernelDecomposition** (3): Even+odd=original, symmetry checks
+- **TestGeneralPattern** (6): Orders N=0,1,2,4 noise counts, conservative unconstrained
+- **TestLeanConnection** (2): CGL+BEC→Lean FDR, second-order structure
+- **TestBoundaryTerms** (5): O(D) correction, experiments<2%, D=0 vanishing, D=1 growth, full analysis
+
+### `tests/test_cross_validation.py`
+Pytest wrapper for `scripts/validate.py` (10 checks).
+
+### `scripts/review_figures.py`
+Figure review pipeline: generates 12 PNGs via kaleido, produces review_manifest.json, runs automated structural checks. Used by figure-reviewer agent.
+
+**Total test count: 64/64 tests, 10/10 validation checks.**
+
+---
+
 ## 6. CONFIGURATION FILES
 
 ### `pyproject.toml`
@@ -1176,7 +1226,7 @@ All in `tests/` directory.
 ✅ **Documentation complete**
 - ✓ 2 paper drafts (397 + 359 lines LaTeX)
 - ✓ 4 technical + stakeholder notebooks
-- ✓ 6 publication-quality figures (Plotly)
+- ✓ 12 publication-quality figures (Plotly): 6 Phase 1 + 6 Phase 2 (CGL, boundary, positivity, on-shell, Einstein)
 - ✓ Interactive HTML dashboard
 
 ---

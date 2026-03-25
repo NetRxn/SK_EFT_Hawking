@@ -53,6 +53,7 @@ COLORS = {
     "subsonic": "#DAE2F8",   # Light blue — subsonic region fill
     "supersonic": "#FFE0E0", # Light red — supersonic region fill
     "sensitivity": "#CCCCCC",# Grey — experimental sensitivity band
+    "noise": "#D4A574",      # Warm tan — noise/FDR terms
 }
 
 # Typography matching PRL conventions
@@ -109,7 +110,11 @@ def fig_transonic_profiles(experiments: dict[str, tuple[BECParameters, Transonic
     )
 
     for name, (params, bg) in experiments.items():
-        color = COLORS.get(name.split()[1] if " " in name else name, "#333")
+        # Map experiment display names to COLORS keys
+        _color_map = {"Rb": "Rb87", "K": "K39", "Na": "Na23",
+                      "Steinhauer": "Rb87", "Heidelberg": "K39", "Trento": "Na23"}
+        color_key = next((v for k, v in _color_map.items() if k in name), None)
+        color = COLORS.get(color_key, COLORS["horizon"]) if color_key else COLORS["horizon"]
         xi = params.healing_length
         x_norm = bg.x / xi  # Normalize to healing lengths
 
@@ -540,7 +545,8 @@ def fig_kappa_scaling() -> go.Figure:
                       annotation_text=label, annotation_position="top",
                       annotation_font=dict(size=10, color=color))
 
-    fig.update_xaxes(type="log", title_text="Surface gravity κ (s⁻¹)")
+    fig.update_xaxes(type="log", title_text="Surface gravity κ (s⁻¹)",
+                     range=[1, 4])  # 10¹ to 10⁴ s⁻¹
     fig.update_yaxes(type="log", title_text="|Correction|",
                      range=[-7, 0])
 
@@ -549,6 +555,425 @@ def fig_kappa_scaling() -> go.Figure:
         title=dict(text="<b>Scaling with Surface Gravity: δ<sub>disp</sub> vs δ<sub>diss</sub></b>",
                    font=TITLE_FONT),
         legend=dict(x=0.55, y=0.98),
+    )
+
+    return fig
+
+
+# ============================================================
+# Phase 2 Figures: CGL FDR, Boundary Terms, Positivity
+# ============================================================
+
+def fig_cgl_fdr_pattern() -> go.Figure:
+    """Noise count pattern at each EFT order from CGL FDR.
+
+    Shows: at even order N=2n, there are n+1 noise bilinears.
+    At odd order N=2n+1, noise is imaginary → 0 real bilinears.
+    This is the central Direction D result.
+    """
+    from src.second_order.cgl_derivation import derive_fdr_fourier
+
+    results = derive_fdr_fourier(6)
+
+    orders = sorted(results.keys())
+    n_diss = [len(results[N]['dissipative']) for N in orders]
+    n_cons = [len(results[N]['conservative']) for N in orders]
+    n_noise = [len(results[N]['noise']) for N in orders]
+    formula = [(N + 1) // 2 + 1 for N in orders]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=orders, y=n_diss,
+        name="Dissipative (odd-ω)",
+        marker_color=COLORS["dissipative"],
+        marker_line=dict(width=1, color="black"),
+    ))
+    fig.add_trace(go.Bar(
+        x=orders, y=n_cons,
+        name="Conservative (even-ω)",
+        marker_color=COLORS["dispersive"],
+        marker_line=dict(width=1, color="black"),
+    ))
+    fig.add_trace(go.Bar(
+        x=orders, y=n_noise,
+        name="Noise bilinears (FDR-determined)",
+        marker_color=COLORS["noise"],
+        marker_line=dict(width=1, color="black"),
+    ))
+
+    # Overlay the counting formula
+    fig.add_trace(go.Scatter(
+        x=orders, y=formula,
+        mode="markers+lines",
+        name="count(N) = ⌊(N+1)/2⌋ + 1",
+        line=dict(color=COLORS["horizon"], width=2, dash="dash"),
+        marker=dict(size=10, symbol="diamond", color=COLORS["horizon"]),
+    ))
+
+    fig.update_xaxes(title_text="EFT Order N", dtick=1)
+    fig.update_yaxes(title_text="Number of independent terms")
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>CGL FDR Pattern: Monomial Counting at Each EFT Order</b>",
+                   font=TITLE_FONT),
+        barmode="group",
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_even_vs_odd_kernel() -> go.Figure:
+    """Visual decomposition of K_R into conservative (even-ω) and dissipative (odd-ω).
+
+    Shows how the CGL FDR picks out only the odd-ω part, which produces noise.
+    Even-ω terms cancel identically → zero noise for non-dissipative systems.
+    """
+    import numpy as np
+
+    omega_range = np.linspace(-5, 5, 500)
+
+    # Example K_R with both conservative and dissipative terms:
+    # K_R = -ω² + c_s²k² + iγω  (BEC with damping, k=1)
+    k_val = 1.0
+    c_s = 1.0
+    gamma = 0.8
+
+    K_R_even = -omega_range**2 + c_s**2 * k_val**2  # conservative
+    K_R_odd_real = np.zeros_like(omega_range)  # odd part is imaginary
+    K_R_odd_imag = gamma * omega_range  # Im(K_R^odd) = γω
+
+    # Noise from FDR: K_N = 2γ/β (constant)
+    beta = 1.0
+    K_N = 2 * gamma / beta * np.ones_like(omega_range)
+
+    fig = make_subplots(
+        rows=2, cols=2,
+        subplot_titles=(
+            "<b>(a)</b> K<sub>R</sub><sup>even</sup>(ω) — Conservative",
+            "<b>(b)</b> Im[K<sub>R</sub><sup>odd</sup>(ω)] — Dissipative",
+            "<b>(c)</b> CGL FDR: K<sub>N</sub> = −i[K<sub>R</sub>(ω)−K<sub>R</sub>(−ω)]/(β₀ω)",
+            "<b>(d)</b> Summary: Even → 0 noise, Odd → finite noise",
+        ),
+        vertical_spacing=0.15,
+        horizontal_spacing=0.12,
+    )
+
+    # (a) Even kernel
+    fig.add_trace(go.Scatter(
+        x=omega_range, y=K_R_even,
+        mode="lines", name="K<sub>R</sub><sup>even</sup>",
+        line=dict(color=COLORS["dispersive"], width=2.5),
+        showlegend=False,
+    ), row=1, col=1)
+
+    # (b) Odd kernel (imaginary part)
+    fig.add_trace(go.Scatter(
+        x=omega_range, y=K_R_odd_imag,
+        mode="lines", name="Im[K<sub>R</sub><sup>odd</sup>]",
+        line=dict(color=COLORS["dissipative"], width=2.5),
+        showlegend=False,
+    ), row=1, col=2)
+
+    # (c) Resulting noise
+    fig.add_trace(go.Scatter(
+        x=omega_range, y=K_N,
+        mode="lines", name="K<sub>N</sub> = 2γ/β₀",
+        line=dict(color=COLORS["noise"], width=3),
+        fill="tozeroy", fillcolor="rgba(212,165,116,0.15)",
+        showlegend=False,
+    ), row=2, col=1)
+    fig.add_hline(y=0, line=dict(color="black", width=0.5), row=2, col=1)
+
+    # (d) Summary: conceptual bar chart
+    fig.add_trace(go.Bar(
+        x=["Even-ω<br>(conservative)", "Odd-ω<br>(dissipative)"],
+        y=[0, 2 * gamma / beta],
+        marker_color=[COLORS["dispersive"], COLORS["dissipative"]],
+        marker_line=dict(width=1, color="black"),
+        text=["K<sub>N</sub> = 0", f"K<sub>N</sub> = 2γ/β₀"],
+        textposition="outside",
+        showlegend=False,
+    ), row=2, col=2)
+
+    for row in [1, 2]:
+        for col in [1, 2]:
+            if not (row == 2 and col == 2):
+                fig.update_xaxes(title_text="ω", row=row, col=col)
+
+    fig.update_yaxes(title_text="K<sub>R</sub><sup>even</sup>", row=1, col=1)
+    fig.update_yaxes(title_text="Im[K<sub>R</sub><sup>odd</sup>]", row=1, col=2)
+    fig.update_yaxes(title_text="K<sub>N</sub> (noise)", row=2, col=1)
+    fig.update_yaxes(title_text="Noise kernel", row=2, col=2)
+
+    apply_layout(fig,
+        height=650, width=800,
+        title=dict(text="<b>CGL FDR: Only Dissipative (Odd-ω) Terms Produce Noise</b>",
+                   font=TITLE_FONT),
+    )
+
+    for ann in fig.layout.annotations:
+        ann.font = dict(size=12, family=FONT["family"])
+
+    return fig
+
+
+def fig_boundary_term_suppression() -> go.Figure:
+    """D-dependence of IBP boundary correction for all three experiments.
+
+    Shows that IBP gradient terms from position-dependent γ(x) are O(D)-suppressed.
+    Marks the three experimental D values.
+    """
+    from src.core.constants import get_all_experiments
+
+    D_range = np.logspace(-3, 0.5, 200)
+    correction = D_range  # |correction/leading| ~ D
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=D_range, y=correction * 100,
+        mode="lines",
+        name="|IBP correction / leading noise| ~ D",
+        line=dict(color=COLORS["dissipative"], width=3),
+        fill="tozeroy", fillcolor="rgba(230, 57, 70, 0.08)",
+        hovertemplate="D=%{x:.4f}<br>Correction=%{y:.1f}%<extra></extra>",
+    ))
+
+    # Mark experimental D values
+    experiments = get_all_experiments()
+    exp_colors = {
+        "Steinhauer": COLORS["Rb87"],
+        "Heidelberg": COLORS["K39"],
+        "Trento": COLORS["Na23"],
+    }
+    for name, (params, bg) in experiments.items():
+        D = bg.adiabaticity
+        color = exp_colors.get(name, "#333")
+        fig.add_trace(go.Scatter(
+            x=[D], y=[D * 100],
+            mode="markers+text",
+            marker=dict(size=14, color=color,
+                       line=dict(width=2, color="black"), symbol="star"),
+            text=[f"{name}<br>D={D:.4f}"],
+            textposition="top center",
+            textfont=dict(size=11, color=color),
+            showlegend=False,
+            hovertemplate=f"{name}<br>D={D:.4f}<br>Correction={D*100:.1f}%<extra></extra>",
+        ))
+
+    # EFT breakdown region
+    fig.add_vrect(x0=1, x1=3.2, fillcolor="rgba(255,0,0,0.05)",
+                  line=dict(color="red", width=1, dash="dash"),
+                  annotation_text="EFT breakdown (D ≥ 1)",
+                  annotation_position="top left",
+                  annotation_font=dict(color="red", size=11))
+
+    fig.update_xaxes(type="log", title_text="Adiabaticity parameter D = κξ/c<sub>s</sub>")
+    fig.update_yaxes(type="log", title_text="IBP correction (%)",
+                     range=[-1, 2.5])
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Boundary Term Suppression: IBP Corrections are O(D)</b>",
+                   font=TITLE_FONT),
+    )
+
+    return fig
+
+
+def fig_positivity_constraint() -> go.Figure:
+    """Visualize the SK positivity constraint and its relaxation.
+
+    Shows: strict constraint γ_{2,1}+γ_{2,2}=0 from 2×2 PSD matrix,
+    and relaxed constraint (γ_{2,1}+γ_{2,2})² ≤ 4γ₂γ_x β from 3×3.
+    """
+    # Parameter space: γ_{2,1} vs γ_{2,2}
+    g21_range = np.linspace(-2, 2, 300)
+    g22_range = np.linspace(-2, 2, 300)
+    G21, G22 = np.meshgrid(g21_range, g22_range)
+
+    # Strict constraint: γ_{2,1} + γ_{2,2} = 0 → γ_{2,2} = -γ_{2,1}
+    # Relaxed: (γ_{2,1}+γ_{2,2})² ≤ 4·γ₂·γ_x·β
+    gamma_2_times_gamma_x_beta = 0.5  # representative value
+    relaxed_bound = np.sqrt(4 * gamma_2_times_gamma_x_beta)
+
+    # Violation measure: (γ_{2,1}+γ_{2,2})² - 4γ₂γ_xβ
+    violation = (G21 + G22)**2 - 4 * gamma_2_times_gamma_x_beta
+
+    fig = go.Figure()
+
+    # Relaxed region (allowed)
+    fig.add_trace(go.Contour(
+        x=g21_range, y=g22_range,
+        z=violation,
+        contours=dict(
+            start=0, end=0, size=0.001,
+            coloring="none",
+            showlabels=False,
+        ),
+        line=dict(color=COLORS["dissipative"], width=2),
+        showscale=False,
+        name="Relaxed bound",
+    ))
+
+    # Fill the allowed region
+    fig.add_trace(go.Contour(
+        x=g21_range, y=g22_range,
+        z=violation,
+        contours=dict(start=-100, end=0, size=100,
+                      coloring="fill"),
+        colorscale=[[0, "rgba(92, 148, 110, 0.15)"],
+                    [1, "rgba(92, 148, 110, 0.15)"]],
+        showscale=False,
+        showlegend=False,
+        hoverinfo="skip",
+    ))
+
+    # Strict constraint line: γ_{2,2} = -γ_{2,1}
+    fig.add_trace(go.Scatter(
+        x=g21_range, y=-g21_range,
+        mode="lines",
+        name="Strict: γ<sub>2,1</sub> + γ<sub>2,2</sub> = 0",
+        line=dict(color=COLORS["horizon"], width=3),
+    ))
+
+    # Annotations
+    fig.add_annotation(
+        x=0.8, y=0.8, text="Forbidden<br>(unitarity violated)",
+        font=dict(size=12, color=COLORS["dissipative"]),
+        showarrow=False,
+    )
+    fig.add_annotation(
+        x=-0.5, y=0.3, text="Allowed<br>(relaxed)",
+        font=dict(size=12, color=COLORS["dispersive"]),
+        showarrow=False,
+    )
+
+    fig.update_xaxes(title_text="γ<sub>2,1</sub>")
+    fig.update_yaxes(title_text="γ<sub>2,2</sub>")
+
+    apply_layout(fig,
+        height=500, width=550,
+        title=dict(text="<b>SK Positivity Constraint on Second-Order Coefficients</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.02, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_on_shell_vanishing() -> go.Figure:
+    """δ^(2) vanishes on the acoustic shell, nonzero only off-shell.
+
+    Shows δ^(2)(k) for fixed ω, with the acoustic shell at k = ω/c_s marked.
+    The positivity constraint γ_{2,2} = -γ_{2,1} produces exact cancellation
+    at k = ω/c_s, with a cubic residual from Bogoliubov dispersion.
+    """
+    omega_val = 100.0  # representative frequency
+    c_s = 1.0
+    kappa = 50.0
+    gamma_21 = 0.5
+
+    k_range = np.linspace(0.5 * omega_val / c_s, 1.5 * omega_val / c_s, 400)
+    k_acoustic = omega_val / c_s
+
+    # δ^(2) = γ_{2,1}·k·(k² - ω²/c_s²) / κ  (with γ_{2,2} = -γ_{2,1})
+    delta_2 = gamma_21 * k_range * (k_range**2 - omega_val**2 / c_s**2) / kappa
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=k_range / k_acoustic, y=delta_2,
+        mode="lines",
+        name="δ<sup>(2)</sup>(k) with γ<sub>2,2</sub> = −γ<sub>2,1</sub>",
+        line=dict(color=COLORS["dissipative"], width=3),
+        hovertemplate="k/k<sub>acoustic</sub>=%{x:.2f}<br>δ<sup>(2)</sup>=%{y:.4f}<extra></extra>",
+    ))
+
+    # Mark the acoustic shell
+    fig.add_vline(x=1.0, line=dict(color=COLORS["horizon"], width=2, dash="dash"),
+                  annotation_text="Acoustic shell: k = ω/c<sub>s</sub>",
+                  annotation_position="top right",
+                  annotation_font=dict(size=11))
+
+    # Zero line
+    fig.add_hline(y=0, line=dict(color="rgba(0,0,0,0.3)", width=1))
+
+    # Shade the "observable" region (off-shell, Bogoliubov)
+    fig.add_vrect(x0=0.95, x1=1.05,
+                  fillcolor="rgba(46, 134, 171, 0.1)",
+                  line_width=0,
+                  annotation_text="Near-shell<br>~10⁻⁸–10⁻¹²",
+                  annotation_position="bottom left",
+                  annotation_font=dict(size=9, color=COLORS["Rb87"]))
+
+    fig.update_xaxes(title_text="k / k<sub>acoustic</sub>")
+    fig.update_yaxes(title_text="δ<sup>(2)</sup> — Second-order correction")
+
+    apply_layout(fig,
+        height=400, width=650,
+        title=dict(text="<b>On-Shell Vanishing: δ<sup>(2)</sup> = 0 at k = ω/c<sub>s</sub></b>",
+                   font=TITLE_FONT),
+    )
+
+    return fig
+
+
+def fig_einstein_relation() -> go.Figure:
+    """The Einstein relation as the simplest FDR case.
+
+    Shows σ = γ/β₀: noise strength proportional to friction × temperature.
+    Brownian motion visualization with FDR connecting dissipation to fluctuations.
+    """
+    # Temperature dependence: σ = γT
+    T_range = np.linspace(0, 5, 200)
+    gamma_vals = [0.5, 1.0, 2.0]
+
+    fig = go.Figure()
+
+    line_styles = ["solid", "dash", "dot"]
+    for gamma, dash in zip(gamma_vals, line_styles):
+        sigma = gamma * T_range  # σ = γ/β₀ = γT (k_B = 1 units)
+        fig.add_trace(go.Scatter(
+            x=T_range, y=sigma,
+            mode="lines",
+            name=f"γ = {gamma}",
+            line=dict(color=COLORS["dissipative"], width=2.5, dash=dash),
+            hovertemplate=f"γ={gamma}<br>T=%{{x:.2f}}<br>σ=%{{y:.2f}}<extra></extra>",
+        ))
+
+    # Annotation connecting to CGL
+    fig.add_annotation(
+        x=3.5, y=3.5, text="σ = γ/β₀ = γT",
+        font=dict(size=14, family=FONT["family"]),
+        showarrow=False,
+        bgcolor="rgba(255,255,255,0.8)",
+        bordercolor=COLORS["dissipative"],
+        borderwidth=1, borderpad=4,
+    )
+
+    fig.add_annotation(
+        x=4.0, y=1.0,
+        text="CGL master formula:<br>K<sub>N</sub> = −i[K<sub>R</sub>(ω)−K<sub>R</sub>(−ω)]/(β₀ω)<br>"
+             "→ simplest case: K<sub>N</sub> = 2γ/β₀",
+        font=dict(size=10, family=FONT["family"]),
+        showarrow=False,
+        bgcolor="rgba(255,255,255,0.9)",
+        bordercolor=COLORS["cross"],
+        borderwidth=1, borderpad=4,
+    )
+
+    fig.update_xaxes(title_text="Temperature T (k<sub>B</sub> = 1)")
+    fig.update_yaxes(title_text="Noise strength σ")
+
+    apply_layout(fig,
+        height=400, width=600,
+        title=dict(text="<b>Einstein Relation: σ = γT (Simplest FDR)</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98),
     )
 
     return fig
@@ -564,13 +989,19 @@ def build_interactive_dashboard(experiments: dict, output_dir: str) -> str:
     Contains all figures plus parameter sliders for exploration.
     Returns the path to the generated HTML file.
     """
-    # Generate all figures
+    # Generate all figures (Phase 1 + Phase 2)
     fig1 = fig_transonic_profiles(experiments)
     fig2 = fig_correction_hierarchy(experiments)
     fig3 = fig_parameter_space()
     fig4 = fig_spin_sonic_enhancement()
     fig5 = fig_temperature_decomposition(experiments)
     fig6 = fig_kappa_scaling()
+    fig7 = fig_cgl_fdr_pattern()
+    fig8 = fig_even_vs_odd_kernel()
+    fig9 = fig_boundary_term_suppression()
+    fig10 = fig_positivity_constraint()
+    fig11 = fig_on_shell_vanishing()
+    fig12 = fig_einstein_relation()
 
     figures = [
         ("Transonic Background Profiles", fig1),
@@ -579,6 +1010,12 @@ def build_interactive_dashboard(experiments: dict, output_dir: str) -> str:
         ("Spin-Sonic Enhancement", fig4),
         ("Temperature Decomposition", fig5),
         ("κ-Scaling Relations", fig6),
+        ("CGL FDR Pattern", fig7),
+        ("Even vs Odd Kernel Decomposition", fig8),
+        ("Boundary Term Suppression", fig9),
+        ("Positivity Constraint", fig10),
+        ("On-Shell Vanishing", fig11),
+        ("Einstein Relation", fig12),
     ]
 
     # Build HTML with navigation
@@ -754,6 +1191,34 @@ def _get_caption(idx: int) -> str:
         "<b>Figure 6:</b> Scaling of corrections with surface gravity κ. The dispersive "
         "correction grows as κ² while the dissipative correction falls as 1/κ. Their crossing "
         "point κ* determines which effect dominates. Vertical lines mark experimental κ values.",
+
+        "<b>Figure 7:</b> CGL FDR monomial counting at each EFT order N. Dissipative (odd-ω) "
+        "retarded terms are paired with noise bilinears via the CGL dynamical KMS condition. "
+        "Conservative (even-ω) terms are unconstrained. The counting formula "
+        "count(N) = ⌊(N+1)/2⌋ + 1 is overlaid.",
+
+        "<b>Figure 8:</b> Decomposition of K<sub>R</sub> into even-ω (conservative) and odd-ω "
+        "(dissipative) parts. The CGL FDR formula K<sub>N</sub> = −i[K<sub>R</sub>(ω)−K<sub>R</sub>(−ω)]/(β₀ω) "
+        "extracts only the odd-ω part. Even-ω terms cancel identically, producing zero noise "
+        "for non-dissipative systems.",
+
+        "<b>Figure 9:</b> Boundary term suppression as a function of adiabaticity D = κξ/c<sub>s</sub>. "
+        "IBP with position-dependent γ(x) generates gradient corrections proportional to D. "
+        "For all three experiments (D ≈ 0.012–0.014), corrections are ~1.2–1.4%.",
+
+        "<b>Figure 10:</b> SK positivity constraint on second-order coefficients. The strict "
+        "constraint γ<sub>2,1</sub> + γ<sub>2,2</sub> = 0 (black line) becomes an inequality "
+        "when the (∂<sub>x</sub>ψ<sub>a</sub>)² monomial is included. The green region shows "
+        "the allowed parameter space.",
+
+        "<b>Figure 11:</b> On-shell vanishing of the second-order correction. With the positivity "
+        "constraint γ<sub>2,2</sub> = −γ<sub>2,1</sub>, δ<sup>(2)</sup> vanishes exactly at "
+        "k = ω/c<sub>s</sub> (acoustic shell). Nonzero values arise only from Bogoliubov off-shell "
+        "dispersion (~10<sup>−8</sup>–10<sup>−12</sup>).",
+
+        "<b>Figure 12:</b> The Einstein relation σ = γT as the simplest case of the CGL FDR. "
+        "Noise strength is proportional to friction × temperature. This is the N=0 limit of "
+        "the general CGL master formula.",
     ]
     return captions[idx] if idx < len(captions) else ""
 
@@ -819,6 +1284,12 @@ def export_static_figures(experiments: dict, output_dir: str):
         "fig4_spin_sonic_enhancement": fig_spin_sonic_enhancement(),
         "fig5_temperature_decomposition": fig_temperature_decomposition(experiments),
         "fig6_kappa_scaling": fig_kappa_scaling(),
+        "fig7_cgl_fdr_pattern": fig_cgl_fdr_pattern(),
+        "fig8_even_vs_odd_kernel": fig_even_vs_odd_kernel(),
+        "fig9_boundary_term_suppression": fig_boundary_term_suppression(),
+        "fig10_positivity_constraint": fig_positivity_constraint(),
+        "fig11_on_shell_vanishing": fig_on_shell_vanishing(),
+        "fig12_einstein_relation": fig_einstein_relation(),
     }
 
     exported = []

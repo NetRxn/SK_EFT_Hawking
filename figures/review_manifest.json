@@ -1,0 +1,347 @@
+{
+  "generated": "2026-03-25T15:44:27.174504+00:00",
+  "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
+  "figures": [
+    {
+      "name": "fig1_transonic_profiles",
+      "function": "fig_transonic_profiles",
+      "caption": "Transonic BEC background profiles for three experimental setups.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig1_transonic_profiles.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig1_transonic_profiles.html",
+      "expected_traces": 9,
+      "expected_axes": {
+        "xaxis3": "\u03be",
+        "yaxis": "Velocity"
+      },
+      "physics_checks": [
+        "all_densities_positive",
+        "mach_crosses_one"
+      ],
+      "color_keys": [
+        "Rb87",
+        "K39",
+        "Na23"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig2_correction_hierarchy",
+      "function": "fig_correction_hierarchy",
+      "caption": "Correction hierarchy: \u03b4_disp, \u03b4_diss, \u03b4_cross on log scale.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig2_correction_hierarchy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig2_correction_hierarchy.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "yaxis": "Correction"
+      },
+      "physics_checks": [
+        "all_corrections_positive",
+        "diss_smaller_than_disp_for_Rb87"
+      ],
+      "color_keys": [
+        "dispersive",
+        "dissipative",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig3_parameter_space",
+      "function": "fig_parameter_space",
+      "caption": "2D parameter space: D vs \u03b3/\u03ba with experimental points.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig3_parameter_space.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig3_parameter_space.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "Adiabaticity",
+        "yaxis": "Dissipation"
+      },
+      "physics_checks": [
+        "eft_boundary_at_D_equals_1"
+      ],
+      "color_keys": [
+        "Rb87",
+        "K39",
+        "Na23"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig4_spin_sonic_enhancement",
+      "function": "fig_spin_sonic_enhancement",
+      "caption": "Spin-sonic enhancement: \u03b4_diss \u00d7 (c_dens/c_spin)\u00b2.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig4_spin_sonic_enhancement.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig4_spin_sonic_enhancement.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "ratio",
+        "yaxis": "\u03b4"
+      },
+      "physics_checks": [
+        "enhancement_monotonic"
+      ],
+      "color_keys": [
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig5_temperature_decomposition",
+      "function": "fig_temperature_decomposition",
+      "caption": "Temperature decomposition: T_eff = T_H(1 + \u03b4_disp + \u03b4_diss + \u03b4_cross).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig5_temperature_decomposition.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig5_temperature_decomposition.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "yaxis": "Temperature"
+      },
+      "physics_checks": [
+        "T_H_dominates"
+      ],
+      "color_keys": [
+        "horizon",
+        "dispersive",
+        "dissipative",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig6_kappa_scaling",
+      "function": "fig_kappa_scaling",
+      "caption": "Scaling: \u03b4_disp ~ \u03ba\u00b2 vs \u03b4_diss ~ 1/\u03ba with crossing point.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig6_kappa_scaling.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig6_kappa_scaling.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u03ba",
+        "yaxis": "Correction"
+      },
+      "physics_checks": [
+        "curves_cross"
+      ],
+      "color_keys": [
+        "dispersive",
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig7_cgl_fdr_pattern",
+      "function": "fig_cgl_fdr_pattern",
+      "caption": "CGL FDR monomial counting at each EFT order N.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig7_cgl_fdr_pattern.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig7_cgl_fdr_pattern.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "Order",
+        "yaxis": "terms"
+      },
+      "physics_checks": [
+        "noise_count_even_orders_only"
+      ],
+      "color_keys": [
+        "dissipative",
+        "dispersive"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig8_even_vs_odd_kernel",
+      "function": "fig_even_vs_odd_kernel",
+      "caption": "K_R decomposition: even-\u03c9 (conservative) vs odd-\u03c9 (dissipative).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig8_even_vs_odd_kernel.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig8_even_vs_odd_kernel.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "\u03c9"
+      },
+      "physics_checks": [
+        "even_part_symmetric",
+        "noise_from_odd_only"
+      ],
+      "color_keys": [
+        "dispersive",
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig9_boundary_term_suppression",
+      "function": "fig_boundary_term_suppression",
+      "caption": "IBP boundary correction is O(D) for all experiments.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig9_boundary_term_suppression.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig9_boundary_term_suppression.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "Adiabaticity",
+        "yaxis": "correction"
+      },
+      "physics_checks": [
+        "all_experiments_below_2_percent"
+      ],
+      "color_keys": [
+        "dissipative",
+        "Rb87",
+        "K39",
+        "Na23"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig10_positivity_constraint",
+      "function": "fig_positivity_constraint",
+      "caption": "SK positivity constraint: strict \u03b3_{2,1}+\u03b3_{2,2}=0 and relaxed bound.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig10_positivity_constraint.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig10_positivity_constraint.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u03b3",
+        "yaxis": "\u03b3"
+      },
+      "physics_checks": [
+        "strict_line_passes_through_origin"
+      ],
+      "color_keys": [
+        "horizon"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig11_on_shell_vanishing",
+      "function": "fig_on_shell_vanishing",
+      "caption": "\u03b4^(2) vanishes at k = \u03c9/c_s (acoustic shell), nonzero off-shell.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig11_on_shell_vanishing.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig11_on_shell_vanishing.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "k",
+        "yaxis": "\u03b4"
+      },
+      "physics_checks": [
+        "zero_crossing_at_k_equals_omega_over_cs"
+      ],
+      "color_keys": [
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig12_einstein_relation",
+      "function": "fig_einstein_relation",
+      "caption": "Einstein relation \u03c3 = \u03b3T: simplest FDR from CGL.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig12_einstein_relation.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig12_einstein_relation.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "Temperature",
+        "yaxis": "Noise"
+      },
+      "physics_checks": [
+        "linear_in_T",
+        "proportional_to_gamma"
+      ],
+      "color_keys": [
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    }
+  ]
+}

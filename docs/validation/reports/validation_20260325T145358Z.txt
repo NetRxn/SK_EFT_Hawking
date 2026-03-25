@@ -1,0 +1,11 @@
+SK-EFT Hawking Validation Report
+Generated: 20260325T145358Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] viz_consistency
+  + Phase1_Stakeholder.ipynb — WARN: 6 untagged .show() call(s); 4 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase1_Technical.ipynb — WARN: 6 untagged .show() call(s); 2 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase2_Stakeholder.ipynb — WARN: 6 untagged .show() call(s); 23 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase2_Technical.ipynb — WARN: 9 untagged .show() call(s); 12 hardcoded COLORS hex value(s) — use COLORS dict
+
+Overall: 1/1 passed

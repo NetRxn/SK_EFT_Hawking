@@ -1,0 +1,41 @@
+{
+  "timestamp": "20260325T145358Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "viz_consistency": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s); 4 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s); 2 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s); 23 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 9 untagged .show() call(s); 12 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

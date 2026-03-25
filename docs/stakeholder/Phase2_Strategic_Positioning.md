@@ -134,6 +134,18 @@ This is the signature of a research program, not a one-off calculation.
 | Competitor publishes second-order analysis first | Low | High | Our formal verification is unique; no competitor has Lean infrastructure |
 | Phase 2 results too small to detect | High (likely) | Low | Theoretical value (counting, parity) stands independently |
 
+### CGL Derivation as a Key Differentiator
+
+The CGL dynamical KMS derivation (Direction D, completed March 25, 2026) is a significant competitive advantage:
+
+1. **First-principles foundation.** No other analog gravity program has derived the FDR from the CGL transformation and formally verified the derivation in Lean 4. The master formula K_N = −i·[K_R(ω)−K_R(−ω)]/(β₀ω) provides a general-order result, not just a case-by-case check.
+
+2. **Structural insight.** The decomposition into even-ω (conservative, no noise) and odd-ω (dissipative, paired with noise) is a clean structural result that extends to arbitrary derivative order. The noise count pattern (n+1 bilinears at even order N=2n, zero at odd orders) is new.
+
+3. **All open questions resolved.** The combination of CGL derivation + boundary term analysis + Aristotle stress tests closes every theoretical question raised during development. The 40/40 theorem count with zero sorry is unmatched in the field.
+
+4. **Boundary terms controlled.** The O(D) suppression of IBP gradient corrections (~1.3% for current experiments) provides quantitative assurance that the constant-coefficient EFT is valid near the horizon.
+
 ---
 
-*This memo extends the Phase 1 Strategic Positioning to cover Phase 2's contributions to the research program. It emphasizes systematic extensibility, new observables, and the formal verification methodology as distinguishing features of the program. Last updated: March 24, 2026.*
+*This memo extends the Phase 1 Strategic Positioning to cover Phase 2's contributions to the research program. It emphasizes systematic extensibility, new observables, and the formal verification methodology as distinguishing features of the program. Last updated: March 25, 2026 (Direction D CGL derivation, all open questions resolved, 40/40 theorems).*

@@ -93,6 +93,7 @@ class Detail:
     name: str
     passed: bool
     message: str = ""
+    warning: bool = False  # True = passed but with advisory warning (⚠)
 
 
 @dataclass
@@ -575,6 +576,113 @@ def check_lean_build() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 10: Notebook visualization consistency (warnings only)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("viz_consistency", "Notebook visualizations use imported physics and consistent style")
+def check_viz_consistency() -> CheckResult:
+    """Visualization consistency warnings (advisory, always passes).
+
+    Two mechanisms:
+      1. Opt-in: cells tagged ``# viz-ref: fig_name`` are checked against
+         the corresponding function in ``src/core/visualizations.py``.
+      2. Safety net: any ``.show()`` call in a code cell that lacks a
+         ``viz-ref`` tag triggers a warning — the figure is untracked.
+
+    Also warns if a figure cell uses hardcoded color hex values instead
+    of the COLORS dict from constants.py.
+    """
+    import ast
+    import importlib
+
+    details = []
+
+    # ── Discover visualizations.py figure functions ──
+    viz_functions = set()
+    viz_path = SRC_DIR / "core" / "visualizations.py"
+    if viz_path.exists():
+        try:
+            tree = ast.parse(viz_path.read_text())
+            viz_functions = {
+                node.name for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef) and node.name.startswith("fig_")
+            }
+        except SyntaxError:
+            details.append(Detail("visualizations.py", True,
+                                  "WARN: could not parse visualizations.py",
+                                  warning=True))
+
+    # ── Known COLORS hex values (hardcoding these is a smell) ──
+    try:
+        from src.core.constants import COLORS as _COLORS
+        known_hex = {v.lower() for v in _COLORS.values() if isinstance(v, str)}
+    except ImportError:
+        known_hex = set()
+
+    # ── Scan notebooks ──
+    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
+        try:
+            with open(nb_path) as f:
+                nb = json.load(f)
+        except Exception as e:
+            details.append(Detail(nb_path.name, True,
+                                  f"WARN: could not parse — {e}", warning=True))
+            continue
+
+        untracked_show = 0
+        hardcoded_colors = 0
+        ref_warnings = []
+
+        for cell_idx, cell in enumerate(nb.get('cells', [])):
+            if cell.get('cell_type') != 'code':
+                continue
+            src = ''.join(cell.get('source', []))
+
+            # ── Check for viz-ref tags ──
+            ref_match = re.search(r'#\s*viz-ref:\s*(\w+)', src)
+            has_show = '.show()' in src
+
+            if ref_match:
+                ref_name = ref_match.group(1)
+                # Check function exists in visualizations.py
+                if ref_name not in viz_functions:
+                    ref_warnings.append(
+                        f"cell {cell_idx}: viz-ref '{ref_name}' not found in visualizations.py"
+                    )
+            elif has_show:
+                # Safety net: .show() without viz-ref tag
+                untracked_show += 1
+
+            # ── Check for hardcoded color hex values ──
+            if known_hex:
+                hex_matches = re.findall(r'["\']#([0-9a-fA-F]{6})["\']', src)
+                for h in hex_matches:
+                    if f"#{h.lower()}" in known_hex:
+                        hardcoded_colors += 1
+
+        # ── Report per notebook ──
+        warns = []
+        if untracked_show:
+            warns.append(f"{untracked_show} untagged .show() call(s)")
+        if hardcoded_colors:
+            warns.append(f"{hardcoded_colors} hardcoded COLORS hex value(s) — use COLORS dict")
+        for rw in ref_warnings:
+            warns.append(rw)
+
+        if warns:
+            details.append(Detail(
+                nb_path.name, True,
+                "WARN: " + "; ".join(warns),
+                warning=True,
+            ))
+        else:
+            details.append(Detail(nb_path.name, True, "clean"))
+
+    # Always passes — these are advisory warnings
+    return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Runner
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -608,7 +716,12 @@ def print_results(results: Dict[str, CheckResult]) -> None:
             print(f"  ERROR: {cr.error}")
 
         for d in cr.details:
-            sym = "✓" if d.passed else "✗"
+            if d.warning:
+                sym = "\033[33m⚠\033[0m"
+            elif d.passed:
+                sym = "✓"
+            else:
+                sym = "✗"
             line = f"  {sym} {d.name}"
             if d.message:
                 line += f"  —  {d.message}"
@@ -616,8 +729,14 @@ def print_results(results: Dict[str, CheckResult]) -> None:
 
     total = len(results)
     passed = sum(1 for r in results.values() if r.passed)
+    total_warnings = sum(
+        1 for r in results.values() for d in r.details if d.warning
+    )
     print(f"\n{'═'*70}")
-    print(f"  Overall: {passed}/{total} checks passed")
+    summary = f"  Overall: {passed}/{total} checks passed"
+    if total_warnings:
+        summary += f" ({total_warnings} warning{'s' if total_warnings > 1 else ''})"
+    print(summary)
     if passed == total:
         print("  \033[32mALL CHECKS PASSED\033[0m")
     else:
