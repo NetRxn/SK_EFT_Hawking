@@ -37,8 +37,19 @@ def test_lean_phase2_modules_exist():
         assert path.exists(), f"Missing Phase 2 Lean module: {path}"
 
 
+def test_lean_phase3_modules_exist():
+    """Verify Phase 3 Lean modules are present."""
+    expected = [
+        "SKEFTHawking/ThirdOrderSK.lean",
+        "SKEFTHawking/GaugeErasure.lean",
+    ]
+    for module in expected:
+        path = LEAN_DIR / module
+        assert path.exists(), f"Missing Phase 3 Lean module: {path}"
+
+
 def test_lean_root_imports_all_modules():
-    """Verify the root SKEFTHawking.lean imports all 6 modules."""
+    """Verify the root SKEFTHawking.lean imports all 9 modules."""
     root = LEAN_DIR / "SKEFTHawking.lean"
     assert root.exists(), "Missing root Lean file"
     content = root.read_text()
@@ -49,6 +60,9 @@ def test_lean_root_imports_all_modules():
         "import SKEFTHawking.SecondOrderSK",
         "import SKEFTHawking.HawkingUniversality",
         "import SKEFTHawking.WKBAnalysis",
+        "import SKEFTHawking.CGLTransform",
+        "import SKEFTHawking.ThirdOrderSK",
+        "import SKEFTHawking.GaugeErasure",
     ]
     for imp in expected_imports:
         assert imp in content, f"Root Lean file missing: {imp}"

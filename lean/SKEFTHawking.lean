@@ -5,6 +5,8 @@ import SKEFTHawking.SecondOrderSK
 import SKEFTHawking.HawkingUniversality
 import SKEFTHawking.WKBAnalysis
 import SKEFTHawking.CGLTransform
+import SKEFTHawking.ThirdOrderSK
+import SKEFTHawking.GaugeErasure
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

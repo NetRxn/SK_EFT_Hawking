@@ -1,15 +1,17 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Two papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Three papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
 - **Paper 2 (second-order):** Two additional coefficients (γ_{2,1}, γ_{2,2}),
-  frequency-dependent ω³ spectral distortion, WKB mode analysis. Draft in progress.
+  frequency-dependent ω³ spectral distortion, WKB mode analysis, CGL FDR derivation.
+- **Paper 3 (gauge erasure):** Universal structural theorem — non-Abelian gauge DOF
+  erased by hydrodynamization, U(1) survives (photonization). PRL format.
 
-**Lean 4 formalization:** 40/40 theorems proved via Aristotle across 13 submissions.
-Zero sorry remaining. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 72 theorems (40 Aristotle + 32 manual), zero sorry.
+Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 ## Project Structure
 
@@ -18,14 +20,17 @@ SK_EFT_Hawking/
 ├── lean/                              # Lean 4 formalization (40/40, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 6)
+│   ├── SKEFTHawking.lean              # Root module (imports all 9)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (5 theorems)
 │       ├── SKDoubling.lean            # Structure B: SK doubling + KMS (7 theorems)
-│       ├── HawkingUniversality.lean   # Structure C: universality (3 theorems)
+│       ├── HawkingUniversality.lean   # Structure C: universality + κ-crossing + spin-sonic (9 theorems)
 │       ├── SecondOrderSK.lean         # Phase 2: second-order counting + stress tests (19 theorems)
-│       └── WKBAnalysis.lean           # Phase 2: WKB + total-division strengthening (12 theorems)
+│       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
+│       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
+│       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
+│       └── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure

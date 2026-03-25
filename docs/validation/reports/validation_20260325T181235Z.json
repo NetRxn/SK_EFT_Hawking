@@ -1,0 +1,467 @@
+{
+  "timestamp": "20260325T181235Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "formulas": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "count_coefficients",
+          "passed": true,
+          "message": "Refs: secondOrder_count, counting_formula_N2, counting_formula_N3",
+          "warning": false
+        },
+        {
+          "name": "enumerate_monomials",
+          "passed": true,
+          "message": "Refs: spatial_parity_eliminates_second_order, parity_null_test",
+          "warning": false
+        },
+        {
+          "name": "damping_rate",
+          "passed": true,
+          "message": "Refs: dampingRate_eq_zero_iff",
+          "warning": false
+        },
+        {
+          "name": "dispersive_correction",
+          "passed": true,
+          "message": "Refs: dispersive_bound, dispersive_bound_tight",
+          "warning": false
+        },
+        {
+          "name": "first_order_correction",
+          "passed": true,
+          "message": "Refs: firstOrder_correction_zero_iff",
+          "warning": false
+        },
+        {
+          "name": "effective_temperature_ratio",
+          "passed": true,
+          "message": "Refs: effective_temperature_well_defined",
+          "warning": false
+        },
+        {
+          "name": "turning_point_shift",
+          "passed": true,
+          "message": "Refs: turning_point_shift_nonzero, turning_point_shift_nonzero_strengthened",
+          "warning": false
+        }
+      ]
+    },
+    "numerical": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Steinhauer.c_s",
+          "passed": 1.0,
+          "message": "expected=1.151e-03, actual=1.151e-03, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.xi",
+          "passed": 1.0,
+          "message": "expected=6.350e-07, actual=6.349e-07, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.kappa",
+          "passed": 1.0,
+          "message": "expected=2.190e+01, actual=2.190e+01, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.T_H",
+          "passed": 1.0,
+          "message": "expected=2.660e-11, actual=2.663e-11, err=0.1%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.c_s",
+          "passed": 1.0,
+          "message": "expected=3.919e-03, actual=3.919e-03, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.xi",
+          "passed": 1.0,
+          "message": "expected=4.160e-07, actual=4.159e-07, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.kappa",
+          "passed": 1.0,
+          "message": "expected=1.019e+02, actual=1.019e+02, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.T_H",
+          "passed": 1.0,
+          "message": "expected=1.240e-10, actual=1.239e-10, err=0.1%",
+          "warning": false
+        },
+        {
+          "name": "Trento.c_s",
+          "passed": 1.0,
+          "message": "expected=2.185e-03, actual=2.185e-03, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Trento.xi",
+          "passed": 1.0,
+          "message": "expected=1.264e-06, actual=1.264e-06, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Trento.kappa",
+          "passed": 1.0,
+          "message": "expected=2.140e+01, actual=2.141e+01, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Trento.T_H",
+          "passed": 1.0,
+          "message": "expected=2.600e-11, actual=2.602e-11, err=0.1%",
+          "warning": false
+        }
+      ]
+    },
+    "identities": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "count(1)==2",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "count(2)==2",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "count(3)==3",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "disp(0)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "1st_order(0,kappa)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "Gamma(k,w,cs,0,0,0,0)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "delta2_acoustic_vanishes",
+          "passed": true,
+          "message": "value=0.000e+00",
+          "warning": false
+        }
+      ]
+    },
+    "paper_table": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Steinhauer.c_s",
+          "passed": 1.0,
+          "message": "paper=1.151e-03, code=1.151e-03",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.xi",
+          "passed": 1.0,
+          "message": "paper=6.350e-07, code=6.349e-07",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.kappa",
+          "passed": 1.0,
+          "message": "paper=2.190e+01, code=2.190e+01",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.T_H",
+          "passed": 1.0,
+          "message": "paper=2.700e-11, code=2.663e-11",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.c_s",
+          "passed": 1.0,
+          "message": "paper=3.919e-03, code=3.919e-03",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.xi",
+          "passed": 1.0,
+          "message": "paper=4.160e-07, code=4.159e-07",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.kappa",
+          "passed": 1.0,
+          "message": "paper=1.019e+02, code=1.019e+02",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.T_H",
+          "passed": 1.0,
+          "message": "paper=1.240e-10, code=1.239e-10",
+          "warning": false
+        },
+        {
+          "name": "Trento.c_s",
+          "passed": 1.0,
+          "message": "paper=2.185e-03, code=2.185e-03",
+          "warning": false
+        },
+        {
+          "name": "Trento.xi",
+          "passed": 1.0,
+          "message": "paper=1.264e-06, code=1.264e-06",
+          "warning": false
+        },
+        {
+          "name": "Trento.kappa",
+          "passed": 1.0,
+          "message": "paper=2.140e+01, code=2.141e+01",
+          "warning": false
+        },
+        {
+          "name": "Trento.T_H",
+          "passed": 1.0,
+          "message": "paper=2.600e-11, code=2.602e-11",
+          "warning": false
+        }
+      ]
+    },
+    "theorems": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "TOTAL_THEOREMS",
+          "passed": true,
+          "message": "actual=40, expected=40",
+          "warning": false
+        },
+        {
+          "name": "len(ARISTOTLE_THEOREMS)",
+          "passed": true,
+          "message": "actual=40, expected=40",
+          "warning": false
+        },
+        {
+          "name": "consistency",
+          "passed": true,
+          "message": "TOTAL=40, dict=40",
+          "warning": false
+        }
+      ]
+    },
+    "notebooks": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        }
+      ]
+    },
+    "lean_source": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "dampingRate_eq_zero_iff",
+          "passed": true,
+          "message": "Lean ident 'dampingRate_eq_zero_iff' found",
+          "warning": false
+        },
+        {
+          "name": "dispersive_bound",
+          "passed": true,
+          "message": "Lean ident 'dispersive_correction_bound' found",
+          "warning": false
+        },
+        {
+          "name": "firstOrder_correction_zero_iff",
+          "passed": true,
+          "message": "Lean ident 'firstOrder_correction_zero_iff' found",
+          "warning": false
+        },
+        {
+          "name": "acoustic_metric_determinant",
+          "passed": true,
+          "message": "Lean ident 'acousticMetric_det' found",
+          "warning": false
+        },
+        {
+          "name": "secondOrder_count",
+          "passed": true,
+          "message": "Lean ident 'secondOrder_count' found",
+          "warning": false
+        }
+      ]
+    },
+    "cgl_fdr": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "einstein_relation",
+          "passed": true,
+          "message": "\u03c3 = \u03b3/\u03b2\u2080 for Brownian particle",
+          "warning": false
+        },
+        {
+          "name": "first_order_bec",
+          "passed": true,
+          "message": "K_N = 2\u0393/\u03b2\u2080 for BEC with damping",
+          "warning": false
+        },
+        {
+          "name": "second_order_real",
+          "passed": true,
+          "message": "Second-order noise kernel is real",
+          "warning": false
+        },
+        {
+          "name": "noise_count_pattern",
+          "passed": true,
+          "message": "Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}",
+          "warning": false
+        }
+      ]
+    },
+    "lean_build": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "lake_bin",
+          "passed": true,
+          "message": "/Users/johnroehm/.elan/bin/lake",
+          "warning": false
+        },
+        {
+          "name": "lean_root",
+          "passed": true,
+          "message": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean",
+          "warning": false
+        },
+        {
+          "name": "lake_build",
+          "passed": true,
+          "message": "build succeeded (2257 jobs)",
+          "warning": false
+        }
+      ]
+    },
+    "viz_consistency": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s); 4 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s); 2 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s); 23 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 9 untagged .show() call(s); 12 hardcoded COLORS hex value(s) \u2014 use COLORS dict",
+          "warning": true
+        }
+      ]
+    },
+    "notebook_exec": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "13 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "16 code cells executed successfully",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "failed": 0
+  }
+}

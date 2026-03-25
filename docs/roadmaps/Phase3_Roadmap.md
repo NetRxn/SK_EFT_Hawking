@@ -69,15 +69,15 @@
 - N=4 SYM holographic results (multiple sources)
 
 **Deliverables:**
-- [ ] `src/gauge_erasure/` — Python module with the algebraic argument (higher-form symmetry commutativity, center symmetry analysis)
-- [ ] `lean/SKEFTHawking/GaugeErasure.lean` — Lean formalization of the structural theorem (at minimum: higher-form Abelianness, Z_N → domain walls not Goldstone)
-- [ ] Aristotle submissions for Lean proofs
-- [ ] `papers/paper3_gauge_erasure/paper_draft.tex` — Paper draft (target: PRL or PRD Rapid Communication)
-- [ ] Tests in `tests/test_gauge_erasure.py`
+- [x] `src/gauge_erasure/` — Python module: erasure_theorem.py with GaugeGroup, HigherFormSymmetry, HydrodynamicFate, full analysis chain, Standard Model + N=4 SYM analysis
+- [x] `lean/SKEFTHawking/GaugeErasure.lean` — 11 Lean theorems + 1 axiom (discrete center): gauge_erasure, u1_survival, erasure_dichotomy, sm_only_u1_survives, concrete SU(2)/SU(3)/U(1) instances
+- [ ] Aristotle submissions (not needed — proofs done directly except 1 axiom from Lie theory)
+- [x] `papers/paper3_gauge_erasure/paper_draft.tex` — PRL format, ~4 pages, covers argument chain + universality + N=4 SYM + formal verification + implications
+- [x] Tests in `tests/test_gauge_erasure.py` — 25 tests covering groups, higher-form symmetry, Goldstone/domain wall, erasure theorem, Standard Model, N=4 SYM
 
 **Estimated LOE:** 2-3 days
 **Risk:** Low-medium. Physics is established; novelty is synthesis + formalization.
-**Status:** `pending`
+**Status:** `complete`
 
 ---
 
@@ -91,20 +91,24 @@
 - `src/second_order/enumeration.py` generalizes to arbitrary order
 
 **What's needed:**
-- [ ] Enumerate all third-order monomials explicitly (derivative structures with 3 derivatives on ψ_r, ψ_a)
-- [ ] Apply normalization, KMS T-reversal parity, and CGL FDR constraints
-- [ ] Identify which coefficients require parity breaking (expect: odd-derivative-count terms)
-- [ ] Determine if any new qualitative physics emerges (new symmetry constraints? new spectral features?)
-- [ ] Lean formalization: `ThirdOrderSK.lean` or extend `SecondOrderSK.lean`
-- [ ] Aristotle submissions
-- [ ] Update enumeration.py with third-order support
-- [ ] Tests
+- [x] Enumerate all third-order monomials explicitly (derivative structures with 4 derivatives on ψ_r, ψ_a)
+- [x] Apply normalization, KMS T-reversal parity, and CGL FDR constraints
+- [x] Identify which coefficients require parity breaking → **DISCOVERY: parity alternation theorem**
+- [x] Determine if any new qualitative physics emerges → **YES: parity alternation + Bogoliubov k⁴ connection**
+- [x] Lean formalization: `ThirdOrderSK.lean` created (14 theorems, zero sorry)
+- [ ] Aristotle submissions (not needed — all proofs done directly in Lean)
+- [x] Update enumeration.py with third-order support + parity alternation analysis
+- [x] Tests (36 new tests, 100/100 total)
 
-**Key question:** Does a new qualitative feature emerge at third order, or does the pattern stabilize? The counting formula predicts count(N) → N/2 + 1 for large N, suggesting eventual stabilization. Third order is the test.
+**Key finding:** The **parity alternation theorem** is a new qualitative result:
+- At odd EFT order N (1, 3, 5, ...): all monomials are parity-preserving → corrections exist universally
+- At even EFT order N (2, 4, 6, ...): all monomials require broken parity → corrections only with background flow
+- The ∂⁴_x monomial mirrors the Bogoliubov superluminal dispersion ℏ²k⁴/4m², connecting EFT to UV physics
+- Spectral correction δ^(3)(ω) ∝ ω⁴ is EVEN in frequency (unlike odd ω³ at second order)
 
 **Estimated LOE:** 1-2 days
 **Risk:** Very low. Same methodology, proven infrastructure.
-**Status:** `pending`
+**Status:** `complete`
 
 ---
 
@@ -113,15 +117,15 @@
 **Goal:** Formalize three results currently only computed numerically.
 
 **Enhancements:**
-- [ ] **κ-scaling crossing prediction:** Formalize δ_disp = δ_diss at κ* and derive the crossing surface gravity
-- [ ] **Spin-sonic enhancement theorem:** Prove (c_density/c_spin)² enhancement is exact at leading order
-- [ ] **Bogoliubov coefficient bound:** Formalize that dissipative correction to |β_k|² is bounded by Γ_H/κ
+- [x] **κ-scaling crossing prediction:** Formalized in HawkingUniversality.lean — `kappaCrossing_pos`, `kappa_crossing_is_crossing` (κ* = 6A·c_s²/(π·ξ²), proved positive and crossing)
+- [x] **Spin-sonic enhancement theorem:** Formalized in HawkingUniversality.lean — `spinSonicEnhancement_pos`, `spinSonic_enhancement_exact` (ratio proof: (c_d/c_s)² exact at leading order)
+- [x] **Bogoliubov coefficient bound:** Formalized in WKBAnalysis.lean — `bogoliubov_correction_bounded`, `bogoliubov_correction_perturbative` (δ_diss ≤ 1 when Γ_H ≤ κ), `secondOrder_vanishes_on_shell_with_positivity`
 
-**Where they go:** Extend `HawkingUniversality.lean` and `WKBAnalysis.lean`
+**Where they go:** Extended `HawkingUniversality.lean` (4 new theorems) and `WKBAnalysis.lean` (3 new theorems)
 
 **Estimated LOE:** 1 day (bundle with 1C)
 **Risk:** Very low.
-**Status:** `pending`
+**Status:** `complete`
 
 ---
 

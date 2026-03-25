@@ -264,6 +264,106 @@ def count_imaginary_monomials(N: int) -> dict:
 
 
 # ═══════════════════════════════════════════════════════════════════
+# Parity alternation theorem
+# ═══════════════════════════════════════════════════════════════════
+
+def parity_alternation(N: int) -> dict:
+    """Determine whether order-N corrections require broken spatial parity.
+
+    Structural result: at EFT order N with derivative level L = N+1,
+    the surviving monomials have (m, n) with m even and n = L - m.
+
+    - If N is odd → L is even → n = L - m is even (since m even, L even)
+      → ALL monomials are parity-preserving
+      → count(N, parity) = count(N, no parity)
+
+    - If N is even → L is odd → n = L - m is odd (since m even, L odd)
+      → ALL monomials REQUIRE broken parity
+      → count(N, parity) = 0
+
+    Physical implication:
+      - Odd-order corrections (N=1,3,5,...) exist universally, even in
+        homogeneous systems with full spatial symmetry.
+      - Even-order corrections (N=2,4,6,...) are pure background-flow effects
+        that vanish without spatial parity breaking.
+
+    This creates a systematic alternation in the EFT derivative expansion:
+    universal → flow-only → universal → flow-only → ...
+
+    Returns:
+        Dict with keys: N, L, requires_parity_breaking, all_monomials_parity_type,
+        count_no_parity, count_with_parity, physical_interpretation.
+    """
+    L = N + 1
+    requires_breaking = N % 2 == 0  # even N → odd L → requires breaking
+
+    r = analyze_order(N, verbose=False)
+
+    if requires_breaking:
+        interp = (f"Order {N} (even): ALL {r.n_transport_no_parity} monomials have "
+                  f"odd spatial derivative count → require broken parity (background flow). "
+                  f"These corrections vanish in homogeneous systems.")
+    else:
+        interp = (f"Order {N} (odd): ALL {r.n_transport_no_parity} monomials have "
+                  f"even spatial derivative count → parity-preserving. "
+                  f"These corrections exist universally.")
+
+    return {
+        'N': N,
+        'L': L,
+        'requires_parity_breaking': requires_breaking,
+        'all_monomials_parity_type': 'odd_n' if requires_breaking else 'even_n',
+        'count_no_parity': r.n_transport_no_parity,
+        'count_with_parity': r.n_transport_with_parity,
+        'monomials': r.t_reversal_surviving,
+        'physical_interpretation': interp,
+    }
+
+
+def third_order_analysis(verbose: bool = True) -> OrderAnalysis:
+    """Detailed analysis of the third-order EFT extension.
+
+    At N=3, L=4, the three surviving monomials are:
+      (m=0, n=4): ψ_a · ∂⁴_x ψ_r  — quartic spatial
+      (m=2, n=2): ψ_a · ∂²_t ∂²_x ψ_r  — mixed temporal-spatial
+      (m=4, n=0): ψ_a · ∂⁴_t ψ_r  — quartic temporal
+
+    Key qualitative features:
+      1. ALL THREE are parity-even (n even) → exist without background flow
+      2. The ∂⁴_x term matches the Bogoliubov superluminal dispersion ℏ²k⁴/4m²
+      3. Spectrum correction δ^(3)(ω) ∝ ω⁴ is even in frequency (unlike odd ω³ at N=2)
+      4. The ∂⁴_t term is purely temporal damping at fourth order
+
+    Lean: thirdOrder_count (Aristotle run 3eedcabb), cumulative_count_through_3
+    """
+    r = analyze_order(3, verbose=verbose)
+
+    if verbose:
+        pa = parity_alternation(3)
+        print(f"\n{'─'*70}")
+        print("PARITY ALTERNATION at third order:")
+        print(f"  {pa['physical_interpretation']}")
+        print(f"\n  Contrast with second order (N=2):")
+        pa2 = parity_alternation(2)
+        print(f"  {pa2['physical_interpretation']}")
+
+        print(f"\n  The three third-order monomials:")
+        labels = [
+            ("γ_{3,1}", "quartic spatial dispersion — mirrors Bogoliubov ℏ²k⁴/4m²"),
+            ("γ_{3,2}", "mixed temporal-spatial — ω²k² cross-term"),
+            ("γ_{3,3}", "quartic temporal damping — pure time evolution"),
+        ]
+        for (d, (name, desc)) in zip(r.t_reversal_surviving, labels):
+            d_str = repr(d)
+            print(f"    {name}: ψ_a · {d_str} ψ_r — {desc}")
+
+        print(f"\n  Spectral correction: δ^(3)(ω) ∝ ω⁴ (even in frequency)")
+        print(f"  Units: γ_{{3,i}} have dimension [m⁴/s]")
+
+    return r
+
+
+# ═══════════════════════════════════════════════════════════════════
 # Main analysis
 # ═══════════════════════════════════════════════════════════════════
 

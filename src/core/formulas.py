@@ -72,14 +72,22 @@ def enumerate_monomials(N: int, require_spatial_parity: bool = False):
 # Damping rate (WKBAnalysis.lean: DissipativeDispersion.dampingRate)
 # ════════════════════════════════════════════════════════════════════
 
-def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0):
+def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
+                 gamma_3_1=0.0, gamma_3_2=0.0, gamma_3_3=0.0):
     """
-    Dissipative damping rate including first and second order.
+    Dissipative damping rate including first, second, and third order.
 
-    Γ(k, ω) = γ₁·k² + γ₂·ω²/c_s² + γ_{2,1}·k³ + γ_{2,2}·ω²·k/c_s²
+    Γ(k, ω) = γ₁·k² + γ₂·ω²/c_s²                        (order 1)
+            + γ_{2,1}·k³ + γ_{2,2}·ω²·k/c_s²             (order 2)
+            + γ_{3,1}·k⁴ + γ_{3,2}·ω²·k²/c_s² + γ_{3,3}·ω⁴/c_s⁴  (order 3)
 
     Lean: dampingRate_eq_zero_iff — proves Γ=0 for all (k,ω) iff all γᵢ=0.
     Aristotle: 518636d7
+
+    Parity alternation:
+        Order 1 terms (k², ω²) are parity-even → universal
+        Order 2 terms (k³, ω²k) are parity-odd → require background flow
+        Order 3 terms (k⁴, ω²k², ω⁴) are parity-even → universal
 
     Args:
         k: wavenumber [m⁻¹]
@@ -89,13 +97,19 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0):
         gamma_2: first-order transport coefficient [m²/s]
         gamma_2_1: second-order transport coefficient [m³/s]
         gamma_2_2: second-order transport coefficient [m³/s]
+        gamma_3_1: third-order transport coefficient [m⁴/s]
+        gamma_3_2: third-order transport coefficient [m⁴/s]
+        gamma_3_3: third-order transport coefficient [m⁴/s]
 
     Returns:
         Γ(k, ω) [s⁻¹]
     """
     first_order = gamma_1 * k**2 + gamma_2 * (omega**2 / c_s**2)
     second_order = gamma_2_1 * k**3 + gamma_2_2 * (omega**2 * k / c_s**2)
-    return first_order + second_order
+    third_order = (gamma_3_1 * k**4 +
+                   gamma_3_2 * (omega**2 * k**2 / c_s**2) +
+                   gamma_3_3 * (omega**4 / c_s**4))
+    return first_order + second_order + third_order
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -184,6 +198,41 @@ def second_order_correction(k, omega, c_s, gamma_2_1, gamma_2_2, kappa):
 # ════════════════════════════════════════════════════════════════════
 # Effective temperature (WKBAnalysis.lean: effectiveTemperature)
 # ════════════════════════════════════════════════════════════════════
+
+def third_order_correction(k, omega, c_s, gamma_3_1, gamma_3_2, gamma_3_3, kappa):
+    """
+    Third-order dissipative correction to T_eff.
+
+    δ⁽³⁾(ω) = [γ_{3,1}·k⁴ + γ_{3,2}·ω²·k²/c_s² + γ_{3,3}·ω⁴/c_s⁴] / κ
+
+    This is FREQUENCY-DEPENDENT and EVEN in ω — the new physics of Phase 3.
+    Unlike second-order (odd in ω, requires parity breaking), third-order
+    corrections are parity-preserving and exist universally.
+
+    The γ_{3,1}·k⁴ term has the same structure as the Bogoliubov
+    superluminal dispersion ℏ²k⁴/(4m²), connecting the EFT to the
+    microscopic UV physics of the BEC.
+
+    Lean: thirdOrder_count, cumulative_count_through_3
+    Aristotle: 3eedcabb
+
+    Args:
+        k: wavenumber [m⁻¹]
+        omega: frequency [s⁻¹]
+        c_s: speed of sound [m/s]
+        gamma_3_1: third-order transport coefficient [m⁴/s]
+        gamma_3_2: third-order transport coefficient [m⁴/s]
+        gamma_3_3: third-order transport coefficient [m⁴/s]
+        kappa: surface gravity [s⁻¹]
+
+    Returns:
+        δ⁽³⁾(ω) (dimensionless)
+    """
+    Gamma_3 = (gamma_3_1 * k**4 +
+               gamma_3_2 * (omega**2 * k**2 / c_s**2) +
+               gamma_3_3 * (omega**4 / c_s**4))
+    return Gamma_3 / kappa
+
 
 def effective_temperature_ratio(omega, c_s, kappa, D,
                                  gamma_1, gamma_2,
