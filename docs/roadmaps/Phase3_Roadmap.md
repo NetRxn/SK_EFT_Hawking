@@ -69,15 +69,15 @@
 - N=4 SYM holographic results (multiple sources)
 
 **Deliverables:**
-- [ ] `src/gauge_erasure/` — Python module with the algebraic argument (higher-form symmetry commutativity, center symmetry analysis)
-- [ ] `lean/SKEFTHawking/GaugeErasure.lean` — Lean formalization of the structural theorem (at minimum: higher-form Abelianness, Z_N → domain walls not Goldstone)
-- [ ] Aristotle submissions for Lean proofs
-- [ ] `papers/paper3_gauge_erasure/paper_draft.tex` — Paper draft (target: PRL or PRD Rapid Communication)
-- [ ] Tests in `tests/test_gauge_erasure.py`
+- [x] `src/gauge_erasure/` — Python module: erasure_theorem.py with GaugeGroup, HigherFormSymmetry, HydrodynamicFate, full analysis chain, Standard Model + N=4 SYM analysis
+- [x] `lean/SKEFTHawking/GaugeErasure.lean` — 11 Lean theorems + 1 axiom (discrete center): gauge_erasure, u1_survival, erasure_dichotomy, sm_only_u1_survives, concrete SU(2)/SU(3)/U(1) instances
+- [ ] Aristotle submissions (not needed — proofs done directly except 1 axiom from Lie theory)
+- [x] `papers/paper3_gauge_erasure/paper_draft.tex` — PRL format, ~4 pages, covers argument chain + universality + N=4 SYM + formal verification + implications
+- [x] Tests in `tests/test_gauge_erasure.py` — 25 tests covering groups, higher-form symmetry, Goldstone/domain wall, erasure theorem, Standard Model, N=4 SYM
 
 **Estimated LOE:** 2-3 days
 **Risk:** Low-medium. Physics is established; novelty is synthesis + formalization.
-**Status:** `pending`
+**Status:** `complete`
 
 ---
 
