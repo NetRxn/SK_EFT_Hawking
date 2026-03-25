@@ -71,7 +71,7 @@
 **Deliverables:**
 - [x] `src/gauge_erasure/` — Python module: erasure_theorem.py with GaugeGroup, HigherFormSymmetry, HydrodynamicFate, full analysis chain, Standard Model + N=4 SYM analysis
 - [x] `lean/SKEFTHawking/GaugeErasure.lean` — 11 Lean theorems + 1 axiom (discrete center): gauge_erasure, u1_survival, erasure_dichotomy, sm_only_u1_survives, concrete SU(2)/SU(3)/U(1) instances
-- [ ] Aristotle submissions (not needed — proofs done directly except 1 axiom from Lie theory)
+- [x] Aristotle submissions (not needed — proofs done directly except 1 axiom from Lie theory)
 - [x] `papers/paper3_gauge_erasure/paper_draft.tex` — PRL format, ~4 pages, covers argument chain + universality + N=4 SYM + formal verification + implications
 - [x] Tests in `tests/test_gauge_erasure.py` — 25 tests covering groups, higher-form symmetry, Goldstone/domain wall, erasure theorem, Standard Model, N=4 SYM
 
@@ -96,7 +96,7 @@
 - [x] Identify which coefficients require parity breaking → **DISCOVERY: parity alternation theorem**
 - [x] Determine if any new qualitative physics emerges → **YES: parity alternation + Bogoliubov k⁴ connection**
 - [x] Lean formalization: `ThirdOrderSK.lean` created (14 theorems, zero sorry)
-- [ ] Aristotle submissions (not needed — all proofs done directly in Lean)
+- [x] Aristotle submissions (not needed — all proofs done directly in Lean)
 - [x] Update enumeration.py with third-order support + parity alternation analysis
 - [x] Tests (36 new tests, 100/100 total)
 
@@ -171,20 +171,26 @@ Match WKB solutions across the complex turning point. The standard Hawking resul
 Express |α_k|² and |β_k|² in terms of the EFT parameters. The standard unitarity relation |α|² - |β|² = 1 may be modified by dissipation — determine how.
 
 **Deliverables:**
-- [ ] `src/wkb/connection_formula.py` — Exact connection formula implementation
-- [ ] `src/wkb/bogoliubov.py` — Modified Bogoliubov coefficients with full frequency dependence
-- [ ] `src/wkb/spectrum.py` — Observable Hawking spectrum with all corrections
-- [ ] `lean/SKEFTHawking/WKBConnection.lean` — Lean formalization of connection formula structure
-- [ ] Aristotle submissions
-- [ ] `papers/paper4_wkb_companion/paper_draft.tex` — or fold into PRD companion
-- [ ] Numerical comparison: WKB exact vs. EFT perturbative for three BEC platforms
-- [ ] Tests
+- [x] `src/wkb/connection_formula.py` — Complex turning point, Stokes geometry, exact connection formula with dissipation-shifted turning point
+- [x] `src/wkb/bogoliubov.py` — Modified Bogoliubov coefficients with broken unitarity (|α|²-|β|²=1-δ_k), decoherence parameter, FDR noise floor
+- [x] `src/wkb/spectrum.py` — Observable Hawking spectrum with platform-specific predictions (Steinhauer/Heidelberg/Trento), perturbative comparison
+- [x] `lean/SKEFTHawking/WKBConnection.lean` — 17 theorems, zero sorry: modified unitarity, decoherence, noise floor, spectral floor, turning point structure
+- [x] Aristotle submissions (not needed — all proofs done directly in Lean)
+- [x] `papers/paper4_wkb_connection/paper_draft.tex` — PRD format, standalone paper (decision: non-perturbative effects warrant standalone)
+- [x] Numerical comparison: WKB exact vs. EFT perturbative for three BEC platforms (in spectrum.py + notebooks)
+- [x] Tests in `tests/test_wkb_connection.py` — 65 tests across 12 test classes
+- [x] Notebooks: WKBConnection_Technical.ipynb (26 cells) + WKBConnection_Stakeholder.ipynb (17 cells)
+- [x] Updated `src/core/formulas.py` with decoherence_parameter() and fdr_noise_floor() (Lean-referenced)
 
-**Key question:** Does the exact WKB result reveal structure beyond what the perturbative EFT captures? E.g., non-perturbative effects near the turning point, or a breakdown scale where the EFT ceases to be valid.
+**Key question answer:** YES — three non-perturbative effects beyond perturbative EFT:
+1. Modified unitarity: |α|²-|β|²=1-δ_k (decoherence parameter δ_k=2Γ_H/κ)
+2. FDR noise floor: n_noise=δ_k/2 (KMS-mandated, independent of Hawking process)
+3. Spectral floor: noise dominates over Hawking radiation at ω≳6T_H for Steinhauer
+→ Decision: standalone Paper 4 (not folded into PRD companion)
 
 **Estimated LOE:** 3-4 days
 **Risk:** Medium. Connection formula literature is mature; dissipative extension is novel. The complex Stokes geometry could produce surprises.
-**Status:** `pending`
+**Status:** `complete`
 
 ---
 
@@ -273,28 +279,29 @@ Day 6-12 (Wave 3, overlapping with Wave 2 tail):
 
 ### Expected outputs
 
-| Paper | Target journal | Content | Theorem count (est.) |
-|-------|---------------|---------|---------------------|
-| Paper 1 (Phase 1) | PRL | First-order SK-EFT Hawking correction | 14 |
-| Paper 2 (Phase 2) | PRD | Second-order + CGL + counting formula | 26 |
-| Paper 3 (1B) | PRL/PRD Rapid | Non-Abelian gauge erasure theorem | 5-8 |
-| Paper 4 (2D) | PRD | Exact WKB connection formula | 5-8 |
-| Paper 5 (3F) | PRL/PRD | ADW gap equation result (±) | 5-7 |
+| Paper | Target journal | Content | Theorems (actual) | Figures |
+|-------|---------------|---------|-------------------|---------|
+| Paper 1 (Phase 1) | PRL | First-order SK-EFT Hawking correction | referenced across modules | 3 |
+| Paper 2 (Phase 2) | PRD | Second-order + CGL + counting formula | referenced across modules | 6 |
+| Paper 3 (1B) | PRL/PRD Rapid | Non-Abelian gauge erasure theorem | 11 + 1 axiom | 2 |
+| Paper 4 (2D) | PRD | Exact WKB connection formula | 17 | 3 |
+| Paper 5 (3F) | PRL/PRD | ADW gap equation result (±) | TBD | TBD |
 
-**Cumulative Lean theorems:** ~55-67 (current 40 + new)
+**Cumulative Lean theorems:** 109 + 1 axiom (40 Aristotle-proved + 69 manual), zero sorry, 10 modules, 2258 jobs
 **Walls addressed:** Gauge wall closed (Paper 3), gravity wall tested (Paper 5)
+**Tests:** 191/191, **Notebooks:** 10, **Pipeline figures:** 27
 
 ### Decision points
 
-| After... | If... | Then... |
-|----------|-------|---------|
-| Wave 1 | Third-order reveals new qualitative physics | Extend to fourth order before Wave 2 |
-| Wave 1 | Third-order pattern stabilizes | Proceed to Wave 2 as planned |
-| Wave 2 | WKB reveals non-perturbative effects | Write standalone paper (not fold into PRD) |
-| Wave 2 | WKB confirms EFT perturbative result | Fold into PRD companion |
-| Wave 3 | Gap equation has nontrivial Lorentzian solution | Phase 4: vestigial simulation (G) + experimental outreach |
-| Wave 3 | Gap equation fails | Publish negative result; pivot to vestigial gravity (Level 1) |
-| Wave 3 | Gap equation inconclusive (requires beyond mean-field) | Phase 4: Monte Carlo simulation (G) |
+| After... | If... | Then... | **Resolved** |
+|----------|-------|---------|-------------|
+| Wave 1 | Third-order reveals new qualitative physics | Extend to fourth order before Wave 2 | **No** — parity alternation proved for general N, no 4th-order extension needed |
+| Wave 1 | Third-order pattern stabilizes | Proceed to Wave 2 as planned | **Yes** — proceeded to Wave 2 |
+| Wave 2 | WKB reveals non-perturbative effects | Write standalone paper (not fold into PRD) | **Yes** — 3 non-perturbative effects → standalone Paper 4 |
+| Wave 2 | WKB confirms EFT perturbative result | Fold into PRD companion | N/A (opposite outcome) |
+| Wave 3 | Gap equation has nontrivial Lorentzian solution | Phase 4: vestigial simulation (G) + experimental outreach | Pending |
+| Wave 3 | Gap equation fails | Publish negative result; pivot to vestigial gravity (Level 1) | Pending |
+| Wave 3 | Gap equation inconclusive (requires beyond mean-field) | Phase 4: Monte Carlo simulation (G) | Pending |
 
 ### Foundation for experimental outreach (post-Phase 3)
 
@@ -315,10 +322,10 @@ This provides a strong basis for approaching experimentalists from a position of
 ```bash
 cd SK_EFT_Hawking
 uv sync                                          # Install/sync dependencies
-uv run python -m pytest tests/ -v                # 64/64 tests
+uv run python -m pytest tests/ -v                # 191/191 tests
 uv run python scripts/validate.py                # 11/11 cross-layer checks + archive
-uv run python scripts/review_figures.py          # 12 PNGs + structural checks + manifest
-cd lean && ~/.elan/bin/lake build                 # 2255 jobs, clean
+uv run python scripts/review_figures.py          # 27 PNGs + structural checks + manifest
+cd lean && ~/.elan/bin/lake build                 # 2258 jobs, clean
 ```
 
 **Validation checks (11 total):**
@@ -337,7 +344,7 @@ cd lean && ~/.elan/bin/lake build                 # 2255 jobs, clean
 ### Figure Review Pipeline
 
 ```bash
-# Generate all 12 PNGs + run automated structural checks:
+# Generate all 27 PNGs + run automated structural checks:
 uv run python scripts/review_figures.py
 
 # LLM visual review (requires Claude Code session):
@@ -349,6 +356,23 @@ uv run python scripts/review_figures.py
 ```
 
 **Plugin location:** `.claude/plugins/physics-figure-review/` (registered in `installed_plugins.json` as `physics-figure-review@local`). Contains agent `figure-reviewer` that reads PNGs + manifest and produces structured JSON report checking rendering quality, physics accuracy, and style consistency.
+
+**Figure count:** 27 total (12 Phase 1+2, 9 Phase 3 Wave 1, 6 Phase 3 Wave 2). All registered in `scripts/review_figures.py` with corresponding functions in `src/core/visualizations.py` (25 functions, some with `stakeholder` parameter).
+
+### PR Submission Checklist (REQUIRED)
+
+Before creating a PR for any wave, ALL of the following must pass:
+
+- [ ] `uv run python -m pytest tests/ -v` — all tests pass
+- [ ] `uv run python scripts/validate.py` — all cross-layer checks pass
+- [ ] `cd lean && ~/.elan/bin/lake build` — Lean builds cleanly (zero sorry)
+- [ ] All notebooks execute cleanly (`nbclient`)
+- [ ] **`uv run python scripts/review_figures.py`** — all PNGs generated, structural checks pass
+- [ ] **LLM figure review agent** — run, fix ALL issues (FAIL and MINOR), re-run until all PASS
+- [ ] No evaluative print statements in notebook code cells (commentary in markdown only)
+- [ ] README, `src/__init__.py`, roadmap updated with current counts
+
+**The figure review step is a GATE — do not skip it.** It catches rendering issues (overlapping text, wrong colors, invisible curves) that automated tests cannot detect.
 
 ### Pre-Commit Hook
 
@@ -386,11 +410,54 @@ temporary/working-docs/specs/    # Design specs (if needed)
 temporary/working-docs/plans/    # Implementation plans (if needed)
 ```
 
+### Visualization Workflow (Figures-First)
+
+**Build figures BEFORE notebooks/papers.** This prevents cleanup work by validating visuals before distribution.
+
+```
+Step 1: Implement figure functions in src/core/visualizations.py
+        → Each figure is a `def fig_NAME() -> go.Figure` using COLORS + apply_layout
+        → Use `stakeholder=True` parameter for tech/stakeholder pairs
+
+Step 2: Register in scripts/review_figures.py (FigureSpec + func_map)
+        → Run: uv run python scripts/review_figures.py --generate
+        → Verify all PNGs generated, zero failures
+        ↺ Fix any generation failures, repeat until clean
+
+Step 3: Run LLM figure review agent
+        → Fix any FAIL or MINOR issues in visualizations.py
+        → Regenerate PNGs, re-review until ALL PASS (no FAIL, no MINOR)
+        → Report: figures/figure_review_report.json
+        ↺ This is iterative — keep fixing until the review is clean
+
+Step 4: Copy publication-ready PNGs to paper figures/ directories
+        → papers/paper<N>_<name>/figures/
+        → Add \begin{figure}\includegraphics blocks to .tex files
+        → Each paper gets only its relevant figures
+
+Step 5: Write/update paper draft (.tex)
+        → Reference figures via \ref{fig:name}
+        → Ensure captions match the validated figure content
+
+Step 6: Create Technical notebook to match paper
+        → Import COLORS and physics from src modules
+        → Tag figure cells with `# viz-ref: fig_name`
+        → Code cells compute and display; markdown cells interpret
+        → No evaluative print statements in code cells
+
+Step 7: Create Stakeholder notebook for wider audience
+        → Same physics imports, more accessible language
+        → Teaching-oriented markdown with analogies
+        → Supplementary visuals where they aid communication
+```
+
+**Why this order?** The LLM review agent catches rendering issues (overlapping text, wrong colors, invisible curves, colorblind inaccessibility) that automated tests cannot detect. Fixing in `visualizations.py` first means fixes propagate to all consumers. Papers reference validated figures. Technical notebooks match papers. Stakeholder notebooks build on technical ones. No cleanup work at any stage.
+
 ### Key Conventions
 
 - **Constants & formulas:** Single source of truth in `src/core/constants.py` and `src/core/formulas.py`
-- **Visualizations:** Plotly only. `src/core/visualizations.py` has 12 figure functions + full COLORS palette (12 keys). Notebooks build figures inline (transparent for teaching) but import physics + COLORS from src. `visualizations.py` is used for paper/dashboard export, not notebook imports.
-- **COLORS architecture:** `constants.py` has 3 experiment colors (Steinhauer/Heidelberg/Trento). `visualizations.py` has the full palette (+ Rb87/K39/Na23 aliases + dispersive/dissipative/cross/horizon/noise etc). Notebooks import COLORS from `visualizations`.
+- **Visualizations:** Plotly only. `src/core/visualizations.py` has 25 figure functions (12 Phase 1+2, 13 Phase 3) + full COLORS palette (12 keys). `visualizations.py` is the source of truth for figure rendering. Notebooks import COLORS and physics from src, never reimplement.
+- **COLORS architecture:** `constants.py` has 3 experiment colors (Steinhauer/Heidelberg/Trento). `visualizations.py` has the full palette (+ Rb87/K39/Na23 aliases + dispersive/dissipative/cross/horizon/noise etc). Use blue/amber (not red/green) for binary classifications to ensure colorblind accessibility.
 - **Notebook `viz-ref` tags:** Figure cells tagged `# viz-ref: fig_name` map to `visualizations.py` functions. validate.py CHECK 10 checks these for drift. Untagged `.show()` calls get advisory warnings.
 - **Formula provenance:** Every formula references its Lean theorem and Aristotle run ID
 - **Lean Mathlib:** Pinned to commit `8f9d9cff`. Do not update without coordinating with Aristotle.
@@ -403,8 +470,8 @@ When modifying physics results or proof counts, these must stay synced:
 | Category | Files |
 |----------|-------|
 | **Code** | `src/core/constants.py` (ARISTOTLE_THEOREMS, TOTAL_THEOREMS), `src/__init__.py`, `scripts/validate.py` (expected counts, forbidden set), `src/core/formulas.py`,  |
-| **Papers** | `papers/paper1_first_order/paper_draft.tex`, `papers/paper2_second_order/paper_draft.tex` |
-| **Notebooks** | All 4 `.ipynb` files (summary cells, verification sections) |
+| **Papers** | `papers/paper1_first_order/paper_draft.tex`, `papers/paper2_second_order/paper_draft.tex`, `papers/paper3_gauge_erasure/paper_draft.tex`, `papers/paper4_wkb_connection/paper_draft.tex` |
+| **Notebooks** | All 10 `.ipynb` files (summary cells, verification sections) |
 | **Stakeholder docs** | `docs/stakeholder/Phase2_companion_guide.md`, `Phase2_Strategic_Positioning.md`, `Phase2_Implications.md`, `Phase1_Implications.md`, `companion_guide.md` |
 | **Roadmaps** | `docs/roadmaps/Phase2_Roadmap.md`, `docs/roadmaps/Phase3_Roadmap.md` |
 | **Root** | `SK_EFT_Hawking_Inventory.md`, `README.MD` | 

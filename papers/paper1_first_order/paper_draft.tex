@@ -255,6 +255,25 @@ Dissipative correction $\delta_{\text{diss}}$ & (dimensionless) & $5.9 \times 10
 \label{tab:experimental_params}
 \end{table}
 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig1_transonic_profiles.png}
+\caption{Transonic background profiles for three BEC analog Hawking experiments:
+Steinhauer ${}^{87}$Rb (blue), Heidelberg ${}^{39}$K (berry), and Trento ${}^{23}$Na
+spin-sonic (amber). Panels show velocity and sound speed, Mach number, and density
+profiles near the sonic horizon.}
+\label{fig:transonic_profiles}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig2_correction_hierarchy.png}
+\caption{Hierarchy of corrections to the Hawking temperature: dispersive
+$\delta_{\text{disp}}$ (green), dissipative $\delta_{\text{diss}}$ (red),
+and cross-term $\delta_{\text{cross}}$ (gray) for three BEC platforms on log scale.}
+\label{fig:correction_hierarchy}
+\end{figure}
+
 From kinetic theory in the collisionless (Knudsen) regime---where the mean free path between atomic collisions exceeds the system size, so transport is ballistic rather than diffusive---transitioning to hydrodynamics, we estimate
 \begin{equation}
 \gamma_1 \sim \frac{\hbar}{m} n \sigma \sim 10^{-3} \text{ to } 10^{-1} \text{ s}^{-1},
@@ -267,6 +286,16 @@ Substituting into \eqref{eq:delta_diss_explicit}:
 \end{equation}
 
 This is \textbf{below} the current experimental sensitivity of Steinhauer's apparatus, which is limited to $\Delta T / T \sim 10^{-2}$ by shot noise and trap inhomogeneities.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig4_spin_sonic_enhancement.png}
+\caption{Spin-sonic enhancement of dissipative corrections. The ratio
+$(c_{\text{density}}/c_{\text{spin}})^2$ amplifies $\delta_{\text{diss}}$,
+potentially bringing it within experimental reach for the Trento ${}^{23}$Na
+platform. Horizontal dashed lines mark experimental sensitivity thresholds.}
+\label{fig:spin_sonic}
+\end{figure}
 
 \subsection{Numerical Estimates for Projected $^{23}$Na Spin-Sonic Setup}
 

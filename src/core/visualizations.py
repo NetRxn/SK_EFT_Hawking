@@ -92,6 +92,35 @@ def apply_layout(fig, **kwargs):
     return fig
 
 
+def _find_experiment(experiments: dict, keyword: str):
+    """Find an experiment entry by keyword substring match.
+
+    The experiments dict uses keys like '⁸⁷Rb (Steinhauer)' while
+    Phase 3 functions reference by short name 'Steinhauer'.
+    """
+    for key in experiments:
+        if keyword.lower() in key.lower():
+            return experiments[key]
+    raise KeyError(f"No experiment matching '{keyword}' in {list(experiments.keys())}")
+
+
+def _resolve_platform_color(name: str) -> str:
+    """Resolve a platform display name to its COLORS palette entry.
+
+    Handles both short names ('Steinhauer') and full display names
+    ('⁸⁷Rb (Steinhauer)') by substring matching.
+    """
+    _color_map = {
+        "Steinhauer": "Steinhauer", "Rb": "Rb87",
+        "Heidelberg": "Heidelberg", "K": "K39",
+        "Trento": "Trento", "Na": "Na23",
+    }
+    for keyword, color_key in _color_map.items():
+        if keyword in name:
+            return COLORS[color_key]
+    return COLORS["horizon"]
+
+
 # ============================================================
 # Figure 1: Transonic Background Profiles
 # ============================================================
@@ -428,11 +457,19 @@ def fig_temperature_decomposition(experiments: dict) -> go.Figure:
 
     Shows how each correction term shifts the effective temperature
     relative to the ideal Hawking temperature.
+
+    Row 1: All components (T_H dominates, corrections invisible).
+    Row 2: Corrections only (δ_disp, δ_diss, δ_cross) at zoomed scale.
     """
+    n_exp = len(experiments)
+    row1_titles = [f"<b>{name}</b>" for name in experiments.keys()]
+    row2_titles = [f"<b>{name} (corrections only)</b>" for name in experiments.keys()]
     fig = make_subplots(
-        rows=1, cols=len(experiments),
-        subplot_titles=[f"<b>{name}</b>" for name in experiments.keys()],
+        rows=2, cols=n_exp,
+        subplot_titles=row1_titles + row2_titles,
         shared_yaxes=True,
+        vertical_spacing=0.15,
+        row_heights=[0.45, 0.55],
     )
 
     for col, (name, (params, bg)) in enumerate(experiments.items(), 1):
@@ -452,6 +489,7 @@ def fig_temperature_decomposition(experiments: dict) -> go.Figure:
 
         T_H = bg.hawking_temp * 1e9  # nK
 
+        # Row 1: all components including T_H
         components = [
             ("T_H", T_H, COLORS["horizon"]),
             ("+ δ_disp", T_H * corr["delta_disp"], COLORS["dispersive"]),
@@ -474,10 +512,33 @@ def fig_temperature_decomposition(experiments: dict) -> go.Figure:
             hovertemplate="%{x}: %{y:.4e} nK<extra></extra>",
         ), row=1, col=col)
 
+        # Row 2: corrections only (without T_H) at zoomed scale
+        corr_components = [
+            ("δ_disp", T_H * corr["delta_disp"], COLORS["dispersive"]),
+            ("δ_diss", T_H * corr["delta_diss"], COLORS["dissipative"]),
+            ("δ_cross", T_H * corr["delta_cross"], COLORS["cross"]),
+        ]
+
+        corr_labels = [c[0] for c in corr_components]
+        corr_values = [c[1] for c in corr_components]
+        corr_colors = [c[2] for c in corr_components]
+
+        fig.add_trace(go.Bar(
+            x=corr_labels, y=corr_values,
+            marker_color=corr_colors,
+            marker_line=dict(width=1, color="black"),
+            text=[f"{v:.2e} nK" for v in corr_values],
+            textposition="outside",
+            textfont=dict(size=9),
+            showlegend=False,
+            hovertemplate="%{x}: %{y:.4e} nK<extra></extra>",
+        ), row=2, col=col)
+
     fig.update_yaxes(type="log", title_text="Temperature contribution (nK)", row=1, col=1)
+    fig.update_yaxes(type="log", title_text="Correction terms (nK)", row=2, col=1)
 
     apply_layout(fig,
-        height=450, width=900,
+        height=700, width=900,
         title=dict(text="<b>Effective Temperature Decomposition: T<sub>eff</sub> = T<sub>H</sub>(1 + δ<sub>disp</sub> + δ<sub>diss</sub> + δ<sub>cross</sub>)</b>",
                    font=dict(size=14, family=FONT["family"])),
     )
@@ -1348,6 +1409,1064 @@ def main():
     print("Done!")
 
     return fig_dir
+
+
+# ============================================================
+# Phase 3 Wave 1: Third-Order + Gauge Erasure Figures
+# ============================================================
+
+def fig_parity_alternation(stakeholder: bool = False) -> go.Figure:
+    """Parity alternation structure of the EFT derivative expansion.
+
+    If stakeholder=False: heatmap of monomial structure at each EFT order
+    1-8 (rows=order, cols=m value, colored by universal/flow-only/killed).
+    If stakeholder=True: bar chart showing count per order, colored
+    green=universal, red=flow-only.
+
+    Uses the parity_alternation theorem from enumeration.py and the
+    count_coefficients formula from formulas.py.
+    """
+    from src.second_order.enumeration import parity_alternation
+    from src.core.formulas import count_coefficients
+
+    if stakeholder:
+        orders = list(range(1, 9))
+        counts_universal = []
+        counts_flow = []
+        for N in orders:
+            pa = parity_alternation(N)
+            if pa['requires_parity_breaking']:
+                counts_universal.append(0)
+                counts_flow.append(pa['count_no_parity'])
+            else:
+                counts_universal.append(pa['count_no_parity'])
+                counts_flow.append(0)
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Bar(
+            x=orders, y=counts_universal,
+            name="Universal (parity-preserving)",
+            marker_color=COLORS["Steinhauer"],  # blue (color-blind accessible)
+            marker_line=dict(width=1, color="black"),
+            text=[str(c) if c > 0 else "" for c in counts_universal],
+            textposition="outside",
+        ))
+        fig.add_trace(go.Bar(
+            x=orders, y=counts_flow,
+            name="Flow-only (parity-breaking)",
+            marker_color=COLORS["Trento"],  # amber (color-blind accessible)
+            marker_line=dict(width=1, color="black"),
+            text=[str(c) if c > 0 else "" for c in counts_flow],
+            textposition="outside",
+        ))
+
+        # Overlay counting formula
+        formula_vals = [count_coefficients(N) for N in orders]
+        fig.add_trace(go.Scatter(
+            x=orders, y=formula_vals,
+            mode="markers+lines",
+            name="count(N) = floor((N+1)/2) + 1",
+            line=dict(color=COLORS["horizon"], width=2, dash="dash"),
+            marker=dict(size=10, symbol="diamond", color=COLORS["horizon"]),
+        ))
+
+        fig.update_xaxes(title_text="EFT Order N", dtick=1)
+        fig.update_yaxes(title_text="Transport Coefficients")
+
+        apply_layout(fig,
+            height=450, width=700,
+            title=dict(text="<b>Parity Alternation: Universal vs Flow-Only Corrections</b>",
+                       font=TITLE_FONT),
+            barmode="stack",
+            legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+        )
+    else:
+        orders = list(range(1, 9))
+        # Build heatmap data: rows=order, cols=m value (0,2,4,...,8)
+        max_m = 8
+        m_values = list(range(0, max_m + 1, 2))  # even m only
+
+        z_data = []
+        hover_text = []
+        for N in orders:
+            pa = parity_alternation(N)
+            L = N + 1
+            row = []
+            hover_row = []
+            for m in m_values:
+                n = L - m
+                if n < 0 or m > L:
+                    row.append(0)  # outside range
+                    hover_row.append(f"N={N}, m={m}: outside range")
+                elif m % 2 != 0:
+                    row.append(0)  # killed by T-reversal (shouldn't happen since m_values are even)
+                    hover_row.append(f"N={N}, m={m}: killed by T-reversal")
+                elif pa['requires_parity_breaking'] and n % 2 != 0:
+                    row.append(2)  # flow-only (odd n, requires parity breaking)
+                    hover_row.append(f"N={N}, m={m}, n={n}: flow-only (odd n)")
+                elif not pa['requires_parity_breaking'] and n % 2 == 0:
+                    row.append(1)  # universal (even n)
+                    hover_row.append(f"N={N}, m={m}, n={n}: universal (even n)")
+                else:
+                    row.append(0)
+                    hover_row.append(f"N={N}, m={m}, n={n}: not at this level")
+            z_data.append(row)
+            hover_text.append(hover_row)
+
+        # Custom colorscale: 0=grey (empty), 1=blue (universal), 2=amber (flow-only)
+        # Using blue/amber instead of green/red for color-blind accessibility
+        colorscale = [
+            [0.0, "#E0E0E0"],    # empty/killed
+            [0.5, COLORS["Steinhauer"]],  # universal (blue)
+            [1.0, COLORS["Trento"]],  # flow-only (amber)
+        ]
+
+        fig = go.Figure(data=go.Heatmap(
+            z=z_data,
+            x=[f"m={m}" for m in m_values],
+            y=[f"N={N}" for N in orders],
+            hovertext=hover_text,
+            hoverinfo="text",
+            colorscale=colorscale,
+            showscale=False,
+            zmin=0, zmax=2,
+        ))
+
+        # Annotations for cell values
+        for i, N in enumerate(orders):
+            L = N + 1
+            for j, m in enumerate(m_values):
+                n = L - m
+                if n >= 0 and m <= L:
+                    label = f"({m},{n})"
+                    fig.add_annotation(
+                        x=j, y=i, text=label,
+                        font=dict(size=10, color="white" if z_data[i][j] > 0 else "grey"),
+                        showarrow=False,
+                    )
+
+        fig.update_xaxes(title_text="Time derivatives m (even)")
+        fig.update_yaxes(title_text="EFT Order N")
+
+        apply_layout(fig,
+            height=500, width=650,
+            title=dict(text="<b>Parity Alternation: Monomial Structure at Each EFT Order</b>",
+                       font=TITLE_FONT),
+        )
+
+    return fig
+
+
+def fig_damping_rate_third_order(
+    experiments: dict[str, tuple[BECParameters, TransonicBackground]],
+) -> go.Figure:
+    """Damping rate Gamma(k)/kappa vs k/k_H for Steinhauer at orders 1, 2, and 3.
+
+    Shows three curves: order 1 only, through order 2, through order 3,
+    illustrating the convergence of the EFT derivative expansion.
+    """
+    from src.core.formulas import damping_rate as dr
+    from src.core.formulas import beliaev_transport_coefficients
+
+    # Use Steinhauer parameters
+    name = "Steinhauer"
+    params, bg = _find_experiment(experiments, name)
+
+    n_1D = params.density_upstream
+    a_s = params.scattering_length
+    cs = params.sound_speed_upstream
+    kappa = bg.surface_gravity
+    xi = params.healing_length
+
+    coeffs = beliaev_transport_coefficients(n_1D, a_s, kappa, cs, xi)
+    g1 = coeffs['gamma_1']
+    g2 = coeffs['gamma_2']
+    g21 = coeffs['gamma_2_1']
+    g22 = coeffs['gamma_2_2']
+
+    # Third-order coefficients: scale ~ gamma_dim * xi^2 / c_s^2
+    Gamma_Bel = coeffs['Gamma_Bel']
+    g31 = Gamma_Bel * (xi / cs)**2 / (2 * coeffs['k_H']**4)
+    g32 = -g31
+    g33 = g31 * 0.5  # subdominant
+
+    k_H = kappa / cs
+    k_range = np.linspace(0.1 * k_H, 5.0 * k_H, 300)
+    omega_range = cs * k_range  # acoustic dispersion
+
+    Gamma_1 = np.array([dr(k, cs * k, cs, g1, g2) for k in k_range]) / kappa
+    Gamma_12 = np.array([dr(k, cs * k, cs, g1, g2, g21, g22) for k in k_range]) / kappa
+    Gamma_123 = np.array([dr(k, cs * k, cs, g1, g2, g21, g22, g31, g32, g33) for k in k_range]) / kappa
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=("Damping rate |Gamma(k)|/kappa", "Fractional correction vs order 1"),
+        horizontal_spacing=0.15,
+    )
+
+    fig.add_trace(go.Scatter(
+        x=k_range / k_H, y=np.abs(Gamma_1),
+        mode="lines", name="Order 1 only",
+        line=dict(color=COLORS["Steinhauer"], width=2, dash="dash"),
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=k_range / k_H, y=np.abs(Gamma_12),
+        mode="lines", name="Through order 2",
+        line=dict(color=COLORS["Heidelberg"], width=2, dash="dot"),
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=k_range / k_H, y=np.abs(Gamma_123),
+        mode="lines", name="Through order 3",
+        line=dict(color=COLORS["dissipative"], width=3),
+    ), row=1, col=1)
+
+    # Right panel: fractional residuals relative to order 1
+    safe_G1 = np.where(np.abs(Gamma_1) > 1e-30, Gamma_1, 1e-30)
+    resid_2 = np.abs((Gamma_12 - Gamma_1) / safe_G1)
+    resid_3 = np.abs((Gamma_123 - Gamma_1) / safe_G1)
+
+    fig.add_trace(go.Scatter(
+        x=k_range / k_H, y=resid_2,
+        mode="lines", name="|delta Gamma/Gamma| order 2",
+        line=dict(color=COLORS["Heidelberg"], width=2),
+        showlegend=False,
+    ), row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=k_range / k_H, y=resid_3,
+        mode="lines", name="|delta Gamma/Gamma| order 3",
+        line=dict(color=COLORS["dissipative"], width=2),
+        showlegend=False,
+    ), row=1, col=2)
+
+    for col in [1, 2]:
+        fig.add_vline(x=1.0, line=dict(color=COLORS["horizon"], width=1, dash="dot"),
+                      row=1, col=col)
+
+    fig.update_xaxes(title_text="k / k<sub>H</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="k / k<sub>H</sub>", row=1, col=2)
+    fig.update_yaxes(title_text="|Gamma(k)| / kappa", type="log", row=1, col=1)
+    fig.update_yaxes(title_text="Fractional correction", type="log", row=1, col=2)
+
+    apply_layout(fig,
+        height=450, width=1000,
+        title=dict(text="<b>Damping Rate: EFT Order Convergence (Steinhauer ⁸⁷Rb)</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_spectral_correction_comparison(
+    experiments: dict[str, tuple[BECParameters, TransonicBackground]],
+) -> go.Figure:
+    """Side-by-side comparison of second-order (odd) and third-order (even) spectral corrections.
+
+    Left panel: delta^(2)(omega) ~ omega^3 (odd in frequency).
+    Right panel: delta^(3)(omega) ~ omega^4 (even in frequency).
+    Demonstrates the parity alternation in the spectral domain.
+    """
+    from src.core.formulas import second_order_correction, third_order_correction
+    from src.core.formulas import beliaev_transport_coefficients
+
+    # Use Steinhauer as representative
+    name = "Steinhauer"
+    params, bg = _find_experiment(experiments, name)
+
+    n_1D = params.density_upstream
+    a_s = params.scattering_length
+    cs = params.sound_speed_upstream
+    kappa = bg.surface_gravity
+    xi = params.healing_length
+
+    coeffs = beliaev_transport_coefficients(n_1D, a_s, kappa, cs, xi)
+    g21 = coeffs['gamma_2_1']
+    g22 = coeffs['gamma_2_2']
+
+    Gamma_Bel = coeffs['Gamma_Bel']
+    k_H = coeffs['k_H']
+    g31 = Gamma_Bel * (xi / cs)**2 / (2 * k_H**4)
+    g32 = -g31
+    g33 = g31 * 0.5
+
+    omega_range = np.linspace(-5 * kappa, 5 * kappa, 500)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "<b>(a)</b> delta<sup>(2)</sup>(omega) ~ omega<sup>3</sup> (odd)",
+            "<b>(b)</b> delta<sup>(3)</sup>(omega) ~ omega<sup>4</sup> (even)",
+        ),
+        horizontal_spacing=0.15,
+    )
+
+    # Second-order correction: evaluate OFF-shell (k = 2*omega/c_s) to show odd symmetry.
+    # On the acoustic shell (k = omega/c_s), positivity constraint gamma_2_2 = -gamma_2_1
+    # makes delta^(2) vanish identically — that's correct physics but invisible in a plot.
+    k_off = 2.0  # off-shell factor: k = k_off * omega/c_s
+    delta_2 = np.array([
+        second_order_correction(k_off * abs(w) / cs, w, cs, g21, g22, kappa)
+        for w in omega_range
+    ])
+    fig.add_trace(go.Scatter(
+        x=omega_range / kappa, y=delta_2,
+        mode="lines", name="delta<sup>(2)</sup> (odd, off-shell)",
+        line=dict(color=COLORS["Heidelberg"], width=2.5),
+        showlegend=True,
+    ), row=1, col=1)
+    fig.add_hline(y=0, line=dict(color="rgba(0,0,0,0.3)", width=0.5), row=1, col=1)
+    fig.add_annotation(
+        x=0.25, y=0.15, xref="paper", yref="paper",
+        text="Evaluated off-shell (k=2omega/c_s).<br>On-shell: vanishes by positivity.",
+        showarrow=False, font=dict(size=9, color="#888"),
+    )
+
+    # Third-order correction
+    delta_3 = np.array([
+        third_order_correction(abs(w) / cs, abs(w), cs, g31, g32, g33, kappa)
+        for w in omega_range
+    ])
+    fig.add_trace(go.Scatter(
+        x=omega_range / kappa, y=delta_3,
+        mode="lines", name="delta<sup>(3)</sup> (even)",
+        line=dict(color=COLORS["dissipative"], width=2.5),
+        showlegend=True,
+    ), row=1, col=2)
+    fig.add_hline(y=0, line=dict(color="rgba(0,0,0,0.3)", width=0.5), row=1, col=2)
+
+    fig.update_xaxes(title_text="omega / kappa", row=1, col=1)
+    fig.update_xaxes(title_text="omega / kappa", row=1, col=2)
+    fig.update_yaxes(title_text="delta<sup>(2)</sup>", row=1, col=1)
+    fig.update_yaxes(title_text="delta<sup>(3)</sup>", row=1, col=2)
+
+    apply_layout(fig,
+        height=400, width=900,
+        title=dict(text="<b>Spectral Correction Parity: Odd (N=2) vs Even (N=3)</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    for ann in fig.layout.annotations:
+        ann.font = dict(size=12, family=FONT["family"])
+
+    return fig
+
+
+def fig_kappa_crossing_phase3(
+    experiments: dict[str, tuple[BECParameters, TransonicBackground]],
+) -> go.Figure:
+    """Log-log plot of |delta_disp| and delta_diss vs kappa for all 3 platforms.
+
+    Shows the crossing point where dispersive and dissipative corrections
+    are equal, with crossing diamonds marking each platform's crossing kappa.
+    """
+    from src.core.formulas import dispersive_correction, beliaev_transport_coefficients
+
+    kappa_range = np.logspace(1, 5, 300)
+
+    fig = go.Figure()
+
+    for name, (params, bg) in experiments.items():
+        cs = params.sound_speed_upstream
+        xi = params.healing_length
+        n_1D = params.density_upstream
+        a_s = params.scattering_length
+        color = _resolve_platform_color(name)
+
+        # Dispersive correction: |delta_disp| = (pi/6) * D^2
+        D_arr = kappa_range * xi / cs
+        delta_disp_arr = np.abs(dispersive_correction(D_arr))
+
+        # Dissipative correction: delta_diss = Gamma_Bel / kappa
+        # Gamma_Bel = sqrt(n*a^3) * kappa^2 / c_s
+        na3_half = np.sqrt(n_1D * a_s**3)
+        Gamma_Bel = na3_half * kappa_range**2 / cs
+        delta_diss_arr = Gamma_Bel / kappa_range
+
+        fig.add_trace(go.Scatter(
+            x=kappa_range, y=delta_disp_arr,
+            mode="lines", name=f"|delta_disp| ({name})",
+            line=dict(color=color, width=2, dash="dash"),
+            legendgroup=name,
+            hovertemplate="kappa=%{x:.0f}<br>|delta_disp|=%{y:.2e}<extra></extra>",
+        ))
+        fig.add_trace(go.Scatter(
+            x=kappa_range, y=delta_diss_arr,
+            mode="lines", name=f"delta_diss ({name})",
+            line=dict(color=color, width=2),
+            legendgroup=name,
+            hovertemplate="kappa=%{x:.0f}<br>delta_diss=%{y:.2e}<extra></extra>",
+        ))
+
+        # Find crossing point
+        log_diff = np.log10(delta_disp_arr) - np.log10(delta_diss_arr)
+        sign_changes = np.where(np.diff(np.sign(log_diff)))[0]
+        if len(sign_changes) > 0:
+            idx = sign_changes[0]
+            cross_kappa = kappa_range[idx]
+            cross_val = delta_disp_arr[idx]
+            fig.add_trace(go.Scatter(
+                x=[cross_kappa], y=[cross_val],
+                mode="markers",
+                marker=dict(size=14, color=color, symbol="diamond",
+                           line=dict(width=2, color="black")),
+                name=f"Crossing ({name})",
+                legendgroup=name,
+                showlegend=False,
+                hovertemplate=f"Crossing ({name})<br>kappa*={cross_kappa:.0f}<extra></extra>",
+            ))
+
+    fig.update_xaxes(type="log", title_text="Surface gravity kappa (s<sup>-1</sup>)")
+    fig.update_yaxes(type="log", title_text="|Correction|")
+
+    apply_layout(fig,
+        height=500, width=750,
+        title=dict(text="<b>kappa Crossing: |delta_disp| vs delta_diss (All Platforms)</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.55, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_spin_sonic_enhancement_phase3(
+    experiments: dict[str, tuple[BECParameters, TransonicBackground]],
+) -> go.Figure:
+    """Enhancement factor (c_density/c_spin)^2 vs velocity ratio with sensitivity thresholds.
+
+    Shows how the spin-sonic channel amplifies the dissipative correction
+    for all three platforms, with experimental sensitivity threshold lines.
+    """
+    from src.core.formulas import beliaev_transport_coefficients
+
+    c_ratio = np.logspace(0, 3, 300)
+    enhancement = c_ratio**2
+
+    fig = go.Figure()
+
+    for name, (params, bg) in experiments.items():
+        cs = params.sound_speed_upstream
+        kappa = bg.surface_gravity
+        xi = params.healing_length
+        n_1D = params.density_upstream
+        a_s = params.scattering_length
+        color = _resolve_platform_color(name)
+
+        coeffs = beliaev_transport_coefficients(n_1D, a_s, kappa, cs, xi)
+        Gamma_Bel = coeffs['Gamma_Bel']
+        delta_diss_base = Gamma_Bel / kappa
+
+        delta_diss_enhanced = delta_diss_base * enhancement
+
+        fig.add_trace(go.Scatter(
+            x=c_ratio, y=delta_diss_enhanced,
+            mode="lines", name=f"{name}",
+            line=dict(color=color, width=2.5),
+            hovertemplate=f"{name}<br>c_dens/c_spin=%{{x:.0f}}<br>delta_diss=%{{y:.2e}}<extra></extra>",
+        ))
+
+    # Sensitivity thresholds
+    for val, label in [(0.1, "10% (current)"),
+                        (0.01, "1% (near-term)"),
+                        (0.001, "0.1% (projected)")]:
+        fig.add_hline(y=val, line=dict(color=COLORS["sensitivity"], width=1.5, dash="dash"),
+                      annotation_text=label, annotation_position="right",
+                      annotation_font=dict(size=10, color="#888"))
+
+    fig.update_xaxes(type="log",
+                     title_text="Velocity ratio c<sub>density</sub> / c<sub>spin</sub>")
+    fig.update_yaxes(type="log", title_text="|delta<sub>diss</sub>|",
+                     range=[-8, 0])
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Spin-Sonic Enhancement: All Platforms</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_bogoliubov_connection(
+    experiments: dict[str, tuple[BECParameters, TransonicBackground]],
+) -> go.Figure:
+    """Acoustic vs Bogoliubov dispersion relation and k^4 deviation.
+
+    Side-by-side: left shows omega(k) for acoustic (linear) and
+    Bogoliubov (superluminal), right shows the fractional k^4 deviation.
+    """
+    from src.core.constants import HBAR
+
+    # Use Steinhauer as representative
+    name = "Steinhauer"
+    params, bg = _find_experiment(experiments, name)
+
+    cs = params.sound_speed_upstream
+    xi = params.healing_length
+    mass = params.mass
+
+    k_range = np.linspace(0, 5.0 / xi, 400)
+
+    # Acoustic: omega = c_s * k
+    omega_acoustic = cs * k_range
+
+    # Bogoliubov: omega = c_s * k * sqrt(1 + (k*xi)^2 / 2)
+    # More precisely: omega^2 = c_s^2 * k^2 + (hbar * k^2 / (2*m))^2
+    omega_bog = cs * k_range * np.sqrt(1 + (k_range * xi)**2 / 4)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "<b>(a)</b> Dispersion relation",
+            "<b>(b)</b> k<sup>4</sup> deviation",
+        ),
+        horizontal_spacing=0.15,
+    )
+
+    # Left: Dispersion relations
+    fig.add_trace(go.Scatter(
+        x=k_range * xi, y=omega_acoustic / (cs / xi),
+        mode="lines", name="Acoustic: omega = c<sub>s</sub>k",
+        line=dict(color=COLORS["dispersive"], width=2, dash="dash"),
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=k_range * xi, y=omega_bog / (cs / xi),
+        mode="lines", name="Bogoliubov",
+        line=dict(color=COLORS["Steinhauer"], width=2.5),
+    ), row=1, col=1)
+
+    # Right: Fractional deviation
+    with np.errstate(divide='ignore', invalid='ignore'):
+        deviation = np.where(
+            omega_acoustic > 0,
+            (omega_bog - omega_acoustic) / omega_acoustic,
+            0.0,
+        )
+
+    fig.add_trace(go.Scatter(
+        x=k_range * xi, y=deviation,
+        mode="lines", name="(omega_Bog - omega_ac) / omega_ac",
+        line=dict(color=COLORS["dissipative"], width=2.5),
+        showlegend=True,
+    ), row=1, col=2)
+
+    # Overlay k^4 scaling guide
+    k4_guide = (k_range * xi)**2 / 8  # leading correction ~ (k*xi)^2/4 at small k
+    fig.add_trace(go.Scatter(
+        x=k_range * xi, y=k4_guide,
+        mode="lines", name="~ (k xi)<sup>2</sup>/8 guide",
+        line=dict(color=COLORS["cross"], width=1.5, dash="dot"),
+        showlegend=True,
+    ), row=1, col=2)
+
+    fig.update_xaxes(title_text="k xi", row=1, col=1)
+    fig.update_xaxes(title_text="k xi", row=1, col=2)
+    fig.update_yaxes(title_text="omega / (c<sub>s</sub>/xi)", row=1, col=1)
+    fig.update_yaxes(title_text="Fractional deviation", row=1, col=2)
+
+    apply_layout(fig,
+        height=400, width=900,
+        title=dict(text="<b>Bogoliubov vs Acoustic Dispersion: UV Connection to EFT</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    for ann in fig.layout.annotations:
+        ann.font = dict(size=12, family=FONT["family"])
+
+    return fig
+
+
+def fig_sm_scorecard() -> go.Figure:
+    """Standard Model gauge group bar chart: SU(3)/SU(2)/U(1), colored by survives/erased.
+
+    Shows the gauge erasure theorem applied to each factor of the SM gauge group,
+    with green for surviving (U(1)) and red for erased (SU(3), SU(2)).
+    """
+    from src.gauge_erasure.erasure_theorem import standard_model_analysis
+
+    sm = standard_model_analysis()
+
+    groups = list(sm.keys())
+    dims = [sm[g].group.dim for g in groups]
+    survives = [sm[g].survives for g in groups]
+    colors = [COLORS["dispersive"] if s else COLORS["dissipative"] for s in survives]
+    labels = ["SURVIVES" if s else "ERASED" for s in survives]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=groups, y=dims,
+        marker_color=colors,
+        marker_line=dict(width=2, color="black"),
+        text=labels,
+        textposition="outside",
+        textfont=dict(size=12, family=FONT["family"]),
+        hovertemplate="%{x}<br>dim=%{y}<br>%{text}<extra></extra>",
+    ))
+
+    # Add center subgroup annotations
+    for i, g in enumerate(groups):
+        center = sm[g].group.center
+        fig.add_annotation(
+            x=i, y=dims[i] / 2,
+            text=f"Center: {center}",
+            font=dict(size=10, color="white"),
+            showarrow=False,
+        )
+
+    fig.update_xaxes(title_text="SM Gauge Group Factor")
+    fig.update_yaxes(title_text="Group Dimension")
+
+    apply_layout(fig,
+        height=450, width=550,
+        title=dict(text="<b>Standard Model Gauge Erasure Scorecard</b>",
+                   font=TITLE_FONT),
+    )
+
+    return fig
+
+
+def fig_erasure_survey() -> go.Figure:
+    """Survey bar chart of gauge erasure across SU(N), SO(N), and U(1) groups.
+
+    Shows which gauge groups survive (green) vs are erased (red) upon
+    hydrodynamization, demonstrating the universality of the theorem.
+    """
+    from src.gauge_erasure.erasure_theorem import (
+        gauge_erasure_analysis, su, so, u1,
+    )
+
+    # Build survey data
+    groups = []
+    names = []
+    survive_flags = []
+    dimensions = []
+
+    # SU(N) series
+    for N in range(2, 11):
+        g = su(N)
+        result = gauge_erasure_analysis(g)
+        groups.append(g)
+        names.append(f"SU({N})")
+        survive_flags.append(result.survives)
+        dimensions.append(g.dim)
+
+    # SO(N) series
+    for N in range(3, 11):
+        g = so(N)
+        result = gauge_erasure_analysis(g)
+        groups.append(g)
+        names.append(f"SO({N})")
+        survive_flags.append(result.survives)
+        dimensions.append(g.dim)
+
+    # U(1)
+    g = u1()
+    result = gauge_erasure_analysis(g)
+    groups.append(g)
+    names.append("U(1)")
+    survive_flags.append(result.survives)
+    dimensions.append(g.dim)
+
+    colors = [COLORS["dispersive"] if s else COLORS["dissipative"] for s in survive_flags]
+    labels = ["Survives" if s else "Erased" for s in survive_flags]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=names, y=dimensions,
+        marker_color=colors,
+        marker_line=dict(width=1, color="black"),
+        text=labels,
+        textposition="outside",
+        textfont=dict(size=9),
+        hovertemplate="%{x}<br>dim=%{y}<br>%{text}<extra></extra>",
+    ))
+
+    # Visual dividers between group families
+    fig.add_vline(x=8.5, line=dict(color=COLORS["cross"], width=1, dash="dot"),
+                  annotation_text="SU(N) | SO(N)", annotation_position="top",
+                  annotation_font=dict(size=10, color=COLORS["cross"]))
+    fig.add_vline(x=16.5, line=dict(color=COLORS["cross"], width=1, dash="dot"),
+                  annotation_text="SO(N) | U(1)", annotation_position="top",
+                  annotation_font=dict(size=10, color=COLORS["cross"]))
+
+    fig.update_yaxes(title_text="Group Dimension")
+
+    apply_layout(fig,
+        height=500, width=900,
+        title=dict(text="<b>Gauge Erasure Survey: Which Gauge Groups Survive Hydrodynamization?</b>",
+                   font=TITLE_FONT),
+    )
+
+    # Set tickangle after apply_layout to ensure it is not overridden
+    fig.update_xaxes(title_text="Gauge Group", tickangle=-45)
+
+    return fig
+
+
+# ============================================================
+# Phase 3 Wave 2: WKB Connection Figures
+# ============================================================
+
+def fig_complex_turning_point() -> go.Figure:
+    """Imaginary part of the WKB turning point vs omega/T_H for all 3 platforms.
+
+    Shows how the turning point shifts into the complex plane as a function
+    of frequency, driven by the SK-EFT damping rate.
+    """
+    from src.wkb.connection_formula import compute_complex_turning_point
+    from src.wkb.spectrum import steinhauer_platform, heidelberg_platform, trento_platform
+
+    platforms = [
+        ("Steinhauer", steinhauer_platform(), COLORS["Steinhauer"]),
+        ("Heidelberg", heidelberg_platform(), COLORS["Heidelberg"]),
+        ("Trento", trento_platform(), COLORS["Trento"]),
+    ]
+
+    fig = go.Figure()
+
+    for name, p, color in platforms:
+        T_H = p.T_H
+        omega_arr = np.linspace(0.1 * T_H, 6.0 * T_H, 200)
+
+        x_imag_arr = []
+        for omega in omega_arr:
+            tp = compute_complex_turning_point(
+                omega, p.kappa, p.c_s, p.xi,
+                p.gamma_1, p.gamma_2,
+                p.gamma_2_1, p.gamma_2_2,
+            )
+            x_imag_arr.append(tp.x_imag)
+
+        fig.add_trace(go.Scatter(
+            x=omega_arr / T_H, y=x_imag_arr,
+            mode="lines", name=name,
+            line=dict(color=color, width=2.5),
+            hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>x_imag=%{{y:.2e}}<extra></extra>",
+        ))
+
+    fig.update_xaxes(title_text="omega / T<sub>H</sub>")
+    fig.update_yaxes(title_text="x<sub>imag</sub> (turning point shift)",
+                     type="log")
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Complex Turning Point: Imaginary Shift vs Frequency</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_effective_surface_gravity() -> go.Figure:
+    """Decomposition of kappa_eff/kappa into dispersive and dissipative contributions.
+
+    Three-row subplot (one per platform) showing the frequency-dependent
+    effective surface gravity and its correction decomposition.
+    """
+    from src.wkb.connection_formula import effective_surface_gravity as esg
+    from src.wkb.spectrum import steinhauer_platform, heidelberg_platform, trento_platform
+
+    platforms = [
+        ("Steinhauer", steinhauer_platform(), COLORS["Steinhauer"]),
+        ("Heidelberg", heidelberg_platform(), COLORS["Heidelberg"]),
+        ("Trento", trento_platform(), COLORS["Trento"]),
+    ]
+
+    fig = make_subplots(
+        rows=1, cols=3,
+        subplot_titles=[f"<b>{name}</b>" for name, _, _ in platforms],
+        shared_yaxes=True,
+        horizontal_spacing=0.08,
+    )
+
+    for col, (name, p, color) in enumerate(platforms, 1):
+        T_H = p.T_H
+        omega_arr = np.linspace(0.1 * T_H, 6.0 * T_H, 200)
+
+        delta_disp_arr = []
+        delta_diss_arr = []
+        keff_ratio_arr = []
+
+        for omega in omega_arr:
+            result = esg(
+                omega, p.kappa, p.c_s, p.xi,
+                p.gamma_1, p.gamma_2,
+                p.gamma_2_1, p.gamma_2_2,
+            )
+            delta_disp_arr.append(abs(result.delta_disp))
+            delta_diss_arr.append(result.delta_diss)
+            keff_ratio_arr.append(result.kappa_eff / result.kappa)
+
+        fig.add_trace(go.Scatter(
+            x=omega_arr / T_H, y=delta_disp_arr,
+            mode="lines", name=f"|delta_disp| ({name})",
+            line=dict(color=COLORS["dispersive"], width=2),
+            legendgroup="disp",
+            showlegend=True,
+        ), row=1, col=col)
+
+        fig.add_trace(go.Scatter(
+            x=omega_arr / T_H, y=delta_diss_arr,
+            mode="lines", name=f"delta_diss ({name})",
+            line=dict(color=COLORS["dissipative"], width=2),
+            legendgroup="diss",
+            showlegend=True,
+        ), row=1, col=col)
+
+        fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=1, col=col)
+
+    fig.update_yaxes(title_text="|Correction|", type="log", row=1, col=1)
+
+    apply_layout(fig,
+        height=400, width=1000,
+        title=dict(text="<b>Effective Surface Gravity: Correction Decomposition</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    for ann in fig.layout.annotations:
+        ann.font = dict(size=12, family=FONT["family"])
+
+    return fig
+
+
+def fig_decoherence_and_noise() -> go.Figure:
+    """Combined plot: decoherence parameter and FDR noise floor vs omega/T_H.
+
+    Shows delta_k and n_noise on a log scale for all 3 platforms, illustrating
+    the interplay between unitarity deficit and mandatory noise.
+    """
+    from src.wkb.spectrum import steinhauer_platform, heidelberg_platform, trento_platform
+    from src.core.formulas import damping_rate as dr
+    from src.core.formulas import decoherence_parameter as dp
+    from src.core.formulas import fdr_noise_floor as fnf
+
+    platforms = [
+        ("Steinhauer", steinhauer_platform(), COLORS["Steinhauer"]),
+        ("Heidelberg", heidelberg_platform(), COLORS["Heidelberg"]),
+        ("Trento", trento_platform(), COLORS["Trento"]),
+    ]
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "<b>(a)</b> Decoherence parameter delta_k",
+            "<b>(b)</b> FDR noise floor n_noise",
+        ),
+        horizontal_spacing=0.12,
+    )
+
+    for name, p, color in platforms:
+        T_H = p.T_H
+        omega_arr = np.linspace(0.1 * T_H, 6.0 * T_H, 200)
+
+        dk_arr = []
+        noise_arr = []
+
+        for omega in omega_arr:
+            k_H = omega / p.c_s
+            Gamma_H = dr(k_H, omega, p.c_s,
+                         p.gamma_1, p.gamma_2,
+                         p.gamma_2_1, p.gamma_2_2)
+            dk = dp(Gamma_H, p.kappa)
+            nf = fnf(dk)
+            dk_arr.append(dk)
+            noise_arr.append(nf)
+
+        fig.add_trace(go.Scatter(
+            x=omega_arr / T_H, y=dk_arr,
+            mode="lines", name=name,
+            line=dict(color=color, width=2.5),
+            legendgroup=name,
+            hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>dk=%{{y:.2e}}<extra></extra>",
+        ), row=1, col=1)
+
+        fig.add_trace(go.Scatter(
+            x=omega_arr / T_H, y=noise_arr,
+            mode="lines", name=name,
+            line=dict(color=color, width=2.5),
+            legendgroup=name,
+            showlegend=False,
+            hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>n_noise=%{{y:.2e}}<extra></extra>",
+        ), row=1, col=2)
+
+    fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=1, col=2)
+    fig.update_yaxes(title_text="delta<sub>k</sub>", type="log", row=1, col=1)
+    fig.update_yaxes(title_text="n<sub>noise</sub>", type="log", row=1, col=2)
+
+    apply_layout(fig,
+        height=400, width=900,
+        title=dict(text="<b>Decoherence and FDR Noise Floor: All Platforms</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    for ann in fig.layout.annotations:
+        ann.font = dict(size=12, family=FONT["family"])
+
+    return fig
+
+
+def fig_hawking_spectrum_exact(stakeholder: bool = False) -> go.Figure:
+    """Full Hawking spectrum with exact WKB corrections.
+
+    If stakeholder=False: 3-row subplot (one per platform) showing
+    n_total, n_Planck, and n_noise curves.
+    If stakeholder=True: single overlay of all 3 platforms showing
+    n_total vs n_Planck for a quick comparison.
+    """
+    from src.wkb.spectrum import (
+        steinhauer_platform, heidelberg_platform, trento_platform,
+        compute_spectrum,
+    )
+
+    platforms = [
+        ("Steinhauer", steinhauer_platform(), COLORS["Steinhauer"]),
+        ("Heidelberg", heidelberg_platform(), COLORS["Heidelberg"]),
+        ("Trento", trento_platform(), COLORS["Trento"]),
+    ]
+
+    if stakeholder:
+        fig = go.Figure()
+
+        for name, p, color in platforms:
+            spectrum = compute_spectrum(p, omega_min=0.1, omega_max_factor=5.0, n_points=80)
+            T_H = spectrum.T_H
+
+            fig.add_trace(go.Scatter(
+                x=spectrum.omega_array / T_H, y=spectrum.n_total_array,
+                mode="lines", name=f"n_total ({name})",
+                line=dict(color=color, width=2.5),
+                hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>n=%{{y:.4f}}<extra></extra>",
+            ))
+            fig.add_trace(go.Scatter(
+                x=spectrum.omega_array / T_H, y=spectrum.n_planck_array,
+                mode="lines", name=f"n_Planck ({name})",
+                line=dict(color=color, width=1.5, dash="dot"),
+                showlegend=False,
+            ))
+
+        fig.update_xaxes(title_text="omega / T<sub>H</sub>")
+        fig.update_yaxes(title_text="Occupation number n(omega)", type="log")
+
+        apply_layout(fig,
+            height=500, width=750,
+            title=dict(text="<b>Hawking Spectrum: All Platforms (Exact WKB)</b>",
+                       font=TITLE_FONT),
+            legend=dict(x=0.55, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+        )
+    else:
+        fig = make_subplots(
+            rows=3, cols=1,
+            shared_xaxes=True,
+            vertical_spacing=0.08,
+            subplot_titles=[f"<b>{name}</b>" for name, _, _ in platforms],
+        )
+
+        for row, (name, p, color) in enumerate(platforms, 1):
+            spectrum = compute_spectrum(p, omega_min=0.1, omega_max_factor=5.0, n_points=80)
+            T_H = spectrum.T_H
+
+            n_noise_arr = np.array([pt.n_noise for pt in spectrum.points])
+
+            fig.add_trace(go.Scatter(
+                x=spectrum.omega_array / T_H, y=spectrum.n_total_array,
+                mode="lines", name="n<sub>total</sub>",
+                line=dict(color=color, width=2.5),
+                legendgroup="total",
+                showlegend=(row == 1),
+            ), row=row, col=1)
+
+            fig.add_trace(go.Scatter(
+                x=spectrum.omega_array / T_H, y=spectrum.n_planck_array,
+                mode="lines", name="n<sub>Planck</sub>",
+                line=dict(color=COLORS["horizon"], width=1.5, dash="dash"),
+                legendgroup="planck",
+                showlegend=(row == 1),
+            ), row=row, col=1)
+
+            fig.add_trace(go.Scatter(
+                x=spectrum.omega_array / T_H, y=n_noise_arr,
+                mode="lines", name="n<sub>noise</sub>",
+                line=dict(color=COLORS["noise"], width=1.5, dash="dot"),
+                legendgroup="noise",
+                showlegend=(row == 1),
+            ), row=row, col=1)
+
+            fig.update_yaxes(type="log", row=row, col=1)
+
+        fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=3, col=1)
+        fig.update_yaxes(title_text="n(omega)", row=2, col=1)
+
+        apply_layout(fig,
+            height=800, width=700,
+            title=dict(text="<b>Hawking Spectrum: Exact WKB with Decoherence and Noise</b>",
+                       font=TITLE_FONT),
+            legend=dict(x=0.55, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+        )
+
+        for ann in fig.layout.annotations:
+            ann.font = dict(size=12, family=FONT["family"])
+
+    return fig
+
+
+def fig_exact_vs_perturbative() -> go.Figure:
+    """Fractional difference (n_exact - n_pert)/n_pert vs omega/T_H for all 3 platforms.
+
+    Shows where the exact WKB connection formula deviates from the
+    perturbative EFT treatment, highlighting the UV regime.
+    """
+    from src.wkb.spectrum import (
+        steinhauer_platform, heidelberg_platform, trento_platform,
+        compare_exact_vs_perturbative,
+    )
+
+    platforms = [
+        ("Steinhauer", steinhauer_platform(), COLORS["Steinhauer"]),
+        ("Heidelberg", heidelberg_platform(), COLORS["Heidelberg"]),
+        ("Trento", trento_platform(), COLORS["Trento"]),
+    ]
+
+    fig = go.Figure()
+
+    for name, p, color in platforms:
+        comparison = compare_exact_vs_perturbative(
+            p, omega_min=0.1, omega_max_factor=8.0, n_points=100,
+        )
+        T_H = p.T_H
+
+        fig.add_trace(go.Scatter(
+            x=comparison.omega / T_H, y=comparison.fractional_difference,
+            mode="lines", name=name,
+            line=dict(color=color, width=2.5),
+            hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>frac_diff=%{{y:.4f}}<extra></extra>",
+        ))
+
+    fig.add_hline(y=0, line=dict(color="rgba(0,0,0,0.3)", width=1))
+    fig.add_hline(y=0.01, line=dict(color=COLORS["sensitivity"], width=1, dash="dash"),
+                  annotation_text="1% level", annotation_position="right",
+                  annotation_font=dict(size=10, color="#888"))
+    fig.add_hline(y=-0.01, line=dict(color=COLORS["sensitivity"], width=1, dash="dash"))
+
+    fig.update_xaxes(title_text="omega / T<sub>H</sub>")
+    fig.update_yaxes(title_text="(n<sub>exact</sub> - n<sub>pert</sub>) / n<sub>pert</sub>")
+
+    apply_layout(fig,
+        height=450, width=750,
+        title=dict(text="<b>Exact vs Perturbative WKB: Fractional Difference</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
 
 
 if __name__ == "__main__":
