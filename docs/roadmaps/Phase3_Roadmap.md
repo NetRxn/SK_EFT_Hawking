@@ -10,10 +10,11 @@
 
 **What Phases 1+2 established:**
 - SK-EFT dissipative corrections to analog Hawking radiation through second order
-- 40/40 Lean 4 theorems (zero sorry), Aristotle automated prover, 64/64 Python tests, 9/9 validation checks
+- 40/40 Lean 4 theorems (zero sorry), Aristotle automated prover, 64/64 Python tests, 11/11 validation checks
 - Key results: δ_diss = Γ_H/κ (first order), δ^(2)(ω) ∝ ω³ spectral distortion (second order), counting formula count(N) = ⌊(N+1)/2⌋ + 1, CGL FDR derivation, positivity constraint γ_{2,1}+γ_{2,2}=0, on-shell vanishing
-- Two paper drafts: `papers/paper1_first_order/paper_draft.tex` (PRL), `papers/paper2_second_order/paper_draft.tex` (PRD)
-- Presentation work (visualizations, paper figures, notebook optimization) being completed by separate agent
+- All 4 open questions resolved (FDR correctness, relaxed positivity, boundary terms O(D)~1.3%, KMS optimality)
+- Two paper drafts with 6 figures each: `papers/paper1_first_order/paper_draft.tex` (PRL), `papers/paper2_second_order/paper_draft.tex` (PRD)
+- Presentation work **COMPLETE**: 12 Plotly figures (6 Phase 1 + 6 Phase 2), 4 notebooks execute cleanly (47 code cells), all docs synced
 
 **What Phase 3 aims to do:**
 1. Submit the Phase 1+2 papers
@@ -129,12 +130,13 @@
 **Goal:** Run deep research during Wave 1 to prep for D (WKB) and F (ADW gap equation).
 
 **Research prompts (already placed in `Lit-Search/Tasks/`):**
-- [ ] `WKB_dissipative_Hawking_connection_formula.txt` — Exact connection formula, Stokes geometry, Bogoliubov transformation with dissipation, backreaction, grey-body factor analog, experimental precision requirements
-- [ ] `ADW_gap_equation_emergent_gravity.txt` — ADW interaction Hamiltonian, Wen's lattice QED model, Hubbard-Stratonovich decomposition, Vergeles unitarity proof dependencies, vestigial gravity details, existing gap equation calculations
+- [x] `WKB_dissipative_Hawking_connection_formula.txt` — Exact connection formula, Stokes geometry, Bogoliubov transformation with dissipation, backreaction, grey-body factor analog, experimental precision requirements
+- [x] `ADW_gap_equation_emergent_gravity.txt` — ADW interaction Hamiltonian, Wen's lattice QED model, Hubbard-Stratonovich decomposition, Vergeles unitarity proof dependencies, vestigial gravity details, existing gap equation calculations
 
-**Deliverable:** Research results in `Lit-Search/Phase-3/Results/`
-
-**Status:** `pending`
+**Deliverable:** Research results:
+`Lit-Search/Phase-3/The ADW mean-field gap equation for tetrad condensation with emergent Dirac fermions.md`
+`Lit-Search/Phase-3/WKB connection formulas for dissipative analog Hawking radiation- a gap analysis.md`
+**Status:** `complete` (results will inform Waves 2 and 3)
 
 ---
 
@@ -308,10 +310,51 @@ This provides a strong basis for approaching experimentalists from a position of
 
 ```bash
 cd SK_EFT_Hawking
-uv sync                                     # Install/sync dependencies
-uv run python -m pytest tests/ -v           # All tests
-uv run python scripts/validate.py           # Cross-layer validation
-cd lean && ~/.elan/bin/lake build            # Lean build (should be clean)
+uv sync                                          # Install/sync dependencies
+uv run python -m pytest tests/ -v                # 64/64 tests
+uv run python scripts/validate.py                # 11/11 cross-layer checks + archive
+uv run python scripts/review_figures.py          # 12 PNGs + structural checks + manifest
+cd lean && ~/.elan/bin/lake build                 # 2255 jobs, clean
+```
+
+**Validation checks (11 total):**
+1. `formulas` — Python formulas reference valid Lean theorems
+2. `numerical` — Experimental parameters match reference values
+3. `identities` — Mathematical identities and boundary conditions
+4. `paper_table` — Paper Table 1 values match solver output
+5. `theorems` — Theorem registry has expected entries and is self-consistent
+6. `notebooks` — Notebooks import physics from src.core, no re-implementation (forbidden set)
+7. `lean_source` — Key theorem names found in Lean source files
+8. `cgl_fdr` — CGL FDR derivation produces correct results
+9. `lean_build` — Lean project builds cleanly (requires lake)
+10. `viz_consistency` — Notebook viz uses imported physics, consistent style (WARNINGS only: `viz-ref` tags, hardcoded colors, untagged `.show()`)
+11. `notebook_exec` — All notebooks execute without errors (runs all cells via nbclient)
+
+### Figure Review Pipeline
+
+```bash
+# Generate all 12 PNGs + run automated structural checks:
+uv run python scripts/review_figures.py
+
+# LLM visual review (requires Claude Code session):
+# Option A: Use the physics-figure-review plugin agent (after /reload-plugins):
+#   Agent tool with subagent_type="physics-figure-review:figure-reviewer"
+# Option B: Use a general-purpose agent with the review prompt from the agent file
+# Both read PNGs from figures/ + review_manifest.json
+# Report: figures/figure_review_report.json
+```
+
+**Plugin location:** `.claude/plugins/physics-figure-review/` (registered in `installed_plugins.json` as `physics-figure-review@local`). Contains agent `figure-reviewer` that reads PNGs + manifest and produces structured JSON report checking rendering quality, physics accuracy, and style consistency.
+
+### Pre-Commit Hook
+
+```bash
+# Install notebook execution pre-commit hook:
+ln -sf ../../scripts/pre-commit-notebooks.sh .git/hooks/pre-commit
+
+# Only triggers when .ipynb files are staged.
+# Runs jupyter nbconvert --execute on each staged notebook.
+# Blocks commit on failure.
 ```
 
 ### Aristotle Workflow
@@ -319,6 +362,8 @@ cd lean && ~/.elan/bin/lake build            # Lean build (should be clean)
 ```bash
 uv run python scripts/submit_to_aristotle.py --priority 1    # Submit sorry gaps
 uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate  # Integrate results
+export ARISTOTLE_API_KEY=$(grep ARISTOTLE_API_KEY .env | cut -d= -f2)
+aristotle list --limit 5 --api-key "$ARISTOTLE_API_KEY"
 ```
 
 ### Deep Research
@@ -327,7 +372,7 @@ uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate  # Inte
 # Place prompts in:
 Lit-Search/Tasks/<prompt_name>.txt
 # Results appear in:
-Lit-Search/Phase-3/Results/<result_name>.md
+Lit-Search/Phase-3/<result_name>.md
 ```
 
 ### Working Documents
@@ -340,11 +385,31 @@ temporary/working-docs/plans/    # Implementation plans (if needed)
 ### Key Conventions
 
 - **Constants & formulas:** Single source of truth in `src/core/constants.py` and `src/core/formulas.py`
-- **Visualizations:** Plotly only. Color palette: `#2E86AB` steel blue, `#A23B72` berry, `#F18F01` amber
+- **Visualizations:** Plotly only. `src/core/visualizations.py` has 12 figure functions + full COLORS palette (12 keys). Notebooks build figures inline (transparent for teaching) but import physics + COLORS from src. `visualizations.py` is used for paper/dashboard export, not notebook imports.
+- **COLORS architecture:** `constants.py` has 3 experiment colors (Steinhauer/Heidelberg/Trento). `visualizations.py` has the full palette (+ Rb87/K39/Na23 aliases + dispersive/dissipative/cross/horizon/noise etc). Notebooks import COLORS from `visualizations`.
+- **Notebook `viz-ref` tags:** Figure cells tagged `# viz-ref: fig_name` map to `visualizations.py` functions. validate.py CHECK 10 checks these for drift. Untagged `.show()` calls get advisory warnings.
 - **Formula provenance:** Every formula references its Lean theorem and Aristotle run ID
 - **Lean Mathlib:** Pinned to commit `8f9d9cff`. Do not update without coordinating with Aristotle.
 - **New modules:** Follow existing patterns — `src/<domain>/`, `tests/test_<domain>.py`, `lean/SKEFTHawking/<Module>.lean`
 
+### Document Sync Checklist
+
+When modifying physics results or proof counts, these must stay synced:
+
+| Category | Files |
+|----------|-------|
+| **Code** | `src/core/constants.py` (ARISTOTLE_THEOREMS, TOTAL_THEOREMS), `src/__init__.py`, `scripts/validate.py` (expected counts, forbidden set), `src/core/formulas.py`,  |
+| **Papers** | `papers/paper1_first_order/paper_draft.tex`, `papers/paper2_second_order/paper_draft.tex` |
+| **Notebooks** | All 4 `.ipynb` files (summary cells, verification sections) |
+| **Stakeholder docs** | `docs/stakeholder/Phase2_companion_guide.md`, `Phase2_Strategic_Positioning.md`, `Phase2_Implications.md`, `Phase1_Implications.md`, `companion_guide.md` |
+| **Roadmaps** | `docs/roadmaps/Phase2_Roadmap.md`, `docs/roadmaps/Phase3_Roadmap.md` |
+| **Root** | `SK_EFT_Hawking_Inventory.md`, `README.MD` | 
+| **Top-level** | `README.md`, `CLAUDE.md`, `Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`, `Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md` |
+
+### Handoff Documents
+
+Full handoff for Phase 2: `temporary/Phase2d_Complete_Handoff_2026_03_25.md`
+
 ---
 
-*Phase 3 roadmap prepared 2026-03-25. Builds on Phase 1 (2026-03-23) and Phase 2 (2026-03-24/25).*
+*Phase 3 roadmap prepared 2026-03-25. Builds on Phase 1 (2026-03-23) and Phase 2 (2026-03-24/25). Infrastructure section updated 2026-03-25 with validation pipeline (11 checks), figure review plugin, pre-commit hook, COLORS architecture, document sync checklist.*
