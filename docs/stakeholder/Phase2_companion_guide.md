@@ -131,10 +131,10 @@ Phase 2 adds two new Lean modules to the formal verification:
 
 ### The Python Computation
 
-Three new Python modules in `SK_EFT_Phase2/src/`:
+Three Python modules in `src/second_order/`:
 
-- **second_order_enumeration.py**: Systematically enumerates all monomials and verifies the counting formula
-- **second_order_sk.py**: Coefficient structures, action constructors, and frequency-dependent corrections
+- **enumeration.py**: Systematically enumerates all monomials and verifies the counting formula
+- **coefficients.py**: Coefficient structures, action constructors, and frequency-dependent corrections
 - **wkb_analysis.py**: Full WKB solver computing Bogoliubov coefficients with second-order dissipative corrections
 
 ### Diagram: Phase 2 Architecture
@@ -163,10 +163,10 @@ SecondOrderSK.lean    WKBAnalysis.lean    │
                                           │
     ┌─────────────────────────────────────┘
     │
-    ├── second_order_enumeration.py
+    ├── enumeration.py
     │   → count(1)=2, count(2)=2 ✓
     │
-    ├── second_order_sk.py
+    ├── coefficients.py
     │   → Coefficient structures, actions
     │
     └── wkb_analysis.py
@@ -244,21 +244,24 @@ The amplitudes (α, β) that relate the "ingoing" vacuum state to the "outgoing"
 | Lean SecondOrderSK module | ✓ Compiles (2254 jobs) |
 | Lean WKBAnalysis module | ✓ Compiles |
 | WKB Python solver | ✓ Working (natural units) |
+| WKB numerical results | ✓ Finalized — all 3 experiments, paper table filled |
 | Aristotle core gaps (Rounds 1-3) | **ALL 7 PROVED** ✓ |
-| Aristotle stress tests (Round 4) | **ALL 9 PROVED** ✓ (run 3eedcabb, March 24, 2026) |
-| Combined total | **31/31 proofs complete, zero sorry remaining** ✓ |
-| Paper draft | In progress (Round 4 results integrated) |
-| Visualizations | Generated (Plotly, interactive HTML) |
+| Aristotle stress tests (Round 4) | **ALL 9 PROVED** ✓ (run 3eedcabb) |
+| Aristotle total-division (Round 5) | **ALL 3 PROVED** ✓ (run 518636d7) |
+| Combined total | **35/35 proofs complete, zero sorry remaining** ✓ |
+| Paper draft | In progress (numerical table and Round 4/5 results integrated) |
+| Visualizations | Generated (Plotly, interactive HTML, 9 Phase 2 figures) |
 
 ### Next Steps
 
 1. ~~**Aristotle Round 1** — verify counting lemmas~~ ✓ COMPLETE (run d61290fd, all 4 proved)
 1. ~~**Aristotle Round 2+3** — stress-test uniqueness, positivity, WKB~~ ✓ COMPLETE (run c4d73ca8, all 3 proved)
 1. ~~**Aristotle Round 4** — robustness stress tests (9 gaps)~~ ✓ COMPLETE (run 3eedcabb, all 9 proved)
-2. **Numerical estimates** — finalize δ^(2)(ω) at experimental parameters
-3. **Publication-quality figures** — spectral distortion plots, parity comparison (Round 4 results integrated)
-4. **Paper draft completion** — Round 4 results and numerical values integrated
+1. ~~**Aristotle Round 5** — total-division strengthening (3 gaps)~~ ✓ COMPLETE (run 518636d7, all 3 proved)
+1. ~~**Numerical estimates** — finalize δ^(2)(ω) at experimental parameters~~ ✓ COMPLETE — key finding: positivity constraint makes δ^(2) vanish on acoustic shell; nonzero only via Bogoliubov off-shell (~10⁻¹²–10⁻⁸)
+2. **Paper draft completion** — numerical table filled, remaining prose revisions
+3. **Internal review** of combined Phase 1 + Phase 2 papers
 
 ---
 
-*This companion guide is the Phase 2 analog of the Phase 1 Educational Companion Guide. It explains the new physics (frequency dependence, parity, spectral distortion) at an accessible level while documenting the technical architecture and verification strategy. Last updated: March 24, 2026 (added Round 4 bulletproofing suite).*
+*This companion guide is the Phase 2 analog of the Phase 1 Educational Companion Guide. It explains the new physics (frequency dependence, parity, spectral distortion) at an accessible level while documenting the technical architecture and verification strategy. Last updated: March 24, 2026 (synced file paths, updated proof tally to 35/35, marked numerical estimates complete).*

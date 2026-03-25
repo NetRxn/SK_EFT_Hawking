@@ -2,7 +2,7 @@
 
 ## Technical and Real-World Implications of Frequency-Dependent Corrections
 
-**Status:** Phase 2 VERIFICATION COMPLETE — All 22/22 Lean proofs verified, zero sorry remaining
+**Status:** Phase 2 VERIFICATION COMPLETE — All 35/35 Lean proofs verified, zero sorry remaining
 **Date:** March 24, 2026
 **Classification:** Research Overview — For Technical and Non-Technical Stakeholders
 **Prerequisite:** Phase 1 Stakeholder Implications document (March 23, 2026)
@@ -37,7 +37,7 @@ For a more detailed explanation with analogies and examples, see the Phase 1 and
 
 Phase 1 found that friction in the quantum fluid shifts the effective Hawking temperature by a constant amount. Two transport coefficients (γ₁, γ₂) parameterize the shift. The correction is small (0.001% to 0.1%) and doesn't depend on the frequency of the emitted phonons. All mathematical structures were formally verified in Lean 4 with zero remaining proof gaps.
 
-### Phase 2 (In Progress): The Spectrum Distorts
+### Phase 2 (Complete): The Spectrum Distorts
 
 Phase 2 asks: what happens at the next order? The answer reveals four results with distinct physical and experimental significance:
 
@@ -102,7 +102,7 @@ Phase 2 extends the Lean 4 formalization with two new modules and 7 new proof ob
 - **Positivity constraint** (1 gap, priority 2): ✓ **PROVED** by Aristotle (run c4d73ca8). Proof by contradiction: constructs field configuration making Im < 0 if γ_{2,1}+γ_{2,2} ≠ 0.
 - **Turning point shift** (1 gap, priority 3): ✓ **PROVED** by Aristotle (run c4d73ca8). Pure witness construction.
 
-**All 7 Phase 2 sorry gaps are now proved. Combined with Phase 1 (15/15), the project has 22/22 proofs verified with zero sorry remaining.**
+**All 7 Phase 2 core sorry gaps are now proved. Combined with Phase 1 (14/14), Round 4 stress tests (10/10), and Round 5 total-division strengthening (3/3), the project has 35/35 proofs verified with zero sorry remaining.**
 
 ### The Stress Test Passed
 
@@ -134,25 +134,25 @@ Also cleaned up: removed unused hN from transport_coefficient_count, stripped un
 
 **Third-order extension.** Test `thirdOrder_count` extended the counting formula: count(3) = 3 (proved by native_decide).
 
-**Status: 9/9 stress tests proved. Combined Phase 1+2+Round 4: 31 total proofs, zero sorry.**
+**Status: 9/9 stress tests proved. Combined Phase 1+2+Round 4+Round 5: 35 total proofs, zero sorry.**
 
 ---
 
 ## Updated Project Status
 
-| Component | Phase 1 | Phase 2 | Round 4 |
-|---|---|---|---|
-| Lean formalization | **14/14** (100%) ✓ | **7/7** (100%) ✓ | **9/9** (100%) ✓ |
-| Core proofs | Aristotle runs across 9 submissions | Aristotle runs d61290fd + c4d73ca8 | Aristotle run 3eedcabb |
-| Robustness stress tests | 2 (FDR optimal, alt-sign) | 7 planned | **9 all proved** ✓ |
-| Python computation | 12/12 tests ✓ | Complete (enumeration + WKB) | N/A (proof-verified) |
-| Paper draft | **Finalized** (PRL format) | In progress (PRD format) | Integrated |
-| Counting formula | N/A | **4/4 proved** ✓ | Extended: count(3)=3 ✓ |
-| Strong uniqueness | **Proved** (first-order) | **Proved** (second-order) ✓ | Stress-tested ✓ |
-| FDR sign determination | Not applicable | (Intended for Round 4) | **Confirmed via negation** ✓ |
-| Positivity constraint | Trivial at first order | **γ_{2,1}+γ_{2,2}=0 proved** ✓ | Relaxation law **proved** ✓ |
-| Spectral distortion | Not applicable | Framework complete | Impact on damping validated |
-| Lean build | 2252 jobs | 2254 jobs | Builds clean with all proofs |
+| Component | Phase 1 | Phase 2 | Round 4 | Round 5 |
+|---|---|---|---|---|
+| Lean formalization | **14/14** ✓ | **8/8** ✓ | **10/10** ✓ | **3/3** ✓ |
+| Core proofs | 9 Aristotle runs | runs d61290fd + c4d73ca8 | run 3eedcabb | run 518636d7 |
+| Python computation | 12/12 tests ✓ | Complete (enumeration + WKB) | N/A | N/A |
+| Numerical results | Paper table ✓ | Paper table ✓ (δ^(2) ~10⁻¹²–10⁻⁸) | N/A | N/A |
+| Paper draft | **Finalized** (PRL) | In progress (PRD) | Integrated | Integrated |
+| Counting formula | N/A | **4/4 proved** ✓ | count(3)=3 ✓ | N/A |
+| Strong uniqueness | **Proved** (1st-order) | **Proved** (2nd-order) ✓ | Stress-tested ✓ | N/A |
+| FDR sign | N/A | N/A | **Confirmed via negation** ✓ | N/A |
+| Positivity | Trivial at 1st-order | **γ_{2,1}+γ_{2,2}=0** ✓ | Relaxation ✓ | N/A |
+| Total-division | N/A | N/A | N/A | κ>0 load-bearing ✓ |
+| **Combined** | | | | **35/35 ZERO SORRY** |
 
 ---
 
@@ -174,22 +174,20 @@ The methodology developed here — systematic monomial enumeration, algebraic KM
 
 ## Next Steps
 
-**Immediate (this week):**
-- ~~Submit counting lemmas to Aristotle (Round 1)~~ ✓ COMPLETE — all 4 proved (run d61290fd)
-- ~~Submit stress tests + WKB to Aristotle (Round 2+3)~~ ✓ COMPLETE — all 3 proved (run c4d73ca8)
+**Completed:**
+- ~~Submit counting lemmas to Aristotle (Round 1)~~ ✓ COMPLETE (run d61290fd)
+- ~~Submit stress tests + WKB to Aristotle (Round 2+3)~~ ✓ COMPLETE (run c4d73ca8)
 - ~~Verify `lake build` with integrated Aristotle proofs~~ ✓ COMPLETE — clean build
-- Submit robustness stress tests to Aristotle (Round 4) — **IN PROGRESS** (9 gaps, results pending)
+- ~~Submit robustness stress tests to Aristotle (Round 4)~~ ✓ COMPLETE (run 3eedcabb, all 9 proved)
+- ~~Submit total-division strengthening to Aristotle (Round 5)~~ ✓ COMPLETE (run 518636d7, all 3 proved)
+- ~~Finalize numerical estimates for spectral distortion~~ ✓ COMPLETE — key finding: positivity constraint makes δ^(2) vanish on acoustic shell; nonzero only via Bogoliubov off-shell (~10⁻¹²–10⁻⁸)
 
-**Near-term (2-4 weeks):**
-- Finalize numerical estimates for spectral distortion at experimental parameters
-- Complete Phase 2 paper draft
-- Generate publication-quality visualizations of spectral distortion
-
-**Medium-term (1-3 months):**
+**Next:**
+- Complete Phase 2 paper draft (numerical table filled, prose revisions remaining)
 - Internal review of combined Phase 1 + Phase 2 papers
 - Engage experimental collaborators with spectral distortion prediction
 - Begin Phase 3 planning (backreaction + ³He-A extension)
 
 ---
 
-*This document extends the Phase 1 Stakeholder Implications to cover the second-order SK-EFT analysis. It emphasizes the qualitatively new physics (frequency dependence, parity, spectral distortion) that distinguishes Phase 2 from a simple refinement of Phase 1. Last updated: March 24, 2026.*
+*This document extends the Phase 1 Stakeholder Implications to cover the second-order SK-EFT analysis. It emphasizes the qualitatively new physics (frequency dependence, parity, spectral distortion) that distinguishes Phase 2 from a simple refinement of Phase 1. Last updated: March 24, 2026 (synced proof tally to 35/35, marked numerical estimates and all Aristotle rounds complete).*
