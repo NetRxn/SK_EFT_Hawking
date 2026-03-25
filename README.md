@@ -1,7 +1,7 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Three papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Four papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
@@ -9,9 +9,11 @@ to acoustic Hawking radiation in BEC analog gravity. Three papers in a unified c
   frequency-dependent ω³ spectral distortion, WKB mode analysis, CGL FDR derivation.
 - **Paper 3 (gauge erasure):** Universal structural theorem — non-Abelian gauge DOF
   erased by hydrodynamization, U(1) survives (photonization). PRL format.
+- **Paper 4 (exact WKB):** Non-perturbative connection formula: modified unitarity
+  |α|²-|β|²=1-δ_k, FDR noise floor, spectral floor at ω≳6T_H. PRD format.
 
-**Lean 4 formalization:** 72 theorems (40 Aristotle + 32 manual), zero sorry.
-Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 109 theorems + 1 axiom (40 Aristotle + 69 manual), zero sorry.
+10 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 ## Project Structure
 
@@ -20,7 +22,7 @@ SK_EFT_Hawking/
 ├── lean/                              # Lean 4 formalization (40/40, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 9)
+│   ├── SKEFTHawking.lean              # Root module (imports all 10)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (5 theorems)
@@ -30,7 +32,8 @@ SK_EFT_Hawking/
 │       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
 │       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
 │       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
-│       └── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom)
+│       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom)
+│       └── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -38,22 +41,38 @@ SK_EFT_Hawking/
 │   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (40/40 filled)
 │   │   └── visualizations.py          # Plotly figures + interactive dashboard
 │   ├── first_order/                   # Phase 1 specific analysis
-│   └── second_order/                  # Phase 2 analysis (absorbed from SK_EFT_Phase2)
-│       ├── enumeration.py             # Transport coefficient counting at arbitrary order
-│       ├── coefficients.py            # Second-order data structures + action constructors
-│       └── wkb_analysis.py            # WKB mode analysis through the dissipative horizon
+│   ├── second_order/                  # Phase 2 analysis (absorbed from SK_EFT_Phase2)
+│   │   ├── enumeration.py             # Transport coefficient counting at arbitrary order
+│   │   ├── coefficients.py            # Second-order data structures + action constructors
+│   │   └── wkb_analysis.py            # WKB mode analysis through the dissipative horizon
+│   ├── gauge_erasure/                 # Non-Abelian gauge erasure theorem
+│   │   └── erasure_theorem.py         # GaugeGroup, HigherFormSymmetry, standard model analysis
+│   └── wkb/                           # Exact WKB connection formula (Phase 3 Wave 2)
+│       ├── connection_formula.py       # Complex turning point, Stokes geometry, exact formula
+│       ├── bogoliubov.py              # Modified Bogoliubov coefficients, decoherence, noise floor
+│       └── spectrum.py                # Observable spectrum, platform predictions, comparison
 │
 ├── papers/
 │   ├── paper1_first_order/            # PRL submission
 │   │   └── paper_draft.tex
-│   └── paper2_second_order/           # PRD / companion paper
+│   ├── paper2_second_order/           # PRD companion paper
+│   │   └── paper_draft.tex
+│   ├── paper3_gauge_erasure/          # PRL gauge erasure
+│   │   └── paper_draft.tex
+│   └── paper4_wkb_connection/         # PRD exact WKB
 │       └── paper_draft.tex
 │
 ├── notebooks/
 │   ├── Phase1_Technical.ipynb         # Full paper computation (23 cells, 6 Plotly figs)
 │   ├── Phase1_Stakeholder.ipynb       # Lay-person version (20 cells)
 │   ├── Phase2_Technical.ipynb         # Second-order computation (30 cells, 9+ Plotly figs)
-│   └── Phase2_Stakeholder.ipynb       # Lay-person version (19 cells)
+│   ├── Phase2_Stakeholder.ipynb       # Lay-person version (19 cells)
+│   ├── Phase3_Technical.ipynb         # Third-order + parity alternation
+│   ├── Phase3_Stakeholder.ipynb       # Third-order stakeholder version
+│   ├── GaugeErasure_Technical.ipynb   # Gauge erasure technical notebook
+│   ├── GaugeErasure_Stakeholder.ipynb # Gauge erasure stakeholder notebook
+│   ├── WKBConnection_Technical.ipynb  # Exact WKB + spectral floor (26 cells)
+│   └── WKBConnection_Stakeholder.ipynb # WKB stakeholder version (17 cells)
 │
 ├── docs/
 │   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
@@ -122,15 +141,19 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (40/40 — Zero Sorry)
+## Theorem Inventory (109 + 1 axiom — Zero Sorry)
 
-| Module | Phase | Theorems | Aristotle Runs |
+| Module | Phase | Theorems | Notes |
 |---|---|---|---|
-| AcousticMetric.lean | 1 | 5 | 082e6776, a87f425a, 88cf2000 |
-| SKDoubling.lean | 1 | 7 | 082e6776, 638c5ff3, 270e77a0, 20556034 |
-| HawkingUniversality.lean | 1 | 3 | d65e3bba, 657fcd6a, 416fb432 |
-| SecondOrderSK.lean | 2 | 19 | d61290fd, c4d73ca8, 3eedcabb |
-| WKBAnalysis.lean | 2 | 12 | d61290fd, c4d73ca8, 3eedcabb, 518636d7 |
+| AcousticMetric.lean | 1 | 8 | Aristotle: 082e6776, a87f425a, 88cf2000 |
+| SKDoubling.lean | 1 | 9 | Aristotle: 082e6776, 638c5ff3, 270e77a0, 20556034 |
+| HawkingUniversality.lean | 1+3 | 9 | +κ-crossing, spin-sonic (1E) |
+| SecondOrderSK.lean | 2 | 19 | Aristotle: d61290fd, c4d73ca8, 3eedcabb |
+| WKBAnalysis.lean | 2+3 | 15 | +Bogoliubov bound (1E). Aristotle: 518636d7 |
+| CGLTransform.lean | 2 | 7 | CGL FDR derivation |
+| ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem (1C) |
+| GaugeErasure.lean | 3 | 11 + 1 axiom | Gauge erasure (1B) |
+| WKBConnection.lean | 3 | 17 | Exact WKB connection (2D) |
 
 ## Build Environment
 

@@ -306,6 +306,72 @@ def turning_point_shift(Gamma_H, kappa, c_s):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Decoherence parameter (WKBConnection.lean: decoherence_nonneg)
+# ════════════════════════════════════════════════════════════════════
+
+def decoherence_parameter(Gamma_H, kappa):
+    """
+    Decoherence parameter for the modified Bogoliubov relation.
+
+    δ_k = 2 · Γ_H / κ = 2 · δ_diss
+
+    This measures the probability of phonon absorption during horizon
+    crossing. The factor of 2 arises from the two traversals of the
+    dissipative region on the SK contour (retarded + advanced branches).
+
+    Modified unitarity: |α|² - |β|² = 1 - δ_k
+
+    Lean: decoherence_nonneg, decoherence_double_delta_diss,
+          decoherence_zero_iff (WKBConnection.lean)
+
+    Args:
+        Gamma_H: damping rate at horizon [s⁻¹]
+        kappa: surface gravity [s⁻¹]
+
+    Returns:
+        δ_k (dimensionless, non-negative)
+    """
+    if kappa <= 0:
+        return 0.0
+    return 2.0 * Gamma_H / kappa
+
+
+def fdr_noise_floor(delta_k, omega=None, T_env=0.0):
+    """
+    FDR/KMS-mandated noise floor.
+
+    n_noise = δ_k / 2  (at T_env = 0)
+
+    The fluctuation-dissipation relation requires that dissipation
+    is accompanied by noise. At zero environment temperature,
+    n_noise = δ_k/2 = Γ_H/κ = δ_diss.
+
+    Lean: noise_floor_nonneg, noise_floor_eq_delta_diss,
+          noise_floor_zero_iff (WKBConnection.lean)
+
+    Args:
+        delta_k: decoherence parameter
+        omega: mode frequency (unused at T_env=0, for future extension)
+        T_env: environment temperature (default 0)
+
+    Returns:
+        n_noise (dimensionless, non-negative)
+    """
+    if delta_k <= 0:
+        return 0.0
+    if T_env > 0 and omega is not None and omega > 0:
+        x = omega / (2.0 * T_env)
+        if x > 30:
+            coth_x = 1.0
+        elif x < 1e-10:
+            coth_x = 1.0 / x
+        else:
+            coth_x = 1.0 / np.tanh(x)
+        return (delta_k / 2.0) * coth_x
+    return delta_k / 2.0
+
+
+# ════════════════════════════════════════════════════════════════════
 # Beliaev damping estimate
 # ════════════════════════════════════════════════════════════════════
 
