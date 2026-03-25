@@ -109,7 +109,7 @@ def test_no_active_sorry():
 
 
 def test_sorry_gap_registry():
-    """Verify the Aristotle sorry-gap registry reports 35/35 filled."""
+    """Verify the Aristotle sorry-gap registry reports 40/40 filled."""
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
     assert len(unfilled) == 0, (

@@ -70,18 +70,67 @@ Implementation:
 
 ### Direction C: Lean Enhancement and Aristotle Stress-Testing
 
-**Status: Complete. All 35/35 theorems proved across 5 Aristotle rounds (zero sorry remaining).**
+**Status: Complete. All 40/40 theorems proved across 5 Aristotle rounds (zero sorry remaining).**
 
 Two new Lean modules extend the Phase 1 formalization:
 
 1. **SecondOrderSK.lean**: Structures for extended fields, second-order coefficients, full KMS, strong uniqueness theorem
 2. **WKBAnalysis.lean**: Dissipative dispersion, turning point shift, damping rate non-negativity
 
-### Direction D: Full KMS Derivation (Future)
+### Direction D: Full KMS Derivation from CGL Transformation
 
-**Status: Not yet started. Identified as the hardest component.**
+**Status: Complete. CGL FDR derived at arbitrary order, 5/5 Lean theorems proved (Aristotle runs dab8cfc1, 2ca3e7e6).**
 
-The CGL dynamical KMS transformation involves a complex time shift t → t + iβ/2 combined with time reversal and field conjugation. The "i" in the shift makes the derivation subtle — it acts on the classical (real-valued) EFT action but introduces complex transformations. A first-principles derivation of the second-order FDR from the CGL transformation is the main open theoretical challenge.
+#### Key Finding (2026-03-24): Model Restructuring Required
+
+Deep research into the CGL dynamical KMS transformation (Crossley-Glorioso-Liu 2017, Glorioso-Liu 2018, Jain-Kovtun 2024) revealed that the original `FirstOrderKMS` algebraic constraints in the Lean formalization were **not derivable from the CGL transformation** as formulated. The issue:
+
+**The CGL FDR pairs noise with ODD-in-ω (dissipative) retarded terms, not even-in-ω (conservative) terms.** Specifically:
+
+```
+K_N(ω,k) = [K_R(ω,k) − K_R(−ω,k)] / (β₀ω)
+```
+
+This picks out ONLY the odd-ω part of K_R. Even-ω terms (∂_t², ∂_x²) cancel and correctly produce zero noise — a non-dissipative system has no thermal fluctuations. The FDR relations i₁β = −r₂ and i₂β = r₁+r₂ from `FirstOrderKMS` pair noise with even-m conservative coefficients, which the CGL condition does not do.
+
+**Resolution: Restructure the SK-EFT model** to explicitly include odd-m dissipative retarded terms alongside the even-m conservative terms:
+
+| Derivative order | Conservative (even-ω, unconstrained by FDR) | Dissipative (odd-ω, paired with noise by FDR) |
+|---|---|---|
+| Level 1 | — | γ_diss · ψ_a · ∂_t ψ_r |
+| Level 2 | r₁ · ψ_a · ∂_t² ψ_r,  r₂ · ψ_a · ∂_x² ψ_r | — |
+| Level 3 | s₁ · ψ_a · ∂_x³ ψ_r,  s₃ · ψ_a · ∂_t²∂_x ψ_r | γ₃ · ψ_a · ∂_t³ ψ_r,  γ_{1,2} · ψ_a · ∂_t∂_x² ψ_r |
+
+The CGL FDR then gives the correct pairing:
+- γ_diss = β₀ · i₁  (level 1 dissipation ↔ level 0 noise: Einstein relation)
+- γ₃ = β₀ · i₂  (level 3 dissipation ↔ level 2 temporal noise)
+- γ_{1,2} = β₀ · i₃  (level 3 dissipation ↔ level 2 spatial noise)
+
+At second order, the parity-breaking monomials s₁ (∂_x³, odd n) and s₃ (∂_t²∂_x, odd n) ARE odd-derivative dissipative terms. The second-order FDR j_tx·β = s₁+s₃ pairs the cross-noise with these odd-parity terms — consistent with CGL.
+
+#### Impact Assessment
+
+- **Lean formalization:** `FirstOrderKMS` and `FullSecondOrderKMS` structures need revision to separate conservative and dissipative retarded coefficients. The uniqueness theorems (proved by Aristotle) remain valid as algebraic results but their physical interpretation changes.
+- **Python numerics:** Unchanged — the physical predictions (δ_diss, δ^(2), WKB spectrum) depend on the total transport coefficients, not on the conservative/dissipative decomposition.
+- **Paper claims:** No overstatements found. The second-order FDR is already labeled "CONJECTURE" and Direction D is described as "remains open." Minor wording fix needed in paper line 79 ("dissipative" → "real-sector").
+- **Existing proofs (40/40):** All remain valid. They prove algebraic consistency of the stated axioms; the reinterpretation doesn't invalidate them.
+
+#### Implementation Plan
+
+1. **SymPy derivation** (`src/second_order/cgl_derivation.py`): Implement Fourier-space CGL FDR algorithm. Build KMS-invariant action using invariant combination Φ_a(Φ_a + iβ₀∂_t Φ_r) from Jain-Kovtun. Derive FDR at arbitrary derivative order.
+
+2. **Lean formalization** (`lean/SKEFTHawking/CGLTransform.lean`): Define CGL transformation. State and prove that CGL invariance ⟹ FDR pairing odd-ω dissipative with noise. Derive specific FDR at orders N=1,2,3 and general N.
+
+3. **Model update**: Extend `FullSecondOrderCoeffs` to include odd-m dissipative coefficients. Show that the TOTAL action (conservative + dissipative) with CGL FDR reproduces the physical predictions.
+
+4. **Validation**: Cross-check CGL-derived FDR against existing Aristotle results. The `altFDR_uniqueness_test` negation proof should remain consistent.
+
+#### References
+
+- Crossley-Glorioso-Liu, JHEP 2017 (arXiv:1511.03646) — dynamical KMS symmetry
+- Glorioso-Liu, JHEP 2018 (arXiv:1612.07705) — SK for superfluids
+- Jain-Kovtun, JHEP 2024 (arXiv:2309.00511) — KMS-invariant building blocks
+- Deep research report: `Lit-Search/Phase-2/Dynamical KMS symmetry and the fluctuation-dissipation relation in Schwinger-Keldysh EFT.md`
 
 ---
 
@@ -140,11 +189,12 @@ The CGL dynamical KMS transformation involves a complex time shift t → t + iβ
 
 **Combined Phase 1+2+4: 22 core + 10 stress tests = 32/32 ALL PROVED. Zero sorry remaining.**
 
-**Final tally: 35/35 ALL PROVED. Zero sorry remaining across entire codebase.**
+**Final tally: 40/40 ALL PROVED. Zero sorry remaining across entire codebase.**
 - Phase 1 core: 14/14
 - Phase 2 core: 8/8
 - Round 4 stress tests: 10/10
 - Round 5 total-division strengthening: 3/3 (Aristotle run 518636d7)
+- Direction D CGL derivation: 5/5 (Aristotle runs dab8cfc1, 2ca3e7e6)
 
 ### Phase 4: Total-Division Strengthening (Round 5) — COMPLETE ✓
 
@@ -179,7 +229,8 @@ lean/SKEFTHawking/
 ├── SKDoubling.lean               (Phase 1: first-order SK, uniqueness)
 ├── HawkingUniversality.lean      (Phase 1: combined universality)
 ├── SecondOrderSK.lean            (Phase 2: second-order counting + KMS)
-└── WKBAnalysis.lean              (Phase 2: WKB mode analysis)
+├── WKBAnalysis.lean              (Phase 2: WKB mode analysis)
+└── CGLTransform.lean             (Direction D: CGL FDR derivation, 5 theorems)
 ```
 
 Phase 2 imports `SKDoubling.lean` to access `FirstOrderCoeffs`, `SKFields`, and the proven `firstOrder_uniqueness`. The `SecondOrderSK` module extends these to `FullSecondOrderCoeffs` (14 parameters) and `fullSecondOrder_uniqueness`.
@@ -193,8 +244,10 @@ Phase 2 imports `SKDoubling.lean` to access `FirstOrderCoeffs`, `SKFields`, and 
 | Second-order enumeration | `src/second_order/enumeration.py` | ✓ Validated |
 | Coefficient structures | `src/second_order/coefficients.py` | ✓ Working |
 | WKB solver | `src/second_order/wkb_analysis.py` | ✓ Working (natural units) |
-| Aristotle interface | `src/core/aristotle_interface.py` | ✓ All 35/35 gaps filled |
+| Aristotle interface | `src/core/aristotle_interface.py` | ✓ All 40/40 gaps filled |
 | Submission script | `scripts/submit_to_aristotle.py` | ✓ All rounds complete |
+| CGL FDR derivation | `src/second_order/cgl_derivation.py` | ✓ Direction D complete |
+| CGL tests | `tests/test_cgl_derivation.py` | ✓ 21/21 passing |
 
 ---
 
@@ -202,11 +255,11 @@ Phase 2 imports `SKDoubling.lean` to access `FirstOrderCoeffs`, `SKFields`, and 
 
 ### Theoretical Risks
 
-1. **Is the second-order FDR correct?** The conjectured relation j_tx · β = s₁ + s₃ is patterned on the first-order FDR but hasn't been derived from the CGL transformation. *Resolved: `altFDR_uniqueness_test` (Aristotle run 3eedcabb) proved ¬(∀...) via counterexample, confirming the signed FDR is unique. Remains open: first-principles derivation from CGL (Direction D).*
+1. **Is the second-order FDR correct?** *Fully resolved.* The relation j_tx · β = s₁ + s₃ was (a) stress-tested by `altFDR_uniqueness_test` (Aristotle run 3eedcabb, negation proof confirming sign uniqueness), and (b) derived from first principles via the CGL dynamical KMS transformation (Direction D, `CGLTransform.lean`, `cgl_implies_secondOrderKMS`). The CGL master formula K_N = −i·[K_R(ω)−K_R(−ω)]/(β₀ω) pairs noise with odd-ω dissipative retarded terms; the chain CGL FDR → T-reversal cancellation → model identification reproduces j_tx·β = s₁+s₃.
 
 2. **Does the positivity constraint persist with more imaginary monomials?** Adding (∂_x ψ_a)² to the imaginary sector would give the matrix a nonzero (3,3) entry, potentially relaxing γ_{2,1} + γ_{2,2} = 0 to an inequality. *Resolved: `relaxed_positivity_weakens` (Aristotle run 3eedcabb) proved the relaxed bound (γ_{2,1}+γ_{2,2})² ≤ 4·γ₂·γ_x·β.*
 
-3. **Are there additional second-order imaginary monomials?** The enumeration assumes ψ_a · ∂_t² ψ_a reduces to -(∂_t ψ_a)² by integration by parts. This is correct for action integrals but the boundary terms may matter near the horizon. *Partially resolved: `relaxed_uniqueness_test` (Aristotle run 3eedcabb) proved a 5-param witness with γ_x = c.i3. Boundary term analysis remains open.*
+3. **Are there additional second-order imaginary monomials?** *Resolved.* IBP with position-dependent transport coefficients γ(x) generates gradient corrections proportional to ∂_x γ. These are O(D)-suppressed: for all three experiments (D ≈ 0.012–0.014), the correction is ~1.2–1.4% of the leading noise — well below δ_diss ~ 10⁻⁵–10⁻³. The extra monomials generate an independent noise coefficient already explored by Aristotle: `relaxed_uniqueness_test` (run 3eedcabb) proved a 5-param witness with γ_x = c.i3, and `relaxed_positivity_weakens` showed the positivity constraint relaxes to (γ_{2,1}+γ_{2,2})² ≤ 4·γ₂·γ_x·β. Full analysis in `cgl_derivation.py:boundary_term_analysis()`. For D ~ 1 (abrupt horizons) the correction is O(1) and the constant-coefficient EFT breaks down.
 
 4. **Is FirstOrderKMS the optimal constraint at first order?** *Resolved: `firstOrder_KMS_optimal` (Aristotle run 3eedcabb) proved positivity ↔ (i1≥0 ∧ i2≥0).*
 
@@ -226,10 +279,11 @@ The spectral distortion δ^(2)(ω) ∝ ω³ is suppressed by (ω/Λ)³ relative 
 | Aristotle Round 2+3 (stress tests + WKB) | March 24, 2026 | **COMPLETE** ✓ (run c4d73ca8) |
 | Aristotle Round 4 (robustness stress tests) | March 24, 2026 | **COMPLETE** ✓ (run 3eedcabb) — all 9 gaps proved |
 | Aristotle Round 5 (total-division strengthening) | March 24, 2026 | **COMPLETE** ✓ (run 518636d7) — all 3 gaps proved |
-| WKB numerical results finalized | April 1, 2026 | In progress |
-| Phase 2 paper draft complete | April 15, 2026 | Stubbed |
-| Internal review | May 1, 2026 | Planned |
+| WKB numerical results finalized | March 24, 2026 | **COMPLETE** ✓ — table filled, on-shell vanishing found |
+| Direction D CGL derivation | March 25, 2026 | **COMPLETE** ✓ (runs dab8cfc1, 2ca3e7e6) — 5/5 proved |
+| Phase 2 paper draft | March 25, 2026 | **Substantive** — all sections written, CGL §3.4 added |
+| Internal review | — | Next step |
 
 ---
 
-*This roadmap documents the Phase 2 extension of the SK-EFT Hawking paper, covering second-order derivative expansion, frequency-dependent corrections, and Aristotle stress-testing of the algebraic KMS structure. Last updated: March 24, 2026 (synced file paths to consolidated repo, updated all direction statuses and resolved risks).*
+*This roadmap documents the Phase 2 extension of the SK-EFT Hawking paper, covering second-order derivative expansion, frequency-dependent corrections, Aristotle stress-testing, and the CGL dynamical KMS derivation. Last updated: March 25, 2026 (Direction D complete: CGL FDR derived, 40/40 theorems proved, all directions A–D complete).*

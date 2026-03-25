@@ -320,7 +320,7 @@ def check_paper_table_consistency() -> CheckResult:
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("theorems", "Theorem registry has 35 entries and is self-consistent")
+@register_check("theorems", "Theorem registry has 40 entries and is self-consistent")
 def check_theorem_count() -> CheckResult:
     from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
 
@@ -328,8 +328,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 35),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 35),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 40),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 40),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
@@ -356,6 +356,8 @@ def check_notebook_isolation() -> CheckResult:
         'second_order_correction', 'turning_point_shift',
         'effective_temperature', 'count_formula',
         'enumerate_monomials', 'count_coefficients',
+        'cgl_fdr', 'retarded_kernel', 'noise_kernel',
+        'derive_fdr_fourier', 'extract_odd_kernel',
     }
 
     details = []
@@ -430,10 +432,64 @@ def check_lean_source() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# CHECK 8: Lean build (optional, requires `lake` on PATH)
+# CHECK 8: CGL FDR derivation consistency
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("lean_build", "Lean project builds without sorry (requires lake)")
+@register_check("cgl_fdr", "CGL FDR derivation produces correct results")
+def check_cgl_fdr() -> CheckResult:
+    """Verify the CGL dynamical KMS derivation of the FDR."""
+    from src.second_order.cgl_derivation import (
+        verify_einstein_relation,
+        verify_first_order_bec,
+        verify_second_order_fdr,
+        derive_fdr_fourier,
+    )
+
+    details = []
+    all_pass = True
+
+    # Einstein relation
+    ok = verify_einstein_relation()
+    details.append(Detail("einstein_relation", ok,
+                          "σ = γ/β₀ for Brownian particle"))
+    if not ok:
+        all_pass = False
+
+    # First-order BEC FDR
+    ok = verify_first_order_bec()
+    details.append(Detail("first_order_bec", ok,
+                          "K_N = 2Γ/β₀ for BEC with damping"))
+    if not ok:
+        all_pass = False
+
+    # Second-order noise reality
+    ok = verify_second_order_fdr()
+    details.append(Detail("second_order_real", ok,
+                          "Second-order noise kernel is real"))
+    if not ok:
+        all_pass = False
+
+    # General pattern: noise count at even orders
+    try:
+        results = derive_fdr_fourier(4)
+        counts = {N: len(data['noise']) for N, data in results.items()}
+        ok = counts == {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}
+        details.append(Detail("noise_count_pattern", ok,
+                              f"Noise counts: {counts}"))
+        if not ok:
+            all_pass = False
+    except Exception as e:
+        details.append(Detail("noise_count_pattern", False, str(e)))
+        all_pass = False
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 9: Lean build (optional, requires `lake` on PATH)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("lean_build", "Lean project builds cleanly (requires lake)")
 def check_lean_build() -> CheckResult:
     """
     Run `lake build` on the Lean project.

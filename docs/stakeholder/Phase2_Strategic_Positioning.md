@@ -68,7 +68,7 @@ The WKB mode analysis framework (turning point shift, connection formula, Bogoli
 - Phase 1: First-order δ_diss, 14/14 Lean proofs, KMS discovery ✓
 - Phase 2: Second-order δ^(2)(ω), counting formula **proved** ✓, parity result **proved** ✓, strong uniqueness **proved** ✓, positivity constraint **proved** ✓ — **22/22 core proofs verified**
 - Round 4: Robustness stress tests, 10/10 **proved** ✓ (run 3eedcabb, March 24, 2026). FDR sign uniqueness confirmed via negation proofs. Positivity relaxation law verified. KMS optimality proved.
-- Round 5: Total-division strengthening. **3 sorry gaps proved** ✓ (run 518636d7, March 24, 2026) closing the gap between "proof is valid" and "proof exercises all the physics." Theorems where κ > 0 is genuinely load-bearing: turning_point_shift_nonzero, firstOrder_correction_zero_iff, dampingRate_eq_zero_iff. **Status: 35/35 ALL PROVED ✓ ZERO SORRY REMAINING**
+- Round 5: Total-division strengthening. **3 sorry gaps proved** ✓ (run 518636d7, March 24, 2026) closing the gap between "proof is valid" and "proof exercises all the physics." Theorems where κ > 0 is genuinely load-bearing: turning_point_shift_nonzero, firstOrder_correction_zero_iff, dampingRate_eq_zero_iff. **Status: 40/40 ALL PROVED ✓ ZERO SORRY REMAINING**
 - Combined: two-paper series with integrated formal verification demonstrating systematic extensibility of SK-EFT to all orders, now with hypothesis strengthening via Round 5
 
 ### Tier 1 Enablement (6-18 months, Phase 2 specific)
@@ -99,7 +99,7 @@ The WKB mode analysis framework (turning point shift, connection formula, Bogoli
 - Target: PRD Rapid Communication or companion PRL
 - Main result: δ^(2)(ω) ∝ ω³, counting formula, parity, positivity constraint
 - Key innovation: New observable (spectral shape), systematic extensibility demonstrated, FDR uniqueness confirmed
-- Status: Draft in progress, **35/35 proofs complete** — 22/22 core proofs + 10/10 robustness stress tests (run 3eedcabb) + 3/3 total-division strengthening (run 518636d7), March 24, 2026. **ZERO SORRY REMAINING**
+- Status: Draft in progress, **40/40 proofs complete** — 22/22 core proofs + 10/10 robustness stress tests (run 3eedcabb) + 3/3 total-division strengthening (run 518636d7), March 24, 2026. **ZERO SORRY REMAINING**
 
 ### Combined Impact
 

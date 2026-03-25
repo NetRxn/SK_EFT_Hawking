@@ -8,14 +8,14 @@ to acoustic Hawking radiation in BEC analog gravity. Two papers in a unified cod
 - **Paper 2 (second-order):** Two additional coefficients (γ_{2,1}, γ_{2,2}),
   frequency-dependent ω³ spectral distortion, WKB mode analysis. Draft in progress.
 
-**Lean 4 formalization:** 35/35 theorems proved via Aristotle across 13 submissions.
+**Lean 4 formalization:** 40/40 theorems proved via Aristotle across 13 submissions.
 Zero sorry remaining. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (35/35, zero sorry)
+├── lean/                              # Lean 4 formalization (40/40, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 6)
@@ -30,7 +30,7 @@ SK_EFT_Hawking/
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (35/35 filled)
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (40/40 filled)
 │   │   └── visualizations.py          # Plotly figures + interactive dashboard
 │   ├── first_order/                   # Phase 1 specific analysis
 │   └── second_order/                  # Phase 2 analysis (absorbed from SK_EFT_Phase2)
@@ -117,7 +117,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (35/35 — Zero Sorry)
+## Theorem Inventory (40/40 — Zero Sorry)
 
 | Module | Phase | Theorems | Aristotle Runs |
 |---|---|---|---|

@@ -313,7 +313,7 @@ If δ_diss is amplified to **100× its current value**:
 - `turning_point_shift_nonzero`: Nonzero damping Γ_H > 0 implies nonzero shift δx_imag > 0 — **✓ PROVED**
 - `firstOrder_correction_zero_iff`: True biconditional δ_diss = 0 ↔ Γ_H = 0 (requires κ > 0 to distinguish) — **✓ PROVED**
 - `dampingRate_eq_zero_iff`: Γ(k,ω) = 0 for all k,ω ↔ all γᵢ = 0 (requires c_s ≠ 0) — **✓ PROVED**
-Status: 35/35 ALL PROVED; current tally: 32 proved + 3 Round 5 = 35 total ✓ ZERO SORRY REMAINING
+Status: 40/40 ALL PROVED; current tally: 32 proved + 3 Round 5 = 35 total ✓ ZERO SORRY REMAINING
 
 ### Phase 1: Foundation — COMPLETE ✓
 

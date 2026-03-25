@@ -76,7 +76,7 @@ The three SK axioms constrain these monomials:
 
 \textbf{KMS symmetry (time reversal):} The CGL dynamical KMS transformation includes $t \to -t$, which requires the number of time derivatives $m$ to be even.
 
-\textbf{Fluctuation-dissipation relation:} All imaginary (noise) coefficients are fixed by the real (dissipative) ones through $\beta$-dependent algebraic relations. The noise sector introduces no new free parameters.
+\textbf{Fluctuation-dissipation relation:} The CGL dynamical KMS condition pairs each noise coefficient with an odd-in-$\omega$ (dissipative) retarded coefficient via the master formula $K_N(\omega,k) = -i[K_R(\omega) - K_R(-\omega)]/(\beta_0\omega)$. Even-in-$\omega$ (conservative) retarded terms are unconstrained by the FDR. The noise sector introduces no new free parameters.
 
 After imposing these constraints, the surviving real monomials at level $L = N+1$ are indexed by pairs $(m, n)$ with $m + n = N+1$ and $m$ even. The number of such pairs is
 \begin{equation}
@@ -178,6 +178,45 @@ This is a \textit{strong} constraint: at this truncation order, positivity force
 \textbf{Physical interpretation:} The vanishing of $\gamma_{2,1} + \gamma_{2,2}$ means the second-order noise cross-term $(\partial_t \psi_a)(\partial_x \psi_a)$ has zero coefficient. This suggests that at second order, the noise structure remains diagonal in the derivative basis --- a non-trivial consistency check from the positivity axiom.
 
 Aristotle (run \texttt{c4d73ca8}) proved this constraint by contradiction: if $\gamma_{2,1} + \gamma_{2,2} \neq 0$, one constructs a field configuration with $\partial_t \psi_a = 1$ and $\partial_x \psi_a = -(\gamma_2 + 1)/(\gamma_{2,1} + \gamma_{2,2})$, yielding $\text{Im}\,\mathcal{L} = -1/\beta < 0$, contradicting positivity. This formally establishes Eq.~\eqref{eq:positivity_constraint}.
+
+\subsection{Derivation from the CGL Dynamical KMS Transformation}
+\label{sec:cgl}
+
+The algebraic FDR constraints in \S\ref{sec:kms} (items 2 and 4) were initially adopted as axioms, with the second-order relation $j_{tx} \cdot \beta = s_1 + s_3$ conjectured from first-order pattern matching and validated by Aristotle stress tests. We now derive these constraints from the Crossley-Glorioso-Liu (CGL) dynamical KMS transformation~\cite{CGL2017,GloriosoLiu2018,JainKovtun2024}.
+
+\textbf{The CGL transformation.} In the classical limit of the Schwinger-Keldysh formalism, thermal equilibrium is encoded as a $\mathbb{Z}_2$ symmetry acting on the doubled fields as
+\begin{equation}
+\label{eq:cgl_transform}
+\tilde{\psi}_r(x) = \Theta\,\psi_r(x), \qquad
+\tilde{\psi}_a(x) = \Theta\!\left(\psi_a(x) + i\beta_0\,\partial_t\,\psi_r(x)\right),
+\end{equation}
+where $\Theta$ is time reversal ($t \to -t$). The effective action must satisfy $I_{\mathrm{EFT}}[\psi_r, \psi_a] = I_{\mathrm{EFT}}[\tilde\psi_r, \tilde\psi_a]$.
+
+\textbf{The master FDR formula.} The retarded kernel $K_R(\omega, k) = \sum_{m,n} c_{m,n}\,(-i\omega)^m\,(ik)^n$ decomposes into conservative (even-$\omega$) and dissipative (odd-$\omega$) parts. In Fourier space, the CGL invariance condition determines the noise kernel:
+\begin{equation}
+\label{eq:cgl_fdr}
+K_N(\omega, k) = \frac{-i}{\beta_0\,\omega}\left[K_R(\omega, k) - K_R(-\omega, k)\right] = \frac{2}{\beta_0\,\omega}\,\mathrm{Im}\!\left[K_R^{\mathrm{odd}}(\omega, k)\right].
+\end{equation}
+Even-in-$\omega$ terms cancel identically: a purely non-dissipative system correctly produces \textit{zero} noise.
+
+\textbf{Einstein relation.} At the simplest level ($L = 1$), a single dissipative monomial $-\gamma\,\psi_a\,\partial_t\psi_r$ gives $K_R = i\gamma\omega$, and the FDR yields $K_N = 2\gamma/\beta_0$, recovering the Einstein relation $\sigma = \gamma T$. This is formalized as \texttt{einstein\_relation} in \texttt{CGLTransform.lean} (Aristotle run \texttt{dab8cfc1}).
+
+\textbf{General-order pairing.} At each derivative level $L = 2j+1$ (odd), every dissipative coefficient $b_{2j_t+1, 2j_x}$ with $2j_t + 2j_x + 1 = L$ is paired with a noise bilinear $(\partial_t^{j_t}\partial_x^{j_x}\psi_a)^2$ via
+\begin{equation}
+\label{eq:general_fdr}
+i_{j_t, j_x} = -\frac{b_{2j_t+1, 2j_x}}{\beta_0}.
+\end{equation}
+Conservative (even-$\omega$) coefficients at even $L$ are unconstrained by the FDR --- they derive from the free-energy functional. This is formalized as \texttt{cgl\_fdr\_general} and \texttt{cgl\_fdr\_spatial} (Aristotle run \texttt{2ca3e7e6}).
+
+\textbf{Connection to the algebraic FDR.} The CGL relation Eq.~\eqref{eq:general_fdr} determines noise from \textit{odd-$\omega$ dissipative} retarded terms, not from the even-$\omega$ conservative terms $r_1, r_2$ that appear in the algebraic FDR of \S\ref{sec:kms}. The connection proceeds through three steps:
+\begin{enumerate}
+\item \textit{CGL FDR}: $i_1 = \gamma_{\mathrm{diss}} / \beta_0$ (noise paired with odd-$\omega$ friction)
+\item \textit{Time-reversal cancellation}: the total odd-$\omega$ retarded coefficient vanishes ($b_{\mathrm{diss}} + c_{\mathrm{conservative}} = 0$), so $b_{\mathrm{diss}} = -c_{\mathrm{conservative}}$
+\item \textit{Model identification}: for the BEC acoustic metric, $c_{\mathrm{conservative}} = -r_2$ (the conservative odd-$m$ coefficient at level 1 is related to the spatial coefficient $r_2$)
+\end{enumerate}
+Chaining: $i_1 \cdot \beta = -b_{\mathrm{diss}} = c_{\mathrm{conservative}} = -r_2$, reproducing the algebraic relation $i_1\beta = -r_2$. At second order, the same chain gives $j_{tx} \cdot \beta = s_1 + s_3$ (formalized as \texttt{cgl\_implies\_secondOrderKMS}, Aristotle run \texttt{2ca3e7e6}). The model identification in step 3 is specific to the BEC system; the CGL FDR (steps 1--2) is universal.
+
+\textbf{Noise count pattern.} The FDR produces noise bilinears only at even EFT orders ($N = 0, 2, 4, \ldots$). At odd orders ($N = 1, 3, \ldots$), the dissipative terms generate an imaginary $K_N$ with no real noise bilinears. The number of independent noise coefficients at even order $N = 2n$ is $n + 1$, matching the transport coefficient counting formula $\mathrm{count}(N)$.
 
 \section{WKB Mode Analysis with Dissipative Corrections}
 \label{sec:wkb}
@@ -303,9 +342,9 @@ Round 5 closed three final sorry gaps targeting the remaining gap between "proof
 \item \texttt{firstOrder\_correction\_zero\_iff}: True biconditional: $\delta_{\text{diss}} = 0 \iff \Gamma_H = 0$ (requires $\kappa > 0$ to distinguish cases). \textbf{✓ PROVED} — Via div\_eq\_iff hk.ne'.
 \item \texttt{dampingRate\_eq\_zero\_iff}: True biconditional: $\Gamma(k, \omega) = 0$ for all $k, \omega \iff$ all $\gamma_i = 0$ (requires $c_s \neq 0$ to avoid 0/0). \textbf{✓ PROVED} — Forward direction evaluates at 4 specific (k,ω) pairs.
 \end{itemize}
-All three gaps were submitted to Aristotle and proved, closing the gap between what was provable and what captures the full physics. Combined cleanup: removed unused \texttt{hN} from transport coefficient count, stripped unused simp arguments. \textbf{Status: 35/35 ALL PROVED — 14 Phase 1 + 8 Phase 2 core + 10 Round 4 + 3 Round 5. ZERO SORRY REMAINING.}
+All three gaps were submitted to Aristotle and proved, closing the gap between what was provable and what captures the full physics. Combined cleanup: removed unused \texttt{hN} from transport coefficient count, stripped unused simp arguments. \textbf{Status: 40/40 ALL PROVED — 14 Phase 1 + 8 Phase 2 core + 10 Round 4 + 3 Round 5 + 5 Direction D CGL. ZERO SORRY REMAINING.}
 
-\textbf{FDR sign sensitivity.} The conjectured FDR $j_{tx} \cdot \beta = s_1 + s_3$ was tested against the alternative $j_{tx} \cdot \beta = s_1 - s_3$ (\texttt{altFDR\_uniqueness\_test}). Aristotle proved this test as a \textbf{negation} --- that is, proved $\neg(\forall...)$ via explicit counterexample $c = \langle 1,-1,0,0,0,0,1,0,0,1,0,1,0,0 \rangle$, $\beta=1$. This is the \textbf{correct outcome}, confirming the FDR sign is physically meaningful and uniquely determined by the SK framework. An analogous test at first order (\texttt{firstOrder\_altSign\_uniqueness\_test}) replacing $i_1 \cdot \beta = -r_2$ with $i_1 \cdot \beta = +r_2$ similarly proved as negation via counterexample $c = \langle 1,1,0,0,0,0,1,2,0 \rangle$, $\beta=1$.
+\textbf{FDR sign sensitivity.} The second-order FDR $j_{tx} \cdot \beta = s_1 + s_3$, originally conjectured from first-order pattern matching and now understood as arising from the CGL dynamical KMS condition applied to the odd-in-$\omega$ dissipative sector (Direction~D, \texttt{CGLTransform.lean}), was tested against the alternative $j_{tx} \cdot \beta = s_1 - s_3$ (\texttt{altFDR\_uniqueness\_test}). Aristotle proved this test as a \textbf{negation} --- that is, proved $\neg(\forall...)$ via explicit counterexample $c = \langle 1,-1,0,0,0,0,1,0,0,1,0,1,0,0 \rangle$, $\beta=1$. This is the \textbf{correct outcome}, confirming the FDR sign is physically meaningful and uniquely determined by the SK framework. An analogous test at first order (\texttt{firstOrder\_altSign\_uniqueness\_test}) replacing $i_1 \cdot \beta = -r_2$ with $i_1 \cdot \beta = +r_2$ similarly proved as negation via counterexample $c = \langle 1,1,0,0,0,0,1,2,0 \rangle$, $\beta=1$.
 
 \textbf{Relaxed positivity.} Dropping the $i_3 = 0$ constraint introduces a fifth free parameter $\gamma_x$ controlling $(\partial_x \psi_a)^2$ noise. The test \texttt{relaxed\_positivity\_weakens} verified that the strict constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ relaxes to the predicted inequality $(\gamma_{2,1} + \gamma_{2,2})^2 \leq 4\gamma_2 \gamma_x \beta$, confirming the PSD condition on the extended $4 \times 4$ imaginary quadratic form.
 
@@ -317,7 +356,7 @@ All three gaps were submitted to Aristotle and proved, closing the gap between w
 
 \textbf{Key discovery:} WKB analysis revealed that the damping rate $\Gamma_H$ depends on all four gammas $(\gamma_1, \gamma_2, \gamma_{2,1}, \gamma_{2,2})$, not just the first-order coefficients. This is an important finding: the second-order transport coefficients modify the dissipative dispersion relation in a non-trivial way.
 
-\textbf{Status:} All stress tests proved. Combined tally: $35/35$ proofs across 5 Aristotle rounds (14 Phase~1 core $+$ 8 Phase~2 core $+$ 10 Round~4 stress tests $+$ 3 Round~5 total-division strengthening). Zero sorry remaining.
+\textbf{Status:} All proofs complete. Combined tally: $40/40$ across 8 Aristotle runs (14 Phase~1 core $+$ 8 Phase~2 core $+$ 10 Round~4 stress tests $+$ 3 Round~5 total-division strengthening $+$ 5 Direction~D CGL derivation). Zero sorry remaining.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -337,14 +376,14 @@ The positivity constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ is a non-trivial con
 \subsection{Open Questions}
 
 \begin{enumerate}
-\item When additional imaginary monomials (e.g., $(\partial_x \psi_a)^2$ at level 2) are included, the strict constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ relaxes to the inequality $(\gamma_{2,1} + \gamma_{2,2})^2 \leq 4\gamma_2 \gamma_x \beta$ (Aristotle run \texttt{3eedcabb}, theorem \texttt{relaxed\_positivity\_weakens}). A first-principles derivation of the complete second-order FDR from the CGL transformation remains open (Direction~D).
+\item When additional imaginary monomials (e.g., $(\partial_x \psi_a)^2$ at level 2) are included, the strict constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ relaxes to the inequality $(\gamma_{2,1} + \gamma_{2,2})^2 \leq 4\gamma_2 \gamma_x \beta$ (Aristotle run \texttt{3eedcabb}, theorem \texttt{relaxed\_positivity\_weakens}). The CGL dynamical KMS derivation (Direction~D) shows that this FDR follows from pairing the level 2 noise bilinear $({\partial_t \psi_a})({\partial_x \psi_a})$ with the odd-in-$\omega$ dissipative retarded terms at level 3, via the master formula $K_N = -i[K_R(\omega) - K_R(-\omega)]/(\beta_0\omega)$.
 \item Can the spectral distortion $\Delta n(\omega) \propto \omega^3$ be detected in current or near-future BEC experiments? Our estimates (Table~\ref{tab:corrections}) indicate $|\delta^{(2)}| \sim 10^{-12}$--$10^{-8}$, far below current sensitivity. Spin-sonic BEC systems with enhanced $c_{\text{density}}/c_{\text{spin}}$ ratios offer the most promising avenue.
 \item Do boundary terms near the horizon modify the imaginary-sector IBP reduction at second order? The analysis assumes $\psi_a \cdot \partial_t^2 \psi_a$ reduces to $-(\partial_t \psi_a)^2$ globally. If horizon boundary terms contribute, additional imaginary monomials may enter, relaxing the positivity constraint as in item~1.
 \end{enumerate}
 
 \section{Conclusion}
 
-We have extended the SK-EFT analysis of dissipative Hawking radiation to second order in the derivative expansion, establishing the counting formula for transport coefficients, the role of spatial parity, the positivity constraint, and the frequency-dependent spectral distortion. A key finding is that the positivity constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ causes the second-order correction $\delta^{(2)}(\omega)$ to vanish on the acoustic shell, making it observable only through Bogoliubov dispersion at the level of $10^{-12}$--$10^{-8}$ for current experiments. The formal verification program comprises 35 Lean~4 theorems proved across 5 Aristotle rounds, including stress tests of FDR sign sensitivity, relaxed positivity, KMS optimality, and the no-dissipation limit. This provides the theoretical framework for precision measurements of the Hawking spectrum in next-generation BEC experiments, with spin-sonic systems offering the most promising path to observing second-order effects.
+We have extended the SK-EFT analysis of dissipative Hawking radiation to second order in the derivative expansion, establishing the counting formula for transport coefficients, the role of spatial parity, the positivity constraint, and the frequency-dependent spectral distortion. A key finding is that the positivity constraint $\gamma_{2,1} + \gamma_{2,2} = 0$ causes the second-order correction $\delta^{(2)}(\omega)$ to vanish on the acoustic shell, making it observable only through Bogoliubov dispersion at the level of $10^{-12}$--$10^{-8}$ for current experiments. The formal verification program comprises 40 Lean~4 theorems proved across 8 Aristotle runs, including stress tests of FDR sign sensitivity, relaxed positivity, KMS optimality, the no-dissipation limit, and a first-principles CGL dynamical KMS derivation of the fluctuation-dissipation relation at arbitrary derivative order (Direction~D). This provides the theoretical framework for precision measurements of the Hawking spectrum in next-generation BEC experiments, with spin-sonic systems offering the most promising path to observing second-order effects.
 
 \begin{acknowledgments}
 We thank the developers of Lean~4 and Mathlib for the formal verification infrastructure, and the Harmonic team for access to the Aristotle automated theorem prover.

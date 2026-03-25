@@ -134,7 +134,7 @@ Phase 2 tests: all 7 proved, including two wrong-sign FDR tests at second order 
 - `firstOrder_correction_zero_iff`: True biconditional δ_diss = 0 ↔ Γ_H = 0 (requires κ > 0 to distinguish) — **✓ PROVED**
 - `dampingRate_eq_zero_iff`: True biconditional Γ(k,ω) = 0 for all k,ω ↔ all γᵢ = 0 (requires c_s ≠ 0) — **✓ PROVED**
 
-Also cleaned up: removed unused hN from transport_coefficient_count, stripped unnecessary simp args. **Status: 35/35 ALL PROVED ✓ ZERO SORRY REMAINING**
+Also cleaned up: removed unused hN from transport_coefficient_count, stripped unnecessary simp args. **Status: 40/40 ALL PROVED ✓ ZERO SORRY REMAINING**
 
 ---
 

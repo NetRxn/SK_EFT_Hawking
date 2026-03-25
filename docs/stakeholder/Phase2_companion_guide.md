@@ -34,7 +34,7 @@ The formalism imposes three axioms that any physically consistent dissipative th
 
 SK-EFT combines these two frameworks: write down the most general dissipative theory (EFT derivative expansion) within the SK doubled-field formalism, subject to all three axioms.
 
-The result is extremely constraining. At each derivative order, you start with many possible terms. Normalization eliminates terms without the right field structure. KMS symmetry fixes all noise coefficients in terms of the dissipative ones (so noise is not an independent parameter — it's determined by dissipation and temperature). Positivity constrains the signs and relationships between whatever survives.
+The result is extremely constraining. At each derivative order, you start with many possible terms. Normalization eliminates terms without the right field structure. The CGL dynamical KMS symmetry (Direction D) pairs each noise coefficient with an odd-in-ω (dissipative) retarded coefficient via the generalized Einstein relation — noise is determined by dissipation and temperature. Even-in-ω (conservative) terms are unconstrained by the FDR. Positivity constrains the signs and relationships between whatever survives.
 
 At **first order** (Phase 1), only 2 free parameters survive: γ₁ and γ₂.
 At **second order** (Phase 2), only 2 new parameters appear: γ_{2,1} and γ_{2,2} — and positivity further constrains them so that effectively only 1 new parameter is independent.
@@ -195,7 +195,7 @@ With all 22 original proofs complete, we tested the framework by deliberately mo
 2. **firstOrder_correction_zero_iff**: True biconditional δ_diss = 0 ↔ Γ_H = 0 (requires κ > 0 to distinguish) — **✓ PROVED**
 3. **dampingRate_eq_zero_iff**: True biconditional: Γ(k,ω) = 0 for all k,ω ↔ all γᵢ = 0 (requires c_s ≠ 0) — **✓ PROVED**
 
-Status: 35/35 ALL PROVED. Current tally: 32 proved + 3 Round 5 = 35 total ✓ ZERO SORRY REMAINING
+Status: 40/40 ALL PROVED. Tally: 14 Phase 1 + 8 Phase 2 + 10 Round 4 + 3 Round 5 + 5 Direction D = 40 total ✓ ZERO SORRY REMAINING
 
 **Wrong-sign FDR tests.** We flipped the sign in the fluctuation-dissipation relation and tested uniqueness. Aristotle proved both wrong-sign tests as negations — proving ¬(∀...) via explicit counterexamples. This is the **correct outcome**: it confirms the FDR sign is physically determined and unique. The signed FDR (j_tx·β = s₁+s₃ at second order, i₁·β = -r₂ at first order) is the only mathematically consistent choice.
 
@@ -248,7 +248,8 @@ The amplitudes (α, β) that relate the "ingoing" vacuum state to the "outgoing"
 | Aristotle core gaps (Rounds 1-3) | **ALL 7 PROVED** ✓ |
 | Aristotle stress tests (Round 4) | **ALL 9 PROVED** ✓ (run 3eedcabb) |
 | Aristotle total-division (Round 5) | **ALL 3 PROVED** ✓ (run 518636d7) |
-| Combined total | **35/35 proofs complete, zero sorry remaining** ✓ |
+| Direction D CGL derivation | **ALL 5 PROVED** ✓ (runs dab8cfc1, 2ca3e7e6) |
+| Combined total | **40/40 proofs complete, zero sorry remaining** ✓ |
 | Paper draft | In progress (numerical table and Round 4/5 results integrated) |
 | Visualizations | Generated (Plotly, interactive HTML, 9 Phase 2 figures) |
 
@@ -259,9 +260,9 @@ The amplitudes (α, β) that relate the "ingoing" vacuum state to the "outgoing"
 1. ~~**Aristotle Round 4** — robustness stress tests (9 gaps)~~ ✓ COMPLETE (run 3eedcabb, all 9 proved)
 1. ~~**Aristotle Round 5** — total-division strengthening (3 gaps)~~ ✓ COMPLETE (run 518636d7, all 3 proved)
 1. ~~**Numerical estimates** — finalize δ^(2)(ω) at experimental parameters~~ ✓ COMPLETE — key finding: positivity constraint makes δ^(2) vanish on acoustic shell; nonzero only via Bogoliubov off-shell (~10⁻¹²–10⁻⁸)
-2. **Paper draft completion** — numerical table filled, remaining prose revisions
-3. **Internal review** of combined Phase 1 + Phase 2 papers
+1. ~~**Direction D** — CGL dynamical KMS derivation of FDR~~ ✓ COMPLETE (runs dab8cfc1, 2ca3e7e6, all 5 proved). Master formula K_N = −i·[K_R(ω)−K_R(−ω)]/(β₀ω) pairs noise with odd-ω dissipation at each order. Einstein relation recovered. Connection to algebraic FDR formalized.
+2. **Internal review** of combined Phase 1 + Phase 2 papers — next step
 
 ---
 
-*This companion guide is the Phase 2 analog of the Phase 1 Educational Companion Guide. It explains the new physics (frequency dependence, parity, spectral distortion) at an accessible level while documenting the technical architecture and verification strategy. Last updated: March 24, 2026 (synced file paths, updated proof tally to 35/35, marked numerical estimates complete).*
+*This companion guide is the Phase 2 analog of the Phase 1 Educational Companion Guide. It explains the new physics (frequency dependence, parity, spectral distortion) at an accessible level while documenting the technical architecture and verification strategy. Last updated: March 25, 2026 (Direction D CGL derivation complete, proof tally 40/40, all Directions A–D complete).*

@@ -2,7 +2,7 @@
 
 ## Technical and Real-World Implications of Frequency-Dependent Corrections
 
-**Status:** Phase 2 VERIFICATION COMPLETE — All 35/35 Lean proofs verified, zero sorry remaining
+**Status:** Phase 2 VERIFICATION COMPLETE — All 40/40 Lean proofs verified, zero sorry remaining
 **Date:** March 24, 2026
 **Classification:** Research Overview — For Technical and Non-Technical Stakeholders
 **Prerequisite:** Phase 1 Stakeholder Implications document (March 23, 2026)
@@ -102,13 +102,13 @@ Phase 2 extends the Lean 4 formalization with two new modules and 7 new proof ob
 - **Positivity constraint** (1 gap, priority 2): ✓ **PROVED** by Aristotle (run c4d73ca8). Proof by contradiction: constructs field configuration making Im < 0 if γ_{2,1}+γ_{2,2} ≠ 0.
 - **Turning point shift** (1 gap, priority 3): ✓ **PROVED** by Aristotle (run c4d73ca8). Pure witness construction.
 
-**All 7 Phase 2 core sorry gaps are now proved. Combined with Phase 1 (14/14), Round 4 stress tests (10/10), and Round 5 total-division strengthening (3/3), the project has 35/35 proofs verified with zero sorry remaining.**
+**All 7 Phase 2 core sorry gaps are now proved. Combined with Phase 1 (14/14), Round 4 stress tests (10/10), Round 5 total-division strengthening (3/3), and Direction D CGL derivation (5/5), the project has 40/40 proofs verified with zero sorry remaining.**
 
 ### The Stress Test Passed
 
 In Phase 1, Aristotle discovered that the original KMS formulation was mathematically too weak — it admitted a counterexample that satisfied all stated constraints but didn't correspond to any physical theory. This was a genuine scientific discovery from formal verification.
 
-Phase 2 deliberately exposed the second-order KMS condition to the same stress test. **Aristotle found no counterexample.** The proof of `fullSecondOrder_uniqueness` confirms that the conjectured second-order FDR relation (j_tx · β = s₁ + s₃) is correct — any SK action satisfying the full second-order KMS condition is uniquely determined by exactly 4 transport coefficients. This is a significant validation of the theoretical framework.
+Phase 2 deliberately exposed the second-order KMS condition to the same stress test. **Aristotle found no counterexample.** The proof of `fullSecondOrder_uniqueness` confirms that the second-order FDR relation (j_tx · β = s₁ + s₃) is correct — any SK action satisfying the full second-order KMS condition is uniquely determined by exactly 4 transport coefficients. Direction D further showed that this FDR follows from the CGL dynamical KMS condition: the master formula K_N = −i·[K_R(ω) − K_R(−ω)]/(β₀ω) pairs noise with odd-in-ω dissipative retarded terms at each derivative order (the generalized Einstein relation).
 
 ### Bulletproofing Suite (Round 4) — ✓ COMPLETE
 
@@ -122,7 +122,7 @@ With 22/22 core proofs complete, we subjected the framework to *robustness testi
 2. **firstOrder_correction_zero_iff**: True biconditional $\delta_{\text{diss}} = 0 \iff \Gamma_H = 0$. Requires $\kappa > 0$ to distinguish cases (with total division, both sides are 0 when $\kappa = 0$). — **✓ PROVED**
 3. **dampingRate_eq_zero_iff**: True biconditional $\Gamma(k, \omega) = 0$ for all $k, \omega \iff$ all $\gamma_i = 0$. Requires $c_s \neq 0$ to avoid spurious identities. — **✓ PROVED**
 
-Also cleaned up: removed unused hN from transport_coefficient_count, stripped unnecessary simp arguments. **Status: 35/35 ALL PROVED ✓ ZERO SORRY REMAINING**
+Also cleaned up: removed unused hN from transport_coefficient_count, stripped unnecessary simp arguments. **Status: 40/40 ALL PROVED ✓ ZERO SORRY REMAINING**
 
 **FDR sign sensitivity.** We flipped the sign of the FDR (replacing s₁ + s₃ with s₁ - s₃) and tested uniqueness. Aristotle proved both wrong-sign tests as *negations* — proving ¬(∀...) via explicit counterexamples. This is the desired outcome: it confirms the FDR sign is physically meaningful and uniquely determined by the SK framework, not arbitrary. Tests `altFDR_uniqueness_test` and `firstOrder_altSign_uniqueness_test` both proved.
 
@@ -152,7 +152,8 @@ Also cleaned up: removed unused hN from transport_coefficient_count, stripped un
 | FDR sign | N/A | N/A | **Confirmed via negation** ✓ | N/A |
 | Positivity | Trivial at 1st-order | **γ_{2,1}+γ_{2,2}=0** ✓ | Relaxation ✓ | N/A |
 | Total-division | N/A | N/A | N/A | κ>0 load-bearing ✓ |
-| **Combined** | | | | **35/35 ZERO SORRY** |
+| CGL derivation | N/A | N/A | N/A | 5/5 Direction D ✓ |
+| **Combined** | | | | **40/40 ZERO SORRY** |
 
 ---
 
@@ -190,4 +191,4 @@ The methodology developed here — systematic monomial enumeration, algebraic KM
 
 ---
 
-*This document extends the Phase 1 Stakeholder Implications to cover the second-order SK-EFT analysis. It emphasizes the qualitatively new physics (frequency dependence, parity, spectral distortion) that distinguishes Phase 2 from a simple refinement of Phase 1. Last updated: March 24, 2026 (synced proof tally to 35/35, marked numerical estimates and all Aristotle rounds complete).*
+*This document extends the Phase 1 Stakeholder Implications to cover the second-order SK-EFT analysis. It emphasizes the qualitatively new physics (frequency dependence, parity, spectral distortion) that distinguishes Phase 2 from a simple refinement of Phase 1. Last updated: March 24, 2026 (synced proof tally to 40/40, marked numerical estimates and all Aristotle rounds complete).*

@@ -460,6 +460,59 @@ SORRY_GAPS: list[SorryGap] = [
                       # Forward: evaluate at 4 points to isolate each γᵢ
                       # Backward: unfold + aesop
     ),
+
+    # ── Direction D: CGL Dynamical KMS Derivation ──
+    SorryGap(
+        module="SKEFTHawking.CGLTransform",
+        name="cgl_fdr_general",
+        priority=2,
+        description="General-order CGL FDR: noise at level 2n paired with "
+                    "odd-ω dissipation at level 2n+1 via the generalized Einstein relation.",
+        strategy_hint="Fourier-space computation: build K_R with odd-m coefficient, "
+                      "apply K_N = −i·[K_R(ω) − K_R(−ω)]/(β₀ω), match coefficients of "
+                      "ω^{2j_t}·k^{2j_x}. See PROVIDED SOLUTION in the theorem docstring.",
+        filled=True,  # Proved by Aristotle run 2ca3e7e6 (March 24, 2026)
+                      # Strengthened: now encodes actual noise=-b/β formula (was trivial True)
+    ),
+    SorryGap(
+        module="SKEFTHawking.CGLTransform",
+        name="cgl_fdr_spatial",
+        priority=2,
+        description="CGL FDR for spatial dissipative monomials: same structure as "
+                    "cgl_fdr_general but parameterized by (j_t, j_x).",
+        strategy_hint="rw [← h_fdr, mul_div_cancel_right₀ _ hb.ne']",
+        filled=True,  # Proved by Aristotle run 2ca3e7e6 (March 24, 2026)
+    ),
+    SorryGap(
+        module="SKEFTHawking.CGLTransform",
+        name="cgl_implies_secondOrderKMS",
+        priority=2,
+        description="CGL FDR + T-reversal + model identification → j_tx·β = s₁+s₃. "
+                    "Full chain connecting CGL to FullSecondOrderKMS.",
+        strategy_hint="linarith on the 5 linear hypotheses",
+        filled=True,  # Proved by Aristotle run 2ca3e7e6 (March 24, 2026)
+    ),
+    SorryGap(
+        module="SKEFTHawking.CGLTransform",
+        name="einstein_relation",
+        priority=1,
+        description="Einstein relation from CGL: σ·β = −b_{1,0}. The simplest FDR: "
+                    "level 0 noise paired with level 1 friction.",
+        strategy_hint="From h_fdr: noise.sigma = -diss.b_10 / beta. Use eq_div_iff hb.ne'.",
+        filled=True,  # Proved by Aristotle run dab8cfc1 (March 24, 2026)
+                      # Proof: rw [← h_fdr, mul_div_cancel_right₀ _ hb.ne']
+    ),
+    SorryGap(
+        module="SKEFTHawking.CGLTransform",
+        name="secondOrder_cgl_fdr",
+        priority=1,
+        description="Second-order CGL FDR: i_{0,1}·β = −b_{1,2} and i_{1,0}·β = −b_{3,0}. "
+                    "Two noise bilinears paired with two odd-ω dissipative terms at level 3.",
+        strategy_hint="From hypotheses h_fdr_01 and h_fdr_10, use eq_div_iff hb.ne' to solve "
+                      "for noise.i_01 and noise.i_10 in terms of diss coefficients and beta.",
+        filled=True,  # Proved by Aristotle run dab8cfc1 (March 24, 2026)
+                      # Proof: exact ⟨eq_div_of_mul_eq hb.ne' h_fdr_01, eq_div_of_mul_eq hb.ne' h_fdr_10⟩
+    ),
 ]
 
 

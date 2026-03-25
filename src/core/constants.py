@@ -103,7 +103,7 @@ COLORS = {
 # ════════════════════════════════════════════════════════════════════
 # Lean verification registry
 # Maps each theorem to its Aristotle run ID and status.
-# 35/35 proved, 0 sorry remaining.
+# 40/40 proved, 0 sorry remaining.
 # ════════════════════════════════════════════════════════════════════
 
 ARISTOTLE_THEOREMS = {
@@ -147,10 +147,17 @@ ARISTOTLE_THEOREMS = {
     'firstOrder_correction_zero_iff_strengthened': '518636d7',
     'turning_point_shift_nonzero_strengthened': '518636d7',
     'effective_temperature_well_defined': '518636d7',
+
+    # Direction D: CGL Derivation (5)
+    'einstein_relation': 'dab8cfc1',
+    'secondOrder_cgl_fdr': 'dab8cfc1',
+    'cgl_fdr_general': '2ca3e7e6',
+    'cgl_fdr_spatial': '2ca3e7e6',
+    'cgl_implies_secondOrderKMS': '2ca3e7e6',
 }
 
 TOTAL_THEOREMS = len(ARISTOTLE_THEOREMS)
-assert TOTAL_THEOREMS == 35, f"Expected 35 theorems, got {TOTAL_THEOREMS}"
+assert TOTAL_THEOREMS == 40, f"Expected 40 theorems, got {TOTAL_THEOREMS}"
 
 
 # ════════════════════════════════════════════════════════════════════
