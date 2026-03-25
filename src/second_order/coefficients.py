@@ -118,6 +118,57 @@ class SecondOrderCoeffs:
 
 
 @dataclass
+class ThirdOrderCoeffs:
+    """Third-order SK-EFT transport coefficients (Phase 3, new result).
+
+    At derivative level 4, the five candidate monomials are:
+        ψ_a · ∂⁴_x ψ_r       (m=0, n=4) — SURVIVES (m even)
+        ψ_a · ∂_t ∂³_x ψ_r   (m=1, n=3) — KILLED (m odd, T-reversal)
+        ψ_a · ∂²_t ∂²_x ψ_r  (m=2, n=2) — SURVIVES (m even)
+        ψ_a · ∂³_t ∂_x ψ_r   (m=3, n=1) — KILLED (m odd, T-reversal)
+        ψ_a · ∂⁴_t ψ_r        (m=4, n=0) — SURVIVES (m even)
+
+    After T-reversal: 3 surviving coefficients.
+    ALL THREE have even n → parity-preserving (exist without background flow).
+    This is qualitatively different from second order where ALL monomials
+    required broken parity.
+
+    Parity alternation theorem:
+        At odd EFT order N, derivative level L = N+1 is even, so
+        n = L - m is always even when m is even → all monomials are
+        parity-preserving. At even N, the opposite: all require broken parity.
+
+    Physical meaning:
+        gamma_3_1: Coefficient of ψ_a · ∂⁴_x ψ_r.
+            Quartic spatial dispersion/damping. Mirrors the Bogoliubov
+            superluminal dispersion relation ℏ²k⁴/4m². This is where the
+            EFT makes contact with the microscopic UV physics.
+            Generates k⁴ corrections to the damping rate.
+
+        gamma_3_2: Coefficient of ψ_a · ∂²_t ∂²_x ψ_r.
+            Mixed temporal-spatial term. Generates ω²k² cross-corrections.
+            Probes the interplay between temporal evolution and spatial
+            structure at the fourth-derivative level.
+
+        gamma_3_3: Coefficient of ψ_a · ∂⁴_t ψ_r.
+            Quartic temporal damping. Pure time-evolution correction.
+            Generates ω⁴ corrections to the damping rate. This is the
+            highest purely temporal term at this order.
+
+    Spectral correction: δ^(3)(ω) ∝ ω⁴ — EVEN in frequency.
+    (Second-order was ∝ ω³, ODD in frequency.)
+    This alternation continues: odd N → even ω-power, even N → odd ω-power.
+
+    Units: [m⁴/s] (one additional spatial derivative beyond second order).
+
+    Lean: thirdOrder_count (Aristotle run 3eedcabb), cumulative_count_through_3
+    """
+    gamma_3_1: float  # ψ_a · ∂⁴_x ψ_r   (quartic spatial)
+    gamma_3_2: float  # ψ_a · ∂²_t ∂²_x ψ_r  (mixed temporal-spatial)
+    gamma_3_3: float  # ψ_a · ∂⁴_t ψ_r   (quartic temporal)
+
+
+@dataclass
 class FullCoeffs:
     """Combined first + second order transport coefficients.
 
@@ -134,6 +185,36 @@ class FullCoeffs:
     def n_total(self) -> int:
         """Total number of transport coefficients through second order."""
         return 4
+
+
+@dataclass
+class FullCoeffsThrough3:
+    """Combined first + second + third order transport coefficients.
+
+    Total: 7 free parameters (2 + 2 + 3).
+    Through order 3, the SK-EFT has 7 independent dissipative transport
+    coefficients. With spatial parity: 5 (2 first-order + 0 second + 3 third).
+
+    The parity alternation theorem explains this pattern:
+    - Order 1 (odd): 2 coefficients, all parity-preserving
+    - Order 2 (even): 2 coefficients, all require broken parity
+    - Order 3 (odd): 3 coefficients, all parity-preserving
+
+    Lean: cumulative_count_through_3 (Aristotle run 3eedcabb)
+    """
+    first: FirstOrderCoeffs
+    second: SecondOrderCoeffs
+    third: ThirdOrderCoeffs
+
+    @property
+    def n_total(self) -> int:
+        """Total number of transport coefficients through third order."""
+        return 7
+
+    @property
+    def n_parity_preserving(self) -> int:
+        """Coefficients that survive spatial parity (no background flow)."""
+        return 5  # 2 (first) + 0 (second) + 3 (third)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -175,6 +256,23 @@ def second_order_action_re(gamma_2_1: float, gamma_2_2: float,
     """
     return gamma_2_1 * psi_a * dxxx_psi_r + \
            gamma_2_2 * psi_a * dttx_psi_r
+
+
+def third_order_action_re(gamma_3_1: float, gamma_3_2: float, gamma_3_3: float,
+                          psi_a: float, dxxxx_psi_r: float,
+                          dttxx_psi_r: float, dtttt_psi_r: float) -> float:
+    """Real part of the third-order SK action correction.
+
+    L_re^(3) = γ_{3,1} · ψ_a · ∂⁴_x ψ_r
+             + γ_{3,2} · ψ_a · ∂²_t ∂²_x ψ_r
+             + γ_{3,3} · ψ_a · ∂⁴_t ψ_r
+
+    All three monomials are parity-PRESERVING (even n).
+    This is the parity alternation: odd-order corrections exist universally.
+    """
+    return (gamma_3_1 * psi_a * dxxxx_psi_r +
+            gamma_3_2 * psi_a * dttxx_psi_r +
+            gamma_3_3 * psi_a * dtttt_psi_r)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -258,6 +356,44 @@ def hawking_correction_second_order(
     delta_mixed = coeffs.second.gamma_2_2 * omega_bar**2 * v_bar / kappa
 
     return delta_cubic + delta_mixed
+
+
+def hawking_correction_third_order(
+    omega: float | np.ndarray,
+    coeffs: FullCoeffsThrough3,
+    kappa: float,
+    c_s: float,
+) -> float | np.ndarray:
+    """Third-order correction to the Hawking spectrum (frequency-dependent).
+
+    δ^(3)(ω) = γ_{3,1} · (ω/κ)⁴ · (κ/c_s)⁴ / κ
+             + γ_{3,2} · (ω/κ)² · (ω/κ)² · (κ/c_s)² · (κ/c_s)² / κ
+             + γ_{3,3} · (ω/κ)⁴ / κ
+
+    More precisely, on-shell (k = ω/c_s):
+    δ^(3)(ω) = [γ_{3,1}·k⁴ + γ_{3,2}·ω²k²/c_s² + γ_{3,3}·ω⁴/c_s⁴] / κ
+
+    Key physics:
+    1. The correction is ∝ ω⁴ — EVEN in frequency (unlike odd ω³ at N=2)
+    2. Parity-preserving: exists without background flow
+    3. The γ_{3,1} term has the same k⁴ structure as Bogoliubov dispersion
+
+    Args:
+        omega: Mode frequency (or array).
+        coeffs: Full transport coefficients through third order.
+        kappa: Surface gravity.
+        c_s: Sound speed at horizon.
+
+    Returns:
+        δ^(3)(ω) — the frequency-dependent third-order correction.
+    """
+    k = omega / c_s  # on-shell acoustic wavenumber
+
+    Gamma_3 = (coeffs.third.gamma_3_1 * k**4 +
+               coeffs.third.gamma_3_2 * (omega**2 * k**2 / c_s**2) +
+               coeffs.third.gamma_3_3 * (omega**4 / c_s**4))
+
+    return Gamma_3 / kappa
 
 
 def effective_temperature(

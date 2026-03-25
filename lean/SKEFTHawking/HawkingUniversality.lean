@@ -438,4 +438,118 @@ noncomputable def steinhauer_adiabaticity : ℝ := 0.04
 noncomputable def trento_spin_sonic_enhancement : ℝ := 100
   -- Enhancement factor: (c_density/c_spin)² relative to single-component
 
+/-!
+## Phase 3 Enhancements (1E)
+
+### κ-Scaling Crossing Prediction
+
+The dispersive and dissipative corrections scale differently with surface gravity:
+  δ_disp = -(π/6)·D² = -(π/6)·(κξ/c_s)²  ∝ κ²
+  δ_diss = Γ_H/κ                            ∝ κ
+
+Since dispersive grows as κ² and dissipative falls as 1/κ (via Γ_H/κ
+with Γ_H ∝ κ² giving δ_diss ∝ κ), there exists a crossing surface
+gravity κ* where |δ_disp| = δ_diss.
+
+Below κ*, dissipation dominates (δ_diss > |δ_disp|).
+Above κ*, dispersion dominates (|δ_disp| > δ_diss).
+-/
+
+/-- Parameters for the κ-crossing analysis. -/
+structure KappaCrossingParams where
+  /-- Healing length ξ [m] -/
+  xi : ℝ
+  xi_pos : 0 < xi
+  /-- Sound speed c_s [m/s] -/
+  cs : ℝ
+  cs_pos : 0 < cs
+  /-- Effective damping coefficient A: δ_diss = A·κ where A = (γ₁+γ₂)/c_s² -/
+  diss_coeff : ℝ
+  diss_coeff_pos : 0 < diss_coeff
+
+/-- The crossing surface gravity κ* where |δ_disp(κ*)| = δ_diss(κ*).
+
+    Setting (π/6)·(κξ/c_s)² = A·κ (where A encodes the transport coefficients),
+    we get κ* = 6A·c_s²/(π·ξ²).
+
+    This is well-defined and positive when A > 0 (dissipation present),
+    ξ > 0, and c_s > 0. -/
+noncomputable def kappaCrossing (p : KappaCrossingParams) : ℝ :=
+  6 * p.diss_coeff * p.cs ^ 2 / (Real.pi * p.xi ^ 2)
+
+/-- The crossing surface gravity κ* is positive. -/
+theorem kappaCrossing_pos (p : KappaCrossingParams) :
+    0 < kappaCrossing p := by
+  unfold kappaCrossing
+  apply div_pos
+  · have h6 : (0:ℝ) < 6 := by norm_num
+    have hcs2 : (0:ℝ) < p.cs ^ 2 := sq_pos_of_pos p.cs_pos
+    exact mul_pos (mul_pos h6 p.diss_coeff_pos) hcs2
+  · exact mul_pos Real.pi_pos (sq_pos_of_pos p.xi_pos)
+
+/-- At the crossing point, the dispersive and dissipative corrections
+    are equal in magnitude.
+
+    |δ_disp(κ*)| = (π/6)·(κ*·ξ/c_s)² and δ_diss(κ*) = A·κ*.
+    Substituting κ* = 6A·c_s²/(π·ξ²):
+      (π/6)·(6A·c_s²/(π·ξ²)·ξ/c_s)² = (π/6)·(6A·c_s/(π·ξ))²
+                                       = (π/6)·36A²·c_s²/(π²·ξ²)
+                                       = 6A²·c_s²/(π·ξ²)
+                                       = A·κ* ✓ -/
+theorem kappa_crossing_is_crossing (p : KappaCrossingParams) :
+    Real.pi / 6 * (kappaCrossing p * p.xi / p.cs) ^ 2 =
+    p.diss_coeff * kappaCrossing p := by
+  unfold kappaCrossing
+  have hpi : (Real.pi : ℝ) ≠ 0 := ne_of_gt Real.pi_pos
+  have hxi : p.xi ≠ 0 := ne_of_gt p.xi_pos
+  have hcs : p.cs ≠ 0 := ne_of_gt p.cs_pos
+  have h6 : (6:ℝ) ≠ 0 := by norm_num
+  field_simp [hpi, hxi, hcs, h6]
+
+/-!
+### Spin-Sonic Enhancement Theorem
+
+In a two-component BEC, spin waves propagate at c_spin ≪ c_density.
+The dissipative correction δ_diss scales as (c_density/c_spin)² relative
+to a single-component system. This enhancement is exact at leading order
+in the EFT.
+-/
+
+/-- Spin-sonic enhancement factor: the dissipative correction is enhanced
+    by the square of the velocity ratio when operating with spin sound
+    rather than density sound. -/
+noncomputable def spinSonicEnhancement (c_density c_spin : ℝ) : ℝ :=
+  (c_density / c_spin) ^ 2
+
+/-- The enhancement factor is positive when both velocities are positive. -/
+theorem spinSonicEnhancement_pos (c_d c_s : ℝ) (hd : 0 < c_d) (hs : 0 < c_s) :
+    0 < spinSonicEnhancement c_d c_s := by
+  unfold spinSonicEnhancement
+  positivity
+
+/-- The spin-sonic enhancement is exact at leading order:
+    δ_diss(spin) = (c_density/c_spin)² · δ_diss(density).
+
+    Proof: δ_diss = Γ_H/κ with Γ_H = (γ₁+γ₂)·k_H² and k_H = κ/c_s.
+    Replacing c_s → c_spin while keeping γᵢ and κ fixed:
+      k_H(spin) = κ/c_spin, so Γ_H(spin) = (γ₁+γ₂)·κ²/c_spin²
+      δ_diss(spin) = (γ₁+γ₂)·κ/c_spin²
+    while δ_diss(density) = (γ₁+γ₂)·κ/c_density²
+    Ratio = c_density²/c_spin² = (c_density/c_spin)². -/
+theorem spinSonic_enhancement_exact
+    (gamma_eff kappa c_density c_spin : ℝ)
+    (hgk : gamma_eff * kappa ≠ 0) (hcd : c_density ≠ 0) (hcs : c_spin ≠ 0) :
+    -- δ_diss(spin) / δ_diss(density)
+    -- = [gamma_eff · κ / c_spin²] / [gamma_eff · κ / c_density²]
+    (gamma_eff * kappa / c_spin ^ 2) /
+    (gamma_eff * kappa / c_density ^ 2) =
+    spinSonicEnhancement c_density c_spin := by
+  unfold spinSonicEnhancement
+  have hcs2 : c_spin ^ 2 ≠ 0 := pow_ne_zero 2 hcs
+  have hcd2 : c_density ^ 2 ≠ 0 := pow_ne_zero 2 hcd
+  field_simp [hgk, hcs2, hcd2]
+  have hge : gamma_eff ≠ 0 := left_ne_zero_of_mul hgk
+  have hke : kappa ≠ 0 := right_ne_zero_of_mul hgk
+  field_simp [hge, hke]
+
 end SKEFTHawking.HawkingUniversality
