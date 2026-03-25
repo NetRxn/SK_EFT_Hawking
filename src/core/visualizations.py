@@ -54,6 +54,10 @@ COLORS = {
     "supersonic": "#FFE0E0", # Light red — supersonic region fill
     "sensitivity": "#CCCCCC",# Grey — experimental sensitivity band
     "noise": "#D4A574",      # Warm tan — noise/FDR terms
+    # Aliases matching constants.py experiment names
+    "Steinhauer": "#2E86AB",
+    "Heidelberg": "#A23B72",
+    "Trento": "#F18F01",
 }
 
 # Typography matching PRL conventions
@@ -742,14 +746,15 @@ def fig_boundary_term_suppression() -> go.Figure:
         hovertemplate="D=%{x:.4f}<br>Correction=%{y:.1f}%<extra></extra>",
     ))
 
-    # Mark experimental D values
+    # Mark experimental D values (stagger positions to avoid overlap)
     experiments = get_all_experiments()
     exp_colors = {
         "Steinhauer": COLORS["Rb87"],
         "Heidelberg": COLORS["K39"],
         "Trento": COLORS["Na23"],
     }
-    for name, (params, bg) in experiments.items():
+    text_positions = ["top left", "bottom right", "top right"]
+    for (name, (params, bg)), tpos in zip(experiments.items(), text_positions):
         D = bg.adiabaticity
         color = exp_colors.get(name, "#333")
         fig.add_trace(go.Scatter(
@@ -757,8 +762,8 @@ def fig_boundary_term_suppression() -> go.Figure:
             mode="markers+text",
             marker=dict(size=14, color=color,
                        line=dict(width=2, color="black"), symbol="star"),
-            text=[f"{name}<br>D={D:.4f}"],
-            textposition="top center",
+            text=[f"{name} (D={D:.3f})"],
+            textposition=tpos,
             textfont=dict(size=11, color=color),
             showlegend=False,
             hovertemplate=f"{name}<br>D={D:.4f}<br>Correction={D*100:.1f}%<extra></extra>",
@@ -789,52 +794,33 @@ def fig_positivity_constraint() -> go.Figure:
 
     Shows: strict constraint γ_{2,1}+γ_{2,2}=0 from 2×2 PSD matrix,
     and relaxed constraint (γ_{2,1}+γ_{2,2})² ≤ 4γ₂γ_x β from 3×3.
+    Uses filled scatter band instead of contours for clean rendering.
     """
-    # Parameter space: γ_{2,1} vs γ_{2,2}
-    g21_range = np.linspace(-2, 2, 300)
-    g22_range = np.linspace(-2, 2, 300)
-    G21, G22 = np.meshgrid(g21_range, g22_range)
+    g21 = np.linspace(-2, 2, 300)
 
-    # Strict constraint: γ_{2,1} + γ_{2,2} = 0 → γ_{2,2} = -γ_{2,1}
-    # Relaxed: (γ_{2,1}+γ_{2,2})² ≤ 4·γ₂·γ_x·β
-    gamma_2_times_gamma_x_beta = 0.5  # representative value
-    relaxed_bound = np.sqrt(4 * gamma_2_times_gamma_x_beta)
+    # Relaxed bound: γ_{2,2} = -γ_{2,1} ± √(4γ₂γ_xβ)
+    gamma_2_times_gamma_x_beta = 0.5
+    half_width = np.sqrt(4 * gamma_2_times_gamma_x_beta)
 
-    # Violation measure: (γ_{2,1}+γ_{2,2})² - 4γ₂γ_xβ
-    violation = (G21 + G22)**2 - 4 * gamma_2_times_gamma_x_beta
+    upper = -g21 + half_width  # upper boundary of allowed band
+    lower = -g21 - half_width  # lower boundary of allowed band
 
     fig = go.Figure()
 
-    # Relaxed region (allowed)
-    fig.add_trace(go.Contour(
-        x=g21_range, y=g22_range,
-        z=violation,
-        contours=dict(
-            start=0, end=0, size=0.001,
-            coloring="none",
-            showlabels=False,
-        ),
-        line=dict(color=COLORS["dissipative"], width=2),
-        showscale=False,
-        name="Relaxed bound",
-    ))
-
-    # Fill the allowed region
-    fig.add_trace(go.Contour(
-        x=g21_range, y=g22_range,
-        z=violation,
-        contours=dict(start=-100, end=0, size=100,
-                      coloring="fill"),
-        colorscale=[[0, "rgba(92, 148, 110, 0.15)"],
-                    [1, "rgba(92, 148, 110, 0.15)"]],
-        showscale=False,
-        showlegend=False,
+    # Allowed band (filled region between upper and lower)
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([g21, g21[::-1]]),
+        y=np.concatenate([upper, lower[::-1]]),
+        fill="toself",
+        fillcolor="rgba(92, 148, 110, 0.2)",
+        line=dict(color=COLORS["dispersive"], width=2),
+        name="Relaxed: (γ<sub>2,1</sub>+γ<sub>2,2</sub>)² ≤ 4γ₂γ<sub>x</sub>β",
         hoverinfo="skip",
     ))
 
     # Strict constraint line: γ_{2,2} = -γ_{2,1}
     fig.add_trace(go.Scatter(
-        x=g21_range, y=-g21_range,
+        x=g21, y=-g21,
         mode="lines",
         name="Strict: γ<sub>2,1</sub> + γ<sub>2,2</sub> = 0",
         line=dict(color=COLORS["horizon"], width=3),
@@ -842,18 +828,20 @@ def fig_positivity_constraint() -> go.Figure:
 
     # Annotations
     fig.add_annotation(
-        x=0.8, y=0.8, text="Forbidden<br>(unitarity violated)",
-        font=dict(size=12, color=COLORS["dissipative"]),
+        x=1.2, y=1.2, text="Forbidden<br>(unitarity violated)",
+        font=dict(size=13, color=COLORS["dissipative"]),
         showarrow=False,
+        bgcolor="rgba(255,255,255,0.8)",
     )
     fig.add_annotation(
-        x=-0.5, y=0.3, text="Allowed<br>(relaxed)",
-        font=dict(size=12, color=COLORS["dispersive"]),
+        x=-0.8, y=0.5, text="Allowed<br>(relaxed bound)",
+        font=dict(size=13, color=COLORS["dispersive"]),
         showarrow=False,
+        bgcolor="rgba(255,255,255,0.8)",
     )
 
-    fig.update_xaxes(title_text="γ<sub>2,1</sub>")
-    fig.update_yaxes(title_text="γ<sub>2,2</sub>")
+    fig.update_xaxes(title_text="γ<sub>2,1</sub>", range=[-2, 2])
+    fig.update_yaxes(title_text="γ<sub>2,2</sub>", range=[-2, 2])
 
     apply_layout(fig,
         height=500, width=550,
@@ -934,14 +922,15 @@ def fig_einstein_relation() -> go.Figure:
 
     fig = go.Figure()
 
-    line_styles = ["solid", "dash", "dot"]
-    for gamma, dash in zip(gamma_vals, line_styles):
+    # Distinct colors for each γ value (all within the warm palette)
+    gamma_colors = [COLORS["dissipative"], COLORS["noise"], COLORS["Na23"]]
+    for gamma, color in zip(gamma_vals, gamma_colors):
         sigma = gamma * T_range  # σ = γ/β₀ = γT (k_B = 1 units)
         fig.add_trace(go.Scatter(
             x=T_range, y=sigma,
             mode="lines",
             name=f"γ = {gamma}",
-            line=dict(color=COLORS["dissipative"], width=2.5, dash=dash),
+            line=dict(color=color, width=3),
             hovertemplate=f"γ={gamma}<br>T=%{{x:.2f}}<br>σ=%{{y:.2f}}<extra></extra>",
         ))
 

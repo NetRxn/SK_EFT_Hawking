@@ -683,6 +683,71 @@ def check_viz_consistency() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 11: Notebook execution (all notebooks must run without errors)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("notebook_exec", "All notebooks execute without errors")
+def check_notebook_execution() -> CheckResult:
+    """Execute each notebook top-to-bottom and verify zero errors.
+
+    Uses nbconvert's execute preprocessor with a timeout per cell.
+    This catches import errors, missing variables, broken physics code,
+    and any runtime failures that static checks miss.
+    """
+    import nbformat
+    from nbformat.v4 import new_notebook
+
+    details = []
+    all_pass = True
+
+    # Try importing the execution engine
+    try:
+        from nbclient import NotebookClient
+    except ImportError:
+        return CheckResult(
+            passed=True,
+            details=[Detail("nbclient", True,
+                            "SKIPPED — nbclient not installed. "
+                            "Install with: pip install nbclient")],
+        )
+
+    for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
+        try:
+            with open(nb_path) as f:
+                nb = nbformat.read(f, as_version=4)
+
+            client = NotebookClient(
+                nb,
+                timeout=120,          # per-cell timeout
+                kernel_name="python3",
+                resources={"metadata": {"path": str(NOTEBOOKS_DIR)}},
+            )
+            client.execute()
+
+            # Count executed cells
+            code_cells = sum(1 for c in nb.cells if c.cell_type == "code")
+            details.append(Detail(
+                nb_path.name, True,
+                f"{code_cells} code cells executed successfully"))
+
+        except Exception as e:
+            all_pass = False
+            # Extract just the error type and message, not the full traceback
+            err_lines = str(e).strip().split("\n")
+            # Find the actual error line (usually last non-empty line with Error in it)
+            err_msg = err_lines[-1] if err_lines else str(e)
+            for line in reversed(err_lines):
+                if "Error" in line:
+                    err_msg = line.strip()
+                    break
+            if len(err_msg) > 200:
+                err_msg = err_msg[:200] + "..."
+            details.append(Detail(nb_path.name, False, err_msg))
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Runner
 # ═══════════════════════════════════════════════════════════════════════
 
