@@ -1,0 +1,11 @@
+SK-EFT Hawking Validation Report
+Generated: 20260326T160518Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] cgl_fdr
+  + einstein_relation — σ = γ/β₀ for Brownian particle
+  + first_order_bec — K_N = 2Γ/β₀ for BEC with damping
+  + second_order_real — Second-order noise kernel is real
+  + noise_count_pattern — Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}
+
+Overall: 1/1 passed

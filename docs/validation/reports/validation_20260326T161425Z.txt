@@ -1,0 +1,23 @@
+SK-EFT Hawking Validation Report
+Generated: 20260326T161425Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] notebook_exec
+  + ADW_Stakeholder.ipynb — 6 code cells executed successfully
+  + ADW_Technical.ipynb — 14 code cells executed successfully
+  - ExperimentalPredictions_Stakeholder.ipynb — [31mNameError[39m: name 'compute_prediction_table' is not defined
+  - ExperimentalPredictions_Technical.ipynb — [31mAttributeError[39m: 'PerturbativeComparison' object has no attribute 'max_deviation'
+  + GaugeErasure_Stakeholder.ipynb — 8 code cells executed successfully
+  + GaugeErasure_Technical.ipynb — 10 code cells executed successfully
+  + Phase1_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase1_Technical.ipynb — 10 code cells executed successfully
+  + Phase2_Stakeholder.ipynb — 13 code cells executed successfully
+  + Phase2_Technical.ipynb — 16 code cells executed successfully
+  + Phase3_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3_Technical.ipynb — 12 code cells executed successfully
+  + Vestigial_Stakeholder.ipynb — 4 code cells executed successfully
+  + Vestigial_Technical.ipynb — 13 code cells executed successfully
+  + WKBConnection_Stakeholder.ipynb — 9 code cells executed successfully
+  + WKBConnection_Technical.ipynb — 9 code cells executed successfully
+
+Overall: 0/1 passed

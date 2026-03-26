@@ -1,0 +1,41 @@
+{
+  "timestamp": "20260326T160518Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "cgl_fdr": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "einstein_relation",
+          "passed": true,
+          "message": "\u03c3 = \u03b3/\u03b2\u2080 for Brownian particle",
+          "warning": false
+        },
+        {
+          "name": "first_order_bec",
+          "passed": true,
+          "message": "K_N = 2\u0393/\u03b2\u2080 for BEC with damping",
+          "warning": false
+        },
+        {
+          "name": "second_order_real",
+          "passed": true,
+          "message": "Second-order noise kernel is real",
+          "warning": false
+        },
+        {
+          "name": "noise_count_pattern",
+          "passed": true,
+          "message": "Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}
