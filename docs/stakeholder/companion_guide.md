@@ -492,8 +492,39 @@ For technical questions about the Lean formalization, see `lean/README.md`.
 
 For the full technical papers, see `papers/paper1-5_*/paper_draft.tex`.
 
-For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase3_Implications.md`.
+For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase4_Implications.md`.
 
 ---
 
-*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 25, 2026.*
+## Phase 4: Testing Predictions and Closing Dead Ends
+
+### What was Phase 4 about?
+
+Phase 3 was theoretical: proving what fluids can and can't do. Phase 4 is about **testing those predictions with numbers** and **building the bridge to experiments**.
+
+### For experimentalists: your prediction package is ready
+
+We now provide concrete tables: "at frequency X for your specific experiment, the deviation from standard Hawking is Y%, and you need Z shots to detect it at 3-sigma." Three platforms get customized predictions:
+- **Steinhauer (Technion):** Best for initial detection (largest corrections)
+- **Heidelberg:** Best for the kappa-scaling test (tunable scattering length)
+- **Trento:** Best UV range (smallest dispersive corrections)
+
+### We found a new kind of gravity
+
+Volovik predicted in 2024 that gravity might exist in a "partial" form — where the fabric of spacetime (the metric) exists but the deeper structure (the tetrad) doesn't. We confirmed this numerically. The consequence: in this phase, Einstein's Equivalence Principle is violated — different types of particles experience different gravity. This is a testable prediction.
+
+### Some routes don't work — and we proved it
+
+Not everything in theoretical physics leads somewhere. Two routes we investigated turned out to be dead ends:
+- **Non-Abelian fracton gauge theories** can't reproduce the Standard Model's strong and weak forces. Four independent reasons, each formally verified by computer.
+- **Fracton gravity** matches Einstein's gravity at the simplest level but diverges at the next level — by 60%. The mismatch grows in higher dimensions.
+
+Closing dead ends is valuable: it tells the community where NOT to look, saving resources.
+
+### Acoustic black holes cool down
+
+A genuinely surprising finding: artificial black holes in BECs cool down over time (opposite of real black holes in space!). As they emit Hawking radiation, they lose energy, slow down, and approach a limiting state. This is structurally analogous to charged black holes in general relativity approaching extremality.
+
+---
+
+*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 26, 2026.*
