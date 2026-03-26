@@ -18,11 +18,13 @@ from src.adw.ginzburg_landau import (
     PhaseClassification,
     GLPhaseDiagram,
     He3Comparison,
+    FluctuationCorrection,
     compute_gl_coefficients,
     invariant_polynomials,
     classify_gl_phases,
     compute_phase_diagram,
     he3_comparison,
+    compute_fluctuation_corrections,
     gl_free_energy_general,
     independent_invariant_count_real,
     independent_invariant_count_complex,
@@ -378,7 +380,8 @@ class TestHe3Comparison:
     def test_a_phase_mismatch(self):
         """A-phase comparison is NOT a structural match (missing feedback)."""
         comparisons = he3_comparison()
-        ap = [c for c in comparisons if "A-phase" in c.adw_quantity]
+        ap = [c for c in comparisons
+              if "A-phase" in c.adw_quantity and "diag" in c.adw_quantity]
         assert len(ap) == 1
         assert not ap[0].structural_match
 
@@ -530,3 +533,172 @@ class TestCrossModuleConsistency:
         phases = classify_gl_phases(coeffs)
         ground = [p for p in phases if p.is_ground_state][0]
         assert ground.phase_type == GLPhaseType.PRE_GEOMETRIC
+
+
+# ═══════════════════════════════════════════════════════════════════
+# Fluctuation Corrections
+# ═══════════════════════════════════════════════════════════════════
+
+
+class TestFluctuationCorrection:
+    """Test fluctuation corrections to GL beta_i coefficients."""
+
+    def _get_correction(self, ratio: float = 2.0) -> FluctuationCorrection:
+        """Helper: compute fluctuation correction at given G/G_c."""
+        G_c = critical_coupling(1.0, 4)
+        coeffs = compute_gl_coefficients(ratio * G_c, 1.0, 4)
+        return compute_fluctuation_corrections(coeffs)
+
+    def test_returns_fluctuation_correction(self):
+        """Returns a FluctuationCorrection dataclass."""
+        result = self._get_correction()
+        assert isinstance(result, FluctuationCorrection)
+
+    def test_five_bare_betas(self):
+        """Bare beta list has 5 entries."""
+        result = self._get_correction()
+        assert len(result.beta_i_bare) == 5
+
+    def test_five_corrected_betas(self):
+        """Corrected beta list has 5 entries."""
+        result = self._get_correction()
+        assert len(result.beta_i_corrected) == 5
+
+    def test_bare_betas_positive(self):
+        """All bare beta_i are positive."""
+        result = self._get_correction()
+        for beta in result.beta_i_bare:
+            assert beta > 0
+
+    def test_corrected_betas_positive(self):
+        """All corrected beta_i remain positive (stability preserved)."""
+        result = self._get_correction()
+        for beta in result.beta_i_corrected:
+            assert beta > 0
+
+    def test_correction_magnitude_finite(self):
+        """Correction magnitude is a finite positive number."""
+        result = self._get_correction()
+        assert np.isfinite(result.correction_magnitude)
+        assert result.correction_magnitude >= 0
+
+    def test_a_phase_not_stabilized(self):
+        """A-phase is NOT stabilized by fluctuation corrections.
+
+        This is the key physics result: unlike He-3 where spin
+        fluctuations stabilize the A-phase, ADW's real tetrad
+        gauge structure prevents A-phase stabilization.
+        """
+        result = self._get_correction()
+        assert result.a_phase_stabilized is False
+
+    def test_a_phase_not_stabilized_multiple_ratios(self):
+        """A-phase remains unstabilized across a range of couplings."""
+        for ratio in [1.1, 1.5, 2.0, 3.0, 5.0]:
+            result = self._get_correction(ratio)
+            assert result.a_phase_stabilized is False, (
+                f"A-phase incorrectly stabilized at G/G_c = {ratio}"
+            )
+
+    def test_real_field_degeneracy_preserved(self):
+        """Fluctuation corrections preserve I_2 = I_3 and I_1 = I_5 degeneracies.
+
+        This is the structural reason the B-phase ground state is
+        protected: the real-field degeneracies cannot be broken by
+        one-loop corrections because they are enforced by SO(3,1).
+        """
+        result = self._get_correction()
+        # beta_1 = beta_5 preserved
+        assert result.beta_i_corrected[0] == pytest.approx(
+            result.beta_i_corrected[4]
+        )
+        # beta_2 = beta_3 preserved
+        assert result.beta_i_corrected[1] == pytest.approx(
+            result.beta_i_corrected[2]
+        )
+
+    def test_corrections_increase_betas(self):
+        """Fluctuation corrections increase beta_i (positive one-loop shift)."""
+        result = self._get_correction()
+        for bare, corrected in zip(result.beta_i_bare, result.beta_i_corrected):
+            assert corrected >= bare
+
+    def test_mechanism_description_nonempty(self):
+        """Mechanism description is a nonempty string."""
+        result = self._get_correction()
+        assert isinstance(result.mechanism, str)
+        assert len(result.mechanism) > 0
+
+    def test_mechanism_mentions_no_stabilization(self):
+        """Mechanism description explicitly states A-phase is unstabilized."""
+        result = self._get_correction()
+        assert "unstabilized" in result.mechanism.lower()
+
+    def test_near_transition_larger_correction(self):
+        """Fluctuation corrections are larger near the transition (G/G_c ~ 1)."""
+        result_near = self._get_correction(ratio=1.01)
+        result_far = self._get_correction(ratio=5.0)
+        assert result_near.correction_magnitude > result_far.correction_magnitude
+
+    def test_below_Gc(self):
+        """Fluctuation corrections work in the pre-geometric phase too."""
+        result = self._get_correction(ratio=0.5)
+        assert isinstance(result, FluctuationCorrection)
+        assert result.a_phase_stabilized is False
+
+    def test_bare_betas_match_coefficients(self):
+        """Bare betas match the input GLCoefficients."""
+        G_c = critical_coupling(1.0, 4)
+        coeffs = compute_gl_coefficients(2.0 * G_c, 1.0, 4)
+        result = compute_fluctuation_corrections(coeffs)
+        assert result.beta_i_bare[0] == pytest.approx(coeffs.beta_1)
+        assert result.beta_i_bare[1] == pytest.approx(coeffs.beta_2)
+        assert result.beta_i_bare[2] == pytest.approx(coeffs.beta_3)
+        assert result.beta_i_bare[3] == pytest.approx(coeffs.beta_4)
+        assert result.beta_i_bare[4] == pytest.approx(coeffs.beta_5)
+
+
+# ═══════════════════════════════════════════════════════════════════
+# He-3 Comparison — Fluctuation Entries
+# ═══════════════════════════════════════════════════════════════════
+
+
+class TestHe3ComparisonFluctuations:
+    """Test the new fluctuation-related He-3 comparison entries."""
+
+    def test_comparison_count_increased(self):
+        """At least 12 comparison entries (10 original + 2 new)."""
+        comparisons = he3_comparison()
+        assert len(comparisons) >= 12
+
+    def test_fluctuation_correction_entry(self):
+        """'Fluctuation corrections to beta_i' entry exists and is NOT a match."""
+        comparisons = he3_comparison()
+        fluct = [c for c in comparisons
+                 if "Fluctuation corrections" in c.adw_quantity]
+        assert len(fluct) == 1
+        assert not fluct[0].structural_match
+        assert "spin fluctuation" in fluct[0].note.lower()
+
+    def test_a_phase_stability_entry(self):
+        """'A-phase stability mechanism' entry exists and is NOT a match."""
+        comparisons = he3_comparison()
+        stab = [c for c in comparisons
+                if "A-phase stability" in c.adw_quantity]
+        assert len(stab) == 1
+        assert not stab[0].structural_match
+        assert "ferromagnetic" in stab[0].note.lower()
+
+    def test_fluctuation_entry_mentions_bam(self):
+        """Fluctuation correction entry references the BAM mechanism."""
+        comparisons = he3_comparison()
+        fluct = [c for c in comparisons
+                 if "Fluctuation corrections" in c.adw_quantity][0]
+        assert "Brinkman" in fluct.he3_analog or "Anderson" in fluct.he3_analog
+
+    def test_stability_entry_mentions_absent(self):
+        """A-phase stability entry notes the mechanism is absent in ADW."""
+        comparisons = he3_comparison()
+        stab = [c for c in comparisons
+                if "A-phase stability" in c.adw_quantity][0]
+        assert "absent" in stab.note.lower() or "no analog" in stab.note.lower()
