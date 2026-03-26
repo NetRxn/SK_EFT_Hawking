@@ -232,11 +232,9 @@ theorem dof_gap_formula_3d_check : dof_gap 3 = (3 : Int) - 1 := by native_decide
 -- graviton_dof (d+1) = (d+1)*(d+1-3)/2 = (d+1)*(d-2)/2.
 -- Gap = d*(d+1)/2 - 2 - (d+1)*(d-2)/2 = (d+1)*(d - (d-2))/2 - 2 = (d+1) - 2 = d - 1.
 -- For Nat division: need to be careful. Check d=3: 6-2-2=2=3-1. d=4: 10-2-5=3=4-1.
-theorem dof_gap_eq_d_minus_1_check_4 : dof_gap 4 = 3 := by
-  sorry
+theorem dof_gap_eq_d_minus_1_check_4 : dof_gap 4 = 3 := by native_decide
 
-theorem dof_gap_eq_d_minus_1_check_5 : dof_gap 5 = 4 := by
-  sorry
+theorem dof_gap_eq_d_minus_1_check_5 : dof_gap 5 = 4 := by native_decide
 
 /-- **The DOF gap is strictly positive for all d ≥ 2.**
     This means the fracton-gravity bootstrap gap is universal, not a 4D artifact. -/
@@ -245,6 +243,6 @@ theorem dof_gap_eq_d_minus_1_check_5 : dof_gap 5 = 4 := by
 theorem dof_gap_positive_2_through_8 :
     dof_gap 2 > 0 ∧ dof_gap 3 > 0 ∧ dof_gap 4 > 0 ∧
     dof_gap 5 > 0 ∧ dof_gap 6 > 0 ∧ dof_gap 7 > 0 ∧ dof_gap 8 > 0 := by
-  sorry
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
 
 end SKEFTHawking.FractonGravity

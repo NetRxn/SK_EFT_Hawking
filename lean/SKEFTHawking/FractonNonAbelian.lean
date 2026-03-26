@@ -187,7 +187,7 @@ theorem obstructions_individually_sufficient :
     (gauge_field_rank_fracton ≠ gauge_field_rank_ym) ∧
     -- Parameter dimension alone prevents compatibility (for SU(2))
     (gauge_param_dim_fracton ≠ gauge_param_dim_ym 2) := by
-  sorry
+  refine ⟨?_, ?_, ?_⟩ <;> native_decide
 
 /-- **The parameter dimension gap grows with N for SU(N).**
     Fracton has 1 scalar parameter; SU(N) has N^2-1 parameters.
@@ -198,6 +198,6 @@ theorem obstructions_individually_sufficient :
 theorem param_gap_grows :
     gauge_param_dim_ym 3 > gauge_param_dim_ym 2 ∧
     gauge_param_dim_ym 4 > gauge_param_dim_ym 3 := by
-  sorry
+  constructor <;> native_decide
 
 end SKEFTHawking.FractonNonAbelian

@@ -209,14 +209,24 @@ while standard hydro charge count d+2 is constant. This quantifies
 exactly how much more information fracton hydro preserves.
 -/
 
-/-- **Fracton charges strictly exceed standard for n ≥ 2 in any d ≥ 2.**
-    This is the general version of fracton_exceeds_standard_3d_order2. -/
--- PROVIDED SOLUTION: conserved_charges_fracton d n = C(n+d,d).
--- For n=2, d≥2: C(d+2,d) = (d+2)(d+1)/2 ≥ (d+2) > d+2 = standard.
--- Actually C(d+2,d) = (d+2)(d+1)/2. Need (d+2)(d+1)/2 > d+2, i.e., (d+1)/2 > 1, i.e., d > 1.
+/-
+PROBLEM
+**Fracton charges strictly exceed standard for n ≥ 2 in any d ≥ 2.**
+    This is the general version of fracton_exceeds_standard_3d_order2.
+
+PROVIDED SOLUTION
+: conserved_charges_fracton d n = C(n+d,d).
+For n=2, d≥2: C(d+2,d) = (d+2)(d+1)/2 ≥ (d+2) > d+2 = standard.
+Actually C(d+2,d) = (d+2)(d+1)/2. Need (d+2)(d+1)/2 > d+2, i.e., (d+1)/2 > 1, i.e., d > 1.
+
+conserved_charges_fracton d 2 = binomial (2+d) d and conserved_charges_standard d = d+2. We need binomial (d+2) d > d+2 for d ≥ 2. Note binomial (d+2) d = binomial (d+2) 2 = (d+2)(d+1)/2. For d≥2, (d+2)(d+1)/2 ≥ 4·3/2 = 6 > 4 = d+2 when d=2. In general (d+2)(d+1)/2 > d+2 iff (d+1)/2 > 1 iff d > 1 iff d ≥ 2. Try induction on d starting from d=2, or use omega after unfolding the binomial recursion enough times. An interval_cases approach or direct induction on d with the binomial recursive definition should work.
+-/
 theorem fracton_exceeds_standard_general (d : Nat) (hd : d ≥ 2) :
     conserved_charges_fracton d 2 > conserved_charges_standard d := by
-  sorry
+  rcases d with ( _ | _ | d ) <;> simp_all +arith +decide [ conserved_charges_fracton, conserved_charges_standard ];
+  induction d <;> simp_all +arith +decide [ binomial ];
+  rename_i n ih;
+  linarith [ show binomial n n ≥ 1 from Nat.recOn n ( by trivial ) fun n ihn => by { rw [ show binomial ( n + 1 ) ( n + 1 ) = binomial n n + binomial n ( n + 1 ) by rfl ] ; linarith } ]
 
 /-- **The ratio fracton/standard grows without bound as n → ∞.**
     At order n in d dimensions: C(n+d,d) / (d+2) ~ n^d / (d! · (d+2)).
@@ -226,13 +236,30 @@ theorem fracton_exceeds_standard_general (d : Nat) (hd : d ≥ 2) :
 -- Check: d=2, n=4: C(6,2)=15 > 2·4=8. d=3, n=5: C(8,3)=56 > 2·5=10.
 theorem fracton_ratio_grows_3d :
     conserved_charges_fracton 3 5 > 2 * conserved_charges_standard 3 := by
-  sorry
+  native_decide
 
-/-- **Binomial coefficient is strictly monotone for k ≥ 1.**
-    C(n+1, k) > C(n, k) when k ≥ 1 and n ≥ k. -/
--- PROVIDED SOLUTION: C(n+1,k) = C(n,k) + C(n,k-1) and C(n,k-1) > 0 when n ≥ k ≥ 1.
+/-
+PROBLEM
+**Binomial coefficient is strictly monotone for k ≥ 1.**
+    C(n+1, k) > C(n, k) when k ≥ 1 and n ≥ k.
+
+PROVIDED SOLUTION
+: C(n+1,k) = C(n,k) + C(n,k-1) and C(n,k-1) > 0 when n ≥ k ≥ 1.
+
+By induction on k. Base case k=1: binomial n 1 < binomial (n+1) 1. We have binomial (n+1) 1 = binomial n 0 + binomial n 1 = 1 + binomial n 1 > binomial n 1. Inductive step: binomial (n+1) (k+1) = binomial n k + binomial n (k+1). By IH, binomial n k ≥ binomial (n-1) k + 1 (if applicable) — actually better approach: binomial (n+1) (k'+2) = binomial n (k'+1) + binomial n (k'+2). We need this > binomial n (k'+2). It suffices to show binomial n (k'+1) > 0, i.e., binomial n (k'+1) ≥ 1 when n ≥ k'+2. Actually even simpler: binomial (n+1) k = binomial n (k-1) + binomial n k by Pascal's rule. So binomial (n+1) k - binomial n k = binomial n (k-1). We need binomial n (k-1) > 0 when n ≥ k ≥ 1, i.e., n ≥ k-1+1 = k. This follows from a helper lemma that binomial n k > 0 when n ≥ k.
+-/
 theorem binomial_strict_mono (n k : Nat) (hk : k ≥ 1) (hn : n ≥ k) :
     binomial n k < binomial (n + 1) k := by
-  sorry
+  -- By Pascal's rule, binomial (n+1, k) = binomial n (k-1) + binomial n k.
+  have h_pascal : binomial (n + 1) k = binomial n (k - 1) + binomial n k := by
+    cases k <;> aesop;
+  rcases k with ( _ | _ | k ) <;> simp_all +arith +decide [ Nat.choose_succ_succ ];
+  · exact Nat.recOn n ( by trivial ) fun n ih => by trivial;
+  · -- By definition of binomial coefficients, we know that binomial n (k + 1) is positive for n ≥ k + 1.
+    have h_binom_pos : ∀ {n k : ℕ}, n ≥ k + 1 → 0 < binomial n (k + 1) := by
+      intro n k hn; induction hn <;> simp_all +arith +decide [ Nat.choose_succ_succ ] ;
+      · exact Nat.recOn k ( by trivial ) fun n ih => by { rw [ show binomial ( n + 2 ) ( n + 2 ) = binomial ( n + 1 ) ( n + 1 ) + binomial ( n + 1 ) ( n + 2 ) by rfl ] ; linarith };
+      · exact Nat.le_trans ‹_› ( binomial_mono_first _ _ );
+    grind
 
 end SKEFTHawking.FractonHydro

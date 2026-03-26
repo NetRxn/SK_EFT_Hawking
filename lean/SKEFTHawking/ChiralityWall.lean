@@ -281,7 +281,8 @@ theorem translation_invariance_applies : gs_translation.applies_to_tpf = true :=
 theorem evading_one_breaks_nogo :
     evaded_count gs_conditions ≥ 1 →
     applying_count gs_conditions < gs_conditions.length := by
-  sorry
+  intro _
+  native_decide
 
 /-- **TPF's evasion margin: it evades 2, only needs 1.**
     The margin of safety is 1 — even if one evasion turns out to be
@@ -289,6 +290,6 @@ theorem evading_one_breaks_nogo :
 -- PROVIDED SOLUTION: evaded_count = 2 (by native_decide), so 2 ≥ 1 + 1.
 theorem tpf_evasion_margin :
     evaded_count gs_conditions ≥ 1 + 1 := by
-  sorry
+  native_decide
 
 end SKEFTHawking.ChiralityWall

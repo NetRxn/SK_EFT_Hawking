@@ -252,13 +252,13 @@ theorem phase_levels_distinct :
     phase_info_level VestigialPhase.pre_geometric ≠ phase_info_level VestigialPhase.vestigial ∧
     phase_info_level VestigialPhase.vestigial ≠ phase_info_level VestigialPhase.full_tetrad ∧
     phase_info_level VestigialPhase.pre_geometric ≠ phase_info_level VestigialPhase.full_tetrad := by
-  sorry
+  refine ⟨?_, ?_, ?_⟩ <;> decide
 
 /-- Phase levels are strictly ordered. -/
 theorem phase_levels_ordered :
     phase_info_level VestigialPhase.pre_geometric < phase_info_level VestigialPhase.vestigial ∧
     phase_info_level VestigialPhase.vestigial < phase_info_level VestigialPhase.full_tetrad := by
-  sorry
+  constructor <;> decide
 
 /-- **The metric DOF count in the vestigial phase is d(d+1)/2.**
     In 4D this is 10 — the same number as in GR. The vestigial metric
@@ -267,6 +267,6 @@ theorem phase_levels_ordered :
 -- For general d: metric_components d = d*(d+1)/2.
 theorem metric_dof_equals_gr (d : Nat) (hd : d ≥ 2) :
     metric_components d = d * (d + 1) / 2 := by
-  sorry
+  rfl
 
 end SKEFTHawking.VestigialGravity
