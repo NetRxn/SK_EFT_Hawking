@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-25T21:30:35.988057+00:00",
+  "generated": "2026-03-26T05:36:05.909246+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -713,6 +713,416 @@
       "color_keys": [
         "Steinhauer",
         "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig28_adw_effective_potential",
+      "function": "fig_adw_effective_potential",
+      "caption": "Coleman-Weinberg effective potential for tetrad condensation at three coupling ratios.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig28_adw_effective_potential.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig28_adw_effective_potential.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "C",
+        "yaxis": "V"
+      },
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig29_adw_phase_diagram",
+      "function": "fig_adw_phase_diagram",
+      "caption": "Phase diagram: tetrad VEV vs coupling ratio G/G_c.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig29_adw_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig29_adw_phase_diagram.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "G",
+        "yaxis": "C"
+      },
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig30_adw_ng_modes",
+      "function": "fig_adw_ng_mode_decomposition",
+      "caption": "Vergeles mode counting: tetrad DOF decomposition in 4D.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig30_adw_ng_modes.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig30_adw_ng_modes.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "Mode"
+      },
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig31_adw_he3_analogy",
+      "function": "fig_adw_he3_analogy",
+      "caption": "Structural analogy between ADW tetrad and superfluid He-3 order parameter.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig31_adw_he3_analogy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig31_adw_he3_analogy.html",
+      "expected_traces": 10,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig32_adw_obstacles",
+      "function": "fig_adw_structural_obstacles",
+      "caption": "Four structural obstacles for emergent fermion bootstrap with severity.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig32_adw_obstacles.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig32_adw_obstacles.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "Severity"
+      },
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig33_adw_coupling_scan",
+      "function": "fig_adw_coupling_scan",
+      "caption": "Coupling scan: V_eff depth and tetrad VEV for N_f = 2, 4, 8.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig33_adw_coupling_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig33_adw_coupling_scan.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "G"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig34_adw_coupling_scan_stakeholder",
+      "function": "fig_adw_coupling_scan_stakeholder",
+      "caption": "Coupling scan for wider audience: simplified labels.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig34_adw_coupling_scan_stakeholder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig34_adw_coupling_scan_stakeholder.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "G"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig35_prediction_table_comparison",
+      "function": "fig_prediction_table_comparison",
+      "caption": "Spectral deviation from Planckian for all three BEC platforms.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig35_prediction_table_comparison.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig35_prediction_table_comparison.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "\u03c9"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig36_detector_requirements",
+      "function": "fig_detector_requirements",
+      "caption": "Detector requirements: shots needed for three measurement goals.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig36_detector_requirements.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig36_detector_requirements.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "goal"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig37_kappa_scaling",
+      "function": "fig_kappa_scaling_phase4",
+      "caption": "Kappa-scaling test: dispersive (D^2) vs dissipative corrections.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig37_kappa_scaling.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig37_kappa_scaling.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "D"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "dispersive",
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig38_noise_floor_crossover",
+      "function": "fig_noise_floor_crossover",
+      "caption": "Noise floor crossover: where FDR noise exceeds Hawking signal.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig38_noise_floor_crossover.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig38_noise_floor_crossover.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "\u03c9"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig39_chirality_wall_status",
+      "function": "fig_chirality_wall_status",
+      "caption": "Chirality wall: GS conditions vs TPF evasion.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig39_chirality_wall_status.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig39_chirality_wall_status.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig40_gl_phase_diagram",
+      "function": "fig_gl_phase_diagram",
+      "caption": "Ginzburg-Landau phase diagram: B-phase, A-phase, polar phases.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig40_gl_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig40_gl_phase_diagram.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "G"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig41_he3_comparison_table",
+      "function": "fig_he3_comparison_table",
+      "caption": "He-3 vs ADW structural comparison table.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig41_he3_comparison_table.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig41_he3_comparison_table.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig42_vestigial_phase_diagram",
+      "function": "fig_vestigial_phase_diagram",
+      "caption": "Vestigial gravity mean-field phase diagram.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig42_vestigial_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig42_vestigial_phase_diagram.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "G"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig43_backreaction_cooling",
+      "function": "fig_backreaction_cooling",
+      "caption": "Acoustic BH cooling toward extremality.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig43_backreaction_cooling.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig43_backreaction_cooling.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "\u03c4"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig44_information_retention",
+      "function": "fig_information_retention",
+      "caption": "Fracton vs standard hydro information retention.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig44_information_retention.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig44_information_retention.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "dimension"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
         "Trento"
       ],
       "review_criteria": [

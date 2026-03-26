@@ -28,6 +28,8 @@ Gauge information assessment:
 Modules:
     sk_eft: Fracton SK-EFT transport coefficients and symmetry structure
     information_retention: UV information comparison between fracton and standard hydro
+    gravity_connection: Fracton-gravity Kerr-Schild analysis, bootstrap gap, route comparison
+    non_abelian: Non-Abelian fracton gauge theories and Yang-Mills compatibility
 
 References:
     - Gorantla-Prem-Tantivasadakarn-Williamson (PRB 112, 125124, 2025)
@@ -57,12 +59,40 @@ from src.fracton.information_retention import (
     FragmentationData,
     InformationComparison,
     GaugeInformationAssessment,
+    GaugeCoarsegrainingResult,
     standard_hydro_charges,
     fracton_hydro_charges,
     information_ratio,
     hilbert_space_fragmentation,
     gauge_information_assessment,
+    gauge_coarsegraining_example,
     compare_information_retention,
+)
+from src.fracton.gravity_connection import (
+    LinearizedEquivalence,
+    BootstrapStep,
+    BootstrapGap,
+    BootstrapGapQuantification,
+    CubicVertexStructure,
+    GravityRouteComparison,
+    GravityRouteProperties,
+    NonAbelianResult,
+    linearized_equivalence,
+    gupta_feynman_bootstrap,
+    bootstrap_gap_assessment,
+    quantify_bootstrap_gap,
+    compare_gravity_routes,
+    non_abelian_fracton_analysis,
+)
+from src.fracton.non_abelian import (
+    NonAbelianFractonGauge,
+    YangMillsCompatibility,
+    DerivativeStructureComparison,
+    analyze_non_abelian_compatibility,
+    wang_xu_yau_theory,
+    bulmash_barkeshli_theory,
+    standard_yang_mills,
+    derivative_structure_comparison,
 )
 
 __all__ = [
@@ -84,10 +114,36 @@ __all__ = [
     "FragmentationData",
     "InformationComparison",
     "GaugeInformationAssessment",
+    "GaugeCoarsegrainingResult",
     "standard_hydro_charges",
     "fracton_hydro_charges",
     "information_ratio",
     "hilbert_space_fragmentation",
     "gauge_information_assessment",
+    "gauge_coarsegraining_example",
     "compare_information_retention",
+    # Gravity connection (3A)
+    "LinearizedEquivalence",
+    "BootstrapStep",
+    "BootstrapGap",
+    "BootstrapGapQuantification",
+    "CubicVertexStructure",
+    "GravityRouteComparison",
+    "GravityRouteProperties",
+    "NonAbelianResult",
+    "linearized_equivalence",
+    "gupta_feynman_bootstrap",
+    "bootstrap_gap_assessment",
+    "quantify_bootstrap_gap",
+    "compare_gravity_routes",
+    "non_abelian_fracton_analysis",
+    # Non-Abelian fracton (3B)
+    "NonAbelianFractonGauge",
+    "YangMillsCompatibility",
+    "DerivativeStructureComparison",
+    "analyze_non_abelian_compatibility",
+    "wang_xu_yau_theory",
+    "bulmash_barkeshli_theory",
+    "standard_yang_mills",
+    "derivative_structure_comparison",
 ]
