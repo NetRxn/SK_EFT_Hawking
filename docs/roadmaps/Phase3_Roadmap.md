@@ -241,18 +241,23 @@ Expand around the saddle point. Count Nambu-Goldstone modes: GL(4,ℝ)/SO(3,1) b
 - If no nontrivial solution → fermion bootstrap fails at mean-field (publishable negative result)
 
 **Deliverables:**
-- [ ] `src/adw/wen_model.py` — Wen's lattice QED effective Hamiltonian
-- [ ] `src/adw/hubbard_stratonovich.py` — HS decomposition and fermion determinant
-- [ ] `src/adw/gap_equation.py` — Gap equation solver (SymPy analytical + SciPy numerical)
-- [ ] `src/adw/fluctuations.py` — Fluctuation analysis and NG mode counting
-- [ ] `lean/SKEFTHawking/ADWMechanism.lean` — Lean formalization of structural results (symmetry breaking pattern, mode counting theorem, signature constraint)
-- [ ] Aristotle submissions
-- [ ] `papers/paper5_adw_gap/paper_draft.tex` — Paper draft (positive or negative result)
-- [ ] Tests
+- [x] `src/adw/wen_model.py` — Wen's lattice QED effective Hamiltonian (N_f=4 Dirac, Herbut RG)
+- [x] `src/adw/hubbard_stratonovich.py` — HS decomposition, TetradField, fermion determinant
+- [x] `src/adw/gap_equation.py` — Coleman-Weinberg V_eff, critical coupling, phase classification
+- [x] `src/adw/fluctuations.py` — SSB pattern, NG mode counting, Vergeles check, obstacles
+- [x] `lean/SKEFTHawking/ADWMechanism.lean` — 21 theorems, zero sorry (1 Aristotle-proved: curvature_zero_at_Gc)
+- [x] Aristotle submission: curvature_zero_at_Gc proved via `one_div_div` + `sub_self`
+- [x] `papers/paper5_adw_gap/paper_draft.tex` — PRD format, qualified positive result
+- [x] Tests: 78 new tests in `tests/test_adw.py` (13 test classes)
+- [x] Notebooks: ADW_Technical.ipynb (22 cells) + ADW_Stakeholder.ipynb (16 cells)
+- [x] Updated `src/core/formulas.py` with adw_effective_potential, adw_critical_coupling, tetrad_broken_generators, graviton_polarization_count
+- [x] 7 new figures (fig28-fig34) in visualizations.py, all LLM-reviewed PASS
+
+**Key result:** Qualified positive — nontrivial Lorentzian solution exists for G > G_c, producing 2 massless spin-2 graviton modes as Higgs bosons. But 4 structural obstacles prevent emergent fermion bootstrap at Level 2.
 
 **Estimated LOE:** 5-7 days
 **Risk:** High. The gap equation may have no nontrivial solution, or the solution may break the wrong symmetry. Either outcome is publishable but a negative result redirects toward Level 1 (vestigial gravity) rather than Level 2.
-**Status:** `pending`
+**Status:** `complete`
 
 ---
 
@@ -285,11 +290,11 @@ Day 6-12 (Wave 3, overlapping with Wave 2 tail):
 | Paper 2 (Phase 2) | PRD | Second-order + CGL + counting formula | referenced across modules | 6 |
 | Paper 3 (1B) | PRL/PRD Rapid | Non-Abelian gauge erasure theorem | 11 + 1 axiom | 2 |
 | Paper 4 (2D) | PRD | Exact WKB connection formula | 17 | 3 |
-| Paper 5 (3F) | PRL/PRD | ADW gap equation result (±) | TBD | TBD |
+| Paper 5 (3F) | PRD | ADW gap equation (qualified positive) | 21 | 3 |
 
-**Cumulative Lean theorems:** 109 + 1 axiom (40 Aristotle-proved + 69 manual), zero sorry, 10 modules, 2258 jobs
+**Cumulative Lean theorems:** 130 + 1 axiom (41 Aristotle-proved + 90 manual), zero sorry, 11 modules, 2259 jobs
 **Walls addressed:** Gauge wall closed (Paper 3), gravity wall tested (Paper 5)
-**Tests:** 191/191, **Notebooks:** 10, **Pipeline figures:** 27
+**Tests:** 269/269, **Notebooks:** 12, **Pipeline figures:** 34
 
 ### Decision points
 
@@ -299,9 +304,9 @@ Day 6-12 (Wave 3, overlapping with Wave 2 tail):
 | Wave 1 | Third-order pattern stabilizes | Proceed to Wave 2 as planned | **Yes** — proceeded to Wave 2 |
 | Wave 2 | WKB reveals non-perturbative effects | Write standalone paper (not fold into PRD) | **Yes** — 3 non-perturbative effects → standalone Paper 4 |
 | Wave 2 | WKB confirms EFT perturbative result | Fold into PRD companion | N/A (opposite outcome) |
-| Wave 3 | Gap equation has nontrivial Lorentzian solution | Phase 4: vestigial simulation (G) + experimental outreach | Pending |
-| Wave 3 | Gap equation fails | Publish negative result; pivot to vestigial gravity (Level 1) | Pending |
-| Wave 3 | Gap equation inconclusive (requires beyond mean-field) | Phase 4: Monte Carlo simulation (G) | Pending |
+| Wave 3 | Gap equation has nontrivial Lorentzian solution | Phase 4: vestigial simulation (G) + experimental outreach | **Yes** — nontrivial solution with Lorentzian signature for G > G_c, but 4 structural obstacles for emergent fermions |
+| Wave 3 | Gap equation fails | Publish negative result; pivot to vestigial gravity (Level 1) | N/A (opposite outcome) |
+| Wave 3 | Gap equation inconclusive (requires beyond mean-field) | Phase 4: Monte Carlo simulation (G) | N/A (mean-field succeeds) |
 
 ### Foundation for experimental outreach (post-Phase 3)
 
@@ -388,10 +393,10 @@ ln -sf ../../scripts/pre-commit-notebooks.sh .git/hooks/pre-commit
 ### Aristotle Workflow
 
 ```bash
-uv run python scripts/submit_to_aristotle.py --priority 1    # Submit sorry gaps
-uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate  # Integrate results
 export ARISTOTLE_API_KEY=$(grep ARISTOTLE_API_KEY .env | cut -d= -f2)
+uv run python scripts/submit_to_aristotle.py --priority 1    # Submit sorry gaps (optional priority)
 aristotle list --limit 5 --api-key "$ARISTOTLE_API_KEY"
+uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate  # Integrate results
 ```
 
 ### Deep Research

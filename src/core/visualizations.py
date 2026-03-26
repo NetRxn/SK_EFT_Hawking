@@ -2469,5 +2469,358 @@ def fig_exact_vs_perturbative() -> go.Figure:
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════
+# Phase 3 Wave 3: ADW Gap Equation Figures
+# ════════════════════════════════════════════════════════════════════
+
+def fig_adw_effective_potential() -> go.Figure:
+    """V_eff(C) for three coupling ratios: G/G_c = 0.5, 1.0, 2.0.
+
+    Shows the Coleman-Weinberg effective potential transitioning from
+    a single minimum at C=0 (pre-geometric) to a Mexican hat with
+    nontrivial minimum (full tetrad) as coupling increases.
+    """
+    from src.adw.gap_equation import (
+        effective_potential, critical_coupling, effective_potential_landscape,
+    )
+    import numpy as np
+
+    Lambda, N_f = 1.0, 4
+    G_c = critical_coupling(Lambda, N_f)
+
+    ratios = [0.5, 1.0, 2.0]
+    labels = ["G/G<sub>c</sub> = 0.5 (pre-geometric)",
+              "G/G<sub>c</sub> = 1.0 (critical)",
+              "G/G<sub>c</sub> = 2.0 (full tetrad)"]
+    colors_list = [COLORS["dispersive"], COLORS["horizon"], COLORS["dissipative"]]
+    dashes = ["dash", "dot", "solid"]
+
+    fig = go.Figure()
+
+    for ratio, label, color, dash in zip(ratios, labels, colors_list, dashes):
+        landscape = effective_potential_landscape(
+            G=ratio * G_c, Lambda=Lambda, N_f=N_f, n_points=200,
+        )
+        # Normalize by Lambda^4 for clean axis
+        C_norm = landscape['C'] / Lambda
+        V_norm = landscape['V_eff'] / Lambda**4
+
+        fig.add_trace(go.Scatter(
+            x=C_norm, y=V_norm,
+            mode="lines", name=label,
+            line=dict(color=color, width=2.5, dash=dash),
+        ))
+
+    fig.add_hline(y=0, line=dict(color="rgba(0,0,0,0.2)", width=1))
+
+    fig.update_xaxes(title_text="C / \u039B", range=[0, 1])
+    fig.update_yaxes(title_text="V<sub>eff</sub> / \u039B\u2074")
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>ADW Effective Potential: Phase Transition</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.35, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_adw_phase_diagram() -> go.Figure:
+    """Phase diagram: tetrad VEV C/Lambda vs coupling ratio G/G_c.
+
+    Shows pre-geometric phase (C=0) below G_c and full tetrad phase
+    (C>0) above, with vestigial metric window near G_c.
+    """
+    from src.adw.gap_equation import full_gap_analysis, critical_coupling
+    import numpy as np
+
+    Lambda, N_f = 1.0, 4
+    G_c = critical_coupling(Lambda, N_f)
+
+    ratios = np.linspace(0.1, 5.0, 100)
+    C_values = []
+    for r in ratios:
+        result = full_gap_analysis(G=r * G_c, Lambda=Lambda, N_f=N_f)
+        if result.nontrivial_solution and result.phase.value == "full_tetrad":
+            C_values.append(result.nontrivial_solution.C / Lambda)
+        else:
+            C_values.append(0.0)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=ratios, y=C_values,
+        mode="lines", name="C / \u039B",
+        line=dict(color=COLORS["dissipative"], width=3),
+        fill="tozeroy",
+        fillcolor="rgba(230,57,70,0.1)",
+    ))
+
+    # Mark G_c
+    fig.add_vline(x=1.0, line=dict(color=COLORS["horizon"], width=2, dash="dash"),
+                  annotation_text="G = G<sub>c</sub>",
+                  annotation_position="top",
+                  annotation_font=dict(size=12))
+
+    # Phase labels
+    fig.add_annotation(x=0.5, y=0.15, text="Pre-geometric<br>(e = 0)",
+                       showarrow=False, font=dict(size=13, color=COLORS["dispersive"]))
+    fig.add_annotation(x=3.0, y=0.5, text="Full tetrad<br>(e \u2260 0, Lorentzian)",
+                       showarrow=False, font=dict(size=13, color=COLORS["dissipative"]))
+
+    fig.update_xaxes(title_text="G / G<sub>c</sub>")
+    fig.update_yaxes(title_text="C / \u039B (tetrad VEV)", range=[0, 1.0])
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>ADW Phase Diagram: Tetrad Condensation</b>",
+                   font=TITLE_FONT),
+    )
+
+    return fig
+
+
+def fig_adw_ng_mode_decomposition() -> go.Figure:
+    """Bar chart: tetrad component decomposition in 4D.
+
+    16 = 6 (spin connection) + 4 (diffeomorphisms) + 2 (graviton) + 4 (massive)
+    """
+    from src.adw.fluctuations import classify_ng_modes
+
+    modes = classify_ng_modes(4)
+
+    names = []
+    counts = []
+    colors_list = []
+    mode_colors = {
+        "absorbed": COLORS["cross"],
+        "pure_gauge": COLORS["sensitivity"],
+        "massless_graviton": COLORS["Steinhauer"],
+        "massive_higgs": COLORS["Trento"],
+    }
+
+    for m in modes:
+        names.append(m.mode_type.value.replace("_", " ").title())
+        counts.append(m.count)
+        colors_list.append(mode_colors.get(m.mode_type.value, "#999999"))
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=names, y=counts,
+        marker_color=colors_list,
+        text=[str(c) for c in counts],
+        textposition="outside",
+        textfont=dict(size=14, color="black"),
+    ))
+
+    # Annotate total
+    fig.add_annotation(x=1.5, y=15, text="Total: 16 = 4<sup>2</sup>",
+                       showarrow=False, font=dict(size=13))
+
+    fig.update_xaxes(title_text="Mode Type")
+    fig.update_yaxes(title_text="Count", range=[0, 18])
+
+    apply_layout(fig,
+        height=450, width=650,
+        title=dict(text="<b>Tetrad Mode Decomposition (Vergeles Counting)</b>",
+                   font=TITLE_FONT),
+    )
+
+    return fig
+
+
+def fig_adw_he3_analogy() -> go.Figure:
+    """Side-by-side comparison: ADW tetrad vs He-3 superfluid order parameter.
+
+    Two columns showing the parallel structure:
+    - Order parameter (e^a_mu vs A_{alpha i})
+    - Symmetry breaking pattern
+    - NG modes absorbed by gauge field
+    - Remaining Higgs modes (graviton vs superfluid collective modes)
+    """
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=["<b>ADW Tetrad Condensation</b>",
+                        "<b>Superfluid ³He (p-wave BCS)</b>"],
+        horizontal_spacing=0.15,
+    )
+
+    # ADW properties
+    adw_props = ["e<sup>a</sup><sub>\u03bc</sub> (4\u00d74)", "SO(3,1) \u00d7 SO(3,1)", "6 \u2192 spin connection",
+                 "2 massless graviton", "4 massive Higgs"]
+    adw_labels = ["Order Parameter", "Symmetry", "NG Absorbed", "Massless", "Massive"]
+
+    # He-3 properties
+    he3_props = ["A<sub>\u03b1i</sub> (3\u00d73)", "SO(3)<sub>S</sub> \u00d7 SO(3)<sub>L</sub> \u00d7 U(1)",
+                 "3 \u2192 spin-orbit", "2 sound modes", "4 massive modes"]
+
+    y_pos = list(range(len(adw_props), 0, -1))
+
+    for i, (label, adw, he3) in enumerate(zip(adw_labels, adw_props, he3_props)):
+        fig.add_trace(go.Scatter(
+            x=[0.5], y=[y_pos[i]],
+            mode="text", text=[f"<b>{label}:</b> {adw}"],
+            textposition="middle center",
+            textfont=dict(size=12),
+            showlegend=False,
+        ), row=1, col=1)
+
+        fig.add_trace(go.Scatter(
+            x=[0.5], y=[y_pos[i]],
+            mode="text", text=[f"<b>{label}:</b> {he3}"],
+            textposition="middle center",
+            textfont=dict(size=12),
+            showlegend=False,
+        ), row=1, col=2)
+
+    for col in [1, 2]:
+        fig.update_xaxes(showticklabels=False, showgrid=False, zeroline=False,
+                         showline=False, range=[0, 1], row=1, col=col)
+        fig.update_yaxes(showticklabels=False, showgrid=False, zeroline=False,
+                         showline=False, range=[0.2, 5.8], row=1, col=col)
+
+    apply_layout(fig,
+        height=320, width=900,
+        title=dict(text="<b>Structural Analogy: Tetrad vs Superfluid ³He</b>",
+                   font=TITLE_FONT),
+        margin=dict(l=30, r=30, t=50, b=20),
+    )
+
+    return fig
+
+
+def fig_adw_structural_obstacles() -> go.Figure:
+    """Horizontal bar chart of the four structural obstacles with severity.
+
+    Uses blue/amber for severity levels (not red/green for colorblind accessibility).
+    """
+    from src.adw.fluctuations import structural_obstacles
+
+    obstacles = structural_obstacles()
+    short_names = {
+        "spin_connection_gap": "Spin Connection\nGap",
+        "grassmann_bosonic_incompatibility": "Grassmann-Bosonic\nIncompatibility",
+        "nielsen_ninomiya_doubling": "Nielsen-Ninomiya\nDoubling",
+        "cosmological_constant": "Cosmological\nConstant",
+    }
+    names = [short_names.get(o.name, o.name.replace("_", " ").title()) for o in obstacles]
+    severities = [o.severity for o in obstacles]
+
+    # Severity scoring
+    severity_score = {"serious": 2, "moderate": 1}
+    scores = [severity_score[s] for s in severities]
+
+    # Blue/amber for severity (colorblind accessible)
+    color_map = {"serious": COLORS["Steinhauer"], "moderate": COLORS["Trento"]}
+    bar_colors = [color_map[s] for s in severities]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        y=names, x=scores,
+        orientation="h",
+        marker_color=bar_colors,
+        text=[s.upper() for s in severities],
+        textposition="inside",
+        textfont=dict(size=12, color="white"),
+    ))
+
+    fig.update_xaxes(title_text="Severity", tickvals=[1, 2],
+                     ticktext=["Moderate", "Serious"], range=[0, 2.5])
+    fig.update_yaxes(title_text="")
+
+    # Legend annotations
+    fig.add_annotation(x=2.3, y=3, text="<b>Status: All Open</b>",
+                       showarrow=False, font=dict(size=11))
+
+    apply_layout(fig,
+        height=350, width=700,
+        title=dict(text="<b>Structural Obstacles for Emergent Fermion Bootstrap</b>",
+                   font=TITLE_FONT),
+    )
+
+    return fig
+
+
+def fig_adw_coupling_scan(stakeholder: bool = False) -> go.Figure:
+    """V_eff and tetrad VEV scanned across G/G_c for N_f = 2, 4, 8.
+
+    Two panels:
+    - Left: V_eff(C_min) vs G/G_c (depth of the minimum)
+    - Right: C_min/Lambda vs G/G_c (order parameter)
+
+    Stakeholder version uses simpler labels and larger fonts.
+    """
+    from src.adw.gap_equation import full_gap_analysis, critical_coupling
+    import numpy as np
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=["<b>Potential Depth at Minimum</b>",
+                        "<b>Tetrad VEV (Order Parameter)</b>"],
+        horizontal_spacing=0.12,
+    )
+
+    Lambda = 1.0
+    nf_values = [2, 4, 8]
+    nf_colors = [COLORS["Steinhauer"], COLORS["Heidelberg"], COLORS["Trento"]]
+
+    for N_f, color in zip(nf_values, nf_colors):
+        G_c = critical_coupling(Lambda, N_f)
+        ratios = np.linspace(0.5, 5.0, 80)
+        V_mins = []
+        C_mins = []
+
+        for r in ratios:
+            result = full_gap_analysis(G=r * G_c, Lambda=Lambda, N_f=N_f)
+            if result.nontrivial_solution and result.phase.value == "full_tetrad":
+                V_mins.append(result.nontrivial_solution.V_eff / Lambda**4)
+                C_mins.append(result.nontrivial_solution.C / Lambda)
+            else:
+                V_mins.append(0.0)
+                C_mins.append(0.0)
+
+        label = f"N<sub>f</sub> = {N_f}" if not stakeholder else f"{N_f} fermion species"
+
+        fig.add_trace(go.Scatter(
+            x=ratios, y=V_mins,
+            mode="lines", name=label,
+            line=dict(color=color, width=2.5),
+            legendgroup=f"nf{N_f}",
+        ), row=1, col=1)
+
+        fig.add_trace(go.Scatter(
+            x=ratios, y=C_mins,
+            mode="lines", name=label,
+            line=dict(color=color, width=2.5),
+            legendgroup=f"nf{N_f}",
+            showlegend=False,
+        ), row=1, col=2)
+
+    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
+                  annotation_text="G<sub>c</sub>", annotation_position="top",
+                  row=1, col=1)
+    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
+                  row=1, col=2)
+
+    fig.update_xaxes(title_text="G / G<sub>c</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="G / G<sub>c</sub>", row=1, col=2)
+    fig.update_yaxes(title_text="V<sub>eff</sub>(C<sub>min</sub>) / \u039B<sup>4</sup>", row=1, col=1)
+    fig.update_yaxes(title_text="C<sub>min</sub> / \u039B", row=1, col=2)
+
+    title = ("<b>ADW Gap Equation: Coupling Scan</b>" if not stakeholder
+             else "<b>Tetrad Condensation Across Coupling Strength</b>")
+
+    apply_layout(fig,
+        height=450, width=900,
+        title=dict(text=title, font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
 if __name__ == "__main__":
     main()
