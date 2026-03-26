@@ -122,11 +122,30 @@ Fracton systems present a **genuine structural loophole** through three mechanis
 2. **Not Yang-Mills gauge structure:** The Wang-Xu-Yau non-Abelian tensor gauge structure is non-commutative but not an ordinary Lie group. It sits outside the Yang-Mills paradigm.
 3. **No fracton hydrodynamics for non-Abelian case:** Formulating non-Abelian fracton hydrodynamics analogous to the Abelian Glorioso-Huang-Lucas theory remains an open problem.
 
-### 4.4. Verdict
+### 4.4. Concrete Example: Z_3 Gauge Coarse-Graining (Strengthening)
+
+To move beyond qualitative claims, we implemented a concrete Z_3 lattice gauge theory coarse-graining test (`gauge_coarsegraining_example()` in `information_retention.py`):
+
+- **Setup:** Z_3 gauge theory on an L=8 periodic 1D chain. Enumerate all gauge-invariant states (Wilson loops).
+- **Standard CG:** Group sites into blocks of 2, keep only block-summed link variables (charge/monopole moment). This is the analog of standard hydro coarse-graining.
+- **Fracton CG:** Keep block charge AND block dipole moment (position-weighted sum). This is the analog of fracton hydro coarse-graining.
+- **Result:** Fracton CG has **strictly higher reconstruction fidelity** than standard CG (fidelity ratio > 1). The dipole moment retains position-dependent information that standard charge-only CG discards.
+
+This quantifies the "partial" in "partially preserves gauge information": the fracton encoding doesn't fully reconstruct the gauge field, but it preserves more gauge-invariant information than standard hydro, and the improvement is measurable.
+
+### 4.5. Non-Abelian Fracton Route Closed (Item 3B)
+
+Wang-Xu-Yau and Bulmash-Barkeshli non-Abelian fracton theories are NOT Yang-Mills compatible. Four structural obstructions (formally verified in `FractonNonAbelian.lean`):
+1. Derivative order mismatch (dd vs d)
+2. Field rank mismatch (symmetric tensor vs adjoint vector)
+3. Gauge parameter dimension (1 scalar vs N^2-1 adjoint — gap grows as N^2, formally verified: `param_gap_grows`)
+4. Each obstruction is individually sufficient (`obstructions_individually_sufficient`)
+
+### 4.6. Verdict
 
 **Fracton hydrodynamics preserves non-Abelian gauge information PARTIALLY.**
 
-The information is encoded as fragmentation patterns and multipole structure, NOT as conventional gauge field degrees of freedom. This is a fundamentally different encoding than standard gauge transport. The loophole is conceptually compelling, supported by lattice model evidence (Bulmash-Barkeshli, Sala et al., Adler et al. experiments), but mathematically unproven as a mechanism for non-Abelian survival in the finite-temperature hydrodynamic limit.
+The information is encoded as fragmentation patterns and multipole structure, NOT as conventional gauge field degrees of freedom. The Z_3 coarse-graining example quantifies this: fracton CG has higher fidelity than standard CG, but does not achieve full reconstruction. The non-Abelian fracton route to SU(N) is closed (4 obstructions, formally verified). The loophole remains conceptually compelling but limited to indirect encoding.
 
 ---
 
