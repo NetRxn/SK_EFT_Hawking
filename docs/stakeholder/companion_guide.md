@@ -451,14 +451,49 @@ This project sits at the intersection of:
 
 Understanding any one of these areas deeply will enrich your appreciation of the project.
 
-### Questions?
+---
 
-For technical questions about the Lean formalization, see `/SK_EFT_Hawking_Paper/lean/README.md`.
+## Phase 3: Three Structural Results (March 25, 2026)
 
-For details on the numerical solver, see `/SK_EFT_Hawking_Paper/src/README.md`.
+Phase 3 went beyond computing corrections to ask: what are the fundamental limits of what quantum fluids can produce?
 
-For the full technical paper (in progress), stay tuned to the project repository.
+### The Parity Pattern
+
+Extending the EFT to third order revealed a hidden pattern: corrections alternate between universal (odd orders: 1st, 3rd, 5th...) and symmetry-dependent (even orders: 2nd, 4th, 6th...). This parity alternation theorem means experimentalists always know which corrections to expect based on their experimental setup.
+
+### Can Fluids Produce the Strong and Weak Forces?
+
+**No.** We proved a universal structural theorem: when any system becomes a fluid, the forces carried by SU(2) (weak) and SU(3) (strong) are erased. Only electromagnetism (U(1)) survives. This is not an approximation or a limitation of our method — it's a mathematical consequence of how symmetries work in fluids.
+
+Think of it this way: imagine you have a complex painting with many colors. When you blur it (the analog of "hydrodynamization"), the fine color distinctions are lost. The gauge erasure theorem proves that the "non-Abelian colors" (strong and weak forces) are always lost in this blurring, while the "Abelian color" (electromagnetism) survives.
+
+### The Full Hawking Spectrum
+
+The exact WKB connection formula completes the prediction chain. Instead of just "the temperature shifts by this much," we now predict the full spectral shape of the Hawking radiation — including a noise floor from quantum fluctuations that sets a fundamental detection limit.
+
+### Can Gravity Emerge from Quantum Fluids?
+
+**Partially.** The ADW mechanism shows that at mean-field level (the simplest approximation), fermion condensation does produce gravitons — the carriers of gravity. But four specific obstacles prevent this from working with emergent (rather than fundamental) fermions. The "vestigial gravity" concept — where the metric exists without the full gravitational field — is the most promising next step.
+
+### Current Status
+
+| Metric | Phase 1 | Phase 2 | Phase 3 |
+|--------|---------|---------|---------|
+| Papers | 1 | 2 | 5 |
+| Verified theorems | 14 | 40 | 130 + 1 axiom |
+| Tests | 12 | 64 | 269 |
+| Structural walls tested | 0 | 0 | 2 (gauge closed, gravity tested) |
 
 ---
 
-*This companion guide is part of the SK-EFT Hawking Paper project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 23, 2026.*
+### Questions?
+
+For technical questions about the Lean formalization, see `lean/README.md`.
+
+For the full technical papers, see `papers/paper1-5_*/paper_draft.tex`.
+
+For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase3_Implications.md`.
+
+---
+
+*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 25, 2026.*
