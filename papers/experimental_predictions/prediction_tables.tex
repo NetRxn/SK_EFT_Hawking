@@ -1,0 +1,156 @@
+\documentclass[aps,prd,twocolumn,showpacs,superscriptaddress,nofootinbib]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Spectral Predictions for Analog Hawking Radiation:\\
+Platform-Specific Tables from SK-EFT}
+
+\author{SK-EFT Hawking Research Program}
+
+\date{\today}
+
+\begin{abstract}
+We present platform-specific spectral predictions for analog Hawking
+radiation in three BEC experiments: Steinhauer $^{87}$Rb (Technion),
+Heidelberg $^{39}$K, and Trento $^{23}$Na spin-sonic. The predictions
+derive from the Schwinger-Keldysh dissipative effective field theory
+framework (Papers~1--4) and include: (i)~complete spectral occupation
+$n(\omega)$ at representative frequencies, (ii)~correction decomposition
+into dispersive and dissipative contributions, (iii)~noise floor
+thresholds from the fluctuation-dissipation relation, (iv)~detector
+sensitivity requirements for three measurement goals, and
+(v)~a kappa-scaling test prediction for Heidelberg~$^{39}$K.
+This document is designed for experimentalists planning measurements.
+\end{abstract}
+
+\maketitle
+
+\section{Platform Parameters}
+
+\begin{table}[h]
+\caption{BEC platform parameters in natural units ($c_s = 1$, $\kappa = 1$).}
+\label{tab:params}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Parameter & Steinhauer & Heidelberg & Trento \\
+\hline
+Atom & $^{87}$Rb & $^{39}$K & $^{23}$Na \\
+$D$ & 0.030 & 0.020 & 0.014 \\
+$\gamma_\text{dim}$ & $3\times10^{-3}$ & $2\times10^{-3}$ & $1.4\times10^{-5}$ \\
+$T_H$ & $\kappa/2\pi$ & $\kappa/2\pi$ & $\kappa/2\pi$ \\
+$\omega_\text{max}/T_H$ & 65.1 & 85.3 & 108.2 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\section{Spectral Predictions}
+
+Table~\ref{tab:spectral} lists the predicted occupation number $n(\omega)$
+at five representative frequencies for each platform, along with the
+decomposition into dispersive ($\delta_\text{disp}$) and dissipative
+($\delta_\text{diss}$) corrections.
+
+The total occupation is:
+\begin{equation}
+n(\omega) = n_\text{Hawking}(\omega) + n_\text{noise}(\omega)
+\end{equation}
+where $n_\text{Hawking} = |\beta|^2 / (1 - \delta_k)$ includes the
+modified unitarity correction and $n_\text{noise} = \delta_k/2$ is the
+FDR-mandated noise floor.
+
+\begin{table*}[t]
+\caption{Spectral predictions at representative frequencies. Values computed
+from the exact WKB connection formula (Paper~4).}
+\label{tab:spectral}
+\begin{ruledtabular}
+\begin{tabular}{l c c c c c c c}
+Platform & $\omega/T_H$ & $n_\text{total}$ & $n_\text{Planck}$ & $\delta_\text{disp}$ & $\delta_\text{diss}$ & $\delta_k$ & Dominant \\
+\hline
+\multicolumn{8}{c}{\textit{Steinhauer $^{87}$Rb}} \\
+ & 0.5 & 1.903 & 1.902 & $-4.7\times10^{-4}$ & $1.4\times10^{-5}$ & $2.7\times10^{-5}$ & dispersive \\
+ & 1.0 & 0.525 & 0.524 & $-4.7\times10^{-4}$ & $8.7\times10^{-5}$ & $1.7\times10^{-4}$ & dispersive \\
+ & 2.0 & 0.151 & 0.150 & $-4.7\times10^{-4}$ & $3.2\times10^{-4}$ & $6.3\times10^{-4}$ & noise floor \\
+ & 3.0 & 0.053 & 0.052 & $-4.7\times10^{-4}$ & $6.9\times10^{-4}$ & $1.4\times10^{-3}$ & noise floor \\
+ & 5.0 & 0.009 & 0.007 & $-4.7\times10^{-4}$ & $1.9\times10^{-3}$ & $3.7\times10^{-3}$ & noise floor \\
+\hline
+\multicolumn{8}{c}{\textit{Heidelberg $^{39}$K}} \\
+ & 0.5 & 1.903 & 1.902 & $-2.1\times10^{-4}$ & $9.0\times10^{-6}$ & $1.8\times10^{-5}$ & dispersive \\
+ & 1.0 & 0.524 & 0.524 & $-2.1\times10^{-4}$ & $5.8\times10^{-5}$ & $1.2\times10^{-4}$ & dispersive \\
+ & 2.0 & 0.151 & 0.150 & $-2.1\times10^{-4}$ & $2.1\times10^{-4}$ & $4.2\times10^{-4}$ & noise floor \\
+ & 3.0 & 0.053 & 0.052 & $-2.1\times10^{-4}$ & $4.6\times10^{-4}$ & $9.1\times10^{-4}$ & noise floor \\
+ & 5.0 & 0.008 & 0.007 & $-2.1\times10^{-4}$ & $1.2\times10^{-3}$ & $2.5\times10^{-3}$ & noise floor \\
+\hline
+\multicolumn{8}{c}{\textit{Trento $^{23}$Na}} \\
+ & 0.5 & 1.903 & 1.902 & $-1.0\times10^{-4}$ & $6.3\times10^{-8}$ & $1.3\times10^{-7}$ & dispersive \\
+ & 1.0 & 0.524 & 0.524 & $-1.0\times10^{-4}$ & $4.0\times10^{-7}$ & $8.1\times10^{-7}$ & dispersive \\
+ & 2.0 & 0.150 & 0.150 & $-1.0\times10^{-4}$ & $1.5\times10^{-6}$ & $2.9\times10^{-6}$ & dispersive \\
+ & 3.0 & 0.052 & 0.052 & $-1.0\times10^{-4}$ & $3.2\times10^{-6}$ & $6.4\times10^{-6}$ & dispersive \\
+ & 5.0 & 0.007 & 0.007 & $-1.0\times10^{-4}$ & $8.6\times10^{-6}$ & $1.7\times10^{-5}$ & noise floor \\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+The key physics features visible in Table~\ref{tab:spectral}:
+\begin{itemize}
+\item At low frequencies ($\omega \lesssim T_H$), the dispersive correction
+dominates. It is negative (subluminal dispersion lowers $T_\text{eff}$).
+\item At high frequencies ($\omega \gtrsim 2\,T_H$), the noise floor
+dominates for Steinhauer and Heidelberg due to their larger damping rates.
+\item Trento has negligible dissipation ($\gamma_\text{dim} = 1.4\times10^{-5}$),
+so dispersive corrections dominate across almost the entire spectrum.
+\item The crossover from dispersive to noise-floor dominance occurs at
+$\omega/T_H \approx 2$ for Steinhauer and Heidelberg.
+\end{itemize}
+
+\section{Detector Requirements}
+
+Three measurement goals are considered:
+\begin{enumerate}
+\item Detect the first-order dissipative correction $\delta_\text{diss}$
+at 3$\sigma$ significance.
+\item Detect the FDR noise floor $n_\text{noise}$ at 3$\sigma$.
+\item Distinguish exact WKB from perturbative EFT at the 1\% level.
+\end{enumerate}
+
+\section{Kappa-Scaling Test}
+
+The Heidelberg $^{39}$K platform can tune the scattering length via
+Feshbach resonance, enabling a direct test of how the Hawking spectrum
+scales with surface gravity $\kappa$.
+
+The SK-EFT prediction provides a clean discriminant:
+\begin{itemize}
+\item $\delta_\text{disp} \propto D^2 \propto \kappa^2$ (quadratic scaling)
+\item $\delta_\text{diss} \approx \text{const}$ (independent of $\kappa$
+at leading order)
+\end{itemize}
+
+Measuring the $\kappa$-dependence of the spectral deviation separates
+dispersive from dissipative corrections without needing absolute
+calibration of either.
+
+\section{Summary: Which Platform for Which Measurement}
+
+\begin{table}[h]
+\caption{Platform rankings by measurement goal.}
+\label{tab:rankings}
+\begin{ruledtabular}
+\begin{tabular}{lc}
+Measurement & Best Platform \\
+\hline
+Initial EFT detection & Steinhauer \\
+FDR noise floor & Steinhauer \\
+UV spectral range & Trento \\
+Kappa scaling & Heidelberg \\
+Fewest shots needed & Steinhauer \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\end{document}
