@@ -56,7 +56,7 @@
 
 **Estimated LOE:** Low-Medium (1/2 wave)
 **Risk:** Low. All physics is already computed; this is packaging and presentation.
-**Status:** `pending`
+**Status:** `complete` — src/experimental/predictions.py (33 tests), fig35-38, prediction_tables.tex
 
 ---
 
@@ -81,7 +81,7 @@
 
 **Estimated LOE:** Low-Medium (1/2 wave)
 **Risk:** Medium. The compatibility question may not have a clean formal answer — the two groups haven't engaged each other's work.
-**Status:** `pending`
+**Status:** `complete` — src/chirality/tpf_gs_analysis.py (55 tests), fig39, docs/chirality_wall_analysis.md
 
 ---
 
@@ -106,7 +106,7 @@
 
 **Estimated LOE:** Medium
 **Risk:** Low-Medium. The GL expansion is standard; the invariant polynomial classification may require careful tensor algebra.
-**Status:** `pending`
+**Status:** `complete` — src/adw/ginzburg_landau.py (55 tests), fig40-41
 
 ---
 

@@ -414,7 +414,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         caption="Spectral deviation from Planckian for all three BEC platforms.",
         needs_experiments=False,
         expected_traces=3,
-        expected_axes={"xaxis": "T_H"},
+        expected_axes={"xaxis": "\u03c9"},
         physics_checks=[],
         color_keys=["Steinhauer", "Heidelberg", "Trento"],
     ),
@@ -444,9 +444,41 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         caption="Noise floor crossover: where FDR noise exceeds Hawking signal.",
         needs_experiments=False,
         expected_traces=6,
-        expected_axes={"xaxis": "T_H"},
+        expected_axes={"xaxis": "\u03c9"},
         physics_checks=[],
         color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    # Phase 4 Wave 1B: Chirality wall
+    FigureSpec(
+        name="fig39_chirality_wall_status",
+        function="fig_chirality_wall_status",
+        caption="Chirality wall: GS conditions vs TPF evasion.",
+        needs_experiments=False,
+        expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Trento"],
+    ),
+    # Phase 4 Wave 1C: GL phase diagram
+    FigureSpec(
+        name="fig40_gl_phase_diagram",
+        function="fig_gl_phase_diagram",
+        caption="Ginzburg-Landau phase diagram: B-phase, A-phase, polar phases.",
+        needs_experiments=False,
+        expected_traces=4,
+        expected_axes={"xaxis": "G"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig41_he3_comparison_table",
+        function="fig_he3_comparison_table",
+        caption="He-3 vs ADW structural comparison table.",
+        needs_experiments=False,
+        expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=[],
     ),
 ]
 
@@ -480,6 +512,9 @@ def generate_figures() -> dict[str, Path]:
         # Phase 4 Wave 1
         fig_prediction_table_comparison, fig_detector_requirements,
         fig_kappa_scaling_phase4, fig_noise_floor_crossover,
+        # Phase 4 Wave 1B/1C
+        fig_chirality_wall_status, fig_gl_phase_diagram,
+        fig_he3_comparison_table,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -542,6 +577,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_detector_requirements": fig_detector_requirements,
         "fig_kappa_scaling_phase4": fig_kappa_scaling_phase4,
         "fig_noise_floor_crossover": fig_noise_floor_crossover,
+        # Phase 4 Wave 1B/1C
+        "fig_chirality_wall_status": fig_chirality_wall_status,
+        "fig_gl_phase_diagram": fig_gl_phase_diagram,
+        "fig_he3_comparison_table": fig_he3_comparison_table,
     }
 
     paths = {}
@@ -607,6 +646,9 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 4 Wave 1
         fig_prediction_table_comparison, fig_detector_requirements,
         fig_kappa_scaling_phase4, fig_noise_floor_crossover,
+        # Phase 4 Wave 1B/1C
+        fig_chirality_wall_status, fig_gl_phase_diagram,
+        fig_he3_comparison_table,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -667,6 +709,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_detector_requirements": fig_detector_requirements,
         "fig_kappa_scaling_phase4": fig_kappa_scaling_phase4,
         "fig_noise_floor_crossover": fig_noise_floor_crossover,
+        # Phase 4 Wave 1B/1C
+        "fig_chirality_wall_status": fig_chirality_wall_status,
+        "fig_gl_phase_diagram": fig_gl_phase_diagram,
+        "fig_he3_comparison_table": fig_he3_comparison_table,
     }
 
     issues: list[CheckIssue] = []

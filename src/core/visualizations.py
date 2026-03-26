@@ -3047,5 +3047,153 @@ def fig_noise_floor_crossover():
     return fig
 
 
+def fig_chirality_wall_status():
+    """Fig 39: Chirality wall status — GS conditions vs TPF evasion.
+
+    Shows each GS no-go condition and whether TPF evades it, color-coded
+    by verdict: evaded (blue), applies (amber), unclear (grey).
+    """
+    from src.chirality.tpf_gs_analysis import gs_conditions
+
+    conditions = gs_conditions()
+
+    names = [c.name.replace("_", " ").title() for c in conditions]
+    verdicts = [c.applies_to_tpf.value for c in conditions]
+
+    verdict_colors = {
+        'evaded': COLORS['Steinhauer'],      # blue — good news
+        'applies': COLORS['Trento'],          # amber — constraint holds
+        'unclear': '#8D99AE',                 # grey — undetermined
+    }
+    colors = [verdict_colors.get(v, '#8D99AE') for v in verdicts]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=names,
+        y=[1] * len(conditions),
+        marker_color=colors,
+        text=[v.upper() for v in verdicts],
+        textposition='inside',
+        textfont=dict(size=14, color='white'),
+    ))
+
+    fig.update_yaxes(visible=False)
+
+    apply_layout(fig,
+        height=350, width=700,
+        title=dict(text="<b>Chirality Wall: GS Conditions vs TPF Construction</b>",
+                   font=TITLE_FONT),
+        xaxis_title="Golterman-Shamir condition",
+    )
+
+    return fig
+
+
+def fig_gl_phase_diagram():
+    """Fig 40: GL phase diagram — B-phase, A-phase, and pre-geometric regions.
+
+    Shows the ground state energy as a function of coupling G/G_c for
+    each phase classification.
+    """
+    from src.adw.ginzburg_landau import compute_phase_diagram
+
+    diagram = compute_phase_diagram(Lambda=1.0, N_f=4, n_points=60)
+
+    fig = go.Figure()
+
+    # Pre-geometric: F = 0 for all couplings
+    fig.add_trace(go.Scatter(
+        x=list(diagram.coupling_ratios),
+        y=[0.0] * len(diagram.coupling_ratios),
+        mode="lines",
+        name="Pre-geometric",
+        line=dict(color='#8D99AE', width=2.5, dash="dash"),
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=list(diagram.coupling_ratios),
+        y=list(diagram.free_energies_B),
+        mode="lines",
+        name="B-phase (isotropic)",
+        line=dict(color=COLORS['Steinhauer'], width=2.5),
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=list(diagram.coupling_ratios),
+        y=list(diagram.free_energies_A),
+        mode="lines",
+        name="A-phase (anisotropic)",
+        line=dict(color=COLORS['Heidelberg'], width=2.5),
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=list(diagram.coupling_ratios),
+        y=list(diagram.free_energies_polar),
+        mode="lines",
+        name="Polar",
+        line=dict(color=COLORS['Trento'], width=2.5),
+    ))
+
+    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
+                  annotation_text="G<sub>c</sub>", annotation_position="top")
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Ginzburg-Landau Phase Diagram</b>", font=TITLE_FONT),
+        xaxis_title="G / G<sub>c</sub>",
+        yaxis_title="F<sub>GL</sub> / \u039B<sup>4</sup>",
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_he3_comparison_table():
+    """Fig 41: He-3 vs ADW structural comparison — match/mismatch indicators.
+
+    Visual table showing which aspects of He-3 superfluid physics have
+    structural analogs in the ADW tetrad condensation framework.
+    """
+    from src.adw.ginzburg_landau import he3_comparison
+
+    comparisons = he3_comparison()
+
+    adw_items = [c.adw_quantity for c in comparisons]
+    he3_items = [c.he3_analog for c in comparisons]
+    matches = [c.structural_match for c in comparisons]
+
+    colors = [COLORS['Steinhauer'] if m else COLORS['Trento'] for m in matches]
+    symbols = ['\u2713' if m else '\u2717' for m in matches]
+
+    fig = go.Figure()
+    fig.add_trace(go.Table(
+        header=dict(
+            values=['ADW Quantity', 'He-3 Analog', 'Match'],
+            fill_color='lightgrey',
+            align='center',
+            font=dict(size=13, family=FONT['family']),
+        ),
+        cells=dict(
+            values=[adw_items, he3_items, symbols],
+            fill_color=[['white'] * len(adw_items),
+                        ['white'] * len(he3_items),
+                        [c if m else c for c, m in zip(
+                            ['rgba(46,134,171,0.15)'] * len(matches),
+                            matches
+                        )]],
+            align='center',
+            font=dict(size=12, family=FONT['family']),
+        ),
+    ))
+
+    fig.update_layout(
+        title=dict(text="<b>He-3 vs ADW Structural Comparison</b>", font=TITLE_FONT),
+        height=400, width=700,
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
+
+    return fig
+
+
 if __name__ == "__main__":
     main()
