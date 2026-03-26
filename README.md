@@ -1,7 +1,7 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Four papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Five papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
@@ -11,29 +11,34 @@ to acoustic Hawking radiation in BEC analog gravity. Four papers in a unified co
   erased by hydrodynamization, U(1) survives (photonization). PRL format.
 - **Paper 4 (exact WKB):** Non-perturbative connection formula: modified unitarity
   |α|²-|β|²=1-δ_k, FDR noise floor, spectral floor at ω≳6T_H. PRD format.
+- **Paper 5 (ADW gap equation):** Mean-field tetrad condensation via the
+  Akama-Diakonov-Wetterich mechanism. Qualified positive result: nontrivial
+  Lorentzian solution for G > G_c, 2 massless graviton modes as Higgs bosons.
+  Four structural obstacles for emergent fermion bootstrap. PRD format.
 
-**Lean 4 formalization:** 109 theorems + 1 axiom (40 Aristotle + 69 manual), zero sorry.
-10 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 130 theorems + 1 axiom (41 Aristotle + 90 manual), zero sorry.
+11 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (40/40, zero sorry)
+├── lean/                              # Lean 4 formalization (41/41, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 10)
+│   ├── SKEFTHawking.lean              # Root module (imports all 11)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
-│       ├── AcousticMetric.lean        # Structure A: acoustic metric (5 theorems)
-│       ├── SKDoubling.lean            # Structure B: SK doubling + KMS (7 theorems)
+│       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
+│       ├── SKDoubling.lean            # Structure B: SK doubling + KMS (9 theorems)
 │       ├── HawkingUniversality.lean   # Structure C: universality + κ-crossing + spin-sonic (9 theorems)
 │       ├── SecondOrderSK.lean         # Phase 2: second-order counting + stress tests (19 theorems)
 │       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
 │       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
 │       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
 │       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom)
-│       └── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
+│       ├── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
+│       └── ADWMechanism.lean          # Phase 3: ADW tetrad condensation (21 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -47,10 +52,15 @@ SK_EFT_Hawking/
 │   │   └── wkb_analysis.py            # WKB mode analysis through the dissipative horizon
 │   ├── gauge_erasure/                 # Non-Abelian gauge erasure theorem
 │   │   └── erasure_theorem.py         # GaugeGroup, HigherFormSymmetry, standard model analysis
-│   └── wkb/                           # Exact WKB connection formula (Phase 3 Wave 2)
-│       ├── connection_formula.py       # Complex turning point, Stokes geometry, exact formula
-│       ├── bogoliubov.py              # Modified Bogoliubov coefficients, decoherence, noise floor
-│       └── spectrum.py                # Observable spectrum, platform predictions, comparison
+│   ├── wkb/                           # Exact WKB connection formula (Phase 3 Wave 2)
+│   │   ├── connection_formula.py       # Complex turning point, Stokes geometry, exact formula
+│   │   ├── bogoliubov.py              # Modified Bogoliubov coefficients, decoherence, noise floor
+│   │   └── spectrum.py                # Observable spectrum, platform predictions, comparison
+│   └── adw/                           # ADW mean-field gap equation (Phase 3 Wave 3)
+│       ├── wen_model.py               # Wen's emergent QED, Nielsen-Ninomiya, Herbut RG
+│       ├── hubbard_stratonovich.py    # HS decomposition, TetradField, fermion determinant
+│       ├── gap_equation.py            # Coleman-Weinberg V_eff, critical coupling, phase diagram
+│       └── fluctuations.py            # SSB pattern, NG modes, Vergeles counting, obstacles
 │
 ├── papers/
 │   ├── paper1_first_order/            # PRL submission
@@ -59,7 +69,9 @@ SK_EFT_Hawking/
 │   │   └── paper_draft.tex
 │   ├── paper3_gauge_erasure/          # PRL gauge erasure
 │   │   └── paper_draft.tex
-│   └── paper4_wkb_connection/         # PRD exact WKB
+│   ├── paper4_wkb_connection/         # PRD exact WKB
+│   │   └── paper_draft.tex
+│   └── paper5_adw_gap/               # PRD ADW gap equation
 │       └── paper_draft.tex
 │
 ├── notebooks/
@@ -72,7 +84,9 @@ SK_EFT_Hawking/
 │   ├── GaugeErasure_Technical.ipynb   # Gauge erasure technical notebook
 │   ├── GaugeErasure_Stakeholder.ipynb # Gauge erasure stakeholder notebook
 │   ├── WKBConnection_Technical.ipynb  # Exact WKB + spectral floor (26 cells)
-│   └── WKBConnection_Stakeholder.ipynb # WKB stakeholder version (17 cells)
+│   ├── WKBConnection_Stakeholder.ipynb # WKB stakeholder version (17 cells)
+│   ├── ADW_Technical.ipynb            # ADW gap equation technical (22 cells)
+│   └── ADW_Stakeholder.ipynb         # ADW stakeholder version (16 cells)
 │
 ├── docs/
 │   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
@@ -80,12 +94,16 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite
-│   ├── test_transonic_background.py   # Physics validation (12/12)
+├── tests/                             # pytest suite (269 tests)
+│   ├── test_transonic_background.py   # Physics validation
 │   ├── test_second_order.py           # Enumeration + WKB tests
+│   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
+│   ├── test_wkb_connection.py         # Exact WKB connection tests (65 tests)
+│   ├── test_adw.py                    # ADW gap equation tests (78 tests)
+│   ├── test_cross_validation.py       # Cross-layer validation
 │   └── test_lean_integrity.py         # Module structure + sorry-gap regression
 │
-├── figures/                           # Interactive HTML dashboards
+├── figures/                           # 34 pipeline figures (PNG + HTML)
 ├── scripts/
 │   └── submit_to_aristotle.py         # Aristotle submission + integration script
 ├── pyproject.toml                     # Unified Python dependencies
@@ -105,7 +123,7 @@ python -m src.second_order.enumeration     # Print transport coefficient countin
 ### Lean
 ```bash
 cd SK_EFT_Hawking/lean
-lake build                                 # ~2252 jobs, should be clean
+lake build                                 # ~2259 jobs, should be clean
 ```
 
 ### Aristotle
@@ -141,7 +159,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (109 + 1 axiom — Zero Sorry)
+## Theorem Inventory (130 + 1 axiom — Zero Sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -154,6 +172,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem (1C) |
 | GaugeErasure.lean | 3 | 11 + 1 axiom | Gauge erasure (1B) |
 | WKBConnection.lean | 3 | 17 | Exact WKB connection (2D) |
+| ADWMechanism.lean | 3 | 21 | Aristotle: f8de66d1. Vergeles counting, phase classification |
 
 ## Build Environment
 
@@ -163,4 +182,4 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 
 ## References
 
-See `docs/roadmaps/Phase1_Roadmap.md` and `docs/roadmaps/Phase2_Roadmap.md` for full technical context and reference lists.
+See `docs/roadmaps/Phase1_Roadmap.md`, `docs/roadmaps/Phase2_Roadmap.md`, and `docs/roadmaps/Phase3_Roadmap.md` for full technical context and reference lists.
