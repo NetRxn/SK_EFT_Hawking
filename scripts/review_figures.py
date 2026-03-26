@@ -480,6 +480,37 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=[],
     ),
+    # Phase 4 Wave 2
+    FigureSpec(
+        name="fig42_vestigial_phase_diagram",
+        function="fig_vestigial_phase_diagram",
+        caption="Vestigial gravity mean-field phase diagram.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "G"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Trento"],
+    ),
+    FigureSpec(
+        name="fig43_backreaction_cooling",
+        function="fig_backreaction_cooling",
+        caption="Acoustic BH cooling toward extremality.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "\u03c4"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig44_information_retention",
+        function="fig_information_retention",
+        caption="Fracton vs standard hydro information retention.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "dimension"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Trento"],
+    ),
 ]
 
 
@@ -515,6 +546,9 @@ def generate_figures() -> dict[str, Path]:
         # Phase 4 Wave 1B/1C
         fig_chirality_wall_status, fig_gl_phase_diagram,
         fig_he3_comparison_table,
+        # Phase 4 Wave 2
+        fig_vestigial_phase_diagram, fig_backreaction_cooling,
+        fig_information_retention,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -581,6 +615,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_chirality_wall_status": fig_chirality_wall_status,
         "fig_gl_phase_diagram": fig_gl_phase_diagram,
         "fig_he3_comparison_table": fig_he3_comparison_table,
+        # Phase 4 Wave 2
+        "fig_vestigial_phase_diagram": fig_vestigial_phase_diagram,
+        "fig_backreaction_cooling": fig_backreaction_cooling,
+        "fig_information_retention": fig_information_retention,
     }
 
     paths = {}
@@ -649,6 +687,9 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 4 Wave 1B/1C
         fig_chirality_wall_status, fig_gl_phase_diagram,
         fig_he3_comparison_table,
+        # Phase 4 Wave 2
+        fig_vestigial_phase_diagram, fig_backreaction_cooling,
+        fig_information_retention,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -713,6 +754,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_chirality_wall_status": fig_chirality_wall_status,
         "fig_gl_phase_diagram": fig_gl_phase_diagram,
         "fig_he3_comparison_table": fig_he3_comparison_table,
+        # Phase 4 Wave 2
+        "fig_vestigial_phase_diagram": fig_vestigial_phase_diagram,
+        "fig_backreaction_cooling": fig_backreaction_cooling,
+        "fig_information_retention": fig_information_retention,
     }
 
     issues: list[CheckIssue] = []

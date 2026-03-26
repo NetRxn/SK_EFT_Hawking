@@ -3195,5 +3195,179 @@ def fig_he3_comparison_table():
     return fig
 
 
+# ════════════════════════════════════════════════════════════════
+# Phase 4 Wave 2: Vestigial Gravity + Backreaction (fig42-fig44)
+# ════════════════════════════════════════════════════════════════
+
+def fig_vestigial_phase_diagram():
+    """Fig 42: Vestigial gravity phase diagram from mean-field scan."""
+    from src.vestigial.phase_diagram import scan_coupling
+
+    result = scan_coupling(
+        method="mean_field", Lambda=1.0, N_f=4,
+        coupling_range=(0.3, 3.0), n_points=60,
+    )
+
+    fig = make_subplots(rows=1, cols=2,
+                        subplot_titles=["Order parameters",
+                                        "Phase classification"])
+
+    fig.add_trace(go.Scatter(
+        x=list(result.coupling_ratios),
+        y=list(result.tetrad_values),
+        mode="lines", name="Tetrad VEV",
+        line=dict(color=COLORS['Steinhauer'], width=2.5),
+    ), row=1, col=1)
+
+    fig.add_trace(go.Scatter(
+        x=list(result.coupling_ratios),
+        y=list(result.metric_values),
+        mode="lines", name="Metric correlator",
+        line=dict(color=COLORS['Trento'], width=2.5),
+    ), row=1, col=1)
+
+    phase_colors = {
+        'pre_geometric': '#8D99AE',
+        'vestigial': COLORS['Trento'],
+        'full_tetrad': COLORS['Steinhauer'],
+    }
+    y_phase = [1 if p == 'full_tetrad' else (0.5 if p == 'vestigial' else 0)
+               for p in result.phases]
+
+    fig.add_trace(go.Scatter(
+        x=list(result.coupling_ratios),
+        y=y_phase,
+        mode="lines",
+        name="Phase",
+        line=dict(color="black", width=2),
+        fill="tozeroy",
+        fillcolor="rgba(46,134,171,0.1)",
+    ), row=1, col=2)
+
+    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
+                  row=1, col=1)
+    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
+                  row=1, col=2)
+
+    fig.update_xaxes(title_text="G / G<sub>c</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="G / G<sub>c</sub>", row=1, col=2)
+    fig.update_yaxes(title_text="Magnitude / \u039B", row=1, col=1)
+    fig.update_yaxes(title_text="Phase (0=pre, 0.5=vestigial, 1=full)", row=1, col=2)
+
+    apply_layout(fig,
+        height=400, width=850,
+        title=dict(text="<b>Vestigial Gravity: Mean-Field Phase Diagram</b>",
+                   font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_backreaction_cooling():
+    """Fig 43: Acoustic BH cooling — T_H(t) for all three platforms."""
+    from src.wkb.backreaction import all_platform_backreaction
+
+    results = all_platform_backreaction()
+
+    platform_colors_map = {
+        'Steinhauer_Rb87': COLORS['Steinhauer'],
+        'Heidelberg_K39': COLORS['Heidelberg'],
+        'Trento_Na23': COLORS['Trento'],
+    }
+    platform_labels = {
+        'Steinhauer_Rb87': 'Steinhauer <sup>87</sup>Rb',
+        'Heidelberg_K39': 'Heidelberg <sup>39</sup>K',
+        'Trento_Na23': 'Trento <sup>23</sup>Na',
+    }
+
+    fig = go.Figure()
+
+    for name, result in results.items():
+        evo = result.evolution
+        # Normalize time by cooling timescale
+        tau = result.timescale.tau_cool
+        t_norm = np.array(evo.times) / tau if tau > 0 else np.array(evo.times)
+        T_norm = np.array(evo.T_H_values) / evo.T_H_values[0]
+
+        color = platform_colors_map.get(name, 'grey')
+        label = platform_labels.get(name, name)
+
+        fig.add_trace(go.Scatter(
+            x=t_norm, y=T_norm,
+            mode="lines",
+            name=label,
+            line=dict(color=color, width=2.5),
+        ))
+
+    fig.add_hline(y=0, line=dict(color="black", width=0.5, dash="dash"))
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Acoustic BH Cooling: Approach to Extremality</b>",
+                   font=TITLE_FONT),
+        xaxis_title="t / \u03c4<sub>cool</sub>",
+        yaxis_title="T<sub>H</sub>(t) / T<sub>H</sub>(0)",
+        legend=dict(x=0.65, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_information_retention():
+    """Fig 44: Information retention — fracton vs standard hydro."""
+    from src.fracton.information_retention import (
+        standard_hydro_charges, fracton_hydro_charges,
+    )
+
+    dims = [2, 3, 4, 5]
+    standard_charges = []
+    fracton_charges_dipole = []
+    fracton_charges_quad = []
+
+    for d in dims:
+        si = standard_hydro_charges(d)
+        fi_dip = fracton_hydro_charges(d, max_multipole=1)
+        fi_quad = fracton_hydro_charges(d, max_multipole=2)
+        standard_charges.append(si.conserved_charges)
+        fracton_charges_dipole.append(fi_dip.conserved_charges)
+        fracton_charges_quad.append(fi_quad.conserved_charges)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=[str(d) for d in dims],
+        y=standard_charges,
+        name="Standard hydro",
+        marker_color='#8D99AE',
+    ))
+
+    fig.add_trace(go.Bar(
+        x=[str(d) for d in dims],
+        y=fracton_charges_dipole,
+        name="Fracton (dipole)",
+        marker_color=COLORS['Steinhauer'],
+    ))
+
+    fig.add_trace(go.Bar(
+        x=[str(d) for d in dims],
+        y=fracton_charges_quad,
+        name="Fracton (quadrupole)",
+        marker_color=COLORS['Trento'],
+    ))
+
+    apply_layout(fig,
+        height=400, width=700,
+        title=dict(text="<b>UV Information Retention: Fracton vs Standard Hydro</b>",
+                   font=TITLE_FONT),
+        xaxis_title="Spacetime dimension d",
+        yaxis_title="Conserved charges",
+        barmode='group',
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
 if __name__ == "__main__":
     main()

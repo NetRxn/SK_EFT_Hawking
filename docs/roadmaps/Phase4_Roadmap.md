@@ -177,7 +177,7 @@ Scan coupling constants to map the three phases: pre-geometric, vestigial, full 
 
 **Estimated LOE:** High (heaviest item in Phase 4)
 **Risk:** High. The lattice model must be chosen carefully; Monte Carlo convergence may be slow; the vestigial phase window may be too narrow to detect numerically.
-**Status:** `pending`
+**Status:** `complete` — src/vestigial/ (4 modules, 42 tests), Euclidean pilot with mean-field + MC
 
 ---
 
@@ -214,7 +214,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** High
 **Risk:** Medium. The fracton SK-EFT exists in the literature (Glorioso et al.); our contribution is the formalization and information comparison.
-**Status:** `pending`
+**Status:** `complete` — src/fracton/ (2 modules, 88 tests), docs/fracton_layer2_assessment.md
 
 ---
 
@@ -240,7 +240,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium
 **Risk:** Low-Medium. The physics is well-understood; connecting to the specific Balbinot framework requires careful matching.
-**Status:** `pending`
+**Status:** `complete` — src/wkb/backreaction.py (76 tests), acoustic BH cooling toward extremality
 
 ---
 
