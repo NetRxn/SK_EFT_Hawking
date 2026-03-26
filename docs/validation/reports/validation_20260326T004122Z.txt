@@ -1,0 +1,116 @@
+SK-EFT Hawking Validation Report
+Generated: 20260326T004122Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] formulas
+  + count_coefficients — Refs: secondOrder_count, counting_formula_N2, counting_formula_N3
+  + enumerate_monomials — Refs: spatial_parity_eliminates_second_order, parity_null_test
+  + damping_rate — Refs: dampingRate_eq_zero_iff
+  + dispersive_correction — Refs: dispersive_bound, dispersive_bound_tight
+  + first_order_correction — Refs: firstOrder_correction_zero_iff
+  + effective_temperature_ratio — Refs: effective_temperature_well_defined
+  + turning_point_shift — Refs: turning_point_shift_nonzero, turning_point_shift_nonzero_strengthened
+
+[PASS] numerical
+  + Steinhauer.c_s — expected=1.151e-03, actual=1.151e-03, err=0.0%
+  + Steinhauer.xi — expected=6.350e-07, actual=6.349e-07, err=0.0%
+  + Steinhauer.kappa — expected=2.190e+01, actual=2.190e+01, err=0.0%
+  + Steinhauer.T_H — expected=2.660e-11, actual=2.663e-11, err=0.1%
+  + Heidelberg.c_s — expected=3.919e-03, actual=3.919e-03, err=0.0%
+  + Heidelberg.xi — expected=4.160e-07, actual=4.159e-07, err=0.0%
+  + Heidelberg.kappa — expected=1.019e+02, actual=1.019e+02, err=0.0%
+  + Heidelberg.T_H — expected=1.240e-10, actual=1.239e-10, err=0.1%
+  + Trento.c_s — expected=2.185e-03, actual=2.185e-03, err=0.0%
+  + Trento.xi — expected=1.264e-06, actual=1.264e-06, err=0.0%
+  + Trento.kappa — expected=2.140e+01, actual=2.141e+01, err=0.0%
+  + Trento.T_H — expected=2.600e-11, actual=2.602e-11, err=0.1%
+
+[PASS] identities
+  + count(1)==2
+  + count(2)==2
+  + count(3)==3
+  + disp(0)==0
+  + 1st_order(0,kappa)==0
+  + Gamma(k,w,cs,0,0,0,0)==0
+  + delta2_acoustic_vanishes — value=0.000e+00
+
+[PASS] paper_table
+  + Steinhauer.c_s — paper=1.151e-03, code=1.151e-03
+  + Steinhauer.xi — paper=6.350e-07, code=6.349e-07
+  + Steinhauer.kappa — paper=2.190e+01, code=2.190e+01
+  + Steinhauer.T_H — paper=2.700e-11, code=2.663e-11
+  + Heidelberg.c_s — paper=3.919e-03, code=3.919e-03
+  + Heidelberg.xi — paper=4.160e-07, code=4.159e-07
+  + Heidelberg.kappa — paper=1.019e+02, code=1.019e+02
+  + Heidelberg.T_H — paper=1.240e-10, code=1.239e-10
+  + Trento.c_s — paper=2.185e-03, code=2.185e-03
+  + Trento.xi — paper=1.264e-06, code=1.264e-06
+  + Trento.kappa — paper=2.140e+01, code=2.141e+01
+  + Trento.T_H — paper=2.600e-11, code=2.602e-11
+
+[PASS] theorems
+  + TOTAL_THEOREMS — actual=40, expected=40
+  + len(ARISTOTLE_THEOREMS) — actual=40, expected=40
+  + consistency — TOTAL=40, dict=40
+
+[PASS] notebooks
+  + ADW_Stakeholder.ipynb — clean
+  + ADW_Technical.ipynb — clean
+  + GaugeErasure_Stakeholder.ipynb — clean
+  + GaugeErasure_Technical.ipynb — clean
+  + Phase1_Stakeholder.ipynb — clean
+  + Phase1_Technical.ipynb — clean
+  + Phase2_Stakeholder.ipynb — clean
+  + Phase2_Technical.ipynb — clean
+  + Phase3_Stakeholder.ipynb — clean
+  + Phase3_Technical.ipynb — clean
+  + WKBConnection_Stakeholder.ipynb — clean
+  + WKBConnection_Technical.ipynb — clean
+
+[PASS] lean_source
+  + dampingRate_eq_zero_iff — Lean ident 'dampingRate_eq_zero_iff' found
+  + dispersive_bound — Lean ident 'dispersive_correction_bound' found
+  + firstOrder_correction_zero_iff — Lean ident 'firstOrder_correction_zero_iff' found
+  + acoustic_metric_determinant — Lean ident 'acousticMetric_det' found
+  + secondOrder_count — Lean ident 'secondOrder_count' found
+
+[PASS] cgl_fdr
+  + einstein_relation — σ = γ/β₀ for Brownian particle
+  + first_order_bec — K_N = 2Γ/β₀ for BEC with damping
+  + second_order_real — Second-order noise kernel is real
+  + noise_count_pattern — Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}
+
+[PASS] lean_build
+  + lake_bin — /Users/johnroehm/.elan/bin/lake
+  + lean_root — /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean
+  + lake_build — build succeeded (2259 jobs)
+
+[PASS] viz_consistency
+  + ADW_Stakeholder.ipynb — WARN: cell 14: viz-ref 'fig_adw_coupling_scan_stakeholder' not found in visualizations.py
+  + ADW_Technical.ipynb — clean
+  + GaugeErasure_Stakeholder.ipynb — WARN: cell 8: viz-ref 'fig_continuous_vs_discrete' not found in visualizations.py; cell 11: viz-ref 'fig_sm_scorecard_stakeholder' not found in visualizations.py; cell 14: viz-ref 'fig_erasure_survey_stakeholder' not found in visualizations.py
+  + GaugeErasure_Technical.ipynb — clean
+  + Phase1_Stakeholder.ipynb — WARN: 6 untagged .show() call(s); 4 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase1_Technical.ipynb — WARN: 6 untagged .show() call(s); 2 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase2_Stakeholder.ipynb — WARN: 6 untagged .show() call(s); 23 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase2_Technical.ipynb — WARN: 9 untagged .show() call(s); 12 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase3_Stakeholder.ipynb — WARN: cell 6: viz-ref 'fig_parity_alternation_visual' not found in visualizations.py; cell 13: viz-ref 'fig_kappa_crossing_stakeholder' not found in visualizations.py; cell 15: viz-ref 'fig_spin_sonic_stakeholder' not found in visualizations.py
+  + Phase3_Technical.ipynb — WARN: cell 7: viz-ref 'fig_parity_alternation_heatmap' not found in visualizations.py; cell 15: viz-ref 'fig_kappa_crossing' not found in visualizations.py
+  + WKBConnection_Stakeholder.ipynb — WARN: cell 6: viz-ref 'fig_spectral_floor_steinhauer' not found in visualizations.py; cell 9: viz-ref 'fig_platform_comparison_bars' not found in visualizations.py; cell 11: viz-ref 'fig_all_platform_spectra' not found in visualizations.py; cell 13: viz-ref 'fig_shots_needed' not found in visualizations.py; cell 17: viz-ref 'fig_theory_chain_summary' not found in visualizations.py
+  + WKBConnection_Technical.ipynb — WARN: cell 10: viz-ref 'fig_decoherence_parameter' not found in visualizations.py; cell 13: viz-ref 'fig_fdr_noise_floor' not found in visualizations.py; cell 16: viz-ref 'fig_hawking_spectrum_3platform' not found in visualizations.py; cell 22: viz-ref 'fig_spectral_floor_analysis' not found in visualizations.py
+
+[PASS] notebook_exec
+  + ADW_Stakeholder.ipynb — 6 code cells executed successfully
+  + ADW_Technical.ipynb — 14 code cells executed successfully
+  + GaugeErasure_Stakeholder.ipynb — 8 code cells executed successfully
+  + GaugeErasure_Technical.ipynb — 10 code cells executed successfully
+  + Phase1_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase1_Technical.ipynb — 10 code cells executed successfully
+  + Phase2_Stakeholder.ipynb — 13 code cells executed successfully
+  + Phase2_Technical.ipynb — 16 code cells executed successfully
+  + Phase3_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3_Technical.ipynb — 12 code cells executed successfully
+  + WKBConnection_Stakeholder.ipynb — 9 code cells executed successfully
+  + WKBConnection_Technical.ipynb — 9 code cells executed successfully
+
+Overall: 11/11 passed
