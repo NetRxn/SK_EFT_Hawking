@@ -113,12 +113,22 @@ theorem fracton_quadruples_standard_3d :
 -- binomial (m'+2) (k'+1) = binomial (m'+1) k' + binomial (m'+1) (k'+1)
 -- ≥ binomial m' k' + binomial m' (k'+1) = binomial (m'+1) (k'+1) by IH.
 theorem binomial_mono_first (m k : Nat) : binomial m k ≤ binomial (m + 1) k := by
-  sorry
+  induction k generalizing m with
+  | zero => simp [binomial]
+  | succ k' ih =>
+    cases m with
+    | zero => simp [binomial]
+    | succ m' =>
+      -- After unfolding: binomial (m'+1) (k'+1) = binomial m' k' + binomial m' (k'+1)
+      -- and binomial (m'+2) (k'+1) = binomial (m'+1) k' + binomial (m'+1) (k'+1)
+      simp [binomial]
 
 theorem fracton_charges_monotone (d n : Nat) :
     conserved_charges_fracton d n ≤ conserved_charges_fracton d (n + 1) := by
-  -- PROVIDED SOLUTION: Unfold, rewrite n+1+d = (n+d)+1, apply binomial_mono_first.
-  sorry
+  unfold conserved_charges_fracton
+  have h : n + 1 + d = (n + d) + 1 := by omega
+  rw [h]
+  exact binomial_mono_first (n + d) d
 
 /-!
 ## Information Retention
@@ -131,12 +141,11 @@ def information_capacity (n_charges : Nat) : Nat := n_charges
 
 /-- **Information retention is monotone in multipole order.**
     Higher multipole order → more conserved charges → more UV information. -/
--- PROVIDED SOLUTION: Follows directly from fracton_charges_monotone.
--- PROVIDED SOLUTION: Unfold information_capacity (identity), apply fracton_charges_monotone.
 theorem information_retention_monotone (d n : Nat) :
     information_capacity (conserved_charges_fracton d n) ≤
     information_capacity (conserved_charges_fracton d (n + 1)) := by
-  sorry
+  unfold information_capacity
+  exact fracton_charges_monotone d n
 
 /-!
 ## Gauge Erasure Interaction
