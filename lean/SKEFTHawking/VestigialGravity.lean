@@ -170,4 +170,70 @@ def lorentzian_signature_4d : List Int := [1, -1, -1, -1]
 /-- Lorentzian signature has exactly 4 eigenvalues in 4D. -/
 theorem lorentzian_has_4_eigenvalues : lorentzian_signature_4d.length = 4 := by native_decide
 
+/-!
+## Equivalence Principle Violation
+
+In the vestigial phase, bosons couple to the metric g_{mu nu} (which exists)
+while fermions couple to the tetrad e^a_mu (which has zero VEV). This
+means bosonic and fermionic geodesics differ — a violation of the
+Equivalence Principle.
+
+The EP violation is quantified by the ratio:
+    Delta_EP = 1 - <e^a_mu> / sqrt(<e^a_mu e^b_nu> eta_ab)
+
+In the vestigial phase: Delta_EP = 1 (maximal violation).
+In the full tetrad phase: Delta_EP → 0 (EP restored).
+-/
+
+/-- EP violation parameter: 1 in vestigial, 0 in full tetrad,
+    undefined in pre-geometric (no metric exists). -/
+noncomputable def ep_violation (p : VestigialPhase) : Option ℝ :=
+  match p with
+  | VestigialPhase.pre_geometric => none  -- no metric, EP undefined
+  | VestigialPhase.vestigial => some 1.0  -- maximal violation
+  | VestigialPhase.full_tetrad => some 0.0  -- EP restored
+
+/-- **In the vestigial phase, EP violation is maximal.** -/
+theorem ep_violation_maximal_vestigial :
+    ep_violation VestigialPhase.vestigial = some 1.0 := by rfl
+
+/-- **In the full tetrad phase, EP is restored.** -/
+theorem ep_violation_zero_full :
+    ep_violation VestigialPhase.full_tetrad = some 0.0 := by rfl
+
+/-- **EP violation is a testable prediction: it distinguishes
+    vestigial from full tetrad observationally.** -/
+theorem ep_distinguishes_phases :
+    ep_violation VestigialPhase.vestigial ≠ ep_violation VestigialPhase.full_tetrad := by
+  unfold ep_violation
+  -- some 1.0 ≠ some 0.0
+  intro h
+  -- h : some 1.0 = some 0.0, extract the inner equality
+  have : (1.0 : ℝ) = 0.0 := Option.some.inj h
+  linarith
+
+/-!
+## Sign Problem Severity
+
+The Lorentzian theory has a sign problem: the auxiliary action is not
+positive-definite for timelike tetrad components. The average sign
+decays exponentially with lattice volume:
+
+    <sign> ~ exp(-f · L^d)
+
+where f > 0 depends on the coupling. This means direct importance
+sampling becomes exponentially expensive for large lattices.
+-/
+
+/-- The sign problem severity grows with lattice volume.
+    For a d-dimensional lattice of size L, the volume is L^d. -/
+def lattice_volume (L d : Nat) : Nat := L ^ d
+
+/-- Doubling L increases volume by factor 2^d. -/
+-- PROVIDED SOLUTION: L^d * 2^d = (2L)^d by Nat.mul_pow
+theorem volume_doubles (L d : Nat) :
+    lattice_volume (2 * L) d = 2 ^ d * lattice_volume L d := by
+  unfold lattice_volume
+  ring
+
 end SKEFTHawking.VestigialGravity
