@@ -336,6 +336,77 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["Steinhauer", "Heidelberg", "Trento"],
     ),
+    # ─── Phase 3 Wave 3: ADW Gap Equation ───
+    FigureSpec(
+        name="fig28_adw_effective_potential",
+        function="fig_adw_effective_potential",
+        caption="Coleman-Weinberg effective potential for tetrad condensation at three coupling ratios.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "C", "yaxis": "V"},
+        physics_checks=[],
+        color_keys=[],
+    ),
+    FigureSpec(
+        name="fig29_adw_phase_diagram",
+        function="fig_adw_phase_diagram",
+        caption="Phase diagram: tetrad VEV vs coupling ratio G/G_c.",
+        needs_experiments=False,
+        expected_traces=1,
+        expected_axes={"xaxis": "G", "yaxis": "C"},
+        physics_checks=[],
+        color_keys=[],
+    ),
+    FigureSpec(
+        name="fig30_adw_ng_modes",
+        function="fig_adw_ng_mode_decomposition",
+        caption="Vergeles mode counting: tetrad DOF decomposition in 4D.",
+        needs_experiments=False,
+        expected_traces=1,
+        expected_axes={"xaxis": "Mode"},
+        physics_checks=[],
+        color_keys=[],
+    ),
+    FigureSpec(
+        name="fig31_adw_he3_analogy",
+        function="fig_adw_he3_analogy",
+        caption="Structural analogy between ADW tetrad and superfluid He-3 order parameter.",
+        needs_experiments=False,
+        expected_traces=10,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=[],
+    ),
+    FigureSpec(
+        name="fig32_adw_obstacles",
+        function="fig_adw_structural_obstacles",
+        caption="Four structural obstacles for emergent fermion bootstrap with severity.",
+        needs_experiments=False,
+        expected_traces=1,
+        expected_axes={"xaxis": "Severity"},
+        physics_checks=[],
+        color_keys=[],
+    ),
+    FigureSpec(
+        name="fig33_adw_coupling_scan",
+        function="fig_adw_coupling_scan",
+        caption="Coupling scan: V_eff depth and tetrad VEV for N_f = 2, 4, 8.",
+        needs_experiments=False,
+        expected_traces=6,
+        expected_axes={"xaxis": "G"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig34_adw_coupling_scan_stakeholder",
+        function="fig_adw_coupling_scan_stakeholder",
+        caption="Coupling scan for wider audience: simplified labels.",
+        needs_experiments=False,
+        expected_traces=6,
+        expected_axes={"xaxis": "G"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
 ]
 
 
@@ -361,6 +432,10 @@ def generate_figures() -> dict[str, Path]:
         fig_complex_turning_point, fig_effective_surface_gravity,
         fig_decoherence_and_noise, fig_hawking_spectrum_exact,
         fig_exact_vs_perturbative,
+        # Phase 3 Wave 3
+        fig_adw_effective_potential, fig_adw_phase_diagram,
+        fig_adw_ng_mode_decomposition, fig_adw_he3_analogy,
+        fig_adw_structural_obstacles, fig_adw_coupling_scan,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -410,6 +485,14 @@ def generate_figures() -> dict[str, Path]:
         "fig_hawking_spectrum_exact": fig_hawking_spectrum_exact,
         "fig_hawking_spectrum_exact_stakeholder": lambda: fig_hawking_spectrum_exact(stakeholder=True),
         "fig_exact_vs_perturbative": fig_exact_vs_perturbative,
+        # Phase 3 Wave 3
+        "fig_adw_effective_potential": fig_adw_effective_potential,
+        "fig_adw_phase_diagram": fig_adw_phase_diagram,
+        "fig_adw_ng_mode_decomposition": fig_adw_ng_mode_decomposition,
+        "fig_adw_he3_analogy": fig_adw_he3_analogy,
+        "fig_adw_structural_obstacles": fig_adw_structural_obstacles,
+        "fig_adw_coupling_scan": fig_adw_coupling_scan,
+        "fig_adw_coupling_scan_stakeholder": lambda: fig_adw_coupling_scan(stakeholder=True),
     }
 
     paths = {}

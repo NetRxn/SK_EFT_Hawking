@@ -375,6 +375,107 @@ def fdr_noise_floor(delta_k, omega=None, T_env=0.0):
 # Beliaev damping estimate
 # ════════════════════════════════════════════════════════════════════
 
+# ════════════════════════════════════════════════════════════════════
+# ADW gap equation (ADWMechanism.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def adw_effective_potential(C, G, Lambda, N_f):
+    """
+    Effective potential for tetrad condensation.
+
+    V_eff(C) = C²/(2G) - (N_f/16π²)[Λ²C² - C⁴ ln(Λ²/C² + 1)]
+
+    The first term is the tree-level HS potential.
+    The second term is the one-loop Coleman-Weinberg contribution
+    from integrating out N_f Dirac fermions in the tetrad background.
+
+    Lean: effective_potential_structure (ADWMechanism.lean)
+
+    Args:
+        C: Tetrad magnitude (order parameter)
+        G: ADW coupling constant
+        Lambda: UV cutoff
+        N_f: Number of Dirac fermion species
+
+    Returns:
+        V_eff(C)
+    """
+    if C < 1e-15:
+        return 0.0
+    V_tree = C**2 / (2.0 * G)
+    prefactor = N_f / (16.0 * np.pi**2)
+    ratio_sq = Lambda**2 / C**2
+    V_1loop = -prefactor * (Lambda**2 * C**2 - C**4 * np.log(ratio_sq + 1.0))
+    return V_tree + V_1loop
+
+
+def adw_critical_coupling(Lambda, N_f):
+    """
+    Critical coupling for tetrad condensation.
+
+    G_c = 8π² / (N_f · Λ²)
+
+    Derived from d²V_eff/dC²|_{C=0} = 0 with V_eff = C²/(2G) - (N_f/16π²)[...].
+    For G > G_c, the origin becomes unstable and the effective potential
+    develops a nontrivial minimum at C ≠ 0 (tetrad condensation).
+
+    Lean: critical_coupling_pos (ADWMechanism.lean)
+
+    Args:
+        Lambda: UV cutoff
+        N_f: Number of Dirac fermion species
+
+    Returns:
+        G_c (positive)
+    """
+    return 8.0 * np.pi**2 / (N_f * Lambda**2)
+
+
+def tetrad_broken_generators(spacetime_dim):
+    """
+    Number of broken generators in L_c × L_s → L_J.
+
+    n_broken = dim SO(d-1,1) = d(d-1)/2
+
+    For d=4: n_broken = 6.
+
+    Lean: broken_generators_eq (ADWMechanism.lean)
+
+    Args:
+        spacetime_dim: Dimension of spacetime (d)
+
+    Returns:
+        d(d-1)/2
+    """
+    d = spacetime_dim
+    return d * (d - 1) // 2
+
+
+def graviton_polarization_count(spacetime_dim):
+    """
+    Number of massless graviton polarizations in d dimensions.
+
+    n_pol = d(d-3)/2
+
+    For d=4: 2 polarizations (helicity ±2).
+    For d=3: 0 (no gravitational waves in 2+1D).
+
+    Lean: graviton_polarization_count (ADWMechanism.lean)
+
+    Args:
+        spacetime_dim: Dimension of spacetime (d)
+
+    Returns:
+        d(d-3)/2
+    """
+    d = spacetime_dim
+    return d * (d - 3) // 2
+
+
+# ════════════════════════════════════════════════════════════════════
+# Beliaev damping estimate
+# ════════════════════════════════════════════════════════════════════
+
 def beliaev_damping_rate(n_1D, a_s, kappa, c_s):
     """
     Estimate the Beliaev phonon damping rate at the Hawking frequency.

@@ -14,8 +14,13 @@ A unified project encompassing:
     * Modified unitarity: |α|² - |β|² = 1 - δ_k (decoherence parameter).
     * FDR noise floor: n_noise = δ_k/2 (KMS-mandated spectral floor).
     * Platform-specific predictions for Steinhauer/Heidelberg/Trento BECs.
+  - Phase 3 Wave 3 (ADW mean-field gap equation):
+    * Tests the gravity wall via Akama-Diakonov-Wetterich tetrad condensation.
+    * Critical coupling G_c = 8π²/(N_f Λ²), nontrivial Lorentzian solution for G > G_c.
+    * Vergeles mode counting: 16 = 6 + 4 + 2 + 4, gravitons as Higgs bosons.
+    * Four structural obstacles for emergent fermion bootstrap.
 
-Lean 4 formalization: 40 Aristotle-proved + 69 manual = 109 theorems + 1 axiom, zero sorry.
+Lean 4 formalization: 40 Aristotle-proved + 90 manual = 130 theorems + 1 axiom, zero sorry.
 
 Subpackages:
     src.core          — Shared infrastructure (transonic solver, Aristotle, viz)
@@ -23,4 +28,5 @@ Subpackages:
     src.second_order  — Second-order enumeration, coefficients, WKB (perturbative)
     src.gauge_erasure — Non-Abelian gauge erasure theorem
     src.wkb           — Exact WKB connection formula (non-perturbative)
+    src.adw           — ADW mean-field gap equation (tetrad condensation)
 """
