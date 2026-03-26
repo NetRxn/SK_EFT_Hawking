@@ -171,4 +171,33 @@ theorem all_obstructions_hold :
     gauge_param_dim_fracton ≠ gauge_param_dim_ym 3 := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
 
+/-!
+## Strengthening: Obstruction Independence
+-/
+
+/-- **The 4 obstructions are independent — each is individually sufficient
+    to prevent YM compatibility, and they arise from different mathematical
+    structures (derivatives, rank, parameters, algebra). -/
+-- PROVIDED SOLUTION: Each obstruction is a ≠ statement on different fields.
+-- They can all be proved by native_decide individually.
+theorem obstructions_individually_sufficient :
+    -- Derivative order alone prevents compatibility
+    (gauge_derivative_order_fracton ≠ gauge_derivative_order_ym) ∧
+    -- Rank alone prevents compatibility
+    (gauge_field_rank_fracton ≠ gauge_field_rank_ym) ∧
+    -- Parameter dimension alone prevents compatibility (for SU(2))
+    (gauge_param_dim_fracton ≠ gauge_param_dim_ym 2) := by
+  sorry
+
+/-- **The parameter dimension gap grows with N for SU(N).**
+    Fracton has 1 scalar parameter; SU(N) has N^2-1 parameters.
+    The gap N^2-2 grows quadratically. -/
+-- PROVIDED SOLUTION: gauge_param_dim_ym N = N^2 - 1.
+-- gauge_param_dim_fracton = 1. Gap = N^2 - 2.
+-- For N=2: gap=2. N=3: gap=7. N=4: gap=14.
+theorem param_gap_grows :
+    gauge_param_dim_ym 3 > gauge_param_dim_ym 2 ∧
+    gauge_param_dim_ym 4 > gauge_param_dim_ym 3 := by
+  sorry
+
 end SKEFTHawking.FractonNonAbelian

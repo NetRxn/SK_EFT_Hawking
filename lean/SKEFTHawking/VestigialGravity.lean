@@ -236,4 +236,37 @@ theorem volume_doubles (L d : Nat) :
   unfold lattice_volume
   ring
 
+/-!
+## Strengthening: Phase Hierarchy Quantification
+-/
+
+/-- **The three phases form a total order on information content.**
+    pre_geometric < vestigial < full_tetrad in terms of geometric structure. -/
+def phase_info_level : VestigialPhase → Nat
+  | VestigialPhase.pre_geometric => 0
+  | VestigialPhase.vestigial => 1
+  | VestigialPhase.full_tetrad => 2
+
+/-- Phase levels are distinct. -/
+theorem phase_levels_distinct :
+    phase_info_level VestigialPhase.pre_geometric ≠ phase_info_level VestigialPhase.vestigial ∧
+    phase_info_level VestigialPhase.vestigial ≠ phase_info_level VestigialPhase.full_tetrad ∧
+    phase_info_level VestigialPhase.pre_geometric ≠ phase_info_level VestigialPhase.full_tetrad := by
+  sorry
+
+/-- Phase levels are strictly ordered. -/
+theorem phase_levels_ordered :
+    phase_info_level VestigialPhase.pre_geometric < phase_info_level VestigialPhase.vestigial ∧
+    phase_info_level VestigialPhase.vestigial < phase_info_level VestigialPhase.full_tetrad := by
+  sorry
+
+/-- **The metric DOF count in the vestigial phase is d(d+1)/2.**
+    In 4D this is 10 — the same number as in GR. The vestigial metric
+    has the right number of components to describe geometry. -/
+-- PROVIDED SOLUTION: metric_components 4 = 4*5/2 = 10. Already proved above.
+-- For general d: metric_components d = d*(d+1)/2.
+theorem metric_dof_equals_gr (d : Nat) (hd : d ≥ 2) :
+    metric_components d = d * (d + 1) / 2 := by
+  sorry
+
 end SKEFTHawking.VestigialGravity

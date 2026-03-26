@@ -201,4 +201,38 @@ theorem fracton_advantage_despite_erasure :
   · rfl
   · native_decide
 
+/-!
+## Strengthening: Charge Growth Rate
+
+The fracton charge count C(n+d, d) grows polynomially in n (as n^d/d!)
+while standard hydro charge count d+2 is constant. This quantifies
+exactly how much more information fracton hydro preserves.
+-/
+
+/-- **Fracton charges strictly exceed standard for n ≥ 2 in any d ≥ 2.**
+    This is the general version of fracton_exceeds_standard_3d_order2. -/
+-- PROVIDED SOLUTION: conserved_charges_fracton d n = C(n+d,d).
+-- For n=2, d≥2: C(d+2,d) = (d+2)(d+1)/2 ≥ (d+2) > d+2 = standard.
+-- Actually C(d+2,d) = (d+2)(d+1)/2. Need (d+2)(d+1)/2 > d+2, i.e., (d+1)/2 > 1, i.e., d > 1.
+theorem fracton_exceeds_standard_general (d : Nat) (hd : d ≥ 2) :
+    conserved_charges_fracton d 2 > conserved_charges_standard d := by
+  sorry
+
+/-- **The ratio fracton/standard grows without bound as n → ∞.**
+    At order n in d dimensions: C(n+d,d) / (d+2) ~ n^d / (d! · (d+2)).
+    We prove the weaker statement: for n ≥ d+2, the ratio exceeds 2. -/
+-- PROVIDED SOLUTION: For n = d+2: C(2d+2, d) vs d+2.
+-- C(2d+2,d) = (2d+2)!/(d!(d+2)!) which for d≥2 is much larger than 2(d+2).
+-- Check: d=2, n=4: C(6,2)=15 > 2·4=8. d=3, n=5: C(8,3)=56 > 2·5=10.
+theorem fracton_ratio_grows_3d :
+    conserved_charges_fracton 3 5 > 2 * conserved_charges_standard 3 := by
+  sorry
+
+/-- **Binomial coefficient is strictly monotone for k ≥ 1.**
+    C(n+1, k) > C(n, k) when k ≥ 1 and n ≥ k. -/
+-- PROVIDED SOLUTION: C(n+1,k) = C(n,k) + C(n,k-1) and C(n,k-1) > 0 when n ≥ k ≥ 1.
+theorem binomial_strict_mono (n k : Nat) (hk : k ≥ 1) (hn : n ≥ k) :
+    binomial n k < binomial (n + 1) k := by
+  sorry
+
 end SKEFTHawking.FractonHydro

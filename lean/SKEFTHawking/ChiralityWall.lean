@@ -269,4 +269,26 @@ one of the 4 structural obstacles for full emergent gravity.
     not by breaking translation invariance. -/
 theorem translation_invariance_applies : gs_translation.applies_to_tpf = true := by rfl
 
+/-!
+## Strengthening: Logical Structure of the No-Go
+-/
+
+/-- **The GS no-go is a conjunction: ALL 4 conditions are required.**
+    Evading k conditions out of 4 leaves 4-k conditions.
+    If k ≥ 1, the conjunction fails and the no-go does not apply. -/
+-- PROVIDED SOLUTION: evaded_count + applying_count = 4 (condition_conservation).
+-- If evaded ≥ 1, then applying ≤ 3 < 4, so not all 4 hold.
+theorem evading_one_breaks_nogo :
+    evaded_count gs_conditions ≥ 1 →
+    applying_count gs_conditions < gs_conditions.length := by
+  sorry
+
+/-- **TPF's evasion margin: it evades 2, only needs 1.**
+    The margin of safety is 1 — even if one evasion turns out to be
+    incorrect, the construction still breaks the no-go. -/
+-- PROVIDED SOLUTION: evaded_count = 2 (by native_decide), so 2 ≥ 1 + 1.
+theorem tpf_evasion_margin :
+    evaded_count gs_conditions ≥ 1 + 1 := by
+  sorry
+
 end SKEFTHawking.ChiralityWall
