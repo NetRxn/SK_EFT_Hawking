@@ -103,7 +103,8 @@ COLORS = {
 # ════════════════════════════════════════════════════════════════════
 # Lean verification registry
 # Maps each theorem to its Aristotle run ID and status.
-# 40/40 proved, 0 sorry remaining.
+# 53/53 Aristotle-proved, 0 sorry remaining.
+# Total Lean theorems: 216 + 1 axiom across 16 modules.
 # ════════════════════════════════════════════════════════════════════
 
 ARISTOTLE_THEOREMS = {
@@ -154,10 +155,25 @@ ARISTOTLE_THEOREMS = {
     'cgl_fdr_general': '2ca3e7e6',
     'cgl_fdr_spatial': '2ca3e7e6',
     'cgl_implies_secondOrderKMS': '2ca3e7e6',
+
+    # Phase 4: Aristotle batch b1ea2eb7 (13 theorems)
+    'fracton_exceeds_standard_general': 'b1ea2eb7',
+    'fracton_ratio_grows_3d': 'b1ea2eb7',
+    'binomial_strict_mono': 'b1ea2eb7',
+    'dof_gap_eq_d_minus_1_check_4': 'b1ea2eb7',
+    'dof_gap_eq_d_minus_1_check_5': 'b1ea2eb7',
+    'dof_gap_positive_2_through_8': 'b1ea2eb7',
+    'phase_levels_distinct': 'b1ea2eb7',
+    'phase_levels_ordered': 'b1ea2eb7',
+    'metric_dof_equals_gr': 'b1ea2eb7',
+    'evading_one_breaks_nogo': 'b1ea2eb7',
+    'tpf_evasion_margin': 'b1ea2eb7',
+    'obstructions_individually_sufficient': 'b1ea2eb7',
+    'param_gap_grows': 'b1ea2eb7',
 }
 
 TOTAL_THEOREMS = len(ARISTOTLE_THEOREMS)
-assert TOTAL_THEOREMS == 40, f"Expected 40 theorems, got {TOTAL_THEOREMS}"
+assert TOTAL_THEOREMS == 53, f"Expected 53 theorems, got {TOTAL_THEOREMS}"
 
 
 # ════════════════════════════════════════════════════════════════════

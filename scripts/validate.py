@@ -321,7 +321,7 @@ def check_paper_table_consistency() -> CheckResult:
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("theorems", "Theorem registry has 40 entries and is self-consistent")
+@register_check("theorems", "Theorem registry has 53 entries and is self-consistent")
 def check_theorem_count() -> CheckResult:
     from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
 
@@ -329,8 +329,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 40),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 40),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 53),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 53),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
@@ -412,11 +412,19 @@ def check_lean_source() -> CheckResult:
     # Map Python registry names to expected Lean identifiers
     # (some differ by naming convention)
     spot_checks = {
+        # Phase 1-2
         'dampingRate_eq_zero_iff': 'dampingRate_eq_zero_iff',
         'dispersive_bound': 'dispersive_correction_bound',
         'firstOrder_correction_zero_iff': 'firstOrder_correction_zero_iff',
         'acoustic_metric_determinant': 'acousticMetric_det',
         'secondOrder_count': 'secondOrder_count',
+        # Phase 4 (Aristotle batch b1ea2eb7)
+        'fracton_exceeds_standard_general': 'fracton_exceeds_standard_general',
+        'binomial_strict_mono': 'binomial_strict_mono',
+        'dof_gap_positive_2_through_8': 'dof_gap_positive_2_through_8',
+        'evading_one_breaks_nogo': 'evading_one_breaks_nogo',
+        'ep_distinguishes_phases': 'ep_distinguishes_phases',
+        'obstructions_individually_sufficient': 'obstructions_individually_sufficient',
     }
 
     details = []
