@@ -450,10 +450,52 @@ ln -sf ../../scripts/pre-commit-notebooks.sh .git/hooks/pre-commit
 ```
 
 ### Aristotle Workflow
+ALWAYS READ THIS WHEN WORKING WITH LEAN/ARISTOTLE: `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/archive/references/Theorm_Proving_Aristotle_Lean.md`
+
+use `scripts/submit_to_aristotle.py` for all interactions with Aristotle. This includes submitting new runs, retrieving results, and resuming from OUT_OF_BUDGET runs. The script handles the full workflow: submission, waiting, extraction, diffing, and optional integration.
+Relevant docstring:
+
+"""
+Submit SK-EFT Hawking Paper Lean sorries to Aristotle.
+
+This script submits sorry gaps to Aristotle, waits for results, extracts
+the returned tar.gz, diffs against our source, and optionally integrates
+the filled proofs back into the codebase.
+
+Usage:
+    # From project root:
+    python scripts/submit_to_aristotle.py
+
+    # With explicit priority level (1=algebraic, 2=moderate, 3=all):
+    python scripts/submit_to_aristotle.py --priority 2
+
+    # Targeted single sorry:
+    python scripts/submit_to_aristotle.py --target acousticMetric_det
+
+    # Auto-integrate filled proofs (copies patched files into lean/):
+    python scripts/submit_to_aristotle.py --priority 1 --integrate
+
+    # Retrieve a previous run by project ID:
+    python scripts/submit_to_aristotle.py --retrieve 082e6776-42d7-469d-be9d-064c328540cf
+
+    # Resume from an OUT_OF_BUDGET run (retrieve partial, integrate, resubmit):
+    python scripts/submit_to_aristotle.py --resume 082e6776-42d7-469d-be9d-064c328540cf
+
+Requires:
+    - aristotlelib installed: pip install aristotlelib
+    - ARISTOTLE_API_KEY in .env or environment
+
+Output:
+    Results saved to docs/aristotle_results/<run_id>/ with:
+    - ARISTOTLE_SUMMARY_*.md  — what Aristotle changed
+    - Patched .lean files     — ready for review/integration
+    - diff.patch              — unified diff against our lean/ source
+"""
+
 
 ```bash
 export ARISTOTLE_API_KEY=$(grep ARISTOTLE_API_KEY .env | cut -d= -f2)
-uv run python scripts/submit_to_aristotle.py --priority 1
+uv run python scripts/submit_to_aristotle.py --priority 1 # optional priority level
 uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate
 ```
 

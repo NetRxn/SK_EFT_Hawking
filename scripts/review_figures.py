@@ -407,6 +407,47 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["Steinhauer", "Heidelberg", "Trento"],
     ),
+    # Phase 4 Wave 1: Experimental Predictions
+    FigureSpec(
+        name="fig35_prediction_table_comparison",
+        function="fig_prediction_table_comparison",
+        caption="Spectral deviation from Planckian for all three BEC platforms.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "T_H"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig36_detector_requirements",
+        function="fig_detector_requirements",
+        caption="Detector requirements: shots needed for three measurement goals.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "goal"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig37_kappa_scaling",
+        function="fig_kappa_scaling_phase4",
+        caption="Kappa-scaling test: dispersive (D^2) vs dissipative corrections.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "D"},
+        physics_checks=[],
+        color_keys=["dispersive", "dissipative"],
+    ),
+    FigureSpec(
+        name="fig38_noise_floor_crossover",
+        function="fig_noise_floor_crossover",
+        caption="Noise floor crossover: where FDR noise exceeds Hawking signal.",
+        needs_experiments=False,
+        expected_traces=6,
+        expected_axes={"xaxis": "T_H"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
 ]
 
 
@@ -436,6 +477,9 @@ def generate_figures() -> dict[str, Path]:
         fig_adw_effective_potential, fig_adw_phase_diagram,
         fig_adw_ng_mode_decomposition, fig_adw_he3_analogy,
         fig_adw_structural_obstacles, fig_adw_coupling_scan,
+        # Phase 4 Wave 1
+        fig_prediction_table_comparison, fig_detector_requirements,
+        fig_kappa_scaling_phase4, fig_noise_floor_crossover,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -493,6 +537,11 @@ def generate_figures() -> dict[str, Path]:
         "fig_adw_structural_obstacles": fig_adw_structural_obstacles,
         "fig_adw_coupling_scan": fig_adw_coupling_scan,
         "fig_adw_coupling_scan_stakeholder": lambda: fig_adw_coupling_scan(stakeholder=True),
+        # Phase 4 Wave 1
+        "fig_prediction_table_comparison": fig_prediction_table_comparison,
+        "fig_detector_requirements": fig_detector_requirements,
+        "fig_kappa_scaling_phase4": fig_kappa_scaling_phase4,
+        "fig_noise_floor_crossover": fig_noise_floor_crossover,
     }
 
     paths = {}
@@ -542,6 +591,22 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_cgl_fdr_pattern, fig_even_vs_odd_kernel,
         fig_boundary_term_suppression, fig_positivity_constraint,
         fig_on_shell_vanishing, fig_einstein_relation,
+        # Phase 3 Wave 1
+        fig_parity_alternation, fig_damping_rate_third_order,
+        fig_spectral_correction_comparison, fig_kappa_crossing_phase3,
+        fig_spin_sonic_enhancement_phase3, fig_bogoliubov_connection,
+        fig_sm_scorecard, fig_erasure_survey,
+        # Phase 3 Wave 2
+        fig_complex_turning_point, fig_effective_surface_gravity,
+        fig_decoherence_and_noise, fig_hawking_spectrum_exact,
+        fig_exact_vs_perturbative,
+        # Phase 3 Wave 3
+        fig_adw_effective_potential, fig_adw_phase_diagram,
+        fig_adw_ng_mode_decomposition, fig_adw_he3_analogy,
+        fig_adw_structural_obstacles, fig_adw_coupling_scan,
+        # Phase 4 Wave 1
+        fig_prediction_table_comparison, fig_detector_requirements,
+        fig_kappa_scaling_phase4, fig_noise_floor_crossover,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -589,6 +654,19 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_hawking_spectrum_exact": fig_hawking_spectrum_exact,
         "fig_hawking_spectrum_exact_stakeholder": lambda: fig_hawking_spectrum_exact(stakeholder=True),
         "fig_exact_vs_perturbative": fig_exact_vs_perturbative,
+        # Phase 3 Wave 3
+        "fig_adw_effective_potential": fig_adw_effective_potential,
+        "fig_adw_phase_diagram": fig_adw_phase_diagram,
+        "fig_adw_ng_mode_decomposition": fig_adw_ng_mode_decomposition,
+        "fig_adw_he3_analogy": fig_adw_he3_analogy,
+        "fig_adw_structural_obstacles": fig_adw_structural_obstacles,
+        "fig_adw_coupling_scan": fig_adw_coupling_scan,
+        "fig_adw_coupling_scan_stakeholder": lambda: fig_adw_coupling_scan(stakeholder=True),
+        # Phase 4 Wave 1
+        "fig_prediction_table_comparison": fig_prediction_table_comparison,
+        "fig_detector_requirements": fig_detector_requirements,
+        "fig_kappa_scaling_phase4": fig_kappa_scaling_phase4,
+        "fig_noise_floor_crossover": fig_noise_floor_crossover,
     }
 
     issues: list[CheckIssue] = []

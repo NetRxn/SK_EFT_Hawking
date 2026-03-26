@@ -2822,5 +2822,230 @@ def fig_adw_coupling_scan(stakeholder: bool = False) -> go.Figure:
     return fig
 
 
+# ════════════════════════════════════════════════════════════════
+# Phase 4 Wave 1: Experimental Prediction Figures (fig35-fig38)
+# ════════════════════════════════════════════════════════════════
+
+def fig_prediction_table_comparison():
+    """Fig 35: Platform prediction comparison — n(omega) for all three platforms.
+
+    Shows the full spectral occupation n(omega)/n_Planck(omega) for
+    Steinhauer, Heidelberg, and Trento, highlighting the frequency
+    dependence of deviations from the Planckian.
+    """
+    from src.experimental.predictions import compute_all_predictions
+
+    tables = compute_all_predictions()
+
+    fig = go.Figure()
+
+    platform_colors = {
+        'steinhauer': COLORS['Steinhauer'],
+        'heidelberg': COLORS['Heidelberg'],
+        'trento': COLORS['Trento'],
+    }
+    platform_labels = {
+        'steinhauer': 'Steinhauer <sup>87</sup>Rb',
+        'heidelberg': 'Heidelberg <sup>39</sup>K',
+        'trento': 'Trento <sup>23</sup>Na',
+    }
+
+    for name, table in tables.items():
+        omegas = [p.omega_over_T_H for p in table.predictions]
+        deviations = [p.fractional_deviation * 100 for p in table.predictions]
+
+        fig.add_trace(go.Scatter(
+            x=omegas, y=deviations,
+            mode="lines+markers",
+            name=platform_labels[name],
+            line=dict(color=platform_colors[name], width=2.5),
+            marker=dict(size=8, color=platform_colors[name]),
+        ))
+
+    fig.add_hline(y=0, line=dict(color="black", width=0.5, dash="dash"))
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Spectral Deviation from Planckian</b>", font=TITLE_FONT),
+        xaxis_title="\u03c9 / T<sub>H</sub>",
+        yaxis_title="Fractional deviation [%]",
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_detector_requirements():
+    """Fig 36: Detector requirements — shots needed vs measurement goal.
+
+    Bar chart comparing the required experimental shots for three
+    measurement goals across all platforms.
+    """
+    from src.experimental.predictions import compute_detector_requirements
+    from src.wkb.spectrum import steinhauer_platform, heidelberg_platform, trento_platform
+
+    platforms = [
+        ('Steinhauer', steinhauer_platform()),
+        ('Heidelberg', heidelberg_platform()),
+        ('Trento', trento_platform()),
+    ]
+    platform_colors_list = [COLORS['Steinhauer'], COLORS['Heidelberg'], COLORS['Trento']]
+
+    fig = go.Figure()
+
+    goal_short = ['\u03b4<sub>diss</sub>', 'n<sub>noise</sub>', 'WKB vs EFT']
+
+    for i, (pname, platform) in enumerate(platforms):
+        reqs = compute_detector_requirements(platform)
+        shots = [np.log10(max(r.required_shots, 1)) for r in reqs]
+
+        fig.add_trace(go.Bar(
+            x=goal_short,
+            y=shots,
+            name=pname,
+            marker_color=platform_colors_list[i],
+        ))
+
+    fig.add_hline(y=np.log10(7000), line=dict(color="black", width=1, dash="dot"),
+                  annotation_text="Current (7000 shots)",
+                  annotation_position="top right")
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Detector Requirements by Measurement Goal</b>", font=TITLE_FONT),
+        xaxis_title="Measurement goal",
+        yaxis_title="log\u2081\u2080(shots needed)",
+        barmode='group',
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_kappa_scaling_phase4():
+    """Fig 37: Kappa-scaling test prediction for Heidelberg K-39.
+
+    Shows how dispersive (D^2) and dissipative corrections scale with
+    the adiabaticity parameter D, demonstrating the experimental handle
+    for separating the two effects.
+    """
+    from src.experimental.predictions import kappa_scaling_prediction
+
+    pred = kappa_scaling_prediction(n_points=20)
+    D_values = np.linspace(0.01, 0.05, 20)
+
+    fig = make_subplots(rows=1, cols=2,
+                        subplot_titles=["Dispersive correction",
+                                        "Dissipative correction"])
+
+    fig.add_trace(go.Scatter(
+        x=D_values, y=np.abs(pred.delta_disp_values),
+        mode="lines+markers",
+        name=f"|\u03b4<sub>disp</sub>| \u221d D<sup>{pred.scaling_exponent_disp:.1f}</sup>",
+        line=dict(color=COLORS['dispersive'], width=2.5),
+        marker=dict(size=5),
+    ), row=1, col=1)
+
+    # Reference D^2 line
+    ref_disp = (np.pi / 6) * D_values**2
+    fig.add_trace(go.Scatter(
+        x=D_values, y=ref_disp,
+        mode="lines",
+        name="D\u00b2 reference",
+        line=dict(color="grey", width=1, dash="dash"),
+        showlegend=True,
+    ), row=1, col=1)
+
+    fig.add_trace(go.Scatter(
+        x=D_values, y=pred.delta_diss_values,
+        mode="lines+markers",
+        name=f"\u03b4<sub>diss</sub> \u221d D<sup>{pred.scaling_exponent_diss:.1f}</sup>",
+        line=dict(color=COLORS['dissipative'], width=2.5),
+        marker=dict(size=5),
+    ), row=1, col=2)
+
+    fig.update_xaxes(title_text="D = \u03ba\u03be/c<sub>s</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="D = \u03ba\u03be/c<sub>s</sub>", row=1, col=2)
+    fig.update_yaxes(title_text="|\u03b4<sub>disp</sub>|", type="log", row=1, col=1)
+    fig.update_yaxes(title_text="\u03b4<sub>diss</sub>", row=1, col=2)
+
+    apply_layout(fig,
+        height=400, width=850,
+        title=dict(text="<b>Kappa-Scaling Test: Dispersive vs Dissipative</b>", font=TITLE_FONT),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_noise_floor_crossover():
+    """Fig 38: Noise floor crossover — where FDR noise exceeds Hawking signal.
+
+    Shows n_Hawking and n_noise vs frequency for each platform, marking
+    the crossover frequency where the noise floor dominates.
+    """
+    from src.wkb.spectrum import compute_spectrum, steinhauer_platform, heidelberg_platform, trento_platform
+
+    platforms = [
+        ('Steinhauer', steinhauer_platform(), COLORS['Steinhauer']),
+        ('Heidelberg', heidelberg_platform(), COLORS['Heidelberg']),
+        ('Trento', trento_platform(), COLORS['Trento']),
+    ]
+
+    fig = go.Figure()
+
+    for pname, platform, color in platforms:
+        spectrum = compute_spectrum(platform, omega_min=0.2, omega_max_factor=10.0, n_points=80)
+        T_H = platform.T_H
+        omegas = spectrum.omega_array / T_H
+        n_hawking = np.array([p.n_hawking for p in spectrum.points])
+        n_noise = np.array([p.n_noise for p in spectrum.points])
+
+        fig.add_trace(go.Scatter(
+            x=omegas, y=n_hawking,
+            mode="lines",
+            name=f"{pname} n<sub>Hawking</sub>",
+            line=dict(color=color, width=2),
+            legendgroup=pname,
+        ))
+
+        fig.add_trace(go.Scatter(
+            x=omegas, y=n_noise,
+            mode="lines",
+            name=f"{pname} n<sub>noise</sub>",
+            line=dict(color=color, width=1.5, dash="dot"),
+            legendgroup=pname,
+        ))
+
+        # Find crossover
+        crossover_idx = None
+        for i in range(len(n_hawking)):
+            if n_noise[i] > n_hawking[i] and n_hawking[i] > 1e-20:
+                crossover_idx = i
+                break
+
+        if crossover_idx is not None:
+            fig.add_trace(go.Scatter(
+                x=[omegas[crossover_idx]],
+                y=[n_noise[crossover_idx]],
+                mode="markers",
+                name=f"{pname} crossover",
+                marker=dict(size=10, symbol="x", color=color, line=dict(width=2)),
+                legendgroup=pname,
+                showlegend=False,
+            ))
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Noise Floor Crossover</b>", font=TITLE_FONT),
+        xaxis_title="\u03c9 / T<sub>H</sub>",
+        yaxis_title="Occupation number n(\u03c9)",
+        yaxis_type="log",
+        legend=dict(x=0.65, y=0.98, bgcolor="rgba(255,255,255,0.9)", font=dict(size=10)),
+    )
+
+    return fig
+
+
 if __name__ == "__main__":
     main()
