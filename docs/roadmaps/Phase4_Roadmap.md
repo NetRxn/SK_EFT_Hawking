@@ -267,7 +267,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium-High
 **Risk:** Medium. The linearized equivalence is established; the bootstrap gap assessment is the novel contribution.
-**Status:** `pending`
+**Status:** `complete` — src/fracton/gravity_connection.py, bootstrap gap at 2nd order
 
 ---
 
@@ -286,7 +286,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium
 **Risk:** High. This may produce a negative result — the algebra may be incompatible.
-**Status:** `pending`
+**Status:** `complete` — NEGATIVE RESULT. Non-Abelian fracton NOT Yang-Mills compatible. 4 obstructions formalized.
 
 ---
 
@@ -303,7 +303,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium
 **Risk:** Low (paper writing on completed results)
-**Status:** `pending`
+**Status:** `complete` — papers/paper6_vestigial/paper_draft.tex (PRD format)
 
 ---
 
@@ -319,7 +319,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 - [ ] Update Feasibility Study with Phase 4 results
 
 **Estimated LOE:** Medium
-**Status:** `pending`
+**Status:** `complete` — docs/gravity_hierarchy_synthesis.md
 
 ---
 
@@ -333,7 +333,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 - [ ] All documents synced per Document Sync Checklist
 
 **Estimated LOE:** Low-Medium
-**Status:** `pending`
+**Status:** `complete` — 130+1 axiom (zero sorry), 737 tests, 44 figures, all validation passing
 
 ---
 
