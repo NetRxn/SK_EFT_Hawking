@@ -37,11 +37,13 @@ from src.fracton.information_retention import (
     InformationComparison,
     GaugeInformationAssessment,
     GaugeInfoMechanism,
+    GaugeCoarsegrainingResult,
     standard_hydro_charges,
     fracton_hydro_charges,
     information_ratio,
     hilbert_space_fragmentation,
     gauge_information_assessment,
+    gauge_coarsegraining_example,
     compare_information_retention,
 )
 
@@ -741,3 +743,135 @@ class TestCrossConsistency:
             InformationComparison,
             GaugeInformationAssessment,
         )
+
+
+# ═══════════════════════════════════════════════════════════════════
+# Z_3 gauge coarse-graining example
+# ═══════════════════════════════════════════════════════════════════
+
+class TestGaugeCoarsegrainingExample:
+    """Test the Z_3 gauge coarse-graining example for fracton information retention."""
+
+    def test_default_parameters(self):
+        """Default call (L=8, block=2, Z_3) should produce valid result."""
+        result = gauge_coarsegraining_example()
+        assert result.lattice_size == 8
+        assert result.block_size == 2
+        assert result.group_order == 3
+
+    def test_total_configs(self):
+        """Total configurations = q^L."""
+        result = gauge_coarsegraining_example(lattice_size=4, group_order=3)
+        assert result.n_total_configs == 3 ** 4
+
+    def test_gauge_invariant_count(self):
+        """Number of gauge-invariant states equals group order for 1D periodic."""
+        for q in [2, 3, 5]:
+            result = gauge_coarsegraining_example(lattice_size=4, group_order=q)
+            assert result.n_gauge_invariant == q
+
+    def test_one_wilson_loop(self):
+        """1D periodic chain has exactly 1 independent Wilson loop."""
+        result = gauge_coarsegraining_example()
+        assert result.n_wilson_loops == 1
+
+    def test_fracton_fidelity_geq_standard(self):
+        """Fracton CG preserves at least as much info as standard CG."""
+        result = gauge_coarsegraining_example()
+        assert result.fracton_fidelity >= result.standard_fidelity
+
+    def test_fidelity_ratio_geq_one(self):
+        """Fidelity ratio (fracton/standard) >= 1."""
+        result = gauge_coarsegraining_example()
+        assert result.fidelity_ratio >= 1.0
+
+    def test_fracton_more_cg_states_than_standard(self):
+        """Fracton CG produces at least as many distinguishable states as standard."""
+        result = gauge_coarsegraining_example()
+        assert result.n_fracton_cg_states >= result.n_standard_cg_states
+
+    def test_standard_fidelity_positive(self):
+        """Standard CG fidelity is positive (retains some information)."""
+        result = gauge_coarsegraining_example()
+        assert result.standard_fidelity > 0.0
+
+    def test_fracton_fidelity_positive(self):
+        """Fracton CG fidelity is positive."""
+        result = gauge_coarsegraining_example()
+        assert result.fracton_fidelity > 0.0
+
+    def test_fidelity_leq_one(self):
+        """Both fidelities should be at most 1 (can't recover more than exists)."""
+        result = gauge_coarsegraining_example()
+        assert result.standard_fidelity <= 1.0
+        assert result.fracton_fidelity <= 1.0
+
+    def test_n_blocks_computed(self):
+        """Number of blocks = L / block_size."""
+        result = gauge_coarsegraining_example(lattice_size=8, block_size=4)
+        assert result.n_blocks == 2
+
+    def test_z2_gauge_group(self):
+        """Z_2 gauge group works correctly."""
+        result = gauge_coarsegraining_example(lattice_size=4, group_order=2)
+        assert result.group_order == 2
+        assert result.n_gauge_invariant == 2
+        assert result.n_total_configs == 2 ** 4
+
+    def test_larger_block_less_fidelity(self):
+        """Larger blocks should not increase standard CG fidelity."""
+        result_small = gauge_coarsegraining_example(lattice_size=8, block_size=2)
+        result_large = gauge_coarsegraining_example(lattice_size=8, block_size=4)
+        # With fewer blocks (larger block_size), standard CG has fewer bins
+        assert result_large.n_standard_cg_states <= result_small.n_standard_cg_states
+
+    def test_info_bits_positive(self):
+        """Info retained bits should be positive."""
+        result = gauge_coarsegraining_example()
+        assert result.standard_info_retained_bits > 0
+        assert result.fracton_info_retained_bits > 0
+
+    def test_total_gauge_invariant_bits(self):
+        """Total gauge-invariant bits for Z_3 = log2(3)."""
+        result = gauge_coarsegraining_example(lattice_size=4, group_order=3)
+        expected = log2(3)
+        assert abs(result.total_gauge_invariant_bits - expected) < 1e-10
+
+    def test_invalid_lattice_size(self):
+        """lattice_size < 2 should raise ValueError."""
+        with pytest.raises(ValueError, match="lattice_size"):
+            gauge_coarsegraining_example(lattice_size=1)
+
+    def test_invalid_block_size(self):
+        """block_size < 1 should raise ValueError."""
+        with pytest.raises(ValueError, match="block_size"):
+            gauge_coarsegraining_example(block_size=0)
+
+    def test_invalid_group_order(self):
+        """group_order < 2 should raise ValueError."""
+        with pytest.raises(ValueError, match="group_order"):
+            gauge_coarsegraining_example(group_order=1)
+
+    def test_non_divisible_raises(self):
+        """lattice_size not divisible by block_size should raise ValueError."""
+        with pytest.raises(ValueError, match="divisible"):
+            gauge_coarsegraining_example(lattice_size=7, block_size=2)
+
+    def test_block_size_one_maximal_fidelity(self):
+        """block_size=1 means no coarse-graining: both CG types should be maximal."""
+        result = gauge_coarsegraining_example(lattice_size=4, block_size=1, group_order=2)
+        # With block_size=1, each link is its own block
+        # Standard CG keeps individual link sums (= the links themselves)
+        # Fracton CG keeps (charge, dipole) = (link_value, 0) per block
+        # Both should be equivalent to keeping all link values
+        assert result.n_standard_cg_states == result.n_fracton_cg_states
+
+    def test_concrete_z3_fidelity_ratio(self):
+        """Z_3 with L=8, block=2: fracton fidelity ratio should be > 1."""
+        result = gauge_coarsegraining_example(lattice_size=8, block_size=2, group_order=3)
+        assert result.fidelity_ratio > 1.0
+
+    def test_fracton_info_bits_geq_standard(self):
+        """Fracton retained bits >= standard retained bits."""
+        result = gauge_coarsegraining_example()
+        assert result.fracton_info_retained_bits >= result.standard_info_retained_bits

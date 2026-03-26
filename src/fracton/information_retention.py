@@ -636,6 +636,337 @@ class GaugeInformationAssessment:
         return "low"
 
 
+# ═══════════════════════════════════════════════════════════════════
+# Z_3 gauge coarse-graining example
+# ═══════════════════════════════════════════════════════════════════
+
+@dataclass
+class GaugeCoarsegrainingResult:
+    """Result of Z_3 lattice gauge theory coarse-graining example.
+
+    Models a Z_3 gauge theory on a 1D chain (L sites, periodic),
+    enumerates gauge-invariant states (Wilson loops), coarse-grains
+    to fracton-like block variables, and checks reconstruction fidelity.
+
+    The key physics:
+        - Z_3 is the center of SU(3), the simplest non-Abelian center.
+        - In 1D, gauge-invariant states are parameterized by Wilson loops
+          (products of link variables around closed paths).
+        - Standard hydro coarse-graining: group links into blocks, keep
+          only block-averaged variables. This erases all information about
+          individual link configurations within a block.
+        - Fracton-like coarse-graining: keep block charge (monopole) AND
+          block dipole moment of link variables. The dipole moment encodes
+          information about the spatial distribution within each block.
+        - Reconstruction fidelity measures what fraction of the original
+          Wilson loop values can be recovered from coarse-grained data.
+
+    Attributes:
+        lattice_size: Number of lattice sites L
+        n_links: Number of links (= L for periodic chain)
+        group_order: Order of the gauge group (3 for Z_3)
+        n_total_configs: Total link configurations = group_order^n_links
+        n_gauge_invariant: Number of gauge-invariant states
+        n_wilson_loops: Number of independent Wilson loops
+        block_size: Number of sites per coarse-grained block
+        n_blocks: Number of coarse-grained blocks
+        n_standard_cg_states: Distinguishable states after standard CG
+        n_fracton_cg_states: Distinguishable states after fracton CG
+        standard_fidelity: Reconstruction fidelity with standard CG
+        fracton_fidelity: Reconstruction fidelity with fracton CG
+        fidelity_ratio: fracton_fidelity / standard_fidelity
+    """
+    lattice_size: int
+    n_links: int
+    group_order: int
+    n_total_configs: int
+    n_gauge_invariant: int
+    n_wilson_loops: int
+    block_size: int
+    n_blocks: int
+    n_standard_cg_states: int
+    n_fracton_cg_states: int
+    standard_fidelity: float
+    fracton_fidelity: float
+    fidelity_ratio: float
+
+    @property
+    def standard_info_retained_bits(self) -> float:
+        """Information retained by standard coarse-graining in bits."""
+        if self.n_standard_cg_states <= 0:
+            return 0.0
+        return log2(self.n_standard_cg_states)
+
+    @property
+    def fracton_info_retained_bits(self) -> float:
+        """Information retained by fracton coarse-graining in bits."""
+        if self.n_fracton_cg_states <= 0:
+            return 0.0
+        return log2(self.n_fracton_cg_states)
+
+    @property
+    def total_gauge_invariant_bits(self) -> float:
+        """Total gauge-invariant information in bits."""
+        if self.n_gauge_invariant <= 0:
+            return 0.0
+        return log2(self.n_gauge_invariant)
+
+
+def _z3_wilson_loops(link_config: tuple[int, ...], group_order: int) -> tuple[int, ...]:
+    """Compute all independent Wilson loop values for a periodic 1D chain.
+
+    On a 1D periodic chain with L links, the independent Wilson loops are
+    contiguous products of link variables:
+        W_k = prod_{i=0}^{k-1} U_i  (mod group_order), for k = 1, ..., L
+
+    The full Wilson loop W_L (around the entire chain) is the only
+    topologically non-trivial loop and uniquely characterizes the
+    gauge-invariant content in 1D.
+
+    For the coarse-graining analysis, we track all partial Wilson loops
+    since they encode the spatial distribution of gauge flux.
+
+    Args:
+        link_config: Tuple of link variables (each in {0, 1, ..., group_order-1})
+        group_order: Order of the cyclic gauge group
+
+    Returns:
+        Tuple of Wilson loop values (partial products mod group_order)
+    """
+    L = len(link_config)
+    loops = []
+    for k in range(1, L + 1):
+        w = 0
+        for i in range(k):
+            w = (w + link_config[i]) % group_order
+        loops.append(w)
+    return tuple(loops)
+
+
+def _standard_coarsegrain(
+    link_config: tuple[int, ...],
+    block_size: int,
+    group_order: int,
+) -> tuple[int, ...]:
+    """Standard coarse-graining: keep only block-summed link variables.
+
+    Groups links into blocks and retains only the sum of link values
+    within each block (mod group_order). This is the analog of standard
+    hydrodynamic coarse-graining: only the "charge" (total flux through
+    each block) is retained.
+
+    Args:
+        link_config: Tuple of link variables
+        block_size: Number of links per block
+        group_order: Order of the cyclic gauge group
+
+    Returns:
+        Tuple of block charges (one per block)
+    """
+    L = len(link_config)
+    n_blocks = L // block_size
+    block_charges = []
+    for b in range(n_blocks):
+        charge = 0
+        for i in range(block_size):
+            charge = (charge + link_config[b * block_size + i]) % group_order
+        block_charges.append(charge)
+    return tuple(block_charges)
+
+
+def _fracton_coarsegrain(
+    link_config: tuple[int, ...],
+    block_size: int,
+    group_order: int,
+) -> tuple[tuple[int, int], ...]:
+    """Fracton-like coarse-graining: keep block charge AND dipole moment.
+
+    In addition to the block charge (sum of link values), retains the
+    "dipole moment" — the position-weighted sum within each block:
+        charge_b = sum_i U_{b*bs + i}  (mod q)
+        dipole_b = sum_i i * U_{b*bs + i}  (mod q)
+
+    The dipole moment encodes information about the spatial distribution
+    of gauge flux within the block, which standard coarse-graining erases.
+    This is the fracton analog: dipole conservation preserves sub-block
+    structure.
+
+    Args:
+        link_config: Tuple of link variables
+        block_size: Number of links per block
+        group_order: Order of the cyclic gauge group
+
+    Returns:
+        Tuple of (charge, dipole) pairs for each block
+    """
+    L = len(link_config)
+    n_blocks = L // block_size
+    block_data = []
+    for b in range(n_blocks):
+        charge = 0
+        dipole = 0
+        for i in range(block_size):
+            val = link_config[b * block_size + i]
+            charge = (charge + val) % group_order
+            dipole = (dipole + i * val) % group_order
+        block_data.append((charge, dipole))
+    return tuple(block_data)
+
+
+def gauge_coarsegraining_example(
+    lattice_size: int = 8,
+    block_size: int = 2,
+    group_order: int = 3,
+) -> GaugeCoarsegrainingResult:
+    """Concrete Z_3 gauge coarse-graining example for fracton information retention.
+
+    Models a Z_3 lattice gauge theory on a 1D periodic chain, enumerates all
+    gauge-invariant states (Wilson loops), and compares two coarse-graining
+    procedures:
+
+    1. Standard CG: keep only block-summed variables (monopole/charge).
+       This is the analog of standard hydrodynamic coarse-graining.
+
+    2. Fracton CG: keep block charge AND block dipole moment.
+       This preserves sub-block spatial structure, mimicking how
+       fracton hydro retains dipole-level information.
+
+    The "reconstruction fidelity" measures what fraction of distinct
+    gauge-invariant states remain distinguishable after coarse-graining.
+    In standard hydro, gauge info is completely erased. In fracton hydro,
+    Hilbert space fragmentation preserves some structure. This example
+    quantifies "some" with a concrete number.
+
+    The Z_3 group is chosen as the center of SU(3), making this the
+    simplest non-Abelian center relevant to QCD. The 1D chain allows
+    exact enumeration for small L.
+
+    Args:
+        lattice_size: Number of lattice sites L (default 8)
+        block_size: Sites per coarse-grained block (default 2)
+        group_order: Order of the cyclic gauge group (default 3 for Z_3)
+
+    Returns:
+        GaugeCoarsegrainingResult with complete analysis
+
+    Raises:
+        ValueError: If lattice_size < 2, block_size < 1, group_order < 2,
+            or lattice_size is not divisible by block_size
+    """
+    if lattice_size < 2:
+        raise ValueError(f"lattice_size must be >= 2, got {lattice_size}")
+    if block_size < 1:
+        raise ValueError(f"block_size must be >= 1, got {block_size}")
+    if group_order < 2:
+        raise ValueError(f"group_order must be >= 2, got {group_order}")
+    if lattice_size % block_size != 0:
+        raise ValueError(
+            f"lattice_size ({lattice_size}) must be divisible by block_size ({block_size})"
+        )
+
+    L = lattice_size
+    q = group_order
+    n_links = L  # periodic chain: L links for L sites
+    n_blocks = L // block_size
+
+    # Enumerate all link configurations
+    n_total = q ** n_links
+
+    # For each configuration, compute:
+    # 1. Full Wilson loop (gauge-invariant label)
+    # 2. Standard CG data (block charges)
+    # 3. Fracton CG data (block charges + dipoles)
+
+    # On a 1D periodic chain, the only gauge-invariant observable is
+    # the full Wilson loop W = prod_i U_i (mod q). There are q distinct
+    # Wilson loop values, so there are q gauge-invariant classes.
+    # However, within each Wilson loop sector, different link configs
+    # produce different partial Wilson loops, and these carry information
+    # about the spatial distribution of flux.
+
+    # We track: for each (Wilson loop value, CG data) pair, how many
+    # distinct Wilson loop values map to the same CG data.
+
+    # Use itertools to enumerate configs for small lattice
+    from itertools import product as iter_product
+
+    # Map: standard CG data -> set of Wilson loop values that produce it
+    standard_cg_to_wilson: dict[tuple, set] = {}
+    # Map: fracton CG data -> set of Wilson loop values that produce it
+    fracton_cg_to_wilson: dict[tuple, set] = {}
+
+    # Also count gauge-invariant states
+    wilson_loop_values: set[int] = set()
+
+    for config in iter_product(range(q), repeat=n_links):
+        # Full Wilson loop = sum of all links mod q (1D additive notation)
+        full_wilson = sum(config) % q
+        wilson_loop_values.add(full_wilson)
+
+        # Compute all partial Wilson loops for this config
+        all_loops = _z3_wilson_loops(config, q)
+
+        # Standard coarse-graining
+        std_cg = _standard_coarsegrain(config, block_size, q)
+        if std_cg not in standard_cg_to_wilson:
+            standard_cg_to_wilson[std_cg] = set()
+        standard_cg_to_wilson[std_cg].add(all_loops)
+
+        # Fracton coarse-graining
+        frac_cg = _fracton_coarsegrain(config, block_size, q)
+        if frac_cg not in fracton_cg_to_wilson:
+            fracton_cg_to_wilson[frac_cg] = set()
+        fracton_cg_to_wilson[frac_cg].add(all_loops)
+
+    # Number of gauge-invariant states = q (Wilson loop sectors)
+    n_gauge_invariant = len(wilson_loop_values)
+
+    # Number of independent Wilson loops on a periodic 1D chain = 1
+    # (just the full loop; partial loops are not gauge-invariant)
+    n_wilson_loops = 1
+
+    # Number of distinguishable states after CG:
+    # = number of distinct CG images (distinct bins in CG space)
+    n_standard_cg = len(standard_cg_to_wilson)
+    n_fracton_cg = len(fracton_cg_to_wilson)
+
+    # Reconstruction fidelity:
+    # What fraction of the TOTAL distinct Wilson loop configurations
+    # (all partial loops, not just the full loop) remain distinguishable
+    # after coarse-graining?
+    #
+    # Total distinct partial-loop tuples across all configs:
+    all_distinct_loop_tuples: set[tuple] = set()
+    for s in standard_cg_to_wilson.values():
+        all_distinct_loop_tuples.update(s)
+    total_distinct = len(all_distinct_loop_tuples)
+
+    # Standard CG fidelity: fraction of configs that land in unique bins
+    # = (number of distinct CG images) / (total distinct loop tuples)
+    standard_fidelity = n_standard_cg / total_distinct if total_distinct > 0 else 0.0
+
+    # Fracton CG fidelity: same metric
+    fracton_fidelity = n_fracton_cg / total_distinct if total_distinct > 0 else 0.0
+
+    fidelity_ratio = fracton_fidelity / standard_fidelity if standard_fidelity > 0 else float('inf')
+
+    return GaugeCoarsegrainingResult(
+        lattice_size=L,
+        n_links=n_links,
+        group_order=q,
+        n_total_configs=n_total,
+        n_gauge_invariant=n_gauge_invariant,
+        n_wilson_loops=n_wilson_loops,
+        block_size=block_size,
+        n_blocks=n_blocks,
+        n_standard_cg_states=n_standard_cg,
+        n_fracton_cg_states=n_fracton_cg,
+        standard_fidelity=standard_fidelity,
+        fracton_fidelity=fracton_fidelity,
+        fidelity_ratio=fidelity_ratio,
+    )
+
+
 def gauge_information_assessment() -> GaugeInformationAssessment:
     """Assess whether fracton hydro can carry non-Abelian gauge information.
 

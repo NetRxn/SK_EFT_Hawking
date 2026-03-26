@@ -20,12 +20,15 @@ from src.fracton.gravity_connection import (
     LinearizedEquivalence,
     BootstrapStep,
     BootstrapGap,
+    BootstrapGapQuantification,
+    CubicVertexStructure,
     GravityRouteComparison,
     GravityRouteProperties,
     NonAbelianResult,
     linearized_equivalence,
     gupta_feynman_bootstrap,
     bootstrap_gap_assessment,
+    quantify_bootstrap_gap,
     compare_gravity_routes,
     non_abelian_fracton_analysis,
 )
@@ -797,3 +800,158 @@ class TestCrossConsistency:
         assert ObstructionType.ALGEBRAIC.value != ObstructionType.GEOMETRIC.value
         assert GravityRouteType.FRACTON.value != GravityRouteType.ADW.value
         assert AlgebraType.NON_ABELIAN_FRACTON.value != AlgebraType.YANG_MILLS.value
+
+
+# ===================================================================
+# Bootstrap gap quantification
+# ===================================================================
+
+class TestBootstrapGapQuantification:
+    """Test quantitative comparison of cubic vertices in GR vs fracton."""
+
+    def test_gr_has_5_structures_in_4d(self):
+        """Linearized GR in D=4 has 5 independent cubic vertex structures."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.n_gr_structures == 5
+
+    def test_fracton_has_8_structures_in_4d(self):
+        """Fracton theory in D=4 has 8 independent cubic vertex structures."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.n_fracton_structures == 8
+
+    def test_gap_magnitude_4d(self):
+        """Gap magnitude in D=4: |8-5|/5 = 0.6."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert abs(result.gap_magnitude - 0.6) < 1e-10
+
+    def test_gap_percentage_4d(self):
+        """Gap as percentage: 60%."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert abs(result.gap_percentage - 60.0) < 1e-10
+
+    def test_three_excess_structures_4d(self):
+        """3 excess structures in fracton vs GR in D=4."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.n_excess_structures == 3
+
+    def test_not_exact_match(self):
+        """GR and fracton do NOT have identical cubic structure in D=4."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert not result.is_exact_match
+
+    def test_nothing_missing_in_fracton(self):
+        """All GR structures are present in fracton (subset symmetry)."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert len(result.missing_in_fracton) == 0
+
+    def test_three_extra_in_fracton(self):
+        """3 extra structures identified in fracton theory."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert len(result.extra_in_fracton) == 3
+
+    def test_excess_causes_instability(self):
+        """Excess structures cause dynamical instability."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.excess_causes_instability
+
+    def test_gap_not_closable(self):
+        """The gap is NOT closable."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert not result.gap_closable
+
+    def test_gr_coefficients_unique(self):
+        """GR cubic vertex coefficients are uniquely fixed."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.gr_vertex.coefficients_unique
+
+    def test_fracton_coefficients_not_unique(self):
+        """Fracton cubic vertex coefficients are NOT uniquely fixed."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert not result.fracton_vertex.coefficients_unique
+
+    def test_gr_vertex_label(self):
+        """GR vertex should be labeled 'GR'."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.gr_vertex.theory_label == "GR"
+
+    def test_fracton_vertex_label(self):
+        """Fracton vertex should be labeled 'fracton'."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.fracton_vertex.theory_label == "fracton"
+
+    def test_fracton_has_higher_derivative_vertices(self):
+        """Fracton vertex structures include higher-derivative terms."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert result.fracton_vertex.has_higher_derivative_vertices
+
+    def test_gr_no_higher_derivative_vertices(self):
+        """GR vertex structures do NOT include higher-derivative terms."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert not result.gr_vertex.has_higher_derivative_vertices
+
+    def test_extra_structures_mention_spin1(self):
+        """Extra structures should mention spin-1 sector."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        extra_text = " ".join(result.extra_in_fracton).lower()
+        assert "spin-1" in extra_text
+
+    def test_extra_structures_mention_instability(self):
+        """Extra structures should mention instability."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        extra_text = " ".join(result.extra_in_fracton).lower()
+        assert "instability" in extra_text or "unstable" in extra_text
+
+    def test_extra_structures_mention_4_derivative(self):
+        """Extra structures should mention 4-derivative vertices."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        extra_text = " ".join(result.extra_in_fracton).lower()
+        assert "4-derivative" in extra_text
+
+    def test_3d_gr_topological(self):
+        """In D=3, GR is topological: 0 cubic vertex structures."""
+        result = quantify_bootstrap_gap(spacetime_dim=3)
+        assert result.n_gr_structures == 0
+
+    def test_3d_fracton_has_vertices(self):
+        """In D=3, fracton still has cubic vertices (propagating DOF)."""
+        result = quantify_bootstrap_gap(spacetime_dim=3)
+        assert result.n_fracton_structures > 0
+
+    def test_5d_same_gr_structure_count(self):
+        """In D=5, GR still has 5 independent cubic structures."""
+        result = quantify_bootstrap_gap(spacetime_dim=5)
+        assert result.n_gr_structures == 5
+
+    def test_gr_structures_described(self):
+        """GR structures should have descriptions."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        for s in result.gr_vertex.structures:
+            assert len(s) > 20
+
+    def test_fracton_structures_described(self):
+        """Fracton structures should have descriptions."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        for s in result.fracton_vertex.structures:
+            assert len(s) > 20
+
+    def test_gr_gauge_symmetry_mentions_diffeo(self):
+        """GR gauge symmetry description should mention diffeomorphisms."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert "diffeo" in result.gr_vertex.gauge_symmetry_used.lower()
+
+    def test_fracton_gauge_symmetry_mentions_scalar(self):
+        """Fracton gauge symmetry description should mention scalar."""
+        result = quantify_bootstrap_gap(spacetime_dim=4)
+        assert "scalar" in result.fracton_vertex.gauge_symmetry_used.lower()
+
+    def test_consistency_with_bootstrap_gap_assessment(self):
+        """Quantification should be consistent with qualitative bootstrap gap."""
+        qual = bootstrap_gap_assessment()
+        quant = quantify_bootstrap_gap()
+        # Both say gap appears at order 3
+        assert qual.order_where_breaks == 3
+        # Quantitative confirms excess structures exist
+        assert quant.n_excess_structures > 0
+        # Both say gap is not closable
+        assert not qual.is_closable
+        assert not quant.gap_closable
