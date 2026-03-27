@@ -55,7 +55,7 @@ SK_EFT_Hawking/
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (53 proved)
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (56 proved)
 │   │   └── visualizations.py          # Plotly figures + interactive dashboard
 │   ├── first_order/                   # Phase 1 specific analysis
 │   ├── second_order/                  # Phase 2 analysis (absorbed from SK_EFT_Phase2)
@@ -131,7 +131,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (820 tests)
+├── tests/                             # pytest suite (822 tests)
 │   ├── test_transonic_background.py   # Physics validation
 │   ├── test_second_order.py           # Enumeration + WKB tests
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
@@ -140,7 +140,7 @@ SK_EFT_Hawking/
 │   ├── test_cross_validation.py       # Cross-layer validation
 │   └── test_lean_integrity.py         # Module structure + sorry-gap regression
 │
-├── figures/                           # 44 pipeline figures (PNG + HTML)
+├── figures/                           # 45 pipeline figures (PNG + HTML)
 ├── scripts/
 │   └── submit_to_aristotle.py         # Aristotle submission + integration script
 ├── pyproject.toml                     # Unified Python dependencies

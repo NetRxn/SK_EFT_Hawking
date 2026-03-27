@@ -2,7 +2,7 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Six papers (Phases 1–4) with complete Lean 4 formalization (216 theorems + 1 axiom, zero sorry, 16 modules). 820 tests, 44 pipeline figures, 16 notebooks.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Six papers (Phases 1–4) with complete Lean 4 formalization (216 theorems + 1 axiom, zero sorry, 16 modules). 822 tests, 45 pipeline figures, 16 notebooks. 56 Aristotle-proved, 160 manual.
 
 **Note:** Detailed per-file descriptions below cover Phase 1–2 modules. Phase 3–4 modules (gauge_erasure, wkb, adw, chirality, experimental, vestigial, fracton) follow the same patterns — see README.MD for the full project tree and CLAUDE.md for architecture.
 
@@ -1140,7 +1140,7 @@ Figure review pipeline: generates 12 PNGs via kaleido, produces review_manifest.
 | Category | Count | Status |
 |----------|-------|--------|
 | **Python Source Modules** | ~35 | ✓ Complete (Phases 1-4) |
-| **Test Files** | 12 | ✓ 820 tests, all passing |
+| **Test Files** | 12 | ✓ 822 tests, all passing |
 | **Notebooks** | 16 | ✓ Phases 1-4 (Technical + Stakeholder) |
 | **Lean Modules** | 16 | ✓ All build clean |
 | **Lean Theorems** | | |
@@ -1213,18 +1213,22 @@ Figure review pipeline: generates 12 PNGs via kaleido, produces review_manifest.
 ## VERIFICATION STATUS
 
 ✅ **All 216 Lean theorems + 1 axiom PROVED, zero sorry** (16 modules)
-✅ **53 Aristotle-proved** (40 Phases 1-3 + 13 Phase 4 batch b1ea2eb7)
-✅ **820 pytest tests passing** (12 test files)
-✅ **44 pipeline figures generated** (all structural checks passing)
+✅ **56 Aristotle-proved** (40 Phases 1-3 + 13 Phase 4 batch b1ea2eb7 + 2 Wave 5 quality audit f35ca767 + 1 ADW f8de66d1)
+✅ **822 pytest tests passing** (12 test files)
+✅ **45 pipeline figures generated** (all structural checks passing)
 ✅ **16 notebooks** (all execute cleanly)
 ✅ **6 papers + prediction tables** (LaTeX, PRD/PRL format)
 
-Last verified: March 26, 2026 (Phase 4 completion)
+Last verified: March 27, 2026 (Wave 5 quality hardening)
 
 - ✓ 14 Phase 1 (core dissipative corrections)
 - ✓ 8 Phase 2 (second-order enumeration, KMS, WKB)
 - ✓ 9 Phase 3 stress tests (FDR robustness, KMS optimality, limit checks)
-- ✓ 3 Phase 4 Round 5 additions (total-division strengthening: nonzero shifts, zero-iff biconditionals)
+- ✓ 3 Phase 2 Round 5 additions (total-division strengthening: nonzero shifts, zero-iff biconditionals)
+- ✓ 5 CGL FDR derivation (Einstein relation, CGL→KMS chain)
+- ✓ 1 ADW curvature_zero_at_Gc
+- ✓ 13 Phase 4 batch (fracton, vestigial, chirality)
+- ✓ 2 Wave 5 quality audit (strengthened vacuous theorems: gs_nogo_requires_all, zeroTemp_nontrivial)
 
 ✅ **All Python code tested**
 - ✓ 7 Lean integrity tests

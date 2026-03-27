@@ -21,7 +21,7 @@ A unified project encompassing:
       bootstrap (60% gap), both formally verified.
 
 Lean 4 formalization: 216 theorems + 1 axiom, zero sorry, 16 modules.
-Aristotle automated theorem prover: 13 Phase 4 theorems verified.
+Aristotle automated theorem prover: 56 theorems proved (13 Phase 4 + 43 earlier).
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

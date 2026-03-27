@@ -45,10 +45,10 @@ This document synthesizes all gravity results across Phases 3-4 of the SK-EFT Ha
 
 **Key results:**
 - Three-phase structure confirmed by both mean-field and Monte Carlo:
-  - Phase I (pre-geometric): |M_E| = 0, |M_g| = 0
-  - Phase II (vestigial metric): |M_E| = 0, |M_g| > 0
-  - Phase III (full tetrad): |M_E| > 0, |M_g| > 0
-- Vestigial window exists in a finite coupling range (G/G_c roughly 0.6 to 1.0 in MC, 0.7 to 1.0 in mean-field)
+  - Phase I (pre-geometric): |M_E| = 0, |M_g| ~ 0 (uncorrelated thermal noise, curvature large)
+  - Phase II (vestigial metric): |M_E| = 0, |M_g| > 0 (correlated metric fluctuations, curvature small)
+  - Phase III (full tetrad): |M_E| > 0, |M_g| > 0 (tetrad condensation)
+- Vestigial phase identified by a curvature-based criterion: the curvature at the origin of V_eff drops below ~30% of its weak-coupling value, enabling collectively ordered metric fluctuations. Mean-field window: G/G_c ~ 0.8 to 1.0. MC shows onset at somewhat lower coupling (~0.7) due to fluctuation broadening.
 - Metric eigenvalues are positive-definite (Euclidean signature) throughout the vestigial phase
 - Equivalence Principle violation: bosons experience geometry, fermions do not
 

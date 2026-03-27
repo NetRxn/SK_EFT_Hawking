@@ -628,7 +628,7 @@ Paper 6 figures, both Vestigial notebooks, visualizations.py fig_vestigial_phase
 
 **Exit criteria for Phase 4 COMPLETE:**
 - [ ] All 14 validation checks pass with zero warnings on new checks
-- [ ] All 821+ tests pass
+- [ ] All 822+ tests pass
 - [ ] Lean builds clean (zero sorry)
 - [ ] LLM figure review: all figures PASS (no FAIL, no MINOR)
 - [ ] Every paper numerical claim verified within 0.5% of computed value
@@ -655,9 +655,9 @@ The pipeline document supersedes the scattered infrastructure sections in Phase 
 
 ```bash
 cd SK_EFT_Hawking
-uv run python -m pytest tests/ -v                    # 821 tests
+uv run python -m pytest tests/ -v                    # 822 tests
 uv run python scripts/validate.py                    # 14 checks
-uv run python scripts/review_figures.py              # 44 PNGs + structural checks
+uv run python scripts/review_figures.py              # 45 PNGs + structural checks
 cd lean && lake build                                 # zero sorry
 ```
 
@@ -667,11 +667,11 @@ cd lean && lake build                                 # zero sorry
 |--------|-------|
 | Lean theorems | 216 + 1 axiom |
 | Lean modules | 16 |
-| Aristotle-proved | 54 (run IDs in constants.py) |
-| Manual proofs | 162 |
-| Python tests | 821 |
+| Aristotle-proved | 56 (run IDs in constants.py) |
+| Manual proofs | 160 |
+| Python tests | 822 |
 | Validation checks | 14/14 pass |
-| Pipeline figures | 44 |
+| Pipeline figures | 45 |
 | Papers | 6 + prediction tables |
 | Notebooks | 16 (8 Technical + 8 Stakeholder) |
 
