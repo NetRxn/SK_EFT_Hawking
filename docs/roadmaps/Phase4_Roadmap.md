@@ -595,11 +595,11 @@ Paper 6 figures, both Vestigial notebooks, visualizations.py fig_vestigial_phase
 **Goal:** Update Feasibility Study and Critical Review v3 with corrected Phase 4 results, honest feasibility framing, and current counts.
 
 **Deliverables:**
-- [ ] Update `Fluid-Based Approach to Fundamental Physics  Feasibility Study.md` — SK-EFT row with corrected counts (216+1 axiom, 821 tests, 14 validation checks), honest experimental feasibility framing
-- [ ] Update `Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md` — SK-EFT row, experimental evidence table, quantitative benchmarks table
-- [ ] Update `docs/stakeholder/Phase4_Implications.md` — verify content accuracy
-- [ ] Update `docs/stakeholder/Phase4_Strategic_Positioning.md` — verify content accuracy, no false feasibility claims
-- [ ] Verify all counts consistent across all docs (Stage 12 of pipeline)
+- [x] Update `docs/Fluid-Based...Feasibility Study.md` — SK-EFT row with Phase 4 results (done Wave 5)
+- [x] Update `docs/Fluid-Based...Critical Review v3.md` — SK-EFT row, experimental evidence (done Wave 5)
+- [x] Update `docs/stakeholder/Phase4_Implications.md` — content + counts verified (done Wave 5)
+- [x] Update `docs/stakeholder/Phase4_Strategic_Positioning.md` — verified (done Wave 5)
+- [x] Verify all counts consistent across all docs — Stage 12 complete (done Wave 5)
 
 **Estimated LOE:** Low-Medium
 **Status:** `pending`

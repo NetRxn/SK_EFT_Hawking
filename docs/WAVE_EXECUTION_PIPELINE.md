@@ -287,10 +287,40 @@ uv run python scripts/review_figures.py
 | **Stakeholder** | `docs/stakeholder/companion_guide.md` | Status table + content synthesis |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Implications.md` | Content for this phase |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Strategic_Positioning.md` | Content for this phase |
-| **Top-level** | `Feasibility Study.md` | SK-EFT row in validation table |
-| **Top-level** | `Critical Review v3.md` | SK-EFT row in evidence table |
+| **Reference** | `docs/Fluid-Based...Feasibility Study.md` | SK-EFT row in validation table |
+| **Reference** | `docs/Fluid-Based...Critical Review v3.md` | SK-EFT row in evidence table |
+| **Inventory** | `SK_EFT_Hawking_Inventory.md` | All sections (see Inventory_Index.md for what to update) |
+| **Inventory Index** | `SK_EFT_Hawking_Inventory_Index.md` | Counts table + section→update mapping |
 
-**All counts must agree:** theorem count, test count, Lean module count, figure count, paper count, notebook count.
+**Content must be consistent across all documents.** This means: physics descriptions match the code, phase boundaries match computed values, feasibility claims are supported by calculations, and all narratives reflect the current state of the research. Count agreement (theorems, tests, figures, etc.) is a secondary mechanical check — content accuracy is the primary concern.
+
+### Inventory Maintenance Protocol
+
+The Inventory (`SK_EFT_Hawking_Inventory.md`) is the comprehensive source of truth. The Index (`SK_EFT_Hawking_Inventory_Index.md`) is the LLM-friendly quick reference.
+
+**Before updating:** Read `SK_EFT_Hawking_Inventory_Index.md` to understand which sections need updates and the verification commands for each count.
+
+**Update procedure:**
+1. Run the verification commands from the Index's "Counts" table to get ground truth
+2. Update the Inventory's relevant sections (the Index tells you which sections to update for each type of change)
+3. Update the Index's "Counts" table
+4. Update the Index's "Last synced" date
+5. Spot-check: read 3 random sections of the Inventory and verify they match the current codebase
+
+**Common staleness patterns to watch for:**
+- New modules added but not listed in Section 1
+- New Lean theorems but Section 2 table not updated
+- New Aristotle runs but Section 3 table not updated
+- New notebooks/papers but Sections 4-5 not updated
+- Formula changes in formulas.py but Section 10 not updated
+- Test count changes but Section 6 not updated
+- Descriptions that reference old behavior (e.g., "hardcoded constants" after consolidation)
+
+### Validation Reports
+
+- `docs/validation/reports/` — Timestamped archives from `validate.py` (auto-generated, no maintenance needed)
+- `docs/validation/lean_quality_audit.md` — Manual audit snapshots. Create new ones per wave; do not update old ones in place.
+- `docs/validation/VALIDATION_REPORT.md` — Deprecated; superseded by `validate.py` automated checks. Kept for historical reference only.
 
 **Gate:** `validate.py` full suite passes. Manual spot-check of 3 count-sensitive files confirms consistency.
 

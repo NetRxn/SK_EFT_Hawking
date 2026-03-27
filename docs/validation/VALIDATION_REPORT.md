@@ -1,5 +1,7 @@
 # Cross-Layer Validation Report: SK-EFT Hawking Project
 
+**Status: ARCHIVED (Phase 2 snapshot).** This report is superseded by the automated `validate.py` suite (14 checks). Kept for historical reference. Do not update — create new validation docs per wave instead.
+
 ## Purpose
 
 This report documents the automated verification of consistency between the four layers of the SK-EFT Hawking project: Python source code, Lean 4 formal proofs, Jupyter notebooks, and LaTeX paper drafts. It is designed for inclusion as a paper appendix or supplementary material.
