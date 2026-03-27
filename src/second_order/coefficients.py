@@ -300,12 +300,10 @@ def hawking_correction_first_order(
     Returns:
         δ_diss (dimensionless correction to T_H).
     """
-    # The effective damping rate at the horizon, evaluated at ω = κ, k_H = κ/c_s:
-    #   Γ_H = γ₁·k_H² + γ₂·ω²/c_s² = (γ₁ + γ₂)·(κ/c_s)²
-    # Matches WKBAnalysis.lean: dampingRate(k_H, κ) with first-order terms.
+    from src.core.formulas import first_order_correction
     k_H = kappa / c_s
     Gamma_H = (gamma_1 + gamma_2) * k_H**2
-    return Gamma_H / kappa
+    return first_order_correction(Gamma_H, kappa)
 
 
 def hawking_correction_second_order(

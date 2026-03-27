@@ -454,19 +454,36 @@ The dissipative corrections δ_diss persist at T = 0 because they modify
 Im G_R (the spectral function), not just the thermal occupation factor.
 -/
 
-/-- In the T → 0 limit, the KMS constraint becomes:
+/-
+PROBLEM
+In the T → 0 limit, the KMS constraint becomes:
     ψ_a → ψ_a + i∞ · ∂_t ψ_r
 
     In practice, this means the fluctuation terms in Im I_SK are
     determined by the vacuum FDR rather than the thermal one.
-    The action remains non-trivial because G_K = sign(ω) · Im G_R ≠ 0. -/
-theorem zeroTemp_nontrivial (_coeffs : DissipativeCoeffs)
-    (_hg1 : 0 < _coeffs.gamma_1 ∨ 0 < _coeffs.gamma_2) :
-    -- The dissipative action is non-zero even at T = 0
-    -- (the ψ_a sector remains coupled to ψ_r)
-    True := by
-  trivial -- Placeholder: the real content is that Im G_R ≠ 0
-  -- when γ₁ > 0 or γ₂ > 0, regardless of temperature
+    The action remains non-trivial because G_K = sign(ω) · Im G_R ≠ 0.
+
+    Formally: if γ₁ > 0 or γ₂ > 0, then for any β > 0 there exist field
+    configurations where the imaginary part (noise) of the Lagrangian is
+    strictly positive.
+
+    Strengthened from vacuous `True` conclusion (quality audit 2026-03-26).
+
+    Proof sketch: evaluate at ψ_a = 1 (rest zero) for γ₁ > 0, giving Im = γ₁/β > 0.
+    Or evaluate at ∂_t ψ_a = 1 (rest zero) for γ₂ > 0, giving Im = γ₂/β > 0.
+
+PROVIDED SOLUTION
+Case split on hg. If gamma_1 > 0, use witness f = ⟨0, 1, 0, 0, 0, 0, 0, 0, 0⟩. Then Im = (gamma_1/beta) * 1^2 + (gamma_2/beta) * 0^2 = gamma_1/beta > 0 since gamma_1 > 0 and beta > 0. If gamma_2 > 0, use witness f = ⟨0, 0, 0, 0, 1, 0, 0, 0, 0⟩. Then Im = (gamma_1/beta) * 0^2 + (gamma_2/beta) * 1^2 = gamma_2/beta > 0.
+-/
+theorem zeroTemp_nontrivial (coeffs : DissipativeCoeffs) (beta : ℝ) (hb : 0 < beta)
+    (hg : 0 < coeffs.gamma_1 ∨ 0 < coeffs.gamma_2) :
+    ∃ (f : SKFields),
+      0 < ((firstOrderDissipativeAction coeffs beta).lagrangian f).2 := by
+  obtain h | h := hg;
+  · -- Choose $f$ such that $f.psi_a = 1$ and all other components are zero.
+    use ⟨0, 1, 0, 0, 0, 0, 0, 0, 0⟩
+    simp [firstOrderDissipativeAction, h, hb];
+  · exact ⟨ ⟨ 0, 0, 0, 0, 1, 0, 0, 0, 0 ⟩, by unfold firstOrderDissipativeAction; norm_num; positivity ⟩
 
 /-!
 ## Fluctuation-Dissipation Relation

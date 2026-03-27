@@ -199,6 +199,33 @@ class TestMeanField:
         assert result.phase == "full_tetrad"
         assert result.C_tetrad > 0
 
+    def test_three_phase_structure(self):
+        """Verify the corrected three-phase structure:
+        - Weak coupling (G << G_c) → pre-geometric
+        - Near G_c from below → vestigial
+        - Above G_c → full tetrad
+        """
+        result = vestigial_phase_window(Lambda=1.0, N_f=4, n_points=30)
+
+        # Must have all three phases
+        phases_seen = set(result['phases'])
+        assert "pre_geometric" in phases_seen, "No pre-geometric phase found"
+        assert "vestigial" in phases_seen, "No vestigial phase found"
+        assert "full_tetrad" in phases_seen, "No full_tetrad phase found"
+
+        # Phase ordering: pre-geometric first, then vestigial, then full tetrad
+        first_vestigial = next(i for i, p in enumerate(result['phases']) if p == "vestigial")
+        first_full = next(i for i, p in enumerate(result['phases']) if p == "full_tetrad")
+        last_pre = max(i for i, p in enumerate(result['phases']) if p == "pre_geometric")
+        assert last_pre < first_vestigial, "pre-geometric should come before vestigial"
+        assert first_vestigial < first_full, "vestigial should come before full_tetrad"
+
+        # Vestigial window should be near G_c (ratio 0.7-1.0), not at weak coupling
+        vestigial_ratios = [result['coupling_ratios'][i]
+                           for i, p in enumerate(result['phases']) if p == "vestigial"]
+        assert min(vestigial_ratios) > 0.6, f"Vestigial starts too low: {min(vestigial_ratios)}"
+        assert max(vestigial_ratios) <= 1.1, f"Vestigial extends too high: {max(vestigial_ratios)}"
+
 
 class TestMonteCarlo:
     """Tests for Monte Carlo sampler."""

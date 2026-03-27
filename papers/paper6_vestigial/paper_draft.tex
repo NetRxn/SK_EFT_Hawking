@@ -208,24 +208,31 @@ small enough that fluctuations produce a significant composite order.
 
 Scanning the coupling ratio $G/\Gc$, we find three regimes in mean-field:
 \begin{itemize}
-\item $G/\Gc < 0.7$: Pre-geometric. Curvature at origin is large;
-  fluctuations are suppressed.
-\item $0.7 \lesssim G/\Gc \lesssim 1.0$: Vestigial. The curvature is
-  small; metric fluctuations produce $|M_g| > 0$ while $|M_E| = 0$.
+\item $G/\Gc \lesssim 0.8$: Pre-geometric. The curvature at the origin
+  $\partial^2\Veff/\partial C^2|_{C=0} = 1/G - \Nf\Lambda^2/(8\pi^2)$
+  is large; the metric correlation length $\xi \sim 1/\sqrt{\text{curvature}}$
+  is short and metric fluctuations are uncorrelated thermal noise.
+\item $0.8 \lesssim G/\Gc \lesssim 1.0$: Vestigial. The curvature has
+  dropped below $\sim 30\%$ of its weak-coupling value; the correlation
+  length grows and metric fluctuations develop collective (vestigial)
+  order, producing $|M_g| > 0$ while $|M_E| = 0$.
 \item $G/\Gc > 1.0$: Full tetrad. $C_{\min} > 0$ with $\Veff < 0$.
 \end{itemize}
-The vestigial window depends on the definition of ``macroscopic
-metric''---we adopt the threshold $|M_g| > 0.01\,\Lambda^2$---but
-the qualitative three-phase structure is robust.
+The vestigial criterion is curvature-based: the origin remains a minimum
+but the restoring force is weak enough for correlated metric fluctuations.
+This is the standard condensed-matter criterion for vestigial
+order~\cite{Fernandes2019}---the qualitative three-phase structure is
+robust against the precise threshold choice.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig1_effective_potential.png}
-\caption{Effective potential $\Veff(C)$ at three representative coupling
-ratios. Below $\Gc$: origin is the unique minimum (pre-geometric). Near
-$\Gc$: the origin is still a minimum but the curvature is small,
-enabling vestigial metric fluctuations. Above $\Gc$: Mexican-hat
-potential with nontrivial minimum (full tetrad condensation).}
+\caption{Effective potential $\Veff(C)$ at three coupling ratios.
+$G/\Gc = 0.5$: strong positive curvature at the origin (pre-geometric).
+$G/\Gc = 0.9$: curvature nearly vanishes, enabling vestigial metric
+fluctuations.
+$G/\Gc = 2.0$: Mexican-hat potential with nontrivial minimum at
+$C_{\min}/\Lambda \approx 0.35$ (full tetrad condensation).}
 \label{fig:veff}
 \end{figure}
 
@@ -262,11 +269,11 @@ At each measurement sweep we record:
 The Monte Carlo scan confirms the three-phase structure predicted by
 mean-field:
 
-\textit{Pre-geometric phase} ($G/\Gc \lesssim 0.6$). Both $|M_E|$ and
+\textit{Pre-geometric phase} ($G/\Gc \lesssim 0.7$). Both $|M_E|$ and
 $|M_g|$ are consistent with $O(1/\sqrt{V})$ fluctuations---no
 macroscopic order.
 
-\textit{Vestigial phase} ($0.6 \lesssim G/\Gc \lesssim 1.0$). The
+\textit{Vestigial phase} ($0.7 \lesssim G/\Gc \lesssim 1.0$). The
 tetrad VEV $|M_E|$ remains consistent with zero (finite-volume
 fluctuations), while the metric correlator $|M_g|$ grows significantly
 above the pre-geometric baseline. The eigenvalues of $M_g$ are all
@@ -301,9 +308,11 @@ reveal the following key features from both mean-field and Monte Carlo:
 \begin{enumerate}
 \item \textbf{Vestigial window.} A finite coupling window supports
   $|M_g| \neq 0$ with $|M_E| = 0$. In mean-field, this window extends
-  from $G/\Gc \approx 0.7$ to $G/\Gc = 1.0$. The Monte Carlo data show
-  the onset at a somewhat lower coupling ($G/\Gc \approx 0.6$),
-  reflecting the role of fluctuations in broadening the vestigial window.
+  from $G/\Gc \approx 0.8$ to $G/\Gc = 1.0$, defined by the curvature
+  criterion (the curvature at the origin drops below $\sim 30\%$ of its
+  weak-coupling value). The Monte Carlo data show the onset at a somewhat
+  lower coupling ($G/\Gc \approx 0.7$), reflecting the role of
+  fluctuations in broadening the vestigial window.
 
 \item \textbf{Signature stability.} Throughout the vestigial phase, the
   eigenvalues of $M_g$ are positive-definite (Euclidean signature).
@@ -464,7 +473,8 @@ The key findings are:
   ordering, EP violation structure, and metric DOF counting.
   Three of these theorems were proved by the Aristotle automated
   theorem prover (run \texttt{b1ea2eb7}); the remainder were proved manually.
-  The full project contains 216 theorems + 1 axiom across 16 modules.
+  The full project contains 216 theorems + 1 axiom across 16 modules,
+  56 proved by Aristotle.
 \end{enumerate}
 
 The vestigial metric phase represents the most accessible form of

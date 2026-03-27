@@ -17,10 +17,10 @@ Usage:
     python scripts/submit_to_aristotle.py --target acousticMetric_det
 
     # Auto-integrate filled proofs (copies patched files into lean/):
-    python scripts/submit_to_aristotle.py --priority 1 --integrate
+    python scripts/submit_to_aristotle.py --priority 1
 
     # Retrieve a previous run by project ID:
-    python scripts/submit_to_aristotle.py --retrieve 082e6776-42d7-469d-be9d-064c328540cf
+    python scripts/submit_to_aristotle.py --retrieve 082e6776-42d7-469d-be9d-064c328540cf --integrate
 
     # Resume from an OUT_OF_BUDGET run (retrieve partial, integrate, resubmit):
     python scripts/submit_to_aristotle.py --resume 082e6776-42d7-469d-be9d-064c328540cf
@@ -77,10 +77,14 @@ def retrieve_result(project_id: str, destination: Path, api_key: str) -> Path:
 
     print(f"Retrieving project {project_id}...")
     cmd = [
-        "aristotle", "result", project_id,
+        "aristotle",
+        "result",
+        project_id,
         "--wait",
-        "--destination", str(tar_path),
-        "--api-key", api_key,
+        "--destination",
+        str(tar_path),
+        "--api-key",
+        api_key,
     ]
     subprocess.run(cmd, check=True)
 
@@ -115,7 +119,9 @@ def extract_tarball(tar_path: Path, destination: Path) -> Path:
         if child.is_dir() and any(child.glob("*.lean")):
             return child
 
-    raise FileNotFoundError(f"Could not find Lean project in extracted files at {destination}")
+    raise FileNotFoundError(
+        f"Could not find Lean project in extracted files at {destination}"
+    )
 
 
 def generate_diff(patched_dir: Path, original_dir: Path, output_path: Path) -> str:
@@ -131,9 +137,18 @@ def generate_diff(patched_dir: Path, original_dir: Path, output_path: Path) -> s
             continue
 
         result = subprocess.run(
-            ["diff", "-u", str(original_file), str(patched_file),
-             "--label", f"a/{rel_path}", "--label", f"b/{rel_path}"],
-            capture_output=True, text=True
+            [
+                "diff",
+                "-u",
+                str(original_file),
+                str(patched_file),
+                "--label",
+                f"a/{rel_path}",
+                "--label",
+                f"b/{rel_path}",
+            ],
+            capture_output=True,
+            text=True,
         )
         if result.stdout:
             diff_lines.append(result.stdout)
@@ -198,32 +213,45 @@ def main():
         description="Submit Lean sorry gaps to Aristotle for automated proof filling"
     )
     parser.add_argument(
-        "--priority", type=int, default=1, choices=[1, 2, 3],
-        help="Maximum priority level to submit (1=algebraic, 2=moderate, 3=all). Default: 1"
+        "--priority",
+        type=int,
+        default=1,
+        choices=[1, 2, 3],
+        help="Maximum priority level to submit (1=algebraic, 2=moderate, 3=all). Default: 1",
     )
     parser.add_argument(
-        "--target", type=str, default=None,
-        help="Target a specific sorry by name (e.g., 'acousticMetric_det')"
+        "--target",
+        type=str,
+        default=None,
+        help="Target a specific sorry by name (e.g., 'acousticMetric_det')",
     )
     parser.add_argument(
-        "--timeout", type=int, default=3600,
-        help="Timeout in seconds per submission. Default: 3600 (1 hour)"
+        "--timeout",
+        type=int,
+        default=3600,
+        help="Timeout in seconds per submission. Default: 3600 (1 hour)",
     )
     parser.add_argument(
-        "--dry-run", action="store_true",
-        help="Print what would be submitted without actually submitting"
+        "--dry-run",
+        action="store_true",
+        help="Print what would be submitted without actually submitting",
     )
     parser.add_argument(
-        "--retrieve", type=str, default=None,
-        help="Retrieve results for a previous project ID instead of submitting new"
+        "--retrieve",
+        type=str,
+        default=None,
+        help="Retrieve results for a previous project ID instead of submitting new",
     )
     parser.add_argument(
-        "--integrate", action="store_true",
-        help="Auto-integrate patched files into lean/ (review diff first!)"
+        "--integrate",
+        action="store_true",
+        help="Auto-integrate patched files into lean/ (review diff first!)",
     )
     parser.add_argument(
-        "--resume", type=str, default=None,
-        help="Resume from an OUT_OF_BUDGET run: retrieve partial results, integrate, resubmit"
+        "--resume",
+        type=str,
+        default=None,
+        help="Resume from an OUT_OF_BUDGET run: retrieve partial results, integrate, resubmit",
     )
     args = parser.parse_args()
 
@@ -239,9 +267,13 @@ def main():
             if not gaps:
                 print(f"  ERROR: No sorry gap named '{args.target}'")
         else:
-            gaps = [g for g in SORRY_GAPS if g.priority <= args.priority and not g.filled]
+            gaps = [
+                g for g in SORRY_GAPS if g.priority <= args.priority and not g.filled
+            ]
             filled = [g for g in SORRY_GAPS if g.priority <= args.priority and g.filled]
-            print(f"\nWould submit {len(gaps)} unfilled gaps at priority ≤ {args.priority}")
+            print(
+                f"\nWould submit {len(gaps)} unfilled gaps at priority ≤ {args.priority}"
+            )
             if filled:
                 print(f"  (Skipping {len(filled)} already-filled gaps)")
         return
@@ -258,7 +290,7 @@ def main():
         diff_text = generate_diff(patched_dir, LEAN_DIR, diff_path)
         if diff_text:
             print(f"\nDiff saved to: {diff_path}")
-            print(f"\n{'='*60}\nDIFF PREVIEW (first 3000 chars)\n{'='*60}")
+            print(f"\n{'=' * 60}\nDIFF PREVIEW (first 3000 chars)\n{'=' * 60}")
             print(diff_text[:3000])
         else:
             print("\nNo differences found (files identical).")
@@ -297,7 +329,7 @@ def main():
         diff_text = generate_diff(patched_dir, LEAN_DIR, diff_path)
         if diff_text:
             print(f"\nPartial progress diff saved to: {diff_path}")
-            print(f"\n{'='*60}\nPARTIAL DIFF PREVIEW (first 2000 chars)\n{'='*60}")
+            print(f"\n{'=' * 60}\nPARTIAL DIFF PREVIEW (first 2000 chars)\n{'=' * 60}")
             print(diff_text[:2000])
         else:
             print("\nNo partial progress found (files identical). Nothing to resume.")
@@ -352,18 +384,22 @@ def main():
             if filled:
                 print(f"  All {len(filled)} gaps at this level are already filled!")
             return
-        print(f"\nSubmitting {len(gaps)} unfilled sorry gaps (priority ≤ {args.priority}):")
+        print(
+            f"\nSubmitting {len(gaps)} unfilled sorry gaps (priority ≤ {args.priority}):"
+        )
         for g in gaps:
             print(f"  [{g.priority}] {g.module}.{g.name}")
         if filled:
-            print(f"\n  (Skipping {len(filled)} already-filled: {', '.join(g.name for g in filled)})")
+            print(
+                f"\n  (Skipping {len(filled)} already-filled: {', '.join(g.name for g in filled)})"
+            )
         result = runner.submit_priority_batch(
             max_priority=args.priority,
             timeout_seconds=args.timeout,
         )
 
     # Report
-    print(f"\n{'='*60}\nRESULTS\n{'='*60}")
+    print(f"\n{'=' * 60}\nRESULTS\n{'=' * 60}")
     print(f"Project ID: {result.project_id}")
     print(f"Status: {result.status}")
 
@@ -372,9 +408,13 @@ def main():
         print(f"\n⚠️  OUT_OF_BUDGET: Aristotle exhausted its compute budget.")
         print(f"   Partial results may be available. Next steps:")
         print(f"   1. Retrieve partial output:")
-        print(f"      aristotle result {result.project_id} --destination partial.tar.gz")
+        print(
+            f"      aristotle result {result.project_id} --destination partial.tar.gz"
+        )
         print(f"   2. Or use this script:")
-        print(f"      python scripts/submit_to_aristotle.py --retrieve {result.project_id}")
+        print(
+            f"      python scripts/submit_to_aristotle.py --retrieve {result.project_id}"
+        )
         print(f"   3. Inspect the diff for any useful partial progress")
         print(f"   4. Resubmit the (partially-filled) project to continue\n")
 
@@ -415,7 +455,9 @@ def main():
             if args.integrate:
                 updated = integrate_proofs(patched_dir, LEAN_DIR)
                 if updated:
-                    print(f"\nIntegrated {len(updated)} files. Run `lake build` to verify!")
+                    print(
+                        f"\nIntegrated {len(updated)} files. Run `lake build` to verify!"
+                    )
 
     print(f"\nFull results saved to {RESULTS_DIR}/")
 

@@ -1,0 +1,13 @@
+SK-EFT Hawking Validation Report
+Generated: 20260327T050929Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] paper_provenance
+  + paper1_first_order/figures — 3 figure files present
+  + paper2_second_order/figures — 6 figure files present
+  + paper3_gauge_erasure/figures — 2 figure files present
+  + paper4_wkb_connection/figures — 3 figure files present
+  + paper5_adw_gap/figures — 3 figure files present
+  + paper6_vestigial/figures — 2 figure files present
+
+Overall: 1/1 passed

@@ -551,6 +551,22 @@ SORRY_GAPS: list[SorryGap] = [
              strategy_hint="case analysis", filled=True),
     SorryGap(module="SKEFTHawking.FractonGravity", name="param_gap_grows",
              priority=1, description="Parameter gap grows with dimension", strategy_hint="monotonicity", filled=True),
+
+    # Wave 5 quality audit — strengthened from vacuous conclusions (2026-03-26)
+    SorryGap(module="SKEFTHawking.ChiralityWall", name="gs_nogo_requires_all",
+             priority=1,
+             description="GS no-go: applicable_count = 2 ∧ applicable_count < length. "
+                         "Strengthened from vacuous `true` conclusion.",
+             strategy_hint="native_decide on concrete gs_conditions list",
+             filled=True),
+    SorryGap(module="SKEFTHawking.SKDoubling", name="zeroTemp_nontrivial",
+             priority=1,
+             description="Dissipative action non-trivial at any T: ∃ f, 0 < Im(L(f)). "
+                         "Strengthened from vacuous `True` conclusion.",
+             strategy_hint="Witness ψ_a=1 gives Im = γ₁/β > 0 when γ₁ > 0. "
+                           "Witness ∂_t ψ_a=1 gives Im = γ₂/β > 0 when γ₂ > 0. "
+                           "Use div_pos.",
+             filled=True),
 ]
 
 

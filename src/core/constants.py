@@ -105,8 +105,8 @@ COLORS = {
 # Maps Aristotle-proved theorems to their run IDs.
 #
 # Verification breakdown (216 theorems + 1 axiom across 16 Lean modules):
-#   - 54 proved by Aristotle automated theorem prover (listed below with run IDs)
-#   - 162 proved manually in Lean (verified by `lake build`, zero sorry)
+#   - 56 proved by Aristotle automated theorem prover (listed below with run IDs)
+#   - 160 proved manually in Lean (verified by `lake build`, zero sorry)
 #   - 1 axiom: non_abelian_center_discrete in GaugeErasure.lean
 #
 # All 217 proof obligations have zero sorry. Verified by `lake build`.
@@ -181,10 +181,14 @@ ARISTOTLE_THEOREMS = {
     'tpf_evasion_margin': 'b1ea2eb7',
     'obstructions_individually_sufficient': 'b1ea2eb7',
     'param_gap_grows': 'b1ea2eb7',
+
+    # Wave 5 quality audit: strengthened vacuous theorems (2026-03-26)
+    'gs_nogo_requires_all': 'f35ca767',
+    'zeroTemp_nontrivial': 'f35ca767',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 54, f"Expected 54 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 56, f"Expected 56 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

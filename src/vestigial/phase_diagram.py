@@ -133,7 +133,9 @@ def scan_coupling(
             C_norm = C / Lambda if Lambda > 0 else C
             G_norm = G_m / Lambda**2 if Lambda > 0 else G_m
 
-            phase = classify_phase_point(C_norm, G_norm)
+            # Use the corrected phase from full_mean_field_analysis
+            # (curvature-based classification, not raw metric threshold)
+            phase = result.phase
 
             points.append(PhasePoint(
                 coupling_ratio=r,

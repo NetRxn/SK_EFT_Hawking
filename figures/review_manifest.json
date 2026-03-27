@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-26T05:36:05.909246+00:00",
+  "generated": "2026-03-27T05:08:00.928793+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1047,6 +1047,28 @@
       "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig41_he3_comparison_table.html",
       "expected_traces": 1,
       "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig45_vestigial_effective_potential",
+      "function": "fig_vestigial_effective_potential",
+      "caption": "Paper 6 native V_eff at three coupling ratios.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig45_vestigial_effective_potential.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig45_vestigial_effective_potential.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "C"
+      },
       "physics_checks": [],
       "color_keys": [],
       "review_criteria": [

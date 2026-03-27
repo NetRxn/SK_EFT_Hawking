@@ -46,11 +46,10 @@ from src.core.formulas import damping_rate, decoherence_parameter, fdr_noise_flo
 
 
 # ═══════════════════════════════════════════════════════════════════
-# Physical constants (SI)
+# Physical constants (from single source of truth)
 # ═══════════════════════════════════════════════════════════════════
 
-_HBAR = 1.054571817e-34   # J*s
-_K_B = 1.380649e-23       # J/K
+from src.core.constants import HBAR as _HBAR, K_B as _K_B, ATOMS
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -105,7 +104,7 @@ def steinhauer_si() -> SIPlatformParams:
         T_H_si=0.35e-9,
         n_atoms=8000,
         n_1D=5e7,
-        mass=1.443160648e-25,
+        mass=ATOMS['Rb87']['mass'],
         chemical_potential=3.6e-32,
         bec_lifetime=0.1,
         description="Steinhauer 87Rb waterfall BEC (Technion)",
@@ -127,7 +126,7 @@ def heidelberg_si() -> SIPlatformParams:
         T_H_si=0.70e-9,
         n_atoms=100000,
         n_1D=3e7,
-        mass=6.470076e-26,
+        mass=ATOMS['K39']['mass'],
         chemical_potential=5.8e-32,
         bec_lifetime=1.0,
         description="Heidelberg 39K Feshbach-tunable BEC",
@@ -148,7 +147,7 @@ def trento_si() -> SIPlatformParams:
         T_H_si=0.24e-9,
         n_atoms=500000,
         n_1D=1e8,
-        mass=3.8175458e-26,
+        mass=ATOMS['Na23']['mass'],
         chemical_potential=2.1e-32,
         bec_lifetime=5.0,
         description="Trento 23Na spin-sonic BEC proposal",
@@ -534,8 +533,9 @@ def backreaction_evolution(
                 n_current, n_0, kappa_0, c_s_0, mass, g_int,
             )
 
-            # Update Hawking temperature: T_H = hbar * kappa / (2*pi*k_B)
-            T_H_current = _HBAR * kappa_current / (2.0 * np.pi * _K_B)
+            # Update Hawking temperature
+            from src.core.formulas import hawking_temperature
+            T_H_current = hawking_temperature(kappa_current)
 
             # Cumulative energy radiated
             E_radiated += dE
@@ -745,8 +745,9 @@ def exponential_cooling_model(
     """
     # Use the exact rational solution rather than the exponential
     # approximation, since it correctly captures the late-time behavior
+    from src.core.formulas import hawking_temperature
     kappa_arr = kappa_0 / (1.0 + times / tau_cool)
-    T_H_arr = _HBAR * kappa_arr / (2.0 * np.pi * _K_B)
+    T_H_arr = hawking_temperature(kappa_arr)
     return kappa_arr, T_H_arr
 
 

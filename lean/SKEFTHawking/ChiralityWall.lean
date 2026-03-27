@@ -227,13 +227,20 @@ The TPF construction achieves ¬C1 (infinite rotors) and ¬C4 (ancilla fields).
 This is sufficient: ¬C1 alone breaks the conjunction.
 -/
 
-/-- The GS theorem requires ALL conditions to hold. Evading any one is sufficient. -/
-theorem gs_nogo_requires_all : ∀ (conditions : List GSCondition),
-    conditions.length = 4 →
-    (conditions.filter (fun c => !c.applies_to_tpf)).length ≥ 1 →
-    -- If at least 1 condition is evaded, the no-go does not apply
-    true := by
-  intros; trivial
+/-
+PROBLEM
+The GS theorem requires ALL conditions to hold. Evading any one is sufficient
+    to break the no-go. For gs_conditions: only 2 of 4 apply to TPF, so the
+    conjunction of all 4 fails.
+
+    Strengthened from vacuous `true` conclusion (quality audit 2026-03-26).
+
+PROVIDED SOLUTION
+Both conjuncts are decidable computations on concrete lists. Use `native_decide` or `decide`.
+-/
+theorem gs_nogo_requires_all :
+    applicable_count gs_conditions = 2 ∧ applicable_count gs_conditions < gs_conditions.length := by
+  native_decide +revert
 
 /-- Stronger: TPF evades exactly 2 conditions, which is more than sufficient. -/
 theorem tpf_evades_two_sufficient :

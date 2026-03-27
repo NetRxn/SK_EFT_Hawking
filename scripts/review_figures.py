@@ -482,6 +482,16 @@ FIGURE_REGISTRY: list[FigureSpec] = [
     ),
     # Phase 4 Wave 2
     FigureSpec(
+        name="fig45_vestigial_effective_potential",
+        function="fig_vestigial_effective_potential",
+        caption="Paper 6 native V_eff at three coupling ratios.",
+        needs_experiments=False,
+        expected_traces=3,
+        expected_axes={"xaxis": "C"},
+        physics_checks=[],
+        color_keys=[],
+    ),
+    FigureSpec(
         name="fig42_vestigial_phase_diagram",
         function="fig_vestigial_phase_diagram",
         caption="Vestigial gravity mean-field phase diagram.",
@@ -547,6 +557,7 @@ def generate_figures() -> dict[str, Path]:
         fig_chirality_wall_status, fig_gl_phase_diagram,
         fig_he3_comparison_table,
         # Phase 4 Wave 2
+        fig_vestigial_effective_potential,
         fig_vestigial_phase_diagram, fig_backreaction_cooling,
         fig_information_retention,
     )
@@ -616,6 +627,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_gl_phase_diagram": fig_gl_phase_diagram,
         "fig_he3_comparison_table": fig_he3_comparison_table,
         # Phase 4 Wave 2
+        "fig_vestigial_effective_potential": fig_vestigial_effective_potential,
         "fig_vestigial_phase_diagram": fig_vestigial_phase_diagram,
         "fig_backreaction_cooling": fig_backreaction_cooling,
         "fig_information_retention": fig_information_retention,
@@ -688,6 +700,7 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_chirality_wall_status, fig_gl_phase_diagram,
         fig_he3_comparison_table,
         # Phase 4 Wave 2
+        fig_vestigial_effective_potential,
         fig_vestigial_phase_diagram, fig_backreaction_cooling,
         fig_information_retention,
         COLORS,
@@ -755,6 +768,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_gl_phase_diagram": fig_gl_phase_diagram,
         "fig_he3_comparison_table": fig_he3_comparison_table,
         # Phase 4 Wave 2
+        "fig_vestigial_effective_potential": fig_vestigial_effective_potential,
         "fig_vestigial_phase_diagram": fig_vestigial_phase_diagram,
         "fig_backreaction_cooling": fig_backreaction_cooling,
         "fig_information_retention": fig_information_retention,

@@ -137,6 +137,30 @@ def dispersive_correction(D):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Hawking temperature (AcousticMetric.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def hawking_temperature(kappa):
+    """
+    Hawking temperature from surface gravity.
+
+    T_H = hbar * kappa / (2 * pi * k_B)
+
+    This is the Unruh-Hawking result for a 1+1D acoustic black hole.
+
+    Lean: hawking_temp_from_surface_gravity (AcousticMetric.lean)
+    Aristotle: manual
+
+    Args:
+        kappa: surface gravity [s^-1]
+
+    Returns:
+        T_H [K]
+    """
+    from src.core.constants import HBAR, K_B
+    return HBAR * kappa / (2 * np.pi * K_B)
+
+
 # First-order dissipative correction (WKBAnalysis.lean)
 # ════════════════════════════════════════════════════════════════════
 
@@ -177,7 +201,7 @@ def second_order_correction(k, omega, c_s, gamma_2_1, gamma_2_2, kappa):
     δ⁽²⁾(ω) = γ_{2,1}·k·(k² - ω²/c_s²) / κ
     which vanishes for acoustic modes (k = ω/c_s) and grows with dispersion.
 
-    Lean: secondOrderCorrection (WKBAnalysis.lean)
+    Lean: secondOrder_vanishes_on_shell_with_positivity (WKBAnalysis.lean)
     Aristotle: 518636d7
 
     Args:
@@ -389,7 +413,8 @@ def adw_effective_potential(C, G, Lambda, N_f):
     The second term is the one-loop Coleman-Weinberg contribution
     from integrating out N_f Dirac fermions in the tetrad background.
 
-    Lean: effective_potential_structure (ADWMechanism.lean)
+    Lean: critical_coupling_pos (ADWMechanism.lean) — V_eff structure verified via G_c positivity
+    Aristotle: manual
 
     Args:
         C: Tetrad magnitude (order parameter)
@@ -431,6 +456,34 @@ def adw_critical_coupling(Lambda, N_f):
     return 8.0 * np.pi**2 / (N_f * Lambda**2)
 
 
+def adw_curvature_at_origin(G, Lambda, N_f):
+    """
+    Second derivative of V_eff at C=0 (curvature at the origin).
+
+    d²V_eff/dC²|_{C=0} = 1/G - N_f · Λ² / (8π²)
+
+    Positive for G < G_c (origin is a minimum, pre-geometric).
+    Zero at G = G_c (phase transition).
+    Negative for G > G_c (origin is unstable, tetrad condenses).
+
+    In the vestigial phase analysis, this curvature determines the
+    metric correlation length: ξ_metric ~ 1/√curvature. As curvature → 0
+    near G_c, metric correlations grow, producing vestigial ordering.
+
+    Lean: curvature_zero_at_Gc (ADWMechanism.lean)
+    Aristotle: f8de66d1
+
+    Args:
+        G: ADW coupling constant
+        Lambda: UV cutoff
+        N_f: Number of Dirac fermion species
+
+    Returns:
+        d²V_eff/dC²|_{C=0}
+    """
+    return 1.0 / G - N_f * Lambda**2 / (8.0 * np.pi**2)
+
+
 def tetrad_broken_generators(spacetime_dim):
     """
     Number of broken generators in L_c × L_s → L_J.
@@ -439,7 +492,8 @@ def tetrad_broken_generators(spacetime_dim):
 
     For d=4: n_broken = 6.
 
-    Lean: broken_generators_eq (ADWMechanism.lean)
+    Lean: broken_generators_4d (ADWMechanism.lean)
+    Aristotle: manual
 
     Args:
         spacetime_dim: Dimension of spacetime (d)
@@ -460,7 +514,8 @@ def graviton_polarization_count(spacetime_dim):
     For d=4: 2 polarizations (helicity ±2).
     For d=3: 0 (no gravitational waves in 2+1D).
 
-    Lean: graviton_polarization_count (ADWMechanism.lean)
+    Lean: graviton_pol_4d (ADWMechanism.lean)
+    Aristotle: manual
 
     Args:
         spacetime_dim: Dimension of spacetime (d)
@@ -485,6 +540,9 @@ def beliaev_damping_rate(n_1D, a_s, kappa, c_s):
     This gives the total first-order damping RATE [s⁻¹] at the horizon.
     To extract EFT transport coefficients, use beliaev_transport_coefficients().
 
+    Lean: dampingRate_firstOrder_nonneg (WKBAnalysis.lean) — verifies Γ_H ≥ 0
+    Aristotle: manual (UV matching formula; Lean verifies the EFT structure, not the microscopic derivation)
+
     Args:
         n_1D: quasi-1D linear density [m⁻¹]
         a_s: s-wave scattering length [m]
@@ -506,6 +564,9 @@ def beliaev_transport_coefficients(n_1D, a_s, kappa, c_s, xi):
 
     Matching to Beliaev: γ₁ = γ₂ = Γ_Bel / (2·k_H²)
     (equal splitting from leading-order KMS: FirstOrderKMS theorem)
+
+    Lean: firstOrder_uniqueness (SKDoubling.lean) — verifies the (γ₁, γ₂) parameterization
+    Aristotle: manual (UV matching; Lean verifies the EFT structure)
 
     Second-order coefficients are suppressed by ξ/c_s:
         γ_{2,1} scale ~ Γ_Bel · (ξ/c_s) / (2·k_H³)

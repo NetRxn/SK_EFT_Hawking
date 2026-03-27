@@ -2967,7 +2967,16 @@ def fig_kappa_scaling_phase4():
     fig.update_xaxes(title_text="D = \u03ba\u03be/c<sub>s</sub>", row=1, col=1)
     fig.update_xaxes(title_text="D = \u03ba\u03be/c<sub>s</sub>", row=1, col=2)
     fig.update_yaxes(title_text="|\u03b4<sub>disp</sub>|", type="log", row=1, col=1)
-    fig.update_yaxes(title_text="\u03b4<sub>diss</sub>", row=1, col=2)
+    # δ_diss is D-independent (~5e-5), so show actual scale
+    diss_max = max(abs(v) for v in pred.delta_diss_values) if any(pred.delta_diss_values) else 1e-4
+    fig.update_yaxes(title_text="\u03b4<sub>diss</sub>",
+                     range=[0, diss_max * 3], row=1, col=2)
+    fig.add_annotation(
+        text=f"\u03b4<sub>diss</sub> \u2248 {diss_max:.1e} (D-independent)",
+        xref="x2", yref="y2",
+        x=0.03, y=diss_max * 2, showarrow=False,
+        font=dict(size=11, color=COLORS['dissipative']),
+    )
 
     apply_layout(fig,
         height=400, width=850,
@@ -3199,6 +3208,56 @@ def fig_he3_comparison_table():
 # Phase 4 Wave 2: Vestigial Gravity + Backreaction (fig42-fig44)
 # ════════════════════════════════════════════════════════════════
 
+def fig_vestigial_effective_potential():
+    """Paper 6 native V_eff figure: effective potential at three coupling ratios
+    showing the transition from pre-geometric (stable origin) through vestigial
+    (small curvature) to full tetrad (Mexican hat).
+
+    Uses G/G_c = 0.5 (pre-geometric), 0.9 (vestigial), 1.5 (full tetrad).
+    """
+    from src.adw.gap_equation import effective_potential
+    from src.core.formulas import adw_critical_coupling, adw_curvature_at_origin
+
+    Lambda = 1.0
+    N_f = 4
+    G_c = adw_critical_coupling(Lambda, N_f)
+
+    C_range = np.linspace(0, 0.6 * Lambda, 200)
+
+    ratios = [0.5, 0.9, 2.0]
+    labels = [
+        f"G/G<sub>c</sub> = 0.5 (pre-geometric)",
+        f"G/G<sub>c</sub> = 0.9 (vestigial)",
+        f"G/G<sub>c</sub> = 2.0 (full tetrad)",
+    ]
+    colors_list = [COLORS['dispersive'], COLORS['Trento'], COLORS['Steinhauer']]
+
+    fig = go.Figure()
+
+    for r, label, color in zip(ratios, labels, colors_list):
+        G = r * G_c
+        V_vals = [effective_potential(c, G, Lambda, N_f) for c in C_range]
+        fig.add_trace(go.Scatter(
+            x=C_range / Lambda, y=V_vals,
+            mode="lines", name=label,
+            line=dict(color=color, width=2.5),
+        ))
+
+    fig.add_hline(y=0, line=dict(color="grey", width=0.5, dash="dash"))
+
+    # Cap y-range so the Mexican-hat dip at G > G_c is visible
+    apply_layout(fig,
+        height=450, width=650,
+        title=dict(text="<b>Effective Potential V<sub>eff</sub>(C)</b>", font=TITLE_FONT),
+        xaxis_title="C / \u039b",
+        yaxis_title="V<sub>eff</sub>(C)",
+        legend=dict(x=0.35, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+    fig.update_yaxes(range=[-0.002, 0.005])
+
+    return fig
+
+
 def fig_vestigial_phase_diagram():
     """Fig 42: Vestigial gravity phase diagram from mean-field scan."""
     from src.vestigial.phase_diagram import scan_coupling
@@ -3271,14 +3330,14 @@ def fig_backreaction_cooling():
     results = all_platform_backreaction()
 
     platform_colors_map = {
-        'Steinhauer_Rb87': COLORS['Steinhauer'],
-        'Heidelberg_K39': COLORS['Heidelberg'],
-        'Trento_Na23': COLORS['Trento'],
+        'steinhauer': COLORS['Steinhauer'],
+        'heidelberg': COLORS['Heidelberg'],
+        'trento': COLORS['Trento'],
     }
     platform_labels = {
-        'Steinhauer_Rb87': 'Steinhauer <sup>87</sup>Rb',
-        'Heidelberg_K39': 'Heidelberg <sup>39</sup>K',
-        'Trento_Na23': 'Trento <sup>23</sup>Na',
+        'steinhauer': 'Steinhauer <sup>87</sup>Rb',
+        'heidelberg': 'Heidelberg <sup>39</sup>K',
+        'trento': 'Trento <sup>23</sup>Na',
     }
 
     fig = go.Figure()
