@@ -37,6 +37,7 @@ References:
 import numpy as np
 from dataclasses import dataclass
 from typing import Optional
+from src.core.constants import HBAR, K_B, ATOMS, EXPERIMENTS
 
 
 @dataclass
@@ -67,7 +68,7 @@ class BECParameters:
 
     def __post_init__(self):
         """Compute derived quantities from the fundamental parameters."""
-        hbar = 1.054571817e-34  # [J·s]
+        hbar = HBAR
 
         # Transverse oscillator length
         a_perp = np.sqrt(hbar / (self.mass * self.omega_perp))
@@ -102,13 +103,14 @@ def steinhauer_Rb87() -> BECParameters:
     Limitation: ⁸⁷Rb lacks broad Feshbach resonances, so the scattering
     length (and hence surface gravity) cannot be tuned independently.
     """
-    m_Rb87 = 1.443160648e-25  # kg
-    a_Rb87 = 5.77e-9  # m (⁸⁷Rb scattering length)
+    atom = ATOMS['Rb87']
+    exp = EXPERIMENTS['Steinhauer']
     return BECParameters(
-        mass=m_Rb87,
-        scattering_length=a_Rb87,
-        density_upstream=5e7,      # m⁻¹ (typical 1D density)
-        velocity_upstream=0.85e-3, # m/s (M ~ 0.74, subsonic but near-sonic)
+        mass=atom['mass'],
+        scattering_length=atom['a_s'],
+        density_upstream=exp['density_upstream'],
+        velocity_upstream=exp['velocity_upstream'],
+        omega_perp=exp['omega_perp'],
     )
 
 
@@ -122,13 +124,14 @@ def heidelberg_K39() -> BECParameters:
 
     Uses DMD (digital micromirror device) for arbitrary potential shaping.
     """
-    m_K39 = 6.470076e-26  # kg
-    a_K39 = 50e-9  # m (tunable via Feshbach; this is a moderate value)
+    atom = ATOMS['K39']
+    exp = EXPERIMENTS['Heidelberg']
     return BECParameters(
-        mass=m_K39,
-        scattering_length=a_K39,
-        density_upstream=3e7,
-        velocity_upstream=3.0e-3,  # M ~ 0.77
+        mass=atom['mass'],
+        scattering_length=atom['a_s'],
+        density_upstream=exp['density_upstream'],
+        velocity_upstream=exp['velocity_upstream'],
+        omega_perp=exp['omega_perp'],
     )
 
 
@@ -144,13 +147,14 @@ def trento_spin_sonic() -> BECParameters:
 
     Reference: Berti et al., Comptes Rendus Physique (2025)
     """
-    m_Na23 = 3.8175458e-26  # kg
-    a_Na23 = 2.75e-9  # m
+    atom = ATOMS['Na23']
+    exp = EXPERIMENTS['Trento']
     return BECParameters(
-        mass=m_Na23,
-        scattering_length=a_Na23,
-        density_upstream=1e8,
-        velocity_upstream=1.6e-3,  # M ~ 0.73
+        mass=atom['mass'],
+        scattering_length=atom['a_s'],
+        density_upstream=exp['density_upstream'],
+        velocity_upstream=exp['velocity_upstream'],
+        omega_perp=exp['omega_perp'],
     )
 
 
@@ -224,8 +228,8 @@ def solve_transonic_background(
     Returns:
         TransonicBackground with all fields on the spatial grid.
     """
-    hbar = 1.054571817e-34
-    k_B = 1.380649e-23
+    hbar = HBAR
+    k_B = K_B
     xi = params.healing_length
     cs0 = params.sound_speed_upstream
     g_int = params.interaction_strength
@@ -279,7 +283,8 @@ def solve_transonic_background(
     potential = E0 - 0.5 * m * velocity**2 - g_int * density
 
     # Hawking temperature
-    T_H = hbar * kappa / (2 * np.pi * k_B)
+    from src.core.formulas import hawking_temperature
+    T_H = hawking_temperature(kappa)
 
     # Adiabaticity parameter
     cs_H = sound_speed[horizon_idx]
@@ -334,7 +339,7 @@ def compute_dissipative_correction(
     kappa = bg.surface_gravity
     xi = params.healing_length
     cs = params.sound_speed_upstream
-    hbar = 1.054571817e-34
+    hbar = HBAR
 
     # The transport coefficients γ₁, γ₂ here have units [s⁻¹] — they are
     # the phonon damping rate evaluated at the Hawking frequency ω_H ~ κ.
@@ -342,17 +347,14 @@ def compute_dissipative_correction(
     #   δ_diss ~ Γ_H / κ
     # where Γ_H = γ₁ + γ₂ is the total damping rate at ω_H.
     # This is the ratio of the damping timescale to the Hawking timescale.
+    from src.core.formulas import first_order_correction, dispersive_correction
+
+    # gamma_1, gamma_2 are already damping RATES [s⁻¹] at the horizon
     gamma_eff = gamma_1 + gamma_2
 
-    if kappa > 0:
-        delta_diss = gamma_eff / kappa
-    else:
-        delta_diss = 0.0
-
-    # Dispersive correction: δ_disp ~ (κξ/c_s)² (Coutant-Parentani)
-    # The coefficient depends on the dispersion type (sub/superluminal)
     D = bg.adiabaticity
-    delta_disp = -(np.pi / 6) * D**2  # Corley-Jacobson; matches formulas.dispersive_correction
+    delta_diss = first_order_correction(gamma_eff, kappa)
+    delta_disp = dispersive_correction(D)
 
     # Cross-term: δ_cross ~ δ_disp · δ_diss
     delta_cross = delta_disp * delta_diss
@@ -390,7 +392,7 @@ if __name__ == "__main__":
         params = param_fn()
         print(f"  Healing length: {params.healing_length*1e6:.3f} μm")
         print(f"  Sound speed:    {params.sound_speed_upstream*1e3:.3f} mm/s")
-        print(f"  Chemical pot:   {params.chemical_potential/1.380649e-23*1e9:.2f} nK (in k_B units)")
+        print(f"  Chemical pot:   {params.chemical_potential/K_B*1e9:.2f} nK (in k_B units)")
 
         bg = solve_transonic_background(params)
         print(f"  Horizon at:     x_H = {bg.x_horizon/params.healing_length:.1f} ξ")

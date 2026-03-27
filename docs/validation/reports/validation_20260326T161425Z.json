@@ -1,0 +1,113 @@
+{
+  "timestamp": "20260326T161425Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "notebook_exec": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "ADW_Technical.ipynb",
+          "passed": true,
+          "message": "14 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": false,
+          "message": "\u001b[31mNameError\u001b[39m: name 'compute_prediction_table' is not defined",
+          "warning": false
+        },
+        {
+          "name": "ExperimentalPredictions_Technical.ipynb",
+          "passed": false,
+          "message": "\u001b[31mAttributeError\u001b[39m: 'PerturbativeComparison' object has no attribute 'max_deviation'",
+          "warning": false
+        },
+        {
+          "name": "GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "13 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "16 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3_Stakeholder.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3_Technical.ipynb",
+          "passed": true,
+          "message": "12 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "4 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "13 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

@@ -179,7 +179,7 @@ Express |α_k|² and |β_k|² in terms of the EFT parameters. The standard unita
 - [x] `papers/paper4_wkb_connection/paper_draft.tex` — PRD format, standalone paper (decision: non-perturbative effects warrant standalone)
 - [x] Numerical comparison: WKB exact vs. EFT perturbative for three BEC platforms (in spectrum.py + notebooks)
 - [x] Tests in `tests/test_wkb_connection.py` — 65 tests across 12 test classes
-- [x] Notebooks: WKBConnection_Technical.ipynb (26 cells) + WKBConnection_Stakeholder.ipynb (17 cells)
+- [x] Notebooks: Phase3c_WKBConnection_Technical.ipynb (26 cells) + Phase3c_WKBConnection_Stakeholder.ipynb (17 cells)
 - [x] Updated `src/core/formulas.py` with decoherence_parameter() and fdr_noise_floor() (Lean-referenced)
 
 **Key question answer:** YES — three non-perturbative effects beyond perturbative EFT:
@@ -249,7 +249,7 @@ Expand around the saddle point. Count Nambu-Goldstone modes: GL(4,ℝ)/SO(3,1) b
 - [x] Aristotle submission: curvature_zero_at_Gc proved via `one_div_div` + `sub_self`
 - [x] `papers/paper5_adw_gap/paper_draft.tex` — PRD format, qualified positive result
 - [x] Tests: 78 new tests in `tests/test_adw.py` (13 test classes)
-- [x] Notebooks: ADW_Technical.ipynb (22 cells) + ADW_Stakeholder.ipynb (16 cells)
+- [x] Notebooks: Phase3d_ADW_Technical.ipynb (22 cells) + Phase3d_ADW_Stakeholder.ipynb (16 cells)
 - [x] Updated `src/core/formulas.py` with adw_effective_potential, adw_critical_coupling, tetrad_broken_generators, graviton_polarization_count
 - [x] 7 new figures (fig28-fig34) in visualizations.py, all LLM-reviewed PASS
 

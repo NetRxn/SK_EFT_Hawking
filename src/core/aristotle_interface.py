@@ -513,6 +513,60 @@ SORRY_GAPS: list[SorryGap] = [
         filled=True,  # Proved by Aristotle run dab8cfc1 (March 24, 2026)
                       # Proof: exact ⟨eq_div_of_mul_eq hb.ne' h_fdr_01, eq_div_of_mul_eq hb.ne' h_fdr_10⟩
     ),
+
+    # ── Phase 3: ADWMechanism.lean (1 theorem) ──────────────────────────
+    SorryGap(module="SKEFTHawking.ADWMechanism", name="curvature_zero_at_Gc",
+             priority=1, description="V_eff curvature vanishes at critical coupling G_c",
+             strategy_hint="one_div_div + sub_self",
+             filled=True),  # Proved by Aristotle run f8de66d1 (March 25, 2026)
+
+    # ── Phase 4: Aristotle batch b1ea2eb7 (13 theorems) ────────────────
+    SorryGap(module="SKEFTHawking.FractonHydro", name="fracton_exceeds_standard_general",
+             priority=1, description="Fracton charges exceed standard hydro at all orders",
+             strategy_hint="Induction on multipole order", filled=True),
+    SorryGap(module="SKEFTHawking.FractonHydro", name="fracton_ratio_grows_3d",
+             priority=1, description="Fracton/standard charge ratio grows with order in 3D",
+             strategy_hint="Binomial monotonicity", filled=True),
+    SorryGap(module="SKEFTHawking.FractonHydro", name="binomial_strict_mono",
+             priority=1, description="Binomial coefficient strict monotonicity lemma",
+             strategy_hint="Nat.choose properties", filled=True),
+    SorryGap(module="SKEFTHawking.FractonGravity", name="dof_gap_eq_d_minus_1_check_4",
+             priority=1, description="DOF gap = d-1 at d=4", strategy_hint="native_decide", filled=True),
+    SorryGap(module="SKEFTHawking.FractonGravity", name="dof_gap_eq_d_minus_1_check_5",
+             priority=1, description="DOF gap = d-1 at d=5", strategy_hint="native_decide", filled=True),
+    SorryGap(module="SKEFTHawking.FractonGravity", name="dof_gap_positive_2_through_8",
+             priority=1, description="DOF gap positive for d=2..8", strategy_hint="native_decide", filled=True),
+    SorryGap(module="SKEFTHawking.VestigialGravity", name="phase_levels_distinct",
+             priority=1, description="Three gravity levels are distinct phases", strategy_hint="constructive", filled=True),
+    SorryGap(module="SKEFTHawking.VestigialGravity", name="phase_levels_ordered",
+             priority=1, description="Phase levels form ordered hierarchy", strategy_hint="constructive", filled=True),
+    SorryGap(module="SKEFTHawking.VestigialGravity", name="metric_dof_equals_gr",
+             priority=1, description="Metric DOF count matches GR prediction", strategy_hint="native_decide", filled=True),
+    SorryGap(module="SKEFTHawking.ChiralityWall", name="evading_one_breaks_nogo",
+             priority=1, description="Evading one GS condition breaks the no-go", strategy_hint="constructive", filled=True),
+    SorryGap(module="SKEFTHawking.ChiralityWall", name="tpf_evasion_margin",
+             priority=1, description="TPF evasion margin quantified", strategy_hint="arithmetic", filled=True),
+    SorryGap(module="SKEFTHawking.FractonNonAbelian", name="obstructions_individually_sufficient",
+             priority=1, description="Each obstruction individually sufficient to block YM compatibility",
+             strategy_hint="case analysis", filled=True),
+    SorryGap(module="SKEFTHawking.FractonGravity", name="param_gap_grows",
+             priority=1, description="Parameter gap grows with dimension", strategy_hint="monotonicity", filled=True),
+
+    # Wave 5 quality audit — strengthened from vacuous conclusions (2026-03-26)
+    SorryGap(module="SKEFTHawking.ChiralityWall", name="gs_nogo_requires_all",
+             priority=1,
+             description="GS no-go: applicable_count = 2 ∧ applicable_count < length. "
+                         "Strengthened from vacuous `true` conclusion.",
+             strategy_hint="native_decide on concrete gs_conditions list",
+             filled=True),
+    SorryGap(module="SKEFTHawking.SKDoubling", name="zeroTemp_nontrivial",
+             priority=1,
+             description="Dissipative action non-trivial at any T: ∃ f, 0 < Im(L(f)). "
+                         "Strengthened from vacuous `True` conclusion.",
+             strategy_hint="Witness ψ_a=1 gives Im = γ₁/β > 0 when γ₁ > 0. "
+                           "Witness ∂_t ψ_a=1 gives Im = γ₂/β > 0 when γ₂ > 0. "
+                           "Use div_pos.",
+             filled=True),
 ]
 
 

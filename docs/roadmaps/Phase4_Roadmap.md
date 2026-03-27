@@ -51,12 +51,12 @@
 - [ ] `src/experimental/predictions.py` — Functions computing all prediction tables
 - [ ] `papers/experimental_predictions/prediction_tables.tex` — Standalone prediction document
 - [ ] Figures: prediction comparison across platforms (stakeholder-friendly)
-- [ ] Notebooks: ExperimentalPredictions_Technical.ipynb + _Stakeholder.ipynb
+- [ ] Notebooks: Phase4a_ExperimentalPredictions_Technical.ipynb + _Stakeholder.ipynb
 - [ ] Tests
 
 **Estimated LOE:** Low-Medium (1/2 wave)
 **Risk:** Low. All physics is already computed; this is packaging and presentation.
-**Status:** `pending`
+**Status:** `complete` — src/experimental/predictions.py (33 tests), fig35-38, prediction_tables.tex
 
 ---
 
@@ -81,7 +81,7 @@
 
 **Estimated LOE:** Low-Medium (1/2 wave)
 **Risk:** Medium. The compatibility question may not have a clean formal answer — the two groups haven't engaged each other's work.
-**Status:** `pending`
+**Status:** `complete` — src/chirality/tpf_gs_analysis.py (55 tests), fig39, docs/chirality_wall_analysis.md
 
 ---
 
@@ -101,12 +101,12 @@
 **Deliverables:**
 - [ ] `src/adw/ginzburg_landau.py` — GL expansion, beta_i computation, phase classification
 - [ ] Figures: GL phase diagram, beta_i comparison He-3 vs ADW
-- [ ] Extension of ADW_Technical.ipynb
+- [ ] Extension of Phase3d_ADW_Technical.ipynb
 - [ ] Tests
 
 **Estimated LOE:** Medium
 **Risk:** Low-Medium. The GL expansion is standard; the invariant polynomial classification may require careful tensor algebra.
-**Status:** `pending`
+**Status:** `complete` — src/adw/ginzburg_landau.py (55 tests), fig40-41
 
 ---
 
@@ -177,7 +177,7 @@ Scan coupling constants to map the three phases: pre-geometric, vestigial, full 
 
 **Estimated LOE:** High (heaviest item in Phase 4)
 **Risk:** High. The lattice model must be chosen carefully; Monte Carlo convergence may be slow; the vestigial phase window may be too narrow to detect numerically.
-**Status:** `pending`
+**Status:** `complete` — src/vestigial/ (4 modules, 42 tests), Euclidean pilot with mean-field + MC
 
 ---
 
@@ -214,7 +214,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** High
 **Risk:** Medium. The fracton SK-EFT exists in the literature (Glorioso et al.); our contribution is the formalization and information comparison.
-**Status:** `pending`
+**Status:** `complete` — src/fracton/ (2 modules, 88 tests), docs/fracton_layer2_assessment.md
 
 ---
 
@@ -240,7 +240,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium
 **Risk:** Low-Medium. The physics is well-understood; connecting to the specific Balbinot framework requires careful matching.
-**Status:** `pending`
+**Status:** `complete` — src/wkb/backreaction.py (76 tests), acoustic BH cooling toward extremality
 
 ---
 
@@ -267,7 +267,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium-High
 **Risk:** Medium. The linearized equivalence is established; the bootstrap gap assessment is the novel contribution.
-**Status:** `pending`
+**Status:** `complete` — src/fracton/gravity_connection.py, bootstrap gap at 2nd order
 
 ---
 
@@ -286,7 +286,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 
 **Estimated LOE:** Medium
 **Risk:** High. This may produce a negative result — the algebra may be incompatible.
-**Status:** `pending`
+**Status:** `complete` — NEGATIVE RESULT. Non-Abelian fracton NOT Yang-Mills compatible. 4 obstructions formalized.
 
 ---
 
@@ -299,11 +299,11 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 **Deliverables:**
 - [ ] `papers/paper6_vestigial/paper_draft.tex` — PRD format
 - [ ] Figures from 2A, copied to paper directory
-- [ ] Notebooks: Vestigial_Technical.ipynb + _Stakeholder.ipynb
+- [ ] Notebooks: Phase4b_Vestigial_Technical.ipynb + _Stakeholder.ipynb
 
 **Estimated LOE:** Medium
 **Risk:** Low (paper writing on completed results)
-**Status:** `pending`
+**Status:** `complete` — papers/paper6_vestigial/paper_draft.tex (PRD format)
 
 ---
 
@@ -319,7 +319,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 - [ ] Update Feasibility Study with Phase 4 results
 
 **Estimated LOE:** Medium
-**Status:** `pending`
+**Status:** `complete` — docs/gravity_hierarchy_synthesis.md
 
 ---
 
@@ -333,7 +333,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 - [ ] All documents synced per Document Sync Checklist
 
 **Estimated LOE:** Low-Medium
-**Status:** `pending`
+**Status:** `complete` — 130+1 axiom (zero sorry), 737 tests, 44 figures, all validation passing
 
 ---
 
@@ -384,135 +384,302 @@ Wave 4 (Days 11-12):
 
 ---
 
-## 6. Infrastructure Notes
+## 6. Wave 5 — Quality Hardening (added 2026-03-26)
 
-### Build & Validation
+Phase 4 Waves 1-4 were executed by subagents with context loss between orchestrator and workers. A systematic audit (2026-03-26) found: physically absurd shot count calculations (27 vs 982 billion from two code paths), hallucinated feasibility narratives contradicted by computed data, Lean theorem registry name mismatches, missing Paper 6 figures, and a mean-field phase classification bug. The validation suite (11 checks) caught structural issues but missed physical nonsense.
 
-```bash
-cd SK_EFT_Hawking
-uv sync                                          # Install/sync dependencies
-uv run python -m pytest tests/ -v                # 269/269 tests (Phase 3 exit)
-uv run python scripts/validate.py                # 11/11 cross-layer checks + archive
-uv run python scripts/review_figures.py          # 34 PNGs + structural checks + manifest
-cd lean && ~/.elan/bin/lake build                 # 2259 jobs, clean (Phase 3 exit)
-```
+Wave 5 hardens everything before Phase 4 can be called complete.
 
-**Validation checks (11 total):**
-1. `formulas` — Python formulas reference valid Lean theorems
-2. `numerical` — Experimental parameters match reference values
-3. `identities` — Mathematical identities and boundary conditions
-4. `paper_table` — Paper Table 1 values match solver output
-5. `theorems` — Theorem registry has expected entries and is self-consistent
-6. `notebooks` — Notebooks import physics from src.core, no re-implementation (forbidden set)
-7. `lean_source` — Key theorem names found in Lean source files
-8. `cgl_fdr` — CGL FDR derivation produces correct results
-9. `lean_build` — Lean project builds cleanly (requires lake)
-10. `viz_consistency` — Notebook viz uses imported physics, consistent style
-11. `notebook_exec` — All notebooks execute without errors (runs all cells via nbclient)
+**Entry state (Wave 5 start, 2026-03-26):**
+- 821 tests pass, 14/14 validation checks pass (3 new checks added: physical_bounds, cross_path_consistency, paper_provenance)
+- Shot count bug fixed (spectrum.py now uses delta_diss at T_H, not divergent max_deviation)
+- ARISTOTLE_THEOREMS registry cleaned (54 entries, all match actual Lean theorem names)
+- formulas.py Lean references corrected (12 wrong names fixed)
+- Notebook viz-ref tags fixed (27 mismatches resolved)
+- Experimental predictions narrative corrected (no more "within reach" claims)
+- Papers 3-6 "formally verified" claims updated with per-paper Lean module + theorem counts
 
-### Figure Review Pipeline
+**What remains:**
 
-```bash
-# Generate all PNGs + run automated structural checks:
-uv run python scripts/review_figures.py
+### 5A. Lean Theorem Quality Audit [Lean + Aristotle]
 
-# LLM visual review (requires Claude Code session):
-# Option A: Use the physics-figure-review plugin agent (after /reload-plugins):
-#   Agent tool with subagent_type="physics-figure-review:figure-reviewer"
-# Option B: Use a general-purpose agent with the review prompt from the agent file
-# Both read PNGs from figures/ + review_manifest.json
-# Report: figures/figure_review_report.json
-```
+**Goal:** Verify all 162 manually-proved theorems are non-trivial (no vacuous proofs from total division), and strengthen any that Aristotle can improve.
 
-**Plugin location:** `.claude/plugins/physics-figure-review/` (registered in `installed_plugins.json` as `physics-figure-review@local`). Contains agent `figure-reviewer` that reads PNGs + manifest and produces structured JSON report.
+**The problem:** Lean 4's total division convention (`0/0 = 0`) means theorems with division in the conclusion can be proved trivially when the denominator is zero. Phase 2 Round 5 caught this for 3 WKB theorems and added strengthened variants. The remaining 162 manual proofs across 16 modules have not been audited for this issue.
 
-**Figure count at Phase 3 exit:** 34 total (12 Phase 1+2, 9 Phase 3 Wave 1, 6 Phase 3 Wave 2, 7 Phase 3 Wave 3). All registered in `scripts/review_figures.py` with corresponding functions in `src/core/visualizations.py`.
+**The calculation:**
 
-### PR Submission Checklist (REQUIRED)
+*Step 1 — Identify suspect theorems:*
+Grep all theorems for patterns where the conclusion involves division (`/`), and the hypotheses include positivity constraints (`0 < κ`, `c_s ≠ 0`, `Γ > 0`). These are candidates for vacuous total-division proofs.
 
-Before creating a PR for any wave, ALL of the following must pass:
+*Step 2 — Submit to Aristotle for strengthening:*
+For each suspect theorem, submit to Aristotle with `--target <name> --integrate`. Aristotle may find a shorter or stronger proof. If it does, verify the new proof actually exercises the hypotheses (not just `simp` or `trivial`).
 
-- [ ] `uv run python -m pytest tests/ -v` — all tests pass
-- [ ] `uv run python scripts/validate.py` — all cross-layer checks pass
-- [ ] `cd lean && ~/.elan/bin/lake build` — Lean builds cleanly (zero sorry)
-- [ ] All notebooks execute cleanly (`nbclient`)
-- [ ] **`uv run python scripts/review_figures.py`** — all PNGs generated, structural checks pass
-- [ ] **LLM figure review agent** — run, fix ALL issues (FAIL and MINOR), re-run until all PASS
-- [ ] No evaluative print statements in notebook code cells (commentary in markdown only)
-- [ ] README, `src/__init__.py`, roadmap updated with current counts
+*Step 3 — Audit Phase 4 modules specifically:*
+Phase 4 added 5 new Lean modules (ChiralityWall, VestigialGravity, FractonHydro, FractonGravity, FractonNonAbelian) with 86 theorems total. These were written by subagents and have not been Aristotle-tested. Submit all 86 theorems as `--target` one-by-one to confirm they are at maximum strength.
 
-**The figure review step is a GATE — do not skip it.**
+*Step 4 — Document results:*
+Produce a theorem quality report listing: which theorems were strengthened, which Aristotle couldn't improve (already optimal), which have known total-division vacuity with explanation of why it's acceptable.
 
-### Pre-Commit Hook
+**Success criteria:**
+- Every theorem either passes Aristotle strengthening or has documented justification for its current form
+- No trivially-true theorems remain (conclusions that hold regardless of hypotheses)
+- Theorem quality report written to `docs/validation/lean_quality_audit.md`
 
-```bash
-ln -sf ../../scripts/pre-commit-notebooks.sh .git/hooks/pre-commit
-```
+**Deliverables:**
+- [ ] `scripts/audit_lean_quality.py` — Script to identify suspect theorems
+- [ ] Aristotle submissions for all Phase 4 manual proofs (86 theorems)
+- [ ] Updated Lean files with any strengthened proofs
+- [ ] `docs/validation/lean_quality_audit.md` — Quality report
+- [ ] Updated `ARISTOTLE_THEOREMS` in constants.py if new run IDs obtained
+- [ ] Updated `SorryGap` entries in aristotle_interface.py
 
-### Aristotle Workflow
-
-```bash
-export ARISTOTLE_API_KEY=$(grep ARISTOTLE_API_KEY .env | cut -d= -f2)
-uv run python scripts/submit_to_aristotle.py --priority 1
-uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate
-```
-
-### Deep Research
-
-```bash
-# Place prompts in:
-Lit-Search/Tasks/<prompt_name>.txt
-# Results appear in:
-Lit-Search/Phase-4/<result_name>.md
-```
-
-### Working Documents
-
-```
-temporary/working-docs/specs/    # Design specs (if needed)
-temporary/working-docs/plans/    # Implementation plans (if needed)
-```
-
-### Visualization Workflow (Figures-First)
-
-**Build figures BEFORE notebooks/papers.** This prevents cleanup work.
-
-```
-Step 1: Implement figure functions in src/core/visualizations.py
-Step 2: Register in scripts/review_figures.py (FigureSpec + func_map)
-Step 3: Run LLM figure review agent, fix ALL issues (FAIL + MINOR)
-Step 4: Copy publication-ready PNGs to paper figures/ directories
-Step 5: Write/update paper draft (.tex)
-Step 6: Create Technical notebook to match paper
-Step 7: Create Stakeholder notebook for wider audience
-```
-
-### Key Conventions
-
-- **Constants & formulas:** Single source of truth in `src/core/constants.py` and `src/core/formulas.py`
-- **Visualizations:** Plotly only. Use blue/amber (not red/green) for binary classifications (colorblind accessibility).
-- **Formula provenance:** Every formula references its Lean theorem and Aristotle run ID
-- **Lean Mathlib:** Pinned to commit `8f9d9cff`. Do not update without coordinating with Aristotle.
-- **New modules:** Follow existing patterns — `src/<domain>/`, `tests/test_<domain>.py`, `lean/SKEFTHawking/<Module>.lean`
-
-### Document Sync Checklist
-
-When modifying physics results or proof counts, these must stay synced:
-
-| Category | Files |
-|----------|-------|
-| **Code** | `src/core/constants.py`, `src/__init__.py`, `scripts/validate.py`, `src/core/formulas.py` |
-| **Papers** | `papers/paper1_first_order/paper_draft.tex` through `papers/paper5_adw_gap/paper_draft.tex` (+ paper6 when created) |
-| **Notebooks** | All `.ipynb` files |
-| **Stakeholder docs** | `docs/stakeholder/*.md` |
-| **Roadmaps** | `docs/roadmaps/Phase3_Roadmap.md`, `docs/roadmaps/Phase4_Roadmap.md` |
-| **Root** | `SK_EFT_Hawking_Inventory.md`, `README.MD` |
-| **Top-level** | `README.md`, `CLAUDE.md`, `Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`, `Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md` |
-
-### Handoff Documents
-
-Phase 3 handoff: `temporary/Phase3_Complete_Handoff_2026_03_25.md`
+**Estimated LOE:** Medium-High (86 Aristotle submissions, review of each result)
+**Risk:** Low — worst case is Aristotle times out on hard theorems, which is documented not failed
+**Status:** `pending`
 
 ---
 
-*Phase 4 roadmap prepared 2026-03-25. Builds on Phase 3 completion (same day). Infrastructure section carries forward from Phase 3 with updated counts.*
+### 5B. Vestigial Mean-Field Phase Classification Fix [Python + Lean]
+
+**Goal:** Fix the mean-field metric correlator calculation so that the three-phase structure (pre-geometric → vestigial → full tetrad) produces physically correct phase boundaries.
+
+**The problem:** `src/vestigial/mean_field.py:mean_field_metric_correlator()` line 152 computes `metric_fluct = d² * T_eff / curvature` which gives M_g ≈ 10.8 even at G/G_c = 0.3 (very weak coupling). This means EVERY coupling below G_c gets classified as "vestigial" — there is no pre-geometric phase in the current model. The issue: the formula doesn't include volume scaling (1/V factor) or a proper threshold distinguishing thermal noise from genuine vestigial ordering.
+
+**The physics:**
+
+In the thermodynamic limit (V → ∞), the fluctuation contribution to the metric correlator is:
+
+⟨e^a_μ e^b_ν⟩_fluct = δ^{ab} × (d² × T_eff) / (V × |∂²V_eff/∂C²|_{C=0})
+
+The critical point is that M_g scales as **1/V** in the pre-geometric phase (intensive fluctuations → 0 per site) but as **V^0** (extensive order) in the vestigial phase. The current code omits the 1/V factor entirely.
+
+*Step 1 — Add volume scaling to the fluctuation formula:*
+The mean-field metric correlator should be: `metric_fluct = d² * T_eff / (V * curvature)` where V is the lattice volume (L^d). For the mean-field analysis, V represents the correlation volume — the number of sites over which fluctuations are correlated.
+
+*Step 2 — Define vestigial ordering criterion:*
+The vestigial phase exists when `metric_fluct × V > threshold` — i.e., the total (not per-site) metric correlator is macroscopic. This is the standard condensed-matter criterion for vestigial order (Fernandes et al. 2019).
+
+*Step 3 — Recompute phase diagram:*
+With the corrected formula, rescan G/G_c and verify:
+- G/G_c << 1: pre-geometric (M_g ~ 1/V → 0)
+- G/G_c near 1 (from below): vestigial (M_g diverges as curvature → 0)
+- G/G_c > 1: full tetrad (M_E > 0)
+
+*Step 4 — Update all downstream artifacts:*
+Paper 6 figures, both Vestigial notebooks, visualizations.py fig_vestigial_phase_diagram.
+
+**Success criteria:**
+- Phase diagram shows three distinct regions with physically correct ordering
+- Pre-geometric phase occupies G/G_c << 1 (weak coupling)
+- Vestigial window is finite and near G_c
+- Paper 6 Figure 2 reflects corrected phase diagram
+- Vestigial notebook narrative matches corrected figure
+
+**Deliverables:**
+- [ ] Fix `src/vestigial/mean_field.py:mean_field_metric_correlator()` — add volume scaling
+- [ ] Fix `src/vestigial/phase_diagram.py:classify_phase()` — update threshold logic
+- [ ] Update tests in `tests/test_vestigial.py` — test correct phase ordering
+- [ ] Regenerate `figures/fig42_vestigial_phase_diagram.png`
+- [ ] Update `papers/paper6_vestigial/figures/fig2_phase_diagram.png`
+- [ ] Update both Vestigial notebooks (Phase4b_Vestigial_Technical + _Stakeholder)
+- [ ] Verify: `validate.py` all 14 checks pass after fix
+
+**Estimated LOE:** Medium
+**Risk:** Medium — the thermodynamic limit may not cleanly separate the phases in mean-field; may need Monte Carlo confirmation
+**Status:** `pending`
+
+---
+
+### 5C. Paper 6 Native Figures [Python Pipeline]
+
+**Goal:** Generate Paper 6 figures from the vestigial module's own computations, not borrowed from Paper 5.
+
+**The problem:** Paper 6 Figure 1 is currently a copy of `fig28_adw_effective_potential.png` (from Paper 5 / ADW module). Paper 6 should have its own figure showing V_eff at the three coupling ratios mentioned in its text (G/G_c = 0.5, 0.9, 1.5). Figures 2+3 were merged into one — the paper originally described 3 distinct figures.
+
+**Deliverables (following Wave Execution Pipeline stages 8-10):**
+- [ ] Add `fig_vestigial_effective_potential()` to `src/core/visualizations.py` — V_eff at G/G_c = 0.5, 0.9, 1.5 using `src/adw/gap_equation.py` with vestigial-specific labels
+- [ ] Add `fig_vestigial_order_parameters()` to `src/core/visualizations.py` — M_E and M_g vs G/G_c showing mean-field + MC comparison (if MC data is meaningful after 5B fix)
+- [ ] Register both in `scripts/review_figures.py`
+- [ ] Run LLM figure review agent → fix any FAIL/MINOR → re-run until all PASS
+- [ ] Copy PNGs to `papers/paper6_vestigial/figures/`
+- [ ] Update `paper_draft.tex` to use native figures with correct `\includegraphics` refs
+- [ ] Update `paper_draft.tex` to restore 3-figure structure if warranted by 5B results
+
+**Depends on:** 5B (mean-field fix) — must be done first so figures reflect corrected physics
+**Estimated LOE:** Low-Medium
+**Status:** `blocked` by 5B
+
+---
+
+### 5D. LLM Figure Review for Phase 4 Figures [Review Pipeline]
+
+**Goal:** Run the figure review agent on all Phase 4 figures (fig35-fig44) that were not reviewed at the correct pipeline stage during Wave 1-4 execution.
+
+**The problem:** The Wave Execution Pipeline mandates LLM figure review as a gate (Stage 9) before papers and notebooks. During Wave 1-4, subagents may have skipped or missequenced this step.
+
+**Deliverables:**
+- [ ] Run `uv run python scripts/review_figures.py` — confirm all 44 PNGs generate
+- [ ] Run LLM figure review agent on all figures, focusing on fig35-fig44 (Phase 4)
+- [ ] Fix any FAIL or MINOR issues in `visualizations.py`
+- [ ] Regenerate PNGs, re-review until all PASS
+- [ ] Save report to `figures/figure_review_report.json`
+
+**Estimated LOE:** Low
+**Status:** `pending`
+
+---
+
+### 5E. Notebook Narrative Consistency Audit [Manual Review]
+
+**Goal:** Verify all Phase 3-4 notebook narrative text is consistent with computed values. No hallucinated feasibility claims, no hardcoded numbers that contradict formulas.py output, no vague claims unsupported by computation.
+
+**The problem:** ExperimentalPredictions notebooks had "within reach" text contradicted by 10^12 shot requirements. Vestigial notebook had wrong phase ordering description. Other Phase 3-4 notebooks have not been audited for similar issues.
+
+**Notebooks to audit:**
+- [ ] Phase3a_ThirdOrder_Technical + _Stakeholder
+- [ ] Phase3b_GaugeErasure_Technical + _Stakeholder
+- [ ] Phase3c_WKBConnection_Technical + _Stakeholder
+- [ ] Phase3d_ADW_Technical + _Stakeholder
+- [ ] Phase4b_Vestigial_Technical (text sections, after 5B fix)
+
+**For each notebook, verify:**
+1. Every numerical claim in markdown matches the code cell output above/below it
+2. No feasibility claims without supporting computation
+3. No "formally verified" claims without specific theorem names
+4. Color descriptions in text match actual figure colors
+5. Phase/wave attribution is correct
+
+**Deliverables:**
+- [ ] Per-notebook audit notes (can be inline comments or a summary doc)
+- [ ] Fixes to any incorrect narrative text found
+- [ ] `validate.py` all 14 checks pass after fixes
+
+**Estimated LOE:** Medium
+**Status:** `pending` (partially done for ExperimentalPredictions + Vestigial)
+
+---
+
+### 5F. Paper Numerical Claims Audit [Validation Pipeline]
+
+**Goal:** Extend CHECK 14 (paper_provenance) to extract and verify ALL numerical values in paper tables, not just theorem refs and figure presence.
+
+**The problem:** Current CHECK 14 verifies theorem names exist in Lean and figures aren't placeholders, but doesn't compare numerical table values against computed results. Papers 4-6 have numerical claims that haven't been traced back to `formulas.py`.
+
+**Papers to audit:**
+
+*Paper 1 (first-order):* Table 1 values already checked by CHECK 4 (paper_table). ✓
+
+*Paper 2 (second-order):* Table with δ^(2) values at three platforms. Verify against `formulas.second_order_correction()`.
+
+*Paper 4 (WKB connection):* Platform parameters table. Verify against `wkb/spectrum.py` platform functions.
+
+*Paper 5 (ADW gap):* Critical coupling G_c value. Verify against `formulas.adw_critical_coupling()`.
+
+*Paper 6 (vestigial):* Phase boundaries. Verify against corrected `vestigial/phase_diagram.py` (after 5B).
+
+**Deliverables:**
+- [ ] Extend `check_paper_provenance()` in `scripts/validate.py` to parse numerical values from each paper's tables
+- [ ] Add computed-vs-claimed comparisons at 0.5% tolerance
+- [ ] Fix any discrepancies found
+- [ ] All 14 checks pass
+
+**Depends on:** 5B (for Paper 6 values)
+**Estimated LOE:** Medium
+**Status:** `pending`
+
+---
+
+### 5G. Top-Level Document Update [Document Sync]
+
+**Goal:** Update Feasibility Study and Critical Review v3 with corrected Phase 4 results, honest feasibility framing, and current counts.
+
+**Deliverables:**
+- [ ] Update `Fluid-Based Approach to Fundamental Physics  Feasibility Study.md` — SK-EFT row with corrected counts (216+1 axiom, 821 tests, 14 validation checks), honest experimental feasibility framing
+- [ ] Update `Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md` — SK-EFT row, experimental evidence table, quantitative benchmarks table
+- [ ] Update `docs/stakeholder/Phase4_Implications.md` — verify content accuracy
+- [ ] Update `docs/stakeholder/Phase4_Strategic_Positioning.md` — verify content accuracy, no false feasibility claims
+- [ ] Verify all counts consistent across all docs (Stage 12 of pipeline)
+
+**Estimated LOE:** Low-Medium
+**Status:** `pending`
+
+---
+
+### Wave 5 Summary
+
+```
+5A: Lean theorem quality audit         — pending (86 Aristotle submissions)
+5B: Vestigial mean-field fix           — pending (volume scaling in fluctuation formula)
+5C: Paper 6 native figures             — blocked by 5B
+5D: LLM figure review (Phase 4 figs)  — pending
+5E: Notebook narrative audit           — pending (partial: ExperimentalPredictions done)
+5F: Paper numerical claims audit       — pending (partial: CHECK 14 exists but incomplete)
+5G: Top-level document update          — pending
+```
+
+**Execution order:**
+1. 5A (Lean audit) + 5D (figure review) — can run in parallel, no dependencies
+2. 5B (mean-field fix) — blocks 5C and part of 5F
+3. 5C (Paper 6 figures) — after 5B
+4. 5E (notebook narrative audit) — after 5B (for Vestigial), otherwise independent
+5. 5F (paper claims audit) — after 5B (for Paper 6)
+6. 5G (top-level docs) — last, after all other fixes stabilize counts
+
+**Exit criteria for Phase 4 COMPLETE:**
+- [ ] All 14 validation checks pass with zero warnings on new checks
+- [ ] All 822+ tests pass
+- [ ] Lean builds clean (zero sorry)
+- [ ] LLM figure review: all figures PASS (no FAIL, no MINOR)
+- [ ] Every paper numerical claim verified within 0.5% of computed value
+- [ ] Every Lean theorem either Aristotle-strengthened or documented as optimal
+- [ ] Vestigial phase diagram shows physically correct three-phase structure
+- [ ] No narrative text contradicts computed values
+- [ ] All counts consistent across all documents
+- [ ] Wave Execution Pipeline (`docs/WAVE_EXECUTION_PIPELINE.md`) followed for all fixes
+
+---
+
+## 7. Infrastructure
+
+**All infrastructure is now defined in `docs/WAVE_EXECUTION_PIPELINE.md`.** That document is the single authoritative reference for:
+
+- The 12-stage wave execution sequence with gates
+- The 7 pipeline invariants
+- Build, validation, Aristotle, figure review, and document sync procedures
+- All conventions and key commands
+
+The pipeline document supersedes the scattered infrastructure sections in Phase 3 and earlier Phase 4 roadmaps. Any future wave of work MUST follow the pipeline stages in order.
+
+### Quick Reference
+
+```bash
+cd SK_EFT_Hawking
+uv run python -m pytest tests/ -v                    # 822 tests
+uv run python scripts/validate.py                    # 14 checks
+uv run python scripts/review_figures.py              # 45 PNGs + structural checks
+cd lean && lake build                                 # zero sorry
+```
+
+### Current Counts (Wave 5 entry)
+
+| Metric | Count |
+|--------|-------|
+| Lean theorems | 216 + 1 axiom |
+| Lean modules | 16 |
+| Aristotle-proved | 56 (run IDs in constants.py) |
+| Manual proofs | 160 |
+| Python tests | 822 |
+| Validation checks | 14/14 pass |
+| Pipeline figures | 45 |
+| Papers | 6 + prediction tables |
+| Notebooks | 16 (8 Technical + 8 Stakeholder) |
+
+### Handoff Documents
+
+- Phase 3: `temporary/Phase3_Complete_Handoff_2026_03_25.md`
+- Phase 4 quality audit: This roadmap (Wave 5 section)
+
+---
+
+*Phase 4 roadmap prepared 2026-03-25. Wave 5 (quality hardening) added 2026-03-26 after systematic audit. Infrastructure now defined in `docs/WAVE_EXECUTION_PIPELINE.md`.*

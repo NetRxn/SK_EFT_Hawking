@@ -302,23 +302,30 @@ def compute_spectrum(
     omega_peak_dev = float(omega_array[i_max])
 
     # Estimate shots needed for detection (3-sigma):
-    # Need per-bin precision ~ max_dev / 3
-    # Precision scales as 1/sqrt(N_shots)
+    # Use the dissipative correction at T_H as the target signal,
+    # NOT max_deviation (which diverges at high omega where n_Planck -> 0).
+    # Precision scales as 1/sqrt(N_shots).
     # Current best: ~30% per-bin (Steinhauer 2019, 7000 shots)
     current_precision = 0.30
     current_shots = 7000
-    if max_dev > 0:
-        required_precision = max_dev / 3.0
+
+    # Find delta_diss at omega ~ T_H (the physically meaningful signal)
+    i_TH = int(np.argmin(np.abs(omega_array - T_H)))
+    delta_diss_at_TH = abs(points[i_TH].delta_diss) if i_TH < len(points) else 0.0
+
+    if delta_diss_at_TH > 0:
+        required_precision = delta_diss_at_TH / 3.0
         shots_needed = current_shots * (current_precision / required_precision)**2
     else:
         shots_needed = float('inf')
 
     detectability = {
         'max_deviation': max_dev,
+        'delta_diss_at_TH': delta_diss_at_TH,
         'omega_peak_deviation': omega_peak_dev,
         'omega_peak_deviation_over_T_H': omega_peak_dev / T_H,
         'shots_needed_3sigma': shots_needed,
-        'feasible': shots_needed < 1e6,
+        'feasible': shots_needed < 1e8,  # 10^8 is the upper bound of current technology
     }
 
     return HawkingSpectrum(

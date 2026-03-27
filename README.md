@@ -1,7 +1,7 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Five papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
@@ -15,18 +15,25 @@ to acoustic Hawking radiation in BEC analog gravity. Five papers in a unified co
   Akama-Diakonov-Wetterich mechanism. Qualified positive result: nontrivial
   Lorentzian solution for G > G_c, 2 massless graviton modes as Higgs bosons.
   Four structural obstacles for emergent fermion bootstrap. PRD format.
+- **Paper 6 (vestigial gravity):** Lattice evidence for vestigial metric phase
+  in the ADW model. Three-phase structure: pre-geometric, vestigial, full tetrad.
+  EP violation prediction. Monte Carlo + mean-field. PRD format.
 
-**Lean 4 formalization:** 130 theorems + 1 axiom (41 Aristotle + 90 manual), zero sorry.
-11 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 216 theorems + 1 axiom, zero sorry.
+16 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+
+**Phase 4 additions:** Experimental prediction package, chirality wall synthesis,
+He-3/GL phase classification, vestigial gravity simulation (lattice + MC),
+fracton hydrodynamics Layer 2, backreaction calculation, fracton-gravity analysis.
 
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (41/41, zero sorry)
+├── lean/                              # Lean 4 formalization (216 theorems + 1 axiom, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 11)
+│   ├── SKEFTHawking.lean              # Root module (imports all 16)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -38,12 +45,17 @@ SK_EFT_Hawking/
 │       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
 │       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom)
 │       ├── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
-│       └── ADWMechanism.lean          # Phase 3: ADW tetrad condensation (21 theorems)
+│       ├── ADWMechanism.lean          # Phase 3: ADW tetrad condensation (21 theorems)
+│       ├── ChiralityWall.lean         # Phase 4: chirality wall analysis (17 theorems)
+│       ├── VestigialGravity.lean      # Phase 4: vestigial metric phase (18 theorems)
+│       ├── FractonHydro.lean          # Phase 4: fracton hydrodynamics (17 theorems)
+│       ├── FractonGravity.lean        # Phase 4: fracton-gravity bootstrap (20 theorems)
+│       └── FractonNonAbelian.lean     # Phase 4: non-Abelian fracton obstruction (14 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (40/40 filled)
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (56 proved)
 │   │   └── visualizations.py          # Plotly figures + interactive dashboard
 │   ├── first_order/                   # Phase 1 specific analysis
 │   ├── second_order/                  # Phase 2 analysis (absorbed from SK_EFT_Phase2)
@@ -55,12 +67,29 @@ SK_EFT_Hawking/
 │   ├── wkb/                           # Exact WKB connection formula (Phase 3 Wave 2)
 │   │   ├── connection_formula.py       # Complex turning point, Stokes geometry, exact formula
 │   │   ├── bogoliubov.py              # Modified Bogoliubov coefficients, decoherence, noise floor
-│   │   └── spectrum.py                # Observable spectrum, platform predictions, comparison
-│   └── adw/                           # ADW mean-field gap equation (Phase 3 Wave 3)
-│       ├── wen_model.py               # Wen's emergent QED, Nielsen-Ninomiya, Herbut RG
-│       ├── hubbard_stratonovich.py    # HS decomposition, TetradField, fermion determinant
-│       ├── gap_equation.py            # Coleman-Weinberg V_eff, critical coupling, phase diagram
-│       └── fluctuations.py            # SSB pattern, NG modes, Vergeles counting, obstacles
+│   │   ├── spectrum.py                # Observable spectrum, platform predictions, comparison
+│   │   └── backreaction.py            # Acoustic BH cooling toward extremality (Phase 4)
+│   ├── adw/                           # ADW mean-field gap equation (Phase 3 Wave 3)
+│   │   ├── wen_model.py               # Wen's emergent QED, Nielsen-Ninomiya, Herbut RG
+│   │   ├── hubbard_stratonovich.py    # HS decomposition, TetradField, fermion determinant
+│   │   ├── gap_equation.py            # Coleman-Weinberg V_eff, critical coupling, phase diagram
+│   │   ├── fluctuations.py            # SSB pattern, NG modes, Vergeles counting, obstacles
+│   │   └── ginzburg_landau.py         # GL expansion, beta_i analogs, phase classification (Phase 4)
+│   ├── experimental/                  # Experimental prediction package (Phase 4 Wave 1)
+│   │   └── predictions.py            # Platform tables, detector requirements, kappa-scaling
+│   ├── chirality/                     # Chirality wall synthesis (Phase 4 Wave 1)
+│   │   └── tpf_gs_analysis.py        # GS conditions vs TPF evasion
+│   ├── vestigial/                     # Vestigial gravity simulation (Phase 4 Wave 2)
+│   │   ├── lattice_model.py           # Lattice Hamiltonian, HS-transformed ADW
+│   │   ├── mean_field.py              # Extended mean-field with metric correlator
+│   │   ├── monte_carlo.py             # Metropolis-Hastings sampler
+│   │   ├── phase_diagram.py           # Coupling scan and phase classification
+│   │   └── finite_size.py             # Binder cumulant + finite-size scaling
+│   └── fracton/                       # Fracton hydrodynamics (Phase 4 Waves 2-3)
+│       ├── sk_eft.py                  # Fracton SK-EFT transport coefficients
+│       ├── information_retention.py   # UV information comparison
+│       ├── gravity_connection.py      # Fracton-gravity Kerr-Schild + bootstrap
+│       └── non_abelian.py             # Non-Abelian fracton analysis
 │
 ├── papers/
 │   ├── paper1_first_order/            # PRL submission
@@ -71,22 +100,30 @@ SK_EFT_Hawking/
 │   │   └── paper_draft.tex
 │   ├── paper4_wkb_connection/         # PRD exact WKB
 │   │   └── paper_draft.tex
-│   └── paper5_adw_gap/               # PRD ADW gap equation
-│       └── paper_draft.tex
+│   ├── paper5_adw_gap/               # PRD ADW gap equation
+│   │   └── paper_draft.tex
+│   ├── paper6_vestigial/             # PRD vestigial gravity (Phase 4)
+│   │   └── paper_draft.tex
+│   └── experimental_predictions/     # Standalone prediction tables (Phase 4)
+│       └── prediction_tables.tex
 │
 ├── notebooks/
 │   ├── Phase1_Technical.ipynb         # Full paper computation (23 cells, 6 Plotly figs)
 │   ├── Phase1_Stakeholder.ipynb       # Lay-person version (20 cells)
 │   ├── Phase2_Technical.ipynb         # Second-order computation (30 cells, 9+ Plotly figs)
 │   ├── Phase2_Stakeholder.ipynb       # Lay-person version (19 cells)
-│   ├── Phase3_Technical.ipynb         # Third-order + parity alternation
-│   ├── Phase3_Stakeholder.ipynb       # Third-order stakeholder version
-│   ├── GaugeErasure_Technical.ipynb   # Gauge erasure technical notebook
-│   ├── GaugeErasure_Stakeholder.ipynb # Gauge erasure stakeholder notebook
-│   ├── WKBConnection_Technical.ipynb  # Exact WKB + spectral floor (26 cells)
-│   ├── WKBConnection_Stakeholder.ipynb # WKB stakeholder version (17 cells)
-│   ├── ADW_Technical.ipynb            # ADW gap equation technical (22 cells)
-│   └── ADW_Stakeholder.ipynb         # ADW stakeholder version (16 cells)
+│   ├── Phase3a_ThirdOrder_Technical.ipynb       # Phase 3 Wave 1: third-order EFT
+│   ├── Phase3a_ThirdOrder_Stakeholder.ipynb
+│   ├── Phase3b_GaugeErasure_Technical.ipynb     # Phase 3 Wave 1: gauge erasure
+│   ├── Phase3b_GaugeErasure_Stakeholder.ipynb
+│   ├── Phase3c_WKBConnection_Technical.ipynb    # Phase 3 Wave 2: exact WKB
+│   ├── Phase3c_WKBConnection_Stakeholder.ipynb
+│   ├── Phase3d_ADW_Technical.ipynb              # Phase 3 Wave 3: ADW gap equation
+│   ├── Phase3d_ADW_Stakeholder.ipynb
+│   ├── Phase4a_ExperimentalPredictions_Technical.ipynb  # Phase 4 Wave 1: predictions
+│   ├── Phase4a_ExperimentalPredictions_Stakeholder.ipynb
+│   ├── Phase4b_Vestigial_Technical.ipynb        # Phase 4 Wave 2: vestigial gravity
+│   └── Phase4b_Vestigial_Stakeholder.ipynb
 │
 ├── docs/
 │   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
@@ -94,7 +131,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (269 tests)
+├── tests/                             # pytest suite (822 tests)
 │   ├── test_transonic_background.py   # Physics validation
 │   ├── test_second_order.py           # Enumeration + WKB tests
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
@@ -103,7 +140,7 @@ SK_EFT_Hawking/
 │   ├── test_cross_validation.py       # Cross-layer validation
 │   └── test_lean_integrity.py         # Module structure + sorry-gap regression
 │
-├── figures/                           # 34 pipeline figures (PNG + HTML)
+├── figures/                           # 45 pipeline figures (PNG + HTML)
 ├── scripts/
 │   └── submit_to_aristotle.py         # Aristotle submission + integration script
 ├── pyproject.toml                     # Unified Python dependencies
@@ -159,7 +196,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (130 + 1 axiom — Zero Sorry)
+## Theorem Inventory (216 + 1 axiom — Zero Sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -172,7 +209,12 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem (1C) |
 | GaugeErasure.lean | 3 | 11 + 1 axiom | Gauge erasure (1B) |
 | WKBConnection.lean | 3 | 17 | Exact WKB connection (2D) |
-| ADWMechanism.lean | 3 | 21 | Aristotle: f8de66d1. Vergeles counting, phase classification |
+| ADWMechanism.lean | 3 | 21 | Vergeles counting, phase classification |
+| ChiralityWall.lean | 4 | 17 | GS conditions, TPF evasion, wall status |
+| VestigialGravity.lean | 4 | 18 | Phase hierarchy, EP violation |
+| FractonHydro.lean | 4 | 17 | Multipole conservation, information retention |
+| FractonGravity.lean | 4 | 20 | Bootstrap gap, DOF mismatch |
+| FractonNonAbelian.lean | 4 | 14 | Non-Abelian fracton obstruction (negative result) |
 
 ## Build Environment
 
@@ -182,4 +224,4 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 
 ## References
 
-See `docs/roadmaps/Phase1_Roadmap.md`, `docs/roadmaps/Phase2_Roadmap.md`, and `docs/roadmaps/Phase3_Roadmap.md` for full technical context and reference lists.
+See `docs/roadmaps/Phase1_Roadmap.md` through `docs/roadmaps/Phase4_Roadmap.md` for full technical context and reference lists.

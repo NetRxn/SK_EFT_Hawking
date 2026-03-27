@@ -123,7 +123,7 @@ We formalize the mathematics in **Lean 4**, a proof assistant—a programming la
    - Proves that the Hawking temperature depends only on the acoustic horizon's geometry (surface gravity), not on microscopic details
    - This universality is profound: it means the temperature formula is robust across different physical systems
 
-**Current status:** The Lean project compiles successfully. **All 12 "sorry" gaps have been filled by Aristotle** (an AI theorem prover) across eight targeted submissions. The filled proofs span all three priority levels: priority-1 algebraic results (acoustic metric determinant, inverse, Lorentzian signature, SK positivity), priority-2 structural results (phonon EOM construction, candidate term counting), and priority-3 analytic results (d'Alembertian operator, FDR from KMS symmetry, dispersive correction bound, dissipative correction existence, combined Hawking universality, and SK first-order uniqueness).
+**Current status:** The Lean project compiles successfully with **216 theorems + 1 axiom, zero sorry** across 16 modules spanning all four phases. Of these, **56 theorems were proved by the Aristotle automated theorem prover** across 13 targeted submissions; the remaining 160 were proved manually. The Phase 1 core results (acoustic metric, SK doubling, Hawking universality) were the first to be Aristotle-verified, with subsequent phases extending the formalization to gauge erasure, exact WKB connection formulas, ADW gravity, vestigial phases, fracton hydrodynamics, and chirality wall analysis.
 
 **Key discovery:** During the uniqueness proof, Aristotle found that our original KMS hypothesis was too weak — it only constrained 4 of 9 field components, admitting a counterexample. This led to a corrected formalization (`FirstOrderKMS`) encoding the fluctuation-dissipation relation directly, which is a concrete example of formal verification catching a subtle physics error.
 
@@ -477,12 +477,14 @@ The exact WKB connection formula completes the prediction chain. Instead of just
 
 ### Current Status
 
-| Metric | Phase 1 | Phase 2 | Phase 3 |
-|--------|---------|---------|---------|
-| Papers | 1 | 2 | 5 |
-| Verified theorems | 14 | 40 | 130 + 1 axiom |
-| Tests | 12 | 64 | 269 |
-| Structural walls tested | 0 | 0 | 2 (gauge closed, gravity tested) |
+| Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 |
+|--------|---------|---------|---------|---------|
+| Papers | 1 | 2 | 5 | 6 |
+| Verified theorems | 14 | 40 | 130 + 1 axiom | 216 + 1 axiom |
+| Lean modules | 4 | 7 | 11 | 16 |
+| Tests | 12 | 64 | 269 | 820 |
+| Pipeline figures | 6 | 12 | 34 | 44 |
+| Structural walls tested | 0 | 0 | 2 (gauge closed, gravity tested) | 2 + vestigial validated |
 
 ---
 
@@ -492,8 +494,39 @@ For technical questions about the Lean formalization, see `lean/README.md`.
 
 For the full technical papers, see `papers/paper1-5_*/paper_draft.tex`.
 
-For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase3_Implications.md`.
+For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase4_Implications.md`.
 
 ---
 
-*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 25, 2026.*
+## Phase 4: Testing Predictions and Closing Dead Ends
+
+### What was Phase 4 about?
+
+Phase 3 was theoretical: proving what fluids can and can't do. Phase 4 is about **testing those predictions with numbers** and **building the bridge to experiments**.
+
+### For experimentalists: your prediction package is ready
+
+We now provide concrete tables: "at frequency X for your specific experiment, the deviation from standard Hawking is Y%, and you need Z shots to detect it at 3-sigma." Three platforms get customized predictions:
+- **Steinhauer (Technion):** Best for initial detection (largest corrections)
+- **Heidelberg:** Best for the kappa-scaling test (tunable scattering length)
+- **Trento:** Best UV range (smallest dispersive corrections)
+
+### We found a new kind of gravity
+
+Volovik predicted in 2024 that gravity might exist in a "partial" form — where the fabric of spacetime (the metric) exists but the deeper structure (the tetrad) doesn't. We confirmed this numerically. The consequence: in this phase, Einstein's Equivalence Principle is violated — different types of particles experience different gravity. This is a testable prediction.
+
+### Some routes don't work — and we proved it
+
+Not everything in theoretical physics leads somewhere. Two routes we investigated turned out to be dead ends:
+- **Non-Abelian fracton gauge theories** can't reproduce the Standard Model's strong and weak forces. Four independent reasons, each formally verified by computer.
+- **Fracton gravity** matches Einstein's gravity at the simplest level but diverges at the next level — by 60%. The mismatch grows in higher dimensions.
+
+Closing dead ends is valuable: it tells the community where NOT to look, saving resources.
+
+### Acoustic black holes cool down
+
+A genuinely surprising finding: artificial black holes in BECs cool down over time (opposite of real black holes in space!). As they emit Hawking radiation, they lose energy, slow down, and approach a limiting state. This is structurally analogous to charged black holes in general relativity approaching extremality.
+
+---
+
+*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 26, 2026.*

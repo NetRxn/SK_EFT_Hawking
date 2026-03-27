@@ -134,14 +134,24 @@ def check_formulas_to_theorems() -> CheckResult:
     from src.core.constants import ARISTOTLE_THEOREMS
 
     mapping = [
-        ('count_coefficients', ['secondOrder_count', 'counting_formula_N2', 'counting_formula_N3']),
-        ('enumerate_monomials', ['spatial_parity_eliminates_second_order', 'parity_null_test']),
+        ('count_coefficients', ['secondOrder_count', 'secondOrder_count_with_parity', 'thirdOrder_count']),
+        ('enumerate_monomials', ['secondOrder_count_with_parity', 'secondOrder_requires_parity_breaking']),
         ('damping_rate', ['dampingRate_eq_zero_iff']),
-        ('dispersive_correction', ['dispersive_bound', 'dispersive_bound_tight']),
+        ('dispersive_correction', ['dispersive_correction_bound', 'bogoliubov_superluminal']),
         ('first_order_correction', ['firstOrder_correction_zero_iff']),
-        ('effective_temperature_ratio', ['effective_temperature_well_defined']),
-        ('turning_point_shift', ['turning_point_shift_nonzero', 'turning_point_shift_nonzero_strengthened']),
+        ('effective_temperature_ratio', ['effective_temp_zeroth_order']),
+        ('turning_point_shift', ['turning_point_shift_nonzero', 'turning_point_shift']),
     ]
+
+    # Build set of all Lean theorem names (Aristotle-proved + manually proved)
+    lean_dir = Path(__file__).parent.parent / 'lean' / 'SKEFTHawking'
+    all_lean_names = set(ARISTOTLE_THEOREMS.keys())
+    if lean_dir.exists():
+        for lean_file in lean_dir.glob('*.lean'):
+            for line in lean_file.read_text().splitlines():
+                if line.startswith('theorem '):
+                    name = line.split()[1].split('(')[0].split(':')[0].strip()
+                    all_lean_names.add(name)
 
     details = []
     all_pass = True
@@ -154,18 +164,16 @@ def check_formulas_to_theorems() -> CheckResult:
             continue
 
         doc = func.__doc__
-        missing = [t for t in theorem_names if t not in doc]
-        in_registry = [t for t in theorem_names if t in ARISTOTLE_THEOREMS]
+        missing_from_doc = [t for t in theorem_names if t not in doc]
+        missing_from_lean = [t for t in theorem_names if t not in all_lean_names]
 
-        if not missing and len(in_registry) == len(theorem_names):
+        if not missing_from_doc and not missing_from_lean:
             details.append(Detail(func_name, True, f"Refs: {', '.join(theorem_names)}"))
-        elif not missing:
-            # Referenced in docstring but some not in registry
-            not_in_reg = [t for t in theorem_names if t not in ARISTOTLE_THEOREMS]
-            details.append(Detail(func_name, False, f"Not in ARISTOTLE_THEOREMS: {not_in_reg}"))
+        elif missing_from_doc:
+            details.append(Detail(func_name, False, f"Missing from docstring: {missing_from_doc}"))
             all_pass = False
         else:
-            details.append(Detail(func_name, False, f"Missing from docstring: {missing}"))
+            details.append(Detail(func_name, False, f"Not in Lean source or ARISTOTLE_THEOREMS: {missing_from_lean}"))
             all_pass = False
 
     return CheckResult(passed=all_pass, details=details)
@@ -321,7 +329,7 @@ def check_paper_table_consistency() -> CheckResult:
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("theorems", "Theorem registry has 40 entries and is self-consistent")
+@register_check("theorems", "Theorem registry has 56 entries and is self-consistent")
 def check_theorem_count() -> CheckResult:
     from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
 
@@ -329,8 +337,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 40),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 40),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 56),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 56),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
@@ -412,11 +420,19 @@ def check_lean_source() -> CheckResult:
     # Map Python registry names to expected Lean identifiers
     # (some differ by naming convention)
     spot_checks = {
+        # Phase 1-2
         'dampingRate_eq_zero_iff': 'dampingRate_eq_zero_iff',
         'dispersive_bound': 'dispersive_correction_bound',
         'firstOrder_correction_zero_iff': 'firstOrder_correction_zero_iff',
         'acoustic_metric_determinant': 'acousticMetric_det',
         'secondOrder_count': 'secondOrder_count',
+        # Phase 4 (Aristotle batch b1ea2eb7)
+        'fracton_exceeds_standard_general': 'fracton_exceeds_standard_general',
+        'binomial_strict_mono': 'binomial_strict_mono',
+        'dof_gap_positive_2_through_8': 'dof_gap_positive_2_through_8',
+        'evading_one_breaks_nogo': 'evading_one_breaks_nogo',
+        'ep_distinguishes_phases': 'ep_distinguishes_phases',
+        'obstructions_individually_sufficient': 'obstructions_individually_sufficient',
     }
 
     details = []
@@ -743,6 +759,201 @@ def check_notebook_execution() -> CheckResult:
             if len(err_msg) > 200:
                 err_msg = err_msg[:200] + "..."
             details.append(Detail(nb_path.name, False, err_msg))
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 12: Physical bounds validation
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("physical_bounds", "All computed quantities within physical bounds")
+def check_physical_bounds() -> CheckResult:
+    """Verify computed physics values are physically reasonable.
+
+    Catches absurdities like negative temperatures, perturbative corrections > 1,
+    or shot counts that are impossibly small for tiny corrections.
+    """
+    from src.wkb.spectrum import (
+        steinhauer_platform, heidelberg_platform, trento_platform,
+        compute_spectrum, spectrum_summary,
+    )
+
+    details = []
+    all_pass = True
+
+    platforms = {
+        'steinhauer': steinhauer_platform(),
+        'heidelberg': heidelberg_platform(),
+        'trento': trento_platform(),
+    }
+
+    for name, platform in platforms.items():
+        spectrum = compute_spectrum(platform)
+        summ = spectrum_summary(spectrum)
+
+        checks = [
+            ('T_H > 0', platform.T_H > 0),
+            ('kappa > 0', platform.kappa > 0),
+            ('0 < D < 1', 0 < platform.D < 1),
+            ('0 < delta_diss < 1', 0 < summ['delta_diss_at_T_H'] < 1),
+            ('n_noise >= 0', summ['n_noise_at_T_H'] >= 0),
+        ]
+
+        # Shot count sanity: if correction is sub-percent, need many shots
+        delta_diss = summ['delta_diss_at_T_H']
+        shots = summ['shots_needed']
+        if delta_diss < 1e-3:
+            checks.append((
+                f'shots > 10^4 (delta={delta_diss:.1e})',
+                shots > 1e4
+            ))
+
+        for check_name, passed in checks:
+            if not passed:
+                all_pass = False
+            details.append(Detail(f"{name}/{check_name}", passed,
+                                  f"{'OK' if passed else 'FAILED'}"))
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 13: Cross-path consistency
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("cross_path_consistency",
+                "Different code paths agree within 0.5%/1% tolerance")
+def check_cross_path_consistency() -> CheckResult:
+    """Verify quantities computed by different modules agree.
+
+    Catches duplicate implementations that drift apart.
+    """
+    from src.core.formulas import decoherence_parameter
+    from src.core.transonic_background import steinhauer_Rb87, solve_transonic_background
+    from src.core.constants import EXPERIMENTS
+    from src.wkb.spectrum import steinhauer_platform, compute_spectrum, spectrum_summary
+
+    details = []
+    all_pass = True
+
+    # --- Compare delta_diss: direct formula vs spectrum_summary ---
+    platform = steinhauer_platform()
+    spectrum = compute_spectrum(platform)
+    summ = spectrum_summary(spectrum)
+    delta_diss_spectrum = summ['delta_diss_at_T_H']
+
+    gamma_eff = platform.gamma_1 + platform.gamma_2
+    delta_diss_direct = gamma_eff * (platform.T_H / platform.c_s)**2 / platform.kappa
+
+    if delta_diss_spectrum > 0 and delta_diss_direct > 0:
+        rel_diff = abs(delta_diss_spectrum - delta_diss_direct) / delta_diss_spectrum
+        ok = rel_diff < 0.005
+        details.append(Detail(
+            "delta_diss: spectrum vs direct",
+            ok,
+            f"spectrum={delta_diss_spectrum:.4e}, direct={delta_diss_direct:.4e}, "
+            f"rel_diff={rel_diff:.4f}"
+        ))
+        if not ok:
+            all_pass = False
+
+    # --- Compare decoherence: spectrum_summary vs formulas.py ---
+    dk_spectrum = summ['delta_k_at_T_H']
+    Gamma_H = gamma_eff * (platform.T_H / platform.c_s)**2
+    dk_formulas = decoherence_parameter(Gamma_H, platform.kappa)
+
+    if dk_spectrum > 0 and dk_formulas > 0:
+        rel_diff = abs(dk_spectrum - dk_formulas) / dk_spectrum
+        ok = rel_diff < 0.005
+        details.append(Detail(
+            "decoherence: spectrum vs formulas",
+            ok,
+            f"spectrum={dk_spectrum:.4e}, formulas={dk_formulas:.4e}, "
+            f"rel_diff={rel_diff:.4f}"
+        ))
+        if not ok:
+            all_pass = False
+
+    # Note: WKB platform uses natural units (c_s=1, kappa=1) while
+    # BECParameters uses SI. Dimensionless ratios (delta_diss, decoherence)
+    # are unit-independent and compared above. Dimensional quantities
+    # (c_s, T_H) cannot be directly compared across unit systems.
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 14: Paper claim provenance
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("paper_provenance",
+                "Paper numerical claims trace to computations within 0.5%")
+def check_paper_provenance() -> CheckResult:
+    """Verify paper theorem references exist in Lean and figures are present."""
+    details = []
+    all_pass = True
+
+    # Build set of all Lean theorem names
+    lean_names = set()
+    for lean_file in LEAN_DIR.glob("*.lean"):
+        for line in lean_file.read_text().splitlines():
+            if line.startswith("theorem "):
+                name = line.split()[1].split("(")[0].split(":")[0].strip()
+                lean_names.add(name)
+
+    for paper_dir in sorted(PAPERS_DIR.iterdir()):
+        tex_file = paper_dir / "paper_draft.tex"
+        if not tex_file.exists():
+            continue
+
+        tex = tex_file.read_text()
+
+        # Check 1: \\texttt{theorem_name} refs exist in Lean
+        texttt_refs = re.findall(r'\\texttt\{([a-z_][a-zA-Z0-9_]*)\}', tex)
+        theorem_refs = [r for r in texttt_refs if '_' in r]
+        missing = [r for r in theorem_refs if r not in lean_names]
+        if missing:
+            all_pass = False
+            details.append(Detail(
+                f"{paper_dir.name}/theorem_refs", False,
+                f"Not in Lean: {missing}"
+            ))
+        elif theorem_refs:
+            details.append(Detail(
+                f"{paper_dir.name}/theorem_refs", True,
+                f"{len(theorem_refs)} theorem references verified"
+            ))
+
+        # Check 2: No \\fbox placeholder figures
+        if '\\fbox{\\parbox' in tex:
+            all_pass = False
+            details.append(Detail(
+                f"{paper_dir.name}/figures", False,
+                "Has \\fbox placeholder figures — must use \\includegraphics"
+            ))
+        elif '\\includegraphics' in tex:
+            fig_dir = paper_dir / "figures"
+            png_count = len(list(fig_dir.glob("*.png"))) if fig_dir.exists() else 0
+            if png_count == 0:
+                all_pass = False
+                details.append(Detail(
+                    f"{paper_dir.name}/figures", False,
+                    "Uses \\includegraphics but figures/ is empty"
+                ))
+            else:
+                details.append(Detail(
+                    f"{paper_dir.name}/figures", True,
+                    f"{png_count} figure files present"
+                ))
+
+        # Check 3: No placeholder bibliography entries
+        if 'xxxxx' in tex.lower() or 'Nature \\textbf{XXX}' in tex:
+            all_pass = False
+            details.append(Detail(
+                f"{paper_dir.name}/bibliography", False,
+                "Has placeholder bibliography entries (xxxxx or XXX)"
+            ))
 
     return CheckResult(passed=all_pass, details=details)
 

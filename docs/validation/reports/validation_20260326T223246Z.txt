@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260326T223246Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] cross_path_consistency
+  ERROR: 'TransonicBackground' object has no attribute 'sound_speed_upstream'
+
+Overall: 0/1 passed
