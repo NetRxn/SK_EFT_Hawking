@@ -51,7 +51,7 @@
 - [ ] `src/experimental/predictions.py` — Functions computing all prediction tables
 - [ ] `papers/experimental_predictions/prediction_tables.tex` — Standalone prediction document
 - [ ] Figures: prediction comparison across platforms (stakeholder-friendly)
-- [ ] Notebooks: ExperimentalPredictions_Technical.ipynb + _Stakeholder.ipynb
+- [ ] Notebooks: Phase4a_ExperimentalPredictions_Technical.ipynb + _Stakeholder.ipynb
 - [ ] Tests
 
 **Estimated LOE:** Low-Medium (1/2 wave)
@@ -101,7 +101,7 @@
 **Deliverables:**
 - [ ] `src/adw/ginzburg_landau.py` — GL expansion, beta_i computation, phase classification
 - [ ] Figures: GL phase diagram, beta_i comparison He-3 vs ADW
-- [ ] Extension of ADW_Technical.ipynb
+- [ ] Extension of Phase3d_ADW_Technical.ipynb
 - [ ] Tests
 
 **Estimated LOE:** Medium
@@ -299,7 +299,7 @@ Can fracton hydro carry non-Abelian gauge information indirectly (via fragmentat
 **Deliverables:**
 - [ ] `papers/paper6_vestigial/paper_draft.tex` — PRD format
 - [ ] Figures from 2A, copied to paper directory
-- [ ] Notebooks: Vestigial_Technical.ipynb + _Stakeholder.ipynb
+- [ ] Notebooks: Phase4b_Vestigial_Technical.ipynb + _Stakeholder.ipynb
 
 **Estimated LOE:** Medium
 **Risk:** Low (paper writing on completed results)

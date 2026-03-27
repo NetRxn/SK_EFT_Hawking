@@ -1,0 +1,23 @@
+SK-EFT Hawking Validation Report
+Generated: 20260326T181218Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] viz_consistency
+  + ADW_Stakeholder.ipynb — WARN: cell 14: viz-ref 'fig_adw_coupling_scan_stakeholder' not found in visualizations.py
+  + ADW_Technical.ipynb — clean
+  + ExperimentalPredictions_Stakeholder.ipynb — WARN: cell 5: viz-ref 'fig35' not found in visualizations.py; cell 8: viz-ref 'fig36' not found in visualizations.py; cell 11: viz-ref 'fig37' not found in visualizations.py
+  + ExperimentalPredictions_Technical.ipynb — WARN: cell 7: viz-ref 'fig35' not found in visualizations.py; cell 11: viz-ref 'fig36' not found in visualizations.py; cell 13: viz-ref 'fig37' not found in visualizations.py; cell 16: viz-ref 'fig38' not found in visualizations.py
+  + GaugeErasure_Stakeholder.ipynb — WARN: cell 8: viz-ref 'fig_continuous_vs_discrete' not found in visualizations.py; cell 11: viz-ref 'fig_sm_scorecard_stakeholder' not found in visualizations.py; cell 14: viz-ref 'fig_erasure_survey_stakeholder' not found in visualizations.py
+  + GaugeErasure_Technical.ipynb — clean
+  + Phase1_Stakeholder.ipynb — WARN: 6 untagged .show() call(s); 4 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase1_Technical.ipynb — WARN: 6 untagged .show() call(s); 2 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase2_Stakeholder.ipynb — WARN: 6 untagged .show() call(s); 23 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase2_Technical.ipynb — WARN: 9 untagged .show() call(s); 12 hardcoded COLORS hex value(s) — use COLORS dict
+  + Phase3_Stakeholder.ipynb — WARN: cell 6: viz-ref 'fig_parity_alternation_visual' not found in visualizations.py; cell 13: viz-ref 'fig_kappa_crossing_stakeholder' not found in visualizations.py; cell 15: viz-ref 'fig_spin_sonic_stakeholder' not found in visualizations.py
+  + Phase3_Technical.ipynb — WARN: cell 7: viz-ref 'fig_parity_alternation_heatmap' not found in visualizations.py; cell 15: viz-ref 'fig_kappa_crossing' not found in visualizations.py
+  + Vestigial_Stakeholder.ipynb — WARN: 2 untagged .show() call(s); cell 11: viz-ref 'fig42' not found in visualizations.py
+  + Vestigial_Technical.ipynb — WARN: 4 untagged .show() call(s); cell 17: viz-ref 'fig42' not found in visualizations.py
+  + WKBConnection_Stakeholder.ipynb — WARN: cell 6: viz-ref 'fig_spectral_floor_steinhauer' not found in visualizations.py; cell 9: viz-ref 'fig_platform_comparison_bars' not found in visualizations.py; cell 11: viz-ref 'fig_all_platform_spectra' not found in visualizations.py; cell 13: viz-ref 'fig_shots_needed' not found in visualizations.py; cell 17: viz-ref 'fig_theory_chain_summary' not found in visualizations.py
+  + WKBConnection_Technical.ipynb — WARN: cell 10: viz-ref 'fig_decoherence_parameter' not found in visualizations.py; cell 13: viz-ref 'fig_fdr_noise_floor' not found in visualizations.py; cell 16: viz-ref 'fig_hawking_spectrum_3platform' not found in visualizations.py; cell 22: viz-ref 'fig_spectral_floor_analysis' not found in visualizations.py
+
+Overall: 1/1 passed

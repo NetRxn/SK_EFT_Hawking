@@ -31,8 +31,8 @@ def count_coefficients(N: int) -> int:
 
     count(N) = ⌊(N+1)/2⌋ + 1
 
-    Lean: secondOrder_count, counting_formula_N2, counting_formula_N3
-    Aristotle: d61290fd (all three)
+    Lean: secondOrder_count, secondOrder_count_with_parity, thirdOrder_count
+    Aristotle: d61290fd, 3eedcabb
 
     At N=1: count=2 (γ₁, γ₂)
     At N=2: count=2 new (γ_{2,1}, γ_{2,2})
@@ -51,8 +51,8 @@ def enumerate_monomials(N: int, require_spatial_parity: bool = False):
         - m even (KMS / time-reversal invariance)
         - if require_spatial_parity: n even
 
-    Lean: spatial_parity_eliminates_second_order, parity_null_test
-    Aristotle: 3eedcabb
+    Lean: secondOrder_count_with_parity, secondOrder_requires_parity_breaking
+    Aristotle: d61290fd, 3eedcabb
 
     Returns:
         List of (m, n) tuples.
@@ -113,7 +113,7 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
 
 
 # ════════════════════════════════════════════════════════════════════
-# Dispersive correction (HawkingUniversality.lean: dispersive_bound)
+# Dispersive correction (HawkingUniversality.lean: dispersive_correction_bound)
 # ════════════════════════════════════════════════════════════════════
 
 def dispersive_correction(D):
@@ -124,8 +124,8 @@ def dispersive_correction(D):
 
     where D = κξ/c_s is the adiabaticity parameter.
 
-    Lean: dispersive_bound, dispersive_bound_tight
-    Aristotle: a87f425a, 3eedcabb
+    Lean: dispersive_correction_bound, bogoliubov_superluminal
+    Aristotle: d65e3bba, 3eedcabb
 
     Args:
         D: adiabaticity parameter (dimensionless)
@@ -242,8 +242,8 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
 
     T_eff/T_H = 1 + δ_disp + δ_diss + δ⁽²⁾(ω)
 
-    Lean: effective_temperature_well_defined
-    Aristotle: 518636d7
+    Lean: effective_temp_zeroth_order
+    Aristotle: c4d73ca8
 
     Args:
         omega: frequency [s⁻¹]
@@ -291,8 +291,8 @@ def turning_point_shift(Gamma_H, kappa, c_s):
     The Lean theorem `turning_point_shift_nonzero` proves that
     Γ_H > 0, κ > 0, c_s > 0 imply δx > 0.
 
-    Lean: turning_point_shift_nonzero, turning_point_shift_nonzero_strengthened
-    Aristotle: 518636d7
+    Lean: turning_point_shift_nonzero, turning_point_shift
+    Aristotle: 518636d7, c4d73ca8
 
     Args:
         Gamma_H: damping rate at horizon [s⁻¹]

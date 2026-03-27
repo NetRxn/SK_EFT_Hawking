@@ -1,0 +1,16 @@
+{
+  "timestamp": "20260326T223246Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "cross_path_consistency": {
+      "passed": false,
+      "error": "'TransonicBackground' object has no attribute 'sound_speed_upstream'",
+      "details": []
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

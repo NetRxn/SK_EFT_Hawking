@@ -1,0 +1,35 @@
+{
+  "timestamp": "20260326T223403Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "cross_path_consistency": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "delta_diss: spectrum vs direct",
+          "passed": true,
+          "message": "spectrum=7.5991e-05, direct=7.5991e-05, rel_diff=0.0000",
+          "warning": false
+        },
+        {
+          "name": "decoherence: spectrum vs formulas",
+          "passed": true,
+          "message": "spectrum=1.5198e-04, formulas=1.5198e-04, rel_diff=0.0000",
+          "warning": false
+        },
+        {
+          "name": "c_s: BECParameters vs WKB platform",
+          "passed": 0.0,
+          "message": "BEC=1.1509e-03, WKB=1.0000e+00, rel_diff=867.8732",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

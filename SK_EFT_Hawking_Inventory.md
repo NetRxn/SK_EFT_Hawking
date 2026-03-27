@@ -1,8 +1,10 @@
 # SK-EFT Hawking Project: Comprehensive Inventory
 
-**Repository Root:** `/sessions/laughing-practical-allen/mnt/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/`
+**Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Two-phase paper with complete Lean 4 formalization (40/40 theorems proved).
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Six papers (Phases 1–4) with complete Lean 4 formalization (216 theorems + 1 axiom, zero sorry, 16 modules). 820 tests, 44 pipeline figures, 16 notebooks.
+
+**Note:** Detailed per-file descriptions below cover Phase 1–2 modules. Phase 3–4 modules (gauge_erasure, wkb, adw, chirality, experimental, vestigial, fracton) follow the same patterns — see README.MD for the full project tree and CLAUDE.md for architecture.
 
 ---
 

@@ -309,3 +309,25 @@ class TestPhysicsConsistency:
         assert (tables['trento'].omega_max_over_T_H >
                 tables['heidelberg'].omega_max_over_T_H >
                 tables['steinhauer'].omega_max_over_T_H)
+
+    def test_shot_count_sanity(self):
+        """Shot counts must be >> 10^4 when corrections are << 1.
+
+        Catching physically absurd shot counts (e.g. 27) that arise from
+        using relative deviations that diverge at high frequency.
+        """
+        tables = compute_all_predictions()
+        for name, t in tables.items():
+            delta_diss = t.summary['delta_diss_at_T_H']
+            shots = t.summary['shots_needed']
+            # If the correction is sub-percent, you need many shots
+            if delta_diss < 1e-3:
+                assert shots > 1e4, (
+                    f"{name}: delta_diss={delta_diss:.2e} but shots_needed={shots:.0f} "
+                    f"— physically absurd (small correction cannot be detected with few shots)"
+                )
+            # No platform should report feasible (all corrections are tiny)
+            assert not t.summary['feasible'], (
+                f"{name}: feasible=True but delta_diss={delta_diss:.2e} — "
+                f"these corrections are far below current detector sensitivity"
+            )

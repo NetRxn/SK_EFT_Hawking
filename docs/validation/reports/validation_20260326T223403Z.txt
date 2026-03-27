@@ -1,0 +1,10 @@
+SK-EFT Hawking Validation Report
+Generated: 20260326T223403Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] cross_path_consistency
+  + delta_diss: spectrum vs direct — spectrum=7.5991e-05, direct=7.5991e-05, rel_diff=0.0000
+  + decoherence: spectrum vs formulas — spectrum=1.5198e-04, formulas=1.5198e-04, rel_diff=0.0000
+  - c_s: BECParameters vs WKB platform — BEC=1.1509e-03, WKB=1.0000e+00, rel_diff=867.8732
+
+Overall: 0/1 passed

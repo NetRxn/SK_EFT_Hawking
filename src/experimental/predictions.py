@@ -512,8 +512,8 @@ def compare_platforms(
         observable="Measurement feasibility (shots for 3-sigma detection)",
         rankings={name: i + 1 for i, name in enumerate(ranked)},
         values=shots,
-        recommendation=f"{ranked[0]} requires the fewest shots ({shots[ranked[0]]:.0f}), "
-                       f"making it the most feasible for near-term detection.",
+        recommendation=f"{ranked[0]} requires the fewest shots ({shots[ranked[0]]:.2e}), "
+                       f"though all platforms need >> 10^6 shots for direct detection.",
     ))
 
     return comparisons

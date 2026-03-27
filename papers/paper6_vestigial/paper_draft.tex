@@ -220,16 +220,7 @@ the qualitative three-phase structure is robust.
 
 \begin{figure}[t]
 \centering
-\fbox{\parbox{0.9\columnwidth}{\centering
-  \vspace{1cm}
-  {\large\bfseries [Figure~1]}\\[4pt]
-  Effective potential $\Veff(C)$ at three coupling\\
-  ratios: $G/\Gc = 0.5$ (pre-geometric),\\
-  $G/\Gc = 0.9$ (vestigial regime, origin stable\\
-  but shallow), and $G/\Gc = 1.5$ (full tetrad,\\
-  nontrivial minimum).
-  \vspace{1cm}
-}}
+\includegraphics[width=\columnwidth]{figures/fig1_effective_potential.png}
 \caption{Effective potential $\Veff(C)$ at three representative coupling
 ratios. Below $\Gc$: origin is the unique minimum (pre-geometric). Near
 $\Gc$: the origin is still a minimum but the curvature is small,
@@ -291,21 +282,12 @@ nature of the vestigial ordering.
 
 \begin{figure}[t]
 \centering
-\fbox{\parbox{0.9\columnwidth}{\centering
-  \vspace{1cm}
-  {\large\bfseries [Figure~2]}\\[4pt]
-  Phase diagram: coupling scan of\\
-  tetrad VEV $|M_E|$ and metric correlator\\
-  $|M_g|$ vs.\ $G/\Gc$ from Monte Carlo\\
-  on $L = 4$ lattice. Three phases visible:\\
-  pre-geometric, vestigial, full tetrad.
-  \vspace{1cm}
-}}
-\caption{Phase diagram from the Euclidean Monte Carlo simulation. Top
-panel: tetrad VEV $|M_E|$ vs.\ coupling ratio $G/\Gc$. Bottom panel:
-metric correlator $|M_g|$. The vestigial window is the region where
-$|M_g| > 0$ while $|M_E| \approx 0$. Error bars show standard deviation
-over Monte Carlo measurements.}
+\includegraphics[width=\columnwidth]{figures/fig2_phase_diagram.png}
+\caption{Mean-field phase diagram. Left panel: tetrad VEV $|M_E|$ and
+metric correlator $|M_g|$ vs.\ coupling ratio $G/\Gc$. Right panel:
+phase classification (0 = pre-geometric, 0.5 = vestigial, 1 = full
+tetrad). The vestigial window is the region where $|M_g| > 0$ while
+$|M_E| = 0$. Dashed vertical line marks $G/\Gc = 1$.}
 \label{fig:phase_diagram}
 \end{figure}
 
@@ -313,8 +295,8 @@ over Monte Carlo measurements.}
 \section{Phase Diagram and Order Parameters}
 \label{sec:phase_diagram}
 
-Figure~\ref{fig:order_params} shows the order parameters as functions of
-$G/\Gc$ from both mean-field and Monte Carlo. The key features are:
+The order parameters as functions of $G/\Gc$ (Fig.~\ref{fig:phase_diagram})
+reveal the following key features from both mean-field and Monte Carlo:
 
 \begin{enumerate}
 \item \textbf{Vestigial window.} A finite coupling window supports
@@ -335,25 +317,8 @@ $G/\Gc$ from both mean-field and Monte Carlo. The key features are:
   condensation at $\Gc$.
 \end{enumerate}
 
-\begin{figure}[t]
-\centering
-\fbox{\parbox{0.9\columnwidth}{\centering
-  \vspace{1cm}
-  {\large\bfseries [Figure~3]}\\[4pt]
-  Order parameters $|M_E|$ (tetrad VEV)\\
-  and $|M_g|$ (metric correlator) vs.\ $G/\Gc$\\
-  comparing mean-field (lines) and\\
-  Monte Carlo (points with error bars).\\
-  Metric eigenvalues shown in inset.
-  \vspace{1cm}
-}}
-\caption{Order parameters as functions of coupling ratio $G/\Gc$.
-Solid lines: mean-field. Points with error bars: Monte Carlo ($L=4$).
-The vestigial window is shaded. Inset: eigenvalues of the metric
-correlator $M_g^{\mu\nu}$ in the vestigial phase, confirming
-positive-definite (Euclidean) signature.}
-\label{fig:order_params}
-\end{figure}
+% Figure 3 content merged into Fig. 2 (mean-field phase diagram with
+% order parameters and phase classification in a single panel).
 
 % ============================================================
 \section{Discussion}
@@ -493,10 +458,13 @@ The key findings are:
   ($\langle\text{sign}\rangle \sim e^{-22}$ at $L=2$), directing
   future work toward contour deformation methods.
 
-\item All structural results are formally verified in 216 Lean~4
-  theorems with zero \texttt{sorry} gaps, including the phase
-  hierarchy ordering, EP violation structure, and metric DOF counting
-  (verified by the Aristotle automated theorem prover).
+\item All structural results are formally verified in Lean~4.
+  This paper's results are formalized in \texttt{VestigialGravity.lean}
+  (18 theorems, zero \texttt{sorry}), including the phase hierarchy
+  ordering, EP violation structure, and metric DOF counting.
+  Three of these theorems were proved by the Aristotle automated
+  theorem prover (run \texttt{b1ea2eb7}); the remainder were proved manually.
+  The full project contains 216 theorems + 1 axiom across 16 modules.
 \end{enumerate}
 
 The vestigial metric phase represents the most accessible form of

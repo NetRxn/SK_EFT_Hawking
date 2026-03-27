@@ -477,12 +477,14 @@ The exact WKB connection formula completes the prediction chain. Instead of just
 
 ### Current Status
 
-| Metric | Phase 1 | Phase 2 | Phase 3 |
-|--------|---------|---------|---------|
-| Papers | 1 | 2 | 5 |
-| Verified theorems | 14 | 40 | 130 + 1 axiom |
-| Tests | 12 | 64 | 269 |
-| Structural walls tested | 0 | 0 | 2 (gauge closed, gravity tested) |
+| Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 |
+|--------|---------|---------|---------|---------|
+| Papers | 1 | 2 | 5 | 6 |
+| Verified theorems | 14 | 40 | 130 + 1 axiom | 216 + 1 axiom |
+| Lean modules | 4 | 7 | 11 | 16 |
+| Tests | 12 | 64 | 269 | 820 |
+| Pipeline figures | 6 | 12 | 34 | 44 |
+| Structural walls tested | 0 | 0 | 2 (gauge closed, gravity tested) | 2 + vestigial validated |
 
 ---
 
