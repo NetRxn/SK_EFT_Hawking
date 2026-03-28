@@ -118,7 +118,7 @@ Even-ω (conservative) coefficients are UNCONSTRAINED by the FDR.
     PROVIDED SOLUTION
     The hypothesis h_fdr encodes the CGL condition for this monomial pair.
     Divide both sides by beta (positive, hence nonzero) using eq_div_iff. -/
-theorem cgl_fdr_general (j : ℕ) (b noise beta : ℝ) (hb : 0 < beta)
+theorem cgl_fdr_general (_j : ℕ) (b noise beta : ℝ) (hb : 0 < beta)
     (h_fdr : noise * beta = -b) :
     noise = -b / beta := by
   rw [← h_fdr, mul_div_cancel_right₀ _ hb.ne']
@@ -136,7 +136,7 @@ theorem cgl_fdr_general (j : ℕ) (b noise beta : ℝ) (hb : 0 < beta)
 
     PROVIDED SOLUTION
     Same as cgl_fdr_general: divide h_fdr by beta. -/
-theorem cgl_fdr_spatial (j_t j_x : ℕ) (b noise beta : ℝ) (hb : 0 < beta)
+theorem cgl_fdr_spatial (_j_t _j_x : ℕ) (b noise beta : ℝ) (hb : 0 < beta)
     (h_fdr : noise * beta = -b) :
     noise = -b / beta := by
   rw [← h_fdr, mul_div_cancel_right₀ _ hb.ne']
@@ -285,16 +285,16 @@ by the CGL FDR — they derive from the free-energy functional / equation of sta
     1. Einstein relation: σ·β = −b_{1,0}
     2. T-reversal: b_{1,0} + c₄ = 0, so b_{1,0} = −c₄
     3. Model identification: c₄ = −r₂ (from the acoustic metric)
-    4. Combined: σ·β = −b_{1,0} = c₄ = −r₂, so σ·β = −r₂  ✓ -/
+    4. Combined: σ·β = −b_{1,0} = c₄ = −r₂, so σ·β = −r₂  ✓
+
+    **Audit note:** `hb : 0 < beta` was removed — conclusion follows from
+    linear arithmetic on equality hypotheses alone. -/
 theorem cgl_implies_firstOrderKMS
     (sigma : ℝ) (b_10 : ℝ) (c_4 : ℝ) (r_2 : ℝ) (beta : ℝ)
-    (hb : 0 < beta)
-    (h_cgl : sigma * beta = -b_10)          -- CGL FDR
-    (h_trev : b_10 + c_4 = 0)               -- T-reversal cancellation
-    (h_model : c_4 = -r_2)                   -- model-specific identification
-    : sigma * beta = -r_2 := by
-  -- Chain: sigma·β = −b_10 = c_4 = −r_2
-  linarith
+    (h_cgl : sigma * beta = -b_10)
+    (h_trev : b_10 + c_4 = 0)
+    (h_model : c_4 = -r_2) :
+    sigma * beta = -r_2 := by linarith
 
 /-- **Connection theorem: CGL FDR implies FullSecondOrderKMS (j_tx·β = s₁+s₃).**
 
@@ -318,17 +318,18 @@ theorem cgl_implies_firstOrderKMS
 
     PROVIDED SOLUTION
     Linear arithmetic on the 6 hypotheses. Each b equals -c by T-reversal,
-    and each c equals the corresponding s by model identification. Chain with linarith. -/
+    and each c equals the corresponding s by model identification. Chain with linarith.
+
+    **Audit note:** `hb : 0 < beta` was removed — the conclusion follows
+    from pure linear arithmetic on the equality hypotheses. -/
 theorem cgl_implies_secondOrderKMS
     (j_tx : ℝ) (b_12 b_30 : ℝ) (c_12 c_30 : ℝ) (s_1 s_3 : ℝ) (beta : ℝ)
-    (hb : 0 < beta)
-    (h_cgl : j_tx * beta = -(b_12 + b_30))     -- CGL FDR for the cross-noise
-    (h_trev_12 : b_12 + c_12 = 0)               -- T-reversal at (m=1,n=2)
-    (h_trev_30 : b_30 + c_30 = 0)               -- T-reversal at (m=3,n=0)
-    (h_model_1 : c_12 = s_1)                     -- model identification
-    (h_model_3 : c_30 = s_3)                     -- model identification
-    : j_tx * beta = s_1 + s_3 := by
-  linarith
+    (h_cgl : j_tx * beta = -(b_12 + b_30))
+    (h_trev_12 : b_12 + c_12 = 0)
+    (h_trev_30 : b_30 + c_30 = 0)
+    (h_model_1 : c_12 = s_1)
+    (h_model_3 : c_30 = s_3) :
+    j_tx * beta = s_1 + s_3 := by linarith
 
 /-!
 ## Even-ω Coefficients Are Unconstrained
@@ -342,12 +343,10 @@ of state / free-energy functional, not by thermal equilibrium.
 
     For a purely even-ω retarded kernel (no dissipative terms),
     the CGL FDR gives identically zero noise. This is physically
-    correct: a non-dissipative system has no thermal fluctuations. -/
-theorem even_kernel_zero_noise (a_20 a_02 : ℝ) (beta : ℝ) (hb : 0 < beta) :
-    -- K_R = −a_20·ω² − a_02·k² is even in ω
-    -- K_R(ω) − K_R(−ω) = 0
-    -- K_N = 0
-    True := by
-  trivial  -- The physical content is captured by the Python verification
+    correct: a non-dissipative system has no thermal fluctuations.
+
+    **Audit note:** All parameters were removed —
+    the conclusion is `True`. This is a documentation placeholder. -/
+theorem even_kernel_zero_noise : True := trivial
 
 end SKEFTHawking.CGLTransform

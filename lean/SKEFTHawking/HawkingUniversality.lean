@@ -125,10 +125,8 @@ noncomputable def bogoliubovDispersion (cs cutoff : ℝ)
 
 /-- The Bogoliubov dispersion is superluminal. -/
 theorem bogoliubov_superluminal (cs cutoff : ℝ) (hcs : 0 < cs) (hcut : 0 < cutoff) :
-    (bogoliubovDispersion cs cutoff hcs hcut).isSuperluminal := by
-  intro x hx
-  simp [bogoliubovDispersion]
-  linarith
+    (bogoliubovDispersion cs cutoff hcs hcut).isSuperluminal :=
+  fun _ hx => by simp [bogoliubovDispersion]; linarith
 
 /-!
 ## The Adiabaticity Condition
@@ -221,13 +219,12 @@ order, with corrections suppressed by (T_H/Λ)².
 
       |β/α|² = exp(-2πω/κ)
 
-    giving a perfect Planckian spectrum at temperature T_H = κ/(2π). -/
-theorem standard_hawking_thermal (kappa : ℝ) (_omega : ℝ) (_hkappa : 0 < kappa) (_homega : 0 < _omega) :
-    -- The standard result: n(ω) = 1/(exp(2πω/κ) - 1)
-    -- equivalently, T_eff = κ/(2π) = T_H
-    hawkingTemp kappa = kappa / (2 * Real.pi) := by
-  unfold hawkingTemp
-  ring
+    giving a perfect Planckian spectrum at temperature T_H = κ/(2π).
+
+    **Audit note:** Original hypotheses `_hkappa : 0 < kappa` and `_homega : 0 < omega`
+    were removed — the conclusion is a definitional identity for all reals. -/
+theorem standard_hawking_thermal (kappa : ℝ) :
+    hawkingTemp kappa = kappa / (2 * Real.pi) := rfl
 
 /-
 PROBLEM

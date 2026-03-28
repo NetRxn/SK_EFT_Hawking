@@ -252,3 +252,37 @@ serve a documentation purpose even if the hypothesis isn't load-bearing.
 2. Submit the 5 strengthening candidates to Aristotle
 3. Document the duplicate `derivative_order_mismatch` in a comment
 4. The remaining 209 theorems are correctly formulated and require no changes
+
+---
+
+## Wave 1C Addendum (2026-03-28)
+
+**Scope:** Aristotle strengthening sweep across all 18 Lean modules (233 theorems + 1 axiom post-Wave 1A/1B).
+
+### New Modules Added (Wave 1A/1B)
+
+| Module | Theorems | Notes |
+|--------|----------|-------|
+| KappaScaling.lean | 11 | All sorry gaps filled by Aristotle (run_20260328_051547). Crossover balance, regime classification. |
+| PolaritonTier1.lean | 6 | All manual proofs. Attenuation bounds, monotonicity, BEC recovery. |
+
+### Aristotle Strengthening Results
+
+Submitted all manual proofs for strengthening. Aristotle identified and removed **21 unnecessary hypotheses** across 10 files:
+
+- Redundant hypotheses that were implied by other hypotheses via contradiction
+- Example: `hgamma` hypothesis removed from 3 regime classification theorems in KappaScaling.lean (the gamma non-negativity was already derivable from the MaterialParams structure constraints)
+- All changes verified by `lake build` (zero sorry, zero errors)
+
+### Updated Counts
+
+| Item | Pre-Wave 1 | Post-Wave 1 |
+|------|-----------|-------------|
+| Total theorems | 216 + 1 axiom | 233 + 1 axiom |
+| Aristotle-proved | 56 | 59 |
+| Manual proofs | 160 | 174 |
+| Lean modules | 16 | 18 |
+
+### Outstanding Items from Original Audit
+
+The 2 vacuous-conclusion theorems (`gs_nogo_requires_all`, `zeroTemp_nontrivial`) and 3 vacuous-hypothesis theorems identified in the original audit remain unfixed. These are candidates for future strengthening but are low priority — the physical content is correctly encoded in other theorems in the same modules.

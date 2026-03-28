@@ -255,6 +255,256 @@ class TestKappaScaling:
             assert abs(ratio - 1.0) < 0.1
 
 
+class TestKappaScalingModule:
+    """Tests for src/experimental/kappa_scaling.py — the physical kappa-scaling module.
+
+    These test the correct physics: at fixed BEC material properties,
+    delta_disp scales as kappa^2 and delta_diss scales as kappa^1.
+    """
+
+    def test_sweep_structure(self):
+        """Sweep should have correct array shapes and metadata."""
+        from src.experimental.kappa_scaling import compute_kappa_sweep
+        from src.core.transonic_background import steinhauer_Rb87
+        from src.core.constants import KAPPA_SCALING_FACTORS
+
+        sweep = compute_kappa_sweep(steinhauer_Rb87(), 'Steinhauer')
+        n = len(KAPPA_SCALING_FACTORS)
+        assert len(sweep.kappa_values) == n
+        assert len(sweep.delta_disp_values) == n
+        assert len(sweep.delta_diss_values) == n
+        assert len(sweep.delta_total_values) == n
+        assert len(sweep.T_eff_ratio) == n
+        assert sweep.platform_name == 'Steinhauer'
+        assert sweep.kappa_nominal > 0
+        assert sweep.kappa_cross > 0
+        assert sweep.gamma_1 > 0
+        assert sweep.gamma_2 > 0
+        assert sweep.c_s > 0
+        assert sweep.xi > 0
+
+    def test_dispersive_scaling_exponent(self):
+        """Fitted dispersive scaling exponent should be 2.0 (quadratic)."""
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            assert abs(sweep.scaling_exponent_disp - 2.0) < 0.01, (
+                f"{name}: expected disp exponent=2.0, got {sweep.scaling_exponent_disp:.4f}"
+            )
+
+    def test_dissipative_scaling_exponent(self):
+        """Fitted dissipative scaling exponent should be 1.0 (linear)."""
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            assert abs(sweep.scaling_exponent_diss - 1.0) < 0.01, (
+                f"{name}: expected diss exponent=1.0, got {sweep.scaling_exponent_diss:.4f}"
+            )
+
+    def test_dispersive_always_negative(self):
+        """Dispersive correction should be negative at all kappa > 0."""
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            assert np.all(sweep.delta_disp_values < 0), (
+                f"{name}: delta_disp should be < 0 at all kappa"
+            )
+
+    def test_dissipative_always_positive(self):
+        """Dissipative correction should be positive at all kappa > 0."""
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            assert np.all(sweep.delta_diss_values > 0), (
+                f"{name}: delta_diss should be > 0 at all kappa"
+            )
+
+    def test_crossover_balance(self):
+        """At kappa_cross, |delta_disp| should equal delta_diss."""
+        from src.core.formulas import (
+            kappa_scaling_dispersive, kappa_scaling_dissipative, kappa_scaling_crossover
+        )
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            d_disp_cross = abs(kappa_scaling_dispersive(
+                sweep.kappa_cross, sweep.xi, sweep.c_s
+            ))
+            d_diss_cross = kappa_scaling_dissipative(
+                sweep.kappa_cross, sweep.gamma_1, sweep.gamma_2, sweep.c_s
+            )
+            assert d_disp_cross == pytest.approx(d_diss_cross, rel=1e-10), (
+                f"{name}: crossover balance failed: |d_disp|={d_disp_cross:.3e}, "
+                f"d_diss={d_diss_cross:.3e}"
+            )
+
+    def test_crossover_formula_consistency(self):
+        """kappa_scaling_crossover should match the crossoverKappa computation."""
+        from src.core.formulas import kappa_scaling_crossover
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            formula_cross = kappa_scaling_crossover(sweep.gamma_1, sweep.gamma_2, sweep.xi)
+            assert formula_cross == pytest.approx(sweep.kappa_cross, rel=1e-12), (
+                f"{name}: crossover formulas disagree"
+            )
+
+    def test_T_eff_ratio_physical_bounds(self):
+        """T_eff/T_H should be in (0.99, 1.01) for these small corrections."""
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            for i, ratio in enumerate(sweep.T_eff_ratio):
+                assert 0.99 < ratio < 1.01, (
+                    f"{name} at kappa={sweep.kappa_values[i]:.1f}: "
+                    f"T_eff/T_H={ratio:.6f} out of bounds"
+                )
+
+    def test_heidelberg_dissipative_dominated(self):
+        """Heidelberg K-39 should be in the dissipative-dominated regime."""
+        from src.experimental.kappa_scaling import compute_kappa_sweep
+        from src.core.transonic_background import heidelberg_K39
+
+        sweep = compute_kappa_sweep(heidelberg_K39(), 'Heidelberg')
+        assert sweep.kappa_nominal < sweep.kappa_cross, (
+            "Heidelberg should be dissipative-dominated (kappa_nom < kappa_cross)"
+        )
+
+    def test_trento_dispersive_dominated(self):
+        """Trento should be in the dispersive-dominated regime."""
+        from src.experimental.kappa_scaling import compute_kappa_sweep
+        from src.core.transonic_background import trento_spin_sonic
+
+        sweep = compute_kappa_sweep(trento_spin_sonic(), 'Trento')
+        assert sweep.kappa_nominal > sweep.kappa_cross, (
+            "Trento should be dispersive-dominated (kappa_nom > kappa_cross)"
+        )
+
+    def test_cross_module_consistency(self):
+        """kappa_scaling formulas should match transonic_background computations.
+
+        At nominal kappa, the kappa_scaling_dispersive formula should agree
+        with the standard dispersive_correction(D) formula.
+        """
+        from src.core.formulas import dispersive_correction, kappa_scaling_dispersive
+        from src.experimental.kappa_scaling import compute_all_sweeps
+
+        sweeps = compute_all_sweeps()
+        for name, sweep in sweeps.items():
+            D_nom = sweep.xi * sweep.kappa_nominal / sweep.c_s
+            d_disp_standard = dispersive_correction(D_nom)
+            d_disp_kappa = kappa_scaling_dispersive(sweep.kappa_nominal, sweep.xi, sweep.c_s)
+            assert d_disp_standard == pytest.approx(d_disp_kappa, rel=1e-10), (
+                f"{name}: dispersive_correction(D) != kappa_scaling_dispersive(kappa)"
+            )
+
+    def test_summary_table(self):
+        """Summary table should have all platforms with valid data."""
+        from src.experimental.kappa_scaling import kappa_scaling_summary
+
+        summary = kappa_scaling_summary()
+        assert set(summary.keys()) == {'Steinhauer', 'Heidelberg', 'Trento'}
+        for name, s in summary.items():
+            assert s['kappa_nominal'] > 0
+            assert s['kappa_cross'] > 0
+            assert s['regime'] in ('dispersive', 'dissipative')
+            assert abs(s['scaling_exponent_disp'] - 2.0) < 0.01
+            assert abs(s['scaling_exponent_diss'] - 1.0) < 0.01
+
+
+class TestPolaritonPredictions:
+    """Tests for polariton Tier 1 predictions."""
+
+    def test_all_platforms_compute(self):
+        """All polariton platforms should compute without error."""
+        from src.experimental.polariton_predictions import compute_all_polariton_platforms
+
+        platforms = compute_all_polariton_platforms()
+        assert len(platforms) == 3
+        for name, p in platforms.items():
+            assert p.T_H > 0
+            assert p.D > 0
+            assert p.validity_ratio > 0
+
+    def test_T_H_much_hotter_than_bec(self):
+        """Polariton T_H should be >> BEC T_H (factor > 10^8)."""
+        from src.experimental.polariton_predictions import polariton_bec_comparison
+
+        comps = polariton_bec_comparison()
+        for c in comps:
+            for bec_name, ratio in c.T_H_ratio.items():
+                assert ratio > 1e8, (
+                    f"{c.polariton.name} vs {bec_name}: T_H ratio = {ratio:.1e}, expected > 10^8"
+                )
+
+    def test_tier1_regime_classification(self):
+        """Regime classification should match Gamma_pol/kappa thresholds."""
+        from src.experimental.polariton_predictions import compute_all_polariton_platforms
+
+        platforms = compute_all_polariton_platforms()
+        for name, p in platforms.items():
+            if p.validity_ratio < 0.03:
+                assert p.tier1_regime == 'excellent'
+            elif p.validity_ratio < 0.1:
+                assert p.tier1_regime == 'perturbative'
+            elif p.validity_ratio < 1.0:
+                assert p.tier1_regime == 'borderline'
+            else:
+                assert p.tier1_regime == 'intractable'
+
+    def test_ultralong_is_perturbative(self):
+        """Ultra-long cavity should be in the perturbative Tier 1 regime."""
+        from src.experimental.polariton_predictions import compute_polariton_platform
+
+        p = compute_polariton_platform('Paris_ultralong')
+        assert p.tier1_regime == 'perturbative'
+        assert p.validity_ratio < 0.1
+
+    def test_standard_is_intractable(self):
+        """Standard cavity should be intractable for Tier 1."""
+        from src.experimental.polariton_predictions import compute_polariton_platform
+
+        p = compute_polariton_platform('Paris_standard')
+        assert p.tier1_regime == 'intractable'
+        assert p.validity_ratio > 1.0
+
+    def test_dispersive_correction_larger_than_bec(self):
+        """Polariton dispersive correction should be larger (D ~ 0.1 vs D ~ 0.02)."""
+        from src.experimental.polariton_predictions import compute_polariton_platform
+
+        p = compute_polariton_platform('Paris_ultralong')
+        assert abs(p.delta_disp) > 1e-3, (
+            f"Expected |delta_disp| > 0.001, got {abs(p.delta_disp):.3e}"
+        )
+
+    def test_spatial_attenuation_factor(self):
+        """Spatial attenuation correction should be >= 1."""
+        from src.core.formulas import polariton_spatial_attenuation
+
+        # Long cavity, 10 um propagation at 10^6 m/s group velocity
+        factor = polariton_spatial_attenuation(1e10, 10e-6, 1e6)
+        assert factor >= 1.0
+        assert factor < 2.0  # Should be modest for short distances
+
+    def test_regime_map(self):
+        """Regime map should have all platforms with valid data."""
+        from src.experimental.polariton_predictions import polariton_regime_map
+
+        regime_map = polariton_regime_map()
+        assert len(regime_map) == 3
+        for name, data in regime_map.items():
+            assert 'Gamma_pol_over_kappa' in data
+            assert 'tier1_regime' in data
+            assert data['T_H_K'] > 0
+
+
 class TestPhysicsConsistency:
     """Cross-checks for physics consistency."""
 

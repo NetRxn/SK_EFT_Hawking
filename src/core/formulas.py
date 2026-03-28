@@ -603,3 +603,471 @@ def beliaev_transport_coefficients(n_1D, a_s, kappa, c_s, xi):
         'Gamma_Bel': Gamma_Bel,
         'k_H': k_H,
     }
+
+
+# ════════════════════════════════════════════════════════════════════
+# Kappa-scaling test predictions (KappaScaling.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def kappa_scaling_dispersive(kappa, xi, c_s):
+    """
+    Dispersive correction as a function of surface gravity kappa.
+
+    δ_disp(κ) = -(π/6) · (ξ·κ/c_s)²
+
+    At fixed BEC material properties (ξ, c_s constant), the dispersive
+    correction scales quadratically with kappa: |δ_disp| ∝ κ².
+
+    This is equivalent to dispersive_correction(D) with D = ξκ/c_s.
+
+    Lean: kappa_scaling_dispersive_quadratic
+    Aristotle: pending
+
+    Args:
+        kappa: surface gravity [s⁻¹]
+        xi: healing length [m]
+        c_s: speed of sound [m/s]
+
+    Returns:
+        δ_disp(κ) (dimensionless, negative)
+    """
+    D = xi * kappa / c_s
+    return -(np.pi / 6) * D**2
+
+
+def kappa_scaling_dissipative(kappa, gamma_1, gamma_2, c_s):
+    """
+    Dissipative correction as a function of surface gravity kappa.
+
+    δ_diss(κ) = (γ₁ + γ₂) · κ / c_s²
+
+    At fixed BEC material properties (γ₁, γ₂, c_s constant), the
+    dissipative correction scales linearly with kappa: δ_diss ∝ κ.
+
+    Derivation: Γ_H = (γ₁ + γ₂) · k_H² = (γ₁ + γ₂) · κ²/c_s²,
+    then δ_diss = Γ_H/κ = (γ₁ + γ₂) · κ/c_s².
+
+    Lean: kappa_scaling_dissipative_linear
+    Aristotle: pending
+
+    Args:
+        kappa: surface gravity [s⁻¹]
+        gamma_1: first-order transport coefficient [m²/s]
+        gamma_2: first-order transport coefficient [m²/s]
+        c_s: speed of sound [m/s]
+
+    Returns:
+        δ_diss(κ) (dimensionless, non-negative)
+    """
+    return (gamma_1 + gamma_2) * kappa / c_s**2
+
+
+def kappa_scaling_crossover(gamma_1, gamma_2, xi):
+    """
+    Crossover surface gravity where |δ_disp| = δ_diss.
+
+    κ_cross = 6 · (γ₁ + γ₂) / (π · ξ²)
+
+    Below κ_cross: dissipative correction dominates (linear in κ).
+    Above κ_cross: dispersive correction dominates (quadratic in κ).
+
+    This crossover provides the experimental handle for the κ-scaling
+    test: measuring the spectrum at multiple κ values reveals the
+    transition from linear to quadratic scaling, confirming the EFT
+    prediction structure.
+
+    Derivation: Set |δ_disp| = δ_diss:
+        (π/6)(ξκ/c_s)² = (γ₁+γ₂)κ/c_s²
+    The c_s² cancels from both sides:
+        (π/6)ξ²κ = (γ₁+γ₂)
+        κ_cross = 6(γ₁+γ₂) / (πξ²)
+
+    Lean: kappa_scaling_crossover_unique
+    Aristotle: pending
+
+    Args:
+        gamma_1: first-order transport coefficient [m²/s]
+        gamma_2: first-order transport coefficient [m²/s]
+        xi: healing length [m]
+
+    Returns:
+        κ_cross [s⁻¹]
+    """
+    return 6.0 * (gamma_1 + gamma_2) / (np.pi * xi**2)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Polariton Tier 1 corrections (PolaritonTier1.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def polariton_spatial_attenuation(Gamma_pol, L, v_g):
+    """
+    Spatial attenuation correction for polariton Hawking radiation.
+
+    N_corr(k) = N_meas(k) × exp[Γ_pol · L / v_g(k)]
+
+    In driven-dissipative polariton condensates, excitations propagating
+    away from the horizon decay at rate Γ_pol. The measured occupation
+    must be corrected by the spatial attenuation factor to recover the
+    intrinsic thermal envelope.
+
+    Lean: polariton_attenuation_positive
+    Aristotle: pending
+
+    Args:
+        Gamma_pol: polariton decay rate [s⁻¹]
+        L: propagation distance from horizon [m]
+        v_g: group velocity of the mode [m/s]
+
+    Returns:
+        Correction factor (≥ 1) to multiply measured occupation
+    """
+    if v_g <= 0 or L <= 0:
+        return 1.0
+    return np.exp(Gamma_pol * L / v_g)
+
+
+def polariton_tier1_validity(Gamma_pol, kappa):
+    """
+    Tier 1 validity parameter: Γ_pol / κ.
+
+    The perturbative Tier 1 patch (uniform imaginary frequency shift)
+    is valid when Γ_pol/κ << 1. Classification:
+        < 0.03: excellent (ultra-long cavities)
+        < 0.1:  perturbative (long-lifetime cavities)
+        < 1.0:  borderline (need Tier 2 complex couplings)
+        ≥ 1.0:  intractable (need Tier 3 full open quantum system)
+
+    Lean: polariton_validity_nonneg
+    Aristotle: pending
+
+    Args:
+        Gamma_pol: polariton decay rate [s⁻¹]
+        kappa: surface gravity [s⁻¹]
+
+    Returns:
+        Γ_pol / κ (dimensionless, non-negative)
+    """
+    if kappa <= 0:
+        return float('inf')
+    return Gamma_pol / kappa
+
+
+def polariton_hawking_temperature(kappa):
+    """
+    Hawking temperature for polariton condensate.
+
+    T_H = ℏκ/(2πk_B)
+
+    Same formula as BEC (kinematics are identical). The key difference
+    is that polariton κ values are ~10^10x larger, giving T_H ~ 0.1-4 K
+    vs ~0.35 nK for BEC.
+
+    Lean: hawking_temp_from_surface_gravity (AcousticMetric.lean) — same formula
+    Aristotle: manual
+
+    Args:
+        kappa: surface gravity [s⁻¹]
+
+    Returns:
+        T_H [K]
+    """
+    return hawking_temperature(kappa)
+
+
+# ════════════════════════════════════════════════════════════════════
+# 2D ADW model / Grassmann TRG (SU2PseudoReality.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def su2_one_link_integral(dim_fund=2):
+    """
+    SU(2) Haar measure one-link integral normalization.
+
+    ∫ dU U_ij U*_kl = (1/dim_fund) δ_il δ_jk
+
+    After integrating out one SU(2) gauge link connecting sites x and y,
+    the gauge-coupled 4-fermion vertex becomes a color-singlet exchange
+    with strength reduced by 1/dim_fund = 1/2.
+
+    This is a consequence of Schur orthogonality for the fundamental
+    representation: the normalized Haar measure on SU(2) projects
+    the tensor product fund ⊗ fund* onto the singlet channel.
+
+    Lean: su2_one_link_normalization (SU2PseudoReality.lean)
+    Aristotle: pending
+
+    Args:
+        dim_fund: dimension of the fundamental representation (2 for SU(2))
+
+    Returns:
+        1/dim_fund (the normalization factor)
+    """
+    return 1.0 / dim_fund
+
+
+def adw_2d_effective_coupling(g_EH, dim_fund=2):
+    """
+    Effective 4-fermion coupling in 2D after SU(2) integration.
+
+    g_eff = g_EH / dim_fund
+
+    In the 2D reduced ADW model, after analytically integrating out the
+    SU(2) spin connection on each link using the Haar measure, the
+    nearest-neighbor gauge-coupled vertex reduces to a purely fermionic
+    4-fermion interaction with effective coupling g_eff.
+
+    The cosmological (on-site) term g_cosmo is unchanged by gauge
+    integration since it doesn't involve the link variable.
+
+    Lean: effective_coupling_positive (SU2PseudoReality.lean)
+    Aristotle: pending
+
+    Args:
+        g_EH: Einstein-Hilbert coupling (nearest-neighbor gauge term)
+        dim_fund: dimension of fundamental representation (2 for SU(2))
+
+    Returns:
+        g_eff (effective 4-fermion coupling, same sign as g_EH)
+    """
+    return g_EH / dim_fund
+
+
+def binder_cumulant(m2_mean, m4_mean):
+    """
+    Binder cumulant for an order parameter.
+
+    U_L = 1 - <m⁴> / (3 <m²>²)
+
+    At a second-order phase transition, U_L crosses at a universal value
+    independent of lattice size L. For Ising universality class: U* ≈ 0.61.
+    In the disordered phase: U_L → 0 (Gaussian fluctuations).
+    In the ordered phase: U_L → 2/3 (delta-function distribution).
+
+    For vestigial gravity: separate Binder cumulants for tetrad and metric
+    order parameters. If crossings occur at different couplings, the
+    vestigial phase exists as a distinct thermodynamic phase.
+
+    Lean: binder_cumulant_ordered_limit (SU2PseudoReality.lean)
+    Aristotle: pending
+
+    Args:
+        m2_mean: ensemble average <m²> of squared order parameter
+        m4_mean: ensemble average <m⁴> of quartic order parameter
+
+    Returns:
+        U_L (dimensionless, between 0 and 2/3 for well-behaved distributions)
+    """
+    if m2_mean <= 0:
+        return 0.0
+    return 1.0 - m4_mean / (3.0 * m2_mean**2)
+
+
+def grassmann_trg_free_energy(ln_Z, volume):
+    """
+    Per-site free energy from Grassmann TRG partition function.
+
+    f = -ln(Z) / V
+
+    The Grassmann TRG computes the partition function Z of the 2D
+    lattice model by iterative tensor contraction. The free energy
+    density is the intensive thermodynamic quantity.
+
+    Phase transitions appear as non-analyticities in f(g) as a
+    function of the coupling constant.
+
+    Lean: free_energy_extensive (SU2PseudoReality.lean)
+    Aristotle: pending
+
+    Args:
+        ln_Z: natural log of the partition function (from TRG)
+        volume: number of lattice sites V = L²
+
+    Returns:
+        f (free energy per site)
+    """
+    if volume <= 0:
+        return 0.0
+    return -ln_Z / volume
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 2B: 4D fermion-bag Monte Carlo
+# ════════════════════════════════════════════════════════════════════
+
+def so4_one_link_integral(dim_L=2, dim_R=2):
+    """
+    SO(4) ≅ SU(2)_L × SU(2)_R one-link integral factor.
+
+    ∫ dU_{SO(4)} U_{ij} U*_{kl} = (1/dim_L)(1/dim_R) δ_il δ_jk
+
+    Since SO(4) = SU(2)_L × SU(2)_R, each factor integrates independently
+    via the Schur orthogonality relation. The combined factor is the product.
+
+    For dim_L = dim_R = 2 (fundamental reps): factor = 1/4.
+
+    Lean: so4_one_link_factor (FermionBag4D.lean)
+    Aristotle: pending
+
+    Args:
+        dim_L: dimension of SU(2)_L fundamental rep (default 2)
+        dim_R: dimension of SU(2)_R fundamental rep (default 2)
+
+    Returns:
+        1/(dim_L × dim_R)
+    """
+    return 1.0 / (dim_L * dim_R)
+
+
+def adw_4d_effective_coupling(g_EH, dim_fund=4):
+    """
+    Effective nearest-neighbor coupling after SO(4) gauge integration in 4D.
+
+    g_eff = g_EH / dim_fund = g_EH / 4
+
+    Analogous to the 2D case (g_eff = g_EH/2) but with SO(4) fundamental
+    rep dimension 4 instead of SU(2) dimension 2.
+
+    Lean: so4_effective_coupling_pos (FermionBag4D.lean)
+    Aristotle: pending
+
+    Args:
+        g_EH: Einstein-Hilbert gauge coupling
+        dim_fund: SO(4) fundamental representation dimension (default 4)
+
+    Returns:
+        Effective 4-fermion coupling after gauge integration
+    """
+    return g_EH / dim_fund
+
+
+def eight_fermion_vertex_weight(n_occ, g_cosmo):
+    """
+    Boltzmann weight for the on-site 8-fermion cosmological vertex.
+
+    The 8-fermion vertex is the product of all 8 Grassmann variables
+    at a site. Its weight is:
+        w = exp(-g_cosmo × Π_{i=1}^{8} n_i)
+
+    Since each n_i ∈ {0,1}, the product is 1 only when ALL 8 variables
+    are occupied (n_occ = 8), otherwise 0.
+
+    w(n_occ < 8) = 1  (no cosmological contribution)
+    w(n_occ = 8) = exp(-g_cosmo)  (full 8-fermion vertex)
+
+    Lean: eight_fermion_weight_bounds (FermionBag4D.lean)
+    Aristotle: pending
+
+    Args:
+        n_occ: number of occupied Grassmann variables at the site (0-8)
+        g_cosmo: cosmological coupling constant
+
+    Returns:
+        Boltzmann weight for this occupation configuration
+    """
+    import numpy as np
+    if n_occ == 8:
+        return np.exp(-g_cosmo)
+    return 1.0
+
+
+def fermion_bag_local_weight(bag_config, g_cosmo, g_eff):
+    """
+    Total Boltzmann weight for a fermion bag configuration.
+
+    A fermion bag is a connected cluster of sites where Grassmann
+    variables are occupied. The weight is the product of:
+    1. On-site 8-fermion vertices (cosmological term)
+    2. Nearest-neighbor 4-fermion bonds (Einstein-Hilbert term)
+
+    W(bag) = Π_sites exp(-g_cosmo × δ_{n=8}) × Π_bonds exp(-g_eff × n_bond)
+
+    where n_bond is the bond occupation (0 or 1) and δ_{n=8} is 1 only
+    when all 8 Grassmann variables at a site are occupied.
+
+    Lean: fermion_bag_weight_positive (FermionBag4D.lean)
+    Aristotle: pending
+
+    Args:
+        bag_config: dict with 'site_occupations' (list of ints 0-8)
+                    and 'bond_occupations' (list of ints 0 or 1)
+        g_cosmo: cosmological coupling
+        g_eff: effective NN coupling (after SO(4) integration)
+
+    Returns:
+        Total Boltzmann weight (always positive for Euclidean SO(4))
+    """
+    import numpy as np
+    w = 1.0
+    for n_occ in bag_config['site_occupations']:
+        w *= eight_fermion_vertex_weight(n_occ, g_cosmo)
+    for n_bond in bag_config['bond_occupations']:
+        w *= np.exp(-g_eff * n_bond)
+    return w
+
+
+def metric_correlator_connected(tetrad_m2, tetrad_m4):
+    """
+    Connected metric correlator from tetrad moments.
+
+    The metric is the composite operator g_μν = η_{ab} E^a_μ E^b_ν.
+    The connected correlator (vestigial diagnostic) is:
+
+    ⟨g_μν g_ρσ⟩_c = ⟨E²E²⟩ - ⟨E²⟩² = m4 - m2²
+
+    where m2 = ⟨|E|²⟩ and m4 = ⟨|E|⁴⟩.
+
+    In the vestigial phase: ⟨E⟩ = 0 but ⟨g⟩ ≠ 0, so m4 - m2² > 0.
+    In the pre-geometric phase: m4 - m2² → 0.
+    In the tetrad-ordered phase: m4 ≈ m2² (Gaussian).
+
+    Lean: metric_correlator_nonneg (FermionBag4D.lean)
+    Aristotle: pending
+
+    Args:
+        tetrad_m2: ⟨|E|²⟩ (second moment of tetrad magnitude)
+        tetrad_m4: ⟨|E|⁴⟩ (fourth moment of tetrad magnitude)
+
+    Returns:
+        Connected metric correlator (≥ 0 by Cauchy-Schwarz)
+    """
+    return max(0.0, tetrad_m4 - tetrad_m2**2)
+
+
+def vestigial_phase_indicator(binder_tetrad, binder_metric):
+    """
+    Classify phase from Binder cumulants of tetrad and metric order parameters.
+
+    Phase classification (Volovik 2024):
+    - Pre-geometric:  U_tetrad → 0, U_metric → 0
+    - Vestigial:      U_tetrad → 0, U_metric → 2/3
+    - Tetrad-ordered: U_tetrad → 2/3, U_metric → 2/3
+
+    The vestigial phase exists iff there's a coupling window where
+    U_metric has crossed to 2/3 but U_tetrad has not.
+
+    Lean: vestigial_phase_splitting (FermionBag4D.lean)
+    Aristotle: pending
+
+    Args:
+        binder_tetrad: Binder cumulant for tetrad order parameter
+        binder_metric: Binder cumulant for metric order parameter
+
+    Returns:
+        String: 'pre_geometric', 'vestigial', 'tetrad_ordered', or 'crossover'
+    """
+    threshold_ordered = 0.4    # U_L > 0.4 indicates ordered
+    threshold_disordered = 0.2  # U_L < 0.2 indicates disordered
+
+    metric_ordered = binder_metric > threshold_ordered
+    tetrad_ordered = binder_tetrad > threshold_ordered
+    metric_disordered = binder_metric < threshold_disordered
+    tetrad_disordered = binder_tetrad < threshold_disordered
+
+    if tetrad_disordered and metric_disordered:
+        return 'pre_geometric'
+    elif tetrad_disordered and metric_ordered:
+        return 'vestigial'
+    elif tetrad_ordered and metric_ordered:
+        return 'tetrad_ordered'
+    else:
+        return 'crossover'

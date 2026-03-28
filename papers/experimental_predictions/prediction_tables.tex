@@ -120,20 +120,98 @@ at 3$\sigma$ significance.
 
 \section{Kappa-Scaling Test}
 
-The Heidelberg $^{39}$K platform can tune the scattering length via
-Feshbach resonance, enabling a direct test of how the Hawking spectrum
-scales with surface gravity $\kappa$.
+Varying the surface gravity $\kappa$ while holding BEC material properties
+fixed produces different scaling for the two EFT corrections. At fixed
+healing length $\xi$, sound speed $c_s$, and transport coefficients
+$\gamma_1$, $\gamma_2$:
 
-The SK-EFT prediction provides a clean discriminant:
-\begin{itemize}
-\item $\delta_\text{disp} \propto D^2 \propto \kappa^2$ (quadratic scaling)
-\item $\delta_\text{diss} \approx \text{const}$ (independent of $\kappa$
-at leading order)
-\end{itemize}
+\begin{align}
+|\delta_\text{disp}(\kappa)| &= \frac{\pi}{6}\left(\frac{\xi\kappa}{c_s}\right)^2 \propto \kappa^2 \label{eq:disp_scaling} \\
+\delta_\text{diss}(\kappa) &= \frac{(\gamma_1 + \gamma_2)\kappa}{c_s^2} \propto \kappa \label{eq:diss_scaling}
+\end{align}
 
-Measuring the $\kappa$-dependence of the spectral deviation separates
-dispersive from dissipative corrections without needing absolute
-calibration of either.
+The crossover surface gravity where the two corrections are equal in
+magnitude is:
+\begin{equation}
+\kappa_\text{cross} = \frac{6(\gamma_1 + \gamma_2)}{\pi\xi^2}
+\label{eq:crossover}
+\end{equation}
+
+This is formally verified in Lean~4 (\texttt{KappaScaling.lean}):
+\texttt{kappa\_scaling\_crossover\_balance} proves $|\delta_\text{disp}(\kappa_\text{cross})| = \delta_\text{diss}(\kappa_\text{cross})$;
+\texttt{crossover\_unique} proves uniqueness.
+
+\begin{table}[h]
+\caption{Kappa-scaling regime classification. $\kappa_\text{nom}$ is the
+nominal surface gravity from the transonic background solver.}
+\label{tab:kappa_scaling}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Platform & $\kappa_\text{nom}/\kappa_\text{cross}$ & Regime & Dominant \\
+\hline
+Steinhauer & 1.3 & crossover & both \\
+Heidelberg & 0.04 & $\kappa < \kappa_\text{cross}$ & dissipative \\
+Trento & 5.7 & $\kappa > \kappa_\text{cross}$ & dispersive \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The three platforms span the crossover (Fig.~\ref{fig:kappa_scaling}),
+providing complementary experimental access to both scaling regimes.
+Heidelberg's large transport coefficients (from the tunable $^{39}$K
+scattering length) place it firmly in the dissipative regime, while
+Trento's small dissipation makes dispersive corrections dominant.
+Steinhauer sits near the crossover.
+
+\begin{figure}[h]
+\includegraphics[width=\columnwidth]{figures/fig46_kappa_scaling_physical.png}
+\caption{EFT corrections vs.\ surface gravity for all three platforms.
+Dashed lines: $|\delta_\text{disp}| \propto \kappa^2$. Solid lines:
+$\delta_\text{diss} \propto \kappa$. Circles: nominal operating point.
+Crosses: crossover $\kappa_\text{cross}$ where corrections balance.}
+\label{fig:kappa_scaling}
+\end{figure}
+
+\section{Polariton Platform Extension (Tier 1)}
+
+Polariton condensates offer an alternative platform with dramatically
+higher Hawking temperatures ($T_H \sim 0.06$\,K vs.~$\sim 0.35$\,nK
+for BEC) due to the light effective polariton mass
+($m^* = 7.0 \times 10^{-35}$\,kg). The Hawking temperature formula
+$T_H = \hbar\kappa/(2\pi k_B)$ is unchanged in the driven-dissipative
+setting~\cite{Grisins2016}.
+
+The key challenge is the cavity photon decay rate $\Gamma_\text{pol}$,
+which introduces frequency-independent spatial attenuation. The
+perturbative Tier~1 patch (uniform imaginary frequency shift) is valid
+when $\Gamma_\text{pol}/\kappa \ll 1$:
+
+\begin{table}[h]
+\caption{Polariton regime classification for $\kappa = 5 \times 10^{10}$\,s$^{-1}$,
+$D = 0.1$. Formally verified in \texttt{PolaritonTier1.lean} (6 theorems, zero sorry).}
+\label{tab:polariton}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+Cavity & $\tau_\text{cav}$ & $\Gamma_\text{pol}/\kappa$ & Regime & EFT test \\
+\hline
+Standard & 3\,ps & 6.7 & intractable & no \\
+Long-lifetime & 100\,ps & 0.20 & borderline & marginal \\
+Ultra-long & 300\,ps & 0.067 & perturbative & yes \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The spectral degeneracy between polariton decay (flat $\Gamma_\text{pol}$)
+and EFT phonon dissipation ($\propto \omega^n$, $n \geq 2$) can be broken
+by frequency-resolved measurements: the EFT correction has a distinct
+spectral shape that the uniform cavity decay cannot mimic.
+
+Ultra-long-lifetime cavities ($\tau > 300$\,ps, achieved with
+Snoke/Pfeiffer samples) place $\Gamma_\text{pol}/\kappa$ in the
+perturbative regime, making clean extraction of EFT corrections feasible.
+The Paris polariton group (Bramati-Jacquet) has demonstrated horizon
+engineering with spatial light modulators, with stimulated Hawking
+detection possible 2026--2027.
 
 \section{Summary: Which Platform for Which Measurement}
 

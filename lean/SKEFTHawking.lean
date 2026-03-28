@@ -14,6 +14,10 @@ import SKEFTHawking.VestigialGravity
 import SKEFTHawking.FractonHydro
 import SKEFTHawking.FractonGravity
 import SKEFTHawking.FractonNonAbelian
+import SKEFTHawking.KappaScaling
+import SKEFTHawking.PolaritonTier1
+import SKEFTHawking.SU2PseudoReality
+import SKEFTHawking.FermionBag4D
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

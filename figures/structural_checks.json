@@ -1,69 +1,8 @@
 {
-  "timestamp": "2026-03-27T05:50:33.663974+00:00",
-  "issues": [
-    {
-      "figure": "fig17_kappa_crossing",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title 'Surface gravity kappa (s<sup>-1</sup>)' missing expected '\u03ba'"
-    },
-    {
-      "figure": "fig18_spin_sonic_phase3",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "yaxis title '|delta<sub>diss</sub>|' missing expected '\u03b4'"
-    },
-    {
-      "figure": "fig22_complex_turning_point",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title 'omega / T<sub>H</sub>' missing expected '\u03c9'"
-    },
-    {
-      "figure": "fig22_complex_turning_point",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "yaxis title 'x<sub>imag</sub> (turning point shift)' missing expected '\u03b4x'"
-    },
-    {
-      "figure": "fig23_effective_surface_gravity",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title 'omega / T<sub>H</sub>' missing expected '\u03c9'"
-    },
-    {
-      "figure": "fig24_decoherence_and_noise",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title 'omega / T<sub>H</sub>' missing expected '\u03c9'"
-    },
-    {
-      "figure": "fig25_hawking_spectrum_exact",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title '' missing expected '\u03c9'"
-    },
-    {
-      "figure": "fig26_hawking_spectrum_stakeholder",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title 'omega / T<sub>H</sub>' missing expected '\u03c9'"
-    },
-    {
-      "figure": "fig27_exact_vs_perturbative",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "xaxis title 'omega / T<sub>H</sub>' missing expected '\u03c9'"
-    },
-    {
-      "figure": "fig27_exact_vs_perturbative",
-      "severity": "warning",
-      "check": "axis_label",
-      "message": "yaxis title '(n<sub>exact</sub> - n<sub>pert</sub>) / n<sub>pert</sub>' missing expected 'difference'"
-    }
-  ],
+  "timestamp": "2026-03-28T17:01:17.794071+00:00",
+  "issues": [],
   "summary": {
     "errors": 0,
-    "warnings": 10
+    "warnings": 0
   }
 }

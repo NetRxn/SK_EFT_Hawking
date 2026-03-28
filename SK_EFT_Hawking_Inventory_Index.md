@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** March 27, 2026 (Wave 5)
+**Last synced:** March 28, 2026 (Phase 5 Wave 2B)
 
 ---
 
@@ -10,14 +10,14 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 216 + 1 axiom | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 56 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
-| Manual proofs | 160 | 216 - 56 |
-| Lean modules | 16 | `ls lean/SKEFTHawking/*.lean` |
-| Python source modules | 30 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Lean theorems | 259 + 1 axiom | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 59 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
+| Manual proofs | 200 | 259 - 59 |
+| Lean modules | 20 | `ls lean/SKEFTHawking/*.lean` |
+| Python source modules | 37 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 16 | `find tests/ -name "test_*.py"` |
-| Test count | 822 | `pytest tests/ -q` |
-| Figures | 45 | `grep -c "^def fig_" src/core/visualizations.py` |
+| Test count | 892 | `pytest tests/ -q` |
+| Figures | 50 | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | 16 | `ls notebooks/*.ipynb` |
 | Papers | 6 + tables | `ls papers/*/paper_draft.tex` |
 | Validation checks | 14 | `python scripts/validate.py --list` |
@@ -48,9 +48,9 @@
 
 ### Core (`src/core/`)
 - `constants.py` — Physical constants, experimental params, Aristotle registry
-- `formulas.py` — Canonical physics formulas with Lean refs (19 functions)
+- `formulas.py` — Canonical physics formulas with Lean refs (22 functions)
 - `transonic_background.py` — 1D BEC transonic flow solver
-- `visualizations.py` — All 42 Plotly figure functions + COLORS palette
+- `visualizations.py` — All 43 Plotly figure functions + COLORS palette
 - `aristotle_interface.py` — Aristotle API + 56 sorry gap registry
 
 ### Phase 1-2 (`src/second_order/`)
@@ -73,6 +73,7 @@
 
 ### Phase 4 (`src/experimental/`, `src/chirality/`, `src/fracton/`, `src/vestigial/`)
 - `experimental/predictions.py` — Platform prediction tables, shot counts
+- `experimental/kappa_scaling.py` — Physical kappa-scaling sweeps for all platforms
 - `chirality/tpf_gs_analysis.py` — TPF vs GS no-go: 2/4 conditions evaded
 - `fracton/sk_eft.py` — Fracton SK-EFT, binomial charge counting
 - `fracton/information_retention.py` — Fracton retains exponentially more UV info
@@ -83,6 +84,11 @@
 - `vestigial/monte_carlo.py` — Metropolis MC for lattice model
 - `vestigial/phase_diagram.py` — Phase diagram from MF + MC
 - `vestigial/finite_size.py` — Finite-size scaling analysis
+- `vestigial/su2_integration.py` — Analytical SU(2) Haar measure integration
+- `vestigial/grassmann_trg.py` — 2D Grassmann TRG implementation
+- `vestigial/lattice_4d.py` — 4D hypercubic lattice model with SO(4) gauge integration
+- `vestigial/fermion_bag.py` — Fermion-bag MC algorithm for 8-fermion vertices
+- `vestigial/phase_scan.py` — 4D coupling scan with Binder cumulant analysis
 
 ---
 
@@ -106,6 +112,10 @@
 | FractonHydro | 17 | Binomial monotonicity, erasure universal |
 | FractonGravity | 20 | Bootstrap divergence, DOF gap |
 | FractonNonAbelian | 14 | YM incompatibility |
+| KappaScaling | 11 | Crossover balance, regime classification |
+| PolaritonTier1 | 6 | Spatial attenuation ≥ 1, monotonicity, BEC recovery |
+| SU2PseudoReality | 10 | One-link normalization, effective coupling, Binder cumulant limits |
+| FermionBag4D | 16 | SO(4) integration, 8-fermion bounds, bag positivity+boundedness, Binder range, vestigial splitting |
 
 ---
 

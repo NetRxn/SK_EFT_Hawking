@@ -20,8 +20,8 @@ A unified project encompassing:
     * Routes closed: non-Abelian fracton (4 obstructions), fracton-gravity
       bootstrap (60% gap), both formally verified.
 
-Lean 4 formalization: 216 theorems + 1 axiom, zero sorry, 16 modules.
-Aristotle automated theorem prover: 56 theorems proved (13 Phase 4 + 43 earlier).
+Lean 4 formalization: 259 theorems + 1 axiom, zero sorry, 20 modules.
+Aristotle automated theorem prover: 59 theorems proved (3 Phase 5 + 13 Phase 4 + 43 earlier).
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

@@ -264,9 +264,7 @@ noncomputable def firstOrderDissipativeAction
     When ψ_a = 0 and ∂ψ_a = 0, the Lagrangian vanishes. -/
 theorem firstOrder_normalization (coeffs : DissipativeCoeffs) (beta : ℝ) :
     satisfies_normalization (firstOrderDissipativeAction coeffs beta) := by
-  intro fields ha hda_t hda_x
-  simp only [firstOrderDissipativeAction, ha, hda_t]
-  norm_num
+  intro fields ha hda_t _; simp [firstOrderDissipativeAction, ha, hda_t]
 
 /-- The first-order dissipative action satisfies positivity (Im I_SK ≥ 0)
     when γ₁ ≥ 0, γ₂ ≥ 0, and β > 0. -/
@@ -504,28 +502,27 @@ as a shift in the effective temperature extracted from G_K.
     Evaluating the Im part of `firstOrderDissipativeAction` at the "pure ψ_a"
     point (ψ_a = 1, all other fields zero) extracts the γ₁/β coefficient.
     This encodes coth(βω/2) → 1/β at leading (frequency-independent) order
-    for the bulk damping sector. -/
-theorem fdr_from_kms_gamma1 (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < beta) :
+    for the bulk damping sector.
+
+    **Audit note:** `_hbeta : 0 < beta` was removed — the conclusion is
+    a definitional computation that does not require beta positivity. -/
+theorem fdr_from_kms_gamma1 (coeffs : DissipativeCoeffs) (beta : ℝ) :
     let action := firstOrderDissipativeAction coeffs beta
     (action.lagrangian ⟨0, 1, 0, 0, 0, 0, 0, 0, 0⟩).2 =
       coeffs.gamma_1 / beta := by
-  -- Im part at (ψ_r=0, ψ_a=1, rest=0):
-  -- (γ₁/β)·1² + (γ₂/β)·0² = γ₁/β
-  -- Proof by Aristotle (run 20556034): unfold + aesop
-  unfold firstOrderDissipativeAction ; aesop
+  simp [firstOrderDissipativeAction]
 
 /-- **FDR for the γ₂ sector: the (∂_t ψ_a)² noise term has coefficient γ₂/β.**
 
     Evaluating the Im part at the "pure ∂_t ψ_a" point extracts γ₂/β.
     This encodes the FDR for the anisotropic damping sector along the
-    superfluid flow direction. -/
-theorem fdr_from_kms_gamma2 (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < beta) :
+    superfluid flow direction.
+
+    **Audit note:** `_hbeta : 0 < beta` was removed — definitional computation. -/
+theorem fdr_from_kms_gamma2 (coeffs : DissipativeCoeffs) (beta : ℝ) :
     let action := firstOrderDissipativeAction coeffs beta
     (action.lagrangian ⟨0, 0, 0, 0, 1, 0, 0, 0, 0⟩).2 =
       coeffs.gamma_2 / beta := by
-  -- Im part at (dt_ψ_a=1, rest=0):
-  -- (γ₁/β)·0² + (γ₂/β)·1² = γ₂/β
-  -- Proof by Aristotle (run 20556034): simp on definition
   simp [firstOrderDissipativeAction]
 
 /-- **The fluctuation-dissipation relation (algebraic, position-space form).**
@@ -542,16 +539,15 @@ theorem fdr_from_kms_gamma2 (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 
 
     The proof is a direct computation: unfold `firstOrderDissipativeAction`
     and verify that the Im part of the Lagrangian equals the claimed
-    expression for all field configurations. -/
-theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) (_hbeta : 0 < beta) :
+    expression for all field configurations.
+
+    **Audit note:** `_hbeta : 0 < beta` was removed — definitional equality. -/
+theorem fdr_from_kms (coeffs : DissipativeCoeffs) (beta : ℝ) :
     let action := firstOrderDissipativeAction coeffs beta
-    -- For ALL field configurations, the Im part equals (γ₁/β)·ψ_a² + (γ₂/β)·(∂_t ψ_a)²
     ∀ (f : SKFields),
       (action.lagrangian f).2 =
         (coeffs.gamma_1 / beta) * f.psi_a ^ 2 +
         (coeffs.gamma_2 / beta) * f.dt_psi_a ^ 2 :=
-  -- Proof by Aristotle (run 638c5ff3): definitional equality — the Im part
-  -- of firstOrderDissipativeAction is literally this expression.
   fun _ => rfl
 
 /-!

@@ -1817,7 +1817,7 @@ def fig_kappa_crossing_phase3(
                 hovertemplate=f"Crossing ({name})<br>kappa*={cross_kappa:.0f}<extra></extra>",
             ))
 
-    fig.update_xaxes(type="log", title_text="Surface gravity kappa (s<sup>-1</sup>)")
+    fig.update_xaxes(type="log", title_text="Surface gravity κ (s<sup>-1</sup>)")
     fig.update_yaxes(type="log", title_text="|Correction|")
 
     apply_layout(fig,
@@ -1876,7 +1876,7 @@ def fig_spin_sonic_enhancement_phase3(
 
     fig.update_xaxes(type="log",
                      title_text="Velocity ratio c<sub>density</sub> / c<sub>spin</sub>")
-    fig.update_yaxes(type="log", title_text="|delta<sub>diss</sub>|",
+    fig.update_yaxes(type="log", title_text="|δ<sub>diss</sub>|",
                      range=[-8, 0])
 
     apply_layout(fig,
@@ -2149,8 +2149,8 @@ def fig_complex_turning_point() -> go.Figure:
             hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>x_imag=%{{y:.2e}}<extra></extra>",
         ))
 
-    fig.update_xaxes(title_text="omega / T<sub>H</sub>")
-    fig.update_yaxes(title_text="x<sub>imag</sub> (turning point shift)",
+    fig.update_xaxes(title_text="ω / T<sub>H</sub>")
+    fig.update_yaxes(title_text="δx<sub>imag</sub> (turning point shift)",
                      type="log")
 
     apply_layout(fig,
@@ -2219,7 +2219,7 @@ def fig_effective_surface_gravity() -> go.Figure:
             showlegend=True,
         ), row=1, col=col)
 
-        fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=1, col=col)
+        fig.update_xaxes(title_text="ω / T<sub>H</sub>", row=1, col=col)
 
     fig.update_yaxes(title_text="|Correction|", type="log", row=1, col=1)
 
@@ -2296,8 +2296,8 @@ def fig_decoherence_and_noise() -> go.Figure:
             hovertemplate=f"{name}<br>omega/T_H=%{{x:.2f}}<br>n_noise=%{{y:.2e}}<extra></extra>",
         ), row=1, col=2)
 
-    fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=1, col=1)
-    fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=1, col=2)
+    fig.update_xaxes(title_text="ω / T<sub>H</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="ω / T<sub>H</sub>", row=1, col=2)
     fig.update_yaxes(title_text="delta<sub>k</sub>", type="log", row=1, col=1)
     fig.update_yaxes(title_text="n<sub>noise</sub>", type="log", row=1, col=2)
 
@@ -2353,7 +2353,7 @@ def fig_hawking_spectrum_exact(stakeholder: bool = False) -> go.Figure:
                 showlegend=False,
             ))
 
-        fig.update_xaxes(title_text="omega / T<sub>H</sub>")
+        fig.update_xaxes(title_text="ω / T<sub>H</sub>")
         fig.update_yaxes(title_text="Occupation number n(omega)", type="log")
 
         apply_layout(fig,
@@ -2402,8 +2402,9 @@ def fig_hawking_spectrum_exact(stakeholder: bool = False) -> go.Figure:
 
             fig.update_yaxes(type="log", row=row, col=1)
 
-        fig.update_xaxes(title_text="omega / T<sub>H</sub>", row=3, col=1)
-        fig.update_yaxes(title_text="n(omega)", row=2, col=1)
+        for row in range(1, 4):
+            fig.update_xaxes(title_text="ω / T<sub>H</sub>", row=row, col=1)
+        fig.update_yaxes(title_text="n(ω)", row=2, col=1)
 
         apply_layout(fig,
             height=800, width=700,
@@ -2456,8 +2457,8 @@ def fig_exact_vs_perturbative() -> go.Figure:
                   annotation_font=dict(size=10, color="#888"))
     fig.add_hline(y=-0.01, line=dict(color=COLORS["sensitivity"], width=1, dash="dash"))
 
-    fig.update_xaxes(title_text="omega / T<sub>H</sub>")
-    fig.update_yaxes(title_text="(n<sub>exact</sub> - n<sub>pert</sub>) / n<sub>pert</sub>")
+    fig.update_xaxes(title_text="ω / T<sub>H</sub>")
+    fig.update_yaxes(title_text="Fractional difference (n<sub>exact</sub> − n<sub>pert</sub>) / n<sub>pert</sub>")
 
     apply_layout(fig,
         height=450, width=750,
@@ -2987,6 +2988,169 @@ def fig_kappa_scaling_phase4():
     return fig
 
 
+def fig_kappa_scaling_physical():
+    """Fig 45: Physical kappa-scaling predictions for all three BEC platforms.
+
+    Shows how |δ_disp| (∝ κ²) and δ_diss (∝ κ) scale with surface gravity
+    for each platform at fixed BEC material properties. The crossover κ_cross
+    where |δ_disp| = δ_diss is marked for each platform.
+
+    Key physics: the different scaling exponents (2 vs 1) provide an
+    experimental discriminant. Platforms span the crossover:
+    - Heidelberg: dissipative-dominated (κ_nom ≪ κ_cross)
+    - Steinhauer: near crossover (κ_nom ≈ κ_cross)
+    - Trento: dispersive-dominated (κ_nom ≫ κ_cross)
+    """
+    from src.experimental.kappa_scaling import compute_all_sweeps
+
+    sweeps = compute_all_sweeps()
+
+    fig = go.Figure()
+
+    for name in ['Steinhauer', 'Heidelberg', 'Trento']:
+        sweep = sweeps[name]
+        color = COLORS[name]
+        kappa = sweep.kappa_values
+
+        # |delta_disp| (dashed) — quadratic scaling
+        fig.add_trace(go.Scatter(
+            x=kappa, y=np.abs(sweep.delta_disp_values),
+            mode="lines",
+            name=f"{name} |δ<sub>disp</sub>| ∝ κ²",
+            line=dict(color=color, width=2, dash="dash"),
+            legendgroup=name,
+        ))
+
+        # delta_diss (solid) — linear scaling
+        fig.add_trace(go.Scatter(
+            x=kappa, y=sweep.delta_diss_values,
+            mode="lines",
+            name=f"{name} δ<sub>diss</sub> ∝ κ",
+            line=dict(color=color, width=2.5),
+            legendgroup=name,
+        ))
+
+        # Mark nominal kappa
+        nom_idx = np.argmin(np.abs(kappa - sweep.kappa_nominal))
+        fig.add_trace(go.Scatter(
+            x=[sweep.kappa_nominal],
+            y=[sweep.delta_diss_values[nom_idx]],
+            mode="markers",
+            name=f"{name} nominal κ",
+            marker=dict(size=8, color=color, symbol="circle"),
+            legendgroup=name,
+            showlegend=False,
+        ))
+
+        # Mark crossover kappa if it's in range
+        if kappa[0] < sweep.kappa_cross < kappa[-1]:
+            from src.core.formulas import kappa_scaling_dissipative
+            d_diss_cross = kappa_scaling_dissipative(
+                sweep.kappa_cross, sweep.gamma_1, sweep.gamma_2, sweep.c_s
+            )
+            fig.add_trace(go.Scatter(
+                x=[sweep.kappa_cross],
+                y=[d_diss_cross],
+                mode="markers",
+                name=f"{name} κ<sub>cross</sub>",
+                marker=dict(size=10, color=color, symbol="x", line=dict(width=2)),
+                legendgroup=name,
+                showlegend=False,
+            ))
+
+    apply_layout(fig,
+        height=500, width=800,
+        title=dict(text="<b>κ-Scaling Test: EFT Corrections vs Surface Gravity</b>",
+                   font=TITLE_FONT),
+        xaxis_title="κ [s⁻¹]",
+        yaxis_title="Correction magnitude",
+        xaxis_type="log",
+        yaxis_type="log",
+        legend=dict(x=0.02, y=0.02, yanchor="bottom",
+                    bgcolor="rgba(255,255,255,0.9)", font=dict(size=10)),
+    )
+
+    return fig
+
+
+def fig_polariton_regime_map():
+    """Fig 47: Polariton Tier 1 regime map — Gamma_pol/kappa vs cavity lifetime.
+
+    Shows the three cavity quality regimes (intractable, borderline,
+    perturbative/excellent) as colored regions, with the three Paris
+    polariton configurations marked. Includes the BEC platforms for
+    comparison (all deep in the perturbative regime).
+    """
+    from src.experimental.polariton_predictions import polariton_regime_map
+
+    regime = polariton_regime_map()
+
+    # Regime boundaries
+    tau_range = np.logspace(-12, -9, 100)  # 1 ps to 1 ns
+    kappa = 5.0e10  # s^-1 (same for all polariton platforms)
+    gamma_over_kappa = 1.0 / (tau_range * kappa)
+
+    fig = go.Figure()
+
+    # Background regime bands
+    fig.add_hrect(y0=1.0, y1=10, fillcolor="rgba(230,57,70,0.15)",
+                  line_width=0, annotation_text="Intractable",
+                  annotation_position="top left")
+    fig.add_hrect(y0=0.1, y1=1.0, fillcolor="rgba(241,143,1,0.15)",
+                  line_width=0, annotation_text="Borderline",
+                  annotation_position="top left")
+    fig.add_hrect(y0=0.03, y1=0.1, fillcolor="rgba(92,148,110,0.15)",
+                  line_width=0, annotation_text="Perturbative (Tier 1)",
+                  annotation_position="top left")
+    fig.add_hrect(y0=0.001, y1=0.03, fillcolor="rgba(46,134,171,0.15)",
+                  line_width=0, annotation_text="Excellent",
+                  annotation_position="top left")
+
+    # Polariton platforms
+    regime_colors = {
+        'intractable': COLORS['dissipative'],
+        'borderline': COLORS['Trento'],
+        'perturbative': COLORS['dispersive'],
+        'excellent': COLORS['Steinhauer'],
+    }
+
+    for name, data in regime.items():
+        color = regime_colors.get(data['tier1_regime'], 'grey')
+        fig.add_trace(go.Scatter(
+            x=[data['tau_cav_ps']],
+            y=[data['Gamma_pol_over_kappa']],
+            mode="markers+text",
+            name=name.replace('_', ' '),
+            marker=dict(size=12, color=color, symbol="diamond"),
+            text=[f"  {name.split('_')[1]}"],
+            textposition="middle right",
+            textfont=dict(size=11),
+        ))
+
+    # Reference line: Gamma_pol/kappa = 1/tau*kappa
+    fig.add_trace(go.Scatter(
+        x=tau_range * 1e12,
+        y=gamma_over_kappa,
+        mode="lines",
+        name="Γ_pol/κ = 1/(τκ)",
+        line=dict(color="grey", width=1, dash="dot"),
+        showlegend=False,
+    ))
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(text="<b>Polariton Tier 1 Regime Map</b>", font=TITLE_FONT),
+        xaxis_title="Cavity lifetime τ [ps]",
+        yaxis_title="Γ<sub>pol</sub> / κ",
+        xaxis_type="log",
+        yaxis_type="log",
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+    fig.update_yaxes(range=[np.log10(0.001), np.log10(10)])
+
+    return fig
+
+
 def fig_noise_floor_crossover():
     """Fig 38: Noise floor crossover — where FDR noise exceeds Hawking signal.
 
@@ -3424,6 +3588,206 @@ def fig_information_retention():
         barmode='group',
         legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
     )
+
+    return fig
+
+
+def fig_grassmann_trg_2d_phase():
+    """Fig 48: 2D ADW phase diagram from Grassmann TRG.
+
+    Shows free energy and specific heat as functions of the
+    Einstein-Hilbert coupling at fixed cosmological coupling.
+    Specific heat peaks signal phase transitions.
+    """
+    from src.vestigial.grassmann_trg import scan_coupling_2d, TRGParams
+
+    scan = scan_coupling_2d(
+        g_cosmo=1.0,
+        g_EH_range=(0.0, 5.0),
+        n_points=40,
+        trg_params=TRGParams(D_cut=8, n_rg_steps=3),
+    )
+
+    fig = make_subplots(
+        rows=2, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.08,
+        subplot_titles=[
+            "<b>Free energy density</b>",
+            "<b>Specific heat (phase transition signal)</b>",
+        ],
+    )
+
+    # Free energy
+    fig.add_trace(go.Scatter(
+        x=scan.g_EH_values,
+        y=scan.free_energies,
+        mode='lines+markers',
+        line=dict(color=COLORS['Steinhauer'], width=2),
+        marker=dict(size=4),
+        name="f(g<sub>EH</sub>)",
+        showlegend=False,
+    ), row=1, col=1)
+
+    # Specific heat
+    fig.add_trace(go.Scatter(
+        x=scan.g_EH_values,
+        y=scan.specific_heat,
+        mode='lines+markers',
+        line=dict(color=COLORS['Trento'], width=2),
+        marker=dict(size=4),
+        name="C(g<sub>EH</sub>)",
+        showlegend=False,
+    ), row=2, col=1)
+
+    # Mark phase boundary if found
+    if scan.phase_boundary is not None:
+        for row in [1, 2]:
+            fig.add_vline(
+                x=scan.phase_boundary,
+                line_dash="dash",
+                line_color=COLORS['Heidelberg'],
+                annotation_text=f"g*≈{scan.phase_boundary:.1f}" if row == 2 else None,
+                row=row, col=1,
+            )
+
+    apply_layout(fig,
+        height=600, width=700,
+        title=dict(
+            text="<b>2D ADW Phase Diagram (Grassmann TRG)</b>",
+            font=TITLE_FONT,
+        ),
+    )
+
+    for row in [1, 2]:
+        fig.update_xaxes(title_text="g<sub>EH</sub> (Einstein-Hilbert coupling)", row=row, col=1)
+    fig.update_yaxes(title_text="f = −ln Z / V", row=1, col=1)
+    fig.update_yaxes(title_text="C = −d²f/dg²", row=2, col=1)
+
+    return fig
+
+
+def fig_fermion_bag_4d_binder():
+    """Fig 49: 4D Binder cumulant scan from fermion-bag MC.
+
+    Shows tetrad and metric Binder cumulants as functions of the
+    Einstein-Hilbert coupling. Splitting between the two curves
+    (metric ordering before tetrad) would indicate a vestigial phase.
+    """
+    from src.vestigial.phase_scan import scan_coupling_4d
+    from src.vestigial.fermion_bag import FermionBagParams
+
+    mc = FermionBagParams(n_thermalize=50, n_measure=100, n_skip=2, seed=42)
+    scan = scan_coupling_4d(
+        g_cosmo=1.0,
+        g_EH_range=(0.0, 4.0),
+        n_points=20,
+        L=3,
+        mc_params=mc,
+    )
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=scan.g_EH_values,
+        y=scan.binder_metric,
+        mode='lines+markers',
+        line=dict(color=COLORS['Steinhauer'], width=2),
+        marker=dict(size=5),
+        name="U<sub>L</sub> (metric)",
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=scan.g_EH_values,
+        y=scan.binder_tetrad,
+        mode='lines+markers',
+        line=dict(color=COLORS['Trento'], width=2, dash='dash'),
+        marker=dict(size=5, symbol='diamond'),
+        name="U<sub>L</sub> (tetrad)",
+    ))
+
+    # Reference lines
+    fig.add_hline(y=2/3, line_dash="dot", line_color="gray",
+                  annotation_text="ordered (2/3)")
+    fig.add_hline(y=0, line_dash="dot", line_color="gray",
+                  annotation_text="disordered (0)")
+
+    apply_layout(fig,
+        height=450, width=700,
+        title=dict(
+            text=f"<b>4D Binder Cumulants (L={scan.L}, fermion-bag MC)</b>",
+            font=TITLE_FONT,
+        ),
+        xaxis_title="g<sub>EH</sub> (Einstein-Hilbert coupling)",
+        yaxis_title="Binder cumulant U<sub>L</sub>",
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+
+    return fig
+
+
+def fig_fermion_bag_4d_phase_diagram():
+    """Fig 50: 4D phase classification from fermion-bag MC.
+
+    Shows the phase (pre-geometric, vestigial, tetrad-ordered) as
+    a function of coupling, with metric correlator on secondary axis.
+    """
+    from src.vestigial.phase_scan import scan_coupling_4d
+    from src.vestigial.fermion_bag import FermionBagParams
+
+    mc = FermionBagParams(n_thermalize=50, n_measure=100, n_skip=2, seed=42)
+    scan = scan_coupling_4d(
+        g_cosmo=1.0,
+        g_EH_range=(0.0, 4.0),
+        n_points=20,
+        L=3,
+        mc_params=mc,
+    )
+
+    fig = make_subplots(
+        rows=2, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.08,
+        subplot_titles=[
+            "<b>Connected metric correlator (vestigial diagnostic)</b>",
+            "<b>MC acceptance rate</b>",
+        ],
+    )
+
+    # Metric correlator
+    fig.add_trace(go.Scatter(
+        x=scan.g_EH_values,
+        y=scan.metric_correlator,
+        mode='lines+markers',
+        line=dict(color=COLORS['Steinhauer'], width=2),
+        marker=dict(size=4),
+        name="⟨g_μν g_ρσ⟩_c",
+        showlegend=False,
+    ), row=1, col=1)
+
+    # Acceptance rate
+    fig.add_trace(go.Scatter(
+        x=scan.g_EH_values,
+        y=scan.acceptance_rates,
+        mode='lines+markers',
+        line=dict(color=COLORS['Trento'], width=2),
+        marker=dict(size=4),
+        name="acceptance",
+        showlegend=False,
+    ), row=2, col=1)
+
+    apply_layout(fig,
+        height=550, width=700,
+        title=dict(
+            text="<b>4D ADW Phase Diagnostics (fermion-bag MC)</b>",
+            font=TITLE_FONT,
+        ),
+    )
+
+    for row in [1, 2]:
+        fig.update_xaxes(title_text="g<sub>EH</sub> (Einstein-Hilbert coupling)", row=row, col=1)
+    fig.update_yaxes(title_text="⟨gg⟩_c", row=1, col=1)
+    fig.update_yaxes(title_text="acceptance rate", row=2, col=1)
 
     return fig
 

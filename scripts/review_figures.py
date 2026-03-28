@@ -448,6 +448,17 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["Steinhauer", "Heidelberg", "Trento"],
     ),
+    # Phase 5 Wave 1A: Physical kappa-scaling
+    FigureSpec(
+        name="fig46_kappa_scaling_physical",
+        function="fig_kappa_scaling_physical",
+        caption="Physical kappa-scaling: EFT corrections vs surface gravity for all platforms.",
+        needs_experiments=False,
+        expected_traces=6,
+        expected_axes={"xaxis": "κ"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
     # Phase 4 Wave 1B: Chirality wall
     FigureSpec(
         name="fig39_chirality_wall_status",
@@ -521,6 +532,38 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["Steinhauer", "Trento"],
     ),
+    # Phase 5 Wave 2A: Grassmann TRG
+    FigureSpec(
+        name="fig48_grassmann_trg_2d_phase",
+        function="fig_grassmann_trg_2d_phase",
+        caption="2D ADW phase diagram from Grassmann TRG: free energy and specific heat vs coupling.",
+        needs_experiments=False,
+        expected_traces=2,
+        expected_axes={"xaxis": "g"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Trento"],
+    ),
+    # Phase 5 Wave 2B: 4D fermion-bag MC
+    FigureSpec(
+        name="fig49_fermion_bag_4d_binder",
+        function="fig_fermion_bag_4d_binder",
+        caption="4D Binder cumulants (tetrad vs metric) from fermion-bag MC.",
+        needs_experiments=False,
+        expected_traces=2,
+        expected_axes={"xaxis": "g"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Trento"],
+    ),
+    FigureSpec(
+        name="fig50_fermion_bag_4d_phase_diagram",
+        function="fig_fermion_bag_4d_phase_diagram",
+        caption="4D ADW phase diagnostics: metric correlator and acceptance rate.",
+        needs_experiments=False,
+        expected_traces=2,
+        expected_axes={"xaxis": "g"},
+        physics_checks=[],
+        color_keys=["Steinhauer", "Trento"],
+    ),
 ]
 
 
@@ -553,6 +596,8 @@ def generate_figures() -> dict[str, Path]:
         # Phase 4 Wave 1
         fig_prediction_table_comparison, fig_detector_requirements,
         fig_kappa_scaling_phase4, fig_noise_floor_crossover,
+        # Phase 5 Wave 1A
+        fig_kappa_scaling_physical,
         # Phase 4 Wave 1B/1C
         fig_chirality_wall_status, fig_gl_phase_diagram,
         fig_he3_comparison_table,
@@ -560,6 +605,11 @@ def generate_figures() -> dict[str, Path]:
         fig_vestigial_effective_potential,
         fig_vestigial_phase_diagram, fig_backreaction_cooling,
         fig_information_retention,
+        # Phase 5 Wave 2A
+        fig_grassmann_trg_2d_phase,
+        # Phase 5 Wave 2B
+        fig_fermion_bag_4d_binder,
+        fig_fermion_bag_4d_phase_diagram,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -622,6 +672,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_detector_requirements": fig_detector_requirements,
         "fig_kappa_scaling_phase4": fig_kappa_scaling_phase4,
         "fig_noise_floor_crossover": fig_noise_floor_crossover,
+        # Phase 5 Wave 1A
+        "fig_kappa_scaling_physical": fig_kappa_scaling_physical,
         # Phase 4 Wave 1B/1C
         "fig_chirality_wall_status": fig_chirality_wall_status,
         "fig_gl_phase_diagram": fig_gl_phase_diagram,
@@ -631,6 +683,11 @@ def generate_figures() -> dict[str, Path]:
         "fig_vestigial_phase_diagram": fig_vestigial_phase_diagram,
         "fig_backreaction_cooling": fig_backreaction_cooling,
         "fig_information_retention": fig_information_retention,
+        # Phase 5 Wave 2A
+        "fig_grassmann_trg_2d_phase": fig_grassmann_trg_2d_phase,
+        # Phase 5 Wave 2B
+        "fig_fermion_bag_4d_binder": fig_fermion_bag_4d_binder,
+        "fig_fermion_bag_4d_phase_diagram": fig_fermion_bag_4d_phase_diagram,
     }
 
     paths = {}
@@ -696,6 +753,8 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 4 Wave 1
         fig_prediction_table_comparison, fig_detector_requirements,
         fig_kappa_scaling_phase4, fig_noise_floor_crossover,
+        # Phase 5 Wave 1A
+        fig_kappa_scaling_physical,
         # Phase 4 Wave 1B/1C
         fig_chirality_wall_status, fig_gl_phase_diagram,
         fig_he3_comparison_table,
@@ -703,6 +762,11 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_vestigial_effective_potential,
         fig_vestigial_phase_diagram, fig_backreaction_cooling,
         fig_information_retention,
+        # Phase 5 Wave 2A
+        fig_grassmann_trg_2d_phase,
+        # Phase 5 Wave 2B
+        fig_fermion_bag_4d_binder,
+        fig_fermion_bag_4d_phase_diagram,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -763,6 +827,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_detector_requirements": fig_detector_requirements,
         "fig_kappa_scaling_phase4": fig_kappa_scaling_phase4,
         "fig_noise_floor_crossover": fig_noise_floor_crossover,
+        # Phase 5 Wave 1A
+        "fig_kappa_scaling_physical": fig_kappa_scaling_physical,
         # Phase 4 Wave 1B/1C
         "fig_chirality_wall_status": fig_chirality_wall_status,
         "fig_gl_phase_diagram": fig_gl_phase_diagram,
@@ -772,6 +838,11 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_vestigial_phase_diagram": fig_vestigial_phase_diagram,
         "fig_backreaction_cooling": fig_backreaction_cooling,
         "fig_information_retention": fig_information_retention,
+        # Phase 5 Wave 2A
+        "fig_grassmann_trg_2d_phase": fig_grassmann_trg_2d_phase,
+        # Phase 5 Wave 2B
+        "fig_fermion_bag_4d_binder": fig_fermion_bag_4d_binder,
+        "fig_fermion_bag_4d_phase_diagram": fig_fermion_bag_4d_phase_diagram,
     }
 
     issues: list[CheckIssue] = []

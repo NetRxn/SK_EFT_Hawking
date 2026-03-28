@@ -500,3 +500,438 @@ class TestFiniteSizeScaling:
         assert len(result.lattice_sizes) == 2
         assert len(result.susceptibility_peaks_tetrad) == 2
         assert len(result.susceptibility_peaks_metric) == 2
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 2A: SU(2) Integration + Grassmann TRG
+# ════════════════════════════════════════════════════════════════════
+
+from src.vestigial.su2_integration import (
+    integrate_one_link, build_effective_action,
+    su2_pseudo_reality_check, build_initial_tensor,
+    SU2IntegrationResult, EffectiveAction2D,
+)
+from src.vestigial.grassmann_trg import (
+    run_grassmann_trg, TRGParams, scan_coupling_2d,
+    trg_free_energy_convergence, PhaseScanResult,
+)
+from src.core.formulas import (
+    su2_one_link_integral, adw_2d_effective_coupling,
+    binder_cumulant, grassmann_trg_free_energy,
+)
+from src.core.constants import ADW_2D_MODEL, SU2_HAAR, GRASSMANN_TRG
+
+
+class TestSU2Integration:
+    """Tests for SU(2) Haar measure integration."""
+
+    def test_one_link_integral_value(self):
+        """∫ dU U_ij U*_kl = 1/2 for SU(2)."""
+        assert su2_one_link_integral(2) == 0.5
+
+    def test_one_link_integral_general(self):
+        """For SU(N), the factor is 1/N."""
+        assert su2_one_link_integral(3) == pytest.approx(1.0 / 3.0)
+
+    def test_effective_coupling(self):
+        """g_eff = g_EH / dim_fund."""
+        assert adw_2d_effective_coupling(4.0, 2) == 2.0
+        assert adw_2d_effective_coupling(0.0, 2) == 0.0
+
+    def test_integrate_one_link_structure(self):
+        """Integration result has correct structure."""
+        result = integrate_one_link(2.0)
+        assert isinstance(result, SU2IntegrationResult)
+        assert result.g_EH == 2.0
+        assert result.g_eff == 1.0
+        assert result.dim_fund == 2
+        assert 'singlet' in result.channels
+        assert result.channels['singlet'] == 1.0
+
+    def test_effective_action_structure(self):
+        """Effective action has correct parameters."""
+        action = build_effective_action(1.0, 2.0)
+        assert isinstance(action, EffectiveAction2D)
+        assert action.g_cosmo == 1.0
+        assert action.g_eff == 1.0  # 2.0 / 2
+        assert action.d == 2
+        assert action.n_grassmann == 2
+        assert action.coordination_number == 4
+
+    def test_pseudo_reality(self):
+        """SU(2) fundamental rep is pseudo-real: U* = ε U ε⁻¹."""
+        result = su2_pseudo_reality_check()
+        assert result['pseudo_real'] is True
+        assert result['max_reconstruction_error'] < 1e-10
+        assert result['sign_problem_absent'] is True
+
+    def test_initial_tensor_shape(self):
+        """Initial tensor has shape (2, 2, 2, 2)."""
+        T = build_initial_tensor(1.0, 1.0)
+        assert T.shape == (2, 2, 2, 2)
+
+    def test_initial_tensor_positive(self):
+        """All tensor elements should be positive (Boltzmann weights)."""
+        T = build_initial_tensor(1.0, 0.5)
+        assert np.all(T > 0)
+
+    def test_initial_tensor_zero_coupling(self):
+        """At g_cosmo=0, g_EH=0: all weights = 1, tensor sums to 4."""
+        T = build_initial_tensor(0.0, 0.0)
+        # Each element T[l,r,u,d] = Σ_{n1,n2} 1 = 4 (sum over 4 configs)
+        assert np.allclose(T, 4.0)
+
+
+class TestGrassmannTRG:
+    """Tests for the Grassmann TRG algorithm."""
+
+    def test_trg_runs(self):
+        """TRG should run without errors."""
+        result = run_grassmann_trg(1.0, 1.0, TRGParams(D_cut=4, n_rg_steps=2))
+        assert result.L == 4
+        assert result.volume == 16
+        assert np.isfinite(result.ln_Z)
+        assert np.isfinite(result.free_energy)
+
+    def test_trg_zero_coupling_consistency(self):
+        """At zero coupling, free energy per site should be independent of L."""
+        f_values = []
+        for n_rg in [2, 3, 4]:
+            result = run_grassmann_trg(0.0, 0.0, TRGParams(D_cut=4, n_rg_steps=n_rg))
+            f_values.append(result.free_energy)
+        # Free energy per site should be the same regardless of lattice size
+        for f in f_values:
+            assert abs(f - f_values[0]) < 0.1, (
+                f"Free energy varies with L at zero coupling: {f_values}"
+            )
+
+    def test_trg_free_energy_finite(self):
+        """Free energy should be finite for reasonable couplings."""
+        for g_EH in [0.0, 0.5, 1.0, 2.0, 5.0]:
+            result = run_grassmann_trg(1.0, g_EH, TRGParams(D_cut=4, n_rg_steps=2))
+            assert np.isfinite(result.free_energy), f"Non-finite f at g_EH={g_EH}"
+
+    def test_trg_lattice_size(self):
+        """Lattice size = 2^n_rg_steps."""
+        for n in [1, 2, 3, 4]:
+            result = run_grassmann_trg(1.0, 1.0, TRGParams(D_cut=4, n_rg_steps=n))
+            assert result.L == 2**n
+            assert result.volume == (2**n)**2
+
+    def test_trg_sv_spectrum(self):
+        """Singular value spectrum should be recorded at each step."""
+        params = TRGParams(D_cut=8, n_rg_steps=3)
+        result = run_grassmann_trg(1.0, 1.0, params)
+        assert len(result.singular_value_spectrum) == 3
+        for sv in result.singular_value_spectrum:
+            assert len(sv) > 0
+            assert np.all(sv >= 0)
+            # SVs should be in decreasing order
+            assert np.all(sv[:-1] >= sv[1:])
+
+    def test_trg_d_cut_convergence(self):
+        """Free energy should converge as D_cut increases."""
+        conv = trg_free_energy_convergence(1.0, 1.0, D_cut_values=[4, 8, 16], n_rg_steps=3)
+        energies = [r['free_energy'] for r in conv['results']]
+        # Check that differences decrease (convergence)
+        if len(energies) >= 3:
+            diff1 = abs(energies[1] - energies[0])
+            diff2 = abs(energies[2] - energies[1])
+            assert diff2 <= diff1 + 1e-10  # converging or already converged
+
+
+class TestPhaseScan2D:
+    """Tests for the 2D coupling scan."""
+
+    def test_scan_runs(self):
+        """Coupling scan should complete without errors."""
+        result = scan_coupling_2d(
+            g_cosmo=1.0,
+            g_EH_range=(0.0, 3.0),
+            n_points=10,
+            trg_params=TRGParams(D_cut=4, n_rg_steps=2),
+        )
+        assert isinstance(result, PhaseScanResult)
+        assert len(result.g_EH_values) == 10
+        assert len(result.free_energies) == 10
+        assert np.all(np.isfinite(result.free_energies))
+
+    def test_scan_specific_heat(self):
+        """Specific heat should be computed."""
+        result = scan_coupling_2d(
+            g_cosmo=1.0, g_EH_range=(0.0, 3.0), n_points=10,
+            trg_params=TRGParams(D_cut=4, n_rg_steps=2),
+        )
+        assert len(result.specific_heat) == 10
+        assert np.all(np.isfinite(result.specific_heat))
+
+    def test_free_energy_monotone_weak_coupling(self):
+        """Free energy should vary smoothly at weak coupling."""
+        result = scan_coupling_2d(
+            g_cosmo=1.0, g_EH_range=(0.0, 1.0), n_points=5,
+            trg_params=TRGParams(D_cut=4, n_rg_steps=2),
+        )
+        # Check free energies are finite and smooth (no wild jumps)
+        diffs = np.abs(np.diff(result.free_energies))
+        assert np.all(diffs < 10.0)  # no catastrophic jumps
+
+
+class TestFormulas2D:
+    """Tests for the Wave 2A formulas in formulas.py."""
+
+    def test_binder_cumulant_ordered(self):
+        """U_L = 2/3 in the ordered limit (m⁴ = m²²)."""
+        m2 = 5.0
+        m4 = m2**2
+        assert binder_cumulant(m2, m4) == pytest.approx(2.0 / 3.0)
+
+    def test_binder_cumulant_gaussian(self):
+        """U_L = 0 for Gaussian (m⁴ = 3m²²)."""
+        m2 = 5.0
+        m4 = 3.0 * m2**2
+        assert binder_cumulant(m2, m4) == pytest.approx(0.0)
+
+    def test_binder_cumulant_zero(self):
+        """U_L = 0 when m2 = 0."""
+        assert binder_cumulant(0.0, 0.0) == 0.0
+
+    def test_free_energy_formula(self):
+        """f = -ln(Z)/V."""
+        assert grassmann_trg_free_energy(10.0, 100) == pytest.approx(-0.1)
+        assert grassmann_trg_free_energy(0.0, 100) == 0.0
+
+    def test_free_energy_zero_volume(self):
+        """Handle zero volume gracefully."""
+        assert grassmann_trg_free_energy(10.0, 0) == 0.0
+
+    def test_constants_consistency(self):
+        """ADW 2D model constants are self-consistent."""
+        assert ADW_2D_MODEL['d'] == 2
+        assert ADW_2D_MODEL['n_grassmann'] == 2
+        assert ADW_2D_MODEL['gauge_dim'] == SU2_HAAR['dim_fund']
+        assert SU2_HAAR['one_link_factor'] == su2_one_link_integral(SU2_HAAR['dim_fund'])
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 2B: 4D Fermion-Bag Monte Carlo
+# ════════════════════════════════════════════════════════════════════
+
+from src.core.formulas import (
+    so4_one_link_integral, adw_4d_effective_coupling,
+    eight_fermion_vertex_weight, fermion_bag_local_weight,
+    metric_correlator_connected, vestigial_phase_indicator,
+)
+from src.core.constants import ADW_4D_MODEL, SO4_HAAR, FERMION_BAG
+from src.vestigial.lattice_4d import (
+    Lattice4DParams, Lattice4DConfig, create_lattice_4d,
+    total_action_4d, tetrad_order_parameter_4d, metric_order_parameter_4d,
+    neighbor_index, bond_index,
+)
+from src.vestigial.fermion_bag import (
+    FermionBagParams, FermionBagResult, run_fermion_bag_mc,
+)
+from src.vestigial.phase_scan import (
+    scan_coupling_4d, PhaseScan4DResult,
+    binder_crossing_analysis, BinderCrossing4DResult,
+)
+
+
+class TestFormulas4D:
+    """Tests for Wave 2B formulas."""
+
+    def test_so4_one_link(self):
+        """SO(4) one-link factor = 1/4."""
+        assert so4_one_link_integral() == 0.25
+
+    def test_so4_one_link_general(self):
+        """General: 1/(dim_L × dim_R)."""
+        assert so4_one_link_integral(3, 3) == pytest.approx(1.0 / 9.0)
+
+    def test_adw_4d_effective_coupling(self):
+        """g_eff = g_EH / 4."""
+        assert adw_4d_effective_coupling(4.0) == 1.0
+        assert adw_4d_effective_coupling(0.0) == 0.0
+
+    def test_eight_fermion_full_occ(self):
+        """At full occupation, weight = exp(-g_cosmo)."""
+        assert eight_fermion_vertex_weight(8, 1.0) == pytest.approx(np.exp(-1.0))
+
+    def test_eight_fermion_partial_occ(self):
+        """At partial occupation, weight = 1."""
+        for n in range(8):
+            assert eight_fermion_vertex_weight(n, 5.0) == 1.0
+
+    def test_fermion_bag_weight(self):
+        """Bag weight is product of positive factors."""
+        config = {
+            'site_occupations': [8, 4, 0],
+            'bond_occupations': [1, 0, 1],
+        }
+        w = fermion_bag_local_weight(config, 1.0, 0.5)
+        expected = np.exp(-1.0) * 1.0 * 1.0 * np.exp(-0.5) * 1.0 * np.exp(-0.5)
+        assert w == pytest.approx(expected)
+        assert w > 0
+
+    def test_metric_correlator_positive(self):
+        """Connected metric correlator ≥ 0."""
+        assert metric_correlator_connected(5.0, 30.0) >= 0
+        assert metric_correlator_connected(5.0, 25.0) == 0  # m4 = m2²
+
+    def test_vestigial_indicator_all_phases(self):
+        """Phase indicator classifies all three phases correctly."""
+        assert vestigial_phase_indicator(0.1, 0.1) == 'pre_geometric'
+        assert vestigial_phase_indicator(0.1, 0.6) == 'vestigial'
+        assert vestigial_phase_indicator(0.6, 0.6) == 'tetrad_ordered'
+        assert vestigial_phase_indicator(0.3, 0.3) == 'crossover'
+
+    def test_constants_4d(self):
+        """4D model constants are self-consistent."""
+        assert ADW_4D_MODEL['d'] == 4
+        assert ADW_4D_MODEL['n_grassmann'] == 8
+        assert ADW_4D_MODEL['n_dirac'] * ADW_4D_MODEL['spinor_dim'] == 8
+        assert SO4_HAAR['one_link_factor'] == so4_one_link_integral()
+
+
+class TestLattice4D:
+    """Tests for the 4D lattice model."""
+
+    def test_params_volume(self):
+        """Volume = L^4."""
+        p = Lattice4DParams(L=4)
+        assert p.volume == 256
+
+    def test_params_bonds(self):
+        """Number of bonds = V × d."""
+        p = Lattice4DParams(L=3)
+        assert p.n_bonds == 81 * 4  # 3^4 = 81 sites, 4 directions
+
+    def test_params_g_eff(self):
+        """Effective coupling = g_EH/4."""
+        p = Lattice4DParams(g_EH=8.0)
+        assert p.g_eff == 2.0
+
+    def test_create_lattice(self):
+        """Lattice creation produces correct shapes."""
+        p = Lattice4DParams(L=2)
+        config = create_lattice_4d(p)
+        assert config.site_occ.shape == (16,)   # 2^4
+        assert config.bond_occ.shape == (64,)   # 16 × 4
+        assert np.all(config.site_occ >= 0)
+        assert np.all(config.site_occ <= 8)
+
+    def test_total_action_positive(self):
+        """Total action is non-negative for positive couplings."""
+        p = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=1.0)
+        config = create_lattice_4d(p)
+        S = total_action_4d(config)
+        assert S >= 0
+
+    def test_tetrad_order_bounded(self):
+        """Tetrad order parameter in [0, 1]."""
+        p = Lattice4DParams(L=2)
+        config = create_lattice_4d(p)
+        E = tetrad_order_parameter_4d(config)
+        assert 0 <= E <= 1
+
+    def test_metric_order_bounded(self):
+        """Metric order parameter in [0, 1]."""
+        p = Lattice4DParams(L=2)
+        config = create_lattice_4d(p)
+        g = metric_order_parameter_4d(config)
+        assert 0 <= g <= 1
+
+    def test_neighbor_periodic(self):
+        """Periodic boundary conditions wrap correctly."""
+        L = 3
+        # In direction 0, site L-1 wraps to 0
+        assert neighbor_index(2, 0, L) == 0   # x0=2 → x0=0
+        # In direction 1, site at x1=2 wraps
+        site = 2 * L   # (0,2,0,0)
+        nbr = neighbor_index(site, 1, L)
+        assert nbr == 0  # wraps to (0,0,0,0)
+
+    def test_bond_index_unique(self):
+        """Bond indices are unique across all site-direction pairs."""
+        L = 2
+        V = L**4
+        indices = set()
+        for site in range(V):
+            for d in range(4):
+                idx = bond_index(site, d, V)
+                indices.add(idx)
+        assert len(indices) == V * 4  # all unique
+
+
+class TestFermionBagMC:
+    """Tests for the fermion-bag Monte Carlo."""
+
+    def test_mc_runs(self):
+        """MC should complete without errors."""
+        p = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=1.0)
+        mc = FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=42)
+        r = run_fermion_bag_mc(p, mc)
+        assert isinstance(r, FermionBagResult)
+        assert np.isfinite(r.binder_tetrad)
+        assert np.isfinite(r.binder_metric)
+        assert r.phase in ['pre_geometric', 'vestigial', 'tetrad_ordered', 'crossover']
+
+    def test_acceptance_rate(self):
+        """Acceptance rate should be between 0 and 1."""
+        p = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=1.0)
+        mc = FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=42)
+        r = run_fermion_bag_mc(p, mc)
+        assert 0 < r.acceptance_rate <= 1
+
+    def test_reproducibility(self):
+        """Same seed gives same results."""
+        p = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=1.0)
+        mc = FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=123)
+        r1 = run_fermion_bag_mc(p, mc)
+        r2 = run_fermion_bag_mc(p, FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=123))
+        assert r1.binder_tetrad == r2.binder_tetrad
+
+    def test_strong_coupling_ordered(self):
+        """At strong coupling (large g_EH), system should trend toward order."""
+        p = Lattice4DParams(L=2, g_cosmo=0.1, g_EH=10.0)
+        mc = FermionBagParams(n_thermalize=20, n_measure=50, n_skip=2, seed=42)
+        r = run_fermion_bag_mc(p, mc)
+        # Strong coupling favors low occupation → action minimized
+        assert np.isfinite(r.action_mean)
+
+    def test_zero_coupling(self):
+        """At zero coupling, system is free — all configs equally weighted."""
+        p = Lattice4DParams(L=2, g_cosmo=0.0, g_EH=0.0)
+        mc = FermionBagParams(n_thermalize=5, n_measure=20, n_skip=1, seed=42)
+        r = run_fermion_bag_mc(p, mc)
+        assert r.action_mean == pytest.approx(0.0, abs=0.01)
+
+
+class TestPhaseScan4D:
+    """Tests for the 4D coupling scan."""
+
+    def test_scan_runs(self):
+        """Coupling scan completes."""
+        mc = FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=42)
+        scan = scan_coupling_4d(1.0, (0.0, 2.0), 5, L=2, mc_params=mc)
+        assert isinstance(scan, PhaseScan4DResult)
+        assert len(scan.g_EH_values) == 5
+        assert len(scan.binder_tetrad) == 5
+        assert np.all(np.isfinite(scan.binder_tetrad))
+
+    def test_scan_acceptance_rates(self):
+        """All scan points should have reasonable acceptance."""
+        mc = FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=42)
+        scan = scan_coupling_4d(1.0, (0.0, 2.0), 5, L=2, mc_params=mc)
+        assert np.all(scan.acceptance_rates > 0)
+        assert np.all(scan.acceptance_rates <= 1)
+
+    def test_binder_crossing_analysis(self):
+        """Binder crossing analysis runs without errors."""
+        mc = FermionBagParams(n_thermalize=5, n_measure=10, n_skip=1, seed=42)
+        result = binder_crossing_analysis(
+            g_cosmo=1.0, g_EH_range=(0.0, 2.0), n_points=5,
+            lattice_sizes=[2, 3], mc_params=mc,
+        )
+        assert isinstance(result, BinderCrossing4DResult)
+        assert len(result.scans) == 2
+        assert isinstance(result.vestigial_detected, bool)

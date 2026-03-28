@@ -90,9 +90,7 @@ noncomputable def acousticMetric (v cs rho : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :
 /-- The acoustic metric is symmetric. -/
 theorem acousticMetric_symmetric (v cs rho : ℝ) :
     (acousticMetric v cs rho).IsSymm := by
-  ext i j
-  simp only [acousticMetric, Matrix.of_apply, Matrix.transpose_apply]
-  fin_cases i <;> fin_cases j <;> simp [mul_comm]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [acousticMetric, mul_comm]
 
 /-- Components of the inverse acoustic metric g^{μν}.
     These are the components that appear in the wave equation □_g π = 0. -/
@@ -120,26 +118,18 @@ noncomputable def acousticMetricInv (v cs rho : ℝ) : Matrix (Fin 2) (Fin 2) �
     and depends only on ρ, not on v or c_s separately. -/
 theorem acousticMetric_det (v cs rho : ℝ) (hcs : cs ≠ 0) :
     (acousticMetric v cs rho).det = -(rho ^ 2) := by
-  -- Proof by Aristotle: expand 2×2 determinant via det_fin_two, simplify
-  rw [Matrix.det_fin_two,
-    show (acousticMetric v cs rho) = Matrix.of ![![rho / cs * (-(cs ^ 2 - v ^ 2)),
-      rho / cs * (-v)], ![rho / cs * (-v), rho / cs * 1]] from
-      by ext i j; fin_cases i <;> fin_cases j <;> rfl]
-  norm_num
-  ring_nf
-  norm_num [hcs]
+  rw [Matrix.det_fin_two, show (acousticMetric v cs rho) = Matrix.of ![![rho / cs *
+    (-(cs ^ 2 - v ^ 2)), rho / cs * (-v)], ![rho / cs * (-v), rho / cs * 1]] from
+    by ext i j; fin_cases i <;> fin_cases j <;> rfl]
+  norm_num; ring_nf; norm_num [hcs]
 
 /-- The inverse metric is indeed the inverse of the metric.
     g_{μα} g^{αν} = δ^ν_μ -/
 theorem acousticMetric_inv_correct (v cs rho : ℝ) (hcs : cs ≠ 0) (hrho : rho ≠ 0) :
     acousticMetric v cs rho * acousticMetricInv v cs rho = 1 := by
-  -- Proof by Aristotle: ext + fin_cases on 2×2 entries, algebraic simplification
-  unfold acousticMetric acousticMetricInv
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [div_eq_mul_inv, Matrix.mul_apply] <;>
-    ring_nf <;>
-    aesop (simp_config := { decide := true })
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [acousticMetric, acousticMetricInv, Matrix.mul_apply, div_eq_mul_inv] <;>
+    ring_nf <;> aesop (simp_config := { decide := true })
 
 /-!
 ## The Phonon EOM from Son's EFT
@@ -247,12 +237,14 @@ theorem acoustic_metric_theorem
     fun _ => rfl⟩, trivial⟩
 
 /-- The acoustic metric has Lorentzian signature: one negative and one
-    positive eigenvalue. This ensures the phonon EOM is hyperbolic. -/
+    positive eigenvalue. This ensures the phonon EOM is hyperbolic.
+
+    **Audit note:** `hsub : v ^ 2 < cs ^ 2` is unused — the determinant
+    `-ρ²` is negative for any `ρ > 0`, regardless of `v` vs `cs`. -/
 theorem acoustic_metric_lorentzian (v cs rho : ℝ)
-    (hcs : 0 < cs) (hrho : 0 < rho) (hsub : v ^ 2 < cs ^ 2) :
+    (hcs : 0 < cs) (hrho : 0 < rho) (_hsub : v ^ 2 < cs ^ 2) :
     (acousticMetric v cs rho).det < 0 := by
-  -- Proof by Aristotle: rewrite with acousticMetric_det, then negativity from ρ > 0
-  rw [acousticMetric_det] <;> aesop
+  rw [acousticMetric_det v cs rho hcs.ne']; nlinarith [sq_nonneg rho]
 
 /-- **Sound speed from the EFT.**
 
@@ -282,18 +274,13 @@ theorem gtt_vanishes_at_horizon (bg : FluidBackground) (h : SonicHorizon bg) :
     let v := bg.velocity h.x_H
     let cs := bg.soundSpeed h.x_H
     cs ^ 2 - v ^ 2 = 0 := by
-  simp only
-  have hvc := h.horizon_condition
-  rw [hvc]
-  ring
+  simp only; rw [h.horizon_condition]; ring
 
 /-- The Hawking temperature from the surface gravity:
     T_H = κ/(2π)
     in natural units (ℏ = k_B = 1). -/
 theorem hawking_temp_from_surface_gravity (bg : FluidBackground) (h : SonicHorizon bg) :
-    hawkingTemp h.surfaceGravity = h.surfaceGravity / (2 * Real.pi) := by
-  unfold hawkingTemp
-  ring
+    hawkingTemp h.surfaceGravity = h.surfaceGravity / (2 * Real.pi) := rfl
 
 /-!
 ## Connection to the Broader EFT

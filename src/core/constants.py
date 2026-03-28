@@ -90,6 +90,194 @@ EXPERIMENTS = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Polariton platform parameters
+# Polaritons are driven-dissipative quasiparticles, not atomic BECs.
+# They do not use the transonic_background solver — parameters are
+# specified directly from the Bogoliubov dispersion.
+#
+# Key difference from BEC: the dominant damping is cavity decay
+# Gamma_pol = 1/tau_cav, which is frequency-independent. EFT phonon
+# damping (from polariton-polariton scattering) is subdominant.
+#
+# The Tier 1 perturbative patch is valid when Gamma_pol/kappa << 1.
+#
+# References:
+#   - Falque et al., PRL 135, 023401 (2025) — Paris polariton horizons
+#   - Grisins et al., PRB 94, 144518 (2016) — T_H survives
+#   - Jacquet et al., Eur. Phys. J. D 76, 152 (2022) — kinematics
+# ════════════════════════════════════════════════════════════════════
+
+POLARITON_MASS = 7.0e-35      # kg (effective polariton mass, Falque et al.)
+
+POLARITON_PLATFORMS = {
+    'Paris_long': {
+        'description': 'Paris polariton, long-lifetime cavity (100 ps)',
+        'c_s': 1.0e6,             # m/s (1 μm/ps, typical Bogoliubov sound speed)
+        'xi': 2.0e-6,             # m (2 μm healing length)
+        'kappa': 5.0e10,          # s⁻¹ (0.05 THz, SLM-controlled horizon)
+        'tau_cav': 100e-12,       # s (cavity lifetime)
+        'Gamma_pol': 1.0e10,      # s⁻¹ (1/tau_cav)
+        'gamma_phonon_dim': 1e-4, # Dimensionless phonon damping (subdominant)
+    },
+    'Paris_ultralong': {
+        'description': 'Paris polariton, ultra-long-lifetime cavity (300 ps)',
+        'c_s': 1.0e6,
+        'xi': 2.0e-6,
+        'kappa': 5.0e10,
+        'tau_cav': 300e-12,
+        'Gamma_pol': 3.33e9,
+        'gamma_phonon_dim': 1e-4,
+    },
+    'Paris_standard': {
+        'description': 'Paris polariton, standard cavity (3 ps)',
+        'c_s': 1.0e6,
+        'xi': 2.0e-6,
+        'kappa': 5.0e10,
+        'tau_cav': 3e-12,
+        'Gamma_pol': 3.33e11,
+        'gamma_phonon_dim': 1e-4,
+    },
+}
+
+# Derived polariton parameters
+for _name, _plat in POLARITON_PLATFORMS.items():
+    _plat['D'] = _plat['xi'] * _plat['kappa'] / _plat['c_s']
+    _plat['T_H_K'] = HBAR * _plat['kappa'] / (2 * np.pi * K_B)
+    _plat['Gamma_pol_over_kappa'] = _plat['Gamma_pol'] / _plat['kappa']
+    _ratio = _plat['Gamma_pol_over_kappa']
+    _plat['tier1_regime'] = ('excellent' if _ratio < 0.03
+                             else 'perturbative' if _ratio < 0.1
+                             else 'borderline' if _ratio < 1.0
+                             else 'intractable')
+    _plat['tier1_valid'] = _ratio < 0.1
+
+
+# ════════════════════════════════════════════════════════════════════
+# Kappa-scaling test configuration
+# The kappa-scaling test varies surface gravity kappa while holding
+# BEC material properties fixed. Multipliers applied to each
+# platform's nominal kappa to produce the scan range.
+# ════════════════════════════════════════════════════════════════════
+
+KAPPA_SCALING_FACTORS = np.array([0.2, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0])
+
+
+# ════════════════════════════════════════════════════════════════════
+# 2D ADW model parameters (Phase 5 Wave 2A: Grassmann TRG benchmark)
+#
+# Reduced 2D version of the Diakonov lattice gravity model:
+#   - 2 Grassmann variables per site (1 Dirac spinor in 2D)
+#   - SU(2) gauge group on links (spin connection)
+#   - 4-fermion vertices after SU(2) Haar measure integration
+#   - No fermion bilinear kinetic term (pure multi-fermion)
+#
+# The 2D model retains the essential multi-fermion dynamics and
+# symmetry-breaking pattern (tetrad vs metric order) but lacks
+# the full diffeomorphism content of the 4D theory.
+#
+# Reference: Vladimirov-Diakonov, PRD 86, 104019 (2012)
+# Reference: Shimizu-Kuramashi, PRD 90, 014508 (2014) — Grassmann TRG
+# ════════════════════════════════════════════════════════════════════
+
+ADW_2D_MODEL = {
+    'd': 2,                       # spacetime dimension
+    'n_grassmann': 2,             # Grassmann variables per site (1 Dirac spinor)
+    'gauge_group': 'SU(2)',       # spin connection gauge group
+    'gauge_dim': 2,               # fundamental representation dimension
+}
+
+# SU(2) Haar measure integration identities
+# Vol(SU(2)) = 2π², used in normalization of group integrals
+# Key identity: ∫ dU U_ij U*_kl = (1/dim_fund) δ_il δ_jk
+SU2_HAAR = {
+    'volume': 2 * np.pi**2,                    # Vol(SU(2))
+    'dim_fund': 2,                              # dim of fundamental rep
+    'one_link_factor': 0.5,                     # 1/dim_fund for single-link integral
+    'pseudo_real': True,                        # fund rep is self-conjugate
+}
+
+# Grassmann TRG parameters
+GRASSMANN_TRG = {
+    'D_cut_default': 16,          # bond dimension (truncation parameter)
+    'D_cut_high': 32,             # high-accuracy bond dimension
+    'D_cut_benchmark': 8,         # fast benchmark bond dimension
+    'svd_threshold': 1e-12,       # threshold for discarding small singular values
+}
+
+# 2D benchmarking lattice sizes (L × L square lattice)
+# Effective lattice size after n_rg = log2(L) TRG steps is 1×1 → Z
+ADW_2D_LATTICE_SIZES = [4, 8, 16, 32, 64]
+
+# Coupling scan range for the 2D phase diagram
+# g_cosmo: cosmological term coupling (4-fermion on-site)
+# g_EH: Einstein-Hilbert term coupling (4-fermion nearest-neighbor via gauge)
+# Scan g_EH/g_cosmo at fixed g_cosmo = 1
+ADW_2D_COUPLING_SCAN = {
+    'g_cosmo': 1.0,                             # fixed cosmological coupling
+    'g_EH_range': (0.0, 5.0),                   # Einstein-Hilbert coupling range
+    'n_points': 50,                             # number of scan points
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 2B: 4D ADW cubic lattice pilot (fermion-bag MC)
+#
+# 8 Grassmann variables per site (2 Dirac spinors × 4 components).
+# SO(4) ≅ SU(2)×SU(2) gauge group (Euclidean spin connection).
+# After integrating out gauge field: purely fermionic effective action
+# with 8-fermion vertices (cosmological) + 4-fermion NN (Einstein-Hilbert).
+#
+# Reference: Vladimirov-Diakonov, PRD 86, 104019 (2012)
+# Reference: Chandrasekharan, PRD 82, 025007 (2010) — fermion-bag algorithm
+# Reference: Catterall, JHEP 01, 121 (2016) — SO(4) fermion-bag MC
+# ════════════════════════════════════════════════════════════════════
+
+ADW_4D_MODEL = {
+    'd': 4,                       # spacetime dimension
+    'n_grassmann': 8,             # Grassmann variables per site (2 Dirac × 4 components)
+    'n_dirac': 2,                 # number of Dirac spinors
+    'spinor_dim': 4,              # components per Dirac spinor in 4D
+    'gauge_group': 'SO(4)',       # Euclidean spin connection gauge group
+    'gauge_dim': 4,               # fundamental representation dimension
+    'coordination_number': 8,     # 2d = 8 nearest neighbors on 4D hypercubic lattice
+    'z4_symmetry': True,          # Volovik Z_4: e^a_mu -> -i e^a_mu, i^4=1
+}
+
+# SO(4) ≅ SU(2)_L × SU(2)_R Haar measure integration
+# Each SU(2) factor integrated independently via Peter-Weyl
+# Combined one-link factor: (1/dim_L)(1/dim_R) = 1/4
+SO4_HAAR = {
+    'dim_fund': 4,                # SO(4) fundamental rep dimension
+    'dim_su2': 2,                 # each SU(2) factor
+    'one_link_factor': 0.25,      # (1/2)×(1/2) for SU(2)_L × SU(2)_R
+    'pseudo_real': True,          # both SU(2) factors are pseudo-real
+    'n_independent_channels': 4,  # singlet, (adj,1), (1,adj), (adj,adj)
+}
+
+# Fermion-bag algorithm parameters
+# The fermion-bag partitions the lattice into "bags" where Grassmann
+# integrals are evaluated exactly. Bag updates are local and sign-free.
+FERMION_BAG = {
+    'max_bag_size': 32,           # max sites per bag (controls accuracy vs speed)
+    'n_thermalize': 500,          # thermalization sweeps before measurement
+    'n_measure': 1000,            # measurement sweeps
+    'n_skip': 5,                  # sweeps between measurements (decorrelation)
+    'seed': 42,                   # default random seed
+}
+
+# 4D lattice sizes for pilot study (L^4 hypercubic)
+# Cost scaling: 6^4=1296 (minutes), 8^4=4096 (hours), 10^4=10000 (days)
+ADW_4D_LATTICE_SIZES = [4, 6, 8]
+
+# 4D coupling scan parameters
+ADW_4D_COUPLING_SCAN = {
+    'g_cosmo': 1.0,               # fixed cosmological coupling
+    'g_EH_range': (0.0, 4.0),     # Einstein-Hilbert coupling range
+    'n_points': 20,               # number of scan points (smaller for 4D cost)
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Plotly color palette (consistent across all figures)
 # ════════════════════════════════════════════════════════════════════
 
@@ -104,12 +292,12 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (216 theorems + 1 axiom across 16 Lean modules):
-#   - 56 proved by Aristotle automated theorem prover (listed below with run IDs)
-#   - 160 proved manually in Lean (verified by `lake build`, zero sorry)
+# Verification breakdown (259 theorems + 1 axiom across 20 Lean modules):
+#   - 59 proved by Aristotle automated theorem prover (listed below with run IDs)
+#   - 174 proved manually in Lean (verified by `lake build`, zero sorry)
 #   - 1 axiom: non_abelian_center_discrete in GaugeErasure.lean
 #
-# All 217 proof obligations have zero sorry. Verified by `lake build`.
+# All 234 proof obligations have zero sorry. Verified by `lake build`.
 # ════════════════════════════════════════════════════════════════════
 
 ARISTOTLE_THEOREMS = {
@@ -185,10 +373,15 @@ ARISTOTLE_THEOREMS = {
     # Wave 5 quality audit: strengthened vacuous theorems (2026-03-26)
     'gs_nogo_requires_all': 'f35ca767',
     'zeroTemp_nontrivial': 'f35ca767',
+
+    # Phase 5 Wave 1A — KappaScaling.lean (3 by Aristotle, 8 manual)
+    'dissipative_dominates_below': 'run_20260328_051547',
+    'dispersive_dominates_above': 'run_20260328_051547',
+    'crossover_unique': 'run_20260328_051547',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 56, f"Expected 56 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 59, f"Expected 59 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

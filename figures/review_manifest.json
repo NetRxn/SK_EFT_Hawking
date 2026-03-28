@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-27T05:50:33.192469+00:00",
+  "generated": "2026-03-28T16:24:09.138961+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -991,6 +991,32 @@
       ]
     },
     {
+      "name": "fig46_kappa_scaling_physical",
+      "function": "fig_kappa_scaling_physical",
+      "caption": "Physical kappa-scaling: EFT corrections vs surface gravity for all platforms.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig46_kappa_scaling_physical.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig46_kappa_scaling_physical.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "\u03ba"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Heidelberg",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
       "name": "fig39_chirality_wall_status",
       "function": "fig_chirality_wall_status",
       "caption": "Chirality wall: GS conditions vs TPF evasion.",
@@ -1141,6 +1167,81 @@
       "expected_traces": 3,
       "expected_axes": {
         "xaxis": "dimension"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig48_grassmann_trg_2d_phase",
+      "function": "fig_grassmann_trg_2d_phase",
+      "caption": "2D ADW phase diagram from Grassmann TRG: free energy and specific heat vs coupling.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig48_grassmann_trg_2d_phase.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig48_grassmann_trg_2d_phase.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "g"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig49_fermion_bag_4d_binder",
+      "function": "fig_fermion_bag_4d_binder",
+      "caption": "4D Binder cumulants (tetrad vs metric) from fermion-bag MC.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig49_fermion_bag_4d_binder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig49_fermion_bag_4d_binder.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "g"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig50_fermion_bag_4d_phase_diagram",
+      "function": "fig_fermion_bag_4d_phase_diagram",
+      "caption": "4D ADW phase diagnostics: metric correlator and acceptance rate.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig50_fermion_bag_4d_phase_diagram.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig50_fermion_bag_4d_phase_diagram.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "g"
       },
       "physics_checks": [],
       "color_keys": [

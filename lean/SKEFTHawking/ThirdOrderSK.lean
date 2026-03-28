@@ -215,7 +215,9 @@ private lemma no_even_pair_sums_odd (a b n : ℕ) (hn : n % 2 = 1)
     (hsum : a + b = n) (ha : a % 2 = 0) (hb : b % 2 = 0) : False := by
   omega
 
-theorem parity_breaking_at_even_order (N : ℕ) (hN : N % 2 = 0) (hN_pos : 0 < N) :
+/-- **Audit note:** `hN_pos : 0 < N` was removed — the proof only uses
+    `hN : N % 2 = 0` (even + even ≠ odd holds for N = 0 too). -/
+theorem parity_breaking_at_even_order (N : ℕ) (hN : N % 2 = 0) :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = N + 1 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)
       (Finset.Icc (0, 0) (N + 1, N + 1))) = 0 := by
@@ -225,7 +227,7 @@ theorem parity_breaking_at_even_order (N : ℕ) (hN : N % 2 = 0) (hN_pos : 0 < N
       ¬(x.1 + x.2 = N + 1 ∧ x.1 % 2 = 0 ∧ x.2 % 2 = 0) := by
     intro ⟨a, b⟩ _ ⟨hsum, ha, hb⟩
     exact no_even_pair_sums_odd a b (N + 1) (by omega) hsum ha hb
-  simp only [Finset.filter_congr_decidable, Finset.card_eq_zero]
+  simp only [Finset.card_eq_zero]
   ext ⟨a, b⟩
   refine ⟨fun h => ?_, fun h => absurd h (by simp)⟩
   simp only [Finset.mem_filter] at h
@@ -264,20 +266,14 @@ theorem fifthOrder_parity_count :
     n = 4, 2, 0 — all even. This is the concrete manifestation of the
     parity alternation theorem at N=3. -/
 theorem thirdOrder_spatial_derivative_counts :
-    -- The n values (second components) of the surviving monomials at N=3, L=4
-    -- are 4, 2, 0 — all even
-    (4 : ℕ) % 2 = 0 ∧ (2 : ℕ) % 2 = 0 ∧ (0 : ℕ) % 2 = 0 := by
-  constructor <;> [norm_num; constructor <;> norm_num]
+    (4 : ℕ) % 2 = 0 ∧ (2 : ℕ) % 2 = 0 ∧ (0 : ℕ) % 2 = 0 := by decide
 
 /-- The three surviving monomials explicitly: (0,4), (2,2), (4,0).
     These correspond to γ_{3,1}, γ_{3,2}, γ_{3,3} respectively. -/
 theorem thirdOrder_explicit_monomials :
-    -- (m, n) pairs with m + n = 4, m even
     (0 + 4 = 4 ∧ 0 % 2 = 0) ∧
     (2 + 2 = 4 ∧ 2 % 2 = 0) ∧
-    (4 + 0 = 4 ∧ 4 % 2 = 0) := by
-  constructor <;> [constructor <;> norm_num;
-    constructor <;> [constructor <;> norm_num; constructor <;> norm_num]]
+    (4 + 0 = 4 ∧ 4 % 2 = 0) := by decide
 
 /-!
 ## Spectral Symmetry: Even vs Odd Frequency Dependence

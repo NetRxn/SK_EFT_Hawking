@@ -68,14 +68,17 @@
 **Sources:** `src/core/formulas.py` (dispersive_correction, first_order_correction), `src/core/constants.py` (EXPERIMENTS), `src/wkb/spectrum.py`
 
 **Deliverables:**
-- [ ] `src/experimental/kappa_scaling.py` — kappa-scaling prediction functions
-- [ ] `lean/SKEFTHawking/KappaScaling.lean` — Lean theorems: scaling laws, crossover condition
-- [ ] Aristotle: fill sorry gaps
-- [ ] Tests in `tests/test_experimental.py`
-- [ ] Figure: kappa-scaling comparison across platforms (delta_disp vs delta_diss vs kappa)
-- [ ] Update Paper 1 or Paper 4 appendix with kappa-scaling predictions
-- [ ] Notebooks: update Phase4a Technical + Stakeholder
-- [ ] Document sync (Inventory, README, etc.)
+- [x] `src/experimental/kappa_scaling.py` — kappa-scaling sweeps for all platforms (2026-03-28)
+- [x] 3 formulas in `formulas.py`: kappa_scaling_dispersive, kappa_scaling_dissipative, kappa_scaling_crossover (2026-03-28)
+- [x] `lean/SKEFTHawking/KappaScaling.lean` — 11 theorems: scaling laws, crossover balance, regime classification (2026-03-28)
+- [x] Aristotle: fill 10 sorry gaps (7 priority-1, 3 priority-2) — all filled, run_20260328_051547 (2026-03-28)
+- [x] 12 new tests in `tests/test_experimental.py` (834 total, all pass) (2026-03-28)
+- [x] Figure: fig46_kappa_scaling_physical — log-log plot of corrections vs kappa for all platforms (2026-03-28)
+- [x] Updated `papers/experimental_predictions/prediction_tables.tex` — corrected kappa-scaling section + table + figure (2026-03-28)
+- [ ] Notebooks: update Phase4a Technical + Stakeholder — deferred to Wave 5 synthesis
+- [x] Document sync: Inventory Index, README, src/__init__.py counts updated (2026-03-28)
+
+**Key finding (2026-03-28):** The old claim that "delta_diss ≈ const" was wrong. Correct physics: delta_diss ∝ kappa (linear), because transport coefficients gamma_1, gamma_2 are material properties independent of kappa, so Gamma_H = (gamma_1+gamma_2)(kappa/c_s)² and delta_diss = Gamma_H/kappa = (gamma_1+gamma_2)kappa/c_s². The crossover formula kappa_cross = 6(gamma_1+gamma_2)/(pi*xi²) cancels c_s² (original bug fixed). Platforms span the crossover: Steinhauer near it (1.3x), Heidelberg dissipative-dominated (0.04x), Trento dispersive-dominated (5.7x).
 
 **Estimated LOE:** Low-Medium
 **Risk:** Low. All physics already computed; this is extending existing formulas to variable kappa.
@@ -99,14 +102,15 @@
 **Key insight from research:** Polariton dissipation (Gamma_pol) is frequency-INDEPENDENT, while EFT phonon dissipation scales as omega^n (n >= 2). This spectral signature difference is the handle for breaking the degeneracy.
 
 **Deliverables:**
-- [ ] Polariton parameters in `src/core/constants.py` (ATOMS, EXPERIMENTS dicts)
-- [ ] `src/experimental/polariton_predictions.py` — Tier 1 polariton spectral predictions
-- [ ] Lean theorems: pseudounitary scattering, Tier 1 validity conditions
-- [ ] Tests
-- [ ] Figures: polariton vs BEC comparison, Gamma_pol/kappa regime map
-- [ ] Update prediction tables in Paper 4
-- [ ] Notebooks
-- [ ] Document sync
+- [x] Polariton parameters in `src/core/constants.py` — POLARITON_PLATFORMS dict with 3 cavity qualities (2026-03-28)
+- [x] `src/experimental/polariton_predictions.py` — Tier 1 polariton predictions module (2026-03-28)
+- [x] 3 formulas in `formulas.py`: polariton_spatial_attenuation, polariton_tier1_validity, polariton_hawking_temperature (2026-03-28)
+- [x] `lean/SKEFTHawking/PolaritonTier1.lean` — 6 theorems, zero sorry (attenuation bounds, monotonicity, BEC recovery) (2026-03-28)
+- [x] 8 new tests in `tests/test_experimental.py` (2026-03-28)
+- [x] Figure: fig47_polariton_regime_map — Gamma_pol/kappa vs cavity lifetime (2026-03-28)
+- [x] Updated `papers/experimental_predictions/prediction_tables.tex` — polariton section + regime table (2026-03-28)
+- [ ] Notebooks — deferred to Wave 5 synthesis
+- [x] Document sync: Inventory Index, README, src/__init__.py, constants.py counts updated (2026-03-28)
 
 **Estimated LOE:** Medium
 **Risk:** Low-Medium. Tier 1 is well-understood; challenge is ensuring the imaginary frequency shift is correctly propagated through all spectral functions.
@@ -126,11 +130,11 @@
 **Success criterion:** Any strengthened proof is a win. Realistic expectation: 5-15 additional Aristotle proofs from the 160 manual pool.
 
 **Deliverables:**
-- [ ] Updated Lean files with Aristotle-strengthened proofs
-- [ ] Updated `src/core/constants.py` ARISTOTLE_THEOREMS count
-- [ ] Updated `src/core/aristotle_interface.py` SorryGap entries
-- [ ] `docs/validation/lean_quality_audit.md` — audit report
-- [ ] Document sync
+- [x] Updated Lean files with Aristotle-strengthened proofs — 21 unnecessary hypotheses removed across 10 files, all building clean (2026-03-28)
+- [x] Updated `src/core/constants.py` ARISTOTLE_THEOREMS count — 59 Aristotle-proved (2026-03-28)
+- [x] Updated `src/core/aristotle_interface.py` SorryGap entries — all KappaScaling entries filled=True (2026-03-28)
+- [x] `docs/validation/lean_quality_audit.md` — Wave 1C addendum added (2026-03-28)
+- [x] Document sync — counts synced at 233 theorems / 59 Aristotle / 174 manual (2026-03-28)
 
 **Estimated LOE:** Medium (batch submission + integration)
 **Risk:** Low. Worst case: no additional proofs strengthened, which is still informative.
@@ -172,11 +176,17 @@
 5. Construct vestigial metric correlator diagnostic: Binder cumulants for tetrad vs metric order parameters
 
 **Deliverables:**
-- [ ] `src/vestigial/grassmann_trg.py` — 2D Grassmann TRG implementation
-- [ ] `src/vestigial/su2_integration.py` — Analytical SU(2) Haar measure integration
-- [ ] Tests: verify against known 2D results
-- [ ] Figures: 2D phase diagram with vestigial diagnostic
-- [ ] Lean theorems: SU(2) pseudo-reality → real effective action, Binder cumulant ordering
+- [x] `src/vestigial/grassmann_trg.py` — 2D Grassmann TRG implementation (2026-03-28)
+- [x] `src/vestigial/su2_integration.py` — Analytical SU(2) Haar measure integration (2026-03-28)
+- [x] 4 formulas in `formulas.py`: su2_one_link_integral, adw_2d_effective_coupling, binder_cumulant, grassmann_trg_free_energy (2026-03-28)
+- [x] `lean/SKEFTHawking/SU2PseudoReality.lean` — 10 theorems, zero sorry (one-link normalization, effective coupling, Binder cumulant limits, free energy extensivity) (2026-03-28)
+- [x] 24 new tests in `tests/test_vestigial.py` (866 total, all pass) (2026-03-28)
+- [x] Figure: fig48_grassmann_trg_2d_phase — free energy and specific heat vs coupling (2026-03-28)
+- [x] Constants: ADW_2D_MODEL, SU2_HAAR, GRASSMANN_TRG, ADW_2D_COUPLING_SCAN in constants.py (2026-03-28)
+- [ ] Notebooks — deferred to Wave 5 synthesis
+- [x] Document sync: Inventory Index, README, src/__init__.py, constants.py counts updated (2026-03-28)
+
+**Status:** COMPLETE. SU(2) pseudo-reality verified numerically (max reconstruction error < 1e-10). TRG produces smooth free energy curves and specific heat peaks at phase transitions. D_cut convergence confirmed. Ready for Wave 2B (4D cubic pilot).
 
 **Estimated LOE:** High
 **Risk:** Medium. Grassmann TRG is established but implementing from scratch requires care. The 2D model may be too simple to show vestigial order (vestigial phases are typically 3D+ phenomena).
@@ -198,15 +208,19 @@
 6. **Go/no-go:** If two distinct Binder cumulant crossings appear (T_metric > T_tetrad), vestigial phase exists
 
 **Deliverables:**
-- [ ] `src/vestigial/fermion_bag.py` — Fermion-bag MC for 8-fermion vertices
-- [ ] `src/vestigial/lattice_4d.py` — 4D cubic lattice model with SO(4) gauge integration
-- [ ] `src/vestigial/phase_scan.py` — Coupling scan with Binder cumulant analysis
-- [ ] Tests: sign problem check, convergence tests, known-limit validation
-- [ ] Figures: 4D phase diagram, Binder cumulant crossings, metric correlator vs coupling
-- [ ] Lean theorems: vestigial phase existence/non-existence conditions
-- [ ] Paper 6 update (or new Paper 7 if results are substantial)
-- [ ] Notebooks (Technical + Stakeholder)
-- [ ] Document sync
+- [x] `src/vestigial/fermion_bag.py` — Fermion-bag MC for 8-fermion vertices (2026-03-28)
+- [x] `src/vestigial/lattice_4d.py` — 4D cubic lattice model with SO(4) gauge integration (2026-03-28)
+- [x] `src/vestigial/phase_scan.py` — Coupling scan with Binder cumulant analysis (2026-03-28)
+- [x] 6 formulas in `formulas.py`: so4_one_link_integral, adw_4d_effective_coupling, eight_fermion_vertex_weight, fermion_bag_local_weight, metric_correlator_connected, vestigial_phase_indicator (2026-03-28)
+- [x] `lean/SKEFTHawking/FermionBag4D.lean` — 13 theorems, zero sorry (SO(4) integration, 8-fermion bounds, bag positivity, vestigial splitting, extensivity) (2026-03-28)
+- [x] 26 new tests in `tests/test_vestigial.py` (892 total, all pass) (2026-03-28)
+- [x] Figures: fig49 (4D Binder cumulants), fig50 (4D phase diagnostics) (2026-03-28)
+- [x] Constants: ADW_4D_MODEL, SO4_HAAR, FERMION_BAG, ADW_4D_COUPLING_SCAN in constants.py (2026-03-28)
+- [ ] Paper 6 update — deferred to Wave 5 synthesis
+- [ ] Notebooks — deferred to Wave 5 synthesis
+- [x] Document sync: Inventory Index, README, src/__init__.py, constants.py, roadmap updated (2026-03-28)
+
+**Status:** COMPLETE (infrastructure). The 4D fermion-bag MC framework is implemented and validated at small lattice sizes (L=2,3,4). At L=2, the system is tetrad-ordered across the coupling range tested (too small for phase transitions). Production runs at L=6,8 require dedicated compute time (hours-days). The go/no-go for the vestigial phase requires finite-size scaling at L≥6, which is ready to run but compute-limited.
 
 **Estimated LOE:** Very High (heaviest item in Phase 5)
 **Risk:** High. Novel algorithm (fermion-bag for 8-fermion vertices not done before), sign problem may appear despite SU(2) argument, vestigial phase may not exist (publishable negative result).

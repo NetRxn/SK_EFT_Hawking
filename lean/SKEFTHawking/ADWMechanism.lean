@@ -55,7 +55,9 @@ def lorentz_dim (d : ℕ) : ℕ := d * (d - 1) / 2
 /-- In 4 spacetime dimensions, SO(3,1) has dimension 6. -/
 theorem lorentz_dim_4 : lorentz_dim 4 = 6 := by native_decide
 
-/-- The Lorentz group dimension is always non-negative. -/
+/-- The Lorentz group dimension is always non-negative.
+    **Audit note:** This is trivially true for any `ℕ`-valued function
+    (natural numbers are non-negative by definition). -/
 theorem lorentz_dim_nonneg (d : ℕ) : 0 ≤ lorentz_dim d := Nat.zero_le _
 
 /-!
@@ -195,12 +197,11 @@ Key steps: one_div, inv_div to simplify 1/G_c, then sub_self.
 
 Unfold critical_coupling to get 1/(8π²/(N_f·Λ²)) - N_f·Λ²/(8π²) = 0. The reciprocal 1/(8π²/(N_f·Λ²)) simplifies to N_f·Λ²/(8π²) using div_div or one_div_div. Then sub_self gives 0. Use field_simp to clear denominators, then ring. The key positivity facts are that 8π² > 0, N_f > 0, Λ² > 0.
 -/
-theorem curvature_zero_at_Gc {Λ N_f : ℝ} (hΛ : 0 < Λ) (hN : 0 < N_f) :
+/-- **Audit note:** `hΛ` and `hN` were removed — the conclusion is a
+    `simp`-level identity that holds for all reals via `sub_self`. -/
+theorem curvature_zero_at_Gc {Λ N_f : ℝ} :
     1 / critical_coupling Λ N_f - N_f * Λ ^ 2 / (8 * Real.pi ^ 2) = 0 := by
-  -- Substitute the definition of `critical_coupling` into the expression.
-  have h_critical : critical_coupling Λ N_f = 8 * Real.pi ^ 2 / (N_f * Λ ^ 2) := by
-    rfl;
-  rw [ h_critical, one_div_div, sub_self ]
+  simp [critical_coupling, sub_self]
 
 /-!
 ## Phase Classification

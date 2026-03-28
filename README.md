@@ -19,8 +19,8 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
   in the ADW model. Three-phase structure: pre-geometric, vestigial, full tetrad.
   EP violation prediction. Monte Carlo + mean-field. PRD format.
 
-**Lean 4 formalization:** 216 theorems + 1 axiom, zero sorry.
-16 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 259 theorems + 1 axiom, zero sorry.
+20 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 4 additions:** Experimental prediction package, chirality wall synthesis,
 He-3/GL phase classification, vestigial gravity simulation (lattice + MC),
@@ -30,7 +30,7 @@ fracton hydrodynamics Layer 2, backreaction calculation, fracton-gravity analysi
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (216 theorems + 1 axiom, zero sorry)
+├── lean/                              # Lean 4 formalization (259 theorems + 1 axiom, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 16)
@@ -131,7 +131,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (822 tests)
+├── tests/                             # pytest suite (834 tests)
 │   ├── test_transonic_background.py   # Physics validation
 │   ├── test_second_order.py           # Enumeration + WKB tests
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
@@ -196,7 +196,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (216 + 1 axiom — Zero Sorry)
+## Theorem Inventory (227 + 1 axiom — 10 sorry pending Aristotle)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -215,6 +215,8 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | FractonHydro.lean | 4 | 17 | Multipole conservation, information retention |
 | FractonGravity.lean | 4 | 20 | Bootstrap gap, DOF mismatch |
 | FractonNonAbelian.lean | 4 | 14 | Non-Abelian fracton obstruction (negative result) |
+| KappaScaling.lean | 5 | 11 | Crossover balance, regime classification (zero sorry) |
+| PolaritonTier1.lean | 5 | 6 | Attenuation bounds, monotonicity, BEC recovery (zero sorry) |
 
 ## Build Environment
 

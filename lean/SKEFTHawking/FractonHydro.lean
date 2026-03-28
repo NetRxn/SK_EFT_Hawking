@@ -253,11 +253,11 @@ theorem binomial_strict_mono (n k : Nat) (hk : k ≥ 1) (hn : n ≥ k) :
   -- By Pascal's rule, binomial (n+1, k) = binomial n (k-1) + binomial n k.
   have h_pascal : binomial (n + 1) k = binomial n (k - 1) + binomial n k := by
     cases k <;> aesop;
-  rcases k with ( _ | _ | k ) <;> simp_all +arith +decide [ Nat.choose_succ_succ ];
+  rcases k with ( _ | _ | k ) <;> simp_all +arith +decide;
   · exact Nat.recOn n ( by trivial ) fun n ih => by trivial;
   · -- By definition of binomial coefficients, we know that binomial n (k + 1) is positive for n ≥ k + 1.
     have h_binom_pos : ∀ {n k : ℕ}, n ≥ k + 1 → 0 < binomial n (k + 1) := by
-      intro n k hn; induction hn <;> simp_all +arith +decide [ Nat.choose_succ_succ ] ;
+      intro n k hn; induction hn <;> simp_all +arith +decide;
       · exact Nat.recOn k ( by trivial ) fun n ih => by { rw [ show binomial ( n + 2 ) ( n + 2 ) = binomial ( n + 1 ) ( n + 1 ) + binomial ( n + 1 ) ( n + 2 ) by rfl ] ; linarith };
       · exact Nat.le_trans ‹_› ( binomial_mono_first _ _ );
     grind

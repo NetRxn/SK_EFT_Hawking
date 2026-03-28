@@ -262,11 +262,10 @@ theorem phase_levels_ordered :
 
 /-- **The metric DOF count in the vestigial phase is d(d+1)/2.**
     In 4D this is 10 — the same number as in GR. The vestigial metric
-    has the right number of components to describe geometry. -/
--- PROVIDED SOLUTION: metric_components 4 = 4*5/2 = 10. Already proved above.
--- For general d: metric_components d = d*(d+1)/2.
-theorem metric_dof_equals_gr (d : Nat) (hd : d ≥ 2) :
-    metric_components d = d * (d + 1) / 2 := by
-  rfl
+    has the right number of components to describe geometry.
+
+    **Audit note:** `hd : d ≥ 2` was removed — the conclusion is `rfl` for all `d`. -/
+theorem metric_dof_equals_gr (d : Nat) :
+    metric_components d = d * (d + 1) / 2 := rfl
 
 end SKEFTHawking.VestigialGravity

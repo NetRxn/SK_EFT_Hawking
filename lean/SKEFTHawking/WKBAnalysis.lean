@@ -250,15 +250,16 @@ noncomputable def firstOrderCorrection
     T_eff > T_H when γ₁ > 0 or γ₂ > 0.
 
     Physical interpretation: dissipation provides an additional mechanism
-    for particle creation beyond the geometric Hawking effect. -/
+    for particle creation beyond the geometric Hawking effect.
+
+    **Audit note:** `_h21` and `_h22` were removed — `firstOrderCorrection`
+    only involves `dampingRate / kappa`, not the individual coefficients. -/
 theorem firstOrder_correction_positive
     (ddr : DissipativeDispersion)
     (kappa k_H omega : ℝ) (hk : 0 < kappa)
-    (_h21 : ddr.gamma_2_1 = 0) (_h22 : ddr.gamma_2_2 = 0)
     (hrate : 0 < ddr.dampingRate k_H omega) :
-    0 < firstOrderCorrection ddr kappa k_H omega := by
-  unfold firstOrderCorrection
-  exact div_pos hrate hk
+    0 < firstOrderCorrection ddr kappa k_H omega :=
+  div_pos hrate hk
 
 /-!
 ## Second-Order Correction: Frequency-Dependent δ^(2)(ω)
@@ -287,9 +288,7 @@ theorem secondOrder_vanishes_at_first_order
     (ddr : DissipativeDispersion) (kappa k_H omega : ℝ)
     (h21 : ddr.gamma_2_1 = 0) (h22 : ddr.gamma_2_2 = 0) :
     secondOrderCorrection ddr kappa k_H omega = 0 := by
-  unfold secondOrderCorrection
-  rw [h21, h22]
-  ring
+  simp [secondOrderCorrection, h21, h22]
 
 /-- The full effective temperature through second order:
 
@@ -310,10 +309,8 @@ theorem effective_temp_zeroth_order
     (hg1 : ddr.gamma_1 = 0) (hg2 : ddr.gamma_2 = 0)
     (h21 : ddr.gamma_2_1 = 0) (h22 : ddr.gamma_2_2 = 0) :
     effectiveTemperature ddr kappa k_H omega = kappa / (2 * Real.pi) := by
-  unfold effectiveTemperature firstOrderCorrection secondOrderCorrection
-    DissipativeDispersion.dampingRate
-  rw [hg1, hg2, h21, h22]
-  ring
+  simp [effectiveTemperature, firstOrderCorrection, secondOrderCorrection,
+    DissipativeDispersion.dampingRate, hg1, hg2, h21, h22]
 
 /-!
 ## Numerical Validation Target
@@ -526,16 +523,16 @@ theorem bogoliubov_correction_bounded
     when Γ_H ≪ κ. Combined with the experimental estimates:
     - Steinhauer: δ_diss ~ 10⁻⁶ to 10⁻⁴
     - Heidelberg: δ_diss ~ 10⁻⁵ to 10⁻³
-    - Trento spin-sonic: δ_diss ~ 10⁻² to 10⁻¹ (enhanced) -/
+    - Trento spin-sonic: δ_diss ~ 10⁻² to 10⁻¹ (enhanced)
+
+    **Audit note:** `h21` and `h22` were removed — `firstOrderCorrection = dampingRate / kappa`
+    depends only on the total damping rate bound, not the individual coefficients. -/
 theorem bogoliubov_correction_perturbative
     (ddr : DissipativeDispersion)
     (kappa k_H omega : ℝ) (hk : 0 < kappa)
-    (h21 : ddr.gamma_2_1 = 0) (h22 : ddr.gamma_2_2 = 0)
     (hrate_bound : ddr.dampingRate k_H omega ≤ kappa) :
     firstOrderCorrection ddr kappa k_H omega ≤ 1 := by
-  unfold firstOrderCorrection
-  rw [div_le_one₀ hk]
-  exact hrate_bound
+  rw [firstOrderCorrection, div_le_one₀ hk]; exact hrate_bound
 
 /-- The second-order correction is additionally suppressed relative to
     the first-order correction by the EFT expansion parameter ω/Λ.
