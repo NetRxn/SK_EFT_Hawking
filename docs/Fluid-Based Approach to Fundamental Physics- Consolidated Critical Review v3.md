@@ -194,7 +194,7 @@ Fermionic p-wave superfluid → Landau two-fluid hydrodynamics → emergent Weyl
 
 ### Tier 0: Immediate (paper-ready within 6 months)
 
-**5.1 SK-EFT dissipative correction to analog Hawking radiation — PHASE 1 COMPLETE (March 2026).** The single most impactful paper the program can produce. Phase 1 delivered: Son's superfluid EFT formalized in Lean 4; SK doubling with three axioms; acoustic metric verified; all 12 Lean proof obligations filled by Aristotle (automated theorem prover) across 8 targeted submissions; PRL-format paper draft finalized; publication-quality interactive visualizations generated (Plotly); Python computation validated for three BEC platforms (Steinhauer Rb-87, Heidelberg K-39, Trento Na-23 spin-sonic). **Key discovery:** Formal verification caught a subtle error in the KMS hypothesis — the original formalization was too weak, admitting a counterexample. The corrected `FirstOrderKMS` structure is itself a scientific contribution. Build: 2252 Lean jobs, zero warnings. Phase 2 (quadratic expansion, experimental engagement) and journal submission in progress.
+**5.1 SK-EFT dissipative correction to analog Hawking radiation — PHASES 1-4 COMPLETE (March 2026).** Six papers, 216 theorems + 1 axiom (zero sorry, 56 Aristotle-proved across 18 runs), 822 tests, 16 modules, 14/14 validation checks, 45 figures. Phase 4 added: platform-specific prediction tables (Steinhauer Rb-87, Heidelberg K-39, Trento Na-23), vestigial gravity numerically confirmed (three-phase structure), fracton Layer 2 (exponentially more UV info), chirality wall conditional breach (2/4 GS evaded), backreaction toward extremality, non-Abelian fracton negative result (4 obstructions formally verified).
 
 **5.2 Document the non-Abelian gauge erasure as a negative result.** ✅ **COMPLETE (March 2026).** Paper 3 formalizes the universal structural theorem with 11 Lean theorems + 1 axiom. Standard Model analysis: SU(3)×SU(2)×U(1) → U(1)_EM survives hydrodynamization; non-Abelian DOF erased. Gauge erasure closes the hybrid architecture's most important information channel.
 
@@ -202,7 +202,7 @@ Fermionic p-wave superfluid → Landau two-fluid hydrodynamics → emergent Weyl
 
 **5.3 ADW mean-field gap equation with emergent Dirac fermions.** ✅ **COMPLETE (March 2026).** Paper 5 performs the full calculation: Wen's lattice QED → N_f=4 Dirac fermions → ADW 8-fermion interaction → HS decomposition → Coleman-Weinberg V_eff → gap equation → phase diagram. **Qualified positive result**: nontrivial Lorentzian solution for G > G_c = 8π²/(N_f Λ²), producing 2 massless spin-2 graviton modes as Higgs bosons. Vergeles mode counting (16=6+4+2+4) formally verified (21 Lean theorems, zero sorry). Four structural obstacles identified for emergent fermion bootstrap: spin-connection gap, Grassmann-bosonic incompatibility, Nielsen-Ninomiya doubling, cosmological constant. The fermion bootstrap at Level 2 works at mean-field with fundamental fermions but cannot yet be extended to emergent fermions.
 
-**5.4 BEC replication collaboration.** Support the Heidelberg K-39 or Trento spin-sonic programs for independent κ-scaling test. The QSimFP consortium and JILA Heising-Simons provide funding frameworks.
+**5.4 BEC replication collaboration.** Support independent Hawking measurement programs. **Updated 2026-03-28:** Heidelberg (Oberthaler) has the best apparatus (K-39 Feshbach + DMD) for the kappa-scaling test but is currently pursuing analog cosmology, not Hawking. Paris polaritons (Bramati-Jacquet) are the most active Hawking program (horizons demonstrated, PRL 2025; stimulated Hawking possible 2026-27 but driven-dissipative corrections complicate EFT comparison). Trento spin-sonic (Carusotto-Ferrari, ERC-funded 2026) is best for EFT testing but ~2028-31. Steinhauer has plateaued (no new data since PRD 2022). The kappa-scaling test remains the most accessible experimental target across all platforms.
 
 **5.5 Vestigial metric correlator simulation.** Monte Carlo simulation of a 3+1D qubit model with ADW-type 8-fermion interaction. Measure the 4-fermion correlator g_μν = η_ab⟨Ê^a_μ Ê^b_ν⟩ in the disordered-tetrad phase. Tests Volovik's vestigial gravity numerically.
 
@@ -212,11 +212,11 @@ Fermionic p-wave superfluid → Landau two-fluid hydrodynamics → emergent Weyl
 
 **5.7 Track TPF vs. GS resolution.** The chirality wall's fate turns on whether the TPF 4+1D gapped interface conjecture is proven and whether GS's conditions apply to the disentangler construction. Direct analysis of compatibility is the highest-priority theoretical question.
 
-**5.8 Monte Carlo transport in emergent SU(2).** Compute η/s for a Walker-Wang model producing emergent SU(2) at finite temperature. Verify Svetitsky-Yaffe universality. If confirmed, the QGP lesson transfers directly to emergent gauge theories — closing the last universality loophole.
+**5.8 Monte Carlo transport in emergent gauge theory.** **Updated 2026-03-28:** The original plan (Walker-Wang SU(2)_k eta/s) is not feasible — intrinsic sign problem proven uncurable for modular SU(2)_k (Golan et al., PRR 2020), no WW construction for emergent continuous SU(2), no T^{mu nu} defined for topological lattice models. **Revised:** Z_2 Walker-Wang (3D toric code) transport as Strategy A (~500K GPU-hrs, sign-problem-free, first transport computation for any emergent gauge theory). TRG for non-Abelian as Strategy B (2-5M GPU-hrs, INCITE-scale). Tests Svetitsky-Yaffe universality at transport level.
 
 ### Tier 3: Long-term (ongoing research programs)
 
-**5.9 Wallstrom resolution** via distributional approach. **5.10 Gu topological supergravity completion.** **5.11 Non-Abelian fracton hydrodynamics construction.** **5.12 Lean 4 formalization blueprint** (22–43 person-months estimated).
+**5.9 Wallstrom resolution.** **Updated:** Reddiger has pivoted from proving Madelung-Schrodinger equivalence to building a distinct Kolmogorov-probability-based theory (Quantum Stud. 13, 2026). The question is shifting from "solve Wallstrom" to "is the alternative theory physically adequate?" **5.10 Emergent gravity UV completion.** **Updated:** Fang-Gu topological supergravity (arXiv:2312.17196) follows a fundamentally different route from ADW (loop condensation vs fermion bilinear condensation). The actual target is substituting TPF chiral fermions into the Vladimirov-Diakonov simplicial lattice framework. **5.11 Non-Abelian fracton hydrodynamics construction — CANCELLED.** Phase 4 negative result: all fracton gauge types are YM-incompatible (4 obstructions formally verified). **5.12 Lean 4 formalization blueprint** (22–43 person-months estimated).
 
 ---
 
@@ -230,7 +230,7 @@ Fermionic p-wave superfluid → Landau two-fluid hydrodynamics → emergent Weyl
 | CME signal | 2.6–3.3σ at √s = 11.5–19.6 GeV | STAR BES-II (May 2025) | New |
 | BEC Hawking T_H | 0.35 nK (matches prediction) | Steinhauer (Nature 2019) | Unchanged |
 | Dispersive corrections to T_H | O(0.04–0.16%) — below 10–30% exp. precision | Coutant-Parentani | New |
-| SK-EFT dissipative correction | **Phase 1-3 COMPLETE** | This work (March 2026) | 130+1 axiom Lean theorems (zero sorry), 11 modules, 269 tests, 5 papers. Phase 3 added: third-order parity alternation (Paper 3W1), gauge erasure theorem (Paper 3), exact WKB connection (Paper 4: modified unitarity, spectral floor), ADW gap equation (Paper 5: qualified positive — nontrivial Lorentzian solution, 2 massless graviton modes, 4 structural obstacles for emergent fermion bootstrap). |
+| SK-EFT dissipative correction | **Phase 1-4 COMPLETE** | This work (March 2026) | 216+1 axiom Lean theorems (zero sorry, 56 Aristotle-proved), 16 modules, 822 tests, 6 papers. Phase 4 added: platform-specific predictions (Steinhauer, Heidelberg, Trento), vestigial gravity numerically confirmed (3-phase structure), fracton Layer 2 (exponentially more UV info), chirality wall conditional breach (2/4 GS evaded), backreaction toward extremality, non-Abelian fracton negative result (4 obstructions). |
 | Backreaction | Acoustic BHs cool (→ extremality) | Balbinot et al. 2025 | New |
 | SMG threshold | 16 Weyl fermions (SU(3), N_f=8) | Hasenfratz-Witzel 2025 | New |
 | Vergeles unitarity | Proven for 4D lattice gravity | PRD 112, 2025 | New |
@@ -323,9 +323,9 @@ Six developments, any of which would shift the assessment:
 
 4. **SMG demonstrated with chiral gauge coupling.** Would close the vector-like → chiral gap in the SMG program. This is the hardest missing step.
 
-5. **Monte Carlo η/s for emergent SU(2) from Walker-Wang.** Would test universality between emergent and fundamental gauge theories at finite temperature, closing the last loophole for the gauge erasure theorem.
+5. **Monte Carlo η/s for emergent gauge theory.** **Updated 2026-03-28:** Original SU(2)_k Walker-Wang target is infeasible (intrinsic sign problem). Revised target: Z_2 toric code transport (Strategy A). Would be the first transport computation for any emergent gauge theory. Tests Svetitsky-Yaffe universality at transport level.
 
-6. **Resolution of the Wallstrom objection.** Would establish Madelung equations as a complete quantum-mechanical formulation. Distributional approach (Reddiger-Poirier) is the most promising route.
+6. **Resolution of the Wallstrom objection.** **Updated 2026-03-28:** Reddiger has pivoted to a distinct Kolmogorov-probability-based theory rather than proving Madelung-Schrodinger equivalence. The question is shifting from "solve" to "build around."
 
 ---
 
