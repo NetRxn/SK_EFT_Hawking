@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** March 28, 2026 (Phase 5 Wave 2B)
+**Last synced:** March 29, 2026 (Phase 5 Wave 4A)
 
 ---
 
@@ -10,19 +10,20 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 259 + 1 axiom | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 59 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
-| Manual proofs | 200 | 259 - 59 |
-| Lean modules | 20 | `ls lean/SKEFTHawking/*.lean` |
+| Lean theorems | 347 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 84 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
+| Manual proofs | 263 | 347 - 84 |
+| Lean modules | 25 | `ls lean/SKEFTHawking/*.lean` |
+| Sorry gaps | 0 | ZERO sorry — all proved |
 | Python source modules | 37 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 16 | `find tests/ -name "test_*.py"` |
-| Test count | 892 | `pytest tests/ -q` |
-| Figures | 50 | `grep -c "^def fig_" src/core/visualizations.py` |
+| Test files | 17 | `find tests/ -name "test_*.py"` |
+| Test count | 988 | `pytest tests/ -q` (all pass) |
+| Figures | 49 | `len(FIGURE_REGISTRY)` in review_figures.py |
 | Notebooks | 16 | `ls notebooks/*.ipynb` |
 | Papers | 6 + tables | `ls papers/*/paper_draft.tex` |
 | Validation checks | 14 | `python scripts/validate.py --list` |
 | Stakeholder docs | 11 | See Section 9 of inventory |
-| Aristotle runs | 18 | `constants.py:ARISTOTLE_THEOREMS` unique values |
+| Aristotle runs | 23 | `constants.py:ARISTOTLE_THEOREMS` unique values |
 
 ---
 
@@ -48,7 +49,7 @@
 
 ### Core (`src/core/`)
 - `constants.py` — Physical constants, experimental params, Aristotle registry
-- `formulas.py` — Canonical physics formulas with Lean refs (22 functions)
+- `formulas.py` — Canonical physics formulas with Lean refs (39 functions)
 - `transonic_background.py` — 1D BEC transonic flow solver
 - `visualizations.py` — All 43 Plotly figure functions + COLORS palette
 - `aristotle_interface.py` — Aristotle API + 56 sorry gap registry
@@ -116,6 +117,11 @@
 | PolaritonTier1 | 6 | Spatial attenuation ≥ 1, monotonicity, BEC recovery |
 | SU2PseudoReality | 10 | One-link normalization, effective coupling, Binder cumulant limits |
 | FermionBag4D | 16 | SO(4) integration, 8-fermion bounds, bag positivity+boundedness, Binder range, vestigial splitting |
+| LatticeHamiltonian | 28 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace real |
+| GoltermanShamir | 15+1ax | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation |
+| TPFEvasion | 12 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
+| KLinearCategory | 16 (4 sorry) | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
+| SphericalCategory | 18 (7 sorry) | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, fibonacci φ²=φ+1, chirality limitation |
 
 ---
 

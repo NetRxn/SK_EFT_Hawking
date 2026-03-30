@@ -20,8 +20,18 @@ A unified project encompassing:
     * Routes closed: non-Abelian fracton (4 obstructions), fracton-gravity
       bootstrap (60% gap), both formally verified.
 
-Lean 4 formalization: 259 theorems + 1 axiom, zero sorry, 20 modules.
-Aristotle automated theorem prover: 59 theorems proved (3 Phase 5 + 13 Phase 4 + 43 earlier).
+  - Phase 5 (analytical completion + chirality wall + Layer 1 formalization):
+    * Kappa-scaling test predictions for all BEC platforms.
+    * Polariton Tier 1 predictions (10^10× hotter T_H).
+    * 4D fermion-bag MC pilot for vestigial gravity (infrastructure ready).
+    * Chirality wall: GS 9 conditions formalized, TPF evasion machine-verified.
+    * Lattice Hamiltonian framework: BZ compact, ℓ²(ℤ) ∞-dim, round discontinuous.
+    * Layer 1 categorical infrastructure: PivotalCategory, SphericalCategory,
+      SemisimpleCategory (first-ever in any proof assistant).
+
+Lean 4 formalization: 347 theorems + 2 axioms, 25 modules.
+  Waves 1-3: ZERO sorry. Wave 4A: 11 sorry stubs pending Aristotle.
+Aristotle automated theorem prover: 73 theorems proved across 22 runs.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

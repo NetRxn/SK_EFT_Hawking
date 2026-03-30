@@ -18,6 +18,11 @@ import SKEFTHawking.KappaScaling
 import SKEFTHawking.PolaritonTier1
 import SKEFTHawking.SU2PseudoReality
 import SKEFTHawking.FermionBag4D
+import SKEFTHawking.LatticeHamiltonian
+import SKEFTHawking.GoltermanShamir
+import SKEFTHawking.TPFEvasion
+import SKEFTHawking.KLinearCategory
+import SKEFTHawking.SphericalCategory
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

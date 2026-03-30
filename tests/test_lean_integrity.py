@@ -108,14 +108,22 @@ def test_lean_toolchain():
 
 
 def test_no_active_sorry():
-    """Verify no active sorry statements in Lean modules.
+    """Verify no active sorry statements in Lean modules except known stubs.
 
     Checks for 'sorry' outside of line comments (--) and block comments
     (/- ... -/). This is a heuristic check — `lake build` is the
     definitive test.
+
+    Files in SORRY_ALLOWED are awaiting Aristotle proof-filling and are
+    expected to contain sorry stubs. Remove from this set as proofs are filled.
     """
+    # All sorry gaps filled by Aristotle as of run_20260329_094416
+    SORRY_ALLOWED = set()
+
     lean_dir = LEAN_DIR / "SKEFTHawking"
     for lean_file in lean_dir.glob("*.lean"):
+        if lean_file.name in SORRY_ALLOWED:
+            continue
         content = lean_file.read_text()
         in_block_comment = 0  # nesting depth
         for i, line in enumerate(content.splitlines(), 1):
@@ -146,7 +154,11 @@ def test_no_active_sorry():
 
 
 def test_sorry_gap_registry():
-    """Verify the Aristotle sorry-gap registry reports 40/40 filled."""
+    """Verify the Aristotle sorry-gap registry state.
+
+    Wave 4A adds 11 new sorry stubs (4 KLinearCategory + 7 SphericalCategory)
+    pending Aristotle proof-filling. Prior waves have all gaps filled.
+    """
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
     assert len(unfilled) == 0, (

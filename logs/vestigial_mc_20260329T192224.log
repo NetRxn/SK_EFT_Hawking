@@ -1,0 +1,48 @@
+19:22:24 ============================================================
+19:22:24   Vestigial MC Production Run (vectorized + multiprocessing)
+19:22:24   Lattice sizes: [4, 6]
+19:22:24   Sweeps: 250 thermalize + 500 measure
+19:22:24   Couplings: 10 points
+19:22:24   Cores: 16
+19:22:24   Seed: 42
+19:22:24   Started: 2026-03-29T19:22:24.756919
+19:22:24 ============================================================
+19:22:24 
+[1/3] 4D Binder cumulant crossing analysis...
+19:22:24   Dispatching 20 jobs across 16 cores...
+19:22:25   Completed 20 jobs in 0.5s
+19:22:25   L=4: mean acceptance=0.933
+19:22:25   L=6: mean acceptance=0.933
+19:22:25   Tetrad crossing: None
+19:22:25   Metric crossing: None
+19:22:25   Vestigial window: None
+19:22:25   Vestigial detected: False
+19:22:25 
+[2/3] Finite-size scaling analysis...
+19:22:25   Dispatching 20 FSS jobs across 16 cores...
+19:22:29   Completed 20 FSS jobs in 3.9s
+19:22:29   L=4: 10 points, mean acc=0.908
+19:22:29   L=6: 10 points, mean acc=0.908
+19:22:29   L=4: tetrad peak at G/Gc=1.83, metric peak at G/Gc=2.50
+19:22:29   L=6: tetrad peak at G/Gc=1.61, metric peak at G/Gc=2.50
+19:22:29   Split transition: True
+19:22:29 
+[3/3] Sign reweighting check...
+19:22:30   G/Gc=0.5, L=4: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=0.5, L=6: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=1.0, L=4: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=1.0, L=6: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=1.5, L=4: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=1.5, L=6: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=2.0, L=4: <sign>=0.0000 ± 0.0000
+19:22:30   G/Gc=2.0, L=6: <sign>=0.0000 ± 0.0000
+19:22:30 
+============================================================
+19:22:30   RESULTS SUMMARY
+19:22:30 ============================================================
+19:22:30   Vestigial detected (Binder): False
+19:22:30   Split transition (FSS):      True
+19:22:30   Sign problem absent:         False
+19:22:30   Total runtime:               6.0s (0.00h)
+19:22:30   Results saved to:            docs/vestigial_mc_results/vestigial_mc_20260329T192224.json
+19:22:30 ============================================================

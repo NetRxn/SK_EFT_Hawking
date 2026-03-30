@@ -1,0 +1,74 @@
+{
+  "binder_crossing": {
+    "lattice_sizes": [
+      4
+    ],
+    "tetrad_crossing": null,
+    "metric_crossing": null,
+    "vestigial_window": null,
+    "vestigial_detected": false,
+    "runtime_s": 2.87687087059021
+  },
+  "finite_size_scaling": {
+    "lattice_sizes": [
+      4
+    ],
+    "tetrad_crossing": null,
+    "metric_crossing": null,
+    "split_transition": false,
+    "vestigial_survives": false,
+    "susc_peaks_tetrad": [
+      {
+        "L": 4,
+        "coupling": 2.5,
+        "height": 28.27102159891183
+      }
+    ],
+    "susc_peaks_metric": [
+      {
+        "L": 4,
+        "coupling": 2.5,
+        "height": 899162.7983037941
+      }
+    ],
+    "runtime_s": 18.156265258789062
+  },
+  "sign_reweighting": [
+    {
+      "coupling": 0.5,
+      "L": 4,
+      "avg_sign": 3.671601603432491e-291,
+      "avg_sign_err": 0.0
+    },
+    {
+      "coupling": 1.0,
+      "L": 4,
+      "avg_sign": 1.5339157123245104e-223,
+      "avg_sign_err": 0.0
+    },
+    {
+      "coupling": 1.5,
+      "L": 4,
+      "avg_sign": 5.0063506489907226e-192,
+      "avg_sign_err": 0.0
+    },
+    {
+      "coupling": 2.0,
+      "L": 4,
+      "avg_sign": 1.9331388828047228e-185,
+      "avg_sign_err": 0.0
+    }
+  ],
+  "sign_runtime_s": 7.103759765625,
+  "metadata": {
+    "timestamp": "20260329T102224",
+    "lattice_sizes": [
+      4
+    ],
+    "n_measure": 200,
+    "n_thermalize": 100,
+    "n_couplings": 10,
+    "seed": 42,
+    "total_runtime_s": 28.136895895004272
+  }
+}

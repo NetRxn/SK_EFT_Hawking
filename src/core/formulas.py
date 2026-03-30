@@ -1071,3 +1071,210 @@ def vestigial_phase_indicator(binder_tetrad, binder_metric):
         return 'tetrad_ordered'
     else:
         return 'crossover'
+
+
+# ════════════════════════════════════════════════════════════════════
+# Lattice Hamiltonian framework (LatticeHamiltonian.lean)
+# Infrastructure for GS no-go / TPF evasion formalization
+# ════════════════════════════════════════════════════════════════════
+
+def gs_condition_count(n_explicit=6, n_implicit=3):
+    """
+    Total number of GS no-go conditions.
+
+    The Golterman-Shamir generalized no-go theorem relies on 6 explicit
+    conditions (C1-C6) and 3 implicit assumptions (I1-I3) = 9 total.
+    The no-go applies only when ALL conditions hold simultaneously.
+    Evading any single condition is sufficient to escape the no-go.
+
+    Lean: gs_total_conditions (LatticeHamiltonian.lean)
+    Aristotle: pending
+
+    Args:
+        n_explicit: number of explicit GS conditions (default 6)
+        n_implicit: number of implicit GS assumptions (default 3)
+
+    Returns:
+        Total number of conditions
+    """
+    return n_explicit + n_implicit
+
+
+def tpf_evasion_count(n_violated=3, n_total=9):
+    """
+    Number of GS conditions violated by the TPF construction, and margin.
+
+    TPF cleanly violates 3 GS conditions:
+      C2: bosonic rotor ancillas (not fermion-only)
+      I3: infinite-dimensional local Hilbert space (L²(S¹))
+      dim: extra-dimensional SPT slab (4+1D, not purely D-dim)
+
+    Since the no-go requires ALL conditions, violating any one suffices.
+    The evasion margin is n_violated - 1.
+
+    Lean: tpf_evasion_sufficient (LatticeHamiltonian.lean)
+    Aristotle: pending
+
+    Args:
+        n_violated: GS conditions violated by TPF (default 3)
+        n_total: total GS conditions (default 9)
+
+    Returns:
+        dict with 'violated', 'applicable', 'margin'
+    """
+    return {
+        'violated': n_violated,
+        'applicable': n_total - n_violated,
+        'margin': n_violated - 1,
+    }
+
+
+def brillouin_zone_dimension(d):
+    """
+    Dimension of the Brillouin zone torus T^d.
+
+    For a lattice Hamiltonian in d spatial dimensions, the Brillouin
+    zone is T^d = (ℝ/2πℤ)^d, which is a d-dimensional compact manifold.
+
+    This is the domain of the Bloch Hamiltonian H(k).
+
+    Lean: brillouin_zone_compact (LatticeHamiltonian.lean)
+    Aristotle: pending
+
+    Args:
+        d: spatial dimension (positive integer)
+
+    Returns:
+        d (the BZ is a d-dimensional torus)
+    """
+    return d
+
+
+def vector_like_spectrum_check(n_left, n_right):
+    """
+    Check whether a fermion spectrum is vector-like.
+
+    A spectrum is vector-like if the number of left-handed Weyl fermions
+    equals the number of right-handed Weyl fermions in every charge sector.
+    This is the conclusion of the GS/NN no-go theorem.
+
+    A chiral spectrum has n_left ≠ n_right in at least one sector.
+    The TPF construction aims to achieve a chiral spectrum while evading
+    the no-go by violating its conditions.
+
+    Lean: vector_like_iff_equal (LatticeHamiltonian.lean)
+    Aristotle: pending
+
+    Args:
+        n_left: count of left-handed Weyl fermions
+        n_right: count of right-handed Weyl fermions
+
+    Returns:
+        True if vector-like (n_left == n_right), False if chiral
+    """
+    return n_left == n_right
+
+
+# ════════════════════════════════════════════════════════════════════
+# Layer 1: Categorical infrastructure (Wave 4A)
+# Pivotal, spherical, semisimple categories — quantum dimensions
+# ════════════════════════════════════════════════════════════════════
+
+def quantum_dimension(trace_id):
+    """Quantum dimension of an object in a spherical category.
+
+    d_X = tr_sph(id_X), where tr_sph is the spherical (= left = right)
+    categorical trace. For group categories Vec_G, d_X = 1 for all X.
+    For Rep(G), d_X = dim(V_X) as a vector space.
+
+    Lean: quantum_dim_unit, quantum_dim_tensor
+    Aristotle: pending
+
+    Args:
+        trace_id: trace of the identity morphism (real-valued for spherical)
+
+    Returns:
+        Quantum dimension d_X = trace_id
+    """
+    return trace_id
+
+
+def global_dimension_squared(quantum_dims):
+    """Global (squared) dimension of a fusion category.
+
+    D² = Σ_i d_i², summing over isomorphism classes of simple objects.
+    For Vec_G: D² = |G|. For Rep(G): D² = |G| (by Burnside).
+
+    Lean: global_dim_vec_eq_card, global_dim_positive
+    Aristotle: pending
+
+    Args:
+        quantum_dims: list of quantum dimensions [d_0, d_1, ..., d_{n-1}]
+
+    Returns:
+        D² = sum of squares of quantum dimensions
+    """
+    return sum(d**2 for d in quantum_dims)
+
+
+def fusion_multiplicity(decomposition_coefficients):
+    """Fusion multiplicity N^k_{ij} for simple objects i, j, k.
+
+    X_i ⊗ X_j ≅ ⊕_k N^k_{ij} · X_k in a semisimple monoidal category.
+    For Vec_G: N^k_{ij} = δ_{k, i·j}. For Rep(G): tensor product
+    decomposition multiplicities.
+
+    Lean: fusion_unit_left, fusion_associative
+    Aristotle: pending
+
+    Args:
+        decomposition_coefficients: dict mapping simple label k -> N^k_{ij}
+
+    Returns:
+        Total multiplicity sum Σ_k N^k_{ij} (total dimension of tensor product)
+    """
+    return sum(decomposition_coefficients.values())
+
+
+def categorical_trace(eigenvalues, pivotal_coefficients=None):
+    """Categorical trace of an endomorphism in a pivotal category.
+
+    tr_L(f) = ε_X ∘ (f ⊗ id_{X*}) ∘ η_X (left trace)
+    tr_R(f) = ε'_X ∘ (id_{*X} ⊗ f) ∘ η'_X (right trace)
+    In a spherical category: tr_L = tr_R.
+
+    For endomorphisms of simple objects: tr(f) = λ · d_X where
+    f = λ · id_X (by Schur's lemma over algebraically closed field).
+
+    Lean: trace_spherical_eq, trace_comp_tensor
+    Aristotle: pending
+
+    Args:
+        eigenvalues: eigenvalues of the endomorphism (for matrix representation)
+        pivotal_coefficients: optional pivotal structure data (default: identity)
+
+    Returns:
+        Trace value (sum of eigenvalues for standard trace)
+    """
+    return sum(eigenvalues)
+
+
+def pivotal_indicator(left_trace, right_trace):
+    """Checks whether a rigid monoidal category is spherical.
+
+    A pivotal category has a monoidal natural isomorphism δ: id → (-)**.
+    Left trace: tr_L(f: X → X) = ε_X ∘ (f ⊗ id_{X*}) ∘ η_X
+    Right trace: tr_R(f: X → X) = ε'_X ∘ (id_{*X} ⊗ f) ∘ η'_X
+    Spherical: tr_L = tr_R for all endomorphisms of all objects.
+
+    Lean: spherical_iff_traces_eq, pivotal_double_dual_iso
+    Aristotle: pending
+
+    Args:
+        left_trace: left categorical trace value
+        right_trace: right categorical trace value
+
+    Returns:
+        True if spherical (traces agree), False otherwise
+    """
+    return abs(left_trace - right_trace) < 1e-12

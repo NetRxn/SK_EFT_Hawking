@@ -167,13 +167,10 @@ def auxiliary_action(config: LatticeConfig) -> float:
     G = config.params.G
     eta = config.params.eta
 
-    total = 0.0
-    for i in range(config.volume):
-        e = config.tetrads[i]
-        # Tr(e^T eta e) = sum_{a,mu} eta_ab e^a_mu e^b_mu
-        total += np.trace(e.T @ eta @ e)
-
-    return total / (2.0 * G)
+    # Vectorized: Tr(e^T η e) = Σ_μ (e^T η e)_{μμ} for all sites at once
+    # tetrads shape: (V, a, mu). Tr(e^T η e) = einsum over a,b,mu with mu repeated
+    traces = np.einsum('vam,ab,vbm->v', config.tetrads, eta, config.tetrads)
+    return float(np.sum(traces) / (2.0 * G))
 
 
 def site_action(e: np.ndarray, G: float, eta: np.ndarray) -> float:
@@ -222,14 +219,12 @@ def metric_order_parameter(config: LatticeConfig) -> np.ndarray:
         d x d matrix (volume-averaged metric).
     """
     eta = config.params.eta
-    d = config.params.d
-    metric_sum = np.zeros((d, d))
-
-    for i in range(config.volume):
-        e = config.tetrads[i]
-        metric_sum += e.T @ eta @ e
-
-    return metric_sum / config.volume
+    # Vectorized: e^T @ eta @ e for all sites, then mean
+    # tetrads shape: (V, a, mu) where a=tangent, mu=coord
+    # e^T @ eta @ e: (mu, a) @ (a, b) @ (b, nu) = (mu, nu)
+    # einsum: 'vam,ab,vbn->vmn' contracts tangent indices a,b
+    metric_all = np.einsum('vam,ab,vbn->vmn', config.tetrads, eta, config.tetrads)
+    return np.mean(metric_all, axis=0)
 
 
 def tetrad_susceptibility(configs: list[LatticeConfig]) -> float:

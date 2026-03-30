@@ -2,9 +2,9 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Six papers (Phases 1-4) with complete Lean 4 formalization (216 theorems + 1 axiom, zero sorry, 16 modules). 822 tests, 45 pipeline figures, 16 notebooks. 56 Aristotle-proved, 160 manual.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Six papers (Phases 1-4) + Phase 5 analytical completion and chirality wall formalization. Complete Lean 4 formalization (300 theorems + 2 axioms, zero sorry, 22 modules). 918 tests, 50 pipeline figures, 16 notebooks. 72 Aristotle-proved, 228 manual.
 
-**Last verified:** March 27, 2026 (Wave 5 quality hardening)
+**Last verified:** March 28, 2026 (Phase 5 Wave 3B+)
 
 ---
 
@@ -196,9 +196,32 @@
 #### `src/vestigial/finite_size.py` (461 lines)
 **Purpose:** Finite-size scaling analysis for the vestigial-to-full-tetrad transition.
 
+#### `src/vestigial/su2_integration.py` (Phase 5 Wave 2A)
+**Purpose:** Analytical SU(2) Haar measure integration. Peter-Weyl decomposition of the one-link integral. Pseudo-reality verification for sign-problem absence.
+
+#### `src/vestigial/grassmann_trg.py` (Phase 5 Wave 2A)
+**Purpose:** 2D Grassmann TRG implementation. Iterative tensor coarse-graining for the reduced ADW model. Free energy, specific heat, coupling scan, D_cut convergence.
+
+#### `src/vestigial/lattice_4d.py` (Phase 5 Wave 2B)
+**Purpose:** 4D hypercubic lattice model with SO(4) ≅ SU(2)_L × SU(2)_R gauge integration. Site/bond/total action, tetrad/metric order parameters, neighbor/bond indexing.
+
+#### `src/vestigial/fermion_bag.py` (Phase 5 Wave 2B)
+**Purpose:** Fermion-bag Metropolis MC for 8-fermion vertices (Chandrasekharan algorithm). Avoids sign problem via SU(2) pseudo-reality.
+
+#### `src/vestigial/phase_scan.py` (Phase 5 Wave 2B)
+**Purpose:** 4D coupling scan with Binder cumulant analysis. Identifies vestigial phase via split Binder crossings for tetrad vs metric order parameters.
+
+### 1.5 Phase 5 Modules
+
+#### `src/experimental/kappa_scaling.py` (Phase 5 Wave 1A)
+**Purpose:** Physical kappa-scaling sweeps for all BEC platforms. Computes dispersive (∝κ²) and dissipative (∝κ) corrections as functions of surface gravity. Identifies crossover κ_cross where |δ_disp| = δ_diss.
+
+#### `src/experimental/polariton_predictions.py` (Phase 5 Wave 1B)
+**Purpose:** Tier 1 polariton platform predictions. Spatial attenuation correction, validity parameter Γ_pol/κ, regime classification (ultra-long/long/standard cavities).
+
 ---
 
-## 2. LEAN FORMAL VERIFICATION (16 modules, 216 theorems + 1 axiom)
+## 2. LEAN FORMAL VERIFICATION (22 modules, 300 theorems + 2 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -220,12 +243,20 @@
 | FractonHydro | 264 | 17 | 0 | 4 | Binomial monotonicity, charge counting, erasure universal |
 | FractonGravity | 248 | 20 | 0 | 4 | Bootstrap divergence, DOF gap, route achievements |
 | FractonNonAbelian | 203 | 14 | 0 | 4 | YM incompatibility, obstruction count, param gap |
+| KappaScaling | ~200 | 11 | 0 | 5 | Crossover balance, regime classification, scaling laws |
+| PolaritonTier1 | ~150 | 6 | 0 | 5 | Spatial attenuation ≥ 1, monotonicity, BEC recovery |
+| SU2PseudoReality | ~200 | 10 | 0 | 5 | One-link normalization, effective coupling, Binder limits |
+| FermionBag4D | ~250 | 16 | 0 | 5 | SO(4) integration, 8-fermion bounds, bag positivity, vestigial splitting |
+| LatticeHamiltonian | ~400 | 28 | 0 | 5 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace |
+| GoltermanShamir | ~330 | 13 | 1 | 5 | 9 GS conditions as Props, no-go bundle, TPF evasion synthesis (bosonic+∞-dim), condition interactions |
 
-**Axiom:** `non_abelian_center_discrete` (GaugeErasure.lean) — Encodes Lie theory: center of non-Abelian compact Lie group is discrete.
+**Axioms:**
+- `non_abelian_center_discrete` (GaugeErasure.lean) — Encodes Lie theory: center of non-Abelian compact Lie group is discrete.
+- `gs_nogo_axiom` (GoltermanShamir.lean) — Statement-level axiomatization of GS no-go theorem. Proof requires spectral theory infrastructure not yet in Mathlib (target: future wave).
 
 ---
 
-## 3. ARISTOTLE THEOREM PROVER (56 proved across 18 runs)
+## 3. ARISTOTLE THEOREM PROVER (72 proved across 21 runs)
 
 | Run ID | Date | Theorems | Scope |
 |--------|------|----------|-------|
@@ -247,6 +278,10 @@
 | f8de66d1 | 2026-03-25 | 1 | ADW: curvature_zero_at_Gc |
 | b1ea2eb7 | 2026-03-26 | 13 | Phase 4 batch (fracton, vestigial, chirality) |
 | f35ca767 | 2026-03-27 | 2 | Wave 5: gs_nogo_requires_all, zeroTemp_nontrivial |
+| run_20260328_051547 | 2026-03-28 | 3 | Wave 1A: kappa-scaling (dissipative_dominates, dispersive_dominates, crossover_unique) |
+| run_20260328_132925 | 2026-03-28 | 7 | Wave 3A: LatticeHamiltonian (double_shift, finite_sum, rotor_∞_dim, round_discontinuous, ℤ_infinite, Hermitian diagonal+trace) |
+| run_20260328_142342 | 2026-03-28 | 3 | Wave 3B: GoltermanShamir (tpf_violates_C2, tpf_outside_gs_scope, c1_implies_i2) |
+| run_20260328_151228 | 2026-03-28 | 3 | Wave 3B+: GoltermanShamir strengthening (c2_fock_dim_power_of_two, tpf_escapes_by_bosonic_and_infinite, tpf_bosonic_exceeds_fock) |
 
 ---
 
@@ -297,7 +332,7 @@
 
 ---
 
-## 6. TEST FILES (16 files, 822 tests)
+## 6. TEST FILES (16 files, 918 tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
@@ -311,11 +346,11 @@
 | test_wkb_connection | 65 | Connection formula, Bogoliubov, spectrum |
 | test_adw | 78 | Gap equation, NG modes, fluctuations |
 | test_ginzburg_landau | 75 | GL expansion, He-3 analogy |
-| test_experimental | 34 | Prediction tables, shot counts |
-| test_chirality | 55 | GS conditions, TPF evasion |
+| test_experimental | 54 | Prediction tables, shot counts, kappa-scaling, polariton |
+| test_chirality | 81 | GS 9 conditions, TPF evasion, lattice framework formulas, no-go structure |
 | test_fracton | 110 | SK-EFT, information retention |
 | test_fracton_gravity | 146 | Bootstrap, DOF gap, non-Abelian |
-| test_vestigial | 56 | Mean-field, MC, 3-phase structure |
+| test_vestigial | 106 | Mean-field, MC, 3-phase structure, SU(2) integration, TRG, 4D fermion-bag |
 | test_backreaction | 76 | Cooling, extremality, timescales |
 
 ---
@@ -325,7 +360,7 @@
 | Script | Lines | Purpose |
 |--------|-------|---------|
 | validate.py | 1158 | 14 cross-layer validation checks |
-| review_figures.py | 959 | Generate 45 PNGs + structural checks + manifest |
+| review_figures.py | ~1000 | Generate 50 PNGs + structural checks + manifest |
 | submit_to_aristotle.py | 466 | Aristotle submission/retrieval/integration |
 
 ---
@@ -434,16 +469,16 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| **Python Source Modules** | 30 | Complete (Phases 1-4) |
+| **Python Source Modules** | 37 | Complete (Phases 1-5 Wave 3B) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 16 | 822 tests, all passing |
+| **Test Files** | 16 | 918 tests, all passing |
 | **Notebooks** | 16 | Phases 1-4 (Technical + Stakeholder) |
-| **Lean Modules** | 16 | All build clean (zero sorry) |
-| **Lean Theorems** | 216 + 1 axiom | Zero sorry |
-| **Aristotle-proved** | 56 | 18 runs |
-| **Manual proofs** | 160 | |
+| **Lean Modules** | 22 | All build clean (zero sorry) |
+| **Lean Theorems** | 300 + 2 axioms | Zero sorry |
+| **Aristotle-proved** | 72 | 21 runs |
+| **Manual proofs** | 228 | |
 | **Paper Drafts** | 6 + prediction tables | Full LaTeX |
-| **Pipeline Figures** | 45 | All PNGs generated |
+| **Pipeline Figures** | 49 | All PNGs generated |
 | **Validation Checks** | 14 | All passing |
 | **Scripts** | 3 | validate, review_figures, submit_to_aristotle |
 | **Stakeholder Docs** | 11 | Phases 1-4 |

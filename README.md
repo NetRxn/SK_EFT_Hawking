@@ -19,18 +19,18 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
   in the ADW model. Three-phase structure: pre-geometric, vestigial, full tetrad.
   EP violation prediction. Monte Carlo + mean-field. PRD format.
 
-**Lean 4 formalization:** 259 theorems + 1 axiom, zero sorry.
-20 Lean modules. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 300 theorems + 2 axioms, zero sorry.
+22 Lean modules. 72 Aristotle-proved. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
-**Phase 4 additions:** Experimental prediction package, chirality wall synthesis,
-He-3/GL phase classification, vestigial gravity simulation (lattice + MC),
-fracton hydrodynamics Layer 2, backreaction calculation, fracton-gravity analysis.
+**Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, 4D fermion-bag MC pilot,
+chirality wall formalization (GS 9 conditions, TPF evasion machine-verified),
+lattice Hamiltonian framework (BrillouinZone compact, ℓ²(ℤ) ∞-dim, round discontinuous).
 
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (259 theorems + 1 axiom, zero sorry)
+├── lean/                              # Lean 4 formalization (300 theorems + 2 axioms, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 16)

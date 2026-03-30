@@ -1,0 +1,166 @@
+SK-EFT Hawking Validation Report
+Generated: 20260328T190458Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] formulas
+  + count_coefficients — Refs: secondOrder_count, secondOrder_count_with_parity, thirdOrder_count
+  + enumerate_monomials — Refs: secondOrder_count_with_parity, secondOrder_requires_parity_breaking
+  + damping_rate — Refs: dampingRate_eq_zero_iff
+  + dispersive_correction — Refs: dispersive_correction_bound, bogoliubov_superluminal
+  + first_order_correction — Refs: firstOrder_correction_zero_iff
+  + effective_temperature_ratio — Refs: effective_temp_zeroth_order
+  + turning_point_shift — Refs: turning_point_shift_nonzero, turning_point_shift
+
+[PASS] numerical
+  + Steinhauer.c_s — expected=1.151e-03, actual=1.151e-03, err=0.0%
+  + Steinhauer.xi — expected=6.350e-07, actual=6.349e-07, err=0.0%
+  + Steinhauer.kappa — expected=2.190e+01, actual=2.190e+01, err=0.0%
+  + Steinhauer.T_H — expected=2.660e-11, actual=2.663e-11, err=0.1%
+  + Heidelberg.c_s — expected=3.919e-03, actual=3.919e-03, err=0.0%
+  + Heidelberg.xi — expected=4.160e-07, actual=4.159e-07, err=0.0%
+  + Heidelberg.kappa — expected=1.019e+02, actual=1.019e+02, err=0.0%
+  + Heidelberg.T_H — expected=1.240e-10, actual=1.239e-10, err=0.1%
+  + Trento.c_s — expected=2.185e-03, actual=2.185e-03, err=0.0%
+  + Trento.xi — expected=1.264e-06, actual=1.264e-06, err=0.0%
+  + Trento.kappa — expected=2.140e+01, actual=2.141e+01, err=0.0%
+  + Trento.T_H — expected=2.600e-11, actual=2.602e-11, err=0.1%
+
+[PASS] identities
+  + count(1)==2
+  + count(2)==2
+  + count(3)==3
+  + disp(0)==0
+  + 1st_order(0,kappa)==0
+  + Gamma(k,w,cs,0,0,0,0)==0
+  + delta2_acoustic_vanishes — value=0.000e+00
+
+[PASS] paper_table
+  + Steinhauer.c_s — paper=1.151e-03, code=1.151e-03
+  + Steinhauer.xi — paper=6.350e-07, code=6.349e-07
+  + Steinhauer.kappa — paper=2.190e+01, code=2.190e+01
+  + Steinhauer.T_H — paper=2.700e-11, code=2.663e-11
+  + Heidelberg.c_s — paper=3.919e-03, code=3.919e-03
+  + Heidelberg.xi — paper=4.160e-07, code=4.159e-07
+  + Heidelberg.kappa — paper=1.019e+02, code=1.019e+02
+  + Heidelberg.T_H — paper=1.240e-10, code=1.239e-10
+  + Trento.c_s — paper=2.185e-03, code=2.185e-03
+  + Trento.xi — paper=1.264e-06, code=1.264e-06
+  + Trento.kappa — paper=2.140e+01, code=2.141e+01
+  + Trento.T_H — paper=2.600e-11, code=2.602e-11
+
+[PASS] theorems
+  + TOTAL_THEOREMS — actual=66, expected=66
+  + len(ARISTOTLE_THEOREMS) — actual=66, expected=66
+  + consistency — TOTAL=66, dict=66
+
+[PASS] notebooks
+  + Phase1_Stakeholder.ipynb — clean
+  + Phase1_Technical.ipynb — clean
+  + Phase2_Stakeholder.ipynb — clean
+  + Phase2_Technical.ipynb — clean
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — clean
+  + Phase3a_ThirdOrder_Technical.ipynb — clean
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — clean
+  + Phase3b_GaugeErasure_Technical.ipynb — clean
+  + Phase3c_WKBConnection_Stakeholder.ipynb — clean
+  + Phase3c_WKBConnection_Technical.ipynb — clean
+  + Phase3d_ADW_Stakeholder.ipynb — clean
+  + Phase3d_ADW_Technical.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — clean
+  + Phase4b_Vestigial_Stakeholder.ipynb — clean
+  + Phase4b_Vestigial_Technical.ipynb — clean
+
+[PASS] lean_source
+  + dampingRate_eq_zero_iff — Lean ident 'dampingRate_eq_zero_iff' found
+  + dispersive_bound — Lean ident 'dispersive_correction_bound' found
+  + firstOrder_correction_zero_iff — Lean ident 'firstOrder_correction_zero_iff' found
+  + acoustic_metric_determinant — Lean ident 'acousticMetric_det' found
+  + secondOrder_count — Lean ident 'secondOrder_count' found
+  + fracton_exceeds_standard_general — Lean ident 'fracton_exceeds_standard_general' found
+  + binomial_strict_mono — Lean ident 'binomial_strict_mono' found
+  + dof_gap_positive_2_through_8 — Lean ident 'dof_gap_positive_2_through_8' found
+  + evading_one_breaks_nogo — Lean ident 'evading_one_breaks_nogo' found
+  + ep_distinguishes_phases — Lean ident 'ep_distinguishes_phases' found
+  + obstructions_individually_sufficient — Lean ident 'obstructions_individually_sufficient' found
+
+[PASS] cgl_fdr
+  + einstein_relation — σ = γ/β₀ for Brownian particle
+  + first_order_bec — K_N = 2Γ/β₀ for BEC with damping
+  + second_order_real — Second-order noise kernel is real
+  + noise_count_pattern — Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}
+
+[PASS] lean_build
+  + lake_bin — /Users/johnroehm/.elan/bin/lake
+  + lean_root — /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean
+  + lake_build — build succeeded (2284 jobs)
+
+[PASS] viz_consistency
+  + Phase1_Stakeholder.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase1_Technical.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase2_Stakeholder.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase2_Technical.ipynb — WARN: 9 untagged .show() call(s)
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — clean
+  + Phase3a_ThirdOrder_Technical.ipynb — clean
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — clean
+  + Phase3b_GaugeErasure_Technical.ipynb — clean
+  + Phase3c_WKBConnection_Stakeholder.ipynb — clean
+  + Phase3c_WKBConnection_Technical.ipynb — clean
+  + Phase3d_ADW_Stakeholder.ipynb — clean
+  + Phase3d_ADW_Technical.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — clean
+  + Phase4b_Vestigial_Stakeholder.ipynb — WARN: 2 untagged .show() call(s)
+  + Phase4b_Vestigial_Technical.ipynb — WARN: 4 untagged .show() call(s)
+
+[PASS] notebook_exec
+  + Phase1_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase1_Technical.ipynb — 10 code cells executed successfully
+  + Phase2_Stakeholder.ipynb — 13 code cells executed successfully
+  + Phase2_Technical.ipynb — 16 code cells executed successfully
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3a_ThirdOrder_Technical.ipynb — 12 code cells executed successfully
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase3b_GaugeErasure_Technical.ipynb — 10 code cells executed successfully
+  + Phase3c_WKBConnection_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3c_WKBConnection_Technical.ipynb — 9 code cells executed successfully
+  + Phase3d_ADW_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase3d_ADW_Technical.ipynb — 14 code cells executed successfully
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — 11 code cells executed successfully
+  + Phase4b_Vestigial_Stakeholder.ipynb — 4 code cells executed successfully
+  + Phase4b_Vestigial_Technical.ipynb — 13 code cells executed successfully
+
+[PASS] physical_bounds
+  + steinhauer/T_H > 0 — OK
+  + steinhauer/kappa > 0 — OK
+  + steinhauer/0 < D < 1 — OK
+  + steinhauer/0 < delta_diss < 1 — OK
+  + steinhauer/n_noise >= 0 — OK
+  + steinhauer/shots > 10^4 (delta=7.6e-05) — OK
+  + heidelberg/T_H > 0 — OK
+  + heidelberg/kappa > 0 — OK
+  + heidelberg/0 < D < 1 — OK
+  + heidelberg/0 < delta_diss < 1 — OK
+  + heidelberg/n_noise >= 0 — OK
+  + heidelberg/shots > 10^4 (delta=5.1e-05) — OK
+  + trento/T_H > 0 — OK
+  + trento/kappa > 0 — OK
+  + trento/0 < D < 1 — OK
+  + trento/0 < delta_diss < 1 — OK
+  + trento/n_noise >= 0 — OK
+  + trento/shots > 10^4 (delta=3.5e-07) — OK
+
+[PASS] cross_path_consistency
+  + delta_diss: spectrum vs direct — spectrum=7.5991e-05, direct=7.5991e-05, rel_diff=0.0000
+  + decoherence: spectrum vs formulas — spectrum=1.5198e-04, formulas=1.5198e-04, rel_diff=0.0000
+
+[PASS] paper_provenance
+  + paper1_first_order/figures — 3 figure files present
+  + paper2_second_order/figures — 6 figure files present
+  + paper3_gauge_erasure/figures — 2 figure files present
+  + paper4_wkb_connection/figures — 3 figure files present
+  + paper5_adw_gap/figures — 3 figure files present
+  + paper6_vestigial/figures — 2 figure files present
+
+Overall: 14/14 passed

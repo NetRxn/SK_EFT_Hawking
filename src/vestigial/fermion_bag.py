@@ -120,11 +120,13 @@ def _local_action_change(config: Lattice4DConfig, site: int,
 
 def fermion_bag_sweep(config: Lattice4DConfig,
                        rng: np.random.Generator) -> tuple[Lattice4DConfig, float]:
-    """Perform one full Metropolis sweep over all sites.
+    """Perform one full vectorized Metropolis sweep over all sites.
 
-    Each site is visited once. A new occupation number is proposed
-    uniformly from {0, ..., n_grassmann}, and accepted/rejected by
-    the Metropolis criterion.
+    All sites are updated simultaneously: propose new occupations,
+    compute action changes, accept/reject in bulk via numpy.
+
+    The on-site action is S_site = g_cosmo × δ_{n=8}, so ΔS depends
+    only on whether old/new occupation is 8. This is fully vectorizable.
 
     Args:
         config: current lattice configuration
@@ -133,22 +135,27 @@ def fermion_bag_sweep(config: Lattice4DConfig,
     Returns:
         (updated_config, acceptance_rate)
     """
-    n_accept = 0
-    n_propose = 0
     V = config.params.volume
     n_grass = config.params.n_grassmann
+    g_cosmo = config.params.g_cosmo
 
-    for site in range(V):
-        new_occ = rng.integers(0, n_grass + 1)
-        dS = _local_action_change(config, site, new_occ, rng)
+    # Propose new occupations for ALL sites at once
+    new_occ = rng.integers(0, n_grass + 1, size=V)
 
-        # Metropolis acceptance
-        if dS <= 0 or rng.random() < np.exp(-dS):
-            config.site_occ[site] = new_occ
-            n_accept += 1
-        n_propose += 1
+    # Vectorized action change: ΔS = g_cosmo * (δ_{new=8} - δ_{old=8})
+    old_is_8 = (config.site_occ == 8).astype(np.float64)
+    new_is_8 = (new_occ == 8).astype(np.float64)
+    dS = g_cosmo * (new_is_8 - old_is_8)
 
-    acceptance_rate = n_accept / max(n_propose, 1)
+    # Vectorized Metropolis: accept if ΔS ≤ 0 or rand < exp(-ΔS)
+    rand = rng.random(size=V)
+    accept = (dS <= 0) | (rand < np.exp(-dS))
+
+    # Apply accepted updates
+    config.site_occ = np.where(accept, new_occ, config.site_occ)
+    n_accept = int(np.sum(accept))
+
+    acceptance_rate = n_accept / V
     return config, acceptance_rate
 
 

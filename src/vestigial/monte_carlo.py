@@ -93,14 +93,16 @@ class MCResult:
 
 def metropolis_sweep(config: LatticeConfig, step_size: float,
                      rng: np.random.Generator) -> tuple[LatticeConfig, float]:
-    """Perform one full Metropolis sweep over the lattice.
+    """Perform one full vectorized Metropolis sweep over the lattice.
 
-    Each site is visited once in random order. The tetrad at each site
-    is updated by a Gaussian proposal:
-        e_new = e_old + step_size * N(0, 1)
+    All sites are updated simultaneously using checkerboard decomposition:
+    even sites first, then odd sites. This preserves detailed balance
+    while allowing full numpy vectorization within each sublattice.
 
-    The acceptance criterion is:
-        accept if Delta S < 0 or random() < exp(-Delta S)
+    For the on-site action S = (1/2G) Tr(e^T η e), the action change
+    from e → e + δe is:
+        ΔS = (1/2G) [Tr((e+δe)^T η (e+δe)) - Tr(e^T η e)]
+           = (1/G) Tr(δe^T η e) + (1/2G) Tr(δe^T η δe)
 
     Args:
         config: Current lattice configuration.
@@ -114,26 +116,40 @@ def metropolis_sweep(config: LatticeConfig, step_size: float,
     d = config.params.d
     G = config.params.G
     eta = config.params.eta
-    accepted = 0
+    total_accepted = 0
 
-    # Visit sites in random order
-    site_order = rng.permutation(V)
+    # Two-pass checkerboard: even sites then odd sites
+    for parity in range(2):
+        # Select sublattice sites
+        sites = np.arange(parity, V, 2)
+        n_sites = len(sites)
 
-    for site in site_order:
-        e_old = config.tetrads[site].copy()
-        S_old = site_action(e_old, G, eta)
+        # Current tetrads for this sublattice: shape (n_sites, d, d)
+        e_old = config.tetrads[sites]
 
-        # Propose update
-        e_new = e_old + step_size * rng.standard_normal((d, d))
-        S_new = site_action(e_new, G, eta)
+        # Propose perturbations: shape (n_sites, d, d)
+        delta_e = step_size * rng.standard_normal((n_sites, d, d))
+        e_new = e_old + delta_e
 
-        # Metropolis accept/reject
+        # Vectorized action computation: S = (1/2G) Tr(e^T η e)
+        # For Euclidean η = I: Tr(e^T e) = sum of squares
+        # General: Tr(e^T η e) = einsum('...ai,...ab,...bi->...', e, η, e)
+        S_old = np.einsum('...ai,...ab,...bi->...', e_old, eta, e_old) / (2.0 * G)
+        S_new = np.einsum('...ai,...ab,...bi->...', e_new, eta, e_new) / (2.0 * G)
+
         delta_S = S_new - S_old
-        if delta_S < 0 or rng.random() < np.exp(-delta_S):
-            config.tetrads[site] = e_new
-            accepted += 1
 
-    acceptance_rate = accepted / V
+        # Vectorized Metropolis: accept if ΔS ≤ 0 or rand < exp(-ΔS)
+        rand = rng.random(size=n_sites)
+        # Clip delta_S to avoid overflow in exp
+        accept = (delta_S <= 0) | (rand < np.exp(np.minimum(-delta_S, 0.0)))
+
+        # Apply accepted updates
+        accept_3d = accept[:, np.newaxis, np.newaxis]  # broadcast to (n, d, d)
+        config.tetrads[sites] = np.where(accept_3d, e_new, e_old)
+        total_accepted += int(np.sum(accept))
+
+    acceptance_rate = total_accepted / V
     return config, acceptance_rate
 
 
@@ -184,12 +200,9 @@ def run_monte_carlo(lattice_params: LatticeParams,
         tetrad_mag = float(np.sqrt(np.sum(M_E**2)))
         metric_mag = float(np.sqrt(np.sum(M_g**2)))
 
-        # Action
-        action = 0.0
-        G = lattice_params.G
-        eta = lattice_params.eta
-        for site in range(config.volume):
-            action += site_action(config.tetrads[site], G, eta)
+        # Action (vectorized)
+        from src.vestigial.lattice_model import auxiliary_action
+        action = auxiliary_action(config)
 
         measurements.append(MCMeasurement(
             sweep=i,

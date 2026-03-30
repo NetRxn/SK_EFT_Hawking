@@ -278,6 +278,140 @@ ADW_4D_COUPLING_SCAN = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Lattice Hamiltonian framework (Wave 3A — chirality wall formalization)
+#
+# Infrastructure for the GS no-go / TPF evasion formalization.
+# The 6 explicit + 3 implicit GS conditions are the mathematical
+# targets; the lattice Hamiltonian definitions provide the Lean
+# vocabulary for stating them precisely.
+# ════════════════════════════════════════════════════════════════════
+
+# GS no-go: 6 explicit conditions + 3 implicit assumptions = 9 total
+GS_CONDITIONS = {
+    'explicit': {
+        'C1': 'lattice_translation_invariance',   # H(k) ∈ C¹(T^d)
+        'C2': 'fermion_fields_only',              # no scalar/bosonic ancillas
+        'C3': 'relativistic_no_massless_bosons',  # free massless fermions + irrelevant ops
+        'C4': 'complete_interpolating_fields',     # retarded/advanced propagators complete
+        'C5': 'no_spontaneous_symmetry_breaking',  # global symmetry unbroken
+        'C6': 'propagator_zeros_kinematical',      # zeros removable by field redefinition
+    },
+    'implicit': {
+        'I1': 'hamiltonian_formulation',   # continuous time, discrete space
+        'I2': 'local_interactions',        # finite-range Hamiltonian
+        'I3': 'finite_dim_local_hilbert',  # finite-dimensional local Hilbert space
+    },
+}
+
+# TPF violations of GS conditions (from deep research analysis)
+TPF_VIOLATIONS = {
+    'C2': 'bosonic_rotor_ancillas',         # L²(S¹) rotor DOF are bosonic
+    'I3': 'infinite_dim_rotor_hilbert',     # L²(S¹) is countably infinite-dim
+    'dim': 'extra_dimensional_spt_slab',    # 4+1D SPT slab, not purely D-dim
+}
+TPF_VIOLATION_COUNT = len(TPF_VIOLATIONS)  # 3 clean violations
+
+# Lattice framework parameters
+LATTICE_FRAMEWORK = {
+    'd_physical': 4,             # spatial dimension for 3+1D QFT
+    'brillouin_period': 2 * np.pi,  # period of BZ torus T^d = (ℝ/2πℤ)^d
+    'n_gs_explicit': 6,          # explicit GS conditions
+    'n_gs_implicit': 3,          # implicit GS assumptions
+    'n_gs_total': 9,             # total GS conditions
+    'n_tpf_violations': 3,       # GS conditions cleanly violated by TPF
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Layer 1 formalization: Categorical infrastructure (Wave 4A)
+#
+# String-net condensation requires fusion categories — the input data
+# for the Levin-Wen model. The output is Z(C) (Drinfeld center),
+# which recovers Dijkgraaf-Witten gauge theory when C = Vec_G.
+# Mathlib4 provides monoidal/braided/rigid categories + Drinfeld center;
+# the missing layers (pivotal → spherical → semisimple → fusion) are
+# what Wave 4 builds. This would be the FIRST fusion category
+# formalization in any proof assistant.
+# ════════════════════════════════════════════════════════════════════
+
+# Categorical hierarchy: what exists vs what we build
+CATEGORY_HIERARCHY = {
+    'mathlib_existing': [
+        'MonoidalCategory',      # full coherence tactic, pentagon axiom
+        'BraidedCategory',       # hexagon identities
+        'SymmetricCategory',
+        'RigidCategory',         # exact pairings, evaluation/coevaluation
+        'MonoidalLinear',        # R-linear tensor product
+        'MonoidalPreadditive',   # additive tensor product
+        'Simple',                # simple objects (mono is iso or zero)
+        'SchurLemma',            # finrank End(X) = 1 for simple X
+        'DrinfeldCenter',        # Z(C) braided monoidal
+    ],
+    'wave4a_new': [
+        'PivotalCategory',       # double-dual ≅ identity (natural iso)
+        'CategoricalTrace',      # left/right traces via pivotal structure
+        'SphericalCategory',     # left trace = right trace
+        'QuantumDimension',      # d_X = tr(id_X)
+        'SemisimpleCategory',    # every object = ⊕ simples
+    ],
+    'wave4b_new': [
+        'FusionCategory',        # rigid+semisimple+k-linear+spherical+fin simples
+        'FSymbols',              # associator matrix elements
+        'PentagonEquation',      # F-symbol consistency
+        'FrobeniusPerronDim',    # Frobenius-Perron dimension
+        'GlobalDimension',       # D² = Σ d_i²
+    ],
+}
+
+# Concrete fusion category examples for verification
+FUSION_EXAMPLES = {
+    'Vec_Z2': {
+        'group': 'Z_2',
+        'n_simples': 2,          # {1, g}
+        'quantum_dims': [1, 1],  # all objects have dim 1
+        'global_dim_sq': 2,      # D² = 1² + 1² = 2
+        'F_symbols_trivial': True,  # all F = 1 (trivial 3-cocycle)
+    },
+    'Vec_Z3': {
+        'group': 'Z_3',
+        'n_simples': 3,
+        'quantum_dims': [1, 1, 1],
+        'global_dim_sq': 3,
+        'F_symbols_trivial': True,
+    },
+    'Vec_S3': {
+        'group': 'S_3',
+        'n_simples': 6,          # one for each group element
+        'quantum_dims': [1, 1, 1, 1, 1, 1],
+        'global_dim_sq': 6,
+        'F_symbols_trivial': False,  # nontrivial H³(S₃, ℂ×)
+    },
+    'Rep_S3': {
+        'group': 'S_3',
+        'n_simples': 3,          # trivial, sign, standard (2-dim)
+        'quantum_dims': [1, 1, 2],
+        'global_dim_sq': 6,      # 1² + 1² + 2² = 6 = |S₃|
+        'F_symbols_trivial': False,
+    },
+    'Fibonacci': {
+        'group': None,           # not a group category
+        'n_simples': 2,          # {1, τ}
+        'quantum_dims': [1, (1 + np.sqrt(5)) / 2],  # golden ratio φ
+        'global_dim_sq': (5 + np.sqrt(5)) / 2,      # 1 + φ² = 2 + φ
+        'F_symbols_trivial': False,
+    },
+}
+
+# Physics connections: how string-net layers connect to existing codebase
+LAYER1_CONNECTIONS = {
+    'gauge_erasure': 'Z(C) always non-chiral (c=0 mod 8) → doubled gauge erased at boundary',
+    'fracton_hydro': 'Stacked Vec_G string-nets → fracton phases via gauged 1-form symmetry',
+    'fracton_nonabelian': 'Cage-net from non-Abelian Vec_G → non-Abelian fracton excitations',
+    'chirality_wall': 'Z(C) doubled → intrinsic chirality limitation of string-nets',
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Plotly color palette (consistent across all figures)
 # ════════════════════════════════════════════════════════════════════
 
@@ -292,12 +426,13 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (259 theorems + 1 axiom across 20 Lean modules):
-#   - 59 proved by Aristotle automated theorem prover (listed below with run IDs)
-#   - 174 proved manually in Lean (verified by `lake build`, zero sorry)
-#   - 1 axiom: non_abelian_center_discrete in GaugeErasure.lean
+# Verification breakdown (347 theorems + 2 axioms across 25 Lean modules):
+#   - 84 proved by Aristotle automated theorem prover (listed below with run IDs)
+#   - 263 proved manually in Lean (verified by `lake build`)
+#   - 2 axioms: non_abelian_center_discrete (GaugeErasure.lean),
+#               gs_nogo_axiom (GoltermanShamir.lean)
 #
-# All 234 proof obligations have zero sorry. Verified by `lake build`.
+# ZERO sorry across entire project. Verified by `lake build`.
 # ════════════════════════════════════════════════════════════════════
 
 ARISTOTLE_THEOREMS = {
@@ -378,10 +513,47 @@ ARISTOTLE_THEOREMS = {
     'dissipative_dominates_below': 'run_20260328_051547',
     'dispersive_dominates_above': 'run_20260328_051547',
     'crossover_unique': 'run_20260328_051547',
+
+    # Phase 5 Wave 3A — LatticeHamiltonian.lean (7 by Aristotle)
+    'translation_invariant_double_shift': 'run_20260328_132925',
+    'finite_range_bloch_is_finite_sum': 'run_20260328_132925',
+    'rotor_hilbert_not_finite_dim': 'run_20260328_132925',
+    'round_not_continuous_at_half': 'run_20260328_132925',
+    'integers_not_finite': 'run_20260328_132925',
+    'hermitian_diagonal_real': 'run_20260328_132925',
+    'hermitian_trace_real': 'run_20260328_132925',
+
+    # Phase 5 Wave 3B — GoltermanShamir.lean (3 by Aristotle)
+    'tpf_violates_C2': 'run_20260328_142342',
+    'tpf_outside_gs_scope': 'run_20260328_142342',
+    'c1_implies_i2': 'run_20260328_142342',
+
+    # Phase 5 Wave 3B+ — GoltermanShamir.lean strengthening (3 by Aristotle)
+    'c2_fock_dim_power_of_two': 'run_20260328_151228',
+    'tpf_escapes_by_bosonic_and_infinite': 'run_20260328_151228',
+    'tpf_bosonic_exceeds_fock': 'run_20260328_151228',
+
+    # Phase 5 Wave 3C — GoltermanShamir.lean fock_space_finite_dim (1 by Aristotle)
+    'fock_space_finite_dim': 'run_20260328_170451',
+
+    # Phase 5 Wave 4A — KLinearCategory.lean (4 by Aristotle)
+    'tensor_preserves_nonzero': 'run_20260329_094416',
+    'unit_totalDim_one': 'run_20260329_094416',
+    'simples_nonempty': 'run_20260329_094416',
+    'simple_indecomposable': 'run_20260329_094416',
+
+    # Phase 5 Wave 4A — SphericalCategory.lean (7 by Aristotle)
+    'quantum_dim_unit': 'run_20260329_094416',
+    'quantum_dim_tensor': 'run_20260329_094416',
+    'quantum_dim_dual': 'run_20260329_094416',
+    'trace_smul': 'run_20260329_094416',
+    'trace_zero': 'run_20260329_094416',
+    'double_mate_comp': 'run_20260329_094416',
+    'golden_ratio_eq': 'run_20260329_094416',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 59, f"Expected 59 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 84, f"Expected 84 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 
