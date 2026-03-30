@@ -525,7 +525,7 @@
 
 ### 5A. Cross-Wave Validation [Pipeline Stage 7] — COMPLETE
 
-- [x] Full validation suite: 14/14 checks pass, 1014 tests pass, 60 figures generated (2026-03-30)
+- [x] Full validation suite: 14/14 checks pass, 1014 tests pass, 61 figures generated (2026-03-30)
 
 ### 5B. Document Sync [Pipeline Stage 12] — COMPLETE
 
@@ -586,7 +586,7 @@
 
 ### 5F. Document Sync (Stage 12)
 
-- [x] `SK_EFT_Hawking_Inventory.md` — FULL UPDATE: all 10 sections updated (source of truth), 429 theorems, 99 Aristotle, 30 modules, 1014 tests, 60 figures (2026-03-30)
+- [x] `SK_EFT_Hawking_Inventory.md` — FULL UPDATE: all 10 sections updated (source of truth), 429 theorems, 99 Aristotle, 30 modules, 1014 tests, 61 figures (2026-03-30)
 - [x] `README.MD` — theorem table (29 modules), project tree (30 Lean modules, 7 papers, 20 notebooks), all counts updated (2026-03-30)
 - [x] Formula docstring Aristotle provenance — DONE (2026-03-30)
 - [x] `SK_EFT_Hawking_Inventory_Index.md` — counts updated, FusionExamples sorry removed, VecG/DrinfeldDouble/GaugeEmergence added (2026-03-30)
@@ -614,15 +614,19 @@
 - **Vestigial/metric wall:** Encouraging. Split transition at L=6,8 is the first numerical evidence for a genuine vestigial phase. L=10,12 needed for thermodynamic limit.
 - **UV completion wall:** Four structural obstacles from Paper 5 remain. Layer 1 formalization provides new categorical routes (string-nets, Fermi-point) but Bott periodicity blocks the topological invariant approach.
 
-**By the numbers:** 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests, 60 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 validation checks, 15/15 deep research tasks complete.
+**By the numbers:** 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests, 61 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 validation checks, 15/15 deep research tasks complete.
 
-### 5H. Deferred: Earlier paper visualization audit (Papers 1-5)
+### 5H. Earlier paper visualization audit (Papers 1-5) — COMPLETE (2026-03-30)
 
-Papers 1-5 were completed in Phases 1-4 with their own figure suites. A comprehensive audit to ensure all papers meet the current visualization standard (no \fbox placeholders, all figures from visualizations.py, consistent style) is deferred to a future session. Scope:
-- [ ] Audit Papers 1-5 for figure completeness and consistency
-- [ ] Identify any inline/hardcoded figures that should be in visualizations.py
-- [ ] Update any stale numerical claims (post-Wave 5 quality hardening corrections)
-- [ ] Ensure all papers reference current Lean theorem names and Aristotle run IDs
+Comprehensive audit of Papers 1-5 against current visualization and documentation standards:
+- [x] Audit Papers 1-5 for figure completeness and consistency — ALL papers use `\includegraphics`, zero `\fbox` placeholders, all referenced PNGs/PDFs exist (2026-03-30)
+- [x] Identify any inline/hardcoded figures that should be in visualizations.py — Papers 1-2 use PDF figures (appropriate for revtex4-2); Papers 3-5 use PNG from visualizations.py. No inline figures found (2026-03-30)
+- [x] Update any stale numerical claims — Paper 4 had stale global counts (216→429, 1→2 axioms, 16→30 modules, 56→99 Aristotle). Fixed. Papers 1-3, 5 use paper-local counts only (correct) (2026-03-30)
+- [x] Ensure all papers reference current Lean theorem names and Aristotle run IDs — Papers 1-5 cite specific theorem names matching their respective Lean modules. Paper-local Aristotle run IDs are historically accurate (2026-03-30)
+
+Also updated top-level documents:
+- [x] `docs/Fluid-Based...Critical Review v3.md` — Updated 12 sections: executive summary chirality wall verdict, §1.3 EFT landscape (Phase 5 additions), §2.3 chirality wall (formal verification result), §4.3-4.4 architecture scorecard, §5.1/5.5/5.7 roadmap items, §6 benchmarks, §8.2 impactful papers, §9 claims (4 new items), §10.3 vestigial MC (2026-03-30)
+- [x] `docs/Fluid-Based...Feasibility Study.md` — Updated §4.1 validation table: SK-EFT row with Phase 5 counts and results (2026-03-30)
 
 ---
 
@@ -677,4 +681,4 @@ All prompts in `Lit-Search/Tasks/`. Results in `Lit-Search/Phase-5/`.
 
 ---
 
-*Phase 5 roadmap. Waves 1-4C COMPLETE. Wave 5 synthesis NEARLY COMPLETE (Stages 9-12 done, minor deferred items remaining). 429 theorems + 2 axioms, ZERO sorry, 99 Aristotle-proved across 27 runs, 30 modules, 1014 tests, 60 figures, 7 papers, 20 notebooks, 14/14 validation. Split transition detected at L=6,8. First-ever PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant. Wave 4D (Fermi-point) blocked by Bott periodicity. Deep research: 15/15 tasks complete. Updated 2026-03-30.*
+*Phase 5 roadmap. Waves 1-4C COMPLETE. Wave 5 synthesis COMPLETE (all 12 pipeline stages done, 5H audit done). 429 theorems + 2 axioms, ZERO sorry, 99 Aristotle-proved across 27 runs, 30 modules, 1014 tests, 61 figures, 7 papers, 20 notebooks, 14/14 validation. Split transition detected at L=6,8. First-ever PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant. Wave 4D (Fermi-point) blocked by Bott periodicity. Deep research: 15/15 tasks complete. Top-level docs (Critical Review v3, Feasibility Study) updated with Phase 5 results. Updated 2026-03-30.*
