@@ -529,4 +529,49 @@ A genuinely surprising finding: artificial black holes in BECs cool down over ti
 
 ---
 
-*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 26, 2026.*
+---
+
+## Phase 5: Formal Verification Firsts and the Analytical Ceiling
+
+### What was Phase 5 about?
+
+Phase 4 tested predictions and built the experimental bridge. Phase 5 asks: **how far can we push analytically, and can we machine-check the structural claims?** The answer: remarkably far — and the formal verification produced several firsts.
+
+### The chirality wall: first machine-checked analysis
+
+The "chirality wall" is the biggest open question in lattice field theory: can you put chiral fermions (the kind that exist in the Standard Model) on a discrete lattice? Two groups proposed seemingly contradictory answers — Golterman-Shamir (no, under 9 conditions) and Tong-Preskill-Fidkowski (yes, using extra dimensions and infinite-dimensional Hilbert spaces).
+
+We formalized BOTH sides in Lean 4 (a proof-checking programming language) and showed they operate in genuinely different mathematical frameworks. The TPF construction violates 5 of the 9 GS conditions — not because it disproves the no-go theorem, but because it works outside its scope. This is the **first time anyone has formally verified claims in this debate**, which has been going on informally for years.
+
+### Building the mathematical language of topological phases
+
+To formalize how gauge structure emerges from simple ingredients (the "Layer 1" of our architecture), we needed mathematical structures that no proof assistant in the world had. We built them:
+
+- **Fusion categories** — the mathematical language of anyons (exotic particles in 2D systems). Think of them as the "periodic table" for topological phases of matter.
+- **The Drinfeld double** — the algebra that tells you which anyons emerge from a given microscopic model. We proved that for any group G, the anyons form a predictable pattern (the "DW gauge theory").
+- **The chirality limitation** — string-net models (the standard construction for topological phases) ALWAYS produce "doubled" theories. This is why gauge information gets erased at boundaries.
+
+These are genuine contributions to the formalization of mathematics, not just physics.
+
+### Polariton platform: 10 billion times hotter
+
+We added a completely new experimental platform: exciton-polariton condensates. These are hybrid light-matter systems in semiconductor microcavities. The key advantage: their Hawking temperature is about 1 Kelvin — ten billion times hotter than in BEC systems. This makes corrections far more accessible. The Paris group has already demonstrated acoustic horizons (published in Physical Review Letters in 2025).
+
+### Vestigial gravity: the split transition
+
+Remember the "new kind of gravity" from Phase 4? We ran the full production-scale computer simulation (Monte Carlo on a 4D lattice) and found **the split transition** — the metric order parameter and tetrad order parameter undergo phase transitions at different temperatures. This is the smoking gun for the vestigial phase existing as a genuine thermodynamic phase, not a finite-size artifact.
+
+### By the numbers
+
+| Metric | Phase 4 | Phase 5 |
+|--------|---------|---------|
+| Lean theorems | 216 + 1 axiom | 429 + 2 axioms |
+| Aristotle-proved | 56 | 91 |
+| Lean modules | 16 | 30 |
+| Tests | 822 | 1014 |
+| Platforms | 3 (BEC) | 4 (3 BEC + polariton) |
+| Formal verification firsts | 0 | 3 (chirality wall, fusion categories, Drinfeld double) |
+
+---
+
+*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 29, 2026.*

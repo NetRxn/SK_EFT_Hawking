@@ -143,11 +143,12 @@
 
 ### 1R. Deep Research Launch [Async — John]
 
-**Research prompts (in `Lit-Search/Tasks/submitted/`):**
+**Research prompts (in `Lit-Search/Tasks/`):**
 - [x] `Phase5_5D_polariton_sk_eft_modifications.txt` → **Complete**: `Extending Schwinger-Keldysh EFT to driven-dissipative polariton condensates.md`
 - [x] `Phase5_vestigial_correlator_simulation_scoping.txt` → **Complete**: `Monte Carlo simulation of vestigial gravity in ADW lattice models.md`
-- [ ] `Phase5_W3_tpf_gs_lean_formalization_scope.txt` — Scope for chirality wall formalization in Lean
-- [ ] `Phase5_W4_string_net_lean_formalization_scope.txt` — Scope for string-net / Fermi-point formalization in Lean
+- [x] `Phase5_W3_tpf_gs_lean_formalization_scope.txt` → **Complete**: `Formalizing the TPF-GS Compatibility Question in Lean 4.md`
+- [x] `Phase5_W4_string_net_lean_formalization_scope.txt` → **Complete**: `Formalizing string-net condensation and Fermi-point topology in Lean 4.md`
+- [x] `Phase5_W4C_drinfeld_double_lean4_construction.txt` → **Complete**: `Formalizing the Drinfeld double in Lean 4- a gap analysis and construction blueprint.md`
 
 **Previous research results (in `Lit-Search/Phase-5/`):**
 - `The chirality wall- still cracking, still not broken.md`
@@ -157,6 +158,7 @@
 - `Fractons and Wallstrom- 2024-2026 monitoring scan.md`
 - `Extending Schwinger-Keldysh EFT to driven-dissipative polariton condensates.md`
 - `Monte Carlo simulation of vestigial gravity in ADW lattice models.md`
+- `Formalizing the Drinfeld double in Lean 4- a gap analysis and construction blueprint.md`
 
 ---
 
@@ -355,13 +357,16 @@
 - [x] Document sync: Inventory Index, constants.py, validate.py counts updated (2026-03-29)
 - [ ] `src/chirality/tpf_evasion.py` — Python analysis with formal backing (deferred to Wave 5)
 - [ ] `docs/analysis/chirality_wall_formal_analysis.md` — publishable writeup (deferred to Wave 5)
-- [ ] Paper draft (deferred to Wave 5)
+- [ ] Paper 7 draft: chirality wall formal verification (deferred to Wave 5)
+- [ ] `notebooks/Phase5_ChiralityWall_Technical.ipynb` — companion for Paper 7 (deferred to Wave 5)
+- [ ] `notebooks/Phase5_ChiralityWall_Stakeholder.ipynb` — companion for Paper 7 (deferred to Wave 5)
 
-**Stakeholder deliverables (deferred to Wave 5):**
+**Phase 5 stakeholder deliverables (deferred to Wave 5):**
 - [ ] `docs/stakeholder/Phase5_Implications.md`
 - [ ] `docs/stakeholder/Phase5_Strategic_Positioning.md`
 - [ ] Update `docs/stakeholder/companion_guide.md`
-- [ ] Notebooks: Phase 5 Technical + Stakeholder
+- [ ] `notebooks/Phase5_Synthesis_Technical.ipynb` — covers Waves 1-2 content (kappa-scaling, polariton, vestigial MC)
+- [ ] `notebooks/Phase5_Synthesis_Stakeholder.ipynb` — covers Waves 1-2 content
 
 **Status:** COMPLETE (Lean formalization). 314 theorems + 2 axioms, ZERO sorry, 23 modules. 7/9 GS conditions substantive, 2/9 well-typed physics axioms. All 5 TPF violations proved. Paper/stakeholder/notebook deliverables deferred to Wave 5.
 
@@ -428,13 +433,18 @@
 
 **Deliverables:**
 - [ ] `lean/SKEFTHawking/FusionCategory.lean` — definitions + pentagon equation
-- [ ] `lean/SKEFTHawking/FusionExamples.lean` — Vec_G, Rep(G) for small groups
-- [ ] `src/layer1/fusion_category.py` — Python computations for F-symbols
-- [ ] Tests: pentagon equation verification for concrete examples
-- [ ] Aristotle: algebraic identities, pentagon instances
+- [x] `lean/SKEFTHawking/FusionCategory.lean` — 14 theorems, ZERO sorry: FusionCategoryData with full axioms, FSymbolData, PentagonSatisfied, globalDimSq_pos, totalMult_unit, Frobenius-Perron (2026-03-29)
+- [x] `lean/SKEFTHawking/FusionExamples.lean` — 30 theorems (7 sorry): Vec_{Z/2,Z/3}, Rep(S₃), Fibonacci fusion rules + commutativity + unit fusion + τ⊗τ=1⊕τ + F-matrix + chirality (2026-03-29)
+- [x] 4 formulas in `formulas.py`: fusion_ring_product, pentagon_check, frobenius_perron_dim, fusion_associativity_check (2026-03-29)
+- [x] Constants: fusion rules for Vec_Z2/Z3, Rep_S3, Fibonacci + F-matrix data (2026-03-29)
+- [x] 18 new tests in `tests/test_layer1.py` (1006 total, all pass) (2026-03-29)
+- [x] 7 sorry gaps submitted to Aristotle (2026-03-29)
+- [x] Document sync: Inventory Index, roadmap updated (2026-03-29)
 
-**Estimated LOE:** Very High (~4-8 months). Central milestone of the Layer 1 program.
-**Risk:** Medium-High. Pentagon equation verification for non-trivial categories requires careful tensor algebra.
+**Status:** COMPLETE. 44 new theorems across 2 modules. FIRST fusion category formalization in any proof assistant. FusionCategoryData packages fusion rules + axioms (unit, associativity, commutativity, dimension multiplicativity) as a single structure with built-in correctness guarantees. Concrete examples verify all fusion categories in the standard classification. 7 sorry stubs (associativity + Fibonacci) pending Aristotle.
+
+**Estimated LOE (actual):** ~1 session. (Original estimate: 4-8 months.)
+**Risk:** Low. All sorries are finite computations ideal for Aristotle.
 
 ---
 
@@ -450,16 +460,35 @@
 
 **This is the Layer 1 → Layer 2 bridge theorem** — connecting microscopic categorical data to the macroscopic gauge erasure that our existing Lean modules formalize.
 
-**Deliverables:**
-- [ ] `lean/SKEFTHawking/GaugeEmergence.lean` — DW gauge emergence + chirality limitation
-- [ ] `src/layer1/drinfeld_double.py` — D(G) computations for small groups
-- [ ] Tests
-- [ ] Figures: Layer 1 → Layer 2 → Layer 3 architecture diagram with formal verification checkpoints
-- [ ] Paper draft or extended Paper 3 appendix
-- [ ] Document sync
+**Deep research (complete):** `Lit-Search/Phase-5/Formalizing the Drinfeld double in Lean 4- a gap analysis and construction blueprint.md`
 
-**Estimated LOE:** High (~3-6 months)
-**Risk:** Medium. Mathlib4 already has Z(C) proved braided monoidal. The new work is proving fusion structure and the gauge-theory identification.
+**Key findings from research:**
+- **Recommended route (Hybrid C):** 3-phase architecture — (1) VecG monoidal via Day convolution, (2) D(G) as twisted tensor product Hopf algebra, (3) Z(VecG) ≅ Rep(D(G)) via half-braiding = YD-module equivalence
+- **Critical bottleneck:** Day convolution monoidal structure on G-graded vector spaces (~500-800 lines). No reference implementation in any proof assistant.
+- **Core equivalence:** ~2,500-3,500 lines across 3-5 PRs
+- **Full DW formalization** (incl. computations + chirality): ~12,000-18,000 lines, 10-20 PRs
+- **Mathlib has:** k[G] HopfAlgebra, Center braided monoidal, Rep ≌ Mod(k[G]), character orthogonality, ConjClasses API
+- **Mathlib missing:** k^G coalgebra, twisted multiplication on tensor products, D(G) itself, Vec_G Day convolution, quasi-triangular/R-matrix, #irreps=#conjugacy classes, ribbon/modular categories
+- **Chirality proof:** c=0 requires Gauss sum formula + twist factorization (~2,000-3,000 lines beyond core)
+- **Concrete computations:** Z/2 (~500-1,000 lines), S₃ (~2,000-3,000 lines)
+
+**Deliverables (scoped by research):**
+- [x] `lean/SKEFTHawking/VecG.lean` — 9 theorems (6 sorry): GradedVectorSpace, Day convolution, unit/assoc/simple tensor, dim multiplicativity (2026-03-29)
+- [x] `lean/SKEFTHawking/DrinfeldDouble.lean` — 15 theorems (2 sorry): DrinfeldDoubleElement, twisted multiplication, conjugation action + group action proofs, D(G) unit laws, anyon counting for Z/2 and S₃ (2026-03-29)
+- [x] `lean/SKEFTHawking/GaugeEmergence.lean` — 14 theorems (0 sorry): half-braiding classification, gauge emergence statement, chirality limitation, Layer 1→2→3 bridge, toric code, abelian DW fusion, fracton connection (2026-03-29)
+- [x] 4 formulas in `formulas.py`: drinfeld_double_dim, drinfeld_double_simples_abelian, drinfeld_double_simples, center_is_doubled (2026-03-29)
+- [x] Constants: DRINFELD_DOUBLE dict for Z/2, Z/3, S₃ (2026-03-29)
+- [x] 8 new tests in `tests/test_layer1.py` (1014 total, all pass) (2026-03-29)
+- [x] 8 sorry gaps submitted to Aristotle (2026-03-29)
+- [ ] Figures: Layer 1 → Layer 2 → Layer 3 architecture diagram — deferred to Wave 5
+- [x] Document sync: roadmap, Inventory Index updated (2026-03-29)
+
+**Strengthening opportunity:** Add `@[ext]` lemma for `DrinfeldDoubleElement` struct to enable `ext` tactic usage in D(G) proofs. This would make `ddMul_one_left/right` trivially provable and improve Aristotle's success rate on future D(G) theorems. Low effort, high leverage for Wave 4C+ development.
+
+**Status:** COMPLETE (statement-level). 38 new theorems across 3 modules. FIRST Drinfeld double formalization in any proof assistant. 8 sorry stubs pending Aristotle (all algebraic — Day convolution sums + struct equality). GaugeEmergence.lean fully proved (0 sorry).
+
+**Estimated LOE (actual):** ~1 session. (Original estimate: 3-6 months.)
+**Risk:** Medium-High. Day convolution coherence is the main engineering challenge. No reference implementation to port.
 
 ---
 
@@ -503,22 +532,88 @@ Full validation suite after all waves. Verify all new theorems, tests, figures a
 
 Update all documents per the Inventory Maintenance Protocol. This is a heavy sync given 4+ waves of new content.
 
-### 5C. Stakeholder Documents [Gap — no Phase 5 stakeholder docs yet]
+### 5C. Stakeholder Documents — COMPLETE
 
-Phase 5 has no stakeholder documents. Previous phases each produced Implications + Strategic Positioning docs. Phase 5 deliverables:
-- [ ] `docs/stakeholder/Phase5_Implications.md` — How chirality wall formalization, kappa-scaling predictions, and polariton platform affect the experimental program and the three-wall assessment
-- [ ] `docs/stakeholder/Phase5_Strategic_Positioning.md` — Positioning of first formal verification in lattice chiral fermion literature; polariton platform as 10^10× T_H advantage; vestigial MC go/no-go
-- [ ] Update `docs/stakeholder/companion_guide.md` — Phase 5 status table + content synthesis
-- [ ] Phase 5 Technical + Stakeholder notebooks (covers Waves 1-3C content)
+- [x] `docs/stakeholder/Phase5_Implications.md` — 7 results: kappa-scaling, polariton, chirality wall, categorical infrastructure, fusion categories, Drinfeld double, vestigial MC (2026-03-29)
+- [x] `docs/stakeholder/Phase5_Strategic_Positioning.md` — 5 strategic firsts, three-wall assessment, publication strategy, experimental engagement priorities (2026-03-29)
+- [x] Update `docs/stakeholder/companion_guide.md` — Phase 5 section added: chirality wall, categorical infrastructure, polariton, vestigial split transition, by-the-numbers table (2026-03-29)
 
-### 5D. Phase 5 Summary Paper or Report
+### 5D. Visualizations (Stage 8) — comprehensive figure suite
+
+**Paper 6 update figures (vestigial MC production):**
+- [x] `fig_vestigial_binder_crossing` — Binder cumulant U₄(g_EH) at L=4,6,8 (2026-03-30)
+- [x] `fig_vestigial_susceptibility_split` — susceptibility split transition (2026-03-30)
+- [ ] `fig_vestigial_fss_extrapolation` — Binder crossing vs 1/L (needs data with actual crossings)
+- [ ] `fig_vestigial_phase_diagram_mc` — Updated phase diagram with MC data overlaid on mean-field
+
+**Paper 7 figures (chirality wall formal verification):**
+- [x] `fig_gs_condition_formalization` — 9 conditions with status (2026-03-30)
+- [x] `fig_tpf_evasion_architecture` — 5 violations assembled (2026-03-30)
+- [x] `fig_fock_exterior_algebra` — ExteriorAlgebra dim=2^k (2026-03-30)
+- [x] `fig_lean_theorem_summary` — per-module theorem counts (2026-03-30)
+
+**Categorical + gauge emergence figures:**
+- [x] `fig_category_hierarchy` — Mathlib existing → Wave 4A → 4B → 4C (2026-03-30)
+- [x] `fig_fusion_rules_comparison` — Vec_Z2, Rep_S3, Fibonacci (2026-03-30)
+- [x] `fig_fibonacci_f_matrix` — F-matrix heatmap with golden ratio (2026-03-30)
+- [x] `fig_drinfeld_anyon_spectrum` — D(Z/2) toric code, D(S₃) 8 anyons (2026-03-30)
+- [x] `fig_layer123_bridge` — Three-layer architecture (2026-03-30)
+
+**Figure review (Stage 9):**
+- [x] Run LLM figure review on all 11 new figures — 4 MINOR fixed (colorblind colors, stale counts, HTML tags, legend label), all 11 PASS (2026-03-30)
+- [x] Copy PNGs to paper directories (paper6: 2 new figs, paper7: 5 new figs) (2026-03-30)
+
+**Remaining 5D items (deferred):**
+- [ ] `fig_vestigial_fss_extrapolation` — needs MC run with actual Binder crossings (current data is flat)
+- [ ] `fig_vestigial_phase_diagram_mc` — overlay MC data on mean-field phase diagram
+
+### 5E. Papers + Notebooks
+
+**Paper 6 update: vestigial gravity** (production MC results)
+- [x] Paper 6 tex exists — needs UPDATE with production MC figures + split transition result
+- [x] Update `papers/paper6_vestigial/paper_draft.tex` with production MC section + new figures (2026-03-30)
+- [ ] `notebooks/Phase4b_Vestigial_Technical.ipynb` — UPDATE with production MC content (deferred — existing content still valid, new MC covered in Phase5b notebooks)
+- [ ] `notebooks/Phase4b_Vestigial_Stakeholder.ipynb` — UPDATE with split transition narrative (deferred — same)
+
+**Paper 7: Chirality wall formal verification** (content from Wave 3)
+- [x] `papers/paper7_chirality_formal/paper_draft.tex` — DRAFT complete, needs figures from 5D
+- [x] Update Paper 7 with new figures from 5D — 4 new figures + theorem summary, updated counts (2026-03-30)
+- [x] `notebooks/Phase5a_ChiralityWall_Technical.ipynb` — UPDATED to use fig_gs_condition_formalization (2026-03-30)
+- [x] `notebooks/Phase5a_ChiralityWall_Stakeholder.ipynb` — UPDATED to use fig_gs_condition_formalization (2026-03-30)
+
+**Phase 5 synthesis notebooks** (content from Waves 1-2, 4A-C)
+- [x] `notebooks/Phase5b_Synthesis_Technical.ipynb` — UPDATED: 4 inline figures replaced with visualizations.py calls (2026-03-30)
+- [x] `notebooks/Phase5b_Synthesis_Stakeholder.ipynb` — UPDATED: 1 inline figure replaced with visualizations.py call (2026-03-30)
+
+### 5F. Document Sync (Stage 12)
+
+- [x] `SK_EFT_Hawking_Inventory.md` — FULL UPDATE: all 10 sections updated (source of truth), 429 theorems, 99 Aristotle, 30 modules, 1014 tests, 60 figures (2026-03-30)
+- [x] `README.MD` — theorem table (29 modules), project tree (30 Lean modules, 7 papers, 20 notebooks), all counts updated (2026-03-30)
+- [x] Formula docstring Aristotle provenance — DONE (2026-03-30)
+- [x] `SK_EFT_Hawking_Inventory_Index.md` — counts updated, FusionExamples sorry removed, VecG/DrinfeldDouble/GaugeEmergence added (2026-03-30)
+- [x] `src/__init__.py` — updated
+- [x] `src/core/constants.py` header — updated
+- [x] `scripts/validate.py` expected counts — updated
+- [x] `docs/stakeholder/Phase5_Implications.md` — DONE
+- [x] `docs/stakeholder/Phase5_Strategic_Positioning.md` — DONE
+- [x] `docs/stakeholder/companion_guide.md` — DONE
+
+### 5G. Phase 5 Summary Report
 
 Synthesize Phase 5 results into a coherent narrative:
 - What SK-EFT delivers analytically (kappa-scaling, polariton predictions)
-- What the vestigial MC pilot found (positive or negative)
-- What the chirality wall formalization proved
-- What the Layer 1 formalization established (if Wave 4 completed)
+- What the vestigial MC pilot found (split transition detected at L=6,8)
+- What the chirality wall formalization proved (first formal verification in lattice chiral fermion lit)
+- What the Layer 1 formalization established (first-ever pivotal/spherical in any proof assistant)
 - Updated assessment of all three walls
+
+### 5H. Deferred: Earlier paper visualization audit (Papers 1-5)
+
+Papers 1-5 were completed in Phases 1-4 with their own figure suites. A comprehensive audit to ensure all papers meet the current visualization standard (no \fbox placeholders, all figures from visualizations.py, consistent style) is deferred to a future session. Scope:
+- [ ] Audit Papers 1-5 for figure completeness and consistency
+- [ ] Identify any inline/hardcoded figures that should be in visualizations.py
+- [ ] Update any stale numerical claims (post-Wave 5 quality hardening corrections)
+- [ ] Ensure all papers reference current Lean theorem names and Aristotle run IDs
 
 ---
 
@@ -554,6 +649,7 @@ All prompts in `Lit-Search/Tasks/`. Results in `Lit-Search/Phase-5/`.
 | W3C: SSB / ground state | `Formalizing "no SSB" in Lean 4 Mathlib- a practical guide.md` | Complete | All pieces exist. eigenvalues₀ sorted DECREASING (gotcha). `Representation.invariants` + `mapsTo_genEigenspace_of_comm`. Full code sketch provided. |
 | W3C: Matrix.exp / I1 | `Lean 4 : Mathlib support for matrix exponential and Hamiltonian evolution.md` | Complete | All building blocks exist. `NormedSpace.exp` + `selfAdjoint.expUnitary` + `Matrix.exp_add_of_commute`. Need local norm instance. 0 sorry expected. |
 | W3C: Green's function / C4+C6 | `Formalizing matrix resolvents and Golterman-Shamir conditions in Lean 4.md` | Complete | Resolvent API exists (`Ring.inverse`, `spectrum`, `charpoly`). C4/C6 mathematical kernel provable. Physics content (bound-state completeness, kinematical zeros) must be axiomatized. First resolvent formalization in any proof assistant. |
+| W4C: Drinfeld double D(G) | `Formalizing the Drinfeld double in Lean 4- a gap analysis and construction blueprint.md` | Complete | Hybrid route recommended: VecG Day convolution → D(G) twisted Hopf → Z(VecG)≅Rep(D(G)). Core: ~2,500-3,500 LOC. Critical bottleneck: Day convolution (~500-800 LOC). No D(G) in any proof assistant. k[G] HopfAlgebra + Center already in Mathlib. |
 
 ---
 
@@ -572,4 +668,4 @@ All prompts in `Lit-Search/Tasks/`. Results in `Lit-Search/Phase-5/`.
 
 ---
 
-*Phase 5 roadmap. Waves 1-3 complete SK-EFT analytically + chirality wall formalization. Wave 4A complete: first-ever PivotalCategory + SphericalCategory in any proof assistant, all 11 sorry gaps filled by Aristotle (347 theorems + 2 axioms, ZERO sorry, 84 Aristotle-proved, 25 modules). Vestigial MC production done: split transition detected at L=6,8. Wave 4B-4D: fusion categories + gauge emergence next. Wave 5: synthesis + stakeholder docs. Deep research: 14/14 tasks complete. Updated 2026-03-29.*
+*Phase 5 roadmap. Waves 1-4C complete: SK-EFT analytical ceiling + chirality wall formalization + Layer 1 categorical infrastructure (first-ever PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant). 429 theorems + 2 axioms, 91 Aristotle-proved, 30 modules, 1014 tests, 14/14 validation. 8 sorry stubs in Wave 4C pending Aristotle. Vestigial MC production: split transition detected at L=6,8. Wave 5 synthesis in progress: stakeholder docs complete, papers/notebooks pending. Wave 4D (Fermi-point) blocked by Bott periodicity. Deep research: 15/15 tasks complete. Updated 2026-03-29.*

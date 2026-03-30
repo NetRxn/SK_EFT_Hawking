@@ -23,6 +23,11 @@ import SKEFTHawking.GoltermanShamir
 import SKEFTHawking.TPFEvasion
 import SKEFTHawking.KLinearCategory
 import SKEFTHawking.SphericalCategory
+import SKEFTHawking.FusionCategory
+import SKEFTHawking.FusionExamples
+import SKEFTHawking.VecG
+import SKEFTHawking.DrinfeldDouble
+import SKEFTHawking.GaugeEmergence
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -24,6 +24,14 @@ from src.core.formulas import (
     fusion_multiplicity,
     categorical_trace,
     pivotal_indicator,
+    fusion_ring_product,
+    pentagon_check,
+    frobenius_perron_dim,
+    fusion_associativity_check,
+    drinfeld_double_dim,
+    drinfeld_double_simples_abelian,
+    drinfeld_double_simples,
+    center_is_doubled,
 )
 
 
@@ -232,6 +240,114 @@ class TestGoldenRatioIdentity:
         """1² + φ² = 2 + φ"""
         phi = (1 + math.sqrt(5)) / 2
         assert abs(1 + phi**2 - (2 + phi)) < 1e-10
+
+
+class TestFusionRules:
+    """Test fusion rules and associativity for all examples."""
+
+    @pytest.mark.parametrize("name", ['Vec_Z2', 'Vec_Z3', 'Rep_S3', 'Fibonacci'])
+    def test_associativity(self, name):
+        ex = FUSION_EXAMPLES[name]
+        N = ex['fusion_rules']
+        n = ex['n_simples']
+        assert fusion_associativity_check(N, n)
+
+    @pytest.mark.parametrize("name", ['Vec_Z2', 'Vec_Z3', 'Rep_S3', 'Fibonacci'])
+    def test_unit_fusion(self, name):
+        """N^k_{0,j} = δ_{kj} (unit is index 0)."""
+        ex = FUSION_EXAMPLES[name]
+        N = ex['fusion_rules']
+        n = ex['n_simples']
+        for j in range(n):
+            for k in range(n):
+                expected = 1 if k == j else 0
+                assert N[k][0][j] == expected, f"{name}: N[{k}][0][{j}] = {N[k][0][j]} != {expected}"
+
+
+class TestFrobeniusPerronDim:
+    """Test FP dimensions match quantum dimensions."""
+
+    @pytest.mark.parametrize("name", ['Vec_Z2', 'Vec_Z3', 'Rep_S3', 'Fibonacci'])
+    def test_fp_matches_quantum(self, name):
+        ex = FUSION_EXAMPLES[name]
+        N = ex['fusion_rules']
+        fp = frobenius_perron_dim(N, ex['n_simples'])
+        for i, (fp_d, q_d) in enumerate(zip(fp, ex['quantum_dims'])):
+            assert abs(fp_d - q_d) < 1e-8, f"{name} simple {i}: FP={fp_d} != QD={q_d}"
+
+
+class TestFusionRingProduct:
+    """Test fusion_ring_product formula."""
+
+    def test_fibonacci_tau_squared(self):
+        N = FUSION_EXAMPLES['Fibonacci']['fusion_rules']
+        result = fusion_ring_product(N, 1, 1)  # τ⊗τ
+        assert result == [1, 1]  # 1 ⊕ τ
+
+    def test_rep_s3_std_squared(self):
+        N = FUSION_EXAMPLES['Rep_S3']['fusion_rules']
+        result = fusion_ring_product(N, 2, 2)  # std⊗std
+        assert result == [1, 1, 1]  # triv ⊕ sign ⊕ std
+
+
+class TestFibonacciPentagon:
+    """Test Fibonacci F-matrix satisfies pentagon constraints."""
+
+    def test_F_unitary(self):
+        F = FUSION_EXAMPLES['Fibonacci']['F_matrix_tau']
+        assert pentagon_check(F, 0, 0, 0, 0, 2)
+
+    def test_F_determinant(self):
+        """det(F) = -1 for the Fibonacci F-matrix."""
+        import numpy as np
+        F = FUSION_EXAMPLES['Fibonacci']['F_matrix_tau']
+        assert abs(np.linalg.det(F) - (-1)) < 1e-10
+
+
+class TestFusionAssociativityCheck:
+    """Test the fusion_associativity_check formula."""
+
+    def test_trivial(self):
+        N = [[[1]]]
+        assert fusion_associativity_check(N, 1)
+
+    def test_z2(self):
+        N = FUSION_EXAMPLES['Vec_Z2']['fusion_rules']
+        assert fusion_associativity_check(N, 2)
+
+
+class TestDrinfeldDouble:
+    """Test Drinfeld double formulas and constants."""
+
+    def test_dd_dim_Z2(self):
+        assert drinfeld_double_dim(2) == 4
+
+    def test_dd_dim_S3(self):
+        assert drinfeld_double_dim(6) == 36
+
+    def test_dd_simples_abelian_Z2(self):
+        assert drinfeld_double_simples_abelian(2) == 4
+
+    def test_dd_simples_abelian_Z3(self):
+        assert drinfeld_double_simples_abelian(3) == 9
+
+    def test_dd_simples_S3(self):
+        assert drinfeld_double_simples(3, [3, 2, 3]) == 8
+
+    def test_center_doubled(self):
+        for n in [2, 3, 6, 12]:
+            assert center_is_doubled(n) is True
+
+    def test_dd_constants_Z2(self):
+        from src.core.constants import DRINFELD_DOUBLE
+        dd = DRINFELD_DOUBLE['Z2']
+        assert dd['n_simples'] == dd['group_order'] ** 2
+
+    def test_dd_constants_S3(self):
+        from src.core.constants import DRINFELD_DOUBLE
+        dd = DRINFELD_DOUBLE['S3']
+        assert dd['n_simples'] == sum(dd['irreps_per_class'])
+        assert dd['dim_D'] == dd['group_order'] ** 2
 
 
 class TestLeanModuleStructure:

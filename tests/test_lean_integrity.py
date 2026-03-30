@@ -117,7 +117,7 @@ def test_no_active_sorry():
     Files in SORRY_ALLOWED are awaiting Aristotle proof-filling and are
     expected to contain sorry stubs. Remove from this set as proofs are filled.
     """
-    # All sorry gaps filled by Aristotle as of run_20260329_094416
+    # All sorry gaps filled by Aristotle
     SORRY_ALLOWED = set()
 
     lean_dir = LEAN_DIR / "SKEFTHawking"

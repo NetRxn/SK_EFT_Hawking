@@ -1,0 +1,27 @@
+SK-EFT Hawking Validation Report
+Generated: 20260330T124129Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] viz_consistency
+  + Phase1_Stakeholder.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase1_Technical.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase2_Stakeholder.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase2_Technical.ipynb — WARN: 9 untagged .show() call(s)
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — clean
+  + Phase3a_ThirdOrder_Technical.ipynb — clean
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — clean
+  + Phase3b_GaugeErasure_Technical.ipynb — clean
+  + Phase3c_WKBConnection_Stakeholder.ipynb — clean
+  + Phase3c_WKBConnection_Technical.ipynb — clean
+  + Phase3d_ADW_Stakeholder.ipynb — clean
+  + Phase3d_ADW_Technical.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — clean
+  + Phase4b_Vestigial_Stakeholder.ipynb — WARN: 2 untagged .show() call(s)
+  + Phase4b_Vestigial_Technical.ipynb — WARN: 4 untagged .show() call(s)
+  + Phase5a_ChiralityWall_Stakeholder.ipynb — WARN: cell 10: viz-ref 'fig39_chirality_wall_status' not found in visualizations.py
+  + Phase5a_ChiralityWall_Technical.ipynb — WARN: cell 17: viz-ref 'fig39_chirality_wall_status' not found in visualizations.py
+  + Phase5b_Synthesis_Stakeholder.ipynb — clean
+  + Phase5b_Synthesis_Technical.ipynb — clean
+
+Overall: 1/1 passed

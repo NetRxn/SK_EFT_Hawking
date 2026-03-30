@@ -564,6 +564,84 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["Steinhauer", "Trento"],
     ),
+    # Phase 5 Wave 5D — comprehensive figure suite
+    FigureSpec(
+        name="fig51_vestigial_binder_crossing",
+        function="fig_vestigial_binder_crossing",
+        caption="Vestigial MC Binder cumulants at L=4,6,8.",
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "g"}, physics_checks=[], color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig52_vestigial_susceptibility_split",
+        function="fig_vestigial_susceptibility_split",
+        caption="Split transition: susceptibility peaks at different couplings.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Heidelberg"],
+    ),
+    FigureSpec(
+        name="fig53_gs_condition_formalization",
+        function="fig_gs_condition_formalization",
+        caption="GS no-go conditions: formalization status and TPF violation.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
+    FigureSpec(
+        name="fig54_lean_theorem_summary",
+        function="fig_lean_theorem_summary",
+        caption="Phase 5 Lean verification: manual vs Aristotle proofs per module.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Trento"],
+    ),
+    FigureSpec(
+        name="fig55_category_hierarchy",
+        function="fig_category_hierarchy",
+        caption="Categorical infrastructure: Mathlib existing vs new.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig56_fusion_rules_comparison",
+        function="fig_fusion_rules_comparison",
+        caption="Fusion rules: total multiplicity for Vec_Z2, Rep_S3, Fibonacci.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
+    FigureSpec(
+        name="fig57_fibonacci_f_matrix",
+        function="fig_fibonacci_f_matrix",
+        caption="Fibonacci F-matrix with golden ratio entries.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
+    FigureSpec(
+        name="fig58_drinfeld_anyon_spectrum",
+        function="fig_drinfeld_anyon_spectrum",
+        caption="Drinfeld double anyon spectrum and algebra dimension.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig59_layer123_bridge",
+        function="fig_layer123_bridge",
+        caption="Three-layer architecture with formal verification at each level.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Heidelberg", "Trento"],
+    ),
+    FigureSpec(
+        name="fig60_tpf_evasion_architecture",
+        function="fig_tpf_evasion_architecture",
+        caption="TPF evasion: 5 GS conditions violated.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
+    FigureSpec(
+        name="fig61_fock_exterior_algebra",
+        function="fig_fock_exterior_algebra",
+        caption="Fermionic Fock space dimension: ExteriorAlgebra dim = 2^k.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Trento"],
+    ),
 ]
 
 
@@ -610,6 +688,18 @@ def generate_figures() -> dict[str, Path]:
         # Phase 5 Wave 2B
         fig_fermion_bag_4d_binder,
         fig_fermion_bag_4d_phase_diagram,
+        # Phase 5 Wave 5D
+        fig_vestigial_binder_crossing,
+        fig_vestigial_susceptibility_split,
+        fig_gs_condition_formalization,
+        fig_lean_theorem_summary,
+        fig_category_hierarchy,
+        fig_fusion_rules_comparison,
+        fig_fibonacci_f_matrix,
+        fig_drinfeld_anyon_spectrum,
+        fig_layer123_bridge,
+        fig_tpf_evasion_architecture,
+        fig_fock_exterior_algebra,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -688,6 +778,18 @@ def generate_figures() -> dict[str, Path]:
         # Phase 5 Wave 2B
         "fig_fermion_bag_4d_binder": fig_fermion_bag_4d_binder,
         "fig_fermion_bag_4d_phase_diagram": fig_fermion_bag_4d_phase_diagram,
+        # Phase 5 Wave 5D
+        "fig_vestigial_binder_crossing": fig_vestigial_binder_crossing,
+        "fig_vestigial_susceptibility_split": fig_vestigial_susceptibility_split,
+        "fig_gs_condition_formalization": fig_gs_condition_formalization,
+        "fig_lean_theorem_summary": fig_lean_theorem_summary,
+        "fig_category_hierarchy": fig_category_hierarchy,
+        "fig_fusion_rules_comparison": fig_fusion_rules_comparison,
+        "fig_fibonacci_f_matrix": fig_fibonacci_f_matrix,
+        "fig_drinfeld_anyon_spectrum": fig_drinfeld_anyon_spectrum,
+        "fig_layer123_bridge": fig_layer123_bridge,
+        "fig_tpf_evasion_architecture": fig_tpf_evasion_architecture,
+        "fig_fock_exterior_algebra": fig_fock_exterior_algebra,
     }
 
     paths = {}
@@ -767,6 +869,18 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 5 Wave 2B
         fig_fermion_bag_4d_binder,
         fig_fermion_bag_4d_phase_diagram,
+        # Phase 5 Wave 5D — comprehensive figure suite
+        fig_vestigial_binder_crossing,
+        fig_vestigial_susceptibility_split,
+        fig_gs_condition_formalization,
+        fig_lean_theorem_summary,
+        fig_category_hierarchy,
+        fig_fusion_rules_comparison,
+        fig_fibonacci_f_matrix,
+        fig_drinfeld_anyon_spectrum,
+        fig_layer123_bridge,
+        fig_tpf_evasion_architecture,
+        fig_fock_exterior_algebra,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -843,6 +957,18 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 5 Wave 2B
         "fig_fermion_bag_4d_binder": fig_fermion_bag_4d_binder,
         "fig_fermion_bag_4d_phase_diagram": fig_fermion_bag_4d_phase_diagram,
+        # Phase 5 Wave 5D — comprehensive figure suite
+        "fig_vestigial_binder_crossing": fig_vestigial_binder_crossing,
+        "fig_vestigial_susceptibility_split": fig_vestigial_susceptibility_split,
+        "fig_gs_condition_formalization": fig_gs_condition_formalization,
+        "fig_lean_theorem_summary": fig_lean_theorem_summary,
+        "fig_category_hierarchy": fig_category_hierarchy,
+        "fig_fusion_rules_comparison": fig_fusion_rules_comparison,
+        "fig_fibonacci_f_matrix": fig_fibonacci_f_matrix,
+        "fig_drinfeld_anyon_spectrum": fig_drinfeld_anyon_spectrum,
+        "fig_layer123_bridge": fig_layer123_bridge,
+        "fig_tpf_evasion_architecture": fig_tpf_evasion_architecture,
+        "fig_fock_exterior_algebra": fig_fock_exterior_algebra,
     }
 
     issues: list[CheckIssue] = []

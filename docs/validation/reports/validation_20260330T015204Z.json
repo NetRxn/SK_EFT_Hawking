@@ -1,0 +1,893 @@
+{
+  "timestamp": "20260330T015204Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "formulas": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "count_coefficients",
+          "passed": true,
+          "message": "Refs: secondOrder_count, secondOrder_count_with_parity, thirdOrder_count",
+          "warning": false
+        },
+        {
+          "name": "enumerate_monomials",
+          "passed": true,
+          "message": "Refs: secondOrder_count_with_parity, secondOrder_requires_parity_breaking",
+          "warning": false
+        },
+        {
+          "name": "damping_rate",
+          "passed": true,
+          "message": "Refs: dampingRate_eq_zero_iff",
+          "warning": false
+        },
+        {
+          "name": "dispersive_correction",
+          "passed": true,
+          "message": "Refs: dispersive_correction_bound, bogoliubov_superluminal",
+          "warning": false
+        },
+        {
+          "name": "first_order_correction",
+          "passed": true,
+          "message": "Refs: firstOrder_correction_zero_iff",
+          "warning": false
+        },
+        {
+          "name": "effective_temperature_ratio",
+          "passed": true,
+          "message": "Refs: effective_temp_zeroth_order",
+          "warning": false
+        },
+        {
+          "name": "turning_point_shift",
+          "passed": true,
+          "message": "Refs: turning_point_shift_nonzero, turning_point_shift",
+          "warning": false
+        }
+      ]
+    },
+    "numerical": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Steinhauer.c_s",
+          "passed": 1.0,
+          "message": "expected=1.151e-03, actual=1.151e-03, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.xi",
+          "passed": 1.0,
+          "message": "expected=6.350e-07, actual=6.349e-07, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.kappa",
+          "passed": 1.0,
+          "message": "expected=2.190e+01, actual=2.190e+01, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.T_H",
+          "passed": 1.0,
+          "message": "expected=2.660e-11, actual=2.663e-11, err=0.1%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.c_s",
+          "passed": 1.0,
+          "message": "expected=3.919e-03, actual=3.919e-03, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.xi",
+          "passed": 1.0,
+          "message": "expected=4.160e-07, actual=4.159e-07, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.kappa",
+          "passed": 1.0,
+          "message": "expected=1.019e+02, actual=1.019e+02, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.T_H",
+          "passed": 1.0,
+          "message": "expected=1.240e-10, actual=1.239e-10, err=0.1%",
+          "warning": false
+        },
+        {
+          "name": "Trento.c_s",
+          "passed": 1.0,
+          "message": "expected=2.185e-03, actual=2.185e-03, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Trento.xi",
+          "passed": 1.0,
+          "message": "expected=1.264e-06, actual=1.264e-06, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Trento.kappa",
+          "passed": 1.0,
+          "message": "expected=2.140e+01, actual=2.141e+01, err=0.0%",
+          "warning": false
+        },
+        {
+          "name": "Trento.T_H",
+          "passed": 1.0,
+          "message": "expected=2.600e-11, actual=2.602e-11, err=0.1%",
+          "warning": false
+        }
+      ]
+    },
+    "identities": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "count(1)==2",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "count(2)==2",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "count(3)==3",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "disp(0)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "1st_order(0,kappa)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "Gamma(k,w,cs,0,0,0,0)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "delta2_acoustic_vanishes",
+          "passed": true,
+          "message": "value=0.000e+00",
+          "warning": false
+        }
+      ]
+    },
+    "paper_table": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Steinhauer.c_s",
+          "passed": 1.0,
+          "message": "paper=1.151e-03, code=1.151e-03",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.xi",
+          "passed": 1.0,
+          "message": "paper=6.350e-07, code=6.349e-07",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.kappa",
+          "passed": 1.0,
+          "message": "paper=2.190e+01, code=2.190e+01",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.T_H",
+          "passed": 1.0,
+          "message": "paper=2.700e-11, code=2.663e-11",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.c_s",
+          "passed": 1.0,
+          "message": "paper=3.919e-03, code=3.919e-03",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.xi",
+          "passed": 1.0,
+          "message": "paper=4.160e-07, code=4.159e-07",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.kappa",
+          "passed": 1.0,
+          "message": "paper=1.019e+02, code=1.019e+02",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.T_H",
+          "passed": 1.0,
+          "message": "paper=1.240e-10, code=1.239e-10",
+          "warning": false
+        },
+        {
+          "name": "Trento.c_s",
+          "passed": 1.0,
+          "message": "paper=2.185e-03, code=2.185e-03",
+          "warning": false
+        },
+        {
+          "name": "Trento.xi",
+          "passed": 1.0,
+          "message": "paper=1.264e-06, code=1.264e-06",
+          "warning": false
+        },
+        {
+          "name": "Trento.kappa",
+          "passed": 1.0,
+          "message": "paper=2.140e+01, code=2.141e+01",
+          "warning": false
+        },
+        {
+          "name": "Trento.T_H",
+          "passed": 1.0,
+          "message": "paper=2.600e-11, code=2.602e-11",
+          "warning": false
+        }
+      ]
+    },
+    "theorems": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "TOTAL_THEOREMS",
+          "passed": true,
+          "message": "actual=84, expected=84",
+          "warning": false
+        },
+        {
+          "name": "len(ARISTOTLE_THEOREMS)",
+          "passed": true,
+          "message": "actual=84, expected=84",
+          "warning": false
+        },
+        {
+          "name": "consistency",
+          "passed": true,
+          "message": "TOTAL=84, dict=84",
+          "warning": false
+        }
+      ]
+    },
+    "notebooks": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        }
+      ]
+    },
+    "lean_source": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "dampingRate_eq_zero_iff",
+          "passed": true,
+          "message": "Lean ident 'dampingRate_eq_zero_iff' found",
+          "warning": false
+        },
+        {
+          "name": "dispersive_bound",
+          "passed": true,
+          "message": "Lean ident 'dispersive_correction_bound' found",
+          "warning": false
+        },
+        {
+          "name": "firstOrder_correction_zero_iff",
+          "passed": true,
+          "message": "Lean ident 'firstOrder_correction_zero_iff' found",
+          "warning": false
+        },
+        {
+          "name": "acoustic_metric_determinant",
+          "passed": true,
+          "message": "Lean ident 'acousticMetric_det' found",
+          "warning": false
+        },
+        {
+          "name": "secondOrder_count",
+          "passed": true,
+          "message": "Lean ident 'secondOrder_count' found",
+          "warning": false
+        },
+        {
+          "name": "fracton_exceeds_standard_general",
+          "passed": true,
+          "message": "Lean ident 'fracton_exceeds_standard_general' found",
+          "warning": false
+        },
+        {
+          "name": "binomial_strict_mono",
+          "passed": true,
+          "message": "Lean ident 'binomial_strict_mono' found",
+          "warning": false
+        },
+        {
+          "name": "dof_gap_positive_2_through_8",
+          "passed": true,
+          "message": "Lean ident 'dof_gap_positive_2_through_8' found",
+          "warning": false
+        },
+        {
+          "name": "evading_one_breaks_nogo",
+          "passed": true,
+          "message": "Lean ident 'evading_one_breaks_nogo' found",
+          "warning": false
+        },
+        {
+          "name": "ep_distinguishes_phases",
+          "passed": true,
+          "message": "Lean ident 'ep_distinguishes_phases' found",
+          "warning": false
+        },
+        {
+          "name": "obstructions_individually_sufficient",
+          "passed": true,
+          "message": "Lean ident 'obstructions_individually_sufficient' found",
+          "warning": false
+        }
+      ]
+    },
+    "cgl_fdr": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "einstein_relation",
+          "passed": true,
+          "message": "\u03c3 = \u03b3/\u03b2\u2080 for Brownian particle",
+          "warning": false
+        },
+        {
+          "name": "first_order_bec",
+          "passed": true,
+          "message": "K_N = 2\u0393/\u03b2\u2080 for BEC with damping",
+          "warning": false
+        },
+        {
+          "name": "second_order_real",
+          "passed": true,
+          "message": "Second-order noise kernel is real",
+          "warning": false
+        },
+        {
+          "name": "noise_count_pattern",
+          "passed": true,
+          "message": "Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}",
+          "warning": false
+        }
+      ]
+    },
+    "lean_build": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "lake_bin",
+          "passed": true,
+          "message": "/Users/johnroehm/.elan/bin/lake",
+          "warning": false
+        },
+        {
+          "name": "lean_root",
+          "passed": true,
+          "message": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean",
+          "warning": false
+        },
+        {
+          "name": "lake_build",
+          "passed": true,
+          "message": "build succeeded (8054 jobs)",
+          "warning": false
+        }
+      ]
+    },
+    "viz_consistency": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 9 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase4b_Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 4 untagged .show() call(s)",
+          "warning": true
+        }
+      ]
+    },
+    "notebook_exec": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "13 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "16 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Stakeholder.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Technical.ipynb",
+          "passed": true,
+          "message": "12 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Technical.ipynb",
+          "passed": true,
+          "message": "14 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Technical.ipynb",
+          "passed": true,
+          "message": "11 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "4 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "13 code cells executed successfully",
+          "warning": false
+        }
+      ]
+    },
+    "physical_bounds": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "steinhauer/T_H > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/kappa > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/0 < D < 1",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/0 < delta_diss < 1",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/n_noise >= 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/shots > 10^4 (delta=7.6e-05)",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/T_H > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/kappa > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/0 < D < 1",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/0 < delta_diss < 1",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/n_noise >= 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/shots > 10^4 (delta=5.1e-05)",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/T_H > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/kappa > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/0 < D < 1",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/0 < delta_diss < 1",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/n_noise >= 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/shots > 10^4 (delta=3.5e-07)",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        }
+      ]
+    },
+    "cross_path_consistency": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "delta_diss: spectrum vs direct",
+          "passed": true,
+          "message": "spectrum=7.5991e-05, direct=7.5991e-05, rel_diff=0.0000",
+          "warning": false
+        },
+        {
+          "name": "decoherence: spectrum vs formulas",
+          "passed": true,
+          "message": "spectrum=1.5198e-04, formulas=1.5198e-04, rel_diff=0.0000",
+          "warning": false
+        }
+      ]
+    },
+    "paper_provenance": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "paper1_first_order/figures",
+          "passed": true,
+          "message": "3 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper2_second_order/figures",
+          "passed": true,
+          "message": "6 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper3_gauge_erasure/figures",
+          "passed": true,
+          "message": "2 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper4_wkb_connection/figures",
+          "passed": true,
+          "message": "3 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper5_adw_gap/figures",
+          "passed": true,
+          "message": "3 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper6_vestigial/figures",
+          "passed": true,
+          "message": "2 figure files present",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 14,
+    "passed": 14,
+    "failed": 0
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "timestamp": "20260330T124129Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "viz_consistency": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 9 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase4b_Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 4 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5a_ChiralityWall_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: cell 10: viz-ref 'fig39_chirality_wall_status' not found in visualizations.py",
+          "warning": true
+        },
+        {
+          "name": "Phase5a_ChiralityWall_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: cell 17: viz-ref 'fig39_chirality_wall_status' not found in visualizations.py",
+          "warning": true
+        },
+        {
+          "name": "Phase5b_Synthesis_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_Synthesis_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

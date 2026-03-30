@@ -367,17 +367,30 @@ CATEGORY_HIERARCHY = {
 FUSION_EXAMPLES = {
     'Vec_Z2': {
         'group': 'Z_2',
-        'n_simples': 2,          # {1, g}
+        'n_simples': 2,          # {0, 1} = {e, g}
+        'simple_labels': ['e', 'g'],
         'quantum_dims': [1, 1],  # all objects have dim 1
         'global_dim_sq': 2,      # D² = 1² + 1² = 2
         'F_symbols_trivial': True,  # all F = 1 (trivial 3-cocycle)
+        # Fusion rules N[k][i][j] = δ_{k, i+j mod 2}
+        'fusion_rules': [
+            [[1, 0], [0, 1]],  # N[0][i][j]: e appears in i⊗j
+            [[0, 1], [1, 0]],  # N[1][i][j]: g appears in i⊗j
+        ],
     },
     'Vec_Z3': {
         'group': 'Z_3',
         'n_simples': 3,
+        'simple_labels': ['e', 'g', 'g2'],
         'quantum_dims': [1, 1, 1],
         'global_dim_sq': 3,
         'F_symbols_trivial': True,
+        # N[k][i][j] = δ_{k, (i+j) mod 3}
+        'fusion_rules': [
+            [[1, 0, 0], [0, 0, 1], [0, 1, 0]],  # N[0]: 0+0=0, 1+2=0, 2+1=0
+            [[0, 1, 0], [1, 0, 0], [0, 0, 1]],  # N[1]: 0+1=1, 1+0=1, 2+2=1
+            [[0, 0, 1], [0, 1, 0], [1, 0, 0]],  # N[2]: 0+2=2, 1+1=2, 2+0=2
+        ],
     },
     'Vec_S3': {
         'group': 'S_3',
@@ -388,19 +401,43 @@ FUSION_EXAMPLES = {
     },
     'Rep_S3': {
         'group': 'S_3',
-        'n_simples': 3,          # trivial, sign, standard (2-dim)
+        'n_simples': 3,          # trivial(0), sign(1), standard(2, dim=2)
+        'simple_labels': ['triv', 'sign', 'std'],
         'quantum_dims': [1, 1, 2],
         'global_dim_sq': 6,      # 1² + 1² + 2² = 6 = |S₃|
         'F_symbols_trivial': False,
+        # Fusion rules: triv⊗X=X, sign⊗sign=triv, sign⊗std=std, std⊗std=triv⊕sign⊕std
+        'fusion_rules': [
+            [[1, 0, 0], [0, 1, 0], [0, 0, 1]],  # N[triv]: triv⊗X = X
+            [[0, 1, 0], [1, 0, 0], [0, 0, 1]],  # N[sign]: sign appears in i⊗j
+            [[0, 0, 1], [0, 0, 1], [1, 1, 1]],  # N[std]: std appears in i⊗j
+        ],
     },
     'Fibonacci': {
         'group': None,           # not a group category
-        'n_simples': 2,          # {1, τ}
+        'n_simples': 2,          # {1(=0), τ(=1)}
+        'simple_labels': ['1', 'τ'],
         'quantum_dims': [1, (1 + np.sqrt(5)) / 2],  # golden ratio φ
         'global_dim_sq': (5 + np.sqrt(5)) / 2,      # 1 + φ² = 2 + φ
         'F_symbols_trivial': False,
+        # Fusion rules: 1⊗X=X, τ⊗τ = 1⊕τ
+        'fusion_rules': [
+            [[1, 0], [0, 1]],  # N[1]: unit fusion
+            [[0, 1], [1, 1]],  # N[τ]: τ⊗τ contains both 1 and τ
+        ],
+        # F-matrix: F^{τττ}_τ is the nontrivial 2×2 block
+        # F^{τττ}_{τ} = [[φ⁻¹, φ^{-1/2}], [φ^{-1/2}, -φ⁻¹]]
+        # where φ = (1+√5)/2. Pentagon equation constrains this uniquely.
+        'F_matrix_tau': None,  # computed at import time below
     },
 }
+
+# Compute Fibonacci F-matrix (depends on φ)
+_phi = (1 + np.sqrt(5)) / 2
+FUSION_EXAMPLES['Fibonacci']['F_matrix_tau'] = np.array([
+    [1 / _phi, 1 / np.sqrt(_phi)],
+    [1 / np.sqrt(_phi), -1 / _phi],
+])
 
 # Physics connections: how string-net layers connect to existing codebase
 LAYER1_CONNECTIONS = {
@@ -408,6 +445,32 @@ LAYER1_CONNECTIONS = {
     'fracton_hydro': 'Stacked Vec_G string-nets → fracton phases via gauged 1-form symmetry',
     'fracton_nonabelian': 'Cage-net from non-Abelian Vec_G → non-Abelian fracton excitations',
     'chirality_wall': 'Z(C) doubled → intrinsic chirality limitation of string-nets',
+}
+
+# Drinfeld double data (Wave 4C — gauge emergence)
+# D(G) = k^G ⊗ k[G] with twisted multiplication.
+# Simple modules of D(G) ↔ pairs (conjugacy class K, irrep of centralizer C_G(g)).
+DRINFELD_DOUBLE = {
+    'Z2': {
+        'group_order': 2,
+        'n_conj_classes': 2,
+        'n_simples': 4,        # 2 classes × 2 irreps each (abelian: each centralizer = G)
+        'dim_D': 4,            # dim D(G) = |G|² = 4
+    },
+    'Z3': {
+        'group_order': 3,
+        'n_conj_classes': 3,
+        'n_simples': 9,        # 3 × 3 (abelian)
+        'dim_D': 9,
+    },
+    'S3': {
+        'group_order': 6,
+        'n_conj_classes': 3,   # {e}, {(12),(13),(23)}, {(123),(132)}
+        'centralizer_orders': [6, 2, 3],  # C(e)=S₃, C((12))=⟨(12)⟩, C((123))=⟨(123)⟩
+        'irreps_per_class': [3, 2, 3],    # 3 irreps of S₃, 2 of Z/2, 3 of Z/3
+        'n_simples': 8,        # 3 + 2 + 3 = 8
+        'dim_D': 36,           # |G|² = 36
+    },
 }
 
 
@@ -426,9 +489,9 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (347 theorems + 2 axioms across 25 Lean modules):
-#   - 84 proved by Aristotle automated theorem prover (listed below with run IDs)
-#   - 263 proved manually in Lean (verified by `lake build`)
+# Verification breakdown (429 theorems + 2 axioms across 30 Lean modules):
+#   - 99 proved by Aristotle automated theorem prover (listed below with run IDs)
+#   - 330 proved manually in Lean (verified by `lake build`)
 #   - 2 axioms: non_abelian_center_discrete (GaugeErasure.lean),
 #               gs_nogo_axiom (GoltermanShamir.lean)
 #
@@ -550,10 +613,31 @@ ARISTOTLE_THEOREMS = {
     'trace_zero': 'run_20260329_094416',
     'double_mate_comp': 'run_20260329_094416',
     'golden_ratio_eq': 'run_20260329_094416',
+
+    # Phase 5 Wave 4B — FusionExamples.lean (7 by Aristotle)
+    'vecZ2_assoc': 'run_20260329_205113',
+    'vecZ3_assoc': 'run_20260329_205113',
+    'repS3_assoc': 'run_20260329_205113',
+    'fib_assoc': 'run_20260329_205113',
+    'fib_F_involutory': 'run_20260329_205113',
+    'fib_is_chiral': 'run_20260329_205113',
+    'fibonacci_dim_not_integer': 'run_20260329_205113',
+
+    # Phase 5 Wave 4C — VecG.lean (6 by Aristotle)
+    'day_unit_left': 'run_20260329_211117',
+    'day_unit_right': 'run_20260329_211117',
+    'day_assoc': 'run_20260329_211117',
+    'simple_tensor': 'run_20260329_211117',
+    'day_dim_multiplicative': 'run_20260329_211117',
+    'simpleGraded_invertible': 'run_20260329_211117',
+
+    # Phase 5 Wave 4C — DrinfeldDouble.lean (2 by Aristotle)
+    'ddMul_one_left': 'run_20260329_211117',
+    'ddMul_one_right': 'run_20260329_211117',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 84, f"Expected 84 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 99, f"Expected 91 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

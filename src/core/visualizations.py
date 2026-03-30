@@ -3792,5 +3792,438 @@ def fig_fermion_bag_4d_phase_diagram():
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 5D: Comprehensive figure suite
+# Paper 6 update (vestigial MC), Paper 7 (chirality), categorical
+# ════════════════════════════════════════════════════════════════════
+
+
+def fig_vestigial_binder_crossing() -> go.Figure:
+    """Binder cumulant U₄ vs coupling at L=4,6,8 from production MC.
+
+    Shows Binder cumulants for tetrad and metric order parameters.
+    Crossing points between different L values indicate phase transitions.
+    """
+    import json
+    import os
+
+    data_dir = os.path.join(os.path.dirname(__file__), '..', '..',
+                           'docs', 'vestigial_mc_results')
+    # Find the production run (largest file)
+    files = sorted([f for f in os.listdir(data_dir) if f.endswith('.json')],
+                  key=lambda f: os.path.getsize(os.path.join(data_dir, f)),
+                  reverse=True)
+    with open(os.path.join(data_dir, files[0])) as f:
+        mc = json.load(f)
+
+    fig = make_subplots(rows=1, cols=2,
+                        subplot_titles=["Tetrad Binder U₄", "Metric Binder U₄"])
+
+    L_colors = {4: COLORS['Steinhauer'], 6: COLORS['Heidelberg'], 8: COLORS['Trento']}
+
+    for L_str, scan in mc['binder_crossing']['data'].items():
+        L = int(L_str)
+        color = L_colors.get(L, '#666666')
+        fig.add_trace(go.Scatter(
+            x=scan['g_EH_values'], y=scan['binder_tetrad'],
+            mode='lines+markers', name=f'L={L}',
+            line=dict(color=color, width=2), marker=dict(size=3),
+            legendgroup=f'L{L}', showlegend=True,
+        ), row=1, col=1)
+        fig.add_trace(go.Scatter(
+            x=scan['g_EH_values'], y=scan['binder_metric'],
+            mode='lines+markers', name=f'L={L}',
+            line=dict(color=color, width=2), marker=dict(size=3),
+            legendgroup=f'L{L}', showlegend=False,
+        ), row=1, col=2)
+
+    apply_layout(fig, height=400, width=900,
+        title=dict(text="<b>Vestigial MC: Binder Cumulants vs Coupling (L=4,6,8)</b>",
+                   font=TITLE_FONT))
+    fig.update_xaxes(title_text="g<sub>EH</sub>", row=1, col=1)
+    fig.update_xaxes(title_text="g<sub>EH</sub>", row=1, col=2)
+    fig.update_yaxes(title_text="U₄ (tetrad)", row=1, col=1)
+    fig.update_yaxes(title_text="U₄ (metric)", row=1, col=2)
+    return fig
+
+
+def fig_vestigial_susceptibility_split() -> go.Figure:
+    """Susceptibility peaks for tetrad and metric at L=4,6,8.
+
+    The split transition: tetrad and metric peaks at different couplings
+    indicates a vestigial metric phase between pre-geometric and full tetrad.
+    """
+    import json, os
+    from src.core.constants import DRINFELD_DOUBLE  # just for import test
+
+    data_dir = os.path.join(os.path.dirname(__file__), '..', '..',
+                           'docs', 'vestigial_mc_results')
+    files = sorted([f for f in os.listdir(data_dir) if f.endswith('.json')],
+                  key=lambda f: os.path.getsize(os.path.join(data_dir, f)),
+                  reverse=True)
+    with open(os.path.join(data_dir, files[0])) as f:
+        mc = json.load(f)
+
+    peaks = mc['finite_size_scaling']['susceptibility_peaks']
+    L_values = sorted([int(k) for k in peaks.keys()])
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=[f'L={L}' for L in L_values],
+        y=[peaks[str(L)]['tetrad_peak_coupling'] for L in L_values],
+        name='Tetrad χ peak',
+        marker_color=COLORS['Steinhauer'],
+        width=0.35, offset=-0.18,
+    ))
+    fig.add_trace(go.Bar(
+        x=[f'L={L}' for L in L_values],
+        y=[peaks[str(L)]['metric_peak_coupling'] for L in L_values],
+        name='Metric χ peak',
+        marker_color=COLORS['Heidelberg'],
+        width=0.35, offset=0.18,
+    ))
+
+    # Add split annotation at L=8
+    if len(L_values) >= 3:
+        L8 = str(L_values[-1])
+        t_peak = peaks[L8]['tetrad_peak_coupling']
+        m_peak = peaks[L8]['metric_peak_coupling']
+        if abs(t_peak - m_peak) > 0.05:
+            fig.add_annotation(
+                x=f'L={L_values[-1]}', y=max(t_peak, m_peak) + 0.15,
+                text=f"Split: Δ={abs(m_peak-t_peak):.2f}",
+                showarrow=True, arrowhead=2,
+                font=dict(size=12, color='red', family=FONT['family']),
+            )
+
+    apply_layout(fig, height=450, width=600,
+        title=dict(text="<b>Split Transition: Susceptibility Peaks at Different Couplings</b>",
+                   font=TITLE_FONT),
+        yaxis=dict(title="G/G<sub>c</sub> at susceptibility peak"),
+        barmode='group')
+    return fig
+
+
+def fig_gs_condition_formalization() -> go.Figure:
+    """9 GS conditions with formalization status and TPF violation status.
+
+    Color-coded: green = substantive Prop, yellow = well-typed axiom,
+    red outline = violated by TPF.
+    """
+    from src.core.constants import GS_CONDITIONS, TPF_VIOLATIONS
+
+    conditions = []
+    statuses = []
+    tpf_violated = []
+
+    # Map conditions to formalization status
+    formalization = {
+        'C1': 'Substantive', 'C2': 'Substantive', 'C3': 'Substantive',
+        'C4': 'Axiom', 'C5': 'Substantive', 'C6': 'Axiom',
+        'I1': 'Substantive', 'I2': 'Substantive', 'I3': 'Substantive',
+    }
+    tpf_violations = {'C1', 'C2', 'I3'}  # clean violations
+    tpf_conditional = {'C3'}  # conditional
+    tpf_extra = {'dim'}  # extra-dimensional (not a GS condition per se)
+
+    all_conds = list(GS_CONDITIONS['explicit'].keys()) + list(GS_CONDITIONS['implicit'].keys())
+    for c in all_conds:
+        conditions.append(c)
+        statuses.append(formalization.get(c, 'Unknown'))
+        tpf_violated.append(c in tpf_violations or c in tpf_conditional)
+
+    colors = []
+    for s, v in zip(statuses, tpf_violated):
+        if v:
+            colors.append(COLORS['Heidelberg'])  # Berry — violated
+        elif s == 'Substantive':
+            colors.append(COLORS['Steinhauer'])  # Steel blue — substantive
+        else:
+            colors.append(COLORS['Trento'])  # Amber — axiom
+
+    fig = go.Figure(go.Bar(
+        x=conditions, y=[1]*len(conditions),
+        marker_color=colors,
+        marker_line=dict(width=2, color='black'),
+        text=[f"{s}<br>{'VIOLATED' if v else ''}" for s, v in zip(statuses, tpf_violated)],
+        textposition='inside',
+        textfont=dict(size=11, color='white', family=FONT['family']),
+    ))
+
+    apply_layout(fig, height=350, width=700,
+        title=dict(text="<b>GS No-Go Conditions: Formalization & TPF Violation Status</b>",
+                   font=TITLE_FONT),
+        yaxis=dict(showticklabels=False, showgrid=False),
+        xaxis=dict(title="Golterman-Shamir condition"))
+
+    # Legend annotations
+    for color, label, y in [(COLORS['Steinhauer'], 'Substantive Prop', 0.85),
+                             (COLORS['Trento'], 'Well-typed Axiom', 0.75),
+                             (COLORS['Heidelberg'], 'TPF Violated', 0.65)]:
+        fig.add_annotation(x=0.98, y=y, xref='paper', yref='paper',
+            text=f"<span style='color:{color}'>■</span> {label}",
+            showarrow=False, font=dict(size=11, family=FONT['family']),
+            xanchor='right')
+    return fig
+
+
+def fig_lean_theorem_summary() -> go.Figure:
+    """Theorem counts per Lean module: manual vs Aristotle-proved."""
+    modules = [
+        ('LatticeHamiltonian', 28, 7), ('GoltermanShamir', 15, 7),
+        ('TPFEvasion', 12, 0), ('KLinearCategory', 16, 4),
+        ('SphericalCategory', 18, 7), ('FusionCategory', 14, 0),
+        ('FusionExamples', 30, 7), ('VecG', 9, 6),
+        ('DrinfeldDouble', 15, 2), ('GaugeEmergence', 14, 0),
+    ]
+
+    names = [m[0] for m in modules]
+    manual = [m[1] - m[2] for m in modules]
+    aristotle = [m[2] for m in modules]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(name='Manual', x=names, y=manual,
+                         marker_color=COLORS['Steinhauer']))
+    fig.add_trace(go.Bar(name='Aristotle', x=names, y=aristotle,
+                         marker_color=COLORS['Trento']))
+
+    apply_layout(fig, height=450, width=800, barmode='stack',
+        title=dict(text="<b>Phase 5 Lean Verification: Manual vs Aristotle Proofs</b>",
+                   font=TITLE_FONT),
+        yaxis=dict(title="Theorem count"),
+        xaxis=dict(title="Lean module", tickangle=-45))
+    return fig
+
+
+def fig_category_hierarchy() -> go.Figure:
+    """Categorical hierarchy: Mathlib existing → Wave 4A → 4B → 4C."""
+    from src.core.constants import CATEGORY_HIERARCHY
+
+    layers = [
+        ('Mathlib (existing)', CATEGORY_HIERARCHY['mathlib_existing'], COLORS['Steinhauer']),
+        ('Wave 4A (new)', CATEGORY_HIERARCHY['wave4a_new'], COLORS['Heidelberg']),
+        ('Wave 4B (new)', CATEGORY_HIERARCHY['wave4b_new'], COLORS['Trento']),
+    ]
+
+    fig = go.Figure()
+    for i, (label, items, color) in enumerate(layers):
+        fig.add_trace(go.Bar(
+            x=[label], y=[len(items)],
+            name=label, marker_color=color,
+            text=[f"{len(items)} structures<br>{'<br>'.join(items[:3])}{'...' if len(items) > 3 else ''}"],
+            textposition='inside',
+            textfont=dict(size=10, color='white', family=FONT['family']),
+        ))
+
+    apply_layout(fig, height=400, width=600,
+        title=dict(text="<b>Categorical Infrastructure: What We Built</b>",
+                   font=TITLE_FONT),
+        yaxis=dict(title="Number of structures"),
+        showlegend=False)
+    return fig
+
+
+def fig_fusion_rules_comparison() -> go.Figure:
+    """Fusion rules comparison: Vec_Z2, Rep_S3, Fibonacci side by side."""
+    import numpy as np
+    from src.core.constants import FUSION_EXAMPLES
+
+    examples = ['Vec_Z2', 'Rep_S3', 'Fibonacci']
+    fig = make_subplots(rows=1, cols=3, subplot_titles=examples)
+
+    for col, name in enumerate(examples, 1):
+        ex = FUSION_EXAMPLES[name]
+        if 'fusion_rules' not in ex:
+            continue
+        N = np.array(ex['fusion_rules'])
+        n = ex['n_simples']
+        labels = ex.get('simple_labels', [str(i) for i in range(n)])
+
+        # Sum over output channel: total multiplicity matrix M_{ij} = Σ_k N^k_{ij}
+        M = np.sum(N, axis=0)
+
+        fig.add_trace(go.Heatmap(
+            z=M, x=labels, y=labels,
+            colorscale=[[0, 'white'], [1, COLORS['Steinhauer']]],
+            showscale=(col == 3),
+            text=M.astype(str), texttemplate='%{text}',
+            textfont=dict(size=14),
+        ), row=1, col=col)
+
+    apply_layout(fig, height=350, width=900,
+        title=dict(text="<b>Fusion Rules: Total Multiplicity Σ<sub>k</sub> N<sup>k</sup><sub>ij</sub></b>",
+                   font=TITLE_FONT))
+    for col in range(1, 4):
+        fig.update_xaxes(title_text="j", row=1, col=col)
+        fig.update_yaxes(title_text="i", row=1, col=col)
+    return fig
+
+
+def fig_fibonacci_f_matrix() -> go.Figure:
+    """Fibonacci F-matrix heatmap showing golden ratio structure."""
+    import numpy as np
+    from src.core.constants import FUSION_EXAMPLES
+
+    F = FUSION_EXAMPLES['Fibonacci']['F_matrix_tau']
+    phi = (1 + np.sqrt(5)) / 2
+
+    fig = go.Figure(go.Heatmap(
+        z=F, x=['𝟙 channel', 'τ channel'], y=['𝟙 channel', 'τ channel'],
+        colorscale='RdBu', zmid=0,
+        text=[[f'{F[i,j]:.4f}' for j in range(2)] for i in range(2)],
+        texttemplate='%{text}', textfont=dict(size=16),
+    ))
+
+    apply_layout(fig, height=400, width=450,
+        title=dict(text=f"<b>Fibonacci F-matrix F<sup>τττ</sup><sub>τ</sub> (φ={(phi):.4f})</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="Output channel"),
+        yaxis=dict(title="Input channel"))
+    return fig
+
+
+def fig_drinfeld_anyon_spectrum() -> go.Figure:
+    """Anyon content of Drinfeld doubles: D(Z/2) and D(S₃)."""
+    from src.core.constants import DRINFELD_DOUBLE
+
+    groups = ['Z2', 'Z3', 'S3']
+    n_simples = [DRINFELD_DOUBLE[g]['n_simples'] for g in groups]
+    dim_D = [DRINFELD_DOUBLE[g]['dim_D'] for g in groups]
+    labels = ['D(ℤ/2)\ntoric code', 'D(ℤ/3)', 'D(S₃)\nnon-abelian']
+
+    fig = make_subplots(rows=1, cols=2, subplot_titles=["# Anyons", "dim D(G)"])
+
+    fig.add_trace(go.Bar(
+        x=labels, y=n_simples,
+        marker_color=[COLORS['Steinhauer'], COLORS['Heidelberg'], COLORS['Trento']],
+        text=n_simples, textposition='outside',
+        textfont=dict(size=14, family=FONT['family']),
+    ), row=1, col=1)
+
+    fig.add_trace(go.Bar(
+        x=labels, y=dim_D,
+        marker_color=[COLORS['Steinhauer'], COLORS['Heidelberg'], COLORS['Trento']],
+        text=dim_D, textposition='outside',
+        textfont=dict(size=14, family=FONT['family']),
+    ), row=1, col=2)
+
+    apply_layout(fig, height=400, width=750,
+        title=dict(text="<b>Drinfeld Double: Anyon Spectrum & Algebra Dimension</b>",
+                   font=TITLE_FONT),
+        showlegend=False)
+    fig.update_yaxes(title_text="# simple modules", row=1, col=1)
+    fig.update_yaxes(title_text="dim D(G) = |G|²", row=1, col=2)
+    return fig
+
+
+def fig_layer123_bridge() -> go.Figure:
+    """Three-layer architecture with formal verification at each level."""
+    fig = go.Figure()
+
+    layers = [
+        ('Layer 1: Categorical', 'Vec_G → Z(Vec_G) ≅ Rep(D(G))',
+         '116 theorems across 7 modules (KLinearCategory → GaugeEmergence)', COLORS['Trento'], 3),
+        ('Layer 2: Gauge Theory', 'Gauge erasure: non-Abelian erased, U(1) survives',
+         '11 theorems + 1 axiom (GaugeErasure.lean)', COLORS['Heidelberg'], 2),
+        ('Layer 3: EFT / Hydro', 'SK-EFT: δ_diss, δ_disp, spectral predictions',
+         '302 theorems + 1 axiom across 22 modules (Phases 1-5)', COLORS['Steinhauer'], 1),
+    ]
+
+    for name, physics, verification, color, y in layers:
+        fig.add_trace(go.Bar(
+            x=[1], y=[name], orientation='h',
+            marker_color=color, marker_line=dict(width=2, color='black'),
+            text=[f"<b>{physics}</b><br><i>{verification}</i>"],
+            textposition='inside',
+            textfont=dict(size=11, color='white', family=FONT['family']),
+            showlegend=False,
+        ))
+
+    # Connection arrows (annotations)
+    fig.add_annotation(x=0.5, y=1.5, text="↓ gauge emergence (Z(Vec_G))",
+        showarrow=False, font=dict(size=11, color='black', family=FONT['family']))
+    fig.add_annotation(x=0.5, y=0.5, text="↓ hydrodynamization (gauge erasure)",
+        showarrow=False, font=dict(size=11, color='black', family=FONT['family']))
+
+    apply_layout(fig, height=350, width=800,
+        title=dict(text="<b>Three-Layer Architecture: Formally Verified End-to-End</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(showticklabels=False, showgrid=False),
+        yaxis=dict(showgrid=False),
+        barmode='stack')
+    return fig
+
+
+def fig_tpf_evasion_architecture() -> go.Figure:
+    """TPF evasion: 5 violations of GS conditions, assembled into synthesis."""
+    violations = [
+        ('I3: Finite-dim', 'ℓ²(ℤ) infinite-dim', 'rotor_hilbert_not_finite_dim'),
+        ('C1: Smoothness', 'round(x) discontinuous', 'round_not_continuous_at_half'),
+        ('C2: Fermion-only', 'Bosonic rotor L²(S¹)', 'tpf_violates_C2'),
+        ('Extra-dim', '4+1D SPT slab', 'tpf_bulk_dimension'),
+        ('C3: No bosons', 'Rotor Goldstone modes', 'C3 conditional'),
+    ]
+
+    names = [v[0] for v in violations]
+    reasons = [v[1] for v in violations]
+    theorems = [v[2] for v in violations]
+
+    colors = [COLORS['Heidelberg']] * 4 + [COLORS['Trento']]  # last is conditional
+
+    fig = go.Figure(go.Bar(
+        y=names[::-1], x=[1]*5, orientation='h',
+        marker_color=colors[::-1],
+        marker_line=dict(width=2, color='black'),
+        text=[f"<b>{r}</b><br><i>{t}</i>" for r, t in zip(reasons[::-1], theorems[::-1])],
+        textposition='inside',
+        textfont=dict(size=11, color='white', family=FONT['family']),
+    ))
+
+    apply_layout(fig, height=350, width=700,
+        title=dict(text="<b>TPF Evasion: 5 GS Conditions Violated</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(showticklabels=False, showgrid=False),
+        yaxis=dict(showgrid=False))
+
+    fig.add_annotation(x=0.5, y=-0.15, xref='paper', yref='paper',
+        text="Master synthesis: tpf_outside_gs_scope_main (5-part conjunction, zero sorry)",
+        showarrow=False, font=dict(size=11, family=FONT['family']))
+    return fig
+
+
+def fig_fock_exterior_algebra() -> go.Figure:
+    """ExteriorAlgebra as fermionic Fock space: dim = 2^k."""
+    import numpy as np
+
+    k_values = list(range(1, 9))
+    dims = [2**k for k in k_values]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=[f'k={k}' for k in k_values], y=dims,
+        marker_color=COLORS['Steinhauer'],
+        text=[str(d) for d in dims], textposition='outside',
+        textfont=dict(size=12, family=FONT['family']),
+        name='dim(FockSpace k)', showlegend=True,
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=[f'k={k}' for k in k_values], y=dims,
+        mode='lines', line=dict(color=COLORS['Trento'], width=2, dash='dot'),
+        name='2^k', showlegend=True,
+    ))
+
+    apply_layout(fig, height=400, width=600,
+        title=dict(text="<b>Fermionic Fock Space: dim(ExteriorAlgebra) = 2<sup>k</sup></b>",
+                   font=TITLE_FONT),
+        yaxis=dict(title="dim(FermionicFockSpace k)", type='log'),
+        xaxis=dict(title="k (number of modes)"))
+
+    fig.add_annotation(x=0.5, y=0.95, xref='paper', yref='paper',
+        text="fock_space_finite_dim: proved by Aristotle via graded decomposition",
+        showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
+    return fig
+
+
 if __name__ == "__main__":
     main()

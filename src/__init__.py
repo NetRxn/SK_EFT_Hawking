@@ -23,15 +23,17 @@ A unified project encompassing:
   - Phase 5 (analytical completion + chirality wall + Layer 1 formalization):
     * Kappa-scaling test predictions for all BEC platforms.
     * Polariton Tier 1 predictions (10^10× hotter T_H).
-    * 4D fermion-bag MC pilot for vestigial gravity (infrastructure ready).
+    * 4D fermion-bag MC production: split transition detected at L=6,8.
     * Chirality wall: GS 9 conditions formalized, TPF evasion machine-verified.
     * Lattice Hamiltonian framework: BZ compact, ℓ²(ℤ) ∞-dim, round discontinuous.
     * Layer 1 categorical infrastructure: PivotalCategory, SphericalCategory,
-      SemisimpleCategory (first-ever in any proof assistant).
+      SemisimpleCategory, FusionCategory (first-ever in any proof assistant).
+    * First fusion category formalization: Vec_G, Rep(S₃), Fibonacci verified.
+    * First Drinfeld double formalization: D(G), gauge emergence, chirality limitation.
 
-Lean 4 formalization: 347 theorems + 2 axioms, 25 modules.
-  Waves 1-3: ZERO sorry. Wave 4A: 11 sorry stubs pending Aristotle.
-Aristotle automated theorem prover: 73 theorems proved across 22 runs.
+Lean 4 formalization: 429 theorems + 2 axioms, 30 modules.
+  Waves 1-4B: ZERO sorry. Wave 4C: 8 sorry stubs pending Aristotle.
+Aristotle automated theorem prover: 91 theorems proved across 25 runs.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

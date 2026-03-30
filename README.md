@@ -19,21 +19,26 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
   in the ADW model. Three-phase structure: pre-geometric, vestigial, full tetrad.
   EP violation prediction. Monte Carlo + mean-field. PRD format.
 
-**Lean 4 formalization:** 300 theorems + 2 axioms, zero sorry.
-22 Lean modules. 72 Aristotle-proved. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+- **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
+  no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
-**Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, 4D fermion-bag MC pilot,
-chirality wall formalization (GS 9 conditions, TPF evasion machine-verified),
-lattice Hamiltonian framework (BrillouinZone compact, ℓ²(ℤ) ∞-dim, round discontinuous).
+**Lean 4 formalization:** 429 theorems + 2 axioms, zero sorry.
+30 Lean modules. 99 Aristotle-proved across 27 runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+
+**Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, 4D fermion-bag MC pilot
+(split transition detected at L=6,8), chirality wall formalization (GS 9 conditions,
+TPF evasion machine-verified), Layer 1 categorical infrastructure (first-ever
+PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant),
+gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)).
 
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (300 theorems + 2 axioms, zero sorry)
+├── lean/                              # Lean 4 formalization (429 theorems + 2 axioms, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 16)
+│   ├── SKEFTHawking.lean              # Root module (imports all 30)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -50,7 +55,21 @@ SK_EFT_Hawking/
 │       ├── VestigialGravity.lean      # Phase 4: vestigial metric phase (18 theorems)
 │       ├── FractonHydro.lean          # Phase 4: fracton hydrodynamics (17 theorems)
 │       ├── FractonGravity.lean        # Phase 4: fracton-gravity bootstrap (20 theorems)
-│       └── FractonNonAbelian.lean     # Phase 4: non-Abelian fracton obstruction (14 theorems)
+│       ├── FractonNonAbelian.lean     # Phase 4: non-Abelian fracton obstruction (14 theorems)
+│       ├── KappaScaling.lean          # Phase 5: crossover balance, regime classification (11 theorems)
+│       ├── PolaritonTier1.lean        # Phase 5: attenuation bounds, BEC recovery (6 theorems)
+│       ├── SU2PseudoReality.lean      # Phase 5: one-link normalization, Binder limits (10 theorems)
+│       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
+│       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
+│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (15 theorems + 1 axiom)
+│       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
+│       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
+│       ├── SphericalCategory.lean     # Phase 5: FIRST-EVER pivotal + spherical (18 theorems)
+│       ├── FusionCategory.lean        # Phase 5: fusion axioms, pentagon, F-symbols (14 theorems)
+│       ├── FusionExamples.lean        # Phase 5: Vec_Z2/Z3, Rep_S3, Fibonacci (30 theorems)
+│       ├── VecG.lean                  # Phase 5: Day convolution, graded spaces (9 theorems)
+│       ├── DrinfeldDouble.lean        # Phase 5: D(G) twisted multiplication (15 theorems)
+│       └── GaugeEmergence.lean        # Phase 5: Z(Vec_G)≅Rep(D(G)), chirality (14 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -102,7 +121,9 @@ SK_EFT_Hawking/
 │   │   └── paper_draft.tex
 │   ├── paper5_adw_gap/               # PRD ADW gap equation
 │   │   └── paper_draft.tex
-│   ├── paper6_vestigial/             # PRD vestigial gravity (Phase 4)
+│   ├── paper6_vestigial/             # PRD vestigial gravity + production MC (Phase 4-5)
+│   │   └── paper_draft.tex
+│   ├── paper7_chirality_formal/      # PRD/CPC GS no-go + TPF evasion in Lean 4 (Phase 5)
 │   │   └── paper_draft.tex
 │   └── experimental_predictions/     # Standalone prediction tables (Phase 4)
 │       └── prediction_tables.tex
@@ -123,7 +144,11 @@ SK_EFT_Hawking/
 │   ├── Phase4a_ExperimentalPredictions_Technical.ipynb  # Phase 4 Wave 1: predictions
 │   ├── Phase4a_ExperimentalPredictions_Stakeholder.ipynb
 │   ├── Phase4b_Vestigial_Technical.ipynb        # Phase 4 Wave 2: vestigial gravity
-│   └── Phase4b_Vestigial_Stakeholder.ipynb
+│   ├── Phase4b_Vestigial_Stakeholder.ipynb
+│   ├── Phase5a_ChiralityWall_Technical.ipynb    # Phase 5: chirality wall formal verification
+│   ├── Phase5a_ChiralityWall_Stakeholder.ipynb
+│   ├── Phase5b_Synthesis_Technical.ipynb        # Phase 5: kappa-scaling, categorical, Drinfeld
+│   └── Phase5b_Synthesis_Stakeholder.ipynb
 │
 ├── docs/
 │   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
@@ -131,7 +156,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (834 tests)
+├── tests/                             # pytest suite (1014 tests)
 │   ├── test_transonic_background.py   # Physics validation
 │   ├── test_second_order.py           # Enumeration + WKB tests
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
@@ -140,7 +165,7 @@ SK_EFT_Hawking/
 │   ├── test_cross_validation.py       # Cross-layer validation
 │   └── test_lean_integrity.py         # Module structure + sorry-gap regression
 │
-├── figures/                           # 45 pipeline figures (PNG + HTML)
+├── figures/                           # 60 pipeline figures (PNG + HTML)
 ├── scripts/
 │   └── submit_to_aristotle.py         # Aristotle submission + integration script
 ├── pyproject.toml                     # Unified Python dependencies
@@ -196,27 +221,39 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (227 + 1 axiom — 10 sorry pending Aristotle)
+## Theorem Inventory (429 + 2 axioms — ZERO sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
 | AcousticMetric.lean | 1 | 8 | Aristotle: 082e6776, a87f425a, 88cf2000 |
 | SKDoubling.lean | 1 | 9 | Aristotle: 082e6776, 638c5ff3, 270e77a0, 20556034 |
-| HawkingUniversality.lean | 1+3 | 9 | +κ-crossing, spin-sonic (1E) |
+| HawkingUniversality.lean | 1+3 | 9 | +κ-crossing, spin-sonic |
 | SecondOrderSK.lean | 2 | 19 | Aristotle: d61290fd, c4d73ca8, 3eedcabb |
-| WKBAnalysis.lean | 2+3 | 15 | +Bogoliubov bound (1E). Aristotle: 518636d7 |
+| WKBAnalysis.lean | 2+3 | 15 | Aristotle: 518636d7 |
 | CGLTransform.lean | 2 | 7 | CGL FDR derivation |
-| ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem (1C) |
-| GaugeErasure.lean | 3 | 11 + 1 axiom | Gauge erasure (1B) |
-| WKBConnection.lean | 3 | 17 | Exact WKB connection (2D) |
+| ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem |
+| GaugeErasure.lean | 3 | 11 + 1 axiom | Gauge erasure |
+| WKBConnection.lean | 3 | 17 | Exact WKB connection |
 | ADWMechanism.lean | 3 | 21 | Vergeles counting, phase classification |
 | ChiralityWall.lean | 4 | 17 | GS conditions, TPF evasion, wall status |
 | VestigialGravity.lean | 4 | 18 | Phase hierarchy, EP violation |
 | FractonHydro.lean | 4 | 17 | Multipole conservation, information retention |
 | FractonGravity.lean | 4 | 20 | Bootstrap gap, DOF mismatch |
-| FractonNonAbelian.lean | 4 | 14 | Non-Abelian fracton obstruction (negative result) |
-| KappaScaling.lean | 5 | 11 | Crossover balance, regime classification (zero sorry) |
-| PolaritonTier1.lean | 5 | 6 | Attenuation bounds, monotonicity, BEC recovery (zero sorry) |
+| FractonNonAbelian.lean | 4 | 14 | Non-Abelian fracton obstruction |
+| KappaScaling.lean | 5 | 11 | Crossover balance, regime classification |
+| PolaritonTier1.lean | 5 | 6 | Attenuation bounds, BEC recovery |
+| SU2PseudoReality.lean | 5 | 10 | One-link normalization, Binder limits |
+| FermionBag4D.lean | 5 | 16 | SO(4) integration, bag positivity |
+| LatticeHamiltonian.lean | 5 | 28 | BZ compact, GS 9 conditions, TPF 3 violations |
+| GoltermanShamir.lean | 5 | 15 + 1 axiom | 9 GS Props, Fock space finite, TPF evasion |
+| TPFEvasion.lean | 5 | 12 | Master synthesis, 5 violations |
+| KLinearCategory.lean | 5 | 16 | SemisimpleCategory, Schur, Vec_G D² |
+| SphericalCategory.lean | 5 | 18 | PivotalCategory (FIRST-EVER), quantumDim |
+| FusionCategory.lean | 5 | 14 | FusionCategoryData, pentagon, F-symbols |
+| FusionExamples.lean | 5 | 30 | Vec_Z2/Z3, Rep_S3, Fibonacci |
+| VecG.lean | 5 | 9 | Day convolution, graded spaces |
+| DrinfeldDouble.lean | 5 | 15 | D(G) twisted multiplication, anyon counting |
+| GaugeEmergence.lean | 5 | 14 | Z(Vec_G)≅Rep(D(G)), chirality limitation |
 
 ## Build Environment
 

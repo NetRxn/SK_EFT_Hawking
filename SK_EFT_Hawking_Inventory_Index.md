@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** March 29, 2026 (Phase 5 Wave 4A)
+**Last synced:** March 30, 2026 (Phase 5 Wave 5 — synthesis complete)
 
 ---
 
@@ -10,20 +10,21 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 347 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 84 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
-| Manual proofs | 263 | 347 - 84 |
-| Lean modules | 25 | `ls lean/SKEFTHawking/*.lean` |
+| Lean theorems | 429 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 99 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
+| Manual proofs | 330 | 429 - 99 |
+| **All proved** | **ZERO sorry** | `lake build` — zero sorry warnings |
+| Lean modules | 30 | `ls lean/SKEFTHawking/*.lean` |
 | Sorry gaps | 0 | ZERO sorry — all proved |
 | Python source modules | 37 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 17 | `find tests/ -name "test_*.py"` |
-| Test count | 988 | `pytest tests/ -q` (all pass) |
-| Figures | 49 | `len(FIGURE_REGISTRY)` in review_figures.py |
-| Notebooks | 16 | `ls notebooks/*.ipynb` |
-| Papers | 6 + tables | `ls papers/*/paper_draft.tex` |
+| Test count | 1014 | `pytest tests/ -q` (all pass) |
+| Figures | 60 | `len(FIGURE_REGISTRY)` in review_figures.py |
+| Notebooks | 20 | `ls notebooks/*.ipynb` |
+| Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
 | Validation checks | 14 | `python scripts/validate.py --list` |
-| Stakeholder docs | 11 | See Section 9 of inventory |
-| Aristotle runs | 23 | `constants.py:ARISTOTLE_THEOREMS` unique values |
+| Stakeholder docs | 13 | See Section 9 of inventory |
+| Aristotle runs | 27 | `constants.py:ARISTOTLE_THEOREMS` unique values |
 
 ---
 
@@ -120,8 +121,13 @@
 | LatticeHamiltonian | 28 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace real |
 | GoltermanShamir | 15+1ax | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation |
 | TPFEvasion | 12 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
-| KLinearCategory | 16 (4 sorry) | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
-| SphericalCategory | 18 (7 sorry) | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, fibonacci φ²=φ+1, chirality limitation |
+| KLinearCategory | 16 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
+| SphericalCategory | 18 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, fibonacci φ²=φ+1, chirality limitation |
+| FusionCategory | 14 | FusionCategoryData with axioms, FSymbolData, PentagonSatisfied, globalDimSq_pos, totalMult_unit, Frobenius-Perron |
+| FusionExamples | 30 | Vec_{Z/2}, Vec_{Z/3}, Rep(S₃), Fibonacci: fusion rules, commutativity, unit fusion, τ⊗τ=1⊕τ, F-matrix, chirality |
+| VecG | 9 | GradedVectorSpace, Day convolution, unit/assoc/simple tensor, dim multiplicativity |
+| DrinfeldDouble | 15 | DrinfeldDoubleElement, twisted multiplication, conjugation action, D(G) unit laws, anyon counting |
+| GaugeEmergence | 14 | Half-braiding, gauge emergence Z(Vec_G)≅Rep(D(G)), chirality limitation c≡0(8), Layer 1→2→3 bridge |
 
 ---
 

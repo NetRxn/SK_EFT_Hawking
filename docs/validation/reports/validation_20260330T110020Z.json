@@ -1,0 +1,65 @@
+{
+  "timestamp": "20260330T110020Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "paper_provenance": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "paper1_first_order/figures",
+          "passed": true,
+          "message": "3 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper2_second_order/figures",
+          "passed": true,
+          "message": "6 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper3_gauge_erasure/figures",
+          "passed": true,
+          "message": "2 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper4_wkb_connection/figures",
+          "passed": true,
+          "message": "3 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper5_adw_gap/figures",
+          "passed": true,
+          "message": "3 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper6_vestigial/figures",
+          "passed": true,
+          "message": "2 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper7_chirality_formal/figures",
+          "passed": true,
+          "message": "1 figure files present",
+          "warning": false
+        },
+        {
+          "name": "paper7_chirality_formal/bibliography",
+          "passed": false,
+          "message": "Has placeholder bibliography entries (xxxxx or XXX)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}
