@@ -19,7 +19,7 @@
 | Python source modules | 37 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 17 | `find tests/ -name "test_*.py"` |
 | Test count | 1014 | `pytest tests/ -q` (all pass) |
-| Figures | 60 | `len(FIGURE_REGISTRY)` in review_figures.py |
+| Figures | 61 | `len(FIGURE_REGISTRY)` in review_figures.py |
 | Notebooks | 20 | `ls notebooks/*.ipynb` |
 | Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
 | Validation checks | 14 | `python scripts/validate.py --list` |

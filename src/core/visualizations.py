@@ -3904,6 +3904,74 @@ def fig_vestigial_susceptibility_split() -> go.Figure:
     return fig
 
 
+def fig_vestigial_phase_diagram_mc() -> go.Figure:
+    """Mean-field phase diagram with MC susceptibility peaks overlaid."""
+    import json
+    from src.vestigial.phase_diagram import scan_coupling
+
+    # Mean-field scan
+    result = scan_coupling(
+        method="mean_field", Lambda=1.0, N_f=4,
+        coupling_range=(0.3, 3.0), n_points=60,
+    )
+
+    fig = go.Figure()
+
+    # Mean-field order parameters
+    fig.add_trace(go.Scatter(
+        x=list(result.coupling_ratios),
+        y=list(result.tetrad_values),
+        mode="lines", name="MF Tetrad VEV",
+        line=dict(color=COLORS['Steinhauer'], width=2),
+    ))
+    fig.add_trace(go.Scatter(
+        x=list(result.coupling_ratios),
+        y=list(result.metric_values),
+        mode="lines", name="MF Metric correlator",
+        line=dict(color=COLORS['Trento'], width=2),
+    ))
+
+    # Mean-field vestigial window shading
+    fig.add_vrect(x0=0.8, x1=1.0, fillcolor=COLORS['Trento'],
+                  opacity=0.1, line_width=0,
+                  annotation_text="MF vestigial", annotation_position="top left")
+
+    # MC susceptibility peaks from production data
+    from pathlib import Path as _Path
+    mc_path = _Path(__file__).resolve().parent.parent.parent / "docs" / "vestigial_mc_results" / "vestigial_mc_20260329T192611.json"
+    if mc_path.exists():
+        with open(mc_path) as f:
+            mc_data = json.load(f)
+        peaks = mc_data.get('finite_size_scaling', {}).get('susceptibility_peaks', {})
+        markers = {'4': 'circle', '6': 'square', '8': 'diamond'}
+        for L_str, pdata in peaks.items():
+            t_peak = pdata['tetrad_peak_coupling']
+            m_peak = pdata['metric_peak_coupling']
+            fig.add_trace(go.Scatter(
+                x=[t_peak], y=[0.02], mode='markers',
+                marker=dict(symbol=markers.get(L_str, 'circle'), size=14,
+                            color=COLORS['Steinhauer'], line=dict(width=2, color='black')),
+                name=f'MC tetrad χ peak L={L_str}', showlegend=(L_str == '8'),
+            ))
+            fig.add_trace(go.Scatter(
+                x=[m_peak], y=[0.04], mode='markers',
+                marker=dict(symbol=markers.get(L_str, 'circle'), size=14,
+                            color=COLORS['Heidelberg'], line=dict(width=2, color='black')),
+                name=f'MC metric χ peak L={L_str}', showlegend=(L_str == '8'),
+            ))
+
+    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"))
+
+    apply_layout(fig, height=450, width=750,
+        title=dict(text="<b>Phase Diagram: Mean-Field + MC Susceptibility Peaks</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="G / G<sub>c</sub>"),
+        yaxis=dict(title="Magnitude / Λ"),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+    return fig
+
+
 def fig_gs_condition_formalization() -> go.Figure:
     """9 GS conditions with formalization status and TPF violation status.
 

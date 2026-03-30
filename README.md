@@ -165,7 +165,7 @@ SK_EFT_Hawking/
 │   ├── test_cross_validation.py       # Cross-layer validation
 │   └── test_lean_integrity.py         # Module structure + sorry-gap regression
 │
-├── figures/                           # 60 pipeline figures (PNG + HTML)
+├── figures/                           # 61 pipeline figures (PNG + HTML)
 ├── scripts/
 │   └── submit_to_aristotle.py         # Aristotle submission + integration script
 ├── pyproject.toml                     # Unified Python dependencies

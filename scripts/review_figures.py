@@ -642,6 +642,13 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=2,
         expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Trento"],
     ),
+    FigureSpec(
+        name="fig62_vestigial_phase_diagram_mc",
+        function="fig_vestigial_phase_diagram_mc",
+        caption="Mean-field phase diagram with MC susceptibility peaks overlaid.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Trento"],
+    ),
 ]
 
 
@@ -700,6 +707,7 @@ def generate_figures() -> dict[str, Path]:
         fig_layer123_bridge,
         fig_tpf_evasion_architecture,
         fig_fock_exterior_algebra,
+        fig_vestigial_phase_diagram_mc,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -790,6 +798,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_layer123_bridge": fig_layer123_bridge,
         "fig_tpf_evasion_architecture": fig_tpf_evasion_architecture,
         "fig_fock_exterior_algebra": fig_fock_exterior_algebra,
+        "fig_vestigial_phase_diagram_mc": fig_vestigial_phase_diagram_mc,
     }
 
     paths = {}
@@ -881,6 +890,7 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_layer123_bridge,
         fig_tpf_evasion_architecture,
         fig_fock_exterior_algebra,
+        fig_vestigial_phase_diagram_mc,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -969,6 +979,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_layer123_bridge": fig_layer123_bridge,
         "fig_tpf_evasion_architecture": fig_tpf_evasion_architecture,
         "fig_fock_exterior_algebra": fig_fock_exterior_algebra,
+        "fig_vestigial_phase_diagram_mc": fig_vestigial_phase_diagram_mc,
     }
 
     issues: list[CheckIssue] = []

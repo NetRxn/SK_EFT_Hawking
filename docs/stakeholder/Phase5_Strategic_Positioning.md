@@ -103,7 +103,7 @@ Phase 5 marks a qualitative shift in the program's maturity:
 - **Phase 5:** Formal verification + categorical foundations + production MC
 
 The project now has:
-- 429 machine-checked theorems (91 by Aristotle automated prover)
+- 429 machine-checked theorems (99 by Aristotle automated prover across 27 runs)
 - 1014 automated tests with 14/14 validation checks
 - Production-scale MC evidence for the vestigial phase
 - First-ever categorical infrastructure for topological phases in a proof assistant

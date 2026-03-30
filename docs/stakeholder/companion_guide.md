@@ -566,12 +566,15 @@ Remember the "new kind of gravity" from Phase 4? We ran the full production-scal
 | Metric | Phase 4 | Phase 5 |
 |--------|---------|---------|
 | Lean theorems | 216 + 1 axiom | 429 + 2 axioms |
-| Aristotle-proved | 56 | 91 |
+| Aristotle-proved | 56 | 99 (27 runs) |
 | Lean modules | 16 | 30 |
 | Tests | 822 | 1014 |
+| Figures | 45 | 61 |
+| Papers | 6 | 7 |
+| Notebooks | 16 | 20 |
 | Platforms | 3 (BEC) | 4 (3 BEC + polariton) |
 | Formal verification firsts | 0 | 3 (chirality wall, fusion categories, Drinfeld double) |
 
 ---
 
-*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 29, 2026.*
+*This companion guide is part of the SK-EFT Hawking project documentation. It aims to make the physics and methodology accessible to stakeholders and collaborators without requiring a PhD in theoretical physics. Last updated: March 30, 2026.*

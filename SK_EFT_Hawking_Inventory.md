@@ -2,7 +2,7 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, and Layer 1 categorical infrastructure. Complete Lean 4 formalization (429 theorems + 2 axioms, zero sorry, 30 modules). 1014 tests, 60 pipeline figures, 20 notebooks. 99 Aristotle-proved across 27 runs, 330 manual.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, and Layer 1 categorical infrastructure. Complete Lean 4 formalization (429 theorems + 2 axioms, zero sorry, 30 modules). 1014 tests, 61 pipeline figures, 20 notebooks. 99 Aristotle-proved across 27 runs, 330 manual.
 
 **Last verified:** March 30, 2026 (Phase 5 Wave 5 synthesis)
 
@@ -95,7 +95,8 @@
 - Phase 5 Wave 1 (2): kappa_scaling_physical, polariton_regime_map
 - Phase 5 Wave 2 (4): grassmann_trg_2d_phase, fermion_bag_4d_binder, fermion_bag_4d_phase_diagram, vestigial_binder_crossing
 - Phase 5 Wave 3/5 (5): gs_condition_formalization, tpf_evasion_architecture, fock_exterior_algebra, lean_theorem_summary, vestigial_susceptibility_split
-- Phase 5 Wave 4 (6): category_hierarchy, fusion_rules_comparison, fibonacci_f_matrix, drinfeld_anyon_spectrum, layer123_bridge
+- Phase 5 Wave 4 (5): category_hierarchy, fusion_rules_comparison, fibonacci_f_matrix, drinfeld_anyon_spectrum, layer123_bridge
+- Phase 5 Wave 5 (1): vestigial_phase_diagram_mc (MF + MC overlay)
 
 **Stakeholder variants** use `stakeholder=True` parameter for simplified versions.
 
@@ -526,7 +527,7 @@
 | **Aristotle-proved** | 99 | 27 runs |
 | **Manual proofs** | 330 | |
 | **Paper Drafts** | 7 + prediction tables | Full LaTeX |
-| **Pipeline Figures** | 60 | All PNGs generated |
+| **Pipeline Figures** | 61 | All PNGs generated |
 | **Validation Checks** | 14 | All passing |
 | **Scripts** | 4 | validate, review_figures, submit_to_aristotle, run_vestigial_production |
 | **Stakeholder Docs** | 13 | Phases 1-5 |
@@ -535,4 +536,4 @@
 
 ---
 
-**Project Status:** Phase 5 Waves 1-4C COMPLETE. Wave 5 synthesis IN PROGRESS. 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests (all pass), 60 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks.
+**Project Status:** Phase 5 Waves 1-4C COMPLETE. Wave 5 synthesis IN PROGRESS. 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests (all pass), 61 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks.

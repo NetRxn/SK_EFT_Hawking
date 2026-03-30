@@ -2,7 +2,7 @@
 
 ## Technical and Real-World Implications
 
-**Status:** Phase 5 Waves 1–4C COMPLETE — 429 theorems + 2 axioms (8 sorry pending Aristotle), 91 Aristotle-proved, 1014 tests, 30 Lean modules
+**Status:** Phase 5 Waves 1–4C COMPLETE — 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests, 30 Lean modules
 **Date:** March 29, 2026
 **Classification:** Research Overview — For Technical and Non-Technical Stakeholders
 **Prerequisite:** Phase 4 Implications document (March 26, 2026)
@@ -159,7 +159,7 @@ The Drinfeld double D(G) — the algebra whose representations are the anyons of
 - **Chirality limitation:** Z(C) always has c ≡ 0 (mod 8) — string-nets produce non-chiral phases.
 - **Layer 1→2→3 bridge:** categorical data → gauge structure → erasure → EFT predictions.
 
-**Lean verification:** 38 theorems across VecG (9), DrinfeldDouble (15), GaugeEmergence (14). 8 sorry pending Aristotle (Day convolution algebra + D(G) unit laws).
+**Lean verification:** 38 theorems across VecG (9), DrinfeldDouble (15), GaugeEmergence (14). All proved — 8 sorry gaps filled by Aristotle (Day convolution, D(G) unit laws, anyon counting).
 
 ### Why it matters
 
@@ -207,8 +207,8 @@ The GS no-go and TPF construction are now formally verified to operate in differ
 
 ## What Comes Next
 
-1. **Aristotle integration for Wave 4C** — 8 sorry gaps in VecG + DrinfeldDouble pending
-2. **Paper 7: Chirality Wall Formal Verification** — PRD or CPC submission
-3. **Phase 5 notebooks** — Technical + Stakeholder for chirality wall and synthesis
-4. **Wave 4D (Fermi-point)** — secondary track, partially blocked by Bott periodicity
-5. **Phase 6** — HPC-scale vestigial MC, Walker-Wang Z₂, experimental collaboration
+1. ~~**Aristotle integration for Wave 4C**~~ — DONE. All 8 sorry gaps filled. 99 Aristotle-proved total.
+2. ~~**Paper 7: Chirality Wall Formal Verification**~~ — DONE. Draft complete with comprehensive figure suite.
+3. ~~**Phase 5 notebooks**~~ — DONE. 4 notebooks (chirality wall + synthesis, Technical + Stakeholder).
+4. **Wave 4D (Fermi-point)** — blocked by Bott periodicity (π₃(GL(n,ℂ)) ≅ ℤ requires ~5,000-10,000 LOC)
+5. **Phase 6** — HPC-scale vestigial MC (L=10,12), Walker-Wang Z₂, experimental collaboration

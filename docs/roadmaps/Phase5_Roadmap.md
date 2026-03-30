@@ -75,7 +75,7 @@
 - [x] 12 new tests in `tests/test_experimental.py` (834 total, all pass) (2026-03-28)
 - [x] Figure: fig46_kappa_scaling_physical — log-log plot of corrections vs kappa for all platforms (2026-03-28)
 - [x] Updated `papers/experimental_predictions/prediction_tables.tex` — corrected kappa-scaling section + table + figure (2026-03-28)
-- [ ] Notebooks: update Phase4a Technical + Stakeholder — deferred to Wave 5 synthesis
+- [x] Notebooks: Phase4a content covered by Phase5b_Synthesis notebooks (2026-03-30)
 - [x] Document sync: Inventory Index, README, src/__init__.py counts updated (2026-03-28)
 
 **Key finding (2026-03-28):** The old claim that "delta_diss ≈ const" was wrong. Correct physics: delta_diss ∝ kappa (linear), because transport coefficients gamma_1, gamma_2 are material properties independent of kappa, so Gamma_H = (gamma_1+gamma_2)(kappa/c_s)² and delta_diss = Gamma_H/kappa = (gamma_1+gamma_2)kappa/c_s². The crossover formula kappa_cross = 6(gamma_1+gamma_2)/(pi*xi²) cancels c_s² (original bug fixed). Platforms span the crossover: Steinhauer near it (1.3x), Heidelberg dissipative-dominated (0.04x), Trento dispersive-dominated (5.7x).
@@ -109,7 +109,7 @@
 - [x] 8 new tests in `tests/test_experimental.py` (2026-03-28)
 - [x] Figure: fig47_polariton_regime_map — Gamma_pol/kappa vs cavity lifetime (2026-03-28)
 - [x] Updated `papers/experimental_predictions/prediction_tables.tex` — polariton section + regime table (2026-03-28)
-- [ ] Notebooks — deferred to Wave 5 synthesis
+- [x] Notebooks — covered by Phase5b_Synthesis notebooks (2026-03-30)
 - [x] Document sync: Inventory Index, README, src/__init__.py, constants.py counts updated (2026-03-28)
 
 **Estimated LOE:** Medium
@@ -185,7 +185,7 @@
 - [x] 24 new tests in `tests/test_vestigial.py` (866 total, all pass) (2026-03-28)
 - [x] Figure: fig48_grassmann_trg_2d_phase — free energy and specific heat vs coupling (2026-03-28)
 - [x] Constants: ADW_2D_MODEL, SU2_HAAR, GRASSMANN_TRG, ADW_2D_COUPLING_SCAN in constants.py (2026-03-28)
-- [ ] Notebooks — deferred to Wave 5 synthesis
+- [x] Notebooks — covered by Phase5b_Synthesis notebooks (2026-03-30)
 - [x] Document sync: Inventory Index, README, src/__init__.py, constants.py counts updated (2026-03-28)
 
 **Status:** COMPLETE. SU(2) pseudo-reality verified numerically (max reconstruction error < 1e-10). TRG produces smooth free energy curves and specific heat peaks at phase transitions. D_cut convergence confirmed. Ready for Wave 2B (4D cubic pilot).
@@ -218,8 +218,8 @@
 - [x] 26 new tests in `tests/test_vestigial.py` (892 total, all pass) (2026-03-28)
 - [x] Figures: fig49 (4D Binder cumulants), fig50 (4D phase diagnostics) (2026-03-28)
 - [x] Constants: ADW_4D_MODEL, SO4_HAAR, FERMION_BAG, ADW_4D_COUPLING_SCAN in constants.py (2026-03-28)
-- [ ] Paper 6 update — deferred to Wave 5 synthesis
-- [ ] Notebooks — deferred to Wave 5 synthesis
+- [x] Paper 6 update — DONE in Wave 5E with production MC section + split transition (2026-03-30)
+- [x] Notebooks — covered by Phase5b_Synthesis notebooks (2026-03-30)
 - [x] Document sync: Inventory Index, README, src/__init__.py, constants.py, roadmap updated (2026-03-28)
 
 **Status:** COMPLETE. Infrastructure + production runs done. MC inner loops vectorized (16× speedup), multiprocessing runner (10 cores), production L=4,6,8 completed in 107 seconds. **Result: Split transition detected** — tetrad and metric susceptibility peaks at different couplings at L=6,8, consistent with vestigial phase. Full results in `docs/vestigial_mc_results/vestigial_mc_20260329T192611.json`.
@@ -355,18 +355,18 @@
 - [x] Tests: 930 total (all pass) (2026-03-29)
 - [x] Aristotle: 73 Aristotle-proved total, ZERO sorry (2026-03-29)
 - [x] Document sync: Inventory Index, constants.py, validate.py counts updated (2026-03-29)
-- [ ] `src/chirality/tpf_evasion.py` — Python analysis with formal backing (deferred to Wave 5)
-- [ ] `docs/analysis/chirality_wall_formal_analysis.md` — publishable writeup (deferred to Wave 5)
-- [ ] Paper 7 draft: chirality wall formal verification (deferred to Wave 5)
-- [ ] `notebooks/Phase5_ChiralityWall_Technical.ipynb` — companion for Paper 7 (deferred to Wave 5)
-- [ ] `notebooks/Phase5_ChiralityWall_Stakeholder.ipynb` — companion for Paper 7 (deferred to Wave 5)
+- [x] `src/chirality/tpf_evasion.py` — SUPERSEDED by existing `tpf_gs_analysis.py` which covers full GS/TPF analysis
+- [x] `docs/analysis/chirality_wall_formal_analysis.md` — SUPERSEDED by Paper 7 (`paper7_chirality_formal/paper_draft.tex`)
+- [x] Paper 7 draft: chirality wall formal verification — DONE in Wave 5E (2026-03-30)
+- [x] `notebooks/Phase5a_ChiralityWall_Technical.ipynb` — DONE in Wave 5E (2026-03-30)
+- [x] `notebooks/Phase5a_ChiralityWall_Stakeholder.ipynb` — DONE in Wave 5E (2026-03-30)
 
-**Phase 5 stakeholder deliverables (deferred to Wave 5):**
-- [ ] `docs/stakeholder/Phase5_Implications.md`
-- [ ] `docs/stakeholder/Phase5_Strategic_Positioning.md`
-- [ ] Update `docs/stakeholder/companion_guide.md`
-- [ ] `notebooks/Phase5_Synthesis_Technical.ipynb` — covers Waves 1-2 content (kappa-scaling, polariton, vestigial MC)
-- [ ] `notebooks/Phase5_Synthesis_Stakeholder.ipynb` — covers Waves 1-2 content
+**Phase 5 stakeholder deliverables (completed in Wave 5):**
+- [x] `docs/stakeholder/Phase5_Implications.md` — DONE in Wave 5C (2026-03-29)
+- [x] `docs/stakeholder/Phase5_Strategic_Positioning.md` — DONE in Wave 5C (2026-03-29)
+- [x] Update `docs/stakeholder/companion_guide.md` — DONE in Wave 5C (2026-03-29)
+- [x] `notebooks/Phase5b_Synthesis_Technical.ipynb` — DONE in Wave 5E (2026-03-30)
+- [x] `notebooks/Phase5b_Synthesis_Stakeholder.ipynb` — DONE in Wave 5E (2026-03-30)
 
 **Status:** COMPLETE (Lean formalization). 314 theorems + 2 axioms, ZERO sorry, 23 modules. 7/9 GS conditions substantive, 2/9 well-typed physics axioms. All 5 TPF violations proved. Paper/stakeholder/notebook deliverables deferred to Wave 5.
 
@@ -432,7 +432,6 @@
 **Key theorem:** For C = Vec_G (G-graded vector spaces), F-symbols encode group 3-cocycle data H³(G, k×). This connects fusion categories to the group cohomology already in Mathlib.
 
 **Deliverables:**
-- [ ] `lean/SKEFTHawking/FusionCategory.lean` — definitions + pentagon equation
 - [x] `lean/SKEFTHawking/FusionCategory.lean` — 14 theorems, ZERO sorry: FusionCategoryData with full axioms, FSymbolData, PentagonSatisfied, globalDimSq_pos, totalMult_unit, Frobenius-Perron (2026-03-29)
 - [x] `lean/SKEFTHawking/FusionExamples.lean` — 30 theorems (7 sorry): Vec_{Z/2,Z/3}, Rep(S₃), Fibonacci fusion rules + commutativity + unit fusion + τ⊗τ=1⊕τ + F-matrix + chirality (2026-03-29)
 - [x] 4 formulas in `formulas.py`: fusion_ring_product, pentagon_check, frobenius_perron_dim, fusion_associativity_check (2026-03-29)
@@ -480,7 +479,7 @@
 - [x] Constants: DRINFELD_DOUBLE dict for Z/2, Z/3, S₃ (2026-03-29)
 - [x] 8 new tests in `tests/test_layer1.py` (1014 total, all pass) (2026-03-29)
 - [x] 8 sorry gaps submitted to Aristotle (2026-03-29)
-- [ ] Figures: Layer 1 → Layer 2 → Layer 3 architecture diagram — deferred to Wave 5
+- [x] Figures: Layer 1 → Layer 2 → Layer 3 architecture diagram — `fig_layer123_bridge` in visualizations.py (2026-03-30)
 - [x] Document sync: roadmap, Inventory Index updated (2026-03-29)
 
 **Strengthening opportunity:** Add `@[ext]` lemma for `DrinfeldDoubleElement` struct to enable `ext` tactic usage in D(G) proofs. This would make `ddMul_one_left/right` trivially provable and improve Aristotle's success rate on future D(G) theorems. Low effort, high leverage for Wave 4C+ development.
@@ -524,13 +523,13 @@
 
 ## 5. Wave 5 — Synthesis + Document Sync (Days 23-25)
 
-### 5A. Cross-Wave Validation [Pipeline Stage 7]
+### 5A. Cross-Wave Validation [Pipeline Stage 7] — COMPLETE
 
-Full validation suite after all waves. Verify all new theorems, tests, figures are consistent across layers.
+- [x] Full validation suite: 14/14 checks pass, 1014 tests pass, 60 figures generated (2026-03-30)
 
-### 5B. Document Sync [Pipeline Stage 12]
+### 5B. Document Sync [Pipeline Stage 12] — COMPLETE
 
-Update all documents per the Inventory Maintenance Protocol. This is a heavy sync given 4+ waves of new content.
+- [x] All documents synced per Inventory Maintenance Protocol (2026-03-30). See 5F for details.
 
 ### 5C. Stakeholder Documents — COMPLETE
 
@@ -544,7 +543,7 @@ Update all documents per the Inventory Maintenance Protocol. This is a heavy syn
 - [x] `fig_vestigial_binder_crossing` — Binder cumulant U₄(g_EH) at L=4,6,8 (2026-03-30)
 - [x] `fig_vestigial_susceptibility_split` — susceptibility split transition (2026-03-30)
 - [ ] `fig_vestigial_fss_extrapolation` — Binder crossing vs 1/L (needs data with actual crossings)
-- [ ] `fig_vestigial_phase_diagram_mc` — Updated phase diagram with MC data overlaid on mean-field
+- [x] `fig_vestigial_phase_diagram_mc` — Mean-field phase diagram with MC susceptibility peaks overlaid (2026-03-30)
 
 **Paper 7 figures (chirality wall formal verification):**
 - [x] `fig_gs_condition_formalization` — 9 conditions with status (2026-03-30)
@@ -565,15 +564,15 @@ Update all documents per the Inventory Maintenance Protocol. This is a heavy syn
 
 **Remaining 5D items (deferred):**
 - [ ] `fig_vestigial_fss_extrapolation` — needs MC run with actual Binder crossings (current data is flat)
-- [ ] `fig_vestigial_phase_diagram_mc` — overlay MC data on mean-field phase diagram
+- [x] `fig_vestigial_phase_diagram_mc` — overlay MC data on mean-field phase diagram (2026-03-30)
 
 ### 5E. Papers + Notebooks
 
 **Paper 6 update: vestigial gravity** (production MC results)
 - [x] Paper 6 tex exists — needs UPDATE with production MC figures + split transition result
 - [x] Update `papers/paper6_vestigial/paper_draft.tex` with production MC section + new figures (2026-03-30)
-- [ ] `notebooks/Phase4b_Vestigial_Technical.ipynb` — UPDATE with production MC content (deferred — existing content still valid, new MC covered in Phase5b notebooks)
-- [ ] `notebooks/Phase4b_Vestigial_Stakeholder.ipynb` — UPDATE with split transition narrative (deferred — same)
+- [x] `notebooks/Phase4b_Vestigial_Technical.ipynb` — UPDATED: Section 12 added with production MC split transition + 2 viz-ref figures (2026-03-30)
+- [x] `notebooks/Phase4b_Vestigial_Stakeholder.ipynb` — UPDATED: production results section + susceptibility split figure (2026-03-30)
 
 **Paper 7: Chirality wall formal verification** (content from Wave 3)
 - [x] `papers/paper7_chirality_formal/paper_draft.tex` — DRAFT complete, needs figures from 5D
@@ -598,14 +597,24 @@ Update all documents per the Inventory Maintenance Protocol. This is a heavy syn
 - [x] `docs/stakeholder/Phase5_Strategic_Positioning.md` — DONE
 - [x] `docs/stakeholder/companion_guide.md` — DONE
 
-### 5G. Phase 5 Summary Report
+### 5G. Phase 5 Summary Report — COMPLETE
 
-Synthesize Phase 5 results into a coherent narrative:
-- What SK-EFT delivers analytically (kappa-scaling, polariton predictions)
-- What the vestigial MC pilot found (split transition detected at L=6,8)
-- What the chirality wall formalization proved (first formal verification in lattice chiral fermion lit)
-- What the Layer 1 formalization established (first-ever pivotal/spherical in any proof assistant)
-- Updated assessment of all three walls
+**Phase 5 delivered four categories of results:**
+
+1. **SK-EFT analytical completion (Wave 1):** Kappa-scaling predictions across all platforms — correction δ_diss ∝ κ (linear, not constant as previously claimed). Crossover formula κ_cross = 6(γ₁+γ₂)/(πξ²) identifies regime for each platform. Polariton Tier 1 predictions: T_H ~ 0.8-4 K (10¹⁰× hotter than BEC), ultra-long cavities (τ > 100 ps) needed for EFT regime.
+
+2. **Vestigial MC production (Wave 2):** Split transition detected at L=6,8. Susceptibility peaks for tetrad and metric order parameters at different couplings (Δ ≈ 0.63 at L=8), consistent with genuine vestigial phase. Vectorized MC with checkerboard decomposition achieves 16× speedup; production L=4,6,8 completes in 107 seconds.
+
+3. **Chirality wall formalization (Wave 3):** First formal verification in the lattice chiral fermion literature. 7/9 GS conditions formalized as substantive Lean propositions (C2 via ExteriorAlgebra, C3 via spectral gap, C5 via ground state invariance, I1 via matrix exponential). 5 TPF violations proved. Master synthesis `tpf_outside_gs_scope_main` is a machine-checked 5-part conjunction. 55 theorems + 1 axiom across 3 modules.
+
+4. **Layer 1 categorical infrastructure (Wave 4):** First-ever PivotalCategory, SphericalCategory, and FusionCategory definitions in any proof assistant. Concrete examples (Vec_{Z/2,Z/3}, Rep(S₃), Fibonacci) with all fusion rules verified. Drinfeld double D(G) formalized with twisted multiplication, Day convolution, and anyon counting. Gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)) proved. Chirality limitation c ≡ 0 (mod 8) established. 116 theorems across 7 modules.
+
+**Three-wall assessment (updated):**
+- **Chirality wall:** Conditional. 5/9 GS conditions violated by TPF. Neither proves nor disproves the other. First formal analysis establishes this rigorously.
+- **Vestigial/metric wall:** Encouraging. Split transition at L=6,8 is the first numerical evidence for a genuine vestigial phase. L=10,12 needed for thermodynamic limit.
+- **UV completion wall:** Four structural obstacles from Paper 5 remain. Layer 1 formalization provides new categorical routes (string-nets, Fermi-point) but Bott periodicity blocks the topological invariant approach.
+
+**By the numbers:** 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests, 60 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 validation checks, 15/15 deep research tasks complete.
 
 ### 5H. Deferred: Earlier paper visualization audit (Papers 1-5)
 
@@ -668,4 +677,4 @@ All prompts in `Lit-Search/Tasks/`. Results in `Lit-Search/Phase-5/`.
 
 ---
 
-*Phase 5 roadmap. Waves 1-4C complete: SK-EFT analytical ceiling + chirality wall formalization + Layer 1 categorical infrastructure (first-ever PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant). 429 theorems + 2 axioms, 91 Aristotle-proved, 30 modules, 1014 tests, 14/14 validation. 8 sorry stubs in Wave 4C pending Aristotle. Vestigial MC production: split transition detected at L=6,8. Wave 5 synthesis in progress: stakeholder docs complete, papers/notebooks pending. Wave 4D (Fermi-point) blocked by Bott periodicity. Deep research: 15/15 tasks complete. Updated 2026-03-29.*
+*Phase 5 roadmap. Waves 1-4C COMPLETE. Wave 5 synthesis NEARLY COMPLETE (Stages 9-12 done, minor deferred items remaining). 429 theorems + 2 axioms, ZERO sorry, 99 Aristotle-proved across 27 runs, 30 modules, 1014 tests, 60 figures, 7 papers, 20 notebooks, 14/14 validation. Split transition detected at L=6,8. First-ever PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant. Wave 4D (Fermi-point) blocked by Bott periodicity. Deep research: 15/15 tasks complete. Updated 2026-03-30.*
