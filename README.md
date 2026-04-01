@@ -22,11 +22,11 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
 - **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
   no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
-**Lean 4 formalization:** 429 theorems + 2 axioms, zero sorry.
-30 Lean modules. 99 Aristotle-proved across 27 runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 506 theorems + 2 axioms — ALL PROVED, ZERO sorry.
+33 Lean modules. 176 Aristotle-proved across 29 runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
-**Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, 4D fermion-bag MC pilot
-(split transition detected at L=6,8), chirality wall formalization (GS 9 conditions,
+**Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
+MC framework (Lean-verified, production in progress), chirality wall formalization (GS 9 conditions,
 TPF evasion machine-verified), Layer 1 categorical infrastructure (first-ever
 PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant),
 gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)).
@@ -35,7 +35,7 @@ gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)).
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (429 theorems + 2 axioms, zero sorry)
+├── lean/                              # Lean 4 formalization (506 theorems + 2 axioms, ZERO sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 30)
@@ -221,7 +221,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (429 + 2 axioms — ZERO sorry)
+## Theorem Inventory (506 + 2 axioms — ZERO sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -254,6 +254,9 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | VecG.lean | 5 | 9 | Day convolution, graded spaces |
 | DrinfeldDouble.lean | 5 | 15 | D(G) twisted multiplication, anyon counting |
 | GaugeEmergence.lean | 5 | 14 | Z(Vec_G)≅Rep(D(G)), chirality limitation |
+| SO4Weingarten.lean | 5 | 14 | Weingarten 2nd/4th moment, channel positivity, Planck occupation |
+| FractonFormulas.lean | 5 | 45 | Charge counting, dispersion, retention, DOF gap, YM obstructions |
+| WetterichNJL.lean | 5 | 18 | Fierz completeness, NJL channels, ADW correspondence |
 
 ## Build Environment
 

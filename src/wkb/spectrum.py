@@ -15,7 +15,7 @@ where:
 and n_Hawking itself contains:
     - Standard Planck factor at T_H = kappa/(2*pi)
     - Dispersive correction: delta_disp = -(pi/6)*D^2
-    - Dissipative correction: delta_diss = Gamma_H/kappa (all EFT orders)
+    - Dissipative correction: delta_diss = Gamma_H/kappa (all EFT orders through third)
     - UV suppression above omega_max
 
 Lean formalization: WKBConnection.lean — spectrum_thermal_limit,
@@ -41,10 +41,8 @@ from src.wkb.connection_formula import (
 from src.wkb.bogoliubov import (
     ModifiedBogoliubov,
     modified_bogoliubov_coefficients,
-    decoherence_parameter,
-    fdr_noise_floor,
 )
-from src.core.formulas import damping_rate
+from src.core.formulas import damping_rate, decoherence_parameter, fdr_noise_floor
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -97,6 +95,21 @@ class PlatformParams:
     def gamma_2_2(self) -> float:
         """Second-order coefficient (positivity: gamma_2_2 = -gamma_2_1)."""
         return -self.gamma_2_1
+
+    @property
+    def gamma_3_1(self) -> float:
+        """Third-order transport coefficient (xi²/c_s² suppressed)."""
+        return self.gamma_dim * (self.xi / self.c_s) ** 2 / 3.0
+
+    @property
+    def gamma_3_2(self) -> float:
+        """Third-order transport coefficient."""
+        return self.gamma_3_1
+
+    @property
+    def gamma_3_3(self) -> float:
+        """Third-order transport coefficient."""
+        return self.gamma_3_1
 
     @property
     def T_H(self) -> float:
@@ -207,23 +220,11 @@ class HawkingSpectrum:
 
 
 def planck_occupation(omega: float, T: float) -> float:
-    """Standard Planck/Bose-Einstein occupation at temperature T.
-
-    n_BE = 1 / (exp(omega/T) - 1)
-
-    Args:
-        omega: Frequency.
-        T: Temperature (same units as omega).
-
-    Returns:
-        Occupation number.
-    """
-    if T <= 0 or omega <= 0:
+    """Delegates to canonical formulas.planck_occupation."""
+    from src.core.formulas import planck_occupation as _canonical
+    if omega <= 0:
         return 0.0
-    x = omega / T
-    if x > 500:
-        return 0.0
-    return 1.0 / (np.exp(x) - 1.0)
+    return _canonical(omega, T)
 
 
 def compute_spectrum(
@@ -262,6 +263,7 @@ def compute_spectrum(
             omega, platform.kappa, platform.c_s, platform.xi,
             platform.gamma_1, platform.gamma_2,
             platform.gamma_2_1, platform.gamma_2_2,
+            platform.gamma_3_1, platform.gamma_3_2, platform.gamma_3_3,
         )
 
         # Modified Bogoliubov coefficients
@@ -434,6 +436,7 @@ def compare_exact_vs_perturbative(
             omega, platform.kappa, platform.c_s, platform.xi,
             platform.gamma_1, platform.gamma_2,
             platform.gamma_2_1, platform.gamma_2_2,
+            platform.gamma_3_1, platform.gamma_3_2, platform.gamma_3_3,
         )
         bog = modified_bogoliubov_coefficients(conn, T_env)
         n_exact_list.append(bog.n_total)
@@ -515,11 +518,12 @@ def spectrum_summary(spectrum: HawkingSpectrum) -> dict:
         Dictionary of diagnostic quantities.
     """
     p = spectrum.platform
-    k_H = p.T_H / p.c_s  # horizon wavenumber at T_H
+    k_H = p.T_H / p.c_s  # wavenumber at Wien-peak frequency omega = T_H = kappa/(2pi)
     Gamma_H = damping_rate(
         k_H, p.T_H, p.c_s,
         p.gamma_1, p.gamma_2,
         p.gamma_2_1, p.gamma_2_2,
+        p.gamma_3_1, p.gamma_3_2, p.gamma_3_3,
     )
     dk = decoherence_parameter(Gamma_H, p.kappa)
     n_noise = fdr_noise_floor(dk, p.T_H)

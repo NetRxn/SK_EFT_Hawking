@@ -1,0 +1,12 @@
+SK-EFT Hawking Validation Report
+Generated: 20260331T214738Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] parameter_provenance
+  + coverage — All 29 parameters have provenance entries
+  - llm_verification — 29 params not LLM-verified: HBAR, K_B, A_BOHR, Rb87.mass, Rb87.a_s... (+24 more)
+  + human_verification — 29 params not yet human-verified (blocks paper submission)
+  - unresolved_conflicts — 1 params have NULL value (unresolved conflict): Steinhauer.omega_perp
+  + tier_appropriateness — 7 MEASURED params not yet LLM-verified: Rb87.a_s, Na23.a_s, Steinhauer.omega_perp, POLARITON_MASS, Paris_long.tau_cav
+
+Overall: 0/1 passed

@@ -37,11 +37,11 @@ Phase 4 validated numerically, closed dead ends, and built the experimental brid
 
 **Why it matters strategically:** The Drinfeld double is the algebraic engine of Dijkgraaf-Witten gauge theory — the simplest topological gauge theory. Formalizing it connects our gauge erasure theorems (Phase 3) to their categorical origin, completing the three-layer architecture with formal verification at every level.
 
-### 4. Production-Scale Vestigial MC with Split Transition
+### 4. Vestigial MC Framework with Weingarten Integration
 
-**What:** Vectorized + multiprocessing fermion-bag MC completing L=4,6,8 production runs in 107 seconds (vs 8+ hours before optimization). Split transition detected: tetrad and metric susceptibility peaks at different couplings.
+**What:** Full SO(4) Weingarten multi-channel bond coupling (fundamental + adjoint representation channels) implemented and Lean-verified (14 theorems, zero sorry, Aristotle-proved). The initial product-form MC was found to be physically incorrect for the ADW model; the corrected Weingarten framework is now in production.
 
-**Why it matters strategically:** This is the first production-scale numerical evidence (beyond mean-field and small-lattice tests) for the vestigial metric phase. The split transition surviving to L=8 suggests a genuine thermodynamic phase. This transforms the vestigial gravity result from "mean-field indicates" to "lattice MC confirms."
+**Why it matters strategically:** This is the first lattice MC framework for the ADW model with correct SO(4) gauge integration physics. The Weingarten calculus is formally verified — a unique asset for publication credibility. Production simulations with the correct physics are in progress.
 
 ### 5. Polariton Platform with 10^10× Temperature Advantage
 
@@ -56,7 +56,7 @@ Phase 4 validated numerically, closed dead ends, and built the experimental brid
 | Wall | Phase 4 Status | Phase 5 Status | Next Step |
 |------|---------------|----------------|-----------|
 | **1. Non-Abelian Gauge** | Fracton route closed, standard hydro erases | Categorical foundation: Z(C) doubled → gauge erasure is a theorem of categorical algebra | Wave 4D: Fermi-point topological invariant (blocked by Bott periodicity) |
-| **2. Einstein Gravity** | Vestigial confirmed (mean-field + small MC) | Production MC confirms split transition at L=6,8; vestigial is genuine thermodynamic phase | Phase 6: HPC-scale MC (simplicial lattice, L=10-16), finite-size scaling exponents |
+| **2. Einstein Gravity** | Vestigial confirmed (mean-field) | Weingarten multi-channel MC framework Lean-verified; production run in progress | Weingarten + NJL production MC, finite-size scaling |
 | **3. Chirality** | 2/4 GS conditions evaded (informal) | 5/9 GS conditions formally violated; first machine-checked analysis; chirality limitation theorem | Paper 7 submission; engage GS/TPF communities |
 
 ---

@@ -24,6 +24,8 @@ from dataclasses import dataclass, field
 import numpy as np
 from typing import Optional
 
+from src.core.constants import FERMION_BAG, ADW_4D_FSS
+from src.core.formulas import binder_cumulant as _binder_cumulant
 from src.vestigial.lattice_model import (
     LatticeParams, LatticeConfig, create_lattice,
     tetrad_order_parameter, metric_order_parameter,
@@ -157,8 +159,8 @@ def compute_binder_cumulant(mc_result: MCResult,
     m2_g = float(np.mean(metric_mags**2))
     m4_g = float(np.mean(metric_mags**4))
 
-    U_t = 1.0 - m4_t / (3.0 * m2_t**2) if m2_t > 1e-30 else 0.0
-    U_g = 1.0 - m4_g / (3.0 * m2_g**2) if m2_g > 1e-30 else 0.0
+    U_t = _binder_cumulant(m2_t, m4_t)
+    U_g = _binder_cumulant(m2_g, m4_g)
 
     return BinderCumulant(
         L=L, coupling_ratio=coupling_ratio,
@@ -257,7 +259,9 @@ def finite_size_scaling(
     """
     if mc_params is None:
         mc_params = MCParams(
-            n_thermalize=100, n_measure=200, n_skip=5,
+            n_thermalize=FERMION_BAG['n_thermalize'],
+            n_measure=FERMION_BAG['n_measure'],
+            n_skip=FERMION_BAG['n_skip'],
             step_size=0.3, seed=42,
         )
 
@@ -369,7 +373,9 @@ def sign_reweighting(
     """
     if mc_params is None:
         mc_params = MCParams(
-            n_thermalize=100, n_measure=500, n_skip=3,
+            n_thermalize=FERMION_BAG['n_thermalize'],
+            n_measure=FERMION_BAG['n_measure'],
+            n_skip=FERMION_BAG['n_skip'],
             step_size=0.3, seed=42,
         )
 
@@ -382,31 +388,28 @@ def sign_reweighting(
     lattice_params = LatticeParams(L=L, d=4, G=G, N_f=N_f, euclidean=True)
     mc_result = run_monte_carlo(lattice_params, mc_params)
 
-    # For each Euclidean config, compute Delta S = S_Lorentzian - S_Euclidean
-    # S_E = (1/2G) sum Tr(e^T e)
-    # S_L = (1/2G) sum Tr(e^T eta e) where eta = diag(-1,+1,+1,+1)
-    # Delta S = (1/2G) sum [Tr(e^T eta e) - Tr(e^T e)]
-    #         = -(1/G) sum (e^0_mu)^2  [the timelike component squared, negative]
-    d = 4
+    # For each Euclidean config, get Delta S = S_Lorentzian - S_Euclidean
+    # ΔS = -(1/G) Σ_x (e^0_μ(x))^2  (always negative)
     delta_S_values = []
 
-    # We can compute Delta S from the stored measurements
-    # But we only have summary stats, not full configs. Use the final config.
-    # For a proper study we'd store configs; here we estimate from the
-    # distribution of the tetrad magnitude.
-    #
-    # Approximate: <(e^0_mu)^2> ~ (1/d) <||e||^2> per site
-    # Delta S ~ -(1/G) * V * (1/d) * <||e||^2>
-    # sign ~ exp(Delta S)
-    V = L**d
-    for meas in mc_result.measurements:
-        # e magnitude per site ~ meas.tetrad_vev * sqrt(d*d) for volume-averaged
-        # But tetrad_vev = ||<e>||, not <||e||>. Use action as proxy.
-        # S_aux = (1/2G) sum ||e_x||^2 => <||e||^2> = 2G * S / V
-        e_sq_per_site = 2.0 * G * meas.action / V if V > 0 else 0.0
-        # Delta S = -(1/G) * V * (1/d) * e_sq_per_site
-        delta_S = -(1.0 / G) * V * (1.0 / d) * e_sq_per_site
-        delta_S_values.append(delta_S)
+    # Use exact ΔS computed from full config during MC (preferred)
+    if mc_result.measurements and mc_result.measurements[0].delta_S_lorentzian is not None:
+        delta_S_values = [m.delta_S_lorentzian for m in mc_result.measurements]
+    else:
+        import warnings
+        warnings.warn(
+            f"sign_reweighting(L={L}): exact delta_S_lorentzian not available. "
+            f"Falling back to approximate ΔS (underflows at large L).",
+            stacklevel=2,
+        )
+        d = 4
+        V = L**d
+        if G <= 0:
+            raise ValueError(f"G must be positive for sign reweighting, got G={G}")
+        for meas in mc_result.measurements:
+            e_sq_per_site = 2.0 * G * meas.action / V if V > 0 else 0.0
+            delta_S = -(1.0 / G) * V * (1.0 / d) * e_sq_per_site
+            delta_S_values.append(delta_S)
 
     delta_S_arr = np.array(delta_S_values)
     # Average sign = <exp(Delta S)>_E (note: Delta S is typically negative)
@@ -415,14 +418,15 @@ def sign_reweighting(
     log_avg_sign = max_dS + np.log(np.mean(np.exp(delta_S_arr - max_dS)))
     avg_sign = float(np.exp(log_avg_sign))
 
-    # Standard error via jackknife
+    # Standard error via jackknife (log-sum-exp stabilized)
     n = len(delta_S_values)
     if n > 1:
-        signs = np.exp(delta_S_arr)
         jackknife_means = []
         for i in range(n):
-            jk = np.delete(signs, i)
-            jackknife_means.append(np.mean(jk))
+            jk = np.delete(delta_S_arr, i)
+            jk_max = np.max(jk)
+            jk_mean = float(np.exp(jk_max + np.log(np.mean(np.exp(jk - jk_max)))))
+            jackknife_means.append(jk_mean)
         jk_arr = np.array(jackknife_means)
         avg_sign_err = float(np.sqrt((n - 1) * np.var(jk_arr)))
     else:

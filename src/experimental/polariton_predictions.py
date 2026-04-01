@@ -22,7 +22,7 @@ References:
     - Jacquet et al., Eur. Phys. J. D 76, 152 (2022) — kinematics
     - Sieberer et al., Rep. Prog. Phys. 79, 096001 (2016) — SBD framework
 
-Lean: PolaritonTier1.lean (planned)
+Lean: PolaritonTier1.lean (6 theorems, zero sorry)
 """
 
 import numpy as np
@@ -110,7 +110,7 @@ def compute_polariton_platform(name: str) -> PolaritonPlatform:
 
     # EFT phonon dissipative correction (subdominant for polaritons)
     gamma_dim = params['gamma_phonon_dim']
-    delta_diss_eft = gamma_dim  # In natural units, delta_diss ≈ gamma_dim/(4π²)
+    delta_diss_eft = gamma_dim  # In natural units, delta_diss = Gamma_H/kappa = gamma_dim
 
     return PolaritonPlatform(
         name=name,

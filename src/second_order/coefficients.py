@@ -47,6 +47,9 @@ from typing import Optional
 
 import numpy as np
 
+from src.core.constants import HBAR, K_B
+from src.core.formulas import hawking_temperature
+
 
 # ═══════════════════════════════════════════════════════════════════
 # Transport coefficient data structures
@@ -69,10 +72,12 @@ class FirstOrderCoeffs:
     Constraints:
         gamma_1 ≥ 0, gamma_2 ≥ 0 (from positivity / second law)
 
-    FDR (from FirstOrderKMS):
-        i₁ = γ₁/β  (noise coefficient for ψ_a²)
-        i₂ = γ₂/β  (noise coefficient for (∂_t ψ_a)²)
-        i₃ = 0      (no (∂_x ψ_a)² noise at first order)
+    FDR (from FirstOrderKMS, Lean-verified via Aristotle run 270e77a0):
+        In Lean coefficient labels: i₁·β = -r₂,  i₂·β = r₁+r₂
+        With identification γ₁ = -r₂, γ₂ = r₁+r₂:
+            i₁ = γ₁/β  (noise coefficient for ψ_a²)
+            i₂ = γ₂/β  (noise coefficient for (∂_t ψ_a)²)
+            i₃ = 0      (no (∂_x ψ_a)² noise at first order)
     """
     gamma_1: float  # ψ_a · □ψ_r
     gamma_2: float  # ψ_a · ∂²_t ψ_r
@@ -415,7 +420,7 @@ def effective_temperature(
     Returns:
         T_eff(ω) for each frequency.
     """
-    T_H = kappa / (2 * np.pi)
+    T_H = kappa / (2 * np.pi)  # Natural units (ℏ=k_B=1); see formulas.hawking_temperature for SI
 
     # First-order correction (constant)
     delta_1 = hawking_correction_first_order(
@@ -433,19 +438,9 @@ def effective_temperature(
 # ═══════════════════════════════════════════════════════════════════
 
 def planck_spectrum(omega: np.ndarray, T: float) -> np.ndarray:
-    """Planck (Bose-Einstein) spectrum at temperature T.
-
-    n(ω) = 1 / (exp(ω/T) - 1)
-
-    Args:
-        omega: Frequency array (positive values).
-        T: Temperature.
-
-    Returns:
-        Occupation number at each frequency.
-    """
-    x = omega / T
-    return 1.0 / (np.exp(x) - 1.0)
+    """Planck (Bose-Einstein) spectrum. Delegates to canonical formulas.planck_occupation."""
+    from src.core.formulas import planck_occupation
+    return planck_occupation(omega, T)
 
 
 def spectral_distortion(
@@ -477,7 +472,7 @@ def spectral_distortion(
     Returns:
         Relative spectral distortion array.
     """
-    T_H = kappa / (2 * np.pi)
+    T_H = kappa / (2 * np.pi)  # Natural units (ℏ=k_B=1); see formulas.hawking_temperature for SI
     T_eff = effective_temperature(omega, coeffs, kappa, c_s, v_gradient)
 
     n_planck = planck_spectrum(omega, T_H)
@@ -522,10 +517,7 @@ def estimate_second_order_coeffs_beliaev(
     Returns:
         Estimated second-order coefficients.
     """
-    import scipy.constants as const
-
-    hbar = const.hbar
-    xi = hbar / (m * c_s)  # healing length
+    xi = HBAR / (m * c_s)  # healing length
 
     # Beliaev damping rate
     gas_param = n * a_s**3  # dimensionless gas parameter (1D analog)

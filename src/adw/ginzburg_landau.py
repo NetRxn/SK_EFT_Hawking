@@ -34,11 +34,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 import numpy as np
 
+from src.core.formulas import (
+    adw_effective_potential as effective_potential,
+    adw_critical_coupling as critical_coupling,
+    adw_curvature_at_origin as curvature_at_origin,
+)
 from src.adw.gap_equation import (
     GapEquationParams,
-    effective_potential,
-    critical_coupling,
-    curvature_at_origin,
     solve_gap_equation,
 )
 from src.adw.hubbard_stratonovich import TetradField
@@ -268,13 +270,13 @@ def _polar_phase_tetrad(C: float) -> np.ndarray:
 
 
 def _planar_phase_tetrad(C: float) -> np.ndarray:
-    """Planar phase ansatz: one direction has zero gap in a different pattern.
+    """Planar phase ansatz — DEGENERATE with A-phase in diagonal approximation.
 
-    e^a_mu = C * diag(1, 1, 1, 0) but with off-diagonal structure.
-    For the initial classification we use the same form as A-phase
-    but note the distinction arises from off-diagonal components in He-3.
-
-    In He-3, the planar phase is A_{ai} = Delta * (delta_{ai} - d_hat_a d_hat_i).
+    In He-3, the planar phase has off-diagonal structure
+    A_{ai} = Delta * (delta_{ai} - d_hat_a d_hat_i) that distinguishes it
+    from A-phase. In the diagonal GL approximation used here, both reduce
+    to diag(1,1,1,0), making the planar phase indistinguishable from A-phase.
+    A proper distinction requires the full off-diagonal GL coefficients.
     """
     return C * np.diag([1.0, 1.0, 1.0, 0.0])
 
@@ -401,7 +403,10 @@ def compute_gl_coefficients(G: float, Lambda: float, N_f: int) -> GLCoefficients
     #
     # We compute beta_eff from the CW potential:
     # The quartic term in V_eff = prefactor * C^4 * ln(Lambda^2/C^2 + 1)
-    # At the scale C_eval ~ 0.1 * Lambda (deep inside the GL regime):
+    # Evaluate at C_eval = 0.1 * Lambda — a convention choice that places
+    # the evaluation point deep inside the GL regime (C << Lambda).
+    # The beta_eff depends logarithmically on C_eval/Lambda, so the
+    # qualitative phase structure is insensitive to this choice.
     C_eval = 0.1 * Lambda
     ratio = Lambda / C_eval
     beta_eff = prefactor_cw * np.log(ratio**2 + 1.0)
@@ -587,7 +592,7 @@ def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification
     f_B = _full_cw_free_energy(G, Lambda, N_f, 4)
     f_A = _full_cw_free_energy(G, Lambda, N_f, 3)
     f_polar = _full_cw_free_energy(G, Lambda, N_f, 2)
-    f_planar = _full_cw_free_energy(G, Lambda, N_f, 3)  # Same DOF count as A
+    f_planar = f_A  # Degenerate with A-phase in diagonal approximation (see _planar_phase_tetrad)
 
     # Pre-geometric phase: F = 0 always
     f_pre = 0.0

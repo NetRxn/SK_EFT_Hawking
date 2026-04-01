@@ -1,5 +1,7 @@
 """Non-Abelian Fracton Gauge Theories: Yang-Mills Compatibility Analysis.
 
+PROVENANCE NOTE: See sk_eft.py for Pipeline Invariant 1+4 gap status.
+
 Investigates whether non-Abelian fracton gauge theories can produce emergent
 SU(N) gauge structure compatible with standard Yang-Mills algebra.
 
@@ -60,6 +62,8 @@ References:
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
+
+from src.core.formulas import fracton_ym_obstruction_count
 
 
 # ===================================================================

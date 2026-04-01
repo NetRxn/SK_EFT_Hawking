@@ -1,0 +1,47 @@
+{
+  "timestamp": "20260331T214738Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "parameter_provenance": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "coverage",
+          "passed": true,
+          "message": "All 29 parameters have provenance entries",
+          "warning": false
+        },
+        {
+          "name": "llm_verification",
+          "passed": false,
+          "message": "29 params not LLM-verified: HBAR, K_B, A_BOHR, Rb87.mass, Rb87.a_s... (+24 more)",
+          "warning": false
+        },
+        {
+          "name": "human_verification",
+          "passed": true,
+          "message": "29 params not yet human-verified (blocks paper submission)",
+          "warning": true
+        },
+        {
+          "name": "unresolved_conflicts",
+          "passed": false,
+          "message": "1 params have NULL value (unresolved conflict): Steinhauer.omega_perp",
+          "warning": false
+        },
+        {
+          "name": "tier_appropriateness",
+          "passed": true,
+          "message": "7 MEASURED params not yet LLM-verified: Rb87.a_s, Na23.a_s, Steinhauer.omega_perp, POLARITON_MASS, Paris_long.tau_cav",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

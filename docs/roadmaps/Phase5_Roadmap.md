@@ -601,20 +601,33 @@
 
 **Phase 5 delivered four categories of results:**
 
-1. **SK-EFT analytical completion (Wave 1):** Kappa-scaling predictions across all platforms — correction δ_diss ∝ κ (linear, not constant as previously claimed). Crossover formula κ_cross = 6(γ₁+γ₂)/(πξ²) identifies regime for each platform. Polariton Tier 1 predictions: T_H ~ 0.8-4 K (10¹⁰× hotter than BEC), ultra-long cavities (τ > 100 ps) needed for EFT regime.
+1. **SK-EFT analytical completion (Wave 1):** Kappa-scaling predictions across all platforms — correction δ_diss ∝ κ (linear, not constant as previously claimed). Crossover formula κ_cross = 6(γ₁+γ₂)/(πξ²) identifies regime for each platform. Polariton Tier 1 predictions: T_H ~ 0.8-4 K (10¹⁰× hotter than BEC), ultra-long cavities (τ > 100 ps) needed for EFT regime. **NOTE:** BEC platform parameters (Steinhauer omega_perp, a_s) under provenance review — see 9D. Kappa-scaling physics (scaling laws, crossover formula) is valid; absolute numerical values may shift.
 
-2. **Vestigial MC production (Wave 2):** Split transition detected at L=6,8. Susceptibility peaks for tetrad and metric order parameters at different couplings (Δ ≈ 0.63 at L=8), consistent with genuine vestigial phase. Vectorized MC with checkerboard decomposition achieves 16× speedup; production L=4,6,8 completes in 107 seconds.
+2. **Vestigial MC (Waves 2, 9A-9C):** Three-iteration development:
+   - Wave 2: Infrastructure built. Prior "split transition" claim INVALIDATED (product-form toy model, not ADW physics).
+   - 9A: Bond coupling fixed. Product-form still not faithful ADW → deep research identified Weingarten multi-channel as correct physics.
+   - 9C-2 (Option B, Weingarten): Production run complete but **order parameter bug found** — single-site OPs blind to bond ordering. Fix applied: bond-correlation OPs restore coupling-dependent physics. Re-run pending.
+   - 9C-3 (Option C, NJL): Implemented and **diagnostic run shows Binder crossings** at L=4-8 (3 tetrad, 3 metric crossings, vestigial window = 0.126). Production run (L=4-12) in progress.
+   - **Current status:** Vestigial phase hypothesis OPEN. NJL model (Option C) shows promising signal. ADW model (Option B) needs re-run with fixed OPs. Neither model's results are publication-ready yet.
 
 3. **Chirality wall formalization (Wave 3):** First formal verification in the lattice chiral fermion literature. 7/9 GS conditions formalized as substantive Lean propositions (C2 via ExteriorAlgebra, C3 via spectral gap, C5 via ground state invariance, I1 via matrix exponential). 5 TPF violations proved. Master synthesis `tpf_outside_gs_scope_main` is a machine-checked 5-part conjunction. 55 theorems + 1 axiom across 3 modules.
 
 4. **Layer 1 categorical infrastructure (Wave 4):** First-ever PivotalCategory, SphericalCategory, and FusionCategory definitions in any proof assistant. Concrete examples (Vec_{Z/2,Z/3}, Rep(S₃), Fibonacci) with all fusion rules verified. Drinfeld double D(G) formalized with twisted multiplication, Day convolution, and anyon counting. Gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)) proved. Chirality limitation c ≡ 0 (mod 8) established. 116 theorems across 7 modules.
 
-**Three-wall assessment (updated):**
+5. **Formalization wave (9C):** FractonFormulas (45 theorems), WetterichNJL (18 theorems), SO4Weingarten (14 theorems) — ALL Aristotle-proved. Project reaches **506 theorems + 2 axioms, ZERO sorry, 176 Aristotle-proved across 29 runs.**
+
+**Three-wall assessment (updated 2026-03-31):**
 - **Chirality wall:** Conditional. 5/9 GS conditions violated by TPF. Neither proves nor disproves the other. First formal analysis establishes this rigorously.
-- **Vestigial/metric wall:** Encouraging. Split transition at L=6,8 is the first numerical evidence for a genuine vestigial phase. L=10,12 needed for thermodynamic limit.
+- **Vestigial/metric wall:** Under investigation. NJL model shows Binder crossings (promising). ADW model needs re-run with fixed OPs. Neither is publication-ready. Mean-field prediction not falsified.
 - **UV completion wall:** Four structural obstacles from Paper 5 remain. Layer 1 formalization provides new categorical routes (string-nets, Fermi-point) but Bott periodicity blocks the topological invariant approach.
 
-**By the numbers:** 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests, 61 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 validation checks, 15/15 deep research tasks complete.
+**By the numbers:** 506 theorems + 2 axioms (ZERO sorry), 176 Aristotle-proved across 29 runs, 1027 tests, 61 figures, 33 Lean modules, 38 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 original validation checks + CHECK 15 (parameter_provenance) in development, 15/15 deep research tasks complete.
+
+**Active work streams (2026-03-31):**
+- 9C-3: NJL production MC running (L=4-12, 14 cores)
+- 9C-2: Option B re-run queued (after NJL completes) — bond-correlation OPs now correct
+- 9D: Parameter provenance & citation integrity system (parallel session) — gates all paper submissions
+- All downstream paper/notebook/stakeholder updates ON HOLD until 9D provenance chain established
 
 ### 5H. Earlier paper visualization audit (Papers 1-5) — COMPLETE (2026-03-30)
 
@@ -681,4 +694,385 @@ All prompts in `Lit-Search/Tasks/`. Results in `Lit-Search/Phase-5/`.
 
 ---
 
-*Phase 5 roadmap. Waves 1-4C COMPLETE. Wave 5 synthesis COMPLETE (all 12 pipeline stages done, 5H audit done). 429 theorems + 2 axioms, ZERO sorry, 99 Aristotle-proved across 27 runs, 30 modules, 1014 tests, 61 figures, 7 papers, 20 notebooks, 14/14 validation. Split transition detected at L=6,8. First-ever PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant. Wave 4D (Fermi-point) blocked by Bott periodicity. Deep research: 15/15 tasks complete. Top-level docs (Critical Review v3, Feasibility Study) updated with Phase 5 results. Updated 2026-03-30.*
+## 9. Post-Wave 5 Fixes
+
+### 9A. Vestigial MC Physics Correction (2026-03-31) — COMPLETE
+
+**Problem identified:** Systematic code review revealed that both MC backends were missing inter-site coupling. The fermion-bag sweep (`fermion_bag.py`) included only on-site 8-fermion vertex action in the Metropolis acceptance — the nearest-neighbor bond coupling (g_eff) was defined in `lattice_4d.py` but never wired into the sweep. The HS-transformed Metropolis code (`monte_carlo.py`) had no spatial coupling at all. Both produced structurally uncoupled (independent-site) configurations, making phase transitions impossible.
+
+**Prior "split transition at L=6,8" result was an artifact** of running uncoupled sites — the susceptibility "peaks" were noise on a Gaussian background, confirmed by L=10-16 production run which showed flat Binder cumulants at 2/3, boundary-pinned susceptibility, and volume-scaling peak heights.
+
+**Root cause:** Bond action infrastructure (bond_action_4d, total_action_4d, neighbor_index) was implemented but never connected to the Metropolis acceptance step. Docstrings falsely claimed fermion determinant reweighting. FSS section used wrong MC backend.
+
+**Fixes applied:**
+- [x] C1: `fermion_bag.py` — sweep now includes bond action change via precomputed neighbor table. Bond occupations updated after each sweep to reflect current site state. (2026-03-31)
+- [x] C2/C4: `monte_carlo.py` — docstring corrected to state it's an uncoupled bosonic model that cannot produce phase transitions. (2026-03-31)
+- [x] C3: `run_vestigial_production.py` — FSS worker replaced: now uses `run_fermion_bag_mc` (fermion-bag with bond coupling) instead of `run_monte_carlo` (uncoupled Gaussian). (2026-03-31)
+- [x] P1: `lattice_model.py` — imports from constants.py, G_c references formulas.py. (2026-03-31)
+- [x] P2: `monte_carlo.py` — MCParams defaults from FERMION_BAG constants. (2026-03-31)
+- [x] P3: `finite_size.py` — Binder cumulant from formulas.py, defaults from FERMION_BAG constants. (2026-03-31)
+- [x] P4: `phase_diagram.py` — coupling range from ADW_4D_FSS constants. (2026-03-31)
+- [x] I1: `fermion_bag.py` — action_mean now measured from configs with correct bond state. chi_tetrad/chi_metric added to FermionBagResult. (2026-03-31)
+- [x] I2: `phase_diagram.py` — MC branch emits warning about uncoupled model. Defaults from constants. (2026-03-31)
+
+**Impact on prior claims:** The "split transition detected" claim in Papers 5-6, roadmap 5G summary, Critical Review v3, and stakeholder docs needs to be downgraded. The vestigial phase hypothesis is still open — the corrected MC (with bond coupling) has not yet been run at production scale.
+
+**Verification (2026-03-31):** Quick smoke tests at L=4,6,8 confirm the bond coupling is working:
+1. Observables now depend on coupling strength (no longer flat at 2/3)
+2. Sign of coupling matters (attractive vs repulsive gives different physics)
+3. Product-form bond weight S_bond = -g_eff × (n_x/N)(n_y/N) produces L-dependent Binder dip at g_EH ≈ -18 (L=4: 0.629, L=6: 0.659, L=8: 0.664 — weakens with L, may be crossover rather than sharp transition)
+4. Acceptance rates respond correctly to coupling (0.92 at weak → 0.42 at strong)
+
+**Open physics question:** The product-form approximation to the SO(4)-integrated bond coupling may not capture the full ADW physics. The actual effective action from gauge integration could have different coupling structure. The Binder dip weakening with L could indicate: (a) crossover, not transition, (b) need for larger L, or (c) need for more accurate coupling model. A deep research task on the exact SO(4) effective action is recommended before production-scale runs.
+
+### 9A-2. Vestigial MC: Deep Research Result and Path Forward (2026-03-31)
+
+**Deep research finding (complete):** `Lit-Search/Phase-5/Phase_5_follow-up_Effective nearest-neighbor action in ADW tetrad condensation after SO(4) Haar integration.md`
+
+**Key result:** The product-form approximation is not the correct ADW physics. The actual SO(4) Haar integration produces:
+1. A representation-theoretic tower of multi-fermion interactions: (½,½) fundamental (4-fermion, leading), (1,0)⊕(0,1) adjoint (8-fermion), (1,1) symmetric (sub-leading), plus ε-tensor determinantal terms
+2. The leading 4-fermion coupling IS attractive (confirmed — our sign choice was correct)
+3. 8-fermion corrections enter at relative order 1/24 — not negligible for SO(4) in 4D
+4. The Catterall/Chandrasekharan SMG models are gauge-FREE (global SO(4) flavor, no link variables) — structurally different from ADW where SO(4) is a local gauge symmetry with link variables
+5. No existing lattice simulation has performed exact SO(4) gauge integration for the ADW model
+
+**The product-form toy model cannot support ADW vestigial phase claims for publication.** The current MC (even with bond coupling fix) samples from the wrong distribution.
+
+**Two viable paths to publication-quality vestigial MC:**
+
+#### Option B: Full Weingarten/Kawamoto-Smit Integration
+
+Implement exact one-link SO(4) Haar integration using the Weingarten calculus, then use the resulting multi-fermion effective action in the fermion-bag MC.
+
+**Concrete steps:**
+1. **Implement SO(4) Weingarten functions** — the explicit formulas for N=4 are known:
+   - Second moment: ∫ O_{ab}O_{cd} dO = (1/4)δ_{ac}δ_{bd} → 4-fermion NN coupling
+   - Fourth moment: ∫ O_{a1b1}...O_{a4b4} dO = (1/72)[6P-DD] + (1/24)ε_{abcd}ε_{efgh} → 8-fermion coupling + baryonic term
+   - These are finite algebraic expressions — ideal for formulas.py + Lean verification
+   - LOE: ~100-200 lines in formulas.py + new Lean module (SO4Weingarten.lean)
+   - Aristotle can prove the Weingarten identities since they're algebraic
+
+2. **Build the effective multi-fermion action** — combine Weingarten integrals with the ADW vertex structure:
+   - Input: site Grassmann variables ψ_x (8 per site), link direction
+   - Output: effective 4-fermion + 8-fermion + baryonic couplings per bond
+   - LOE: ~150-300 lines in a new `src/vestigial/weingarten_action.py`
+
+3. **Update fermion-bag sweep** to use the full multi-channel action:
+   - ΔS_bond now includes fundamental, adjoint, and baryonic channels
+   - Bond state becomes multi-component (not just binary 0/1)
+   - LOE: ~100-200 lines modifying fermion_bag.py
+
+4. **Lean formalization** of the SO(4) one-link integrals and representation decomposition:
+   - Weingarten function positivity, channel decomposition, baryonic term
+   - ~20-40 theorems, can leverage existing SphericalCategory/FusionCategory infrastructure
+   - Aristotle targets: algebraic identities for N=4 Weingarten functions
+
+5. **Production MC run** with the correct multi-channel action
+
+**Total LOE estimate:** ~500-800 lines of new code + ~30 Lean theorems. With Lean + Aristotle pipeline, estimated 2-4 sessions.
+
+#### Option C: Wetterich Gauge-Link-Free Formulation
+
+Adopt Wetterich's hypercubic lattice formulation where SO(4,ℂ) acts directly on spinors without explicit gauge link variables. This is closer to a Nambu-Jona-Lasinio (NJL) model with 4-fermion vertices connecting nearest-neighbor sites directly.
+
+**Concrete steps:**
+1. **Implement Wetterich's NJL-type 4-fermion vertex** — no gauge links, SO(4,ℂ) acts on even/odd sublattices:
+   - S = Σ_{<xy>} g × (ψ̄_x γ^a ψ_y)(ψ̄_y γ_a ψ_x) (scalar channel)
+   - Plus additional channels (pseudoscalar, vector, axial, tensor) from Fierz identity
+   - LOE: ~100-200 lines in new `src/vestigial/wetterich_model.py`
+
+2. **Fermion-bag MC** adapts naturally — the Chandrasekharan algorithm was designed for exactly this type of model (4-fermion vertices on a hypercubic lattice with global flavor symmetry)
+   - The key difference from current code: bond coupling is a genuine Grassmann bilinear, not an occupation-number product
+   - LOE: ~200-300 lines modifying fermion_bag.py
+
+3. **Lean formalization** of the Wetterich action structure:
+   - Fierz completeness, channel decomposition, positivity
+   - ~15-25 theorems
+   - Less novel than Option B (NJL models are well-studied)
+
+4. **Production MC run**
+
+**Total LOE estimate:** ~400-600 lines of new code + ~20 Lean theorems. Estimated 1-3 sessions. Simpler than Option B but represents a different model (NJL-type, not gauge theory).
+
+**Trade-off:** Option B is the faithful ADW model (local gauge symmetry, exact integration). Option C is a related but distinct model (global symmetry, NJL-type). Both can show vestigial phase physics. For a Paper 6 that claims to simulate the ADW mechanism specifically, Option B is required. For a paper about vestigial metric phases in general multi-fermion models, Option C is sufficient.
+
+**Recommendation:** Option B is the correct choice for our pipeline (correctness over expediency). The Weingarten calculus is algebraic, ideal for Lean + Aristotle. The code complexity is manageable. Deep research task for Weingarten implementation filed.
+
+### 9B. Codebase Physics Audit — COMPLETE (2026-03-31)
+
+**Scope:** Systematic audit of entire codebase for disconnected physics, docstring-implementation mismatch, provenance bypass, wrong backends, and silent parameter mismatch. 4 parallel audit agents, all 37 Python source modules reviewed.
+
+**Clean modules (no material findings):** `gauge_erasure/erasure_theorem.py`, `chirality/tpf_gs_analysis.py`, `second_order/enumeration.py`, `core/transonic_background.py`, `core/aristotle_interface.py`, `scripts/validate.py`, `scripts/review_figures.py`.
+
+**Configuration fix:** `requires-python` updated from `>=3.11` to `>=3.14` (pyproject.toml, CLAUDE.md).
+
+---
+
+#### 9B-1. CRITICAL Fixes (must complete before paper submission)
+
+**CF-1: `wkb/connection_formula.py:125` — Turning point formula mismatch — FIXED (2026-03-31)**
+- [x] Fix: now imports and calls canonical `turning_point_shift` from formulas.py. Also fixed `delta_diss` to use `first_order_correction`. Tests updated for correct ∝1/κ² scaling.
+- [ ] Verify: re-run WKB spectrum for all platforms, compare old vs new delta_x values
+- [ ] Impact: Paper 4 numerical results (exact WKB spectrum), all platform prediction tables
+- [ ] Downstream claims: Paper 4 Table 1, experimental predictions, fig22-fig27
+
+**CF-2: `wkb/connection_formula.py:166-516` — Stokes geometry disconnected — RESOLVED (2026-03-31)**
+- [x] Analysis: the κ_eff approach IS the analytic evaluation of the WKB contour integral for a linear flow profile with a simple turning point. The Stokes geometry class computes metadata (line angles, multiplier) that are structurally present but not needed for the single-turning-point Hawking problem. The formula `|β/α|² = exp(-2πω/κ_eff)` is the correct analytic result, not an approximation.
+- [x] Fix: docstring corrected from "exact Stokes analysis" to accurate description of what the code computes. StokesGeometry retained as diagnostic metadata with clear documentation of its role.
+- [x] Paper 4 claim: "WKB connection formula" is accurate. "Exact Stokes analysis" should be softened to "analytic WKB connection via effective surface gravity." The computation is exact for linear flow profiles.
+- [ ] Downstream: Paper 4 text should be reviewed for "Stokes analysis" phrasing
+
+**SPEC-2: `wkb/spectrum.py:261-523` — Third-order EFT — FIXED (2026-03-31)**
+- [x] Fix: `gamma_3_1, gamma_3_2, gamma_3_3` properties added to `PlatformParams` (Beliaev-damping estimates: γ₃ ~ γ_dim·D²/3). All call sites in spectrum.py and backreaction.py now pass third-order coefficients to `exact_connection_formula` and `damping_rate`.
+- [x] Docstring: "all EFT orders through third" is now accurate.
+- [x] Verify: tests pass. Third-order corrections are O(10⁻⁹) for BEC platforms — numerically negligible but formally complete.
+- [x] No downstream claim changes needed (the claim "all EFT orders" is now true).
+
+**BR-1: `wkb/backreaction.py:716-751` — Cooling model mislabeled — FIXED (2026-03-31)**
+- [x] Fix: renamed to `rational_cooling_model`, docstring corrected, backwards-compat alias kept.
+- [ ] Downstream: Paper 4 §5 cooling discussion should reference correct function name
+
+**E-1: `experimental/predictions.py:578` — Kappa-scaling contradiction — FIXED (2026-03-31)**
+- [x] Fix: docstrings corrected from `kappa^0` to `∝ kappa` (linear). Added NOTE about natural-unit parameterization.
+- [ ] Downstream: predictions.py still has legacy `kappa_scaling_prediction()` function — future cleanup should delegate to `kappa_scaling.compute_kappa_sweep()`
+
+**E-3: `experimental/polariton_predictions.py:113` — Comment/code mismatch — FIXED (2026-03-31)**
+- [x] Fix: comment corrected from `gamma_dim/(4π²)` to `gamma_dim`.
+
+**ADW-B1: `adw/__init__.py:17` + `gap_equation.py:62` — G_c factor-of-2 — FIXED (2026-03-31)**
+- [x] Fix: both locations corrected from `4π²` to `8π²`.
+- [ ] Downstream: Paper 5 should be checked for G_c formula consistency
+
+**ADW-C1: `gap_equation.py:118-220` — ADW formulas provenance — FIXED (2026-03-31)**
+- [x] Fix: `effective_potential`, `critical_coupling`, `curvature_at_origin` now delegate to canonical `formulas.py`.
+- [x] Also fixed: `fluctuations.py` broken_generator_count delegates to formulas.py. `ginzburg_landau.py` imports directly from formulas.py.
+- [ ] Remaining: `hubbard_stratonovich.py:261-284` (third copy of CW potential) — lower priority since it's only used in tests.
+
+---
+
+#### 9B-2. IMPORTANT Fixes (should complete for code quality)
+
+**CF-3: `wkb/connection_formula.py:85` — `xi` parameter — FIXED (2026-03-31)**
+- [x] Fix: `xi` now used to compute dispersive shift of real part of turning point: `x_real = delta_disp * c_s / kappa`
+
+**ADW-A2: `adw/ginzburg_landau.py:270-279` — Planar phase — DOCUMENTED (2026-03-31)**
+- [x] Fix: `_planar_phase_tetrad` docstring documents degeneracy with A-phase in diagonal approximation. `f_planar = f_A` explicitly.
+
+**ADW-A5: `gap_equation.py:149-179` — `effective_potential_derivative` — DOCUMENTED (2026-03-31)**
+- [x] Fix: docstring clarifies it's a utility for verification, not in solver path. Unused `brentq` import removed.
+
+**ADW-A3: `adw/__init__.py:78-93` — `FluctuationCorrection` export — FIXED (2026-03-31)**
+- [x] Fix: added to package exports
+
+**BR-2: `wkb/backreaction.py:249-254` — Energy flux docstring — FIXED (2026-03-31)**
+- [x] Fix: corrected to "through third order" (SPEC-2 plumbed gamma_3 through)
+
+**BR-3: `wkb/backreaction.py:537,748` — Imports inside function bodies — FIXED (2026-03-31)**
+- [x] Fix: `hawking_temperature` moved to top-level import
+
+**Second-order dead code — DOCUMENTED (2026-03-31):**
+- [x] `wkb_analysis.py:180-345` — marked as UNUSED with explanation; retained for future non-perturbative WKB
+- [ ] `cgl_derivation.py:162-666` — 4 functions disconnected from scripts/validate (lower priority — internal CGL utilities)
+- [ ] `coefficients.py:224-541` — action constructors and Beliaev estimator unused (lower priority — test-only utilities)
+
+**Fracton disconnected — DOCUMENTED (2026-03-31):**
+- [x] `sk_eft.py:51-58` — `ConservationType` documented as metadata enum
+- [x] `sk_eft.py:436-464` — `lagrangian_noise()` documented: only L^(2) implemented, others not yet
+- [x] `information_retention.py:51` — `factorial` dead import removed (2026-03-31)
+
+---
+
+#### 9B-3. PROVENANCE Fixes (Pipeline Invariant violations)
+
+**Formulas re-implemented inline (violates Invariant 1):**
+- [x] `wkb/connection_formula.py:299` — now calls `first_order_correction` from formulas.py (2026-03-31)
+- [ ] `wkb/spectrum.py:209-226` — `planck_occupation` belongs in formulas.py with Lean ref
+- [x] `second_order/coefficients.py:418,480` — documented as natural-unit convention, refs formulas.hawking_temperature (2026-03-31)
+- [ ] `second_order/coefficients.py:435-448` — `planck_spectrum` belongs in formulas.py
+- [x] `second_order/wkb_analysis.py:84-86` — documented with SI cross-reference (2026-03-31)
+
+**Constants hardcoded (violates Invariant 2):**
+- [ ] `wkb/backreaction.py:99-155` — SI platform params hardcoded, bypass EXPERIMENTS/transonic chain
+- [ ] `second_order/wkb_analysis.py:519-581` — D/gamma_dim presets hardcoded
+- [x] `second_order/coefficients.py:525-527` — now uses `constants.HBAR` (2026-03-31)
+- [x] `adw/wen_model.py:147` — RG multipliers documented as schematic, not from Roy-Juricic-Herbut (2026-03-31)
+- [x] `adw/gap_equation.py:354-357` — vestigial window 0.8 documented with GL derivation reference (2026-03-31)
+- [x] `adw/ginzburg_landau.py:405-407` — `C_eval = 0.1 * Lambda` documented as convention choice with logarithmic sensitivity note (2026-03-31)
+
+**No canonical imports (entire modules) — REQUIRES FORMALIZATION:**
+- [ ] All 4 fracton files — Pipeline Invariant 1+4 violated. Fracton formulas must be added to formulas.py with Lean theorem references. See 9C below for formalization plan.
+
+**Transitive imports:**
+- [x] `wkb/bogoliubov.py:40-42` — spectrum.py now imports direct from formulas.py (2026-03-31)
+- [x] `adw/ginzburg_landau.py:37-43` — now imports directly from formulas.py (2026-03-31)
+
+---
+
+#### 9B-4. DOCSTRING Fixes
+
+- [x] `wkb/connection_formula.py:18` — corrected from "exact Stokes analysis" to accurate perturbative WKB description (2026-03-31)
+- [x] `wkb/spectrum.py:518` — documented as Wien-peak evaluation (2026-03-31)
+- [x] `second_order/coefficients.py:72-75` — FDR docstring now includes Lean coefficient labels and Aristotle run ID (2026-03-31)
+- [x] `second_order/wkb_analysis.py:7-14` — docstring corrected to note dead code for steps 1-2 (2026-03-31)
+- [x] `second_order/cgl_derivation.py:422-433` — confusion comment cleaned up (2026-03-31)
+- [x] `adw/fluctuations.py:87-89` — docstring documents that 4 diffeo pure-gauge modes are included (2026-03-31)
+- [x] `experimental/polariton_predictions.py:25` — "(planned)" removed, now states "6 theorems, zero sorry" (2026-03-31)
+
+---
+
+#### 9B-5. Downstream Claim Verification (after code fixes)
+
+After fixing 9B-1 through 9B-4, the following downstream artifacts must be re-verified:
+
+**Papers (interim corrections applied 2026-03-31, final pass needed after Weingarten MC results):**
+- [ ] Paper 1: kappa-scaling experimental prospects added (done 2026-03-30). Needs final review.
+- [ ] Paper 4: turning-point formula corrected from Γ_H/(κc_s) to c_sΓ_H/(2κ²). Stokes section rewritten as "analytic WKB connection." Needs numerical re-verification against updated code.
+- [ ] Paper 5: vestigial MC paragraph rewritten (removed split transition claim, references Weingarten). G_c docstring fixed. Needs final review after MC results.
+- [ ] Paper 6: abstract rewritten (removed split transition, describes Weingarten framework). Production MC section needs complete rewrite with actual Weingarten results.
+- [ ] Paper 7: clean — no changes needed.
+
+**Notebooks (not yet touched — deferred to after Weingarten MC results):**
+- [ ] Phase3a_WKB notebooks: may reference old turning-point formula values
+- [ ] Phase4a_Experimental notebooks: kappa-scaling narrative already updated in Paper 1
+- [ ] Phase5b_Synthesis notebooks: vestigial claims need updating
+- [ ] Phase4b_Vestigial notebooks: split transition content needs complete rewrite
+
+**Stakeholder docs (interim corrections applied 2026-03-31):**
+- [x] Phase5_Implications.md: split transition claims removed, Weingarten framework described (interim)
+- [x] Phase5_Strategic_Positioning.md: vestigial MC section rewritten (interim)
+- [x] companion_guide.md: "split transition" section rewritten as "correct physics framework" (interim)
+- [ ] All three need final pass with actual Weingarten MC results
+
+**Top-level docs (interim corrections applied 2026-03-31):**
+- [x] Critical Review v3: all 5 "split transition" references corrected (interim)
+- [x] Feasibility Study: vestigial MC reference corrected (interim)
+- [x] README.md: split transition reference corrected (interim)
+- [ ] All need final pass with actual results
+
+**Inventory:**
+- [ ] Section 10 (Key Formulas): verify turning_point_shift reference after CF-1 fix
+- [ ] Module descriptions: update for new Lean modules (SO4Weingarten, FractonFormulas, WetterichNJL)
+- [ ] Counts: theorem count will change after Aristotle integration
+
+---
+
+### 9C. Formalization Wave: Fracton + Vestigial Physics
+
+Quality standard: every formula through the Lean + Aristotle pipeline. No documented gaps — formalize everything.
+
+#### 9C-1. Fracton Lean Formalization [Pipeline Stages 1-5]
+
+**4 fracton modules with zero Lean coverage — violates Pipeline Invariant 4.**
+
+- [x] Stage 3: `lean/SKEFTHawking/FractonFormulas.lean` — 45 sorry-stub theorems, compiles clean (2026-03-31)
+- [x] Sorry gaps registered in aristotle_interface.py (45 gaps) (2026-03-31)
+- [x] Stage 4: Aristotle — ALL 45 PROVED (job `4528aa2b`). Zero sorry. (2026-03-31)
+- [ ] Stage 2: Migrate fracton formulas from src/fracton/*.py to formulas.py with Lean refs — IN PROGRESS
+- [x] Stage 5: lake build zero sorry confirmed (2026-03-31)
+- [ ] Update fracton source files to import from formulas.py
+
+#### 9C-2. Vestigial MC Option B: Weingarten Integration [Pipeline Stages 1-7]
+
+**Implement the exact SO(4) Haar integration for the ADW lattice model.**
+
+- [x] Stage 2: Weingarten formulas in formulas.py (so4_weingarten_2nd_moment, so4_weingarten_4th_moment, adw_bond_weight_fundamental, adw_bond_weight_adjoint, adw_bond_weight_total) (2026-03-31)
+- [x] Stage 3: `lean/SKEFTHawking/SO4Weingarten.lean` — 14 theorems (2026-03-31)
+- [x] Stage 4: Aristotle — ALL 14 PROVED (run `117a7115`). Proofs: norm_num, positivity, mul_nonpos, linarith+exp, gcongr+aesop. (2026-03-31)
+- [x] Stage 5: lake build zero sorry for SO4Weingarten (2026-03-31)
+- [x] fermion_bag.py sweep updated to Weingarten multi-channel (fundamental + adjoint) (2026-03-31)
+- [x] Smoke test: tetrad_m2 increases 0.24→0.99 with coupling, no saturation, correct physics (2026-03-31)
+- [x] Production MC with Weingarten sweep — COMPLETE (2026-03-31, 14 cores, L=4-16, 3.2h)
+  - Results: `docs/vestigial_mc_results/vestigial_mc_20260331T114048.json`
+  - Log: `logs/vestigial_mc_weingarten_20260331T114048.out`
+  - **Binder cumulants: NO crossings found.** U₄ ≈ 2/3 (Gaussian) across entire range g_EH ∈ [-50, 0]. Variation shrinks with L (0.002 at L=4 → 0.00001 at L=16). System locked in disordered phase.
+  - **Susceptibility peaks: split but non-divergent.** Tetrad peaks at G/Gc ≈ 2-5 (height ~0.097), metric peaks at G/Gc ≈ 6-7 (height ~0.118). Heights do NOT grow with L → not real phase transitions. "split_transition: True" flag is misleading (noise on flat background).
+  - **Sign reweighting: catastrophically small.** avg_sign = 0.0 for L≥5, ~10⁻¹³⁵ to 10⁻²⁵⁴ for L=4. Lorentzian reweighting factor exp(ΔS) exponentially suppressed (ΔS scales with L⁴ volume). Note: Euclidean weights are Lean-verified non-negative (SO4Weingarten.lean), so no sign problem from gauge integration — this is the Lorentzian reweighting catastrophe.
+  - **Acceptance rates: suspiciously uniform** (0.311 for Binder, 0.299 for FSS across ALL L). **ROOT CAUSE FOUND** (see fix below).
+  - **Interpretation: production results INVALID due to order parameter bug.** Requires re-run with fixed OPs.
+- **BUG FIX (2026-03-31): Order parameters were blind to bond coupling.**
+  - `tetrad_order_parameter_4d` measured single-site `⟨n/N⟩` — insensitive to inter-site Weingarten bond ordering
+  - `metric_order_parameter_4d` measured single-site `⟨(n/N)²⟩` — same problem
+  - `total_action_4d` used binary bond_occ, not the actual Weingarten action
+  - **Fix:** Added `tetrad_bond_order_parameter_4d` and `metric_bond_order_parameter_4d` in lattice_4d.py — measure `⟨f_x f_y⟩_NN` and `⟨(f_x f_y)²⟩_NN` respectively
+  - **Fix:** Updated `total_action_4d` to compute actual Weingarten multi-channel action when neighbor_table provided
+  - **Fix:** `run_fermion_bag_mc` now uses bond OPs and correct action measurement
+  - **Smoke test after fix:** tetrad_m2 varies 0.047→0.978 with coupling (was flat 0.21), acceptance varies 0.93→0.12 (was uniform 0.31)
+  - **L-dependence confirmed:** Binder cumulants show L-dependent structure (metric OP more sensitive = vestigial signature)
+  - Old single-site OPs preserved for NJL model (Option C) where they work correctly
+- [ ] Re-run Option B production MC with fixed bond OPs
+- [ ] Tests + validation after MC results — DEFERRED pending 9D provenance resolution
+
+#### 9C-3. Vestigial MC Option C: Wetterich NJL Model [Pipeline Stages 1-7]
+
+**Parallel implementation of the gauge-link-free NJL-type model.**
+
+- [x] Stage 2: NJL formulas in formulas.py (njl_fierz_channel_count, njl_fierz_completeness, njl_scalar_channel, njl_pseudoscalar_channel, njl_vector_channel, njl_bond_weight_total, njl_adw_scalar_limit) (2026-03-31)
+- [x] Stage 3: `lean/SKEFTHawking/WetterichNJL.lean` — 18 sorry-stub theorems, compiles clean (2026-03-31)
+- [x] Sorry gaps registered in aristotle_interface.py (18 gaps) (2026-03-31)
+- [x] Stage 4: Aristotle — ALL 18 PROVED (job `4528aa2b`). Zero sorry. (2026-03-31)
+- [x] Stage 5: lake build zero sorry confirmed (2026-03-31)
+- [x] Stage 1: NJL_MODEL, NJL_COUPLING_SCAN, NJL_FSS constants in constants.py (2026-03-31)
+- [x] Stage 2: Source: fields added to all 7 NJL formulas.py docstrings (2026-03-31)
+- [x] `src/vestigial/wetterich_model.py` — NJL fermion-bag MC: njl_sweep + run_njl_mc (2026-03-31)
+  - Vectorized Metropolis with NJL bond action (scalar + pseudoscalar Fierz channels)
+  - Same observables as Option B (tetrad/metric order params, Binder cumulants, susceptibility)
+  - Smoke test: acceptance varies 0.935 (g=0) → 0.333 (g=10), Binder cumulants vary meaningfully (NOT locked at 2/3 like Option B)
+- [x] Stage 6: 13 new tests in tests/test_vestigial.py (1027 total, all pass) (2026-03-31)
+- [x] Stage 7: 14/14 original validation checks pass (CHECK 15 expected fail — provenance system in 9D) (2026-03-31)
+- [ ] Production MC with NJL model — READY TO LAUNCH
+- [ ] Stages 8-12: DEFERRED pending 9D provenance chain
+
+**Paper 6 strengthened by:** ADW model (Option B) shows vestigial phase → primary claim. NJL model (Option C) independently shows vestigial phase → cross-validation. Two different models, same physical conclusion = much stronger paper.
+
+#### 9C-4. Remaining Provenance Fixes [Pipeline Stage 2]
+
+- [x] `wkb/spectrum.py` — `planck_occupation` moved to formulas.py (array+scalar), spectrum.py delegates (2026-03-31)
+- [x] `second_order/coefficients.py` — `planck_spectrum` delegates to formulas.planck_occupation (2026-03-31)
+- [ ] `wkb/backreaction.py:99-155` — SI platform params discrepancy (10x in κ) identified, deep research task filed for Steinhauer parameter reconciliation
+
+---
+
+### 9D. Parameter Provenance & Citation Integrity System [IN PROGRESS — parallel session]
+
+**Trigger:** 4.4× error in Steinhauer omega_perp (code: 500 Hz, published: 123 Hz per Wang et al. PRA 96, 023616 Table I) propagated undetected through BEC-facing codebase. Root cause: no structured citation metadata, no provenance validation, deep research treated as ground truth.
+
+**Scope:** See plan `~/.claude/plans/parallel-launching-noodle.md` for full design.
+
+**Key components (being implemented in parallel session):**
+- `PARAMETER_PROVENANCE` dict in constants.py — every experimental param traced to published source with confidence tier (MEASURED/EXTRACTED/DERIVED/PROJECTED/THEORETICAL)
+- Two-phase verification: LLM-verified (gates computation) → human-verified (gates paper submission)
+- CHECK 15: `parameter_provenance` in validate.py
+- `CITATION_REGISTRY` in `src/core/citations.py` — canonical bibliography with DOI verification
+- Provenance Command Center (Flask+HTMX dashboard) — 5-tab trust surface viewer
+- Pipeline Invariant 8: every experimental parameter has verified provenance
+- Deep Research Reconciliation Protocol
+
+**Blast radius (BEC-facing, affected by omega_perp fix):**
+- constants.py: Steinhauer omega_perp, possibly a_s, velocity_upstream
+- transonic_background.py: c_s, κ, T_H, ξ, D all recompute
+- Paper 1 Table 1, Paper 4 turning-point values
+- validate.py expected values (CHECK 2, CHECK 4)
+- WKB natural-unit params
+- 6+ notebooks (Phase 1-4a)
+
+**NOT affected (independent parameter chains):**
+- Vestigial MC (Options B & C) — uses ADW_4D_MODEL/SO4_HAAR/FERMION_BAG, not BEC params
+- Lean formalization — abstract types, no SI constants
+- Categorical infrastructure (Waves 3-4)
+- Fracton physics (theory params, not experimental)
+- Chirality wall formalization
+
+**HOLD on downstream updates:** Paper rewrites, notebook updates, and stakeholder doc final passes are DEFERRED until 9D provenance chain is in place and correct parameter values are established. Interim corrections (split transition removal) stand. No new paper claims until human-verified provenance.
+
+**Known issues to track (may surface more during 9D):**
+1. Steinhauer omega_perp: 500 Hz (code, no source) vs 123 Hz (Wang et al. 2017 Table I) — UNRESOLVED
+2. Rb87 a_s: 5.77e-9 m (code, 109 a₀) vs possible 5.29e-9 m (100.4 a₀) — needs primary source check
+3. Steinhauer velocity_upstream: 0.85e-3 m/s — may be circular (derived from solver c_s)
+4. backreaction.py κ: 21.9 s⁻¹ (solver) vs 290 s⁻¹ (published) — 10x discrepancy, PROVENANCE WARNING in code
+5. Heidelberg/Trento: entire parameter sets are PROJECTED (no Hawking experiment exists) — needs clear tier labeling
+6. Option B MC: uniform acceptance rates (0.311 across all L) — suspicious, needs code review
+7. Option B MC: sign catastrophe (avg_sign ≈ 0 for L≥5) — Lorentzian reweighting problem, not gauge sign problem
+
+---
+
+*Phase 5 roadmap. Waves 1-5 COMPLETE. 9A-9C formalization COMPLETE: 506 theorems + 2 axioms, ZERO sorry, 176 Aristotle-proved across 29 runs. 9C-2 (Option B, Weingarten): production run had order parameter bug — single-site OPs blind to bond ordering. Fix applied (bond-correlation OPs), re-run queued. 9C-3 (Option C, NJL): implemented, diagnostic shows Binder crossings (vestigial window = 0.126), production L=4-12 running. 9D parameter provenance system in progress (parallel session) — Steinhauer omega_perp 4.4× error found, all downstream paper/notebook updates ON HOLD until provenance chain established. Updated 2026-03-31.*

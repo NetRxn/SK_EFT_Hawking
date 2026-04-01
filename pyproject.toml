@@ -6,7 +6,7 @@ authors = [
     { name = "John Roehm" },
 ]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 dependencies = [
     # Core scientific
     "numpy>=2.0",
@@ -27,6 +27,8 @@ dependencies = [
     # Testing
     "pytest>=8.0",
     "pandas>=3.0.1",
+    # Provenance dashboard
+    "flask>=3.0",
 ]
 
 [build-system]

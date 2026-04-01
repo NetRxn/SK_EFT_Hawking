@@ -1,5 +1,7 @@
 """Information Retention: Fracton vs Standard Hydrodynamics.
 
+PROVENANCE NOTE: See sk_eft.py for Pipeline Invariant 1+4 gap status.
+
 Quantifies how much UV (microscopic) information is preserved after
 hydrodynamization in fracton vs standard Navier-Stokes hydrodynamics.
 
@@ -48,8 +50,10 @@ References:
 
 from dataclasses import dataclass, field
 from enum import Enum
-from math import comb, log2, factorial
+from math import comb, log2
 from typing import Optional
+
+from src.core.formulas import fracton_total_charges, fracton_retention_ratio
 
 import numpy as np
 

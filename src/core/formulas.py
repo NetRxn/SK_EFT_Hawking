@@ -1074,6 +1074,572 @@ def vestigial_phase_indicator(binder_tetrad, binder_metric):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Bose-Einstein occupation number
+# ════════════════════════════════════════════════════════════════════
+
+def planck_occupation(omega, T):
+    """
+    Bose-Einstein occupation number n(ω) = 1 / (exp(ω/T) - 1).
+
+    The thermal occupation of a bosonic mode at frequency ω and
+    temperature T (in natural units where k_B = 1).
+
+    Handles both scalar and array inputs.
+
+    Lean: planck_nonneg (SO4Weingarten.lean)
+    Aristotle: run_20260331_103403 (Aristotle-proved via linarith + add_one_le_exp)
+
+    Args:
+        omega: Mode frequency (scalar or array)
+        T: Temperature (same units as omega)
+
+    Returns:
+        Occupation number (≥ 0 for ω > 0, T > 0)
+    """
+    import numpy as np
+    if T <= 0:
+        return np.zeros_like(omega) if hasattr(omega, '__len__') else 0.0
+    x = np.asarray(omega) / T
+    result = np.where(x > 500, 0.0, 1.0 / (np.exp(np.minimum(x, 500)) - 1.0))
+    return float(result) if np.ndim(result) == 0 else result
+    return 1.0 / (np.exp(x) - 1.0)
+
+
+# ════════════════════════════════════════════════════════════════════
+# SO(4) Weingarten calculus (SO4Weingarten.lean)
+# Exact gauge integration for the ADW lattice gravity model
+# ════════════════════════════════════════════════════════════════════
+
+def so4_weingarten_2nd_moment(N=4):
+    """
+    SO(N) second-moment Weingarten integral.
+
+    ∫_{SO(N)} O_{ab} O_{cd} dO = (1/N) δ_{ac} δ_{bd}
+
+    This generates the leading 4-fermion nearest-neighbor coupling
+    after gauge integration. For SO(4): factor = 1/4.
+
+    Lean: weingarten_2nd_positive (SO4Weingarten.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        N: Dimension of SO(N) (default 4 for SO(4) gravity)
+
+    Returns:
+        1/N — the prefactor for the fundamental representation channel.
+    """
+    return 1.0 / N
+
+
+def so4_weingarten_4th_moment(N=4):
+    """
+    SO(N) fourth-moment Weingarten function coefficients.
+
+    ∫_{SO(N)} O_{a1b1} O_{a2b2} O_{a3b3} O_{a4b4} dO
+      = (1/N(N+2)(N-1)) × [sum over pair partitions with Weingarten weights]
+      + (for SO(N), not O(N)): (1/N!) ε_{a1..aN} ε_{b1..bN} term
+
+    For N=4:
+      Pair-partition prefactor = 1/(4 × 6 × 3) = 1/72
+      ε-tensor prefactor = 1/24
+
+    This generates 8-fermion nearest-neighbor coupling (sub-leading)
+    and the baryonic (determinantal) channel.
+
+    Lean: weingarten_4th_decomposition (SO4Weingarten.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        N: Dimension of SO(N) (default 4)
+
+    Returns:
+        dict with 'pair_partition' and 'epsilon_tensor' prefactors.
+    """
+    pair = 1.0 / (N * (N + 2) * (N - 1))
+    import math
+    epsilon = 1.0 / math.factorial(N)
+    return {
+        'pair_partition': pair,      # 1/72 for N=4
+        'epsilon_tensor': epsilon,   # 1/24 for N=4
+        'N': N,
+    }
+
+
+def adw_bond_weight_fundamental(n_x, n_y, g_eff, N_grass=8):
+    """
+    Bond weight from the (1/2, 1/2) fundamental representation channel.
+
+    The leading 4-fermion NN coupling after SO(4) Haar integration:
+      W_fund = exp(-g_eff × (1/N) × (n_x/N_grass) × (n_y/N_grass))
+
+    where 1/N comes from so4_weingarten_2nd_moment and the occupation
+    fractions represent the fermion bilinear overlap.
+
+    The sign of g_eff determines attractive (g_eff < 0, favors alignment)
+    vs repulsive (g_eff > 0, penalizes alignment) coupling.
+
+    Lean: bond_weight_fundamental_positive (SO4Weingarten.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        n_x: Grassmann occupation at site x (0 to N_grass)
+        n_y: Grassmann occupation at site y (0 to N_grass)
+        g_eff: Effective NN coupling (negative = attractive)
+        N_grass: Total Grassmann variables per site (default 8)
+
+    Returns:
+        Bond action contribution (for use in Boltzmann weight exp(-S))
+    """
+    import numpy as np
+    N = 4  # SO(4) fundamental dimension
+    return g_eff * (1.0 / N) * (n_x / N_grass) * (n_y / N_grass)
+
+
+def adw_bond_weight_adjoint(n_x, n_y, g_eff, N_grass=8):
+    """
+    Bond weight from the (1,0)⊕(0,1) adjoint representation channel.
+
+    The sub-leading 8-fermion NN coupling. Enters at relative order
+    1/N(N+2) = 1/24 compared to the fundamental channel.
+
+    S_adj = g_eff × (1/N(N+2)) × [(n_x/N_grass)^2 × (n_y/N_grass)^2]
+
+    Lean: bond_weight_adjoint_suppressed (SO4Weingarten.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        n_x, n_y: Grassmann occupations
+        g_eff: Effective NN coupling
+        N_grass: Total Grassmann variables per site
+
+    Returns:
+        Bond action contribution from adjoint channel.
+    """
+    N = 4
+    return g_eff * (1.0 / (N * (N + 2))) * (n_x / N_grass)**2 * (n_y / N_grass)**2
+
+
+def adw_bond_weight_total(n_x, n_y, g_eff, N_grass=8):
+    """
+    Total bond weight from all SO(4) representation channels.
+
+    S_bond = S_fundamental + S_adjoint + S_epsilon
+
+    The fundamental channel dominates (O(1/N)), adjoint is O(1/N(N+2)),
+    and the ε-tensor channel is O(1/N!) — progressively suppressed.
+
+    For the initial implementation, we include fundamental + adjoint.
+    The ε-tensor (baryonic) channel requires tracking all 4 gauge-index
+    components simultaneously and is deferred to a future version.
+
+    Lean: bond_weight_total_decomposition (SO4Weingarten.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        n_x, n_y: Grassmann occupations
+        g_eff: Effective NN coupling
+        N_grass: Total Grassmann variables per site
+
+    Returns:
+        Total bond action contribution.
+    """
+    return (adw_bond_weight_fundamental(n_x, n_y, g_eff, N_grass) +
+            adw_bond_weight_adjoint(n_x, n_y, g_eff, N_grass))
+
+
+# ════════════════════════════════════════════════════════════════════
+# Wetterich NJL-type 4-fermion model (WetterichNJL.lean)
+# Global SO(4) flavor symmetry — NO gauge links
+# Fierz-complete nearest-neighbor 4-fermion interaction
+# ════════════════════════════════════════════════════════════════════
+
+def njl_fierz_channel_count():
+    """
+    Number of independent Fierz channels for 4-component Dirac fermions.
+
+    The 16-dimensional Clifford algebra Cl(4) is spanned by:
+      S (scalar): 1 generator      — Γ = 1
+      P (pseudoscalar): 1 generator — Γ = γ₅
+      V (vector): 4 generators      — Γ = γ_μ
+      A (axial vector): 4 generators — Γ = γ_μ γ₅
+      T (tensor): 6 generators       — Γ = σ_μν
+
+    Total: 1 + 1 + 4 + 4 + 6 = 16 = 4² (Fierz completeness).
+    These provide 5 independent channel structures for the 4-fermion vertex.
+
+    Lean: fierz_channel_count (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+    Source: Fierz, Z. Phys. 104, 553 (1937); standard Clifford algebra decomposition
+
+    Returns:
+        5 — number of Fierz channels (S, P, V, A, T)
+    """
+    return 5
+
+
+def njl_fierz_completeness():
+    """
+    Fierz completeness identity: generators sum to identity on spinor space.
+
+    Σ_α (dim Γ_α) = 1 + 1 + 4 + 4 + 6 = 16 = (spinor_dim)²
+
+    This is the completeness relation for the Clifford algebra Cl(4).
+    It ensures that the Fierz decomposition of any 4-fermion vertex is
+    unique and exhaustive — no channel is missed.
+
+    Lean: fierz_completeness (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+    Source: Fierz, Z. Phys. 104, 553 (1937); 1+1+4+4+6=16=4^2
+
+    Returns:
+        dict with channel dimensions and total
+    """
+    channels = {
+        'S': 1,   # scalar
+        'P': 1,   # pseudoscalar
+        'V': 4,   # vector
+        'A': 4,   # axial vector
+        'T': 6,   # tensor
+    }
+    total = sum(channels.values())
+    return {
+        'channels': channels,
+        'total': total,
+        'spinor_dim': 4,
+        'complete': total == 4**2,
+    }
+
+
+def njl_scalar_channel(n_x, n_y, g, N_grass=8):
+    """
+    NJL scalar Fierz channel contribution to the bond action.
+
+    S_S = g × (n_x / N) × (n_y / N)
+
+    The scalar channel (Γ = 1) couples the total occupation fractions
+    at adjacent sites. This is the leading attractive interaction that
+    drives chiral condensation ⟨ψ̄ψ⟩ ≠ 0 and, in the Wetterich
+    interpretation, the tetrad condensation that produces emergent gravity.
+
+    In the occupation-number representation, the scalar bilinear
+    ψ̄_x ψ_y has expectation value proportional to (n_x/N)(n_y/N).
+
+    Physical interpretation:
+      g > 0: attractive (favors correlated occupation → condensation)
+      g < 0: repulsive
+
+    Lean: njl_scalar_nonneg (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+    Source: Wetterich, PLB 901, 136223 (2024), Eq. (3); NJL, PR 122, 345 (1961)
+
+    Args:
+        n_x: Grassmann occupation at site x (0 to N_grass)
+        n_y: Grassmann occupation at site y (0 to N_grass)
+        g: NJL coupling constant (positive = attractive)
+        N_grass: Total Grassmann variables per site (default 8)
+
+    Returns:
+        Scalar channel action contribution.
+    """
+    N = float(N_grass)
+    return g * (n_x / N) * (n_y / N)
+
+
+def njl_pseudoscalar_channel(n_x, n_y, g, N_grass=8):
+    """
+    NJL pseudoscalar Fierz channel contribution to the bond action.
+
+    S_P = -g × (n_x / N)(n_y / N) × (1 - 2 n_x / N)(1 - 2 n_y / N)
+
+    The pseudoscalar channel (Γ = γ₅) couples the "chirality" of the
+    occupation. The factor (1 - 2n/N) maps occupation fraction to a
+    signed quantity: +1 at n=0 (empty), 0 at n=N/2 (half-filled),
+    -1 at n=N (full). This is the lattice analog of the γ₅ sign.
+
+    The overall minus sign means the pseudoscalar channel is repulsive
+    when the scalar channel is attractive — this is a consequence of
+    the Fierz identity relating (ψ̄ψ)² and (ψ̄γ₅ψ)² channels.
+
+    At half-filling (n = N/2), the pseudoscalar contribution vanishes
+    because (1 - 2×0.5) = 0. At the extremes (n=0 or n=N), the
+    pseudoscalar magnitude equals the scalar magnitude but with
+    opposite sign.
+
+    Lean: njl_pseudoscalar_half_filling_zero (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+    Source: Wetterich, PLB 901, 136223 (2024), Eq. (3); Fierz rearrangement
+
+    Args:
+        n_x: Grassmann occupation at site x (0 to N_grass)
+        n_y: Grassmann occupation at site y (0 to N_grass)
+        g: NJL coupling constant (same g as scalar channel)
+        N_grass: Total Grassmann variables per site (default 8)
+
+    Returns:
+        Pseudoscalar channel action contribution.
+    """
+    N = float(N_grass)
+    fx = n_x / N
+    fy = n_y / N
+    return -g * fx * fy * (1.0 - 2.0 * fx) * (1.0 - 2.0 * fy)
+
+
+def njl_vector_channel(n_x, n_y, g, N_grass=8):
+    """
+    NJL vector Fierz channel contribution to the bond action.
+
+    S_V = g × (4 / N²) × n_x × (N - n_x) × n_y × (N - n_y) / N⁴
+        = g × 4 × f_x(1 - f_x) × f_y(1 - f_y)
+
+    where f = n/N is the occupation fraction.
+
+    The vector channel (Γ = γ_μ) couples the "current" bilinears.
+    In the occupation-number representation, the current ψ̄γ_μψ is
+    sensitive to the variance of occupation: f(1-f) peaks at
+    half-filling and vanishes at empty/full. The factor of 4 counts
+    the 4 vector components.
+
+    This channel is sub-leading compared to scalar for condensation
+    physics but contributes to the equation of state in the
+    pre-geometric phase.
+
+    Lean: njl_vector_nonneg (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+    Source: Wetterich, PLB 901, 136223 (2024), Eq. (3)
+
+    Args:
+        n_x: Grassmann occupation at site x (0 to N_grass)
+        n_y: Grassmann occupation at site y (0 to N_grass)
+        g: NJL coupling constant
+        N_grass: Total Grassmann variables per site (default 8)
+
+    Returns:
+        Vector channel action contribution.
+    """
+    N = float(N_grass)
+    fx = n_x / N
+    fy = n_y / N
+    return g * 4.0 * fx * (1.0 - fx) * fy * (1.0 - fy)
+
+
+def njl_bond_weight_total(n_x, n_y, g, N_grass=8):
+    """
+    Total NJL bond weight from scalar + pseudoscalar Fierz channels.
+
+    S_NJL = S_S + S_P
+          = g(n_x/N)(n_y/N) - g(n_x/N)(n_y/N)(1 - 2n_x/N)(1 - 2n_y/N)
+          = g(n_x/N)(n_y/N) × [1 - (1 - 2n_x/N)(1 - 2n_y/N)]
+
+    This is the minimal 2-channel NJL model (scalar + pseudoscalar).
+    The vector, axial, and tensor channels can be included for the
+    full Fierz-complete model; here we include the two channels that
+    dominate the condensation physics.
+
+    Key property: at half-filling (n = N/2), the pseudoscalar vanishes
+    and S_NJL = S_S. Away from half-filling, the pseudoscalar partially
+    cancels the scalar.
+
+    Correspondence to ADW model:
+    In the limit where only the scalar channel survives (pseudoscalar → 0),
+    the NJL bond weight reduces to g(n_x/N)(n_y/N), which matches
+    the ADW fundamental channel with g → g_eff/4. This connects the
+    Wetterich NJL model to the gauge-integrated ADW model in the
+    scalar-dominance limit.
+
+    Lean: njl_bond_weight_decomposition (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+    Source: Wetterich, PLB 901, 136223 (2024), Eq. (3); Fierz decomposition S+P
+
+    Args:
+        n_x: Grassmann occupation at site x (0 to N_grass)
+        n_y: Grassmann occupation at site y (0 to N_grass)
+        g: NJL coupling constant (positive = attractive)
+        N_grass: Total Grassmann variables per site (default 8)
+
+    Returns:
+        Total NJL bond action from scalar + pseudoscalar channels.
+    """
+    return (njl_scalar_channel(n_x, n_y, g, N_grass) +
+            njl_pseudoscalar_channel(n_x, n_y, g, N_grass))
+
+
+def njl_adw_scalar_limit(g_njl, N_grass=8):
+    """
+    Map NJL coupling to the equivalent ADW effective coupling in the
+    scalar-dominance limit.
+
+    In the scalar-only limit (pseudoscalar → 0), the NJL model
+    S_NJL = g × (n_x/N)(n_y/N) corresponds to the ADW fundamental
+    channel S_fund = g_eff × (1/4) × (n_x/N)(n_y/N).
+
+    Therefore: g_njl = g_eff / 4, or equivalently g_eff = 4 × g_njl.
+
+    This provides a quantitative bridge between the Wetterich NJL
+    picture (global symmetry, 4-fermion condensation) and the ADW
+    gauge picture (local SO(4), gauge integration).
+
+    Lean: njl_adw_correspondence (WetterichNJL.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        g_njl: NJL coupling constant
+        N_grass: Grassmann variables per site (for consistency check)
+
+    Returns:
+        dict with 'g_eff' (ADW effective coupling) and 'g_EH' (bare EH coupling)
+    """
+    g_eff = 4.0 * g_njl
+    g_EH = g_eff * 4  # g_eff = g_EH / dim_fund, dim_fund = 4
+    return {
+        'g_eff': g_eff,
+        'g_EH': g_EH,
+        'g_njl': g_njl,
+        'scalar_limit': True,
+    }
+
+
+# ════════════════════════════════════════════════════════════════════
+# Fracton physics formulas (FractonFormulas.lean)
+# Canonical formulas for fracton hydrodynamics, information retention,
+# gravity connection, and non-Abelian obstructions
+# ════════════════════════════════════════════════════════════════════
+
+def fracton_charge_components(order, spatial_dim):
+    """
+    Number of independent components of an n-th rank symmetric tensor in d dimensions.
+
+    C(n + d - 1, n) = C(n + d - 1, d - 1)
+
+    Lean: symmetric_tensor_components (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        order: Multipole order n (0=scalar, 1=dipole, 2=quadrupole, ...)
+        spatial_dim: Number of spatial dimensions d
+
+    Returns:
+        Number of independent components
+    """
+    from math import comb
+    return comb(order + spatial_dim - 1, order)
+
+
+def fracton_total_charges(max_order, spatial_dim):
+    """
+    Total conserved multipole charges from order 0 through N.
+
+    By the Hockey Stick identity: Σ_{n=0}^{N} C(n+d-1,n) = C(N+d,d)
+
+    Lean: hockey_stick_charge_count (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        max_order: Maximum multipole order N
+        spatial_dim: Number of spatial dimensions d
+
+    Returns:
+        Total number of conserved charge components
+    """
+    from math import comb
+    return comb(max_order + spatial_dim, spatial_dim)
+
+
+def fracton_dispersion_power(multipole_order):
+    """
+    Dispersion power for n-pole conservation: omega ~ k^{n+1}.
+
+    Lean: dipole_quadratic_dispersion (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        multipole_order: Multipole conservation order n
+
+    Returns:
+        Dispersion power n + 1
+    """
+    return multipole_order + 1
+
+
+def fracton_damping_power(multipole_order):
+    """
+    Damping power for n-pole conservation: Im(omega) ~ k^{2(n+1)}.
+
+    Lean: damping_twice_dispersion (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        multipole_order: Multipole conservation order n
+
+    Returns:
+        Damping power 2(n + 1)
+    """
+    return 2 * (multipole_order + 1)
+
+
+def fracton_retention_ratio(max_order, spatial_dim):
+    """
+    Information retention ratio: fracton conserved charges / standard hydro charges.
+
+    For standard hydro: d + 2 conserved charges (d momentum + energy + mass).
+    For fracton: C(N+d, d) multipole charges.
+    Ratio = C(N+d, d) / (d + 2).
+
+    Lean: retention_ratio_exceeds_one (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        max_order: Maximum multipole order N
+        spatial_dim: Number of spatial dimensions d
+
+    Returns:
+        Retention ratio (> 1 for N >= 2, d >= 2)
+    """
+    from math import comb
+    standard = spatial_dim + 2
+    fracton = comb(max_order + spatial_dim, spatial_dim)
+    return fracton / standard if standard > 0 else 0.0
+
+
+def fracton_dof_gap(spatial_dim):
+    """
+    DOF gap between fracton symmetric tensor gauge theory and linearized gravity.
+
+    Fracton propagating DOF = d(d+1)/2 - d = d(d-1)/2
+    Graviton DOF = d(d-1)/2 - (d-1) = (d-1)(d-2)/2
+    Gap = d - 1
+
+    Lean: dof_gap_equals_d_minus_1, dof_gap_always_positive (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Args:
+        spatial_dim: Number of spatial dimensions d
+
+    Returns:
+        DOF gap = d - 1
+    """
+    return spatial_dim - 1
+
+
+def fracton_ym_obstruction_count():
+    """
+    Number of independent obstructions preventing fracton-YM compatibility.
+
+    Four independent obstructions:
+    1. Commutator structure mismatch (scalar vs vector gauge parameter)
+    2. Gauge parameter dimension gap (grows quadratically with N)
+    3. Algebraic structure incompatibility (rank-2 vs rank-1 tensor)
+    4. Dynamical constraint mismatch (mobility restrictions vs free propagation)
+
+    Lean: ym_four_independent_obstructions, no_fracton_ym_compatibility (FractonFormulas.lean)
+    Aristotle: 4528aa2b
+
+    Returns:
+        4 (number of independent obstructions)
+    """
+    return 4
+
+
+# ════════════════════════════════════════════════════════════════════
 # Lattice Hamiltonian framework (LatticeHamiltonian.lean)
 # Infrastructure for GS no-go / TPF evasion formalization
 # ════════════════════════════════════════════════════════════════════

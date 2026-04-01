@@ -1,16 +1,14 @@
-"""Monte Carlo sampler for the vestigial gravity lattice model.
+"""Monte Carlo sampler for the HS-transformed bosonic tetrad model.
 
-Implements Metropolis-Hastings sampling for the HS-transformed ADW
-model in the Euclidean pilot configuration (no sign problem).
+Samples the auxiliary (Hubbard-Stratonovich) field exp(-S_aux) where
+S_aux = (1/2G) Σ_x Tr(e^T η e). This is a purely on-site action with
+NO inter-site coupling and NO fermion determinant — each site is an
+independent Gaussian.
 
-The effective action per site is:
-    S_site = (1/2G) Tr(e^T e)
-
-Updates: single-site Metropolis with Gaussian proposals.
-
-For the Euclidean pilot, the fermion determinant is included via
-an effective potential correction (reweighting from the mean-field
-Coleman-Weinberg potential).
+This code is useful for testing infrastructure (observables, I/O, viz)
+but CANNOT produce phase transitions. For physics-correct simulations
+with inter-site coupling, use the fermion-bag MC in
+src/vestigial/fermion_bag.py.
 
 Reference: Sexty-Wetterich, Nucl. Phys. B 867, 290 (2013) — 2D precedent
 """
@@ -19,6 +17,7 @@ from dataclasses import dataclass, field
 import numpy as np
 from typing import Optional
 
+from src.core.constants import FERMION_BAG
 from src.vestigial.lattice_model import (
     LatticeParams, LatticeConfig, create_lattice,
     site_action, tetrad_order_parameter, metric_order_parameter,
@@ -36,9 +35,9 @@ class MCParams:
         step_size: Metropolis proposal width.
         seed: Random seed for reproducibility.
     """
-    n_thermalize: int = 100
-    n_measure: int = 200
-    n_skip: int = 5
+    n_thermalize: int = FERMION_BAG['n_thermalize']
+    n_measure: int = FERMION_BAG['n_measure']
+    n_skip: int = FERMION_BAG['n_skip']
     step_size: float = 0.3
     seed: Optional[int] = None
 
@@ -53,12 +52,16 @@ class MCMeasurement:
         tetrad_vev: Volume-averaged tetrad magnitude.
         metric_mag: Volume-averaged metric magnitude.
         acceptance_rate: Acceptance rate for this measurement block.
+        delta_S_lorentzian: S_Lorentzian - S_Euclidean for sign reweighting.
+            Computed from full config: ΔS = -(1/G) Σ_x (e^0_μ)² per site.
+            None if not computed.
     """
     sweep: int
     action: float
     tetrad_vev: float
     metric_mag: float
     acceptance_rate: float
+    delta_S_lorentzian: Optional[float] = None
 
 
 @dataclass
@@ -204,12 +207,21 @@ def run_monte_carlo(lattice_params: LatticeParams,
         from src.vestigial.lattice_model import auxiliary_action
         action = auxiliary_action(config)
 
+        # Compute Euclidean→Lorentzian ΔS from full config while it's in memory.
+        # S_E = (1/2G) Σ Tr(e^T e),  S_L = (1/2G) Σ Tr(e^T η_L e)  where η_L = diag(-1,1,1,1)
+        # ΔS = S_L - S_E = -(1/G) Σ_x (e^0_μ(x))^2
+        # tetrads shape: (V, a, μ) — index 0 on axis 1 is timelike tangent-space component
+        G = lattice_params.G
+        e0_sq = np.sum(config.tetrads[:, 0, :] ** 2)  # sum over all sites and μ
+        delta_S_lor = -e0_sq / G if G > 0 else float('-inf')
+
         measurements.append(MCMeasurement(
             sweep=i,
             action=action,
             tetrad_vev=tetrad_mag,
             metric_mag=metric_mag,
             acceptance_rate=avg_acc,
+            delta_S_lorentzian=float(delta_S_lor),
         ))
         acceptance_rates.append(avg_acc)
 

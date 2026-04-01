@@ -1,24 +1,26 @@
-"""Exact WKB connection formula for dissipative analog Hawking radiation.
+"""WKB connection formula for dissipative analog Hawking radiation.
 
 Derives the connection formula that maps SK-EFT transport coefficients to
-modified Bogoliubov coefficients via complex turning-point analysis. This
-is the exact (non-perturbative in the turning-point shift) counterpart to
-the perturbative treatment in src/second_order/wkb_analysis.py.
+modified Bogoliubov coefficients via complex turning-point analysis. Uses
+the perturbative effective-surface-gravity approach (kappa_eff) valid when
+the dissipative turning-point shift is small (delta_x << c_s/kappa).
 
-The calculation chain:
+NOTE: The StokesGeometry class computes Stokes line angles and multipliers
+as metadata/diagnostics, but they do NOT feed into the Bogoliubov coefficient
+calculation. The actual connection formula uses the perturbative
+exp(-2*pi*omega/kappa_eff) with kappa_eff from effective_surface_gravity.
+A full non-perturbative Stokes integral would require numerical evaluation
+of the WKB action integral along the deformed anti-Stokes contour.
+
+The calculation chain (as implemented):
     1. Dissipative mode equation on the transonic background
-    2. Complex turning point: x_tp = x_H + i*delta_x_imag
-    3. Stokes-line analysis around the shifted turning point
-    4. WKB action integral along the deformed contour
-    5. Exact Bogoliubov coefficients from the Stokes multiplier
+    2. Complex turning point: x_tp = x_H + i*delta_x_imag (from formulas.turning_point_shift)
+    3. Effective surface gravity kappa_eff incorporating dispersive + dissipative corrections
+    4. Perturbative Bogoliubov coefficients: |beta/alpha|^2 = exp(-2*pi*omega/kappa_eff)
 
 The key result: the standard Hawking factor exp(-2*pi*omega/kappa) acquires
-a dissipative correction from the imaginary shift of the turning point:
-
-    |beta/alpha|^2 = exp(-2*pi*omega/kappa_eff(omega))
-
-where kappa_eff absorbs dispersive and dissipative corrections, and the
-unitarity relation is modified to |alpha|^2 - |beta|^2 = 1 - delta_k.
+a dissipative correction via kappa_eff(omega), and the unitarity relation
+is modified to |alpha|^2 - |beta|^2 = 1 - delta_k.
 
 Lean formalization: WKBConnection.lean — complex_turning_point_shift,
     stokes_multiplier_invariant, connection_formula_reduces_to_hawking
@@ -35,7 +37,10 @@ from typing import Optional
 
 import numpy as np
 
-from src.core.formulas import damping_rate, dispersive_correction
+from src.core.formulas import (
+    damping_rate, dispersive_correction, turning_point_shift,
+    first_order_correction,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -97,11 +102,11 @@ def compute_complex_turning_point(
     scale for a mode of frequency omega at the horizon. The damping rate
     Gamma_H is evaluated at (k_H, omega).
 
-    The imaginary shift is:
-        delta_x = Gamma_H(omega) / (kappa * c_s)
+    The complex turning point has:
+        x_real = delta_disp * c_s / kappa  (dispersive, from xi)
+        x_imag = c_s * Gamma_H / (2 * kappa^2)  (dissipative, from formulas.turning_point_shift)
 
-    This is exact to all orders in the EFT expansion (the EFT order enters
-    through the frequency dependence of Gamma_H).
+    Both shifts are exact to all EFT orders through their frequency dependence.
 
     Lean: complex_turning_point_shift (WKBConnection.lean)
 
@@ -122,11 +127,16 @@ def compute_complex_turning_point(
         gamma_2_1, gamma_2_2,
         gamma_3_1, gamma_3_2, gamma_3_3,
     )
-    delta_x = Gamma_H / (kappa * c_s) if kappa > 0 and c_s > 0 else 0.0
+    delta_x_imag = turning_point_shift(Gamma_H, kappa, c_s) if kappa > 0 and c_s > 0 else 0.0
+
+    # Dispersive shift of real part: from formulas.dispersive_correction
+    D = kappa * xi / c_s if c_s > 0 else 0.0
+    delta_disp = dispersive_correction(D)
+    delta_x_real = delta_disp * c_s / kappa if kappa > 0 else 0.0
 
     return ComplexTurningPoint(
-        x_real=0.0,  # horizon-centered coordinates
-        x_imag=delta_x,
+        x_real=delta_x_real,
+        x_imag=delta_x_imag,
         Gamma_H=Gamma_H,
         kappa=kappa,
         c_s=c_s,
@@ -296,7 +306,7 @@ def effective_surface_gravity(
         gamma_2_1, gamma_2_2,
         gamma_3_1, gamma_3_2, gamma_3_3,
     )
-    delta_diss = Gamma_H / kappa if kappa > 0 else 0.0
+    delta_diss = first_order_correction(Gamma_H, kappa) if kappa > 0 else 0.0
 
     delta_total = delta_disp + delta_diss
     kappa_eff = kappa / (1 + delta_total) if (1 + delta_total) > 0 else kappa

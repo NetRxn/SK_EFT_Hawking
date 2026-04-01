@@ -42,7 +42,9 @@ from src.wkb.spectrum import (
     trento_platform,
     ALL_PLATFORMS,
 )
-from src.core.formulas import damping_rate, decoherence_parameter, fdr_noise_floor
+from src.core.formulas import (
+    damping_rate, decoherence_parameter, fdr_noise_floor, hawking_temperature,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -92,6 +94,13 @@ class SIPlatformParams:
 
 def steinhauer_si() -> SIPlatformParams:
     """Steinhauer 87Rb BEC parameters in SI units.
+
+    PROVENANCE WARNING: These SI values differ from constants.EXPERIMENTS['Steinhauer']
+    which gives kappa=21.9, c_s=1.151mm/s, T_H=0.027nK via the transonic solver.
+    The values here (kappa=290, T_H=0.35nK) match Steinhauer's published results
+    (Nature 2019) directly, suggesting the EXPERIMENTS params may use different
+    conventions (quasi-1D vs 3D density, different profile width). This discrepancy
+    needs reconciliation — see Phase 5 roadmap 9C-4.
 
     Sources: Steinhauer, Nature 569, 688 (2019); Nature Phys. 17, 362 (2021).
     Deep research: Balbinot backreaction timescale analysis.
@@ -227,8 +236,8 @@ def compute_energy_flux(
 
         F = integral d(omega) / (2*pi) * hbar * omega * n(omega)
 
-    using the full WKB spectrum including noise floor and all
-    EFT corrections.
+    using the full WKB spectrum including noise floor and
+    EFT corrections through third order.
 
     The flux is decomposed by computing:
         F_planck: from planck_occupation only
@@ -534,7 +543,6 @@ def backreaction_evolution(
             )
 
             # Update Hawking temperature
-            from src.core.formulas import hawking_temperature
             T_H_current = hawking_temperature(kappa_current)
 
             # Cumulative energy radiated
@@ -713,27 +721,22 @@ def all_platform_backreaction(
 # Analytic approximations
 # ═══════════════════════════════════════════════════════════════════
 
-def exponential_cooling_model(
+def rational_cooling_model(
     kappa_0: float,
     tau_cool: float,
     times: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Analytic exponential cooling model.
+    """Exact rational cooling model for acoustic black hole backreaction.
 
-    From Balbinot et al. (2005), the surface gravity evolves as:
-        kappa(t) = kappa_0 * exp(-t / tau_cool)
+    The exact solution of d(kappa)/dt = -kappa²/C gives:
+        kappa(t) = kappa_0 / (1 + t/tau_cool)
 
-    This gives:
-        T_H(t) = T_H_0 * exp(-t / tau_cool)
+    This is hyperbolic decay (not exponential). The exponential
+    approximation kappa ~ kappa_0 exp(-t/tau_cool) is valid only
+    for t << tau_cool.
 
-    The exponential form arises because L_H ~ T_H^2 ~ kappa^2,
-    and d(kappa)/dt ~ -L_H / E_BEC ~ -kappa^2 / E_BEC.
-    Solving: kappa(t) = kappa_0 / (1 + t/tau_cool), which for
-    t << tau_cool approximates as exp(-t/tau_cool).
-
-    More precisely, the exact solution of d(kappa)/dt = -kappa^2/C
-    gives kappa(t) = kappa_0 / (1 + kappa_0 * t / C). The exponential
-    approximation is valid for t << tau_cool.
+    Lean: backreaction_cooling_monotone (WKBConnection.lean)
+    Aristotle: manual
 
     Args:
         kappa_0: Initial surface gravity [s^-1].
@@ -743,12 +746,13 @@ def exponential_cooling_model(
     Returns:
         Tuple of (kappa_array, T_H_array in Kelvin).
     """
-    # Use the exact rational solution rather than the exponential
-    # approximation, since it correctly captures the late-time behavior
-    from src.core.formulas import hawking_temperature
     kappa_arr = kappa_0 / (1.0 + times / tau_cool)
     T_H_arr = hawking_temperature(kappa_arr)
     return kappa_arr, T_H_arr
+
+
+# Backwards compatibility alias
+exponential_cooling_model = rational_cooling_model
 
 
 def extremality_parameter_analytic(

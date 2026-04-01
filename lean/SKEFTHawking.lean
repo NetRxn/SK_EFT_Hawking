@@ -14,6 +14,7 @@ import SKEFTHawking.VestigialGravity
 import SKEFTHawking.FractonHydro
 import SKEFTHawking.FractonGravity
 import SKEFTHawking.FractonNonAbelian
+import SKEFTHawking.FractonFormulas
 import SKEFTHawking.KappaScaling
 import SKEFTHawking.PolaritonTier1
 import SKEFTHawking.SU2PseudoReality
@@ -28,6 +29,8 @@ import SKEFTHawking.FusionExamples
 import SKEFTHawking.VecG
 import SKEFTHawking.DrinfeldDouble
 import SKEFTHawking.GaugeEmergence
+import SKEFTHawking.SO4Weingarten
+import SKEFTHawking.WetterichNJL
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

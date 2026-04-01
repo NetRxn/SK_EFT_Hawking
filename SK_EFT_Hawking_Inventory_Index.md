@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** March 30, 2026 (Phase 5 Wave 5 — synthesis complete)
+**Last synced:** March 31, 2026 (Phase 5 Section 9C — COMPLETE, zero sorry)
 
 ---
 
@@ -10,21 +10,21 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 429 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 99 | `src/core/constants.py:ARISTOTLE_PROVED_COUNT` |
-| Manual proofs | 330 | 429 - 99 |
-| **All proved** | **ZERO sorry** | `lake build` — zero sorry warnings |
-| Lean modules | 30 | `ls lean/SKEFTHawking/*.lean` |
-| Sorry gaps | 0 | ZERO sorry — all proved |
-| Python source modules | 37 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Lean theorems | 506 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 176 | 99 original + 14 SO4Weingarten + 45 FractonFormulas + 18 WetterichNJL |
+| Manual proofs | 330 | 506 - 176 |
+| **Sorry gaps** | **0** | All filled by Aristotle `4528aa2b` (FractonFormulas + WetterichNJL) |
+| Lean modules | 33 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 506 + 2ax | ALL theorems proved, zero sorry |
+| Python source modules | 38 | `find src/ -name "*.py" ! -name "__init__.py"` (+ wetterich_model.py) |
 | Test files | 17 | `find tests/ -name "test_*.py"` |
-| Test count | 1014 | `pytest tests/ -q` (all pass) |
+| Test count | 1027 | `pytest tests/ -q` (all pass) |
 | Figures | 61 | `len(FIGURE_REGISTRY)` in review_figures.py |
 | Notebooks | 20 | `ls notebooks/*.ipynb` |
 | Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
-| Validation checks | 14 | `python scripts/validate.py --list` |
+| Validation checks | 15 | `python scripts/validate.py --list` (CHECK 15 = parameter_provenance, in progress) |
 | Stakeholder docs | 13 | See Section 9 of inventory |
-| Aristotle runs | 27 | `constants.py:ARISTOTLE_THEOREMS` unique values |
+| Aristotle runs | 29 | 27 original + run_20260331_103403 (SO4Weingarten) + 4528aa2b (FractonFormulas+WetterichNJL) |
 
 ---
 
@@ -50,7 +50,7 @@
 
 ### Core (`src/core/`)
 - `constants.py` — Physical constants, experimental params, Aristotle registry
-- `formulas.py` — Canonical physics formulas with Lean refs (39 functions)
+- `formulas.py` — Canonical physics formulas with Lean refs (~55 functions including Weingarten, NJL, fracton, Planck)
 - `transonic_background.py` — 1D BEC transonic flow solver
 - `visualizations.py` — All 43 Plotly figure functions + COLORS palette
 - `aristotle_interface.py` — Aristotle API + 56 sorry gap registry
@@ -128,6 +128,9 @@
 | VecG | 9 | GradedVectorSpace, Day convolution, unit/assoc/simple tensor, dim multiplicativity |
 | DrinfeldDouble | 15 | DrinfeldDoubleElement, twisted multiplication, conjugation action, D(G) unit laws, anyon counting |
 | GaugeEmergence | 14 | Half-braiding, gauge emergence Z(Vec_G)≅Rep(D(G)), chirality limitation c≡0(8), Layer 1→2→3 bridge |
+| SO4Weingarten | 14 | Weingarten 2nd/4th moment, channel positivity, bond weight, Planck occupation (**ALL PROVED, zero sorry**) |
+| FractonFormulas | 45 | Charge counting, dispersion, retention, DOF gap, YM obstructions (**ALL PROVED**, Aristotle `4528aa2b`) |
+| WetterichNJL | 18 | Fierz completeness, scalar/pseudoscalar/vector channels, NJL-ADW correspondence (**ALL PROVED**, Aristotle `4528aa2b`) |
 
 ---
 

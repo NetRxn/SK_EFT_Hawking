@@ -136,13 +136,19 @@ def bond_action_4d(n_bond: int, g_eff: float) -> float:
     return g_eff * n_bond
 
 
-def total_action_4d(config: Lattice4DConfig) -> float:
+def total_action_4d(config: Lattice4DConfig,
+                     neighbor_table: np.ndarray = None) -> float:
     """Compute the total action for a lattice configuration.
 
-    S = Σ_sites g_cosmo × δ_{n=8} + Σ_bonds g_eff × n_bond
+    Uses the actual Weingarten multi-channel bond action that matches
+    what the Metropolis sweep samples from:
+      S = Σ_sites g_cosmo × δ_{n=8}
+        + Σ_bonds g_eff × [(1/4)(n_x/N)(n_y/N) + (1/24)(n_x/N)²(n_y/N)²]
 
     Args:
         config: lattice configuration
+        neighbor_table: precomputed neighbor indices. If None, uses
+            binary bond_occ approximation (backwards compatible but inaccurate).
 
     Returns:
         Total action S
@@ -150,10 +156,19 @@ def total_action_4d(config: Lattice4DConfig) -> float:
     g_cosmo = config.params.g_cosmo
     g_eff = config.params.g_eff
 
-    s_sites = np.sum(config.site_occ == 8) * g_cosmo
-    s_bonds = g_eff * np.sum(config.bond_occ)
+    s_sites = float(np.sum(config.site_occ == 8) * g_cosmo)
 
-    return float(s_sites + s_bonds)
+    if neighbor_table is not None:
+        N = float(config.params.n_grassmann)
+        frac = config.site_occ.astype(np.float64) / N
+        nbr_frac = frac[neighbor_table[:, :4]]  # forward neighbors only
+        fund = frac[:, np.newaxis] * nbr_frac / 4.0
+        adj = (frac[:, np.newaxis] ** 2) * (nbr_frac ** 2) / 24.0
+        s_bonds = float(g_eff * np.sum(fund + adj))
+    else:
+        s_bonds = float(g_eff * np.sum(config.bond_occ))
+
+    return s_sites + s_bonds
 
 
 def tetrad_order_parameter_4d(config: Lattice4DConfig) -> float:
@@ -199,6 +214,76 @@ def metric_order_parameter_4d(config: Lattice4DConfig) -> float:
     return float(np.mean(normalized ** 2))
 
 
+def tetrad_bond_order_parameter_4d(config: Lattice4DConfig,
+                                    neighbor_table: np.ndarray = None) -> float:
+    """Compute the bond-correlation tetrad order parameter.
+
+    The tetrad bilinear E^a_μ ~ ψ̄_x γ^a_μ U_{xy} ψ_y connects
+    neighboring sites via the gauge link. After Weingarten integration,
+    the natural observable is the nearest-neighbor occupation correlation:
+
+      |E|²_bond = (1/N_bonds) Σ_{⟨xy⟩} (n_x/N)(n_y/N)
+
+    This measures how much the bond coupling has aligned occupation
+    fractions at neighboring sites. In the disordered phase, f_x and f_y
+    are independent and ⟨f_x f_y⟩ ≈ ⟨f⟩². In the ordered phase,
+    correlations develop and ⟨f_x f_y⟩ > ⟨f⟩².
+
+    This is the correct tetrad OP for the Weingarten model (Option B).
+    The single-site version (tetrad_order_parameter_4d) works for the
+    NJL model (Option C) where the coupling acts directly on occupations.
+
+    Args:
+        config: lattice configuration
+        neighbor_table: precomputed neighbor indices, shape (V, 8).
+            If None, builds one (slower).
+
+    Returns:
+        Bond-correlation tetrad order parameter.
+    """
+    L = config.params.L
+    N = float(config.params.n_grassmann)
+    if neighbor_table is None:
+        neighbor_table = build_neighbor_table(L)
+
+    frac = config.site_occ.astype(np.float64) / N  # (V,)
+    # Use only forward neighbors (4 directions) to avoid double-counting
+    nbr_frac = frac[neighbor_table[:, :4]]  # (V, 4)
+    bond_products = frac[:, np.newaxis] * nbr_frac  # (V, 4)
+    return float(np.mean(bond_products))
+
+
+def metric_bond_order_parameter_4d(config: Lattice4DConfig,
+                                    neighbor_table: np.ndarray = None) -> float:
+    """Compute the bond-correlation metric order parameter.
+
+    The metric g_μν = η_{ab} E^a_μ E^b_ν is a 4-fermion composite.
+    In the Weingarten model, it corresponds to the squared bond product:
+
+      |g|_bond = (1/N_bonds) Σ_{⟨xy⟩} (n_x/N)²(n_y/N)²
+
+    This is the adjoint-channel (1/24 Weingarten factor) contribution
+    and serves as the vestigial diagnostic: it's sensitive to metric
+    ordering even when the tetrad VEV vanishes.
+
+    Args:
+        config: lattice configuration
+        neighbor_table: precomputed neighbor indices, shape (V, 8).
+
+    Returns:
+        Bond-correlation metric order parameter.
+    """
+    L = config.params.L
+    N = float(config.params.n_grassmann)
+    if neighbor_table is None:
+        neighbor_table = build_neighbor_table(L)
+
+    frac = config.site_occ.astype(np.float64) / N
+    nbr_frac = frac[neighbor_table[:, :4]]  # forward neighbors only
+    bond_sq = (frac[:, np.newaxis] ** 2) * (nbr_frac ** 2)
+    return float(np.mean(bond_sq))
+
+
 def neighbor_index(site: int, direction: int, L: int) -> int:
     """Get the neighbor index in a given direction with periodic BC.
 
@@ -236,3 +321,36 @@ def bond_index(site: int, direction: int, volume: int) -> int:
         Linear bond index
     """
     return site + volume * direction
+
+
+def build_neighbor_table(L: int) -> np.ndarray:
+    """Precompute the neighbor table for a 4D hypercubic lattice.
+
+    Returns an array of shape (V, 8) where V = L^4. For each site,
+    the 8 neighbors are: 4 forward (+x0, +x1, +x2, +x3) then
+    4 backward (-x0, -x1, -x2, -x3), all with periodic boundaries.
+
+    Args:
+        L: linear lattice size
+
+    Returns:
+        neighbor_table: shape (V, 8), integer site indices
+    """
+    V = L ** 4
+    table = np.empty((V, 8), dtype=np.int64)
+    for site in range(V):
+        coords = []
+        s = site
+        for _ in range(4):
+            coords.append(s % L)
+            s //= L
+        for d in range(4):
+            # Forward neighbor
+            fwd = list(coords)
+            fwd[d] = (fwd[d] + 1) % L
+            table[site, d] = fwd[0] + L * (fwd[1] + L * (fwd[2] + L * fwd[3]))
+            # Backward neighbor
+            bwd = list(coords)
+            bwd[d] = (bwd[d] - 1) % L
+            table[site, d + 4] = bwd[0] + L * (bwd[1] + L * (bwd[2] + L * bwd[3]))
+    return table

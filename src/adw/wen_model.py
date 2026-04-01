@@ -176,11 +176,13 @@ def herbut_terminal_velocity(v_F: float, v_B: float, c: float,
         # Simplified RG flow: velocities attracted to mean
         v_mean = (vf + vb + vc) / 3
 
-        # Fermion velocity: driven by gauge interaction
+        # Schematic beta functions: qualitative attractor toward v_mean.
+        # Multipliers (1.0, 0.5, 0.3) are schematic — not from Roy-Juricic-Herbut.
+        # The exact one-loop coefficients would require the full RG computation
+        # which is beyond scope. Convergence to terminal velocity is the
+        # Lean-verified structural result (velocity_equalization_convergence).
         dvf = alpha * (v_mean - vf) * dl
-        # Boson velocity: driven by fermion loop
         dvb = alpha * (v_mean - vb) * dl * 0.5
-        # Lattice speed: driven by both
         dvc = alpha * (v_mean - vc) * dl * 0.3
 
         vf += dvf

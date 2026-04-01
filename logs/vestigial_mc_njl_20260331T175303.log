@@ -1,0 +1,32 @@
+17:53:03 ============================================================
+17:53:03   Vestigial MC Production Run (vectorized + multiprocessing)
+17:53:03   Requested lattice sizes: [4, 5, 6, 8, 10, 12]
+17:53:03   Sweeps: 2500 thermalize + 5000 measure
+17:53:03   Couplings: 40 points
+17:53:03   Cores: 14
+17:53:03   Seed: 137
+17:53:03   n_skip (decorrelation): {4: 5, 5: 5, 6: 5, 8: 5, 10: 5, 12: 7}
+17:53:03   Started: 2026-03-31T17:53:03.209914
+17:53:03 ============================================================
+17:53:03 
+[1/3] 4D Binder cumulant crossing analysis...
+17:53:03   Dispatching 240 new jobs across 14 cores (model=njl)...
+18:08:35   Completed 240 new jobs in 932.4s
+18:08:35   L=4: mean acceptance=0.520
+18:08:35   L=5: mean acceptance=0.414
+18:08:35   L=6: mean acceptance=0.520
+18:08:35   L=8: mean acceptance=0.519
+18:08:35   L=10: mean acceptance=0.518
+18:08:35   L=12: mean acceptance=0.519
+18:08:35   L=4-5: tetrad crossing=13.35820152406551, metric crossing=8.508954243885418
+18:08:35   L=5-6: tetrad crossing=4.49685159660446, metric crossing=4.198873026116393
+18:08:35   L=6-8: tetrad crossing=25.855178487070617, metric crossing=25.980749133568697
+18:08:35   L=8-10: tetrad crossing=16.686175350849634, metric crossing=16.690376633079847
+18:08:35   L=10-12: tetrad crossing=None, metric crossing=None
+18:08:35   Tetrad crossings found: 4
+18:08:35   Metric crossings found: 4
+18:08:35   Vestigial window: None
+18:08:35   Vestigial detected: False
+18:08:35 
+[2/3] Finite-size scaling analysis...
+18:08:35   Dispatching 240 FSS jobs across 14 cores (model=njl)...

@@ -33,6 +33,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
+from src.core.formulas import (
+    tetrad_broken_generators as _canonical_broken_generators,
+    graviton_polarization_count as _canonical_graviton_pol,
+)
+
 
 class NGModeType(Enum):
     """Classification of Nambu-Goldstone modes."""
@@ -85,7 +90,12 @@ class SymmetryBreakingPattern:
 
     @property
     def n_physical_dof(self) -> int:
-        """Physical DOF in the tetrad = components - gauge DOF."""
+        """Tetrad DOF after removing Lorentz gauge = d² - d(d-1)/2.
+
+        In 4D: 16 - 6 = 10. These 10 decompose as:
+        2 massless graviton + 4 massive Higgs + 4 diffeomorphism pure-gauge.
+        The 4 diffeo modes are unphysical but are counted here because
+        diffeomorphism invariance is broken on the lattice."""
         return self.tetrad_components - self.dim_H
 
 
@@ -134,30 +144,13 @@ class FluctuationResult:
 
 
 def lorentz_group_dimension(spacetime_dim: int) -> int:
-    """Dimension of the Lorentz group SO(d-1,1) in d spacetime dimensions.
-
-    dim SO(d-1,1) = d(d-1)/2
-
-    Lean: lorentz_dim
-
-    Args:
-        spacetime_dim: Dimension of spacetime (d)
-
-    Returns:
-        d(d-1)/2
-    """
+    """Dimension of the Lorentz group SO(d-1,1). Lean: lorentz_dim."""
     d = spacetime_dim
     return d * (d - 1) // 2
 
 
 def broken_generator_count(spacetime_dim: int) -> int:
-    """Number of broken generators in L_c x L_s -> L_J.
-
-    dim(L_c x L_s) = 2 * dim(SO(d-1,1))
-    dim(L_J) = dim(SO(d-1,1))
-    n_broken = dim(L_c x L_s) - dim(L_J) = dim(SO(d-1,1))
-
-    For d=4: n_broken = 6
+    """Number of broken generators. Delegates to canonical formulas.py.
 
     Lean: broken_generators_eq
 
@@ -167,7 +160,7 @@ def broken_generator_count(spacetime_dim: int) -> int:
     Returns:
         Number of broken generators.
     """
-    return lorentz_group_dimension(spacetime_dim)
+    return _canonical_broken_generators(spacetime_dim)
 
 
 def tetrad_component_count(spacetime_dim: int) -> int:

@@ -2,9 +2,9 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, and Layer 1 categorical infrastructure. Complete Lean 4 formalization (429 theorems + 2 axioms, zero sorry, 30 modules). 1014 tests, 61 pipeline figures, 20 notebooks. 99 Aristotle-proved across 27 runs, 330 manual.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, and Section 9C formalization wave (Weingarten, fracton, NJL). Lean 4 formalization: 506 theorems + 2 axioms across 33 modules (443+2ax proved, 63 sorry pending Aristotle). 1014 tests, 61 pipeline figures, 20 notebooks. 113 Aristotle-proved across 28 runs.
 
-**Last verified:** March 30, 2026 (Phase 5 Wave 5 synthesis)
+**Last verified:** March 31, 2026 (Phase 5 Section 9C — formalization in progress)
 
 ---
 

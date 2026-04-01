@@ -106,13 +106,14 @@ Near the horizon, linearizing $v(x) \approx c_s + \kappa x$, the turning
 point where $Q(x) = 0$ shifts from the real axis to
 \begin{equation}
 x_\text{tp} = x_H + i\,\delta x_\text{imag}\,,\qquad
-\delta x_\text{imag} = \frac{\Gamma_H}{\kappa\, c_s}\,,
+\delta x_\text{imag} = \frac{c_s\,\Gamma_H}{2\kappa^2}\,,
 \label{eq:turning_point}
 \end{equation}
 where $\Gamma_H = \Gamma(k_H, \omega)$ is the damping rate evaluated at
 the horizon wavenumber $k_H = \omega/c_s$. This shift is exact to all
 orders in the EFT expansion; the EFT order enters only through the
-frequency dependence of~$\Gamma_H$.
+frequency dependence of~$\Gamma_H$. The formula is formally verified
+in Lean~4 (\texttt{turning\_point\_shift}, Aristotle run \texttt{518636d7}).
 
 \begin{figure}[htb]
 \centering
@@ -132,13 +133,15 @@ shift grows as $\omega^2$ through $\Gamma_H \propto k_H^2$.}
 
 For a first-order zero of $Q(x)$, three Stokes lines emerge from the
 turning point at $2\pi/3$ angular separation. The Stokes constant
-$T = i$ is invariant under the imaginary shift~\cite{Berry1989, Heading1962},
-but the WKB action integral along the anti-Stokes line acquires an
-additional imaginary contribution proportional to $\delta x_\text{imag}$.
+$T = i$ is invariant under the imaginary shift~\cite{Berry1989, Heading1962}.
+For the linear flow profile $v(x) \approx c_s + \kappa x$ near the horizon,
+the WKB action integral between the turning point pair can be evaluated
+analytically, yielding the effective surface gravity $\kappa_\text{eff}$
+that absorbs both dispersive and dissipative corrections.
 
 \subsection{Modified Bogoliubov coefficients}
 
-The WKB matching across the shifted turning point yields the exact
+The analytic WKB connection for the linear profile gives the
 connection formula
 \begin{equation}
 \left|\frac{\beta}{\alpha}\right|^2 = e^{-2\pi\omega/\kappa_\text{eff}(\omega)}\,,

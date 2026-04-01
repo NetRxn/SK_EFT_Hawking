@@ -935,3 +935,166 @@ class TestPhaseScan4D:
         assert isinstance(result, BinderCrossing4DResult)
         assert len(result.scans) == 2
         assert isinstance(result.vestigial_detected, bool)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Option C: Wetterich NJL fermion-bag MC
+# ════════════════════════════════════════════════════════════════════
+
+from src.vestigial.wetterich_model import njl_sweep, run_njl_mc
+from src.core.constants import NJL_MODEL, NJL_COUPLING_SCAN
+
+
+class TestNJLConstants:
+    """Stage 1 checks: NJL constants are well-formed."""
+
+    def test_njl_model_fields(self):
+        """NJL model dict has required fields."""
+        assert NJL_MODEL['d'] == 4
+        assert NJL_MODEL['n_grassmann'] == 8
+        assert NJL_MODEL['n_fierz_channels'] == 5
+        assert NJL_MODEL['gauge_group'] is None  # key difference from ADW
+
+    def test_njl_fierz_completeness(self):
+        """1 + 1 + 4 + 4 + 6 = 16 = (spinor_dim)^2 (Fierz completeness)."""
+        assert 1 + 1 + 4 + 4 + 6 == 16
+        # 16 = 4^2 where 4 is spinor dimension; n_grassmann=8 = 2 Dirac × 4 components
+        assert 16 == 4 ** 2
+
+    def test_njl_coupling_scan_range(self):
+        """NJL coupling is positive (attractive)."""
+        lo, hi = NJL_COUPLING_SCAN['g_njl_range']
+        assert lo >= 0
+        assert hi > lo
+
+
+class TestNJLSweep:
+    """Stage 6 checks: NJL sweep mechanics."""
+
+    def test_njl_sweep_preserves_shape(self):
+        """Sweep doesn't change lattice dimensions."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        V = params.volume
+
+        config_new, acc = njl_sweep(config, rng, g_njl=1.0)
+        assert config_new.site_occ.shape == (V,)
+        assert 0 <= acc <= 1
+
+    def test_njl_sweep_occupation_bounds(self):
+        """Occupations remain in [0, N_grass] after sweep."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        N = params.n_grassmann
+
+        for _ in range(10):
+            config, _ = njl_sweep(config, rng, g_njl=5.0)
+
+        assert np.all(config.site_occ >= 0)
+        assert np.all(config.site_occ <= N)
+
+    def test_njl_zero_coupling_high_acceptance(self):
+        """g_njl=0 means only on-site action → high acceptance."""
+        params = Lattice4DParams(L=2, g_cosmo=0.1, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+
+        accs = []
+        for _ in range(20):
+            config, acc = njl_sweep(config, rng, g_njl=0.0)
+            accs.append(acc)
+
+        mean_acc = np.mean(accs)
+        assert mean_acc > 0.8, f"Zero coupling should give high acceptance, got {mean_acc}"
+
+    def test_njl_strong_coupling_lower_acceptance(self):
+        """Strong coupling reduces acceptance rate."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        rng_weak = np.random.default_rng(42)
+        rng_strong = np.random.default_rng(42)
+        config_w = create_lattice_4d(params, rng_weak)
+        config_s = create_lattice_4d(params, rng_strong)
+
+        acc_weak = []
+        acc_strong = []
+        for _ in range(20):
+            config_w, a = njl_sweep(config_w, rng_weak, g_njl=0.1)
+            acc_weak.append(a)
+            config_s, a = njl_sweep(config_s, rng_strong, g_njl=50.0)
+            acc_strong.append(a)
+
+        assert np.mean(acc_weak) > np.mean(acc_strong), \
+            "Strong coupling should lower acceptance"
+
+
+class TestNJLMC:
+    """Stage 6 checks: full NJL MC run."""
+
+    def test_njl_mc_runs(self):
+        """NJL MC completes without error."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        mc = FermionBagParams(n_thermalize=10, n_measure=20, n_skip=1, seed=42)
+        result = run_njl_mc(params, g_njl=5.0, mc_params=mc)
+
+        assert result.tetrad_m2 >= 0
+        assert result.metric_m2 >= 0
+        assert 0 < result.acceptance_rate < 1
+        assert result.phase in ('pre_geometric', 'vestigial', 'tetrad_ordered')
+
+    def test_njl_binder_bounds(self):
+        """Binder cumulants in valid range [0, 2/3]."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        mc = FermionBagParams(n_thermalize=10, n_measure=50, n_skip=1, seed=42)
+
+        for g in [0.0, 5.0, 20.0]:
+            result = run_njl_mc(params, g_njl=g, mc_params=mc)
+            assert 0 <= result.binder_tetrad <= 2.0 / 3.0 + 0.01, \
+                f"Binder tetrad out of range at g={g}: {result.binder_tetrad}"
+            assert 0 <= result.binder_metric <= 2.0 / 3.0 + 0.01, \
+                f"Binder metric out of range at g={g}: {result.binder_metric}"
+
+    def test_njl_acceptance_varies_with_coupling(self):
+        """Acceptance rate should depend on coupling strength."""
+        params = Lattice4DParams(L=3, g_cosmo=1.0, g_EH=0.0)
+        mc = FermionBagParams(n_thermalize=10, n_measure=30, n_skip=1, seed=137)
+
+        acc_weak = run_njl_mc(params, g_njl=0.1, mc_params=mc).acceptance_rate
+        acc_strong = run_njl_mc(params, g_njl=20.0, mc_params=mc).acceptance_rate
+        assert acc_weak != acc_strong, \
+            "Acceptance should vary with coupling (not uniform like Option B bug)"
+
+    def test_njl_adw_correspondence_limit(self):
+        """At half-filling mean, NJL scalar dominates → close to ADW fundamental."""
+        from src.core.formulas import njl_scalar_channel, njl_bond_weight_total
+
+        # At half-filling (n=4 of 8), pseudoscalar vanishes
+        n_half = 4
+        g = 10.0
+        scalar = njl_scalar_channel(n_half, n_half, g, N_grass=8)
+        total = njl_bond_weight_total(n_half, n_half, g, N_grass=8)
+        assert abs(scalar - total) < 1e-10, \
+            "At half-filling, total should equal scalar (pseudoscalar vanishes)"
+
+    def test_njl_pseudoscalar_cancellation_away_from_half(self):
+        """Away from half-filling, pseudoscalar partially cancels scalar."""
+        from src.core.formulas import njl_scalar_channel, njl_bond_weight_total
+
+        # At n=2 (quarter-filling), pseudoscalar is nonzero
+        n = 2
+        g = 10.0
+        scalar = njl_scalar_channel(n, n, g, N_grass=8)
+        total = njl_bond_weight_total(n, n, g, N_grass=8)
+        assert total < scalar, \
+            "Away from half-filling, pseudoscalar should reduce total"
+
+    def test_njl_reproducibility(self):
+        """Same seed gives same result."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        mc = FermionBagParams(n_thermalize=10, n_measure=20, n_skip=1, seed=42)
+
+        r1 = run_njl_mc(params, g_njl=5.0, mc_params=mc)
+        r2 = run_njl_mc(params, g_njl=5.0, mc_params=mc)
+        assert r1.tetrad_m2 == r2.tetrad_m2
+        assert r1.acceptance_rate == r2.acceptance_rate

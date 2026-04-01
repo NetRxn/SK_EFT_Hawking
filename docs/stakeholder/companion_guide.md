@@ -557,9 +557,9 @@ These are genuine contributions to the formalization of mathematics, not just ph
 
 We added a completely new experimental platform: exciton-polariton condensates. These are hybrid light-matter systems in semiconductor microcavities. The key advantage: their Hawking temperature is about 1 Kelvin — ten billion times hotter than in BEC systems. This makes corrections far more accessible. The Paris group has already demonstrated acoustic horizons (published in Physical Review Letters in 2025).
 
-### Vestigial gravity: the split transition
+### Vestigial gravity: correct physics framework
 
-Remember the "new kind of gravity" from Phase 4? We ran the full production-scale computer simulation (Monte Carlo on a 4D lattice) and found **the split transition** — the metric order parameter and tetrad order parameter undergo phase transitions at different temperatures. This is the smoking gun for the vestigial phase existing as a genuine thermodynamic phase, not a finite-size artifact.
+Remember the "new kind of gravity" from Phase 4? A comprehensive codebase audit revealed that the initial Monte Carlo simulation used a simplified bond coupling that didn't capture the full ADW physics. We implemented the correct SO(4) Weingarten multi-channel integration — the exact gauge integration that produces the effective nearest-neighbor action from first principles — and formally verified it in Lean (14 theorems, zero sorry, Aristotle-proved). Production simulations with the corrected physics are now running. This is the first lattice MC framework for the ADW model with mathematically verified gauge integration.
 
 ### By the numbers
 

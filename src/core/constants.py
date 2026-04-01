@@ -259,21 +259,71 @@ SO4_HAAR = {
 # integrals are evaluated exactly. Bag updates are local and sign-free.
 FERMION_BAG = {
     'max_bag_size': 32,           # max sites per bag (controls accuracy vs speed)
-    'n_thermalize': 500,          # thermalization sweeps before measurement
-    'n_measure': 1000,            # measurement sweeps
-    'n_skip': 5,                  # sweeps between measurements (decorrelation)
+    'n_thermalize': 2500,         # thermalization sweeps before measurement
+    'n_measure': 5000,            # measurement sweeps
+    'n_skip': 5,                  # base decorrelation gap (scaled by L in runner)
     'seed': 42,                   # default random seed
 }
 
-# 4D lattice sizes for pilot study (L^4 hypercubic)
-# Cost scaling: 6^4=1296 (minutes), 8^4=4096 (hours), 10^4=10000 (days)
-ADW_4D_LATTICE_SIZES = [4, 6, 8]
+# 4D lattice sizes (L^4 hypercubic)
+# Cost scaling (vectorized, 10 cores): L=8 ~2min, L=12 ~30min, L=16 ~4-16h
+ADW_4D_LATTICE_SIZES = [4, 6, 8, 10, 12, 14, 16]
 
-# 4D coupling scan parameters
+# 4D coupling scan parameters (Binder crossing section)
+# g_EH < 0 = attractive bonds (correct ADW physics: fermion hopping favors
+# tetrad alignment). The product-form bond coupling is
+# S_bond = -g_eff × (n_x/N)(n_y/N) where g_eff = g_EH/4.
 ADW_4D_COUPLING_SCAN = {
     'g_cosmo': 1.0,               # fixed cosmological coupling
-    'g_EH_range': (0.0, 4.0),     # Einstein-Hilbert coupling range
-    'n_points': 20,               # number of scan points (smaller for 4D cost)
+    'g_EH_range': (-50.0, 0.0),   # Einstein-Hilbert coupling range (negative = attractive)
+    'n_points': 40,               # coupling scan points
+}
+
+# 4D finite-size scaling parameters
+# g_EH in FSS is passed as g_EH = -ratio (attractive), scanning ratio = |g_EH|
+ADW_4D_FSS = {
+    'coupling_range': (1.0, 50.0),          # |g_EH| range for FSS scan (mapped to negative g_EH)
+    'n_couplings': 40,                      # coupling points
+    'sign_check_couplings': [1.0, 5.0, 10.0, 15.0, 20.0, 30.0, 50.0],
+    'vestigial_window_threshold': 0.01,     # min Binder crossing separation
+    'split_threshold': 0.05,                # min susceptibility peak separation
+}
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Section 9C-3: Wetterich NJL model (gauge-link-free)
+#
+# Fierz-complete nearest-neighbor 4-fermion interaction. NO local gauge
+# symmetry — SO(4) acts as global flavor. The NJL model provides an
+# independent cross-check of vestigial gravity (Option C vs Option B).
+#
+# Reference: Wetterich, PLB 901, 136223 (2024) — spinor gravity
+# Reference: Nambu & Jona-Lasinio, PR 122, 345 (1961) — NJL model
+# Reference: Fierz, Z. Phys. 104, 553 (1937) — Fierz rearrangement
+# ════════════════════════════════════════════════════════════════════
+
+NJL_MODEL = {
+    'd': 4,                       # spacetime dimension
+    'n_grassmann': 8,             # Grassmann variables per site (same as ADW)
+    'n_fierz_channels': 5,       # S, P, V, A, T (1+1+4+4+6 = 16 = 4²)
+    'active_channels': ['scalar', 'pseudoscalar'],  # minimal 2-channel model
+    'gauge_group': None,          # NO local gauge symmetry (key difference from ADW)
+    'global_symmetry': 'SO(4)',   # flavor symmetry only
+    'coordination_number': 8,     # same lattice as ADW
+}
+
+# NJL coupling scan — maps to ADW via g_eff = 4 × g_njl
+# NJL coupling g > 0 = attractive (same convention as ADW g_EH < 0)
+NJL_COUPLING_SCAN = {
+    'g_cosmo': 1.0,               # on-site 8-fermion vertex (same as ADW)
+    'g_njl_range': (0.0, 50.0),   # NJL coupling range (positive = attractive)
+    'n_points': 40,               # coupling scan points
+}
+
+NJL_FSS = {
+    'coupling_range': (1.0, 50.0),          # g_njl range for FSS scan
+    'n_couplings': 40,
+    'vestigial_window_threshold': 0.01,
+    'split_threshold': 0.05,
 }
 
 
@@ -489,7 +539,7 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (429 theorems + 2 axioms across 30 Lean modules):
+# Verification breakdown (506 theorems + 2 axioms across 33 Lean modules):
 #   - 99 proved by Aristotle automated theorem prover (listed below with run IDs)
 #   - 330 proved manually in Lean (verified by `lake build`)
 #   - 2 axioms: non_abelian_center_discrete (GaugeErasure.lean),
@@ -634,12 +684,108 @@ ARISTOTLE_THEOREMS = {
     # Phase 5 Wave 4C — DrinfeldDouble.lean (2 by Aristotle)
     'ddMul_one_left': 'run_20260329_211117',
     'ddMul_one_right': 'run_20260329_211117',
+
+    # Phase 5 Section 9C — FractonFormulas.lean (45 by Aristotle)
+    'symmetric_tensor_components': '4528aa2b',
+    'charge_scalar_one_component': '4528aa2b',
+    'dipole_d_components': '4528aa2b',
+    'quadrupole_3d_six_components': '4528aa2b',
+    'hockey_stick_charge_count': '4528aa2b',
+    'charge_count_at_least_linear': '4528aa2b',
+    'total_conserved_with_momentum_energy': '4528aa2b',
+    'dipole_quadratic_dispersion': '4528aa2b',
+    'dipole_k4_damping': '4528aa2b',
+    'standard_linear_dispersion': '4528aa2b',
+    'damping_twice_dispersion': '4528aa2b',
+    'dispersion_power_strict_mono': '4528aa2b',
+    'subdiffusive_relaxation': '4528aa2b',
+    'ucd_standard': '4528aa2b',
+    'ucd_dipole': '4528aa2b',
+    'ucd_quadrupole': '4528aa2b',
+    'ucd_unbounded': '4528aa2b',
+    'ucd_grows_even': '4528aa2b',
+    'transport_count_total': '4528aa2b',
+    'positivity_constrains_dissipative': '4528aa2b',
+    'retention_ratio_exceeds_one': '4528aa2b',
+    'retention_ratio_diverges': '4528aa2b',
+    'fragmentation_bits_positive': '4528aa2b',
+    'standard_hydro_info_constant': '4528aa2b',
+    'xcube_grows_linearly': '4528aa2b',
+    'fragmentation_dominates_standard_1d': '4528aa2b',
+    'fracton_dof_4d_spacetime': '4528aa2b',
+    'graviton_dof_4d_is_2': '4528aa2b',
+    'extra_dof_4d': '4528aa2b',
+    'dof_gap_equals_d_minus_1': '4528aa2b',
+    'dof_gap_always_positive': '4528aa2b',
+    'bootstrap_diverges_all_high_orders': '4528aa2b',
+    'five_bootstrap_obstructions': '4528aa2b',
+    'bootstrap_gap_is_structural': '4528aa2b',
+    'spin1_instability_at_cubic': '4528aa2b',
+    'commutator_order_mismatch': '4528aa2b',
+    'commutator_order_ratio': '4528aa2b',
+    'param_gap_quadratic_growth': '4528aa2b',
+    'param_mismatch_general': '4528aa2b',
+    'ym_four_independent_obstructions': '4528aa2b',
+    'no_fracton_ym_compatibility': '4528aa2b',
+    'wxy_scalar_not_vector': '4528aa2b',
+    'dispersion_matches_charge_scaling': '4528aa2b',
+    'dof_gap_cross_check': '4528aa2b',
+    'obstruction_counts_distinct': '4528aa2b',
+
+    # Phase 5 Section 9C — WetterichNJL.lean (18 by Aristotle)
+    'fierz_completeness': '4528aa2b',
+    'fierz_equals_spinor_sq': '4528aa2b',
+    'fierz_channel_count': '4528aa2b',
+    'fierz_channel_dims_positive': '4528aa2b',
+    'njl_scalar_nonneg': '4528aa2b',
+    'njl_scalar_monotone': '4528aa2b',
+    'njl_scalar_upper_bound': '4528aa2b',
+    'njl_pseudoscalar_half_filling_zero': '4528aa2b',
+    'chirality_factor_bounded': '4528aa2b',
+    'njl_pseudoscalar_sign_at_empty': '4528aa2b',
+    'njl_bond_weight_decomposition': '4528aa2b',
+    'njl_total_at_half_filling': '4528aa2b',
+    'njl_bond_weight_symmetric': '4528aa2b',
+    'njl_vector_nonneg': '4528aa2b',
+    'vector_variance_bound': '4528aa2b',
+    'njl_adw_correspondence': '4528aa2b',
+    'njl_adw_positivity': '4528aa2b',
+    'njl_to_g_EH': '4528aa2b',
+
+    # Phase 5 Section 9C — SO4Weingarten.lean (14 by Aristotle)
+    'weingarten_2nd_factor': 'run_20260331_103403',
+    'weingarten_2nd_so4': 'run_20260331_103403',
+    'weingarten_4th_so4_pair': 'run_20260331_103403',
+    'weingarten_epsilon_so4': 'run_20260331_103403',
+    'adjoint_channel_suppressed': 'run_20260331_103403',
+    'fundamental_channel_nonneg': 'run_20260331_103403',
+    'adjoint_channel_nonneg': 'run_20260331_103403',
+    'total_bond_nonneg': 'run_20260331_103403',
+    'attractive_bond_action_nonpos': 'run_20260331_103403',
+    'so4_fundamental_dim': 'run_20260331_103403',
+    'so4_tensor_product_decomp': 'run_20260331_103403',
+    'planck_nonneg': 'run_20260331_103403',
+    'exp_gt_one_of_pos': 'run_20260331_103403',
+    'planck_monotone': 'run_20260331_103403',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 99, f"Expected 91 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 176, f"Expected 176 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
+
+
+# ════════════════════════════════════════════════════════════════════
+# Parameter Provenance Registry (imported from src.core.provenance)
+#
+# Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS must have
+# a corresponding entry in PARAMETER_PROVENANCE that traces it to a
+# specific published source (paper, table/figure, page).
+#
+# See Pipeline Invariant 8 and CHECK 15 in validate.py.
+# ════════════════════════════════════════════════════════════════════
+
+from src.core.provenance import PARAMETER_PROVENANCE  # noqa: E402
 
 
 # ════════════════════════════════════════════════════════════════════

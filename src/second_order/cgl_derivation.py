@@ -419,19 +419,11 @@ def verify_second_order_fdr() -> bool:
 
     At second order, the odd-ω dissipative retarded monomials with
     broken spatial parity are:
-    - b₁ · ω · k³  (from ψ_a · ∂_t ∂_x³ ψ_r, but odd in ω)
-    Wait — let me think about what the second-order terms are.
-
-    At derivative level 3 (EFT order N=2), the odd-m retarded monomials:
-    - m=1, n=2: c_{1,2} · (-iω)(ik)² = c_{1,2} · iω·k²  [odd in ω]  ×(-1)
+    - m=1, n=2: c_{1,2} · (-iω)(ik)² = c_{1,2} · iω·k²  [odd in ω]
     - m=3, n=0: c_{3,0} · (-iω)³ = c_{3,0} · iω³  [odd in ω]
 
-    CGL FDR:
-    K_N = [K_R(ω) - K_R(-ω)] / (β₀ω)
-        = [2·(c_{1,2}·iω·(-k²) + c_{3,0}·iω³)] / (β₀ω)
-        = 2i·(−c_{1,2}·k² + c_{3,0}·ω²) / β₀
-
-    Hmm, this is imaginary. Something is off with signs.
+    CGL FDR gives K_N = [K_R(ω) - K_R(-ω)] / (β₀ω), which is purely
+    imaginary — the verification below checks the imaginary part directly.
     Let me recompute.
     """
     omega = sp.Symbol('omega', real=True)

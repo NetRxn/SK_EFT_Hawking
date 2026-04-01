@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SK-EFT Provenance Command Center</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+        :root {
+            --green: #22c55e; --green-bg: #f0fdf4; --green-border: #86efac;
+            --yellow: #eab308; --yellow-bg: #fefce8; --yellow-border: #fde047;
+            --red: #ef4444; --red-bg: #fef2f2; --red-border: #fca5a5;
+            --blue: #2E86AB; --blue-bg: #eff6ff; --blue-border: #93c5fd;
+            --grey: #6b7280; --grey-bg: #f9fafb; --grey-border: #d1d5db;
+            --bg: #ffffff; --text: #1f2937; --border: #e5e7eb;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               background: #f3f4f6; color: var(--text); line-height: 1.5; }
+
+        /* Header */
+        .header { background: var(--bg); border-bottom: 2px solid var(--border);
+                  padding: 16px 24px; position: sticky; top: 0; z-index: 100; }
+        .header h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+        .summary-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+        .summary-item { font-size: 0.85rem; padding: 4px 10px; border-radius: 6px;
+                       background: var(--grey-bg); border: 1px solid var(--grey-border); }
+        .summary-item.good { background: var(--green-bg); border-color: var(--green-border); }
+        .summary-item.warn { background: var(--yellow-bg); border-color: var(--yellow-border); }
+        .summary-item.bad { background: var(--red-bg); border-color: var(--red-border); }
+
+        /* Progress bar */
+        .progress-bar { height: 8px; background: var(--grey-border); border-radius: 4px;
+                       overflow: hidden; margin: 8px 0; max-width: 400px; }
+        .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+        .progress-fill.green { background: var(--green); }
+        .progress-fill.yellow { background: var(--yellow); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); }
+        .tab { padding: 8px 16px; text-decoration: none; color: var(--grey);
+               font-weight: 500; font-size: 0.9rem; border-bottom: 2px solid transparent;
+               margin-bottom: -2px; cursor: pointer; }
+        .tab:hover { color: var(--text); }
+        .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+        /* Filters */
+        .filters { display: flex; gap: 8px; padding: 12px 24px; background: var(--bg);
+                  border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .filters select { padding: 4px 8px; border: 1px solid var(--border);
+                         border-radius: 4px; font-size: 0.85rem; }
+        .filters label { font-size: 0.85rem; color: var(--grey); font-weight: 500; }
+
+        /* Content */
+        .content { max-width: 1200px; margin: 0 auto; padding: 16px 24px; }
+
+        /* Parameter cards */
+        .param-card { background: var(--bg); border: 1px solid var(--border);
+                     border-radius: 8px; padding: 16px; margin-bottom: 12px;
+                     transition: border-color 0.2s; }
+        .param-card.conflict { border-color: var(--red); border-width: 2px; }
+        .param-card.unverified { border-color: var(--red-border); }
+        .param-card.llm-verified { border-color: var(--yellow-border); }
+        .param-card.human-verified { border-color: var(--green-border); background: var(--green-bg); }
+
+        .param-header { display: flex; justify-content: space-between; align-items: center;
+                       margin-bottom: 8px; }
+        .param-key { font-family: 'SF Mono', Consolas, monospace; font-weight: 700;
+                    font-size: 0.95rem; }
+        .status-badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;
+                       font-weight: 600; text-transform: uppercase; }
+        .status-human { background: var(--green-bg); color: #15803d; border: 1px solid var(--green-border); }
+        .status-llm { background: var(--yellow-bg); color: #a16207; border: 1px solid var(--yellow-border); }
+        .status-unverified { background: var(--red-bg); color: #dc2626; border: 1px solid var(--red-border); }
+        .status-conflict { background: var(--red-bg); color: #dc2626; border: 1px solid var(--red); font-weight: 700; }
+
+        .tier-badge { padding: 2px 6px; border-radius: 3px; font-size: 0.7rem;
+                     font-weight: 600; background: var(--grey-bg); color: var(--grey);
+                     border: 1px solid var(--grey-border); margin-left: 8px; }
+        .tier-badge.measured { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-border); }
+        .tier-badge.projected { background: var(--yellow-bg); color: #a16207; border-color: var(--yellow-border); }
+
+        .values-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+                     margin: 8px 0; font-size: 0.85rem; }
+        .value-box { padding: 8px; background: var(--grey-bg); border-radius: 4px; }
+        .value-box.conflict { background: var(--red-bg); }
+        .value-label { font-size: 0.75rem; color: var(--grey); text-transform: uppercase;
+                      font-weight: 600; margin-bottom: 2px; }
+        .value-num { font-family: 'SF Mono', Consolas, monospace; font-size: 0.9rem; }
+
+        .source-box { background: var(--blue-bg); border: 1px solid var(--blue-border);
+                     border-radius: 4px; padding: 8px 12px; margin: 8px 0;
+                     font-size: 0.85rem; }
+        .source-label { font-size: 0.7rem; color: var(--blue); font-weight: 600;
+                       text-transform: uppercase; margin-bottom: 4px; }
+
+        .excerpt-box { background: #faf5ff; border: 1px solid #d8b4fe;
+                      border-radius: 4px; padding: 8px 12px; margin: 8px 0;
+                      font-style: italic; font-size: 0.85rem; }
+
+        .notes-box { background: var(--yellow-bg); border: 1px solid var(--yellow-border);
+                    border-radius: 4px; padding: 8px 12px; margin: 8px 0;
+                    font-size: 0.85rem; }
+
+        .papers-used { font-size: 0.75rem; color: var(--grey); margin-top: 4px; }
+
+        .actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; }
+        .btn { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border);
+              font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+        .btn-confirm { background: var(--green-bg); color: #15803d; border-color: var(--green-border); }
+        .btn-confirm:hover { background: var(--green); color: white; }
+        .btn-reject { background: var(--red-bg); color: #dc2626; border-color: var(--red-border); }
+        .btn-reject:hover { background: var(--red); color: white; }
+        .btn-flag { background: var(--yellow-bg); color: #a16207; border-color: var(--yellow-border); }
+        .btn-flag:hover { background: var(--yellow); color: white; }
+        .btn-save { background: var(--blue); color: white; border-color: var(--blue);
+                   padding: 8px 20px; font-size: 0.9rem; }
+        .btn-save:hover { opacity: 0.9; }
+
+        .action-notes { flex: 1; padding: 6px 10px; border: 1px solid var(--border);
+                       border-radius: 4px; font-size: 0.85rem; }
+
+        /* Conflict warning */
+        .conflict-warning { background: var(--red-bg); border: 2px solid var(--red);
+                           border-radius: 4px; padding: 8px 12px; margin: 8px 0;
+                           font-weight: 600; font-size: 0.85rem; color: #dc2626; }
+
+        /* Table styles (Lean/Aristotle tab) */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .data-table th { background: var(--grey-bg); padding: 8px 12px; text-align: left;
+                        font-weight: 600; border-bottom: 2px solid var(--border); position: sticky;
+                        top: 120px; z-index: 10; }
+        .data-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+        .data-table tr:hover { background: var(--blue-bg); }
+        .method-aristotle { color: var(--green); font-weight: 600; }
+        .method-manual { color: var(--blue); }
+        .method-sorry { color: var(--red); font-weight: 700; }
+        .method-axiom { color: #9333ea; font-weight: 600; }
+
+        /* DOI link */
+        .doi-link { color: var(--blue); text-decoration: none; font-size: 0.8rem; }
+        .doi-link:hover { text-decoration: underline; }
+
+        /* Keyboard shortcut hint */
+        .kbd { display: inline-block; padding: 1px 5px; border: 1px solid var(--grey-border);
+              border-radius: 3px; font-size: 0.7rem; font-family: monospace;
+              background: var(--grey-bg); color: var(--grey); }
+
+        /* Save bar */
+        .save-bar { position: fixed; bottom: 0; left: 0; right: 0;
+                   background: var(--bg); border-top: 2px solid var(--blue);
+                   padding: 12px 24px; display: flex; justify-content: space-between;
+                   align-items: center; z-index: 100; }
+        .save-status { font-size: 0.85rem; }
+
+        /* Tab content visibility */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Paper card */
+        .paper-card { background: var(--bg); border: 1px solid var(--border);
+                     border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+        .paper-card h3 { font-size: 1rem; margin-bottom: 8px; }
+        .paper-stat { display: inline-block; margin-right: 16px; font-size: 0.85rem; }
+
+        @media (max-width: 768px) {
+            .values-row { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>SK-EFT Provenance Command Center</h1>
+    <div class="summary-bar">
+        <div class="summary-item {% if summary.params_human == summary.params_total %}good{% elif summary.params_llm > 0 %}warn{% else %}bad{% endif %}">
+            Parameters: {{ summary.params_human }}/{{ summary.params_total }} human-verified
+        </div>
+        <div class="summary-item {% if summary.params_conflicts == 0 %}good{% else %}bad{% endif %}">
+            Conflicts: {{ summary.params_conflicts }}
+        </div>
+        <div class="summary-item {% if summary.theorems_sorry == 0 %}good{% else %}warn{% endif %}">
+            Lean: {{ summary.theorems_total }} thms ({{ summary.theorems_sorry }} sorry)
+        </div>
+        <div class="summary-item good">
+            Aristotle: {{ summary.theorems_aristotle }} proved
+        </div>
+        <div class="summary-item">
+            Formulas: {{ summary.formulas_with_source }}/{{ summary.formulas_total }} with Source:
+        </div>
+    </div>
+    <div class="progress-bar">
+        {% set pct = (summary.params_human / summary.params_total * 100) if summary.params_total > 0 else 0 %}
+        <div class="progress-fill {% if pct == 100 %}green{% else %}yellow{% endif %}"
+             style="width: {{ pct|int }}%"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <a class="tab {% if tab == 'parameters' %}active{% endif %}"
+           href="?tab=parameters&status={{ status_filter }}&tier={{ tier_filter }}&paper={{ paper_filter }}">
+            Parameters ({{ summary.params_total }})
+        </a>
+        <a class="tab {% if tab == 'formulas' %}active{% endif %}"
+           href="?tab=formulas">
+            Formulas ({{ summary.formulas_total }})
+        </a>
+        <a class="tab {% if tab == 'lean' %}active{% endif %}"
+           href="?tab=lean">
+            Lean/Aristotle ({{ summary.theorems_total }})
+        </a>
+        <a class="tab {% if tab == 'papers' %}active{% endif %}"
+           href="?tab=papers">
+            Paper Claims ({{ papers|length }})
+        </a>
+        <a class="tab {% if tab == 'citations' %}active{% endif %}"
+           href="?tab=citations">
+            Citation Registry
+        </a>
+    </div>
+</div>
+
+<!-- Filters (Parameters tab) -->
+{% if tab == 'parameters' %}
+<div class="filters">
+    <label>Status:</label>
+    <select onchange="location.href='?tab=parameters&status='+this.value+'&tier={{ tier_filter }}&paper={{ paper_filter }}'">
+        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+        <option value="conflict" {% if status_filter == 'conflict' %}selected{% endif %}>Conflicts</option>
+        <option value="unverified" {% if status_filter == 'unverified' %}selected{% endif %}>Unverified</option>
+        <option value="llm_verified" {% if status_filter == 'llm_verified' %}selected{% endif %}>LLM Only</option>
+        <option value="human_verified" {% if status_filter == 'human_verified' %}selected{% endif %}>Human Verified</option>
+    </select>
+    <label>Tier:</label>
+    <select onchange="location.href='?tab=parameters&status={{ status_filter }}&tier='+this.value+'&paper={{ paper_filter }}'">
+        <option value="all" {% if tier_filter == 'all' %}selected{% endif %}>All</option>
+        <option value="MEASURED" {% if tier_filter == 'MEASURED' %}selected{% endif %}>Measured</option>
+        <option value="EXTRACTED" {% if tier_filter == 'EXTRACTED' %}selected{% endif %}>Extracted</option>
+        <option value="DERIVED" {% if tier_filter == 'DERIVED' %}selected{% endif %}>Derived</option>
+        <option value="PROJECTED" {% if tier_filter == 'PROJECTED' %}selected{% endif %}>Projected</option>
+    </select>
+    <label>Paper:</label>
+    <select onchange="location.href='?tab=parameters&status={{ status_filter }}&tier={{ tier_filter }}&paper='+this.value">
+        <option value="all" {% if paper_filter == 'all' %}selected{% endif %}>All</option>
+        {% for i in range(1, 8) %}
+        <option value="{{ i }}" {% if paper_filter == i|string %}selected{% endif %}>Paper {{ i }}</option>
+        {% endfor %}
+    </select>
+    <span style="margin-left: auto; font-size: 0.75rem; color: var(--grey);">
+        Keyboard: <span class="kbd">y</span> confirm
+        <span class="kbd">n</span> reject
+        <span class="kbd">f</span> flag
+        <span class="kbd">j/k</span> next/prev
+    </span>
+</div>
+{% endif %}
+
+<!-- Content -->
+<div class="content" style="padding-bottom: 80px;">
+
+    <!-- ═══ PARAMETERS TAB ═══ -->
+    <div class="tab-content {% if tab == 'parameters' %}active{% endif %}">
+        {% for p in params %}
+        <div class="param-card {% if p.has_conflict %}conflict{% else %}{{ p.status.replace('_', '-') }}{% endif %}"
+             id="card-{{ loop.index0 }}">
+            <div class="param-header">
+                <span>
+                    <span class="param-key">{{ p.key }}</span>
+                    <span class="tier-badge {% if p.tier == 'MEASURED' %}measured{% elif p.tier == 'PROJECTED' %}projected{% endif %}">
+                        {{ p.tier }}
+                    </span>
+                </span>
+                <span id="status-{{ p.key }}">
+                    {% if p.has_conflict %}
+                    <span class="status-badge status-conflict">CONFLICT</span>
+                    {% elif p.status == 'human_verified' %}
+                    <span class="status-badge status-human">HUMAN VERIFIED</span>
+                    {% elif p.status == 'llm_verified' %}
+                    <span class="status-badge status-llm">LLM VERIFIED</span>
+                    {% else %}
+                    <span class="status-badge status-unverified">UNVERIFIED</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if p.has_conflict %}
+            <div class="conflict-warning">
+                WARNING: Code value does not match provenance source
+            </div>
+            {% endif %}
+
+            <div class="values-row">
+                <div class="value-box {% if p.has_conflict %}conflict{% endif %}">
+                    <div class="value-label">Current code value</div>
+                    <div class="value-num">{{ format_value(p.code_value) }} {{ p.unit }}</div>
+                </div>
+                <div class="value-box">
+                    <div class="value-label">Provenance value</div>
+                    <div class="value-num">{{ format_value(p.provenance_value) }} {{ p.unit }}</div>
+                </div>
+            </div>
+
+            <div class="source-box">
+                <div class="source-label">Source</div>
+                <div>{{ p.source }}</div>
+                {% if p.detail %}<div style="margin-top: 4px; font-size: 0.8rem; color: var(--grey);">{{ p.detail }}</div>{% endif %}
+                {% if p.doi %}
+                <a class="doi-link" href="https://doi.org/{{ p.doi }}" target="_blank" rel="noopener">
+                    DOI: {{ p.doi }} &#8599;
+                </a>
+                {% endif %}
+            </div>
+
+            {% if p.llm_verified_notes %}
+            <div class="excerpt-box">
+                <div style="font-size: 0.7rem; color: #9333ea; font-weight: 600; font-style: normal;">
+                    LLM-EXTRACTED EXCERPT</div>
+                {{ p.llm_verified_notes }}
+            </div>
+            {% endif %}
+
+            {% if p.notes %}
+            <div class="notes-box">
+                <strong>Notes:</strong> {{ p.notes }}
+            </div>
+            {% endif %}
+
+            {% if p.papers %}
+            <div class="papers-used">Used in: Papers {{ p.papers|join(', ') }}</div>
+            {% endif %}
+
+            <div class="actions">
+                <button class="btn btn-confirm"
+                        hx-post="/verify" hx-target="#status-{{ p.key }}"
+                        hx-vals='{"key": "{{ p.key }}", "action": "confirm"}'>
+                    Confirm
+                </button>
+                <button class="btn btn-reject"
+                        hx-post="/verify" hx-target="#status-{{ p.key }}"
+                        hx-vals='{"key": "{{ p.key }}", "action": "reject"}'>
+                    Reject
+                </button>
+                <button class="btn btn-flag"
+                        hx-post="/verify" hx-target="#status-{{ p.key }}"
+                        hx-vals='{"key": "{{ p.key }}", "action": "flag"}'>
+                    Flag
+                </button>
+                <input class="action-notes" type="text" placeholder="Notes..."
+                       name="notes-{{ p.key }}" id="notes-{{ p.key }}">
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not params %}
+        <div style="text-align: center; padding: 40px; color: var(--grey);">
+            No parameters match the current filters.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ═══ FORMULAS TAB ═══ -->
+    <div class="tab-content {% if tab == 'formulas' %}active{% endif %}">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Description</th>
+                    <th>Lean</th>
+                    <th>Aristotle</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in formulas %}
+                <tr>
+                    <td><code>{{ f.name }}</code><br>
+                        <small style="color: var(--grey);">L{{ f.line }}</small></td>
+                    <td style="max-width: 300px;">{{ f.description[:80] }}</td>
+                    <td>{% if f.has_lean %}<span style="color: var(--green);">{{ f.lean[:40] }}</span>
+                        {% else %}<span style="color: var(--red);">MISSING</span>{% endif %}</td>
+                    <td>{% if f.has_aristotle %}{{ f.aristotle[:20] }}{% else %}<span style="color: var(--grey);">—</span>{% endif %}</td>
+                    <td>{% if f.has_source %}<span style="color: var(--green);">{{ f.source[:50] }}</span>
+                        {% else %}<span style="color: var(--yellow);">—</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ═══ LEAN/ARISTOTLE TAB ═══ -->
+    <div class="tab-content {% if tab == 'lean' %}active{% endif %}">
+        <div class="summary-bar" style="margin-bottom: 16px;">
+            <div class="summary-item good">Aristotle: {{ summary.theorems_aristotle }}</div>
+            <div class="summary-item" style="background: var(--blue-bg); border-color: var(--blue-border);">
+                Manual: {{ summary.theorems_manual }}</div>
+            {% if summary.theorems_sorry > 0 %}
+            <div class="summary-item bad">Sorry: {{ summary.theorems_sorry }}</div>
+            {% endif %}
+            <div class="summary-item" style="background: #f3e8ff; border-color: #d8b4fe;">
+                Axioms: {{ summary.theorems_axioms }}</div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Theorem</th>
+                    <th>Method</th>
+                    <th>Run ID</th>
+                    <th>Statement (truncated)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in theorems %}
+                <tr>
+                    <td>{{ t.module }}</td>
+                    <td><code>{{ t.name }}</code></td>
+                    <td><span class="method-{{ t.method }}">{{ t.method|upper }}</span></td>
+                    <td><code style="font-size: 0.75rem;">{{ t.run_id[:12] }}</code></td>
+                    <td style="max-width: 400px; font-size: 0.8rem; color: var(--grey);">
+                        {{ t.statement }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ═══ PAPER CLAIMS TAB ═══ -->
+    <div class="tab-content {% if tab == 'papers' %}active{% endif %}">
+        {% for p in papers %}
+        <div class="paper-card" style="border-left: 4px solid {% if p.param_status == 'ready' %}var(--green){% elif p.param_status == 'blocked' %}var(--red){% elif p.param_status == 'no_deps' %}var(--blue){% else %}var(--yellow){% endif %};">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h3>{{ p.title }}</h3>
+                    <div style="color: var(--grey); font-size: 0.85rem; margin-bottom: 8px;">{{ p.topic }}</div>
+                </div>
+                <div>
+                    {% if p.param_status == 'ready' %}
+                    <span class="status-badge status-human">READY FOR SUBMISSION</span>
+                    {% elif p.param_status == 'blocked' %}
+                    <span class="status-badge status-conflict">BLOCKED — PARAM CONFLICTS</span>
+                    {% elif p.param_status == 'no_deps' %}
+                    <span class="status-badge" style="background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border);">NO PARAM DEPS</span>
+                    {% else %}
+                    <span class="status-badge status-llm">PENDING HUMAN REVIEW</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Stats row -->
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0;">
+                <span class="paper-stat">{{ p.figure_count }} figures</span>
+                <span class="paper-stat">{{ p.theorem_count }} theorem refs</span>
+                <span class="paper-stat">{{ p.bibitem_count }} bibliography entries</span>
+                {% if p.platforms %}
+                <span class="paper-stat">Platforms: {{ p.platforms|join(', ') }}</span>
+                {% endif %}
+                {% if p.lean_modules %}
+                <span class="paper-stat">Lean: {{ p.lean_modules|join(', ') }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Issues -->
+            {% if p.issues %}
+            <div style="margin: 8px 0;">
+                {% for issue in p.issues %}
+                <div style="color: var(--red); font-size: 0.85rem; font-weight: 500;">
+                    ✗ {{ issue }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Parameter readiness -->
+            {% if p.params_total > 0 %}
+            <div style="margin: 8px 0; padding: 8px; background: var(--grey-bg); border-radius: 4px;">
+                <div style="font-size: 0.75rem; color: var(--grey); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">
+                    Parameter Verification</div>
+                <div class="progress-bar" style="max-width: 100%;">
+                    {% set ppct = (p.params_human / p.params_total * 100) if p.params_total > 0 else 0 %}
+                    <div class="progress-fill {% if ppct == 100 %}green{% else %}yellow{% endif %}"
+                         style="width: {{ ppct|int }}%"></div>
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 4px;">
+                    {{ p.params_human }}/{{ p.params_total }} human-verified
+                    {% if p.params_conflict > 0 %}
+                    <span style="color: var(--red); font-weight: 600;">
+                        ({{ p.params_conflict }} conflict{{ 's' if p.params_conflict > 1 }})</span>
+                    {% endif %}
+                </div>
+                {% for dp in p.dependent_params %}
+                <span style="display: inline-block; padding: 1px 6px; margin: 2px; border-radius: 3px; font-size: 0.7rem;
+                       {% if dp.has_conflict %}background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border);
+                       {% elif dp.human_verified %}background: var(--green-bg); color: #15803d; border: 1px solid var(--green-border);
+                       {% elif dp.llm_verified %}background: var(--yellow-bg); color: #a16207; border: 1px solid var(--yellow-border);
+                       {% else %}background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border);{% endif %}">
+                    {{ dp.key }}
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Numerical table values (expandable) -->
+            {% if p.numerical_values %}
+            <details style="margin: 8px 0;">
+                <summary style="cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--blue);">
+                    {{ p.numerical_values|length }} table rows with numerical values
+                </summary>
+                <table class="data-table" style="margin-top: 4px;">
+                    <thead><tr><th>Line</th><th>Row</th><th>Values</th></tr></thead>
+                    <tbody>
+                    {% for nv in p.numerical_values %}
+                    <tr>
+                        <td><code>{{ nv.line }}</code></td>
+                        <td style="max-width: 200px;">{{ nv.label }}</td>
+                        <td><code>{{ nv.nums|join(' | ') }}</code></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </details>
+            {% endif %}
+
+            <!-- Theorem references (expandable) -->
+            {% if p.theorem_refs %}
+            <details style="margin: 8px 0;">
+                <summary style="cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--blue);">
+                    {{ p.theorem_count }} theorem references
+                    {% if p.missing_theorems %}
+                    <span style="color: var(--red);">({{ p.missing_theorems|length }} missing from Lean)</span>
+                    {% endif %}
+                </summary>
+                <div style="margin-top: 4px;">
+                {% for t in p.theorem_refs %}
+                <span style="display: inline-block; padding: 1px 6px; margin: 2px; border-radius: 3px; font-size: 0.75rem; font-family: monospace;
+                       {% if t.in_lean %}background: var(--green-bg); border: 1px solid var(--green-border);
+                       {% else %}background: var(--red-bg); border: 1px solid var(--red-border);{% endif %}">
+                    {{ t.name }}{% if not t.in_lean %} ✗{% endif %}
+                </span>
+                {% endfor %}
+                </div>
+            </details>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ═══ CITATION REGISTRY TAB ═══ -->
+    <div class="tab-content {% if tab == 'citations' %}active{% endif %}">
+        {% if citations %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Authors</th>
+                    <th>Reference</th>
+                    <th>DOI</th>
+                    <th>arXiv</th>
+                    <th>Used in</th>
+                    <th>Provides</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in citations %}
+                <tr>
+                    <td><code style="font-weight: 600;">{{ c.key }}</code></td>
+                    <td style="max-width: 180px;">{{ c.authors_short }}</td>
+                    <td>{{ c.ref }}</td>
+                    <td>{% if c.doi %}
+                        <a class="doi-link" href="https://doi.org/{{ c.doi }}" target="_blank" rel="noopener">
+                            {{ c.doi[:25] }}{% if c.doi|length > 25 %}...{% endif %} &#8599;
+                        </a>
+                        {% else %}<span style="color: var(--grey);">—</span>{% endif %}
+                    </td>
+                    <td>{% if c.arxiv %}
+                        <a class="doi-link" href="https://arxiv.org/abs/{{ c.arxiv }}" target="_blank" rel="noopener">
+                            {{ c.arxiv }}
+                        </a>
+                        {% else %}<span style="color: var(--grey);">—</span>{% endif %}
+                    </td>
+                    <td><span style="font-size: 0.75rem;">{{ c.used_in|length }} files</span></td>
+                    <td>{% if c.provides %}
+                        {% for p in c.provides %}
+                        <span style="font-size: 0.7rem; background: var(--blue-bg); padding: 1px 4px; border-radius: 2px;">{{ p }}</span>
+                        {% endfor %}
+                        {% else %}<span style="color: var(--grey); font-size: 0.75rem;">—</span>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: var(--grey);">
+            <p>Citation registry is empty.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- Save bar -->
+<div class="save-bar">
+    <div class="save-status" id="save-status">
+        Changes accumulate in browser session. Click "Save All" to persist.
+    </div>
+    <button class="btn btn-save" hx-post="/save" hx-target="#save-status">
+        Save All
+    </button>
+</div>
+
+<!-- Keyboard shortcuts -->
+<script>
+    let currentCard = 0;
+    const cards = document.querySelectorAll('.param-card');
+
+    function focusCard(idx) {
+        if (idx >= 0 && idx < cards.length) {
+            currentCard = idx;
+            cards[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            cards[idx].style.boxShadow = '0 0 0 2px var(--blue)';
+            cards.forEach((c, i) => { if (i !== idx) c.style.boxShadow = ''; });
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const card = cards[currentCard];
+        if (!card) return;
+
+        if (e.key === 'j') { focusCard(currentCard + 1); e.preventDefault(); }
+        else if (e.key === 'k') { focusCard(currentCard - 1); e.preventDefault(); }
+        else if (e.key === 'y') {
+            card.querySelector('.btn-confirm')?.click(); e.preventDefault();
+        }
+        else if (e.key === 'n') {
+            card.querySelector('.btn-reject')?.click(); e.preventDefault();
+        }
+        else if (e.key === 'f') {
+            card.querySelector('.btn-flag')?.click(); e.preventDefault();
+        }
+    });
+</script>
+
+</body>
+</html>

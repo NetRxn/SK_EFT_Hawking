@@ -21,6 +21,8 @@ from dataclasses import dataclass, field
 import numpy as np
 from typing import Optional
 
+from src.core.constants import ADW_4D_MODEL
+
 
 @dataclass
 class LatticeParams:
@@ -62,7 +64,9 @@ class LatticeParams:
     @property
     def G_c(self) -> float:
         """Critical coupling from mean-field: G_c = 8 pi^2 / (N_f Lambda^2).
-        On the lattice with Lambda = pi/a = pi (a=1): G_c = 8 / N_f."""
+        On the lattice with Lambda = pi/a = pi (a=1): G_c = 8 / N_f.
+        See also: formulas.adw_critical_coupling() for the continuum version."""
+        # Lattice version: Lambda = pi, so G_c = 8*pi^2 / (N_f * pi^2) = 8/N_f
         return 8.0 / self.N_f
 
 

@@ -575,7 +575,8 @@ class KappaScalingPrediction:
     The SK-EFT prediction:
         T_eff(kappa) / T_H(kappa) = 1 + delta_disp(kappa) + delta_diss(kappa)
 
-    where delta_disp ~ kappa^2 and delta_diss ~ kappa^0 (constant).
+    where delta_disp ∝ kappa² (quadratic) and delta_diss ∝ kappa (linear).
+    See formulas.kappa_scaling_dissipative for the canonical formula.
 
     Attributes:
         kappa_values: Surface gravity values tested.
@@ -604,9 +605,13 @@ def kappa_scaling_prediction(
     xi, c_s) and tracks how corrections scale.
 
     The key discriminant:
-        - delta_disp scales as D^2 ~ kappa^2 (quadratic)
-        - delta_diss is approximately constant in D (independent of kappa
-          at leading order, since Gamma_H and kappa scale together)
+        - delta_disp scales as D^2 ∝ kappa^2 (quadratic)
+        - delta_diss scales as kappa (linear, from formulas.kappa_scaling_dissipative)
+
+    NOTE: this function works in natural units with fixed kappa=1, varying D.
+    In this parameterization delta_diss appears approximately constant in D,
+    but the PHYSICAL scaling with kappa is linear. See kappa_scaling.py for
+    the correct physical-units analysis.
 
     This difference in scaling provides an experimental handle to separate
     dispersive from dissipative corrections.

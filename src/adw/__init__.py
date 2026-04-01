@@ -14,7 +14,7 @@ The calculation chain:
 Key results:
 - Phase diagram: pre-geometric (e=0), vestigial metric (g!=0, e=0),
   full tetrad (e!=0) phases
-- Critical coupling G_c = 4pi^2 / (N_f Lambda^2) for tetrad condensation
+- Critical coupling G_c = 8pi^2 / (N_f Lambda^2) for tetrad condensation
 - Symmetry breaking L_c x L_s -> L_J produces 6 NG modes (absorbed by
   spin connection) + 10 physical DOF (2 massless graviton + 8 massive)
 - Four structural obstacles for emergent fermion bootstrap
@@ -90,4 +90,6 @@ from src.adw.ginzburg_landau import (
     gl_free_energy_general,
     independent_invariant_count_real,
     independent_invariant_count_complex,
+    FluctuationCorrection,
+    compute_fluctuation_corrections,
 )

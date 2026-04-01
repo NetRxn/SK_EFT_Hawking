@@ -1,0 +1,84 @@
+09:17:43 ============================================================
+09:17:43   Vestigial MC Production Run (vectorized + multiprocessing)
+09:17:43   Requested lattice sizes: [4, 5, 6, 7, 8, 10, 12, 14, 16]
+09:17:43   Sweeps: 2500 thermalize + 5000 measure
+09:17:43   Couplings: 40 points
+09:17:43   Cores: 10
+09:17:43   Seed: 137
+09:17:43   n_skip (decorrelation): {4: 5, 5: 5, 6: 5, 7: 5, 8: 5, 10: 5, 12: 7, 14: 9, 16: 12}
+09:17:43   Started: 2026-03-31T09:17:43.715268
+09:17:43 ============================================================
+09:17:43 
+[1/3] 4D Binder cumulant crossing analysis...
+09:17:43   Dispatching 360 new jobs across 10 cores...
+09:55:27   Completed 360 new jobs in 2263.3s
+09:55:27   L=4: mean acceptance=0.512
+09:55:27   L=5: mean acceptance=0.427
+09:55:27   L=6: mean acceptance=0.512
+09:55:27   L=7: mean acceptance=0.450
+09:55:27   L=8: mean acceptance=0.512
+09:55:27   L=10: mean acceptance=0.512
+09:55:27   L=12: mean acceptance=0.512
+09:55:27   L=14: mean acceptance=0.512
+09:55:27   L=16: mean acceptance=0.512
+09:55:27   L=4-5: tetrad crossing=None, metric crossing=-38.57183277744582
+09:55:27   L=5-6: tetrad crossing=-17.9701281066566, metric crossing=-17.84925819074953
+09:55:27   L=6-7: tetrad crossing=-36.06050833201174, metric crossing=-49.4773110684347
+09:55:27   L=7-8: tetrad crossing=-46.4895758300025, metric crossing=-18.033478560860157
+09:55:27   L=8-10: tetrad crossing=None, metric crossing=None
+09:55:27   L=10-12: tetrad crossing=None, metric crossing=None
+09:55:27   L=12-14: tetrad crossing=None, metric crossing=None
+09:55:27   L=14-16: tetrad crossing=-44.81360759718555, metric crossing=-44.794025752771475
+09:55:27   Tetrad crossings found: 4
+09:55:27   Metric crossings found: 5
+09:55:27   Vestigial window: 0.019581844414076954
+09:55:27   Vestigial detected: True
+09:55:27 
+[2/3] Finite-size scaling analysis...
+09:55:27   Dispatching 360 FSS jobs across 10 cores...
+10:32:07   Completed 360 FSS jobs in 2200.3s
+10:32:07   L=4: 40 points, mean acc=0.503
+10:32:07   L=5: 40 points, mean acc=0.417
+10:32:07   L=6: 40 points, mean acc=0.503
+10:32:07   L=7: 40 points, mean acc=0.440
+10:32:07   L=8: 40 points, mean acc=0.503
+10:32:07   L=10: 40 points, mean acc=0.503
+10:32:07   L=12: 40 points, mean acc=0.503
+10:32:07   L=14: 40 points, mean acc=0.502
+10:32:07   L=16: 40 points, mean acc=0.503
+10:32:07   L=4: tetrad peak at G/Gc=1.00, metric peak at G/Gc=1.00
+10:32:07   L=5: tetrad peak at G/Gc=1.00, metric peak at G/Gc=1.00
+10:32:07   L=6: tetrad peak at G/Gc=1.00, metric peak at G/Gc=17.33
+10:32:07   L=7: tetrad peak at G/Gc=1.00, metric peak at G/Gc=1.00
+10:32:07   L=8: tetrad peak at G/Gc=16.08, metric peak at G/Gc=16.08
+10:32:07   L=10: tetrad peak at G/Gc=1.00, metric peak at G/Gc=17.33
+10:32:07   L=12: tetrad peak at G/Gc=27.38, metric peak at G/Gc=27.38
+10:32:07   L=14: tetrad peak at G/Gc=1.00, metric peak at G/Gc=16.08
+10:32:07   L=16: tetrad peak at G/Gc=34.92, metric peak at G/Gc=34.92
+10:32:07   Split transition: False
+10:32:07 
+[3/3] Sign reweighting check...
+10:32:17   G/Gc=1.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=1.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=5.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=5.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=10.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=10.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=15.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=15.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=20.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=20.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=30.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=30.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=50.0, L=4: <sign>=0.0000 ± 0.0000
+10:32:17   G/Gc=50.0, L=5: <sign>=0.0000 ± 0.0000
+10:32:17 
+============================================================
+10:32:17   RESULTS SUMMARY
+10:32:17 ============================================================
+10:32:17   Vestigial detected (Binder): True
+10:32:17   Split transition (FSS):      False
+10:32:17   Sign problem absent:         False
+10:32:17   Total runtime:               4473.3s (1.24h)
+10:32:17   Results saved to:            docs/vestigial_mc_results/vestigial_mc_20260331T091743.json
+10:32:17 ============================================================

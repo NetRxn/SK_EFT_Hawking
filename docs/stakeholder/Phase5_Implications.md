@@ -179,7 +179,7 @@ This is the first numerical evidence from production-scale lattice simulations (
 
 ### Why it matters
 
-The vestigial phase is the most accessible form of emergent gravity — it requires only metric correlations, not full tetrad order. The split transition at L=6,8 survives finite-size effects that wiped out the signal at L=4, suggesting a genuine thermodynamic phase rather than a finite-size artifact. Full finite-size scaling analysis (Binder cumulant crossings, susceptibility scaling exponents) is the next step.
+The vestigial phase is the most accessible form of emergent gravity — it requires only metric correlations, not full tetrad order. **Update (2026-03-31):** The initial production MC used a product-form bond coupling that was found to be incorrect for the ADW model. A codebase physics audit identified that the full SO(4) Weingarten multi-channel integration (fundamental + adjoint representation channels) is required. The corrected MC framework with Weingarten coupling is now implemented and Lean-verified (14 theorems, zero sorry). Production simulations with the correct physics are in progress.
 
 ---
 
@@ -191,10 +191,10 @@ The vestigial phase is the most accessible form of emergent gravity — it requi
 The gauge erasure theorem (Phase 3) is now grounded in categorical first principles: Z(C) is always non-chiral (c = 0 mod 8), meaning string-net gauge structure is intrinsically doubled. Non-abelian gauge emergence from Vec_{S₃} produces 8 anyons with non-trivial braiding, but the gauge information is still erased at the hydrodynamic boundary because of the doubling. The only route to unconstrained non-abelian gauge transport remains Layer 1 mechanisms that bypass hydrodynamics — now formally verified through the Drinfeld double formalization.
 
 ### Wall 2: Dynamical Einstein Gravity
-**Phase 5 impact: VESTIGIAL LEVEL STRENGTHENED — production MC confirms split transition.**
+**Phase 5 impact: VESTIGIAL FRAMEWORK ESTABLISHED — Weingarten MC in progress.**
 
 The gravity hierarchy:
-- **Level 1 (vestigial):** Production MC confirms split transition at L=6,8. EP violation predicted.
+- **Level 1 (vestigial):** Weingarten multi-channel MC framework built and Lean-verified. Production run with correct SO(4) physics in progress. Prior product-form results invalidated.
 - **Level 2 (full tetrad):** ADW mechanism validated at mean-field (Phase 3). Four structural obstacles remain.
 - **Level 3 (UV-complete):** Blocked by chirality + Grassmann-bosonic incompatibility.
 

@@ -1,5 +1,10 @@
 """Fracton SK-EFT: Transport Coefficients and Symmetry Structure.
 
+PROVENANCE NOTE: Fracton formulas are self-contained and do not yet
+have canonical versions in formulas.py or Lean theorem references.
+This is a known Pipeline Invariant 1+4 gap. When fracton physics is
+formalized in Lean, these formulas should migrate to formulas.py.
+
 Implements the Schwinger-Keldysh effective field theory for fracton
 hydrodynamics following Glorioso-Huang-Lucas (JHEP 05, 022, 2023).
 
@@ -43,13 +48,20 @@ from typing import Optional
 import numpy as np
 from math import comb
 
+from src.core.formulas import (
+    fracton_charge_components,
+    fracton_total_charges,
+    fracton_dispersion_power,
+    fracton_damping_power,
+)
+
 
 # ═══════════════════════════════════════════════════════════════════
 # Symmetry classification
 # ═══════════════════════════════════════════════════════════════════
 
 class ConservationType(Enum):
-    """Type of conservation law."""
+    """Type of conservation law. Used only as metadata by MultipoleCharge.conservation_type."""
     CHARGE = "charge"           # Q = integral rho
     DIPOLE = "dipole"           # D_i = integral x_i rho
     QUADRUPOLE = "quadrupole"   # Q_ij = integral x_i x_j rho
@@ -439,6 +451,9 @@ class FractonSKAction:
         DeltaU_a: np.ndarray,
     ) -> float:
         """Evaluate the noise part of the Lagrangian: L^(2).
+
+        NOTE: Only L^(2) (noise) is implemented. L_eq, L^(1), L_bar^(1)
+        are not yet implemented. This method is not called in the live path.
 
         -i beta_0 L^(2) = s_{ibjc} E_{a,ib} E_{a,jc}
                          + t_{ibjc} DeltaU_{a,ib} DeltaU_{a,jc}

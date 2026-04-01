@@ -39,7 +39,24 @@ Stage 12: DOCUMENT SYNC              → Gate: full validate.py passes, counts c
 - No other file may hardcode physical constants or experimental values
 - All other modules import from `constants.py`
 
-**Gate:** `python -c "from src.core.constants import *"` succeeds without error.
+**Provenance Requirements:**
+- Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS MUST have a
+  corresponding entry in `PARAMETER_PROVENANCE` (in `src/core/provenance.py`)
+- Each provenance entry MUST specify: value, unit, tier, source, detail,
+  llm_verified_date, human_verified_date
+- Tier must be one of: MEASURED, EXTRACTED, DERIVED, PROJECTED, THEORETICAL
+- PROJECTED parameters must be clearly labeled — they represent estimates for
+  experiments that have not been performed
+- Parameters from deep research (LLM outputs) enter as `llm_verified_date: None`
+  and must be LLM-verified against the primary source before the Stage 1 gate passes
+- See the [Deep Research Reconciliation Protocol](#deep-research-reconciliation-protocol) below
+
+**Gate:** `python -c "from src.core.constants import *"` succeeds without error
+**AND** `python scripts/validate.py --check parameter_provenance` passes
+(all LLM-verified, zero MISSING, zero NULL values).
+
+**Paper Submission Gate:** `python scripts/validate.py --check parameter_provenance --strict`
+passes (all parameters human-verified). Checked before arXiv/journal submission, not at Stage 1.
 
 ---
 
@@ -53,6 +70,7 @@ Stage 12: DOCUMENT SYNC              → Gate: full validate.py passes, counts c
   - The mathematical formula in plain text
   - `Lean: <theorem_name>` — the exact name of the Lean theorem (must exist in a .lean file or be a planned sorry stub)
   - `Aristotle: <run_id>` — the Aristotle run that proved it, or `manual` for hand proofs, or `pending` for unproved stubs
+  - `Source: <citation>` — for physics formulas derived from published work: paper citation + equation number (e.g., `Source: Corley & Jacobson, PRD 54, 1568 (1996), Eq. (4.2)`). Pure math identities and project-original results may omit this.
 - Domain-specific modules (`src/<domain>/`) import from `formulas.py` — they NEVER reimplement formulas
 
 **Rules:**
@@ -344,6 +362,32 @@ These must hold at ALL times, not just at wave completion:
 
 7. **Narrative derives from data.** Feasibility claims, detectability statements, and experimental reach assessments must be supported by computed quantities. "Within reach" means the computed shot count is < 10^6 and feasible=True.
 
+8. **Every experimental parameter has verified provenance.** Each value in EXPERIMENTS, ATOMS, and platform dicts traces to a specific published source (paper, table/figure, page) via `PARAMETER_PROVENANCE` in `src/core/provenance.py`. Parameters from LLM research outputs are not considered verified until LLM reads the primary source. Paper submission requires human verification via the provenance dashboard. Enforced by CHECK 15.
+
+---
+
+## Deep Research Reconciliation Protocol
+
+When incorporating results from deep research (LLM-generated analysis in `Lit-Search/`):
+
+1. **Extract claims.** List every factual claim: parameter values, paper citations, experimental status assertions.
+
+2. **Classify each claim:**
+   - **VERIFIABLE:** cites a specific paper + location (table, equation, figure)
+   - **PLAUSIBLE:** consistent with known physics but no specific citation
+   - **CONFLICTING:** disagrees with another deep research result or the codebase
+   - **UNVERIFIABLE:** no citation, or citation is vague ("well-known result")
+
+3. **For VERIFIABLE claims:** Add to `PARAMETER_PROVENANCE`. LLM fetches the cited paper and extracts the value + excerpt → `llm_verified_date` set. Code values can update after LLM verification. Human verification via dashboard gates paper submission.
+
+4. **For CONFLICTING claims:** Document BOTH values + excerpts in `PARAMETER_PROVENANCE` notes. LLM recommends resolution based on source quality (e.g., "Table I" beats "estimated from figure"). Code uses the LLM-recommended value. Human resolves via dashboard before paper submission.
+
+5. **For PLAUSIBLE/UNVERIFIABLE claims:** Can add to `constants.py` with `tier: 'PROJECTED'` and `llm_verified_date: None`. Clearly labeled as estimates. CHECK 15 flags these as advisory warnings, not hard failures (PROJECTED params are expected to lack primary sources).
+
+6. **Verification tasks** go in the roadmap under a "Primary Source Verification" section.
+
+**Rule:** Deep research claims can update code parameters after LLM verification against primary sources. Paper SUBMISSION is gated on human verification via the provenance dashboard.
+
 ---
 
 ## Quick Reference: Commands
@@ -351,7 +395,7 @@ These must hold at ALL times, not just at wave completion:
 ```bash
 # Full validation (run from SK_EFT_Hawking/ root)
 uv run python -m pytest tests/ -v                    # All tests
-uv run python scripts/validate.py                    # All 14 checks
+uv run python scripts/validate.py                    # All 15 checks
 uv run python scripts/review_figures.py              # Generate figures + structural checks
 cd lean && lake build                                 # Lean build
 
@@ -364,5 +408,9 @@ uv run python scripts/submit_to_aristotle.py --resume <ID>
 uv run python scripts/validate.py --check physical_bounds
 uv run python scripts/validate.py --check cross_path_consistency
 uv run python scripts/validate.py --check paper_provenance
+uv run python scripts/validate.py --check parameter_provenance  # CHECK 15
 uv run python scripts/validate.py --list              # List all available checks
+
+# Provenance command center (human verification dashboard)
+uv run python scripts/provenance_dashboard.py         # Opens localhost:8050
 ```

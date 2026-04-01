@@ -86,11 +86,12 @@ class TestComplexTurningPoint:
             omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
         )
-        expected = tp.Gamma_H / (1.0 * 1.0)
+        # Canonical formula: delta_x = c_s * Gamma_H / (2 * kappa^2)
+        expected = 1.0 * tp.Gamma_H / (2.0 * 1.0**2)
         assert abs(tp.x_imag - expected) < 1e-12
 
-    def test_shift_inversely_proportional_to_kappa(self):
-        """Doubling kappa halves the shift."""
+    def test_shift_inversely_proportional_to_kappa_squared(self):
+        """Doubling kappa quarters the shift (delta_x ∝ 1/kappa²)."""
         tp1 = compute_complex_turning_point(
             omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
@@ -99,8 +100,8 @@ class TestComplexTurningPoint:
             omega=0.5, kappa=2.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
         )
-        # Same Gamma_H (same k_H and omega), but different kappa
-        assert abs(tp2.x_imag - tp1.x_imag / 2.0) < 1e-12
+        # Same Gamma_H (same k_H and omega), kappa doubled → shift / 4
+        assert abs(tp2.x_imag - tp1.x_imag / 4.0) < 1e-12
 
     def test_shift_frequency_dependent(self):
         """Shift grows with frequency (through k_H dependence)."""

@@ -337,8 +337,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 99),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 99),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 176),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 176),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
@@ -956,6 +956,188 @@ def check_paper_provenance() -> CheckResult:
             ))
 
     return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 15: Parameter provenance — every experimental param has a
+# verified source traced to a published paper + table/figure.
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("parameter_provenance",
+                "Every experimental parameter has verified provenance")
+def check_parameter_provenance() -> CheckResult:
+    """CHECK 15: Validate the parameter provenance registry.
+
+    Checks:
+    1. Coverage: every param in EXPERIMENTS/ATOMS/POLARITON has provenance
+    2. LLM verification: all entries have llm_verified_date (gates Stage 1)
+    3. Human verification: advisory — gates paper submission, not computation
+    4. Consistency: provenance value matches actual constant value
+    5. Tier appropriateness: MEASURED params must have a real source
+    """
+    from src.core.constants import EXPERIMENTS, ATOMS, POLARITON_PLATFORMS
+    from src.core.provenance import PARAMETER_PROVENANCE
+
+    details = []
+    all_pass = True
+
+    # --- 1. Coverage: every parameter has a provenance entry ---
+    missing = []
+    for platform, params in EXPERIMENTS.items():
+        for key in params:
+            if key in ('description', 'atom'):
+                continue
+            prov_key = f"{platform}.{key}"
+            if prov_key not in PARAMETER_PROVENANCE:
+                missing.append(prov_key)
+
+    for atom, props in ATOMS.items():
+        for key in props:
+            if key in ('label',):
+                continue
+            prov_key = f"{atom}.{key}"
+            if prov_key not in PARAMETER_PROVENANCE:
+                missing.append(prov_key)
+
+    # Check POLARITON_MASS
+    if 'POLARITON_MASS' not in PARAMETER_PROVENANCE:
+        missing.append('POLARITON_MASS')
+
+    for config, params in POLARITON_PLATFORMS.items():
+        for key in ('c_s', 'xi', 'kappa', 'tau_cav', 'Gamma_pol', 'gamma_phonon_dim'):
+            prov_key = f"{config}.{key}"
+            if prov_key not in PARAMETER_PROVENANCE:
+                # Shared params (c_s, xi, kappa, gamma_phonon_dim) only need
+                # one entry under Paris_long since all configs share them
+                if key in ('c_s', 'xi', 'kappa', 'gamma_phonon_dim'):
+                    shared_key = f"Paris_long.{key}"
+                    if shared_key not in PARAMETER_PROVENANCE:
+                        missing.append(prov_key)
+                else:
+                    missing.append(prov_key)
+
+    if missing:
+        all_pass = False
+        details.append(Detail(
+            "coverage", False,
+            f"Missing provenance for {len(missing)} params: {', '.join(missing[:5])}"
+            + (f"... (+{len(missing)-5} more)" if len(missing) > 5 else "")
+        ))
+    else:
+        details.append(Detail("coverage", True,
+                              f"All {len(PARAMETER_PROVENANCE)} parameters have provenance entries"))
+
+    # --- 2. LLM verification (gates Stage 1 computation) ---
+    not_llm = [k for k, v in PARAMETER_PROVENANCE.items()
+               if v.get('llm_verified_date') is None]
+    if not_llm:
+        all_pass = False
+        details.append(Detail(
+            "llm_verification", False,
+            f"{len(not_llm)} params not LLM-verified: {', '.join(not_llm[:5])}"
+            + (f"... (+{len(not_llm)-5} more)" if len(not_llm) > 5 else "")
+        ))
+    else:
+        details.append(Detail("llm_verification", True,
+                              "All parameters LLM-verified"))
+
+    # --- 3. Human verification (advisory — gates paper submission) ---
+    not_human = [k for k, v in PARAMETER_PROVENANCE.items()
+                 if v.get('human_verified_date') is None]
+    if not_human:
+        details.append(Detail(
+            "human_verification", True,
+            f"{len(not_human)} params not yet human-verified (blocks paper submission)",
+            warning=True
+        ))
+    else:
+        details.append(Detail("human_verification", True,
+                              "All parameters human-verified — paper submission unblocked"))
+
+    # --- 4. Consistency: provenance value matches actual constant ---
+    mismatches = []
+    null_values = []
+    for prov_key, entry in PARAMETER_PROVENANCE.items():
+        if entry['value'] is None:
+            null_values.append(prov_key)
+            continue
+
+        # Look up actual value
+        actual = _lookup_provenance_value(prov_key, EXPERIMENTS, ATOMS,
+                                          POLARITON_PLATFORMS)
+        if actual is not None:
+            try:
+                rel_err = abs(float(actual) - float(entry['value'])) / max(abs(float(actual)), 1e-30)
+                if rel_err > 0.001:
+                    mismatches.append(f"{prov_key}: registry={entry['value']}, code={actual}")
+            except (TypeError, ValueError):
+                pass  # non-numeric (e.g., string params)
+
+    if null_values:
+        all_pass = False
+        details.append(Detail(
+            "unresolved_conflicts", False,
+            f"{len(null_values)} params have NULL value (unresolved conflict): "
+            f"{', '.join(null_values)}"
+        ))
+    if mismatches:
+        all_pass = False
+        details.append(Detail(
+            "value_consistency", False,
+            f"{len(mismatches)} mismatches: {'; '.join(mismatches[:3])}"
+        ))
+    elif not null_values:
+        details.append(Detail("value_consistency", True,
+                              "All provenance values match code"))
+
+    # --- 5. Tier appropriateness ---
+    tier_issues = []
+    for prov_key, entry in PARAMETER_PROVENANCE.items():
+        if (entry['tier'] == 'MEASURED'
+                and entry.get('llm_verified_date') is None
+                and 'CODATA' not in entry.get('source', '')
+                and 'NIST' not in entry.get('source', '')):
+            tier_issues.append(prov_key)
+    if tier_issues:
+        details.append(Detail(
+            "tier_appropriateness", True,
+            f"{len(tier_issues)} MEASURED params not yet LLM-verified: "
+            f"{', '.join(tier_issues[:5])}",
+            warning=True
+        ))
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
+    """Look up the actual value in constants for a provenance key like 'Steinhauer.omega_perp'."""
+    import numpy as np
+    from src.core.constants import HBAR, K_B, A_BOHR, POLARITON_MASS
+
+    # Fundamental constants
+    fundamentals = {'HBAR': HBAR, 'K_B': K_B, 'A_BOHR': A_BOHR,
+                    'POLARITON_MASS': POLARITON_MASS}
+    if prov_key in fundamentals:
+        return fundamentals[prov_key]
+
+    parts = prov_key.split('.', 1)
+    if len(parts) != 2:
+        return None
+    group, key = parts
+
+    # ATOMS
+    if group in atoms:
+        return atoms[group].get(key)
+
+    # EXPERIMENTS
+    if group in experiments:
+        return experiments[group].get(key)
+
+    # POLARITON_PLATFORMS
+    if group in polariton_platforms:
+        return polariton_platforms[group].get(key)
+
+    return None
 
 
 # ═══════════════════════════════════════════════════════════════════════

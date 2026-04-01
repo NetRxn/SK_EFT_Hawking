@@ -30,8 +30,13 @@ Lean: ADWMechanism.lean (critical_coupling_pos, gap_nontrivial_above_Gc,
 from dataclasses import dataclass
 from enum import Enum
 import numpy as np
-from scipy.optimize import minimize_scalar, brentq
+from scipy.optimize import minimize_scalar
 
+from src.core.formulas import (
+    adw_effective_potential as _canonical_V_eff,
+    adw_critical_coupling as _canonical_G_c,
+    adw_curvature_at_origin as _canonical_curv,
+)
 from src.adw.hubbard_stratonovich import TetradField
 
 
@@ -59,7 +64,7 @@ class GapEquationParams:
     def G_c(self) -> float:
         """Critical coupling for tetrad condensation.
 
-        G_c = 4 pi^2 / (N_f Lambda^2)
+        G_c = 8 pi^2 / (N_f Lambda^2)
 
         Lean: critical_coupling_pos
         """
@@ -116,39 +121,20 @@ class GapEquationResult:
 
 
 def effective_potential(C: float, G: float, Lambda: float, N_f: int) -> float:
-    """Effective potential V_eff(C) for the tetrad magnitude.
-
-    V_eff(C) = C^2/(2G) - (N_f/16pi^2)[Lambda^2 C^2 - C^4 ln(Lambda^2/C^2 + 1)]
-
-    The first term is the tree-level HS potential.
-    The second term is the one-loop Coleman-Weinberg contribution
-    from integrating out N_f Dirac fermions in the tetrad background.
+    """Effective potential V_eff(C). Delegates to canonical formulas.py.
 
     Lean: effective_potential_structure
-
-    Args:
-        C: Tetrad magnitude (order parameter)
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        V_eff(C) [dimensionless in natural units]
     """
-    if C < 1e-15:
-        return 0.0
-
-    V_tree = C**2 / (2.0 * G)
-    prefactor = N_f / (16.0 * np.pi**2)
-    ratio_sq = Lambda**2 / C**2
-    V_1loop = -prefactor * (Lambda**2 * C**2 - C**4 * np.log(ratio_sq + 1.0))
-
-    return V_tree + V_1loop
+    return _canonical_V_eff(C, G, Lambda, N_f)
 
 
 def effective_potential_derivative(C: float, G: float, Lambda: float,
                                    N_f: int) -> float:
-    """Derivative dV_eff/dC for finding extrema.
+    """Derivative dV_eff/dC — utility for verification and visualization.
+
+    NOTE: The solver (solve_gap_equation) uses minimize_scalar on V_eff
+    directly, not brentq on this derivative. This function is provided
+    for tests and analytical checks but is not in the solver path.
 
     dV_eff/dC = C/G - (N_f/16pi^2)[2 Lambda^2 C - 4C^3 ln(Lambda^2/C^2+1)
                                       + 2C^3 Lambda^2/(Lambda^2 + C^2)]
@@ -180,44 +166,16 @@ def effective_potential_derivative(C: float, G: float, Lambda: float,
 
 
 def critical_coupling(Lambda: float, N_f: int) -> float:
-    """Critical coupling for tetrad condensation.
-
-    G_c = 8 pi^2 / (N_f Lambda^2)
-
-    Derived from the condition that d^2V_eff/dC^2|_{C=0} = 0:
-        1/G_c = N_f Lambda^2 / (8 pi^2)
-
-    For G > G_c, the origin becomes unstable and the effective potential
-    develops a nontrivial minimum at C != 0 (tetrad condensation).
+    """Critical coupling G_c = 8pi²/(N_f Λ²). Delegates to canonical formulas.py.
 
     Lean: critical_coupling_pos
-
-    Args:
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        G_c (positive)
     """
-    return 8.0 * np.pi**2 / (N_f * Lambda**2)
+    return _canonical_G_c(Lambda, N_f)
 
 
 def curvature_at_origin(G: float, Lambda: float, N_f: int) -> float:
-    """Second derivative of V_eff at C=0.
-
-    d^2V/dC^2|_{C=0} = 1/G - N_f Lambda^2 / (8 pi^2)
-
-    Sign change at G = G_c: positive for G < G_c, negative for G > G_c.
-
-    Args:
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        d^2V/dC^2|_{C=0}
-    """
-    return 1.0 / G - N_f * Lambda**2 / (8.0 * np.pi**2)
+    """Curvature d²V/dC²|_{C=0}. Delegates to canonical formulas.py."""
+    return _canonical_curv(G, Lambda, N_f)
 
 
 def solve_gap_equation(params: GapEquationParams) -> GapEquationResult:
@@ -351,8 +309,11 @@ def vestigial_metric_condition(G: float, G_c: float) -> bool:
     Returns:
         True if vestigial metric phase is possible.
     """
-    # Vestigial phase exists near the critical coupling
-    # The window is approximately 0.8 G_c < G < G_c
+    # Vestigial phase exists near the critical coupling.
+    # The lower bound 0.8 is a mean-field estimate from the Ginzburg-Landau
+    # expansion: vestigial order appears when beta_eff > 0 (quartic coefficient
+    # positive), which requires G > G_c * (1 - epsilon) with epsilon ~ 0.2
+    # from the one-loop correction. See ginzburg_landau.py for details.
     ratio = G / G_c
     return 0.8 < ratio <= 1.0
 

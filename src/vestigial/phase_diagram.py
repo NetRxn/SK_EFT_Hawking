@@ -23,6 +23,7 @@ from src.vestigial.mean_field import (
     MeanFieldParams, MeanFieldResult, full_mean_field_analysis,
     vestigial_phase_window,
 )
+from src.core.constants import ADW_4D_FSS, FERMION_BAG
 from src.vestigial.monte_carlo import MCParams, MCResult, run_monte_carlo
 
 
@@ -94,8 +95,8 @@ def scan_coupling(
     method: str = "mean_field",
     Lambda: float = 1.0,
     N_f: int = 4,
-    coupling_range: tuple[float, float] = (0.3, 3.0),
-    n_points: int = 30,
+    coupling_range: tuple[float, float] = ADW_4D_FSS['coupling_range'],
+    n_points: int = ADW_4D_FSS['n_couplings'],
     L: int = 4,
     mc_params: Optional[MCParams] = None,
 ) -> PhaseDiagramResult:
@@ -149,9 +150,19 @@ def scan_coupling(
             phases.append(phase)
 
     elif method == "monte_carlo":
+        import warnings
+        warnings.warn(
+            "phase_diagram method='monte_carlo' uses the uncoupled bosonic HS model "
+            "(no inter-site coupling, no fermion determinant). It CANNOT produce "
+            "phase transitions. Use the fermion-bag MC via run_vestigial_production.py "
+            "for physics-correct results.",
+            stacklevel=2,
+        )
         if mc_params is None:
             mc_params = MCParams(
-                n_thermalize=50, n_measure=100, n_skip=3,
+                n_thermalize=FERMION_BAG['n_thermalize'],
+                n_measure=FERMION_BAG['n_measure'],
+                n_skip=FERMION_BAG['n_skip'],
                 step_size=0.3, seed=42,
             )
 

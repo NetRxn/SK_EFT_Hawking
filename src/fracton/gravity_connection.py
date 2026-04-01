@@ -1,5 +1,7 @@
 """Fracton-Gravity Kerr-Schild Analysis: Linearized Equivalence and Bootstrap Gap.
 
+PROVENANCE NOTE: See sk_eft.py for Pipeline Invariant 1+4 gap status.
+
 Investigates whether linearized gravity can emerge from fracton symmetric
 tensor gauge theory via the Kerr-Schild map and Gupta-Feynman bootstrap,
 and formalizes the structural gap to full diffeomorphism invariance.
@@ -55,6 +57,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
+from src.core.formulas import fracton_dof_gap
 from src.fracton.non_abelian import (
     NonAbelianFractonGauge,
     YangMillsCompatibility,

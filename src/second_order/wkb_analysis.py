@@ -4,16 +4,16 @@ Implements the WKB (Wentzel-Kramers-Brillouin) mode analysis for phonon
 propagation through a sonic horizon with dissipative corrections from the
 SK-EFT transport coefficients.
 
-The key calculation chain:
-    1. Modified dispersion relation:
-       ω² = [c_s(x) - v(x)]² k² · F(k²ξ²) + iΓ_eff(k)·ω
-
-    2. Local wavenumber k(x) from solving the dispersion at each x.
-
-    3. WKB connection formula across the turning point → Bogoliubov coefficients.
-
-    4. Effective temperature decomposition:
+The key calculation chain (as implemented):
+    1. Modified dispersion relation (defined but unused — see local_wavenumber)
+    2. Analytic WKB connection formula → Bogoliubov coefficients (connection_formula)
+    3. Effective temperature decomposition:
        T_eff(ω) = T_H · [1 + δ_disp + δ_diss + δ^(2)(ω)]
+
+NOTE: The functions `dispersion_relation`, `local_wavenumber`, and
+`wkb_phase_integral` are defined but unused in the live computation path.
+The connection formula uses the analytic perturbative approach via
+effective_surface_gravity, not numerical spatial integration.
 
 Physical context:
     At first order, δ_diss = Γ_H/κ is frequency-INDEPENDENT.
@@ -82,7 +82,8 @@ class TransonicProfile:
 
     @property
     def T_H(self) -> float:
-        """Hawking temperature T_H = κ/(2π) [energy units]."""
+        """Hawking temperature T_H = κ/(2π) in natural units (ℏ=k_B=1).
+        See formulas.hawking_temperature for SI version."""
         return self.kappa / (2 * np.pi)
 
     def v(self, x: np.ndarray | float) -> np.ndarray | float:
@@ -174,7 +175,11 @@ class BogoliubovResult:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# Local dispersion relation solver
+# ═══════════════════════════════════════════════════════════════════
+# UNUSED: Numerical WKB functions below are defined but not called
+# in the live computation path. The analytic connection_formula()
+# function (below) is used instead. These are retained for potential
+# future use in non-perturbative WKB analysis with non-linear flow profiles.
 # ═══════════════════════════════════════════════════════════════════
 
 def dispersion_relation(

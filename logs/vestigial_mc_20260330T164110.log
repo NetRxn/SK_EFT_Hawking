@@ -1,0 +1,100 @@
+16:41:10 ============================================================
+16:41:10   Vestigial MC Production Run (vectorized + multiprocessing)
+16:41:10   Requested lattice sizes: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+16:41:10   Sweeps: 2500 thermalize + 5000 measure
+16:41:10   Couplings: 40 points
+16:41:10   Cores: 14
+16:41:10   Seed: 16
+16:41:10   n_skip (decorrelation): {4: 5, 5: 5, 6: 5, 7: 5, 8: 5, 9: 5, 10: 5, 11: 6, 12: 7, 13: 8, 14: 9, 15: 11, 16: 12}
+16:41:10   Started: 2026-03-30T16:41:10.373868
+16:41:10 ============================================================
+16:41:10 
+[1/3] 4D Binder cumulant crossing analysis...
+16:41:10   Dispatching 520 new jobs across 14 cores...
+16:53:10   Completed 520 new jobs in 719.9s
+16:53:10   L=4: mean acceptance=0.933
+16:53:10   L=5: mean acceptance=0.933
+16:53:10   L=6: mean acceptance=0.933
+16:53:10   L=7: mean acceptance=0.933
+16:53:10   L=8: mean acceptance=0.933
+16:53:10   L=9: mean acceptance=0.933
+16:53:10   L=10: mean acceptance=0.933
+16:53:10   L=11: mean acceptance=0.933
+16:53:10   L=12: mean acceptance=0.933
+16:53:10   L=13: mean acceptance=0.933
+16:53:10   L=14: mean acceptance=0.933
+16:53:10   L=15: mean acceptance=0.933
+16:53:10   L=16: mean acceptance=0.933
+16:53:10   L=4-5: tetrad crossing=None, metric crossing=None
+16:53:10   L=5-6: tetrad crossing=None, metric crossing=None
+16:53:10   L=6-7: tetrad crossing=None, metric crossing=None
+16:53:10   L=7-8: tetrad crossing=None, metric crossing=None
+16:53:10   L=8-9: tetrad crossing=None, metric crossing=None
+16:53:10   L=9-10: tetrad crossing=None, metric crossing=None
+16:53:10   L=10-11: tetrad crossing=None, metric crossing=None
+16:53:10   L=11-12: tetrad crossing=None, metric crossing=None
+16:53:10   L=12-13: tetrad crossing=None, metric crossing=None
+16:53:10   L=13-14: tetrad crossing=None, metric crossing=None
+16:53:10   L=14-15: tetrad crossing=None, metric crossing=None
+16:53:10   L=15-16: tetrad crossing=None, metric crossing=None
+16:53:10   Tetrad crossings found: 0
+16:53:10   Metric crossings found: 0
+16:53:10   Vestigial window: None
+16:53:10   Vestigial detected: False
+16:53:10 
+[2/3] Finite-size scaling analysis...
+16:53:10   Dispatching 520 FSS jobs across 14 cores...
+03:56:04   Completed 520 FSS jobs in 39773.7s
+03:56:04   L=4: 40 points, mean acc=0.927
+03:56:04   L=5: 40 points, mean acc=0.927
+03:56:04   L=6: 40 points, mean acc=0.927
+03:56:04   L=7: 40 points, mean acc=0.927
+03:56:04   L=8: 40 points, mean acc=0.927
+03:56:04   L=9: 40 points, mean acc=0.927
+03:56:04   L=10: 40 points, mean acc=0.927
+03:56:04   L=11: 40 points, mean acc=0.927
+03:56:04   L=12: 40 points, mean acc=0.927
+03:56:04   L=13: 40 points, mean acc=0.927
+03:56:04   L=14: 40 points, mean acc=0.927
+03:56:04   L=15: 40 points, mean acc=0.927
+03:56:04   L=16: 40 points, mean acc=0.927
+03:56:04   L=4: tetrad peak at G/Gc=4.77, metric peak at G/Gc=4.65
+03:56:04   L=5: tetrad peak at G/Gc=4.77, metric peak at G/Gc=4.88
+03:56:04   L=6: tetrad peak at G/Gc=4.77, metric peak at G/Gc=5.00
+03:56:04   L=7: tetrad peak at G/Gc=3.62, metric peak at G/Gc=4.88
+03:56:04   L=8: tetrad peak at G/Gc=5.00, metric peak at G/Gc=4.88
+03:56:04   L=9: tetrad peak at G/Gc=4.54, metric peak at G/Gc=5.00
+03:56:04   L=10: tetrad peak at G/Gc=3.62, metric peak at G/Gc=5.00
+03:56:04   L=11: tetrad peak at G/Gc=4.42, metric peak at G/Gc=5.00
+03:56:04   L=12: tetrad peak at G/Gc=4.54, metric peak at G/Gc=5.00
+03:56:04   L=13: tetrad peak at G/Gc=4.08, metric peak at G/Gc=5.00
+03:56:04   L=14: tetrad peak at G/Gc=5.00, metric peak at G/Gc=5.00
+03:56:04   L=15: tetrad peak at G/Gc=4.19, metric peak at G/Gc=5.00
+03:56:04   L=16: tetrad peak at G/Gc=4.65, metric peak at G/Gc=5.00
+03:56:04   Split transition: True
+03:56:04 
+[3/3] Sign reweighting check...
+03:56:11   G/Gc=0.5, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=0.5, L=5: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=1.0, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=1.0, L=5: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=1.5, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=1.5, L=5: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=2.0, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=2.0, L=5: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=3.0, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=3.0, L=5: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=4.0, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=4.0, L=5: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=5.0, L=4: <sign>=0.0000 ± 0.0000
+03:56:11   G/Gc=5.0, L=5: <sign>=0.0000 ± 0.0000
+03:56:11 
+============================================================
+03:56:11   RESULTS SUMMARY
+03:56:11 ============================================================
+03:56:11   Vestigial detected (Binder): False
+03:56:11   Split transition (FSS):      True
+03:56:11   Sign problem absent:         False
+03:56:11   Total runtime:               40500.9s (11.25h)
+03:56:11   Results saved to:            docs/vestigial_mc_results/vestigial_mc_20260330T164110.json
+03:56:11 ============================================================
