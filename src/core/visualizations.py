@@ -4293,5 +4293,182 @@ def fig_fock_exterior_algebra() -> go.Figure:
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════
+# Wave 6: Analytical Vestigial Susceptibility Figures
+# ════════════════════════════════════════════════════════════════════
+
+def fig_vestigial_susceptibility() -> go.Figure:
+    """RPA metric susceptibility χ_g⁻¹(G) vs G/G_c.
+
+    Shows the inverse susceptibility crossing zero at G_ves for multiple u_g values.
+    The crossing point moves toward G_c as u_g decreases (exponentially narrow window).
+    """
+    from src.core.formulas import (
+        adw_metric_susceptibility_inv, adw_critical_coupling
+    )
+    from src.core.constants import ADW_VESTIGIAL
+
+    G_c = adw_critical_coupling(np.pi, 2)
+    c_D = ADW_VESTIGIAL['c_D_trace']
+
+    fig = go.Figure()
+
+    # Multiple u_g values to show how window shifts
+    u_g_values = [0.3, 0.5, 1.0, 2.0]
+    colors = [COLORS['cross'], COLORS['dispersive'], COLORS['Rb87'], COLORS['K39']]
+
+    G_over_Gc = np.linspace(0.01, 0.999, 500)
+
+    for u_g, color in zip(u_g_values, colors):
+        chi_inv = [adw_metric_susceptibility_inv(
+            g * G_c, G_c, u_g, c_D, np.pi
+        ) for g in G_over_Gc]
+        fig.add_trace(go.Scatter(
+            x=G_over_Gc, y=chi_inv,
+            mode='lines', line=dict(color=color, width=2),
+            name=f'u_g = {u_g}',
+        ))
+
+    # Zero line
+    fig.add_hline(y=0, line=dict(color='black', width=1, dash='dash'))
+
+    # Vertical line at G_c
+    fig.add_vline(x=1.0, line=dict(color=COLORS['dissipative'], width=1, dash='dot'),
+                  annotation_text="G_c", annotation_position="top right")
+
+    apply_layout(fig, height=450, width=700,
+        title=dict(text="<b>RPA Metric Susceptibility: Vestigial Transition</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="G / G_c"),
+        yaxis=dict(title="χ_g⁻¹(G)"),
+        legend=dict(x=0.02, y=0.98, bgcolor='rgba(255,255,255,0.8)'))
+
+    fig.add_annotation(x=0.5, y=0.02, xref='paper', yref='paper',
+        text="χ_g⁻¹ = 0 defines G_ves (vestigial transition). Shaded: vestigial phase (metric ordered, tetrad disordered).",
+        showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
+    return fig
+
+
+def fig_vestigial_window() -> go.Figure:
+    """Vestigial window G_ves/G_c vs u_g, showing exponential narrowness.
+
+    Log-scale plot demonstrating BCS-like exponential scaling in d=4.
+    """
+    from src.core.formulas import adw_vestigial_critical_coupling, adw_critical_coupling
+    from src.core.constants import ADW_VESTIGIAL
+
+    G_c = adw_critical_coupling(np.pi, 2)
+    c_D = ADW_VESTIGIAL['c_D_trace']
+
+    fig = go.Figure()
+
+    u_g_vals = np.linspace(0.1, 3.0, 200)
+    G_ves_over_Gc = []
+    window_width = []
+    for u_g in u_g_vals:
+        G_ves = adw_vestigial_critical_coupling(G_c, u_g, c_D, np.pi)
+        ratio = G_ves / G_c if G_ves < G_c else 1.0
+        G_ves_over_Gc.append(ratio)
+        window_width.append(max(G_c - G_ves, 1e-300))
+
+    # G_ves/G_c plot
+    fig.add_trace(go.Scatter(
+        x=u_g_vals, y=G_ves_over_Gc,
+        mode='lines', line=dict(color=COLORS['Rb87'], width=2.5),
+        name='G_ves / G_c (trace channel)',
+    ))
+
+    # Also show traceless-symmetric channel (c_D = 8)
+    c_D_tl = ADW_VESTIGIAL['c_D_traceless']
+    G_ves_tl = []
+    for u_g in u_g_vals:
+        G_ves = adw_vestigial_critical_coupling(G_c, u_g, c_D_tl, np.pi)
+        ratio = G_ves / G_c if G_ves < G_c else 1.0
+        G_ves_tl.append(ratio)
+
+    fig.add_trace(go.Scatter(
+        x=u_g_vals, y=G_ves_tl,
+        mode='lines', line=dict(color=COLORS['Na23'], width=2, dash='dash'),
+        name='G_ves / G_c (traceless-sym)',
+    ))
+
+    fig.add_hline(y=1.0, line=dict(color='black', width=1, dash='dot'),
+                  annotation_text="G_c (tetrad condensation)")
+
+    apply_layout(fig, height=450, width=700,
+        title=dict(text="<b>Vestigial Window: Exponential Narrowness in d=4</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="u_g (metric-channel quartic coupling)"),
+        yaxis=dict(title="G_ves / G_c", range=[0, 1.05]),
+        legend=dict(x=0.02, y=0.15, bgcolor='rgba(255,255,255,0.8)'))
+
+    fig.add_annotation(x=0.5, y=0.02, xref='paper', yref='paper',
+        text="BCS-like scaling: G_ves/G_c ~ 1 − exp(−16π²/(c_D·u_g)). Window only visible for u_g ≳ 0.3.",
+        showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
+    return fig
+
+
+def fig_vestigial_phase_diagram_analytical() -> go.Figure:
+    """Analytical phase diagram: pre-geometric / vestigial / full-tetrad regions.
+
+    Shows the three phases as a function of G/G_c with the vestigial window shaded.
+    """
+    from src.core.formulas import adw_vestigial_critical_coupling, adw_critical_coupling
+    from src.core.constants import ADW_VESTIGIAL
+
+    G_c = adw_critical_coupling(np.pi, 2)
+    c_D = ADW_VESTIGIAL['c_D_trace']
+
+    fig = go.Figure()
+
+    # Phase boundaries vs u_g
+    u_g_vals = np.linspace(0.1, 3.0, 200)
+    G_ves_vals = []
+    for u_g in u_g_vals:
+        G_ves = adw_vestigial_critical_coupling(G_c, u_g, c_D, np.pi)
+        G_ves_vals.append(G_ves / G_c if G_ves < G_c else 1.0)
+
+    # G_c line (always at 1)
+    fig.add_trace(go.Scatter(
+        x=u_g_vals, y=[1.0] * len(u_g_vals),
+        mode='lines', line=dict(color=COLORS['dissipative'], width=2),
+        name='G_c (tetrad condensation)',
+    ))
+
+    # G_ves line
+    fig.add_trace(go.Scatter(
+        x=u_g_vals, y=G_ves_vals,
+        mode='lines', line=dict(color=COLORS['Rb87'], width=2.5),
+        name='G_ves (metric condensation)',
+    ))
+
+    # Shade vestigial region
+    fig.add_trace(go.Scatter(
+        x=list(u_g_vals) + list(reversed(u_g_vals)),
+        y=G_ves_vals + [1.0] * len(u_g_vals),
+        fill='toself', fillcolor='rgba(46,134,171,0.15)',
+        line=dict(width=0), showlegend=True,
+        name='Vestigial phase (metric ordered, tetrad disordered)',
+    ))
+
+    # Phase labels
+    fig.add_annotation(x=1.5, y=0.3, text="<b>Pre-geometric</b><br>(fully disordered)",
+        showarrow=False, font=dict(size=13, family=FONT['family']))
+    fig.add_annotation(x=2.5, y=1.15, text="<b>Einstein-Cartan</b><br>(tetrad condensed)",
+        showarrow=False, font=dict(size=13, family=FONT['family']))
+
+    apply_layout(fig, height=500, width=700,
+        title=dict(text="<b>ADW Phase Diagram: Vestigial Metric Ordering</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="u_g (metric-channel quartic coupling)", range=[0.1, 3.0]),
+        yaxis=dict(title="G / G_c", range=[0, 1.3]),
+        legend=dict(x=0.02, y=0.98, bgcolor='rgba(255,255,255,0.8)'))
+
+    fig.add_annotation(x=0.5, y=-0.12, xref='paper', yref='paper',
+        text="Volovik (2024): EP violated in vestigial phase — bosons see metric, fermions don't.",
+        showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
+    return fig
+
+
 if __name__ == "__main__":
     main()

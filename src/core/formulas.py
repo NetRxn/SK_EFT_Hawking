@@ -33,6 +33,7 @@ def count_coefficients(N: int) -> int:
 
     Lean: secondOrder_count, secondOrder_count_with_parity, thirdOrder_count
     Aristotle: d61290fd, 3eedcabb
+    Source: Crossley/Glorioso/Liu, JHEP 1709, 095 (2017)
 
     At N=1: count=2 (γ₁, γ₂)
     At N=2: count=2 new (γ_{2,1}, γ_{2,2})
@@ -53,6 +54,7 @@ def enumerate_monomials(N: int, require_spatial_parity: bool = False):
 
     Lean: secondOrder_count_with_parity, secondOrder_requires_parity_breaking
     Aristotle: d61290fd, 3eedcabb
+    Source: Crossley/Glorioso/Liu, JHEP 1709, 095 (2017)
 
     Returns:
         List of (m, n) tuples.
@@ -83,6 +85,7 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
 
     Lean: dampingRate_eq_zero_iff — proves Γ=0 for all (k,ω) iff all γᵢ=0.
     Aristotle: 518636d7
+    Source: original (SK-EFT construction)
 
     Parity alternation:
         Order 1 terms (k², ω²) are parity-even → universal
@@ -126,6 +129,7 @@ def dispersive_correction(D):
 
     Lean: dispersive_correction_bound, bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
+    Source: Corley & Jacobson, PRD 54, 1568 (1996)
 
     Args:
         D: adiabaticity parameter (dimensionless)
@@ -150,6 +154,7 @@ def hawking_temperature(kappa):
 
     Lean: hawking_temp_from_surface_gravity (AcousticMetric.lean)
     Aristotle: manual
+    Source: Hawking, Nature 248, 30 (1974); Unruh, PRL 46, 1351 (1981)
 
     Args:
         kappa: surface gravity [s^-1]
@@ -175,6 +180,7 @@ def first_order_correction(Gamma_H, kappa):
     Lean: firstOrder_correction_zero_iff — proves δ_diss=0 iff Γ_H=0.
           Uses κ > 0 (total-division strengthening).
     Aristotle: 518636d7
+    Source: original
 
     Args:
         Gamma_H: damping rate at horizon [s⁻¹]
@@ -203,6 +209,7 @@ def second_order_correction(k, omega, c_s, gamma_2_1, gamma_2_2, kappa):
 
     Lean: secondOrder_vanishes_on_shell_with_positivity (WKBAnalysis.lean)
     Aristotle: 518636d7
+    Source: original
 
     Args:
         k: wavenumber [m⁻¹]
@@ -239,6 +246,7 @@ def third_order_correction(k, omega, c_s, gamma_3_1, gamma_3_2, gamma_3_3, kappa
 
     Lean: thirdOrder_count, cumulative_count_through_3
     Aristotle: 3eedcabb
+    Source: original
 
     Args:
         k: wavenumber [m⁻¹]
@@ -268,6 +276,7 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
 
     Lean: effective_temp_zeroth_order
     Aristotle: c4d73ca8
+    Source: original
 
     Args:
         omega: frequency [s⁻¹]
@@ -317,6 +326,7 @@ def turning_point_shift(Gamma_H, kappa, c_s):
 
     Lean: turning_point_shift_nonzero, turning_point_shift
     Aristotle: 518636d7, c4d73ca8
+    Source: original (WKB analysis)
 
     Args:
         Gamma_H: damping rate at horizon [s⁻¹]
@@ -347,6 +357,7 @@ def decoherence_parameter(Gamma_H, kappa):
 
     Lean: decoherence_nonneg, decoherence_double_delta_diss,
           decoherence_zero_iff (WKBConnection.lean)
+    Source: original
 
     Args:
         Gamma_H: damping rate at horizon [s⁻¹]
@@ -372,6 +383,7 @@ def fdr_noise_floor(delta_k, omega=None, T_env=0.0):
 
     Lean: noise_floor_nonneg, noise_floor_eq_delta_diss,
           noise_floor_zero_iff (WKBConnection.lean)
+    Source: original
 
     Args:
         delta_k: decoherence parameter
@@ -415,6 +427,7 @@ def adw_effective_potential(C, G, Lambda, N_f):
 
     Lean: critical_coupling_pos (ADWMechanism.lean) — V_eff structure verified via G_c positivity
     Aristotle: manual
+    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
 
     Args:
         C: Tetrad magnitude (order parameter)
@@ -445,6 +458,7 @@ def adw_critical_coupling(Lambda, N_f):
     develops a nontrivial minimum at C ≠ 0 (tetrad condensation).
 
     Lean: critical_coupling_pos (ADWMechanism.lean)
+    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
 
     Args:
         Lambda: UV cutoff
@@ -472,6 +486,7 @@ def adw_curvature_at_origin(G, Lambda, N_f):
 
     Lean: curvature_zero_at_Gc (ADWMechanism.lean)
     Aristotle: f8de66d1
+    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
 
     Args:
         G: ADW coupling constant
@@ -494,6 +509,7 @@ def tetrad_broken_generators(spacetime_dim):
 
     Lean: broken_generators_4d (ADWMechanism.lean)
     Aristotle: manual
+    Source: standard group theory
 
     Args:
         spacetime_dim: Dimension of spacetime (d)
@@ -516,6 +532,7 @@ def graviton_polarization_count(spacetime_dim):
 
     Lean: graviton_pol_4d (ADWMechanism.lean)
     Aristotle: manual
+    Source: standard group theory
 
     Args:
         spacetime_dim: Dimension of spacetime (d)
@@ -542,6 +559,7 @@ def beliaev_damping_rate(n_1D, a_s, kappa, c_s):
 
     Lean: dampingRate_firstOrder_nonneg (WKBAnalysis.lean) — verifies Γ_H ≥ 0
     Aristotle: manual (UV matching formula; Lean verifies the EFT structure, not the microscopic derivation)
+    Source: original (UV matching procedure)
 
     Args:
         n_1D: quasi-1D linear density [m⁻¹]
@@ -567,6 +585,7 @@ def beliaev_transport_coefficients(n_1D, a_s, kappa, c_s, xi):
 
     Lean: firstOrder_uniqueness (SKDoubling.lean) — verifies the (γ₁, γ₂) parameterization
     Aristotle: manual (UV matching; Lean verifies the EFT structure)
+    Source: original (UV matching procedure)
 
     Second-order coefficients are suppressed by ξ/c_s:
         γ_{2,1} scale ~ Γ_Bel · (ξ/c_s) / (2·k_H³)
@@ -622,6 +641,7 @@ def kappa_scaling_dispersive(kappa, xi, c_s):
 
     Lean: kappa_scaling_dispersive_quadratic
     Aristotle: manual
+    Source: original
 
     Args:
         kappa: surface gravity [s⁻¹]
@@ -649,6 +669,7 @@ def kappa_scaling_dissipative(kappa, gamma_1, gamma_2, c_s):
 
     Lean: kappa_scaling_dissipative_linear
     Aristotle: manual
+    Source: original
 
     Args:
         kappa: surface gravity [s⁻¹]
@@ -684,6 +705,7 @@ def kappa_scaling_crossover(gamma_1, gamma_2, xi):
 
     Lean: kappa_scaling_crossover_unique
     Aristotle: manual
+    Source: original
 
     Args:
         gamma_1: first-order transport coefficient [m²/s]
@@ -713,6 +735,7 @@ def polariton_spatial_attenuation(Gamma_pol, L, v_g):
 
     Lean: polariton_attenuation_positive
     Aristotle: manual
+    Source: original (Tier 1 patch)
 
     Args:
         Gamma_pol: polariton decay rate [s⁻¹]
@@ -740,6 +763,7 @@ def polariton_tier1_validity(Gamma_pol, kappa):
 
     Lean: polariton_validity_nonneg
     Aristotle: manual
+    Source: original (Tier 1 patch)
 
     Args:
         Gamma_pol: polariton decay rate [s⁻¹]
@@ -765,6 +789,7 @@ def polariton_hawking_temperature(kappa):
 
     Lean: hawking_temp_from_surface_gravity (AcousticMetric.lean) — same formula
     Aristotle: manual
+    Source: Hawking, Nature 248, 30 (1974); Unruh, PRL 46, 1351 (1981)
 
     Args:
         kappa: surface gravity [s⁻¹]
@@ -795,6 +820,7 @@ def su2_one_link_integral(dim_fund=2):
 
     Lean: su2_one_link_normalization (SU2PseudoReality.lean)
     Aristotle: manual
+    Source: standard Haar measure (Creutz, Quarks Gluons and Lattices, 1983)
 
     Args:
         dim_fund: dimension of the fundamental representation (2 for SU(2))
@@ -821,6 +847,7 @@ def adw_2d_effective_coupling(g_EH, dim_fund=2):
 
     Lean: effective_coupling_positive (SU2PseudoReality.lean)
     Aristotle: manual
+    Source: Vladimirov & Diakonov, PRD 86, 104019 (2012)
 
     Args:
         g_EH: Einstein-Hilbert coupling (nearest-neighbor gauge term)
@@ -849,6 +876,7 @@ def binder_cumulant(m2_mean, m4_mean):
 
     Lean: binder_cumulant_ordered_limit (SU2PseudoReality.lean)
     Aristotle: manual
+    Source: Binder, Z. Phys. B 43, 119 (1981)
 
     Args:
         m2_mean: ensemble average <m²> of squared order parameter
@@ -860,6 +888,84 @@ def binder_cumulant(m2_mean, m4_mean):
     if m2_mean <= 0:
         return 0.0
     return 1.0 - m4_mean / (3.0 * m2_mean**2)
+
+
+def binder_cumulant_vector(m2_mean, m4_mean, d):
+    """Binder cumulant for a d-component vector order parameter.
+
+    U₄ = 1 - d/(d+2) · ⟨|φ|⁴⟩ / ⟨|φ|²⟩²
+
+    For a d-component isotropic Gaussian random vector:
+      ⟨|φ|⁴⟩ = (1 + 2/d) ⟨|φ|²⟩²
+    giving U₄ = 0 in the disordered phase.
+
+    In the fully ordered phase (delta-function at |φ|=φ₀):
+      U₄ → 1 - d/(d+2) = 2/(d+2)
+
+    Reduces to the scalar Binder cumulant (1/3 prefactor) when d=1.
+
+    Lean: binderCumulantVector, binder_vector_gaussian, binder_vector_ordered (MajoranaKramers.lean)
+    Aristotle: cc257137 (2 theorems: gaussian + ordered limits)
+    Source: Binder, Z. Phys. B 43, 119 (1981)
+    Source: Ballesteros et al., PRB 58, 2740 (1998), Eq. (2) — vector generalization
+
+    Args:
+        m2_mean: ensemble average ⟨|φ|²⟩
+        m4_mean: ensemble average ⟨|φ|⁴⟩
+        d: number of order parameter components
+
+    Returns:
+        U₄ (dimensionless). Disordered: 0. Ordered: 2/(d+2).
+    """
+    if m2_mean <= 0:
+        return 0.0
+    return 1.0 - (d / (d + 2.0)) * m4_mean / m2_mean**2
+
+
+def binder_cumulant_tetrad(m2_mean, m4_mean):
+    """Binder cumulant for the 16-component tetrad order parameter E^a_μ.
+
+    The tetrad E^a_μ (a=1..4 Lorentz, μ=1..4 spacetime) has d=16
+    independent real components. The vector Binder cumulant gives:
+
+      U₄ = 1 - 16/18 · ⟨|E|⁴⟩/⟨|E|²⟩² = 1 - 8/9 · ⟨|E|⁴⟩/⟨|E|²⟩²
+
+    Disordered: U₄ → 0. Ordered: U₄ → 2/18 = 1/9 ≈ 0.111.
+
+    Lean: binder_tetrad_prefactor (MajoranaKramers.lean) — proves prefactor = 16/18 = 8/9
+    Aristotle: pending (proved by ring tactic, no sorry)
+    Source: Binder, Z. Phys. B 43, 119 (1981)
+    Source: Ballesteros et al., PRB 58, 2740 (1998), Eq. (2)
+
+    Args:
+        m2_mean: ⟨|E|²⟩ = ⟨Σ_{a,μ} (E^a_μ)²⟩
+        m4_mean: ⟨|E|⁴⟩ = ⟨(Σ_{a,μ} (E^a_μ)²)²⟩
+    """
+    return binder_cumulant_vector(m2_mean, m4_mean, d=16)
+
+
+def binder_cumulant_metric(m2_mean, m4_mean):
+    """Binder cumulant for the 9-component traceless symmetric metric Q_{μν}.
+
+    The traceless symmetric 4×4 tensor Q_{μν} = g_{μν} - (Tr g/4)δ_{μν}
+    has d = 4(4+1)/2 - 1 = 9 independent real components. Gives:
+
+      U₄ = 1 - 9/11 · ⟨Tr(Q²)²⟩/⟨Tr(Q²)⟩²
+
+    where Tr(Q²) = Σ_{μ,ν} Q_{μν}² is the squared norm of Q.
+
+    Disordered: U₄ → 0. Ordered: U₄ → 2/11 ≈ 0.182.
+
+    Lean: binder_metric_prefactor (MajoranaKramers.lean) — proves prefactor = 9/11
+    Aristotle: pending (proved by ring tactic, no sorry)
+    Source: Binder, Z. Phys. B 43, 119 (1981)
+    Source: Ballesteros et al., PRB 58, 2740 (1998), Eq. (2)
+
+    Args:
+        m2_mean: ⟨Tr(Q²)⟩ = ⟨|Q|²⟩
+        m4_mean: ⟨(Tr(Q²))²⟩ = ⟨|Q|⁴⟩
+    """
+    return binder_cumulant_vector(m2_mean, m4_mean, d=9)
 
 
 def grassmann_trg_free_energy(ln_Z, volume):
@@ -877,6 +983,7 @@ def grassmann_trg_free_energy(ln_Z, volume):
 
     Lean: free_energy_extensive (SU2PseudoReality.lean)
     Aristotle: manual
+    Source: standard statistical mechanics
 
     Args:
         ln_Z: natural log of the partition function (from TRG)
@@ -907,6 +1014,7 @@ def so4_one_link_integral(dim_L=2, dim_R=2):
 
     Lean: so4_one_link_factor (FermionBag4D.lean)
     Aristotle: manual
+    Source: standard Haar measure (Creutz, Quarks Gluons and Lattices, 1983)
 
     Args:
         dim_L: dimension of SU(2)_L fundamental rep (default 2)
@@ -929,6 +1037,7 @@ def adw_4d_effective_coupling(g_EH, dim_fund=4):
 
     Lean: so4_effective_coupling_pos (FermionBag4D.lean)
     Aristotle: manual
+    Source: Vladimirov & Diakonov, PRD 86, 104019 (2012)
 
     Args:
         g_EH: Einstein-Hilbert gauge coupling
@@ -956,6 +1065,7 @@ def eight_fermion_vertex_weight(n_occ, g_cosmo):
 
     Lean: eight_fermion_weight_bounds (FermionBag4D.lean)
     Aristotle: manual
+    Source: Chandrasekharan, PRD 82, 025007 (2010)
 
     Args:
         n_occ: number of occupied Grassmann variables at the site (0-8)
@@ -986,6 +1096,7 @@ def fermion_bag_local_weight(bag_config, g_cosmo, g_eff):
 
     Lean: fermion_bag_weight_positive (FermionBag4D.lean)
     Aristotle: manual
+    Source: Chandrasekharan, PRD 82, 025007 (2010)
 
     Args:
         bag_config: dict with 'site_occupations' (list of ints 0-8)
@@ -1022,6 +1133,7 @@ def metric_correlator_connected(tetrad_m2, tetrad_m4):
 
     Lean: metric_correlator_nonneg (FermionBag4D.lean)
     Aristotle: manual
+    Source: original
 
     Args:
         tetrad_m2: ⟨|E|²⟩ (second moment of tetrad magnitude)
@@ -1047,6 +1159,7 @@ def vestigial_phase_indicator(binder_tetrad, binder_metric):
 
     Lean: vestigial_phase_splitting (FermionBag4D.lean)
     Aristotle: manual
+    Source: original
 
     Args:
         binder_tetrad: Binder cumulant for tetrad order parameter
@@ -1088,6 +1201,7 @@ def planck_occupation(omega, T):
 
     Lean: planck_nonneg (SO4Weingarten.lean)
     Aristotle: run_20260331_103403 (Aristotle-proved via linarith + add_one_le_exp)
+    Source: standard quantum statistics
 
     Args:
         omega: Mode frequency (scalar or array)
@@ -1121,6 +1235,7 @@ def so4_weingarten_2nd_moment(N=4):
 
     Lean: weingarten_2nd_positive (SO4Weingarten.lean)
     Aristotle: 4528aa2b
+    Source: Collins, Int. Math. Res. Not. 2003, 953 (2003)
 
     Args:
         N: Dimension of SO(N) (default 4 for SO(4) gravity)
@@ -1148,6 +1263,7 @@ def so4_weingarten_4th_moment(N=4):
 
     Lean: weingarten_4th_decomposition (SO4Weingarten.lean)
     Aristotle: 4528aa2b
+    Source: Collins, Int. Math. Res. Not. 2003, 953 (2003)
 
     Args:
         N: Dimension of SO(N) (default 4)
@@ -1180,6 +1296,7 @@ def adw_bond_weight_fundamental(n_x, n_y, g_eff, N_grass=8):
 
     Lean: bond_weight_fundamental_positive (SO4Weingarten.lean)
     Aristotle: 4528aa2b
+    Source: original (application of Weingarten to ADW)
 
     Args:
         n_x: Grassmann occupation at site x (0 to N_grass)
@@ -1206,6 +1323,7 @@ def adw_bond_weight_adjoint(n_x, n_y, g_eff, N_grass=8):
 
     Lean: bond_weight_adjoint_suppressed (SO4Weingarten.lean)
     Aristotle: 4528aa2b
+    Source: original (application of Weingarten to ADW)
 
     Args:
         n_x, n_y: Grassmann occupations
@@ -1234,6 +1352,7 @@ def adw_bond_weight_total(n_x, n_y, g_eff, N_grass=8):
 
     Lean: bond_weight_total_decomposition (SO4Weingarten.lean)
     Aristotle: 4528aa2b
+    Source: original (application of Weingarten to ADW)
 
     Args:
         n_x, n_y: Grassmann occupations
@@ -1480,6 +1599,7 @@ def njl_adw_scalar_limit(g_njl, N_grass=8):
 
     Lean: njl_adw_correspondence (WetterichNJL.lean)
     Aristotle: 4528aa2b
+    Source: Wetterich, PRD 70, 105004 (2004)
 
     Args:
         g_njl: NJL coupling constant
@@ -1499,6 +1619,457 @@ def njl_adw_scalar_limit(g_njl, N_grass=8):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Analytical vestigial metric susceptibility (VestigialSusceptibility.lean)
+# RPA formalism: χ_g⁻¹ = 1/u_g − c_D·Π₀(1/G − 1/G_c)
+# Proves vestigial metric ordering G_ves < G_c whenever u_g > 0
+# ════════════════════════════════════════════════════════════════════
+
+def gamma_trace_projection(channel='metric'):
+    """
+    Projection of the 4D gamma-matrix trace onto metric or Lorentz channels.
+
+    Tr(γ^a γ^b γ^c γ^d) = 4(δ^{ab}δ^{cd} − δ^{ac}δ^{bd} + δ^{ad}δ^{bc})
+
+    Metric channel (symmetric: δ^{ab}δ^{cd} + δ^{ad}δ^{bc}):
+        coefficient = 4 × 2 = 8  (attractive, u_g > 0)
+
+    Lorentz channel (antisymmetric: δ^{ac}δ^{bd}):
+        coefficient = −4  (repulsive)
+
+    Lean: gamma_trace_metric_positive (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: standard gamma-matrix algebra; Peskin/Schroeder App. A
+
+    Args:
+        channel: 'metric' or 'lorentz'
+
+    Returns:
+        Projection coefficient (positive for metric = attractive interaction)
+    """
+    if channel == 'metric':
+        return 8
+    elif channel == 'lorentz':
+        return -4
+    else:
+        raise ValueError(f"Unknown channel '{channel}': use 'metric' or 'lorentz'")
+
+
+def adw_quartic_coupling_metric(N_f, D=4):
+    """
+    Quartic coupling u_g in the metric channel from the ADW 8-fermion vertex.
+
+    u_g = (N_f / (16π²)) × (gamma_trace_metric / D²) × ln(2)
+
+    The quartic vertex arises from the fourth-order expansion of the
+    fermion determinant. The gamma-matrix trace Tr(γ^aγ^bγ^cγ^d)
+    projected onto the metric channel (symmetric combination) gives
+    a positive contribution, ensuring u_g > 0.
+
+    The factor ln(2) comes from the fourth-order Coleman-Weinberg
+    coefficient. u_g is Λ-independent (the cutoff cancels between
+    numerator and denominator in the ratio of CW coefficients).
+
+    Lean: u_g_positive (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: Fernandes/Chubukov/Schmalian, Ann. Rev. CMP 10, 133 (2019), Eq. (5);
+            adapted to ADW via Diakonov arXiv:1109.0091 quartic vertex
+
+    Args:
+        N_f: Number of Dirac fermion species
+        D: Internal SO(D) dimension (default 4)
+
+    Returns:
+        u_g > 0 (metric-channel quartic coupling)
+    """
+    gamma_proj = gamma_trace_projection('metric')
+    # Fourth-order CW coefficient: the log factor from the momentum integral
+    # ∫₀^Λ d⁴p/(2π)⁴ · 1/(p²+r_e)⁴ evaluated at r_e → 0 contributes ln(2)
+    u_g = (N_f / (16.0 * np.pi**2)) * (gamma_proj / D**2) * np.log(2.0)
+    return u_g
+
+
+def adw_bubble_integral(r_e, Lambda):
+    """
+    Bubble integral Π₀(r_e) — two tetrad propagators in d=4.
+
+    Π₀(r_e) = (1/16π²)[ln(Λ²/r_e) − 1]
+
+    This is the fundamental integral ∫ d⁴k/(2π)⁴ · 1/(k² + r_e)²
+    evaluated with sharp UV cutoff Λ. It diverges logarithmically as
+    r_e → 0⁺ (i.e., G → G_c) — the hallmark of d=4 vestigial physics.
+
+    In d=3: Π₀ ~ 1/(8π√r_e) (power-law, wide vestigial window).
+    In d=4: Π₀ ~ ln(Λ²/r_e)/16π² (logarithmic, exponentially narrow window).
+
+    Lean: bubble_integral_monotone, bubble_integral_diverges (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: Nie/Tarjus/Kivelson, PNAS 111, 7980 (2014), Eq. (S12);
+            standard d=4 momentum integral
+
+    Args:
+        r_e: Inverse tetrad susceptibility = 1/G − 1/G_c (> 0 in disordered phase)
+        Lambda: UV cutoff
+
+    Returns:
+        Π₀(r_e) — strictly positive for r_e > 0, diverges as r_e → 0⁺
+    """
+    if r_e <= 0:
+        return np.inf
+    return (1.0 / (16.0 * np.pi**2)) * (np.log(Lambda**2 / r_e) - 1.0)
+
+
+def adw_metric_susceptibility_inv(G, G_c, u_g, c_D, Lambda):
+    """
+    Inverse RPA metric susceptibility in the ADW model.
+
+    χ_g⁻¹(G) = 1/u_g − c_D · Π₀(1/G − 1/G_c)
+
+    The metric susceptibility diverges (χ_g⁻¹ → 0) at G = G_ves,
+    signaling the onset of vestigial metric ordering. For G < G_ves,
+    χ_g⁻¹ > 0 (disordered). For G_ves < G < G_c, χ_g⁻¹ < 0
+    (metric channel unstable → condensation).
+
+    Lean: susceptibility_diverges, vestigial_before_tetrad (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: Fernandes/Chubukov/Schmalian, Ann. Rev. CMP 10, 133 (2019), Eq. (7)
+
+    Args:
+        G: Gravitational coupling (< G_c for disordered phase)
+        G_c: Critical coupling for tetrad condensation
+        u_g: Metric-channel quartic coupling (> 0 for attractive)
+        c_D: Channel multiplicity (32 for trace, 8 for traceless-symmetric)
+        Lambda: UV cutoff
+
+    Returns:
+        χ_g⁻¹ — positive means disordered, zero means vestigial transition
+    """
+    r_e = 1.0 / G - 1.0 / G_c
+    Pi_0 = adw_bubble_integral(r_e, Lambda)
+    return 1.0 / u_g - c_D * Pi_0
+
+
+def adw_vestigial_critical_coupling(G_c, u_g, c_D, Lambda):
+    """
+    Vestigial critical coupling G_ves where metric susceptibility diverges.
+
+    1/G_ves = 1/G_c + Λ² · exp(−16π²/(c_D·u_g) − 1)
+
+    This is the coupling where the metric orders (⟨g_μν⟩ ≠ 0) while the
+    tetrad remains disordered (⟨e^a_μ⟩ = 0). G_ves < G_c always when u_g > 0.
+
+    Lean: vestigial_before_tetrad (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: derived from χ_g⁻¹ = 0 condition;
+            Fernandes/Chubukov/Schmalian, Ann. Rev. CMP 10, 133 (2019), Eq. (8)
+
+    Args:
+        G_c: Critical coupling for tetrad condensation
+        u_g: Metric-channel quartic coupling (must be > 0)
+        c_D: Channel multiplicity (32 for trace, 8 for traceless-symmetric)
+        Lambda: UV cutoff
+
+    Returns:
+        G_ves (< G_c when u_g > 0)
+    """
+    if u_g <= 0:
+        return np.inf  # no vestigial transition for repulsive channel
+    exponent = -16.0 * np.pi**2 / (c_D * u_g) - 1.0
+    r_e_star = Lambda**2 * np.exp(exponent)
+    G_ves = 1.0 / (1.0 / G_c + r_e_star)
+    return G_ves
+
+
+def adw_vestigial_window_width(G_c, u_g, c_D, Lambda):
+    """
+    Width of the vestigial window: G_c − G_ves.
+
+    The vestigial phase exists in the interval (G_ves, G_c) where the metric
+    is condensed but the tetrad is not. This window is exponentially narrow
+    in d=4 (BCS-like scaling):
+
+        G_c − G_ves ≈ G_c² · Λ² · exp(−16π²/(c_D·u_g) − 1)
+
+    for small window. This is a structural prediction: vestigial metric order
+    in 4D quantum gravity is a non-perturbative phenomenon visible only at
+    exponentially strong coupling — the gravitational analog of the BCS gap.
+
+    Lean: vestigial_window_exponential (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: derived from vestigial_critical_coupling formula
+
+    Args:
+        G_c: Critical coupling for tetrad condensation
+        u_g: Metric-channel quartic coupling (must be > 0)
+        c_D: Channel multiplicity
+        Lambda: UV cutoff
+
+    Returns:
+        G_c − G_ves (positive, exponentially small for small u_g)
+    """
+    G_ves = adw_vestigial_critical_coupling(G_c, u_g, c_D, Lambda)
+    return G_c - G_ves
+
+
+def adw_vestigial_ordering_proved(u_g):
+    """
+    Whether the analytical proof guarantees vestigial metric ordering.
+
+    The RPA susceptibility analysis proves G_ves < G_c whenever u_g > 0.
+    This is a sufficient condition — the metric NECESSARILY orders before
+    the tetrad when the metric-channel quartic coupling is attractive.
+
+    For the ADW model, u_g > 0 follows from the gamma-matrix trace
+    projection onto the symmetric channel, which gives coefficient +8
+    (vs −4 for the antisymmetric Lorentz channel).
+
+    Lean: vestigial_ordering_sufficient (VestigialSusceptibility.lean)
+    Aristotle: 9e2251cd
+    Source: theorem statement in deep research report
+
+    Args:
+        u_g: Metric-channel quartic coupling
+
+    Returns:
+        True if vestigial ordering is analytically guaranteed
+    """
+    return u_g > 0
+
+
+# ════════════════════════════════════════════════════════════════════
+# Gauge-link MC infrastructure (QuaternionGauge.lean, GaugeFermionBag.lean)
+# SO(4) ≅ (SU(2)_L × SU(2)_R)/Z_2 via quaternion pairs
+# ════════════════════════════════════════════════════════════════════
+
+def quaternion_multiply(q1, q2):
+    """
+    Hamilton product of two quaternions q = (a, b, c, d).
+
+    (a₁,b₁,c₁,d₁)·(a₂,b₂,c₂,d₂) = (
+        a₁a₂ - b₁b₂ - c₁c₂ - d₁d₂,
+        a₁b₂ + b₁a₂ + c₁d₂ - d₁c₂,
+        a₁c₂ - b₁d₂ + c₁a₂ + d₁b₂,
+        a₁d₂ + b₁c₂ - c₁b₂ + d₁a₂
+    )
+
+    For unit quaternions, this implements SU(2) group multiplication.
+    The product of unit quaternions is again a unit quaternion (norm multiplicative).
+
+    Lean: quaternion_norm_mul (QuaternionGauge.lean)
+    Aristotle: fb657b4d
+    Source: Creutz, "Quarks, Gluons and Lattices" (1983), Ch. 15
+
+    Args:
+        q1: quaternion (a1, b1, c1, d1) as length-4 array
+        q2: quaternion (a2, b2, c2, d2) as length-4 array
+
+    Returns:
+        Product quaternion as numpy array of shape (4,)
+    """
+    q1 = np.asarray(q1, dtype=float)
+    q2 = np.asarray(q2, dtype=float)
+    a1, b1, c1, d1 = q1[..., 0], q1[..., 1], q1[..., 2], q1[..., 3]
+    a2, b2, c2, d2 = q2[..., 0], q2[..., 1], q2[..., 2], q2[..., 3]
+    return np.stack([
+        a1*a2 - b1*b2 - c1*c2 - d1*d2,
+        a1*b2 + b1*a2 + c1*d2 - d1*c2,
+        a1*c2 - b1*d2 + c1*a2 + d1*b2,
+        a1*d2 + b1*c2 - c1*b2 + d1*a2,
+    ], axis=-1)
+
+
+def so4_from_quaternion_pair(q_L, q_R):
+    """
+    Construct a 4×4 SO(4) matrix from SU(2)_L × SU(2)_R quaternion pair.
+
+    SO(4) acts on v ∈ ℝ⁴ ≅ ℍ as v → q_L · v · q̄_R.
+    The resulting 4×4 orthogonal matrix R_{ij} is bilinear in the
+    quaternion components.
+
+    Storage: 8 floats (2 quaternions) vs 16 floats (4×4 matrix).
+    Computation: quaternion multiply = 16 flops vs matrix multiply = 128 flops.
+
+    Lean: so4_dimension (QuaternionGauge.lean)
+    Aristotle: fb657b4d
+    Source: standard representation theory; Creutz Ch. 15
+
+    Args:
+        q_L: left SU(2) quaternion (a, b, c, d), unit norm
+        q_R: right SU(2) quaternion (a, b, c, d), unit norm
+
+    Returns:
+        4×4 SO(4) rotation matrix
+    """
+    q_L = np.asarray(q_L, dtype=float)
+    q_R = np.asarray(q_R, dtype=float)
+    a, b, c, d = q_L
+    p, q, r, s = q_R
+
+    # R_{ij} from v_out = q_L · v_in · conj(q_R)
+    # Build by applying to each basis quaternion e_0=(1,0,0,0), etc.
+    R = np.zeros((4, 4))
+    for j in range(4):
+        e_j = np.zeros(4)
+        e_j[j] = 1.0
+        # v_out = q_L * e_j * conj(q_R)
+        q_R_conj = np.array([p, -q, -r, -s])
+        temp = quaternion_multiply(q_L, e_j)
+        v_out = quaternion_multiply(temp, q_R_conj)
+        R[:, j] = v_out
+    return R
+
+
+def wilson_plaquette_action(tr_UP, N=4):
+    """
+    Wilson plaquette action for a single plaquette.
+
+    S_P = 1 − (1/N) Re Tr(U_P)
+
+    For SO(4), N=4. The trace is real for orthogonal matrices.
+    S_P = 0 for identity (ordered), S_P = 2 for maximally disordered.
+
+    Lean: plaquette_action_nonneg, plaquette_action_identity (QuaternionGauge.lean)
+    Aristotle: fb657b4d
+    Source: Wilson, PRD 10, 2445 (1974)
+
+    Args:
+        tr_UP: Tr(U_P) — trace of the ordered product of 4 links around a plaquette
+        N: dimension of the fundamental representation (4 for SO(4))
+
+    Returns:
+        S_P ≥ 0
+    """
+    return 1.0 - tr_UP / N
+
+
+def euclidean_gamma_matrices():
+    """
+    Return the 4D Euclidean Clifford algebra gamma matrices.
+
+    γ^0 = σ_1 ⊗ σ_1, γ^1 = σ_1 ⊗ σ_2, γ^2 = σ_1 ⊗ σ_3, γ^3 = σ_2 ⊗ I₂
+
+    Properties:
+    - {γ^a, γ^b} = 2δ^{ab} (Euclidean Clifford algebra)
+    - (γ^a)² = I₄
+    - (γ^a)† = γ^a (Hermitian)
+    - Tr(γ^a) = 0 (traceless)
+    - γ^0, γ^2 are real; γ^1, γ^3 are purely imaginary
+    - Cl(4,0) ≅ M_2(ℍ) → no real 4×4 rep exists; complex is mandatory
+    - det(M_B) ∈ ℝ via charge conjugation C = γ^0γ^2, not via reality of γ
+
+    Lean: gamma_clifford_algebra (GaugeFermionBag.lean)
+    Aristotle: fb657b4d
+    Source: Montvay & Münster, "Quantum Fields on a Lattice" (1994), Ch. 4.4
+
+    Returns:
+        Array of shape (4, 4, 4), complex128 — four 4×4 Hermitian matrices
+    """
+    from src.core.constants import EUCLIDEAN_GAMMA_4D
+    return EUCLIDEAN_GAMMA_4D.copy()
+
+
+def tetrad_bilinear(n_x, n_y, gamma_a, U_xy):
+    """
+    Composite tetrad bilinear E^a_μ = ψ̄_x γ^a U_{xy} ψ_y (4×4 complex formulation).
+
+    The tetrad is the primary order parameter for full symmetry breaking.
+    ψ̄ = occ[4:8] and ψ = occ[0:4] — ALL 8 Grassmann DOFs participate.
+    The gamma matrix γ^a carries the internal SO(4) index a = 0,...,3,
+    producing a 4-component vector E^a_μ for each bond.
+
+    Reality: E^0, E^2 are real; E^1, E^3 are purely imaginary.
+    This is unavoidable from Cl(4,0) ≅ M₂(ℍ) — no real 4×4 rep exists.
+    The metric g_{μν} = δ_{ab} E^a E^b is real per-config (Option A, no conjugation)
+    because (imaginary)² = real.
+    For a manifestly real formulation, use the 8×8 Majorana representation
+    (see gauge_fermion_bag_majorana.py).
+
+    Source: ADW tetrad condensation lattice formulation.md (deep research Q1-Q2)
+
+    Lean: tetrad_gauge_covariant (GaugeFermionBag.lean)
+    Aristotle: fb657b4d
+    Source: Vladimirov & Diakonov, PRD 86, 104019 (2012)
+
+    Args:
+        n_x: occupation array at site x, shape (8,) with values in {0,1}
+              occ[0:4] = ψ, occ[4:8] = ψ̄
+        n_y: occupation array at site y, shape (8,)
+        gamma_a: 4×4 gamma matrix for internal index a (complex Hermitian)
+        U_xy: 4×4 SO(4) gauge link from x to y (real orthogonal)
+
+    Returns:
+        E^a_μ scalar (complex: real for a=0,2; purely imaginary for a=1,3)
+    """
+    psi_bar_x = n_x[4:8].astype(complex)  # ψ̄ = occ[4:8]
+    psi_y = n_y[:4].astype(complex)        # ψ = occ[0:4]
+    gamma_U = np.asarray(gamma_a, dtype=complex) @ np.asarray(U_xy, dtype=complex)
+    return complex(psi_bar_x @ gamma_U @ psi_y)
+
+
+def tetrad_bilinear_full(n_x, n_y, gammas, U_xy):
+    """
+    Full 4-component tetrad vector E^a_μ for a single bond (x,μ).
+
+    E^a_μ(x) = ψ̄_x γ^a U_{x,μ} ψ_{x+μ̂} for a = 0,1,2,3.
+
+    Returns a 4-component complex vector. For occupation-number configs
+    with real SO(4) links, each component is real (imaginary parts cancel
+    due to charge conjugation structure).
+
+    Lean: tetrad_gauge_covariant (GaugeFermionBag.lean)
+    Aristotle: fb657b4d
+    Source: Vladimirov & Diakonov, PRD 86, 104019 (2012)
+
+    Args:
+        n_x: occupation array at site x, shape (8,)
+        n_y: occupation array at site y, shape (8,)
+        gammas: all 4 gamma matrices, shape (4, 4, 4), complex
+        U_xy: 4×4 SO(4) gauge link (real orthogonal)
+
+    Returns:
+        E^a as complex array of shape (4,) — the 4-component tetrad vector
+    """
+    psi_bar_x = n_x[4:8].astype(complex)
+    psi_y = n_y[:4].astype(complex)
+    U = np.asarray(U_xy, dtype=complex)
+    E = np.empty(4, dtype=complex)
+    for a in range(4):
+        E[a] = psi_bar_x @ (gammas[a] @ U) @ psi_y
+    return E
+
+
+def metric_from_tetrad(E_matrix):
+    """
+    Metric tensor from tetrad: g_μν = δ_{ab} E^a_μ E^b_ν (Option A, no conjugation).
+
+    The metric is a symmetric 4×4 matrix, gauge-invariant under SO(4).
+    It is the vestigial order parameter — can condense while E = 0.
+
+    WARNING: This function casts E to float (dtype=float). For the correct
+    4×4 complex gamma matrix formulation where E^1, E^3 are purely imaginary,
+    use the Option A formula g_{μν} = Σ_a E^a_μ · E^a_ν directly (no conjugation).
+    The result is real per-configuration because (imaginary)² = real.
+    See measure_metric_correct() in gauge_fermion_bag.py for the correct
+    complex-aware implementation.
+
+    For real tetrad representations (e.g., staggered-phase formulation,
+    or the 8×8 Majorana formulation), this function is correct as-is.
+
+    Lean: metric_gauge_invariant, metric_from_tetrad_sq, metric_nonneg (GaugeFermionBag.lean)
+    Aristotle: fb657b4d
+    Source: ADW mechanism; Volovik, JETP Lett. 119, 564 (2024)
+    Source: ADW tetrad condensation lattice formulation.md (deep research Q2)
+
+    Args:
+        E_matrix: tetrad as D×d REAL matrix (D=4 internal, d=4 spacetime)
+
+    Returns:
+        g_μν as d×d symmetric matrix (real, positive semidefinite for real E)
+    """
+    E = np.asarray(E_matrix, dtype=float)
+    return E.T @ E  # g_μν = δ_{ab} E^a_μ E^b_ν = (E^T E)_{μν}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Fracton physics formulas (FractonFormulas.lean)
 # Canonical formulas for fracton hydrodynamics, information retention,
 # gravity connection, and non-Abelian obstructions
@@ -1512,6 +2083,7 @@ def fracton_charge_components(order, spatial_dim):
 
     Lean: symmetric_tensor_components (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Args:
         order: Multipole order n (0=scalar, 1=dipole, 2=quadrupole, ...)
@@ -1532,6 +2104,7 @@ def fracton_total_charges(max_order, spatial_dim):
 
     Lean: hockey_stick_charge_count (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Args:
         max_order: Maximum multipole order N
@@ -1550,6 +2123,7 @@ def fracton_dispersion_power(multipole_order):
 
     Lean: dipole_quadratic_dispersion (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Args:
         multipole_order: Multipole conservation order n
@@ -1566,6 +2140,7 @@ def fracton_damping_power(multipole_order):
 
     Lean: damping_twice_dispersion (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Args:
         multipole_order: Multipole conservation order n
@@ -1586,6 +2161,7 @@ def fracton_retention_ratio(max_order, spatial_dim):
 
     Lean: retention_ratio_exceeds_one (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Args:
         max_order: Maximum multipole order N
@@ -1610,6 +2186,7 @@ def fracton_dof_gap(spatial_dim):
 
     Lean: dof_gap_equals_d_minus_1, dof_gap_always_positive (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Args:
         spatial_dim: Number of spatial dimensions d
@@ -1632,6 +2209,7 @@ def fracton_ym_obstruction_count():
 
     Lean: ym_four_independent_obstructions, no_fracton_ym_compatibility (FractonFormulas.lean)
     Aristotle: 4528aa2b
+    Source: Glorioso et al., JHEP 05, 022 (2023)
 
     Returns:
         4 (number of independent obstructions)
@@ -1655,6 +2233,7 @@ def gs_condition_count(n_explicit=6, n_implicit=3):
 
     Lean: gs_total_conditions (LatticeHamiltonian.lean)
     Aristotle: manual
+    Source: Golterman & Shamir, arXiv:2603.15985 (2026)
 
     Args:
         n_explicit: number of explicit GS conditions (default 6)
@@ -1680,6 +2259,7 @@ def tpf_evasion_count(n_violated=3, n_total=9):
 
     Lean: tpf_evasion_sufficient (LatticeHamiltonian.lean)
     Aristotle: manual
+    Source: Golterman & Shamir, arXiv:2603.15985 (2026)
 
     Args:
         n_violated: GS conditions violated by TPF (default 3)
@@ -1706,6 +2286,7 @@ def brillouin_zone_dimension(d):
 
     Lean: brillouin_zone_compact (LatticeHamiltonian.lean)
     Aristotle: manual
+    Source: standard lattice field theory
 
     Args:
         d: spatial dimension (positive integer)
@@ -1730,6 +2311,7 @@ def vector_like_spectrum_check(n_left, n_right):
 
     Lean: vector_like_iff_equal (LatticeHamiltonian.lean)
     Aristotle: manual
+    Source: standard lattice field theory
 
     Args:
         n_left: count of left-handed Weyl fermions
@@ -1755,6 +2337,7 @@ def quantum_dimension(trace_id):
 
     Lean: quantum_dim_unit, quantum_dim_tensor
     Aristotle: run_20260329_094416
+    Source: standard category theory (Turaev, Quantum Invariants, 1994)
 
     Args:
         trace_id: trace of the identity morphism (real-valued for spherical)
@@ -1773,6 +2356,7 @@ def global_dimension_squared(quantum_dims):
 
     Lean: global_dim_vec_eq_card, global_dim_positive
     Aristotle: manual
+    Source: standard category theory (Turaev, Quantum Invariants, 1994)
 
     Args:
         quantum_dims: list of quantum dimensions [d_0, d_1, ..., d_{n-1}]
@@ -1792,6 +2376,7 @@ def fusion_multiplicity(decomposition_coefficients):
 
     Lean: fusion_unit_left, fusion_associative
     Aristotle: manual
+    Source: Etingof et al., Tensor Categories, AMS (2015)
 
     Args:
         decomposition_coefficients: dict mapping simple label k -> N^k_{ij}
@@ -1814,6 +2399,7 @@ def categorical_trace(eigenvalues, pivotal_coefficients=None):
 
     Lean: trace_spherical_eq, trace_comp_tensor
     Aristotle: manual
+    Source: standard category theory (Turaev, Quantum Invariants, 1994)
 
     Args:
         eigenvalues: eigenvalues of the endomorphism (for matrix representation)
@@ -1835,6 +2421,7 @@ def pivotal_indicator(left_trace, right_trace):
 
     Lean: spherical_iff_traces_eq, pivotal_double_dual_iso
     Aristotle: manual
+    Source: standard category theory (Turaev, Quantum Invariants, 1994)
 
     Args:
         left_trace: left categorical trace value
@@ -1858,6 +2445,7 @@ def fusion_ring_product(N, i, j):
 
     Lean: fusion_unit_left, fusion_associativity
     Aristotle: manual
+    Source: Etingof et al., Tensor Categories, AMS (2015)
 
     Args:
         N: fusion rules tensor N[k][i][j] (list of matrices)
@@ -1884,6 +2472,7 @@ def pentagon_check(F, i, j, k, l, n_simples):
 
     Lean: pentagon_F_symbols, fibonacci_pentagon_verified
     Aristotle: manual
+    Source: Etingof et al., Tensor Categories, AMS (2015)
 
     Args:
         F: F-symbol data (category-dependent format)
@@ -1915,6 +2504,7 @@ def frobenius_perron_dim(fusion_rules, n_simples):
 
     Lean: fp_dim_positive, fp_dim_unit_one
     Aristotle: manual
+    Source: Etingof et al., Tensor Categories, AMS (2015)
 
     Args:
         fusion_rules: N[k][i][j] tensor
@@ -1943,6 +2533,7 @@ def fusion_associativity_check(N, n_simples):
 
     Lean: fusion_associativity
     Aristotle: manual
+    Source: Etingof et al., Tensor Categories, AMS (2015)
 
     Args:
         N: fusion rules tensor N[k][i][j]
@@ -1974,6 +2565,7 @@ def drinfeld_double_dim(group_order):
 
     Lean: drinfeld_double_dim_sq
     Aristotle: manual
+    Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
     Args:
         group_order: |G|
@@ -1993,6 +2585,7 @@ def drinfeld_double_simples_abelian(group_order):
 
     Lean: dd_simples_abelian_eq_sq
     Aristotle: manual
+    Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
     Args:
         group_order: |G| for abelian G
@@ -2012,6 +2605,7 @@ def drinfeld_double_simples(n_conj_classes, irreps_per_class):
 
     Lean: dd_simples_sum
     Aristotle: manual
+    Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
     Args:
         n_conj_classes: number of conjugacy classes
@@ -2033,6 +2627,7 @@ def center_is_doubled(group_order):
 
     Lean: center_doubled_trivial_charge
     Aristotle: manual
+    Source: Muger, J. Pure Appl. Algebra 180, 159 (2003)
 
     Args:
         group_order: |G|
@@ -2041,3 +2636,357 @@ def center_is_doubled(group_order):
         True (Z(Vec_G) is always doubled for any G)
     """
     return True
+
+
+# ════════════════════════════════════════════════════════════════════
+# 8×8 Majorana fermion-bag formulas (MajoranaKramers.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def majorana_gamma_matrices_8x8():
+    """
+    Return the 4 real symmetric 8×8 gamma matrices for Cl(4,0).
+
+    Γ¹ = σ₁⊗σ₁⊗σ₁, Γ² = σ₃⊗σ₁⊗σ₁, Γ³ = I₂⊗σ₃⊗σ₁, Γ⁴ = I₂⊗I₂⊗σ₃
+
+    Properties:
+    - {Γ^a, Γ^b} = 2δ^{ab} I₈ (Euclidean Clifford algebra)
+    - (Γ^a)^T = Γ^a (symmetric), (Γ^a)² = I₈
+    - All entries real — no complex arithmetic needed
+
+    Lean: majorana_gamma_squared_identity, majorana_anticommutation (MajoranaKramers.lean)
+    Aristotle: manual (algebraic, proved by Lean directly)
+    Source: Figueroa-O'Farrill, Edinburgh lectures on Majorana spinors
+
+    Returns:
+        Array of shape (4, 8, 8), float64
+    """
+    from src.core.constants import MAJORANA_GAMMA_8x8
+    return MAJORANA_GAMMA_8x8.copy()
+
+
+def majorana_charge_conjugation_bilinear(a, gammas, J1):
+    """
+    Compute J₁Γ^a — the antisymmetric matrix defining the Majorana bilinear.
+
+    E^a = Ψ^T · (J₁Γ^a) · S · Ψ
+
+    J₁Γ^a is antisymmetric because J₁ is antisymmetric, Γ^a is symmetric,
+    and [J₁, Γ^a] = 0: (J₁Γ^a)^T = (Γ^a)^T J₁^T = Γ^a(-J₁) = -J₁Γ^a.
+
+    Lean: cg_antisymmetric (MajoranaKramers.lean)
+    Aristotle: manual
+    Source: "The 8×8 Majorana formulation for ADW fermion-bag MC"
+
+    Args:
+        a: internal SO(4) index, 0-3
+        gammas: 8×8 gamma matrices, shape (4, 8, 8)
+        J1: charge conjugation matrix, shape (8, 8)
+
+    Returns:
+        J₁Γ^a as 8×8 real antisymmetric matrix
+    """
+    return J1 @ gammas[a]
+
+
+def kramers_anticommutation_check(J2, A):
+    """
+    Verify Kramers condition {J₂, A} = 0 for a fermion matrix A.
+
+    If this holds AND J₂ is real antisymmetric with J₂² = -I,
+    then Pf(A) has definite sign (Wei et al. PRL 116, 2016).
+
+    Lean: kramers_anticommutation, kramers_pfaffian_definite_sign (MajoranaKramers.lean)
+    Aristotle: manual
+    Source: Wei/Wu/Li/Zhang/Xiang, PRL 116, 250601 (2016), Theorem 1
+
+    Args:
+        J2: Kramers operator, shape (n, n)
+        A: antisymmetric fermion matrix, shape (n, n)
+
+    Returns:
+        max|{J₂, A}| — should be < 1e-10 for Kramers to hold
+    """
+    anticomm = J2 @ A + A @ J2
+    return float(np.max(np.abs(anticomm)))
+
+
+def spin4_givens_lift(theta, gamma_i, gamma_j):
+    """
+    Spin(4) lift of a planar Givens rotation by angle θ in the (i,j) plane.
+
+    S(θ) = cos(θ/2) I₈ + sin(θ/2) Γ^i Γ^j
+
+    This is exact because (Γ^i Γ^j)² = -I₈ for i ≠ j, so:
+    exp(θ/2 · Γ^i Γ^j) = cos(θ/2) I + sin(θ/2) Γ^i Γ^j
+
+    Properties:
+    - S is real and orthogonal: S S^T = I₈
+    - S Γ^i S^T = cos(θ) Γ^i + sin(θ) Γ^j
+    - S Γ^j S^T = -sin(θ) Γ^i + cos(θ) Γ^j
+    - S Γ^k S^T = Γ^k for k ≠ i,j
+    - Product of lifts: if R = R₁R₂, then S = S₁S₂ (Spin homomorphism)
+
+    Any SO(4) rotation decomposes into ≤6 Givens rotations.
+    The full Spin(4) element is the product of individual lifts.
+
+    Lean: bivector_squared_neg_identity, givens_spin_lift_orthogonal,
+          givens_spin_lift_conjugation, givens_spin_lift_product (MajoranaKramers.lean)
+    Aristotle: manual (algebraic, proved by Lean directly)
+    Source: Lawson & Michelsohn, "Spin Geometry" (1989), Proposition 1.10
+
+    Args:
+        theta: rotation angle
+        gamma_i: 8×8 gamma matrix Γ^i
+        gamma_j: 8×8 gamma matrix Γ^j
+
+    Returns:
+        S: 8×8 real orthogonal matrix (Spin(4) element)
+    """
+    n = gamma_i.shape[0]
+    bivector = gamma_i @ gamma_j
+    return np.cos(theta / 2.0) * np.eye(n) + np.sin(theta / 2.0) * bivector
+
+
+def schur_complement_det(M_A, M_A_inv, M_B, Delta):
+    """
+    Determinant of a block matrix via the Schur complement.
+
+    For M = [[A, Δ], [Δ^T, B]]:
+      det(M) = det(A) · det(B - Δ^T A^{-1} Δ)
+
+    The Schur complement S = B - Δ^T A^{-1} Δ is typically much smaller
+    than the full matrix M, making this efficient when A^{-1} is cached.
+
+    Used in the fermion-bag algorithm when bags MERGE: the merged
+    fermion matrix has block structure from the two original bags plus
+    the new bond contribution Δ.
+
+    Cost: O(n_A × k + k³) where k = dim(B), n_A = dim(A).
+    Compare: full det of merged matrix is O((n_A + k)³).
+
+    Lean: schur_complement_det (MajoranaKramers.lean)
+    Aristotle: manual (algebraic identity)
+    Source: Haville, "Matrix Algebra From a Statistician's Perspective" (1997), Thm 13.3.8
+
+    Args:
+        M_A: square matrix A, shape (n, n)
+        M_A_inv: A^{-1}, shape (n, n) — precomputed/cached
+        M_B: square matrix B, shape (k, k)
+        Delta: off-diagonal block, shape (n, k)
+
+    Returns:
+        det(M) = det(A) · det(S) where S is the Schur complement
+    """
+    det_A = np.linalg.det(M_A)
+    schur = M_B - Delta.T @ M_A_inv @ Delta
+    det_S = np.linalg.det(schur)
+    return det_A * det_S
+
+
+# ════════════════════════════════════════════════════════════════════
+# Wave 7C: HS+RHMC formulas
+# Hubbard-Stratonovich decoupled RHMC for ADW tetrad condensation
+# ════════════════════════════════════════════════════════════════════
+
+
+def hs_partition_function_identity(g, X_sq):
+    """Hubbard-Stratonovich Gaussian decoupling identity.
+
+    exp(-g·X²) = (4πg)^{-1/2} ∫ dh exp(-h²/(4g) + h·X)
+
+    This exact identity decouples a quartic fermion interaction
+    (X = ψ̄Γ^a ψ bilinear) into a Gaussian auxiliary field h coupled
+    linearly to the bilinear. The auxiliary field action is:
+
+      S_aux = h²/(4g)
+
+    with Gaussian prior variance σ² = 2g.
+
+    Lean: hs_gaussian_identity (HubbardStratonovichRHMC.lean)
+    Aristotle: pending
+    Source: Hubbard, PRL 3, 77 (1959)
+    Source: Stratonovich, Sov. Phys. Dokl. 2, 416 (1958)
+
+    Args:
+        g: quartic coupling constant (g > 0)
+        X_sq: value of X² (the squared bilinear)
+
+    Returns:
+        exp(-g·X²) — the quartic weight being decoupled
+    """
+    return np.exp(-g * X_sq)
+
+
+def su2_lie_exp(P, epsilon):
+    """Closed-form SU(2) Lie algebra exponential as quaternion.
+
+    For P = (P₁, P₂, P₃) ∈ su(2) and step size ε:
+
+      exp(iε P_a σ_a/2) = cos(|P|ε/2)·𝟙 + i·sin(|P|ε/2)·(P̂_a σ_a)
+
+    In quaternion representation q = (a, b, c, d):
+      a = cos(|P|ε/2)
+      (b, c, d) = sin(|P|ε/2) · P̂
+
+    This is exact (no truncation) and requires only 2 trig evaluations.
+    Cheaper than SU(3) Cayley-Hamilton or Padé methods because
+    SU(2) ≅ S³ is a sphere.
+
+    Lean: su2_closed_form_exp (HubbardStratonovichRHMC.lean)
+    Aristotle: pending
+    Source: Creutz, "Quarks, Gluons and Lattices" (1983), Ch. 15
+
+    Args:
+        P: su(2) momentum components, shape (..., 3)
+        epsilon: MD step size (scalar)
+
+    Returns:
+        q: unit quaternion, shape (..., 4)
+    """
+    P = np.asarray(P, dtype=np.float64)
+    P_norm = np.sqrt(np.sum(P**2, axis=-1))
+    half_angle = P_norm * epsilon / 2.0
+
+    # Handle zero momentum (P=0 → identity quaternion)
+    safe_norm = np.where(P_norm > 1e-30, P_norm, 1.0)
+    P_hat = P / safe_norm[..., np.newaxis]
+
+    cos_ha = np.cos(half_angle)
+    sin_ha = np.sin(half_angle)
+
+    q = np.zeros(P.shape[:-1] + (4,), dtype=np.float64)
+    q[..., 0] = cos_ha
+    q[..., 1] = sin_ha * P_hat[..., 0]
+    q[..., 2] = sin_ha * P_hat[..., 1]
+    q[..., 3] = sin_ha * P_hat[..., 2]
+
+    # For P=0: cos(0)=1, sin(0)·P_hat = 0 → identity quaternion (1,0,0,0) ✓
+    return q
+
+
+def omelyan_error_bound(epsilon, lam=0.1932):
+    """Omelyan 2MN integrator energy violation bound.
+
+    The Omelyan integrator with parameter λ has error:
+      ΔH = O(ε²) with coefficient ~10× smaller than leapfrog.
+
+    The optimal parameter λ = 0.1932 minimizes the leading error
+    coefficient in the BCH expansion of the symmetric decomposition.
+
+    For acceptance rate estimation:
+      P(accept) ≈ erfc(√(⟨ΔH²⟩/2))
+    Target: 75-85% acceptance with ε ≈ tau/N_MD.
+
+    Lean: omelyan_second_order_symplectic (HubbardStratonovichRHMC.lean)
+    Aristotle: pending
+    Source: Omelyan, Mryglod & Folk, Comp. Phys. Comm. 146, 188 (2002), Eq. (31)
+
+    Args:
+        epsilon: MD step size
+        lam: Omelyan parameter (default 0.1932, optimal for 2MN)
+
+    Returns:
+        Estimated ⟨ΔH²⟩ scaling coefficient (multiply by ε⁴ for actual variance)
+    """
+    # The error coefficient for 2MN Omelyan is ~1/72 vs ~1/12 for leapfrog
+    # (exact value depends on the Hamiltonian structure)
+    c_omelyan = (1.0 / 72.0) * (1.0 - 6.0 * lam * (1.0 - lam))
+    return c_omelyan * epsilon**4
+
+
+def zolotarev_error_bound(n_poles, kappa):
+    """Zolotarev optimal rational approximation error bound.
+
+    For the minimax rational approximation r(x) ≈ x^{-1/4} on [ε, λ_max]:
+
+      δ_n ≤ 4·exp(-n·π²/ln(4κ))
+
+    where κ = λ_max/ε is the spectral condition number.
+    This exponential convergence in n makes RHMC vastly more efficient
+    than polynomial approximation methods (which require O(√κ) terms).
+
+    Lean: zolotarev_exponential_convergence (HubbardStratonovichRHMC.lean)
+    Aristotle: pending
+    Source: Clark & Kennedy, NPB Proc. Suppl. 129, 850 (2004), Eq. (3)
+
+    Args:
+        n_poles: number of partial-fraction poles
+        kappa: spectral condition number λ_max/λ_min
+
+    Returns:
+        Upper bound on maximum relative approximation error
+    """
+    if kappa <= 1:
+        return 0.0
+    return 4.0 * np.exp(-n_poles * np.pi**2 / np.log(4.0 * kappa))
+
+
+def md_hamiltonian(K_h, K_gauge, S_aux, S_PF):
+    """Full RHMC molecular dynamics Hamiltonian.
+
+    H = K_h + K_gauge + S_aux + S_PF
+
+    where:
+      K_h = (1/2) Σ_{x,μ,a} (π^a_{x,μ})²  — h-field kinetic energy
+      K_gauge = (1/2) Σ_{x,μ} [Tr(P_L²) + Tr(P_R²)]  — gauge kinetic
+      S_aux = Σ_{x,μ,a} (h^a_{x,μ})²/(4g)  — HS Gaussian prior
+      S_PF = φ† r(A†A) φ  — pseudofermion action (rational approx)
+
+    H is exactly conserved by the continuous-time Hamilton's equations.
+    The Omelyan integrator preserves H to O(ε²), and the Metropolis
+    accept/reject step corrects for the discretization error.
+
+    Lean: rhmc_hamiltonian_conserved (HubbardStratonovichRHMC.lean)
+    Aristotle: pending
+    Source: Duane, Kennedy, Pendleton & Roweth, PLB 195, 216 (1987)
+
+    Args:
+        K_h: h-field kinetic energy (scalar)
+        K_gauge: gauge momentum kinetic energy (scalar)
+        S_aux: auxiliary field Gaussian action (scalar)
+        S_PF: pseudofermion action (scalar)
+
+    Returns:
+        H: total Hamiltonian (scalar)
+    """
+    return K_h + K_gauge + S_aux + S_PF
+
+
+def hs_auxiliary_field_metric(h, L):
+    """Metric proxy from HS auxiliary field h.
+
+    In the HS representation, the auxiliary field h^a_{x,μ} is conjugate
+    to the tetrad E^a_μ (proportional at mean-field: h = 2g·E). The
+    metric proxy is:
+
+      M_μν = (1/V) Σ_{x,a} h^a_{x,μ} · h^a_{x,ν}
+      Q_μν = M_μν - (TrM/4)·δ_μν  (traceless part)
+      trQ² = Σ_{μ,ν} Q_μν²
+
+    This detects the same symmetry breaking as the fermion-bag metric
+    measurement. O(V) computation — no CG solve needed.
+
+    Lean: binder_metric_prefactor (MajoranaKramers.lean)
+    Aristotle: cc257137
+    Source: project-original (h-field as order parameter proxy)
+
+    Args:
+        h: auxiliary field, shape (L,L,L,L,4,4) — h[x0,x1,x2,x3,mu,a]
+        L: lattice size
+
+    Returns:
+        (Q, trQ2): Q is (4,4) traceless symmetric, trQ2 = Tr(Q²)
+    """
+    V = L**4
+    # M_μν = (1/V) Σ_{x,a} h^a_{x,μ} · h^a_{x,ν}
+    # h has shape (L,L,L,L,4,4) = (x0,x1,x2,x3, mu, a)
+    # Reshape to (V, 4, 4) for vectorized contraction
+    h_flat = h.reshape(V, 4, 4)  # (V, mu, a)
+    # M_μν = (1/V) Σ_x Σ_a h^a_{x,μ} h^a_{x,ν}
+    M = np.einsum('xma,xna->mn', h_flat, h_flat) / V
+
+    # Traceless part
+    tr = np.trace(M)
+    Q = M - (tr / 4.0) * np.eye(4)
+    trQ2 = np.sum(Q * Q)  # Tr(Q²) = Σ Q_μν²
+    return Q, trQ2

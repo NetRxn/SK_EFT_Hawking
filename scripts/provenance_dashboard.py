@@ -181,7 +181,10 @@ def load_lean_theorems():
 
 
 def load_paper_claims():
-    """Load per-paper claim analysis for the Paper Claims tab."""
+    """Load per-paper claim analysis from declared PAPER_DEPENDENCIES."""
+    from src.core.provenance import PAPER_DEPENDENCIES, PARAMETER_PROVENANCE
+    from src.core.constants import ARISTOTLE_THEOREMS
+
     papers_dir = PROJECT_ROOT / "papers"
     lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
     papers = []
@@ -198,61 +201,6 @@ def load_paper_claims():
                     name = line.split()[1].split("(")[0].split(":")[0].strip()
                     lean_names.add(name)
 
-    # Paper descriptions and which platforms/modules they depend on
-    paper_meta = {
-        'paper1_first_order': {
-            'title': 'Paper 1: First-Order SK-EFT (PRL)',
-            'topic': 'δ_diss = Γ_H/κ correction for 3 BEC platforms',
-            'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
-            'lean_modules': ['AcousticMetric', 'SKDoubling', 'HawkingUniversality'],
-        },
-        'paper2_second_order': {
-            'title': 'Paper 2: Second-Order SK-EFT (PRD)',
-            'topic': 'Frequency-dependent ω³ correction, counting formula, CGL FDR',
-            'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
-            'lean_modules': ['SecondOrderSK', 'WKBAnalysis', 'CGLTransform'],
-        },
-        'paper3_gauge_erasure': {
-            'title': 'Paper 3: Non-Abelian Gauge Erasure (PRL)',
-            'topic': 'Universal structural theorem — U(1) survives',
-            'platforms': ['Steinhauer'],
-            'lean_modules': ['GaugeErasure'],
-        },
-        'paper4_wkb_connection': {
-            'title': 'Paper 4: Exact WKB Connection (PRD)',
-            'topic': 'Non-perturbative Bogoliubov, decoherence, noise floor',
-            'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
-            'lean_modules': ['WKBConnection'],
-        },
-        'paper5_adw_gap': {
-            'title': 'Paper 5: ADW Gap Equation (PRD)',
-            'topic': 'Mean-field tetrad condensation, G_c, 2 gravitons',
-            'platforms': [],
-            'lean_modules': ['ADWMechanism'],
-        },
-        'paper6_vestigial': {
-            'title': 'Paper 6: Vestigial Gravity (PRD)',
-            'topic': 'Lattice MC, vestigial metric phase, Weingarten integration',
-            'platforms': [],
-            'lean_modules': ['VestigialGravity', 'FermionBag4D', 'SO4Weingarten'],
-        },
-        'paper7_chirality_formal': {
-            'title': 'Paper 7: Chirality Wall Formal Verification (PRD/CPC)',
-            'topic': 'GS 9 conditions formalized, TPF evasion machine-verified',
-            'platforms': [],
-            'lean_modules': ['LatticeHamiltonian', 'GoltermanShamir', 'TPFEvasion'],
-        },
-        'experimental_predictions': {
-            'title': 'Prediction Tables',
-            'topic': 'Platform-specific spectral predictions',
-            'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
-            'lean_modules': ['KappaScaling', 'PolaritonTier1'],
-        },
-    }
-
-    # Load provenance to check parameter readiness
-    from src.core.provenance import PARAMETER_PROVENANCE
-
     for paper_dir in sorted(papers_dir.iterdir()):
         tex_file = paper_dir / "paper_draft.tex"
         if not tex_file.exists():
@@ -262,52 +210,61 @@ def load_paper_claims():
         tex_lines = tex.splitlines()
         line_count = len(tex_lines)
 
-        meta = paper_meta.get(paper_dir.name, {
+        # Use declared dependencies (preferred) or fall back to paper name
+        meta = PAPER_DEPENDENCIES.get(paper_dir.name, {
             'title': paper_dir.name,
             'topic': '',
-            'platforms': [],
+            'formulas': [],
             'lean_modules': [],
+            'platforms': [],
+            'key_claims': [],
         })
 
-        # --- Theorem references with Lean verification ---
-        texttt_refs = re.findall(r'\\texttt\{([a-z_][a-zA-Z0-9_]*)\}', tex)
-        theorem_refs = [r for r in texttt_refs if '_' in r]
-        theorem_details = []
-        for ref in theorem_refs:
-            in_lean = ref in lean_names
-            theorem_details.append({'name': ref, 'in_lean': in_lean})
-        missing_theorems = [t for t in theorem_details if not t['in_lean']]
+        # --- Formula dependencies with Source: status ---
+        formula_deps = []
+        for fname in meta.get('formulas', []):
+            # Check if this formula has a Source: field in formulas.py
+            has_source = False
+            source_text = ''
+            try:
+                import src.core.formulas as _f
+                func = getattr(_f, fname, None)
+                if func and func.__doc__:
+                    src_match = re.search(r'Source:\s*(.+)', func.__doc__)
+                    if src_match:
+                        has_source = True
+                        source_text = src_match.group(1).strip()
+            except Exception:
+                pass
+            formula_deps.append({
+                'name': fname,
+                'has_source': has_source,
+                'source': source_text,
+            })
+
+        # --- Lean module theorem counts ---
+        lean_module_details = []
+        for module_name in meta.get('lean_modules', []):
+            lean_file = lean_dir / f"{module_name}.lean"
+            thm_count = 0
+            aristotle_count = 0
+            if lean_file.exists():
+                for line in lean_file.read_text().splitlines():
+                    if line.startswith("theorem "):
+                        thm_count += 1
+                        name = line.split()[1].split("(")[0].split(":")[0].strip()
+                        if name in ARISTOTLE_THEOREMS:
+                            aristotle_count += 1
+            lean_module_details.append({
+                'module': module_name,
+                'theorems': thm_count,
+                'aristotle': aristotle_count,
+            })
 
         # --- Figures ---
         fig_dir = paper_dir / "figures"
         fig_count = len(list(fig_dir.glob("*.png"))) if fig_dir.exists() else 0
         has_fbox = '\\fbox{\\parbox' in tex
-
-        # --- Numerical table extraction (look for tabular environments) ---
-        numerical_values = []
-        in_tabular = False
-        for i, line in enumerate(tex_lines, 1):
-            if '\\begin{tabular}' in line:
-                in_tabular = True
-            elif '\\end{tabular}' in line:
-                in_tabular = False
-            elif in_tabular and '&' in line:
-                # Extract numbers from table rows
-                cells = line.split('&')
-                nums = []
-                for cell in cells:
-                    # Match scientific notation and plain numbers
-                    for m in re.finditer(r'(\d+\.?\d*)\s*(?:\\times\s*10\^\{?(-?\d+)\}?|[eE]([+-]?\d+))?', cell):
-                        val_str = m.group(0).strip().rstrip('\\').strip()
-                        if val_str and any(c.isdigit() for c in val_str):
-                            nums.append(val_str)
-                if nums:
-                    row_label = cells[0].strip().replace('$', '').replace('\\', '')[:40]
-                    numerical_values.append({
-                        'line': i,
-                        'label': row_label,
-                        'nums': nums[:5],  # cap at 5 values per row
-                    })
 
         # --- Bibliography check ---
         has_placeholder_bib = 'xxxxx' in tex.lower() or 'Nature \\textbf{XXX}' in tex
@@ -315,23 +272,23 @@ def load_paper_claims():
 
         # --- Parameter readiness ---
         dependent_params = []
-        for platform in meta['platforms']:
+        atom_map = {'Steinhauer': 'Rb87', 'Heidelberg': 'K39', 'Trento': 'Na23'}
+        seen_keys = set()
+        for platform in meta.get('platforms', []):
             for key, entry in PARAMETER_PROVENANCE.items():
-                if key.startswith(platform) or key.startswith(platform[:2].upper()):
+                if key.startswith(platform) and key not in seen_keys:
+                    seen_keys.add(key)
                     dependent_params.append({
                         'key': key,
                         'human_verified': entry.get('human_verified_date') is not None,
                         'llm_verified': entry.get('llm_verified_date') is not None,
                         'has_conflict': entry['value'] is None,
                     })
-
-        # Also check atomic params for BEC platforms
-        atom_map = {'Steinhauer': 'Rb87', 'Heidelberg': 'K39', 'Trento': 'Na23'}
-        for platform in meta['platforms']:
             atom = atom_map.get(platform)
             if atom:
                 for key, entry in PARAMETER_PROVENANCE.items():
-                    if key.startswith(atom):
+                    if key.startswith(atom) and key not in seen_keys:
+                        seen_keys.add(key)
                         dependent_params.append({
                             'key': key,
                             'human_verified': entry.get('human_verified_date') is not None,
@@ -349,10 +306,11 @@ def load_paper_claims():
             issues.append('Has \\fbox placeholder figures')
         if has_placeholder_bib:
             issues.append('Has placeholder bibliography entries')
-        if missing_theorems:
-            issues.append(f'{len(missing_theorems)} theorem refs not in Lean')
         if params_conflict > 0:
             issues.append(f'{params_conflict} dependent params have unresolved conflicts')
+        formulas_without_source = [f for f in formula_deps if not f['has_source']]
+        if formulas_without_source:
+            issues.append(f'{len(formulas_without_source)} formulas missing Source: field')
 
         # --- Submission readiness ---
         if params_total == 0:
@@ -366,17 +324,16 @@ def load_paper_claims():
 
         papers.append({
             'name': paper_dir.name,
-            'title': meta['title'],
-            'topic': meta['topic'],
-            'platforms': meta['platforms'],
-            'lean_modules': meta['lean_modules'],
+            'title': meta.get('title', paper_dir.name),
+            'topic': meta.get('topic', ''),
+            'platforms': meta.get('platforms', []),
+            'lean_modules': meta.get('lean_modules', []),
+            'lean_module_details': lean_module_details,
+            'formula_deps': formula_deps,
+            'key_claims': meta.get('key_claims', []),
             'lines': line_count,
-            'theorem_refs': theorem_details,
-            'theorem_count': len(theorem_refs),
-            'missing_theorems': missing_theorems,
             'figure_count': fig_count,
             'has_fbox': has_fbox,
-            'numerical_values': numerical_values[:10],  # cap display
             'bibitem_count': bibitem_count,
             'has_placeholder_bib': has_placeholder_bib,
             'dependent_params': dependent_params,

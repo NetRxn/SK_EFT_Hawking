@@ -1098,3 +1098,369 @@ class TestNJLMC:
         r2 = run_njl_mc(params, g_njl=5.0, mc_params=mc)
         assert r1.tetrad_m2 == r2.tetrad_m2
         assert r1.acceptance_rate == r2.acceptance_rate
+
+
+# ════════════════════════════════════════════════════════════════════
+# Staggered order parameters and spatial correlator
+# ════════════════════════════════════════════════════════════════════
+
+from src.vestigial.lattice_4d import (
+    staggered_tetrad_op, staggered_metric_op, spatial_correlator,
+    _staggered_sign,
+)
+
+
+class TestStaggeredSign:
+    """Verify the checkerboard sign pattern."""
+
+    def test_sign_alternates(self):
+        """Adjacent sites have opposite sign in each direction."""
+        signs = _staggered_sign(4)
+        # site 0 = (0,0,0,0) → parity 0 → sign +1
+        assert signs[0] == 1.0
+        # site 1 = (1,0,0,0) → parity 1 → sign -1
+        assert signs[1] == -1.0
+        # site 4 = (0,1,0,0) → parity 1 → sign -1
+        assert signs[4] == -1.0
+
+    def test_sign_parity(self):
+        """All signs are +1 or -1, with equal count on even L."""
+        for L in [4, 6]:
+            signs = _staggered_sign(L)
+            assert np.all(np.abs(signs) == 1.0)
+            assert np.sum(signs == 1.0) == np.sum(signs == -1.0), \
+                f"L={L}: sublattices should be equal size"
+
+    def test_sign_odd_L_imbalance(self):
+        """Odd L has unequal sublattice sizes (geometric frustration source)."""
+        signs = _staggered_sign(5)
+        assert np.all(np.abs(signs) == 1.0)
+        # 5^4 = 625 (odd total) → sublattices can't be equal
+        n_plus = np.sum(signs == 1.0)
+        n_minus = np.sum(signs == -1.0)
+        assert n_plus != n_minus
+
+
+class TestStaggeredOPs:
+    """Tests for staggered tetrad and metric order parameters."""
+
+    def test_staggered_tetrad_random_near_zero(self):
+        """For random config near half-filling, staggered OP ≈ 0."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        m_stag = staggered_tetrad_op(config)
+        # Random occupations → staggered mean ≈ 0 (within statistical noise)
+        assert abs(m_stag) < 0.2, f"Random config should have small staggered OP: {m_stag}"
+
+    def test_staggered_tetrad_perfect_af(self):
+        """Perfect AF pattern (even=8, odd=0) gives maximal staggered OP."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        signs = _staggered_sign(4)
+        # Set perfect AF: even sublattice = N, odd sublattice = 0
+        config.site_occ = np.where(signs > 0, 8, 0).astype(np.int32)
+        m_stag = staggered_tetrad_op(config)
+        # Should be +0.5 (all even sites at f=1, all odd at f=0, centered at 0.5)
+        assert abs(m_stag - 0.5) < 0.01
+
+    def test_staggered_tetrad_sign_flip(self):
+        """Flipping the AF pattern reverses the staggered OP sign."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        signs = _staggered_sign(4)
+
+        config.site_occ = np.where(signs > 0, 8, 0).astype(np.int32)
+        m_pos = staggered_tetrad_op(config)
+
+        config.site_occ = np.where(signs > 0, 0, 8).astype(np.int32)
+        m_neg = staggered_tetrad_op(config)
+
+        assert abs(m_pos + m_neg) < 0.01, "Flipped AF should give opposite sign"
+
+    def test_staggered_metric_always_nonneg(self):
+        """Staggered metric OP (mean of (f-0.5)²) is always ≥ 0."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        for _ in range(5):
+            config.site_occ = rng.integers(0, 9, size=params.volume).astype(np.int32)
+            m_met = staggered_metric_op(config)
+            assert m_met >= 0, f"Staggered metric should be non-negative: {m_met}"
+
+    def test_staggered_metric_half_filling_minimum(self):
+        """At uniform half-filling, staggered metric is zero (all f=0.5)."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        config.site_occ = np.full(params.volume, 4, dtype=np.int32)  # f = 0.5
+        m_met = staggered_metric_op(config)
+        assert abs(m_met) < 1e-10, "Half-filling should give zero staggered metric"
+
+    def test_njl_populates_staggered_fields(self):
+        """run_njl_mc should populate all staggered fields."""
+        params = Lattice4DParams(L=2, g_cosmo=1.0, g_EH=0.0)
+        mc = FermionBagParams(n_thermalize=10, n_measure=20, n_skip=1, seed=42)
+        r = run_njl_mc(params, g_njl=5.0, mc_params=mc)
+        assert r.stag_tetrad_m2 is not None
+        assert r.stag_tetrad_m4 is not None
+        assert r.binder_stag_tetrad is not None
+        assert r.chi_stag_tetrad is not None
+        assert r.stag_metric_mean is not None
+
+
+class TestSpatialCorrelator:
+    """Tests for the connected spatial correlator G(r)."""
+
+    def test_correlator_shape(self):
+        """G(r) returns correct number of points."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        sc = spatial_correlator(config)
+        assert len(sc['r']) == 3  # max_r = L//2 = 2, so r = [0, 1, 2]
+        assert len(sc['G_r']) == 3
+        assert len(sc['G_r_raw']) == 3
+
+    def test_correlator_g0_positive(self):
+        """G(0) = Var(f) > 0 for non-uniform config."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        sc = spatial_correlator(config)
+        assert sc['G_r'][0] > 0, "G(0) should be positive (on-site variance)"
+
+    def test_correlator_g0_zero_uniform(self):
+        """G(0) = 0 for uniform config (all sites identical)."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        config.site_occ = np.full(params.volume, 4, dtype=np.int32)
+        sc = spatial_correlator(config)
+        assert abs(sc['G_r'][0]) < 1e-10, "Uniform config should have G(0) = 0"
+
+    def test_correlator_random_uncorrelated(self):
+        """Random config has G(r>0) ≈ 0 (uncorrelated sites)."""
+        params = Lattice4DParams(L=6, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        sc = spatial_correlator(config)
+        for r in range(1, len(sc['G_r'])):
+            assert abs(sc['G_r'][r]) < 0.02, \
+                f"Random config should have G({r}) ≈ 0, got {sc['G_r'][r]}"
+
+    def test_correlator_af_pattern_oscillates(self):
+        """Perfect AF config should give oscillating G(r)."""
+        params = Lattice4DParams(L=4, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        signs = _staggered_sign(4)
+        config.site_occ = np.where(signs > 0, 8, 0).astype(np.int32)
+        sc = spatial_correlator(config)
+        # G(0) > 0 (variance), G(1) < 0 (anti-correlated NN)
+        assert sc['G_r'][0] > 0
+        assert sc['G_r'][1] < 0, "AF pattern should have negative G(1)"
+
+    def test_correlator_custom_max_r(self):
+        """max_r parameter limits the output."""
+        params = Lattice4DParams(L=8, g_cosmo=1.0, g_EH=0.0)
+        rng = np.random.default_rng(42)
+        config = create_lattice_4d(params, rng)
+        sc = spatial_correlator(config, max_r=2)
+        assert len(sc['r']) == 3  # [0, 1, 2]
+        assert sc['r'][-1] == 2
+
+
+# ════════════════════════════════════════════════════════════════════
+# Wave 6: Analytical Vestigial Susceptibility Tests
+# ════════════════════════════════════════════════════════════════════
+
+class TestGammaTrace:
+    """Test gamma-matrix trace projections."""
+
+    def test_metric_channel_positive(self):
+        from src.core.formulas import gamma_trace_projection
+        assert gamma_trace_projection('metric') == 8
+        assert gamma_trace_projection('metric') > 0
+
+    def test_lorentz_channel_negative(self):
+        from src.core.formulas import gamma_trace_projection
+        assert gamma_trace_projection('lorentz') == -4
+        assert gamma_trace_projection('lorentz') < 0
+
+    def test_metric_dominates_lorentz(self):
+        from src.core.formulas import gamma_trace_projection
+        assert gamma_trace_projection('metric') > abs(gamma_trace_projection('lorentz'))
+
+    def test_invalid_channel_raises(self):
+        from src.core.formulas import gamma_trace_projection
+        import pytest
+        with pytest.raises(ValueError):
+            gamma_trace_projection('invalid')
+
+
+class TestQuarticCoupling:
+    """Test ADW quartic coupling u_g computation."""
+
+    def test_u_g_positive(self):
+        from src.core.formulas import adw_quartic_coupling_metric
+        u_g = adw_quartic_coupling_metric(N_f=2)
+        assert u_g > 0
+
+    def test_u_g_scales_with_N_f(self):
+        from src.core.formulas import adw_quartic_coupling_metric
+        u1 = adw_quartic_coupling_metric(N_f=1)
+        u2 = adw_quartic_coupling_metric(N_f=2)
+        assert abs(u2 / u1 - 2.0) < 1e-10
+
+
+class TestBubbleIntegral:
+    """Test bubble integral Π₀(r_e)."""
+
+    def test_positive_for_small_r_e(self):
+        from src.core.formulas import adw_bubble_integral
+        Pi = adw_bubble_integral(r_e=0.01, Lambda=np.pi)
+        assert Pi > 0
+
+    def test_monotone_decreasing(self):
+        from src.core.formulas import adw_bubble_integral
+        Pi1 = adw_bubble_integral(r_e=0.1, Lambda=np.pi)
+        Pi2 = adw_bubble_integral(r_e=1.0, Lambda=np.pi)
+        assert Pi1 > Pi2  # smaller r_e → larger Π₀
+
+    def test_diverges_at_zero(self):
+        from src.core.formulas import adw_bubble_integral
+        Pi = adw_bubble_integral(r_e=1e-10, Lambda=np.pi)
+        Pi2 = adw_bubble_integral(r_e=1e-20, Lambda=np.pi)
+        assert Pi2 > Pi  # continues growing as r_e → 0
+
+    def test_returns_inf_at_zero(self):
+        from src.core.formulas import adw_bubble_integral
+        Pi = adw_bubble_integral(r_e=0.0, Lambda=np.pi)
+        assert Pi == np.inf
+
+    def test_known_value(self):
+        """Π₀(r_e) = (1/16π²)(ln(Λ²/r_e) - 1) at specific point."""
+        from src.core.formulas import adw_bubble_integral
+        r_e = 1.0
+        Lambda = np.pi
+        expected = (1.0 / (16 * np.pi**2)) * (np.log(Lambda**2 / r_e) - 1.0)
+        assert abs(adw_bubble_integral(r_e, Lambda) - expected) < 1e-15
+
+
+class TestMetricSusceptibility:
+    """Test RPA metric susceptibility."""
+
+    def test_positive_far_from_Gc(self):
+        """χ_g⁻¹ > 0 far from G_c (disordered)."""
+        from src.core.formulas import (
+            adw_metric_susceptibility_inv, adw_critical_coupling,
+            adw_quartic_coupling_metric
+        )
+        G_c = adw_critical_coupling(np.pi, 2)
+        u_g = adw_quartic_coupling_metric(2)
+        chi_inv = adw_metric_susceptibility_inv(
+            G=0.1 * G_c, G_c=G_c, u_g=u_g, c_D=32, Lambda=np.pi
+        )
+        assert chi_inv > 0
+
+    def test_negative_near_Gc(self):
+        """χ_g⁻¹ < 0 very close to G_c (vestigial phase, if window is wide enough)."""
+        from src.core.formulas import adw_metric_susceptibility_inv
+        # Use artificially large u_g to make window visible
+        chi_inv = adw_metric_susceptibility_inv(
+            G=3.99, G_c=4.0, u_g=1.0, c_D=32, Lambda=np.pi
+        )
+        assert chi_inv < 0
+
+    def test_crosses_zero(self):
+        """χ_g⁻¹ changes sign between G=0 and G≈G_c for large enough u_g."""
+        from src.core.formulas import adw_metric_susceptibility_inv
+        G_c = 4.0
+        u_g = 1.0
+        chi_far = adw_metric_susceptibility_inv(0.1, G_c, u_g, 32, np.pi)
+        chi_near = adw_metric_susceptibility_inv(3.999, G_c, u_g, 32, np.pi)
+        assert chi_far > 0 and chi_near < 0  # sign change → zero crossing exists
+
+
+class TestVestigialCriticalCoupling:
+    """Test vestigial critical coupling G_ves."""
+
+    def test_G_ves_less_than_G_c(self):
+        """G_ves < G_c for any u_g > 0."""
+        from src.core.formulas import adw_vestigial_critical_coupling
+        G_c = 4.0
+        for u_g in [0.5, 1.0, 2.0]:
+            G_ves = adw_vestigial_critical_coupling(G_c, u_g, 32, np.pi)
+            assert G_ves < G_c, f"G_ves={G_ves} >= G_c={G_c} for u_g={u_g}"
+
+    def test_window_widens_with_u_g(self):
+        """Larger u_g → wider vestigial window."""
+        from src.core.formulas import adw_vestigial_window_width
+        G_c = 4.0
+        w1 = adw_vestigial_window_width(G_c, u_g=0.5, c_D=32, Lambda=np.pi)
+        w2 = adw_vestigial_window_width(G_c, u_g=1.0, c_D=32, Lambda=np.pi)
+        assert w2 > w1
+
+    def test_exponentially_narrow_for_small_u_g(self):
+        """Window vanishes exponentially for small u_g."""
+        from src.core.formulas import adw_vestigial_window_width
+        G_c = 4.0
+        w = adw_vestigial_window_width(G_c, u_g=0.01, c_D=32, Lambda=np.pi)
+        assert w < 1e-100  # exponentially suppressed
+
+    def test_no_vestigial_for_repulsive(self):
+        """No vestigial transition when u_g ≤ 0."""
+        from src.core.formulas import adw_vestigial_critical_coupling
+        G_ves = adw_vestigial_critical_coupling(4.0, u_g=-1.0, c_D=32, Lambda=np.pi)
+        assert G_ves == np.inf
+
+
+class TestVestigialOrdering:
+    """Test vestigial ordering sufficient condition."""
+
+    def test_positive_u_g_proves_ordering(self):
+        from src.core.formulas import adw_vestigial_ordering_proved
+        assert adw_vestigial_ordering_proved(0.001)
+        assert adw_vestigial_ordering_proved(1.0)
+
+    def test_negative_u_g_no_ordering(self):
+        from src.core.formulas import adw_vestigial_ordering_proved
+        assert not adw_vestigial_ordering_proved(-1.0)
+        assert not adw_vestigial_ordering_proved(0.0)
+
+    def test_adw_model_has_ordering(self):
+        """The ADW model specifically has u_g > 0 → vestigial ordering proved."""
+        from src.core.formulas import (
+            adw_quartic_coupling_metric, adw_vestigial_ordering_proved
+        )
+        u_g = adw_quartic_coupling_metric(N_f=2)
+        assert adw_vestigial_ordering_proved(u_g) == True
+
+
+class TestVestigialConstants:
+    """Test ADW_VESTIGIAL constants."""
+
+    def test_channel_multiplicities(self):
+        from src.core.constants import ADW_VESTIGIAL
+        assert ADW_VESTIGIAL['c_D_trace'] == 2 * ADW_VESTIGIAL['D']**2
+        assert ADW_VESTIGIAL['c_D_traceless'] == 2 * ADW_VESTIGIAL['D']
+
+    def test_gamma_trace_signs(self):
+        from src.core.constants import ADW_VESTIGIAL
+        assert ADW_VESTIGIAL['gamma_trace_metric_coeff'] > 0  # attractive
+        assert ADW_VESTIGIAL['gamma_trace_lorentz_coeff'] < 0  # repulsive
+
+    def test_scan_params(self):
+        from src.core.constants import ADW_VESTIGIAL_SCAN
+        lo, hi = ADW_VESTIGIAL_SCAN['G_over_Gc_range']
+        assert 0 < lo < hi < 1
+
+    def test_cross_check_with_formulas(self):
+        """Constants match formula outputs."""
+        from src.core.constants import ADW_VESTIGIAL
+        from src.core.formulas import gamma_trace_projection
+        assert ADW_VESTIGIAL['gamma_trace_metric_coeff'] == gamma_trace_projection('metric')
+        assert ADW_VESTIGIAL['gamma_trace_lorentz_coeff'] == gamma_trace_projection('lorentz')

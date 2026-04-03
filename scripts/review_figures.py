@@ -649,6 +649,28 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=2,
         expected_axes={}, physics_checks=[], color_keys=["Steinhauer", "Trento"],
     ),
+    # Phase 5 Wave 6: Analytical Vestigial Susceptibility
+    FigureSpec(
+        name="fig63_vestigial_susceptibility",
+        function="fig_vestigial_susceptibility",
+        caption="RPA metric susceptibility vs G/G_c for multiple u_g values.",
+        needs_experiments=False, expected_traces=4,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
+    FigureSpec(
+        name="fig64_vestigial_window",
+        function="fig_vestigial_window",
+        caption="Vestigial window G_ves/G_c vs u_g showing exponential narrowness.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
+    FigureSpec(
+        name="fig65_vestigial_phase_diagram_analytical",
+        function="fig_vestigial_phase_diagram_analytical",
+        caption="ADW analytical phase diagram: pre-geometric / vestigial / Einstein-Cartan.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
 ]
 
 
@@ -708,6 +730,10 @@ def generate_figures() -> dict[str, Path]:
         fig_tpf_evasion_architecture,
         fig_fock_exterior_algebra,
         fig_vestigial_phase_diagram_mc,
+        # Phase 5 Wave 6
+        fig_vestigial_susceptibility,
+        fig_vestigial_window,
+        fig_vestigial_phase_diagram_analytical,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -799,6 +825,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_tpf_evasion_architecture": fig_tpf_evasion_architecture,
         "fig_fock_exterior_algebra": fig_fock_exterior_algebra,
         "fig_vestigial_phase_diagram_mc": fig_vestigial_phase_diagram_mc,
+        # Phase 5 Wave 6
+        "fig_vestigial_susceptibility": fig_vestigial_susceptibility,
+        "fig_vestigial_window": fig_vestigial_window,
+        "fig_vestigial_phase_diagram_analytical": fig_vestigial_phase_diagram_analytical,
     }
 
     paths = {}
@@ -891,6 +921,10 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_tpf_evasion_architecture,
         fig_fock_exterior_algebra,
         fig_vestigial_phase_diagram_mc,
+        # Phase 5 Wave 6
+        fig_vestigial_susceptibility,
+        fig_vestigial_window,
+        fig_vestigial_phase_diagram_analytical,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -980,6 +1014,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_tpf_evasion_architecture": fig_tpf_evasion_architecture,
         "fig_fock_exterior_algebra": fig_fock_exterior_algebra,
         "fig_vestigial_phase_diagram_mc": fig_vestigial_phase_diagram_mc,
+        # Phase 5 Wave 6
+        "fig_vestigial_susceptibility": fig_vestigial_susceptibility,
+        "fig_vestigial_window": fig_vestigial_window,
+        "fig_vestigial_phase_diagram_analytical": fig_vestigial_phase_diagram_analytical,
     }
 
     issues: list[CheckIssue] = []

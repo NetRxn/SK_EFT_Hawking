@@ -1,0 +1,11 @@
+SK-EFT Hawking Validation Report
+Generated: 20260401T033522Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] parameter_provenance
+  + coverage — All 29 parameters have provenance entries
+  + llm_verification — All parameters LLM-verified
+  + human_verification — 29 params not yet human-verified (blocks paper submission)
+  + value_consistency — All provenance values match code
+
+Overall: 1/1 passed

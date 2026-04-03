@@ -22,8 +22,8 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
 - **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
   no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
-**Lean 4 formalization:** 506 theorems + 2 axioms — ALL PROVED, ZERO sorry.
-33 Lean modules. 176 Aristotle-proved across 29 runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 588 theorems + 2 axioms — ALL PROVED, ZERO sorry.
+38 Lean modules. 211 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
 MC framework (Lean-verified, production in progress), chirality wall formalization (GS 9 conditions,
@@ -35,15 +35,16 @@ gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)).
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (506 theorems + 2 axioms, ZERO sorry)
+├── lean/                              # Lean 4 formalization (588 theorems + 2 axioms, ZERO sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 30)
+│   ├── SKEFTHawking.lean              # Root module (imports all 38)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
 │       ├── SKDoubling.lean            # Structure B: SK doubling + KMS (9 theorems)
 │       ├── HawkingUniversality.lean   # Structure C: universality + κ-crossing + spin-sonic (9 theorems)
+│       ├── HubbardStratonovichRHMC.lean # Phase 5: HS identity, Kramers, complex pseudofermion (22 theorems)
 │       ├── SecondOrderSK.lean         # Phase 2: second-order counting + stress tests (19 theorems)
 │       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
 │       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
@@ -61,6 +62,7 @@ SK_EFT_Hawking/
 │       ├── SU2PseudoReality.lean      # Phase 5: one-link normalization, Binder limits (10 theorems)
 │       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
 │       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
+│       ├── MajoranaKramers.lean       # Phase 5: Majorana Kramers degeneracy, sign-free determinant (25 theorems)
 │       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (15 theorems + 1 axiom)
 │       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
 │       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
@@ -156,7 +158,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1014 tests)
+├── tests/                             # pytest suite (1244 tests)
 │   ├── test_transonic_background.py   # Physics validation
 │   ├── test_second_order.py           # Enumeration + WKB tests
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
@@ -221,7 +223,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (506 + 2 axioms — ZERO sorry)
+## Theorem Inventory (588 + 2 axioms — ZERO sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -257,6 +259,11 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | SO4Weingarten.lean | 5 | 14 | Weingarten 2nd/4th moment, channel positivity, Planck occupation |
 | FractonFormulas.lean | 5 | 45 | Charge counting, dispersion, retention, DOF gap, YM obstructions |
 | WetterichNJL.lean | 5 | 18 | Fierz completeness, NJL channels, ADW correspondence |
+| VestigialSusceptibility.lean | 5 | 16 | Gamma trace, RPA susceptibility, vestigial window |
+| QuaternionGauge.lean | 5 | 10 | SO(4) quaternion gauge, plaquette bounds, heatbath |
+| GaugeFermionBag.lean | 5 | 9 | Tetrad covariance, bag weight, SMW update |
+| HubbardStratonovichRHMC.lean | 5 | 22 | HS identity, Kramers, multi-shift CG, complex pseudofermion |
+| MajoranaKramers.lean | 5 | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block |
 
 ## Build Environment
 

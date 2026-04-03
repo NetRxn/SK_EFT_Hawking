@@ -34,11 +34,13 @@ PARAMETER_PROVENANCE = {
         'value': 1.054571817e-34,
         'unit': 'J·s',
         'tier': 'MEASURED',
-        'source': 'CODATA 2018',
-        'detail': 'Exact value in SI 2019 redefinition',
-        'doi': None,  # CODATA is a database, not a single paper
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'source': 'CODATA 2018 / SI 2019',
+        'detail': 'Exact value by definition in SI 2019 redefinition. '
+                  'ℏ = h/(2π) = 1.054571817...×10⁻³⁴ J·s.',
+        'doi': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'CODATA exact value. Verified against NIST reference: '
+                              'https://physics.nist.gov/cgi-bin/cuu/Value?hbar',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Exact by definition in SI 2019.',
@@ -47,11 +49,13 @@ PARAMETER_PROVENANCE = {
         'value': 1.380649e-23,
         'unit': 'J/K',
         'tier': 'MEASURED',
-        'source': 'CODATA 2018',
-        'detail': 'Exact value in SI 2019 redefinition',
+        'source': 'CODATA 2018 / SI 2019',
+        'detail': 'Exact value by definition in SI 2019 redefinition. '
+                  'k_B = 1.380649×10⁻²³ J/K.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'CODATA exact value. Verified against NIST reference: '
+                              'https://physics.nist.gov/cgi-bin/cuu/Value?k',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Exact by definition in SI 2019.',
@@ -61,10 +65,11 @@ PARAMETER_PROVENANCE = {
         'unit': 'm',
         'tier': 'MEASURED',
         'source': 'CODATA 2018',
-        'detail': 'Bohr radius, NIST SP 961',
+        'detail': 'Bohr radius a₀ = 5.29177210903(80)×10⁻¹¹ m. NIST SP 961.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'CODATA 2018 recommended value. Verified against NIST reference: '
+                              'https://physics.nist.gov/cgi-bin/cuu/Value?bohrrada0',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
@@ -77,29 +82,37 @@ PARAMETER_PROVENANCE = {
         'unit': 'kg',
         'tier': 'MEASURED',
         'source': 'NIST Atomic Weights and Isotopic Compositions',
-        'detail': 'Atomic mass 86.909180531 u × 1.66053906660e-27 kg/u',
+        'detail': '86.909180531 u × 1.66053906660e-27 kg/u = 1.443160648e-25 kg',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'NIST standard atomic mass for Rb-87. Calculation: '
+                              '86.909180531 u × 1.66053906660e-27 kg/u = 1.4432e-25 kg. '
+                              'Matches code value to 7 significant figures.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
     },
     'Rb87.a_s': {
-        'value': 5.77e-9,
+        'value': 5.31e-9,  # LLM-VERIFIED: 100.4 a_0 from van Kempen, NOT 109 a_0
         'unit': 'm',
         'tier': 'MEASURED',
         'source': 'van Kempen et al., PRL 88, 093201 (2002)',
-        'detail': 'Table I, |F=2,mF=2> + |F=2,mF=2> channel, a = 109.1(1) a_0',
+        'detail': 'Page 2: "aF=2 = +100.4(1)a0" for the F=2 hyperfine state. '
+                  'Steinhauer uses |F=2, mF=2> (confirmed in Wang 2017 Table II). '
+                  '100.4 a_0 × 5.2918e-11 m/a_0 = 5.313e-9 m ≈ 5.31 nm.',
         'doi': '10.1103/PhysRevLett.88.093201',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read arXiv:cond-mat/0110610 (van Kempen 2002). Page 2: '
+                              '"aF=2 = +100.4(1)a0". This is the F=2 channel scattering length. '
+                              'Code currently uses 109 a_0 = 5.77 nm — THIS IS WRONG. '
+                              '109 a_0 does not appear in van Kempen; it may be from an older '
+                              'reference or a different channel. The pure triplet is 98.98 a_0. '
+                              'Impact: ~4% change in c_s (0.571 → 0.548 mm/s with corrected omega_perp).',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Deep research cites 100.4 a_0 as "standard Rb-87 value" — '
-                 'this may be a different scattering channel or source. '
-                 '109 a_0 is the |2,2>+|2,2> triplet from van Kempen 2002. '
-                 'CONFLICT UNRESOLVED — needs primary source verification of both claims.',
+        'notes': 'CODE HAS WRONG VALUE: 109 a_0 = 5.77 nm. Correct: 100.4 a_0 = 5.31 nm. '
+                 'Impact is ~8% in a_s, ~4% in c_s. Secondary to the omega_perp 4× error '
+                 'but still needs fixing for publication accuracy.',
     },
 
     # ── K-39 atomic properties ─────────────────────────────────────
@@ -109,10 +122,10 @@ PARAMETER_PROVENANCE = {
         'unit': 'kg',
         'tier': 'MEASURED',
         'source': 'NIST Atomic Weights and Isotopic Compositions',
-        'detail': 'Atomic mass 38.96370668 u',
+        'detail': '38.96370668 u × 1.66053906660e-27 kg/u = 6.470076e-26 kg',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'NIST standard atomic mass for K-39.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
@@ -121,16 +134,25 @@ PARAMETER_PROVENANCE = {
         'value': 50e-9,
         'unit': 'm',
         'tier': 'PROJECTED',
-        'source': 'Falke et al., PRA 78, 012503 (2008)',
-        'detail': 'Feshbach resonance near 402 G allows tuning 0-200 a_0. '
-                  '50 nm chosen as representative mid-range value.',
-        'doi': '10.1103/PhysRevA.78.012503',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'source': 'Design choice — K-39 Feshbach resonance allows wide tuning',
+        'detail': 'K-39 has a broad Feshbach resonance near 402 G that allows '
+                  'tuning a_s from near-zero to thousands of a_0 (D\'Errico et al., '
+                  'New J. Phys. 9, 223 (2007)). 50 nm ≈ 945 a_0 is a design choice '
+                  'for a projected experiment — chosen as a moderate value that gives '
+                  'reasonable BEC density and sound speed.',
+        'doi': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — tunable parameter. 50 nm = 945 a_0, well within '
+                              'the K-39 Feshbach tuning range (up to ~4000 a_0 near resonance). '
+                              'Original detail incorrectly stated "0-200 a_0" which is the '
+                              'BACKGROUND scattering length range, not the Feshbach-enhanced range. '
+                              'Falke et al. 2008 is spectroscopy, not Feshbach tuning — '
+                              'D\'Errico et al. 2007 is the correct Feshbach reference.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Tunable parameter, not a fixed measurement. 50 nm is a '
-                 'design choice for projections, not a published value.',
+        'notes': 'Tunable parameter, not a fixed measurement. 50 nm = 945 a_0 is within '
+                 'the broad K-39 Feshbach resonance range. This is a design choice — '
+                 'Heidelberg could choose any value by tuning the magnetic field.',
     },
 
     # ── Na-23 atomic properties ────────────────────────────────────
@@ -140,10 +162,10 @@ PARAMETER_PROVENANCE = {
         'unit': 'kg',
         'tier': 'MEASURED',
         'source': 'NIST Atomic Weights and Isotopic Compositions',
-        'detail': 'Atomic mass 22.9897692820 u',
+        'detail': '22.9897692820 u × 1.66053906660e-27 kg/u = 3.8175458e-26 kg',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'NIST standard atomic mass for Na-23.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
@@ -152,14 +174,24 @@ PARAMETER_PROVENANCE = {
         'value': 2.75e-9,
         'unit': 'm',
         'tier': 'MEASURED',
-        'source': 'NEEDS IDENTIFICATION',
-        'detail': 'Cited as ~52 a_0, triplet s-wave. Source paper not identified.',
-        'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'source': 'Knoop et al., PRA 83, 042704 (2011)',
+        'detail': 'Na-23 triplet scattering length a_T = 54.54(20) a_0 '
+                  '(Knoop et al. 2011, high-precision Feshbach spectroscopy). '
+                  'Older value: 52.98 a_0 (Tiesinga et al. 1996). '
+                  '2.75 nm ≈ 52 a_0 — matches older reference. '
+                  'With Knoop: 54.54 a_0 = 2.887 nm.',
+        'doi': '10.1103/PhysRevA.83.042704',
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'Standard Na-23 value. 52 a_0 = 2.75 nm matches Tiesinga 1996. '
+                              'More recent Knoop 2011 gives 54.54(20) a_0 = 2.887 nm. '
+                              'Difference is ~5%. Code uses the older value. '
+                              'For PROJECTED Trento experiment, precision doesn\'t matter — '
+                              'but for publication, should cite Knoop 2011.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Standard Na-23 scattering length. Source paper needs identification.',
+        'notes': 'Value 2.75 nm (52 a_0) is from older Tiesinga 1996. '
+                 'More precise Knoop 2011: 54.54 a_0 = 2.887 nm. ~5% difference. '
+                 'Acceptable for projected experiment.',
     },
 
     # ── Steinhauer experimental parameters ─────────────────────────
@@ -169,53 +201,68 @@ PARAMETER_PROVENANCE = {
         'unit': 'm^-1',
         'tier': 'EXTRACTED',
         'source': 'Wang et al., PRA 96, 023616 (2017)',
-        'detail': 'Fig. 2 density profile. n_1D is position-dependent: '
-                  'peak ~120 μm⁻¹, horizon region ~40-60 μm⁻¹. '
+        'detail': 'Page 13 text: "nmax ~ 120 μm⁻¹" (peak density from 3D GP). '
+                  'Fig. 2 shows position-dependent profile. '
+                  'Horizon region is well below peak: ~40-60 μm⁻¹. '
                   '5e7 m⁻¹ = 50 μm⁻¹ chosen as approximate horizon-region value.',
         'doi': '10.1103/PhysRevA.96.023616',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read arXiv:1605.01027 page 13: "nmax ~ 120 μm⁻¹" is the '
+                              'PEAK density, not horizon density. 50 μm⁻¹ is reasonable for '
+                              'horizon region based on Fig. 2 density profiles. N=6000 atoms '
+                              'in ~100 μm BEC → average ~60 μm⁻¹.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Position-dependent quantity — value depends on WHERE in the BEC. '
-                 'This is an approximation. Real analysis should use the full profile.',
+        'notes': 'Position-dependent quantity. Peak = 120 μm⁻¹, horizon ~ 40-60 μm⁻¹. '
+                 'Our value of 50 μm⁻¹ is an approximation, not an exact measurement.',
     },
     'Steinhauer.velocity_upstream': {
-        'value': 0.85e-3,
+        'value': 0.41e-3,
         'unit': 'm/s',
-        'tier': 'PROJECTED',
-        'source': 'NEEDS IDENTIFICATION',
+        'tier': 'DERIVED',
+        'source': 'NEEDS IDENTIFICATION — derived from Mach number assumption',
         'detail': 'No published table with this exact value found. '
-                  'Likely estimated from Mach ~ 0.74 assumption and solver c_s, '
-                  'making it potentially circular if c_s is wrong.',
+                  'Appears to be derived from Mach ~ 0.74 × c_s, where c_s itself '
+                  'is computed from (now-known-wrong) omega_perp = 500 Hz. '
+                  'With corrected c_s ≈ 0.55 mm/s, Mach 0.74 gives v ≈ 0.41 mm/s, '
+                  'not 0.85 mm/s. VALUE NEEDS RECALCULATION after omega_perp fix.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'Tier corrected from PROJECTED to DERIVED — Steinhauer experiment '
+                              'was actually performed (Nature Physics 2016). Value appears derived '
+                              'from Mach number × c_s. With corrected omega_perp, the derived '
+                              'velocity would be ~0.41 mm/s not 0.85 mm/s. Needs recalculation '
+                              'or primary source identification.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Possibly circular derivation — if c_s is wrong (which it is), '
-                 'this velocity estimate is also wrong.',
+        'notes': 'CIRCULAR DERIVATION: v = Mach × c_s, but c_s was computed from wrong '
+                 'omega_perp. With corrected params, v ≈ 0.41 mm/s. Also: Steinhauer may '
+                 'report flow velocity directly in density profile figures — needs check.',
     },
     'Steinhauer.omega_perp': {
-        'value': None,  # UNRESOLVED — code uses 2π×500, deep research says 2π×123
+        'value': 2 * np.pi * 123,  # LLM-VERIFIED: 123 Hz from Wang et al. Table II
         'unit': 'rad/s',
         'tier': 'MEASURED',
-        'source': 'UNRESOLVED — CONFLICTING SOURCES',
-        'detail': 'Code currently uses 2π × 500 Hz (NO SOURCE FOUND). '
-                  'Deep research cites Wang et al., PRA 96, 023616 (2017), '
-                  'Table I: ω_⊥ = 2π × 123 Hz for the 2014 apparatus. '
-                  'The 2019 Nature experiment may use a different trap configuration. '
-                  'Neither 500 Hz nor 123 Hz has been verified against the primary source.',
+        'source': 'Wang et al., PRA 96, 023616 (2017)',
+        'detail': 'Table II: "radial trap frequency ν = 123 Hz". '
+                  'Also confirmed in text: "ω_x/ω_ρ = 4.5 Hz/123 Hz". '
+                  'The paper labels this ω_ρ (radial) = ω_perp (transverse). '
+                  'This is for Steinhauer 2014 apparatus (same trap as 2019).',
         'doi': '10.1103/PhysRevA.96.023616',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read arXiv:1605.01027 (correct arXiv ID, not 1706.01483 '
+                              'which was a hallucinated combustion paper). Page 13, Table II: '
+                              '"radial trap frequency ν = 123 Hz". g₁D formula in Eq. A8 '
+                              'context: g1D = g3D·m·ω_ρ/h = 2ℏ·ω_perp·a_s (confirmed). '
+                              'CODE CURRENTLY HAS 500 Hz — NO SOURCE EXISTS FOR THIS VALUE.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'CRITICAL: This is the root cause of the 4.4× g₁D error. '
-                 '500 Hz → c_s = 1.15 mm/s, κ = 21.9 (wrong). '
-                 '123 Hz → c_s = 0.55 mm/s, κ ≈ 290 (matches published T_H). '
-                 'The 500 Hz value has NO published source and may have been '
-                 'hallucinated by an LLM in an early coding session.',
+        'notes': 'CRITICAL: Code uses 2π×500 Hz but source says 123 Hz. '
+                 'The 500 Hz value has NO published source. '
+                 '123 Hz → g₁D = 8.63e-40 J·m, c_s ≈ 0.55 mm/s, κ ≈ 290 s⁻¹ (matches published T_H). '
+                 '500 Hz → g₁D = 3.82e-39 J·m, c_s = 1.15 mm/s, κ = 21.9 s⁻¹ (wrong by 13×). '
+                 'Also: deep research arXiv ID 1706.01483 was WRONG (combustion paper). '
+                 'Correct arXiv is 1605.01027.',
     },
 
     # ── Heidelberg projected parameters ────────────────────────────
@@ -230,8 +277,8 @@ PARAMETER_PROVENANCE = {
                   'No transonic flow or sonic horizon experiment exists. '
                   'This density is a projection for a hypothetical Hawking experiment.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — Heidelberg (Oberthaler) has only published analog cosmology (Viermann 2022), not Hawking. No transonic flow experiment exists. Density value is an arbitrary projection.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'PROJECTED: No Heidelberg Hawking experiment exists.',
@@ -243,8 +290,8 @@ PARAMETER_PROVENANCE = {
         'source': 'NEEDS IDENTIFICATION',
         'detail': 'Projected value for hypothetical Hawking experiment.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — no Heidelberg Hawking experiment. 3.0 mm/s chosen for Mach < 1 at projected sound speed.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'PROJECTED: No Heidelberg Hawking experiment exists.',
@@ -257,8 +304,8 @@ PARAMETER_PROVENANCE = {
         'detail': 'Projected value. No published source for this trap frequency '
                   'in a Hawking radiation context.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — no Heidelberg Hawking experiment. 500 Hz is unsourced (same issue as Steinhauer). Heidelberg cosmology experiments use 2D geometry with different confinement.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'PROJECTED: Same unsourced 500 Hz as Steinhauer. '
@@ -277,8 +324,8 @@ PARAMETER_PROVENANCE = {
                   'in Berti et al., Comptes Rendus Physique 25 (2025). '
                   'Paper uses dimensionless parameters only — no experimental density published.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — Trento spin-sonic is a theoretical proposal (Berti 2025). Paper uses dimensionless params only, no experimental density published. 1e8 m⁻¹ is an arbitrary projection.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'PROJECTED: Spin-sonic horizon is a theoretical proposal, not realized.',
@@ -290,8 +337,8 @@ PARAMETER_PROVENANCE = {
         'source': 'NEEDS IDENTIFICATION',
         'detail': 'Projected value for hypothetical spin-sonic experiment.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — no Trento Hawking experiment. 1.6 mm/s chosen for Mach ~ 0.73 at projected sound speed.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'PROJECTED: No Trento Hawking experiment exists.',
@@ -303,8 +350,8 @@ PARAMETER_PROVENANCE = {
         'source': 'NEEDS IDENTIFICATION',
         'detail': 'Projected value. Same unsourced 500 Hz as other platforms.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — no Trento Hawking experiment. 500 Hz is unsourced (same issue as Steinhauer). Trento two-component Na-23 would have different confinement.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'PROJECTED: Same unsourced 500 Hz. Trento uses two-component Na-23 '
@@ -319,10 +366,13 @@ PARAMETER_PROVENANCE = {
         'unit': 'kg',
         'tier': 'MEASURED',
         'source': 'Falque et al., PRL 135, 023401 (2025)',
-        'detail': 'Effective polariton mass, typical GaAs microcavity.',
+        'detail': 'Page 4: "we extract the effective polariton mass at the working '
+                  'point, m* = 7.0 × 10⁻³⁵ kg." Fitted from measured spectrum.',
         'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read arXiv:2311.01392 (Falque 2025). Page 4, Section III: '
+                              '"m* = 7.0 × 10⁻³⁵ kg" — extracted from measured polariton spectrum. '
+                              'Value matches code. ArXiv ID for citation: 2311.01392.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
@@ -330,28 +380,44 @@ PARAMETER_PROVENANCE = {
     'Paris_long.c_s': {
         'value': 1.0e6,
         'unit': 'm/s',
-        'tier': 'EXTRACTED',
-        'source': 'Jacquet et al., Eur. Phys. J. D 76, 152 (2022)',
-        'detail': 'Typical Bogoliubov sound speed ~1 μm/ps in polariton condensate.',
+        'tier': 'PROJECTED',
+        'source': 'DISCREPANCY: Falque 2025 reports 0.40 µm/ps = 4.0e5 m/s',
+        'detail': 'Code uses 1.0e6 m/s (1 µm/ps). Falque et al. (2025) page 5: '
+                  '"speed of sound cs(x) ≈ 0.40 µm ps⁻¹" = 4.0e5 m/s. '
+                  'Code value is 2.5× higher than the measured value. '
+                  'The 1 µm/ps value may come from Jacquet 2022 (different experiment) '
+                  'or be a projected estimate for a higher-density polariton fluid.',
         'doi': '10.1140/epjd/s10053-022-00477-5',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read Falque 2025 (arXiv:2311.01392) page 5: cs ≈ 0.40 µm/ps. '
+                              'Code has 1.0 µm/ps — 2.5× discrepancy. Jacquet 2022 (cited as source) '
+                              'not yet fetched. c_s depends on polariton density and interaction '
+                              'strength, so different experiments can have different values. '
+                              'TIER CHANGED from EXTRACTED to PROJECTED — the 1.0 µm/ps value '
+                              'does not match the only experiment we have read.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Same c_s used for all 3 Paris cavity configurations.',
+        'notes': 'DISCREPANCY: Code 1.0e6 m/s vs Falque measured 4.0e5 m/s. '
+                 'Need to verify Jacquet 2022 source and determine if 1.0 µm/ps '
+                 'is from a different experiment or a projection.',
     },
     'Paris_long.xi': {
         'value': 2.0e-6,
         'unit': 'm',
-        'tier': 'EXTRACTED',
-        'source': 'Jacquet et al., Eur. Phys. J. D 76, 152 (2022)',
-        'detail': 'Healing length ~2 μm, typical for polariton condensate.',
+        'tier': 'PROJECTED',
+        'source': 'DISCREPANCY: Falque 2025 reports 3.4-4.0 µm, not 2.0 µm',
+        'detail': 'Code uses 2.0 µm. Falque et al. (2025) page 5: "healing length '
+                  'ξ is typically 3.4 µm upstream and 4.0 µm downstream." '
+                  'Code value is ~50% lower than measured.',
         'doi': '10.1140/epjd/s10053-022-00477-5',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read Falque 2025 (arXiv:2311.01392) page 5: '
+                              'ξ ≈ 3.4-4.0 µm. Code has 2.0 µm — ~50% discrepancy. '
+                              'TIER CHANGED from EXTRACTED to PROJECTED since value '
+                              'does not match the measured experiment.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': None,
+        'notes': 'DISCREPANCY: Code 2.0 µm vs Falque measured 3.4-4.0 µm.',
     },
     'Paris_long.kappa': {
         'value': 5.0e10,
@@ -360,8 +426,8 @@ PARAMETER_PROVENANCE = {
         'source': 'Falque et al., PRL 135, 023401 (2025)',
         'detail': 'SLM-controlled horizon, projected surface gravity ~0.05 THz.',
         'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — Falque 2025 demonstrated polariton horizons with SLM but did not report surface gravity κ. Value 5e10 s⁻¹ is an order-of-magnitude estimate giving T_H ~ 0.6 mK.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Falque demonstrated polariton horizons but did not report κ directly. '
@@ -370,15 +436,20 @@ PARAMETER_PROVENANCE = {
     'Paris_long.tau_cav': {
         'value': 100e-12,
         'unit': 's',
-        'tier': 'MEASURED',
-        'source': 'Falque et al., PRL 135, 023401 (2025)',
-        'detail': 'Long-lifetime cavity, τ = 100 ps.',
+        'tier': 'PROJECTED',
+        'source': 'Projected — NOT from Falque 2025 (actual cavity has τ ≈ 8 ps)',
+        'detail': 'Falque 2025 reports ℏγ ≈ 80 µeV → γ = 1.2e11 s⁻¹ → τ ≈ 8 ps. '
+                  '100 ps is a projected value for a next-generation long-lifetime cavity. '
+                  'Such cavities exist (e.g., Ballarini 2017) but Falque did not use one.',
         'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'LLM read Falque 2025 (arXiv:2311.01392) page 9: '
+                              '"ℏγ ≈ 80 µeV" → τ ≈ 8 ps, NOT 100 ps. The 100 ps value '
+                              'is a projection for future cavity technology. '
+                              'TIER CHANGED from MEASURED to PROJECTED.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': None,
+        'notes': 'TIER CORRECTED: Was MEASURED, now PROJECTED. Falque actual cavity τ ≈ 8 ps.',
     },
     'Paris_long.Gamma_pol': {
         'value': 1.0e10,
@@ -387,8 +458,8 @@ PARAMETER_PROVENANCE = {
         'source': 'Derived: 1/tau_cav',
         'detail': 'Γ_pol = 1/τ_cav = 1/(100 ps) = 10^10 s⁻¹.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'DERIVED: trivially verified from parent parameter.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Derived from tau_cav, not independently measured.',
@@ -401,8 +472,8 @@ PARAMETER_PROVENANCE = {
         'detail': 'Dimensionless phonon damping, subdominant to cavity decay. '
                   'Order-of-magnitude estimate.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — order-of-magnitude estimate for polariton-polariton scattering damping. In polariton systems cavity decay dominates; phonon damping is subdominant. 1e-4 is a reasonable but unconstrained estimate.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Estimated, not measured or published.',
@@ -412,15 +483,18 @@ PARAMETER_PROVENANCE = {
     'Paris_ultralong.tau_cav': {
         'value': 300e-12,
         'unit': 's',
-        'tier': 'MEASURED',
-        'source': 'Falque et al., PRL 135, 023401 (2025)',
-        'detail': 'Ultra-long-lifetime cavity, τ = 300 ps.',
-        'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'tier': 'PROJECTED',
+        'source': 'Projected — aspirational next-generation cavity',
+        'detail': 'Ultra-long-lifetime cavity τ = 300 ps. This is an aspirational '
+                  'target, not from any published experiment. Falque actual cavity τ ≈ 8 ps.',
+        'doi': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'PROJECTED — 300 ps is a projected future cavity. '
+                              'Falque 2025 actual cavity has τ ≈ 8 ps (ℏγ ≈ 80 µeV). '
+                              'TIER CHANGED from MEASURED to PROJECTED.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': None,
+        'notes': 'TIER CORRECTED: Was MEASURED, now PROJECTED.',
     },
     'Paris_ultralong.Gamma_pol': {
         'value': 3.33e9,
@@ -429,8 +503,8 @@ PARAMETER_PROVENANCE = {
         'source': 'Derived: 1/tau_cav',
         'detail': 'Γ_pol = 1/(300 ps) ≈ 3.33×10⁹ s⁻¹.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'DERIVED: trivially verified from parent parameter.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
@@ -438,15 +512,20 @@ PARAMETER_PROVENANCE = {
     'Paris_standard.tau_cav': {
         'value': 3e-12,
         'unit': 's',
-        'tier': 'MEASURED',
-        'source': 'Typical GaAs microcavity',
-        'detail': 'Standard cavity lifetime ~3 ps.',
+        'tier': 'EXTRACTED',
+        'source': 'Typical GaAs microcavity value — no specific paper',
+        'detail': 'Standard GaAs microcavity lifetime ~3 ps. This is a typical '
+                  'order-of-magnitude value, not from a specific measurement.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'Tier corrected from MEASURED to EXTRACTED — no specific paper '
+                              'cited. 3 ps is a widely-used typical value for standard GaAs '
+                              'microcavities (Q ~ 1000-3000). For publication, should cite '
+                              'a specific cavity measurement or label as order-of-magnitude.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Standard value, not from a specific paper.',
+        'notes': 'Order-of-magnitude value. For publication, need either a specific '
+                 'source or explicit acknowledgment that this is a representative value.',
     },
     'Paris_standard.Gamma_pol': {
         'value': 3.33e11,
@@ -455,11 +534,229 @@ PARAMETER_PROVENANCE = {
         'source': 'Derived: 1/tau_cav',
         'detail': 'Γ_pol = 1/(3 ps) ≈ 3.33×10¹¹ s⁻¹.',
         'doi': None,
-        'llm_verified_date': None,
-        'llm_verified_notes': None,
+        'llm_verified_date': '2026-03-31',
+        'llm_verified_notes': 'DERIVED: trivially verified from parent parameter.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
+    },
+
+    # ── Majorana 8×8 representation constants (Wave 7B) ───────────
+
+    'MAJORANA_GAMMA_8x8': {
+        'value': '4 real symmetric 8×8 matrices',
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Lawson & Michelsohn, "Spin Geometry" (1989), Ch. I §5',
+        'detail': 'Real 8×8 representation of Cl(4,0). The 4 gamma matrices '
+                  'satisfy {Γ^a, Γ^b} = 2δ^{ab}, are symmetric (Γ^a)^T = Γ^a, '
+                  'and real. Unique up to orthogonal conjugation. '
+                  'Constructed via tensor products of Pauli matrices: '
+                  'Γ^1=σ₁⊗σ₀⊗σ₁, Γ^2=σ₁⊗σ₀⊗σ₃, Γ^3=σ₁⊗σ₁⊗σ₀, Γ^4=σ₁⊗σ₃⊗σ₀.',
+        'doi': None,
+        'llm_verified_date': '2026-04-01',
+        'llm_verified_notes': 'Verified: Cl(4,0) ≅ M₂(ℍ) admits a real 8×8 rep '
+                              '(but NOT a real 4×4 rep). Anticommutation verified '
+                              'computationally in test_gauge.py::TestMajorana8x8GammaMatrices.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Lean: majorana_gamma_squared_identity, majorana_anticommutation '
+                 '(MajoranaKramers.lean). All proved, zero sorry.',
+    },
+    'MAJORANA_J1': {
+        'value': 'antisymmetric 8×8 matrix, J₁² = -I',
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Lawson & Michelsohn, "Spin Geometry" (1989), Ch. I §5',
+        'detail': 'Charge conjugation matrix in the 8×8 Majorana basis. '
+                  'J₁ is antisymmetric (J₁^T = -J₁), satisfies J₁² = -I, '
+                  'and commutes with all Γ^a: [J₁, Γ^a] = 0. '
+                  'J₁Γ^a is antisymmetric, enabling nonzero Majorana bilinear '
+                  'Ψ^T(J₁Γ^a)Ψ. Part of the quaternionic commutant of Cl(4,0).',
+        'doi': None,
+        'llm_verified_date': '2026-04-01',
+        'llm_verified_notes': 'Verified: J₁ from deep research "The 8×8 Majorana '
+                              'formulation for ADW fermion-bag MC". Properties checked '
+                              'computationally in test_gauge.py::TestQuaternionicCommutant.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Lean: quaternionic_structure_squared, cg_antisymmetric '
+                 '(MajoranaKramers.lean). All proved, zero sorry.',
+    },
+    'MAJORANA_J2': {
+        'value': 'antisymmetric 8×8 matrix, J₂² = -I',
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Wei/Wu/Li/Zhang/Xiang, PRL 116, 250601 (2016)',
+        'detail': 'Kramers operator. Antisymmetric, J₂² = -I, '
+                  '{J₁, J₂} = 0, [J₂, Γ^a] = 0, [J₂, S] = 0 for S ∈ Spin(4). '
+                  'The key property {J₂, A} = 0 for the fermion matrix A '
+                  'guarantees Pf(A) has definite sign → sign-problem-free MC.',
+        'doi': '10.1103/PhysRevLett.116.250601',
+        'llm_verified_date': '2026-04-01',
+        'llm_verified_notes': 'Verified: Kramers positivity from Wei et al. PRL 116. '
+                              'The pseudoreal structure of Spin(4) ≅ SU(2)_L × SU(2)_R '
+                              'guarantees {J₂, A} = 0. Checked computationally in '
+                              'test_gauge.py::TestKramersPfaffianSignAcrossConfigs.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Lean: kramers_anticommutation, kramers_pfaffian_definite_sign, '
+                 'adw_sign_problem_free (MajoranaKramers.lean). All proved, zero sorry.',
+    },
+    'MAJORANA_J3': {
+        'value': 'antisymmetric 8×8 matrix, J₃ = J₁·J₂',
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Lawson & Michelsohn, "Spin Geometry" (1989), Ch. I §5',
+        'detail': 'Third quaternionic structure. J₃ = J₁J₂, satisfies J₃² = -I, '
+                  '{J₁, J₃} = 0, {J₂, J₃} = 0. Together J₁, J₂, J₃ generate '
+                  'the quaternion algebra ℍ, the commutant of Cl(4,0) in M₈(ℝ).',
+        'doi': None,
+        'llm_verified_date': '2026-04-01',
+        'llm_verified_notes': 'Verified: quaternion product rule checked in '
+                              'test_gauge.py::TestQuaternionicCommutant::test_quaternion_product_rule.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Lean: j1_j2_anticommute (MajoranaKramers.lean). Proved, zero sorry.',
+    },
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Paper Dependency Mappings
+#
+# Declared data: which formulas, Lean modules, and parameters each
+# paper depends on. Used by the provenance dashboard Paper Claims tab
+# instead of brittle regex parsing of .tex files.
+# ════════════════════════════════════════════════════════════════════
+
+PAPER_DEPENDENCIES = {
+    'paper1_first_order': {
+        'title': 'Paper 1: First-Order SK-EFT (PRL)',
+        'topic': 'δ_diss = Γ_H/κ correction for 3 BEC platforms',
+        'formulas': [
+            'hawking_temperature', 'first_order_correction', 'dispersive_correction',
+            'damping_rate', 'effective_temperature_ratio',
+            'beliaev_damping_rate', 'beliaev_transport_coefficients',
+        ],
+        'lean_modules': ['AcousticMetric', 'SKDoubling', 'HawkingUniversality'],
+        'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
+        'key_claims': [
+            'δ_diss = Γ_H/κ (first-order dissipative correction)',
+            'Γ_H = (γ₁+γ₂)(κ/c_s)² (damping rate at horizon)',
+            'Spin-sonic enhancement ×(c_density/c_spin)²',
+            'Table 1: c_s, ξ, κ, T_H, D, δ_disp, δ_diss for 3 platforms',
+        ],
+    },
+    'paper2_second_order': {
+        'title': 'Paper 2: Second-Order SK-EFT (PRD)',
+        'topic': 'Frequency-dependent ω³ correction, counting formula, CGL FDR',
+        'formulas': [
+            'count_coefficients', 'enumerate_monomials',
+            'second_order_correction', 'damping_rate',
+        ],
+        'lean_modules': ['SecondOrderSK', 'WKBAnalysis', 'CGLTransform', 'ThirdOrderSK'],
+        'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
+        'key_claims': [
+            'count(N) = ⌊(N+1)/2⌋ + 1 (transport coefficient counting)',
+            'δ^(2)(ω) ∝ ω³ (frequency-dependent spectral distortion)',
+            'Positivity: (γ_{2,1}+γ_{2,2})² ≤ 4γ₂γ_x β',
+            'CGL FDR derivation at arbitrary order',
+        ],
+    },
+    'paper3_gauge_erasure': {
+        'title': 'Paper 3: Non-Abelian Gauge Erasure (PRL)',
+        'topic': 'Universal structural theorem — U(1) survives',
+        'formulas': [],  # structural theorem, not formula-based
+        'lean_modules': ['GaugeErasure'],
+        'platforms': ['Steinhauer'],
+        'key_claims': [
+            'Non-Abelian gauge DOF erased by hydrodynamization',
+            'Only U(1)_EM survives as continuous Goldstone',
+            'SM analysis: SU(3)→domain walls, SU(2)→domain walls, U(1)→Goldstone',
+        ],
+    },
+    'paper4_wkb_connection': {
+        'title': 'Paper 4: Exact WKB Connection (PRD)',
+        'topic': 'Non-perturbative Bogoliubov, decoherence, noise floor',
+        'formulas': [
+            'turning_point_shift', 'decoherence_parameter', 'fdr_noise_floor',
+            'first_order_correction', 'hawking_temperature', 'planck_occupation',
+        ],
+        'lean_modules': ['WKBConnection'],
+        'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
+        'key_claims': [
+            '|α|²−|β|² = 1−δ_k (modified unitarity)',
+            'Noise floor = δ_diss/(2(1−δ_diss))',
+            'Spectral floor at ω ≳ 6T_H',
+            'Acoustic BHs cool toward extremality',
+        ],
+    },
+    'paper5_adw_gap': {
+        'title': 'Paper 5: ADW Gap Equation (PRD)',
+        'topic': 'Mean-field tetrad condensation, G_c, 2 gravitons',
+        'formulas': [
+            'adw_effective_potential', 'adw_critical_coupling',
+            'adw_curvature_at_origin', 'tetrad_broken_generators',
+            'graviton_polarization_count',
+        ],
+        'lean_modules': ['ADWMechanism'],
+        'platforms': [],
+        'key_claims': [
+            'G_c = 8π²/(N_f·Λ²) (critical coupling)',
+            'd²−1 = 15 broken generators in 4D',
+            'd(d−3)/2 = 2 massless gravitons in 4D',
+            'Four structural obstacles for fermion bootstrap',
+        ],
+    },
+    'paper6_vestigial': {
+        'title': 'Paper 6: Vestigial Gravity (PRD)',
+        'topic': 'Lattice MC, vestigial metric phase, Weingarten integration',
+        'formulas': [
+            'so4_weingarten_2nd_moment', 'so4_weingarten_4th_moment',
+            'adw_bond_weight_fundamental', 'adw_bond_weight_adjoint',
+            'adw_bond_weight_total', 'vestigial_phase_indicator',
+            'binder_cumulant', 'fermion_bag_local_weight',
+        ],
+        'lean_modules': ['VestigialGravity', 'FermionBag4D', 'SO4Weingarten'],
+        'platforms': [],
+        'key_claims': [
+            'SO(4) Weingarten multi-channel bond coupling',
+            'Three-phase structure: pre-geometric → vestigial → full tetrad',
+            'EP violation prediction in vestigial phase',
+        ],
+    },
+    'paper7_chirality_formal': {
+        'title': 'Paper 7: Chirality Wall Formal Verification (PRD/CPC)',
+        'topic': 'GS 9 conditions formalized, TPF evasion machine-verified',
+        'formulas': [
+            'gs_condition_count', 'tpf_evasion_count',
+            'brillouin_zone_dimension', 'vector_like_spectrum_check',
+        ],
+        'lean_modules': ['LatticeHamiltonian', 'GoltermanShamir', 'TPFEvasion'],
+        'platforms': [],
+        'key_claims': [
+            '7/9 GS conditions formalized as substantive Lean propositions',
+            '5 TPF violations proved (C1, C2, I3, extra-dim, C3-conditional)',
+            'tpf_outside_gs_scope_main: machine-checked 5-part conjunction',
+            'First formal verification in lattice chiral fermion literature',
+        ],
+    },
+    'experimental_predictions': {
+        'title': 'Prediction Tables',
+        'topic': 'Platform-specific spectral predictions',
+        'formulas': [
+            'kappa_scaling_dispersive', 'kappa_scaling_dissipative',
+            'kappa_scaling_crossover', 'polariton_spatial_attenuation',
+            'polariton_tier1_validity', 'polariton_hawking_temperature',
+        ],
+        'lean_modules': ['KappaScaling', 'PolaritonTier1'],
+        'platforms': ['Steinhauer', 'Heidelberg', 'Trento'],
+        'key_claims': [
+            'δ_diss ∝ κ (linear, not constant)',
+            'κ_cross = 6(γ₁+γ₂)/(πξ²) (crossover formula)',
+            'Polariton T_H ~ 0.8-4 K (10¹⁰× hotter than BEC)',
+        ],
     },
 }
 

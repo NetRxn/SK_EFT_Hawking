@@ -1,0 +1,23 @@
+[package]
+name = "sk_eft_rhmc"
+version = "0.1.0"
+edition = "2024"
+description = "Matrix-free HS+RHMC for ADW tetrad condensation — Rust hot path with PyO3 bindings"
+# Lean: HubbardStratonovichRHMC.lean (13 theorems, zero sorry)
+# Source: "HS+RHMC for ADW tetrad condensation..." (deep research)
+
+[lib]
+name = "sk_eft_rhmc"
+crate-type = ["cdylib"]  # Python extension module
+
+[dependencies]
+pyo3 = { version = "0.24", features = ["extension-module"] }
+numpy = "0.24"       # PyO3 numpy integration for zero-copy array access
+rand = "0.9"
+rand_chacha = "0.9"  # deterministic seeded RNG (reproducible trajectories)
+
+[profile.release]
+opt-level = 3
+lto = "fat"               # link-time optimization for maximum performance
+codegen-units = 1          # single codegen unit for best optimization
+target-cpu = "native"      # use Apple Silicon NEON/AMX instructions

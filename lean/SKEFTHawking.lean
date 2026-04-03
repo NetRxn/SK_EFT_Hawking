@@ -31,6 +31,11 @@ import SKEFTHawking.DrinfeldDouble
 import SKEFTHawking.GaugeEmergence
 import SKEFTHawking.SO4Weingarten
 import SKEFTHawking.WetterichNJL
+import SKEFTHawking.VestigialSusceptibility
+import SKEFTHawking.QuaternionGauge
+import SKEFTHawking.GaugeFermionBag
+import SKEFTHawking.MajoranaKramers
+import SKEFTHawking.HubbardStratonovichRHMC
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

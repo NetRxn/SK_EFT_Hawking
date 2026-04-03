@@ -21,14 +21,59 @@
 
 ## 1. HPC-Dependent Items
 
-### 6A. Vestigial MC Production (Phase 2-3 of MC Roadmap)
+### 6A. Vestigial MC Production at Scale (L=12-20)
 
-**Trigger:** Phase 5 Wave 2 pilot shows interesting phase structure (vestigial phase detected or rich coupling landscape).
+**Trigger:** Phase 5 Wave 7C confirms vestigial phase at L=4-8 via HS+RHMC.
 
-**What:** 4D simplicial lattice production runs at 8⁴-12⁴ equivalent (~50K-250K simplices). Systematic finite-size scaling. Precision critical exponents. Continuum-limit extrapolation at 16⁴ if warranted.
+**What:** Scale HS+RHMC to L=12-20 for precision finite-size scaling. Extract critical exponents. Continuum-limit extrapolation. Compare with analytical G_ves prediction from Wave 6.
 
-**Resources:** ~100,000 core-hours modest HPC allocation. ALCC-scale.
-**Scoping:** `Lit-Search/Phase-5/Monte Carlo simulation of vestigial gravity in ADW lattice models.md`
+**Status update (2026-04-02):** The algorithm is HS+RHMC (not fermion-bag — fermion-bag hits O(V⁴) percolation wall). The fermion matrix A[h,U] is **physically sparse** (nearest-neighbor, 0.2% fill at L=8). Two implementation paths:
+
+**Path A: Sparse CG on Apple Silicon (workstation, no HPC)**
+- Implement sparse matrix builder + sparse CG in PyTorch torch backend
+- Fermion matrix A has ~256 nonzeros per row (4 directions × 8×8 blocks)
+- Sparse CG reads 2600× less data than dense at L=12 → feasible on 128GB machine
+- Projected: L=12 in ~1-3 days, L=16 in ~5 days, L=20 in ~4-11 days
+- Bottleneck: Python loop overhead in CG (~1ms per iteration dispatch)
+- This path is Phase 5 scope (next session) — NOT deferred to Phase 6
+
+**Path B: Custom Metal matrix-free CG (Apple Silicon GPU acceleration)**
+- Matrix-free: compute A@v on-the-fly from h-field using stencil operation, never store A
+- Encode entire CG iteration body into single MTLCommandBuffer (eliminates 100-350μs dispatch overhead)
+- Uses PyObjC `Metal` framework to write Metal compute shaders called from Python
+- Stencil computation has higher arithmetic intensity (~0.8 FLOP/byte) than sparse matvec (0.17)
+- Would bring genuine GPU benefit: Apple GPU has 2-6× compute advantage for stencil ops
+- Estimated development: 2-4 weeks. Speedup: potentially 3-10× over sparse CPU CG
+- This is the "HPC-equivalent" path for Apple Silicon — avoids need for external cluster
+
+**Path C: External HPC (NVIDIA CUDA)**
+- Traditional approach: port to CUDA, use QUDA or Grid lattice QCD libraries
+- Advantages: mature ecosystem, float64 hardware, HBM bandwidth (3.35 TB/s on H100 vs 273 GB/s)
+- ~100K core-hours ALCC allocation for L=12-20 production
+- Only necessary if Path A/B insufficient for publication precision
+
+**Recommendation:** Path A first (sparse CG, ~1 session), Path B if throughput insufficient, Path C only for L≥20 or extreme precision.
+
+**Deep research:**
+- `Lit-Search/Phase-5/5W7C/GPU-accelerated CG on Apple Silicon.md` — GPU vs CPU analysis, Metal kernel roadmap
+- `Lit-Search/Phase-5/5W7C/JAX on Apple Silicon- closing the 2.7× gap with PyTorch for RHMC.md` — JAX vs PyTorch analysis
+- `Lit-Search/Phase-5/Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation.md` — original scoping
+
+**Key Phase 5 findings informing this:**
+- HS+RHMC replaces fermion-bag (O(V·√κ) vs O(V⁴)). Sign-problem-free via Kramers.
+- GPU acceleration is a dead end on Apple Silicon for Python-framework iterative solvers (unified memory, kernel launch overhead). Custom Metal is the GPU path.
+- PyTorch CPU with Accelerate BLAS (AMX) is the best Python framework. JAX routes matmul through Eigen/NEON bypassing AMX.
+- Sparse matrix storage is the critical unlock: 2600× less memory/bandwidth at L=12.
+
+**Production projections (128 GB Apple Silicon, sparse CG once implemented):**
+
+| L | s/traj | 24K traj | Path |
+|---|--------|----------|------|
+| 12 | ~3-10s | 1-3 days | A (sparse CG) |
+| 14 | ~5-15s | 1-4 days | A |
+| 16 | ~7-30s | 2-8 days | A or B |
+| 18 | ~10-40s | 3-11 days | B recommended |
+| 20 | ~15-60s | 4-17 days | B or C |
 
 ---
 
@@ -43,9 +88,15 @@
 
 ---
 
-### 6C. Walker-Wang TRG for Non-Abelian (Strategy B)
+### ~~6C. 4D ATRG for Vestigial Gravity~~ → MOVED TO PHASE 5 WAVE 8
 
-**Trigger:** Strategy A successful + INCITE-scale allocation.
+**Status:** Moved to Phase 5 (Section 12, Wave 8) on 2026-04-01. Reassessment: D=8-12 workstation-tractable (128MB-3.4GB per tensor), O(D⁹) at D=12 for L=4 is ~1.5h. Reference implementations exist. The "9-14 month" estimate was academic pace — our pipeline compresses to ~6 weeks. Only D=16+ scale-up would return to Phase 6.
+
+---
+
+### 6D. Walker-Wang TRG for Non-Abelian (Strategy B)
+
+**Trigger:** Strategy A (6B) successful + INCITE-scale allocation.
 
 **What:** Tensor renormalization group for SU(2)_k Walker-Wang. Targets thermodynamic observables (critical exponents) rather than transport. Sign-problem-free but computationally demanding.
 
@@ -55,7 +106,7 @@
 
 ## 2. Collaboration-Dependent Items
 
-### 6D. BEC Experimental Engagement
+### 6E. BEC Experimental Engagement
 
 **Platforms (ranked by EFT testing capability):**
 1. **Trento spin-sonic** (Carusotto-Ferrari) — Best for EFT testing. Two-branch dispersion control. ERC funded (QFIELBS, 2026). Timeline: 2028-31.
@@ -66,7 +117,7 @@
 
 ---
 
-### 6E. Polariton Tier 2-3 EFT Predictions
+### 6F. Polariton Tier 2-3 EFT Predictions
 
 **Trigger:** Polariton stimulated Hawking observed + Tier 1 predictions validated.
 
@@ -86,4 +137,4 @@
 
 ---
 
-*Phase 6 roadmap. All items require resources beyond the LLM + Lean + Aristotle pipeline. Prioritize based on Phase 5 results and resource availability. Prepared 2026-03-28.*
+*Phase 6 roadmap. Items requiring resources beyond the LLM + Lean + Aristotle pipeline (HPC, collaboration, or multi-month development). 6A: HS+RHMC production at L=12-20 — THREE PATHS: (A) sparse CG on Apple Silicon (days per L, Phase 5 scope), (B) custom Metal matrix-free CG (3-10× over sparse, 2-4 weeks dev), (C) external HPC/CUDA (only for L≥20). 6B: Walker-Wang Z₂ transport. Former 6C (4D ATRG) MOVED to Phase 5 Wave 8. Updated 2026-04-02.*

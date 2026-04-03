@@ -35,6 +35,7 @@ from src.vestigial.lattice_4d import (
     Lattice4DParams, Lattice4DConfig, create_lattice_4d,
     site_action_4d, total_action_4d,
     tetrad_order_parameter_4d, metric_order_parameter_4d,
+    staggered_tetrad_op, staggered_metric_op,
     build_neighbor_table,
 )
 from src.vestigial.fermion_bag import FermionBagParams, FermionBagResult
@@ -156,9 +157,11 @@ def run_njl_mc(params: Lattice4DParams,
     for _ in range(mc_params.n_thermalize):
         config, _ = njl_sweep(config, rng, g_njl, nbr_table)
 
-    # Measurement
+    # Measurement — both uniform and staggered OPs
     tetrad_values = []
     metric_values = []
+    stag_tetrad_values = []
+    stag_metric_values = []
     action_values = []
     acceptance_rates = []
 
@@ -169,18 +172,19 @@ def run_njl_mc(params: Lattice4DParams,
         config, acc = njl_sweep(config, rng, g_njl, nbr_table)
         acceptance_rates.append(acc)
 
-        tetrad = tetrad_order_parameter_4d(config)
-        metric = metric_order_parameter_4d(config)
-        action = total_action_4d(config)
-
-        tetrad_values.append(tetrad)
-        metric_values.append(metric)
-        action_values.append(action)
+        tetrad_values.append(tetrad_order_parameter_4d(config))
+        metric_values.append(metric_order_parameter_4d(config))
+        stag_tetrad_values.append(staggered_tetrad_op(config))
+        stag_metric_values.append(staggered_metric_op(config))
+        action_values.append(total_action_4d(config))
 
     tetrad_arr = np.array(tetrad_values)
     metric_arr = np.array(metric_values)
+    stag_t_arr = np.array(stag_tetrad_values)
+    stag_m_arr = np.array(stag_metric_values)
     action_arr = np.array(action_values)
 
+    # Uniform OP moments
     tetrad_m2 = float(np.mean(tetrad_arr ** 2))
     tetrad_m4 = float(np.mean(tetrad_arr ** 4))
     metric_m2 = float(np.mean(metric_arr ** 2))
@@ -194,6 +198,12 @@ def run_njl_mc(params: Lattice4DParams,
     binder_m = binder_cumulant(metric_m2, metric_m4)
     met_corr = metric_correlator_connected(tetrad_m2, tetrad_m4)
     phase = vestigial_phase_indicator(binder_t, binder_m)
+
+    # Staggered OP moments (antiferromagnetic — the physically relevant OP for NJL)
+    stag_m2 = float(np.mean(stag_t_arr ** 2))
+    stag_m4 = float(np.mean(stag_t_arr ** 4))
+    binder_stag = binder_cumulant(stag_m2, stag_m4)
+    chi_stag = float(V * (np.mean(stag_t_arr ** 2) - np.mean(np.abs(stag_t_arr)) ** 2))
 
     return FermionBagResult(
         tetrad_m2=tetrad_m2,
@@ -211,4 +221,9 @@ def run_njl_mc(params: Lattice4DParams,
         action_std=float(np.std(action_arr)),
         params=params,
         mc_params=mc_params,
+        stag_tetrad_m2=stag_m2,
+        stag_tetrad_m4=stag_m4,
+        binder_stag_tetrad=binder_stag,
+        chi_stag_tetrad=chi_stag,
+        stag_metric_mean=float(np.mean(stag_m_arr)),
     )

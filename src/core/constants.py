@@ -40,17 +40,17 @@ ATOMS = {
     'Rb87': {
         'label': '⁸⁷Rb',
         'mass': 1.443160648e-25,    # kg (86.909180531 u)
-        'a_s': 5.77e-9,             # m (≈ 109 a₀, triplet s-wave)
+        'a_s': 5.31e-9,             # m (100.4 a₀, F=2; van Kempen PRL 88, 093201)
     },
     'K39': {
         'label': '³⁹K',
         'mass': 6.470076e-26,       # kg (38.96370668 u)
-        'a_s': 50e-9,               # m (tunable via Feshbach at 402 G)
+        'a_s': 50e-9,               # m (tunable via Feshbach at 402 G; PROJECTED)
     },
     'Na23': {
         'label': '²³Na',
         'mass': 3.8175458e-26,      # kg (22.9897692820 u)
-        'a_s': 2.75e-9,             # m (≈ 52 a₀, triplet s-wave)
+        'a_s': 2.75e-9,             # m (≈ 52 a₀, triplet; Tiesinga 1996)
     },
 }
 
@@ -66,25 +66,25 @@ ATOMS = {
 
 EXPERIMENTS = {
     'Steinhauer': {
-        'description': 'Steinhauer ⁸⁷Rb BEC (Nature Physics 2016)',
+        'description': 'Steinhauer ⁸⁷Rb BEC (Nature 2016/2019)',
         'atom': 'Rb87',
-        'density_upstream': 5e7,       # m⁻¹ (quasi-1D linear density)
-        'velocity_upstream': 0.85e-3,  # m/s (Mach ~ 0.74)
-        'omega_perp': 2 * np.pi * 500, # rad/s (transverse trap)
+        'density_upstream': 5e7,       # m⁻¹ (quasi-1D, horizon region; Wang 2017 Fig.2)
+        'velocity_upstream': 0.41e-3,  # m/s (Mach ~0.75 × c_s; DERIVED, see provenance)
+        'omega_perp': 2 * np.pi * 123, # rad/s (Wang PRA 96, 023616, Table II: ν=123 Hz)
     },
     'Heidelberg': {
-        'description': 'Heidelberg ³⁹K BEC (projected)',
+        'description': 'Heidelberg ³⁹K BEC (PROJECTED — no Hawking expt exists)',
         'atom': 'K39',
-        'density_upstream': 3e7,       # m⁻¹
-        'velocity_upstream': 3.0e-3,   # m/s (Mach ~ 0.77)
-        'omega_perp': 2 * np.pi * 500, # rad/s
+        'density_upstream': 3e7,       # m⁻¹ (PROJECTED)
+        'velocity_upstream': 3.0e-3,   # m/s (PROJECTED)
+        'omega_perp': 2 * np.pi * 500, # rad/s (PROJECTED — unsourced)
     },
     'Trento': {
-        'description': 'Trento ²³Na spin-sonic BEC (projected)',
+        'description': 'Trento ²³Na spin-sonic BEC (PROJECTED — theoretical proposal)',
         'atom': 'Na23',
-        'density_upstream': 1e8,       # m⁻¹
-        'velocity_upstream': 1.6e-3,   # m/s (Mach ~ 0.73)
-        'omega_perp': 2 * np.pi * 500, # rad/s
+        'density_upstream': 1e8,       # m⁻¹ (PROJECTED)
+        'velocity_upstream': 1.6e-3,   # m/s (PROJECTED)
+        'omega_perp': 2 * np.pi * 500, # rad/s (PROJECTED — unsourced)
     },
 }
 
@@ -315,15 +315,253 @@ NJL_MODEL = {
 # NJL coupling g > 0 = attractive (same convention as ADW g_EH < 0)
 NJL_COUPLING_SCAN = {
     'g_cosmo': 1.0,               # on-site 8-fermion vertex (same as ADW)
-    'g_njl_range': (0.0, 50.0),   # NJL coupling range (positive = attractive)
+    'g_njl_range': (2.0, 15.0),   # NJL coupling range — focused on AF transition region
     'n_points': 40,               # coupling scan points
 }
 
 NJL_FSS = {
-    'coupling_range': (1.0, 50.0),          # g_njl range for FSS scan
+    'coupling_range': (2.0, 15.0),          # g_njl range for FSS scan — transition region
     'n_couplings': 40,
     'vestigial_window_threshold': 0.01,
     'split_threshold': 0.05,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 6: Analytical Vestigial Susceptibility (RPA formalism)
+#
+# The metric g_μν = δ_{ab} e^a_μ e^b_ν is a composite bilinear of the
+# tetrad — a vestigial order parameter. The RPA metric susceptibility
+# χ_g⁻¹ = 1/u_g − c_D·Π₀(1/G − 1/G_c) diverges at G_ves < G_c
+# whenever the metric-channel quartic coupling u_g > 0.
+#
+# Reference: Fernandes/Chubukov/Schmalian, Ann. Rev. CMP 10, 133 (2019)
+# Reference: Nie/Tarjus/Kivelson, PNAS 111, 7980 (2014)
+# Reference: Volovik, JETP Letters 119, 564 (2024) — symmetry identification
+# ════════════════════════════════════════════════════════════════════
+
+ADW_VESTIGIAL = {
+    'N_f': 2,                     # Dirac fermion species in ADW
+    'D': 4,                       # internal SO(4) dimension
+    'Lambda': np.pi,              # UV cutoff (lattice: π/a with a=1)
+    # Channel multiplicity factors from index contraction:
+    #   δ_{ab}δ_{cd}δ^{ac}δ^{bd} = D = 4
+    #   Trace channel: c_D = 2D² = 32
+    #   Traceless-symmetric: c_D = 2D = 8
+    'c_D_trace': 32,              # 2 × D² — scalar (volume) metric channel
+    'c_D_traceless': 8,           # 2 × D  — traceless symmetric (graviton) channel
+    # Gamma-matrix trace projection onto metric channel:
+    #   Tr(γ^a γ^b γ^c γ^d) = 4(δ^{ab}δ^{cd} − δ^{ac}δ^{bd} + δ^{ad}δ^{bc})
+    #   Metric projection (symmetric: δ^{ab}δ^{cd} + δ^{ad}δ^{bc}): coefficient = 4×2 = 8
+    #   Lorentz projection (antisymmetric: δ^{ac}δ^{bd}): coefficient = −4 (repulsive)
+    'gamma_trace_metric_coeff': 8,    # positive → attractive metric channel
+    'gamma_trace_lorentz_coeff': -4,  # negative → repulsive Lorentz channel
+}
+
+# Vestigial susceptibility scan parameters
+ADW_VESTIGIAL_SCAN = {
+    'G_over_Gc_range': (0.01, 0.999),   # G/G_c scan range (disordered phase)
+    'n_points': 200,                     # fine scan for smooth susceptibility curve
+    'u_g_range': (0.01, 2.0),            # quartic coupling range for window plot
+    'n_u_g_points': 100,                 # points for u_g sweep
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5 Wave 7: Hybrid Gauge-Link + Fermion-Bag MC
+#
+# First-ever fermion-bag MC with dynamical SO(4) gauge links on a 4D
+# hypercubic lattice. SO(4) ≅ (SU(2)_L × SU(2)_R)/Z_2 via quaternion
+# pairs for 4× computational speedup.
+#
+# Reference: Chandrasekharan, PRD 82, 025007 (2010) — fermion-bag
+# Reference: Kennedy & Pendleton, PLB 156, 393 (1985) — SU(2) heatbath
+# Reference: Creutz, "Quarks, Gluons and Lattices" (1983) — lattice gauge
+# Reference: Wilson, PRD 10, 2445 (1974) — plaquette action
+# ════════════════════════════════════════════════════════════════════
+
+GAUGE_LINK_MC = {
+    'N_f': 2,                     # Dirac fermion species
+    'beta_range': (0.0, 10.0),    # Wilson plaquette coupling (β=0 is pure ADW)
+    'g_range': (0.0, 20.0),       # four-fermion coupling
+    'n_thermalize': 500,          # thermalization sweeps
+    'n_measure': 2000,            # measurement sweeps
+    'n_skip': 5,                  # decorrelation gap between measurements
+    'n_overrelax': 4,             # overrelaxation sweeps per heatbath sweep
+    'quaternion_renorm_interval': 50,  # renormalize quaternions every N sweeps
+}
+
+SO4_LATTICE = {
+    'dim': 4,                     # spacetime dimension
+    'n_directions': 4,            # number of link directions per site
+    'n_plaquettes_per_link': 6,   # each link in d=4 belongs to 6 plaquettes
+    'plaquette_norm': 4.0,        # Tr(I₄) = 4 for SO(4) fundamental
+    'quaternion_dim': 4,          # components per SU(2) quaternion
+    'link_storage': 8,            # 2 quaternions × 4 floats = 8 floats per link
+    'checkerboard': True,         # even/odd checkerboard update ordering
+}
+
+# 4D Euclidean Clifford algebra: {γ^a, γ^b} = 2δ^{ab}
+# Chiral representation from tensor products of Pauli matrices.
+# NOTE: Cl(4,0) ≅ M_2(ℍ) — no faithful real 4×4 rep exists.
+#   γ^0, γ^2 are real; γ^1, γ^3 are purely imaginary.
+#   det(M_B) ∈ ℝ guaranteed by charge conjugation (C = γ^0 γ^2),
+#   NOT by gamma matrices being real.
+# Reference: Montvay & Münster, "Quantum Fields on a Lattice" (1994), Ch. 4.4
+# Reference: Creutz, "Quarks, Gluons and Lattices" (1983), Ch. 4
+EUCLIDEAN_GAMMA_4D = None  # Populated at module load below
+
+def _build_euclidean_gamma_4d():
+    """Construct 4D Euclidean gamma matrices from Pauli tensor products.
+
+    γ^0 = σ_1 ⊗ σ_1   (real, Hermitian)
+    γ^1 = σ_1 ⊗ σ_2   (imaginary, Hermitian)
+    γ^2 = σ_1 ⊗ σ_3   (real, Hermitian)
+    γ^3 = σ_2 ⊗ I₂    (imaginary, Hermitian)
+
+    All satisfy {γ^a, γ^b} = 2δ^{ab}, (γ^a)² = I₄, Tr(γ^a) = 0.
+    """
+    sigma_1 = np.array([[0, 1], [1, 0]], dtype=complex)
+    sigma_2 = np.array([[0, -1j], [1j, 0]], dtype=complex)
+    sigma_3 = np.array([[1, 0], [0, -1]], dtype=complex)
+    I2 = np.eye(2, dtype=complex)
+    return np.array([
+        np.kron(sigma_1, sigma_1),  # γ^0: real
+        np.kron(sigma_1, sigma_2),  # γ^1: imaginary
+        np.kron(sigma_1, sigma_3),  # γ^2: real
+        np.kron(sigma_2, I2),       # γ^3: imaginary
+    ])
+
+EUCLIDEAN_GAMMA_4D = _build_euclidean_gamma_4d()
+
+# Charge conjugation matrix: C = γ^0 · γ^2 = -i(I₂ ⊗ σ_2)
+# Satisfies: C γ^a C^{-1} = -(γ^a)^T for all a
+# Consequence: det(M_B[U]) ∈ ℝ for U ∈ SO(4) (real gauge group)
+CHARGE_CONJUGATION_4D = EUCLIDEAN_GAMMA_4D[0] @ EUCLIDEAN_GAMMA_4D[2]
+
+# ════════════════════════════════════════════════════════════════════
+# 8×8 Real Majorana representation of Cl(4,0)
+# Source: "The 8×8 Majorana formulation for ADW fermion-bag MC" (deep research)
+# Source: Figueroa-O'Farrill, Edinburgh lectures on Majorana spinors
+# Source: Wei/Wu/Li/Zhang/Xiang, PRL 116, 250601 (2016) — Kramers positivity
+#
+# All Γ^a are real, symmetric, 8×8, satisfying {Γ^a,Γ^b} = 2δ^{ab}I₈.
+# The commutant of Cl(4,0) in Mat₈(ℝ) is ℍ, spanned by J₁,J₂,J₃.
+# J₁ = charge conjugation (C), J₂ = Kramers operator (T).
+# Kramers positivity: {J₂, A} = 0 for any A = Σ_a h_a J₁Γ^a ⊗ U
+#   → Pf(A) has definite sign → sign-problem-free.
+# ════════════════════════════════════════════════════════════════════
+
+def _build_majorana_8x8():
+    """Construct 8×8 real Majorana gamma matrices and quaternionic commutant."""
+    sigma_1 = np.array([[0.0, 1.0], [1.0, 0.0]])
+    sigma_3 = np.array([[1.0, 0.0], [0.0, -1.0]])
+    I2 = np.eye(2)
+    epsilon = np.array([[0.0, -1.0], [1.0, 0.0]])  # ε = iσ₂ in real form
+
+    # Gamma matrices: Γ^a = tensor products of σ₁, σ₃, I₂
+    G1 = np.kron(sigma_1, np.kron(sigma_1, sigma_1))  # σ₁⊗σ₁⊗σ₁
+    G2 = np.kron(sigma_3, np.kron(sigma_1, sigma_1))  # σ₃⊗σ₁⊗σ₁
+    G3 = np.kron(I2, np.kron(sigma_3, sigma_1))        # I₂⊗σ₃⊗σ₁
+    G4 = np.kron(I2, np.kron(I2, sigma_3))              # I₂⊗I₂⊗σ₃
+    gammas = np.array([G1, G2, G3, G4])
+
+    # Quaternionic commutant: J_k² = -I₈, J_k^T = -J_k, [J_k, Γ^a] = 0
+    J1 = np.kron(epsilon, np.kron(sigma_3, I2))      # ε⊗σ₃⊗I₂
+    J2 = np.kron(epsilon, np.kron(sigma_1, sigma_3))  # ε⊗σ₁⊗σ₃
+    J3 = np.kron(I2, np.kron(epsilon, sigma_3))       # I₂⊗ε⊗σ₃
+
+    return gammas, J1, J2, J3
+
+MAJORANA_GAMMA_8x8, MAJORANA_J1, MAJORANA_J2, MAJORANA_J3 = _build_majorana_8x8()
+
+# Gauge-link MC scan parameters for phase diagram mapping
+GAUGE_LINK_SCAN = {
+    'beta_points': [0.0, 0.5, 1.0, 2.0, 3.0, 5.0, 8.0, 10.0],  # Wilson coupling
+    'g_points': 20,               # four-fermion coupling points per β slice
+    'lattice_sizes': [4, 6, 8],   # L values for finite-size scaling
+    'sign_threshold': 0.1,        # minimum ⟨sign⟩ for usable data
+}
+
+# ════════════════════════════════════════════════════════════════════
+# HS+RHMC parameters (Wave 7C — Hubbard-Stratonovich + Rational HMC)
+#
+# Replaces fermion-bag algorithm for L≥6. The HS transformation
+# decouples the quartic fermion interaction via auxiliary scalar fields
+# h^a_{x,μ}, enabling RHMC sampling with O(V·√κ) cost per decorrelated
+# sample (vs O(V⁴) for fermion-bag).
+#
+# Source: Catterall & Schaich, JHEP 07, 057 (2015) — Pfaffian RHMC
+# Source: Clark & Kennedy, NPB Proc. Suppl. 129, 850 (2004) — RHMC algorithm
+# Source: Omelyan et al., Comp. Phys. Comm. 146, 188 (2002) — integrator
+# Source: deep research "HS+RHMC for ADW tetrad condensation..."
+# ════════════════════════════════════════════════════════════════════
+
+RHMC_PARAMS = {
+    # ── MD trajectory parameters ──
+    # tau = total trajectory length, n_md_steps = Omelyan steps, eps = tau/n_md_steps.
+    # The Omelyan integrator gives ΔH ~ C·ε² where C depends on the model.
+    # At L=2, g=2.0: C ≈ 44 (measured 2026-04-02 via ΔH scaling test).
+    # For 75-85% acceptance: need ⟨ΔH⟩ ~ 1, so ε ≈ 1/√C ≈ 0.15.
+    # Step size scan at L=2, g=2.0 (2026-04-02): ΔH < 10⁻³ for all eps ≤ 0.2
+    #   (L=2 too small for meaningful ΔH — only 128 DOF).
+    # At L=4 (2048 DOF): C scales ~linearly with dim, so ΔH ~ 44 × (2048/128) × ε² = 704 ε².
+    #   For ΔH ~ 1: ε ≈ 0.04 → n_md_steps = 25 at tau=1.0.
+    # Default n_md_steps=10 (eps=0.1) is a starting point; tune per (L, g) in production.
+    # Source: Omelyan et al., CPC 146, 188 (2002), Eq. (31)
+    'tau': 1.0,                        # MD trajectory length
+    'n_md_steps': 10,                  # Omelyan steps (eps = tau/n_md_steps = 0.1)
+    'omelyan_lambda': 0.1932,          # Omelyan 2MN optimal parameter
+    'force_evals_per_step': 3,         # Omelyan: 3 force evals per step
+
+    # ── Zolotarev rational approximation (x^{-1/4} for Pf = det^{1/4}) ──
+    # Three precision levels following the standard multi-precision RHMC strategy:
+    # MD forces use cheap low-precision → errors corrected by Metropolis step.
+    # Accept/reject uses expensive high-precision → ensures exact sampling.
+    # The MISMATCH between MD and MC precision causes a systematic ΔH bias.
+    # This bias is O(δ²) where δ is the Zolotarev approx error at MD precision.
+    # CRITICAL: the S_PF mismatch between MD and MC poles adds DIRECTLY to ΔH.
+    # Measured S_PF vs exact at L=2, κ=164 (2026-04-02):
+    #   8 poles: ΔS_PF ≈ 79  → ΔH ≈ 80 (destroys acceptance, h-field unstable)
+    #  12 poles: ΔS_PF ≈ 0.3 → ΔH ≈ 0.3 + O(ε²) (marginal)
+    #  16 poles: ΔS_PF ≈ 0.03 → negligible (integrator error dominates)
+    # Same-poles test (16 for both MD+MC, 2026-04-02):
+    #   ΔH ≈ 0.8, acceptance 60%, h-field stable, no mismatch artifacts.
+    # For production: use same poles for MD and MC to avoid mismatch.
+    # Multi-precision strategy (fewer MD poles) is an OPTIMIZATION that requires
+    # careful tuning per (L, g) to ensure ΔS_PF < integrator error.
+    # Source: Clark & Kennedy, NPB PS 129, 850 (2004), Section 3
+    'n_poles_md': 16,                  # same as MC for reliability (ΔS_PF ≈ 0.03)
+    'n_poles_hb': 16,                  # for pseudofermion heat bath
+    'n_poles_mc': 16,                  # same as MD — avoids mismatch artifacts
+
+    # ── Spectral range estimation (Lanczos on A†A) ──
+    'lanczos_iterations': 20,          # iterations for λ_min/λ_max estimation
+    'spectral_safety_low': 0.8,        # safety factor: use 0.8 × λ_min
+    'spectral_safety_high': 1.2,       # safety factor: use 1.2 × λ_max
+
+    # ── Multi-shift conjugate gradient ──
+    # CG tolerance sets the force accuracy. With cg_tol_md=1e-8:
+    #   - Reversibility degrades to ~1e-10 (measured 2026-04-02)
+    #   - Acceptable because Metropolis corrects for force errors
+    # With cg_tol_md=1e-14: reversibility to machine precision (~1e-15)
+    #   - But ~2× more CG iterations → 2× slower forces
+    # Production compromise: 1e-8 for MD, 1e-12 for Hamiltonian (accept/reject)
+    # Source: Clark & Kennedy, NPB PS 129, 850 (2004) — multi-precision RHMC
+    'cg_tol_md': 1e-8,                # CG residual tolerance for MD forces
+    'cg_tol_mc': 1e-12,               # CG residual tolerance for Hamiltonian eval
+    'cg_max_iter': 5000,              # CG iteration cap
+
+    # ── Production defaults ──
+    'n_trajectories': 1000,            # total RHMC trajectories
+    'n_thermalize': 200,               # thermalization trajectories
+    'n_measure_skip': 5,               # trajectories between measurements
+    'target_acceptance': (0.75, 0.85), # optimal Metropolis acceptance range
+
+    # ── Auxiliary field initialization ──
+    # h^a_{x,μ} ~ Gaussian(0, √(2g)) at equilibrium.
+    # 16V fields total: 4 directions × 4 Lorentz × V sites.
+    'h_field_components': 16,          # per site: 4 directions × 4 Lorentz indices
 }
 
 
@@ -767,10 +1005,71 @@ ARISTOTLE_THEOREMS = {
     'planck_nonneg': 'run_20260331_103403',
     'exp_gt_one_of_pos': 'run_20260331_103403',
     'planck_monotone': 'run_20260331_103403',
+    # Wave 6 — VestigialSusceptibility (16 theorems, Aristotle 9e2251cd)
+    'gamma_trace_metric_positive': '9e2251cd',
+    'gamma_trace_lorentz_negative': '9e2251cd',
+    'metric_dominates_lorentz': '9e2251cd',
+    'u_g_positive': '9e2251cd',
+    'u_g_positive_adw': '9e2251cd',
+    'bubble_integral_monotone': '9e2251cd',
+    'bubble_integral_diverges': '9e2251cd',
+    'bubble_integral_positive': '9e2251cd',
+    'susceptibility_diverges': '9e2251cd',
+    'vestigial_before_tetrad': '9e2251cd',
+    'vestigial_r_e_star_pos': '9e2251cd',
+    'vestigial_window_exponential': '9e2251cd',
+    'vestigial_window_vanishes': '9e2251cd',
+    'trace_channel_multiplicity': '9e2251cd',
+    'traceless_channel_multiplicity': '9e2251cd',
+    'vestigial_ordering_sufficient': '9e2251cd',
+    # Wave 7A — QuaternionGauge (10 theorems, Aristotle fb657b4d)
+    'quaternion_norm_mul': 'fb657b4d',
+    'quaternion_left_identity': 'fb657b4d',
+    'quaternion_conjugate_inverse': 'fb657b4d',
+    'so4_dimension': 'fb657b4d',
+    'su2_su2_dimension': 'fb657b4d',
+    'plaquette_trace_bound': 'fb657b4d',
+    'plaquette_action_nonneg': 'fb657b4d',
+    'plaquette_action_identity': 'fb657b4d',
+    'heatbath_weight_integrable': 'fb657b4d',
+    'heatbath_detailed_balance': 'fb657b4d',
+    # Wave 7B — GaugeFermionBag (9 theorems, Aristotle fb657b4d)
+    'tetrad_gauge_covariant': 'fb657b4d',
+    'metric_gauge_invariant': 'fb657b4d',
+    'metric_from_tetrad_sq': 'fb657b4d',
+    'bag_weight_real': 'fb657b4d',
+    'determinant_rank1_update': 'fb657b4d',
+    'vestigial_implies_nonzero_variance': 'fb657b4d',
+    'metric_nonneg': 'fb657b4d',
+    'binder_gaussian': 'fb657b4d',
+    'binder_ordered': 'fb657b4d',
+    # HubbardStratonovichRHMC.lean — 22 theorems, all manual proofs (2026-04-02)
+    'hs_gaussian_identity_zero': 'manual',
+    'hs_gaussian_action_nonneg': 'manual',
+    'su2_closed_form_exp': 'manual',
+    'su2_exp_unit_quaternion_identity': 'manual',
+    'omelyan_second_order_symplectic': 'manual',
+    'omelyan_time_reversible': 'manual',
+    'zolotarev_exponential_convergence': 'manual',
+    'partial_fraction_positivity': 'manual',
+    'rhmc_hamiltonian_nonneg': 'manual',
+    'rhmc_detailed_balance': 'manual',
+    'hs_fermion_matrix_antisymmetric': 'manual',
+    'kramers_holds_hs_matrix': 'manual',
+    'multishift_cg_shared_krylov': 'manual',
+    'bipartite_nearest_neighbor_zero_diagonal': 'manual',
+    'ata_block_diag': 'manual',
+    'even_odd_spectrum_identical': 'manual',
+    'even_odd_cg_equivalence': 'manual',
+    'multishift_krylov_shift_invariance': 'manual',
+    'multishift_residual_collinearity': 'manual',
+    'even_odd_force_equivalence': 'manual',
+    'complex_pseudofermion_pfaffian': 'manual',
+    'heatbath_a_trick_covariance': 'manual',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 176, f"Expected 176 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 233, f"Expected 233 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

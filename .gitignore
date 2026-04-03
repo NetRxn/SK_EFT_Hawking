@@ -64,3 +64,4 @@ outputs/
 
 # cache files
 pytest-cache-files-1k3by_ri
+rust/target/*

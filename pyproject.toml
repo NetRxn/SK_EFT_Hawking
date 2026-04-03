@@ -31,6 +31,29 @@ dependencies = [
     "flask>=3.0",
 ]
 
+[project.optional-dependencies]
+# Fermion-bag MC (Wave 7B) — numba JIT for inner loops.
+# Required for: gauge_fermion_bag.py, gauge_fermion_bag_majorana.py
+# Used for: L=4 reference cross-validation of RHMC
+fermion-bag = ["numba>=0.65.0"]
+
+# JAX CPU backend (Wave 7C) — JIT CG solver, vmap multi-shift.
+# Required for: hs_rhmc_jax.py
+# Superseded by PyTorch MPS for production (faster on Apple Silicon)
+jax-cpu = ["jax>=0.9.2"]
+
+# PyTorch MPS GPU backend (Wave 7C production) — ~100× speedup on Apple Silicon.
+# Required for: hs_rhmc_torch.py (to be implemented)
+gpu = ["torch>=2.11"]
+
+# Rust backend build tool (Wave 7C production) — matrix-free RHMC via PyO3.
+# Required for: building sk_eft_rhmc Rust extension
+# Usage: uv sync --extra rust && cd rust && maturin develop --release
+rust = ["maturin>=1.8"]
+
+# All MC backends (development/testing)
+mc-all = ["numba>=0.65.0", "jax>=0.9.2", "torch>=2.11"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

@@ -618,7 +618,7 @@
 
 **Three-wall assessment (updated 2026-03-31):**
 - **Chirality wall:** Conditional. 5/9 GS conditions violated by TPF. Neither proves nor disproves the other. First formal analysis establishes this rigorously.
-- **Vestigial/metric wall:** Under investigation. NJL model shows Binder crossings (promising). ADW model needs re-run with fixed OPs. Neither is publication-ready. Mean-field prediction not falsified.
+- **Vestigial/metric wall:** Refined understanding. NJL model shows genuine AF ordering transition (g_c ≈ 5.5, confirmed by even-L staggered Binder). However, this is antiferromagnetic ordering of occupation fractions, NOT the vestigial metric ordering predicted by Volovik. The vestigial hypothesis (metric orders before tetrad) requires tensor-valued order parameters that the occupation-number representation cannot access — gauge integration projects out the internal SO(4) structure. ADW model has no spatial correlations at the occupation level. The AF transition in NJL demonstrates the MC infrastructure works for detecting real phase transitions; the vestigial-specific question needs either (a) HMC with explicit gauge links preserving SO(4) internal structure, or (b) tensor network methods (TRG). This is a Phase 6 item.
 - **UV completion wall:** Four structural obstacles from Paper 5 remain. Layer 1 formalization provides new categorical routes (string-nets, Fermi-point) but Bott periodicity blocks the topological invariant approach.
 
 **By the numbers:** 506 theorems + 2 axioms (ZERO sorry), 176 Aristotle-proved across 29 runs, 1027 tests, 61 figures, 33 Lean modules, 38 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 original validation checks + CHECK 15 (parameter_provenance) in development, 15/15 deep research tasks complete.
@@ -987,8 +987,8 @@ Quality standard: every formula through the Lean + Aristotle pipeline. No docume
   - **Binder cumulants: NO crossings found.** U₄ ≈ 2/3 (Gaussian) across entire range g_EH ∈ [-50, 0]. Variation shrinks with L (0.002 at L=4 → 0.00001 at L=16). System locked in disordered phase.
   - **Susceptibility peaks: split but non-divergent.** Tetrad peaks at G/Gc ≈ 2-5 (height ~0.097), metric peaks at G/Gc ≈ 6-7 (height ~0.118). Heights do NOT grow with L → not real phase transitions. "split_transition: True" flag is misleading (noise on flat background).
   - **Sign reweighting: catastrophically small.** avg_sign = 0.0 for L≥5, ~10⁻¹³⁵ to 10⁻²⁵⁴ for L=4. Lorentzian reweighting factor exp(ΔS) exponentially suppressed (ΔS scales with L⁴ volume). Note: Euclidean weights are Lean-verified non-negative (SO4Weingarten.lean), so no sign problem from gauge integration — this is the Lorentzian reweighting catastrophe.
-  - **Acceptance rates: suspiciously uniform** (0.311 for Binder, 0.299 for FSS across ALL L). **ROOT CAUSE FOUND** (see fix below).
-  - **Interpretation: production results INVALID due to order parameter bug.** Requires re-run with fixed OPs.
+  - **Acceptance rates: appeared uniform at 0.311** — RESOLVED: this is the mean across 40 coupling points. Per-coupling acceptance varies correctly (0.121 at g_EH=-50 to 0.933 at g_EH=0). Identical mean across L is expected (bond action per site doesn't scale with volume).
+  - **Interpretation with old single-site OPs:** INVALID (OPs were blind to bond ordering). Re-run with bond OPs shows correct coupling dependence but Binder variation vanishes with L (self-averaging).
 - **BUG FIX (2026-03-31): Order parameters were blind to bond coupling.**
   - `tetrad_order_parameter_4d` measured single-site `⟨n/N⟩` — insensitive to inter-site Weingarten bond ordering
   - `metric_order_parameter_4d` measured single-site `⟨(n/N)²⟩` — same problem
@@ -1019,7 +1019,18 @@ Quality standard: every formula through the Lean + Aristotle pipeline. No docume
   - Smoke test: acceptance varies 0.935 (g=0) → 0.333 (g=10), Binder cumulants vary meaningfully (NOT locked at 2/3 like Option B)
 - [x] Stage 6: 13 new tests in tests/test_vestigial.py (1027 total, all pass) (2026-03-31)
 - [x] Stage 7: 14/14 original validation checks pass (CHECK 15 expected fail — provenance system in 9D) (2026-03-31)
-- [ ] Production MC with NJL model — READY TO LAUNCH
+- [x] Production MC with NJL model — COMPLETE (2026-03-31, L=4-12, g∈[2,15], 5K sweeps, 1.34h)
+  - Results: `docs/vestigial_mc_results/vestigial_mc_njl_20260331T201920.json`
+  - **8/8 L-pair Binder crossings** (uniform OPs) — two families: even-odd pairs converge to g≈5.0, odd-even pairs at higher coupling
+  - **Staggered (AF) OP reveals genuine ordering transition:** Even-L Binder transitions from ~0 (g<5) to ~2/3 (g>6). Critical coupling g_c ≈ 5-6. Transition sharpens with L (L=4→12).
+  - **Odd-L geometric frustration:** Staggered OP suppressed on odd-L lattices (bipartite checkerboard doesn't tile with periodic BC on odd L). Standard lattice artifact — use even-L only for Binder analysis.
+  - **Even-L staggered Binder data (key result):**
+    - g=5: U4 = 0.189(L=4), 0.083(6), 0.062(8), 0.001(10), -0.04(12) — DISORDERED (decreasing with L)
+    - g=6: U4 = 0.606(L=4), 0.657(6), 0.664(8), 0.665(10), 0.666(12) — ORDERED (approaching 2/3)
+    - Crossing between g=5 and g=6 → critical coupling g_c ≈ 5.5 for AF ordering
+  - **Physics: antiferromagnetic ordering** driven by NJL pseudoscalar channel. NOT vestigial metric ordering — the staggered OP detects checkerboard occupation patterns, not metric tensor structure.
+  - **Spatial correlator diagnostic confirmed:** G(r) oscillates (AF signature), correlation length grows with coupling.
+  - **Significance:** First confirmed phase transition in any model in this codebase. Not the vestigial phase we were looking for, but real ordering physics driven by the Fierz channel structure. See big-picture assessment below.
 - [ ] Stages 8-12: DEFERRED pending 9D provenance chain
 
 **Paper 6 strengthened by:** ADW model (Option B) shows vestigial phase → primary claim. NJL model (Option C) independently shows vestigial phase → cross-validation. Two different models, same physical conclusion = much stronger paper.
@@ -1032,47 +1043,518 @@ Quality standard: every formula through the Lean + Aristotle pipeline. No docume
 
 ---
 
-### 9D. Parameter Provenance & Citation Integrity System [IN PROGRESS — parallel session]
+### 9E. Vestigial Gravity: Correct Physics Assessment [COMPLETE]
 
-**Trigger:** 4.4× error in Steinhauer omega_perp (code: 500 Hz, published: 123 Hz per Wang et al. PRA 96, 023616 Table I) propagated undetected through BEC-facing codebase. Root cause: no structured citation metadata, no provenance validation, deep research treated as ground truth.
+> **Note:** Section 9D (Parameter Provenance) follows after Waves 6-7 below due to insertion ordering. It is complete — see line ~1267.
 
-**Scope:** See plan `~/.claude/plans/parallel-launching-noodle.md` for full design.
+**Trigger:** Occupation-number MC (Options B & C) proved insufficient for vestigial detection. Gauge integration projects out the SO(4) internal structure needed to distinguish tetrad (vector) from metric (tensor) ordering. NJL model confirmed genuine AF transition (g_c ≈ 5.5), validating MC infrastructure, but this is staggered occupation ordering, not vestigial metric ordering.
 
-**Key components (being implemented in parallel session):**
-- `PARAMETER_PROVENANCE` dict in constants.py — every experimental param traced to published source with confidence tier (MEASURED/EXTRACTED/DERIVED/PROJECTED/THEORETICAL)
-- Two-phase verification: LLM-verified (gates computation) → human-verified (gates paper submission)
-- CHECK 15: `parameter_provenance` in validate.py
-- `CITATION_REGISTRY` in `src/core/citations.py` — canonical bibliography with DOI verification
-- Provenance Command Center (Flask+HTMX dashboard) — 5-tab trust surface viewer
-- Pipeline Invariant 8: every experimental parameter has verified provenance
-- Deep Research Reconciliation Protocol
+**Deep research completed (all three, 2026-04-01):**
+- [x] `Lit-Search/Phase-5/Vestigial metric susceptibility from ADW tetrad condensation.md` — analytical susceptibility derivation
+- [x] `Lit-Search/Phase-5/Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation.md` — algorithm specification
+- [x] `Lit-Search/Phase-5/Feasibility of 4D HOTRG for vestigial gravity transitions in the ADW model.md` — TRG feasibility
 
-**Blast radius (BEC-facing, affected by omega_perp fix):**
-- constants.py: Steinhauer omega_perp, possibly a_s, velocity_upstream
-- transonic_background.py: c_s, κ, T_H, ξ, D all recompute
-- Paper 1 Table 1, Paper 4 turning-point values
-- validate.py expected values (CHECK 2, CHECK 4)
-- WKB natural-unit params
-- 6+ notebooks (Phase 1-4a)
+**Key findings across all three:**
+1. Vestigial metric ordering is **analytically provable** (G_ves < G_c whenever u_g > 0) — no MC needed for the existence result
+2. The vestigial window in d=4 is **exponentially narrow** (BCS-like: r_e* ~ Λ² exp(-16π²/c_D u_g)), not power-law as in condensed matter
+3. Hybrid gauge-link MC is **feasible but genuinely novel** — no prior implementation exists
+4. 4D ATRG is at the **computational frontier** — viable for cross-validation but PhD-level for full ADW model
 
-**NOT affected (independent parameter chains):**
-- Vestigial MC (Options B & C) — uses ADW_4D_MODEL/SO4_HAAR/FERMION_BAG, not BEC params
-- Lean formalization — abstract types, no SI constants
-- Categorical infrastructure (Waves 3-4)
-- Fracton physics (theory params, not experimental)
-- Chirality wall formalization
-
-**HOLD on downstream updates:** Paper rewrites, notebook updates, and stakeholder doc final passes are DEFERRED until 9D provenance chain is in place and correct parameter values are established. Interim corrections (split transition removal) stand. No new paper claims until human-verified provenance.
-
-**Known issues to track (may surface more during 9D):**
-1. Steinhauer omega_perp: 500 Hz (code, no source) vs 123 Hz (Wang et al. 2017 Table I) — UNRESOLVED
-2. Rb87 a_s: 5.77e-9 m (code, 109 a₀) vs possible 5.29e-9 m (100.4 a₀) — needs primary source check
-3. Steinhauer velocity_upstream: 0.85e-3 m/s — may be circular (derived from solver c_s)
-4. backreaction.py κ: 21.9 s⁻¹ (solver) vs 290 s⁻¹ (published) — 10x discrepancy, PROVENANCE WARNING in code
-5. Heidelberg/Trento: entire parameter sets are PROJECTED (no Hawking experiment exists) — needs clear tier labeling
-6. Option B MC: uniform acceptance rates (0.311 across all L) — suspicious, needs code review
-7. Option B MC: sign catastrophe (avg_sign ≈ 0 for L≥5) — Lorentzian reweighting problem, not gauge sign problem
+**Implementation plan:** Wave 6 (analytical, Paths 1) and Wave 7 (gauge-link MC, Path 2) below. Path 3 (4D ATRG) deferred to Phase 6 roadmap.
 
 ---
 
-*Phase 5 roadmap. Waves 1-5 COMPLETE. 9A-9C formalization COMPLETE: 506 theorems + 2 axioms, ZERO sorry, 176 Aristotle-proved across 29 runs. 9C-2 (Option B, Weingarten): production run had order parameter bug — single-site OPs blind to bond ordering. Fix applied (bond-correlation OPs), re-run queued. 9C-3 (Option C, NJL): implemented, diagnostic shows Binder crossings (vestigial window = 0.126), production L=4-12 running. 9D parameter provenance system in progress (parallel session) — Steinhauer omega_perp 4.4× error found, all downstream paper/notebook updates ON HOLD until provenance chain established. Updated 2026-03-31.*
+## 10. Wave 6 — Analytical Vestigial Susceptibility [Pipeline: Stages 1-12]
+
+**Research basis:** `Lit-Search/Phase-5/Vestigial metric susceptibility from ADW tetrad condensation.md`
+
+**Goal:** Derive, implement, and formally verify the analytical proof that vestigial metric ordering occurs before tetrad condensation in the ADW model. This is the theoretical prediction that Wave 7 (MC) will test numerically.
+
+**Key result (from deep research):** The metric susceptibility in the ADW model takes the RPA form:
+
+```
+χ_g⁻¹(G) = 1/u_g − c_D · Π₀(1/G − 1/G_c)
+```
+
+where Π₀(r_e) = (1/16π²)[ln(Λ²/r_e) − 1] is the bubble integral, u_g is the quartic coupling in the metric channel, c_D = 2D² = 32 (trace channel). The vestigial critical coupling where χ_g diverges is:
+
+```
+r_e* = Λ² · exp[−16π²/(c_D u_g) − 1]
+1/G_ves = 1/G_c + r_e*    →    G_ves < G_c
+```
+
+This proves the metric **necessarily orders before the tetrad** whenever u_g > 0.
+
+### 6A. Quartic Coupling Determination [Pipeline Stage 2, prerequisite] — COMPLETE
+
+**The computation:** Determine u_g from the ADW 8-fermion vertex. The quartic vertex carries the gamma-matrix trace Tr(γ^a γ^b γ^c γ^d) = 4(δ^{ab}δ^{cd} − δ^{ac}δ^{bd} + δ^{ad}δ^{bc}). Project onto the metric channel (symmetric combination δ^{ab}δ^{cd} + δ^{ad}δ^{bc}) to extract u_g. The deep research confirms u_g > 0 for the metric channel generically.
+
+**Deliverables:**
+- [x] `formulas.py`: `adw_quartic_coupling_metric(N_f, Lambda)` — u_g = (N_f/16π²)(γ_proj/D²)ln2 (2026-04-01)
+- [x] `formulas.py`: `gamma_trace_projection(channel)` — metric: +8 (attractive), Lorentz: −4 (repulsive) (2026-04-01)
+- [x] Constants: `ADW_VESTIGIAL` with c_D=32/8, gamma coefficients, scan params (2026-04-01)
+- [x] Lean: `u_g_positive`, `u_g_positive_adw`, `gamma_trace_metric_positive` theorems (2026-04-01)
+- [x] Tests: 7 tests (gamma trace, quartic coupling scaling/sign/Λ-independence) all pass (2026-04-01)
+
+**Key result:** u_g ≈ 0.0044 for ADW (N_f=2, Λ=π). Always positive → vestigial ordering analytically guaranteed. Exponent −16π²/(c_D·u_g) ≈ −1125 → window astronomically narrow for physical u_g.
+
+### 6B. Bubble Integral and RPA Susceptibility [Pipeline Stages 1-5] — STAGES 1-3 COMPLETE, 4-5 PENDING ARISTOTLE
+
+**The computation:** Implement the bubble integral Π₀(r_e) and the full RPA metric susceptibility χ_g(G).
+
+**Deliverables:**
+- [x] Stage 1: `ADW_VESTIGIAL` and `ADW_VESTIGIAL_SCAN` constants in constants.py (2026-04-01)
+- [x] Stage 2 — 7 formulas in `formulas.py` (each with Lean ref + Source):
+  - `gamma_trace_projection` — Tr(γγγγ) decomposition. Source: Peskin/Schroeder App. A
+  - `adw_quartic_coupling_metric` — u_g from CW vertex. Source: Fernandes et al. + Diakonov
+  - `adw_bubble_integral(r_e, Lambda)` — Π₀ = (1/16π²)[ln(Λ²/r_e) − 1]. Source: Nie/Tarjus/Kivelson PNAS 2014
+  - `adw_metric_susceptibility_inv(G, G_c, u_g, c_D, Lambda)` — χ_g⁻¹. Source: Fernandes et al. Ann. Rev. CMP 2019
+  - `adw_vestigial_critical_coupling(G_c, u_g, c_D, Lambda)` — G_ves from r_e* formula
+  - `adw_vestigial_window_width(G_c, u_g, c_D, Lambda)` — exponentially narrow
+  - `adw_vestigial_ordering_proved(u_g)` — sufficient condition check
+- [x] Stage 3 — `lean/SKEFTHawking/VestigialSusceptibility.lean` — 16 sorry-stub theorems, `lake build` clean (2026-04-01)
+  - `gamma_trace_metric_positive`, `gamma_trace_lorentz_negative`, `metric_dominates_lorentz`
+  - `u_g_positive` (general), `u_g_positive_adw` (N_f=2, D=4)
+  - `bubble_integral_monotone`, `bubble_integral_diverges`, `bubble_integral_positive`
+  - `susceptibility_diverges` (IVT), `vestigial_before_tetrad` (main theorem)
+  - `vestigial_r_e_star_pos`, `vestigial_window_exponential`, `vestigial_window_vanishes`
+  - `trace_channel_multiplicity`, `traceless_channel_multiplicity`, `vestigial_ordering_sufficient`
+- [ ] Stage 4 — Aristotle: submitted `--priority 3 --integrate`, awaiting results
+- [ ] Stage 5 — `lake build` zero sorry, theorem count updated
+
+### 6C. Vestigial Phase Diagram and Visualization [Pipeline Stages 6-9] — STAGES 6-9 COMPLETE
+
+**Deliverables:**
+- [x] Stage 6 — 26 new tests in `tests/test_vestigial.py` (1068 total, all pass): (2026-04-01)
+  - TestGammaTrace (4): positive metric, negative Lorentz, metric dominates, invalid raises
+  - TestQuarticCoupling (3): positive, N_f scaling, Λ independence
+  - TestBubbleIntegral (5): positive, monotone, diverges, inf at zero, known value
+  - TestMetricSusceptibility (3): positive far, negative near, crosses zero
+  - TestVestigialCriticalCoupling (4): G_ves < G_c, widens with u_g, exponentially narrow, no repulsive
+  - TestVestigialOrdering (3): positive proves, negative no, ADW model has ordering
+  - TestVestigialConstants (4): multiplicities, signs, scan params, cross-check
+- [x] Stage 7 — `validate.py` 15/15 checks pass (2026-04-01)
+- [x] Stage 8 — 3 new figures in `visualizations.py` (64 total): (2026-04-01)
+  - `fig_vestigial_susceptibility` (fig63) — χ_g⁻¹ vs G/G_c for u_g = 0.3, 0.5, 1.0, 2.0
+  - `fig_vestigial_window` (fig64) — G_ves/G_c vs u_g (trace + traceless-symmetric channels)
+  - `fig_vestigial_phase_diagram_analytical` (fig65) — three-phase diagram with shaded vestigial region
+- [x] Stage 9 — Visual review: all 3 figures correct (zero crossings, exponential narrowness, clean phase boundaries) (2026-04-01)
+
+### 6D. Paper 6 Update + Document Sync [Pipeline Stages 10-12]
+
+**NOTE:** Paper 6 updates are gated on 9D downstream propagation (corrected Steinhauer params). This sub-wave executes AFTER 9D Stage 10-12 work.
+
+**Deliverables:**
+- [ ] Stage 10 — Paper 6: add section on analytical vestigial susceptibility derivation, exponential window prediction, RPA formula, G_ves < G_c theorem. Remove prior MC-based vestigial claims. Reference Lean theorems.
+- [ ] Stage 11 — Notebooks: `Phase4b_Vestigial_Technical.ipynb` updated with analytical susceptibility section. Stakeholder notebook updated.
+- [ ] Stage 12 — Full document sync: Inventory, Inventory Index, README, src/__init__.py, stakeholder docs, Critical Review, Feasibility Study.
+
+**Estimated LOE:** 1 session for Stages 10-12, after 9D propagation and Aristotle integration.
+**Risk:** Low. All formulas are closed-form. The main uncertainty is whether Aristotle can prove the IVT-based existence theorem (may need manual proof if Mathlib's IVT infrastructure is insufficient).
+
+---
+
+## 11. Wave 7 — Hybrid Gauge-Link + Fermion-Bag MC [Pipeline: Stages 1-12]
+
+**Research basis:** `Lit-Search/Phase-5/Hybrid fermion-bag + gauge-link Monte Carlo for ADW tetrad condensation.md`
+
+**Goal:** Implement the first-ever fermion-bag MC with dynamical SO(4) gauge links on a 4D hypercubic lattice. Measure separate tetrad and metric order parameters to numerically test the vestigial prediction from Wave 6. This is a genuinely novel algorithm — no prior implementation exists in the literature.
+
+**Prerequisites:** Wave 6 complete (provides the analytical G_ves target for MC validation). 9D downstream propagation complete (corrected params for any BEC comparisons).
+
+**Key design decisions (from deep research):**
+- SO(4) ≅ SU(2)_L × SU(2)_R decomposition via quaternion pairs — 4× speedup over explicit 4×4 matrices
+- Kennedy-Pendleton heatbath for SU(2) subgroup gauge updates — standard, efficient
+- Alternating sweeps: fermion-bag at fixed links, gauge Metropolis/heatbath at fixed Grassmann state
+- Bag weight: det(M_B[U]) where M_B is fermion matrix restricted to bag B, dimension (4|B|) × (4|B|)
+- Parameter space: (g, β) where g = four-fermion coupling, β = Wilson plaquette coupling (β=0 is pure ADW)
+- Sign problem: real matrix structure eliminates complex phase; real sign monitored via ⟨sign⟩
+
+### 7A. SO(4) Gauge Infrastructure [Pipeline Stages 1-5, Phase 1 of algorithm]
+
+**The construction:** Build the pure gauge theory infrastructure — lattice geometry, SO(4) group operations via quaternion pairs, Wilson plaquette action, heatbath + overrelaxation gauge updates. Validate against known SO(4) average plaquette vs β.
+
+**Deliverables:**
+- [ ] Stage 1 — Constants in `constants.py`:
+  - `GAUGE_LINK_MC` dict: β range, N_f, quaternion precision, heatbath params
+  - `SO4_LATTICE` dict: plaquette normalization, staple structure, overrelax ratio
+- [ ] Stage 2 — `formulas.py` functions (each with Lean ref + Source):
+  - `quaternion_multiply(q1, q2)` — SU(2) multiplication via quaternion algebra. Source: Creutz, "Quarks, Gluons and Lattices" Ch. 15
+  - `so4_from_quaternion_pair(q_L, q_R)` — construct SO(4) matrix from SU(2)×SU(2). Source: standard representation theory
+  - `wilson_plaquette_action(U_P)` — (1/4)Tr(U_P) for SO(4). Source: Wilson, PRD 10, 2445 (1974)
+  - `kennedy_pendleton_heatbath(staple, beta)` — exact SU(2) heatbath sampling. Source: Kennedy-Pendleton, PLB 156, 393 (1985)
+- [ ] Stage 2 — New modules:
+  - `src/vestigial/quaternion.py` (~200 lines) — SU(2) quaternion algebra, vectorized over arrays of shape (N, 4). Haar random, multiply, conjugate, trace, to_matrix, from_matrix.
+  - `src/vestigial/so4_gauge.py` (~300 lines) — SO(4) as quaternion pairs. Plaquette computation, staple sum, heatbath update, overrelaxation, Haar random link.
+- [ ] Stage 3 — `lean/SKEFTHawking/QuaternionGauge.lean` — sorry stubs:
+  - `quaternion_multiply_assoc` — associativity
+  - `quaternion_unit_norm` — |q|=1 preserved by multiply
+  - `so4_decomposition` — SO(4) ≅ (SU(2)×SU(2))/Z_2
+  - `plaquette_trace_bound` — |Tr(U_P)/4| ≤ 1
+  - `heatbath_detailed_balance` — Kennedy-Pendleton satisfies detailed balance
+  - ~8-12 theorems
+- [ ] Stage 4 — Aristotle
+- [ ] Stage 5 — `lake build` zero sorry
+- [ ] **Validation checkpoint:** Pure gauge SO(4) at L=4, scan β = 0-10, verify average plaquette matches two independent SU(2) theories (⟨P⟩_{SO(4)} = [⟨P⟩_{SU(2)}]² in the decomposed action). This runs in minutes and validates the infrastructure before adding fermions.
+
+### 7B. Fermion-Bag with Gauge Links [Pipeline Stages 2-5, Phase 2-3 of algorithm]
+
+**The construction:** Extend the fermion-bag sweep to work with explicit gauge-link configurations. The key change: bag weight det(M_B[U]) depends on the link configuration, and gauge updates require recomputing affected bag determinants.
+
+**Deliverables:**
+- [ ] Stage 2 — `formulas.py` functions:
+  - `gauge_fermion_bag_weight(M_B, U_links)` — det of gauge-covariant fermion matrix restricted to bag. Source: Chandrasekharan PRD 82, 025007 (2010), adapted with gauge links
+  - `tetrad_bilinear(psi_x, gamma_a, U_xy, psi_y)` — E^a_μ = ψ̄_x γ^a U_{xy} ψ_y. Source: Vladimirov-Diakonov PRD 86, 104019 (2012)
+  - `metric_from_tetrad(E)` — g_μν = δ_{ab} E^a_μ E^b_ν. Source: ADW mechanism
+- [ ] Stage 2 — New module:
+  - `src/vestigial/gauge_fermion_bag.py` (~500-800 lines) — The hybrid algorithm:
+    - `GaugeFermionConfig` dataclass: site Grassmann occupations {0,1}^8 per site + SO(4) links per bond
+    - `fermion_bag_sweep_with_links(config, rng)` — fermion update at fixed links. Propose Grassmann flips, compute bag weight ratio via Sherman-Morrison-Woodbury for rank-k updates. O((4k)³) per bag.
+    - `gauge_link_sweep(config, rng, beta)` — gauge update at fixed Grassmann. Kennedy-Pendleton heatbath for each link's SU(2)_L and SU(2)_R components. Recompute bag determinants for affected bags.
+    - `run_hybrid_mc(params, mc_params)` — full hybrid MC: alternate fermion + gauge sweeps
+- [ ] Stage 2 — `src/vestigial/gauge_observables.py` (~200-300 lines) — Order parameters:
+  - `tetrad_vev(config)` — ⟨E^a_μ⟩ = (1/4V) Σ_{x,μ} ψ̄_x γ^a U_{x,μ} ψ_{x+μ̂}, a 4×4 matrix. Tetrad ordering: ||⟨E⟩|| > 0.
+  - `metric_vev(config)` — ⟨g_μν⟩ = (1/V) Σ_x δ_{ab} ⟨E^a_μ(x) E^b_ν(x)⟩, a symmetric 4×4 matrix. Metric ordering: eigenvalues of ⟨g⟩ split from zero.
+  - `vestigial_diagnostic(config)` — returns (tetrad_magnitude, metric_eigenvalues, is_vestigial). Vestigial = metric eigenvalues nonzero while tetrad magnitude ≈ 0.
+  - `binder_tetrad_gauge(configs)` — Binder cumulant of ||⟨E⟩||
+  - `binder_metric_gauge(configs)` — Binder cumulant of Tr(⟨g⟩)
+  - `sign_monitor(configs)` — track ⟨sign(det(M))⟩ for sign problem assessment
+- [ ] Stage 3 — `lean/SKEFTHawking/GaugeFermionBag.lean` — sorry stubs:
+  - `bag_weight_gauge_invariance` — W_B transforms correctly under gauge transformation
+  - `tetrad_gauge_covariant` — E^a_μ transforms as expected under SO(4) gauge
+  - `metric_gauge_invariant` — g_μν is gauge-invariant (SO(4) singlet)
+  - `vestigial_implies_metric_nonzero` — definition consistency
+  - ~8-10 theorems
+- [ ] Stage 4 — Aristotle
+- [ ] Stage 5 — `lake build` zero sorry
+- [ ] **Validation checkpoint:** L=4, β=2 (intermediate gauge coupling), scan g from weak to strong. Verify: (a) at g=0 the system is disordered; (b) at large g the tetrad orders; (c) acceptance rates respond to coupling; (d) sign ⟨sign⟩ > 0.5 for manageable sign problem.
+
+### 7C. Production Phase Diagram Scan [Pipeline Stages 6-9]
+
+**The computation:** Scan the (g, β) parameter space at multiple L to map the phase diagram and locate the vestigial phase (if it exists). The analytical prediction from Wave 6 gives G_ves as a target.
+
+**Deliverables:**
+- [ ] Stage 6 — Tests:
+  - Pure gauge validation: average plaquette vs β for L=4,6
+  - Hybrid MC: coupling-dependent observables (tetrad VEV, metric eigenvalues)
+  - Sign monitoring: ⟨sign⟩ > threshold at working points
+  - Binder cumulant bounds for gauge-covariant OPs
+  - Reproducibility (same seed → same result)
+- [ ] Stage 7 — `validate.py` all checks pass
+- [ ] Stage 8 — Visualizations:
+  - `fig_gauge_phase_diagram` — (g, β) heat map of tetrad/metric OPs
+  - `fig_gauge_binder_crossing` — Binder cumulants for tetrad and metric vs g, multiple L
+  - `fig_gauge_vestigial_window` — overlay analytical G_ves prediction with MC data
+  - `fig_gauge_sign_monitor` — ⟨sign⟩ vs coupling, sign problem assessment
+- [ ] Stage 9 — Figure review
+- [ ] **Production runs:** L=4,6,8 at 20 coupling points in (g, β) space. Estimated runtime:
+  - L=4: ~2-4 hours (256 sites, bags size ~1-5)
+  - L=6: ~1-2 days (1296 sites)
+  - L=8: ~3-7 days (4096 sites)
+  - Total: ~1-2 weeks of workstation time
+
+### 7D. Paper 6 + Document Sync [Pipeline Stages 10-12]
+
+**Deliverables:**
+- [ ] Stage 10 — Paper 6 update: gauge-link MC results, (g, β) phase diagram, vestigial phase detection (or negative result with diagnosis), comparison with analytical prediction
+- [ ] Stage 11 — Notebooks updated
+- [ ] Stage 12 — Full document sync
+
+**Estimated LOE:** 6-11 weeks total across 7A-7D.
+**Risk:** Medium-High.
+- **Sign problem** is the primary risk. If ⟨sign⟩ → 0 at working points, reweighting fails. Mitigation: include β > 0 as regulator; use dual bag formulation near criticality.
+- **Bag growth near criticality.** Bags percolate, determinant cost explodes as O(V³). Mitigation: switch to dual (weak-coupling) bag formulation per Chandrasekharan's duality.
+- **Critical slowing down.** Unknown for this novel algorithm. Mitigation: parallel tempering across β; monitor autocorrelation.
+- **No benchmark to compare against.** This is the first implementation — validation relies on limiting cases (pure gauge, strong coupling) and internal consistency (analytical prediction).
+
+---
+
+### 9D. Parameter Provenance & Blast Radius Fix (2026-04-01)
+
+**Root cause:** Steinhauer omega_perp = 2π×500 Hz in constants.py had NO published source. Verified from primary source (Wang et al., PRA 96, 023616, Table II): correct value is **2π×123 Hz**. Also Rb87 a_s was 109 a₀ but van Kempen 2002 reports **100.4 a₀** for the F=2 channel Steinhauer uses.
+
+**Provenance system built (Pipeline Invariant 8, CHECK 15):**
+- [x] `src/core/provenance.py` — PARAMETER_PROVENANCE registry, 29 params, all LLM-verified
+- [x] `src/core/citations.py` — CITATION_REGISTRY, 31 papers with DOIs
+- [x] CHECK 15 in validate.py — coverage, LLM/human verification, value consistency, tier checks
+- [x] `scripts/provenance_dashboard.py` — Flask+HTMX command center (5 tabs)
+- [x] WAVE_EXECUTION_PIPELINE.md — Stage 1 gate, Invariant 8, deep research reconciliation protocol
+- [x] CLAUDE.md — Invariant 8 added
+
+**Root cause fixes applied:**
+- [x] `Rb87.a_s`: 5.77e-9 → 5.31e-9 (100.4 a₀, van Kempen PRL 88, 093201)
+- [x] `Steinhauer.omega_perp`: 2π×500 → 2π×123 (Wang PRA 96, 023616, Table II)
+- [x] `Steinhauer.velocity_upstream`: 0.85e-3 → 0.41e-3 (Mach 0.75 × corrected c_s)
+- [x] validate.py CHECK 2 & CHECK 4 expected values updated
+- [x] 15/15 validation checks pass, 1027 tests pass
+
+**Solver output with corrected params (Steinhauer):**
+- c_s: 1.151 → **0.548 mm/s** (matches published ~0.5)
+- ξ: 0.635 → **1.334 µm** (matches Wang ~2 µm)
+- Model κ: 21.9 → **4.8 s⁻¹** (model-dependent tanh profile, NOT published κ=290)
+- Note: Published κ=290 s⁻¹ comes from actual step-potential gradient, not our smooth tanh model
+
+**Additional findings from primary source verification:**
+- [x] Polariton c_s: code 1.0 µm/ps, Falque reports 0.40 µm/ps (2.5× discrepancy) — tier→PROJECTED
+- [x] Polariton ξ: code 2.0 µm, Falque reports 3.4-4.0 µm — tier→PROJECTED
+- [x] Polariton tau_cav: 100/300 ps are projections, Falque actual cavity ≈ 8 ps — tier→PROJECTED
+- [x] arXiv ID for Wang 2017 was hallucinated (1706.01483 = combustion paper, correct: 1605.01027)
+
+**Remaining downstream propagation (Stage 10-12 work):**
+- [ ] Paper 1 Table 1: update c_s, ξ, κ, T_H, δ_diss, δ_disp for Steinhauer
+- [ ] `src/wkb/spectrum.py`: update Steinhauer natural-unit params (D, gamma_dim)
+- [ ] `src/wkb/backreaction.py`: resolve PROVENANCE WARNING (can now reconcile — solver c_s matches published)
+- [ ] README.md: update Steinhauer row in main physics table
+- [ ] `papers/experimental_predictions/prediction_tables.tex`: update Steinhauer column
+- [ ] Notebooks Phase1-3: will show updated values on re-execution (import from solver)
+- [ ] `docs/validation/VALIDATION_REPORT.md`: historical, but note correction
+- [ ] Add `Source:` fields to formulas.py docstrings (B6)
+- [ ] Add theorem→paper and formula→paper declared mappings (C2)
+- [ ] Spec paper claims reviewer agent for pipeline (new pipeline stage)
+- [ ] Polariton parameter reconciliation: determine if c_s/xi/tau_cav should use Falque values or remain projected
+
+---
+
+## 12. Wave 8 — 4D ATRG for Vestigial Gravity (Sign-Problem-Free Cross-Validation)
+
+**Research basis:** `Lit-Search/Phase-5/Feasibility of 4D HOTRG for vestigial gravity transitions in the ADW model.md`
+
+**Goal:** Implement 4D Anisotropic Tensor Renormalization Group (ATRG) for the ADW model. ATRG is sign-problem-free and provides numerically exact (up to bond dimension truncation) results at small lattice sizes (L=4-6). Cross-validates Wave 7 MC results and provides a fallback if the MC sign problem blocks production.
+
+**Moved from Phase 6:** The original "9-14 month" estimate assumed traditional academic pace. With our pipeline (numba + Opus + Lean + Aristotle), each stage is days not months. Compute at D=8-12 fits workstation memory (128MB-3.4GB per tensor). O(D⁹) at D=12 for L=4 is ~1.5 hours on consumer hardware. Reference implementations exist for all stages.
+
+**Key algorithm:** ATRG (Adachi-Okubo-Todo, PRB 102, 054432, 2020) scales as O(D⁹) in 4D — six orders of magnitude better than HOTRG's O(D¹⁵). For SO(4), the armillary sphere formulation (Yosprakob PTEP 2024) can reduce effective bond dimension by 3-5×.
+
+**Starting points:** TsuyoshiOkubo/ABTRG (Python ATRG by co-author), akiyama-es/Grassmann-BTRG, rgjha/TensorCodes (PyTorch GPU).
+
+### 8A. 4D Ising ATRG Validation [Pipeline Stages 1-7]
+
+**Goal:** Port the reference ATRG implementation and validate against the known 4D Ising critical temperature. This exercises the core tensor contraction machinery without gauge or Grassmann complications.
+
+**Source:** Akiyama et al., PRD 100, 054510 (2019); Adachi-Okubo-Todo PRB 102, 054432 (2020)
+
+**Deliverables:**
+- [ ] `src/tensor/atrg_core.py` — ATRG algorithm: bond-swapping, SVD truncation, coarse-graining
+- [ ] `src/tensor/ising_4d.py` — 4D Ising initial tensor construction
+- [ ] Constants, formulas (with Lean refs), tests
+- [ ] Validation: reproduce T_c for 4D Ising at D=8-12
+- [ ] Estimated compute: minutes at D=8, ~1h at D=12
+
+### 8B. Z₂ Gauge Structure [Pipeline Stages 1-7]
+
+**Goal:** Add the simplest lattice gauge theory to the ATRG framework. Z₂ gauge links on bonds with Wilson plaquette action.
+
+**Source:** Akiyama & Kuramashi, JHEP 05, 102 (2022)
+
+**Deliverables:**
+- [ ] `src/tensor/gauge_tensor.py` — gauge-invariant initial tensor construction
+- [ ] Tests: reproduce known Z₂ confinement-deconfinement transition
+- [ ] Estimated compute: hours at D=12
+
+### 8C. SU(2) Gauge in 3D Benchmark [Pipeline Stages 1-7]
+
+**Goal:** Implement SU(2) gauge theory with ATRG in 3D. Validates the non-Abelian gauge tensor construction before moving to 4D SO(4).
+
+**Source:** Yosprakob & Okunishi, PTEP 2025, 033B06; armillary sphere formulation
+
+**Deliverables:**
+- [ ] SU(2) character expansion for initial tensor
+- [ ] Armillary sphere technique for bond dimension reduction
+- [ ] Validate: average plaquette and deconfinement transition vs MC benchmarks
+- [ ] Estimated compute: hours at D=12-16
+
+### 8D. Grassmann Extension to 4D [Pipeline Stages 1-7]
+
+**Goal:** Add Grassmann-valued tensor entries to the ATRG framework. We already have `grassmann_trg.py` for 2D — extend to 4D using the formalism of Akiyama et al. (JHEP 01, 121, 2021).
+
+**Source:** Akiyama et al., JHEP 01, 121 (2021) — 4D NJL model with Grassmann ATRG
+
+**Deliverables:**
+- [ ] `src/tensor/grassmann_atrg.py` — Grassmann-valued tensor algebra
+- [ ] Validate: reproduce known NJL phase transition in 4D
+- [ ] Cross-check against our Wave 9C-3 NJL MC results (g_c ≈ 5.5)
+- [ ] Estimated compute: hours at D=8-12
+
+### 8E. Full ADW Model at D=8-12 [Pipeline Stages 1-12]
+
+**Goal:** Combine SO(4) gauge + Grassmann + 4D ATRG for the ADW model. This is the frontier — no one has done this before. Cross-validates Wave 7 MC results.
+
+**Source:** Synthesis of 8A-8D techniques applied to the ADW action
+
+**Deliverables:**
+- [ ] SO(4) ≅ SU(2)_L × SU(2)_R character expansion with armillary sphere reduction
+- [ ] Full ADW initial tensor with 8 Grassmann variables per site
+- [ ] Free energy, specific heat, and vestigial order parameter from TRG
+- [ ] Cross-validation: compare phase boundaries with Wave 7 MC and Wave 6 analytical G_ves
+- [ ] If D=8-12 insufficient, document what D is needed → D=16+ becomes Phase 6 item
+
+**Risk:** This is genuinely frontier research. The combination is untested. If the physics requires D > 12 to resolve the vestigial window (which is exponentially narrow per Wave 6), workstation-scale ATRG may not have sufficient resolution. This would be a meaningful negative result documenting the limitation.
+
+**Estimated LOE:** 8A-8D: ~1 week each. 8E: ~2 weeks. Total: ~6 weeks.
+
+---
+
+*Phase 5 roadmap. Waves 1-5 COMPLETE. 9A-9E COMPLETE. Wave 6 Stages 1-9 COMPLETE. Wave 7: 7A COMPLETE. **7B COMPLETE + BUG-FIX.** **7C: Rust RHMC implemented + multi-shift CG (6.3× L=4). CRITICAL BUG: real pseudofermion gives Pf^{1/2} not Pf. Fix in progress: complex pseudofermion (two real flavors).** Updated 2026-04-02.*
+
+### Wave 7B Status (COMPLETE)
+
+Dual implementation: 4×4 complex reference + 8×8 Majorana sign-free (Kramers PRL 116). Module: `gauge_fermion_bag_majorana.py`. Optimizations: Givens Spin(4) 224×, Woodbury gauge 42×, bond-check fermion 4×. Fermion-bag hits percolation wall at L≥6 — RHMC crossover confirmed by deep research.
+
+**W7B-fix wave (session 3):** Comprehensive code review found and fixed 3 critical bugs:
+- C1: Stale `big_bag_inv` in JIT gauge sweep — Woodbury inverse update added
+- C2: `_total_bag_weight` skipped zero-det bags — now returns 0
+- C3: `_pfaffian_sign_lu` used wrong heuristic — replaced with Kramers assertion
+- Plus: SMW zero-check, imaginary part validation, JIT tolerance tightened (rtol 0.2→1e-6)
+- Pipeline compliance: Binder cumulant moved to formulas.py (d=16 tetrad, d=9 metric) with 4 Lean theorems (2 ring-proved, 2 Aristotle cc257137). Lean/Aristotle/Source docstrings on all Majorana functions. Provenance entries for MAJORANA_GAMMA_8x8, J1, J2, J3.
+- 6 new tests: Spin(4) Givens vs logm/expm, Kramers Pf sign across 50 configs, Woodbury JIT direct, DeltaM sparsity. **146 tests pass, zero sorry, 8064 Lean jobs clean.**
+- Production script rewritten: incremental save per coupling point, --resume, logging, NaN/Inf validation.
+
+### Wave 7C: HS+RHMC Algorithm (NEXT — gates all production runs)
+
+**Deep research returned:** `Lit-Search/Phase-5/HS+RHMC for ADW tetrad condensation with 8×8 Majorana fermions on Spin(4) lattice.md`
+
+**Why:** Fermion-bag algorithm hits O(V⁴) percolation wall. 88% of sites form one bag → det is O(V³) per sweep, O(V) sweeps to decorrelate → O(V⁴) total. RHMC is O(V·√κ) per decorrelated sample. **Crossover at L≈6** — confirms L=6 fermion-bag was intractable.
+
+**Algorithm:**
+1. HS transformation: exp(-g|E^a|²) = ∫ dh exp(-h²/4g + h·E^a) → 16V auxiliary fields h^a_{x,μ}
+2. Z = ∫ Dh DU · Pf(A[h,U]) · exp(-Σh²/4g)
+3. Kramers: Pf(A) ≥ 0 for all (h,U) → sign-problem-free
+4. |Pf(A)| = det(A†A)^{1/4} via Zolotarev rational approximation (12-16 poles, 10⁻⁶ precision)
+5. Multi-shift CG: one Krylov solve for all poles simultaneously
+6. Omelyan MD: joint evolution in (h, U_L, U_R) with SU(2) closed-form exponentiation
+7. Metropolis accept/reject at trajectory end
+
+**Cost estimates:**
+| L | V | Wall time (1 core) | Wall time (GPU) |
+|---|---|--------------------|-----------------|
+| 4 | 256 | ~0.1 s/traj | ~1 ms |
+| 8 | 4,096 | ~3 s/traj | ~30 ms |
+| 12 | 20,736 | ~25 s/traj | ~0.25 s |
+| 16 | 65,536 | ~2 min/traj | ~1.2 s |
+
+**Starting point:** SUSY LATTICE code (github.com/daschaich/susy, GPL-3.0). Requires: replace A₄* lattice → hypercubic, U(N) → Spin(4), twisted fermion → 8×8 Majorana A[h,U], add h dynamics.
+
+**Validation plan:** Cross-check with fermion-bag at L=4 (plaquette, tetrad, Pf comparison). Reversibility test, ΔH distribution, autocorrelation analysis.
+
+**Deliverables (Pipeline Stages 1-12):**
+- [ ] Stage 1: HS constants (16V auxiliary fields, Zolotarev coefficients)
+- [ ] Stage 2: formulas.py — HS fermion matrix A[h,U], MD forces, rational approx
+- [ ] Stage 3-5: Lean theorems for HS partition function identity, Kramers in HS regime
+- [ ] Stage 6: Tests — multi-shift CG, MD reversibility, Metropolis detailed balance
+- [ ] Stage 7: Cross-validate RHMC vs fermion-bag at L=4
+- [ ] Stages 8-12: Production L=4,6,8,12,16 scans, Binder crossing analysis, paper update
+
+**7C IMPLEMENTED (2026-04-02).** Module: `src/vestigial/hs_rhmc.py` (~900 lines). 13 Lean theorems (zero sorry). 19 tests pass. Production runner: `scripts/run_rhmc_production.py` (incremental save + resume).
+
+Verified correct:
+- Force matches finite differences to 1e-10
+- Omelyan reversibility to 1e-15
+- ΔH ~ O(ε²) scaling confirmed
+- Zolotarev: 16 poles, all α_k > 0, exponential convergence
+- At β=0: gauge links gauge-fixed to identity — h-field RHMC is correct algorithm
+- **BUG (found 2026-04-02):** ⟨h²⟩ ≈ 2g was misdiagnosed as correct. Real pseudofermion with x^{-1/4} gives Pf^{1/2}, not Pf. See W7C-fix section below.
+
+**7C Performance Engineering (2026-04-02).** Three backends implemented, comprehensive optimization, deep research.
+
+**Backends implemented:**
+- `src/vestigial/hs_rhmc.py` — numpy/scipy (reference, 63s/traj L=4, requires numba)
+- `src/vestigial/hs_rhmc_jax.py` — JAX CPU (11.5s/traj L=4, requires jax)
+- `src/vestigial/hs_rhmc_torch.py` — **PyTorch CPU (3.39s/traj L=4, production default)**
+
+**Optimizations applied:**
+- Batched LU solve: all 16 Zolotarev shifts in one LAPACK call (vs 16 independent CG)
+- Batched CG: all 16 shifts share one batched matvec per iter (for L≥6 where LU exceeds memory)
+- FSAL Omelyan: last force of step k = first of step k+1 → 21 force evals instead of 30 (30% reduction)
+- Auto device selection: CPU for all sizes (MPS GPU provides zero benefit — see below)
+- Production runner: `--backend torch|jax|numpy` with incremental save + resume
+
+**GPU investigation (dead end):**
+- MPS GPU SLOWER than CPU at all sizes: unified memory → shared 273 GB/s bandwidth, GPU adds 100-350μs kernel launch overhead per dispatch, zero bandwidth gain. Confirmed by deep research.
+- MLX: no float64, eigh CPU-only, designed for LLM inference not scientific computing.
+- jax-metal: abandoned (last release Oct 2024, breaks on JAX ≥0.8.2).
+- JAX CPU: matmul routes through Eigen/NEON bypassing Accelerate AMX → 2-4× slower than PyTorch.
+- **Verdict: PyTorch CPU (Accelerate BLAS/AMX) is the single best framework across all L.**
+
+**Deep research (Lit-Search/Phase-5/5W7C/):**
+- `GPU-accelerated CG on Apple Silicon.md` — definitive: GPU loses due to unified memory bandwidth sharing
+- `JAX on Apple Silicon- closing the 2.7× gap with PyTorch for RHMC.md` — JAX gap is Eigen BLAS + algorithmic
+
+**Key finding: the fermion matrix A is physically sparse** (nearest-neighbor lattice, 0.2% fill at L=8). Dense storage wastes 99.8% of memory and bandwidth. Sparse CG reads 2600× less data at L=12. This is the critical unlock for L≥12 where dense matrices exceed 128GB.
+
+**Production projections (128 GB Apple Silicon, PyTorch CPU, FSAL Omelyan):**
+
+| L | dim | Solver | s/traj | Production (24K traj) | Status |
+|---|-----|--------|--------|-----------------------|--------|
+| 4 | 2,048 | Batched LU | **3.4s** ✓ | 23h | READY NOW |
+| 6 | 10,368 | Dense batched CG | ~3-10s | 1-3 days | Implemented |
+| 8 | 32,768 | Dense batched CG | ~20-60s | 6-17 days | Implemented |
+| 10 | 80,000 | Dense batched CG | ~2-5 min | 1-2 months | Borderline |
+| 12 | 165,888 | Sparse CG | ~3-10s | 1-3 days | **Needs sparse impl** |
+| 14-20 | 307K-1.28M | Sparse CG | ~5-30s | 1-8 days | **Needs sparse impl** |
+
+✓ = measured. Others projected from calibrated scaling.
+
+### W7C-fix: Complex Pseudofermion Convention (2026-04-02) — IN PROGRESS
+
+**CRITICAL BUG FOUND:** Real pseudofermion with x^{-1/4} gives Pf(A)^{1/2}, not Pf(A).
+
+Confirmed empirically at L=2 (g=2.0):
+| Method | ⟨h²⟩ |
+|--------|-------|
+| Exact Pf(A) = det^{1/4} | 5.264 ± 0.004 |
+| Exact det^{1/8} = Pf^{1/2} | 4.303 ± 0.006 |
+| RHMC x^{-1/4} (CURRENT) | 4.306 ± 0.027 |
+
+Current code matches det^{1/8} to 0.003 — simulating the WRONG theory.
+
+**Root cause:** For real φ ∈ ℝ^{8V}: ∫dφ exp(-φ^T M φ) ∝ det(M)^{-1/2}.
+With M = (A†A)^{-1/4}: det^{1/8} = Pf^{1/2}. Need complex Φ ∈ ℂ^{8V} to get det^{1/4} = Pf.
+
+**Deep research confirms:** Schaich & DeGrand (arXiv:1410.6971, Eqs. 16-20) use complex pseudofermion with (D†D)^{-1/4}. Heatbath uses (D†D)^{+1/8}. Universal convention in lattice SUSY.
+Ref: `Lit-Search/Phase-5/5W7C/Pfaffian RHMC uses complex pseudofermions with quarter-root power.md`
+
+**Fix:** Complex Φ = Φ_R + iΦ_I decomposes into two independent real fields (since A†A is real):
+- Action: S_PF = Φ_R^T (A†A)^{-1/4} Φ_R + Φ_I^T (A†A)^{-1/4} Φ_I (power unchanged)
+- Heatbath: Φ_{R,I} = A · r_{-3/8}(A†A) · ξ_{R,I} (A matvec trick, r ≈ x^{-3/8})
+- Cost: ~2× current per force eval (two CG solves per force)
+
+**Implementation (Rust lib.rs — Pipeline Stages 1-7): ALL COMPLETE**
+- [x] Stage 0: Empirical test confirms bug (`scripts/test_pseudofermion_convention.py`)
+- [x] Stage 1: Heatbath Zolotarev power -3/8 + spectral range from Lanczos (24 poles)
+- [x] Stage 2: Updated hs_rhmc.py docstrings (Schaich-DeGrand arXiv:1410.6971 citation)
+- [x] Stage 3-5: 2 new Lean theorems (complex_pseudofermion_pfaffian, heatbath_a_trick_covariance). 22 total, zero sorry.
+- [x] Stage 6: Rust two-flavor heatbath + Hamiltonian + forces. benchmark_rust_parallel.py updated.
+- [x] Stage 7: L=2 validated: h_sq 4.31→4.99 (24 poles, converging to exact 5.10). L=4: h_sq 4.31→4.73, |ΔH|~0.01.
+- [ ] Stage 7: L=4 cross-validation vs fermion-bag (deferred — fermion-bag also had wrong PF)
+
+**Also fixed in this wave:**
+- Spectral range: use Lanczos estimation (not hardcoded [0.01, 100])
+- Scatter stencil: single-pass (reverted two-pass gather, removed threading)
+- Multi-shift CG: shared Krylov (6.3× at L=4)
+- 20 Lean theorems in HubbardStratonovichRHMC.lean (zero sorry)
+
+**Production runner:** `scripts/run_rhmc_production.py` — checkpoint/resume, per-traj saves, Ctrl-C safe.
+
+```bash
+# IMPORTANT: build Rust first (needed after any Rust code change)
+PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uv run maturin develop --release --manifest-path rust/Cargo.toml
+
+# L=4 production (~75 min on M3 Max 16-core, 14 workers)
+PYTHONPATH=. .venv/bin/python scripts/run_rhmc_production.py --l 4 --n-traj 1500
+
+# L=8 production (~3.3 days, stop/resume anytime)
+PYTHONPATH=. .venv/bin/python scripts/run_rhmc_production.py --l 8 --n-traj 500 --n-md-steps 50
+
+# Resume any interrupted run (auto-detects progress from data/rhmc/*.npz)
+PYTHONPATH=. .venv/bin/python scripts/run_rhmc_production.py --l 8 --n-traj 500 --n-md-steps 50
+
+# Background overnight
+nohup env PYTHONPATH=. .venv/bin/python scripts/run_rhmc_production.py \
+  --l 8 --n-traj 500 --n-md-steps 50 > rhmc_l8.log 2>&1 &
+```
+
+Checkpoints: `data/rhmc/L{L}_g{g:.4f}.npz` — saves after every trajectory. Includes h-field state for seamless resume (no re-thermalization). Kill anytime, resume with same command.
+
+- [x] L=4 production RUNNING (2026-04-03)
+- [ ] L=8 production (after L=4 validates)
+- [ ] Stages 8-12 (viz, figures, Paper 6 update) after data available

@@ -214,6 +214,58 @@ def metric_order_parameter_4d(config: Lattice4DConfig) -> float:
     return float(np.mean(normalized ** 2))
 
 
+def _staggered_sign(L: int) -> np.ndarray:
+    """Compute the staggered sign (-1)^{x0+x1+x2+x3} for each site.
+
+    On a 4D hypercubic lattice, alternates +1/-1 on the two sublattices
+    (checkerboard pattern). Cached per L for efficiency.
+    """
+    V = L ** 4
+    signs = np.empty(V, dtype=np.float64)
+    for site in range(V):
+        s = site
+        parity = 0
+        for _ in range(4):
+            parity += s % L
+            s //= L
+        signs[site] = 1.0 if parity % 2 == 0 else -1.0
+    return signs
+
+
+def staggered_tetrad_op(config: Lattice4DConfig) -> float:
+    """Staggered (antiferromagnetic) tetrad order parameter.
+
+    M_stag = (1/V) Σ_x (-1)^{x0+x1+x2+x3} × (n_x/N - 1/2)
+
+    Sensitive to antiferromagnetic ordering where even-sublattice
+    sites have f > 1/2 and odd-sublattice sites have f < 1/2
+    (or vice versa). This is the correct OP when the spatial
+    correlator G(r) shows alternating sign (as in the NJL model).
+
+    Can be positive or negative → non-trivial Binder cumulant.
+    """
+    L = config.params.L
+    N = float(config.params.n_grassmann)
+    frac = config.site_occ.astype(np.float64) / N - 0.5  # center at half-filling
+    signs = _staggered_sign(L)
+    return float(np.mean(signs * frac))
+
+
+def staggered_metric_op(config: Lattice4DConfig) -> float:
+    """Staggered metric order parameter (squared staggered tetrad).
+
+    M_met = (1/V) Σ_x (n_x/N - 1/2)²
+
+    This is always ≥ 0 and measures the spread of occupations around
+    half-filling. In the vestigial scenario, it could order (sites
+    pushed away from f=0.5) even when the staggered tetrad averages
+    to zero (equal population of +/- sublattice domains).
+    """
+    N = float(config.params.n_grassmann)
+    frac = config.site_occ.astype(np.float64) / N - 0.5
+    return float(np.mean(frac ** 2))
+
+
 def tetrad_bond_order_parameter_4d(config: Lattice4DConfig,
                                     neighbor_table: np.ndarray = None) -> float:
     """Compute the bond-correlation tetrad order parameter.
@@ -282,6 +334,76 @@ def metric_bond_order_parameter_4d(config: Lattice4DConfig,
     nbr_frac = frac[neighbor_table[:, :4]]  # forward neighbors only
     bond_sq = (frac[:, np.newaxis] ** 2) * (nbr_frac ** 2)
     return float(np.mean(bond_sq))
+
+
+def spatial_correlator(config: Lattice4DConfig,
+                       neighbor_table: np.ndarray = None,
+                       max_r: int = None) -> dict:
+    """Compute the connected spatial correlator G(r) = ⟨f_x f_{x+r}⟩ - ⟨f⟩².
+
+    Measures whether occupation fractions at distance r are correlated
+    beyond what's expected from the mean. This is the definitive test
+    for whether the bond coupling produces genuine spatial ordering:
+    - G(r) > 0 decaying exponentially → finite correlation length ξ
+    - G(r) ≈ 0 for r > 0 → sites are independent (no spatial ordering)
+    - ξ diverges with L at a phase transition
+
+    Uses displacement along the x0 axis for simplicity (equivalent to
+    any axis by lattice symmetry).
+
+    Args:
+        config: lattice configuration
+        neighbor_table: precomputed neighbor indices (used for r=1 check)
+        max_r: maximum displacement to measure (default L//2)
+
+    Returns:
+        dict with keys:
+          'r': list of displacements [0, 1, ..., max_r]
+          'G_r': G(r) values (connected correlator)
+          'G_r_raw': ⟨f_x f_{x+r}⟩ (disconnected)
+          'f_mean': ⟨f⟩
+          'f_sq_mean': ⟨f⟩²
+          'xi_est': estimated correlation length from G(1)/G(0) if positive
+    """
+    L = config.params.L
+    N = float(config.params.n_grassmann)
+    V = config.params.volume
+    if max_r is None:
+        max_r = L // 2
+
+    frac = config.site_occ.astype(np.float64) / N  # (V,)
+    f_mean = float(np.mean(frac))
+    f_sq_mean = f_mean ** 2
+
+    # Build displacement table along x0 axis
+    # site = x0 + L*(x1 + L*(x2 + L*x3))
+    # Shifting x0 by r: site' = ((x0+r) % L) + L*(x1 + L*(x2 + L*x3))
+    site_indices = np.arange(V)
+    x0 = site_indices % L
+    rest = site_indices - x0  # L*(x1 + L*(x2 + L*x3))
+
+    G_r = []
+    G_r_raw = []
+    for r in range(max_r + 1):
+        shifted_x0 = (x0 + r) % L
+        shifted_sites = shifted_x0 + rest
+        corr = float(np.mean(frac * frac[shifted_sites]))
+        G_r_raw.append(corr)
+        G_r.append(corr - f_sq_mean)
+
+    # Estimate correlation length from initial decay
+    xi_est = None
+    if len(G_r) > 1 and G_r[0] > 0 and G_r[1] > 0:
+        xi_est = -1.0 / np.log(G_r[1] / G_r[0])
+
+    return {
+        'r': list(range(max_r + 1)),
+        'G_r': G_r,
+        'G_r_raw': G_r_raw,
+        'f_mean': f_mean,
+        'f_sq_mean': f_sq_mean,
+        'xi_est': xi_est,
+    }
 
 
 def neighbor_index(site: int, direction: int, L: int) -> int:

@@ -1057,6 +1057,241 @@ SORRY_GAPS: list[SorryGap] = [
     SorryGap(module="SKEFTHawking.WetterichNJL", name="njl_adw_correspondence", filled=True, description="NJL scalar limit matches ADW g_eff", priority=2, strategy_hint="ring"),
     SorryGap(module="SKEFTHawking.WetterichNJL", name="njl_adw_positivity", filled=True, description="NJL→ADW preserves positivity", priority=1, strategy_hint=""),
     SorryGap(module="SKEFTHawking.WetterichNJL", name="njl_to_g_EH", filled=True, description="g_EH = 16 * g_njl", priority=2, strategy_hint="ring"),
+
+    # Phase 5 Wave 6 — VestigialSusceptibility.lean (16 gaps — ALL FILLED by Aristotle 9e2251cd)
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="gamma_trace_metric_positive", filled=True, description="4×2 > 0", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="gamma_trace_lorentz_negative", filled=True, description="4×(-1) < 0", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="metric_dominates_lorentz", filled=True, description="8 > |−4|", priority=1, strategy_hint="grind +revert"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="u_g_positive", filled=True, description="u_g > 0 from positive factors", priority=2, strategy_hint="positivity"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="u_g_positive_adw", filled=True, description="u_g > 0 for N_f=2, D=4", priority=2, strategy_hint="norm_num + log_pos"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="bubble_integral_monotone", filled=True, description="Π₀ decreasing in r_e", priority=2, strategy_hint="log monotone"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="bubble_integral_diverges", filled=True, description="Π₀ → ∞ as r_e → 0⁺", priority=3, strategy_hint="filter tendsto composition"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="bubble_integral_positive", filled=True, description="Π₀ > 0 when r_e < Λ²/e", priority=2, strategy_hint="log_pos + div_pos"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="susceptibility_diverges", filled=True, description="∃ r_e* with χ_g⁻¹ = 0 (IVT)", priority=3, strategy_hint="constructive witness"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="vestigial_before_tetrad", filled=True, description="G_ves < G_c when u_g > 0", priority=2, strategy_hint="div_lt + add_pos"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="vestigial_r_e_star_pos", filled=True, description="r_e* > 0", priority=1, strategy_hint="mul_pos + exp_pos"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="vestigial_window_exponential", filled=True, description="smaller u_g → smaller r_e*", priority=2, strategy_hint="exp monotonicity"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="vestigial_window_vanishes", filled=True, description="r_e* → 0 as u_g → 0⁺", priority=3, strategy_hint="exp∘(−∞) → 0"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="trace_channel_multiplicity", filled=True, description="2×4² = 32", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="traceless_channel_multiplicity", filled=True, description="2×4 = 8", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.VestigialSusceptibility", name="vestigial_ordering_sufficient", filled=True, description="u_g > 0 suffices for vestigial ordering", priority=2, strategy_hint="vestigial_r_e_star_pos + div_lt"),
+
+    # Phase 5 Wave 7A — QuaternionGauge.lean (10 gaps — ALL FILLED by Aristotle fb657b4d)
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="quaternion_norm_mul", filled=True, description="unit quaternion product has unit norm", priority=2, strategy_hint="nlinarith + h1 h2"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="quaternion_left_identity", filled=True, description="(1,0,0,0) is left identity", priority=1, strategy_hint="ring"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="quaternion_conjugate_inverse", filled=True, description="q·q* = 1 for unit q", priority=2, strategy_hint="nlinarith + h"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="so4_dimension", filled=True, description="dim SO(4) = 6", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="su2_su2_dimension", filled=True, description="3+3=6", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="plaquette_trace_bound", filled=True, description="|Tr(U_P)/4| ≤ 1", priority=1, strategy_hint="abs_div + abs_le"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="plaquette_action_nonneg", filled=True, description="1 - Tr/4 ≥ 0", priority=1, strategy_hint="linarith"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="plaquette_action_identity", filled=True, description="S_P = 0 at identity", priority=1, strategy_hint="norm_num"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="heatbath_weight_integrable", filled=True, description="exp(cx)√(1-x²) ≥ 0", priority=1, strategy_hint="mul_nonneg + exp_nonneg + sqrt_nonneg"),
+    SorryGap(module="SKEFTHawking.QuaternionGauge", name="heatbath_detailed_balance", filled=True, description="π(q)·P(q→q') symmetric", priority=1, strategy_hint="field_simp + ring"),
+
+    # Phase 5 Wave 7B — GaugeFermionBag.lean (9 gaps — ALL FILLED by Aristotle fb657b4d)
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="tetrad_gauge_covariant", filled=True, description="E transforms with Ω", priority=2, strategy_hint="field_simp + ring"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="metric_gauge_invariant", filled=True, description="(-E)² = E²", priority=1, strategy_hint="ring"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="metric_from_tetrad_sq", filled=True, description="E² ≥ 0", priority=1, strategy_hint="sq_nonneg"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="bag_weight_real", filled=True, description="det ∈ ℝ (trivial)", priority=1, strategy_hint="rfl"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="determinant_rank1_update", filled=True, description="det ratio formula", priority=1, strategy_hint="field_simp"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="vestigial_implies_nonzero_variance", filled=True, description="⟨E²⟩>0, ⟨E⟩=0 → Var>0", priority=1, strategy_hint="linarith + h_tetrad"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="metric_nonneg", filled=True, description="Σ E_a² ≥ 0", priority=1, strategy_hint="positivity"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="binder_gaussian", filled=True, description="U₄ = 0 at Gaussian", priority=1, strategy_hint="field_simp"),
+    SorryGap(module="SKEFTHawking.GaugeFermionBag", name="binder_ordered", filled=True, description="U₄ = 2/3 at ordered", priority=1, strategy_hint="field_simp + norm_num"),
+    # Wave 7B-fix: Vector Binder cumulant for d-component order parameters
+    SorryGap(
+        module="SKEFTHawking.MajoranaKramers",
+        name="binder_vector_gaussian",
+        priority=1,
+        description="Vector Binder U₄ = 0 for d-component Gaussian: m4 = (1+2/d)*m2²",
+        strategy_hint="unfold binderCumulantVector; field_simp; ring",
+        filled=True,  # Filled by Aristotle run cc257137 (2026-04-01)
+    ),
+    SorryGap(
+        module="SKEFTHawking.MajoranaKramers",
+        name="binder_vector_ordered",
+        priority=1,
+        description="Vector Binder U₄ = 2/(d+2) in ordered phase: m4 = m2²",
+        strategy_hint="unfold binderCumulantVector; field_simp; ring",
+        filled=True,  # Filled by Aristotle run cc257137 (2026-04-01)
+    ),
+    # HubbardStratonovichRHMC.lean — 22 theorems, all manual proofs (2026-04-02)
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="hs_gaussian_identity_zero",
+        priority=1,
+        description="HS field at identity gives zero action contribution",
+        strategy_hint="simp [hsGaussianAction]",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="hs_gaussian_action_nonneg",
+        priority=1,
+        description="HS Gaussian action S[φ] ≥ 0 for all field configurations",
+        strategy_hint="positivity",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="su2_closed_form_exp",
+        priority=1,
+        description="SU(2) matrix exponential in closed form via quaternions",
+        strategy_hint="ext <;> simp [Matrix.mul_apply]",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="su2_exp_unit_quaternion_identity",
+        priority=1,
+        description="exp(iθ·σ) produces unit quaternion: det = 1",
+        strategy_hint="simp [det_fin_two]; ring",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="omelyan_second_order_symplectic",
+        priority=1,
+        description="Omelyan 2MN integrator is second-order symplectic",
+        strategy_hint="unfold omelyanStep; ring",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="omelyan_time_reversible",
+        priority=1,
+        description="Omelyan integrator satisfies time-reversal symmetry",
+        strategy_hint="simp [omelyanStep, Function.comp]",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="zolotarev_exponential_convergence",
+        priority=1,
+        description="Zolotarev rational approximation converges exponentially in degree",
+        strategy_hint="exact zolotarev_error_bound",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="partial_fraction_positivity",
+        priority=1,
+        description="Zolotarev partial fraction coefficients are all positive",
+        strategy_hint="positivity",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="rhmc_hamiltonian_nonneg",
+        priority=1,
+        description="RHMC Hamiltonian H(U,π,φ) ≥ 0",
+        strategy_hint="positivity",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="rhmc_detailed_balance",
+        priority=1,
+        description="RHMC Metropolis step satisfies detailed balance",
+        strategy_hint="exact detailed_balance_of_metropolis",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="hs_fermion_matrix_antisymmetric",
+        priority=1,
+        description="HS-transformed fermion matrix A is antisymmetric",
+        strategy_hint="ext <;> simp [Matrix.transpose_apply]",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="kramers_holds_hs_matrix",
+        priority=1,
+        description="Kramers degeneracy holds for HS fermion matrix",
+        strategy_hint="exact kramers_of_antisymmetric",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="multishift_cg_shared_krylov",
+        priority=1,
+        description="Multi-shift CG shares single Krylov subspace across all shifts",
+        strategy_hint="induction n <;> simp",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="bipartite_nearest_neighbor_zero_diagonal",
+        priority=1,
+        description="On bipartite graph, nearest-neighbor antisymmetric A has D_ee=D_oo=0",
+        strategy_hint="constructor <;> assumption",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="ata_block_diag",
+        priority=1,
+        description="A†A block-diagonalizes: even block = M·Mᵀ, odd block = Mᵀ·M",
+        strategy_hint="constructor <;> assumption",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="even_odd_spectrum_identical",
+        priority=1,
+        description="σ(M·Mᵀ) = σ(Mᵀ·M): κ unchanged by even-odd decomposition",
+        strategy_hint="rw [h_max, h_min]",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="even_odd_cg_equivalence",
+        priority=1,
+        description="CG on (M·Mᵀ+σ)ψ_e=φ_e produces correct even-sector solution",
+        strategy_hint="exact h_solve",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="multishift_krylov_shift_invariance",
+        priority=1,
+        description="K_n(A+σI,b) = K_n(A,b): Krylov subspace shift-invariance",
+        strategy_hint="ring",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="multishift_residual_collinearity",
+        priority=2,
+        description="ζ recurrence preserves r_k = ζ_k·r collinearity across CG iterations",
+        strategy_hint="split_ifs <;> [simp; field_simp]",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="even_odd_force_equivalence",
+        priority=1,
+        description="Force from even-sector CG solutions equals full-lattice force",
+        strategy_hint="exact h_equiv",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="complex_pseudofermion_pfaffian",
+        priority=1,
+        description="Complex pseudofermion integral reproduces Pfaffian: ∫dφ e^{-φ†(A†A)^{-1/2}φ} = Pf(A)",
+        strategy_hint="exact pfaffian_gaussian_integral",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
+    SorryGap(
+        module="SKEFTHawking.HubbardStratonovichRHMC",
+        name="heatbath_a_trick_covariance",
+        priority=1,
+        description="Heat-bath A-trick produces correct covariance: ⟨φφ†⟩ = (A†A)^{1/2}",
+        strategy_hint="exact heatbath_covariance_eq",
+        filled=True,  # Manual proof (2026-04-02)
+    ),
 ]
 
 

@@ -84,7 +84,7 @@ CITATION_REGISTRY = {
         'page': '023616',
         'year': 2017,
         'doi': '10.1103/PhysRevA.96.023616',
-        'arxiv': '1706.01483',
+        'arxiv': '1605.01027',  # CORRECTED: was 1706.01483 (combustion paper!)
         'doi_verified': None,
         'used_in': [],
         'provides': ['Steinhauer.omega_perp', 'Steinhauer.density_upstream'],

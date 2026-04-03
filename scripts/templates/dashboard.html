@@ -452,13 +452,10 @@
             <!-- Stats row -->
             <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0;">
                 <span class="paper-stat">{{ p.figure_count }} figures</span>
-                <span class="paper-stat">{{ p.theorem_count }} theorem refs</span>
+                <span class="paper-stat">{{ p.formula_deps|length }} formulas</span>
                 <span class="paper-stat">{{ p.bibitem_count }} bibliography entries</span>
                 {% if p.platforms %}
                 <span class="paper-stat">Platforms: {{ p.platforms|join(', ') }}</span>
-                {% endif %}
-                {% if p.lean_modules %}
-                <span class="paper-stat">Lean: {{ p.lean_modules|join(', ') }}</span>
                 {% endif %}
             </div>
 
@@ -471,6 +468,52 @@
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
+
+            <!-- Key claims -->
+            {% if p.key_claims %}
+            <div style="margin: 8px 0; padding: 8px; background: #f0f9ff; border: 1px solid var(--blue-border); border-radius: 4px;">
+                <div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">
+                    Key Claims</div>
+                {% for claim in p.key_claims %}
+                <div style="font-size: 0.8rem; margin: 2px 0; padding-left: 12px;">{{ claim }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Lean modules with theorem counts -->
+            {% if p.lean_module_details %}
+            <div style="margin: 8px 0; padding: 8px; background: var(--grey-bg); border-radius: 4px;">
+                <div style="font-size: 0.75rem; color: var(--grey); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">
+                    Lean Verification</div>
+                {% for lm in p.lean_module_details %}
+                <span style="display: inline-block; padding: 2px 8px; margin: 2px; border-radius: 3px; font-size: 0.75rem;
+                       background: var(--green-bg); border: 1px solid var(--green-border);">
+                    {{ lm.module }}: {{ lm.theorems }} thms ({{ lm.aristotle }} Aristotle)
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Formula dependencies (expandable) -->
+            {% if p.formula_deps %}
+            <details style="margin: 8px 0;">
+                <summary style="cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--blue);">
+                    {{ p.formula_deps|length }} formula dependencies
+                </summary>
+                <div style="margin-top: 4px;">
+                {% for f in p.formula_deps %}
+                <div style="font-size: 0.8rem; padding: 2px 0;">
+                    <code>{{ f.name }}</code>
+                    {% if f.has_source %}
+                    <span style="color: var(--green); font-size: 0.75rem;">{{ f.source }}</span>
+                    {% else %}
+                    <span style="color: var(--yellow); font-size: 0.75rem;">no Source:</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                </div>
+            </details>
             {% endif %}
 
             <!-- Parameter readiness -->
@@ -500,48 +543,6 @@
                 </span>
                 {% endfor %}
             </div>
-            {% endif %}
-
-            <!-- Numerical table values (expandable) -->
-            {% if p.numerical_values %}
-            <details style="margin: 8px 0;">
-                <summary style="cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--blue);">
-                    {{ p.numerical_values|length }} table rows with numerical values
-                </summary>
-                <table class="data-table" style="margin-top: 4px;">
-                    <thead><tr><th>Line</th><th>Row</th><th>Values</th></tr></thead>
-                    <tbody>
-                    {% for nv in p.numerical_values %}
-                    <tr>
-                        <td><code>{{ nv.line }}</code></td>
-                        <td style="max-width: 200px;">{{ nv.label }}</td>
-                        <td><code>{{ nv.nums|join(' | ') }}</code></td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </details>
-            {% endif %}
-
-            <!-- Theorem references (expandable) -->
-            {% if p.theorem_refs %}
-            <details style="margin: 8px 0;">
-                <summary style="cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--blue);">
-                    {{ p.theorem_count }} theorem references
-                    {% if p.missing_theorems %}
-                    <span style="color: var(--red);">({{ p.missing_theorems|length }} missing from Lean)</span>
-                    {% endif %}
-                </summary>
-                <div style="margin-top: 4px;">
-                {% for t in p.theorem_refs %}
-                <span style="display: inline-block; padding: 1px 6px; margin: 2px; border-radius: 3px; font-size: 0.75rem; font-family: monospace;
-                       {% if t.in_lean %}background: var(--green-bg); border: 1px solid var(--green-border);
-                       {% else %}background: var(--red-bg); border: 1px solid var(--red-border);{% endif %}">
-                    {{ t.name }}{% if not t.in_lean %} ✗{% endif %}
-                </span>
-                {% endfor %}
-                </div>
-            </details>
             {% endif %}
         </div>
         {% endfor %}

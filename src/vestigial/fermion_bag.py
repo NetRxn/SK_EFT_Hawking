@@ -97,6 +97,12 @@ class FermionBagResult:
     action_std: float
     params: Lattice4DParams
     mc_params: FermionBagParams
+    # Staggered order parameters (antiferromagnetic, populated by NJL model)
+    stag_tetrad_m2: Optional[float] = None
+    stag_tetrad_m4: Optional[float] = None
+    binder_stag_tetrad: Optional[float] = None
+    chi_stag_tetrad: Optional[float] = None
+    stag_metric_mean: Optional[float] = None
 
 
 def fermion_bag_sweep(config: Lattice4DConfig,

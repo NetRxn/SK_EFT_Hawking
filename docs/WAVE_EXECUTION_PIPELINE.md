@@ -241,7 +241,7 @@ uv run python scripts/review_figures.py
 **Purpose:** Catch rendering issues that automated tests cannot detect.
 
 **Actions:**
-- Run LLM figure review agent (physics-figure-review plugin or general-purpose agent with review prompt)
+- Run LLM figure review agent (`physics-qa:figure-reviewer` plugin agent)
 - Fix ALL issues flagged as FAIL or MINOR in `visualizations.py`
 - Regenerate PNGs, re-review until ALL PASS
 - Report saved to `figures/figure_review_report.json`
@@ -264,7 +264,32 @@ uv run python scripts/review_figures.py
 - Qualitative claims (feasibility, detectability) must be supported by computed quantities — no hallucinated optimism
 - No hardcoded numbers in tex that aren't also in the computation pipeline
 
-**Gate:** `validate.py --check paper_provenance` passes for this paper.
+**Paper Claims Review (`physics-qa:claims-reviewer` — runs after Stage 10, before Stage 11):**
+
+After writing or updating a paper draft, run the paper claims reviewer agent
+(`physics-qa:claims-reviewer` plugin). This is analogous to the figure reviewer
+(`physics-qa:figure-reviewer`) in Stage 9 — an LLM sweep that checks content
+accuracy, not just formatting.
+
+The agent reads each paper's `.tex` and cross-references against:
+1. `PAPER_DEPENDENCIES` in `provenance.py` — declared formulas, Lean modules, key claims
+2. `formulas.py` — recomputes numerical values and compares to paper tables
+3. `PARAMETER_PROVENANCE` — checks all referenced parameters are verified
+4. `CITATION_REGISTRY` — checks all cited papers have valid DOIs
+5. `ARISTOTLE_THEOREMS` — checks "formally verified" claims match actual proof status
+
+The agent reports:
+- **FAIL**: numerical value in paper disagrees with computation by >0.5%
+- **FAIL**: "formally verified" claim but theorem not in Lean or has sorry
+- **FAIL**: cited reference DOI doesn't resolve or is wrong paper
+- **WARN**: parameter referenced but not human-verified (blocks submission)
+- **WARN**: qualitative claim without computed support
+- **PASS**: claim verified against computation pipeline
+
+Results saved to `papers/paper<N>/claims_review.json`.
+
+**Gate:** `validate.py --check paper_provenance` passes for this paper
+AND paper claims review has zero FAIL.
 
 ---
 

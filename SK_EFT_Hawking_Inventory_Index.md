@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** March 31, 2026 (Phase 5 Section 9C — COMPLETE, zero sorry)
+**Last synced:** April 3, 2026 (W7C-fix — complex pseudofermion, 22 RHMC theorems)
 
 ---
 
@@ -10,21 +10,22 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 506 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 176 | 99 original + 14 SO4Weingarten + 45 FractonFormulas + 18 WetterichNJL |
-| Manual proofs | 330 | 506 - 176 |
-| **Sorry gaps** | **0** | All filled by Aristotle `4528aa2b` (FractonFormulas + WetterichNJL) |
-| Lean modules | 33 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 506 + 2ax | ALL theorems proved, zero sorry |
-| Python source modules | 38 | `find src/ -name "*.py" ! -name "__init__.py"` (+ wetterich_model.py) |
-| Test files | 17 | `find tests/ -name "test_*.py"` |
-| Test count | 1027 | `pytest tests/ -q` (all pass) |
-| Figures | 61 | `len(FIGURE_REGISTRY)` in review_figures.py |
+| Lean theorems | 588 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 211 | 176 prior + 16 VestigialSusceptibility (`9e2251cd`) + 10 QuaternionGauge + 9 GaugeFermionBag (`fb657b4d`) |
+| Manual proofs | 377 | 588 - 211 (includes 22 RHMC + 25 MajoranaKramers) |
+| **Sorry gaps** | **0** | All filled — 30+ Aristotle runs |
+| Lean modules | 38 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 588 + 2ax | ALL theorems proved, zero sorry |
+| Python source modules | 40 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Test files | 19 | `find tests/ -name "test_*.py"` |
+| Test count | 1244 | `pytest tests/ -q` |
+| Figures | 64 | `len(FIGURE_REGISTRY)` in review_figures.py |
 | Notebooks | 20 | `ls notebooks/*.ipynb` |
 | Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
 | Validation checks | 15 | `python scripts/validate.py --list` (CHECK 15 = parameter_provenance, in progress) |
 | Stakeholder docs | 13 | See Section 9 of inventory |
-| Aristotle runs | 29 | 27 original + run_20260331_103403 (SO4Weingarten) + 4528aa2b (FractonFormulas+WetterichNJL) |
+| Aristotle runs | 30+ | 29 prior + VestigialSusceptibility `9e2251cd` + manual RHMC |
+| Deep research tasks | 18 | 15 complete + 3 filed (9E-1 analytical susceptibility, 9E-2 gauge-link MC, 9E-3 4D HOTRG) |
 
 ---
 
@@ -49,11 +50,13 @@
 ## Source module map (module → purpose, one line each)
 
 ### Core (`src/core/`)
-- `constants.py` — Physical constants, experimental params, Aristotle registry
+- `constants.py` — Physical constants, experimental params, Aristotle registry, NJL/ADW model params
 - `formulas.py` — Canonical physics formulas with Lean refs (~55 functions including Weingarten, NJL, fracton, Planck)
 - `transonic_background.py` — 1D BEC transonic flow solver
 - `visualizations.py` — All 43 Plotly figure functions + COLORS palette
-- `aristotle_interface.py` — Aristotle API + 56 sorry gap registry
+- `aristotle_interface.py` — Aristotle API + sorry gap registry (all filled)
+- `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
+- `citations.py` — Citation registry (CITATION_REGISTRY, DOI tracking, usage mapping)
 
 ### Phase 1-2 (`src/second_order/`)
 - `enumeration.py` — Transport coefficient counting: count(N) = floor((N+1)/2)+1
@@ -89,8 +92,9 @@
 - `vestigial/su2_integration.py` — Analytical SU(2) Haar measure integration
 - `vestigial/grassmann_trg.py` — 2D Grassmann TRG implementation
 - `vestigial/lattice_4d.py` — 4D hypercubic lattice model with SO(4) gauge integration
-- `vestigial/fermion_bag.py` — Fermion-bag MC algorithm for 8-fermion vertices
-- `vestigial/phase_scan.py` — 4D coupling scan with Binder cumulant analysis
+- `vestigial/fermion_bag.py` — Fermion-bag MC algorithm for 8-fermion vertices (ADW Option B)
+- `vestigial/wetterich_model.py` — NJL fermion-bag MC (Option C, gauge-link-free, staggered OPs)
+- `vestigial/phase_scan.py` — 4D coupling scan with Binder cumulant analysis (ADW + NJL)
 
 ---
 
@@ -131,6 +135,11 @@
 | SO4Weingarten | 14 | Weingarten 2nd/4th moment, channel positivity, bond weight, Planck occupation (**ALL PROVED, zero sorry**) |
 | FractonFormulas | 45 | Charge counting, dispersion, retention, DOF gap, YM obstructions (**ALL PROVED**, Aristotle `4528aa2b`) |
 | WetterichNJL | 18 | Fierz completeness, scalar/pseudoscalar/vector channels, NJL-ADW correspondence (**ALL PROVED**, Aristotle `4528aa2b`) |
+| VestigialSusceptibility | 16 | Gamma trace, u_g positivity, bubble integral Π₀, RPA susceptibility, vestigial_before_tetrad, exponential window (**ALL PROVED**, Aristotle `9e2251cd`) |
+| QuaternionGauge | 10 | Unit quaternion norm, identity, conjugate inverse, SO(4) dim, plaquette bounds, heatbath detailed balance (**ALL PROVED**, Aristotle `fb657b4d`) |
+| GaugeFermionBag | 9 | Tetrad gauge covariance, metric invariance, bag weight real, SMW update, vestigial diagnostic, Binder limits (**ALL PROVED**, Aristotle `fb657b4d`) |
+| HubbardStratonovichRHMC | 22 | HS identity, Kramers, multi-shift CG, complex pseudofermion Pfaffian identity |
+| MajoranaKramers | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block structure |
 
 ---
 

@@ -121,9 +121,10 @@ def _run_single_njl_binder(args):
     )
     result = run_njl_mc(params, g_njl=g_njl, mc_params=mc_params)
     return {
-        'L': L, 'g_EH': g_njl,  # reuse key for compatibility with analysis code
+        'L': L, 'g_EH': g_njl,
         'binder_tetrad': result.binder_tetrad,
         'binder_metric': result.binder_metric,
+        'binder_stag_tetrad': result.binder_stag_tetrad,
         'metric_correlator': result.metric_correlator,
         'phase': result.phase,
         'acceptance_rate': result.acceptance_rate,
@@ -149,15 +150,15 @@ def _run_single_njl_fss(args):
     )
     result = run_njl_mc(params, g_njl=g_njl, mc_params=mc_params)
 
-    binder_t = binder_cumulant(result.tetrad_m2, result.tetrad_m4)
-    binder_m = binder_cumulant(result.metric_m2, result.metric_m4)
     return {
         'L': L, 'ratio': ratio,
         'tetrad_m2': result.tetrad_m2, 'tetrad_m4': result.tetrad_m4,
         'metric_m2': result.metric_m2, 'metric_m4': result.metric_m4,
         'chi_tetrad': result.chi_tetrad, 'chi_metric': result.chi_metric,
+        'chi_stag_tetrad': result.chi_stag_tetrad,
         'acceptance_rate': result.acceptance_rate,
-        'binder_tetrad': binder_t, 'binder_metric': binder_m,
+        'binder_tetrad': result.binder_tetrad, 'binder_metric': result.binder_metric,
+        'binder_stag_tetrad': result.binder_stag_tetrad,
     }
 
 

@@ -17,7 +17,7 @@ Usage:
     python scripts/submit_to_aristotle.py --target acousticMetric_det
 
     # Auto-integrate filled proofs (copies patched files into lean/):
-    python scripts/submit_to_aristotle.py --priority 1
+    python scripts/submit_to_aristotle.py --integrate
 
     # Retrieve a previous run by project ID:
     python scripts/submit_to_aristotle.py --retrieve 082e6776-42d7-469d-be9d-064c328540cf --integrate
@@ -51,7 +51,7 @@ LEAN_DIR = PROJECT_ROOT / "lean"
 RESULTS_DIR = PROJECT_ROOT / "docs" / "aristotle_results"
 
 sys.path.insert(0, str(PROJECT_ROOT))
-from src.core.aristotle_interface import AristotleRunner, SORRY_GAPS
+from src.core.aristotle_interface import AristotleRunner, SORRY_GAPS  # noqa: E402
 
 
 def load_api_key() -> str:

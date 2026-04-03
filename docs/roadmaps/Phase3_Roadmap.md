@@ -353,14 +353,15 @@ cd lean && ~/.elan/bin/lake build                 # 2258 jobs, clean
 uv run python scripts/review_figures.py
 
 # LLM visual review (requires Claude Code session):
-# Option A: Use the physics-figure-review plugin agent (after /reload-plugins):
-#   Agent tool with subagent_type="physics-figure-review:figure-reviewer"
-# Option B: Use a general-purpose agent with the review prompt from the agent file
-# Both read PNGs from figures/ + review_manifest.json
-# Report: figures/figure_review_report.json
+# Use the physics-qa plugin agents:
+#   Agent tool with subagent_type="physics-qa:figure-reviewer"  (figure review)
+#   Agent tool with subagent_type="physics-qa:claims-reviewer"  (paper claims review)
+# Both produce structured JSON reports
+# Figure report: figures/figure_review_report.json
+# Claims report: papers/paper<N>/claims_review.json
 ```
 
-**Plugin location:** `.claude/plugins/physics-figure-review/` (registered in `installed_plugins.json` as `physics-figure-review@local`). Contains agent `figure-reviewer` that reads PNGs + manifest and produces structured JSON report checking rendering quality, physics accuracy, and style consistency.
+**Plugin location:** `.claude/plugins/physics-qa/`. Contains two agents: `figure-reviewer` (visual review of figures against manifest) and `claims-reviewer` (paper numerical claims, theorem refs, parameter provenance, citation integrity against computation pipeline).
 
 **Figure count:** 27 total (12 Phase 1+2, 9 Phase 3 Wave 1, 6 Phase 3 Wave 2). All registered in `scripts/review_figures.py` with corresponding functions in `src/core/visualizations.py` (25 functions, some with `stakeholder` parameter).
 

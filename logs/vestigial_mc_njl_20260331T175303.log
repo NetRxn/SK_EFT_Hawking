@@ -30,3 +30,43 @@
 18:08:35 
 [2/3] Finite-size scaling analysis...
 18:08:35   Dispatching 240 FSS jobs across 14 cores (model=njl)...
+18:24:37   Completed 240 FSS jobs in 961.8s
+18:24:37   L=4: 40 points, mean acc=0.511
+18:24:37   L=5: 40 points, mean acc=0.403
+18:24:37   L=6: 40 points, mean acc=0.510
+18:24:37   L=8: 40 points, mean acc=0.510
+18:24:37   L=10: 40 points, mean acc=0.508
+18:24:37   L=12: 40 points, mean acc=0.510
+18:24:37   L=4: tetrad peak at G/Gc=6.03, metric peak at G/Gc=6.03
+18:24:37   L=5: tetrad peak at G/Gc=18.59, metric peak at G/Gc=18.59
+18:24:37   L=6: tetrad peak at G/Gc=6.03, metric peak at G/Gc=6.03
+18:24:37   L=8: tetrad peak at G/Gc=6.03, metric peak at G/Gc=6.03
+18:24:37   L=10: tetrad peak at G/Gc=16.08, metric peak at G/Gc=16.08
+18:24:37   L=12: tetrad peak at G/Gc=6.03, metric peak at G/Gc=6.03
+18:24:37   Split transition: False
+18:24:37 
+[3/3] Sign reweighting check...
+18:24:44   G/Gc=1.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=1.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=5.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=5.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=10.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=10.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=15.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=15.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=20.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=20.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=30.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=30.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=50.0, L=4: <sign>=0.0000 ± 0.0000
+18:24:44   G/Gc=50.0, L=5: <sign>=0.0000 ± 0.0000
+18:24:44 
+============================================================
+18:24:44   RESULTS SUMMARY
+18:24:44 ============================================================
+18:24:44   Vestigial detected (Binder): False
+18:24:44   Split transition (FSS):      False
+18:24:44   Sign problem absent:         False
+18:24:44   Total runtime:               1901.3s (0.53h)
+18:24:44   Results saved to:            docs/vestigial_mc_results/vestigial_mc_njl_20260331T175303.json
+18:24:44 ============================================================

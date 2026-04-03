@@ -188,8 +188,8 @@ def check_numerical_consistency() -> CheckResult:
     from src.core.constants import get_all_experiments, HBAR
 
     expected = {
-        'Steinhauer': {'c_s': 1.151e-3, 'xi': 0.635e-6, 'kappa': 21.9, 'T_H': 2.66e-11},
-        'Heidelberg': {'c_s': 3.919e-3, 'xi': 0.416e-6, 'kappa': 101.9, 'T_H': 1.24e-10},
+        'Steinhauer': {'c_s': 5.476e-4, 'xi': 1.334e-6, 'kappa': 4.8, 'T_H': 5.78e-12},
+        'Heidelberg': {'c_s': 3.919e-3, 'xi': 4.159e-7, 'kappa': 101.9, 'T_H': 1.24e-10},
         'Trento':     {'c_s': 2.185e-3, 'xi': 1.264e-6, 'kappa': 21.4, 'T_H': 2.6e-11},
     }
 
@@ -287,10 +287,13 @@ def check_paper_table_consistency() -> CheckResult:
     if not paper_path.exists():
         return CheckResult(passed=False, error=f"Paper not found: {paper_path}")
 
-    # Reference values from the corrected table
+    # Reference values from the corrected table (solver output)
+    # NOTE: Steinhauer kappa/T_H here are MODEL values (tanh profile).
+    # Published values (kappa=290, T_H=0.35nK) come from the actual
+    # step potential, not our smooth model. See backreaction.py steinhauer_si().
     paper_table = {
-        'Steinhauer': {'c_s': 1.151e-3, 'xi': 0.635e-6, 'kappa': 21.9, 'T_H': 0.027e-9},
-        'Heidelberg': {'c_s': 3.919e-3, 'xi': 0.416e-6, 'kappa': 101.9, 'T_H': 0.124e-9},
+        'Steinhauer': {'c_s': 5.476e-4, 'xi': 1.334e-6, 'kappa': 4.8, 'T_H': 0.006e-9},
+        'Heidelberg': {'c_s': 3.919e-3, 'xi': 4.159e-7, 'kappa': 101.9, 'T_H': 0.124e-9},
         'Trento':     {'c_s': 2.185e-3, 'xi': 1.264e-6, 'kappa': 21.4, 'T_H': 0.026e-9},
     }
 
@@ -337,8 +340,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 176),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 176),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 211),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 211),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))
