@@ -1112,6 +1112,101 @@ def check_parameter_provenance() -> CheckResult:
     return CheckResult(passed=all_pass, details=details)
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 16: Knowledge graph integrity
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("graph_integrity",
+                "Knowledge graph integrity — orphans, conflicts, broken chains")
+def check_graph_integrity() -> CheckResult:
+    """CHECK 16: Build provenance graph and run integrity queries."""
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        from graph_integrity import run_integrity_checks
+    except ImportError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("import", True,
+                   f"graph_integrity not available ({exc}); skipping",
+                   warning=True),
+        ])
+
+    report = run_integrity_checks()
+    s = report['summary']
+
+    details = []
+
+    # Graph size (informational)
+    details.append(Detail(
+        "graph_size", True,
+        f"{s['total_nodes']} nodes, {s['total_edges']} edges",
+    ))
+
+    # Conflicts are hard failures
+    if s['conflicts'] > 0:
+        conflict_names = ', '.join(c['name'] for c in report['conflicts'][:5])
+        suffix = f" (+{s['conflicts'] - 5} more)" if s['conflicts'] > 5 else ""
+        details.append(Detail(
+            "conflicts", False,
+            f"{s['conflicts']} verification conflicts: {conflict_names}{suffix}",
+        ))
+    else:
+        details.append(Detail("conflicts", True, "No verification conflicts"))
+
+    # Orphans are warnings
+    if s['orphans'] > 0:
+        orphan_sample = ', '.join(o['id'] for o in report['orphan_nodes'][:5])
+        suffix = f" (+{s['orphans'] - 5} more)" if s['orphans'] > 5 else ""
+        details.append(Detail(
+            "orphan_nodes", True,
+            f"{s['orphans']} orphan nodes: {orphan_sample}{suffix}",
+            warning=True,
+        ))
+    else:
+        details.append(Detail("orphan_nodes", True, "No orphan nodes"))
+
+    # Ungrounded claims are warnings
+    if s['ungrounded'] > 0:
+        sample = ', '.join(u['id'] for u in report['ungrounded_claims'][:5])
+        suffix = f" (+{s['ungrounded'] - 5} more)" if s['ungrounded'] > 5 else ""
+        details.append(Detail(
+            "ungrounded_claims", True,
+            f"{s['ungrounded']} ungrounded claims: {sample}{suffix}",
+            warning=True,
+        ))
+    else:
+        details.append(Detail("ungrounded_claims", True, "All claims grounded"))
+
+    # Broken chains are warnings
+    if s['broken_chains'] > 0:
+        sample = ', '.join(b['formula'] for b in report['broken_chains'][:5])
+        suffix = f" (+{s['broken_chains'] - 5} more)" if s['broken_chains'] > 5 else ""
+        details.append(Detail(
+            "broken_chains", True,
+            f"{s['broken_chains']} broken provenance chains: {sample}{suffix}",
+            warning=True,
+        ))
+    else:
+        details.append(Detail("broken_chains", True, "No broken provenance chains"))
+
+    # Missing provenance are warnings
+    if s['missing_provenance'] > 0:
+        sample = ', '.join(m['name'] for m in report['missing_provenance'][:5])
+        suffix = f" (+{s['missing_provenance'] - 5} more)" if s['missing_provenance'] > 5 else ""
+        details.append(Detail(
+            "missing_provenance", True,
+            f"{s['missing_provenance']} params without SOURCED_FROM: {sample}{suffix}",
+            warning=True,
+        ))
+    else:
+        details.append(Detail("missing_provenance", True,
+                              "All non-projected params have provenance sources"))
+
+    # Only conflicts are hard failures
+    passed = s['conflicts'] == 0
+
+    return CheckResult(passed=passed, details=details)
+
+
 def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
     """Look up the actual value in constants for a provenance key like 'Steinhauer.omega_perp'."""
     import numpy as np

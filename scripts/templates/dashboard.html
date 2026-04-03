@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SK-EFT Provenance Command Center</title>
-    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@starfederation/datastar"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --green: #22c55e; --green-bg: #f0fdf4; --green-border: #86efac;
@@ -219,6 +221,10 @@
            href="?tab=citations">
             Citation Registry
         </a>
+        <a class="tab {% if tab == 'graph' %}active{% endif %}"
+           href="?tab=graph">
+            Knowledge Graph
+        </a>
     </div>
 </div>
 
@@ -258,7 +264,7 @@
 {% endif %}
 
 <!-- Content -->
-<div class="content" style="padding-bottom: 80px;">
+<div class="content" style="padding-bottom: 80px;{% if tab == 'graph' %} max-width: none; padding: 0;{% endif %}">
 
     <!-- ═══ PARAMETERS TAB ═══ -->
     <div class="tab-content {% if tab == 'parameters' %}active{% endif %}">
@@ -333,18 +339,15 @@
 
             <div class="actions">
                 <button class="btn btn-confirm"
-                        hx-post="/verify" hx-target="#status-{{ p.key }}"
-                        hx-vals='{"key": "{{ p.key }}", "action": "confirm"}'>
+                        onclick="verifyParam('{{ p.key }}', 'confirm', this)">
                     Confirm
                 </button>
                 <button class="btn btn-reject"
-                        hx-post="/verify" hx-target="#status-{{ p.key }}"
-                        hx-vals='{"key": "{{ p.key }}", "action": "reject"}'>
+                        onclick="verifyParam('{{ p.key }}', 'reject', this)">
                     Reject
                 </button>
                 <button class="btn btn-flag"
-                        hx-post="/verify" hx-target="#status-{{ p.key }}"
-                        hx-vals='{"key": "{{ p.key }}", "action": "flag"}'>
+                        onclick="verifyParam('{{ p.key }}', 'flag', this)">
                     Flag
                 </button>
                 <input class="action-notes" type="text" placeholder="Notes..."
@@ -599,20 +602,59 @@
         {% endif %}
     </div>
 
+    <!-- ═══ KNOWLEDGE GRAPH TAB ═══ -->
+    {% if tab == 'graph' %}
+    <div class="tab-content active" style="padding: 0; max-width: none;">
+        {% include 'partials/graph_tab.html' %}
+    </div>
+    {% endif %}
+
 </div>
 
 <!-- Save bar -->
-<div class="save-bar">
+<div class="save-bar" {% if tab == 'graph' %}style="display: none;"{% endif %}>
     <div class="save-status" id="save-status">
         Changes accumulate in browser session. Click "Save All" to persist.
     </div>
-    <button class="btn btn-save" hx-post="/save" hx-target="#save-status">
+    <button class="btn btn-save" onclick="saveAll()">
         Save All
     </button>
 </div>
 
-<!-- Keyboard shortcuts -->
+<!-- Verify/Save fetch helpers (replacing HTMX) + Keyboard shortcuts -->
 <script>
+    function safeSetHTML(el, html) {
+        // Safe DOM replacement: parse server HTML fragment, then replace children
+        const parser = new DOMParser();
+        const doc = parser.parseFromString('<div>' + html + '</div>', 'text/html');
+        const fragment = document.createDocumentFragment();
+        Array.from(doc.body.firstChild.childNodes).forEach(n => fragment.appendChild(n.cloneNode(true)));
+        el.replaceChildren(fragment);
+    }
+
+    function verifyParam(key, action, btn) {
+        const notesInput = document.getElementById('notes-' + key);
+        const notes = notesInput ? notesInput.value : '';
+        const body = new URLSearchParams({key, action, notes});
+        fetch('/verify', {method: 'POST', body})
+            .then(r => r.text())
+            .then(html => {
+                const target = document.getElementById('status-' + key);
+                if (target) safeSetHTML(target, html);
+            })
+            .catch(err => console.error('Verify failed:', err));
+    }
+
+    function saveAll() {
+        fetch('/save', {method: 'POST'})
+            .then(r => r.text())
+            .then(html => {
+                const target = document.getElementById('save-status');
+                if (target) safeSetHTML(target, html);
+            })
+            .catch(err => console.error('Save failed:', err));
+    }
+
     let currentCard = 0;
     const cards = document.querySelectorAll('.param-card');
 

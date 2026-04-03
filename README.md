@@ -181,7 +181,11 @@ SK_EFT_Hawking/
 │   ├── Phase5b_Synthesis_Technical.ipynb        # Phase 5: kappa-scaling, categorical, Drinfeld
 │   └── Phase5b_Synthesis_Stakeholder.ipynb
 │
+├── docker/
+│   └── docker-compose.graph.yml       # PG+AGE container for knowledge graph (port 5433)
+│
 ├── docs/
+│   ├── KNOWLEDGE_GRAPH.md             # Knowledge graph documentation and guide
 │   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
 │   ├── stakeholder/                   # Implications, strategic positioning, companion guides
 │   ├── aristotle_results/             # All 13 Aristotle run archives
@@ -199,9 +203,16 @@ SK_EFT_Hawking/
 │   ├── test_gauge.py                 # SO(4) gauge, quaternion, Majorana (146 tests)
 │   └── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
 │
-├── figures/                           # 64 pipeline figures (PNG + HTML)
+├── figures/                           # 64 pipeline figures (PNG + HTML) + provenance_graph.json
 ├── scripts/
-│   └── submit_to_aristotle.py         # Aristotle submission + integration script
+│   ├── submit_to_aristotle.py         # Aristotle submission + integration script
+│   ├── build_graph.py                 # Knowledge graph extraction (8 node types, 10 edge types)
+│   ├── graph_integrity.py             # Graph integrity queries (orphans, conflicts, chains)
+│   ├── provenance_dashboard.py        # Flask dashboard + /api/graph endpoints
+│   └── templates/
+│       ├── dashboard.html             # Dashboard template (Datastar)
+│       └── partials/
+│           └── graph_tab.html         # D3 knowledge graph visualization
 ├── pyproject.toml                     # Unified Python dependencies
 └── .env                               # Aristotle API key (not committed)
 ```
@@ -227,6 +238,14 @@ lake build                                 # ~2259 jobs, should be clean
 cd SK_EFT_Hawking
 python scripts/submit_to_aristotle.py --priority 1    # Submit sorry gaps
 python scripts/submit_to_aristotle.py --retrieve <ID>  # Retrieve results
+```
+
+### Provenance Knowledge Graph
+```bash
+cd SK_EFT_Hawking
+uv run python scripts/provenance_dashboard.py          # Opens http://localhost:8050
+# Navigate to "Knowledge Graph" tab for interactive D3 visualization
+# See docs/KNOWLEDGE_GRAPH.md for full documentation
 ```
 
 ## Main Physics Results
