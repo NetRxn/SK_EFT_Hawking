@@ -1066,12 +1066,81 @@ ARISTOTLE_THEOREMS = {
     'even_odd_force_equivalence': 'manual',
     'complex_pseudofermion_pfaffian': 'manual',
     'heatbath_a_trick_covariance': 'manual',
+    # Phase 5a Wave 1A: OnsagerAlgebra.lean
+    'davies_G_antisymmetry': '9d6f2432',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 233, f"Expected 233 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+# Count updated when Aristotle fills new sorry stubs (Phase 5a Wave 1B pending)
+assert ARISTOTLE_PROVED_COUNT == 234, f"Expected 234 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5a: Onsager Algebra Parameters (Wave 1)
+#
+# The Onsager algebra is defined by the Dolan-Grady (DG) relations:
+#   [A₀, [A₀, [A₀, A₁]]] = 16[A₀, A₁]  (and symmetric)
+#
+# It is isomorphic to the fixed-point subalgebra of L(sl₂) under
+# the Chevalley involution (Davies 1990, Roan 1991).
+#
+# Sources:
+#   Onsager, Phys. Rev. 65, 117 (1944) — original relations
+#   Dolan & Grady, Phys. Rev. Lett. 49, 108 (1982) — finite presentation
+#   Davies, J. Phys. A 23, 2245 (1990) — isomorphism proof
+#   Gioia & Thorngren, PRL 136, 061601 (2026) — lattice chiral fermions
+# ════════════════════════════════════════════════════════════════════
+
+ONSAGER_ALGEBRA = {
+    # Dolan-Grady relation coefficient: [A₀, [A₀, [A₀, A₁]]] = DG_COEFF * [A₀, A₁]
+    'DG_COEFF': 16,
+    # Davies commutation relations: [A_m, A_n] = DAVIES_AA_COEFF * G_{m-n}
+    'DAVIES_AA_COEFF': 4,
+    # [G_n, A_m] = DAVIES_GA_COEFF * (A_{m+n} - A_{m-n})
+    'DAVIES_GA_COEFF': 2,
+    # Chevalley involution: θ(e)=f, θ(f)=e, θ(h)=-h
+    # Loop algebra embedding: A_m ↦ f⊗t^m - e⊗t^{-m}, G_m ↦ h⊗t^{-m} - h⊗t^m
+    'GENERATORS': 2,  # DG presentation has 2 generators (A₀, A₁)
+    'RELATIONS': 2,   # 2 cubic DG relations
+    'SL2_DIM': 3,     # sl₂ is 3-dimensional
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5a: Z₁₆ Classification Parameters (Wave 3A)
+#
+# Ω₄^{Pin⁺} ≅ ℤ₁₆ (Giambalvo 1973, Kirby-Taylor 1990).
+# Axiomatized in Lean; conditional theorems derive chirality constraints.
+#
+# The 16-fold way (Bruillard-Galindo-Rowell-Wang, 2016):
+#   Every super-modular category admits exactly 16 inequivalent
+#   minimal modular extensions.
+#
+# Sources:
+#   Giambalvo, Trans. AMS 180, 275 (1973) — original computation
+#   Kirby & Taylor, in "Topology" (1990) — Adams spectral sequence proof
+#   Bruillard et al., J. Math. Phys. 58, 041704 (2017) — 16-fold way
+#   Freed & Hopkins, Ann. Math. 194, 529 (2021) — reflection positivity
+# ════════════════════════════════════════════════════════════════════
+
+Z16_CLASSIFICATION = {
+    # The order of Ω₄^{Pin⁺}
+    'BORDISM_ORDER': 16,
+    # Central charge periodicity: c ≡ 0 (mod 16) for super-modular extensions
+    'CENTRAL_CHARGE_MOD': 16,
+    # Existing chirality limitation from Phase 5 (GaugeEmergence.lean)
+    'STRING_NET_MOD': 8,  # c ≡ 0 (mod 8) for Z(Vec_G) — proved
+    # Strengthened constraint from Z₁₆ axiom
+    'Z16_MOD': 16,  # c ≡ 0 (mod 16) — conditional on Z₁₆ axiom
+    # Number of minimal modular extensions of sVec
+    'SVEC_EXTENSIONS': 16,  # SO(N)₁ for N=1,...,16
+    # A(1) sub-Hopf algebra dimension (Steenrod)
+    'A1_DIM': 8,  # A(1) = ⟨Sq¹, Sq²⟩ is 8-dimensional over F₂
+    # Fermion counting: anomaly cancellation requires 16n Majorana fermions
+    'ANOMALY_CANCELLATION_UNIT': 16,
+}
 
 
 # ════════════════════════════════════════════════════════════════════

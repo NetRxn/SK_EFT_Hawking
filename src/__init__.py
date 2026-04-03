@@ -31,7 +31,13 @@ A unified project encompassing:
     * First fusion category formalization: Vec_G, Rep(S₃), Fibonacci verified.
     * First Drinfeld double formalization: D(G), gauge emergence, chirality limitation.
 
-Lean 4 formalization: 588 theorems + 2 axioms, 38 modules. ALL PROVED, ZERO sorry.
+  - Phase 5a (chirality wall formalization — Onsager algebra + Z₁₆):
+    * Onsager algebra: Dolan-Grady definition, Davies isomorphism, Chevalley
+      embedding into L(sl₂), connection to Gioia-Thorngren lattice chiral fermions.
+    * Z₁₆ axiomatized framework: Pin⁺ bordism axiom, super-modular categories,
+      16-fold way, chirality strengthening (mod 8 → mod 16), anomaly cancellation.
+
+Lean 4 formalization: 675 theorems + 3 axioms, 43 modules. 3 sorry pending Aristotle.
 Aristotle automated theorem prover: 233 theorems proved across 30+ runs.
 
 Subpackages:

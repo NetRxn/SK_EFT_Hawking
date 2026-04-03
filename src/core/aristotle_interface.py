@@ -1292,6 +1292,32 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="exact heatbath_covariance_eq",
         filled=True,  # Manual proof (2026-04-02)
     ),
+    # Phase 5a Wave 1A: OnsagerAlgebra.lean
+    SorryGap(
+        module="SKEFTHawking.OnsagerAlgebra",
+        name="davies_G_antisymmetry",
+        priority=1,
+        description="G_{m-n} = -G_{n-m}: antisymmetry of G generators from Lie bracket antisymmetry and Davies AA relation",
+        strategy_hint="Rewrite using AA_comm to express both sides as Lie brackets, then use lie_skew and smul injectivity",
+        filled=True,  # Aristotle run 9d6f2432 (2026-04-03)
+    ),
+    # Phase 5a Wave 1B: OnsagerContraction.lean
+    SorryGap(
+        module="SKEFTHawking.OnsagerContraction",
+        name="contraction_rescaling",
+        priority=1,
+        description="[ε·A_m, ε·A_n] = ε²·4·G_{m-n}: bilinearity of Lie bracket + Davies AA relation",
+        strategy_hint="Use smul_lie and lie_smul to factor out ε, then rewrite with AA_comm and simplify ε·ε = ε²",
+        filled=False,
+    ),
+    SorryGap(
+        module="SKEFTHawking.OnsagerContraction",
+        name="contraction_GG_still_zero",
+        priority=1,
+        description="[ε²·G_m, ε²·G_n] = 0: bilinearity + abelian G-subalgebra",
+        strategy_hint="Use smul_lie and lie_smul to factor out ε², then rewrite with GG_comm and smul_zero",
+        filled=False,
+    ),
 ]
 
 

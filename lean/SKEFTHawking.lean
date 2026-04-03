@@ -36,6 +36,11 @@ import SKEFTHawking.QuaternionGauge
 import SKEFTHawking.GaugeFermionBag
 import SKEFTHawking.MajoranaKramers
 import SKEFTHawking.HubbardStratonovichRHMC
+import SKEFTHawking.OnsagerAlgebra
+import SKEFTHawking.OnsagerContraction
+import SKEFTHawking.Z16Classification
+import SKEFTHawking.SMGClassification
+import SKEFTHawking.SteenrodA1
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
