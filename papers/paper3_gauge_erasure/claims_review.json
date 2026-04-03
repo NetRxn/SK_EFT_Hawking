@@ -1,0 +1,335 @@
+{
+  "paper": "paper3_gauge_erasure",
+  "title": "Non-Abelian Gauge Erasure by Hydrodynamization: A Universal Structural Theorem",
+  "reviewer": "physics-qa:claims-reviewer",
+  "review_date": "2026-04-03",
+  "model": "claude-opus-4-6[1m]",
+  "overall_verdict": "PASS_WITH_FINDINGS",
+  "summary": "Paper 3 is a structural/algebraic theorem paper with no platform-dependent numerical values. The core logical chain (higher-form Abelianness -> discrete center -> domain walls -> erasure) is correctly stated, fully backed by Python computation (25/25 tests pass), and formally verified in Lean 4 (11 theorems + 1 axiom, zero sorry, lake build clean). All four Lean theorem names referenced in the paper exist and are proved. Two moderate findings: (1) duplicate bibliography entry (GrozdanovHofmanIqbal and Grozdanov2017 are identical), (2) 10 of 16 bibliography entries missing from CITATION_REGISTRY. One minor physics note: SO(2k+1) center description applies to Spin(2k+1) not SO(2k+1). Three registry maintenance items: used_in fields incomplete for three existing citations, PAPER_DEPENDENCIES platforms list includes 'Steinhauer' despite paper having no platform-specific content.",
+
+  "layer_1_numerical_claims": {
+    "verdict": "PASS",
+    "tolerance": "0.5%",
+    "notes": "Paper 3 is a purely structural/algebraic theorem. It contains no platform-dependent numerical values, no computed corrections, and no table of experimental parameters. The only quantitative claims are structural counts verified below.",
+    "claims": [
+      {
+        "claim": "11 theorems + 1 axiom in GaugeErasure.lean, zero sorry",
+        "paper_location": "Abstract (line 37)",
+        "pipeline_source": "lean/SKEFTHawking/GaugeErasure.lean",
+        "computed_value": "11 theorems (non_abelian_gives_discrete, abelian_gives_continuous, continuous_gives_goldstone, discrete_gives_domain_wall, gauge_erasure, u1_survival, erasure_dichotomy, su3_erased, su2_erased, u1_survives, sm_only_u1_survives), 1 axiom (non_abelian_center_discrete), 0 sorry",
+        "match": true,
+        "notes": "Exact match. Verified by grep + lake build clean (8065 jobs, zero sorry)."
+      },
+      {
+        "claim": "SU(3)_c has 8 generators",
+        "paper_location": "Fig. 1 caption (line 182)",
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::su(3).dim = 8",
+        "computed_value": 8,
+        "match": true,
+        "notes": "dim(su(3)) = 3^2 - 1 = 8. Standard."
+      },
+      {
+        "claim": "SU(2)_L has 3 generators",
+        "paper_location": "Fig. 1 caption (line 183)",
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::su(2).dim = 3",
+        "computed_value": 3,
+        "match": true,
+        "notes": "dim(su(2)) = 2^2 - 1 = 3. Standard."
+      },
+      {
+        "claim": "U(1)_Y has 1 generator",
+        "paper_location": "Fig. 1 caption (line 183)",
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::u1().dim = 1",
+        "computed_value": 1,
+        "match": true,
+        "notes": "dim(u(1)) = 1. Standard."
+      },
+      {
+        "claim": "Z(SU(N)) = Z_N",
+        "paper_location": "Eq. 1 (line 107)",
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::su(N).center = 'Z_N'",
+        "match": true,
+        "notes": "Standard Lie theory fact."
+      }
+    ]
+  },
+
+  "layer_2_theorem_references": {
+    "verdict": "PASS",
+    "lean_module": "lean/SKEFTHawking/GaugeErasure.lean",
+    "lean_build": "CLEAN (zero sorry, 8065 jobs, warnings only for unused variables in HubbardStratonovichRHMC.lean)",
+    "theorem_count_actual": 11,
+    "theorem_count_claimed": 11,
+    "axiom_count_actual": 1,
+    "axiom_count_claimed": 1,
+    "sorry_count": 0,
+    "theorems_referenced_in_paper": [
+      {
+        "paper_name": "gauge_erasure",
+        "lean_name": "gauge_erasure",
+        "paper_location": "Section V, line 249",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "Main result: non-Abelian + continuous -> no surviving hydro modes. Proved via non_abelian_gives_discrete + unfold survives hydro_fate + simp."
+      },
+      {
+        "paper_name": "u1_survival",
+        "lean_name": "u1_survival",
+        "paper_location": "Section V, line 250",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "Abelian exception: U(1) produces Goldstone boson."
+      },
+      {
+        "paper_name": "erasure_dichotomy",
+        "lean_name": "erasure_dichotomy",
+        "paper_location": "Section III, line 176; Section V, line 251",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "Survival <-> Abelianness (exact biconditional). Uses gauge_erasure + u1_survival."
+      },
+      {
+        "paper_name": "sm_only_u1_survives",
+        "lean_name": "sm_only_u1_survives",
+        "paper_location": "Section V, line 253",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "Standard Model application: SU(3) erased AND SU(2) erased AND U(1) survives."
+      }
+    ],
+    "additional_theorems_not_referenced_in_paper": [
+      "non_abelian_gives_discrete",
+      "abelian_gives_continuous",
+      "continuous_gives_goldstone",
+      "discrete_gives_domain_wall",
+      "su3_erased",
+      "su2_erased",
+      "u1_survives"
+    ],
+    "findings": []
+  },
+
+  "layer_3_parameter_provenance": {
+    "verdict": "PASS",
+    "notes": "Paper 3 is a purely structural theorem with no experimentally-measured parameters. No BEC platform parameters, no scattering lengths, no temperatures, no frequencies. No PARAMETER_PROVENANCE entries are needed. PAPER_DEPENDENCIES in provenance.py correctly shows 'formulas': [] (empty) for paper3, confirming no formula dependencies.",
+    "parameters_checked": [],
+    "findings": [
+      {
+        "severity": "LOW",
+        "finding": "PAPER_DEPENDENCIES lists platforms: ['Steinhauer'] for paper3, but the paper contains no Steinhauer-specific content. The citations Steinhauer2016 and Kolobov2021 appear in the Implications section as general references for BEC analog gravity, not as sources of parameter values.",
+        "recommendation": "Consider changing platforms to [] for paper3 in PAPER_DEPENDENCIES, since no platform-specific computations are performed."
+      }
+    ]
+  },
+
+  "layer_4_citation_integrity": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "paper_bibitem_keys": [
+      "Unruh1981", "Visser1998", "Wen2003", "LevinWen2006",
+      "GrozdanovHofmanIqbal", "HofmanIqbal", "Grozdanov2017",
+      "Torrieri2020", "NastaseSonnenschein2025", "GKSW2015",
+      "Adler2024", "Steinhauer2016", "Kolobov2021",
+      "Diakonov2011", "Wetterich2004", "Volovik2003"
+    ],
+    "paper_cite_keys": [
+      "Unruh1981", "Visser1998", "Wen2003", "LevinWen2006",
+      "GrozdanovHofmanIqbal", "HofmanIqbal", "Grozdanov2017",
+      "Torrieri2020", "NastaseSonnenschein2025", "GKSW2015",
+      "Adler2024", "Steinhauer2016", "Kolobov2021",
+      "Diakonov2011", "Wetterich2004", "Volovik2003"
+    ],
+    "orphan_bibitems": [],
+    "missing_cite_targets": [],
+    "registry_matches": {
+      "Unruh1981": {"in_registry": true, "used_in_includes_paper3": true},
+      "Visser1998": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: M. Visser, Class. Quant. Grav. 15, 1767 (1998). Foundational acoustic metric paper."},
+      "Wen2003": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: X.-G. Wen, Phys. Rev. D 68, 065003 (2003). String-net origin of light."},
+      "LevinWen2006": {"in_registry": true, "used_in_includes_paper3": false, "notes": "Registry used_in does not include paper3 but should."},
+      "GrozdanovHofmanIqbal": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: S. Grozdanov, D. M. Hofman, N. Iqbal, Phys. Rev. D 95, 096003 (2017). Photonization theorem."},
+      "HofmanIqbal": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: D. M. Hofman, N. Iqbal, SciPost Phys. 6, 006 (2019). Higher-form symmetry hydro."},
+      "Grozdanov2017": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. DUPLICATE of GrozdanovHofmanIqbal: same authors, journal (PRD 95, 096003 (2017))."},
+      "Torrieri2020": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: G. Torrieri, Phys. Rev. D 102, 076009 (2020). Non-Abelian fluid obstruction."},
+      "NastaseSonnenschein2025": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: H. Nastase, J. Sonnenschein, arXiv:2501.13263 (2025). Non-Abelian Clebsch closure."},
+      "GKSW2015": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: D. Gaiotto, A. Kapustin, N. Seiberg, B. Willett, JHEP 02, 172 (2015). Generalized global symmetries."},
+      "Adler2024": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: D. Adler et al., Nature 636, 87 (2024). Fracton hydrodynamics."},
+      "Steinhauer2016": {"in_registry": true, "used_in_includes_paper3": true},
+      "Kolobov2021": {"in_registry": true, "used_in_includes_paper3": true},
+      "Diakonov2011": {"in_registry": true, "used_in_includes_paper3": false, "notes": "Registry used_in does not include paper3 but should."},
+      "Wetterich2004": {"in_registry": true, "used_in_includes_paper3": false, "notes": "Registry used_in does not include paper3 but should."},
+      "Volovik2003": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: G. E. Volovik, The Universe in a Helium Droplet (Oxford, 2003). Fermi-point topology."}
+    },
+    "findings": [
+      {
+        "severity": "MODERATE",
+        "finding": "DUPLICATE BIBLIOGRAPHY ENTRY: GrozdanovHofmanIqbal (line 321) and Grozdanov2017 (line 327) are identical -- same authors (S. Grozdanov, D. M. Hofman, N. Iqbal), same journal (Phys. Rev. D 95, 096003 (2017)). The paper cites GrozdanovHofmanIqbal on lines 60, 160 and Grozdanov2017 on line 63.",
+        "recommendation": "Remove Grozdanov2017 bibitem and change \\cite{HofmanIqbal,Grozdanov2017} on line 63 to \\cite{HofmanIqbal,GrozdanovHofmanIqbal} or \\cite{HofmanIqbal}."
+      },
+      {
+        "severity": "LOW",
+        "finding": "10 of 16 bibliography entries are missing from CITATION_REGISTRY: Visser1998, Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Grozdanov2017, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003.",
+        "recommendation": "Add all to CITATION_REGISTRY with used_in including paper3. (After removing Grozdanov2017 duplicate, this becomes 9 missing entries.)"
+      },
+      {
+        "severity": "LOW",
+        "finding": "Three existing registry entries (LevinWen2006, Diakonov2011, Wetterich2004) are cited in paper3 but their used_in lists do not include 'papers/paper3_gauge_erasure/paper_draft.tex'.",
+        "recommendation": "Add paper3 path to used_in for all three."
+      }
+    ]
+  },
+
+  "layer_5_qualitative_claims": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "claims": [
+      {
+        "claim": "Higher-form symmetries must be Abelian because operators on codimension >= 1 submanifolds commute",
+        "paper_location": "Section II.A (lines 86-99)",
+        "computed_support": true,
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py logical chain steps (i)-(iii); Lean: higher_form_symmetry function encodes this; test_higher_form_must_be_abelian passes",
+        "notes": "Core structural argument. Follows directly from locality (spacelike separation -> commutativity). Well-established in literature (GKSW 2015)."
+      },
+      {
+        "claim": "Non-Abelian gauge theories have at most discrete center symmetries (Z_N for SU(N))",
+        "paper_location": "Section II.B (lines 101-116)",
+        "computed_support": true,
+        "pipeline_source": "Lean axiom non_abelian_center_discrete; Python: su(N).center = 'Z_N', so(N).center = 'Z_2' or 'Z_2 x Z_2'",
+        "notes": "Standard Lie theory. Encoded as the single axiom in the Lean formalization."
+      },
+      {
+        "claim": "Discrete symmetry breaking produces domain walls, not Goldstone bosons",
+        "paper_location": "Section II.C (lines 118-130)",
+        "computed_support": true,
+        "pipeline_source": "Lean: discrete_gives_domain_wall theorem (rfl proof); Python: test_discrete_gives_domain_wall passes",
+        "notes": "Standard result. Goldstone theorem requires continuous symmetry."
+      },
+      {
+        "claim": "U(1) gauge DOF survive as 1-form Goldstone (photonization theorem)",
+        "paper_location": "Section III (lines 153-174)",
+        "computed_support": true,
+        "pipeline_source": "Lean: u1_survival theorem, abelian_gives_continuous theorem; Python: test_u1_survives passes",
+        "notes": "References Grozdanov-Hofman-Iqbal correctly."
+      },
+      {
+        "claim": "Exact dichotomy: survival iff Abelian",
+        "paper_location": "Eq. 3 (line 172-173)",
+        "computed_support": true,
+        "pipeline_source": "Lean: erasure_dichotomy theorem (biconditional, proved from gauge_erasure + u1_survival); Python: test_erasure_is_structural passes",
+        "notes": "The core result. Formally verified as a biconditional (iff)."
+      },
+      {
+        "claim": "Standard MIS hydrodynamics: non-Abelian currents covariantly (not ordinarily) conserved",
+        "paper_location": "Section IV.A (lines 192-199)",
+        "computed_support": true,
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py docstring and analysis logic",
+        "notes": "Standard physics: D_mu J^mu = 0 vs partial_mu J^mu = 0. Covariant conservation does not yield a globally conserved charge."
+      },
+      {
+        "claim": "Fracton hydrodynamics cannot rescue non-Abelian gauge DOF",
+        "paper_location": "Section IV.B (lines 201-210)",
+        "computed_support": true,
+        "pipeline_source": "src/gauge_erasure/erasure_theorem.py analysis; Lean: gauge_erasure theorem is independent of hydrodynamic framework",
+        "notes": "Argument: the obstacle is gauge redundancy (covariant conservation), not conservation law count. Even infinite multipole charges don't help."
+      },
+      {
+        "claim": "N=4 SYM is non-confining yet all holographic hydro modes are color-singlets",
+        "paper_location": "Section IV.C (lines 212-228)",
+        "computed_support": true,
+        "pipeline_source": "Python: test_n4_sym_erased and test_n4_sym_explanation_mentions_confinement pass",
+        "notes": "Establishes that erasure is structural (not dynamical/confinement-driven). N=4 SYM is the decisive test case."
+      },
+      {
+        "claim": "Only U(1)_EM survives in the Standard Model after hydrodynamization",
+        "paper_location": "Section VI (lines 282-285)",
+        "computed_support": true,
+        "pipeline_source": "Lean: sm_only_u1_survives (triple conjunction); Python: test_sm_only_photon_survives passes",
+        "notes": "SU(3)_c erased, SU(2)_L erased, U(1)_Y survives. After EWSB, the surviving photon is from U(1)_EM."
+      },
+      {
+        "claim": "Drinfeld center Z(C) has topological central charge c = 0 (mod 8), producing non-chiral doubled topological order",
+        "paper_location": "Lines 277-280",
+        "computed_support": true,
+        "pipeline_source": "lean/SKEFTHawking/DrinfeldDouble.lean: center_is_doubled theorem (line 181), nonabelian_gauge_still_doubled theorem (line 194)",
+        "notes": "Formally verified in Lean. Paper correctly identifies this as the categorical foundation for the erasure mechanism."
+      }
+    ],
+    "findings": [
+      {
+        "severity": "MODERATE",
+        "finding": "Lines 113-114 state: 'Z_2 for SO(2k+1), Z_2 x Z_2 for SO(4k)'. For the Lie group SO(2k+1) with k >= 1, the center is trivial {I}, not Z_2. The Z_2 center belongs to Spin(2k+1), the universal covering group. Similarly, the center of SO(4k) is Z_2 (not Z_2 x Z_2); the Z_2 x Z_2 center belongs to Spin(4k). While the main theorem does not depend on these specific center values (it only requires discreteness), the stated values are technically incorrect for SO(n) and should either reference Spin(n) or be corrected.",
+        "recommendation": "Change 'SO(2k+1)' to 'Spin(2k+1)' and 'SO(4k)' to 'Spin(4k)', or rephrase as 'For the universal covering groups Spin(n)...' to be precise. Alternatively, keep SO notation but state the correct centers: Z_2 for SO(2k), trivial for SO(2k+1)."
+      }
+    ]
+  },
+
+  "test_results": {
+    "test_file": "tests/test_gauge_erasure.py",
+    "tests_run": 25,
+    "tests_passed": 25,
+    "tests_failed": 0,
+    "execution_time": "0.02s"
+  },
+
+  "lean_build": {
+    "module": "lean/SKEFTHawking/GaugeErasure.lean",
+    "result": "CLEAN",
+    "total_jobs": 8065,
+    "sorry_count": 0,
+    "warnings": "Unused variable warnings in HubbardStratonovichRHMC.lean only (unrelated to GaugeErasure)"
+  },
+
+  "figures": {
+    "fig20_sm_scorecard": {
+      "exists": true,
+      "path": "papers/paper3_gauge_erasure/figures/fig20_sm_scorecard.png",
+      "also_at": "figures/fig20_sm_scorecard.png",
+      "visualization_function": "src/core/visualizations.py::fig_sm_scorecard",
+      "caption_accurate": true,
+      "notes": "Shows SU(3)/SU(2)/U(1) bar chart. Caption correctly states generator counts (8, 3, 1)."
+    },
+    "fig21_erasure_survey": {
+      "exists": true,
+      "path": "papers/paper3_gauge_erasure/figures/fig21_erasure_survey.png",
+      "also_at": "figures/fig21_erasure_survey.png",
+      "visualization_function": "src/core/visualizations.py::fig_erasure_survey",
+      "caption_accurate": true,
+      "notes": "Surveys SU(2)-SU(10), SO(3)-SO(10), U(1). Caption correctly describes range and result."
+    }
+  },
+
+  "findings_summary": [
+    {
+      "id": "F1",
+      "severity": "MODERATE",
+      "category": "citation",
+      "description": "DUPLICATE BIBLIOGRAPHY ENTRY: GrozdanovHofmanIqbal (bibitem line 321) and Grozdanov2017 (bibitem line 327) are identical references -- same authors, journal, volume, page, year (Phys. Rev. D 95, 096003 (2017)).",
+      "recommendation": "Remove Grozdanov2017 bibitem. Change \\cite{HofmanIqbal,Grozdanov2017} on line 63 to \\cite{HofmanIqbal,GrozdanovHofmanIqbal}."
+    },
+    {
+      "id": "F2",
+      "severity": "MODERATE",
+      "category": "physics",
+      "description": "Lines 113-114 incorrectly attribute center subgroups to SO(n) when they belong to Spin(n). SO(2k+1) has trivial center for k >= 1; Z_2 is the center of Spin(2k+1). SO(4k) has center Z_2; Z_2 x Z_2 is the center of Spin(4k).",
+      "recommendation": "Replace SO(2k+1), SO(4k) with Spin(2k+1), Spin(4k) or correct the center values for SO groups. The main theorem is unaffected since all centers remain discrete."
+    },
+    {
+      "id": "F3",
+      "severity": "LOW",
+      "category": "citation",
+      "description": "10 of 16 bibliography entries are missing from CITATION_REGISTRY: Visser1998, Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Grozdanov2017, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003.",
+      "recommendation": "Add all (minus the duplicate Grozdanov2017) to CITATION_REGISTRY with used_in including paper3."
+    },
+    {
+      "id": "F4",
+      "severity": "LOW",
+      "category": "citation",
+      "description": "Three existing registry entries (LevinWen2006, Diakonov2011, Wetterich2004) cite paper3 but their used_in lists do not include paper3.",
+      "recommendation": "Add 'papers/paper3_gauge_erasure/paper_draft.tex' to used_in for all three."
+    },
+    {
+      "id": "F5",
+      "severity": "LOW",
+      "category": "provenance",
+      "description": "PAPER_DEPENDENCIES lists platforms: ['Steinhauer'] for paper3, but the paper performs no platform-specific computations. Steinhauer2016 and Kolobov2021 appear only as general references in the Implications section.",
+      "recommendation": "Change platforms to [] in PAPER_DEPENDENCIES for paper3."
+    }
+  ]
+}

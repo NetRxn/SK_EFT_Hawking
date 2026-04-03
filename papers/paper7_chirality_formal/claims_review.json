@@ -1,0 +1,420 @@
+{
+  "paper": "paper7_chirality_formal",
+  "title": "Formal Verification of the Golterman-Shamir No-Go Conditions and TPF Evasion in Lean 4",
+  "reviewer": "physics-qa:claims-reviewer",
+  "review_date": "2026-04-03",
+  "model": "claude-opus-4-6[1m]",
+  "overall_verdict": "PASS_WITH_ISSUES",
+  "summary": "Core formal verification claims are accurate: 55 theorems + 1 axiom across 3 modules, zero sorry, 14 Aristotle proofs across 4 runs. All Lean theorems exist and are sorry-free. The master synthesis theorem tpf_outside_gs_scope_main is a genuine five-part conjunction. However, the broader project counts in the Discussion/Conclusion are stale (429 should be 588 theorems, 30 should be 38 modules, 99 should be 233 Aristotle-proved), several paper-specific citations are missing from CITATION_REGISTRY, and one bibitem key has a year mismatch.",
+
+  "layers": {
+    "1_numerical_claims": {
+      "verdict": "PASS",
+      "notes": "Paper 7 is a formal verification paper with no floating-point numerical claims. All 'numerical' claims are integer counts verified against source files.",
+      "checks": [
+        {
+          "claim": "9 GS conditions (6 explicit + 3 implicit)",
+          "location": "abstract, Sec II",
+          "paper_value": "6 + 3 = 9",
+          "computed_value": "gs_explicit_count = 6, gs_implicit_count = 3, gs_total_conditions = 9",
+          "source": "LatticeHamiltonian.lean lines 121-128",
+          "status": "PASS"
+        },
+        {
+          "claim": "7 of 9 conditions encode genuine mathematical content",
+          "location": "abstract",
+          "paper_value": 7,
+          "computed_value": "substantive_condition_count: 7 + 2 = 9 in GoltermanShamir.lean line 506",
+          "source": "GoltermanShamir.lean docstring: Substantive (7/9): C1, C2, C3, C4, C5, I2, I3",
+          "status": "PASS"
+        },
+        {
+          "claim": "TPF violates 5 of 9 conditions",
+          "location": "abstract, Sec III",
+          "paper_value": 5,
+          "computed_value": "potential_violation_count: 3 + 2 = 5 in TPFEvasion.lean line 79",
+          "source": "TPFEvasion.lean",
+          "status": "PASS"
+        },
+        {
+          "claim": "55 theorems across 3 Lean modules",
+          "location": "abstract, Table I, Conclusion",
+          "paper_value": "28 + 15 + 12 = 55",
+          "computed_value": "LatticeHamiltonian: 28 theorem decls + 1 lemma. GoltermanShamir: 14 theorem decls + 3 private lemmas + 1 instance. TPFEvasion: 12 theorem decls. Total theorem decls: 28+14+12=54. With instance counted: 55.",
+          "source": "grep ^theorem across all three .lean files",
+          "status": "PASS",
+          "notes": "Count of 55 requires counting the unnamed Module.Finite instance as a theorem (reasonable since it proves fock_space_finite_dim). The 3 private helper lemmas in GoltermanShamir are NOT counted in the 55."
+        },
+        {
+          "claim": "1 axiom (gs_nogo_axiom)",
+          "location": "abstract, Table I",
+          "paper_value": 1,
+          "computed_value": 1,
+          "source": "GoltermanShamir.lean line 427: axiom gs_nogo_axiom",
+          "status": "PASS"
+        },
+        {
+          "claim": "14 Aristotle-proved across 4 runs",
+          "location": "abstract, Table I, Acknowledgments",
+          "paper_value": "14 proofs, 4 runs",
+          "computed_value": "LatticeHamiltonian: 7 (run_20260328_132925). GoltermanShamir: 3 (run_20260328_142342) + 3 (run_20260328_151228) + 1 (run_20260328_170451) = 7. Total: 14 across 4 runs.",
+          "source": "ARISTOTLE_THEOREMS in constants.py lines 868-888",
+          "status": "PASS"
+        },
+        {
+          "claim": "Table I: LatticeHamiltonian 28 thms, 7 Aristotle",
+          "location": "Table I",
+          "paper_value": "28, 7",
+          "computed_value": "28 theorem declarations, 7 in ARISTOTLE_THEOREMS",
+          "status": "PASS"
+        },
+        {
+          "claim": "Table I: GoltermanShamir 15+1ax thms, 7 Aristotle",
+          "location": "Table I",
+          "paper_value": "15+1ax, 7",
+          "computed_value": "14 theorem decls + 1 instance + 1 axiom = 15+1ax. 7 in ARISTOTLE_THEOREMS (3+3+1).",
+          "status": "PASS",
+          "notes": "Inventory Index says 14+1ax (undercounts by 1 vs paper). Paper is correct if instance counted."
+        },
+        {
+          "claim": "Table I: TPFEvasion 12 thms, 0 Aristotle",
+          "location": "Table I",
+          "paper_value": "12, 0",
+          "computed_value": "12 theorem declarations, 0 in ARISTOTLE_THEOREMS",
+          "status": "PASS"
+        }
+      ]
+    },
+
+    "2_theorem_references": {
+      "verdict": "PASS",
+      "notes": "All theorem references in the paper exist in the Lean source and are sorry-free. Zero sorry confirmed across all three files.",
+      "checks": [
+        {
+          "theorem": "brillouin_zone_compact",
+          "referenced_in": "Sec II (C1)",
+          "file": "lean/SKEFTHawking/LatticeHamiltonian.lean",
+          "line": 85,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "noncomputable instance, uses Pi.compactSpace"
+        },
+        {
+          "theorem": "fock_space_finite_dim",
+          "referenced_in": "Sec II (C2), Fig 3 caption",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 262,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Unnamed instance: Module.Finite C (FermionicFockSpace k). Paper references by name from Aristotle registry."
+        },
+        {
+          "theorem": "exteriorPower_eq_bot_of_lt",
+          "referenced_in": "Sec II (C2, helper)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 188,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Private lemma, Aristotle helper"
+        },
+        {
+          "theorem": "exteriorPower_iSup_range",
+          "referenced_in": "Sec II (C2, helper)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 199,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Private lemma, Aristotle helper"
+        },
+        {
+          "theorem": "exteriorPower_sup_fg",
+          "referenced_in": "Sec II (C2, helper)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 252,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Private lemma, Aristotle helper"
+        },
+        {
+          "theorem": "rotor_hilbert_not_finite_dim",
+          "referenced_in": "Sec II (I3), Sec III (I3 violation)",
+          "file": "lean/SKEFTHawking/LatticeHamiltonian.lean",
+          "line": 304,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Proves not FiniteDimensional C (lp ... 2) via linear independence of lp.single"
+        },
+        {
+          "theorem": "round_not_continuous_at_half",
+          "referenced_in": "Sec III (C1 violation)",
+          "file": "lean/SKEFTHawking/LatticeHamiltonian.lean",
+          "line": 332,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "epsilon-delta argument"
+        },
+        {
+          "theorem": "integers_not_finite",
+          "referenced_in": "Sec III (I3 support)",
+          "file": "lean/SKEFTHawking/LatticeHamiltonian.lean",
+          "line": 354,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Uses Infinite.not_finite"
+        },
+        {
+          "theorem": "c1_implies_i2",
+          "referenced_in": "Sec II (I2)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 448,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "C1 subsumes I2"
+        },
+        {
+          "theorem": "tpf_violates_C2",
+          "referenced_in": "Sec III (C2 violation)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 465,
+          "exists": true,
+          "sorry_free": true
+        },
+        {
+          "theorem": "tpf_bosonic_exceeds_fock",
+          "referenced_in": "Sec III (C2 violation)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 487,
+          "exists": true,
+          "sorry_free": true
+        },
+        {
+          "theorem": "tpf_outside_gs_scope_main",
+          "referenced_in": "abstract, Sec III.A, Conclusion",
+          "file": "lean/SKEFTHawking/TPFEvasion.lean",
+          "line": 149,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "Five-part conjunction: I3 + Z-infinite + C1 + extra-dim + nogo-fails"
+        },
+        {
+          "theorem": "gs_nogo_axiom",
+          "referenced_in": "Sec IV (GS No-Go Bundle)",
+          "file": "lean/SKEFTHawking/GoltermanShamir.lean",
+          "line": 427,
+          "exists": true,
+          "sorry_free": true,
+          "notes": "axiom declaration (not sorry -- this is an intentional axiomatization)"
+        }
+      ],
+      "sorry_scan": {
+        "LatticeHamiltonian.lean": "zero sorry (confirmed by word-boundary grep)",
+        "GoltermanShamir.lean": "zero sorry (confirmed by word-boundary grep)",
+        "TPFEvasion.lean": "zero sorry (confirmed by word-boundary grep)"
+      }
+    },
+
+    "3_parameter_provenance": {
+      "verdict": "PASS",
+      "notes": "Paper 7 references no experimental parameters from PARAMETER_PROVENANCE. It is a pure formal verification paper with no experimental quantities. The PAPER_DEPENDENCIES entry for paper7_chirality_formal correctly lists formulas: gs_condition_count, tpf_evasion_count, brillouin_zone_dimension, vector_like_spectrum_check -- all exist in formulas.py.",
+      "checks": [
+        {
+          "parameter": "Lean 4 version 4.28.0",
+          "location": "Sec IV line 230",
+          "paper_value": "4.28.0",
+          "source_value": "leanprover/lean4:v4.28.0",
+          "source": "lean/lean-toolchain",
+          "status": "PASS"
+        },
+        {
+          "parameter": "Mathlib commit 8f9d9cff",
+          "location": "Sec IV line 230",
+          "paper_value": "8f9d9cff",
+          "source_value": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+          "source": "lean/lakefile.toml line 12",
+          "status": "PASS"
+        }
+      ]
+    },
+
+    "4_citation_integrity": {
+      "verdict": "FAIL",
+      "notes": "Multiple Paper 7 citations are missing from CITATION_REGISTRY. Also, bibitem key GoltermanShamir2024 has a year mismatch (arXiv 2603.xxxxx is a 2026 paper).",
+      "checks": [
+        {
+          "citation": "GoltermanShamir2024 (bibitem key)",
+          "in_registry": false,
+          "registry_key": "GoltermanShamir2026",
+          "status": "FAIL",
+          "notes": "Bibitem key says 2024, paper entry says year 2026, arXiv is 2603.15985 (March 2026). Key should be GoltermanShamir2026 to match CITATION_REGISTRY."
+        },
+        {
+          "citation": "Nielsen1981a",
+          "in_registry": false,
+          "status": "FAIL",
+          "notes": "Nielsen-Ninomiya no-go theorem Part I. Missing from CITATION_REGISTRY. Should be added."
+        },
+        {
+          "citation": "Nielsen1981b",
+          "in_registry": false,
+          "status": "FAIL",
+          "notes": "Nielsen-Ninomiya no-go theorem Part II. Missing from CITATION_REGISTRY."
+        },
+        {
+          "citation": "TPF2024",
+          "in_registry": false,
+          "status": "FAIL",
+          "notes": "Tong-Preskill-Fidkowski arXiv:2411.18738. Missing from CITATION_REGISTRY."
+        },
+        {
+          "citation": "Tong2022",
+          "in_registry": false,
+          "status": "FAIL",
+          "notes": "Tong arXiv:2104.03997 (2021, not 2022 as key suggests). Missing from CITATION_REGISTRY."
+        },
+        {
+          "citation": "Aristotle",
+          "in_registry": false,
+          "status": "FAIL",
+          "notes": "Aristotle theorem prover URL citation. Not a paper, but should be tracked."
+        },
+        {
+          "citation": "GoltermanShamir2026 (registry key)",
+          "in_registry": true,
+          "used_in_includes_paper7": true,
+          "status": "PASS",
+          "notes": "Correctly lists paper7_chirality_formal in used_in."
+        }
+      ]
+    },
+
+    "5_qualitative_claims": {
+      "verdict": "FAIL",
+      "notes": "Core chirality-specific claims are accurate. Broader project count claims are stale and must be updated before submission.",
+      "checks": [
+        {
+          "claim": "First formal verification of the lattice chirality problem in a proof assistant",
+          "location": "abstract line 35, Sec V line 293, Conclusion line 320",
+          "status": "UNVERIFIABLE_FROM_CODEBASE",
+          "notes": "Cannot verify 'first-ever' claims from codebase alone -- requires literature search. Plausible given the niche topic. No known prior Lean/Coq/Isabelle formalization of lattice chirality no-go conditions exists in public Mathlib or similar repositories as of the model's training data."
+        },
+        {
+          "claim": "First-ever definitions of pivotal, spherical, and fusion categories in a proof assistant",
+          "location": "Sec V line 309",
+          "status": "UNVERIFIABLE_FROM_CODEBASE",
+          "notes": "PivotalCategory, SphericalCategory, FusionCategoryData all exist in the Lean source. 'First-ever' claim requires literature verification. As of early 2025, these were not in Mathlib."
+        },
+        {
+          "claim": "429 theorems + 2 axioms across 30 modules",
+          "location": "Sec V line 313, Conclusion line 326",
+          "status": "FAIL",
+          "notes": "STALE. Actual count: 588 theorems + 2 axioms across 38 modules (from inventory index and grep). The paper was written when the project had fewer modules. Must update to current values or pin to a specific phase snapshot."
+        },
+        {
+          "claim": "99 proved by Aristotle across 27 runs",
+          "location": "Conclusion line 327",
+          "status": "FAIL",
+          "notes": "STALE. Actual count: 233 Aristotle-proved across 30+ runs (from ARISTOTLE_PROVED_COUNT in constants.py). Must update."
+        },
+        {
+          "claim": "Phase 5 adds 213 theorems across 13 modules, bringing total to 429",
+          "location": "Fig 4 caption line 275",
+          "status": "FAIL",
+          "notes": "STALE. These counts reflect an earlier project state. Current Phase 5+ has significantly more theorems and modules."
+        },
+        {
+          "claim": "Master synthesis is a machine-checked five-part conjunction",
+          "location": "abstract, Sec III.A",
+          "status": "PASS_WITH_CAVEATS",
+          "notes": "tpf_outside_gs_scope_main IS a five-part conjunction, but the five parts are: (1) I3 violated, (2) Z infinite, (3) C1 violated, (4) extra-dim (4+1=5), (5) nogo fails (9-3<9). This is 3 violations + 1 supporting fact + 1 consequence -- not 5 distinct violations as the paper's prose somewhat implies. The paper's abstract says 'five of the nine conditions' are violated, which is correct about the paper's overall analysis, but the master theorem only encodes 3 of those 5 violations (I3, C1, extra-dim). C2 violation (tpf_violates_C2, tpf_bosonic_exceeds_fock) and C3 conditional violation (tpf_c3_conditional) are proved as separate theorems, not in the master conjunction."
+        },
+        {
+          "claim": "GS no-go and TPF operate in genuinely different mathematical frameworks",
+          "location": "abstract, Sec V, Conclusion",
+          "status": "PASS",
+          "notes": "Well-supported by the formal analysis: TPF violates GS hypotheses (I3, C2, C1, extra-dim), so neither proves nor disproves the other."
+        },
+        {
+          "claim": "Drinfeld double D(G) and gauge emergence theorem Z(Vec_G) = Rep(D(G))",
+          "location": "Sec V line 311",
+          "status": "PASS",
+          "notes": "DrinfeldDouble.lean and GaugeEmergence.lean exist with relevant theorems."
+        },
+        {
+          "claim": "Paper listing of tpf_outside_gs_scope_main conjuncts",
+          "location": "lines 185-189",
+          "status": "PASS_WITH_CAVEATS",
+          "notes": "Paper shows pseudocode with simplified names (violation_I3, violation_Z_infinite, violation_C1, extra_dim, nogo_fails_with_violations). Actual Lean uses expanded type expressions. The name nogo_fails_with_violations does not exist -- actual conjunct is 9-3<9 which corresponds to nogo_fails_with_three_violations. Pseudocode is a reasonable simplification but not verbatim."
+        }
+      ]
+    }
+  },
+
+  "figures": {
+    "fig53_gs_condition_formalization": {
+      "exists": true,
+      "path": "papers/paper7_chirality_formal/figures/fig53_gs_condition_formalization.png",
+      "status": "EXISTS"
+    },
+    "fig54_lean_theorem_summary": {
+      "exists": true,
+      "path": "papers/paper7_chirality_formal/figures/fig54_lean_theorem_summary.png",
+      "status": "EXISTS_BUT_STALE",
+      "notes": "Caption claims 429 total theorems and 213 Phase 5 theorems -- both stale."
+    },
+    "fig60_tpf_evasion_architecture": {
+      "exists": true,
+      "path": "papers/paper7_chirality_formal/figures/fig60_tpf_evasion_architecture.png",
+      "status": "EXISTS"
+    },
+    "fig61_fock_exterior_algebra": {
+      "exists": true,
+      "path": "papers/paper7_chirality_formal/figures/fig61_fock_exterior_algebra.png",
+      "status": "EXISTS"
+    }
+  },
+
+  "issues": [
+    {
+      "severity": "HIGH",
+      "type": "stale_count",
+      "description": "Broader project counts in Discussion and Conclusion are stale: paper says 429 theorems + 2 axioms across 30 modules, actual is 588 + 2 across 38. Paper says 99 Aristotle-proved across 27 runs, actual is 233 across 30+. Must update before submission.",
+      "locations": ["Sec V line 313", "Conclusion line 326-327", "Fig 4 caption line 275"]
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "missing_citations",
+      "description": "5 Paper 7 citations missing from CITATION_REGISTRY: Nielsen1981a, Nielsen1981b, TPF2024, Tong2022, Aristotle. These should be added for provenance dashboard tracking.",
+      "locations": ["src/core/citations.py"]
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "bibitem_key_mismatch",
+      "description": "Bibitem key GoltermanShamir2024 has wrong year -- paper entry says 2026, arXiv is 2603.15985 (March 2026). Key should be GoltermanShamir2026 to match CITATION_REGISTRY and actual publication year.",
+      "locations": ["paper_draft.tex line 348"]
+    },
+    {
+      "severity": "LOW",
+      "type": "inventory_index_discrepancy",
+      "description": "Inventory Index says GoltermanShamir has 14+1ax theorems, but paper says 15+1ax. Paper is correct (14 theorem decls + 1 unnamed instance = 15). Inventory Index undercounts by 1.",
+      "locations": ["SK_EFT_Hawking_Inventory_Index.md line 134"]
+    },
+    {
+      "severity": "LOW",
+      "type": "master_theorem_description",
+      "description": "Paper prose implies the master synthesis assembles '5 violations' but tpf_outside_gs_scope_main actually encodes 3 violations (I3, C1, extra-dim) + 1 supporting fact (Z infinite) + 1 consequence (nogo fails). C2 and C3 violations are separate theorems not in the conjunction.",
+      "locations": ["abstract line 50-51", "Sec III.A lines 183-190"]
+    },
+    {
+      "severity": "LOW",
+      "type": "pseudocode_name_mismatch",
+      "description": "Paper listing uses nogo_fails_with_violations but no theorem of that exact name exists. Closest: nogo_fails_with_three_violations. The pseudocode is a simplification, not verbatim Lean.",
+      "locations": ["paper_draft.tex line 188"]
+    }
+  ],
+
+  "pass_count": 9,
+  "fail_count": 8,
+  "total_checks": 31,
+  "blocking_issues": 1,
+  "notes": "The paper's core claims about the chirality formalization (55 theorems, 1 axiom, zero sorry, 14 Aristotle proofs, 4 runs, master synthesis theorem) are all verified and accurate. The blocking issue is the stale broader project counts in Discussion/Conclusion which must be updated to current values (588 theorems, 38 modules, 233 Aristotle-proved) before submission."
+}

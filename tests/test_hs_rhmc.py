@@ -458,18 +458,17 @@ class TestTorchSolver:
             assert rel_res < 1e-4, f"shift={sigma}: rel_res={rel_res:.2e}"
 
     def test_cg_fallback_for_large_dim(self):
-        """CG path is used when dim > cutoff."""
+        """Batched CG works for shifted systems."""
         import torch
-        from src.vestigial.hs_rhmc_torch import (
-            cg_solve_torch, EIGH_DIM_CUTOFF,
-        )
-        # Just verify CG works directly
+        from src.vestigial.hs_rhmc_torch import batched_cg
+        # Verify batched CG works directly with a single shift
         dim = 64
-        A = torch.randn(dim, dim)
-        AtA = A.T @ A + 0.01 * torch.eye(dim)  # ensure well-conditioned
-        b = torch.randn(dim)
-        x, n_iter = cg_solve_torch(AtA, b, 1.0, tol=1e-6, max_iter=200)
-        residual = torch.norm(AtA @ x + 1.0 * x - b) / torch.norm(b)
+        A = torch.randn(dim, dim, dtype=torch.float64)
+        AtA = A.T @ A + 0.01 * torch.eye(dim, dtype=torch.float64)
+        b = torch.randn(dim, dtype=torch.float64)  # batched_cg expects (dim,)
+        shifts = [1.0]
+        x_list, n_iter = batched_cg(AtA, b, shifts, tol=1e-6, max_iter=200)
+        residual = torch.norm(AtA @ x_list[0] + 1.0 * x_list[0] - b) / torch.norm(b)
         assert residual < 1e-5
 
 

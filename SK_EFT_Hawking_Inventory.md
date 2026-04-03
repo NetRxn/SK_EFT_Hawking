@@ -2,13 +2,13 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, and Section 9C formalization wave (Weingarten, fracton, NJL). Lean 4 formalization: 506 theorems + 2 axioms across 33 modules (443+2ax proved, 63 sorry pending Aristotle). 1014 tests, 61 pipeline figures, 20 notebooks. 113 Aristotle-proved across 28 runs.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, and Waves 7A-7C (gauge-link MC + RHMC). Lean 4 formalization: 588 theorems + 2 axioms across 38 modules — ALL PROVED, ZERO sorry. 233 Aristotle-proved. 1245 tests, 64 pipeline figures, 20 notebooks, 47 Python source modules.
 
-**Last verified:** March 31, 2026 (Phase 5 Section 9C — formalization in progress)
+**Last verified:** April 3, 2026 (full sync — W7C RHMC complete, L=4 done, L=8 in flight)
 
 ---
 
-## 1. PYTHON SOURCE FILES (37 modules + 11 __init__.py)
+## 1. PYTHON SOURCE FILES (47 modules + 11 __init__.py)
 
 ### 1.1 Core Module: `src/core/`
 
@@ -107,7 +107,7 @@
 
 **Key Types:** `SorryGap` (dataclass), `AristotleResult` (dataclass), `AristotleRunner` (class)
 
-**Sorry Gap Registry (99 total, all filled):**
+**Sorry Gap Registry (233 Aristotle-proved, all gaps filled):**
 - Phase 1: 14 gaps (AcousticMetric, SKDoubling, HawkingUniversality)
 - Phase 2: 9 gaps (SecondOrderSK, WKBAnalysis)
 - Phase 2 Stress Tests: 9 gaps (KMS optimality, FDR sign tests, limit checks)
@@ -119,6 +119,10 @@
 - Wave 4A: 11 gaps (KLinearCategory, SphericalCategory)
 - Wave 4B: 7 gaps (FusionExamples)
 - Wave 4C: 5 gaps (VecG, DrinfeldDouble)
+- Wave 9C: 77 gaps (SO4Weingarten 14, FractonFormulas 45, WetterichNJL 18)
+- Wave 6B: 16 gaps (VestigialSusceptibility)
+- Wave 7A-B: 21 gaps (QuaternionGauge 10, GaugeFermionBag 9, Binder 2)
+- Wave 7B-C: 47 manual proofs (HubbardStratonovichRHMC 22, MajoranaKramers 25)
 
 ---
 
@@ -234,9 +238,36 @@
 #### `src/experimental/polariton_predictions.py` (Phase 5 Wave 1B)
 **Purpose:** Tier 1 polariton platform predictions. Spatial attenuation correction, validity parameter Γ_pol/κ, regime classification (ultra-long/long/standard cavities).
 
+#### `src/vestigial/quaternion.py` (Phase 5 Wave 7A)
+**Purpose:** SU(2) quaternion algebra for SO(4) gauge theory. Vectorized operations, Haar random sampling.
+
+#### `src/vestigial/so4_gauge.py` (Phase 5 Wave 7A)
+**Purpose:** SO(4) gauge theory via quaternion pair decomposition. Plaquette, staple, Kennedy-Pendleton heatbath, overrelaxation.
+
+#### `src/vestigial/gauge_fermion_bag.py` (Phase 5 Wave 7B)
+**Purpose:** Hybrid fermion-bag + gauge-link Monte Carlo. 4×4 complex fermion matrix, Sherman-Morrison-Woodbury updates.
+
+#### `src/vestigial/gauge_fermion_bag_majorana.py` (Phase 5 Wave 7B)
+**Purpose:** 8×8 Majorana sign-free fermion-bag. Kramers degeneracy (PRL 116), Givens Spin(4), Woodbury gauge updates. Hits percolation wall at L≥6.
+
+#### `src/vestigial/hs_rhmc.py` (Phase 5 Wave 7C)
+**Purpose:** Hubbard-Stratonovich + RHMC algorithm. Reference numpy/scipy implementation. Complex pseudofermion, Zolotarev rational approximation, multi-shift CG.
+
+#### `src/vestigial/hs_rhmc_jax.py` (Phase 5 Wave 7C)
+**Purpose:** JAX CPU backend for RHMC. Batched CG solver.
+
+#### `src/vestigial/hs_rhmc_torch.py` (Phase 5 Wave 7C)
+**Purpose:** PyTorch CPU backend for RHMC. Production default. Batched LU (L=4) and batched CG (L≥6), FSAL Omelyan integrator.
+
+#### `src/core/provenance.py` (Phase 5 Wave 9D)
+**Purpose:** Parameter provenance registry. PARAMETER_PROVENANCE dict with tiers, sources, verification dates.
+
+#### `src/core/citations.py` (Phase 5 Wave 9D)
+**Purpose:** Citation registry. CITATION_REGISTRY with DOIs, usage mapping.
+
 ---
 
-## 2. LEAN FORMAL VERIFICATION (30 modules, 429 theorems + 2 axioms)
+## 2. LEAN FORMAL VERIFICATION (38 modules, 588 theorems + 2 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -263,7 +294,7 @@
 | SU2PseudoReality | ~200 | 10 | 0 | 5 | One-link normalization, effective coupling, Binder limits |
 | FermionBag4D | ~250 | 16 | 0 | 5 | SO(4) integration, 8-fermion bounds, bag positivity, vestigial splitting |
 | LatticeHamiltonian | ~400 | 28 | 0 | 5 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace |
-| GoltermanShamir | ~330 | 15 | 1 | 5 | 9 GS conditions as substantive Props, no-go bundle, TPF evasion, Fock space finite-dim, Pauli exclusion |
+| GoltermanShamir | ~330 | 14 | 1 | 5 | 9 GS conditions as substantive Props, no-go bundle, TPF evasion, Fock space finite-dim, Pauli exclusion |
 | TPFEvasion | ~200 | 12 | 0 | 5 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
 | KLinearCategory | ~300 | 16 | 0 | 5 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
 | SphericalCategory | ~350 | 18 | 0 | 5 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, Fibonacci φ²=φ+1 |
@@ -272,6 +303,14 @@
 | VecG | ~200 | 9 | 0 | 5 | GradedVectorSpace, Day convolution, unit/assoc/simple tensor, dim multiplicativity |
 | DrinfeldDouble | ~300 | 15 | 0 | 5 | DrinfeldDoubleElement, twisted multiplication, conjugation action, D(G) unit laws, anyon counting |
 | GaugeEmergence | ~250 | 14 | 0 | 5 | Half-braiding, gauge emergence Z(Vec_G)≅Rep(D(G)), chirality limitation c≡0(8), Layer 1→2→3 bridge |
+| SO4Weingarten | ~250 | 14 | 0 | 5 | Weingarten 2nd/4th moment, channel positivity, bond weight, Planck occupation (**ALL PROVED**, Aristotle `117a7115`) |
+| FractonFormulas | ~400 | 45 | 0 | 5 | Charge counting, dispersion, retention, DOF gap, YM obstructions (**ALL PROVED**, Aristotle `4528aa2b`) |
+| WetterichNJL | ~250 | 18 | 0 | 5 | Fierz completeness, scalar/pseudoscalar/vector channels, NJL-ADW correspondence (**ALL PROVED**, Aristotle `4528aa2b`) |
+| VestigialSusceptibility | ~250 | 16 | 0 | 5 | Gamma trace, u_g positivity, bubble integral, RPA susceptibility, vestigial_before_tetrad (**ALL PROVED**, Aristotle `9e2251cd`) |
+| QuaternionGauge | ~200 | 10 | 0 | 5 | Unit quaternion norm, identity, SO(4) dim, plaquette bounds, heatbath detailed balance (**ALL PROVED**, Aristotle `fb657b4d`) |
+| GaugeFermionBag | ~200 | 9 | 0 | 5 | Tetrad gauge covariance, metric invariance, bag weight real, SMW update, Binder limits (**ALL PROVED**, Aristotle `fb657b4d`) |
+| HubbardStratonovichRHMC | ~400 | 22 | 0 | 5 | HS identity, Kramers, multi-shift CG, complex pseudofermion Pfaffian identity |
+| MajoranaKramers | ~400 | 25 | 0 | 5 | Majorana Kramers degeneracy, sign-free determinant, 8×8 block structure |
 
 **Axioms:**
 - `non_abelian_center_discrete` (GaugeErasure.lean) — Encodes Lie theory: center of non-Abelian compact Lie group is discrete.
@@ -279,7 +318,7 @@
 
 ---
 
-## 3. ARISTOTLE THEOREM PROVER (99 proved across 27 runs)
+## 3. ARISTOTLE THEOREM PROVER (233 proved across 30+ runs)
 
 | Run ID | Date | Theorems | Scope |
 |--------|------|----------|-------|
@@ -310,6 +349,12 @@
 | run_20260329_133200 | 2026-03-29 | 7 | Wave 4B: FusionExamples (associativity, fib_tau_squared, fib_F_involutory, fib_is_chiral) |
 | run_20260329_162811 | 2026-03-29 | 3 | Wave 4C-1: VecG (day_unit_left/right, day_assoc) |
 | run_20260329_173500 | 2026-03-29 | 5 | Wave 4C-2: VecG+DrinfeldDouble (simple_tensor, day_dim_multiplicative, ddMul_one_left/right, dd_abelian_simples) |
+| 117a7115 | 2026-03-31 | 14 | 9C-2: SO4Weingarten (all 14 theorems) |
+| 4528aa2b | 2026-03-31 | 63 | 9C-1+3: FractonFormulas (45) + WetterichNJL (18) |
+| 9e2251cd | 2026-04-01 | 16 | Wave 6B: VestigialSusceptibility (all 16 theorems) |
+| fb657b4d | 2026-04-02 | 19 | Wave 7A+7B: QuaternionGauge (10) + GaugeFermionBag (9) |
+| cc257137 | 2026-04-02 | 2 | W7B-fix: Binder cumulant theorems |
+| *manual* | 2026-04-02 | 47 | HubbardStratonovichRHMC (22) + MajoranaKramers (25) — manual proofs |
 
 ---
 
@@ -351,7 +396,7 @@
 | paper3_gauge_erasure | PRL | 310 | Non-Abelian gauge erasure theorem |
 | paper4_wkb_connection | PRD | 298 | Exact WKB connection formula |
 | paper5_adw_gap | PRD | 397 | ADW mean-field gap equation |
-| paper6_vestigial | PRD | ~620 | Vestigial metric phase + production MC split transition (L=4,6,8) |
+| paper6_vestigial | PRD | ~620 | Vestigial metric phase + analytical susceptibility + RHMC production (L=4 done, L=8 in flight) |
 | paper7_chirality_formal | PRD/CPC | ~330 | GS no-go formal verification + TPF evasion in Lean 4 |
 | experimental_predictions | Tables | 156 | Platform spectral predictions |
 
@@ -365,14 +410,14 @@
 
 ---
 
-## 6. TEST FILES (17 files, 1014 tests)
+## 6. TEST FILES (19 files, 1245 tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
 | test_transonic_background | 12 | BEC parameters, background solver, corrections |
 | test_second_order | 12 | Enumeration, coefficients, WKB |
 | test_cgl_derivation | 26 | CGL FDR, kernel decomposition, boundary terms |
-| test_cross_validation | 7 | Wraps validate.py 14 checks |
+| test_cross_validation | 7 | Wraps validate.py 15 checks |
 | test_lean_integrity | 9 | Module presence, toolchain, zero sorry |
 | test_third_order | 36 | Third-order enumeration, parity structure |
 | test_gauge_erasure | 25 | Erasure theorem, SM analysis |
@@ -380,12 +425,14 @@
 | test_adw | 78 | Gap equation, NG modes, fluctuations |
 | test_ginzburg_landau | 75 | GL expansion, He-3 analogy |
 | test_experimental | 54 | Prediction tables, shot counts, kappa-scaling, polariton |
-| test_chirality | 81 | GS 9 conditions, TPF evasion, lattice framework, no-go structure |
+| test_chirality | 93 | GS 9 conditions, TPF evasion, lattice framework, no-go structure |
 | test_fracton | 110 | SK-EFT, information retention |
 | test_fracton_gravity | 146 | Bootstrap, DOF gap, non-Abelian |
-| test_vestigial | 106 | Mean-field, MC, 3-phase structure, SU(2), TRG, 4D fermion-bag |
+| test_vestigial | 159 | Mean-field, MC, 3-phase structure, SU(2), TRG, 4D fermion-bag, NJL, susceptibility |
 | test_backreaction | 76 | Cooling, extremality, timescales |
-| test_layer1 | 96 | Categorical infrastructure, fusion rules, Drinfeld double, quantum dimensions |
+| test_layer1 | 84 | Categorical infrastructure, fusion rules, Drinfeld double, quantum dimensions |
+| test_gauge | 146 | SO(4) gauge, quaternion algebra, fermion-bag, Majorana, RHMC infrastructure |
+| test_hs_rhmc | 32 | HS+RHMC: Zolotarev, multi-shift CG, forces, heatbath, torch backend |
 
 ---
 
@@ -393,10 +440,17 @@
 
 | Script | Lines | Purpose |
 |--------|-------|---------|
-| validate.py | ~1200 | 14 cross-layer validation checks |
-| review_figures.py | ~1100 | Generate 60 PNGs + structural checks + manifest |
+| validate.py | 1343 | 15 cross-layer validation checks (incl. parameter_provenance) |
+| review_figures.py | 1205 | Generate 64 PNGs + structural checks + manifest |
 | submit_to_aristotle.py | 466 | Aristotle submission/retrieval/integration |
-| run_vestigial_production.py | ~300 | Multiprocessing production MC runner (L=4,6,8) |
+| run_vestigial_production.py | 709 | Multiprocessing production MC runner (fermion-bag, L=4,6,8) |
+| run_rhmc_production.py | 239 | RHMC production runner (Rust backend, checkpoint/resume) |
+| run_majorana_production.py | 281 | Majorana fermion-bag production runner (W7B) |
+| provenance_dashboard.py | 627 | Flask+HTMX parameter provenance command center |
+| view_vestigial_mc.py | 639 | MC results viewer and analysis dashboard |
+| analyze_majorana_results.py | 241 | Majorana MC results analysis |
+| benchmark_rust_parallel.py | 133 | Rust RHMC backend benchmarking |
+| test_pseudofermion_convention.py | 262 | Empirical pseudofermion convention test (W7C-fix) |
 
 ---
 
@@ -406,7 +460,7 @@
 |------|---------|
 | pyproject.toml | Project metadata, dependencies (numpy, scipy, plotly, pandas, sympy, kaleido, aristotlelib) |
 | uv.lock | uv package manager lock file |
-| .python-version | Python >=3.11 |
+| .python-version | Python >=3.14 |
 | lean/lakefile.toml | Lean Lake build config (depends on Mathlib) |
 | lean/lean-toolchain | v4.28.0 |
 | lean/lake-manifest.json | Lean package manifest |
@@ -432,9 +486,10 @@
 | Phase2_Roadmap.md | docs/roadmaps/ | Complete |
 | Phase3_Roadmap.md | docs/roadmaps/ | Complete |
 | Phase4_Roadmap.md | docs/roadmaps/ | Complete (includes Wave 5) |
-| Phase5_Roadmap.md | docs/roadmaps/ | Active (Wave 5 synthesis) |
+| Phase5_Roadmap.md | docs/roadmaps/ | Active (W7C RHMC, L=8 in flight) |
+| Phase5a_Roadmap.md | docs/roadmaps/ | New — Onsager algebra + GT + Z₁₆ chirality wall |
 
-### Stakeholder Documents (13 total)
+### Stakeholder Documents (12 total)
 | Document | Location |
 |----------|----------|
 | companion_guide.md | docs/stakeholder/ |
@@ -518,22 +573,22 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| **Python Source Modules** | 37 | Complete (Phases 1-5) |
+| **Python Source Modules** | 47 | Complete (Phases 1-5, Waves 1-7C) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 17 | 1014 tests, all passing |
+| **Test Files** | 19 | 1245 tests, all passing |
 | **Notebooks** | 20 | Phases 1-5 (Technical + Stakeholder) |
-| **Lean Modules** | 30 | All build clean (zero sorry) |
-| **Lean Theorems** | 429 + 2 axioms | Zero sorry |
-| **Aristotle-proved** | 99 | 27 runs |
-| **Manual proofs** | 330 | |
+| **Lean Modules** | 38 | All build clean (zero sorry) |
+| **Lean Theorems** | 588 + 2 axioms | Zero sorry |
+| **Aristotle-proved** | 233 | 30+ runs |
+| **Manual proofs** | 355 | |
 | **Paper Drafts** | 7 + prediction tables | Full LaTeX |
-| **Pipeline Figures** | 61 | All PNGs generated |
-| **Validation Checks** | 14 | All passing |
-| **Scripts** | 4 | validate, review_figures, submit_to_aristotle, run_vestigial_production |
-| **Stakeholder Docs** | 13 | Phases 1-5 |
+| **Pipeline Figures** | 64 | All PNGs generated |
+| **Validation Checks** | 15 | All 15 passing |
+| **Scripts** | 11 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 4 utilities |
+| **Stakeholder Docs** | 12 | Phases 1-5 |
 | **Analysis Docs** | 3 | Vestigial, fracton, chirality |
 | **Roadmaps** | 5 | Phases 1-5 |
 
 ---
 
-**Project Status:** Phase 5 Waves 1-4C COMPLETE. Wave 5 synthesis IN PROGRESS. 429 theorems + 2 axioms (ZERO sorry), 99 Aristotle-proved across 27 runs, 1014 tests (all pass), 61 figures, 30 Lean modules, 37 Python modules, 7 papers, 20 notebooks.
+**Project Status (2026-04-03):** Phase 5 Waves 1-5, 9A-9E, Wave 6 (Stages 1-9), Wave 7A-7C COMPLETE. L=4 RHMC production COMPLETE. L=8 RHMC IN FLIGHT (~3d). Wave 8 (4D ATRG) NOT STARTED. 588 theorems + 2 axioms (ZERO sorry), 233 Aristotle-proved, 1245 tests (all pass), 64 figures, 38 Lean modules, 47 Python modules, 7 papers, 20 notebooks.

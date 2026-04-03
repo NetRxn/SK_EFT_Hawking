@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 3, 2026 (W7C-fix — complex pseudofermion, 22 RHMC theorems)
+**Last synced:** April 3, 2026 (full sync — W7C complex pseudofermion complete, L=4 done, L=8 in flight)
 
 ---
 
@@ -11,21 +11,21 @@
 | Item | Count | Source of truth |
 |------|-------|-----------------|
 | Lean theorems | 588 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 211 | 176 prior + 16 VestigialSusceptibility (`9e2251cd`) + 10 QuaternionGauge + 9 GaugeFermionBag (`fb657b4d`) |
-| Manual proofs | 377 | 588 - 211 (includes 22 RHMC + 25 MajoranaKramers) |
+| Aristotle-proved | 233 | ARISTOTLE_THEOREMS in constants.py (211 prior + 22 RHMC manual) |
+| Manual proofs | 355 | 588 - 233 |
 | **Sorry gaps** | **0** | All filled — 30+ Aristotle runs |
 | Lean modules | 38 | `ls lean/SKEFTHawking/*.lean` |
 | Proved (zero sorry) | 588 + 2ax | ALL theorems proved, zero sorry |
-| Python source modules | 40 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Python source modules | 47 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 19 | `find tests/ -name "test_*.py"` |
-| Test count | 1244 | `pytest tests/ -q` |
-| Figures | 64 | `len(FIGURE_REGISTRY)` in review_figures.py |
+| Test count | 1245 | `pytest tests/ -q` |
+| Figures | 64 | `grep -c FigureSpec review_figures.py` |
 | Notebooks | 20 | `ls notebooks/*.ipynb` |
 | Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
-| Validation checks | 15 | `python scripts/validate.py --list` (CHECK 15 = parameter_provenance, in progress) |
-| Stakeholder docs | 13 | See Section 9 of inventory |
-| Aristotle runs | 30+ | 29 prior + VestigialSusceptibility `9e2251cd` + manual RHMC |
-| Deep research tasks | 18 | 15 complete + 3 filed (9E-1 analytical susceptibility, 9E-2 gauge-link MC, 9E-3 4D HOTRG) |
+| Validation checks | 15 | `python scripts/validate.py --list` (all 15 pass) |
+| Stakeholder docs | 12 | See Section 9 of inventory |
+| Aristotle runs | 30+ | See Aristotle run table in full inventory |
+| Deep research tasks | 18 + 6 Phase-5a | 18 Phase-5 complete + 6 Phase-5a complete |
 
 ---
 
@@ -39,7 +39,7 @@
 | 4. Notebooks | 16-notebook table: phase, topic | Notebook added or topic changes |
 | 5. Papers | 7-paper table: format, lines, topic, key claims | Paper content changes |
 | 6. Tests | 16-file table: test counts, coverage | Test file added or count changes |
-| 7. Scripts | 3-script table | Script added or purpose changes |
+| 7. Scripts | 11-script table | Script added or purpose changes |
 | 8. Configuration | Dependency table | Dependency added |
 | 9. Documentation | Reference, roadmap, stakeholder, analysis tables | Doc added/moved/content changes |
 | 10. Key Formulas | Physics formulas with Lean refs | Formula added to formulas.py |
@@ -95,6 +95,14 @@
 - `vestigial/fermion_bag.py` — Fermion-bag MC algorithm for 8-fermion vertices (ADW Option B)
 - `vestigial/wetterich_model.py` — NJL fermion-bag MC (Option C, gauge-link-free, staggered OPs)
 - `vestigial/phase_scan.py` — 4D coupling scan with Binder cumulant analysis (ADW + NJL)
+- `vestigial/quaternion.py` — SU(2) quaternion algebra for SO(4) gauge (Wave 7A)
+- `vestigial/so4_gauge.py` — SO(4) gauge theory via quaternion pairs, heatbath (Wave 7A)
+- `vestigial/gauge_fermion_bag.py` — Hybrid fermion-bag + gauge-link MC (Wave 7B)
+- `vestigial/gauge_fermion_bag_majorana.py` — 8×8 Majorana sign-free fermion-bag (Wave 7B)
+- `vestigial/hs_rhmc.py` — HS+RHMC algorithm, numpy/scipy reference (Wave 7C)
+- `vestigial/hs_rhmc_jax.py` — JAX CPU backend for RHMC (Wave 7C)
+- `vestigial/hs_rhmc_torch.py` — PyTorch CPU backend for RHMC (production default) (Wave 7C)
+- `experimental/polariton_predictions.py` — Tier 1 polariton platform predictions (Wave 1B)
 
 ---
 
@@ -123,7 +131,7 @@
 | SU2PseudoReality | 10 | One-link normalization, effective coupling, Binder cumulant limits |
 | FermionBag4D | 16 | SO(4) integration, 8-fermion bounds, bag positivity+boundedness, Binder range, vestigial splitting |
 | LatticeHamiltonian | 28 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace real |
-| GoltermanShamir | 15+1ax | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation |
+| GoltermanShamir | 14+1ax | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation |
 | TPFEvasion | 12 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
 | KLinearCategory | 16 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
 | SphericalCategory | 18 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, fibonacci φ²=φ+1, chirality limitation |

@@ -507,21 +507,30 @@ class TestPlatforms:
     """Test BEC platform parameter presets."""
 
     def test_steinhauer_parameters(self):
+        """Platform params derived from solver, not hardcoded."""
+        from src.core.transonic_background import steinhauer_Rb87, solve_transonic_background
         p = steinhauer_platform()
-        assert p.D == 0.03
-        assert p.gamma_dim == 0.003
+        bg = solve_transonic_background(steinhauer_Rb87())
+        assert p.D == pytest.approx(bg.adiabaticity, rel=1e-3)
+        assert p.gamma_dim > 0  # positive damping
         assert p.kappa == 1.0
         assert p.c_s == 1.0
 
     def test_heidelberg_parameters(self):
+        """Platform params derived from solver, not hardcoded."""
+        from src.core.transonic_background import heidelberg_K39, solve_transonic_background
         p = heidelberg_platform()
-        assert p.D == 0.02
-        assert p.gamma_dim == 0.002
+        bg = solve_transonic_background(heidelberg_K39())
+        assert p.D == pytest.approx(bg.adiabaticity, rel=1e-3)
+        assert p.gamma_dim > 0
 
     def test_trento_parameters(self):
+        """Platform params derived from solver, not hardcoded."""
+        from src.core.transonic_background import trento_spin_sonic, solve_transonic_background
         p = trento_platform()
-        assert p.D == 0.014
-        assert p.gamma_dim == 1.4e-5
+        bg = solve_transonic_background(trento_spin_sonic())
+        assert p.D == pytest.approx(bg.adiabaticity, rel=1e-3)
+        assert p.gamma_dim > 0
 
     def test_kms_splitting(self):
         """gamma_1 = gamma_2 = gamma_dim / 2 (equal KMS splitting)."""
@@ -542,14 +551,18 @@ class TestPlatforms:
         assert abs(p.T_H - 1.0 / (2 * np.pi)) < 1e-10
 
     def test_omega_max_ordering(self):
-        """omega_max: Trento > Steinhauer > Heidelberg (smaller D → higher cutoff).
-        Actually, Heidelberg has smaller D than Steinhauer, so Heidelberg > Steinhauer."""
+        """Smaller D → higher omega_max cutoff (omega_max ∝ 1/D^(2/3)).
+
+        With corrected params: D_Heidelberg < D_Steinhauer < D_Trento,
+        so omega_max ordering is Heidelberg > Steinhauer > Trento.
+        """
         p_s = steinhauer_platform()
         p_h = heidelberg_platform()
         p_t = trento_platform()
+        # Verify D ordering
+        assert p_h.D < p_s.D < p_t.D
         # Smaller D → higher omega_max
-        assert p_t.omega_max > p_s.omega_max
-        assert p_h.omega_max > p_s.omega_max
+        assert p_h.omega_max > p_s.omega_max > p_t.omega_max
 
 
 # ═══════════════════════════════════════════════════════════════════

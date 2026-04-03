@@ -40,6 +40,13 @@ from typing import Optional, Callable
 import numpy as np
 from scipy.optimize import brentq
 
+from src.core.constants import ATOMS
+from src.core.formulas import beliaev_transport_coefficients
+from src.core.transonic_background import (
+    steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
+    solve_transonic_background,
+)
+
 
 # ═══════════════════════════════════════════════════════════════════
 # Background flow profile
@@ -505,85 +512,47 @@ def extract_corrections(
 # Experimental parameter presets
 # ═══════════════════════════════════════════════════════════════════
 
-def steinhauer_params() -> WKBParameters:
-    """WKB parameters for the Steinhauer ⁸⁷Rb BEC experiment.
+def _wkb_params_from_solver(factory, atom_key: str) -> WKBParameters:
+    """Derive natural-unit WKB params from the transonic solver.
 
-    All quantities in NATURAL UNITS where c_s = 1 and κ sets the scale:
-        κ = 1 (all energies/frequencies in units of κ)
-        c_s = 1 (all velocities in units of c_s)
-        ξ = D · c_s / κ = D (healing length in units of c_s/κ)
+    Computes D and gamma_dim from constants.py → transonic solver → Beliaev
+    formula, enforcing Pipeline Invariant 2 (no hardcoded constants).
 
-    Physical values from Phase 1 (steinhauer_Rb87 factory):
-        κ_phys ≈ 3400 Hz, c_s ≈ 3.3 mm/s, ξ ≈ 0.28 μm
-        D = κξ/c_s ≈ 0.03
-
-    The dimensionless damping coefficients are:
-        γ̃ = γ_phys / κ  (ratio of damping rate to surface gravity)
-
-    From Beliaev: γ_Bel / κ ≈ 0.003 for Steinhauer parameters.
+    Natural units: kappa=1, c_s=1, so xi=D.
     """
-    D = 0.03  # adiabaticity parameter
-    profile = TransonicProfile(
-        kappa=1.0,    # natural units
-        c_s=1.0,      # natural units
-        xi=D,         # ξ = D·c_s/κ = D in natural units
-    )
-    # Dimensionless damping: γ̃ = γ_phys/κ ≈ 0.003
-    gamma_dim = 0.003
+    params = factory()
+    bg = solve_transonic_background(params)
+    kappa = bg.surface_gravity
+    c_s = params.sound_speed_upstream
+    xi = params.healing_length
+    n_1D = params.density_upstream
+    a_s = ATOMS[atom_key]['a_s']
+
+    D = bg.adiabaticity
+    coeffs = beliaev_transport_coefficients(n_1D, a_s, kappa, c_s, xi)
+    gamma_dim = coeffs['Gamma_Bel'] / kappa
+
+    profile = TransonicProfile(kappa=1.0, c_s=1.0, xi=D)
     return WKBParameters(
         profile=profile,
-        gamma_1=gamma_dim / 2,  # split equally between γ₁ and γ₂
+        gamma_1=gamma_dim / 2,
         gamma_2=gamma_dim / 2,
     )
+
+
+def steinhauer_params() -> WKBParameters:
+    """WKB parameters for Steinhauer ⁸⁷Rb, derived from transonic solver."""
+    return _wkb_params_from_solver(steinhauer_Rb87, 'Rb87')
 
 
 def heidelberg_params() -> WKBParameters:
-    """WKB parameters for the projected Heidelberg ³⁹K BEC experiment.
-
-    Feshbach-tunable scattering length → adjustable D and γ.
-    D ≈ 0.02 (tighter confinement, lower D).
-    """
-    D = 0.02
-    profile = TransonicProfile(
-        kappa=1.0,
-        c_s=1.0,
-        xi=D,
-    )
-    gamma_dim = 0.002
-    return WKBParameters(
-        profile=profile,
-        gamma_1=gamma_dim / 2,
-        gamma_2=gamma_dim / 2,
-    )
+    """WKB parameters for Heidelberg ³⁹K, derived from transonic solver."""
+    return _wkb_params_from_solver(heidelberg_K39, 'K39')
 
 
 def trento_params() -> WKBParameters:
-    """WKB parameters for the projected Trento ²³Na spin-sonic BEC experiment.
-
-    Physical values from constants.py (trento_spin_sonic factory):
-        κ_phys ≈ 21 s⁻¹, c_s ≈ 2.19 mm/s, ξ ≈ 1.26 μm
-        D = κξ/c_s ≈ 0.014
-
-    The Beliaev damping is weak for ²³Na (small a_s):
-        γ̃ = Γ_Bel/κ ≈ 1.4e-5
-
-    Spin-sonic enhancement: in a two-component BEC, spin waves
-    propagate at c_spin ≪ c_density. The ratio c_density/c_spin
-    can enhance T_H and δ_diss by ~100×, potentially making
-    second-order corrections accessible.
-    """
-    D = 0.014
-    profile = TransonicProfile(
-        kappa=1.0,
-        c_s=1.0,
-        xi=D,
-    )
-    gamma_dim = 1.4e-5
-    return WKBParameters(
-        profile=profile,
-        gamma_1=gamma_dim / 2,
-        gamma_2=gamma_dim / 2,
-    )
+    """WKB parameters for Trento ²³Na spin-sonic, derived from transonic solver."""
+    return _wkb_params_from_solver(trento_spin_sonic, 'Na23')
 
 
 # ═══════════════════════════════════════════════════════════════════

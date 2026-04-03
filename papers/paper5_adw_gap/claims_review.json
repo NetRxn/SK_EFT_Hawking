@@ -1,0 +1,300 @@
+{
+  "paper": "paper5_adw_gap",
+  "title": "Mean-field gap equation for tetrad condensation in the ADW mechanism",
+  "reviewer": "physics-qa:claims-reviewer",
+  "review_date": "2026-04-03",
+  "model": "claude-opus-4-6[1m]",
+  "overall_verdict": "PASS_WITH_FINDINGS",
+  "summary": "All numerical claims reproduce within tolerance. All Lean theorems verified (21 theorems, 0 sorry, lake build clean). G_c = 8pi^2/(N_f Lambda^2) confirmed correct (8pi^2, not 4pi^2). Vestigial MC paragraph correctly references Weingarten framework. Six minor findings: one phantom Lean theorem name, one stale PAPER_DEPENDENCIES entry, three orphan citations missing from CITATION_REGISTRY, two orphan bibliography entries, and one citation key mismatch.",
+
+  "layer_1_numerical_claims": {
+    "verdict": "PASS",
+    "tolerance": "0.5%",
+    "claims": [
+      {
+        "claim": "G_c = 8pi^2 / (N_f Lambda^2)",
+        "paper_location": "Eq. after Eq. 4 (line 113)",
+        "pipeline_source": "formulas.py::adw_critical_coupling (line 470)",
+        "computed_value": "8*pi^2/(N_f*Lambda^2)",
+        "match": true,
+        "notes": "Exact symbolic match. Confirmed 8pi^2 (not 4pi^2) per 9B audit."
+      },
+      {
+        "claim": "V_eff(C) = C^2/(2G) - (N_f/16pi^2)[Lambda^2 C^2 - C^4 ln(Lambda^2/C^2 + 1)]",
+        "paper_location": "Eq. 4 (line 103-107)",
+        "pipeline_source": "formulas.py::adw_effective_potential (lines 418-447)",
+        "match": true,
+        "notes": "Formula matches exactly between paper and formulas.py. CW potential verified via tests."
+      },
+      {
+        "claim": "Curvature d^2V/dC^2|_{C=0} changes sign at G_c",
+        "paper_location": "Line 110-111",
+        "pipeline_source": "formulas.py::adw_curvature_at_origin (lines 473-499)",
+        "match": true,
+        "notes": "Verified: positive for G < G_c, ~0 at G = G_c, negative for G > G_c. 78/78 ADW tests pass."
+      },
+      {
+        "claim": "Nontrivial minimum with V_eff(C_min) < 0 for G > G_c",
+        "paper_location": "Line 117",
+        "pipeline_source": "gap_equation.py::solve_gap_equation",
+        "match": true,
+        "notes": "TestEffectivePotential::test_veff_negative_above_Gc passes."
+      },
+      {
+        "claim": "Flat-spacetime tetrad e^a_mu = C delta^a_mu gives Lorentzian signature (-,+,+,+)",
+        "paper_location": "Line 119-120",
+        "pipeline_source": "hubbard_stratonovich.py::TetradField.flat_spacetime",
+        "match": true,
+        "notes": "TestTetradField::test_lorentzian_signature passes. Metric = C^2 * diag(-1,+1,+1,+1)."
+      },
+      {
+        "claim": "16 = 6 + 4 + 2 + 4 (Vergeles mode counting)",
+        "paper_location": "Eq. line 167-171",
+        "pipeline_source": "fluctuations.py::vergeles_mode_counting",
+        "match": true,
+        "notes": "TestVergelesModeCounting::test_4d_vergeles passes. 6 absorbed + 4 diffeo + 2 graviton + 4 massive = 16."
+      },
+      {
+        "claim": "2 massless spin-2 graviton polarizations in 4D",
+        "paper_location": "Line 29, 175",
+        "pipeline_source": "formulas.py::graviton_polarization_count, fluctuations.py::graviton_identification",
+        "match": true,
+        "notes": "d(d-3)/2 = 4*1/2 = 2. Lean theorem graviton_pol_4d confirms."
+      },
+      {
+        "claim": "N_f = 4 four-component Dirac fermions from 3D cubic lattice (2^3 = 8 Weyl species)",
+        "paper_location": "Lines 69-71",
+        "pipeline_source": "wen_model.py::wen_coulomb_phase, nielsen_ninomiya_dirac_count",
+        "match": true,
+        "notes": "2^3 = 8 Weyl -> 4 Dirac. Lean theorem weyl_species_3d and dirac_species_3d confirm."
+      },
+      {
+        "claim": "4 structural obstacles",
+        "paper_location": "Lines 196-207",
+        "pipeline_source": "fluctuations.py::structural_obstacles",
+        "match": true,
+        "notes": "Lean theorem structural_obstacle_count confirms. Names match: spin_connection_gap, grassmann_bosonic, nielsen_ninomiya, cosmological_constant."
+      },
+      {
+        "claim": "Second-order phase transition at G = G_c",
+        "paper_location": "Lines 25, 156",
+        "pipeline_source": "ginzburg_landau.py (line 850)",
+        "match": true,
+        "notes": "Consistent with Coleman-Weinberg mechanism at mean-field level."
+      }
+    ]
+  },
+
+  "layer_2_theorem_references": {
+    "verdict": "PASS_WITH_FINDING",
+    "lean_module": "lean/SKEFTHawking/ADWMechanism.lean",
+    "lean_build": "CLEAN (zero sorry, 8065 jobs, warnings only for unused variables in other files)",
+    "lean_version": "v4.28.0 (matches paper claim)",
+    "theorem_count_actual": 21,
+    "theorem_count_claimed": 21,
+    "sorry_count": 0,
+    "aristotle_run_id": "f8de66d1",
+    "aristotle_theorem": "curvature_zero_at_Gc",
+    "aristotle_verified": true,
+    "theorems_referenced_in_paper": [
+      {
+        "paper_name": "lorentz_dim_4",
+        "lean_name": "lorentz_dim_4",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "dim SO(3,1) = 6"
+      },
+      {
+        "paper_name": "graviton_pol_4d",
+        "lean_name": "graviton_pol_4d",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "n_pol = 2 in 4D"
+      },
+      {
+        "paper_name": "vergeles_mode_count",
+        "lean_name": "vergeles_mode_count",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "6+4+2+4 = 16"
+      },
+      {
+        "paper_name": "critical_coupling_pos",
+        "lean_name": "critical_coupling_pos",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "G_c > 0"
+      },
+      {
+        "paper_name": "phase_classification",
+        "lean_name": null,
+        "exists": false,
+        "has_sorry": false,
+        "notes": "FINDING: No single theorem named 'phase_classification' in Lean. The phase classification is proved by three separate theorems: pos_C_gives_full_tetrad, zero_C_no_fluct_gives_pregeometric, zero_C_with_fluct_gives_vestigial. Paper should reference these or use a collective name that matches."
+      },
+      {
+        "paper_name": "weyl_eq_double_dirac",
+        "lean_name": "weyl_eq_double_dirac",
+        "exists": true,
+        "has_sorry": false,
+        "notes": "N_Weyl = 2 * N_Dirac"
+      }
+    ],
+    "findings": [
+      {
+        "severity": "LOW",
+        "finding": "Paper references 'phase_classification' as a Lean theorem name but no such single theorem exists. The result is split across three theorems: pos_C_gives_full_tetrad, zero_C_no_fluct_gives_pregeometric, zero_C_with_fluct_gives_vestigial.",
+        "recommendation": "Either rename to reference the three individual theorems, or add a collective theorem 'phase_classification' in Lean that combines them."
+      }
+    ]
+  },
+
+  "layer_3_parameter_provenance": {
+    "verdict": "PASS",
+    "notes": "Paper 5 does not use any experimentally-measured parameters (no BEC platform parameters). All quantities are theoretical/structural: G_c formula, mode counting, symmetry dimensions. No PARAMETER_PROVENANCE entries needed beyond what exists.",
+    "parameters_checked": []
+  },
+
+  "layer_4_citation_integrity": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "paper_citations": [
+      "Akama1978", "Diakonov2011", "Wetterich2005", "Wen2006",
+      "Roy2016", "Vladimirov2012", "Volovik2024", "Vergeles2025",
+      "Maitiniyazi2024", "Selch2025"
+    ],
+    "registry_matches": {
+      "Akama1978": {"registry_key": "Akama1978", "match": true, "used_in_includes_paper5": true},
+      "Diakonov2011": {"registry_key": "Diakonov2011", "match": true, "used_in_includes_paper5": true},
+      "Wetterich2005": {"registry_key": "Wetterich2004", "match": "KEY_MISMATCH", "used_in_includes_paper5": true, "notes": "Paper bibitem key is 'Wetterich2005' but registry key is 'Wetterich2004'. Reference data (PRD 70, 105004, year 2004) is correct in both places. Year in registry (2004) matches published year."},
+      "Wen2006": {"registry_key": "LevinWen2006", "match": "KEY_MISMATCH", "used_in_includes_paper5": true, "notes": "Paper bibitem key 'Wen2006' vs registry key 'LevinWen2006'. Bibliographic data matches."},
+      "Roy2016": {"registry_key": null, "match": false, "notes": "NOT IN CITATION_REGISTRY. Paper bibliography: Roy, Juricic, Herbut, JHEP 04, 018 (2016). Used for Herbut velocity equalization mechanism."},
+      "Vladimirov2012": {"registry_key": "VladimirovDiakonov2012", "match": "KEY_MISMATCH", "used_in_includes_paper5": false, "notes": "Paper bibitem key 'Vladimirov2012' vs registry key 'VladimirovDiakonov2012'. Registry used_in does NOT include paper5 but should."},
+      "Volovik2024": {"registry_key": "Volovik2024", "match": true, "used_in_includes_paper5": true},
+      "Vergeles2025": {"registry_key": "Vergeles2025", "match": true, "used_in_includes_paper5": true},
+      "Maitiniyazi2024": {"registry_key": null, "match": false, "notes": "NOT IN CITATION_REGISTRY. Paper bibliography: Maitiniyazi et al., PRD 109, 106018 (2024). ALSO: orphan bibitem -- not cited in paper text."},
+      "Selch2025": {"registry_key": null, "match": false, "notes": "NOT IN CITATION_REGISTRY. Paper bibliography: Selch and Zubkov, Symmetry 17, 1045 (2025). ALSO: orphan bibitem -- not cited in paper text."}
+    },
+    "findings": [
+      {
+        "severity": "LOW",
+        "finding": "Three citations in paper bibliography are missing from CITATION_REGISTRY: Roy2016, Maitiniyazi2024, Selch2025.",
+        "recommendation": "Add these to CITATION_REGISTRY with used_in including paper5."
+      },
+      {
+        "severity": "LOW",
+        "finding": "Maitiniyazi2024 and Selch2025 are orphan bibliography entries -- they appear in \\thebibliography but are never \\cite{}'d in the paper text.",
+        "recommendation": "Either cite them in the appropriate context or remove from bibliography."
+      },
+      {
+        "severity": "LOW",
+        "finding": "VladimirovDiakonov2012 registry used_in list does not include paper5, but paper5 cites it.",
+        "recommendation": "Add 'papers/paper5_adw_gap/paper_draft.tex' to VladimirovDiakonov2012.used_in."
+      },
+      {
+        "severity": "LOW",
+        "finding": "Citation key mismatches between paper bibitem keys and registry keys: Wetterich2005 vs Wetterich2004, Wen2006 vs LevinWen2006, Vladimirov2012 vs VladimirovDiakonov2012.",
+        "recommendation": "Normalize keys or document the mapping. Bibliographic data is correct in all cases."
+      }
+    ]
+  },
+
+  "layer_5_qualitative_claims": {
+    "verdict": "PASS_WITH_FINDING",
+    "claims": [
+      {
+        "claim": "Gravitons are Higgs bosons of the tetrad order parameter, NOT Nambu-Goldstone bosons",
+        "paper_location": "Lines 179-180",
+        "computed_support": true,
+        "pipeline_source": "fluctuations.py::graviton_identification returns nature='Higgs boson of tetrad order parameter'",
+        "notes": "Correct: NG modes are absorbed by spin connection; gravitons are in the residual Higgs sector."
+      },
+      {
+        "claim": "Three gravitational phases: pre-geometric, vestigial metric, full tetrad",
+        "paper_location": "Lines 137-148",
+        "computed_support": true,
+        "pipeline_source": "gap_equation.py::PhaseType enum, classify_phase function; Lean: GravPhase inductive type with three constructors",
+        "notes": "Consistent with Vladimirov-Diakonov (2012) and Volovik (2024)."
+      },
+      {
+        "claim": "Vestigial MC paragraph references Weingarten framework (not stale split transition claims)",
+        "paper_location": "Lines 239-243",
+        "computed_support": true,
+        "pipeline_source": "formulas.py::adw_bond_weight_fundamental, adw_bond_weight_adjoint, adw_bond_weight_total (Weingarten multi-channel)",
+        "notes": "Paper correctly states 'SO(4) Weingarten multi-channel bond coupling (fundamental + adjoint representation channels)'. Matches pipeline."
+      },
+      {
+        "claim": "None of the four obstacles is definitively fatal",
+        "paper_location": "Line 209",
+        "computed_support": true,
+        "pipeline_source": "fluctuations.py::structural_obstacles -- all have status='open', severities are 'serious' or 'moderate' (none 'fatal')",
+        "notes": "Paper language is appropriately hedged."
+      },
+      {
+        "claim": "Qualified positive result",
+        "paper_location": "Line 233",
+        "computed_support": true,
+        "notes": "Appropriate: mechanism works at mean-field with fundamental fermions; obstacles identified for emergent extension."
+      }
+    ],
+    "findings": [
+      {
+        "severity": "LOW",
+        "finding": "PAPER_DEPENDENCIES in provenance.py (line 707) contains stale key_claim: 'd^2-1 = 15 broken generators in 4D'. The actual number of broken generators is d(d-1)/2 = 6 (in 4D), not d^2-1 = 15. The paper and code are correct; only this registry entry is wrong.",
+        "recommendation": "Fix PAPER_DEPENDENCIES key_claims entry to: 'd(d-1)/2 = 6 broken generators in 4D'."
+      }
+    ]
+  },
+
+  "test_results": {
+    "test_file": "tests/test_adw.py",
+    "tests_run": 78,
+    "tests_passed": 78,
+    "tests_failed": 0,
+    "execution_time": "0.36s"
+  },
+
+  "findings_summary": [
+    {
+      "id": "F1",
+      "severity": "LOW",
+      "category": "theorem_reference",
+      "description": "Paper references Lean theorem 'phase_classification' which does not exist as a single theorem. Split across three separate theorems.",
+      "recommendation": "Update paper to reference the three individual theorem names, or add a collective theorem."
+    },
+    {
+      "id": "F2",
+      "severity": "LOW",
+      "category": "provenance",
+      "description": "PAPER_DEPENDENCIES key_claim 'd^2-1 = 15 broken generators in 4D' is incorrect. Should be 'd(d-1)/2 = 6 broken generators in 4D'.",
+      "recommendation": "Fix provenance.py line 707."
+    },
+    {
+      "id": "F3",
+      "severity": "LOW",
+      "category": "citation",
+      "description": "Three paper citations missing from CITATION_REGISTRY: Roy2016, Maitiniyazi2024, Selch2025.",
+      "recommendation": "Add to CITATION_REGISTRY."
+    },
+    {
+      "id": "F4",
+      "severity": "LOW",
+      "category": "citation",
+      "description": "Two orphan bibliography entries (Maitiniyazi2024, Selch2025) never cited in paper text.",
+      "recommendation": "Either cite them or remove from bibliography."
+    },
+    {
+      "id": "F5",
+      "severity": "LOW",
+      "category": "citation",
+      "description": "VladimirovDiakonov2012 registry used_in does not include paper5.",
+      "recommendation": "Add paper5 path to used_in list."
+    },
+    {
+      "id": "F6",
+      "severity": "LOW",
+      "category": "citation",
+      "description": "Bibitem key mismatches: Wetterich2005 (paper) vs Wetterich2004 (registry), Wen2006 vs LevinWen2006, Vladimirov2012 vs VladimirovDiakonov2012. Data is correct in all cases.",
+      "recommendation": "Normalize keys or document mapping."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+SK-EFT Hawking Validation Report
+Generated: 20260403T173244Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] paper_table
+  + Steinhauer.c_s — paper=5.476e-04, code=5.476e-04
+  + Steinhauer.xi — paper=1.334e-06, code=1.334e-06
+  + Steinhauer.kappa — paper=4.800e+00, code=4.758e+00
+  + Steinhauer.T_H — paper=6.000e-12, code=5.784e-12
+  + Heidelberg.c_s — paper=3.919e-03, code=3.919e-03
+  + Heidelberg.xi — paper=4.159e-07, code=4.159e-07
+  + Heidelberg.kappa — paper=1.019e+02, code=1.019e+02
+  + Heidelberg.T_H — paper=1.240e-10, code=1.239e-10
+  + Trento.c_s — paper=2.185e-03, code=2.185e-03
+  + Trento.xi — paper=1.264e-06, code=1.264e-06
+  + Trento.kappa — paper=2.140e+01, code=2.141e+01
+  + Trento.T_H — paper=2.600e-11, code=2.602e-11
+
+Overall: 1/1 passed

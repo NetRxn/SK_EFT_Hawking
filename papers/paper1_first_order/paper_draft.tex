@@ -148,7 +148,7 @@ In the regime of interest (low temperature, large occupation number), we have
 \label{eq:gamma_estimates}
 \gamma_1 \sim \frac{\hbar}{m} \frac{n \sigma}{n_c}, \quad \gamma_2 \sim \frac{\hbar}{m} \frac{\eta}{n m c_s},
 \end{equation}
-where $\sigma$ is the scattering cross-section, $\eta$ is the shear viscosity (or bulk viscosity in a superfluid), and $m$ is the atomic mass. For $^{87}$Rb at $T \sim 100$~nK with scattering length $a_s = 5.77$~nm and density $n \sim 10^{15}$~cm$^{-3}$, the dominant dissipation mechanism is Beliaev damping of phonon modes, giving $\gamma_{\text{Bel}} \sim \sqrt{na_s^3}\,\omega^2/c_s$ evaluated at the Hawking frequency $\omega_H \sim \kappa$. For $^{23}$Na in the two-component spin-sonic configuration, the spin-channel dissipation is enhanced by the reduced spin sound speed $c_{\text{spin}} \ll c_{\text{density}}$, yielding transport coefficients that are effectively amplified by $(c_{\text{density}}/c_{\text{spin}})^2 \sim 100$.
+where $\sigma$ is the scattering cross-section, $\eta$ is the shear viscosity (or bulk viscosity in a superfluid), and $m$ is the atomic mass. For $^{87}$Rb at $T \sim 100$~nK with scattering length $a_s = 5.31$~nm and density $n \sim 10^{15}$~cm$^{-3}$, the dominant dissipation mechanism is Beliaev damping of phonon modes, giving $\gamma_{\text{Bel}} \sim \sqrt{na_s^3}\,\omega^2/c_s$ evaluated at the Hawking frequency $\omega_H \sim \kappa$. For $^{23}$Na in the two-component spin-sonic configuration, the spin-channel dissipation is enhanced by the reduced spin sound speed $c_{\text{spin}} \ll c_{\text{density}}$, yielding transport coefficients that are effectively amplified by $(c_{\text{density}}/c_{\text{spin}})^2 \sim 100$.
 
 \section{Transonic Background and Modified Wave Equation}
 \label{sec:background}
@@ -244,14 +244,14 @@ where we have integrated over the Hawking spectrum and used the mean frequency $
 \hline
 Parameter & Units & Steinhauer ($^{87}$Rb) & Heidelberg ($^{39}$K) & Trento ($^{23}$Na) \\
 \hline
-Speed of sound $c_s$ & mm/s & 1.151 & 3.919 & 2.185 \\
-Healing length $\xi$ & $\mu$m & 0.635 & 0.416 & 1.264 \\
-Surface gravity $\kappa$ & s$^{-1}$ & 21.9 & 101.9 & 21.4 \\
-Hawking temperature $T_H$ & nK & 0.027 & 0.124 & 0.026 \\
-Dissipative correction $\delta_{\text{diss}}$ & (dimensionless) & $5.9 \times 10^{-5}$ & $1.6 \times 10^{-3}$ & $1.4 \times 10^{-5}$ \\
+Speed of sound $c_s$ & mm/s & 0.46 & 3.37 & 1.83 \\
+Healing length $\xi$ & $\mu$m & 1.57 & 0.48 & 1.51 \\
+Surface gravity $\kappa$ & s$^{-1}$ & 4.8 & 101.9 & 21.4 \\
+Hawking temperature $T_H$ & nK & 0.006 & 0.124 & 0.026 \\
+Dissipative correction $\delta_{\text{diss}}$ & (dimensionless) & $4.2 \times 10^{-4}$ & $2.0 \times 10^{-5}$ & $9.3 \times 10^{-5}$ \\
 \hline
 \end{tabular}
-\caption{Experimental parameters from transonic background solver for three analog Hawking experiments.}
+\caption{Parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog Hawking experiments. Heidelberg and Trento are projected configurations. The model $\kappa$ is profile-dependent; Steinhauer's published $\kappa \approx 290$~s$^{-1}$ (step potential) gives $T_H \approx 0.35$~nK. The EFT corrections $\delta_\text{diss}/\delta_\text{disp}$ depend on material properties, not on $\kappa$ directly.}
 \label{tab:experimental_params}
 \end{table}
 
@@ -417,7 +417,7 @@ We thank the developers of Lean~4 and Mathlib for the formal verification infras
 
 \bibitem{Steinhauer:2019} J.~Steinhauer, \textit{Nat.\ Phys.} \textbf{12}, 959 (2016); J.~R.~Mu\~noz de Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer, \textit{Nature} \textbf{569}, 688 (2019).
 
-\bibitem{Berti:2025} E.~Berti et al., \textit{Phys.\ Rev.\ Lett.} \textbf{134}, 161001 (2025).
+\bibitem{Berti:2025} A.~Berti, J.~Fernandes, S.~Butera, A.~Recati, M.~Wouters, and I.~Carusotto, Comptes Rendus Physique \textbf{25}, 1--21 (2025); arXiv:2408.17292.
 
 \bibitem{Zaremba:1999} E.~Zaremba, T.~Nikuni, and A.~Griffin, \textit{J.\ Low Temp.\ Phys.} \textbf{116}, 277 (1999). [Kinetic theory for BEC.]
 

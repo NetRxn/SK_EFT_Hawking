@@ -31,8 +31,8 @@ A unified project encompassing:
     * First fusion category formalization: Vec_G, Rep(S₃), Fibonacci verified.
     * First Drinfeld double formalization: D(G), gauge emergence, chirality limitation.
 
-Lean 4 formalization: 506 theorems + 2 axioms, 33 modules. ALL PROVED, ZERO sorry.
-Aristotle automated theorem prover: 176 theorems proved across 29 runs.
+Lean 4 formalization: 588 theorems + 2 axioms, 38 modules. ALL PROVED, ZERO sorry.
+Aristotle automated theorem prover: 233 theorems proved across 30+ runs.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

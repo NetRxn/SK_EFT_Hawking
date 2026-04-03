@@ -508,10 +508,12 @@ class TestPolaritonPredictions:
 class TestPhysicsConsistency:
     """Cross-checks for physics consistency."""
 
-    def test_steinhauer_d_value(self):
-        """Steinhauer D should match known value."""
+    def test_steinhauer_d_from_solver(self):
+        """Steinhauer D should match transonic solver adiabaticity."""
+        from src.core.transonic_background import steinhauer_Rb87, solve_transonic_background
         platform = steinhauer_platform()
-        assert platform.D == pytest.approx(0.03)
+        bg = solve_transonic_background(steinhauer_Rb87())
+        assert platform.D == pytest.approx(bg.adiabaticity, rel=1e-3)
 
     def test_noise_floor_identity(self):
         """n_noise = delta_diss = delta_k/2 (FDR identity)."""
@@ -554,11 +556,12 @@ class TestPhysicsConsistency:
         D_trento = tables['trento'].params.D
         D_heidelberg = tables['heidelberg'].params.D
         D_steinhauer = tables['steinhauer'].params.D
-        assert D_trento < D_heidelberg < D_steinhauer
+        # With corrected params: Heidelberg (0.012) < Steinhauer (0.013) < Trento (0.014)
+        assert D_heidelberg < D_steinhauer < D_trento
         # Therefore omega_max/T_H should be ordered inversely
-        assert (tables['trento'].omega_max_over_T_H >
-                tables['heidelberg'].omega_max_over_T_H >
-                tables['steinhauer'].omega_max_over_T_H)
+        assert (tables['heidelberg'].omega_max_over_T_H >
+                tables['steinhauer'].omega_max_over_T_H >
+                tables['trento'].omega_max_over_T_H)
 
     def test_shot_count_sanity(self):
         """Shot counts must be >> 10^4 when corrections are << 1.

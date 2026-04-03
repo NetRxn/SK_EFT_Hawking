@@ -1,15 +1,129 @@
 {
-  "timestamp": "2026-03-30T11:39:22.304301+00:00",
+  "timestamp": "2026-04-03T17:46:03.459969+00:00",
   "issues": [
     {
-      "figure": "fig58_drinfeld_anyon_spectrum",
+      "figure": "fig51_vestigial_binder_crossing",
       "severity": "warning",
-      "check": "trace_count",
-      "message": "Expected \u22656 traces, got 2"
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig51_vestigial_binder_crossing",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #666666 not in COLORS dict"
     }
   ],
   "summary": {
     "errors": 0,
-    "warnings": 1
+    "warnings": 20
   }
 }

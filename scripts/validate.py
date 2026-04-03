@@ -340,8 +340,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 211),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 211),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 233),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 233),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))

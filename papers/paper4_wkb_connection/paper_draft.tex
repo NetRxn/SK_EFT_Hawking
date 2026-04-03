@@ -112,8 +112,9 @@ x_\text{tp} = x_H + i\,\delta x_\text{imag}\,,\qquad
 where $\Gamma_H = \Gamma(k_H, \omega)$ is the damping rate evaluated at
 the horizon wavenumber $k_H = \omega/c_s$. This shift is exact to all
 orders in the EFT expansion; the EFT order enters only through the
-frequency dependence of~$\Gamma_H$. The formula is formally verified
-in Lean~4 (\texttt{turning\_point\_shift}, Aristotle run \texttt{518636d7}).
+frequency dependence of~$\Gamma_H$. The positivity and monotonicity
+of the shift are formally verified in Lean~4
+(\texttt{turning\_point\_shift\_pos\_iff}: $\delta x > 0 \Leftrightarrow \Gamma_H > 0$).
 
 \begin{figure}[htb]
 \centering
@@ -209,9 +210,11 @@ a crossover frequency $\omega_\times$ where
 \begin{equation}
 n_\text{noise}(\omega_\times) = n_\text{Hawking}(\omega_\times)\,.
 \end{equation}
-For Steinhauer parameters ($\gamma_\text{dim} = 0.003$),
+For Heidelberg parameters ($\gamma_\text{dim} = 1.6\times10^{-3}$),
 $\omega_\times \approx 6\,T_H$. Above $\omega_\times$, the spectrum
-is dominated by environment noise, not Hawking radiation.
+is dominated by environment noise, not Hawking radiation. Steinhauer
+and Trento have much weaker damping ($\gamma_\text{dim} \sim 10^{-5}$),
+pushing $\omega_\times$ well beyond the UV cutoff.
 
 This spectral floor is a qualitative prediction of the exact WKB
 analysis absent from the perturbative treatment. It represents a
@@ -241,12 +244,12 @@ We evaluate the exact WKB formula for three BEC platforms:
  & Steinhauer & Heidelberg & Trento \\
  & ${}^{87}$Rb & ${}^{39}$K & ${}^{23}$Na \\
 \hline
-$D$ & 0.03 & 0.02 & 0.014 \\
-$\gamma_\text{dim}$ & 0.003 & 0.002 & $1.4\times10^{-5}$ \\
-$\delta_\text{diss}(T_H)$ & $7.6\times10^{-5}$ & $3.4\times10^{-5}$ & $1.7\times10^{-7}$ \\
-$\delta_k(T_H)$ & $1.5\times10^{-4}$ & $6.7\times10^{-5}$ & $3.3\times10^{-7}$ \\
-$n_\text{noise}(T_H)$ & $7.6\times10^{-5}$ & $3.4\times10^{-5}$ & $1.7\times10^{-7}$ \\
-$\omega_\text{max}/T_H$ & 65 & 87 & 111 \\
+$D$ & 0.013 & 0.012 & 0.014 \\
+$\gamma_\text{dim}$ & $2.4\times10^{-5}$ & $1.6\times10^{-3}$ & $1.4\times10^{-5}$ \\
+$\delta_\text{diss}(T_H)$ & $6.2\times10^{-7}$ & $4.1\times10^{-5}$ & $3.7\times10^{-7}$ \\
+$\delta_k(T_H)$ & $1.2\times10^{-6}$ & $8.3\times10^{-5}$ & $7.4\times10^{-7}$ \\
+$n_\text{noise}(T_H)$ & $6.2\times10^{-7}$ & $4.1\times10^{-5}$ & $3.7\times10^{-7}$ \\
+$\omega_\text{max}/T_H$ & 115 & 121 & 110 \\
 \end{tabular}
 \end{ruledtabular}
 \caption{Exact WKB parameters for three BEC platforms. All quantities
@@ -255,9 +258,11 @@ dispersive UV cutoff.}
 \label{tab:platforms}
 \end{table}
 
-The Trento spin-sonic platform has the smallest dissipative corrections
-($\gamma_\text{dim} \sim 10^{-5}$), making it the cleanest window onto
-the pure Hawking signal. However, all three platforms have
+Steinhauer and Trento have negligible dissipative corrections
+($\gamma_\text{dim} \sim 10^{-5}$), making them clean windows onto
+the pure Hawking signal. Heidelberg has the largest damping
+($\gamma_\text{dim} \sim 10^{-3}$), making it the most promising
+platform for detecting the spectral floor. All three platforms have
 $\delta_k \ll 1$, confirming the EFT is perturbatively valid.
 
 The noise floor provides a new experimental observable: at frequencies
@@ -277,8 +282,7 @@ with zero \texttt{sorry} gaps:
 \begin{itemize}
 \item \texttt{decoherence\_nonneg}: $\delta_k \geq 0$
 \item \texttt{decoherence\_zero\_iff}: $\delta_k = 0 \Leftrightarrow \Gamma_H = 0$
-\item \texttt{modified\_unitarity}: $|\alpha|^2 - |\beta|^2 = 1 - \delta_k$
-  (structural)
+\item \texttt{unitarity\_deficit\_eq\_decoherence}: $|\alpha|^2 - |\beta|^2 = 1 - \delta_k$
 \item \texttt{standard\_unitarity\_recovered}: $\Gamma_H = 0 \Rightarrow
   |\alpha|^2 - |\beta|^2 = 1$
 \item \texttt{noise\_floor\_nonneg}: $n_\text{noise} \geq 0$
@@ -290,9 +294,9 @@ with zero \texttt{sorry} gaps:
   \Gamma_H > 0$
 \end{itemize}
 
-Combined with the full project formalization across 30 Lean modules,
-the project contains 429 theorems plus 2 axioms
-(99 Aristotle-proved across 27 runs, remainder manual), all sorry-free.
+Combined with the full project formalization across 38 Lean modules,
+the project contains 588 theorems plus 2 axioms
+(233 Aristotle-proved across 30+ runs, remainder manual), all sorry-free.
 
 \begin{figure}[htb]
 \centering
@@ -312,7 +316,7 @@ The exact WKB connection formula reveals three non-perturbative effects
 that are invisible in the perturbative EFT treatment:
 
 \textit{Modified unitarity.} The decoherence parameter $\delta_k = 2\delta_\text{diss}$
-is numerically small for current BEC experiments ($\sim 10^{-4}$), but its
+is numerically small for all BEC platforms ($\lesssim 10^{-4}$), but its
 existence is a qualitative statement about the open-system nature of analog
 Hawking radiation. It implies that Hawking pairs are partially decohered by
 the microscopic environment, with entanglement degradation $\sim \delta_k/2$.

@@ -621,13 +621,14 @@
 - **Vestigial/metric wall:** Refined understanding. NJL model shows genuine AF ordering transition (g_c ≈ 5.5, confirmed by even-L staggered Binder). However, this is antiferromagnetic ordering of occupation fractions, NOT the vestigial metric ordering predicted by Volovik. The vestigial hypothesis (metric orders before tetrad) requires tensor-valued order parameters that the occupation-number representation cannot access — gauge integration projects out the internal SO(4) structure. ADW model has no spatial correlations at the occupation level. The AF transition in NJL demonstrates the MC infrastructure works for detecting real phase transitions; the vestigial-specific question needs either (a) HMC with explicit gauge links preserving SO(4) internal structure, or (b) tensor network methods (TRG). This is a Phase 6 item.
 - **UV completion wall:** Four structural obstacles from Paper 5 remain. Layer 1 formalization provides new categorical routes (string-nets, Fermi-point) but Bott periodicity blocks the topological invariant approach.
 
-**By the numbers:** 506 theorems + 2 axioms (ZERO sorry), 176 Aristotle-proved across 29 runs, 1027 tests, 61 figures, 33 Lean modules, 38 Python modules, 7 papers, 20 notebooks, 13 stakeholder documents, 14/14 original validation checks + CHECK 15 (parameter_provenance) in development, 15/15 deep research tasks complete.
+**By the numbers (updated 2026-04-03):** 588 theorems + 2 axioms (ZERO sorry), 233 Aristotle-proved, 38 Lean modules, 47 Python source modules, 19 test files, 1245 tests (all pass), 64 figures, 20 notebooks, 7 papers, 12 stakeholder documents, 15/15 validation checks pass, 18 deep research tasks complete.
 
-**Active work streams (2026-03-31):**
-- 9C-3: NJL production MC running (L=4-12, 14 cores)
-- 9C-2: Option B re-run queued (after NJL completes) — bond-correlation OPs now correct
-- 9D: Parameter provenance & citation integrity system (parallel session) — gates all paper submissions
-- All downstream paper/notebook/stakeholder updates ON HOLD until 9D provenance chain established
+**Active work streams (2026-04-03):**
+- W7C: L=8 RHMC production IN FLIGHT (est. ~3d)
+- W7C: L=4 RHMC production COMPLETE
+- Wave 6D/7D: Paper 6 update + document sync BLOCKED on L=8 data
+- 9D downstream propagation: Paper 1 table, README table, prediction tables — BLOCKED on L=8 data (batch with paper updates)
+- Phase 5a roadmap: deep research complete, roadmap creation in this session
 
 ### 5H. Earlier paper visualization audit (Papers 1-5) — COMPLETE (2026-03-30)
 
@@ -812,15 +813,15 @@ Adopt Wetterich's hypercubic lattice formulation where SO(4,ℂ) acts directly o
 
 **CF-1: `wkb/connection_formula.py:125` — Turning point formula mismatch — FIXED (2026-03-31)**
 - [x] Fix: now imports and calls canonical `turning_point_shift` from formulas.py. Also fixed `delta_diss` to use `first_order_correction`. Tests updated for correct ∝1/κ² scaling.
-- [ ] Verify: re-run WKB spectrum for all platforms, compare old vs new delta_x values
-- [ ] Impact: Paper 4 numerical results (exact WKB spectrum), all platform prediction tables
-- [ ] Downstream claims: Paper 4 Table 1, experimental predictions, fig22-fig27
+- [x] Verify: WKB spectrum recomputed for all platforms — D and gamma_dim now solver-derived (Invariant 2 fix) (2026-04-03)
+- [x] Impact: Paper 4 table updated, prediction_tables.tex fully updated, fig22-fig27 regenerated (2026-04-03)
+- [x] Downstream claims: Paper 4 Table 1 verified by claims reviewer, prediction tables updated (2026-04-03)
 
 **CF-2: `wkb/connection_formula.py:166-516` — Stokes geometry disconnected — RESOLVED (2026-03-31)**
 - [x] Analysis: the κ_eff approach IS the analytic evaluation of the WKB contour integral for a linear flow profile with a simple turning point. The Stokes geometry class computes metadata (line angles, multiplier) that are structurally present but not needed for the single-turning-point Hawking problem. The formula `|β/α|² = exp(-2πω/κ_eff)` is the correct analytic result, not an approximation.
 - [x] Fix: docstring corrected from "exact Stokes analysis" to accurate description of what the code computes. StokesGeometry retained as diagnostic metadata with clear documentation of its role.
 - [x] Paper 4 claim: "WKB connection formula" is accurate. "Exact Stokes analysis" should be softened to "analytic WKB connection via effective surface gravity." The computation is exact for linear flow profiles.
-- [ ] Downstream: Paper 4 text should be reviewed for "Stokes analysis" phrasing
+- [x] Downstream: Paper 4 Lean verification claim narrowed (turning point formula mismatch with Lean definition) (2026-04-03)
 
 **SPEC-2: `wkb/spectrum.py:261-523` — Third-order EFT — FIXED (2026-03-31)**
 - [x] Fix: `gamma_3_1, gamma_3_2, gamma_3_3` properties added to `PlatformParams` (Beliaev-damping estimates: γ₃ ~ γ_dim·D²/3). All call sites in spectrum.py and backreaction.py now pass third-order coefficients to `exact_connection_formula` and `damping_rate`.
@@ -841,7 +842,7 @@ Adopt Wetterich's hypercubic lattice formulation where SO(4,ℂ) acts directly o
 
 **ADW-B1: `adw/__init__.py:17` + `gap_equation.py:62` — G_c factor-of-2 — FIXED (2026-03-31)**
 - [x] Fix: both locations corrected from `4π²` to `8π²`.
-- [ ] Downstream: Paper 5 should be checked for G_c formula consistency
+- [x] Downstream: Paper 5 G_c confirmed correct (8π²) by claims reviewer (2026-04-03)
 
 **ADW-C1: `gap_equation.py:118-220` — ADW formulas provenance — FIXED (2026-03-31)**
 - [x] Fix: `effective_potential`, `critical_coupling`, `curvature_at_origin` now delegate to canonical `formulas.py`.
@@ -924,18 +925,20 @@ Adopt Wetterich's hypercubic lattice formulation where SO(4,ℂ) acts directly o
 
 After fixing 9B-1 through 9B-4, the following downstream artifacts must be re-verified:
 
-**Papers (interim corrections applied 2026-03-31, final pass needed after Weingarten MC results):**
-- [ ] Paper 1: kappa-scaling experimental prospects added (done 2026-03-30). Needs final review.
-- [ ] Paper 4: turning-point formula corrected from Γ_H/(κc_s) to c_sΓ_H/(2κ²). Stokes section rewritten as "analytic WKB connection." Needs numerical re-verification against updated code.
-- [ ] Paper 5: vestigial MC paragraph rewritten (removed split transition claim, references Weingarten). G_c docstring fixed. Needs final review after MC results.
-- [ ] Paper 6: abstract rewritten (removed split transition, describes Weingarten framework). Production MC section needs complete rewrite with actual Weingarten results.
-- [ ] Paper 7: clean — no changes needed.
+**Papers (claims review 2026-04-03 — all blocking issues fixed):**
+- [x] Paper 1: Table 1 updated, a_s text fixed, Berti citation fixed, caption clarified. Claims review PASS. (2026-04-03)
+- [x] Paper 2: CGL cite key fixed, Berti citation fixed. Claims review PASS. (2026-04-03)
+- [x] Paper 3: SO(n)/Spin(n) center corrected, duplicate bibitem removed. Claims review PASS. (2026-04-03)
+- [x] Paper 4: table updated, Lean claim narrowed (turning point formula mismatch), δ_k text fixed, global counts updated. Claims review PASS. (2026-04-03)
+- [x] Paper 5: confirmed clean — G_c correct, vestigial references Weingarten. Claims review PASS. (2026-04-03)
+- [ ] Paper 6: BLOCKED on L=8 RHMC results. Production MC section needs complete rewrite.
+- [x] Paper 7: global counts updated (588/38/233), bibkey year fixed. Claims review PASS. (2026-04-03)
 
-**Notebooks (not yet touched — deferred to after Weingarten MC results):**
-- [ ] Phase3a_WKB notebooks: may reference old turning-point formula values
-- [ ] Phase4a_Experimental notebooks: kappa-scaling narrative already updated in Paper 1
-- [ ] Phase5b_Synthesis notebooks: vestigial claims need updating
-- [ ] Phase4b_Vestigial notebooks: split transition content needs complete rewrite
+**Notebooks (verified 2026-04-03):**
+- [x] All 20 notebooks execute cleanly (notebook_exec CHECK passes). Values auto-update from solver imports. (2026-04-03)
+- [x] No stale hardcoded narrative found in Phase1-3 WKB notebooks (2026-04-03)
+- [ ] Phase4b_Vestigial notebooks: vestigial content needs rewrite after L=8 RHMC results
+- [ ] Phase5b_Synthesis notebooks: vestigial claims need updating after L=8 RHMC results
 
 **Stakeholder docs (interim corrections applied 2026-03-31):**
 - [x] Phase5_Implications.md: split transition claims removed, Weingarten framework described (interim)
@@ -1119,8 +1122,8 @@ This proves the metric **necessarily orders before the tetrad** whenever u_g > 0
   - `susceptibility_diverges` (IVT), `vestigial_before_tetrad` (main theorem)
   - `vestigial_r_e_star_pos`, `vestigial_window_exponential`, `vestigial_window_vanishes`
   - `trace_channel_multiplicity`, `traceless_channel_multiplicity`, `vestigial_ordering_sufficient`
-- [ ] Stage 4 — Aristotle: submitted `--priority 3 --integrate`, awaiting results
-- [ ] Stage 5 — `lake build` zero sorry, theorem count updated
+- [x] Stage 4 — Aristotle: ALL 16 PROVED (run `9e2251cd`). Zero sorry. (2026-04-01)
+- [x] Stage 5 — `lake build` zero sorry confirmed (2026-04-01)
 
 ### 6C. Vestigial Phase Diagram and Visualization [Pipeline Stages 6-9] — STAGES 6-9 COMPLETE
 
@@ -1175,83 +1178,45 @@ This proves the metric **necessarily orders before the tetrad** whenever u_g > 0
 **The construction:** Build the pure gauge theory infrastructure — lattice geometry, SO(4) group operations via quaternion pairs, Wilson plaquette action, heatbath + overrelaxation gauge updates. Validate against known SO(4) average plaquette vs β.
 
 **Deliverables:**
-- [ ] Stage 1 — Constants in `constants.py`:
-  - `GAUGE_LINK_MC` dict: β range, N_f, quaternion precision, heatbath params
-  - `SO4_LATTICE` dict: plaquette normalization, staple structure, overrelax ratio
-- [ ] Stage 2 — `formulas.py` functions (each with Lean ref + Source):
-  - `quaternion_multiply(q1, q2)` — SU(2) multiplication via quaternion algebra. Source: Creutz, "Quarks, Gluons and Lattices" Ch. 15
-  - `so4_from_quaternion_pair(q_L, q_R)` — construct SO(4) matrix from SU(2)×SU(2). Source: standard representation theory
-  - `wilson_plaquette_action(U_P)` — (1/4)Tr(U_P) for SO(4). Source: Wilson, PRD 10, 2445 (1974)
-  - `kennedy_pendleton_heatbath(staple, beta)` — exact SU(2) heatbath sampling. Source: Kennedy-Pendleton, PLB 156, 393 (1985)
-- [ ] Stage 2 — New modules:
-  - `src/vestigial/quaternion.py` (~200 lines) — SU(2) quaternion algebra, vectorized over arrays of shape (N, 4). Haar random, multiply, conjugate, trace, to_matrix, from_matrix.
-  - `src/vestigial/so4_gauge.py` (~300 lines) — SO(4) as quaternion pairs. Plaquette computation, staple sum, heatbath update, overrelaxation, Haar random link.
-- [ ] Stage 3 — `lean/SKEFTHawking/QuaternionGauge.lean` — sorry stubs:
-  - `quaternion_multiply_assoc` — associativity
-  - `quaternion_unit_norm` — |q|=1 preserved by multiply
-  - `so4_decomposition` — SO(4) ≅ (SU(2)×SU(2))/Z_2
-  - `plaquette_trace_bound` — |Tr(U_P)/4| ≤ 1
-  - `heatbath_detailed_balance` — Kennedy-Pendleton satisfies detailed balance
-  - ~8-12 theorems
-- [ ] Stage 4 — Aristotle
-- [ ] Stage 5 — `lake build` zero sorry
-- [ ] **Validation checkpoint:** Pure gauge SO(4) at L=4, scan β = 0-10, verify average plaquette matches two independent SU(2) theories (⟨P⟩_{SO(4)} = [⟨P⟩_{SU(2)}]² in the decomposed action). This runs in minutes and validates the infrastructure before adding fermions.
+- [x] Stage 1 — Constants in `constants.py`: GAUGE_LINK_MC, SO4_LATTICE dicts (2026-04-02)
+- [x] Stage 2 — `formulas.py` functions: quaternion_multiply, so4_from_quaternion_pair, wilson_plaquette_action, kennedy_pendleton_heatbath (2026-04-02)
+- [x] Stage 2 — New modules: `src/vestigial/quaternion.py`, `src/vestigial/so4_gauge.py` (2026-04-02)
+- [x] Stage 3 — `lean/SKEFTHawking/QuaternionGauge.lean` — 10 theorems, zero sorry (2026-04-02)
+- [x] Stage 4 — Aristotle: ALL PROVED (run `fb657b4d`). Zero sorry. (2026-04-02)
+- [x] Stage 5 — `lake build` zero sorry confirmed (2026-04-02)
+- [x] **Validation checkpoint:** Pure gauge SO(4) validated (2026-04-02)
+
+**Status:** COMPLETE.
 
 ### 7B. Fermion-Bag with Gauge Links [Pipeline Stages 2-5, Phase 2-3 of algorithm]
 
 **The construction:** Extend the fermion-bag sweep to work with explicit gauge-link configurations. The key change: bag weight det(M_B[U]) depends on the link configuration, and gauge updates require recomputing affected bag determinants.
 
 **Deliverables:**
-- [ ] Stage 2 — `formulas.py` functions:
-  - `gauge_fermion_bag_weight(M_B, U_links)` — det of gauge-covariant fermion matrix restricted to bag. Source: Chandrasekharan PRD 82, 025007 (2010), adapted with gauge links
-  - `tetrad_bilinear(psi_x, gamma_a, U_xy, psi_y)` — E^a_μ = ψ̄_x γ^a U_{xy} ψ_y. Source: Vladimirov-Diakonov PRD 86, 104019 (2012)
-  - `metric_from_tetrad(E)` — g_μν = δ_{ab} E^a_μ E^b_ν. Source: ADW mechanism
-- [ ] Stage 2 — New module:
-  - `src/vestigial/gauge_fermion_bag.py` (~500-800 lines) — The hybrid algorithm:
-    - `GaugeFermionConfig` dataclass: site Grassmann occupations {0,1}^8 per site + SO(4) links per bond
-    - `fermion_bag_sweep_with_links(config, rng)` — fermion update at fixed links. Propose Grassmann flips, compute bag weight ratio via Sherman-Morrison-Woodbury for rank-k updates. O((4k)³) per bag.
-    - `gauge_link_sweep(config, rng, beta)` — gauge update at fixed Grassmann. Kennedy-Pendleton heatbath for each link's SU(2)_L and SU(2)_R components. Recompute bag determinants for affected bags.
-    - `run_hybrid_mc(params, mc_params)` — full hybrid MC: alternate fermion + gauge sweeps
-- [ ] Stage 2 — `src/vestigial/gauge_observables.py` (~200-300 lines) — Order parameters:
-  - `tetrad_vev(config)` — ⟨E^a_μ⟩ = (1/4V) Σ_{x,μ} ψ̄_x γ^a U_{x,μ} ψ_{x+μ̂}, a 4×4 matrix. Tetrad ordering: ||⟨E⟩|| > 0.
-  - `metric_vev(config)` — ⟨g_μν⟩ = (1/V) Σ_x δ_{ab} ⟨E^a_μ(x) E^b_ν(x)⟩, a symmetric 4×4 matrix. Metric ordering: eigenvalues of ⟨g⟩ split from zero.
-  - `vestigial_diagnostic(config)` — returns (tetrad_magnitude, metric_eigenvalues, is_vestigial). Vestigial = metric eigenvalues nonzero while tetrad magnitude ≈ 0.
-  - `binder_tetrad_gauge(configs)` — Binder cumulant of ||⟨E⟩||
-  - `binder_metric_gauge(configs)` — Binder cumulant of Tr(⟨g⟩)
-  - `sign_monitor(configs)` — track ⟨sign(det(M))⟩ for sign problem assessment
-- [ ] Stage 3 — `lean/SKEFTHawking/GaugeFermionBag.lean` — sorry stubs:
-  - `bag_weight_gauge_invariance` — W_B transforms correctly under gauge transformation
-  - `tetrad_gauge_covariant` — E^a_μ transforms as expected under SO(4) gauge
-  - `metric_gauge_invariant` — g_μν is gauge-invariant (SO(4) singlet)
-  - `vestigial_implies_metric_nonzero` — definition consistency
-  - ~8-10 theorems
-- [ ] Stage 4 — Aristotle
-- [ ] Stage 5 — `lake build` zero sorry
-- [ ] **Validation checkpoint:** L=4, β=2 (intermediate gauge coupling), scan g from weak to strong. Verify: (a) at g=0 the system is disordered; (b) at large g the tetrad orders; (c) acceptance rates respond to coupling; (d) sign ⟨sign⟩ > 0.5 for manageable sign problem.
+- [x] Stage 2 — `formulas.py` functions: gauge_fermion_bag_weight, tetrad_bilinear, metric_from_tetrad (2026-04-02)
+- [x] Stage 2 — `src/vestigial/gauge_fermion_bag.py` + `src/vestigial/gauge_fermion_bag_majorana.py` — dual implementation (4×4 complex + 8×8 Majorana sign-free) (2026-04-02)
+- [x] Stage 2 — Order parameters integrated into gauge_fermion_bag modules (no separate gauge_observables.py needed) (2026-04-02)
+- [x] Stage 3 — `lean/SKEFTHawking/GaugeFermionBag.lean` — 9 theorems, zero sorry (tetrad covariance, metric invariance, bag weight, SMW update, Binder limits) (2026-04-02)
+- [x] Stage 4 — Aristotle: ALL PROVED (run `fb657b4d`). Zero sorry. (2026-04-02)
+- [x] Stage 5 — `lake build` zero sorry confirmed (2026-04-02)
+- [x] **Validation checkpoint:** L=4 scan validated. Fermion-bag hits percolation wall at L≥6 → RHMC crossover confirmed. (2026-04-02)
+
+**Status:** COMPLETE. Fermion-bag algorithm works at L=4 but percolation wall blocks L≥6. RHMC (Wave 7C) is the production algorithm.
 
 ### 7C. Production Phase Diagram Scan [Pipeline Stages 6-9]
 
 **The computation:** Scan the (g, β) parameter space at multiple L to map the phase diagram and locate the vestigial phase (if it exists). The analytical prediction from Wave 6 gives G_ves as a target.
 
 **Deliverables:**
-- [ ] Stage 6 — Tests:
-  - Pure gauge validation: average plaquette vs β for L=4,6
-  - Hybrid MC: coupling-dependent observables (tetrad VEV, metric eigenvalues)
-  - Sign monitoring: ⟨sign⟩ > threshold at working points
-  - Binder cumulant bounds for gauge-covariant OPs
-  - Reproducibility (same seed → same result)
-- [ ] Stage 7 — `validate.py` all checks pass
-- [ ] Stage 8 — Visualizations:
+- [ ] Stage 6 — Tests: **BLOCKED on L=8 data** (pure gauge validated, RHMC tests pass, need production-scale observables)
+- [ ] Stage 7 — `validate.py` all checks pass — **BLOCKED on L=8 data**
+- [ ] Stage 8 — Visualizations: **BLOCKED on L=8 data**
   - `fig_gauge_phase_diagram` — (g, β) heat map of tetrad/metric OPs
   - `fig_gauge_binder_crossing` — Binder cumulants for tetrad and metric vs g, multiple L
   - `fig_gauge_vestigial_window` — overlay analytical G_ves prediction with MC data
   - `fig_gauge_sign_monitor` — ⟨sign⟩ vs coupling, sign problem assessment
-- [ ] Stage 9 — Figure review
-- [ ] **Production runs:** L=4,6,8 at 20 coupling points in (g, β) space. Estimated runtime:
-  - L=4: ~2-4 hours (256 sites, bags size ~1-5)
-  - L=6: ~1-2 days (1296 sites)
-  - L=8: ~3-7 days (4096 sites)
-  - Total: ~1-2 weeks of workstation time
+- [ ] Stage 9 — Figure review — **BLOCKED on L=8 data**
+- **Production status (2026-04-03):** L=4 COMPLETE. L=8 IN FLIGHT (~3d est.). Algorithm: Rust RHMC with complex pseudofermion, multi-shift CG, Omelyan integrator. **OBE items:** Original fermion-bag production estimates (7C originally planned) superseded by RHMC. Wave 8 (4D ATRG) NOT STARTED — deferred pending MC results.
 
 ### 7D. Paper 6 + Document Sync [Pipeline Stages 10-12]
 
@@ -1301,25 +1266,39 @@ This proves the metric **necessarily orders before the tetrad** whenever u_g > 0
 - [x] arXiv ID for Wang 2017 was hallucinated (1706.01483 = combustion paper, correct: 1605.01027)
 
 **Remaining downstream propagation (Stage 10-12 work):**
-- [ ] Paper 1 Table 1: update c_s, ξ, κ, T_H, δ_diss, δ_disp for Steinhauer
-- [ ] `src/wkb/spectrum.py`: update Steinhauer natural-unit params (D, gamma_dim)
-- [ ] `src/wkb/backreaction.py`: resolve PROVENANCE WARNING (can now reconcile — solver c_s matches published)
-- [ ] README.md: update Steinhauer row in main physics table
-- [ ] `papers/experimental_predictions/prediction_tables.tex`: update Steinhauer column
-- [ ] Notebooks Phase1-3: will show updated values on re-execution (import from solver)
-- [ ] `docs/validation/VALIDATION_REPORT.md`: historical, but note correction
-- [ ] Add `Source:` fields to formulas.py docstrings (B6)
-- [ ] Add theorem→paper and formula→paper declared mappings (C2)
-- [ ] Spec paper claims reviewer agent for pipeline (new pipeline stage)
+- [x] Paper 1 Table 1: updated c_s, ξ, κ, T_H, δ_diss for all 3 platforms + caption + a_s text + Berti citation (2026-04-03)
+- [x] `src/wkb/spectrum.py`: Invariant 2 fix — now derives D, gamma_dim from transonic solver, no hardcoded values (2026-04-03)
+- [x] `src/second_order/wkb_analysis.py`: same Invariant 2 fix — derives from solver (2026-04-03)
+- [ ] `src/wkb/backreaction.py`: resolve PROVENANCE WARNING (SI platform params still hardcoded — 9B-3 item)
+- [x] README.md: Steinhauer row updated in main physics table (2026-04-03)
+- [x] `papers/experimental_predictions/prediction_tables.tex`: full update — params, spectral table, narrative, rankings, kappa-scaling regime (2026-04-03)
+- [x] Notebooks Phase1-3: confirmed execute cleanly with updated values, no stale narrative (2026-04-03)
+- [ ] `docs/validation/VALIDATION_REPORT.md`: historical, low priority
+- [ ] Add `Source:` fields to formulas.py docstrings (B6) — pre-existing, not blocking
+- [ ] Add theorem→paper and formula→paper declared mappings (C2) — pre-existing, not blocking
+- [x] Paper claims reviewer: ran on all 7 papers, all blocking issues fixed (2026-04-03)
 - [ ] Polariton parameter reconciliation: determine if c_s/xi/tau_cav should use Falque values or remain projected
+- [x] Paper 2: fixed CGL cite key mismatch + Berti citation (2026-04-03)
+- [x] Paper 3: fixed SO(n)/Spin(n) center error + duplicate bibitem (2026-04-03)
+- [x] Paper 4: table updated, Lean verification claim narrowed (turning point formula mismatch), δ_k text corrected, theorem name fixed, global counts updated (2026-04-03)
+- [x] Paper 5: confirmed clean — G_c correct, vestigial paragraph references Weingarten (2026-04-03)
+- [x] Paper 7: global counts updated (429→588, 30→38, 99→233), bibkey GoltermanShamir2024→2026 (2026-04-03)
+- [x] All 64 figures regenerated with corrected params, copied to paper directories (2026-04-03)
+- [x] 15/15 validation checks pass, 1245/1245 tests pass (2026-04-03)
 
 ---
 
-## 12. Wave 8 — 4D ATRG for Vestigial Gravity (Sign-Problem-Free Cross-Validation)
+## 12. Wave 8 — 4D ATRG for Vestigial Gravity (CONDITIONAL — see decision below)
 
 **Research basis:** `Lit-Search/Phase-5/Feasibility of 4D HOTRG for vestigial gravity transitions in the ADW model.md`
 
 **Goal:** Implement 4D Anisotropic Tensor Renormalization Group (ATRG) for the ADW model. ATRG is sign-problem-free and provides numerically exact (up to bond dimension truncation) results at small lattice sizes (L=4-6). Cross-validates Wave 7 MC results and provides a fallback if the MC sign problem blocks production.
+
+**Status decision (2026-04-03):** Wave 8 is now CONDITIONAL on L=8 RHMC results:
+- **If L=8 shows sign problem** (⟨sign⟩ → 0 at working points): Wave 8 becomes urgent as the only viable path to production vestigial MC. Execute before Phase 5a.
+- **If L=8 is clean** (good acceptance, meaningful Binder structure): Wave 8 drops to "cross-validation, nice to have" and moves back to Phase 6 roadmap. Phase 5a takes priority as the default next workstream.
+
+**Rationale:** Wave 6 analytically proved G_ves < G_c (vestigial ordering exists). The MC tests the numerical window width, not existence. Phase 5a (Onsager algebra, GT formalization, Z₁₆) has higher publication impact, lower risk, zero dependencies, and builds on existing categorical Lean infrastructure. Wave 8's 4D ATRG with SO(4)+Grassmann is genuinely frontier but high-risk (may require D > 12, exceeding workstation memory).
 
 **Moved from Phase 6:** The original "9-14 month" estimate assumed traditional academic pace. With our pipeline (numba + Opus + Lean + Aristotle), each stage is days not months. Compute at D=8-12 fits workstation memory (128MB-3.4GB per tensor). O(D⁹) at D=12 for L=4 is ~1.5 hours on consumer hardware. Reference implementations exist for all stages.
 
@@ -1394,7 +1373,9 @@ This proves the metric **necessarily orders before the tetrad** whenever u_g > 0
 
 ---
 
-*Phase 5 roadmap. Waves 1-5 COMPLETE. 9A-9E COMPLETE. Wave 6 Stages 1-9 COMPLETE. Wave 7: 7A COMPLETE. **7B COMPLETE + BUG-FIX.** **7C: Rust RHMC implemented + multi-shift CG (6.3× L=4). CRITICAL BUG: real pseudofermion gives Pf^{1/2} not Pf. Fix in progress: complex pseudofermion (two real flavors).** Updated 2026-04-02.*
+*Phase 5 roadmap. Waves 1-5 COMPLETE. 9A-9E COMPLETE. Wave 6 COMPLETE (all stages). Wave 7A-7C COMPLETE. L=4 RHMC COMPLETE, L=8 IN FLIGHT (~3d). Wave 8 (4D ATRG) CONDITIONAL on L=8 results — if clean, deferred to Phase 6; if sign problem, execute before Phase 5a. 9D downstream propagation COMPLETE (full claims review on all 7 papers, all blocking issues fixed). Updated 2026-04-03.*
+*By the numbers: 588 theorems + 2 axioms (ZERO sorry), 233 Aristotle-proved, 38 Lean modules, 47 Python source modules, 19 test files, 1245 tests (all pass), 64 figures, 20 notebooks, 7 papers (6 claims-reviewed PASS, Paper 6 blocked on L=8), 15/15 validation checks pass.*
+*Next workstream: Phase 5a (Onsager algebra + GT formalization + Z₁₆). See `docs/roadmaps/Phase5a_Roadmap.md`.*
 
 ### Wave 7B Status (COMPLETE)
 
@@ -1437,12 +1418,13 @@ Dual implementation: 4×4 complex reference + 8×8 Majorana sign-free (Kramers P
 **Validation plan:** Cross-check with fermion-bag at L=4 (plaquette, tetrad, Pf comparison). Reversibility test, ΔH distribution, autocorrelation analysis.
 
 **Deliverables (Pipeline Stages 1-12):**
-- [ ] Stage 1: HS constants (16V auxiliary fields, Zolotarev coefficients)
-- [ ] Stage 2: formulas.py — HS fermion matrix A[h,U], MD forces, rational approx
-- [ ] Stage 3-5: Lean theorems for HS partition function identity, Kramers in HS regime
-- [ ] Stage 6: Tests — multi-shift CG, MD reversibility, Metropolis detailed balance
-- [ ] Stage 7: Cross-validate RHMC vs fermion-bag at L=4
-- [ ] Stages 8-12: Production L=4,6,8,12,16 scans, Binder crossing analysis, paper update
+- [x] Stage 1: HS constants (16V auxiliary fields, Zolotarev coefficients) (2026-04-02)
+- [x] Stage 2: formulas.py — HS fermion matrix A[h,U], MD forces, rational approx (2026-04-02)
+- [x] Stage 3-5: `lean/SKEFTHawking/HubbardStratonovichRHMC.lean` — 22 theorems, zero sorry (2026-04-02)
+- [x] Stage 3-5: `lean/SKEFTHawking/MajoranaKramers.lean` — 25 theorems, zero sorry (2026-04-02)
+- [x] Stage 6: Tests — multi-shift CG, MD reversibility, Metropolis detailed balance (2026-04-02)
+- [ ] Stage 7: Cross-validate RHMC vs fermion-bag at L=4 (deferred — fermion-bag also had wrong PF convention)
+- [ ] Stages 8-12: Production L=4,6,8,12,16 scans, Binder crossing analysis, paper update — **L=4 COMPLETE, L=8 IN FLIGHT (est. ~3d, started 2026-04-03)**
 
 **7C IMPLEMENTED (2026-04-02).** Module: `src/vestigial/hs_rhmc.py` (~900 lines). 13 Lean theorems (zero sorry). 19 tests pass. Production runner: `scripts/run_rhmc_production.py` (incremental save + resume).
 
@@ -1555,6 +1537,6 @@ nohup env PYTHONPATH=. .venv/bin/python scripts/run_rhmc_production.py \
 
 Checkpoints: `data/rhmc/L{L}_g{g:.4f}.npz` — saves after every trajectory. Includes h-field state for seamless resume (no re-thermalization). Kill anytime, resume with same command.
 
-- [x] L=4 production RUNNING (2026-04-03)
-- [ ] L=8 production (after L=4 validates)
-- [ ] Stages 8-12 (viz, figures, Paper 6 update) after data available
+- [x] L=4 production COMPLETE (2026-04-03). Data in `data/rhmc/L4_*.npz`.
+- [ ] L=8 production IN FLIGHT (started 2026-04-03, est. ~3 days). Data accumulating in `data/rhmc/L8_*.npz`.
+- [ ] Stages 8-12 (viz, figures, Paper 6 update) — **BLOCKED on L=8 completion**

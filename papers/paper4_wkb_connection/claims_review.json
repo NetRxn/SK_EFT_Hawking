@@ -1,0 +1,239 @@
+{
+  "paper": "paper4_wkb_connection",
+  "title": "Exact WKB Connection Formula for Dissipative Analog Hawking Radiation",
+  "review_date": "2026-04-03",
+  "reviewer": "physics-qa:claims-reviewer (Claude Opus 4.6)",
+  "verdict": "CONDITIONAL PASS — 2 issues require fixes before submission",
+
+  "layer_1_numerical_claims": {
+    "status": "NEEDS_RECOMPUTATION",
+    "notes": "Bash execution was unavailable; full solver recomputation could not be performed. Manual algebraic checks below.",
+    "table_internal_consistency": {
+      "status": "PASS",
+      "details": [
+        "delta_k = 2 * delta_diss: Steinhauer 2*6.2e-7=1.24e-6 ≈ 1.2e-6 (PASS, rounding). Heidelberg 2*4.1e-5=8.2e-5 vs 8.3e-5 (1% rounding). Trento 2*3.7e-7=7.4e-7 (PASS).",
+        "n_noise = delta_k/2 = delta_diss: All three platforms self-consistent (PASS).",
+        "All delta_k << 1, confirming EFT perturbative validity (PASS)."
+      ]
+    },
+    "values_needing_solver_verification": [
+      {
+        "claim": "D = 0.013 (Steinhauer), 0.012 (Heidelberg), 0.014 (Trento)",
+        "source": "Table 1, line 247",
+        "verification": "Requires transonic solver. These are stated as solver-derived values (updated per user).",
+        "status": "UNVERIFIED — needs uv run"
+      },
+      {
+        "claim": "gamma_dim = 2.4e-5 (Steinhauer), 1.6e-3 (Heidelberg), 1.4e-5 (Trento)",
+        "source": "Table 1, line 247",
+        "verification": "Requires beliaev_transport_coefficients from solver. Stated as solver-derived.",
+        "status": "UNVERIFIED — needs uv run"
+      },
+      {
+        "claim": "delta_diss(T_H) values: 6.2e-7, 4.1e-5, 3.7e-7",
+        "source": "Table 1, line 248",
+        "verification": "Should equal gamma_dim * (1/(2*pi))^2 = gamma_dim / (4*pi^2). Check: 2.4e-5/39.478 = 6.08e-7 ≈ 6.2e-7 (2% off). 1.6e-3/39.478 = 4.05e-5 ≈ 4.1e-5 (1% off). 1.4e-5/39.478 = 3.55e-7 ≈ 3.7e-7 (4% off). All within tolerance but suggest these are independently computed, not derived from gamma_dim / (4*pi^2).",
+        "status": "MARGINAL PASS — algebraic check within 5%"
+      },
+      {
+        "claim": "omega_max/T_H = 115, 121, 110",
+        "source": "Table 1, line 251",
+        "verification": "omega_max = kappa / D^(2/3) in natural units. omega_max/T_H = 2*pi/D^(2/3). For D=0.013: 2*pi/0.013^0.667 = 6.283/0.0551 = 114.0 ≈ 115 (PASS). For D=0.012: 6.283/0.0524 = 119.9 ≈ 121 (1% off, PASS). For D=0.014: 6.283/0.0578 = 108.7 ≈ 110 (1% off, PASS).",
+        "status": "PASS — algebraic check matches within 1%"
+      }
+    ]
+  },
+
+  "layer_2_theorem_references": {
+    "status": "PASS with 1 FORMULA MISMATCH (see issues)",
+    "wkb_connection_lean_module": {
+      "theorem_count": 17,
+      "sorry_count": 0,
+      "status": "PASS — 17 theorems, zero sorry, matches paper claim"
+    },
+    "listed_theorems": [
+      {"name": "decoherence_nonneg", "file": "WKBConnection.lean:89", "exists": true, "sorry_free": true},
+      {"name": "decoherence_zero_iff", "file": "WKBConnection.lean:111", "exists": true, "sorry_free": true},
+      {"name": "unitarity_deficit_eq_decoherence", "file": "WKBConnection.lean:155", "exists": true, "sorry_free": true},
+      {"name": "standard_unitarity_recovered", "file": "WKBConnection.lean:166", "exists": true, "sorry_free": true},
+      {"name": "noise_floor_nonneg", "file": "WKBConnection.lean:197", "exists": true, "sorry_free": true},
+      {"name": "noise_floor_eq_delta_diss", "file": "WKBConnection.lean:210", "exists": true, "sorry_free": true},
+      {"name": "occupation_reduces_to_beta_sq", "file": "WKBConnection.lean:267", "exists": true, "sorry_free": true},
+      {"name": "noise_dominates_when_beta_small", "file": "WKBConnection.lean:306", "exists": true, "sorry_free": true},
+      {"name": "turning_point_shift_pos_iff", "file": "WKBConnection.lean:346", "exists": true, "sorry_free": true}
+    ],
+    "inline_theorem_refs": [
+      {
+        "location": "Eq. (4), line 116",
+        "claim": "turning_point_shift, Aristotle run 518636d7",
+        "lean_theorem": "turning_point_shift (WKBAnalysis.lean:179)",
+        "aristotle_run_id": "518636d7",
+        "aristotle_registry": "maps to turning_point_shift_nonzero in ARISTOTLE_THEOREMS",
+        "status": "FORMULA MISMATCH — see issues[0]"
+      }
+    ],
+    "global_counts": {
+      "claim_588_theorems": {"actual": 588, "status": "PASS"},
+      "claim_2_axioms": {"actual": 2, "status": "PASS"},
+      "claim_38_modules": {"actual": 38, "status": "PASS"},
+      "claim_233_aristotle": {"actual": 233, "status": "PASS — matches ARISTOTLE_THEOREMS count in constants.py"}
+    }
+  },
+
+  "layer_3_parameter_provenance": {
+    "status": "PASS with NOTES",
+    "steinhauer": {
+      "omega_perp": "123 Hz (Wang 2017 Table II). LLM-verified 2026-03-31. Human-verified: pending. TIER: MEASURED.",
+      "density_upstream": "5e7 m^-1. TIER: EXTRACTED (approximate horizon-region value). LLM-verified.",
+      "a_s": "5.31e-9 m (100.4 a_0, F=2; van Kempen 2002). LLM-verified. Provenance notes flag older incorrect 109 a_0 value was corrected.",
+      "status": "PASS — all Steinhauer params have provenance entries"
+    },
+    "heidelberg": {
+      "all_params": "TIER: PROJECTED. No Heidelberg Hawking experiment exists.",
+      "status": "PASS — correctly flagged as PROJECTED in provenance"
+    },
+    "trento": {
+      "all_params": "TIER: PROJECTED. Theoretical proposal only (Berti 2025).",
+      "status": "PASS — correctly flagged as PROJECTED in provenance"
+    },
+    "notes": [
+      "Paper does not distinguish between MEASURED (Steinhauer) and PROJECTED (Heidelberg, Trento) parameters in the table. Consider adding a footnote.",
+      "Steinhauer velocity_upstream (0.41 mm/s) is DERIVED tier with circular derivation notes in provenance. Flagged but acceptable for Mach number consistency."
+    ]
+  },
+
+  "layer_4_citation_integrity": {
+    "status": "FAIL — 7 orphan bibliography entries, 6 citations not in CITATION_REGISTRY",
+    "orphan_bibitems": [
+      "CorleyJacobson1996 — in bibliography but never cited in body text",
+      "CoutantParentani2012 — in bibliography but never cited in body text",
+      "BelgiornoCacciatori2024 — in bibliography but never cited in body text",
+      "RobertsonParentani2015 — in bibliography but never cited in body text",
+      "LombardoTuriaci2012 — in bibliography but never cited in body text",
+      "JanaLoganayagam2020 — in bibliography but never cited in body text",
+      "GiacobinoJacquet2025 — in bibliography but never cited in body text"
+    ],
+    "missing_from_registry": [
+      "Berry1989 — cited in text, not in CITATION_REGISTRY",
+      "Heading1962 — cited in text, not in CITATION_REGISTRY",
+      "CoutantParentani2012 — not in CITATION_REGISTRY",
+      "BelgiornoCacciatori2024 — not in CITATION_REGISTRY",
+      "RobertsonParentani2015 — not in CITATION_REGISTRY",
+      "LombardoTuriaci2012 — not in CITATION_REGISTRY",
+      "GiacobinoJacquet2025 — not in CITATION_REGISTRY"
+    ],
+    "registry_used_in_mismatch": [
+      "Steinhauer2016 — in paper4 bibliography but paper4 not in its used_in list in CITATION_REGISTRY"
+    ],
+    "bibkey_mismatches": [
+      "CorleyJacobson1996 (paper) vs Corley1996 (registry)",
+      "JanaLoganayagam2020 (paper) vs Jana2020 (registry)"
+    ]
+  },
+
+  "layer_5_qualitative_claims": {
+    "status": "PASS with NOTES",
+    "claims": [
+      {
+        "claim": "Modified unitarity: |alpha|^2 - |beta|^2 = 1 - delta_k with delta_k = 2*Gamma_H/kappa",
+        "lean_support": "unitarity_deficit_eq_decoherence (WKBConnection.lean:155)",
+        "python_support": "decoherence_parameter() in formulas.py:346",
+        "status": "PASS"
+      },
+      {
+        "claim": "FDR noise floor n_noise = delta_k/2 = Gamma_H/kappa",
+        "lean_support": "noise_floor_eq_delta_diss (WKBConnection.lean:210)",
+        "python_support": "fdr_noise_floor() in formulas.py:374",
+        "status": "PASS"
+      },
+      {
+        "claim": "Spectral floor at omega ~6 T_H (for Heidelberg)",
+        "lean_support": "noise_dominates_when_beta_small (WKBConnection.lean:306) — qualitative",
+        "python_support": "Computed in spectrum.py; requires solver to verify exact crossover frequency",
+        "status": "UNVERIFIED — needs solver. Qualitatively reasonable."
+      },
+      {
+        "claim": "In limit delta_k -> 0, reduces to standard Planck: n = |beta|^2",
+        "lean_support": "occupation_reduces_to_beta_sq (WKBConnection.lean:267)",
+        "status": "PASS"
+      },
+      {
+        "claim": "Steinhauer and Trento have gamma_dim ~ 10^-5 (discussion line 215-216)",
+        "paper_table_values": "Steinhauer: 2.4e-5, Trento: 1.4e-5",
+        "status": "PASS — both are order 10^-5"
+      },
+      {
+        "claim": "delta_k ~ 10^-4 for current BEC experiments (discussion line 320)",
+        "paper_table_values": "Steinhauer: 1.2e-6, Heidelberg: 8.3e-5, Trento: 7.4e-7",
+        "status": "WEAK — only Heidelberg is ~10^-4. Steinhauer/Trento are ~10^-6 to 10^-7. Claim is misleading; should say ~10^-5 or specify Heidelberg."
+      },
+      {
+        "claim": "PAPER_DEPENDENCIES says noise floor = delta_diss/(2(1-delta_diss))",
+        "paper_eq_7": "n_noise = delta_k/2 = delta_diss",
+        "lean_theorem": "noise_floor_eq_delta_diss proves n_noise = Gamma_H/kappa = delta_diss",
+        "status": "MINOR INCONSISTENCY — PAPER_DEPENDENCIES formula differs from paper and Lean. They agree in perturbative limit."
+      }
+    ]
+  },
+
+  "issues": [
+    {
+      "id": 0,
+      "severity": "HIGH",
+      "category": "formula_mismatch",
+      "location": "Eq. (4), line 109 of paper_draft.tex",
+      "description": "Paper claims delta_x_imag = c_s * Gamma_H / (2*kappa^2) is 'formally verified in Lean 4 (turning_point_shift)'. But the Lean theorem (WKBAnalysis.lean:179) proves x_imag = Gamma_H / (kappa * c_s), and WKBConnection.lean:336 defines turningPointShift = Gamma_H / (kappa * c_s). These differ by a factor of c_s^2 / (2*kappa). The Python formulas.py:339 DOES implement the paper formula c_s * Gamma_H / (2*kappa^2). Resolution: either (a) the paper formula is correct and Lean proves a different (order-of-magnitude) quantity, or (b) one of them has the wrong formula. The paper MUST NOT claim Lean verification of a formula that Lean does not prove.",
+      "recommendation": "Clarify what the Lean theorem actually proves. If Lean proves Gamma_H/(kappa*c_s) and the physics gives c_s*Gamma_H/(2*kappa^2), these are different statements. Either update the paper to not claim Lean verification of Eq. (4), or fix the Lean definition to match the paper formula."
+    },
+    {
+      "id": 1,
+      "severity": "MEDIUM",
+      "category": "orphan_citations",
+      "location": "Bibliography (lines 351-363)",
+      "description": "7 of 12 bibliography entries are never cited in the paper body: CorleyJacobson1996, CoutantParentani2012, BelgiornoCacciatori2024, RobertsonParentani2015, LombardoTuriaci2012, JanaLoganayagam2020, GiacobinoJacquet2025. RevTeX/PRD will flag uncited references.",
+      "recommendation": "Either add \\cite{} references in the text body for each used reference, or remove unused bibliography entries. At minimum, CorleyJacobson1996 should be cited where delta_disp is introduced (line 154), and LombardoTuriaci2012 / JanaLoganayagam2020 should be cited in the modified unitarity discussion."
+    },
+    {
+      "id": 2,
+      "severity": "LOW",
+      "category": "citation_registry_gap",
+      "location": "src/core/citations.py",
+      "description": "6 papers in the paper4 bibliography are not in CITATION_REGISTRY: Berry1989, Heading1962, CoutantParentani2012, BelgiornoCacciatori2024, RobertsonParentani2015, LombardoTuriaci2012, GiacobinoJacquet2025. Additionally, Steinhauer2016 used_in does not include paper4.",
+      "recommendation": "Add missing entries to CITATION_REGISTRY. Update Steinhauer2016 used_in to include paper4."
+    },
+    {
+      "id": 3,
+      "severity": "LOW",
+      "category": "qualitative_overstatement",
+      "location": "Discussion, line 320",
+      "description": "Claim 'delta_k ~ 10^-4 for current BEC experiments' is true only for Heidelberg (8.3e-5). Steinhauer is 1.2e-6 and Trento is 7.4e-7, both orders of magnitude smaller.",
+      "recommendation": "Change to 'delta_k ranges from ~10^-7 to ~10^-4' or 'delta_k < 10^-4' or specify 'for Heidelberg parameters'."
+    },
+    {
+      "id": 4,
+      "severity": "LOW",
+      "category": "provenance_metadata",
+      "location": "src/core/provenance.py, PAPER_DEPENDENCIES line 690",
+      "description": "PAPER_DEPENDENCIES claims noise floor = delta_diss/(2(1-delta_diss)), but paper Eq. (7) and Lean theorem noise_floor_eq_delta_diss both give n_noise = delta_diss. The PAPER_DEPENDENCIES formula appears to be stale.",
+      "recommendation": "Update PAPER_DEPENDENCIES key_claims for paper4 to match the actual paper formula: n_noise = delta_k/2 = delta_diss."
+    },
+    {
+      "id": 5,
+      "severity": "INFO",
+      "category": "numerical_verification_incomplete",
+      "location": "Table 1",
+      "description": "Full numerical recomputation from the solver pipeline could not be performed (Bash unavailable). D, gamma_dim, and derived quantities should be recomputed via: uv run python -c 'from src.wkb.spectrum import steinhauer_platform, heidelberg_platform, trento_platform; [print(f()) for f in [steinhauer_platform, heidelberg_platform, trento_platform]]'",
+      "recommendation": "Run the solver recomputation to confirm table values within 0.5% tolerance."
+    }
+  ],
+
+  "summary": {
+    "total_claims_checked": 32,
+    "pass": 24,
+    "conditional_pass": 3,
+    "unverified": 3,
+    "fail": 2,
+    "blocking_issues": 1,
+    "description": "Paper 4 is structurally sound with correct physics and verified Lean theorems (17 theorems, zero sorry). The critical blocking issue is the formula mismatch between Eq. (4) (delta_x_imag = c_s*Gamma_H/(2*kappa^2)) and the Lean formalization (Gamma_H/(kappa*c_s)). The paper must not claim Lean verification of a formula the Lean code does not prove. After fixing issue #0 and adding the missing citations (issue #1), the paper is ready for submission pending solver recomputation of table values."
+  }
+}

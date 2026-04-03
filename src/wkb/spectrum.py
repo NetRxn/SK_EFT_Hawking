@@ -42,7 +42,15 @@ from src.wkb.bogoliubov import (
     ModifiedBogoliubov,
     modified_bogoliubov_coefficients,
 )
-from src.core.formulas import damping_rate, decoherence_parameter, fdr_noise_floor
+from src.core.formulas import (
+    damping_rate, decoherence_parameter, fdr_noise_floor,
+    beliaev_transport_coefficients,
+)
+from src.core.transonic_background import (
+    steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
+    solve_transonic_background,
+)
+from src.core.constants import ATOMS
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -122,33 +130,48 @@ class PlatformParams:
         return critical_frequency(self.kappa, self.xi, self.c_s)
 
 
+def _platform_from_solver(factory, atom_key: str, name: str, description: str) -> PlatformParams:
+    """Derive natural-unit platform params from the transonic solver.
+
+    Computes D and gamma_dim from constants.py → transonic solver → Beliaev
+    formula, enforcing Pipeline Invariant 2 (no hardcoded constants).
+    """
+    params = factory()
+    bg = solve_transonic_background(params)
+    kappa = bg.surface_gravity
+    c_s = params.sound_speed_upstream
+    xi = params.healing_length
+    n_1D = params.density_upstream
+    a_s = ATOMS[atom_key]['a_s']
+
+    D = bg.adiabaticity
+    coeffs = beliaev_transport_coefficients(n_1D, a_s, kappa, c_s, xi)
+    gamma_dim = coeffs['Gamma_Bel'] / kappa
+
+    return PlatformParams(name=name, D=D, gamma_dim=gamma_dim, description=description)
+
+
 def steinhauer_platform() -> PlatformParams:
-    """Steinhauer 87Rb BEC parameters (Technion)."""
-    return PlatformParams(
-        name="Steinhauer_Rb87",
-        D=0.03,
-        gamma_dim=0.003,
-        description="Steinhauer 87Rb waterfall BEC (Technion)",
+    """Steinhauer 87Rb BEC parameters derived from transonic solver."""
+    return _platform_from_solver(
+        steinhauer_Rb87, 'Rb87', 'Steinhauer_Rb87',
+        'Steinhauer 87Rb waterfall BEC (Technion)',
     )
 
 
 def heidelberg_platform() -> PlatformParams:
-    """Heidelberg 39K BEC parameters (Oberthaler group)."""
-    return PlatformParams(
-        name="Heidelberg_K39",
-        D=0.02,
-        gamma_dim=0.002,
-        description="Heidelberg 39K Feshbach-tunable BEC",
+    """Heidelberg 39K BEC parameters derived from transonic solver."""
+    return _platform_from_solver(
+        heidelberg_K39, 'K39', 'Heidelberg_K39',
+        'Heidelberg 39K Feshbach-tunable BEC',
     )
 
 
 def trento_platform() -> PlatformParams:
-    """Trento 23Na spin-sonic BEC parameters (Carusotto group)."""
-    return PlatformParams(
-        name="Trento_Na23",
-        D=0.014,
-        gamma_dim=1.4e-5,
-        description="Trento 23Na spin-sonic BEC proposal",
+    """Trento 23Na spin-sonic BEC parameters derived from transonic solver."""
+    return _platform_from_solver(
+        trento_spin_sonic, 'Na23', 'Trento_Na23',
+        'Trento 23Na spin-sonic BEC proposal',
     )
 
 

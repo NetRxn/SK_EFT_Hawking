@@ -1,0 +1,89 @@
+{
+  "timestamp": "20260403T173244Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "paper_table": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Steinhauer.c_s",
+          "passed": 1.0,
+          "message": "paper=5.476e-04, code=5.476e-04",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.xi",
+          "passed": 1.0,
+          "message": "paper=1.334e-06, code=1.334e-06",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.kappa",
+          "passed": 1.0,
+          "message": "paper=4.800e+00, code=4.758e+00",
+          "warning": false
+        },
+        {
+          "name": "Steinhauer.T_H",
+          "passed": 1.0,
+          "message": "paper=6.000e-12, code=5.784e-12",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.c_s",
+          "passed": 1.0,
+          "message": "paper=3.919e-03, code=3.919e-03",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.xi",
+          "passed": 1.0,
+          "message": "paper=4.159e-07, code=4.159e-07",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.kappa",
+          "passed": 1.0,
+          "message": "paper=1.019e+02, code=1.019e+02",
+          "warning": false
+        },
+        {
+          "name": "Heidelberg.T_H",
+          "passed": 1.0,
+          "message": "paper=1.240e-10, code=1.239e-10",
+          "warning": false
+        },
+        {
+          "name": "Trento.c_s",
+          "passed": 1.0,
+          "message": "paper=2.185e-03, code=2.185e-03",
+          "warning": false
+        },
+        {
+          "name": "Trento.xi",
+          "passed": 1.0,
+          "message": "paper=1.264e-06, code=1.264e-06",
+          "warning": false
+        },
+        {
+          "name": "Trento.kappa",
+          "passed": 1.0,
+          "message": "paper=2.140e+01, code=2.141e+01",
+          "warning": false
+        },
+        {
+          "name": "Trento.T_H",
+          "passed": 1.0,
+          "message": "paper=2.600e-11, code=2.602e-11",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

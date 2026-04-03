@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-30T11:39:21.575860+00:00",
+  "generated": "2026-04-03T17:46:01.595352+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1420,7 +1420,7 @@
       "caption": "Drinfeld double anyon spectrum and algebra dimension.",
       "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig58_drinfeld_anyon_spectrum.png",
       "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig58_drinfeld_anyon_spectrum.html",
-      "expected_traces": 6,
+      "expected_traces": 2,
       "expected_axes": {},
       "physics_checks": [],
       "color_keys": [
@@ -1495,6 +1495,89 @@
         "Steinhauer",
         "Trento"
       ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig62_vestigial_phase_diagram_mc",
+      "function": "fig_vestigial_phase_diagram_mc",
+      "caption": "Mean-field phase diagram with MC susceptibility peaks overlaid.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig62_vestigial_phase_diagram_mc.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig62_vestigial_phase_diagram_mc.html",
+      "expected_traces": 2,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "Steinhauer",
+        "Trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig63_vestigial_susceptibility",
+      "function": "fig_vestigial_susceptibility",
+      "caption": "RPA metric susceptibility vs G/G_c for multiple u_g values.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig63_vestigial_susceptibility.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig63_vestigial_susceptibility.html",
+      "expected_traces": 4,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig64_vestigial_window",
+      "function": "fig_vestigial_window",
+      "caption": "Vestigial window G_ves/G_c vs u_g showing exponential narrowness.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig64_vestigial_window.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig64_vestigial_window.html",
+      "expected_traces": 2,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig65_vestigial_phase_diagram_analytical",
+      "function": "fig_vestigial_phase_diagram_analytical",
+      "caption": "ADW analytical phase diagram: pre-geometric / vestigial / Einstein-Cartan.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig65_vestigial_phase_diagram_analytical.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig65_vestigial_phase_diagram_analytical.html",
+      "expected_traces": 3,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
       "review_criteria": [
         "Axes labels readable and correct",
         "Legend entries present and clear",

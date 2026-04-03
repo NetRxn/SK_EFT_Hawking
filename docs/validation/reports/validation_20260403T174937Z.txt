@@ -1,0 +1,27 @@
+SK-EFT Hawking Validation Report
+Generated: 20260403T174937Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] notebook_exec
+  + Phase1_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase1_Technical.ipynb — 10 code cells executed successfully
+  + Phase2_Stakeholder.ipynb — 13 code cells executed successfully
+  + Phase2_Technical.ipynb — 16 code cells executed successfully
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3a_ThirdOrder_Technical.ipynb — 12 code cells executed successfully
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase3b_GaugeErasure_Technical.ipynb — 10 code cells executed successfully
+  + Phase3c_WKBConnection_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3c_WKBConnection_Technical.ipynb — 9 code cells executed successfully
+  + Phase3d_ADW_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase3d_ADW_Technical.ipynb — 14 code cells executed successfully
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — 11 code cells executed successfully
+  + Phase4b_Vestigial_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase4b_Vestigial_Technical.ipynb — 15 code cells executed successfully
+  + Phase5a_ChiralityWall_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5a_ChiralityWall_Technical.ipynb — 9 code cells executed successfully
+  + Phase5b_Synthesis_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5b_Synthesis_Technical.ipynb — 12 code cells executed successfully
+
+Overall: 1/1 passed

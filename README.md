@@ -23,13 +23,14 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
   no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
 **Lean 4 formalization:** 588 theorems + 2 axioms — ALL PROVED, ZERO sorry.
-38 Lean modules. 211 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+38 Lean modules. 233 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
-MC framework (Lean-verified, production in progress), chirality wall formalization (GS 9 conditions,
+MC framework (Lean-verified), chirality wall formalization (GS 9 conditions,
 TPF evasion machine-verified), Layer 1 categorical infrastructure (first-ever
 PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant),
-gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)).
+gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)), analytical vestigial susceptibility,
+hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermions (L=4 complete, L=8 in flight).
 
 ## Project Structure
 
@@ -63,7 +64,7 @@ SK_EFT_Hawking/
 │       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
 │       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
 │       ├── MajoranaKramers.lean       # Phase 5: Majorana Kramers degeneracy, sign-free determinant (25 theorems)
-│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (15 theorems + 1 axiom)
+│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (14 theorems + 1 axiom)
 │       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
 │       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
 │       ├── SphericalCategory.lean     # Phase 5: FIRST-EVER pivotal + spherical (18 theorems)
@@ -71,13 +72,21 @@ SK_EFT_Hawking/
 │       ├── FusionExamples.lean        # Phase 5: Vec_Z2/Z3, Rep_S3, Fibonacci (30 theorems)
 │       ├── VecG.lean                  # Phase 5: Day convolution, graded spaces (9 theorems)
 │       ├── DrinfeldDouble.lean        # Phase 5: D(G) twisted multiplication (15 theorems)
-│       └── GaugeEmergence.lean        # Phase 5: Z(Vec_G)≅Rep(D(G)), chirality (14 theorems)
+│       ├── GaugeEmergence.lean        # Phase 5: Z(Vec_G)≅Rep(D(G)), chirality (14 theorems)
+│       ├── SO4Weingarten.lean         # Phase 5: Weingarten 2nd/4th moment, channel positivity (14 theorems)
+│       ├── FractonFormulas.lean       # Phase 5: charge counting, dispersion, DOF gap (45 theorems)
+│       ├── WetterichNJL.lean          # Phase 5: Fierz completeness, NJL channels (18 theorems)
+│       ├── VestigialSusceptibility.lean # Phase 5: RPA susceptibility, vestigial_before_tetrad (16 theorems)
+│       ├── QuaternionGauge.lean       # Phase 5: SO(4) quaternion gauge, heatbath (10 theorems)
+│       └── GaugeFermionBag.lean       # Phase 5: tetrad covariance, bag weight, SMW update (9 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (56 proved)
-│   │   └── visualizations.py          # Plotly figures + interactive dashboard
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (233 proved)
+│   │   ├── visualizations.py          # Plotly figures (62 functions) + COLORS palette
+│   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
+│   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
 │   ├── first_order/                   # Phase 1 specific analysis
 │   ├── second_order/                  # Phase 2 analysis (absorbed from SK_EFT_Phase2)
 │   │   ├── enumeration.py             # Transport coefficient counting at arbitrary order
@@ -96,16 +105,31 @@ SK_EFT_Hawking/
 │   │   ├── gap_equation.py            # Coleman-Weinberg V_eff, critical coupling, phase diagram
 │   │   ├── fluctuations.py            # SSB pattern, NG modes, Vergeles counting, obstacles
 │   │   └── ginzburg_landau.py         # GL expansion, beta_i analogs, phase classification (Phase 4)
-│   ├── experimental/                  # Experimental prediction package (Phase 4 Wave 1)
-│   │   └── predictions.py            # Platform tables, detector requirements, kappa-scaling
+│   ├── experimental/                  # Experimental prediction package (Phase 4-5)
+│   │   ├── predictions.py            # Platform tables, detector requirements, kappa-scaling
+│   │   ├── kappa_scaling.py          # Physical kappa-scaling sweeps (Phase 5 Wave 1A)
+│   │   └── polariton_predictions.py  # Tier 1 polariton predictions (Phase 5 Wave 1B)
 │   ├── chirality/                     # Chirality wall synthesis (Phase 4 Wave 1)
 │   │   └── tpf_gs_analysis.py        # GS conditions vs TPF evasion
-│   ├── vestigial/                     # Vestigial gravity simulation (Phase 4 Wave 2)
+│   ├── vestigial/                     # Vestigial gravity simulation (Phase 4-5, Waves 2-7C)
 │   │   ├── lattice_model.py           # Lattice Hamiltonian, HS-transformed ADW
 │   │   ├── mean_field.py              # Extended mean-field with metric correlator
 │   │   ├── monte_carlo.py             # Metropolis-Hastings sampler
 │   │   ├── phase_diagram.py           # Coupling scan and phase classification
-│   │   └── finite_size.py             # Binder cumulant + finite-size scaling
+│   │   ├── finite_size.py             # Binder cumulant + finite-size scaling
+│   │   ├── su2_integration.py         # SU(2) Haar measure integration (Wave 2A)
+│   │   ├── grassmann_trg.py           # 2D Grassmann TRG (Wave 2A)
+│   │   ├── lattice_4d.py             # 4D hypercubic lattice model (Wave 2B)
+│   │   ├── fermion_bag.py            # Fermion-bag MC (Wave 2B)
+│   │   ├── wetterich_model.py        # NJL fermion-bag MC (Wave 9C-3)
+│   │   ├── phase_scan.py             # 4D coupling scan (Wave 2B)
+│   │   ├── quaternion.py             # SU(2) quaternion algebra (Wave 7A)
+│   │   ├── so4_gauge.py              # SO(4) gauge theory (Wave 7A)
+│   │   ├── gauge_fermion_bag.py      # Hybrid fermion-bag + gauge-link MC (Wave 7B)
+│   │   ├── gauge_fermion_bag_majorana.py # 8×8 Majorana sign-free (Wave 7B)
+│   │   ├── hs_rhmc.py               # HS+RHMC numpy reference (Wave 7C)
+│   │   ├── hs_rhmc_jax.py           # JAX CPU backend (Wave 7C)
+│   │   └── hs_rhmc_torch.py         # PyTorch CPU production default (Wave 7C)
 │   └── fracton/                       # Fracton hydrodynamics (Phase 4 Waves 2-3)
 │       ├── sk_eft.py                  # Fracton SK-EFT transport coefficients
 │       ├── information_retention.py   # UV information comparison
@@ -158,16 +182,19 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 13 Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1244 tests)
-│   ├── test_transonic_background.py   # Physics validation
-│   ├── test_second_order.py           # Enumeration + WKB tests
-│   ├── test_gauge_erasure.py          # Gauge erasure theorem tests
+├── tests/                             # pytest suite (1245 tests across 19 files)
+│   ├── test_transonic_background.py   # Physics validation (12 tests)
+│   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
+│   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
 │   ├── test_wkb_connection.py         # Exact WKB connection tests (65 tests)
 │   ├── test_adw.py                    # ADW gap equation tests (78 tests)
-│   ├── test_cross_validation.py       # Cross-layer validation
-│   └── test_lean_integrity.py         # Module structure + sorry-gap regression
+│   ├── test_cross_validation.py       # Cross-layer validation (7 tests)
+│   ├── test_lean_integrity.py         # Module structure + sorry-gap regression (9 tests)
+│   ├── test_vestigial.py             # MC, SU(2), TRG, 4D, NJL, susceptibility (159 tests)
+│   ├── test_gauge.py                 # SO(4) gauge, quaternion, Majorana (146 tests)
+│   └── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
 │
-├── figures/                           # 61 pipeline figures (PNG + HTML)
+├── figures/                           # 64 pipeline figures (PNG + HTML)
 ├── scripts/
 │   └── submit_to_aristotle.py         # Aristotle submission + integration script
 ├── pyproject.toml                     # Unified Python dependencies
@@ -211,9 +238,9 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 
 | Experiment | ξ [μm] | c_s [mm/s] | T_H [nK] | D | δ_disp | δ_diss |
 |---|---|---|---|---|---|---|
-| Steinhauer ⁸⁷Rb | 0.64 | 1.15 | 0.03 | 0.013 | 1.8e-4 | 6.5e-5 |
-| Heidelberg ³⁹K | 0.42 | 3.92 | 0.12 | 0.012 | 1.4e-4 | 1.8e-3 |
-| Trento ²³Na (spin) | 1.26 | 2.19 | 0.03 | 0.014 | 1.9e-4 | 1.6e-5 |
+| Steinhauer ⁸⁷Rb | 1.57 | 0.46 | 0.006 | 0.013 | 8.5e-5 | 4.2e-4 |
+| Heidelberg ³⁹K | 0.48 | 3.37 | 0.12 | 0.012 | 7.3e-5 | 2.0e-5 |
+| Trento ²³Na (spin) | 1.51 | 1.83 | 0.03 | 0.014 | 9.9e-5 | 9.3e-5 |
 
 ### Phase 2: Second-Order Correction (Frequency-Dependent)
 
@@ -268,7 +295,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 ## Build Environment
 
 - **Lean:** 4.28.0 with Mathlib (commit 8f9d9cff6bd728b17a24e163c9402775d9e6a365)
-- **Python:** ≥3.11, managed via uv. Key deps: numpy, scipy, sympy, mpmath, plotly, aristotlelib.
+- **Python:** ≥3.14, managed via uv. Key deps: numpy, scipy, sympy, mpmath, plotly, aristotlelib, torch, maturin.
 - **Visualization:** Plotly (not matplotlib). Color scheme: #2E86AB steel blue, #A23B72 berry, #F18F01 amber.
 
 ## References
