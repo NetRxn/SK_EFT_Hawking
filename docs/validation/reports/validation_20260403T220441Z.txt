@@ -1,0 +1,13 @@
+SK-EFT Hawking Validation Report
+Generated: 20260403T220441Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] graph_integrity
+  + graph_size — 980 nodes, 1036 edges
+  + conflicts — No verification conflicts
+  + orphan_nodes — 516 orphan nodes: param:Paris_long.Gamma_pol, param:Paris_long.gamma_phonon_dim, param:Paris_ultralong.tau_cav, param:Paris_ultralong.Gamma_pol, param:Paris_standard.tau_cav (+511 more)
+  + ungrounded_claims — 3 ungrounded claims: claim:paper3_gauge_erasure:0, claim:paper3_gauge_erasure:1, claim:paper3_gauge_erasure:2
+  + broken_chains — 28 broken provenance chains: formula:so4_weingarten_2nd_moment, formula:so4_weingarten_4th_moment, formula:adw_bond_weight_fundamental, formula:adw_bond_weight_adjoint, formula:adw_bond_weight_total (+23 more)
+  + missing_provenance — 16 params without SOURCED_FROM: HBAR, K_B, A_BOHR, Rb87.mass, K39.mass (+11 more)
+
+Overall: 1/1 passed

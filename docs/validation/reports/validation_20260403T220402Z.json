@@ -1,0 +1,53 @@
+{
+  "timestamp": "20260403T220402Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "graph_integrity": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "graph_size",
+          "passed": true,
+          "message": "980 nodes, 1036 edges",
+          "warning": false
+        },
+        {
+          "name": "conflicts",
+          "passed": true,
+          "message": "No verification conflicts",
+          "warning": false
+        },
+        {
+          "name": "orphan_nodes",
+          "passed": true,
+          "message": "516 orphan nodes: param:Paris_long.Gamma_pol, param:Paris_long.gamma_phonon_dim, param:Paris_ultralong.tau_cav, param:Paris_ultralong.Gamma_pol, param:Paris_standard.tau_cav (+511 more)",
+          "warning": true
+        },
+        {
+          "name": "ungrounded_claims",
+          "passed": true,
+          "message": "3 ungrounded claims: claim:paper3_gauge_erasure:0, claim:paper3_gauge_erasure:1, claim:paper3_gauge_erasure:2",
+          "warning": true
+        },
+        {
+          "name": "broken_chains",
+          "passed": true,
+          "message": "28 broken provenance chains: formula:so4_weingarten_2nd_moment, formula:so4_weingarten_4th_moment, formula:adw_bond_weight_fundamental, formula:adw_bond_weight_adjoint, formula:adw_bond_weight_total (+23 more)",
+          "warning": true
+        },
+        {
+          "name": "missing_provenance",
+          "passed": true,
+          "message": "16 params without SOURCED_FROM: HBAR, K_B, A_BOHR, Rb87.mass, K39.mass (+11 more)",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}
