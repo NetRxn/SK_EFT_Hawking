@@ -21,11 +21,15 @@ from pathlib import Path
 
 from flask import Flask, render_template, request, jsonify
 
-# Ensure project root is importable
+# Ensure project root and scripts dir are importable
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(SCRIPT_DIR))
 
 app = Flask(__name__, template_folder=str(Path(__file__).parent / "templates"))
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -590,6 +594,113 @@ def save_all():
         <strong>{changes} parameters updated in memory.</strong>
         <p>Run <code>uv run python scripts/provenance_dashboard.py --write</code> to persist to disk.</p>
     </div>'''
+
+
+# ════════════════════════════════════════════════════════════════════
+# Knowledge Graph API endpoints
+# ════════════════════════════════════════════════════════════════════
+
+@app.route("/api/graph")
+def api_graph():
+    """Return the full provenance graph as JSON for D3 visualization."""
+    from build_graph import build_graph_json
+    graph = build_graph_json()
+    return jsonify(graph)
+
+
+@app.route("/api/graph/trace/<path:node_id>")
+def api_trace(node_id):
+    """Return the provenance chain for a node (bidirectional BFS).
+
+    Walks forward through outgoing edges (source->target) AND backward
+    through incoming edges (target->source) to find the full chain.
+    """
+    from build_graph import build_graph_json
+    graph = build_graph_json()
+    nodes = graph['nodes']
+    links = graph['links']
+
+    # Validate node exists
+    node_ids = {n['id'] for n in nodes}
+    if node_id not in node_ids:
+        return jsonify({'error': f'Unknown node: {node_id}'}), 404
+
+    traced_node_ids = set()
+    traced_edge_indices = set()
+
+    def fwd(nid):
+        if nid in traced_node_ids:
+            return
+        traced_node_ids.add(nid)
+        for i, link in enumerate(links):
+            if link['source'] == nid:
+                traced_edge_indices.add(i)
+                fwd(link['target'])
+
+    def bwd(nid):
+        if nid in traced_node_ids:
+            return
+        traced_node_ids.add(nid)
+        for i, link in enumerate(links):
+            if link['target'] == nid:
+                traced_edge_indices.add(i)
+                bwd(link['source'])
+
+    fwd(node_id)
+    bwd(node_id)
+
+    return jsonify({
+        'traced_node_ids': sorted(traced_node_ids),
+        'traced_edge_indices': sorted(traced_edge_indices),
+    })
+
+
+@app.route("/api/graph/impact/<path:node_id>")
+def api_impact(node_id):
+    """Return all nodes that depend on the given node (upstream walk).
+
+    Walks upstream: find edges where target == current, follow source.
+    Also walks downstream: find edges where source == current, follow target.
+    """
+    from build_graph import build_graph_json
+    graph = build_graph_json()
+    nodes = graph['nodes']
+    links = graph['links']
+
+    node_ids = {n['id'] for n in nodes}
+    if node_id not in node_ids:
+        return jsonify({'error': f'Unknown node: {node_id}'}), 404
+
+    impacted_node_ids = set([node_id])
+    impacted_edge_indices = set()
+
+    def upstream(nid):
+        for i, link in enumerate(links):
+            if link['target'] == nid and link['source'] not in impacted_node_ids:
+                impacted_node_ids.add(link['source'])
+                impacted_edge_indices.add(i)
+                upstream(link['source'])
+
+    def downstream(nid):
+        for i, link in enumerate(links):
+            if link['source'] == nid and link['target'] not in impacted_node_ids:
+                impacted_node_ids.add(link['target'])
+                impacted_edge_indices.add(i)
+
+    upstream(node_id)
+    downstream(node_id)
+
+    return jsonify({
+        'impacted_node_ids': sorted(impacted_node_ids),
+        'impacted_edge_indices': sorted(impacted_edge_indices),
+    })
+
+
+@app.route("/api/graph/integrity")
+def api_integrity():
+    """Return the graph integrity report."""
+    from graph_integrity import run_integrity_checks
+    return jsonify(run_integrity_checks())
 
 
 # ════════════════════════════════════════════════════════════════════

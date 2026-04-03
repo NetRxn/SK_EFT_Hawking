@@ -1,0 +1,15 @@
+services:
+  pg-age:
+    image: apache/age:release_PG17_1.6.0
+    container_name: sk_eft_graph
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: sk_eft_provenance
+      POSTGRES_USER: sk_eft
+      POSTGRES_PASSWORD: sk_eft_local
+    volumes:
+      - sk_eft_graph_data:/var/lib/postgresql/data
+
+volumes:
+  sk_eft_graph_data:

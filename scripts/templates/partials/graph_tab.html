@@ -1,0 +1,905 @@
+<!-- Knowledge Graph Tab — D3 force-directed provenance graph -->
+<!-- Adapted from approved prototype; fetches live data from /api/graph -->
+<style>
+    /* ═══ Knowledge Graph scoped styles ═══ */
+    .kg-wrap {
+        --c-paper: #2E86AB; --c-claim: #E8C547; --c-formula: #F18F01;
+        --c-theorem: #5C946E; --c-aristotle: #22c55e; --c-parameter: #A23B72;
+        --c-source: #c8ccd0; --c-figure: #9b6dff;
+        --kg-bg: #080c14; --kg-bg-panel: #0f1520; --kg-bg-card: #151d2e;
+        --kg-border: #1e293b; --kg-text: #e2e8f0; --kg-text-dim: #64748b;
+        --kg-text-bright: #f8fafc; --kg-accent: #2E86AB;
+        font-family: 'Instrument Sans', sans-serif;
+        background: var(--kg-bg); color: var(--kg-text);
+        position: relative; width: 100vw; height: calc(100vh - 160px); min-height: 500px;
+    }
+
+    .kg-topbar {
+        position: absolute; top: 0; left: 0; right: 0; z-index: 100; height: 48px;
+        background: rgba(8,12,20,0.95); backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--kg-border);
+        display: flex; align-items: center; gap: 16px; padding: 0 20px;
+    }
+    .kg-topbar-title { font-weight: 700; font-size: 0.9rem; color: var(--kg-text-bright); white-space: nowrap; }
+    .kg-topbar-title span { color: var(--kg-accent); }
+    .kg-topbar-divider { width: 1px; height: 24px; background: var(--kg-border); }
+
+    .kg-mode-group { display: flex; gap: 2px; }
+    .kg-mode-btn {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
+        padding: 5px 12px; border: 1px solid var(--kg-border);
+        background: transparent; color: var(--kg-text-dim); cursor: pointer; transition: all 0.2s;
+    }
+    .kg-mode-btn:first-child { border-radius: 5px 0 0 5px; }
+    .kg-mode-btn:last-child { border-radius: 0 5px 5px 0; }
+    .kg-mode-btn.active { background: var(--kg-accent); color: var(--kg-text-bright); border-color: var(--kg-accent); }
+    .kg-mode-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: var(--kg-text); }
+
+    .kg-paper-focus {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
+        padding: 4px 10px; border-radius: 5px; border: 1px solid var(--kg-border);
+        background: var(--kg-bg-panel); color: var(--kg-text); cursor: pointer;
+        max-width: 180px; appearance: none; -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
+    }
+    .kg-paper-focus:hover { border-color: var(--kg-accent); }
+    .kg-paper-focus:focus { outline: none; border-color: var(--kg-accent); box-shadow: 0 0 0 2px rgba(46,134,171,0.25); }
+    .kg-paper-focus option { background: var(--kg-bg-panel); color: var(--kg-text); }
+
+    .kg-filter-group { display: flex; gap: 5px; flex-wrap: wrap; }
+    .kg-filter-pill {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.68rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.04em;
+        padding: 3px 9px; border-radius: 16px; border: 1.5px solid;
+        cursor: pointer; transition: all 0.2s; background: transparent;
+    }
+    .kg-filter-pill.off { opacity: 0.25; }
+
+    .kg-topbar-stats {
+        margin-left: auto; display: flex; gap: 14px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--kg-text-dim);
+    }
+    .kg-topbar-stats .val { color: var(--kg-text); font-weight: 600; }
+
+    .kg-graph-container { position: absolute; top: 48px; left: 0; right: 0; bottom: 0; }
+    .kg-graph-container svg { width: 100%; height: 100%; }
+
+    .kg-link { stroke: rgba(255,255,255,0.25); stroke-width: 0.8; fill: none; }
+    .kg-link.highlighted { stroke: rgba(255,255,255,0.6); stroke-width: 1.5; }
+    .kg-link.dimmed-trace { opacity: 0.05; }
+    .kg-link.traced { stroke-width: 2.5; stroke-dasharray: 8 4; animation: kg-traceflow 0.8s linear infinite; }
+    .kg-link.traced-ok { stroke: #22c55e; stroke-width: 2.5; }
+    .kg-link.traced-bad { stroke: #ef4444; stroke-width: 2.5; }
+    .kg-link.impact { stroke: #F18F01; stroke-width: 2.5; stroke-dasharray: 6 3; animation: kg-traceflow 1s linear infinite; }
+    @keyframes kg-traceflow { to { stroke-dashoffset: -12; } }
+
+    .kg-link-arrow { fill: rgba(255,255,255,0.12); }
+    .kg-link-arrow.highlighted { fill: rgba(255,255,255,0.5); }
+
+    .kg-node { cursor: pointer; }
+    .kg-node circle.kg-main-circle { stroke-width: 2; transition: stroke-width 0.15s; }
+    .kg-node:hover circle.kg-main-circle { stroke-width: 3; }
+    .kg-node.dimmed { opacity: 0.08; pointer-events: none; }
+    .kg-node.selected circle.kg-main-circle { stroke-width: 3.5; }
+
+    .kg-node-label {
+        font-family: 'IBM Plex Mono', monospace; font-size: 8.5px;
+        fill: var(--kg-text-dim); text-anchor: middle; pointer-events: none;
+    }
+    .kg-node:hover .kg-node-label, .kg-node.selected .kg-node-label, .kg-node.traced .kg-node-label {
+        fill: var(--kg-text-bright); font-weight: 500;
+    }
+
+    .kg-verif-ring { fill: none; stroke-width: 2; opacity: 0; }
+    .kg-verif-ring.verified { stroke: rgba(34,197,94,0.5); opacity: 0.6; }
+    .kg-verif-ring.llm { stroke: rgba(234,179,8,0.4); opacity: 0.5; }
+    .kg-verif-ring.conflict { stroke: rgba(239,68,68,0.6); opacity: 0.8;
+        animation: kg-pulse-ring 1.5s ease-in-out infinite; }
+    .kg-verif-ring.projected { stroke: rgba(234,179,8,0.3); opacity: 0.4; stroke-dasharray: 3 3; }
+    @keyframes kg-pulse-ring { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
+
+    .kg-detail-panel {
+        position: absolute; top: 48px; right: 0; bottom: 0; width: 360px;
+        background: var(--kg-bg-panel); border-left: 1px solid var(--kg-border);
+        transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+        z-index: 90; overflow-y: auto; padding: 18px;
+    }
+    .kg-detail-panel.open { transform: translateX(0); }
+    .kg-detail-close {
+        position: absolute; top: 10px; right: 10px; width: 26px; height: 26px;
+        border-radius: 5px; border: 1px solid var(--kg-border); background: transparent;
+        color: var(--kg-text-dim); cursor: pointer; font-size: 0.9rem;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .kg-detail-close:hover { background: rgba(255,255,255,0.05); color: var(--kg-text); }
+    .kg-detail-type { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.07em; margin-bottom: 3px; }
+    .kg-detail-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem;
+        font-weight: 600; color: var(--kg-text-bright); margin-bottom: 12px; word-break: break-word; }
+    .kg-detail-section { margin-bottom: 14px; }
+    .kg-detail-section-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--kg-text-dim); margin-bottom: 5px; }
+    .kg-detail-field { display: grid; grid-template-columns: 90px 1fr; gap: 3px 7px;
+        font-size: 0.8rem; margin-bottom: 3px; }
+    .kg-detail-field-key { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--kg-text-dim); }
+    .kg-detail-field-val { color: var(--kg-text); word-break: break-word; }
+    .kg-detail-badge { display: inline-block; padding: 2px 7px; border-radius: 4px;
+        font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .kg-badge-verified { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .kg-badge-llm { background: rgba(234,179,8,0.15); color: #fbbf24; }
+    .kg-badge-conflict { background: rgba(239,68,68,0.2); color: #f87171; }
+    .kg-badge-projected { background: rgba(234,179,8,0.1); color: #fbbf24; border: 1px dashed rgba(234,179,8,0.3); }
+    .kg-detail-note { background: var(--kg-bg-card); border: 1px solid var(--kg-border);
+        border-radius: 5px; padding: 9px 11px; font-size: 0.78rem; color: var(--kg-text-dim); line-height: 1.5; }
+    .kg-detail-note.warning { border-color: rgba(239,68,68,0.4);
+        background: rgba(239,68,68,0.05); color: #fca5a5; }
+    .kg-detail-actions { display: flex; gap: 7px; margin-top: 14px; }
+    .kg-action-btn { font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+        padding: 7px 14px; border-radius: 5px; border: 1px solid; cursor: pointer; transition: all 0.2s; }
+    .kg-action-btn.trace { background: rgba(34,197,94,0.1); color: #4ade80; border-color: rgba(34,197,94,0.3); }
+    .kg-action-btn.trace:hover { background: rgba(34,197,94,0.2); }
+    .kg-action-btn.impact { background: rgba(241,143,1,0.1); color: #F18F01; border-color: rgba(241,143,1,0.3); }
+    .kg-action-btn.impact:hover { background: rgba(241,143,1,0.2); }
+    .kg-conn-list { list-style: none; }
+    .kg-conn-item { display: flex; align-items: center; gap: 7px; padding: 4px 0;
+        font-size: 0.78rem; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
+    .kg-conn-item:hover { background: rgba(255,255,255,0.02); }
+    .kg-conn-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .kg-conn-edge { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+        color: var(--kg-text-dim); min-width: 75px; }
+    .kg-conn-name { color: var(--kg-text); }
+
+    .kg-legend {
+        position: absolute; bottom: 16px; left: 16px; z-index: 80;
+        background: var(--kg-bg-panel); border: 1px solid var(--kg-border);
+        border-radius: 8px; padding: 12px 14px; font-size: 0.72rem;
+    }
+    .kg-legend-title { font-weight: 700; font-size: 0.65rem; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--kg-text-dim); margin-bottom: 6px; }
+    .kg-legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+    .kg-legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+
+    .kg-hint { position: absolute; bottom: 16px; right: 16px; z-index: 80;
+        background: var(--kg-bg-panel); border: 1px solid var(--kg-border);
+        border-radius: 8px; padding: 10px 14px; font-size: 0.75rem;
+        color: var(--kg-text-dim); max-width: 240px; line-height: 1.5; }
+    .kg-hint kbd { display: inline-block; padding: 1px 4px; border-radius: 3px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+        background: var(--kg-bg-card); border: 1px solid var(--kg-border); color: var(--kg-text); }
+
+    .kg-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-family: 'IBM Plex Mono', monospace; font-size: 1rem; color: var(--kg-text-dim); }
+
+    .kg-wrap ::-webkit-scrollbar { width: 5px; }
+    .kg-wrap ::-webkit-scrollbar-track { background: transparent; }
+    .kg-wrap ::-webkit-scrollbar-thumb { background: var(--kg-border); border-radius: 3px; }
+
+    /* ═══ Physics Controls Panel ═══ */
+    .kg-controls-toggle {
+        font-family: 'Instrument Sans', sans-serif; font-size: 1rem;
+        padding: 4px 10px; border-radius: 5px; border: 1px solid var(--kg-border);
+        background: transparent; color: var(--kg-text-dim); cursor: pointer;
+        transition: all 0.2s; line-height: 1;
+    }
+    .kg-controls-toggle:hover { background: rgba(255,255,255,0.05); color: var(--kg-text); }
+    .kg-controls-toggle.active { background: var(--kg-accent); color: var(--kg-text-bright); border-color: var(--kg-accent); }
+
+    .kg-controls-panel {
+        position: absolute; top: 56px; left: 16px; z-index: 95;
+        background: var(--kg-bg-panel); border: 1px solid var(--kg-border);
+        border-radius: 8px; padding: 14px 16px; width: 260px;
+        display: none; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .kg-controls-panel.open { display: block; }
+    .kg-controls-title {
+        font-weight: 700; font-size: 0.68rem; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--kg-text-dim); margin-bottom: 10px;
+    }
+    .kg-slider-row {
+        display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    }
+    .kg-slider-label {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+        color: var(--kg-text-dim); min-width: 80px; flex-shrink: 0;
+    }
+    .kg-slider-input {
+        flex: 1; -webkit-appearance: none; appearance: none;
+        height: 4px; border-radius: 2px; background: var(--kg-border);
+        outline: none; cursor: pointer;
+    }
+    .kg-slider-input::-webkit-slider-thumb {
+        -webkit-appearance: none; appearance: none; width: 12px; height: 12px;
+        border-radius: 50%; background: var(--kg-accent); cursor: pointer;
+        border: none;
+    }
+    .kg-slider-input::-moz-range-thumb {
+        width: 12px; height: 12px; border-radius: 50%; background: var(--kg-accent);
+        cursor: pointer; border: none;
+    }
+    .kg-slider-val {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+        color: var(--kg-text); min-width: 36px; text-align: right;
+    }
+    .kg-controls-divider {
+        height: 1px; background: var(--kg-border); margin: 10px 0;
+    }
+    .kg-unpin-btn {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.72rem; font-weight: 600;
+        padding: 5px 12px; border-radius: 5px; border: 1px solid var(--kg-border);
+        background: transparent; color: var(--kg-text-dim); cursor: pointer;
+        transition: all 0.2s; width: 100%;
+    }
+    .kg-unpin-btn:hover { background: rgba(255,255,255,0.05); color: var(--kg-text); }
+
+    /* ═══ Layout Toggle Buttons ═══ */
+    .kg-layout-group { display: flex; gap: 2px; }
+    .kg-layout-btn {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
+        padding: 5px 12px; border: 1px solid var(--kg-border);
+        background: transparent; color: var(--kg-text-dim); cursor: pointer; transition: all 0.2s;
+    }
+    .kg-layout-btn:first-child { border-radius: 5px 0 0 5px; }
+    .kg-layout-btn:last-child { border-radius: 0 5px 5px 0; }
+    .kg-layout-btn.active { background: var(--kg-accent); color: var(--kg-text-bright); border-color: var(--kg-accent); }
+    .kg-layout-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: var(--kg-text); }
+
+    /* ═══ Pin indicator ═══ */
+    .kg-pin-indicator { fill: var(--kg-text-bright); opacity: 0; pointer-events: none; }
+    .kg-node.pinned .kg-pin-indicator { opacity: 0.85; }
+</style>
+
+<div class="kg-wrap" id="kg-wrap">
+    <div class="kg-topbar">
+        <div class="kg-topbar-title"><span>SK-EFT</span> Provenance Graph</div>
+        <div class="kg-topbar-divider"></div>
+        <div class="kg-mode-group">
+            <button class="kg-mode-btn active" data-mode="explore" id="kg-mode-explore">Explore</button>
+            <button class="kg-mode-btn" data-mode="trace" id="kg-mode-trace">Trace</button>
+            <button class="kg-mode-btn" data-mode="impact" id="kg-mode-impact">Impact</button>
+        </div>
+        <div class="kg-topbar-divider"></div>
+        <div class="kg-layout-group">
+            <button class="kg-layout-btn active" data-layout="force" id="kg-layout-force">Force</button>
+            <button class="kg-layout-btn" data-layout="radial" id="kg-layout-radial">Radial</button>
+            <button class="kg-layout-btn" data-layout="hierarchy" id="kg-layout-hierarchy">Hierarchy</button>
+            <button class="kg-layout-btn" data-layout="circle" id="kg-layout-circle">Circle</button>
+        </div>
+        <div class="kg-topbar-divider"></div>
+        <button class="kg-controls-toggle" id="kg-controls-toggle" title="Physics Controls">&#9881;</button>
+        <div class="kg-topbar-divider"></div>
+        <div class="kg-filter-group" id="kg-filters"></div>
+        <div class="kg-topbar-divider"></div>
+        <select id="kg-paper-focus" class="kg-paper-focus">
+            <option value="">All Papers</option>
+        </select>
+        <div class="kg-topbar-stats">
+            <span><span class="val" id="kg-stat-nodes">0</span> nodes</span>
+            <span><span class="val" id="kg-stat-edges">0</span> edges</span>
+            <span class="val" id="kg-stat-issues" style="color:#f87171"></span>
+        </div>
+    </div>
+    <div class="kg-graph-container">
+        <svg id="kg-graph">
+            <defs>
+                <filter id="kg-glow-g" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="kg-glow-r" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <marker id="kg-arr" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="7" markerHeight="5" orient="auto">
+                    <path d="M0,0 L10,3 L0,6 Z" class="kg-link-arrow"/></marker>
+                <marker id="kg-arr-h" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="7" markerHeight="5" orient="auto">
+                    <path d="M0,0 L10,3 L0,6 Z" class="kg-link-arrow highlighted"/></marker>
+                <pattern id="kg-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="0.4" fill="rgba(255,255,255,0.035)"/></pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#kg-grid)"/>
+        </svg>
+    </div>
+    <div class="kg-detail-panel" id="kg-detailPanel">
+        <button class="kg-detail-close" id="kg-detail-close-btn">&times;</button>
+        <div id="kg-detailContent"></div>
+    </div>
+    <div class="kg-controls-panel" id="kg-controls-panel">
+        <div class="kg-controls-title">Force Simulation</div>
+        <div class="kg-slider-row">
+            <span class="kg-slider-label">Repulsion</span>
+            <input type="range" class="kg-slider-input" id="kg-slider-charge" min="-500" max="-10" step="5" value="-200">
+            <span class="kg-slider-val" id="kg-val-charge">-200</span>
+        </div>
+        <div class="kg-slider-row">
+            <span class="kg-slider-label">Link Dist</span>
+            <input type="range" class="kg-slider-input" id="kg-slider-linkdist" min="20" max="300" step="5" value="100">
+            <span class="kg-slider-val" id="kg-val-linkdist">100</span>
+        </div>
+        <div class="kg-slider-row">
+            <span class="kg-slider-label">Gravity</span>
+            <input type="range" class="kg-slider-input" id="kg-slider-gravity" min="0" max="0.2" step="0.005" value="0.03">
+            <span class="kg-slider-val" id="kg-val-gravity">0.03</span>
+        </div>
+        <div class="kg-slider-row">
+            <span class="kg-slider-label">Link Str</span>
+            <input type="range" class="kg-slider-input" id="kg-slider-linkstr" min="0.01" max="1.0" step="0.01" value="0.3">
+            <span class="kg-slider-val" id="kg-val-linkstr">0.30</span>
+        </div>
+        <div class="kg-controls-divider"></div>
+        <button class="kg-unpin-btn" id="kg-unpin-all">Unpin All Nodes</button>
+    </div>
+    <div class="kg-legend">
+        <div class="kg-legend-title">Node Types</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-paper)"></div> Paper</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-claim)"></div> Paper Claim</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-formula)"></div> Formula</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-theorem)"></div> Lean Theorem</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-aristotle)"></div> Aristotle Run</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-parameter)"></div> Parameter</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-source)"></div> Primary Source</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:var(--c-figure)"></div> Figure</div>
+        <div style="margin-top:8px" class="kg-legend-title">Verification</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:#22c55e;box-shadow:0 0 5px #22c55e"></div> Verified</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:#eab308;box-shadow:0 0 5px #eab308"></div> LLM Only</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="background:#ef4444;box-shadow:0 0 6px #ef4444"></div> Conflict</div>
+        <div class="kg-legend-row"><div class="kg-legend-dot" style="border:1.5px dashed #eab308;background:transparent"></div> Projected</div>
+    </div>
+    <div class="kg-hint" id="kg-hint">
+        <strong>Explore:</strong> Click any node to inspect.<br>
+        <strong>Trace:</strong> Click a claim to trace provenance.<br>
+        <strong>Impact:</strong> Click a parameter to see downstream.<br>
+        <kbd>Scroll</kbd> zoom &nbsp; <kbd>Drag</kbd> pan<br>
+        <kbd>Drag</kbd> node to pin &nbsp; <kbd>Dbl-click</kbd> to unpin
+    </div>
+    <div class="kg-loading" id="kg-loading">Loading provenance graph...</div>
+</div>
+
+<script>
+(function() {
+    // ═══ Constants ═══
+    const TC = {
+        Paper:'#2E86AB', PaperClaim:'#E8C547', Formula:'#F18F01', LeanTheorem:'#5C946E',
+        AristotleRun:'#22c55e', Parameter:'#A23B72', PrimarySource:'#c8ccd0', Figure:'#9b6dff'
+    };
+    const TR = {
+        Paper:18, PaperClaim:12, Formula:14, LeanTheorem:12,
+        AristotleRun:10, Parameter:13, PrimarySource:11, Figure:11
+    };
+    const COL = {
+        PrimarySource:0, Parameter:1, Formula:2, LeanTheorem:3,
+        AristotleRun:3.5, Figure:4.5, PaperClaim:4.5, Paper:5.5
+    };
+
+    let nodes = [], links = [], mode = 'explore', currentLayout = 'force';
+    let sim, linkEl, nodeEl;
+    // Force defaults (synced with sliders)
+    let forceParams = { charge: -200, linkDist: 100, gravity: 0.03, linkStr: 0.3 };
+    // Radial radius map by type
+    const RADIAL_R = { PrimarySource:0, Parameter:150, Formula:300, LeanTheorem:450, AristotleRun:450, PaperClaim:600, Figure:600, Paper:750 };
+
+    // ═══ Fetch graph data from API ═══
+    fetch('/api/graph')
+        .then(r => r.json())
+        .then(graph => {
+            document.getElementById('kg-loading').style.display = 'none';
+            nodes = graph.nodes;
+            links = graph.links;
+            initGraph();
+        })
+        .catch(err => {
+            const el = document.getElementById('kg-loading');
+            el.textContent = 'Error loading graph: ' + err.message;
+            el.style.color = '#ef4444';
+        });
+
+    function initGraph() {
+        const wrap = document.getElementById('kg-wrap');
+        const W = wrap.clientWidth;
+        const H = wrap.clientHeight - 48;
+
+        const svg = d3.select('#kg-graph');
+        const g = svg.append('g');
+        svg.call(d3.zoom().scaleExtent([0.25, 4]).on('zoom', e => g.attr('transform', e.transform)));
+
+        const colX = d3.scaleLinear().domain([0, 5.5]).range([W * 0.1, W * 0.88]);
+        sim = d3.forceSimulation(nodes)
+            .force('link', d3.forceLink(links).id(d => d.id).distance(forceParams.linkDist).strength(forceParams.linkStr))
+            .force('charge', d3.forceManyBody().strength(forceParams.charge))
+            .force('x', d3.forceX(d => colX(COL[d.type] || 2.5)).strength(forceParams.gravity))
+            .force('y', d3.forceY(H / 2).strength(forceParams.gravity))
+            .force('collision', d3.forceCollide().radius(d => (TR[d.type] || 12) + 7));
+
+        linkEl = g.append('g').selectAll('path').data(links).enter().append('path')
+            .attr('class', 'kg-link').attr('marker-end', 'url(#kg-arr)');
+
+        nodeEl = g.append('g').selectAll('g').data(nodes).enter().append('g')
+            .attr('class', 'kg-node')
+            .call(d3.drag()
+                .on('start', (e) => { if (!e.active) sim.alphaTarget(0.3).restart(); e.subject.fx = e.subject.x; e.subject.fy = e.subject.y; })
+                .on('drag', (e) => { e.subject.fx = e.x; e.subject.fy = e.y; })
+                .on('end', (e) => {
+                    if (!e.active) sim.alphaTarget(0);
+                    // Pin node at drop position
+                    e.subject.fx = e.subject.x;
+                    e.subject.fy = e.subject.y;
+                    d3.select(e.sourceEvent.target.closest('.kg-node')).classed('pinned', true);
+                }));
+
+        // Double-click to unpin
+        nodeEl.on('dblclick', (e, d) => {
+            e.stopPropagation();
+            e.preventDefault();
+            d.fx = null;
+            d.fy = null;
+            d3.select(e.currentTarget).classed('pinned', false);
+            sim.alpha(0.3).restart();
+        });
+
+        nodeEl.append('circle').attr('class', d => 'kg-verif-ring ' + (d.verification || '')).attr('r', d => (TR[d.type] || 12) + 5);
+        nodeEl.append('circle').attr('class', 'kg-main-circle')
+            .attr('r', d => TR[d.type] || 12)
+            .attr('fill', d => { const c = TC[d.type]; return d.verification === 'conflict' ? '#1a0808' : d3.color(c).copy({opacity: 0.15}); })
+            .attr('stroke', d => TC[d.type])
+            .attr('filter', d => d.verification === 'conflict' ? 'url(#kg-glow-r)' : d.verification === 'verified' ? 'url(#kg-glow-g)' : null);
+
+        // Pin indicator (small dot above node)
+        nodeEl.append('circle').attr('class', 'kg-pin-indicator')
+            .attr('r', 3).attr('cy', d => -(TR[d.type] || 12) - 6);
+
+        // Label: use node.label if available, otherwise derive from id
+        nodeEl.append('text').attr('class', 'kg-node-label')
+            .attr('dy', d => (TR[d.type] || 12) + 13)
+            .text(d => d.label || d.id.split(':').pop());
+
+        nodeEl.on('click', (e, d) => {
+            e.stopPropagation();
+            if (mode === 'trace') traceFromAPI(d);
+            else if (mode === 'impact') impactFromAPI(d);
+            else selectNode(d);
+        });
+        svg.on('click', () => { clearSel(); closeDetail(); });
+
+        sim.on('tick', () => {
+            linkEl.attr('d', d => {
+                const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y;
+                const dr = Math.sqrt(dx * dx + dy * dy) * 1.5;
+                const r = TR[d.target.type] || 12;
+                const a = Math.atan2(dy, dx);
+                const tx = d.target.x - Math.cos(a) * (r + 5);
+                const ty = d.target.y - Math.sin(a) * (r + 5);
+                return 'M' + d.source.x + ',' + d.source.y + 'A' + dr + ',' + dr + ' 0 0,1 ' + tx + ',' + ty;
+            });
+            nodeEl.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+        });
+
+        // Stats
+        document.getElementById('kg-stat-nodes').textContent = nodes.length;
+        document.getElementById('kg-stat-edges').textContent = links.length;
+        const iss = nodes.filter(n => n.verification === 'conflict');
+        if (iss.length) document.getElementById('kg-stat-issues').textContent = iss.length + ' conflicts';
+
+        // Type filter pills
+        const fC = document.getElementById('kg-filters');
+        const types = [...new Set(nodes.map(n => n.type))];
+        const aF = new Set(types);
+        types.forEach(t => {
+            const p = document.createElement('button');
+            p.className = 'kg-filter-pill';
+            p.dataset.type = t;
+            p.style.borderColor = TC[t] || '#888';
+            p.style.color = TC[t] || '#888';
+            p.textContent = t.replace(/([A-Z])/g, ' $1').trim() + ' (' + nodes.filter(n => n.type === t).length + ')';
+            p.onclick = () => {
+                if (aF.has(t)) { aF.delete(t); p.classList.add('off'); }
+                else { aF.add(t); p.classList.remove('off'); }
+                nodeEl.style('display', d => aF.has(d.type) ? null : 'none');
+                linkEl.style('display', d => aF.has(d.source.type) && aF.has(d.target.type) ? null : 'none');
+            };
+            fC.appendChild(p);
+        });
+
+        // Paper Focus dropdown
+        const paperSelect = document.getElementById('kg-paper-focus');
+        const paperNodes = nodes.filter(n => n.type === 'Paper').sort((a, b) => a.id.localeCompare(b.id));
+        paperNodes.forEach(pn => {
+            const opt = document.createElement('option');
+            opt.value = pn.id;
+            opt.textContent = pn.label || pn.id.split(':').pop();
+            paperSelect.appendChild(opt);
+        });
+        paperSelect.onchange = function() {
+            const val = this.value;
+            if (!val) {
+                // "All Papers" — restore everything
+                clearSel();
+                nodeEl.style('display', null).style('opacity', null);
+                linkEl.style('display', null).style('opacity', null);
+                return;
+            }
+            // Fetch traced subgraph for the selected paper
+            fetch('/api/graph/trace/' + encodeURIComponent(val))
+                .then(r => r.json())
+                .then(data => {
+                    clearSel();
+                    const tr = new Set(data.traced_node_ids);
+                    const tl = new Set(data.traced_edge_indices);
+                    nodeEl
+                        .style('display', n => tr.has(n.id) ? null : 'none')
+                        .style('opacity', null);
+                    linkEl
+                        .style('display', (l, i) => tl.has(i) ? null : 'none')
+                        .style('opacity', null);
+                })
+                .catch(err => console.error('Paper focus failed:', err));
+        };
+
+        // Mode buttons
+        document.getElementById('kg-mode-explore').onclick = () => setMode('explore');
+        document.getElementById('kg-mode-trace').onclick = () => setMode('trace');
+        document.getElementById('kg-mode-impact').onclick = () => setMode('impact');
+        document.getElementById('kg-detail-close-btn').onclick = () => closeDetail();
+
+        // ═══ Controls panel toggle ═══
+        const ctrlToggle = document.getElementById('kg-controls-toggle');
+        const ctrlPanel = document.getElementById('kg-controls-panel');
+        ctrlToggle.onclick = () => {
+            const open = ctrlPanel.classList.toggle('open');
+            ctrlToggle.classList.toggle('active', open);
+        };
+
+        // ═══ Slider handlers ═══
+        function wireSlider(sliderId, valId, paramKey, applyFn) {
+            const slider = document.getElementById(sliderId);
+            const valEl = document.getElementById(valId);
+            slider.oninput = function() {
+                const v = parseFloat(this.value);
+                forceParams[paramKey] = v;
+                valEl.textContent = paramKey === 'gravity' || paramKey === 'linkStr' ? v.toFixed(2) : v;
+                applyFn(v);
+                sim.alpha(0.3).restart();
+            };
+        }
+        wireSlider('kg-slider-charge', 'kg-val-charge', 'charge', v => {
+            sim.force('charge').strength(v);
+        });
+        wireSlider('kg-slider-linkdist', 'kg-val-linkdist', 'linkDist', v => {
+            sim.force('link').distance(v);
+        });
+        wireSlider('kg-slider-gravity', 'kg-val-gravity', 'gravity', v => {
+            if (currentLayout === 'force') {
+                sim.force('x').strength(v);
+                sim.force('y').strength(v);
+            }
+        });
+        wireSlider('kg-slider-linkstr', 'kg-val-linkstr', 'linkStr', v => {
+            sim.force('link').strength(v);
+        });
+
+        // ═══ Unpin All ═══
+        document.getElementById('kg-unpin-all').onclick = () => {
+            nodes.forEach(d => { d.fx = null; d.fy = null; });
+            nodeEl.classed('pinned', false);
+            sim.alpha(0.3).restart();
+        };
+
+        // ═══ Layout Toggle ═══
+        // Layer map for hierarchy layout
+        const HIER_LAYER = {
+            PrimarySource: 0, Parameter: 1, Formula: 2,
+            LeanTheorem: 3, AristotleRun: 3,
+            PaperClaim: 4, Figure: 4, Paper: 5
+        };
+        const HIER_LAYER_COUNT = 6;
+
+        // Type ordering for circle layout
+        const CIRCLE_TYPE_ORDER = ['Paper', 'PaperClaim', 'Figure', 'Formula', 'LeanTheorem', 'AristotleRun', 'Parameter', 'PrimarySource'];
+
+        function getVisibleNodes() {
+            // If paper focus is active, only position visible nodes
+            const visible = [];
+            nodeEl.each(function(d) {
+                if (d3.select(this).style('display') !== 'none') visible.push(d);
+            });
+            return visible.length > 0 ? visible : nodes;
+        }
+
+        function setLayout(layout) {
+            currentLayout = layout;
+            document.querySelectorAll('.kg-layout-btn').forEach(b => b.classList.toggle('active', b.dataset.layout === layout));
+
+            // Clear layout-specific forces before applying new ones
+            sim.force('radial', null);
+
+            if (layout === 'radial') {
+                sim.force('x', null).force('y', null);
+                sim.force('radial', d3.forceRadial(d => RADIAL_R[d.type] || 300, W / 2, H / 2).strength(0.8));
+                sim.force('charge').strength(forceParams.charge * 1.3);
+                sim.force('link').distance(forceParams.linkDist).strength(forceParams.linkStr);
+            } else if (layout === 'hierarchy') {
+                const visNodes = getVisibleNodes();
+                const margin = 80;
+                const usableW = W - 2 * margin;
+
+                // Group visible nodes by layer and assign vertical positions
+                const layerBuckets = {};
+                visNodes.forEach(d => {
+                    const layer = HIER_LAYER[d.type] != null ? HIER_LAYER[d.type] : 2;
+                    if (!layerBuckets[layer]) layerBuckets[layer] = [];
+                    layerBuckets[layer].push(d);
+                });
+                // Sort within each layer alphabetically by label/id
+                Object.values(layerBuckets).forEach(bucket => {
+                    bucket.sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id));
+                });
+
+                visNodes.forEach(d => {
+                    const layer = HIER_LAYER[d.type] != null ? HIER_LAYER[d.type] : 2;
+                    d.hierX = margin + (layer / (HIER_LAYER_COUNT - 1)) * usableW;
+                    const bucket = layerBuckets[layer];
+                    const idx = bucket.indexOf(d);
+                    const spacing = Math.max(30, H / (bucket.length + 1));
+                    d.hierY = spacing * (idx + 1);
+                });
+
+                sim.force('x', d3.forceX(d => d.hierX != null ? d.hierX : W / 2).strength(0.8));
+                sim.force('y', d3.forceY(d => d.hierY != null ? d.hierY : H / 2).strength(0.3));
+                sim.force('charge').strength(-30);
+                sim.force('link').distance(forceParams.linkDist * 0.6).strength(0.05);
+            } else if (layout === 'circle') {
+                const visNodes = getVisibleNodes();
+                // Sort by type order, then alphabetically within type
+                const sorted = [...visNodes].sort((a, b) => {
+                    const ta = CIRCLE_TYPE_ORDER.indexOf(a.type);
+                    const tb = CIRCLE_TYPE_ORDER.indexOf(b.type);
+                    const ia = ta >= 0 ? ta : CIRCLE_TYPE_ORDER.length;
+                    const ib = tb >= 0 ? tb : CIRCLE_TYPE_ORDER.length;
+                    if (ia !== ib) return ia - ib;
+                    return (a.label || a.id).localeCompare(b.label || b.id);
+                });
+
+                const cx = W / 2;
+                const cy = H / 2;
+                const radius = Math.min(W, H) * 0.4;
+
+                sorted.forEach((d, i) => {
+                    const angle = (2 * Math.PI * i) / sorted.length - Math.PI / 2;
+                    d.circX = cx + radius * Math.cos(angle);
+                    d.circY = cy + radius * Math.sin(angle);
+                });
+
+                sim.force('x', d3.forceX(d => d.circX != null ? d.circX : W / 2).strength(1.0));
+                sim.force('y', d3.forceY(d => d.circY != null ? d.circY : H / 2).strength(1.0));
+                sim.force('charge').strength(-5);
+                sim.force('link').distance(forceParams.linkDist).strength(0.0);
+            } else {
+                // 'force' — restore default force-directed
+                sim.force('x', d3.forceX(d => colX(COL[d.type] || 2.5)).strength(forceParams.gravity));
+                sim.force('y', d3.forceY(H / 2).strength(forceParams.gravity));
+                sim.force('charge').strength(forceParams.charge);
+                sim.force('link').distance(forceParams.linkDist).strength(forceParams.linkStr);
+            }
+            sim.alpha(0.6).restart();
+        }
+        document.getElementById('kg-layout-force').onclick = () => setLayout('force');
+        document.getElementById('kg-layout-radial').onclick = () => setLayout('radial');
+        document.getElementById('kg-layout-hierarchy').onclick = () => setLayout('hierarchy');
+        document.getElementById('kg-layout-circle').onclick = () => setLayout('circle');
+    }
+
+    function setMode(m) {
+        mode = m;
+        document.querySelectorAll('.kg-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+        clearSel();
+        const hints = {
+            explore: '<strong>Explore:</strong> Click any node to inspect.',
+            trace: '<strong>Trace:</strong> Click a node to see its full provenance chain. Green = verified, red = broken.',
+            impact: '<strong>Impact:</strong> Click a parameter to see everything that depends on it.'
+        };
+        const hintEl = document.getElementById('kg-hint');
+        hintEl.textContent = '';
+        const tmp = document.createElement('div');
+        tmp.insertAdjacentHTML('afterbegin', hints[m]);
+        while (tmp.firstChild) hintEl.appendChild(tmp.firstChild);
+    }
+
+    function clearSel() {
+        if (!nodeEl || !linkEl) return;
+        nodeEl.classed('dimmed selected traced', false);
+        linkEl.classed('highlighted traced traced-ok traced-bad impact dimmed-trace', false)
+            .attr('stroke', null).attr('marker-end', 'url(#kg-arr)');
+    }
+
+    function selectNode(d) {
+        clearSel();
+        nodeEl.classed('selected', n => n.id === d.id);
+        const nb = new Set([d.id]);
+        links.forEach(l => {
+            const s = l.source.id || l.source, t = l.target.id || l.target;
+            if (s === d.id) nb.add(t);
+            if (t === d.id) nb.add(s);
+        });
+        nodeEl.classed('dimmed', n => !nb.has(n.id));
+        linkEl.classed('highlighted', l => (l.source.id || l.source) === d.id || (l.target.id || l.target) === d.id)
+            .attr('marker-end', l => ((l.source.id || l.source) === d.id || (l.target.id || l.target) === d.id) ? 'url(#kg-arr-h)' : 'url(#kg-arr)');
+        showDetail(d);
+    }
+
+    function traceFromAPI(d) {
+        clearSel();
+        // Call trace API
+        fetch('/api/graph/trace/' + encodeURIComponent(d.id))
+            .then(r => r.json())
+            .then(data => {
+                const tr = new Set(data.traced_node_ids);
+                const tl = new Set(data.traced_edge_indices);
+                nodeEl.classed('dimmed', n => !tr.has(n.id)).classed('traced', n => tr.has(n.id));
+                linkEl.each(function(l, i) {
+                    if (tl.has(i)) {
+                        const tn = nodes.find(n => n.id === (l.target.id || l.target));
+                        const bad = tn && (tn.verification === 'conflict' || tn.verification === 'projected');
+                        d3.select(this).classed('traced', true).classed(bad ? 'traced-bad' : 'traced-ok', true);
+                    } else {
+                        d3.select(this).classed('dimmed-trace', true);
+                    }
+                });
+                showDetail(d);
+            })
+            .catch(err => console.error('Trace failed:', err));
+    }
+
+    function impactFromAPI(d) {
+        clearSel();
+        fetch('/api/graph/impact/' + encodeURIComponent(d.id))
+            .then(r => r.json())
+            .then(data => {
+                const imp = new Set(data.impacted_node_ids);
+                const il = new Set(data.impacted_edge_indices);
+                nodeEl.classed('dimmed', n => !imp.has(n.id));
+                linkEl.each(function(l, i) {
+                    if (il.has(i)) d3.select(this).classed('impact', true);
+                });
+                showDetail(d);
+            })
+            .catch(err => console.error('Impact failed:', err));
+    }
+
+    function showDetail(d) {
+        const p = document.getElementById('kg-detailPanel');
+        const c = document.getElementById('kg-detailContent');
+        while (c.firstChild) c.removeChild(c.firstChild);
+
+        const typeDiv = document.createElement('div');
+        typeDiv.className = 'kg-detail-type';
+        typeDiv.style.color = TC[d.type] || '#888';
+        typeDiv.textContent = d.type;
+        c.appendChild(typeDiv);
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'kg-detail-name';
+        nameDiv.textContent = d.name || d.id;
+        c.appendChild(nameDiv);
+
+        if (d.verification) {
+            const b = document.createElement('span');
+            b.className = 'kg-detail-badge';
+            const map = {verified: 'kg-badge-verified', llm: 'kg-badge-llm', llm_verified: 'kg-badge-llm',
+                         conflict: 'kg-badge-conflict', projected: 'kg-badge-projected'};
+            const lbl = {verified: 'VERIFIED', llm: 'LLM ONLY', llm_verified: 'LLM VERIFIED',
+                         conflict: 'CONFLICT', projected: 'PROJECTED'};
+            b.classList.add(map[d.verification] || '');
+            b.textContent = lbl[d.verification] || d.verification;
+            c.appendChild(b);
+        }
+
+        const sec1 = document.createElement('div');
+        sec1.className = 'kg-detail-section';
+        sec1.style.marginTop = '10px';
+        const note1 = document.createElement('div');
+        note1.className = 'kg-detail-note';
+        note1.textContent = d.detail || '';
+        sec1.appendChild(note1);
+        c.appendChild(sec1);
+
+        if (d.meta) {
+            const sec = document.createElement('div');
+            sec.className = 'kg-detail-section';
+            const t = document.createElement('div');
+            t.className = 'kg-detail-section-title';
+            t.textContent = 'Properties';
+            sec.appendChild(t);
+            for (const [k, v] of Object.entries(d.meta)) {
+                if (v != null) {
+                    const f = document.createElement('div');
+                    f.className = 'kg-detail-field';
+                    const fk = document.createElement('div');
+                    fk.className = 'kg-detail-field-key';
+                    fk.textContent = k;
+                    const fv = document.createElement('div');
+                    fv.className = 'kg-detail-field-val';
+                    fv.textContent = String(v);
+                    f.appendChild(fk); f.appendChild(fv);
+                    sec.appendChild(f);
+                }
+            }
+            c.appendChild(sec);
+        }
+
+        if (d.notes) {
+            const sec = document.createElement('div');
+            sec.className = 'kg-detail-section';
+            const t = document.createElement('div');
+            t.className = 'kg-detail-section-title';
+            t.textContent = 'Notes';
+            sec.appendChild(t);
+            const n = document.createElement('div');
+            n.className = 'kg-detail-note warning';
+            n.textContent = d.notes;
+            sec.appendChild(n);
+            c.appendChild(sec);
+        }
+
+        // Connections
+        const conn = [];
+        links.forEach(l => {
+            const s = l.source.id || l.source, t = l.target.id || l.target;
+            if (s === d.id) { const n = nodes.find(x => x.id === t); if (n) conn.push({edge: l.type, node: n, dir: '\u2192'}); }
+            if (t === d.id) { const n = nodes.find(x => x.id === s); if (n) conn.push({edge: l.type, node: n, dir: '\u2190'}); }
+        });
+
+        if (conn.length) {
+            const sec = document.createElement('div');
+            sec.className = 'kg-detail-section';
+            const t = document.createElement('div');
+            t.className = 'kg-detail-section-title';
+            t.textContent = 'Connections';
+            sec.appendChild(t);
+            const ul = document.createElement('ul');
+            ul.className = 'kg-conn-list';
+            conn.forEach(cn => {
+                const li = document.createElement('li');
+                li.className = 'kg-conn-item';
+                li.onclick = () => selectNode(nodes.find(n => n.id === cn.node.id));
+                const dot = document.createElement('div');
+                dot.className = 'kg-conn-dot';
+                dot.style.background = TC[cn.node.type] || '#888';
+                const edge = document.createElement('div');
+                edge.className = 'kg-conn-edge';
+                edge.textContent = cn.dir + ' ' + cn.edge;
+                const nm = document.createElement('div');
+                nm.className = 'kg-conn-name';
+                nm.textContent = cn.node.label || cn.node.id.split(':').pop();
+                li.appendChild(dot); li.appendChild(edge); li.appendChild(nm);
+                ul.appendChild(li);
+            });
+            sec.appendChild(ul);
+            c.appendChild(sec);
+        }
+
+        // Action buttons
+        const acts = document.createElement('div');
+        acts.className = 'kg-detail-actions';
+        if (['Paper', 'PaperClaim', 'Formula', 'LeanTheorem'].includes(d.type)) {
+            const btn = document.createElement('button');
+            btn.className = 'kg-action-btn trace';
+            btn.textContent = 'Trace to Foundation';
+            btn.onclick = () => { setMode('trace'); traceFromAPI(nodes.find(n => n.id === d.id)); };
+            acts.appendChild(btn);
+        }
+        if (['Parameter', 'PrimarySource', 'Formula'].includes(d.type)) {
+            const btn = document.createElement('button');
+            btn.className = 'kg-action-btn impact';
+            btn.textContent = 'Show Impact';
+            btn.onclick = () => { setMode('impact'); impactFromAPI(nodes.find(n => n.id === d.id)); };
+            acts.appendChild(btn);
+        }
+        c.appendChild(acts);
+
+        p.classList.add('open');
+    }
+
+    function closeDetail() {
+        document.getElementById('kg-detailPanel').classList.remove('open');
+    }
+})();
+</script>

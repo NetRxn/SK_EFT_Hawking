@@ -1,0 +1,960 @@
+#!/usr/bin/env python3
+"""
+SK-EFT Hawking Knowledge Graph Builder
+=======================================
+
+Extracts nodes and edges from the project's canonical registries
+(provenance, formulas, constants, citations, figures, Lean theorems)
+and produces a JSON graph suitable for visualization and integrity analysis.
+
+Usage
+-----
+    # Dump JSON to stdout:
+    python scripts/build_graph.py --json
+
+    # Write JSON to file:
+    python scripts/build_graph.py --json --out /tmp/graph.json
+
+    # Check source hash staleness only:
+    python scripts/build_graph.py --check
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib
+import importlib.util
+import json
+import re
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+# Path setup
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
+
+# Platform -> Atom mapping for USED_BY / DEPENDS_ON edges
+PLATFORM_ATOM_MAP = {
+    'Steinhauer': 'Rb87',
+    'Heidelberg': 'K39',
+    'Trento': 'Na23',
+}
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Source hash
+# ═══════════════════════════════════════════════════════════════════════
+
+def compute_source_hash() -> str:
+    """SHA-256 hash (truncated to 16 hex chars) of all source registry files + Lean files."""
+    hasher = hashlib.sha256()
+
+    source_files = sorted([
+        PROJECT_ROOT / "src" / "core" / "provenance.py",
+        PROJECT_ROOT / "src" / "core" / "constants.py",
+        PROJECT_ROOT / "src" / "core" / "formulas.py",
+        PROJECT_ROOT / "src" / "core" / "citations.py",
+        PROJECT_ROOT / "scripts" / "review_figures.py",
+    ])
+
+    # Add Lean files
+    if LEAN_DIR.is_dir():
+        lean_files = sorted(LEAN_DIR.glob("*.lean"))
+        source_files.extend(lean_files)
+
+    for fp in source_files:
+        if fp.is_file():
+            hasher.update(fp.read_bytes())
+
+    return hasher.hexdigest()[:16]
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Node extractors
+# ═══════════════════════════════════════════════════════════════════════
+
+def _lookup_code_value(key: str, EXPERIMENTS: dict, ATOMS: dict, POLARITON_PLATFORMS: dict):
+    """Look up the actual code value for a provenance key.
+
+    Checks fundamentals by name (HBAR, K_B, A_BOHR), then splits key on '.'
+    to look up group.param in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS.
+    Returns None if not found.
+    """
+    from src.core.constants import HBAR, K_B, A_BOHR
+
+    # Fundamental constants
+    fundamentals = {'HBAR': HBAR, 'K_B': K_B, 'A_BOHR': A_BOHR}
+    if key in fundamentals:
+        return fundamentals[key]
+
+    # Split on '.' for group.param lookup
+    parts = key.split('.', 1)
+    if len(parts) != 2:
+        return None
+    group, param = parts
+
+    for registry in (EXPERIMENTS, ATOMS, POLARITON_PLATFORMS):
+        if group in registry and param in registry[group]:
+            return registry[group][param]
+
+    return None
+
+
+def extract_parameter_nodes() -> list[dict]:
+    """Extract parameter nodes from PARAMETER_PROVENANCE in provenance.py."""
+    from src.core.provenance import PARAMETER_PROVENANCE
+    from src.core.constants import EXPERIMENTS, ATOMS, POLARITON_PLATFORMS
+
+    nodes = []
+    for key, entry in PARAMETER_PROVENANCE.items():
+        # Determine verification status
+        if entry.get('value') is None:
+            status = 'conflict'
+        elif entry.get('human_verified_date'):
+            status = 'verified'
+        elif entry.get('llm_verified_date'):
+            status = 'llm'
+        elif entry.get('tier') == 'PROJECTED':
+            status = 'projected'
+        else:
+            status = 'unverified'
+
+        detail = entry.get('detail', '')
+
+        # Check for conflict between provenance value and actual code value
+        actual = _lookup_code_value(key, EXPERIMENTS, ATOMS, POLARITON_PLATFORMS)
+        has_conflict = False
+        if entry.get('value') is not None and actual is not None:
+            try:
+                rel_err = abs(float(actual) - float(entry['value'])) / max(abs(float(actual)), 1e-30)
+                has_conflict = rel_err > 0.001
+            except (TypeError, ValueError):
+                has_conflict = False
+
+        if has_conflict:
+            status = 'conflict'
+            detail = f"Code value {actual} != provenance value {entry['value']}. {detail}"
+
+        notes = entry.get('notes', '')
+        nodes.append({
+            'id': f'param:{key}',
+            'type': 'Parameter',
+            'label': key,
+            'name': key,
+            'verification': status,
+            'detail': detail,
+            'meta': {
+                'value': _safe_json_value(entry.get('value')),
+                'unit': entry.get('unit', ''),
+                'tier': entry.get('tier', ''),
+                'source': entry.get('source', ''),
+                'doi': entry.get('doi'),
+                'llm_verified': entry.get('llm_verified_date') is not None,
+                'human_verified': entry.get('human_verified_date') is not None,
+                'notes': notes if notes else None,
+            },
+        })
+
+    return nodes
+
+
+def _safe_json_value(val):
+    """Convert a value to something JSON-serializable."""
+    import numpy as np
+    if isinstance(val, (np.ndarray, np.generic)):
+        return val.tolist()
+    if isinstance(val, (int, float, str, bool, type(None))):
+        return val
+    return str(val)
+
+
+def extract_formula_nodes() -> list[dict]:
+    """Extract formula nodes from function definitions in formulas.py."""
+    formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
+    source = formulas_path.read_text()
+
+    # Parse function definitions and their docstrings
+    pattern = re.compile(
+        r'^def\s+([a-z_][a-z0-9_]*)\s*\(',
+        re.MULTILINE,
+    )
+
+    nodes = []
+    for match in pattern.finditer(source):
+        name = match.group(1)
+        # Skip private helpers
+        if name.startswith('_'):
+            continue
+
+        # Extract docstring if present
+        func_start = match.start()
+        lean_refs = []
+        aristotle_refs = []
+        source_refs = []
+
+        # Find the docstring: look for triple-quoted string after the def line
+        docstring_match = re.search(
+            r'"""(.*?)"""',
+            source[func_start:func_start + 3000],
+            re.DOTALL,
+        )
+        if docstring_match:
+            docstring = docstring_match.group(1)
+            # Extract Lean refs
+            lean_match = re.search(r'Lean:\s*(.+?)(?:\n|$)', docstring)
+            if lean_match:
+                lean_refs = [r.strip() for r in lean_match.group(1).split(',')]
+
+            # Extract Aristotle refs
+            arist_match = re.search(r'Aristotle:\s*(.+?)(?:\n|$)', docstring)
+            if arist_match:
+                aristotle_refs = [r.strip() for r in arist_match.group(1).split(',')]
+
+            # Extract Source refs
+            source_matches = re.findall(r'Source:\s*(.+?)(?:\n|$)', docstring)
+            source_refs = [s.strip() for s in source_matches]
+
+        # Determine verification and detail
+        has_lean = len(lean_refs) > 0
+        verification = 'verified' if has_lean else 'unverified'
+
+        # First line of docstring description
+        formula_detail = ''
+        if docstring_match:
+            docstring_text = docstring_match.group(1).strip()
+            first_line = docstring_text.split('\n')[0].strip()
+            if first_line:
+                formula_detail = first_line
+
+        nodes.append({
+            'id': f'formula:{name}',
+            'type': 'Formula',
+            'label': name,
+            'name': name,
+            'verification': verification,
+            'detail': formula_detail,
+            'meta': {
+                'lean_refs': lean_refs,
+                'aristotle_refs': aristotle_refs,
+                'source_refs': source_refs,
+            },
+        })
+
+    return nodes
+
+
+def extract_lean_theorem_nodes() -> list[dict]:
+    """Extract theorem/axiom nodes from Lean files."""
+    from src.core.constants import ARISTOTLE_THEOREMS
+
+    nodes = []
+    seen_names = set()
+
+    if not LEAN_DIR.is_dir():
+        return nodes
+
+    for lean_file in sorted(LEAN_DIR.glob("*.lean")):
+        module_name = lean_file.stem
+        text = lean_file.read_text()
+
+        for line_num, line in enumerate(text.splitlines(), start=1):
+            stripped = line.strip()
+            is_theorem = stripped.startswith('theorem ')
+            is_axiom = stripped.startswith('axiom ')
+
+            if not (is_theorem or is_axiom):
+                continue
+
+            # Extract name: second token, split on ( or :
+            kind_keyword = 'theorem' if is_theorem else 'axiom'
+            rest = stripped[len(kind_keyword):].strip()
+            # Name ends at first ( or : or whitespace
+            name_match = re.match(r'([a-zA-Z_][a-zA-Z0-9_]*)', rest)
+            if not name_match:
+                continue
+            name = name_match.group(1)
+
+            if name in seen_names:
+                continue
+            seen_names.add(name)
+
+            # Determine method
+            if is_axiom:
+                method = 'axiom'
+            elif name in ARISTOTLE_THEOREMS:
+                run_id = ARISTOTLE_THEOREMS[name]
+                method = 'manual' if run_id == 'manual' else 'aristotle'
+            else:
+                method = 'manual'
+
+            nodes.append({
+                'id': f'lean:{name}',
+                'type': 'LeanTheorem',
+                'label': name,
+                'name': name,
+                'verification': 'verified',
+                'detail': f'{module_name}.lean:{line_num}',
+                'meta': {
+                    'module': module_name,
+                    'kind': 'axiom' if is_axiom else 'theorem',
+                    'method': method,
+                    'aristotle_run_id': ARISTOTLE_THEOREMS.get(name),
+                },
+            })
+
+    return nodes
+
+
+def extract_aristotle_run_nodes() -> list[dict]:
+    """Extract Aristotle run nodes from ARISTOTLE_THEOREMS, deduplicated by run_id."""
+    from src.core.constants import ARISTOTLE_THEOREMS
+
+    # Group theorems by run_id, skip 'manual'
+    runs: dict[str, list[str]] = {}
+    for thm_name, run_id in ARISTOTLE_THEOREMS.items():
+        if run_id == 'manual':
+            continue
+        runs.setdefault(run_id, []).append(thm_name)
+
+    nodes = []
+    for run_id, theorems in sorted(runs.items()):
+        nodes.append({
+            'id': f'aristotle:{run_id}',
+            'type': 'AristotleRun',
+            'label': run_id,
+            'name': run_id,
+            'verification': 'verified',
+            'detail': f'{len(theorems)} theorems proved',
+            'meta': {
+                'theorem_count': len(theorems),
+                'theorems': sorted(theorems),
+            },
+        })
+
+    return nodes
+
+
+def extract_primary_source_nodes() -> list[dict]:
+    """Extract primary source nodes from CITATION_REGISTRY in citations.py."""
+    from src.core.citations import CITATION_REGISTRY
+
+    nodes = []
+    for key, entry in CITATION_REGISTRY.items():
+        source_detail = entry.get('notes', '') or entry.get('title', '')
+        nodes.append({
+            'id': f'source:{key}',
+            'type': 'PrimarySource',
+            'label': key,
+            'name': key,
+            'verification': 'verified',
+            'detail': source_detail,
+            'meta': {
+                'authors': entry.get('authors', ''),
+                'title': entry.get('title', ''),
+                'journal': entry.get('journal'),
+                'volume': entry.get('volume'),
+                'page': entry.get('page'),
+                'year': entry.get('year'),
+                'doi': entry.get('doi'),
+                'arxiv': entry.get('arxiv'),
+                'doi_verified': entry.get('doi_verified'),
+                'used_in': entry.get('used_in', []),
+                'provides': entry.get('provides', []),
+                'notes': entry.get('notes', ''),
+            },
+        })
+
+    return nodes
+
+
+def extract_paper_nodes() -> list[dict]:
+    """Extract paper nodes from PAPER_DEPENDENCIES in provenance.py."""
+    from src.core.provenance import PAPER_DEPENDENCIES
+
+    nodes = []
+    for key, entry in PAPER_DEPENDENCIES.items():
+        nodes.append({
+            'id': f'paper:{key}',
+            'type': 'Paper',
+            'label': key,
+            'name': entry.get('title', key),
+            'verification': 'verified',
+            'detail': entry.get('topic', ''),
+            'meta': {
+                'topic': entry.get('topic', ''),
+                'formulas': entry.get('formulas', []),
+                'lean_modules': entry.get('lean_modules', []),
+                'platforms': entry.get('platforms', []),
+                'n_claims': len(entry.get('key_claims', [])),
+            },
+        })
+
+    return nodes
+
+
+def extract_paper_claim_nodes() -> list[dict]:
+    """Extract paper claim nodes from key_claims in PAPER_DEPENDENCIES."""
+    from src.core.provenance import PAPER_DEPENDENCIES
+
+    nodes = []
+    for paper_key, entry in PAPER_DEPENDENCIES.items():
+        for idx, claim_text in enumerate(entry.get('key_claims', [])):
+            nodes.append({
+                'id': f'claim:{paper_key}:{idx}',
+                'type': 'PaperClaim',
+                'label': claim_text[:60] + ('...' if len(claim_text) > 60 else ''),
+                'name': claim_text,
+                'verification': 'verified',
+                'detail': claim_text,
+                'meta': {
+                    'paper': paper_key,
+                    'index': idx,
+                    'full_text': claim_text,
+                },
+            })
+
+    return nodes
+
+
+def extract_figure_nodes() -> list[dict]:
+    """Extract figure nodes from FIGURE_REGISTRY in review_figures.py."""
+    # Import via importlib to avoid circular deps from review_figures.py's sys.path manipulation
+    spec = importlib.util.spec_from_file_location(
+        "review_figures",
+        str(PROJECT_ROOT / "scripts" / "review_figures.py"),
+    )
+    mod = importlib.util.module_from_spec(spec)
+    # NOTE: This registers review_figures in sys.modules as a side effect.
+    # Acceptable for Phase 1; if review_figures gains module-scope side effects,
+    # consider extracting FIGURE_REGISTRY to a shared data module.
+    sys.modules["review_figures"] = mod
+    # Suppress main-level side effects by patching argparse
+    _orig_argv = sys.argv
+    sys.argv = ['review_figures.py']
+    try:
+        spec.loader.exec_module(mod)
+    finally:
+        sys.argv = _orig_argv
+
+    nodes = []
+    for fig_spec in mod.FIGURE_REGISTRY:
+        nodes.append({
+            'id': f'figure:{fig_spec.name}',
+            'type': 'Figure',
+            'label': fig_spec.name,
+            'name': fig_spec.name,
+            'verification': 'verified',
+            'detail': fig_spec.caption,
+            'meta': {
+                'function': fig_spec.function,
+                'caption': fig_spec.caption,
+                'expected_traces': fig_spec.expected_traces,
+            },
+        })
+
+    return nodes
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Aggregate node extraction
+# ═══════════════════════════════════════════════════════════════════════
+
+def extract_all_nodes() -> list[dict]:
+    """Extract all nodes from all 8 extractors."""
+    nodes = []
+    nodes.extend(extract_parameter_nodes())
+    nodes.extend(extract_formula_nodes())
+    nodes.extend(extract_lean_theorem_nodes())
+    nodes.extend(extract_aristotle_run_nodes())
+    nodes.extend(extract_primary_source_nodes())
+    nodes.extend(extract_paper_nodes())
+    nodes.extend(extract_paper_claim_nodes())
+    nodes.extend(extract_figure_nodes())
+    return nodes
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Edge extractors
+# ═══════════════════════════════════════════════════════════════════════
+
+def extract_claims_edges(node_ids: set) -> list[dict]:
+    """CLAIMS: Paper -> PaperClaim."""
+    from src.core.provenance import PAPER_DEPENDENCIES
+
+    edges = []
+    for paper_key, entry in PAPER_DEPENDENCIES.items():
+        paper_id = f'paper:{paper_key}'
+        if paper_id not in node_ids:
+            continue
+        for idx in range(len(entry.get('key_claims', []))):
+            claim_id = f'claim:{paper_key}:{idx}'
+            if claim_id in node_ids:
+                edges.append({
+                    'source': paper_id,
+                    'target': claim_id,
+                    'type': 'CLAIMS',
+                })
+
+    return edges
+
+
+def extract_grounded_in_edges(node_ids: set) -> list[dict]:
+    """GROUNDED_IN: PaperClaim -> Formula."""
+    from src.core.provenance import PAPER_DEPENDENCIES
+
+    # TODO Phase 2: PAPER_DEPENDENCIES doesn't map individual claims to specific formulas.
+    # Currently produces Cartesian product (all claims × all formulas per paper).
+    # Refine when claim-level formula mapping is available.
+    edges = []
+    seen = set()
+    for paper_key, entry in PAPER_DEPENDENCIES.items():
+        formulas = entry.get('formulas', [])
+        for idx in range(len(entry.get('key_claims', []))):
+            claim_id = f'claim:{paper_key}:{idx}'
+            if claim_id not in node_ids:
+                continue
+            for fname in formulas:
+                formula_id = f'formula:{fname}'
+                if formula_id in node_ids:
+                    edge_key = (claim_id, formula_id)
+                    if edge_key not in seen:
+                        seen.add(edge_key)
+                        edges.append({
+                            'source': claim_id,
+                            'target': formula_id,
+                            'type': 'GROUNDED_IN',
+                        })
+
+    return edges
+
+
+def extract_verified_by_edges(node_ids: set) -> list[dict]:
+    """VERIFIED_BY: Formula -> LeanTheorem (from Lean: refs in formulas.py docstrings)."""
+    formula_nodes = [n for n in extract_formula_nodes()]
+
+    edges = []
+    seen = set()
+    for fnode in formula_nodes:
+        formula_id = fnode['id']
+        if formula_id not in node_ids:
+            continue
+        lean_refs = fnode.get('meta', {}).get('lean_refs', [])
+        for ref in lean_refs:
+            # Clean up: ref might be "theorem_name (Module.lean)" or just "theorem_name"
+            clean_ref = ref.split('(')[0].strip().split(' ')[0].strip()
+            if not clean_ref:
+                continue
+            lean_id = f'lean:{clean_ref}'
+            if lean_id in node_ids:
+                edge_key = (formula_id, lean_id)
+                if edge_key not in seen:
+                    seen.add(edge_key)
+                    edges.append({
+                        'source': formula_id,
+                        'target': lean_id,
+                        'type': 'VERIFIED_BY',
+                    })
+
+    return edges
+
+
+def extract_proved_by_edges(node_ids: set) -> list[dict]:
+    """PROVED_BY: LeanTheorem -> AristotleRun (skip 'manual')."""
+    from src.core.constants import ARISTOTLE_THEOREMS
+
+    edges = []
+    seen = set()
+    for thm_name, run_id in ARISTOTLE_THEOREMS.items():
+        if run_id == 'manual':
+            continue
+        lean_id = f'lean:{thm_name}'
+        aristotle_id = f'aristotle:{run_id}'
+        if lean_id in node_ids and aristotle_id in node_ids:
+            edge_key = (lean_id, aristotle_id)
+            if edge_key not in seen:
+                seen.add(edge_key)
+                edges.append({
+                    'source': lean_id,
+                    'target': aristotle_id,
+                    'type': 'PROVED_BY',
+                })
+
+    return edges
+
+
+def extract_used_by_edges(node_ids: set) -> list[dict]:
+    """USED_BY: Parameter -> Formula.
+
+    Inferred: papers list platforms and formulas; a formula belonging to a paper
+    using platform X depends on X's params and the corresponding atom's params.
+    """
+    from src.core.provenance import PAPER_DEPENDENCIES, PARAMETER_PROVENANCE
+
+    edges = []
+    seen = set()
+
+    for _paper_key, entry in PAPER_DEPENDENCIES.items():
+        platforms = entry.get('platforms', [])
+        formulas = entry.get('formulas', [])
+
+        # Collect relevant parameter prefixes for these platforms
+        param_prefixes = set()
+        for platform in platforms:
+            param_prefixes.add(platform)
+            atom = PLATFORM_ATOM_MAP.get(platform)
+            if atom:
+                param_prefixes.add(atom)
+
+        # Also add fundamental constants if any formulas exist
+        if formulas:
+            param_prefixes.update(['HBAR', 'K_B', 'A_BOHR'])
+
+        for fname in formulas:
+            formula_id = f'formula:{fname}'
+            if formula_id not in node_ids:
+                continue
+            for pkey in PARAMETER_PROVENANCE:
+                # Check if this parameter matches any relevant prefix
+                if any(pkey == prefix or pkey.startswith(f'{prefix}.') for prefix in param_prefixes):
+                    param_id = f'param:{pkey}'
+                    if param_id in node_ids:
+                        edge_key = (param_id, formula_id)
+                        if edge_key not in seen:
+                            seen.add(edge_key)
+                            edges.append({
+                                'source': param_id,
+                                'target': formula_id,
+                                'type': 'USED_BY',
+                            })
+
+    return edges
+
+
+def extract_sourced_from_edges(node_ids: set) -> list[dict]:
+    """SOURCED_FROM: Parameter -> PrimarySource (match doi)."""
+    from src.core.provenance import PARAMETER_PROVENANCE
+    from src.core.citations import CITATION_REGISTRY
+
+    # Build DOI -> citation key map
+    doi_to_key: dict[str, str] = {}
+    for ckey, centry in CITATION_REGISTRY.items():
+        doi = centry.get('doi')
+        if doi:
+            doi_to_key[doi] = ckey
+
+    edges = []
+    seen = set()
+    for pkey, pentry in PARAMETER_PROVENANCE.items():
+        param_id = f'param:{pkey}'
+        if param_id not in node_ids:
+            continue
+        pdoi = pentry.get('doi')
+        if pdoi and pdoi in doi_to_key:
+            source_id = f'source:{doi_to_key[pdoi]}'
+            if source_id in node_ids:
+                edge_key = (param_id, source_id)
+                if edge_key not in seen:
+                    seen.add(edge_key)
+                    edges.append({
+                        'source': param_id,
+                        'target': source_id,
+                        'type': 'SOURCED_FROM',
+                    })
+
+    return edges
+
+
+def extract_depends_on_edges(node_ids: set) -> list[dict]:
+    """DEPENDS_ON: Paper -> Parameter (via platforms)."""
+    from src.core.provenance import PAPER_DEPENDENCIES, PARAMETER_PROVENANCE
+
+    edges = []
+    seen = set()
+
+    for paper_key, entry in PAPER_DEPENDENCIES.items():
+        paper_id = f'paper:{paper_key}'
+        if paper_id not in node_ids:
+            continue
+
+        platforms = entry.get('platforms', [])
+        param_prefixes = set()
+        for platform in platforms:
+            param_prefixes.add(platform)
+            atom = PLATFORM_ATOM_MAP.get(platform)
+            if atom:
+                param_prefixes.add(atom)
+
+        for pkey in PARAMETER_PROVENANCE:
+            if any(pkey == prefix or pkey.startswith(f'{prefix}.') for prefix in param_prefixes):
+                param_id = f'param:{pkey}'
+                if param_id in node_ids:
+                    edge_key = (paper_id, param_id)
+                    if edge_key not in seen:
+                        seen.add(edge_key)
+                        edges.append({
+                            'source': paper_id,
+                            'target': param_id,
+                            'type': 'DEPENDS_ON',
+                        })
+
+    return edges
+
+
+def extract_cites_edges(node_ids: set) -> list[dict]:
+    """CITES: Formula -> PrimarySource (from Source: refs in docstrings)."""
+    from src.core.citations import CITATION_REGISTRY
+
+    formula_nodes = extract_formula_nodes()
+
+    # Build lookup: first author last name -> citation key
+    author_to_key: dict[str, list[str]] = {}
+    for ckey, centry in CITATION_REGISTRY.items():
+        authors = centry.get('authors', '')
+        # Extract first author's last name
+        first_author = authors.split(',')[0].strip()
+        last_name = first_author.split()[-1] if first_author else ''
+        if last_name:
+            author_to_key.setdefault(last_name, []).append(ckey)
+
+    edges = []
+    seen = set()
+    for fnode in formula_nodes:
+        formula_id = fnode['id']
+        if formula_id not in node_ids:
+            continue
+        source_refs = fnode.get('meta', {}).get('source_refs', [])
+        for ref_text in source_refs:
+            # Try to match by author last name
+            for last_name, ckeys in author_to_key.items():
+                if last_name in ref_text:
+                    for ckey in ckeys:
+                        source_id = f'source:{ckey}'
+                        if source_id in node_ids:
+                            edge_key = (formula_id, source_id)
+                            if edge_key not in seen:
+                                seen.add(edge_key)
+                                edges.append({
+                                    'source': formula_id,
+                                    'target': source_id,
+                                    'type': 'CITES',
+                                })
+
+    return edges
+
+
+def extract_has_figure_edges(node_ids: set) -> list[dict]:
+    """HAS_FIGURE: Paper -> Figure.
+
+    Maps papers to the figures they include, inferred from \\includegraphics
+    in paper .tex files.  Since claim-level figure assignments aren't yet
+    available, edges go from Paper nodes directly to Figure nodes.
+    """
+    PAPER_FIGURE_MAP = {
+        'paper1_first_order': [
+            'fig1_transonic_profiles', 'fig2_correction_hierarchy',
+            'fig4_spin_sonic_enhancement',
+        ],
+        'paper2_second_order': [
+            'fig7_cgl_fdr_pattern', 'fig8_even_vs_odd_kernel',
+            'fig11_on_shell_vanishing',
+        ],
+        'paper3_gauge_erasure': [
+            'fig20_sm_scorecard', 'fig21_erasure_survey',
+        ],
+        'paper4_wkb_connection': [
+            'fig22_complex_turning_point', 'fig25_hawking_spectrum_exact',
+            'fig27_exact_vs_perturbative',
+        ],
+        'paper5_adw_gap': [
+            'fig28_adw_effective_potential', 'fig29_adw_phase_diagram',
+            'fig30_adw_ng_modes',
+        ],
+        'paper6_vestigial': [
+            'fig45_vestigial_effective_potential', 'fig42_vestigial_phase_diagram',
+            'fig51_vestigial_binder_crossing', 'fig52_vestigial_susceptibility_split',
+        ],
+        'paper7_chirality_formal': [
+            'fig53_gs_condition_formalization', 'fig54_lean_theorem_summary',
+            'fig60_tpf_evasion_architecture', 'fig61_fock_exterior_algebra',
+        ],
+    }
+
+    edges = []
+    seen = set()
+    for paper_key, figure_names in PAPER_FIGURE_MAP.items():
+        paper_id = f'paper:{paper_key}'
+        if paper_id not in node_ids:
+            continue
+        for fig_name in figure_names:
+            figure_id = f'figure:{fig_name}'
+            if figure_id in node_ids:
+                edge_key = (paper_id, figure_id)
+                if edge_key not in seen:
+                    seen.add(edge_key)
+                    edges.append({
+                        'source': paper_id,
+                        'target': figure_id,
+                        'type': 'HAS_FIGURE',
+                    })
+
+    return edges
+
+
+def extract_imports_edges(node_ids: set) -> list[dict]:
+    """IMPORTS: Formula -> Formula (if one formula calls another, limited in Phase 1)."""
+    # Phase 1: detect direct calls from formulas.py source
+    formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
+    source = formulas_path.read_text()
+
+    # Get all formula function names
+    formula_names = set()
+    for match in re.finditer(r'^def\s+([a-z_][a-z0-9_]*)\s*\(', source, re.MULTILINE):
+        name = match.group(1)
+        if not name.startswith('_'):
+            formula_names.add(name)
+
+    # Parse each function body for calls to other formula functions
+    func_pattern = re.compile(
+        r'^def\s+([a-z_][a-z0-9_]*)\s*\(.*?\n(?=^def\s|\Z)',
+        re.MULTILINE | re.DOTALL,
+    )
+
+    edges = []
+    seen = set()
+    for match in func_pattern.finditer(source):
+        caller = match.group(1)
+        if caller.startswith('_'):
+            continue
+        body = match.group(0)
+        caller_id = f'formula:{caller}'
+        if caller_id not in node_ids:
+            continue
+
+        # Strip leading docstring so we only search code, not docstring text
+        body_code = re.sub(r'""".*?"""', '', body, count=1, flags=re.DOTALL)
+
+        for callee in formula_names:
+            if callee == caller:
+                continue
+            # Look for callee( pattern in code-only text
+            if re.search(rf'\b{re.escape(callee)}\s*\(', body_code):
+                callee_id = f'formula:{callee}'
+                if callee_id in node_ids:
+                    edge_key = (caller_id, callee_id)
+                    if edge_key not in seen:
+                        seen.add(edge_key)
+                        edges.append({
+                            'source': caller_id,
+                            'target': callee_id,
+                            'type': 'IMPORTS',
+                        })
+
+    return edges
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Aggregate edge extraction
+# ═══════════════════════════════════════════════════════════════════════
+
+def extract_all_edges(node_ids: set) -> list[dict]:
+    """Extract all edges from all 10 edge extractors, deduplicated."""
+    edges = []
+    edges.extend(extract_claims_edges(node_ids))
+    edges.extend(extract_grounded_in_edges(node_ids))
+    edges.extend(extract_verified_by_edges(node_ids))
+    edges.extend(extract_proved_by_edges(node_ids))
+    edges.extend(extract_used_by_edges(node_ids))
+    edges.extend(extract_sourced_from_edges(node_ids))
+    edges.extend(extract_depends_on_edges(node_ids))
+    edges.extend(extract_cites_edges(node_ids))
+    edges.extend(extract_has_figure_edges(node_ids))
+    edges.extend(extract_imports_edges(node_ids))
+
+    # Final deduplication (belt-and-suspenders)
+    deduped = []
+    seen = set()
+    for edge in edges:
+        key = (edge['source'], edge['target'], edge['type'])
+        if key not in seen:
+            seen.add(key)
+            deduped.append(edge)
+
+    return deduped
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Full graph builder
+# ═══════════════════════════════════════════════════════════════════════
+
+def build_graph_json() -> dict:
+    """Build the complete graph and return as a JSON-serializable dict."""
+    nodes = extract_all_nodes()
+    node_ids = {n['id'] for n in nodes}
+    edges = extract_all_edges(node_ids)
+
+    return {
+        'nodes': nodes,
+        'links': edges,
+        'meta': {
+            'built_at': datetime.now(timezone.utc).isoformat(),
+            'source_hash': compute_source_hash(),
+            'node_count': len(nodes),
+            'edge_count': len(edges),
+        },
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CLI
+# ═══════════════════════════════════════════════════════════════════════
+
+def main():
+    parser = argparse.ArgumentParser(description='Build SK-EFT Hawking knowledge graph.')
+    parser.add_argument('--json', action='store_true', help='Dump JSON to stdout')
+    parser.add_argument('--out', type=str, default=None, help='Write JSON to file')
+    parser.add_argument('--check', action='store_true', help='Print source hash only')
+    args = parser.parse_args()
+
+    if args.check:
+        print(compute_source_hash())
+        return
+
+    graph = build_graph_json()
+
+    if args.out:
+        with open(args.out, 'w') as f:
+            json.dump(graph, f, indent=2, default=str)
+        print(f"Wrote {args.out}: {graph['meta']['node_count']} nodes, "
+              f"{graph['meta']['edge_count']} edges, "
+              f"hash={graph['meta']['source_hash']}", file=sys.stderr)
+    elif args.json:
+        print(json.dumps(graph, indent=2, default=str))
+    else:
+        # Summary
+        meta = graph['meta']
+        print(f"SK-EFT Knowledge Graph")
+        print(f"  Source hash: {meta['source_hash']}")
+        print(f"  Nodes: {meta['node_count']}")
+        print(f"  Edges: {meta['edge_count']}")
+        print()
+
+        # Node breakdown
+        from collections import Counter
+        node_types = Counter(n['type'] for n in graph['nodes'])
+        print("  Node types:")
+        for ntype, count in sorted(node_types.items()):
+            print(f"    {ntype}: {count}")
+
+        edge_types = Counter(e['type'] for e in graph['links'])
+        print("  Edge types:")
+        for etype, count in sorted(edge_types.items()):
+            print(f"    {etype}: {count}")
+
+
+if __name__ == '__main__':
+    main()
