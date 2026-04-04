@@ -777,9 +777,9 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (900 theorems + 2 axioms across 58 Lean modules):
+# Verification breakdown (924 theorems + 2 axioms across 62 Lean modules):
 #   - 254 tracked in ARISTOTLE_THEOREMS registry (251 machine + 3 manual, listed below with run IDs)
-#   - 646 proved manually in Lean (verified by `lake build`)
+#   - 670 proved manually in Lean (verified by `lake build`)
 #   - 2 axioms: non_abelian_center_discrete (GaugeErasure.lean),
 #               gs_nogo_axiom (GoltermanShamir.lean)
 #   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
@@ -1105,6 +1105,22 @@ assert ARISTOTLE_PROVED_COUNT == 254, f"Expected 254 Aristotle-proved theorems, 
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 
+# ═══════════════════════════════════════════════════════════════════════
+# Axiom metadata — eliminability classification for project axioms
+# ═══════════════════════════════════════════════════════════════════════
+
+AXIOM_METADATA: dict[str, dict[str, str]] = {
+    'non_abelian_center_discrete': {
+        'eliminability': 'eliminable',
+        'reason': 'Standard Lie theory result, provable from Mathlib simple Lie group API',
+        'module': 'GaugeErasure',
+    },
+    'gs_nogo_axiom': {
+        'eliminability': 'hard',
+        'reason': 'Requires unbounded spectral theory not yet in Mathlib',
+        'module': 'GoltermanShamir',
+    },
+}
 
 # ════════════════════════════════════════════════════════════════════
 # Phase 5a: Onsager Algebra Parameters (Wave 1)

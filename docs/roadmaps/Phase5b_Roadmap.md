@@ -60,52 +60,46 @@ odd ℤ₄ charge contributes +1 to the anomaly index. The SM fermion content:
 - Without ν_R: 6+3+3+2+1 = **15 ≡ -1 mod 16** (anomalous)
 - 3 generations without ν_R: 3×(-1) = **-3 mod 16 ≠ 0** (forces hidden sectors)
 
-### Axioms needed (3):
+### Axioms (planned 3, all discharged/removed — see §4):
 
-```
-axiom dai_freed_framework : AnomalyIndex ≃ ZMod 16
-axiom weyl_anomaly_contribution : odd Z4charge → contributes ±1 to ZMod 16 index
-axiom anomaly_cancellation : consistent theory → totalAnomaly = 0
-```
+The original plan called for 3 axioms. All were either discharged to theorems
+(tautological as Lean statements) or removed (mathematically false). The core
+theorems use hypotheses instead of axioms — e.g., `generation_mod3_constraint`
+takes `24 ∣ 8*N_f` as a premise, not an axiom.
 
 ### Deliverables:
 
-- [ ] `lean/SKEFTHawking/SMFermionData.lean` — ~20-25 theorems:
+- [x] `lean/SKEFTHawking/SMFermionData.lean` — 19 theorems, zero sorry:
   - SM fermion enumeration (quarks, leptons, neutrinos)
   - ℤ₄ charge computation (X = 5(B-L) - 4Y)
-  - All SM fermion charges are odd (finite check)
-  - Component counting per fermion type
+  - All SM fermion charges are odd (finite check with explicit witnesses)
+  - Component counting per fermion type (16 with ν_R, 15 without)
 
-- [ ] `lean/SKEFTHawking/Z16AnomalyComputation.lean` — ~20-30 theorems:
-  - Dai-Freed axiom (anomaly valued in ℤ₁₆)
-  - Anomaly index: 16 ≡ 0 mod 16 (with ν_R, one generation)
-  - Anomaly index: 15 ≡ -1 mod 16 (without ν_R, one generation)
+- [x] `lean/SKEFTHawking/Z16AnomalyComputation.lean` — 23 theorems, zero sorry, zero axioms:
+  - Anomaly index: 16 ≡ 0 mod 16 (with ν_R, by `decide`)
+  - Anomaly index: 15 ≡ -1 mod 16 (without ν_R)
   - Three-generation anomaly: -3 mod 16 ≠ 0
   - Hidden sector theorem: anomaly ≠ 0 → ∃ compensating sector
   - Bridge to existing Z16Classification.lean
+  - 2 originally-planned axioms discharged to theorems (tautological)
 
-- [ ] `lean/SKEFTHawking/GenerationConstraint.lean` — ~10-15 theorems (stretch):
-  - Axiom: chiral central charge c₋ = 8N_f (from dimensional reduction)
-  - Axiom: c₋ ≡ 0 mod 24 (modular invariance / framing anomaly)
-  - Theorem: N_f ≡ 0 mod 3 (derived from the two axioms)
-  - Theorem: N_f = 3 is the minimal nontrivial solution
-  - Bridge to Wang's topological argument
+- [x] `lean/SKEFTHawking/GenerationConstraint.lean` — 13 theorems, zero sorry, zero axioms:
+  - `generation_mod3_constraint`: `24 ∣ 8*N_f → 3 ∣ N_f` (Aristotle `a1dfcbde`)
+  - N_f = 3 is the minimal nontrivial solution
+  - 1 planned axiom discharged (tautological), 1 REMOVED (mathematically false)
 
-- [ ] `src/core/sm_anomaly.py` — SM fermion data + anomaly computation
-- [ ] `tests/test_sm_anomaly.py`
-- [ ] Formulas in formulas.py, constants in constants.py
-- [ ] Paper 9 or Paper 8 extension
-- [ ] Full pipeline stages 1-12
+- [x] `src/core/sm_anomaly.py` — SM fermion data + anomaly computation (FermionAnomalyData, SMAnomalyReport)
+- [x] `tests/test_sm_anomaly.py` — 44 tests across 7 test classes
+- [x] Formulas in formulas.py (4 new: sm_z4_charge, sm_anomaly_index, sm_three_gen_anomaly, sm_generation_constraint), constants in constants.py (SM_FERMION_DATA, SM_ANOMALY)
+- [x] Paper 9: `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex` — PRL draft, claims reviewed
+- [x] Full pipeline stages 1-12 (figures 71-73, notebooks, doc sync)
 
-### Estimated LOE:
-- Core (Waves 1): ~50-70 theorems, 1-2 sessions
-- Stretch (generation constraint): ~10-15 additional theorems
-- Total: ~60-85 theorems
+### Actual LOE:
+- Wave 1: 55 theorems (19 + 23 + 13), 1 session
+- 3 figures, 44 tests, 4 formulas, Paper 9 draft
 
-### Key Aristotle targets:
-- ℤ₄ charge computations (finite arithmetic)
-- Anomaly index mod-16 verification
-- N_f ≡ 0 mod 3 derivation from axioms
+### Aristotle contributions:
+- `generation_mod3_constraint` (Aristotle `a1dfcbde`): Int→Nat cast via `obtain + omega + exact_mod_cast`
 
 ---
 
@@ -129,12 +123,12 @@ proved in one session. Remaining work is typeclass plumbing.
   - Bidirectional Layer 1↔3 encoding via D(G) unit laws
   - Vec_G type definition via GradedObject (Additive G) (ModuleCat k)
 
-- [x] `lean/SKEFTHawking/VecGMonoidal.lean` — 12 theorems:
+- [x] `lean/SKEFTHawking/VecGMonoidal.lean` — 12 theorems, zero sorry:
   - **MonoidalCategory (VecG_Cat k G)** — PROVED (Day convolution, all coherence)
   - **Category (Center (VecG_Cat k G))** — PROVED (Z(Vec_G) exists)
   - **MonoidalCategory (Center (VecG_Cat k G))** — PROVED
-  - BraidedCategory (VecG_Cat k G) — 1 sorry (Lean heartbeat, Aristotle in flight)
-  - BraidedCategory (Center (VecG_Cat k G)) — conditional on above
+  - **BraidedCategory (VecG_Cat k G)** — PROVED (Aristotle `48493889`, separate CommGroup section)
+  - **BraidedCategory (Center (VecG_Cat k G))** — PROVED
   - Forgetful functor Z(Vec_G) → Vec_G — constructed
   - Dimension matching |G|²
 
@@ -156,35 +150,70 @@ proved in one session. Remaining work is typeclass plumbing.
   - Non-abelian fusion: A3⊗A3 = A1⊕A2⊕A3 (dimension check)
   - First non-abelian Drinfeld center computation in a proof assistant
 
-- [ ] `lean/SKEFTHawking/CenterEquivalenceZ2.lean` — Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2):
-  - Explicit bijection between ToricCodeCenter anyons and D(ℤ/2) simples
-  - Fusion preservation, braiding preservation
-  - Concrete verification of the abstract equivalence
+- [x] `lean/SKEFTHawking/CenterEquivalenceZ2.lean` — 10 theorems, zero sorry:
+  - Explicit bijection (toricToDZ2/dz2ToToric as Equiv) between ToricCodeCenter anyons and D(ℤ/2) simples
+  - Fusion preservation, grading preservation, character preservation, braiding preservation
+  - Concrete verification of the abstract equivalence (all by exhaustive case analysis)
 
-### Estimated LOE:
-- Toric code center: DONE (25 theorems)
-- S₃ center: DONE (22 theorems)
-- Concrete ℤ/2 equivalence: ~15-20 theorems, this session
+### Actual LOE:
+- DrinfeldCenterBridge: 18 theorems
+- VecGMonoidal: 12 theorems
+- ToricCodeCenter: 25 theorems
+- S3CenterAnyons: 22 theorems
+- CenterEquivalenceZ2: 10 theorems
+- **Total Wave 2: 87 theorems**, zero sorry
 
 ---
 
-## 3. Wave 3 — Abstract Equivalence Functor Center(Vec_G) ⥤ Rep(D(G))
+## 3. Wave 3 — D(G) Algebra + Abstract Equivalence Functor
 
-**Goal:** Construct the abstract equivalence functor and prove it is a braided
-monoidal equivalence. Requires making DrinfeldDoubleElement into a Mathlib Algebra
-and constructing ModuleCat over it.
+**Goal:** Build D(G) as a proper k-algebra with twisted multiplication, then
+construct the abstract equivalence functor Center(Vec_G) ⥤ Rep(D(G)).
 
 ### Deliverables:
-- [ ] D(G) as Mathlib Algebra (Ring + Algebra k instances on DrinfeldDoubleElement)
-- [ ] Rep(D(G)) as ModuleCat over D(G)
-- [ ] Functor: Center(Vec_G) ⥤ Rep(D(G))
-- [ ] Inverse functor + natural isomorphisms (equivalence proof)
-- [ ] Braided monoidal structure preservation
 
-### Estimated LOE:
-- D(G) algebra infrastructure: ~20-30 theorems
-- Functor + equivalence: ~30-50 theorems
-- Total: 1-2 sessions
+**Completed:**
+- [x] `lean/SKEFTHawking/DrinfeldDoubleAlgebra.lean` — 9 theorems, zero sorry:
+  - DDAlg = G×G → k with twisted convolution multiplication
+  - Left unit law (`ddAlgMul_one_left`, Aristotle `878b181f`)
+  - Right unit law (`ddAlgMul_one_right`, Aristotle `878b181f`)
+  - Associativity (`ddAlgMul_assoc`, Aristotle `878b181f`)
+  - Basis multiplication formula (`ddBasis_mul`, Aristotle `878b181f`)
+  - Dimension |G|², abelian specialization (conjugation trivial)
+
+- [x] `lean/SKEFTHawking/DrinfeldDoubleRing.lean` — 7 defs/thms, 13 sorrys (Aristotle in flight):
+  - DG newtype wrapper (avoids Pi.instMul conflict with twisted convolution)
+  - AddCommGroup instance (pointwise through coeff)
+  - Ring instance: mul_assoc/one_mul/mul_one lifted from DrinfeldDoubleAlgebra
+  - Algebra k instance: algebraMap r ↦ (a,g) ↦ if g=e then r else 0
+  - Basis multiplication, dimension |G|²
+  - All 13 sorrys filled by Aristotle `52992d6a` (distrib, algebraMap, commutes', smul_def', basis_mul)
+
+- [x] `lean/SKEFTHawking/DrinfeldEquivalence.lean` — 12 theorems, zero sorry:
+  - Simple object counts: |G|² on both sides
+  - Hopf algebra structure: coproduct well-defined, counit, antipode involutive
+  - Concrete verifications: Z/2 (toric code) and S₃ (8 anyons) already in prior modules
+  - Monoidal + braided structure preservation (stated as `True := trivial`)
+  - Gauge emergence physical interpretation bridge (stated as `True := trivial`)
+  - NOTE: 4 of 12 theorems are `True := trivial` placeholders recording what SHOULD hold,
+    not constructive proofs. The algebraic core is proved; categorical wrapping is not.
+
+**Deferred to Phase 6 (categorical wrapping — ~30-50 thms, deep Mathlib plumbing):**
+- [ ] Full categorical functor `Functor.mk` : Center(Vec_G) ⥤ ModuleCat(DG k G)
+      (needs object map: Center pair → DG-module, morphism map: Center hom → linear map)
+- [ ] Full equivalence proof (Functor + inverse + natural isomorphisms)
+- [ ] Braided monoidal functor structure
+- The algebraic bijection (half-braiding ↔ D(G)-module) IS proved in DrinfeldCenterBridge.
+  The concrete equivalence IS verified for Z/2 and S₃. What's missing is the abstract
+  categorical functor construction wrapping these algebraic results.
+
+### Actual LOE (Wave 3):
+- DrinfeldDoubleAlgebra: 9 theorems (Aristotle 878b181f)
+- DrinfeldDoubleRing: 3 thms + 4 instances (Aristotle `52992d6a`, zero sorry)
+- DrinfeldEquivalence: 12 theorems (4 are `True` placeholders)
+- **Total Wave 3: 24 theorems**, zero sorry
+- Tests: 27 (test_drinfeld_algebra.py)
+- Formulas: 3 new (basis_mul, antipode, coproduct)
 
 ---
 
@@ -210,18 +239,75 @@ The project has **2 axioms** (down from 7 after integrity sweep 2026-04-04).
 
 **Risk assessment:** The 2 remaining axioms encode well-established results. Axiom 1 is standard Lie theory. Axiom 2 is the GS no-go theorem (1993, well-cited). Neither is at risk of being wrong.
 
-## 5. Deferred Targets (see Phase6_Deferred_Targets.md)
+## 5. Wave 4 — Wang Bridge: Deriving c₋ = 8N_f from SM Fermion Content
 
-The following remain deferred:
+**Goal:** Bridge SMFermionData.lean → GenerationConstraint.lean by deriving the
+coefficient "8" in c₋ = 8N_f from the 16 Weyl fermions per SM generation.
+
+### Deliverables:
+- [ ] `lean/SKEFTHawking/WangBridge.lean` — ~5-10 theorems:
+  - Axiom: each Weyl fermion contributes c = 1/2 to chiral central charge
+  - Theorem: c₋ = total_components × (1/2) = 16/2 = 8 per generation (with ν_R)
+  - Theorem: c₋ = 15/2 per generation (without ν_R) — fractional, implies ν_R needed
+  - Bridge: SMFermionData.total_components → GenerationConstraint.c₋_coeff
+  - Full chain: SM fermion enum → component count → c₋ = 8N_f → (24|c₋ → 3|N_f)
+
+**Paper impact:** Strengthens Paper 9 (generation constraint derived from fermion content).
+
+---
+
+## 6. Wave 5 — Modular Invariance from Mathlib's Modular Forms
+
+**Goal:** Derive the "24" in c₋ ≡ 0 mod 24 from the mathematics of modular forms,
+using Mathlib's existing NumberTheory.ModularForms infrastructure (~85% coverage).
+
+### The argument:
+1. 2D partition function Z(τ) must be modular invariant under SL₂(ℤ)
+2. Under T: τ → τ+1, Z acquires phase e^{2πi·c₋/24} (Dedekind eta anomaly)
+3. Modular invariance ⟹ c₋/24 ∈ ℤ ⟹ 24 | c₋
+4. Combined with c₋ = 8N_f (Wave 4): N_f ≡ 0 mod 3
+
+### Deliverables:
+- [ ] `lean/SKEFTHawking/ModularInvarianceConstraint.lean` — ~15-25 theorems:
+  - Import Mathlib NumberTheory.ModularForms, DedekindEta
+  - T-transformation phase: e^{2πi/24} as 24th root of unity
+  - Modular invariance → phase = 1 → 24 | c₋
+  - Connection to GenerationConstraint: the "24" is DERIVED, not axiomatized
+- [ ] Python: formulas, tests, visualization of modular constraint
+- [ ] Full pipeline stages 1-12
+
+**Paper impact:** Potential Paper 10: *"From Modular Forms to Generation Counting"*
+  - First formal derivation connecting number-theoretic modular invariance to SM physics
+  - Uses Mathlib's existing infrastructure (not axioms) for the key step
+  - Community contribution: physics application of Mathlib's modular forms
+
+---
+
+## 7. Wave 6 (stretch) — Rokhlin "16" Convergence
+
+**Goal:** Axiomatize Rokhlin's theorem and connect the "16" that appears in four
+independent areas: Rokhlin signature, Z₁₆ classification, SM Weyl count, Kitaev 16-fold way.
+
+### Deliverables:
+- [ ] `lean/SKEFTHawking/RokhlinBridge.lean` — ~20-30 theorems:
+  - Axiom: Rokhlin's theorem (σ(M) ≡ 0 mod 16 for spin 4-manifolds)
+  - "16 convergence" theorem: formal statement that Rokhlin 16 = Z₁₆ 16 = Weyl 16
+  - Alternative derivation of 24 | c₋ through topological path
+- [ ] Paper 10 extension with topological perspective
+
+---
+
+## 8. Deferred Targets (see Phase6_Deferred_Targets.md)
+
+The following remain deferred to Phase 6:
 - q-Onsager → quantum group → MTC chain (Tier 1, ~60-100 thms)
-- Wang three-generation full proof through Hirzebruch+Rokhlin (Tier 1, ~80-120 thms)
 - Non-Abelian TPF disentangler (Tier 2, requires breakthrough)
 
 ---
 
-## 4. Publication Impact
+## 9. Publication Impact
 
-The SM anomaly computation in ℤ₁��� gives:
+The SM anomaly computation in ℤ₁₆ gives:
 - **First formally verified anomaly constraint in particle physics**
 - Direct connection to the chirality wall (same ℤ₁₆ that classifies the wall)
 - The "16" convergence: cobordism = Rokhlin = Kähler-Dirac = Kitaev = 16-fold way
@@ -241,4 +327,4 @@ gauge emergence through Mathlib's verified infrastructure."
 
 ---
 
-*Phase 5b roadmap. Created 2026-04-04. Updated 2026-04-04 (Drinfeld Center promoted from Phase 6). Research basis: Lit-Search/Phase-5b/ (2 deep research files). All waves follow WAVE_EXECUTION_PIPELINE.md.*
+*Phase 5b roadmap. Created 2026-04-04. Updated 2026-04-04 (roadmap synced: all Waves 1-2 complete, Wave 3 partially complete, axiom sweep done). Research basis: Lit-Search/Phase-5b/ (2 deep research files). All waves follow WAVE_EXECUTION_PIPELINE.md.*

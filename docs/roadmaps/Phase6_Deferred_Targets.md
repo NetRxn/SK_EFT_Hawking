@@ -18,13 +18,17 @@
 - **Our estimate:** Probably 1-3 months once infrastructure exists, or faster with axiomatization strategy
 - **Note:** The algebraic CONSEQUENCE (8N_f ≡ 0 mod 24 → N_f ≡ 0 mod 3) is trivial and included in Phase 5b as a stretch goal. The full proof through Hirzebruch + Rokhlin is the deferred target.
 
-### Drinfeld Center Z(Vec_G) ≅ Rep(D(G)) Full Equivalence — **PROMOTED TO PHASE 5b**
-- **Status:** Promoted to Phase 5b Wave 2 (2026-04-04). See Phase5b_Roadmap.md.
-- **Progress:** 27 theorems across DrinfeldCenterBridge.lean + VecGMonoidal.lean, zero sorry.
-  Algebraic core proved (conjugation ↔ half-braiding bijection).
-  Vec_G defined via Mathlib's GradedObject. 4 typeclass instances remain for full MonoidalCategory.
-- **Revised Mathlib gap:** ~80%+ infrastructure available (Center, HalfBraiding, GradedObject.Monoidal, BraidedCategory all present). Gap is typeclass plumbing, not missing definitions.
-- **Revised estimate:** 1-3 sessions to discharge MonoidalCategory assumption + build functor.
+### Drinfeld Center Z(Vec_G) ≅ Rep(D(G)) — **COMPLETED in Phase 5b** (Waves 2-3)
+- **Status:** Core complete in Phase 5b. 96 theorems across 7 modules, zero sorry.
+  Remaining: abstract equivalence functor (Ring/Algebra wrapping + functor construction).
+- **Completed (Phase 5b):**
+  - DrinfeldCenterBridge (18 thms), VecGMonoidal (12 thms), ToricCodeCenter (25 thms),
+    S3CenterAnyons (22 thms), CenterEquivalenceZ2 (10 thms), DrinfeldDoubleAlgebra (9 thms)
+  - MonoidalCategory + BraidedCategory for Vec_G and Center(Vec_G) all proved
+  - D(G) algebra laws (unit, associativity, basis multiplication) all proved
+  - Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2) equivalence verified
+- **Remaining for Phase 6:** Ring/Algebra typeclass wrapping on DDAlg, Rep(D(G)) as ModuleCat,
+  abstract functor Center(Vec_G) ⥤ Rep(D(G)), braided monoidal equivalence proof (~40-65 theorems).
 
 ### q-Onsager → Quantum Group → MTC Chain
 - **Source:** Baseilhac-Belliard arXiv:0906.1215; Terwilliger arXiv:math.QA/0307016

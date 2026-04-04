@@ -226,7 +226,7 @@ DrinfeldDoubleAlgebra module summary:
   - Unit laws, associativity, basis multiplication stated with PROVIDED SOLUTIONs
   - Abelian specialization: conjugation trivial, D(G) commutative
   - Connects to CenterEquivalenceZ2 (concrete Z/2 case)
-  - 5 sorry gaps for Aristotle: unit laws, associativity, basis mul, abelian conjugation
+  - All proofs filled by Aristotle (run 878b181f): unit laws, associativity, basis mul
 -/
 theorem dd_algebra_summary :
     (1 : G) * (1 : G) = 1 := mul_one 1

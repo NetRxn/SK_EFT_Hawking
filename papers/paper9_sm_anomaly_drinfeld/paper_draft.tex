@@ -29,7 +29,7 @@ modules in a proof assistant, compute the Drinfeld centers of $\mathrm{Vec}_{\ma
 (toric code, 4 anyons) and $\mathrm{Vec}_{S_3}$ (8 non-abelian anyons), and
 establish $Z(\mathrm{Vec}_G)$ as a braided monoidal category via Mathlib's
 infrastructure. All results are verified by \texttt{lake build} with zero
-\texttt{sorry} across 900 theorems and 2 axioms in 58 Lean~4 modules, with 251
+\texttt{sorry} across 924 theorems and 2 axioms in 62 Lean~4 modules, with 251
 filled by the Aristotle automated prover.
 \end{abstract}
 
@@ -114,8 +114,15 @@ values). Dotted line: $N_f = 3$ (observed).}
 \label{sec:generation}
 
 The number of SM generations is constrained by modular invariance.
-Dimensional reduction gives a 2D theory with chiral central charge
-$c_- = 8 N_f$~\cite{Wang2024}. The framing anomaly requires
+Each left-handed Weyl fermion contributes $c = 1/2$ to the 2D chiral
+central charge upon dimensional reduction~\cite{AlvarezGaumeWitten1984}.
+The SM has 16 Weyl components per generation (Sec.~\ref{sec:anomaly}),
+giving $c_- = 16/2 = 8$ per generation, hence
+$c_- = 8 N_f$~\cite{Wang2024}. The coefficient ``8'' is thus \emph{derived}
+from the SM fermion content, not a free parameter. Notably, without $\nu_R$
+one obtains $c_- = 15/2$ per generation---a fractional central charge
+signaling a gravitational anomaly and independently requiring $\nu_R$.
+The framing anomaly requires
 $c_- \equiv 0 \pmod{24}$~\cite{AlvarezGaumeWitten1984,Stolz1993}.
 Together:
 \begin{equation}
@@ -123,11 +130,16 @@ Together:
 \end{equation}
 $N_f = 3$ is the minimal nontrivial solution.
 
-This is formalized in \texttt{GenerationConstraint.lean} (13 theorems, zero sorry,
-zero axioms). The central theorem \texttt{generation\_mod3\_constraint} is a
-conditional: \emph{if} $24 \mid 8 N_f$ \emph{then} $3 \mid N_f$, proved
-by Aristotle (run \texttt{a1dfcbde}) using \texttt{exact\_mod\_cast} for the
-$\mathbb{Z} \to \mathbb{N}$ cast. The modular invariance hypothesis enters
+The bridge from fermion content to generation constraint is formalized in
+\texttt{WangBridge.lean} (9 theorems, zero sorry): the theorem
+\texttt{fermion\_count\_gives\_central\_charge} derives $c_- = 8$ from
+\texttt{SMFermionData.total\_components\_with\_nu\_R}, and
+\texttt{central\_charge\_fractional\_without\_nu\_R} proves that 15/2 is
+not an integer ($\nu_R$ required). The algebraic constraint is in
+\texttt{GenerationConstraint.lean} (13 theorems, zero sorry,
+zero axioms): \texttt{generation\_mod3\_constraint} is a
+conditional \emph{if} $24 \mid 8 N_f$ \emph{then} $3 \mid N_f$, proved
+by Aristotle (run \texttt{a1dfcbde}). The modular invariance hypothesis enters
 as a premise, not an axiom.
 
 \begin{figure}[t]
@@ -217,6 +229,26 @@ We verify the concrete correspondence between the 4 toric code anyons and the
 fusion rules, and braiding phases. All 10 theorems in
 \texttt{CenterEquivalenceZ2.lean} are proved by exhaustive case analysis (zero sorry).
 
+\subsection{D(G) as a $k$-algebra}
+
+We formalize $D(G)$ as a Mathlib \texttt{Ring} and \texttt{Algebra} $k$:
+the twisted convolution multiplication, unit laws, associativity
+(\texttt{DrinfeldDoubleAlgebra.lean}, Aristotle \texttt{878b181f}), and
+distributivity (\texttt{DrinfeldDoubleRing.lean}). A newtype wrapper \texttt{DG}
+avoids conflict with Pi's pointwise \texttt{Mul} instance. The Hopf algebra
+structure---coproduct, counit, and involutive antipode---is verified in
+\texttt{DrinfeldEquivalence.lean} (12 theorems, zero sorry).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig74_drinfeld_equivalence_structure.png}
+\caption{Anyon content of $Z(\mathrm{Vec}_G)$ for $G = \mathbb{Z}/2$ (toric code,
+4 abelian anyons with $D^2 = 4$) and $G = S_3$ (8 non-abelian anyons with $D^2 = 36$).
+Color indicates conjugacy class. Global dimension $D^2 = |G|^2$ on both sides,
+matching $\dim D(G)$.}
+\label{fig:drinfeld_equivalence}
+\end{figure}
+
 %% ══════════════════════════════════════════════════════════════════
 \section{Conclusions}
 
@@ -231,13 +263,16 @@ toric code (4 abelian anyons) and $D(S_3)$ (8 non-abelian anyons).
 \item $Z(\mathrm{Vec}_G)$ as a braided monoidal category via Mathlib's
 \texttt{Center} infrastructure --- the first such construction connecting
 abstract category theory to concrete gauge emergence.
+\item $D(G)$ as a Mathlib \texttt{Ring} and $k$-\texttt{Algebra}, with Hopf
+algebra structure (coproduct, counit, involutive antipode), establishing the
+algebraic foundation for $Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$.
 \end{enumerate}
 
-The formal verification comprises 900 theorems + 2 axioms across 58 Lean~4
+The formal verification comprises 924 theorems + 2 axioms across 62 Lean~4
 modules, conditional on two axioms encoding established group theory
 (\texttt{non\_abelian\_center\_discrete}) and lattice field theory
 (\texttt{gs\_nogo\_axiom}). Verified by \texttt{lake build} (zero \texttt{sorry}).
-251 theorems are filled by the Aristotle automated prover
+254 theorems are filled by the Aristotle automated prover
 across 32+ runs.
 
 The same $\mathbb{Z}_{16}$ that classifies the chirality wall~\cite{GioiaThorngrenPRL2026}

@@ -23,6 +23,7 @@ from src.core.formulas import (
     sm_anomaly_index,
     sm_three_gen_anomaly,
     sm_generation_constraint,
+    wang_bridge_central_charge,
 )
 from src.core.sm_anomaly import (
     compute_fermion_anomaly_data,
@@ -312,3 +313,54 @@ class TestPhysicalBounds:
         for name, f in SM_FERMION_DATA.items():
             X_raw = 5 * f['B_minus_L'] - 4 * f['Y']
             assert abs(X_raw - round(X_raw)) < 1e-10, f"{name}: X = {X_raw} is not integer"
+
+
+# ════════════════════════════════════════════════════════════════════
+# Wang Bridge: c₋ = 8N_f derived from SM fermion content
+# ════════════════════════════════════════════════════════════════════
+
+class TestWangBridge:
+    """Tests for Wang bridge: 16 Weyl → c₋ = 8 per generation."""
+
+    def test_with_nu_R_integral(self):
+        """16 Weyl fermions → c₋ = 8 (integral, well-defined)."""
+        result = wang_bridge_central_charge(16)
+        assert result['c_minus_per_gen'] == 8.0
+        assert result['is_integral'] is True
+        assert result['requires_nu_R'] is False
+
+    def test_without_nu_R_fractional(self):
+        """15 Weyl fermions → c₋ = 15/2 (fractional → anomalous)."""
+        result = wang_bridge_central_charge(15)
+        assert result['c_minus_per_gen'] == 7.5
+        assert result['c_minus_exact'] == '15/2'
+        assert result['is_integral'] is False
+        assert result['requires_nu_R'] is True
+
+    def test_coefficient_derived_from_count(self):
+        """The "8" in c₋ = 8N_f is 16/2, not a free parameter."""
+        total_weyl = sum(f['components'] for f in SM_FERMION_DATA.values())
+        assert total_weyl == 16
+        result = wang_bridge_central_charge(total_weyl)
+        assert result['c_minus_per_gen'] == 8.0
+
+    def test_full_chain(self):
+        """SM fermions → 16 Weyl → c₋ = 8 → c₋ = 8N_f → (24|c₋ → 3|N_f)."""
+        # Step 1-2: Fermion count → central charge
+        result = wang_bridge_central_charge(16)
+        assert result['c_minus_per_gen'] == 8.0
+        # Step 3-4: c₋ = 8N_f, modular invariance
+        for N_f in [3, 6, 9]:
+            gen = sm_generation_constraint(N_f)
+            assert gen['satisfies_modular_invariance'] is True
+            assert gen['satisfies_generation_constraint'] is True
+        # Non-multiples of 3 fail
+        for N_f in [1, 2, 4, 5]:
+            gen = sm_generation_constraint(N_f)
+            assert gen['satisfies_generation_constraint'] is False
+
+    def test_sixteen_convergence(self):
+        """The same "16" appears in SM Weyl count and Z₁₆ modulus."""
+        total_weyl = sum(f['components'] for f in SM_FERMION_DATA.values())
+        assert total_weyl == 16
+        assert total_weyl % 16 == 0  # Z₁₆ anomaly-free

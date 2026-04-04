@@ -4891,5 +4891,109 @@ def fig_sm_generation_constraint() -> go.Figure:
     return fig
 
 
+def fig_drinfeld_equivalence_structure() -> go.Figure:
+    """Z(Vec_G) ≅ Rep(D(G)) equivalence: anyon content for concrete groups.
+
+    Shows the anyon/simple-module content for Z/2 (toric code, 4 anyons)
+    and S₃ (8 non-abelian anyons), verifying D² = |G|² on both sides.
+    Quantum dimensions displayed as bar heights, with D² totals annotated.
+
+    Data from: ToricCodeCenter.lean (25 thms), S3CenterAnyons.lean (22 thms),
+    DrinfeldEquivalence.lean (12 thms).
+    """
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=["Z(Vec<sub>ℤ/2</sub>) — Toric Code (4 anyons)",
+                        "Z(Vec<sub>S₃</sub>) — 8 Non-Abelian Anyons"],
+        horizontal_spacing=0.15,
+    )
+
+    # === Panel 1: Z/2 toric code ===
+    z2_labels = ["1 (vacuum)", "e (electric)", "m (magnetic)", "ε (fermion)"]
+    z2_dims = [1, 1, 1, 1]  # all dimension 1
+    z2_colors = [COLORS["Rb87"]] * 4  # steel blue
+
+    fig.add_trace(go.Bar(
+        x=z2_labels, y=z2_dims,
+        marker_color=z2_colors,
+        text=["d=1"] * 4,
+        textposition="outside",
+        textfont=dict(size=13),
+        showlegend=False,
+    ), row=1, col=1)
+
+    # D² annotation
+    fig.add_annotation(
+        x=1.5, y=1.3,
+        text="D² = 4 = |ℤ/2|²",
+        showarrow=False, font=dict(size=13, color=COLORS["Rb87"],
+                                    family=FONT['family']),
+        row=1, col=1,
+    )
+
+    # R(e,m) = -1 annotation — prominent for publication
+    fig.add_annotation(
+        x=1.5, y=0.4,
+        text="<b>R(e,m) = −1</b>",
+        showarrow=False, font=dict(size=14, color=COLORS["dissipative"],
+                                    family=FONT['family']),
+        row=1, col=1,
+    )
+
+    # === Panel 2: S₃ non-abelian ===
+    s3_labels = ["A₁", "A₂", "A₃", "B₁", "B₂", "C₁", "C₂", "C₃"]
+    s3_dims = [1, 1, 2, 3, 3, 2, 2, 2]
+    s3_classes = ["e", "e", "e", "(12)", "(12)", "(123)", "(123)", "(123)"]
+    s3_colors = [COLORS["Rb87"] if c == "e"
+                 else COLORS["Na23"] if c == "(12)"
+                 else COLORS["K39"]
+                 for c in s3_classes]
+
+    fig.add_trace(go.Bar(
+        x=s3_labels, y=s3_dims,
+        marker_color=s3_colors,
+        text=[f"d={d}" for d in s3_dims],
+        textposition="outside",
+        textfont=dict(size=13),
+        showlegend=False,
+    ), row=1, col=2)
+
+    # D² annotation
+    fig.add_annotation(
+        x=3.5, y=3.5,
+        text="D² = 36 = |S₃|²",
+        showarrow=False, font=dict(size=13, color=COLORS["K39"],
+                                    family=FONT['family']),
+        row=1, col=2,
+    )
+
+    # Class legend
+    for i, (label, color) in enumerate([
+        ("{e} class", COLORS["Rb87"]),
+        ("(12) class", COLORS["Na23"]),
+        ("(123) class", COLORS["K39"]),
+    ]):
+        fig.add_trace(go.Bar(
+            x=[None], y=[None],
+            marker_color=color,
+            name=label,
+            showlegend=True,
+        ))
+
+    fig.update_layout(
+        title=dict(text="Drinfeld Center Equivalence: Z(Vec<sub>G</sub>) ≅ Rep(D(G))",
+                   font=TITLE_FONT),
+        font=FONT,
+        plot_bgcolor='white', paper_bgcolor='white',
+        legend=dict(x=0.75, y=0.95, bgcolor='rgba(255,255,255,0.8)'),
+        height=400, width=900,
+        barmode='group',
+    )
+    fig.update_yaxes(title_text="Quantum Dimension d", range=[0, 4], row=1, col=1)
+    fig.update_yaxes(title_text="Quantum Dimension d", range=[0, 4.2], row=1, col=2)
+
+    return fig
+
+
 if __name__ == "__main__":
     main()

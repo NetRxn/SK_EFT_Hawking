@@ -729,6 +729,13 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=1,
         expected_axes={"xaxis": "generation", "yaxis": "central"}, physics_checks=[], color_keys=["dispersive"],
     ),
+    FigureSpec(
+        name="fig74_drinfeld_equivalence_structure",
+        function="fig_drinfeld_equivalence_structure",
+        caption="Drinfeld center equivalence Z(Vec_G) = Rep(D(G)): anyon content for Z/2 (toric code) and S3 (non-abelian).",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "anyon", "yaxis": "dimension"}, physics_checks=[], color_keys=["Rb87", "Na23", "K39"],
+    ),
 ]
 
 
@@ -802,6 +809,7 @@ def generate_figures() -> dict[str, Path]:
         fig_sm_fermion_z16_anomaly,
         fig_sm_generation_anomaly,
         fig_sm_generation_constraint,
+        fig_drinfeld_equivalence_structure,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -907,6 +915,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_sm_fermion_z16_anomaly": fig_sm_fermion_z16_anomaly,
         "fig_sm_generation_anomaly": fig_sm_generation_anomaly,
         "fig_sm_generation_constraint": fig_sm_generation_constraint,
+        "fig_drinfeld_equivalence_structure": fig_drinfeld_equivalence_structure,
     }
 
     paths = {}
@@ -1116,6 +1125,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_sm_fermion_z16_anomaly": fig_sm_fermion_z16_anomaly,
         "fig_sm_generation_anomaly": fig_sm_generation_anomaly,
         "fig_sm_generation_constraint": fig_sm_generation_constraint,
+        "fig_drinfeld_equivalence_structure": fig_drinfeld_equivalence_structure,
     }
 
     issues: list[CheckIssue] = []

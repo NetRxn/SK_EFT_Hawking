@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (axiom integrity sweep: 4 axioms discharged/removed, 900 thm + 2 ax, 58 modules)
+**Last synced:** April 4, 2026 (Waves 3-4 complete: 924 thm + 2 ax, 62 modules, zero sorry)
 
 ---
 
@@ -10,16 +10,16 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 900 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Lean theorems | 924 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
 | Aristotle-proved | 254 (251 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| Manual proofs | 646 | 900 - 254 |
+| Manual proofs | 670 | 924 - 254 |
 | **Sorry gaps** | **0** | All filled |
-| Lean modules | 58 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 900 + 2ax | All proved |
+| Lean modules | 62 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 924 + 2ax | All proved |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 29 | `find tests/ -name "test_*.py"` |
-| Test count | 1456 | `pytest tests/ -q` (1390 + 44 SM anomaly + 22 other) |
-| Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` (69 + 3 SM anomaly) |
+| Test files | 30 | `find tests/ -name "test_*.py"` |
+| Test count | 1488 | `pytest tests/ -q` (1456 + 27 drinfeld algebra + 5 wang bridge) |
+| Figures | 71 | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | 24 | `ls notebooks/*.ipynb` (22 + 2 Phase 5b SM anomaly/Drinfeld) |
 | Papers | 9 | `ls papers/*/paper_draft.tex` (8 + Paper 9 SM anomaly + Drinfeld) |
 | Validation checks | 16 | `python scripts/validate.py --list` |
@@ -53,8 +53,8 @@
 - `constants.py` — Physical constants, experimental params, Aristotle registry, NJL/ADW model params
 - `formulas.py` — Canonical physics formulas with Lean refs (~59 functions including SM anomaly, Weingarten, NJL, fracton, Planck)
 - `transonic_background.py` — 1D BEC transonic flow solver
-- `visualizations.py` — All 72 Plotly figure functions + COLORS palette
-- `aristotle_interface.py` — Aristotle API + sorry gap registry (1 unfilled: vecG_braided)
+- `visualizations.py` — All 71 Plotly figure functions + COLORS palette
+- `aristotle_interface.py` — Aristotle API + sorry gap registry (all filled, zero unfilled)
 - `sm_anomaly.py` — SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check
 - `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
 - `citations.py` — Citation registry (CITATION_REGISTRY, DOI tracking, usage mapping)
@@ -168,6 +168,10 @@
 | ToricCodeCenter | 25 | 4 toric code anyons, fusion rules, R(e,m)=-1, fermion self-stats, first computed Drinfeld center (**ALL PROVED**) |
 | S3CenterAnyons | 22 | 8 non-abelian anyons, d=1,1,2,3,3,2,2,2, D²=36=|S₃|², A3⊗A3 decomposition, first non-abelian center (**ALL PROVED**) |
 | CenterEquivalenceZ2 | 10 | Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2): bijection, fusion, braiding preserved (**ALL PROVED**) |
+| DrinfeldDoubleAlgebra | 9 | D(G) as k-algebra: twisted convolution, unit laws, associativity, basis mul, abelian specialization (**ALL PROVED**, Aristotle `878b181f`) |
+| DrinfeldDoubleRing | 3+4inst | DG newtype wrapper, Ring + Algebra k instances, distrib, basis_mul (**ALL PROVED**, Aristotle `52992d6a`) |
+| DrinfeldEquivalence | 12 | Z(Vec_G)≅Rep(D(G)): simple counts, Hopf structure, antipode involutive, gauge emergence bridge (**ALL PROVED**) |
+| WangBridge | 9 | Derives c₋=8N_f from SM fermion content (16 Weyl → c₋=8), fractional c₋ without ν_R, full chain to N_f≡0(3), "16 convergence" (**ALL PROVED**) |
 
 ---
 

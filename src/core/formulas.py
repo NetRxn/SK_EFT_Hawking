@@ -2639,6 +2639,80 @@ def center_is_doubled(group_order):
 
 
 # ════════════════════════════════════════════════════════════════════
+# D(G) algebra and equivalence (DrinfeldDoubleRing.lean, DrinfeldEquivalence.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def drinfeld_double_basis_mul(a, b, g1, g2, mul_fn, conjugate_fn):
+    """Drinfeld double basis multiplication.
+
+    (δ_a ⊗ g1) · (δ_b ⊗ g2) = δ_{a, g1·b·g1⁻¹} · (δ_a ⊗ g1·g2)
+
+    Returns None if a ≠ g1·b·g1⁻¹ (product is zero), else returns (a, g1*g2).
+
+    Lean: DG.basis_mul
+    Aristotle: pending
+    Source: Kassel, Quantum Groups (Springer, 1995), Ch. IX
+
+    Args:
+        a, b: group elements (grade indices)
+        g1, g2: group elements (algebra indices)
+        mul_fn: group multiplication function (g, h) -> g·h
+        conjugate_fn: function (g, x) -> g*x*g⁻¹
+
+    Returns:
+        (a, g1·g2) if a == conjugate(g1, b), else None
+    """
+    if a == conjugate_fn(g1, b):
+        return (a, mul_fn(g1, g2))
+    return None
+
+
+def drinfeld_double_antipode(a, g, inv_fn, conjugate_fn):
+    """Drinfeld double antipode: S(δ_a ⊗ g) = δ_{g⁻¹·a⁻¹·g} ⊗ g⁻¹.
+
+    Lean: hopf_antipode_involutive
+    Aristotle: manual
+    Source: Kassel, Quantum Groups (Springer, 1995), Ch. IX
+
+    Args:
+        a, g: group elements
+        inv_fn: function returning inverse
+        conjugate_fn: function (g, x) -> g*x*g⁻¹
+
+    Returns:
+        (g⁻¹·a⁻¹·g, g⁻¹)
+    """
+    g_inv = inv_fn(g)
+    a_inv = inv_fn(a)
+    return (conjugate_fn(g_inv, a_inv), g_inv)
+
+
+def drinfeld_coproduct_summands(a, g, group_elements, mul_fn):
+    """Summands of the Drinfeld double coproduct.
+
+    Δ(δ_a ⊗ g) = Σ_{a1·a2=a} (δ_{a1} ⊗ g) ⊗ (δ_{a2} ⊗ g)
+
+    Lean: hopf_coproduct_well_defined
+    Aristotle: manual
+    Source: Kassel, Quantum Groups (Springer, 1995), Ch. IX
+
+    Args:
+        a, g: group elements
+        group_elements: list of all group elements
+        mul_fn: group multiplication function (g, h) -> g·h
+
+    Returns:
+        List of ((a1, g), (a2, g)) pairs with a1·a2 = a
+    """
+    result = []
+    for a1 in group_elements:
+        for a2 in group_elements:
+            if mul_fn(a1, a2) == a:
+                result.append(((a1, g), (a2, g)))
+    return result
+
+
+# ════════════════════════════════════════════════════════════════════
 # 8×8 Majorana fermion-bag formulas (MajoranaKramers.lean)
 # ════════════════════════════════════════════════════════════════════
 
@@ -3491,4 +3565,36 @@ def sm_generation_constraint(N_f):
         'N_f_mod3': N_f % 3,
         'satisfies_generation_constraint': satisfies_mod3,
         'is_minimal_nontrivial': (N_f == 3),
+    }
+
+
+def wang_bridge_central_charge(n_weyl):
+    """Derive chiral central charge from Weyl fermion count.
+
+    Each left-handed Weyl fermion contributes c = 1/2 to the 2D chiral
+    central charge upon dimensional reduction. The SM has 16 Weyl components
+    per generation (with ν_R), giving c₋ = 16/2 = 8 per generation.
+
+    Without ν_R: 15 Weyl → c₋ = 15/2 (fractional → anomalous, forces ν_R).
+
+    Lean: fermion_count_gives_central_charge, central_charge_fractional_without_nu_R (WangBridge.lean)
+    Aristotle: manual
+    Source: Alvarez-Gaumé & Witten, NPB 234, 269 (1984); Wang, PRD 110, 125028 (2024)
+
+    Args:
+        n_weyl: number of Weyl fermion components per generation
+
+    Returns:
+        dict with central charge, integrality check, and generation constraint
+    """
+    from fractions import Fraction
+    c_minus_per_gen = Fraction(n_weyl, 2)
+    is_integral = c_minus_per_gen.denominator == 1
+    return {
+        'n_weyl': n_weyl,
+        'c_minus_per_gen': float(c_minus_per_gen),
+        'c_minus_exact': str(c_minus_per_gen),
+        'is_integral': is_integral,
+        'anomaly_free': is_integral and (int(c_minus_per_gen) * 1) % 24 == 0,
+        'requires_nu_R': not is_integral,
     }

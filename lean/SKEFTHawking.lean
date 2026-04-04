@@ -56,6 +56,9 @@ import SKEFTHawking.ToricCodeCenter
 import SKEFTHawking.S3CenterAnyons
 import SKEFTHawking.CenterEquivalenceZ2
 import SKEFTHawking.DrinfeldDoubleAlgebra
+import SKEFTHawking.DrinfeldDoubleRing
+import SKEFTHawking.DrinfeldEquivalence
+import SKEFTHawking.WangBridge
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

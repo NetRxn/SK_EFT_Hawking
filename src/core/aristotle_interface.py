@@ -1550,6 +1550,15 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="Use @GradedObject.braidedCategory with explicit args, or construct BraidedCategory manually from GradedObject.Monoidal.braiding + hexagon lemmas. All prerequisites synthesize individually.",
         filled=True,  # Aristotle run 48493889: CommGroup G in separate section resolves diamond
     ),
+    # Phase 5b Wave 3: DrinfeldDoubleRing (13 sorrys — Ring/Algebra typeclass plumbing)
+    SorryGap(
+        module="SKEFTHawking.DrinfeldDoubleRing",
+        name="DG_ring_algebra",
+        priority=1,
+        description="Ring + Algebra k instances on DG wrapper for D(G). 13 sorrys: zsmul_succ'/neg', left/right_distrib, zero/mul_zero, algebraMap fields, commutes', smul_def', basis_mul",
+        strategy_hint="AddCommGroup axioms: ext + Pi pointwise. Distrib: unfold ddAlgMul, mul_add/add_mul + sum_add_distrib. Zero_mul/mul_zero: Pi.zero_apply + sum_const_zero. AlgebraMap: Finset.sum_eq_single 1 for convolution with unit. See PROVIDED SOLUTION hints in file.",
+        filled=True,  # Aristotle run 52992d6a: all 13 sorrys filled
+    ),
 ]
 
 
