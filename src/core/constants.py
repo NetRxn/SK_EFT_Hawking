@@ -1070,10 +1070,29 @@ ARISTOTLE_THEOREMS = {
     'davies_G_antisymmetry': '9d6f2432',
     # Phase 5a Wave 1B: OnsagerContraction.lean
     'contraction_rescaling': '36b7796f',
+    # Phase 5a Wave 2A: PauliMatrices + WilsonMass + BdGHamiltonian (14 theorems)
+    'σ_x_sq': '90ed1a98',
+    'σ_z_sq': '90ed1a98',
+    'σ_y_sq': '90ed1a98',
+    'comm_σ_x_σ_y': '90ed1a98',
+    'comm_σ_y_σ_z': '90ed1a98',
+    'comm_σ_z_σ_x': '90ed1a98',
+    'anticomm_σ_x_σ_z': '90ed1a98',
+    'σ_x_trace': '90ed1a98',
+    'σ_y_trace': '90ed1a98',
+    'σ_z_trace': '90ed1a98',
+    'wilson_mass_at_zero': '90ed1a98',
+    'wilson_mass_positive_at_pi': '90ed1a98',
+    'wilson_max_at_antiperiodic': '90ed1a98',
+    'kronecker_comm_identity_mixed': '90ed1a98',
+    # Phase 5a Wave 2B: GTCommutation.lean (3 theorems — crown jewels)
+    'gt_tau_commutator_vanishes': '18969de2',
+    'gt_commutation_4x4': '18969de2',
+    'gt_chiral_charge_non_compact': '18969de2',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 235, f"Expected 235 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 252, f"Expected 252 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 
@@ -1141,6 +1160,52 @@ Z16_CLASSIFICATION = {
     'A1_DIM': 8,  # A(1) = ⟨Sq¹, Sq²⟩ is 8-dimensional over F₂
     # Fermion counting: anomaly cancellation requires 16n Majorana fermions
     'ANOMALY_CANCELLATION_UNIT': 16,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5a: Gioia-Thorngren Lattice Chiral Fermion (Wave 2)
+#
+# GT constructs 3+1D lattice Hamiltonians with exact chiral symmetry
+# [H, Q_A] = 0 where Q_A is non-on-site and non-compact.
+#
+# Construction 1: Single Weyl fermion via Karsten-Wilczek + BdG doubling.
+#   H_BdG(k) is 4x4 at each k-point (sigma x tau Kronecker structure).
+#   Wilson mass M(k) = 3 - cos(kx) - cos(ky) - cos(kz) gaps all doublers.
+#   Chiral charge q_A(k) = 1_sigma ⊗ [(1+cos p3)/2 · tau_z + sin(p3)/2 · tau_x].
+#
+# Construction 2: Weyl doublet (magnetic Weyl semimetal).
+#   Q_V (on-site) + Q_A (non-on-site) generate the Onsager algebra on UV lattice.
+#   [Q_V, Q_A] ≠ 0 contracts to SU(2) in IR (emanant symmetry).
+#
+# Sources:
+#   Gioia & Thorngren, PRL 136, 061601 (2026) — original GT construction
+#   Misumi, arXiv:2512.22609 (2025) — BdG form, Eqs. 46-50
+#   Seiberg, arXiv:2211.12543 (2023) — emanant symmetry concept
+#   Seiberg & Shao, arXiv:2307.02534 (2024) — emanant symmetry + anomaly matching
+# ════════════════════════════════════════════════════════════════════
+
+GT_MODEL = {
+    # Spatial dimension of the lattice
+    'LATTICE_DIM': 3,
+    # Internal DOF per site (spin up/down)
+    'N_BANDS': 2,
+    # BdG (Nambu) doubling factor
+    'NAMBU_FACTOR': 2,
+    # BdG block dimension at each k-point: NAMBU_FACTOR * N_BANDS = 4
+    'BDG_BLOCK_DIM': 4,
+    # Wilson mass offset (number of cosines in M(k) = d - sum cos)
+    'WILSON_OFFSET': 3,
+    # Wilson mass range: M(k) ∈ [0, 2*LATTICE_DIM]
+    'WILSON_MAX': 6,
+    # Number of Weyl nodes: M(k)=0 only at k=(0,0,0) → exactly 1
+    'WEYL_NODE_COUNT': 1,
+    # Chiral charge real-space range (nearest-neighbor along z)
+    'Q_A_RANGE': 1,
+    # Pauli matrix dimension
+    'PAULI_DIM': 2,
+    # GS conditions violated by GT: I2 (on-site), I3 (compact spectrum)
+    'GS_VIOLATIONS': ['I2_on_site', 'I3_compact_spectrum'],
 }
 
 

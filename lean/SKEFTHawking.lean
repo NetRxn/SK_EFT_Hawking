@@ -41,6 +41,12 @@ import SKEFTHawking.OnsagerContraction
 import SKEFTHawking.Z16Classification
 import SKEFTHawking.SMGClassification
 import SKEFTHawking.SteenrodA1
+import SKEFTHawking.PauliMatrices
+import SKEFTHawking.WilsonMass
+import SKEFTHawking.BdGHamiltonian
+import SKEFTHawking.GTCommutation
+import SKEFTHawking.GTWeylDoublet
+import SKEFTHawking.ChiralityWallMaster
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

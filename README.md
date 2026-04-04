@@ -22,8 +22,8 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
 - **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
   no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
-**Lean 4 formalization:** 675 theorems + 3 axioms across 43 Lean modules. Zero sorry.
-235 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 748 theorems + 3 axioms across 49 Lean modules. Zero sorry.
+252 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
 MC framework (Lean-verified), chirality wall formalization (GS 9 conditions,
@@ -36,7 +36,7 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (675 theorems + 3 axioms, 43 modules, zero sorry)
+├── lean/                              # Lean 4 formalization (748 theorems + 3 axioms, 49 modules, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 43)
@@ -83,7 +83,12 @@ SK_EFT_Hawking/
 │       ├── OnsagerContraction.lean    # Phase 5a: Inönü-Wigner contraction O→su(2) (12 theorems)
 │       ├── Z16Classification.lean     # Phase 5a: Z₁₆ axiom, super-modular, 16-fold way (21 theorems + 1 axiom)
 │       ├── SteenrodA1.lean            # Phase 5a: A(1) sub-Hopf algebra, Adem, Ext→Z₁₆ (17 theorems)
-│       └── SMGClassification.lean     # Phase 5a: AZ tenfold way, SMG data, spectral gap (13 theorems)
+│       ├── SMGClassification.lean     # Phase 5a: AZ tenfold way, SMG data, spectral gap (13 theorems)
+│       ├── PauliMatrices.lean         # Phase 5a: σ_x,σ_y,σ_z, commutation, anti-commutation (15 theorems)
+│       ├── WilsonMass.lean            # Phase 5a: M(k)=3-Σcos, zero locus, bounds (11 theorems)
+│       ├── BdGHamiltonian.lean        # Phase 5a: BdG 4x4, σ⊗τ Kronecker, chiral charge (8 theorems)
+│       ├── GTCommutation.lean         # Phase 5a: [H,Q_A]=0 central theorem, GS evasion (10 theorems)
+│       └── GTWeylDoublet.lean         # Phase 5a: Weyl doublet, Onsager→SU(2), Witten anomaly (12 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -274,7 +279,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (675 + 3 axioms — zero sorry)
+## Theorem Inventory (748 + 3 axioms — zero sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -315,11 +320,16 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | GaugeFermionBag.lean | 5 | 9 | Tetrad covariance, bag weight, SMW update |
 | HubbardStratonovichRHMC.lean | 5 | 22 | HS identity, Kramers, multi-shift CG, complex pseudofermion |
 | MajoranaKramers.lean | 5 | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block |
-| OnsagerAlgebra.lean | 5a | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding, GT connection (1 sorry) |
+| OnsagerAlgebra.lean | 5a | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding, GT connection. Aristotle: 9d6f2432 |
 | OnsagerContraction.lean | 5a | 12 | Inönü-Wigner contraction O→su(2), rescaling, anomaly encoding. Aristotle: 36b7796f |
 | Z16Classification.lean | 5a | 21+1ax | Z₁₆ axiom, super-modular categories, 16-fold way, chirality mod 8→16 |
 | SteenrodA1.lean | 5a | 17 | A(1) F₂-algebra, Adem relations, multiplication table, Ext→Z₁₆ |
 | SMGClassification.lean | 5a | 13 | AZ tenfold way, SMG symmetry data, spectral gap typeclass, gapped interface |
+| PauliMatrices.lean | 5a | 15 | Pauli σ_x,σ_y,σ_z, commutation [σ_i,σ_j]=2iε σ_k, involutivity, traces. Aristotle: 90ed1a98 |
+| WilsonMass.lean | 5a | 11 | Wilson mass M(k), M=0 iff k=0 for all finite L, non-negativity, bounds. Aristotle: 90ed1a98 |
+| BdGHamiltonian.lean | 5a | 8 | BdG 4x4 Kronecker structure, H_BdG(k), q_A(k), Kronecker comm identity. Aristotle: 90ed1a98 |
+| GTCommutation.lean | 5a | 10 | **[H,Q_A]=0**: 2x2 τ-space trig identity, full 4x4, GS evasion (3 sorry) |
+| GTWeylDoublet.lean | 5a | 12 | Model 2: Q_V+Q_A→Onsager, emanant SU(2), Witten ℤ₂=elem 8∈ℤ₁₆, bridges |
 
 ## Build Environment
 

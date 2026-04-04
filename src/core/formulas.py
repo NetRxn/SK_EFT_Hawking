@@ -3238,3 +3238,115 @@ def z16_svec_extensions():
         {'N': N, 'label': f'SO({N})₁', 'central_charge': N / 2, 'c_mod_16': (N / 2) % 16}
         for N in range(1, 17)
     ]
+
+
+# ════════════════════════════════════════════════════════════════════
+# Gioia-Thorngren Lattice Chiral Fermion (Wave 2)
+# ════════════════════════════════════════════════════════════════════
+
+def gt_wilson_mass(kx, ky, kz):
+    """
+    Wilson mass function M(k) = 3 - cos(kx) - cos(ky) - cos(kz).
+
+    Gaps all doubler fermions while preserving one massless Weyl node at k=0.
+    M(k) = 0 if and only if k = (0,0,0) — proved for all finite lattices.
+
+    On the discrete Brillouin zone with k_i = 2*pi*n_i/L:
+      cos(2*pi*n/L) = 1  iff  n = 0 (mod L)
+    Since each cos ≤ 1 and sum = 3 forces each cos = 1.
+
+    Lean: wilson_mass_zero_iff_cos_eq_one, wilson_mass_at_zero, wilson_mass_nonneg
+    Aristotle: 90ed1a98 (wilson_mass_at_zero, wilson_mass_positive_at_pi, wilson_max_at_antiperiodic)
+    Source: Wilson, PRD 10, 2445 (1974); Gioia & Thorngren, PRL 136, 061601 (2026)
+
+    Args:
+        kx, ky, kz: momentum components (radians)
+
+    Returns:
+        dict with mass value and properties
+    """
+    M = 3.0 - np.cos(kx) - np.cos(ky) - np.cos(kz)
+    return {
+        'mass': float(M),
+        'is_zero': bool(np.isclose(M, 0.0)),
+        'is_positive': bool(M > 0),
+        'max_value': 6.0,
+    }
+
+
+def gt_chiral_charge(p3):
+    """
+    GT chiral charge matrix q_A(p) in 2x2 Nambu (tau) space.
+
+    q_A(p) = (1 + cos p3)/2 · tau_z + (sin p3)/2 · tau_x
+
+    Acts as identity in spin (sigma) space: full 4x4 form is 1_sigma ⊗ q_tau.
+    Eigenvalues: ±cos(p3/2) — non-quantized, non-compact spectrum.
+    Real-space range: R = 1 (nearest-neighbor along z).
+
+    Ginsparg-Wilson relation: q_A^2 = cos^2(p3/2) · 1
+
+    Lean: chiral_charge_noncompact, chiral_charge_range (BdGHamiltonian.lean)
+    Aristotle: 18969de2 (gt_chiral_charge_non_compact)
+    Source: Misumi, arXiv:2512.22609 (2025), Eq. 50
+
+    Args:
+        p3: z-component of momentum (radians)
+
+    Returns:
+        dict with 2x2 matrix entries, eigenvalues, and properties
+    """
+    q_zz = (1.0 + np.cos(p3)) / 2.0  # tau_z coefficient
+    q_xz = np.sin(p3) / 2.0           # tau_x coefficient
+    eigenvalues = np.cos(p3 / 2.0)
+    gw_norm_sq = np.cos(p3 / 2.0) ** 2
+    return {
+        'tau_z_coeff': float(q_zz),
+        'tau_x_coeff': float(q_xz),
+        'matrix_2x2': np.array([[q_zz, q_xz], [q_xz, -q_zz]]),
+        'eigenvalues': (float(eigenvalues), float(-eigenvalues)),
+        'is_hermitian': True,
+        'gw_norm_sq': float(gw_norm_sq),
+        'range_R': 1,  # nearest-neighbor in z
+    }
+
+
+def gt_commutator_identity(p3):
+    """
+    The 2x2 Nambu-space commutator [h_eff, q_tau] that must vanish.
+
+    h_tau(p) = sin(p3) · tau_z + (1 - cos p3) · tau_x  (the tau-dependent part)
+    q_tau(p) = (1 + cos p3)/2 · tau_z + sin(p3)/2 · tau_x
+
+    [h_tau, q_tau] = sin(p3)*sin(p3)/2 * [tau_z, tau_x]
+                   + (1-cos p3)*(1+cos p3)/2 * [tau_x, tau_z]
+                   = sin^2(p3)/2 * 2i*tau_y + (-sin^2(p3)/2) * 2i*tau_y
+                   = 0
+
+    where (1-cos p3)(1+cos p3)/2 = sin^2(p3)/2 by the Pythagorean identity.
+    This is the heart of the GT construction: the commutator vanishes
+    identically for ALL p3 and ALL parameter values.
+
+    Lean: gt_tau_commutator_vanishes, gt_commutation_4x4 (GTCommutation.lean)
+    Aristotle: 18969de2 (gt_tau_commutator_vanishes, gt_commutation_4x4)
+    Source: Gioia & Thorngren, PRL 136, 061601 (2026)
+
+    Args:
+        p3: z-component of momentum (radians)
+
+    Returns:
+        dict with commutator components and verification
+    """
+    # Coefficient of i*tau_y from [tau_z, tau_x] = 2i*tau_y
+    term1 = np.sin(p3) * np.sin(p3) / 2.0
+    # Coefficient of i*tau_y from [tau_x, tau_z] = -2i*tau_y
+    term2 = (1.0 - np.cos(p3)) * (1.0 + np.cos(p3)) / 2.0
+    # The identity: term1 = term2, so they cancel
+    commutator_coeff = term1 - term2
+    return {
+        'term1_sin_sq': float(term1),
+        'term2_product': float(term2),
+        'commutator_tau_y_coeff': float(commutator_coeff),
+        'vanishes': bool(np.isclose(commutator_coeff, 0.0)),
+        'identity_used': 'sin^2(p3) = (1-cos p3)(1+cos p3) [Pythagorean]',
+    }

@@ -4470,5 +4470,247 @@ def fig_vestigial_phase_diagram_analytical() -> go.Figure:
     return fig
 
 
+# ============================================================
+# Phase 5a: GT Lattice Chiral Fermion + Chirality Wall
+# ============================================================
+
+
+def fig_gt_band_structure() -> go.Figure:
+    """GT BdG band structure along high-symmetry path in the Brillouin zone.
+
+    Shows the 4 BdG energy bands for the Gioia-Thorngren single-Weyl
+    construction. The key feature: exactly one gapless Weyl node at k=0
+    (Gamma), while all doublers at zone boundary are gapped by the Wilson mass.
+
+    Lean: wilson_mass_zero_iff_cos_eq_one (WilsonMass.lean)
+    """
+    from src.chirality.gioia_thorngren import bdg_hamiltonian_fast, band_structure
+
+    # High-symmetry path: Gamma -> X -> M -> Gamma -> R
+    N = 200
+    paths = {
+        'Gamma-X': np.column_stack([np.linspace(0, np.pi, N), np.zeros(N), np.zeros(N)]),
+        'X-M': np.column_stack([np.full(N, np.pi), np.linspace(0, np.pi, N), np.zeros(N)]),
+        'M-Gamma': np.column_stack([np.linspace(np.pi, 0, N), np.linspace(np.pi, 0, N), np.zeros(N)]),
+        'Gamma-R': np.column_stack([np.linspace(0, np.pi, N), np.linspace(0, np.pi, N), np.linspace(0, np.pi, N)]),
+    }
+
+    fig = go.Figure()
+    x_offset = 0
+    tick_positions = [0]
+    tick_labels = ['Gamma']
+
+    for seg_name, k_path in paths.items():
+        bands = band_structure(k_path, r=1.0)
+        x = np.linspace(x_offset, x_offset + 1, len(k_path))
+
+        for b in range(4):
+            fig.add_trace(go.Scatter(
+                x=x, y=bands[:, b],
+                mode='lines',
+                line=dict(color=COLORS['Rb87'] if b < 2 else COLORS['K39'], width=1.5),
+                showlegend=(seg_name == 'Gamma-X' and b in [0, 2]),
+                name='Valence' if b < 2 else 'Conduction',
+            ))
+
+        x_offset += 1
+        label = seg_name.split('-')[1]
+        tick_positions.append(x_offset)
+        tick_labels.append(label)
+
+    # Mark Weyl node at Gamma
+    fig.add_annotation(x=0, y=0, text='<b>Weyl node</b>', showarrow=True,
+        arrowhead=2, ax=50, ay=-40, font=dict(size=13, color=COLORS['dissipative']))
+
+    # Vertical segment dividers
+    for pos in tick_positions[1:-1]:
+        fig.add_vline(x=pos, line_dash='dot', line_color='rgba(0,0,0,0.3)')
+
+    apply_layout(fig, height=450, width=700,
+        title=dict(text='<b>GT BdG Band Structure (r=1)</b>', font=TITLE_FONT),
+        xaxis=dict(title='', tickvals=tick_positions, ticktext=tick_labels),
+        yaxis=dict(title='Energy (arb. units)'),
+        legend=dict(x=0.02, y=0.98))
+    return fig
+
+
+def fig_wilson_mass_bz() -> go.Figure:
+    """Wilson mass M(k) on the kz=0 plane of the Brillouin zone.
+
+    Heatmap showing M(kx,ky,0) = 3 - cos(kx) - cos(ky) - 1. The single
+    zero at kx=ky=0 (the Weyl node) is clearly visible. All doublers
+    at zone boundary are gapped (M > 0).
+
+    Lean: wilson_mass_nonneg, wilson_mass_pos_of_ne_zero (WilsonMass.lean)
+    """
+    from src.core.formulas import gt_wilson_mass
+
+    N = 100
+    kx = np.linspace(-np.pi, np.pi, N)
+    ky = np.linspace(-np.pi, np.pi, N)
+    KX, KY = np.meshgrid(kx, ky)
+    M = np.vectorize(lambda x, y: gt_wilson_mass(x, y, 0)['mass'])(KX, KY)
+
+    fig = go.Figure(data=go.Heatmap(
+        z=M, x=kx, y=ky,
+        colorscale=[[0, '#FFFFFF'], [0.01, '#DAE2F8'], [0.5, COLORS['Rb87']], [1, '#1A1A2E']],
+        colorbar=dict(title='M(k)'),
+        hovertemplate='kx=%{x:.2f}, ky=%{y:.2f}<br>M=%{z:.3f}<extra></extra>',
+    ))
+
+    # Mark Weyl node
+    fig.add_trace(go.Scatter(
+        x=[0], y=[0], mode='markers',
+        marker=dict(size=14, color=COLORS['Na23'], symbol='x', line=dict(width=3, color=COLORS['Na23'])),
+        name='Weyl node (M=0)', showlegend=True,
+    ))
+
+    apply_layout(fig, height=500, width=550,
+        title=dict(text='<b>Wilson Mass M(kx,ky,0)</b>', font=TITLE_FONT),
+        xaxis=dict(title='kx', range=[-np.pi, np.pi]),
+        yaxis=dict(title='ky', range=[-np.pi, np.pi], scaleanchor='x'))
+    return fig
+
+
+def fig_chiral_charge_spectrum() -> go.Figure:
+    """Chiral charge eigenvalues ±cos(p3/2) as a function of p3.
+
+    Shows the non-compact (continuous, non-integer) spectrum of Q_A,
+    demonstrating violation of GS condition I3 (compact spectrum).
+    Also shows the Ginsparg-Wilson norm cos^2(p3/2).
+
+    Lean: chiral_charge_noncompact, chiral_charge_range (BdGHamiltonian.lean)
+    """
+    p3 = np.linspace(-np.pi, np.pi, 300)
+    ev_plus = np.cos(p3 / 2)
+    ev_minus = -np.cos(p3 / 2)
+    gw_norm = np.cos(p3 / 2) ** 2
+
+    fig = make_subplots(rows=1, cols=2, subplot_titles=[
+        'Chiral charge eigenvalues', 'Ginsparg-Wilson norm'])
+
+    fig.add_trace(go.Scatter(x=p3, y=ev_plus, mode='lines',
+        line=dict(color=COLORS['Rb87'], width=2), name='+cos(p3/2)'), row=1, col=1)
+    fig.add_trace(go.Scatter(x=p3, y=ev_minus, mode='lines',
+        line=dict(color=COLORS['K39'], width=2), name='-cos(p3/2)'), row=1, col=1)
+    # Integer grid lines to show non-quantization
+    for val in [-1, 0, 1]:
+        fig.add_hline(y=val, line_dash='dot', line_color='rgba(0,0,0,0.2)', row=1, col=1)
+
+    fig.add_trace(go.Scatter(x=p3, y=gw_norm, mode='lines',
+        line=dict(color=COLORS['dispersive'], width=2), name='cos^2(p3/2)'), row=1, col=2)
+    fig.add_hline(y=1, line_dash='dot', line_color='rgba(0,0,0,0.2)', row=1, col=2)
+
+    apply_layout(fig, height=400, width=800,
+        title=dict(text='<b>GT Chiral Charge: Non-Compact Spectrum</b>', font=TITLE_FONT))
+    fig.update_xaxes(title_text='p3', row=1, col=1)
+    fig.update_xaxes(title_text='p3', row=1, col=2)
+    fig.update_yaxes(title_text='Eigenvalue', row=1, col=1)
+    fig.update_yaxes(title_text='q_A^2 norm', row=1, col=2)
+    return fig
+
+
+def fig_gt_commutator_verification() -> go.Figure:
+    """Numerical verification of [H_BdG(k), q_A(k)] = 0 on a finite lattice.
+
+    Shows |[H,Q_A]|_max at each k-point for L=8, demonstrating that the
+    commutator is at machine epsilon (~10^-16) everywhere. This is the
+    numerical mirror of the Lean theorem gt_commutation_4x4.
+
+    Lean: gt_commutation_4x4, gt_tau_commutator_vanishes (GTCommutation.lean)
+    """
+    from src.chirality.gioia_thorngren import (
+        brillouin_zone, bdg_hamiltonian_fast, chiral_charge_4x4,
+    )
+
+    L = 8
+    k = brillouin_zone(L)
+    H = bdg_hamiltonian_fast(k, r=1.0)
+    Q = chiral_charge_4x4(k)
+    comm = H @ Q - Q @ H
+    norms = np.max(np.abs(comm), axis=(1, 2))
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=np.arange(len(norms)), y=norms,
+        mode='markers',
+        marker=dict(size=3, color=COLORS['Rb87']),
+        name='|[H(k), Q_A(k)]|_max',
+    ))
+    fig.add_hline(y=1e-14, line_dash='dash', line_color=COLORS['dissipative'],
+        annotation_text='machine epsilon', annotation_position='top right')
+
+    apply_layout(fig, height=400, width=700,
+        title=dict(text=f'<b>[H, Q_A] = 0 Verification (L={L}, {L**3} k-points)</b>',
+                   font=TITLE_FONT),
+        xaxis=dict(title='k-point index'),
+        yaxis=dict(title='Max |commutator entry|', type='log',
+                   range=[-17, -13]))
+    return fig
+
+
+def fig_chirality_wall_three_pillars() -> go.Figure:
+    """Overview of the three-pillar chirality wall formal verification.
+
+    Structured diagram showing:
+      Pillar 1 (red): GS no-go — 9 conditions, 5 TPF violations
+      Pillar 2 (blue): GT construction — [H,Q_A]=0, non-on-site, 1 Weyl
+      Pillar 3 (green): Z16 + Onsager — anomaly classification
+
+    With bridge connections between pillars.
+
+    Lean: chirality_wall_assessment (ChiralityWallMaster.lean)
+    """
+    fig = go.Figure()
+
+    # Three pillars as colored boxes
+    pillars = [
+        {'x': 0.15, 'color': COLORS['dissipative'], 'title': 'Pillar 1: No-Go',
+         'items': ['GS: 9 conditions', '5 violated by TPF', '14 theorems (GS)', '12 theorems (TPF)']},
+        {'x': 0.50, 'color': COLORS['Rb87'], 'title': 'Pillar 2: GT Construction',
+         'items': ['[H, Q_A] = 0 verified', 'Non-on-site (R=1)', '1 Weyl node', '56 theorems (Wave 2)']},
+        {'x': 0.85, 'color': COLORS['Na23'], 'title': 'Pillar 3: Anomaly',
+         'items': ['Onsager (DG=16)', 'O → su(2) contraction', 'Z16 axiom + A(1)', '87 theorems (W1+3)']},
+    ]
+
+    for p in pillars:
+        # Box
+        fig.add_shape(type='rect',
+            x0=p['x'] - 0.13, x1=p['x'] + 0.13, y0=0.15, y1=0.85,
+            fillcolor=p['color'], opacity=0.12,
+            line=dict(color=p['color'], width=2))
+        # Title
+        fig.add_annotation(x=p['x'], y=0.92, text=f"<b>{p['title']}</b>",
+            showarrow=False, font=dict(size=15, color=p['color'], family=FONT['family']))
+        # Items
+        for i, item in enumerate(p['items']):
+            fig.add_annotation(x=p['x'], y=0.72 - i * 0.14, text=item,
+                showarrow=False, font=dict(size=13, family=FONT['family']))
+
+    # Bridge arrows
+    fig.add_annotation(x=0.33, y=0.50, ax=0.15 + 0.13, ay=0.50,
+        text='GS evasion', showarrow=True, arrowhead=2, arrowcolor='gray',
+        font=dict(size=10, color='gray'))
+    fig.add_annotation(x=0.67, y=0.50, ax=0.50 + 0.13, ay=0.50,
+        text='Anomaly protection', showarrow=True, arrowhead=2, arrowcolor='gray',
+        font=dict(size=10, color='gray'))
+
+    # Summary bar
+    fig.add_annotation(x=0.50, y=0.03,
+        text='<b>748 theorems + 3 axioms | 49 Lean modules | zero sorry | 252 Aristotle-proved</b>',
+        showarrow=False, font=dict(size=14, family=FONT['family']))
+
+    fig.update_layout(
+        height=500, width=800,
+        title=dict(text='<b>Chirality Wall: Three-Pillar Formal Verification</b>',
+                   font=TITLE_FONT, x=0.5),
+        xaxis=dict(visible=False, range=[0, 1]),
+        yaxis=dict(visible=False, range=[0, 1]),
+        plot_bgcolor='white', paper_bgcolor='white',
+        margin=dict(l=20, r=20, t=60, b=40),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

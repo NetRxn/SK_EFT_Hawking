@@ -123,62 +123,115 @@
 
 ## 2. Wave 2 — Gioia-Thorngren Lattice Chiral Symmetry [Lean + Aristotle]
 
-**Research basis:** `Lit-Search/Phase-5a/Formalizing Gioia-Thorngren anomaly matching in Lean 4.md`
+**Research basis:**
+- `Lit-Search/Phase-5a/Formalizing Gioia-Thorngren anomaly matching in Lean 4.md` (initial feasibility)
+- `Lit-Search/Phase-5a/Formalizing the Gioia-Thorngren lattice chiral fermion in Lean 4.md` (implementation architecture)
+- `Lit-Search/Phase-5a/Formalizing emanant symmetry and anomaly matching for the GT lattice chiral fermion construction.md` (anomaly + bridge theorems)
+- GT paper: arXiv:2503.07708 (PRL 136, 061601, 2026)
+- Misumi review: arXiv:2512.22609 (BdG form of GT, Eqs. 46-50)
 
-**Prerequisites:** Wave 1 (Onsager algebra).
+**Prerequisites:** Wave 1 (Onsager algebra) — COMPLETE.
 
-### 2A. CAR Algebra and BdG Hamiltonian Framework [Pipeline: Stages 1-5]
+**Approach (decided 2026-04-04 after deep research):** Finite-volume algebraic, mode-by-mode in momentum space. The key insight from deep research: H_BdG(k) is a 4x4 matrix at each k-point (block diagonal in momentum space), and the central theorem [H, Q_A] = 0 reduces to a **single 2x2 trigonometric identity** in Nambu (tau) space: sin^2(p_3) - (1-cos p_3)(1+cos p_3)/2 = 0, which is just sin^2 + cos^2 = 1. No CAR algebra, Fock space, or infinite-dimensional operator theory needed.
 
-**Goal:** Build the lattice operator framework needed for the GT construction. This extends the existing LatticeHamiltonian infrastructure (Wave 3A of Phase 5) with fermionic creation/annihilation operators.
+**Mathlib infrastructure available:**
+- `Matrix.blockDiagonal` + `blockDiagonalRingHom` — k-space decomposition
+- `Matrix.kroneckerMap` — sigma x tau tensor products
+- `LieRing.ofAssociativeRing` — automatic [A,B] = AB - BA
+- `Real.cos_le_one` — Wilson mass uniqueness
+- `Matrix.blockDiagonal_mul` — reduces full lattice proof to per-k blocks
 
-**The construction:**
-1. CAR algebra: {c_x, c_y†} = δ_{xy}, {c_x, c_y} = 0 — via Mathlib's `ExteriorAlgebra` (already used for C2)
-2. BdG Hamiltonian: H = Σ_{x,y} (h_{xy} c_x† c_y + Δ_{xy} c_x† c_y† + h.c.)
-3. Locality classification: finite-range, not-on-site, non-compact
-4. Chiral symmetry: Q_A commutes with H but is not on-site
+**What must be built:** Pauli matrices, BdG structure, Wilson mass function, chiral charge q_A(k), Kronecker product lemmas, non-on-site classification.
 
-**Deliverables:**
-- [ ] `lean/SKEFTHawking/CARAlgebra.lean` — ~15-20 theorems:
-  - Creation/annihilation operators on ExteriorAlgebra
-  - Anti-commutation relations
-  - Number operator, particle-hole symmetry
-- [ ] `lean/SKEFTHawking/BdGHamiltonian.lean` — ~15-20 theorems:
-  - BdG structure, locality classification
-  - Spectrum, particle-hole symmetry of BdG spectrum
-- [ ] Tests, formulas, document sync
+### 2A. Pauli Matrices + BdG Infrastructure [Pipeline: Stages 1-5]
 
-**Estimated LOE:** High (4-8 weeks). Functional analysis gaps (operator norms, spectral theory) may require axiomatization.
-**Risk:** Medium. The gap between ExteriorAlgebra as a vector space and ExteriorAlgebra as an operator algebra is nontrivial.
+**Goal:** Define Pauli matrix infrastructure and the BdG Hamiltonian type. This is shared infrastructure for both GT models and future lattice fermion formalizations.
+
+**Modules and deliverables:**
+
+- [x] `lean/SKEFTHawking/PauliMatrices.lean` — 15 theorems, zero sorry:
+  - sigma_x, sigma_y, sigma_z, tau_x, tau_y, tau_z definitions
+  - Commutation: [σ_i, σ_j] = 2iε_{ijk}σ_k (all 3 proved by Aristotle `90ed1a98`)
+  - Anti-commutation: {σ_x, σ_z} = 0
+  - Involutivity: σ_i² = 1 (all 3 proved by Aristotle)
+  - Hermiticity, tracelessness (all proved by Aristotle)
+
+- [x] `lean/SKEFTHawking/WilsonMass.lean` — 11 theorems, zero sorry:
+  - M(k) = 3 - cos(kx) - cos(ky) - cos(kz)
+  - `wilson_mass_zero_iff_cos_eq_one`: M(k)=0 ↔ all cos=1 (manual proof)
+  - `wilson_mass_nonneg`, `wilson_mass_le_six` (manual proofs via linarith)
+  - `wilson_mass_at_zero`, `wilson_mass_positive_at_pi`, `wilson_max_at_antiperiodic` (Aristotle `90ed1a98`)
+  - `wilson_mass_pos_of_ne_zero`: strictly positive away from origin (manual)
+
+- [x] `lean/SKEFTHawking/BdGHamiltonian.lean` — 8 theorems, zero sorry:
+  - `BdGIndex = Fin 2 × Fin 2`, block dim = 4
+  - H_BdG(k) as 4×4 via σ⊗τ Kronecker structure
+  - q_A(k) = 𝟙_σ ⊗ q_tau(p) definition
+  - `kronecker_comm_identity_mixed`: [A⊗𝟙, 𝟙⊗B] = 0 (Aristotle `90ed1a98`, proved by `grind`)
+  - Chiral charge: non-on-site (R=1), non-compact (eigenvalues ±cos(p₃/2))
+
+- [x] Formulas in `formulas.py`: gt_wilson_mass, gt_chiral_charge, gt_commutator_identity
+- [x] Constants in `constants.py`: GT_MODEL parameters
+- [x] Tests in `tests/test_gt_model.py` (26 tests, all pass)
+
+**Status: COMPLETE** — 34 theorems, zero sorry. Aristotle `90ed1a98` proved all 14 sorry stubs.
+**Actual:** 34 theorems (within estimate). First Pauli matrix + Wilson mass formalization for lattice chiral fermions.
 
 ---
 
-### 2B. GT Model Formalization [Pipeline: Stages 1-5]
+### 2B. Chiral Symmetry and GT Model Verification [Pipeline: Stages 1-12]
 
-**Goal:** Formalize the two GT models: (1) single Weyl fermion with non-compact U(1) chiral symmetry, (2) Weyl doublet with Onsager algebra chiral symmetry contracting to SU(2) in IR.
+**Goal:** Prove [H, Q_A] = 0 for GT Construction 1 (single Weyl fermion), prove Q_A is non-on-site and non-compact, connect to GS evasion. Then extend to Model 2 (Weyl doublet) with Onsager algebra connection.
 
-**Prerequisites:** 2A (CAR algebra, BdG framework), Wave 1 (Onsager algebra).
+**The proof structure (from deep research):**
+1. Define q_A(k) = 1_sigma ⊗ [(1+cos p3)/2 * tau_z + (sin p3)/2 * tau_x]
+2. [H_BdG(k), q_A(k)] decomposes into 3 terms:
+   - sigma_1⊗1 and sigma_3⊗1 terms: commute trivially with 1_sigma⊗(tau stuff) = 0
+   - sigma_2⊗h_eff term: reduces to [h_eff(p), q_tau(p)] in 2x2 tau space
+3. The 2x2 commutator [h_eff, q_tau] = 0 via: sin(p3)*sin(p3)/2*[tau_z,tau_x] + (1-cos p3)*(1+cos p3)/2*[tau_x,tau_z] = i*sin^2(p3)*tau_y - i*sin^2(p3)*tau_y = 0
+4. Lift to full lattice via `Matrix.blockDiagonal` ring homomorphism
 
-**The construction:**
-1. Define GT Model 1: H = Σ_k h(k) with specific dispersion on BrillouinZone 3 (3+1D)
-2. Define chiral charge Q_A as non-compact, not-on-site lattice operator
-3. Prove [H, Q_A] = 0 exactly (at the Hamiltonian level, not just in IR)
-4. Prove Q_A is NOT on-site (violates GS condition I2/I3)
-5. Define GT Model 2: H_doublet with Onsager algebra charges (A₀, A₁)
-6. Prove [H_doublet, A₀] = [H_doublet, A₁] = 0
+**Modules and deliverables:**
 
-**Key theorem:** GT models evade Nielsen-Ninomiya by using non-compact, not-on-site symmetries — exactly the conditions our Phase 5 formalization proved the GS no-go requires.
+- [x] `lean/SKEFTHawking/GTCommutation.lean` — 10 theorems, **3 sorry (Aristotle in flight)**:
+  - `gt_tau_commutator_vanishes`: [h_tau, q_tau] = 0 (the 2×2 sin²+cos²=1 identity)
+  - `gt_commutation_4x4`: [H_BdG(k), q_A(k)] = 0 (full 4×4 result)
+  - `gt_lattice_commutation`: lift to all k via gt_commutation_4x4
+  - GS evasion: non-on-site (R=1), non-compact (±cos(p₃/2))
+  - Bridge: gt_dg_coeff_bridge connects to OnsagerAlgebra DG_COEFF=16
+  - `gt_chiral_charge_non_compact`: ∃ non-integer eigenvalue (sorry, Aristotle)
 
-**Deliverables:**
-- [ ] `lean/SKEFTHawking/GioiaThorngrenModel.lean` — ~20-30 theorems:
-  - Model 1 Hamiltonian + chiral symmetry proof
-  - Model 2 Hamiltonian + Onsager symmetry proof
-  - Nielsen-Ninomiya evasion: explicit violation identification
-  - Connection to existing TPFEvasion.lean results
-- [ ] `src/chirality/gioia_thorngren.py` — GT model computations
-- [ ] Tests, formulas, document sync
+- [x] `lean/SKEFTHawking/GTWeylDoublet.lean` — 12 theorems, zero sorry:
+  - Q_V (on-site) + Q_A (non-on-site) charge structure
+  - Onsager algebra: DG_COEFF=16 connects to OnsagerAlgebra.lean
+  - Emanant symmetry: Onsager contracts to su(2) (sl2_dim=3)
+  - Witten anomaly: element 8 ∈ ℤ₁₆ (8*2=16), connects to Z16Classification.lean
+  - TPF pipeline: anomaly cancellation at 16 Majorana, connects to TPFEvasion.lean
+  - GS violation bridge: 2 conditions violated
 
-**Estimated LOE:** High (6-12 weeks). The explicit Hamiltonian proofs are technically demanding.
-**Risk:** Medium-High. Proving [H, Q_A] = 0 rigorously in Lean requires spectral theory infrastructure that may need axiomatization.
+- [x] `src/chirality/gioia_thorngren.py` — vectorized NumPy BdG pipeline:
+  - brillouin_zone, wilson_mass, find_weyl_nodes
+  - bdg_hamiltonian_fast (vectorized σ⊗τ), band_structure
+  - chiral_charge_4x4, chiral_charge_eigenvalues
+  - verify_commutator, verify_commutator_tau, ginsparg_wilson_check
+  - analyze_gt_evasion (full GTEvasionReport)
+- [x] Tests in `tests/test_gt_model.py` (26 tests) + `tests/test_gioia_thorngren.py` (25 tests)
+- [x] Pipeline Stages 1-7, 12 complete. Stages 8-11 deferred to Wave 4.
+
+**Status: IN PROGRESS** — 22 theorems written, 3 sorry (Aristotle in flight). All Python complete.
+**Actual:** 22 theorems (within 18-25 estimate for GTCommutation+GTWeylDoublet). Domain module + 51 tests.
+
+**Key Aristotle targets:**
+- Pauli commutation relations (algebraic, clean)
+- Wilson mass uniqueness (trigonometric, may need hints)
+- [H_BdG(k), q_A(k)] = 0 decomposition (algebraic matrix identity)
+- Dolan-Grady verification for Model 2 on finite lattice
+
+**Paper impact:** Completes the chirality wall formal verification from two sides:
+- Negative: GS no-go + TPF evasion (Phase 5, done)
+- Positive: GT construction with machine-verified [H, Q_A] = 0 (this wave)
+- Algebraic: Onsager + Z_16 + A(1) Steenrod (Waves 1, 3, done)
+First formal verification of a lattice chiral fermion construction in any proof assistant.
 
 ---
 
@@ -277,19 +330,24 @@ structure ChiralityWallMasterTheorem where
 ```
 
 **Deliverables:**
-- [ ] `lean/SKEFTHawking/ChiralityWallMaster.lean` — ~15-25 theorems:
-  - Master structure definition
-  - Bridge theorems connecting three pillars
-  - Current status assessment: what is proved, what is axiomatized, what is conditional
-- [ ] Paper 8 draft: `papers/paper8_chirality_master/paper_draft.tex` — comprehensive chirality wall paper
-  - First formal verification survey of the chirality wall
-  - Three-pillar structure with machine-checked proofs
-  - Publication target: Reviews of Modern Physics or Computer Physics Communications
-- [ ] Notebooks: `Phase5a_ChiralityMaster_Technical.ipynb` + `_Stakeholder.ipynb`
-- [ ] Full document sync (Stages 8-12)
+- [x] `lean/SKEFTHawking/ChiralityWallMaster.lean` — 17 theorems, zero sorry:
+  - ChiralityWallStatus structure, chiralityWall2026 instance
+  - Pillar 1-3 summary theorems, bridge theorems (GS→GT, GT→anomaly, GS→Z₁₆)
+  - chirality_wall_assessment: master conjunction
+- [x] Paper 8 draft: `papers/paper8_chirality_master/paper_draft.tex`
+  - Three-pillar survey, 5 figures, full bibliography
+  - Claims review: 31 PASS, 0 FAIL, 7 WARN (all warnings defensible)
+- [x] Paper 7 updated: forward reference to Paper 8, counts reconciled (748/49)
+  - Claims review: 20 PASS, 0 FAIL (748 count confirmed), 7 WARN
+- [x] Notebooks: `Phase5a_GTChiralFermion_Technical.ipynb` + `_Stakeholder.ipynb`
+- [x] 5 new figures (fig66-fig70), LLM figure review (2 PASS, 3 MINOR→fixed)
+- [x] `src/chirality/gioia_thorngren.py` domain module + tests
+- [x] Stakeholder docs: Phase5a_Implications.md, Phase5a_Strategic_Positioning.md
+- [x] Full document sync: Inventory, README, __init__.py, validate.py, companion_guide
+- [x] Living docs updated: Feasibility Study + Critical Review v3 (counts + chirality verdict)
 
-**Estimated LOE:** Medium (2-4 weeks for synthesis, once Waves 1-3 complete).
-**Risk:** Low. This is a packaging wave — the hard work is in Waves 1-3.
+**Status: COMPLETE** — 17 theorems, zero sorry. All 12 pipeline stages + claims review.
+**Actual:** Single session (April 4, 2026). Packaging wave as expected.
 
 ---
 
@@ -359,24 +417,29 @@ All results in `Lit-Search/Phase-5a/`.
 | Chirality wall unification | `Formalizing the chirality wall...` | Three-pillar structure. Algebraic layer tractable. A(1) Ext is most novel bounded target. |
 | SMG spectral gaps | `Spectral gaps for symmetric mass generation...` | Yang-Mills difficulty. Axiomatize gap, prove everything conditional. Gap comparison method promising. |
 | Onsager algebra survey | `The Onsager algebra- from lattice integrability...` | Universal anomaly encoding structure. 7+ physics domains. q-Onsager → fusion categories. |
+| **GT finite-volume BdG** | `Formalizing the Gioia-Thorngren lattice chiral fermion in Lean 4.md` | **Mode-by-mode 4x4 matrices**. [H,Q_A]=0 reduces to 2x2 trig identity (sin²+cos²=1). Mathlib has blockDiagonal, kroneckerMap, LieRing.ofAssociativeRing. ~8-10 modules, 2-3 weeks. |
+| **Emanant symmetry + anomaly** | `Formalizing emanant symmetry and anomaly matching...` | Emanant symmetry is algebraic abelianization (not IW contraction). Witten anomaly = element 8 ∈ Z₁₆. Group cohomology provable, bordism axiomatized. Bridge theorems to GS/TPF/Onsager clean. |
 
 ---
 
-## 8. Estimated Timeline
+## 8. Estimated Timeline (Revised 2026-04-04)
 
-| Wave | Scope | LOE | Dependencies |
-|------|-------|-----|-------------|
-| Wave 1 | Onsager algebra | 2-6 weeks | None |
-| Wave 2 | GT models | 4-12 weeks | Wave 1 |
-| Wave 3A | Z₁₆ axiom + conditionals | 3-6 weeks | None (parallel with Wave 2) |
-| Wave 3B | A(1) Ext computation | 4-8 weeks | Wave 3A |
-| Wave 4 | Master theorem synthesis | 2-4 weeks | Waves 1-3 |
-| Wave 5 | Spectral gap + statistics | 1-3 weeks | None (parallel) |
+| Wave | Scope | LOE | Dependencies | Status |
+|------|-------|-----|-------------|--------|
+| Wave 1A | Onsager DG+Davies | 1 session | None | **COMPLETE** (24 thms) |
+| Wave 1B | Contraction→su(2) | 1 session | Wave 1A | **COMPLETE** (12 thms) |
+| Wave 2A | Pauli + BdG + Wilson mass | 1-2 weeks | Wave 1 | **NEXT** |
+| Wave 2B | GT commutation + non-on-site + Onsager connection | 1-2 weeks | Wave 2A | Queued |
+| Wave 3A | Z₁₆ axiom + conditionals | 1 session | None | **COMPLETE** (21+1ax thms) |
+| Wave 3B | A(1) Ext computation | 1 session | Wave 3A | **COMPLETE** (17 thms) |
+| Wave 4 | Master theorem synthesis + Paper 8 + notebooks | 2-3 weeks | Waves 1-3 | Blocked on Wave 2 |
+| Wave 5A | SMG spectral gap assessment | 1 session | None | **COMPLETE** (13 thms) |
+| Wave 5B | Verified statistics roadmap | 1 session | None | **COMPLETE** (doc only) |
 
-**Total estimated:** 16-39 weeks. Wave 1 + Wave 3A can start immediately in parallel.
-
-**Estimated theorem count:** 100-180 new theorems across 6-10 new Lean modules.
+**Completed:** 6/8 waves (1A, 1B, 3A, 3B, 5A, 5B) — 87 theorems + 1 axiom, zero sorry.
+**Remaining:** Wave 2 (~30-40 theorems, 2-3 weeks), then Wave 4 (synthesis + paper, 2-3 weeks).
+**Total theorem estimate:** 130-150 new theorems across ~12-15 new Lean modules.
 
 ---
 
-*Phase 5a roadmap. Created 2026-04-03. Execution priority confirmed: Waves 1 + 3A start immediately (no dependencies). L=8 RHMC in parallel. Wave 8 conditional on L=8 results. All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). Deep research complete.*
+*Phase 5a roadmap. Created 2026-04-03. Last updated 2026-04-04 (Wave 2 redesigned after deep research: finite-volume BdG, mode-by-mode k-space, 2x2 trig identity core). Execution: Waves 1+3+5 complete, Wave 2 next, Wave 4 after. All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md).*

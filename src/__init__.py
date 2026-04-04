@@ -31,14 +31,18 @@ A unified project encompassing:
     * First fusion category formalization: Vec_G, Rep(S₃), Fibonacci verified.
     * First Drinfeld double formalization: D(G), gauge emergence, chirality limitation.
 
-  - Phase 5a (chirality wall formalization — Onsager algebra + Z₁₆):
+  - Phase 5a (chirality wall formalization — Onsager algebra + Z₁₆ + GT):
     * Onsager algebra: Dolan-Grady definition, Davies isomorphism, Chevalley
-      embedding into L(sl₂), connection to Gioia-Thorngren lattice chiral fermions.
+      embedding into L(sl₂), contraction to su(2).
     * Z₁₆ axiomatized framework: Pin⁺ bordism axiom, super-modular categories,
       16-fold way, chirality strengthening (mod 8 → mod 16), anomaly cancellation.
+    * A(1) Steenrod subalgebra: 8-dim F₂-algebra, Adem relations, Ext→Z₁₆.
+    * GT lattice chiral fermion: Pauli matrices, Wilson mass, BdG Hamiltonian,
+      [H,Q_A]=0 central theorem, non-on-site classification, Weyl doublet
+      Onsager→SU(2) emanant symmetry, Witten anomaly connection.
 
-Lean 4 formalization: 675 theorems + 3 axioms, 43 modules. Zero sorry.
-Aristotle automated theorem prover: 235 theorems proved across 30+ runs.
+Lean 4 formalization: 748 theorems + 3 axioms, 49 modules. Zero sorry.
+Aristotle automated theorem prover: 252 theorems proved across 30+ runs.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

@@ -48,14 +48,17 @@ discontinuous at $1/2$), fermion-only (bosonic rotor ancillas), finite
 local dimension ($\ell^2(\mathbb{Z})$ proved infinite-dimensional),
 extra-dimensional (4+1D SPT slab), and conditionally, no massless bosons.
 The master synthesis \texttt{tpf\_outside\_gs\_scope\_main} is a
-machine-checked five-part conjunction. The formalization comprises 55
+machine-checked five-part conjunction. The formalization comprises 54
 theorems across three Lean modules (\texttt{LatticeHamiltonian.lean},
 \texttt{GoltermanShamir.lean}, \texttt{TPFEvasion.lean}), with zero
 \texttt{sorry}, verified by \texttt{lake build}. Of these, 14 are proved
 by the Aristotle automated theorem prover across 4 runs. This work
 provides machine-checked evidence that the GS no-go and TPF construction
 operate in genuinely different mathematical frameworks---neither proves
-nor disproves the other.
+nor disproves the other. A companion paper~\cite{Paper8} extends this
+analysis with the Gioia-Thorngren positive construction ($[H,Q_A]=0$
+machine-verified), Onsager algebra formalization, and $\mathbb{Z}_{16}$
+anomaly classification, totaling 748~theorems across 49~modules.
 \end{abstract}
 
 \maketitle
@@ -252,13 +255,13 @@ Key Mathlib infrastructure:
 Module & Thms & Aristotle & Key Result \\
 \hline
 LatticeHamiltonian & 28 & 7 & BZ compact, $\ell^2(\mathbb{Z})$ $\infty$-dim \\
-GoltermanShamir & 15+1ax & 7 & 9 conditions, Fock space finite \\
+GoltermanShamir & 14+1ax & 7 & 9 conditions, Fock space finite \\
 TPFEvasion & 12 & 0 & Master synthesis \\
 \hline
-Total & 55+1ax & 14 & Zero sorry \\
+Total & 54+1ax & 14 & Zero sorry \\
 \hline
 \end{tabular}
-\caption{Lean verification summary. All 55 theorems + 1 axiom verified
+\caption{Lean verification summary. All 54 theorems + 1 axiom verified
 by \texttt{lake build} with zero \texttt{sorry}. 14 proofs filled by
 the Aristotle automated theorem prover across 4 runs.}
 \label{tab:verification}
@@ -270,9 +273,9 @@ the Aristotle automated theorem prover across 4 runs.}
 \caption{Theorem counts per Phase~5 Lean module. Blue: manual proofs.
   Amber: proofs filled by the Aristotle automated theorem prover.
   The chirality modules (\texttt{LatticeHamiltonian},
-  \texttt{GoltermanShamir}, \texttt{TPFEvasion}) contribute 55 theorems.
+  \texttt{GoltermanShamir}, \texttt{TPFEvasion}) contribute 54 theorems.
   The full Phase~5 adds 372 theorems across 22 modules, bringing the
-  project total to 588 theorems + 2 axioms.}
+  project total to 748 theorems + 3 axioms.}
 \label{fig:theorem_summary}
 \end{figure}
 
@@ -309,7 +312,7 @@ The broader formalization program has also produced the first-ever
 definitions of pivotal, spherical, and fusion categories in a proof
 assistant, along with the first formalization of the Drinfeld double
 $D(G)$ and the gauge emergence theorem $Z(\mathrm{Vec}_G) \cong
-\mathrm{Rep}(D(G))$. Together, these 588 theorems across 38 modules
+\mathrm{Rep}(D(G))$. Together, these 748 theorems across 49 modules
 provide end-to-end formal verification from categorical Layer~1 through
 gauge Layer~2 to hydrodynamic Layer~3.
 
@@ -319,16 +322,29 @@ gauge Layer~2 to hydrodynamic Layer~3.
 
 We have presented the first formal verification of the Golterman-Shamir
 no-go conditions and TPF evasion mechanism in a proof assistant.
-55 theorems + 1 axiom across three Lean~4 modules, with zero
+54 theorems + 1 axiom across three Lean~4 modules, with zero
 \texttt{sorry}, provide machine-checked evidence that the lattice
 chirality debate involves frameworks operating in different mathematical
 spaces. The formalization is part of a broader project containing
-588 theorems + 2 axioms across 38 modules, 233 proved by the Aristotle
+748 theorems + 3 axioms across 49 modules, 252 proved by the Aristotle
 automated theorem prover across 30+ runs, all with zero \texttt{sorry}.
+
+In companion work~\cite{Paper8}, this analysis is extended in two
+directions. First, the Gioia-Thorngren construction~\cite{GioiaTh2026}
+is formalized: the central theorem $[H_{\mathrm{BdG}}(\mathbf{k}),
+q_A(\mathbf{k})]=0$ is machine-verified for all momenta on any finite
+lattice, with the chiral charge proved non-on-site and non-compact---
+violating exactly the GS conditions identified here. Second, the anomaly
+classification framework (Onsager algebra, $\mathbb{Z}_{16}$ Pin$^+$
+bordism, A(1) Steenrod subalgebra) is formalized, connecting the
+lattice UV structure to the continuum IR anomaly via In\"on\"u-Wigner
+contraction. Together, the two papers provide a three-pillar formal
+verification of the chirality wall: no-go (this work), positive
+construction, and anomaly classification~\cite{Paper8}.
 
 \begin{acknowledgments}
 Proofs were assisted by the Aristotle automated theorem
-prover~\cite{Aristotle} (Harmonic, Inc.) which filled 14 of the 55
+prover~\cite{Aristotle} (Harmonic, Inc.) which filled 14 of the 54
 sorry gaps in the chirality modules, including the key
 \texttt{fock\_space\_finite\_dim} result via graded decomposition
 of the exterior algebra.
@@ -356,9 +372,19 @@ arXiv:2411.18738 (2024).
 D.~Tong,
 arXiv:2104.03997 (2021).
 
+\bibitem{GioiaTh2026}
+D.~Gioia and R.~Thorngren,
+Phys.\ Rev.\ Lett.\ {\bf 136}, 061601 (2026);
+arXiv:2503.07708.
+
+\bibitem{Paper8}
+J.~Roehm,
+``The Chirality Wall: A Three-Pillar Formal Verification Survey
+in Lean~4'' (2026), companion paper.
+
 \bibitem{Aristotle}
 Aristotle automated theorem prover,
-\url{https://www.aristotle.cx/}.
+\url{https://aristotle.harmonic.fun/}.
 
 \end{thebibliography}
 

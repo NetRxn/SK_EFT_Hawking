@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Phase 5a Wave 1B complete: OnsagerContraction zero sorry)
+**Last synced:** April 4, 2026 (Phase 5a Wave 2: GT lattice chiral fermion, 5 new modules)
 
 ---
 
@@ -10,22 +10,22 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 675 + 3 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 235 | ARISTOTLE_THEOREMS in constants.py (211 prior + 22 RHMC manual + 1 Onsager + 1 Contraction) |
-| Manual proofs | 440 | 675 - 235 |
+| Lean theorems | 748 + 3 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 252 | ARISTOTLE_THEOREMS in constants.py (235 prior + 14 W2A `90ed1a98` + 3 W2B `18969de2`) |
+| Manual proofs | 496 | 748 - 252 |
 | **Sorry gaps** | **0** | All filled |
-| Lean modules | 43 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 675 + 3ax | All proved |
-| Python source modules | 47 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 24 | `find tests/ -name "test_*.py"` |
-| Test count | 1339 | `pytest tests/ -q` |
-| Figures | 64 | `grep -c FigureSpec review_figures.py` |
-| Notebooks | 20 | `ls notebooks/*.ipynb` |
-| Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
-| Validation checks | 16 | `python scripts/validate.py --list` (all 16 pass) |
+| Lean modules | 49 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 748 + 3ax | All proved |
+| Python source modules | 48 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Test files | 28 | `find tests/ -name "test_*.py"` |
+| Test count | 1390 | `pytest tests/ -q` (1339 + 26 + 25 GT) |
+| Figures | 69 | `grep -c "^def fig_" src/core/visualizations.py` (64 + 5 GT/chirality) |
+| Notebooks | 22 | `ls notebooks/*.ipynb` (20 + 2 GT chirality) |
+| Papers | 8 | `ls papers/*/paper_draft.tex` (7 + Paper 8 chirality master) |
+| Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 12 | See Section 9 of inventory |
 | Aristotle runs | 30+ | See Aristotle run table in full inventory |
-| Deep research tasks | 18 + 6 Phase-5a | 18 Phase-5 complete + 6 Phase-5a complete |
+| Deep research tasks | 18 + 8 Phase-5a | 18 Phase-5 complete + 8 Phase-5a complete (6 prior + 2 GT)
 
 ---
 
@@ -153,6 +153,12 @@
 | Z16Classification | 21+1ax | Z₁₆ axiom, SuperModularCategory, 16-fold way, chirality strengthening mod 8→16, anomaly cancellation, Drinfeld bridge (**ALL PROVED**) |
 | SteenrodA1 | 17 | A(1) 8-dim F₂-algebra, explicit multiplication table, Adem relations, Ext→Z₁₆ connection (**ALL PROVED**, first Steenrod formalization) |
 | SMGClassification | 13 | AZClass tenfold way, SMGSymmetryData, HasSpectralGap typeclass, gapped interface conjecture, conditional theorems (**ALL PROVED**) |
+| PauliMatrices | 15 | σ_x,σ_y,σ_z definitions, commutation [σ_i,σ_j]=2iε_{ijk}σ_k, anti-commutation, involutivity, traces (**ALL PROVED**, Aristotle `90ed1a98`) |
+| WilsonMass | 11 | M(k)=3-cos kx-cos ky-cos kz, M=0 iff k=0 (all finite L), non-negativity, bounds (**ALL PROVED**, Aristotle `90ed1a98`) |
+| BdGHamiltonian | 8 | BdGIndex 4×4, H_BdG σ⊗τ Kronecker structure, q_A definition, Kronecker commutator identity (**ALL PROVED**, Aristotle `90ed1a98`) |
+| GTCommutation | 10 | **Central theorem** [H_BdG(k),q_A(k)]=0, 2×2 τ-space trig identity, GS evasion, bridge to TPF (**ALL PROVED**, Aristotle `18969de2`) |
+| GTWeylDoublet | 12 | Model 2: Q_V+Q_A generate Onsager, emanant SU(2), Witten anomaly=element 8∈ℤ₁₆, bridges to GS/TPF/Z₁₆ (**ALL PROVED**) |
+| ChiralityWallMaster | 17 | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly, bridge theorems, status structure (**ALL PROVED**) |
 
 ---
 

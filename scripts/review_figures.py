@@ -671,6 +671,42 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=3,
         expected_axes={}, physics_checks=[], color_keys=[],
     ),
+    # Phase 5a Wave 4: GT Lattice Chiral Fermion + Chirality Wall Master
+    FigureSpec(
+        name="fig66_gt_band_structure",
+        function="fig_gt_band_structure",
+        caption="GT BdG band structure showing single gapless Weyl node at Gamma.",
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"yaxis": "Energy"}, physics_checks=[], color_keys=["Rb87", "K39"],
+    ),
+    FigureSpec(
+        name="fig67_wilson_mass_bz",
+        function="fig_wilson_mass_bz",
+        caption="Wilson mass M(kx,ky,0) heatmap: zero only at origin (Weyl node).",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={}, physics_checks=[], color_keys=["dissipative"],
+    ),
+    FigureSpec(
+        name="fig68_chiral_charge_spectrum",
+        function="fig_chiral_charge_spectrum",
+        caption="GT chiral charge eigenvalues ±cos(p3/2): non-compact spectrum.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={}, physics_checks=[], color_keys=["Rb87", "K39"],
+    ),
+    FigureSpec(
+        name="fig69_gt_commutator_verification",
+        function="fig_gt_commutator_verification",
+        caption="Numerical verification [H,Q_A]=0 at L=8: machine epsilon everywhere.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={"yaxis": "commutator"}, physics_checks=[], color_keys=["Rb87"],
+    ),
+    FigureSpec(
+        name="fig70_chirality_wall_three_pillars",
+        function="fig_chirality_wall_three_pillars",
+        caption="Three-pillar chirality wall formal verification: no-go + GT + anomaly.",
+        needs_experiments=False, expected_traces=0,
+        expected_axes={}, physics_checks=[], color_keys=[],
+    ),
 ]
 
 
@@ -734,6 +770,12 @@ def generate_figures() -> dict[str, Path]:
         fig_vestigial_susceptibility,
         fig_vestigial_window,
         fig_vestigial_phase_diagram_analytical,
+        # Phase 5a Wave 4: GT + Chirality Wall
+        fig_gt_band_structure,
+        fig_wilson_mass_bz,
+        fig_chiral_charge_spectrum,
+        fig_gt_commutator_verification,
+        fig_chirality_wall_three_pillars,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -829,6 +871,12 @@ def generate_figures() -> dict[str, Path]:
         "fig_vestigial_susceptibility": fig_vestigial_susceptibility,
         "fig_vestigial_window": fig_vestigial_window,
         "fig_vestigial_phase_diagram_analytical": fig_vestigial_phase_diagram_analytical,
+        # Phase 5a Wave 4: GT + Chirality Wall
+        "fig_gt_band_structure": fig_gt_band_structure,
+        "fig_wilson_mass_bz": fig_wilson_mass_bz,
+        "fig_chiral_charge_spectrum": fig_chiral_charge_spectrum,
+        "fig_gt_commutator_verification": fig_gt_commutator_verification,
+        "fig_chirality_wall_three_pillars": fig_chirality_wall_three_pillars,
     }
 
     paths = {}
@@ -925,6 +973,12 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_vestigial_susceptibility,
         fig_vestigial_window,
         fig_vestigial_phase_diagram_analytical,
+        # Phase 5a Wave 4: GT + Chirality Wall
+        fig_gt_band_structure,
+        fig_wilson_mass_bz,
+        fig_chiral_charge_spectrum,
+        fig_gt_commutator_verification,
+        fig_chirality_wall_three_pillars,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1018,6 +1072,12 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_vestigial_susceptibility": fig_vestigial_susceptibility,
         "fig_vestigial_window": fig_vestigial_window,
         "fig_vestigial_phase_diagram_analytical": fig_vestigial_phase_diagram_analytical,
+        # Phase 5a Wave 4: GT + Chirality Wall
+        "fig_gt_band_structure": fig_gt_band_structure,
+        "fig_wilson_mass_bz": fig_wilson_mass_bz,
+        "fig_chiral_charge_spectrum": fig_chiral_charge_spectrum,
+        "fig_gt_commutator_verification": fig_gt_commutator_verification,
+        "fig_chirality_wall_three_pillars": fig_chirality_wall_three_pillars,
     }
 
     issues: list[CheckIssue] = []

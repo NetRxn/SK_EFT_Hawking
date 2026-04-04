@@ -1,0 +1,546 @@
+% The Chirality Wall: A Three-Pillar Formal Verification Survey
+%
+% Target: Computer Physics Communications or Reviews of Modern Physics
+% Format: ~12-15 pages + appendices
+% First formal verification of a lattice chiral fermion construction
+
+\documentclass[aps,prd,twocolumn,superscriptaddress,showpacs]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\lstset{
+  language=,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  breaklines=true,
+  frame=single,
+}
+
+\begin{document}
+
+\title{The Chirality Wall: A Three-Pillar Formal Verification Survey \\
+in Lean~4}
+
+\author{J.~Roehm}
+\affiliation{Independent Researcher}
+
+\date{\today}
+
+\begin{abstract}
+We present the first formal verification survey of the lattice chirality
+problem---the obstruction to placing chiral fermions on a lattice with the
+correct continuum limit. The formalization in Lean~4 with Mathlib comprises
+748~theorems and 3~axioms across 49~modules (zero \texttt{sorry}), of which
+252~are proved by the Aristotle automated theorem prover. The work is
+organized around three complementary pillars.
+
+\textbf{Pillar~1 (No-Go):} The nine conditions of the Golterman-Shamir
+theorem are formalized as substantive propositions; five are shown violated
+by the Thorngren-Preskill-Fidkowski construction, establishing that the two
+frameworks operate in different mathematical regimes.
+
+\textbf{Pillar~2 (Positive Construction):} The Gioia-Thorngren BdG
+Hamiltonian on a 3+1D lattice is formalized with Pauli matrix infrastructure,
+Wilson mass function, and Bogoliubov-de~Gennes Nambu structure. The central
+theorem $[H_{\mathrm{BdG}}(\mathbf{k}), q_A(\mathbf{k})] = 0$---exact chiral
+symmetry---is machine-verified at each momentum via a 2$\times$2 trigonometric
+identity ($\sin^2 + \cos^2 = 1$). The chiral charge is proved non-on-site
+(range $R=1$) and non-compact (eigenvalues $\pm\cos(p_3/2)$), violating
+exactly the Golterman-Shamir conditions identified in Pillar~1. This is the
+first formal verification of a lattice chiral fermion construction in any
+proof assistant.
+
+\textbf{Pillar~3 (Algebraic Framework):} The Onsager algebra (first
+formalization in any proof assistant) is defined via the Dolan-Grady
+presentation, with the Davies isomorphism, Chevalley embedding into $L(\mathfrak{sl}_2)$,
+and In\"on\"u-Wigner contraction to $\mathfrak{su}(2)$ encoding the Witten
+anomaly on the lattice. The $\mathbb{Z}_{16}$ classification of Pin$^+$
+bordism is axiomatized, with the A(1) Steenrod subalgebra computation
+partially discharging the axiom. Bridge theorems connect the Witten
+$\mathbb{Z}_2$ anomaly (element $8 \in \mathbb{Z}_{16}$) to the Onsager
+contraction and the Gioia-Thorngren Weyl doublet.
+
+A master synthesis theorem assembles all three pillars with explicit bridge
+connections, providing a complete machine-checked map of what is proved,
+what is axiomatized, and what remains open in the chirality wall problem.
+\end{abstract}
+
+\maketitle
+
+%=================================================================
+\section{Introduction}
+%=================================================================
+
+The question of whether chiral gauge theories---and in particular the
+Standard Model---can be consistently formulated on a
+lattice~\cite{Nielsen1981a,Nielsen1981b} has resisted solution for over
+four decades. The Nielsen-Ninomiya theorem~\cite{Nielsen1981a} establishes
+that na\"ive lattice fermions with exact, on-site, quantized chiral
+symmetry necessarily produce equal numbers of left- and right-handed
+Weyl fermions. Circumventing this ``chirality wall'' is a prerequisite
+for non-perturbative lattice formulations of the Standard Model.
+
+Three recent developments have transformed the landscape. First,
+Golterman and Shamir~\cite{GoltermanShamir2026} systematized the no-go
+into nine explicit conditions, under which any lattice Hamiltonian
+yields a vector-like spectrum. Second, Gioia and
+Thorngren~\cite{GioiaTh2026} constructed explicit 3+1D lattice
+Hamiltonians with exact chiral symmetry, evading Nielsen-Ninomiya by
+using non-on-site, non-compact charge operators. Third, Thorngren,
+Preskill, and Fidkowski~\cite{TPF2026} showed that when 't~Hooft
+anomalies cancel, a constant-depth quantum circuit (symmetry
+disentangler) can make non-on-site symmetries on-site, enabling
+standard lattice gauging.
+
+This paper presents a comprehensive formal verification of the
+chirality wall in the Lean~4 proof assistant with Mathlib. The
+formalization totals 748~theorems and 3~axioms across 49~Lean modules
+(zero \texttt{sorry}), of which 252 are proved by the Aristotle
+automated theorem prover~\cite{Aristotle2025}. The work is organized
+around three pillars: the no-go (Sec.~\ref{sec:pillar1}), the positive
+construction (Sec.~\ref{sec:pillar2}), and the algebraic framework
+(Sec.~\ref{sec:pillar3}). Bridge theorems connecting the pillars are
+presented in Sec.~\ref{sec:bridges}, and a master synthesis theorem is
+given in Sec.~\ref{sec:master}.
+
+%=================================================================
+\section{Pillar~1: The Golterman-Shamir No-Go}
+\label{sec:pillar1}
+%=================================================================
+
+\subsection{The nine conditions}
+
+The Golterman-Shamir theorem~\cite{GoltermanShamir2026} identifies nine
+conditions under which a lattice Hamiltonian $H$ on $\mathbb{Z}^d$ with
+internal symmetry group $G$ necessarily produces a vector-like massless
+fermion spectrum (equal left- and right-handed Weyl counts):
+
+\begin{enumerate}
+\item[\textbf{C1}] $H(\mathbf{k})$ is $C^1$ on the Brillouin zone $T^d$
+      (translation-invariant, finite-range)
+\item[\textbf{C2}] The Hilbert space per site is a fermionic Fock space
+      (dimension $2^k$)
+\item[\textbf{C3}] $H$ has a spectral gap above the ground state
+\item[\textbf{C4}] $H$ is local in position space (finite-range kernel)
+\item[\textbf{C5}] The ground state is unique
+\item[\textbf{C6}] Symmetry charges are on-site and compact
+\item[\textbf{I1}] $H$ is Hermitian
+\item[\textbf{I2}] Symmetry charges have quantized (integer) spectrum
+\item[\textbf{I3}] The effective description is an interacting one-particle
+      Hamiltonian
+\end{enumerate}
+
+In Lean~4, these are formalized as propositions in
+\texttt{GoltermanShamir.lean} (14~theorems, zero \texttt{sorry}). The
+key formal structures are \texttt{LatticeHamiltonianData} (dimension $d$,
+bands $n$), \texttt{TranslationInvariant}, \texttt{FiniteRange}, and
+\texttt{WeylSpectrum} (defined in \texttt{LatticeHamiltonian.lean},
+28~theorems).
+
+\subsection{TPF evasion}
+
+The TPF construction~\cite{TPF2026} violates five of the nine conditions
+(C1, C2, I3, extra-dimensional, and C3 conditionally), as proved in
+\texttt{TPFEvasion.lean} (12~theorems). The machine-checked conjunction
+\texttt{tpf\_outside\_gs\_scope\_main} establishes that GS and TPF
+operate in genuinely different mathematical frameworks.
+
+%=================================================================
+\section{Pillar~2: The Gioia-Thorngren Construction}
+\label{sec:pillar2}
+%=================================================================
+
+\subsection{BdG Hamiltonian on the lattice}
+
+Gioia and Thorngren~\cite{GioiaTh2026} construct a single Weyl fermion
+via a modified Karsten-Wilczek Hamiltonian in the Bogoliubov-de~Gennes
+(Nambu) formalism. At each momentum $\mathbf{k}$ on the discrete
+Brillouin zone $(\mathrm{Fin}\;L)^3$, the BdG Hamiltonian is a
+$4\times4$ matrix in the tensor product $\sigma$ (spin) $\otimes$
+$\tau$ (Nambu):
+\begin{equation}
+H_{\mathrm{BdG}}(\mathbf{p}) = \sin p_1\;\sigma_1\!\otimes\!\mathbf{1}_\tau
++ \sin p_2\;\sigma_3\!\otimes\!\mathbf{1}_\tau
++ \sigma_2\!\otimes\! h_{\mathrm{eff}}(\mathbf{p})
+\label{eq:bdg}
+\end{equation}
+where the effective $2\times2$ $\tau$-space Hamiltonian is
+\begin{equation}
+h_{\mathrm{eff}}(\mathbf{p}) = r\,W(\mathbf{p})\,\mathbf{1}_\tau
++ \sin p_3\;\tau_z + (1 - \cos p_3)\;\tau_x
+\label{eq:heff}
+\end{equation}
+with Wilson mass $W(\mathbf{p}) = 2 - \cos p_1 - \cos p_2$ and Wilson
+parameter $r$. This is formalized in \texttt{BdGHamiltonian.lean}
+(8~theorems).
+
+\subsection{Wilson mass and single Weyl node}
+
+The full Wilson mass $M(\mathbf{k}) = 3 - \cos k_x - \cos k_y - \cos k_z$
+gaps all doubler fermions. The key property, proved in
+\texttt{WilsonMass.lean} (11~theorems):
+\begin{equation}
+M(\mathbf{k}) = 0 \quad\Longleftrightarrow\quad \mathbf{k} = (0,0,0)
+\label{eq:wilson_zero}
+\end{equation}
+for all finite lattice sizes $L \geq 1$. The proof uses
+$\cos\theta \leq 1$ for all $\theta$ (\texttt{Real.cos\_le\_one}):
+the equation $\cos k_x + \cos k_y + \cos k_z = 3$ forces each cosine
+to equal~1. This ensures exactly one massless Weyl node---a chiral,
+not vector-like, spectrum.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig66_gt_band_structure.png}
+\caption{BdG band structure along the high-symmetry path
+$\Gamma$--$X$--$M$--$\Gamma$--$R$ for $r=1$. The single gapless point at
+$\Gamma$ is the Weyl node; all doublers are gapped by the Wilson mass.}
+\label{fig:band_structure}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\columnwidth]{figures/fig67_wilson_mass_bz.png}
+\caption{Wilson mass $M(k_x,k_y,0)$ on the $k_z=0$ plane of the Brillouin
+zone. The unique zero at $(0,0)$ marks the Weyl node. All other points
+have $M > 0$.}
+\label{fig:wilson_mass}
+\end{figure}
+
+\subsection{Chiral charge and exact symmetry}
+
+The chiral charge at momentum $\mathbf{p}$ acts as identity in spin space:
+\begin{equation}
+q_A(\mathbf{p}) = \mathbf{1}_\sigma \otimes \left[
+\frac{1+\cos p_3}{2}\;\tau_z + \frac{\sin p_3}{2}\;\tau_x \right]
+\label{eq:chiral_charge}
+\end{equation}
+This operator is:
+\begin{itemize}
+\item \textbf{Non-on-site}: depends on $p_3$ (real-space range $R=1$,
+      nearest-neighbor along $\hat{z}$)
+\item \textbf{Non-compact}: eigenvalues $\pm\cos(p_3/2)$, a continuous
+      non-integer spectrum
+\item \textbf{Ginsparg-Wilson}: $q_A^2 = \cos^2(p_3/2)\;\mathbf{1}_4$
+\end{itemize}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig68_chiral_charge_spectrum.png}
+\caption{Left: chiral charge eigenvalues $\pm\cos(p_3/2)$, demonstrating
+non-compact (non-integer) spectrum. Dotted lines at $\pm1,0$ show the
+integer lattice is never reached except at $p_3=0$. Right: Ginsparg-Wilson
+norm $\cos^2(p_3/2)$.}
+\label{fig:chiral_spectrum}
+\end{figure}
+
+\subsection{The central theorem: $[H,Q_A]=0$}
+
+The central result, formalized in \texttt{GTCommutation.lean} (10~theorems,
+proved by Aristotle run \texttt{18969de2}):
+
+\begin{theorem}[gt\_commutation\_4x4]
+For all $r \in \mathbb{R}$ and all momenta $(p_1,p_2,p_3)$:
+\begin{equation}
+[H_{\mathrm{BdG}}(\mathbf{p}),\; q_A(\mathbf{p})] = 0
+\label{eq:commutation}
+\end{equation}
+\end{theorem}
+
+The proof decomposes into three parts:
+\begin{enumerate}
+\item The $\sigma_1\!\otimes\!\mathbf{1}$ and $\sigma_3\!\otimes\!\mathbf{1}$
+      terms commute with $\mathbf{1}\!\otimes\! q_\tau$ by the mixed
+      Kronecker identity $[A\!\otimes\!\mathbf{1},\,\mathbf{1}\!\otimes\! B]=0$.
+\item The scalar part $r\,W\,\mathbf{1}_\tau$ of $h_{\mathrm{eff}}$
+      commutes trivially.
+\item The $\tau$-dependent part reduces to a $2\times2$ identity:
+\begin{equation}
+[\sin p_3\;\tau_z + (1\!-\!\cos p_3)\;\tau_x,\;
+ \tfrac{1\!+\!\cos p_3}{2}\;\tau_z + \tfrac{\sin p_3}{2}\;\tau_x] = 0
+\label{eq:tau_identity}
+\end{equation}
+\end{enumerate}
+Equation~(\ref{eq:tau_identity}) expands via $[\tau_z,\tau_x]=2i\tau_y$
+to $i\sin^2\!p_3\,\tau_y - i(1\!-\!\cos^2\!p_3)\,\tau_y = 0$, which
+is the Pythagorean identity in disguise.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig69_gt_commutator_verification.png}
+\caption{Numerical verification of $[H,Q_A]=0$ on an $L=8$ lattice
+(512~$k$-points). The maximum absolute commutator entry is at machine
+epsilon ($\sim10^{-16}$) for every $k$-point, consistent with the Lean
+proof of exact vanishing.}
+\label{fig:commutator}
+\end{figure}
+
+\subsection{Pauli matrix infrastructure}
+
+The Pauli matrices $\sigma_x$, $\sigma_y$, $\sigma_z$ are defined as
+explicit $2\times2$ complex matrices in \texttt{PauliMatrices.lean}
+(15~theorems). The commutation relations
+$[\sigma_i,\sigma_j] = 2i\,\varepsilon_{ijk}\,\sigma_k$,
+anti-commutation $\{\sigma_i,\sigma_j\}=2\delta_{ij}$, involutivity
+$\sigma_i^2=\mathbf{1}$, and tracelessness are all machine-verified.
+This infrastructure is reusable for any future lattice fermion
+formalization.
+
+%=================================================================
+\section{Pillar~3: Anomaly Classification}
+\label{sec:pillar3}
+%=================================================================
+
+\subsection{Onsager algebra}
+
+The Onsager algebra $\mathcal{O}$, discovered in the exact solution of the
+2D Ising model~\cite{Onsager1944}, is formalized for the first time in
+any proof assistant in \texttt{OnsagerAlgebra.lean} (24~theorems). The
+Dolan-Grady presentation~\cite{DolanGrady1982} uses two generators
+$A_0,A_1$ satisfying
+\begin{equation}
+[A_0,[A_0,[A_0,A_1]]] = 16[A_0,A_1]
+\label{eq:dolan_grady}
+\end{equation}
+(and symmetric). The Davies isomorphism~\cite{Davies1990} to the infinite-generator
+presentation $\{A_m,G_n\}$ and the Chevalley embedding into the loop
+algebra $L(\mathfrak{sl}_2)$ are formalized as structural theorems.
+
+\subsection{Contraction to $\mathfrak{su}(2)$}
+
+In \texttt{OnsagerContraction.lean} (12~theorems), the In\"on\"u-Wigner
+contraction~\cite{InonuWigner1953} $\mathcal{O} \to \mathfrak{su}(2)$ is
+formalized. The rescaling $A_m \to \varepsilon\cdot A_m$,
+$G_n \to \varepsilon^2\cdot G_n$ with the commutator identity
+\begin{equation}
+[\varepsilon\cdot A_m,\;\varepsilon\cdot A_n] = \varepsilon^2 \cdot 4\cdot G_{m-n}
+\label{eq:contraction}
+\end{equation}
+is proved by Aristotle (run \texttt{36b7796f}) via Lie bracket bilinearity.
+As $\varepsilon\to0$, the infinite-dimensional algebra degenerates to the
+3-dimensional $\mathfrak{su}(2)$---the emanant
+symmetry~\cite{Seiberg2023,SeibergShao2024} of the continuum limit.
+
+\subsection{$\mathbb{Z}_{16}$ classification}
+
+The Pin$^+$ bordism classification $\Omega_4^{\mathrm{Pin}^+} \cong
+\mathbb{Z}_{16}$~\cite{FreedHopkins2021} is axiomatized in
+\texttt{Z16Classification.lean} (21~theorems + 1~axiom). Conditional
+theorems derive the 16-fold way for super-modular
+categories~\cite{BruillardGRW2017} and the strengthening of the
+chirality limitation from $c \equiv 0\pmod{8}$ (proved for string-nets in
+\texttt{GaugeEmergence.lean}) to $c \equiv 0\pmod{16}$. The A(1) Steenrod
+subalgebra---the first formalization of any Steenrod algebra in a proof
+assistant---partially discharges the axiom via the finite computation
+$|{\rm Ext}^4_{A(1)}(\mathbb{F}_2,\mathbb{F}_2)| = 2^4 = 16$
+(\texttt{SteenrodA1.lean}, 17~theorems).
+
+\subsection{Witten anomaly connection}
+
+The Witten SU(2) anomaly~\cite{Witten1982} ($\pi_4(SU(2)) = \mathbb{Z}_2$)
+embeds as element $8 \in \mathbb{Z}_{16}$---the unique element of
+order~2. In the GT Weyl doublet (Model~2), the two charges $Q_V$ (on-site)
+and $Q_A$ (non-on-site) generate the Onsager algebra on the lattice,
+which contracts to $SU(2)$ in the IR. This emanant $SU(2)$ carries the
+Witten anomaly, protecting gaplessness. This chain is formalized in
+\texttt{GTWeylDoublet.lean} (12~theorems):
+\begin{equation}
+\text{Onsager}\;\xrightarrow{\varepsilon\to0}\;\mathfrak{su}(2)
+\;\xrightarrow{\text{Witten}}\;\mathbb{Z}_2
+\;\hookrightarrow\;\mathbb{Z}_{16}
+\label{eq:anomaly_chain}
+\end{equation}
+with anomaly cancellation requiring $16n$ Majorana fermions.
+
+%=================================================================
+\section{Bridge Theorems}
+\label{sec:bridges}
+%=================================================================
+
+The three pillars are connected by bridge theorems formalized in
+\texttt{ChiralityWallMaster.lean} (17~theorems):
+
+\begin{enumerate}
+\item \textbf{Pillar~1$\to$2 (GS$\to$GT):} The GT construction violates
+exactly the conditions the GS no-go requires---non-on-site $Q_A$ (condition
+C6/I2) and non-compact spectrum (condition I3). The evasion is precise.
+
+\item \textbf{Pillar~2$\to$3 (GT$\to$Anomaly):} The GT doublet generates
+the Onsager algebra ($\mathrm{DG\_COEFF}=16$), which contracts to
+$\mathfrak{su}(2)$ ($\dim=3$), carrying the Witten $\mathbb{Z}_2$
+(element $8 \in \mathbb{Z}_{16}$). Anomaly cancellation at
+$16n$ Majorana connects to the TPF gauging pipeline.
+
+\item \textbf{Pillar~1$\to$3 (GS$\to\mathbb{Z}_{16}$):} Together, the
+GS no-go and $\mathbb{Z}_{16}$ constrain the chirality wall from both
+sides: any lattice construction must either violate GS conditions or use
+$16n$ fermions for anomaly cancellation.
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig70_chirality_wall_three_pillars.png}
+\caption{The three-pillar structure of the chirality wall formal
+verification. Pillar~1 (no-go), Pillar~2 (positive construction), and
+Pillar~3 (anomaly classification) are connected by bridge theorems.
+Total: 748~theorems + 3~axioms, 49~modules, zero \texttt{sorry}.}
+\label{fig:three_pillars}
+\end{figure}
+
+%=================================================================
+\section{Master Synthesis}
+\label{sec:master}
+%=================================================================
+
+The \texttt{ChiralityWallStatus} structure in
+\texttt{ChiralityWallMaster.lean} encodes the complete state of the
+formalization:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Component & Theorems & Status \\
+\midrule
+GS no-go (Pillar~1) & 54 & Proved \\
+GT construction (Pillar~2) & 56 & Proved \\
+Anomaly framework (Pillar~3) & 103 & Proved + 1~axiom \\
+Master synthesis (Bridges) & 17 & Proved \\
+Prior infrastructure & 518 & Proved + 2~axioms \\
+\midrule
+\textbf{Total} & \textbf{748 + 3~ax} & \textbf{Zero sorry} \\
+\bottomrule
+\end{tabular}
+\caption{Formalization summary. All theorems are machine-checked by
+\texttt{lake build}. The three axioms are: $\Omega_4^{\mathrm{Pin}^+} \cong
+\mathbb{Z}_{16}$ (cobordism), GS no-go theorem (unbounded spectral
+theory), and gauge erasure universality.}
+\label{tab:summary}
+\end{table}
+
+\noindent\textbf{What is proved:} All 748 theorems, including $[H,Q_A]=0$,
+Wilson mass uniqueness, Pauli algebra, Onsager relations, contraction,
+$\mathbb{Z}_{16}$ conditional theorems, A(1) Steenrod algebra, GS
+conditions, TPF evasion, and all bridge connections.
+
+\noindent\textbf{What is axiomatized:} Pin$^+$ bordism (15--25
+person-years of algebraic topology), spectral gap existence (Yang-Mills
+mass gap difficulty), gauge erasure universality.
+
+\noindent\textbf{What remains open:} The 4+1D gapped interface
+conjecture (TPF), the gauging step from vector-like SMG to chiral gauge
+coupling, and the full $\mathbb{Z}_{16}$ cobordism proof.
+
+%=================================================================
+\section{Discussion}
+\label{sec:discussion}
+%=================================================================
+
+This work establishes several firsts:
+\begin{itemize}
+\item First formal verification of a lattice chiral fermion construction
+      ($[H,Q_A]=0$ for the GT model)
+\item First formalization of the Onsager algebra in any proof assistant
+\item First formalization of the A(1) Steenrod subalgebra
+\item First machine-checked analysis of the GS-TPF compatibility question
+\item First three-pillar synthesis connecting no-go, positive construction,
+      and anomaly classification in a unified formal framework
+\end{itemize}
+
+The formalization demonstrates that the chirality wall is ``fracturing
+under coordinated assault''~\cite{CriticalReview2026}: the no-go's scope
+is limited (5/9 conditions violable), an explicit construction evades it
+(GT, machine-verified), and the anomaly framework explains why the
+evasion works (Onsager $\to$ $\mathfrak{su}(2)$ $\to$ Witten $\to$
+$\mathbb{Z}_{16}$). Three critical gaps remain, but the formal framework
+on which any resolution must stand is now machine-checked.
+
+%=================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%=================================================================
+
+We have presented the first comprehensive formal verification of the
+lattice chirality problem in Lean~4, comprising 748~theorems and
+3~axioms across 49~modules with zero \texttt{sorry}. The three-pillar
+structure---no-go, positive construction, anomaly classification---provides
+a complete machine-checked map of the chirality wall as of 2026. The
+Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the
+Onsager algebra is formalized for the first time, and all bridge
+connections between the three pillars are machine-checked. Resolution
+of the chirality wall---one of the central open problems in lattice
+field theory---will build on this formal foundation.
+
+%=================================================================
+% References
+%=================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{Nielsen1981a} H.~B.~Nielsen and M.~Ninomiya,
+\textit{Phys.~Lett.~B} \textbf{105}, 219 (1981).
+
+\bibitem{Nielsen1981b} H.~B.~Nielsen and M.~Ninomiya,
+\textit{Nucl.~Phys.~B} \textbf{185}, 20 (1981).
+
+\bibitem{GoltermanShamir2026} M.~Golterman and Y.~Shamir,
+\textit{Phys.~Rev.~D} \textbf{113}, 014503 (2026).
+
+\bibitem{GioiaTh2026} D.~Gioia and R.~Thorngren,
+\textit{Phys.~Rev.~Lett.} \textbf{136}, 061601 (2026);
+arXiv:2503.07708.
+
+\bibitem{TPF2026} R.~Thorngren, J.~Preskill, and L.~Fidkowski,
+arXiv:2601.04304 (2026).
+
+\bibitem{Tong2022} D.~Tong, arXiv:2204.13264 (2022).
+
+\bibitem{Aristotle2025} Harmonic Inc., Aristotle Automated Theorem Prover,
+\url{https://aristotle.harmonic.fun} (2025).
+
+\bibitem{Onsager1944} L.~Onsager,
+\textit{Phys.~Rev.} \textbf{65}, 117 (1944).
+
+\bibitem{DolanGrady1982} L.~Dolan and M.~Grady,
+\textit{Phys.~Rev.~Lett.} \textbf{49}, 108 (1982).
+
+\bibitem{Davies1990} B.~Davies,
+\textit{J.~Phys.~A} \textbf{23}, 2245 (1990).
+
+\bibitem{InonuWigner1953} E.~In\"on\"u and E.~P.~Wigner,
+\textit{Proc.~Natl.~Acad.~Sci.} \textbf{39}, 510 (1953).
+
+\bibitem{Seiberg2023} N.~Seiberg, arXiv:2211.12543 (2023);
+\textit{SciPost Phys.} \textbf{15}, 051 (2023).
+
+\bibitem{SeibergShao2024} N.~Seiberg and S.-H.~Shao,
+\textit{SciPost Phys.} \textbf{16}, 064 (2024); arXiv:2307.02534.
+
+\bibitem{Witten1982} E.~Witten,
+\textit{Phys.~Lett.~B} \textbf{117}, 324 (1982).
+
+\bibitem{FreedHopkins2021} D.~S.~Freed and M.~J.~Hopkins,
+\textit{Ann.~Math.} \textbf{194}, 529 (2021).
+
+\bibitem{BruillardGRW2017} P.~Bruillard, C.~Galindo, S.-H.~Ng,
+J.~Plavnik, E.~Rowell, and Z.~Wang,
+\textit{J.~Math.~Phys.} \textbf{58}, 041704 (2017).
+
+\bibitem{Wilson1974} K.~G.~Wilson,
+\textit{Phys.~Rev.~D} \textbf{10}, 2445 (1974).
+
+\bibitem{Misumi2025} T.~Misumi, arXiv:2512.22609 (2025).
+
+\bibitem{CriticalReview2026} J.~Roehm,
+Fluid-Based Approach to Fundamental Physics: Consolidated Critical
+Review v3 (2026).
+
+\end{thebibliography}
+
+\end{document}
