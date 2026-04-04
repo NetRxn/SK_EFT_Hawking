@@ -4712,5 +4712,184 @@ def fig_chirality_wall_three_pillars() -> go.Figure:
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════
+# Phase 5b: SM Anomaly in ℤ₁₆
+# ════════════════════════════════════════════════════════════════════
+
+def fig_sm_fermion_z16_anomaly() -> go.Figure:
+    """SM fermion anomaly contributions in ℤ₁₆.
+
+    Bar chart showing each SM fermion's component count (= anomaly contribution).
+    Stacked to show the total of 16 (with ν_R) or 15 (without).
+    The ℤ₁₆ cancellation boundary at 16 is shown as a dashed line.
+
+    Lean: total_anomaly_with_nu_R, total_anomaly_without_nu_R (SMFermionData.lean)
+    """
+    from src.core.constants import SM_FERMION_DATA
+
+    names = []
+    components = []
+    colors = []
+    fermion_colors = {
+        'Q_L': COLORS['Rb87'],        # blue — quarks
+        'u_R_bar': COLORS['Rb87'],
+        'd_R_bar': COLORS['Rb87'],
+        'L': COLORS['Na23'],           # amber — leptons
+        'e_R_bar': COLORS['Na23'],
+        'nu_R_bar': COLORS['dispersive'],  # green — ν_R (hidden sector candidate)
+    }
+
+    for name, f in SM_FERMION_DATA.items():
+        names.append(f['label'].split('(')[0].strip())
+        components.append(f['components'])
+        colors.append(fermion_colors[name])
+
+    fig = go.Figure()
+
+    # Cumulative bar
+    cumulative = 0
+    for i, (n, c, col) in enumerate(zip(names, components, colors)):
+        fig.add_trace(go.Bar(
+            x=[c], y=['SM Fermions'], orientation='h',
+            base=cumulative,
+            marker_color=col, marker_line=dict(color='white', width=1),
+            text=f'{n}<br>({c})', textposition='inside',
+            textfont=dict(size=13, color='white', family=FONT['family']),
+            showlegend=False,
+            hovertemplate=f'{n}: {c} components<extra></extra>',
+        ))
+        cumulative += c
+
+    # ℤ₁₆ boundary
+    fig.add_vline(x=16, line=dict(color=COLORS['dissipative'], width=2.5, dash='dash'),
+                  annotation=dict(text='ℤ₁₆ boundary (16)', font=dict(size=13, color=COLORS['dissipative'])))
+
+    # Without ν_R marker
+    fig.add_vline(x=15, line=dict(color=COLORS['cross'], width=1.5, dash='dot'),
+                  annotation=dict(text='Without ν_R (15)', font=dict(size=12, color=COLORS['cross']),
+                                  yshift=-25))
+
+    fig.update_layout(
+        height=250, width=700,
+        title=dict(text='<b>SM Fermion Anomaly Contributions in ℤ₁₆</b>',
+                   font=TITLE_FONT, x=0.5),
+        xaxis=dict(title=dict(text='Cumulative Weyl Fermion Components',
+                             font=dict(size=14, family=FONT['family'])),
+                   range=[0, 19], tickfont=dict(size=13, family=FONT['family'])),
+        yaxis=dict(visible=False),
+        plot_bgcolor='white', paper_bgcolor='white',
+        margin=dict(l=20, r=20, t=60, b=50),
+        barmode='stack',
+    )
+    return fig
+
+
+def fig_sm_generation_anomaly() -> go.Figure:
+    """Anomaly index vs number of generations.
+
+    Shows how the ℤ₁₆ anomaly depends on the number of fermion generations,
+    for both the SM with and without right-handed neutrinos.
+
+    Lean: three_gen_anomalous (Z16AnomalyComputation.lean)
+    """
+    from src.core.formulas import sm_three_gen_anomaly
+
+    n_gens = list(range(1, 17))
+    anomaly_with = [(n * 16) % 16 for n in n_gens]
+    anomaly_without = [(n * 15) % 16 for n in n_gens]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=n_gens, y=anomaly_with,
+        mode='markers+lines',
+        marker=dict(size=10, color=COLORS['Rb87']),
+        line=dict(color=COLORS['Rb87'], width=2),
+        name='With ν_R (16 per gen)',
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=n_gens, y=anomaly_without,
+        mode='markers',
+        marker=dict(size=11, color=COLORS['Na23'], symbol='diamond'),
+        name='Without ν_R (15 per gen)',
+    ))
+
+    # Highlight N_f = 3
+    fig.add_vline(x=3, line=dict(color=COLORS['cross'], width=1, dash='dot'))
+    fig.add_annotation(x=3, y=14, text='N_f = 3<br>(observed)',
+        showarrow=False, font=dict(size=12, color=COLORS['cross'], family=FONT['family']))
+
+    # Anomaly-free line
+    fig.add_hline(y=0, line=dict(color='black', width=0.5, dash='dash'))
+    fig.add_annotation(x=15, y=0.8, text='Anomaly-free',
+        showarrow=False, font=dict(size=11, color='gray', family=FONT['family']))
+
+    fig.update_layout(
+        height=400, width=700,
+        title=dict(text='<b>ℤ₁₆ Anomaly Index vs Generation Count</b>',
+                   font=TITLE_FONT, x=0.5),
+        xaxis=dict(title=dict(text='Number of Generations (N_f)',
+                             font=dict(size=14, family=FONT['family'])),
+                   dtick=1, tickfont=dict(size=13, family=FONT['family'])),
+        yaxis=dict(title=dict(text='Anomaly Index (mod 16)',
+                             font=dict(size=14, family=FONT['family'])),
+                   range=[-1, 16], dtick=2, tickfont=dict(size=13, family=FONT['family'])),
+        legend=dict(x=0.55, y=0.95, font=dict(size=13, family=FONT['family'])),
+        plot_bgcolor='white', paper_bgcolor='white',
+    )
+    return fig
+
+
+def fig_sm_generation_constraint() -> go.Figure:
+    """Generation constraint N_f ≡ 0 mod 3 visualization.
+
+    Shows c₋ = 8N_f vs the modular invariance requirement c₋ ≡ 0 mod 24.
+    Highlights which values of N_f satisfy the constraint.
+
+    Lean: generation_mod3_constraint (GenerationConstraint.lean)
+    """
+    from src.core.formulas import sm_generation_constraint
+
+    n_f_values = list(range(0, 10))
+    c_minus = [8 * n for n in n_f_values]
+    satisfies = [sm_generation_constraint(n)['satisfies_generation_constraint']
+                 for n in n_f_values]
+
+    fig = go.Figure()
+
+    # All points
+    fig.add_trace(go.Bar(
+        x=n_f_values, y=c_minus,
+        marker_color=[COLORS['Rb87'] if s else COLORS['cross'] for s in satisfies],
+        text=[f'c₋={c}' for c in c_minus],
+        textposition='outside',
+        textfont=dict(size=12, family=FONT['family']),
+        showlegend=False,
+        hovertemplate='N_f=%{x}<br>c₋=%{y}<br>Satisfies: %{customdata}<extra></extra>',
+        customdata=['Yes' if s else 'No' for s in satisfies],
+    ))
+
+    # Modular invariance lines at multiples of 24
+    for mult in [24, 48, 72]:
+        fig.add_hline(y=mult, line=dict(color=COLORS['Rb87'], width=1, dash='dash'),
+                      annotation=dict(text=f'c₋ = {mult}', x=0.98,
+                                      font=dict(size=11, color=COLORS['Rb87'])))
+
+    fig.update_layout(
+        height=400, width=600,
+        title=dict(text='<b>Generation Constraint: c₋ = 8N_f ≡ 0 mod 24</b>',
+                   font=TITLE_FONT, x=0.5),
+        xaxis=dict(title=dict(text='Number of Generations (N_f)',
+                             font=dict(size=14, family=FONT['family'])),
+                   dtick=1, tickfont=dict(size=13, family=FONT['family'])),
+        yaxis=dict(title=dict(text='Chiral Central Charge (c₋)',
+                             font=dict(size=14, family=FONT['family'])),
+                   tickfont=dict(size=13, family=FONT['family'])),
+        plot_bgcolor='white', paper_bgcolor='white',
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

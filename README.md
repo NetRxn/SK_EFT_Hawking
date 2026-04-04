@@ -22,8 +22,12 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
 - **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
   no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
-**Lean 4 formalization:** 748 theorems + 3 axioms across 49 Lean modules. Zero sorry.
-252 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+- **Paper 8 (chirality master):** Three-pillar chirality wall: GS no-go + GT positive
+  construction + Z₁₆ anomaly classification. PRL format.
+
+**Lean 4 formalization:** 877 theorems + 7 axioms across 56 Lean modules. 1 sorry
+(Lean heartbeat limit, Aristotle in flight). 253 Aristotle-proved across 31+ runs.
+Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
 MC framework (Lean-verified), chirality wall formalization (GS 9 conditions,
@@ -36,7 +40,7 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (748 theorems + 3 axioms, 49 modules, zero sorry)
+├── lean/                              # Lean 4 formalization (877 theorems + 7 axioms, 56 modules, 1 sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 43)
@@ -88,7 +92,15 @@ SK_EFT_Hawking/
 │       ├── WilsonMass.lean            # Phase 5a: M(k)=3-Σcos, zero locus, bounds (11 theorems)
 │       ├── BdGHamiltonian.lean        # Phase 5a: BdG 4x4, σ⊗τ Kronecker, chiral charge (8 theorems)
 │       ├── GTCommutation.lean         # Phase 5a: [H,Q_A]=0 central theorem, GS evasion (10 theorems)
-│       └── GTWeylDoublet.lean         # Phase 5a: Weyl doublet, Onsager→SU(2), Witten anomaly (12 theorems)
+│       ├── GTWeylDoublet.lean         # Phase 5a: Weyl doublet, Onsager→SU(2), Witten anomaly (12 theorems)
+│       ├── ChiralityWallMaster.lean   # Phase 5a: Three-pillar synthesis theorem (17 theorems)
+│       ├── SMFermionData.lean         # Phase 5b: SM fermion ℤ₄ charges, component counts (19 theorems)
+│       ├── Z16AnomalyComputation.lean # Phase 5b: SM anomaly in ℤ₁₆, hidden sector theorem (21+2ax)
+│       ├── GenerationConstraint.lean  # Phase 5b: N_f ≡ 0 mod 3 from modular invariance (12+2ax)
+│       ├── DrinfeldCenterBridge.lean  # Phase 5b: Half-braiding ↔ D(G)-module, Mathlib Center (18 theorems)
+│       ├── VecGMonoidal.lean          # Phase 5b: MonoidalCategory(Vec_G), Center(Vec_G) (12 theorems)
+│       ├── ToricCodeCenter.lean       # Phase 5b: Toric code from Center(Vec_{ℤ/2}), R(e,m)=-1 (25 theorems)
+│       └── S3CenterAnyons.lean        # Phase 5b: Non-abelian Center(Vec_{S₃}), 8 anyons, D²=36 (22 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -328,8 +340,16 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | PauliMatrices.lean | 5a | 15 | Pauli σ_x,σ_y,σ_z, commutation [σ_i,σ_j]=2iε σ_k, involutivity, traces. Aristotle: 90ed1a98 |
 | WilsonMass.lean | 5a | 11 | Wilson mass M(k), M=0 iff k=0 for all finite L, non-negativity, bounds. Aristotle: 90ed1a98 |
 | BdGHamiltonian.lean | 5a | 8 | BdG 4x4 Kronecker structure, H_BdG(k), q_A(k), Kronecker comm identity. Aristotle: 90ed1a98 |
-| GTCommutation.lean | 5a | 10 | **[H,Q_A]=0**: 2x2 τ-space trig identity, full 4x4, GS evasion (3 sorry) |
+| GTCommutation.lean | 5a | 10 | **[H,Q_A]=0**: 2x2 τ-space trig identity, full 4x4, GS evasion. Aristotle: 18969de2 |
 | GTWeylDoublet.lean | 5a | 12 | Model 2: Q_V+Q_A→Onsager, emanant SU(2), Witten ℤ₂=elem 8∈ℤ₁₆, bridges |
+| ChiralityWallMaster.lean | 5a | 17 | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly |
+| SMFermionData.lean | 5b | 19 | SM fermion enum, ℤ₄ charges X=5(B-L)-4Y, all odd, component counts 16/15 |
+| Z16AnomalyComputation.lean | 5b | 21+2ax | SM anomaly 16≡0/15≡-1 mod 16, hidden sector theorem, "16" convergence |
+| GenerationConstraint.lean | 5b | 12+2ax | N_f≡0(3) from c₋=8N_f+modular invariance. Aristotle: a1dfcbde |
+| DrinfeldCenterBridge.lean | 5b | 18 | Half-braiding ↔ D(G)-module bijection, Mathlib Center API, bidirectional |
+| VecGMonoidal.lean | 5b | 12 | **MonoidalCategory(Vec_G)**, Center(Vec_G) monoidal, forgetful functor |
+| ToricCodeCenter.lean | 5b | 25 | First computed Drinfeld center: 4 toric code anyons, R(e,m)=-1 |
+| S3CenterAnyons.lean | 5b | 22 | First non-abelian center: 8 D(S₃) anyons, d=2,3, D²=36 |
 
 ## Build Environment
 

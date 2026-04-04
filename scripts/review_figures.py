@@ -707,6 +707,28 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=0,
         expected_axes={}, physics_checks=[], color_keys=[],
     ),
+    # Phase 5b: SM Anomaly
+    FigureSpec(
+        name="fig71_sm_fermion_z16_anomaly",
+        function="fig_sm_fermion_z16_anomaly",
+        caption="SM fermion anomaly contributions in Z16: 16 Weyl with nu_R, 15 without.",
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "component"}, physics_checks=[], color_keys=["Rb87", "Na23"],
+    ),
+    FigureSpec(
+        name="fig72_sm_generation_anomaly",
+        function="fig_sm_generation_anomaly",
+        caption="Z16 anomaly index vs generation count: with and without nu_R.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "generation", "yaxis": "anomaly"}, physics_checks=[], color_keys=["Rb87", "dissipative"],
+    ),
+    FigureSpec(
+        name="fig73_sm_generation_constraint",
+        function="fig_sm_generation_constraint",
+        caption="Generation constraint c_minus = 8 N_f mod 24: N_f must be multiple of 3.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={"xaxis": "generation", "yaxis": "central"}, physics_checks=[], color_keys=["dispersive"],
+    ),
 ]
 
 
@@ -776,6 +798,10 @@ def generate_figures() -> dict[str, Path]:
         fig_chiral_charge_spectrum,
         fig_gt_commutator_verification,
         fig_chirality_wall_three_pillars,
+        # Phase 5b: SM Anomaly
+        fig_sm_fermion_z16_anomaly,
+        fig_sm_generation_anomaly,
+        fig_sm_generation_constraint,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -877,6 +903,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_chiral_charge_spectrum": fig_chiral_charge_spectrum,
         "fig_gt_commutator_verification": fig_gt_commutator_verification,
         "fig_chirality_wall_three_pillars": fig_chirality_wall_three_pillars,
+        # Phase 5b
+        "fig_sm_fermion_z16_anomaly": fig_sm_fermion_z16_anomaly,
+        "fig_sm_generation_anomaly": fig_sm_generation_anomaly,
+        "fig_sm_generation_constraint": fig_sm_generation_constraint,
     }
 
     paths = {}
@@ -979,6 +1009,10 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_chiral_charge_spectrum,
         fig_gt_commutator_verification,
         fig_chirality_wall_three_pillars,
+        # Phase 5b: SM Anomaly
+        fig_sm_fermion_z16_anomaly,
+        fig_sm_generation_anomaly,
+        fig_sm_generation_constraint,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1078,6 +1112,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_chiral_charge_spectrum": fig_chiral_charge_spectrum,
         "fig_gt_commutator_verification": fig_gt_commutator_verification,
         "fig_chirality_wall_three_pillars": fig_chirality_wall_three_pillars,
+        # Phase 5b
+        "fig_sm_fermion_z16_anomaly": fig_sm_fermion_z16_anomaly,
+        "fig_sm_generation_anomaly": fig_sm_generation_anomaly,
+        "fig_sm_generation_constraint": fig_sm_generation_constraint,
     }
 
     issues: list[CheckIssue] = []

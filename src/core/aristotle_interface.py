@@ -1458,6 +1458,98 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="Use p3 = 1. cos(1/2) ≈ 0.877 is not 0, 1, or -1. Need Real.cos_pos_of_mem_Ioo for positivity, then contradiction with exact values.",
         filled=True,
     ),
+    # Phase 5b: SMFermionData.lean (2 sorrys)
+    SorryGap(
+        module="SKEFTHawking.SMFermionData",
+        name="z4_charge_is_integer",
+        priority=1,
+        description="All SM fermion Z4 charges are integers: ∃ n : ℤ, X(f) = n for all f",
+        strategy_hint="cases f, then simp [z4ChargeRaw, bMinusL, hyperchargeY], then provide witness for each case",
+        filled=True,  # Manual proof: explicit witnesses per constructor
+    ),
+    SorryGap(
+        module="SKEFTHawking.SMFermionData",
+        name="sm_z4_all_odd",
+        priority=1,
+        description="All SM fermion Z4 charges are odd: ∃ k, X(f) = 2k+1 for all f",
+        strategy_hint="cases f, then simp [z4ChargeRaw, bMinusL, hyperchargeY]; use specific k values (0, 0, -2, -2, 0, 2)",
+        filled=True,  # Manual proof: explicit witnesses (0, 0, -2, -2, 0, 2)
+    ),
+    # Phase 5b: Z16AnomalyComputation.lean (2 sorrys)
+    SorryGap(
+        module="SKEFTHawking.Z16AnomalyComputation",
+        name="generation_anomaly_period",
+        priority=1,
+        description="16 | 15n ↔ 16 | n: anomaly periodicity (15 coprime to 16)",
+        strategy_hint="Use Nat.Coprime.dvd_of_dvd_mul_right with coprimality of 15 and 16, or Int version",
+        filled=True,  # Manual proof: omega-based forward/backward direction
+    ),
+    SorryGap(
+        module="SKEFTHawking.Z16AnomalyComputation",
+        name="hidden_sector_required",
+        priority=1,
+        description="a ≠ 0 in ZMod 16 → ∃ b ≠ 0 with a + b = 0: hidden sector existence",
+        strategy_hint="Use b = -a. Then a + (-a) = 0. Need -a ≠ 0 from a ≠ 0 (neg_ne_zero or ZMod.neg_ne_zero).",
+        filled=True,  # Manual proof: ⟨-a, neg_ne_zero.mpr ha, add_neg_cancel a⟩
+    ),
+    # Phase 5b: GenerationConstraint.lean (6 sorrys)
+    SorryGap(
+        module="SKEFTHawking.GenerationConstraint",
+        name="generation_mod3_constraint",
+        priority=1,
+        description="24 | 8*N_f → 3 | N_f: generation constraint from modular invariance",
+        strategy_hint="From 24 | 8n: write 8n = 24k, so n = 3k. Use Nat.dvd_of_mul_dvd_mul_left or omega.",
+        filled=True,  # Aristotle run a1dfcbde: obtain + omega + exact_mod_cast
+    ),
+    SorryGap(
+        module="SKEFTHawking.GenerationConstraint",
+        name="div_24_8n_implies_div_3_n",
+        priority=1,
+        description="24 | 8n → 3 | n (natural number version)",
+        strategy_hint="8n = 24k implies n = 3k. Or: gcd(8,24) = 8, so 24/gcd | n, i.e., 3 | n.",
+        filled=True,  # Manual proof: obtain ⟨k, hk⟩ := h; omega
+    ),
+    SorryGap(
+        module="SKEFTHawking.GenerationConstraint",
+        name="div_3_n_implies_div_24_8n",
+        priority=1,
+        description="3 | n → 24 | 8n (converse direction)",
+        strategy_hint="If n = 3k then 8n = 24k. obtain ⟨k, hk⟩ := h; exact ⟨k, by linarith⟩ or omega.",
+        filled=True,  # Manual proof: obtain ⟨k, hk⟩ := h; ⟨k, by omega⟩
+    ),
+    SorryGap(
+        module="SKEFTHawking.GenerationConstraint",
+        name="generation_constraint_iff",
+        priority=1,
+        description="3 | n ↔ 24 | 8n (biconditional)",
+        strategy_hint="Combine div_24_8n_implies_div_3_n and div_3_n_implies_div_24_8n.",
+        filled=True,  # Manual proof: term-mode Iff.intro combining the two
+    ),
+    SorryGap(
+        module="SKEFTHawking.GenerationConstraint",
+        name="generation_minimal_nontrivial",
+        priority=1,
+        description="3 | 3 and 3 is minimal positive multiple of 3",
+        strategy_hint="constructor; exact dvd_refl 3; intros m hm hd; exact Nat.le_of_dvd hm hd.",
+        filled=True,  # Manual proof: dvd_refl + Nat.le_of_dvd
+    ),
+    SorryGap(
+        module="SKEFTHawking.GenerationConstraint",
+        name="generation_next_solution",
+        priority=1,
+        description="3 | 6 and 6 is the next multiple of 3 after 3",
+        strategy_hint="constructor; norm_num; intros m hm hd; omega or interval_cases with 3 < m.",
+        filled=True,  # Manual proof: norm_num + omega
+    ),
+    # Phase 5b Wave 2: DrinfeldCenterBridge + VecGMonoidal (0 sorrys in Bridge, 1 in Monoidal)
+    SorryGap(
+        module="SKEFTHawking.VecGMonoidal",
+        name="vecG_braided",
+        priority=1,
+        description="BraidedCategory instance for GradedObject (Additive G) (ModuleCat k) — Lean performance issue",
+        strategy_hint="Use @GradedObject.braidedCategory with explicit args, or construct BraidedCategory manually from GradedObject.Monoidal.braiding + hexagon lemmas. All prerequisites synthesize individually.",
+        filled=True,  # Aristotle run 48493889: CommGroup G in separate section resolves diamond
+    ),
 ]
 
 

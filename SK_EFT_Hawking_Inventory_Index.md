@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Phase 5a Wave 2: GT lattice chiral fermion, 5 new modules)
+**Last synced:** April 4, 2026 (Phase 5b: SM anomaly + Drinfeld Center, 7 new modules)
 
 ---
 
@@ -10,22 +10,22 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 748 + 3 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 252 | ARISTOTLE_THEOREMS in constants.py (235 prior + 14 W2A `90ed1a98` + 3 W2B `18969de2`) |
-| Manual proofs | 496 | 748 - 252 |
-| **Sorry gaps** | **0** | All filled |
-| Lean modules | 49 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 748 + 3ax | All proved |
-| Python source modules | 48 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 28 | `find tests/ -name "test_*.py"` |
-| Test count | 1390 | `pytest tests/ -q` (1339 + 26 + 25 GT) |
-| Figures | 69 | `grep -c "^def fig_" src/core/visualizations.py` (64 + 5 GT/chirality) |
-| Notebooks | 22 | `ls notebooks/*.ipynb` (20 + 2 GT chirality) |
-| Papers | 8 | `ls papers/*/paper_draft.tex` (7 + Paper 8 chirality master) |
+| Lean theorems | 877 + 7 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 253 | ARISTOTLE_THEOREMS in constants.py (252 prior + 1 `a1dfcbde`) |
+| Manual proofs | 624 | 877 - 253 |
+| **Sorry gaps** | **1** | `vecG_braided` (VecGMonoidal.lean) — Lean heartbeat limit, Aristotle in flight |
+| Lean modules | 56 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 876 + 7ax | 1 sorry remaining |
+| Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Test files | 29 | `find tests/ -name "test_*.py"` |
+| Test count | 1456 | `pytest tests/ -q` (1390 + 44 SM anomaly + 22 other) |
+| Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` (69 + 3 SM anomaly) |
+| Notebooks | 22 | `ls notebooks/*.ipynb` |
+| Papers | 8 | `ls papers/*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 12 | See Section 9 of inventory |
-| Aristotle runs | 30+ | See Aristotle run table in full inventory |
-| Deep research tasks | 18 + 8 Phase-5a | 18 Phase-5 complete + 8 Phase-5a complete (6 prior + 2 GT)
+| Aristotle runs | 31+ | See Aristotle run table in full inventory |
+| Deep research tasks | 18 + 8 + 2 | 18 Phase-5 + 8 Phase-5a + 2 Phase-5b
 
 ---
 
@@ -51,10 +51,11 @@
 
 ### Core (`src/core/`)
 - `constants.py` — Physical constants, experimental params, Aristotle registry, NJL/ADW model params
-- `formulas.py` — Canonical physics formulas with Lean refs (~55 functions including Weingarten, NJL, fracton, Planck)
+- `formulas.py` — Canonical physics formulas with Lean refs (~59 functions including SM anomaly, Weingarten, NJL, fracton, Planck)
 - `transonic_background.py` — 1D BEC transonic flow solver
-- `visualizations.py` — All 43 Plotly figure functions + COLORS palette
-- `aristotle_interface.py` — Aristotle API + sorry gap registry (all filled)
+- `visualizations.py` — All 72 Plotly figure functions + COLORS palette
+- `aristotle_interface.py` — Aristotle API + sorry gap registry (1 unfilled: vecG_braided)
+- `sm_anomaly.py` — SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check
 - `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
 - `citations.py` — Citation registry (CITATION_REGISTRY, DOI tracking, usage mapping)
 
@@ -159,6 +160,13 @@
 | GTCommutation | 10 | **Central theorem** [H_BdG(k),q_A(k)]=0, 2×2 τ-space trig identity, GS evasion, bridge to TPF (**ALL PROVED**, Aristotle `18969de2`) |
 | GTWeylDoublet | 12 | Model 2: Q_V+Q_A generate Onsager, emanant SU(2), Witten anomaly=element 8∈ℤ₁₆, bridges to GS/TPF/Z₁₆ (**ALL PROVED**) |
 | ChiralityWallMaster | 17 | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly, bridge theorems, status structure (**ALL PROVED**) |
+| SMFermionData | 19 | SM fermion enum, ℤ₄ charges X=5(B-L)-4Y, all odd, component counts 16/15, anomaly contributions (**ALL PROVED**) |
+| Z16AnomalyComputation | 21+2ax | Dai-Freed axioms, anomaly 16≡0 / 15≡-1 mod 16, 3-gen anomaly -3, hidden sector theorem, "16" convergence (**ALL PROVED**) |
+| GenerationConstraint | 12+2ax | c₋=8N_f + c₋≡0(24) axioms, N_f≡0(3) **derived**, minimal N_f=3, combined constraints (**ALL PROVED**, Aristotle `a1dfcbde`) |
+| DrinfeldCenterBridge | 18 | Half-braiding ↔ D(G)-module bijection, conjugation identities, Mathlib Center API, bidirectional encoding (**ALL PROVED**) |
+| VecGMonoidal | 12 | **MonoidalCategory(Vec_G)** proved, Center(Vec_G) category+monoidal, forgetful functor, BraidedCategory (1 sorry — Lean heartbeat) |
+| ToricCodeCenter | 25 | 4 toric code anyons, fusion rules, R(e,m)=-1, fermion self-stats, first computed Drinfeld center (**ALL PROVED**) |
+| S3CenterAnyons | 22 | 8 non-abelian anyons, d=1,1,2,3,3,2,2,2, D²=36=|S₃|², A3⊗A3 decomposition, first non-abelian center (**ALL PROVED**) |
 
 ---
 

@@ -477,15 +477,15 @@ The exact WKB connection formula completes the prediction chain. Instead of just
 
 ### Current Status
 
-| Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 | Phase 5a |
-|--------|---------|---------|---------|---------|---------|----------|
-| Papers | 1 | 2 | 5 | 6 | 7 | 8 |
-| Verified theorems | 14 | 40 | 130+1ax | 216+1ax | 675+3ax | 748+3ax |
-| Lean modules | 4 | 7 | 11 | 16 | 43 | 49 |
-| Tests | 12 | 64 | 269 | 820 | 1339 | 1390 |
-| Pipeline figures | 6 | 12 | 34 | 44 | 64 | 69 |
-| Aristotle-proved | 14 | 40 | 99 | 211 | 235 | 252 |
-| Walls tested | 0 | 0 | 2 | 2+vestigial | chirality formalized | chirality **verified** |
+| Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 | Phase 5a | Phase 5b |
+|--------|---------|---------|---------|---------|---------|----------|----------|
+| Papers | 1 | 2 | 5 | 6 | 7 | 8 | 8 |
+| Verified theorems | 14 | 40 | 130+1ax | 216+1ax | 675+3ax | 748+3ax | 877+7ax |
+| Lean modules | 4 | 7 | 11 | 16 | 43 | 49 | 56 |
+| Tests | 12 | 64 | 269 | 820 | 1339 | 1390 | 1456 |
+| Pipeline figures | 6 | 12 | 34 | 44 | 64 | 69 | 72 |
+| Aristotle-proved | 14 | 40 | 99 | 211 | 235 | 252 | 253 |
+| Walls tested | 0 | 0 | 2 | 2+vestigial | chirality formalized | chirality **verified** | SM anomaly + Drinfeld center |
 
 ---
 

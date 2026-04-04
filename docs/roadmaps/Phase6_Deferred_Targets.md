@@ -18,15 +18,13 @@
 - **Our estimate:** Probably 1-3 months once infrastructure exists, or faster with axiomatization strategy
 - **Note:** The algebraic CONSEQUENCE (8N_f ≡ 0 mod 24 → N_f ≡ 0 mod 3) is trivial and included in Phase 5b as a stretch goal. The full proof through Hirzebruch + Rokhlin is the deferred target.
 
-### Drinfeld Center Z(Vec_G) ≅ Rep(D(G)) Full Equivalence
-- **Source:** Our GaugeEmergence.lean states this; full proof requires fusion category infrastructure
-- **Result:** Categorical proof of gauge emergence from topological order
-- **Requires:** Fusion categories as finite semisimple rigid monoidal categories, module categories, Lagrangian algebras
-- **Mathlib gap:** ~40-50% infrastructure (Drinfeld center Z(C) exists with half-braiding)
-- **Deep research estimate:** 100-150 theorems, 6-12 months (human)
-- **Our estimate:** Possibly 2-4 weeks with Aristotle if fusion category infra is built first
-- **Note:** This is the "crown jewel" per deep research — most constructive (70% genuine proofs vs axioms). Independently valuable for Mathlib.
-- **Bidirectional interpretation:** Z(C) implements Layer 1 ↔ 3 consistency via SymTFT slab construction. Half-braiding = bidirectional anomaly matching.
+### Drinfeld Center Z(Vec_G) ≅ Rep(D(G)) Full Equivalence — **PROMOTED TO PHASE 5b**
+- **Status:** Promoted to Phase 5b Wave 2 (2026-04-04). See Phase5b_Roadmap.md.
+- **Progress:** 27 theorems across DrinfeldCenterBridge.lean + VecGMonoidal.lean, zero sorry.
+  Algebraic core proved (conjugation ↔ half-braiding bijection).
+  Vec_G defined via Mathlib's GradedObject. 4 typeclass instances remain for full MonoidalCategory.
+- **Revised Mathlib gap:** ~80%+ infrastructure available (Center, HalfBraiding, GradedObject.Monoidal, BraidedCategory all present). Gap is typeclass plumbing, not missing definitions.
+- **Revised estimate:** 1-3 sessions to discharge MonoidalCategory assumption + build functor.
 
 ### q-Onsager → Quantum Group → MTC Chain
 - **Source:** Baseilhac-Belliard arXiv:0906.1215; Terwilliger arXiv:math.QA/0307016

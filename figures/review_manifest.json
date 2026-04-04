@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-03T17:46:01.595352+00:00",
+  "generated": "2026-04-04T05:27:17.960202+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1578,6 +1578,196 @@
       "expected_axes": {},
       "physics_checks": [],
       "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig66_gt_band_structure",
+      "function": "fig_gt_band_structure",
+      "caption": "GT BdG band structure showing single gapless Weyl node at Gamma.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig66_gt_band_structure.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig66_gt_band_structure.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "yaxis": "Energy"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Rb87",
+        "K39"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig67_wilson_mass_bz",
+      "function": "fig_wilson_mass_bz",
+      "caption": "Wilson mass M(kx,ky,0) heatmap: zero only at origin (Weyl node).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig67_wilson_mass_bz.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig67_wilson_mass_bz.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig68_chiral_charge_spectrum",
+      "function": "fig_chiral_charge_spectrum",
+      "caption": "GT chiral charge eigenvalues \u00b1cos(p3/2): non-compact spectrum.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig68_chiral_charge_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig68_chiral_charge_spectrum.html",
+      "expected_traces": 2,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "Rb87",
+        "K39"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig69_gt_commutator_verification",
+      "function": "fig_gt_commutator_verification",
+      "caption": "Numerical verification [H,Q_A]=0 at L=8: machine epsilon everywhere.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig69_gt_commutator_verification.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig69_gt_commutator_verification.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "yaxis": "commutator"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Rb87"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig70_chirality_wall_three_pillars",
+      "function": "fig_chirality_wall_three_pillars",
+      "caption": "Three-pillar chirality wall formal verification: no-go + GT + anomaly.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig70_chirality_wall_three_pillars.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig70_chirality_wall_three_pillars.html",
+      "expected_traces": 0,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig71_sm_fermion_z16_anomaly",
+      "function": "fig_sm_fermion_z16_anomaly",
+      "caption": "SM fermion anomaly contributions in Z16: 16 Weyl with nu_R, 15 without.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig71_sm_fermion_z16_anomaly.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig71_sm_fermion_z16_anomaly.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "component"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Rb87",
+        "Na23"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig72_sm_generation_anomaly",
+      "function": "fig_sm_generation_anomaly",
+      "caption": "Z16 anomaly index vs generation count: with and without nu_R.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig72_sm_generation_anomaly.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig72_sm_generation_anomaly.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "generation",
+        "yaxis": "anomaly"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Rb87",
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig73_sm_generation_constraint",
+      "function": "fig_sm_generation_constraint",
+      "caption": "Generation constraint c_minus = 8 N_f mod 24: N_f must be multiple of 3.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig73_sm_generation_constraint.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig73_sm_generation_constraint.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "generation",
+        "yaxis": "central"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "dispersive"
+      ],
       "review_criteria": [
         "Axes labels readable and correct",
         "Legend entries present and clear",
