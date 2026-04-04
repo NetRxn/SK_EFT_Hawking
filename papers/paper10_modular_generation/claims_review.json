@@ -1,0 +1,351 @@
+{
+  "paper": "paper10_modular_generation",
+  "review_date": "2026-04-04T00:00:00Z",
+  "reviewer": "claims-reviewer agent (Claude Opus 4.6 1M)",
+  "overall_status": "issues_found",
+
+  "numerical_claims": [
+    {
+      "location": "Sec 2, Table: Q_L (3,2) = 6 components, c = 3",
+      "paper_value": "6 components, c = 3",
+      "computed_value": "SM_FERMION_DATA['Q_L']['components'] = 6, c = 6 * 0.5 = 3",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Each Weyl fermion contributes c = 1/2. 6 components -> c = 3."
+    },
+    {
+      "location": "Sec 2, Table: u_R_bar (3bar,1) = 3 components, c = 3/2",
+      "paper_value": "3 components, c = 3/2",
+      "computed_value": "SM_FERMION_DATA['u_R_bar']['components'] = 3, c = 1.5",
+      "delta_pct": 0.0,
+      "status": "PASS"
+    },
+    {
+      "location": "Sec 2, Table: d_R_bar (3bar,1) = 3 components, c = 3/2",
+      "paper_value": "3 components, c = 3/2",
+      "computed_value": "SM_FERMION_DATA['d_R_bar']['components'] = 3, c = 1.5",
+      "delta_pct": 0.0,
+      "status": "PASS"
+    },
+    {
+      "location": "Sec 2, Table: L (1,2) = 2 components, c = 1",
+      "paper_value": "2 components, c = 1",
+      "computed_value": "SM_FERMION_DATA['L']['components'] = 2, c = 1.0",
+      "delta_pct": 0.0,
+      "status": "PASS"
+    },
+    {
+      "location": "Sec 2, Table: e_R_bar (1,1) = 1 component, c = 1/2",
+      "paper_value": "1 component, c = 1/2",
+      "computed_value": "SM_FERMION_DATA['e_R_bar']['components'] = 1, c = 0.5",
+      "delta_pct": 0.0,
+      "status": "PASS"
+    },
+    {
+      "location": "Sec 2, Table: nu_R_bar (1,1) = 1 component, c = 1/2",
+      "paper_value": "1 component, c = 1/2",
+      "computed_value": "SM_FERMION_DATA['nu_R_bar']['components'] = 1, c = 0.5",
+      "delta_pct": 0.0,
+      "status": "PASS"
+    },
+    {
+      "location": "Sec 2, Table: Total = 16 components, c = 8",
+      "paper_value": "16, c = 8",
+      "computed_value": "6+3+3+2+1+1 = 16, c = 3+1.5+1.5+1+0.5+0.5 = 8",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches SM_ANOMALY['COMPONENTS_WITH_NU_R']=16 and SM_ANOMALY['CHIRAL_CENTRAL_CHARGE_COEFF']=8."
+    },
+    {
+      "location": "Sec 2.2, line 101: Without nu_R, 15 Weyl, c_- = 15/2",
+      "paper_value": "15, c_- = 15/2",
+      "computed_value": "SM_ANOMALY['COMPONENTS_WITHOUT_NU_R'] = 15, 15 * 0.5 = 7.5 = 15/2",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Fractional c_- verified. Lean: central_charge_fractional_without_nu_R in WangBridge.lean."
+    },
+    {
+      "location": "Sec 3, line 130: zeta_24 = e^{2pi i/24} = e^{pi i/12}",
+      "paper_value": "zeta_24 = e^{pi i/12}",
+      "computed_value": "2*pi*i/24 = pi*i/12. Correct.",
+      "delta_pct": 0.0,
+      "status": "PASS"
+    },
+    {
+      "location": "Sec 3.2, Eq (3): 24 | 8 N_f => 3 | N_f",
+      "paper_value": "N_f equiv 0 mod 3",
+      "computed_value": "gcd(8,24) = 8, 24/gcd(8,24) = 3, so 24|8N_f <=> 3|N_f",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Lean: generation_mod3_constraint in GenerationConstraint.lean (Aristotle a1dfcbde)."
+    },
+    {
+      "location": "Sec 3.2, line 161-162: 24 | 8*3 but 24 does not divide 8*1 and 24 does not divide 8*2",
+      "paper_value": "sharpness claim",
+      "computed_value": "8*3=24 (yes), 8*1=8 (no), 8*2=16 (no)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Lean: constraint_sharpness in ModularInvarianceConstraint.lean (proved by omega)."
+    },
+    {
+      "location": "Sec 3.2, line 162: 24 = 8 x 3",
+      "paper_value": "24 = 8 x 3",
+      "computed_value": "24 = 8 * 3",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Lean: twenty_four_origin in ModularInvarianceConstraint.lean."
+    }
+  ],
+
+  "theorem_refs": [
+    {
+      "name": "WangBridge.lean (9 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 9,
+      "actual_count": 9,
+      "status": "PASS"
+    },
+    {
+      "name": "fermion_count_gives_central_charge (WangBridge.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "status": "PASS",
+      "notes": "Line 73 of WangBridge.lean. Derives c_- = 8 from total_components_with_nu_R = 16."
+    },
+    {
+      "name": "central_charge_fractional_without_nu_R (WangBridge.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "status": "PASS",
+      "notes": "Line 109 of WangBridge.lean. Proves 15/2 is not a natural number."
+    },
+    {
+      "name": "wang_sixteen_convergence (WangBridge.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "status": "PASS",
+      "notes": "Line 128. Referenced on paper line 197."
+    },
+    {
+      "name": "GenerationConstraint.lean (13 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 13,
+      "actual_count": 13,
+      "status": "PASS",
+      "notes": "Paper does not state theorem count but Inventory Index confirms 13."
+    },
+    {
+      "name": "generation_mod3_constraint (Aristotle a1dfcbde)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "a1dfcbde",
+      "status": "PASS",
+      "notes": "Line 77 of GenerationConstraint.lean. Confirmed in ARISTOTLE_THEOREMS."
+    },
+    {
+      "name": "SMFermionData.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "actual_count": 19,
+      "status": "PASS",
+      "notes": "Referenced on paper line 97 via SMFermionData.total_components_with_nu_R."
+    },
+    {
+      "name": "ModularInvarianceConstraint.lean (12 theorems)",
+      "in_lean": true,
+      "has_sorry": true,
+      "theorem_count_match": true,
+      "paper_count": 12,
+      "actual_count": 12,
+      "sorry_count": 4,
+      "status": "FAIL",
+      "notes": "Paper lines 219-225 lists ModularInvarianceConstraint.lean among 'key modules---all with zero sorry'. This is FALSE. The module has 4 theorems with sorry: zeta24_pow_24 (line 50), zeta24_ne_one (line 59), zeta24_primitive (line 69), qParam_integer_invariant (line 99). Additionally, framing_anomaly_constraint (line 115) has 2 sorry branches in its proof. Paper line 225 does note 'complex exponential identities pending Aristotle' but this contradicts the 'all with zero sorry' framing."
+    },
+    {
+      "name": "qParam_shift (ModularInvarianceConstraint.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "status": "PASS",
+      "notes": "Line 84. Proved using Complex.exp_add + ring. Paper correctly notes this is proved (line 167)."
+    },
+    {
+      "name": "framing_anomaly_constraint (ModularInvarianceConstraint.lean)",
+      "in_lean": true,
+      "has_sorry": true,
+      "status": "FAIL",
+      "notes": "Line 115. Both directions of the biconditional have sorry. Paper line 169 claims it 'proves 24|c <=> e^{2pi i c/24}=1' but the proof is incomplete."
+    }
+  ],
+
+  "parameter_provenance": [
+    {
+      "key": "N/A",
+      "status": "PASS",
+      "notes": "Paper 10 has no experimental parameter dependencies. All claims are algebraic/number-theoretic. No BEC/polariton platform needed."
+    }
+  ],
+
+  "citation_integrity": [
+    {
+      "bibkey": "Wang2024",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. PRD 110, 125028 (2024), arXiv:2312.14928."
+    },
+    {
+      "bibkey": "AlvarezGaumeWitten1984",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. NPB 234, 269 (1984)."
+    },
+    {
+      "bibkey": "GarciaEtxebarria2019",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. JHEP 08, 003 (2019)."
+    },
+    {
+      "bibkey": "Rademacher1973",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Rademacher, Topics in Analytic Number Theory (Springer, 1973). Book reference."
+    },
+    {
+      "bibkey": "GrossJackiw1972",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. PRD 6, 477 (1972)."
+    },
+    {
+      "bibkey": "Rokhlin1952",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Dokl. Akad. Nauk SSSR 84, 221 (1952)."
+    },
+    {
+      "bibkey": "Kitaev2009",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. AIP Conf. Proc. 1134, 22 (2009)."
+    },
+    {
+      "bibkey": "Stolz1993",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Math. Ann. 296, 685 (1993). Cited in bibliography but never \\cite'd in paper text."
+    }
+  ],
+
+  "qualitative_claims": [
+    {
+      "claim": "First formal derivation connecting number-theoretic modular invariance to a Standard Model constraint (abstract, conclusions)",
+      "support": "WangBridge.lean (c_-=8 from fermion content), GenerationConstraint.lean (24|8N_f => 3|N_f, Aristotle proved), ModularInvarianceConstraint.lean (eta transformation, q-parameter shift proved). Chain is formalized though 4 sorry remain in complex exponential lemmas.",
+      "status": "WARN",
+      "notes": "The derivation chain is substantially formalized but not fully complete: 4 sorry gaps in ModularInvarianceConstraint.lean mean the eta->24->constraint chain has unproved links. The 'first formal derivation' claim should be qualified with 'modulo 4 pending complex exponential lemmas'."
+    },
+    {
+      "claim": "Without nu_R, c_- = 15/2 is fractional -- a formally verified independent argument for nu_R (Sec 2.2)",
+      "support": "Lean theorem central_charge_fractional_without_nu_R in WangBridge.lean (proved, zero sorry). formulas.py wang_bridge_central_charge(15) returns 7.5.",
+      "status": "PASS"
+    },
+    {
+      "claim": "The coefficient 8 in c_- = 8 N_f is derived from the SM's 16 Weyl fermion components, not a free parameter (abstract, Sec 2.1)",
+      "support": "Lean: fermion_count_gives_central_charge derives c_- = 8 from total_components_with_nu_R = 16. The coefficient is computed, not axiomatized.",
+      "status": "PASS"
+    },
+    {
+      "claim": "The 24 traces to zeta regularization zeta(-1) = -1/12 (Sec 3.1, line 132-134)",
+      "support": "Standard CFT result: Casimir energy E_0 = -c/24, arising from regularized sum 1+2+3+... = -1/12. Well-established physics; Lean formalization records the q^{1/24} prefactor.",
+      "status": "PASS",
+      "notes": "Physics claim, not numerically verifiable from pipeline. Standard textbook result."
+    },
+    {
+      "claim": "The factorization 24 = 8 x 3 encodes both ingredients (Sec 3.2, line 162-164)",
+      "support": "Lean: twenty_four_origin (24 = 8*3) and twenty_four_decomposition (24 = 8*3 and Coprime 8 3). Both proved.",
+      "status": "PASS"
+    },
+    {
+      "claim": "T-transformation phase cycles through cube roots of unity (Fig 1 caption, line 155-156)",
+      "support": "Phase = e^{2pi i * 8N_f/24} = e^{2pi i N_f/3}. For N_f=0: 1, N_f=1: omega, N_f=2: omega^2, N_f=3: 1. Correct.",
+      "status": "PASS"
+    },
+    {
+      "claim": "'16 convergence': number 16 appears in 4 independent areas (Sec 4)",
+      "support": "Lean: wang_sixteen_convergence in WangBridge.lean records SM Weyl count = Z16 modulus.",
+      "status": "PASS",
+      "notes": "Qualitative claim about conceptual connections, well-supported by formal verification."
+    }
+  ],
+
+  "project_level_counts": [
+    {
+      "location": "Abstract line 31: '936 theorems + 2 axioms across 63 Lean 4 modules'",
+      "status": "PASS",
+      "notes": "Verified: 936 theorems, 2 axioms, 63 .lean files."
+    },
+    {
+      "location": "Abstract line 31-32: 'with zero sorry'",
+      "status": "FAIL",
+      "notes": "The abstract says '936 theorems + 2 axioms across 63 Lean 4 modules with zero sorry'. ModularInvarianceConstraint.lean has 4 theorems with sorry. The project is NOT zero-sorry. This is a global claim that is factually incorrect."
+    },
+    {
+      "location": "Conclusions line 218-219: '936 theorems + 2 axioms across 63 Lean 4 modules. The key modules---all with zero sorry'",
+      "status": "FAIL",
+      "notes": "ModularInvarianceConstraint.lean is listed as a 'key module' on line 224 but has 4 sorry. The 'all with zero sorry' claim is false for this module."
+    },
+    {
+      "location": "Conclusions line 224-225: 'ModularInvarianceConstraint.lean (framing anomaly: q-parameter shift proved, complex exponential identities pending Aristotle)'",
+      "status": "WARN",
+      "notes": "The parenthetical correctly notes some identities are 'pending Aristotle', but this contradicts the overarching 'all with zero sorry' claim on line 219. The sentence structure is misleading."
+    }
+  ],
+
+  "infrastructure_issues": [
+    {
+      "issue": "Paper 10 not in PAPER_DEPENDENCIES (provenance.py)",
+      "status": "WARN",
+      "notes": "Paper 10 should be added to PAPER_DEPENDENCIES."
+    },
+    {
+      "issue": "All 8 citations missing from CITATION_REGISTRY (citations.py)",
+      "status": "WARN",
+      "notes": "Wang2024, AlvarezGaumeWitten1984, GarciaEtxebarria2019, Rademacher1973, GrossJackiw1972, Rokhlin1952, Kitaev2009, Stolz1993 -- all absent."
+    },
+    {
+      "issue": "Stolz1993 in bibliography but never \\cite'd in text",
+      "status": "WARN",
+      "notes": "Orphan bibliography entry. Either cite it or remove it."
+    },
+    {
+      "issue": "Inventory Index says 9 papers but 10 exist (Paper 10 not counted)",
+      "status": "WARN",
+      "notes": "Inventory Index line 24 says 'Papers: 9' but paper10_modular_generation exists."
+    }
+  ],
+
+  "summary": "3 FAIL, 13 WARN, 24 PASS",
+  "blocking_issues": [
+    "Abstract claims 'zero sorry' globally -- FALSE. ModularInvarianceConstraint.lean has 4 sorry theorems. Fix: either add 'except 4 pending in ModularInvarianceConstraint' or wait for Aristotle to fill them.",
+    "Conclusions line 219 claims 'key modules---all with zero sorry' but lists ModularInvarianceConstraint.lean which has 4 sorry. Fix: either exclude it from the 'zero sorry' claim or note the 4 pending sorry explicitly.",
+    "framing_anomaly_constraint claimed as proved (line 169) but both directions have sorry. Fix: say 'stated and partially proved' or 'proof pending Aristotle'."
+  ],
+  "non_blocking_issues": [
+    "All 8 bibliography entries missing from CITATION_REGISTRY -- blocks submission per CHECK 15.",
+    "Paper not in PAPER_DEPENDENCIES -- blocks provenance tracking.",
+    "Stolz1993 in bibliography but never \\cite'd in text.",
+    "Inventory Index paper count (9) does not include Paper 10.",
+    "'First formal derivation' claim should be qualified given 4 sorry in the modular invariance chain."
+  ]
+}

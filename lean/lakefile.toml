@@ -17,5 +17,5 @@ name = "SKEFTHawking"
 [[lean_exe]]
 name = "extractDeps"
 root = "SKEFTHawking.ExtractDeps"
-# NOTE: Linking may exceed macOS command-line limits with Mathlib.
-# Fallback: `lake env lean --run SKEFTHawking/ExtractDeps.lean`
+# NOTE: Native linking may exceed macOS argument-length limits with Mathlib.
+# Use interpreted mode instead: `lake env lean --run SKEFTHawking/ExtractDeps.lean`

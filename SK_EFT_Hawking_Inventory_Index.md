@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Waves 1-5: 936 thm + 2 ax, 63 modules, 4 sorrys in ModularInvarianceConstraint pending Aristotle)
+**Last synced:** April 4, 2026 (Post Wave 7: 968 thm, 0 ax, 66 modules, 11 sorry pending Aristotle)
 
 ---
 
@@ -10,22 +10,23 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 936 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 272 (269 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| Manual proofs | 664 | 936 - 272 |
-| **Sorry gaps** | **0** | All filled |
-| Lean modules | 63 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 924 + 2ax | All proved |
+| Lean theorems | 968 (0 axioms) | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 273 (270 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
+| Manual proofs | 695 | 968 - 273 |
+| **Sorry gaps** | **11** | 5 in QNumber.lean, 6 in Uqsl2.lean (Aristotle pending) |
+| **Axioms** | **0** | All removed (Wave 6) |
+| Lean modules | 66 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 957 | 968 - 11 |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 31 | `find tests/ -name "test_*.py"` |
-| Test count | 1506 | `pytest tests/ -q` (1488 + 18 modular invariance) |
-| Figures | 71 | `grep -c "^def fig_" src/core/visualizations.py` |
-| Notebooks | 24 | `ls notebooks/*.ipynb` (22 + 2 Phase 5b SM anomaly/Drinfeld) |
-| Papers | 9 | `ls papers/*/paper_draft.tex` (8 + Paper 9 SM anomaly + Drinfeld) |
+| Test files | 34 | `find tests/ -name "test_*.py"` |
+| Test count | 1506+ | `pytest tests/ -q` |
+| Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` |
+| Notebooks | 28 | `ls notebooks/*.ipynb` |
+| Papers | 11 | `ls papers/*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 12 | See Section 9 of inventory |
-| Aristotle runs | 31+ | See Aristotle run table in full inventory |
-| Deep research tasks | 18 + 8 + 2 | 18 Phase-5 + 8 Phase-5a + 2 Phase-5b
+| Aristotle runs | 33+ | See Aristotle run table in full inventory |
+| Deep research tasks | 18 + 8 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b (incl. 4 q-Onsager)
 
 ---
 
@@ -53,7 +54,7 @@
 - `constants.py` — Physical constants, experimental params, Aristotle registry, NJL/ADW model params
 - `formulas.py` — Canonical physics formulas with Lean refs (~59 functions including SM anomaly, Weingarten, NJL, fracton, Planck)
 - `transonic_background.py` — 1D BEC transonic flow solver
-- `visualizations.py` — All 71 Plotly figure functions + COLORS palette
+- `visualizations.py` — All 72 Plotly figure functions + COLORS palette
 - `aristotle_interface.py` — Aristotle API + sorry gap registry (all filled, zero unfilled)
 - `sm_anomaly.py` — SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check
 - `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
@@ -119,7 +120,7 @@
 | WKBAnalysis | 15 | Damping biconditionals, turning point |
 | CGLTransform | 7 | CGL FDR, Einstein relation |
 | ThirdOrderSK | 14 | Parity alternation (general N) |
-| GaugeErasure | 11+1ax | Erasure theorem, U(1) survival |
+| GaugeErasure | 12 | Erasure theorem, U(1) survival (axiom removed) |
 | WKBConnection | 17 | Decoherence, noise floor, unitarity |
 | ADWMechanism | 21 | Critical coupling, NG modes |
 | ChiralityWall | 17 | GS no-go requires all, TPF evasion |
@@ -132,7 +133,7 @@
 | SU2PseudoReality | 10 | One-link normalization, effective coupling, Binder cumulant limits |
 | FermionBag4D | 16 | SO(4) integration, 8-fermion bounds, bag positivity+boundedness, Binder range, vestigial splitting |
 | LatticeHamiltonian | 28 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace real |
-| GoltermanShamir | 14+1ax | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation |
+| GoltermanShamir | 15 | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation (axiom removed) |
 | TPFEvasion | 12 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
 | KLinearCategory | 16 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
 | SphericalCategory | 18 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, fibonacci φ²=φ+1, chirality limitation |
@@ -172,7 +173,10 @@
 | DrinfeldDoubleRing | 3+4inst | DG newtype wrapper, Ring + Algebra k instances, distrib, basis_mul (**ALL PROVED**, Aristotle `52992d6a`) |
 | DrinfeldEquivalence | 12 | Z(Vec_G)≅Rep(D(G)): simple counts, Hopf structure, antipode involutive, gauge emergence bridge (**ALL PROVED**) |
 | WangBridge | 9 | Derives c₋=8N_f from SM fermion content (16 Weyl → c₋=8), fractional c₋ without ν_R, full chain to N_f≡0(3), "16 convergence" (**ALL PROVED**) |
-| ModularInvarianceConstraint | 12 | ζ₂₄ root of unity, q-parameter shift (proved), framing anomaly 24\|c₋ ↔ phase=1, complete chain η→24→3\|N_f, Rokhlin "16" (**4 sorrys**, Aristotle pending) |
+| ModularInvarianceConstraint | 12 | ζ₂₄ root of unity, q-parameter shift (proved), framing anomaly 24\|c₋ ↔ phase=1, complete chain η→24→3\|N_f, Rokhlin "16" (**ALL PROVED**, Aristotle `b54f9611`) |
+| RokhlinBridge | 14 | Rokhlin "16" convergence, with/without ν_R analysis (**ALL PROVED**) |
+| QNumber | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16=DG_COEFF (**5 sorry pending Aristotle**) |
+| Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**6 sorry pending Aristotle**) |
 
 ---
 

@@ -37,48 +37,83 @@ Python registries          build_graph.py           Flask API          D3 visual
  review_figures.py)
 ```
 
-**Phase 1 (current):** Python registries are the source of truth. The graph is extracted on demand by `build_graph.py` and served as JSON via Flask. The D3 visualization renders it interactively.
+**Python registries remain the source of truth.** The graph is extracted on demand by `build_graph.py` and served as JSON via Flask. The D3 visualization renders it interactively. PG+AGE is populated in parallel for Cypher-based traversal queries (dependency trees, blast radius).
 
-**Phase 2 (planned):** PG+AGE graph becomes the source of truth. Python dicts are generated from it. Dashboard gains write capability.
+### Lean Declaration Extraction
+
+Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawking/ExtractDeps.lean`) that uses `Lean.Environment.collectAxioms` to compute transitive axiom dependencies. The Python wrapper (`scripts/extract_lean_deps.py`) manages staleness checking — re-extraction only happens when `.lean` files change. Output cached at `lean/lean_deps.json`.
+
+### PG+AGE Parallel Write
+
+`build_graph.py` writes all nodes and edges to the `sk_eft` graph in PG+AGE (port 5433) alongside JSON extraction. This is best-effort — if PG is unavailable, JSON extraction still works. PG provides Cypher-based traversal for dependency tree queries in the Proof Architecture tab.
 
 ## Graph Schema
 
-### Node Types (8)
+### Node Types (13)
 
-| Node Type | Count | Source | ID Format |
-|-----------|-------|--------|-----------|
-| **Paper** | 8 | `PAPER_DEPENDENCIES` in provenance.py | `paper:{key}` |
-| **PaperClaim** | 29 | `PAPER_DEPENDENCIES.key_claims` | `claim:{paper}:{index}` |
-| **Formula** | 108 | `formulas.py` function defs + docstrings | `formula:{name}` |
-| **LeanTheorem** | 676 | `lean/SKEFTHawking/*.lean` | `lean:{name}` |
-| **AristotleRun** | 31 | `ARISTOTLE_THEOREMS` in constants.py | `aristotle:{run_id}` |
-| **Parameter** | 33 | `PARAMETER_PROVENANCE` in provenance.py | `param:{key}` |
-| **PrimarySource** | 31 | `CITATION_REGISTRY` in citations.py | `source:{key}` |
-| **Figure** | 64 | `FIGURE_REGISTRY` in review_figures.py | `figure:{name}` |
+| Node Type | Shape | Color | Source | ID Format |
+|-----------|-------|-------|--------|-----------|
+| **Paper** | Square | Steel blue (#2E86AB) | provenance.py | `paper:{key}` |
+| **PaperClaim** | Circle | Gold (#E8C547) | provenance.py | `claim:{paper}:{index}` |
+| **Formula** | Circle | Amber (#F18F01) | formulas.py | `formula:{name}` |
+| **Parameter** | Diamond | Berry (#A23B72) | provenance.py | `param:{key}` |
+| **PrimarySource** | Triangle | Grey (#c8ccd0) | citations.py | `source:{key}` |
+| **Figure** | Circle | Purple (#9b6dff) | review_figures.py | `figure:{name}` |
+| **AristotleRun** | Circle | Green (#22c55e) | constants.py | `aristotle:{run_id}` |
+| **LeanAxiom** | Diamond | Amber (#d97706) | lean_deps.json | `lean:{name}` |
+| **LeanTheorem** | Circle | Sage (#5C946E) | lean_deps.json | `lean:{name}` |
+| **LeanDef** | Circle | Blue (#60a5fa) | lean_deps.json | `lean:{name}` |
+| **LeanStructure** | Square | Purple (#c084fc) | lean_deps.json | `lean:{name}` |
+| **LeanInductive** | Square | Amber (#fbbf24) | lean_deps.json | `lean:{name}` |
+| **LeanInstance** | Circle | Indigo (#818cf8) | lean_deps.json | `lean:{name}` |
 
 Every node has a uniform schema: `{id, type, label, name, verification, detail, meta}`.
 
-**Verification status** (computed per node):
+### Shape Vocabulary
+
+Shapes encode semantic roles — a visual dimension independent of color:
+
+| Shape | Semantic Role | Node Types |
+|-------|--------------|------------|
+| **Diamond** | Trust boundary — accepted without derivation | LeanAxiom, Parameter |
+| **Circle** | Derived — proven, computed, or generated | LeanTheorem, LeanDef, LeanInstance, Formula, PaperClaim, Figure, AristotleRun |
+| **Square** | Structural — defines the framework/vocabulary | LeanStructure, LeanInductive, Paper |
+| **Triangle** | External input — comes from outside the system | PrimarySource |
+
+### Verification Status (computed per node)
+
 - `verified` — fully grounded (human-verified parameter, Lean-proved theorem)
 - `llm` — LLM-verified only (parameters awaiting human verification)
 - `conflict` — code value disagrees with provenance value (>0.1% relative error)
 - `projected` — PROJECTED tier parameter (no primary source expected)
 - `unverified` — no verification
 
-### Edge Types (10)
+### Edge Types (11)
 
-| Edge | From | To | Count | Semantics |
-|------|------|----|-------|-----------|
-| `CLAIMS` | Paper | PaperClaim | 29 | Paper makes this claim |
-| `GROUNDED_IN` | PaperClaim | Formula | 146 | Claim computed by formula |
-| `VERIFIED_BY` | Formula | LeanTheorem | 110 | Formula has Lean proof |
-| `PROVED_BY` | LeanTheorem | AristotleRun | 210 | Aristotle filled this sorry |
-| `USED_BY` | Parameter | Formula | 411 | Formula depends on parameter |
-| `SOURCED_FROM` | Parameter | PrimarySource | 8 | Parameter from this paper |
-| `DEPENDS_ON` | Paper | Parameter | 65 | Paper uses this parameter |
-| `CITES` | Formula | PrimarySource | 40 | Formula cites this source |
-| `HAS_FIGURE` | Paper | Figure | 22 | Paper includes this figure |
-| `IMPORTS` | Formula | Formula | 17 | Formula calls another formula |
+| Edge | From | To | Semantics |
+|------|------|----|-----------|
+| `CLAIMS` | Paper | PaperClaim | Paper makes this claim |
+| `GROUNDED_IN` | PaperClaim | Formula | Claim computed by formula |
+| `VERIFIED_BY` | Formula | LeanTheorem | Formula has Lean proof |
+| `PROVED_BY` | LeanTheorem | AristotleRun | Aristotle filled this sorry |
+| `USED_BY` | Parameter | Formula | Formula depends on parameter |
+| `SOURCED_FROM` | Parameter | PrimarySource | Parameter from this paper |
+| `DEPENDS_ON` | Paper | Parameter | Paper uses this parameter |
+| `CITES` | Formula | PrimarySource | Formula cites this source |
+| `HAS_FIGURE` | Paper | Figure | Paper includes this figure |
+| `IMPORTS` | Formula | Formula | Formula calls another formula |
+| `DEPENDS_ON_AXIOM` | LeanTheorem/LeanDef | LeanAxiom | Transitive axiom dependency (from `collectAxioms`) |
+
+### Lean Node Metadata
+
+Lean declaration nodes carry additional metadata in `meta`:
+
+- `meta.shape` — diamond/circle/square/triangle
+- `meta.lean_kind` — raw Lean kind (axiom/theorem/def/structure/etc.)
+- `meta.axiom_deps_project` — project axiom names this declaration depends on
+- `meta.axiom_deps_core` — core axiom names (propext, Classical.choice, etc.)
+- `meta.eliminability` — eliminable/hard/unknown (axioms only, from `AXIOM_METADATA`)
+- `meta.field_constraints` — structure field names and types (structures only)
 
 ## Interactive Visualization
 
@@ -103,8 +138,11 @@ Switch layouts using the buttons in the topbar: **Force | Radial | Hierarchy | C
 
 ### Controls
 
-- **Filter pills** — toggle visibility by node type (click to show/hide)
+- **Filter pills** — toggle visibility by node type (click to show/hide). Lean declaration types split into main (Axiom, Theorem) and scaffolding (Def, Structure, Inductive, Instance).
+- **Scaffolding toggle** — show/hide Lean scaffolding types (Def, Structure, Inductive, Instance) as a group. Off by default to keep the graph navigable.
+- **Core Axioms toggle** — show/hide core Lean axioms (propext, Classical.choice, Quot.sound). Off by default.
 - **Paper Focus dropdown** — isolate a single paper's subgraph
+- **Logical Focus dropdown** — isolate the subgraph of an axiom or structure. Lists project axioms first, then structures. Uses impact BFS to find all connected nodes.
 - **Physics panel** (⚙ gear icon) — tune force simulation parameters:
   - Repulsion: charge strength (-500 to -10, default -200)
   - Link Distance: edge length (20 to 300, default 100)
@@ -125,10 +163,11 @@ Click any node to open the detail panel (right side). Shows:
 
 ### Visual Encoding
 
-- **Node color** by type: steel blue (Paper), gold (PaperClaim), amber (Formula), sage (LeanTheorem), green (AristotleRun), berry/pink (Parameter), grey (PrimarySource), purple (Figure)
-- **Node size** by type (Papers largest, AristotleRuns smallest)
+- **Node shape** by semantic role: diamond (trust boundaries: axioms, parameters), square (structural: structures, papers), triangle (external: sources), circle (derived: everything else)
+- **Node color** by type: steel blue (Paper), gold (PaperClaim), amber (Formula), sage (LeanTheorem), amber (LeanAxiom), blue (LeanDef), purple (LeanStructure), amber (LeanInductive), indigo (LeanInstance), green (AristotleRun), berry/pink (Parameter), grey (PrimarySource), purple (Figure)
+- **Node size** by type (Papers/Axioms largest, Instances smallest)
 - **Verification glow**: green ring = verified, amber = LLM only, red pulse = conflict
-- **Edges**: light grey default; bright green = traced-ok; red = traced-bad; amber = impact
+- **Edges**: light grey default; bright green = traced-ok; red = traced-bad; amber = impact; amber dashed = DEPENDS_ON_AXIOM
 
 ## API Endpoints
 
@@ -172,6 +211,9 @@ Checks:
 - **Ungrounded claims** — paper claims without GROUNDED_IN edges
 - **Broken provenance chains** — claims grounded in formulas that lack Lean proofs
 - **Missing provenance** — parameters without SOURCED_FROM edges (excluding PROJECTED tier)
+- **Unclassified axioms** — axioms without eliminability entry in `AXIOM_METADATA`
+- **Axiom dependency stats** — DEPENDS_ON_AXIOM edge counts and theorem blast radii
+- **PG+AGE sync** — vertex count in PG matches extracted node count
 
 ### validate.py CHECK 16
 
@@ -185,14 +227,18 @@ Integrated as CHECK 16 in the validation suite. Conflicts are hard failures; orp
 
 | File | Purpose |
 |------|---------|
-| `scripts/build_graph.py` | Extracts 8 node types + 10 edge types from registries |
-| `scripts/graph_integrity.py` | Structural integrity queries |
-| `scripts/provenance_dashboard.py` | Flask dashboard + API endpoints |
+| `lean/SKEFTHawking/ExtractDeps.lean` | Lean meta script: declaration extraction + collectAxioms |
+| `lean/lean_deps.json` | Cached extraction output (gitignored) |
+| `scripts/extract_lean_deps.py` | Python wrapper with staleness check for Lean extraction |
+| `scripts/build_graph.py` | Extracts 13 node types + 11 edge types, writes to JSON + PG+AGE |
+| `scripts/graph_integrity.py` | Structural integrity queries + axiom checks + PG sync |
+| `scripts/provenance_dashboard.py` | Flask dashboard + API endpoints + Proof Architecture data |
 | `scripts/templates/dashboard.html` | Main dashboard template (Datastar) |
-| `scripts/templates/partials/graph_tab.html` | D3 knowledge graph visualization |
+| `scripts/templates/partials/graph_tab.html` | D3 knowledge graph with shapes, filters, Logical Focus |
 | `figures/provenance_graph.json` | Static JSON export of the graph |
-| `tests/test_build_graph.py` | 18 extraction tests |
-| `tests/test_graph_integrity.py` | 2 integrity tests |
+| `tests/test_build_graph.py` | Extraction tests (nodes, edges, shapes, PG write) |
+| `tests/test_extract_lean_deps.py` | Lean extraction wrapper tests |
+| `tests/test_graph_integrity.py` | Integrity tests |
 | `docker/docker-compose.graph.yml` | PG+AGE container (port 5433) |
 
 ## Dependencies
@@ -206,15 +252,23 @@ Integrated as CHECK 16 in the validation suite. Conflicts are hard failures; orp
 
 ## Phased Roadmap
 
-### Phase 1 (current): Graph View + Explorer
+### Phase 1 (complete): Graph View + Explorer
 - Graph extracted from Python registries (source of truth unchanged)
 - Interactive D3 visualization with 4 layouts and 3 modes
 - Integrity queries and CHECK 16 integration
 - Static JSON export
 
+### Phase 1.5 (complete): Lean Proof Architecture + PG+AGE
+- Full Lean declaration taxonomy (13 node types) via `ExtractDeps.lean` + `collectAxioms`
+- Shape vocabulary: diamond (trust boundaries), square (structural), triangle (external), circle (derived)
+- Proof Architecture dashboard tab: axiom command panel, declaration browser, structure field assumptions
+- Scaffolding toggle, Logical Focus dropdown, DEPENDS_ON_AXIOM edges
+- PG+AGE parallel write (Python registries remain source of truth)
+- Axiom eliminability tracking via `AXIOM_METADATA` in constants.py
+- Claims-reviewer agent: axiom risk + hypothesis risk assessment
+
 ### Phase 2: Graph as Source of Truth
-- PG+AGE schema with constraints and indexes
-- Thin Python query layer: `from src.core.graph import get_parameter, ...`
+- Flip source of truth from Python dicts to PG+AGE
 - Generate Python dicts from graph (backward compat)
 - Dashboard write capability (edit provenance directly)
 

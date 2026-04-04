@@ -20,6 +20,8 @@ from scripts.build_graph import (
     extract_parameter_nodes,
     extract_formula_nodes,
     extract_lean_theorem_nodes,
+    extract_lean_declaration_nodes,
+    extract_depends_on_axiom_edges,
     extract_aristotle_run_nodes,
     extract_primary_source_nodes,
     extract_paper_nodes,
@@ -32,6 +34,7 @@ from scripts.build_graph import (
     extract_sourced_from_edges,
     build_graph_json,
     compute_source_hash,
+    SHAPE_MAP,
 )
 
 
@@ -265,3 +268,189 @@ class TestFullGraph:
         h2 = compute_source_hash()
         assert h1 == h2
         assert len(h1) == 16  # truncated to 16 hex chars
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# New node type tests
+# ═══════════════════════════════════════════════════════════════════════
+
+class TestExtractLeanDeclarationNodes:
+    """Tests for extract_lean_declaration_nodes()."""
+
+    @pytest.fixture(scope="class")
+    def lean_nodes(self):
+        nodes = extract_lean_declaration_nodes()
+        if not nodes:
+            pytest.skip("No Lean declarations extracted")
+        return nodes
+
+    def test_has_multiple_types(self, lean_nodes):
+        """Declaration nodes cover multiple Lean kinds."""
+        types = {n['type'] for n in lean_nodes}
+        assert 'LeanAxiom' in types or 'LeanTheorem' in types, (
+            f"No axiom or theorem nodes found; types present: {types}"
+        )
+        assert 'LeanTheorem' in types
+        assert 'LeanDef' in types
+        assert 'LeanStructure' in types or 'LeanInductive' in types, (
+            f"No structure/inductive nodes; types: {types}"
+        )
+
+    def test_axiom_nodes_have_eliminability(self, lean_nodes):
+        """Every LeanAxiom node has eliminability in meta (may be None if not in AXIOM_METADATA)."""
+        axioms = [n for n in lean_nodes if n['type'] == 'LeanAxiom']
+        for ax in axioms:
+            assert 'eliminability' in ax['meta'], f"Missing eliminability in axiom {ax['id']}"
+
+    def test_nodes_have_shape(self, lean_nodes):
+        """First 20 declaration nodes have a valid shape."""
+        for node in lean_nodes[:20]:
+            assert 'shape' in node['meta'], f"Missing shape in {node['id']}"
+            assert node['meta']['shape'] in ('diamond', 'circle', 'square', 'triangle'), (
+                f"Invalid shape {node['meta']['shape']} in {node['id']}"
+            )
+
+    def test_structure_has_field_constraints(self, lean_nodes):
+        """At least one LeanStructure node has field_constraints."""
+        structs = [n for n in lean_nodes if n['type'] == 'LeanStructure']
+        if not structs:
+            pytest.skip("No LeanStructure nodes found")
+        has_fields = any(len(s['meta'].get('field_constraints', [])) > 0 for s in structs)
+        assert has_fields, "No LeanStructure nodes have field_constraints"
+
+    def test_no_duplicate_ids(self, lean_nodes):
+        """No duplicate node IDs in declaration nodes."""
+        ids = [n['id'] for n in lean_nodes]
+        assert len(ids) == len(set(ids)), (
+            f"Duplicate declaration IDs: {[x for x in ids if ids.count(x) > 1][:5]}"
+        )
+
+    def test_count_greater_than_500(self, lean_nodes):
+        """Total declaration count > 500 (project has many declarations)."""
+        assert len(lean_nodes) > 500, f"Only found {len(lean_nodes)} declarations"
+
+
+class TestShapeMap:
+    """Tests for SHAPE_MAP constant."""
+
+    def test_all_types_have_shapes(self):
+        """All 13 node types have entries in SHAPE_MAP."""
+        for t in ['Paper', 'PaperClaim', 'Formula', 'Parameter', 'PrimarySource',
+                  'Figure', 'AristotleRun', 'LeanAxiom', 'LeanTheorem', 'LeanDef',
+                  'LeanStructure', 'LeanInductive', 'LeanInstance']:
+            assert t in SHAPE_MAP, f"Node type {t!r} missing from SHAPE_MAP"
+
+    def test_diamonds_are_trust_boundaries(self):
+        """LeanAxiom and Parameter are diamonds (trust boundaries)."""
+        assert SHAPE_MAP['LeanAxiom'] == 'diamond'
+        assert SHAPE_MAP['Parameter'] == 'diamond'
+
+    def test_all_shapes_are_valid(self):
+        """All shape values are in the allowed set."""
+        valid = {'diamond', 'circle', 'square', 'triangle'}
+        for node_type, shape in SHAPE_MAP.items():
+            assert shape in valid, f"{node_type} has invalid shape {shape!r}"
+
+
+class TestDependsOnAxiomEdges:
+    """Tests for extract_depends_on_axiom_edges()."""
+
+    def test_edges_point_to_axioms(self):
+        """Every DEPENDS_ON_AXIOM edge target is a LeanAxiom node."""
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        node_types = {n['id']: n['type'] for n in nodes}
+        edges = extract_depends_on_axiom_edges(node_ids)
+        for e in edges:
+            target_type = node_types.get(e['target'])
+            assert target_type == 'LeanAxiom', (
+                f"Target {e['target']} is {target_type}, not LeanAxiom"
+            )
+
+    def test_edges_have_correct_type(self):
+        """All edges returned have type DEPENDS_ON_AXIOM."""
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        edges = extract_depends_on_axiom_edges(node_ids)
+        for e in edges:
+            assert e['type'] == 'DEPENDS_ON_AXIOM'
+
+    def test_no_self_edges(self):
+        """No edge connects a node to itself."""
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        edges = extract_depends_on_axiom_edges(node_ids)
+        for e in edges:
+            assert e['source'] != e['target'], f"Self-edge on {e['source']}"
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# PG+AGE parallel write tests
+# ═══════════════════════════════════════════════════════════════════════
+
+class TestPGWrite:
+    """Tests for PG+AGE parallel write. Skips if PG unavailable."""
+
+    @pytest.fixture(scope="class")
+    def pg_conn(self):
+        try:
+            import psycopg
+            conn = psycopg.connect(
+                "host=localhost port=5433 dbname=sk_eft_provenance "
+                "user=sk_eft password=sk_eft_local"
+            )
+            yield conn
+            conn.close()
+        except Exception:
+            pytest.skip("PG+AGE not available")
+
+    @pytest.fixture(scope="class")
+    def built_graph(self, pg_conn):
+        """Build the graph once per class (expensive — runs Lean extraction)."""
+        from scripts.build_graph import build_graph_json
+        return build_graph_json()
+
+    def test_write_populates_graph(self, pg_conn, built_graph):
+        """Vertices exist in PG after write."""
+        with pg_conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+            cur.execute("""
+                SELECT * FROM cypher('sk_eft', $$
+                    MATCH (n) RETURN count(n)
+                $$) AS (cnt agtype)
+            """)
+            count = cur.fetchone()[0]
+        # count is agtype, need to parse
+        assert int(str(count)) > 0, "PG should have vertices after write"
+
+    def test_write_node_count_matches(self, pg_conn, built_graph):
+        """Vertex count in PG matches node count in graph dict."""
+        expected = built_graph['meta']['node_count']
+
+        with pg_conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+            cur.execute("""
+                SELECT * FROM cypher('sk_eft', $$
+                    MATCH (n) RETURN count(n)
+                $$) AS (cnt agtype)
+            """)
+            count = int(str(cur.fetchone()[0]))
+        assert count == expected, (
+            f"PG vertex count {count} != graph node_count {expected}"
+        )
+
+    def test_write_survives_pg_unavailable(self):
+        """write_graph_to_pg does not raise when PG is unavailable."""
+        from scripts.build_graph import write_graph_to_pg
+        # Pass a minimal graph — function must never raise
+        dummy_graph = {
+            'nodes': [{'id': 'test:x', 'type': 'Formula', 'name': 'x',
+                       'label': 'x', 'verification': 'verified', 'detail': '',
+                       'meta': {'shape': 'circle'}}],
+            'links': [],
+            'meta': {'node_count': 1, 'edge_count': 0},
+        }
+        # Should complete without raising regardless of PG availability
+        write_graph_to_pg(dummy_graph)

@@ -1,197 +1,370 @@
 {
-  "review_date": "2026-04-03",
-  "paper": "paper9_sm_anomaly_drinfeld/paper_draft.tex",
-  "reviewer": "claims-reviewer agent (Claude Opus 4.6)",
-  "summary": "15 claims checked: 11 PASS, 3 FAIL, 1 WARN",
+  "paper": "paper9_sm_anomaly_drinfeld",
+  "review_date": "2026-04-04T00:00:00Z",
+  "reviewer": "claims-reviewer agent (Claude Opus 4.6 1M)",
+  "overall_status": "issues_found",
 
-  "claims": [
+  "numerical_claims": [
     {
-      "id": "NUM-1",
-      "category": "NUMERICAL",
-      "claim": "6+3+3+2+1+1 = 16 (with nu_R)",
-      "location": "Sec 2, line 83",
+      "location": "Sec 2, line 85: 6+3+3+2+1+1 = 16 (with nu_R)",
+      "paper_value": "16",
+      "computed_value": "16",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "SM_FERMION_DATA in constants.py: Q_L=6, u_R_bar=3, d_R_bar=3, L=2, e_R_bar=1, nu_R_bar=1. Sum=16. Also verified by Lean theorem total_components_with_nu_R in SMFermionData.lean."
+      "notes": "SM_FERMION_DATA components: Q_L=6, u_R_bar=3, d_R_bar=3, L=2, e_R_bar=1, nu_R_bar=1. Sum=16. Lean: total_components_with_nu_R in SMFermionData.lean."
     },
     {
-      "id": "NUM-2",
-      "category": "NUMERICAL",
-      "claim": "6+3+3+2+1 = 15 (without nu_R)",
-      "location": "Sec 2, line 84",
+      "location": "Sec 2, line 86: 6+3+3+2+1 = 15 (without nu_R)",
+      "paper_value": "15",
+      "computed_value": "15",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "SM_FERMION_DATA components sum without nu_R_bar = 15. Verified by Lean theorem total_components_without_nu_R in SMFermionData.lean."
+      "notes": "SM_FERMION_DATA minus nu_R_bar: 6+3+3+2+1=15. Lean: total_components_without_nu_R."
     },
     {
-      "id": "NUM-3",
-      "category": "NUMERICAL",
-      "claim": "3 x 15 = 45 equiv -3 mod 16",
-      "location": "Sec 2, line 96",
+      "location": "Sec 2, line 78: All six SM fermion types have X equiv 1 mod 4",
+      "paper_value": "all X mod 4 = 1",
+      "computed_value": "Q_L:1, u_R_bar:1, d_R_bar:1, L:1, e_R_bar:1, nu_R_bar:1",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "3*15=45, 45 mod 16 = 13, 13 = -3 mod 16. Verified by Lean theorems three_gen_total (3*15=45), three_gen_mod16 (45%16=13), three_gen_is_neg3 ((13:ZMod 16) = -3) in Z16AnomalyComputation.lean."
+      "notes": "Manual computation from constants.py B-L and Y values via X = 5(B-L) - 4Y: Q_L=5/3-2/3=1, u_R_bar=-5/3+8/3=1, d_R_bar=-5/3-4/3=-3 mod 4=1, L=-5+2=-3 mod 4=1, e_R_bar=5-4=1, nu_R_bar=5. All 1 mod 4. Matches Lean theorem sm_z4_all_odd."
     },
     {
-      "id": "THM-1",
-      "category": "THEOREM_REF",
-      "claim": "sm_z4_all_odd exists in SMFermionData.lean with zero sorry",
-      "location": "Sec 2, line 77",
+      "location": "Sec 2, line 98: 3 x 15 = 45 equiv -3 mod 16",
+      "paper_value": "-3 mod 16",
+      "computed_value": "3*15=45, 45 mod 16 = 13, 13 = -3 mod 16",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "theorem sm_z4_all_odd at line 162 of SMFermionData.lean. Proved by exhaustive case split. No sorry found in file. lake build clean."
+      "notes": "Arithmetic check: 45 mod 16 = 13, and (-3) mod 16 = 13. Matches SM_ANOMALY['THREE_GEN_ANOMALY']=-3 in constants.py."
     },
     {
-      "id": "THM-2",
-      "category": "THEOREM_REF",
-      "claim": "hidden_sector_required exists in Z16AnomalyComputation.lean, Aristotle run a1dfcbde",
-      "location": "Sec 2, line 99-100",
-      "status": "FAIL",
-      "evidence": "theorem hidden_sector_required exists at line 165 of Z16AnomalyComputation.lean and is proved (no sorry). HOWEVER, it is NOT in ARISTOTLE_THEOREMS and was NOT proved by Aristotle run a1dfcbde. It is a manual proof: 'exact <-a, neg_ne_zero.mpr ha, add_neg_cancel a>'. Run a1dfcbde only proved generation_mod3_constraint (in GenerationConstraint.lean). Paper incorrectly attributes hidden_sector_required to Aristotle.",
-      "fix": "Change 'Aristotle run a1dfcbde' to remove the Aristotle attribution for hidden_sector_required, or move the Aristotle reference to only apply to the 21 theorems + 2 axioms count."
-    },
-    {
-      "id": "THM-3",
-      "category": "THEOREM_REF",
-      "claim": "generation_mod3_constraint in GenerationConstraint.lean, Aristotle run a1dfcbde, uses exact_mod_cast",
-      "location": "Sec 3, line 126-128",
+      "location": "Sec 3, line 121: c_- = 16/2 = 8 per generation",
+      "paper_value": "8",
+      "computed_value": "8",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "theorem generation_mod3_constraint at line 73 of GenerationConstraint.lean. Uses exact_mod_cast on line 77. Registered as ARISTOTLE_THEOREMS['generation_mod3_constraint'] = 'a1dfcbde'. All confirmed."
+      "notes": "SM_ANOMALY['CHIRAL_CENTRAL_CHARGE_COEFF']=8. Each Weyl contributes c=1/2, 16 Weyl -> c_-=8. Lean: fermion_count_gives_central_charge in WangBridge.lean."
     },
     {
-      "id": "THM-4",
-      "category": "THEOREM_REF",
-      "claim": "braiding_em_is_minus_one in ToricCodeCenter.lean, zero sorry",
-      "location": "Sec 4.2, line 178",
+      "location": "Sec 3, line 131: 8 N_f equiv 0 mod 24 => N_f equiv 0 mod 3",
+      "paper_value": "N_f equiv 0 mod 3",
+      "computed_value": "gcd(8,24)=8, 24/8=3, so 8N_f mod 24 = 0 <=> N_f mod 3 = 0",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "theorem braiding_em_is_minus_one at line 191 of ToricCodeCenter.lean. No sorry in file."
+      "notes": "Algebra verified: 8*3=24 divides 24, 8*1=8 does not, 8*2=16 does not. Lean: generation_mod3_constraint in GenerationConstraint.lean (Aristotle a1dfcbde)."
     },
     {
-      "id": "ARIST-1",
-      "category": "ARISTOTLE_REF",
-      "claim": "Aristotle run a1dfcbde",
-      "location": "Sec 2 line 100, Sec 3 line 127",
+      "location": "Sec 4.2, Table: D^2 = sum d_a^2 = 4 for Z(Vec_{Z/2})",
+      "paper_value": "4",
+      "computed_value": "1+1+1+1 = 4 = |Z/2|^2",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "Run ID a1dfcbde exists in ARISTOTLE_THEOREMS, mapping to generation_mod3_constraint."
+      "notes": "4 anyons all with d=1. D^2=4=2^2. Lean verified in ToricCodeCenter.lean."
     },
     {
-      "id": "ARIST-2",
-      "category": "ARISTOTLE_REF",
-      "claim": "Aristotle run 48493889",
-      "location": "Sec 4.1, line 155",
+      "location": "Sec 4.3, Table: D^2 = 36 for Z(Vec_{S3})",
+      "paper_value": "36",
+      "computed_value": "1+1+4+9+9+4+4+4 = 36 = 6^2 = |S3|^2",
+      "delta_pct": 0.0,
       "status": "PASS",
-      "evidence": "Run ID 48493889 exists in ARISTOTLE_THEOREMS, mapping to vecG_braided."
-    },
-    {
-      "id": "COUNT-1",
-      "category": "COUNT",
-      "claim": "877 theorems + 7 axioms",
-      "location": "Abstract line 32, Sec 5 line 226",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' across 56 Lean files: 877. grep '^axiom ': 7. Both match exactly. Note: there is also 1 lemma not counted, consistent with 'theorems' label."
-    },
-    {
-      "id": "COUNT-2",
-      "category": "COUNT",
-      "claim": "56 Lean 4 modules",
-      "location": "Abstract line 32, Sec 5 line 226",
-      "status": "PASS",
-      "evidence": "find lean/SKEFTHawking -name '*.lean' | wc -l = 56."
-    },
-    {
-      "id": "COUNT-3",
-      "category": "COUNT",
-      "claim": "254 Aristotle-proved",
-      "location": "Sec 5, line 228",
-      "status": "FAIL",
-      "evidence": "ARISTOTLE_THEOREMS has 254 total entries, but 23 are marked 'manual' (HubbardStratonovichRHMC.lean: 22 manual, SKDoubling.lean: 1 manual). Only 231 were actually Aristotle-proved. The paper says '254 theorems are filled by the Aristotle automated prover' which is incorrect.",
-      "fix": "Change to '231 theorems are filled by the Aristotle automated prover' or '254 tracked theorems (231 Aristotle-proved, 23 manual)'. Alternatively, rename the registry to avoid confusion."
-    },
-    {
-      "id": "COUNT-4",
-      "category": "COUNT",
-      "claim": "zero sorry",
-      "location": "Abstract line 32, Sec 5 line 227",
-      "status": "PASS",
-      "evidence": "lake build completed successfully (8083 jobs, zero sorry). grep for 'sorry' in all 6 paper-relevant Lean files returned no matches."
-    },
-    {
-      "id": "DRINFELD-1",
-      "category": "DRINFELD",
-      "claim": "Toric code: 4 anyons, S3 center: 8 anyons, D^2=36",
-      "location": "Abstract line 29-30, Sec 4.2 line 159, Sec 4.3 line 182-200",
-      "status": "PASS",
-      "evidence": "ToricCodeCenter.lean: toric_anyon_count proves Fintype.card ToricAnyon = 4. S3CenterAnyons.lean: s3_anyon_count proves Fintype.card S3Anyon = 8. s3_global_dim_sq proves sum of d_a^2 = 36. global_dim_matches_group_sq proves 36 = 6^2 = |S3|^2. All confirmed."
-    },
-    {
-      "id": "GEN-1",
-      "category": "GENERATION",
-      "claim": "N_f equiv 0 mod 3, c_- = 8 N_f, c_- equiv 0 mod 24",
-      "location": "Sec 3, lines 117-122",
-      "status": "PASS",
-      "evidence": "GenerationConstraint.lean: axiom chiral_central_charge_coeff establishes c_- = 8 N_f. axiom modular_invariance_constraint establishes 24 | c_-. theorem generation_mod3_constraint derives 3 | N_f. SM_ANOMALY in constants.py: CHIRAL_CENTRAL_CHARGE_COEFF=8, MODULAR_INVARIANCE_MOD=24. All consistent."
-    },
-    {
-      "id": "PER-FILE-1",
-      "category": "COUNT",
-      "claim": "SMFermionData.lean: 19 theorems",
-      "location": "Sec 2, line 77",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' SMFermionData.lean | wc -l = 19."
-    },
-    {
-      "id": "PER-FILE-2",
-      "category": "COUNT",
-      "claim": "Z16AnomalyComputation.lean: 21 theorems + 2 axioms",
-      "location": "Sec 2, line 100",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' = 21. grep '^axiom ' = 2."
-    },
-    {
-      "id": "PER-FILE-3",
-      "category": "COUNT",
-      "claim": "GenerationConstraint.lean: 12 theorems + 2 axioms",
-      "location": "Sec 3, line 125",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' = 12. grep '^axiom ' = 2."
-    },
-    {
-      "id": "PER-FILE-4",
-      "category": "COUNT",
-      "claim": "ToricCodeCenter.lean: 25 theorems",
-      "location": "Sec 4.2, line 179",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' = 25."
-    },
-    {
-      "id": "PER-FILE-5",
-      "category": "COUNT",
-      "claim": "S3CenterAnyons.lean: 22 theorems",
-      "location": "Sec 4.3, line 208",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' = 22."
-    },
-    {
-      "id": "PER-FILE-6",
-      "category": "COUNT",
-      "claim": "VecGMonoidal.lean: 12 theorems",
-      "location": "Sec 4.1, line 149",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' = 12."
-    },
-    {
-      "id": "ASSERT-1",
-      "category": "COUNT",
-      "claim": "ARISTOTLE_PROVED_COUNT assert message says 'Expected 253' but checks == 254",
-      "location": "constants.py line 1102",
-      "status": "WARN",
-      "evidence": "The assert statement is: assert ARISTOTLE_PROVED_COUNT == 254, f'Expected 253 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}'. The error message says 253 but the check is against 254. This is a cosmetic bug -- the assert works correctly but the error message is stale/wrong. Not a paper claim issue, but should be fixed.",
-      "fix": "Change error message from 'Expected 253' to 'Expected 254' in constants.py line 1102."
+      "notes": "8 anyons: d = 1,1,2,3,3,2,2,2. d^2 sum = 36. Lean: s3_global_dim_sq in S3CenterAnyons.lean."
     }
   ],
 
-  "overall_verdict": "2 FAIL, 1 WARN, 18 PASS",
+  "theorem_refs": [
+    {
+      "name": "SMFermionData.lean (19 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 19,
+      "actual_count": 19,
+      "status": "PASS"
+    },
+    {
+      "name": "Z16AnomalyComputation.lean (23 theorems, zero axioms, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 23,
+      "actual_count": 23,
+      "axiom_count": 0,
+      "status": "PASS",
+      "notes": "Paper says '23 theorems, zero axioms, zero sorry'. All confirmed. Previous review (Apr 3) used stale counts (21 thm, 2 ax)."
+    },
+    {
+      "name": "hidden_sector_required",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "none (manual proof)",
+      "status": "PASS",
+      "notes": "Paper line 101 says 'manual proof' -- correctly attributed now. Previous review flagged Aristotle misattribution which has been fixed."
+    },
+    {
+      "name": "GenerationConstraint.lean (13 theorems, zero sorry, zero axioms)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 13,
+      "actual_count": 13,
+      "axiom_count": 0,
+      "status": "PASS",
+      "notes": "Paper correctly says '13 theorems, zero sorry, zero axioms'. Axioms were discharged to theorems."
+    },
+    {
+      "name": "generation_mod3_constraint (Aristotle a1dfcbde)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "a1dfcbde",
+      "status": "PASS",
+      "notes": "Confirmed in ARISTOTLE_THEOREMS registry."
+    },
+    {
+      "name": "fermion_count_gives_central_charge (WangBridge.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "status": "PASS"
+    },
+    {
+      "name": "WangBridge.lean (9 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 9,
+      "actual_count": 9,
+      "status": "PASS"
+    },
+    {
+      "name": "VecGMonoidal.lean (12 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 12,
+      "actual_count": 12,
+      "status": "PASS"
+    },
+    {
+      "name": "braiding_em_is_minus_one (ToricCodeCenter.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "status": "PASS"
+    },
+    {
+      "name": "ToricCodeCenter.lean (25 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 25,
+      "actual_count": 25,
+      "status": "PASS"
+    },
+    {
+      "name": "S3CenterAnyons.lean (22 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 22,
+      "actual_count": 22,
+      "status": "PASS"
+    },
+    {
+      "name": "CenterEquivalenceZ2.lean (10 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 10,
+      "actual_count": 10,
+      "status": "PASS"
+    },
+    {
+      "name": "DrinfeldDoubleAlgebra.lean (Aristotle 878b181f)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "878b181f",
+      "status": "PASS",
+      "notes": "9 theorems, zero sorry. Aristotle run ID confirmed in ARISTOTLE_THEOREMS."
+    },
+    {
+      "name": "DrinfeldDoubleRing.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "actual_count": 3,
+      "status": "PASS"
+    },
+    {
+      "name": "DrinfeldEquivalence.lean (12 theorems, zero sorry)",
+      "in_lean": true,
+      "has_sorry": false,
+      "theorem_count_match": true,
+      "paper_count": 12,
+      "actual_count": 12,
+      "status": "PASS"
+    },
+    {
+      "name": "vecG_braided (Aristotle 48493889)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "48493889",
+      "status": "PASS",
+      "notes": "VecGMonoidal.lean. Confirmed in ARISTOTLE_THEOREMS."
+    }
+  ],
+
+  "parameter_provenance": [
+    {
+      "key": "N/A",
+      "status": "PASS",
+      "notes": "Paper 9 does not depend on experimental parameters. All claims are representation-theoretic or categorical -- no BEC/polariton platform dependencies. Paper not yet in PAPER_DEPENDENCIES (see WARN below)."
+    }
+  ],
+
+  "citation_integrity": [
+    {
+      "bibkey": "GarciaEtxebarria2019",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: JHEP 08, 003 (2019), arXiv:1808.00009."
+    },
+    {
+      "bibkey": "Wang2024",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: PRD 110, 125028 (2024), arXiv:2312.14928."
+    },
+    {
+      "bibkey": "GioiaThorngrenPRL2026",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: PRL 136, 061601 (2026)."
+    },
+    {
+      "bibkey": "Kitaev2003",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: Ann. Phys. 303, 2 (2003)."
+    },
+    {
+      "bibkey": "DPR1991",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: Dijkgraaf-Pasquier-Roche, NPB Proc. Suppl. 18, 60 (1991)."
+    },
+    {
+      "bibkey": "AlvarezGaumeWitten1984",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: NPB 234, 269 (1984)."
+    },
+    {
+      "bibkey": "Stolz1993",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: Math. Ann. 296, 685 (1993)."
+    },
+    {
+      "bibkey": "DaiFreed1994",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Cited in bibliography but not \\cite'd in text. Should be added: J. Diff. Geom. 35, 471 (1994)."
+    },
+    {
+      "bibkey": "GrossJackiw1972",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Should be added: PRD 6, 477 (1972)."
+    }
+  ],
+
+  "qualitative_claims": [
+    {
+      "claim": "First formally verified anomaly constraint in particle physics (abstract, conclusions)",
+      "support": "All referenced Lean modules exist, have zero sorry (for Paper 9's modules), lake build clean. Comprehensive formal verification of Z16 anomaly from fermion data.",
+      "status": "PASS",
+      "notes": "Priority/novelty claim. Cannot verify 'first' against entire literature but the scope of verification (19+23+13+9 theorems across 4 modules) is substantial and credible."
+    },
+    {
+      "claim": "First Drinfeld center computations in a proof assistant (abstract, conclusions)",
+      "support": "ToricCodeCenter.lean (25 thms), S3CenterAnyons.lean (22 thms), CenterEquivalenceZ2.lean (10 thms), VecGMonoidal.lean (12 thms). All zero sorry.",
+      "status": "PASS",
+      "notes": "Priority/novelty claim. Credible given extensive Lean formalization."
+    },
+    {
+      "claim": "Three generations without nu_R require hidden sectors (line 99)",
+      "support": "Lean theorem hidden_sector_required in Z16AnomalyComputation.lean proves: if a != 0 in ZMod 16, hidden sector needed. Three-gen anomaly = -3 mod 16 != 0.",
+      "status": "PASS"
+    },
+    {
+      "claim": "Braided monoidal structure requires G commutative (CommGroup G), line 169",
+      "support": "VecGMonoidal.lean uses CommGroup G section. Lean typeclass synthesis confirms requirement.",
+      "status": "PASS",
+      "notes": "Correct -- Mathlib Center braiding requires commutativity for Day convolution symmetry."
+    }
+  ],
+
+  "project_level_counts": [
+    {
+      "location": "Abstract line 33: '936 theorems and 2 axioms across 63 Lean 4 modules'",
+      "status": "PASS",
+      "notes": "Verified: grep '^theorem' across lean/SKEFTHawking/*.lean = 936. grep '^axiom' = 2 (GaugeErasure.lean, GoltermanShamir.lean). 63 .lean files."
+    },
+    {
+      "location": "Abstract line 33-34: 'with 251 filled by the Aristotle automated prover'",
+      "status": "FAIL",
+      "notes": "ARISTOTLE_THEOREMS in constants.py has 254 entries (254 total = 251 machine + 3 manual). The paper says '251' which happens to match the machine-only count but is inconsistent with the conclusions (line 276) which says '254'. Should pick one consistent number. Recommend '254 tracked (251 automated, 3 manual)' or just '251 automated'."
+    },
+    {
+      "location": "Conclusions line 275: 'Verified by lake build (zero sorry)'",
+      "status": "FAIL",
+      "notes": "ModularInvarianceConstraint.lean has 4 theorems with sorry (zeta24_pow_24, zeta24_ne_one, zeta24_primitive, qParam_integer_invariant) plus 2 sorry branches in framing_anomaly_constraint. The project is NOT zero-sorry. The abstract (line 32) scopes correctly to 'All modules referenced in this paper' which is true (Paper 9 modules are all zero-sorry), but the conclusions claim global zero-sorry which is false."
+    },
+    {
+      "location": "Conclusions line 276: '254 theorems are filled by the Aristotle automated prover'",
+      "status": "WARN",
+      "notes": "254 includes 3 manual entries. '251 automated + 3 manual' would be precise. Inconsistent with abstract's '251'."
+    },
+    {
+      "location": "Conclusions line 274: 'two axioms encoding established group theory and lattice field theory'",
+      "status": "PASS",
+      "notes": "Verified: non_abelian_center_discrete in GaugeErasure.lean, gs_nogo_axiom in GoltermanShamir.lean."
+    }
+  ],
+
+  "infrastructure_issues": [
+    {
+      "issue": "Paper 9 not in PAPER_DEPENDENCIES (provenance.py)",
+      "status": "WARN",
+      "notes": "Paper 9 should be added to PAPER_DEPENDENCIES with its Lean module dependencies."
+    },
+    {
+      "issue": "All 9 citations missing from CITATION_REGISTRY (citations.py)",
+      "status": "WARN",
+      "notes": "GarciaEtxebarria2019, Wang2024, GioiaThorngrenPRL2026, Kitaev2003, DPR1991, AlvarezGaumeWitten1984, Stolz1993, DaiFreed1994, GrossJackiw1972 -- all absent."
+    },
+    {
+      "issue": "DaiFreed1994 in bibliography but never \\cite'd in text",
+      "status": "WARN",
+      "notes": "Orphan bibliography entry. Either cite it or remove it."
+    }
+  ],
+
+  "summary": "2 FAIL, 12 WARN, 27 PASS",
   "blocking_issues": [
-    "THM-2: Paper attributes hidden_sector_required to Aristotle run a1dfcbde. It was manually proved. Run a1dfcbde only proved generation_mod3_constraint.",
-    "COUNT-3: Paper claims '254 Aristotle-proved' but 23/254 entries in ARISTOTLE_THEOREMS are manual proofs. Actual Aristotle count is 231."
+    "Conclusions line 275 claims 'zero sorry' globally but ModularInvarianceConstraint.lean has 4 sorry theorems. Fix: either scope the claim to 'all modules referenced in this paper' (as the abstract does) or note the 4 pending sorry.",
+    "Abstract says '251 Aristotle' but conclusions say '254 Aristotle'. Internal inconsistency. Fix: pick one number and use it consistently."
   ],
   "non_blocking_issues": [
-    "ASSERT-1: Error message in constants.py line 1102 says 'Expected 253' but should say 'Expected 254'."
+    "All 9 bibliography entries missing from CITATION_REGISTRY -- blocks submission per CHECK 15.",
+    "Paper not in PAPER_DEPENDENCIES -- blocks provenance tracking.",
+    "DaiFreed1994 appears in bibliography but is never cited in text.",
+    "Conclusions '254 Aristotle-proved' includes 3 manual proofs -- minor imprecision."
   ]
 }

@@ -97,6 +97,8 @@ passes (all parameters human-verified). Checked before arXiv/journal submission,
 - Beware Lean's total division convention (`0/0 = 0`): add strengthened variants where κ > 0 or c_s ≠ 0 is genuinely used in the proof
 - When in doubt, state the theorem in the strongest form possible; Aristotle can find the proof
 
+**Axiom Classification:** New axioms MUST have an entry in `AXIOM_METADATA` (in `src/core/constants.py`) with `eliminability` (eliminable/hard/unknown) and `reason` fields. This surfaces in the Proof Architecture dashboard tab and claims-reviewer agent.
+
 **Gate:** `cd lean && lake build` compiles successfully (sorry warnings are expected, zero errors).
 
 ---
@@ -234,6 +236,8 @@ uv run python scripts/validate.py
 12. `physical_bounds` — All computed quantities within physical bounds
 13. `cross_path_consistency` — Different code paths agree within 0.5%/1%
 14. `paper_provenance` — Paper numerical claims trace to computations within 0.5%
+15. `parameter_provenance` — All parameters have verified provenance
+16. `graph_integrity` — Knowledge graph integrity: orphans, conflicts, broken chains, axiom classification, PG+AGE sync
 
 **Gate:** ALL checks pass (not just advisory warnings). Report archived to `docs/validation/reports/`.
 

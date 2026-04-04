@@ -165,6 +165,86 @@
         .paper-card h3 { font-size: 1rem; margin-bottom: 8px; }
         .paper-stat { display: inline-block; margin-right: 16px; font-size: 0.85rem; }
 
+        /* ── Proof Architecture tab ── */
+        .proof-section-header { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em;
+                               font-weight: 700; color: var(--grey); padding-bottom: 6px;
+                               margin-bottom: 12px; border-bottom: 2px solid var(--border); }
+
+        .axiom-card { background: var(--bg); border: 1px solid var(--border);
+                     border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+        .axiom-card.eliminable { border-left: 4px solid var(--green); }
+        .axiom-card.removed { border-left: 4px solid var(--green); }
+        .axiom-card.hard { border-left: 4px solid #d97706; }
+        .axiom-card.unknown { border-left: 4px solid var(--grey); }
+        .axiom-name { font-family: 'SF Mono', Consolas, monospace; font-weight: 700; font-size: 0.95rem; }
+        .axiom-location { color: var(--grey); font-size: 0.75rem; margin-top: 2px; }
+        .axiom-statement { font-family: 'SF Mono', Consolas, monospace; font-size: 0.75rem;
+                         background: var(--grey-bg); padding: 8px 10px; border-radius: 6px;
+                         margin: 10px 0; color: var(--text); line-height: 1.6;
+                         border: 1px solid var(--border); white-space: pre-wrap;
+                         word-break: break-word; overflow-x: auto; }
+
+        .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;
+                display: inline-block; }
+        .badge-amber { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .badge-green { background: var(--green-bg); color: #15803d; border: 1px solid var(--green-border); }
+        .badge-purple { background: #f3e8ff; color: #7c3aed; border: 1px solid #d8b4fe; }
+        .badge-muted { background: var(--grey-bg); color: var(--grey); border: 1px solid var(--grey-border); }
+
+        .dep-tree { font-family: 'SF Mono', Consolas, monospace; font-size: 0.75rem;
+                   line-height: 2; padding: 8px 0 0 4px; color: var(--text); }
+        .dep-tree .axiom-dot { color: #d97706; }
+        .dep-tree .axiom-dot.green { color: var(--green); }
+        .dep-indent-1 { padding-left: 20px; }
+        .dep-indent-2 { padding-left: 40px; }
+        .dep-indent-3 { padding-left: 60px; }
+
+        .core-toggle { border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px;
+                      background: var(--bg); margin-bottom: 20px; }
+        .core-toggle summary { cursor: pointer; font-size: 0.78rem; font-weight: 600; color: #7c3aed; }
+        .core-toggle .core-body { font-size: 0.78rem; color: var(--grey); padding: 10px 0 0 0; line-height: 1.7; }
+        .core-toggle .core-body strong { color: var(--text); }
+
+        .filter-pills { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
+        .pill { padding: 4px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 600;
+               cursor: pointer; border: 1px solid var(--border); color: var(--grey);
+               background: var(--bg); text-decoration: none; }
+        .pill:hover { border-color: var(--blue); color: var(--text); }
+        .pill.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+        .module-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .module-table th { text-align: left; padding: 8px 12px; background: var(--grey-bg);
+                         font-weight: 600; font-size: 0.72rem; text-transform: uppercase;
+                         letter-spacing: 0.05em; border-bottom: 2px solid var(--border);
+                         position: sticky; top: 120px; z-index: 10; }
+        .module-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+        .module-table tr:hover { background: var(--blue-bg); }
+        .module-table .mod-name { font-family: 'SF Mono', Consolas, monospace; font-weight: 500; }
+        .module-table .has-axiom { background: #fefce8; }
+        .module-table .has-axiom:hover { background: #fef9c3; }
+        .count-thm { color: var(--green); }
+        .count-def { color: var(--blue); }
+        .count-struct { color: #7c3aed; }
+        .count-ind { color: #d97706; }
+        .count-inst { color: #6366f1; }
+        .count-axiom { color: #d97706; font-weight: 700; }
+
+        .struct-toggle { border: 1px solid #d8b4fe; border-radius: 8px; padding: 10px 14px;
+                        background: #faf5ff; margin-top: 20px; }
+        .struct-toggle summary { cursor: pointer; font-size: 0.78rem; font-weight: 700; color: #7c3aed;
+                               text-transform: uppercase; letter-spacing: 0.05em; }
+        .struct-field { font-family: 'SF Mono', Consolas, monospace; font-size: 0.75rem; color: #7c3aed;
+                       padding-left: 14px; }
+        .struct-name { font-family: 'SF Mono', Consolas, monospace; font-weight: 700; font-size: 0.82rem; }
+        .struct-loc { color: var(--grey); font-size: 0.72rem; }
+
+        .btn-kg { padding: 5px 14px; border-radius: 5px; font-size: 0.75rem; font-weight: 600;
+                 cursor: pointer; border: none; display: inline-block; text-decoration: none; }
+        .btn-kg-primary { background: var(--blue); color: white; }
+        .btn-kg-primary:hover { opacity: 0.9; }
+        .btn-kg-secondary { background: var(--grey-bg); color: var(--grey); border: 1px solid var(--grey-border); }
+        .btn-kg-secondary:hover { background: var(--border); color: var(--text); }
+
         @media (max-width: 768px) {
             .values-row { grid-template-columns: 1fr; }
             .filters { flex-direction: column; }
@@ -211,7 +291,7 @@
         </a>
         <a class="tab {% if tab == 'lean' %}active{% endif %}"
            href="?tab=lean">
-            Lean/Aristotle ({{ summary.theorems_total }})
+            Proof Architecture
         </a>
         <a class="tab {% if tab == 'papers' %}active{% endif %}"
            href="?tab=papers">
@@ -392,42 +472,205 @@
         </table>
     </div>
 
-    <!-- ═══ LEAN/ARISTOTLE TAB ═══ -->
+    <!-- ═══ PROOF ARCHITECTURE TAB ═══ -->
     <div class="tab-content {% if tab == 'lean' %}active{% endif %}">
+        {% if proof_arch %}
+
+        {% if proof_arch.error is defined and proof_arch.error %}
+        <div class="conflict-warning" style="margin-bottom: 16px;">
+            Error loading proof architecture data: {{ proof_arch.error }}
+        </div>
+        {% endif %}
+
+        <!-- ── Summary Bar ── -->
         <div class="summary-bar" style="margin-bottom: 16px;">
-            <div class="summary-item good">Aristotle: {{ summary.theorems_aristotle }}</div>
+            <div class="summary-item" style="background: #fef3c7; border-color: #fde68a;">
+                Axioms: {{ proof_arch.kind_counts.get('LeanAxiom', 0) }}
+            </div>
+            <div class="summary-item good">
+                Theorems: {{ proof_arch.kind_counts.get('LeanTheorem', 0) }}
+            </div>
             <div class="summary-item" style="background: var(--blue-bg); border-color: var(--blue-border);">
-                Manual: {{ summary.theorems_manual }}</div>
-            {% if summary.theorems_sorry > 0 %}
-            <div class="summary-item bad">Sorry: {{ summary.theorems_sorry }}</div>
-            {% endif %}
+                Defs: {{ proof_arch.kind_counts.get('LeanDef', 0) }}
+            </div>
             <div class="summary-item" style="background: #f3e8ff; border-color: #d8b4fe;">
-                Axioms: {{ summary.theorems_axioms }}</div>
+                Structures: {{ proof_arch.kind_counts.get('LeanStructure', 0) }}
+            </div>
+            <div class="summary-item" style="background: #fef3c7; border-color: #fde68a;">
+                Inductives: {{ proof_arch.kind_counts.get('LeanInductive', 0) }}
+            </div>
+            <div class="summary-item" style="background: #eef2ff; border-color: #c7d2fe;">
+                Instances: {{ proof_arch.kind_counts.get('LeanInstance', 0) }}
+            </div>
+            <span style="margin-left: auto; font-size: 0.78rem; color: var(--grey);">
+                {{ proof_arch.module_count }} modules &middot;
+                {{ '{:,}'.format(proof_arch.total_declarations) }} total declarations
+            </span>
         </div>
 
-        <table class="data-table">
+        <!-- ── Axiom Command Panel ── -->
+        <div class="proof-section-header">
+            Axiom Command Panel &mdash; Trust Boundaries
+        </div>
+
+        {% for ax in proof_arch.axiom_cards %}
+        <div class="axiom-card {{ ax.eliminability }}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <div class="axiom-name">{{ ax.name }}</div>
+                    <div class="axiom-location">
+                        {{ ax.detail }} &middot; {{ ax.reason }}
+                    </div>
+                </div>
+                {% if ax.eliminability == 'removed' %}
+                <span class="badge badge-green">Removed (proved)</span>
+                {% elif ax.eliminability == 'eliminable' %}
+                <span class="badge badge-green">Eliminable</span>
+                {% elif ax.eliminability == 'hard' %}
+                <span class="badge badge-amber">Hard to eliminate</span>
+                {% else %}
+                <span class="badge badge-muted">Unknown</span>
+                {% endif %}
+            </div>
+
+            <div class="axiom-statement">{{ ax.statement }}</div>
+
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
+                <span class="badge badge-amber">Blast radius: {{ ax.blast_radius }} theorem{{ 's' if ax.blast_radius != 1 }}</span>
+                {% for paper in ax.papers %}
+                <span class="badge badge-amber">{{ paper }}</span>
+                {% endfor %}
+                {% if ax.core_axioms %}
+                <span class="badge badge-muted">Core deps: {{ ax.core_axioms|join(', ') }}</span>
+                {% endif %}
+            </div>
+
+            {% if ax.downstream %}
+            <details>
+                <summary style="cursor: pointer; font-size: 0.78rem; font-weight: 600; color: {% if ax.eliminability == 'eliminable' %}var(--green){% else %}#d97706{% endif %};">
+                    Dependency Tree ({{ ax.blast_radius }} downstream)
+                </summary>
+                <div class="dep-tree">
+                    <div>
+                        <span class="axiom-dot {% if ax.eliminability == 'eliminable' %}green{% endif %}">&#9670;</span>
+                        {{ ax.name }} <span style="color: var(--grey);">(axiom)</span>
+                    </div>
+                    {% for dep in ax.downstream %}
+                    <div class="dep-indent-1">&rarr; {{ dep }}</div>
+                    {% endfor %}
+                </div>
+            </details>
+            {% endif %}
+
+            <div style="margin-top: 10px; display: flex; gap: 8px;">
+                <a class="btn-kg btn-kg-primary" href="?tab=graph">View in KG</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not proof_arch.axiom_cards %}
+        <div style="text-align: center; padding: 20px; color: var(--grey); font-size: 0.85rem;">
+            No project axioms found.
+        </div>
+        {% endif %}
+
+        <!-- ── Core Axioms Toggle ── -->
+        <details class="core-toggle">
+            <summary>Show Core Lean Axioms (propext, Classical.choice, Quot.sound)</summary>
+            <div class="core-body">
+                <div><strong>propext</strong> &mdash; Propositional extensionality: (P &harr; Q) &rarr; P = Q. Foundational to Lean 4 mathematics.</div>
+                <div><strong>Classical.choice</strong> &mdash; Axiom of choice. Used for non-constructive proofs.</div>
+                <div><strong>Quot.sound</strong> &mdash; Quotient soundness. Used for quotient types.</div>
+                <div style="color: var(--grey); margin-top: 6px; font-style: italic;">
+                    These are foundational to all Lean 4 mathematics. Not eliminable, not a risk.
+                </div>
+            </div>
+        </details>
+
+        <!-- ── Declaration Browser ── -->
+        <div class="proof-section-header" style="margin-top: 8px;">
+            Declaration Browser &mdash;
+            {{ '{:,}'.format(proof_arch.total_declarations) }} declarations across {{ proof_arch.module_count }} modules
+        </div>
+
+        <div class="filter-pills" id="decl-filter-pills">
+            <span class="pill active" data-filter="all"
+                  onclick="filterDeclTable('all', this)">All ({{ proof_arch.total_declarations }})</span>
+            {% if proof_arch.kind_counts.get('LeanAxiom', 0) > 0 %}
+            <span class="pill" data-filter="axioms" style="color: #d97706; border-color: #fde68a;"
+                  onclick="filterDeclTable('axioms', this)">Axioms ({{ proof_arch.kind_counts.get('LeanAxiom', 0) }})</span>
+            {% endif %}
+            <span class="pill" data-filter="theorems"
+                  onclick="filterDeclTable('theorems', this)">Theorems ({{ proof_arch.kind_counts.get('LeanTheorem', 0) }})</span>
+            <span class="pill" data-filter="defs"
+                  onclick="filterDeclTable('defs', this)">Defs ({{ proof_arch.kind_counts.get('LeanDef', 0) }})</span>
+            <span class="pill" data-filter="structures"
+                  onclick="filterDeclTable('structures', this)">Structures ({{ proof_arch.kind_counts.get('LeanStructure', 0) }})</span>
+            <span class="pill" data-filter="inductives"
+                  onclick="filterDeclTable('inductives', this)">Inductives ({{ proof_arch.kind_counts.get('LeanInductive', 0) }})</span>
+            <span class="pill" data-filter="instances"
+                  onclick="filterDeclTable('instances', this)">Instances ({{ proof_arch.kind_counts.get('LeanInstance', 0) }})</span>
+        </div>
+
+        <table class="module-table" id="decl-browser-table">
             <thead>
                 <tr>
-                    <th>Module</th>
-                    <th>Theorem</th>
-                    <th>Method</th>
-                    <th>Run ID</th>
-                    <th>Statement (truncated)</th>
+                    <th style="width: 200px;">Module</th>
+                    <th>Axioms</th>
+                    <th>Thms</th>
+                    <th>Defs</th>
+                    <th>Structs</th>
+                    <th>Inds</th>
+                    <th>Insts</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
-                {% for t in theorems %}
-                <tr>
-                    <td>{{ t.module }}</td>
-                    <td><code>{{ t.name }}</code></td>
-                    <td><span class="method-{{ t.method }}">{{ t.method|upper }}</span></td>
-                    <td><code style="font-size: 0.75rem;">{{ t.run_id[:12] }}</code></td>
-                    <td style="max-width: 400px; font-size: 0.8rem; color: var(--grey);">
-                        {{ t.statement }}</td>
+                {% for mod_name, counts in proof_arch.sorted_modules %}
+                <tr class="{% if counts.axioms > 0 %}has-axiom{% endif %}"
+                    data-axioms="{{ counts.axioms }}" data-theorems="{{ counts.theorems }}"
+                    data-defs="{{ counts.defs }}" data-structures="{{ counts.structures }}"
+                    data-inductives="{{ counts.inductives }}" data-instances="{{ counts.instances }}">
+                    <td class="mod-name" {% if counts.axioms > 0 %}style="color: #d97706;"{% endif %}>
+                        {{ mod_name }}
+                    </td>
+                    <td>{% if counts.axioms > 0 %}<span class="count-axiom">{{ counts.axioms }}</span>{% else %}&mdash;{% endif %}</td>
+                    <td>{% if counts.theorems > 0 %}<span class="count-thm">{{ counts.theorems }}</span>{% else %}&mdash;{% endif %}</td>
+                    <td>{% if counts.defs > 0 %}<span class="count-def">{{ counts.defs }}</span>{% else %}&mdash;{% endif %}</td>
+                    <td>{% if counts.structures > 0 %}<span class="count-struct">{{ counts.structures }}</span>{% else %}&mdash;{% endif %}</td>
+                    <td>{% if counts.inductives > 0 %}<span class="count-ind">{{ counts.inductives }}</span>{% else %}&mdash;{% endif %}</td>
+                    <td>{% if counts.instances > 0 %}<span class="count-inst">{{ counts.instances }}</span>{% else %}&mdash;{% endif %}</td>
+                    <td style="font-weight: 600;">{{ counts.total }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- ── Structure Field Assumptions ── -->
+        {% if proof_arch.struct_fields %}
+        <details class="struct-toggle">
+            <summary>Structure Field Assumptions &mdash; Implicit trust boundaries in {{ proof_arch.struct_fields|length }} structures</summary>
+            <div style="padding: 12px 0 0 0;">
+                {% for s in proof_arch.struct_fields %}
+                <div style="margin-bottom: 14px;">
+                    <div>
+                        <span class="struct-name">{{ s.name }}</span>
+                        <span class="struct-loc">({{ s.module }}.lean)</span>
+                    </div>
+                    {% for field in s.fields %}
+                    <div class="struct-field">&bull; {{ field }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </details>
+        {% endif %}
+
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: var(--grey);">
+            Loading proof architecture data... (Navigate to this tab to load data.)
+        </div>
+        {% endif %}
     </div>
 
     <!-- ═══ PAPER CLAIMS TAB ═══ -->
@@ -665,6 +908,26 @@
             cards[idx].style.boxShadow = '0 0 0 2px var(--blue)';
             cards.forEach((c, i) => { if (i !== idx) c.style.boxShadow = ''; });
         }
+    }
+
+    // Declaration Browser filter
+    function filterDeclTable(kind, pill) {
+        const table = document.getElementById('decl-browser-table');
+        if (!table) return;
+        const rows = table.querySelectorAll('tbody tr');
+
+        // Update active pill
+        document.querySelectorAll('#decl-filter-pills .pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        rows.forEach(row => {
+            if (kind === 'all') {
+                row.style.display = '';
+                return;
+            }
+            const count = parseInt(row.getAttribute('data-' + kind) || '0', 10);
+            row.style.display = count > 0 ? '' : 'none';
+        });
     }
 
     document.addEventListener('keydown', (e) => {

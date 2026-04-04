@@ -39,34 +39,29 @@ This is the fundamental phase in the Dedekind eta transformation.
 -/
 noncomputable def zeta24 : ℂ := cexp (2 * π * I / 24)
 
-/--
+/-
 ζ₂₄ is a 24th root of unity: ζ₂₄²⁴ = 1.
-
-PROVIDED SOLUTION
-zeta24^24 = cexp(2πi/24)^24 = cexp(24 · 2πi/24) = cexp(2πi) = 1.
-Use Complex.exp_nat_mul or Complex.exp_int_mul_two_pi_mul_I_ofInt.
-Key: cexp(2πi) = 1, which is Complex.exp_two_pi_mul_I or by norm_num.
 -/
-theorem zeta24_pow_24 : zeta24 ^ 24 = 1 := sorry
+theorem zeta24_pow_24 : zeta24 ^ 24 = 1 := by
+  unfold zeta24;
+  rw [ ← Complex.exp_nat_mul, mul_comm, Complex.exp_eq_one_iff ] ; use 1 ; ring
 
-/--
+/-
 ζ₂₄ ≠ 1 (it is a PRIMITIVE 24th root).
-
-PROVIDED SOLUTION
-If ζ₂₄ = 1 then cexp(2πi/24) = 1, which means 2πi/24 = 2πi·k for some integer k,
-i.e., 1/24 ∈ ℤ — contradiction. Use Complex.exp_eq_one_iff_exists_int.
 -/
-theorem zeta24_ne_one : zeta24 ≠ 1 := sorry
+theorem zeta24_ne_one : zeta24 ≠ 1 := by
+  exact ne_of_apply_ne Complex.im ( by norm_num [ zeta24, Complex.exp_im, ( by ring : 2 * Real.pi / 24 = Real.pi / 12 ) ] ; exact ne_of_gt ( Real.sin_pos_of_pos_of_lt_pi ( by positivity ) ( by linarith [ Real.pi_pos ] ) ) )
 
-/--
+/-
 ζ₂₄ is a primitive 24th root: ζ₂₄^n = 1 ↔ 24 | n.
-
-PROVIDED SOLUTION
-Forward: if 24 | n then n = 24k, ζ₂₄^(24k) = (ζ₂₄^24)^k = 1^k = 1.
-Backward: ζ₂₄^n = cexp(2πin/24) = 1 ⟹ n/24 ∈ ℤ ⟹ 24 | n.
-Use Complex.exp_eq_one_iff_exists_int for the backward direction.
 -/
-theorem zeta24_primitive (n : ℤ) : zeta24 ^ n = 1 ↔ (24 : ℤ) ∣ n := sorry
+theorem zeta24_primitive (n : ℤ) : zeta24 ^ n = 1 ↔ (24 : ℤ) ∣ n := by
+  rw [ ← Complex.cpow_intCast, Complex.cpow_def_of_ne_zero ] <;> norm_num [ zeta24 ];
+  rw [ Complex.log_exp ] <;> norm_num;
+  · rw [ Complex.exp_eq_one_iff ];
+    exact ⟨ fun ⟨ k, hk ⟩ => ⟨ k, by rw [ ← @Int.cast_inj ℂ ] ; push_cast; rw [ mul_comm ] at hk; norm_num [ Complex.ext_iff ] at hk ⊢; nlinarith [ Real.pi_pos ] ⟩, fun ⟨ k, hk ⟩ => ⟨ k, by rw [ hk ] ; push_cast; ring ⟩ ⟩;
+  · linarith [ Real.pi_pos ];
+  · linarith [ Real.pi_pos ]
 
 /-! ## 2. The Dedekind eta T-transformation -/
 
@@ -88,29 +83,22 @@ theorem qParam_shift (h : ℕ) (hh : h ≠ 0) (z : ℂ) :
   rw [Complex.exp_add]
   ring
 
-/--
+/-
 For the integer q-parameter (h=1): q(z+1) = q(z).
 This is because e^{2πi} = 1, so the shift adds a full period.
-
-PROVIDED SOLUTION
-cexp(2πi(z+1)) = cexp(2πiz + 2πi) = cexp(2πiz) · cexp(2πi) = cexp(2πiz) · 1.
 -/
 theorem qParam_integer_invariant (z : ℂ) (n : ℕ) :
-    cexp (2 * ↑π * I * (z + 1)) ^ n = cexp (2 * ↑π * I * z) ^ n := sorry
+    cexp (2 * ↑π * I * (z + 1)) ^ n = cexp (2 * ↑π * I * z) ^ n := by
+      norm_num [ mul_add, Complex.exp_add ]
 
 /-! ## 3. The framing anomaly: 24 | c₋ -/
 
-/--
+/-
 The central theorem: if a partition function Z(τ) transforms under
 T: τ → τ+1 with phase e^{2πi·c₋/24}, then modular invariance
 (Z(τ+1) = Z(τ) for all τ) forces 24 | c₋.
 
 This is purely algebraic: e^{2πi·c/24} = 1 ⟺ 24 | c.
-
-PROVIDED SOLUTION
-Forward (24|c → phase=1): c = 24k, e^{2πi·24k/24} = e^{2πik} = 1.
-Backward (phase=1 → 24|c): e^{2πic/24} = 1 means c/24 ∈ ℤ, so 24|c.
-Use Complex.exp_eq_one_iff_exists_int.
 -/
 theorem framing_anomaly_constraint (c : ℤ) :
     cexp (2 * ↑π * I * ↑c / 24) = 1 ↔ (24 : ℤ) ∣ c := by
@@ -118,9 +106,10 @@ theorem framing_anomaly_constraint (c : ℤ) :
   · intro h
     -- cexp(2πic/24) = 1 means 2πic/24 = 2πik for some k
     -- i.e., c/24 ∈ ℤ, so 24 | c
-    sorry
+    rw [ Complex.exp_eq_one_iff ] at h;
+    exact ⟨ h.choose, by rw [ ← @Int.cast_inj ℂ ] ; push_cast; rw [ ← eq_comm ] ; have := h.choose_spec; rw [ div_eq_iff ( by norm_num ) ] at this; norm_num [ Complex.ext_iff ] at *; nlinarith [ Real.pi_pos ] ⟩
   · intro ⟨k, hk⟩
-    sorry
+    rw [ hk, Complex.exp_eq_one_iff ] ; use k ; push_cast ; ring
 
 /--
 The generation constraint derived from the framing anomaly:

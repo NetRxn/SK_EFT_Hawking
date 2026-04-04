@@ -30,7 +30,7 @@ modules in a proof assistant, compute the Drinfeld centers of $\mathrm{Vec}_{\ma
 establish $Z(\mathrm{Vec}_G)$ as a braided monoidal category via Mathlib's
 infrastructure. All modules referenced in this paper are verified by
 \texttt{lake build} with zero \texttt{sorry}. The broader project comprises
-936~theorems and 2~axioms across 63~Lean~4 modules, with 251
+951~theorems across 64~Lean~4 modules (zero axioms), with 273
 filled by the Aristotle automated prover.
 \end{abstract}
 
@@ -269,12 +269,12 @@ algebra structure (coproduct, counit, involutive antipode), establishing the
 algebraic foundation for $Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$.
 \end{enumerate}
 
-The formal verification comprises 936 theorems + 2 axioms across 63 Lean~4
-modules, conditional on two axioms encoding established group theory
-(\texttt{non\_abelian\_center\_discrete}) and lattice field theory
-(\texttt{gs\_nogo\_axiom}). Verified by \texttt{lake build} (zero \texttt{sorry}).
-254 theorems are filled by the Aristotle automated prover
-across 32+ runs.
+The formal verification comprises 951 theorems across 64 Lean~4
+modules, with zero axioms and zero \texttt{sorry}. The two axioms present in
+earlier versions (\texttt{non\_abelian\_center\_discrete} and
+\texttt{gs\_nogo\_axiom}) have been proved as theorems. All modules referenced
+in this paper have zero \texttt{sorry}; 273 theorems are filled by the
+Aristotle automated prover (270 machine-proved, 3 manual) across 33+ runs.
 
 The same $\mathbb{Z}_{16}$ that classifies the chirality wall~\cite{GioiaThorngrenPRL2026}
 also constrains the SM's generation count and forces hidden sectors.

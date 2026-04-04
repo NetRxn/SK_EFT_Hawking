@@ -3663,3 +3663,112 @@ def dedekind_eta_origin_of_24():
         'factorization_24': {'8': 'c₋ per generation', '3': 'N_f constraint'},
         'origin': 'Riemann zeta regularization ζ(-1) = -1/12',
     }
+
+
+def rokhlin_sixteen_convergence():
+    """The "16 convergence" — the same number 16 appears in four independent areas.
+
+    1. SM Weyl fermion count: 16 components per generation
+    2. Z₁₆ bordism: Ω₅^{Spin^{Z₄}} ≅ Z₁₆
+    3. Rokhlin's theorem: σ(M) ≡ 0 mod 16 for spin 4-manifolds
+    4. Kitaev 16-fold way: Z₁₆ classification of topological superconductors
+
+    All trace to Bott periodicity: 16 = 8 × 2 (period × Pfaffian).
+
+    Lean: sixteen_convergence_full, bott_period (RokhlinBridge.lean)
+    Aristotle: manual
+    Source: Rokhlin, Dokl. Akad. Nauk SSSR 84, 221 (1952); Kitaev, AIP 1134, 22 (2009)
+
+    Returns:
+        dict with the four appearances and their connections
+    """
+    return {
+        'sm_weyl': 16,
+        'z16_bordism': 16,
+        'rokhlin_signature': 16,
+        'kitaev_16fold': 16,
+        'bott_decomposition': {'period': 8, 'pfaffian': 2, 'product': 16},
+        'all_equal': True,
+    }
+
+
+def generation_constraints_with_without_nu_R(N_f):
+    """Compare generation constraints with and without right-handed neutrinos.
+
+    With ν_R: Z₁₆ anomaly automatically cancels → only modular inv. constrains N_f.
+    Without ν_R: Z₁₆ requires 16|N_f AND modular inv. requires 3|N_f → lcm(16,3)=48.
+
+    Lean: z16_anomaly_always_cancels_with_nu_R, z16_anomaly_without_nu_R,
+          constraints_without_nu_R (RokhlinBridge.lean)
+    Aristotle: b54f9611 (z16_anomaly_without_nu_R)
+    Source: García-Etxebarria & Montero, JHEP 08, 003 (2019); Wang, PRD 110, 125028 (2024)
+
+    Args:
+        N_f: number of fermion generations
+
+    Returns:
+        dict with constraint satisfaction for both scenarios
+    """
+    import math
+    z16_with_nu_R = True  # 16*N_f ≡ 0 mod 16 always
+    z16_without_nu_R = N_f % 16 == 0  # 15*N_f ≡ 0 mod 16 iff 16|N_f
+    modular_inv = (8 * N_f) % 24 == 0  # 3|N_f
+    return {
+        'N_f': N_f,
+        'with_nu_R': {
+            'z16_ok': z16_with_nu_R,
+            'modular_ok': modular_inv,
+            'all_ok': z16_with_nu_R and modular_inv,
+        },
+        'without_nu_R': {
+            'z16_ok': z16_without_nu_R,
+            'modular_ok': modular_inv,
+            'all_ok': z16_without_nu_R and modular_inv,
+        },
+        'minimal_with_nu_R': 3,
+        'minimal_without_nu_R': math.lcm(16, 3),  # = 48
+    }
+
+
+def q_integer(n, q):
+    """The q-integer [n]_q = (qⁿ - q⁻ⁿ)/(q - q⁻¹).
+
+    Equivalent sum form: [n]_q = q^{n-1} + q^{n-3} + ... + q^{-(n-1)}.
+    At q=1: [n]_1 = n (classical limit).
+
+    Lean: qInt (QNumber.lean)
+    Aristotle: pending
+    Source: Kassel, Quantum Groups (Springer, 1995), Ch. IV
+
+    Args:
+        n: non-negative integer
+        q: deformation parameter (q ≠ 0, q ≠ ±1 for the fraction form)
+
+    Returns:
+        [n]_q as a number
+    """
+    if n == 0:
+        return 0
+    return sum(q ** (n - 1 - 2 * i) for i in range(n))
+
+
+def q_dg_coefficient(q):
+    """The q-Dolan-Grady coefficient [3]_q = q² + 1 + q⁻².
+
+    This replaces the binomial coefficient 3 in the classical DG relations:
+      A³B − [3]_q·A²BA + [3]_q·ABA² − BA³ = ρ(AB − BA)
+
+    At q=1: [3]_1 = 3 (classical triple commutator coefficient).
+    The RHS coefficient ρ = 16 (DG_COEFF) is INDEPENDENT of q.
+
+    Lean: qInt_three (QNumber.lean)
+    Aristotle: pending
+    Source: Terwilliger, arXiv:math.QA/0307016; Baseilhac-Belliard, arXiv:0906.1215
+
+    Args:
+        q: deformation parameter
+
+    Returns:
+        [3]_q = q² + 1 + q⁻²
+    """
+    return q ** 2 + 1 + q ** (-2)

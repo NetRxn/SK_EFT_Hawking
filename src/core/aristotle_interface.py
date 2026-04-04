@@ -1568,6 +1568,33 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="zeta24^24: unfold zeta24, use exp_nat_mul or exp_add repeatedly, reduce to cexp(2πi)=1. zeta24_ne_one: cexp(2πi/24)=1 would mean 2πi/24=2πik, contradiction. zeta24_primitive: exp_eq_one_iff + divisibility. qParam_integer_invariant: cexp(2πi(z+1))=cexp(2πiz)*cexp(2πi)=cexp(2πiz)*1. See PROVIDED SOLUTION hints in file.",
         filled=False,
     ),
+    # Phase 5b Wave 6: RokhlinBridge (1 sorry — ZMod arithmetic)
+    SorryGap(
+        module="SKEFTHawking.RokhlinBridge",
+        name="z16_anomaly_without_nu_R",
+        priority=1,
+        description="15*N_f ≡ 0 mod 16 ↔ 16|N_f. ZMod arithmetic: 15 ≡ -1 mod 16, so -N_f ≡ 0 iff 16|N_f.",
+        strategy_hint="15 ≡ -1 mod 16 (by decide). So 15*N_f = -N_f in ZMod 16. Then -N_f = 0 iff N_f = 0 iff 16|N_f. Use ZMod.natCast_zmod_eq_zero_iff_dvd.",
+        filled=False,
+    ),
+    # Phase 5b Wave 7: QNumber (5 sorrys — Laurent polynomial evaluation)
+    SorryGap(
+        module="SKEFTHawking.QNumber",
+        name="qnumber_eval",
+        priority=2,
+        description="5 sorrys: evalAtOne construction (LaurentPolynomial → k algebra hom), evalAtOne_T, qInt_classical_limit, qInt_two_pow4_classical, qInt_three_classical. All Laurent polynomial evaluation.",
+        strategy_hint="evalAtOne: use LaurentPolynomial.eval₂ or the universal property. evalAtOne_T: T m evaluates to 1^m = 1. qInt_classical_limit: map_sum + evalAtOne_T + card_range. See PROVIDED SOLUTION hints.",
+        filled=False,
+    ),
+    # Phase 5b Wave 7: Uqsl2 (6 sorrys — RingQuot relation proofs)
+    SorryGap(
+        module="SKEFTHawking.Uqsl2",
+        name="uqsl2_relations",
+        priority=2,
+        description="6 sorrys: uq_K_mul_Kinv, uq_Kinv_mul_K, uqK_unit, uq_KE, uq_KF, uq_serre. All are RingQuot.mkAlgHom_rel applications with ChevalleyRel constructors.",
+        strategy_hint="Unfold uqK/uqE/etc to uqsl2Mk applied to generators. Use ← map_mul / ← map_one to combine. Then RingQuot.mkAlgHom_rel _ ChevalleyRel.KKinv etc. For KE/KF/Serre: also need map_algebraMap or Algebra.algebraMap_eq_smul_one.",
+        filled=False,
+    ),
 ]
 
 

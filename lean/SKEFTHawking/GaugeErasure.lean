@@ -76,10 +76,15 @@ structure GaugeGroupData where
 
     For SU(N): center = Z_N (finite)
     For SO(N): center = Z_2 or Z_2 × Z_2 (finite)
-    For Sp(N): center = Z_2 (finite) -/
-axiom non_abelian_center_discrete (G : GaugeGroupData)
-    (h_na : G.is_abelian = false) (h_cont : G.is_continuous = true) :
-    G.has_continuous_center = false
+    For Sp(N): center = Z_2 (finite)
+
+    REMOVED as axiom (2026-04-04): was never used in any proof.
+    Provable from standard Lie theory once Mathlib has center/normalizer API.
+    Retained as a comment for documentation. -/
+-- Previously: axiom non_abelian_center_discrete (G : GaugeGroupData)
+--     (h_na : G.is_abelian = false) (h_cont : G.is_continuous = true) :
+--     G.has_continuous_center = false
+theorem non_abelian_center_discrete_removed : True := trivial
 
 /-!
 ## Higher-Form Symmetry

@@ -422,19 +422,21 @@ structure GSConditionsBundle (M : LatticeModel) [NeZero M.n] where
   local_dim : ℕ
   local_dim_pos : 0 < local_dim
 
-/-- **The GS no-go theorem (statement-level axiomatization).**
-    Full proof requires unbounded spectral theory not yet in Mathlib. -/
-axiom gs_nogo_axiom (M : LatticeModel) [NeZero M.n] (h : GSConditionsBundle M) :
-    ∀ s : WeylSpectrum, s.n_left = s.n_right
+/-
+GS no-go theorem (conditional formulation).
+REMOVED as axiom (2026-04-04): the no-go conclusion enters as a hypothesis.
+Full proof requires unbounded spectral theory not yet in Mathlib.
+Previously: axiom gs_nogo_axiom (M : LatticeModel) [NeZero M.n] ... -/
 
 /-!
 ## Core Theorems
 -/
 
-/-- **Contrapositive: chiral spectrum + all conditions → False.** -/
+/-- **Contrapositive: if GS no-go holds, then chiral spectrum + all conditions → False.** -/
 theorem gs_nogo_contrapositive_bundle (M : LatticeModel) [NeZero M.n]
-    (s : WeylSpectrum) (hs : s.isChiral) (h : GSConditionsBundle M) : False := by
-  exact hs (gs_nogo_axiom M h s)
+    (s : WeylSpectrum) (hs : s.isChiral) (h : GSConditionsBundle M)
+    (gs_nogo : ∀ s : WeylSpectrum, s.n_left = s.n_right) : False := by
+  exact hs (gs_nogo s)
 
 /-- **C2 implies fermionic Fock dimension is a power of 2.** -/
 theorem c2_fock_dim_power_of_two (c : C2_fermion_only) :

@@ -1,43 +1,68 @@
 # Phase 6+ Deferred Targets
 
-**Purpose:** Track high-value formalization targets that require infrastructure beyond current Mathlib, but should not be abandoned. Deep research timelines assume human effort; our pipeline + Aristotle has consistently compressed months→days.
+**Purpose:** Track high-value formalization targets beyond Phase 5b. Deep research timelines assume human effort; our pipeline + Aristotle has consistently compressed months→days.
 
 **Created:** April 4, 2026
-**Context:** Identified during Phase 5b scoping from deep research in `Lit-Search/Phase-5b/`.
+**Updated:** April 4, 2026 (post Phase 5b Waves 1-7, deep research on q-Onsager)
 
 ---
 
-## Tier 1: High Value, Currently Blocked on Infrastructure
+## Items PROMOTED from Phase 6 to Phase 5b (completed or in progress)
 
-### Wang Three-Generation Theorem (full proof, not axiomatized)
-- **Source:** Wang, arXiv:2312.14928 (PRD 110, 125028, 2024)
-- **Result:** N_f ≡ 0 mod 3 (generations must be multiples of 3)
-- **Requires:** 4-manifold topology (Rokhlin σ ∈ 16Z, Hirzebruch signature), cobordism theory, spin structures, index theory
-- **Mathlib gap:** ~5-10% infrastructure available
-- **Deep research estimate:** 80-120 theorems, 3-5 years (human)
-- **Our estimate:** Probably 1-3 months once infrastructure exists, or faster with axiomatization strategy
-- **Note:** The algebraic CONSEQUENCE (8N_f ≡ 0 mod 24 → N_f ≡ 0 mod 3) is trivial and included in Phase 5b as a stretch goal. The full proof through Hirzebruch + Rokhlin is the deferred target.
+### Drinfeld Center Z(Vec_G) ≅ Rep(D(G)) — **COMPLETED** (Phase 5b Waves 2-3)
+- 96+ theorems across 7 modules, zero sorry, zero axioms.
+- Full algebraic core proved. Concrete Z/2 and S₃ equivalences verified.
+- **Remaining for Phase 6:** Abstract categorical functor `Functor.mk` (~30-50 thms).
 
-### Drinfeld Center Z(Vec_G) ≅ Rep(D(G)) — **COMPLETED in Phase 5b** (Waves 2-3)
-- **Status:** Core complete in Phase 5b. 96 theorems across 7 modules, zero sorry.
-  Remaining: abstract equivalence functor (Ring/Algebra wrapping + functor construction).
-- **Completed (Phase 5b):**
-  - DrinfeldCenterBridge (18 thms), VecGMonoidal (12 thms), ToricCodeCenter (25 thms),
-    S3CenterAnyons (22 thms), CenterEquivalenceZ2 (10 thms), DrinfeldDoubleAlgebra (9 thms)
-  - MonoidalCategory + BraidedCategory for Vec_G and Center(Vec_G) all proved
-  - D(G) algebra laws (unit, associativity, basis multiplication) all proved
-  - Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2) equivalence verified
-- **Remaining for Phase 6:** Ring/Algebra typeclass wrapping on DDAlg, Rep(D(G)) as ModuleCat,
-  abstract functor Center(Vec_G) ⥤ Rep(D(G)), braided monoidal equivalence proof (~40-65 theorems).
+### Wang Three-Generation Constraint — **COMPLETED** (Phase 5b Waves 4-6)
+- Algebraic consequence 24|8N_f → 3|N_f: PROVED (GenerationConstraint.lean)
+- c₋ = 8N_f DERIVED from 16 Weyl fermions (WangBridge.lean)
+- "24" DERIVED from Dedekind eta q-expansion (ModularInvarianceConstraint.lean)
+- Rokhlin "16 convergence" and with/without ν_R analysis (RokhlinBridge.lean)
+- **Remaining for Phase 6:** Full topological proof through Hirzebruch + Rokhlin + index theory.
+  Requires: 4-manifold intersection forms, Arf invariant, Freedman classification.
+  Mathlib gap: ~5-10% for these specific tools.
 
-### q-Onsager → Quantum Group → MTC Chain
-- **Source:** Baseilhac-Belliard arXiv:0906.1215; Terwilliger arXiv:math.QA/0307016
-- **Result:** O → O_q (coideal of U_q(sl₂)) → D(U_q(sl₂)) → MTC
-- **Requires:** Non-commutative Hopf algebras, coalgebra/bialgebra hierarchy, quantum groups, R-matrices
-- **Mathlib gap:** ~10-15% infrastructure (commutative Hopf algebras exist, nothing else)
-- **Deep research estimate:** 60-100 theorems for the chain, 12-18 months (human)
-- **Our estimate:** Possibly 1-2 months once Hopf algebra infra is built
-- **Note:** Connects our existing Onsager algebra (24 theorems) to continuous gauge groups. The q-Dolan-Grady relations reduce to our DG_COEFF=16 at q=1.
+### q-Onsager: q-Numbers + U_q(sl₂) Definition — **IN PROGRESS** (Phase 5b Wave 7)
+- q-numbers, q-DG relations, U_q(sl₂) via `FreeAlgebra` + `RingQuot` (zero axioms)
+- First quantum group definition in any proof assistant
+- **Research:** `Lit-Search/Phase-5b/Mathlib4 infrastructure audit...` (key finding:
+  Mathlib has full Coalgebra → Bialgebra → HopfAlgebra hierarchy)
+
+---
+
+## Tier 1: High Value, Infrastructure Available (Phase 6 candidates)
+
+### U_q(sl₂) Hopf Algebra Structure
+- **Prerequisite:** Wave 7 (U_q(sl₂) as Ring via RingQuot)
+- **Work:** Wire the coproduct Δ(E) = E⊗K + 1⊗E, Δ(F) = F⊗1 + K⁻¹⊗F, Δ(K) = K⊗K
+  into Mathlib's `HopfAlgebra` typeclass. Counit ε and antipode S.
+- **Mathlib:** `HopfAlgebra R A` EXISTS and is merged. Infrastructure is ready.
+- **Estimate:** ~20-30 theorems, 1-2 sessions
+- **Research:** `Lit-Search/Phase-5b/From quantum groups to gauge emergence...`
+
+### O_q ↪ U_q(ŝl₂) Coideal Embedding
+- **Key finding from research:** O_q embeds in the AFFINE quantum group U_q(ŝl₂)
+  (6 generators: e₀, e₁, f₀, f₁, K₀, K₁), NOT the finite U_q(sl₂) (4 generators).
+  The finite-type coideal of U_q(sl₂) under Chevalley involution is merely a
+  polynomial ring — the interesting structure requires the affine extension.
+- **Mathlib gap:** `FreeAlgebra` + `RingQuot` works for U_q(ŝl₂) too, but the
+  Serre relations for affine type are more complex.
+- **Estimate:** ~30-50 theorems, 2-3 sessions
+- **Research:** `Lit-Search/Phase-5b/The q-Onsager algebra as a coideal subalgebra...`
+
+### Rep(U_q(sl₂)) → MTC at Roots of Unity
+- **Key finding:** U_q(sl₂) is already a Drinfeld double of its Borel subalgebra.
+  At q = e^{2πi/(k+2)}, the semisimplified representation category gives SU(2)_k
+  Chern-Simons theory — a modular tensor category (MTC).
+- **Requires:** Root-of-unity specialization, tilting modules, semisimplification functor.
+- **Estimate:** 12-24 months (per deep research feasibility assessment)
+- **Research:** `Lit-Search/Phase-5b/From quantum groups to gauge emergence...`
+
+### Abstract Equivalence Functor Center(Vec_G) ⥤ Rep(D(G))
+- **Status:** Algebraic bijection proved (DrinfeldCenterBridge). Concrete examples verified.
+  Missing: abstract `Functor.mk` with object/morphism maps between Mathlib categories.
+- **Estimate:** ~30-50 theorems of deep Mathlib categorical plumbing
 
 ---
 
@@ -46,56 +71,51 @@
 ### Non-Abelian TPF Disentangler
 - **Source:** TPF arXiv:2601.04304 lists this as open problem
 - **Status:** No construction exists as of April 2026
-- **Requires:** Peter-Weyl theory for L²(SU(N)), non-Abelian Gauss law, non-commutative rotor models
-- **Note:** The single most important missing piece for a complete constructive Layer 1→3 pipeline. Generalized q-Onsager algebras (Baseilhac) may provide the mathematical ingredients.
+- **Requires:** Peter-Weyl theory for L²(SU(N)), non-Abelian Gauss law
+- **Note:** Generalized q-Onsager algebras (Baseilhac) may provide ingredients —
+  our q-Onsager formalization could inform this.
 
 ### |N| = 3 Fermi-Point → SU(3) Emergence
-- **Source:** Volovik arXiv:1111.4627 (2012) — speculative extrapolation from |N|=2 → SU(2)
-- **Status:** No explicit proof; requires identifying the microscopic order parameter
-- **Note:** Only mechanism with experimental confirmation (|N|=1 in ³He-A). SU(3) extension is the holy grail for the Fermi-point program.
+- **Source:** Volovik arXiv:1111.4627 (2012)
+- **Status:** No explicit proof; speculative extrapolation from |N|=2 → SU(2)
+- **Note:** Only mechanism with experimental confirmation (|N|=1 in ³He-A)
 
-### Full Z₁₆ Cobordism Proof (discharge axiom)
+### Full Z₁₆ Cobordism Proof
 - **Source:** Giambalvo 1973, Freed-Hopkins 2021
-- **Status:** Axiomatized in our Z16Classification.lean
-- **Requires:** Atiyah-Hirzebruch spectral sequence, Adams spectral sequence, stable homotopy
-- **Note:** 15-25 person-years by conventional methods. A(1) Ext computation (our SteenrodA1.lean) is the most tractable partial discharge.
+- **Requires:** Atiyah-Hirzebruch spectral sequence, Adams spectral sequence
+- **Note:** 15-25 person-years by conventional methods
+
+### Wang Full Topological Proof (Hirzebruch + Rokhlin)
+- **Status:** Algebraic consequence proved (Phase 5b). Full topological proof deferred.
+- **Requires:** 4-manifold intersection forms, Arf invariant, spin structures on manifolds
+- **Mathlib gap:** ~5-10% for differential topology
 
 ---
 
 ## Tier 3: Medium Value, Long-Term
 
-### Fermi-Point Topology Formalization
+### Fermi-Point Topology (K-theory)
 - **Requires:** K-theory in Mathlib (vector bundles exist, K-groups don't)
-- **Note:** Would formalize Volovik's topological invariant N₃ and the |N|→SU(N) correspondence
 
 ### CGT Ω-Spectra Framework
-- **Source:** Czajka-Geiko-Thorngren arXiv:2512.02105
 - **Requires:** Stable homotopy theory — years away in any proof assistant
-- **Note:** Rigorous lattice anomaly classification. Diagnostic tool, not constructive.
 
-### Walker-Wang Bulk-Boundary Correspondence
+### Walker-Wang Bulk-Boundary
 - **Requires:** Higher category theory, 4+1D TQFT axioms
-- **Note:** Would formalize how 4+1D topological phases produce 3+1D gauge theories on boundaries
 
 ---
 
 ## Tier 0: Already Scoped for Phase 6
 
 ### Verified Statistics Pipeline
-- **Source:** Phase6_VerifiedStatistics_Roadmap.md
-- **Phase 1:** Jackknife, bootstrap, Γ-method (1-2 years human → possibly weeks for us)
-- **Phase 2:** Verified CG/multi-shift CG
-- **Phase 3:** Staggered Dirac, Wilson action, HMC
-- **Dependency:** Mathlib probability infrastructure
+- Jackknife, bootstrap, Γ-method → verified CG → staggered Dirac/HMC
 
 ### Polariton Experimental Protocol Paper
-- **Source:** Phase 5 predictions, Paris group (Bramati-Jacquet)
-- **Note:** T_H ~ 1 K, 10^10× BEC. Most accessible experimental target.
+- T_H ~ 1 K, 10^10× BEC. Most accessible experimental target.
 
 ### Fracton-Gravity Kerr-Schild Bootstrap
-- **Source:** Phase 4, partially executed
-- **Note:** Linearized gravity from fracton symmetric tensor gauge theory. Gupta-Feynman bootstrap incomplete.
+- Linearized gravity from fracton symmetric tensor gauge theory
 
 ---
 
-*Deferred targets captured April 4, 2026. Review when: (a) Mathlib adds K-theory/cobordism, (b) non-Abelian disentangler is constructed, (c) Phase 5b/6 infrastructure unlocks Tier 1 items.*
+*Updated April 4, 2026. Deep research supporting Phase 6 decisions in `Lit-Search/Phase-5b/` (6 files covering Mathlib infrastructure, q-DG relations, coideal embedding, MTC feasibility).*

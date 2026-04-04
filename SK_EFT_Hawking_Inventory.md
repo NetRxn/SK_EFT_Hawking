@@ -2,7 +2,7 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Nine papers (Phases 1-5b) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, and Waves 7A-7C (gauge-link MC + RHMC). Lean 4 formalization: 900 theorems + 2 axioms across 58 modules — ZERO sorry. 254 Aristotle-proved (251 machine + 3 manual). 1456 tests, 72 pipeline figures, 24 notebooks, 49 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Ten papers (Phases 1-5b) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, and Waves 7A-7C (gauge-link MC + RHMC). Lean 4 formalization: 951 theorems, 0 axioms across 64 modules — ZERO sorry. 273 Aristotle-proved (270 machine + 3 manual). 1506 tests, 72 pipeline figures, 26 notebooks, 49 Python source modules.
 
 **Last verified:** April 4, 2026 (axiom integrity sweep — 4 axioms discharged/removed, W7C RHMC complete, L=4 done, L=8 in flight)
 
@@ -575,13 +575,13 @@
 |----------|-------|--------|
 | **Python Source Modules** | 49 | Complete (Phases 1-5b) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 29 | 1456 tests, all passing |
-| **Notebooks** | 24 | Phases 1-5b (Technical + Stakeholder) |
-| **Lean Modules** | 58 | All build clean |
-| **Lean Theorems** | 900 + 2 axioms | Zero sorry |
-| **Aristotle-proved** | 254 (251 machine + 3 manual in registry) | 32+ runs |
-| **Manual proofs** | 646 | |
-| **Paper Drafts** | 9 + prediction tables | Full LaTeX |
+| **Test Files** | 31 | 1506 tests, all passing |
+| **Notebooks** | 26 | Phases 1-5b (Technical + Stakeholder) |
+| **Lean Modules** | 64 | All build clean |
+| **Lean Theorems** | 951 (0 axioms) | Zero sorry |
+| **Aristotle-proved** | 273 (270 machine + 3 manual in registry) | 33+ runs |
+| **Manual proofs** | 678 | |
+| **Paper Drafts** | 10 + prediction tables | Full LaTeX |
 | **Pipeline Figures** | 72 | All PNGs generated |
 | **Validation Checks** | 16 | All passing |
 | **Scripts** | 11 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 4 utilities |
@@ -591,4 +591,4 @@
 
 ---
 
-**Project Status (2026-04-04):** Phase 5b Waves 1-4 COMPLETE. 924 theorems + 2 axioms (ZERO sorry), 254 Aristotle-registry entries (251 machine-proved, 3 manual), 1488 tests (all pass), 71 figures, 62 Lean modules, 49 Python modules, 9 papers, 24 notebooks. Phase 5b: SM anomaly in Z16, generation constraint, Drinfeld center (monoidal Vec_G, toric code, S3 non-abelian, CenterEquivalenceZ2, DrinfeldDoubleAlgebra, DrinfeldDoubleRing, DrinfeldEquivalence), Wang bridge (c₋=8N_f derived from fermion content). Axiom integrity sweep: 4 axioms discharged/removed (3 tautological, 1 false). L=8 RHMC results pending for Paper 6.
+**Project Status (2026-04-04):** Phase 5b COMPLETE. 951 theorems, 0 axioms (ZERO sorry), 273 Aristotle-registry entries (270 machine-proved, 3 manual), 1506 tests (all pass), 72 figures, 64 Lean modules, 49 Python modules, 10 papers, 26 notebooks. Phase 5b: SM anomaly in Z16, generation constraint, Drinfeld center (monoidal Vec_G, toric code, S3 non-abelian, CenterEquivalenceZ2, DrinfeldDoubleAlgebra, DrinfeldDoubleRing, DrinfeldEquivalence), Wang bridge (c₋=8N_f derived from fermion content). All axioms removed (Wave 6): non_abelian_center_discrete and gs_nogo_axiom proved as theorems. L=8 RHMC results pending for Paper 6.

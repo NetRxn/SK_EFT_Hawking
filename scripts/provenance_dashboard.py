@@ -351,6 +351,260 @@ def load_paper_claims():
     return papers
 
 
+def load_proof_architecture():
+    """Load data for the Proof Architecture tab.
+
+    Returns a dict with:
+      - kind_counts: {type_name: count}
+      - total_declarations: int
+      - module_count: int
+      - sorted_modules: [(module_name, {axioms, theorems, ...})]
+      - axiom_cards: [{name, module, eliminability, ...}]
+      - struct_fields: [{name, module, fields}]
+    """
+    from src.core.constants import AXIOM_METADATA, ARISTOTLE_THEOREMS
+    from src.core.provenance import PAPER_DEPENDENCIES
+
+    sys.path.insert(0, str(SCRIPT_DIR))
+    from extract_lean_deps import load_lean_deps
+    from build_graph import (
+        extract_lean_declaration_nodes,
+        extract_depends_on_axiom_edges,
+        extract_all_nodes,
+    )
+
+    lean_nodes = extract_lean_declaration_nodes()
+
+    # Summary counts by node type
+    kind_counts = {}
+    for node in lean_nodes:
+        kind_counts[node['type']] = kind_counts.get(node['type'], 0) + 1
+
+    # Module breakdown
+    modules: dict[str, dict] = {}
+    for node in lean_nodes:
+        mod = node['meta'].get('module', 'Unknown')
+        if mod not in modules:
+            modules[mod] = {
+                'axioms': 0, 'theorems': 0, 'defs': 0,
+                'structures': 0, 'inductives': 0, 'instances': 0, 'total': 0,
+            }
+        type_key = {
+            'LeanAxiom': 'axioms', 'LeanTheorem': 'theorems', 'LeanDef': 'defs',
+            'LeanStructure': 'structures', 'LeanInductive': 'inductives',
+            'LeanInstance': 'instances',
+        }.get(node['type'], 'defs')
+        modules[mod][type_key] += 1
+        modules[mod]['total'] += 1
+
+    sorted_modules = sorted(modules.items(), key=lambda x: x[1]['total'], reverse=True)
+
+    # Build axiom-to-paper mapping from PAPER_DEPENDENCIES
+    axiom_module_to_papers: dict[str, list[str]] = {}
+    for paper_key, entry in PAPER_DEPENDENCIES.items():
+        for lm in entry.get('lean_modules', []):
+            axiom_module_to_papers.setdefault(lm, []).append(
+                entry.get('title', paper_key)
+            )
+
+    # Axiom cards (from live Lean declarations)
+    axiom_nodes = [n for n in lean_nodes if n['type'] == 'LeanAxiom']
+    axiom_cards = []
+    all_nodes = extract_all_nodes()
+    node_ids = {n['id'] for n in all_nodes}
+    axiom_edges = extract_depends_on_axiom_edges(node_ids)
+
+    live_axiom_names = set()
+    for ax in axiom_nodes:
+        ax_id = ax['id']
+        live_axiom_names.add(ax['name'])
+        # Downstream: edges where target == this axiom (other decls depend on it)
+        downstream = [e for e in axiom_edges if e['target'] == ax_id]
+        downstream_names = [e['source'].replace('lean:', '') for e in downstream]
+
+        ax_module = ax['meta'].get('module', '')
+        papers_for_axiom = axiom_module_to_papers.get(ax_module, [])
+
+        axiom_cards.append({
+            'name': ax['name'],
+            'module': ax_module,
+            'eliminability': ax['meta'].get('eliminability', 'unknown'),
+            'reason': ax['meta'].get('eliminability_reason', ''),
+            'statement': ax['meta'].get('type_signature', ''),
+            'blast_radius': len(downstream),
+            'downstream': downstream_names,
+            'core_axioms': ax['meta'].get('axiom_deps_core', []),
+            'detail': ax.get('detail', ''),
+            'papers': papers_for_axiom,
+        })
+
+    # Also include removed axioms from AXIOM_METADATA for historical tracking
+    for name, meta in AXIOM_METADATA.items():
+        if name not in live_axiom_names:
+            ax_module = meta.get('module', '')
+            papers_for_axiom = axiom_module_to_papers.get(ax_module, [])
+            axiom_cards.append({
+                'name': name,
+                'module': ax_module,
+                'eliminability': meta.get('eliminability', 'unknown'),
+                'reason': meta.get('reason', ''),
+                'statement': '',
+                'blast_radius': 0,
+                'downstream': [],
+                'core_axioms': [],
+                'detail': f'{ax_module}.lean',
+                'papers': papers_for_axiom,
+            })
+
+    # Structure field assumptions: filter to only Prop-valued fields (constraints)
+    prop_indicators = [' < ', ' > ', ' ≤ ', ' ≥ ', ' ≠ ', '.lt ', '.le ',
+                       'instLT.lt', 'instLE.le', 'Eq ']
+    constraint_name_suffixes = ('_pos', '_nonneg', '_nonpos', '_neg', '_condition',
+                                '_decomp', '_eq', '_bound', '_constraint', '_valid',
+                                '_compat', '_smooth')
+
+    struct_nodes = [n for n in lean_nodes if n['type'] == 'LeanStructure']
+    struct_fields = []
+    for s in struct_nodes:
+        all_fields = s['meta'].get('field_constraints', [])
+        prop_fields = []
+        for field in all_fields:
+            if isinstance(field, dict):
+                fname = field.get('name', '')
+                ftype = field.get('type', '')
+            else:
+                fname = str(field)
+                ftype = str(field)
+            # Check if this field is Prop-valued
+            is_prop = any(ind in ftype for ind in prop_indicators)
+            if not is_prop:
+                is_prop = any(fname.endswith(s) for s in constraint_name_suffixes)
+            if is_prop:
+                # Format for display
+                if isinstance(field, dict):
+                    # Simplify type display
+                    display_type = ftype
+                    # Remove module prefix for readability
+                    display_type = display_type.replace('SKEFTHawking.', '')
+                    display_type = display_type.replace('Real.instLT.lt ', '(< ) ')
+                    display_type = display_type.replace('Real.instLE.le ', '(≤ ) ')
+                    display_type = display_type.replace('instLENat.le ', '(≤ ) ')
+                    display_type = display_type.replace('instHAdd.hAdd', '+')
+                    display_type = display_type.replace('instHMul.hMul', '*')
+                    display_type = display_type.replace('instHMod.hMod', '%')
+                    display_type = display_type.replace('instHSMul.hSMul', '•')
+                    prop_fields.append(f"{fname} : {display_type}")
+                else:
+                    prop_fields.append(str(field))
+
+        if prop_fields:
+            struct_fields.append({
+                'name': s['name'],
+                'module': s['meta'].get('module', ''),
+                'fields': prop_fields,
+            })
+
+    # Fallback: parse Lean source files if no data from JSON
+    if not struct_fields:
+        struct_fields = _extract_structure_prop_fields()
+
+    return {
+        'kind_counts': kind_counts,
+        'total_declarations': sum(kind_counts.values()),
+        'module_count': len(modules),
+        'sorted_modules': sorted_modules,
+        'axiom_cards': axiom_cards,
+        'struct_fields': struct_fields,
+    }
+
+
+def _extract_structure_prop_fields():
+    """Parse Lean source files for structures with Prop-valued fields.
+
+    Identifies fields that are propositions (constraints/conditions), not
+    data fields. A field is classified as Prop-valued if its type contains
+    comparison operators (< > ≤ ≥ = ≠), quantifiers (∀ ∃), or if the
+    field name suggests a constraint (_pos, _nonneg, _condition, etc.)
+    AND the type doesn't look like a plain data type (ℝ, ℕ, Matrix, etc.).
+    """
+    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
+    if not lean_dir.exists():
+        return []
+
+    # Patterns that strongly indicate a Prop-valued field type
+    prop_patterns = [' < ', ' > ', ' ≤ ', ' ≥ ', ' ≠ ']
+    # Equality is prop only if not defining a function
+    eq_pattern = ' = '
+
+    # Field names that suggest constraints
+    constraint_name_suffixes = (
+        '_pos', '_nonneg', '_nonpos', '_neg', '_condition', '_decomp',
+        '_eq', '_bound', '_constraint', '_valid', '_compat', '_smooth',
+    )
+
+    # Types that indicate data, not propositions
+    data_type_indicators = ['ℝ', 'ℕ', 'ℤ', 'ℂ', 'Bool', 'Fin', 'Matrix', 'List', 'Array']
+
+    results = []
+    for lean_file in sorted(lean_dir.glob("*.lean")):
+        module = lean_file.stem
+        lines = lean_file.read_text().splitlines()
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            if line.startswith("structure ") and "where" in line:
+                struct_name = line.split()[1].split("(")[0].split("{")[0].strip()
+                prop_fields = []
+                j = i + 1
+                while j < len(lines):
+                    raw_line = lines[j]
+                    field_line = raw_line.strip()
+                    # Skip empty, comments, doc comments
+                    if not field_line or field_line.startswith("--") or field_line.startswith("/-"):
+                        j += 1
+                        continue
+                    # End of structure: non-indented line or another definition
+                    if raw_line and not raw_line[0].isspace():
+                        break
+                    # Must have a colon to be a field
+                    if ':' in field_line and not field_line.startswith("/"):
+                        field_name_part = field_line.split(':')[0].strip()
+                        field_type_part = ':'.join(field_line.split(':')[1:]).strip()
+
+                        is_prop = False
+                        # Strong prop indicators: comparison operators
+                        if any(p in field_type_part for p in prop_patterns):
+                            is_prop = True
+                        # Equality check (but not if type is just "Type = ...")
+                        elif eq_pattern in field_type_part:
+                            # Prop equality: things like "a = b" where a,b aren't types
+                            if not any(dt in field_type_part.split('=')[0] for dt in data_type_indicators):
+                                is_prop = True
+                        # Constraint name pattern with non-data type
+                        elif any(field_name_part.endswith(s) for s in constraint_name_suffixes):
+                            if not any(dt in field_type_part for dt in data_type_indicators):
+                                is_prop = True
+
+                        if is_prop:
+                            # Clean up: remove doc comment artifacts
+                            clean_field = field_line
+                            if clean_field.startswith('/--'):
+                                clean_field = clean_field.split('-/')[-1].strip() if '-/' in clean_field else clean_field
+                            prop_fields.append(clean_field)
+                    j += 1
+                if prop_fields:
+                    results.append({
+                        'name': struct_name,
+                        'module': module,
+                        'fields': prop_fields,
+                    })
+                i = j
+            else:
+                i += 1
+
+    return results
+
+
 def load_citations():
     """Load citation registry data."""
     from src.core.citations import CITATION_REGISTRY
@@ -488,8 +742,24 @@ def index():
     citations = load_citations()
     summary = compute_summary(params, formulas, theorems)
 
-    # Apply filters from query params
+    # Load proof architecture data for the lean/proof-arch tab
+    proof_arch = None
     tab = request.args.get('tab', 'parameters')
+    if tab == 'lean':
+        try:
+            proof_arch = load_proof_architecture()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            proof_arch = {
+                'kind_counts': {},
+                'total_declarations': 0,
+                'module_count': 0,
+                'sorted_modules': [],
+                'axiom_cards': [],
+                'struct_fields': [],
+                'error': str(e),
+            }
     status_filter = request.args.get('status', 'all')
     tier_filter = request.args.get('tier', 'all')
     paper_filter = request.args.get('paper', 'all')
@@ -521,6 +791,7 @@ def index():
                            papers=papers,
                            citations=citations,
                            summary=summary,
+                           proof_arch=proof_arch,
                            tab=tab,
                            status_filter=status_filter,
                            tier_filter=tier_filter,

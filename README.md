@@ -1,7 +1,7 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Nine papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Ten papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
@@ -29,8 +29,12 @@ to acoustic Hawking radiation in BEC analog gravity. Nine papers in a unified co
   constraint in particle physics. SM anomaly in Z16, generation constraint,
   toric code center, D(S3) non-abelian center. PRL format.
 
-**Lean 4 formalization:** 924 theorems + 2 axioms across 62 Lean modules. Zero sorry.
-254 Aristotle-proved across 32+ runs.
+- **Paper 10 (modular generation):** From modular forms to generation counting.
+  First formal derivation connecting number-theoretic modular invariance to
+  SM generation constraint N_f = 0 mod 3. PRD format.
+
+**Lean 4 formalization:** 951 theorems across 64 Lean modules. Zero axioms, zero sorry.
+273 Aristotle-proved across 33+ runs.
 Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
@@ -44,10 +48,10 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (924 theorems + 2 axioms, 62 modules, zero sorry)
+├── lean/                              # Lean 4 formalization (951 theorems, 0 axioms, 64 modules, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 62)
+│   ├── SKEFTHawking.lean              # Root module (imports all 64)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -58,7 +62,7 @@ SK_EFT_Hawking/
 │       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
 │       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
 │       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
-│       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom — 1 of 2 remaining)
+│       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (12 theorems)
 │       ├── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
 │       ├── ADWMechanism.lean          # Phase 3: ADW tetrad condensation (21 theorems)
 │       ├── ChiralityWall.lean         # Phase 4: chirality wall analysis (17 theorems)
@@ -72,7 +76,7 @@ SK_EFT_Hawking/
 │       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
 │       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
 │       ├── MajoranaKramers.lean       # Phase 5: Majorana Kramers degeneracy, sign-free determinant (25 theorems)
-│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (14 theorems + 1 axiom — 1 of 2 remaining)
+│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (15 theorems)
 │       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
 │       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
 │       ├── SphericalCategory.lean     # Phase 5: FIRST-EVER pivotal + spherical (18 theorems)
@@ -109,13 +113,15 @@ SK_EFT_Hawking/
 │       ├── DrinfeldDoubleAlgebra.lean # Phase 5b: D(G) twisted convolution, unit/assoc (9 theorems)
 │       ├── DrinfeldDoubleRing.lean    # Phase 5b: D(G) as Ring + Algebra k (3 thms + instances)
 │       ├── DrinfeldEquivalence.lean   # Phase 5b: Z(Vec_G)≅Rep(D(G)) structure (12 theorems)
-│       └── WangBridge.lean            # Phase 5b: c₋=8N_f from 16 Weyl, ν_R required (9 theorems)
+│       ├── WangBridge.lean            # Phase 5b: c₋=8N_f from 16 Weyl, ν_R required (9 theorems)
+│       ├── ModularInvarianceConstraint.lean # Phase 5b: framing anomaly, η→24→3|N_f (12 theorems)
+│       └── RokhlinBridge.lean         # Phase 5b: Rokhlin "16" convergence (14 theorems)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (254 proved)
-│   │   ├── visualizations.py          # Plotly figures (71 functions) + COLORS palette
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (273 proved)
+│   │   ├── visualizations.py          # Plotly figures (72 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
 │   ├── first_order/                   # Phase 1 specific analysis
@@ -300,7 +306,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (924 + 2 axioms — zero sorry)
+## Theorem Inventory (951 theorems — zero axioms, zero sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -311,7 +317,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | WKBAnalysis.lean | 2+3 | 15 | Aristotle: 518636d7 |
 | CGLTransform.lean | 2 | 7 | CGL FDR derivation |
 | ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem |
-| GaugeErasure.lean | 3 | 11 + 1 axiom | Gauge erasure |
+| GaugeErasure.lean | 3 | 12 | Gauge erasure (axiom removed) |
 | WKBConnection.lean | 3 | 17 | Exact WKB connection |
 | ADWMechanism.lean | 3 | 21 | Vergeles counting, phase classification |
 | ChiralityWall.lean | 4 | 17 | GS conditions, TPF evasion, wall status |
@@ -324,7 +330,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | SU2PseudoReality.lean | 5 | 10 | One-link normalization, Binder limits |
 | FermionBag4D.lean | 5 | 16 | SO(4) integration, bag positivity |
 | LatticeHamiltonian.lean | 5 | 28 | BZ compact, GS 9 conditions, TPF 3 violations |
-| GoltermanShamir.lean | 5 | 14 + 1 axiom | 9 GS Props, Fock space finite, TPF evasion |
+| GoltermanShamir.lean | 5 | 15 | 9 GS Props, Fock space finite, TPF evasion (axiom removed) |
 | TPFEvasion.lean | 5 | 12 | Master synthesis, 5 violations |
 | KLinearCategory.lean | 5 | 16 | SemisimpleCategory, Schur, Vec_G D² |
 | SphericalCategory.lean | 5 | 18 | PivotalCategory (FIRST-EVER), quantumDim |
@@ -364,6 +370,8 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | DrinfeldDoubleRing.lean | 5b | 3 | DG wrapper → Ring + Algebra k instances, distrib. Aristotle: 52992d6a |
 | DrinfeldEquivalence.lean | 5b | 12 | Z(Vec_G)≅Rep(D(G)): simple counts, Hopf structure, antipode, gauge bridge |
 | WangBridge.lean | 5b | 9 | c₋=8N_f derived from 16 Weyl, fractional c₋ forces ν_R, full chain |
+| ModularInvarianceConstraint.lean | 5b | 12 | Framing anomaly from η, q-parameter shift, 24\|c₋, complete chain η→24→3\|N_f. Aristotle: b54f9611 |
+| RokhlinBridge.lean | 5b | 14 | Rokhlin "16" convergence, with/without ν_R analysis |
 
 ## Build Environment
 

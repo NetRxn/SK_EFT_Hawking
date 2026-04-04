@@ -26,10 +26,13 @@ import hashlib
 import importlib
 import importlib.util
 import json
+import logging
 import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 # Path setup
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -37,6 +40,34 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
+
+# Shape map for all 13 node types
+SHAPE_MAP: dict[str, str] = {
+    'Paper': 'square',
+    'PaperClaim': 'circle',
+    'Formula': 'circle',
+    'Parameter': 'diamond',
+    'PrimarySource': 'triangle',
+    'Figure': 'circle',
+    'AristotleRun': 'circle',
+    'LeanAxiom': 'diamond',
+    'LeanTheorem': 'circle',
+    'LeanDef': 'circle',
+    'LeanStructure': 'square',
+    'LeanInductive': 'square',
+    'LeanInstance': 'circle',
+}
+
+LEAN_KIND_TO_TYPE: dict[str, str] = {
+    'axiom': 'LeanAxiom',
+    'theorem': 'LeanTheorem',
+    'def': 'LeanDef',
+    'structure': 'LeanStructure',
+    'class': 'LeanStructure',
+    'inductive': 'LeanInductive',
+    'instance': 'LeanInstance',
+    'opaque': 'LeanDef',
+}
 
 # Platform -> Atom mapping for USED_BY / DEPENDS_ON edges
 PLATFORM_ATOM_MAP = {
@@ -248,66 +279,92 @@ def extract_formula_nodes() -> list[dict]:
     return nodes
 
 
-def extract_lean_theorem_nodes() -> list[dict]:
-    """Extract theorem/axiom nodes from Lean files."""
-    from src.core.constants import ARISTOTLE_THEOREMS
+def extract_lean_declaration_nodes() -> list[dict]:
+    """Extract typed declaration nodes from lean_deps.json.
+
+    Produces LeanAxiom, LeanTheorem, LeanDef, LeanStructure, LeanInductive,
+    and LeanInstance nodes with shape metadata and dependency info.
+    """
+    from scripts.extract_lean_deps import load_lean_deps
+    from src.core.constants import ARISTOTLE_THEOREMS, AXIOM_METADATA
+
+    declarations = load_lean_deps()
 
     nodes = []
-    seen_names = set()
+    seen_ids = set()
 
-    if not LEAN_DIR.is_dir():
-        return nodes
+    for decl in declarations:
+        kind = decl.get('kind', '')
+        node_type = LEAN_KIND_TO_TYPE.get(kind)
+        if node_type is None:
+            continue
 
-    for lean_file in sorted(LEAN_DIR.glob("*.lean")):
-        module_name = lean_file.stem
-        text = lean_file.read_text()
+        full_name = decl.get('name', '')
+        # Short name: last component after last '.'
+        short_name = full_name.rsplit('.', 1)[-1] if '.' in full_name else full_name
 
-        for line_num, line in enumerate(text.splitlines(), start=1):
-            stripped = line.strip()
-            is_theorem = stripped.startswith('theorem ')
-            is_axiom = stripped.startswith('axiom ')
+        node_id = f'lean:{short_name}'
+        if node_id in seen_ids:
+            continue
+        seen_ids.add(node_id)
 
-            if not (is_theorem or is_axiom):
-                continue
+        # Module name: strip "SKEFTHawking." prefix, take first component
+        raw_module = decl.get('module', '')
+        module_stripped = raw_module[len('SKEFTHawking.'):] if raw_module.startswith('SKEFTHawking.') else raw_module
+        module_name = module_stripped.split('.')[0] if module_stripped else raw_module
 
-            # Extract name: second token, split on ( or :
-            kind_keyword = 'theorem' if is_theorem else 'axiom'
-            rest = stripped[len(kind_keyword):].strip()
-            # Name ends at first ( or : or whitespace
-            name_match = re.match(r'([a-zA-Z_][a-zA-Z0-9_]*)', rest)
-            if not name_match:
-                continue
-            name = name_match.group(1)
+        # Determine method
+        if kind == 'axiom':
+            method = 'axiom'
+        elif short_name in ARISTOTLE_THEOREMS:
+            run_id = ARISTOTLE_THEOREMS[short_name]
+            method = 'manual' if run_id == 'manual' else 'aristotle'
+        else:
+            method = 'manual'
 
-            if name in seen_names:
-                continue
-            seen_names.add(name)
+        # Axiom eliminability (axioms only)
+        ax_meta = AXIOM_METADATA.get(short_name, {}) if kind == 'axiom' else {}
+        eliminability = ax_meta.get('eliminability')
+        eliminability_reason = ax_meta.get('reason')
 
-            # Determine method
-            if is_axiom:
-                method = 'axiom'
-            elif name in ARISTOTLE_THEOREMS:
-                run_id = ARISTOTLE_THEOREMS[name]
-                method = 'manual' if run_id == 'manual' else 'aristotle'
-            else:
-                method = 'manual'
+        # Dependency short names
+        axiom_deps_project_short = [
+            n.rsplit('.', 1)[-1] if '.' in n else n
+            for n in decl.get('axiom_deps_project', [])
+        ]
+        axiom_deps_core_short = [
+            n.rsplit('.', 1)[-1] if '.' in n else n
+            for n in decl.get('axiom_deps_core', [])
+        ]
 
-            nodes.append({
-                'id': f'lean:{name}',
-                'type': 'LeanTheorem',
-                'label': name,
-                'name': name,
-                'verification': 'verified',
-                'detail': f'{module_name}.lean:{line_num}',
-                'meta': {
-                    'module': module_name,
-                    'kind': 'axiom' if is_axiom else 'theorem',
-                    'method': method,
-                    'aristotle_run_id': ARISTOTLE_THEOREMS.get(name),
-                },
-            })
+        nodes.append({
+            'id': node_id,
+            'type': node_type,
+            'label': short_name,
+            'name': short_name,
+            'verification': 'verified',
+            'detail': f'{module_name}.lean',
+            'meta': {
+                'module': module_name,
+                'kind': kind,
+                'method': method,
+                'aristotle_run_id': ARISTOTLE_THEOREMS.get(short_name),
+                'shape': SHAPE_MAP.get(node_type, 'circle'),
+                'lean_kind': kind,
+                'axiom_deps_project': axiom_deps_project_short,
+                'axiom_deps_core': axiom_deps_core_short,
+                'eliminability': eliminability,
+                'eliminability_reason': eliminability_reason,
+                'field_constraints': decl.get('structure_fields', []),
+                'type_signature': decl.get('type', ''),
+            },
+        })
 
     return nodes
+
+
+# Backward compatibility alias for tests/code that imports the old name
+extract_lean_theorem_nodes = extract_lean_declaration_nodes
 
 
 def extract_aristotle_run_nodes() -> list[dict]:
@@ -465,16 +522,22 @@ def extract_figure_nodes() -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def extract_all_nodes() -> list[dict]:
-    """Extract all nodes from all 8 extractors."""
+    """Extract all nodes from all extractors."""
     nodes = []
     nodes.extend(extract_parameter_nodes())
     nodes.extend(extract_formula_nodes())
-    nodes.extend(extract_lean_theorem_nodes())
+    nodes.extend(extract_lean_declaration_nodes())
     nodes.extend(extract_aristotle_run_nodes())
     nodes.extend(extract_primary_source_nodes())
     nodes.extend(extract_paper_nodes())
     nodes.extend(extract_paper_claim_nodes())
     nodes.extend(extract_figure_nodes())
+
+    # Add shape metadata to all node types that don't already have it
+    for node in nodes:
+        if 'shape' not in node.get('meta', {}):
+            node.setdefault('meta', {})['shape'] = SHAPE_MAP.get(node['type'], 'circle')
+
     return nodes
 
 
@@ -805,6 +868,37 @@ def extract_has_figure_edges(node_ids: set) -> list[dict]:
     return edges
 
 
+def extract_depends_on_axiom_edges(node_ids: set) -> list[dict]:
+    """DEPENDS_ON_AXIOM: LeanTheorem/LeanDef/etc. -> LeanAxiom."""
+    lean_nodes = extract_lean_declaration_nodes()
+
+    edges = []
+    seen = set()
+
+    for node in lean_nodes:
+        src_id = node['id']
+        if src_id not in node_ids:
+            continue
+        short_name = node['name']
+        for axiom_short in node.get('meta', {}).get('axiom_deps_project', []):
+            target_id = f'lean:{axiom_short}'
+            if target_id not in node_ids:
+                continue
+            # Skip self-edges
+            if src_id == target_id:
+                continue
+            edge_key = (src_id, target_id)
+            if edge_key not in seen:
+                seen.add(edge_key)
+                edges.append({
+                    'source': src_id,
+                    'target': target_id,
+                    'type': 'DEPENDS_ON_AXIOM',
+                })
+
+    return edges
+
+
 def extract_imports_edges(node_ids: set) -> list[dict]:
     """IMPORTS: Formula -> Formula (if one formula calls another, limited in Phase 1)."""
     # Phase 1: detect direct calls from formulas.py source
@@ -862,7 +956,7 @@ def extract_imports_edges(node_ids: set) -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def extract_all_edges(node_ids: set) -> list[dict]:
-    """Extract all edges from all 10 edge extractors, deduplicated."""
+    """Extract all edges from all edge extractors, deduplicated."""
     edges = []
     edges.extend(extract_claims_edges(node_ids))
     edges.extend(extract_grounded_in_edges(node_ids))
@@ -874,6 +968,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_cites_edges(node_ids))
     edges.extend(extract_has_figure_edges(node_ids))
     edges.extend(extract_imports_edges(node_ids))
+    edges.extend(extract_depends_on_axiom_edges(node_ids))
 
     # Final deduplication (belt-and-suspenders)
     deduped = []
@@ -888,6 +983,154 @@ def extract_all_edges(node_ids: set) -> list[dict]:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# PG+AGE parallel write
+# ═══════════════════════════════════════════════════════════════════════
+
+def _cypher_escape(s) -> str:
+    """Escape a string for use in AGE Cypher property values."""
+    if s is None:
+        return ''
+    return str(s).replace("\\", "\\\\").replace("'", "\\'")
+
+
+def _create_age_labels(conn, node_types: set, edge_types: set) -> None:
+    """Create AGE vertex and edge labels using autocommit to avoid transaction pollution.
+
+    Each CREATE label is its own statement; errors (label already exists) are
+    ignored individually without affecting the surrounding transaction.
+    """
+    # Use autocommit so each label creation is its own transaction
+    old_autocommit = conn.autocommit
+    conn.autocommit = True
+    try:
+        with conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+            for ntype in sorted(node_types):
+                try:
+                    cur.execute(
+                        f"SELECT create_vlabel('sk_eft', '{_cypher_escape(ntype)}')"
+                    )
+                except Exception:
+                    pass  # Label already exists
+            for etype in sorted(edge_types):
+                try:
+                    cur.execute(
+                        f"SELECT create_elabel('sk_eft', '{_cypher_escape(etype)}')"
+                    )
+                except Exception:
+                    pass  # Label already exists
+    finally:
+        conn.autocommit = old_autocommit
+
+
+def write_graph_to_pg(graph: dict) -> None:
+    """Write all nodes and edges to PostgreSQL + Apache AGE (best-effort).
+
+    If psycopg is unavailable or the connection fails, logs a warning and
+    returns — never raises.  JSON extraction is unaffected by PG failures.
+
+    Connection: host=localhost port=5433 dbname=sk_eft_provenance
+                user=sk_eft password=sk_eft_local  graph=sk_eft
+    """
+    # --- 1. Import psycopg ---
+    try:
+        import psycopg  # type: ignore
+    except ImportError:
+        logger.warning("psycopg not available — skipping PG+AGE write")
+        return
+
+    # --- 2. Connect ---
+    try:
+        conn = psycopg.connect(
+            "host=localhost port=5433 dbname=sk_eft_provenance "
+            "user=sk_eft password=sk_eft_local"
+        )
+    except Exception as exc:
+        logger.warning("PG+AGE connection failed: %s — skipping write", exc)
+        return
+
+    try:
+        # --- 4 & 5. Create vertex/edge labels (idempotent, autocommit each) ---
+        node_types = {n['type'] for n in graph['nodes']}
+        edge_types = {e['type'] for e in graph['links']}
+        _create_age_labels(conn, node_types, edge_types)
+
+        # --- 3, 6, 7, 8. Clear + insert all in one transaction ---
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("LOAD 'age'")
+                cur.execute("SET search_path = ag_catalog, '$user', public")
+
+                # --- 3. Clear existing data ---
+                cur.execute("""
+                    SELECT * FROM cypher('sk_eft', $$
+                        MATCH (n) DETACH DELETE n
+                    $$) AS (a agtype)
+                """)
+
+                # --- 6. Insert all nodes ---
+                for node in graph['nodes']:
+                    ntype = _cypher_escape(node['type'])
+                    nid = _cypher_escape(node['id'])
+                    name = _cypher_escape(node.get('name', ''))
+                    label = _cypher_escape(node.get('label', ''))
+                    verification = _cypher_escape(node.get('verification', ''))
+                    detail = _cypher_escape(node.get('detail', ''))
+                    shape = _cypher_escape(node.get('meta', {}).get('shape', ''))
+                    meta_str = _cypher_escape(json.dumps(node.get('meta', {}), default=str))
+
+                    cur.execute(f"""
+                        SELECT * FROM cypher('sk_eft', $$
+                            CREATE (:{ntype} {{
+                                id: '{nid}',
+                                name: '{name}',
+                                label: '{label}',
+                                verification: '{verification}',
+                                detail: '{detail}',
+                                shape: '{shape}',
+                                meta: '{meta_str}'
+                            }})
+                        $$) AS (a agtype)
+                    """)
+
+                # --- 7. Insert all edges ---
+                for edge in graph['links']:
+                    etype = _cypher_escape(edge['type'])
+                    src = _cypher_escape(edge['source'])
+                    tgt = _cypher_escape(edge['target'])
+
+                    cur.execute(f"""
+                        SELECT * FROM cypher('sk_eft', $$
+                            MATCH (a {{id: '{src}'}}), (b {{id: '{tgt}'}})
+                            CREATE (a)-[:{etype}]->(b)
+                        $$) AS (a agtype)
+                    """)
+
+        # --- 8. Commit (handled by `with conn:` context manager above) ---
+        node_count = len(graph['nodes'])
+        edge_count = len(graph['links'])
+        logger.info(
+            "PG+AGE write complete: %d nodes, %d edges",
+            node_count,
+            edge_count,
+        )
+
+    except Exception as exc:
+        # --- 9. Rollback on failure ---
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        logger.warning("PG+AGE write failed: %s — graph JSON unaffected", exc)
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Full graph builder
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -897,7 +1140,7 @@ def build_graph_json() -> dict:
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
 
-    return {
+    graph = {
         'nodes': nodes,
         'links': edges,
         'meta': {
@@ -907,6 +1150,13 @@ def build_graph_json() -> dict:
             'edge_count': len(edges),
         },
     }
+
+    try:
+        write_graph_to_pg(graph)
+    except Exception as exc:
+        logger.warning("PG+AGE write failed: %s", exc)
+
+    return graph
 
 
 # ═══════════════════════════════════════════════════════════════════════

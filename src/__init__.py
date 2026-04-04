@@ -41,8 +41,8 @@ A unified project encompassing:
       [H,Q_A]=0 central theorem, non-on-site classification, Weyl doublet
       Onsager→SU(2) emanant symmetry, Witten anomaly connection.
 
-Lean 4 formalization: 924 theorems + 2 axioms, 62 modules. Zero sorry.
-Aristotle automated theorem prover: 254 theorems proved across 32+ runs.
+Lean 4 formalization: 951 theorems, 0 axioms, 64 modules. Zero sorry.
+Aristotle automated theorem prover: 273 theorems proved across 33+ runs.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

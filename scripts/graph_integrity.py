@@ -140,6 +140,44 @@ def run_integrity_checks() -> dict:
                 'tier': tier,
             })
 
+    # --- 6. Axiom integrity checks ---
+    from src.core.constants import AXIOM_METADATA
+    axiom_nodes = [n for n in nodes if n['type'] == 'LeanAxiom']
+    unclassified_axioms = [
+        n for n in axiom_nodes
+        if n['meta'].get('eliminability') in (None, 'unknown')
+    ]
+    unclassified_axiom_ids = [n['name'] for n in unclassified_axioms]
+
+    # --- 7. DEPENDS_ON_AXIOM edge stats ---
+    depends_on_axiom_edges = [e for e in edges if e['type'] == 'DEPENDS_ON_AXIOM']
+    theorems_with_axiom_deps = {e['source'] for e in depends_on_axiom_edges}
+
+    # --- 8. PG+AGE sync check (best-effort) ---
+    pg_sync_status = 'unavailable'
+    pg_vertex_count = None
+    try:
+        import psycopg
+        conn = psycopg.connect(
+            "host=localhost port=5433 dbname=sk_eft_provenance "
+            "user=sk_eft password=sk_eft_local"
+        )
+        with conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+            cur.execute("""
+                SELECT * FROM cypher('sk_eft', $$
+                    MATCH (n) RETURN count(n)
+                $$) AS (cnt agtype)
+            """)
+            row = cur.fetchone()
+            if row:
+                pg_vertex_count = int(str(row[0]))
+                pg_sync_status = 'ok' if pg_vertex_count == len(nodes) else 'divergent'
+        conn.close()
+    except Exception:
+        pg_sync_status = 'unavailable'
+
     # --- Summary ---
     total_issues = (
         len(orphan_nodes) + len(conflicts) + len(ungrounded_claims)
@@ -152,6 +190,7 @@ def run_integrity_checks() -> dict:
         'ungrounded_claims': ungrounded_claims,
         'broken_chains': broken_chains,
         'missing_provenance': missing_provenance,
+        'unclassified_axioms': unclassified_axiom_ids,
         'summary': {
             'total_nodes': len(nodes),
             'total_edges': len(edges),
@@ -161,6 +200,12 @@ def run_integrity_checks() -> dict:
             'ungrounded': len(ungrounded_claims),
             'broken_chains': len(broken_chains),
             'missing_provenance': len(missing_provenance),
+            'unclassified_axioms': len(unclassified_axioms),
+            'total_axioms': len(axiom_nodes),
+            'depends_on_axiom_edges': len(depends_on_axiom_edges),
+            'theorems_with_axiom_deps': len(theorems_with_axiom_deps),
+            'pg_vertex_count': pg_vertex_count,
+            'pg_sync': pg_sync_status,
         },
     }
 
@@ -206,6 +251,27 @@ def print_report(report: dict) -> None:
         for m in report['missing_provenance']:
             print(f"    {m['id']}  tier={m['tier']}")
         print()
+
+    # Axiom integrity report
+    print(f"  AXIOM INTEGRITY:")
+    print(f"    Total axioms: {s['total_axioms']}")
+    print(f"    Unclassified axioms: {s['unclassified_axioms']}")
+    if report['unclassified_axioms']:
+        for axiom_id in report['unclassified_axioms']:
+            print(f"      {axiom_id}")
+    print()
+
+    # Axiom dependency edges
+    print(f"  AXIOM DEPENDENCIES:")
+    print(f"    DEPENDS_ON_AXIOM edges: {s['depends_on_axiom_edges']}")
+    print(f"    Theorems with axiom deps: {s['theorems_with_axiom_deps']}")
+    print()
+
+    # PG+AGE sync status
+    print(f"  DATABASE SYNC:")
+    print(f"    PG vertex count: {s['pg_vertex_count'] if s['pg_vertex_count'] is not None else 'unknown'}")
+    print(f"    PG sync status: {s['pg_sync']}")
+    print()
 
     if s['total_issues'] == 0:
         print("  All clear — no integrity issues found.")

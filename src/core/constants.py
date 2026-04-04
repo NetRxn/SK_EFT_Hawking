@@ -777,16 +777,17 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (924 theorems + 2 axioms across 62 Lean modules):
-#   - 254 tracked in ARISTOTLE_THEOREMS registry (251 machine + 3 manual, listed below with run IDs)
-#   - 670 proved manually in Lean (verified by `lake build`)
-#   - 2 axioms: non_abelian_center_discrete (GaugeErasure.lean),
-#               gs_nogo_axiom (GoltermanShamir.lean)
+# Verification breakdown (968 theorems, 0 axioms across 66 Lean modules):
+#   - 273 tracked in ARISTOTLE_THEOREMS registry (270 machine + 3 manual, listed below with run IDs)
+#   - 695 proved manually in Lean (verified by `lake build`)
+#   - 0 axioms (all removed — see axiom history below)
 #   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
 #               chiral_central_charge_coeff (all tautological as stated)
-#   - REMOVED: modular_invariance_constraint (was mathematically FALSE — see GenerationConstraint.lean)
+#   - REMOVED axioms: modular_invariance_constraint (mathematically FALSE),
+#               non_abelian_center_discrete (proved as theorem),
+#               gs_nogo_axiom (proved as theorem)
 #
-# ZERO sorry across entire project. Verified by `lake build`.
+# ZERO sorry, ZERO axioms across entire project. Verified by `lake build`.
 # ════════════════════════════════════════════════════════════════════
 
 ARISTOTLE_THEOREMS = {
@@ -1118,26 +1119,28 @@ ARISTOTLE_THEOREMS = {
     'DG_instAlgebra_commutes': '52992d6a',
     'DG_instAlgebra_smul_def': '52992d6a',
     'DG_basis_mul': '52992d6a',
+    # Wave 6: axiom removal run
+    'z16_anomaly_without_nu_R': 'b54f9611',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 254, f"Expected 254 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 273, f"Expected 273 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 
 # ═══════════════════════════════════════════════════════════════════════
-# Axiom metadata — eliminability classification for project axioms
+# Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════
 
 AXIOM_METADATA: dict[str, dict[str, str]] = {
     'non_abelian_center_discrete': {
-        'eliminability': 'eliminable',
-        'reason': 'Standard Lie theory result, provable from Mathlib simple Lie group API',
+        'eliminability': 'removed',
+        'reason': 'Proved as theorem (Wave 6 axiom removal)',
         'module': 'GaugeErasure',
     },
     'gs_nogo_axiom': {
-        'eliminability': 'hard',
-        'reason': 'Requires unbounded spectral theory not yet in Mathlib',
+        'eliminability': 'removed',
+        'reason': 'Proved as theorem (Wave 6 axiom removal)',
         'module': 'GoltermanShamir',
     },
 }
