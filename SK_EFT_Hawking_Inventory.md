@@ -2,13 +2,13 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Seven papers (Phases 1-5) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, and Waves 7A-7C (gauge-link MC + RHMC). Lean 4 formalization: 588 theorems + 2 axioms across 38 modules — ALL PROVED, ZERO sorry. 233 Aristotle-proved. 1245 tests, 64 pipeline figures, 20 notebooks, 47 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Nine papers (Phases 1-5b) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, and Waves 7A-7C (gauge-link MC + RHMC). Lean 4 formalization: 900 theorems + 2 axioms across 58 modules — ZERO sorry. 254 Aristotle-proved (251 machine + 3 manual). 1456 tests, 72 pipeline figures, 24 notebooks, 49 Python source modules.
 
-**Last verified:** April 3, 2026 (full sync — W7C RHMC complete, L=4 done, L=8 in flight)
+**Last verified:** April 4, 2026 (axiom integrity sweep — 4 axioms discharged/removed, W7C RHMC complete, L=4 done, L=8 in flight)
 
 ---
 
-## 1. PYTHON SOURCE FILES (47 modules + 11 __init__.py)
+## 1. PYTHON SOURCE FILES (49 modules + 11 __init__.py)
 
 ### 1.1 Core Module: `src/core/`
 
@@ -19,7 +19,7 @@
 - `HBAR`, `K_B` — SI physical constants
 - `ATOMS` dict — Atomic properties (mass, scattering length) for Rb87, K39, Na23
 - `EXPERIMENTS` dict — Experimental parameters (density, velocity, omega_perp) for Steinhauer, Heidelberg, Trento
-- `ARISTOTLE_THEOREMS` dict — 99 theorem→run_id mappings across 27 runs
+- `ARISTOTLE_THEOREMS` dict — 254 theorem→run_id mappings across 32+ runs
 - `ARISTOTLE_PROVED_COUNT = 99`
 - `COLORS` dict — Plotly color palette for consistent visualization
 - `CATEGORY_HIERARCHY` — 3-layer categorical infrastructure
@@ -103,11 +103,11 @@
 ---
 
 #### `src/core/aristotle_interface.py` (~1200 lines)
-**Purpose:** Interface to Aristotle automated theorem prover. Registry of 99 sorry gaps (all filled).
+**Purpose:** Interface to Aristotle automated theorem prover. Registry of sorry gaps (all filled).
 
 **Key Types:** `SorryGap` (dataclass), `AristotleResult` (dataclass), `AristotleRunner` (class)
 
-**Sorry Gap Registry (233 Aristotle-proved, all gaps filled):**
+**Sorry Gap Registry (254 registry entries, all gaps filled):**
 - Phase 1: 14 gaps (AcousticMetric, SKDoubling, HawkingUniversality)
 - Phase 2: 9 gaps (SecondOrderSK, WKBAnalysis)
 - Phase 2 Stress Tests: 9 gaps (KMS optimality, FDR sign tests, limit checks)
@@ -267,7 +267,7 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (38 modules, 588 theorems + 2 axioms)
+## 2. LEAN FORMAL VERIFICATION (58 modules, 900 theorems + 2 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -318,7 +318,7 @@
 
 ---
 
-## 3. ARISTOTLE THEOREM PROVER (233 proved across 30+ runs)
+## 3. ARISTOTLE THEOREM PROVER (254 registry entries across 32+ runs)
 
 | Run ID | Date | Theorems | Scope |
 |--------|------|----------|-------|
@@ -358,7 +358,7 @@
 
 ---
 
-## 4. JUPYTER NOTEBOOKS (20 total: 10 Technical + 10 Stakeholder)
+## 4. JUPYTER NOTEBOOKS (24 total: 12 Technical + 12 Stakeholder)
 
 | Notebook | Phase | Topic |
 |----------|-------|-------|
@@ -387,7 +387,7 @@
 
 ---
 
-## 5. PAPER DRAFTS (7 papers + prediction tables)
+## 5. PAPER DRAFTS (9 papers + prediction tables)
 
 | Paper | Format | Lines | Topic |
 |-------|--------|-------|-------|
@@ -410,7 +410,7 @@
 
 ---
 
-## 6. TEST FILES (19 files, 1245 tests)
+## 6. TEST FILES (29 files, 1456 tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
@@ -573,22 +573,22 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| **Python Source Modules** | 47 | Complete (Phases 1-5, Waves 1-7C) |
+| **Python Source Modules** | 49 | Complete (Phases 1-5b) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 19 | 1245 tests, all passing |
-| **Notebooks** | 20 | Phases 1-5 (Technical + Stakeholder) |
-| **Lean Modules** | 38 | All build clean (zero sorry) |
-| **Lean Theorems** | 588 + 2 axioms | Zero sorry |
-| **Aristotle-proved** | 233 | 30+ runs |
-| **Manual proofs** | 355 | |
-| **Paper Drafts** | 7 + prediction tables | Full LaTeX |
-| **Pipeline Figures** | 64 | All PNGs generated |
-| **Validation Checks** | 15 | All 15 passing |
+| **Test Files** | 29 | 1456 tests, all passing |
+| **Notebooks** | 24 | Phases 1-5b (Technical + Stakeholder) |
+| **Lean Modules** | 58 | All build clean |
+| **Lean Theorems** | 900 + 2 axioms | Zero sorry |
+| **Aristotle-proved** | 254 (251 machine + 3 manual in registry) | 32+ runs |
+| **Manual proofs** | 646 | |
+| **Paper Drafts** | 9 + prediction tables | Full LaTeX |
+| **Pipeline Figures** | 72 | All PNGs generated |
+| **Validation Checks** | 16 | All passing |
 | **Scripts** | 11 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 4 utilities |
-| **Stakeholder Docs** | 12 | Phases 1-5 |
+| **Stakeholder Docs** | 12 | Phases 1-5b |
 | **Analysis Docs** | 3 | Vestigial, fracton, chirality |
-| **Roadmaps** | 5 | Phases 1-5 |
+| **Roadmaps** | 7 | Phases 1-5b + Phase 6 deferred |
 
 ---
 
-**Project Status (2026-04-03):** Phase 5 Waves 1-5, 9A-9E, Wave 6 (Stages 1-9), Wave 7A-7C COMPLETE. L=4 RHMC production COMPLETE. L=8 RHMC IN FLIGHT (~3d). Wave 8 (4D ATRG) NOT STARTED. 588 theorems + 2 axioms (ZERO sorry), 233 Aristotle-proved, 1245 tests (all pass), 64 figures, 38 Lean modules, 47 Python modules, 7 papers, 20 notebooks.
+**Project Status (2026-04-04):** Phase 5b COMPLETE. 900 theorems + 2 axioms (ZERO sorry), 254 Aristotle-registry entries (251 machine-proved, 3 manual), 1456 tests (all pass), 72 figures, 58 Lean modules, 49 Python modules, 9 papers, 24 notebooks. Phase 5b: SM anomaly in Z16, generation constraint, Drinfeld center (monoidal Vec_G, toric code, S3 non-abelian, CenterEquivalenceZ2). Axiom integrity sweep: 4 axioms discharged/removed (3 tautological, 1 false). L=8 RHMC results pending for Paper 6.

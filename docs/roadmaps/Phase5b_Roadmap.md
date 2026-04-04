@@ -16,7 +16,7 @@
 ## 0. Entry State
 
 **What Phase 5a established (verified 2026-04-04):**
-- 748 theorems + 3 axioms (zero sorry), 252 Aristotle-proved, 49 Lean modules
+- 748 theorems + 3 axioms at Phase 5a exit (now 900 theorems + 2 axioms after axiom sweep), 252 Aristotle-proved, 49→58 Lean modules
 - Three-pillar chirality wall master theorem (GS no-go + GT positive + Z₁₆ anomaly)
 - Z₁₆ classification axiomatized, 16-fold way for super-modular categories
 - GT [H, Q_A] = 0 machine-verified, Onsager algebra formalized
@@ -24,7 +24,7 @@
 
 **What Phase 5b aims to do:**
 Connect the chirality wall formalization to the actual Standard Model by computing
-the SM's anomaly class in ℤ₁₆ from first principles (representation-theoretic data).
+the SM's anomaly class in ℤ₁₆ from representation-theoretic data (conditional on 2 axioms).
 This establishes the first formally verified anomaly constraint in particle physics.
 
 **Research basis:**
@@ -150,22 +150,67 @@ proved in one session. Remaining work is typeclass plumbing.
   - Fusion-grading/character compatibility
   - First computed Drinfeld center example in any proof assistant
 
-- [ ] `lean/SKEFTHawking/S3CenterAnyons.lean` — Concrete Center(Vec_{S₃}):
-  - Compute Center(Vec_{S₃}) explicitly → 8 simple objects (non-abelian anyons)
-  - 3 conjugacy classes × irreps of centralizers: {e}→3, {(12),...}→2, {(123),...}→3
-  - Non-abelian fusion rules (fusion multiplicities > 1)
+- [x] `lean/SKEFTHawking/S3CenterAnyons.lean` — 22 theorems, zero sorry:
+  - 8 non-abelian anyons with quantum dimensions d=1,1,2,3,3,2,2,2
+  - D² = 36 = |S₃|², class equation, centralizer structure
+  - Non-abelian fusion: A3⊗A3 = A1⊕A2⊕A3 (dimension check)
   - First non-abelian Drinfeld center computation in a proof assistant
 
-- [ ] Construct equivalence functor Center(Vec_G) ⥤ Rep(D(G))
+- [ ] `lean/SKEFTHawking/CenterEquivalenceZ2.lean` — Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2):
+  - Explicit bijection between ToricCodeCenter anyons and D(ℤ/2) simples
+  - Fusion preservation, braiding preservation
+  - Concrete verification of the abstract equivalence
 
 ### Estimated LOE:
 - Toric code center: DONE (25 theorems)
-- S₃ center: ~20-30 theorems, this session
-- Functor construction + proof: ~30-50 theorems, 1-2 sessions
+- S₃ center: DONE (22 theorems)
+- Concrete ℤ/2 equivalence: ~15-20 theorems, this session
 
 ---
 
-## 3. Deferred Targets (see Phase6_Deferred_Targets.md)
+## 3. Wave 3 — Abstract Equivalence Functor Center(Vec_G) ⥤ Rep(D(G))
+
+**Goal:** Construct the abstract equivalence functor and prove it is a braided
+monoidal equivalence. Requires making DrinfeldDoubleElement into a Mathlib Algebra
+and constructing ModuleCat over it.
+
+### Deliverables:
+- [ ] D(G) as Mathlib Algebra (Ring + Algebra k instances on DrinfeldDoubleElement)
+- [ ] Rep(D(G)) as ModuleCat over D(G)
+- [ ] Functor: Center(Vec_G) ⥤ Rep(D(G))
+- [ ] Inverse functor + natural isomorphisms (equivalence proof)
+- [ ] Braided monoidal structure preservation
+
+### Estimated LOE:
+- D(G) algebra infrastructure: ~20-30 theorems
+- Functor + equivalence: ~30-50 theorems
+- Total: 1-2 sessions
+
+---
+
+## 4. Axiom Index — Justifications and Discharge Roadmap
+
+The project has **2 axioms** (down from 7 after integrity sweep 2026-04-04).
+
+| # | Axiom | Module | What it assumes | Source | Discharge path |
+|---|-------|--------|----------------|--------|----------------|
+| 1 | `non_abelian_center_discrete` | GaugeErasure | Center of non-abelian group is discrete subgroup | Standard group theory | Provable once Mathlib has center/normalizer API for finite groups |
+| 2 | `gs_nogo_axiom` | GoltermanShamir | GS no-go conditions as stated | Golterman-Shamir 1993 | Could strengthen to derive from lattice Hamiltonian axioms |
+
+**Discharged (converted to theorems — were tautological as Lean statements):**
+- `z16_classification` (Z16Classification): `∃ (φ : ZMod 16 ≃ ZMod 16), Bijective φ` — trivially true, discharged by `⟨Equiv.refl _, Equiv.bijective _⟩`
+- `dai_freed_spin_z4` (Z16AnomalyComputation): same tautological structure as z16_classification
+- `chiral_central_charge_coeff` (GenerationConstraint): `∀ N_f, ∃ c, c = 8*N_f` — trivially true (witness: `8*N_f`)
+- `weyl_anomaly_unit` (Z16AnomalyComputation): `(1 : ZMod 16) ≠ 0` — discharged by `decide`
+
+**REMOVED (mathematically false):**
+- `modular_invariance_constraint` (GenerationConstraint): claimed `∀ c₋, (∃ N_f, c₋ = 8*N_f) → 24 ∣ c₋`. Counterexample: N_f=1, c₋=8, 24 ∤ 8. The physics (modular invariance for consistent theories) is correct but the universal quantification was wrong. The generation_mod3_constraint theorem was already correct — it takes `24 ∣ 8*N_f` as a hypothesis.
+
+**None of the 4 discharged/removed axioms were used in any proof.**
+
+**Risk assessment:** The 2 remaining axioms encode well-established results. Axiom 1 is standard Lie theory. Axiom 2 is the GS no-go theorem (1993, well-cited). Neither is at risk of being wrong.
+
+## 5. Deferred Targets (see Phase6_Deferred_Targets.md)
 
 The following remain deferred:
 - q-Onsager → quantum group → MTC chain (Tier 1, ~60-100 thms)

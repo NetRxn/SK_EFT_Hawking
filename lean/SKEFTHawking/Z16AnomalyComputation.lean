@@ -34,7 +34,10 @@ This is the Dai-Freed theorem applied to the SM's discrete ℤ₄ symmetry:
 Axiomatized because the full proof requires cobordism theory (Adams spectral
 sequence, Thom-Pontryagin construction) — see Phase6_Deferred_Targets.md.
 -/
-axiom dai_freed_spin_z4 : ∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ
+-- DISCHARGED: was axiom, but the statement is tautological (same as z16_classification).
+-- The actual physics content (Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆) requires cobordism theory.
+theorem dai_freed_spin_z4 : ∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ :=
+  ⟨Equiv.refl _, (Equiv.refl _).bijective⟩
 
 /--
 Anomaly contribution axiom: each left-handed Weyl fermion with odd ℤ₄ charge
@@ -43,7 +46,7 @@ contributes ±1 to the anomaly index valued in ℤ₁₆.
 More precisely, odd charge → contribution is +1 (for left-handed);
 even charge → no contribution. All SM fermions have odd charge (sm_z4_all_odd).
 -/
-axiom weyl_anomaly_unit : (1 : ZMod 16) ≠ 0
+theorem weyl_anomaly_unit : (1 : ZMod 16) ≠ 0 := by decide
 
 /-! ## 2. One-Generation Anomaly: With ν_R -/
 

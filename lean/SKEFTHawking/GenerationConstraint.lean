@@ -37,22 +37,26 @@ reduce to c₋ = 8 per generation in the 2D effective theory.
 Axiomatized because: the full derivation requires index theory (Atiyah-Singer)
 on the compactification manifold.
 -/
-axiom chiral_central_charge_coeff :
-    ∀ N_f : ℕ, ∃ c_minus : ℤ, c_minus = 8 * ↑N_f
+-- DISCHARGED: was axiom, but "∀ N_f, ∃ c, c = 8*N_f" is trivially true (witness: 8*N_f).
+-- The physics content (c₋ = 8 N_f from index theory) is real but the Lean statement
+-- was tautological. The relationship is now encoded structurally in the formulas.
+theorem chiral_central_charge_coeff :
+    ∀ N_f : ℕ, ∃ c_minus : ℤ, c_minus = 8 * ↑N_f :=
+  fun N_f => ⟨8 * ↑N_f, rfl⟩
 
-/--
-Axiom 2: Modular invariance (framing anomaly cancellation) requires
-c₋ ≡ 0 mod 24.
-
-This is a necessary condition for the 2D theory to be consistently defined
-on arbitrary Riemann surfaces. It arises from the transformation properties
-of the partition function under the modular group SL(2,ℤ).
-
-Axiomatized because: the full proof requires the relationship between
-framing anomaly, gravitational Chern-Simons term, and η-invariant.
--/
-axiom modular_invariance_constraint :
-    ∀ c_minus : ℤ, (∃ N_f : ℕ, c_minus = 8 * ↑N_f) → 24 ∣ c_minus
+-- REMOVED: modular_invariance_constraint was FALSE as stated.
+-- It claimed: ∀ c_minus, (∃ N_f, c_minus = 8*N_f) → 24 ∣ c_minus
+-- Counterexample: N_f=1, c_minus=8, but 24 ∤ 8.
+--
+-- The PHYSICS is correct: modular invariance requires c₋ ≡ 0 mod 24 for
+-- CONSISTENT theories. But the axiom universally quantified over ALL N_f,
+-- not just physically valid ones. The correct encoding is as a hypothesis
+-- on generation_mod3_constraint (which already takes h_mod : 24 ∣ (8 * N_f)
+-- as a hypothesis, so the theorem itself was always correct).
+--
+-- Net effect: generation_mod3_constraint is still valid — it says
+-- "IF 24 | 8*N_f THEN 3 | N_f", which is a true conditional.
+-- The false axiom was never used in any proof.
 
 /-! ## 2. The Generation Constraint -/
 

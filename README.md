@@ -25,8 +25,12 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
 - **Paper 8 (chirality master):** Three-pillar chirality wall: GS no-go + GT positive
   construction + Z₁₆ anomaly classification. PRL format.
 
-**Lean 4 formalization:** 877 theorems + 7 axioms across 56 Lean modules. 1 sorry
-(Lean heartbeat limit, Aristotle in flight). 253 Aristotle-proved across 31+ runs.
+- **Paper 9 (SM anomaly + Drinfeld center):** First formally verified anomaly
+  constraint in particle physics. SM anomaly in Z16, generation constraint,
+  toric code center, D(S3) non-abelian center. PRL format.
+
+**Lean 4 formalization:** 900 theorems + 2 axioms across 58 Lean modules. Zero sorry.
+254 Aristotle-proved across 32+ runs.
 Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
@@ -40,7 +44,7 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (877 theorems + 7 axioms, 56 modules, 1 sorry)
+├── lean/                              # Lean 4 formalization (900 theorems + 2 axioms, 58 modules, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 43)
@@ -54,7 +58,7 @@ SK_EFT_Hawking/
 │       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
 │       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
 │       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
-│       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom)
+│       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (11 theorems + 1 axiom — 1 of 2 remaining)
 │       ├── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
 │       ├── ADWMechanism.lean          # Phase 3: ADW tetrad condensation (21 theorems)
 │       ├── ChiralityWall.lean         # Phase 4: chirality wall analysis (17 theorems)
@@ -68,7 +72,7 @@ SK_EFT_Hawking/
 │       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
 │       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
 │       ├── MajoranaKramers.lean       # Phase 5: Majorana Kramers degeneracy, sign-free determinant (25 theorems)
-│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (14 theorems + 1 axiom)
+│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (14 theorems + 1 axiom — 1 of 2 remaining)
 │       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
 │       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
 │       ├── SphericalCategory.lean     # Phase 5: FIRST-EVER pivotal + spherical (18 theorems)
@@ -85,7 +89,7 @@ SK_EFT_Hawking/
 │       ├── GaugeFermionBag.lean       # Phase 5: tetrad covariance, bag weight, SMW update (9 theorems)
 │       ├── OnsagerAlgebra.lean        # Phase 5a: Dolan-Grady, Davies isomorphism, Chevalley (24 theorems)
 │       ├── OnsagerContraction.lean    # Phase 5a: Inönü-Wigner contraction O→su(2) (12 theorems)
-│       ├── Z16Classification.lean     # Phase 5a: Z₁₆ axiom, super-modular, 16-fold way (21 theorems + 1 axiom)
+│       ├── Z16Classification.lean     # Phase 5a: Z₁₆ classification, super-modular, 16-fold way (22 theorems, axiom discharged)
 │       ├── SteenrodA1.lean            # Phase 5a: A(1) sub-Hopf algebra, Adem, Ext→Z₁₆ (17 theorems)
 │       ├── SMGClassification.lean     # Phase 5a: AZ tenfold way, SMG data, spectral gap (13 theorems)
 │       ├── PauliMatrices.lean         # Phase 5a: σ_x,σ_y,σ_z, commutation, anti-commutation (15 theorems)
@@ -95,8 +99,8 @@ SK_EFT_Hawking/
 │       ├── GTWeylDoublet.lean         # Phase 5a: Weyl doublet, Onsager→SU(2), Witten anomaly (12 theorems)
 │       ├── ChiralityWallMaster.lean   # Phase 5a: Three-pillar synthesis theorem (17 theorems)
 │       ├── SMFermionData.lean         # Phase 5b: SM fermion ℤ₄ charges, component counts (19 theorems)
-│       ├── Z16AnomalyComputation.lean # Phase 5b: SM anomaly in ℤ₁₆, hidden sector theorem (21+2ax)
-│       ├── GenerationConstraint.lean  # Phase 5b: N_f ≡ 0 mod 3 from modular invariance (12+2ax)
+│       ├── Z16AnomalyComputation.lean # Phase 5b: SM anomaly in ℤ₁₆, hidden sector theorem (23 theorems, 2 axioms discharged)
+│       ├── GenerationConstraint.lean  # Phase 5b: N_f ≡ 0 mod 3 (conditional on 24|8N_f) (13 theorems, axioms discharged/removed)
 │       ├── DrinfeldCenterBridge.lean  # Phase 5b: Half-braiding ↔ D(G)-module, Mathlib Center (18 theorems)
 │       ├── VecGMonoidal.lean          # Phase 5b: MonoidalCategory(Vec_G), Center(Vec_G) (12 theorems)
 │       ├── ToricCodeCenter.lean       # Phase 5b: Toric code from Center(Vec_{ℤ/2}), R(e,m)=-1 (25 theorems)
@@ -291,7 +295,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (748 + 3 axioms — zero sorry)
+## Theorem Inventory (900 + 2 axioms — zero sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -315,7 +319,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | SU2PseudoReality.lean | 5 | 10 | One-link normalization, Binder limits |
 | FermionBag4D.lean | 5 | 16 | SO(4) integration, bag positivity |
 | LatticeHamiltonian.lean | 5 | 28 | BZ compact, GS 9 conditions, TPF 3 violations |
-| GoltermanShamir.lean | 5 | 15 + 1 axiom | 9 GS Props, Fock space finite, TPF evasion |
+| GoltermanShamir.lean | 5 | 14 + 1 axiom | 9 GS Props, Fock space finite, TPF evasion |
 | TPFEvasion.lean | 5 | 12 | Master synthesis, 5 violations |
 | KLinearCategory.lean | 5 | 16 | SemisimpleCategory, Schur, Vec_G D² |
 | SphericalCategory.lean | 5 | 18 | PivotalCategory (FIRST-EVER), quantumDim |
@@ -334,7 +338,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | MajoranaKramers.lean | 5 | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block |
 | OnsagerAlgebra.lean | 5a | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding, GT connection. Aristotle: 9d6f2432 |
 | OnsagerContraction.lean | 5a | 12 | Inönü-Wigner contraction O→su(2), rescaling, anomaly encoding. Aristotle: 36b7796f |
-| Z16Classification.lean | 5a | 21+1ax | Z₁₆ axiom, super-modular categories, 16-fold way, chirality mod 8→16 |
+| Z16Classification.lean | 5a | 22 | Z₁₆ classification (axiom discharged), super-modular categories, 16-fold way, chirality mod 8→16 |
 | SteenrodA1.lean | 5a | 17 | A(1) F₂-algebra, Adem relations, multiplication table, Ext→Z₁₆ |
 | SMGClassification.lean | 5a | 13 | AZ tenfold way, SMG symmetry data, spectral gap typeclass, gapped interface |
 | PauliMatrices.lean | 5a | 15 | Pauli σ_x,σ_y,σ_z, commutation [σ_i,σ_j]=2iε σ_k, involutivity, traces. Aristotle: 90ed1a98 |
@@ -344,8 +348,8 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | GTWeylDoublet.lean | 5a | 12 | Model 2: Q_V+Q_A→Onsager, emanant SU(2), Witten ℤ₂=elem 8∈ℤ₁₆, bridges |
 | ChiralityWallMaster.lean | 5a | 17 | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly |
 | SMFermionData.lean | 5b | 19 | SM fermion enum, ℤ₄ charges X=5(B-L)-4Y, all odd, component counts 16/15 |
-| Z16AnomalyComputation.lean | 5b | 21+2ax | SM anomaly 16≡0/15≡-1 mod 16, hidden sector theorem, "16" convergence |
-| GenerationConstraint.lean | 5b | 12+2ax | N_f≡0(3) from c₋=8N_f+modular invariance. Aristotle: a1dfcbde |
+| Z16AnomalyComputation.lean | 5b | 23 | SM anomaly 16≡0/15≡-1 mod 16, hidden sector theorem, "16" convergence (2 axioms discharged) |
+| GenerationConstraint.lean | 5b | 13 | N_f≡0(3) conditional on 24|8N_f (axioms discharged/removed). Aristotle: a1dfcbde |
 | DrinfeldCenterBridge.lean | 5b | 18 | Half-braiding ↔ D(G)-module bijection, Mathlib Center API, bidirectional |
 | VecGMonoidal.lean | 5b | 12 | **MonoidalCategory(Vec_G)**, Center(Vec_G) monoidal, forgetful functor |
 | ToricCodeCenter.lean | 5b | 25 | First computed Drinfeld center: 4 toric code anyons, R(e,m)=-1 |

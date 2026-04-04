@@ -1,0 +1,41 @@
+{
+  "review_date": "2026-04-03",
+  "reviewer": "figure-reviewer agent (Claude Opus 4.6)",
+  "scope": "Phase 5b figures only (fig71-fig73)",
+  "figures": {
+    "fig71_sm_fermion_z16_anomaly": {
+      "verdict": "PASS",
+      "layout": "Horizontal stacked bar with 6 SM fermion segments totaling 16. Correct orientation and stacking.",
+      "color_compliance": "Blue (#2E86AB) for quarks, amber (#F18F01) for leptons, green (#5C946E) for nu_R. No red/green pair.",
+      "reference_lines": "Dashed line at 16 (carmine), dotted line at 15 (grey). Both present and correctly positioned.",
+      "typography": "Serif font family (CMU Serif fallback chain), labels >= 12pt. Title 16pt bold.",
+      "physics_content": "Fermion component counts (6+3+3+2+1+1=16) match SM Weyl fermion content. Correct.",
+      "notes": "Dashed boundary line uses carmine (#E63946) rather than project blue/amber, but this is acceptable as it marks a distinct mathematical boundary, not a data series, and creates no red/green pair."
+    },
+    "fig72_sm_generation_anomaly": {
+      "verdict": "PASS",
+      "layout": "Scatter plot: anomaly index (mod 16) vs generation count (1-16). Two traces clearly distinguished.",
+      "color_compliance": "Blue (#2E86AB) circles+lines for 'With nu_R'. Amber (#F18F01) diamonds (markers only, no connecting line) for 'Without nu_R'. Correct.",
+      "reference_lines": "Vertical dotted at N_f=3 with annotation '(observed)'. Horizontal dashed at y=0 ('Anomaly-free').",
+      "typography": "Serif font family, axis labels 14pt, tick labels 13pt, legend 13pt. All >= 12pt.",
+      "physics_content": "With nu_R: (N*16) mod 16 = 0 for all N (always anomaly-free). Without nu_R: (N*15) mod 16 cycles nontrivially, hitting 0 only at N=16. Three generations (N_f=3) gives anomaly index 13 without nu_R, correctly showing SM is anomalous without right-handed neutrino.",
+      "notes": "Clean and correct. Diamond vs circle marker distinction is effective."
+    },
+    "fig73_sm_generation_constraint": {
+      "verdict": "PASS",
+      "layout": "Vertical bar chart, c_minus = 8*N_f for N_f=0 through 9. Value labels above each bar.",
+      "color_compliance": "Blue (#2E86AB) for N_f satisfying mod-3 constraint (N_f=0,3,6,9). Grey (#8D99AE) for all others. Correct.",
+      "reference_lines": "Horizontal dashed lines at c_minus = 24, 48, 72 (multiples of 24). Blue color, correctly positioned.",
+      "typography": "Serif font family, axis labels 14pt, tick/text labels 12-13pt. All >= 12pt.",
+      "physics_content": "c_minus = 8*N_f with modular invariance requiring c_minus = 0 mod 24, hence N_f = 0 mod 3. Bars at N_f=3 (c_minus=24), N_f=6 (c_minus=48), N_f=9 (c_minus=72) correctly highlighted. The generation constraint selects N_f as multiples of 3.",
+      "notes": "Reference line annotations ('c_- = 24' etc.) appear at right edge. Some overlap between bar value labels and dashed lines at N_f=9 (c_minus=72), but legibility is acceptable."
+    }
+  },
+  "summary": {
+    "total_reviewed": 3,
+    "pass": 3,
+    "minor": 0,
+    "fail": 0,
+    "overall": "All three Phase 5b figures pass review. Color conventions (blue/amber, no red-green pairs), serif typography >= 12pt, and physics content are correct throughout."
+  }
+}

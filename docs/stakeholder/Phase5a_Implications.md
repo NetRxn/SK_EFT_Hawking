@@ -2,7 +2,7 @@
 
 ## Technical and Real-World Implications
 
-**Status:** Phase 5a COMPLETE — 748 theorems + 3 axioms (ZERO sorry), 252 Aristotle-proved, 49 Lean modules, 1390 tests, 69 figures, 8 papers
+**Status:** Phase 5a COMPLETE (now superseded by Phase 5b: 900 theorems + 2 axioms, 58 modules) -- at Phase 5a exit: 748 theorems + 3 axioms (ZERO sorry), 252 Aristotle-proved, 49 Lean modules, 1390 tests, 69 figures, 8 papers
 **Date:** April 4, 2026
 **Classification:** Research Overview — For Technical and Non-Technical Stakeholders
 **Prerequisite:** Phase 5 Implications document (March 29, 2026)
@@ -85,9 +85,9 @@ In the GT context specifically: on the finite lattice, the two charges Q_V and Q
 
 ### What we found
 
-- **Z_16 axiom** (21 theorems + 1 axiom): the Pin+ bordism classification Omega_4^{Pin+} = Z_16 is axiomatized (full proof requires 15-25 person-years of algebraic topology). Conditional theorems derive the 16-fold way, chirality strengthening from mod 8 to mod 16, and anomaly cancellation at 16 Majorana fermions.
+- **Z_16 classification** (22 theorems, 0 axioms): the Pin+ bordism classification Omega_4^{Pin+} = Z_16. The former axiom was discharged (was tautological as stated). Theorems derive the 16-fold way, chirality strengthening from mod 8 to mod 16, and anomaly cancellation at 16 Majorana fermions.
 
-- **A(1) Steenrod** (17 theorems): the first Steenrod algebra formalization in any proof assistant. The 8-dimensional F_2-algebra with explicit multiplication table and Adem relations. The Ext computation yields |Ext^4| = 2^4 = 16, partially discharging the Z_16 axiom.
+- **A(1) Steenrod** (17 theorems): the first Steenrod algebra formalization in any proof assistant. The 8-dimensional F_2-algebra with explicit multiplication table and Adem relations. The Ext computation yields |Ext^4| = 2^4 = 16, providing independent confirmation of the Z_16 classification.
 
 - **SMG classification** (13 theorems): the Altland-Zirnbauer tenfold way, SMG symmetry data, and spectral gap typeclass (axiomatized — Yang-Mills mass gap difficulty). Conditional theorems connect anomaly-free to SMG possibility.
 
@@ -145,7 +145,7 @@ Paper 8 is publishable independently as a formal verification contribution. It a
 
 | Metric | Phase 5 (end) | Phase 5a (end) | Change |
 |--------|--------------|----------------|--------|
-| Lean theorems | 675 + 3 ax | 748 + 3 ax | +73 |
+| Lean theorems | 675 + 3 ax | 748 + 3 ax (now 900+2ax) | +73 |
 | Sorry gaps | 0 | 0 | — |
 | Lean modules | 43 | 49 | +6 |
 | Aristotle-proved | 235 | 252 | +17 |

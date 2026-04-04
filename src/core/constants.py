@@ -777,14 +777,14 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (800 theorems + 7 axioms across 52 Lean modules):
-#   - 254 proved by Aristotle automated theorem prover (listed below with run IDs)
-#   - 623 proved manually in Lean (verified by `lake build`)
-#   - 7 axioms: non_abelian_center_discrete (GaugeErasure.lean),
-#               gs_nogo_axiom (GoltermanShamir.lean),
-#               z16_classification (Z16Classification.lean),
-#               dai_freed_spin_z4, weyl_anomaly_unit (Z16AnomalyComputation.lean),
-#               chiral_central_charge_coeff, modular_invariance_constraint (GenerationConstraint.lean)
+# Verification breakdown (900 theorems + 2 axioms across 58 Lean modules):
+#   - 254 tracked in ARISTOTLE_THEOREMS registry (251 machine + 3 manual, listed below with run IDs)
+#   - 646 proved manually in Lean (verified by `lake build`)
+#   - 2 axioms: non_abelian_center_discrete (GaugeErasure.lean),
+#               gs_nogo_axiom (GoltermanShamir.lean)
+#   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
+#               chiral_central_charge_coeff (all tautological as stated)
+#   - REMOVED: modular_invariance_constraint (was mathematically FALSE — see GenerationConstraint.lean)
 #
 # ZERO sorry across entire project. Verified by `lake build`.
 # ════════════════════════════════════════════════════════════════════
@@ -1046,27 +1046,29 @@ ARISTOTLE_THEOREMS = {
     'metric_nonneg': 'fb657b4d',
     'binder_gaussian': 'fb657b4d',
     'binder_ordered': 'fb657b4d',
-    # HubbardStratonovichRHMC.lean — 22 theorems, all manual proofs (2026-04-02)
-    'hs_gaussian_identity_zero': 'manual',
-    'hs_gaussian_action_nonneg': 'manual',
-    'su2_closed_form_exp': 'manual',
-    'su2_exp_unit_quaternion_identity': 'manual',
-    'omelyan_second_order_symplectic': 'manual',
-    'omelyan_time_reversible': 'manual',
-    'zolotarev_exponential_convergence': 'manual',
-    'partial_fraction_positivity': 'manual',
-    'rhmc_hamiltonian_nonneg': 'manual',
-    'rhmc_detailed_balance': 'manual',
-    'hs_fermion_matrix_antisymmetric': 'manual',
-    'kramers_holds_hs_matrix': 'manual',
-    'multishift_cg_shared_krylov': 'manual',
-    'bipartite_nearest_neighbor_zero_diagonal': 'manual',
-    'ata_block_diag': 'manual',
-    'even_odd_spectrum_identical': 'manual',
-    'even_odd_cg_equivalence': 'manual',
-    'multishift_krylov_shift_invariance': 'manual',
-    'multishift_residual_collinearity': 'manual',
-    'even_odd_force_equivalence': 'manual',
+    # HubbardStratonovichRHMC.lean — 22 theorems (2026-04-02)
+    # 20 proved by Aristotle run da7cb04d (submitted, cherry-picked during integration)
+    # 2 added after Aristotle snapshot (manual only: complex_pseudofermion_pfaffian, heatbath_a_trick_covariance)
+    'hs_gaussian_identity_zero': 'da7cb04d',
+    'hs_gaussian_action_nonneg': 'da7cb04d',
+    'su2_closed_form_exp': 'da7cb04d',
+    'su2_exp_unit_quaternion_identity': 'da7cb04d',
+    'omelyan_second_order_symplectic': 'da7cb04d',
+    'omelyan_time_reversible': 'da7cb04d',
+    'zolotarev_exponential_convergence': 'da7cb04d',
+    'partial_fraction_positivity': 'da7cb04d',
+    'rhmc_hamiltonian_nonneg': 'da7cb04d',
+    'rhmc_detailed_balance': 'da7cb04d',
+    'hs_fermion_matrix_antisymmetric': 'da7cb04d',
+    'kramers_holds_hs_matrix': 'da7cb04d',
+    'multishift_cg_shared_krylov': 'da7cb04d',
+    'bipartite_nearest_neighbor_zero_diagonal': 'da7cb04d',
+    'ata_block_diag': 'da7cb04d',
+    'even_odd_spectrum_identical': 'da7cb04d',
+    'even_odd_cg_equivalence': 'da7cb04d',
+    'multishift_krylov_shift_invariance': 'da7cb04d',
+    'multishift_residual_collinearity': 'da7cb04d',
+    'even_odd_force_equivalence': 'da7cb04d',
     'complex_pseudofermion_pfaffian': 'manual',
     'heatbath_a_trick_covariance': 'manual',
     # Phase 5a Wave 1A: OnsagerAlgebra.lean
@@ -1099,7 +1101,7 @@ ARISTOTLE_THEOREMS = {
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 254, f"Expected 253 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 254, f"Expected 254 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

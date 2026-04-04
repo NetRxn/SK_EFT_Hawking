@@ -48,7 +48,12 @@ This is axiomatized because the full proof requires:
 The result was first computed by Giambalvo (1973) and proved via the
 Adams spectral sequence by Kirby-Taylor (1990).
 -/
-axiom z16_classification : ∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ
+-- DISCHARGED: was axiom, but the statement ∃ (φ : ZMod 16 ≃ ZMod 16), Bijective φ
+-- is trivially true (any Equiv is bijective). The actual physics content
+-- (Ω₄^{Pin⁺} ≅ ℤ₁₆) requires cobordism theory; this placeholder was tautological.
+-- See Phase6_Deferred_Targets.md for the full cobordism proof roadmap.
+theorem z16_classification : ∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ :=
+  ⟨Equiv.refl _, (Equiv.refl _).bijective⟩
 
 /-! ## 2. Super-Modular Categories -/
 

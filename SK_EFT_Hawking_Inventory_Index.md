@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Phase 5b: SM anomaly + Drinfeld Center, 7 new modules)
+**Last synced:** April 4, 2026 (axiom integrity sweep: 4 axioms discharged/removed, 900 thm + 2 ax, 58 modules)
 
 ---
 
@@ -10,18 +10,18 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 877 + 7 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 253 | ARISTOTLE_THEOREMS in constants.py (252 prior + 1 `a1dfcbde`) |
-| Manual proofs | 624 | 877 - 253 |
-| **Sorry gaps** | **1** | `vecG_braided` (VecGMonoidal.lean) — Lean heartbeat limit, Aristotle in flight |
-| Lean modules | 56 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 876 + 7ax | 1 sorry remaining |
+| Lean theorems | 900 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 254 (251 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
+| Manual proofs | 646 | 900 - 254 |
+| **Sorry gaps** | **0** | All filled |
+| Lean modules | 58 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 900 + 2ax | All proved |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 29 | `find tests/ -name "test_*.py"` |
 | Test count | 1456 | `pytest tests/ -q` (1390 + 44 SM anomaly + 22 other) |
 | Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` (69 + 3 SM anomaly) |
-| Notebooks | 22 | `ls notebooks/*.ipynb` |
-| Papers | 8 | `ls papers/*/paper_draft.tex` |
+| Notebooks | 24 | `ls notebooks/*.ipynb` (22 + 2 Phase 5b SM anomaly/Drinfeld) |
+| Papers | 9 | `ls papers/*/paper_draft.tex` (8 + Paper 9 SM anomaly + Drinfeld) |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 12 | See Section 9 of inventory |
 | Aristotle runs | 31+ | See Aristotle run table in full inventory |
@@ -151,7 +151,7 @@
 | MajoranaKramers | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block structure |
 | OnsagerAlgebra | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding into L(sl₂), GT connection (**ALL PROVED**, Aristotle `9d6f2432`) |
 | OnsagerContraction | 12 | Inönü-Wigner contraction O→su(2), rescaling, commutator vanishing, anomaly encoding (**ALL PROVED**, Aristotle `36b7796f` + manual) |
-| Z16Classification | 21+1ax | Z₁₆ axiom, SuperModularCategory, 16-fold way, chirality strengthening mod 8→16, anomaly cancellation, Drinfeld bridge (**ALL PROVED**) |
+| Z16Classification | 22 | Z₁₆ classification (axiom discharged→theorem), SuperModularCategory, 16-fold way, chirality strengthening mod 8→16, anomaly cancellation, Drinfeld bridge (**ALL PROVED**) |
 | SteenrodA1 | 17 | A(1) 8-dim F₂-algebra, explicit multiplication table, Adem relations, Ext→Z₁₆ connection (**ALL PROVED**, first Steenrod formalization) |
 | SMGClassification | 13 | AZClass tenfold way, SMGSymmetryData, HasSpectralGap typeclass, gapped interface conjecture, conditional theorems (**ALL PROVED**) |
 | PauliMatrices | 15 | σ_x,σ_y,σ_z definitions, commutation [σ_i,σ_j]=2iε_{ijk}σ_k, anti-commutation, involutivity, traces (**ALL PROVED**, Aristotle `90ed1a98`) |
@@ -161,12 +161,13 @@
 | GTWeylDoublet | 12 | Model 2: Q_V+Q_A generate Onsager, emanant SU(2), Witten anomaly=element 8∈ℤ₁₆, bridges to GS/TPF/Z₁₆ (**ALL PROVED**) |
 | ChiralityWallMaster | 17 | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly, bridge theorems, status structure (**ALL PROVED**) |
 | SMFermionData | 19 | SM fermion enum, ℤ₄ charges X=5(B-L)-4Y, all odd, component counts 16/15, anomaly contributions (**ALL PROVED**) |
-| Z16AnomalyComputation | 21+2ax | Dai-Freed axioms, anomaly 16≡0 / 15≡-1 mod 16, 3-gen anomaly -3, hidden sector theorem, "16" convergence (**ALL PROVED**) |
-| GenerationConstraint | 12+2ax | c₋=8N_f + c₋≡0(24) axioms, N_f≡0(3) **derived**, minimal N_f=3, combined constraints (**ALL PROVED**, Aristotle `a1dfcbde`) |
+| Z16AnomalyComputation | 23 | Anomaly 16≡0 / 15≡-1 mod 16, 3-gen anomaly -3, hidden sector theorem, "16" convergence (2 axioms discharged→theorems) (**ALL PROVED**) |
+| GenerationConstraint | 13 | c₋=8N_f (discharged→theorem) + modular_invariance_constraint (REMOVED, was false). N_f≡0(3) **derived** as conditional, minimal N_f=3 (**ALL PROVED**, Aristotle `a1dfcbde`) |
 | DrinfeldCenterBridge | 18 | Half-braiding ↔ D(G)-module bijection, conjugation identities, Mathlib Center API, bidirectional encoding (**ALL PROVED**) |
-| VecGMonoidal | 12 | **MonoidalCategory(Vec_G)** proved, Center(Vec_G) category+monoidal, forgetful functor, BraidedCategory (1 sorry — Lean heartbeat) |
+| VecGMonoidal | 12 | **MonoidalCategory(Vec_G)** proved, Center(Vec_G) category+monoidal+braided, forgetful functor (**ALL PROVED**, Aristotle `48493889`) |
 | ToricCodeCenter | 25 | 4 toric code anyons, fusion rules, R(e,m)=-1, fermion self-stats, first computed Drinfeld center (**ALL PROVED**) |
 | S3CenterAnyons | 22 | 8 non-abelian anyons, d=1,1,2,3,3,2,2,2, D²=36=|S₃|², A3⊗A3 decomposition, first non-abelian center (**ALL PROVED**) |
+| CenterEquivalenceZ2 | 10 | Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2): bijection, fusion, braiding preserved (**ALL PROVED**) |
 
 ---
 

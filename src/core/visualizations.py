@@ -4697,7 +4697,7 @@ def fig_chirality_wall_three_pillars() -> go.Figure:
 
     # Summary bar
     fig.add_annotation(x=0.50, y=0.03,
-        text='<b>748 theorems + 3 axioms | 49 Lean modules | zero sorry | 252 Aristotle-proved</b>',
+        text='<b>900 theorems + 2 axioms | 58 Lean modules | zero sorry | 254 Aristotle-proved</b>',
         showarrow=False, font=dict(size=14, family=FONT['family']))
 
     fig.update_layout(

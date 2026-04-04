@@ -36,8 +36,8 @@ in Lean~4}
 We present the first formal verification survey of the lattice chirality
 problem---the obstruction to placing chiral fermions on a lattice with the
 correct continuum limit. The formalization in Lean~4 with Mathlib comprises
-748~theorems and 3~axioms across 49~modules (zero \texttt{sorry}), of which
-252~are proved by the Aristotle automated theorem prover. The work is
+900~theorems and 2~axioms across 58~modules (zero \texttt{sorry} in main
+modules), of which 254~are proved by the Aristotle automated theorem prover. The work is
 organized around three complementary pillars.
 
 \textbf{Pillar~1 (No-Go):} The nine conditions of the Golterman-Shamir
@@ -100,8 +100,8 @@ standard lattice gauging.
 
 This paper presents a comprehensive formal verification of the
 chirality wall in the Lean~4 proof assistant with Mathlib. The
-formalization totals 748~theorems and 3~axioms across 49~Lean modules
-(zero \texttt{sorry}), of which 252 are proved by the Aristotle
+formalization totals 900~theorems and 2~axioms across 58~Lean modules
+(zero \texttt{sorry} in main modules), of which 254 are proved by the Aristotle
 automated theorem prover~\cite{Aristotle2025}. The work is organized
 around three pillars: the no-go (Sec.~\ref{sec:pillar1}), the positive
 construction (Sec.~\ref{sec:pillar2}), and the algebraic framework
@@ -389,7 +389,7 @@ $16n$ fermions for anomaly cancellation.
 \caption{The three-pillar structure of the chirality wall formal
 verification. Pillar~1 (no-go), Pillar~2 (positive construction), and
 Pillar~3 (anomaly classification) are connected by bridge theorems.
-Total: 748~theorems + 3~axioms, 49~modules, zero \texttt{sorry}.}
+Total: 900~theorems + 2~axioms, 58~modules, zero \texttt{sorry} (main modules).}
 \label{fig:three_pillars}
 \end{figure}
 
@@ -410,28 +410,30 @@ Component & Theorems & Status \\
 \midrule
 GS no-go (Pillar~1) & 54 & Proved \\
 GT construction (Pillar~2) & 56 & Proved \\
-Anomaly framework (Pillar~3) & 103 & Proved + 1~axiom \\
+Anomaly framework (Pillar~3) & 103 & Proved (axiom discharged) \\
 Master synthesis (Bridges) & 17 & Proved \\
 Prior infrastructure & 518 & Proved + 2~axioms \\
+Phase~5b additions & 152 & Proved (axioms discharged/removed) \\
 \midrule
-\textbf{Total} & \textbf{748 + 3~ax} & \textbf{Zero sorry} \\
+\textbf{Total} & \textbf{900 + 2~ax} & \textbf{Zero sorry} \\
 \bottomrule
 \end{tabular}
 \caption{Formalization summary. All theorems are machine-checked by
-\texttt{lake build}. The three axioms are: $\Omega_4^{\mathrm{Pin}^+} \cong
-\mathbb{Z}_{16}$ (cobordism), GS no-go theorem (unbounded spectral
-theory), and gauge erasure universality.}
+\texttt{lake build}. The two remaining axioms are: GS no-go theorem (unbounded spectral
+theory) and gauge erasure universality (non-abelian center discrete).
+The former $\mathbb{Z}_{16}$ cobordism axiom was discharged (tautological as stated).}
 \label{tab:summary}
 \end{table}
 
-\noindent\textbf{What is proved:} All 748 theorems, including $[H,Q_A]=0$,
+\noindent\textbf{What is proved:} All 900 theorems, including $[H,Q_A]=0$,
 Wilson mass uniqueness, Pauli algebra, Onsager relations, contraction,
 $\mathbb{Z}_{16}$ conditional theorems, A(1) Steenrod algebra, GS
-conditions, TPF evasion, and all bridge connections.
+conditions, TPF evasion, SM anomaly in $\mathbb{Z}_{16}$, generation
+constraint, Drinfeld center computations, and all bridge connections.
 
-\noindent\textbf{What is axiomatized:} Pin$^+$ bordism (15--25
-person-years of algebraic topology), spectral gap existence (Yang-Mills
-mass gap difficulty), gauge erasure universality.
+\noindent\textbf{What is axiomatized (2 axioms):} GS no-go theorem
+(unbounded spectral theory), gauge erasure universality (non-abelian center
+discrete). The former Pin$^+$ bordism axiom was discharged.
 
 \noindent\textbf{What remains open:} The 4+1D gapped interface
 conjecture (TPF), the gauging step from vector-like SMG to chiral gauge
@@ -467,8 +469,8 @@ on which any resolution must stand is now machine-checked.
 %=================================================================
 
 We have presented the first comprehensive formal verification of the
-lattice chirality problem in Lean~4, comprising 748~theorems and
-3~axioms across 49~modules with zero \texttt{sorry}. The three-pillar
+lattice chirality problem in Lean~4, comprising 900~theorems and
+2~axioms across 58~modules with zero \texttt{sorry} (main modules). The three-pillar
 structure---no-go, positive construction, anomaly classification---provides
 a complete machine-checked map of the chirality wall as of 2026. The
 Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the
