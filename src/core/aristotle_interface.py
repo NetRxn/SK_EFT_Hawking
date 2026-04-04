@@ -1566,7 +1566,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="4 sorrys: zeta24_pow_24, zeta24_ne_one, zeta24_primitive, qParam_integer_invariant, plus backward direction of framing_anomaly_constraint. All complex exponential arithmetic.",
         strategy_hint="zeta24^24: unfold zeta24, use exp_nat_mul or exp_add repeatedly, reduce to cexp(2πi)=1. zeta24_ne_one: cexp(2πi/24)=1 would mean 2πi/24=2πik, contradiction. zeta24_primitive: exp_eq_one_iff + divisibility. qParam_integer_invariant: cexp(2πi(z+1))=cexp(2πiz)*cexp(2πi)=cexp(2πiz)*1. See PROVIDED SOLUTION hints in file.",
-        filled=False,
+        filled=True,  # Aristotle run b54f9611: all sorrys filled
     ),
     # Phase 5b Wave 6: RokhlinBridge (1 sorry — ZMod arithmetic)
     SorryGap(
@@ -1575,7 +1575,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="15*N_f ≡ 0 mod 16 ↔ 16|N_f. ZMod arithmetic: 15 ≡ -1 mod 16, so -N_f ≡ 0 iff 16|N_f.",
         strategy_hint="15 ≡ -1 mod 16 (by decide). So 15*N_f = -N_f in ZMod 16. Then -N_f = 0 iff N_f = 0 iff 16|N_f. Use ZMod.natCast_zmod_eq_zero_iff_dvd.",
-        filled=False,
+        filled=True,  # Aristotle run b54f9611: sorry filled
     ),
     # Phase 5b Wave 7: QNumber (5 sorrys — Laurent polynomial evaluation)
     SorryGap(

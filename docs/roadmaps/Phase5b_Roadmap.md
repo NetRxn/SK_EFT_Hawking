@@ -16,7 +16,7 @@
 ## 0. Entry State
 
 **What Phase 5a established (verified 2026-04-04):**
-- 748 theorems + 3 axioms at Phase 5a exit (now 900 theorems + 2 axioms after axiom sweep), 252 Aristotle-proved, 49→58 Lean modules
+- 748 theorems + 3 axioms at Phase 5a exit (now 968 theorems, 0 axioms after axiom sweep + Wave 7), 273 Aristotle-proved, 49→66 Lean modules
 - Three-pillar chirality wall master theorem (GS no-go + GT positive + Z₁₆ anomaly)
 - Z₁₆ classification axiomatized, 16-fold way for super-modular categories
 - GT [H, Q_A] = 0 machine-verified, Onsager algebra formalized
@@ -24,7 +24,7 @@
 
 **What Phase 5b aims to do:**
 Connect the chirality wall formalization to the actual Standard Model by computing
-the SM's anomaly class in ℤ₁₆ from representation-theoretic data (conditional on 2 axioms).
+the SM's anomaly class in ℤ₁₆ from representation-theoretic data (all axioms now removed).
 This establishes the first formally verified anomaly constraint in particle physics.
 
 **Research basis:**
@@ -219,7 +219,7 @@ construct the abstract equivalence functor Center(Vec_G) ⥤ Rep(D(G)).
 
 ## 4. Axiom Index — Justifications and Discharge Roadmap
 
-The project has **0 axioms** (down from 7 after integrity sweep and Wave 6 axiom removal).
+The project has **0 axioms** (down from 7 after integrity sweep and Wave 6 axiom removal). 968 theorems across 66 modules.
 
 | # | Former Axiom | Module | Status |
 |---|-------|--------|--------|
@@ -237,7 +237,7 @@ The project has **0 axioms** (down from 7 after integrity sweep and Wave 6 axiom
 
 **None of the discharged/removed axioms were used in any proof.**
 
-**Final state:** Zero axioms. All 951 theorems are proved from Lean/Mathlib foundations with no assumptions.
+**Final state:** Zero axioms. All 968 theorems are proved from Lean/Mathlib foundations with no assumptions (11 sorry pending Aristotle in QNumber.lean + Uqsl2.lean).
 
 ## 5. Wave 4 — Wang Bridge: Deriving c₋ = 8N_f from SM Fermion Content
 

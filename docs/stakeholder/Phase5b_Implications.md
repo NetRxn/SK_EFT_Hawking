@@ -32,6 +32,6 @@ The generation constraint N_f ≡ 0 mod 3 is derived from two independently veri
 
 ## Current Status
 
-- 951 theorems, 0 axioms, 64 Lean modules, zero sorry
-- 1506 tests, 72 figures, 10 papers, 26 notebooks
+- 968 theorems, 0 axioms, 66 Lean modules (11 sorry pending Aristotle)
+- 1554 tests, 72 figures, 11 papers, 28 notebooks
 - Aristotle automated prover: 273 theorems across 33+ runs

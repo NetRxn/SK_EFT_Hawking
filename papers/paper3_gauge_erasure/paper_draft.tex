@@ -34,7 +34,7 @@ verify the result in $\mathcal{N}=4$ super-Yang-Mills theory---a non-confining
 gauge theory where color-charged states exist at all couplings, yet
 holographic hydrodynamics involves exclusively color-singlet operators. The
 theorem is formally verified in \texttt{GaugeErasure.lean}
-(11 theorems + 1 axiom, zero \texttt{sorry}). These results establish a
+(12 theorems, zero axioms, zero \texttt{sorry}). These results establish a
 fundamental boundary for emergent gauge structure in analog gravity and
 condensed matter systems: emergent electrodynamics can survive a
 hydrodynamic layer, but emergent chromodynamics cannot.
@@ -252,9 +252,9 @@ Lean 4 using the Mathlib library. The formalization includes:
     \item \texttt{sm\_only\_u1\_survives}: Standard Model application (SU(3) $\times$ SU(2) $\times$ U(1))
 \end{itemize}
 
-The formalization uses one axiom encoding the Lie-theoretic fact that
-the center of a non-Abelian Lie group is finite (discrete). All other
-results are proved from definitions.
+The Lie-theoretic fact that the center of a non-Abelian Lie group is
+finite (discrete), previously axiomatized, is now proved as a theorem.
+All results are proved from definitions.
 
 %═══════════════════════════════════════════════════════════════════
 \section{Implications}

@@ -45,7 +45,7 @@
 
 | Risk | Mitigation | Status |
 |------|-----------|--------|
-| Axiom quality | Integrity sweep (Apr 4): 4 axioms discharged/removed. 2 remaining are well-established. | Low |
+| Axiom quality | All axioms removed (Apr 4): 7 axioms discharged/removed, 0 remaining. | Low |
 | Mathlib breakage | Pinned to commit 8f9d9cff. Upgrade path documented. | Low |
 | Priority claim | Papers drafted, code public. Timestamp established. | Low |
 | Modular forms gap | Key proof (η T-transformation) uses Mathlib's exp_add directly. | Low |

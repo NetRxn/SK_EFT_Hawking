@@ -28,7 +28,7 @@ pure mathematics (zeta regularization $\zeta(-1) = -1/12$), the denominator
 is pure physics (SM fermion content). Without right-handed neutrinos,
 $c_- = 15/2$ is fractional --- a formally verified independent argument
 for $\nu_R$. The complete chain from modular forms to particle physics
-comprises 951~theorems across 64~Lean~4 modules (zero axioms, zero
+comprises 968~theorems across 66~Lean~4 modules (zero axioms, zero
 \texttt{sorry}); the complete derivation chain from modular forms through
 fermion counting to the generation bound is fully machine-checked. This is the first
 formal derivation connecting number-theoretic modular invariance to a
@@ -201,7 +201,7 @@ $8$ is the Bott period of $\pi_n(O)$ and $2$ is the Pfaffian factor
 
 The formal verification records the convergence as
 \texttt{sixteen\_convergence\_full} in \texttt{RokhlinBridge.lean}
-(14 theorems + 1 axiom for Rokhlin's theorem).
+(14 theorems; Rokhlin's theorem enters as a hypothesis, not an axiom).
 
 \subsection{With vs.\ without $\nu_R$}
 
@@ -230,7 +230,7 @@ The minimal solution is $N_f = \mathrm{lcm}(16, 3) = 48$
 (\texttt{constraints\_without\_nu\_R}). Since $N_f = 3$ is observed,
 this provides formal evidence for the existence of $\nu_R$.
 
-Rokhlin's theorem is axiomatized as a well-established result (1952,
+Rokhlin's theorem enters as a hypothesis (not an axiom) in the key theorems. It is a well-established result (1952,
 hundreds of citations). The bound is sharp: the K3 surface has
 $\sigma = -16$, while the E8 manifold has $\sigma = 8$ but is
 \emph{not} spin --- formally verified as
@@ -257,15 +257,15 @@ constraint requires $N_f = \mathrm{lcm}(16,3) = 48$ --- providing formal
 evidence for right-handed neutrinos from the observed $N_f = 3$.
 \end{enumerate}
 
-The formal verification comprises 951~theorems across 64~Lean~4
-modules (zero axioms, zero \texttt{sorry}). The key modules are
+The formal verification comprises 968~theorems across 66~Lean~4
+modules (zero axioms, zero \texttt{sorry} in main modules). The key modules are
 \texttt{SMFermionData.lean} (fermion enumeration, zero \texttt{sorry}),
 \texttt{WangBridge.lean} ($c_- = 8$ derivation, zero \texttt{sorry}),
 \texttt{GenerationConstraint.lean} ($24 \mid 8N_f \Rightarrow 3 \mid N_f$,
 Aristotle \texttt{a1dfcbde}, zero \texttt{sorry}),
 \texttt{ModularInvarianceConstraint.lean} (framing anomaly from $\eta$,
 $q$-parameter shift proved, all identities proved, Aristotle \texttt{b54f9611}),
-and \texttt{RokhlinBridge.lean} (``16'' convergence, Rokhlin axiom,
+and \texttt{RokhlinBridge.lean} (``16'' convergence, Rokhlin hypothesis,
 with/without $\nu_R$ analysis, 14 theorems).
 
 As a further application of the same infrastructure, we define the

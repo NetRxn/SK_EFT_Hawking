@@ -1,7 +1,7 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Ten papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Eleven papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
@@ -33,7 +33,7 @@ to acoustic Hawking radiation in BEC analog gravity. Ten papers in a unified cod
   First formal derivation connecting number-theoretic modular invariance to
   SM generation constraint N_f = 0 mod 3. PRD format.
 
-**Lean 4 formalization:** 951 theorems across 64 Lean modules. Zero axioms, zero sorry.
+**Lean 4 formalization:** 968 theorems across 66 Lean modules. Zero axioms, zero sorry.
 273 Aristotle-proved across 33+ runs.
 Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
@@ -48,10 +48,10 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (951 theorems, 0 axioms, 64 modules, zero sorry)
+├── lean/                              # Lean 4 formalization (968 theorems, 0 axioms, 66 modules, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 64)
+│   ├── SKEFTHawking.lean              # Root module (imports all 66)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -115,7 +115,9 @@ SK_EFT_Hawking/
 │       ├── DrinfeldEquivalence.lean   # Phase 5b: Z(Vec_G)≅Rep(D(G)) structure (12 theorems)
 │       ├── WangBridge.lean            # Phase 5b: c₋=8N_f from 16 Weyl, ν_R required (9 theorems)
 │       ├── ModularInvarianceConstraint.lean # Phase 5b: framing anomaly, η→24→3|N_f (12 theorems)
-│       └── RokhlinBridge.lean         # Phase 5b: Rokhlin "16" convergence (14 theorems)
+│       ├── RokhlinBridge.lean         # Phase 5b: Rokhlin "16" convergence (14 theorems)
+│       ├── QNumber.lean               # Phase 5b: q-integers [n]_q, classical limit (11 theorems, 5 sorry pending Aristotle)
+│       └── Uqsl2.lean                 # Phase 5b: FIRST quantum group U_q(sl₂), zero axioms (6 theorems, 6 sorry pending Aristotle)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -188,6 +190,14 @@ SK_EFT_Hawking/
 │   │   └── paper_draft.tex
 │   ├── paper7_chirality_formal/      # PRD/CPC GS no-go + TPF evasion in Lean 4 (Phase 5)
 │   │   └── paper_draft.tex
+│   ├── paper8_chirality_master/      # PRL three-pillar chirality wall (Phase 5a)
+│   │   └── paper_draft.tex
+│   ├── paper9_sm_anomaly_drinfeld/   # PRL SM anomaly + Drinfeld center (Phase 5b)
+│   │   └── paper_draft.tex
+│   ├── paper10_modular_generation/   # PRD modular generation constraint (Phase 5b)
+│   │   └── paper_draft.tex
+│   ├── paper11_quantum_group/        # PRD first quantum group formalization (Phase 5b)
+│   │   └── paper_draft.tex
 │   └── experimental_predictions/     # Standalone prediction tables (Phase 4)
 │       └── prediction_tables.tex
 │
@@ -210,8 +220,16 @@ SK_EFT_Hawking/
 │   ├── Phase4b_Vestigial_Stakeholder.ipynb
 │   ├── Phase5a_ChiralityWall_Technical.ipynb    # Phase 5: chirality wall formal verification
 │   ├── Phase5a_ChiralityWall_Stakeholder.ipynb
+│   ├── Phase5a_GTChiralFermion_Technical.ipynb   # Phase 5a: GT chiral fermion, Onsager, Z₁₆
+│   ├── Phase5a_GTChiralFermion_Stakeholder.ipynb
 │   ├── Phase5b_Synthesis_Technical.ipynb        # Phase 5: kappa-scaling, categorical, Drinfeld
-│   └── Phase5b_Synthesis_Stakeholder.ipynb
+│   ├── Phase5b_Synthesis_Stakeholder.ipynb
+│   ├── Phase5b_SMAnomalyDrinfeld_Technical.ipynb # Phase 5b: SM anomaly, Drinfeld center
+│   ├── Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb
+│   ├── Phase5b_ModularGeneration_Technical.ipynb # Phase 5b: modular generation constraint
+│   ├── Phase5b_ModularGeneration_Stakeholder.ipynb
+│   ├── Phase5b_QuantumGroup_Technical.ipynb     # Phase 5b: first quantum group formalization
+│   └── Phase5b_QuantumGroup_Stakeholder.ipynb
 │
 ├── docker/
 │   └── docker-compose.graph.yml       # PG+AGE container for knowledge graph (port 5433)
@@ -220,10 +238,10 @@ SK_EFT_Hawking/
 │   ├── KNOWLEDGE_GRAPH.md             # Knowledge graph documentation and guide
 │   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
 │   ├── stakeholder/                   # Implications, strategic positioning, companion guides
-│   ├── aristotle_results/             # All 13 Aristotle run archives
+│   ├── aristotle_results/             # All 33+ Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1245 tests across 19 files)
+├── tests/                             # pytest suite (1554 tests across 34 files)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -235,7 +253,7 @@ SK_EFT_Hawking/
 │   ├── test_gauge.py                 # SO(4) gauge, quaternion, Majorana (146 tests)
 │   └── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
 │
-├── figures/                           # 64 pipeline figures (PNG + HTML) + provenance_graph.json
+├── figures/                           # 72 pipeline figures (PNG + HTML) + provenance_graph.json
 ├── scripts/
 │   ├── submit_to_aristotle.py         # Aristotle submission + integration script
 │   ├── build_graph.py                 # Knowledge graph extraction (8 node types, 10 edge types)
@@ -306,7 +324,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (951 theorems — zero axioms, zero sorry)
+## Theorem Inventory (968 theorems — zero axioms, zero sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -372,6 +390,8 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | WangBridge.lean | 5b | 9 | c₋=8N_f derived from 16 Weyl, fractional c₋ forces ν_R, full chain |
 | ModularInvarianceConstraint.lean | 5b | 12 | Framing anomaly from η, q-parameter shift, 24\|c₋, complete chain η→24→3\|N_f. Aristotle: b54f9611 |
 | RokhlinBridge.lean | 5b | 14 | Rokhlin "16" convergence, with/without ν_R analysis |
+| QNumber.lean | 5b | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16 (5 sorry pending Aristotle) |
+| Uqsl2.lean | 5b | 6 | **FIRST quantum group in a proof assistant**: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms (6 sorry pending Aristotle) |
 
 ## Build Environment
 

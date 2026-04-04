@@ -29,6 +29,7 @@ class TestIntegrityReportStructure:
         expected_keys = {
             'orphan_nodes', 'broken_chains', 'ungrounded_claims',
             'missing_provenance', 'summary', 'conflicts',
+            'unclassified_axioms',
         }
         assert expected_keys == set(report.keys()), (
             f"Report keys mismatch. Expected: {expected_keys}, Got: {set(report.keys())}"
@@ -36,7 +37,7 @@ class TestIntegrityReportStructure:
 
         # All issue lists are actually lists
         for key in ('orphan_nodes', 'broken_chains', 'ungrounded_claims',
-                     'missing_provenance', 'conflicts'):
+                     'missing_provenance', 'conflicts', 'unclassified_axioms'):
             assert isinstance(report[key], list), f"{key} should be a list"
 
         # Summary has expected sub-keys
@@ -45,16 +46,23 @@ class TestIntegrityReportStructure:
             'total_nodes', 'total_edges', 'total_issues',
             'orphans', 'conflicts', 'ungrounded',
             'broken_chains', 'missing_provenance',
+            'total_axioms', 'unclassified_axioms',
+            'depends_on_axiom_edges', 'theorems_with_axiom_deps',
+            'pg_vertex_count', 'pg_sync',
         }
         assert expected_summary_keys == set(summary.keys()), (
             f"Summary keys mismatch. Expected: {expected_summary_keys}, "
             f"Got: {set(summary.keys())}"
         )
 
-        # All summary values are non-negative integers
+        # All numeric summary values are non-negative integers
+        # (pg_sync is a string status, not a count)
         for key, val in summary.items():
-            assert isinstance(val, int), f"summary[{key}] should be int, got {type(val)}"
-            assert val >= 0, f"summary[{key}] should be non-negative"
+            if key == 'pg_sync':
+                assert isinstance(val, str), f"summary[{key}] should be str, got {type(val)}"
+            else:
+                assert isinstance(val, int), f"summary[{key}] should be int, got {type(val)}"
+                assert val >= 0, f"summary[{key}] should be non-negative"
 
         # total_issues is the sum of all issue counts
         assert summary['total_issues'] == (

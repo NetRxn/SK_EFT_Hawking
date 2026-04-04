@@ -58,7 +58,7 @@ operate in genuinely different mathematical frameworks---neither proves
 nor disproves the other. A companion paper~\cite{Paper8} extends this
 analysis with the Gioia-Thorngren positive construction ($[H,Q_A]=0$
 machine-verified), Onsager algebra formalization, and $\mathbb{Z}_{16}$
-anomaly classification, totaling 900~theorems + 2~axioms across 58~modules.
+anomaly classification, totaling 968~theorems (zero axioms) across 66~modules.
 \end{abstract}
 
 \maketitle
@@ -273,9 +273,8 @@ the Aristotle automated theorem prover across 4 runs.}
 \caption{Theorem counts per Phase~5 Lean module. Blue: manual proofs.
   Amber: proofs filled by the Aristotle automated theorem prover.
   The chirality modules (\texttt{LatticeHamiltonian},
-  \texttt{GoltermanShamir}, \texttt{TPFEvasion}) contribute 54 theorems.
-  The full Phase~5 adds 372 theorems across 22 modules, bringing the
-  project total to 900 theorems + 2 axioms.}
+  \texttt{GoltermanShamir}, \texttt{TPFEvasion}) contribute 55 theorems.
+  The full project totals 968 theorems (zero axioms) across 66 modules.}
 \label{fig:theorem_summary}
 \end{figure}
 
@@ -312,7 +311,7 @@ The broader formalization program has also produced the first-ever
 definitions of pivotal, spherical, and fusion categories in a proof
 assistant, along with the first formalization of the Drinfeld double
 $D(G)$ and the gauge emergence theorem $Z(\mathrm{Vec}_G) \cong
-\mathrm{Rep}(D(G))$. Together, these 900 theorems across 58 modules
+\mathrm{Rep}(D(G))$. Together, these 968 theorems across 66 modules
 provide end-to-end formal verification from categorical Layer~1 through
 gauge Layer~2 to hydrodynamic Layer~3.
 
@@ -322,12 +321,12 @@ gauge Layer~2 to hydrodynamic Layer~3.
 
 We have presented the first formal verification of the Golterman-Shamir
 no-go conditions and TPF evasion mechanism in a proof assistant.
-54 theorems + 1 axiom across three Lean~4 modules, with zero
+55 theorems (zero axioms) across three Lean~4 modules, with zero
 \texttt{sorry}, provide machine-checked evidence that the lattice
 chirality debate involves frameworks operating in different mathematical
 spaces. The formalization is part of a broader project containing
-900 theorems + 2 axioms across 58 modules, 254 proved by the Aristotle
-automated theorem prover across 32+ runs, all with zero \texttt{sorry}.
+968 theorems (zero axioms) across 66 modules, 273 proved by the Aristotle
+automated theorem prover across 33+ runs.
 
 In companion work~\cite{Paper8}, this analysis is extended in two
 directions. First, the Gioia-Thorngren construction~\cite{GioiaTh2026}

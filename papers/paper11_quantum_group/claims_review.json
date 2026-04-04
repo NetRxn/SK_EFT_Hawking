@@ -1,0 +1,277 @@
+{
+  "paper": "paper11_quantum_group",
+  "review_date": "2026-04-04T00:00:00Z",
+  "overall_status": "issues_found",
+  "numerical_claims": [
+    {
+      "location": "Section 5 (Conclusions), line 187",
+      "paper_value": "968 theorems",
+      "computed_value": "968 theorems (grep '^theorem ' across 64 .lean files)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Total theorem count matches."
+    },
+    {
+      "location": "Section 5 (Conclusions), line 187",
+      "paper_value": "66 Lean 4 modules",
+      "computed_value": "66 files in lean/SKEFTHawking/ (65 physics + ExtractDeps infrastructure)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Count matches if ExtractDeps.lean is included. Minor: ExtractDeps is tooling not physics."
+    },
+    {
+      "location": "Table (Section 4), QNumber.lean row",
+      "paper_value": "13 thms",
+      "computed_value": "11 theorems (grep '^theorem ' QNumber.lean)",
+      "delta_pct": 15.4,
+      "status": "FAIL",
+      "notes": "QNumber.lean has 11 theorems (qInt_zero, qInt_one, qInt_two, qInt_three, evalAtOne_T, qInt_classical_limit, qInt_two_pow4_classical, qInt_three_classical, qFactorial_zero, qFactorial_one, qnumber_summary). Paper claims 13. If counting defs (qInt, evalAtOne, qFactorial) brings total declarations to 14, but those are defs not theorems."
+    },
+    {
+      "location": "Table (Section 4), Uqsl2.lean row",
+      "paper_value": "14 thms",
+      "computed_value": "6 theorems (grep '^theorem ' Uqsl2.lean)",
+      "delta_pct": 57.1,
+      "status": "FAIL",
+      "notes": "Uqsl2.lean has 6 theorems (uq_K_mul_Kinv, uq_Kinv_mul_K, uq_KE, uq_KF, uq_serre, uqsl2_summary). Even counting all declarations (inductive, abbrev, def, theorem) gives ~14, but those are not theorems. Paper must use 'thms' to mean only theorems."
+    },
+    {
+      "location": "Table (Section 4), OnsagerAlgebra.lean row",
+      "paper_value": "24 thms",
+      "computed_value": "24 theorems",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Exact match."
+    },
+    {
+      "location": "Table (Section 4), DrinfeldDouble*.lean row",
+      "paper_value": "47 thms",
+      "computed_value": "27 theorems in DrinfeldDouble/DoubleAlgebra/DoubleRing (15+9+3), or 57 including DrinfeldEquivalence(12)+DrinfeldCenterBridge(18)",
+      "delta_pct": null,
+      "status": "FAIL",
+      "notes": "No combination of Drinfeld* files sums to 47. Three core DrinfeldDouble files = 27. All five Drinfeld* files = 57. Paper value matches neither."
+    }
+  ],
+  "theorem_refs": [
+    {
+      "name": "qInt (QNumber.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "qInt is a def, not theorem. Present in QNumber.lean."
+    },
+    {
+      "name": "qInt_three (QNumber.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "Theorem present, proved, no sorry."
+    },
+    {
+      "name": "Uqsl2 (Uqsl2.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "Uqsl2 is an abbrev (= RingQuot (ChevalleyRel k)). Present, no sorry."
+    },
+    {
+      "name": "ChevalleyRel (Uqsl2.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "Inductive proposition, well-formed, 5 constructors matching 5 relations."
+    },
+    {
+      "name": "uqsl2Mk (Uqsl2.lean)",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "Quotient map def, present."
+    },
+    {
+      "name": "RingQuot.mkAlgHom_rel",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "Mathlib infrastructure used in proofs."
+    },
+    {
+      "name": "uq_K_mul_Kinv",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "KK^-1 = 1, fully proved."
+    },
+    {
+      "name": "uq_Kinv_mul_K",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "K^-1 K = 1, fully proved."
+    },
+    {
+      "name": "uq_KE",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "KE = q^2 EK, fully proved. Paper line 142 falsely says 'pending Aristotle'."
+    },
+    {
+      "name": "uq_KF",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "KF = q^-2 FK, fully proved. Paper line 142 falsely says 'pending Aristotle'."
+    },
+    {
+      "name": "uq_serre",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": null,
+      "status": "PASS",
+      "notes": "Serre relation fully proved. Paper line 142 falsely says 'pending Aristotle'."
+    }
+  ],
+  "parameter_provenance": [
+    {
+      "key": "N/A",
+      "llm_verified": null,
+      "human_verified": null,
+      "status": "WARN",
+      "notes": "Paper 11 has no entry in PAPER_DEPENDENCIES (provenance.py). This is a pure algebra paper with no experimental parameters, so no parameter provenance is needed. But the PAPER_DEPENDENCIES registry should be updated to include paper 11."
+    }
+  ],
+  "citation_integrity": [
+    {
+      "bibkey": "Drinfeld1986",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Jimbo1986",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Terwilliger2001",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Also: bibkey says 2001 but entry is arXiv:math/0307016 (2003)."
+    },
+    {
+      "bibkey": "Baseilhac2005",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY. Bibkey says 2005 but entry cites NPB 873 (2013) and arXiv:0906.1215 (2009)."
+    },
+    {
+      "bibkey": "Kolb2014",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Kassel1995",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Paper9",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Companion paper cross-reference. Not a published citation."
+    },
+    {
+      "bibkey": "Paper10",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Companion paper cross-reference. Not a published citation."
+    }
+  ],
+  "qualitative_claims": [
+    {
+      "claim": "First quantum group definition in any proof assistant (abstract, line 49, line 180)",
+      "support": "No competing formalization found in Mathlib, Coq MathComp, or Isabelle AFP. Claim is plausible but unverifiable from codebase alone.",
+      "status": "WARN",
+      "notes": "Priority claim. Should cite a search (e.g., Mathlib docs, Coq opam, Isabelle AFP) to substantiate 'first'."
+    },
+    {
+      "claim": "KE, KF, and Serre proofs require additional algebraMap plumbing (pending Aristotle) (line 141-142)",
+      "support": "FALSE. All five Chevalley relation theorems (uq_KE, uq_KF, uq_serre) are FULLY PROVED in Uqsl2.lean with no sorry.",
+      "status": "FAIL",
+      "notes": "Paper text is STALE. The proofs were completed but the paper was not updated. Must remove 'pending Aristotle' language."
+    },
+    {
+      "claim": "zero sorry (pending Aristotle filling 11 relation proofs) (line 188-189)",
+      "support": "Self-contradictory. lake build is clean (zero sorry confirmed). No sorry exists anywhere in QNumber.lean or Uqsl2.lean. The parenthetical '(pending Aristotle filling 11 relation proofs)' is false and contradicts 'zero sorry'.",
+      "status": "FAIL",
+      "notes": "CRITICAL. The paper simultaneously claims zero sorry AND pending Aristotle work. Remove the parenthetical entirely or rewrite to reflect that ALL proofs are complete."
+    },
+    {
+      "claim": "87 theorems for Drinfeld center (intro paragraph, line 64)",
+      "support": "Paper says '87 theorems' for the center equivalence. The five Drinfeld* files total 57 theorems. Additional center-related modules (CenterEquivalenceZ2: 10, VecG: 9, VecGMonoidal: 12, S3CenterAnyons: 22, ToricCodeCenter: 25) would add more, but the exact scope of '87' is unclear.",
+      "status": "WARN",
+      "notes": "Cannot verify the '87 theorems' claim without knowing which modules are included. May be correct for a different set of modules than those checked."
+    },
+    {
+      "claim": "Hopf algebra hierarchy recently merged in Mathlib (line 57, 195)",
+      "support": "Mathlib pinned to commit 8f9d9cff. Cannot verify merge status from codebase.",
+      "status": "WARN",
+      "notes": "Verify that Coalgebra -> Bialgebra -> HopfAlgebra is present in the pinned Mathlib commit."
+    }
+  ],
+  "axiom_risk": [
+    {
+      "axiom": "None",
+      "eliminability": "N/A",
+      "reason": "QNumber.lean and Uqsl2.lean contain zero axiom declarations. Paper's 'zero axioms' claim for these modules is verified.",
+      "affected_claims": [],
+      "status": "PASS"
+    }
+  ],
+  "hypothesis_risk": [
+    {
+      "structure": "CommRing k",
+      "hypothesis": "k is a commutative ring (universe polymorphic)",
+      "nature": "Standard algebraic assumption. The construction works over any commutative ring, which is maximally general.",
+      "affected_claims": ["All q-integer and Uqsl2 claims"],
+      "status": "INFO"
+    }
+  ],
+  "figure_review": {
+    "status": "N/A",
+    "notes": "No Wave 7 / quantum group / q-number figures found in figures/ directory. Paper 11 is a pure algebra paper with no computational figures. The table in Section 4 is text-based, not a generated figure."
+  },
+  "summary": "3 FAIL, 8 WARN, 8 PASS",
+  "blocking_issues": [
+    "FAIL: QNumber.lean theorem count: paper says 13, actual is 11. Fix table.",
+    "FAIL: Uqsl2.lean theorem count: paper says 14, actual is 6. Fix table.",
+    "FAIL: DrinfeldDouble*.lean theorem count: paper says 47, actual is 27 (core) or 57 (all Drinfeld*). Fix table.",
+    "FAIL: Line 141-142 says KE/KF/Serre proofs are 'pending Aristotle' — they are FULLY PROVED. Remove stale language.",
+    "FAIL: Line 188-189 is self-contradictory: 'zero sorry (pending Aristotle filling 11 relation proofs)'. All proofs are complete. Remove parenthetical.",
+    "WARN: No PAPER_DEPENDENCIES entry for paper 11 in provenance.py.",
+    "WARN: All 6 external citations missing from CITATION_REGISTRY.",
+    "WARN: Bibkey dates inconsistent (Terwilliger2001 -> 2003 paper, Baseilhac2005 -> 2013 paper)."
+  ]
+}

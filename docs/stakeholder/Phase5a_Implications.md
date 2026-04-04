@@ -2,7 +2,7 @@
 
 ## Technical and Real-World Implications
 
-**Status:** Phase 5a COMPLETE (now superseded by Phase 5b: 900 theorems + 2 axioms, 58 modules) -- at Phase 5a exit: 748 theorems + 3 axioms (ZERO sorry), 252 Aristotle-proved, 49 Lean modules, 1390 tests, 69 figures, 8 papers
+**Status:** Phase 5a COMPLETE (now superseded by Phase 5b: 968 theorems, 0 axioms, 66 modules) -- at Phase 5a exit: 748 theorems + 3 axioms (ZERO sorry), 252 Aristotle-proved, 49 Lean modules, 1390 tests, 69 figures, 8 papers
 **Date:** April 4, 2026
 **Classification:** Research Overview — For Technical and Non-Technical Stakeholders
 **Prerequisite:** Phase 5 Implications document (March 29, 2026)

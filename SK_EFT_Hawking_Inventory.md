@@ -2,9 +2,9 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Ten papers (Phases 1-5b) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, and Waves 7A-7C (gauge-link MC + RHMC). Lean 4 formalization: 951 theorems, 0 axioms across 64 modules — ZERO sorry. 273 Aristotle-proved (270 machine + 3 manual). 1506 tests, 72 pipeline figures, 26 notebooks, 49 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Eleven papers (Phases 1-5b) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), and first quantum group formalization. Lean 4 formalization: 968 theorems, 0 axioms across 66 modules (11 sorry pending Aristotle). 273 Aristotle-proved (270 machine + 3 manual). 1554 tests, 72 pipeline figures, 28 notebooks, 49 Python source modules.
 
-**Last verified:** April 4, 2026 (axiom integrity sweep — 4 axioms discharged/removed, W7C RHMC complete, L=4 done, L=8 in flight)
+**Last verified:** April 4, 2026 (post Wave 7 audit — all axioms removed, W7C RHMC complete, L=4 done, L=8 in flight, first quantum group U_q(sl₂))
 
 ---
 
@@ -19,8 +19,8 @@
 - `HBAR`, `K_B` — SI physical constants
 - `ATOMS` dict — Atomic properties (mass, scattering length) for Rb87, K39, Na23
 - `EXPERIMENTS` dict — Experimental parameters (density, velocity, omega_perp) for Steinhauer, Heidelberg, Trento
-- `ARISTOTLE_THEOREMS` dict — 254 theorem→run_id mappings across 32+ runs
-- `ARISTOTLE_PROVED_COUNT = 99`
+- `ARISTOTLE_THEOREMS` dict — 273 theorem→run_id mappings across 33+ runs
+- `ARISTOTLE_PROVED_COUNT = 273`
 - `COLORS` dict — Plotly color palette for consistent visualization
 - `CATEGORY_HIERARCHY` — 3-layer categorical infrastructure
 - `FUSION_EXAMPLES` — 5 fusion categories with rules + F-matrices
@@ -76,11 +76,11 @@
 ---
 
 #### `src/core/visualizations.py` (~4230 lines)
-**Purpose:** All Plotly figures (60 functions) + full COLORS palette. **Only place figure functions live.**
+**Purpose:** All Plotly figures (72 functions) + full COLORS palette. **Only place figure functions live.**
 
 **Color Palette:** Steel blue (Steinhauer), berry (Heidelberg), amber (Trento), sage (dispersive), carmine (dissipative), warm tan (noise), cool grey (cross-terms)
 
-**Figure Functions by Phase (60 total):**
+**Figure Functions by Phase (72 total):**
 - Phase 1 (6): transonic_profiles, correction_hierarchy, parameter_space, spin_sonic_enhancement, temperature_decomposition, kappa_scaling
 - Phase 2 (6): cgl_fdr_pattern, even_vs_odd_kernel, boundary_term_suppression, positivity_constraint, on_shell_vanishing, einstein_relation
 - Phase 3a Third-Order (3): parity_alternation, damping_rate_third_order, spectral_correction_comparison
@@ -107,7 +107,7 @@
 
 **Key Types:** `SorryGap` (dataclass), `AristotleResult` (dataclass), `AristotleRunner` (class)
 
-**Sorry Gap Registry (254 registry entries, all gaps filled):**
+**Sorry Gap Registry (273 registry entries, all gaps filled):**
 - Phase 1: 14 gaps (AcousticMetric, SKDoubling, HawkingUniversality)
 - Phase 2: 9 gaps (SecondOrderSK, WKBAnalysis)
 - Phase 2 Stress Tests: 9 gaps (KMS optimality, FDR sign tests, limit checks)
@@ -267,7 +267,7 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (58 modules, 900 theorems + 2 axioms)
+## 2. LEAN FORMAL VERIFICATION (66 modules, 968 theorems, 0 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -281,7 +281,7 @@
 | WKBAnalysis | 561 | 15 | 0 | 2 | Damping nonneg, turning point, biconditionals |
 | CGLTransform | 352 | 7 | 0 | 2 | CGL FDR, Einstein relation, CGL→KMS chain |
 | ThirdOrderSK | 329 | 14 | 0 | 3 | Parity alternation (general N), spectral parity |
-| GaugeErasure | 262 | 11 | 1 | 3 | Gauge erasure theorem, U(1) survival, SM dichotomy |
+| GaugeErasure | 262 | 12 | 0 | 3 | Gauge erasure theorem, U(1) survival, SM dichotomy (axiom removed Wave 6) |
 | WKBConnection | 414 | 17 | 0 | 3 | Decoherence nonneg, noise floor, unitarity deficit |
 | ADWMechanism | 288 | 21 | 0 | 3 | Critical coupling pos, curvature_zero_at_Gc, NG modes |
 | ChiralityWall | 301 | 17 | 0 | 4 | GS no-go requires all, TPF evasion count, wall status |
@@ -294,7 +294,7 @@
 | SU2PseudoReality | ~200 | 10 | 0 | 5 | One-link normalization, effective coupling, Binder limits |
 | FermionBag4D | ~250 | 16 | 0 | 5 | SO(4) integration, 8-fermion bounds, bag positivity, vestigial splitting |
 | LatticeHamiltonian | ~400 | 28 | 0 | 5 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace |
-| GoltermanShamir | ~330 | 14 | 1 | 5 | 9 GS conditions as substantive Props, no-go bundle, TPF evasion, Fock space finite-dim, Pauli exclusion |
+| GoltermanShamir | ~330 | 15 | 0 | 5 | 9 GS conditions as substantive Props, no-go bundle, TPF evasion, Fock space finite-dim, Pauli exclusion (axiom removed Wave 6) |
 | TPFEvasion | ~200 | 12 | 0 | 5 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
 | KLinearCategory | ~300 | 16 | 0 | 5 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
 | SphericalCategory | ~350 | 18 | 0 | 5 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, Fibonacci φ²=φ+1 |
@@ -312,13 +312,11 @@
 | HubbardStratonovichRHMC | ~400 | 22 | 0 | 5 | HS identity, Kramers, multi-shift CG, complex pseudofermion Pfaffian identity |
 | MajoranaKramers | ~400 | 25 | 0 | 5 | Majorana Kramers degeneracy, sign-free determinant, 8×8 block structure |
 
-**Axioms:**
-- `non_abelian_center_discrete` (GaugeErasure.lean) — Encodes Lie theory: center of non-Abelian compact Lie group is discrete.
-- `gs_nogo_axiom` (GoltermanShamir.lean) — Statement-level axiomatization of GS no-go theorem. Proof requires spectral theory infrastructure not yet in Mathlib (target: future wave).
+**Axioms:** None (all removed in Wave 6 — `non_abelian_center_discrete` and `gs_nogo_axiom` proved as theorems).
 
 ---
 
-## 3. ARISTOTLE THEOREM PROVER (254 registry entries across 32+ runs)
+## 3. ARISTOTLE THEOREM PROVER (273 registry entries across 33+ runs)
 
 | Run ID | Date | Theorems | Scope |
 |--------|------|----------|-------|
@@ -358,7 +356,7 @@
 
 ---
 
-## 4. JUPYTER NOTEBOOKS (24 total: 12 Technical + 12 Stakeholder)
+## 4. JUPYTER NOTEBOOKS (28 total: 14 Technical + 14 Stakeholder)
 
 | Notebook | Phase | Topic |
 |----------|-------|-------|
@@ -387,7 +385,7 @@
 
 ---
 
-## 5. PAPER DRAFTS (9 papers + prediction tables)
+## 5. PAPER DRAFTS (11 papers + prediction tables)
 
 | Paper | Format | Lines | Topic |
 |-------|--------|-------|-------|
@@ -410,7 +408,7 @@
 
 ---
 
-## 6. TEST FILES (29 files, 1456 tests)
+## 6. TEST FILES (34 files, 1554 tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
@@ -575,13 +573,13 @@
 |----------|-------|--------|
 | **Python Source Modules** | 49 | Complete (Phases 1-5b) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 31 | 1506 tests, all passing |
-| **Notebooks** | 26 | Phases 1-5b (Technical + Stakeholder) |
-| **Lean Modules** | 64 | All build clean |
-| **Lean Theorems** | 951 (0 axioms) | Zero sorry |
+| **Test Files** | 34 | 1554 tests |
+| **Notebooks** | 28 | Phases 1-5b (Technical + Stakeholder) |
+| **Lean Modules** | 66 | All build clean |
+| **Lean Theorems** | 968 (0 axioms) | 11 sorry pending Aristotle |
 | **Aristotle-proved** | 273 (270 machine + 3 manual in registry) | 33+ runs |
-| **Manual proofs** | 678 | |
-| **Paper Drafts** | 10 + prediction tables | Full LaTeX |
+| **Manual proofs** | 695 | |
+| **Paper Drafts** | 11 + prediction tables | Full LaTeX |
 | **Pipeline Figures** | 72 | All PNGs generated |
 | **Validation Checks** | 16 | All passing |
 | **Scripts** | 11 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 4 utilities |
@@ -591,4 +589,4 @@
 
 ---
 
-**Project Status (2026-04-04):** Phase 5b COMPLETE. 951 theorems, 0 axioms (ZERO sorry), 273 Aristotle-registry entries (270 machine-proved, 3 manual), 1506 tests (all pass), 72 figures, 64 Lean modules, 49 Python modules, 10 papers, 26 notebooks. Phase 5b: SM anomaly in Z16, generation constraint, Drinfeld center (monoidal Vec_G, toric code, S3 non-abelian, CenterEquivalenceZ2, DrinfeldDoubleAlgebra, DrinfeldDoubleRing, DrinfeldEquivalence), Wang bridge (c₋=8N_f derived from fermion content). All axioms removed (Wave 6): non_abelian_center_discrete and gs_nogo_axiom proved as theorems. L=8 RHMC results pending for Paper 6.
+**Project Status (2026-04-04):** Phase 5b COMPLETE. 968 theorems, 0 axioms (11 sorry pending Aristotle in QNumber.lean + Uqsl2.lean), 273 Aristotle-registry entries (270 machine-proved, 3 manual), 1554 tests, 72 figures, 66 Lean modules, 49 Python modules, 11 papers, 28 notebooks. Phase 5b: SM anomaly in Z16, generation constraint, Drinfeld center (monoidal Vec_G, toric code, S3 non-abelian, CenterEquivalenceZ2, DrinfeldDoubleAlgebra, DrinfeldDoubleRing, DrinfeldEquivalence), Wang bridge (c₋=8N_f derived from fermion content), first quantum group U_q(sl₂). All axioms removed (Wave 6): non_abelian_center_discrete and gs_nogo_axiom proved as theorems. L=8 RHMC results pending for Paper 6.

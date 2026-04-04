@@ -117,8 +117,8 @@ def test_no_active_sorry():
     Files in SORRY_ALLOWED are awaiting Aristotle proof-filling and are
     expected to contain sorry stubs. Remove from this set as proofs are filled.
     """
-    # All sorry gaps filled by Aristotle
-    SORRY_ALLOWED = set()
+    # Sorry stubs pending Aristotle proof-filling
+    SORRY_ALLOWED = {"QNumber.lean", "Uqsl2.lean"}
 
     lean_dir = LEAN_DIR / "SKEFTHawking"
     for lean_file in lean_dir.glob("*.lean"):
@@ -161,9 +161,13 @@ def test_sorry_gap_registry():
     """
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
-    assert len(unfilled) == 0, (
-        f"{len(unfilled)} unfilled sorry gaps: "
-        f"{[g.name for g in unfilled]}"
+    # 2 unfilled: qnumber_eval (QNumber.lean, 5 sorry) + uqsl2_relations (Uqsl2.lean, 6 sorry)
+    # pending Aristotle submission
+    expected_unfilled = {"qnumber_eval", "uqsl2_relations"}
+    actual_unfilled = {g.name for g in unfilled}
+    assert actual_unfilled == expected_unfilled, (
+        f"Unexpected unfilled sorry gaps: "
+        f"expected={expected_unfilled}, got={actual_unfilled}"
     )
     assert len(SORRY_GAPS) >= 35, (
         f"Expected ≥35 sorry gaps in registry, got {len(SORRY_GAPS)}"

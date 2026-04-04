@@ -19,10 +19,10 @@
 | Proved (zero sorry) | 957 | 968 - 11 |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 34 | `find tests/ -name "test_*.py"` |
-| Test count | 1506+ | `pytest tests/ -q` |
+| Test count | 1554 | `pytest tests/ -q` |
 | Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | 28 | `ls notebooks/*.ipynb` |
-| Papers | 11 | `ls papers/*/paper_draft.tex` |
+| Papers | 11 | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 12 | See Section 9 of inventory |
 | Aristotle runs | 33+ | See Aristotle run table in full inventory |

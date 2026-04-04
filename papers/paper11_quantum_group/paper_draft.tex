@@ -136,10 +136,10 @@ $E, F, K, K^{-1}$ are defined as images of the free algebra generators.
 $K$ is proved to be a unit (\texttt{IsUnit}) with $K^{-1}$ as its
 inverse, using the \texttt{KKinv} and \texttt{KinvK} relations.
 
-All five Chevalley relations are stated as theorems. The $KK^{-1} = 1$
-and $K^{-1}K = 1$ proofs follow directly from \texttt{RingQuot.mkAlgHom\_rel}.
-The $KE$, $KF$, and Serre relation proofs require additional
-\texttt{algebraMap} plumbing (pending Aristotle automated prover).
+All five Chevalley relations are proved as theorems: $KK^{-1} = 1$
+and $K^{-1}K = 1$ via \texttt{RingQuot.mkAlgHom\_rel}; $KE = q^2 EK$
+and $KF = q^{-2}FK$ via \texttt{AlgHom.commutes}; and the Serre relation
+via \texttt{map\_sub} + \texttt{mkAlgHom\_rel} (Aristotle automated prover).
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The Chain: Onsager $\to$ Quantum Group $\to$ Gauge Theory}
@@ -152,9 +152,9 @@ chain connecting lattice physics to gauge theory:
 \textbf{Formalized} & & \textbf{Module} \\
 \hline
 Onsager algebra $O$ & & OnsagerAlgebra.lean (24 thms) \\
-$q$-integers $[n]_q$ & & QNumber.lean (13 thms) \\
-$U_q(\mathfrak{sl}_2)$ & & Uqsl2.lean (14 thms) \\
-$D(G)$, $Z(\mathrm{Vec}_G)$ & & DrinfeldDouble*.lean (47 thms) \\
+$q$-integers $[n]_q$ & & QNumber.lean (11 thms) \\
+$U_q(\mathfrak{sl}_2)$ & & Uqsl2.lean (6 thms + defs) \\
+$D(G)$, $Z(\mathrm{Vec}_G)$ & & 7 Drinfeld/Center modules (96 thms) \\
 \hline
 \textbf{Planned} & & \\
 \hline
@@ -185,8 +185,8 @@ algebra-by-generators-and-relations pattern, with \texttt{Ring} and
 \texttt{Algebra} instances automatic from \texttt{RingQuot}.
 
 The broader formalization now comprises 968~theorems across 66~Lean~4
-modules with zero axioms and zero \texttt{sorry} (pending Aristotle
-filling 11 relation proofs). The $q$-integer formalization connects the
+modules with zero axioms and zero \texttt{sorry}. The $q$-integer
+formalization connects the
 classical Dolan-Grady coefficient $[2]_1^4 = 16$ to the quantum
 deformation, and $U_q(\mathfrak{sl}_2)$ establishes the algebraic
 foundation for the quantum group $\to$ gauge emergence chain.

@@ -332,7 +332,7 @@ def check_paper_table_consistency() -> CheckResult:
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("theorems", "Theorem registry has 56 entries and is self-consistent")
+@register_check("theorems", "Theorem registry has 273 entries and is self-consistent")
 def check_theorem_count() -> CheckResult:
     from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
 
