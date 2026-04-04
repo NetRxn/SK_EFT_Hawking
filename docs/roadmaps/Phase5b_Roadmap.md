@@ -245,14 +245,17 @@ The project has **2 axioms** (down from 7 after integrity sweep 2026-04-04).
 coefficient "8" in c₋ = 8N_f from the 16 Weyl fermions per SM generation.
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/WangBridge.lean` — ~5-10 theorems:
-  - Axiom: each Weyl fermion contributes c = 1/2 to chiral central charge
-  - Theorem: c₋ = total_components × (1/2) = 16/2 = 8 per generation (with ν_R)
-  - Theorem: c₋ = 15/2 per generation (without ν_R) — fractional, implies ν_R needed
-  - Bridge: SMFermionData.total_components → GenerationConstraint.c₋_coeff
-  - Full chain: SM fermion enum → component count → c₋ = 8N_f → (24|c₋ → 3|N_f)
+- [x] `lean/SKEFTHawking/WangBridge.lean` — 9 theorems + 1 def, zero sorry:
+  - def weyl_central_charge: c = N_weyl / 2
+  - fermion_count_gives_central_charge: c₋ = (Σ components)/2 = 16/2 = 8
+  - central_charge_fractional_without_nu_R: 15/2 ∉ ℕ (ν_R required)
+  - wang_bridge_full_chain: SM fermions → c₋ = 8N_f → (24|c₋ → 3|N_f)
+  - wang_sixteen_convergence: Weyl count 16 = Z₁₆ modulus
+- [x] `src/core/formulas.py`: wang_bridge_central_charge (with Lean/Aristotle/Source refs)
+- [x] `tests/test_sm_anomaly.py`: TestWangBridge (5 tests, all pass)
+- [x] Paper 9 updated (generation constraint derived from fermion content)
 
-**Paper impact:** Strengthens Paper 9 (generation constraint derived from fermion content).
+**Paper impact:** Strengthens Paper 9. Independent formal argument for ν_R from c₋ integrality.
 
 ---
 
@@ -268,13 +271,18 @@ using Mathlib's existing NumberTheory.ModularForms infrastructure (~85% coverage
 4. Combined with c₋ = 8N_f (Wave 4): N_f ≡ 0 mod 3
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/ModularInvarianceConstraint.lean` — ~15-25 theorems:
-  - Import Mathlib NumberTheory.ModularForms, DedekindEta
-  - T-transformation phase: e^{2πi/24} as 24th root of unity
-  - Modular invariance → phase = 1 → 24 | c₋
-  - Connection to GenerationConstraint: the "24" is DERIVED, not axiomatized
-- [ ] Python: formulas, tests, visualization of modular constraint
-- [ ] Full pipeline stages 1-12
+- [x] `lean/SKEFTHawking/ModularInvarianceConstraint.lean` — 12 theorems, 4 sorrys (Aristotle pending):
+  - ζ₂₄ = e^{2πi/24} definition and properties (sorry: pow_24, ne_one, primitive)
+  - qParam_shift: q_h(z+1) = e^{2πi/h} · q_h(z) — PROVED from Complex.exp_add
+  - framing_anomaly_constraint: e^{2πic/24} = 1 ↔ 24|c (forward direction proved)
+  - Complete chain: η → 24 → c₋=8N_f → 3|N_f
+  - 24 = 8×3 factorization, coprimality, constraint sharpness
+- [x] Python: modular_t_phase, dedekind_eta_origin_of_24 in formulas.py
+- [x] Tests: test_modular_invariance.py (18 tests, all pass)
+- [x] Visualization: fig75_modular_invariance_phase (T-phase on unit circle)
+- [x] Paper 10 draft: "From Modular Forms to Generation Counting"
+- [x] Notebooks: Phase5b_ModularGeneration_Technical/Stakeholder (both execute)
+- [x] Stakeholder docs: Phase5b_Implications.md, Phase5b_Strategic_Positioning.md
 
 **Paper impact:** Potential Paper 10: *"From Modular Forms to Generation Counting"*
   - First formal derivation connecting number-theoretic modular invariance to SM physics

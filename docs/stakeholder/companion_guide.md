@@ -479,13 +479,13 @@ The exact WKB connection formula completes the prediction chain. Instead of just
 
 | Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 | Phase 5a | Phase 5b |
 |--------|---------|---------|---------|---------|---------|----------|----------|
-| Papers | 1 | 2 | 5 | 6 | 7 | 8 | 8 |
-| Verified theorems | 14 | 40 | 130+1ax | 216+1ax | 675+3ax | 748+3ax | 900+2ax |
-| Lean modules | 4 | 7 | 11 | 16 | 43 | 49 | 58 |
-| Tests | 12 | 64 | 269 | 820 | 1339 | 1390 | 1456 |
+| Papers | 1 | 2 | 5 | 6 | 7 | 8 | 10 |
+| Verified theorems | 14 | 40 | 130+1ax | 216+1ax | 675+3ax | 748+3ax | 936+2ax |
+| Lean modules | 4 | 7 | 11 | 16 | 43 | 49 | 63 |
+| Tests | 12 | 64 | 269 | 820 | 1339 | 1390 | 1506 |
 | Pipeline figures | 6 | 12 | 34 | 44 | 64 | 69 | 72 |
-| Aristotle-proved | 14 | 40 | 99 | 211 | 235 | 252 | 253 |
-| Walls tested | 0 | 0 | 2 | 2+vestigial | chirality formalized | chirality **verified** | SM anomaly + Drinfeld center |
+| Aristotle-proved | 14 | 40 | 99 | 211 | 235 | 252 | 254 |
+| Key results | — | — | 2 walls | +vestigial | chirality formalized | chirality **verified** | **Why 3 generations** + gauge emergence |
 
 ---
 
@@ -495,7 +495,7 @@ For technical questions about the Lean formalization, see `lean/README.md`.
 
 For the full technical papers, see `papers/paper1-8_*/paper_draft.tex`.
 
-For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase5a_Implications.md`.
+For detailed implications of each phase, see `docs/stakeholder/Phase1_Implications.md` through `Phase5b_Implications.md`.
 
 ---
 

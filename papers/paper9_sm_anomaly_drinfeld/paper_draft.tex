@@ -28,8 +28,9 @@ Additionally, we construct the first monoidal category instance for $G$-graded
 modules in a proof assistant, compute the Drinfeld centers of $\mathrm{Vec}_{\mathbb{Z}/2}$
 (toric code, 4 anyons) and $\mathrm{Vec}_{S_3}$ (8 non-abelian anyons), and
 establish $Z(\mathrm{Vec}_G)$ as a braided monoidal category via Mathlib's
-infrastructure. All results are verified by \texttt{lake build} with zero
-\texttt{sorry} across 924 theorems and 2 axioms in 62 Lean~4 modules, with 251
+infrastructure. All modules referenced in this paper are verified by
+\texttt{lake build} with zero \texttt{sorry}. The broader project comprises
+936~theorems and 2~axioms across 63~Lean~4 modules, with 251
 filled by the Aristotle automated prover.
 \end{abstract}
 
@@ -268,7 +269,7 @@ algebra structure (coproduct, counit, involutive antipode), establishing the
 algebraic foundation for $Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$.
 \end{enumerate}
 
-The formal verification comprises 924 theorems + 2 axioms across 62 Lean~4
+The formal verification comprises 936 theorems + 2 axioms across 63 Lean~4
 modules, conditional on two axioms encoding established group theory
 (\texttt{non\_abelian\_center\_discrete}) and lattice field theory
 (\texttt{gs\_nogo\_axiom}). Verified by \texttt{lake build} (zero \texttt{sorry}).

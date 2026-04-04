@@ -1559,6 +1559,15 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="AddCommGroup axioms: ext + Pi pointwise. Distrib: unfold ddAlgMul, mul_add/add_mul + sum_add_distrib. Zero_mul/mul_zero: Pi.zero_apply + sum_const_zero. AlgebraMap: Finset.sum_eq_single 1 for convolution with unit. See PROVIDED SOLUTION hints in file.",
         filled=True,  # Aristotle run 52992d6a: all 13 sorrys filled
     ),
+    # Phase 5b Wave 5: ModularInvarianceConstraint (4 sorrys — complex exponential)
+    SorryGap(
+        module="SKEFTHawking.ModularInvarianceConstraint",
+        name="modular_invariance_sorrys",
+        priority=1,
+        description="4 sorrys: zeta24_pow_24, zeta24_ne_one, zeta24_primitive, qParam_integer_invariant, plus backward direction of framing_anomaly_constraint. All complex exponential arithmetic.",
+        strategy_hint="zeta24^24: unfold zeta24, use exp_nat_mul or exp_add repeatedly, reduce to cexp(2πi)=1. zeta24_ne_one: cexp(2πi/24)=1 would mean 2πi/24=2πik, contradiction. zeta24_primitive: exp_eq_one_iff + divisibility. qParam_integer_invariant: cexp(2πi(z+1))=cexp(2πiz)*cexp(2πi)=cexp(2πiz)*1. See PROVIDED SOLUTION hints in file.",
+        filled=False,
+    ),
 ]
 
 

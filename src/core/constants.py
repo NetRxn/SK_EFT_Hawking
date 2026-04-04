@@ -1098,6 +1098,26 @@ ARISTOTLE_THEOREMS = {
     'generation_mod3_constraint': 'a1dfcbde',
     # Phase 5b Wave 2: VecGMonoidal.lean (1 theorem by Aristotle)
     'vecG_braided': '48493889',
+    # Phase 5b Wave 3: DrinfeldDoubleAlgebra.lean (5 theorems by Aristotle)
+    'ddAlgMul_one_left': '878b181f',
+    'ddAlgMul_one_right': '878b181f',
+    'ddAlgMul_assoc': '878b181f',
+    'ddBasis_mul': '878b181f',
+    'abelian_dd_conjugation': '878b181f',
+    # Phase 5b Wave 3: DrinfeldDoubleRing.lean (13 sorrys filled by Aristotle)
+    'DG_instAddCommGroup_zsmul_succ': '52992d6a',
+    'DG_instAddCommGroup_zsmul_neg': '52992d6a',
+    'DG_instRing_left_distrib': '52992d6a',
+    'DG_instRing_right_distrib': '52992d6a',
+    'DG_instRing_zero_mul': '52992d6a',
+    'DG_instRing_mul_zero': '52992d6a',
+    'DG_instAlgebra_map_one': '52992d6a',
+    'DG_instAlgebra_map_mul': '52992d6a',
+    'DG_instAlgebra_map_zero': '52992d6a',
+    'DG_instAlgebra_map_add': '52992d6a',
+    'DG_instAlgebra_commutes': '52992d6a',
+    'DG_instAlgebra_smul_def': '52992d6a',
+    'DG_basis_mul': '52992d6a',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)

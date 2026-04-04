@@ -59,6 +59,7 @@ import SKEFTHawking.DrinfeldDoubleAlgebra
 import SKEFTHawking.DrinfeldDoubleRing
 import SKEFTHawking.DrinfeldEquivalence
 import SKEFTHawking.WangBridge
+import SKEFTHawking.ModularInvarianceConstraint
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

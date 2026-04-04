@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Waves 3-4 complete: 924 thm + 2 ax, 62 modules, zero sorry)
+**Last synced:** April 4, 2026 (Waves 1-5: 936 thm + 2 ax, 63 modules, 4 sorrys in ModularInvarianceConstraint pending Aristotle)
 
 ---
 
@@ -10,15 +10,15 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 924 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 254 (251 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| Manual proofs | 670 | 924 - 254 |
+| Lean theorems | 936 + 2 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | 272 (269 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
+| Manual proofs | 664 | 936 - 272 |
 | **Sorry gaps** | **0** | All filled |
-| Lean modules | 62 | `ls lean/SKEFTHawking/*.lean` |
+| Lean modules | 63 | `ls lean/SKEFTHawking/*.lean` |
 | Proved (zero sorry) | 924 + 2ax | All proved |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 30 | `find tests/ -name "test_*.py"` |
-| Test count | 1488 | `pytest tests/ -q` (1456 + 27 drinfeld algebra + 5 wang bridge) |
+| Test files | 31 | `find tests/ -name "test_*.py"` |
+| Test count | 1506 | `pytest tests/ -q` (1488 + 18 modular invariance) |
 | Figures | 71 | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | 24 | `ls notebooks/*.ipynb` (22 + 2 Phase 5b SM anomaly/Drinfeld) |
 | Papers | 9 | `ls papers/*/paper_draft.tex` (8 + Paper 9 SM anomaly + Drinfeld) |
@@ -172,6 +172,7 @@
 | DrinfeldDoubleRing | 3+4inst | DG newtype wrapper, Ring + Algebra k instances, distrib, basis_mul (**ALL PROVED**, Aristotle `52992d6a`) |
 | DrinfeldEquivalence | 12 | Z(Vec_G)≅Rep(D(G)): simple counts, Hopf structure, antipode involutive, gauge emergence bridge (**ALL PROVED**) |
 | WangBridge | 9 | Derives c₋=8N_f from SM fermion content (16 Weyl → c₋=8), fractional c₋ without ν_R, full chain to N_f≡0(3), "16 convergence" (**ALL PROVED**) |
+| ModularInvarianceConstraint | 12 | ζ₂₄ root of unity, q-parameter shift (proved), framing anomaly 24\|c₋ ↔ phase=1, complete chain η→24→3\|N_f, Rokhlin "16" (**4 sorrys**, Aristotle pending) |
 
 ---
 

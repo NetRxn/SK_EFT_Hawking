@@ -4995,5 +4995,112 @@ def fig_drinfeld_equivalence_structure() -> go.Figure:
     return fig
 
 
+def fig_modular_invariance_phase() -> go.Figure:
+    """Modular T-transformation phase vs number of SM generations.
+
+    Shows e^{2πi·c₋/24} for c₋ = 8N_f. The phase is 1 (modular invariant)
+    only when N_f is a multiple of 3. Visualizes WHY N_f = 3 is special.
+
+    Data from: ModularInvarianceConstraint.lean (12 thms),
+    WangBridge.lean (9 thms), GenerationConstraint.lean (13 thms).
+    """
+    import cmath
+
+    n_values = list(range(1, 13))
+    phases_real = []
+    phases_imag = []
+    colors = []
+
+    for n in n_values:
+        c_minus = 8 * n
+        phase = cmath.exp(2j * cmath.pi * c_minus / 24)
+        phases_real.append(phase.real)
+        phases_imag.append(phase.imag)
+        colors.append(COLORS["Rb87"] if n % 3 == 0 else COLORS["cross"])
+
+    fig = go.Figure()
+
+    # Unit circle
+    theta = np.linspace(0, 2 * np.pi, 100)
+    fig.add_trace(go.Scatter(
+        x=np.cos(theta), y=np.sin(theta),
+        mode='lines', line=dict(color='rgba(0,0,0,0.15)', width=1, dash='dot'),
+        showlegend=False,
+    ))
+
+    # Group N_f values by their phase position (mod 3)
+    groups = {0: [], 1: [], 2: []}
+    for n in n_values:
+        groups[n % 3].append(n)
+
+    # Three distinct phase positions
+    phase_positions = {
+        0: (1.0, 0.0),       # mod 3 = 0: phase = 1
+        1: (-0.5, 0.866),    # mod 3 = 1: phase = ω
+        2: (-0.5, -0.866),   # mod 3 = 2: phase = ω²
+    }
+
+    # Plot each group as a single marker with grouped label
+    for mod_val, ns in groups.items():
+        px, py = phase_positions[mod_val]
+        color = COLORS["Rb87"] if mod_val == 0 else COLORS["cross"]
+        label = ",".join(str(n) for n in ns)
+        fig.add_trace(go.Scatter(
+            x=[px], y=[py],
+            mode='markers',
+            marker=dict(size=18 if mod_val == 0 else 14, color=color,
+                        line=dict(width=2 if mod_val == 0 else 1, color='black')),
+            showlegend=False,
+        ))
+
+    # Grouped labels with offset to avoid overlap
+    fig.add_annotation(x=1.0, y=-0.18,
+        text="<b>N<sub>f</sub> = 3, 6, 9, 12</b>",
+        showarrow=False, font=dict(size=12, color=COLORS["Rb87"], family=FONT['family']))
+    fig.add_annotation(x=-0.5, y=1.08,
+        text="N<sub>f</sub> = 1, 4, 7, 10",
+        showarrow=False, font=dict(size=11, color=COLORS["cross"], family=FONT['family']))
+    fig.add_annotation(x=-0.5, y=-1.08,
+        text="N<sub>f</sub> = 2, 5, 8, 11",
+        showarrow=False, font=dict(size=11, color=COLORS["cross"], family=FONT['family']))
+
+    # Highlight ring at phase = 1
+    fig.add_trace(go.Scatter(
+        x=[1], y=[0],
+        mode='markers',
+        marker=dict(size=26, color='rgba(0,0,0,0)', line=dict(width=3, color=COLORS["Rb87"])),
+        name="Phase = 1 (modular invariant)",
+    ))
+
+    # Constraint annotation
+    fig.add_annotation(
+        x=1.25, y=0.25,
+        text="<b>24 | c₋</b><br>N<sub>f</sub> ≡ 0 mod 3",
+        showarrow=True, arrowhead=2, arrowcolor=COLORS["Rb87"],
+        ax=40, ay=-30,
+        font=dict(size=13, color=COLORS["Rb87"], family=FONT['family']),
+        align='left',
+    )
+
+    fig.update_layout(
+        title=dict(text="Framing Anomaly: T-Phase e<sup>2πi·c₋/24</sup> vs Generation Count",
+                   font=TITLE_FONT),
+        xaxis=dict(title="Re(phase)", range=[-1.4, 1.6], scaleanchor="y",
+                   showgrid=True, gridcolor="rgba(0,0,0,0.08)",
+                   zeroline=True, zerolinecolor="rgba(0,0,0,0.2)",
+                   showline=True, linecolor="black", mirror=True),
+        yaxis=dict(title="Im(phase)", range=[-1.4, 1.4],
+                   showgrid=True, gridcolor="rgba(0,0,0,0.08)",
+                   zeroline=True, zerolinecolor="rgba(0,0,0,0.2)",
+                   showline=True, linecolor="black", mirror=True),
+        font=FONT,
+        plot_bgcolor='white', paper_bgcolor='white',
+        width=600, height=600,
+        legend=dict(x=0.02, y=0.98),
+    )
+
+    return fig
+
+
 if __name__ == "__main__":
     main()

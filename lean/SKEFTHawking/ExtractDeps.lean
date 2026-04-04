@@ -95,15 +95,25 @@ private def inSKNamespace (n : Name) : Bool :=
 private def isAuxName (n : Name) : Bool :=
   n.isInternal
 
-/-- Classify a ConstantInfo into a kind string. -/
-private def classifyDecl (env : Environment) (name : Name) (ci : ConstantInfo) : String :=
-  -- Check structure/class/instance before falling through to generic classification
+/-- Check if a Name's last string component starts with "inst".
+    This is Lean's naming convention for auto-generated instances. -/
+private def nameHasInstPrefix (n : Name) : Bool :=
+  match n with
+  | .str _ s => s.startsWith "inst"
+  | _ => false
+
+/-- Classify a ConstantInfo into a kind string.
+    Priority: structure/class > instance > base ConstantInfo kind.
+    Uses CoreM for instance check, with name heuristic fallback. -/
+private def classifyDecl (env : Environment) (name : Name) (ci : ConstantInfo) : MetaM String := do
+  -- Check structure/class before falling through to generic classification
   if isStructure env name then
-    if isClass env name then "class" else "structure"
-  else if Meta.instanceExtension.getState env |>.instanceNames.contains name then
-    "instance"
+    return if isClass env name then "class" else "structure"
+  -- Check instance via extension, then fallback to name heuristic
+  else if (← isInstance name) || nameHasInstPrefix name then
+    return "instance"
   else
-    match ci with
+    return match ci with
     | .axiomInfo _  => "axiom"
     | .thmInfo _    => "theorem"
     | .defnInfo _   => "def"
@@ -154,7 +164,7 @@ private def extractStructureFields (env : Environment) (name : Name) : MetaM (Ar
 /-- Process a single declaration: extract all metadata as JSON. -/
 private def processDecl (env : Environment) (name : Name) (ci : ConstantInfo)
     : MetaM Json := do
-  let kind := classifyDecl env name ci
+  let kind ← classifyDecl env name ci
   let moduleName := getModuleName env name
   let typeStr ← ppExprStr ci.type
 

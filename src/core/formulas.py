@@ -3598,3 +3598,68 @@ def wang_bridge_central_charge(n_weyl):
         'anomaly_free': is_integral and (int(c_minus_per_gen) * 1) % 24 == 0,
         'requires_nu_R': not is_integral,
     }
+
+
+def modular_t_phase(c_minus):
+    """Phase acquired by partition function under T: τ → τ+1.
+
+    Z(τ+1) = e^{2πi·c₋/24} · Z(τ)
+
+    The phase comes from the Dedekind eta function:
+    η(τ) = q^{1/24} Π(1-qⁿ), and η(τ+1) = e^{2πi/24} · η(τ).
+    For Z ~ η^{-c₋}: phase = e^{-2πi·c₋/24}.
+
+    Modular invariance requires phase = 1, i.e., 24 | c₋.
+
+    Lean: framing_anomaly_constraint (ModularInvarianceConstraint.lean)
+    Aristotle: pending
+    Source: Alvarez-Gaumé & Witten, NPB 234, 269 (1984)
+
+    Args:
+        c_minus: chiral central charge (integer for consistent theory)
+
+    Returns:
+        dict with phase, modular invariance check, and constraint
+    """
+    import cmath
+    phase = cmath.exp(2j * cmath.pi * c_minus / 24)
+    is_invariant = abs(phase - 1) < 1e-10
+    return {
+        'c_minus': c_minus,
+        'phase': phase,
+        'phase_magnitude': abs(phase),
+        'is_modular_invariant': is_invariant,
+        'c_minus_mod_24': c_minus % 24,
+        'satisfies_framing_anomaly': c_minus % 24 == 0,
+    }
+
+
+def dedekind_eta_origin_of_24():
+    """Explains the origin of "24" in the framing anomaly.
+
+    The Dedekind eta function η(τ) = q^{1/24} Π_{n≥1}(1-qⁿ) where q = e^{2πiτ}.
+    Under T: τ → τ+1:
+      - q^{1/24} → e^{2πi/24} · q^{1/24}  (the 1/24 shifts)
+      - Π(1-qⁿ) → Π(1-qⁿ)                 (invariant, since q→q for integer n)
+    So η(τ+1) = ζ₂₄ · η(τ) where ζ₂₄ = e^{2πi/24}.
+
+    The 1/24 comes from ζ(-1) = -1/12 (Riemann zeta regularization),
+    giving Casimir energy E₀ = -c/24.
+
+    24 = 8 × 3: the "8" is c₋ per generation, the "3" is N_f.
+
+    Lean: qParam_shift, twenty_four_origin (ModularInvarianceConstraint.lean)
+    Aristotle: manual
+    Source: Dedekind (1877); Rademacher, Topics in Analytic Number Theory (1973)
+
+    Returns:
+        dict with the mathematical explanation
+    """
+    return {
+        'eta_prefactor_exponent': '1/24',
+        'zeta_minus_one': -1/12,
+        'casimir_energy_formula': 'E_0 = -c/24',
+        'T_phase': 'e^{2πi/24}',
+        'factorization_24': {'8': 'c₋ per generation', '3': 'N_f constraint'},
+        'origin': 'Riemann zeta regularization ζ(-1) = -1/12',
+    }
