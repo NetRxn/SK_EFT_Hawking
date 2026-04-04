@@ -1,7 +1,7 @@
 # Dissipative EFT Corrections to Analog Hawking Radiation
 
 Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified codebase:
+to acoustic Hawking radiation in BEC analog gravity. Nine papers in a unified codebase:
 
 - **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
   δ_diss = Γ_H/κ correction. PRL format, submission-ready.
@@ -47,7 +47,7 @@ SK_EFT_Hawking/
 ├── lean/                              # Lean 4 formalization (900 theorems + 2 axioms, 58 modules, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 43)
+│   ├── SKEFTHawking.lean              # Root module (imports all 58)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
