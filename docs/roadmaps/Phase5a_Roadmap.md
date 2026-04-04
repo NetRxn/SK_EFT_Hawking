@@ -77,7 +77,7 @@
 **Mathlib infrastructure needed:** `FreeLieAlgebra` (exists), quotient construction (standard), sl₂ Lie algebra (exists as `LieAlgebra.sl2Triple`).
 
 **Deliverables:**
-- [x] `lean/SKEFTHawking/OnsagerAlgebra.lean` — 24 theorems (1 sorry pending Aristotle):
+- [x] `lean/SKEFTHawking/OnsagerAlgebra.lean` — 24 theorems, zero sorry:
   - `DolanGradyPresentation`, `DaviesPresentation` structures
   - Davies isomorphism statement, abelian G-subalgebra, G antisymmetry
   - `ChevalleyInvolution`, `LoopAlgebraSl2`, embedding verification
@@ -86,10 +86,10 @@
 - [x] Formulas in `formulas.py`: onsager_dg_relation, onsager_davies_commutator, onsager_chevalley_embedding, onsager_dimension
 - [x] Constants in `constants.py`: ONSAGER_ALGEBRA parameters
 - [x] Tests in `tests/test_onsager.py` (30 tests, all pass)
-- [ ] Aristotle: 1 sorry (`davies_G_antisymmetry`) — submitted, in flight
+- [x] Aristotle: `davies_G_antisymmetry` proved (run `9d6f2432`)
 - [x] Document sync
 
-**Status: IN PROGRESS** — Aristotle filling last sorry. All other deliverables complete.
+**Status: COMPLETE** — 24 theorems, zero sorry. Aristotle `9d6f2432` filled `davies_G_antisymmetry`.
 **Actual:** 24 theorems (exceeded ~15-25 estimate). First Onsager algebra formalization in any proof assistant.
 
 ---
@@ -105,17 +105,18 @@
 4. This contraction is the formal mechanism encoding the Witten anomaly on the lattice
 
 **Deliverables:**
-- [x] `lean/SKEFTHawking/OnsagerContraction.lean` — 12 theorems (2 sorry pending Aristotle):
+- [x] `lean/SKEFTHawking/OnsagerContraction.lean` — 12 theorems, zero sorry:
   - `ContractionData` structure, rescaling theorems
   - Commutator vanishing at ε=0, generator vanishing
   - su(2) dimension recovery, coefficient match
   - Anomaly encoding, anomaly cancellation connection
   - Filtered algebra interpretation, representation compatibility
 - [x] Formula in `formulas.py`: onsager_contraction
-- [ ] Aristotle: 2 sorrys (contraction_rescaling, contraction_GG_still_zero) — registered, will batch
-- [ ] Tests, document sync (pending batch with Wave 1A completion)
+- [x] Aristotle: `contraction_rescaling` proved (run `36b7796f`), `contraction_GG_still_zero` proved manually
+- [x] Tests in `tests/test_contraction.py` (14 tests, all pass)
+- [x] Document sync
 
-**Status: IN PROGRESS** — Lean module written, 2 sorrys registered for next Aristotle batch.
+**Status: COMPLETE** — 12 theorems, zero sorry. Aristotle `36b7796f` + manual proof.
 **Actual:** 12 theorems (within ~10-15 estimate). Standard Inönü-Wigner construction as expected.
 
 ---
@@ -240,7 +241,8 @@
   - Unit laws, augmentation map
   - Hopf algebra structure (statement level)
   - Ext group connection: Ext⁴ → ℤ₁₆ = 2⁴, change-of-rings theorem
-- [ ] Tests, document sync (pending batch)
+- [x] Tests in `tests/test_steenrod.py` (11 tests, all pass)
+- [x] Document sync
 
 **Status: COMPLETE** — All 17 theorems proved, zero sorry. First Steenrod algebra formalization in any proof assistant.
 **Actual:** 17 theorems (within ~15-25 estimate). `native_decide` confirmed A1 dimension. Multiplication table fully explicit and degree-verified.
@@ -312,7 +314,8 @@ These are research-only waves. No implementation — they produce deep research 
   - `GappedInterfaceConjecture` structure (TPF 2026 formal statement)
   - Conditional theorems: anomaly-free ↔ SMG, contrapositive no-go
   - Bridges to Z₁₆, GS, TPF, Fidkowski-Kitaev
-- [ ] Tests, document sync (pending batch)
+- [x] Tests in `tests/test_smg.py` (13 tests, all pass)
+- [x] Document sync
 
 **Status: COMPLETE** — All 13 theorems proved manually, zero sorry.
 **Actual:** 13 theorems (within ~10-15 estimate). Purely definitional as expected.
@@ -327,8 +330,6 @@ These are research-only waves. No implementation — they produce deep research 
   - Phase 2 (2-4yr): Verified CG/multi-shift CG, SpMV
   - Phase 3 (4-7yr): Staggered Dirac, Wilson action, HMC
   - Infrastructure dependency table, effort estimates (20-40 py total)
-- [ ] Deep research task for Mathlib probability infrastructure assessment
-
 **Status: COMPLETE** — Roadmap written. Execution deferred to Phase 6 (Mathlib dependency).
 
 ---

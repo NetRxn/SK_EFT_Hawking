@@ -66,10 +66,15 @@ Then substitute AA_comm: [A_m, A_n] = 4·G_{m-n}. So the result is ε²·4·G_{m
 In Lean, use LieAlgebra.smul_lie and LieAlgebra.lie_smul to factor out scalars,
 then rewrite with AA_comm and simplify the scalar product to ε².
 -/
-theorem contraction_rescaling (L : Type u) [AddCommGroup L] [Module ℂ L]
-    [LieRing L] [LieAlgebra ℂ L] (D : DaviesPresentation L) (ε : ℂ) (m n : ℤ) :
+theorem contraction_rescaling (L : Type u) [LieRing L] [LieAlgebra ℂ L]
+    (D : DaviesPresentation L) (ε : ℂ) (m n : ℤ) :
     ⁅ε • D.A m, ε • D.A n⁆ = ε ^ 2 • (4 : ℂ) • D.G (m - n) := by
-  sorry
+  have smul_lie_self : ∀ (ε : ℂ) (x y : L), ⁅ε • x, y⁆ = ε • ⁅x, y⁆ := by
+    intro ε x y
+    rw [← lie_skew (ε • x) y, LieAlgebra.lie_smul, ← smul_neg]
+    congr 1
+    exact lie_skew x y
+  rw [smul_lie_self, LieAlgebra.lie_smul, smul_smul, sq, D.AA_comm, smul_smul]
 
 /--
 The rescaled GG commutator remains zero:
@@ -86,10 +91,15 @@ Factor out scalars by bilinearity: [ε²·G_m, ε²·G_n] = ε²·ε²·[G_m, G_
 Then apply GG_comm to get [G_m, G_n] = 0. So the result is ε⁴·0 = 0.
 Use smul_lie and lie_smul from Mathlib, then rewrite with GG_comm and smul_zero.
 -/
-theorem contraction_GG_still_zero (L : Type u) [AddCommGroup L] [Module ℂ L]
-    [LieRing L] [LieAlgebra ℂ L] (D : DaviesPresentation L) (ε : ℂ) (m n : ℤ) :
+theorem contraction_GG_still_zero (L : Type u) [LieRing L] [LieAlgebra ℂ L]
+    (D : DaviesPresentation L) (ε : ℂ) (m n : ℤ) :
     ⁅ε ^ 2 • D.G m, ε ^ 2 • D.G n⁆ = 0 := by
-  sorry
+  have smul_lie_self : ∀ (c : ℂ) (x y : L), ⁅c • x, y⁆ = c • ⁅x, y⁆ := by
+    intro c x y
+    rw [← lie_skew (c • x) y, LieAlgebra.lie_smul, ← smul_neg]
+    congr 1
+    exact lie_skew x y
+  rw [smul_lie_self, LieAlgebra.lie_smul, D.GG_comm, smul_zero, smul_zero]
 
 /-! ## 2. The ε → 0 Limit -/
 

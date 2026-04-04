@@ -1068,11 +1068,12 @@ ARISTOTLE_THEOREMS = {
     'heatbath_a_trick_covariance': 'manual',
     # Phase 5a Wave 1A: OnsagerAlgebra.lean
     'davies_G_antisymmetry': '9d6f2432',
+    # Phase 5a Wave 1B: OnsagerContraction.lean
+    'contraction_rescaling': '36b7796f',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-# Count updated when Aristotle fills new sorry stubs (Phase 5a Wave 1B pending)
-assert ARISTOTLE_PROVED_COUNT == 234, f"Expected 234 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 235, f"Expected 235 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

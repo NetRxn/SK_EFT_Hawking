@@ -46,8 +46,7 @@ def DG_COEFF : ℤ := 16
 Structure encoding the Dolan-Grady presentation of the Onsager algebra.
 Two generators A₀, A₁ in a Lie algebra satisfying the cubic relations.
 -/
-structure DolanGradyPresentation (L : Type u) [AddCommGroup L] [Module ℂ L]
-    [LieRing L] [LieAlgebra ℂ L] where
+structure DolanGradyPresentation (L : Type u) [LieRing L] [LieAlgebra ℂ L] where
   A₀ : L
   A₁ : L
   /-- First DG relation: [A₀, [A₀, [A₀, A₁]]] = 16[A₀, A₁] -/
@@ -137,8 +136,7 @@ theorem davies_isomorphism_statement :
 The Davies presentation has abelian G-subalgebra: [G_m, G_n] = 0 for all m, n.
 This is immediate from the defining relations.
 -/
-theorem davies_abelian_G (L : Type u) [LieRing L] [LieAlgebra ℂ L]
-    (D : DaviesPresentation L) (m n : ℤ) :
+theorem davies_abelian_G (L : Type u) [LieRing L] [LieAlgebra ℂ L] (D : DaviesPresentation L) (m n : ℤ) :
     ⁅D.G m, D.G n⁆ = 0 :=
   D.GG_comm m n
 
@@ -158,8 +156,7 @@ Rewrite using Davies AA_comm on both sides to get
 cancellation follows from the injectivity of scalar multiplication
 by the nonzero element (4 : ℂ).
 -/
-theorem davies_G_antisymmetry (L : Type u) [LieRing L] [LieAlgebra ℂ L]
-    (D : DaviesPresentation L) (m n : ℤ) :
+theorem davies_G_antisymmetry (L : Type u) [LieRing L] [LieAlgebra ℂ L] (D : DaviesPresentation L) (m n : ℤ) :
     (4 : ℂ) • D.G (m - n) = -((4 : ℂ) • D.G (n - m)) := by
   rw [← D.AA_comm m n, ← D.AA_comm n m]
   exact (lie_skew (D.A m) (D.A n)).symm

@@ -1,0 +1,10 @@
+SK-EFT Hawking Validation Report
+Generated: 20260404T001233Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] theorems
+  - TOTAL_THEOREMS — actual=235, expected=233
+  - len(ARISTOTLE_THEOREMS) — actual=235, expected=233
+  + consistency — TOTAL=235, dict=235
+
+Overall: 0/1 passed

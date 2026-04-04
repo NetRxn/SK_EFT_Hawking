@@ -1,0 +1,12 @@
+[build-system]
+requires = ["maturin>=1.8,<2"]
+build-backend = "maturin"
+
+[project]
+name = "sk-eft-rhmc"
+version = "0.1.0"
+requires-python = ">=3.14"
+
+[tool.maturin]
+manifest-path = "Cargo.toml"
+module-name = "sk_eft_rhmc"

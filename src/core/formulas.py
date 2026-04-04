@@ -3124,9 +3124,9 @@ def onsager_contraction(epsilon, A0_val, A1_val):
     After the contraction, the resulting 3-dimensional algebra has
     commutation relations isomorphic to su(2).
 
-    Lean: contraction_rescaling, contraction_commutator_vanishes,
-          contraction_su2_recovery
-    Aristotle: pending
+    Lean: contraction_rescaling, contraction_GG_still_zero,
+          contraction_commutator_vanishes, su2_dimension
+    Aristotle: 36b7796f (contraction_rescaling), manual (contraction_GG_still_zero)
     Source: Gioia & Thorngren, PRL 136, 061601 (2026); Inönü & Wigner,
             Proc. Natl. Acad. Sci. 39, 510 (1953)
 

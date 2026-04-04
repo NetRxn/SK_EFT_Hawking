@@ -36,6 +36,8 @@ Source: Schaich & DeGrand, CPC 190:200 (2015), Eqs. 16-20 (arXiv:1410.6971)
 import argparse
 import multiprocessing as mp
 import numpy as np
+import os
+import signal
 import time
 from pathlib import Path
 
@@ -219,6 +221,13 @@ def main():
     t0 = time.time()
 
     with mp.Pool(args.workers) as pool:
+        def _shutdown(signum, frame):
+            print("\n  Shutting down workers...", flush=True)
+            pool.terminate()
+            pool.join()
+            raise SystemExit(0)
+        signal.signal(signal.SIGTERM, _shutdown)
+
         results = pool.map(_run_coupling_chunked, tasks)
 
     elapsed = time.time() - t0

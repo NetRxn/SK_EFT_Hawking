@@ -1308,7 +1308,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="[ε·A_m, ε·A_n] = ε²·4·G_{m-n}: bilinearity of Lie bracket + Davies AA relation",
         strategy_hint="Use smul_lie and lie_smul to factor out ε, then rewrite with AA_comm and simplify ε·ε = ε²",
-        filled=False,
+        filled=True,
     ),
     SorryGap(
         module="SKEFTHawking.OnsagerContraction",
@@ -1316,7 +1316,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="[ε²·G_m, ε²·G_n] = 0: bilinearity + abelian G-subalgebra",
         strategy_hint="Use smul_lie and lie_smul to factor out ε², then rewrite with GG_comm and smul_zero",
-        filled=False,
+        filled=True,
     ),
 ]
 

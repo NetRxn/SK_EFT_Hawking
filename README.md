@@ -22,8 +22,8 @@ to acoustic Hawking radiation in BEC analog gravity. Six papers in a unified cod
 - **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
   no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
 
-**Lean 4 formalization:** 675 theorems + 3 axioms across 43 Lean modules. 3 sorry pending Aristotle.
-233 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 675 theorems + 3 axioms across 43 Lean modules. Zero sorry.
+235 Aristotle-proved across 30+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
 MC framework (Lean-verified), chirality wall formalization (GS 9 conditions,
@@ -36,7 +36,7 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (675 theorems + 3 axioms, 43 modules)
+├── lean/                              # Lean 4 formalization (675 theorems + 3 axioms, 43 modules, zero sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 43)
@@ -274,7 +274,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (675 + 3 axioms — 3 sorry pending Aristotle)
+## Theorem Inventory (675 + 3 axioms — zero sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -316,7 +316,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | HubbardStratonovichRHMC.lean | 5 | 22 | HS identity, Kramers, multi-shift CG, complex pseudofermion |
 | MajoranaKramers.lean | 5 | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block |
 | OnsagerAlgebra.lean | 5a | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding, GT connection (1 sorry) |
-| OnsagerContraction.lean | 5a | 12 | Inönü-Wigner contraction O→su(2), rescaling, anomaly encoding (2 sorry) |
+| OnsagerContraction.lean | 5a | 12 | Inönü-Wigner contraction O→su(2), rescaling, anomaly encoding. Aristotle: 36b7796f |
 | Z16Classification.lean | 5a | 21+1ax | Z₁₆ axiom, super-modular categories, 16-fold way, chirality mod 8→16 |
 | SteenrodA1.lean | 5a | 17 | A(1) F₂-algebra, Adem relations, multiplication table, Ext→Z₁₆ |
 | SMGClassification.lean | 5a | 13 | AZ tenfold way, SMG symmetry data, spectral gap typeclass, gapped interface |

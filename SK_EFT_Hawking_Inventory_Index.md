@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 3, 2026 (Phase 5a Waves 1A+3A: OnsagerAlgebra + Z16Classification added)
+**Last synced:** April 4, 2026 (Phase 5a Wave 1B complete: OnsagerContraction zero sorry)
 
 ---
 
@@ -11,18 +11,18 @@
 | Item | Count | Source of truth |
 |------|-------|-----------------|
 | Lean theorems | 675 + 3 axioms | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 234 | ARISTOTLE_THEOREMS in constants.py (211 prior + 22 RHMC manual + 1 Onsager) |
-| Manual proofs | 439 | 675 - 234 - 2 sorry |
-| **Sorry gaps** | **2** | OnsagerContraction (2, Aristotle in flight — 13%) |
+| Aristotle-proved | 235 | ARISTOTLE_THEOREMS in constants.py (211 prior + 22 RHMC manual + 1 Onsager + 1 Contraction) |
+| Manual proofs | 440 | 675 - 235 |
+| **Sorry gaps** | **0** | All filled |
 | Lean modules | 43 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 672 + 3ax | 3 sorry pending Aristotle |
+| Proved (zero sorry) | 675 + 3ax | All proved |
 | Python source modules | 47 | `find src/ -name "*.py" ! -name "__init__.py"` |
 | Test files | 24 | `find tests/ -name "test_*.py"` |
 | Test count | 1339 | `pytest tests/ -q` |
 | Figures | 64 | `grep -c FigureSpec review_figures.py` |
 | Notebooks | 20 | `ls notebooks/*.ipynb` |
 | Papers | 7 + tables | `ls papers/*/paper_draft.tex` |
-| Validation checks | 15 | `python scripts/validate.py --list` (all 15 pass) |
+| Validation checks | 16 | `python scripts/validate.py --list` (all 16 pass) |
 | Stakeholder docs | 12 | See Section 9 of inventory |
 | Aristotle runs | 30+ | See Aristotle run table in full inventory |
 | Deep research tasks | 18 + 6 Phase-5a | 18 Phase-5 complete + 6 Phase-5a complete |
@@ -149,7 +149,7 @@
 | HubbardStratonovichRHMC | 22 | HS identity, Kramers, multi-shift CG, complex pseudofermion Pfaffian identity |
 | MajoranaKramers | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block structure |
 | OnsagerAlgebra | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding into L(sl₂), GT connection (**ALL PROVED**, Aristotle `9d6f2432`) |
-| OnsagerContraction | 12 | Inönü-Wigner contraction O→su(2), rescaling, commutator vanishing, anomaly encoding (**2 sorry pending Aristotle**) |
+| OnsagerContraction | 12 | Inönü-Wigner contraction O→su(2), rescaling, commutator vanishing, anomaly encoding (**ALL PROVED**, Aristotle `36b7796f` + manual) |
 | Z16Classification | 21+1ax | Z₁₆ axiom, SuperModularCategory, 16-fold way, chirality strengthening mod 8→16, anomaly cancellation, Drinfeld bridge (**ALL PROVED**) |
 | SteenrodA1 | 17 | A(1) 8-dim F₂-algebra, explicit multiplication table, Adem relations, Ext→Z₁₆ connection (**ALL PROVED**, first Steenrod formalization) |
 | SMGClassification | 13 | AZClass tenfold way, SMGSymmetryData, HasSpectralGap typeclass, gapped interface conjecture, conditional theorems (**ALL PROVED**) |

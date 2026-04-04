@@ -105,40 +105,67 @@ passes (all parameters human-verified). Checked before arXiv/journal submission,
 
 **Purpose:** Fill sorry gaps with machine-verified proofs. Strengthen manual proofs.
 
-**Pre-requisite:** Read `docs/archive/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session.
+**Pre-requisite:** Read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session. It covers Aristotle's capabilities, prompt strategies, and project-specific integration behavior.
 
-**Actions:**
+### 4a. Submit
 
-1. **Submit sorry gaps:**
-   ```bash
-   uv run python scripts/submit_to_aristotle.py --priority 1 --integrate
-   ```
+One job per file. Different files can run as separate parallel batches. The submit script reads the API key from `.env` in the project root.
 
-2. **For manual proofs — attempt strengthening:**
-   ```bash
-   uv run python scripts/submit_to_aristotle.py --target <theorem_name> --integrate
-   ```
+```bash
+# Submit all unfilled sorrys at a priority level:
+uv run python scripts/submit_to_aristotle.py --priority 3
 
-3. **Retrieve results:**
-   ```bash
-   uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate
-   ```
+# Target a specific sorry:
+uv run python scripts/submit_to_aristotle.py --target <theorem_name>
+```
 
-4. **Resume OUT_OF_BUDGET runs:**
-   ```bash
-   uv run python scripts/submit_to_aristotle.py --resume <ID>
-   ```
+Do not pass `--integrate` at submission time — integration is a separate step (4c).
 
-5. **After integration — verify quality:**
-   - Review the diff: does the proof actually exercise the hypotheses?
-   - Check for trivial proofs (e.g., `simp` that works because of total division)
-   - If strengthening is needed: stop, explain to user, prepare correction
-   - Only after quality is verified, proceed to registration
+### 4b. Monitor
 
-6. **Register the proof:**
-   - Update `SorryGap(filled=True)` in `src/core/aristotle_interface.py`
-   - Add Aristotle run ID to `ARISTOTLE_THEOREMS` in `src/core/constants.py`
-   - Update `formulas.py` docstrings: change `Aristotle: pending` to `Aristotle: <run_id>`
+```bash
+# Source .env for the CLI key, then check status:
+source .env && uv run aristotle list --limit 5
+```
+
+Move on to non-dependent work while waiting.
+
+### 4c. Retrieve and Review
+
+Retrieve first, review the diff, then integrate selectively.
+
+```bash
+# 1. Retrieve (no --integrate)
+uv run python scripts/submit_to_aristotle.py --retrieve <UUID>
+
+# 2. Review the diff
+cat docs/aristotle_results/run_<timestamp>/diff.patch
+
+# 3. If clean: re-run with --integrate
+uv run python scripts/submit_to_aristotle.py --retrieve <UUID> --integrate
+
+# 3. If regressions: manually copy only the filled proof blocks
+```
+
+See the [Aristotle reference doc](references/Theorm_Proving_Aristotle_Lean.md#project-integration) for details on `--integrate` behavior and regression risks.
+
+### 4d. Resume OUT_OF_BUDGET runs
+
+```bash
+uv run python scripts/submit_to_aristotle.py --resume <UUID>
+```
+
+### 4e. Verify quality
+
+- Does the proof exercise the hypotheses? Check for trivial proofs (total division, vacuous satisfaction).
+- `lake build` — zero errors, sorry warnings only for genuinely unfilled gaps.
+- If strengthening is needed: stop, explain to user, prepare correction.
+
+### 4f. Register
+
+- Update `SorryGap(filled=True)` in `src/core/aristotle_interface.py`
+- Add run UUID to `ARISTOTLE_THEOREMS` in `src/core/constants.py`
+- Update `formulas.py` docstrings: `Aristotle: pending` → `Aristotle: <run_id>`
 
 **Gate:** All sorry gaps filled (or documented as manual with explanation). `lake build` clean with zero sorry.
 
@@ -424,7 +451,7 @@ uv run python scripts/validate.py                    # All 15 checks
 uv run python scripts/review_figures.py              # Generate figures + structural checks
 cd lean && lake build                                 # Lean build
 
-# Aristotle (read docs/archive/references/Theorm_Proving_Aristotle_Lean.md first!)
+# Aristotle (read docs/references/Theorm_Proving_Aristotle_Lean.md first!)
 uv run python scripts/submit_to_aristotle.py --priority 1 --integrate
 uv run python scripts/submit_to_aristotle.py --retrieve <ID> --integrate
 uv run python scripts/submit_to_aristotle.py --resume <ID>

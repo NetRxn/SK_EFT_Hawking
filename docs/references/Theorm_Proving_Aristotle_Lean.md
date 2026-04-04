@@ -189,6 +189,69 @@ Formalize this paper and make sure the code quality closely follows Mathlib stan
 
 
 
+---
+
+## Project Integration
+
+This section covers how Aristotle integrates with the SK-EFT Hawking project specifically. For the general pipeline steps, see [WAVE_EXECUTION_PIPELINE.md](../WAVE_EXECUTION_PIPELINE.md) Stage 4.
+
+### API Key
+
+The API key lives in `.env` at the project root (`SK_EFT_Hawking/.env`). The submit script (`scripts/submit_to_aristotle.py`) reads it automatically. The `aristotle` CLI does not read `.env` — source it first:
+
+```bash
+source .env && uv run aristotle list --limit 5
+```
+
+### Submit Script (`scripts/submit_to_aristotle.py`)
+
+The script wraps the Aristotle API for our project. Key behaviors:
+
+| Flag | What it does |
+|------|-------------|
+| `--priority N` | Submits all unfilled `SorryGap` entries at priority ≤ N (from `aristotle_interface.py`) |
+| `--target <name>` | Submits the whole Lean project but prompts Aristotle to focus on a specific sorry |
+| `--retrieve <UUID>` | Downloads results for a completed run into `docs/aristotle_results/run_<timestamp>/` |
+| `--integrate` | When combined with `--retrieve`, copies patched `.lean` files into `lean/` (whole-file copy) |
+| `--resume <UUID>` | Retrieves partial results from an OUT_OF_BUDGET run, integrates, and resubmits |
+| `--dry-run` | Prints what would be submitted without submitting |
+| `--timeout N` | Timeout in seconds (default 3600). The script times out locally but the Aristotle job continues server-side |
+
+**`--target` still sends the whole project.** It only changes the prompt sent to Aristotle. Submitting the same file twice creates duplicate work.
+
+**`--integrate` is a whole-file copy.** It overwrites any `.lean` file that differs between Aristotle's output and your `lean/` directory. It has no merge intelligence — it does not selectively apply proof fills. This means if Aristotle modified a file for any reason (typeclass fixes, reformatting, etc.), the entire file is replaced.
+
+### Aristotle's Snapshot Behavior
+
+When you submit a job, Aristotle receives a snapshot of the entire Lean project at that moment. It works from this snapshot independently. This has consequences when running multiple jobs:
+
+- If you submit job A (targeting `OnsagerAlgebra.lean`) and job B (targeting `OnsagerContraction.lean`) in sequence, job B's snapshot includes the state of `OnsagerAlgebra.lean` at submission time — which may still have sorrys that job A later fills.
+- If job A completes and you integrate its results, then job B completes, job B's version of `OnsagerAlgebra.lean` is stale. Using `--integrate` on job B would overwrite job A's proofs with sorrys.
+
+**Mitigation:** Always review the diff before integrating. If the diff touches files outside your target module, compare against your current source (not what you submitted). Manually copy only the proof blocks you need.
+
+### Result Artifacts
+
+Results are saved to `docs/aristotle_results/run_<timestamp>_<UUID_prefix>/`:
+
+| File | Contents |
+|------|----------|
+| `result.tar.gz` | Raw Aristotle output (extracted automatically) |
+| `diff.patch` | Unified diff between Aristotle's output and your `lean/` source |
+| `ARISTOTLE_SUMMARY_*.md` | Aristotle's description of what it proved and how |
+
+The summary file is the best starting point for review — it describes proof strategy and any structural changes Aristotle made.
+
+### Registration
+
+After verifying a proof, register it in three places:
+
+1. **`src/core/aristotle_interface.py`** — Set `SorryGap(filled=True)` for the theorem
+2. **`src/core/constants.py`** — Add the run UUID (first 8 chars, from `aristotle list`) to `ARISTOTLE_THEOREMS`
+3. **`src/core/formulas.py`** — Update docstring: `Aristotle: pending` → `Aristotle: <run_id>`
+
+---
+
 ## lean reference
 https://github.com/leanprover/lean4
 https://lean-lang.org/doc/reference/latest/

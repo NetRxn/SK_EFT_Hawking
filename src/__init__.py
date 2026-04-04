@@ -37,8 +37,8 @@ A unified project encompassing:
     * Z₁₆ axiomatized framework: Pin⁺ bordism axiom, super-modular categories,
       16-fold way, chirality strengthening (mod 8 → mod 16), anomaly cancellation.
 
-Lean 4 formalization: 675 theorems + 3 axioms, 43 modules. 3 sorry pending Aristotle.
-Aristotle automated theorem prover: 233 theorems proved across 30+ runs.
+Lean 4 formalization: 675 theorems + 3 axioms, 43 modules. Zero sorry.
+Aristotle automated theorem prover: 235 theorems proved across 30+ runs.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)
