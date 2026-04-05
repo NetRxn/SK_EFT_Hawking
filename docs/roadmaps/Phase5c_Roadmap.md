@@ -165,19 +165,18 @@ theorem rokhlin (M : SpinBordism4) : 16 ∣ signature4 M := by
   -- Falls out in ~10 lines from the axioms
 ```
 
-- [ ] `lean/SKEFTHawking/SpinBordism.lean` — ~10-15 theorems
-- [ ] Define SpinBordism4 with 2 hypotheses (NOT axioms — see HYPOTHESIS_REGISTRY risk assessment)
+- [x] `lean/SKEFTHawking/SpinBordism.lean` — 8 theorems + 1 structure, 2 sorry (Aristotle)
+- [x] Define SpinBordismData structure with hypothesized properties (NOT axioms)
   - Hypothesis: Ω^Spin_4 ≅ Z (as AddCommGroup iso)
   - Hypothesis: σ(generator) = -16 (K3 surface)
-- [ ] Derive Rokhlin as conditional theorem: given hypotheses, 16 | σ(M) for all M
-- [ ] Bridge to our Z₁₆: the mod-16 reduction of the signature map
-  IS the anomaly invariant from Z16Classification.lean
-- [ ] Eliminate the hypothesis in RokhlinBridge.lean (replace with bordism hypothesis)
-- [ ] Full Wang: combine with GenerationConstraint.lean for 3|N_f (conditional on bordism hypothesis)
-- [ ] Register both hypotheses in `HYPOTHESIS_REGISTRY` with circularity notes
+- [x] Rokhlin stated as conditional theorem (sorry — Aristotle target with PROVIDED SOLUTION)
+- [x] Z₁₆ bridge: sm_anomaly_cancels_with_nu_R (16|16N_f) PROVED
+- [x] anomaly_without_nu_R (15N_f ≡ -N_f mod 16) PROVED
+- [x] anomaly_three_gen_no_nu_R (15*3 mod 16 = 13) PROVED
+- [x] wang_full_chain stated (sorry — Aristotle target with PROVIDED SOLUTION)
+- [x] spin_bordism_iso_Z already registered in HYPOTHESIS_REGISTRY with circularity notes
+- [ ] RokhlinBridge.lean hypothesis elimination (after Aristotle fills rokhlin_from_bordism)
 - [ ] `tests/test_spin_bordism.py` — tests for the derivation chain
-
-**Estimated:** ~10-15 theorems. The "16 convergence" becomes a conditional theorem.
 **Axiom risk:** These are hypotheses, NOT axioms. See HYPOTHESIS_REGISTRY entry `spin_bordism_iso_Z` for circularity assessment. The ABP computation historically used Rokhlin-equivalent facts — document clearly.
 **Research:** `Lit-Search/Phase-5c/Rokhlin/The same 16...` (unanimously Rank 1)
 

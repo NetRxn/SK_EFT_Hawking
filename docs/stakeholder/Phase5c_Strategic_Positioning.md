@@ -15,7 +15,11 @@
 
 5. **First E8 lattice verification** — Properties of the E8 Cartan matrix formally verified using Mathlib's existing CartanMatrix.E8. Disproves the naive algebraic Rokhlin conjecture.
 
-6. **First verified statistical estimators for lattice MC** — Jackknife variance and autocorrelation time, with non-negativity proved.
+6. **First algebraic Rokhlin decomposition** — Serre's theorem (8|sigma for even unimodular) proved with zero sorry. The algebra-topology gap formalized: algebraic bound is 8, topology provides the extra factor of 2.
+
+7. **First spin bordism → Rokhlin → Wang chain** — The full 3-generation constraint derived conditionally from spin bordism data. SpinBordismData structure cleanly packages the topological hypotheses.
+
+8. **First verified statistical estimators for lattice MC** — Jackknife variance and autocorrelation time, with non-negativity proved.
 
 ### Paper Portfolio (Phase 5c)
 | Paper | Status | Key Claim | Venue |
@@ -70,11 +74,11 @@
 
 | Metric | Phase 5b End | Phase 5c End | Delta |
 |--------|-------------|-------------|-------|
-| Theorems | 968 | 1084 | +116 |
-| Modules | 66 | 74 | +8 |
+| Theorems | 968 | 1102 | +134 |
+| Modules | 66 | 76 | +10 |
 | Axioms | 0 | 0 | 0 |
-| Hypotheses tracked | 0 | 4 | +4 |
-| Test files | 34 | 37 | +3 |
+| Hypotheses tracked | 0 | 5 | +5 |
+| Test files | 34 | 38 | +4 |
 | Figures | 72 | 77 | +5 |
 | Deep research files | ~30 | ~40 | +10 |
-| Formal verification firsts | ~10 | ~16 | +6 |
+| Formal verification firsts | ~10 | ~18 | +8 |

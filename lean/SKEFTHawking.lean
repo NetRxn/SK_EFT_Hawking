@@ -72,6 +72,7 @@ import SKEFTHawking.RibbonCategory
 import SKEFTHawking.E8Lattice
 import SKEFTHawking.VerifiedJackknife
 import SKEFTHawking.AlgebraicRokhlin
+import SKEFTHawking.SpinBordism
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

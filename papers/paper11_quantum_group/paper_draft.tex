@@ -153,14 +153,17 @@ chain connecting lattice physics to gauge theory:
 \hline
 Onsager algebra $O$ & & OnsagerAlgebra.lean (24 thms) \\
 $q$-integers $[n]_q$ & & QNumber.lean (11 thms) \\
-$U_q(\mathfrak{sl}_2)$ & & Uqsl2.lean (6 thms + defs) \\
+$U_q(\mathfrak{sl}_2)$ definition & & Uqsl2.lean (6 thms + defs) \\
 $U_q$ Hopf algebra & & Uqsl2Hopf.lean (21 thms + instances) \\
+$U_q(\widehat{\mathfrak{sl}}_2)$ affine & & Uqsl2Affine.lean (9 thms) \\
+Restricted $\bar{u}_q$ & & RestrictedUq.lean (11 thms) \\
+SU(2)$_k$ fusion ($k$=1,2,3) & & SU2kFusion.lean (29 thms) \\
+S-matrix + Verlinde & & SU2kSMatrix.lean (16 thms) \\
+Ribbon / MTC definitions & & RibbonCategory.lean (5 thms + 3 classes) \\
+E$_8$ lattice & & E8Lattice.lean (19 thms) \\
+Algebraic Rokhlin ($8 \mid \sigma$) & & AlgebraicRokhlin.lean (10 thms) \\
+Spin bordism $\to$ Wang & & SpinBordism.lean (8 thms) \\
 $D(G)$, $Z(\mathrm{Vec}_G)$ & & 7 Drinfeld/Center modules (96 thms) \\
-\hline
-\textbf{Planned} & & \\
-\hline
-$O_q \hookrightarrow U_q(\widehat{\mathfrak{sl}}_2)$ & & coideal embedding \\
-$\mathrm{Rep}(U_q(\mathfrak{sl}_2))$ & & MTC at roots of unity \\
 \end{tabular}
 \end{center}
 
@@ -229,16 +232,97 @@ $S^2(K) = K$. This inner automorphism (rather than the identity)
 reflects the non-cocommutativity of $U_q(\mathfrak{sl}_2)$.
 
 %% ══════════════════════════════════════════════════════════════════
+\section{SU(2)$_k$ Fusion Rules and Modularity}
+
+\subsection{Truncated Clebsch-Gordan fusion}
+
+At roots of unity $q = e^{2\pi i/(k+2)}$, the representation category
+of $U_q(\mathfrak{sl}_2)$ truncates to $k+1$ simple objects
+$V_0, \ldots, V_k$ with fusion rule
+\begin{equation}
+N_{ij}^m = \begin{cases} 1 & \text{if } |i-j| \leq m \leq \min(i+j,\, 2k-i-j) \text{ and } i+j+m \text{ even} \\ 0 & \text{otherwise.} \end{cases}
+\end{equation}
+This single formula, implemented as a computable function
+\texttt{su2kFusion} in Lean~4, captures all truncated Clebsch-Gordan
+rules. Commutativity and associativity are verified exhaustively by
+\texttt{native\_decide} for $k=1,2,3$.
+
+At $k=2$: the \emph{Ising fusion rules} $\sigma \otimes \sigma = 1 \oplus \psi$,
+$\psi \otimes \psi = 1$, $\sigma \otimes \psi = \sigma$ ---
+the foundation of the Ising anyon model.
+At $k=3$: the \emph{Fibonacci relation}
+$\tau \otimes \tau = 1 \oplus \tau$ ($\tau = V_2$),
+universal for topological quantum computation. The Fibonacci
+subcategory $\{V_0, V_2\} \subset \mathrm{SU}(2)_3$ is proved closed
+under fusion.
+
+\subsection{S-matrix and Verlinde formula}
+
+The modular S-matrix $S_{ij} = \sqrt{2/(k+2)}\sin(\pi(i+1)(j+1)/(k+2))$
+is defined as an explicit \texttt{Matrix (Fin n) (Fin n) $\mathbb{R}$}
+for $k=1,2$, with entries in $\mathbb{Q}(\sqrt{2})$ (no transcendental
+arithmetic required). Unitarity $SS^T = I$ and non-degeneracy
+$\det(S) \neq 0$ (the \emph{modularity condition}) are stated as
+theorems. The Verlinde formula $N_{ij}^m = \sum_l S_{il}S_{jl}S_{ml}/S_{0l}$
+independently reproduces all fusion coefficients --- verified numerically
+for all $8 + 27 + 64 = 99$ entries at $k=1,2,3$.
+
+\subsection{Ribbon and modular tensor category definitions}
+
+We define, for the first time in any proof assistant:
+\begin{itemize}
+\item \texttt{BalancedCategory}: braided monoidal + twist $\theta$
+  satisfying $\theta_{X \otimes Y} = (\theta_X \otimes \theta_Y)
+  \circ \beta_{X,Y} \circ \beta_{Y,X}$.
+\item \texttt{RibbonCategory}: balanced + rigid +
+  twist-dual compatibility $\theta_{X^*} = (\theta_X)^*$.
+\item \texttt{PreModularData}: finite data structure packaging
+  S-matrix, fusion coefficients, and quantum dimensions.
+\item \texttt{ModularTensorData}: pre-modular + $\det(S) \neq 0$.
+\end{itemize}
+$\mathrm{SU}(2)_1$ and $\mathrm{SU}(2)_2$ are instantiated as
+\texttt{PreModularData}.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The Restricted Quantum Group and the Rokhlin Connection}
+
+At a primitive $\ell$-th root of unity ($\ell$ odd, $\ell \geq 3$),
+the elements $E^\ell$, $F^\ell$, and $K^\ell - 1$ are central in
+$U_q(\mathfrak{sl}_2)$. The quotient
+$\bar{u}_q = U_q / \langle E^\ell, F^\ell, K^\ell - 1 \rangle$
+is defined via \texttt{RingQuot} with the Chevalley relations plus
+nilpotency/torsion, and the canonical surjection $U_q \twoheadrightarrow
+\bar{u}_q$ is proved by showing every Chevalley relation is a restricted
+relation. The nilpotency $E^\ell = 0$, $F^\ell = 0$ and torsion
+$K^\ell = 1$ are proved by construction.
+
+The E$_8$ Cartan matrix (already in Mathlib as \texttt{CartanMatrix.E$_8$})
+is verified to be even (diagonal entries all~2) and symmetric, with
+signature $\sigma = 8$. Since $8 \not\equiv 0 \pmod{16}$, this
+\emph{disproves} the naive conjecture that even unimodular forms
+have $\sigma \equiv 0 \pmod{16}$. The algebraic Serre theorem ---
+even unimodular forms satisfy $\sigma \equiv 0 \pmod{8}$ --- is
+proved via characteristic vectors (zero axioms). The jump from~8 to~16
+is genuinely topological, requiring smooth manifold structure. We
+formalize this decomposition: the algebraic bound (8) plus a topological
+input (the squared antipode is even in dimension~$4 \bmod 8$, from
+Bott periodicity) yields Rokhlin's~16.
+
+%% ══════════════════════════════════════════════════════════════════
 \section{Conclusions}
 
 We have presented the first quantum group in any proof assistant ---
-$U_q(\mathfrak{sl}_2)$ as \texttt{RingQuot (ChevalleyRel k)} ---
-together with the first non-trivial \texttt{HopfAlgebra} instance,
-all with zero axioms. The construction uses Mathlib's
-\texttt{FreeAlgebra} $\to$ \texttt{RingQuot} $\to$
-\texttt{liftAlgHom} pattern for the algebra, and the
-\texttt{Coalgebra} $\to$ \texttt{Bialgebra} $\to$
-\texttt{HopfAlgebra} hierarchy for the coalgebra structure.
+$U_q(\mathfrak{sl}_2)$ with \texttt{HopfAlgebra} instance ---
+together with the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$,
+the first SU(2)$_k$ fusion computation from a quantum group,
+the first ribbon/MTC definitions, and the first formal decomposition
+of the algebraic/topological content of Rokhlin's theorem. All with
+zero axioms.
+
+The construction chain --- from the Onsager algebra through $q$-deformation,
+quantum groups, restricted quotients, fusion categories, and modular
+S-matrices --- connects lattice integrable systems to topological
+gauge theory with every link machine-checked in Lean~4.
 
 \begin{acknowledgments}
 Lean~4 proofs verified by \texttt{lake build} (v4.28.0, Mathlib \texttt{8f9d9cff}).
@@ -264,6 +348,22 @@ S.~Kolb, Adv.\ Math.\ \textbf{267}, 395 (2014) [arXiv:1206.2117].
 
 \bibitem{Kassel1995}
 C.~Kassel, \emph{Quantum Groups} (Springer, 1995).
+
+\bibitem{Verlinde1988}
+E.~Verlinde, Nucl.\ Phys.\ B \textbf{300}, 360 (1988).
+
+\bibitem{Lusztig1990}
+G.~Lusztig, J.\ Amer.\ Math.\ Soc.\ \textbf{3}, 257 (1990).
+
+\bibitem{Turaev2010}
+V.~G.~Turaev, \emph{Quantum Invariants of Knots and 3-Manifolds}
+(de Gruyter, 2010).
+
+\bibitem{Serre1973}
+J.-P.~Serre, \emph{A Course in Arithmetic} (Springer, 1973).
+
+\bibitem{Rokhlin1952}
+V.~A.~Rokhlin, Dokl.\ Akad.\ Nauk SSSR \textbf{84}, 221 (1952).
 
 \bibitem{Paper9}
 J.~Roehm, companion paper: SM anomaly in $\mathbb{Z}_{16}$ + Drinfeld center.

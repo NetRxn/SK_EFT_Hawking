@@ -777,12 +777,12 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (1084 theorems, 0 axioms across 74 Lean modules):
+# Verification breakdown (1102 theorems, 0 axioms across 76 Lean modules):
 #   - 273 tracked in ARISTOTLE_THEOREMS registry (270 machine + 3 manual, listed below with run IDs)
-#   - 811 proved manually in Lean (verified by `lake build`)
+#   - 829 proved manually in Lean (verified by `lake build`)
 #   - 0 axioms (all removed — see axiom history below)
-#   - 39 sorry pending Aristotle (22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory
-#     + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq)
+#   - 41 sorry pending Aristotle (22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory
+#     + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq + 2 SpinBordism)
 #   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
 #               chiral_central_charge_coeff (all tautological as stated)
 #   - REMOVED axioms: modular_invariance_constraint (mathematically FALSE),

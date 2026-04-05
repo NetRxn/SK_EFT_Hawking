@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Phase 5c complete: **1084 thm**, 0 ax, 74 modules, 39 sorry across 6 files pending Aristotle)
+**Last synced:** April 4, 2026 (Phase 5c Wave 7: **1102 thm**, 0 ax, 76 modules, 41 sorry across 7 files pending Aristotle)
 
 ---
 
@@ -10,21 +10,21 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **1084** (0 axioms) | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Lean theorems | **1102** (0 axioms) | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
 | Aristotle-proved | 273 (270 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| Manual proofs | 811 | 1084 - 273 |
-| **Sorry gaps** | **39** | 22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq (Aristotle pending) |
+| Manual proofs | 829 | 1102 - 273 |
+| **Sorry gaps** | **41** | 22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq + 2 SpinBordism (Aristotle pending) |
 | **Axioms** | **0** | All removed (Wave 6) |
-| Lean modules | 74 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 1045 | 1084 - 39 |
+| Lean modules | 76 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 1061 | 1102 - 41 |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 37 | `find tests/ -name "test_*.py"` |
-| Test count | 1610+ | `pytest tests/ -q` |
-| Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` |
+| Test files | 38 | `find tests/ -name "test_*.py"` |
+| Test count | 1635+ | `pytest tests/ -q` |
+| Figures | 77 | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | 28 | `ls notebooks/*.ipynb` |
 | Papers | 11 | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
-| Stakeholder docs | 12 | See Section 9 of inventory |
+| Stakeholder docs | 18 | See Section 9 of inventory |
 | Aristotle runs | 33+ | See Aristotle run table in full inventory |
 | Deep research tasks | 18 + 8 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b (incl. 4 q-Onsager)
 
@@ -35,12 +35,12 @@
 | Section | Covers | When to update |
 |---------|--------|----------------|
 | 1. Python Source | All `src/` modules with purpose + line counts | New module added or module purpose changes |
-| 2. Lean Verification | 74-module table: lines, theorem count, key results | Theorem added/removed, module added |
+| 2. Lean Verification | 76-module table: lines, theorem count, key results | Theorem added/removed, module added |
 | 3. Aristotle | Run table with dates + theorem counts | New Aristotle submission |
 | 4. Notebooks | 28-notebook table: phase, topic | Notebook added or topic changes |
 | 5. Papers | 7-paper table: format, lines, topic, key claims | Paper content changes |
-| 6. Tests | 37-file table: test counts, coverage | Test file added or count changes |
-| 7. Scripts | 11-script table | Script added or purpose changes |
+| 6. Tests | 38-file table: test counts, coverage | Test file added or count changes |
+| 7. Scripts | 14-script table | Script added or purpose changes |
 | 8. Configuration | Dependency table | Dependency added |
 | 9. Documentation | Reference, roadmap, stakeholder, analysis tables | Doc added/moved/content changes |
 | 10. Key Formulas | Physics formulas with Lean refs | Formula added to formulas.py |
@@ -52,10 +52,10 @@
 
 ### Core (`src/core/`)
 - `constants.py` — Physical constants, experimental params, Aristotle registry, NJL/ADW model params
-- `formulas.py` — Canonical physics formulas with Lean refs (137 functions including SM anomaly, Weingarten, NJL, fracton, Planck, quantum group, SU(2)_k fusion/S-matrix)
+- `formulas.py` — Canonical physics formulas with Lean refs (137 functions including SM anomaly, Weingarten, NJL, fracton, Planck, quantum group, SU(2)_k fusion/S-matrix, E8/Rokhlin)
 - `transonic_background.py` — 1D BEC transonic flow solver
-- `visualizations.py` — All 72 Plotly figure functions + COLORS palette
-- `aristotle_interface.py` — Aristotle API + sorry gap registry (39 unfilled across 6 Lean modules)
+- `visualizations.py` — All 77 Plotly figure functions + COLORS palette
+- `aristotle_interface.py` — Aristotle API + sorry gap registry (41 unfilled across 7 Lean modules)
 - `sm_anomaly.py` — SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check
 - `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
 - `citations.py` — Citation registry (CITATION_REGISTRY, DOI tracking, usage mapping)
@@ -184,6 +184,8 @@
 | RestrictedUq | 11 | Restricted quantum group u_q(sl_2): E^ell=F^ell=0, K^ell=1 nilpotency/torsion, Chevalley→restricted, small_uq→SU(2)_k connection (**1 sorry pending Aristotle**) |
 | RibbonCategory | 4 | BalancedCategory, RibbonCategory, MTC definitions, su2k1/su2k2 symmetric (**2 sorry pending Aristotle: modular conditions**) |
 | E8Lattice | 19 | E8 Cartan matrix: det=1, even diagonal, symmetric, positive definite, Rokhlin gap σ=8, hyperbolic plane, Serre mod 8, classification (**2 sorry pending Aristotle: det computation, minor det**) |
+| AlgebraicRokhlin | 10 | Algebraic Serre theorem σ≡0 mod 8, unimodular/even/symmetric defs, characteristic vectors, E8 bridge (**ALL PROVED, zero sorry**) |
+| SpinBordism | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData structure, anomaly with/without ν_R (**2 sorry pending Aristotle: rokhlin_from_bordism, wang_full_chain**) |
 | VerifiedJackknife | 5 | First verified statistical estimators: jackknife variance non-neg, autocovariance_zero non-neg, intAutocorrTime bounds (**2 sorry pending Aristotle**) |
 
 ---

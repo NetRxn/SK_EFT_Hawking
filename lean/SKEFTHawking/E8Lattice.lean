@@ -33,6 +33,7 @@ The E8 Cartan matrix has determinant 1 (unimodular).
 This is the defining property that makes E8 a unimodular lattice.
 
 PROVIDED SOLUTION
+PROVIDED SOLUTION
 The 8×8 Leibniz formula has 8! = 40320 terms. Use cofactor expansion
 along row 0 (which has only 2 nonzero entries: E₈(0,0)=2, E₈(0,2)=-1).
 This reduces to two 7×7 determinants, which further reduce recursively.

@@ -257,16 +257,21 @@ constraint requires $N_f = \mathrm{lcm}(16,3) = 48$ --- providing formal
 evidence for right-handed neutrinos from the observed $N_f = 3$.
 \end{enumerate}
 
-The formal verification comprises 968~theorems across 66~Lean~4
-modules (zero axioms, zero \texttt{sorry} in main modules). The key modules are
-\texttt{SMFermionData.lean} (fermion enumeration, zero \texttt{sorry}),
-\texttt{WangBridge.lean} ($c_- = 8$ derivation, zero \texttt{sorry}),
+The formal verification now comprises 1100+~theorems across 76~Lean~4
+modules (zero axioms). Key modules for this paper:
+\texttt{SMFermionData.lean} (fermion enumeration),
+\texttt{WangBridge.lean} ($c_- = 8$ derivation),
 \texttt{GenerationConstraint.lean} ($24 \mid 8N_f \Rightarrow 3 \mid N_f$,
-Aristotle \texttt{a1dfcbde}, zero \texttt{sorry}),
+Aristotle \texttt{a1dfcbde}),
 \texttt{ModularInvarianceConstraint.lean} (framing anomaly from $\eta$,
-$q$-parameter shift proved, all identities proved, Aristotle \texttt{b54f9611}),
-and \texttt{RokhlinBridge.lean} (``16'' convergence, Rokhlin hypothesis,
-with/without $\nu_R$ analysis, 14 theorems).
+Aristotle \texttt{b54f9611}),
+\texttt{RokhlinBridge.lean} (``16'' convergence),
+and the new \texttt{AlgebraicRokhlin.lean} (Serre's $8 \mid \sigma$ for
+even unimodular forms, zero \texttt{sorry}), \texttt{E8Lattice.lean}
+(E$_8$ is even unimodular with $\sigma = 8$, disproving the naive
+algebraic Rokhlin conjecture --- the jump from~8 to~16 requires smooth
+topology), and \texttt{SpinBordism.lean} (the full Wang chain conditional
+on spin bordism data).
 
 As a further application of the same infrastructure, we define the
 Drinfeld-Jimbo quantum group $U_q(\mathfrak{sl}_2)$ as a

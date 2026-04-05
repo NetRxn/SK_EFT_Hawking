@@ -33,7 +33,7 @@ to acoustic Hawking radiation in BEC analog gravity. Eleven papers in a unified 
   First formal derivation connecting number-theoretic modular invariance to
   SM generation constraint N_f = 0 mod 3. PRD format.
 
-**Lean 4 formalization:** 1084 theorems across 74 Lean modules. Zero axioms, 39 sorry pending Aristotle.
+**Lean 4 formalization:** 1102 theorems across 76 Lean modules. Zero axioms, 41 sorry pending Aristotle.
 273 Aristotle-proved across 33+ runs.
 Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
@@ -48,16 +48,17 @@ hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermion
 SU(2)_k fusion rules at k=1,2,3 (Ising/Fibonacci by native_decide), affine quantum group U_q(sl_2 hat),
 SU(2)_k S-matrices + Verlinde formula, restricted quantum group u_q(sl₂), Ribbon/MTC category
 definitions (first in any proof assistant), E8 lattice + Rokhlin gap verification,
+algebraic Rokhlin (Serre σ≡0 mod 8), spin bordism → Rokhlin → Wang chain,
 first verified statistical estimators (jackknife, autocorrelation).
 
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (1084 theorems, 0 axioms, 74 modules, 39 sorry pending Aristotle)
+├── lean/                              # Lean 4 formalization (1102 theorems, 0 axioms, 76 modules, 41 sorry pending Aristotle)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 73 + ExtractDeps)
+│   ├── SKEFTHawking.lean              # Root module (imports all 75 theorem modules)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -82,7 +83,7 @@ SK_EFT_Hawking/
 │       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
 │       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
 │       ├── MajoranaKramers.lean       # Phase 5: Majorana Kramers degeneracy, sign-free determinant (25 theorems)
-│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (15 theorems)
+│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (14 theorems)
 │       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
 │       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
 │       ├── SphericalCategory.lean     # Phase 5: FIRST-EVER pivotal + spherical (18 theorems)
@@ -131,13 +132,15 @@ SK_EFT_Hawking/
 │       ├── RestrictedUq.lean         # Phase 5c: restricted quantum group u_q(sl₂), nilpotency (11 theorems, 1 sorry pending Aristotle)
 │       ├── RibbonCategory.lean       # Phase 5c: Balanced/Ribbon/MTC definitions (4 theorems, 2 sorry pending Aristotle)
 │       ├── E8Lattice.lean            # Phase 5c: E8 Cartan, Rokhlin gap, classification (19 theorems, 2 sorry pending Aristotle)
+│       ├── AlgebraicRokhlin.lean     # Phase 5c: algebraic Serre theorem σ≡0 mod 8 (10 theorems, all proved)
+│       ├── SpinBordism.lean          # Phase 5c: spin bordism → Rokhlin → Wang chain (8 theorems, 2 sorry pending Aristotle)
 │       └── VerifiedJackknife.lean    # Phase 5c: verified jackknife/autocorrelation estimators (5 theorems, 2 sorry pending Aristotle)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
 │   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (273 proved)
-│   │   ├── visualizations.py          # Plotly figures (72 functions) + COLORS palette
+│   │   ├── visualizations.py          # Plotly figures (77 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
 │   ├── first_order/                   # Phase 1 specific analysis
@@ -255,7 +258,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 33+ Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1610+ tests across 37 files)
+├── tests/                             # pytest suite (1635+ tests across 38 files)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -267,7 +270,7 @@ SK_EFT_Hawking/
 │   ├── test_gauge.py                 # SO(4) gauge, quaternion, Majorana (146 tests)
 │   └── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
 │
-├── figures/                           # 72 pipeline figures (PNG + HTML) + provenance_graph.json
+├── figures/                           # 77 pipeline figures (PNG + HTML) + provenance_graph.json
 ├── scripts/
 │   ├── submit_to_aristotle.py         # Aristotle submission + integration script
 │   ├── build_graph.py                 # Knowledge graph extraction (8 node types, 10 edge types)
@@ -338,7 +341,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (1084 theorems — zero axioms, 39 sorry pending Aristotle)
+## Theorem Inventory (1102 theorems — zero axioms, 41 sorry pending Aristotle)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -413,6 +416,8 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | RestrictedUq.lean | 5c | 11 | Restricted quantum group u_q(sl₂): nilpotency E^ell=0, torsion K^ell=1, SU(2)_k connection (1 sorry pending Aristotle) |
 | RibbonCategory.lean | 5c | 4 | Balanced, Ribbon, MTC definitions (FIRST in any proof assistant) (2 sorry pending Aristotle) |
 | E8Lattice.lean | 5c | 19 | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (2 sorry pending Aristotle) |
+| AlgebraicRokhlin.lean | 5c | 10 | Algebraic Serre theorem σ≡0 mod 8, unimodular/even/symmetric defs, characteristic vectors (ALL PROVED) |
+| SpinBordism.lean | 5c | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData, anomaly with/without ν_R (2 sorry pending Aristotle) |
 | VerifiedJackknife.lean | 5c | 5 | First verified statistical estimators: jackknife, autocorrelation, intAutocorrTime (2 sorry pending Aristotle) |
 
 ## Build Environment

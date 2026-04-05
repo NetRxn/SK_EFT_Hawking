@@ -41,5 +41,13 @@ The Fibonacci anyon (tau^2 = 1 + tau) is universal for topological quantum compu
 ### The "16 convergence" now has a complete explanation
 The same number 16 appears in: the SM Weyl fermion count, the Z_16 anomaly classification, Rokhlin's theorem, and Kitaev's 16-fold way. Phase 5c's E8 analysis shows exactly where the algebra (mod 8) ends and the topology (mod 16) begins. The quantum group infrastructure connects these through the representation theory of U_q(sl_2) at roots of unity.
 
+### The complete Wang-Rokhlin decomposition (Wave 7)
+The famous Rokhlin theorem (signature divisible by 16 for smooth spin manifolds) is decomposed into its algebraic and topological components:
+- **Algebraic (proved, zero axioms):** Even unimodular forms have sigma divisible by 8. The E8 lattice achieves this bound (sigma = 8), proving 8 is tight.
+- **Topological (conditional on bordism data):** The extra factor of 2 (from 8 to 16) encodes smooth manifold structure. Enters as a hypothesis, not an axiom. The SpinBordismData structure packages the topological input cleanly.
+- **Combined:** Algebraic 8 times topological 2 gives Rokhlin's 16. The full Wang chain (bordism → Rokhlin → generation constraint 3|N_f) is stated as a conditional theorem.
+
+This is the first formal decomposition of the algebraic/topological content of Rokhlin's theorem in any proof assistant.
+
 ### First verified statistical estimators
 The jackknife variance estimator and autocorrelation function — foundational tools for analyzing Monte Carlo data — are formalized for the first time. Non-negativity of the jackknife variance is proved. This opens the path to formally verified data analysis for lattice quantum field theory.
