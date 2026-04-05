@@ -23,19 +23,19 @@ Our key corrections: (i)~the speed of sound $c_s = 0.5~\mu\text{m/ps}$
 is a factor of 2 lower than previous theoretical estimates due to
 excitonic reservoir effects, confirmed by three independent measurements;
 (ii)~the dispersive parameter $D = \xi\kappa/c_s \approx 0.3{-}0.5$
-places the system in the near-adiabatic regime with ${\sim}20\%$
+places the system in the near-adiabatic regime with ${\sim}10\%$
 dispersive corrections to $T_H$; (iii)~stimulated Hawking detection
 via CW pump-probe spectroscopy achieves signal-to-noise ratios
 $10^3{-}10^6$ times better than spontaneous correlation measurements.
 For the LKB Paris platform ($\kappa = 5 \times 10^{10}~\text{s}^{-1}$),
 we predict $T_H \approx 61~\text{mK}$ with stimulated gain $G(\omega)
-> 0.5$ for $\omega < 0.3\kappa$, requiring only ${\sim}100$ probe
+> 0.5$ for $\omega < 0.18\kappa$, requiring only ${\sim}100$ probe
 photons per mode for $5\sigma$ detection. All predictions derive from
-a formally verified computation pipeline (1214 Lean~4 theorems,
+a formally verified computation pipeline (1233 Lean~4 theorems,
 0~axioms, verified by \texttt{lake build}). Polariton-specific
 results verified in \texttt{PolaritonTier1.lean} (6~theorems, zero
-sorry): \texttt{spatial\_attenuation\_ge\_one},
-\texttt{tier1\_regime\_monotone}, \texttt{bec\_recovery\_limit}.
+sorry, all manual proofs): \texttt{attenuation\_ge\_one},
+\texttt{attenuation\_mono\_Gamma}, \texttt{attenuation\_eq\_one\_at\_zero\_decay}.
 Formulas: \texttt{stimulated\_hawking\_gain},
 \texttt{polariton\_hawking\_temperature} in \texttt{formulas.py}.
 \end{abstract}
@@ -49,7 +49,7 @@ Analog Hawking radiation --- the quantum emission of phonon pairs at
 acoustic horizons in flowing superfluids --- has been confirmed in
 atomic BEC~\cite{Steinhauer2016,deNova2019} at temperatures
 $T_H \approx 0.35~\text{nK}$. Exciton-polariton condensates offer a
-$10^9$-fold temperature advantage, with predicted $T_H \sim 0.1{-}1~\text{K}$,
+${\sim}10^8$-fold temperature advantage, with predicted $T_H \sim 0.1{-}1~\text{K}$,
 due to stronger interactions and sharper spatial gradients achievable
 in semiconductor microcavities~\cite{Gerace2012,Nguyen2015}.
 
@@ -75,7 +75,7 @@ that bypass the quantum noise floor, with quasinormal mode
 resonances~\cite{Burkhard2025} further concentrating the signal.
 
 \item \textbf{Formally verified predictions}: All spectral formulas
-derive from a Lean~4 formalization with 1214 verified theorems
+derive from a Lean~4 formalization with 1233 verified theorems
 and zero axioms, ensuring internal consistency between the
 EFT framework and platform-specific predictions.
 \end{enumerate}
@@ -200,14 +200,17 @@ levels~\cite{Grisins2016,Jacquet2022}.
 \toprule
 Platform & $T_H$ & $\tau_{\text{pol}}$ & $\kappa\tau$ & Feasibility \\
 \midrule
-Paris long (100~ps) & 61~mK & 100~ps & 5.0 & \textbf{Yes} \\
-Paris ultralong (300~ps) & 61~mK & 300~ps & 15 & \textbf{Best} \\
-Paris standard (3~ps) & 61~mK & 3~ps & 0.15 & Marginal \\
+Paris long (100~ps) & 61~mK & 100~ps & 5.0 & Borderline \\
+Paris ultralong (300~ps) & 61~mK & 300~ps & 15 & \textbf{Perturbative} \\
+Paris standard (3~ps) & 61~mK & 3~ps & 0.15 & Intractable \\
 Steinhauer BEC & 0.35~nK & $\infty$ & $\infty$ & Confirmed \\
 \bottomrule
 \end{tabular}
 \caption{Platform comparison. $\kappa\tau > 1$ is required for
 the Hawking process to develop before polariton decay.
+Feasibility labels reflect the Tier~1 perturbative regime
+classification ($\Gamma_{\text{pol}}/\kappa$): \emph{perturbative}
+($<0.1$), \emph{borderline} ($0.1{-}1$), \emph{intractable} ($>1$).
 The ultralong-lifetime cavity ($\tau \sim 300$~ps,
 $Q \sim 10^6$~\cite{Nelsen2013,Alnatah2024}) is optimal.}
 \end{table}
@@ -263,12 +266,12 @@ function traceability:
   \texttt{POLARITON\_PLATFORMS}
 
 \item Spatial attenuation $\geq 1$:
-  \texttt{spatial\_attenuation\_ge\_one}
-  (\texttt{PolaritonTier1.lean}, Aristotle \texttt{da7cb04d})
+  \texttt{attenuation\_ge\_one}
+  (\texttt{PolaritonTier1.lean}, manual proof)
 
-\item Tier~1 monotonicity:
-  \texttt{tier1\_regime\_monotone}
-  (\texttt{PolaritonTier1.lean})
+\item Attenuation monotonicity:
+  \texttt{attenuation\_mono\_Gamma}
+  (\texttt{PolaritonTier1.lean}, manual proof)
 \end{itemize}
 
 Parameter provenance: all polariton parameters
@@ -285,8 +288,8 @@ resolved via the Deep Research Reconciliation Protocol
 Polariton BEC with reservoir-corrected parameters and stimulated
 Hawking detection via CW pump-probe spectroscopy offers a
 realistic pathway to analog Hawking radiation detection at
-temperatures $10^9$ times higher than achieved in atomic BEC.
-All predictions are formally verified (1214 Lean~4 theorems,
+temperatures ${\sim}10^8$ times higher than achieved in atomic BEC.
+All predictions are formally verified (1233 Lean~4 theorems,
 zero axioms) and traceable to specific computation modules.
 The LKB Paris platform with long-lifetime cavities
 ($\tau \sim 100{-}300$~ps) and programmable SLM horizons

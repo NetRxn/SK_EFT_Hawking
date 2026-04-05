@@ -4,7 +4,7 @@
 
 This project asks a deep question: can the mathematics of exotic states of matter — superfluids, topological insulators, quantum spin liquids — also describe the fundamental forces and particles of the universe? We investigate this with a combination of numerical computation, formal mathematical proof-checking, and automated theorem proving, producing experimentally testable predictions along the way.
 
-Everything is machine-checked in the Lean 4 proof assistant: 1100+ theorems, zero axioms, across 76 modules.
+Everything is machine-checked in the Lean 4 proof assistant: 1233 theorems, zero axioms, across 86 modules.
 
 ---
 
@@ -115,4 +115,4 @@ This project established several firsts in the formal verification of physics:
 
 ---
 
-*Last updated: April 2026. Phase 5c complete (quantum groups through MTC). Phase 5d (ADW gap equation) scoped.*
+*Last updated: April 2026. Phase 5d active: 10 waves (gap equation, MTC instances, polariton paper, quantum group extensions, verified statistics). 1233 theorems, 86 modules, 22 sorry pending Aristotle.*

@@ -66,13 +66,17 @@
 ### Cross-validation (VERIFIED in Wave 1):
 Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation gives G_c = 1/(N_f·I(0)) with I(0) = c₄·Λ²/2 and c₄ = 1/(4π²). Result: G_c = 8π²/(N_f·Λ²) — **exact match** between integral and V_eff formulations. Proved in Lean as `criticalCoupling_formula` and `criticalCoupling_eq_adw`.
 
-### Current state (Apr 5 2026):
-- **1179 theorems**, 0 axioms, 79 Lean modules, **5 sorry** (all in SU2kMTC.lean)
+### Current state (Apr 5 2026, end of session):
+- **1233 theorems**, 0 axioms, **86 Lean modules**, **22 sorry** (all Aristotle targets)
 - Phase 5c: COMPLETE (all sorry filled)
-- TetradGapEquation: 9/10 proved by Aristotle, 1 disproved (correctly excised)
-- Uqsl2Hopf: ZERO SORRY (Serre coproduct proved by Aristotle `79e07d55`)
-- Polariton c_s: corrected from 1.0→0.5 µm/ps per reconciliation protocol
-- QSqrt2 type built for MTC pentagon verification
+- Phase 5d: 10 waves built, Waves 1-2 COMPLETE, Wave 3 MC running
+- TetradGapEquation: 0 sorry (9 proved by Aristotle, 1 disproved)
+- Uqsl2Hopf: 0 sorry (Serre coproduct proved by Aristotle `79e07d55`)
+- Polariton c_s: corrected 1.0→0.5 µm/ps per reconciliation protocol
+- Stimulated Hawking: formulas + figure built, Paper 12 drafted
+- 2 MTCs under construction (Ising + Fibonacci), QSqrt2/QSqrt5 types proved
+- Coideal embedding + Rep(u_q) correspondence BUILT
+- Verified statistics + Kerr-Schild BUILT
 
 ---
 
@@ -229,7 +233,7 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 ### Paper 13 (NEW, if warranted) — Wen+ADW connection paper
 - Only if Wave 3 produces definitive results (positive or negative)
 - Would be the first paper combining emergent QED with emergent gravity
-- [ ] `papers/paper12_wen_adw/paper_draft.tex`
+- [ ] `papers/paper13_wen_adw/paper_draft.tex`
 - Venue: PRL (if positive), PRD (if negative but informative)
 
 ### Notebooks:
@@ -322,7 +326,7 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - [x] `fig_stimulated_hawking_spectrum` — gain vs ω/κ with detection threshold
 
 ### Stage 10: Paper Draft — NEW PAPER (no polariton paper exists yet)
-- [ ] Create `papers/paper_polariton/paper_draft.tex` — NEW, not an update
+- [ ] Create `papers/paper12_polariton/paper_draft.tex` — NEW, not an update
   - [ ] Corrected predictions with reservoir-corrected c_s = 0.5 µm/ps
   - [ ] Stimulated Hawking detection pathway (Grisins 2016, Burkhard 2025)
   - [ ] 2025 LKB breakthrough (Falque et al.): programmable horizons
@@ -334,7 +338,7 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 ### Deliverables:
 - [x] `src/core/formulas.py` — 4 stimulated Hawking functions
 - [x] `src/core/visualizations.py` — `fig_stimulated_hawking_spectrum`
-- [ ] NEW polariton prediction paper (`papers/paper_polariton/`)
+- [ ] NEW polariton prediction paper (`papers/paper12_polariton/`)
 - [ ] `notebooks/Phase5d_Polariton_Technical.ipynb`
 - [ ] `notebooks/Phase5d_Polariton_Stakeholder.ipynb`
 
@@ -375,7 +379,96 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 
 ---
 
-## 9. Assessment: Risk and Reward
+## 9. Wave 9 — Coideal Embedding O_q ↪ U_q(ŝl₂) — BUILT
+
+**Goal:** Prove the coideal property for the q-Onsager generators B₀, B₁ inside U_q(ŝl₂). Completes the chain Onsager → O_q → U_q(ŝl₂).
+
+### Prerequisites (ALL met):
+- [x] `Uqsl2Affine.lean` — B₀ = F₀+E₀K₀⁻¹, B₁ = F₁+E₁K₁⁻¹ defined (Phase 5c Wave 2)
+- [x] `Uqsl2AffineHopf.lean` — affComul defined (Wave 6)
+- [x] `OnsagerAlgebra.lean` — Dolan-Grady relations (24 thms, zero sorry)
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/CoidealEmbedding.lean` — 6 theorems (2 proved + 4 sorry), lake build clean
+- [x] Coideal property stated: Δ(B_i) = B_i ⊗ 1 + K_i⁻¹ ⊗ B_i
+- [x] Counit: ε(B_i) = 0 stated
+- [x] Dolan-Grady connection noted (full cubic relation deferred)
+- [ ] 4 sorry: coideal_B0, coideal_B1, counit_B0, counit_B1 (Aristotle targets)
+
+---
+
+## 10. Wave 10 — Rep(u_q) → SU(2)_k Data Correspondence — BUILT
+
+**Goal:** Data-level bridge: u_q(sl₂) at root of unity has k+1 simple modules whose fusion matches su2kFusion.
+
+### Prerequisites (ALL met):
+- [x] `RestrictedUq.lean` — u_q defined, zero sorry
+- [x] `SU2kFusion.lean` — fusion rules verified, zero sorry
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/RepUqFusion.lean` — 14 theorems (12 proved + 2 sorry), lake build clean
+- [x] `restricted_uq_dim`: dim(u_q) = (k+2)³ PROVED for k=1,2,3 (native_decide)
+- [x] `n_simples`: k+1 simple modules PROVED for k=1,2,3
+- [x] `classical_dim_pos`, `quantum_dim_vacuum` PROVED
+- [x] Fusion correspondence: structural match to su2kFusion (same function)
+- [ ] 2 sorry: `rep_fusion_comm` (commutativity), `peter_weyl_classical` (sum of squares identity)
+
+---
+
+## Phase 5d Summary
+
+### Current state (Apr 5 2026, session 2):
+- **1253 theorems**, 0 axioms, **88 Lean modules**, **34 sorry**
+- Entry state was 1102 thms, 76 modules, 41 sorry
+- **+151 theorems, +12 modules** across 2 sessions
+- Session 2: CenterFunctor (W12), StimulatedHawking (W13), verified stats Python (W11), papers/notebooks/docs
+
+### Wave status:
+| Wave | Focus | Theorems | Sorry | Status |
+|------|-------|----------|-------|--------|
+| 1 | Tetrad gap equation (Lean) | 20 | 0 | **COMPLETE** |
+| 2 | Python solver + observables | — | — | **COMPLETE** |
+| 3 | MC production (L=4,6,8) | — | — | L=8 running |
+| 4 | Ising + Fibonacci MTC | 39 | 8 | Aristotle in flight |
+| 5 | Polariton paper (Paper 12) | — | — | Claims reviewed, all FAIL fixed |
+| 6 | U_q(ŝl₂) affine Hopf | 4 | 3 | BUILT |
+| 7 | Verified statistics (Lean) | 6 | 4 | BUILT |
+| 8 | Kerr-Schild metrics | 7 | 1 | BUILT |
+| 9 | Coideal embedding | 6 | 4 | BUILT |
+| 10 | Rep(u_q) → SU(2)_k | 14 | 2 | BUILT |
+| 11 | Verified statistics (Python) | — | — | **COMPLETE** (5 formulas, 18 tests) |
+| 12 | Abstract functor Center→ModCat | 9 | 5 | BUILT |
+| 13 | Stimulated Hawking Lean | 11 | 7 | BUILT |
+
+### Completed this session (session 2):
+- Papers 5, 11, 12 updated with current results
+- 4 notebooks: Polariton + MTC (Technical + Stakeholder)
+- 2 stakeholder docs: Phase5d_Implications, Phase5d_Strategic_Positioning
+- Wave 11: verified statistics Python (jackknife, autocorrelation, bootstrap CI, Γ-method)
+- Wave 12: CenterFunctor.lean — abstract functor Center(Vec_G) ⥤ ModuleCat(DG)
+- Claims-reviewer on Paper 12: 5 FAIL fixed, 17 WARN fixed
+- Doc sync: Inventory Index, Inventory, README all updated
+- Sorry registry fixed, companion guide updated
+
+### Blocked items:
+- Aristotle `3b356975` (MTC sorry) — in flight, ~10%
+- L=8 RHMC — running (PID 96665)
+- L=6 RHMC — needs free cores
+
+### Aristotle next batch (after current job completes):
+- 3 FibonacciMTC (pentagon, global dim, dim consistency)
+- 3 Uqsl2AffineHopf (relation-respect proofs)
+- 4 VerifiedStatistics (Cauchy-Schwarz, jackknife, ρ≤1, N_eff≤N)
+- 1 KerrSchild (Sherman-Morrison inverse)
+- 4 CoidealEmbedding (coideal_B0/B1, counit_B0/B1)
+- 2 RepUqFusion (fusion comm, Peter-Weyl)
+- 5 CenterFunctor (functor existence, full, faithful, essSurj, equivalence)
+- 7 StimulatedHawking (BE strict anti, gain anti, tendsto zero, lower bound, sqrt scaling, dispersive interval, detection threshold)
+- Total: 29 sorry for next submission
+
+---
+
+## 11. Assessment: Risk and Reward
 
 ### What makes this high-leverage:
 - **Genuinely unexplored:** No published work combines Wen + ADW

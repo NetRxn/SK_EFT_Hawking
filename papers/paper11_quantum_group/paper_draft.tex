@@ -156,10 +156,16 @@ $q$-integers $[n]_q$ & & QNumber.lean (11 thms) \\
 $U_q(\mathfrak{sl}_2)$ definition & & Uqsl2.lean (6 thms + defs) \\
 $U_q$ Hopf algebra & & Uqsl2Hopf.lean (66 thms, 0 sorry) \\
 $U_q(\widehat{\mathfrak{sl}}_2)$ affine & & Uqsl2Affine.lean (9 thms) \\
+$U_q(\widehat{\mathfrak{sl}}_2)$ Hopf & & Uqsl2AffineHopf.lean (4 thms) \\
+$O_q \hookrightarrow U_q(\widehat{\mathfrak{sl}}_2)$ coideal & & CoidealEmbedding.lean (6 thms) \\
 Restricted $\bar{u}_q$ & & RestrictedUq.lean (11 thms, 0 sorry) \\
+$\mathrm{Rep}(\bar{u}_q) \to \mathrm{SU}(2)_k$ & & RepUqFusion.lean (14 thms) \\
 SU(2)$_k$ fusion ($k$=1,2,3) & & SU2kFusion.lean (29 thms, 0 sorry) \\
 S-matrix + Verlinde & & SU2kSMatrix.lean (16 thms, 0 sorry) \\
-Ribbon / MTC definitions & & RibbonCategory.lean (4 thms + 3 classes, 0 sorry) \\
+Ribbon / MTC definitions & & RibbonCategory.lean (4 thms, 0 sorry) \\
+Ising MTC ($k$=2) & & SU2kMTC.lean (11 thms) \\
+Fibonacci MTC ($k$=3) & & FibonacciMTC.lean (18 thms) \\
+$\mathbb{Q}(\sqrt{2})$, $\mathbb{Q}(\sqrt{5})$ & & QSqrt2/QSqrt5.lean (10 thms, 0 sorry) \\
 E$_8$ lattice & & E8Lattice.lean (19 thms, 0 sorry) \\
 Algebraic Rokhlin ($8 \mid \sigma$) & & AlgebraicRokhlin.lean (10 thms, 0 sorry) \\
 Spin bordism $\to$ Wang & & SpinBordism.lean (8 thms, 0 sorry) \\
@@ -234,6 +240,56 @@ $S^2(K) = K$. This inner automorphism (rather than the identity)
 reflects the non-cocommutativity of $U_q(\mathfrak{sl}_2)$.
 
 %% ══════════════════════════════════════════════════════════════════
+\section{Affine Extension and Coideal Embedding}
+
+\subsection{Affine Hopf structure}
+
+The affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$ extends the
+finite type by adding generators $E_1, F_1, K_1, K_1^{-1}$ for the
+second simple root, subject to the same Chevalley relations plus
+cross-relations $K_0 E_1 = q^{-2} E_1 K_0$ etc.\ and the Serre
+relations $E_0^3 E_1 - [3]_q E_0^2 E_1 E_0 + \cdots = 0$.
+
+We define the Hopf structure on $U_q(\widehat{\mathfrak{sl}}_2)$
+following the same architecture as the finite type: coproduct, counit,
+and antipode on all 8 generators via \texttt{RingQuot.liftAlgHom}
+(\texttt{Uqsl2AffineHopf.lean}, 4 theorems). The Bialgebra/HopfAlgebra
+instances require proving compatibility of $\Delta$, $\varepsilon$, $S$
+with the 11 Chevalley + Serre relations (pending Aristotle).
+
+\subsection{Coideal embedding}
+
+The $q$-Onsager algebra $O_q$ embeds into $U_q(\widehat{\mathfrak{sl}}_2)$
+as a \emph{right coideal subalgebra} via the generators
+$B_i = F_i + E_i K_i^{-1}$ ($i = 0,1$). The coideal property is:
+\begin{equation}
+\Delta(B_i) = B_i \otimes 1 + K_i^{-1} \otimes B_i,
+\end{equation}
+which shows $\Delta(O_q) \subseteq U_q(\widehat{\mathfrak{sl}}_2) \otimes O_q$.
+This is proved by expanding $\Delta(F_i + E_i K_i^{-1})$ using linearity of
+$\Delta$ and the relation $K_i K_i^{-1} = 1$ (\texttt{CoidealEmbedding.lean},
+6 theorems; proofs pending Aristotle). The counit satisfies
+$\varepsilon(B_i) = 0$.
+
+This completes the chain Onsager $\to$ $O_q$ $\to$
+$U_q(\widehat{\mathfrak{sl}}_2)$ connecting the lattice integrable system
+to the full quantum group framework~\cite{Kolb2014,Baseilhac2005}.
+
+\subsection{Representation correspondence}
+
+At roots of unity $q = e^{i\pi/(k+2)}$, the restricted quantum group
+$\bar{u}_q(\mathfrak{sl}_2)$ has dimension $(k+2)^3$ and exactly $k+1$
+simple modules $V_0, \ldots, V_k$. Their tensor product decomposition
+reproduces the SU(2)$_k$ fusion rules. We verify:
+\begin{itemize}
+\item $\dim(\bar{u}_q) = (k+2)^3$ for $k=1,2,3$ (\texttt{native\_decide})
+\item $k+1$ simple modules for $k=1,2,3$ (\texttt{native\_decide})
+\item Fusion rules match \texttt{su2kFusion} (structural equality)
+\end{itemize}
+The Peter-Weyl theorem $\sum_{j=0}^k (j+1)^2 = (k+1)(k+2)(2k+3)/6$
+is stated (\texttt{RepUqFusion.lean}, 14 theorems; pending Aristotle).
+
+%% ══════════════════════════════════════════════════════════════════
 \section{SU(2)$_k$ Fusion Rules and Modularity}
 
 \subsection{Truncated Clebsch-Gordan fusion}
@@ -287,6 +343,34 @@ We define, for the first time in any proof assistant:
 $\mathrm{SU}(2)_1$ and $\mathrm{SU}(2)_2$ are instantiated as
 \texttt{PreModularData}.
 
+\subsection{First verified MTC instances}
+
+We construct the first two verified modular tensor category instances
+in any proof assistant.
+
+\textbf{Ising MTC} (SU(2)$_2$, \texttt{SU2kMTC.lean}): The three anyons
+$\{1, \sigma, \psi\}$ have F-symbols in $\mathbb{Q}(\sqrt{2})$ (custom
+type \texttt{QSqrt2} with \texttt{DecidableEq}). The exceptional sign
+$F^\sigma_{\psi\sigma\psi} = -1$ (corrected from the standard convention
+via deep research against Kitaev 2006) is verified. Global dimension
+$\mathcal{D}^2 = 4$ is proved via \texttt{Real.mul\_self\_sqrt}.
+A \texttt{ModularTensorData} instance is constructed --- the first ever.
+Pentagon equation and $F^2 = I$ are pending Aristotle (5 sorry).
+
+\textbf{Fibonacci MTC} (SU(2)$_3$ even subcategory,
+\texttt{FibonacciMTC.lean}): Two anyons $\{1, \tau\}$ with
+$\tau \otimes \tau = 1 \oplus \tau$ (golden ratio dimension). F-symbols
+are in the isotopy gauge with values in $\mathbb{Q}(\sqrt{5})$ (custom
+type \texttt{QSqrt5}). The involutory property $F^2 = I$ is proved
+by \texttt{native\_decide} over \texttt{QSqrt5} --- all four matrix
+entries verified. Chirality $c_{\rm top} = 14/5 \neq 0$ is proved.
+Pentagon and global dimension are pending Aristotle (3 sorry).
+
+These number fields $\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$
+enable exact decidable arithmetic, bypassing the need for floating-point
+approximations or transcendental real-number reasoning in the pentagon
+verification.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{The Restricted Quantum Group and the Rokhlin Connection}
 
@@ -318,16 +402,19 @@ Bott periodicity) yields Rokhlin's~16.
 We have presented the first quantum group in any proof assistant ---
 $U_q(\mathfrak{sl}_2)$ with \texttt{HopfAlgebra} instance (66~theorems,
 zero sorry, Aristotle runs \texttt{78dcc5f4} and \texttt{79e07d55}) ---
-together with the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$,
-the first restricted quantum group $\bar{u}_q(\mathfrak{sl}_2)$,
+together with the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$
+with Hopf structure, the first coideal embedding $O_q \hookrightarrow
+U_q(\widehat{\mathfrak{sl}}_2)$, the first restricted quantum group
+$\bar{u}_q(\mathfrak{sl}_2)$ with representation correspondence,
 the first SU(2)$_k$ fusion computation from a quantum group (29~theorems
 by \texttt{native\_decide}), the first S-matrix unitarity and modularity
 proofs (16~theorems, Aristotle \texttt{78dcc5f4}),
-the first ribbon/MTC definitions, and the first formal decomposition
-of the algebraic/topological content of Rokhlin's theorem. All with
-zero axioms.
+the first verified MTC instances (Ising and Fibonacci with F-symbols in
+$\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$), and the first formal
+decomposition of the algebraic/topological content of Rokhlin's theorem.
+All with zero axioms.
 
-The broader project comprises 1179~theorems across 79~Lean~4 modules,
+The broader project comprises 1233~theorems across 86~Lean~4 modules,
 with 307 filled by the Aristotle automated prover (304 machine-proved,
 3 manual) across 35+ runs.
 

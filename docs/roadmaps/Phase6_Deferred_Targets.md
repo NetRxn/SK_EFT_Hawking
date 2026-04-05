@@ -90,17 +90,15 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - Deep research submitted: stimulated Hawking quantitative predictions
 - See Phase5d_Roadmap.md Wave 5 for full scope
 
-### C. Verified Statistics Extension
-- **Foundation:** VerifiedJackknife (0 sorry), RHMC production code.
-- **Work:** Bootstrap CI, Γ-method windowing, chi-squared, connection to RHMC observables.
-- **Deep research exists:** `Deferred-Background/Formalizing jackknife and autocorrelation in Lean 4.md`
-- **Impact:** Connects formal verification to MC pipeline. Publishable as standalone.
-- **Estimate:** ~20-30 theorems.
+### C. Verified Statistics Extension — **PARTIALLY PROMOTED TO Phase 5d Waves 7+11**
+- Lean: VerifiedStatistics.lean (6 thms, 4 sorry) — sample variance, Cauchy-Schwarz, N_eff
+- Python: verified_analysis.py + formulas.py (jackknife, autocovariance, bootstrap CI, Γ-method, N_eff)
+- **Remaining:** Bootstrap variance Lean formalization, chi-squared, more Γ-method theory
 
-### D. Abstract Functor Center(Vec_G) ⥤ Rep(D(G))
-- **Status:** Algebraic bijection proved (Phase 5b). Missing: Mathlib Functor.mk construction.
-- **Deep research exists:** `Ribbon-Level2-abstract-functor-construction.md`
-- **Estimate:** ~30-50 theorems of categorical plumbing.
+### D. Abstract Functor Center(Vec_G) ⥤ Rep(D(G)) — **PROMOTED TO Phase 5d Wave 12**
+- CenterFunctor.lean: 9 thms (4 proved, 5 sorry). Functor existence, Full, Faithful, EssSurj, Equivalence.
+- Uses Path B (ofFullyFaithfullyEssSurj). Deep research applied.
+- **Remaining:** Full Aristotle proofs. Monoidal/braided functor upgrade.
 
 ### E. Hopf Structure on U_q(ŝl₂)
 - **Prerequisite:** Uqsl2Hopf Serre coproduct resolved (3 sorry).
@@ -165,4 +163,4 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ---
 
-*Updated April 5, 2026. Phase 5c COMPLETE (0 sorry). Phase 5d Waves 1-4 active. Fibonacci MTC added. Polariton c_s corrected. U_q(sl₂) Hopf algebra COMPLETE (first ever). Wang-Rokhlin chain FULLY PROVED. 1197 theorems, 81 modules, 8 sorry, 0 axioms. Phase 5e: U_q(ŝl₂) Hopf (scoped, not started).*
+*Updated April 5, 2026 (session 2). Phase 5d: 13 waves, 1253 theorems, 88 modules, 34 sorry. Items A-D promoted. Stimulated Hawking formalized (Wave 13). CenterFunctor built (Wave 12). Verified statistics Python complete (Wave 11). Papers 5/11/12 updated. Claims-reviewed. Aristotle `3b356975` in flight.*

@@ -2,13 +2,13 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Eleven papers (Phases 1-5c) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), Hopf algebra, affine U_q(sl_2 hat), restricted u_q, SU(2)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators. Lean 4 formalization: 1102 theorems, 0 axioms across 76 modules (41 sorry pending Aristotle). 273 Aristotle-proved (270 machine + 3 manual). 1635+ tests, 77 pipeline figures, 28 notebooks, 49 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Twelve papers (Phases 1-5d) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), Hopf algebra, affine U_q(sl_2 hat), restricted u_q, SU(2)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators, tetrad gap equation, Fibonacci/Ising MTC, coideal embedding, Rep(u_q) fusion correspondence. Lean 4 formalization: 1233 theorems, 0 axioms across 86 modules (23 sorry pending Aristotle). 307 Aristotle-proved (304 machine + 3 manual). 1635+ tests, 80 pipeline figures, 36 notebooks, 51 Python source modules.
 
-**Last verified:** April 4, 2026 (Phase 5c Wave 7 — 1102 thm, 0 ax, 76 modules, 41 sorry across 7 files pending Aristotle)
+**Last verified:** April 5, 2026 (Phase 5d Waves 1-2 COMPLETE — 1233 thm, 0 ax, 86 modules, 23 sorry across 8 files pending Aristotle)
 
 ---
 
-## 1. PYTHON SOURCE FILES (49 modules + 11 __init__.py)
+## 1. PYTHON SOURCE FILES (51 modules + 11 __init__.py)
 
 ### 1.1 Core Module: `src/core/`
 
@@ -19,8 +19,8 @@
 - `HBAR`, `K_B` — SI physical constants
 - `ATOMS` dict — Atomic properties (mass, scattering length) for Rb87, K39, Na23
 - `EXPERIMENTS` dict — Experimental parameters (density, velocity, omega_perp) for Steinhauer, Heidelberg, Trento
-- `ARISTOTLE_THEOREMS` dict — 273 theorem→run_id mappings across 33+ runs
-- `ARISTOTLE_PROVED_COUNT = 273`
+- `ARISTOTLE_THEOREMS` dict — 307 theorem→run_id mappings across 35+ runs
+- `ARISTOTLE_PROVED_COUNT = 307`
 - `COLORS` dict — Plotly color palette for consistent visualization
 - `CATEGORY_HIERARCHY` — 3-layer categorical infrastructure
 - `FUSION_EXAMPLES` — 5 fusion categories with rules + F-matrices
@@ -76,11 +76,11 @@
 ---
 
 #### `src/core/visualizations.py` (~4230 lines)
-**Purpose:** All Plotly figures (77 functions) + full COLORS palette. **Only place figure functions live.**
+**Purpose:** All Plotly figures (80 functions) + full COLORS palette. **Only place figure functions live.**
 
 **Color Palette:** Steel blue (Steinhauer), berry (Heidelberg), amber (Trento), sage (dispersive), carmine (dissipative), warm tan (noise), cool grey (cross-terms)
 
-**Figure Functions by Phase (77 total):**
+**Figure Functions by Phase (80 total):**
 - Phase 1 (6): transonic_profiles, correction_hierarchy, parameter_space, spin_sonic_enhancement, temperature_decomposition, kappa_scaling
 - Phase 2 (6): cgl_fdr_pattern, even_vs_odd_kernel, boundary_term_suppression, positivity_constraint, on_shell_vanishing, einstein_relation
 - Phase 3a Third-Order (3): parity_alternation, damping_rate_third_order, spectral_correction_comparison
@@ -102,6 +102,7 @@
 - Phase 5b (4): sm_fermion_z16_anomaly, sm_generation_anomaly, sm_generation_constraint, drinfeld_equivalence_structure
 - Phase 5b Modular (1): modular_invariance_phase
 - Phase 5c (5): su2k_fusion_tables, su2k_quantum_dims, su2k_s_matrix_heatmaps, hopf_chain, e8_cartan_heatmap
+- Phase 5d (3): tetrad_gap_curve, tetrad_gap_integral, stimulated_hawking_spectrum
 
 **Stakeholder variants** use `stakeholder=True` parameter for simplified versions.
 
@@ -112,7 +113,7 @@
 
 **Key Types:** `SorryGap` (dataclass), `AristotleResult` (dataclass), `AristotleRunner` (class)
 
-**Sorry Gap Registry (273 registry entries, all gaps filled):**
+**Sorry Gap Registry (307 registry entries, all gaps filled):**
 - Phase 1: 14 gaps (AcousticMetric, SKDoubling, HawkingUniversality)
 - Phase 2: 9 gaps (SecondOrderSK, WKBAnalysis)
 - Phase 2 Stress Tests: 9 gaps (KMS optimality, FDR sign tests, limit checks)
@@ -264,15 +265,27 @@
 #### `src/vestigial/hs_rhmc_torch.py` (Phase 5 Wave 7C)
 **Purpose:** PyTorch CPU backend for RHMC. Production default. Batched LU (L=4) and batched CG (L≥6), FSAL Omelyan integrator.
 
+#### `src/core/sm_anomaly.py` (Phase 5a-5b)
+**Purpose:** SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check.
+
 #### `src/core/provenance.py` (Phase 5 Wave 9D)
 **Purpose:** Parameter provenance registry. PARAMETER_PROVENANCE dict with tiers, sources, verification dates.
 
 #### `src/core/citations.py` (Phase 5 Wave 9D)
 **Purpose:** Citation registry. CITATION_REGISTRY with DOIs, usage mapping.
 
+#### `src/chirality/gioia_thorngren.py` (Phase 5a)
+**Purpose:** Gioia-Thorngren chirality analysis.
+
+#### `src/adw/tetrad_gap_solver.py` (Phase 5d)
+**Purpose:** NJL-type gap equation solver, Δ*(G) curve, MF-guided scan parameters.
+
+#### `src/adw/tetrad_observables.py` (Phase 5d)
+**Purpose:** MC observables: O_tet, O_met, Binder U₄, spatial correlator C(r).
+
 ---
 
-## 2. LEAN FORMAL VERIFICATION (76 modules, 1102 theorems, 0 axioms)
+## 2. LEAN FORMAL VERIFICATION (86 modules, 1233 theorems, 0 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -343,22 +356,32 @@
 | RokhlinBridge | ~250 | 14 | 0 | 5b | Rokhlin "16" convergence, with/without ν_R analysis (**ALL PROVED**) |
 | QNumber | ~200 | 11 | 0 | 5b | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16 (**ALL PROVED**, Aristotle `7d8efa8f`) |
 | Uqsl2 | ~200 | 6 | 0 | 5b | **FIRST quantum group**: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms (**ALL PROVED**, Aristotle `7d8efa8f`) |
-| Uqsl2Hopf | ~450 | 23 | 0 | 5c | **FIRST Hopf algebra on U_q(sl₂)**: Bialgebra + HopfAlgebra, coproduct/counit/antipode, S²=Ad(K) (**22 sorry pending Aristotle**) |
+| Uqsl2Hopf | ~450 | 66 | 0 | 5c-5d | **FIRST Hopf algebra on U_q(sl₂)**: Bialgebra + HopfAlgebra, coproduct/counit/antipode, S²=Ad(K), Serre coproduct (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4` + `79e07d55`) |
 | SU2kFusion | ~400 | 29 | 0 | 5c | SU(2)_k fusion at k=1,2,3: Ising σ²=1+ψ, Fibonacci τ²=1+τ, charge conjugation (**ALL PROVED by native_decide**) |
 | Uqsl2Affine | ~300 | 9 | 0 | 5c | U_q(sl_2 hat) affine quantum group: Chevalley + cross-relations, coideal property (**ALL PROVED**) |
-| SU2kSMatrix | ~250 | 16 | 0 | 5c | SU(2)_k S-matrices at k=1,2: unitarity, Verlinde formula, modularity (**10 sorry pending Aristotle**) |
-| RestrictedUq | ~250 | 11 | 0 | 5c | Restricted quantum group u_q(sl₂): nilpotency, torsion, SU(2)_k connection (**1 sorry pending Aristotle**) |
-| RibbonCategory | ~200 | 4 | 0 | 5c | BalancedCategory, RibbonCategory, MTC definitions (FIRST in any proof assistant) (**2 sorry pending Aristotle**) |
-| E8Lattice | ~200 | 19 | 0 | 5c | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (**2 sorry pending Aristotle**) |
+| SU2kSMatrix | ~250 | 16 | 0 | 5c | SU(2)_k S-matrices at k=1,2: unitarity, Verlinde formula, modularity (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| RestrictedUq | ~250 | 11 | 0 | 5c | Restricted quantum group u_q(sl₂): nilpotency, torsion, SU(2)_k connection (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| RibbonCategory | ~200 | 4 | 0 | 5c | BalancedCategory, RibbonCategory, MTC definitions (FIRST in any proof assistant) (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| E8Lattice | ~200 | 19 | 0 | 5c | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | AlgebraicRokhlin | ~200 | 10 | 0 | 5c | Algebraic Serre theorem σ≡0 mod 8 for even unimodular forms, characteristic vectors, E8 bridge (**ALL PROVED, zero sorry**) |
-| SpinBordism | ~150 | 8 | 0 | 5c | Spin bordism → Rokhlin → Wang chain: SpinBordismData structure, anomaly with/without ν_R, full Wang chain (**2 sorry pending Aristotle**) |
-| VerifiedJackknife | ~200 | 5 | 0 | 5c | First verified statistical estimators: jackknife variance, autocorrelation, intAutocorrTime (**2 sorry pending Aristotle**) |
+| SpinBordism | ~150 | 8 | 0 | 5c | Spin bordism → Rokhlin → Wang chain: SpinBordismData structure, anomaly with/without ν_R, full Wang chain (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| VerifiedJackknife | ~200 | 5 | 0 | 5c | First verified statistical estimators: jackknife variance, autocorrelation, intAutocorrTime (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| TetradGapEquation | ~300 | 20 | 0 | 5d | **First tetrad gap equation**: NJL-type gap, criticalCoupling, IVT existence, Banach uniqueness, bifurcation, vestigial connection (19 PROVED, Aristotle `79e07d55`; **1 sorry**: gap_solution_bounded) |
+| SU2kMTC | ~220 | 11 | 0 | 5d | Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**5 sorry pending Aristotle**) |
+| QSqrt2 | ~50 | 3 | 0 | 5d | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
+| QSqrt5 | ~80 | 7 | 0 | 5d | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
+| FibonacciMTC | ~180 | 11 | 0 | 5d | Fibonacci MTC: F-symbols in Q(√5), F²=I PROVED, PreModularData, chirality (**3 sorry**: pentagon, global dim, dim consistency) |
+| Uqsl2AffineHopf | ~200 | 4 | 0 | 5d | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom (**3 sorry**: relation-respect proofs) |
+| VerifiedStatistics | ~150 | 6 | 0 | 5d | Statistics extension: sample variance non-neg, Cauchy-Schwarz, jackknife mean-case, N_eff ≤ N (**4 sorry**) |
+| KerrSchild | ~100 | 7 | 0 | 5d | Kerr-Schild metrics: null vector, radial_null, Sherman-Morrison inverse, Schwarzschild, DOF counting (**1 sorry**) |
+| CoidealEmbedding | ~130 | 6 | 0 | 5d | Coideal subalgebra embedding B_i into U_q(ŝl₂), Dolan-Grady from Chevalley (**4 sorry**: coideal/counit proofs) |
+| RepUqFusion | ~160 | 13 | 0 | 5d | Rep(u_q) → SU(2)_k fusion data correspondence, dim formulas, Peter-Weyl (**2 sorry**: dimension formula, fusion comm) |
 
 **Axioms:** None (all removed in Wave 6 — `non_abelian_center_discrete` and `gs_nogo_axiom` proved as theorems).
 
 ---
 
-## 3. ARISTOTLE THEOREM PROVER (273 registry entries across 33+ runs)
+## 3. ARISTOTLE THEOREM PROVER (307 registry entries across 35+ runs)
 
 | Run ID | Date | Theorems | Scope |
 |--------|------|----------|-------|
@@ -406,12 +429,14 @@
 | 52992d6a | 2026-04-03 | 13 | Phase 5b Wave 3: DrinfeldDoubleRing (Ring + Algebra instances) |
 | b54f9611 | 2026-04-03 | 1 | Wave 6: axiom removal (z16_anomaly_without_nu_R) |
 | 7d8efa8f | 2026-04-04 | — | Phase 5b: QNumber + Uqsl2 (q-integers, first quantum group) |
-| 1f8e6cb5 | 2026-04-04 | — | Phase 5c: Uqsl2Hopf batch 1 (in progress) |
-| c73bac9c | 2026-04-04 | — | Phase 5c: Uqsl2Hopf batch 2 (in progress) |
+| 1f8e6cb5 | 2026-04-04 | — | Phase 5c: Uqsl2Hopf batch 1 |
+| c73bac9c | 2026-04-04 | — | Phase 5c: Uqsl2Hopf batch 2 |
+| 78dcc5f4 | 2026-04-05 | 34+ | Phase 5d Wave 1: Uqsl2Hopf (all sorry filled), SU2kSMatrix, RestrictedUq, RibbonCategory, E8Lattice, SpinBordism, VerifiedJackknife (all proved) |
+| 79e07d55 | 2026-04-05 | 19+ | Phase 5d Wave 2: TetradGapEquation (19 proved), Uqsl2Hopf Serre coproduct |
 
 ---
 
-## 4. JUPYTER NOTEBOOKS (28 total: 14 Technical + 14 Stakeholder)
+## 4. JUPYTER NOTEBOOKS (36 total: 18 Technical + 18 Stakeholder)
 
 | Notebook | Phase | Topic |
 |----------|-------|-------|
@@ -443,12 +468,20 @@
 | Phase5b_ModularGeneration_Stakeholder | 5b | Modular generation for non-specialists |
 | Phase5b_QuantumGroup_Technical | 5b | First quantum group U_q(sl₂) formalization |
 | Phase5b_QuantumGroup_Stakeholder | 5b | Quantum group for non-specialists |
+| Phase5c_HopfAlgebra_Technical | 5c | Hopf algebra on U_q(sl₂), coproduct/counit/antipode |
+| Phase5c_HopfAlgebra_Stakeholder | 5c | Hopf algebra for non-specialists |
+| Phase5c_SU2kFusion_Technical | 5c | SU(2)_k fusion rules, S-matrix, Ising/Fibonacci |
+| Phase5c_SU2kFusion_Stakeholder | 5c | SU(2)_k fusion for non-specialists |
+| Phase5c_E8Rokhlin_Technical | 5c | E8 lattice, algebraic Rokhlin, spin bordism |
+| Phase5c_E8Rokhlin_Stakeholder | 5c | E8/Rokhlin for non-specialists |
+| Phase5d_TetradGap_Technical | 5d | Tetrad gap equation, NJL-type gap solver |
+| Phase5d_TetradGap_Stakeholder | 5d | Tetrad gap equation for non-specialists |
 
 **Convention:** Technical mirrors paper structure. Stakeholder teaches the physics. All import from `src/` modules (no inline formula redefinition). All figure cells tagged `# viz-ref: fig_<name>`.
 
 ---
 
-## 5. PAPER DRAFTS (11 papers + prediction tables)
+## 5. PAPER DRAFTS (12 papers + prediction tables)
 
 | Paper | Format | Lines | Topic |
 |-------|--------|-------|-------|
@@ -463,6 +496,7 @@
 | paper9_sm_anomaly_drinfeld | PRL | ~300 | SM anomaly in Z₁₆ + Drinfeld center formalization |
 | paper10_modular_generation | PRD | ~300 | Modular invariance → generation constraint N_f ≡ 0 mod 3 |
 | paper11_quantum_group | PRD | ~300 | First quantum group formalization U_q(sl₂) |
+| paper12_polariton | PRL | ~300 | Polariton analog Hawking: stimulated amplification protocol |
 | experimental_predictions | Tables | 156 | Platform spectral predictions |
 
 **Key numerical claims (all traced to formulas.py via CHECK 14):**
@@ -475,7 +509,7 @@
 
 ---
 
-## 6. TEST FILES (38 files, 1635+ tests)
+## 6. TEST FILES (40 files, 1635+ tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
@@ -517,6 +551,8 @@
 | test_su2k_fusion | 29+ | SU(2)_k fusion rules at k=1,2,3 |
 | test_affine_quantum | — | Affine quantum group, restricted u_q, S-matrix |
 | test_e8_rokhlin | 24 | E8 lattice, algebraic Rokhlin (Serre mod 8), spin bordism, Wang chain |
+| test_tetrad_gap | — | Tetrad gap equation Lean formalization tests |
+| test_tetrad_gap_solver | — | Tetrad gap solver, NJL-type gap equation, Δ*(G) curve |
 
 ---
 
@@ -670,16 +706,16 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| **Python Source Modules** | 49 | Complete (Phases 1-5c) |
+| **Python Source Modules** | 51 | Complete (Phases 1-5d) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 38 | 1635+ tests |
-| **Notebooks** | 28 | Phases 1-5b (Technical + Stakeholder) |
-| **Lean Modules** | 76 | All build clean |
-| **Lean Theorems** | 1102 (0 axioms) | 41 sorry pending Aristotle across 7 files |
-| **Aristotle-proved** | 273 (270 machine + 3 manual in registry) | 33+ runs |
-| **Manual proofs** | 829 | |
-| **Paper Drafts** | 11 + prediction tables | Full LaTeX |
-| **Pipeline Figures** | 77 | All PNGs generated |
+| **Test Files** | 40 | 1635+ tests |
+| **Notebooks** | 36 | Phases 1-5d (Technical + Stakeholder) |
+| **Lean Modules** | 86 | All build clean |
+| **Lean Theorems** | 1233 (0 axioms) | 23 sorry pending Aristotle across 8 files |
+| **Aristotle-proved** | 307 (304 machine + 3 manual in registry) | 35+ runs |
+| **Manual proofs** | 926 | |
+| **Paper Drafts** | 12 + prediction tables | Full LaTeX |
+| **Pipeline Figures** | 80 | All PNGs generated |
 | **Validation Checks** | 16 | All passing |
 | **Scripts** | 14 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 7 utilities |
 | **Stakeholder Docs** | 18 | Phases 1-5c |
@@ -688,4 +724,4 @@
 
 ---
 
-**Project Status (2026-04-04):** Phase 5c Wave 7 COMPLETE. 1102 theorems, 0 axioms (41 sorry pending Aristotle across 7 files: Uqsl2Hopf 22, SU2kSMatrix 10, RibbonCategory 2, VerifiedJackknife 2, E8Lattice 2, RestrictedUq 1, SpinBordism 2), 273 Aristotle-registry entries (270 machine-proved, 3 manual), 1635+ tests, 77 figures, 76 Lean modules, 49 Python modules, 11 papers, 28 notebooks. Phase 5c Wave 7 additions: AlgebraicRokhlin (Serre σ≡0 mod 8, 10 thms, all proved), SpinBordism (bordism → Rokhlin → Wang chain, 8 thms, 2 sorry), E8Lattice PROVIDED SOLUTION tags, 5 new figures (fig76-80: SU(2)_k fusion/dims/S-matrix, Hopf chain, E8 Cartan), test_e8_rokhlin (24 tests), HYPOTHESIS_REGISTRY now 5 entries. All axioms removed. L=8 RHMC results pending for Paper 6.
+**Project Status (2026-04-05):** Phase 5d Waves 1-2 COMPLETE. 1233 theorems, 0 axioms (23 sorry pending Aristotle across 8 files: SU2kMTC 5, VerifiedStatistics 4, CoidealEmbedding 4, FibonacciMTC 3, Uqsl2AffineHopf 3, RepUqFusion 2, KerrSchild 1, TetradGapEquation 1), 307 Aristotle-registry entries (304 machine-proved, 3 manual), 1635+ tests, 80 figures, 86 Lean modules, 51 Python modules, 12 papers, 36 notebooks. Phase 5d additions: +131 theorems, +10 Lean modules, -18 sorry resolved (Uqsl2Hopf 22→0 + SU2kSMatrix 10→0 + RibbonCategory 2→0 + E8Lattice 2→0 + SpinBordism 2→0 + RestrictedUq 1→0 + VerifiedJackknife 2→0), Uqsl2Hopf expanded 23→66 theorems. New modules: TetradGapEquation (20), SU2kMTC (11), FibonacciMTC (11), QSqrt2 (3), QSqrt5 (7), Uqsl2AffineHopf (4), VerifiedStatistics (6), KerrSchild (7), CoidealEmbedding (6), RepUqFusion (13). paper12_polariton new.

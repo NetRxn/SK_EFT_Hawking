@@ -813,7 +813,7 @@ def stimulated_hawking_gain(omega, kappa, greybody=1.0):
     (Hawking) channel output is G(ω) × n_in. The gain peaks at low
     frequencies where G → Γ/(2πω/κ) and approaches 1 for ω ≪ κ.
 
-    Lean: stimulated_hawking_gain_pos (future)
+    Lean: boseEinstein_pos, stimGain_pos, boseEinstein_strictAnti (StimulatedHawking.lean)
     Aristotle: pending
     Source: Grisins et al., PRB 94, 144518 (2016); Macher & Parentani, PRD 79, 124008 (2009)
 
@@ -838,7 +838,7 @@ def stimulated_hawking_snr(omega, kappa, n_probe, n_shots=1, greybody=1.0):
 
     For 5σ detection: N_shots · N_probe ≥ 25 / G(ω)².
 
-    Lean: stimulated_hawking_snr_scaling (future)
+    Lean: snr_pos, snr_sqrt_scaling, detection_threshold (StimulatedHawking.lean)
     Aristotle: pending
     Source: Deep research Phase-5d, Eq. from Grisins et al. (2016) framework
 
@@ -891,8 +891,10 @@ def dispersive_hawking_correction(D):
     κ_eff ≈ κ(1 - c₁·D² + O(D⁴)) where D = ξκ/c_s is the smoothness parameter.
     The coefficient c₁ ~ O(1) depends on the horizon profile shape.
 
-    For D ≈ 0.46 (our polariton system): ~20% correction.
+    For D ≈ 0.30 (our polariton system, reservoir-corrected c_s): ~9% correction.
 
+    Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean)
+    Aristotle: pending
     Source: Finazzi & Parentani, PRD 85, 124027 (2012)
 
     Args:
@@ -4474,3 +4476,171 @@ def restricted_uq_relations(ell):
         'num_simples': ell,
         'fusion_level': ell - 2,  # k = ell - 2 for SU(2)_k connection
     }
+
+
+# ════════════════════════════════════════════════════════════════════
+# Verified Statistics (VerifiedJackknife.lean + VerifiedStatistics.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def jackknife_variance(data, observable=None):
+    """
+    Delete-one jackknife variance estimator.
+
+    sigma_JK^2 = [(n-1)/n] * sum_i (theta_i - theta_bar)^2
+
+    where theta_i is the observable computed on data with the i-th
+    sample deleted.
+
+    Lean: jackknifeVariance_nonneg (VerifiedJackknife.lean)
+    Aristotle: 78dcc5f4
+    Lean: jackknife_mean_case (VerifiedStatistics.lean) — pending
+
+    Args:
+        data: 1D array of samples
+        observable: function mapping array -> scalar. Defaults to np.mean.
+
+    Returns:
+        (estimate, variance) tuple
+    """
+    data = np.asarray(data, dtype=float)
+    n = len(data)
+    if n < 2:
+        raise ValueError("Need at least 2 samples for jackknife")
+
+    if observable is None:
+        observable = np.mean
+
+    theta_full = observable(data)
+    theta_delete = np.empty(n)
+    for i in range(n):
+        theta_delete[i] = observable(np.delete(data, i))
+
+    theta_bar = np.mean(theta_delete)
+    variance = ((n - 1) / n) * np.sum((theta_delete - theta_bar) ** 2)
+    return theta_full, variance
+
+
+def autocovariance(data, max_lag=None):
+    """
+    Unnormalized autocovariance function C(t) for lag t = 0, 1, ..., max_lag.
+
+    C(t) = sum_{i=0}^{n-t-1} (x_i - xbar)(x_{i+t} - xbar)
+
+    Lean: autocovariance_zero_nonneg (VerifiedJackknife.lean)
+    Aristotle: 78dcc5f4
+    Lean: autocovariance_bounded (VerifiedStatistics.lean) — pending
+
+    Args:
+        data: 1D array of samples
+        max_lag: maximum lag (default: n//4)
+
+    Returns:
+        array of C(t) for t = 0, 1, ..., max_lag
+    """
+    data = np.asarray(data, dtype=float)
+    n = len(data)
+    if max_lag is None:
+        max_lag = n // 4
+
+    xbar = np.mean(data)
+    centered = data - xbar
+    C = np.empty(max_lag + 1)
+    for t in range(max_lag + 1):
+        C[t] = np.sum(centered[:n - t] * centered[t:n]) if t < n else 0.0
+    return C
+
+
+def integrated_autocorrelation_time(data, window=None):
+    """
+    Integrated autocorrelation time with window W (Wolff Gamma-method).
+
+    tau_int(W) = 1/2 + sum_{t=1}^{W} C(t)/C(0)
+
+    Lean: intAutocorrTime_ge_half (VerifiedJackknife.lean)
+    Aristotle: 78dcc5f4
+
+    Args:
+        data: 1D array of samples
+        window: summation window W (default: automatic via Wolff criterion)
+
+    Returns:
+        (tau_int, window_used) tuple
+    """
+    data = np.asarray(data, dtype=float)
+    n = len(data)
+    max_lag = n // 4
+    C = autocovariance(data, max_lag)
+
+    if C[0] <= 0:
+        return 0.5, 0
+
+    rho = C / C[0]
+
+    if window is not None:
+        W = min(window, max_lag)
+        tau = 0.5 + np.sum(rho[1:W + 1])
+        return max(tau, 0.5), W
+
+    # Wolff automatic windowing: stop when W >= c * tau_int(W)
+    c = 5.0
+    tau = 0.5
+    for W in range(1, max_lag + 1):
+        tau += rho[W]
+        if W >= c * tau:
+            return max(tau, 0.5), W
+
+    return max(tau, 0.5), max_lag
+
+
+def effective_sample_size(data, window=None):
+    """
+    Effective sample size N_eff = N / (2 * tau_int).
+
+    Lean: effectiveSampleSize_le_n (VerifiedStatistics.lean) — pending
+    Lean: intAutocorrTime_ge_half guarantees N_eff <= N.
+
+    Args:
+        data: 1D array of samples
+        window: summation window (default: automatic)
+
+    Returns:
+        (n_eff, tau_int, window_used) tuple
+    """
+    data = np.asarray(data, dtype=float)
+    n = len(data)
+    tau, W = integrated_autocorrelation_time(data, window)
+    n_eff = n / (2 * tau)
+    return n_eff, tau, W
+
+
+def bootstrap_confidence_interval(data, observable=None, n_bootstrap=1000, alpha=0.05):
+    """
+    Bootstrap confidence interval via percentile method.
+
+    Lean: sampleVariance_nonneg (VerifiedStatistics.lean) — variance bound
+    Aristotle: pending
+
+    Args:
+        data: 1D array of samples
+        observable: function mapping array -> scalar. Defaults to np.mean.
+        n_bootstrap: number of bootstrap resamples
+        alpha: significance level (default 0.05 for 95% CI)
+
+    Returns:
+        (estimate, ci_low, ci_high) tuple
+    """
+    data = np.asarray(data, dtype=float)
+    n = len(data)
+    if observable is None:
+        observable = np.mean
+
+    rng = np.random.default_rng(42)
+    theta_full = observable(data)
+    theta_boot = np.empty(n_bootstrap)
+    for b in range(n_bootstrap):
+        resample = data[rng.integers(0, n, size=n)]
+        theta_boot[b] = observable(resample)
+
+    ci_low = np.percentile(theta_boot, 100 * alpha / 2)
+    ci_high = np.percentile(theta_boot, 100 * (1 - alpha / 2))
+    return theta_full, ci_low, ci_high

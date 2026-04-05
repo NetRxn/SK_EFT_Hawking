@@ -161,9 +161,9 @@ def test_sorry_gap_registry():
     """
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
-    # 2 unfilled: qnumber_eval (QNumber.lean, 5 sorry) + uqsl2_relations (Uqsl2.lean, 6 sorry)
-    # pending Aristotle submission
-    expected_unfilled = {"qnumber_eval", "uqsl2_relations"}
+    # All sorry gaps in registry are filled (Aristotle runs 7d8efa8f, 78dcc5f4, 79e07d55)
+    # Active sorry (22 total) are in Phase 5d modules not yet registered
+    expected_unfilled = set()
     actual_unfilled = {g.name for g in unfilled}
     assert actual_unfilled == expected_unfilled, (
         f"Unexpected unfilled sorry gaps: "

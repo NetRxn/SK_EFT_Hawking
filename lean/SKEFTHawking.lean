@@ -81,6 +81,10 @@ import SKEFTHawking.FibonacciMTC
 import SKEFTHawking.Uqsl2AffineHopf
 import SKEFTHawking.VerifiedStatistics
 import SKEFTHawking.KerrSchild
+import SKEFTHawking.CoidealEmbedding
+import SKEFTHawking.RepUqFusion
+import SKEFTHawking.CenterFunctor
+import SKEFTHawking.StimulatedHawking
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -1602,7 +1602,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="22 sorrys: comulFreeAlg_respects_rel (5 relation checks), counitFreeAlg_respects_rel (5 checks), antipodeFreeAlg_respects_rel (5 checks), 4 comul_gen + 4 counit_gen + 4 antipode_gen (unfolding liftAlgHom), coassociativity, 2 counitality, 2 antipode axioms, S^2=Ad(K), counit_comp_antipode. First Hopf algebra in a proof assistant.",
         strategy_hint="Generator-level: unfold comulUq/counitUq/antipodeUq to liftAlgHom, apply liftAlgHom_mkAlgHom_apply, then lift_ι_apply. Relation compatibility: intro/cases on ChevalleyRel, compute on tensor products using map_mul/map_add. Coalgebra axioms: AlgHom equality by ext, reduce to generator checks. Antipode axioms: LinearMap ext, reduce to generators. See PROVIDED SOLUTION hints in each theorem.",
-        filled=False,
+        filled=True,
     ),
 ]
 
