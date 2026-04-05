@@ -63,6 +63,15 @@ import SKEFTHawking.ModularInvarianceConstraint
 import SKEFTHawking.RokhlinBridge
 import SKEFTHawking.QNumber
 import SKEFTHawking.Uqsl2
+import SKEFTHawking.Uqsl2Hopf
+import SKEFTHawking.SU2kFusion
+import SKEFTHawking.Uqsl2Affine
+import SKEFTHawking.SU2kSMatrix
+import SKEFTHawking.RestrictedUq
+import SKEFTHawking.RibbonCategory
+import SKEFTHawking.E8Lattice
+import SKEFTHawking.VerifiedJackknife
+import SKEFTHawking.AlgebraicRokhlin
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

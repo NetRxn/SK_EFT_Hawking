@@ -55,6 +55,8 @@ Each axiom card shows: name, location, eliminability badge, full type signature,
 
 **Declaration Browser:** Table of all Lean modules sorted by total declaration count. Columns: Module, Axioms, Thms, Defs, Structs, Inds, Insts, Total. Kind filter pills allow filtering by declaration type. Modules containing axioms are highlighted.
 
+**Hypothesis Command Panel:** One card per entry in `HYPOTHESIS_REGISTRY` (constants.py). Card border color indicates eliminability (green = algebraic, amber = hard, red = very_hard). Each card shows: hypothesis name, mathematical statement, status (active/proposed/eliminated), eliminability, dependent theorems, source citation, risk assessment, and circularity notes. This tracks load-bearing unproved inputs that enter as theorem parameters, not global axioms.
+
 **Structure Field Assumptions:** Collapsed section listing structures with Prop-valued fields — these are implicit physics hypotheses (e.g., `FluidBackground.soundSpeed_pos : 0 < soundSpeed x`).
 
 ### Paper Claims

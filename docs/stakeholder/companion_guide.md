@@ -477,15 +477,15 @@ The exact WKB connection formula completes the prediction chain. Instead of just
 
 ### Current Status
 
-| Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 | Phase 5a | Phase 5b |
-|--------|---------|---------|---------|---------|---------|----------|----------|
-| Papers | 1 | 2 | 5 | 6 | 7 | 8 | 10 |
-| Verified theorems | 14 | 40 | 130+1ax | 216+1ax | 675+3ax | 748+3ax | 968 (0 ax) |
-| Lean modules | 4 | 7 | 11 | 16 | 43 | 49 | 66 |
-| Tests | 12 | 64 | 269 | 820 | 1339 | 1390 | 1554 |
-| Pipeline figures | 6 | 12 | 34 | 44 | 64 | 69 | 72 |
-| Aristotle-proved | 14 | 40 | 99 | 211 | 235 | 252 | 273 |
-| Key results | — | — | 2 walls | +vestigial | chirality formalized | chirality **verified** | **Why 3 generations** + gauge emergence |
+| Metric | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 | Phase 5a | Phase 5b | Phase 5c |
+|--------|---------|---------|---------|---------|---------|----------|----------|----------|
+| Papers | 1 | 2 | 5 | 6 | 7 | 8 | 10 | 11 |
+| Verified theorems | 14 | 40 | 130+1ax | 216+1ax | 675+3ax | 748+3ax | 968 (0 ax) | 1084 (0 ax) |
+| Lean modules | 4 | 7 | 11 | 16 | 43 | 49 | 66 | 74 |
+| Tests | 12 | 64 | 269 | 820 | 1339 | 1390 | 1554 | 1610+ |
+| Pipeline figures | 6 | 12 | 34 | 44 | 64 | 69 | 72 | 72 |
+| Aristotle-proved | 14 | 40 | 99 | 211 | 235 | 252 | 273 | 273 |
+| Key results | — | — | 2 walls | +vestigial | chirality formalized | chirality **verified** | **Why 3 generations** + gauge emergence | Hopf algebra + MTC + E8 lattice |
 
 ---
 
@@ -564,17 +564,17 @@ Remember the "new kind of gravity" from Phase 4? A comprehensive codebase audit 
 
 ### By the numbers
 
-| Metric | Phase 4 | Phase 5 |
+| Metric | Phase 4 | Phase 5 (all) |
 |--------|---------|---------|
-| Lean theorems | 216 + 1 axiom | 968 (0 axioms) |
+| Lean theorems | 216 + 1 axiom | 1084 (0 axioms) |
 | Aristotle-proved | 56 | 273 (33+ runs) |
-| Lean modules | 16 | 66 |
-| Tests | 822 | 1014 |
-| Figures | 45 | 61 |
-| Papers | 6 | 7 |
-| Notebooks | 16 | 20 |
+| Lean modules | 16 | 74 |
+| Tests | 822 | 1610+ |
+| Figures | 45 | 72 |
+| Papers | 6 | 11 |
+| Notebooks | 16 | 28 |
 | Platforms | 3 (BEC) | 4 (3 BEC + polariton) |
-| Formal verification firsts | 0 | 3 (chirality wall, fusion categories, Drinfeld double) |
+| Formal verification firsts | 0 | 6 (chirality wall, fusion categories, Drinfeld double, Hopf algebra, Ribbon/MTC, verified statistics) |
 
 ---
 

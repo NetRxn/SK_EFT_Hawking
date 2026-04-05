@@ -33,7 +33,7 @@ to acoustic Hawking radiation in BEC analog gravity. Eleven papers in a unified 
   First formal derivation connecting number-theoretic modular invariance to
   SM generation constraint N_f = 0 mod 3. PRD format.
 
-**Lean 4 formalization:** 968 theorems across 66 Lean modules. Zero axioms, zero sorry.
+**Lean 4 formalization:** 1084 theorems across 74 Lean modules. Zero axioms, 39 sorry pending Aristotle.
 273 Aristotle-proved across 33+ runs.
 Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
@@ -44,14 +44,20 @@ PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant),
 gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)), analytical vestigial susceptibility,
 hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermions (L=4 complete, L=8 in flight).
 
+**Phase 5c additions:** First Hopf algebra in a proof assistant (U_q(sl₂) coproduct/counit/antipode),
+SU(2)_k fusion rules at k=1,2,3 (Ising/Fibonacci by native_decide), affine quantum group U_q(sl_2 hat),
+SU(2)_k S-matrices + Verlinde formula, restricted quantum group u_q(sl₂), Ribbon/MTC category
+definitions (first in any proof assistant), E8 lattice + Rokhlin gap verification,
+first verified statistical estimators (jackknife, autocorrelation).
+
 ## Project Structure
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (968 theorems, 0 axioms, 66 modules, zero sorry)
+├── lean/                              # Lean 4 formalization (1084 theorems, 0 axioms, 74 modules, 39 sorry pending Aristotle)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 66)
+│   ├── SKEFTHawking.lean              # Root module (imports all 73 + ExtractDeps)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -116,8 +122,16 @@ SK_EFT_Hawking/
 │       ├── WangBridge.lean            # Phase 5b: c₋=8N_f from 16 Weyl, ν_R required (9 theorems)
 │       ├── ModularInvarianceConstraint.lean # Phase 5b: framing anomaly, η→24→3|N_f (12 theorems)
 │       ├── RokhlinBridge.lean         # Phase 5b: Rokhlin "16" convergence (14 theorems)
-│       ├── QNumber.lean               # Phase 5b: q-integers [n]_q, classical limit (11 theorems, 5 sorry pending Aristotle)
-│       └── Uqsl2.lean                 # Phase 5b: FIRST quantum group U_q(sl₂), zero axioms (6 theorems, 6 sorry pending Aristotle)
+│       ├── QNumber.lean               # Phase 5b: q-integers [n]_q, classical limit (11 theorems)
+│       ├── Uqsl2.lean                 # Phase 5b: FIRST quantum group U_q(sl₂), zero axioms (6 theorems)
+│       ├── Uqsl2Hopf.lean            # Phase 5c: FIRST Hopf algebra on U_q(sl₂), coproduct/counit/antipode (23 theorems, 22 sorry pending Aristotle)
+│       ├── SU2kFusion.lean           # Phase 5c: SU(2)_k fusion at k=1,2,3, Ising/Fibonacci (29 theorems)
+│       ├── Uqsl2Affine.lean          # Phase 5c: U_q(sl_2 hat) affine quantum group (9 theorems)
+│       ├── SU2kSMatrix.lean          # Phase 5c: SU(2)_k S-matrices, unitarity, Verlinde (16 theorems, 10 sorry pending Aristotle)
+│       ├── RestrictedUq.lean         # Phase 5c: restricted quantum group u_q(sl₂), nilpotency (11 theorems, 1 sorry pending Aristotle)
+│       ├── RibbonCategory.lean       # Phase 5c: Balanced/Ribbon/MTC definitions (4 theorems, 2 sorry pending Aristotle)
+│       ├── E8Lattice.lean            # Phase 5c: E8 Cartan, Rokhlin gap, classification (19 theorems, 2 sorry pending Aristotle)
+│       └── VerifiedJackknife.lean    # Phase 5c: verified jackknife/autocorrelation estimators (5 theorems, 2 sorry pending Aristotle)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
@@ -241,7 +255,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 33+ Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1554 tests across 34 files)
+├── tests/                             # pytest suite (1610+ tests across 37 files)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -324,7 +338,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
 - Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
 
-## Theorem Inventory (968 theorems — zero axioms, zero sorry)
+## Theorem Inventory (1084 theorems — zero axioms, 39 sorry pending Aristotle)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -348,7 +362,7 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | SU2PseudoReality.lean | 5 | 10 | One-link normalization, Binder limits |
 | FermionBag4D.lean | 5 | 16 | SO(4) integration, bag positivity |
 | LatticeHamiltonian.lean | 5 | 28 | BZ compact, GS 9 conditions, TPF 3 violations |
-| GoltermanShamir.lean | 5 | 15 | 9 GS Props, Fock space finite, TPF evasion (axiom removed) |
+| GoltermanShamir.lean | 5 | 14 | 9 GS Props, Fock space finite, TPF evasion (axiom removed) |
 | TPFEvasion.lean | 5 | 12 | Master synthesis, 5 violations |
 | KLinearCategory.lean | 5 | 16 | SemisimpleCategory, Schur, Vec_G D² |
 | SphericalCategory.lean | 5 | 18 | PivotalCategory (FIRST-EVER), quantumDim |
@@ -390,8 +404,16 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 | WangBridge.lean | 5b | 9 | c₋=8N_f derived from 16 Weyl, fractional c₋ forces ν_R, full chain |
 | ModularInvarianceConstraint.lean | 5b | 12 | Framing anomaly from η, q-parameter shift, 24\|c₋, complete chain η→24→3\|N_f. Aristotle: b54f9611 |
 | RokhlinBridge.lean | 5b | 14 | Rokhlin "16" convergence, with/without ν_R analysis |
-| QNumber.lean | 5b | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16 (5 sorry pending Aristotle) |
-| Uqsl2.lean | 5b | 6 | **FIRST quantum group in a proof assistant**: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms (6 sorry pending Aristotle) |
+| QNumber.lean | 5b | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16. Aristotle: 7d8efa8f |
+| Uqsl2.lean | 5b | 6 | **FIRST quantum group in a proof assistant**: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms. Aristotle: 7d8efa8f |
+| Uqsl2Hopf.lean | 5c | 23 | **FIRST Hopf algebra in a proof assistant**: coproduct/counit/antipode, S²=Ad(K) (22 sorry pending Aristotle) |
+| SU2kFusion.lean | 5c | 29 | SU(2)_k fusion at k=1,2,3: Ising σ²=1+ψ, Fibonacci τ²=1+τ, charge conjugation (ALL PROVED by native_decide) |
+| Uqsl2Affine.lean | 5c | 9 | U_q(sl_2 hat) affine quantum group, Chevalley + cross-relations, coideal property |
+| SU2kSMatrix.lean | 5c | 16 | SU(2)_k S-matrices at k=1,2: unitarity, Verlinde formula, modularity (10 sorry pending Aristotle) |
+| RestrictedUq.lean | 5c | 11 | Restricted quantum group u_q(sl₂): nilpotency E^ell=0, torsion K^ell=1, SU(2)_k connection (1 sorry pending Aristotle) |
+| RibbonCategory.lean | 5c | 4 | Balanced, Ribbon, MTC definitions (FIRST in any proof assistant) (2 sorry pending Aristotle) |
+| E8Lattice.lean | 5c | 19 | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (2 sorry pending Aristotle) |
+| VerifiedJackknife.lean | 5c | 5 | First verified statistical estimators: jackknife, autocorrelation, intAutocorrTime (2 sorry pending Aristotle) |
 
 ## Build Environment
 

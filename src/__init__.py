@@ -41,7 +41,21 @@ A unified project encompassing:
       [H,Q_A]=0 central theorem, non-on-site classification, Weyl doublet
       Onsager→SU(2) emanant symmetry, Witten anomaly connection.
 
-Lean 4 formalization: 968 theorems, 0 axioms, 66 modules. Zero sorry.
+  - Phase 5b (SM anomaly + Drinfeld center + modular generation + quantum group):
+    * SM anomaly in Z₁₆: fermion data, anomaly index, hidden sector theorem.
+    * Drinfeld center: toric code, D(S₃) non-abelian, center equivalence.
+    * Modular generation constraint: framing anomaly → N_f ≡ 0 mod 3.
+    * First quantum group: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms.
+
+  - Phase 5c (Hopf algebra + SU(2)_k + ribbon/MTC + E8 + statistics):
+    * First Hopf algebra in a proof assistant: U_q(sl₂) coproduct/counit/antipode.
+    * SU(2)_k fusion at k=1,2,3: Ising, Fibonacci by native_decide.
+    * Affine quantum group U_q(sl_2 hat), restricted u_q(sl₂).
+    * SU(2)_k S-matrices + Verlinde formula, ribbon/MTC category definitions.
+    * E8 lattice verification: Rokhlin gap, Serre bound.
+    * First verified statistical estimators: jackknife, autocorrelation.
+
+Lean 4 formalization: 1084 theorems, 0 axioms, 74 modules. 39 sorry pending Aristotle.
 Aristotle automated theorem prover: 273 theorems proved across 33+ runs.
 
 Subpackages:

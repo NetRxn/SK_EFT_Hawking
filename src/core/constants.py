@@ -777,17 +777,17 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (968 theorems, 0 axioms across 66 Lean modules):
+# Verification breakdown (1084 theorems, 0 axioms across 74 Lean modules):
 #   - 273 tracked in ARISTOTLE_THEOREMS registry (270 machine + 3 manual, listed below with run IDs)
-#   - 695 proved manually in Lean (verified by `lake build`)
+#   - 811 proved manually in Lean (verified by `lake build`)
 #   - 0 axioms (all removed — see axiom history below)
+#   - 39 sorry pending Aristotle (22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory
+#     + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq)
 #   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
 #               chiral_central_charge_coeff (all tautological as stated)
 #   - REMOVED axioms: modular_invariance_constraint (mathematically FALSE),
 #               non_abelian_center_discrete (proved as theorem),
 #               gs_nogo_axiom (proved as theorem)
-#
-# ZERO sorry, ZERO axioms across entire project. Verified by `lake build`.
 # ════════════════════════════════════════════════════════════════════
 
 ARISTOTLE_THEOREMS = {
@@ -1142,6 +1142,96 @@ AXIOM_METADATA: dict[str, dict[str, str]] = {
         'eliminability': 'removed',
         'reason': 'Proved as theorem (Wave 6 axiom removal)',
         'module': 'GoltermanShamir',
+    },
+}
+
+# ════════════════════════════════════════════════════════════════════
+# HYPOTHESIS REGISTRY
+#
+# Tracks unproved inputs that enter as hypotheses (function parameters)
+# rather than axioms. These are mathematically well-established results
+# that we cannot prove in Lean from our current infrastructure.
+#
+# Unlike axioms, hypotheses do NOT contaminate downstream theorems —
+# they appear explicitly in the theorem statement as conditions.
+# But we need to track them to understand our proof's total assumptions.
+#
+# Fields:
+#   statement: Mathematical content of the hypothesis
+#   status: 'active' (used in current theorems) | 'eliminable' | 'eliminated'
+#   eliminability: 'algebraic' | 'hard' | 'very_hard' | 'open'
+#   elimination_path: What would be needed to prove it
+#   dependent_theorems: List of theorems that take this as a hypothesis
+#   source: Published proof / reference
+#   risk: Assessment of the hypothesis's reliability
+#   circularity_note: Any known circularity concerns
+# ════════════════════════════════════════════════════════════════════
+
+HYPOTHESIS_REGISTRY: dict[str, dict] = {
+    'rokhlin_sigma_mod_16': {
+        'statement': 'For any closed smooth spin 4-manifold M, 16 | σ(M)',
+        'status': 'active',
+        'eliminability': 'very_hard',
+        'elimination_path': 'Requires either: (a) Atiyah-Singer index theorem + quaternionic spinor structure, or (b) Adams spectral sequence computation of Ω^Spin_4, or (c) Freedman-Kirby characteristic surface argument. All require differential topology not in Mathlib.',
+        'dependent_theorems': [
+            'SKEFTHawking.sixteen_convergence_full',
+            'SKEFTHawking.z16_anomaly_without_nu_R',
+        ],
+        'module': 'RokhlinBridge',
+        'source': 'Rokhlin, Dokl. Akad. Nauk SSSR 84, 221 (1952)',
+        'risk': 'Extremely low — proved 1952, independently confirmed by Atiyah-Singer (1963), Freedman-Kirby (1978). As solid as any result in topology.',
+        'circularity_note': 'None for the hypothesis itself. But the proposed 2-axiom bordism ALTERNATIVE (Ω^Spin_4 ≅ Z) has circularity: ABP (1966) used Rokhlin-equivalent facts in their computation.',
+    },
+    'modular_invariance_framing': {
+        'statement': 'The framing anomaly requires e^{2πic/24} = 1 for a consistent TQFT, i.e., 24 | c₋',
+        'status': 'active',
+        'eliminability': 'hard',
+        'elimination_path': 'Requires formalizing: (a) Atiyah 2-framing on 3-manifolds, (b) the relation between central charge and framing anomaly, (c) Witten-Reshetikhin-Turaev invariant modularity. The algebraic consequence (24 | c₋) is proved; the physical INPUT (framing anomaly = modularity constraint) is the hypothesis.',
+        'dependent_theorems': [
+            'SKEFTHawking.wang_bridge_full_chain',
+            'SKEFTHawking.generation_constraint_iff',
+        ],
+        'module': 'WangBridge',
+        'source': 'Witten, Comm. Math. Phys. 121, 351 (1989); Atiyah, Topology 29, 1 (1990)',
+        'risk': 'Extremely low — foundational result in TQFT, universally accepted.',
+        'circularity_note': 'None.',
+    },
+    'c_minus_equals_8Nf': {
+        'statement': 'The chiral central charge of N_f generations of SM fermions is c₋ = 8N_f',
+        'status': 'active',
+        'eliminability': 'algebraic',
+        'elimination_path': 'This was DERIVED (not hypothesized) in WangBridge.lean from the 16 Weyl fermions per generation. But the derivation assumes the standard SM fermion content — the hypothesis is that the SM has exactly 16 Weyl fermions per generation.',
+        'dependent_theorems': [
+            'SKEFTHawking.central_charge_from_sm',
+        ],
+        'module': 'WangBridge',
+        'source': 'SM fermion content (standard textbook result)',
+        'risk': 'Zero — this is the definition of the SM.',
+        'circularity_note': 'None.',
+    },
+    'characteristic_square_mod_8': {
+        'statement': 'For any unimodular symmetric bilinear form and any characteristic vector c, c^T M c ≡ σ(M) mod 8',
+        'status': 'active',
+        'eliminability': 'hard',
+        'elimination_path': 'Requires classification of indefinite unimodular forms (Hasse-Minkowski theorem) or van der Blij lemma via Gauss sums. Neither is in Mathlib.',
+        'dependent_theorems': [
+            'SKEFTHawking.serre_even_unimodular_mod8',
+        ],
+        'module': 'AlgebraicRokhlin',
+        'source': 'Serre, "A Course in Arithmetic" (1973), Ch. V; van der Blij, Math. Z. 74, 18 (1960)',
+        'risk': 'Extremely low — proved independently by Serre (1973) and van der Blij (1960). Textbook result.',
+        'circularity_note': 'None. Purely algebraic result about bilinear forms, independent of topology.',
+    },
+    'spin_bordism_iso_Z': {
+        'statement': 'Ω^Spin_4 ≅ Z, generated by the K3 surface with σ(K3) = -16',
+        'status': 'proposed',  # Not yet used — proposed for Wave 7C
+        'eliminability': 'very_hard',
+        'elimination_path': 'Requires Adams spectral sequence computation (Anderson-Brown-Peterson 1966-67). Probably 10+ years from formalization in any proof assistant.',
+        'dependent_theorems': [],  # Would be used in bordism-derived Rokhlin
+        'module': 'proposed: SpinBordism.lean',
+        'source': 'Anderson-Brown-Peterson, Bull. AMS 72, 256 (1966)',
+        'risk': 'Extremely low — standard result in algebraic topology.',
+        'circularity_note': 'CAUTION: The ABP computation historically used facts equivalent to Rokhlin theorem. Using this to DERIVE Rokhlin creates a logical dependency chain where A proves B but A was originally proved using B. The mathematical content is not circular (ABP can be proved independently of Rokhlin via Adams spectral sequence), but the historical provenance is tangled. If used, should be clearly documented as an independent route, not as "proving" Rokhlin from more basic facts.',
     },
 }
 

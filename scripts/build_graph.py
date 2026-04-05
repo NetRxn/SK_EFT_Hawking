@@ -56,6 +56,7 @@ SHAPE_MAP: dict[str, str] = {
     'LeanStructure': 'square',
     'LeanInductive': 'square',
     'LeanInstance': 'circle',
+    'Hypothesis': 'diamond',
 }
 
 LEAN_KIND_TO_TYPE: dict[str, str] = {
@@ -286,7 +287,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
     and LeanInstance nodes with shape metadata and dependency info.
     """
     from scripts.extract_lean_deps import load_lean_deps
-    from src.core.constants import ARISTOTLE_THEOREMS, AXIOM_METADATA
+    from src.core.constants import ARISTOTLE_THEOREMS, AXIOM_METADATA, HYPOTHESIS_REGISTRY
 
     declarations = load_lean_deps()
 
@@ -361,6 +362,52 @@ def extract_lean_declaration_nodes() -> list[dict]:
         })
 
     return nodes
+
+
+def extract_hypothesis_nodes():
+    """Extract Hypothesis nodes and ASSUMES edges from HYPOTHESIS_REGISTRY.
+
+    Produces Hypothesis nodes (diamond shape, coral color) and ASSUMES edges
+    connecting dependent Lean theorems to their hypotheses.
+    """
+    from src.core.constants import HYPOTHESIS_REGISTRY
+
+    nodes = []
+    edges = []
+
+    for key, hyp in HYPOTHESIS_REGISTRY.items():
+        if hyp.get('status') == 'eliminated':
+            continue
+
+        node_id = f"hyp:{key}"
+        nodes.append({
+            'id': node_id,
+            'type': 'Hypothesis',
+            'label': key.replace('_', ' ').title(),
+            'name': key,
+            'verification': 'unverified',  # hypotheses are by definition unproved
+            'detail': hyp.get('statement', ''),
+            'meta': {
+                'status': hyp.get('status', 'active'),
+                'eliminability': hyp.get('eliminability', 'unknown'),
+                'elimination_path': hyp.get('elimination_path', ''),
+                'source': hyp.get('source', ''),
+                'risk': hyp.get('risk', ''),
+                'circularity_note': hyp.get('circularity_note', ''),
+                'module': hyp.get('module', ''),
+            },
+        })
+
+        # Create ASSUMES edges from dependent theorems
+        for thm_name in hyp.get('dependent_theorems', []):
+            lean_id = f"lean:{thm_name}"
+            edges.append({
+                'source': lean_id,
+                'target': node_id,
+                'type': 'ASSUMES',
+            })
+
+    return nodes, edges
 
 
 # Backward compatibility alias for tests/code that imports the old name
@@ -532,6 +579,11 @@ def extract_all_nodes() -> list[dict]:
     nodes.extend(extract_paper_nodes())
     nodes.extend(extract_paper_claim_nodes())
     nodes.extend(extract_figure_nodes())
+
+    # Hypothesis nodes + ASSUMES edges
+    hyp_nodes, _hyp_edges = extract_hypothesis_nodes()
+    nodes.extend(hyp_nodes)
+    # (edges are added separately in build_all_edges)
 
     # Add shape metadata to all node types that don't already have it
     for node in nodes:
@@ -969,6 +1021,12 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_has_figure_edges(node_ids))
     edges.extend(extract_imports_edges(node_ids))
     edges.extend(extract_depends_on_axiom_edges(node_ids))
+
+    # ASSUMES edges from HYPOTHESIS_REGISTRY
+    _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
+    for edge in hyp_edges:
+        if edge['source'] in node_ids and edge['target'] in node_ids:
+            edges.append(edge)
 
     # Final deduplication (belt-and-suspenders)
     deduped = []

@@ -154,6 +154,7 @@ chain connecting lattice physics to gauge theory:
 Onsager algebra $O$ & & OnsagerAlgebra.lean (24 thms) \\
 $q$-integers $[n]_q$ & & QNumber.lean (11 thms) \\
 $U_q(\mathfrak{sl}_2)$ & & Uqsl2.lean (6 thms + defs) \\
+$U_q$ Hopf algebra & & Uqsl2Hopf.lean (21 thms + instances) \\
 $D(G)$, $Z(\mathrm{Vec}_G)$ & & 7 Drinfeld/Center modules (96 thms) \\
 \hline
 \textbf{Planned} & & \\
@@ -176,25 +177,68 @@ the lattice chirality formalized in companion work to continuous gauge
 emergence through the quantum group framework.
 
 %% ══════════════════════════════════════════════════════════════════
+\section{Hopf Algebra Structure}
+
+The quantum group $U_q(\mathfrak{sl}_2)$ carries a Hopf algebra
+structure: a coproduct $\Delta$, counit $\varepsilon$, and antipode $S$.
+We formalize all three and wire them into Mathlib's
+\texttt{HopfAlgebra} typeclass, making $U_q(\mathfrak{sl}_2)$ the
+\emph{first Hopf algebra in any proof assistant} (beyond the trivial
+commutative semiring and group algebra instances).
+
+\subsection{Coproduct and counit}
+
+The coproduct $\Delta : U_q \to U_q \otimes U_q$ is defined on
+generators by
+\begin{align}
+\Delta(E) &= E \otimes K + 1 \otimes E, \\
+\Delta(F) &= F \otimes 1 + K^{-1} \otimes F, \\
+\Delta(K) &= K \otimes K, \quad \Delta(K^{-1}) = K^{-1} \otimes K^{-1}.
+\end{align}
+The counit $\varepsilon : U_q \to \mathbb{k}[q,q^{-1}]$ sends
+$\varepsilon(E) = \varepsilon(F) = 0$ and $\varepsilon(K) = 1$.
+
+Both are constructed as algebra homomorphisms: we define maps on
+generators via \texttt{FreeAlgebra.lift}, prove compatibility with
+the Chevalley relations, and descend to the quotient via
+\texttt{RingQuot.liftAlgHom}. The \texttt{Bialgebra} instance uses
+\texttt{Bialgebra.ofAlgHom}, consuming coassociativity and
+counitality proofs.
+
+\subsection{Antipode}
+
+The antipode $S : U_q \to U_q$ is the anti-homomorphism
+\begin{equation}
+S(E) = -EK^{-1}, \quad S(F) = -KF, \quad S(K) = K^{-1}.
+\end{equation}
+Since $S$ reverses multiplication ($S(ab) = S(b)S(a)$), we construct
+it as an algebra homomorphism into the opposite ring
+$U_q^{\mathrm{op}}$ via \texttt{MulOpposite}, then compose with
+the canonical linear equivalence. The \texttt{HopfAlgebra} instance
+requires the two antipode axioms
+$\mu \circ (S \otimes \mathrm{id}) \circ \Delta = \eta \circ \varepsilon$
+and
+$\mu \circ (\mathrm{id} \otimes S) \circ \Delta = \eta \circ \varepsilon$.
+
+A key structural theorem: the squared antipode is conjugation by $K$,
+\begin{equation}
+S^2(x) = K x K^{-1},
+\end{equation}
+which on generators gives $S^2(E) = q^2 E$, $S^2(F) = q^{-2}F$,
+$S^2(K) = K$. This inner automorphism (rather than the identity)
+reflects the non-cocommutativity of $U_q(\mathfrak{sl}_2)$.
+
+%% ══════════════════════════════════════════════════════════════════
 \section{Conclusions}
 
-We have presented the first quantum group definition in any proof assistant:
-$U_q(\mathfrak{sl}_2)$ as \texttt{RingQuot (ChevalleyRel k)} in Lean~4,
-with zero axioms. The construction uses Mathlib's idiomatic
-algebra-by-generators-and-relations pattern, with \texttt{Ring} and
-\texttt{Algebra} instances automatic from \texttt{RingQuot}.
-
-The broader formalization now comprises 968~theorems across 66~Lean~4
-modules with zero axioms and zero \texttt{sorry}. The $q$-integer
-formalization connects the
-classical Dolan-Grady coefficient $[2]_1^4 = 16$ to the quantum
-deformation, and $U_q(\mathfrak{sl}_2)$ establishes the algebraic
-foundation for the quantum group $\to$ gauge emergence chain.
-
-Mathlib's recently merged Hopf algebra hierarchy (\texttt{Coalgebra}
-$\to$ \texttt{Bialgebra} $\to$ \texttt{HopfAlgebra}) makes the next
-step --- wiring the coproduct $\Delta(E) = E \otimes K + 1 \otimes E$
-into the \texttt{HopfAlgebra} typeclass --- immediately feasible.
+We have presented the first quantum group in any proof assistant ---
+$U_q(\mathfrak{sl}_2)$ as \texttt{RingQuot (ChevalleyRel k)} ---
+together with the first non-trivial \texttt{HopfAlgebra} instance,
+all with zero axioms. The construction uses Mathlib's
+\texttt{FreeAlgebra} $\to$ \texttt{RingQuot} $\to$
+\texttt{liftAlgHom} pattern for the algebra, and the
+\texttt{Coalgebra} $\to$ \texttt{Bialgebra} $\to$
+\texttt{HopfAlgebra} hierarchy for the coalgebra structure.
 
 \begin{acknowledgments}
 Lean~4 proofs verified by \texttt{lake build} (v4.28.0, Mathlib \texttt{8f9d9cff}).

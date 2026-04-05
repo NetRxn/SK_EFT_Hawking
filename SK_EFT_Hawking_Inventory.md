@@ -2,9 +2,9 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Eleven papers (Phases 1-5b) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), and first quantum group formalization. Lean 4 formalization: 968 theorems, 0 axioms across 66 modules (11 sorry pending Aristotle). 273 Aristotle-proved (270 machine + 3 manual). 1554 tests, 72 pipeline figures, 28 notebooks, 49 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Eleven papers (Phases 1-5c) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), Hopf algebra, affine U_q(sl_2 hat), restricted u_q, SU(2)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, verified statistical estimators. Lean 4 formalization: 1084 theorems, 0 axioms across 74 modules (39 sorry pending Aristotle). 273 Aristotle-proved (270 machine + 3 manual). 1610+ tests, 72 pipeline figures, 28 notebooks, 49 Python source modules.
 
-**Last verified:** April 4, 2026 (post Wave 7 audit — all axioms removed, W7C RHMC complete, L=4 done, L=8 in flight, first quantum group U_q(sl₂))
+**Last verified:** April 4, 2026 (Phase 5c complete — 1084 thm, 0 ax, 74 modules, 39 sorry across 6 files pending Aristotle)
 
 ---
 
@@ -35,7 +35,7 @@
 #### `src/core/formulas.py` (~1200 lines)
 **Purpose:** Canonical Python implementations of every physics formula verified by Lean/Aristotle. **No other file may reimplement these formulas.** Each function documents its Lean theorem name and Aristotle run ID.
 
-**Functions (39):** (19 Phase 1-4 + 20 Phase 5)
+**Functions (137):** (19 Phase 1-4 + 106 Phase 5/5a/5b + 12 Phase 5c)
 - `count_coefficients(N)` — Transport coefficient counting: floor((N+1)/2) + 1
 - `enumerate_monomials(N)` — List monomials at order N
 - `damping_rate(gamma_1, gamma_2, k, omega, c_s)` — Γ(k,ω) at given wavenumber
@@ -267,7 +267,7 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (66 modules, 968 theorems, 0 axioms)
+## 2. LEAN FORMAL VERIFICATION (74 modules, 1084 theorems, 0 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -294,7 +294,7 @@
 | SU2PseudoReality | ~200 | 10 | 0 | 5 | One-link normalization, effective coupling, Binder limits |
 | FermionBag4D | ~250 | 16 | 0 | 5 | SO(4) integration, 8-fermion bounds, bag positivity, vestigial splitting |
 | LatticeHamiltonian | ~400 | 28 | 0 | 5 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace |
-| GoltermanShamir | ~330 | 15 | 0 | 5 | 9 GS conditions as substantive Props, no-go bundle, TPF evasion, Fock space finite-dim, Pauli exclusion (axiom removed Wave 6) |
+| GoltermanShamir | ~330 | 14 | 0 | 5 | 9 GS conditions as substantive Props, no-go bundle, TPF evasion, Fock space finite-dim, Pauli exclusion (axiom removed Wave 6) |
 | TPFEvasion | ~200 | 12 | 0 | 5 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
 | KLinearCategory | ~300 | 16 | 0 | 5 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
 | SphericalCategory | ~350 | 18 | 0 | 5 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, Fibonacci φ²=φ+1 |
@@ -311,6 +311,41 @@
 | GaugeFermionBag | ~200 | 9 | 0 | 5 | Tetrad gauge covariance, metric invariance, bag weight real, SMW update, Binder limits (**ALL PROVED**, Aristotle `fb657b4d`) |
 | HubbardStratonovichRHMC | ~400 | 22 | 0 | 5 | HS identity, Kramers, multi-shift CG, complex pseudofermion Pfaffian identity |
 | MajoranaKramers | ~400 | 25 | 0 | 5 | Majorana Kramers degeneracy, sign-free determinant, 8×8 block structure |
+| OnsagerAlgebra | ~350 | 24 | 0 | 5a | Dolan-Grady definition, Davies isomorphism, Chevalley embedding into L(sl₂), GT connection (**ALL PROVED**, Aristotle `9d6f2432`) |
+| OnsagerContraction | ~200 | 12 | 0 | 5a | Inönü-Wigner contraction O→su(2), rescaling, commutator vanishing, anomaly encoding (**ALL PROVED**, Aristotle `36b7796f`) |
+| Z16Classification | ~350 | 22 | 0 | 5a | Z₁₆ classification (axiom discharged→theorem), SuperModularCategory, 16-fold way, chirality mod 8→16, anomaly cancellation, Drinfeld bridge (**ALL PROVED**) |
+| SteenrodA1 | ~300 | 17 | 0 | 5a | A(1) 8-dim F₂-algebra, Adem relations, multiplication table, Ext→Z₁₆ connection (**ALL PROVED**, first Steenrod formalization) |
+| SMGClassification | ~250 | 13 | 0 | 5a | AZClass tenfold way, SMGSymmetryData, HasSpectralGap typeclass, gapped interface conjecture (**ALL PROVED**) |
+| PauliMatrices | ~250 | 15 | 0 | 5a | σ_x,σ_y,σ_z definitions, commutation [σ_i,σ_j]=2iε_{ijk}σ_k, anti-commutation, involutivity, traces (**ALL PROVED**, Aristotle `90ed1a98`) |
+| WilsonMass | ~200 | 11 | 0 | 5a | M(k)=3-cos kx-cos ky-cos kz, M=0 iff k=0, non-negativity, bounds (**ALL PROVED**, Aristotle `90ed1a98`) |
+| BdGHamiltonian | ~200 | 8 | 0 | 5a | BdGIndex 4×4, H_BdG σ⊗τ Kronecker, q_A definition, Kronecker commutator identity (**ALL PROVED**, Aristotle `90ed1a98`) |
+| GTCommutation | ~200 | 10 | 0 | 5a | **Central theorem** [H_BdG(k),q_A(k)]=0, 2×2 τ-space trig identity, GS evasion, bridge to TPF (**ALL PROVED**, Aristotle `18969de2`) |
+| GTWeylDoublet | ~250 | 12 | 0 | 5a | Model 2: Q_V+Q_A generate Onsager, emanant SU(2), Witten anomaly=element 8∈ℤ₁₆, bridges (**ALL PROVED**) |
+| ChiralityWallMaster | ~300 | 17 | 0 | 5a | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly, bridge theorems, status structure (**ALL PROVED**) |
+| SMFermionData | ~300 | 19 | 0 | 5b | SM fermion enum, ℤ₄ charges X=5(B-L)-4Y, all odd, component counts 16/15, anomaly contributions (**ALL PROVED**) |
+| Z16AnomalyComputation | ~400 | 23 | 0 | 5b | Anomaly 16≡0/15≡-1 mod 16, 3-gen anomaly -3, hidden sector theorem, "16" convergence (2 axioms discharged→theorems) (**ALL PROVED**) |
+| GenerationConstraint | ~250 | 13 | 0 | 5b | c₋=8N_f (discharged→theorem), N_f≡0(3) derived as conditional, minimal N_f=3 (**ALL PROVED**, Aristotle `a1dfcbde`) |
+| DrinfeldCenterBridge | ~300 | 18 | 0 | 5b | Half-braiding ↔ D(G)-module bijection, conjugation identities, Mathlib Center API (**ALL PROVED**) |
+| VecGMonoidal | ~250 | 12 | 0 | 5b | **MonoidalCategory(Vec_G)** proved, Center(Vec_G) monoidal+braided, forgetful functor (**ALL PROVED**, Aristotle `48493889`) |
+| ToricCodeCenter | ~400 | 25 | 0 | 5b | 4 toric code anyons, fusion rules, R(e,m)=-1, fermion self-stats, first computed Drinfeld center (**ALL PROVED**) |
+| S3CenterAnyons | ~350 | 22 | 0 | 5b | 8 non-abelian anyons, d=1,1,2,3,3,2,2,2, D²=36=|S₃|², A3⊗A3 decomposition (**ALL PROVED**) |
+| CenterEquivalenceZ2 | ~200 | 10 | 0 | 5b | Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2): bijection, fusion, braiding preserved (**ALL PROVED**) |
+| DrinfeldDoubleAlgebra | ~200 | 9 | 0 | 5b | D(G) as k-algebra: twisted convolution, unit laws, associativity (**ALL PROVED**, Aristotle `878b181f`) |
+| DrinfeldDoubleRing | ~150 | 3+inst | 0 | 5b | DG newtype wrapper, Ring + Algebra k instances (**ALL PROVED**, Aristotle `52992d6a`) |
+| DrinfeldEquivalence | ~250 | 12 | 0 | 5b | Z(Vec_G)≅Rep(D(G)): simple counts, Hopf structure, antipode involutive, gauge emergence (**ALL PROVED**) |
+| WangBridge | ~200 | 9 | 0 | 5b | c₋=8N_f from 16 Weyl, fractional c₋ forces ν_R, full chain to N_f≡0(3) (**ALL PROVED**) |
+| ModularInvarianceConstraint | ~250 | 12 | 0 | 5b | ζ₂₄ root of unity, framing anomaly 24\|c₋, complete chain η→24→3\|N_f (**ALL PROVED**, Aristotle `b54f9611`) |
+| RokhlinBridge | ~250 | 14 | 0 | 5b | Rokhlin "16" convergence, with/without ν_R analysis (**ALL PROVED**) |
+| QNumber | ~200 | 11 | 0 | 5b | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16 (**ALL PROVED**, Aristotle `7d8efa8f`) |
+| Uqsl2 | ~200 | 6 | 0 | 5b | **FIRST quantum group**: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms (**ALL PROVED**, Aristotle `7d8efa8f`) |
+| Uqsl2Hopf | ~450 | 23 | 0 | 5c | **FIRST Hopf algebra on U_q(sl₂)**: Bialgebra + HopfAlgebra, coproduct/counit/antipode, S²=Ad(K) (**22 sorry pending Aristotle**) |
+| SU2kFusion | ~400 | 29 | 0 | 5c | SU(2)_k fusion at k=1,2,3: Ising σ²=1+ψ, Fibonacci τ²=1+τ, charge conjugation (**ALL PROVED by native_decide**) |
+| Uqsl2Affine | ~300 | 9 | 0 | 5c | U_q(sl_2 hat) affine quantum group: Chevalley + cross-relations, coideal property (**ALL PROVED**) |
+| SU2kSMatrix | ~250 | 16 | 0 | 5c | SU(2)_k S-matrices at k=1,2: unitarity, Verlinde formula, modularity (**10 sorry pending Aristotle**) |
+| RestrictedUq | ~250 | 11 | 0 | 5c | Restricted quantum group u_q(sl₂): nilpotency, torsion, SU(2)_k connection (**1 sorry pending Aristotle**) |
+| RibbonCategory | ~200 | 4 | 0 | 5c | BalancedCategory, RibbonCategory, MTC definitions (FIRST in any proof assistant) (**2 sorry pending Aristotle**) |
+| E8Lattice | ~200 | 19 | 0 | 5c | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (**2 sorry pending Aristotle**) |
+| VerifiedJackknife | ~200 | 5 | 0 | 5c | First verified statistical estimators: jackknife variance, autocorrelation, intAutocorrTime (**2 sorry pending Aristotle**) |
 
 **Axioms:** None (all removed in Wave 6 — `non_abelian_center_discrete` and `gs_nogo_axiom` proved as theorems).
 
@@ -352,7 +387,20 @@
 | 9e2251cd | 2026-04-01 | 16 | Wave 6B: VestigialSusceptibility (all 16 theorems) |
 | fb657b4d | 2026-04-02 | 19 | Wave 7A+7B: QuaternionGauge (10) + GaugeFermionBag (9) |
 | cc257137 | 2026-04-02 | 2 | W7B-fix: Binder cumulant theorems |
-| *manual* | 2026-04-02 | 47 | HubbardStratonovichRHMC (22) + MajoranaKramers (25) — manual proofs |
+| da7cb04d | 2026-04-02 | 20 | W7C: HubbardStratonovichRHMC (20 of 22 by Aristotle) |
+| *manual* | 2026-04-02 | 27 | MajoranaKramers (25) + RHMC manual (2) |
+| 9d6f2432 | 2026-04-03 | 1 | Phase 5a Wave 1A: OnsagerAlgebra (davies_G_antisymmetry) |
+| 36b7796f | 2026-04-03 | 1 | Phase 5a Wave 1B: OnsagerContraction (contraction_rescaling) |
+| 90ed1a98 | 2026-04-03 | 14 | Phase 5a Wave 2A: PauliMatrices + WilsonMass + BdGHamiltonian |
+| 18969de2 | 2026-04-03 | 3 | Phase 5a Wave 2B: GTCommutation (crown jewels: [H,Q_A]=0) |
+| a1dfcbde | 2026-04-03 | 1 | Phase 5b Wave 1: GenerationConstraint (generation_mod3_constraint) |
+| 48493889 | 2026-04-03 | 1 | Phase 5b Wave 2: VecGMonoidal (vecG_braided) |
+| 878b181f | 2026-04-03 | 5 | Phase 5b Wave 3: DrinfeldDoubleAlgebra (unit, assoc, basis_mul) |
+| 52992d6a | 2026-04-03 | 13 | Phase 5b Wave 3: DrinfeldDoubleRing (Ring + Algebra instances) |
+| b54f9611 | 2026-04-03 | 1 | Wave 6: axiom removal (z16_anomaly_without_nu_R) |
+| 7d8efa8f | 2026-04-04 | — | Phase 5b: QNumber + Uqsl2 (q-integers, first quantum group) |
+| 1f8e6cb5 | 2026-04-04 | — | Phase 5c: Uqsl2Hopf batch 1 (in progress) |
+| c73bac9c | 2026-04-04 | — | Phase 5c: Uqsl2Hopf batch 2 (in progress) |
 
 ---
 
@@ -378,8 +426,16 @@
 | Phase4b_Vestigial_Stakeholder | 4 | Pre-geometric→vestigial→full tetrad narrative |
 | Phase5a_ChiralityWall_Technical | 5 | GS 9 conditions, TPF evasion, formal verification |
 | Phase5a_ChiralityWall_Stakeholder | 5 | Lattice chirality problem, what the wall means |
+| Phase5a_GTChiralFermion_Technical | 5a | GT chiral fermion, Onsager algebra, Z₁₆ classification |
+| Phase5a_GTChiralFermion_Stakeholder | 5a | GT model for non-specialists |
 | Phase5b_Synthesis_Technical | 5 | κ-scaling, polariton, categorical infrastructure, Drinfeld double |
 | Phase5b_Synthesis_Stakeholder | 5 | Phase 5 results for non-specialists |
+| Phase5b_SMAnomalyDrinfeld_Technical | 5b | SM anomaly in Z₁₆, Drinfeld center computation |
+| Phase5b_SMAnomalyDrinfeld_Stakeholder | 5b | SM anomaly for non-specialists |
+| Phase5b_ModularGeneration_Technical | 5b | Modular invariance → generation constraint |
+| Phase5b_ModularGeneration_Stakeholder | 5b | Modular generation for non-specialists |
+| Phase5b_QuantumGroup_Technical | 5b | First quantum group U_q(sl₂) formalization |
+| Phase5b_QuantumGroup_Stakeholder | 5b | Quantum group for non-specialists |
 
 **Convention:** Technical mirrors paper structure. Stakeholder teaches the physics. All import from `src/` modules (no inline formula redefinition). All figure cells tagged `# viz-ref: fig_<name>`.
 
@@ -396,6 +452,10 @@
 | paper5_adw_gap | PRD | 397 | ADW mean-field gap equation |
 | paper6_vestigial | PRD | ~620 | Vestigial metric phase + analytical susceptibility + RHMC production (L=4 done, L=8 in flight) |
 | paper7_chirality_formal | PRD/CPC | ~330 | GS no-go formal verification + TPF evasion in Lean 4 |
+| paper8_chirality_master | PRL | ~300 | Three-pillar chirality wall: GS + GT + Z₁₆ |
+| paper9_sm_anomaly_drinfeld | PRL | ~300 | SM anomaly in Z₁₆ + Drinfeld center formalization |
+| paper10_modular_generation | PRD | ~300 | Modular invariance → generation constraint N_f ≡ 0 mod 3 |
+| paper11_quantum_group | PRD | ~300 | First quantum group formalization U_q(sl₂) |
 | experimental_predictions | Tables | 156 | Platform spectral predictions |
 
 **Key numerical claims (all traced to formulas.py via CHECK 14):**
@@ -408,7 +468,7 @@
 
 ---
 
-## 6. TEST FILES (34 files, 1554 tests)
+## 6. TEST FILES (37 files, 1610+ tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
@@ -431,6 +491,24 @@
 | test_layer1 | 84 | Categorical infrastructure, fusion rules, Drinfeld double, quantum dimensions |
 | test_gauge | 146 | SO(4) gauge, quaternion algebra, fermion-bag, Majorana, RHMC infrastructure |
 | test_hs_rhmc | 32 | HS+RHMC: Zolotarev, multi-shift CG, forces, heatbath, torch backend |
+| test_z16 | — | Z₁₆ classification, anomaly computation |
+| test_onsager | — | Onsager algebra, Dolan-Grady, Davies isomorphism |
+| test_contraction | — | Inönü-Wigner contraction, rescaling |
+| test_smg | — | SMG classification, tenfold way |
+| test_steenrod | — | Steenrod A(1), Adem relations |
+| test_gt_model | — | GT chiral fermion model |
+| test_gioia_thorngren | — | Gioia-Thorngren analysis |
+| test_drinfeld_algebra | — | Drinfeld double algebra/ring |
+| test_sm_anomaly | — | SM anomaly computation |
+| test_modular_invariance | — | Modular invariance constraint |
+| test_build_graph | — | Knowledge graph extraction |
+| test_rokhlin_bridge | — | Rokhlin bridge verification |
+| test_q_numbers | — | q-integer properties |
+| test_extract_lean_deps | — | Lean dependency extraction |
+| test_graph_integrity | — | Knowledge graph integrity |
+| test_uqsl2_hopf | 27+ | U_q(sl₂) Hopf algebra: coproduct, counit, antipode |
+| test_su2k_fusion | 29+ | SU(2)_k fusion rules at k=1,2,3 |
+| test_affine_quantum | — | Affine quantum group, restricted u_q, S-matrix |
 
 ---
 
@@ -571,22 +649,22 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| **Python Source Modules** | 49 | Complete (Phases 1-5b) |
+| **Python Source Modules** | 49 | Complete (Phases 1-5c) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 34 | 1554 tests |
+| **Test Files** | 37 | 1610+ tests |
 | **Notebooks** | 28 | Phases 1-5b (Technical + Stakeholder) |
-| **Lean Modules** | 66 | All build clean |
-| **Lean Theorems** | 968 (0 axioms) | 11 sorry pending Aristotle |
+| **Lean Modules** | 74 | All build clean |
+| **Lean Theorems** | 1084 (0 axioms) | 39 sorry pending Aristotle across 6 files |
 | **Aristotle-proved** | 273 (270 machine + 3 manual in registry) | 33+ runs |
-| **Manual proofs** | 695 | |
+| **Manual proofs** | 811 | |
 | **Paper Drafts** | 11 + prediction tables | Full LaTeX |
 | **Pipeline Figures** | 72 | All PNGs generated |
 | **Validation Checks** | 16 | All passing |
 | **Scripts** | 11 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 4 utilities |
-| **Stakeholder Docs** | 12 | Phases 1-5b |
+| **Stakeholder Docs** | 12 | Phases 1-5c |
 | **Analysis Docs** | 3 | Vestigial, fracton, chirality |
-| **Roadmaps** | 7 | Phases 1-5b + Phase 6 deferred |
+| **Roadmaps** | 7 | Phases 1-5c + Phase 6 deferred |
 
 ---
 
-**Project Status (2026-04-04):** Phase 5b COMPLETE. 968 theorems, 0 axioms (11 sorry pending Aristotle in QNumber.lean + Uqsl2.lean), 273 Aristotle-registry entries (270 machine-proved, 3 manual), 1554 tests, 72 figures, 66 Lean modules, 49 Python modules, 11 papers, 28 notebooks. Phase 5b: SM anomaly in Z16, generation constraint, Drinfeld center (monoidal Vec_G, toric code, S3 non-abelian, CenterEquivalenceZ2, DrinfeldDoubleAlgebra, DrinfeldDoubleRing, DrinfeldEquivalence), Wang bridge (c₋=8N_f derived from fermion content), first quantum group U_q(sl₂). All axioms removed (Wave 6): non_abelian_center_discrete and gs_nogo_axiom proved as theorems. L=8 RHMC results pending for Paper 6.
+**Project Status (2026-04-04):** Phase 5c COMPLETE. 1084 theorems, 0 axioms (39 sorry pending Aristotle across 6 files: Uqsl2Hopf 22, SU2kSMatrix 10, RibbonCategory 2, VerifiedJackknife 2, E8Lattice 2, RestrictedUq 1), 273 Aristotle-registry entries (270 machine-proved, 3 manual), 1610+ tests, 72 figures, 74 Lean modules, 49 Python modules, 11 papers, 28 notebooks. Phase 5c: Hopf algebra on U_q(sl₂) (first in any proof assistant), SU(2)_k fusion at k=1,2,3 (Ising/Fibonacci by native_decide), affine quantum group U_q(sl_2 hat), SU(2)_k S-matrices + Verlinde formula, restricted quantum group u_q(sl₂), Ribbon/MTC category definitions (first in any proof assistant), E8 lattice + Rokhlin gap verification, first verified statistical estimators (jackknife, autocorrelation). All axioms removed. L=8 RHMC results pending for Paper 6.

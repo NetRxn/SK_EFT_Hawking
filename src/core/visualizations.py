@@ -5102,5 +5102,207 @@ def fig_modular_invariance_phase() -> go.Figure:
     return fig
 
 
+# ═══════════════════════════════════════════════════════════════
+# Phase 5c: SU(2)_k Fusion and Quantum Group Figures
+# ═══════════════════════════════════════════════════════════════
+
+def fig_su2k_fusion_tables() -> go.Figure:
+    """SU(2)_k fusion rule tables for k=1,2,3 as annotated heatmaps."""
+    from src.core.formulas import su2k_fusion_rule
+
+    fig = make_subplots(rows=1, cols=3,
+                        subplot_titles=["SU(2)₁ (semion)", "SU(2)₂ (Ising)", "SU(2)₃ (Fibonacci)"],
+                        horizontal_spacing=0.08)
+
+    for col, k in enumerate([1, 2, 3], 1):
+        n = k + 1
+        labels = [f"V₀", f"V₁"] + ([f"V₂"] if n > 2 else []) + ([f"V₃"] if n > 3 else [])
+        z = [[su2k_fusion_rule(k, i, j, m) for m in range(n)] for i in range(n) for j in range(n)]
+        # Reshape to show fusion table: rows = (i,j) pairs, cols = m outcomes
+        # Actually show as N_{ij} decomposition string
+        table = []
+        text = []
+        for i in range(n):
+            row = []
+            trow = []
+            for j in range(n):
+                channels = [m for m in range(n) if su2k_fusion_rule(k, i, j, m) == 1]
+                row.append(len(channels))
+                trow.append("+".join(f"V_{m}" for m in channels) if channels else "0")
+            table.append(row)
+            text.append(trow)
+
+        fig.add_trace(go.Heatmap(
+            z=table, x=labels[:n], y=labels[:n],
+            text=text, texttemplate="%{text}",
+            colorscale=[[0, "white"], [1, COLORS["Rb87"]]],
+            showscale=False,
+            hovertemplate="V_%{y} ⊗ V_%{x} = %{text}<extra></extra>",
+        ), row=1, col=col)
+
+    fig.update_layout(
+        title=dict(text="SU(2)<sub>k</sub> Fusion Rules", font=TITLE_FONT),
+        font=FONT, width=1000, height=350,
+        plot_bgcolor='white', paper_bgcolor='white',
+    )
+    return fig
+
+
+def fig_su2k_quantum_dims() -> go.Figure:
+    """Quantum dimensions d_j for SU(2)_k at k=1,2,3,4."""
+    from src.core.formulas import su2k_quantum_dim
+    import math
+
+    fig = go.Figure()
+    colors = [COLORS["Rb87"], COLORS["K39"], COLORS["Na23"], COLORS["dispersive"]]
+
+    for idx, k in enumerate([1, 2, 3, 4]):
+        n = k + 1
+        js = list(range(n))
+        dims = [su2k_quantum_dim(k, j) for j in js]
+        fig.add_trace(go.Bar(
+            x=[f"V_{j}" for j in js], y=dims,
+            name=f"k={k}",
+            marker_color=colors[idx],
+            text=[f"{d:.3f}" if d > 1.01 else "" for d in dims],
+            textposition="outside",
+        ))
+
+    fig.update_layout(
+        title=dict(text="Quantum Dimensions d<sub>j</sub> for SU(2)<sub>k</sub>", font=TITLE_FONT),
+        xaxis_title="Simple object", yaxis_title="Quantum dimension d_j",
+        barmode="group",
+        font=FONT, width=700, height=450,
+        plot_bgcolor='white', paper_bgcolor='white',
+        yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.08)"),
+    )
+    # Annotate golden ratio (offset to avoid k=4 bar collision)
+    fig.add_annotation(x="V_2", y=su2k_quantum_dim(3, 2) + 0.25,
+                       text="φ = (1+√5)/2 ≈ 1.618", showarrow=True,
+                       ax=-40, ay=-30,
+                       font=dict(size=11, color=COLORS["Na23"]))
+    return fig
+
+
+def fig_su2k_s_matrix_heatmaps() -> go.Figure:
+    """S-matrix heatmaps for SU(2)_k at k=1,2."""
+    from src.core.formulas import su2k_s_matrix_entry
+
+    fig = make_subplots(rows=1, cols=2,
+                        subplot_titles=["SU(2)₁ S-matrix (2×2)", "SU(2)₂ S-matrix (3×3)"],
+                        horizontal_spacing=0.12)
+
+    for col, k in enumerate([1, 2], 1):
+        n = k + 1
+        labels = [f"V_{j}" for j in range(n)]
+        z = [[su2k_s_matrix_entry(k, i, j) for j in range(n)] for i in range(n)]
+        text = [[f"{su2k_s_matrix_entry(k, i, j):.4f}" for j in range(n)] for i in range(n)]
+
+        fig.add_trace(go.Heatmap(
+            z=z, x=labels, y=labels,
+            text=text, texttemplate="%{text}",
+            colorscale="RdBu", zmid=0,
+            showscale=(col == 2),
+            hovertemplate="S(%{y},%{x}) = %{z:.4f}<extra></extra>",
+        ), row=1, col=col)
+
+    fig.update_layout(
+        title=dict(text="Modular S-matrices for SU(2)<sub>k</sub>", font=TITLE_FONT),
+        font=FONT, width=800, height=380,
+        plot_bgcolor='white', paper_bgcolor='white',
+    )
+    return fig
+
+
+def fig_hopf_chain() -> go.Figure:
+    """The quantum group → gauge emergence chain as a flow diagram."""
+    # Nodes in the chain
+    nodes = [
+        "Onsager", "q-Onsager",
+        "U_q(sl₂)", "U_q(ŝl₂)",
+        "u_q", "SU(2)_k",
+        "S-matrix", "MTC"
+    ]
+    hover = [
+        "Onsager algebra O (24 thms)", "q-Onsager O_q (coideal embed)",
+        "U_q(sl₂) (6+21 thms, Hopf)", "U_q(ŝl₂) affine (9 thms)",
+        "Restricted u_q (11 thms)", "SU(2)_k fusion (29 thms)",
+        "S-matrix + Verlinde (16 thms)", "MTC defs (5 thms + classes)"
+    ]
+    x_pos = [i * 1.5 for i in range(len(nodes))]
+    y_pos = [0, 0, 0, -0.8, 0, 0, 0, 0]
+
+    fig = go.Figure()
+
+    # Edges
+    edges = [(0,1), (1,3), (2,4), (4,5), (5,6), (6,7), (2,3)]
+    for i, j in edges:
+        fig.add_trace(go.Scatter(
+            x=[x_pos[i], x_pos[j]], y=[y_pos[i], y_pos[j]],
+            mode='lines', line=dict(color='grey', width=2),
+            showlegend=False, hoverinfo='skip',
+        ))
+
+    # Nodes
+    colors_chain = [COLORS["dispersive"]] * 2 + [COLORS["Rb87"]] * 2 + \
+                   [COLORS["K39"]] + [COLORS["Na23"]] * 2 + ["#9b6dff"]
+    fig.add_trace(go.Scatter(
+        x=x_pos, y=y_pos,
+        mode='markers+text', text=nodes,
+        textposition="top center",
+        customdata=hover,
+        marker=dict(size=28, color=colors_chain, line=dict(width=2, color='black')),
+        showlegend=False,
+        hovertemplate="%{customdata}<extra></extra>",
+    ))
+
+    fig.update_layout(
+        title=dict(text="Quantum Group → Gauge Emergence Chain (Phase 5c)", font=TITLE_FONT),
+        font=FONT, width=1400, height=400,
+        plot_bgcolor='white', paper_bgcolor='white',
+        xaxis=dict(visible=False), yaxis=dict(visible=False),
+        margin=dict(t=80, b=40),
+    )
+    return fig
+
+
+def fig_e8_cartan_heatmap() -> go.Figure:
+    """E8 Cartan matrix as annotated heatmap."""
+    e8 = [
+        [2, 0, -1, 0, 0, 0, 0, 0],
+        [0, 2, 0, -1, 0, 0, 0, 0],
+        [-1, 0, 2, -1, 0, 0, 0, 0],
+        [0, -1, -1, 2, -1, 0, 0, 0],
+        [0, 0, 0, -1, 2, -1, 0, 0],
+        [0, 0, 0, 0, -1, 2, -1, 0],
+        [0, 0, 0, 0, 0, -1, 2, -1],
+        [0, 0, 0, 0, 0, 0, -1, 2],
+    ]
+    labels = [f"α_{i+1}" for i in range(8)]
+    text = [[str(v) for v in row] for row in e8]
+
+    fig = go.Figure(go.Heatmap(
+        z=e8, x=labels, y=labels,
+        text=text, texttemplate="%{text}",
+        colorscale=[[0, COLORS["Rb87"]], [0.5, "white"], [1, COLORS["Na23"]]],
+        zmid=0, showscale=True,
+        hovertemplate="E₈(%{y}, %{x}) = %{z}<extra></extra>",
+    ))
+
+    fig.update_layout(
+        title=dict(text="E₈ Cartan Matrix — det=1, diagonal=2, σ=8", font=TITLE_FONT),
+        font=FONT, width=550, height=500,
+        plot_bgcolor='white', paper_bgcolor='white',
+        xaxis=dict(title="Simple root"), yaxis=dict(title="Simple root", autorange="reversed"),
+    )
+    # Annotation: disproves algebraic Rokhlin
+    fig.add_annotation(
+        x=0.5, y=-0.12, xref="paper", yref="paper",
+        text="σ(E₈) = 8 ≡ 0 mod 8 but ≢ 0 mod 16 — disproves naive algebraic Rokhlin",
+        showarrow=False, font=dict(size=11, color="grey"),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

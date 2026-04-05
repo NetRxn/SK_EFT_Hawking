@@ -1584,7 +1584,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="5 sorrys: evalAtOne construction (LaurentPolynomial → k algebra hom), evalAtOne_T, qInt_classical_limit, qInt_two_pow4_classical, qInt_three_classical. All Laurent polynomial evaluation.",
         strategy_hint="evalAtOne: use LaurentPolynomial.eval₂ or the universal property. evalAtOne_T: T m evaluates to 1^m = 1. qInt_classical_limit: map_sum + evalAtOne_T + card_range. See PROVIDED SOLUTION hints.",
-        filled=False,
+        filled=True,
     ),
     # Phase 5b Wave 7: Uqsl2 (6 sorrys — RingQuot relation proofs)
     SorryGap(
@@ -1593,6 +1593,15 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="6 sorrys: uq_K_mul_Kinv, uq_Kinv_mul_K, uqK_unit, uq_KE, uq_KF, uq_serre. All are RingQuot.mkAlgHom_rel applications with ChevalleyRel constructors.",
         strategy_hint="Unfold uqK/uqE/etc to uqsl2Mk applied to generators. Use ← map_mul / ← map_one to combine. Then RingQuot.mkAlgHom_rel _ ChevalleyRel.KKinv etc. For KE/KF/Serre: also need map_algebraMap or Algebra.algebraMap_eq_smul_one.",
+        filled=True,
+    ),
+    # Phase 5c Wave 1: Uqsl2Hopf — Hopf algebra structure (22 sorrys)
+    SorryGap(
+        module="SKEFTHawking.Uqsl2Hopf",
+        name="uqsl2_hopf_structure",
+        priority=1,
+        description="22 sorrys: comulFreeAlg_respects_rel (5 relation checks), counitFreeAlg_respects_rel (5 checks), antipodeFreeAlg_respects_rel (5 checks), 4 comul_gen + 4 counit_gen + 4 antipode_gen (unfolding liftAlgHom), coassociativity, 2 counitality, 2 antipode axioms, S^2=Ad(K), counit_comp_antipode. First Hopf algebra in a proof assistant.",
+        strategy_hint="Generator-level: unfold comulUq/counitUq/antipodeUq to liftAlgHom, apply liftAlgHom_mkAlgHom_apply, then lift_ι_apply. Relation compatibility: intro/cases on ChevalleyRel, compute on tensor products using map_mul/map_add. Coalgebra axioms: AlgHom equality by ext, reduce to generator checks. Antipode axioms: LinearMap ext, reduce to generators. See PROVIDED SOLUTION hints in each theorem.",
         filled=False,
     ),
 ]

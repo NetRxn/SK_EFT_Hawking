@@ -3772,3 +3772,340 @@ def q_dg_coefficient(q):
         [3]_q = q² + 1 + q⁻²
     """
     return q ** 2 + 1 + q ** (-2)
+
+
+# ═══════════════════════════════════════════════════════════════
+# Phase 5c: U_q(sl₂) Hopf algebra structure
+# ═══════════════════════════════════════════════════════════════
+
+def uqsl2_coproduct(gen, E, F, K, Kinv, tensor):
+    """Coproduct Δ on U_q(sl₂) generators.
+
+    Δ(E) = E ⊗ K + 1 ⊗ E
+    Δ(F) = F ⊗ 1 + K⁻¹ ⊗ F
+    Δ(K) = K ⊗ K
+    Δ(K⁻¹) = K⁻¹ ⊗ K⁻¹
+
+    The coproduct extends to an algebra homomorphism Δ: U_q → U_q ⊗ U_q.
+    This makes U_q a bialgebra: Δ(ab) = Δ(a)Δ(b).
+
+    Lean: comul_E, comul_F, comul_K, comul_Kinv (Uqsl2Hopf.lean)
+    Aristotle: pending
+    Source: Kassel, "Quantum Groups" (Springer, 1995), Ch. VI, Prop. VI.1.1
+
+    Args:
+        gen: generator name ('E', 'F', 'K', 'Kinv')
+        E, F, K, Kinv: generator elements
+        tensor: function (a, b) -> a ⊗ b
+
+    Returns:
+        Δ(gen) as sum of tensor products
+    """
+    if gen == 'E':
+        return tensor(E, K) + tensor(1, E)
+    elif gen == 'F':
+        return tensor(F, 1) + tensor(Kinv, F)
+    elif gen == 'K':
+        return tensor(K, K)
+    elif gen == 'Kinv':
+        return tensor(Kinv, Kinv)
+    else:
+        raise ValueError(f"Unknown generator: {gen}")
+
+
+def uqsl2_counit(gen):
+    """Counit ε on U_q(sl₂) generators.
+
+    ε(E) = 0, ε(F) = 0, ε(K) = 1, ε(K⁻¹) = 1
+
+    The counit extends to an algebra homomorphism ε: U_q → k[q,q⁻¹].
+
+    Lean: counit_E, counit_F, counit_K, counit_Kinv (Uqsl2Hopf.lean)
+    Aristotle: pending
+    Source: Kassel, "Quantum Groups" (Springer, 1995), Ch. VI
+
+    Args:
+        gen: generator name ('E', 'F', 'K', 'Kinv')
+
+    Returns:
+        ε(gen) ∈ {0, 1}
+    """
+    if gen in ('E', 'F'):
+        return 0
+    elif gen in ('K', 'Kinv'):
+        return 1
+    else:
+        raise ValueError(f"Unknown generator: {gen}")
+
+
+def uqsl2_antipode(gen, E, F, K, Kinv):
+    """Antipode S on U_q(sl₂) generators.
+
+    S(E) = -E K⁻¹
+    S(F) = -K F
+    S(K) = K⁻¹
+    S(K⁻¹) = K
+
+    The antipode is an anti-algebra homomorphism: S(ab) = S(b)S(a).
+    Together with Δ and ε, this makes U_q(sl₂) a Hopf algebra.
+
+    Key property: S² = Ad(K), i.e., S²(x) = K x K⁻¹ for all x.
+
+    Lean: antipode_E, antipode_F, antipode_K, antipode_Kinv (Uqsl2Hopf.lean)
+    Aristotle: pending
+    Source: Kassel, "Quantum Groups" (Springer, 1995), Ch. VI, Prop. VI.1.4
+
+    Args:
+        gen: generator name ('E', 'F', 'K', 'Kinv')
+        E, F, K, Kinv: generator elements
+
+    Returns:
+        S(gen)
+    """
+    if gen == 'E':
+        return -E * Kinv
+    elif gen == 'F':
+        return -K * F
+    elif gen == 'K':
+        return Kinv
+    elif gen == 'Kinv':
+        return K
+    else:
+        raise ValueError(f"Unknown generator: {gen}")
+
+
+def uqsl2_antipode_squared(x, K, Kinv):
+    """Squared antipode S²(x) = K x K⁻¹ (conjugation by K).
+
+    This is a key structural property: the squared antipode is an inner
+    automorphism, not the identity (unlike for cocommutative Hopf algebras).
+    For U_q(sl₂): S²(E) = q² E, S²(F) = q⁻² F, S²(K) = K.
+
+    Lean: antipode_squared_is_ad_K (Uqsl2Hopf.lean)
+    Aristotle: pending
+    Source: Kassel, "Quantum Groups" (Springer, 1995), Ch. VI
+
+    Args:
+        x: element of U_q(sl₂)
+        K, Kinv: Cartan generator and its inverse
+
+    Returns:
+        K * x * Kinv
+    """
+    return K * x * Kinv
+
+
+# ═══════════════════════════════════════════════════════════════
+# Phase 5c Wave 3: SU(2)_k fusion categories
+# ═══════════════════════════════════════════════════════════════
+
+def su2k_fusion_rule(k, i, j, m):
+    """Truncated Clebsch-Gordan fusion rule for SU(2)_k.
+
+    N_{ij}^m = 1 iff all three conditions hold:
+      (i)   |i - j| <= m
+      (ii)  m <= min(i + j, 2k - i - j)    [truncation at level k]
+      (iii) i + j + m is even
+    Otherwise N_{ij}^m = 0.
+
+    Labels i, j, m run from 0 to k (corresponding to spins 0, 1/2, ..., k/2).
+    At k -> infinity, condition (ii) reduces to the standard CG bound m <= i + j.
+
+    Lean: su2kFusion (SU2kFusion.lean)
+    Aristotle: pending
+    Source: Verlinde, Nucl. Phys. B 300, 360 (1988); Di Francesco et al., CFT (1997)
+
+    Args:
+        k: level (positive integer)
+        i, j, m: labels in {0, 1, ..., k}
+
+    Returns:
+        N_{ij}^m in {0, 1}
+    """
+    if (i + j + m) % 2 != 0:
+        return 0
+    if m < abs(i - j):
+        return 0
+    if m > min(i + j, 2 * k - i - j):
+        return 0
+    return 1
+
+
+def su2k_quantum_dim(k, j):
+    """Quantum dimension of V_j in SU(2)_k.
+
+    d_j = sin(pi*(j+1)/(k+2)) / sin(pi/(k+2))
+
+    For k=1: d_0=1, d_1=1 (semion).
+    For k=2: d_0=1, d_1=sqrt(2), d_2=1 (Ising).
+    For k=3: d_0=1, d_1=phi, d_2=phi, d_3=1 (contains Fibonacci).
+    where phi = (1+sqrt(5))/2 is the golden ratio.
+
+    Lean: su2k_qdim (SU2kFusion.lean)
+    Aristotle: pending
+    Source: Di Francesco et al., CFT (1997), Ch. 14
+
+    Args:
+        k: level
+        j: label in {0, ..., k}
+
+    Returns:
+        quantum dimension d_j (real, positive)
+    """
+    import math
+    return math.sin(math.pi * (j + 1) / (k + 2)) / math.sin(math.pi / (k + 2))
+
+
+def su2k_global_dim_sq(k):
+    """Global (total) quantum dimension squared for SU(2)_k.
+
+    D^2 = sum_{j=0}^{k} d_j^2 = (k+2) / (2 * sin^2(pi/(k+2)))
+
+    For k=1: D^2 = 2. For k=2: D^2 = 4. For k=3: D^2 = 5 + sqrt(5).
+
+    Lean: su2k_global_dim_sq (SU2kFusion.lean)
+    Aristotle: pending
+
+    Args:
+        k: level
+
+    Returns:
+        D^2 (real, positive)
+    """
+    import math
+    return (k + 2) / (2 * math.sin(math.pi / (k + 2)) ** 2)
+
+
+def su2k_s_matrix_entry(k, i, j):
+    """S-matrix entry for SU(2)_k.
+
+    S_{ij} = sqrt(2/(k+2)) * sin(pi*(i+1)*(j+1)/(k+2))
+
+    The S-matrix is real, symmetric, and unitary (S*S^T = I).
+    Non-degeneracy (det(S) != 0) is the modularity condition.
+
+    Lean: (planned for Wave 4)
+    Aristotle: pending
+    Source: Verlinde, Nucl. Phys. B 300, 360 (1988)
+
+    Args:
+        k: level
+        i, j: labels in {0, ..., k}
+
+    Returns:
+        S_{ij} (real)
+    """
+    import math
+    return math.sqrt(2 / (k + 2)) * math.sin(
+        math.pi * (i + 1) * (j + 1) / (k + 2)
+    )
+
+
+def su2k_verlinde(k, i, j, m):
+    """Verlinde formula: compute fusion coefficient from S-matrix.
+
+    N_{ij}^m = sum_l S_{il} S_{jl} S_{ml}* / S_{0l}
+
+    For SU(2)_k, S is real so S* = S. This should reproduce
+    the fusion rules from su2k_fusion_rule.
+
+    Lean: (planned for Wave 4)
+    Aristotle: pending
+    Source: Verlinde, Nucl. Phys. B 300, 360 (1988)
+
+    Args:
+        k: level
+        i, j, m: labels in {0, ..., k}
+
+    Returns:
+        N_{ij}^m (should be a non-negative integer)
+    """
+    total = 0.0
+    for l in range(k + 1):
+        s_il = su2k_s_matrix_entry(k, i, l)
+        s_jl = su2k_s_matrix_entry(k, j, l)
+        s_ml = su2k_s_matrix_entry(k, m, l)
+        s_0l = su2k_s_matrix_entry(k, 0, l)
+        total += s_il * s_jl * s_ml / s_0l
+    return total
+
+
+# ═══════════════════════════════════════════════════════════════
+# Phase 5c Wave 2: Affine quantum group U_q(ŝl₂)
+# ═══════════════════════════════════════════════════════════════
+
+def affine_chevalley_cross_relation(a_ij, q):
+    """Cross-node Chevalley relation: K_i E_j K_i^{-1} = q^{a_ij} E_j.
+
+    For the affine Cartan matrix A = ((2,-2),(-2,2)):
+      K_i E_i K_i^{-1} = q^2 E_i  (same node, a_ii = 2)
+      K_i E_j K_i^{-1} = q^{-2} E_j  (cross node, a_ij = -2)
+
+    Lean: K0E0, K1E1, K0E1, K1E0 in AffChevalleyRel (Uqsl2Affine.lean)
+    Aristotle: N/A (zero sorry)
+    Source: Kassel, "Quantum Groups" (Springer, 1995), Ch. VI
+
+    Args:
+        a_ij: Cartan matrix entry (2 for same node, -2 for cross)
+        q: deformation parameter
+
+    Returns:
+        q^{a_ij} (the scaling factor)
+    """
+    return q ** a_ij
+
+
+def coideal_generator(F_i, E_i, K_i_inv, c=1):
+    """Coideal generator B_i = F_i + c * E_i * K_i^{-1} (Kolb convention).
+
+    These generate the q-Onsager algebra O_q inside U_q(ŝl₂).
+    The coideal property: Delta(B_i) = B_i tensor K_i^{-1} + 1 tensor B_i.
+
+    Lean: oqB0, oqB1 (Uqsl2Affine.lean)
+    Aristotle: N/A
+    Source: Kolb, Adv. Math. 267, 395 (2014); Baseilhac-Kolb
+
+    Args:
+        F_i, E_i, K_i_inv: generator elements
+        c: parameter (default 1; all nonzero c give isomorphic algebras)
+
+    Returns:
+        B_i = F_i + c * E_i * K_i_inv
+    """
+    return F_i + c * E_i * K_i_inv
+
+
+# ═══════════════════════════════════════════════════════════════
+# Phase 5c Wave 5: Restricted quantum group u_q(sl₂)
+# ═══════════════════════════════════════════════════════════════
+
+def restricted_uq_relations(ell):
+    """Additional relations for the restricted quantum group u_q(sl₂).
+
+    For a primitive ell-th root of unity (ell odd, ell >= 3):
+      E^ell = 0  (nilpotency)
+      F^ell = 0  (nilpotency)
+      K^ell = 1  (torsion)
+
+    The PBW basis {F^a E^b K^c : 0 <= a, b, c <= ell-1} has dim = ell^3.
+    The semisimplified representation category gives SU(2)_k at k = ell - 2.
+
+    Lean: suq_E_nilpotent, suq_F_nilpotent, suq_K_torsion (RestrictedUq.lean)
+    Aristotle: N/A (proved by construction)
+    Source: Lusztig, J. Amer. Math. Soc. 3, 257 (1990)
+
+    Args:
+        ell: order of the root of unity (odd, >= 3)
+
+    Returns:
+        dict with nilpotency exponent, torsion order, dimension, num simples
+    """
+    if ell < 3 or ell % 2 == 0:
+        raise ValueError(f"ell must be odd and >= 3, got {ell}")
+    return {
+        'nilpotency_exponent': ell,
+        'torsion_order': ell,
+        'dimension': ell ** 3,
+        'num_simples': ell,
+        'fusion_level': ell - 2,  # k = ell - 2 for SU(2)_k connection
+    }

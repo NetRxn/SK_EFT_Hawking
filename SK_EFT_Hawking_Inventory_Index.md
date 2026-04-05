@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Post Wave 7: 968 thm, 0 ax, 66 modules, 11 sorry pending Aristotle)
+**Last synced:** April 4, 2026 (Phase 5c complete: **1084 thm**, 0 ax, 74 modules, 39 sorry across 6 files pending Aristotle)
 
 ---
 
@@ -10,16 +10,16 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | 968 (0 axioms) | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
+| Lean theorems | **1084** (0 axioms) | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
 | Aristotle-proved | 273 (270 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| Manual proofs | 695 | 968 - 273 |
-| **Sorry gaps** | **11** | 5 in QNumber.lean, 6 in Uqsl2.lean (Aristotle pending) |
+| Manual proofs | 811 | 1084 - 273 |
+| **Sorry gaps** | **39** | 22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq (Aristotle pending) |
 | **Axioms** | **0** | All removed (Wave 6) |
-| Lean modules | 66 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 957 | 968 - 11 |
+| Lean modules | 74 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 1045 | 1084 - 39 |
 | Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 34 | `find tests/ -name "test_*.py"` |
-| Test count | 1554 | `pytest tests/ -q` |
+| Test files | 37 | `find tests/ -name "test_*.py"` |
+| Test count | 1610+ | `pytest tests/ -q` |
 | Figures | 72 | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | 28 | `ls notebooks/*.ipynb` |
 | Papers | 11 | `ls papers/paper*/paper_draft.tex` |
@@ -35,11 +35,11 @@
 | Section | Covers | When to update |
 |---------|--------|----------------|
 | 1. Python Source | All `src/` modules with purpose + line counts | New module added or module purpose changes |
-| 2. Lean Verification | 16-module table: lines, theorem count, key results | Theorem added/removed, module added |
+| 2. Lean Verification | 74-module table: lines, theorem count, key results | Theorem added/removed, module added |
 | 3. Aristotle | Run table with dates + theorem counts | New Aristotle submission |
-| 4. Notebooks | 16-notebook table: phase, topic | Notebook added or topic changes |
+| 4. Notebooks | 28-notebook table: phase, topic | Notebook added or topic changes |
 | 5. Papers | 7-paper table: format, lines, topic, key claims | Paper content changes |
-| 6. Tests | 16-file table: test counts, coverage | Test file added or count changes |
+| 6. Tests | 37-file table: test counts, coverage | Test file added or count changes |
 | 7. Scripts | 11-script table | Script added or purpose changes |
 | 8. Configuration | Dependency table | Dependency added |
 | 9. Documentation | Reference, roadmap, stakeholder, analysis tables | Doc added/moved/content changes |
@@ -52,10 +52,10 @@
 
 ### Core (`src/core/`)
 - `constants.py` — Physical constants, experimental params, Aristotle registry, NJL/ADW model params
-- `formulas.py` — Canonical physics formulas with Lean refs (~59 functions including SM anomaly, Weingarten, NJL, fracton, Planck)
+- `formulas.py` — Canonical physics formulas with Lean refs (137 functions including SM anomaly, Weingarten, NJL, fracton, Planck, quantum group, SU(2)_k fusion/S-matrix)
 - `transonic_background.py` — 1D BEC transonic flow solver
 - `visualizations.py` — All 72 Plotly figure functions + COLORS palette
-- `aristotle_interface.py` — Aristotle API + sorry gap registry (all filled, zero unfilled)
+- `aristotle_interface.py` — Aristotle API + sorry gap registry (39 unfilled across 6 Lean modules)
 - `sm_anomaly.py` — SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check
 - `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
 - `citations.py` — Citation registry (CITATION_REGISTRY, DOI tracking, usage mapping)
@@ -133,7 +133,7 @@
 | SU2PseudoReality | 10 | One-link normalization, effective coupling, Binder cumulant limits |
 | FermionBag4D | 16 | SO(4) integration, 8-fermion bounds, bag positivity+boundedness, Binder range, vestigial splitting |
 | LatticeHamiltonian | 28 | BZ compact, GS 9 conditions, TPF 3 violations, ℓ²(ℤ) ∞-dim, round discontinuous, Hermitian trace real |
-| GoltermanShamir | 15 | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation (axiom removed) |
+| GoltermanShamir | 14 | 9 conditions as substantive Props (C2 via ExteriorAlgebra, C3 via spectralGap, C5 via ground state, I1 via Hermitian, C4/C6 via resolvent), TPF evasion, Pauli exclusion, anti-commutation (axiom removed) |
 | TPFEvasion | 12 | Master synthesis: 5 violations assembled, tpf_outside_gs_scope_main, two_violations_proved |
 | KLinearCategory | 16 | SemisimpleCategory, FinitelyManySimples, Schur orthogonality, FusionRules, Vec_G D²=\|G\|, Rep(S₃) D²=6 |
 | SphericalCategory | 18 | PivotalCategory (FIRST-EVER), CategoricalTrace, SphericalCategory, quantumDim, fibonacci φ²=φ+1, chirality limitation |
@@ -175,8 +175,16 @@
 | WangBridge | 9 | Derives c₋=8N_f from SM fermion content (16 Weyl → c₋=8), fractional c₋ without ν_R, full chain to N_f≡0(3), "16 convergence" (**ALL PROVED**) |
 | ModularInvarianceConstraint | 12 | ζ₂₄ root of unity, q-parameter shift (proved), framing anomaly 24\|c₋ ↔ phase=1, complete chain η→24→3\|N_f, Rokhlin "16" (**ALL PROVED**, Aristotle `b54f9611`) |
 | RokhlinBridge | 14 | Rokhlin "16" convergence, with/without ν_R analysis (**ALL PROVED**) |
-| QNumber | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16=DG_COEFF (**5 sorry pending Aristotle**) |
-| Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**6 sorry pending Aristotle**) |
+| QNumber | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16=DG_COEFF (**ALL PROVED**, Aristotle `7d8efa8f`) |
+| Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**ALL PROVED**, Aristotle `7d8efa8f`) |
+| Uqsl2Hopf | 23 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl_2), coproduct/counit/antipode via liftAlgHom, S²=Ad(K) (**22 sorry pending Aristotle `1f8e6cb5`/`c73bac9c`**) |
+| SU2kFusion | 29 | **SU(2)_k fusion at k=1,2,3**: universal truncated CG rule, Ising (sigma²=1+psi), Fibonacci (tau²=1+tau), charge conjugation, assoc+comm, Fibonacci subcategory closed (**ALL PROVED by native_decide, zero sorry**) |
+| Uqsl2Affine | 9 | U_q(sl_2 hat) affine quantum group: 6 generators, Chevalley + cross-relations, K invertibility, coideal property statement (**ALL PROVED, zero sorry**) |
+| SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**10 sorry pending Aristotle**) |
+| RestrictedUq | 11 | Restricted quantum group u_q(sl_2): E^ell=F^ell=0, K^ell=1 nilpotency/torsion, Chevalley→restricted, small_uq→SU(2)_k connection (**1 sorry pending Aristotle**) |
+| RibbonCategory | 4 | BalancedCategory, RibbonCategory, MTC definitions, su2k1/su2k2 symmetric (**2 sorry pending Aristotle: modular conditions**) |
+| E8Lattice | 19 | E8 Cartan matrix: det=1, even diagonal, symmetric, positive definite, Rokhlin gap σ=8, hyperbolic plane, Serre mod 8, classification (**2 sorry pending Aristotle: det computation, minor det**) |
+| VerifiedJackknife | 5 | First verified statistical estimators: jackknife variance non-neg, autocovariance_zero non-neg, intAutocorrTime bounds (**2 sorry pending Aristotle**) |
 
 ---
 

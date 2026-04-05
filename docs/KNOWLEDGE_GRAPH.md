@@ -61,6 +61,7 @@ Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawkin
 | **Figure** | Circle | Purple (#9b6dff) | review_figures.py | `figure:{name}` |
 | **AristotleRun** | Circle | Green (#22c55e) | constants.py | `aristotle:{run_id}` |
 | **LeanAxiom** | Diamond | Amber (#d97706) | lean_deps.json | `lean:{name}` |
+| **Hypothesis** | Diamond | Coral (#f97316) | constants.py HYPOTHESIS_REGISTRY | `hyp:{key}` |
 | **LeanTheorem** | Circle | Sage (#5C946E) | lean_deps.json | `lean:{name}` |
 | **LeanDef** | Circle | Blue (#60a5fa) | lean_deps.json | `lean:{name}` |
 | **LeanStructure** | Square | Purple (#c084fc) | lean_deps.json | `lean:{name}` |
@@ -75,7 +76,7 @@ Shapes encode semantic roles — a visual dimension independent of color:
 
 | Shape | Semantic Role | Node Types |
 |-------|--------------|------------|
-| **Diamond** | Trust boundary — accepted without derivation | LeanAxiom, Parameter |
+| **Diamond** | Trust boundary — accepted without derivation | LeanAxiom, Hypothesis, Parameter |
 | **Circle** | Derived — proven, computed, or generated | LeanTheorem, LeanDef, LeanInstance, Formula, PaperClaim, Figure, AristotleRun |
 | **Square** | Structural — defines the framework/vocabulary | LeanStructure, LeanInductive, Paper |
 | **Triangle** | External input — comes from outside the system | PrimarySource |
@@ -103,6 +104,7 @@ Shapes encode semantic roles — a visual dimension independent of color:
 | `HAS_FIGURE` | Paper | Figure | Paper includes this figure |
 | `IMPORTS` | Formula | Formula | Formula calls another formula |
 | `DEPENDS_ON_AXIOM` | LeanTheorem/LeanDef | LeanAxiom | Transitive axiom dependency (from `collectAxioms`) |
+| `ASSUMES` | LeanTheorem | Hypothesis | Theorem takes this hypothesis as a parameter (from HYPOTHESIS_REGISTRY.dependent_theorems) |
 
 ### Lean Node Metadata
 

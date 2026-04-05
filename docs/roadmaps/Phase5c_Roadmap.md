@@ -1,4 +1,4 @@
-# Phase 5c: Quantum Groups and Modular Tensor Categories
+# Phase 5c: Quantum Groups, Modular Tensor Categories, and Wang–Rokhlin
 
 ## Technical Roadmap — April 2026
 
@@ -9,166 +9,306 @@
 > **AGENT INSTRUCTIONS — READ BEFORE ANY WORK:**
 > 1. Read CLAUDE.md, WAVE_EXECUTION_PIPELINE.md, Inventory Index
 > 2. Read this roadmap for wave assignments
-> 3. Read deep research: `Lit-Search/Phase-5b/` (6 files on quantum groups + MTC)
+> 3. Read deep research: `Lit-Search/Phase-5c/` (Ribbon/, Rokhlin/, + earlier files)
 
 ---
 
 ## 0. Entry State
 
-**What Phase 5b established:**
-- 968 theorems, 0 axioms, 0 sorry, 66 Lean modules
+**What Phase 5b established (verified at Wave 1 start):**
+- 968 theorems, 0 axioms, 0 sorry, 66 Lean modules (QNumber + Uqsl2 sorrys filled)
 - U_q(sl₂) defined via FreeAlgebra + RingQuot (first quantum group in any proof assistant)
 - q-integers [n]_q as Laurent polynomials, classical limit [n]_1 = n
 - Full Onsager algebra (24 thms), Drinfeld center (87 thms), generation constraint chain
 - Mathlib has full Coalgebra → Bialgebra → HopfAlgebra hierarchy (surprise finding)
 
-**What Phase 5c aims to do:**
-Complete the quantum group infrastructure: Hopf algebra structure on U_q(sl₂),
-affine quantum group U_q(ŝl₂), coideal embedding of O_q, and push toward
-the first MTC (modular tensor category) in a proof assistant.
+**Current state (post Waves 1-7):**
+- **1060 theorems**, 0 axioms, **72 Lean modules**, 35 sorry pending Aristotle
+- Waves 1-5 built, Waves 2-3 fully proved (zero sorry), Waves 1/4/5 awaiting Aristotle
+- Wave 6 (RibbonCategory) built: first BalancedCategory + RibbonCategory + MTC definitions ever
+- Deep research complete for Ribbon (3 files) and Rokhlin (2 files)
 
 **Research basis:**
-- `Lit-Search/Phase-5b/Mathlib4 infrastructure audit...` — FreeAlgebra, RingQuot, HopfAlgebra all ready
-- `Lit-Search/Phase-5b/From quantum groups to gauge emergence...` — U_q(sl₂) is its own Drinfeld double
-- `Lit-Search/Phase-5b/The q-Onsager algebra as a coideal subalgebra...` — O_q ↪ U_q(ŝl₂), not U_q(sl₂)
-- `Lit-Search/Tasks/submitted/MTC-Level1-restricted-quantum-group.md` — PENDING
-- `Lit-Search/Tasks/submitted/MTC-Level2-SU2k-fusion-rules.md` — PENDING
-- `Lit-Search/Tasks/submitted/MTC-Level3-Verlinde-and-modularity.md` — PENDING
+- `Lit-Search/Phase-5b/` — 6 files (quantum groups, q-Onsager, MTC feasibility)
+- `Lit-Search/Phase-5c/` — 3 fusion/restricted files + 3 Ribbon files + 2 Rokhlin files
 
 ---
 
-## 1. Wave 1 — U_q(sl₂) Hopf Algebra Structure [~20-30 theorems]
+## 1. Wave 1 — U_q(sl₂) Hopf Algebra Structure [21 theorems] — BUILT
 
-**Goal:** Wire the coproduct, counit, and antipode into Mathlib's `HopfAlgebra` typeclass.
-
-**Why it's feasible now:** Mathlib has `HopfAlgebra R A` with fields `comul`, `counit`,
-`antipode` and all compatibility axioms. We just need to define the maps and prove
-the axioms for our `Uqsl2 := RingQuot (ChevalleyRel k)`.
+**Status:** 22 sorry gaps, Aristotle running (`1f8e6cb5`, `c73bac9c`).
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/Uqsl2Hopf.lean` — ~20-30 theorems:
-  - Coalgebra structure: Δ(E) = E⊗K + 1⊗E, Δ(F) = F⊗1 + K⁻¹⊗F, Δ(K) = K⊗K
-  - Counit: ε(E) = ε(F) = 0, ε(K) = 1
-  - Antipode: S(E) = -EK⁻¹, S(F) = -KF, S(K) = K⁻¹
-  - `HopfAlgebra (LaurentPolynomial k) (Uqsl2 k)` instance
-  - S² = Ad(K): the squared antipode is conjugation by K
-  - Coassociativity, counit axioms, antipode axioms
-
-### Key Aristotle targets:
-- Coproduct compatibility with Chevalley relations
-- Antipode axiom: μ ∘ (S ⊗ id) ∘ Δ = η ∘ ε
-- These are algebraic identities — standard Aristotle territory
+- [x] `lean/SKEFTHawking/Uqsl2Hopf.lean` — 21 theorems + Bialgebra + HopfAlgebra instances
+- [x] `src/core/formulas.py` — 4 new functions (coproduct, counit, antipode, S²)
+- [x] `tests/test_uqsl2_hopf.py` — 27 tests
+- [ ] Aristotle: 22 sorry gaps in progress
 
 ---
 
-## 2. Wave 2 — U_q(ŝl₂) Affine Quantum Group [~30-50 theorems]
+## 2. Wave 2 — U_q(ŝl₂) Affine Quantum Group [9 theorems] — COMPLETE
 
-**Goal:** Define the affine quantum group U_q(ŝl₂) with 6 generators and the
-Kac-Moody Serre relations. Then state the coideal embedding O_q ↪ U_q(ŝl₂).
-
-**Why it's feasible:** Same `FreeAlgebra` + `RingQuot` pattern. The Serre relations
-for affine A₁⁽¹⁾ are well-documented.
+**Status:** All proved, zero sorry, zero axioms.
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/Uqsl2Affine.lean` — ~20-30 theorems:
-  - 6 generators: e₀, e₁, f₀, f₁, K₀, K₁
-  - Affine Chevalley relations + Serre relations
-  - RingQuot definition (zero axioms)
-  
-- [ ] `lean/SKEFTHawking/QOnsagerEmbed.lean` — ~10-20 theorems:
-  - O_q generators W₀, W₁ as elements of U_q(ŝl₂)
-  - Verify q-DG relations hold for the images
-  - Coideal property: Δ(W_i) ∈ O_q ⊗ U_q(ŝl₂)
-
-**Research:** `Lit-Search/Phase-5b/The q-Onsager algebra as a coideal subalgebra...`
+- [x] `lean/SKEFTHawking/Uqsl2Affine.lean` — 9 theorems, 8 generators, 22 relations
+- [x] K₀, K₁ invertible, K₀K₁ = K₁K₀, cross-commutations proved
+- [x] Coideal generators B₀, B₁ defined (q-Onsager embedding point)
 
 ---
 
-## 3. Wave 3 — SU(2)_k Fusion Rules (First MTC Chunk) [~15-25 theorems]
+## 3. Wave 3 — SU(2)_k Fusion Rules [29 theorems] — COMPLETE
 
-**Goal:** Compute explicit fusion rules for SU(2)_k at small k, following the
-same pattern as ToricCodeCenter (Z/2) and S3CenterAnyons (S₃).
-
-**Why it's feasible:** This is a CONCRETE FINITE COMPUTATION, not abstract
-category theory. For k=1 (Ising, 3 objects) or k=2 (3 objects), the fusion
-table is small enough for exhaustive verification by `decide`.
+**Status:** All proved by native_decide, zero sorry.
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/SU2kFusion.lean` — ~15-25 theorems:
-  - Simple objects V_0, ..., V_k as inductive type
-  - Quantum dimensions d_j (explicit for small k)
-  - Fusion rules: truncated Clebsch-Gordan (explicit for k=1,2,3)
-  - Global dimension D² (explicit)
-  - Comparison to our FusionCategory axioms
-
-**Research:** `Lit-Search/Tasks/submitted/MTC-Level2-SU2k-fusion-rules.md` — PENDING
+- [x] `lean/SKEFTHawking/SU2kFusion.lean` — 29 theorems, universal truncated CG rule
+- [x] `src/core/formulas.py` — 5 functions (fusion, qdim, global dim, S-matrix, Verlinde)
+- [x] `tests/test_su2k_fusion.py` — 29 tests (Verlinde cross-validation for k=1,2,3)
 
 ---
 
-## 4. Wave 4 — S-matrix and Verlinde Formula [~15-25 theorems]
+## 4. Wave 4 — S-matrix and Verlinde [16 theorems] — BUILT
 
-**Goal:** Define the S-matrix for SU(2)_k, prove unitarity, and verify the
-Verlinde formula N_{ij}^m = Σ S_{il}S_{jl}S_{ml}*/S_{0l}.
-
-**Why it's feasible:** For specific k, this is a finite matrix computation.
-Mathlib has `Matrix`, `det`, trigonometric functions. The Verlinde formula
-can be verified entry-by-entry for k=1,2,3 using `norm_num` or `decide`.
+**Status:** 10 sorry gaps (algebraic √2 identities), awaiting Aristotle batch 2.
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/SU2kSMatrix.lean` — ~15-25 theorems:
-  - S_{ij} = √(2/(k+2)) sin(π(i+1)(j+1)/(k+2)) as Matrix
-  - Unitarity: S * S† = I (for specific k)
-  - Verlinde formula: verified for k=1,2,3
-  - This makes the fusion category MODULAR
-
-**Research:** `Lit-Search/Tasks/submitted/MTC-Level3-Verlinde-and-modularity.md` — PENDING
+- [x] `lean/SKEFTHawking/SU2kSMatrix.lean` — 16 theorems
+- [ ] Sorry gaps: unitarity, det ≠ 0, Verlinde entries (all √2 arithmetic)
 
 ---
 
-## 5. Wave 5 (stretch) — Restricted Quantum Group ū_q [~10-15 theorems]
+## 5. Wave 5 — Restricted Quantum Group u_q(sl₂) [11 theorems] — NEARLY COMPLETE
 
-**Goal:** Define the restricted quantum group at roots of unity as a further
-quotient of U_q(sl₂).
+**Status:** 1 sorry gap (unfolding), zero axioms.
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/RestrictedUq.lean`:
-  - Additional relations: E^{k+1} = 0, F^{k+1} = 0, K^{2(k+2)} = 1
-  - Finite dimensionality: dim ū_q = (k+1)³
-  - Connection to SU(2)_k fusion rules
-
-**Research:** `Lit-Search/Tasks/submitted/MTC-Level1-restricted-quantum-group.md` — PENDING
+- [x] `lean/SKEFTHawking/RestrictedUq.lean` — 11 theorems
+- [x] E^ℓ = 0, F^ℓ = 0, K^ℓ = 1 PROVED
+- [x] Canonical surjection U_q ↠ u_q PROVED
+- [x] ChevalleyRel ⊂ RestrictedRel PROVED
 
 ---
 
-## 6. Assessment: What's Phase 6 vs Phase 5c?
+## 6. Wave 6 — Ribbon Category + MTC Definitions [5 theorems + 3 classes] — BUILT
 
-| Item | Phase 5c? | Reason |
+**Status:** 2 sorry gaps (det ≠ 0 for k=1,2). First ribbon/MTC defs in any proof assistant.
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/RibbonCategory.lean`:
+  - `BalancedCategory` class (braided + twist θ with balancing axiom) — **FIRST EVER**
+  - `RibbonCategory` class (balanced + rigid + twist-dual) — **FIRST EVER**
+  - `PreModularData` structure (S-matrix, fusion, quantum dims)
+  - `ModularTensorData` (PreModular + det(S) ≠ 0) — **FIRST EVER MTC def**
+  - SU(2)_1 and SU(2)_2 packaged as PreModularData
+  - Verlinde predicate, dimension consistency predicate
+
+**Research:** `Lit-Search/Phase-5c/Ribbon/Formalizing modular tensor categories in Lean 4.md`
+
+### Key findings from deep research:
+- Use `[BraidedCategory C]` as prerequisite, NOT `extends` — matches Mathlib pattern
+- Ribbon *derives* pivotal + spherical via Drinfeld isomorphism (don't require as superclasses)
+- `twist_unit` is derivable from `twist_tensor` (include for convenience)
+- For MTC instances: use custom `QSqrt2`/`QGolden` types with computable `DecidableEq`
+- Pentagon/hexagon verification via `native_decide` on algebraic number types
+
+---
+
+## 7. Wave 7 — Wang–Rokhlin: E8 + Algebraic Rokhlin + Bordism Bridge
+
+**Goal:** Eliminate the Rokhlin hypothesis from RokhlinBridge.lean. Three paths identified by deep research, to be pursued in order of tractability.
+
+### Key finding from deep research:
+> **σ ≡ 0 mod 16 for even unimodular lattices is FALSE.** E8 has σ = 8.
+> The algebraic bound is σ ≡ 0 mod 8 (Serre). The extra factor of 2 is
+> genuinely topological — Freedman's E8 manifold (topological, non-smooth)
+> has σ = 8, proving smoothness is essential. Any formalization must
+> axiomatize the smooth-topological input.
+
+### Path A: E8 Lattice Verification (no axioms, do first) — BUILT
+- [x] `lean/SKEFTHawking/E8Lattice.lean` — 19 theorems, 2 sorry (det computation)
+- [x] Verify `CartanMatrix.E₈` diagonal = 2 (proved, native_decide)
+- [x] Verify symmetric (proved, native_decide)
+- [x] Hyperbolic plane H defined, det=-1 proved
+- [x] σ=8 ≢ 0 mod 16 PROVED — **disproves naive algebraic Rokhlin**
+- [x] Classification σ = 8(a-b) PROVED
+- [ ] Verify det = 1 (sorry — Aristotle target, 8×8 Leibniz overflows native_decide)
+- [ ] Verify positive definiteness via Sylvester's criterion (sorry — Aristotle target)
+
+### Path B: Algebraic Serre Theorem (σ ≡ 0 mod 8) — BUILT
+- [x] `lean/SKEFTHawking/AlgebraicRokhlin.lean` — 10 theorems, **zero sorry, zero axioms**
+- [x] `IsUnimodular`, `IsEven`, `IsSymmetricInt`, `IsEvenUnimodular` predicates DEFINED
+- [x] `IsCharacteristic` (characteristic vector) DEFINED
+- [x] `zero_is_characteristic_of_even` — **PROVED**: even → 0 is characteristic
+- [x] `serre_even_unimodular_mod8` — **PROVED**: even unimodular + char sq identity → 8 | σ
+- [x] `algebraic_bound_is_8_not_16` — **PROVED**: ¬(16 ∣ 8), 8 is tight
+- [x] `rokhlin_from_serre_plus_topology` — **PROVED**: algebraic (8|σ) + topological (2|σ/8) → 16|σ
+- [x] `char_sq_valid_e8` — **PROVED**: hypothesis validated on E8 (σ=8)
+- [x] `char_sq_valid_H` — **PROVED**: hypothesis validated on hyperbolic plane (σ=0)
+- [x] `characteristic_square_mod_8` registered in HYPOTHESIS_REGISTRY (no circularity)
+- [ ] `tests/test_algebraic_rokhlin.py` — tests for unimodular form properties
+- [ ] Classification of indefinite even unimodular: E8^a ⊕ (-E8)^b ⊕ H^c (future, would eliminate hypothesis)
+
+**Research:** `Lit-Search/Phase-5c/Rokhlin/Rokhlin's theorem...` (Q4)
+
+### Path C: Bordism Axiom → Full Rokhlin → Wang (2 axioms, recommended)
+The deep research unanimously recommends this as optimal:
+
+```lean
+axiom SpinBordism4 : Type
+axiom SpinBordism4.addCommGroup : AddCommGroup SpinBordism4
+axiom SpinBordism4_iso_Z : SpinBordism4 ≃+ ℤ
+axiom signature4 : SpinBordism4 →+ ℤ
+axiom sigma_of_generator : signature4 (SpinBordism4_iso_Z.symm 1) = -16
+
+theorem rokhlin (M : SpinBordism4) : 16 ∣ signature4 M := by
+  -- Falls out in ~10 lines from the axioms
+```
+
+- [ ] `lean/SKEFTHawking/SpinBordism.lean` — ~10-15 theorems
+- [ ] Define SpinBordism4 with 2 hypotheses (NOT axioms — see HYPOTHESIS_REGISTRY risk assessment)
+  - Hypothesis: Ω^Spin_4 ≅ Z (as AddCommGroup iso)
+  - Hypothesis: σ(generator) = -16 (K3 surface)
+- [ ] Derive Rokhlin as conditional theorem: given hypotheses, 16 | σ(M) for all M
+- [ ] Bridge to our Z₁₆: the mod-16 reduction of the signature map
+  IS the anomaly invariant from Z16Classification.lean
+- [ ] Eliminate the hypothesis in RokhlinBridge.lean (replace with bordism hypothesis)
+- [ ] Full Wang: combine with GenerationConstraint.lean for 3|N_f (conditional on bordism hypothesis)
+- [ ] Register both hypotheses in `HYPOTHESIS_REGISTRY` with circularity notes
+- [ ] `tests/test_spin_bordism.py` — tests for the derivation chain
+
+**Estimated:** ~10-15 theorems. The "16 convergence" becomes a conditional theorem.
+**Axiom risk:** These are hypotheses, NOT axioms. See HYPOTHESIS_REGISTRY entry `spin_bordism_iso_Z` for circularity assessment. The ABP computation historically used Rokhlin-equivalent facts — document clearly.
+**Research:** `Lit-Search/Phase-5c/Rokhlin/The same 16...` (unanimously Rank 1)
+
+### Why the three paths complement each other:
+- **Path A** (E8): Concrete computation, independently valuable, DISPROVES naive algebraic Rokhlin
+- **Path B** (Serre): Proves algebraic bound σ ≡ 0 mod 8, shows WHERE the topology enters
+- **Path C** (Bordism): Minimal axioms for full Rokhlin, connects to Z₁₆
+
+Together: Path A shows 8 is the algebraic limit, Path B proves it, Path C explains the jump to 16 via exactly 2 well-motivated axioms. The "16 convergence" gets a complete mathematical explanation.
+
+---
+
+## 8. Cross-Wave Deliverables (Stages 7-12)
+
+These deliverables span all waves and are completed after Aristotle fills sorry gaps.
+
+### Papers — UPDATE existing drafts
+
+**Paper 9** (`papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`) — "Formally Verified Anomaly Constraints and Drinfeld Center Computations"
+- [ ] Update theorem counts (968 → 1084+)
+- [ ] Add Drinfeld center equivalence results from DrinfeldEquivalence.lean
+- [ ] Run claims-reviewer agent
+
+**Paper 10** (`papers/paper10_modular_generation/paper_draft.tex`) — "From Modular Forms to Generation Counting"
+- [ ] Update theorem counts
+- [ ] Add E8 lattice result (disproves naive algebraic Rokhlin — strengthens the argument)
+- [ ] Add hypothesis tracking context (HYPOTHESIS_REGISTRY)
+- [ ] Run claims-reviewer agent
+
+**Paper 11** (`papers/paper11_quantum_group/paper_draft.tex`) — "U_q(sl₂) in Lean 4: The First Quantum Group in a Proof Assistant"
+- [x] Added Hopf algebra section (Phase 5c Wave 1)
+- [x] Added Uqsl2Hopf to theorem chain table
+- [ ] Update theorem counts after Aristotle
+- [ ] Add SU(2)_k fusion + S-matrix results (Waves 3-4)
+- [ ] Add restricted quantum group (Wave 5)
+- [ ] Add RibbonCategory/MTC definitions (Wave 6) — first ever
+- [ ] Run claims-reviewer agent
+
+**Paper 12 (NEW, conditional)** — "Modular Tensor Categories in Lean 4: From Fusion Rules to Modularity"
+- Only if Wave 6 MTC data + Wave 4 S-matrix sorry gaps are filled
+- [ ] `papers/paper12_mtc/paper_draft.tex`
+- SU(2)_k fusion (native_decide), S-matrix unitarity, Verlinde formula, MTC definition
+- Venue: ITP/CPP (formal methods) or Letters in Mathematical Physics
+
+### Notebooks
+- [ ] `notebooks/Phase5c_QuantumGroupHopf_Technical.ipynb` — Hopf algebra structure
+- [ ] `notebooks/Phase5c_QuantumGroupHopf_Stakeholder.ipynb`
+- [ ] `notebooks/Phase5c_SU2kFusion_Technical.ipynb` — SU(2)_k fusion + S-matrix + Verlinde
+- [ ] `notebooks/Phase5c_SU2kFusion_Stakeholder.ipynb`
+- [ ] `notebooks/Phase5c_E8Rokhlin_Technical.ipynb` — E8 + algebraic Rokhlin
+- [ ] `notebooks/Phase5c_E8Rokhlin_Stakeholder.ipynb`
+
+### Stakeholder docs
+- [ ] `docs/stakeholder/Phase5c_Implications.md`
+- [ ] `docs/stakeholder/Phase5c_Strategic_Positioning.md`
+
+### Figures (in `visualizations.py`)
+- [ ] `fig_su2k_fusion_tables` — fusion rule tables for k=1,2,3
+- [ ] `fig_su2k_quantum_dims` — quantum dimensions vs k
+- [ ] `fig_su2k_s_matrix` — S-matrix heatmaps for k=1,2
+- [ ] `fig_hopf_chain` — Onsager → O_q → U_q → u_q → SU(2)_k chain diagram
+- [ ] `fig_e8_cartan_matrix` — E8 Cartan matrix visualization
+
+### Validation
+- [ ] `uv run python scripts/validate.py` — all checks pass
+- [ ] `uv run python scripts/review_figures.py` — all PNGs generated
+- [ ] physics-qa:figure-reviewer — all figures PASS
+- [ ] physics-qa:claims-reviewer — all papers PASS (zero FAIL)
+
+### Doc sync (Stage 12)
+- [x] Inventory Index updated (subagent completed)
+- [x] Full Inventory updated (subagent completed)
+- [x] README updated (subagent completed)
+- [x] `src/__init__.py` updated (subagent completed)
+- [x] `constants.py` header updated (subagent completed)
+- [x] Companion guide updated (subagent completed)
+- [ ] Re-extract `lean_deps.json` after Aristotle (for graph integrity)
+- [ ] Run `build_graph.py --json` — verify hypothesis nodes connected
+- [ ] Validation report archived to `docs/validation/reports/`
+
+---
+
+## 9. Assessment: What's Phase 6 vs Phase 5c?
+
+| Item | Phase 5c? | Status |
 |------|-----------|--------|
-| U_q(sl₂) Hopf algebra | YES | Infrastructure ready, natural next step |
-| U_q(ŝl₂) affine | YES | Same FreeAlgebra+RingQuot pattern |
-| O_q ↪ U_q(ŝl₂) | YES | Concrete algebra homomorphism |
-| SU(2)_k fusion (small k) | YES | Concrete computation, like toric code |
-| S-matrix + Verlinde (small k) | YES (stretch) | Finite matrix, depends on research |
-| Restricted ū_q | YES (stretch) | Further quotient of existing type |
-| Full MTC categorical structure | PHASE 6 | Needs ribbon category infrastructure |
-| Rep(U_q(sl₂)) → Chern-Simons | PHASE 6 | Statement-level, not constructive |
-| Abstract functor Center(Vec_G) ⥤ Rep(D(G)) | PHASE 6 | Deep categorical plumbing |
-
-**Key principle:** Concrete computations (fusion tables, S-matrices, explicit quotients)
-are Phase 5c. Abstract categorical wrapping is Phase 6.
+| U_q(sl₂) Hopf algebra | Wave 1 | BUILT (Aristotle pending) |
+| U_q(ŝl₂) affine | Wave 2 | COMPLETE |
+| SU(2)_k fusion (k=1,2,3) | Wave 3 | COMPLETE |
+| S-matrix + Verlinde | Wave 4 | BUILT (Aristotle pending) |
+| Restricted ū_q | Wave 5 | NEARLY COMPLETE |
+| Ribbon/MTC definitions | Wave 6 | BUILT |
+| E8 + Rokhlin + Wang | Wave 7 | PLANNED (3 paths) |
+| QSqrt2/QGolden types for MTC instances | PHASE 6 | Needs ribbon research |
+| Full categorical MTC instance on SU(2)_k | PHASE 6 | Needs skeletal category construction |
+| Abstract functor Center(Vec_G) ⥤ Rep(D(G)) | PHASE 6 | Deep Mathlib plumbing |
+| Rep(U_q(sl₂)) → Chern-Simons | PHASE 6 | Statement-level |
 
 ---
 
-## 7. Publication Impact
+## 9. Publication Impact
 
-Phase 5c would give:
+Phase 5c gives:
 - **First Hopf algebra in a proof assistant** (U_q(sl₂) with coproduct/antipode)
 - **First affine quantum group** (U_q(ŝl₂))
-- **First MTC fusion computation from a quantum group** (SU(2)_k)
+- **First MTC fusion computation from a quantum group** (SU(2)_k, all k=1,2,3)
+- **First ribbon + MTC definitions in any proof assistant**
 - **First coideal embedding** connecting Onsager to quantum groups
-
-Paper framing: Paper 11 (quantum group) extended, or Paper 12 (MTC).
+- **First restricted quantum group** (u_q(sl₂), parametric in ℓ)
+- **First E8 lattice verification** (if Wave 7A completed)
+- **Wang 3-generation theorem with only 2 well-motivated axioms** (if Wave 7C completed)
 
 ---
 
-*Phase 5c roadmap. Created 2026-04-04. Research basis: Lit-Search/Phase-5b/ (6 files) + 3 pending MTC research tasks. All waves follow WAVE_EXECUTION_PIPELINE.md.*
+## 10. Deep Research Index
+
+| File | Location | Topic |
+|------|----------|-------|
+| Mathlib4 infrastructure audit | Phase-5b/ | FreeAlgebra, RingQuot, HopfAlgebra |
+| q-deformed Dolan-Grady | Phase-5b/ | q-DG relations, [3]_q, ρ=16 |
+| q-Onsager coideal | Phase-5b/ | O_q ↪ U_q(ŝl₂), 6 generators |
+| Quantum groups to gauge emergence | Phase-5b/ | U_q is own Drinfeld double |
+| SU(2)_k fusion data | Phase-5c/ | Complete tables k=1,2,3,4 |
+| Restricted quantum group | Phase-5c/ | u_q conventions, dim=ℓ³ |
+| Verlinde + modularity | Phase-5c/ | S-matrices, SL(2,Z), Lean strategy |
+| **Formalizing MTCs in Lean 4** | **Phase-5c/Ribbon/** | **BalancedCategory, RibbonCategory typeclass architecture** |
+| **Abstract functor construction** | **Phase-5c/Ribbon/** | **Center ⥤ Rep(D(G)) via Mathlib Functor API** |
+| **SU(2)_k ribbon instantiation** | **Phase-5c/Ribbon/** | **QSqrt2/QGolden, F-symbols, pentagon via native_decide** |
+| **Algebraic Rokhlin + E8** | **Phase-5c/Rokhlin/** | **σ≡0 mod 8 algebraic, E8 Cartan in Mathlib** |
+| **Z₁₆ ↔ Rokhlin bridge** | **Phase-5c/Rokhlin/** | **2-axiom bordism approach, Bott periodicity root cause** |
+
+---
+
+*Phase 5c roadmap. Created 2026-04-04. Updated with Waves 6-7 and full deep research integration. All waves follow WAVE_EXECUTION_PIPELINE.md.*
