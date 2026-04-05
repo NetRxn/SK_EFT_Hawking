@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 4, 2026 (Phase 5c Wave 7: **1102 thm**, 0 ax, 76 modules, 41 sorry across 7 files pending Aristotle)
+**Last synced:** April 5, 2026 (Phase 5d Waves 4-8: **1214 thm**, 0 ax, 84 modules, **16 sorry**, Aristotle submitted)
 
 ---
 
@@ -10,22 +10,21 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **1102** (0 axioms) | `grep -c "^theorem" lean/SKEFTHawking/*.lean` |
-| Aristotle-proved | 273 (270 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| Manual proofs | 829 | 1102 - 273 |
-| **Sorry gaps** | **41** | 22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq + 2 SpinBordism (Aristotle pending) |
+| Lean theorems | **1214** (0 axioms, incl. private helpers) | `grep -c "^theorem\|^private theorem" lean/SKEFTHawking/*.lean` |
+| Aristotle-proved | **307** (304 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
+| **Sorry gaps** | **16** | 5 SU2kMTC + 3 FibonacciMTC + 3 Uqsl2AffineHopf + 4 VerifiedStatistics + 1 KerrSchild (Aristotle submitted) |
 | **Axioms** | **0** | All removed (Wave 6) |
-| Lean modules | 76 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 1061 | 1102 - 41 |
-| Python source modules | 49 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 38 | `find tests/ -name "test_*.py"` |
+| Lean modules | 84 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 1198 | 1214 - 16 |
+| Python source modules | 51 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Test files | 40 | `find tests/ -name "test_*.py"` |
 | Test count | 1635+ | `pytest tests/ -q` |
-| Figures | 77 | `grep -c "^def fig_" src/core/visualizations.py` |
-| Notebooks | 28 | `ls notebooks/*.ipynb` |
+| Figures | 80 | `grep -c "^def fig_" src/core/visualizations.py` |
+| Notebooks | 36 | `ls notebooks/*.ipynb` |
 | Papers | 11 | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 18 | See Section 9 of inventory |
-| Aristotle runs | 33+ | See Aristotle run table in full inventory |
+| Aristotle runs | 35+ | See Aristotle run table in full inventory |
 | Deep research tasks | 18 + 8 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b (incl. 4 q-Onsager)
 
 ---
@@ -77,6 +76,8 @@
 - `adw/gap_equation.py` — Coleman-Weinberg V_eff, G_c
 - `adw/fluctuations.py` — SSB, NG modes (2 gravitons in 4D), Vergeles check
 - `adw/ginzburg_landau.py` — GL expansion, He-3 analogy
+- `adw/tetrad_gap_solver.py` — NJL-type gap equation solver, Δ*(G) curve, MF-guided scan params (Phase 5d)
+- `adw/tetrad_observables.py` — MC observables: O_tet, O_met, Binder U₄, spatial correlator C(r) (Phase 5d)
 
 ### Phase 4 (`src/experimental/`, `src/chirality/`, `src/fracton/`, `src/vestigial/`)
 - `experimental/predictions.py` — Platform prediction tables, shot counts
@@ -177,16 +178,24 @@
 | RokhlinBridge | 14 | Rokhlin "16" convergence, with/without ν_R analysis (**ALL PROVED**) |
 | QNumber | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16=DG_COEFF (**ALL PROVED**, Aristotle `7d8efa8f`) |
 | Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**ALL PROVED**, Aristotle `7d8efa8f`) |
-| Uqsl2Hopf | 23 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl_2), coproduct/counit/antipode via liftAlgHom, S²=Ad(K) (**22 sorry pending Aristotle `1f8e6cb5`/`c73bac9c`**) |
+| Uqsl2Hopf | 66 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl_2), coproduct/counit/antipode via liftAlgHom, S²=Ad(K), Serre coproduct (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4` + `79e07d55`) |
 | SU2kFusion | 29 | **SU(2)_k fusion at k=1,2,3**: universal truncated CG rule, Ising (sigma²=1+psi), Fibonacci (tau²=1+tau), charge conjugation, assoc+comm, Fibonacci subcategory closed (**ALL PROVED by native_decide, zero sorry**) |
 | Uqsl2Affine | 9 | U_q(sl_2 hat) affine quantum group: 6 generators, Chevalley + cross-relations, K invertibility, coideal property statement (**ALL PROVED, zero sorry**) |
-| SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**10 sorry pending Aristotle**) |
-| RestrictedUq | 11 | Restricted quantum group u_q(sl_2): E^ell=F^ell=0, K^ell=1 nilpotency/torsion, Chevalley→restricted, small_uq→SU(2)_k connection (**1 sorry pending Aristotle**) |
-| RibbonCategory | 4 | BalancedCategory, RibbonCategory, MTC definitions, su2k1/su2k2 symmetric (**2 sorry pending Aristotle: modular conditions**) |
-| E8Lattice | 19 | E8 Cartan matrix: det=1, even diagonal, symmetric, positive definite, Rokhlin gap σ=8, hyperbolic plane, Serre mod 8, classification (**2 sorry pending Aristotle: det computation, minor det**) |
+| SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| RestrictedUq | 11 | Restricted quantum group u_q(sl_2): E^ell=F^ell=0, K^ell=1 nilpotency/torsion, Chevalley→restricted, small_uq→SU(2)_k connection (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| RibbonCategory | 4 | BalancedCategory, RibbonCategory, MTC definitions, su2k1/su2k2 modular (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| E8Lattice | 19 | E8 Cartan matrix: det=1, even diagonal, symmetric, positive definite, Rokhlin gap σ=8, hyperbolic plane, Serre mod 8, classification (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | AlgebraicRokhlin | 10 | Algebraic Serre theorem σ≡0 mod 8, unimodular/even/symmetric defs, characteristic vectors, E8 bridge (**ALL PROVED, zero sorry**) |
-| SpinBordism | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData structure, anomaly with/without ν_R (**2 sorry pending Aristotle: rokhlin_from_bordism, wang_full_chain**) |
-| VerifiedJackknife | 5 | First verified statistical estimators: jackknife variance non-neg, autocovariance_zero non-neg, intAutocorrTime bounds (**2 sorry pending Aristotle**) |
+| QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
+| QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
+| FibonacciMTC | 18 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**3 sorry**: pentagon, global dim, dim consistency) |
+| Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode defined via RingQuot.liftAlgHom (**3 sorry**: relation-respect proofs) |
+| VerifiedStatistics | 7 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**4 sorry**) |
+| KerrSchild | 8 | Kerr-Schild metrics: null vector, radial_null PROVED, Sherman-Morrison inverse, Schwarzschild, DOF counting (**1 sorry**) |
+| SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**5 sorry pending Aristotle**) |
+| SpinBordism | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData structure, anomaly with/without ν_R (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| VerifiedJackknife | 5 | First verified statistical estimators: jackknife variance non-neg, autocovariance_zero non-neg, intAutocorrTime bounds (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
+| TetradGapEquation | 20 | **First tetrad gap equation in any formalism**: NJL-type Δ=G·N_f·Δ·I(Δ), gapIntegral, criticalCoupling=8π²/(N_f·Λ²) (PROVED, matches ADW V_eff), IVT existence, Banach uniqueness, bifurcation at G_c, vestigial connection (19 PROVED, Aristotle `79e07d55`; **1 sorry**: gap_solution_bounded disproved/commented) |
 
 ---
 

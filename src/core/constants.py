@@ -112,8 +112,8 @@ POLARITON_MASS = 7.0e-35      # kg (effective polariton mass, Falque et al.)
 POLARITON_PLATFORMS = {
     'Paris_long': {
         'description': 'Paris polariton, long-lifetime cavity (100 ps)',
-        'c_s': 1.0e6,             # m/s (1 μm/ps, typical Bogoliubov sound speed)
-        'xi': 2.0e-6,             # m (2 μm healing length)
+        'c_s': 5.0e5,             # m/s (0.5 μm/ps, reservoir-corrected; see provenance)
+        'xi': 3.0e-6,             # m (3 μm, consistent with c_s via ξ=ℏ/m*c_s)
         'kappa': 5.0e10,          # s⁻¹ (0.05 THz, SLM-controlled horizon)
         'tau_cav': 100e-12,       # s (cavity lifetime)
         'Gamma_pol': 1.0e10,      # s⁻¹ (1/tau_cav)
@@ -121,8 +121,8 @@ POLARITON_PLATFORMS = {
     },
     'Paris_ultralong': {
         'description': 'Paris polariton, ultra-long-lifetime cavity (300 ps)',
-        'c_s': 1.0e6,
-        'xi': 2.0e-6,
+        'c_s': 5.0e5,             # m/s (reservoir-corrected)
+        'xi': 3.0e-6,             # m (consistent with c_s)
         'kappa': 5.0e10,
         'tau_cav': 300e-12,
         'Gamma_pol': 3.33e9,
@@ -130,8 +130,8 @@ POLARITON_PLATFORMS = {
     },
     'Paris_standard': {
         'description': 'Paris polariton, standard cavity (3 ps)',
-        'c_s': 1.0e6,
-        'xi': 2.0e-6,
+        'c_s': 5.0e5,             # m/s (reservoir-corrected)
+        'xi': 3.0e-6,             # m (consistent with c_s)
         'kappa': 5.0e10,
         'tau_cav': 3e-12,
         'Gamma_pol': 3.33e11,
@@ -777,12 +777,11 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (1102 theorems, 0 axioms across 76 Lean modules):
-#   - 273 tracked in ARISTOTLE_THEOREMS registry (270 machine + 3 manual, listed below with run IDs)
-#   - 829 proved manually in Lean (verified by `lake build`)
+# Verification breakdown (1179 theorems, 0 axioms across 79 Lean modules):
+#   - 307 tracked in ARISTOTLE_THEOREMS registry (304 machine + 3 manual, listed below with run IDs)
+#   - 872 proved manually in Lean (verified by `lake build`)
 #   - 0 axioms (all removed — see axiom history below)
-#   - 41 sorry pending Aristotle (22 Uqsl2Hopf + 10 SU2kSMatrix + 2 RibbonCategory
-#     + 2 VerifiedJackknife + 2 E8Lattice + 1 RestrictedUq + 2 SpinBordism)
+#   - 6 sorry (5 SU2kMTC + 1 TetradGapEquation — Phase 5d, not Phase 5c)
 #   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
 #               chiral_central_charge_coeff (all tautological as stated)
 #   - REMOVED axioms: modular_invariance_constraint (mathematically FALSE),
@@ -1121,10 +1120,52 @@ ARISTOTLE_THEOREMS = {
     'DG_basis_mul': '52992d6a',
     # Wave 6: axiom removal run
     'z16_anomaly_without_nu_R': 'b54f9611',
+    # Phase 5c Wave 4: SU2kSMatrix.lean (10 theorems, Aristotle 78dcc5f4)
+    'S_k1_unitary': '78dcc5f4',
+    'S_k1_det_ne_zero': '78dcc5f4',
+    'verlinde_k1_11_0': '78dcc5f4',
+    'verlinde_k1_11_1': '78dcc5f4',
+    'S_k2_unitary': '78dcc5f4',
+    'S_k2_det_ne_zero': '78dcc5f4',
+    'verlinde_k2_sigma_sq_vacuum': '78dcc5f4',
+    'verlinde_k2_sigma_sq_no_sigma': '78dcc5f4',
+    'verlinde_k2_sigma_sq_psi': '78dcc5f4',
+    'verlinde_k2_psi_sq_vacuum': '78dcc5f4',
+    # Phase 5c Wave 7: E8Lattice.lean (2 theorems, Aristotle 78dcc5f4)
+    'e8_det_one': '78dcc5f4',
+    'e8_minor_2': '78dcc5f4',
+    # Phase 5c Wave 6: RibbonCategory.lean (2 theorems, Aristotle 78dcc5f4)
+    'su2k1_modular': '78dcc5f4',
+    'su2k2_modular': '78dcc5f4',
+    # Phase 5c Wave 7: SpinBordism.lean (1 theorem, Aristotle 78dcc5f4)
+    'rokhlin_from_bordism': '78dcc5f4',
+    # Phase 5c Wave 5: RestrictedUq.lean (1 theorem, Aristotle 78dcc5f4)
+    'uqToSmallUq_E': '78dcc5f4',
+    # Phase 5c: VerifiedJackknife.lean (2 theorems, Aristotle 78dcc5f4)
+    'intAutocorrTime_uncorrelated': '78dcc5f4',
+    'intAutocorrTime_ge_half': '78dcc5f4',
+    # Phase 5c Wave 1: Uqsl2Hopf.lean (7 public theorems, Aristotle 78dcc5f4)
+    'comul_coassoc': '78dcc5f4',
+    'comul_rTensor_counit': '78dcc5f4',
+    'comul_lTensor_counit': '78dcc5f4',
+    'antipode_right': '78dcc5f4',
+    'antipode_left': '78dcc5f4',
+    'antipode_squared_is_ad_K': '78dcc5f4',
+    'counit_comp_antipode': '78dcc5f4',
+    # Phase 5c/5d: TetradGapEquation.lean (9 theorems, Aristotle 79e07d55)
+    'gapIntegral_pos': '79e07d55',
+    'gapIntegral_strictAnti': '79e07d55',
+    'gapIntegral_tendsto_zero': '79e07d55',
+    'gapOperator_self_map': '79e07d55',
+    'gap_trivial_unique_subcritical': '79e07d55',
+    'gap_nontrivial_exists': '79e07d55',
+    'gap_solution_monotone': '79e07d55',
+    'gapIntegral_le_I0': '79e07d55',
+    'gapIntegral_lower_bound': '79e07d55',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 273, f"Expected 273 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 307, f"Expected 307 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

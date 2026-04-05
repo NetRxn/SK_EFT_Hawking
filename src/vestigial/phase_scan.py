@@ -226,3 +226,98 @@ def binder_crossing_analysis(g_cosmo: float = ADW_4D_COUPLING_SCAN['g_cosmo'],
         vestigial_window=vestigial_window,
         vestigial_detected=vestigial_detected,
     )
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5d: MF-guided targeted scan
+# ════════════════════════════════════════════════════════════════════
+
+
+@dataclass
+class TargetedScanParams:
+    """Parameters for a mean-field-guided targeted coupling scan.
+
+    The gap equation predicts G_c = 8π²/(N_f·Λ²). The MC scan
+    centers on this prediction with a window accounting for
+    fluctuation corrections (G_c^MC ≈ O(1) × G_c^MF).
+
+    Attributes:
+        G_c_mf: Mean-field critical coupling from gap equation
+        scan_center: Center of the MC scan (= G_c_mf)
+        scan_width_factor: Scan ± this factor × G_c_mf
+        n_points: Coupling points in the scan
+        lattice_sizes: L values for Binder analysis
+    """
+    G_c_mf: float
+    scan_center: float
+    scan_width_factor: float = 0.5
+    n_points: int = 40
+    lattice_sizes: list[int] = field(default_factory=lambda: [4, 6, 8])
+
+
+def mf_guided_scan_params(
+    Lambda: float = np.pi,
+    N_f: int = 2,
+    width_factor: float = 0.5,
+) -> TargetedScanParams:
+    """Compute targeted scan parameters from the MF gap equation.
+
+    The scan covers [G_c·(1−width), G_c·(1+width)] to capture
+    both the MF prediction and the O(1) fluctuation correction.
+
+    At d=4 (upper critical dimension), the pseudo-critical shift
+    scales as ΔG_c ~ L⁻² (from mean-field ν = 1/2):
+      L=4:  6.25% shift
+      L=6:  2.78% shift
+      L=8:  1.56% shift
+
+    Args:
+        Lambda: UV cutoff (lattice: π/a with a=1)
+        N_f: Dirac fermion species
+        width_factor: Scan window as fraction of G_c
+
+    Returns:
+        TargetedScanParams with MF-guided scan region
+    """
+    from src.core.formulas import tetrad_critical_coupling_integral
+
+    G_c_mf = tetrad_critical_coupling_integral(Lambda, N_f)
+
+    return TargetedScanParams(
+        G_c_mf=G_c_mf,
+        scan_center=G_c_mf,
+        scan_width_factor=width_factor,
+    )
+
+
+def targeted_binder_analysis(
+    params: TargetedScanParams,
+    g_cosmo: float = 1.0,
+    mc_params: Optional[FermionBagParams] = None,
+) -> BinderCrossing4DResult:
+    """Run Binder crossing analysis centered on the MF-predicted G_c.
+
+    Maps g_EH = −G (attractive convention) around the predicted
+    critical coupling. The sign convention: g_EH < 0 means attractive
+    bonds, which is the physical ADW regime.
+
+    Args:
+        params: Targeted scan parameters (from mf_guided_scan_params)
+        g_cosmo: Cosmological coupling (fixed)
+        mc_params: MC parameters
+
+    Returns:
+        BinderCrossing4DResult with MF-guided scan
+    """
+    # Convert G_c to g_EH convention: g_EH = -G (attractive)
+    g_center = -params.scan_center
+    g_width = params.scan_width_factor * abs(g_center)
+    g_EH_range = (g_center - g_width, g_center + g_width)
+
+    return binder_crossing_analysis(
+        g_cosmo=g_cosmo,
+        g_EH_range=g_EH_range,
+        n_points=params.n_points,
+        lattice_sizes=params.lattice_sizes,
+        mc_params=mc_params,
+    )

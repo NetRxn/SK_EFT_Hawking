@@ -1022,6 +1022,7 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_sm_fermion_z16_anomaly,
         fig_sm_generation_anomaly,
         fig_sm_generation_constraint,
+        fig_drinfeld_equivalence_structure,
         COLORS,
     )
     from src.core.transonic_background import (

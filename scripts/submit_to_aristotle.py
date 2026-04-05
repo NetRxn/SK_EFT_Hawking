@@ -115,7 +115,7 @@ def find_sorry_files() -> dict[str, list[str]]:
 
 def build_prompt(sorry_files: dict[str, list[str]]) -> str:
     """Build a comprehensive prompt listing all sorry gaps with hints."""
-    total = sum(len(v) for v in sorry_files.items())
+    total = sum(len(v) for v in sorry_files.values())
     lines = [f"Fill in all the sorry gaps in this project. There are {total} sorry gaps across {len(sorry_files)} files.\n"]
 
     for filename, sorrys in sorted(sorry_files.items(), key=lambda x: -len(x[1])):

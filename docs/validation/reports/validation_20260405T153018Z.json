@@ -1,0 +1,83 @@
+{
+  "timestamp": "20260405T153018Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "lean_source": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "dampingRate_eq_zero_iff",
+          "passed": true,
+          "message": "Lean ident 'dampingRate_eq_zero_iff' found",
+          "warning": false
+        },
+        {
+          "name": "dispersive_bound",
+          "passed": true,
+          "message": "Lean ident 'dispersive_correction_bound' found",
+          "warning": false
+        },
+        {
+          "name": "firstOrder_correction_zero_iff",
+          "passed": true,
+          "message": "Lean ident 'firstOrder_correction_zero_iff' found",
+          "warning": false
+        },
+        {
+          "name": "acoustic_metric_determinant",
+          "passed": true,
+          "message": "Lean ident 'acousticMetric_det' found",
+          "warning": false
+        },
+        {
+          "name": "secondOrder_count",
+          "passed": true,
+          "message": "Lean ident 'secondOrder_count' found",
+          "warning": false
+        },
+        {
+          "name": "fracton_exceeds_standard_general",
+          "passed": true,
+          "message": "Lean ident 'fracton_exceeds_standard_general' found",
+          "warning": false
+        },
+        {
+          "name": "binomial_strict_mono",
+          "passed": true,
+          "message": "Lean ident 'binomial_strict_mono' found",
+          "warning": false
+        },
+        {
+          "name": "dof_gap_positive_2_through_8",
+          "passed": true,
+          "message": "Lean ident 'dof_gap_positive_2_through_8' found",
+          "warning": false
+        },
+        {
+          "name": "evading_one_breaks_nogo",
+          "passed": true,
+          "message": "Lean ident 'evading_one_breaks_nogo' found",
+          "warning": false
+        },
+        {
+          "name": "ep_distinguishes_phases",
+          "passed": true,
+          "message": "Lean ident 'ep_distinguishes_phases' found",
+          "warning": false
+        },
+        {
+          "name": "obstructions_individually_sufficient",
+          "passed": true,
+          "message": "Lean ident 'obstructions_individually_sufficient' found",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

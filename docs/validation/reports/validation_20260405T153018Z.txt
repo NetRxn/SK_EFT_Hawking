@@ -1,0 +1,18 @@
+SK-EFT Hawking Validation Report
+Generated: 20260405T153018Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] lean_source
+  + dampingRate_eq_zero_iff — Lean ident 'dampingRate_eq_zero_iff' found
+  + dispersive_bound — Lean ident 'dispersive_correction_bound' found
+  + firstOrder_correction_zero_iff — Lean ident 'firstOrder_correction_zero_iff' found
+  + acoustic_metric_determinant — Lean ident 'acousticMetric_det' found
+  + secondOrder_count — Lean ident 'secondOrder_count' found
+  + fracton_exceeds_standard_general — Lean ident 'fracton_exceeds_standard_general' found
+  + binomial_strict_mono — Lean ident 'binomial_strict_mono' found
+  + dof_gap_positive_2_through_8 — Lean ident 'dof_gap_positive_2_through_8' found
+  + evading_one_breaks_nogo — Lean ident 'evading_one_breaks_nogo' found
+  + ep_distinguishes_phases — Lean ident 'ep_distinguishes_phases' found
+  + obstructions_individually_sufficient — Lean ident 'obstructions_individually_sufficient' found
+
+Overall: 1/1 passed

@@ -47,51 +47,38 @@ theorem S_k1_11 : S_k1 1 1 = -(1 / √2) := by
 theorem S_k1_symmetric : S_k1.transpose = S_k1 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [S_k1, Matrix.transpose_apply]
 
-/--
+/-
 Unitarity: S * S^T = I for SU(2)_1.
-
-PROVIDED SOLUTION
-S * S^T = (1/sqrt(2))^2 * H * H^T where H = [[1,1],[1,-1]].
-H * H^T = [[2,0],[0,2]] = 2*I.
-So S * S^T = (1/2) * 2 * I = I.
-Use Matrix.ext, fin_cases on indices, then ring + Real.sq_sqrt.
 -/
 theorem S_k1_unitary : S_k1 * S_k1.transpose = 1 := by
-  sorry
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [ Matrix.mul_apply, S_k1 ] ; ring ; norm_num;
+  · ring;
+  · grind;
+  · ring_nf; norm_num;
 
-/--
+/-
 det(S) != 0 for SU(2)_1 (modularity condition).
-
-PROVIDED SOLUTION
-det(S) = (1/sqrt(2))(-1/sqrt(2)) - (1/sqrt(2))(1/sqrt(2))
-       = -1/2 - 1/2 = -1.
 -/
 theorem S_k1_det_ne_zero : S_k1.det ≠ 0 := by
-  sorry
+  unfold S_k1; norm_num [ Matrix.det_fin_two ] ; ring_nf;
+  norm_num
 
-/--
+/-
 Verlinde formula verification for SU(2)_1:
 N_{11}^0 = sum_l S_{1l} S_{1l} S_{0l} / S_{0l} = S_{10}^2 + S_{11}^2 = 1/2 + 1/2 = 1.
 This matches su2kFusion 1 1 1 0 = 1 (Z/2 fusion: V_1 tensor V_1 = V_0).
-
-PROVIDED SOLUTION
-Expand the Fin 2 sum. Each term simplifies via (1/sqrt(2))^2 = 1/2.
 -/
 theorem verlinde_k1_11_0 :
     ∑ l : Fin 2, S_k1 1 l * S_k1 1 l * S_k1 0 l / S_k1 0 l = 1 := by
-  sorry
+  unfold S_k1; norm_num [ Fin.sum_univ_succ ] ; ring_nf ; norm_num;
 
-/--
+/-
 Verlinde: N_{11}^1 = 0 (V_1 tensor V_1 has no V_1).
-
-PROVIDED SOLUTION
-sum_l S_{1l}^2 S_{1l}/S_{0l} = (1/sqrt(2))^2 * (1/sqrt(2))/(1/sqrt(2))
-  + (-1/sqrt(2))^2 * (-1/sqrt(2))/(1/sqrt(2))
-= 1/2 * 1 + 1/2 * (-1) = 0.
 -/
 theorem verlinde_k1_11_1 :
     ∑ l : Fin 2, S_k1 1 l * S_k1 1 l * S_k1 1 l / S_k1 0 l = 0 := by
-  sorry
+  unfold S_k1; norm_num [ Fin.sum_univ_succ ] ; ring;
+  grind
 
 end Level1
 
@@ -117,77 +104,58 @@ theorem S_k2_11_zero : S_k2 1 1 = 0 := by
 theorem S_k2_symmetric : S_k2.transpose = S_k2 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [S_k2, Matrix.transpose_apply]
 
-/--
+/-
 Unitarity: S * S^T = I for SU(2)_2.
-
-PROVIDED SOLUTION
-Row 0 dot Row 0 = (1/2)^2 + (1/sqrt(2))^2 + (1/2)^2 = 1/4 + 1/2 + 1/4 = 1.
-Row 0 dot Row 1 = (1/2)(1/sqrt(2)) + (1/sqrt(2))(0) + (1/2)(-1/sqrt(2)) = 0.
-All other entries follow by symmetry. Use Matrix.ext, fin_cases, ring + sq_sqrt.
 -/
 theorem S_k2_unitary : S_k2 * S_k2.transpose = 1 := by
-  sorry
+  ext i j;
+  fin_cases i <;> fin_cases j <;> norm_num [ Fin.sum_univ_succ, Matrix.mul_apply, S_k2 ];
+  · norm_num [ ← sq ];
+  · norm_num [ ← sq ];
+  · norm_num [ ← sq ];
+  · ring ; norm_num;
+  · norm_num [ ← sq ]
 
-/--
+/-
 det(S) != 0 for SU(2)_2 (modularity condition).
-
-PROVIDED SOLUTION
-Use det_fin_three on the 3x3 S_k2 matrix. Entries are 1/2, 1/sqrt(2), 0, -1/sqrt(2).
-Compute: det = 1/2*(0*1/2 - (-1/sqrt(2))*(-1/sqrt(2))) - 1/sqrt(2)*(1/sqrt(2)*1/2 - (-1/sqrt(2))*1/2)
-            + 1/2*(1/sqrt(2)*(-1/sqrt(2)) - 0*1/2)
-= 1/2*(-1/2) - 1/sqrt(2)*(1/sqrt(2)) + 1/2*(-1/2) = -1/4 - 1/2 - 1/4 = -1.
-Then -1 != 0 by norm_num. Key: Real.sq_sqrt (2 : R) gives sqrt(2)^2 = 2.
 -/
 theorem S_k2_det_ne_zero : S_k2.det ≠ 0 := by
-  sorry
+  norm_num [ Matrix.det_fin_three ];
+  simp +decide [ S_k2 ];
+  ring ; norm_num
 
-/--
+/-
 Verlinde for Ising: N_{11}^0 = 1 (sigma tensor sigma contains vacuum).
-
-PROVIDED SOLUTION
-sum_l S_{1l}^2 S_{0l}/S_{0l}
-= S_{10}^2 + S_{11}^2 + S_{12}^2
-= (1/sqrt(2))^2 + 0^2 + (-1/sqrt(2))^2
-= 1/2 + 0 + 1/2 = 1.
 -/
 theorem verlinde_k2_sigma_sq_vacuum :
     ∑ l : Fin 3, S_k2 1 l * S_k2 1 l * S_k2 0 l / S_k2 0 l = 1 := by
-  sorry
+  norm_num [ Fin.sum_univ_succ, S_k2 ];
+  norm_num [ ← sq ]
 
-/--
+/-
 Verlinde for Ising: N_{11}^1 = 0 (sigma^2 has no sigma).
-
-PROVIDED SOLUTION
-sum_l S_{1l}^2 S_{1l}/S_{0l}
-= (1/sqrt(2))^2 * (1/sqrt(2))/(1/2) + 0 + (1/sqrt(2))^2 * (-1/sqrt(2))/(1/2)
-= (1/2)(sqrt(2)) + 0 + (1/2)(-sqrt(2)) = 0.
 -/
 theorem verlinde_k2_sigma_sq_no_sigma :
     ∑ l : Fin 3, S_k2 1 l * S_k2 1 l * S_k2 1 l / S_k2 0 l = 0 := by
-  sorry
+  unfold S_k2; norm_num [ Fin.sum_univ_succ ] ; ring;
 
-/--
+/-
 Verlinde for Ising: N_{11}^2 = 1 (sigma^2 contains psi).
-
-PROVIDED SOLUTION
-sum_l S_{1l}^2 S_{2l}/S_{0l}
-= (1/sqrt(2))^2 * (1/2)/(1/2) + 0 + (-1/sqrt(2))^2 * (1/2)/(1/2)
-= 1/2 + 0 + 1/2 = 1.
 -/
 theorem verlinde_k2_sigma_sq_psi :
     ∑ l : Fin 3, S_k2 1 l * S_k2 1 l * S_k2 2 l / S_k2 0 l = 1 := by
-  sorry
+  unfold S_k2; norm_num [ Fin.sum_univ_succ ] ; ring_nf ; norm_num;
+  erw [ Matrix.cons_val_succ' ] ; norm_num
 
-/--
+/-
 Verlinde for Ising: N_{22}^0 = 1 (psi^2 = vacuum).
-
-PROVIDED SOLUTION
-sum_l S_{2l}^2 S_{0l}/S_{0l}
-= (1/2)^2 + (1/sqrt(2))^2 + (1/2)^2 = 1/4 + 1/2 + 1/4 = 1.
 -/
 theorem verlinde_k2_psi_sq_vacuum :
     ∑ l : Fin 3, S_k2 2 l * S_k2 2 l * S_k2 0 l / S_k2 0 l = 1 := by
-  sorry
+  simp +decide [ Fin.sum_univ_three ];
+  unfold S_k2;
+  simp +zetaDelta at *;
+  ring_nf; norm_num;
 
 end Level2
 

@@ -28,7 +28,7 @@ namespace SKEFTHawking
 
 /-! ## 1. E8 Cartan matrix properties -/
 
-/--
+/-
 The E8 Cartan matrix has determinant 1 (unimodular).
 This is the defining property that makes E8 a unimodular lattice.
 
@@ -39,7 +39,8 @@ along row 0 (which has only 2 nonzero entries: E₈(0,0)=2, E₈(0,2)=-1).
 This reduces to two 7×7 determinants, which further reduce recursively.
 Alternatively, use row reduction: E8 → upper triangular with integer pivots.
 -/
-theorem e8_det_one : CartanMatrix.E₈.det = 1 := by sorry
+theorem e8_det_one : CartanMatrix.E₈.det = 1 := by
+  rw [ ← Matrix.det_transpose ] ; exact by rw [ Matrix.det_apply' ] ; native_decide;
 
 /-- det(E8) is a unit in Z, i.e., det = ±1. -/
 theorem e8_det_is_unit : IsUnit CartanMatrix.E₈.det := by
@@ -70,18 +71,14 @@ All positive ⟹ positive definite ⟹ σ = 8 (all eigenvalues positive).
 /-- The 1×1 leading minor is 2 > 0. -/
 theorem e8_minor_1 : CartanMatrix.E₈ 0 0 = 2 := by native_decide
 
-/--
+/-
 The 2×2 leading minor has det = 4.
 The top-left 2×2 submatrix of E8 is [[2,0],[0,2]] (nodes 0,1 are not connected).
-
-PROVIDED SOLUTION
-Extract the 2x2 submatrix using submatrix. The result is diag(2,2).
-det_fin_two gives 2*2 - 0*0 = 4. Use norm_num or native_decide on the 2x2 case.
 -/
 theorem e8_minor_2 :
     (CartanMatrix.E₈.submatrix (Fin.castLE (by omega : 2 ≤ 8))
       (Fin.castLE (by omega : 2 ≤ 8))).det = 4 := by
-  sorry
+  native_decide +revert
 
 /-! ## 3. The signature and the Rokhlin counterexample -/
 

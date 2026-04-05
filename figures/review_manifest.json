@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-04T05:27:17.960202+00:00",
+  "generated": "2026-04-05T19:52:06.253824+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1767,6 +1767,33 @@
       "physics_checks": [],
       "color_keys": [
         "dispersive"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig74_drinfeld_equivalence_structure",
+      "function": "fig_drinfeld_equivalence_structure",
+      "caption": "Drinfeld center equivalence Z(Vec_G) = Rep(D(G)): anyon content for Z/2 (toric code) and S3 (non-abelian).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig74_drinfeld_equivalence_structure.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig74_drinfeld_equivalence_structure.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "anyon",
+        "yaxis": "dimension"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "Rb87",
+        "Na23",
+        "K39"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

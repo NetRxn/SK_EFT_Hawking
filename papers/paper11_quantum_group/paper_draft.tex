@@ -154,15 +154,15 @@ chain connecting lattice physics to gauge theory:
 Onsager algebra $O$ & & OnsagerAlgebra.lean (24 thms) \\
 $q$-integers $[n]_q$ & & QNumber.lean (11 thms) \\
 $U_q(\mathfrak{sl}_2)$ definition & & Uqsl2.lean (6 thms + defs) \\
-$U_q$ Hopf algebra & & Uqsl2Hopf.lean (21 thms + instances) \\
+$U_q$ Hopf algebra & & Uqsl2Hopf.lean (66 thms, 0 sorry) \\
 $U_q(\widehat{\mathfrak{sl}}_2)$ affine & & Uqsl2Affine.lean (9 thms) \\
-Restricted $\bar{u}_q$ & & RestrictedUq.lean (11 thms) \\
-SU(2)$_k$ fusion ($k$=1,2,3) & & SU2kFusion.lean (29 thms) \\
-S-matrix + Verlinde & & SU2kSMatrix.lean (16 thms) \\
-Ribbon / MTC definitions & & RibbonCategory.lean (5 thms + 3 classes) \\
-E$_8$ lattice & & E8Lattice.lean (19 thms) \\
-Algebraic Rokhlin ($8 \mid \sigma$) & & AlgebraicRokhlin.lean (10 thms) \\
-Spin bordism $\to$ Wang & & SpinBordism.lean (8 thms) \\
+Restricted $\bar{u}_q$ & & RestrictedUq.lean (11 thms, 0 sorry) \\
+SU(2)$_k$ fusion ($k$=1,2,3) & & SU2kFusion.lean (29 thms, 0 sorry) \\
+S-matrix + Verlinde & & SU2kSMatrix.lean (16 thms, 0 sorry) \\
+Ribbon / MTC definitions & & RibbonCategory.lean (4 thms + 3 classes, 0 sorry) \\
+E$_8$ lattice & & E8Lattice.lean (19 thms, 0 sorry) \\
+Algebraic Rokhlin ($8 \mid \sigma$) & & AlgebraicRokhlin.lean (10 thms, 0 sorry) \\
+Spin bordism $\to$ Wang & & SpinBordism.lean (8 thms, 0 sorry) \\
 $D(G)$, $Z(\mathrm{Vec}_G)$ & & 7 Drinfeld/Center modules (96 thms) \\
 \end{tabular}
 \end{center}
@@ -203,10 +203,11 @@ $\varepsilon(E) = \varepsilon(F) = 0$ and $\varepsilon(K) = 1$.
 
 Both are constructed as algebra homomorphisms: we define maps on
 generators via \texttt{FreeAlgebra.lift}, prove compatibility with
-the Chevalley relations, and descend to the quotient via
-\texttt{RingQuot.liftAlgHom}. The \texttt{Bialgebra} instance uses
-\texttt{Bialgebra.ofAlgHom}, consuming coassociativity and
-counitality proofs.
+the Chevalley relations (including the Serre coproduct relation, the
+hardest proof in the project, proved by Aristotle run \texttt{79e07d55}),
+and descend to the quotient via \texttt{RingQuot.liftAlgHom}. The
+\texttt{Bialgebra} instance uses \texttt{Bialgebra.ofAlgHom}, consuming
+coassociativity and counitality proofs (Aristotle run \texttt{78dcc5f4}).
 
 \subsection{Antipode}
 
@@ -222,6 +223,7 @@ requires the two antipode axioms
 $\mu \circ (S \otimes \mathrm{id}) \circ \Delta = \eta \circ \varepsilon$
 and
 $\mu \circ (\mathrm{id} \otimes S) \circ \Delta = \eta \circ \varepsilon$.
+Both are proved by Aristotle (run \texttt{78dcc5f4}).
 
 A key structural theorem: the squared antipode is conjugation by $K$,
 \begin{equation}
@@ -262,8 +264,10 @@ The modular S-matrix $S_{ij} = \sqrt{2/(k+2)}\sin(\pi(i+1)(j+1)/(k+2))$
 is defined as an explicit \texttt{Matrix (Fin n) (Fin n) $\mathbb{R}$}
 for $k=1,2$, with entries in $\mathbb{Q}(\sqrt{2})$ (no transcendental
 arithmetic required). Unitarity $SS^T = I$ and non-degeneracy
-$\det(S) \neq 0$ (the \emph{modularity condition}) are stated as
-theorems. The Verlinde formula $N_{ij}^m = \sum_l S_{il}S_{jl}S_{ml}/S_{0l}$
+$\det(S) \neq 0$ (the \emph{modularity condition}) are proved by the
+Aristotle automated prover (run \texttt{78dcc5f4}), establishing
+SU(2)$_k$ as a genuine modular tensor category.
+The Verlinde formula $N_{ij}^m = \sum_l S_{il}S_{jl}S_{ml}/S_{0l}$
 independently reproduces all fusion coefficients --- verified numerically
 for all $8 + 27 + 64 = 99$ entries at $k=1,2,3$.
 
@@ -312,12 +316,20 @@ Bott periodicity) yields Rokhlin's~16.
 \section{Conclusions}
 
 We have presented the first quantum group in any proof assistant ---
-$U_q(\mathfrak{sl}_2)$ with \texttt{HopfAlgebra} instance ---
+$U_q(\mathfrak{sl}_2)$ with \texttt{HopfAlgebra} instance (66~theorems,
+zero sorry, Aristotle runs \texttt{78dcc5f4} and \texttt{79e07d55}) ---
 together with the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$,
-the first SU(2)$_k$ fusion computation from a quantum group,
+the first restricted quantum group $\bar{u}_q(\mathfrak{sl}_2)$,
+the first SU(2)$_k$ fusion computation from a quantum group (29~theorems
+by \texttt{native\_decide}), the first S-matrix unitarity and modularity
+proofs (16~theorems, Aristotle \texttt{78dcc5f4}),
 the first ribbon/MTC definitions, and the first formal decomposition
 of the algebraic/topological content of Rokhlin's theorem. All with
 zero axioms.
+
+The broader project comprises 1179~theorems across 79~Lean~4 modules,
+with 307 filled by the Aristotle automated prover (304 machine-proved,
+3 manual) across 35+ runs.
 
 The construction chain --- from the Onsager algebra through $q$-deformation,
 quantum groups, restricted quotients, fusion categories, and modular

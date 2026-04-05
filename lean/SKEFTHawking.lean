@@ -73,6 +73,14 @@ import SKEFTHawking.E8Lattice
 import SKEFTHawking.VerifiedJackknife
 import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.SpinBordism
+import SKEFTHawking.TetradGapEquation
+import SKEFTHawking.QSqrt2
+import SKEFTHawking.QSqrt5
+import SKEFTHawking.SU2kMTC
+import SKEFTHawking.FibonacciMTC
+import SKEFTHawking.Uqsl2AffineHopf
+import SKEFTHawking.VerifiedStatistics
+import SKEFTHawking.KerrSchild
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

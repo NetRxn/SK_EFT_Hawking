@@ -57,7 +57,7 @@ structure SpinBordismData where
 
 /-! ## 2. Rokhlin's theorem from bordism -/
 
-/--
+/-
 **Rokhlin's theorem (conditional on spin bordism data):**
 For any element M of Ω^Spin_4, 16 | σ(M).
 
@@ -65,15 +65,24 @@ Proof: M = isoZ.symm(isoZ(M)) = isoZ.symm(n) for some n : Z.
 Since isoZ is a group isomorphism, isoZ.symm(n) = n • isoZ.symm(1).
 So σ(M) = σ(n • isoZ.symm(1)) = n • σ(isoZ.symm(1)) = n • (-16) = -16n.
 Therefore 16 | σ(M).
-
-PROVIDED SOLUTION
-M = isoZ.symm(isoZ(M)). Set n = isoZ(M). Then isoZ.symm(n) = n smul isoZ.symm(1).
-sigma(M) = sigma(n smul generator) = n * sigma(generator) = n * (-16) = -16n.
-16 divides -16n. Use map_zsmul for the group hom property.
 -/
 theorem rokhlin_from_bordism (D : SpinBordismData) :
     ∀ M : D.Bordism, 16 ∣ D.signature M := by
-  sorry
+  intro M;
+  cases' D with B hB;
+  rename_i h₁ h₂ h₃;
+  have h_iso : ∀ x : B, h₂ x = h₂ (h₁.symm 1) * h₁ x := by
+    intro x
+    have h_iso : ∀ n : ℤ, h₂ (h₁.symm n) = n * h₂ (h₁.symm 1) := by
+      intro n
+      induction' n using Int.induction_on with n ih;
+      · simp +decide [ h₁.symm_apply_eq ];
+      · grind;
+      · rename_i n hn;
+        have := h₂.map_add ( h₁.symm ( -n - 1 ) ) ( h₁.symm 1 ) ; simp_all +decide [ sub_eq_add_neg, add_mul ];
+        ring;
+    simpa [ mul_comm ] using h_iso ( h₁ x );
+  grind +extAll
 
 /-- Rokhlin gives exactly divisibility by 16 — the bound is tight (K3 has σ = -16).
 

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-04T05:27:19.460837+00:00",
+  "timestamp": "2026-04-05T19:52:07.741477+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -120,10 +120,52 @@
       "severity": "warning",
       "check": "color_palette",
       "message": "Color #666666 not in COLORS dict"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title '' missing expected 'anyon'"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "error",
+      "check": "nan_data",
+      "message": "Trace 2 has NaN in x"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "error",
+      "check": "nan_data",
+      "message": "Trace 2 has NaN in y"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "error",
+      "check": "nan_data",
+      "message": "Trace 3 has NaN in x"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "error",
+      "check": "nan_data",
+      "message": "Trace 3 has NaN in y"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "error",
+      "check": "nan_data",
+      "message": "Trace 4 has NaN in x"
+    },
+    {
+      "figure": "fig74_drinfeld_equivalence_structure",
+      "severity": "error",
+      "check": "nan_data",
+      "message": "Trace 4 has NaN in y"
     }
   ],
   "summary": {
-    "errors": 0,
-    "warnings": 20
+    "errors": 6,
+    "warnings": 21
   }
 }

@@ -144,19 +144,26 @@ private theorem uq_E_mul_Kinv :
   · simp +decide [ ← mul_assoc, uq_Kinv_mul_K ];
   · simp +decide [ mul_assoc, mul_left_comm, Algebra.commutes ]
 
--- K*F*E*Kinv - E*Kinv*K*F = F*E - E*F (used by antipodeFreeAlg_Serre)
-/--
-PROVIDED SOLUTION
-Rewrite uq_E_mul_Kinv: E*Kinv = q^2*Kinv*E. Rewrite uq_KF_Kinv: K*F*Kinv = q^{-2}*F.
-Then K*F*E*Kinv = K*F*(q^2*Kinv*E) = q^2*(K*F*Kinv)*E = q^2*q^{-2}*F*E = F*E.
-And E*Kinv*K*F = q^2*Kinv*E*K*F. Use uq_KE: E*K = q^{-2}*K*E...
-Actually simpler: expand both using the commutation relations and show
-q^2*q^{-2} = 1 via uq_T2_Tneg2. Use mul_assoc extensively.
+/-
+K*F*E*Kinv - E*Kinv*K*F = F*E - E*F (used by antipodeFreeAlg_Serre)
 -/
 private theorem uq_KFEK_sub :
     uqK k * uqF k * (uqE k * uqKinv k) - uqE k * uqKinv k * (uqK k * uqF k) =
     uqF k * uqE k - uqE k * uqF k := by
-  sorry
+  have h1 : uqK k * uqF k * (uqE k * uqKinv k) = uqF k * uqE k := by
+    have h1 : uqK k * uqF k * uqE k * uqKinv k = (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T 2)) * (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T (-2))) * uqF k * uqE k := by
+      have h1 : uqK k * uqF k * uqE k = (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T (-2))) * uqF k * uqK k * uqE k := by
+        rw [ ← uq_KF ] ;
+      have h2 : uqK k * uqE k = (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T 2)) * uqE k * uqK k := by
+        grind +suggestions;
+      simp_all +decide [ mul_assoc, mul_comm, mul_left_comm ];
+      rw [ show uqK k * uqKinv k = 1 from uq_K_mul_Kinv k ] ; ring;
+      nontriviality;
+      simp +decide [ mul_assoc, mul_comm, mul_left_comm, Algebra.algebraMap_eq_smul_one ];
+      rw [ SMulCommClass.smul_comm ];
+    rw [ ← mul_assoc, h1, uq_T2_Tneg2, one_mul ];
+  simp_all +decide [ mul_assoc ];
+  simp_all +decide [ ← mul_assoc, uq_Kinv_mul_K ]
 
 /-
 Derived relation: F*K = q⁻²*K*F ... wait no, KF = q⁻²FK means F*K = algebraMap(T 2)*K*F
@@ -252,35 +259,52 @@ private theorem algMap_mul_tmul_right (r : LaurentPolynomial k) (a b : Uqsl2 k) 
   rw [← Algebra.smul_def, ← Algebra.smul_def]
   rw [TensorProduct.smul_tmul, TensorProduct.tmul_smul]
 
-/--
-PROVIDED SOLUTION
-Strategy: expand both sides using map_mul, map_add, comulFreeAlg_sub, then
-reduce to tensor product arithmetic using the proved generator formulas.
-
-LHS = comulFreeAlg(scal(T1-T(-1)) * (EF - FE))
-    = comulFreeAlg(scal(T1-T(-1))) * comulFreeAlg(EF - FE)
-    = algebraMap(T1-T(-1)) * (comulFreeAlg(EF) + algebraMap(-1)*comulFreeAlg(FE))
-
-comulFreeAlg(EF) = comulFreeAlg(E)*comulFreeAlg(F)
-  = (E⊗K + 1⊗E)(F⊗1 + Kinv⊗F)
-  = EF⊗K + E*Kinv⊗KF + F⊗E + Kinv⊗EF
-
-comulFreeAlg(FE) = comulFreeAlg(F)*comulFreeAlg(E)
-  = (F⊗1 + Kinv⊗F)(E⊗K + 1⊗E)
-  = FE⊗K + F⊗E + Kinv*E⊗FK + Kinv⊗FE
-
-RHS = comulFreeAlg(K - Kinv)
-    = K⊗K + algebraMap(-1)*(Kinv⊗Kinv)
-    = K⊗K - Kinv⊗Kinv (using comulFreeAlg_sub)
-
-After expansion, use uq_serre to replace (T1-T(-1))*(EF-FE) with K-Kinv
-in each tensor factor, and comulFreeAlg_Serre_cross_terms for the cross terms.
-Use algMap_mul_tmul and algMap_mul_tmul_right for scalar factoring.
+/-
+Step 1: Expand EF - FE in the tensor product.
 -/
+private theorem comulFreeAlg_EF_sub_FE :
+    comulFreeAlg k (gen k Uqsl2Gen.E * gen k Uqsl2Gen.F) -
+    comulFreeAlg k (gen k Uqsl2Gen.F * gen k Uqsl2Gen.E) =
+    (uqE k * uqF k - uqF k * uqE k) ⊗ₜ[LaurentPolynomial k] uqK k +
+    uqKinv k ⊗ₜ[LaurentPolynomial k] (uqE k * uqF k - uqF k * uqE k) := by
+  rw [ sub_eq_iff_eq_add ];
+  simp +decide [ comulFreeAlg_ι, comulOnGen ];
+  simp +decide [ add_mul, mul_add, mul_assoc, add_assoc, sub_eq_add_neg ];
+  rw [ show ( uqE k * uqKinv k ) ⊗ₜ[k[T;T⁻¹]] ( uqK k * uqF k ) = ( uqKinv k * uqE k ) ⊗ₜ[k[T;T⁻¹]] ( uqF k * uqK k ) from ?_ ] ; abel_nf;
+  · simp +decide [ add_comm, add_left_comm, add_assoc, TensorProduct.add_tmul, TensorProduct.tmul_add ];
+    simp +decide [ ← add_assoc, ← TensorProduct.tmul_add, ← TensorProduct.add_tmul ];
+  · convert comulFreeAlg_Serre_cross_terms k using 1
+
+/-
+Step 2: Distribute algebraMap(T1-T(-1)) and apply uq_serre.
+-/
+private theorem comulFreeAlg_Serre_apply_serre :
+    algebraMap (LaurentPolynomial k)
+      ((Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k)) (T 1 - T (-1)) *
+    ((uqE k * uqF k - uqF k * uqE k) ⊗ₜ[LaurentPolynomial k] uqK k +
+     uqKinv k ⊗ₜ[LaurentPolynomial k] (uqE k * uqF k - uqF k * uqE k)) =
+    uqK k ⊗ₜ[LaurentPolynomial k] uqK k -
+    uqKinv k ⊗ₜ[LaurentPolynomial k] uqKinv k := by
+  have h_dist : algebraMap (LaurentPolynomial k) ((Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k)) (T 1 - T (-1)) * ((uqE k * uqF k - uqF k * uqE k) ⊗ₜ[LaurentPolynomial k] uqK k) = (uqK k - uqKinv k) ⊗ₜ[LaurentPolynomial k] uqK k := by
+    rw [ ← uq_serre ];
+    exact?;
+  have h_dist2 : algebraMap (LaurentPolynomial k) ((Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k)) (T 1 - T (-1)) * (uqKinv k ⊗ₜ[LaurentPolynomial k] (uqE k * uqF k - uqF k * uqE k)) = uqKinv k ⊗ₜ[LaurentPolynomial k] (uqK k - uqKinv k) := by
+    rw [ ← uq_serre ];
+    exact?;
+  simp_all +decide [ mul_add, add_mul, sub_eq_add_neg, TensorProduct.tmul_add, TensorProduct.add_tmul, TensorProduct.tmul_sub, TensorProduct.sub_tmul ];
+  convert congr_arg₂ ( · + · ) ( TensorProduct.sub_tmul ( uqK k ) ( uqKinv k ) ( uqK k ) ) ( TensorProduct.tmul_sub ( uqKinv k ) ( uqK k ) ( uqKinv k ) ) using 1 ; abel_nf
+
 private theorem comulFreeAlg_Serre :
     comulFreeAlg k (scal' k (T 1 - T (-1)) * (gen k Uqsl2Gen.E * gen k Uqsl2Gen.F - gen k Uqsl2Gen.F * gen k Uqsl2Gen.E)) =
     comulFreeAlg k (gen k Uqsl2Gen.K - gen k Uqsl2Gen.Kinv) := by
-  sorry
+  convert comulFreeAlg_Serre_apply_serre k using 1;
+  · rw [ ← comulFreeAlg_EF_sub_FE ];
+    rw [ map_mul ];
+    rw [ map_sub ];
+    congr! 2;
+    convert ( comulFreeAlg k ).commutes _;
+  · erw [ map_sub ];
+    exact congr_arg₂ _ ( comulFreeAlg_ι k _ ) ( comulFreeAlg_ι k _ )
 
 private theorem comulFreeAlg_respects_rel :
     ∀ ⦃x y : FreeAlgebra (LaurentPolynomial k) Uqsl2Gen⦄,
@@ -602,22 +626,8 @@ theorem antipode_Kinv : antipodeUq k (uqKinv k) = uqK k := by
 
 /-! ## 6. Coalgebra axioms -/
 
-/--
+/-
 Coassociativity: (Delta tensor id) composed with Delta = (id tensor Delta) composed with Delta.
-
-PROVIDED SOLUTION
-Both sides are algebra homomorphisms from Uqsl2 k to (Uqsl2 k) ⊗ (Uqsl2 k) ⊗ (Uqsl2 k).
-Two AlgHoms from a RingQuot are equal iff they agree on the image of the quotient map.
-Use RingQuot.liftAlgHom_unique or ext + the universal property.
-Suffices to check on the four generators E, F, K, Kinv.
-For K: both sides give K⊗K⊗K (grouplike, Δ(K)=K⊗K). Use comul_K.
-For Kinv: similarly Kinv⊗Kinv⊗Kinv.
-For E: LHS = (Δ⊗id)(E⊗K + 1⊗E) = Δ(E)⊗K + Δ(1)⊗E = (E⊗K+1⊗E)⊗K + 1⊗1⊗E.
-  RHS = (id⊗Δ)(E⊗K + 1⊗E) = E⊗Δ(K) + 1⊗Δ(E) = E⊗K⊗K + 1⊗(E⊗K+1⊗E).
-  After reassociation via the associator, both equal E⊗K⊗K + 1⊗E⊗K + 1⊗1⊗E.
-For F: analogous computation.
-Key tactic chain: apply AlgHom.ext, use Quot.ind to reduce to FreeAlgebra,
-then use FreeAlgebra.induction to reduce to generators, verify each case.
 -/
 theorem comul_coassoc :
     (Algebra.TensorProduct.assoc (LaurentPolynomial k) (LaurentPolynomial k)
@@ -626,33 +636,74 @@ theorem comul_coassoc :
         (comulUq k)) =
     (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2 k)) (comulUq k)).comp
       (comulUq k) := by
-  sorry
+  ext x;
+  rcases x with ( _ | _ | _ | _ );
+  · simp +decide [ comul_E ];
+    erw [ comul_E ];
+    simp +decide [ comul_E, comul_K ];
+    simp +decide [ add_mul, mul_add, TensorProduct.tmul_add, TensorProduct.add_tmul ];
+    erw [ Algebra.TensorProduct.assoc_tmul ] ; simp +decide [ add_assoc ];
+  · simp +decide [ Algebra.TensorProduct.assoc, Algebra.TensorProduct.map ];
+    erw [ comul_F ];
+    simp +decide [ AlgebraTensorModule.map_tmul, AlgebraTensorModule.assoc_tmul ];
+    erw [ comul_F, comul_Kinv ];
+    simp +decide [ AlgebraTensorModule.assoc_tmul, TensorProduct.tmul_add, TensorProduct.add_tmul ];
+    rw [ add_assoc ];
+    congr;
+  · simp +decide [ comul_K ];
+    erw [ comul_K ];
+    simp +decide [ Algebra.TensorProduct.map_tmul, comul_K ];
+  · simp +decide [ comul_Kinv ];
+    erw [ show ( comulUq k ) ( RingQuot.mkAlgHom _ _ ( FreeAlgebra.ι _ _ ) ) = uqKinv k ⊗ₜ uqKinv k from ?_ ];
+    · simp +decide [ Algebra.TensorProduct.map_tmul, comul_Kinv ];
+    · convert comul_Kinv k using 1
 
-/--
+/-
 Right counitality: (epsilon tensor id) composed with Delta = lid isomorphism.
-
-PROVIDED SOLUTION
-Check on generators: (epsilon tensor id)(Delta(E)) = epsilon(E) tensor K + epsilon(1) tensor E
-= 0 tensor K + 1 tensor E = 1 tensor E. The lid sends 1 tensor E to E.
 -/
 theorem comul_rTensor_counit :
     (Algebra.TensorProduct.map (counitUq k) (.id (LaurentPolynomial k) (Uqsl2 k))).comp
       (comulUq k) =
     (Algebra.TensorProduct.lid (LaurentPolynomial k) (Uqsl2 k)).symm := by
-  sorry
+  ext x;
+  cases x;
+  · simp +decide [ Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.lid ];
+    erw [ comul_E ] ; simp +decide [ Algebra.TensorProduct.map_tmul ];
+    erw [ counit_E ] ; simp +decide [ Algebra.TensorProduct.algEquivOfLinearEquivTensorProduct ];
+    rfl;
+  · simp +zetaDelta at *;
+    erw [ comul_F ];
+    simp +decide [ counit_F, counit_Kinv ];
+    rfl;
+  · convert congr_arg ( fun x : ( Uqsl2 k ) ⊗[LaurentPolynomial k] ( Uqsl2 k ) => ( Algebra.TensorProduct.map ( counitUq k ) ( AlgHom.id k[T;T⁻¹] ( Uqsl2 k ) ) ) x ) ( comul_K k ) using 1;
+    simp +decide [ Algebra.TensorProduct.map_tmul, counit_K ];
+    rfl;
+  · convert congr_arg ( Algebra.TensorProduct.map ( counitUq k ) ( AlgHom.id k[T;T⁻¹] ( Uqsl2 k ) ) ) ( comul_Kinv k ) using 1;
+    simp +decide [ Algebra.TensorProduct.map_tmul, counit_Kinv ];
+    rfl
 
-/--
+/-
 Left counitality: (id tensor epsilon) composed with Delta = rid isomorphism.
-
-PROVIDED SOLUTION
-Check on generators: (id tensor epsilon)(Delta(E)) = E tensor epsilon(K) + 1 tensor epsilon(E)
-= E tensor 1 + 1 tensor 0 = E tensor 1. The rid sends E tensor 1 to E.
 -/
 theorem comul_lTensor_counit :
     (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2 k)) (counitUq k)).comp
       (comulUq k) =
     (Algebra.TensorProduct.rid (LaurentPolynomial k) (LaurentPolynomial k) (Uqsl2 k)).symm := by
-  sorry
+  ext x;
+  cases x <;> simp +decide [ * ];
+  · erw [ comul_E ];
+    simp +decide [ counit_K, counit_E ];
+    rfl;
+  · convert congr_arg ( Algebra.TensorProduct.map ( AlgHom.id _ _ ) ( counitUq k ) ) ( comul_F k ) using 1;
+    simp +decide [ Algebra.TensorProduct.map_tmul ];
+    rw [ counit_F ] ; aesop;
+  · convert congr_arg ( Algebra.TensorProduct.map ( AlgHom.id _ _ ) ( counitUq k ) ) ( comul_K k ) using 1;
+    simp +decide [ uqK ];
+    congr! 1;
+    exact Eq.symm ( counit_K k );
+  · erw [ comul_Kinv ];
+    erw [ Algebra.TensorProduct.map_tmul ] ; simp +decide [ * ];
+    exact congr_arg₂ _ rfl ( counit_Kinv k )
 
 /-! ## 7. Bialgebra instance -/
 
@@ -663,41 +714,251 @@ noncomputable instance : Bialgebra (LaurentPolynomial k) (Uqsl2 k) :=
 
 /-! ## 8. HopfAlgebra instance -/
 
-/--
-Right antipode axiom: m composed with (S tensor id) composed with Delta = eta composed with epsilon.
-
-PROVIDED SOLUTION
-Check on generators. For E:
-  (S tensor id)(Delta(E)) = S(E) tensor K + S(1) tensor E = -E*Kinv tensor K + 1 tensor E
-  m(-E*Kinv tensor K + 1 tensor E) = -E*Kinv*K + E = -E + E = 0
-  eta(epsilon(E)) = eta(0) = 0. Check.
-For K:
-  (S tensor id)(Delta(K)) = S(K) tensor K = Kinv tensor K
-  m(Kinv tensor K) = Kinv*K = 1
-  eta(epsilon(K)) = eta(1) = 1. Check.
+/-
+Helper: the convolution mul' ∘ rTensor(S) maps scalars to scalars
 -/
+private theorem antipodeUq_one :
+    antipodeUq k 1 = 1 := by
+  simp +decide [ antipodeUq, antipodeOpAlg ]
+
+/-
+Helper: rTensor(S) applied to Comul respects scalars
+-/
+private theorem convR_algebraMap (r : LaurentPolynomial k) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (algebraMap (LaurentPolynomial k) (Uqsl2 k) r))) =
+    algebraMap (LaurentPolynomial k) (Uqsl2 k) r := by
+  unfold antipodeUq;
+  simp +decide [ antipodeOpAlg ]
+
+/-
+Helper: convolution for E
+-/
+private theorem convR_E :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqE k))) = 0 := by
+  have h1 : (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k)) ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqE k))) = -(uqE k * uqKinv k * uqK k) + uqE k := by
+    convert congr_arg ( fun x : ( Uqsl2 k ) ⊗[LaurentPolynomial k] ( Uqsl2 k ) => ( LinearMap.mul' k[T;T⁻¹] ( Uqsl2 k ) ) x ) ( LinearMap.map_add ( LinearMap.rTensor ( Uqsl2 k ) ( antipodeUq k ) ) ( uqE k ⊗ₜ[LaurentPolynomial k] uqK k ) ( 1 ⊗ₜ[LaurentPolynomial k] uqE k ) ) using 1;
+    · rw [ comul_E ];
+    · simp +decide [ LinearMap.rTensor_tmul, LinearMap.mul'_apply ];
+      rw [ antipode_E, antipodeUq_one ];
+      grind +revert;
+  have h2 : uqKinv k * uqK k = 1 := by
+    exact?;
+  grind +qlia
+
+/-
+Helper: convolution for F
+-/
+private theorem convR_F :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqF k))) = 0 := by
+  rw [ comul_F ];
+  erw [ LinearMap.map_add ] ; simp +decide [ LinearMap.mul' ] ;
+  rw [ antipode_F, antipode_Kinv ] ; abel1
+
+/-
+Helper: convolution for K
+-/
+private theorem convR_K :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqK k))) = 1 := by
+  convert uq_Kinv_mul_K k;
+  rw [ comul_K ];
+  simp +decide [ antipode_K ]
+
+/-
+Helper: convolution for Kinv
+-/
+private theorem convR_Kinv :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqKinv k))) = 1 := by
+  by_contra h_contra;
+  convert SKEFTHawking.antipodeUq_one k using 1;
+  constructor <;> intro h <;> simp_all +decide [ comul_Kinv, antipode_Kinv, uq_K_mul_Kinv ]
+
+/-
+Key helper: if mul'(rTensor(S)(x)) = algebraMap(r), then
+mul'(rTensor(S)(x * y)) = algebraMap(r) * mul'(rTensor(S)(y))
+for any y in the tensor product.
+-/
+private theorem convR_mul_step
+    (x y : (Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k))
+    (r : LaurentPolynomial k)
+    (hx : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+            ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) x) =
+          algebraMap (LaurentPolynomial k) (Uqsl2 k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) (x * y)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2 k) r *
+      (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+        ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) y) := by
+  revert hx;
+  induction' y using TensorProduct.induction_on with c d;
+  · simp +decide;
+  · intro hx
+    have h_sum : ∃ (s : Finset (Uqsl2 k × Uqsl2 k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 := by
+      exact?;
+    obtain ⟨ s, rfl ⟩ := h_sum; simp +decide [ hx, mul_assoc, Finset.sum_mul _ _ _ ] ;
+    have h_antipode_mul : ∀ a b : Uqsl2 k, antipodeUq k (a * b) = (antipodeUq k b) * (antipodeUq k a) := by
+      intro a b
+      simp [antipodeUq];
+    simp_all +decide [ ← mul_assoc, ← Finset.sum_mul _ _ _ ];
+    simp +decide only [← Finset.mul_sum _ _ _, mul_assoc];
+    rw [ hx ];
+    simp +decide [ mul_assoc, Algebra.commutes ];
+  · simp_all +decide [ mul_add, add_mul ]
+
+/-
+Helper: convolution for lTensor(S) for generators
+-/
+private theorem convL_E :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqE k))) = 0 := by
+  simp +decide [ comul_E, antipode_E, antipode_K, LinearMap.lTensor ];
+  grobner
+
+private theorem convL_F :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqF k))) = 0 := by
+  have h_convL_F : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+    ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+      ((comulUq k) (uqF k))) = uqF k * 1 - uqKinv k * uqK k * uqF k := by
+        have h_convL_F : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+          ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+            ((comulUq k) (uqF k))) = uqF k * 1 + uqKinv k * (-uqK k * uqF k) := by
+              rw [ SKEFTHawking.comul_F ];
+              simp +decide [ LinearMap.lTensor, LinearMap.mul' ];
+              rw [ SKEFTHawking.antipodeUq_one, SKEFTHawking.antipode_F ] ; norm_num;
+              grobner;
+        grind;
+  rw [ h_convL_F, uq_Kinv_mul_K ] ; norm_num;
+  grind +qlia
+
+private theorem convL_K :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqK k))) = 1 := by
+  rw [ comul_K, LinearMap.lTensor_tmul ];
+  convert uq_K_mul_Kinv k using 1;
+  simp [antipode_K]
+
+private theorem convL_Kinv :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (uqKinv k))) = 1 := by
+  convert convL_K k using 1;
+  simp +decide [ comul_Kinv, comul_K ];
+  rw [ antipode_Kinv, antipode_K ];
+  rw [ uq_Kinv_mul_K, uq_K_mul_Kinv ]
+
+private theorem convL_algebraMap (r : LaurentPolynomial k) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k))
+        ((comulUq k) (algebraMap (LaurentPolynomial k) (Uqsl2 k) r))) =
+    algebraMap (LaurentPolynomial k) (Uqsl2 k) r := by
+  simp +decide [ RingQuot.liftAlgHom ];
+  rw [ antipodeUq_one, mul_one ]
+
+/-
+NOTE: for lTensor, the correct factoring is on y (not x):
+if ψ_L(y) = algebraMap(r), then ψ_L(x*y) = ψ_L(x) * algebraMap(r)
+This is because for elementary tensors (a⊗b)*(c⊗d) = ac⊗bd,
+lTensor(S)(ac⊗bd) = ac⊗S(d)S(b), mul' gives a*c*S(d)*S(b).
+If c*S(d) = algebraMap(r), then a*algebraMap(r)*S(b) = algebraMap(r)*a*S(b).
+-/
+private theorem convL_mul_step
+    (x y : (Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k))
+    (r : LaurentPolynomial k)
+    (hy : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+            ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) y) =
+          algebraMap (LaurentPolynomial k) (Uqsl2 k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) (x * y)) =
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k))
+      ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) x) *
+    algebraMap (LaurentPolynomial k) (Uqsl2 k) r := by
+  induction' x using TensorProduct.induction_on with a b ihx ihy;
+  · simp +decide;
+  · have h_eval : ∀ (x : Uqsl2 k ⊗[LaurentPolynomial k] Uqsl2 k), (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k)) ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) (a ⊗ₜ[LaurentPolynomial k] b * x)) = a * (LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k)) ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) x) * antipodeUq k b := by
+      intro x; induction' x using TensorProduct.induction_on with c d ihx ihy; aesop;
+      · have h_antipode : antipodeUq k (b * d) = antipodeUq k d * antipodeUq k b := by
+          have h_antipode : ∀ (x y : Uqsl2 k), antipodeUq k (x * y) = antipodeUq k y * antipodeUq k x := by
+            intro x y
+            have h_antipode_def : antipodeUq k = (MulOpposite.opLinearEquiv (LaurentPolynomial k)).symm.toLinearMap.comp (antipodeOpAlg k).toLinearMap := by
+              grind +locals
+            simp +decide [ h_antipode_def, antipodeOpAlg ];
+          exact h_antipode b d;
+        simp +decide [ h_antipode, mul_assoc ];
+      · simp_all +decide [ mul_add, add_mul ];
+    rw [ h_eval, hy ];
+    simp +decide [ mul_assoc, mul_comm, mul_left_comm, Algebra.commutes ];
+  · simp_all +decide [ add_mul, mul_add ]
+
 theorem antipode_right :
     LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k) ∘ₗ
       (antipodeUq k).rTensor (Uqsl2 k) ∘ₗ
       Coalgebra.comul =
     (Algebra.linearMap (LaurentPolynomial k) (Uqsl2 k)) ∘ₗ Coalgebra.counit := by
-  sorry
+  ext x;
+  obtain ⟨ x, rfl ⟩ := RingQuot.mkAlgHom_surjective ( LaurentPolynomial k ) ( ChevalleyRel k ) x;
+  induction' x using FreeAlgebra.induction with r x y hx hy;
+  · convert convR_algebraMap k r using 1;
+    · simp +decide [ comulUq ];
+    · simp +decide [ uqsl2Mk ];
+  · cases x <;> simp +decide [ * ];
+    · convert convR_E k using 1;
+      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_E k ) using 1;
+    · convert convR_F k using 1;
+      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_F k ) using 1;
+    · convert convR_K k using 1;
+      erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.K ) = uqK k from rfl ] ; exact congr_arg _ ( counit_K k );
+    · convert convR_Kinv k using 1;
+      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_Kinv k ) using 1;
+  · simp_all +decide [ mul_assoc, CoalgebraStruct.comul ];
+    convert convR_mul_step k _ _ _ hy using 1;
+    aesop;
+  · aesop
 
-/--
-Left antipode axiom: m composed with (id tensor S) composed with Delta = eta composed with epsilon.
-
-PROVIDED SOLUTION
-Check on generators. For E:
-  (id tensor S)(Delta(E)) = E tensor S(K) + 1 tensor S(E) = E tensor Kinv + 1 tensor (-E*Kinv)
-  m(E tensor Kinv - 1 tensor E*Kinv) = E*Kinv - E*Kinv = 0
-  eta(epsilon(E)) = 0. Check.
--/
 theorem antipode_left :
     LinearMap.mul' (LaurentPolynomial k) (Uqsl2 k) ∘ₗ
       (antipodeUq k).lTensor (Uqsl2 k) ∘ₗ
       Coalgebra.comul =
     (Algebra.linearMap (LaurentPolynomial k) (Uqsl2 k)) ∘ₗ Coalgebra.counit := by
-  sorry
+  ext x;
+  obtain ⟨ x, rfl ⟩ := RingQuot.mkAlgHom_surjective ( LaurentPolynomial k ) ( ChevalleyRel k ) x;
+  induction' x using FreeAlgebra.induction with r x y hx hy;
+  · convert convL_algebraMap k r using 1;
+    · simp +decide [ comulUq ];
+    · convert counitFreeAlg_respects_rel k _;
+      rotate_left;
+      exact FreeAlgebra.ι _ Uqsl2Gen.K * FreeAlgebra.ι _ Uqsl2Gen.Kinv;
+      exact 1;
+      · exact ChevalleyRel.KKinv;
+      · simp +decide [ counitFreeAlg ];
+        exact one_mul _;
+  · rcases x with ( _ | _ | _ | _ ) <;> simp +decide [ * ];
+    · convert convL_E k;
+      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_E k ) using 1;
+    · convert convL_F k using 1;
+      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_F k ) using 1;
+    · convert convL_K k using 1;
+      erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.K ) = uqK k from rfl ] ; exact congr_arg _ ( counit_K k );
+    · convert convL_Kinv k using 1;
+      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_Kinv k ) using 1;
+  · -- mul case: use convL_mul_step
+    simp_all +decide [ ← LinearMap.comp_assoc, ← RingHom.comp_apply ];
+    convert convL_mul_step k _ _ _ _ using 1;
+    rw [ hy ];
+    grind
+  · aesop
 
 /-- **HopfAlgebra instance for U_q(sl_2).** -/
 noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl2 k) where
@@ -707,21 +968,72 @@ noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl2 k) where
 
 /-! ## 9. Structural theorems -/
 
-/--
+/-
 S squared = Ad(K): the squared antipode is conjugation by K.
 
 Verified on generators:
   S^2(E) = S(-E*Kinv) = -S(Kinv)*S(E) = -K*(-E*Kinv) = K*E*Kinv = q^2*E. Check.
   S^2(F) = S(-K*F) = -S(F)*S(K) = -(-K*F)*Kinv = K*F*Kinv = q^{-2}*F. Check.
   S^2(K) = S(Kinv) = K. Check.
-
-PROVIDED SOLUTION
-Apply the antipode definitions twice. Use the anti-homomorphism property
-S(ab) = S(b)S(a) and the Chevalley relations to simplify.
 -/
 theorem antipode_squared_is_ad_K (x : Uqsl2 k) :
     antipodeUq k (antipodeUq k x) = uqK k * x * uqKinv k := by
-  sorry
+  have h_sq_antipode_gen : ∀ x : Uqsl2Gen, (antipodeUq k) ((antipodeUq k) (uqsl2Mk k (FreeAlgebra.ι (LaurentPolynomial k) x))) = uqK k * uqsl2Mk k (FreeAlgebra.ι (LaurentPolynomial k) x) * uqKinv k := by
+    intro x
+    induction' x with x ih;
+    · erw [ show ( antipodeUq k ) ( uqE k ) = - ( uqE k * uqKinv k ) from ?_ ];
+      · erw [ show ( antipodeUq k ) ( - ( uqE k * uqKinv k ) ) = - ( antipodeUq k ) ( uqE k * uqKinv k ) from ?_ ];
+        · have h_antipode_E : (antipodeUq k) (uqE k * uqKinv k) = (antipodeUq k) (uqKinv k) * (antipodeUq k) (uqE k) := by
+            simp +decide [ antipodeUq, RingQuot.liftAlgHom ];
+          rw [ h_antipode_E, antipode_E, antipode_Kinv ];
+          simp +decide [ mul_assoc, uqsl2Mk ];
+          simp +decide [ uqE ];
+          simp +decide [ uqsl2Mk ];
+          grind;
+        · exact map_neg ( antipodeUq k ) _;
+      · exact?;
+    · convert congr_arg ( fun x => ( antipodeUq k ) x ) ( antipode_F k ) using 1;
+      rw [ show uqsl2Mk k ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.F ) = uqF k from ?_ ];
+      · simp +decide [ antipodeUq ];
+        erw [ show ( antipodeOpAlg k ) ( - ( uqK k * uqF k ) ) = MulOpposite.op ( - ( antipodeUq k ( uqK k * uqF k ) ) ) from ?_ ];
+        · simp +decide [ antipodeUq ];
+          erw [ show ( antipodeOpAlg k ) ( uqF k ) = MulOpposite.op ( - ( uqK k * uqF k ) ) from ?_, show ( antipodeOpAlg k ) ( uqK k ) = MulOpposite.op ( uqKinv k ) from ?_ ] ; simp +decide [ mul_assoc ];
+          · grind;
+          · convert antipode_K k using 1;
+            simp +decide [ antipodeUq ];
+            rw [ ← MulOpposite.unop_inj ] ; simp +decide [ MulOpposite.unop_op ];
+          · rw [ show uqF k = uqsl2Mk k ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.F ) from ?_, antipodeOpAlg ];
+            · simp +decide [ uqsl2Mk ];
+              convert antipodeFreeAlg_ι k Uqsl2Gen.F using 1;
+            · rfl;
+        · simp +decide [ antipodeOpAlg, antipodeUq ];
+          grind;
+      · rfl;
+    · simp +decide [ uqsl2Mk, antipode_K, antipode_Kinv ];
+      erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.K ) = uqK k from rfl ] ; simp +decide [ antipode_K, antipode_Kinv ];
+      rw [ mul_assoc, uq_K_mul_Kinv, mul_one ];
+    · erw [ show ( uqsl2Mk k ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.Kinv ) = uqKinv k from rfl ] ; simp +decide [ antipode_Kinv, antipode_K ] ;
+      rw [ uq_K_mul_Kinv, one_mul ];
+  obtain ⟨ y, rfl ⟩ := RingQuot.mkAlgHom_surjective ( LaurentPolynomial k ) ( ChevalleyRel k ) x;
+  induction' y using FreeAlgebra.induction with x ihx y ihy z ihz;
+  · -- Since the antipode is an algebra homomorphism, we can apply it to the algebra map.
+    have h_antipode_algMap : ∀ r : LaurentPolynomial k, antipodeUq k (algebraMap (LaurentPolynomial k) (Uqsl2 k) r) = algebraMap (LaurentPolynomial k) (Uqsl2 k) r := by
+      intro r
+      simp [antipodeUq];
+    convert h_antipode_algMap x using 1;
+    · grind +suggestions;
+    · convert congr_arg ( fun y => algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) x * y ) ( uq_K_mul_Kinv k ) using 1;
+      · simp +decide [ mul_assoc, mul_comm, mul_left_comm ];
+        rw [ ← mul_assoc, ← mul_assoc ];
+        rw [ ← Algebra.commutes ];
+      · rw [ mul_one ];
+  · exact h_sq_antipode_gen ihx;
+  · have h_antipode_mul : ∀ x y : Uqsl2 k, (antipodeUq k) (x * y) = (antipodeUq k) y * (antipodeUq k) x := by
+      simp +decide [ antipodeUq ];
+    simp_all +decide [ mul_assoc ];
+    simp +decide [ ← mul_assoc, uq_K_mul_Kinv ];
+    simp +decide [ mul_assoc, uq_Kinv_mul_K ];
+  · simp_all +decide [ mul_add, add_mul ]
 
 /-- Delta(K) = K tensor K shows K is grouplike. -/
 theorem K_grouplike : comulUq k (uqK k) = uqK k ⊗ₜ uqK k :=
@@ -735,16 +1047,33 @@ theorem Kinv_grouplike : comulUq k (uqKinv k) = uqKinv k ⊗ₜ uqKinv k :=
 theorem counit_K_mul_Kinv : counitUq k (uqK k) * counitUq k (uqKinv k) = 1 := by
   rw [counit_K, counit_Kinv, one_mul]
 
-/--
+/-
 The antipode commutes with the counit: epsilon composed with S = epsilon.
-
-PROVIDED SOLUTION
-On generators: epsilon(S(E)) = epsilon(-E*Kinv) = -epsilon(E)*epsilon(Kinv) = 0 = epsilon(E).
-epsilon(S(K)) = epsilon(Kinv) = 1 = epsilon(K). Similarly for F, Kinv.
 -/
 theorem counit_comp_antipode (x : Uqsl2 k) :
     counitUq k (antipodeUq k x) = counitUq k x := by
-  sorry
+  obtain ⟨ x, rfl ⟩ := RingQuot.mkAlgHom_surjective ( LaurentPolynomial k ) ( ChevalleyRel k ) x;
+  induction x using FreeAlgebra.induction;
+  · unfold antipodeUq; simp +decide [ antipodeUq_one ] ;
+  · rename_i x;
+    rcases x with ( _ | _ | _ | _ );
+    · erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.E ) = uqE k from rfl ];
+      rw [ antipode_E ];
+      grind +suggestions;
+    · erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.F ) = uqF k from rfl ];
+      rw [ antipode_F ];
+      grind +suggestions;
+    · convert counit_Kinv k;
+      · convert antipode_K k;
+      · convert counit_K k;
+    · erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.Kinv ) = uqKinv k from rfl ] ; simp +decide [ antipode_Kinv ];
+      rw [ counit_K, counit_Kinv ];
+  · rename_i a b ha hb;
+    have h_antipode_mul : antipodeUq k (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRel k) (a * b)) = antipodeUq k (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRel k) b) * antipodeUq k (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRel k) a) := by
+      unfold antipodeUq;
+      simp +decide [ antipodeOpAlg ];
+    simp_all +decide [ mul_comm ];
+  · aesop
 
 /-! ## 10. Module summary -/
 

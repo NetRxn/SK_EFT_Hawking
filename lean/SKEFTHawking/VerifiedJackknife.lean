@@ -103,32 +103,25 @@ noncomputable def effectiveSampleSize (n : ℕ) (x : Fin n → ℝ)
     (W : ℕ) (hW : W + 1 < n) : ℝ :=
   n / (2 * intAutocorrTime n x W hW)
 
-/--
+/-
 **For uncorrelated data (C(t) = 0 for t > 0), tau_int = 1/2.**
-
-PROVIDED SOLUTION
-If autocovariance at all lags 1..W is zero, the sum vanishes.
-tau_int = 1/2 + 0 = 1/2.
 -/
 theorem intAutocorrTime_uncorrelated (n : ℕ) (x : Fin n → ℝ)
     (W : ℕ) (hW : W + 1 < n)
     (huncorr : ∀ t : Fin W, autocovariance n x (t.val + 1) (by omega) = 0) :
     intAutocorrTime n x W hW = 1 / 2 := by
-  sorry
+  -- By definition of intAutocorrTime, we have:
+  simp [intAutocorrTime, huncorr]
 
-/--
+/-
 **For non-negatively correlated data, tau_int >= 1/2.**
-
-PROVIDED SOLUTION
-Each term C(t)/C(0) >= 0 when both C(t) >= 0 and C(0) > 0.
-The sum of non-negatives is non-negative. Adding 1/2 gives >= 1/2.
 -/
 theorem intAutocorrTime_ge_half (n : ℕ) (x : Fin n → ℝ)
     (W : ℕ) (hW : W + 1 < n)
     (hpos : ∀ t : Fin W, autocovariance n x (t.val + 1) (by omega) ≥ 0)
     (hC0 : autocovariance n x 0 (by omega) > 0) :
     intAutocorrTime n x W hW ≥ 1 / 2 := by
-  sorry
+  exact le_add_of_nonneg_right ( Finset.sum_nonneg fun t ht => div_nonneg ( hpos t ) hC0.le )
 
 /-! ## 5. Module summary -/
 

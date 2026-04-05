@@ -28,9 +28,9 @@ pure mathematics (zeta regularization $\zeta(-1) = -1/12$), the denominator
 is pure physics (SM fermion content). Without right-handed neutrinos,
 $c_- = 15/2$ is fractional --- a formally verified independent argument
 for $\nu_R$. The complete chain from modular forms to particle physics
-comprises 968~theorems across 66~Lean~4 modules (zero axioms, zero
-\texttt{sorry}); the complete derivation chain from modular forms through
-fermion counting to the generation bound is fully machine-checked. This is the first
+comprises 1179~theorems across 79~Lean~4 modules (zero axioms); the complete
+derivation chain from modular forms through fermion counting to the
+generation bound is fully machine-checked. This is the first
 formal derivation connecting number-theoretic modular invariance to a
 Standard Model constraint.
 \end{abstract}
@@ -257,7 +257,7 @@ constraint requires $N_f = \mathrm{lcm}(16,3) = 48$ --- providing formal
 evidence for right-handed neutrinos from the observed $N_f = 3$.
 \end{enumerate}
 
-The formal verification now comprises 1100+~theorems across 76~Lean~4
+The formal verification now comprises 1179~theorems across 79~Lean~4
 modules (zero axioms). Key modules for this paper:
 \texttt{SMFermionData.lean} (fermion enumeration),
 \texttt{WangBridge.lean} ($c_- = 8$ derivation),
@@ -268,10 +268,12 @@ Aristotle \texttt{b54f9611}),
 \texttt{RokhlinBridge.lean} (``16'' convergence),
 and the new \texttt{AlgebraicRokhlin.lean} (Serre's $8 \mid \sigma$ for
 even unimodular forms, zero \texttt{sorry}), \texttt{E8Lattice.lean}
-(E$_8$ is even unimodular with $\sigma = 8$, disproving the naive
-algebraic Rokhlin conjecture --- the jump from~8 to~16 requires smooth
+(E$_8$ is even unimodular with $\sigma = 8$, $\det = 1$ proved by
+\texttt{native\_decide}, Aristotle \texttt{78dcc5f4} --- disproving the naive
+algebraic Rokhlin conjecture; the jump from~8 to~16 requires smooth
 topology), and \texttt{SpinBordism.lean} (the full Wang chain conditional
-on spin bordism data).
+on spin bordism data, \texttt{rokhlin\_from\_bordism} proved by Aristotle
+\texttt{78dcc5f4}, zero \texttt{sorry}).
 
 As a further application of the same infrastructure, we define the
 Drinfeld-Jimbo quantum group $U_q(\mathfrak{sl}_2)$ as a

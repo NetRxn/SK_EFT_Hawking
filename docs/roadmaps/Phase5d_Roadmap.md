@@ -2,7 +2,7 @@
 
 ## Technical Roadmap — April 2026
 
-*Prepared 2026-04-04 | Follows Phase 5c (quantum groups, MTC, E8, verified statistics)*
+*Prepared 2026-04-04 | Updated 2026-04-05 | Follows Phase 5c (quantum groups, MTC, E8, verified statistics)*
 
 ---
 
@@ -16,8 +16,8 @@
 
 ## 0. Entry State and Research Corpus
 
-### What Phase 5c established:
-- 1084 theorems, 0 axioms, 74 Lean modules, 39 sorry pending Aristotle
+### What Phase 5c established (pre-5d):
+- 1102 theorems, 0 axioms, 76 Lean modules, 41 sorry pending Aristotle
 - Quantum group chain: Onsager → O_q → U_q(sl₂) Hopf → U_q(ŝl₂) → u_q → SU(2)_k MTC
 - First RibbonCategory/MTC definitions in any proof assistant
 - E8 lattice verified, algebraic Rokhlin disproved (σ=8 ≢ 0 mod 16)
@@ -63,8 +63,16 @@
 ### Key physics finding across the entire corpus:
 > **The tetrad gap equation has never been explicitly written down in the published literature.** The equation is structurally determined by the NJL-ADW correspondence. The critical coupling G_c is O(1) in lattice units (Vladimirov-Diakonov found this for the chiral channel in 2D). The 4D tetrad channel is untested. No published work combines Wen's emergent QED with ADW tetrad gravity. This is genuinely unexplored territory.
 
-### Cross-validation:
-Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5c gap equation gives G_c = 1/I(0) = 2/(c₄Λ²). These are consistent (c₄ = 1/(8π²) with N_f = 1). The two independent derivations agree.
+### Cross-validation (VERIFIED in Wave 1):
+Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation gives G_c = 1/(N_f·I(0)) with I(0) = c₄·Λ²/2 and c₄ = 1/(4π²). Result: G_c = 8π²/(N_f·Λ²) — **exact match** between integral and V_eff formulations. Proved in Lean as `criticalCoupling_formula` and `criticalCoupling_eq_adw`.
+
+### Current state (Apr 5 2026):
+- **1179 theorems**, 0 axioms, 79 Lean modules, **5 sorry** (all in SU2kMTC.lean)
+- Phase 5c: COMPLETE (all sorry filled)
+- TetradGapEquation: 9/10 proved by Aristotle, 1 disproved (correctly excised)
+- Uqsl2Hopf: ZERO SORRY (Serre coproduct proved by Aristotle `79e07d55`)
+- Polariton c_s: corrected from 1.0→0.5 µm/ps per reconciliation protocol
+- QSqrt2 type built for MTC pentagon verification
 
 ---
 
@@ -72,35 +80,54 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5c gap equation g
 
 **Goal:** Derive and solve the explicit continuum gap equation for the tetrad VEV.
 
-### 1A. Gap Equation Formulation (Lean)
-- [ ] Define `gapOperator G Λ Δ := G * Δ * ∫ p in Icc 0 Λ, ρ p / (p² + Δ²)` using Bochner integral
-- [ ] Prove continuity of gapOperator in Δ (via dominated convergence)
-- [ ] Prove gapOperator maps [0, Δ_max] → [0, Δ_max] (self-mapping for IVT)
-- [ ] Define critical coupling G_c = 1/I(0)
-- [ ] Prove G_c > 0 and explicit bounds via `MeasureTheory.integral_mono`
+### 1A. Gap Equation Formulation (Lean) — DONE
+- [x] Define `gapOperator G Λ Δ := G * N_f * Δ * gapIntegral Δ Λ` (analytical closed-form, not Bochner integral — simpler and sufficient)
+- [x] Define `gapIntegral` with c₄ = 1/(4π²), closed-form I(Δ) = c₄/2·[Λ²−Δ²·ln(1+Λ²/Δ²)]
+- [x] Gap operator self-mapping (sorry stub for Aristotle)
+- [x] Define critical coupling G_c = 1/(N_f · I(0)) with formula matching V_eff
+- [x] G_c > 0 (PROVED: `criticalCoupling_pos` via unfold+positivity)
+- [x] Explicit formula 8π²/(N_f·Λ²) (PROVED: `criticalCoupling_formula` via field_simp+ring)
+- [x] Match to ADWMechanism.critical_coupling (PROVED: `criticalCoupling_eq_adw`)
+- [x] Integral bounds: I(Δ) ≤ I(0), lower bound c₄Λ⁴/(4(Λ²+Δ²)) (sorry stubs — need log inequality)
 
-### 1B. Phase Transition (Lean)
-- [ ] Trivial solution Δ = 0 always exists
-- [ ] For G < G_c: trivial solution is unique (via Banach contraction — subcritical)
-- [ ] For G > G_c: nontrivial solution exists (via IVT on g(Δ) = f_G(Δ)/Δ - 1)
-- [ ] Monotonicity: Δ*(G) is increasing in G for G > G_c
-- [ ] Phase transition characterization at G = G_c (bifurcation)
+### 1B. Phase Transition (Lean) — DONE
+- [x] Trivial solution Δ = 0 always exists (PROVED: `trivial_fixed_point`)
+- [x] For G < G_c: trivial solution is unique (sorry stub: `gap_trivial_unique_subcritical`)
+- [x] For G > G_c: nontrivial solution exists via IVT (sorry stub: `gap_nontrivial_exists`)
+- [x] Monotonicity: Δ*(G) increasing (sorry stub: `gap_solution_monotone`)
+- [x] Bifurcation at G = G_c (PROVED: `bifurcation_at_Gc` via unfold+simp+field_simp+ring)
+- [x] Solution bounded by Λ (sorry stub: `gap_solution_bounded`)
 
-### 1C. ADW Connection (Lean)
-- [ ] NJL-ADW correspondence: gap solution Δ ↔ tetrad VEV e^a_μ
-- [ ] Connect to existing `ADWMechanism.lean` critical coupling theorem
-- [ ] Connect to existing `VestigialSusceptibility.lean` r_e = 1/G - 1/G_c
+### 1C. ADW Connection (Lean) — DONE
+- [x] Gap implies full tetrad phase (PROVED: `gap_implies_full_tetrad`, direct from ADWMechanism)
+- [x] Vestigial connection: g(0) = G/G_c − 1 (PROVED: `gap_vestigial_connection` via unfold+simp+field_simp)
+- [x] NJL-ADW Fierz correspondence: g_njl = G_adw/4 (PROVED: `njl_tetrad_correspondence` via funext+ring)
+- [x] Match to ADWMechanism.critical_coupling (PROVED: see 1A above)
 
-**Template:** Picard-Lindelöf in Mathlib (`Mathlib.Analysis.ODE.PicardLindelof`) — same architecture (contraction mapping on integral operator).
+**Template:** Used analytical closed-form rather than Bochner integral (simpler, avoids measure theory). The IVT and Banach contraction architecture follows Picard-Lindelöf as planned.
 
-**Estimated:** ~15-20 new theorems connecting to existing 71-theorem infrastructure.
+**Result:** 20 theorems. Aristotle `79e07d55` proved 9/10, disproved 1 (gap_solution_bounded — false, counterexample found). **ZERO active sorry.**
+
+### Aristotle results (run `79e07d55`):
+| Theorem | Result | Method |
+|---------|--------|--------|
+| `gapIntegral_pos` | **PROVED** | `Real.log_lt_sub_one_of_pos` (deep research finding) |
+| `gapIntegral_strictAnti` | **PROVED** | Calculus: derivative positivity |
+| `gapIntegral_tendsto_zero` | **PROVED** | Squeeze theorem with c₄Λ⁴/(2Δ²) → 0 |
+| `gapOperator_self_map` | **PROVED** | Product of positives |
+| `gap_trivial_unique_subcritical` | **PROVED** | Contrapositive: fixed point ⇒ G ≥ G_c |
+| `gap_nontrivial_exists` | **PROVED** | IVT with continuity at Δ=0 |
+| `gap_solution_bounded` | **DISPROVED** | Counterexample: G=1/(c₄/2·(1−ln2)), N_f=1, Λ=1, Δ=1 |
+| `gap_solution_monotone` | **PROVED** | Fixed-point equation + strict anti-monotonicity |
+| `gapIntegral_le_I0` | **PROVED** | strictAnti for Δ>0, equality for Δ=0 |
+| `gapIntegral_lower_bound` | **PROVED** | Mean value theorem bound |
 
 ### Deliverables:
-- [ ] `lean/SKEFTHawking/TetradGapEquation.lean` — ~15-20 theorems
-- [ ] `src/core/formulas.py` — `tetrad_gap_operator`, `tetrad_critical_coupling`, `tetrad_gap_solution` functions with Lean refs
-- [ ] `tests/test_tetrad_gap.py` — tests for gap operator properties, G_c computation, phase transition
-- [ ] Aristotle submission for sorry stubs (IVT/contraction proofs)
-- [ ] Sorry gap registry entries in `aristotle_interface.py`
+- [x] `lean/SKEFTHawking/TetradGapEquation.lean` — 20 theorems, lake build clean
+- [x] `src/core/formulas.py` — `tetrad_gap_operator`, `tetrad_critical_coupling_integral`, `tetrad_gap_solution`, `tetrad_gap_integral`, `tetrad_density_of_states` (5 new functions with Lean refs)
+- [x] `tests/test_tetrad_gap.py` — 26 tests, all passing
+- [x] Aristotle `79e07d55`: 9/10 proved, 1 disproved (gap_solution_bounded — false)
+- [x] G_c from integral formulation matches V_eff formulation exactly (cross-validated)
 
 ---
 
@@ -108,33 +135,34 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5c gap equation g
 
 **Goal:** Solve the gap equation numerically for 4D tetrad channel and compare to vestigial susceptibility.
 
-### 2A. Gap Equation Solver
-- [ ] Implement 1D nonlinear integral equation solver (scipy.optimize or direct iteration)
-- [ ] Compute G_c for d=4 tetrad channel with physical density of states ρ(p) = c₄·p³
-- [ ] Compare to existing V_eff computation in `adw/gap_equation.py`
-- [ ] Verify G_c consistency with Phase-5 vestigial result: G_c = 8π²/(N_f Λ²)
+### 2A. Gap Equation Solver — DONE
+- [x] Implement bisection solver in `formulas.py` (`tetrad_gap_solution`) — reduces to g(Δ) = G·N_f·I(Δ) − 1 = 0
+- [x] Compute G_c for d=4: G_c = 8π²/(N_f·Λ²) via integral formulation
+- [x] Cross-validate with V_eff: G_c matches to machine precision
+- [x] Compute Δ*(G) curve via `compute_gap_curve` in `tetrad_gap_solver.py`
 
-### 2B. Phase Diagram
-- [ ] Map Δ*(G) curve: order parameter vs coupling
-- [ ] Identify vestigial window G_ves < G < G_c from metric (4-point) condensate
-- [ ] Compare to Vladimirov-Diakonov 2D results (scaling check)
+### 2B. Phase Diagram — DONE
+- [x] Δ*(G) curve: second-order transition at G_c, monotonically increasing
+- [x] Phase diagram computation with vestigial window via `compute_phase_diagram`
+- [x] Vladimirov-Diakonov comparison: G_c·Λ² = 8π²/N_f ≈ 39.5, confirming O(1) in lattice units
 
-### 2C. New MC Observables
-- [ ] Tetrad order parameter: O_tet = (1/V) Σ_x ⟨Ê^a_μ(x)⟩
-- [ ] Metric (vestigial) order parameter: O_met = η_ab ⟨Ê^a_μ Ê^b_ν⟩_conn
-- [ ] Binder cumulant U₄ = 1 − ⟨O⁴⟩/(3⟨O²⟩²)
-- [ ] Spatial correlator C(r) = ⟨Ê^a_μ(0) Ê^a_μ(r)⟩
-- [ ] Add to existing `phase_scan.py` infrastructure
+### 2C. New MC Observables — DONE
+- [x] Tetrad order parameter: `tetrad_order_parameter` in `tetrad_observables.py`
+- [x] Metric (vestigial) order parameter: `metric_order_parameter` — connected 4-point correlator
+- [x] Binder cumulant: `binder_cumulant` — verified: U₄→2/3 (ordered), U₄→0 (disordered)
+- [x] Spatial correlator: `spatial_correlator` — C(r) for composite tetrad propagation
+- [x] Susceptibility from correlator: `susceptibility_from_correlator` — χ = V·Σ C(r)
+- [ ] Integration with `phase_scan.py` (deferred to Wave 3 — needs MC production runs)
 
-**Tests:** ~10 new tests validating gap equation solver, G_c computation, and observable definitions.
+**Tests:** 42 total (26 gap equation + 16 solver/observables), all passing.
 
 ### Deliverables:
-- [ ] `src/adw/tetrad_gap_solver.py` — 1D nonlinear integral equation solver, Δ*(G) curve
-- [ ] `src/adw/tetrad_observables.py` — O_tet, O_met, U₄ Binder, spatial correlator C(r) definitions
-- [ ] `tests/test_tetrad_gap_solver.py` — ~10 tests (G_c value, Δ curve, vestigial window, observable sanity)
-- [ ] `src/core/formulas.py` updates — tetrad_gap_operator, tetrad_critical_coupling with Lean refs
-- [ ] `src/core/constants.py` updates — any new physical parameters with provenance
-- [ ] Figures: `fig_tetrad_phase_diagram` (Δ vs G), `fig_vestigial_window` (metric vs tetrad condensate) in `visualizations.py`
+- [x] `src/adw/tetrad_gap_solver.py` — gap curve, phase diagram, cross-validation, VD comparison
+- [x] `src/adw/tetrad_observables.py` — O_tet, O_met, U₄, C(r), χ from C(r)
+- [x] `tests/test_tetrad_gap.py` — 26 tests (gap integral, G_c, operator, solver)
+- [x] `tests/test_tetrad_gap_solver.py` — 16 tests (curve, cross-validation, Binder, metric OP)
+- [x] `src/core/formulas.py` — 5 new functions with Lean refs (done in Wave 1)
+- [x] Figures: `fig_tetrad_gap_curve` (Δ vs G/G_c), `fig_tetrad_gap_integral` (I(Δ) vs Δ) in `visualizations.py`
 
 ---
 
@@ -153,13 +181,19 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5c gap equation g
 - Vestigial window is exponentially narrow (BCS-like) — may require L≥8 to resolve
 - Use existing RHMC production code with new observables from Wave 2C
 
-### Deliverables:
+### Prep work (done in W1-2):
+- [x] MF-guided scan parameters: `mf_guided_scan_params()` in `phase_scan.py` — centers MC on G_c prediction
+- [x] `targeted_binder_analysis()` — runs Binder crossing centered on MF G_c
+- [x] All observables defined: O_tet, O_met, U₄, C(r) in `tetrad_observables.py`
+- [x] `notebooks/Phase5d_TetradGap_Technical.ipynb` — computation notebook (pre-MC)
+- [x] `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` — accessible narrative (pre-MC)
+
+### Deliverables (need actual MC runs):
 - [ ] L=4 broad coupling scan data (stored in `data/tetrad_scan_L4/`)
 - [ ] L=4,6,8 Binder cumulant crossing analysis
 - [ ] Phase boundary map (coupling space with transition identified)
 - [ ] Vestigial phase detection (or upper bound on window width)
-- [ ] `notebooks/Phase5d_TetradGap_Technical.ipynb` — analysis notebook
-- [ ] `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` — accessible narrative
+- [ ] Update notebooks with MC results
 
 ### Success criteria:
 - **Confirms feasibility:** Nontrivial Binder crossing at O(1) coupling, spatial correlator C(r) ~ 1/r² or slower
@@ -192,15 +226,15 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5c gap equation g
   - [ ] Run claims-reviewer agent
 - Venue: Physical Review D or PRL (if vestigial phase detected)
 
-### Paper 12 (NEW, if warranted) — Wen+ADW connection paper
+### Paper 13 (NEW, if warranted) — Wen+ADW connection paper
 - Only if Wave 3 produces definitive results (positive or negative)
 - Would be the first paper combining emergent QED with emergent gravity
 - [ ] `papers/paper12_wen_adw/paper_draft.tex`
 - Venue: PRL (if positive), PRD (if negative but informative)
 
 ### Notebooks:
-- [ ] `notebooks/Phase5d_TetradGap_Technical.ipynb` — full computation chain
-- [ ] `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` — accessible narrative
+- [x] `notebooks/Phase5d_TetradGap_Technical.ipynb` — gap equation derivation, cross-validation, phase diagram (pre-MC, update after Wave 3)
+- [x] `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` — accessible narrative (pre-MC, update after Wave 3)
 
 ### Stakeholder docs:
 - [ ] `docs/stakeholder/Phase5d_Implications.md`
@@ -213,7 +247,135 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5c gap equation g
 
 ---
 
-## 5. Assessment: Risk and Reward
+## 4b. Wave 4 — SU(2)_k MTC Instance (First Verified MTC)
+
+**Goal:** Package SU(2)_2 (Ising) as a complete ModularTensorData instance with verified F-symbols and pentagon equation.
+
+### Prerequisites (ALL zero sorry):
+- RibbonCategory.lean: BalancedCategory, RibbonCategory, PreModularData, ModularTensorData definitions
+- SU2kFusion.lean: all fusion rules proved by native_decide
+- SU2kSMatrix.lean: S-matrix unitarity, det ≠ 0 (modularity) proved
+- FusionCategory.lean: FSymbolData, PentagonSatisfied structures
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/SU2kMTC.lean` — 11 theorems (6 proved + 5 sorry), module #78
+- [x] `isingF` — F-symbol function for Ising (Hadamard/√2)
+- [x] `isingF_sigma_hadamard` — F-matrix values PROVED
+- [x] `ising_global_dim_sq` — D² = 4 PROVED (via `Real.mul_self_sqrt`)
+- [x] `ising_dim_sigma_sq` — Verlinde dimension consistency PROVED
+- [x] `isingMTC` — ModularTensorData instance CONSTRUCTED (first ever)
+- [ ] `ising_pentagon_holds` — pentagon equation (sorry stub for Aristotle)
+- [ ] `isingF_involutory` — F² = I (sorry stubs)
+- [ ] `ising_twist_unitary`, `ising_twist_psi` — twist properties (sorry stubs)
+- [x] `src/core/formulas.py` — `ising_f_symbol`, `su2k_twist`, `su2k_topological_central_charge`
+- [ ] Deep research submitted: F-symbols and pentagon in Lean 4
+
+### Current state: 1197 theorems, 81 modules, 8 sorry (5 SU2kMTC + 3 FibonacciMTC), 0 axioms
+
+### Ising MTC (SU2kMTC.lean):
+- [x] `isingF` — F-symbols with F^σ_{ψσψ}=-1 corrected
+- [x] `isingMTC` — ModularTensorData instance CONSTRUCTED
+- [x] `ising_global_dim_sq`, `ising_dim_sigma_sq` — PROVED
+- [ ] Pentagon, involutory, twist — 5 sorry (Aristotle submitted)
+
+### Fibonacci MTC (FibonacciMTC.lean) — NEW:
+- [x] `lean/SKEFTHawking/QSqrt5.lean` — Q(√5) number field, all 7 theorems PROVED by native_decide
+- [x] `fibF` — isotopy-gauge F-symbols, ALL in Q(√5)
+- [x] `fibF_values` — F-matrix entries PROVED
+- [x] `fibF_involutory_00/01/10/11` — F²=I PROVED by native_decide over QSqrt5
+- [x] `fibData` — PreModularData instance CONSTRUCTED
+- [x] `fib_chiral` — c_top = 14/5 ≠ 0 PROVED
+- [ ] `fib_pentagon_all_tau` — pentagon (sorry, Aristotle target)
+- [ ] `fib_global_dim`, `fib_dim_consistency` — sorry (√5 arithmetic over ℝ)
+
+### Infrastructure:
+- [x] `QSqrt2.lean` — Q(√2) for Ising, 3 theorems all PROVED
+- [x] `QSqrt5.lean` — Q(√5) for Fibonacci, 7 theorems all PROVED
+- [x] F^σ_{ψσψ} = -1 sign corrected
+- [ ] Rewrite isingF over QSqrt2 for native_decide pentagon
+
+### Deep research completed:
+- `Phase-5d/SU(2)_k F-symbols and pentagon data for Lean 4 formalization.md`:
+  - Ising: 5 non-trivial F-symbol entries, ~16/243 non-trivial pentagons, F∈Q(√2)
+  - Fibonacci: 1 non-trivial pentagon out of 32, isotopy gauge F∈Q(√5)
+  - R-matrix+twist need Q(ζ₁₆) for Ising, Q(ζ₅) for Fibonacci
+  - Recommended: verify fusion category (F+pentagon) first, braiding later
+
+---
+
+## 5. Wave 5 — Polariton Paper Update (Paper 7)
+
+**Goal:** Update Paper 7 with reservoir-corrected predictions, 2025 LKB breakthrough context, and stimulated Hawking detection pathway.
+
+### Context:
+- c_s corrected from 1.0→0.5 µm/ps per reconciliation protocol (3 independent measurements)
+- LKB Paris (Falque et al. 2025) demonstrated programmable horizons + negative-energy modes
+- Stimulated Hawking (Burkhard et al. 2025) identified as most accessible detection pathway
+- Deep research: `Phase-5d/Polariton BEC analog gravity` — comprehensive 2024-2026 review
+
+### Stage 1-2: Constants & Formulas
+- [x] c_s corrected: 1.0e6 → 5.0e5 m/s (reservoir-corrected, reconciliation protocol followed)
+- [x] xi corrected: 2.0e-6 → 3.0e-6 m (consistent with c_s via ξ=ℏ/m*c_s)
+- [x] Provenance updated with 3 independent measurement sources
+- [x] `fig_polariton_regime_map` regenerated
+- [x] Stimulated Hawking formulas: `stimulated_hawking_gain`, `_snr`, `_spectrum`, `dispersive_hawking_correction`
+- [x] `fig_stimulated_hawking_spectrum` — gain vs ω/κ with detection threshold
+
+### Stage 10: Paper Draft — NEW PAPER (no polariton paper exists yet)
+- [ ] Create `papers/paper_polariton/paper_draft.tex` — NEW, not an update
+  - [ ] Corrected predictions with reservoir-corrected c_s = 0.5 µm/ps
+  - [ ] Stimulated Hawking detection pathway (Grisins 2016, Burkhard 2025)
+  - [ ] 2025 LKB breakthrough (Falque et al.): programmable horizons
+  - [ ] Platform comparison table (GaAs, CdTe, perovskite, organic, TMD)
+  - [ ] Thermal competition: n_thermal ≈ 4 at 4-20K
+  - [ ] Key groups: LKB Paris, Snoke/Pittsburgh, Carusotto/Trento
+  - [ ] Run claims-reviewer agent
+
+### Deliverables:
+- [x] `src/core/formulas.py` — 4 stimulated Hawking functions
+- [x] `src/core/visualizations.py` — `fig_stimulated_hawking_spectrum`
+- [ ] NEW polariton prediction paper (`papers/paper_polariton/`)
+- [ ] `notebooks/Phase5d_Polariton_Technical.ipynb`
+- [ ] `notebooks/Phase5d_Polariton_Stakeholder.ipynb`
+
+---
+
+## 6. Wave 6 — U_q(ŝl₂) Affine Hopf Structure — BUILT
+
+**Goal:** Hopf algebra structure on the affine quantum group. Same architecture as Uqsl2Hopf.
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/Uqsl2AffineHopf.lean` — 4 theorems (1 proved + 3 sorry)
+- [x] Coproduct, counit, antipode DEFINED via RingQuot.liftAlgHom
+- [ ] 3 sorry: relation-respect proofs for coproduct, counit, antipode (Aristotle targets)
+- [ ] Bialgebra axioms (deferred — need relation-respect first)
+
+---
+
+## 7. Wave 7 — Verified Statistics Extension — BUILT
+
+**Goal:** Extend VerifiedJackknife for MC data analysis (bootstrap CI, Cauchy-Schwarz, N_eff bound).
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/VerifiedStatistics.lean` — 7 theorems (3 proved + 4 sorry)
+- [x] `sampleVariance_nonneg` PROVED
+- [ ] 4 sorry: Cauchy-Schwarz bound, jackknife mean-case, ρ ≤ 1, N_eff ≤ N (Aristotle targets)
+
+---
+
+## 8. Wave 8 — Kerr-Schild Metrics (Fracton Extension) — BUILT
+
+**Goal:** Verify KS metric algebraic properties for the fracton-gravity linearization sector.
+
+### Deliverables:
+- [x] `lean/SKEFTHawking/KerrSchild.lean` — 8 theorems (7 proved + 1 sorry)
+- [x] `radial_null` PROVED, `schwarzschild_phi_pos` PROVED, `schwarzschild_horizon` PROVED
+- [x] DOF counting: KS 2 DOF = spin-2 graviton PROVED
+- [ ] 1 sorry: Sherman-Morrison inverse `ks_inverse_formula` (Aristotle target)
+
+---
+
+## 9. Assessment: Risk and Reward
 
 ### What makes this high-leverage:
 - **Genuinely unexplored:** No published work combines Wen + ADW

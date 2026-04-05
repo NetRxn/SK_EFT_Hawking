@@ -5304,5 +5304,136 @@ def fig_e8_cartan_heatmap() -> go.Figure:
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════
+# Phase 5d: Tetrad Gap Equation Figures
+# ════════════════════════════════════════════════════════════════════
+
+
+def fig_tetrad_gap_curve() -> go.Figure:
+    """Order parameter Δ*(G) vs coupling G: the gap equation phase transition.
+
+    Shows the bifurcation at G = G_c: Δ = 0 for G < G_c, then Δ*(G) rises
+    continuously for G > G_c (second-order transition).
+    """
+    from src.core.formulas import tetrad_critical_coupling_integral, tetrad_gap_solution
+
+    Lambda = np.pi
+    N_f = 2
+    G_c = tetrad_critical_coupling_integral(Lambda, N_f)
+
+    G_ratios = np.linspace(0, 4, 400)
+    G_values = G_ratios * G_c
+    Delta_values = np.array([tetrad_gap_solution(G, Lambda, N_f) for G in G_values])
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=G_ratios, y=Delta_values / Lambda,
+        mode='lines', line=dict(color=COLORS['dispersive'], width=3),
+        name='Δ*(G) / Λ',
+    ))
+
+    # Critical coupling marker
+    fig.add_vline(x=1.0, line=dict(color=COLORS['dissipative'], width=1.5, dash='dash'))
+    fig.add_annotation(x=1.0, y=0.85, text="G = G<sub>c</sub>",
+        showarrow=False, font=dict(size=13, family=FONT['family'], color=COLORS['dissipative']))
+
+    # Phase labels
+    fig.add_annotation(x=0.4, y=0.1, text="<b>Pre-geometric</b><br>Δ = 0",
+        showarrow=False, font=dict(size=12, family=FONT['family']))
+    fig.add_annotation(x=2.5, y=0.6, text="<b>Tetrad condensed</b><br>Δ > 0",
+        showarrow=False, font=dict(size=12, family=FONT['family']))
+
+    apply_layout(fig, height=450, width=650,
+        title=dict(text="<b>Tetrad Gap Equation: Order Parameter vs Coupling</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="G / G<sub>c</sub>", range=[0, 4]),
+        yaxis=dict(title="Δ* / Λ", range=[0, 1.1]),
+        legend=dict(x=0.02, y=0.98))
+
+    fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
+        text="G<sub>c</sub> = 8π²/(N<sub>f</sub>Λ²) — first explicit tetrad gap equation (NJL-ADW correspondence)",
+        showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
+    return fig
+
+
+def fig_tetrad_gap_integral() -> go.Figure:
+    """Gap integral I(Δ) vs Δ: decreasing from I(0) = Λ²/(8π²) to 0.
+
+    Shows the monotonically decreasing gap integral that controls the
+    phase transition structure.
+    """
+    from src.core.formulas import tetrad_gap_integral as gap_integral
+
+    Lambda = np.pi
+    Delta_values = np.linspace(0, 3 * Lambda, 300)
+    I_values = np.array([gap_integral(d, Lambda) for d in Delta_values])
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=Delta_values / Lambda, y=I_values,
+        mode='lines', line=dict(color=COLORS['dispersive'], width=2.5),
+        name='I(Δ)',
+    ))
+
+    # I(0) marker
+    I0 = gap_integral(0, Lambda)
+    fig.add_hline(y=I0, line=dict(color=COLORS['dissipative'], width=1, dash='dot'))
+    fig.add_annotation(x=0.1, y=I0 * 1.1, text=f"I(0) = Λ²/(8π²) ≈ {I0:.4f}",
+        showarrow=False, font=dict(size=11, family=FONT['family']))
+
+    apply_layout(fig, height=400, width=600,
+        title=dict(text="<b>Gap Integral I(Δ): Monotonically Decreasing</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="Δ / Λ"),
+        yaxis=dict(title="I(Δ)"))
+    return fig
+
+
+def fig_stimulated_hawking_spectrum() -> go.Figure:
+    """Stimulated Hawking gain G(ω) vs frequency: amplification peaks at low ω.
+
+    Shows the exponential suppression G(ω) = 1/(exp(2πω/κ) - 1) with
+    annotations for the optimal probe window and 5σ detection threshold.
+    """
+    from src.core.formulas import stimulated_hawking_spectrum
+    from src.core.constants import POLARITON_PLATFORMS
+
+    kappa = POLARITON_PLATFORMS['Paris_long']['kappa']
+    data = stimulated_hawking_spectrum(kappa, n_points=300)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=data['omega_over_kappa'], y=data['gain'],
+        mode='lines', line=dict(color=COLORS['dispersive'], width=3),
+        name='G(ω) — stimulated gain',
+    ))
+
+    # Detection threshold: G = 0.01 (need ~10^4 probe photons for 5σ)
+    fig.add_hline(y=0.01, line=dict(color=COLORS['dissipative'], width=1, dash='dot'))
+    fig.add_annotation(x=1.5, y=0.015, text="G = 0.01 (5σ with 10⁴ probe photons)",
+        showarrow=False, font=dict(size=10, family=FONT['family'], color=COLORS['dissipative']))
+
+    # Optimal probe window
+    fig.add_vrect(x0=0, x1=0.3, fillcolor=COLORS['dispersive'], opacity=0.08,
+        annotation_text="optimal probe window", annotation_position="top left",
+        annotation_font=dict(size=10))
+
+    apply_layout(fig, height=450, width=650,
+        title=dict(text="<b>Stimulated Hawking Gain Spectrum</b>",
+                   font=TITLE_FONT),
+        xaxis=dict(title="ω / κ", range=[0, 3]),
+        yaxis=dict(title="G(ω)", type="log", range=[-4, 1]),
+        legend=dict(x=0.55, y=0.95))
+
+    fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
+        text=f"T_H = {data['T_H_K']*1e3:.1f} mK | κ = {kappa:.0e} s⁻¹ | "
+             "Grisins PRB 94, 144518 (2016); Burkhard arXiv:2511.12339 (2025)",
+        showarrow=False, font=dict(size=9, family=FONT['family'], color='gray'))
+    return fig
+
+
 if __name__ == "__main__":
     main()

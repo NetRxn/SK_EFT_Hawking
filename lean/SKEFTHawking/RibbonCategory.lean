@@ -152,29 +152,21 @@ theorem su2k1_symmetric : su2k1_data.symmetric := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [su2k1_data, PreModularData.symmetric, Matrix.transpose_apply]
 
-/--
+/-
 SU(2)_1 is modular (det(S) != 0).
-
-PROVIDED SOLUTION
-Unfold modular to S.det != 0. Unfold su2k1_data to the 2x2 matrix.
-det_fin_two gives det = (1/sqrt(2))*(-1/sqrt(2)) - (1/sqrt(2))*(1/sqrt(2))
-= -1/2 - 1/2 = -1. Use Real.sq_sqrt (show sqrt(2)^2 = 2, hence 1/sqrt(2)^2 = 1/2).
-Then -1 != 0 by norm_num.
 -/
-theorem su2k1_modular : su2k1_data.modular := by sorry
+theorem su2k1_modular : su2k1_data.modular := by
+  unfold PreModularData.modular su2k1_data; norm_num;
+  grind +suggestions
 
-/--
+/-
 SU(2)_2 is modular (det(S) != 0).
-
-PROVIDED SOLUTION
-Unfold to the 3x3 matrix determinant. Use det_fin_three or cofactor expansion.
-det = 1/2*(0*1/2 - (-1/sqrt(2))*(-1/sqrt(2))) - 1/sqrt(2)*(1/sqrt(2)*1/2 - (-1/sqrt(2))*1/2)
-    + 1/2*(1/sqrt(2)*(-1/sqrt(2)) - 0*1/2)
-= 1/2*(0 - 1/2) - 1/sqrt(2)*(1/(2*sqrt(2)) + 1/(2*sqrt(2))) + 1/2*(-1/2 - 0)
-= -1/4 - 1/sqrt(2)*(1/sqrt(2)) + (-1/4) = -1/4 - 1/2 - 1/4 = -1.
-Then -1 != 0 by norm_num.
 -/
-theorem su2k2_modular : su2k2_data.modular := by sorry
+theorem su2k2_modular : su2k2_data.modular := by
+  unfold PreModularData.modular;
+  unfold su2k2_data;
+  rw [ Matrix.det_fin_three ];
+  simp +decide [ Matrix.vecHead, Matrix.vecTail ] ; ring_nf ; norm_num
 
 /-! ## 5. Module summary -/
 

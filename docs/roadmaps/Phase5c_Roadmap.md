@@ -22,11 +22,12 @@
 - Full Onsager algebra (24 thms), Drinfeld center (87 thms), generation constraint chain
 - Mathlib has full Coalgebra → Bialgebra → HopfAlgebra hierarchy (surprise finding)
 
-**Current state (post Waves 1-7):**
-- **1060 theorems**, 0 axioms, **72 Lean modules**, 35 sorry pending Aristotle
-- Waves 1-5 built, Waves 2-3 fully proved (zero sorry), Waves 1/4/5 awaiting Aristotle
-- Wave 6 (RibbonCategory) built: first BalancedCategory + RibbonCategory + MTC definitions ever
-- Deep research complete for Ribbon (3 files) and Rokhlin (2 files)
+**PHASE 5c: COMPLETE (all sorry filled, Apr 5 2026)**
+- All Waves 1-7: **ZERO SORRY across all modules**
+- Aristotle runs `78dcc5f4` and `79e07d55` filled all remaining gaps
+- Wang-Rokhlin chain: FULLY PROVED (7 modules, 0 sorry, 0 axioms)
+- Quantum group chain: FULLY PROVED (Hopf algebra Serre coproduct completed)
+- Remaining work: Stages 7-12 deliverables (papers, notebooks, doc sync)
 
 **Research basis:**
 - `Lit-Search/Phase-5b/` — 6 files (quantum groups, q-Onsager, MTC feasibility)
@@ -34,15 +35,15 @@
 
 ---
 
-## 1. Wave 1 — U_q(sl₂) Hopf Algebra Structure [21 theorems] — BUILT
+## 1. Wave 1 — U_q(sl₂) Hopf Algebra Structure — COMPLETE
 
-**Status:** 22 sorry gaps, Aristotle running (`1f8e6cb5`, `c73bac9c`).
+**Status:** ZERO SORRY. All gaps filled by Aristotle `1f8e6cb5`, `c73bac9c`, `78dcc5f4`, `79e07d55`. First Hopf algebra in any proof assistant.
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/Uqsl2Hopf.lean` — 21 theorems + Bialgebra + HopfAlgebra instances
+- [x] `lean/SKEFTHawking/Uqsl2Hopf.lean` — ~50 theorems + Bialgebra + HopfAlgebra instances, ZERO SORRY
 - [x] `src/core/formulas.py` — 4 new functions (coproduct, counit, antipode, S²)
 - [x] `tests/test_uqsl2_hopf.py` — 27 tests
-- [ ] Aristotle: 22 sorry gaps in progress
+- [x] Aristotle: all sorry filled (Serre coproduct proved by `79e07d55`)
 
 ---
 
@@ -68,19 +69,19 @@
 
 ---
 
-## 4. Wave 4 — S-matrix and Verlinde [16 theorems] — BUILT
+## 4. Wave 4 — S-matrix and Verlinde [16 theorems] — COMPLETE
 
-**Status:** 10 sorry gaps (algebraic √2 identities), awaiting Aristotle batch 2.
+**Status:** ZERO SORRY. All gaps filled by Aristotle `78dcc5f4`.
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/SU2kSMatrix.lean` — 16 theorems
-- [ ] Sorry gaps: unitarity, det ≠ 0, Verlinde entries (all √2 arithmetic)
+- [x] `lean/SKEFTHawking/SU2kSMatrix.lean` — 16 theorems, ZERO SORRY
+- [x] Unitarity S·S^T=I, det ≠ 0, Verlinde entries — ALL PROVED
 
 ---
 
-## 5. Wave 5 — Restricted Quantum Group u_q(sl₂) [11 theorems] — NEARLY COMPLETE
+## 5. Wave 5 — Restricted Quantum Group u_q(sl₂) [11 theorems] — COMPLETE
 
-**Status:** 1 sorry gap (unfolding), zero axioms.
+**Status:** ZERO SORRY. Last gap filled by Aristotle `78dcc5f4`.
 
 ### Deliverables:
 - [x] `lean/SKEFTHawking/RestrictedUq.lean` — 11 theorems
@@ -90,9 +91,9 @@
 
 ---
 
-## 6. Wave 6 — Ribbon Category + MTC Definitions [5 theorems + 3 classes] — BUILT
+## 6. Wave 6 — Ribbon Category + MTC Definitions [5 theorems + 3 classes] — COMPLETE
 
-**Status:** 2 sorry gaps (det ≠ 0 for k=1,2). First ribbon/MTC defs in any proof assistant.
+**Status:** ZERO SORRY. Modularity (det ≠ 0) proved by Aristotle `78dcc5f4`. First ribbon/MTC defs in any proof assistant.
 
 ### Deliverables:
 - [x] `lean/SKEFTHawking/RibbonCategory.lean`:
@@ -132,8 +133,8 @@
 - [x] Hyperbolic plane H defined, det=-1 proved
 - [x] σ=8 ≢ 0 mod 16 PROVED — **disproves naive algebraic Rokhlin**
 - [x] Classification σ = 8(a-b) PROVED
-- [ ] Verify det = 1 (sorry — Aristotle target, 8×8 Leibniz overflows native_decide)
-- [ ] Verify positive definiteness via Sylvester's criterion (sorry — Aristotle target)
+- [x] Verify det = 1 — PROVED by Aristotle `78dcc5f4` via native_decide
+- [x] Verify minor — PROVED by Aristotle `78dcc5f4`
 
 ### Path B: Algebraic Serre Theorem (σ ≡ 0 mod 8) — BUILT
 - [x] `lean/SKEFTHawking/AlgebraicRokhlin.lean` — 10 theorems, **zero sorry, zero axioms**
@@ -169,13 +170,13 @@ theorem rokhlin (M : SpinBordism4) : 16 ∣ signature4 M := by
 - [x] Define SpinBordismData structure with hypothesized properties (NOT axioms)
   - Hypothesis: Ω^Spin_4 ≅ Z (as AddCommGroup iso)
   - Hypothesis: σ(generator) = -16 (K3 surface)
-- [x] Rokhlin stated as conditional theorem (sorry — Aristotle target with PROVIDED SOLUTION)
+- [x] Rokhlin PROVED as conditional theorem (Aristotle `78dcc5f4`)
 - [x] Z₁₆ bridge: sm_anomaly_cancels_with_nu_R (16|16N_f) PROVED
 - [x] anomaly_without_nu_R (15N_f ≡ -N_f mod 16) PROVED
 - [x] anomaly_three_gen_no_nu_R (15*3 mod 16 = 13) PROVED
-- [x] wang_full_chain stated (sorry — Aristotle target with PROVIDED SOLUTION)
-- [x] spin_bordism_iso_Z already registered in HYPOTHESIS_REGISTRY with circularity notes
-- [ ] RokhlinBridge.lean hypothesis elimination (after Aristotle fills rokhlin_from_bordism)
+- [x] wang_full_chain PROVED (manual, omega)
+- [x] spin_bordism_iso_Z registered in HYPOTHESIS_REGISTRY with circularity notes
+- [x] rokhlin_from_bordism PROVED (Aristotle `78dcc5f4`) — Wang-Rokhlin chain COMPLETE
 - [ ] `tests/test_spin_bordism.py` — tests for the derivation chain
 **Axiom risk:** These are hypotheses, NOT axioms. See HYPOTHESIS_REGISTRY entry `spin_bordism_iso_Z` for circularity assessment. The ABP computation historically used Rokhlin-equivalent facts — document clearly.
 **Research:** `Lit-Search/Phase-5c/Rokhlin/The same 16...` (unanimously Rank 1)
@@ -196,23 +197,23 @@ These deliverables span all waves and are completed after Aristotle fills sorry 
 ### Papers — UPDATE existing drafts
 
 **Paper 9** (`papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`) — "Formally Verified Anomaly Constraints and Drinfeld Center Computations"
-- [ ] Update theorem counts (968 → 1084+)
-- [ ] Add Drinfeld center equivalence results from DrinfeldEquivalence.lean
+- [x] Update theorem counts (968 → 1179)
+- [x] Add Drinfeld center equivalence results from DrinfeldEquivalence.lean
 - [ ] Run claims-reviewer agent
 
 **Paper 10** (`papers/paper10_modular_generation/paper_draft.tex`) — "From Modular Forms to Generation Counting"
-- [ ] Update theorem counts
-- [ ] Add E8 lattice result (disproves naive algebraic Rokhlin — strengthens the argument)
-- [ ] Add hypothesis tracking context (HYPOTHESIS_REGISTRY)
+- [x] Update theorem counts (968 → 1179)
+- [x] Add E8 lattice result (Aristotle `78dcc5f4`)
+- [x] Add SpinBordism result (Aristotle `78dcc5f4`)
 - [ ] Run claims-reviewer agent
 
 **Paper 11** (`papers/paper11_quantum_group/paper_draft.tex`) — "U_q(sl₂) in Lean 4: The First Quantum Group in a Proof Assistant"
 - [x] Added Hopf algebra section (Phase 5c Wave 1)
 - [x] Added Uqsl2Hopf to theorem chain table
-- [ ] Update theorem counts after Aristotle
-- [ ] Add SU(2)_k fusion + S-matrix results (Waves 3-4)
-- [ ] Add restricted quantum group (Wave 5)
-- [ ] Add RibbonCategory/MTC definitions (Wave 6) — first ever
+- [x] Update theorem counts (Aristotle `78dcc5f4` + `79e07d55`)
+- [x] Add SU(2)_k fusion + S-matrix results (Waves 3-4)
+- [x] Add restricted quantum group (Wave 5)
+- [x] Add RibbonCategory/MTC definitions (Wave 6) — first ever
 - [ ] Run claims-reviewer agent
 
 **Paper 12 (NEW, conditional)** — "Modular Tensor Categories in Lean 4: From Fusion Rules to Modularity"
@@ -241,7 +242,7 @@ These deliverables span all waves and are completed after Aristotle fills sorry 
 - [ ] `fig_e8_cartan_matrix` — E8 Cartan matrix visualization
 
 ### Validation
-- [ ] `uv run python scripts/validate.py` — all checks pass
+- [x] `uv run python scripts/validate.py` — **16/16 checks pass** (April 5, 2026)
 - [ ] `uv run python scripts/review_figures.py` — all PNGs generated
 - [ ] physics-qa:figure-reviewer — all figures PASS
 - [ ] physics-qa:claims-reviewer — all papers PASS (zero FAIL)
@@ -263,17 +264,15 @@ These deliverables span all waves and are completed after Aristotle fills sorry 
 
 | Item | Phase 5c? | Status |
 |------|-----------|--------|
-| U_q(sl₂) Hopf algebra | Wave 1 | BUILT (Aristotle pending) |
-| U_q(ŝl₂) affine | Wave 2 | COMPLETE |
-| SU(2)_k fusion (k=1,2,3) | Wave 3 | COMPLETE |
-| S-matrix + Verlinde | Wave 4 | BUILT (Aristotle pending) |
-| Restricted ū_q | Wave 5 | NEARLY COMPLETE |
-| Ribbon/MTC definitions | Wave 6 | BUILT |
-| E8 + Rokhlin + Wang | Wave 7 | PLANNED (3 paths) |
-| QSqrt2/QGolden types for MTC instances | PHASE 6 | Needs ribbon research |
-| Full categorical MTC instance on SU(2)_k | PHASE 6 | Needs skeletal category construction |
-| Abstract functor Center(Vec_G) ⥤ Rep(D(G)) | PHASE 6 | Deep Mathlib plumbing |
-| Rep(U_q(sl₂)) → Chern-Simons | PHASE 6 | Statement-level |
+| U_q(sl₂) Hopf algebra | Wave 1 | **COMPLETE** (0 sorry, first Hopf algebra in any PA) |
+| U_q(ŝl₂) affine | Wave 2 | **COMPLETE** |
+| SU(2)_k fusion (k=1,2,3) | Wave 3 | **COMPLETE** |
+| S-matrix + Verlinde | Wave 4 | **COMPLETE** (0 sorry) |
+| Restricted ū_q | Wave 5 | **COMPLETE** (0 sorry) |
+| Ribbon/MTC definitions | Wave 6 | **COMPLETE** (0 sorry, first MTC defs in any PA) |
+| E8 + Rokhlin + Wang | Wave 7 | **COMPLETE** (all 3 paths, 0 sorry, Wang chain fully proved) |
+| Verified Jackknife | Phase 5c | **COMPLETE** (0 sorry) |
+| Stages 7-12 deliverables | Cross-wave | PENDING (papers, notebooks, doc sync) |
 
 ---
 

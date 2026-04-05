@@ -156,15 +156,14 @@ noncomputable def uqToSmallUq :
   RingQuot.liftAlgHom (LaurentPolynomial k)
     ⟨smallUqMk k ell, fun {_ _} h => RingQuot.mkAlgHom_rel _ (chevalley_implies_restricted k ell h)⟩
 
-/-- The surjection sends E to E.
-
-PROVIDED SOLUTION
-Unfold uqToSmallUq to liftAlgHom(smallUqMk). Then uqE = mkAlgHom(iota E).
-liftAlgHom_mkAlgHom_apply gives smallUqMk(iota E) = suqE.
+/-
+The surjection sends E to E.
 -/
 theorem uqToSmallUq_E :
     uqToSmallUq k ell (uqE k) = suqE k ell := by
-  sorry
+  unfold uqE suqE;
+  unfold uqToSmallUq;
+  simp +decide [ uqsl2Mk ]
 
 /-! ## 5. Dimension and simple modules (statement-level)
 

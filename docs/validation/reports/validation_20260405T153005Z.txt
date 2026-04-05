@@ -1,0 +1,14 @@
+SK-EFT Hawking Validation Report
+Generated: 20260405T153005Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] formulas
+  + count_coefficients — Refs: secondOrder_count, secondOrder_count_with_parity, thirdOrder_count
+  + enumerate_monomials — Refs: secondOrder_count_with_parity, secondOrder_requires_parity_breaking
+  + damping_rate — Refs: dampingRate_eq_zero_iff
+  + dispersive_correction — Refs: dispersive_correction_bound, bogoliubov_superluminal
+  + first_order_correction — Refs: firstOrder_correction_zero_iff
+  + effective_temperature_ratio — Refs: effective_temp_zeroth_order
+  + turning_point_shift — Refs: turning_point_shift_nonzero, turning_point_shift
+
+Overall: 1/1 passed
