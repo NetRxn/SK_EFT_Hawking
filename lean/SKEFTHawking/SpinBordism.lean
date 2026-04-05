@@ -128,7 +128,9 @@ Use omega or Int.emod_emod_of_dvd.
 theorem wang_full_chain (N_f : ℕ)
     (h_mod : 24 ∣ (8 * N_f : ℤ)) -- framing anomaly: 24 | c₋ = 8N_f
     : 3 ∣ N_f := by
-  sorry
+  obtain ⟨c, hc⟩ := h_mod
+  have : (N_f : ℤ) = 3 * c - 2 * (8 * N_f - 24 * c) / 1 := by omega
+  omega
 
 /-! ## 5. Module summary -/
 

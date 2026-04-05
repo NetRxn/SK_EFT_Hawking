@@ -200,35 +200,57 @@ This section covers how Aristotle integrates with the SK-EFT Hawking project spe
 The API key lives in `.env` at the project root (`SK_EFT_Hawking/.env`). The submit script (`scripts/submit_to_aristotle.py`) reads it automatically. The `aristotle` CLI does not read `.env` — source it first:
 
 ```bash
-source .env && uv run aristotle list --limit 5
+source .env && export ARISTOTLE_API_KEY && uv run list --limit 5
 ```
 
 ### Submit Script (`scripts/submit_to_aristotle.py`)
 
-The script wraps the Aristotle API for our project. Key behaviors:
+The script wraps the Aristotle API for our project.
+
+**Key principle: every submission sends the ENTIRE Lean project.** Aristotle always receives all 76+ `.lean` files regardless of which sorry gaps you're targeting. The prompt only guides where Aristotle focuses. Submitting multiple jobs in parallel = duplicate full-project uploads with overlapping work. **Prefer ONE well-crafted submission.**
 
 | Flag | What it does |
 |------|-------------|
-| `--priority N` | Submits all unfilled `SorryGap` entries at priority ≤ N (from `aristotle_interface.py`) |
-| `--target <name>` | Submits the whole Lean project but prompts Aristotle to focus on a specific sorry |
+| `--submit` | **Recommended.** Scans all `.lean` files for sorry gaps, builds a comprehensive prompt, submits one job. |
+| `--dry-run` | Shows what would be submitted (files, sorry counts, prompt preview) without submitting. |
 | `--retrieve <UUID>` | Downloads results for a completed run into `docs/aristotle_results/run_<timestamp>/` |
 | `--integrate` | When combined with `--retrieve`, copies patched `.lean` files into `lean/` (whole-file copy) |
 | `--resume <UUID>` | Retrieves partial results from an OUT_OF_BUDGET run, integrates, and resubmits |
-| `--dry-run` | Prints what would be submitted without submitting |
+| `--force` | Override the pre-flight check that blocks submission when jobs are already running |
 | `--timeout N` | Timeout in seconds (default 3600). The script times out locally but the Aristotle job continues server-side |
 
-**`--target` still sends the whole project.** It only changes the prompt sent to Aristotle. Submitting the same file twice creates duplicate work.
+**Deprecated flags:** `--priority N` and `--target <name>` still work for backwards compatibility but are not recommended. The priority system doesn't help because Aristotle always receives the full project. For targeted prompts, use the `aristotle` CLI directly.
 
-**`--integrate` is a whole-file copy.** It overwrites any `.lean` file that differs between Aristotle's output and your `lean/` directory. It has no merge intelligence — it does not selectively apply proof fills. This means if Aristotle modified a file for any reason (typeclass fixes, reformatting, etc.), the entire file is replaced.
+**Pre-flight dedup check:** Before submitting, the script queries `aristotle list` for IN_PROGRESS jobs. If any are running, it warns and blocks (use `--force` to override). This prevents duplicate work.
+
+**Submission manifest:** After each submission, a JSON manifest is saved to `docs/aristotle_results/manifests/` recording the job ID, timestamp, prompt preview, and sorry gap counts. This enables dedup checking on future submissions.
+
+**`--integrate` is a whole-file copy.** It overwrites any `.lean` file that differs between Aristotle's output and your `lean/` directory. It has no merge intelligence. If a file (especially `Uqsl2Hopf.lean`) has been cherry-picked from multiple Aristotle runs, review the diff manually before integrating.
 
 ### Aristotle's Snapshot Behavior
 
-When you submit a job, Aristotle receives a snapshot of the entire Lean project at that moment. It works from this snapshot independently. This has consequences when running multiple jobs:
+When you submit a job, Aristotle receives a snapshot of the entire Lean project at that moment. It works from this snapshot independently.
 
-- If you submit job A (targeting `OnsagerAlgebra.lean`) and job B (targeting `OnsagerContraction.lean`) in sequence, job B's snapshot includes the state of `OnsagerAlgebra.lean` at submission time — which may still have sorrys that job A later fills.
-- If job A completes and you integrate its results, then job B completes, job B's version of `OnsagerAlgebra.lean` is stale. Using `--integrate` on job B would overwrite job A's proofs with sorrys.
+**Key consequence:** If you submit two jobs simultaneously, both get the same snapshot. Both will independently prove the same low-hanging-fruit theorems, wasting compute. This is why the script now blocks parallel submissions by default.
 
-**Mitigation:** Always review the diff before integrating. If the diff touches files outside your target module, compare against your current source (not what you submitted). Manually copy only the proof blocks you need.
+**If you must integrate from multiple overlapping runs:**
+1. Retrieve both results (don't `--integrate` either)
+2. Compare the diffs — identify which proofs are unique to each
+3. Cherry-pick the best proof for each theorem manually
+4. For files modified by both runs, take the version with more proofs filled
+5. Run `lake build` to verify the merged result
+
+### Best Practices for Sorry Stubs
+
+Aristotle proves more theorems when given good hints:
+
+1. **PROVIDED SOLUTION in docstrings:** Tag proof sketches with `PROVIDED SOLUTION` in the `/--` docstring above each sorry theorem. Aristotle reads these. It does NOT see comments inside proof blocks.
+
+2. **Helper lemma infrastructure:** Prove auxiliary lemmas that the main sorry depends on. Aristotle can use these. Example: proving all generator-level formulas makes the coalgebra axioms easier.
+
+3. **One comprehensive prompt:** List all sorry gaps with their file locations and specific hints. Prioritize the hardest gaps first (Aristotle allocates compute budget sequentially).
+
+4. **Include typeclass workarounds:** If there are typeclass issues (e.g., tensor product is Semiring not Ring), add explicit instances. The `uqTensorRing` instance was the key breakthrough for the Hopf algebra proofs.
 
 ### Result Artifacts
 
@@ -240,7 +262,23 @@ Results are saved to `docs/aristotle_results/run_<timestamp>_<UUID_prefix>/`:
 | `diff.patch` | Unified diff between Aristotle's output and your `lean/` source |
 | `ARISTOTLE_SUMMARY_*.md` | Aristotle's description of what it proved and how |
 
+Submission manifests are saved to `docs/aristotle_results/manifests/<uuid>.json`.
+
 The summary file is the best starting point for review — it describes proof strategy and any structural changes Aristotle made.
+
+### Lessons Learned
+
+**Fix typeclass gaps before submitting.** If Aristotle needs `map_sub` or `map_neg` on a type that's only a `Semiring` (common with `TensorProduct`), it will burn its entire budget on workarounds and fail. Add explicit typeclass instances (e.g., `Ring`, `Neg`) to the Lean file before submitting. Check that the types Aristotle will work with have the algebraic structure the proofs require.
+
+**Prove helper lemmas first, submit the hard ones.** Aristotle is much more successful when infrastructure lemmas are already proved. Prove the easy cases manually, then submit the file with only the hard sorry gaps remaining. Aristotle uses proved lemmas as building blocks.
+
+**Write specific hints, not vague ones.** PROVIDED SOLUTION hints that name exact Lean lemma names (`RingQuot.liftAlgHom_mkAlgHom_apply`, `FreeAlgebra.lift_ι_apply`) work. Hints like "unfold and simplify" don't help.
+
+**One job, not many.** Every submission uploads the full project. Parallel jobs = duplicate work on the same easy theorems. One well-prompted job listing all gaps with prioritized hints is strictly better.
+
+**Never `--integrate` blindly from overlapping runs.** If two runs touched the same file, the second overwrites the first. Retrieve without `--integrate`, review the diff, cherry-pick the best proofs manually if needed.
+
+**Count sorry from the build, not grep.** `grep "sorry"` catches comments. `lake build 2>&1 | grep "declaration uses"` gives the real count (includes downstream propagation). The `--dry-run` flag scans for sorry as a tactic.
 
 ### Registration
 

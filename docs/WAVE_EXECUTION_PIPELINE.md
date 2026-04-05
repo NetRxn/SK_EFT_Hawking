@@ -111,26 +111,29 @@ passes (all parameters human-verified). Checked before arXiv/journal submission,
 
 ### 4a. Submit
 
-One job per file. Different files can run as separate parallel batches. The submit script reads the API key from `.env` in the project root.
+**One job at a time.** Every submission sends the entire Lean project — parallel jobs duplicate work. The script blocks submission if a job is already running.
 
 ```bash
-# Submit all unfilled sorrys at a priority level:
-uv run python scripts/submit_to_aristotle.py --priority 3
+# Preview what would be submitted:
+uv run python scripts/submit_to_aristotle.py --dry-run
 
-# Target a specific sorry:
-uv run python scripts/submit_to_aristotle.py --target <theorem_name>
+# Submit all unfilled sorry gaps (recommended — single comprehensive job):
+uv run python scripts/submit_to_aristotle.py --submit
+
+# For custom prompts, use the CLI directly:
+cd lean && source ../.env && export ARISTOTLE_API_KEY && uv run aristotle submit "prompt" --project-dir .
 ```
 
-Do not pass `--integrate` at submission time — integration is a separate step (4c).
+Do not pass `--integrate` at submission time — integration is a separate step (4c). Ensure every sorry theorem has a `PROVIDED SOLUTION` hint in its docstring before submitting.
 
 ### 4b. Monitor
 
 ```bash
 # Source .env for the CLI key, then check status:
-source .env && uv run aristotle list --limit 5
+source .env && export ARISTOTLE_API_KEY && uv run aristotle list --limit 5
 ```
 
-Move on to non-dependent work while waiting.
+Move on to non-dependent work while waiting. Do NOT submit additional jobs while one is running.
 
 ### 4c. Retrieve and Review
 

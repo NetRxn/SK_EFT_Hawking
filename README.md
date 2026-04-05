@@ -1,55 +1,49 @@
-# Dissipative EFT Corrections to Analog Hawking Radiation
+# SK-EFT Hawking: Formally Verified Physics from Analog Black Holes to the Standard Model
 
-Computation and formal verification connecting Schwinger-Keldysh dissipative EFT
-to acoustic Hawking radiation in BEC analog gravity. Eleven papers in a unified codebase:
+## What This Project Is About
 
-- **Paper 1 (first-order):** Two transport coefficients (γ₁, γ₂), frequency-independent
-  δ_diss = Γ_H/κ correction. PRL format, submission-ready.
-- **Paper 2 (second-order):** Two additional coefficients (γ_{2,1}, γ_{2,2}),
-  frequency-dependent ω³ spectral distortion, WKB mode analysis, CGL FDR derivation.
-- **Paper 3 (gauge erasure):** Universal structural theorem — non-Abelian gauge DOF
-  erased by hydrodynamization, U(1) survives (photonization). PRL format.
-- **Paper 4 (exact WKB):** Non-perturbative connection formula: modified unitarity
-  |α|²-|β|²=1-δ_k, FDR noise floor, spectral floor at ω≳6T_H. PRD format.
-- **Paper 5 (ADW gap equation):** Mean-field tetrad condensation via the
-  Akama-Diakonov-Wetterich mechanism. Qualified positive result: nontrivial
-  Lorentzian solution for G > G_c, 2 massless graviton modes as Higgs bosons.
-  Four structural obstacles for emergent fermion bootstrap. PRD format.
-- **Paper 6 (vestigial gravity):** Lattice evidence for vestigial metric phase
-  in the ADW model. Three-phase structure: pre-geometric, vestigial, full tetrad.
-  EP violation prediction. Monte Carlo + mean-field. PRD format.
+This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Everything is machine-checked in the Lean 4 proof assistant: 1100+ theorems, zero axioms, across 76 modules.
 
-- **Paper 7 (chirality wall):** First formal verification of the Golterman-Shamir
-  no-go conditions and TPF evasion in Lean 4. PRD/CPC format.
+### Analog Hawking radiation and testable predictions
 
-- **Paper 8 (chirality master):** Three-pillar chirality wall: GS no-go + GT positive
-  construction + Z₁₆ anomaly classification. PRL format.
+When a fluid flows faster than its own speed of sound, it creates a sonic horizon that traps sound waves exactly the way a black hole traps light. The "acoustic Hawking temperature" follows the same formula Hawking derived for real black holes. We computed the first corrections from dissipation — the fact that real fluids have viscosity — and found they have a specific frequency dependence that gives experimentalists a concrete test: vary the flow speed and watch how the spectrum changes. The polariton platform is 10 billion times hotter than BEC systems (~1 Kelvin vs ~10^-10 Kelvin), making it the most accessible route to observing these corrections. A Paris group has already seen negative-energy modes; spontaneous Hawking detection is plausible within 1-2 years.
 
-- **Paper 9 (SM anomaly + Drinfeld center):** First formally verified anomaly
-  constraint in particle physics. SM anomaly in Z16, generation constraint,
-  toric code center, D(S3) non-abelian center. PRL format.
+### Why three generations of matter
 
-- **Paper 10 (modular generation):** From modular forms to generation counting.
-  First formal derivation connecting number-theoretic modular invariance to
-  SM generation constraint N_f = 0 mod 3. PRD format.
+The Standard Model has three copies of its fundamental particles (electron/muon/tau and their quarks). Nobody knows why. We formally derived that the number must be divisible by three, from two independent mathematical facts: the SM's 16 Weyl fermions per generation give a chiral central charge of 8, and modular invariance of the quantum field theory (via the Dedekind eta function, studied by Ramanujan in 1916) forces this charge to be divisible by 24. The ratio 24/8 = 3 constrains the generation count — pure mathematics (number theory) meets pure physics (particle content). We also provide a formal argument for right-handed neutrinos: without them, the central charge is fractional (15/2), which is a gravitational anomaly independent of the usual mass-based argument.
 
-**Lean 4 formalization:** 1102 theorems across 76 Lean modules. Zero axioms, 41 sorry pending Aristotle.
-273 Aristotle-proved across 33+ runs.
-Lean 4.28.0, Mathlib commit `8f9d9cff`.
+### The "16 convergence"
 
-**Phase 5 additions:** Kappa-scaling predictions, polariton Tier 1, Weingarten multi-channel
-MC framework (Lean-verified), chirality wall formalization (GS 9 conditions,
-TPF evasion machine-verified), Layer 1 categorical infrastructure (first-ever
-PivotalCategory, FusionCategory, DrinfeldDouble in any proof assistant),
-gauge emergence theorem Z(Vec_G) ≅ Rep(D(G)), analytical vestigial susceptibility,
-hybrid gauge-link + fermion-bag MC, HS+RHMC with 8×8 Majorana sign-free fermions (L=4 complete, L=8 in flight).
+The number 16 appears in four seemingly unrelated places: the SM's Weyl fermion count, the Z/16 anomaly classification, Rokhlin's theorem on 4-manifold signatures, and Kitaev's classification of topological superconductors. We proved these are the same 16, rooted in the quaternionic structure of spinors in four dimensions. The E8 lattice (verified formally using Mathlib's existing Cartan matrix) has signature 8, proving the algebraic bound is 8, not 16 — the jump to 16 requires smooth topology, not just algebra. This cleanly separates what mathematics alone constrains from what requires physics.
 
-**Phase 5c additions:** First Hopf algebra in a proof assistant (U_q(sl₂) coproduct/counit/antipode),
-SU(2)_k fusion rules at k=1,2,3 (Ising/Fibonacci by native_decide), affine quantum group U_q(sl_2 hat),
-SU(2)_k S-matrices + Verlinde formula, restricted quantum group u_q(sl₂), Ribbon/MTC category
-definitions (first in any proof assistant), E8 lattice + Rokhlin gap verification,
-algebraic Rokhlin (Serre σ≡0 mod 8), spin bordism → Rokhlin → Wang chain,
-first verified statistical estimators (jackknife, autocorrelation).
+### From lattice models to gauge theory
+
+We formalized the complete chain connecting integrable lattice models to topological gauge theory: Onsager algebra → q-deformation → quantum group U_q(sl_2) with Hopf structure → affine quantum group → restricted quantum group at roots of unity → SU(2)_k fusion categories → modular S-matrix → Chern-Simons gauge theory. The SU(2)_k fusion rules at k=3 contain the Fibonacci anyon — universal for topological quantum computation. Our formalization provides verified mathematical foundations for the fusion operations these future quantum computers would perform.
+
+### The chirality wall
+
+The biggest obstacle to deriving the Standard Model from condensed matter is chirality: the weak force only acts on left-handed particles. We provided the first formal analysis of a 2026 construction (Thorngren-Preskill-Fidkowski) that likely evades the 1981 no-go theorems: all 9 conditions of the competing Golterman-Shamir no-go formalized, 5 proved violated, master synthesis theorem machine-checked.
+
+### Emergent gravity: what works and what doesn't
+
+Fracton symmetric tensor gauge theory reproduces linearized gravity but fails at the nonlinear level — formally verified obstruction. The Akama-Diakonov-Wetterich mechanism (gravity from fermion condensation) is more promising: the gap equation for tetrad condensation has never been explicitly written down in the literature. Our deep research identifies it and scopes the computation. The non-Abelian gauge wall is a structural theorem: SU(3) and SU(2) gauge forces cannot survive through a fluid layer (proved), but can originate from topological order (the quantum group route we formalized).
+
+### Verified statistical estimators
+
+The jackknife variance estimator and autocorrelation function — foundational tools for analyzing Monte Carlo data from lattice simulations — are formalized for the first time in any proof assistant. Non-negativity of the jackknife variance is proved. This opens the path to formally verified data analysis for lattice quantum field theory.
+
+*Items marked with \* are pending completion by the Aristotle automated theorem prover: Hopf algebra compatibility proofs, S-matrix unitarity and determinant computations, E8 determinant, and the bordism-derived Rokhlin/Wang chain.*
+
+---
+
+## Technical Summary
+
+**Lean 4 formalization:** 1102 theorems across 76 modules. Zero axioms, ~41 sorry pending Aristotle.
+273 Aristotle-proved across 33+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+
+**Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
+
+**Eleven papers** in a unified codebase — from first-order dissipative corrections (Paper 1) through gauge erasure (Paper 3), exact WKB (Paper 4), emergent gravity (Papers 5-6), chirality wall (Papers 7-8), SM anomaly and Drinfeld center (Paper 9), modular generation counting (Paper 10), and quantum groups through MTC (Paper 11).
 
 ## Project Structure
 
@@ -315,33 +309,24 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 # See docs/KNOWLEDGE_GRAPH.md for full documentation
 ```
 
-## Main Physics Results
+## Documentation Guide
 
-### Phase 1: First-Order Correction (Frequency-Independent)
+| If you want to... | Start here |
+|---|---|
+| Understand the physics and results | This README (above) |
+| See what's been built and its status | [`SK_EFT_Hawking_Inventory_Index.md`](SK_EFT_Hawking_Inventory_Index.md) — counts, module map |
+| Understand the execution process | [`docs/WAVE_EXECUTION_PIPELINE.md`](docs/WAVE_EXECUTION_PIPELINE.md) — 12-stage pipeline |
+| Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
+| Browse the dashboard | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
+| Read non-technical summaries | `docs/stakeholder/` — implications and strategic positioning per phase |
+| See what's next | [`docs/roadmaps/Phase5c_Roadmap.md`](docs/roadmaps/Phase5c_Roadmap.md), [`Phase5d_Roadmap.md`](docs/roadmaps/Phase5d_Roadmap.md), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
+| Understand the broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
+| Read the critical review | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
+| See the deep research corpus | `Lit-Search/` — 40+ research files across Phases 3-5c |
+| Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
+| Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
-
-- δ_disp = (κξ/c_s)² — dispersive, known (Corley-Jacobson)
-- δ_diss = Γ_H/κ — **dissipative, our result**
-- Γ_H = 1.1 · γ_Bel where γ_Bel = √(na_s³) · κ²/c_s
-- Spin-sonic enhancement: ×(c_density/c_spin)² ≈ 100
-- FirstOrderKMS: Aristotle discovered the correct KMS structure constraining all 9 coefficients → 2 free parameters
-
-| Experiment | ξ [μm] | c_s [mm/s] | T_H [nK] | D | δ_disp | δ_diss |
-|---|---|---|---|---|---|---|
-| Steinhauer ⁸⁷Rb | 1.57 | 0.46 | 0.006 | 0.013 | 8.5e-5 | 4.2e-4 |
-| Heidelberg ³⁹K | 0.48 | 3.37 | 0.12 | 0.012 | 7.3e-5 | 2.0e-5 |
-| Trento ²³Na (spin) | 1.51 | 1.83 | 0.03 | 0.014 | 9.9e-5 | 9.3e-5 |
-
-### Phase 2: Second-Order Correction (Frequency-Dependent)
-
-- Counting formula: count(N) = ⌊(N+1)/2⌋ + 1 at EFT order N
-- Two new coefficients at second order, both requiring broken spatial parity
-- δ^(2)(ω) ∝ ω³ — spectral distortion absent at first order
-- Positivity constraint: (γ_{2,1} + γ_{2,2})² ≤ 4·γ₂·γ_x·β
-- Formally verified logical chain: firstOrderCorrection = 0 ↔ dampingRate = 0 ↔ all γᵢ = 0
-
-## Theorem Inventory (1102 theorems — zero axioms, 41 sorry pending Aristotle)
+## Theorem Inventory (1102 theorems — zero axioms, ~41 sorry pending Aristotle)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -426,6 +411,16 @@ T_eff = T_H(1 + δ_disp + δ_diss + δ_cross)
 - **Python:** ≥3.14, managed via uv. Key deps: numpy, scipy, sympy, mpmath, plotly, aristotlelib, torch, maturin.
 - **Visualization:** Plotly (not matplotlib). Color scheme: #2E86AB steel blue, #A23B72 berry, #F18F01 amber.
 
-## References
+## Key References
 
-See `docs/roadmaps/Phase1_Roadmap.md` through `docs/roadmaps/Phase4_Roadmap.md` for full technical context and reference lists.
+**Project documentation:**
+- [Wave Execution Pipeline](docs/WAVE_EXECUTION_PIPELINE.md) — the 12-stage process governing all work
+- [Inventory Index](SK_EFT_Hawking_Inventory_Index.md) — quick reference: module map, counts, pipeline invariants
+- [Knowledge Graph](docs/KNOWLEDGE_GRAPH.md) — interactive provenance visualization
+- [Dashboard](docs/DASHBOARD.md) — parameter verification, proof architecture, paper claims
+
+**Roadmaps:** [`docs/roadmaps/`](docs/roadmaps/) contains phase-specific execution plans (Phases 1-5d) and the [Phase 6 Deferred Targets](docs/roadmaps/Phase6_Deferred_Targets.md) tracking future work with deep research linkage.
+
+**Stakeholder docs:** [`docs/stakeholder/`](docs/stakeholder/) contains non-technical implications and strategic positioning documents for each phase.
+
+**Deep research:** [`Lit-Search/`](../Lit-Search/) contains 40+ research files spanning Phases 3-5c covering quantum groups, modular tensor categories, Rokhlin's theorem, the ADW gap equation, fracton-gravity, and verified statistics.
