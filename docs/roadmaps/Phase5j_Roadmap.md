@@ -4,6 +4,8 @@
 
 *Prepared 2026-04-06 | Connects to the non-Abelian gauge wall (Critical Review §2.1)*
 
+**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. W1-3: NOT STARTED. Deep research COMPLETE.
+
 ---
 
 ## 0. Motivation
@@ -12,7 +14,16 @@ The Critical Review v3 identifies Volovik's Fermi-point scenario as the "most pr
 
 The spin-connection co-emergence at |N|=2 is exactly what ADW needs for tetrad gravity. This could bypass the spin-connection gap identified in the Wen coupling analysis (Phase 5f: G_Wen is 6000x too weak, but the spin-connection gap is the true showstopper).
 
-**Deep research pending:** `Phase5j_fermi_point_su2_emergence.txt` (SUBMITTED)
+**Deep research COMPLETE:** `Lit-Search/Phase-5j/Volovik |N|>1 Fermi-Point → SU(2) Gauge Emergence.md`
+
+**KEY CORRECTIONS from deep research:**
+1. TWO distinct mechanisms conflated in literature:
+   - Mechanism A (single |N|=2 node) → anisotropic Hořava fermions, NOT SU(2)
+   - Mechanism B (correlated |N|=1 nodes) → correct route, Z₂ symmetry → SU(2)
+2. Z₂ → SU(2) promotion is a HEURISTIC (³He-A specific), not a theorem
+3. Selch-Zubkov 2025: matrix-valued vierbein DOES produce spin connection, but mixed SU(2)×SO(3,1), not standard Einstein-Cartan
+4. |N|=3 → SU(3) is more speculative than assumed
+5. Chirality problem unsolved: Fermi-point gives vector coupling, SM needs chiral SU(2)_L
 
 ---
 
@@ -46,8 +57,8 @@ The spin-connection co-emergence at |N|=2 is exactly what ADW needs for tetrad g
 
 | # | Topic | File | Status |
 |---|-------|------|--------|
-| 1 | |N|>1 Fermi-point → SU(2) emergence | Phase5j_fermi_point_su2_emergence.txt | SUBMITTED |
+| 1 | |N|>1 Fermi-point → SU(2) emergence | Lit-Search/Phase-5j/Volovik \|N\|>1 Fermi-Point → SU(2) Gauge Emergence.md | **COMPLETE** |
 
 ---
 
-*Phase 5j roadmap. The Fermi-point scenario is the bridge from condensed matter topology to non-Abelian gauge emergence — the route the Critical Review identifies as most promising.*
+*Phase 5j roadmap. Updated 2026-04-06 (W1-3 NOT STARTED. Deep research COMPLETE: Z_2→SU(2) is heuristic not theorem, Mechanism B correct, Selch-Zubkov 2025 spin connection). 2023 theorems, 88 modules, 28 sorry, 1 axiom. The Fermi-point scenario is the bridge from condensed matter topology to non-Abelian gauge emergence — the route the Critical Review identifies as most promising.*

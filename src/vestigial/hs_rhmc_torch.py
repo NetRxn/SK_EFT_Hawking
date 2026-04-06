@@ -193,6 +193,10 @@ def batched_cg(AtA, b, shifts, tol=1e-6, max_iter=500):
     matrix-vector product per iteration: M @ P where P is (dim, K).
     This amortizes the dominant matmul cost across all shifts.
 
+    AtA can be either a dense matrix (dim, dim) or a callable that applies
+    A†A to a vector. When callable, each column of P is processed separately
+    (matrix-free mode, Phase 5g).
+
     At dim=2048 with K=16 shifts:
     - Per-shift CG (sequential): 16 × ~250 iter × 1 matmul = 4000 matmuls
     - Batched CG: ~250 iter × 1 batched matmul = 250 matmuls (16× amortized)
@@ -204,7 +208,7 @@ def batched_cg(AtA, b, shifts, tol=1e-6, max_iter=500):
     Source: Standard CG (Hestenes & Stiefel, 1952) with batched matvec
 
     Args:
-        AtA: SPD matrix (dim, dim)
+        AtA: SPD matrix (dim, dim) OR callable (v -> AtA @ v)
         b: RHS vector (dim,)
         shifts: list of σ_k values (all ≥ 0)
         tol: relative residual tolerance
@@ -215,8 +219,9 @@ def batched_cg(AtA, b, shifts, tol=1e-6, max_iter=500):
     """
     K = len(shifts)
     dim = b.shape[0]
-    device = AtA.device
-    dtype = AtA.dtype
+    is_callable = callable(AtA)
+    device = b.device if is_callable else AtA.device
+    dtype = b.dtype if is_callable else AtA.dtype
 
     sigma_t = torch.tensor(shifts, dtype=dtype, device=device)  # (K,)
 
@@ -234,9 +239,13 @@ def batched_cg(AtA, b, shifts, tol=1e-6, max_iter=500):
 
     n_iter = 0
     while not converged.all() and n_iter < max_iter:
-        # ══ ONE batched matmul for ALL shifts ══
-        # AtA @ P: (dim, dim) @ (dim, K) → (dim, K)
-        MP = AtA @ P
+        # ══ ONE (batched) matmul for ALL shifts ══
+        if is_callable:
+            # Matrix-free: apply operator to each shift's search direction
+            MP = torch.stack([AtA(P[:, k]) for k in range(K)], dim=1)
+        else:
+            # Dense: AtA @ P: (dim, dim) @ (dim, K) → (dim, K)
+            MP = AtA @ P
 
         # Add shift: (AtA + σ_k I) p_k = MP_k + σ_k * P_k
         AP = MP + sigma_t.unsqueeze(0) * P  # (dim, K)
@@ -302,7 +311,7 @@ def _solve_asymptotic_shifts(AtA, b, shifts, device, dtype):
     One CG refinement step gives machine-precision accuracy.
 
     Args:
-        AtA: matrix (dim, dim)
+        AtA: matrix (dim, dim) OR callable (v -> AtA @ v)
         b: RHS vector
         shifts: list of large σ values
         device, dtype: tensor parameters
@@ -310,13 +319,16 @@ def _solve_asymptotic_shifts(AtA, b, shifts, device, dtype):
     Returns:
         list of solution tensors
     """
+    is_callable = callable(AtA)
+    _apply = AtA if is_callable else lambda v: AtA @ v
+
     solutions = []
     for sigma in shifts:
         # Initial guess: x₀ = b / σ (exact in limit σ → ∞)
         x = b / sigma
         # One CG refinement step: residual then correction
-        r = b - (AtA @ x + sigma * x)
-        Ar = AtA @ r + sigma * r
+        r = b - (_apply(x) + sigma * x)
+        Ar = _apply(r) + sigma * r
         rAr = torch.dot(r, Ar)
         if rAr > 1e-30:
             alpha = torch.dot(r, r) / rAr
@@ -333,6 +345,7 @@ def multi_shift_solve_torch(AtA, phi, shifts, tol=1e-6, max_iter=500,
     - Shifts within spectral range: shared-Krylov CG (1 matmul/iter for all)
     - Shifts far beyond spectral range: direct solve (κ ≈ 1, 2 matmuls each)
     - float64 Metropolis: batched LU (exact, no iteration tolerance)
+    - Matrix-free: AtA can be a callable (Phase 5g, L=12+ support)
 
     The Zolotarev poles span many orders of magnitude (e.g., [0, 10⁹] for
     spectral range [0.5, 130]). Only ~10 of 16 poles are "spectral" —
@@ -342,7 +355,7 @@ def multi_shift_solve_torch(AtA, phi, shifts, tol=1e-6, max_iter=500,
     Source: Jegerlehner, hep-lat/9612014 (1996) — shared Krylov space
 
     Args:
-        AtA: matrix A†A (dim, dim) on device
+        AtA: matrix A†A (dim, dim) on device, OR callable (v -> AtA @ v)
         phi: source vector (dim,) on device
         shifts: list/array of σ_k values
         tol: CG tolerance (shared_krylov only)
@@ -355,13 +368,24 @@ def multi_shift_solve_torch(AtA, phi, shifts, tol=1e-6, max_iter=500,
     """
     n_shifts = len(shifts)
     float_shifts = [float(s) if not isinstance(s, float) else s for s in shifts]
-    device = AtA.device
-    dtype = AtA.dtype
+    is_callable = callable(AtA)
+
+    if is_callable:
+        device = phi.device
+        dtype = phi.dtype
+    else:
+        device = AtA.device
+        dtype = AtA.dtype
 
     if method == 'auto':
-        method = 'batched_lu' if dtype == torch.float64 else 'shared_krylov'
+        if is_callable:
+            method = 'shared_krylov'  # matrix-free always uses CG
+        else:
+            method = 'batched_lu' if dtype == torch.float64 else 'shared_krylov'
 
     if method == 'batched_lu':
+        if is_callable:
+            raise ValueError("batched_lu requires a dense matrix, not a callable")
         return solve_batched_lu(AtA, phi, float_shifts)
 
     # Strategy by dimension:
@@ -369,8 +393,9 @@ def multi_shift_solve_torch(AtA, phi, shifts, tol=1e-6, max_iter=500,
     #   Measured: 120ms vs 250-iteration CG at 8.4s (memory-bound: 250 × 32MB reads)
     # - dim > 4096 (L≥6): batched CG wins (O(n²√κ) < O(n³), fits in memory)
     #   Batched LU at dim=10368 needs 16 × 10368² × 4 = 6.9GB — tight on 16GB machines
+    # - Matrix-free (callable AtA): always CG (no matrix to factor)
     dim = phi.shape[0]
-    if dim <= 4096:
+    if not is_callable and dim <= 4096:
         return solve_batched_lu(AtA, phi, float_shifts)
     else:
         solutions, _ = batched_cg(AtA, phi, float_shifts, tol, max_iter)
@@ -395,7 +420,8 @@ from src.vestigial.hs_rhmc import compute_zolotarev_coefficients  # noqa: E402
 # ════════════════════════════════════════════════════════════════════
 
 
-def compute_forces_torch(h_flat, g, A, phi, alphas, betas, L, lam_max=None):
+def compute_forces_torch(h_flat, g, A, phi, alphas, betas, L, lam_max=None,
+                         stencil_ops=None):
     """Compute h-field forces on MPS device.
 
     At β=0 with identity gauge links, only F_h is needed.
@@ -410,11 +436,13 @@ def compute_forces_torch(h_flat, g, A, phi, alphas, betas, L, lam_max=None):
     Args:
         h_flat: shape (V, 4, 4) on device
         g: coupling (float)
-        A: fermion matrix (dim, dim) on device
+        A: fermion matrix (dim, dim) on device, or None if stencil_ops provided
         phi: pseudofermion (dim,) on device
         alphas: Zolotarev coefficients, 1D tensor on device
         betas: Zolotarev shifts, 1D tensor on device
         L: lattice size
+        stencil_ops: optional dict with 'apply_A' and 'apply_AtA' callables
+                     for matrix-free mode (Phase 5g). If provided, A is ignored.
 
     Returns:
         F_h: shape (V, 4, 4) on device — force on h-fields
@@ -422,16 +450,23 @@ def compute_forces_torch(h_flat, g, A, phi, alphas, betas, L, lam_max=None):
     V = L ** 4
     device = h_flat.device
     dtype = h_flat.dtype
-    AtA = -A @ A  # A†A = -A² for real antisymmetric
+
+    if stencil_ops is not None:
+        apply_A = stencil_ops['apply_A']
+        apply_AtA = stencil_ops['apply_AtA']
+    else:
+        AtA = -A @ A  # A†A = -A² for real antisymmetric
+        apply_A = lambda v: A @ v  # noqa: E731
+        apply_AtA = AtA
 
     # Solve all shifted systems (shared-Krylov for spectral, direct for asymptotic)
     shifts = [float(b) for b in betas]
-    psi_list = multi_shift_solve_torch(AtA, phi, shifts, tol=1e-6, max_iter=500,
-                                        lam_max=lam_max)
+    psi_list = multi_shift_solve_torch(apply_AtA, phi, shifts, tol=1e-6,
+                                        max_iter=500, lam_max=lam_max)
 
     # Stack solutions and compute A @ ψ_k for each
     psi_all = torch.stack(psi_list)  # (n_poles, dim)
-    Apsi_all = torch.einsum('ij,kj->ki', A, psi_all)  # (n_poles, dim)
+    Apsi_all = torch.stack([apply_A(psi) for psi in psi_list])  # (n_poles, dim)
 
     neighbors = _get_neighbors(L)
     CG = _CG_TORCH.to(device)  # (4, 8, 8)

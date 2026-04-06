@@ -20,6 +20,10 @@ structure QSqrt2 where
 
 namespace QSqrt2
 
+@[ext]
+theorem ext {x y : QSqrt2} (ha : x.a = y.a) (hb : x.b = y.b) : x = y := by
+  cases x; cases y; simp_all
+
 instance : Zero QSqrt2 := ⟨⟨0, 0⟩⟩
 instance : One QSqrt2 := ⟨⟨1, 0⟩⟩
 
@@ -36,6 +40,20 @@ instance : Sub QSqrt2 where
 instance : Mul QSqrt2 where
   mul x y := ⟨x.a * y.a + 2 * x.b * y.b,
               x.a * y.b + x.b * y.a⟩
+
+/-- Simp lemmas to expose ℚ arithmetic inside QSqrt2. -/
+@[simp] theorem add_a (x y : QSqrt2) : (x + y).a = x.a + y.a := rfl
+@[simp] theorem add_b (x y : QSqrt2) : (x + y).b = x.b + y.b := rfl
+@[simp] theorem zero_a : (0 : QSqrt2).a = 0 := rfl
+@[simp] theorem zero_b : (0 : QSqrt2).b = 0 := rfl
+
+/-- AddCommMonoid instance — needed for Finset.sum in pentagon equation. -/
+instance : AddCommMonoid QSqrt2 where
+  add_assoc a b c := by ext <;> simp <;> ring
+  zero_add a := by ext <;> simp
+  add_zero a := by ext <;> simp
+  add_comm a b := by ext <;> simp <;> ring
+  nsmul := nsmulRec
 
 /-- Key values for Ising F-symbols. -/
 def sqrt2_inv : QSqrt2 := ⟨0, 1/2⟩       -- 1/√2 = √2/2 = 0 + (1/2)√2

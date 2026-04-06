@@ -6,67 +6,10 @@ import Lean.Structure
 import Lean.Meta.Instances
 import Lean.PrettyPrinter
 
--- Import ALL 60 project modules so their declarations are in the environment
-import SKEFTHawking.AcousticMetric
-import SKEFTHawking.ADWMechanism
-import SKEFTHawking.Basic
-import SKEFTHawking.BdGHamiltonian
-import SKEFTHawking.CenterEquivalenceZ2
-import SKEFTHawking.CGLTransform
-import SKEFTHawking.ChiralityWall
-import SKEFTHawking.ChiralityWallMaster
-import SKEFTHawking.DrinfeldCenterBridge
-import SKEFTHawking.DrinfeldDouble
-import SKEFTHawking.DrinfeldDoubleAlgebra
-import SKEFTHawking.DrinfeldDoubleRing
-import SKEFTHawking.DrinfeldEquivalence
-import SKEFTHawking.FermionBag4D
-import SKEFTHawking.FractonFormulas
-import SKEFTHawking.FractonGravity
-import SKEFTHawking.FractonHydro
-import SKEFTHawking.FractonNonAbelian
-import SKEFTHawking.FusionCategory
-import SKEFTHawking.FusionExamples
-import SKEFTHawking.GaugeEmergence
-import SKEFTHawking.GaugeErasure
-import SKEFTHawking.GaugeFermionBag
-import SKEFTHawking.GenerationConstraint
-import SKEFTHawking.GoltermanShamir
-import SKEFTHawking.GTCommutation
-import SKEFTHawking.GTWeylDoublet
-import SKEFTHawking.HawkingUniversality
-import SKEFTHawking.HubbardStratonovichRHMC
-import SKEFTHawking.KappaScaling
-import SKEFTHawking.KLinearCategory
-import SKEFTHawking.LatticeHamiltonian
-import SKEFTHawking.MajoranaKramers
-import SKEFTHawking.OnsagerAlgebra
-import SKEFTHawking.OnsagerContraction
-import SKEFTHawking.PauliMatrices
-import SKEFTHawking.PolaritonTier1
-import SKEFTHawking.QuaternionGauge
-import SKEFTHawking.S3CenterAnyons
-import SKEFTHawking.SecondOrderSK
-import SKEFTHawking.SKDoubling
-import SKEFTHawking.SMFermionData
-import SKEFTHawking.SMGClassification
-import SKEFTHawking.SO4Weingarten
-import SKEFTHawking.SphericalCategory
-import SKEFTHawking.SteenrodA1
-import SKEFTHawking.SU2PseudoReality
-import SKEFTHawking.ThirdOrderSK
-import SKEFTHawking.ToricCodeCenter
-import SKEFTHawking.TPFEvasion
-import SKEFTHawking.VecG
-import SKEFTHawking.VecGMonoidal
-import SKEFTHawking.VestigialGravity
-import SKEFTHawking.VestigialSusceptibility
-import SKEFTHawking.WetterichNJL
-import SKEFTHawking.WilsonMass
-import SKEFTHawking.WKBAnalysis
-import SKEFTHawking.WKBConnection
-import SKEFTHawking.Z16AnomalyComputation
-import SKEFTHawking.Z16Classification
+-- Import the root module which transitively imports ALL project modules.
+-- This ensures ExtractDeps always sees every declaration without maintaining
+-- a separate import list that drifts out of sync.
+import SKEFTHawking
 
 /-!
 # ExtractDeps — Lean 4 meta-programming script for dependency extraction

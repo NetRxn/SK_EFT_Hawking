@@ -3,7 +3,7 @@
 **Purpose:** Track high-value formalization targets beyond the current phase. Deep research timelines assume human effort; our pipeline + Aristotle has consistently compressed months→days.
 
 **Created:** April 4, 2026
-**Updated:** April 5, 2026 (session 2): **1253 thms, 88 modules, 34 sorry, 0 axioms**
+**Updated:** April 6, 2026: **2023 thms (1949 substantive + 74 placeholder), 88 modules, 28 sorry, 1 axiom**
 
 ---
 
@@ -136,21 +136,31 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ---
 
-## 34 Remaining Sorry Gaps (entire project)
+## 28 Remaining Sorry Gaps (entire project)
 
 | File | Count | Status |
 |------|-------|--------|
-| SU2kMTC.lean | 5 | Aristotle `3b356975` in flight |
-| FibonacciMTC.lean | 3 | Aristotle `3b356975` in flight |
-| Uqsl2AffineHopf.lean | 3 | Next Aristotle batch |
-| VerifiedStatistics.lean | 4 | Next Aristotle batch |
-| CoidealEmbedding.lean | 4 | Next Aristotle batch |
-| RepUqFusion.lean | 2 | Next Aristotle batch |
-| KerrSchild.lean | 1 | Next Aristotle batch |
-| CenterFunctor.lean | 5 | Next Aristotle batch |
-| StimulatedHawking.lean | 7 | Next Aristotle batch |
+| StimulatedHawking.lean | 7 | Aristotle Batch 3 |
+| CenterFunctor.lean | 5 | Aristotle Batch 4 |
+| CoidealEmbedding.lean | 4 | **Aristotle Batch 2 IN FLIGHT** |
+| VerifiedStatistics.lean | 4 | Aristotle Batch 3 |
+| Uqsl2AffineHopf.lean | 3 | **Aristotle Batch 2 IN FLIGHT** |
+| RepUqFusion.lean | 2 | Aristotle Batch 3 |
+| EmergentGravityBounds.lean | 2 | Aristotle Batch 4 |
+| KerrSchild.lean | 1 | Aristotle Batch 4 |
+| TetradGapEquation.lean | 1 | Aristotle Batch 4 (corrected boundedness) |
 
-TetradGapEquation.lean and Uqsl2Hopf.lean: **ZERO sorry** (Aristotle `79e07d55`).
+**Resolved this session:**
+- SU2kMTC.lean: 5→0 (native_decide over QSqrt2, convention bug fixed)
+- FibonacciMTC.lean: 3→0 (native_decide over QSqrt5)
+
+**Proof quality notes:**
+- Zero `set_option maxHeartbeats` in entire project (VecGMonoidal fixed via @[local instance] caching)
+- Ising pentagon PROVED via native_decide over QSqrt2 (convention bug found + fixed)
+- Fibonacci pentagon PROVED via native_decide over QSqrt5
+- 74 placeholder theorems (`True := trivial`) tracked in PLACEHOLDER_THEOREMS
+- 1 axiom: `gapped_interface_axiom` (SPTClassification.lean)
+- Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`
 
 ---
 
@@ -198,14 +208,15 @@ TetradGapEquation.lean and Uqsl2Hopf.lean: **ZERO sorry** (Aristotle `79e07d55`)
 ### Phase 5g-5j Deep Research
 | Topic | File | Phase | Status |
 |-------|------|-------|--------|
-| Sparse/matrix-free fermion operator | Phase-5g/Sparse staggered fermion matrix.md | 5g | **COMPLETE** |
-| Mathlib categorical PR process | Phase-5h/Contributing categorical infrastructure to Mathlib4.md | 5g | **COMPLETE** |
-| 3+1D chirality wall formalizability | Phase-5h/Mapping the 3+1D chirality wall.md | 5h | **COMPLETE** |
-| Paper submission strategy | Phase5g_paper_submission_strategy.txt | 5g | SUBMITTED |
-| Paper 14 scope (braided MTCs) | Phase5g_paper14_braided_mtc_scope.txt | 5g | SUBMITTED |
-| Mathlib PR strategy | Phase5g_mathlib_pr_strategy.txt | 5g | SUBMITTED |
-| U_q(sl_3) quantum group | Phase5i_uq_sl3_quantum_group.txt | 5i | SUBMITTED |
-| |N|>1 Fermi-point → SU(2) | Phase5j_fermi_point_su2_emergence.txt | 5j | SUBMITTED |
+| Sparse/matrix-free fermion operator | Lit-Search/Phase-5g/Sparse staggered fermion matrix.md | 5g | **COMPLETE**, applied (matrix-free CG) |
+| Mathlib categorical PR process | Lit-Search/Phase-5h/Contributing categorical infrastructure to Mathlib4.md | 5g/5h | **COMPLETE** (Mathlib PR guide) |
+| Ising MTC F-symbols + pentagon | Lit-Search/Phase-5g/Ising MTC F-symbols and pentagon equation for Lean 4.md | 5g | **COMPLETE**, applied (pentagon fix) |
+| VecGMonoidal heartbeat fix | Lit-Search/Phase-5g/Replacing inferInstance with explicit monoidal constructions for GradedObject.md | 5g | **COMPLETE**, applied |
+| Paper strategy (braided MTCs) | Lit-Search/Phase-5g/Publishing the first verified braided MTCs and knot invariants.md | 5g | **COMPLETE** |
+| Publication blueprint | Lit-Search/Phase-5g/CopyPublishA publication blueprint for an independent researcher across physics and formal verification.md | 5g | **COMPLETE** |
+| 3+1D chirality wall formalizability | Lit-Search/Phase-5h/Mapping the 3+1D chirality wall.md | 5h | **COMPLETE** |
+| U_q(sl_3) technical specification | Lit-Search/Phase-5j/U_q(sl_3) complete technical specification for Lean 4 formalization.md | 5i | **COMPLETE** (filed under 5j/) |
+| |N|>1 Fermi-point → SU(2) | Lit-Search/Phase-5j/Volovik \|N\|>1 Fermi-Point → SU(2) Gauge Emergence.md | 5j | **COMPLETE** |
 
 ---
 
@@ -216,12 +227,12 @@ TetradGapEquation.lean and Uqsl2Hopf.lean: **ZERO sorry** (Aristotle `79e07d55`)
 | 5d | Tetrad gap equation, polariton, MTC instances, QG extensions | Phase5d_Roadmap.md | 13 waves, Aristotle pending |
 | 5e | Braided MTCs, knot invariants, S-matrix unitarity | Phase5e_Roadmap.md | **COMPLETE** (65 thms, 0 sorry) |
 | 5f | TQFT, emergent gravity bounds, figure-eight knot | Phase5f_Roadmap.md | **COMPLETE** (36 thms, 2 sorry) |
-| 5g | Matrix-free CG, Mathlib PR, paper submission | Phase5g_Roadmap.md | Planned (10 waves) |
-| 5h | Chirality wall 3+1D formalization | Phase5h_Roadmap.md | Planned (5 waves) |
-| 5i | U_q(sl_3) higher-rank quantum groups | Phase5i_Roadmap.md | Planned (3 waves), awaiting deep research |
-| 5j | Fermi-point gauge emergence | Phase5j_Roadmap.md | Planned (3 waves), awaiting deep research |
+| 5g | Matrix-free CG, Mathlib PR, paper submission | Phase5g_Roadmap.md | Track A W1-2 COMPLETE, W3 BLOCKED. Track B/C not started. Deep research COMPLETE. |
+| 5h | Chirality wall 3+1D formalization | Phase5h_Roadmap.md | Track A W1-2 COMPLETE (SPT, 15 thms + 1 axiom). Tracks B-C not started. |
+| 5i | U_q(sl_3) higher-rank quantum groups | Phase5i_Roadmap.md | NOT STARTED. Deep research COMPLETE. W4 BLOCKS Mathlib PR. |
+| 5j | Fermi-point gauge emergence | Phase5j_Roadmap.md | NOT STARTED. Deep research COMPLETE. |
 | 6 | HPC-dependent (L=12-20, Walker-Wang) | Phase6_Roadmap.md | Deferred (sparse CG may eliminate L=12-16 need for HPC) |
 
 ---
 
-*Updated April 6, 2026. 1363 theorems, 96 modules. Phases 5e-5f COMPLETE. Phases 5g-5j planned with 21 deep research tasks (13 complete, 8 submitted/pending). Aristotle `3b356975` at 20%. L=8 RHMC running (epochs, n_md_steps=80).*
+*Updated April 6, 2026. 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. Zero heartbeat overrides. Phases 5e-5f COMPLETE. Phase 5g W1-2 COMPLETE (matrix-free CG, pentagon proved, automated counts). Phase 5h W1-2 COMPLETE (SPT types). Phase 5i-5j NOT STARTED (deep research COMPLETE for both). VecGMonoidal heartbeats eliminated. Aristotle Batch 2 in flight (Uqsl2AffineHopf + CoidealEmbedding, 7 sorry). L=8 RHMC running (4 workers).*

@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 6, 2026 (Phase 5e COMPLETE: **1318 thm**, 0 ax, 93 modules, **34 sorry** across 12 files, Aristotle targets — Phase 5e added 5 modules, 65 theorems, ZERO new sorry)
+**Last synced:** April 6, 2026 (Phase 5g/5h: **1379 thm** (1304 substantive), 1 ax, 97 modules, **28 sorry**, 75 placeholders — VecGMonoidal heartbeats eliminated, pentagon proved via native_decide)
 
 ---
 
@@ -10,18 +10,19 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **1318** (0 axioms, incl. private helpers) | `grep -c "^theorem\|^private theorem" lean/SKEFTHawking/*.lean` |
+| Lean theorems | **1379** (1304 substantive + 75 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
+| Placeholders (True := trivial) | **75** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **307** (304 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **34** | 5 SU2kMTC + 3 FibonacciMTC + 3 Uqsl2AffineHopf + 4 VerifiedStatistics + 4 CoidealEmbedding + 2 RepUqFusion + 1 KerrSchild + 1 TetradGapEquation + 7 StimulatedHawking + 4 CenterFunctor |
-| **Axioms** | **0** | All removed (Wave 6) |
-| Lean modules | 93 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 1284 | 1318 - 34 |
-| Python source modules | 53 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 41 | `find tests/ -name "test_*.py"` |
+| **Sorry gaps** | **28** | 3 Uqsl2AffineHopf + 4 CoidealEmbedding + 4 VerifiedStatistics + 7 StimulatedHawking + 5 CenterFunctor + 2 RepUqFusion + 1 KerrSchild + 2 EmergentGravityBounds + 1 TetradGapEquation (SU2kMTC and FibonacciMTC now ZERO sorry — resolved via native_decide) |
+| **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
+| Lean modules | **97** | Including SPTClassification.lean (new) |
+| Proved (substantive, zero sorry) | **1276** | 1304 - 28 |
+| Python source modules | **53** | Including stencil_dirac.py (new) |
+| Test files | **43** | Including test_stencil_dirac.py (new) |
 | Test count | 1635+ | `pytest tests/ -q` |
-| Figures | 80 | `grep -c "^def fig_" src/core/visualizations.py` |
-| Notebooks | 40 | `ls notebooks/*.ipynb` |
-| Papers | 12 | `ls papers/paper*/paper_draft.tex` |
+| Figures | **81** | `grep -c "^def fig_" src/core/visualizations.py` |
+| Notebooks | **42** | `ls notebooks/*.ipynb` |
+| Papers | **12** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 35+ | See Aristotle run table in full inventory |

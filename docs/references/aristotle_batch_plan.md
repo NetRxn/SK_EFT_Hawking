@@ -2,53 +2,64 @@
 
 ## Overview
 
-36 sorry gaps across 10 modules, organized into 4 priority batches.
+28 sorry gaps across 9 modules, organized into 3 priority batches.
 Submit sequentially — one batch at a time, wait for completion before next.
 
 **Rule:** Never submit overlapping jobs. Each batch sends the entire Lean project.
+
+**Updated:** April 6, 2026. Batch 1 (MTC instances) COMPLETED manually via
+native_decide over Q(√2) and Q(√5). Pentagon convention bug fixed. VecGMonoidal
+heartbeat overrides eliminated. Project builds clean with zero `set_option` overrides.
 
 ## Current Status
 
 | Batch | Priority | Sorry | Modules | Status |
 |-------|----------|-------|---------|--------|
-| 1 | P1 | 8 | SU2kMTC (5), FibonacciMTC (3) | **IN FLIGHT** (3b356975, 20%) |
-| 2 | P1 | 7 | Uqsl2AffineHopf (3), CoidealEmbedding (4) | Ready — submit after Batch 1 |
+| 1 | P1 | ~~8~~ 0 | ~~SU2kMTC (5), FibonacciMTC (3)~~ | **DONE** (native_decide) |
+| 2 | P1 | 7 | Uqsl2AffineHopf (3), CoidealEmbedding (4) | **READY** — submit now |
 | 3 | P2 | 13 | StimulatedHawking (7), VerifiedStatistics (4), RepUqFusion (2) | Ready — submit after Batch 2 |
-| 4 | P3 | 8 | CenterFunctor (5), KerrSchild (1), EmergentGravityBounds (2) | Ready — submit after Batch 3 |
+| 4 | P3 | 8+1 | CenterFunctor (5), KerrSchild (1), EmergentGravityBounds (2), TetradGapEquation (1) | Ready — submit after Batch 3 |
 
 ## Batch Details
 
-### Batch 1 (IN FLIGHT) — MTC Instances
-**Aristotle job:** 3b356975 (submitted ~18h ago, 20% progress)
-**Content:** Pentagon equations, F-symbol involutory, twist factors, global dimension
-
-| Module | Sorry | Key Theorems |
-|--------|-------|-------------|
-| SU2kMTC | 5 | isingF_involutory (×2), ising_pentagon, ising_twist_unitary, ising_twist_psi |
-| FibonacciMTC | 3 | fib_pentagon_all_tau, fib_global_dim, fib_dim_consistency |
-
-**What it unblocks:** Complete fusion category instances (F-symbols verified). Phase 5d Wave 4 completion.
+### Batch 1 — COMPLETED
+Pentagon equations and F-symbol verification for Ising and Fibonacci MTCs.
+Resolved manually: convention mismatch identified via brute-force search over
+Q(√2)/Q(√5), corrected F-symbol admissibility conditions, pentagon proved
+by native_decide. Zero sorry remaining in SU2kMTC and FibonacciMTC.
 
 ### Batch 2 (Priority 1) — Affine Quantum Group
-**Submit when:** Batch 1 completes (or fails and is retrieved)
-**Why P1:** Unblocks Phase 5e Track C (full affine HopfAlgebra instance)
+**Submit now.** Unblocks Phase 5e Track C (full affine HopfAlgebra instance).
 
 | Module | Sorry | Key Theorems | Difficulty |
 |--------|-------|-------------|------------|
-| Uqsl2AffineHopf | 3 | affComul/Counit/Antipode_respects_rel | HARD (Serre coproduct = 64 terms) |
+| Uqsl2AffineHopf | 3 | affComul/Counit/Antipode_respects_rel | HARD (Serre coproduct) |
 | CoidealEmbedding | 4 | coideal_B0/B1, counit_B0/B1 | MODERATE (tensor product expansion) |
 
-**Strategy hints in sorry stubs:** Per-relation factoring, 4-phase tactic, maxHeartbeats 800000 for Serre.
-**Deep research available:** Phase-5e/U_q(ŝl₂) Hopf algebra proof strategy.
+**PROVIDED SOLUTION hints are in each sorry stub.** Key strategies:
+- Coproduct: 4-phase tactic (same as Uqsl2Hopf which Aristotle proved in run 79e07d55)
+- Counit: trivial (all E/F map to 0)
+- Coideal: expand B_i = F_i + E_iK_i^{-1}, apply linearity of Δ
+- **No heartbeat overrides needed** — project builds clean at default limits
 
-**Prompt for submission:**
+**Submission prompt:**
 ```
 Fill the sorry gaps in Uqsl2AffineHopf.lean and CoidealEmbedding.lean.
-For Uqsl2AffineHopf: factor into per-relation lemmas. The counit proof is
-trivial (all E/F map to 0). The coproduct Serre relation expands to 64
-tensor terms — use the 4-phase strategy from the PROVIDED SOLUTION hints.
-For CoidealEmbedding: expand B_i = F_i + E_iK_i^{-1}, apply linearity of Δ.
-Priority: --priority 1
+
+For Uqsl2AffineHopf.lean:
+- affComulFreeAlg_respects_rel: Factor into per-relation cases. Use the same
+  4-phase simp/rewrite strategy that worked for Uqsl2Hopf (already proved in
+  this project). KK⁻¹ and KE/KF cases are mechanical. Counit is trivial
+  (all generators map to 0 or 1). Serre cases expand via coproduct linearity.
+  See PROVIDED SOLUTION hints in each theorem docstring.
+
+For CoidealEmbedding.lean:
+- coideal_B0/B1: Expand B_i = F_i + E_i·K_i⁻¹, apply Δ by linearity,
+  use K_i·K_i⁻¹ = 1 to simplify. See PROVIDED SOLUTION for step-by-step.
+- counit_B0/B1: Apply ε by linearity. ε(E_i) = ε(F_i) = 0, ε(K_i) = 1.
+
+Do NOT add set_option maxHeartbeats or synthInstance.maxHeartbeats overrides.
+The project builds clean at default limits.
 ```
 
 ### Batch 3 (Priority 2) — Paper Verification
@@ -61,33 +72,15 @@ Priority: --priority 1
 | VerifiedStatistics | 4 | Cauchy-Schwarz, jackknife mean-case, ρ≤1, N_eff≤N | MODERATE (finite sums) |
 | RepUqFusion | 2 | fusion commutativity, Peter-Weyl sum of squares | EASY (Nat arithmetic) |
 
-**Prompt for submission:**
-```
-Fill sorry gaps in StimulatedHawking.lean, VerifiedStatistics.lean, and
-RepUqFusion.lean. These are real analysis and finite arithmetic proofs.
-See PROVIDED SOLUTION hints in each theorem docstring.
-Priority: --priority 2
-```
-
 ### Batch 4 (Priority 3) — Hard / Less Urgent
 **Submit when:** Batch 3 completes
-**Why P3:** CenterFunctor is heavy categorical plumbing, others are niche
 
 | Module | Sorry | Key Theorems | Difficulty |
 |--------|-------|-------------|------------|
 | CenterFunctor | 5 | functor_exists, faithful, full, essSurj, equivalence | VERY HARD (categorical) |
 | KerrSchild | 1 | ks_inverse_formula (Sherman-Morrison 4×4) | MODERATE |
 | EmergentGravityBounds | 2 | coupling_deficit, coupling_ratio_small (need π bounds) | EASY |
-
-**Prompt for submission:**
-```
-Fill sorry gaps in CenterFunctor.lean, KerrSchild.lean, and
-EmergentGravityBounds.lean. CenterFunctor uses Path B
-(ofFullyFaithfullyEssSurj) — see deep research hints.
-KerrSchild: Sherman-Morrison for null vector. EmergentGravityBounds:
-need Real.pi_gt_three for π > 3.
-Priority: --priority 3
-```
+| TetradGapEquation | 1 | gap_solution_bounded (corrected, with coupling bound) | MODERATE |
 
 ## Submission Commands
 
@@ -95,11 +88,10 @@ Priority: --priority 3
 # Check current Aristotle status:
 source .env && export ARISTOTLE_API_KEY && uv run aristotle list --limit 5
 
-# Submit a batch (from SK_EFT_Hawking/lean/):
+# Submit Batch 2 (from SK_EFT_Hawking/lean/):
 cd lean
 source ../.env && export ARISTOTLE_API_KEY
-uv run aristotle submit "Fill sorry gaps: [batch description]" \
-  --project-dir . --priority [1|2|3]
+uv run aristotle submit "[prompt text]" --project-dir .
 
 # Retrieve results:
 uv run python scripts/submit_to_aristotle.py --retrieve <UUID>
@@ -107,31 +99,3 @@ uv run python scripts/submit_to_aristotle.py --retrieve <UUID>
 # Integrate (after review):
 uv run python scripts/submit_to_aristotle.py --retrieve <UUID> --integrate
 ```
-
-## Dependency Graph
-
-```
-Batch 1 (MTC instances)
-    ↓ completes fusion categories
-Batch 2 (Affine Hopf + Coideal)
-    ↓ unblocks Phase 5e Track C
-Batch 3 (Paper verification)
-    ↓ completes Papers 11, 12 Lean backing
-Batch 4 (Hard / less urgent)
-    ↓ completes CenterFunctor equivalence
-```
-
-Batches 2-4 are submitted sequentially but are NOT dependency-ordered
-(they're independent modules). The sequencing is by priority: submit
-the most impactful batch first so it starts processing while lower-priority
-batches wait.
-
-## Monitoring
-
-After each submission, monitor with:
-```bash
-source .env && export ARISTOTLE_API_KEY && uv run aristotle list --limit 5
-```
-
-Expected turnaround: 4-24 hours per batch depending on difficulty.
-Batch 2 (Serre coproduct) will likely take the longest.

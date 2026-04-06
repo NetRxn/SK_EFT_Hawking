@@ -93,6 +93,7 @@ import SKEFTHawking.QLevel3
 import SKEFTHawking.TQFTPartition
 import SKEFTHawking.FigureEightKnot
 import SKEFTHawking.EmergentGravityBounds
+import SKEFTHawking.SPTClassification
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

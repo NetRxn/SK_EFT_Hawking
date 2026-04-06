@@ -1619,16 +1619,16 @@ SORRY_GAPS: list[SorryGap] = [
         name="su2k_mtc_pentagon_twist",
         priority=1,
         description="5 sorry: isingF_involutory (2 entries), ising_pentagon, ising_twist_unitary, ising_twist_psi. F-symbol and twist verification for Ising MTC.",
-        strategy_hint="Pentagon: expand sum over Fin 3, reduce to F-symbol arithmetic. Twist: Complex.exp simplification. involutory: F*F=I check via QSqrt2 or Real arithmetic.",
-        filled=False,
+        strategy_hint="RESOLVED: All proved via native_decide over QSqrt2. Convention bug fixed (Kitaev 2006). Pentagon + twist + involutory all zero sorry.",
+        filled=True,
     ),
     SorryGap(
         module="SKEFTHawking.FibonacciMTC",
         name="fibonacci_mtc_pentagon_dim",
         priority=1,
         description="3 sorry: fib_pentagon_all_tau, fib_global_dim, fib_dim_consistency. Pentagon over Q(sqrt5) F-symbols and Real.sqrt arithmetic.",
-        strategy_hint="Pentagon: index convention mapping to FusionCategory.PentagonSatisfied. global_dim: 1 + phi^2 = (5+sqrt5)/2 via Real.sqrt algebra. dim_consistency: phi^2 = phi+1 over ℝ.",
-        filled=False,
+        strategy_hint="RESOLVED: All proved via native_decide over QSqrt5. Pentagon convention fixed. D² and φ²=1+φ proved over both Q(√5) and ℝ.",
+        filled=True,
     ),
 
     # --- Batch 2 (Priority 1 — unblocks Phase 5e Track C) ---

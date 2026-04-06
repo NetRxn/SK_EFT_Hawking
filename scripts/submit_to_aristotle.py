@@ -249,8 +249,13 @@ def main():
         default=3600,
         help="Timeout in seconds. Default: 3600 (1 hour). Job continues server-side.",
     )
-    # Deprecated args (still functional for backwards compat)
-    parser.add_argument("--priority", type=int, default=None, help=argparse.SUPPRESS)
+    parser.add_argument(
+        "--priority",
+        type=int,
+        default=None,
+        help="Submit sorry gaps up to this priority level (1=highest). "
+             "Uses SORRY_GAPS registry in aristotle_interface.py.",
+    )
     parser.add_argument("--target", type=str, default=None, help=argparse.SUPPRESS)
 
     args = parser.parse_args()
@@ -340,9 +345,6 @@ def main():
         return
 
     # Deprecated path warnings
-    if args.priority is not None:
-        print("WARNING: --priority is deprecated. Use --submit instead (single comprehensive job).")
-        print("         The priority system doesn't help because Aristotle always receives the full project.")
     if args.target is not None:
         print("WARNING: --target is deprecated. Use --submit instead.")
         print("         For targeted prompts, use the aristotle CLI directly:")

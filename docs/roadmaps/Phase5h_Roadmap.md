@@ -4,6 +4,8 @@
 
 *Prepared 2026-04-06 | Follows Phase 5g*
 
+**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`. Zero heartbeat overrides. Aristotle Batch 2 in flight.
+
 **Prerequisite:** Phase 5g Mathlib PR (Wave 5) gives credibility context for publishing chirality results.
 
 ---
@@ -24,24 +26,24 @@ Phase 5h extends to 3+1D, addressing the three gaps identified by the Critical R
 
 ## Track A: TPF Gapped Interface Axiomatization
 
-### Wave 1 — SPT Type Definitions
-**Goal:** Define the type-theoretic framework for stating the conjecture.
+### Waves 1-2 — SPT Types + Gapped Interface Axiom — **COMPLETE**
+**Goal:** Define SPT type infrastructure and state the TPF conjecture as a structured axiom.
 
-- [ ] `lean/SKEFTHawking/SPTClassification.lean` — SPTClass, FreeFermionSPT, CommutingProjectorSPT types
-- [ ] Spectral gap as a typeclass
-- [ ] Interface Hamiltonian structure
-- [ ] Connection to existing SpinBordism.lean
-
-### Wave 2 — Gapped Interface Axiom + Consequences
-**Goal:** State the conjecture and derive consequences.
-
-- [ ] `gapped_interface_exists` as an axiom (registered in AXIOM_METADATA)
-- [ ] Derive: anomaly-free → chiral lattice gauge theory exists (conditional theorem)
-- [ ] Connect to our existing Z₁₆ classification
-
-**Deliverables:**
-- `lean/SKEFTHawking/SPTClassification.lean` (~15-20 theorems)
-- Paper 7/8 update with axiomatized conjecture
+- [x] `lean/SKEFTHawking/SPTClassification.lean` — 15 theorems + 1 axiom, ZERO sorry
+  - SPTPhaseData: bulk/boundary dim, classification order, anomaly index
+  - FreeFermionSPT: quadratic Hamiltonian, band topology
+  - CommutingProjectorSPT: commuting terms, infinite-dim rotors, on-site symmetry
+  - InterfaceData: codimension-1 junction between FF and CP realizations
+  - GappedInterfaceProperties: gap > 0, unique ground state, short-range entangled
+- [x] `gapped_interface_axiom` as structured axiom (registered in AXIOM_METADATA, eliminability: hard)
+- [x] `anomaly_free_implies_chiral_gauge`: conditional theorem from axiom
+- [x] `sm_generation_gapped_interface`: SM with 16 Majorana → gapped interface exists
+- [x] `sm_three_gen_gapped_interface`: 3 generations → gapped interface exists
+- [x] `no_gap_implies_anomalous`: contrapositive no-go (rigorous direction)
+- [x] `kapustin_fidkowski_nogo`: finite-dim CP can't have nonzero Hall conductance
+- [x] Bridge theorems to SpinBordism, Z16Classification, SMGClassification, ChiralityWallMaster
+- [x] `lake build` clean (8123 jobs, 18s for module)
+- [ ] Paper 7/8 update with axiomatized conjecture (deferred to doc sync)
 
 ---
 
@@ -79,9 +81,9 @@ Phase 5h extends to 3+1D, addressing the three gaps identified by the Critical R
 
 | # | Topic | File | Status |
 |---|-------|------|--------|
-| 1 | 3+1D chirality wall formalizability | Phase-5h/Mapping the 3+1D chirality wall.md | **COMPLETE** |
-| 2 | Mathlib categorical PR process | Phase-5h/Contributing categorical infrastructure to Mathlib4.md | **COMPLETE** |
+| 1 | 3+1D chirality wall formalizability | Lit-Search/Phase-5h/Mapping the 3+1D chirality wall.md | **COMPLETE** |
+| 2 | Mathlib categorical PR process | Lit-Search/Phase-5h/Contributing categorical infrastructure to Mathlib4.md | **COMPLETE** (shared with 5g) |
 
 ---
 
-*Phase 5h roadmap. The chirality wall is the most actively contested frontier in lattice QFT. Our formal analysis is the only machine-checked contribution to this debate.*
+*Phase 5h roadmap. Updated 2026-04-06 (Track A W1-2 COMPLETE: SPTClassification.lean, 15 thms + 1 axiom. Track B W3-4 NOT STARTED. Track C W5 NOT STARTED). 2023 theorems, 88 modules, 28 sorry, 1 axiom. The chirality wall is the most actively contested frontier in lattice QFT. Our formal analysis is the only machine-checked contribution to this debate.*

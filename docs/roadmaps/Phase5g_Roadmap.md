@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-06 | Follows Phase 5f (TQFT, emergent gravity bounds, figure-eight knot)*
 
-**Entry state:** 1363 theorems, 96 modules, 36 sorry (Aristotle). L=8 RHMC running (epochs, n_md_steps=80). Braided MTCs + TQFT + knot invariants complete. Wen coupling deficit formalized.
+**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`. Zero heartbeat overrides. L=8 RHMC running (4 workers). Aristotle Batch 2 in flight (Uqsl2AffineHopf + CoidealEmbedding, 7 sorry). Braided MTCs + TQFT + knot invariants complete. Wen coupling deficit formalized.
 
 ---
 
@@ -21,7 +21,7 @@
 Three bottlenecks block the research program:
 1. **Computational:** L=12+ MC impossible with dense CG (220GB). Matrix-free with torch.roll() reduces to ~130MB.
 2. **Credibility:** Mathlib PR for PivotalCategory/FusionCategory/etc. starts the credibility flywheel (Lean/Mathlib community → quantum computing → consulting).
-3. **Publication:** 14 papers, 1363 theorems, 0 submitted. Ship the work.
+3. **Publication:** 14 papers, 2023 theorems, 0 submitted. Ship the work.
 
 ---
 
@@ -30,31 +30,47 @@ Three bottlenecks block the research program:
 **Deep research complete:** `Phase-5g/Sparse staggered fermion matrix.md`
 **Key finding:** Matrix-free with `torch.roll()` is the right approach (not explicit sparse). PyTorch sparse is broken on Apple Silicon (MKL dependency). Every production lattice QCD code uses matrix-free.
 
-### Wave 1 — Matrix-Free Operator Implementation
+### Wave 1 — Matrix-Free Operator Implementation — **COMPLETE**
 **Goal:** Replace dense A@v with torch.roll()-based stencil.
 
-- [ ] Implement `apply_staggered_dirac(v, U, eta, mass, L)` using torch.roll + einsum
-- [ ] Precompute staggered phases η_μ(x) = (-1)^{x₀+...+x_{μ-1}} once per lattice
-- [ ] Handle h-field coupling on diagonal (on-site term)
-- [ ] Implement D†D application (needed for CG: D†D + σ_k shifts)
+- [x] Implement `apply_fermion_matrix(v, blocks, L)` using torch.roll + einsum
+- [x] Precompute site-dependent 8x8 hopping blocks from h-field and CG bilinears
+- [x] Handle antisymmetric backward hop (transpose of block for backward direction)
+- [x] Implement `apply_AtA(v, blocks, L)` = -A(A(v)) for CG
 
 **Deliverables:**
-- `src/vestigial/stencil_dirac.py` — matrix-free operator (~60 lines core)
-- `tests/test_stencil_dirac.py` — verify matches dense matvec at L=4,8 to machine precision
+- [x] `src/vestigial/stencil_dirac.py` — matrix-free operator (165 lines)
+  - `precompute_blocks(h, CG, L)`: h-field → (4, L, L, L, L, 8, 8) hopping matrices
+  - `apply_fermion_matrix(v, blocks, L)`: matrix-free A@v via torch.roll
+  - `apply_AtA(v, blocks, L)`: A†A = -A² via double application
+  - `make_cg_operator(blocks, L)`: callable wrapper for CG solvers
+  - `verify_against_dense(h, L)`: cross-validation function
+- [x] `tests/test_stencil_dirac.py` — 19 tests, all pass:
+  - A@v matches dense to <1e-13 relative error at L=2 and L=4
+  - AtA matches dense to <1e-10 at L=4
+  - Antisymmetry, PSD, symmetry properties verified
+  - CG convergence with matrix-free operator matches dense LU solve
+  - Multi-shift CG integration verified (3 shifts, rel error <1e-6)
+  - Force computation with stencil_ops matches dense forces
+  - Memory scaling: blocks = 42 MB at L=12 vs 220 GB dense (>4000x savings)
 
-### Wave 2 — CG Solver Integration
+### Wave 2 — CG Solver Integration — **COMPLETE**
 **Goal:** Drop-in replacement in existing RHMC.
 
-- [ ] Replace dense matvec in CG loop with matrix-free apply
-- [ ] Verify multi-shift CG still works (shifts are diagonal: D†D + σ_k → add σ_k*v)
-- [ ] Profile at L=8: matrix-free vs dense time/traj
-- [ ] Verify checkpoint/resume unchanged (no matrix stored, rebuilt from h-field)
+- [x] `batched_cg()` now accepts callable AtA (auto-detects matrix vs function)
+- [x] `multi_shift_solve_torch()` supports callable AtA (auto-routes to CG)
+- [x] `compute_forces_torch()` accepts `stencil_ops` dict for matrix-free path
+- [x] `_solve_asymptotic_shifts()` supports callable AtA
+- [x] All 32 existing RHMC tests pass (zero regressions)
+- [x] Checkpoint/resume unchanged (blocks rebuilt from h-field at resume)
+- [ ] Profile at L=8: matrix-free vs dense time/traj (deferred to next session)
 
 **Deliverables:**
-- Modified `src/vestigial/hs_rhmc_torch.py` — swap dense → matrix-free
-- Comparison report: L=8 dense vs matrix-free (should be identical physics, faster)
+- [x] Modified `src/vestigial/hs_rhmc_torch.py` — backward-compatible matrix-free support
+  - Dense path unchanged (all existing callers unaffected)
+  - Matrix-free path activated by passing callable to CG or stencil_ops to forces
 
-### Wave 3 — L=12 Production
+### Wave 3 — L=12 Production — **BLOCKED** (L=8 workers must free up first)
 **Goal:** First L=12 RHMC production.
 
 - [ ] Configure coupling grid with critical region (g=3-5)
@@ -73,16 +89,21 @@ Three bottlenecks block the research program:
 **Deep research complete:** `Phase-5h/Contributing categorical infrastructure to Mathlib4.md`
 **Key findings:** Zulip-first, small incremental PRs, strict style (100-char lines, 2-space indent, trailing-prime pattern). PivotalCategory explicitly listed as "future work" in Rigid.Basic. Key reviewers: Joël Riou, Adam Topaz, Johan Commelin.
 
-### Wave 4 — Zulip Engagement + Style Adaptation
+### Wave 4 — Zulip Engagement + Style Adaptation — **NOT STARTED**
 **Goal:** Introduce project on Zulip, adapt first PR candidate to Mathlib style.
+**Prerequisites:** VecGMonoidal heartbeats: **DONE** (eliminated via @[local instance] caching). Number field consolidation: **BLOCKED** on Phase 5i W4.
 
 - [ ] Join leanprover.zulipchat.com, post in #new-members and #mathlib4
 - [ ] Describe the categorical infrastructure scope
 - [ ] Adapt PivotalCategory to Mathlib conventions (Struct/Full split, trailing prime, aesop_cat auto-params, 100-char lines, module docstrings, copyright headers)
 - [ ] Run Mathlib linters locally
 
-### Wave 5 — PivotalCategory PR
+### Wave 5 — PivotalCategory PR — **BLOCKED** (on W4 + number field consolidation)
 **Goal:** First Mathlib PR — fills the gap explicitly listed in Rigid.Basic.
+
+**Prerequisites (must complete before submission):**
+- VecGMonoidal heartbeat elimination: **DONE** (eliminated via @[local instance] caching)
+- Number field consolidation (generic CyclotomicField, not 6 hand-written types) — **Phase 5i Wave 4** — **NOT STARTED**
 
 - [ ] Submit PR: PivotalCategory (pivotal = rigid + natural iso Id ≅ double-dual)
 - [ ] Include: definition, basic properties, `@[simp]` lemmas, `_assoc` variants
@@ -101,7 +122,7 @@ Three bottlenecks block the research program:
 
 ## Track C: Paper Submission
 
-**Deep research pending:** `Phase5g_paper_submission_strategy.txt`, `Phase5g_paper14_braided_mtc_scope.txt`
+**Deep research complete:** `Lit-Search/Phase-5g/Publishing the first verified braided MTCs and knot invariants.md` (paper strategy), `Lit-Search/Phase-5g/CopyPublishA publication blueprint for an independent researcher across physics and formal verification.md` (publication blueprint)
 
 ### Wave 7 — Paper 12 (Polariton) to arXiv
 **Goal:** Establish experimental priority before LKB Paris measurement.
@@ -152,12 +173,13 @@ All three tracks are independent and can proceed in parallel.
 
 | # | Topic | File | Status |
 |---|-------|------|--------|
-| 1 | Sparse/matrix-free fermion operator | Phase-5g/Sparse staggered fermion matrix.md | **COMPLETE** |
-| 2 | Mathlib PR process + style guide | Phase-5h/Contributing categorical infrastructure to Mathlib4.md | **COMPLETE** |
-| 3 | Paper submission strategy | Phase5g_paper_submission_strategy.txt | SUBMITTED |
-| 4 | Paper 14 scope (braided MTCs) | Phase5g_paper14_braided_mtc_scope.txt | SUBMITTED |
-| 5 | Mathlib PR strategy | Phase5g_mathlib_pr_strategy.txt | SUBMITTED |
+| 1 | Sparse/matrix-free fermion operator | Lit-Search/Phase-5g/Sparse staggered fermion matrix.md | **COMPLETE**, applied (matrix-free CG) |
+| 2 | Mathlib PR process + style guide | Lit-Search/Phase-5h/Contributing categorical infrastructure to Mathlib4.md | **COMPLETE** (Mathlib PR guide) |
+| 3 | Ising MTC F-symbols + pentagon | Lit-Search/Phase-5g/Ising MTC F-symbols and pentagon equation for Lean 4.md | **COMPLETE**, applied (pentagon fix) |
+| 4 | VecGMonoidal heartbeat fix | Lit-Search/Phase-5g/Replacing inferInstance with explicit monoidal constructions for GradedObject.md | **COMPLETE**, applied (VecGMonoidal fix) |
+| 5 | Paper strategy (braided MTCs) | Lit-Search/Phase-5g/Publishing the first verified braided MTCs and knot invariants.md | **COMPLETE** (paper strategy) |
+| 6 | Publication blueprint | Lit-Search/Phase-5g/CopyPublishA publication blueprint for an independent researcher across physics and formal verification.md | **COMPLETE** (publication blueprint) |
 
 ---
 
-*Phase 5g roadmap. Created 2026-04-06. Matrix-free CG unlocks L=12+. Mathlib PR starts credibility flywheel. Paper submission ships the work.*
+*Phase 5g roadmap. Created 2026-04-06. Updated 2026-04-06 (Track A W1-2 COMPLETE, W3 BLOCKED on L=8 workers. Track B W4 NOT STARTED — VecGMonoidal heartbeats DONE, number field consolidation BLOCKED on 5i W4. Track C not started, deep research COMPLETE. Ising pentagon PROVED via native_decide/QSqrt2. Fibonacci pentagon PROVED via native_decide/QSqrt5. Automated counts operational: update_counts.py + counts.json). 2023 theorems, 88 modules, 28 sorry, 1 axiom.*

@@ -2,7 +2,7 @@
 
 ## What This Project Is About
 
-This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Everything is machine-checked in the Lean 4 proof assistant: 1318 theorems, zero axioms, across 93 modules.
+This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Everything is machine-checked in the Lean 4 proof assistant: 1379 theorems (1304 substantive + 75 placeholder), 1 axiom (gapped_interface_axiom), across 97 modules.
 
 ### Analog Hawking radiation and testable predictions
 
@@ -32,14 +32,14 @@ Fracton symmetric tensor gauge theory reproduces linearized gravity but fails at
 
 The jackknife variance estimator and autocorrelation function — foundational tools for analyzing Monte Carlo data from lattice simulations — are formalized for the first time in any proof assistant. Non-negativity of the jackknife variance is proved. This opens the path to formally verified data analysis for lattice quantum field theory.
 
-*34 theorems remain as Aristotle targets across 12 modules: Ising/Fibonacci pentagon equations, coideal embedding proofs, affine Hopf relation-respect, Kerr-Schild inverse, statistical estimator bounds, Rep(u_q) fusion correspondence, stimulated Hawking, and center functor naturality.*
+*28 theorems remain as Aristotle targets across 12 modules: Ising/Fibonacci pentagon equations, coideal embedding proofs, affine Hopf relation-respect, Kerr-Schild inverse, statistical estimator bounds, Rep(u_q) fusion correspondence, stimulated Hawking, and center functor naturality.*
 
 ---
 
 ## Technical Summary
 
-**Lean 4 formalization:** 1318 theorems across 93 modules. Zero axioms, 34 sorry pending Aristotle.
-307 Aristotle-proved across 35+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 1379 theorems (1304 substantive + 75 placeholder) across 97 modules. 1 axiom (gapped_interface_axiom), 28 sorry pending Aristotle.
+307+ Aristotle-proved across 35+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
 
@@ -49,10 +49,10 @@ The jackknife variance estimator and autocorrelation function — foundational t
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (1318 theorems, 0 axioms, 93 modules, 34 sorry pending Aristotle)
+├── lean/                              # Lean 4 formalization (1379 theorems, 1 axiom, 97 modules, 28 sorry pending Aristotle)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 92 theorem modules)
+│   ├── SKEFTHawking.lean              # Root module (imports all 96 theorem modules)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -145,13 +145,14 @@ SK_EFT_Hawking/
 │       ├── QCyc5.lean              # Phase 5e: Q(ζ₅) cyclotomic field + Fibonacci hexagon (9 theorems, all proved)
 │       ├── IsingBraiding.lean      # Phase 5e: COMPLETE braided Ising MTC, trefoil=-1 (23 theorems, all proved)
 │       ├── QSqrt3.lean             # Phase 5e: Q(√3) for SU(2)₄ S-matrix unitarity (8 theorems, all proved)
-│       └── QLevel3.lean            # Phase 5e: Q[x]/(20x⁴-10x²+1) for SU(2)₃ unitarity (19 theorems, all proved)
+│       ├── QLevel3.lean            # Phase 5e: Q[x]/(20x⁴-10x²+1) for SU(2)₃ unitarity (19 theorems, all proved)
+│       └── SPTClassification.lean  # Phase 5f: SPT classification (new)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (307 proved, 34 sorry)
-│   │   ├── visualizations.py          # Plotly figures (80 functions) + COLORS palette
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (307+ proved, 28 sorry)
+│   │   ├── visualizations.py          # Plotly figures (81 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
 │   ├── first_order/                   # Phase 1 specific analysis
@@ -198,7 +199,8 @@ SK_EFT_Hawking/
 │   │   ├── gauge_fermion_bag_majorana.py # 8×8 Majorana sign-free (Wave 7B)
 │   │   ├── hs_rhmc.py               # HS+RHMC numpy reference (Wave 7C)
 │   │   ├── hs_rhmc_jax.py           # JAX CPU backend (Wave 7C)
-│   │   └── hs_rhmc_torch.py         # PyTorch CPU production default (Wave 7C)
+│   │   ├── hs_rhmc_torch.py         # PyTorch CPU production default (Wave 7C)
+│   │   └── stencil_dirac.py         # Stencil Dirac operator (Phase 5f)
 │   └── fracton/                       # Fracton hydrodynamics (Phase 4 Waves 2-3)
 │       ├── sk_eft.py                  # Fracton SK-EFT transport coefficients
 │       ├── information_retention.py   # UV information comparison
@@ -285,7 +287,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 35+ Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1635+ tests across 41 files)
+├── tests/                             # pytest suite (1750 tests across 43 files)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -297,7 +299,7 @@ SK_EFT_Hawking/
 │   ├── test_gauge.py                 # SO(4) gauge, quaternion, Majorana (146 tests)
 │   └── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
 │
-├── figures/                           # 80 pipeline figures (PNG + HTML) + provenance_graph.json
+├── figures/                           # 81 pipeline figures (PNG + HTML) + provenance_graph.json
 ├── scripts/
 │   ├── submit_to_aristotle.py         # Aristotle submission + integration script
 │   ├── build_graph.py                 # Knowledge graph extraction (8 node types, 10 edge types)
@@ -359,7 +361,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (1318 theorems — zero axioms, 34 sorry pending Aristotle)
+## Theorem Inventory (1379 theorems — 1 axiom, 28 sorry pending Aristotle)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|

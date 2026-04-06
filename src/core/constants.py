@@ -777,11 +777,11 @@ COLORS = {
 # Lean verification registry
 # Maps Aristotle-proved theorems to their run IDs.
 #
-# Verification breakdown (1179 theorems, 0 axioms across 79 Lean modules):
+# Verification breakdown (1379 theorems (1304 substantive + 75 placeholder), 1 axiom, 97 Lean modules):
 #   - 307 tracked in ARISTOTLE_THEOREMS registry (304 machine + 3 manual, listed below with run IDs)
 #   - 872 proved manually in Lean (verified by `lake build`)
-#   - 0 axioms (all removed — see axiom history below)
-#   - 6 sorry (5 SU2kMTC + 1 TetradGapEquation — Phase 5d, not Phase 5c)
+#   - 1 axiom
+#   - 28 sorry
 #   - Discharged (now theorems): z16_classification, dai_freed_spin_z4,
 #               chiral_central_charge_coeff (all tautological as stated)
 #   - REMOVED axioms: modular_invariance_constraint (mathematically FALSE),
@@ -1184,7 +1184,129 @@ AXIOM_METADATA: dict[str, dict[str, str]] = {
         'reason': 'Proved as theorem (Wave 6 axiom removal)',
         'module': 'GoltermanShamir',
     },
+    'gapped_interface_axiom': {
+        'eliminability': 'hard',
+        'reason': 'TPF 2026 conjecture: gapped interface for anomaly-free SPT. '
+                  'Plausible but unproven. Exactly solvable in 1+1D only. '
+                  '4+1D numerically intractable. Single bottleneck for TPF program.',
+        'module': 'SPTClassification',
+    },
 }
+
+# ════════════════════════════════════════════════════════════════════
+# PLACEHOLDER REGISTRY
+#
+# Tracks theorems declared as `True := trivial` — these encode NO
+# mathematical content. They exist as documentation markers recording
+# what SHOULD eventually be proved, but inflate theorem counts if
+# counted alongside substantive theorems.
+#
+# Two categories:
+#   'summary' — module summary theorems (one per module, harmless documentation)
+#   'content' — claims mathematical content but proves nothing (count-inflating)
+#
+# Verified counts should exclude ALL placeholders.
+# Run: grep -c "True := trivial" lean/SKEFTHawking/*.lean | awk -F: '{s+=$2}END{print s}'
+# ════════════════════════════════════════════════════════════════════
+
+PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
+    # === Content placeholders (mathematical claims, no proof) ===
+    # DrinfeldEquivalence: categorical wrapping stubs
+    'monoidal_structure_corresponds': {
+        'category': 'content',
+        'module': 'DrinfeldEquivalence',
+        'claim': 'Monoidal structures of Z(Vec_G) and Rep(D(G)) correspond',
+        'resolution': 'Requires full functor construction (Phase 6)',
+    },
+    'braided_structure_corresponds': {
+        'category': 'content',
+        'module': 'DrinfeldEquivalence',
+        'claim': 'Braided structures correspond',
+        'resolution': 'Requires braided monoidal functor (Phase 6)',
+    },
+    # GaugeEmergence: 6 placeholder statements
+    'gauge_emergence_half_braiding': {
+        'category': 'content',
+        'module': 'GaugeEmergence',
+        'claim': 'Half-braiding ↔ D(G)-module bijection (full categorical)',
+        'resolution': 'Algebraic version proved in DrinfeldCenterBridge; categorical wrapping Phase 6',
+    },
+    'gauge_emergence_equivalence': {
+        'category': 'content',
+        'module': 'GaugeEmergence',
+        'claim': 'Z(Vec_G) ≅ Rep(D(G)) as braided monoidal categories',
+        'resolution': 'Concrete verification for Z/2 and S₃ done; abstract functor Phase 6',
+    },
+    'chirality_limitation_zero': {
+        'category': 'content',
+        'module': 'GaugeEmergence',
+        'claim': 'c = 0 for all Z(Vec_G)',
+        'resolution': 'Follows from string-net construction; needs formal Turaev-Viro connection',
+    },
+    # SteenrodA1: Adem relations as statements
+    'adem_sq1_sq1': {
+        'category': 'content',
+        'module': 'SteenrodA1',
+        'claim': 'Sq¹Sq¹ = 0 in A(1)',
+        'resolution': 'Verify via explicit multiplication table (native_decide feasible)',
+    },
+    'adem_sq1_sq2': {
+        'category': 'content',
+        'module': 'SteenrodA1',
+        'claim': 'Sq¹Sq² = Sq³ in A(1)',
+        'resolution': 'Same approach',
+    },
+    'adem_sq2_sq2': {
+        'category': 'content',
+        'module': 'SteenrodA1',
+        'claim': 'Sq²Sq² = Sq³Sq¹ in A(1)',
+        'resolution': 'Same approach',
+    },
+    'a1_is_sub_hopf_algebra': {
+        'category': 'content',
+        'module': 'SteenrodA1',
+        'claim': 'A(1) is a sub-Hopf-algebra of the Steenrod algebra',
+        'resolution': 'Requires Hopf structure on A(1)',
+    },
+    # RestrictedUq: dimension/module count statements
+    'small_uq_dim_statement': {
+        'category': 'content',
+        'module': 'RestrictedUq',
+        'claim': 'dim u_q(sl₂) = ℓ³',
+        'resolution': 'Requires explicit basis construction',
+    },
+    # FusionCategory: Ocneanu rigidity + TQFT placeholder
+    'ocneanu_rigidity_placeholder': {
+        'category': 'content',
+        'module': 'FusionCategory',
+        'claim': 'Fusion categories are rigid (Ocneanu)',
+        'resolution': 'Deep result; axiomatize or defer to Phase 6+',
+    },
+    'fusion_to_tqft_placeholder': {
+        'category': 'content',
+        'module': 'FusionCategory',
+        'claim': 'Fusion category → TQFT via Turaev-Viro',
+        'resolution': 'Statement-level; full construction requires cobordism infrastructure',
+    },
+    # CenterFunctor: monoidal/braided functor stubs
+    'center_functor_monoidal': {
+        'category': 'content',
+        'module': 'CenterFunctor',
+        'claim': 'Center functor is monoidal',
+        'resolution': 'Phase 6 categorical wrapping',
+    },
+    'center_functor_braided': {
+        'category': 'content',
+        'module': 'CenterFunctor',
+        'claim': 'Center functor is braided monoidal',
+        'resolution': 'Phase 6 categorical wrapping',
+    },
+}
+
+# Count of content placeholders (inflates theorem count if not excluded)
+PLACEHOLDER_CONTENT_COUNT = sum(
+    1 for v in PLACEHOLDER_THEOREMS.values() if v['category'] == 'content'
+)
 
 # ════════════════════════════════════════════════════════════════════
 # HYPOTHESIS REGISTRY

@@ -355,16 +355,28 @@ AND paper claims review has zero FAIL.
 
 **Purpose:** Ensure all project documentation reflects the current state.
 
-**Actions — update these files:**
+**Actions — run the automated counts system, then update content-sensitive docs:**
+
+```bash
+# Step 1: Regenerate Lean dependency graph (if Lean files changed)
+cd lean && lake env lean --run SKEFTHawking/ExtractDeps.lean > /tmp/lean_deps.json && cp /tmp/lean_deps.json lean_deps.json
+
+# Step 2: Generate counts.json + counts.tex (single source of truth)
+uv run python scripts/update_counts.py
+```
+
+`docs/counts.json` is the authoritative source for ALL project counts.
+`docs/counts.tex` provides LaTeX macros (\totaltheorems, \sorrycount, etc.) for papers.
+
+**Content-sensitive docs (NOT automated — require human/LLM judgment):**
 
 | Category | Files | What to update |
 |----------|-------|---------------|
-| **Code** | `src/__init__.py` | Docstring: theorem count, module count, phase summary |
-| **Code** | `src/core/constants.py` | Header comment: total theorems, modules |
-| **Code** | `scripts/validate.py` | Expected counts in CHECK 5 |
-| **Root** | `README.MD` | Theorem table, project tree, test/figure/module counts |
-| **Root** | `SK_EFT_Hawking_Inventory.md` | Summary table |
-| **Root** | `CLAUDE.md` (repo root) | Architecture, module count, Lean table |
+| **Code** | `src/__init__.py` | Phase summary (not counts — use counts.json) |
+| **Code** | `src/core/constants.py` | Phase summary in header |
+| **Root** | `README.MD` | Project tree, architecture description |
+| **Root** | `SK_EFT_Hawking_Inventory.md` | Module descriptions, section content |
+| **Root** | `CLAUDE.md` (repo root) | Architecture, conventions |
 | **Stakeholder** | `docs/stakeholder/companion_guide.md` | Status table + content synthesis |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Implications.md` | Content for this phase |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Strategic_Positioning.md` | Content for this phase |
@@ -426,6 +438,10 @@ These must hold at ALL times, not just at wave completion:
 7. **Narrative derives from data.** Feasibility claims, detectability statements, and experimental reach assessments must be supported by computed quantities. "Within reach" means the computed shot count is < 10^6 and feasible=True.
 
 8. **Every experimental parameter has verified provenance.** Each value in EXPERIMENTS, ATOMS, and platform dicts traces to a specific published source (paper, table/figure, page) via `PARAMETER_PROVENANCE` in `src/core/provenance.py`. Parameters from LLM research outputs are not considered verified until LLM reads the primary source. Paper submission requires human verification via the provenance dashboard. Enforced by CHECK 15.
+
+9. **Placeholder theorems are non-load-bearing.** Theorems proved as `True := trivial` encode no mathematical content and MUST NOT be referenced by any other proof, formula, or paper claim. They are documentation markers only. Tracked in `PLACEHOLDER_THEOREMS` in `constants.py`. Substantive theorem count = total - placeholders. Paper claims MUST cite substantive count, not total.
+
+10. **No heartbeat overrides.** No `set_option maxHeartbeats` or `set_option synthInstance.maxHeartbeats` in any Lean file (except ExtractDeps.lean which requires unlimited for dependency extraction). Expensive typeclass synthesis is resolved via `@[local instance]` caching. Heartbeat overrides indicate a proof quality problem that must be fixed, not papered over.
 
 ---
 
