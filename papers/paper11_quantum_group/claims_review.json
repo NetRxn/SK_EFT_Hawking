@@ -1,154 +1,379 @@
 {
   "paper": "paper11_quantum_group",
-  "review_date": "2026-04-04T00:00:00Z",
+  "review_date": "2026-04-05T00:00:00Z",
+  "reviewer": "claims-reviewer agent (Phase 5e post-update)",
   "overall_status": "issues_found",
   "numerical_claims": [
     {
-      "location": "Section 5 (Conclusions), line 187",
-      "paper_value": "968 theorems",
-      "computed_value": "968 theorems (grep '^theorem ' across 64 .lean files)",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Total theorem count matches."
-    },
-    {
-      "location": "Section 5 (Conclusions), line 187",
-      "paper_value": "66 Lean 4 modules",
-      "computed_value": "66 files in lean/SKEFTHawking/ (65 physics + ExtractDeps infrastructure)",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Count matches if ExtractDeps.lean is included. Minor: ExtractDeps is tooling not physics."
-    },
-    {
-      "location": "Table (Section 4), QNumber.lean row",
-      "paper_value": "13 thms",
-      "computed_value": "11 theorems (grep '^theorem ' QNumber.lean)",
-      "delta_pct": 15.4,
+      "location": "Conclusions (line 417): '1233 theorems across 86 Lean 4 modules'",
+      "paper_value": "1233 theorems, 86 modules",
+      "computed_value": "1318 theorems (grep '^theorem|^private theorem'), 93 modules (ls *.lean)",
+      "delta_pct": 6.9,
       "status": "FAIL",
-      "notes": "QNumber.lean has 11 theorems (qInt_zero, qInt_one, qInt_two, qInt_three, evalAtOne_T, qInt_classical_limit, qInt_two_pow4_classical, qInt_three_classical, qFactorial_zero, qFactorial_one, qnumber_summary). Paper claims 13. If counting defs (qInt, evalAtOne, qFactorial) brings total declarations to 14, but those are defs not theorems."
+      "notes": "STALE. Paper was not updated after Phase 5e additions. Must read '1318 theorems across 93 Lean 4 modules'."
     },
     {
-      "location": "Table (Section 4), Uqsl2.lean row",
+      "location": "Conclusions (line 418): '307 filled by the Aristotle automated prover (304 machine-proved, 3 manual)'",
+      "paper_value": "307 (304 machine + 3 manual)",
+      "computed_value": "307 (assert in constants.py: ARISTOTLE_PROVED_COUNT == 307)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches ARISTOTLE_THEOREMS registry."
+    },
+    {
+      "location": "Table (Section 4), Uqsl2Hopf.lean row: '66 thms, 0 sorry'",
+      "paper_value": "66 thms, 0 sorry",
+      "computed_value": "66 (23 public + 43 private), 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Exact match using project counting methodology (^theorem|^private theorem)."
+    },
+    {
+      "location": "Table (Section 4), Uqsl2AffineHopf.lean row: '4 thms'",
+      "paper_value": "4 thms",
+      "computed_value": "4 (1 public + 3 private)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), CoidealEmbedding.lean row: '6 thms'",
+      "paper_value": "6 thms",
+      "computed_value": "6 (all public)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), RepUqFusion.lean row: '14 thms'",
       "paper_value": "14 thms",
-      "computed_value": "6 theorems (grep '^theorem ' Uqsl2.lean)",
-      "delta_pct": 57.1,
+      "computed_value": "13 theorems (all public, no private)",
+      "delta_pct": 7.1,
       "status": "FAIL",
-      "notes": "Uqsl2.lean has 6 theorems (uq_K_mul_Kinv, uq_Kinv_mul_K, uq_KE, uq_KF, uq_serre, uqsl2_summary). Even counting all declarations (inductive, abbrev, def, theorem) gives ~14, but those are not theorems. Paper must use 'thms' to mean only theorems."
+      "notes": "Off by 1. Actual count: dim_uq_k1/k2/k3 (3) + n_simples_k1/k2/k3 (3) + fusion_matches_k1/k2 (2) + rep_fusion_comm (1) + classical_dim_pos (1) + quantum_dim_vacuum (1) + peter_weyl_classical (1) + rep_uq_fusion_summary (1) = 13. Should be '13 thms'."
     },
     {
-      "location": "Table (Section 4), OnsagerAlgebra.lean row",
+      "location": "Table (Section 4), FibonacciMTC.lean row: '18 thms'",
+      "paper_value": "18 thms",
+      "computed_value": "11 theorems (all public, no private)",
+      "delta_pct": 38.9,
+      "status": "FAIL",
+      "notes": "Significant overcounting. Actual theorems: fib_tau_sq, fibF_values, fibF_involutory_{00,01,10,11}, fib_pentagon, fib_global_dim, fib_chiral, fib_dim_consistency, fibonacci_mtc_summary = 11. Should be '11 thms'."
+    },
+    {
+      "location": "Table (Section 4), OnsagerAlgebra.lean row: '24 thms'",
       "paper_value": "24 thms",
-      "computed_value": "24 theorems",
+      "computed_value": "24",
       "delta_pct": 0.0,
       "status": "PASS",
-      "notes": "Exact match."
+      "notes": "Matches."
     },
     {
-      "location": "Table (Section 4), DrinfeldDouble*.lean row",
-      "paper_value": "47 thms",
-      "computed_value": "27 theorems in DrinfeldDouble/DoubleAlgebra/DoubleRing (15+9+3), or 57 including DrinfeldEquivalence(12)+DrinfeldCenterBridge(18)",
+      "location": "Table (Section 4), QNumber.lean row: '11 thms'",
+      "paper_value": "11 thms",
+      "computed_value": "11",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), Uqsl2.lean row: '6 thms + defs'",
+      "paper_value": "6 thms + defs",
+      "computed_value": "6 theorems",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches. 'defs' refers to non-theorem declarations (inductive, abbrev, def)."
+    },
+    {
+      "location": "Table (Section 4), Uqsl2Affine.lean row: '9 thms'",
+      "paper_value": "9 thms",
+      "computed_value": "9",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), RestrictedUq.lean row: '11 thms, 0 sorry'",
+      "paper_value": "11 thms, 0 sorry",
+      "computed_value": "11 theorems, 0 sorry (sorry appears only in comments)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), SU2kFusion.lean row: '29 thms, 0 sorry'",
+      "paper_value": "29 thms, 0 sorry",
+      "computed_value": "29, 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), SU2kSMatrix.lean row: '16 thms, 0 sorry'",
+      "paper_value": "16 thms, 0 sorry",
+      "computed_value": "16, 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), RibbonCategory.lean row: '4 thms, 0 sorry'",
+      "paper_value": "4 thms, 0 sorry",
+      "computed_value": "4, 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), SU2kMTC.lean row: '11 thms'",
+      "paper_value": "11 thms",
+      "computed_value": "11",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), QSqrt2/QSqrt5 row: '10 thms, 0 sorry'",
+      "paper_value": "10 thms, 0 sorry",
+      "computed_value": "3 + 7 = 10, 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), E8Lattice.lean row: '19 thms, 0 sorry'",
+      "paper_value": "19 thms, 0 sorry",
+      "computed_value": "19, 0 sorry (sorry in comments only)",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), AlgebraicRokhlin.lean row: '10 thms, 0 sorry'",
+      "paper_value": "10 thms, 0 sorry",
+      "computed_value": "10, 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), SpinBordism.lean row: '8 thms, 0 sorry'",
+      "paper_value": "8 thms, 0 sorry",
+      "computed_value": "8, 0 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Table (Section 4), '7 Drinfeld/Center modules (96 thms)'",
+      "paper_value": "96 thms across 7 modules",
+      "computed_value": "Cannot verify. DrinfeldDouble(15)+DrinfeldDoubleAlgebra(9)+DrinfeldDoubleRing(3)+DrinfeldEquivalence(12)+DrinfeldCenterBridge(18)+CenterEquivalenceZ2(10)+ToricCodeCenter(25)=92. Adding S3CenterAnyons(22)=114. No 7-module combination yields 96.",
       "delta_pct": null,
-      "status": "FAIL",
-      "notes": "No combination of Drinfeld* files sums to 47. Three core DrinfeldDouble files = 27. All five Drinfeld* files = 57. Paper value matches neither."
+      "status": "WARN",
+      "notes": "Likely a stale count from an earlier Phase. The exact set of modules included is ambiguous. Recommend enumerating the 7 modules explicitly in the table."
+    },
+    {
+      "location": "Section 6.4, SU2kMTC sorry claims: 'Pentagon equation and F^2 = I are pending Aristotle (5 sorry)'",
+      "paper_value": "5 sorry",
+      "computed_value": "5 sorry in SU2kMTC.lean",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Section 6.4, FibonacciMTC sorry claims: 'Pentagon and global dimension are pending Aristotle (3 sorry)'",
+      "paper_value": "3 sorry",
+      "computed_value": "3 sorry in FibonacciMTC.lean",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Section 6.2, RepUqFusion sorry: dim and fusion comm",
+      "paper_value": "2 sorry (implied, 'pending Aristotle')",
+      "computed_value": "2 sorry in RepUqFusion.lean",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Matches."
+    },
+    {
+      "location": "Section 5, Uqsl2AffineHopf sorry: 'pending Aristotle'",
+      "paper_value": "sorry (not counted explicitly)",
+      "computed_value": "3 sorry in Uqsl2AffineHopf.lean",
+      "delta_pct": null,
+      "status": "PASS",
+      "notes": "Paper correctly notes proofs are pending. 3 sorry confirmed."
+    },
+    {
+      "location": "Section 5.2, CoidealEmbedding: '6 theorems; proofs pending Aristotle'",
+      "paper_value": "6 thms, some pending",
+      "computed_value": "6 theorems, 4 sorry",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Theorem count matches. 4 of 6 are sorry stubs."
+    },
+    {
+      "location": "Verlinde verification: '8 + 27 + 64 = 99 entries at k=1,2,3'",
+      "paper_value": "99",
+      "computed_value": "2^3 + 3^3 + 4^3 = 8 + 27 + 64 = 99",
+      "delta_pct": 0.0,
+      "status": "PASS",
+      "notes": "Arithmetic verified."
     }
   ],
   "theorem_refs": [
     {
-      "name": "qInt (QNumber.lean)",
+      "name": "Uqsl2Hopf.lean — HopfAlgebra instance",
       "in_lean": true,
       "has_sorry": false,
-      "aristotle": null,
+      "aristotle": "78dcc5f4",
       "status": "PASS",
-      "notes": "qInt is a def, not theorem. Present in QNumber.lean."
+      "notes": "66 theorems, zero sorry. Key theorems (comul_coassoc, antipode_right/left, etc.) tracked in ARISTOTLE_THEOREMS under 78dcc5f4."
     },
     {
-      "name": "qInt_three (QNumber.lean)",
+      "name": "SU2kFusion.lean — fusion computation",
       "in_lean": true,
       "has_sorry": false,
-      "aristotle": null,
+      "aristotle": "manual (native_decide)",
       "status": "PASS",
-      "notes": "Theorem present, proved, no sorry."
+      "notes": "29 theorems, zero sorry. All by native_decide."
     },
     {
-      "name": "Uqsl2 (Uqsl2.lean)",
+      "name": "SU2kSMatrix.lean — S-matrix unitarity",
       "in_lean": true,
       "has_sorry": false,
-      "aristotle": null,
+      "aristotle": "78dcc5f4",
       "status": "PASS",
-      "notes": "Uqsl2 is an abbrev (= RingQuot (ChevalleyRel k)). Present, no sorry."
+      "notes": "16 theorems, zero sorry. 10 tracked in ARISTOTLE_THEOREMS under 78dcc5f4."
     },
     {
-      "name": "ChevalleyRel (Uqsl2.lean)",
+      "name": "RibbonCategory.lean",
       "in_lean": true,
       "has_sorry": false,
-      "aristotle": null,
+      "aristotle": "78dcc5f4 (2 of 4)",
       "status": "PASS",
-      "notes": "Inductive proposition, well-formed, 5 constructors matching 5 relations."
+      "notes": "4 theorems, zero sorry."
     },
     {
-      "name": "uqsl2Mk (Uqsl2.lean)",
+      "name": "Uqsl2AffineHopf.lean",
       "in_lean": true,
-      "has_sorry": false,
-      "aristotle": null,
+      "has_sorry": true,
+      "aristotle": "pending",
       "status": "PASS",
-      "notes": "Quotient map def, present."
+      "notes": "4 theorems, 3 sorry. Paper correctly marks as pending."
     },
     {
-      "name": "RingQuot.mkAlgHom_rel",
+      "name": "CoidealEmbedding.lean",
       "in_lean": true,
-      "has_sorry": false,
-      "aristotle": null,
+      "has_sorry": true,
+      "aristotle": "pending",
       "status": "PASS",
-      "notes": "Mathlib infrastructure used in proofs."
+      "notes": "6 theorems, 4 sorry. Paper correctly marks as pending."
     },
     {
-      "name": "uq_K_mul_Kinv",
+      "name": "RepUqFusion.lean",
       "in_lean": true,
-      "has_sorry": false,
-      "aristotle": null,
+      "has_sorry": true,
+      "aristotle": "pending",
       "status": "PASS",
-      "notes": "KK^-1 = 1, fully proved."
+      "notes": "13 theorems, 2 sorry. Paper correctly marks as pending."
     },
     {
-      "name": "uq_Kinv_mul_K",
+      "name": "SU2kMTC.lean",
       "in_lean": true,
-      "has_sorry": false,
-      "aristotle": null,
+      "has_sorry": true,
+      "aristotle": "pending",
       "status": "PASS",
-      "notes": "K^-1 K = 1, fully proved."
+      "notes": "11 theorems, 5 sorry. Paper correctly notes pending pentagon + F^2."
     },
     {
-      "name": "uq_KE",
+      "name": "FibonacciMTC.lean",
       "in_lean": true,
-      "has_sorry": false,
-      "aristotle": null,
+      "has_sorry": true,
+      "aristotle": "pending",
       "status": "PASS",
-      "notes": "KE = q^2 EK, fully proved. Paper line 142 falsely says 'pending Aristotle'."
+      "notes": "11 theorems, 3 sorry. Paper correctly notes pending pentagon + global dim."
     },
     {
-      "name": "uq_KF",
+      "name": "RestrictedUq.lean",
       "in_lean": true,
       "has_sorry": false,
-      "aristotle": null,
+      "aristotle": "78dcc5f4 (1 theorem)",
       "status": "PASS",
-      "notes": "KF = q^-2 FK, fully proved. Paper line 142 falsely says 'pending Aristotle'."
+      "notes": "11 theorems, zero sorry."
     },
     {
-      "name": "uq_serre",
+      "name": "E8Lattice.lean",
       "in_lean": true,
       "has_sorry": false,
-      "aristotle": null,
+      "aristotle": "78dcc5f4 (2 theorems)",
       "status": "PASS",
-      "notes": "Serre relation fully proved. Paper line 142 falsely says 'pending Aristotle'."
+      "notes": "19 theorems, zero sorry."
+    },
+    {
+      "name": "AlgebraicRokhlin.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "manual",
+      "status": "PASS",
+      "notes": "10 theorems, zero sorry, zero axioms."
+    },
+    {
+      "name": "SpinBordism.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "78dcc5f4 (1 theorem)",
+      "status": "PASS",
+      "notes": "8 theorems, zero sorry."
+    },
+    {
+      "name": "OnsagerAlgebra.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "multiple runs",
+      "status": "PASS",
+      "notes": "24 theorems, zero sorry."
+    },
+    {
+      "name": "QNumber.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "manual",
+      "status": "PASS",
+      "notes": "11 theorems, zero sorry."
+    },
+    {
+      "name": "Uqsl2.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "manual",
+      "status": "PASS",
+      "notes": "6 theorems, zero sorry."
+    },
+    {
+      "name": "QSqrt2.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "manual",
+      "status": "PASS",
+      "notes": "3 theorems, zero sorry."
+    },
+    {
+      "name": "QSqrt5.lean",
+      "in_lean": true,
+      "has_sorry": false,
+      "aristotle": "manual (native_decide)",
+      "status": "PASS",
+      "notes": "7 theorems, zero sorry."
     }
   ],
   "parameter_provenance": [
     {
-      "key": "N/A",
+      "key": "N/A — pure algebra paper",
       "llm_verified": null,
       "human_verified": null,
       "status": "WARN",
-      "notes": "Paper 11 has no entry in PAPER_DEPENDENCIES (provenance.py). This is a pure algebra paper with no experimental parameters, so no parameter provenance is needed. But the PAPER_DEPENDENCIES registry should be updated to include paper 11."
+      "notes": "Paper 11 has no entry in PAPER_DEPENDENCIES (provenance.py). This is a pure algebra paper with no experimental parameters, so no parameter provenance is needed. But PAPER_DEPENDENCIES should be updated to include paper11_quantum_group for completeness."
     }
   ],
   "citation_integrity": [
@@ -157,7 +382,7 @@
       "in_registry": false,
       "doi_verified": false,
       "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY."
+      "notes": "Not in CITATION_REGISTRY. Standard reference, but should be added."
     },
     {
       "bibkey": "Jimbo1986",
@@ -171,14 +396,14 @@
       "in_registry": false,
       "doi_verified": false,
       "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. Also: bibkey says 2001 but entry is arXiv:math/0307016 (2003)."
+      "notes": "Not in CITATION_REGISTRY. Bibkey says 2001 but entry is arXiv:math/0307016 (2003). Inconsistent."
     },
     {
       "bibkey": "Baseilhac2005",
       "in_registry": false,
       "doi_verified": false,
       "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. Bibkey says 2005 but entry cites NPB 873 (2013) and arXiv:0906.1215 (2009)."
+      "notes": "Not in CITATION_REGISTRY. Bibkey says 2005 but entry is NPB 873, 550 (2013) with arXiv:0906.1215 (2009). Inconsistent."
     },
     {
       "bibkey": "Kolb2014",
@@ -195,57 +420,128 @@
       "notes": "Not in CITATION_REGISTRY."
     },
     {
+      "bibkey": "Verlinde1988",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Lusztig1990",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Turaev2010",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Serre1973",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
+      "bibkey": "Rokhlin1952",
+      "in_registry": false,
+      "doi_verified": false,
+      "status": "WARN",
+      "notes": "Not in CITATION_REGISTRY."
+    },
+    {
       "bibkey": "Paper9",
       "in_registry": false,
       "doi_verified": false,
       "status": "WARN",
-      "notes": "Companion paper cross-reference. Not a published citation."
+      "notes": "Companion paper cross-reference. Acceptable as internal ref."
     },
     {
       "bibkey": "Paper10",
       "in_registry": false,
       "doi_verified": false,
       "status": "WARN",
-      "notes": "Companion paper cross-reference. Not a published citation."
+      "notes": "Companion paper cross-reference. Acceptable as internal ref."
     }
   ],
   "qualitative_claims": [
     {
-      "claim": "First quantum group definition in any proof assistant (abstract, line 49, line 180)",
-      "support": "No competing formalization found in Mathlib, Coq MathComp, or Isabelle AFP. Claim is plausible but unverifiable from codebase alone.",
+      "claim": "First quantum group definition in any proof assistant (abstract, Sec 1, Conclusions)",
+      "support": "No competing formalization found in Mathlib4, Coq MathComp, or Isabelle AFP as of knowledge cutoff. Plausible but unverifiable from codebase alone.",
       "status": "WARN",
-      "notes": "Priority claim. Should cite a search (e.g., Mathlib docs, Coq opam, Isabelle AFP) to substantiate 'first'."
+      "notes": "Priority claim. Should cite a systematic search of proof assistant libraries."
     },
     {
-      "claim": "KE, KF, and Serre proofs require additional algebraMap plumbing (pending Aristotle) (line 141-142)",
-      "support": "FALSE. All five Chevalley relation theorems (uq_KE, uq_KF, uq_serre) are FULLY PROVED in Uqsl2.lean with no sorry.",
+      "claim": "First Hopf algebra in any proof assistant (beyond trivial commutative semiring and group algebra instances) (Sec 4)",
+      "support": "Mathlib has Coalgebra/Bialgebra/HopfAlgebra typeclasses, and group algebra instances. The claim is that U_q(sl_2) is the first non-trivial HopfAlgebra instance. Plausible.",
+      "status": "WARN",
+      "notes": "Priority claim. Same verification difficulty."
+    },
+    {
+      "claim": "First verified MTC instances in any proof assistant (Sec 6.4, Conclusions)",
+      "support": "Ising MTC (SU2kMTC.lean) and Fibonacci MTC (FibonacciMTC.lean) have PreModularData/ModularTensorData instances. However, both have sorry gaps (5 and 3 respectively). 'Verified' is slightly overstrong while sorry remain.",
+      "status": "WARN",
+      "notes": "The MTC instances exist but have pending sorry for pentagon and global dimension. The word 'verified' should be qualified with a note about pending proofs."
+    },
+    {
+      "claim": "zero axioms (abstract, Sec 7, Conclusions)",
+      "support": "grep '^axiom ' finds 0 matches across all 93 Lean files. Confirmed.",
+      "status": "PASS",
+      "notes": "Verified."
+    },
+    {
+      "claim": "Serre coproduct relation proved by Aristotle run 79e07d55 (Sec 4.1, line 216)",
+      "support": "WRONG. Run 79e07d55 is exclusively TetradGapEquation.lean (9 theorems). Uqsl2Hopf theorems (comul_coassoc, etc.) are registered under run 78dcc5f4 in ARISTOTLE_THEOREMS.",
       "status": "FAIL",
-      "notes": "Paper text is STALE. The proofs were completed but the paper was not updated. Must remove 'pending Aristotle' language."
+      "notes": "CRITICAL. Aristotle run ID misattribution. The Serre coproduct was proved by 78dcc5f4, not 79e07d55."
     },
     {
-      "claim": "zero sorry (pending Aristotle filling 11 relation proofs) (line 188-189)",
-      "support": "Self-contradictory. lake build is clean (zero sorry confirmed). No sorry exists anywhere in QNumber.lean or Uqsl2.lean. The parenthetical '(pending Aristotle filling 11 relation proofs)' is false and contradicts 'zero sorry'.",
+      "claim": "Conclusions line 403-404: 'Aristotle runs 78dcc5f4 and 79e07d55' for Uqsl2Hopf",
+      "support": "78dcc5f4 is correct for Uqsl2Hopf. 79e07d55 is TetradGapEquation. Only 78dcc5f4 should be cited.",
       "status": "FAIL",
-      "notes": "CRITICAL. The paper simultaneously claims zero sorry AND pending Aristotle work. Remove the parenthetical entirely or rewrite to reflect that ALL proofs are complete."
+      "notes": "Remove 79e07d55 from the Conclusions attribution for Uqsl2Hopf."
     },
     {
-      "claim": "87 theorems for Drinfeld center (intro paragraph, line 64)",
-      "support": "Paper says '87 theorems' for the center equivalence. The five Drinfeld* files total 57 theorems. Additional center-related modules (CenterEquivalenceZ2: 10, VecG: 9, VecGMonoidal: 12, S3CenterAnyons: 22, ToricCodeCenter: 25) would add more, but the exact scope of '87' is unclear.",
+      "claim": "Bialgebra instance uses Bialgebra.ofAlgHom (Sec 4.1, line 215-216)",
+      "support": "Cannot verify API name from codebase. The Bialgebra instance is constructed in Uqsl2Hopf.lean. The specific Mathlib API name should be verified against source.",
       "status": "WARN",
-      "notes": "Cannot verify the '87 theorems' claim without knowing which modules are included. May be correct for a different set of modules than those checked."
+      "notes": "Minor. Verify the exact Mathlib constructor name."
     },
     {
-      "claim": "Hopf algebra hierarchy recently merged in Mathlib (line 57, 195)",
-      "support": "Mathlib pinned to commit 8f9d9cff. Cannot verify merge status from codebase.",
-      "status": "WARN",
-      "notes": "Verify that Coalgebra -> Bialgebra -> HopfAlgebra is present in the pinned Mathlib commit."
+      "claim": "dim(u_q) = (k+2)^3 (Sec 5.3)",
+      "support": "RepUqFusion.lean defines restricted_uq_dim k = (k+2)^3 and verifies k=1->27, k=2->64, k=3->125 by native_decide.",
+      "status": "PASS",
+      "notes": "Verified. Standard result for restricted quantum groups."
+    },
+    {
+      "claim": "Fibonacci F^2 = I proved by native_decide over QSqrt5 (Sec 6.4)",
+      "support": "FibonacciMTC.lean has fibF_involutory_{00,01,10,11} theorems proving all four entries by native_decide. F^2=I at element level is proved.",
+      "status": "PASS",
+      "notes": "Verified. The four component theorems collectively prove F^2 = I."
+    },
+    {
+      "claim": "Chirality c_top = 14/5 != 0 proved (Sec 6.4)",
+      "support": "FibonacciMTC.lean: theorem fib_chiral : (14 : Q) / 5 != 0 := by norm_num. Proved.",
+      "status": "PASS",
+      "notes": "Verified."
+    },
+    {
+      "claim": "Lean 4 v4.28.0, Mathlib 8f9d9cff (Acknowledgments)",
+      "support": "lean-toolchain: leanprover/lean4:v4.28.0. lakefile.toml: mathlib rev = 8f9d9cff...",
+      "status": "PASS",
+      "notes": "Both verified against config files."
     }
   ],
   "axiom_risk": [
     {
       "axiom": "None",
       "eliminability": "N/A",
-      "reason": "QNumber.lean and Uqsl2.lean contain zero axiom declarations. Paper's 'zero axioms' claim for these modules is verified.",
+      "reason": "All 93 Lean modules have zero axiom declarations. Paper's 'zero axioms' claim verified.",
       "affected_claims": [],
       "status": "PASS"
     }
@@ -254,24 +550,32 @@
     {
       "structure": "CommRing k",
       "hypothesis": "k is a commutative ring (universe polymorphic)",
-      "nature": "Standard algebraic assumption. The construction works over any commutative ring, which is maximally general.",
-      "affected_claims": ["All q-integer and Uqsl2 claims"],
+      "nature": "Standard algebraic assumption. Maximally general — works over any commutative ring.",
+      "affected_claims": ["All U_q(sl_2) and q-integer claims"],
+      "status": "INFO"
+    },
+    {
+      "structure": "FibonacciMTC / SU2kMTC",
+      "hypothesis": "F-symbols and S-matrix entries are rational (in Q(sqrt2), Q(sqrt5))",
+      "nature": "Well-established for these specific MTC levels. Avoids transcendental arithmetic. Physically exact.",
+      "affected_claims": ["F^2=I, S-matrix unitarity, global dimension claims"],
       "status": "INFO"
     }
   ],
-  "figure_review": {
-    "status": "N/A",
-    "notes": "No Wave 7 / quantum group / q-number figures found in figures/ directory. Paper 11 is a pure algebra paper with no computational figures. The table in Section 4 is text-based, not a generated figure."
-  },
-  "summary": "3 FAIL, 8 WARN, 8 PASS",
+  "summary": "4 FAIL, 17 WARN, 30 PASS",
   "blocking_issues": [
-    "FAIL: QNumber.lean theorem count: paper says 13, actual is 11. Fix table.",
-    "FAIL: Uqsl2.lean theorem count: paper says 14, actual is 6. Fix table.",
-    "FAIL: DrinfeldDouble*.lean theorem count: paper says 47, actual is 27 (core) or 57 (all Drinfeld*). Fix table.",
-    "FAIL: Line 141-142 says KE/KF/Serre proofs are 'pending Aristotle' — they are FULLY PROVED. Remove stale language.",
-    "FAIL: Line 188-189 is self-contradictory: 'zero sorry (pending Aristotle filling 11 relation proofs)'. All proofs are complete. Remove parenthetical.",
-    "WARN: No PAPER_DEPENDENCIES entry for paper 11 in provenance.py.",
-    "WARN: All 6 external citations missing from CITATION_REGISTRY.",
-    "WARN: Bibkey dates inconsistent (Terwilliger2001 -> 2003 paper, Baseilhac2005 -> 2013 paper)."
+    "FAIL: Conclusions line 417 says '1233 theorems across 86 Lean 4 modules' — STALE. Correct: 1318 theorems across 93 modules.",
+    "FAIL: Table row for RepUqFusion.lean says '14 thms' — actual is 13.",
+    "FAIL: Table row for FibonacciMTC.lean says '18 thms' — actual is 11.",
+    "FAIL: Sec 4.1 line 216 says Serre coproduct proved by 'Aristotle run 79e07d55' — WRONG. Run 79e07d55 is TetradGapEquation.lean. Correct run is 78dcc5f4.",
+    "FAIL: Conclusions line 403-404 says 'Aristotle runs 78dcc5f4 and 79e07d55' for Uqsl2Hopf — remove 79e07d55, it is TetradGapEquation only."
+  ],
+  "non_blocking_issues": [
+    "WARN: No PAPER_DEPENDENCIES entry for paper11 in provenance.py.",
+    "WARN: All 11 external bibliography entries missing from CITATION_REGISTRY.",
+    "WARN: Bibkey/date inconsistencies: Terwilliger2001 -> 2003 paper; Baseilhac2005 -> 2013 paper.",
+    "WARN: '7 Drinfeld/Center modules (96 thms)' — count cannot be verified; no 7-module combination yields exactly 96.",
+    "WARN: Priority claims (first quantum group, first Hopf algebra, first MTC) should cite systematic library searches.",
+    "WARN: 'First verified MTC instances' while both SU2kMTC and FibonacciMTC have sorry gaps (5 and 3). Qualify with 'partial'."
   ]
 }

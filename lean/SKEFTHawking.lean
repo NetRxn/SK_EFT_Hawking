@@ -85,6 +85,11 @@ import SKEFTHawking.CoidealEmbedding
 import SKEFTHawking.RepUqFusion
 import SKEFTHawking.CenterFunctor
 import SKEFTHawking.StimulatedHawking
+import SKEFTHawking.QCyc16
+import SKEFTHawking.QCyc5
+import SKEFTHawking.IsingBraiding
+import SKEFTHawking.QSqrt3
+import SKEFTHawking.QLevel3
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

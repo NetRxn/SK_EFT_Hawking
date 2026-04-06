@@ -4,7 +4,7 @@
 
 This project asks a deep question: can the mathematics of exotic states of matter — superfluids, topological insulators, quantum spin liquids — also describe the fundamental forces and particles of the universe? We investigate this with a combination of numerical computation, formal mathematical proof-checking, and automated theorem proving, producing experimentally testable predictions along the way.
 
-Everything is machine-checked in the Lean 4 proof assistant: 1233 theorems, zero axioms, across 86 modules.
+Everything is machine-checked in the Lean 4 proof assistant: 1318 theorems, zero axioms, across 93 modules.
 
 ---
 
@@ -71,15 +71,15 @@ An interactive web dashboard (`localhost:8050`) lets you trace any claim in any 
 
 | Metric | Count |
 |--------|-------|
-| Lean theorems | 1100+ (zero axioms) |
-| Lean modules | 76 |
+| Lean theorems | 1318 (zero axioms) |
+| Lean modules | 93 |
 | Tracked hypotheses | 5 (all extremely low risk) |
-| Python test files | 38 (1600+ individual tests) |
-| Publication-quality figures | 77 |
-| Paper drafts | 11 |
-| Computational notebooks | 34 (technical + stakeholder pairs) |
-| Aristotle prover runs | 33+ |
-| Deep research files | 40+ |
+| Python test files | 41 (1635+ individual tests) |
+| Publication-quality figures | 80 |
+| Paper drafts | 12 |
+| Computational notebooks | 40 (technical + stakeholder pairs) |
+| Aristotle prover runs | 35+ |
+| Deep research files | 50+ |
 
 ### Formal Verification Firsts
 
@@ -87,7 +87,7 @@ This project established several firsts in the formal verification of physics:
 
 - First formally verified anomaly constraint in particle physics
 - First quantum group (U_q(sl_2)) in any proof assistant
-- First Hopf algebra instance (non-trivial) in any proof assistant*
+- First Hopf algebra instance (non-trivial) in any proof assistant
 - First affine quantum group, restricted quantum group
 - First SU(2)_k fusion rules verified from a quantum group
 - First ribbon category and modular tensor category definitions
@@ -96,8 +96,9 @@ This project established several firsts in the formal verification of physics:
 - First E8 lattice verification and algebraic Rokhlin decomposition
 - First verified statistical estimators for lattice Monte Carlo
 - First formal analysis of the chirality wall (GS no-go vs TPF evasion)
-
-*Pending completion by the Aristotle automated theorem prover.
+- First complete braided fusion category in any proof assistant (Ising MTC with R-matrix, hexagon, ribbon)
+- First formally verified knot invariant from MTC data (trefoil = -1)
+- First verified SU(2)_3 and SU(2)_4 S-matrix unitarity over algebraic number fields
 
 ---
 
@@ -115,4 +116,4 @@ This project established several firsts in the formal verification of physics:
 
 ---
 
-*Last updated: April 2026. Phase 5d active: 10 waves (gap equation, MTC instances, polariton paper, quantum group extensions, verified statistics). 1233 theorems, 86 modules, 22 sorry pending Aristotle.*
+*Last updated: April 2026. Phase 5e complete: braided Ising/Fibonacci MTCs, SU(2)_3/SU(2)_4 S-matrix unitarity, first verified knot invariant. 1318 theorems, 93 modules, 34 sorry pending Aristotle.*

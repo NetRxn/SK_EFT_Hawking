@@ -159,12 +159,12 @@ $U_q(\widehat{\mathfrak{sl}}_2)$ affine & & Uqsl2Affine.lean (9 thms) \\
 $U_q(\widehat{\mathfrak{sl}}_2)$ Hopf & & Uqsl2AffineHopf.lean (4 thms) \\
 $O_q \hookrightarrow U_q(\widehat{\mathfrak{sl}}_2)$ coideal & & CoidealEmbedding.lean (6 thms) \\
 Restricted $\bar{u}_q$ & & RestrictedUq.lean (11 thms, 0 sorry) \\
-$\mathrm{Rep}(\bar{u}_q) \to \mathrm{SU}(2)_k$ & & RepUqFusion.lean (14 thms) \\
+$\mathrm{Rep}(\bar{u}_q) \to \mathrm{SU}(2)_k$ & & RepUqFusion.lean (13 thms) \\
 SU(2)$_k$ fusion ($k$=1,2,3) & & SU2kFusion.lean (29 thms, 0 sorry) \\
 S-matrix + Verlinde & & SU2kSMatrix.lean (16 thms, 0 sorry) \\
 Ribbon / MTC definitions & & RibbonCategory.lean (4 thms, 0 sorry) \\
 Ising MTC ($k$=2) & & SU2kMTC.lean (11 thms) \\
-Fibonacci MTC ($k$=3) & & FibonacciMTC.lean (18 thms) \\
+Fibonacci MTC ($k$=3) & & FibonacciMTC.lean (11 thms) \\
 $\mathbb{Q}(\sqrt{2})$, $\mathbb{Q}(\sqrt{5})$ & & QSqrt2/QSqrt5.lean (10 thms, 0 sorry) \\
 E$_8$ lattice & & E8Lattice.lean (19 thms, 0 sorry) \\
 Algebraic Rokhlin ($8 \mid \sigma$) & & AlgebraicRokhlin.lean (10 thms, 0 sorry) \\
@@ -210,7 +210,7 @@ $\varepsilon(E) = \varepsilon(F) = 0$ and $\varepsilon(K) = 1$.
 Both are constructed as algebra homomorphisms: we define maps on
 generators via \texttt{FreeAlgebra.lift}, prove compatibility with
 the Chevalley relations (including the Serre coproduct relation, the
-hardest proof in the project, proved by Aristotle run \texttt{79e07d55}),
+hardest proof in the project, proved by Aristotle run \texttt{78dcc5f4}),
 and descend to the quotient via \texttt{RingQuot.liftAlgHom}. The
 \texttt{Bialgebra} instance uses \texttt{Bialgebra.ofAlgHom}, consuming
 coassociativity and counitality proofs (Aristotle run \texttt{78dcc5f4}).
@@ -401,7 +401,7 @@ Bott periodicity) yields Rokhlin's~16.
 
 We have presented the first quantum group in any proof assistant ---
 $U_q(\mathfrak{sl}_2)$ with \texttt{HopfAlgebra} instance (66~theorems,
-zero sorry, Aristotle runs \texttt{78dcc5f4} and \texttt{79e07d55}) ---
+zero sorry, Aristotle run \texttt{78dcc5f4}) ---
 together with the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$
 with Hopf structure, the first coideal embedding $O_q \hookrightarrow
 U_q(\widehat{\mathfrak{sl}}_2)$, the first restricted quantum group
@@ -414,7 +414,7 @@ $\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$), and the first formal
 decomposition of the algebraic/topological content of Rokhlin's theorem.
 All with zero axioms.
 
-The broader project comprises 1233~theorems across 86~Lean~4 modules,
+The broader project comprises 1318~theorems across 93~Lean~4 modules,
 with 307 filled by the Aristotle automated prover (304 machine-proved,
 3 manual) across 35+ runs.
 

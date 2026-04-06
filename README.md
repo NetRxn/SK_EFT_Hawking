@@ -2,7 +2,7 @@
 
 ## What This Project Is About
 
-This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Everything is machine-checked in the Lean 4 proof assistant: 1233 theorems, zero axioms, across 86 modules.
+This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Everything is machine-checked in the Lean 4 proof assistant: 1318 theorems, zero axioms, across 93 modules.
 
 ### Analog Hawking radiation and testable predictions
 
@@ -32,13 +32,13 @@ Fracton symmetric tensor gauge theory reproduces linearized gravity but fails at
 
 The jackknife variance estimator and autocorrelation function — foundational tools for analyzing Monte Carlo data from lattice simulations — are formalized for the first time in any proof assistant. Non-negativity of the jackknife variance is proved. This opens the path to formally verified data analysis for lattice quantum field theory.
 
-*23 theorems remain as Aristotle targets across 8 modules: Ising/Fibonacci pentagon equations, coideal embedding proofs, affine Hopf relation-respect, Kerr-Schild inverse, statistical estimator bounds, and Rep(u_q) fusion correspondence.*
+*34 theorems remain as Aristotle targets across 12 modules: Ising/Fibonacci pentagon equations, coideal embedding proofs, affine Hopf relation-respect, Kerr-Schild inverse, statistical estimator bounds, Rep(u_q) fusion correspondence, stimulated Hawking, and center functor naturality.*
 
 ---
 
 ## Technical Summary
 
-**Lean 4 formalization:** 1233 theorems across 86 modules. Zero axioms, 23 sorry pending Aristotle.
+**Lean 4 formalization:** 1318 theorems across 93 modules. Zero axioms, 34 sorry pending Aristotle.
 307 Aristotle-proved across 35+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
@@ -49,10 +49,10 @@ The jackknife variance estimator and autocorrelation function — foundational t
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (1233 theorems, 0 axioms, 86 modules, 23 sorry pending Aristotle)
+├── lean/                              # Lean 4 formalization (1318 theorems, 0 axioms, 93 modules, 34 sorry pending Aristotle)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 85 theorem modules)
+│   ├── SKEFTHawking.lean              # Root module (imports all 92 theorem modules)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -138,12 +138,19 @@ SK_EFT_Hawking/
 │       ├── VerifiedStatistics.lean   # Phase 5d: statistics extension, Cauchy-Schwarz, jackknife (6 theorems, 4 sorry)
 │       ├── KerrSchild.lean          # Phase 5d: Kerr-Schild metrics, Sherman-Morrison (7 theorems, 1 sorry)
 │       ├── CoidealEmbedding.lean    # Phase 5d: coideal subalgebra embedding (6 theorems, 4 sorry)
-│       └── RepUqFusion.lean         # Phase 5d: Rep(u_q) → SU(2)_k fusion correspondence (13 theorems, 2 sorry)
+│       ├── RepUqFusion.lean         # Phase 5d: Rep(u_q) → SU(2)_k fusion correspondence (13 theorems, 2 sorry)
+│       ├── StimulatedHawking.lean   # Phase 5d: stimulated Hawking amplification (11 theorems, 7 sorry)
+│       ├── CenterFunctor.lean       # Phase 5d: Center(Vec_G) → ModuleCat(DG) functor (9 theorems, 5 sorry)
+│       ├── QCyc16.lean             # Phase 5e: Q(ζ₁₆) cyclotomic field (6 theorems, all proved)
+│       ├── QCyc5.lean              # Phase 5e: Q(ζ₅) cyclotomic field + Fibonacci hexagon (9 theorems, all proved)
+│       ├── IsingBraiding.lean      # Phase 5e: COMPLETE braided Ising MTC, trefoil=-1 (23 theorems, all proved)
+│       ├── QSqrt3.lean             # Phase 5e: Q(√3) for SU(2)₄ S-matrix unitarity (8 theorems, all proved)
+│       └── QLevel3.lean            # Phase 5e: Q[x]/(20x⁴-10x²+1) for SU(2)₃ unitarity (19 theorems, all proved)
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (307 proved)
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (307 proved, 34 sorry)
 │   │   ├── visualizations.py          # Plotly figures (80 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
@@ -254,7 +261,19 @@ SK_EFT_Hawking/
 │   ├── Phase5b_ModularGeneration_Technical.ipynb # Phase 5b: modular generation constraint
 │   ├── Phase5b_ModularGeneration_Stakeholder.ipynb
 │   ├── Phase5b_QuantumGroup_Technical.ipynb     # Phase 5b: first quantum group formalization
-│   └── Phase5b_QuantumGroup_Stakeholder.ipynb
+│   ├── Phase5b_QuantumGroup_Stakeholder.ipynb
+│   ├── Phase5c_HopfAlgebra_Technical.ipynb      # Phase 5c: Hopf algebra on U_q(sl₂)
+│   ├── Phase5c_HopfAlgebra_Stakeholder.ipynb
+│   ├── Phase5c_SU2kFusion_Technical.ipynb       # Phase 5c: SU(2)_k fusion, S-matrix, Ising/Fibonacci
+│   ├── Phase5c_SU2kFusion_Stakeholder.ipynb
+│   ├── Phase5c_E8Rokhlin_Technical.ipynb        # Phase 5c: E8, Rokhlin, spin bordism
+│   ├── Phase5c_E8Rokhlin_Stakeholder.ipynb
+│   ├── Phase5d_TetradGap_Technical.ipynb        # Phase 5d: tetrad gap equation
+│   ├── Phase5d_TetradGap_Stakeholder.ipynb
+│   ├── Phase5d_Polariton_Technical.ipynb        # Phase 5d: polariton analog Hawking
+│   ├── Phase5d_Polariton_Stakeholder.ipynb
+│   ├── Phase5d_MTC_Technical.ipynb              # Phase 5d: Ising/Fibonacci MTC instances
+│   └── Phase5d_MTC_Stakeholder.ipynb
 │
 ├── docker/
 │   └── docker-compose.graph.yml       # PG+AGE container for knowledge graph (port 5433)
@@ -266,7 +285,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 35+ Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1635+ tests across 40 files)
+├── tests/                             # pytest suite (1635+ tests across 41 files)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -333,14 +352,14 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
 | Browse the dashboard | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
 | Read non-technical summaries | `docs/stakeholder/` — implications and strategic positioning per phase |
-| See what's next | [`docs/roadmaps/Phase5c_Roadmap.md`](docs/roadmaps/Phase5c_Roadmap.md), [`Phase5d_Roadmap.md`](docs/roadmaps/Phase5d_Roadmap.md), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
+| See what's next | [`docs/roadmaps/Phase5e_Roadmap.md`](docs/roadmaps/Phase5e_Roadmap.md), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
 | Understand the broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
 | Read the critical review | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
 | See the deep research corpus | `Lit-Search/` — 40+ research files across Phases 3-5d |
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (1233 theorems — zero axioms, 23 sorry pending Aristotle)
+## Theorem Inventory (1318 theorems — zero axioms, 34 sorry pending Aristotle)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -428,6 +447,13 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | KerrSchild.lean | 5d | 7 | Kerr-Schild metrics, Sherman-Morrison inverse (1 sorry) |
 | CoidealEmbedding.lean | 5d | 6 | Coideal subalgebra embedding (4 sorry) |
 | RepUqFusion.lean | 5d | 13 | Rep(u_q) → SU(2)_k fusion correspondence (2 sorry) |
+| StimulatedHawking.lean | 5d | 11 | Stimulated Hawking amplification (7 sorry) |
+| CenterFunctor.lean | 5d | 9 | Center(Vec_G) → ModuleCat(DG) functor (5 sorry) |
+| QCyc16.lean | 5e | 6 | Q(ζ₁₆) cyclotomic field (all proved, native_decide) |
+| QCyc5.lean | 5e | 9 | Q(ζ₅) + Fibonacci hexagon E1-E3 (all proved, native_decide) |
+| IsingBraiding.lean | 5e | 23 | COMPLETE braided Ising: hexagon, ribbon, trefoil=-1 (all proved) |
+| QSqrt3.lean | 5e | 8 | Q(√3) + SU(2)₄ S-matrix unitarity (all proved) |
+| QLevel3.lean | 5e | 19 | SU(2)₃ S-matrix unitarity, quantum dim golden ratio (all proved) |
 
 ## Build Environment
 

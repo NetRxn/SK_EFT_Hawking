@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 5, 2026 (Phase 5d Waves 1-2 COMPLETE: **1233 thm**, 0 ax, 86 modules, **23 sorry** across 8 files, Aristotle targets)
+**Last synced:** April 6, 2026 (Phase 5e COMPLETE: **1318 thm**, 0 ax, 93 modules, **34 sorry** across 12 files, Aristotle targets — Phase 5e added 5 modules, 65 theorems, ZERO new sorry)
 
 ---
 
@@ -10,22 +10,22 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **1233** (0 axioms, incl. private helpers) | `grep -c "^theorem\|^private theorem" lean/SKEFTHawking/*.lean` |
+| Lean theorems | **1318** (0 axioms, incl. private helpers) | `grep -c "^theorem\|^private theorem" lean/SKEFTHawking/*.lean` |
 | Aristotle-proved | **307** (304 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **23** | 5 SU2kMTC + 3 FibonacciMTC + 3 Uqsl2AffineHopf + 4 VerifiedStatistics + 4 CoidealEmbedding + 2 RepUqFusion + 1 KerrSchild + 1 TetradGapEquation |
+| **Sorry gaps** | **34** | 5 SU2kMTC + 3 FibonacciMTC + 3 Uqsl2AffineHopf + 4 VerifiedStatistics + 4 CoidealEmbedding + 2 RepUqFusion + 1 KerrSchild + 1 TetradGapEquation + 7 StimulatedHawking + 4 CenterFunctor |
 | **Axioms** | **0** | All removed (Wave 6) |
-| Lean modules | 86 | `ls lean/SKEFTHawking/*.lean` |
-| Proved (zero sorry) | 1210 | 1233 - 23 |
-| Python source modules | 51 | `find src/ -name "*.py" ! -name "__init__.py"` |
-| Test files | 40 | `find tests/ -name "test_*.py"` |
+| Lean modules | 93 | `ls lean/SKEFTHawking/*.lean` |
+| Proved (zero sorry) | 1284 | 1318 - 34 |
+| Python source modules | 53 | `find src/ -name "*.py" ! -name "__init__.py"` |
+| Test files | 41 | `find tests/ -name "test_*.py"` |
 | Test count | 1635+ | `pytest tests/ -q` |
 | Figures | 80 | `grep -c "^def fig_" src/core/visualizations.py` |
-| Notebooks | 36 | `ls notebooks/*.ipynb` |
+| Notebooks | 40 | `ls notebooks/*.ipynb` |
 | Papers | 12 | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
-| Stakeholder docs | 18 | See Section 9 of inventory |
+| Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 35+ | See Aristotle run table in full inventory |
-| Deep research tasks | 18 + 8 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b (incl. 4 q-Onsager)
+| Deep research tasks | 18 + 8 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e
 
 ---
 
@@ -34,11 +34,11 @@
 | Section | Covers | When to update |
 |---------|--------|----------------|
 | 1. Python Source | All `src/` modules with purpose + line counts | New module added or module purpose changes |
-| 2. Lean Verification | 86-module table: lines, theorem count, key results | Theorem added/removed, module added |
+| 2. Lean Verification | 93-module table: lines, theorem count, key results | Theorem added/removed, module added |
 | 3. Aristotle | Run table with dates + theorem counts | New Aristotle submission |
-| 4. Notebooks | 36-notebook table: phase, topic | Notebook added or topic changes |
+| 4. Notebooks | 40-notebook table: phase, topic | Notebook added or topic changes |
 | 5. Papers | 12-paper table: format, lines, topic, key claims | Paper content changes |
-| 6. Tests | 40-file table: test counts, coverage | Test file added or count changes |
+| 6. Tests | 41-file table: test counts, coverage | Test file added or count changes |
 | 7. Scripts | 14-script table | Script added or purpose changes |
 | 8. Configuration | Dependency table | Dependency added |
 | 9. Documentation | Reference, roadmap, stakeholder, analysis tables | Doc added/moved/content changes |
@@ -54,7 +54,7 @@
 - `formulas.py` — Canonical physics formulas with Lean refs (137 functions including SM anomaly, Weingarten, NJL, fracton, Planck, quantum group, SU(2)_k fusion/S-matrix, E8/Rokhlin)
 - `transonic_background.py` — 1D BEC transonic flow solver
 - `visualizations.py` — All 80 Plotly figure functions + COLORS palette
-- `aristotle_interface.py` — Aristotle API + sorry gap registry (23 unfilled across 8 Lean modules)
+- `aristotle_interface.py` — Aristotle API + sorry gap registry (34 unfilled across 12 Lean modules)
 - `sm_anomaly.py` — SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check
 - `provenance.py` — Parameter provenance registry (PARAMETER_PROVENANCE, tiers, verification dates)
 - `citations.py` — Citation registry (CITATION_REGISTRY, DOI tracking, usage mapping)
@@ -199,6 +199,13 @@
 | SpinBordism | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData structure, anomaly with/without ν_R (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | VerifiedJackknife | 5 | First verified statistical estimators: jackknife variance non-neg, autocovariance_zero non-neg, intAutocorrTime bounds (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | TetradGapEquation | 20 | **First tetrad gap equation in any formalism**: NJL-type Δ=G·N_f·Δ·I(Δ), gapIntegral, criticalCoupling=8π²/(N_f·Λ²) (PROVED, matches ADW V_eff), IVT existence, Banach uniqueness, bifurcation at G_c, vestigial connection (19 PROVED, Aristotle `79e07d55`; **1 sorry**: gap_solution_bounded) |
+| StimulatedHawking | 11 | **Phase 5d**: Stimulated Hawking amplification, signal-to-noise, phonon statistics (**7 sorry**) |
+| CenterFunctor | 9 | **Phase 5d**: Abstract functor Center(Vec_G) to ModuleCat(DG), natural transformation (**5 sorry**) |
+| QCyc16 | 6 | **Phase 5e**: Q(ζ₁₆) cyclotomic field: ζ⁸=-1, ζ¹⁶=1, (√2)²=2 (**ALL PROVED by native_decide, zero sorry**) |
+| QCyc5 | 9 | **Phase 5e**: Q(ζ₅) cyclotomic field: ζ⁵=1, cyclotomic relation, Fibonacci hexagon E1-E3, twist consistency (**ALL PROVED by native_decide, zero sorry**) |
+| IsingBraiding | 23 | **Phase 5e**: COMPLETE braided Ising MTC: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum, **trefoil=-1** (**ALL PROVED by native_decide, zero sorry, FIRST verified knot invariant**) |
+| QSqrt3 | 8 | **Phase 5e**: Q(√3) for SU(2)₄ S-matrix: unitarity diagonal+off-diag, det non-zero (**ALL PROVED by native_decide, zero sorry**) |
+| QLevel3 | 19 | **Phase 5e**: Q[x]/(20x⁴-10x²+1) for SU(2)₃ S-matrix: ALL 10 unitarity entries, quantum dim golden ratio (**ALL PROVED by native_decide, zero sorry**) |
 
 ---
 

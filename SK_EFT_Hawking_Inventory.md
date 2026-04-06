@@ -2,13 +2,13 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Twelve papers (Phases 1-5d) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), Hopf algebra, affine U_q(sl_2 hat), restricted u_q, SU(2)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators, tetrad gap equation, Fibonacci/Ising MTC, coideal embedding, Rep(u_q) fusion correspondence. Lean 4 formalization: 1233 theorems, 0 axioms across 86 modules (23 sorry pending Aristotle). 307 Aristotle-proved (304 machine + 3 manual). 1635+ tests, 80 pipeline figures, 36 notebooks, 51 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Twelve papers (Phases 1-5d) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), Hopf algebra, affine U_q(sl_2 hat), restricted u_q, SU(2)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators, tetrad gap equation, Fibonacci/Ising MTC, coideal embedding, Rep(u_q) fusion correspondence, Phase 5e braided MTCs (cyclotomic fields Q(ζ₁₆)/Q(ζ₅), Ising hexagon+ribbon+trefoil, Fibonacci hexagon+twist, SU(2)₃/SU(2)₄ S-matrix unitarity). Lean 4 formalization: 1318 theorems, 0 axioms across 93 modules (34 sorry pending Aristotle). 307 Aristotle-proved (304 machine + 3 manual). 1635+ tests, 80 pipeline figures, 40 notebooks, 53 Python source modules.
 
-**Last verified:** April 5, 2026 (Phase 5d Waves 1-2 COMPLETE — 1233 thm, 0 ax, 86 modules, 23 sorry across 8 files pending Aristotle)
+**Last verified:** April 6, 2026 (Phase 5e COMPLETE — 1318 thm, 0 ax, 93 modules, 34 sorry across 12 files pending Aristotle. Phase 5e: 65 theorems, 5 modules, ZERO new sorry.)
 
 ---
 
-## 1. PYTHON SOURCE FILES (51 modules + 11 __init__.py)
+## 1. PYTHON SOURCE FILES (53 modules + 11 __init__.py)
 
 ### 1.1 Core Module: `src/core/`
 
@@ -285,7 +285,7 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (86 modules, 1233 theorems, 0 axioms)
+## 2. LEAN FORMAL VERIFICATION (93 modules, 1318 theorems, 0 axioms)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -376,6 +376,13 @@
 | KerrSchild | ~100 | 7 | 0 | 5d | Kerr-Schild metrics: null vector, radial_null, Sherman-Morrison inverse, Schwarzschild, DOF counting (**1 sorry**) |
 | CoidealEmbedding | ~130 | 6 | 0 | 5d | Coideal subalgebra embedding B_i into U_q(ŝl₂), Dolan-Grady from Chevalley (**4 sorry**: coideal/counit proofs) |
 | RepUqFusion | ~160 | 13 | 0 | 5d | Rep(u_q) → SU(2)_k fusion data correspondence, dim formulas, Peter-Weyl (**2 sorry**: dimension formula, fusion comm) |
+| StimulatedHawking | ~200 | 11 | 0 | 5d | Stimulated Hawking amplification protocol, signal-to-noise, phonon statistics (**7 sorry**) |
+| CenterFunctor | ~200 | 9 | 0 | 5d | Abstract functor Center(Vec_G) → ModuleCat(DG), natural transformation (**5 sorry**) |
+| QCyc16 | ~100 | 6 | 0 | 5e | Q(ζ₁₆) cyclotomic field: ζ⁸=-1, ζ¹⁶=1, (√2)²=2 (**ALL PROVED by native_decide, zero sorry**) |
+| QCyc5 | ~155 | 9 | 0 | 5e | Q(ζ₅) cyclotomic field: ζ⁵=1, Fibonacci hexagon E1-E3, twist, writhe removal (**ALL PROVED by native_decide, zero sorry**) |
+| IsingBraiding | ~200 | 23 | 0 | 5e | **COMPLETE braided Ising MTC**: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum p₊=2ζ (c_top=1/2), trefoil=-1 (**ALL PROVED by native_decide, zero sorry**, FIRST verified knot invariant) |
+| QSqrt3 | ~90 | 8 | 0 | 5e | Q(√3) for SU(2)₄ S-matrix: row norms, orthogonality, det (**ALL PROVED by native_decide, zero sorry**) |
+| QLevel3 | ~170 | 19 | 0 | 5e | Q[x]/(20x⁴-10x²+1) for SU(2)₃: s²+t²=1/2, ALL 10 S*S^T=I entries, quantum dim golden ratio (**ALL PROVED by native_decide, zero sorry**) |
 
 **Axioms:** None (all removed in Wave 6 — `non_abelian_center_discrete` and `gs_nogo_axiom` proved as theorems).
 
@@ -436,7 +443,7 @@
 
 ---
 
-## 4. JUPYTER NOTEBOOKS (36 total: 18 Technical + 18 Stakeholder)
+## 4. JUPYTER NOTEBOOKS (40 total: 20 Technical + 20 Stakeholder)
 
 | Notebook | Phase | Topic |
 |----------|-------|-------|
@@ -476,6 +483,10 @@
 | Phase5c_E8Rokhlin_Stakeholder | 5c | E8/Rokhlin for non-specialists |
 | Phase5d_TetradGap_Technical | 5d | Tetrad gap equation, NJL-type gap solver |
 | Phase5d_TetradGap_Stakeholder | 5d | Tetrad gap equation for non-specialists |
+| Phase5d_Polariton_Technical | 5d | Polariton analog Hawking, stimulated amplification |
+| Phase5d_Polariton_Stakeholder | 5d | Polariton analog Hawking for non-specialists |
+| Phase5d_MTC_Technical | 5d | Ising/Fibonacci MTC instances, F-symbols |
+| Phase5d_MTC_Stakeholder | 5d | MTC for non-specialists |
 
 **Convention:** Technical mirrors paper structure. Stakeholder teaches the physics. All import from `src/` modules (no inline formula redefinition). All figure cells tagged `# viz-ref: fig_<name>`.
 
@@ -509,7 +520,7 @@
 
 ---
 
-## 6. TEST FILES (40 files, 1635+ tests)
+## 6. TEST FILES (41 files, 1635+ tests)
 
 | Test File | Tests | Covers |
 |-----------|-------|--------|
@@ -553,6 +564,7 @@
 | test_e8_rokhlin | 24 | E8 lattice, algebraic Rokhlin (Serre mod 8), spin bordism, Wang chain |
 | test_tetrad_gap | — | Tetrad gap equation Lean formalization tests |
 | test_tetrad_gap_solver | — | Tetrad gap solver, NJL-type gap equation, Δ*(G) curve |
+| test_verified_statistics | — | Verified statistical estimators |
 
 ---
 
@@ -613,12 +625,13 @@
 | Phase5a_Roadmap.md | docs/roadmaps/ | Complete — Onsager algebra + GT + Z₁₆ chirality wall |
 | Phase5b_Roadmap.md | docs/roadmaps/ | Complete — SM anomaly, Drinfeld center, modular generation, quantum group |
 | Phase5c_Roadmap.md | docs/roadmaps/ | Complete — Hopf algebra, SU(2)_k, E8, Rokhlin, statistics |
-| Phase5d_Roadmap.md | docs/roadmaps/ | New — next phase planning |
+| Phase5d_Roadmap.md | docs/roadmaps/ | Complete — tetrad gap, MTC instances, polariton, verified statistics |
+| Phase5e_Roadmap.md | docs/roadmaps/ | In progress — braided MTCs, knot invariants, affine Hopf, higher-k |
 | Phase6_Roadmap.md | docs/roadmaps/ | Planning |
 | Phase6_Deferred_Targets.md | docs/roadmaps/ | Deferred targets |
 | Phase6_VerifiedStatistics_Roadmap.md | docs/roadmaps/ | Verified statistics roadmap |
 
-### Stakeholder Documents (18 total)
+### Stakeholder Documents (24 total)
 | Document | Location |
 |----------|----------|
 | companion_guide.md | docs/stakeholder/ |
@@ -631,6 +644,8 @@
 | Phase5a_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
 | Phase5b_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
 | Phase5c_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
+| Phase5d_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
+| Phase5e_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
 
 ### Analysis Documents
 | Document | Location | Topic |
@@ -706,22 +721,22 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| **Python Source Modules** | 51 | Complete (Phases 1-5d) |
+| **Python Source Modules** | 53 | Complete (Phases 1-5e) |
 | **Python __init__.py** | 11 | Complete |
-| **Test Files** | 40 | 1635+ tests |
-| **Notebooks** | 36 | Phases 1-5d (Technical + Stakeholder) |
-| **Lean Modules** | 86 | All build clean |
-| **Lean Theorems** | 1233 (0 axioms) | 23 sorry pending Aristotle across 8 files |
+| **Test Files** | 41 | 1635+ tests |
+| **Notebooks** | 40 | Phases 1-5d (Technical + Stakeholder) |
+| **Lean Modules** | 93 | All build clean |
+| **Lean Theorems** | 1318 (0 axioms) | 34 sorry pending Aristotle across 10 files |
 | **Aristotle-proved** | 307 (304 machine + 3 manual in registry) | 35+ runs |
-| **Manual proofs** | 926 | |
+| **Manual proofs** | 977 | 1318 - 307 - 34 |
 | **Paper Drafts** | 12 + prediction tables | Full LaTeX |
 | **Pipeline Figures** | 80 | All PNGs generated |
 | **Validation Checks** | 16 | All passing |
 | **Scripts** | 14 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, 7 utilities |
-| **Stakeholder Docs** | 18 | Phases 1-5c |
+| **Stakeholder Docs** | 24 | Phases 1-5e |
 | **Analysis Docs** | 3 | Vestigial, fracton, chirality |
-| **Roadmaps** | 12 | Phases 1-5d + Phase 6 + deferred |
+| **Roadmaps** | 13 | Phases 1-5e + Phase 6 + deferred |
 
 ---
 
-**Project Status (2026-04-05):** Phase 5d Waves 1-2 COMPLETE. 1233 theorems, 0 axioms (23 sorry pending Aristotle across 8 files: SU2kMTC 5, VerifiedStatistics 4, CoidealEmbedding 4, FibonacciMTC 3, Uqsl2AffineHopf 3, RepUqFusion 2, KerrSchild 1, TetradGapEquation 1), 307 Aristotle-registry entries (304 machine-proved, 3 manual), 1635+ tests, 80 figures, 86 Lean modules, 51 Python modules, 12 papers, 36 notebooks. Phase 5d additions: +131 theorems, +10 Lean modules, -18 sorry resolved (Uqsl2Hopf 22→0 + SU2kSMatrix 10→0 + RibbonCategory 2→0 + E8Lattice 2→0 + SpinBordism 2→0 + RestrictedUq 1→0 + VerifiedJackknife 2→0), Uqsl2Hopf expanded 23→66 theorems. New modules: TetradGapEquation (20), SU2kMTC (11), FibonacciMTC (11), QSqrt2 (3), QSqrt5 (7), Uqsl2AffineHopf (4), VerifiedStatistics (6), KerrSchild (7), CoidealEmbedding (6), RepUqFusion (13). paper12_polariton new.
+**Project Status (2026-04-06):** Phase 5e COMPLETE. 1318 theorems, 0 axioms (34 sorry pending Aristotle across 10 files), 307 Aristotle-registry entries (304 machine-proved, 3 manual), 1635+ tests, 80 figures, 93 Lean modules, 53 Python modules, 12 papers, 40 notebooks. Phase 5e additions: +65 theorems (ALL proved by native_decide, ZERO new sorry), +5 Lean modules (QCyc16, QCyc5, IsingBraiding, QSqrt3, QLevel3). Key results: first complete braided fusion category (Ising: 6 hexagon + 4 ribbon + Gauss sum), first verified knot invariant (trefoil = -1), Fibonacci hexagon E1-E3, SU(2)_3 + SU(2)_4 S-matrix unitarity over algebraic number fields.

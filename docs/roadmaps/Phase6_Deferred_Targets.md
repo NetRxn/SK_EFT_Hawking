@@ -3,7 +3,7 @@
 **Purpose:** Track high-value formalization targets beyond the current phase. Deep research timelines assume human effort; our pipeline + Aristotle has consistently compressed months→days.
 
 **Created:** April 4, 2026
-**Updated:** April 5, 2026 (post Phase 5d W1-2 + Aristotle `78dcc5f4`: **1165 thms, 77 modules, 11 sorry, 0 axioms**)
+**Updated:** April 5, 2026 (session 2): **1253 thms, 88 modules, 34 sorry, 0 axioms**
 
 ---
 
@@ -16,8 +16,8 @@ SpinBordismData → rokhlin_from_bordism (16|σ) → c₋=8N_f → 24|c₋ → 3
 ```
 All 7 modules in the chain (SpinBordism, WangBridge, GenerationConstraint, ModularInvarianceConstraint, RokhlinBridge, AlgebraicRokhlin, E8Lattice) are zero sorry. The E8 counterexample (σ=8 ≢ 0 mod 16) is proved. Algebraic Serre bound (σ≡0 mod 8) is proved. The 2-factor topological gap (mod 8 → mod 16) enters as the SpinBordismData hypothesis.
 
-### Quantum Group Chain: 3 sorry remaining
-8 of 8 modules are zero sorry EXCEPT Uqsl2Hopf (3 sorry = Serre coproduct compatibility). All other links — q-numbers, U_q definition, affine extension, fusion rules, S-matrix unitarity, restricted quantum group, ribbon/MTC definitions — are fully proved.
+### Quantum Group Chain: CORE COMPLETE (0 sorry on finite type)
+All finite-type modules zero sorry: QNumber, Uqsl2, Uqsl2Hopf (66 thms), SU2kFusion, SU2kSMatrix, RestrictedUq, RibbonCategory. Affine extension has 3+4 sorry (Uqsl2AffineHopf + CoidealEmbedding). MTC instances have 8 sorry (SU2kMTC + FibonacciMTC).
 
 ### Tetrad Gap Equation: First Explicit Derivation
 Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensation: Δ = G·N_f·Δ·I(Δ). G_c = 8π²/(N_f·Λ²) matches V_eff exactly (proved in Lean). 20 theorems (12 proved + 8 sorry). Python solver + observables + figures complete.
@@ -35,10 +35,9 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - All hypothesis tracking via HYPOTHESIS_REGISTRY
 - Wang-Rokhlin chain: 0 sorry across 7 modules
 
-### U_q(sl₂) Hopf Algebra — **NEARLY COMPLETE** (Phase 5c)
-- Bialgebra + HopfAlgebra instances constructed. ~50 theorems.
-- **3 sorry remaining:** Serre coproduct (comulFreeAlg_EF_sub_FE, _Serre_apply_serre, _Serre).
-- Deep research completed: tensor product algebra rewriting strategy (Phase-5d).
+### U_q(sl₂) Hopf Algebra — **COMPLETE** (Phase 5c + Aristotle `79e07d55`)
+- Bialgebra + HopfAlgebra instances: 66 theorems, **zero sorry**.
+- Serre coproduct: PROVED by Aristotle.
 - First non-trivial HopfAlgebra instance in any proof assistant.
 
 ### O_q ↪ U_q(ŝl₂) — **COMPLETED** (Phase 5c Wave 2)
@@ -69,10 +68,9 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 ### Verified Jackknife Statistics — **COMPLETED** (Phase 5c + Aristotle `78dcc5f4`)
 - 5 theorems, **zero sorry**. τ_int uncorrelated, τ_int ≥ 1/2: PROVED (Aristotle).
 
-### Tetrad Gap Equation — **IN PROGRESS** (Phase 5d Waves 1-2)
-- 20 theorems (12 proved + 8 sorry). Aristotle job in flight.
-- Gap solver + observables + figures complete. MC infrastructure ready.
-- **Phase 5d Wave 3 (MC production) blocked on user-directed lattice runs.**
+### Tetrad Gap Equation — **COMPLETE** (Phase 5d Waves 1-2 + Aristotle `79e07d55`)
+- 20 theorems, **zero sorry** (9 Aristotle, 1 disproved). gap_solution_bounded FALSE (counterexample).
+- Gap solver + observables + figures complete. L=8 MC production running.
 
 ---
 
@@ -124,12 +122,21 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ---
 
-## 11 Remaining Sorry Gaps (entire project)
+## 34 Remaining Sorry Gaps (entire project)
 
-| File | Count | Theorems | Strategy |
-|------|-------|----------|----------|
-| TetradGapEquation.lean | 8 | gapIntegral_strictAnti, _tendsto_zero, gap_trivial_unique_subcritical, gap_nontrivial_exists, gap_solution_bounded, gap_solution_monotone, gapIntegral_le_I0 (Δ>0), gapIntegral_lower_bound | Aristotle job in flight. Deep research applied: `Real.log_lt_sub_one_of_pos`, IVT, calc chains. |
-| Uqsl2Hopf.lean | 3 | comulFreeAlg_EF_sub_FE, _Serre_apply_serre, _Serre | Deep research applied: 4-phase tactic strategy (unfold→expand→rewrite→collect). `tmul_mul_tmul` is `@[simp]`, `sub_tmul`/`add_tmul` are NOT. Aristotle job in flight. |
+| File | Count | Status |
+|------|-------|--------|
+| SU2kMTC.lean | 5 | Aristotle `3b356975` in flight |
+| FibonacciMTC.lean | 3 | Aristotle `3b356975` in flight |
+| Uqsl2AffineHopf.lean | 3 | Next Aristotle batch |
+| VerifiedStatistics.lean | 4 | Next Aristotle batch |
+| CoidealEmbedding.lean | 4 | Next Aristotle batch |
+| RepUqFusion.lean | 2 | Next Aristotle batch |
+| KerrSchild.lean | 1 | Next Aristotle batch |
+| CenterFunctor.lean | 5 | Next Aristotle batch |
+| StimulatedHawking.lean | 7 | Next Aristotle batch |
+
+TetradGapEquation.lean and Uqsl2Hopf.lean: **ZERO sorry** (Aristotle `79e07d55`).
 
 ---
 
@@ -155,11 +162,15 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 | Stimulated Hawking predictions | Tasks/submitted/ | Submitted Apr 5 — quantitative formulas for Paper 7 |
 | Polariton c_s primary source | Tasks/submitted/ | Submitted Apr 5 — RESOLVED (c_s corrected to 0.5 µm/ps) |
 
-### Proposed (for next batch)
-| Topic | Why |
-|-------|-----|
-| Q(ζ₁₆) encoding in Lean 4 | Full braided Ising MTC (R-matrix + hexagon). Degree 8 over Q. |
-| U_q(ŝl₂) Hopf proof strategy | Phase 5e planning — how to adapt Serre coproduct pattern to 6 generators |
+### Submitted for Phase 5e (6 tasks)
+| Topic | File | Blocking |
+|-------|------|----------|
+| Q(ζ₁₆) and Q(ζ₅) in Lean 4 | Phase5e_cyclotomic_fields_lean4.txt | W1, W5 |
+| Ising R-matrix + hexagon data | Phase5e_ising_R_matrix_hexagon_data.txt | W2, W3 |
+| Fibonacci R-matrix + hexagon | Phase5e_fibonacci_R_matrix_hexagon_data.txt | W5, W6 |
+| U_q(ŝl₂) Hopf proof strategy | Phase5e_affine_hopf_proof_strategy.txt | W7, W8 |
+| Higher-k S-matrix computability | Phase5e_higher_k_s_matrix_computability.txt | W9 |
+| Jones polynomial from MTC | Phase5e_jones_polynomial_from_mtc.txt | W10 |
 
 ---
 

@@ -4644,3 +4644,112 @@ def bootstrap_confidence_interval(data, observable=None, n_bootstrap=1000, alpha
     ci_low = np.percentile(theta_boot, 100 * alpha / 2)
     ci_high = np.percentile(theta_boot, 100 * (1 - alpha / 2))
     return theta_full, ci_low, ci_high
+
+
+# ════════════════════════════════════════════════════════════════════
+# Ising Braiding Data (IsingBraiding.lean + QCyc16.lean)
+# ════════════════════════════════════════════════════════════════════
+
+def ising_r_matrix(a, b, c):
+    """
+    Ising MTC R-matrix eigenvalue R^{ab}_c.
+
+    Non-trivial entries (all others = 1):
+      R^{σσ}_1 = e^{-iπ/8}, R^{σσ}_ψ = e^{3iπ/8}
+      R^{σψ}_σ = R^{ψσ}_σ = -i
+      R^{ψψ}_1 = -1
+
+    Lean: R1_sigma, Rpsi_sigma, R_sigma_psi, R_psi_psi (IsingBraiding.lean)
+    Aristotle: N/A (all native_decide)
+
+    Returns:
+        complex R-matrix eigenvalue
+    """
+    if (a, b, c) == (1, 1, 0):  # σσ→1
+        return np.exp(-1j * np.pi / 8)
+    elif (a, b, c) == (1, 1, 2):  # σσ→ψ
+        return np.exp(3j * np.pi / 8)
+    elif (a, b, c) in [(1, 2, 1), (2, 1, 1)]:  # σψ→σ, ψσ→σ
+        return -1j
+    elif (a, b, c) == (2, 2, 0):  # ψψ→1
+        return -1.0
+    else:
+        return 1.0
+
+
+def ising_twist(a):
+    """
+    Ising MTC twist factor θ_a.
+
+    θ_1 = 1, θ_σ = e^{iπ/8}, θ_ψ = -1.
+
+    Lean: theta_sigma, theta_psi (IsingBraiding.lean)
+    Aristotle: N/A (all native_decide)
+
+    Returns:
+        complex twist factor
+    """
+    if a == 0:  # 1
+        return 1.0
+    elif a == 1:  # σ
+        return np.exp(1j * np.pi / 8)
+    elif a == 2:  # ψ
+        return -1.0
+    else:
+        raise ValueError(f"Invalid Ising anyon label: {a}")
+
+
+def fibonacci_r_matrix(c):
+    """
+    Fibonacci MTC R-matrix eigenvalue R^{ττ}_c.
+
+    R^{ττ}_1 = e^{-4πi/5} = ζ₅³, R^{ττ}_τ = e^{3πi/5} = -ζ₅⁴.
+
+    Lean: R1, Rtau (QCyc5.lean), hexagon_E1/E2/E3 (all native_decide)
+    Aristotle: N/A
+
+    Args:
+        c: fusion channel (0=vacuum, 1=tau)
+
+    Returns:
+        complex R-matrix eigenvalue
+    """
+    if c == 0:  # vacuum channel
+        return np.exp(-4j * np.pi / 5)
+    elif c == 1:  # tau channel
+        return np.exp(3j * np.pi / 5)
+    else:
+        raise ValueError(f"Invalid Fibonacci channel: {c}")
+
+
+def fibonacci_twist():
+    """
+    Fibonacci MTC twist factor θ_τ = e^{4πi/5} = ζ₅².
+
+    Lean: theta_tau, twist_from_R (QCyc5.lean)
+    Aristotle: N/A (native_decide)
+
+    Returns:
+        complex twist factor for τ
+    """
+    return np.exp(4j * np.pi / 5)
+
+
+def trefoil_jones_ising():
+    """
+    Jones polynomial of the right-handed trefoil evaluated at q=i,
+    computed from Ising MTC R-matrix data.
+
+    RT(trefoil, σ) = θ_σ^{-3} · (R₁³ + Rψ³) / d_σ = -1.
+
+    Lean: trefoil_eq_neg_sqrt2 (IsingBraiding.lean)
+    Aristotle: N/A (native_decide)
+
+    Returns:
+        -1 (complex)
+    """
+    R1 = ising_r_matrix(1, 1, 0)
+    Rpsi = ising_r_matrix(1, 1, 2)
+    theta_inv = 1.0 / ising_twist(1)
+    d_sigma = np.sqrt(2)
+    return theta_inv**3 * (R1**3 + Rpsi**3) / d_sigma
