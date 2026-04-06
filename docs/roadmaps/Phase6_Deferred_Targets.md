@@ -109,16 +109,30 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ### Full Z₁₆ Cobordism Proof
 - Requires Atiyah-Hirzebruch + Adams spectral sequences.
-- ~15-25 person-years by conventional methods.
+- Deep research submitted: `Phase5h_chirality_3plus1d_formalizability.txt` — assessing what's formalizable vs conjectural
+- **SCOPED for Phase 5h** (chirality wall deepening)
 
 ### Non-Abelian TPF Disentangler
 - Open problem (TPF arXiv:2601.04304). Requires Peter-Weyl, non-Abelian Gauss law.
+- **SCOPED for Phase 5h** (3+1D gauging step)
 
 ### |N| = 3 Fermi-Point → SU(3) Emergence
-- Speculative. No explicit proof exists.
+- Volovik-Zubkov 2014: |N|=2 → SU(2) is established for fermions
+- Deep research submitted: `Phase5j_fermi_point_su2_emergence.txt`
+- **SCOPED for Phase 5j** (start with |N|=2 → SU(2), then assess |N|=3)
+
+### Higher-Rank Quantum Groups: U_q(sl_3)
+- Same FreeAlgebra/RingQuot pattern as U_q(sl_2) but rank 2 Cartan matrix
+- Deep research submitted: `Phase5i_uq_sl3_quantum_group.txt`
+- **SCOPED for Phase 5i** (SU(3)_k fusion rules → color group connection)
 
 ### Fracton-Gravity Kerr-Schild Bootstrap
-- Published (Afxonidis 2024), 5 obstructions persist. Lower leverage for formal program.
+- Published (Afxonidis 2024), 5 obstructions persist. KerrSchild.lean (7 thms) exists. Lower leverage.
+
+### Sparse CG for L=12+ RHMC
+- Dense CG hits memory wall at L=12 (27GB). Sparse CG reduces to ~85MB.
+- Deep research submitted: `Phase5g_sparse_fermion_matrix_lattice.txt`
+- **PROMOTED to Phase 5g Track A** — the physics bottleneck
 
 ---
 
@@ -172,15 +186,42 @@ TetradGapEquation.lean and Uqsl2Hopf.lean: **ZERO sorry** (Aristotle `79e07d55`)
 | Higher-k S-matrix computability | Phase5e_higher_k_s_matrix_computability.txt | **COMPLETE** — k=3,4 done |
 | Jones polynomial from MTC | Phase5e_jones_polynomial_from_mtc.txt | **COMPLETE** — trefoil+Hopf done |
 
-### Submitted for Phase 5f (5 tasks)
-| Topic | File | Blocking |
-|-------|------|----------|
-| TQFT axioms in Lean 4 | Phase5f_tqft_axioms_lean4.txt | W1 |
-| Wen effective coupling → ADW G_c | Phase5f_wen_effective_coupling.txt | W3 |
-| Two-loop NJL gap equation | Phase5f_two_loop_gap_equation.txt | W4 |
-| Braid group via PresentedGroup | Phase5f_braid_group_lean4.txt | W7 |
-| Genus-g partition functions | Phase5f_tqft_partition_functions.txt | W2 |
+### Phase 5f (5 tasks — ALL COMPLETE)
+| Topic | File | Status |
+|-------|------|--------|
+| TQFT axioms in Lean 4 | Phase-5f/TQFT axioms in Lean 4.md | **COMPLETE** — partition functions verified |
+| Wen effective coupling | Phase-5f/Wen's rotor model falls short.md | **COMPLETE** — 6000x deficit, instanton bypass |
+| Two-loop NJL gap equation | Phase-5f/Two-loop NJL gap equation.md | **COMPLETE** — G_c unchanged at NLO |
+| Braid group + RT invariants | Phase-5f/Braid groups and RT invariants.md | **COMPLETE** — figure-eight computed |
+| Genus-g partition functions | Phase-5f/Genus-g partition functions.md | **COMPLETE** — Ising+Fibonacci verified |
+
+### Phase 5g-5j Deep Research
+| Topic | File | Phase | Status |
+|-------|------|-------|--------|
+| Sparse/matrix-free fermion operator | Phase-5g/Sparse staggered fermion matrix.md | 5g | **COMPLETE** |
+| Mathlib categorical PR process | Phase-5h/Contributing categorical infrastructure to Mathlib4.md | 5g | **COMPLETE** |
+| 3+1D chirality wall formalizability | Phase-5h/Mapping the 3+1D chirality wall.md | 5h | **COMPLETE** |
+| Paper submission strategy | Phase5g_paper_submission_strategy.txt | 5g | SUBMITTED |
+| Paper 14 scope (braided MTCs) | Phase5g_paper14_braided_mtc_scope.txt | 5g | SUBMITTED |
+| Mathlib PR strategy | Phase5g_mathlib_pr_strategy.txt | 5g | SUBMITTED |
+| U_q(sl_3) quantum group | Phase5i_uq_sl3_quantum_group.txt | 5i | SUBMITTED |
+| |N|>1 Fermi-point → SU(2) | Phase5j_fermi_point_su2_emergence.txt | 5j | SUBMITTED |
 
 ---
 
-*Updated April 6, 2026. Phase 5e COMPLETE: 1327 thms, 93 modules. Braided Ising+Fibonacci MTCs, trefoil+Hopf link, SU(2)₃/₄ S-matrices. 74 Phase 5e theorems, 0 sorry. Phase 5f scoped: TQFT + physics + MC + braid group. Aristotle `3b356975` at 13%.*
+## Phase Roadmap Summary
+
+| Phase | Focus | Roadmap | Status |
+|-------|-------|---------|--------|
+| 5d | Tetrad gap equation, polariton, MTC instances, QG extensions | Phase5d_Roadmap.md | 13 waves, Aristotle pending |
+| 5e | Braided MTCs, knot invariants, S-matrix unitarity | Phase5e_Roadmap.md | **COMPLETE** (65 thms, 0 sorry) |
+| 5f | TQFT, emergent gravity bounds, figure-eight knot | Phase5f_Roadmap.md | **COMPLETE** (36 thms, 2 sorry) |
+| 5g | Matrix-free CG, Mathlib PR, paper submission | Phase5g_Roadmap.md | Planned (10 waves) |
+| 5h | Chirality wall 3+1D formalization | Phase5h_Roadmap.md | Planned (5 waves) |
+| 5i | U_q(sl_3) higher-rank quantum groups | Phase5i_Roadmap.md | Planned (3 waves), awaiting deep research |
+| 5j | Fermi-point gauge emergence | Phase5j_Roadmap.md | Planned (3 waves), awaiting deep research |
+| 6 | HPC-dependent (L=12-20, Walker-Wang) | Phase6_Roadmap.md | Deferred (sparse CG may eliminate L=12-16 need for HPC) |
+
+---
+
+*Updated April 6, 2026. 1363 theorems, 96 modules. Phases 5e-5f COMPLETE. Phases 5g-5j planned with 21 deep research tasks (13 complete, 8 submitted/pending). Aristotle `3b356975` at 20%. L=8 RHMC running (epochs, n_md_steps=80).*
