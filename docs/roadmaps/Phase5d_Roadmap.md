@@ -179,11 +179,17 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 2. **L=4,6,8 targeted:** Binder cumulant analysis near identified transitions
 3. **Cross-validate:** MF gap equation predicts G_c; MC confirms or refutes
 
+### Production guide:
+**Use `scripts/run_rhmc_epochs.sh`** — see `docs/references/production_rhmc.md` for full guide.
+- Epoch-based runner prevents thermal throttling (5-8x degradation in long runs)
+- Defaults tuned for L=8: n_md_steps=60, workers=4, chunk_size=10
+- Checkpoint/resume: kill anytime, restart with same command
+
 ### Key parameters:
 - At d=4 (upper critical dimension), mean-field exponents are exact up to log corrections
 - Pseudo-critical coupling shift: ΔG_c ~ L⁻² (6.25% at L=4, 1.56% at L=8)
 - Vestigial window is exponentially narrow (BCS-like) — may require L≥8 to resolve
-- Use existing RHMC production code with new observables from Wave 2C
+- n_md_steps tuning: target |ΔH| < 1 for >40% acceptance (L=8 needs 60+)
 
 ### Prep work (done in W1-2):
 - [x] MF-guided scan parameters: `mf_guided_scan_params()` in `phase_scan.py` — centers MC on G_c prediction
@@ -455,16 +461,15 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - L=8 RHMC — running (PID 96665)
 - L=6 RHMC — needs free cores
 
-### Aristotle next batch (after current job completes):
-- 3 FibonacciMTC (pentagon, global dim, dim consistency)
-- 3 Uqsl2AffineHopf (relation-respect proofs)
-- 4 VerifiedStatistics (Cauchy-Schwarz, jackknife, ρ≤1, N_eff≤N)
-- 1 KerrSchild (Sherman-Morrison inverse)
-- 4 CoidealEmbedding (coideal_B0/B1, counit_B0/B1)
-- 2 RepUqFusion (fusion comm, Peter-Weyl)
-- 5 CenterFunctor (functor existence, full, faithful, essSurj, equivalence)
-- 7 StimulatedHawking (BE strict anti, gain anti, tendsto zero, lower bound, sqrt scaling, dispersive interval, detection threshold)
-- Total: 29 sorry for next submission
+### Aristotle batch plan:
+See `docs/references/aristotle_batch_plan.md` for full details.
+
+| Batch | Priority | Sorry | Modules | Status |
+|-------|----------|-------|---------|--------|
+| 1 | P1 | 8 | SU2kMTC, FibonacciMTC | IN FLIGHT (3b356975) |
+| 2 | P1 | 7 | Uqsl2AffineHopf, CoidealEmbedding | Ready |
+| 3 | P2 | 13 | StimulatedHawking, VerifiedStatistics, RepUqFusion | Ready |
+| 4 | P3 | 8 | CenterFunctor, KerrSchild, EmergentGravityBounds | Ready |
 
 ---
 

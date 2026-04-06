@@ -165,16 +165,32 @@ def main():
     parser.add_argument('--g-min', type=float, default=0.5)
     parser.add_argument('--g-max', type=float, default=8.0)
     parser.add_argument('--n-couplings', type=int, default=14)
+    parser.add_argument('--g-critical-min', type=float, default=None,
+                        help='Add fine-grained points in critical region [g-critical-min, g-critical-max].')
+    parser.add_argument('--g-critical-max', type=float, default=None)
+    parser.add_argument('--n-critical', type=int, default=8,
+                        help='Number of extra points in critical region.')
     parser.add_argument('--n-traj', type=int, required=True)
     parser.add_argument('--n-therm', type=int, default=50)
-    parser.add_argument('--n-md-steps', type=int, default=10)
-    parser.add_argument('--workers', type=int, default=14)
+    parser.add_argument('--n-md-steps', type=int, default=80,
+                        help='MD integration steps per trajectory. '
+                             'Higher = better acceptance, slower per traj. '
+                             'L=4: 20, L=8: 80, L=16: 100+. Target |dH| < 1.')
+    parser.add_argument('--workers', type=int, default=4,
+                        help='Parallel coupling workers. '
+                             'Keep <= physical cores - 2 to avoid thermal throttling.')
     parser.add_argument('--seed', type=int, default=42)
-    parser.add_argument('--chunk-size', type=int, default=1)
+    parser.add_argument('--chunk-size', type=int, default=10,
+                        help='Trajectories per checkpoint write. '
+                             '10 = frequent saves, minimal lost work on interrupt.')
     args = parser.parse_args()
 
     L = args.l
     g_values = np.linspace(args.g_min, args.g_max, args.n_couplings)
+    # Optionally add fine-grained points in the critical region
+    if args.g_critical_min is not None and args.g_critical_max is not None:
+        g_critical = np.linspace(args.g_critical_min, args.g_critical_max, args.n_critical)
+        g_values = np.unique(np.sort(np.concatenate([g_values, g_critical])))
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     n_complete, n_partial = 0, 0

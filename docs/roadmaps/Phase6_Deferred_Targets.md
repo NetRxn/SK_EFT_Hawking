@@ -162,16 +162,25 @@ TetradGapEquation.lean and Uqsl2Hopf.lean: **ZERO sorry** (Aristotle `79e07d55`)
 | Stimulated Hawking predictions | Tasks/submitted/ | Submitted Apr 5 — quantitative formulas for Paper 7 |
 | Polariton c_s primary source | Tasks/submitted/ | Submitted Apr 5 — RESOLVED (c_s corrected to 0.5 µm/ps) |
 
-### Submitted for Phase 5e (6 tasks)
+### Phase 5e (6 tasks — ALL COMPLETE)
+| Topic | File | Status |
+|-------|------|--------|
+| Q(ζ₁₆) and Q(ζ₅) in Lean 4 | Phase5e_cyclotomic_fields_lean4.txt | SUPERSEDED — built directly |
+| Ising R-matrix + hexagon data | Phase5e_ising_R_matrix_hexagon_data.txt | **COMPLETE** — all applied |
+| Fibonacci R-matrix + hexagon | Phase5e_fibonacci_R_matrix_hexagon_data.txt | **COMPLETE** — all applied |
+| U_q(ŝl₂) Hopf proof strategy | Phase5e_affine_hopf_proof_strategy.txt | **COMPLETE** — blocked on Aristotle |
+| Higher-k S-matrix computability | Phase5e_higher_k_s_matrix_computability.txt | **COMPLETE** — k=3,4 done |
+| Jones polynomial from MTC | Phase5e_jones_polynomial_from_mtc.txt | **COMPLETE** — trefoil+Hopf done |
+
+### Submitted for Phase 5f (5 tasks)
 | Topic | File | Blocking |
 |-------|------|----------|
-| Q(ζ₁₆) and Q(ζ₅) in Lean 4 | Phase5e_cyclotomic_fields_lean4.txt | W1, W5 |
-| Ising R-matrix + hexagon data | Phase5e_ising_R_matrix_hexagon_data.txt | W2, W3 |
-| Fibonacci R-matrix + hexagon | Phase5e_fibonacci_R_matrix_hexagon_data.txt | W5, W6 |
-| U_q(ŝl₂) Hopf proof strategy | Phase5e_affine_hopf_proof_strategy.txt | W7, W8 |
-| Higher-k S-matrix computability | Phase5e_higher_k_s_matrix_computability.txt | W9 |
-| Jones polynomial from MTC | Phase5e_jones_polynomial_from_mtc.txt | W10 |
+| TQFT axioms in Lean 4 | Phase5f_tqft_axioms_lean4.txt | W1 |
+| Wen effective coupling → ADW G_c | Phase5f_wen_effective_coupling.txt | W3 |
+| Two-loop NJL gap equation | Phase5f_two_loop_gap_equation.txt | W4 |
+| Braid group via PresentedGroup | Phase5f_braid_group_lean4.txt | W7 |
+| Genus-g partition functions | Phase5f_tqft_partition_functions.txt | W2 |
 
 ---
 
-*Updated April 5, 2026 (session 2). Phase 5d: 13 waves, 1253 theorems, 88 modules, 34 sorry. Items A-D promoted. Stimulated Hawking formalized (Wave 13). CenterFunctor built (Wave 12). Verified statistics Python complete (Wave 11). Papers 5/11/12 updated. Claims-reviewed. Aristotle `3b356975` in flight.*
+*Updated April 6, 2026. Phase 5e COMPLETE: 1327 thms, 93 modules. Braided Ising+Fibonacci MTCs, trefoil+Hopf link, SU(2)₃/₄ S-matrices. 74 Phase 5e theorems, 0 sorry. Phase 5f scoped: TQFT + physics + MC + braid group. Aristotle `3b356975` at 13%.*

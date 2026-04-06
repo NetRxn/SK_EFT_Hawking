@@ -113,15 +113,19 @@ passes (all parameters human-verified). Checked before arXiv/journal submission,
 
 **One job at a time.** Every submission sends the entire Lean project — parallel jobs duplicate work. The script blocks submission if a job is already running.
 
+**Priority batching:** When there are many sorry gaps across multiple modules, group them into priority batches and submit sequentially (highest priority first). Each batch should contain related modules so Aristotle can leverage shared context. Register all sorry gaps with priorities in `SORRY_GAPS` (in `aristotle_interface.py`) before submitting. See `docs/references/aristotle_batch_plan.md` for the current batch plan.
+
 ```bash
 # Preview what would be submitted:
 uv run python scripts/submit_to_aristotle.py --dry-run
 
-# Submit all unfilled sorry gaps (recommended — single comprehensive job):
-uv run python scripts/submit_to_aristotle.py --submit
+# Submit with priority (1=highest, 3=lowest):
+uv run python scripts/submit_to_aristotle.py --submit --priority 1
 
-# For custom prompts, use the CLI directly:
-cd lean && source ../.env && export ARISTOTLE_API_KEY && uv run aristotle submit "prompt" --project-dir .
+# For custom prompts targeting specific modules, use the CLI directly:
+cd lean && source ../.env && export ARISTOTLE_API_KEY
+uv run aristotle submit "Fill sorry gaps in [Module1.lean] and [Module2.lean]. [Strategy hints.]" \
+  --project-dir . --priority 1
 ```
 
 Do not pass `--integrate` at submission time — integration is a separate step (4c). Ensure every sorry theorem has a `PROVIDED SOLUTION` hint in its docstring before submitting.

@@ -130,7 +130,7 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ## Track C: Affine Hopf Completion
 
 ### Wave 7 — U_q(ŝl₂) Bialgebra
-**Prerequisite:** Aristotle resolves 3 Uqsl2AffineHopf sorry.
+**Prerequisite:** Aristotle resolves 3 Uqsl2AffineHopf sorry (Batch 2 in `docs/references/aristotle_batch_plan.md`).
 
 - [ ] Wire coproduct + counit into Bialgebra typeclass
 - [ ] Coassociativity: (Δ⊗id)∘Δ = (id⊗Δ)∘Δ

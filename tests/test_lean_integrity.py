@@ -161,14 +161,24 @@ def test_sorry_gap_registry():
     """
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
-    # All sorry gaps in registry are filled (Aristotle runs 7d8efa8f, 78dcc5f4, 79e07d55)
-    # Active sorry (22 total) are in Phase 5d modules not yet registered
-    expected_unfilled = set()
+    # 9 unfilled sorry gap groups registered across Phases 5d-5f
+    # Batch 1 (in flight): su2k_mtc_pentagon_twist, fibonacci_mtc_pentagon_dim
+    # Batch 2 (P1): affine_hopf_relation_respect, coideal_embedding_proofs
+    # Batch 3 (P2): stimulated_hawking_analysis, verified_statistics_bounds, rep_uq_fusion_algebraic
+    # Batch 4 (P3): center_functor_equivalence, kerr_schild_inverse, emergent_gravity_coupling_bounds
+    expected_unfilled = {
+        "su2k_mtc_pentagon_twist", "fibonacci_mtc_pentagon_dim",
+        "affine_hopf_relation_respect", "coideal_embedding_proofs",
+        "stimulated_hawking_analysis", "verified_statistics_bounds",
+        "rep_uq_fusion_algebraic",
+        "center_functor_equivalence", "kerr_schild_inverse",
+        "emergent_gravity_coupling_bounds",
+    }
     actual_unfilled = {g.name for g in unfilled}
     assert actual_unfilled == expected_unfilled, (
         f"Unexpected unfilled sorry gaps: "
         f"expected={expected_unfilled}, got={actual_unfilled}"
     )
-    assert len(SORRY_GAPS) >= 35, (
-        f"Expected ≥35 sorry gaps in registry, got {len(SORRY_GAPS)}"
+    assert len(SORRY_GAPS) >= 45, (
+        f"Expected ≥45 sorry gaps in registry, got {len(SORRY_GAPS)}"
     )

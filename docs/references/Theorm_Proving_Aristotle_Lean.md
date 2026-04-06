@@ -1,6 +1,19 @@
-# Theorm Proving with Aristotle and Lean
+# Theorem Proving with Aristotle and Lean
 
-## aristotle references
+## Project-Specific Guidance
+
+**Before submitting:** Read the batch plan at `docs/references/aristotle_batch_plan.md` for current priorities, batch assignments, and submission prompts. Sorry gaps are registered with priorities in `SORRY_GAPS` (`src/core/aristotle_interface.py`). Submit one batch at a time, highest priority first. See Stage 4 in `docs/WAVE_EXECUTION_PIPELINE.md` for the full submission protocol.
+
+**Key project conventions:**
+- Every sorry theorem MUST have a `PROVIDED SOLUTION` hint in its docstring
+- Register each sorry in `SORRY_GAPS` with priority (1=highest) before submitting
+- Use `--priority` flag matching the batch priority
+- After retrieval: `lake build` to verify (never grep for sorry — comments contain the word)
+- Integration: review diff first, then `--integrate`
+
+---
+
+## Aristotle References
 
 ### Source Links
 https://aristotle.harmonic.fun/dashboard/docs/overview

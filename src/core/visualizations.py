@@ -5435,5 +5435,107 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
     return fig
 
 
+def fig_rhmc_l8_preliminary() -> go.Figure:
+    """
+    PRELIMINARY L=8 RHMC analysis: 4-panel overview.
+
+    Panel 1: Tetrad order parameter m² vs coupling g
+    Panel 2: Acceptance rate vs coupling g
+    Panel 3: h²/L⁴ (normalized h-field intensity) vs coupling g
+    Panel 4: |delta_H| (MD energy violation) vs coupling g
+
+    CAVEATS (displayed on figure):
+    - High-coupling points (g > 3.96) have only 22 trajectories
+    - Low-coupling acceptance rates are poor (< 30%)
+    - No thermalization cut applied in this preliminary view
+    - Not publication-quality -- diagnostic only
+
+    Lean: verified_analysis.py uses formulas from VerifiedJackknife.lean
+    """
+    from pathlib import Path
+
+    files = sorted(Path('data/rhmc').glob('L8_g*.npz'))
+    if not files:
+        fig = go.Figure()
+        fig.add_annotation(text="No L=8 RHMC data found", x=0.5, y=0.5,
+                          xref='paper', yref='paper', showarrow=False, font=dict(size=20))
+        return fig
+
+    gs, h_sqs, tet_m2s, accepts, delta_Hs, n_trajs = [], [], [], [], [], []
+    for f in files:
+        d = np.load(f)
+        gs.append(float(d['g']))
+        n_trajs.append(len(d['h_sq_history']))
+        h_sqs.append(np.mean(d['h_sq_history']))
+        tet_m2s.append(np.mean(d['tet_m2_history']))
+        accepts.append(float(d['acceptance_rate']))
+        delta_Hs.append(np.mean(np.abs(d['delta_h_history'])))
+
+    gs = np.array(gs)
+    n_trajs = np.array(n_trajs)
+    low_stats = n_trajs < 50
+
+    fig = make_subplots(rows=2, cols=2,
+        subplot_titles=[
+            'Tetrad Order Parameter m2',
+            'Acceptance Rate',
+            'Mean h2 / L4',
+            'MD Energy Violation |dH|',
+        ],
+        vertical_spacing=0.15, horizontal_spacing=0.12)
+
+    marker_colors = ['#F18F01' if ls else '#2E86AB' for ls in low_stats]
+    marker_symbols = ['diamond' if ls else 'circle' for ls in low_stats]
+
+    # Panel 1: tetrad m2
+    fig.add_trace(go.Scatter(x=gs, y=tet_m2s, mode='markers+lines',
+        marker=dict(size=10, color=marker_colors, symbol=marker_symbols),
+        line=dict(color='#2E86AB', width=1, dash='dot'),
+        name='m2', hovertemplate='g=%{x:.2f}<br>m2=%{y:.4f}<br>N=%{customdata}',
+        customdata=n_trajs), row=1, col=1)
+
+    # Panel 2: acceptance
+    fig.add_trace(go.Scatter(x=gs, y=accepts, mode='markers+lines',
+        marker=dict(size=10, color=marker_colors, symbol=marker_symbols),
+        line=dict(color='#2E86AB', width=1, dash='dot'),
+        name='accept', hovertemplate='g=%{x:.2f}<br>accept=%{y:.2f}<br>N=%{customdata}',
+        customdata=n_trajs), row=1, col=2)
+    fig.add_hline(y=0.5, line_dash='dash', line_color='gray', row=1, col=2,
+                  annotation_text='target 50%', annotation_position='top left')
+
+    # Panel 3: h2/L4
+    L = 8
+    h_sq_norm = np.array(h_sqs) / L**4
+    fig.add_trace(go.Scatter(x=gs, y=h_sq_norm, mode='markers+lines',
+        marker=dict(size=10, color=marker_colors, symbol=marker_symbols),
+        line=dict(color='#2E86AB', width=1, dash='dot'),
+        name='h2/L4'), row=2, col=1)
+
+    # Panel 4: |dH|
+    fig.add_trace(go.Scatter(x=gs, y=delta_Hs, mode='markers+lines',
+        marker=dict(size=10, color=marker_colors, symbol=marker_symbols),
+        line=dict(color='#2E86AB', width=1, dash='dot'),
+        name='|dH|'), row=2, col=2)
+    fig.add_hline(y=1.0, line_dash='dash', line_color='gray', row=2, col=2,
+                  annotation_text='target |dH|<1', annotation_position='top left')
+
+    fig.update_xaxes(title_text='coupling g', row=2, col=1)
+    fig.update_xaxes(title_text='coupling g', row=2, col=2)
+
+    fig.update_layout(
+        title=dict(text='PRELIMINARY L=8 RHMC Analysis (not publication-quality)',
+                   font=dict(size=14)),
+        showlegend=False,
+        height=600, width=900,
+        annotations=[dict(
+            text='PRELIMINARY: amber diamonds = N<50 traj. '
+                 'Acceptance rates poor at low g. No thermalization cut.',
+            x=0.5, y=-0.08, xref='paper', yref='paper',
+            showarrow=False, font=dict(size=10, color='gray')
+        )]
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()
