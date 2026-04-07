@@ -2,23 +2,25 @@
 
 ## Overview
 
-28 sorry gaps across 9 modules, organized into 3 priority batches.
+33 sorry gaps across 11 modules, organized into 4 priority batches.
+(4 sorry are private relation-respect proofs + 1 public S² theorem in Uqsl3Hopf;
+4 defs carry transitive sorry and auto-resolve when the theorems are proved.)
 Submit sequentially — one batch at a time, wait for completion before next.
 
 **Rule:** Never submit overlapping jobs. Each batch sends the entire Lean project.
+**Rule:** Manual review of ALL results before integration. No blind `--integrate`.
 
-**Updated:** April 6, 2026. Batch 1 (MTC instances) COMPLETED manually via
-native_decide over Q(√2) and Q(√5). Pentagon convention bug fixed. VecGMonoidal
-heartbeat overrides eliminated. Project builds clean with zero `set_option` overrides.
+**Updated:** April 6, 2026. Batch 2 IN FLIGHT. Uqsl3.lean (21 relations) ZERO sorry.
+Uqsl3Hopf.lean adds 4 new sorry (relation-respect + S²). Project builds clean.
 
 ## Current Status
 
 | Batch | Priority | Sorry | Modules | Status |
 |-------|----------|-------|---------|--------|
 | 1 | P1 | ~~8~~ 0 | ~~SU2kMTC (5), FibonacciMTC (3)~~ | **DONE** (native_decide) |
-| 2 | P1 | 7 | Uqsl2AffineHopf (3), CoidealEmbedding (4) | **READY** — submit now |
-| 3 | P2 | 13 | StimulatedHawking (7), VerifiedStatistics (4), RepUqFusion (2) | Ready — submit after Batch 2 |
-| 4 | P3 | 8+1 | CenterFunctor (5), KerrSchild (1), EmergentGravityBounds (2), TetradGapEquation (1) | Ready — submit after Batch 3 |
+| 2 | P1 | 7 | Uqsl2AffineHopf (3), CoidealEmbedding (4) | **IN FLIGHT** (91434dbd) |
+| 3 | P2 | 17 | StimulatedHawking (7), VerifiedStatistics (4), RepUqFusion (2), Uqsl3Hopf (4) | Ready — submit after Batch 2 |
+| 4 | P3 | 8 | CenterFunctor (5), KerrSchild (1), EmergentGravityBounds (2), TetradGapEquation (1) | Ready — submit after Batch 3 |
 
 ## Batch Details
 
@@ -62,15 +64,16 @@ Do NOT add set_option maxHeartbeats or synthInstance.maxHeartbeats overrides.
 The project builds clean at default limits.
 ```
 
-### Batch 3 (Priority 2) — Paper Verification
+### Batch 3 (Priority 2) — Paper Verification + Uqsl3 Hopf
 **Submit when:** Batch 2 completes
-**Why P2:** Completes Lean backing for Papers 11, 12 and the MC analysis pipeline
+**Why P2:** Completes Lean backing for Papers 11, 12, MC analysis, and rank-2 quantum group
 
 | Module | Sorry | Key Theorems | Difficulty |
 |--------|-------|-------------|------------|
 | StimulatedHawking | 7 | BE monotonicity, limits, sqrt scaling, dispersive bound, detection threshold | MODERATE (real analysis) |
 | VerifiedStatistics | 4 | Cauchy-Schwarz, jackknife mean-case, ρ≤1, N_eff≤N | MODERATE (finite sums) |
 | RepUqFusion | 2 | fusion commutativity, Peter-Weyl sum of squares | EASY (Nat arithmetic) |
+| Uqsl3Hopf | 4 | comul/counit/antipode_respects_rel, S²=Ad(K₁K₂) | HARD (Serre Δ: 24 terms) |
 
 ### Batch 4 (Priority 3) — Hard / Less Urgent
 **Submit when:** Batch 3 completes

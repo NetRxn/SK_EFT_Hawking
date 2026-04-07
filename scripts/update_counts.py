@@ -84,6 +84,10 @@ def count_lean(deps_path: Path) -> dict:
         data = json.load(f)
 
     theorems = [d for d in data if d["kind"] == "theorem"]
+    # Standalone placeholders: theorems whose type is exactly `True`
+    # Note: structure field projections like `GappedInterfaceConjecture.gap_exists`
+    # also have type containing True but are intentional structure fields, not placeholders.
+    # We only count standalone `theorem foo : True := trivial` patterns.
     placeholders = [d for d in theorems if d.get("type") == "True"]
     axioms = [d for d in data if d["kind"] == "axiom"]
     modules = sorted(set(d["module"] for d in data))

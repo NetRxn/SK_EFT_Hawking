@@ -1700,6 +1700,44 @@ SORRY_GAPS: list[SorryGap] = [
         strategy_hint="Both need Real.pi bounds: π > 3.14. Then 32π³ > 32·31 = 992. α²·N_f/(32π³) < 0.04·4/992 < 1/1000. Use Real.pi_gt_three or pi_gt_3141592.",
         filled=False,
     ),
+    # Phase 5i: U_q(sl₃) — definition (Uqsl3.lean) ALL 21 relations PROVED manually
+    # Quantum Serre relations proved via simp [map_mul, map_add, AlgHom.commutes] at h ⊢
+    # Zero sorry in Uqsl3.lean
+    # ═══════════════════════════════════════════════════════════════
+    # Phase 5i Wave 2: U_q(sl₃) Hopf algebra (Uqsl3Hopf.lean) — 4 sorry
+    # ═══════════════════════════════════════════════════════════════
+    SorryGap(
+        module="SKEFTHawking.Uqsl3Hopf",
+        name="comulFreeAlg3_respects_rel",
+        priority=2,
+        description="Coproduct respects all 21 Chevalley relations of U_q(sl₃). The 4 Serre Δ-compatibility proofs are the hardest (24 terms each).",
+        strategy_hint="Factor into per-relation cases. K-invertibility: Δ(KK⁻¹)=Δ(K)Δ(K⁻¹)=(K⊗K)(K⁻¹⊗K⁻¹)=1⊗1. KE: use tmul_mul_tmul + uq3_K1E1. Serre: expand 3 cubic monomials into 24 tensor terms, group by bidegree, cancel using Serre relation + K-E commutation. Same pattern as Uqsl2Hopf (which Aristotle proved in run 79e07d55).",
+        filled=False,
+    ),
+    SorryGap(
+        module="SKEFTHawking.Uqsl3Hopf",
+        name="counitFreeAlg3_respects_rel",
+        priority=2,
+        description="Counit respects all 21 relations. All E,F map to 0, all K to 1.",
+        strategy_hint="Every relation is trivially satisfied: ε kills E,F. Factor into per-relation cases, each is 1-2 lines via simp [counitOnGen3, FreeAlgebra.lift_ι_apply, map_mul, map_add].",
+        filled=False,
+    ),
+    SorryGap(
+        module="SKEFTHawking.Uqsl3Hopf",
+        name="antipodeFreeAlg3_respects_rel",
+        priority=2,
+        description="Antipode (anti-hom) respects all 21 relations.",
+        strategy_hint="S reverses products. K-invertibility: S(KK⁻¹)=S(K⁻¹)S(K)=K·K⁻¹=1. Serre: hardest, needs derived commutation identities. Same approach as Uqsl2Hopf antipode proofs.",
+        filled=False,
+    ),
+    SorryGap(
+        module="SKEFTHawking.Uqsl3Hopf",
+        name="uq3_antipode_squared",
+        priority=2,
+        description="S² = Ad(K₁K₂) on all 8 generators.",
+        strategy_hint="Check each generator. S²(K_i)=K_i (K⁻¹→K). S²(E_i)=K_iE_iK_i⁻¹. Use K-E conjugation.",
+        filled=False,
+    ),
 ]
 
 

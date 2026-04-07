@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-06 | Follows Phase 5g*
 
-**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`. Zero heartbeat overrides. Aristotle Batch 2 in flight.
+**Entry state:** 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`. Zero heartbeat overrides. Aristotle Batch 2 in flight.
 
 **Prerequisite:** Phase 5g Mathlib PR (Wave 5) gives credibility context for publishing chirality results.
 
@@ -49,20 +49,22 @@ Phase 5h extends to 3+1D, addressing the three gaps identified by the Critical R
 
 ## Track B: Gauging Step Analysis
 
-### Wave 3 — Not-On-Site Symmetry Formalization
-**Goal:** Formalize the GT not-on-site U(1) and Onsager algebra action.
+### Waves 3-4 — Not-On-Site Symmetry + SMG Gauging — **COMPLETE**
+**Goal:** Formalize the gauging obstruction and SMG phase structure.
 
-- [ ] Extend GTWeylDoublet.lean with the non-compact charge spectrum
-- [ ] Formalize the Onsager algebra → su(2) contraction as a gauging prerequisite
-- [ ] State: disentangler exists → standard gauging applies (conditional)
-- [ ] Formalize the Misumi instability result as a caveat
-
-### Wave 4 — SMG-to-Chiral Gauging
-**Goal:** Formalize the gap between vector-like SMG and chiral gauge coupling.
-
-- [ ] Define SMG phase (gapped, symmetric, no Goldstones) as a structure
-- [ ] State: SMG + anomaly cancellation → chiral gauge theory (conditional)
-- [ ] Document the unsolved gauging step precisely
+- [x] `lean/SKEFTHawking/GaugingStep.lean` — new module, zero sorry, zero axioms
+- [x] `NotOnSiteSymmetry` structure: range > 0, compact/non-compact spectrum
+- [x] GT Model 1 (non-compact U(1)) and Model 2 (Onsager) instances
+- [x] `SymmetryDisentangler` structure: constant-depth circuit W†QW = on-site
+- [x] Gauging conditional: disentangler + 16|n → chiral gauge theory (PROVED)
+- [x] SM anomaly cancellation: 16 ≡ 0 mod 16, 48 ≡ 0 mod 16 (PROVED)
+- [x] `SMGPhaseData` structure: gapped, symmetric, no Goldstones, condensate order
+- [x] BCH (SU(2), 8 Weyl) and HW (SU(3), 16 Weyl) SMG instances
+- [x] Misumi instability caveat documented
+- [x] Golterman-Shamir propagator-zero obstruction (3 open questions)
+- [x] `ChiralityWall3DStatus`: comprehensive status of all 3 gaps
+- [x] Bridge theorems to SPTClassification, Z16Classification, OnsagerContraction
+- [x] Builds in 3.5s at default heartbeat limits
 
 ---
 
@@ -86,4 +88,4 @@ Phase 5h extends to 3+1D, addressing the three gaps identified by the Critical R
 
 ---
 
-*Phase 5h roadmap. Updated 2026-04-06 (Track A W1-2 COMPLETE: SPTClassification.lean, 15 thms + 1 axiom. Track B W3-4 NOT STARTED. Track C W5 NOT STARTED). 2023 theorems, 88 modules, 28 sorry, 1 axiom. The chirality wall is the most actively contested frontier in lattice QFT. Our formal analysis is the only machine-checked contribution to this debate.*
+*Phase 5h roadmap. Updated 2026-04-06 (Track A W1-2 COMPLETE: SPTClassification.lean, 15 thms + 1 axiom. Track B W3-4 COMPLETE: GaugingStep.lean, 34 thms, 0 sorry. Track C W5 NOT STARTED). 2232 theorems, 94 modules, 33 sorry, 1 axiom. The chirality wall is the most actively contested frontier in lattice QFT. Our formal analysis is the only machine-checked contribution to this debate.*

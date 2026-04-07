@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-06 | Follows successful U_q(sl_2) formalization (66 thms, 0 sorry)*
 
-**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. W1-4: NOT STARTED. W4 (number field consolidation) BLOCKS Mathlib PR (Phase 5g Track B).
+**Entry state:** 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. **W1 COMPLETE** (0 sorry). **W2 Stage 3** (4 sorry). **W3 COMPLETE** (0 sorry). **W4 partial** (PolyQuotQ.lean, 15 thms, 0 sorry). W4 remainder BLOCKS Mathlib PR (Phase 5g Track B).
 
 ---
 
@@ -31,27 +31,43 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 
 ## Track A: U_q(sl_3) Definition + Hopf Structure
 
-### Wave 1 — Chevalley Relations and Definition
+### Wave 1 — Chevalley Relations and Definition — **COMPLETE**
 **Goal:** U_q(sl_3) via FreeAlgebra/RingQuot (same pattern as sl_2).
 
-- [ ] 8 generators: E₁, E₂, F₁, F₂, K₁, K₁⁻¹, K₂, K₂⁻¹
-- [ ] Cartan matrix A = [[2,-1],[-1,2]]
-- [ ] Relations: K-invertibility, KE/KF commutation, EF commutation, Serre (degree 3)
-- [ ] `lean/SKEFTHawking/Uqsl3.lean`
+- [x] 8 generators: E₁, E₂, F₁, F₂, K₁, K₁⁻¹, K₂, K₂⁻¹
+- [x] Cartan matrix A = [[2,-1],[-1,2]]
+- [x] 21 Chevalley relations: K-invertibility (4), K-commutativity (1), KE/KF conjugation (8), EF commutation (4), quantum Serre (4)
+- [x] ALL 21 relation theorems PROVED (zero sorry, zero axioms)
+- [x] K₁, K₂ invertible (unit instances)
+- [x] Quantum Serre proved via `simp [map_mul, map_add, AlgHom.commutes] at h ⊢`
+- [x] `lean/SKEFTHawking/Uqsl3.lean` — first rank-2 quantum group in any proof assistant
+- [x] Builds in 6.4s at default heartbeat limits
 
-### Wave 2 — Hopf Algebra Structure
+### Wave 2 — Hopf Algebra Structure — **Stage 3 COMPLETE** (sorry stubs)
 **Goal:** Bialgebra + HopfAlgebra instances (reuse architecture from Uqsl2Hopf).
 
-- [ ] Coproduct, counit, antipode on 8 generators
-- [ ] Relation-respect proofs (factored per-relation, Aristotle targets)
-- [ ] Bialgebra + HopfAlgebra typeclasses
+- [x] Coproduct Δ defined on 8 generators via FreeAlgebra.lift + RingQuot.liftAlgHom
+- [x] Counit ε defined and descended to quotient
+- [x] Antipode S defined as anti-homomorphism via MulOpposite
+- [x] S² = Ad(K₁K₂) stated
+- [x] `lean/SKEFTHawking/Uqsl3Hopf.lean` — builds in 5.6s
+- [ ] Relation-respect proofs (3 sorry: Δ/ε/S each respect 21 relations — Aristotle Batch 3)
+- [ ] S² proof (1 sorry)
+- [ ] Bialgebra + HopfAlgebra typeclass wiring (after relation-respect proofs filled)
 
-### Wave 3 — SU(3)_k Fusion Rules
+### Wave 3 — SU(3)_k Fusion Rules — **COMPLETE**
 **Goal:** Fusion rules at roots of unity via native_decide.
 
-- [ ] Restricted quantum group ū_q(sl_3)
-- [ ] SU(3)_1 and SU(3)_2 fusion rules
-- [ ] Verify by native_decide (need appropriate number field)
+- [x] `lean/SKEFTHawking/SU3kFusion.lean` — first SU(3)_k fusion in any proof assistant
+- [x] SU(3)_1: Z₃ fusion ring, 3 objects, commutativity + associativity PROVED
+- [x] SU(3)_2: 6 anyons, Fibonacci subcategory (τ⊗τ = 1+τ)
+- [x] SU(3)_2: commutativity + associativity PROVED by native_decide
+- [x] Charge conjugation involution PROVED for both levels
+- [x] Z₃ simple current group {vac, s, s̄} PROVED
+- [x] ALL verified by native_decide — zero sorry, zero axioms
+- [x] Builds in 3.8s
+- [ ] Restricted quantum group ū_q(sl_3) (deferred — not needed for fusion verification)
+- [ ] S-matrix verification (requires Q(ζ₃) and Q(ζ₁₅) — Wave 4 blocker)
 
 ### Wave 4 — Unified Algebraic Number Field Infrastructure
 **Goal:** Consolidate custom number fields into a generic framework.
@@ -76,4 +92,4 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 
 ---
 
-*Phase 5i roadmap. Updated 2026-04-06 (W1-4 NOT STARTED. Deep research COMPLETE. W4 number field consolidation BLOCKS Mathlib PR). 2023 theorems, 88 modules, 28 sorry, 1 axiom. Extends the quantum group chain to the color gauge group. Same proven architecture (FreeAlgebra/RingQuot/liftAlgHom), higher rank.*
+*Phase 5i roadmap. Updated 2026-04-06 (W1 COMPLETE: Uqsl3.lean, 21 relations, 0 sorry. W2 Stage 3: Uqsl3Hopf.lean, Δ/ε/S defined, 4 sorry. W3 COMPLETE: SU3kFusion.lean, SU(3)₁+SU(3)₂ fusion, 99 thms, 0 sorry. W4 partial: PolyQuotQ.lean, 15 thms, 0 sorry; generic CyclotomicField remainder BLOCKS Mathlib PR). 2232 theorems, 94 modules, 33 sorry, 1 axiom. First rank-2 quantum group + first SU(3)_k fusion in any proof assistant.*

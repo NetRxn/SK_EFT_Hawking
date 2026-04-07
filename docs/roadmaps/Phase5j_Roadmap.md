@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-06 | Connects to the non-Abelian gauge wall (Critical Review §2.1)*
 
-**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. W1-3: NOT STARTED. Deep research COMPLETE.
+**Entry state:** 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. **W1 COMPLETE** (FermiPointTopology.lean, 28 thms, 0 sorry). W2-3: NOT STARTED. Deep research COMPLETE.
 
 ---
 
@@ -29,13 +29,15 @@ The spin-connection co-emergence at |N|=2 is exactly what ADW needs for tetrad g
 
 ## Track A: Fermi-Point Topological Charge
 
-### Wave 1 — Topological Charge Definition
+### Wave 1 — Topological Charge Definition — **COMPLETE**
 **Goal:** Formalize the winding number of a Fermi point.
 
-- [ ] Define N = winding number of Green's function singularity on S² surrounding Fermi point
-- [ ] Connect to π₂(S²) = ℤ (Mathlib has homotopy groups?)
-- [ ] |N| = 1 case: U(1) gauge emergence (already formalized in Wen context)
-- [ ] `lean/SKEFTHawking/FermiPointTopology.lean`
+- [x] `lean/SKEFTHawking/FermiPointTopology.lean` — 28 theorems, zero sorry
+- [x] Define N = winding number of Green's function singularity on S² surrounding Fermi point
+- [x] Connect to π₂(S²) = ℤ (topological charge classification)
+- [x] |N| = 1 case: U(1) gauge emergence (Weyl fermions)
+- [x] |N| = 2 case: SU(2) gauge structure (doubly-degenerate Fermi points)
+- [x] Builds clean, zero sorry, zero axioms
 
 ### Wave 2 — |N|=2 → SU(2) Correspondence
 **Goal:** Formalize the gauge emergence theorem for doubly-degenerate Fermi points.
@@ -61,4 +63,4 @@ The spin-connection co-emergence at |N|=2 is exactly what ADW needs for tetrad g
 
 ---
 
-*Phase 5j roadmap. Updated 2026-04-06 (W1-3 NOT STARTED. Deep research COMPLETE: Z_2→SU(2) is heuristic not theorem, Mechanism B correct, Selch-Zubkov 2025 spin connection). 2023 theorems, 88 modules, 28 sorry, 1 axiom. The Fermi-point scenario is the bridge from condensed matter topology to non-Abelian gauge emergence — the route the Critical Review identifies as most promising.*
+*Phase 5j roadmap. Updated 2026-04-06 (**W1 COMPLETE**: FermiPointTopology.lean, 28 thms, 0 sorry. W2-3 NOT STARTED. Deep research COMPLETE: Z_2→SU(2) is heuristic not theorem, Mechanism B correct, Selch-Zubkov 2025 spin connection). 2232 theorems, 94 modules, 33 sorry, 1 axiom. The Fermi-point scenario is the bridge from condensed matter topology to non-Abelian gauge emergence — the route the Critical Review identifies as most promising.*

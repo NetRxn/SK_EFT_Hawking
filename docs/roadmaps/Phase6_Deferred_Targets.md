@@ -3,7 +3,7 @@
 **Purpose:** Track high-value formalization targets beyond the current phase. Deep research timelines assume human effort; our pipeline + Aristotle has consistently compressed months→days.
 
 **Created:** April 4, 2026
-**Updated:** April 6, 2026: **2023 thms (1949 substantive + 74 placeholder), 88 modules, 28 sorry, 1 axiom**
+**Updated:** April 6, 2026: **2232 thms (2150 substantive + 82 placeholder), 94 modules, 33 sorry, 1 axiom**
 
 ---
 
@@ -17,7 +17,7 @@ SpinBordismData → rokhlin_from_bordism (16|σ) → c₋=8N_f → 24|c₋ → 3
 All 7 modules in the chain (SpinBordism, WangBridge, GenerationConstraint, ModularInvarianceConstraint, RokhlinBridge, AlgebraicRokhlin, E8Lattice) are zero sorry. The E8 counterexample (σ=8 ≢ 0 mod 16) is proved. Algebraic Serre bound (σ≡0 mod 8) is proved. The 2-factor topological gap (mod 8 → mod 16) enters as the SpinBordismData hypothesis.
 
 ### Quantum Group Chain: CORE COMPLETE (0 sorry on finite type)
-All finite-type modules zero sorry: QNumber, Uqsl2, Uqsl2Hopf (66 thms), SU2kFusion, SU2kSMatrix, RestrictedUq, RibbonCategory. Affine extension has 3+4 sorry (Uqsl2AffineHopf + CoidealEmbedding). MTC instances have 8 sorry (SU2kMTC + FibonacciMTC).
+All finite-type modules zero sorry: QNumber, Uqsl2, Uqsl2Hopf (66 thms), SU2kFusion, SU2kSMatrix, RestrictedUq, RibbonCategory. **Uqsl3 (Phase 5i Wave 1): First rank-2 quantum group in any proof assistant — 21 Chevalley relations, ALL PROVED, zero sorry.** Affine extension has 3+4 sorry (Uqsl2AffineHopf + CoidealEmbedding). MTC instances have 8 sorry (SU2kMTC + FibonacciMTC).
 
 ### Tetrad Gap Equation: First Explicit Derivation
 Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensation: Δ = G·N_f·Δ·I(Δ). G_c = 8π²/(N_f·Λ²) matches V_eff exactly (proved in Lean). 20 theorems (12 proved + 8 sorry). Python solver + observables + figures complete.
@@ -72,6 +72,35 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - 20 theorems, **zero sorry** (9 Aristotle, 1 disproved). gap_solution_bounded FALSE (counterexample).
 - Gap solver + observables + figures complete. L=8 MC production running.
 
+### U_q(sl₃) Higher-Rank Quantum Group — **COMPLETE** (Phase 5i Wave 1)
+- **First rank-2 quantum group in any proof assistant.** 8 generators, 21 Chevalley relations, Cartan matrix A₂ = [[2,-1],[-1,2]].
+- ALL 21 relation theorems PROVED, **zero sorry**. Builds in 6.4s.
+- Completed without Aristotle (all proofs native). Promoted from Tier 2 → DONE.
+
+### SteenrodA1 Adem Relations — **PROVED** (Phase 5g)
+- 3 Adem relation theorems (adem_sq1_sq1, adem_sq1_sq2, adem_sq2_sq2) proved via native_decide.
+- Promoted from placeholder to substantive. Reduces placeholder count from 75 → 72.
+
+### SU(3)_k Fusion Rules — **COMPLETE** (Phase 5i Wave 3)
+- **First SU(3)_k fusion in any proof assistant.** SU(3)₁ (Z₃ fusion ring, 3 objects) + SU(3)₂ (6 anyons, Fibonacci subcategory).
+- 99 theorems, ALL proved by native_decide — **zero sorry**, zero axioms.
+- `lean/SKEFTHawking/SU3kFusion.lean`
+
+### GaugingStep — **COMPLETE** (Phase 5h Waves 3-4)
+- Gauging obstruction formalization: NotOnSiteSymmetry, SymmetryDisentangler, SMG phase data.
+- 34 theorems, **zero sorry**, zero axioms.
+- `lean/SKEFTHawking/GaugingStep.lean`
+
+### FermiPointTopology — **COMPLETE** (Phase 5j Wave 1)
+- Fermi-point topological charge: winding number, |N|=1 → U(1), |N|=2 → SU(2) gauge emergence.
+- 28 theorems, **zero sorry**, zero axioms.
+- `lean/SKEFTHawking/FermiPointTopology.lean`
+
+### PolyQuotQ (Q(ζ₃) Cyclotomic) — **COMPLETE** (Phase 5i Wave 4)
+- Q(ζ₃) cyclotomic field for SU(3)₁ S-matrix verification.
+- 15 theorems, **zero sorry**, zero axioms.
+- `lean/SKEFTHawking/PolyQuotQ.lean`
+
 ---
 
 ## Tier 1: High Value, Infrastructure Ready — Phase 5e Candidates
@@ -121,10 +150,10 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - Deep research submitted: `Phase5j_fermi_point_su2_emergence.txt`
 - **SCOPED for Phase 5j** (start with |N|=2 → SU(2), then assess |N|=3)
 
-### Higher-Rank Quantum Groups: U_q(sl_3)
-- Same FreeAlgebra/RingQuot pattern as U_q(sl_2) but rank 2 Cartan matrix
-- Deep research submitted: `Phase5i_uq_sl3_quantum_group.txt`
-- **SCOPED for Phase 5i** (SU(3)_k fusion rules → color group connection)
+### Higher-Rank Quantum Groups: U_q(sl_3) — **COMPLETED** (see Items COMPLETED above)
+- ~~Same FreeAlgebra/RingQuot pattern as U_q(sl_2) but rank 2 Cartan matrix~~
+- Deep research: `Phase5i_uq_sl3_quantum_group.txt` — fully applied
+- **DONE in Phase 5i Wave 1** — 21 relations, zero sorry, zero Aristotle needed
 
 ### Fracton-Gravity Kerr-Schild Bootstrap
 - Published (Afxonidis 2024), 5 obstructions persist. KerrSchild.lean (7 thms) exists. Lower leverage.
@@ -136,7 +165,7 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ---
 
-## 28 Remaining Sorry Gaps (entire project)
+## 33 Remaining Sorry Gaps (entire project)
 
 | File | Count | Status |
 |------|-------|--------|
@@ -144,6 +173,7 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 | CenterFunctor.lean | 5 | Aristotle Batch 4 |
 | CoidealEmbedding.lean | 4 | **Aristotle Batch 2 IN FLIGHT** |
 | VerifiedStatistics.lean | 4 | Aristotle Batch 3 |
+| Uqsl3Hopf.lean | 4 | Aristotle Batch 3 (Δ/ε/S relation-respect + S²) |
 | Uqsl2AffineHopf.lean | 3 | **Aristotle Batch 2 IN FLIGHT** |
 | RepUqFusion.lean | 2 | Aristotle Batch 3 |
 | EmergentGravityBounds.lean | 2 | Aristotle Batch 4 |
@@ -154,11 +184,17 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - SU2kMTC.lean: 5→0 (native_decide over QSqrt2, convention bug fixed)
 - FibonacciMTC.lean: 3→0 (native_decide over QSqrt5)
 
+**New modules this session (all zero sorry):**
+- SU3kFusion.lean: 99 thms, 0 sorry (Phase 5i W3)
+- GaugingStep.lean: 34 thms, 0 sorry (Phase 5h W3-4)
+- FermiPointTopology.lean: 28 thms, 0 sorry (Phase 5j W1)
+- PolyQuotQ.lean: 15 thms, 0 sorry (Phase 5i W4)
+
 **Proof quality notes:**
 - Zero `set_option maxHeartbeats` in entire project (VecGMonoidal fixed via @[local instance] caching)
 - Ising pentagon PROVED via native_decide over QSqrt2 (convention bug found + fixed)
 - Fibonacci pentagon PROVED via native_decide over QSqrt5
-- 74 placeholder theorems (`True := trivial`) tracked in PLACEHOLDER_THEOREMS
+- 82 placeholder theorems (`True := trivial`) tracked in PLACEHOLDER_THEOREMS (was 75; 3 SteenrodA1 Adem relations promoted to substantive; new modules added placeholders)
 - 1 axiom: `gapped_interface_axiom` (SPTClassification.lean)
 - Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`
 
@@ -228,11 +264,11 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 | 5e | Braided MTCs, knot invariants, S-matrix unitarity | Phase5e_Roadmap.md | **COMPLETE** (65 thms, 0 sorry) |
 | 5f | TQFT, emergent gravity bounds, figure-eight knot | Phase5f_Roadmap.md | **COMPLETE** (36 thms, 2 sorry) |
 | 5g | Matrix-free CG, Mathlib PR, paper submission | Phase5g_Roadmap.md | Track A W1-2 COMPLETE, W3 BLOCKED. Track B/C not started. Deep research COMPLETE. |
-| 5h | Chirality wall 3+1D formalization | Phase5h_Roadmap.md | Track A W1-2 COMPLETE (SPT, 15 thms + 1 axiom). Tracks B-C not started. |
-| 5i | U_q(sl_3) higher-rank quantum groups | Phase5i_Roadmap.md | NOT STARTED. Deep research COMPLETE. W4 BLOCKS Mathlib PR. |
-| 5j | Fermi-point gauge emergence | Phase5j_Roadmap.md | NOT STARTED. Deep research COMPLETE. |
+| 5h | Chirality wall 3+1D formalization | Phase5h_Roadmap.md | Track A W1-2 COMPLETE (SPT, 15 thms + 1 axiom). **Track B W3-4 COMPLETE** (GaugingStep.lean, 34 thms, 0 sorry). Track C not started. |
+| 5i | U_q(sl_3) higher-rank quantum groups | Phase5i_Roadmap.md | **W1 COMPLETE** (Uqsl3.lean, 21 thms, 0 sorry). **W2 Stage 3** (Uqsl3Hopf.lean, 4 sorry). **W3 COMPLETE** (SU3kFusion.lean, 99 thms, 0 sorry). W4 partially started (PolyQuotQ.lean, 15 thms, 0 sorry). W4 BLOCKS Mathlib PR. |
+| 5j | Fermi-point gauge emergence | Phase5j_Roadmap.md | **W1 COMPLETE** (FermiPointTopology.lean, 28 thms, 0 sorry). W2-3 NOT STARTED. Deep research COMPLETE. |
 | 6 | HPC-dependent (L=12-20, Walker-Wang) | Phase6_Roadmap.md | Deferred (sparse CG may eliminate L=12-16 need for HPC) |
 
 ---
 
-*Updated April 6, 2026. 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. Zero heartbeat overrides. Phases 5e-5f COMPLETE. Phase 5g W1-2 COMPLETE (matrix-free CG, pentagon proved, automated counts). Phase 5h W1-2 COMPLETE (SPT types). Phase 5i-5j NOT STARTED (deep research COMPLETE for both). VecGMonoidal heartbeats eliminated. Aristotle Batch 2 in flight (Uqsl2AffineHopf + CoidealEmbedding, 7 sorry). L=8 RHMC running (4 workers).*
+*Updated April 6, 2026. 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. Zero heartbeat overrides. Phases 5e-5f COMPLETE. Phase 5g W1-2 COMPLETE. Phase 5h W1-2 + W3-4 COMPLETE (GaugingStep, 34 thms, 0 sorry). Phase 5i W1 COMPLETE (Uqsl3 — first rank-2 QG, 21 thms, 0 sorry), W2 Stage 3 (Uqsl3Hopf — 4 sorry), W3 COMPLETE (SU3kFusion — first SU(3)_k fusion, 99 thms, 0 sorry), W4 partial (PolyQuotQ — 15 thms, 0 sorry). Phase 5j W1 COMPLETE (FermiPointTopology — 28 thms, 0 sorry). Aristotle Batch 2 in flight.*

@@ -64,7 +64,10 @@ import SKEFTHawking.RokhlinBridge
 import SKEFTHawking.QNumber
 import SKEFTHawking.Uqsl2
 import SKEFTHawking.Uqsl2Hopf
+import SKEFTHawking.Uqsl3
+import SKEFTHawking.Uqsl3Hopf
 import SKEFTHawking.SU2kFusion
+import SKEFTHawking.SU3kFusion
 import SKEFTHawking.Uqsl2Affine
 import SKEFTHawking.SU2kSMatrix
 import SKEFTHawking.RestrictedUq
@@ -94,6 +97,9 @@ import SKEFTHawking.TQFTPartition
 import SKEFTHawking.FigureEightKnot
 import SKEFTHawking.EmergentGravityBounds
 import SKEFTHawking.SPTClassification
+import SKEFTHawking.GaugingStep
+import SKEFTHawking.FermiPointTopology
+import SKEFTHawking.PolyQuotQ
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

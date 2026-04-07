@@ -2,37 +2,83 @@
 
 ## What This Project Is About
 
-This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Everything is machine-checked in the Lean 4 proof assistant: 1379 theorems (1304 substantive + 75 placeholder), 1 axiom (gapped_interface_axiom), across 97 modules.
+This project investigates whether the mathematical structures that describe exotic states of matter — superfluids, topological insulators, quantum spin liquids — can also describe the fundamental forces and particles of the universe. Every derivation is machine-checked in the Lean 4 proof assistant, meaning a computer has verified each logical step. The results span testable laboratory predictions, constraints on the particle content of the Standard Model, and formal obstructions to unification approaches.
 
 ### Analog Hawking radiation and testable predictions
 
-When a fluid flows faster than its own speed of sound, it creates a sonic horizon that traps sound waves exactly the way a black hole traps light. The "acoustic Hawking temperature" follows the same formula Hawking derived for real black holes. We computed the first corrections from dissipation — the fact that real fluids have viscosity — and found they have a specific frequency dependence that gives experimentalists a concrete test: vary the flow speed and watch how the spectrum changes. The polariton platform is 10 billion times hotter than BEC systems (~1 Kelvin vs ~10^-10 Kelvin), making it the most accessible route to observing these corrections. A Paris group has already seen negative-energy modes; spontaneous Hawking detection is plausible within 1-2 years.
+When a fluid flows faster than its own speed of sound, it creates a "sonic horizon" — a point of no return for sound waves, exactly analogous to a black hole's event horizon for light. Hawking predicted in 1974 that black holes radiate; the same mathematics predicts that sonic horizons radiate phonons (sound quanta). This has been observed in Bose-Einstein condensates (BECs).
+
+We computed the first corrections to this acoustic Hawking radiation from dissipation — the fact that real fluids have viscosity. These corrections produce a specific, predictable change in the radiation spectrum as a function of frequency and flow speed, giving experimentalists a concrete signature to look for.
+
+The most promising experimental platform is polariton superfluids (light-matter hybrids in semiconductor microcavities), which are roughly 10 billion times hotter than BEC systems (~1 K vs. ~10^-10 K). A Paris group has already observed negative-energy partner modes in polariton systems; detection of spontaneous Hawking radiation is plausible within 1-2 years.
 
 ### Why three generations of matter
 
-The Standard Model has three copies of its fundamental particles (electron/muon/tau and their quarks). Nobody knows why. We formally derived that the number must be divisible by three, from two independent mathematical facts: the SM's 16 Weyl fermions per generation give a chiral central charge of 8, and modular invariance of the quantum field theory (via the Dedekind eta function, studied by Ramanujan in 1916) forces this charge to be divisible by 24. The ratio 24/8 = 3 constrains the generation count — pure mathematics (number theory) meets pure physics (particle content). We also provide a formal argument for right-handed neutrinos: without them, the central charge is fractional (15/2), which is a gravitational anomaly independent of the usual mass-based argument.
+The Standard Model has three copies ("generations") of its fundamental particles — electron/muon/tau, each paired with its own neutrino and set of quarks. Nobody knows why three. We formally derived that the number of generations must be a multiple of three, from two independent facts:
+
+**Fact 1 — Particle content gives the number 8.** Each generation contains 16 Weyl fermions (the fundamental chiral building blocks). When the theory is reduced from four dimensions to two (a standard technique for analyzing anomalies), each generation contributes 8 to a quantity called the chiral central charge, denoted c₋. The total is:
+
+```
+c₋ = 8 × N_generations
+```
+
+**Fact 2 — Mathematical consistency gives the number 24.** The partition function of a quantum field theory must satisfy "modular invariance" — a symmetry requirement rooted in the Dedekind eta function from number theory (studied by Ramanujan in 1916). This constrains c₋ to be a multiple of 24:
+
+```
+Modular invariance requires: c₋ ≡ 0 (mod 24)
+```
+
+**The constraint.** Combining the two:
+
+```
+8 × N_generations must be divisible by 24
+→ N_generations must be divisible by 24/8 = 3
+```
+
+The smallest nontrivial solution is N_generations = 3 — which is what nature chose. We also proved that 1 and 2 are ruled out (24 does not divide 8 or 16), and that 6 is the next allowed value. Pure number theory meets particle physics.
+
+We also provide a formal argument for right-handed neutrinos (particles not yet observed but widely expected): without them, the central charge per generation is 15/2 instead of 8, making c₋ fractional. A fractional central charge is a gravitational anomaly — the theory is mathematically inconsistent — independent of the usual mass-based arguments for neutrino mass.
 
 ### The "16 convergence"
 
-The number 16 appears in four seemingly unrelated places: the SM's Weyl fermion count, the Z/16 anomaly classification, Rokhlin's theorem on 4-manifold signatures, and Kitaev's classification of topological superconductors. We proved these are the same 16, rooted in the quaternionic structure of spinors in four dimensions. The E8 lattice (verified formally using Mathlib's existing Cartan matrix) has signature 8, proving the algebraic bound is 8, not 16 — the jump to 16 requires smooth topology, not just algebra. This cleanly separates what mathematics alone constrains from what requires physics.
+The number 16 appears in four areas of physics and mathematics that, on the surface, have nothing to do with each other:
+
+1. **Particle physics:** Each generation of Standard Model fermions has exactly 16 Weyl components.
+2. **Anomaly theory:** The classification of consistent fermion theories lives in a cyclic group with 16 elements (Z/16).
+3. **4D topology:** Rokhlin's theorem (1952) says that certain 4-dimensional manifolds have signatures divisible by 16.
+4. **Condensed matter:** Kitaev's periodic table of topological superconductors repeats with period 16 in the relevant symmetry class.
+
+We proved these are all the same 16, rooted in the quaternionic structure of spinors in four dimensions. The proof also reveals a sharp boundary: algebra alone (specifically, the E8 lattice, verified using Mathlib's Cartan matrix) only forces divisibility by 8. The jump from 8 to 16 requires smooth topology — it is a genuinely physical constraint that pure algebra cannot produce. This cleanly separates what mathematics alone dictates from what requires the additional structure of physical spacetime.
 
 ### From lattice models to gauge theory
 
-We formalized the complete chain connecting integrable lattice models to topological gauge theory: Onsager algebra → q-deformation → quantum group U_q(sl_2) with Hopf structure → affine quantum group → restricted quantum group at roots of unity → SU(2)_k fusion categories → modular S-matrix → Chern-Simons gauge theory. The SU(2)_k fusion rules at k=3 contain the Fibonacci anyon — universal for topological quantum computation. Our formalization provides verified mathematical foundations for the fusion operations these future quantum computers would perform.
+Topological quantum computers would perform calculations by braiding exotic particles called anyons. The mathematical framework governing these operations — modular tensor categories — has deep roots in exactly solvable lattice models from statistical mechanics. We formalized the complete chain connecting them:
+
+> Onsager algebra (2D Ising model) → quantum group U_q(sl_2) → fusion categories → modular S-matrix → Chern-Simons gauge theory
+
+At level k=2, this produces the Ising anyon model. At k=3, it produces the Fibonacci anyon — which is universal for quantum computation (any quantum circuit can be approximated by braiding Fibonacci anyons). Our formalization provides the first machine-verified mathematical foundations for these fusion operations, including the first Hopf algebra and the first quantum group constructed in any proof assistant.
 
 ### The chirality wall
 
-The biggest obstacle to deriving the Standard Model from condensed matter is chirality: the weak force only acts on left-handed particles. We provided the first formal analysis of a 2026 construction (Thorngren-Preskill-Fidkowski) that likely evades the 1981 no-go theorems: all 9 conditions of the competing Golterman-Shamir no-go formalized, 5 proved violated, master synthesis theorem machine-checked.
+The biggest obstacle to deriving the Standard Model from condensed matter physics is chirality: the weak nuclear force couples only to left-handed particles. Since 1981, a series of no-go theorems (Nielsen-Ninomiya and others) have appeared to forbid getting chiral fermions from a lattice or condensed matter system.
+
+We provided the first formal analysis of a 2026 construction by Thorngren, Preskill, and Fidkowski that appears to evade these no-go theorems. We formalized all 9 conditions of the competing Golterman-Shamir no-go theorem and proved that 5 of those conditions are violated by the TPF construction — meaning the no-go theorem's assumptions don't apply, and its conclusion (that chirality is forbidden) doesn't follow. A master synthesis theorem combining all three lines of evidence (Golterman-Shamir evasion, Gu-Wen-Thorngren positive construction, Z₁₆ anomaly classification) is machine-checked.
 
 ### Emergent gravity: what works and what doesn't
 
-Fracton symmetric tensor gauge theory reproduces linearized gravity but fails at the nonlinear level — formally verified obstruction. The Akama-Diakonov-Wetterich mechanism (gravity from fermion condensation) is more promising: the gap equation for tetrad condensation has never been explicitly written down in the literature. Our deep research identifies it and scopes the computation. The non-Abelian gauge wall is a structural theorem: SU(3) and SU(2) gauge forces cannot survive through a fluid layer (proved), but can originate from topological order (the quantum group route we formalized).
+Can gravity emerge from a condensed matter system the way electromagnetism can? We investigated two approaches and found clear results for each.
+
+**What fails:** Fracton models (exotic phases of matter where particles have restricted mobility) reproduce the equations of weak-field gravity, but we formally proved they cannot reproduce full general relativity. The obstruction is structural — the symmetries of fracton gauge theory are too rigid to accommodate the nonlinearities of Einstein's equations.
+
+**What works (partially):** The Akama-Diakonov-Wetterich mechanism, where gravity arises from fermion pair condensation (analogous to how superconductivity arises from electron pairing). The key equation for this condensation — the "tetrad gap equation" — had never been explicitly written down in the literature. We identified it and are computing its solutions.
+
+**A structural boundary:** We proved that the strong and weak nuclear forces (SU(3) and SU(2) gauge symmetries) cannot survive passage through a fluid-like layer — they get erased. However, they can originate *from* topological order, via the quantum group route formalized above. This distinguishes which forces can emerge from condensed matter and which cannot.
 
 ### Verified statistical estimators
 
-The jackknife variance estimator and autocorrelation function — foundational tools for analyzing Monte Carlo data from lattice simulations — are formalized for the first time in any proof assistant. Non-negativity of the jackknife variance is proved. This opens the path to formally verified data analysis for lattice quantum field theory.
+Monte Carlo simulations are a workhorse of computational physics, but the statistical tools used to analyze their output — variance estimators, autocorrelation functions — have never been formally verified. We formalized the jackknife variance estimator and autocorrelation function in Lean 4 for the first time in any proof assistant, including a proof that the jackknife variance is non-negative. This opens the path to formally verified data analysis pipelines for lattice quantum field theory.
 
-*28 theorems remain as Aristotle targets across 12 modules: Ising/Fibonacci pentagon equations, coideal embedding proofs, affine Hopf relation-respect, Kerr-Schild inverse, statistical estimator bounds, Rep(u_q) fusion correspondence, stimulated Hawking, and center functor naturality.*
+*28 theorems remain as Aristotle (automated theorem prover) targets across 12 modules.*
 
 ---
 

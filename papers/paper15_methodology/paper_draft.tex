@@ -1,0 +1,201 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage[margin=1in]{geometry}
+
+\title{A Twelve-Stage Verification Pipeline for\\Computational Physics Research}
+
+\author{John Roehm}
+\date{Draft --- April 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We describe a twelve-stage pipeline for conducting computational physics
+research with continuous machine verification. The pipeline integrates
+Python numerics, Lean~4 formal proofs, and the Aristotle automated theorem
+prover into a single workflow where every formula has a formal theorem,
+every computed quantity has verified bounds, and every paper claim traces
+to computation. Applied to a research program spanning dissipative effective
+field theory, analog Hawking radiation, emergent gravity, quantum groups,
+and topological quantum field theory, the pipeline has produced
+\input{../../docs/counts.tex}\totaltheorems{} machine-checked theorems
+across \input{../../docs/counts.tex}\totalmodules{} Lean modules with
+\input{../../docs/counts.tex}\sorrycount{} remaining gaps, while
+maintaining 16 automated validation checks and full parameter provenance.
+We present the pipeline architecture, its ten invariants, the automated
+theorem prover integration that compresses months of manual proof work
+to hours, and the claims-reviewer system that catches inconsistencies
+between papers and computation. The methodology is domain-agnostic and
+applicable to any research program combining numerical computation with
+formal verification.
+\end{abstract}
+
+% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+% Motivation: computational physics has a reproducibility crisis
+% - Numerical results without verified bounds
+% - Paper claims that diverge from computation over time
+% - No machine-checkable connection between theory and code
+%
+% Our solution: a pipeline that makes verification continuous, not post-hoc
+% Applied to SK-EFT Hawking: BEC analog Hawking radiation + quantum groups + MTCs
+
+% ============================================================
+\section{Pipeline Architecture}
+\label{sec:pipeline}
+
+% The 12 stages:
+% 1. Constants & Parameters (single source of truth)
+% 2. Formulas (canonical, with Lean refs)
+% 3. Lean Theorems (sorry stubs)
+% 4. Aristotle (automated proving)
+% 5. Lean Build Verification (zero sorry gate)
+% 6. Python Tests (correctness + physical bounds)
+% 7. Cross-Layer Validation (16 checks)
+% 8. Visualizations (publication-quality, from validated data)
+% 9. Figure Review (LLM visual inspection)
+% 10. Paper Draft (every claim traced)
+% 11. Notebooks (reproducible narratives)
+% 12. Document Sync (automated counts)
+
+% ============================================================
+\section{Pipeline Invariants}
+\label{sec:invariants}
+
+% The 10 invariants that must hold at ALL times:
+% 1. formulas.py is canonical
+% 2. constants.py is canonical
+% 3. visualizations.py is canonical
+% 4. Every formula has a Lean theorem (zero sorry)
+% 5. Every computed quantity has bounds
+% 6. Every paper claim traces to computation
+% 7. Narrative derives from data
+% 8. Every parameter has verified provenance
+% 9. Placeholder theorems are non-load-bearing
+% 10. No heartbeat overrides
+
+% ============================================================
+\section{Three-Layer Verification}
+\label{sec:three_layer}
+
+% Layer 1: Python numerics (fast iteration, physical intuition)
+% Layer 2: Lean 4 formal proofs (mathematical certainty)
+% Layer 3: Aristotle automated theorem prover (fills sorry gaps)
+%
+% The interaction: Python discovers → Lean formalizes → Aristotle proves
+% Example: tetrad gap equation G_c = 8pi^2/(N_f Lambda^2)
+
+% ============================================================
+\section{Automated Theorem Prover Integration}
+\label{sec:aristotle}
+
+% Aristotle: commercial Lean 4 proving service
+% Integration pattern:
+% - Priority batching (P1/P2/P3)
+% - PROVIDED SOLUTION hints in docstrings
+% - One job at a time (sends entire project)
+% - Manual review before integration
+% - Quality verification (exercises hypotheses?)
+%
+% Results: 307 theorems proved automatically
+% Compression: "multi-month estimates" → hours/days
+% Failure mode: OUT_OF_BUDGET (need to split or hint better)
+
+% ============================================================
+\section{Validation Infrastructure}
+\label{sec:validation}
+
+% 16 automated checks in validate.py:
+% 1. Formula-Lean cross-reference
+% 2. Numerical parameter verification
+% 3. Mathematical identities
+% 4-6. Paper/notebook/lean consistency
+% 7-11. Cross-path, bounds, provenance
+% 12-16. Graph integrity, parameter provenance
+%
+% Claims-reviewer: LLM agent that reads papers against computation
+% Figure-reviewer: LLM agent that reviews visualizations
+% Provenance dashboard: human verification interface
+
+% ============================================================
+\section{Automated Counts System}
+\label{sec:counts}
+
+% Problem: manual count synchronization across 10+ documents
+% Solution: ExtractDeps.lean → lean_deps.json → update_counts.py → counts.json
+% Single source of truth for all project metrics
+% LaTeX macros (\totaltheorems, \sorrycount, etc.) auto-generated
+
+% ============================================================
+\section{Case Study: From Discovery to Verified Theorem}
+\label{sec:case_study}
+
+% Walk through a specific example end-to-end:
+% The pentagon equation convention bug
+% 1. Aristotle "proved" a wrong pentagon (vacuous)
+% 2. Brute-force search identified convention mismatch
+% 3. Deep research provided correct Kitaev convention
+% 4. native_decide verified 243 cases in seconds
+% 5. Claims-reviewer caught stale paper references
+%
+% Lesson: the pipeline CAUGHT a real bug that would have propagated
+
+% ============================================================
+\section{Decidable Number Fields}
+\label{sec:number_fields}
+
+% The technique for verified algebraic computation
+% Q[x]/(f(x)) as rational tuples with DecidableEq
+% native_decide for pentagon (243 cases), hexagon (6 eqs), S-matrix unitarity
+% Trust trade-off: compiler (~30K lines) vs kernel-only
+% Performance: seconds vs hours for equivalent norm_num proofs
+
+% ============================================================
+\section{Scaling and Applicability}
+\label{sec:scaling}
+
+% Current scale: 2232 theorems, 94 modules, 14 papers, 42 notebooks
+% Growth rate: ~200 theorems per session with the pipeline
+% Bottlenecks: Aristotle budget, heartbeat limits, number field consolidation
+%
+% Applicability to other domains:
+% - Pharmaceutical research (FDA SaMD algorithmovigilance)
+% - Financial modeling (verified risk calculations)
+% - Climate science (verified model predictions)
+% - Any domain combining computation with formal claims
+
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+% PhysLean / HepLean: quantum harmonic oscillator, Higgs potential
+% Verified quantum computing: SQIR/VOQC, Lean-QuantumInfo
+% Reproducibility tools: Jupyter, papermill, DVC
+% Formal methods in industry: CompCert, seL4, CertiKOS
+% How this differs: continuous verification during research, not post-hoc
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+% The pipeline transforms research methodology:
+% - Bugs caught in real time (pentagon convention)
+% - Claims verified against computation automatically
+% - Aristotle compresses proof work by orders of magnitude
+% - The 10 invariants prevent drift between papers and code
+%
+% Open-source, domain-agnostic, immediately applicable
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

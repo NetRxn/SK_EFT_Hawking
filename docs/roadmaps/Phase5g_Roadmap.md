@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-06 | Follows Phase 5f (TQFT, emergent gravity bounds, figure-eight knot)*
 
-**Entry state:** 2023 theorems (1949 substantive + 74 placeholder), 1 axiom, 88 modules, 28 sorry. Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`. Zero heartbeat overrides. L=8 RHMC running (4 workers). Aristotle Batch 2 in flight (Uqsl2AffineHopf + CoidealEmbedding, 7 sorry). Braided MTCs + TQFT + knot invariants complete. Wen coupling deficit formalized.
+**Entry state:** 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`. Zero heartbeat overrides. L=8 RHMC running (4 workers). Aristotle Batch 2 in flight (Uqsl2AffineHopf + CoidealEmbedding, 7 sorry). Braided MTCs + TQFT + knot invariants complete. Wen coupling deficit formalized. Phases 5h-5j active: GaugingStep, SU3kFusion, FermiPointTopology, PolyQuotQ all zero sorry.
 
 ---
 
@@ -21,7 +21,7 @@
 Three bottlenecks block the research program:
 1. **Computational:** L=12+ MC impossible with dense CG (220GB). Matrix-free with torch.roll() reduces to ~130MB.
 2. **Credibility:** Mathlib PR for PivotalCategory/FusionCategory/etc. starts the credibility flywheel (Lean/Mathlib community → quantum computing → consulting).
-3. **Publication:** 14 papers, 2023 theorems, 0 submitted. Ship the work.
+3. **Publication:** 14 papers, 2232 theorems, 0 submitted. Ship the work.
 
 ---
 
@@ -182,4 +182,4 @@ All three tracks are independent and can proceed in parallel.
 
 ---
 
-*Phase 5g roadmap. Created 2026-04-06. Updated 2026-04-06 (Track A W1-2 COMPLETE, W3 BLOCKED on L=8 workers. Track B W4 NOT STARTED — VecGMonoidal heartbeats DONE, number field consolidation BLOCKED on 5i W4. Track C not started, deep research COMPLETE. Ising pentagon PROVED via native_decide/QSqrt2. Fibonacci pentagon PROVED via native_decide/QSqrt5. Automated counts operational: update_counts.py + counts.json). 2023 theorems, 88 modules, 28 sorry, 1 axiom.*
+*Phase 5g roadmap. Created 2026-04-06. Updated 2026-04-06 (Track A W1-2 COMPLETE, W3 BLOCKED on L=8 workers. Track B W4 NOT STARTED — VecGMonoidal heartbeats DONE, number field consolidation BLOCKED on 5i W4. Note: Track B blocker reassessed — Mathlib PR not blocked by number fields, categorical infrastructure is independent. Track C not started, deep research COMPLETE. Ising pentagon PROVED via native_decide/QSqrt2. Fibonacci pentagon PROVED via native_decide/QSqrt5. Automated counts operational: update_counts.py + counts.json). 2232 theorems, 94 modules, 33 sorry, 1 axiom.*

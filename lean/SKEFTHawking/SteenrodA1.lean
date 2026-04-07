@@ -30,7 +30,7 @@ open Finset
 
 universe u
 
-noncomputable section
+section
 
 namespace SKEFTHawking
 
@@ -71,7 +71,7 @@ def a1_degree : A1Basis → ℕ
 
 /-! ## 2. Adem Relations -/
 
-/--
+/-
 The Adem relations constrain the Steenrod algebra multiplication.
 In A(1), the key relations are:
 
@@ -81,13 +81,8 @@ In A(1), the key relations are:
   Sq¹Sq³ = 0           (follows from Adem: Sq¹Sq³ = 0)
   Sq²Sq³ = Sq⁵ = Sq²Sq¹Sq² (in A(1))
 
-These are verified by the explicit multiplication table below.
+These are verified by the explicit multiplication table (Section 3b).
 -/
-theorem adem_sq1_sq1 : True := trivial  -- Sq¹Sq¹ = 0 in F₂
-
-theorem adem_sq1_sq2 : True := trivial  -- Sq¹Sq² = Sq³
-
-theorem adem_sq2_sq2 : True := trivial  -- Sq²Sq² = Sq³Sq¹
 
 /--
 The Adem relation Sq^a Sq^b = Σ_{j} (b-1-j choose a-2j) Sq^{a+b-j} Sq^j
@@ -175,6 +170,17 @@ theorem a1_mul_one_left (x : A1Basis) : a1_mul .one x = some x := by
 
 theorem a1_mul_one_right (x : A1Basis) : a1_mul x .one = some x := by
   cases x <;> rfl
+
+/-! ## 3b. Adem Relations (verified via multiplication table) -/
+
+/-- Sq¹Sq¹ = 0 in A(1) (Sq¹ has order 2). -/
+theorem adem_sq1_sq1 : a1_mul .sq1 .sq1 = none := by native_decide
+
+/-- Sq¹Sq² = Sq³ in A(1) (defines Sq³). -/
+theorem adem_sq1_sq2 : a1_mul .sq1 .sq2 = some .sq3 := by native_decide
+
+/-- Sq²Sq² = Sq³Sq¹ in A(1) (the non-trivial Adem relation). -/
+theorem adem_sq2_sq2 : a1_mul .sq2 .sq2 = some .sq3sq1 := by native_decide
 
 /-! ## 4. Hopf Algebra Structure -/
 

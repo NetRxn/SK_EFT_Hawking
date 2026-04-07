@@ -1211,6 +1211,10 @@ AXIOM_METADATA: dict[str, dict[str, str]] = {
 
 PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
     # === Content placeholders (mathematical claims, no proof) ===
+    # Total `True := trivial` in Lean: 71 (36 module summaries + 35 content).
+    # Only content placeholders with resolution plans are tracked here.
+    # Module summaries are documentation markers — non-load-bearing by design.
+    # Full count is in docs/counts.json via update_counts.py.
     # DrinfeldEquivalence: categorical wrapping stubs
     'monoidal_structure_corresponds': {
         'category': 'content',
@@ -1243,25 +1247,8 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
         'claim': 'c = 0 for all Z(Vec_G)',
         'resolution': 'Follows from string-net construction; needs formal Turaev-Viro connection',
     },
-    # SteenrodA1: Adem relations as statements
-    'adem_sq1_sq1': {
-        'category': 'content',
-        'module': 'SteenrodA1',
-        'claim': 'Sq¹Sq¹ = 0 in A(1)',
-        'resolution': 'Verify via explicit multiplication table (native_decide feasible)',
-    },
-    'adem_sq1_sq2': {
-        'category': 'content',
-        'module': 'SteenrodA1',
-        'claim': 'Sq¹Sq² = Sq³ in A(1)',
-        'resolution': 'Same approach',
-    },
-    'adem_sq2_sq2': {
-        'category': 'content',
-        'module': 'SteenrodA1',
-        'claim': 'Sq²Sq² = Sq³Sq¹ in A(1)',
-        'resolution': 'Same approach',
-    },
+    # SteenrodA1: Adem relations — PROVED via native_decide (April 2026)
+    # adem_sq1_sq1, adem_sq1_sq2, adem_sq2_sq2 — RESOLVED, removed from registry
     'a1_is_sub_hopf_algebra': {
         'category': 'content',
         'module': 'SteenrodA1',

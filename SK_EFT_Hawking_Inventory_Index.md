@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 6, 2026 (Phase 5g/5h: **1379 thm** (1304 substantive), 1 ax, 97 modules, **28 sorry**, 75 placeholders — VecGMonoidal heartbeats eliminated, pentagon proved via native_decide)
+**Last synced:** April 6, 2026 (Phase 5h-5j: **2232 thm** (2150 substantive + 82 placeholder), 1 ax, 94 modules, **33 sorry** — SU3kFusion (99 thms, 0 sorry), GaugingStep (34 thms, 0 sorry), FermiPointTopology (28 thms, 0 sorry), PolyQuotQ (15 thms, 0 sorry) all complete)
 
 ---
 
@@ -10,13 +10,13 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **1379** (1304 substantive + 75 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
-| Placeholders (True := trivial) | **75** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
+| Lean theorems | **2232** (2150 substantive + 82 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
+| Placeholders (True := trivial) | **82** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **307** (304 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **28** | 3 Uqsl2AffineHopf + 4 CoidealEmbedding + 4 VerifiedStatistics + 7 StimulatedHawking + 5 CenterFunctor + 2 RepUqFusion + 1 KerrSchild + 2 EmergentGravityBounds + 1 TetradGapEquation (SU2kMTC and FibonacciMTC now ZERO sorry — resolved via native_decide) |
+| **Sorry gaps** | **33** | 7 StimulatedHawking + 5 CenterFunctor + 4 CoidealEmbedding + 4 VerifiedStatistics + 4 Uqsl3Hopf + 3 Uqsl2AffineHopf + 2 RepUqFusion + 2 EmergentGravityBounds + 1 KerrSchild + 1 TetradGapEquation. New modules (SU3kFusion, GaugingStep, FermiPointTopology, PolyQuotQ) all zero sorry. |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **97** | Including SPTClassification.lean (new) |
-| Proved (substantive, zero sorry) | **1276** | 1304 - 28 |
+| Lean modules | **94** | Including SU3kFusion, GaugingStep, FermiPointTopology, PolyQuotQ (new this session) |
+| Proved (substantive, zero sorry) | **2124** | 2150 - 26 (26 sorry theorems + 7 sorry defs) |
 | Python source modules | **53** | Including stencil_dirac.py (new) |
 | Test files | **43** | Including test_stencil_dirac.py (new) |
 | Test count | 1635+ | `pytest tests/ -q` |
@@ -25,7 +25,7 @@
 | Papers | **12** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
-| Aristotle runs | 35+ | See Aristotle run table in full inventory |
+| Aristotle runs | 43+ | See Aristotle run table in full inventory |
 | Deep research tasks | 18 + 8 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e
 
 ---
@@ -35,7 +35,7 @@
 | Section | Covers | When to update |
 |---------|--------|----------------|
 | 1. Python Source | All `src/` modules with purpose + line counts | New module added or module purpose changes |
-| 2. Lean Verification | 93-module table: lines, theorem count, key results | Theorem added/removed, module added |
+| 2. Lean Verification | 94-module table: lines, theorem count, key results | Theorem added/removed, module added |
 | 3. Aristotle | Run table with dates + theorem counts | New Aristotle submission |
 | 4. Notebooks | 40-notebook table: phase, topic | Notebook added or topic changes |
 | 5. Papers | 12-paper table: format, lines, topic, key claims | Paper content changes |
@@ -181,6 +181,8 @@
 | QNumber | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16=DG_COEFF (**ALL PROVED**, Aristotle `7d8efa8f`) |
 | Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**ALL PROVED**, Aristotle `7d8efa8f`) |
 | Uqsl2Hopf | 66 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl₂), coproduct/counit/antipode via liftAlgHom, S²=Ad(K), Serre coproduct (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4` + `79e07d55`) |
+| Uqsl3 | 21 | **Phase 5i**: **FIRST rank-2 quantum group in any proof assistant**: U_q(sl₃) via FreeAlgebra+RingQuot, 8 generators, A₂ Cartan matrix [[2,-1],[-1,2]], 21 Chevalley relations (**ALL PROVED, zero sorry**, native proofs, 6.4s build) |
+| Uqsl3Hopf | 2 | **Phase 5i**: Hopf algebra on U_q(sl₃): coproduct Δ, counit ε, antipode S defined via liftAlgHom. S²=Ad(K₁K₂). (**4 sorry**: relation-respect proofs — Aristotle Batch 3) |
 | SU2kFusion | 29 | **SU(2)_k fusion at k=1,2,3**: universal truncated CG rule, Ising (sigma²=1+psi), Fibonacci (tau²=1+tau), charge conjugation, assoc+comm, Fibonacci subcategory closed (**ALL PROVED by native_decide, zero sorry**) |
 | Uqsl2Affine | 9 | U_q(sl_2 hat) affine quantum group: 6 generators, Chevalley + cross-relations, K invertibility, coideal property statement (**ALL PROVED, zero sorry**) |
 | SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
@@ -190,11 +192,11 @@
 | AlgebraicRokhlin | 10 | Algebraic Serre theorem σ≡0 mod 8, unimodular/even/symmetric defs, characteristic vectors, E8 bridge (**ALL PROVED, zero sorry**) |
 | QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
-| FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**3 sorry**: pentagon, global dim, dim consistency) |
+| FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
 | Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode defined via RingQuot.liftAlgHom (**3 sorry**: relation-respect proofs) |
 | VerifiedStatistics | 6 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**4 sorry**) |
 | KerrSchild | 7 | Kerr-Schild metrics: null vector, radial_null PROVED, Sherman-Morrison inverse, Schwarzschild, DOF counting (**1 sorry**) |
-| SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**5 sorry pending Aristotle**) |
+| SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**ALL PROVED, zero sorry** — native_decide over Q(√2)) |
 | CoidealEmbedding | 6 | **Phase 5d**: Coideal subalgebra embedding B_i into U_q(ŝl₂), Dolan-Grady from Chevalley (**4 sorry**: coideal/counit proofs) |
 | RepUqFusion | 13 | **Phase 5d**: Rep(u_q) → SU(2)_k fusion data correspondence, dim formulas, Peter-Weyl (**2 sorry**: dimension formula, fusion comm) |
 | SpinBordism | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData structure, anomaly with/without ν_R (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
@@ -207,6 +209,10 @@
 | IsingBraiding | 23 | **Phase 5e**: COMPLETE braided Ising MTC: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum, **trefoil=-1** (**ALL PROVED by native_decide, zero sorry, FIRST verified knot invariant**) |
 | QSqrt3 | 8 | **Phase 5e**: Q(√3) for SU(2)₄ S-matrix: unitarity diagonal+off-diag, det non-zero (**ALL PROVED by native_decide, zero sorry**) |
 | QLevel3 | 19 | **Phase 5e**: Q[x]/(20x⁴-10x²+1) for SU(2)₃ S-matrix: ALL 10 unitarity entries, quantum dim golden ratio (**ALL PROVED by native_decide, zero sorry**) |
+| SU3kFusion | 99 | **Phase 5i**: **FIRST SU(3)_k fusion in any proof assistant**: SU(3)₁ Z₃ fusion (3 objects) + SU(3)₂ (6 anyons, Fibonacci subcategory τ⊗τ=1+τ), charge conjugation, associativity+commutativity (**ALL PROVED by native_decide, zero sorry**) |
+| GaugingStep | 34 | **Phase 5h**: Gauging obstruction: NotOnSiteSymmetry, SymmetryDisentangler, GT Models 1+2, SM anomaly 16≡0 mod 16, SMGPhaseData (BCH+HW), Golterman-Shamir propagator-zero, ChiralityWall3DStatus (**ALL PROVED, zero sorry**) |
+| FermiPointTopology | 28 | **Phase 5j**: Fermi-point topological charge: winding number N, |N|=1 → U(1) gauge + Weyl fermions, |N|=2 → SU(2) gauge emergence, spin-connection co-emergence (**ALL PROVED, zero sorry**) |
+| PolyQuotQ | 15 | **Phase 5i**: Q(ζ₃) cyclotomic field via polynomial quotient for SU(3)₁ S-matrix verification (**ALL PROVED, zero sorry**) |
 
 ---
 
