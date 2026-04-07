@@ -108,6 +108,14 @@ import SKEFTHawking.WRTInvariant
 import SKEFTHawking.QuantumGroupHopf
 import SKEFTHawking.KMatrixAnomaly
 import SKEFTHawking.WRTComputation
+import SKEFTHawking.FibonacciBraiding
+import SKEFTHawking.IsingGates
+import SKEFTHawking.SPTStacking
+import SKEFTHawking.TPFDisentangler
+import SKEFTHawking.QCyc5Ext
+import SKEFTHawking.FibonacciQutrit
+import SKEFTHawking.FibonacciUniversality
+import SKEFTHawking.FibonacciQutritUniversality
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

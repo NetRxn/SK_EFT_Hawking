@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-07T07:59:46.339464+00:00",
+  "timestamp": "2026-04-07T18:54:01.486962+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -126,46 +126,10 @@
       "severity": "warning",
       "check": "axis_label",
       "message": "xaxis title '' missing expected 'anyon'"
-    },
-    {
-      "figure": "fig74_drinfeld_equivalence_structure",
-      "severity": "error",
-      "check": "nan_data",
-      "message": "Trace 2 has NaN in x"
-    },
-    {
-      "figure": "fig74_drinfeld_equivalence_structure",
-      "severity": "error",
-      "check": "nan_data",
-      "message": "Trace 2 has NaN in y"
-    },
-    {
-      "figure": "fig74_drinfeld_equivalence_structure",
-      "severity": "error",
-      "check": "nan_data",
-      "message": "Trace 3 has NaN in x"
-    },
-    {
-      "figure": "fig74_drinfeld_equivalence_structure",
-      "severity": "error",
-      "check": "nan_data",
-      "message": "Trace 3 has NaN in y"
-    },
-    {
-      "figure": "fig74_drinfeld_equivalence_structure",
-      "severity": "error",
-      "check": "nan_data",
-      "message": "Trace 4 has NaN in x"
-    },
-    {
-      "figure": "fig74_drinfeld_equivalence_structure",
-      "severity": "error",
-      "check": "nan_data",
-      "message": "Trace 4 has NaN in y"
     }
   ],
   "summary": {
-    "errors": 6,
+    "errors": 0,
     "warnings": 21
   }
 }

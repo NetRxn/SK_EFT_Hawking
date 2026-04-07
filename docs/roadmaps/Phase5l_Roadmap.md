@@ -31,21 +31,38 @@ We have the ONLY verified braiding data. This connects directly to a $50B+ indus
 
 ## Track A: Anyonic Gate Sets
 
-### Wave 1 — Braiding Matrices for n Anyons
+### Wave 1 — Braiding Matrices for n Anyons (**COMPLETE**)
 **Goal:** Compute explicit braiding matrices for systems of n anyons.
 
-- [ ] 2-anyon fusion space: σ⊗σ → {1, ψ} (2-dimensional, our R-matrix acts here)
-- [ ] 3-anyon fusion space: σ⊗σ⊗σ → basis from fusion trees (4-dimensional)
-- [ ] F-move + R-move composition → braiding gate on 3-anyon space
-- [ ] Verify gates match known Clifford group generators for Ising
+- [x] Ising: σ₁, σ₂ complete, braid relation ALL 4 entries, Clifford structure (IsingGates.lean, 21 thms)
+- [x] Fibonacci qubit: F-matrix + σ₂ diagonal in Q(ζ₅), braid relation PROVED (FibonacciBraiding.lean, 33 thms)
+- [x] Fibonacci: (σ₁σ₂)³ = scalar (B₃ center Δ², consistent with DENSE image per FLW)
+- [x] R₁ order 5, R_τ order 10 PROVED
+- [x] **CORRECTION**: B₃ Fibonacci image is DENSE in SU(2) (FLW), NOT binary icosahedral. 2I is the modular/torus representation.
 
-### Wave 2 — Fibonacci Universality
+### Wave 2 — Fibonacci Universality (**IN PROGRESS**)
 **Goal:** Prove Fibonacci anyon braiding is computationally universal.
 
-- [ ] Compute Fibonacci braiding matrices for 3,4,5 anyons explicitly
-- [ ] Show braiding generates a dense subgroup of SU(N) (N = Fibonacci numbers)
-- [ ] Formalize the density argument (golden ratio irrationality → dense rotation)
-- [ ] Solovay-Kitaev approximation: state that any unitary can be ε-approximated by poly(log(1/ε)) braids
+**W2a: Number field + full braiding (COMPLETE)**
+- [x] Q(ζ₅, √φ) degree-8 number field (QCyc5Ext.lean, 19 thms)
+- [x] φ⁻¹/² ∉ Q(ζ₅) necessitates K = Q(ζ₅)[w]/(w²+ζ²+ζ³) — PROVED
+- [x] Full F-matrix in unitary gauge over K: F²=I, symmetric PROVED
+- [x] Full σ₂ over K: diagonal real, off-diagonal pure w, σ₂[0,1]=-(1+ζ²)w PROVED
+- [x] All braid relations over K (2×2) PROVED
+
+**W2b: Qutrit (4-anyon) braiding (COMPLETE)**
+- [x] 3×3 matrices σ₁, σ₂, σ₃ over K (FibonacciQutrit.lean, 6 thms)
+- [x] σ₁ ≠ σ₃ PROVED (genuine B₄, not factoring through B₃)
+- [x] Far-commutativity σ₁σ₃ = σ₃σ₁ PROVED
+- [x] Yang-Baxter σ₁σ₂σ₁ = σ₂σ₁σ₂ PROVED (3×3 over degree-8 field)
+- [x] Yang-Baxter σ₂σ₃σ₂ = σ₃σ₂σ₃ PROVED
+
+**W2c: Self-contained universality proof (NEXT)**
+- [ ] Lie algebra spanning: compute [σ₁, σ₂] commutator matrices over K
+- [ ] Show commutators + generators span su(2) (3D) for qubit — linear independence check
+- [ ] Show commutators span su(3) (8D) for qutrit — determinant/rank check over K
+- [ ] This gives a self-contained proof: braid algebra data → Lie algebra generation → density
+- [ ] Alternative: verify trace of composite braid ∉ 2I character table {±2, ±φ, ±φ⁻¹, ±1, 0}
 
 ### Wave 3 — Error Correction from Fusion Categories
 **Goal:** Define topological error-correcting codes from our fusion data.
@@ -61,7 +78,8 @@ We have the ONLY verified braiding data. This connects directly to a $50B+ indus
 | # | Topic | File | Status |
 |---|-------|------|--------|
 | 1 | TQC from verified MTCs | Lit-Search/Phase-5k-5l-5m-5n/Topological quantum... | **COMPLETE** |
+| 2 | Fibonacci universality explicit data | Lit-Search/Phase-5k-5l-5m-5n/Fibonacci anyon braiding... | **COMPLETE** |
 
 ---
 
-*Phase 5l roadmap. Created 2026-04-07, updated 2026-04-07. Deep research complete. Circle-back after 5k infrastructure (TL+JW already built). Our verified Ising + Fibonacci MTCs connect directly to Microsoft/Google hardware.*
+*Phase 5l roadmap. Created 2026-04-07, updated 2026-04-07. Deep research 1+2 complete. W1 COMPLETE. W2a+W2b COMPLETE (Q(ζ₅,√φ) field + full 2×2 + 3×3 braiding over K). **W2c NEXT**: Lie algebra spanning for self-contained universality proof.*

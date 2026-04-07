@@ -355,7 +355,8 @@ $F^\sigma_{\psi\sigma\psi} = -1$ (corrected from the standard convention
 via deep research against Kitaev 2006) is verified. Global dimension
 $\mathcal{D}^2 = 4$ is proved via \texttt{Real.mul\_self\_sqrt}.
 A \texttt{ModularTensorData} instance is constructed --- the first ever.
-Pentagon equation and $F^2 = I$ are pending Aristotle (5 sorry).
+Pentagon equation and $F^2 = I$ are proved by \texttt{native\_decide}
+over $\mathbb{Q}(\sqrt{2})$ (zero sorry, Aristotle \texttt{78dcc5f4}).
 
 \textbf{Fibonacci MTC} (SU(2)$_3$ even subcategory,
 \texttt{FibonacciMTC.lean}): Two anyons $\{1, \tau\}$ with
@@ -364,7 +365,8 @@ are in the isotopy gauge with values in $\mathbb{Q}(\sqrt{5})$ (custom
 type \texttt{QSqrt5}). The involutory property $F^2 = I$ is proved
 by \texttt{native\_decide} over \texttt{QSqrt5} --- all four matrix
 entries verified. Chirality $c_{\rm top} = 14/5 \neq 0$ is proved.
-Pentagon and global dimension are pending Aristotle (3 sorry).
+Pentagon (512 cases) and global dimension proved by \texttt{native\_decide}
+over $\mathbb{Q}(\sqrt{5})$ (zero sorry).
 
 These number fields $\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$
 enable exact decidable arithmetic, bypassing the need for floating-point
@@ -439,10 +441,28 @@ Serre relation for $A_{ij} = -1$, and commutativity for $A_{ij} = 0$.
 Ten generic relation theorems are proved for all Cartan matrices simultaneously:
 $K$-invertibility, torus commutativity, $K$-$E$/$F$ conjugation,
 $E$-$F$ commutation (diagonal and off-diagonal), and the quantum Serre
-relations. The Cartan matrices $A_1$, $A_2$, $A_3$, $D_4$ are defined
-with verification theorems. This is the \emph{first parameterized quantum
-group definition in any proof assistant}, covering all simply-laced types
-($A_n$, $D_n$, $E_{6,7,8}$) with zero sorry.
+relations.
+
+\textbf{Simply-laced types:} $A_1$, $A_2$, $A_3$, $D_4$ Cartan matrices
+defined with verification.
+
+\textbf{Non-simply-laced types:} $B_2$ (SO(5)), $C_2$ (Sp(4)),
+$G_2$ (exceptional), and $B_3$ (SO(7)) Cartan matrices defined.
+Key structural properties verified by \nativedecide{}:
+\begin{itemize}
+  \item Asymmetry: $A_{12} \neq A_{21}$ for $B_2$ and $G_2$ (PROVED)
+  \item Transpose: $C_2 = B_2^T$ (PROVED, all 4 entries)
+  \item Determinants: $\det(A_2) = 3$, $\det(B_2) = \det(C_2) = 2$,
+    $\det(G_2) = 1$ (PROVED) --- the determinant equals the index
+    of the root lattice in the weight lattice
+  \item Symmetrizability: $DA$ is symmetric for $D = \mathrm{diag}(2,1)$
+    ($B_2$) and $D = \mathrm{diag}(3,1)$ ($G_2$) (PROVED)
+\end{itemize}
+
+This is the \emph{first parameterized quantum group definition in any
+proof assistant}, now covering all rank-2 types ($A_2$, $B_2$, $C_2$,
+$G_2$) and representative higher-rank types ($A_3$, $B_3$, $D_4$)
+with zero sorry.
 
 \subsection{q-Binomial coefficients}
 The quantum Serre relation uses $q$-binomial coefficients

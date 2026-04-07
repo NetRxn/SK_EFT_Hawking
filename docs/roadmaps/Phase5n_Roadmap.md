@@ -104,4 +104,4 @@ Tracks A and C can proceed in parallel. Track B needs deep research results.
 
 ---
 
-*Phase 5n roadmap. Created 2026-04-07, updated 2026-04-07. Deep research complete. Layer A started: 3450 anomaly cancellation + K-matrix formalism proved. Next: 1+1D TPF construction (Track A W1-W2), bordism-anomaly correspondence (Track B W3-W4).*
+*Phase 5n roadmap. Created 2026-04-07, updated 2026-04-07. Deep research complete. Layer A COMPLETE. **Track B W4 COMPLETE** (SPTStacking.lean: group axioms, anomaly additivity, 16-fold periodicity, SM fermion stacking, 1+1D 3450 connection). Next: Track A W1-W2 (1+1D TPF construction, needs deep research), Track B W3 (bordism-anomaly correspondence).*

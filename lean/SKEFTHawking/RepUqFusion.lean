@@ -141,9 +141,24 @@ The semisimple quotient has dimension Σ (j+1)² = (k+1)(k+2)(2k+3)/6
 in the classical case, but at roots of unity with quantum dimensions,
 it becomes Σ [j+1]_q² = (k+2)/sin²(π/(k+2)).
 -/
+private theorem sum_sq_range (k : ℕ) :
+    6 * (Finset.range (k + 1)).sum (fun j => (j + 1) ^ 2) =
+    (k + 1) * (k + 2) * (2 * k + 3) := by
+  induction k with
+  | zero => simp
+  | succ n ih =>
+    rw [Finset.sum_range_succ, mul_add]
+    nlinarith [sq_nonneg n, sq_nonneg (n + 1)]
+
 theorem peter_weyl_classical (k : ℕ) :
     ∑ j : Fin (k + 1), (j.val + 1) ^ 2 = (k + 1) * (k + 2) * (2 * k + 3) / 6 := by
-  sorry
+  suffices h : 6 * ∑ j : Fin (k + 1), (j.val + 1) ^ 2 =
+      (k + 1) * (k + 2) * (2 * k + 3) by omega
+  have : ∑ j : Fin (k + 1), (j.val + 1) ^ 2 =
+      (Finset.range (k + 1)).sum (fun j => (j + 1) ^ 2) := by
+    simp [Finset.sum_range]
+  rw [this]
+  exact sum_sq_range k
 
 /-! ## 5. Module summary -/
 

@@ -4979,7 +4979,7 @@ def fig_drinfeld_equivalence_structure() -> go.Figure:
         ("(123) class", COLORS["K39"]),
     ]):
         fig.add_trace(go.Bar(
-            x=[None], y=[None],
+            x=[], y=[],
             marker_color=color,
             name=label,
             showlegend=True,

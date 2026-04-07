@@ -133,7 +133,9 @@ This is the same strategy that worked for Uqsl2AffineHopf.lean's counit
 (which Aristotle proved with simp +decide in the previous run).
 If simp+ring doesn't close all cases, try decide or norm_num for the remaining ones. -/
 private theorem counitFreeAlg3_respects_rel :
-    ∀ a b, ChevalleyRelSl3 k a b → counitFreeAlg3 k a = counitFreeAlg3 k b := sorry
+    ∀ a b, ChevalleyRelSl3 k a b → counitFreeAlg3 k a = counitFreeAlg3 k b := by
+  intro a b hab
+  induction hab <;> simp [counitFreeAlg3, FreeAlgebra.lift_ι_apply, counitOnGen3] <;> ring
 
 /-- The counit on U_q(sl₃). -/
 noncomputable def uq3Counit :
