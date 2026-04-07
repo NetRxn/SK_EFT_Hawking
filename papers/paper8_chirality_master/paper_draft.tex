@@ -100,9 +100,13 @@ standard lattice gauging.
 
 This paper presents a comprehensive formal verification of the
 chirality wall in the Lean~4 proof assistant with Mathlib. The
-formalization totals 968~theorems (zero axioms) across 66~Lean modules
-(zero \texttt{sorry} in main modules), of which 273 are proved by the Aristotle
-automated theorem prover~\cite{Aristotle2025}. The work is organized
+formalization totals 2237~theorems (1~axiom: \texttt{gapped\_interface\_axiom})
+across 94~Lean modules, of which 307+ are proved by the Aristotle
+automated theorem prover~\cite{Aristotle2025}. Phase~2 (3+1D extension) adds
+\texttt{GaugingStep.lean} (34~theorems: gauging obstruction, SMG phases,
+not-on-site symmetry formalization) and \texttt{SPTClassification.lean}
+(15~theorems + 1~axiom: SPT phase types, gapped interface conjecture,
+conditional chiral gauge theorem). The work is organized
 around three pillars: the no-go (Sec.~\ref{sec:pillar1}), the positive
 construction (Sec.~\ref{sec:pillar2}), and the algebraic framework
 (Sec.~\ref{sec:pillar3}). Bridge theorems connecting the pillars are

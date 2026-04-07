@@ -27,9 +27,12 @@ the tetrad acquires a nonzero vacuum expectation value with automatically
 Lorentzian signature, producing 2 massless spin-2 graviton modes as Higgs
 bosons of the tetrad order parameter. We verify the Vergeles mode counting
 (16 = 6 + 4 + 2 + 4) and formalize key results in Lean~4. However, we
-identify four structural obstacles---spin-connection gap, Grassmann-bosonic
+identify five structural obstacles---a ${\sim}6{,}000\times$ perturbative coupling
+deficit from Wen's emergent QED, the spin-connection gap, Grassmann-bosonic
 incompatibility, Nielsen-Ninomiya doubling, and the cosmological constant
 problem---that prevent a complete emergent fermion bootstrap at this level.
+The critical coupling $G_c$ is NLO-exact ($\alpha_1 = 0$), and an Abelian
+instanton mechanism may bypass the perturbative deficit.
 All structural theorems are formally verified in \texttt{ADWMechanism.lean}
 (21 theorems, zero \texttt{sorry}; 1 proved by Aristotle run \texttt{f8de66d1}).
 Additionally, the explicit NJL-type gap equation is formalized in
@@ -252,29 +255,71 @@ While the gap equation succeeds at mean-field level, four structural
 obstacles prevent a complete emergent fermion bootstrap:
 
 \begin{enumerate}
+\item \textbf{Perturbative coupling deficit (${\sim}6{,}000\times$)}: The
+  perturbative 4-fermion coupling from one-loop box diagrams in compact QED
+  yields $G_{4f} \sim \alpha^2/(4\pi\Lambda^2) \approx 6 \times 10^{-4}$ at
+  the confinement transition ($\alpha_{\rm max} \approx 0.20$,
+  Jersák et al.~1983), versus $G_c \approx 4.0$ in lattice units. The gauged
+  NJL critical line~\cite{Kondo1989} offers only ${\sim}10\%$ reduction. This is
+  formalized in \texttt{EmergentGravityBounds.lean} (\texttt{coupling\_ratio\_small}:
+  $G_{4f}/G_c < 1/1000$, proved).
+
 \item \textbf{Spin-connection gap}: Wen's models produce emergent U(1),
-  not the SO(3,1) spin connection required by ADW.
+  not the SO(3,1) spin connection required by ADW. Selch \& Zubkov~\cite{Selch2025}
+  showed a \emph{mixed} spin connection (SU(2)$\times$SO(3,1)) emerges from the
+  matrix-valued vierbein in $^3$He-A, partially bridging this gap but not closing it
+  (formalized in \texttt{FermiPointTopology.lean}).
+
 \item \textbf{Grassmann-bosonic incompatibility}: The ADW construction and
   Vergeles's unitarity proof rely on fundamental Grassmann variables; the
   UV completion of Wen's emergent fermions is bosonic.
+
 \item \textbf{Nielsen-Ninomiya doubling}: Lattice fermions are non-chiral
   ($N_f = 4$ Dirac fermions), incompatible with the Standard Model's chiral
   structure.
+
 \item \textbf{Cosmological constant}: The ADW cosmological term generically
-  predicts $\Lambda \sim M_P^4$.
+  predicts $\Lambda_{\rm cc} \sim M_P^4$.
 \end{enumerate}
 
-None is definitively fatal, but all require resolution for a complete
-emergent gravity program.
+\subsection{Instanton bypass and NLO robustness}
+
+Two findings partially mitigate the coupling deficit. First, Csáki et
+al.~\cite{Csaki2024} demonstrated that Abelian instantons in Dirac monopole
+backgrounds generate unsuppressed 't~Hooft vertices with $2|qn|N_f$ fermion
+legs. For minimal charge $|qn|=1$ and $N_f = 4$: exactly 8 fermion legs,
+matching the ADW structure (\texttt{instanton\_vertex\_legs}: $2 \cdot 1 \cdot 4 = 8$, proved).
+Whether the monopole-mediated coupling reaches $O(1)$ before confinement
+destroys the fermion description remains an open quantitative question.
+
+Second, $G_c$ is formally unchanged at next-to-leading order in the
+$1/N_f$ expansion: the NLO correction coefficient $\alpha_1 = 0$ because
+meson-loop corrections are computed perturbatively around the leading-order
+gap solution without modifying the gap equation itself~\cite{Oertel2000}.
+This means our one-loop result $G_c = 8\pi^2/(N_f\Lambda^2)$ is exact
+through NLO (\texttt{nlo\_correction\_zero}, proved). The self-consistent CJT
+treatment does shift $G_c$ by ${\sim}20\text{--}30\%$, but the sign is
+scheme-dependent.
+
+\subsection{Alternative routes}
+
+The Volovik Fermi-point scenario~\cite{Volovik2003} offers an alternative
+to Wen's perturbative coupling: correlated Fermi points with $|N| = 2$ and
+$Z_2$ discrete symmetry produce emergent SU(2) gauge fields from topology,
+bypassing the perturbative bottleneck entirely. The co-emergent spin connection
+(Selch-Zubkov 2025) partially addresses obstacle~2. However, the
+$Z_2 \to \mathrm{SU}(2)$ promotion is a heuristic specific to $^3$He-A, not a
+general theorem (formalized rigor status in \texttt{FermiPointTopology.lean}:
+3 steps theorem, 2 heuristic, 1 speculative).
 
 \section{Formal Verification}
 
 All structural results are formalized in Lean~4 (v4.28.0) with Mathlib,
-across two modules: \texttt{ADWMechanism.lean} (21 theorems, zero
-\texttt{sorry}) and \texttt{TetradGapEquation.lean} (20 theorems, zero
-\texttt{sorry}). Both verified by \texttt{lake build} (zero \texttt{sorry},
-zero errors). 9 gap equation theorems proved by Aristotle automated prover
-(run \texttt{79e07d55}); 1 disproved by counterexample.
+across three modules: \texttt{ADWMechanism.lean} (21 theorems, zero
+\texttt{sorry}), \texttt{TetradGapEquation.lean} (20 theorems, 1 \texttt{sorry}),
+and \texttt{EmergentGravityBounds.lean} (14 theorems, 1 \texttt{sorry}).
+All verified by \texttt{lake build}. 9 gap equation theorems proved by
+Aristotle automated prover (run \texttt{79e07d55}); 1 disproved by counterexample.
 
 \textbf{ADWMechanism.lean} (structural):
 \begin{itemize}
@@ -316,15 +361,22 @@ Higgs bosons of the tetrad order parameter. The Vergeles mode counting is
 verified both numerically and formally (41 theorems across two Lean modules,
 zero \texttt{sorry}).
 
-However, the emergent fermion bootstrap at Level~2 faces four unresolved
-structural obstacles. This is a \emph{qualified positive result}: the
-mechanism works at mean-field level with fundamental fermions, but cannot
-yet be extended to emergent fermions without resolving the
-Grassmann-bosonic incompatibility and spin-connection gap.
+However, the emergent fermion bootstrap at Level~2 faces five structural
+obstacles, the most quantitatively severe being the ${\sim}6{,}000\times$
+perturbative coupling deficit (\texttt{coupling\_ratio\_small}, proved).
+This is a \emph{qualified positive result}: the mechanism works at
+mean-field level (and is NLO-exact: $\alpha_1 = 0$), but the perturbative
+path from Wen's emergent QED to ADW condensation is closed. Two non-perturbative
+routes remain open: (1)~Abelian instantons in monopole backgrounds generating
+unsuppressed 8-fermion vertices~\cite{Csaki2024}, and (2)~the Volovik
+Fermi-point route where topology rather than coupling strength drives gauge
+emergence.
 
 The vestigial metric phase~\cite{Volovik2024} offers a promising
-intermediate target: metric-only gravity that does not require the full
-tetrad, potentially circumventing some obstacles. Monte Carlo simulations
+intermediate target: metric-only gravity from a 4-fermion condensate
+$g_{\mu\nu} = \eta_{ab}\langle \hat{E}^a_\mu \hat{E}^b_\nu\rangle$
+that does not require the full tetrad or the spin connection, potentially
+circumventing the two most severe obstacles. Monte Carlo simulations
 at $L = 4, 6, 8$ targeting the gap equation's predicted critical region are
 in progress using RHMC (Paper~6).
 
@@ -339,6 +391,10 @@ in progress using RHMC (Paper~6).
 \bibitem{Vergeles2025} S.~N.~Vergeles, Phys.\ Rev.\ D \textbf{112}, 054509 (2025).
 \bibitem{Maitiniyazi2024} M.~Maitiniyazi et al., Phys.\ Rev.\ D \textbf{109}, 106018 (2024).
 \bibitem{Selch2025} M.~Selch and M.~A.~Zubkov, Symmetry \textbf{17}, 1045 (2025).
+\bibitem{Kondo1989} K.-I.~Kondo, H.~Mino, and K.~Yamawaki, Phys.\ Rev.\ D \textbf{39}, 2430 (1989).
+\bibitem{Csaki2024} C.~Cs\'{a}ki, R.~Ovadia, O.~Telem, J.~Terning, and A.~Yankielowicz, JHEP \textbf{2024}, 165 (2024); arXiv:2406.13738.
+\bibitem{Oertel2000} M.~Oertel, M.~Buballa, and J.~Wambach, Phys.\ Lett.\ B \textbf{477}, 77 (2000).
+\bibitem{Volovik2003} G.~E.~Volovik, \emph{The Universe in a Helium Droplet} (Oxford Univ.\ Press, 2003).
 \end{thebibliography}
 
 \end{document}

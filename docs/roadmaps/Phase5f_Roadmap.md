@@ -87,7 +87,7 @@ Phase 5e completed the **categorical** story: fusion → braiding → ribbon →
 
 ### Wave 5 — L=8 Data Analysis
 **Prerequisite:** L=8 RHMC completion.
-**Status:** Preliminary analysis complete. Production ongoing (~290/500 traj at low g, 22/500 at high g).
+**Status:** Session 3 production running (April 7, 2026). Previous sessions identified and fixed acceptance issues.
 
 - [x] Preliminary 4-panel diagnostic: `fig_rhmc_l8_preliminary` (acceptance, m², h², |ΔH|)
 - [ ] Full analysis with verified_analysis.py after 500 traj complete
@@ -96,8 +96,13 @@ Phase 5e completed the **categorical** story: fusion → braiding → ribbon →
 - [ ] Phase transition identification (if present)
 - [ ] Comparison to mean-field G_c prediction
 
-**Production issue identified:** n_md_steps=30 gives |ΔH|>1 everywhere → acceptance <40%.
-**Fix:** Next run uses `run_rhmc_epochs.sh` with n_md_steps=60 (default).
+**Production history:**
+- Session 1 (April 5): n_md_steps=30 → |ΔH|>1, acceptance <40%. Data unreliable.
+- Session 2 (April 6): n_md_steps=80, g=0.5-8.0, 4 workers. Acceptance at low g still poor (0-20% for g<2), marginal 30-60% for critical region g=3-5, good 60-100% for g>6. Data: 22-305 traj per coupling. |ΔH| averaging 2-4 at low g.
+- **Session 3 (April 7, running):** n_md_steps=160 (doubled), g-critical-min=2.0, g-critical-max=6.0. This should halve |ΔH| → acceptance >60% across critical region. Resumes from Session 2 checkpoints (no re-thermalization). PID 46164.
+
+**Key finding:** L=8 acceptance requires n_md_steps scaling with coupling — low g has stiffer fermion matrix → needs smaller MD step size. n_md_steps=160 targets >60% acceptance across g=2-6.
+
 See `docs/references/production_rhmc.md` for the complete guide.
 
 ### Wave 6 — L=6 Production + Finite-Size Scaling

@@ -58,11 +58,16 @@ For the unnormalized autocovariance (as defined in VerifiedJackknife),
 the bound uses the fact that partial sums of squares are bounded by full sums.
 
 PROVIDED SOLUTION
-Apply Finset.inner_mul_le_norm_mul_sq (Cauchy-Schwarz) or equivalently
-Finset.sum_mul_sq_le_sq_mul_sq. The vectors are a_i = x_i - x̄ over
-Fin(n-t) and b_i = x_{i+t} - x̄ over the same index set.
-Then (Σ a_i b_i)² ≤ (Σ a_i²)(Σ b_i²) ≤ (Σ_{all i} (x_i-x̄)²)² = C(0)².
-Use Finset.sum_le_sum for the partial → full sum step.
+Goal: C(t)² ≤ C(0)·C(0) = C(0)².
+Step 1: unfold autocovariance. C(t) = (1/n) Σ_{i<n-t} (x_i-x̄)(x_{i+t}-x̄).
+Step 2: Apply Finset.inner_mul_le_norm_mul_sq (discrete Cauchy-Schwarz):
+  (Σ a_i * b_i)² ≤ (Σ a_i²) * (Σ b_i²)
+  where a_i = (x_i - x̄), b_i = (x_{i+t} - x̄).
+Step 3: Both Σ a_i² and Σ b_i² are ≤ Σ_{all i} (x_i - x̄)² = n·C(0)
+  by Finset.sum_le_sum (partial sum ≤ full sum).
+Step 4: Combine and cancel the (1/n)² factors.
+Key Mathlib: Finset.inner_mul_le_norm_mul_sq, Finset.sum_le_sum,
+  sq_nonneg, div_mul_div_comm, mul_self_nonneg
 -/
 theorem autocovariance_bounded (n : ℕ) (x : Fin n → ℝ) (t : ℕ)
     (ht : t < n) (hn : n ≥ 1) :

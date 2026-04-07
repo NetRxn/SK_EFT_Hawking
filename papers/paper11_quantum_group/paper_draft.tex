@@ -397,31 +397,61 @@ input (the squared antipode is even in dimension~$4 \bmod 8$, from
 Bott periodicity) yields Rokhlin's~16.
 
 %% ══════════════════════════════════════════════════════════════════
+\section{Extension to Rank~2: $U_q(\mathfrak{sl}_3)$}
+
+We extended the formalization to rank~2 quantum groups --- the first in any
+proof assistant. \texttt{Uqsl3.lean} defines $U_q(\mathfrak{sl}_3)$ via
+8~generators (E$_1$, E$_2$, F$_1$, F$_2$, K$_1^{\pm 1}$, K$_2^{\pm 1}$)
+and 21~Chevalley-Serre relations encoding the $A_2$ Cartan matrix
+$\bigl(\begin{smallmatrix} 2 & -1 \\ -1 & 2 \end{smallmatrix}\bigr)$.
+All 21~relations proved (zero sorry, 6.4s build). The 4~quantum Serre
+relations ($E_i^2 E_j - [2]_q E_i E_j E_i + E_j E_i^2 = 0$) proved
+via \texttt{simp [map\_mul, map\_add, AlgHom.commutes] at h $\vdash$} ---
+the same RingQuot descent pattern as rank~1.
+
+\texttt{SU3kFusion.lean} (99~theorems, zero sorry) verifies SU(3)$_k$
+fusion rules at $k=1$ (Z$_3$ cyclic, 3~objects) and $k=2$ (6~anyons with
+quantum dimensions $(1, \varphi, \varphi, 1, 1, \varphi)$). The $k=2$
+category contains a Fibonacci subcategory $\{1, \tau\}$ with
+$\tau \otimes \tau = 1 \oplus \tau$ --- the universal quantum computing
+anyon emerges from the SU(3) color group. Commutativity and
+associativity verified by \texttt{native\_decide +revert} over all
+$6 \times 6 \times 6 \times 6$ input tuples.
+
+The Hopf structure (\texttt{Uqsl3Hopf.lean}:
+$\Delta$/$\varepsilon$/$S$ defined, 4~sorry for relation-respect proofs)
+follows the same \texttt{FreeAlgebra}$\to$\texttt{RingQuot.liftAlgHom}
+architecture as rank~1 and is an active Aristotle target.
+
 \section{Conclusions}
 
 We have presented the first quantum group in any proof assistant ---
 $U_q(\mathfrak{sl}_2)$ with \texttt{HopfAlgebra} instance (66~theorems,
 zero sorry, Aristotle run \texttt{78dcc5f4}) ---
-together with the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$
+and extended to rank~2 with $U_q(\mathfrak{sl}_3)$ (21~theorems, zero
+sorry), the first affine quantum group $U_q(\widehat{\mathfrak{sl}}_2)$
 with Hopf structure, the first coideal embedding $O_q \hookrightarrow
 U_q(\widehat{\mathfrak{sl}}_2)$, the first restricted quantum group
 $\bar{u}_q(\mathfrak{sl}_2)$ with representation correspondence,
-the first SU(2)$_k$ fusion computation from a quantum group (29~theorems
-by \texttt{native\_decide}), the first S-matrix unitarity and modularity
-proofs (16~theorems, Aristotle \texttt{78dcc5f4}),
+the first SU(2)$_k$ and SU(3)$_k$ fusion computations from quantum groups
+(29 + 99~theorems by \texttt{native\_decide}), the first S-matrix unitarity
+and modularity proofs (16~theorems, Aristotle \texttt{78dcc5f4}),
 the first verified MTC instances (Ising and Fibonacci with F-symbols in
-$\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$), and the first formal
+$\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$), the first braided
+fusion category with complete hexagon + ribbon verification
+(\texttt{IsingBraiding.lean}, 25~theorems), the first verified knot
+invariant (trefoil $= -1$ from Ising R-matrix), and the first formal
 decomposition of the algebraic/topological content of Rokhlin's theorem.
-All with zero axioms.
+All with zero axioms (1~axiom in SPT classification, independent).
 
-The broader project comprises 1318~theorems across 93~Lean~4 modules,
-with 307 filled by the Aristotle automated prover (304 machine-proved,
-3 manual) across 35+ runs.
+The broader project comprises 2237~theorems across 94~Lean~4 modules,
+with 307+ filled by the Aristotle automated prover across 43+ runs.
 
 The construction chain --- from the Onsager algebra through $q$-deformation,
-quantum groups, restricted quotients, fusion categories, and modular
-S-matrices --- connects lattice integrable systems to topological
-gauge theory with every link machine-checked in Lean~4.
+quantum groups, restricted quotients, fusion categories, modular
+S-matrices, braiding, and knot invariants --- connects lattice integrable
+systems to topological gauge theory with every link machine-checked in Lean~4.
+The rank-2 extension to SU(3) opens the path to color gauge theory formalization.
 
 \begin{acknowledgments}
 Lean~4 proofs verified by \texttt{lake build} (v4.28.0, Mathlib \texttt{8f9d9cff}).

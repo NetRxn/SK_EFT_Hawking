@@ -100,7 +100,11 @@ theorem fusion_matches_k2 (i j m : Fin 3) :
 /-- The key structural fact: fusion is commutative (rep theory: V_i⊗V_j ≅ V_j⊗V_i). -/
 theorem rep_fusion_comm (k : ℕ) (i j m : Fin (k + 1)) :
     su2kFusion k i j m = su2kFusion k j i m := by
-  sorry
+  unfold su2kFusion
+  have hab : (↑↑i.val - ↑↑j.val : ℤ).natAbs = (↑↑j.val - ↑↑i.val : ℤ).natAbs := by
+    rw [← Int.natAbs_neg, neg_sub]
+  have hsub : 2 * k - i.val - j.val = 2 * k - j.val - i.val := Nat.sub_right_comm ..
+  simp only [show i.val + j.val = j.val + i.val from Nat.add_comm _ _, hab, hsub]
 
 /-- Dimension formula: dim V_j = j+1 > 0 for all j. -/
 theorem classical_dim_pos (j : ℕ) :

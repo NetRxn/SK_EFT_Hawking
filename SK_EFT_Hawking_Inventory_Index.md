@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 6, 2026 (Phase 5h-5j: **2232 thm** (2150 substantive + 82 placeholder), 1 ax, 94 modules, **33 sorry** — SU3kFusion (99 thms, 0 sorry), GaugingStep (34 thms, 0 sorry), FermiPointTopology (28 thms, 0 sorry), PolyQuotQ (15 thms, 0 sorry) all complete)
+**Last synced:** April 7, 2026 (Phase 5j W2-3: **2237 thm** (2153 substantive + 84 placeholder), 1 ax, 94 modules, **33 sorry** — FermiPointTopology extended to 33 thms (W2-3: emergence chain, multi-Weyl, rigor tracking). Paper 14 re-reviewed (2 FAIL fixed). 6 new notebooks (5h/5i/5j). 4 new figures (93 total). Phase 5h COMPLETE.)
 
 ---
 
@@ -10,18 +10,18 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **2232** (2150 substantive + 82 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
-| Placeholders (True := trivial) | **82** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
+| Lean theorems | **2237** (2153 substantive + 84 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
+| Placeholders (True := trivial) | **84** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **307** (304 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
 | **Sorry gaps** | **33** | 7 StimulatedHawking + 5 CenterFunctor + 4 CoidealEmbedding + 4 VerifiedStatistics + 4 Uqsl3Hopf + 3 Uqsl2AffineHopf + 2 RepUqFusion + 2 EmergentGravityBounds + 1 KerrSchild + 1 TetradGapEquation. New modules (SU3kFusion, GaugingStep, FermiPointTopology, PolyQuotQ) all zero sorry. |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
 | Lean modules | **94** | Including SU3kFusion, GaugingStep, FermiPointTopology, PolyQuotQ (new this session) |
-| Proved (substantive, zero sorry) | **2124** | 2150 - 26 (26 sorry theorems + 7 sorry defs) |
+| Proved (substantive, zero sorry) | **2127** | 2153 - 26 (26 sorry theorems + 7 sorry defs) |
 | Python source modules | **53** | Including stencil_dirac.py (new) |
 | Test files | **43** | Including test_stencil_dirac.py (new) |
 | Test count | 1635+ | `pytest tests/ -q` |
-| Figures | **89** | `grep -c "^def fig_" src/core/visualizations.py` |
-| Notebooks | **42** | `ls notebooks/*.ipynb` |
+| Figures | **93** | `grep -c "^def fig_" src/core/visualizations.py` |
+| Notebooks | **48** | `ls notebooks/*.ipynb` |
 | Papers | **14** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
@@ -211,7 +211,7 @@
 | QLevel3 | 19 | **Phase 5e**: Q[x]/(20x⁴-10x²+1) for SU(2)₃ S-matrix: ALL 10 unitarity entries, quantum dim golden ratio (**ALL PROVED by native_decide, zero sorry**) |
 | SU3kFusion | 99 | **Phase 5i**: **FIRST SU(3)_k fusion in any proof assistant**: SU(3)₁ Z₃ fusion (3 objects) + SU(3)₂ (6 anyons, Fibonacci subcategory τ⊗τ=1+τ), charge conjugation, associativity+commutativity (**ALL PROVED by native_decide, zero sorry**) |
 | GaugingStep | 34 | **Phase 5h**: Gauging obstruction: NotOnSiteSymmetry, SymmetryDisentangler, GT Models 1+2, SM anomaly 16≡0 mod 16, SMGPhaseData (BCH+HW), Golterman-Shamir propagator-zero, ChiralityWall3DStatus (**ALL PROVED, zero sorry**) |
-| FermiPointTopology | 28 | **Phase 5j**: Fermi-point topological charge: winding number N, |N|=1 → U(1) gauge + Weyl fermions, |N|=2 → SU(2) gauge emergence, spin-connection co-emergence (**ALL PROVED, zero sorry**) |
+| FermiPointTopology | 33 | **Phase 5j W1-3**: Fermi-point gauge emergence: VZ Theorem 2.1 (|N|=1 → U(1)+vierbein), Mechanism A vs B, charge splitting, multi-Weyl classification (|N|≤3), SU(2) emergence chain (3 theorem + 2 heuristic + 1 speculative), SU(3) more speculative than SU(2), full emergence chain status, bridges to EmergentGravityBounds/GaugingStep/SPT (**ALL PROVED, zero sorry**) |
 | PolyQuotQ | 15 | **Phase 5i**: Q(ζ₃) cyclotomic field via polynomial quotient for SU(3)₁ S-matrix verification (**ALL PROVED, zero sorry**) |
 
 ---

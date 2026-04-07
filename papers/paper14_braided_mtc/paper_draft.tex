@@ -139,7 +139,7 @@ The pentagon equation~\eqref{eq:pentagon} is verified by \nativedecide{} over $\
 
 The Fibonacci MTC has two simple objects: the vacuum $\mathbf{1}$ and the non-abelian anyon $\tau$, with the golden-ratio fusion rule $\tau \otimes \tau = \mathbf{1} \oplus \tau$. The quantum dimension is $d_\tau = \varphi = (1+\sqrt{5})/2$. F-symbols live in $\mathbb{Q}(\sqrt{5})$ and the R-matrix in $\mathbb{Q}(\zeta_5)$.
 
-The pentagon equation (32 relevant cases) and $F^2 = I$ identity are verified by \nativedecide{} over $\mathbb{Q}(\sqrt{5})$ in \lean{FibonacciMTC.lean} (13 theorems). The R-matrix ($R_\mathbf{1} = \zeta_5^3$, $R_\tau = -\zeta_5^4$), all three hexagon equations (E1--E3), and twist consistency ($\theta_\tau = \zeta_5^2$) are verified by \nativedecide{} over $\mathbb{Q}(\zeta_5)$ in \lean{QCyc5.lean} (9 theorems). All zero \sorry{}.
+The pentagon equation ($2^9 = 512$ cases, checked exhaustively) and $F^2 = I$ identity are verified by \nativedecide{} over $\mathbb{Q}(\sqrt{5})$ in \lean{FibonacciMTC.lean} (13 theorems). The R-matrix ($R_\mathbf{1} = \zeta_5^3$, $R_\tau = -\zeta_5^4$), all three hexagon equations (E1--E3), and twist consistency ($\theta_\tau = \zeta_5^2$) are verified by \nativedecide{} over $\mathbb{Q}(\zeta_5)$ in \lean{QCyc5.lean} (16 theorems). All zero \sorry{}.
 
 \subsection{SU(2)$_k$ at Higher Levels}
 
@@ -158,7 +158,7 @@ The Reshetikhin--Turaev (RT) construction assigns to each braid $\beta \in B_n$ 
 \label{fig:knots}
 \end{figure}
 
-The trefoil knot, represented as the closure of $\sigma_1^3 \in B_2$, evaluates to $-1$ (normalized RT invariant) in the Ising MTC---the first knot invariant computed from categorical data in any proof assistant (\lean{IsingBraiding.lean}). The figure-eight knot trace is computed in \lean{FigureEightKnot.lean} via a 4-strand braid representation, yielding a specific value in $\mathbb{Q}(\zeta_{16})$.
+The trefoil knot, represented as the closure of $\sigma_1^3 \in B_2$, evaluates to $-1$ (normalized RT invariant) in the Ising MTC---the first knot invariant computed from categorical data in any proof assistant (\lean{IsingBraiding.lean}). The figure-eight knot trace is computed in \lean{FigureEightKnot.lean} via a 3-strand braid representation, yielding a specific value in $\mathbb{Q}(\zeta_{16})$.
 
 % ============================================================
 \section{TQFT Partition Functions}

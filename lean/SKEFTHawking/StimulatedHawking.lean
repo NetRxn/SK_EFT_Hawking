@@ -88,10 +88,14 @@ theorem stimGain_pos (omega kappa greybody : ℝ)
 less gain. This is because exp(x) is strictly increasing.
 
 PROVIDED SOLUTION
-n_BE(x) = 1/(exp(x)-1). Since exp is strictly increasing,
-exp(x)-1 is strictly increasing on (0,∞), so 1/(exp(x)-1) is
-strictly decreasing. Use StrictAnti for the reciprocal of a
-strictly monotone positive function.
+n_BE(x) = 1/(exp(x)-1). Strategy:
+1. intro x y hx hy hxy (StrictAntiOn unfolds to ∀ x y ∈ Ioi 0, x < y → f y < f x)
+2. unfold boseEinstein
+3. apply div_lt_div_of_pos_left one_pos (by positivity) (by positivity)
+   -- reduces to showing exp(x)-1 < exp(y)-1 for x < y
+4. Use sub_lt_sub_right (Real.exp_lt_exp.mpr hxy) 1
+   -- or: linarith [Real.exp_lt_exp.mpr hxy]
+Key Mathlib lemmas: Real.exp_lt_exp, div_lt_div_of_pos_left, Real.exp_pos
 -/
 theorem boseEinstein_strictAnti :
     StrictAntiOn boseEinstein (Set.Ioi 0) := by
@@ -99,6 +103,14 @@ theorem boseEinstein_strictAnti :
 
 /--
 **Stimulated gain is strictly decreasing in ω** for fixed κ > 0, Γ > 0.
+
+PROVIDED SOLUTION
+stimGain ω κ g = g * n_BE(2πω/κ). Since n_BE is StrictAntiOn (Ioi 0) and
+ω ↦ 2πω/κ is strictly increasing for κ>0, the composition is StrictAntiOn.
+Use StrictAntiOn.comp_strictMonoOn with the linear scaling function.
+Key: mul_comm to factor out greybody, then apply boseEinstein_strictAnti composed
+with the linear map. Alternatively: unfold stimGain and use boseEinstein_strictAnti
+directly after showing the argument is strictly increasing.
 -/
 theorem stimGain_anti_omega (kappa greybody : ℝ) (hk : kappa > 0) (hg : greybody > 0) :
     StrictAntiOn (fun omega => stimGain omega kappa greybody) (Set.Ioi 0) := by
@@ -111,8 +123,12 @@ theorem stimGain_anti_omega (kappa greybody : ℝ) (hk : kappa > 0) (hg : greybo
 Exponential decay: n_BE(x) ≤ exp(-x) for x ≥ 1.
 
 PROVIDED SOLUTION
-For x ≥ 1: exp(x) - 1 ≥ exp(x)/2 (since exp(x) ≥ 2).
-So 1/(exp(x)-1) ≤ 2/exp(x) = 2·exp(-x).
+Strategy: squeeze theorem between 0 and 1/exp(x) (which → 0).
+1. For x > 0: 0 < boseEinstein x (already proved as boseEinstein_pos)
+2. boseEinstein x = 1/(exp(x)-1) ≤ 1/(exp(x)/2) = 2*exp(-x) for x ≥ 1
+3. Use Filter.Tendsto.squeeze_zero or Filter.tendsto_atTop_atTop
+Key Mathlib: Real.tendsto_exp_neg_atTop_nhds_zero, Filter.Tendsto.squeeze_zero,
+  Real.exp_ge_one_add_of_nonneg (for exp(x) ≥ 1+x), eventually_atTop
 -/
 theorem boseEinstein_tendsto_zero :
     Filter.Tendsto boseEinstein Filter.atTop (nhds 0) := by
@@ -123,8 +139,18 @@ theorem boseEinstein_tendsto_zero :
 More precisely: n_BE(x) ≥ 1/(2x) for 0 < x ≤ 1.
 
 PROVIDED SOLUTION
-For 0 < x ≤ 1: exp(x) - 1 ≤ 2x (since exp(x) ≤ 1 + 2x for x ≤ 1,
-by Taylor with remainder). So 1/(exp(x)-1) ≥ 1/(2x).
+Goal: 1/(exp(x)-1) ≥ 1/(2x) for 0 < x ≤ 1.
+Equivalent to: 2x ≥ exp(x)-1 (since both denominators are positive).
+Equivalent to: exp(x) ≤ 1 + 2x.
+Proof of exp(x) ≤ 1 + 2x for 0 < x ≤ 1:
+  Use add_one_le_exp (Real.add_one_le_exp x) gives 1+x ≤ exp(x), wrong direction.
+  Instead use the convexity: exp is convex, so exp(x) ≤ exp(0)(1-x) + exp(1)·x
+  = 1-x + e·x = 1 + (e-1)x ≤ 1 + 2x since e-1 < 2.
+  Or: use Real.exp_le_one_add_nhds approach.
+  Simpler: unfold boseEinstein, apply div_le_div, then nlinarith with
+  Real.exp_le_pow_div (exp bound from Mathlib) or just use nlinarith with
+  the Taylor bound exp(x) = 1 + x + x²/2 + ... ≤ 1 + x + x² ≤ 1 + 2x for x ≤ 1.
+Key: nlinarith [Real.add_one_le_exp x, sq_nonneg x]
 -/
 theorem boseEinstein_lower_bound (x : ℝ) (hx : 0 < x) (hx1 : x ≤ 1) :
     boseEinstein x ≥ 1 / (2 * x) := by
@@ -149,7 +175,10 @@ theorem snr_sqrt_scaling (n_probe n_shots : ℝ) (G : ℝ)
     (hn : n_probe > 0) (hs : n_shots > 0) :
     Real.sqrt (n_shots * (4 * n_probe)) * G =
     2 * (Real.sqrt (n_shots * n_probe) * G) := by
-  sorry
+  have h4 : n_shots * (4 * n_probe) = 2 ^ 2 * (n_shots * n_probe) := by ring
+  rw [h4, Real.sqrt_mul (by positivity : (2 : ℝ) ^ 2 ≥ 0),
+      Real.sqrt_sq (by norm_num : (2 : ℝ) ≥ 0)]
+  ring
 
 /-! ## 6. Dispersive correction -/
 
@@ -165,9 +194,14 @@ noncomputable def dispersiveCorrection (c1 D : ℝ) : ℝ := 1 - c1 * D ^ 2
 This means the effective temperature is reduced but remains positive.
 
 PROVIDED SOLUTION
-1 - c₁D² > 0 iff c₁D² < 1 iff D² < 1/c₁. Given hD: D² < 1/c₁,
-multiply by c₁ > 0 to get c₁D² < 1, so 1 - c₁D² > 0.
-Also c₁D² > 0 by mul_pos, so 1 - c₁D² < 1.
+After unfold dispersiveCorrection, goal is: 0 < 1 - c1 * D^2 ∧ 1 - c1 * D^2 < 1.
+constructor:
+Left: sub_pos.mpr. Need c1 * D^2 < 1.
+  From hD: D^2 < 1/c1. Multiply by c1 > 0: c1 * D^2 < c1 * (1/c1) = 1.
+  Use (mul_lt_mul_left hc).mpr hD then simp [mul_div_cancel₀] or nlinarith.
+Right: sub_lt_self. Need c1 * D^2 > 0.
+  Use mul_pos hc (sq_pos_of_ne_zero D hD0) or positivity.
+Alternatively: constructor <;> nlinarith [sq_pos_of_ne_zero D hD0, mul_div_cancel₀ (1:ℝ) (ne_of_gt hc)]
 -/
 theorem dispersiveCorrection_in_unit_interval (c1 D : ℝ)
     (hc : c1 > 0) (hD0 : D ≠ 0) (hD : D ^ 2 < 1 / c1) :
@@ -186,7 +220,17 @@ This is a consequence of SNR = √N_probe · G ≥ 5 (for N_shots = 1).
 theorem detection_threshold (G : ℝ) (hG : G > 0) (n_probe : ℝ)
     (hn : n_probe ≥ 25 / G ^ 2) :
     Real.sqrt n_probe * G ≥ 5 := by
-  sorry
+  have hG2 : G ^ 2 > 0 := pow_pos hG 2
+  have hnp : n_probe ≥ 0 := le_trans (div_nonneg (by norm_num) hG2.le) hn
+  set x := Real.sqrt n_probe * G with hx_def
+  have hx_nn : x ≥ 0 := mul_nonneg (Real.sqrt_nonneg _) hG.le
+  have hx_sq : x ^ 2 = n_probe * G ^ 2 := by
+    rw [hx_def, mul_pow, Real.sq_sqrt hnp]
+  have h25 : x ^ 2 ≥ 25 := by
+    rw [hx_sq]
+    have := div_mul_cancel₀ (25 : ℝ) (ne_of_gt hG2)
+    nlinarith [mul_le_mul_of_nonneg_right hn hG2.le]
+  nlinarith [sq_nonneg (x - 5)]
 
 /-! ## 8. Module summary -/
 

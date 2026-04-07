@@ -20,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-We describe a twelve-stage pipeline for conducting computational physics research with continuous machine verification. The pipeline integrates Python numerics, Lean~4 formal proofs, and the Aristotle automated theorem prover into a unified workflow where every formula has a formal theorem, every computed quantity has verified bounds, and every paper claim traces to computation. Applied to a research program spanning dissipative effective field theory, analog Hawking radiation, emergent gravity, quantum groups, and topological quantum field theory, the pipeline has produced 2232 machine-checked theorems across 94 Lean modules with 33 remaining gaps (1.5\%), while maintaining 16 automated validation checks and full parameter provenance. We present the architecture, its ten invariants, the automated theorem prover integration that routinely compresses months of manual proof work to hours, and a case study where the pipeline caught a real convention bug in pentagon equation verification. The methodology is domain-agnostic and immediately applicable to any research program combining numerical computation with formal verification.
+We describe a twelve-stage pipeline for conducting computational physics research with continuous machine verification. The pipeline integrates Python numerics, Lean~4 formal proofs, and the Aristotle automated theorem prover into a unified workflow where every formula has a formal theorem, every computed quantity has verified bounds, and every paper claim traces to computation. Applied to a research program spanning dissipative effective field theory, analog Hawking radiation, emergent gravity, quantum groups, and topological quantum field theory, the pipeline has produced 2237 machine-checked theorems across 94 Lean modules with 33 remaining gaps (1.5\%), while maintaining 16 automated validation checks and full parameter provenance. We present the architecture, its ten invariants, the automated theorem prover integration that routinely compresses months of manual proof work to hours, and a case study where the pipeline caught a real convention bug in pentagon equation verification. The methodology is domain-agnostic and immediately applicable to any research program combining numerical computation with formal verification.
 \end{abstract}
 
 % ============================================================
@@ -33,7 +33,7 @@ We address this with a twelve-stage pipeline that makes verification \emph{conti
 
 We have applied this pipeline to a research program spanning 14 papers, producing:
 \begin{itemize}
-\item 2232 machine-checked theorems across 94 Lean modules (1.5\% gap rate)
+\item 2237 machine-checked theorems across 94 Lean modules (1.5\% gap rate)
 \item 307 theorems proved by the Aristotle automated prover
 \item 16 automated cross-layer validation checks
 \item Full parameter provenance for every experimental value
@@ -94,7 +94,7 @@ Ten invariants must hold at \emph{all times}, not just at stage completion:
 \item \textbf{No heartbeat overrides.} Expensive typeclass synthesis is resolved via architectural fixes, not workarounds.
 \end{enumerate}
 
-Invariant~9 addresses a subtle inflation problem: 82 of our 2232 theorems are \texttt{True := trivial} placeholders that serve as documentation markers. These are tracked in a registry (\texttt{PLACEHOLDER\_THEOREMS}) and excluded from substantive theorem counts. The automated counting system (\texttt{update\_counts.py}) identifies them via the Lean environment's type metadata.
+Invariant~9 addresses a subtle inflation problem: 84 of our 2237 theorems are \texttt{True := trivial} placeholders that serve as documentation markers. These are tracked in a registry (\texttt{PLACEHOLDER\_THEOREMS}) and excluded from substantive theorem counts. The automated counting system (\texttt{update\_counts.py}) identifies them via the Lean environment's type metadata.
 
 % ============================================================
 \section{Three-Layer Verification}
@@ -184,7 +184,7 @@ A recurring source of inefficiency was manual synchronization of theorem counts 
 \item Papers use \verb|\input{counts.tex}| and macros like \verb|\totaltheorems| for auto-updated counts.
 \end{enumerate}
 
-The system distinguishes substantive theorems from placeholders by checking the Lean type: theorems with type \texttt{True} are classified as placeholders. This eliminated a 5\% count inflation from documentation-marker theorems.
+The system distinguishes substantive theorems from placeholders by checking the Lean type: theorems with type \texttt{True} are classified as placeholders. This eliminated a ${\sim}4\%$ count inflation from documentation-marker theorems.
 
 % ============================================================
 \section{Case Study: The Pentagon Convention Bug}
@@ -204,7 +204,7 @@ The pipeline's most dramatic contribution was catching a convention bug in the I
 \section{Scaling and Applicability}
 \label{sec:scaling}
 
-\textbf{Current scale.} The pipeline manages 2232 theorems, 94 Lean modules, 14 papers, 42 notebooks, 81 figures, and 53 Python modules. Growth rate is approximately 200 theorems per intensive session. The automated counts system and validation infrastructure scale linearly.
+\textbf{Current scale.} The pipeline manages 2237 theorems, 94 Lean modules, 14 papers, 48 notebooks, 93 figures, and 53 Python modules. Growth rate is approximately 200 theorems per intensive session. The automated counts system and validation infrastructure scale linearly.
 
 \textbf{Bottlenecks.} Three factors limit throughput: (1) Aristotle budget constraints for proof search, (2) Lean 4 typeclass synthesis for complex categorical hierarchies (resolved by architectural caching, not heartbeat overrides), and (3) number field consolidation for algebraic verification at higher degree extensions.
 

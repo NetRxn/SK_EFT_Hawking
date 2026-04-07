@@ -38,15 +38,22 @@ The checkpoint system makes this fully restartable:
 
 | Parameter | L=4 | L=8 | L=16 |
 |-----------|-----|-----|------|
-| `--n-md-steps` | 20 | **80** | 100+ |
+| `--n-md-steps` | 20 | **160** | 200+ |
 | `--workers` | 6 | **4** | 2 |
 | `EPOCHS` | 5 | **5** | 10 |
 | `TRAJ_PER_EPOCH` | 100 | **100** | 50 |
 | `COOLDOWN` | 10 | **30** | 60 |
-| Target acceptance | >60% | >40% | >30% |
-| Time/traj (est.) | 1-3s | 15-30s | 200-500s |
+| Target acceptance | >60% | >50% | >30% |
+| Time/traj (est.) | 1-3s | 30-60s | 200-500s |
 
 The production script defaults (`--n-md-steps 60`, `--workers 4`, `--chunk-size 10`) are tuned for L=8.
+
+**Important: n_md_steps scales with coupling stiffness.** At low coupling (g<2), the fermion matrix condition number is large, requiring smaller MD steps. Empirical findings from L=8 production:
+- n_md_steps=30: |ΔH|>1 everywhere, acceptance <40% — **unusable**
+- n_md_steps=80: |ΔH|~2-4 at g<2 (acceptance 0-20%), |ΔH|~1-2 at g>3 (acceptance 30-60%) — **marginal in critical region**
+- n_md_steps=160: expected |ΔH|~1-2 at g<2, |ΔH|<1 at g>3 — **recommended for full coupling range**
+
+Use `--n-md-steps 160` for L=8 production spanning the critical region g=2-6.
 
 ## Why Epochs (Not One Long Run)
 

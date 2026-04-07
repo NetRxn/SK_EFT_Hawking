@@ -77,12 +77,30 @@ private theorem comulFreeAlg3_ι (x : Uqsl3Gen) :
 
 /-- The coproduct respects all 21 Chevalley relations of U_q(sl₃).
 
-PROVIDED SOLUTION: Factor into per-relation cases. K-invertibility is mechanical
-(KK⁻¹ ⊗ KK⁻¹ = 1⊗1 by uq3_K1_mul_K1inv). K-commutativity follows from K₁K₂=K₂K₁
-applied in each tensor factor. K-E/K-F conjugation uses the relation in each factor
-and q-power arithmetic. Serre coproduct is the hardest: expand 3 cubic monomials
-into 3×2³=24 terms, group by bidegree, cancel (3,0) and (0,3) by Serre, cancel
-(2,1) and (1,2) by K-E commutation. See Uqsl2Hopf for the sl₂ pattern. -/
+PROVIDED SOLUTION: Decompose into 21 per-relation lemmas using intro a b hab; cases hab.
+The pattern from Uqsl2Hopf.lean (which Aristotle proved in run 79e07d55) works:
+
+Phase 1 (mechanical): K-invertibility (4 cases), K-commutativity (1 case).
+  Tactic: simp [comulFreeAlg3, comulOnGen3, FreeAlgebra.lift_ι_apply, map_mul,
+          AlgHom.commutes, Algebra.TensorProduct.tmul_mul_tmul] then ring or decide.
+
+Phase 2 (moderate): K-E/K-F conjugation (8 cases).
+  Tactic: same simp set + use uq3_Ki_mul_Ej relations from Uqsl3.lean.
+
+Phase 3 (moderate): E_iF_j - F_jE_i commutation (4 cases).
+  Tactic: expand Δ(E_i)·Δ(F_j) - Δ(F_j)·Δ(E_i), collect terms, use EF relations.
+
+Phase 4 (hardest): q-Serre cubic relations (4 cases, 24 terms each).
+  Strategy: expand E_i²E_j - [2]_q E_iE_jE_i + E_jE_i² under Δ.
+  Each E maps to E⊗K + 1⊗E, so each cubic produces 2³=8 terms in the tensor product.
+  Group 24 terms by bidegree (a,b) where a = #E in left factor, b = #E in right factor.
+  The (3,0) and (0,3) groups vanish by the Serre relation in each factor.
+  The (2,1) and (1,2) groups cancel using K-E commutation.
+  Key: ring_nf after expanding, then use ChevalleyRelSl3 lemmas.
+
+For the counit: all cases are trivial since ε(E_i)=ε(F_i)=0, ε(K_i)=1.
+  Tactic: simp [counitFreeAlg3, counitOnGen3, map_mul, map_add] then ring or decide.
+-/
 private theorem comulFreeAlg3_respects_rel :
     ∀ a b, ChevalleyRelSl3 k a b → comulFreeAlg3 k a = comulFreeAlg3 k b := sorry
 
@@ -107,10 +125,13 @@ private def counitFreeAlg3 :
 
 /-- The counit respects all 21 Chevalley relations.
 
-PROVIDED SOLUTION: All E,F map to 0, all K map to 1. K-invertibility: 1·1=1.
-K-commutativity: 1·1=1·1. KE/KF: 1·0 = q^a · 0 · 1 (both 0). EF commutation:
-(q-q⁻¹)·(0·0-0·0) = 1-1 (both 0). Serre: 0²·0 + 0·0² = [2]_q · 0·0·0 (both 0).
-Every relation is trivially satisfied because ε kills all E,F generators. -/
+PROVIDED SOLUTION: All E,F map to 0, all K map to 1. EVERY relation is trivially satisfied.
+Proof: intro a b hab; cases hab <;> simp [counitFreeAlg3, counitOnGen3,
+  FreeAlgebra.lift_ι_apply, map_mul, map_add, AlgHom.commutes] <;> ring
+The key is that after simp + ring, all 21 cases reduce to 0=0 or 1=1.
+This is the same strategy that worked for Uqsl2AffineHopf.lean's counit
+(which Aristotle proved with simp +decide in the previous run).
+If simp+ring doesn't close all cases, try decide or norm_num for the remaining ones. -/
 private theorem counitFreeAlg3_respects_rel :
     ∀ a b, ChevalleyRelSl3 k a b → counitFreeAlg3 k a = counitFreeAlg3 k b := sorry
 
@@ -145,10 +166,28 @@ private def antipodeFreeAlg3 :
 
 /-- The antipode respects all 21 Chevalley relations (as anti-homomorphism).
 
-PROVIDED SOLUTION: Factor by relation group. K-invertibility: S(KK⁻¹)=S(K⁻¹)S(K)=K·K⁻¹=1.
-K-commutativity: S(K₁K₂)=S(K₂)S(K₁)=K₂⁻¹K₁⁻¹ and S(K₂K₁)=S(K₁)S(K₂)=K₁⁻¹K₂⁻¹ — equal
-by K-commutativity of K⁻¹ (derived from K₁K₂=K₂K₁). Serre: hardest, requires derived
-commutation identities. -/
+PROVIDED SOLUTION: Same decomposition strategy as coproduct — intro a b hab; cases hab.
+The antipode is an ANTI-homomorphism via MulOpposite, so S(xy) = S(y)·S(x).
+The proof works in (Uqsl3 k)^mop where multiplication is reversed.
+
+Phase 1 (mechanical): K-invertibility (4 cases).
+  S(K_i·K_i⁻¹) = S(K_i⁻¹)·S(K_i) = K_i·K_i⁻¹ = 1 = S(1).
+  Tactic: simp [antipodeFreeAlg3, antipodeOnGen3, map_mul, MulOpposite.op_mul]
+  then use uq3_K1_mul_K1inv or uq3_K2_mul_K2inv.
+
+Phase 2 (moderate): K-commutativity (1 case).
+  S(K₁K₂) = K₂⁻¹K₁⁻¹ and S(K₂K₁) = K₁⁻¹K₂⁻¹.
+  These are equal by K-commutativity applied to inverses.
+
+Phase 3 (moderate): KE/KF conjugation (8 cases).
+  S(K_i·E_j) = S(E_j)·S(K_i) = (-E_j·K_j⁻¹)·K_i⁻¹.
+  S(q^a·E_j·K_i) = q^a·S(K_i)·S(E_j) = q^a·K_i⁻¹·(-E_j·K_j⁻¹).
+  Equal by K⁻¹-E commutation (derived from K-E relation).
+
+Phase 4 (hard): Serre EF commutation (4 cases) and q-Serre cubic (4 cases).
+  Similar to coproduct but with reversed order and negative signs from S(E)=-EK⁻¹.
+  Key identity: S reverses the order, so Serre relation S(ab-ba) = S(b)S(a)-S(a)S(b).
+-/
 private theorem antipodeFreeAlg3_respects_rel :
     ∀ a b, ChevalleyRelSl3 k a b → antipodeFreeAlg3 k a = antipodeFreeAlg3 k b := sorry
 

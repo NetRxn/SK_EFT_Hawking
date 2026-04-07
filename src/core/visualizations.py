@@ -58,6 +58,11 @@ COLORS = {
     "Steinhauer": "#2E86AB",
     "Heidelberg": "#A23B72",
     "Trento": "#F18F01",
+    # Semantic color-name aliases (Phase 5h/5j figures)
+    "steel_blue": "#2E86AB",
+    "amber": "#F18F01",
+    "sage": "#5C946E",
+    "carmine": "#E63946",
 }
 
 # Typography matching PRL conventions
@@ -5872,6 +5877,190 @@ def fig_sorry_reduction() -> go.Figure:
     )
     fig.update_yaxes(title_text='Sorry count', secondary_y=False)
     fig.update_yaxes(title_text='Sorry %', secondary_y=True)
+    return fig
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5h: Chirality Wall 3+1D
+# ════════════════════════════════════════════════════════════════════
+
+
+def fig_gauging_obstruction_status() -> go.Figure:
+    """Gauging obstruction analysis: conditions for chiral gauge theory.
+
+    Lean: GaugingStep.lean ��� gauging_conditional, sm_anomaly_cancel_16
+    """
+    steps = [
+        'Not-on-site\nsymmetry', 'Disentangler\nW†QW = on-site',
+        '16 | n\n(anomaly cancel)', 'Chiral gauge\ntheory'
+    ]
+    statuses = ['Identified', 'Required', 'Proved\n(SM: 16≡0)', 'Conditional']
+    colors_list = [COLORS['carmine'], COLORS['amber'], COLORS['sage'], COLORS['steel_blue']]
+
+    fig = go.Figure()
+    for i, (step, status, color) in enumerate(zip(steps, statuses, colors_list)):
+        fig.add_trace(go.Scatter(
+            x=[i], y=[0.5], mode='markers+text',
+            marker=dict(size=50, color=color, line=dict(width=2, color='white')),
+            text=[step], textposition='top center', textfont=dict(size=11),
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=[i], y=[0.3], mode='text',
+            text=[status], textfont=dict(size=9, color='gray'),
+            showlegend=False
+        ))
+        if i < len(steps) - 1:
+            fig.add_annotation(x=i + 0.4, y=0.5, text='→', showarrow=False,
+                               font=dict(size=18))
+
+    fig.update_layout(
+        title=dict(text='Gauging Obstruction: Conditions for Chiral Gauge Theory',
+                   font=dict(size=14)),
+        xaxis=dict(visible=False, range=[-0.5, 3.5]),
+        yaxis=dict(visible=False, range=[0, 0.8]),
+        height=300, width=800
+    )
+    return fig
+
+
+def fig_spt_classification_map() -> go.Figure:
+    """SPT classification: free-fermion vs commuting-projector phases.
+
+    Lean: SPTClassification.lean �� 15 thms + gapped_interface_axiom
+    """
+    categories = ['Free Fermion\nSPT', 'Commuting\nProjector SPT', 'Gapped\nInterface']
+    props = [
+        'Quadratic H\nBand topology\nKitaev periodic table',
+        'Infinite-dim rotors\nOn-site symmetry\nCommuting terms',
+        'Codim-1 junction\nGap > 0\nUnique ground state'
+    ]
+    colors_list = [COLORS['steel_blue'], COLORS['sage'], COLORS['amber']]
+
+    fig = go.Figure()
+    for i, (cat, prop, color) in enumerate(zip(categories, props, colors_list)):
+        fig.add_trace(go.Bar(
+            x=[cat], y=[1], marker_color=color,
+            text=[prop], textposition='inside',
+            textfont=dict(size=10, color='white'),
+            showlegend=False
+        ))
+
+    fig.update_layout(
+        title=dict(text='SPT Phase Classification (SPTClassification.lean)',
+                   font=dict(size=14)),
+        yaxis=dict(visible=False), height=350, width=700
+    )
+    return fig
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5j: Fermi-Point Gauge Emergence
+# ════════════════════════════════════════════════════════════════════
+
+
+def fig_fermi_point_emergence_chain() -> go.Figure:
+    """Emergence chain from Fermi-point to emergent gravity.
+
+    Lean: FermiPointTopology.lean — su2_emergence_chain, emergence_theorem_frontier
+    """
+    steps = [
+        'Multi-fermion\n→ Weyl', '|N|=1 → U(1)\n+ vierbein',
+        '|N| node\nsplits', 'Z₂ → SU(2)\ngauge',
+        'Spin conn.\nco-emerges', 'Yang-Mills\ndynamics'
+    ]
+    rigor = ['THEOREM', 'THEOREM', 'THEOREM', 'HEURISTIC', 'HEURISTIC', 'SPECULATIVE']
+    color_map = {
+        'THEOREM': COLORS['sage'],
+        'HEURISTIC': COLORS['amber'],
+        'SPECULATIVE': COLORS['carmine']
+    }
+    colors_list = [color_map[r] for r in rigor]
+
+    fig = go.Figure()
+    for i, (step, r, color) in enumerate(zip(steps, rigor, colors_list)):
+        fig.add_trace(go.Scatter(
+            x=[i], y=[0.5], mode='markers+text',
+            marker=dict(size=45, color=color, line=dict(width=2, color='white')),
+            text=[step], textposition='top center', textfont=dict(size=10),
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=[i], y=[0.3], mode='text',
+            text=[r], textfont=dict(size=8, color=color),
+            showlegend=False
+        ))
+        if i < len(steps) - 1:
+            fig.add_annotation(x=i + 0.4, y=0.5, text='→', showarrow=False,
+                               font=dict(size=16))
+
+    # Frontier line
+    fig.add_vline(x=2.5, line_dash='dash', line_color='gray', opacity=0.5)
+    fig.add_annotation(x=2.5, y=0.7, text='← Theorem frontier',
+                       showarrow=False, font=dict(size=10, color='gray'))
+
+    fig.update_layout(
+        title=dict(text='Fermi-Point → Emergent Gravity: Rigor Status',
+                   font=dict(size=14)),
+        xaxis=dict(visible=False, range=[-0.5, 5.5]),
+        yaxis=dict(visible=False, range=[0.1, 0.85]),
+        height=350, width=900
+    )
+    return fig
+
+
+def fig_mechanism_a_vs_b() -> go.Figure:
+    """Mechanism A (Hořava) vs Mechanism B (SU(2)) distinction.
+
+    Lean: FermiPointTopology.lean — mechanism_a_no_nonabelian, multi_weyl_is_mechanism_a
+    """
+    fig = make_subplots(rows=1, cols=2,
+                        subplot_titles=['Mechanism A: Single |N|>1',
+                                       'Mechanism B: Correlated |N|=1'])
+
+    # Mechanism A: anisotropic dispersion
+    k = np.linspace(-2, 2, 100)
+    E_linear = np.abs(k)
+    E_quad = k ** 2
+    E_cubic = np.abs(k) ** 3
+
+    fig.add_trace(go.Scatter(
+        x=k, y=E_linear, name='|N|=1: E~|k|',
+        line=dict(color=COLORS['sage'], width=2)
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=k, y=E_quad, name='|N|=2: E~k²',
+        line=dict(color=COLORS['amber'], width=2)
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=k, y=E_cubic, name='|N|=3: E~|k|³',
+        line=dict(color=COLORS['carmine'], width=2)
+    ), row=1, col=1)
+
+    # Mechanism B: correlated nodes
+    k2 = np.linspace(-3, 3, 200)
+    E_node1 = np.sqrt((k2 - 1) ** 2 + 0.01)
+    E_node2 = np.sqrt((k2 + 1) ** 2 + 0.01)
+
+    fig.add_trace(go.Scatter(
+        x=k2, y=E_node1, name='Node 1 (N=+1)',
+        line=dict(color=COLORS['steel_blue'], width=2), showlegend=True
+    ), row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=k2, y=E_node2, name='Node 2 (N=+1)',
+        line=dict(color=COLORS['amber'], width=2, dash='dash'), showlegend=True
+    ), row=1, col=2)
+
+    fig.update_xaxes(title_text='k⊥', row=1, col=1)
+    fig.update_xaxes(title_text='k', row=1, col=2)
+    fig.update_yaxes(title_text='E(k)', row=1, col=1)
+    fig.update_yaxes(title_text='E(k)', row=1, col=2)
+
+    fig.update_layout(
+        title=dict(text='Mechanism A (Anisotropic) vs B (Correlated Nodes)',
+                   font=dict(size=14)),
+        height=400, width=900, legend=dict(x=0.65, y=0.95, font=dict(size=10))
+    )
     return fig
 
 
