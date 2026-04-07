@@ -343,4 +343,4 @@ Six developments, any of which would shift the assessment:
 
 ---
 
-*This review covers ~150 papers across hep-th, gr-qc, cond-mat, quant-ph, hep-lat, and math-ph, produced by multiple independent research agents cross-validated against a parallel team's 29-page gap analysis. The project now comprises 2232 Lean theorems across 94 modules with 15 papers. The project knowledge files contain the detailed evidence base; this document provides the synthesized assessment.*
+*This review covers ~150 papers across hep-th, gr-qc, cond-mat, quant-ph, hep-lat, and math-ph, produced by multiple independent research agents cross-validated against a parallel team's 29-page gap analysis. The project now comprises 2237 Lean theorems (1 axiom) across 94 modules with 15 papers, 42 sorry in-flight with Aristotle. The project knowledge files contain the detailed evidence base; this document provides the synthesized assessment.*

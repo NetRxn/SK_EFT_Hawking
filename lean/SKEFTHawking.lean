@@ -100,6 +100,14 @@ import SKEFTHawking.SPTClassification
 import SKEFTHawking.GaugingStep
 import SKEFTHawking.FermiPointTopology
 import SKEFTHawking.PolyQuotQ
+import SKEFTHawking.QuantumGroupGeneric
+import SKEFTHawking.TemperleyLieb
+import SKEFTHawking.JonesWenzl
+import SKEFTHawking.SurgeryPresentation
+import SKEFTHawking.WRTInvariant
+import SKEFTHawking.QuantumGroupHopf
+import SKEFTHawking.KMatrixAnomaly
+import SKEFTHawking.WRTComputation
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

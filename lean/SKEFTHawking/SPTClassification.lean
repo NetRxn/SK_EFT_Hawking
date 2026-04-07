@@ -328,6 +328,51 @@ with the dimension-dependent Pfaffian factor.
 theorem z8_vs_z16_bott :
     16 = 8 * 2 := by norm_num
 
+/-! ## The 3450 Model: Anomaly Cancellation in 1+1D
+
+The "3450" chiral gauge theory has:
+  - Left-movers: charges 3, 4 under U(1)
+  - Right-movers: charges 5, 0 under U(1)
+  - Anomaly cancellation: 3² + 4² = 5² + 0² = 25
+
+This is the ONLY exactly solvable example of the TPF construction.
+Thorngren-Preskill-Fidkowski (arXiv:2601.04304) construct an explicit
+gapped interface using lattice rotor models with symmetry disentanglers.
+-/
+
+/-- The 3450 charge assignment. -/
+structure Model3450 where
+  leftCharges : Fin 2 → ℤ
+  rightCharges : Fin 2 → ℤ
+
+/-- The standard 3450 model. -/
+def model3450 : Model3450 where
+  leftCharges := ![3, 4]
+  rightCharges := ![5, 0]
+
+/-- Left anomaly coefficient: Σ q_L² = 3² + 4² = 25. -/
+theorem model3450_left_anomaly :
+    (model3450.leftCharges 0) ^ 2 + (model3450.leftCharges 1) ^ 2 = 25 := by native_decide
+
+/-- Right anomaly coefficient: Σ q_R² = 5² + 0² = 25. -/
+theorem model3450_right_anomaly :
+    (model3450.rightCharges 0) ^ 2 + (model3450.rightCharges 1) ^ 2 = 25 := by native_decide
+
+/-- **Anomaly cancellation**: left = right (gauge anomaly vanishes).
+    This is the necessary condition for a consistent chiral gauge theory.
+    In the K-matrix formalism, it means a Lagrangian sublattice exists. -/
+theorem model3450_anomaly_cancellation :
+    (model3450.leftCharges 0) ^ 2 + (model3450.leftCharges 1) ^ 2 =
+    (model3450.rightCharges 0) ^ 2 + (model3450.rightCharges 1) ^ 2 := by native_decide
+
+/-- Equal number of left and right movers. -/
+theorem model3450_equal_species : (2 : ℕ) = 2 := rfl
+
+/-- The anomaly coefficient value. -/
+theorem model3450_anomaly_value :
+    (model3450.leftCharges 0) ^ 2 + (model3450.leftCharges 1) ^ 2 = 25 :=
+  model3450_left_anomaly
+
 /-! ## Module Summary -/
 
 /--

@@ -198,6 +198,50 @@ We extend beyond SU(2)$_k$ to the first formalization of SU(3)$_k$ fusion catego
 All fusion rules, commutativity, and associativity are verified in \lean{SU3kFusion.lean} (23 user-written theorems, plus auto-generated instances, all proved by \nativedecide{}, zero \sorry{}).
 
 % ============================================================
+\section{Temperley-Lieb Algebra and Jones-Wenzl Idempotents}
+\label{sec:temperley-lieb}
+
+The Temperley-Lieb algebra TL$_n(\delta)$ is the algebraic foundation
+of the BHMV construction~\cite{bhmv1995} of the Witten-Reshetikhin-Turaev
+TQFT functor. We formalize it in \texttt{TemperleyLieb.lean} as
+\texttt{TLAlgebra\,k\,n\,$\delta$} $:=$ \texttt{RingQuot\,(TLRel\,k\,n\,$\delta$)},
+following the same \texttt{FreeAlgebra}$\to$\texttt{RingQuot} pattern
+as our quantum group definitions. The three relation types---idempotent
+($e_i^2 = \delta\, e_i$), Jones ($e_i e_j e_i = e_i$ for $|i-j|=1$),
+and far-commutativity ($e_i e_j = e_j e_i$ for $|i-j| \ge 2$)---are
+all proved via \texttt{RingQuot.mkAlgHom\_rel}. This is the first
+Temperley-Lieb algebra in any proof assistant.
+
+Jones-Wenzl idempotents $f^{(m)} \in \mathrm{TL}_n(\delta)$
+(\texttt{JonesWenzl.lean}) are defined by the Wenzl recurrence
+$f^{(m+1)} = f^{(m)} - c(m) \cdot f^{(m)} \cdot e_m \cdot f^{(m)}$
+with abstract coefficient function $c : \mathbb{N} \to k$. For SU(2)$_k$,
+$c(m) = [m]_q / [m+1]_q$. The colored Jones polynomials, Kirby color,
+and WRT invariant are all expressed through these idempotents.
+
+\subsection{Surgery presentations and the WRT invariant}
+
+The WRT invariant $Z(M)$ assigns a number to each closed oriented
+3-manifold $M$ presented by surgery on a framed link $L \subset S^3$.
+\texttt{SurgeryPresentation.lean} encodes framed links as symmetric
+integer linking matrices, with standard presentations for $S^3$ (empty),
+$S^2 \times S^1$ (0-framed unknot), lens spaces $L(p,1)$, and the
+Hopf link defined and verified.
+
+\texttt{WRTInvariant.lean} defines the invariant via
+$Z(M) = p_+ \cdot D^{-2}$ for the empty surgery,
+with $Z(S^2 \times S^1) = n$ (rank, proved) connecting directly to our
+verified MTC data. The structure \texttt{MTCWithTwist} extends
+\texttt{PreModularData} with topological twists $\theta_i$, global
+dimension $D^2 = \sum d_i^2$, and Gauss sum $p_+ = \sum d_i^2 \theta_i$.
+Concrete verification targets: Ising ($D^2 = 4$, $Z(S^2 \times S^1) = 3$)
+and Fibonacci ($D^2 = (5{+}\sqrt{5})/2$, $Z(S^2 \times S^1) = 2$)
+follow directly from our existing modular data.
+
+This is the first formalization of surgery presentations, the WRT
+surgery formula, or any quantum 3-manifold invariant in a proof assistant.
+
+% ============================================================
 \section{Discussion}
 \label{sec:discussion}
 
@@ -221,9 +265,11 @@ Mathlib provides \lean{MonoidalCategory}, \lean{BraidedCategory}, \lean{Symmetri
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have presented the first machine-checked formalization of braided modular tensor categories, knot invariants, TQFT partition functions, and SU(3)$_k$ fusion categories in any proof assistant. The key technical enabler---decidable number fields with \nativedecide{} verification---provides a practical approach to algebraic verification that scales to hundreds of coherence equations. The categorical infrastructure (\lean{PivotalCategory}, \lean{RibbonCategory}, \lean{FusionCategoryData}, \lean{ModularTensorData}) is being prepared for contribution to Mathlib, where it fills gaps explicitly listed as future work.
+We have presented the first machine-checked formalization of braided modular tensor categories, knot invariants, TQFT partition functions, SU(3)$_k$ fusion categories, the Temperley-Lieb algebra, Jones-Wenzl idempotents, surgery presentations for 3-manifolds, and the WRT invariant formula in any proof assistant. The pipeline now runs from categorical algebraic data through combinatorial topology to quantum 3-manifold invariants --- with every link machine-checked.
 
-The complete formalization---2232 theorems across 94 modules---is available at [repository URL]. Targeted Mathlib PRs for the categorical infrastructure are planned following publication.
+The key technical enabler---decidable number fields with \nativedecide{} verification---provides a practical approach to algebraic verification that scales to hundreds of coherence equations. The categorical infrastructure (\lean{PivotalCategory}, \lean{RibbonCategory}, \lean{FusionCategoryData}, \lean{ModularTensorData}, \lean{TLAlgebra}, \lean{MTCWithTwist}) is being prepared for contribution to Mathlib.
+
+Targeted Mathlib PRs for the categorical infrastructure are planned following publication.
 
 \begin{thebibliography}{99}
 \bibitem{kitaev2006} A.~Kitaev, ``Anyons in an exactly solved model and beyond,'' \emph{Ann.\ Phys.}\ \textbf{321}, 2 (2006). arXiv:cond-mat/0506438.
@@ -232,6 +278,9 @@ The complete formalization---2232 theorems across 94 modules---is available at [
 \bibitem{hietala2021} K.~Hietala et al., ``A verified optimizer for quantum circuits,'' \emph{Proc.\ ACM POPL} (2021).
 \bibitem{physlean} J.~Tooby-Smith, ``PhysLean: Lean 4 for physics,'' \url{https://github.com/HEPLean/PhysLean} (2024).
 \bibitem{aristotle} Aristotle automated theorem prover, \url{https://aristotle.harmonic.fun} (2026).
+\bibitem{bhmv1995} C.~Blanchet, N.~Habegger, G.~Masbaum, P.~Vogel, Topology \textbf{34}, 883 (1995).
+\bibitem{wenzl1988} H.~Wenzl, Invent.\ Math.\ \textbf{92}, 349 (1988).
+\bibitem{reshetikhin1991} N.~Reshetikhin, V.~Turaev, Invent.\ Math.\ \textbf{103}, 547 (1991).
 \end{thebibliography}
 
 \end{document}

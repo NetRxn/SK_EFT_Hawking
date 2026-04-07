@@ -171,15 +171,125 @@ theorem qFactorial_zero : qFactorial k 0 = 1 := by
 theorem qFactorial_one : qFactorial k 1 = 1 := by
   simp [qFactorial, qInt_one]
 
-/-! ## 6. Module summary -/
+/-! ## 7. q-Binomial Coefficients (Laurent form)
+
+The Laurent q-binomial [n choose j]_q satisfies the Pascal recurrence:
+  [n+1 choose j+1]_q = q^{j+1} · [n choose j+1]_q + q^{j−n} · [n choose j]_q
+
+This produces Laurent polynomials without division. The coefficients appear
+in the quantum Serre relations of quantum groups U_q(𝔤):
+  Σ_{s=0}^{m} (−1)^s [m choose s]_q · X^s Y X^{m−s} = 0.
+-/
 
 /--
-QNumber module: q-integers as Laurent polynomials.
+The Laurent q-binomial coefficient [n choose j]_q.
+At q = 1, recovers the ordinary binomial coefficient C(n, j).
+
+Recurrence: [n+1 choose j+1]_q = q^{j+1}·[n choose j+1]_q + q^{j−n}·[n choose j]_q
+-/
+def qBinom : ℕ → ℕ → LaurentPolynomial k
+  | _, 0 => 1
+  | 0, _ + 1 => 0
+  | n + 1, j + 1 => T ((j : ℤ) + 1) * qBinom n (j + 1) + T ((j : ℤ) - (n : ℤ)) * qBinom n j
+
+/-- [n choose 0]_q = 1 for all n. -/
+@[simp] theorem qBinom_any_zero (n : ℕ) : qBinom k n 0 = 1 := by cases n <;> rfl
+
+/-- [0 choose j+1]_q = 0. -/
+@[simp] theorem qBinom_zero_succ (j : ℕ) : qBinom k 0 (j + 1) = 0 := rfl
+
+/-- Pascal recurrence for q-binomials. -/
+theorem qBinom_succ_succ (n j : ℕ) :
+    qBinom k (n + 1) (j + 1) =
+      T ((j : ℤ) + 1) * qBinom k n (j + 1) + T ((j : ℤ) - (n : ℤ)) * qBinom k n j := rfl
+
+/-- [n choose j]_q = 0 when j > n. -/
+theorem qBinom_eq_zero_of_lt : ∀ {n j : ℕ}, n < j → qBinom k n j = 0 := by
+  intro n
+  induction n with
+  | zero => intro j hj; cases j with | zero => omega | succ j => rfl
+  | succ n ih =>
+    intro j hj
+    cases j with
+    | zero => omega
+    | succ j =>
+      simp only [qBinom_succ_succ]
+      rw [ih (show n < j + 1 by omega), ih (show n < j by omega)]
+      simp [mul_zero]
+
+/-- [n choose n]_q = 1. -/
+theorem qBinom_self : ∀ n : ℕ, qBinom k n n = 1 := by
+  intro n
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [qBinom_succ_succ]
+    have hlt : qBinom k n (n + 1) = 0 := qBinom_eq_zero_of_lt k (by omega)
+    rw [hlt, mul_zero, zero_add]
+    rw [show (n : ℤ) - (n : ℤ) = 0 from Int.sub_self _, T_zero, one_mul, ih]
+
+/-! ### Concrete values -/
+
+/-- [2 choose 1]_q = q + q⁻¹. The simply-laced quantum Serre coefficient. -/
+theorem qBinom_two_one : qBinom k 2 1 = T 1 + T (-1) := by
+  -- qBinom (1+1) (0+1) = T 1 * qBinom 1 1 + T(-1) * qBinom 1 0
+  show T 1 * qBinom k 1 1 + T (-1) * qBinom k 1 0 = T 1 + T (-1)
+  rw [qBinom_self, qBinom_any_zero, mul_one, mul_one]
+
+/-- [2 choose 1]_q = [2]_q. -/
+theorem qBinom_two_one_eq_qInt : qBinom k 2 1 = qInt k 2 := by
+  rw [qBinom_two_one, qInt_two]
+
+/-- [3 choose 1]_q = q² + 1 + q⁻². Coefficient for cubic Serre relations (B₂/C₂). -/
+theorem qBinom_three_one : qBinom k 3 1 = T 2 + 1 + T (-2) := by
+  -- qBinom (2+1) (0+1) = T 1 * qBinom 2 1 + T(-2) * qBinom 2 0
+  show T 1 * qBinom k 2 1 + T (-2) * qBinom k 2 0 = T 2 + 1 + T (-2)
+  rw [qBinom_two_one, qBinom_any_zero, mul_one, mul_add, ← T_add, ← T_add]
+  norm_num [T_zero]
+
+/-- [3 choose 1]_q = [3]_q. -/
+theorem qBinom_three_one_eq_qInt : qBinom k 3 1 = qInt k 3 := by
+  rw [qBinom_three_one, qInt_three]
+
+/-- [3 choose 2]_q = q² + 1 + q⁻². Symmetry: [3 choose 2] = [3 choose 1]. -/
+theorem qBinom_three_two : qBinom k 3 2 = T 2 + 1 + T (-2) := by
+  -- qBinom (2+1) (1+1) = T 2 * qBinom 2 2 + T(-1) * qBinom 2 1
+  show T 2 * qBinom k 2 2 + T (-1) * qBinom k 2 1 = T 2 + 1 + T (-2)
+  rw [qBinom_self, qBinom_two_one, mul_one, mul_add, ← T_add, ← T_add]
+  norm_num [T_zero]; ring
+
+/-! ### Classical limit for q-binomials -/
+
+/-- At q = 1, [n choose j]_q reduces to the ordinary binomial coefficient C(n,j). -/
+theorem qBinom_classical_limit : ∀ (n j : ℕ),
+    evalAtOne k (qBinom k n j) = (Nat.choose n j : k) := by
+  intro n
+  induction n with
+  | zero =>
+    intro j; cases j with
+    | zero => simp [qBinom_any_zero, map_one]
+    | succ j => simp [qBinom_zero_succ, map_zero, Nat.choose_zero_succ]
+  | succ n ih =>
+    intro j; cases j with
+    | zero => simp [qBinom_any_zero, map_one]
+    | succ j =>
+      simp only [qBinom_succ_succ, map_add, map_mul, evalAtOne_T, one_mul]
+      rw [ih (j + 1), ih j, ← Nat.cast_add]
+      congr 1
+      linarith [Nat.choose_succ_succ n j]
+
+/-! ## 8. Module summary -/
+
+/--
+QNumber module: q-integers and q-binomials as Laurent polynomials.
   - qInt n: [n]_q = Σ T^{n-1-2i}, a Laurent polynomial (no division)
   - Explicit: [0]=0, [1]=1, [2]=T+T⁻¹, [3]=T²+1+T⁻²
   - Classical limit: [n]_1 = n (via evalAtOne)
   - DG connection: [2]_1⁴ = 16 = DG_COEFF
-  - q-factorial defined for future use
+  - q-factorial [n]_q! = [1]_q · ... · [n]_q
+  - q-binomial [n choose j]_q via Pascal recurrence (no division)
+  - Classical limit: [n choose j]_1 = C(n,j)
+  - Key: [2 choose 1]_q = [2]_q (simply-laced Serre), [3 choose 1]_q = [3]_q
 -/
 theorem qnumber_summary : True := trivial
 
