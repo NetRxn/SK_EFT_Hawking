@@ -1,10 +1,10 @@
 {
-  "generated": "2026-04-06T21:14:22.003620",
+  "generated": "2026-04-06T22:19:23.592188",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 4409,
-    "theorems_total": 2232,
-    "theorems_substantive": 2150,
+    "total_declarations": 4418,
+    "theorems_total": 2241,
+    "theorems_substantive": 2159,
     "theorems_placeholder": 82,
     "axioms": 1,
     "axiom_names": [
@@ -118,8 +118,8 @@
     "python_modules": 53,
     "test_files": 43,
     "notebooks": 42,
-    "papers": 12,
-    "figures": 81
+    "papers": 14,
+    "figures": 89
   },
   "aristotle": {
     "aristotle_proved": 307,

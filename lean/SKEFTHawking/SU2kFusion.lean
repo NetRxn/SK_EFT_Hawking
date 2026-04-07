@@ -193,10 +193,63 @@ theorem su2k3_fibonacci_closed :
 
 end Level3
 
-/-! ## 5. Module summary -/
+/-! ## 5. SU(2)_4: 5 simple objects -/
+
+section Level4
+
+/-- k=4 has exactly 5 simple objects. -/
+theorem su2k4_object_count : Fintype.card (Fin 5) = 5 := by decide
+
+/-- V_0 is the unit: V_0 ⊗ V_j = V_j. -/
+theorem su2k4_unit_fusion (j m : Fin 5) :
+    su2kFusion 4 0 j m = if j = m then 1 else 0 := by
+  native_decide +revert
+
+/-- V_1 ⊗ V_1 = V_0 + V_2 (standard CG). -/
+theorem su2k4_v1_squared :
+    su2kFusion 4 1 1 0 = 1 ∧ su2kFusion 4 1 1 2 = 1 ∧
+    su2kFusion 4 1 1 1 = 0 ∧ su2kFusion 4 1 1 3 = 0 ∧
+    su2kFusion 4 1 1 4 = 0 := by native_decide
+
+/-- V_2 ⊗ V_2 = V_0 + V_2 + V_4 (truncated at k=4). -/
+theorem su2k4_v2_squared :
+    su2kFusion 4 2 2 0 = 1 ∧ su2kFusion 4 2 2 2 = 1 ∧
+    su2kFusion 4 2 2 4 = 1 ∧ su2kFusion 4 2 2 1 = 0 ∧
+    su2kFusion 4 2 2 3 = 0 := by native_decide
+
+/-- V_4 is the charge conjugation object: V_4 ⊗ V_j = V_{4-j}. -/
+theorem su2k4_charge_conjugation :
+    su2kFusion 4 4 0 4 = 1 ∧ su2kFusion 4 4 1 3 = 1 ∧
+    su2kFusion 4 4 2 2 = 1 ∧ su2kFusion 4 4 3 1 = 1 ∧
+    su2kFusion 4 4 4 0 = 1 := by native_decide
+
+/-- V_4 ⊗ V_4 = V_0 (self-inverse). -/
+theorem su2k4_v4_squared :
+    su2kFusion 4 4 4 0 = 1 := by native_decide
+
+/-- Level 4 fusion is commutative. -/
+theorem su2k4_fusion_comm (i j m : Fin 5) :
+    su2kFusion 4 i j m = su2kFusion 4 j i m := by
+  native_decide +revert
+
+/-- Level 4 fusion is associative. -/
+theorem su2k4_fusion_assoc (i j k n : Fin 5) :
+    ∑ m : Fin 5, su2kFusion 4 i j m * su2kFusion 4 m k n =
+    ∑ m : Fin 5, su2kFusion 4 j k m * su2kFusion 4 i m n := by
+  native_decide +revert
+
+/-- Quantum dimensions: d_j = sin(π(j+1)/(k+2)) / sin(π/(k+2)).
+    For k=4: d_0=1, d_1=√3, d_2=2, d_3=√3, d_4=1.
+    Global dimension: D² = 1+3+4+3+1 = 12. -/
+theorem su2k4_total_channels :
+    ∑ m : Fin 5, su2kFusion 4 2 2 m = 3 := by native_decide
+
+end Level4
+
+/-! ## 6. Module summary -/
 
 /--
-SU2kFusion module: SU(2)_k fusion rules at levels k=1,2,3.
+SU2kFusion module: SU(2)_k fusion rules at levels k=1,2,3,4.
   - Universal fusion rule su2kFusion as a computable Nat function
   - k=1: Z/2 fusion (semion), commutativity, associativity
   - k=2: Ising fusion (sigma^2 = 1 + psi), all verified by native_decide

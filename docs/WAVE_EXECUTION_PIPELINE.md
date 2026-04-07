@@ -228,7 +228,7 @@ uv run python -m pytest tests/ -v
 uv run python scripts/validate.py
 ```
 
-**Checks (14 total):**
+**Checks (16 total):**
 1. `formulas` — Python formulas reference valid Lean theorems
 2. `numerical` — Experimental parameters match reference values
 3. `identities` — Mathematical identities and boundary conditions
@@ -474,7 +474,7 @@ When incorporating results from deep research (LLM-generated analysis in `Lit-Se
 ```bash
 # Full validation (run from SK_EFT_Hawking/ root)
 uv run python -m pytest tests/ -v                    # All tests
-uv run python scripts/validate.py                    # All 15 checks
+uv run python scripts/validate.py                    # All 16 checks
 uv run python scripts/review_figures.py              # Generate figures + structural checks
 cd lean && lake build                                 # Lean build
 

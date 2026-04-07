@@ -20,9 +20,9 @@
 | Python source modules | **53** | Including stencil_dirac.py (new) |
 | Test files | **43** | Including test_stencil_dirac.py (new) |
 | Test count | 1635+ | `pytest tests/ -q` |
-| Figures | **81** | `grep -c "^def fig_" src/core/visualizations.py` |
+| Figures | **89** | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | **42** | `ls notebooks/*.ipynb` |
-| Papers | **12** | `ls papers/paper*/paper_draft.tex` |
+| Papers | **14** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 43+ | See Aristotle run table in full inventory |
@@ -37,9 +37,9 @@
 | 1. Python Source | All `src/` modules with purpose + line counts | New module added or module purpose changes |
 | 2. Lean Verification | 94-module table: lines, theorem count, key results | Theorem added/removed, module added |
 | 3. Aristotle | Run table with dates + theorem counts | New Aristotle submission |
-| 4. Notebooks | 40-notebook table: phase, topic | Notebook added or topic changes |
-| 5. Papers | 12-paper table: format, lines, topic, key claims | Paper content changes |
-| 6. Tests | 41-file table: test counts, coverage | Test file added or count changes |
+| 4. Notebooks | 42-notebook table: phase, topic | Notebook added or topic changes |
+| 5. Papers | 14-paper table: format, lines, topic, key claims | Paper content changes |
+| 6. Tests | 43-file table: test counts, coverage | Test file added or count changes |
 | 7. Scripts | 14-script table | Script added or purpose changes |
 | 8. Configuration | Dependency table | Dependency added |
 | 9. Documentation | Reference, roadmap, stakeholder, analysis tables | Doc added/moved/content changes |
