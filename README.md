@@ -416,7 +416,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
 | Browse the dashboard | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
 | Read non-technical summaries | `docs/stakeholder/` — implications and strategic positioning per phase |
-| See what's next | [`docs/roadmaps/Phase5j_Roadmap.md`](docs/roadmaps/Phase5j_Roadmap.md), [`Phase5i_Roadmap.md`](docs/roadmaps/Phase5i_Roadmap.md), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
+| See what's next | [`docs/roadmaps/Phase5q_Roadmap.md`](docs/roadmaps/Phase5q_Roadmap.md) (Ext computation), [`Phase5r_Roadmap.md`](docs/roadmaps/Phase5r_Roadmap.md) (bordism chain), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
 | Understand the broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
 | Read the critical review | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
 | See the deep research corpus | `Lit-Search/` — 40+ research files across Phases 3-5j |

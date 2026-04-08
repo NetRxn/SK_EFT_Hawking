@@ -4,7 +4,7 @@
 
 *Prepared 2026-04-08 | Updated 2026-04-08 | Follows Phase 5o (community value) and 5m (generic quantum groups)*
 
-**Current state:** 8150 build jobs, 100 modules, 21 sorry, 80 placeholders. Build clean.
+**Current state:** 8150 build jobs, 100 modules, 17 sorry (was 21; 4 KE/KF antipode cases proved manually), 80 placeholders. Build clean. Aristotle 6dbc9447 submitted with all 17 sorry.
 
 **Entry state:** Complete verified MTC pipeline: fusion categories → braiding → modularity (det S ≠ 0) → WRT invariants → experimental predictions. Modularity verified computationally for each specific MTC. Missing: the STRUCTURAL guarantee (Muger's theorem) that Z(C) is always modular, and the derivation of quantum dimensions from first principles (FP eigenvalue theory).
 
@@ -153,4 +153,4 @@ Phase 5p directly enables eliminating these remaining `True := trivial` placehol
 
 ---
 
-*Phase 5p roadmap. Created 2026-04-08, updated 2026-04-08. All 4 deep research tasks COMPLETE. Track B partially complete: MugerCenter.lean has dual_isTransparent PROVED (first ever), plus double_braiding_unit, double_braiding_naturality, iso_isTransparent, selfDual_isTransparent. 7 placeholders eliminated (87→80) in DrinfeldCenterBridge, DrinfeldEquivalence, GaugeEmergence. Tracks A (FPdim) and B (Muger center) are the entry points. Track C (bridge theorem) is the high-value target. Track D (D² formula) completes the structural picture. 21 sorry project-wide; RingQuot typeclass divergence blocks 19 of 21 (deep research #3 submitted). No existing theorems depend on any placeholder (pipeline invariant 9 verified via collectAxioms).*
+*Phase 5p roadmap. Created 2026-04-08, updated 2026-04-08. All 4 deep research tasks COMPLETE. Track B partially complete: MugerCenter.lean has dual_isTransparent PROVED (first ever), plus double_braiding_unit, double_braiding_naturality, iso_isTransparent, selfDual_isTransparent. 7 placeholders eliminated (87→80) in DrinfeldCenterBridge, DrinfeldEquivalence, GaugeEmergence. Tracks A (FPdim) and B (Muger center) are the entry points. Track C (bridge theorem) is the high-value target. Track D (D² formula) completes the structural picture. 17 sorry project-wide (was 21; 4 KE/KF antipode cases proved manually: K₁E₀, K₀F₀, K₁F₁, K₁F₀). Aristotle 6dbc9447 submitted with all 17 sorry + RingQuot workaround hints. Remaining: 12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor. No existing theorems depend on any placeholder (pipeline invariant 9 verified via collectAxioms).*

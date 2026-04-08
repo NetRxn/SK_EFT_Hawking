@@ -332,7 +332,7 @@ def check_paper_table_consistency() -> CheckResult:
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
-@register_check("theorems", "Theorem registry has 307 entries and is self-consistent")
+@register_check("theorems", "Theorem registry has 322 entries and is self-consistent")
 def check_theorem_count() -> CheckResult:
     from src.core.constants import ARISTOTLE_THEOREMS, TOTAL_THEOREMS
 
@@ -340,8 +340,8 @@ def check_theorem_count() -> CheckResult:
     all_pass = True
 
     for name, (actual, expected) in {
-        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 307),
-        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 307),
+        "TOTAL_THEOREMS": (TOTAL_THEOREMS, 322),
+        "len(ARISTOTLE_THEOREMS)": (len(ARISTOTLE_THEOREMS), 322),
     }.items():
         ok = actual == expected
         details.append(Detail(name, ok, f"actual={actual}, expected={expected}"))

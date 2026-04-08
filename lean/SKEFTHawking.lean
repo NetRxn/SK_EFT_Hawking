@@ -121,6 +121,10 @@ import SKEFTHawking.VillainHamiltonian
 import SKEFTHawking.KacWaltonFusion
 import SKEFTHawking.FPDimension
 import SKEFTHawking.MugerCenter
+import SKEFTHawking.A1Ring
+import SKEFTHawking.A1Resolution
+import SKEFTHawking.A1Ext
+import SKEFTHawking.ExtBordismBridge
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

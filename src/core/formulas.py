@@ -5390,3 +5390,111 @@ def tl_relation_check(n_generators, delta, relation_type, i, j=None):
         }
     else:
         raise ValueError(f"Unknown relation type: {relation_type}")
+
+
+# =============================================================================
+# Phase 5q: Ext Computation over A(1)
+# =============================================================================
+
+def a1_resolution_rank(n):
+    """Rank of the n-th module P_n in the minimal free resolution of F₂ over A(1).
+
+    The resolution has ranks 1, 2, 2, 2, 3, 4, ... with 4-fold periodicity
+    driven by the generator w₁ ∈ Ext⁴.
+
+    For a minimal resolution, dim Ext^n = rank(P_n).
+
+    Lean: ext_dim_0 through ext_dim_5 (A1Ext.lean)
+    Aristotle: N/A (native_decide)
+    Source: Beaudry-Campbell, arXiv:1801.07530, Thm 3.1
+
+    Args:
+        n: homological degree (n ≥ 0)
+
+    Returns:
+        rank of P_n (= dimension of Ext^n_{A(1)}(F₂, F₂))
+    """
+    # Known ranks for n = 0..5 (from the explicit resolution)
+    known = [1, 2, 2, 2, 3, 4]
+    if n < len(known):
+        return known[n]
+    # For n ≥ 6: the resolution is 4-periodic via w₁ ∈ Ext^{4,12}
+    # rank(P_{n+4}) = rank(P_n) + rank(P_{n+1}) (from the bidiagonal structure)
+    # Extend by recursion
+    ranks = list(known)
+    while len(ranks) <= n:
+        ranks.append(ranks[-4] + ranks[-3])
+    return ranks[n]
+
+
+def a1_ext_dimension(n):
+    """Dimension of Ext^n_{A(1)}(F₂, F₂) as an F₂-vector space.
+
+    For the minimal resolution, this equals the rank of P_n.
+
+    Lean: ext_dim_0 through ext_dim_5, resolution_minimal (A1Ext.lean)
+    Aristotle: N/A (native_decide)
+    Source: Adams, "Stable Homotopy and Generalised Homology" (1974), Ch. 16
+
+    Args:
+        n: homological degree
+
+    Returns:
+        dim_F₂(Ext^n_{A(1)}(F₂, F₂))
+    """
+    return a1_resolution_rank(n)
+
+
+def a1_ext_generator_bidegrees(n):
+    """Bidegrees (s, t) of Ext^n generators, where s = homological, t = internal.
+
+    The generators of Ext*_{A(1)}(F₂, F₂) are:
+      h₀ at (1, 1), h₁ at (1, 2), v at (3, 7), w₁ at (4, 12)
+    with the algebra structure F₂[h₀, h₁, v, w₁] / (h₀h₁, h₁³, h₁v, v² + h₀²w₁).
+
+    Lean: h0_tower_stem4_starts (A1Ext.lean)
+    Aristotle: N/A
+    Source: Beaudry-Campbell, arXiv:1801.07530
+
+    Args:
+        n: homological degree (0-5 supported)
+
+    Returns:
+        list of (s, t) bidegrees for Ext^n generators
+    """
+    generators = {
+        0: [(0, 0)],                           # 1
+        1: [(1, 1), (1, 2)],                    # h₀, h₁
+        2: [(2, 2), (2, 4)],                    # h₀², h₁²
+        3: [(3, 3), (3, 7)],                    # h₀³, v
+        4: [(4, 4), (4, 8), (4, 12)],           # h₀⁴, h₀v, w₁
+        5: [(5, 5), (5, 9), (5, 13), (5, 14)],  # h₀⁵, h₀²v, h₀w₁, h₁w₁
+    }
+    if n in generators:
+        return generators[n]
+    raise ValueError(f"Generator bidegrees only known for n ≤ 5, got n={n}")
+
+
+def bordism_hypothesis_count():
+    """Number of topological hypotheses in the decomposed bordism chain.
+
+    The generation constraint N_f ≡ 0 mod 3 rests on:
+      - Machine-checked: Ext computation (resolution, d²=0, minimality, dimensions)
+      - 4 topological hypotheses (H1-H4), decomposed from the single opaque
+        SpinBordismData structure
+      - Of which 1 (H2, change-of-rings) is algebraic and potentially provable
+
+    Lean: hypothesis_inventory (ExtBordismBridge.lean)
+    Aristotle: N/A
+
+    Returns:
+        dict with hypothesis counts
+    """
+    return {
+        'total_hypotheses': 4,
+        'algebraically_eliminable': 1,  # H2: change of rings (Shapiro's lemma)
+        'topological': 3,               # H1, H3, H4
+        'machine_checked_components': 5, # d²=0 (4) + minimality (5) + Ext dims (6) + Wang + gen
+        'sorry_introduced': 0,
+        'axioms_introduced': 0,
+    }

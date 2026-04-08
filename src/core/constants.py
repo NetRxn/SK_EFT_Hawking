@@ -1652,6 +1652,92 @@ def get_bec_parameters(experiment_name: str):
     )
 
 
+# =============================================================================
+# Phase 5q: Ext Computation over A(1) — Steenrod Algebra Data
+# =============================================================================
+
+# A(1) Milnor basis elements: Sq(r1, r2) with 0 ≤ r1 ≤ 3, 0 ≤ r2 ≤ 1
+A1_MILNOR_BASIS = {
+    0: {'milnor': (0, 0), 'degree': 0, 'name': '1'},
+    1: {'milnor': (1, 0), 'degree': 1, 'name': 'Sq(1)'},
+    2: {'milnor': (2, 0), 'degree': 2, 'name': 'Sq(2)'},
+    3: {'milnor': (3, 0), 'degree': 3, 'name': 'Sq(3)'},
+    4: {'milnor': (0, 1), 'degree': 3, 'name': 'Q₁'},
+    5: {'milnor': (1, 1), 'degree': 4, 'name': 'Sq(1,1)'},
+    6: {'milnor': (2, 1), 'degree': 5, 'name': 'Sq(2,1)'},
+    7: {'milnor': (3, 1), 'degree': 6, 'name': 'Sq(3,1)'},
+}
+
+# Resolution data: ranks of free modules P_0 through P_5
+A1_RESOLUTION_RANKS = [1, 2, 2, 2, 3, 4]
+
+# Ext dimensions (= resolution ranks for minimal resolution)
+A1_EXT_DIMENSIONS = [1, 2, 2, 2, 3, 4]
+
+# Ext algebra generators with bidegrees (s, t) where s = homological, t = internal
+A1_EXT_GENERATORS = {
+    'h0': {'bidegree': (1, 1), 'stem': 0, 'desc': 'detects 2 in π₀(ko)'},
+    'h1': {'bidegree': (1, 2), 'stem': 1, 'desc': 'detects η in π₁(ko)'},
+    'v':  {'bidegree': (3, 7), 'stem': 4, 'desc': 'detects generator of π₄(ko) ≅ ℤ'},
+    'w1': {'bidegree': (4, 12), 'stem': 8, 'desc': 'Bott periodicity generator'},
+}
+
+# Ext algebra relations (over F₂)
+A1_EXT_RELATIONS = [
+    'h0 * h1 = 0',
+    'h1^3 = 0',
+    'h1 * v = 0',
+    'v^2 + h0^2 * w1 = 0',
+]
+
+# Bordism hypothesis decomposition (Phase 5q Wave 5)
+BORDISM_HYPOTHESES = {
+    'H1': {
+        'name': 'ko cohomology',
+        'statement': 'H*(ko; F₂) ≅ A ⊗_{A(1)} F₂',
+        'eliminability': 'topological',
+        'reference': 'Adams, Stable Homotopy (1974), Ch. 16',
+    },
+    'H2': {
+        'name': 'change of rings',
+        'statement': 'Ext_A(A ⊗_{A(1)} F₂, F₂) ≅ Ext_{A(1)}(F₂, F₂)',
+        'eliminability': 'algebraic',  # Shapiro's lemma — potentially provable
+        'reference': 'Weibel, Homological Algebra (1994), Thm 6.10.7',
+    },
+    'H3': {
+        'name': 'ASS collapses for ko',
+        'statement': 'Adams spectral sequence for ko collapses at E₂',
+        'eliminability': 'topological',
+        'reference': 'Ravenel, Complex Cobordism (2003), Ch. 3',
+    },
+    'H4': {
+        'name': 'ABP splitting',
+        'statement': 'π_n(MSpin) ≅ π_n(ko) for n < 8',
+        'eliminability': 'topological',
+        'reference': 'Anderson-Brown-Peterson, Ann. Math. 86 (1967)',
+    },
+}
+
+
+def get_bec_parameters(experiment_name):
+    """
+    Return a BECParameters object for the named experiment
+    using values from EXPERIMENTS and ATOMS.
+    """
+    from src.core.transonic_background import BECParameters
+
+    exp = EXPERIMENTS[experiment_name]
+    atom = ATOMS[exp['atom']]
+
+    return BECParameters(
+        mass=atom['mass'],
+        scattering_length=atom['a_s'],
+        density_upstream=exp['density_upstream'],
+        velocity_upstream=exp['velocity_upstream'],
+        omega_perp=exp['omega_perp'],
+    )
+
+
 def get_all_experiments():
     """
     Return a dict mapping experiment names to (BECParameters, TransonicBackground)
