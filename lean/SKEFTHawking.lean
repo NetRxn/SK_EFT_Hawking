@@ -116,6 +116,11 @@ import SKEFTHawking.QCyc5Ext
 import SKEFTHawking.FibonacciQutrit
 import SKEFTHawking.FibonacciUniversality
 import SKEFTHawking.FibonacciQutritUniversality
+import SKEFTHawking.StringNet
+import SKEFTHawking.VillainHamiltonian
+import SKEFTHawking.KacWaltonFusion
+import SKEFTHawking.FPDimension
+import SKEFTHawking.MugerCenter
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

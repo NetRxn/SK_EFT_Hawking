@@ -152,10 +152,9 @@ def he3a_mechanism_b : MechanismB where
   symmetry_matches := rfl
   total_charge := 2
 
-/-- The Z₂ → SU(2) promotion is a HEURISTIC, not a theorem.
-    It works in ³He-A because of the specific Cooper pair structure,
-    not from topology alone. -/
-theorem z2_su2_is_heuristic : True := trivial
+-- The Z₂ → SU(2) promotion (Mechanism A) is a HEURISTIC, not a theorem.
+-- It works in ³He-A because of the specific Cooper pair structure,
+-- not from topology alone. See MechanismAData vs MechanismBData above.
 
 /-! ## 4. Spin-Connection Emergence (Selch-Zubkov 2025) -/
 
@@ -190,15 +189,10 @@ theorem chirality_obstruction :
 
 /-! ## 6. Bridge Theorems -/
 
-/-- Bridge to ADWMechanism: the Fermi-point vierbein is the SAME
-    mathematical object as the ADW composite tetrad. Both emerge
-    from the linearized Hamiltonian near a Fermi point/gap node.
-    The difference: ADW also requires a spin connection (partially
-    addressed by Selch-Zubkov 2025). -/
-theorem fermi_point_adw_connection :
-    -- Fermi-point vierbein ↔ ADW tetrad (same mathematical object)
-    -- ADW needs spin connection → Selch-Zubkov partially provides
-    True := trivial
+-- Bridge to ADWMechanism (narrative, not formalizable):
+-- Fermi-point vierbein ↔ ADW tetrad (same mathematical object).
+-- Both emerge from linearized Hamiltonian near a Fermi point/gap node.
+-- ADW needs spin connection → Selch-Zubkov 2025 partially provides.
 
 /-- Bridge to GaugeEmergence: the |N|=1 → U(1) gauge emergence from
     Fermi points is consistent with Layer 1 (U(1)) in our gauge
@@ -488,26 +482,16 @@ theorem chirality_is_independent_obstruction :
 theorem coupling_deficit_downgrades_step5 :
     current_emergence_status.step5_adw_condensation = .heuristic := rfl
 
-/-- Bridge to GaugingStep: the gauging step analysis formalizes the
-    mathematical obstruction to promoting lattice symmetry to gauge
-    theory. The Fermi-point SU(2) bypass (Mechanism B) avoids this
-    obstruction by producing gauge fields from topology, not gauging. -/
-theorem fermi_point_bypasses_gauging :
-    -- Mechanism B produces gauge fields from collective modes
-    -- GaugingStep shows gauging requires disentangler + 16|n
-    -- These are INDEPENDENT routes to gauge structure
-    True := trivial
-
-/-- Bridge to SPTClassification: the gapped interface axiom
-    (TPF conjecture) would provide step 5 if proved. Specifically:
-    anomaly-free → gapped interface → chiral gauge theory.
-    The Fermi-point route is an ALTERNATIVE to the TPF route. -/
-theorem fermi_point_vs_tpf_alternative :
-    -- Two alternative routes to chiral gauge theory:
-    -- Route 1: TPF gapped interface (axiom, hard eliminability)
-    -- Route 2: Fermi-point Mechanism B (heuristic)
-    -- Both currently non-theorem
-    True := trivial
+-- Bridge to GaugingStep: the gauging step analysis formalizes the
+-- mathematical obstruction to promoting lattice symmetry to gauge theory.
+-- The Fermi-point SU(2) bypass (Mechanism B) avoids this obstruction by
+-- producing gauge fields from topology, not gauging (INDEPENDENT routes).
+--
+-- Bridge to SPTClassification: the gapped interface axiom (TPF conjecture)
+-- would provide step 5 if proved: anomaly-free → gapped interface → chiral gauge.
+-- Route 1: TPF gapped interface (axiom, hard eliminability).
+-- Route 2: Fermi-point Mechanism B (heuristic).
+-- Both currently non-theorem — tracked in Phase 5n roadmap.
 
 /-! ## 14. Module Summary -/
 

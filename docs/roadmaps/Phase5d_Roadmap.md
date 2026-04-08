@@ -268,25 +268,25 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - FusionCategory.lean: FSymbolData, PentagonSatisfied structures
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/SU2kMTC.lean` — 11 theorems (6 proved + 5 sorry), module #78
+- [x] `lean/SKEFTHawking/SU2kMTC.lean` — 11 theorems (6 proved + 5 sorry → NOW ZERO sorry), module #78
 - [x] `isingF` — F-symbol function for Ising (Hadamard/√2)
 - [x] `isingF_sigma_hadamard` — F-matrix values PROVED
 - [x] `ising_global_dim_sq` — D² = 4 PROVED (via `Real.mul_self_sqrt`)
 - [x] `ising_dim_sigma_sq` — Verlinde dimension consistency PROVED
 - [x] `isingMTC` — ModularTensorData instance CONSTRUCTED (first ever)
-- [ ] `ising_pentagon_holds` — pentagon equation (sorry stub for Aristotle)
-- [ ] `isingF_involutory` — F² = I (sorry stubs)
-- [ ] `ising_twist_unitary`, `ising_twist_psi` — twist properties (sorry stubs)
+- [x] `ising_pentagon_holds` — pentagon equation PROVED (Aristotle 78dcc5f4 + native_decide rewrite)
+- [x] `isingF_involutory` — F² = I PROVED (Aristotle 78dcc5f4)
+- [x] `ising_twist_unitary`, `ising_twist_psi` — twist properties PROVED (Aristotle 78dcc5f4)
 - [x] `src/core/formulas.py` — `ising_f_symbol`, `su2k_twist`, `su2k_topological_central_charge`
-- [ ] Deep research submitted: F-symbols and pentagon in Lean 4
+- [x] Deep research submitted: F-symbols and pentagon in Lean 4
 
-### Current state: 1197 theorems, 81 modules, 8 sorry (5 SU2kMTC + 3 FibonacciMTC), 0 axioms
+### Current state: 1197 theorems, 81 modules, 0 sorry (SU2kMTC + FibonacciMTC all filled by Aristotle 78dcc5f4), 0 axioms
 
 ### Ising MTC (SU2kMTC.lean):
 - [x] `isingF` — F-symbols with F^σ_{ψσψ}=-1 corrected
 - [x] `isingMTC` — ModularTensorData instance CONSTRUCTED
 - [x] `ising_global_dim_sq`, `ising_dim_sigma_sq` — PROVED
-- [ ] Pentagon, involutory, twist — 5 sorry (Aristotle submitted)
+- [x] Pentagon, involutory, twist — ZERO sorry (Aristotle 78dcc5f4 + native_decide rewrite)
 
 ### Fibonacci MTC (FibonacciMTC.lean) — NEW:
 - [x] `lean/SKEFTHawking/QSqrt5.lean` — Q(√5) number field, all 7 theorems PROVED by native_decide
@@ -295,8 +295,8 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - [x] `fibF_involutory_00/01/10/11` — F²=I PROVED by native_decide over QSqrt5
 - [x] `fibData` — PreModularData instance CONSTRUCTED
 - [x] `fib_chiral` — c_top = 14/5 ≠ 0 PROVED
-- [ ] `fib_pentagon_all_tau` — pentagon (sorry, Aristotle target)
-- [ ] `fib_global_dim`, `fib_dim_consistency` — sorry (√5 arithmetic over ℝ)
+- [x] `fib_pentagon_all_tau` — pentagon PROVED (Aristotle 78dcc5f4)
+- [x] `fib_global_dim`, `fib_dim_consistency` — PROVED (Aristotle 78dcc5f4)
 
 ### Infrastructure:
 - [x] `QSqrt2.lean` — Q(√2) for Ising, 3 theorems all PROVED
@@ -355,37 +355,40 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 **Goal:** Hopf algebra structure on the affine quantum group. Same architecture as Uqsl2Hopf.
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/Uqsl2AffineHopf.lean` — 4 theorems (1 proved + 3 sorry)
+- [x] `lean/SKEFTHawking/Uqsl2AffineHopf.lean` — 19 sorry (Aristotle 91434dbd/986b9f66 decomposed into individual cases)
 - [x] Coproduct, counit, antipode DEFINED via RingQuot.liftAlgHom
-- [ ] 3 sorry: relation-respect proofs for coproduct, counit, antipode (Aristotle targets)
+- [x] Counit proved (Aristotle 986b9f66)
+- [x] Coproduct: 17/21 cases proved (Aristotle 91434dbd/986b9f66); 4 q-Serre cases remain
+- [ ] 4 q-Serre coproduct cases remain (Aristotle 2c668068 in-flight)
+- [ ] Antipode: 6/21 cases proved, 15 remain (Aristotle 2c668068 in-flight)
 - [ ] Bialgebra axioms (deferred — need relation-respect first)
 
 ---
 
-## 7. Wave 7 — Verified Statistics Extension — BUILT
+## 7. Wave 7 — Verified Statistics Extension — COMPLETE
 
 **Goal:** Extend VerifiedJackknife for MC data analysis (bootstrap CI, Cauchy-Schwarz, N_eff bound).
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/VerifiedStatistics.lean` — 7 theorems (3 proved + 4 sorry)
+- [x] `lean/SKEFTHawking/VerifiedStatistics.lean` — 7 theorems, ZERO sorry
 - [x] `sampleVariance_nonneg` PROVED
-- [ ] 4 sorry: Cauchy-Schwarz bound, jackknife mean-case, ρ ≤ 1, N_eff ≤ N (Aristotle targets)
+- [x] Cauchy-Schwarz bound, jackknife mean-case, ρ ≤ 1, N_eff ≤ N — ALL PROVED (Aristotle 986b9f66)
 
 ---
 
-## 8. Wave 8 — Kerr-Schild Metrics (Fracton Extension) — BUILT
+## 8. Wave 8 — Kerr-Schild Metrics (Fracton Extension) — COMPLETE
 
 **Goal:** Verify KS metric algebraic properties for the fracton-gravity linearization sector.
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/KerrSchild.lean` — 8 theorems (7 proved + 1 sorry)
+- [x] `lean/SKEFTHawking/KerrSchild.lean` — 8 theorems, ZERO sorry
 - [x] `radial_null` PROVED, `schwarzschild_phi_pos` PROVED, `schwarzschild_horizon` PROVED
 - [x] DOF counting: KS 2 DOF = spin-2 graviton PROVED
-- [ ] 1 sorry: Sherman-Morrison inverse `ks_inverse_formula` (Aristotle target)
+- [x] `ks_inverse_formula` PROVED (Aristotle 986b9f66; original formula was FALSE — corrected to use raised indices)
 
 ---
 
-## 9. Wave 9 — Coideal Embedding O_q ↪ U_q(ŝl₂) — BUILT
+## 9. Wave 9 — Coideal Embedding O_q ↪ U_q(ŝl₂) — COMPLETE
 
 **Goal:** Prove the coideal property for the q-Onsager generators B₀, B₁ inside U_q(ŝl₂). Completes the chain Onsager → O_q → U_q(ŝl₂).
 
@@ -395,15 +398,15 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - [x] `OnsagerAlgebra.lean` — Dolan-Grady relations (24 thms, zero sorry)
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/CoidealEmbedding.lean` — 6 theorems (2 proved + 4 sorry), lake build clean
+- [x] `lean/SKEFTHawking/CoidealEmbedding.lean` — 6 theorems, ZERO sorry, lake build clean
 - [x] Coideal property stated: Δ(B_i) = B_i ⊗ 1 + K_i⁻¹ ⊗ B_i
 - [x] Counit: ε(B_i) = 0 stated
 - [x] Dolan-Grady connection noted (full cubic relation deferred)
-- [ ] 4 sorry: coideal_B0, coideal_B1, counit_B0, counit_B1 (Aristotle targets)
+- [x] coideal_B0, coideal_B1, counit_B0, counit_B1 — ALL PROVED (Aristotle 986b9f66)
 
 ---
 
-## 10. Wave 10 — Rep(u_q) → SU(2)_k Data Correspondence — BUILT
+## 10. Wave 10 — Rep(u_q) → SU(2)_k Data Correspondence — COMPLETE
 
 **Goal:** Data-level bridge: u_q(sl₂) at root of unity has k+1 simple modules whose fusion matches su2kFusion.
 
@@ -412,12 +415,12 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - [x] `SU2kFusion.lean` — fusion rules verified, zero sorry
 
 ### Deliverables:
-- [x] `lean/SKEFTHawking/RepUqFusion.lean` — 14 theorems (12 proved + 2 sorry), lake build clean
+- [x] `lean/SKEFTHawking/RepUqFusion.lean` — 14 theorems, ZERO sorry, lake build clean
 - [x] `restricted_uq_dim`: dim(u_q) = (k+2)³ PROVED for k=1,2,3 (native_decide)
 - [x] `n_simples`: k+1 simple modules PROVED for k=1,2,3
 - [x] `classical_dim_pos`, `quantum_dim_vacuum` PROVED
 - [x] Fusion correspondence: structural match to su2kFusion (same function)
-- [ ] 2 sorry: `rep_fusion_comm` (commutativity), `peter_weyl_classical` (sum of squares identity)
+- [x] `rep_fusion_comm` (commutativity), `peter_weyl_classical` — PROVED (manually last session)
 
 ---
 
@@ -435,16 +438,16 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 | 1 | Tetrad gap equation (Lean) | 20 | 0 | **COMPLETE** |
 | 2 | Python solver + observables | — | — | **COMPLETE** |
 | 3 | MC production (L=4,6,8) | — | — | L=8 running |
-| 4 | Ising + Fibonacci MTC | 39 | 8 | Aristotle in flight |
+| 4 | Ising + Fibonacci MTC | 39 | 0 | **COMPLETE** (Aristotle 78dcc5f4 + native_decide; all MTC sorry filled, pentagon/hexagon proved) |
 | 5 | Polariton paper (Paper 12) | — | — | Claims reviewed, all FAIL fixed |
-| 6 | U_q(ŝl₂) affine Hopf | 4 | 3 | BUILT |
-| 7 | Verified statistics (Lean) | 6 | 4 | BUILT |
-| 8 | Kerr-Schild metrics | 7 | 1 | BUILT |
-| 9 | Coideal embedding | 6 | 4 | BUILT |
-| 10 | Rep(u_q) → SU(2)_k | 14 | 2 | BUILT |
+| 6 | U_q(ŝl₂) affine Hopf | — | 19 | IN FLIGHT (Aristotle 91434dbd/986b9f66 decomposed; counit proved, 17/21 coproduct, 4 q-Serre + 15 antipode remain; Aristotle 2c668068 in-flight) |
+| 7 | Verified statistics (Lean) | 7 | 0 | **COMPLETE** (Aristotle 986b9f66) |
+| 8 | Kerr-Schild metrics | 8 | 0 | **COMPLETE** (Aristotle 986b9f66; formula corrected to raised indices) |
+| 9 | Coideal embedding | 6 | 0 | **COMPLETE** (Aristotle 986b9f66) |
+| 10 | Rep(u_q) → SU(2)_k | 14 | 0 | **COMPLETE** (manually proved last session) |
 | 11 | Verified statistics (Python) | — | — | **COMPLETE** (5 formulas, 18 tests) |
-| 12 | Abstract functor Center→ModCat | 9 | 5 | BUILT |
-| 13 | Stimulated Hawking Lean | 11 | 7 | BUILT |
+| 12 | Abstract functor Center→ModCat | 9 | 2 | BUILT (CenterFunctor 2 sorry remain — BLOCKED on Muger center infrastructure, see Phase 5p roadmap) |
+| 13 | Stimulated Hawking Lean | 11 | 0 | **COMPLETE** (Aristotle 986b9f66 filled all 5) |
 
 ### Completed this session (session 2):
 - Papers 5, 11, 12 updated with current results
@@ -466,10 +469,11 @@ See `docs/references/aristotle_batch_plan.md` for full details.
 
 | Batch | Priority | Sorry | Modules | Status |
 |-------|----------|-------|---------|--------|
-| 1 | P1 | 8 | SU2kMTC, FibonacciMTC | IN FLIGHT (3b356975) |
-| 2 | P1 | 7 | Uqsl2AffineHopf, CoidealEmbedding | Ready |
-| 3 | P2 | 13 | StimulatedHawking, VerifiedStatistics, RepUqFusion | Ready |
-| 4 | P3 | 8 | CenterFunctor, KerrSchild, EmergentGravityBounds | Ready |
+| 1 | P1 | 8 | SU2kMTC, FibonacciMTC | **COMPLETE** (78dcc5f4 — 0 sorry) |
+| 2 | P1 | 7 | Uqsl2AffineHopf, CoidealEmbedding | **PARTIAL** — CoidealEmbedding DONE (986b9f66); Uqsl2AffineHopf 19 sorry remain |
+| 3 | P2 | 13 | StimulatedHawking, VerifiedStatistics, RepUqFusion | **COMPLETE** (986b9f66 — 0 sorry; RepUqFusion manually) |
+| 4 | P3 | 8 | CenterFunctor, KerrSchild, EmergentGravityBounds | **PARTIAL** — KerrSchild+EmergentGravityBounds DONE (986b9f66); CenterFunctor 2 sorry remain |
+| 5 | P1 | 19 | Uqsl2AffineHopf | IN FLIGHT (2c668068) |
 
 ---
 

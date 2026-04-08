@@ -129,46 +129,19 @@ theorem chirality_independent_of_G :
 
 /-! ## 4. Connection to gauge erasure -/
 
-/--
-The gauge erasure connection: the doubled nature of Z(Vec_G)
-is the categorical reason why gauge information cannot pass through
-the hydrodynamic boundary.
-
-Our existing GaugeErasure.lean proves (11 theorems + 1 axiom):
-  non-Abelian gauge DOF are erased by hydrodynamization,
-  only U(1) survives (photonization).
-
-The categorical foundation: Z(C) being doubled means the emergent
-gauge structure has trivial topological central charge, which means
-the gauge information is redundant (doubled) and can be projected out
-at the boundary without losing physical content.
-
-Formal chain:
-  Vec_G → Z(Vec_G) ≅ Rep(D(G)) → c = 0 → gauge information doubled → erasure
--/
-theorem gauge_erasure_categorical_foundation :
-    True := trivial  -- full proof connects to GaugeErasure.lean
-
-/--
-The Layer 1 → Layer 2 → Layer 3 verification chain:
-
-Layer 1 (categorical, Wave 4): Vec_G → Z(Vec_G) ≅ Rep(D(G))
-  Formally verified: fusion rules, F-symbols, anyon content
-  Key: gauge structure ALWAYS doubled (non-chiral)
-
-Layer 2 (gauge theory, Phases 3-4): gauge erasure theorem
-  Formally verified: non-Abelian erasure, U(1) survival
-  Key: hydrodynamization projects out doubled gauge DOF
-
-Layer 3 (EFT, Phases 1-2): SK-EFT corrections to Hawking radiation
-  Formally verified: δ_diss, δ_disp, spectral predictions
-  Key: only U(1) phonon physics survives to observable spectrum
-
-This completes the formal verification of the three-layer architecture
-from microscopic categorical data to macroscopic experimental predictions.
--/
-theorem three_layer_chain :
-    True := trivial  -- synthesis statement
+-- Gauge erasure connection: the doubled nature of Z(Vec_G)
+-- is the categorical reason why gauge information cannot pass through
+-- the hydrodynamic boundary. See GaugeErasure.lean (11 thms).
+-- Categorical foundation: Z(C) doubled → trivial topological central charge
+-- → gauge information redundant → can be projected out at boundary.
+--
+-- Formal chain: Vec_G → Z(Vec_G) ≅ Rep(D(G)) → c = 0 → gauge doubled → erasure.
+-- See DrinfeldEquivalence.lean for the categorical equivalence.
+--
+-- Three-layer verification chain (narrative synthesis):
+-- Layer 1 (categorical): Vec_G → Z(Vec_G) ≅ Rep(D(G)) [DrinfeldEquivalence.lean]
+-- Layer 2 (gauge theory): gauge erasure, U(1) survival [GaugeErasure.lean]
+-- Layer 3 (EFT): SK-EFT corrections, spectral predictions [SecondOrderSK.lean]
 
 /-! ## 5. Concrete examples -/
 
@@ -198,16 +171,11 @@ for G = ℤ/N.
 theorem abelian_dw_fusion [CommGroup G] (g₁ g₂ : G) :
     g₁ * g₂ = g₁ * g₂ := rfl
 
-/--
-The fracton connection: stacking layers of Z(Vec_G) and gauging
-a diagonal 1-form symmetry produces fracton phases.
-
-This connects to our FractonHydro.lean (17 theorems):
-the fracton excitations arise from the layered string-net construction
-of Gorantla-Prem-Tantivasadakarn-Williamson (arXiv:2505.13604).
--/
-theorem fracton_from_stacked_stringnets :
-    True := trivial  -- requires 1-form symmetry infrastructure
+-- Fracton connection: stacking layers of Z(Vec_G) and gauging a diagonal
+-- 1-form symmetry produces fracton phases. See FractonHydro.lean (17 thms)
+-- for fracton excitation counting. Layered string-net construction follows
+-- Gorantla-Prem-Tantivasadakarn-Williamson (arXiv:2505.13604).
+-- Full formalization requires 1-form symmetry infrastructure (Phase 6).
 
 /-! ## 6. Counts and verification -/
 

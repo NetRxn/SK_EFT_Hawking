@@ -355,15 +355,21 @@ AND paper claims review has zero FAIL.
 
 **Purpose:** Ensure all project documentation reflects the current state.
 
-**Actions — run the automated counts system, then update content-sensitive docs:**
+**Actions — run the automated pipeline, then update content-sensitive docs:**
 
 ```bash
-# Step 1: Regenerate Lean dependency graph (if Lean files changed)
-cd lean && lake env lean --run SKEFTHawking/ExtractDeps.lean > /tmp/lean_deps.json && cp /tmp/lean_deps.json lean_deps.json
+# Step 1: Run validate.py (triggers lean_deps.json refresh automatically if stale)
+uv run python scripts/validate.py
 
 # Step 2: Generate counts.json + counts.tex (single source of truth)
 uv run python scripts/update_counts.py
 ```
+
+**Lean dependency extraction** is managed by `scripts/extract_lean_deps.py`, which:
+- Hashes all `.lean` source files to detect changes
+- Only re-runs `ExtractDeps.lean` when the hash differs from cached
+- Writes output to `lean/lean_deps.json` with a hash file at `lean/lean_deps.json.hash`
+- Is called automatically by `validate.py --check graph_integrity`
 
 `docs/counts.json` is the authoritative source for ALL project counts.
 `docs/counts.tex` provides LaTeX macros (\totaltheorems, \sorrycount, etc.) for papers.

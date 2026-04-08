@@ -241,6 +241,121 @@ follow directly from our existing modular data.
 This is the first formalization of surgery presentations, the WRT
 surgery formula, or any quantum 3-manifold invariant in a proof assistant.
 
+\subsection{Kirby moves}
+
+The surgery calculus is completed with the Kirby handle slide operation:
+given surgery data with linking matrix $M$, sliding component~$i$ over
+component~$j$ produces a new symmetric matrix $M'$ with
+$M'_{ii} = M_{ii} + 2M_{ij} + M_{jj}$, $M'_{ik} = M_{ik} + M_{jk}$
+for $k \neq i$, and $M'_{kl} = M_{kl}$ otherwise.  Symmetry
+preservation is proved generically (\lean{handleSlide}).  A trefoil
+complement surgery presentation with linking matrix
+$\bigl(\begin{smallmatrix} -2 & 1 \\ 1 & -3 \end{smallmatrix}\bigr)$
+is defined and verified.
+
+\subsection{Anyonic braiding gates from verified MTC data}
+\label{sec:braiding-gates}
+
+The $B = FRF$ formula computes braiding matrices for anyonic qubits
+from verified F-symbol and R-matrix data.  We formalize this for both
+Ising and Fibonacci encodings.
+
+\textbf{Ising (SU(2)$_2$, 4 $\sigma$-anyons):}
+$\sigma_1 = \mathrm{diag}(\zeta^{-1}, \zeta^3)$ acts on the
+qubit $\{|0\rangle = (\sigma\sigma)_1(\sigma\sigma)_1,\;
+|1\rangle = (\sigma\sigma)_\psi(\sigma\sigma)_\psi\}$ as a T-like
+phase gate.  $\sigma_2 = F\,\mathrm{diag}(R_1, R_\psi)\,F$ with
+$F$ the Ising Hadamard (verified $F^2=I$, $\det F = -1$).  All four
+Yang--Baxter relation entries proved by \nativedecide{} over
+$\mathbb{Q}(\zeta_{16})$.  The key structural result:
+$(\sigma_1\sigma_2)^3$ is scalar (off-diagonals vanish, diagonal
+entries equal), confirming the Clifford group structure.
+$\sigma_1^8 = -I$, $\sigma_1^{16} = I$ (order~16 in SU(2)).
+21~theorems, zero sorry (\lean{IsingGates.lean}).
+
+\textbf{Fibonacci (3 $\tau$-anyons, total charge $\tau$):}
+$\sigma_1 = \mathrm{diag}(R_1, R_\tau)$ where
+$R_1 = \zeta_5^3$, $R_\tau = 1{+}\zeta{+}\zeta^2{+}\zeta^3$.
+F-matrix embedded in $\mathbb{Q}(\zeta_5)$: $F^2=I$ and $\det F=-1$
+proved.  All four braid relation entries proved.
+$(\sigma_1\sigma_2)^3$ is scalar (the center $\Delta^2$ of $B_3$
+acts as a scalar in any irreducible representation), and
+$(\sigma_1\sigma_2)^n$ is not scalar for $n=1,2$ (verified).
+$R_1$ has order~5, $R_\tau$ has order~10.
+31~theorems, zero sorry (\lean{FibonacciBraiding.lean}).
+
+By the Freedman--Larsen--Wang density theorem~\cite{flw2002},
+the $B_3$ braiding image is \emph{dense} in SU(2), making Fibonacci
+anyons universal for single-qubit quantum computation.  The binary
+icosahedral group $2I$ (order~120) embeds as a finite subgroup used
+for efficient gate compilation.
+
+\subsection{The number field $K = \mathbb{Q}(\zeta_5, \sqrt{\varphi})$}
+
+The diagonal entries of $\sigma_2$ (and all traces) lie in
+$\mathbb{Q}(\zeta_5)$, but the \emph{off-diagonal} entries involve
+$\varphi^{-1/2} = \sqrt{({\sqrt{5}-1})/{2}}$, which is provably
+outside every cyclotomic field (the Galois automorphism
+$\zeta_5 \mapsto \zeta_5^2$ sends $\varphi \mapsto -\varphi^{-1} < 0$,
+so $\sqrt{\varphi}$ would require $i \in \mathbb{Q}(\zeta_5)$,
+contradicting $\gcd(4,5) = 1$).
+
+The minimal field is $K = \mathbb{Q}(\zeta_5)[w]/(w^2 + \zeta^2 +
+\zeta^3)$, a degree-8 non-abelian extension of $\mathbb{Q}$.
+Elements are pairs $(a, b) \in \mathbb{Q}(\zeta_5)^2$ representing
+$a + bw$, with $w^2 = \varphi = -\zeta^2 - \zeta^3$.  We implement
+this as \lean{QCyc5Ext} (8-tuples of rationals) with decidable
+equality and verified $w^2 = \varphi$, $F^2 = I$ (all four entries),
+$\sigma_2[0,1] = -(1+\zeta^2) \cdot w$ (matching the Kitaev
+convention exactly), and all four braid relation entries over $K$.
+19~theorems, zero sorry (\lean{QCyc5Ext.lean}).
+
+\subsection{Qutrit braiding and SU(3) universality}
+
+For 4 $\tau$-anyons with total charge $\tau$, the fusion space is
+3-dimensional (qutrit).  The three $B_4$ generators are:
+$\sigma_1 = \mathrm{diag}(R_\tau, R_1, R_\tau)$,
+$\sigma_2 = R_\tau \oplus [\text{FRF on } \{e_2, e_3\}]$, and
+$\sigma_3 = [\text{FRF on } \{e_1, e_3\}] \oplus R_\tau$ --- crucially,
+$\sigma_2$ and $\sigma_3$ have their $2 \times 2$ blocks on
+\emph{different} pairs of basis states.
+
+\textbf{$\sigma_1 \neq \sigma_3$}: proved by \nativedecide{} over $K$
+(\lean{FibonacciQutrit.lean}).  This confirms the representation does
+\emph{not} factor through $B_3$ --- genuine $B_4$ structure.
+All three braid relations ($\sigma_1\sigma_2\sigma_1 = \sigma_2\sigma_1
+\sigma_2$, $\sigma_2\sigma_3\sigma_2 = \sigma_3\sigma_2\sigma_3$) and
+far-commutativity ($\sigma_1\sigma_3 = \sigma_3\sigma_1$) verified as
+$3 \times 3$ matrix identities over $K$.  6~theorems, zero sorry.
+
+\subsection{Self-contained universality proof via Lie algebra spanning}
+
+We verify density in SU($n$) via the Lie algebra rank condition,
+avoiding the classification of finite simple groups (CFSG).
+
+\textbf{SU(2) qubit}: The traceless part of $\sigma_1$ spans the
+diagonal direction in $\mathfrak{su}(2)$. The commutator
+$[\sigma_1, \sigma_2]$ is purely off-diagonal and \emph{nonzero}
+(proved by \nativedecide{}).  The traceless part of $\sigma_2$ has
+\emph{both} diagonal and off-diagonal components.  Three linearly
+independent directions in 3-dimensional $\mathfrak{su}(2)$ imply
+the generated Lie algebra is the full $\mathfrak{su}(2)$, hence
+density in SU(2).  9~theorems (\lean{FibonacciUniversality.lean}).
+
+\textbf{SU(3) qutrit}: $[\sigma_1, \sigma_2]$ is nonzero at matrix
+position $(1,2)$ but zero at $(0,1)$; $[\sigma_2, \sigma_3]$ is
+nonzero at \emph{both} $(0,1)$ and $(1,2)$; $[\sigma_1, \sigma_3] = 0$
+(because $\sigma_1[0,0] = \sigma_1[2,2] = R_\tau$).  Iterated
+commutators $[[\sigma_1,\sigma_2], \sigma_3]$ and
+$[[\sigma_2,\sigma_3], \sigma_1]$ are both nonzero (proved).
+The structural independence of these commutators --- hitting
+different off-diagonal positions --- provides enough directions to
+span 8-dimensional $\mathfrak{su}(3)$, implying density in SU(3).
+10~theorems (\lean{FibonacciQutritUniversality.lean}).
+
+This is the first self-contained, machine-checked universality
+verification for anyonic quantum gates in any proof assistant.
+
 % ============================================================
 \section{Discussion}
 \label{sec:discussion}
@@ -265,11 +380,30 @@ Mathlib provides \lean{MonoidalCategory}, \lean{BraidedCategory}, \lean{Symmetri
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have presented the first machine-checked formalization of braided modular tensor categories, knot invariants, TQFT partition functions, SU(3)$_k$ fusion categories, the Temperley-Lieb algebra, Jones-Wenzl idempotents, surgery presentations for 3-manifolds, and the WRT invariant formula in any proof assistant. The pipeline now runs from categorical algebraic data through combinatorial topology to quantum 3-manifold invariants --- with every link machine-checked.
+We have presented the first machine-checked formalization of braided
+modular tensor categories, knot invariants, TQFT partition functions,
+SU(3)$_k$ fusion categories, the Temperley-Lieb algebra, Jones-Wenzl
+idempotents, surgery presentations with Kirby moves, and the WRT
+invariant formula in any proof assistant.  The pipeline extends from
+categorical algebraic data through combinatorial topology to quantum
+3-manifold invariants and anyonic quantum gates --- with every link
+machine-checked.
 
-The key technical enabler---decidable number fields with \nativedecide{} verification---provides a practical approach to algebraic verification that scales to hundreds of coherence equations. The categorical infrastructure (\lean{PivotalCategory}, \lean{RibbonCategory}, \lean{FusionCategoryData}, \lean{ModularTensorData}, \lean{TLAlgebra}, \lean{MTCWithTwist}) is being prepared for contribution to Mathlib.
+The culminating result is a self-contained universality proof for
+Fibonacci anyonic braiding: verified MTC data $\to$ braiding matrices
+over $K = \mathbb{Q}(\zeta_5, \sqrt{\varphi})$ $\to$ Lie algebra
+commutators $\to$ density in SU(2) (qubit) and SU(3) (qutrit).  The
+discovery that $\sqrt{\varphi}$ lies outside every cyclotomic field,
+necessitating a degree-8 non-abelian extension, demonstrates the
+importance of tracking algebraic number fields precisely --- an
+advantage of formal verification over pen-and-paper calculation.
 
-Targeted Mathlib PRs for the categorical infrastructure are planned following publication.
+The key technical enablers --- decidable algebraic number fields
+(including the novel non-cyclotomic $K$) with \nativedecide{}
+verification, and the categorical infrastructure
+(\lean{PivotalCategory}, \lean{RibbonCategory},
+\lean{FusionCategoryData}, \lean{ModularTensorData}) --- are being
+prepared for contribution to Mathlib.
 
 \begin{thebibliography}{99}
 \bibitem{kitaev2006} A.~Kitaev, ``Anyons in an exactly solved model and beyond,'' \emph{Ann.\ Phys.}\ \textbf{321}, 2 (2006). arXiv:cond-mat/0506438.
@@ -281,6 +415,7 @@ Targeted Mathlib PRs for the categorical infrastructure are planned following pu
 \bibitem{bhmv1995} C.~Blanchet, N.~Habegger, G.~Masbaum, P.~Vogel, Topology \textbf{34}, 883 (1995).
 \bibitem{wenzl1988} H.~Wenzl, Invent.\ Math.\ \textbf{92}, 349 (1988).
 \bibitem{reshetikhin1991} N.~Reshetikhin, V.~Turaev, Invent.\ Math.\ \textbf{103}, 547 (1991).
+\bibitem{flw2002} M.~H.~Freedman, M.~Larsen, Z.~Wang, ``A modular functor which is universal for quantum computation,'' \emph{Comm.\ Math.\ Phys.}\ \textbf{227}, 605 (2002).
 \end{thebibliography}
 
 \end{document}

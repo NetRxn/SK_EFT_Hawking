@@ -1,0 +1,53 @@
+{
+  "timestamp": "20260408T011705Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "graph_integrity": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "graph_size",
+          "passed": true,
+          "message": "3349 nodes, 1320 edges",
+          "warning": false
+        },
+        {
+          "name": "conflicts",
+          "passed": true,
+          "message": "No verification conflicts",
+          "warning": false
+        },
+        {
+          "name": "orphan_nodes",
+          "passed": true,
+          "message": "2723 orphan nodes: param:MAJORANA_GAMMA_8x8, param:MAJORANA_J1, param:MAJORANA_J2, param:MAJORANA_J3, formula:so4_one_link_integral (+2718 more)",
+          "warning": true
+        },
+        {
+          "name": "ungrounded_claims",
+          "passed": true,
+          "message": "3 ungrounded claims: claim:paper3_gauge_erasure:0, claim:paper3_gauge_erasure:1, claim:paper3_gauge_erasure:2",
+          "warning": true
+        },
+        {
+          "name": "broken_chains",
+          "passed": true,
+          "message": "58 broken provenance chains: formula:planck_occupation, formula:planck_occupation, formula:planck_occupation, formula:planck_occupation, formula:so4_weingarten_2nd_moment (+53 more)",
+          "warning": true
+        },
+        {
+          "name": "missing_provenance",
+          "passed": true,
+          "message": "16 params without SOURCED_FROM: HBAR, K_B, A_BOHR, Rb87.mass, K39.mass (+11 more)",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

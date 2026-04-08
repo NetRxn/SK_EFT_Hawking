@@ -6064,5 +6064,296 @@ def fig_mechanism_a_vs_b() -> go.Figure:
     return fig
 
 
+def fig_ising_braiding_data() -> go.Figure:
+    """Ising MTC braiding data summary: R-matrix, twist, hexagon, ribbon.
+
+    Displays the complete verified braiding data for the Ising MTC
+    from IsingBraiding.lean (23 theorems, 0 sorry).
+    """
+    from src.core.formulas import (
+        ising_r_matrix, ising_twist, mtc_s_matrix,
+        interferometric_visibility, thermal_hall_conductance,
+    )
+
+    fig = make_subplots(rows=1, cols=2, subplot_titles=(
+        'R-matrix phases (QCyc16)', 'Experimental predictions'))
+
+    # R-matrix data
+    labels = ['R₁^{σσ}', 'Rψ^{σσ}', 'R^{σψ}_σ', 'R^{ψψ}_1']
+    R_values = [
+        ising_r_matrix(1, 1, 0), ising_r_matrix(1, 1, 2),
+        ising_r_matrix(1, 2, 1), ising_r_matrix(2, 2, 0)]
+    phases = [np.angle(r) / np.pi for r in R_values]
+    expected = [-1/8, 3/8, -1/2, 1]
+
+    fig.add_trace(go.Bar(
+        x=labels, y=phases, name='Computed phase/π',
+        marker_color=COLORS['steel_blue'], text=[f'{p:.4f}' for p in phases],
+        textposition='outside'
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=labels, y=expected, mode='markers', name='Expected',
+        marker=dict(color=COLORS['carmine'], size=10, symbol='x')
+    ), row=1, col=1)
+
+    # Predictions
+    obs = ['M_{σ,σ}', 'M_{σ,1}', 'M_{σ,ψ}', 'c_top', 'GSD']
+    vals = [
+        abs(interferometric_visibility('ising', 1, 1)),
+        abs(interferometric_visibility('ising', 1, 0)),
+        abs(interferometric_visibility('ising', 1, 2)),
+        thermal_hall_conductance('ising')['c_top'],
+        3,
+    ]
+    fig.add_trace(go.Bar(
+        x=obs, y=vals, name='Ising predictions',
+        marker_color=COLORS['amber'], text=[f'{v:.2f}' for v in vals],
+        textposition='outside'
+    ), row=1, col=2)
+
+    fig.update_yaxes(title_text='Phase / π', row=1, col=1)
+    fig.update_yaxes(title_text='Value', row=1, col=2)
+    fig.update_layout(
+        title=dict(text='Ising MTC: Verified Braiding Data (23 thms, 0 sorry)',
+                   font=TITLE_FONT),
+        height=400, width=900, showlegend=True, font=FONT,
+        legend=dict(x=0.01, y=0.99)
+    )
+    return fig
+
+
+def fig_fibonacci_braiding_data() -> go.Figure:
+    """Fibonacci MTC braiding data summary: R-matrix, hexagon, universality.
+
+    Displays the complete verified braiding data for the Fibonacci MTC
+    from FibonacciBraiding.lean + FibonacciUniversality.lean.
+    """
+    from src.core.formulas import (
+        fibonacci_r_matrix, fibonacci_twist,
+        interferometric_visibility, thermal_hall_conductance,
+        mtc_total_quantum_dimension,
+    )
+
+    fig = make_subplots(rows=1, cols=2, subplot_titles=(
+        'R-matrix + twist (QCyc5)', 'Ising vs Fibonacci predictions'))
+
+    # Fibonacci R/twist data
+    R1 = fibonacci_r_matrix(0)
+    Rtau = fibonacci_r_matrix(1)
+    theta = fibonacci_twist()
+    labels = ['R₁', 'Rτ', 'θ_τ', 'R₁/Rτ²']
+    phases = [np.angle(v)/np.pi for v in [R1, Rtau, theta, R1/Rtau**2]]
+    fig.add_trace(go.Bar(
+        x=labels, y=phases, name='Phase/π',
+        marker_color=COLORS['sage'],
+        text=[f'{p:.4f}' for p in phases], textposition='outside'
+    ), row=1, col=1)
+
+    # Comparison: Ising vs Fibonacci
+    obs = ['|M_{probe,target}|', 'c_top', 'ln(D)', 'GSD', 'e*/e denom']
+    ising_vals = [0.0, 0.5, np.log(2), 3, 4]
+    phi = (1 + np.sqrt(5)) / 2
+    fib_vals = [
+        abs(interferometric_visibility('fibonacci', 1, 1)),
+        thermal_hall_conductance('fibonacci')['c_top'],
+        np.log(mtc_total_quantum_dimension('fibonacci')),
+        2, 5,
+    ]
+
+    fig.add_trace(go.Bar(
+        x=obs, y=ising_vals, name='Ising',
+        marker_color=COLORS['steel_blue']
+    ), row=1, col=2)
+    fig.add_trace(go.Bar(
+        x=obs, y=fib_vals, name='Fibonacci',
+        marker_color=COLORS['amber']
+    ), row=1, col=2)
+
+    fig.update_yaxes(title_text='Phase / π', row=1, col=1)
+    fig.update_yaxes(title_text='Value', row=1, col=2)
+    fig.update_layout(
+        title=dict(text='Fibonacci MTC: Universal Braiding (dense SU(2))',
+                   font=TITLE_FONT),
+        height=400, width=900, barmode='group', showlegend=True, font=FONT,
+        legend=dict(x=0.01, y=0.99)
+    )
+    return fig
+
+
+def fig_experimental_predictions() -> go.Figure:
+    """Side-by-side comparison of 5 distinguishing observables.
+
+    From Phase 5o deep research: From verified braiding algebra to
+    laboratory observables. All values from verified MTC data.
+    """
+    from src.core.formulas import distinguishing_observables_table
+
+    table = distinguishing_observables_table()
+
+    obs = [r['observable'] for r in table]
+    ranks = [r['rank'] for r in table]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=obs, y=ranks, marker_color=[
+            COLORS['sage'], COLORS['sage'],
+            COLORS['amber'], COLORS['steel_blue'], COLORS['steel_blue']],
+        text=[r['status'][:30] + '...' if len(r['status']) > 30 else r['status']
+              for r in table],
+        textposition='outside'
+    ))
+
+    fig.update_layout(
+        title=dict(text='Experimental Accessibility: Ising vs Fibonacci Discriminators',
+                   font=TITLE_FONT),
+        yaxis_title='Accessibility rank (1=most accessible)',
+        height=400, width=800, font=FONT
+    )
+    return fig
+
+
+# ═════════════════════��══════════════════════════════════════════════
+# Phase 5k Wave 4: TQFT Pipeline — WRT Invariants & Surgery
+# ═════════════════════════════���══════════════════════════════════════
+
+
+def fig_wrt_invariants_table() -> go.Figure:
+    """Table of WRT invariant values Z(M) for key 3-manifolds.
+
+    Displays computed and Lean-verified WRT invariant values for S^3,
+    S^2 x S^1, and lens spaces L(p,1) across Ising and Fibonacci MTCs.
+
+    All values verified in Lean via native_decide over cyclotomic number fields
+    (QCyc16 for Ising, QCyc5 for Fibonacci). Key highlights:
+      - Z(L(8,1)) = 0 for Ising (vanishing)
+      - Z(L(16,1)) = 1 for Ising (16-fold periodicity)
+      - Z(L(5,1)) = 1 for Fibonacci (5-fold periodicity)
+
+    Lean: WRTInvariant.lean, WRTComputation.lean
+    """
+    from src.core.formulas import wrt_invariants_table
+
+    rows = wrt_invariants_table()
+
+    manifolds = [r['manifold'] for r in rows]
+    surgeries = [r['surgery'] for r in rows]
+    ising_vals = [r['ising'] for r in rows]
+    fib_vals = [r['fibonacci'] for r in rows]
+    statuses = [r['lean_status'] for r in rows]
+
+    # Color rows: highlight vanishing and trivial invariants
+    row_colors = []
+    for r in rows:
+        if 'vanishing' in r.get('ising', ''):
+            row_colors.append('#FFE0E0')  # light red for vanishing
+        elif r['manifold'] in ('S^3', 'S^2 x S^1'):
+            row_colors.append('#E8F4FD')  # light blue for fundamental
+        else:
+            row_colors.append('#FFF3E0')  # light amber for lens spaces
+
+    fig = go.Figure(data=[go.Table(
+        header=dict(
+            values=['<b>3-Manifold</b>', '<b>Surgery</b>',
+                    '<b>Ising (k=2)</b>', '<b>Fibonacci (k=3)</b>',
+                    '<b>Lean</b>'],
+            fill_color=COLORS['steel_blue'],
+            font=dict(color='white', size=12, family=FONT['family']),
+            align='center'
+        ),
+        cells=dict(
+            values=[manifolds, surgeries, ising_vals, fib_vals, statuses],
+            fill_color=[[c for c in row_colors]] * 5,
+            font=dict(size=11, family=FONT['family']),
+            align='center',
+            height=28
+        )
+    )])
+
+    fig.update_layout(
+        title=dict(
+            text='WRT Invariants Z(M): First Verified Quantum 3-Manifold Values',
+            font=TITLE_FONT),
+        height=350, width=950,
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
+    return fig
+
+
+def fig_surgery_presentation() -> go.Figure:
+    """Visualization of surgery link data for standard 3-manifolds.
+
+    Shows the linking matrix structure and key properties for each
+    standard surgery presentation: S^3, S^2 x S^1, L(p,1), Hopf link,
+    and trefoil complement.
+
+    Lean: SurgeryPresentation.lean (all symmetry/framing proofs verified)
+    """
+    from src.core.formulas import surgery_linking_matrix
+
+    # Define manifolds to display
+    manifold_specs = [
+        ('S^3', 'S3', {}, 'Empty link', 'Canonical'),
+        ('S^2 x S^1', 'S2xS1', {}, '0-unknot', '0-framed unknot'),
+        ('L(1,1)', 'lens', {'p': 1}, '1-unknot', 'p=1 surgery'),
+        ('L(5,1)', 'lens', {'p': 5}, '5-unknot', 'p=5 surgery'),
+        ('L(8,1)', 'lens', {'p': 8}, '8-unknot', 'Ising-invisible'),
+        ('Hopf(2,3)', 'hopf', {'a': 2, 'b': 3}, '2-component', 'lk=1'),
+        ('Trefoil cmpl', 'trefoil_complement', {}, '2-component', '[[-2,1],[1,-3]]'),
+    ]
+
+    names = []
+    n_comps = []
+    framings_str = []
+    matrix_str = []
+    descriptions = []
+    symmetric_check = []
+
+    for label, key, kwargs, desc, note in manifold_specs:
+        data = surgery_linking_matrix(key, **kwargs)
+        names.append(label)
+        n_comps.append(str(data['num_components']))
+        framings_str.append(str(data['framings']) if data['framings'] else '[]')
+        M = data['matrix']
+        if M.size == 0:
+            matrix_str.append('(empty)')
+        elif M.shape == (1, 1):
+            matrix_str.append(f'[{M[0,0]}]')
+        else:
+            rows_repr = ', '.join(
+                '[' + ','.join(str(x) for x in row) + ']' for row in M
+            )
+            matrix_str.append(f'[{rows_repr}]')
+        descriptions.append(note)
+        symmetric_check.append('\u2713' if M.size == 0 or np.array_equal(M, M.T)
+                               else '\u2717')
+
+    fig = go.Figure(data=[go.Table(
+        header=dict(
+            values=['<b>Manifold</b>', '<b>Components</b>', '<b>Framings</b>',
+                    '<b>Linking Matrix</b>', '<b>Notes</b>', '<b>Symm</b>'],
+            fill_color=COLORS['steel_blue'],
+            font=dict(color='white', size=11, family=FONT['family']),
+            align='center'
+        ),
+        cells=dict(
+            values=[names, n_comps, framings_str, matrix_str,
+                    descriptions, symmetric_check],
+            fill_color=[['#E8F4FD', '#FFF3E0'] * 4],
+            font=dict(size=11, family=FONT['family']),
+            align='center',
+            height=28
+        )
+    )])
+
+    fig.update_layout(
+        title=dict(
+            text='Surgery Presentations: Combinatorial 3-Manifold Data',
+            font=TITLE_FONT),
+        height=320, width=900,
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

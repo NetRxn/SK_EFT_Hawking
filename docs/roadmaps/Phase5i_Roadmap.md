@@ -2,9 +2,9 @@
 
 ## Technical Roadmap — April 2026
 
-*Prepared 2026-04-06 | Follows successful U_q(sl_2) formalization (66 thms, 0 sorry)*
+*Prepared 2026-04-06 | Updated 2026-04-08 | Follows successful U_q(sl_2) formalization (66 thms, 0 sorry)*
 
-**Entry state:** 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. **W1 COMPLETE** (0 sorry). **W2 Stage 3** (4 sorry). **W3 COMPLETE** (0 sorry). **W4 partial** (PolyQuotQ.lean, 15 thms, 0 sorry). W4 remainder BLOCKS Mathlib PR (Phase 5g Track B).
+**Entry state:** 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, **21 sorry** project-wide (Uqsl2AffineHopf **16**, Uqsl3Hopf 3, CenterFunctor 2). **W1 COMPLETE** (0 sorry). **W2 Stage 3** (3 sorry — counit proved; comul_respect + antipode_respect + S² remain; Aristotle 2c668068 COMPLETE but RingQuot typeclass divergence blocks further progress). **W3 COMPLETE** (0 sorry). **W4 partial** (PolyQuotQ.lean, 15 thms, 0 sorry). W4 remainder BLOCKS Mathlib PR (Phase 5g Track B).
 
 ---
 
@@ -43,7 +43,7 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 - [x] `lean/SKEFTHawking/Uqsl3.lean` — first rank-2 quantum group in any proof assistant
 - [x] Builds in 6.4s at default heartbeat limits
 
-### Wave 2 — Hopf Algebra Structure — **Stage 3 COMPLETE** (sorry stubs)
+### Wave 2 — Hopf Algebra Structure — **Stage 3 COMPLETE** (3 sorry remain)
 **Goal:** Bialgebra + HopfAlgebra instances (reuse architecture from Uqsl2Hopf).
 
 - [x] Coproduct Δ defined on 8 generators via FreeAlgebra.lift + RingQuot.liftAlgHom
@@ -51,8 +51,8 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 - [x] Antipode S defined as anti-homomorphism via MulOpposite
 - [x] S² = Ad(K₁K₂) stated
 - [x] `lean/SKEFTHawking/Uqsl3Hopf.lean` — builds in 5.6s
-- [ ] Relation-respect proofs (3 sorry: Δ/ε/S each respect 21 relations — Aristotle Batch 3)
-- [ ] S² proof (1 sorry)
+- [x] Counit respect proof PROVED (both manually and Aristotle; counit now 0 sorry)
+- [ ] 3 sorry remain: Δ-respect (comul_respect), S-respect (antipode_respect), S² proof — Aristotle 2c668068 COMPLETE (did not resolve these; blocked by RingQuot typeclass divergence — deep research #3 submitted)
 - [ ] Bialgebra + HopfAlgebra typeclass wiring (after relation-respect proofs filled)
 
 ### Wave 3 — SU(3)_k Fusion Rules — **COMPLETE**
@@ -92,4 +92,4 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 
 ---
 
-*Phase 5i roadmap. Updated 2026-04-06 (W1 COMPLETE: Uqsl3.lean, 21 relations, 0 sorry. W2 Stage 3: Uqsl3Hopf.lean, Δ/ε/S defined, 4 sorry. W3 COMPLETE: SU3kFusion.lean, SU(3)₁+SU(3)₂ fusion, 99 thms, 0 sorry. W4 partial: PolyQuotQ.lean, 15 thms, 0 sorry; generic CyclotomicField remainder BLOCKS Mathlib PR). 2232 theorems, 94 modules, 33 sorry, 1 axiom. First rank-2 quantum group + first SU(3)_k fusion in any proof assistant.*
+*Phase 5i roadmap. Updated 2026-04-08 (W1 COMPLETE: Uqsl3.lean, 21 relations, 0 sorry. W2 Stage 3: Uqsl3Hopf.lean, Δ/ε/S defined, 3 sorry — counit proved (manually + Aristotle), comul_respect + antipode_respect + S² remain; Aristotle 2c668068 COMPLETE but did not resolve these (RingQuot typeclass divergence — deep research #3 submitted). W3 COMPLETE: SU3kFusion.lean, SU(3)₁+SU(3)₂ fusion, 99 thms, 0 sorry. W4 partial: PolyQuotQ.lean, 15 thms, 0 sorry; generic CyclotomicField remainder BLOCKS Mathlib PR). 2232 theorems, 94 modules, 21 sorry total project-wide (Uqsl2AffineHopf 16, Uqsl3Hopf 3, CenterFunctor 2), 1 axiom. First rank-2 quantum group + first SU(3)_k fusion in any proof assistant.*

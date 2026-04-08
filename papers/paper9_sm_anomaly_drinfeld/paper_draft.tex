@@ -4,6 +4,8 @@
 \usepackage{hyperref}
 \usepackage{braket}
 
+\newcommand{\lean}[1]{\texttt{#1}}
+
 \begin{document}
 
 \title{Formally Verified Anomaly Constraints and Drinfeld Center Computations\\
@@ -251,6 +253,43 @@ matching $\dim D(G)$.}
 \end{figure}
 
 %% ══════════════════════════════════════════════════════════════════
+\section{SPT Stacking and the 16-fold Way}
+\label{sec:spt-stacking}
+
+The $\mathbb{Z}_{16}$ classification of fermionic SPT phases in 3+1D
+has a natural group structure under ``stacking'': placing two SPT slabs
+side by side. We formalize this group structure exactly in
+\lean{SPTStacking.lean}, modeling SPT phases as elements of
+$\mathbb{Z}/16\mathbb{Z}$ with all group axioms (associativity,
+commutativity, identity, inverse) proved by \texttt{decide} over
+Mathlib's \lean{ZMod 16}.
+
+\textbf{SM fermion stacking.} One SM generation contributes 16
+Majorana fermions, corresponding to the identity element $0 \in
+\mathbb{Z}_{16}$: anomaly-free by construction. Three generations
+($48 = 3 \times 16 \equiv 0$) are likewise trivial. Without $\nu_R$,
+each generation contributes 15 Majorana ($\equiv -1 \bmod 16$), so
+three generations give $45 \equiv 13 \bmod 16 \neq 0$: a genuine
+anomaly obstruction. Both results verified by \texttt{decide}.
+
+\textbf{The 16-fold periodicity.} 16 copies of a single Majorana
+fermion can be gapped by interactions (proved: stacking 16 copies of
+the generator gives the identity). 8 copies \emph{cannot} be gapped
+(proved: $8 \neq 0$ in $\mathbb{Z}_{16}$). This is the
+Fidkowski-Kitaev result~\cite{fidkowski2010} elevated to 3+1D.
+
+\textbf{Anomaly matching and interfaces.} Two SPT phases can be
+connected by a gapped interface if and only if their anomaly indices
+match: $\nu(P_1) = \nu(P_2)$ iff $P_1 + (-P_2) = 0$ in
+$\mathbb{Z}_{16}$ (proved). This is the mathematical content of the
+TPF conjecture~\cite{tpf2026}: when anomalies match, the stacked
+system is trivial, so a gapped boundary exists.
+
+The module also formalizes the 1+1D analog ($\mathbb{Z}_8$
+classification) and verifies anomaly matching for the 3450 model
+($25 \equiv 1 \bmod 8$ for both left and right sectors), connecting
+to our K-matrix results in \lean{KMatrixAnomaly.lean}.
+
 \section{Conclusions}
 
 We have established:
@@ -320,6 +359,14 @@ J.~Diff.\ Geom.\ \textbf{35}, 471 (1994).
 \bibitem{GrossJackiw1972}
 D.~Gross and R.~Jackiw,
 Phys.\ Rev.\ D \textbf{6}, 477 (1972).
+
+\bibitem{fidkowski2010}
+L.~Fidkowski and A.~Kitaev,
+Phys.\ Rev.\ B \textbf{81}, 134509 (2010).
+
+\bibitem{tpf2026}
+R.~Thorngren, J.~Preskill, and L.~Fidkowski,
+arXiv:2601.04304 (2026).
 \end{thebibliography}
 
 \end{document}

@@ -11,6 +11,10 @@ from src.core.formulas import (
     fibonacci_r_matrix, fibonacci_twist,
     trefoil_jones_ising,
     su2k_s_matrix_entry, su2k_fusion_rule,
+    mtc_s_matrix, mtc_quantum_dimensions, mtc_total_quantum_dimension,
+    interferometric_visibility, thermal_hall_conductance,
+    topological_entanglement_entropy, quasiparticle_charge,
+    ground_state_degeneracy, distinguishing_observables_table,
 )
 
 
@@ -150,3 +154,124 @@ class TestSU2kSMatrix:
         for i in range(k + 1):
             norm = sum(su2k_s_matrix_entry(k, i, j) ** 2 for j in range(k + 1))
             assert abs(norm - 1.0) < 1e-12, f"Row {i} norm = {norm}"
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5o W3: Experimental predictions from verified MTC data
+# ════════════════════════════════════════════════════════════════════
+
+class TestMTCSMatrix:
+    def test_ising_s_matrix_unitary(self):
+        S = mtc_s_matrix('ising')
+        assert np.allclose(S @ S.T, np.eye(3))
+
+    def test_fibonacci_s_matrix_unitary(self):
+        S = mtc_s_matrix('fibonacci')
+        assert np.allclose(S @ S.T, np.eye(2))
+
+    def test_ising_s_matrix_symmetric(self):
+        S = mtc_s_matrix('ising')
+        assert np.allclose(S, S.T)
+
+    def test_ising_s_sigma_sigma_zero(self):
+        """S_{σσ} = 0 — root of even-odd effect."""
+        S = mtc_s_matrix('ising')
+        assert abs(S[1, 1]) < 1e-14
+
+
+class TestQuantumDimensions:
+    def test_ising_D_squared(self):
+        D = mtc_total_quantum_dimension('ising')
+        assert abs(D**2 - 4.0) < 1e-12
+
+    def test_fibonacci_D_squared(self):
+        phi = (1 + np.sqrt(5)) / 2
+        D = mtc_total_quantum_dimension('fibonacci')
+        assert abs(D**2 - (2 + phi)) < 1e-12
+
+
+class TestInterferometricVisibility:
+    def test_ising_even_odd_effect(self):
+        """M_{σ,σ} = 0: complete suppression for odd parity."""
+        assert abs(interferometric_visibility('ising', 1, 1)) < 1e-14
+
+    def test_ising_vacuum_full(self):
+        """M_{σ,1} = +1: full visibility for vacuum target."""
+        assert abs(interferometric_visibility('ising', 1, 0) - 1.0) < 1e-12
+
+    def test_ising_fermion_pi_shifted(self):
+        """M_{σ,ψ} = -1: full visibility, π-shifted."""
+        assert abs(interferometric_visibility('ising', 1, 2) - (-1.0)) < 1e-12
+
+    def test_fibonacci_nonzero(self):
+        """M_{τ,τ} = -1/φ² ≈ -0.382: reduced but nonzero."""
+        phi = (1 + np.sqrt(5)) / 2
+        M = interferometric_visibility('fibonacci', 1, 1)
+        assert abs(M - (-1/phi**2)) < 1e-12
+
+    def test_fibonacci_visibility_magnitude(self):
+        """|M_{τ,τ}| ≈ 0.382."""
+        assert abs(abs(interferometric_visibility('fibonacci', 1, 1)) - 0.381966) < 1e-5
+
+
+class TestThermalHall:
+    def test_ising_central_charge(self):
+        """c_top = 1/2 for Ising."""
+        result = thermal_hall_conductance('ising')
+        assert abs(result['c_top'] - 0.5) < 1e-10
+
+    def test_fibonacci_central_charge(self):
+        """c_top = 14/5 for Fibonacci."""
+        result = thermal_hall_conductance('fibonacci')
+        assert abs(result['c_top'] - 2.8) < 1e-10
+
+    def test_kappa_0_positive(self):
+        result = thermal_hall_conductance('ising')
+        assert result['kappa_0'] > 0
+
+    def test_nu52_prediction(self):
+        """ν=5/2 prediction: 2 + 0.5 = 2.5κ₀ (Banerjee 2018)."""
+        result = thermal_hall_conductance('ising')
+        total_with_landau = 2 + result['c_top']
+        assert abs(total_with_landau - 2.5) < 1e-10
+
+
+class TestTEE:
+    def test_ising_tee(self):
+        assert abs(topological_entanglement_entropy('ising') - np.log(2)) < 1e-12
+
+    def test_fibonacci_tee(self):
+        phi = (1 + np.sqrt(5)) / 2
+        expected = np.log(np.sqrt(2 + phi))
+        assert abs(topological_entanglement_entropy('fibonacci') - expected) < 1e-12
+
+    def test_ising_greater_than_fibonacci(self):
+        """Ising TEE > Fibonacci TEE (D_ising=2 > D_fib≈1.9)."""
+        assert topological_entanglement_entropy('ising') > topological_entanglement_entropy('fibonacci')
+
+
+class TestQuasiparticleCharge:
+    def test_ising_charge(self):
+        assert quasiparticle_charge('ising')['charge_fraction'] == 0.25
+
+    def test_fibonacci_charge(self):
+        assert quasiparticle_charge('fibonacci')['charge_fraction'] == 0.2
+
+
+class TestGSD:
+    def test_ising_gsd(self):
+        assert ground_state_degeneracy('ising') == 3
+
+    def test_fibonacci_gsd(self):
+        assert ground_state_degeneracy('fibonacci') == 2
+
+
+class TestDistinguishingTable:
+    def test_table_has_5_observables(self):
+        table = distinguishing_observables_table()
+        assert len(table) == 5
+
+    def test_table_ranked(self):
+        table = distinguishing_observables_table()
+        ranks = [row['rank'] for row in table]
+        assert ranks == [1, 2, 3, 4, 5]

@@ -302,14 +302,10 @@ theorem spt_refines_smg (n : ℕ) :
     (spt_4plus1d n).classification_order =
     (smg_4d_pin_plus n).classification_order := rfl
 
-/--
-Bridge to ChiralityWallMaster.lean: the gapped interface axiom is
-Pillar 3's axiomatized input. If we discharge it (by finding a proof
-or obtaining overwhelming numerical evidence), the chirality wall
-assessment upgrades from "cracking" to "broken through".
--/
-theorem spt_is_pillar3_input :
-    True := trivial
+-- Bridge to ChiralityWallMaster.lean: the gapped interface axiom is
+-- Pillar 3's axiomatized input. If discharged (by proof or numerical
+-- evidence), the chirality wall upgrades from "cracking" to "broken through".
+-- See also: VillainHamiltonian.lean (K-matrix gappability for 1+1D case).
 
 /--
 The 1+1D analog IS solvable: the "3450" model provides exact evidence.

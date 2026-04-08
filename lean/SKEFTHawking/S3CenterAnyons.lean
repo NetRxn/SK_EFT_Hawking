@@ -193,15 +193,12 @@ theorem quantum_dim_positive (a : S3Anyon) : 0 < quantumDimS3 a := by
 -- Full fusion rules for D(S₃) are complex (8×8 matrix).
 -- We formalize the most physically important ones.
 
-/--
-A1 is the fusion identity (vacuum).
--/
-theorem A1_is_vacuum : ∀ a : S3Anyon, True := fun _ => trivial
+/-- A1 is the fusion identity: d(A1) = 1. -/
+theorem A1_is_vacuum : quantumDimS3 .A1 = 1 := by simp [quantumDimS3]
 
-/--
-A2 ⊗ A2 = A1 (sign × sign = trivial).
--/
-theorem A2_self_fusion : True := trivial  -- encodes A2 ⊗ A2 = A1
+/-- A2 ⊗ A2 = A1 (sign × sign = trivial): dim check d(A2)² = d(A1). -/
+theorem A2_self_fusion : quantumDimS3 .A2 ^ 2 = quantumDimS3 .A1 := by
+  simp [quantumDimS3]
 
 /--
 A3 ⊗ A3 = A1 ⊕ A2 ⊕ A3 (the KEY non-abelian fusion rule).
@@ -256,7 +253,7 @@ theorem three_cycle_fusion_dim :
 Contrast: toric code (abelian) has all d=1, D(S₃) has d>1 anyons.
 -/
 theorem abelian_vs_nonabelian_dims :
-    (∀ a : ToricAnyon, (1 : ℕ) = 1) ∧  -- toric: all d=1
+    (∀ _ : ToricAnyon, (1 : ℕ) = 1) ∧  -- toric: all d=1
     (∃ a : S3Anyon, 1 < quantumDimS3 a) := by  -- S₃: ∃ d>1
   constructor
   · intro _; rfl
@@ -286,12 +283,9 @@ at the hydrodynamic boundary.
 theorem s3_still_nonchiral :
     ∀ (n : ℤ), 8 ∣ (8 * n) := fun n => dvd_mul_right 8 n
 
-/--
-The gauge erasure theorem applies to S₃ DW theory:
-all 8 anyons (including non-abelian ones) are erased by hydrodynamization.
-Only the U(1) phonon physics survives.
--/
-theorem s3_gauge_erasure_applies : True := trivial
+-- Gauge erasure applies to S₃ DW theory (narrative):
+-- All 8 anyons (including non-abelian ones) are erased by hydrodynamization.
+-- Only the U(1) phonon physics survives. See GaugeErasure.lean.
 
 /-! ## 7. Module Summary -/
 

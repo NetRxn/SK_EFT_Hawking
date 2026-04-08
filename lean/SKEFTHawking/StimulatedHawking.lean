@@ -83,78 +83,50 @@ theorem stimGain_pos (omega kappa greybody : ℝ)
 
 /-! ## 3. Monotonicity -/
 
-/--
+/-
 **n_BE is strictly decreasing** on (0, ∞): higher frequencies have
 less gain. This is because exp(x) is strictly increasing.
-
-PROVIDED SOLUTION
-n_BE(x) = 1/(exp(x)-1). Strategy:
-1. intro x y hx hy hxy (StrictAntiOn unfolds to ∀ x y ∈ Ioi 0, x < y → f y < f x)
-2. unfold boseEinstein
-3. apply div_lt_div_of_pos_left one_pos (by positivity) (by positivity)
-   -- reduces to showing exp(x)-1 < exp(y)-1 for x < y
-4. Use sub_lt_sub_right (Real.exp_lt_exp.mpr hxy) 1
-   -- or: linarith [Real.exp_lt_exp.mpr hxy]
-Key Mathlib lemmas: Real.exp_lt_exp, div_lt_div_of_pos_left, Real.exp_pos
 -/
 theorem boseEinstein_strictAnti :
     StrictAntiOn boseEinstein (Set.Ioi 0) := by
-  sorry
+  refine' fun x hx y hy hxy => one_div_lt_one_div_of_lt _ _ <;> aesop
 
-/--
+/-
 **Stimulated gain is strictly decreasing in ω** for fixed κ > 0, Γ > 0.
-
-PROVIDED SOLUTION
-stimGain ω κ g = g * n_BE(2πω/κ). Since n_BE is StrictAntiOn (Ioi 0) and
-ω ↦ 2πω/κ is strictly increasing for κ>0, the composition is StrictAntiOn.
-Use StrictAntiOn.comp_strictMonoOn with the linear scaling function.
-Key: mul_comm to factor out greybody, then apply boseEinstein_strictAnti composed
-with the linear map. Alternatively: unfold stimGain and use boseEinstein_strictAnti
-directly after showing the argument is strictly increasing.
 -/
 theorem stimGain_anti_omega (kappa greybody : ℝ) (hk : kappa > 0) (hg : greybody > 0) :
     StrictAntiOn (fun omega => stimGain omega kappa greybody) (Set.Ioi 0) := by
-  sorry
+  intro omega h_omega omega' h_omega' h_omega_lt_omega'
+  have h_arg : 2 * Real.pi * omega / kappa < 2 * Real.pi * omega' / kappa := by
+    gcongr;
+  exact mul_lt_mul_of_pos_left ( boseEinstein_strictAnti ( show 0 < 2 * Real.pi * omega / kappa from div_pos ( mul_pos ( mul_pos two_pos Real.pi_pos ) h_omega ) hk ) ( show 0 < 2 * Real.pi * omega' / kappa from div_pos ( mul_pos ( mul_pos two_pos Real.pi_pos ) h_omega' ) hk ) h_arg ) hg
 
 /-! ## 4. Limiting behavior -/
 
-/--
+/-
 **n_BE(x) → 0 as x → ∞** (UV suppression).
 Exponential decay: n_BE(x) ≤ exp(-x) for x ≥ 1.
-
-PROVIDED SOLUTION
-Strategy: squeeze theorem between 0 and 1/exp(x) (which → 0).
-1. For x > 0: 0 < boseEinstein x (already proved as boseEinstein_pos)
-2. boseEinstein x = 1/(exp(x)-1) ≤ 1/(exp(x)/2) = 2*exp(-x) for x ≥ 1
-3. Use Filter.Tendsto.squeeze_zero or Filter.tendsto_atTop_atTop
-Key Mathlib: Real.tendsto_exp_neg_atTop_nhds_zero, Filter.Tendsto.squeeze_zero,
-  Real.exp_ge_one_add_of_nonneg (for exp(x) ≥ 1+x), eventually_atTop
 -/
 theorem boseEinstein_tendsto_zero :
     Filter.Tendsto boseEinstein Filter.atTop (nhds 0) := by
-  sorry
+  exact tendsto_const_nhds.div_atTop ( Filter.tendsto_atTop_add_const_right _ _ ( Real.tendsto_exp_atTop ) )
 
-/--
+/-
 **n_BE(x) ~ 1/x as x → 0⁺** (IR enhancement).
 More precisely: n_BE(x) ≥ 1/(2x) for 0 < x ≤ 1.
-
-PROVIDED SOLUTION
-Goal: 1/(exp(x)-1) ≥ 1/(2x) for 0 < x ≤ 1.
-Equivalent to: 2x ≥ exp(x)-1 (since both denominators are positive).
-Equivalent to: exp(x) ≤ 1 + 2x.
-Proof of exp(x) ≤ 1 + 2x for 0 < x ≤ 1:
-  Use add_one_le_exp (Real.add_one_le_exp x) gives 1+x ≤ exp(x), wrong direction.
-  Instead use the convexity: exp is convex, so exp(x) ≤ exp(0)(1-x) + exp(1)·x
-  = 1-x + e·x = 1 + (e-1)x ≤ 1 + 2x since e-1 < 2.
-  Or: use Real.exp_le_one_add_nhds approach.
-  Simpler: unfold boseEinstein, apply div_le_div, then nlinarith with
-  Real.exp_le_pow_div (exp bound from Mathlib) or just use nlinarith with
-  the Taylor bound exp(x) = 1 + x + x²/2 + ... ≤ 1 + x + x² ≤ 1 + 2x for x ≤ 1.
-Key: nlinarith [Real.add_one_le_exp x, sq_nonneg x]
 -/
 theorem boseEinstein_lower_bound (x : ℝ) (hx : 0 < x) (hx1 : x ≤ 1) :
     boseEinstein x ≥ 1 / (2 * x) := by
-  sorry
+  rw [ ge_iff_le, boseEinstein, div_le_div_iff₀ ] <;> try positivity;
+  · have := Real.exp_one_lt_d9.le;
+    rw [ show Real.exp x = ( Real.exp 1 ) ^ x by rw [ ← Real.exp_mul, one_mul ] ];
+    -- Apply Jensen's inequality for the concave function $f(y) = y^x$ with $y = \exp(1)$.
+    have h_jensen : (Real.exp 1) ^ x ≤ 1 + x * (Real.exp 1 - 1) := by
+      have := @Real.geom_mean_le_arith_mean;
+      specialize this { 0, 1 } ( fun i => if i = 0 then 1 - x else x ) ( fun i => if i = 0 then 1 else Real.exp 1 ) ; norm_num at *;
+      linarith [ this hx1 hx.le ( Real.exp_nonneg 1 ) ];
+    nlinarith [ Real.add_one_le_exp 1 ];
+  · norm_num [ hx ]
 
 /-! ## 5. Signal-to-noise ratio -/
 
@@ -189,25 +161,15 @@ and c₁ > 0 is a profile-dependent O(1) coefficient.
 -/
 noncomputable def dispersiveCorrection (c1 D : ℝ) : ℝ := 1 - c1 * D ^ 2
 
-/--
+/-
 **Perturbative regime**: for D² < 1/c₁, the correction is between 0 and 1.
 This means the effective temperature is reduced but remains positive.
-
-PROVIDED SOLUTION
-After unfold dispersiveCorrection, goal is: 0 < 1 - c1 * D^2 ∧ 1 - c1 * D^2 < 1.
-constructor:
-Left: sub_pos.mpr. Need c1 * D^2 < 1.
-  From hD: D^2 < 1/c1. Multiply by c1 > 0: c1 * D^2 < c1 * (1/c1) = 1.
-  Use (mul_lt_mul_left hc).mpr hD then simp [mul_div_cancel₀] or nlinarith.
-Right: sub_lt_self. Need c1 * D^2 > 0.
-  Use mul_pos hc (sq_pos_of_ne_zero D hD0) or positivity.
-Alternatively: constructor <;> nlinarith [sq_pos_of_ne_zero D hD0, mul_div_cancel₀ (1:ℝ) (ne_of_gt hc)]
 -/
 theorem dispersiveCorrection_in_unit_interval (c1 D : ℝ)
     (hc : c1 > 0) (hD0 : D ≠ 0) (hD : D ^ 2 < 1 / c1) :
     0 < dispersiveCorrection c1 D ∧ dispersiveCorrection c1 D < 1 := by
   unfold dispersiveCorrection
-  sorry
+  exact ⟨ by rw [ lt_div_iff₀ hc ] at hD; linarith, by nlinarith [ mul_self_pos.mpr hD0 ] ⟩
 
 /-! ## 7. Detection threshold -/
 

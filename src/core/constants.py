@@ -778,7 +778,7 @@ COLORS = {
 # Maps Aristotle-proved theorems to their run IDs.
 #
 # Verification breakdown (1379 theorems (1304 substantive + 75 placeholder), 1 axiom, 97 Lean modules):
-#   - 307 tracked in ARISTOTLE_THEOREMS registry (304 machine + 3 manual, listed below with run IDs)
+#   - 322 tracked in ARISTOTLE_THEOREMS registry (319 machine + 3 manual, listed below with run IDs)
 #   - 872 proved manually in Lean (verified by `lake build`)
 #   - 1 axiom
 #   - 28 sorry
@@ -1162,10 +1162,26 @@ ARISTOTLE_THEOREMS = {
     'gap_solution_monotone': '79e07d55',
     'gapIntegral_le_I0': '79e07d55',
     'gapIntegral_lower_bound': '79e07d55',
+    # Aristotle run 986b9f66 (2026-04-07): StimulatedHawking, VerifiedStatistics, EmergentGravityBounds, KerrSchild, CoidealEmbedding — 15 theorems
+    'boseEinstein_strictAnti': '986b9f66',
+    'stimGain_anti_omega': '986b9f66',
+    'boseEinstein_tendsto_zero': '986b9f66',
+    'boseEinstein_lower_bound': '986b9f66',
+    'dispersiveCorrection_in_unit_interval': '986b9f66',
+    'autocovariance_bounded': '986b9f66',
+    'jackknife_mean_case': '986b9f66',
+    'normalizedAutocorr_le_one': '986b9f66',
+    'effectiveSampleSize_le_n': '986b9f66',
+    'coupling_deficit': '986b9f66',
+    'ks_inverse_formula': '986b9f66',
+    'counit_B0': '986b9f66',
+    'counit_B1': '986b9f66',
+    'coideal_B0': '986b9f66',
+    'coideal_B1': '986b9f66',
 }
 
 ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS)
-assert ARISTOTLE_PROVED_COUNT == 307, f"Expected 307 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
+assert ARISTOTLE_PROVED_COUNT == 322, f"Expected 322 Aristotle-proved theorems, got {ARISTOTLE_PROVED_COUNT}"
 # Backwards compatibility alias
 TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 

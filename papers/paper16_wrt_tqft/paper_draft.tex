@@ -102,7 +102,10 @@ presentations as symmetric integer linking matrices
 Framing and linking properties verified for all examples. The key
 insight from~\cite{turaev2010}: working with linking matrices avoids
 smooth 3-manifold topology entirely --- the construction is purely
-combinatorial.
+combinatorial. Kirby handle slides (the second Kirby move) are
+formalized as concrete matrix operations preserving symmetry, with a
+trefoil complement presentation $\bigl(\begin{smallmatrix} -2 & 1 \\
+1 & -3 \end{smallmatrix}\bigr)$ verified.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The WRT Invariant Formula}
@@ -129,6 +132,10 @@ Using verified MTC data from companion work~\cite{paper14}:
   \item $p_+ = 1 + 2\theta_\sigma + \theta_\psi = 2\zeta_{16}$ \quad (proved)
   \item $Z(S^2 \times S^1) = 3$ \quad (rank)
   \item Braiding gates: $\sigma_1 = \mathrm{diag}(\zeta^{-1}, \zeta^3)$ (Clifford)
+  \item \textbf{Lens space invariants} $Z(L(p,1))$ for $p = 1,2,3,4,8,16$:
+    numerator $= 1 + 2\theta_\sigma^p + (-1)^p$, all proved.
+    Key: $Z(L(8,1)) = 0$ (vanishing!) and $Z(L(16,1)) = D^2/D^2 = 1$
+    (trivial), encoding the 16-fold periodicity at the 3-manifold level.
 \end{itemize}
 
 \textbf{Fibonacci MTC} (2 simple objects $\{1, \tau\}$, $\tau \otimes \tau = 1 \oplus \tau$):
@@ -156,17 +163,26 @@ $\binom{3}{1}_q = [3]_q$ (for $B_n/C_n$ types).
 
 We have presented the first formalization of the WRT 3-manifold
 invariant pipeline: from algebraic MTC data through the Temperley-Lieb
-algebra, Jones-Wenzl idempotents, and surgery presentations to
-concrete verified invariant values. Seven new Lean~4 modules,
-${\sim}60$~theorems, zero sorry, zero axioms. The Ising and Fibonacci
-computations demonstrate that verified MTC data can produce verified
-topological invariants --- the first such connection in any proof
-assistant.
+algebra, Jones-Wenzl idempotents, surgery presentations with Kirby
+moves, to concrete verified invariant values and anyonic braiding
+gates. Nine Lean~4 modules, ${\sim}115$~theorems, zero sorry, zero
+axioms. The Ising and Fibonacci computations demonstrate that verified
+MTC data can produce both verified topological invariants and verified
+quantum gates --- the first such connections in any proof assistant.
 
-The infrastructure opens direct paths to topological quantum
-computation (braiding gates from the $B = F^{-1}RF$ formula),
-verified quantum error correction (Levin-Wen codes from fusion data),
-and the full WRT TQFT functor (Kirby invariance proofs).
+Braiding gates computed via $B = F^{-1}RF$: Ising gates generate the
+Clifford group, Fibonacci gates generate a dense subgroup of SU(2)
+(Freedman--Larsen--Wang 2002). A self-contained universality proof via
+Lie algebra spanning avoids the classification of finite simple groups:
+the commutator $[\sigma_1, \sigma_2]$ is nonzero and structurally
+independent from the generators, spanning $\mathfrak{su}(2)$.
+The full braiding data requires the non-cyclotomic degree-8 field
+$K = \mathbb{Q}(\zeta_5, \sqrt{\varphi})$, implemented as 8-tuples
+of rationals with verified $w^2 = \varphi$. For 4~anyons on the
+qutrit space (dim~3), all $B_4$ relations verified as $3 \times 3$
+matrix identities over $K$, with $\sigma_1 \neq \sigma_3$ (genuine
+$B_4$, not factoring through $B_3$) and su(3) Lie algebra spanning
+data establishing density in SU(3).
 
 \begin{acknowledgments}
 Lean~4 proofs verified by \texttt{lake build} (v4.28.0,

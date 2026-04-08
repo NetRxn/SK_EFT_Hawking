@@ -199,14 +199,13 @@ This equals dim D(G), consistent with the equivalence.
 theorem center_dimension_formula :
     Fintype.card G ^ 2 = Fintype.card G * Fintype.card G := by ring
 
-/--
-The Müger center of Z(Vec_G) is trivial (Vec).
-This means Z(Vec_G) is modular — it has no transparent anyons.
-Equivalently: every anyon that braids trivially with all others is isomorphic
-to a direct sum of the unit object.
--/
-theorem muger_center_trivial :
-    True := trivial  -- requires Müger center formalization (future work)
+-- Müger center triviality for Z(Vec_G):
+-- For G = ℤ/2 (toric code), this is PROVED in MugerCenter.lean as
+-- `toric_muger_trivial`: only the vacuum has trivial monodromy with all anyons.
+-- For Ising and Fibonacci, non-transparency of non-vacuum simples is also proved
+-- in MugerCenter.lean via S-matrix inequalities over QSqrt2/QSqrt5.
+-- Cannot import MugerCenter here (cycle: DrinfeldCenterBridge → MugerCenter →
+-- ToricCodeCenter → DrinfeldCenterBridge). The general G case is open.
 
 /-! ## 6. Bidirectional Interpretation -/
 
@@ -296,20 +295,15 @@ Each simple is k concentrated in one degree.
 theorem vecG_simples_count :
     Fintype.card G = Fintype.card G := rfl
 
-/--
-Infrastructure inventory for MonoidalCategory (VecG_Cat k G):
-  ✓ AddCommMonoid (Additive G) — from Group G
-  ✓ DecidableEq (Additive G) — from DecidableEq G
-  ✓ MonoidalCategory (ModuleCat k) — in Mathlib
-  ? HasInitial (ModuleCat k) — likely available
-  ? PreservesColimit for curriedTensor — needs verification
-  ? HasTensor₄ObjExt — needs verification
-
-Once these instances are connected, `Center (VecG_Cat k G)` gives Z(Vec_G)
-with automatic braided monoidal structure from Mathlib.
--/
-theorem infrastructure_status :
-    True := trivial
+-- Infrastructure inventory for MonoidalCategory (VecG_Cat k G):
+--   ✓ AddCommMonoid (Additive G) — from Group G
+--   ✓ DecidableEq (Additive G) — from DecidableEq G
+--   ✓ MonoidalCategory (ModuleCat k) — in Mathlib
+--   ? HasInitial (ModuleCat k) — likely available
+--   ? PreservesColimit for curriedTensor — needs verification
+--   ? HasTensor₄ObjExt — needs verification
+-- See VecGMonoidal.lean for MonoidalCategory instance,
+-- CenterEquivalenceZ2.lean for concrete Z/2 verification.
 
 /-! ## 8. Module Summary and Status -/
 

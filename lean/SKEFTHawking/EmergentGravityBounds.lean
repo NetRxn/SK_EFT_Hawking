@@ -53,7 +53,7 @@ noncomputable def G_c_adw (N_f : ℕ) (Λ : ℝ) : ℝ :=
 
 /-! ## 2. Coupling Deficit Theorem -/
 
-/--
+/-
 **The perturbative coupling deficit is at least 3 orders of magnitude.**
 
 For α = α_max = 0.20 and N_f = 4:
@@ -62,25 +62,30 @@ For α = α_max = 0.20 and N_f = 4:
 With α = 0.20: G₄f/G_c = 0.04·4/(32π³) = 0.16/(32·31.006) ≈ 1.6 × 10⁻⁴.
 
 The ratio is bounded: G₄f < G_c/1000 for α ≤ 0.20 and N_f ≤ 10.
-
-PROVIDED SOLUTION
-After unfolding perturbative_4f_coupling and G_c_adw:
-  Goal: α²/(4πΛ²) < (8π²/(N_f·Λ²)) / 1000 = 8π²/(1000·N_f·Λ²)
-Cancel Λ² (positive) from both sides: α²/(4π) < 8π²/(1000·N_f)
-Rearrange: 1000·N_f·α² < 32·π³
-For α ≤ 1/5, N_f ≤ 10: LHS ≤ 1000·10·(1/5)² = 1000·10·1/25 = 400.
-Need: 400 < 32π³. Since π > 3.14159, π³ > 31.006, 32π³ > 992 > 400. ✓
-Key Mathlib: Real.pi_gt_three (gives π > 3), then nlinarith with
-  Real.pi_gt_three to get π³ > 27 > 400/32 = 12.5. Actually need better:
-  Use Real.pi_gt_3141592 if available, or bound π > 3.14 via
-  have hpi : Real.pi > 3 := Real.pi_gt_three
-  Then π³ > 27 and 32·27 = 864 > 400. ✓
-Proof sketch: unfold both, cancel Λ², cast N_f, nlinarith [Real.pi_gt_three, sq_nonneg alpha]
 -/
+private theorem coupling_deficit_aux (asq : ℝ) (N : ℝ) (ha : asq ≤ (1/5)^2) (hN : N ≤ 10)
+    (hN0 : 0 < N) (hasq : 0 ≤ asq) :
+    asq * N * 1000 < 32 * Real.pi ^ 3 := by
+  -- We'll use that π is approximately 3.14159 to estimate π^3.
+  have h_pi_approx : Real.pi > 3.1415 := by
+    exact?;
+  exact lt_of_le_of_lt ( mul_le_mul_of_nonneg_right ( mul_le_mul ha hN ( by positivity ) ( by positivity ) ) ( by positivity ) ) ( by norm_num1 at *; nlinarith [ sq_nonneg ( Real.pi - 3.1415 ) ] )
+
+/-- Note: the original statement had `alpha ≤ 1/5` without a lower bound, which is
+    insufficient since alpha^2 can be arbitrarily large for negative alpha.
+    Added `0 ≤ alpha` (physically natural: alpha is a coupling constant). -/
 theorem coupling_deficit (alpha Λ : ℝ) (N_f : ℕ)
-    (hα : alpha ≤ 1/5) (hΛ : Λ > 0) (hN : N_f ≤ 10) (hN0 : 0 < N_f) :
+    (hα0 : 0 ≤ alpha) (hα : alpha ≤ 1/5) (hΛ : Λ > 0) (hN : N_f ≤ 10) (hN0 : 0 < N_f) :
     perturbative_4f_coupling alpha Λ < G_c_adw N_f Λ / 1000 := by
-  sorry
+  unfold perturbative_4f_coupling G_c_adw
+  rw [div_div]
+  rw [div_lt_div_iff₀ (by positivity) (by positivity)]
+  have hNR : (N_f : ℝ) ≤ 10 := by exact_mod_cast hN
+  have hNR0 : (0 : ℝ) < (N_f : ℝ) := Nat.cast_pos.mpr hN0
+  have hasq : alpha ^ 2 ≤ (1/5)^2 := by nlinarith [sq_nonneg (1/5 - alpha)]
+  have key := coupling_deficit_aux (alpha^2) (N_f : ℝ) hasq hNR hNR0 (sq_nonneg _)
+  have hL2 : Λ ^ 2 > 0 := by positivity
+  nlinarith [mul_lt_mul_of_pos_right key hL2]
 
 /-- The deficit factor: G₄f/G_c = α²·N_f/(32π³). -/
 noncomputable def coupling_ratio (alpha : ℝ) (N_f : ℕ) : ℝ :=

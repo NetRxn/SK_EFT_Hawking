@@ -1646,7 +1646,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="4 sorry: coideal_B0, coideal_B1, counit_B0, counit_B1. Coideal property Δ(Bi)=Bi⊗1+Ki⁻¹⊗Bi and counit ε(Bi)=0.",
         strategy_hint="Expand Bi = Fi + EiKi⁻¹, apply linearity of Δ. Use affComul on Fi, Ei, Ki⁻¹. Multiply out (Ei⊗Ki + 1⊗Ei)(Ki⁻¹⊗Ki⁻¹). Apply KiKi⁻¹=1. Counit: ε(Fi)=0, ε(Ei)=0, ε(Ki⁻¹)=1 → ε(Bi)=0+0·1=0.",
-        filled=False,
+        filled=True,
     ),
 
     # --- Batch 3 (Priority 2 — completes paper verification) ---
@@ -1654,7 +1654,7 @@ SORRY_GAPS: list[SorryGap] = [
         module="SKEFTHawking.StimulatedHawking",
         name="stimulated_hawking_analysis",
         priority=2,
-        description="7 sorry: boseEinstein_strictAnti, stimGain_anti_omega, boseEinstein_tendsto_zero, boseEinstein_lower_bound, snr_sqrt_scaling, dispersiveCorrection_in_unit_interval, detection_threshold. Real analysis: exp monotonicity, limits, sqrt properties.",
+        description="7 sorry: boseEinstein_strictAnti, stimGain_anti_omega, boseEinstein_tendsto_zero, boseEinstein_lower_bound, snr_sqrt_scaling, dispersiveCorrection_in_unit_interval, detection_threshold. Real analysis: exp monotonicity, limits, sqrt properties. 5 of 7 proved by Aristotle run 986b9f66; snr_sqrt_scaling, detection_threshold remain.",
         strategy_hint="strictAnti: 1/(exp(x)-1) has strictly decreasing numerator 1 and strictly increasing denominator. tendsto_zero: squeeze with exp(-x). lower_bound: exp(x)≤1+2x for x≤1 (Taylor). sqrt_scaling: Real.sqrt_mul properties. dispersive: D²<1/c₁ → c₁D²<1 via field_simp. detection: sqrt(n)·G≥5 from n≥25/G².",
         filled=False,
     ),
@@ -1664,7 +1664,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="4 sorry: autocovariance_bounded (Cauchy-Schwarz), jackknife_mean_case (s²/n identity), normalizedAutocorr_le_one (ρ≤1), effectiveSampleSize_le_n (N_eff≤N).",
         strategy_hint="autocovariance_bounded: Finset.inner_mul_le_norm_mul_sq (Cauchy-Schwarz). jackknife_mean_case: Fin.sum_univ_succAbove for delete-one, then field_simp+ring. normalizedAutocorr: use autocovariance_bounded + div_le_one. effectiveSampleSize: use intAutocorrTime_ge_half + div_le_div.",
-        filled=False,
+        filled=True,
     ),
     SorryGap(
         module="SKEFTHawking.RepUqFusion",
@@ -1690,13 +1690,13 @@ SORRY_GAPS: list[SorryGap] = [
         priority=3,
         description="1 sorry: ks_inverse_formula (Sherman-Morrison 4×4 matrix inverse for Kerr-Schild metric).",
         strategy_hint="Sherman-Morrison: (η+φl⊗l)⁻¹ = η-φ/(1+φ·l·η·l)·l⊗l. For null l (l·η·l=0): simplifies to η-φ·l⊗l. Expand 4×4 sum, use nullity hypothesis, close with ring.",
-        filled=False,
+        filled=True,
     ),
     SorryGap(
         module="SKEFTHawking.EmergentGravityBounds",
         name="emergent_gravity_coupling_bounds",
         priority=3,
-        description="2 sorry: coupling_deficit (G₄f < G_c/1000 for α≤0.2), coupling_ratio_small (ratio < 1/1000 for α=0.2, N_f=4).",
+        description="2 sorry: coupling_deficit (G₄f < G_c/1000 for α≤0.2), coupling_ratio_small (ratio < 1/1000 for α=0.2, N_f=4). coupling_deficit proved by Aristotle run 986b9f66; coupling_ratio_small remains.",
         strategy_hint="Both need Real.pi bounds: π > 3.14. Then 32π³ > 32·31 = 992. α²·N_f/(32π³) < 0.04·4/992 < 1/1000. Use Real.pi_gt_three or pi_gt_3141592.",
         filled=False,
     ),

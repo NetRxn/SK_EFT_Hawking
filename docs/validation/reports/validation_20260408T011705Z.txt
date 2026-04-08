@@ -1,0 +1,13 @@
+SK-EFT Hawking Validation Report
+Generated: 20260408T011705Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] graph_integrity
+  + graph_size — 3349 nodes, 1320 edges
+  + conflicts — No verification conflicts
+  + orphan_nodes — 2723 orphan nodes: param:MAJORANA_GAMMA_8x8, param:MAJORANA_J1, param:MAJORANA_J2, param:MAJORANA_J3, formula:so4_one_link_integral (+2718 more)
+  + ungrounded_claims — 3 ungrounded claims: claim:paper3_gauge_erasure:0, claim:paper3_gauge_erasure:1, claim:paper3_gauge_erasure:2
+  + broken_chains — 58 broken provenance chains: formula:planck_occupation, formula:planck_occupation, formula:planck_occupation, formula:planck_occupation, formula:so4_weingarten_2nd_moment (+53 more)
+  + missing_provenance — 16 params without SOURCED_FROM: HBAR, K_B, A_BOHR, Rb87.mass, K39.mass (+11 more)
+
+Overall: 1/1 passed

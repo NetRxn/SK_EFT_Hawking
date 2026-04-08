@@ -206,15 +206,13 @@ theorem chirality_wall_consistent :
 
 /-! ## 6. Theorem Count and Module Summary -/
 
-/-- Phase 5a total across all chirality wall modules. -/
-theorem phase5a_module_count :
-    -- Waves 1A+1B: OnsagerAlgebra (24) + OnsagerContraction (12) = 36
-    -- Wave 2: Pauli (15) + Wilson (11) + BdG (8) + GTComm (10) + GTDoublet (12) = 56
-    -- Wave 3: Z16 (21) + Steenrod (17) = 38
-    -- Wave 5A: SMG (13)
-    -- Wave 4: this module
-    -- Phase 5 base: LatticeHam (28) + GS (14) + TPF (12) + Chirality (17) = 71
-    True := trivial
+-- Phase 5a module count (documentation only, not a theorem):
+-- Waves 1A+1B: OnsagerAlgebra (24) + OnsagerContraction (12) = 36
+-- Wave 2: Pauli (15) + Wilson (11) + BdG (8) + GTComm (10) + GTDoublet (12) = 56
+-- Wave 3: Z16 (21) + Steenrod (17) = 38
+-- Wave 5A: SMG (13)
+-- Wave 4: this module
+-- Phase 5 base: LatticeHam (28) + GS (14) + TPF (12) + Chirality (17) = 71
 
 /-- The chirality wall is fracturing: the formal verification establishes
     - The no-go's scope is limited (5/9 conditions violable)

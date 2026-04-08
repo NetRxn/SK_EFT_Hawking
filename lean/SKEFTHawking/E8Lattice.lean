@@ -148,11 +148,9 @@ positive definite example in rank 8 (no rank < 8 examples exist).
 theorem classification_sigma (a b : ℤ) : 8 ∣ (8 * (a - b)) := by
   exact dvd_mul_right 8 (a - b)
 
-/-- The algebraic Serre theorem (statement): for any even unimodular
-    form, σ ≡ 0 mod 8. This is the ALGEBRAIC bound.
-    The topological Rokhlin theorem strengthens this to σ ≡ 0 mod 16
-    for intersection forms of smooth spin 4-manifolds. -/
-theorem serre_mod_8_statement : True := trivial
+/-- Serre mod 8 for E8: σ(E8) = 8, and 8 ≡ 0 mod 8.
+    The full algebraic Serre theorem is in AlgebraicRokhlin.serre_even_unimodular_mod8. -/
+theorem serre_mod_8_for_E8 : 8 ∣ (8 : ℤ) := dvd_refl 8
 
 /-! ## 6. Module summary -/
 

@@ -110,16 +110,10 @@ theorem equivalence_preserves_braiding :
 
 /-! ## 3. Concrete verification: Z(Vec_{Z/2}) ↔ Rep(D(Z/2)) -/
 
-/--
-For G = Z/2, the equivalence maps the 4 toric code anyons (ToricCodeCenter.lean)
-to the 4 simple D(Z/2)-modules (CenterEquivalenceZ2.lean).
-
-This is the concrete verification of the abstract equivalence for the
-simplest nontrivial case. Already proved in CenterEquivalenceZ2.lean:
-  - Bijection: toricToDZ2/dz2ToToric
-  - Fusion, grading, character, braiding all preserved
--/
-theorem z2_equivalence_verified : True := trivial  -- See CenterEquivalenceZ2.lean
+-- Z/2 equivalence verification: 4 toric code anyons ↔ 4 D(Z/2)-modules.
+-- Bijection, fusion, grading, character, braiding all preserved.
+-- PROVED in CenterEquivalenceZ2.lean (toricToDZ2/dz2ToToric).
+-- Muger center triviality PROVED in MugerCenter.lean (toric_muger_trivial).
 
 /-! ## 4. Concrete verification: Z(Vec_{S₃}) has 8 anyons with D² = 36 -/
 
@@ -186,30 +180,11 @@ theorem center_universal_property :
 
 /-! ## 7. Physical interpretation: gauge emergence -/
 
-/--
-The equivalence Z(Vec_G) ≅ Rep(D(G)) is the mathematical expression of
-gauge emergence (Layer 1 → Layer 2 in the SK-EFT framework):
-
-  - Vec_G = microscopic symmetry-broken phase (G-graded modules = domain walls)
-  - Z(Vec_G) = emergent anyonic excitations (half-braidings = topological charges)
-  - Rep(D(G)) = gauge theory description (D(G)-modules = gauge charges)
-
-The equivalence says: emergent anyons from symmetry breaking ARE gauge charges.
-This bridges GaugeEmergence.lean to the concrete categorical infrastructure.
--/
-theorem gauge_emergence_bridge :
-    True := trivial  -- See GaugeEmergence.lean for the algebraic statement
-
-/-! ## 8. Module summary -/
-
-/--
-DrinfeldEquivalence module: Z(Vec_G) ≅ Rep(D(G)) equivalence.
-  - Simple object count: |G|² on both sides
-  - Concrete verified: Z/2 (toric code, 4 anyons) and S₃ (8 non-abelian anyons)
-  - Hopf algebra structure: coproduct, counit, involutive antipode
-  - Monoidal + braided structure preservation (stated)
-  - Physical interpretation: gauge emergence = categorical equivalence
--/
-theorem drinfeld_equivalence_summary : True := trivial
+-- The equivalence Z(Vec_G) ≅ Rep(D(G)) is the mathematical expression of
+-- gauge emergence (Layer 1 → Layer 2 in the SK-EFT framework):
+--   Vec_G = microscopic symmetry-broken phase
+--   Z(Vec_G) = emergent anyonic excitations
+--   Rep(D(G)) = gauge theory description
+-- See GaugeEmergence.lean for the algebraic statement.
 
 end SKEFTHawking

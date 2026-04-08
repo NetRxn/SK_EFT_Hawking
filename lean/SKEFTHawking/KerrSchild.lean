@@ -41,23 +41,41 @@ theorem radial_null (x y z r : ℝ) (hr : r ≠ 0) (hsphere : x^2 + y^2 + z^2 = 
 
 /-! ## 2. Kerr-Schild inverse (Sherman-Morrison) -/
 
-/-- The KS metric g = η + φ·l⊗l has inverse g⁻¹ = η⁻¹ − φ·l⊗l
+/-
+The KS metric g = η + φ·l⊗l has inverse g⁻¹ = η⁻¹ − φ·l̃⊗l̃
     when l is null. This is the Sherman-Morrison formula applied
     to a rank-1 perturbation of the Minkowski metric.
+    Note: l̃ is the raised-index version of l via η.
 
-PROVIDED SOLUTION
-Sherman-Morrison: (A + uv^T)^{-1} = A^{-1} - A^{-1}u v^T A^{-1}/(1+v^T A^{-1}u).
-For KS: A = η, u = φ·l, v = l. Then v^T A^{-1} u = φ·η^{-1}(l,l) = φ·η(l,l) = 0
-(null condition). So the denominator is 1+0 = 1, and the inverse simplifies to
-η⁻¹ − φ·(η⁻¹l)(l^T η⁻¹) = η⁻¹ − φ·l⊗l (using η⁻¹l = l for null vectors).
--/
-theorem ks_inverse_formula (φ : ℝ) (l : Fin 4 → ℝ) (hl : isNull l) :
+Original statement was DISPROVED: the naive ginv(a,b) = η(a,b) - φ*l(a)*l(b) is wrong
+   because the Sherman-Morrison formula requires raising indices via η.
+   The correct inverse is g⁻¹(a,b) = η(a,b) - φ*l̃(a)*l̃(b) where l̃(i) = Σ_k η(i,k)*l(k).
+   For Minkowski (-,+,+,+): l̃(0) = -l(0), l̃(i) = l(i) for i≥1. -/
+/- theorem ks_inverse_formula (φ : ℝ) (l : Fin 4 → ℝ) (hl : isNull l) :
     ∀ i j : Fin 4,
       let η := fun (a b : Fin 4) => if a = b then (if a = 0 then (-1 : ℝ) else 1) else 0
       let g := fun a b => η a b + φ * l a * l b
       let ginv := fun a b => η a b - φ * l a * l b
       ∑ k : Fin 4, g i k * ginv k j = if i = j then 1 else 0 := by
-  sorry
+  sorry -/
+
+/-- The raised-index null vector: l̃(i) = Σ_k η(i,k)*l(k). -/
+def raiseIndex (l : Fin 4 → ℝ) : Fin 4 → ℝ := fun i =>
+  if i = 0 then -l 0 else l i
+
+/-
+Corrected KS inverse: g⁻¹(a,b) = η(a,b) - φ·l̃(a)·l̃(b) where l̃ = η·l.
+-/
+theorem ks_inverse_formula (φ : ℝ) (l : Fin 4 → ℝ) (hl : isNull l) :
+    ∀ i j : Fin 4,
+      let η := fun (a b : Fin 4) => if a = b then (if a = 0 then (-1 : ℝ) else 1) else 0
+      let l' := raiseIndex l
+      let g := fun a b => η a b + φ * l a * l b
+      let ginv := fun a b => η a b - φ * l' a * l' b
+      ∑ k : Fin 4, g i k * ginv k j = if i = j then 1 else 0 := by
+  unfold raiseIndex isNull at *;
+  simp +decide [ Fin.sum_univ_four, Fin.forall_fin_succ ];
+  grind +ring
 
 /-! ## 3. Kerr-Schild DOF counting -/
 
@@ -86,7 +104,7 @@ theorem schwarzschild_horizon (M : ℝ) (hM : 0 < M) :
 KerrSchild module: fracton-gravity extension to Kerr-Schild sector.
   - isNull: null vector definition
   - radial_null: radial null vector PROVED
-  - ks_inverse_formula: Sherman-Morrison inverse (sorry — Aristotle target)
+  - ks_inverse_formula: Corrected Sherman-Morrison inverse — PROVED (with raised indices)
   - ks_dof_count, null_direction_dof: DOF counting PROVED
   - schwarzschild_phi_pos, schwarzschild_horizon: Schwarzschild properties PROVED
   - Zero axioms.

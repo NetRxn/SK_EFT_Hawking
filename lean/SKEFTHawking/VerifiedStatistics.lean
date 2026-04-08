@@ -48,7 +48,7 @@ theorem sampleVariance_nonneg (n : ℕ) (x : Fin n → ℝ) (hn : n ≥ 2) :
 
 /-! ## 2. Cauchy-Schwarz bound for autocovariance -/
 
-/--
+/-
 **|C(t)| ≤ C(0)** — the autocovariance at any lag is bounded by the variance.
 
 This is the discrete Cauchy-Schwarz inequality applied to the vectors
@@ -56,28 +56,36 @@ a_i = (x_i - x̄) and b_i = (x_{i+t} - x̄).
 
 For the unnormalized autocovariance (as defined in VerifiedJackknife),
 the bound uses the fact that partial sums of squares are bounded by full sums.
-
-PROVIDED SOLUTION
-Goal: C(t)² ≤ C(0)·C(0) = C(0)².
-Step 1: unfold autocovariance. C(t) = (1/n) Σ_{i<n-t} (x_i-x̄)(x_{i+t}-x̄).
-Step 2: Apply Finset.inner_mul_le_norm_mul_sq (discrete Cauchy-Schwarz):
-  (Σ a_i * b_i)² ≤ (Σ a_i²) * (Σ b_i²)
-  where a_i = (x_i - x̄), b_i = (x_{i+t} - x̄).
-Step 3: Both Σ a_i² and Σ b_i² are ≤ Σ_{all i} (x_i - x̄)² = n·C(0)
-  by Finset.sum_le_sum (partial sum ≤ full sum).
-Step 4: Combine and cancel the (1/n)² factors.
-Key Mathlib: Finset.inner_mul_le_norm_mul_sq, Finset.sum_le_sum,
-  sq_nonneg, div_mul_div_comm, mul_self_nonneg
 -/
 theorem autocovariance_bounded (n : ℕ) (x : Fin n → ℝ) (t : ℕ)
     (ht : t < n) (hn : n ≥ 1) :
     (autocovariance n x t ht) ^ 2 ≤
     (autocovariance n x 0 (by omega)) * (autocovariance n x 0 (by omega)) := by
-  sorry
+  unfold autocovariance;
+  simp +zetaDelta at *;
+  -- Apply the Cauchy-Schwarz inequality to the sums.
+  have h_cauchy_schwarz : ∀ (u v : Fin (n - t) → ℝ), (∑ i, u i * v i)^2 ≤ (∑ i, u i^2) * (∑ i, v i^2) := by
+    exact?;
+  refine le_trans ( h_cauchy_schwarz _ _ ) ?_;
+  gcongr;
+  · exact Finset.sum_nonneg fun _ _ => mul_self_nonneg _;
+  · refine' le_trans _ ( Finset.sum_le_sum_of_subset_of_nonneg _ _ );
+    rotate_left;
+    exact Finset.univ.image fun i : Fin ( n - t ) => ⟨ i, by omega ⟩;
+    · exact Finset.subset_univ _;
+    · exact fun _ _ _ => mul_self_nonneg _;
+    · rw [ Finset.sum_image ] <;> norm_num [ ← sq ];
+      exact fun i j h => by simpa [ Fin.ext_iff ] using h;
+  · simp +decide only [← sq];
+    have h_subset : Finset.image (fun i : Fin (n - t) => ⟨i.val + t, by omega⟩ : Fin (n - t) → Fin n) Finset.univ ⊆ Finset.univ := by
+      exact Finset.subset_univ _;
+    have h_sum_le : ∑ i ∈ Finset.image (fun i : Fin (n - t) => ⟨i.val + t, by omega⟩ : Fin (n - t) → Fin n) Finset.univ, (x i - sampleMean n x) ^ 2 ≤ ∑ i ∈ Finset.univ, (x i - sampleMean n x) ^ 2 := by
+      exact Finset.sum_le_sum_of_subset_of_nonneg h_subset fun _ _ _ => sq_nonneg _;
+    rwa [ Finset.sum_image <| by intros i hi j hj hij; simpa [ Fin.ext_iff ] using hij ] at h_sum_le
 
 /-! ## 3. Jackknife mean-case reduction -/
 
-/--
+/-
 **When f = sample mean, jackknife variance = s²/n.**
 
 The delete-one mean x̄_{-i} = (n·x̄ - x_i)/(n-1).
@@ -86,17 +94,19 @@ Substituting: σ²_JK = [(n-1)/n] · Σ [(x̄-x_i)/(n-1)]²
              = [(n-1)/n] · [1/(n-1)²] · Σ(x_i-x̄)²
              = [1/(n(n-1))] · Σ(x_i-x̄)²
              = s²/n  (since s² = Σ(x_i-x̄)²/(n-1)).
-
-PROVIDED SOLUTION
-Use Fin.sum_univ_succAbove for the delete-one decomposition.
-Compute x̄_{-i} = (n·x̄ - x_i)/(n-1) algebraically.
-Then field_simp + ring for the factor cancellation.
 -/
 theorem jackknife_mean_case (n : ℕ) (x : Fin n → ℝ) (hn : n ≥ 2) :
     let θ : Fin n → ℝ := fun i =>
       (∑ j : Fin n, if j = i then 0 else x j) / (n - 1 : ℝ)
     jackknifeVariance n θ = sampleVariance n x / n := by
-  sorry
+  unfold jackknifeVariance sampleVariance;
+  unfold jackknifeMeanStat sampleMean;
+  norm_num [ Finset.sum_ite, Finset.filter_ne' ];
+  norm_num [ ← Finset.sum_div _ _ _ ];
+  rcases n with ( _ | _ | n ) <;> norm_num at *;
+  field_simp;
+  rw [ ← Finset.sum_div _ _ _, ← Finset.sum_div _ _ _ ];
+  rw [ mul_div, mul_div_mul_left _ _ ( by positivity ) ] ; congr ; ext ; ring
 
 /-! ## 4. Gamma-method windowing -/
 
@@ -106,37 +116,30 @@ noncomputable def normalizedAutocorr (n : ℕ) (x : Fin n → ℝ)
     (t : ℕ) (ht : t < n) : ℝ :=
   autocovariance n x t ht / autocovariance n x 0 (by omega)
 
-/-- For non-negatively correlated data, ρ(t) ∈ [0, 1].
-
-PROVIDED SOLUTION
-ρ(t) = C(t)/C(0). Numerator ≥ 0 by hypothesis. Denominator C(0) > 0 by hypothesis.
-So ρ(t) ≥ 0. For ρ(t) ≤ 1: use autocovariance_bounded (C(t)² ≤ C(0)²)
-to get |C(t)| ≤ C(0), then C(t)/C(0) ≤ 1.
+/-
+For non-negatively correlated data, ρ(t) ∈ [0, 1].
 -/
 theorem normalizedAutocorr_le_one (n : ℕ) (x : Fin n → ℝ) (t : ℕ) (ht : t < n)
     (hC0 : autocovariance n x 0 (by omega) > 0)
     (hCt : autocovariance n x t ht ≥ 0) :
     normalizedAutocorr n x t ht ≤ 1 := by
-  sorry
+  exact div_le_one_of_le₀ ( by have := autocovariance_bounded n x t ht ( by linarith ) ; nlinarith ) hC0.le
 
 /-! ## 5. Effective sample size bounds -/
 
-/--
+/-
 **Effective sample size N_eff ≤ N.**
 
 Since τ_int ≥ 1/2 (for non-negatively correlated data),
 N_eff = N/(2τ_int) ≤ N/(2·1/2) = N.
-
-PROVIDED SOLUTION
-Use intAutocorrTime_ge_half to get τ_int ≥ 1/2.
-Then N/(2τ_int) ≤ N/(2·1/2) = N. Use div_le_div_of_nonneg_left.
 -/
 theorem effectiveSampleSize_le_n (n : ℕ) (x : Fin n → ℝ)
     (W : ℕ) (hW : W + 1 < n)
     (hpos : ∀ t : Fin W, autocovariance n x (t.val + 1) (by omega) ≥ 0)
     (hC0 : autocovariance n x 0 (by omega) > 0) :
     effectiveSampleSize n x W hW ≤ n := by
-  sorry
+  refine' div_le_self ( by positivity ) _;
+  linarith [ intAutocorrTime_ge_half n x W hW hpos hC0 ]
 
 /-! ## 6. Module summary -/
 

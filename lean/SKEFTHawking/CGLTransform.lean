@@ -339,14 +339,10 @@ do NOT participate in the FDR. They are free parameters fixed by the equation
 of state / free-energy functional, not by thermal equilibrium.
 -/
 
-/-- **Conservative coefficients are FDR-unconstrained.**
-
-    For a purely even-ω retarded kernel (no dissipative terms),
-    the CGL FDR gives identically zero noise. This is physically
-    correct: a non-dissipative system has no thermal fluctuations.
-
-    **Audit note:** All parameters were removed —
-    the conclusion is `True`. This is a documentation placeholder. -/
-theorem even_kernel_zero_noise : True := trivial
+-- Conservative coefficients are FDR-unconstrained:
+-- For a purely even-ω retarded kernel (no dissipative terms),
+-- the CGL FDR gives identically zero noise (physically correct:
+-- a non-dissipative system has no thermal fluctuations).
+-- Original theorem was vacuously true after parameter removal.
 
 end SKEFTHawking.CGLTransform

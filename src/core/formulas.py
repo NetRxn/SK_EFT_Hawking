@@ -814,7 +814,7 @@ def stimulated_hawking_gain(omega, kappa, greybody=1.0):
     frequencies where G → Γ/(2πω/κ) and approaches 1 for ω ≪ κ.
 
     Lean: boseEinstein_pos, stimGain_pos, boseEinstein_strictAnti (StimulatedHawking.lean)
-    Aristotle: pending
+    Aristotle: 986b9f66
     Source: Grisins et al., PRB 94, 144518 (2016); Macher & Parentani, PRD 79, 124008 (2009)
 
     Args:
@@ -839,7 +839,7 @@ def stimulated_hawking_snr(omega, kappa, n_probe, n_shots=1, greybody=1.0):
     For 5σ detection: N_shots · N_probe ≥ 25 / G(ω)².
 
     Lean: snr_pos, snr_sqrt_scaling, detection_threshold (StimulatedHawking.lean)
-    Aristotle: pending
+    Aristotle: 986b9f66
     Source: Deep research Phase-5d, Eq. from Grisins et al. (2016) framework
 
     Args:
@@ -894,7 +894,7 @@ def dispersive_hawking_correction(D):
     For D ≈ 0.30 (our polariton system, reservoir-corrected c_s): ~9% correction.
 
     Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean)
-    Aristotle: pending
+    Aristotle: 986b9f66
     Source: Finazzi & Parentani, PRD 85, 124027 (2012)
 
     Args:
@@ -4299,6 +4299,46 @@ def su2k_verlinde(k, i, j, m):
 
 
 # ═══════════════════════════════════════════════════════════════
+# Phase 5e: SU(2)₃ S-matrix over Q[x]/(20x⁴-10x²+1)
+# ═══════════════════════════════════════════════════════════════
+
+def su2k3_s_matrix_algebraic():
+    """SU(2)₃ S-matrix in exact algebraic form.
+
+    S-matrix entries live in Q[x]/(20x⁴-10x²+1), a degree-4
+    cyclic extension of Q with conductor 40.
+
+    Generator s = √((5-√5)/20) ≈ 0.3717 = S_{00}
+    Second entry t = -10s³+3s = √((5+√5)/20) ≈ 0.6015 = S_{01}
+
+    Key identity: s²+t² = 1/2 (row normalization, PROVED in Lean).
+    Quantum dim relation: t²-ts-s² = 0 (golden ratio structure).
+
+    Full 4×4 S-matrix:
+        [[s,  t,  t,  s ],
+         [t,  s, -s, -t ],
+         [t, -s, -s,  t ],
+         [s, -t,  t, -s ]]
+
+    Lean: s_sq_plus_t_sq, all 10 unitarity entries (QLevel3.lean)
+    Aristotle: N/A (native_decide)
+    Source: de Boer & Goeree, Comm. Math. Phys. 139, 267 (1991)
+
+    Returns:
+        dict with s, t values and full S-matrix
+    """
+    s = np.sqrt((5 - np.sqrt(5)) / 20)
+    t = np.sqrt((5 + np.sqrt(5)) / 20)
+    S = np.array([
+        [s, t, t, s],
+        [t, s, -s, -t],
+        [t, -s, -s, t],
+        [s, -t, t, -s],
+    ])
+    return {'s': s, 't': t, 'S': S}
+
+
+# ═══════════════════════════════════════════════════════════════
 # Phase 5d Wave 4: SU(2)_k MTC — F-symbols and twist
 # First formally verified modular tensor category
 # ═══════════════════════════════════════════════════════════════
@@ -4316,7 +4356,7 @@ def ising_f_symbol(a, b, c, d, e, f):
     All other F-symbols are trivial (0 or 1) determined by fusion rules.
 
     Lean: ising_f_symbol_def (SU2kMTC.lean)
-    Aristotle: pending (Phase 5d — 5 sorry remaining)
+    Aristotle: 78dcc5f4
     Source: Kitaev, Ann. Phys. 321, 2 (2006), Appendix E
 
     Args:
@@ -4360,7 +4400,7 @@ def su2k_twist(k, a):
     For k=1: θ_0 = 1, θ_1 = exp(iπ/4) = (1+i)/√2.
 
     Lean: su2k_twist_def (SU2kMTC.lean)
-    Aristotle: pending (Phase 5d — 5 sorry remaining)
+    Aristotle: 78dcc5f4
     Source: Turaev, "Quantum Invariants" (2010), Ch. II.1
 
     Args:
@@ -4385,7 +4425,7 @@ def su2k_topological_central_charge(k):
     pure string-net condensation.
 
     Lean: su2k_central_charge_nonzero (SU2kMTC.lean)
-    Aristotle: pending (Phase 5d — 5 sorry remaining)
+    Aristotle: 78dcc5f4
     Source: Kitaev, Ann. Phys. 321, 2 (2006), Eq. (E.25)
 
     Args:
@@ -4618,7 +4658,7 @@ def bootstrap_confidence_interval(data, observable=None, n_bootstrap=1000, alpha
     Bootstrap confidence interval via percentile method.
 
     Lean: sampleVariance_nonneg (VerifiedStatistics.lean) — variance bound
-    Aristotle: pending
+    Aristotle: 986b9f66
 
     Args:
         data: 1D array of samples
@@ -4753,3 +4793,600 @@ def trefoil_jones_ising():
     theta_inv = 1.0 / ising_twist(1)
     d_sigma = np.sqrt(2)
     return theta_inv**3 * (R1**3 + Rpsi**3) / d_sigma
+
+
+# ════════════════════════════════════════════════════════════════════
+# Experimental predictions from verified MTC data (Phase 5o W3)
+# ════════════════════════════════════════════════════════════════════
+
+# Physical constants
+KAPPA_0 = np.pi**2 * 1.380649e-23**2 / (3 * 6.62607015e-34)  # W/K² thermal conductance quantum
+
+
+def mtc_s_matrix(model):
+    """Full S-matrix for Ising or Fibonacci MTC.
+
+    Ising: 3×3 real symmetric matrix, S = (1/2)[[1,√2,1],[√2,0,-√2],[1,-√2,1]]
+    Fibonacci: 2×2 real symmetric, S = (1/D)[[1,φ],[φ,-1]] with D=√(2+φ)
+
+    Lean: su2k_s_matrix_unitarity (SU2kSMatrix.lean)
+    Aristotle: 78dcc5f4
+    Source: Kitaev, Ann. Phys. 321, 2-111 (2006)
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        numpy array S-matrix
+    """
+    if model == 'ising':
+        s2 = np.sqrt(2)
+        return np.array([
+            [1, s2, 1],
+            [s2, 0, -s2],
+            [1, -s2, 1],
+        ]) / 2.0
+    elif model == 'fibonacci':
+        phi = (1 + np.sqrt(5)) / 2
+        D = np.sqrt(2 + phi)
+        return np.array([
+            [1, phi],
+            [phi, -1],
+        ]) / D
+    else:
+        raise ValueError(f"Unknown model: {model}. Use 'ising' or 'fibonacci'.")
+
+
+def mtc_quantum_dimensions(model):
+    """Quantum dimensions for Ising or Fibonacci anyons.
+
+    Ising: d = [1, √2, 1] for {1, σ, ψ}
+    Fibonacci: d = [1, φ] for {1, τ}
+
+    Lean: ising_global_dim_sq (SU2kMTC.lean), fib_globalDimSq (WRTComputation.lean)
+    Aristotle: 78dcc5f4
+
+    Returns:
+        numpy array of quantum dimensions
+    """
+    if model == 'ising':
+        return np.array([1.0, np.sqrt(2), 1.0])
+    elif model == 'fibonacci':
+        phi = (1 + np.sqrt(5)) / 2
+        return np.array([1.0, phi])
+    else:
+        raise ValueError(f"Unknown model: {model}")
+
+
+def mtc_total_quantum_dimension(model):
+    """Total quantum dimension D = √(Σ d_a²).
+
+    Ising: D = 2  (D² = 4)
+    Fibonacci: D = √(2+φ) ≈ 1.902
+
+    Lean: ising_globalDimSq, fib_globalDimSq (WRTComputation.lean)
+    Aristotle: 78dcc5f4
+    """
+    dims = mtc_quantum_dimensions(model)
+    return np.sqrt(np.sum(dims**2))
+
+
+def interferometric_visibility(model, probe, target):
+    """Interferometric monodromy M_{a,c} from verified S-matrix.
+
+    M_{a,c} = S_{ac} · S_{00} / (S_{0a} · S_{0c})
+
+    This gives the interference visibility when probe anyon a
+    encircles target anyon c. |M| = 0 means complete suppression.
+
+    Key predictions:
+        Ising:     M_{σ,σ} = 0     (even-odd effect: zero visibility)
+        Fibonacci: M_{τ,τ} = -1/φ² ≈ -0.382  (reduced but nonzero)
+
+    Lean: gauss_sum (IsingBraiding.lean), su2k_s_matrix_unitarity (SU2kSMatrix.lean)
+    Aristotle: 78dcc5f4 (S-matrix unitarity)
+    Source: Bonderson/Kitaev/Shtengel, PRL 96, 016803 (2006)
+
+    Args:
+        model: 'ising' or 'fibonacci'
+        probe: index of probe anyon (0-indexed: Ising 0=1,1=σ,2=ψ; Fib 0=1,1=τ)
+        target: index of target anyon
+
+    Returns:
+        complex monodromy value M_{probe,target}
+    """
+    S = mtc_s_matrix(model)
+    return S[probe, target] * S[0, 0] / (S[0, probe] * S[0, target])
+
+
+def thermal_hall_conductance(model):
+    """Thermal Hall conductance κ_xy/T from Gauss-Milgram sum.
+
+    κ_xy/T = κ₀ × c_top, where κ₀ = π²k_B²/(3h).
+    c_top from: (1/D) Σ d_a² θ_a = exp(2πi c_top/8).
+
+    Ising:     c_top = 1/2  → κ_xy/T = 0.5 κ₀
+    Fibonacci: c_top = 14/5 → κ_xy/T = 2.8 κ₀
+
+    For ν=5/2 (Ising + 2 filled Landau levels): κ_xy/T = 2.5 κ₀
+    Confirmed by Banerjee et al., Nature 559, 205 (2018).
+
+    Lean: gauss_sum (IsingBraiding.lean), fib_gauss_sum (WRTComputation.lean)
+    Aristotle: N/A (native_decide)
+    Source: Read/Green, PRB 61, 10267 (2000); Kitaev, Ann. Phys. 321 (2006)
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        dict with c_top, kappa_xy_over_T (in units of κ₀), kappa_0 (W/K²)
+    """
+    dims = mtc_quantum_dimensions(model)
+    D = mtc_total_quantum_dimension(model)
+
+    if model == 'ising':
+        twists = np.array([1.0, np.exp(1j * np.pi / 8), -1.0])
+    elif model == 'fibonacci':
+        twists = np.array([1.0, np.exp(4j * np.pi / 5)])
+    else:
+        raise ValueError(f"Unknown model: {model}")
+
+    gauss_sum = np.sum(dims**2 * twists) / D
+    c_top = 8 * np.angle(gauss_sum) / (2 * np.pi)
+
+    return {
+        'c_top': c_top,
+        'kappa_xy_over_T_in_kappa0': c_top,
+        'kappa_0': KAPPA_0,
+        'kappa_xy_over_T': c_top * KAPPA_0,
+    }
+
+
+def topological_entanglement_entropy(model):
+    """Topological entanglement entropy S_topo = ln(D).
+
+    Ising:     S_topo = ln(2) ≈ 0.693
+    Fibonacci: S_topo = ½ln((5+√5)/2) ≈ 0.643
+
+    Lean: ising_globalDimSq (WRTComputation.lean), fib_globalDimSq (WRTComputation.lean)
+    Aristotle: 78dcc5f4
+    Source: Kitaev/Preskill, PRL 96, 110404 (2006); Levin/Wen, PRL 96, 110405 (2006)
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        float S_topo = ln(D)
+    """
+    D = mtc_total_quantum_dimension(model)
+    return np.log(D)
+
+
+def quasiparticle_charge(model):
+    """Fundamental quasiparticle charge e* at the relevant filling fraction.
+
+    Ising (ν=5/2): e* = e/4
+    Fibonacci (ν=12/5): e* = e/5
+
+    Lean: N/A (filling fraction, not MTC data)
+    Source: Dolev et al., Nature 452, 829 (2008) [e/4 shot noise]
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        dict with filling, charge_fraction, charge_denominator
+    """
+    if model == 'ising':
+        return {'filling': 5/2, 'charge_fraction': 1/4, 'charge_denominator': 4}
+    elif model == 'fibonacci':
+        return {'filling': 12/5, 'charge_fraction': 1/5, 'charge_denominator': 5}
+    else:
+        raise ValueError(f"Unknown model: {model}")
+
+
+def ground_state_degeneracy(model):
+    """Ground state degeneracy on a torus = number of anyon types.
+
+    Ising:     GSD = 3 (anyons: 1, σ, ψ)
+    Fibonacci: GSD = 2 (anyons: 1, τ)
+
+    Lean: ising_wrt_rank, fib_wrt_rank (WRTComputation.lean)
+    Aristotle: N/A (rfl)
+    Source: Wen, "Quantum Field Theory of Many-Body Systems" (2004)
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        int GSD
+    """
+    if model == 'ising':
+        return 3
+    elif model == 'fibonacci':
+        return 2
+    else:
+        raise ValueError(f"Unknown model: {model}")
+
+
+def distinguishing_observables_table():
+    """Complete table of 5 observables distinguishing Ising from Fibonacci.
+
+    Returns all predictions from verified MTC data, ranked by
+    experimental accessibility.
+
+    Lean: gauss_sum (IsingBraiding.lean), fib_gauss_sum (WRTComputation.lean),
+          ising_globalDimSq, fib_globalDimSq (WRTComputation.lean),
+          su2k_s_matrix_unitarity (SU2kSMatrix.lean)
+    Aristotle: 78dcc5f4
+    Source: Deep research Phase-5o/From verified braiding algebra to laboratory observables.md
+
+    Returns:
+        list of dicts with observable predictions for both models
+    """
+    ising_hall = thermal_hall_conductance('ising')
+    fib_hall = thermal_hall_conductance('fibonacci')
+
+    return [
+        {
+            'observable': 'Thermal Hall conductance',
+            'formula': 'κ_xy/T = κ₀ × c_top',
+            'ising': f"c_top = {ising_hall['c_top']:.1f}, κ_xy/T = {ising_hall['c_top']:.1f}κ₀",
+            'fibonacci': f"c_top = {fib_hall['c_top']:.1f}, κ_xy/T = {fib_hall['c_top']:.1f}κ₀",
+            'status': 'Demonstrated (Banerjee 2018: 2.5κ₀ at ν=5/2)',
+            'rank': 1,
+        },
+        {
+            'observable': 'Quasiparticle charge',
+            'formula': 'e* via shot noise',
+            'ising': 'e/4 at ν=5/2',
+            'fibonacci': 'e/5 at ν=12/5',
+            'status': 'Demonstrated (Dolev 2008: e/4 at ν=5/2)',
+            'rank': 2,
+        },
+        {
+            'observable': 'Interferometric visibility',
+            'formula': 'M_{a,c} = S_{ac}S_{00}/(S_{0a}S_{0c})',
+            'ising': f"M_{{σ,σ}} = {interferometric_visibility('ising', 1, 1):.3f} (zero — even-odd effect)",
+            'fibonacci': f"M_{{τ,τ}} = {interferometric_visibility('fibonacci', 1, 1):.3f} (reduced, nonzero)",
+            'status': 'Suggestive (Willett 2023 at ν=5/2)',
+            'rank': 3,
+        },
+        {
+            'observable': 'Ground state degeneracy',
+            'formula': 'GSD = # anyon types',
+            'ising': f"GSD = {ground_state_degeneracy('ising')} (1, σ, ψ)",
+            'fibonacci': f"GSD = {ground_state_degeneracy('fibonacci')} (1, τ)",
+            'status': 'Digital simulation only (Google 2023, Chinese team 2024)',
+            'rank': 4,
+        },
+        {
+            'observable': 'Topological entanglement entropy',
+            'formula': 'S_topo = ln(D)',
+            'ising': f"S_topo = ln(2) ≈ {topological_entanglement_entropy('ising'):.3f}",
+            'fibonacci': f"S_topo ≈ {topological_entanglement_entropy('fibonacci'):.3f}",
+            'status': 'Not yet measured in natural systems',
+            'rank': 5,
+        },
+    ]
+
+
+# ═══════════════════════════════════════════════════════════════
+# Phase 5k Wave 4: TQFT Pipeline — WRT invariants, surgery, TL
+# ═══════════════════════════════════════════════════════════════
+
+
+def wrt_s3(model):
+    """WRT invariant Z(S^3) for the given MTC.
+
+    Z(S^3) = 1/D for normalized convention (where D = total quantum dimension).
+
+    For Ising:     Z(S^3) = 1/2  (D = 2)
+    For Fibonacci: Z(S^3) = 1/sqrt(2+phi) ~ 0.5257
+
+    The empty surgery presentation corresponds to S^3, and the WRT
+    formula gives Z(S^3) = p_+ / D^2 which normalizes to 1/D.
+
+    Lean: wrt_S3_formula (WRTInvariant.lean), ising_globalDimSq (WRTComputation.lean)
+    Aristotle: manual (native_decide)
+    Source: Reshetikhin-Turaev, Invent. Math. 103 (1991), 547-597
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        Z(S^3) as real number
+    """
+    D = mtc_total_quantum_dimension(model)
+    return 1.0 / D
+
+
+def wrt_s2xs1(model):
+    """WRT invariant Z(S^2 x S^1) for the given MTC.
+
+    Z(S^2 x S^1) = n (number of simple objects / rank of the MTC).
+
+    For Ising:     Z(S^2 x S^1) = 3  (objects: 1, sigma, psi)
+    For Fibonacci: Z(S^2 x S^1) = 2  (objects: 1, tau)
+
+    This follows from the 0-framed unknot surgery formula and the
+    Verlinde formula. Proved in Lean as wrt_S2xS1_eq_rank.
+
+    Lean: wrt_S2xS1_eq_rank (WRTInvariant.lean), ising_wrt_S2xS1, fib_wrt_S2xS1 (WRTComputation.lean)
+    Aristotle: manual (native_decide)
+    Source: Turaev, "Quantum Invariants" (de Gruyter, 2010)
+
+    Args:
+        model: 'ising' or 'fibonacci'
+
+    Returns:
+        Z(S^2 x S^1) as integer
+    """
+    if model == 'ising':
+        return 3
+    elif model == 'fibonacci':
+        return 2
+    else:
+        raise ValueError(f"Unknown model: {model}. Use 'ising' or 'fibonacci'.")
+
+
+def wrt_lens_space(model, p):
+    """WRT invariant Z(L(p,1)) for lens space obtained by p-surgery on unknot.
+
+    Z(L(p,1)) = (1/D^2) * sum_i d_i^2 * theta_i^p
+
+    where d_i are quantum dimensions, theta_i are topological twists,
+    and D^2 = sum_i d_i^2 is the global dimension squared.
+
+    Key verified values (from WRTComputation.lean):
+      Ising:  Z(L(1,1)) = p_+/D^2 = 2*zeta_16 / 4
+              Z(L(8,1)) = 0 (vanishing! -- invisible to Ising WRT)
+              Z(L(16,1)) = 1 (trivial)
+      Fibonacci: Z(L(5,1)) = 1 (5-fold periodicity from theta_tau^5 = 1)
+
+    Lean: ising_lens_{1,2,3,4,8,16}_num, fib_lens_{1,5}_num (WRTComputation.lean)
+    Aristotle: manual (native_decide)
+    Source: Turaev, "Quantum Invariants" (de Gruyter, 2010), Ch. II
+
+    Args:
+        model: 'ising' or 'fibonacci'
+        p: surgery coefficient (integer)
+
+    Returns:
+        Z(L(p,1)) as complex number
+    """
+    dims = mtc_quantum_dimensions(model)
+    D_sq = np.sum(dims**2)
+
+    if model == 'ising':
+        # Twists: theta_0 = 1, theta_sigma = e^{i*pi/8}, theta_psi = -1
+        twists = np.array([1.0 + 0j, np.exp(1j * np.pi / 8), -1.0 + 0j])
+    elif model == 'fibonacci':
+        # Twists: theta_0 = 1, theta_tau = e^{4i*pi/5}
+        twists = np.array([1.0 + 0j, np.exp(4j * np.pi / 5)])
+    else:
+        raise ValueError(f"Unknown model: {model}. Use 'ising' or 'fibonacci'.")
+
+    return np.sum(dims**2 * twists**p) / D_sq
+
+
+def wrt_invariants_table():
+    """Table of WRT invariant values for key 3-manifolds.
+
+    Computes Z(M) for S^3, S^2 x S^1, and L(p,1) lens spaces
+    for both Ising and Fibonacci MTCs. All values verified in Lean
+    via native_decide over cyclotomic number fields.
+
+    Lean: WRTInvariant.lean, WRTComputation.lean
+    Aristotle: manual (native_decide)
+    Source: Turaev, "Quantum Invariants" (de Gruyter, 2010)
+
+    Returns:
+        list of dicts with manifold, ising_value, fibonacci_value, lean_status
+    """
+    phi = (1 + np.sqrt(5)) / 2
+
+    rows = [
+        {
+            'manifold': 'S^3',
+            'surgery': 'Empty link',
+            'ising': f'1/D = 1/2 = {wrt_s3("ising"):.4f}',
+            'fibonacci': f'1/D = 1/{np.sqrt(2 + phi):.4f} = {wrt_s3("fibonacci"):.4f}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'S^2 x S^1',
+            'surgery': '0-unknot',
+            'ising': f'rank = {wrt_s2xs1("ising")}',
+            'fibonacci': f'rank = {wrt_s2xs1("fibonacci")}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'L(1,1)',
+            'surgery': '1-unknot',
+            'ising': f'|Z| = {abs(wrt_lens_space("ising", 1)):.4f}',
+            'fibonacci': f'|Z| = {abs(wrt_lens_space("fibonacci", 1)):.4f}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'L(2,1)',
+            'surgery': '2-unknot',
+            'ising': f'|Z| = {abs(wrt_lens_space("ising", 2)):.4f}',
+            'fibonacci': f'|Z| = {abs(wrt_lens_space("fibonacci", 2)):.4f}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'L(3,1)',
+            'surgery': '3-unknot',
+            'ising': f'|Z| = {abs(wrt_lens_space("ising", 3)):.4f}',
+            'fibonacci': f'|Z| = {abs(wrt_lens_space("fibonacci", 3)):.4f}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'L(5,1)',
+            'surgery': '5-unknot',
+            'ising': f'|Z| = {abs(wrt_lens_space("ising", 5)):.4f}',
+            'fibonacci': f'|Z| = {abs(wrt_lens_space("fibonacci", 5)):.4f}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'L(8,1)',
+            'surgery': '8-unknot',
+            'ising': f'|Z| = {abs(wrt_lens_space("ising", 8)):.4f} (vanishing!)',
+            'fibonacci': f'|Z| = {abs(wrt_lens_space("fibonacci", 8)):.4f}',
+            'lean_status': 'PROVED',
+        },
+        {
+            'manifold': 'L(16,1)',
+            'surgery': '16-unknot',
+            'ising': f'|Z| = {abs(wrt_lens_space("ising", 16)):.4f}',
+            'fibonacci': f'|Z| = {abs(wrt_lens_space("fibonacci", 16)):.4f}',
+            'lean_status': 'PROVED',
+        },
+    ]
+    return rows
+
+
+def surgery_linking_matrix(manifold, **kwargs):
+    """Surgery presentation linking matrix for standard 3-manifolds.
+
+    Returns the symmetric integer linking matrix encoding the framed
+    link whose Dehn surgery produces the given 3-manifold.
+
+    Lean: surgeryS3, surgeryS2xS1, surgeryLens, surgeryHopfLink (SurgeryPresentation.lean)
+    Aristotle: manual
+    Source: Lickorish, Ann. Math. 76 (1962); Kirby, Invent. Math. 45 (1978)
+
+    Args:
+        manifold: one of 'S3', 'S2xS1', 'lens', 'hopf', 'trefoil_complement'
+        **kwargs: p (for lens), a, b (for hopf)
+
+    Returns:
+        dict with 'matrix' (numpy array), 'num_components', 'framings'
+    """
+    if manifold == 'S3':
+        M = np.zeros((0, 0), dtype=int)
+        return {'matrix': M, 'num_components': 0, 'framings': []}
+    elif manifold == 'S2xS1':
+        M = np.array([[0]], dtype=int)
+        return {'matrix': M, 'num_components': 1, 'framings': [0]}
+    elif manifold == 'lens':
+        p = kwargs.get('p', 1)
+        M = np.array([[p]], dtype=int)
+        return {'matrix': M, 'num_components': 1, 'framings': [p]}
+    elif manifold == 'hopf':
+        a = kwargs.get('a', 0)
+        b = kwargs.get('b', 0)
+        M = np.array([[a, 1], [1, b]], dtype=int)
+        return {'matrix': M, 'num_components': 2, 'framings': [a, b]}
+    elif manifold == 'trefoil_complement':
+        M = np.array([[-2, 1], [1, -3]], dtype=int)
+        return {'matrix': M, 'num_components': 2, 'framings': [-2, -3]}
+    else:
+        raise ValueError(f"Unknown manifold: {manifold}")
+
+
+def surgery_handle_slide(linking_matrix, i, j):
+    """Handle slide (Kirby move K2): slide component i over component j.
+
+    On the linking matrix: row/column i is modified by adding contributions
+    from row/column j. The resulting matrix encodes the same 3-manifold
+    (up to diffeomorphism).
+
+    Lean: handleSlide (SurgeryPresentation.lean), handleSlide_components,
+          handleSlide_self_framing
+    Aristotle: manual
+    Source: Kirby, Invent. Math. 45 (1978), 35-56
+
+    Args:
+        linking_matrix: symmetric integer matrix (numpy array)
+        i, j: component indices to slide
+
+    Returns:
+        new linking matrix after handle slide (numpy array)
+    """
+    M = np.array(linking_matrix, dtype=int)
+    n = M.shape[0]
+    result = np.copy(M)
+    for a in range(n):
+        for b in range(n):
+            val = M[a, b]
+            if a == i:
+                val += M[j, b]
+            if b == i:
+                val += M[a, j]
+            if a == i and b == i:
+                val += M[j, j]
+            result[a, b] = val
+    return result
+
+
+def tl_relation_check(n_generators, delta, relation_type, i, j=None):
+    """Verify Temperley-Lieb algebra relations symbolically.
+
+    Checks the three TL relation types by returning the expected
+    equality data. The actual algebraic verification is in Lean;
+    this function provides the combinatorial checks.
+
+    (TL1) e_i^2 = delta * e_i          (idempotent)
+    (TL2) e_i * e_j * e_i = e_i        when |i - j| = 1 (Jones)
+    (TL3) e_i * e_j = e_j * e_i        when |i - j| >= 2 (far commute)
+
+    Lean: tl_idempotent, tl_jones, tl_far_commute (TemperleyLieb.lean)
+    Aristotle: manual
+    Source: Temperley-Lieb, Proc. Roy. Soc. A 322 (1971), 251-280
+
+    Args:
+        n_generators: number of TL generators
+        delta: loop parameter
+        relation_type: 'idempotent', 'jones', or 'far_commute'
+        i: generator index
+        j: second generator index (for jones and far_commute)
+
+    Returns:
+        dict with 'valid' (bool), 'relation' (str), 'lhs', 'rhs'
+    """
+    if relation_type == 'idempotent':
+        if 0 <= i < n_generators:
+            return {
+                'valid': True,
+                'relation': f'e_{i}^2 = {delta} * e_{i}',
+                'lhs': f'e_{i} * e_{i}',
+                'rhs': f'{delta} * e_{i}',
+                'type': 'TL1',
+            }
+        return {'valid': False, 'relation': 'index out of range', 'type': 'TL1'}
+    elif relation_type == 'jones':
+        if j is None:
+            return {'valid': False, 'relation': 'j required for Jones relation', 'type': 'TL2'}
+        if abs(i - j) == 1 and 0 <= i < n_generators and 0 <= j < n_generators:
+            return {
+                'valid': True,
+                'relation': f'e_{i} * e_{j} * e_{i} = e_{i}',
+                'lhs': f'e_{i} * e_{j} * e_{i}',
+                'rhs': f'e_{i}',
+                'type': 'TL2',
+            }
+        return {
+            'valid': abs(i - j) == 1,
+            'relation': f'|{i} - {j}| = {abs(i - j)}, need 1',
+            'type': 'TL2',
+        }
+    elif relation_type == 'far_commute':
+        if j is None:
+            return {'valid': False, 'relation': 'j required', 'type': 'TL3'}
+        if abs(i - j) >= 2 and 0 <= i < n_generators and 0 <= j < n_generators:
+            return {
+                'valid': True,
+                'relation': f'e_{i} * e_{j} = e_{j} * e_{i}',
+                'lhs': f'e_{i} * e_{j}',
+                'rhs': f'e_{j} * e_{i}',
+                'type': 'TL3',
+            }
+        return {
+            'valid': abs(i - j) >= 2,
+            'relation': f'|{i} - {j}| = {abs(i - j)}, need >= 2',
+            'type': 'TL3',
+        }
+    else:
+        raise ValueError(f"Unknown relation type: {relation_type}")

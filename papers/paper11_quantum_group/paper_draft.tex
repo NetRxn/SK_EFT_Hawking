@@ -501,8 +501,12 @@ and modularity proofs (16~theorems, Aristotle \texttt{78dcc5f4}),
 the first verified MTC instances (Ising and Fibonacci with F-symbols in
 $\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{5})$), the first braided
 fusion category with complete hexagon + ribbon verification
-(\texttt{IsingBraiding.lean}, 25~theorems), the first verified knot
-invariant (trefoil $= -1$ from Ising R-matrix), the first formal
+(\texttt{IsingBraiding.lean}: 6~hexagon equations \texttt{hexagon\_I}--\texttt{hexagon\_III},
+4~ribbon conditions \texttt{ribbon\_ss\_1}--\texttt{ribbon\_pp\_1},
+Gauss sum \texttt{gauss\_sum} confirming $c_{\text{top}} = 1/2$,
+23~theorems total; Fibonacci: \texttt{hexagon\_E1}--\texttt{E3} in \texttt{QCyc5.lean}),
+the first verified knot
+invariant (\texttt{trefoil\_eq\_neg\_sqrt2}: trefoil $= -1$ from Ising R-matrix), the first formal
 decomposition of the algebraic/topological content of Rokhlin's theorem,
 and $q$-binomial coefficients with the classical limit
 $\binom{n}{j}_1 = C(n,j)$.

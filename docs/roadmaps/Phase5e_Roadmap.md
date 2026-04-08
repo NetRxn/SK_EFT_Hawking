@@ -2,7 +2,7 @@
 
 ## Technical Roadmap — April 2026
 
-*Prepared 2026-04-05 | Updated 2026-04-06 | Follows Phase 5d*
+*Prepared 2026-04-05 | Updated 2026-04-08 | Follows Phase 5d*
 
 **Current state:** 1318 theorems, 93 modules. Phase 5e: 65 theorems, 0 sorry, 5 new modules.
 
@@ -130,11 +130,11 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ## Track C: Affine Hopf Completion
 
 ### Wave 7 — U_q(ŝl₂) Bialgebra
-**Prerequisite:** Aristotle resolves 3 Uqsl2AffineHopf sorry (Batch 2 in `docs/references/aristotle_batch_plan.md`).
+**Prerequisite:** Aristotle resolves Uqsl2AffineHopf sorry. Current state: **16 sorry** (Aristotle 2c668068 COMPLETE — proved K₀E₀, K₀E₁, K₀F₁ + 7 helpers, sorry 19→16). Counit PROVED (Aristotle 986b9f66). Coproduct 17/21 cases proved; 4 q-Serre remain. Antipode 6/21 proved; 15 remain. **Blocker: RingQuot typeclass divergence** discovered — blocks 19 of 21 remaining sorry (deep research #3 submitted).
 
-- [ ] Wire coproduct + counit into Bialgebra typeclass
+- [ ] Wire coproduct + counit into Bialgebra typeclass (blocked: 4 q-Serre coproduct cases remain; further blocked by RingQuot typeclass divergence)
 - [ ] Coassociativity: (Δ⊗id)∘Δ = (id⊗Δ)∘Δ
-- [ ] Counitality: (ε⊗id)∘Δ = id = (id⊗ε)∘Δ
+- [ ] Counitality: (ε⊗id)∘Δ = id = (id⊗ε)∘Δ (counit proved, waiting on full coproduct)
 
 **Deliverables:**
 - Extended `Uqsl2AffineHopf.lean` with Bialgebra instance (~15-20 theorems)
@@ -206,7 +206,7 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ```
 
 **Tracks A, B, D: COMPLETE.** All deep research applied, all theorems proved.
-Track C: **blocked** on Aristotle resolving Uqsl2AffineHopf sorry.
+Track C: **blocked** — Aristotle 2c668068 COMPLETE (3 proofs + 7 helpers integrated, sorry 19→16). **RingQuot typeclass divergence** discovered — blocks 19 of 21 remaining sorry. Deep research #3 submitted.
 
 ---
 
@@ -233,7 +233,7 @@ Track C: **blocked** on Aristotle resolving Uqsl2AffineHopf sorry.
 | QCyc5.lean | B-W5 | **9** | COMPLETE, 0 sorry, hexagon E1-E3 |
 | QSqrt3.lean | D-W9 | **8** | COMPLETE, 0 sorry, SU(2)_4 unitarity |
 | QLevel3.lean | D-W9 | **19** | COMPLETE, 0 sorry, SU(2)_3 unitarity |
-| Uqsl2AffineHopf.lean (extended) | C-W7,8 | — | BLOCKED on Aristotle |
+| Uqsl2AffineHopf.lean (extended) | C-W7,8 | — | **16 sorry** (Aristotle 2c668068 COMPLETE: K₀E₀, K₀E₁, K₀F₁ + 7 helpers proved; counit proved; 17/21 coproduct; RingQuot typeclass divergence blocks remaining 19 of 21 sorry — deep research #3 submitted) |
 | KnotInvariant.lean (if feasible) | D-W10 | — | Deferred to Phase 6 |
 
 ### Python (`src/core/formulas.py` — DONE)
@@ -314,4 +314,4 @@ Track C: **blocked** on Aristotle resolving Uqsl2AffineHopf sorry.
 
 ---
 
-*Phase 5e roadmap. Created 2026-04-05, updated 2026-04-06. Tracks A/B/D complete. Track C blocked on Aristotle. 65 theorems, 0 sorry.*
+*Phase 5e roadmap. Created 2026-04-05, updated 2026-04-08. Tracks A/B/D complete. Track C blocked: Uqsl2AffineHopf 16 sorry (was 19; Aristotle 2c668068 COMPLETE — proved K₀E₀, K₀E₁, K₀F₁ + 7 helpers). RingQuot typeclass divergence blocks 19 of 21 remaining sorry — deep research #3 submitted. StimulatedHawking: 0 sorry (986b9f66). EmergentGravityBounds: 0 sorry (986b9f66). 65 theorems new this phase, 21 sorry total project-wide.*

@@ -68,23 +68,10 @@ structure GaugeGroupData where
   /-- Whether the center subgroup is continuous -/
   has_continuous_center : Bool
 
-/-- The center of a non-Abelian Lie group is always discrete (finite).
-    This is a standard result from Lie theory: the center of a simple
-    Lie group is finite. For semisimple groups, the center is a finite
-    Abelian group. We take this as an axiom encoding the Lie-theoretic
-    fact; all concrete instances satisfy it by construction.
-
-    For SU(N): center = Z_N (finite)
-    For SO(N): center = Z_2 or Z_2 × Z_2 (finite)
-    For Sp(N): center = Z_2 (finite)
-
-    REMOVED as axiom (2026-04-04): was never used in any proof.
-    Provable from standard Lie theory once Mathlib has center/normalizer API.
-    Retained as a comment for documentation. -/
--- Previously: axiom non_abelian_center_discrete (G : GaugeGroupData)
---     (h_na : G.is_abelian = false) (h_cont : G.is_continuous = true) :
---     G.has_continuous_center = false
-theorem non_abelian_center_discrete_removed : True := trivial
+-- non_abelian_center_discrete: removed as axiom (2026-04-04), never used.
+-- The center of a non-Abelian simple Lie group is always finite:
+--   SU(N): Z_N, SO(N): Z_2 or Z_2×Z_2, Sp(N): Z_2.
+-- Provable from Lie theory once Mathlib has center/normalizer API.
 
 /-!
 ## Higher-Form Symmetry
