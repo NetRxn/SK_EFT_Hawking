@@ -410,6 +410,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | If you want to... | Start here |
 |---|---|
 | Understand the physics and results | This README (above) |
+| See the big picture assessment | [`docs/RESEARCH_STATUS_OVERVIEW.md`](docs/RESEARCH_STATUS_OVERVIEW.md) — proven chains, gaps, implications |
 | See what's been built and its status | [`SK_EFT_Hawking_Inventory_Index.md`](SK_EFT_Hawking_Inventory_Index.md) — counts, module map |
 | Understand the execution process | [`docs/WAVE_EXECUTION_PIPELINE.md`](docs/WAVE_EXECUTION_PIPELINE.md) — 12-stage pipeline |
 | Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
