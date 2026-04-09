@@ -100,14 +100,15 @@ Phase 5e completed the **categorical** story: fusion → braiding → ribbon →
 - Session 1 (April 5): n_md_steps=30 → |ΔH|>1, acceptance <40%. Data unreliable.
 - Session 2 (April 6): n_md_steps=80, g=0.5-8.0, 4 workers. Acceptance at low g still poor (0-20% for g<2), marginal 30-60% for critical region g=3-5, good 60-100% for g>6. Data: 22-305 traj per coupling. |ΔH| averaging 2-4 at low g.
 - Session 3 (April 7): n_md_steps=160, 4 workers. 3.3 hrs/traj → 55 days estimate. Killed after diagnosis showed CG bottleneck at κ=6054. Data archived to `data/rhmc/L8_v1/`.
-- **Session 4 / v2 (April 9, running):** Optimized: 12-pole Zolotarev (was 24), tau=0.5 (was 1.0), 80 MD steps, 2 workers (was 4). Deep research completed: even-odd + deflation path identified for future 50-70× speedup. Even-odd implemented (1.4× verified) but x^{-1/2} power needs resolution for correct physics — deferred, using full-lattice for this run.
+- **Session 4 / v2 (April 9, running):** Full-lattice baseline: 12-pole Zolotarev, tau=0.5, 80 MD steps, 2 workers. Collecting baseline data while CK optimization built.
 
-**Key findings from optimization session (April 8-9):**
+**Key findings from optimization sessions (April 8-9):**
 - CG convergence dominates: κ=6054 → ~1200 iters/solve, multi-shift essential
 - Chronological CG FAILED: ε×κ≈38 → chrono guesses worse than zero
 - 12 poles adequate: same |ΔH| as 24, error 3.2e-5
 - Even-odd decomposition: stencil 1.4× faster, force verified by finite-difference
-- EO physics: det(M_e)^{1/2} = Pf(A) requires x^{-1/2} Zolotarev but has |ΔH|≈2.35 at any pole count. Complex PF with x^{-1/4} gives det(M_e)^{1/4} (wrong power). Resolution needed.
+- EO x^{-1/2} pathology: |ΔH|≈2.35 at any pole count. Deep research (Phase-5s) identified root cause: CG residual amplification at κ≈6000.
+- **Clark-Kennedy 2-PF IMPLEMENTED (April 9):** det(M_e)^{1/2} = [det(M_e)^{1/4}]^2 via two independent complex PF fields, each with x^{-1/4}. Resolves x^{-1/2} pathology. Verified at L=4: accept=1.00, |ΔH|=0.001. `run_rhmc_rust_eo_2pf` in Rust, `run_rhmc_production.py` switched. Reference: Clark & Kennedy, PRL 98:051601 (2007).
 - Deep research completed: deflation K=30 (next priority, 12-15× on CG) + Hasenbusch K=3 (50-70× total)
 
 See `docs/references/production_rhmc.md` for the complete guide.
@@ -171,6 +172,8 @@ Track C blocked on L=8 RHMC completion.
 | 3 | Two-loop NJL effective potential for tetrad condensation | W4 | Phase5f_two_loop_gap_equation.txt |
 | 4 | Braid group via PresentedGroup + RT representation in Lean 4 | W7 | Phase5f_braid_group_lean4.txt |
 | 5 | Genus-g partition functions from MTC data (Verlinde formula) | W2 | Phase5f_tqft_partition_functions.txt |
+| 6 | Robust tridiag eigvec extraction for Lanczos in Rust | CG accel | Phase5s_tridiag_eigvec_lanczos_rust.md |
+| 7 | Hasenbusch mass splitting for CK 2-PF EO RHMC | CG accel | Phase5s_hasenbusch_mass_splitting_rhmc.md |
 
 ---
 

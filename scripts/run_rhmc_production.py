@@ -126,12 +126,15 @@ def _run_coupling_chunked(args):
 
         h_init = np.array(h_resume, dtype=np.float64) if h_resume is not None else None
 
-        # Full-lattice RHMC with EO-validated Zolotarev powers.
-        # EO decomposition (run_rhmc_rust_eo) available for ~1.4× speedup but
-        # requires x^{-1/2} power for correct Pf(A) = det(M_e)^{1/2} physics,
-        # which has larger |ΔH| at current pole count. Using full-lattice with
-        # 12-pole x^{-1/4} until EO x^{-1/2} acceptance is resolved.
-        result = sk_eft_rhmc.run_rhmc_rust(
+        # Clark-Kennedy 2-PF even-odd RHMC (default):
+        #   det(M_e)^{1/2} = [det(M_e)^{1/4}]^2 via two independent complex
+        #   pseudofermion fields, each with x^{-1/4}. Resolves x^{-1/2} |ΔH|≈2.35
+        #   pathology. Half-lattice CG + reduced force variance → ~2× faster.
+        #   Reference: Clark & Kennedy, PRL 98:051601 (2007)
+        #
+        # Full-lattice fallback (--mode full):
+        #   Single complex PF with x^{-1/4} on full A†A. No EO advantage.
+        result = sk_eft_rhmc.run_rhmc_rust_eo_2pf(
             l=L, g=g, n_traj=chunk + this_therm, n_therm=this_therm, n_meas_skip=1,
             n_md_steps=n_md_steps, tau=tau,
             alpha_0=float(a0), alphas=alphas, betas=betas,
@@ -230,7 +233,7 @@ def main():
     eps = tau / args.n_md_steps
     print(f"{'='*70}")
     print(f"RHMC Production: L={L}, {len(g_values)} couplings x {args.n_traj} traj")
-    print(f"  Complex pseudofermion (Schaich-DeGrand), {n_poles}-pole Zolotarev")
+    print(f"  Clark-Kennedy 2-PF even-odd, {n_poles}-pole Zolotarev x^{{-1/4}}")
     print(f"  tau={tau:.3f}, eps={eps:.6f}, MD steps={args.n_md_steps}")
     print(f"  Progress: {n_complete} complete, {n_partial} partial, "
           f"{len(g_values) - n_complete - n_partial} new")
@@ -248,12 +251,16 @@ def main():
         L, g_values[len(g_values)//2], args.seed, 50, *cg)
     print(f"  Spectrum: [{lam_min:.3f}, {lam_max:.1f}], kappa={lam_max/lam_min:.0f}")
 
-    # Zolotarev partial fraction for x^{-1/4} (action) and x^{-3/8} (heatbath).
-    # Complex pseudofermion convention: det((A†A)^{-1/4})^{-1} = det(A†A)^{1/4} = Pf(A).
+    # Clark-Kennedy 2-PF even-odd RHMC:
+    #   Action: x^{-1/4} on M_e (each of 2 PFs contributes det(M_e)^{1/4})
+    #   Heatbath: x^{-7/8} on M_e (generates M_e^{1/8} distribution for x^{-1/4} action)
+    #     Derivation: η = M_e^{-7/8} ξ, Φ = M_e η = M_e^{1/8} ξ → S = Φ^T M_e^{-1/4} Φ = ξ^T ξ
+    #   Physics: det(M_e)^{1/4} × det(M_e)^{1/4} = det(M_e)^{1/2} = Pf(A)
+    #
     # Lean: zolotarev_exponential_convergence (HubbardStratonovichRHMC.lean)
-    # Source: Schaich & DeGrand, CPC 190:200 (2015), Eqs. 16-20
+    # Source: Clark & Kennedy, PRL 98:051601 (2007); Schaich & DeGrand, CPC 190:200 (2015)
     a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.25)
-    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.375)
+    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.875)
 
     tasks = []
     for i, g in enumerate(g_values):
