@@ -646,6 +646,11 @@ private theorem affComulFreeAlg_E1F0 :
       exact ⟨ uqAffK0_unit k, rfl ⟩;
     exact h_inv.mul_left_cancel h_comm
 
+-- NOTE: F q-Serre coproduct proofs need cross-index K⁻¹-F commutation lemmas
+-- (uqAff_K0inv_K1inv_comm, uqAff_K0inv_mul_F1, uqAff_K1inv_mul_F0)
+-- which are defined later in this file (in the antipode helpers section).
+-- The F proofs will be completed after relocating those lemmas.
+
 /-
 q-Serre coproduct cases: PROVIDED SOLUTION (from deep research)
 
@@ -693,6 +698,18 @@ private theorem affComulFreeAlg_SerreE01 :
   --   `← Algebra.smul_def` + smul_mul_assoc for scalar handling.
   -- RINGQUOT WORKAROUND: Use `erw` (not rw) for all rewrites on Uqsl2Aff.
   --   Use `letI : NonUnitalNonAssocRing (Uqsl2Aff k) := inferInstance` before neg lemmas.
+  -- Step 1: RHS = 0 since Δ is AlgHom
+  erw [map_zero]
+  -- Step 2: Distribute AlgHom over sub/add/mul, then substitute generators
+  simp only [map_sub, map_add, map_mul, AlgHom.commutes]
+  erw [affComulFreeAlg_ι k E0, affComulFreeAlg_ι k E1]
+  simp only [affComulOnGen]
+  -- Step 3: Goal is q-Serre(δE₀, δE₁) = 0 in A⊗A
+  -- First distribute all multiplication over +/- to get sum of products
+  simp only [add_mul, mul_add, sub_mul, mul_sub, mul_assoc]
+  -- Now apply tmul_mul_tmul to each product of simple tensors
+  simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+  -- Step 4: TODO
   sorry
 
 private theorem affComulFreeAlg_SerreE10 :
@@ -702,8 +719,28 @@ private theorem affComulFreeAlg_SerreE10 :
        + ascal k (T 2 + 1 + T (-2)) * ag k E1 * ag k E0 * ag k E1 * ag k E1
        - ag k E0 * ag k E1 * ag k E1 * ag k E1) =
     affComulFreeAlg k 0 := by
-  -- Symmetric to SerreE01 with 0↔1 swap.
-  -- Uses: uqAff_SerreE10, uqAff_K1E1, uqAff_K1E0, affComulOnGen E1/E0.
+  -- Phase 1: RHS = 0
+  erw [map_zero]
+  -- Phase 2: Expand coproduct on generators, distribute products
+  simp only [map_sub, map_add, map_mul, AlgHom.commutes]
+  erw [affComulFreeAlg_ι k E0, affComulFreeAlg_ι k E1]
+  simp only [affComulOnGen]
+  -- Phase 2+3: expand + K-E normalize with algebraMap_apply
+  set_option maxHeartbeats 1600000 in
+  simp only [mul_add, add_mul,
+             Algebra.TensorProduct.tmul_mul_tmul,
+             Algebra.TensorProduct.algebraMap_apply,
+             mul_one, one_mul, mul_assoc,
+             uqAff_K0E0, uqAff_K0E1, uqAff_K1E0, uqAff_K1E1, uqAff_K0K1_comm]
+  -- Complete deeper K-E via left-assoc/K-E alternation
+  simp only [← mul_assoc]
+  simp only [uqAff_K0E0, uqAff_K0E1, uqAff_K1E0, uqAff_K1E1, uqAff_K0K1_comm, mul_assoc]
+  -- Convert to smul form for match_scalars
+  simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, mul_assoc, one_smul]
+  -- Phase 4: Need grouping by common left tensor factor + coefficient cancellation
+  -- Options: (a) match_scalars + ext/simp/omega for Laurent poly goals
+  --          (b) manual ← tmul_add grouping + Serre/coefficient lemmas
+  -- Deep research: Lit-Search/Phase-5s/Mathlib4 tensor product algebra API...
   sorry
 
 private theorem affComulFreeAlg_SerreF01 :
@@ -713,9 +750,7 @@ private theorem affComulFreeAlg_SerreF01 :
        + ascal k (T 2 + 1 + T (-2)) * ag k F0 * ag k F1 * ag k F0 * ag k F0
        - ag k F1 * ag k F0 * ag k F0 * ag k F0) =
     affComulFreeAlg k 0 := by
-  -- Same structure as SerreE01 but for F generators.
-  -- Δ(Fᵢ) = Fᵢ⊗1 + Kᵢ⁻¹⊗Fᵢ (from affComulOnGen).
-  -- Uses: uqAff_SerreF01, uqAff_K0F0, uqAff_K0F1, uqAff_K0inv_mul_K0.
+  -- Needs cross-index K⁻¹-F commutation lemmas (defined later in file)
   sorry
 
 private theorem affComulFreeAlg_SerreF10 :
@@ -725,8 +760,7 @@ private theorem affComulFreeAlg_SerreF10 :
        + ascal k (T 2 + 1 + T (-2)) * ag k F1 * ag k F0 * ag k F1 * ag k F1
        - ag k F0 * ag k F1 * ag k F1 * ag k F1) =
     affComulFreeAlg k 0 := by
-  -- Symmetric to SerreF01 with 0↔1 swap.
-  -- Uses: uqAff_SerreF10, uqAff_K1F1, uqAff_K1F0, uqAff_K1inv_mul_K1.
+  -- Needs cross-index K⁻¹-F commutation lemmas (defined later in file)
   sorry
 
 /-- The coproduct respects all affine Chevalley relations. -/
@@ -1167,9 +1201,28 @@ private theorem affAntipodeFreeAlg_Serre1 :
     affAntipodeFreeAlg k
       (ascal k (T 1 - T (-1)) * (ag k E1 * ag k F1 - ag k F1 * ag k E1)) =
     affAntipodeFreeAlg k (ag k K1 - ag k K1inv) := by
-  -- Symmetric to Serre0 with 0↔1 swap. Same proof structure.
-  -- Uses: uqAff_K1F1, uqAff_E1_mul_K1inv, uqAff_Serre1, uqAff_K1_mul_K1inv
-  sorry
+  -- Mirror of Serre0 with 0↔1 swap.
+  have h_comm : (uqAffK1 k * uqAffF1 k * uqAffE1 k * uqAffK1inv k) = (uqAffF1 k * uqAffE1 k) := by
+    simp +decide [ mul_assoc, uqAff_K1F1, uqAff_K1inv_mul_F1 ];
+    simp +decide [ ← mul_assoc, uqAff_E1_mul_K1inv ];
+    simp +decide [ mul_assoc, mul_left_comm, ← Algebra.smul_def ];
+    simp +decide [ ← mul_assoc, uqAff_K1_mul_K1inv ];
+    exact?;
+  have h_comm : (algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 1 - T (-1))) * (uqAffF1 k * uqAffE1 k - uqAffE1 k * uqAffF1 k) = -(uqAffK1 k - uqAffK1inv k) := by
+    rw [ ← uqAff_Serre1 ] ; ring;
+    grind;
+  convert congr_arg ( fun x => MulOpposite.op x ) h_comm using 1;
+  · simp +decide [ ascal, ag, mul_assoc, mul_sub, sub_mul, mul_comm, mul_left_comm, Algebra.algebraMap_eq_smul_one ];
+    simp +decide [ affAntipodeFreeAlg_ι, affAntipodeOnGen ];
+    simp +decide [ ← MulOpposite.op_mul, ← MulOpposite.op_add, ← MulOpposite.op_neg, mul_assoc, mul_left_comm, mul_comm ];
+    simp +decide [ mul_assoc, mul_left_comm, mul_comm, uqAff_neg_mul_neg ];
+    simp +decide [ ← mul_assoc, ← MulOpposite.op_mul, uqAff_K1_mul_K1inv, uqAff_K1inv_mul_K1 ];
+    simp +decide [ ← smul_sub, ‹uqAffK1 k * uqAffF1 k * uqAffE1 k * uqAffK1inv k = uqAffF1 k * uqAffE1 k›, uqAff_K1inv_mul_K1 ];
+    simp +decide [ ← mul_assoc, ← MulOpposite.op_mul, uqAff_K1_mul_K1inv, uqAff_K1inv_mul_K1 ];
+    simp +decide [ mul_assoc, uqAff_K1inv_mul_K1 ];
+    module;
+  · simp +decide [ affAntipodeFreeAlg, affAntipodeOnGen ];
+    grind +splitImp
 
 /-
 Cross-commutation cases

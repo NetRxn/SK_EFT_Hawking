@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 8, 2026 (Phase 5q-5r: **Ext computation complete** (first in any proof assistant). ~128 Lean modules (was 94), **17 sorry** (was 24 — 4 closed manually, 3 by Aristotle). Phase 5q: A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings — all zero sorry. H2 (change-of-rings) discharged. 322+ Aristotle-proved.)
+**Last synced:** April 9, 2026 (Phase 5s: **11 sorry** (was 17 — CenterFunctor 2→hypotheses, Serre0/Serre1 antipode closed, E10 comul corrected). q-Serre coproduct Phases 1-3 SOLVED in code (expansion + K-E normalization). Phase 4 (coefficient cancellation) is sole remaining blocker. 131 Lean modules. See deep research index below.)
 
 ---
 
@@ -13,7 +13,7 @@
 | Lean theorems | **2237+** (2153+ substantive + ~84 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
 | Placeholders (True := trivial) | **~84** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322+** (319+ machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **17** | 12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor. Aristotle 6dbc9447 in flight. |
+| **Sorry gaps** | **11** | 8 Uqsl2AffineHopf (4 comul + 4 antipode q-Serre) + 3 Uqsl3Hopf. CenterFunctor: 0 sorry (2 hypotheses). All blocked by q-Serre Phase 4. |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
 | Lean modules | **131** | +36 since last full sync (Phases 5k-5s). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (5q-5r), FKGappedInterface, ModularityTheorem (5s). |
 | Python source modules | **53** | Including stencil_dirac.py |
@@ -26,6 +26,7 @@
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 43+ | See Aristotle run table in full inventory |
 | Deep research tasks | 18 + 8 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e
+
 
 ---
 
@@ -192,7 +193,7 @@
 | QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
 | FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
-| Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode defined via RingQuot.liftAlgHom (**19 sorry**: relation-respect proofs) |
+| Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. Serre0/Serre1 antipode CLOSED. **8 sorry** (4 comul + 4 antipode q-Serre). Phases 1-3 working in E10 proof. Phase 4 (Laurent poly coefficient cancellation) blocks all 8. See deep research index. |
 | VerifiedStatistics | 6 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | KerrSchild | 7 | Kerr-Schild metrics: null vector, radial_null PROVED, Sherman-Morrison inverse, Schwarzschild, DOF counting (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**ALL PROVED, zero sorry** — native_decide over Q(√2)) |
@@ -202,7 +203,7 @@
 | VerifiedJackknife | 5 | First verified statistical estimators: jackknife variance non-neg, autocovariance_zero non-neg, intAutocorrTime bounds (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | TetradGapEquation | 20 | **First tetrad gap equation in any formalism**: NJL-type Δ=G·N_f·Δ·I(Δ), gapIntegral, criticalCoupling=8π²/(N_f·Λ²) (PROVED, matches ADW V_eff), IVT existence, Banach uniqueness, bifurcation at G_c, vestigial connection (**ALL PROVED, zero sorry**, Aristotle `79e07d55` + `986b9f66`) |
 | StimulatedHawking | 11 | **Phase 5d**: Stimulated Hawking amplification, signal-to-noise, phonon statistics (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
-| CenterFunctor | 9 | **Phase 5d**: Abstract functor Center(Vec_G) to ModuleCat(DG), natural transformation (**2 sorry**) |
+| CenterFunctor | 9 | **Phase 5d**: Center(Vec_G) ⥤ ModuleCat(DG) — **0 sorry, 2 tracked hypotheses** (H_CF1, H_CF2 as `def ... : Prop`). Data-level evidence via CenterEquivalenceZ2 + S3CenterAnyons. |
 | QCyc16 | 6 | **Phase 5e**: Q(ζ₁₆) cyclotomic field: ζ⁸=-1, ζ¹⁶=1, (√2)²=2 (**ALL PROVED by native_decide, zero sorry**) |
 | QCyc5 | 9 | **Phase 5e**: Q(ζ₅) cyclotomic field: ζ⁵=1, cyclotomic relation, Fibonacci hexagon E1-E3, twist consistency (**ALL PROVED by native_decide, zero sorry**) |
 | IsingBraiding | 25 | **Phase 5e**: COMPLETE braided Ising MTC: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum, **trefoil=-1** (**ALL PROVED by native_decide, zero sorry, FIRST verified knot invariant**) |

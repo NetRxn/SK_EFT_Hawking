@@ -146,27 +146,75 @@ The gapped_interface_axiom is the project's single load-bearing assumption. We p
 
 ---
 
-## Track E: Sorry Closure (MECHANICAL)
+## Track E: Sorry Closure — q-Serre Coproduct & Antipode
 
-### Wave 8 — RingQuot Workaround [Lean]
+### Wave 8 — q-Serre Coproduct Proofs (8 sorry) [Lean]
 
-**Goal:** Close the remaining 15 RingQuot-blocked sorry using the manual workaround pattern (letI + NonUnitalNonAssocRing + op_mul).
+**Goal:** Close 8 q-Serre sorry in Uqsl2AffineHopf (4 comul + 4 antipode) and 3 in Uqsl3Hopf.
 
-**Prerequisites:** Aristotle 6dbc9447 results (may resolve some or all). If Aristotle fails, manual application.
+**Current state (April 9, 2026):** Phases 1-3 of the 4-phase strategy are **SOLVED in working code** (E10 case in Uqsl2AffineHopf.lean). Phase 4 (coefficient cancellation) is the sole remaining blocker. Aristotle cannot solve these — responsibility is ours.
 
-**The pattern (proven for 4 cases this session):**
+**Working Phase 1-3 tactic sequence:**
 ```lean
-letI : NonUnitalNonAssocRing (Uqsl2Aff k) := inferInstance
--- Then neg_mul, mul_neg, etc. fire correctly
+erw [map_zero]
+simp only [map_sub, map_add, map_mul, AlgHom.commutes]
+erw [affComulFreeAlg_ι k E0, affComulFreeAlg_ι k E1]
+simp only [affComulOnGen]
+-- Combined expansion + K-E normalization (KEY: no ← Algebra.smul_def here)
+set_option maxHeartbeats 1600000 in
+simp only [mul_add, add_mul,
+           Algebra.TensorProduct.tmul_mul_tmul,
+           Algebra.TensorProduct.algebraMap_apply,
+           mul_one, one_mul, mul_assoc,
+           uqAff_K0E0, uqAff_K0E1, uqAff_K1E0, uqAff_K1E1, uqAff_K0K1_comm]
+-- Deeper K-E via one alternation
+simp only [← mul_assoc]
+simp only [uqAff_K0E0, uqAff_K0E1, uqAff_K1E0, uqAff_K1E1, uqAff_K0K1_comm, mul_assoc]
+-- Convert to smul
+simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, mul_assoc, one_smul]
+-- Phase 4: sorry — coefficient cancellation in LaurentPolynomial
+sorry
 ```
 
-**Deliverables:**
-- [ ] All 12 Uqsl2AffineHopf sorry closed
-- [ ] All 3 Uqsl3Hopf sorry closed
-- [ ] Sorry count: 17 → 2 (only CenterFunctor remains)
+**Key insights:**
+- `Algebra.TensorProduct.algebraMap_apply` normalizes `algebraMap R (A⊗A) r` → `(algebraMap R A r) ⊗ₜ 1` — essential for [3]_q coefficient expansion
+- Do NOT include `← Algebra.smul_def` in the expansion simp — smul wrappers block `mul_assoc` iterations
+- `noncomm_ring` exceeds recursion depth on ~128 terms; `module` fails because `ring` can't handle `T(n)` in LaurentPolynomial
+- `match_scalars` decomposes correctly but coefficient subgoals need Laurent polynomial-specific tactics, not `ring`
 
-**Estimated LOE:** 1-3 days (mechanical once pattern confirmed)
-**Risk:** Low (pattern proven, just repetitive)
+**Phase 4 next steps (ordered by likelihood of success):**
+1. Pre-prove Laurent polynomial coefficient identities as standalone lemmas: `ext n; simp [LaurentPolynomial.T, Finsupp.single_apply]; omega`
+2. Feed pre-proved identities into `match_scalars` for coefficient decomposition
+3. OR: hierarchical `← tmul_add` grouping with `abel` for term permutation, then Serre + coefficient lemmas per group
+4. Antipode q-Serre: try palindromic reversal trick (Phase-5e research) — only 4 terms after K-normalization, NOT 64. Likely closeable independently.
+
+**Deep research (read in this order):**
+1. `Lit-Search/Phase-5s/Mathlib4 tensor product algebra API and q-Serre tactic strategies.md` — **MOST ACTIONABLE**: algebraMap_apply, match_scalars, Laurent ext, hierarchical grouping
+2. `Lit-Search/Phase-5e/U_q(ŝl₂) Hopf algebra proof strategy for Lean 4.md` — 64-term bidegree analysis, palindromic reversal for antipode
+3. `Lit-Search/Phase-5d/Tensor product algebra rewriting for Hopf coproduct proofs in Lean 4.md` — 4-phase strategy, RingQuot.liftAlgHom pattern
+4. `Lit-Search/Phase-5s/Lean 4 proof strategies for non-commutative tensor product normalization.md` — conv, noncomm_ring, grind
+5. `Lit-Search/Tasks/qSerre_algebraMap_tensor_expansion.md` — updated prompt with working code + precise Phase 4 blocker
+6. `Lit-Search/Tasks/complete/qSerre_coproduct_tensor_expansion_lean4.md` — original problem formulation
+
+**Deliverables:**
+- [ ] Pre-proved Laurent polynomial coefficient identities
+- [ ] All 8 Uqsl2AffineHopf sorry closed (4 comul + 4 antipode q-Serre)
+- [ ] All 3 Uqsl3Hopf sorry closed (same q-Serre pattern)
+- [ ] Sorry count: 11 → 0 (CenterFunctor has 0 sorry, 2 hypotheses)
+
+**Estimated LOE:** 2-5 days once Phase 4 approach validated
+**Risk:** Medium (Phase 4 is a proof engineering problem, not a mathematical one — cancellation verified algebraically)
+
+### Wave 9 — CenterFunctor Hypothesis Elimination (OPTIONAL)
+
+**Goal:** Eliminate 2 tracked hypotheses (H_CF1, H_CF2) by constructing the concrete Z/2 functor.
+
+**Deep research:** `Lit-Search/Phase-5s/CenterFunctor Z2 finite matrix feasibility.md`
+
+**Approach:** Module.compHom + algebra map DG→End, ~400-600 lines, Z/2 case only.
+
+**Estimated LOE:** ~1 week
+**Risk:** Low (algebraic, finite-dimensional)
 
 ---
 
@@ -199,7 +247,8 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 5 | Muger general theorem | 1 week | Deep research | **COMPLETE** — ModularityTheorem.lean, abstract proof |
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
-| Wave 8 | Sorry closure | 1-3 days | Aristotle results | Aristotle 6dbc9447 in flight |
+| Wave 8 | q-Serre sorry closure | 2-5 days | Phase 4 approach | **IN PROGRESS** — Phases 1-3 working, Phase 4 (Laurent poly coefficients) blocks. 7 deep research results available. |
+| Wave 9 | CenterFunctor hypotheses | 1 week | None | Optional — 2 hypotheses, 0 sorry |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.
 
@@ -226,7 +275,7 @@ All tracks are independent. Maximum parallelism possible.
 
 **Track D (instanton):** Clear assessment of whether the coupling deficit is formally bridgeable or inherently non-perturbative.
 
-**Track E (sorry):** 17 → 2 sorry. Near-zero sorry project.
+**Track E (sorry):** 11 → 0 sorry. Zero-sorry project (CenterFunctor has 2 tracked hypotheses, not sorry). First formalization of quantum group Hopf algebra compatibility in any proof assistant.
 
 ---
 

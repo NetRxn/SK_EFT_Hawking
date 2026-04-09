@@ -4,7 +4,7 @@
 
 **Last updated:** April 8, 2026 (end of Week 3, Phase 5q Ext computation complete)
 
-**Current build:** 131 Lean modules, 2237+ theorems, 1 axiom, 17 sorry (12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor; Aristotle 6dbc9447 in flight). 53 Python modules, 45 test files (1856 tests), 100 figures, 48 notebooks, 15 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.**
+**Current build:** 131 Lean modules, 2237+ theorems, 1 axiom, **11 sorry** (8 Uqsl2AffineHopf + 3 Uqsl3Hopf; CenterFunctor: 0 sorry, 2 tracked hypotheses). 53 Python modules, 45 test files (1856 tests), 100 figures, 48 notebooks, 15 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.** q-Serre coproduct proof Phases 1-3 solved; Phase 4 (Laurent polynomial coefficient cancellation) is sole remaining blocker for all 11 sorry.
 
 ---
 
@@ -106,8 +106,8 @@ Recently completed (Phase 5p, April 8 2026):
 
 **What's missing:**
 - **17 sorry remaining**, all technical not mathematical:
-  - 12 in Uqsl2AffineHopf (affine Hopf algebra) — blocked by RingQuot typeclass divergence bug. 4 KE/KF antipode cases closed manually this session. Aristotle 6dbc9447 in flight with workaround hints.
-  - 3 in Uqsl3Hopf — same RingQuot pattern.
+  - 8 in Uqsl2AffineHopf (4 comul + 4 antipode q-Serre) — all blocked by Phase 4 of 4-phase proof strategy (Laurent polynomial coefficient cancellation in tensor product). Phases 1-3 (expansion + K-E normalization) working in code. RingQuot workaround found. Serre0/Serre1 antipode + 2 KE/KF antipode closed. CenterFunctor: 2 sorry → 2 tracked hypotheses (H_CF1, H_CF2). See `Phase5s_Roadmap.md` Track E for next steps and deep research index.
+  - 3 in Uqsl3Hopf — same q-Serre pattern (21 Chevalley relations including cubic Serre for rank 2).
   - 2 in CenterFunctor — needs actual functor construction, not Nonempty.
 - The Kazhdan-Lusztig equivalence Rep(u_q) = SU(2)_k-MTC is stated but not constructively proved (the full proof is 200 pages). Data-level verification done for k=1,2.
 - The S-matrix/Muger bridge theorem Direction 1 (det(S) ≠ 0 → Z₂ trivial) is now proved as a GENERAL theorem (ModularityTheorem.lean) — pure linear algebra, no MTC-specific properties needed. Direction 2 (Z₂ trivial → det(S) ≠ 0) requires Muger's categorical trace machinery and is not yet formalized.
@@ -203,7 +203,7 @@ Recently completed (Phase 5p, April 8 2026):
 - Fibonacci universality for quantum computation
 
 **Layer 2 — Solid structural results with known gaps:**
-- The quantum group → MTC → TQFT chain (17 sorry: 15 from RingQuot bug + 2 CenterFunctor, not mathematical difficulty)
+- The quantum group → MTC → TQFT chain (11 sorry: 8+3 q-Serre coproduct/antipode — proof engineering blocker, not mathematical difficulty)
 - Chirality wall three-pillar analysis (gaps clearly identified, rigor-tracked)
 - ADW gap equation (solution exists, G_c proved, coupling deficit quantified)
 - Fermi-point gauge emergence (rigor tracked: theorem/heuristic/speculative)
@@ -233,7 +233,7 @@ External constraints:
 
 ### Technical blockers
 
-The single highest-leverage fix is resolving the RingQuot typeclass divergence in Lean 4. This would unlock 15 of the 17 remaining sorry (12 Uqsl2AffineHopf + 3 Uqsl3Hopf). Aristotle run 6dbc9447 is in flight with RingQuot workaround hints; 4 sorry were closed manually earlier in this session (KE/KF antipode cases).
+The single highest-leverage fix is closing Phase 4 of the q-Serre coproduct proof: Laurent polynomial coefficient cancellation after tensor product expansion. Phases 1-3 are solved in working code (see `Phase5s_Roadmap.md` Track E). This would close all 11 remaining sorry (8 Uqsl2AffineHopf + 3 Uqsl3Hopf). The RingQuot typeclass bug is worked around. 7 deep research results provide detailed strategies — the most actionable is `Lit-Search/Phase-5s/Mathlib4 tensor product algebra API and q-Serre tactic strategies.md` (recommends `match_scalars` + pre-proved Laurent identities via `ext n; simp; omega`).
 
 ---
 

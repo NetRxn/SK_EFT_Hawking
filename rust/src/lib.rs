@@ -75,7 +75,177 @@ fn build_neighbors(l: usize) -> (Vec<[usize; 4]>, Vec<[usize; 4]>) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// Matrix-free A[h] @ v — the core stencil
+// Even-odd site decomposition
+//
+// On a 4D hypercubic lattice, site (x0,x1,x2,x3) has parity
+// (x0+x1+x2+x3) mod 2. Every forward neighbor of an even site is odd
+// and vice versa. Since A[h] has ONLY nearest-neighbor hops, A_ee = 0
+// and A_oo = 0 — the operator is purely off-diagonal in the even-odd
+// basis. This means A†A = -A² = diag(M_e, M_o) is block-diagonal,
+// where M_e = A_eo·A_eo^T operates on even sites only at half cost.
+//
+// Physics: Pf(A) = det(A†A)^{1/4} = det(M_e)^{1/2}. The x^{-1/2}
+// Zolotarev approximation on the half-lattice operator M_e replaces
+// x^{-1/4} on the full A†A. Same Krylov sharing, half the dimension.
+//
+// Lean: hs_fermion_matrix_antisymmetric (bipartite → block-diagonal)
+// Source: DeGrand & DeTar, "Lattice Methods for QCD" Ch. 8
+// ═══════════════════════════════════════════════════════════════════
+
+/// Even-odd lattice tables for half-lattice stencil operations.
+struct EvenOddTables {
+    even_sites: Vec<usize>,      // full-lattice indices of even sites
+    odd_sites: Vec<usize>,       // full-lattice indices of odd sites
+    compact_idx: Vec<usize>,     // full index → compact index within parity sector
+    is_even: Vec<bool>,          // full index → true if even
+    n_even: usize,
+    n_odd: usize,
+}
+
+fn build_even_odd(l: usize) -> EvenOddTables {
+    let v = l * l * l * l;
+    let mut even_sites = Vec::with_capacity(v / 2);
+    let mut odd_sites = Vec::with_capacity(v / 2);
+    let mut compact_idx = vec![0usize; v];
+    let mut is_even = vec![false; v];
+
+    for site in 0..v {
+        let x0 = site / (l * l * l);
+        let x1 = (site / (l * l)) % l;
+        let x2 = (site / l) % l;
+        let x3 = site % l;
+        if (x0 + x1 + x2 + x3) % 2 == 0 {
+            compact_idx[site] = even_sites.len();
+            is_even[site] = true;
+            even_sites.push(site);
+        } else {
+            compact_idx[site] = odd_sites.len();
+            odd_sites.push(site);
+        }
+    }
+
+    EvenOddTables {
+        n_even: even_sites.len(),
+        n_odd: odd_sites.len(),
+        even_sites,
+        odd_sites,
+        compact_idx,
+        is_even,
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Half-lattice hops: A_eo (odd→even) and A_eo^T (even→odd)
+//
+// A_eo gathers odd-site spinor values into even-site output.
+// A_eo^T scatters even-site spinor values into odd-site output.
+// M_e = A_eo · A_eo^T is applied as two half-hops at half the cost
+// of the full A†A = -A² (which requires two full-lattice stencils).
+//
+// Cost: each half-hop visits V/2 sites × 8 bonds × 32 CG entries
+//       = 128V FMAs, vs 256V for a full A application.
+//       M_e = 2 × 128V = 256V, vs A†A = 2 × 256V = 512V. → 2× saving.
+// ═══════════════════════════════════════════════════════════════════
+
+/// Apply A_eo: maps odd-site vector → even-site vector.
+/// For each even site e: gathers from forward odd neighbor (using h_e)
+///                        and backward odd neighbor (using h_bwd).
+fn apply_aeo(
+    h: &[f64], v_odd: &[f64], out_even: &mut [f64],
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
+    eo: &EvenOddTables, cg_entries: &[CgEntry],
+) {
+    for x in out_even.iter_mut() { *x = 0.0; }
+
+    for &e in &eo.even_sites {
+        let e_compact = eo.compact_idx[e];
+        for mu in 0..4usize {
+            // Forward: even site e gathers from odd fwd neighbor
+            let nb_fwd = fwd[e][mu];
+            let nb_fwd_compact = eo.compact_idx[nb_fwd];
+            for entry in cg_entries {
+                let h_val = h[e * 16 + mu * 4 + entry.a];
+                if h_val == 0.0 { continue; }
+                let c = entry.val * h_val;
+                out_even[8 * e_compact + entry.i] += c * v_odd[8 * nb_fwd_compact + entry.j];
+            }
+
+            // Backward: even site e gathers from odd bwd neighbor
+            let nb_bwd = bwd[e][mu];
+            let nb_bwd_compact = eo.compact_idx[nb_bwd];
+            for entry in cg_entries {
+                let h_val = h[nb_bwd * 16 + mu * 4 + entry.a];
+                if h_val == 0.0 { continue; }
+                let c = entry.val * h_val;
+                // Antisymmetry: backward gather has transposed indices and minus sign
+                out_even[8 * e_compact + entry.j] -= c * v_odd[8 * nb_bwd_compact + entry.i];
+            }
+        }
+    }
+}
+
+/// Apply A_eo^T: maps even-site vector → odd-site vector.
+/// This is the transpose of A_eo: for each even site e, scatters to
+/// forward and backward odd neighbors.
+fn apply_aeot(
+    h: &[f64], v_even: &[f64], out_odd: &mut [f64],
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
+    eo: &EvenOddTables, cg_entries: &[CgEntry],
+) {
+    for x in out_odd.iter_mut() { *x = 0.0; }
+
+    for &e in &eo.even_sites {
+        let e_compact = eo.compact_idx[e];
+        for mu in 0..4usize {
+            // Transpose of forward gather: scatter from even to fwd odd neighbor
+            let nb_fwd = fwd[e][mu];
+            let nb_fwd_compact = eo.compact_idx[nb_fwd];
+            for entry in cg_entries {
+                let h_val = h[e * 16 + mu * 4 + entry.a];
+                if h_val == 0.0 { continue; }
+                let c = entry.val * h_val;
+                // Transpose swaps (e,I)↔(nb,J): out_odd[nb,J] += c * v_even[e,I]
+                out_odd[8 * nb_fwd_compact + entry.j] += c * v_even[8 * e_compact + entry.i];
+            }
+
+            // Transpose of backward gather: scatter from even to bwd odd neighbor
+            let nb_bwd = bwd[e][mu];
+            let nb_bwd_compact = eo.compact_idx[nb_bwd];
+            for entry in cg_entries {
+                let h_val = h[nb_bwd * 16 + mu * 4 + entry.a];
+                if h_val == 0.0 { continue; }
+                let c = entry.val * h_val;
+                // Transpose of (out_e[J] -= c * v_o[I]) → (out_o[I] -= c * v_e[J])
+                out_odd[8 * nb_bwd_compact + entry.i] -= c * v_even[8 * e_compact + entry.j];
+            }
+        }
+    }
+}
+
+/// Apply (M_e + σ) to an even-site vector: out = A_eo(A_eo^T v) + σv.
+/// Cost: two half-hops = one full A application (vs two for A†A).
+fn apply_me_shifted(
+    h: &[f64], v_even: &[f64], out_even: &mut [f64],
+    sigma: f64,
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
+    eo: &EvenOddTables,
+    scratch_odd: &mut [f64],
+    cg_entries: &[CgEntry],
+) {
+    let dim_even = 8 * eo.n_even;
+    // Step 1: scratch_odd = A_eo^T · v_even (even → odd)
+    apply_aeot(h, v_even, scratch_odd, fwd, bwd, eo, cg_entries);
+    // Step 2: out_even = A_eo · scratch_odd (odd → even)
+    apply_aeo(h, scratch_odd, out_even, fwd, bwd, eo, cg_entries);
+    // Step 3: add shift: out += σ · v
+    for i in 0..dim_even {
+        out_even[i] += sigma * v_even[i];
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Matrix-free A[h] @ v — the core stencil (full lattice, kept for
+// validation and observables that need the full operator)
 //
 // A_{(x,I),(y,J)} = Σ_{μ,a} h^a_{x,μ} · CG[a]_{IJ} · δ_{y,x+μ̂} − (transpose)
 //
@@ -824,6 +994,574 @@ fn rhmc_trajectory(
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// Even-odd RHMC — half-lattice Krylov + force on full h-field
+//
+// Physics identity: Pf(A) = det(A†A)^{1/4} = det(M_e)^{1/2}
+// because A is block-off-diagonal → A†A = diag(M_e, M_o) with M_e = M_o.
+//
+// Consequence: the Zolotarev approximation changes from x^{-1/4} (full)
+// to x^{-1/2} (EO), and the heatbath approximation changes from
+// x^{-3/8} (full) to x^{-3/4} (EO):
+//   Full: Φ = A · r_{-3/8}(A†A) · ξ  →  S_PF = Φ_R^T (A†A)^{-1/4} Φ_R + ...
+//   EO:   Φ_e = M_e · r_{-3/4}(M_e) · ξ_e / √2  →  S_PF = Φ_e^T M_e^{-1/2} Φ_e
+//
+// The h-field is always FULL LATTICE (n_sites × 16).  Only the CG vectors
+// and pseudofermion fields live on the half-lattice (dim = 8 × n_even).
+// Forces F_h are accumulated to the full h-field at ALL sites.
+//
+// Lean: hs_fermion_matrix_antisymmetric (bipartite → EO block-diagonal)
+// Source: DeGrand & DeTar, "Lattice Methods for QCD" Ch. 8, Sec. 8.3
+// ═══════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────
+// 1. multishift_cg_eo
+//
+// Solves (M_e + σ_k) ψ_{e,k} = φ_e on EVEN sites only.
+// Identical ζ-recurrence as multishift_cg; calls apply_me_shifted
+// instead of apply_shifted_ata.  Scratch for the odd-site temp
+// vector is allocated internally (size 8 × n_odd).
+// ─────────────────────────────────────────────────────────────────
+
+/// Multi-shift CG on even sites: (M_e + σ_k) ψ_{e,k} = φ_e.
+/// Half-lattice dimension: dim_e = 8 × eo.n_even.
+fn multishift_cg_eo(
+    h: &[f64],
+    phi_e: &[f64],
+    shifts: &[f64],
+    tol: f64,
+    max_iter: usize,
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    eo: &EvenOddTables,
+    cg_entries: &[CgEntry],
+) -> CgResult {
+    let dim_e = 8 * eo.n_even;
+    let ns = shifts.len();
+
+    if ns == 0 {
+        return CgResult { solutions: vec![], n_iter: 0 };
+    }
+
+    // Sort shifts ascending; σ₀ (smallest) is the base system
+    let mut order: Vec<usize> = (0..ns).collect();
+    order.sort_by(|&a, &b| shifts[a].partial_cmp(&shifts[b]).unwrap());
+    let sorted_shifts: Vec<f64> = order.iter().map(|&i| shifts[i]).collect();
+    let sigma0 = sorted_shifts[0];
+
+    // Per-shift state
+    let mut x: Vec<Vec<f64>> = vec![vec![0.0; dim_e]; ns];
+    let mut p: Vec<Vec<f64>> = vec![phi_e.to_vec(); ns];
+
+    // Shared residual for base system
+    let mut r = phi_e.to_vec();
+    let b_norm_sq = dot(phi_e, phi_e);
+
+    if b_norm_sq < 1e-30 {
+        return CgResult { solutions: x, n_iter: 0 };
+    }
+    let tol_sq = tol * tol * b_norm_sq;
+    let mut r_sq = b_norm_sq;
+
+    // ζ recurrence state
+    let mut zeta_cur = vec![1.0_f64; ns];
+    let mut zeta_old = vec![1.0_f64; ns];
+    let mut converged = vec![false; ns];
+
+    let mut alpha = 0.0_f64;
+    let mut alpha_old = 1.0_f64;
+    let mut beta = 0.0_f64;
+    let mut beta_old = 0.0_f64;
+
+    // Scratch buffers — odd-site temp allocated here once
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+    let mut w = vec![0.0_f64; dim_e];  // (M_e + σ₀) @ p₀
+
+    let mut n_iter = 0;
+    while n_iter < max_iter {
+        if converged.iter().all(|&c| c) { break; }
+
+        // Single matvec: w = (M_e + σ₀) @ p₀
+        apply_me_shifted(h, &p[0], &mut w, sigma0, fwd, bwd, eo, &mut scratch_odd, cg_entries);
+
+        let pap = dot(&p[0], &w);
+        if pap.abs() < 1e-30 { break; }
+        alpha = r_sq / pap;
+
+        let r_sq_old = r_sq;
+
+        // Update base residual
+        axpy(-alpha, &w, &mut r);
+        r_sq = dot(&r, &r);
+
+        // Base system: update solution and search direction
+        axpy(alpha, &p[0], &mut x[0]);
+        beta = r_sq / r_sq_old.max(1e-30);
+
+        for i in 0..dim_e {
+            p[0][i] = r[i] + beta * p[0][i];
+        }
+
+        if r_sq < tol_sq { converged[0] = true; }
+
+        // Shifted systems via ζ recurrence
+        for k in 1..ns {
+            if converged[k] { continue; }
+
+            let denom = alpha_old * zeta_old[k]
+                * (1.0 + alpha * (sorted_shifts[k] - sigma0))
+                + beta_old * alpha * (zeta_old[k] - zeta_cur[k]);
+
+            if denom.abs() < 1e-30 {
+                converged[k] = true;
+                continue;
+            }
+
+            let zeta_new = (zeta_cur[k] * zeta_old[k] * alpha_old) / denom;
+            let alpha_k = alpha * zeta_new / zeta_cur[k];
+            let beta_k = (zeta_new / zeta_cur[k]).powi(2) * beta;
+
+            axpy(alpha_k, &p[k], &mut x[k]);
+
+            for i in 0..dim_e {
+                p[k][i] = zeta_new * r[i] + beta_k * p[k][i];
+            }
+
+            if zeta_new * zeta_new * r_sq < tol_sq {
+                converged[k] = true;
+            }
+
+            zeta_old[k] = zeta_cur[k];
+            zeta_cur[k] = zeta_new;
+        }
+
+        alpha_old = alpha;
+        beta_old = beta;
+        n_iter += 1;
+    }
+
+    // Unsort: return in original shift order
+    let mut result = vec![vec![0.0; dim_e]; ns];
+    for (sorted_idx, &orig_idx) in order.iter().enumerate() {
+        std::mem::swap(&mut result[orig_idx], &mut x[sorted_idx]);
+    }
+
+    CgResult { solutions: result, n_iter }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 2. compute_spf_eo
+//
+// Pseudofermion action for one real even-site field:
+//   S_PF = α₀ φ_e·φ_e + Σ_k α_k φ_e·ψ_{e,k}
+// where (M_e + β_k) ψ_{e,k} = φ_e.
+// Approximates φ_e^T M_e^{-1/2} φ_e (Zolotarev x^{-1/2}).
+// ─────────────────────────────────────────────────────────────────
+
+/// Pseudofermion action on even sites: φ_e^T r(M_e) φ_e ≈ φ_e^T M_e^{-1/2} φ_e.
+fn compute_spf_eo(
+    h: &[f64], phi_e: &[f64],
+    alpha_0: f64, zolotarev_alphas: &[f64], zolotarev_betas: &[f64],
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
+    eo: &EvenOddTables,
+    cg_tol: f64, cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+) -> f64 {
+    let cg_result = multishift_cg_eo(h, phi_e, zolotarev_betas, cg_tol, cg_max_iter,
+                                     fwd, bwd, eo, cg_entries);
+    let mut s = alpha_0 * dot(phi_e, phi_e);
+    for k in 0..zolotarev_betas.len() {
+        s += zolotarev_alphas[k] * dot(phi_e, &cg_result.solutions[k]);
+    }
+    s
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 3. compute_pf_force_eo
+//
+// PF force from one even-site field onto the FULL h-field.
+//
+// After solving (M_e + β_k) ψ_{e,k} = φ_e, the force on bond
+// (e, fwd[e][μ]) involves both ψ_{e,k} (even side) and the
+// scatter w_{o,k} = A_eo^T ψ_{e,k} (odd side).
+//
+// Force contraction at even-odd bond (e even, nb odd, direction μ):
+//   ΔF[e, μ, a]     += Σ_k α_k (-2) Σ_{I,J} CG[a]_{IJ}
+//                       × (ψ_e[I] × w_o[nb,J] − w_o[nb,I] × ψ_e[J])
+//   ΔF[nb_bwd,μ,a]  — contribution from the same bond seen from the
+//                       backward odd site acting as bond source.
+//
+// Both even-site h[e,μ,a] (from forward bonds) and odd-site
+// h[nb_bwd,μ,a] (from backward bonds seen at even site e) receive
+// contributions, covering the entire h-field.
+// ─────────────────────────────────────────────────────────────────
+
+/// PF force from one even-site field, accumulated onto full h-field f_h.
+fn compute_pf_force_eo(
+    h: &[f64],
+    phi_e: &[f64],
+    zolotarev_alphas: &[f64],
+    zolotarev_betas: &[f64],
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    eo: &EvenOddTables,
+    cg_tol: f64,
+    cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+    f_h: &mut [f64],
+) {
+    let n_poles = zolotarev_betas.len();
+
+    let cg_result = multishift_cg_eo(h, phi_e, zolotarev_betas, cg_tol, cg_max_iter,
+                                     fwd, bwd, eo, cg_entries);
+
+    // w_{o,k} = A_eo^T ψ_{e,k}  (scatter even→odd, one per pole)
+    let mut w_odd: Vec<Vec<f64>> = Vec::with_capacity(n_poles);
+    {
+        let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+        for k in 0..n_poles {
+            let mut wo = vec![0.0_f64; 8 * eo.n_odd];
+            apply_aeot(h, &cg_result.solutions[k], &mut wo, fwd, bwd, eo, cg_entries);
+            w_odd.push(wo);
+            let _ = &mut scratch_odd; // keep alive
+        }
+    }
+
+    // Loop over even sites, contribute to bonds in all 4 directions.
+    // For each even site e and direction μ:
+    //   • Forward bond: h[e, μ, a]  → force from pair (ψ_e[e], w_o[fwd[e][μ]])
+    //   • Backward bond: h[nb_bwd, μ, a] where nb_bwd = bwd[e][μ]
+    //     → force from pair (ψ_e[e], w_o[nb_bwd])
+    //     BUT note: in apply_aeo the backward gather uses h at nb_bwd with
+    //     transposed/negated indices.  The force must be the exact derivative
+    //     of the action with respect to h at that bond.
+    //
+    // Derivation matches apply_aeo exactly:
+    //   Forward contribution  to (A_eo v)_e[I]:  + CG[a]_{IJ} h[e,μ,a] v_o[nb_fwd,J]
+    //   Backward contribution to (A_eo v)_e[J]:  - CG[a]_{IJ} h[nb_bwd,μ,a] v_o[nb_bwd,I]
+    //
+    // The PF action S = Σ_k α_k φ_e^T ψ_{e,k} involves ψ = M_e^{-1}(M_e+β) ψ
+    // and dS/dh appears via d(A_eo A_eo^T)/dh.  Using the product rule:
+    //   dS/dh[e,μ,a] = Σ_k α_k (-2) × (contraction of ψ_{e,k} and A_eo^T ψ_{e,k})
+    //
+    // The (-2) factor comes from d/dh[h_{IJ} x_I y_J - h_{IJ} y_I x_J] = 2(x_I y_J - y_I x_J).
+
+    for &e in &eo.even_sites {
+        let e_compact = eo.compact_idx[e];
+        for mu in 0..4usize {
+            // ── Forward bond: h at even site e, direction mu ──
+            let nb_fwd = fwd[e][mu];
+            let nb_fwd_compact = eo.compact_idx[nb_fwd];
+            for a in 0..4usize {
+                let mut fval: f64 = 0.0;
+                for k in 0..n_poles {
+                    let psi = &cg_result.solutions[k];
+                    let wo  = &w_odd[k];
+                    let mut c: f64 = 0.0;
+                    for entry in cg_entries {
+                        if entry.a != a { continue; }
+                        let psi_i = psi[8 * e_compact + entry.i];
+                        let wo_j  = wo[8 * nb_fwd_compact + entry.j];
+                        // Forward: d(A_eo)_{(e,I),(nb,J)}/dh[e,mu,a] = CG_{IJ} = entry.val
+                        // psi^T (dA_eo/dh) w = Σ entry.val * psi_I * w_J
+                        c += entry.val * psi_i * wo_j;
+                    }
+                    // F = -dS/dh = +Σ_k α_k · ψ^T(dM_e/dh)ψ = +Σ_k α_k · 2 · ψ^T(dA_eo/dh)w
+                    // Verified numerically: matches finite-difference to 1e-7.
+                    fval += zolotarev_alphas[k] * 2.0 * c;
+                }
+                f_h[e * 16 + mu * 4 + a] += fval;
+            }
+
+            // ── Backward bond: h at odd site nb_bwd, direction mu ──
+            // In apply_aeo the backward gather is:
+            //   out_e[e_compact, J] -= CG[a]_{IJ} h[nb_bwd,μ,a] v_o[nb_bwd_compact, I]
+            // So d(S)/d(h[nb_bwd,μ,a]) has the opposite contraction pattern:
+            //   ΔF = Σ_k α_k (-2) × Σ_{I,J} entry.val × (-1)
+            //        × (ψ_e[e,J] × wo[nb_bwd,I] − wo[nb_bwd,J] × ψ_e[e,I])
+            // The extra minus from the minus sign in apply_aeo backward gather:
+            //   net sign: (-2) × (-1) = +2, and the (x·y - y·x) reverses → same form.
+            let nb_bwd = bwd[e][mu];
+            let nb_bwd_compact = eo.compact_idx[nb_bwd];
+            for a in 0..4usize {
+                let mut fval: f64 = 0.0;
+                for k in 0..n_poles {
+                    let psi = &cg_result.solutions[k];
+                    let wo  = &w_odd[k];
+                    let mut c: f64 = 0.0;
+                    for entry in cg_entries {
+                        if entry.a != a { continue; }
+                        // Backward: d(A_eo)_{(e,J),(nb_bwd,I)}/dh[nb_bwd,mu,a] = -CG_{IJ}
+                        // psi^T(dA_eo/dh)w = Σ (-entry.val) * psi_{e,J} * w_{nb_bwd,I}
+                        let psi_j = psi[8 * e_compact + entry.j];
+                        let wo_i  = wo[8 * nb_bwd_compact + entry.i];
+                        c -= entry.val * psi_j * wo_i;
+                    }
+                    // F = +Σ_k α_k · 2 · ψ^T(dA_eo/dh)w (same sign as forward)
+                    // Verified numerically: matches finite-difference to 1e-7.
+                    fval += zolotarev_alphas[k] * 2.0 * c;
+                }
+                f_h[nb_bwd * 16 + mu * 4 + a] += fval;
+            }
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 4. compute_forces_eo
+//
+// Full force on h: Gaussian prior + PF forces from both complex
+// components (real and imaginary even-site pseudofermion fields).
+// ─────────────────────────────────────────────────────────────────
+
+/// Full force on h-field (all sites): Gaussian prior + 2 EO PF forces.
+fn compute_forces_eo(
+    h: &[f64],
+    g: f64,
+    phi_r_e: &[f64],
+    phi_i_e: &[f64],
+    zolotarev_alphas: &[f64],
+    zolotarev_betas: &[f64],
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    n_sites: usize,
+    eo: &EvenOddTables,
+    cg_tol: f64,
+    cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+) -> Vec<f64> {
+    let mut f_h = vec![0.0; n_sites * 16];
+
+    // Gaussian prior: F = -h / (2g)
+    for i in 0..n_sites * 16 {
+        f_h[i] = -h[i] / (2.0 * g);
+    }
+
+    // PF force from Φ_R (real component on even sites)
+    compute_pf_force_eo(h, phi_r_e, zolotarev_alphas, zolotarev_betas,
+                        fwd, bwd, eo, cg_tol, cg_max_iter, cg_entries, &mut f_h);
+    // PF force from Φ_I (imaginary component on even sites)
+    compute_pf_force_eo(h, phi_i_e, zolotarev_alphas, zolotarev_betas,
+                        fwd, bwd, eo, cg_tol, cg_max_iter, cg_entries, &mut f_h);
+
+    f_h
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 5. compute_hamiltonian_eo
+//
+// H = K + S_aux + S_PF
+// K = 0.5 Σ π_h²  (full h-field momenta)
+// S_aux = Σ h² / (4g)  (full h-field)
+// S_PF = S_PF_R + S_PF_I using compute_spf_eo on even sites
+// ─────────────────────────────────────────────────────────────────
+
+fn compute_hamiltonian_eo(
+    h: &[f64], pi_h: &[f64], g: f64,
+    phi_r_e: &[f64], phi_i_e: &[f64],
+    alpha_0: f64, zolotarev_alphas: &[f64], zolotarev_betas: &[f64],
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
+    eo: &EvenOddTables,
+    cg_tol: f64, cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+) -> f64 {
+    let k_energy: f64 = 0.5 * dot(pi_h, pi_h);
+    let s_aux: f64 = dot(h, h) / (4.0 * g);
+    // Complex pseudofermion on even sites
+    let s_pf = compute_spf_eo(h, phi_r_e, alpha_0, zolotarev_alphas, zolotarev_betas,
+                               fwd, bwd, eo, cg_tol, cg_max_iter, cg_entries)
+             + compute_spf_eo(h, phi_i_e, alpha_0, zolotarev_alphas, zolotarev_betas,
+                               fwd, bwd, eo, cg_tol, cg_max_iter, cg_entries);
+    k_energy + s_aux + s_pf
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 6. pseudofermion_heatbath_eo
+//
+// Generate Φ_e = M_e^{1/4} ξ_e / √2 via the A-trick on even sites.
+//
+// Physics: det(M_e)^{1/2} with pseudofermion action S_PF = Φ_e^T M_e^{-1/2} Φ_e.
+// Correct distribution requires Φ_e ~ M_e^{1/4} Gaussian.
+//
+// Heatbath construction (A-trick adapted for M_e):
+//   1. ξ_e ~ N(0, 1) on even sites
+//   2. η_e = r_{-3/4}(M_e) ξ_e via multishift_cg_eo with heatbath shifts
+//      (η = α₀_hb ξ + Σ_k α_k_hb ψ_{e,k})
+//   3. Φ_e = M_e · η_e = A_eo (A_eo^T η_e)  (one M_e application)
+//   4. Divide by √2 (complex Gaussian normalization)
+//
+// Verification in eigenspace with eigenvalue λ of M_e:
+//   η → λ^{-3/4} ξ  (from step 2)
+//   Φ → λ · λ^{-3/4} ξ = λ^{1/4} ξ  (from step 3)
+//   Covariance: λ^{1/2} / 2 (after /√2 for each of R,I)
+//   → S_PF = Φ_e^T (2 M_e^{-1/2}) Φ_e / 2 = Φ_e^T M_e^{-1/2} Φ_e ✓
+//
+// Lean: hs_gaussian_identity_zero (HubbardStratonovichRHMC.lean)
+// Source: Schaich & DeGrand, CPC 190:200 (2015), Eqs. 16-17 (adapted for EO)
+// ─────────────────────────────────────────────────────────────────
+
+/// Generate complex EO pseudofermion (Φ_R_e, Φ_I_e) on even sites only.
+fn pseudofermion_heatbath_eo(
+    h: &[f64], rng: &mut ChaCha20Rng,
+    alpha_0_hb: f64, alphas_hb: &[f64], betas_hb: &[f64],
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
+    eo: &EvenOddTables,
+    cg_tol: f64, cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+) -> (Vec<f64>, Vec<f64>) {
+    let dim_e = 8 * eo.n_even;
+
+    // Step 1: ξ ~ N(0,1) on even sites only
+    let xi_r: Vec<f64> = (0..dim_e).map(|_| rand_normal(rng)).collect();
+    let xi_i: Vec<f64> = (0..dim_e).map(|_| rand_normal(rng)).collect();
+
+    // Step 2: η = r_{-3/4}(M_e) ξ via multi-shift CG on even sites
+    let cg_r = multishift_cg_eo(h, &xi_r, betas_hb, cg_tol, cg_max_iter,
+                                 fwd, bwd, eo, cg_entries);
+    let cg_i = multishift_cg_eo(h, &xi_i, betas_hb, cg_tol, cg_max_iter,
+                                 fwd, bwd, eo, cg_entries);
+
+    // η = α₀ ξ + Σ_k α_k ψ_{e,k}
+    let mut eta_r = vec![0.0; dim_e];
+    let mut eta_i = vec![0.0; dim_e];
+    for i in 0..dim_e {
+        eta_r[i] = alpha_0_hb * xi_r[i];
+        eta_i[i] = alpha_0_hb * xi_i[i];
+    }
+    for k in 0..betas_hb.len() {
+        axpy(alphas_hb[k], &cg_r.solutions[k], &mut eta_r);
+        axpy(alphas_hb[k], &cg_i.solutions[k], &mut eta_i);
+    }
+
+    // Step 3: Φ_e = M_e η = A_eo (A_eo^T η) — two half-hops
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+    let mut phi_r_e = vec![0.0; dim_e];
+    let mut phi_i_e = vec![0.0; dim_e];
+
+    // M_e η_r
+    apply_aeot(h, &eta_r, &mut scratch_odd, fwd, bwd, eo, cg_entries);
+    apply_aeo(h, &scratch_odd, &mut phi_r_e, fwd, bwd, eo, cg_entries);
+
+    // M_e η_i (reuse scratch_odd)
+    apply_aeot(h, &eta_i, &mut scratch_odd, fwd, bwd, eo, cg_entries);
+    apply_aeo(h, &scratch_odd, &mut phi_i_e, fwd, bwd, eo, cg_entries);
+
+    // Step 4: divide by √2 for complex Gaussian normalization
+    let inv_sqrt2 = 1.0 / f64::sqrt(2.0);
+    for i in 0..dim_e { phi_r_e[i] *= inv_sqrt2; }
+    for i in 0..dim_e { phi_i_e[i] *= inv_sqrt2; }
+
+    (phi_r_e, phi_i_e)
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 7. rhmc_trajectory_eo
+//
+// Same Omelyan 2MN structure as rhmc_trajectory; uses EO functions
+// throughout.  The h-field is full-lattice; pseudofermions live on
+// even sites only.  Observables measured on full lattice via the
+// existing measure_observables function.
+// ─────────────────────────────────────────────────────────────────
+
+fn rhmc_trajectory_eo(
+    h: &mut Vec<f64>,
+    g: f64,
+    tau: f64,
+    n_md_steps: usize,
+    alpha_0: f64, alphas: &[f64], betas: &[f64],
+    alpha_0_hb: f64, alphas_hb: &[f64], betas_hb: &[f64],
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    n_sites: usize,
+    eo: &EvenOddTables,
+    rng: &mut ChaCha20Rng,
+    cg_entries: &[CgEntry],
+    cg_tol_md: f64,
+    cg_tol_mc: f64,
+) -> TrajectoryResult {
+    let n_h = n_sites * 16;
+    let eps = tau / n_md_steps as f64;
+    let lam = 0.1932; // Omelyan 2MN parameter
+    let cg_max_iter = 2000;
+
+    // Heat bath: complex Φ_e = (Φ_R_e, Φ_I_e) on even sites
+    let (phi_r_e, phi_i_e) = pseudofermion_heatbath_eo(
+        h, rng, alpha_0_hb, alphas_hb, betas_hb,
+        fwd, bwd, eo, cg_tol_md, cg_max_iter, cg_entries,
+    );
+
+    // Refresh momenta: π ~ N(0, 1) (full h-field momenta)
+    let mut pi_h: Vec<f64> = (0..n_h).map(|_| rand_normal(rng)).collect();
+
+    // Store old state
+    let h_old = h.clone();
+
+    // H_old (tight tolerance for Metropolis)
+    let h_old_val = compute_hamiltonian_eo(
+        h, &pi_h, g, &phi_r_e, &phi_i_e,
+        alpha_0, alphas, betas, fwd, bwd, eo, cg_tol_mc, cg_max_iter, cg_entries,
+    );
+
+    // ── FSAL Omelyan 2MN MD ──
+    // Initial force
+    let mut f_h = compute_forces_eo(
+        h, g, &phi_r_e, &phi_i_e, alphas, betas,
+        fwd, bwd, n_sites, eo, cg_tol_md, cg_max_iter, cg_entries,
+    );
+
+    for _step in 0..n_md_steps {
+        // λε kick
+        for i in 0..n_h { pi_h[i] += lam * eps * f_h[i]; }
+        // ε/2 drift
+        for i in 0..n_h { h[i] += (eps / 2.0) * pi_h[i]; }
+
+        // Middle force
+        f_h = compute_forces_eo(
+            h, g, &phi_r_e, &phi_i_e, alphas, betas,
+            fwd, bwd, n_sites, eo, cg_tol_md, cg_max_iter, cg_entries,
+        );
+
+        // (1-2λ)ε kick
+        for i in 0..n_h { pi_h[i] += (1.0 - 2.0 * lam) * eps * f_h[i]; }
+        // ε/2 drift
+        for i in 0..n_h { h[i] += (eps / 2.0) * pi_h[i]; }
+
+        // Final force (= initial force of next step via FSAL)
+        f_h = compute_forces_eo(
+            h, g, &phi_r_e, &phi_i_e, alphas, betas,
+            fwd, bwd, n_sites, eo, cg_tol_md, cg_max_iter, cg_entries,
+        );
+
+        // λε kick
+        for i in 0..n_h { pi_h[i] += lam * eps * f_h[i]; }
+    }
+
+    // H_new (tight tolerance)
+    let h_new_val = compute_hamiltonian_eo(
+        h, &pi_h, g, &phi_r_e, &phi_i_e,
+        alpha_0, alphas, betas, fwd, bwd, eo, cg_tol_mc, cg_max_iter, cg_entries,
+    );
+
+    let delta_h = h_new_val - h_old_val;
+
+    // Metropolis accept/reject
+    let accepted = if delta_h <= 0.0 {
+        true
+    } else {
+        let u: f64 = rng.random();
+        u < (-delta_h).exp()
+    };
+
+    if !accepted {
+        *h = h_old;
+    }
+
+    // Observables on full lattice (unchanged function)
+    let (h_sq, tet_m2, tr_q2) = measure_observables(h, n_sites);
+
+    TrajectoryResult { delta_h, accepted, h_sq, tet_m2, tr_q2 }
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // PyO3 Python bindings
 // ═══════════════════════════════════════════════════════════════════
 
@@ -1010,9 +1748,104 @@ fn estimate_spectral_range_py<'py>(
     Ok((lam_min, lam_max))
 }
 
+/// Even-odd RHMC: half-lattice CG with x^{-1/2} Zolotarev.
+/// Physics: Pf(A) = det(M_e)^{1/2} where M_e = A_eo·A_eo^T on even sites.
+/// Zolotarev powers: action x^{-1/2}, heatbath x^{-3/4} (passed from Python).
+/// Same interface as run_rhmc_rust — drop-in replacement.
+#[pyfunction]
+fn run_rhmc_rust_eo<'py>(
+    py: Python<'py>,
+    l: usize,
+    g: f64,
+    n_traj: usize,
+    n_therm: usize,
+    n_meas_skip: usize,
+    n_md_steps: usize,
+    tau: f64,
+    alpha_0: f64,
+    alphas: PyReadonlyArray1<'py, f64>,
+    betas: PyReadonlyArray1<'py, f64>,
+    alpha_0_hb: f64,
+    alphas_hb: PyReadonlyArray1<'py, f64>,
+    betas_hb: PyReadonlyArray1<'py, f64>,
+    seed: u64,
+    cg_a: PyReadonlyArray1<'py, i64>,
+    cg_i: PyReadonlyArray1<'py, i64>,
+    cg_j: PyReadonlyArray1<'py, i64>,
+    cg_val: PyReadonlyArray1<'py, f64>,
+    h_init: Option<PyReadonlyArray1<'py, f64>>,
+) -> PyResult<PyObject> {
+    let alphas = alphas.as_slice()?;
+    let betas = betas.as_slice()?;
+    let alphas_hb = alphas_hb.as_slice()?;
+    let betas_hb = betas_hb.as_slice()?;
+    let cg_entries = parse_cg_entries(cg_a.as_slice()?, cg_i.as_slice()?,
+                                       cg_j.as_slice()?, cg_val.as_slice()?);
+
+    let n_sites = l * l * l * l;
+    let (fwd, bwd) = build_neighbors(l);
+    let eo = build_even_odd(l);
+
+    let mut rng = ChaCha20Rng::seed_from_u64(seed);
+
+    let mut h: Vec<f64> = if let Some(h_in) = h_init {
+        h_in.as_slice()?.to_vec()
+    } else {
+        let sigma_h = (2.0 * g).sqrt();
+        (0..n_sites * 16).map(|_| rand_normal(&mut rng) * sigma_h).collect()
+    };
+
+    let mut h_sq_hist = Vec::new();
+    let mut delta_h_hist = Vec::new();
+    let mut tet_m2_hist = Vec::new();
+    let mut tr_q2_hist = Vec::new();
+    let mut n_accepted: usize = 0;
+
+    for traj in 0..n_traj {
+        if traj % 10 == 0 {
+            py.check_signals()?;
+        }
+
+        let result = rhmc_trajectory_eo(
+            &mut h, g, tau, n_md_steps,
+            alpha_0, alphas, betas,
+            alpha_0_hb, alphas_hb, betas_hb,
+            &fwd, &bwd, n_sites, &eo,
+            &mut rng, &cg_entries,
+            1e-10, 1e-12,
+        );
+
+        delta_h_hist.push(result.delta_h);
+        if result.accepted { n_accepted += 1; }
+
+        if traj >= n_therm && (traj - n_therm) % n_meas_skip == 0 {
+            h_sq_hist.push(result.h_sq);
+            tet_m2_hist.push(result.tet_m2);
+            tr_q2_hist.push(result.tr_q2);
+        }
+    }
+
+    let dict = pyo3::types::PyDict::new(py);
+    dict.set_item("h_sq_history", h_sq_hist)?;
+    dict.set_item("delta_h_history", delta_h_hist)?;
+    let n_meas = tet_m2_hist.len();
+    dict.set_item("tet_m2_history", tet_m2_hist)?;
+    dict.set_item("tr_q2_history", tr_q2_hist)?;
+    dict.set_item("acceptance_rate", n_accepted as f64 / n_traj as f64)?;
+    dict.set_item("n_measurements", n_meas)?;
+    dict.set_item("sign_free", true)?;
+    dict.set_item("even_odd", true)?;
+    dict.set_item("g", g)?;
+    dict.set_item("L", l)?;
+    dict.set_item("h_final", h)?;
+
+    Ok(dict.into())
+}
+
 #[pymodule]
 fn sk_eft_rhmc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(run_rhmc_rust, m)?)?;
+    m.add_function(wrap_pyfunction!(run_rhmc_rust_eo, m)?)?;
     m.add_function(wrap_pyfunction!(apply_fermion_matrix_py, m)?)?;
     m.add_function(wrap_pyfunction!(estimate_spectral_range_py, m)?)?;
     Ok(())

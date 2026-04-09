@@ -87,7 +87,7 @@ Phase 5e completed the **categorical** story: fusion → braiding → ribbon →
 
 ### Wave 5 — L=8 Data Analysis
 **Prerequisite:** L=8 RHMC completion.
-**Status:** Session 3 production running (April 7, 2026). Previous sessions identified and fixed acceptance issues.
+**Status:** Session 4 (v2) production launched April 9, 2026. 22 couplings × 100 traj, 2 workers, 12-pole Zolotarev, tau=0.5, 80 MD steps. ETA ~5 days. Data: `data/rhmc/L8/`. Log: `data/rhmc/logs/rhmc_l8_v2.log`. Previous session 3 data archived to `data/rhmc/L8_v1/`.
 
 - [x] Preliminary 4-panel diagnostic: `fig_rhmc_l8_preliminary` (acceptance, m², h², |ΔH|)
 - [ ] Full analysis with verified_analysis.py after 500 traj complete
@@ -99,9 +99,16 @@ Phase 5e completed the **categorical** story: fusion → braiding → ribbon →
 **Production history:**
 - Session 1 (April 5): n_md_steps=30 → |ΔH|>1, acceptance <40%. Data unreliable.
 - Session 2 (April 6): n_md_steps=80, g=0.5-8.0, 4 workers. Acceptance at low g still poor (0-20% for g<2), marginal 30-60% for critical region g=3-5, good 60-100% for g>6. Data: 22-305 traj per coupling. |ΔH| averaging 2-4 at low g.
-- **Session 3 (April 7, running):** n_md_steps=160 (doubled), g-critical-min=2.0, g-critical-max=6.0. This should halve |ΔH| → acceptance >60% across critical region. Resumes from Session 2 checkpoints (no re-thermalization). PID 46164.
+- Session 3 (April 7): n_md_steps=160, 4 workers. 3.3 hrs/traj → 55 days estimate. Killed after diagnosis showed CG bottleneck at κ=6054. Data archived to `data/rhmc/L8_v1/`.
+- **Session 4 / v2 (April 9, running):** Optimized: 12-pole Zolotarev (was 24), tau=0.5 (was 1.0), 80 MD steps, 2 workers (was 4). Deep research completed: even-odd + deflation path identified for future 50-70× speedup. Even-odd implemented (1.4× verified) but x^{-1/2} power needs resolution for correct physics — deferred, using full-lattice for this run.
 
-**Key finding:** L=8 acceptance requires n_md_steps scaling with coupling — low g has stiffer fermion matrix → needs smaller MD step size. n_md_steps=160 targets >60% acceptance across g=2-6.
+**Key findings from optimization session (April 8-9):**
+- CG convergence dominates: κ=6054 → ~1200 iters/solve, multi-shift essential
+- Chronological CG FAILED: ε×κ≈38 → chrono guesses worse than zero
+- 12 poles adequate: same |ΔH| as 24, error 3.2e-5
+- Even-odd decomposition: stencil 1.4× faster, force verified by finite-difference
+- EO physics: det(M_e)^{1/2} = Pf(A) requires x^{-1/2} Zolotarev but has |ΔH|≈2.35 at any pole count. Complex PF with x^{-1/4} gives det(M_e)^{1/4} (wrong power). Resolution needed.
+- Deep research completed: deflation K=30 (next priority, 12-15× on CG) + Hasenbusch K=3 (50-70× total)
 
 See `docs/references/production_rhmc.md` for the complete guide.
 
