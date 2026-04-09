@@ -8,7 +8,7 @@ computed via canonical functions in formulas.py.
 Usage:
     from src.vestigial.verified_analysis import analyze_rhmc_coupling
 
-    results = analyze_rhmc_coupling('data/rhmc/L8_g5.6923.npz')
+    results = analyze_rhmc_coupling('data/rhmc/L8/g5.6923.npz')
 """
 
 import numpy as np
@@ -109,15 +109,15 @@ def analyze_rhmc_scan(data_dir, lattice_size, thermalization_fraction=0.2):
     Analyze all RHMC data files for a given lattice size.
 
     Args:
-        data_dir: directory containing L{size}_g{coupling}.npz files
+        data_dir: directory containing per-lattice subdirectories (e.g. data/rhmc)
         lattice_size: integer lattice size (4, 6, 8)
         thermalization_fraction: fraction to discard
 
     Returns:
         list of result dicts sorted by coupling
     """
-    data_dir = Path(data_dir)
-    pattern = f'L{lattice_size}_g*.npz'
+    data_dir = Path(data_dir) / f'L{lattice_size}'
+    pattern = 'g*.npz'
     files = sorted(data_dir.glob(pattern))
 
     results = []

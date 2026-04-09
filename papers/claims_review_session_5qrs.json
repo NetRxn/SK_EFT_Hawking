@@ -1,0 +1,511 @@
+{
+  "review_metadata": {
+    "session": "5qrs",
+    "date": "2026-04-08",
+    "reviewer": "claims-reviewer agent",
+    "ground_truth": {
+      "lean_theorems": "2237+",
+      "lean_modules": 130,
+      "lean_modules_with_ExtractDeps": 131,
+      "sorry_count": 17,
+      "sorry_breakdown": "12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor",
+      "axiom_count": 1,
+      "axiom_location": "gapped_interface_axiom in SPTClassification.lean",
+      "aristotle_proved": 322,
+      "aristotle_runs": "43+",
+      "build_status": "lake build succeeds (8157 jobs, zero errors)",
+      "inventory_index_module_count_says": 128,
+      "note": "Inventory Index says 128 but actual count is 130 (excl ExtractDeps). Inventory Index is 2 behind."
+    }
+  },
+
+  "paper10_modular_generation": {
+    "file": "papers/paper10_modular_generation/paper_draft.tex",
+    "claims": [
+      {
+        "claim": "2237+ theorems across 129 Lean 4 modules (zero axioms in generation constraint chain)",
+        "location": "abstract, line 31",
+        "verdict": "WARN",
+        "reason": "Module count says 129 but actual is 130. The '129' is stale (was correct before session 5r additions). 'Zero axioms in the generation constraint chain' is CORRECT — verified: GenerationConstraint.lean, WangBridge.lean, ModularInvarianceConstraint.lean do not import SPTClassification.lean."
+      },
+      {
+        "claim": "1 axiom, zero in the generation constraint chain (conclusions, line 264)",
+        "location": "conclusions, line 264",
+        "verdict": "PASS",
+        "reason": "Correctly states 1 axiom project-wide, zero in the generation chain. Matches ground truth."
+      },
+      {
+        "claim": "dim Ext^4 = 3",
+        "location": "abstract line 35, section conclusions line 285",
+        "verdict": "PASS",
+        "reason": "A1Ext.lean ext_dim_4 proves (Fintype.card (Fin 24)) / 8 = 3 by native_decide. The sequence 1,2,2,2,3,4 for n=0..5 is machine-checked."
+      },
+      {
+        "claim": "WangBridge.lean (9 theorems, zero sorry)",
+        "location": "line 100",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms WangBridge: 9 theorems, zero sorry. Module exists in lean/SKEFTHawking/WangBridge.lean."
+      },
+      {
+        "claim": "ModularInvarianceConstraint.lean (12 theorems)",
+        "location": "line 171",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 12 theorems."
+      },
+      {
+        "claim": "GenerationConstraint Aristotle a1dfcbde",
+        "location": "line 267",
+        "verdict": "PASS",
+        "reason": "ARISTOTLE_THEOREMS in constants.py: generation_mod3_constraint -> a1dfcbde. Matches."
+      },
+      {
+        "claim": "ModularInvarianceConstraint Aristotle b54f9611",
+        "location": "line 269",
+        "verdict": "PASS",
+        "reason": "ARISTOTLE_THEOREMS: z16_anomaly_without_nu_R -> b54f9611. Matches."
+      },
+      {
+        "claim": "RokhlinBridge.lean (14 theorems)",
+        "location": "line 206-207",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 14 theorems."
+      },
+      {
+        "claim": "First machine-checked Ext computation over any Steenrod subalgebra",
+        "location": "abstract, conclusions",
+        "verdict": "PASS",
+        "reason": "No prior formalization of Steenrod subalgebras or Ext computations in any proof assistant found. Claim is accurate."
+      },
+      {
+        "claim": "A1Ring.lean, A1Resolution.lean, A1Ext.lean, ChangeOfRings.lean — all zero sorry",
+        "location": "line 281-290",
+        "verdict": "PASS",
+        "reason": "grep confirms no sorry in these 4 modules."
+      },
+      {
+        "claim": "Lean 4.28.0, Mathlib 8f9d9cff",
+        "location": "line 304",
+        "verdict": "PASS",
+        "reason": "Matches project convention. Mathlib pinned to 8f9d9cff per CLAUDE.md."
+      },
+      {
+        "claim": "Bib: Wang2024 — Phys Rev D 110, 125028 (2024)",
+        "location": "line 309",
+        "verdict": "PASS",
+        "reason": "Wang's paper on generation constraint from anomaly cancellation. PRD 110, 125028 (2024) is correct."
+      },
+      {
+        "claim": "Bib: Alvarez-Gaume Witten 1984 — Nucl Phys B 234, 269 (1984)",
+        "location": "line 313",
+        "verdict": "PASS",
+        "reason": "Classic gravitational anomaly paper. NPB 234, 269 (1984) is correct."
+      }
+    ],
+    "overall": "PASS with 1 WARN (module count 129 should be 130)"
+  },
+
+  "paper8_chirality_master": {
+    "file": "papers/paper8_chirality_master/paper_draft.tex",
+    "claims": [
+      {
+        "claim": "968 theorems (zero axioms) across 66 modules",
+        "location": "abstract line 41, figure caption line 399, discussion line 315",
+        "verdict": "PASS",
+        "reason": "This is the chirality subset count, NOT the full project. The 66-module chirality subset does not import SPTClassification.lean (verified via import chain), so 'zero axioms' is correct for this subset. Table sums to 968."
+      },
+      {
+        "claim": "2237 theorems (1 axiom: gapped_interface_axiom) across 94 Lean modules, of which 307+ proved by Aristotle",
+        "location": "introduction, line 103-104",
+        "verdict": "FAIL",
+        "reason": "THREE stale numbers: (1) module count is 130, not 94. (2) Aristotle-proved is 322+, not 307+. (3) The 2237 is current. Must update to '2237+ theorems (1 axiom) across 130 Lean modules, of which 322+ are proved by Aristotle'."
+      },
+      {
+        "claim": "2237+ theorems across 130 Lean modules",
+        "location": "master synthesis, line 435",
+        "verdict": "PASS",
+        "reason": "Matches ground truth."
+      },
+      {
+        "claim": "first formal verification of a lattice chiral fermion construction",
+        "location": "abstract line 57",
+        "verdict": "PASS",
+        "reason": "No prior formalization exists. Myers/Sati/Schreiber (2024) did abstract braiding gates in cubical Agda but not concrete lattice chiral fermion constructions."
+      },
+      {
+        "claim": "GoltermanShamir.lean (14 theorems, zero sorry)",
+        "location": "line 147-148",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 14 theorems. No sorry found."
+      },
+      {
+        "claim": "TPFEvasion.lean (12 theorems)",
+        "location": "line 154",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 12 theorems."
+      },
+      {
+        "claim": "LatticeHamiltonian.lean (28 theorems)",
+        "location": "line 148",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 28 theorems."
+      },
+      {
+        "claim": "OnsagerAlgebra.lean (24 theorems) — first in any proof assistant",
+        "location": "line 308",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 24 theorems. No prior Onsager algebra formalization found."
+      },
+      {
+        "claim": "OnsagerContraction Aristotle 36b7796f",
+        "location": "line 329",
+        "verdict": "PASS",
+        "reason": "ARISTOTLE_THEOREMS: contraction_rescaling -> 36b7796f. Matches."
+      },
+      {
+        "claim": "GTCommutation.lean (10 theorems, Aristotle 18969de2)",
+        "location": "line 249",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 10 theorems. ARISTOTLE_THEOREMS: gt_commutation_4x4 -> 18969de2. Matches."
+      },
+      {
+        "claim": "PauliMatrices.lean (15 theorems)",
+        "location": "line 292",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 15 theorems."
+      },
+      {
+        "claim": "Z16Classification.lean (22 theorems, zero axioms)",
+        "location": "line 339",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 22 theorems. All proved."
+      },
+      {
+        "claim": "dim Ext^4_{A(1)}(F2,F2) = 3",
+        "location": "line 345",
+        "verdict": "PASS",
+        "reason": "Machine-checked in A1Ext.lean: ext_dim_4 proves 24/8 = 3."
+      },
+      {
+        "claim": "FK gapped interface: spectral gap Delta=2, 20 theorems",
+        "location": "line 452-455",
+        "verdict": "PASS",
+        "reason": "FKGappedInterface.lean: spectral_gap_positive proves (-5)-(-7)=2. grep confirms 20 theorems/lemmas. Zero sorry."
+      },
+      {
+        "claim": "1 axiom: gapped_interface_axiom (4+1D gapped interface conjecture)",
+        "location": "lines 445-448, 498",
+        "verdict": "PASS",
+        "reason": "Single axiom confirmed in SPTClassification.lean line 220. Matches ground truth."
+      },
+      {
+        "claim": "Bib: GoltermanShamir2026 — Phys Rev D 113, 014503 (2026)",
+        "location": "line 519-520",
+        "verdict": "WARN",
+        "reason": "Cannot independently verify a 2026 publication. Citation appears plausible but should be double-checked."
+      },
+      {
+        "claim": "Bib: GioiaTh2026 — Phys Rev Lett 136, 061601 (2026)",
+        "location": "line 522-524",
+        "verdict": "WARN",
+        "reason": "Cannot independently verify a 2026 publication. Citation appears plausible."
+      },
+      {
+        "claim": "Bib: duplicate Aristotle2025 entry",
+        "location": "lines 532-533 and 582-583",
+        "verdict": "WARN",
+        "reason": "bibitem Aristotle2025 is defined twice (lines 532 and 582). LaTeX will silently use the second. Should remove the duplicate."
+      },
+      {
+        "claim": "ChiralityWallMaster.lean (17 theorems)",
+        "location": "line 374",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 17 theorems."
+      },
+      {
+        "claim": "WilsonMass.lean (11 theorems)",
+        "location": "line 191-192",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 11 theorems."
+      },
+      {
+        "claim": "BdGHamiltonian.lean (8 theorems)",
+        "location": "line 184-185",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 8 theorems."
+      },
+      {
+        "claim": "GTWeylDoublet.lean (12 theorems)",
+        "location": "line 359",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 12 theorems."
+      }
+    ],
+    "overall": "FAIL — introduction has stale module count (94 vs 130) and stale Aristotle count (307+ vs 322+). Must fix. Also has duplicate bibentry."
+  },
+
+  "paper7_chirality_formal": {
+    "file": "papers/paper7_chirality_formal/paper_draft.tex",
+    "claims": [
+      {
+        "claim": "54 theorems across three Lean modules (LatticeHamiltonian, GoltermanShamir, TPFEvasion), zero sorry",
+        "location": "abstract, line 51-53",
+        "verdict": "PASS",
+        "reason": "28 + 14 + 12 = 54 matches. Zero sorry confirmed in these three modules."
+      },
+      {
+        "claim": "14 proved by Aristotle across 4 runs",
+        "location": "line 55, line 346",
+        "verdict": "PASS",
+        "reason": "ARISTOTLE_THEOREMS shows 7 (run_20260328_132925) + 3 (run_20260328_142342) + 3 (run_20260328_151228) + 1 (run_20260328_170451) = 14. Matches."
+      },
+      {
+        "claim": "2237+ theorems (1 axiom: gapped interface conjecture) across 130 modules, 322+ proved by Aristotle across 43+ runs",
+        "location": "conclusion, line 327-329",
+        "verdict": "PASS",
+        "reason": "All numbers match ground truth."
+      },
+      {
+        "claim": "968 theorems across 66 modules",
+        "location": "discussion, line 315",
+        "verdict": "PASS",
+        "reason": "Chirality subset count. Table in paper 8 sums to 968. Consistent between papers 7 and 8."
+      },
+      {
+        "claim": "GoltermanShamir.lean: 14+1ax",
+        "location": "table, line 258",
+        "verdict": "WARN",
+        "reason": "Table says '14+1ax'. But the GoltermanShamir module itself has zero axioms. The axiom is in SPTClassification.lean, not GoltermanShamir. This '+1ax' notation is misleading. The module has 14 theorems, zero axioms."
+      },
+      {
+        "claim": "55 theorems in chirality modules",
+        "location": "figure caption, line 277",
+        "verdict": "WARN",
+        "reason": "Says 55 in caption but abstract/text says 54. Table line 265 says 'Total: 54+1ax'. The caption may be counting the axiom differently. Should be '54 theorems + 1 axiom' or just '54 theorems (the axiom is in a different module)'."
+      },
+      {
+        "claim": "first-ever definitions of pivotal, spherical, and fusion categories in a proof assistant",
+        "location": "discussion, line 312-313",
+        "verdict": "PASS",
+        "reason": "No prior definitions found in Lean/Coq/Agda/Isabelle. Mathlib had RigidCategory but not pivotal/spherical/fusion."
+      },
+      {
+        "claim": "Bib: Nielsen1981a — Nucl Phys B 185, 20 (1981)",
+        "location": "line 354",
+        "verdict": "PASS",
+        "reason": "Correct reference for the first Nielsen-Ninomiya lattice fermion paper."
+      },
+      {
+        "claim": "Bib: Nielsen1981b — Nucl Phys B 193, 173 (1981)",
+        "location": "line 358",
+        "verdict": "PASS",
+        "reason": "Correct reference for the second Nielsen-Ninomiya paper."
+      },
+      {
+        "claim": "Bib: GoltermanShamir2026 — arXiv:2603.15985",
+        "location": "line 365",
+        "verdict": "WARN",
+        "reason": "Paper 7 cites GoltermanShamir2026 as arXiv:2603.15985 but paper 8 cites it as Phys Rev D 113, 014503. Should be consistent. Both could be correct (arXiv + published). But paper 7 bibliography should ideally include the published journal ref if available."
+      },
+      {
+        "claim": "Bib: TPF2024 — arXiv:2411.18738 (2024)",
+        "location": "line 369",
+        "verdict": "WARN",
+        "reason": "Paper 7 calls this TPF2024 but paper 8 calls the TPF construction 'TPF2026' (arXiv:2601.04304). These appear to be different papers! TPF2024 (2411.18738, Tong/Preskill/Fidkowski) vs TPF2026 (2601.04304, Thorngren/Preskill/Fidkowski). The authors differ. Should verify which is the correct reference for the disentangler construction."
+      }
+    ],
+    "overall": "PASS with WARNs — minor table/caption inconsistencies (54 vs 55, misleading +1ax attribution)"
+  },
+
+  "paper14_braided_mtc": {
+    "file": "papers/paper14_braided_mtc/paper_draft.tex",
+    "claims": [
+      {
+        "claim": "2237+ machine-checked theorems across 130 Lean modules with zero sorry in the MTC, knot, TQFT, and fusion components",
+        "location": "abstract, line 28",
+        "verdict": "PASS",
+        "reason": "Total theorem count and module count match ground truth. The sorry-free claim is specifically scoped to MTC/knot/TQFT/fusion components, which is correct — sorry only exists in Uqsl2AffineHopf, Uqsl3Hopf, and CenterFunctor."
+      },
+      {
+        "claim": "det S != 0 => Z_2(C) = Vec proved as abstract linear algebra",
+        "location": "abstract",
+        "verdict": "PASS",
+        "reason": "ModularityTheorem.lean confirms this general theorem using Mathlib's Matrix.det_zero_of_row_eq."
+      },
+      {
+        "claim": "Muger center closure (tensor, dual, isomorphism) is machine-checked",
+        "location": "abstract",
+        "verdict": "PASS",
+        "reason": "MugerCenter.lean exists with 19 theorems/lemmas."
+      },
+      {
+        "claim": "PivotalCategory (FIRST-EVER) in SphericalCategory.lean (18 theorems)",
+        "location": "section 3 table",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms SphericalCategory: 18 theorems with PivotalCategory. No prior formalization found."
+      },
+      {
+        "claim": "RibbonCategory (4 theorems in RibbonCategory.lean)",
+        "location": "section 3 table",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 4 theorems."
+      },
+      {
+        "claim": "FusionCategoryData (14 theorems in FusionCategory.lean)",
+        "location": "section 3 table",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 14 theorems."
+      },
+      {
+        "claim": "Ising MTC: F-symbols verified by native_decide over Q(sqrt(2)), pentagon equation (243 cases ~2s)",
+        "location": "section 5.1",
+        "verdict": "PASS",
+        "reason": "SU2kMTC.lean confirms. QSqrt2.lean provides the decidable number field."
+      },
+      {
+        "claim": "IsingBraiding.lean: 25 theorems, trefoil = -1",
+        "location": "section 5.1, section 6",
+        "verdict": "WARN",
+        "reason": "Inventory Index says IsingBraiding: 23 theorems. Paper claims 25. Possible discrepancy — Inventory Index may be stale or paper may be counting differently."
+      },
+      {
+        "claim": "Fibonacci MTC: FibonacciMTC.lean (13 theorems), QCyc5.lean (16 theorems)",
+        "location": "section 5.2",
+        "verdict": "WARN",
+        "reason": "Inventory says FibonacciMTC: 11 theorems (not 13) and QCyc5: 9 theorems (not 16). Paper numbers may reflect additions not yet synced to inventory, or may be overcounts."
+      },
+      {
+        "claim": "SU2kSMatrix.lean (16 theorems, zero sorry)",
+        "location": "section 5.3",
+        "verdict": "PASS",
+        "reason": "Inventory Index confirms 16 theorems."
+      },
+      {
+        "claim": "SU3kFusion.lean: first SU(3)_k fusion in any proof assistant, 23 user-written theorems",
+        "location": "section 7",
+        "verdict": "PASS",
+        "reason": "Confirmed 23 theorems/lemmas by grep. No prior SU(3) fusion formalization found."
+      },
+      {
+        "claim": "Temperley-Lieb algebra: first in any proof assistant (TemperleyLieb.lean)",
+        "location": "section 8",
+        "verdict": "PASS",
+        "reason": "Module exists. No prior TL algebra formalization found in Lean/Coq/Agda/Isabelle."
+      },
+      {
+        "claim": "IsingGates.lean: 21 theorems, zero sorry",
+        "location": "section 8, braiding gates",
+        "verdict": "WARN",
+        "reason": "Module exists but IsingGates.lean is not listed in the Inventory Index module map. Theorem count needs independent verification."
+      },
+      {
+        "claim": "FibonacciBraiding.lean: 31 theorems, zero sorry",
+        "location": "section 8",
+        "verdict": "WARN",
+        "reason": "Module exists but is not listed in Inventory Index module map. Claim 'zero sorry' may be inaccurate — module showed up in initial sorry grep with 2 hits (may be in comments)."
+      },
+      {
+        "claim": "FibonacciQutrit.lean: 6 theorems, zero sorry",
+        "location": "section 8",
+        "verdict": "WARN",
+        "reason": "Module exists but not in Inventory Index. Grep showed 2 sorry-containing lines (may be in comments)."
+      },
+      {
+        "claim": "FibonacciUniversality.lean: 9 theorems",
+        "location": "section 8",
+        "verdict": "WARN",
+        "reason": "Module exists but not in Inventory Index. Cannot independently verify theorem count."
+      },
+      {
+        "claim": "FibonacciQutritUniversality.lean: 10 theorems",
+        "location": "section 8",
+        "verdict": "WARN",
+        "reason": "Module exists but not in Inventory Index."
+      },
+      {
+        "claim": "QCyc5Ext.lean: 19 theorems, zero sorry",
+        "location": "section 8",
+        "verdict": "WARN",
+        "reason": "Module exists but not in Inventory Index."
+      },
+      {
+        "claim": "Self-contained universality proof for anyonic braiding: first in any proof assistant",
+        "location": "section 8, conclusion",
+        "verdict": "PASS",
+        "reason": "No prior machine-checked universality verification for anyonic gates found."
+      },
+      {
+        "claim": "Bib: Kitaev 2006 — Ann Phys 321, 2 (2006)",
+        "location": "bibliography",
+        "verdict": "PASS",
+        "reason": "Correct. Kitaev's 'Anyons in an exactly solved model' paper."
+      },
+      {
+        "claim": "Bib: Rowell et al 2009 — Comm Math Phys 292, 343 (2009)",
+        "location": "bibliography",
+        "verdict": "PASS",
+        "reason": "Correct reference for MTC classification paper."
+      },
+      {
+        "claim": "Bib: Freedman-Larsen-Wang 2002 — Comm Math Phys 227, 605 (2002)",
+        "location": "bibliography",
+        "verdict": "PASS",
+        "reason": "Correct reference for the FLW universality theorem."
+      }
+    ],
+    "overall": "PASS with WARNs — several modules not yet in Inventory Index, some theorem counts may be stale. Core MTC claims are solid."
+  },
+
+  "cross_paper_issues": [
+    {
+      "issue": "Module count inconsistency across papers",
+      "severity": "WARN",
+      "details": "Paper 10 says 129, Paper 8 intro says 94 (stale), Paper 8 synthesis says 130, Paper 7 conclusion says 130, Paper 14 says 130. Ground truth is 130 (excl ExtractDeps). Papers 10 and 8-intro need updating."
+    },
+    {
+      "issue": "Aristotle count inconsistency",
+      "severity": "FAIL",
+      "details": "Paper 8 intro says 307+ but ground truth is 322+. Must fix."
+    },
+    {
+      "issue": "Inventory Index says 128 modules but actual is 130",
+      "severity": "WARN",
+      "details": "The Inventory Index count (128) is behind the actual file count (130 excl ExtractDeps). Several new modules from Phase 5r-5s (FKGappedInterface, VillainHamiltonian, KMatrixAnomaly, SPTStacking, TPFDisentangler, ModularityTheorem, MugerCenter, StringNet, FPDimension, KacWaltonFusion, etc.) may not all be reflected."
+    },
+    {
+      "issue": "Nielsen-Ninomiya bibliography inconsistency between papers 7 and 8",
+      "severity": "WARN",
+      "details": "Paper 7 Nielsen1981a = NPB 185, Paper 8 Nielsen1981a = PLB 105. Different papers with same bibkey label. Should standardize."
+    },
+    {
+      "issue": "TPF reference inconsistency between papers 7 and 8",
+      "severity": "WARN",
+      "details": "Paper 7 cites TPF2024 (arXiv:2411.18738, Tong/Preskill/Fidkowski) while Paper 8 cites TPF2026 (arXiv:2601.04304, Thorngren/Preskill/Fidkowski). Different authors and different arXiv IDs — may be different papers. Should verify which is canonical."
+    },
+    {
+      "issue": "Duplicate Aristotle bibentry in paper 8",
+      "severity": "WARN",
+      "details": "bibitem Aristotle2025 is defined twice in paper 8 (lines 532 and 582)."
+    }
+  ],
+
+  "summary": {
+    "paper10": "PASS with 1 WARN (module count 129 -> 130)",
+    "paper8": "FAIL (stale intro: 94 modules -> 130, 307+ Aristotle -> 322+, duplicate bibentry)",
+    "paper7": "PASS with minor WARNs (table caption 55 vs 54, misleading +1ax, bibliography)",
+    "paper14": "PASS with WARNs (several newer modules not in Inventory Index, some theorem counts may be stale vs inventory)",
+    "blocking_fixes_required": [
+      "Paper 8 line 103-104: change '94 Lean modules' to '130 Lean modules'",
+      "Paper 8 line 104: change '307+' to '322+'",
+      "Paper 8: remove duplicate bibitem Aristotle2025 (line 582)",
+      "Paper 10 abstract line 31: change '129' to '130'"
+    ],
+    "recommended_fixes": [
+      "Inventory Index module count: update 128 -> 130",
+      "Paper 7 table: clarify +1ax belongs to SPTClassification, not GoltermanShamir",
+      "Paper 7 figure caption: 55 -> 54 (or clarify what the 55th is)",
+      "Standardize Nielsen-Ninomiya bibliography keys across papers",
+      "Verify TPF paper references (2024 vs 2026) are the intended ones",
+      "Add FKGappedInterface, VillainHamiltonian, IsingGates, FibonacciBraiding, FibonacciQutrit, FibonacciUniversality, FibonacciQutritUniversality, QCyc5Ext, ModularityTheorem, MugerCenter to Inventory Index module map"
+    ]
+  }
+}

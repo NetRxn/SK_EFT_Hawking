@@ -751,6 +751,14 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=7,
         expected_axes={}, physics_checks=[], color_keys=["steinhauer"],
     ),
+    # Phase 5s: FK gapped interface
+    FigureSpec(
+        name="fig_fk_spectrum",
+        function="fig_fk_spectrum",
+        caption="FK 8-Majorana spectrum: eigenvalues -7,-5,-1,+1,+3 with multiplicities 1,1,4,7,3. Gap Delta=2.",
+        needs_experiments=False, expected_traces=5,
+        expected_axes={"yaxis": "energy"}, physics_checks=[], color_keys=["dissipative"],
+    ),
 ]
 
 
@@ -828,6 +836,7 @@ def generate_figures() -> dict[str, Path]:
         # Phase 5q: Ext computation
         fig_ext_chart,
         fig_a1_resolution_structure,
+        fig_fk_spectrum,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -936,6 +945,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_drinfeld_equivalence_structure": fig_drinfeld_equivalence_structure,
         "fig_ext_chart": fig_ext_chart,
         "fig_a1_resolution_structure": fig_a1_resolution_structure,
+        "fig_fk_spectrum": fig_fk_spectrum,
     }
 
     paths = {}
@@ -1152,6 +1162,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_drinfeld_equivalence_structure": fig_drinfeld_equivalence_structure,
         "fig_ext_chart": fig_ext_chart,
         "fig_a1_resolution_structure": fig_a1_resolution_structure,
+        "fig_fk_spectrum": fig_fk_spectrum,
     }
 
     issues: list[CheckIssue] = []

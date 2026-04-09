@@ -4,7 +4,7 @@
 
 **Last updated:** April 8, 2026 (end of Week 3, Phase 5q Ext computation complete)
 
-**Current build:** 130 Lean modules, 2237+ theorems, 1 axiom, 17 sorry (12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor; Aristotle 6dbc9447 in flight). 53 Python modules, 45 test files (1856 tests), 100 figures, 48 notebooks, 15 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.**
+**Current build:** 131 Lean modules, 2237+ theorems, 1 axiom, 17 sorry (12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor; Aristotle 6dbc9447 in flight). 53 Python modules, 45 test files (1856 tests), 100 figures, 48 notebooks, 15 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.**
 
 ---
 
@@ -161,7 +161,7 @@ Recently completed (Phase 5p, April 8 2026):
 - Gauge erasure: only U(1)_EM survives passage through a fluid layer. SU(2) and SU(3) produce domain walls, not Goldstone modes. Universal structural theorem, machine-proved. Implication: non-Abelian gauge forces cannot emerge from fluid dynamics but CAN originate from topological order (via the quantum group route in Chain 3).
 
 **What's open:**
-- Abelian instantons (Csaki et al. 2024) generate unsuppressed 8-fermion vertices for N_f=4 — a non-perturbative mechanism that could bridge the coupling deficit. **Assessed as NOT formalizable** (Phase 5s): the needed index theorem (half-integer Chern number on R⁴ minus a line with bag boundary conditions) does not exist in mathematics. The O(1) coupling is real physics (confirmed by exact Schwinger model reduction) but cannot be machine-checked.
+- Abelian instantons (Csaki et al. 2024) generate unsuppressed 8-fermion vertices for N_f=4 — a non-perturbative mechanism that could bridge the coupling deficit. **Zero-mode counting NOW MACHINE-CHECKED** (InstantonZeroModes.lean, 9 theorems): the 4D index theorem is entirely bypassed via separation of variables (Clifford Cl(4) ≅ Cl(2) ⊗̂ Cl(2)) + 2D angular counting (6×6 diagonal ℤ matrix) + polynomial space dimension. Result: 2|qn| = 4 zero modes per flavor → 16 total for N_f=4 → 8-fermion ADW vertex. Previously RED, now GREEN. The O(1) amplitude (Schwinger model exact) remains physics, but the combinatorial input is machine-checked.
 - Volovik's vestigial gravity (metric without tetrad): mean-field confirms the vestigial window, MC pending (L=8 RHMC running, matrix-free stencil unlocks L=12+).
 - Fermi-point |N|=2 gauge emergence: formalized with explicit rigor tracking (theorem/heuristic/speculative per step). Theorem-level through step 2 only. SU(3) more speculative than SU(2) (proved). Could bypass the spin-connection gap but introduces its own unsolved chirality problem (vector coupling, not chiral).
 - The spin-connection gap (U(1) to SO(3,1)) has no known path. This is the true showstopper for the Wen-ADW route.
@@ -237,7 +237,7 @@ The single highest-leverage fix is resolving the RingQuot typeclass divergence i
 
 ---
 
-## Module Inventory (~130 Lean modules as of April 8, 2026)
+## Module Inventory (~131 Lean modules as of April 8, 2026)
 
 ### Phase 1-2 (7 modules): AcousticMetric, SKDoubling, HawkingUniversality, SecondOrderSK, WKBAnalysis, CGLTransform, Basic
 ### Phase 3 (6 modules): ThirdOrderSK, GaugeErasure, WKBConnection, ADWMechanism, ChiralityWall, VestigialGravity
@@ -253,7 +253,7 @@ The single highest-leverage fix is resolving the RingQuot typeclass divergence i
 ### Phase 5k-5p (30 modules, new): TemperleyLieb, JonesWenzl, WRTInvariant, WRTComputation, SurgeryPresentation, QuantumGroupHopf, QuantumGroupGeneric, KMatrixAnomaly, SPTStacking, VillainHamiltonian, TPFDisentangler, StringNet, KacWaltonFusion, FPDimension, MugerCenter, IsingGates, FibonacciBraiding, FibonacciQutrit, FibonacciUniversality, FibonacciQutritUniversality, QCyc5Ext, + ExtractDeps (infrastructure)
 ### Phase 5q (4 modules): A1Ring, A1Resolution, A1Ext, ExtBordismBridge
 ### Phase 5r (1 module): ChangeOfRings (H2 discharged)
-### Phase 5s (2 new modules + 1 updated): FKGappedInterface (FK 8-Majorana gapping, first in any proof assistant), ModularityTheorem (general det(S)≠0 → Z₂ trivial), SU2kFusion extended (k=5 fusion + comm + assoc verified)
+### Phase 5s (3 new modules + 2 updated): FKGappedInterface (FK Cayley calibration, Δ=14, first in any proof assistant), ModularityTheorem (general det(S)≠0 → Z₂ trivial), InstantonZeroModes (zero-mode counting bypasses 4D index theorem, RED→GREEN), SU2kFusion extended (k=5), SU2kSMatrix extended (k=5 unitarity)
 
 ---
 

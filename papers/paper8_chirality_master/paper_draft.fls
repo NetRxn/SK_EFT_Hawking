@@ -205,6 +205,9 @@ INPUT ./figures/fig70_chirality_wall_three_pillars.png
 INPUT ./figures/fig70_chirality_wall_three_pillars.png
 INPUT ./figures/fig70_chirality_wall_three_pillars.png
 INPUT ./figures/fig70_chirality_wall_three_pillars.png
+INPUT ./paper_draft.bbl
+INPUT ./paper_draft.bbl
+INPUT paper_draft.bbl
 INPUT paper_draft.aux
 INPUT ./paper_draft.out
 INPUT ./paper_draft.out

@@ -1120,7 +1120,9 @@ private theorem affAntipodeFreeAlg_K1F0 :
   · simp +decide [ Algebra.smul_def ];
     grind
 
--- Serre cases
+/-
+Serre cases
+-/
 private theorem affAntipodeFreeAlg_Serre0 :
     affAntipodeFreeAlg k
       (ascal k (T 1 - T (-1)) * (ag k E0 * ag k F0 - ag k F0 * ag k E0)) =
@@ -1139,7 +1141,27 @@ private theorem affAntipodeFreeAlg_Serre0 :
   -- WORKAROUND: Use `letI : NonUnitalNonAssocRing (Uqsl2Aff k) := inferInstance` before neg_mul/mul_neg.
   --   Use `← Algebra.smul_def` + smul_mul_assoc/mul_smul_comm for scalar commutation.
   --   Use `erw` (not rw) for map_sub, map_mul on RingQuot types.
-  sorry
+  have h_comm : (uqAffK0 k * uqAffF0 k * uqAffE0 k * uqAffK0inv k) = (uqAffF0 k * uqAffE0 k) := by
+    simp +decide [ mul_assoc, uqAff_K0F0, uqAff_K0inv_mul_F0 ];
+    simp +decide [ ← mul_assoc, uqAff_E0_mul_K0inv ];
+    simp +decide [ mul_assoc, mul_left_comm, ← Algebra.smul_def ];
+    simp +decide [ ← mul_assoc, uqAff_K0_mul_K0inv ];
+    exact?;
+  have h_comm : (algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 1 - T (-1))) * (uqAffF0 k * uqAffE0 k - uqAffE0 k * uqAffF0 k) = -(uqAffK0 k - uqAffK0inv k) := by
+    rw [ ← uqAff_Serre0 ] ; ring;
+    grind;
+  convert congr_arg ( fun x => MulOpposite.op x ) h_comm using 1;
+  · simp +decide [ ascal, ag, mul_assoc, mul_sub, sub_mul, mul_comm, mul_left_comm, Algebra.algebraMap_eq_smul_one ];
+    simp +decide [ affAntipodeFreeAlg_ι, affAntipodeOnGen ];
+    simp +decide [ ← MulOpposite.op_mul, ← MulOpposite.op_add, ← MulOpposite.op_neg, mul_assoc, mul_left_comm, mul_comm ];
+    simp +decide [ mul_assoc, mul_left_comm, mul_comm, uqAff_neg_mul_neg ];
+    simp +decide [ ← mul_assoc, ← MulOpposite.op_mul, uqAff_K0_mul_K0inv, uqAff_K0inv_mul_K0 ];
+    simp +decide [ ← smul_sub, ‹uqAffK0 k * uqAffF0 k * uqAffE0 k * uqAffK0inv k = uqAffF0 k * uqAffE0 k›, uqAff_K0inv_mul_K0 ];
+    simp +decide [ ← mul_assoc, ← MulOpposite.op_mul, uqAff_K0_mul_K0inv, uqAff_K0inv_mul_K0 ];
+    simp +decide [ mul_assoc, uqAff_K0inv_mul_K0 ];
+    module;
+  · simp +decide [ affAntipodeFreeAlg, affAntipodeOnGen ];
+    grind +splitImp
 
 private theorem affAntipodeFreeAlg_Serre1 :
     affAntipodeFreeAlg k
@@ -1149,7 +1171,9 @@ private theorem affAntipodeFreeAlg_Serre1 :
   -- Uses: uqAff_K1F1, uqAff_E1_mul_K1inv, uqAff_Serre1, uqAff_K1_mul_K1inv
   sorry
 
--- Cross-commutation cases
+/-
+Cross-commutation cases
+-/
 private theorem affAntipodeFreeAlg_E0F1 :
     affAntipodeFreeAlg k (ag k E0 * ag k F1) =
     affAntipodeFreeAlg k (ag k F1 * ag k E0) := by
@@ -1170,7 +1194,26 @@ private theorem affAntipodeFreeAlg_E0F1 :
   --   uqAff_K0K1_comm, uqAff_K0inv_K1inv_comm, Algebra.commutes,
   --   LaurentPolynomial.T_add. Use `← Algebra.smul_def` + smul_mul_assoc for scalars.
   --   Use `erw` for rewrites on RingQuot types. `letI : NonUnitalNonAssocRing` if needed.
-  sorry
+  have h_comm : uqAffF1 k * uqAffE0 k = uqAffE0 k * uqAffF1 k := by
+    exact?;
+  have h_assoc : uqAffK1 k * uqAffE0 k * uqAffF1 k * uqAffK0inv k = uqAffE0 k * uqAffK1 k * uqAffK0inv k * uqAffF1 k := by
+    have h_assoc : uqAffK1 k * uqAffE0 k = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffE0 k * uqAffK1 k := by
+      exact?;
+    have h_assoc : uqAffF1 k * uqAffK0inv k = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffK0inv k * uqAffF1 k := by
+      exact?;
+    simp_all +decide [ mul_assoc, Algebra.smul_def ];
+    simp_all +decide [ ← mul_assoc, ← Algebra.smul_def ];
+    exact?;
+  have h_assoc : uqAffK1 k * uqAffK0inv k = uqAffK0inv k * uqAffK1 k := by
+    have h_assoc : uqAffK1 k * uqAffK0inv k = uqAffK0inv k * uqAffK1 k := by
+      have := uqAff_K0K1_comm k
+      apply_fun (fun x => x * uqAffK0inv k) at this;
+      simp_all +decide [ mul_assoc, uqAff_K0_mul_K0inv ];
+      apply_fun (fun x => uqAffK0inv k * x) at this;
+      simp_all +decide [ ← mul_assoc, uqAff_K0inv_mul_K0 ];
+    exact h_assoc;
+  simp_all +decide [ mul_assoc ];
+  simp_all +decide [ ← mul_assoc ]
 
 private theorem affAntipodeFreeAlg_E1F0 :
     affAntipodeFreeAlg k (ag k E1 * ag k F0) =
@@ -1184,7 +1227,30 @@ private theorem affAntipodeFreeAlg_E1F0 :
   -- Symmetric to E₀F₁ with 0↔1 swap.
   -- Uses: uqAff_E1F0_comm, uqAff_K0E1, uqAff_F0_mul_K1inv,
   --   uqAff_K0K1_comm, Algebra.commutes, LaurentPolynomial.T_add
-  sorry
+  have h_F0E1_comm : uqAffF0 k * uqAffE1 k = uqAffE1 k * uqAffF0 k := by
+    exact?;
+  have h_K0E1 : uqAffK0 k * uqAffE1 k = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffE1 k * uqAffK0 k := by
+    grind +suggestions;
+  have h_F0K1inv : uqAffF0 k * uqAffK1inv k = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffK1inv k * uqAffF0 k := by
+    exact?;
+  have h_K0K1inv_comm : uqAffK0 k * uqAffK1inv k = uqAffK1inv k * uqAffK0 k := by
+    have h_K0K1inv_comm : uqAffK0 k * uqAffK1 k = uqAffK1 k * uqAffK0 k := by
+      exact?;
+    have h_K0K1inv_comm : uqAffK0 k * (uqAffK1 k * uqAffK1inv k) = uqAffK1 k * (uqAffK0 k * uqAffK1inv k) := by
+      rw [ ← mul_assoc, h_K0K1inv_comm, mul_assoc ];
+    have h_K0K1inv_comm : uqAffK0 k * 1 = uqAffK1 k * (uqAffK0 k * uqAffK1inv k) := by
+      convert h_K0K1inv_comm using 1;
+      rw [ uqAff_K1_mul_K1inv ];
+    have h_K0K1inv_comm : uqAffK1inv k * uqAffK0 k * 1 = uqAffK1inv k * uqAffK1 k * (uqAffK0 k * uqAffK1inv k) := by
+      rw [ mul_assoc, h_K0K1inv_comm, ← mul_assoc ];
+    have h_K0K1inv_comm : uqAffK1inv k * uqAffK1 k = 1 := by
+      exact?;
+    grobner;
+  simp_all +decide [ mul_assoc, mul_left_comm, mul_comm ];
+  simp_all +decide [ ← mul_assoc ];
+  simp_all +decide [ mul_assoc, mul_left_comm ];
+  simp_all +decide [ ← mul_assoc, ← Algebra.smul_def ];
+  exact?
 
 -- q-Serre cases
 private theorem affAntipodeFreeAlg_SerreE01 :

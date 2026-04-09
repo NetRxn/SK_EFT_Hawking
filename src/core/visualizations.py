@@ -46,8 +46,8 @@ COLORS = {
     "Rb87": "#2E86AB",       # Steel blue — established experiment
     "K39": "#A23B72",        # Berry — proposed experiment
     "Na23": "#F18F01",       # Amber — high-impact projected
-    "dispersive": "#5C946E", # Sage green — known correction
-    "dissipative": "#E63946",# Carmine — new correction (our result)
+    "dispersive": "#4682B4", # Steel blue — known correction (colorblind-safe)
+    "dissipative": "#D4A843",# Amber — new correction (our result, colorblind-safe)
     "cross": "#8D99AE",      # Cool grey — subdominant
     "horizon": "#000000",    # Black — horizon line
     "subsonic": "#DAE2F8",   # Light blue — subsonic region fill
@@ -61,8 +61,8 @@ COLORS = {
     # Semantic color-name aliases (Phase 5h/5j figures)
     "steel_blue": "#2E86AB",
     "amber": "#F18F01",
-    "sage": "#5C946E",
-    "carmine": "#E63946",
+    "sage": "#5C946E",      # Legacy — retained for backward compat
+    "carmine": "#E63946",   # Legacy — retained for backward compat
 }
 
 # Typography matching PRL conventions
@@ -1988,7 +1988,7 @@ def fig_sm_scorecard() -> go.Figure:
     """Standard Model gauge group bar chart: SU(3)/SU(2)/U(1), colored by survives/erased.
 
     Shows the gauge erasure theorem applied to each factor of the SM gauge group,
-    with green for surviving (U(1)) and red for erased (SU(3), SU(2)).
+    with blue (dispersive) for surviving (U(1)) and amber (dissipative) for erased (SU(3), SU(2)).
     """
     from src.gauge_erasure.erasure_theorem import standard_model_analysis
 
@@ -2037,7 +2037,7 @@ def fig_sm_scorecard() -> go.Figure:
 def fig_erasure_survey() -> go.Figure:
     """Survey bar chart of gauge erasure across SU(N), SO(N), and U(1) groups.
 
-    Shows which gauge groups survive (green) vs are erased (red) upon
+    Shows which gauge groups survive (blue) vs are erased (amber) upon
     hydrodynamization, demonstrating the universality of the theorem.
     """
     from src.gauge_erasure.erasure_theorem import (
@@ -3813,7 +3813,7 @@ def fig_vestigial_binder_crossing() -> go.Figure:
     import os
 
     data_dir = os.path.join(os.path.dirname(__file__), '..', '..',
-                           'docs', 'vestigial_mc_results')
+                           'data', 'vestigial_mc')
     # Find the production run (largest file)
     files = sorted([f for f in os.listdir(data_dir) if f.endswith('.json')],
                   key=lambda f: os.path.getsize(os.path.join(data_dir, f)),
@@ -3862,7 +3862,7 @@ def fig_vestigial_susceptibility_split() -> go.Figure:
     from src.core.constants import DRINFELD_DOUBLE  # just for import test
 
     data_dir = os.path.join(os.path.dirname(__file__), '..', '..',
-                           'docs', 'vestigial_mc_results')
+                           'data', 'vestigial_mc')
     files = sorted([f for f in os.listdir(data_dir) if f.endswith('.json')],
                   key=lambda f: os.path.getsize(os.path.join(data_dir, f)),
                   reverse=True)
@@ -3943,7 +3943,7 @@ def fig_vestigial_phase_diagram_mc() -> go.Figure:
 
     # MC susceptibility peaks from production data
     from pathlib import Path as _Path
-    mc_path = _Path(__file__).resolve().parent.parent.parent / "docs" / "vestigial_mc_results" / "vestigial_mc_20260329T192611.json"
+    mc_path = _Path(__file__).resolve().parent.parent.parent / "data" / "vestigial_mc" / "vestigial_mc_20260329T192611.json"
     if mc_path.exists():
         with open(mc_path) as f:
             mc_data = json.load(f)
@@ -5459,7 +5459,7 @@ def fig_rhmc_l8_preliminary() -> go.Figure:
     """
     from pathlib import Path
 
-    files = sorted(Path('data/rhmc').glob('L8_g*.npz'))
+    files = sorted(Path('data/rhmc/L8').glob('g*.npz'))
     if not files:
         fig = go.Figure()
         fig.add_annotation(text="No L=8 RHMC data found", x=0.5, y=0.5,
@@ -6405,6 +6405,8 @@ def fig_ext_chart() -> go.Figure:
         text=labels, textposition='top center',
         textfont=dict(size=10, family='CMU Serif, serif'),
         hovertemplate='stem=%{x}, s=%{y}, %{text}<extra></extra>',
+        name='Ext generators',
+        showlegend=False,
     ))
 
     # Draw h₀-towers (vertical lines connecting h₀-multiples)
@@ -6555,7 +6557,7 @@ def fig_fk_spectrum() -> go.Figure:
 
     # Energy levels as horizontal lines
     for i, (E, m, label) in enumerate(zip(eigenvalues, multiplicities, labels)):
-        color = COLORS.get('dissipative', '#C0392B') if i == 0 else \
+        color = COLORS.get('trento', '#D4A843') if i == 0 else \
                 COLORS.get('steinhauer', '#4682B4') if i == 1 else \
                 COLORS.get('horizon', '#808080')
         width = 4 if i == 0 else 2
@@ -6583,9 +6585,9 @@ def fig_fk_spectrum() -> go.Figure:
         xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.3, 1.5]),
         yaxis=dict(title='Energy', dtick=2),
         title=dict(
-            text='Fidkowski-Kitaev 8-Majorana Spectrum (Machine-Checked)',
+            text='FK 8-Majorana Spectrum',
             font=TITLE_FONT),
-        height=400, width=400,
+        height=400, width=450,
         margin=dict(l=60, r=60, t=60, b=40),
     )
 

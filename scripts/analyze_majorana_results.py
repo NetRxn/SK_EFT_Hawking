@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 def load_latest():
     """Find most recent majorana_8x8_*.json file."""
-    data_dir = Path("docs/vestigial_mc_results")
+    data_dir = Path("data/vestigial_mc")
     files = sorted(data_dir.glob("majorana_8x8_*.json"),
                    key=lambda p: p.stat().st_mtime)
     if not files:

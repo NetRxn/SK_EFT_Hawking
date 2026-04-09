@@ -15,7 +15,7 @@
 | Aristotle-proved | **322+** (319+ machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
 | **Sorry gaps** | **17** | 12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor. Aristotle 6dbc9447 in flight. |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **128** | +34 since last full sync (Phases 5k-5r). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (Phase 5q-5r). |
+| Lean modules | **131** | +36 since last full sync (Phases 5k-5s). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (5q-5r), FKGappedInterface, ModularityTheorem (5s). |
 | Python source modules | **53** | Including stencil_dirac.py |
 | Test files | **45** | Including test_a1_ext.py (Phase 5q, 29 tests) |
 | Test count | 1660+ | `pytest tests/ -q` |
@@ -205,7 +205,7 @@
 | CenterFunctor | 9 | **Phase 5d**: Abstract functor Center(Vec_G) to ModuleCat(DG), natural transformation (**2 sorry**) |
 | QCyc16 | 6 | **Phase 5e**: Q(ζ₁₆) cyclotomic field: ζ⁸=-1, ζ¹⁶=1, (√2)²=2 (**ALL PROVED by native_decide, zero sorry**) |
 | QCyc5 | 9 | **Phase 5e**: Q(ζ₅) cyclotomic field: ζ⁵=1, cyclotomic relation, Fibonacci hexagon E1-E3, twist consistency (**ALL PROVED by native_decide, zero sorry**) |
-| IsingBraiding | 23 | **Phase 5e**: COMPLETE braided Ising MTC: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum, **trefoil=-1** (**ALL PROVED by native_decide, zero sorry, FIRST verified knot invariant**) |
+| IsingBraiding | 25 | **Phase 5e**: COMPLETE braided Ising MTC: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum, **trefoil=-1** (**ALL PROVED by native_decide, zero sorry, FIRST verified knot invariant**) |
 | QSqrt3 | 8 | **Phase 5e**: Q(√3) for SU(2)₄ S-matrix: unitarity diagonal+off-diag, det non-zero (**ALL PROVED by native_decide, zero sorry**) |
 | QLevel3 | 19 | **Phase 5e**: Q[x]/(20x⁴-10x²+1) for SU(2)₃ S-matrix: ALL 10 unitarity entries, quantum dim golden ratio (**ALL PROVED by native_decide, zero sorry**) |
 | SU3kFusion | 99 | **Phase 5i**: **FIRST SU(3)_k fusion in any proof assistant**: SU(3)₁ Z₃ fusion (3 objects) + SU(3)₂ (6 anyons, Fibonacci subcategory τ⊗τ=1+τ), charge conjugation, associativity+commutativity (**ALL PROVED by native_decide, zero sorry**) |

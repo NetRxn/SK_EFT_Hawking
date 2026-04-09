@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-07T18:54:00.034080+00:00",
+  "generated": "2026-04-09T01:19:02.338593+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1794,6 +1794,54 @@
         "Rb87",
         "Na23",
         "K39"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_ext_chart",
+      "function": "fig_ext_chart",
+      "caption": "Ext chart for A(1): E2 page of the Adams spectral sequence for ko. Machine-checked dims 1,2,2,2,3,4.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ext_chart.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ext_chart.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "stem",
+        "yaxis": "filtration"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steinhauer",
+        "trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_a1_resolution_structure",
+      "function": "fig_a1_resolution_structure",
+      "caption": "Minimal free resolution of F2 over A(1): bidiagonal pattern, ranks 1,2,2,2,3,4.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a1_resolution_structure.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a1_resolution_structure.html",
+      "expected_traces": 7,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steinhauer"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

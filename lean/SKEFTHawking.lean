@@ -128,6 +128,7 @@ import SKEFTHawking.ExtBordismBridge
 import SKEFTHawking.ChangeOfRings
 import SKEFTHawking.FKGappedInterface
 import SKEFTHawking.ModularityTheorem
+import SKEFTHawking.InstantonZeroModes
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

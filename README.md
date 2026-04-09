@@ -86,7 +86,7 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ## Technical Summary
 
-**Lean 4 formalization:** 2237+ theorems (2153+ substantive + ~84 placeholder) across 128 modules. 1 axiom (gapped_interface_axiom), 17 sorry (Aristotle in flight).
+**Lean 4 formalization:** 2237+ theorems (2153+ substantive + ~84 placeholder) across 131 modules. 1 axiom (gapped_interface_axiom), 17 sorry (Aristotle in flight).
 322+ Aristotle-proved across 43+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
 **First machine-checked Ext computation over any Steenrod subalgebra** (Phase 5q, April 2026).
 
@@ -98,7 +98,7 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (2237+ theorems, 1 axiom, 128 modules, 17 sorry)
+├── lean/                              # Lean 4 formalization (2237+ theorems, 1 axiom, 131 modules, 17 sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 94 theorem modules)

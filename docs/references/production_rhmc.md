@@ -12,7 +12,7 @@ nohup ./scripts/run_rhmc_epochs.sh --l 8 \
 tail -20 data/rhmc/rhmc_l8.log
 
 # Check data:
-ls -lh data/rhmc/L8_g*.npz
+ls -lh data/rhmc/L8/g*.npz
 ```
 
 **Always use `run_rhmc_epochs.sh`**, not `run_rhmc_production.py` directly. The epoch wrapper prevents thermal throttling and memory degradation that cause 5-8x slowdowns in long runs.

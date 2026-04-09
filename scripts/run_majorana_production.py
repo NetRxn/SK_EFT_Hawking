@@ -24,7 +24,7 @@ Usage:
   uv run python scripts/run_majorana_production.py --sizes 4
 
   # Resume interrupted run
-  uv run python scripts/run_majorana_production.py --resume docs/vestigial_mc_results/majorana_8x8_20260401T2200.json
+  uv run python scripts/run_majorana_production.py --resume data/vestigial_mc/majorana_8x8_20260401T2200.json
 
   # Custom coupling range
   uv run python scripts/run_majorana_production.py --sizes 4 --g-min 0.5 --g-max 8.0 --n-couplings 16
@@ -44,7 +44,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-OUT_DIR = Path("docs/vestigial_mc_results")
+OUT_DIR = Path("data/vestigial_mc")
 
 logger = logging.getLogger("majorana_production")
 

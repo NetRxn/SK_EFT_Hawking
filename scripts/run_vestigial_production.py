@@ -31,12 +31,12 @@ Usage:
 
   # Incremental: add L=10,12 to existing results
   python scripts/run_vestigial_production.py --sizes 4 6 8 10 12 \
-    --resume docs/vestigial_mc_results/vestigial_mc_20260329T192611.json
+    --resume data/vestigial_mc/vestigial_mc_20260329T192611.json
 
   # Custom
   python scripts/run_vestigial_production.py --sizes 4 6 --sweeps 2000 --cores 8
 
-Output: results saved to docs/vestigial_mc_results/ as JSON + real-time log.
+Output: results saved to data/vestigial_mc/ as JSON + real-time log.
 """
 
 import argparse
@@ -280,7 +280,7 @@ def run_production(lattice_sizes, n_measure, n_thermalize, n_couplings, seed,
     from src.core.constants import ADW_4D_COUPLING_SCAN
     from src.core.formulas import binder_cumulant
 
-    output_dir = Path("docs/vestigial_mc_results")
+    output_dir = Path("data/vestigial_mc")
     output_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
 

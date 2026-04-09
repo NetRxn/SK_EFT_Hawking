@@ -198,7 +198,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 4 | FK bridge theorem + pipeline | 1 week | Wave 3 | Next — pipeline stages 6-12 |
 | Wave 5 | Muger general theorem | 1 week | Deep research | **COMPLETE** — ModularityTheorem.lean, abstract proof |
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
-| Wave 7 | Instanton assessment | 1-2 days | None | **ASSESSED** — RED for formalizability. Index theorem doesn't exist in mathematics. O(1) coupling is real physics but not machine-checkable. |
+| Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
 | Wave 8 | Sorry closure | 1-3 days | Aristotle results | Aristotle 6dbc9447 in flight |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.

@@ -34,6 +34,7 @@ Source: Schaich & DeGrand, CPC 190:200 (2015), Eqs. 16-20 (arXiv:1410.6971)
 """
 
 import argparse
+import atexit
 import multiprocessing as mp
 import numpy as np
 import os
@@ -45,8 +46,13 @@ from src.core.constants import MAJORANA_GAMMA_8x8, MAJORANA_J1
 from src.vestigial.hs_rhmc import compute_zolotarev_coefficients
 
 
-DATA_DIR = Path("data/rhmc")
+RHMC_BASE = Path("data/rhmc")
 CHUNK_SIZE = 1
+
+
+def _data_dir(L):
+    """Per-lattice-size data directory: data/rhmc/L{L}/"""
+    return RHMC_BASE / f"L{L}"
 
 
 def _build_cg_entries():
@@ -64,7 +70,7 @@ def _build_cg_entries():
 
 
 def _coupling_path(L, g):
-    return DATA_DIR / f"L{L}_g{g:.4f}.npz"
+    return _data_dir(L) / f"g{g:.4f}.npz"
 
 
 def _load_checkpoint(L, g):
@@ -204,7 +210,7 @@ def main():
     if args.g_critical_min is not None and args.g_critical_max is not None:
         g_critical = np.linspace(args.g_critical_min, args.g_critical_max, args.n_critical)
         g_values = np.unique(np.sort(np.concatenate([g_values, g_critical])))
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    _data_dir(L).mkdir(parents=True, exist_ok=True)
 
     n_complete, n_partial = 0, 0
     for g in g_values:
@@ -224,7 +230,7 @@ def main():
     print(f"  Progress: {n_complete} complete, {n_partial} partial, "
           f"{len(g_values) - n_complete - n_partial} new")
     print(f"  Workers: {args.workers}, chunk: {args.chunk_size} traj")
-    print(f"  Output: {DATA_DIR}/L{L}_g*.npz")
+    print(f"  Output: {_data_dir(L)}/g*.npz")
     print(f"{'='*70}")
 
     if n_complete == len(g_values):
@@ -250,15 +256,36 @@ def main():
     print(f"\n  Starting...\n", flush=True)
     t0 = time.time()
 
-    with mp.Pool(args.workers) as pool:
-        def _shutdown(signum, frame):
-            print("\n  Shutting down workers...", flush=True)
-            pool.terminate()
-            pool.join()
-            raise SystemExit(0)
-        signal.signal(signal.SIGTERM, _shutdown)
+    # Write PID file so epoch script and users can find us
+    pid_file = _data_dir(L) / ".rhmc.pid"
+    pid_file.write_text(str(os.getpid()))
 
+    pool = mp.Pool(args.workers)
+
+    def _cleanup():
+        """Kill all workers on ANY exit — normal, signal, or crash."""
+        try:
+            pool.terminate()
+            pool.join(timeout=5)
+        except Exception:
+            pass
+        pid_file.unlink(missing_ok=True)
+
+    atexit.register(_cleanup)
+
+    def _signal_handler(signum, frame):
+        sig_name = signal.Signals(signum).name
+        print(f"\n  Received {sig_name} — shutting down workers...", flush=True)
+        _cleanup()
+        raise SystemExit(0)
+
+    signal.signal(signal.SIGTERM, _signal_handler)
+    signal.signal(signal.SIGINT, _signal_handler)
+
+    try:
         results = pool.map(_run_coupling_chunked, tasks)
+    finally:
+        _cleanup()
 
     elapsed = time.time() - t0
     print(f"\n{'='*70}")

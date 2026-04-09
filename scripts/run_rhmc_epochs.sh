@@ -53,6 +53,32 @@
 set -e
 cd "$(dirname "$0")/.."  # Always run from SK_EFT_Hawking root
 
+# ── Cleanup: kill workers on ANY exit (signal, error, normal) ──
+# The production script writes a PID file; we use it + process group kill
+# to ensure no orphaned workers survive if this script is killed.
+cleanup() {
+    echo ""
+    echo "--- Cleaning up worker processes ---"
+    # Kill the Python production script's entire process group
+    if [ -n "$PROD_PID" ] && kill -0 "$PROD_PID" 2>/dev/null; then
+        # Send TERM to the process group (negative PID = group)
+        kill -- -"$PROD_PID" 2>/dev/null || kill "$PROD_PID" 2>/dev/null
+        wait "$PROD_PID" 2>/dev/null
+    fi
+    # Belt and suspenders: kill any remaining workers via PID file
+    for pidfile in data/rhmc/L*/.rhmc.pid; do
+        if [ -f "$pidfile" ]; then
+            pid=$(cat "$pidfile")
+            if kill -0 "$pid" 2>/dev/null; then
+                kill -- -"$pid" 2>/dev/null || kill "$pid" 2>/dev/null
+            fi
+            rm -f "$pidfile"
+        fi
+    done
+    echo "--- Cleanup complete ---"
+}
+trap cleanup EXIT INT TERM
+
 # Epoch configuration (override via environment variables)
 EPOCHS="${EPOCHS:-5}"
 TRAJ_PER_EPOCH="${TRAJ_PER_EPOCH:-100}"
@@ -73,9 +99,12 @@ for epoch in $(seq 1 $EPOCHS); do
 
     uv run python scripts/run_rhmc_production.py \
         --n-traj $TRAJ_PER_EPOCH \
-        "$@"
-
+        "$@" &
+    PROD_PID=$!
+    wait "$PROD_PID"
     EXIT_CODE=$?
+    PROD_PID=""
+
     if [ $EXIT_CODE -ne 0 ]; then
         echo "ERROR: Epoch $epoch failed with exit code $EXIT_CODE"
         exit $EXIT_CODE

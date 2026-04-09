@@ -447,197 +447,19 @@ fn axpy(alpha: f64, x: &[f64], y: &mut [f64]) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// Single-shift CG with chronological initial guess
-//
-// Standard CG for (A†A + σ)x = φ, supporting an optional initial
-// guess x_init. When h changes by O(ε) between MD steps, the previous
-// CG solution is O(ε) from the new one — CG converges in ~100 iters
-// instead of ~1500. This is the "chronological inverter" technique
-// from Brower et al., Nucl.Phys.B Proc.Suppl. 106 (2002) 581.
-//
-// Used for MD force computation where each shift is solved independently
-// (no multi-shift sharing). The cache-friendliness of solving one shift
-// at a time (working set: 3 vectors × dim ≈ 768KB for L=8) outweighs
-// the lost Krylov sharing, especially at L≥8 where the 24-shift
-// working set (12MB) thrashes L2.
-// ═══════════════════════════════════════════════════════════════════
-
-/// Single-shift CG: solve (A†A + σ)x = φ with optional initial guess.
-/// Returns (solution, n_iterations).
-fn single_cg(
-    h: &[f64],
-    phi: &[f64],
-    sigma: f64,
-    tol: f64,
-    max_iter: usize,
-    fwd: &[[usize; 4]],
-    bwd: &[[usize; 4]],
-    n_sites: usize,
-    cg_entries: &[CgEntry],
-    n_threads: usize,
-    x_init: Option<&[f64]>,
-) -> (Vec<f64>, usize) {
-    let dim = 8 * n_sites;
-    let mut scratch = vec![0.0; dim];
-    let mut w = vec![0.0; dim];
-
-    let mut x = if let Some(x0) = x_init {
-        x0.to_vec()
-    } else {
-        vec![0.0; dim]
-    };
-
-    // Initial residual: r = phi - (A†A + σ)x
-    let mut r = phi.to_vec();
-    if x_init.is_some() {
-        apply_shifted_ata(h, &x, &mut w, sigma, fwd, bwd, n_sites, &mut scratch, cg_entries, n_threads);
-        for i in 0..dim { r[i] -= w[i]; }
-    }
-
-    let b_norm_sq = dot(phi, phi);
-    if b_norm_sq < 1e-30 {
-        return (x, 0);
-    }
-    let tol_sq = tol * tol * b_norm_sq;
-    let mut r_sq = dot(&r, &r);
-    if r_sq < tol_sq {
-        return (x, 0);
-    }
-
-    let mut p = r.clone();
-    let mut n_iter = 0;
-
-    while n_iter < max_iter {
-        apply_shifted_ata(h, &p, &mut w, sigma, fwd, bwd, n_sites, &mut scratch, cg_entries, n_threads);
-
-        let pap = dot(&p, &w);
-        if pap.abs() < 1e-30 { break; }
-        let alpha = r_sq / pap;
-
-        axpy(alpha, &p, &mut x);
-        axpy(-alpha, &w, &mut r);
-
-        let r_sq_new = dot(&r, &r);
-        n_iter += 1;
-        if r_sq_new < tol_sq { break; }
-
-        let beta = r_sq_new / r_sq;
-        for i in 0..dim {
-            p[i] = r[i] + beta * p[i];
-        }
-        r_sq = r_sq_new;
-    }
-
-    (x, n_iter)
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// Chronological force computation
-//
-// Computes the pseudofermion force using independent single-shift CG
-// with chronological initial guesses from the previous MD step.
-// Returns the per-shift solutions for use as next step's guesses.
-// ═══════════════════════════════════════════════════════════════════
-
-/// PF force from one real field, using independent chrono CG per shift.
-/// Returns solutions for chronological reuse.
-fn compute_pf_force_chrono(
-    h: &[f64],
-    phi: &[f64],
-    zolotarev_alphas: &[f64],
-    zolotarev_betas: &[f64],
-    fwd: &[[usize; 4]],
-    bwd: &[[usize; 4]],
-    n_sites: usize,
-    cg_tol: f64,
-    cg_max_iter: usize,
-    cg_entries: &[CgEntry],
-    n_threads: usize,
-    f_h: &mut [f64],
-    x_prev: Option<&Vec<Vec<f64>>>,
-    cg_iters_accum: &mut usize,
-) -> Vec<Vec<f64>> {
-    let dim = 8 * n_sites;
-    let n_poles = zolotarev_betas.len();
-
-    let mut solutions = Vec::with_capacity(n_poles);
-    for k in 0..n_poles {
-        let guess = x_prev.and_then(|xp| if k < xp.len() { Some(xp[k].as_slice()) } else { None });
-        let (sol, iters) = single_cg(h, phi, zolotarev_betas[k], cg_tol, cg_max_iter,
-                                      fwd, bwd, n_sites, cg_entries, n_threads, guess);
-        *cg_iters_accum += iters;
-        solutions.push(sol);
-    }
-
-    // Compute A@ψ_k for force contraction
-    let mut a_psi: Vec<Vec<f64>> = Vec::with_capacity(n_poles);
-    for k in 0..n_poles {
-        let mut ap = vec![0.0; dim];
-        apply_fermion_matrix(h, &solutions[k], &mut ap, fwd, bwd, n_sites, cg_entries, n_threads);
-        a_psi.push(ap);
-    }
-
-    // Force contraction (same as compute_pf_force)
-    for site in 0..n_sites {
-        for mu in 0..4usize {
-            let nb = fwd[site][mu];
-            for a in 0..4usize {
-                let mut force_val: f64 = 0.0;
-                for k in 0..n_poles {
-                    let psi = &solutions[k];
-                    let apsi = &a_psi[k];
-                    let mut contraction: f64 = 0.0;
-                    for entry in cg_entries {
-                        if entry.a != a { continue; }
-                        let psi_i = psi[8 * site + entry.i];
-                        let apsi_j = apsi[8 * nb + entry.j];
-                        let apsi_i = apsi[8 * site + entry.i];
-                        let psi_j = psi[8 * nb + entry.j];
-                        contraction += entry.val * (psi_i * apsi_j - apsi_i * psi_j);
-                    }
-                    force_val += zolotarev_alphas[k] * (-2.0) * contraction;
-                }
-                f_h[site * 16 + mu * 4 + a] += force_val;
-            }
-        }
-    }
-
-    solutions
-}
-
-/// Full force with chronological CG. Returns (force, solutions_R, solutions_I).
-fn compute_forces_chrono(
-    h: &[f64], g: f64,
-    phi_r: &[f64], phi_i: &[f64],
-    alphas: &[f64], betas: &[f64],
-    fwd: &[[usize; 4]], bwd: &[[usize; 4]],
-    n_sites: usize, cg_tol: f64, cg_max_iter: usize,
-    cg_entries: &[CgEntry], n_threads: usize,
-    x_prev_r: Option<&Vec<Vec<f64>>>,
-    x_prev_i: Option<&Vec<Vec<f64>>>,
-    cg_iters_accum: &mut usize,
-) -> (Vec<f64>, Vec<Vec<f64>>, Vec<Vec<f64>>) {
-    let mut f_h = vec![0.0; n_sites * 16];
-    for i in 0..n_sites * 16 {
-        f_h[i] = -h[i] / (2.0 * g);
-    }
-
-    let sol_r = compute_pf_force_chrono(h, phi_r, alphas, betas, fwd, bwd, n_sites,
-                                         cg_tol, cg_max_iter, cg_entries, n_threads,
-                                         &mut f_h, x_prev_r, cg_iters_accum);
-    let sol_i = compute_pf_force_chrono(h, phi_i, alphas, betas, fwd, bwd, n_sites,
-                                         cg_tol, cg_max_iter, cg_entries, n_threads,
-                                         &mut f_h, x_prev_i, cg_iters_accum);
-    (f_h, sol_r, sol_i)
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// Force computation (original multi-shift, for heatbath/Hamiltonian)
+// Force computation
 //
 // F_h[site, mu, a] = -h/(2g) + Σ_k α_k · (force contraction from ψ_k)
 //
 // The pseudofermion force involves ψ_k and A@ψ_k, contracted with the
 // CG stencil at each site. Matrix-free: A@ψ_k computed on-the-fly.
+//
+// Note: chronological CG (independent per-shift with initial guess)
+// was tested and found ineffective at L=8: the condition number κ≈6000
+// means ε×κ≈38, so previous solutions are WORSE than zero as initial
+// guesses for the ill-conditioned base system. Multi-shift CG's Krylov
+// sharing is essential — it solves all shifts in ~1200 shared iterations
+// vs 12×1200 independent iterations.
 //
 // Lean: rhmc_hamiltonian_conserved (HubbardStratonovichRHMC.lean)
 // Source: "HS+RHMC for ADW tetrad condensation..." Section 3
@@ -934,7 +756,6 @@ fn rhmc_trajectory(
     let eps = tau / n_md_steps as f64;
     let lam = 0.1932; // Omelyan 2MN parameter
     let cg_max_iter = 2000;
-    let mut total_cg_iters: usize = 0;
 
     // Heat bath: complex Φ = (Φ_R, Φ_I) via A·r_{-3/8}(A†A)·ξ trick
     let (phi_r, phi_i) = pseudofermion_heatbath(h, rng, alpha_0_hb, alphas_hb, betas_hb,

@@ -13,10 +13,10 @@ Usage:
   python scripts/view_vestigial_mc.py --latest adw
 
   # View a specific file
-  python scripts/view_vestigial_mc.py docs/vestigial_mc_results/vestigial_mc_njl_20260331T175303.json
+  python scripts/view_vestigial_mc.py data/vestigial_mc/vestigial_mc_njl_20260331T175303.json
 
   # Compare two runs side-by-side
-  python scripts/view_vestigial_mc.py --compare docs/vestigial_mc_results/vestigial_mc_njl_*.json docs/vestigial_mc_results/vestigial_mc_adw_*.json
+  python scripts/view_vestigial_mc.py --compare data/vestigial_mc/vestigial_mc_njl_*.json data/vestigial_mc/vestigial_mc_adw_*.json
 
   # Compare latest of each model
   python scripts/view_vestigial_mc.py --compare-models
@@ -42,7 +42,7 @@ REDS = ['#E63946', '#A23B72', '#C0392B', '#E74C3C', '#F39C12',
         '#D35400', '#CB4335', '#922B21', '#7B241C', '#641E16']
 AMBERS = ['#F18F01', '#E8A317', '#D4A017', '#C68E17', '#B8860B']
 
-RESULTS_DIR = Path("docs/vestigial_mc_results")
+RESULTS_DIR = Path("data/vestigial_mc")
 
 
 # ── Utilities ──
