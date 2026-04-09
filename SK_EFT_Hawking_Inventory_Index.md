@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 7, 2026 (Phase 5j W2-3: **2237 thm** (2153 substantive + 84 placeholder), 1 ax, 94 modules, **24 sorry** — Aristotle 986b9f66 filled 15 sorry (StimulatedHawking 7→0, CoidealEmbedding 4→0, VerifiedStatistics 4→0, EmergentGravityBounds 2→0, KerrSchild 1→0, CenterFunctor 5→2) + manual work (Uqsl2AffineHopf 3→19). 322 Aristotle-proved.)
+**Last synced:** April 8, 2026 (Phase 5q-5r: **Ext computation complete** (first in any proof assistant). ~128 Lean modules (was 94), **17 sorry** (was 24 — 4 closed manually, 3 by Aristotle). Phase 5q: A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings — all zero sorry. H2 (change-of-rings) discharged. 322+ Aristotle-proved.)
 
 ---
 
@@ -10,19 +10,18 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **2237** (2153 substantive + 84 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
-| Placeholders (True := trivial) | **84** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
-| Aristotle-proved | **322** (319 machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **24** | 19 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor. All other modules zero sorry (Aristotle 986b9f66 filled StimulatedHawking, CoidealEmbedding, VerifiedStatistics, EmergentGravityBounds, KerrSchild, RepUqFusion, TetradGapEquation). |
+| Lean theorems | **2237+** (2153+ substantive + ~84 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
+| Placeholders (True := trivial) | **~84** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
+| Aristotle-proved | **322+** (319+ machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
+| **Sorry gaps** | **17** | 12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor. Aristotle 6dbc9447 in flight. |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **94** | Including SU3kFusion, GaugingStep, FermiPointTopology, PolyQuotQ (new this session) |
-| Proved (substantive, zero sorry) | **2213** | 2237 - 24 sorry |
-| Python source modules | **53** | Including stencil_dirac.py (new) |
-| Test files | **43** | Including test_stencil_dirac.py (new) |
-| Test count | 1635+ | `pytest tests/ -q` |
-| Figures | **93** | `grep -c "^def fig_" src/core/visualizations.py` |
+| Lean modules | **128** | +34 since last full sync (Phases 5k-5r). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (Phase 5q-5r). |
+| Python source modules | **53** | Including stencil_dirac.py |
+| Test files | **45** | Including test_a1_ext.py (Phase 5q, 29 tests) |
+| Test count | 1660+ | `pytest tests/ -q` |
+| Figures | **100** | `grep -c "^def fig_" src/core/visualizations.py` (includes fig_ext_chart, fig_a1_resolution_structure) |
 | Notebooks | **48** | `ls notebooks/*.ipynb` |
-| Papers | **14** | `ls papers/paper*/paper_draft.tex` |
+| Papers | **15** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 43+ | See Aristotle run table in full inventory |

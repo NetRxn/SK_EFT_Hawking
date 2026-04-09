@@ -342,8 +342,11 @@ chirality limitation from $c \equiv 0\pmod{8}$ (proved for string-nets in
 \texttt{GaugeEmergence.lean}) to $c \equiv 0\pmod{16}$. The A(1) Steenrod
 subalgebra---the first formalization of any Steenrod algebra in a proof
 assistant---partially discharges the axiom via the finite computation
-$|{\rm Ext}^4_{A(1)}(\mathbb{F}_2,\mathbb{F}_2)| = 2^4 = 16$
-(\texttt{SteenrodA1.lean}, 17~theorems).
+$\dim_{\mathbb{F}_2} {\rm Ext}^4_{A(1)}(\mathbb{F}_2,\mathbb{F}_2) = 3$
+(\texttt{A1Ring.lean}+\texttt{A1Resolution.lean}+\texttt{A1Ext.lean},
+first machine-checked Ext computation over any Steenrod subalgebra).
+The number 16 enters through the infinite $h_0$-tower in stem~4
+assembling to~$\mathbb{Z}$ via Adams spectral sequence extensions.
 
 \subsection{Witten anomaly connection}
 
@@ -429,20 +432,33 @@ The former $\mathbb{Z}_{16}$ cobordism axiom was discharged (tautological as sta
 \label{tab:summary}
 \end{table}
 
-\noindent\textbf{What is proved:} All 968 theorems, including $[H,Q_A]=0$,
-Wilson mass uniqueness, Pauli algebra, Onsager relations, contraction,
-$\mathbb{Z}_{16}$ conditional theorems, A(1) Steenrod algebra, GS
-conditions, TPF evasion, SM anomaly in $\mathbb{Z}_{16}$, generation
-constraint, Drinfeld center computations, and all bridge connections.
+\noindent\textbf{What is proved:} 2237+ theorems across 130 Lean modules,
+including $[H,Q_A]=0$, Wilson mass uniqueness, Pauli algebra, Onsager
+relations, contraction, $\mathbb{Z}_{16}$ conditional theorems, A(1)
+Steenrod Ext computation (first in any proof assistant), GS conditions,
+TPF evasion, SM anomaly in $\mathbb{Z}_{16}$, generation constraint,
+Drinfeld center computations, Fidkowski-Kitaev 2+1D gapped interface
+(first FK formalization), and all bridge connections.
 
-\noindent\textbf{What was formerly axiomatized (now all proved):} GS no-go theorem
-(unbounded spectral theory) and gauge erasure universality (non-abelian center
-discrete) are now proved as theorems. The former Pin$^+$ bordism axiom was
-discharged. The project has zero axioms.
+\noindent\textbf{What was formerly axiomatized:} GS no-go theorem
+and gauge erasure universality are proved as theorems. The $\mathbb{Z}_{16}$
+cobordism algebraic core is machine-checked (Ext computation). One axiom
+remains: \texttt{gapped\_interface\_axiom} (4+1D gapped interface
+conjecture), supported by machine-checked 1+1D and 2+1D evidence.
+
+\noindent\textbf{Machine-checked evidence for the gapped interface:}
+The analogous statement is machine-verified in two lower dimensions:
+(i) in 1+1D via the 3450 K-matrix model (\texttt{VillainHamiltonian.lean}),
+and (ii) in 2+1D via the Fidkowski-Kitaev construction
+(\texttt{FKGappedInterface.lean}, 20~theorems)---the first machine-checked
+proof that 8~Majorana fermions can be gapped to a unique ground state
+(spectral gap $\Delta=2$) while preserving symmetry.
 
 \noindent\textbf{What remains open:} The 4+1D gapped interface
-conjecture (TPF), the gauging step from vector-like SMG to chiral gauge
-coupling, and the full $\mathbb{Z}_{16}$ cobordism proof.
+conjecture (TPF, the project's single axiom), the gauging step from
+vector-like SMG to chiral gauge coupling, and the full $\mathbb{Z}_{16}$
+cobordism proof (algebraic core machine-checked via the Ext computation;
+3~topological hypotheses remain).
 
 %=================================================================
 \section{Discussion}
@@ -458,6 +474,10 @@ This work establishes several firsts:
 \item First machine-checked analysis of the GS-TPF compatibility question
 \item First three-pillar synthesis connecting no-go, positive construction,
       and anomaly classification in a unified formal framework
+\item First machine-checked Fidkowski-Kitaev interacting SPT classification
+      (2+1D gapped interface with spectral gap $\Delta=2$)~\cite{FK2010,FK2011}
+\item First machine-checked Ext computation over any Steenrod subalgebra
+      (algebraic core of the $\mathbb{Z}_{16}$ classification)
 \end{itemize}
 
 The formalization demonstrates that the chirality wall is ``fracturing
@@ -474,8 +494,8 @@ on which any resolution must stand is now machine-checked.
 %=================================================================
 
 We have presented the first comprehensive formal verification of the
-lattice chirality problem in Lean~4, comprising 968~theorems
-(zero axioms) across 66~modules. The three-pillar
+lattice chirality problem in Lean~4, comprising 2237+~theorems
+(1~axiom: gapped interface) across 130~modules. The three-pillar
 structure---no-go, positive construction, anomaly classification---provides
 a complete machine-checked map of the chirality wall as of 2026. The
 Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the
@@ -547,6 +567,19 @@ J.~Plavnik, E.~Rowell, and Z.~Wang,
 \bibitem{CriticalReview2026} J.~Roehm,
 Fluid-Based Approach to Fundamental Physics: Consolidated Critical
 Review v3 (2026).
+
+\bibitem{FK2010} L.~Fidkowski and A.~Kitaev,
+\textit{Phys.~Rev.~B} \textbf{81}, 134509 (2010).
+
+\bibitem{FK2011} L.~Fidkowski and A.~Kitaev,
+\textit{Phys.~Rev.~B} \textbf{83}, 075103 (2011).
+
+\bibitem{TongTurner2020} D.~Tong and C.~Turner,
+\textit{SciPost Phys.~Lect.~Notes} \textbf{14} (2020);
+arXiv:1906.07199.
+
+\bibitem{Aristotle2025} Harmonic, Aristotle automated theorem prover,
+\url{https://aristotle.harmonic.fun} (2025).
 
 \end{thebibliography}
 

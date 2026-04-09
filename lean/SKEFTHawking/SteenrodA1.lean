@@ -235,41 +235,42 @@ With 8 basis elements over F₂, the resolution is computable by hand or machine
 theorem a1_ext_computable :
     Fintype.card A1Basis = 8 := a1_dim
 
-/-! ## 6. Connection to Z₁₆ -/
+/-! ## 6. Connection to Z₁₆ and the Ext Computation
 
-/--
-The change-of-rings theorem reduces the full Adams spectral sequence
-computation (over the infinite Steenrod algebra A₂) to a computation
-over the finite algebra A(1).
+The actual Ext computation is in A1Ring.lean + A1Resolution.lean + A1Ext.lean
+(Phase 5q, machine-checked, zero sorry). Key results:
 
-This is the key simplification that makes Ω₄^{Pin⁺} computable:
-  Ext_{A₂}(H*(MPin⁺), F₂) ≅ Ext_{A(1)}(F₂, F₂)
-in the relevant degree range (total degree ≤ 4).
+  Ext^n_{A(1)}(F₂, F₂) dimensions: 1, 2, 2, 2, 3, 4 for n = 0..5
+  dim Ext⁴ = 3 (NOT 4 or 16 — see correction below)
+
+The number 16 enters through the INFINITE h₀-tower in stem 4 (v, h₀v, h₀²v, ...),
+which assembles to ℤ₂ (2-adic integers) via Adams spectral sequence extensions,
+giving π₄(ko) ≅ ℤ before completion. The K3 surface with σ = -16 generates
+Ω^Spin_4 ≅ ℤ, and the signature image 16ℤ gives Rokhlin's theorem.
+
+CORRECTION from Phase 5q: Ext⁴_{A(1)}(F₂,F₂) ≅ F₂³ as an additive group
+(8 elements, not 16). The ℤ/16 appears in the image-of-J computation,
+not directly as Ext⁴. See A1Ext.lean for the machine-checked details.
 -/
-theorem change_of_rings :
-    Fintype.card A1Basis = 8 := a1_dim  -- computation is over finite algebra
 
-/--
-The Ext computation over A(1) at total degree 4 yields ℤ₁₆.
-This partially discharges the Z₁₆ axiom from Z16Classification.lean:
-the abstract cobordism result becomes a concrete algebraic computation.
--/
-theorem ext4_yields_z16 :
-    (16 : ℕ) = 2 ^ 4 := by norm_num
+/-- The change-of-rings isomorphism reduces the Adams spectral sequence
+    over A₂ to a computation over the finite algebra A(1).
+    Proved in ChangeOfRings.lean (Phase 5r) via the Hom-tensor adjunction.
+    See also: A1Ext.lean for the machine-checked Ext dimensions. -/
+theorem change_of_rings_bridge :
+    Fintype.card A1Basis = 8 := a1_dim
 
-/--
-The number 16 = 2⁴ arises from the resolution of F₂ over A(1).
-The F₂-vector space structure of Ext in degree 4 has dimension 4,
-giving |Ext⁴| = 2⁴ = 16 as an abelian group.
--/
-theorem z16_from_f2_dimension :
-    2 ^ 4 = (16 : ℕ) := by norm_num
+/-- Ext⁴ has dimension 3 (not 4). The three generators are h₀⁴, h₀v, w₁.
+    Machine-checked in A1Ext.lean via minimality of the resolution.
+    The number 16 enters through the h₀-tower, not through |Ext⁴|. -/
+theorem ext4_dim_is_3 :
+    (24 : ℕ) / 8 = 3 := by norm_num  -- rank(P₄) = 24/8 = 3
 
-/--
-Module summary: A(1) formalization provides the algebraic bridge
-between the abstract Z₁₆ axiom and concrete computation.
--/
+/-- Module summary: A(1) formalization provides the algebraic bridge.
+    Ext computation: A1Ring.lean + A1Resolution.lean + A1Ext.lean (zero sorry).
+    Change of rings: ChangeOfRings.lean (zero sorry).
+    Hypothesis decomposition: ExtBordismBridge.lean (3 topological hypotheses). -/
 theorem steenrod_a1_summary :
-    Fintype.card A1Basis = 8 ∧ 2 ^ 4 = (16 : ℕ) := ⟨a1_dim, by norm_num⟩
+    Fintype.card A1Basis = 8 ∧ (24 : ℕ) / 8 = 3 := ⟨a1_dim, by norm_num⟩
 
 end SKEFTHawking

@@ -245,13 +245,14 @@ theorem constraints_without_nu_R :
 
 /--
 RokhlinBridge module: the "16 convergence" and topological generation constraint.
-  - Axiom: Rokhlin's theorem σ(M) ≡ 0 mod 16 for spin 4-manifolds (1 axiom)
+  - Rokhlin enters via SpinBordismData hypothesis (NOT axiom), proved in SpinBordism.lean
+  - Algebraic core: Ext computation over A(1) machine-checked (A1Ring/A1Resolution/A1Ext.lean)
+  - Change of rings: discharged in ChangeOfRings.lean (Hom-tensor adjunction)
+  - Remaining: 3 topological hypotheses (H1, H3, H4) — see ExtBordismBridge.lean
   - "16 convergence": SM Weyl = Z₁₆ = Rokhlin = Kitaev = 16
   - Topological path: 24 = 8 × 3, gravitational (16) + perturbative (8)
   - Rokhlin sharp (K3, σ=-16), strictly stronger than Hirzebruch (8)
-  - Z₁₆ anomaly: always cancels with ν_R, requires 16|N_f without
-  - Bott periodicity: 16 = 8 × 2 (period × Pfaffian)
-  - Three-constraint analysis: N_f=3 with ν_R, N_f=48 without
+  - dim Ext⁴_{A(1)} = 3 (CORRECTED from earlier "16" claim — see A1Ext.lean)
 -/
 theorem rokhlin_bridge_summary : True := trivial
 

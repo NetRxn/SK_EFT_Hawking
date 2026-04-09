@@ -4,7 +4,7 @@
 
 **Last updated:** April 8, 2026 (end of Week 3, Phase 5q Ext computation complete)
 
-**Current build:** ~128 Lean modules (including 4 new Phase 5q modules), ~2237+ theorems, 1 axiom, ~17 sorry remaining (down from 21; RingQuot blocker + Aristotle in flight). 53 Python modules, 44 test files (1661+ tests), 93 figures, 48 notebooks, 14 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.**
+**Current build:** 130 Lean modules, 2237+ theorems, 1 axiom, 17 sorry (12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor; Aristotle 6dbc9447 in flight). 53 Python modules, 45 test files (1856 tests), 100 figures, 48 notebooks, 15 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.**
 
 ---
 
@@ -63,16 +63,19 @@ The number 16 appears independently in: (1) particle physics (16 Weyl per genera
 
 All four are proved to originate from the quaternionic structure of spinors in 4D. The separation between algebra (mod 8 from Serre's theorem, fully proved) and topology (the extra factor of 2 from smooth structure, axiomatized) is cleanly formalized. E8 with signature 8 concretely witnesses that algebra alone cannot reach 16 — the jump from 8 to 16 requires genuinely topological input.
 
-**What's missing:**
-- The spin bordism isomorphism Omega^Spin_4 = Z is a hypothesis in SpinBordism.lean. The traditional estimate was ~15-25 person-years. **Phase 5q (COMPLETE, April 8 2026) has machine-checked the algebraic core:**
-  - The minimal free resolution of F_2 over A(1) through degree 5 is verified: d^2=0 at all levels, exactness via rank-nullity, minimality (differentials in augmentation ideal), A(1)-linearity. Zero sorry.
-  - Ext dimensions computed: 1, 2, 2, 2, 3, 4 for degrees 0-5 (from minimality, dim Ext^n = rank P_n).
-  - **Correction:** Ext^4 is F_2^3 (dimension 3), NOT Z/16 as a group. The "16" enters through the infinite h_0-tower in stem 4 assembling to Z via Adams spectral sequence extensions.
-  - The single opaque spin bordism hypothesis is now decomposed into 4 focused topological hypotheses (ExtBordismBridge.lean), each independently verifiable: H1 (ko cohomology), H2 (change of rings, ALGEBRAIC), H3 (ASS collapse), H4 (ABP splitting).
-  - Phase 5r (future) could discharge H2 (Shapiro's lemma) algebraically.
-  - First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.
+**What's been machine-checked (Phase 5q, April 8 2026):**
+- The algebraic core of the spin bordism computation: the minimal free resolution of F_2 over A(1) through degree 5, verified end-to-end via native_decide. d^2=0 at all levels, exactness via kernel enumeration (d1-d3) and RREF witnesses (d4-d5), minimality, Ext dimensions 1, 2, 2, 2, 3, 4. Zero sorry, zero Python trust. First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.
+- The change-of-rings isomorphism Ext_A ≅ Ext_{A(1)} (Phase 5r, ChangeOfRings.lean) — pure algebra via the Hom-tensor adjunction, no topology needed.
+- Ext^4 has dimension 3 (not 16 — the "16" enters through the infinite h_0-tower in stem 4 assembling to Z via Adams spectral sequence extensions).
 
-**Implication:** Three generations is not arbitrary. It is forced by the combination of the Standard Model's particle content and mathematical consistency (modular invariance). The Ext computation (Phase 5q) strengthens this: the algebraic content of the bordism computation — the reason the answer is 16 rather than 8 or 32 — is now machine-checked. What remains as hypotheses is standard textbook topology (ko spectrum cohomology, Adams spectral sequence convergence, ABP splitting), not cutting-edge mathematics. The generation constraint is the project's most surprising result, and its formal foundation is now the strongest it can be without formalizing algebraic topology in Lean.
+**What's missing:**
+- 3 topological hypotheses connecting the machine-checked Ext computation to the actual bordism group:
+  - H1: H*(ko; F_2) ≅ A tensor_{A(1)} F_2 (ko spectrum cohomology — Adams 1974, Ch. 16)
+  - H3: Adams spectral sequence for ko collapses at E_2 (comparison with Bott periodicity — Ravenel 2003, Ch. 3). Assessed as irreducibly topological: the potential differential d_3(h_1^2) -> v can only be ruled out by knowing pi_*(ko).
+  - H4: Anderson-Brown-Peterson splitting pi_n(MSpin) ≅ pi_n(ko) for n < 8 (ABP 1967). Circularity note: ABP historically used Rokhlin-equivalent facts, documented in HYPOTHESIS_REGISTRY.
+- These are standard textbook results, each independently verifiable by a topologist. They cannot be discharged without formalizing spectrum theory and algebraic topology in Lean, which no proof assistant currently supports.
+
+**Implication:** Three generations is not arbitrary. It is forced by the combination of the Standard Model's particle content and mathematical consistency (modular invariance). The algebraic content of the bordism computation — the reason the answer is 16 rather than 8 or 32 — is machine-checked. What remains as hypotheses is standard textbook topology, not cutting-edge mathematics. The generation constraint is the project's most surprising result, and its formal foundation is the strongest achievable without formalizing algebraic topology in Lean.
 
 ---
 
@@ -102,12 +105,12 @@ Recently completed (Phase 5p, April 8 2026):
 - Fibonacci braiding is proved universal for quantum computation via Lie algebra spanning (commutator matrices generate su(2) for qubit, su(3) directions for qutrit).
 
 **What's missing:**
-- **21 sorry remaining**, all technical not mathematical:
-  - 16 in Uqsl2AffineHopf (affine Hopf algebra) — blocked by a RingQuot typeclass divergence bug in Lean 4. The Ring lemmas (zero_mul, mul_zero, etc.) fail to fire on the quotient type. Deep research submitted for workaround.
+- **17 sorry remaining**, all technical not mathematical:
+  - 12 in Uqsl2AffineHopf (affine Hopf algebra) — blocked by RingQuot typeclass divergence bug. 4 KE/KF antipode cases closed manually this session. Aristotle 6dbc9447 in flight with workaround hints.
   - 3 in Uqsl3Hopf — same RingQuot pattern.
   - 2 in CenterFunctor — needs actual functor construction, not Nonempty.
 - The Kazhdan-Lusztig equivalence Rep(u_q) = SU(2)_k-MTC is stated but not constructively proved (the full proof is 200 pages). Data-level verification done for k=1,2.
-- The S-matrix/Muger bridge theorem (det(S) != 0 iff Z_2 trivial) is verified computationally for specific MTCs but not proved in full generality.
+- The S-matrix/Muger bridge theorem Direction 1 (det(S) ≠ 0 → Z₂ trivial) is now proved as a GENERAL theorem (ModularityTheorem.lean) — pure linear algebra, no MTC-specific properties needed. Direction 2 (Z₂ trivial → det(S) ≠ 0) requires Muger's categorical trace machinery and is not yet formalized.
 - Generic Hopf algebra structure for U_q(g) (Wave 2 of Phase 5m) not yet built.
 - The lean-tensor-categories library has been extracted (20 files, 114 theorems, 78 defs, zero sorry) but the Mathlib PR process has not started.
 
@@ -132,11 +135,15 @@ Recently completed (Phase 5p, April 8 2026):
 **1+1D proof-of-concept:** 3450 model anomaly cancellation proved, Villain Hamiltonian formalized (first in any proof assistant), K-matrix formalism built, TPF disentangler properties verified.
 
 **The three gaps:**
-1. **4+1D gapped interface conjecture** — the critical assumption. This is an axiom (gapped_interface_axiom, hard eliminability). Proving it requires resolving a Yang-Mills-mass-gap-difficulty problem. No numerical evidence exists for or against.
+1. **4+1D gapped interface conjecture** — the project's ONLY axiom (`gapped_interface_axiom` in SPTClassification.lean, eliminability: hard). This is the single load-bearing assumption in the entire codebase that is not a standard textbook result. Assessment:
+   - *Evidence for:* The 1+1D analog is proved (3450 model, formalized in VillainHamiltonian.lean). The **2+1D analog is proved** (Fidkowski-Kitaev 8-Majorana gapping, machine-checked in FKGappedInterface.lean — first FK formalization in any proof assistant, 16×16 integer Hamiltonian with spectral gap Δ=2, unique ground state, fermion parity preserved). The TPF construction (PRL 136, 2026) is built on this conjecture. Anomaly matching arguments are consistent. Butt-Catterall-Hasenfratz (PRL 2025) SMG numerical evidence is supportive.
+   - *Evidence against / risks:* No proof exists in 3+1D. No numerical evidence in 4+1D (lattice too large). Proving the spectral gap requires Yang-Mills-mass-gap-difficulty techniques. Misumi instability and Kapustin-Fidkowski no-go (finite-dim CP can't have nonzero Hall conductance) create known obstructions that the TPF construction circumvents via infinite-dimensional rotor spaces — but this makes the gap question harder.
+   - *Blast radius if wrong:* Chirality wall analysis (Papers 7/8) would need revision. All other chains (generation constraint, Hawking radiation, quantum groups, emergent gravity) are completely independent — zero impact.
+   - *Assessment:* Reasonable conjecture, backed by PRL-level research, but genuinely unproved and potentially unprovable with current techniques. Correctly rated as "hard" eliminability.
 2. **The gauging step** — promoting non-on-site chiral symmetry to a dynamical gauge field. The Onsager algebra is non-compact; gauging non-compact lattice symmetries is an open problem. Misumi instability is a known risk.
-3. **Full Z_16 cobordism** — 15-25 person-years to formalize. Algebraic layer done (A(1) Ext, mod 8 bound). Topological factor of 2 axiomatized.
+3. **Full Z_16 cobordism** — 15-25 person-years to formalize. Algebraic layer done (A(1) Ext computation machine-checked in Phase 5q, mod 8 bound proved). Topological factor of 2 enters through 3 focused hypotheses (H1, H3, H4 — see Chain 2).
 
-**Implication:** The chirality wall is cracking but not broken. The formal analysis demonstrates that the GS no-go theorem and the TPF construction operate in genuinely different mathematical frameworks. But three gaps remain between "the no-go doesn't apply" and "chirality is achievable." This is the most actively contested frontier in lattice QFT, and this project's formal analysis is the only machine-checked contribution to the debate.
+**Implication:** The chirality wall is cracking but not broken. The formal analysis demonstrates that the GS no-go theorem and the TPF construction operate in genuinely different mathematical frameworks. But three gaps remain between "the no-go doesn't apply" and "chirality is achievable." The gapped interface axiom is the single load-bearing assumption — if it falls, the chirality conclusion falls with it, but nothing else in the project is affected. This is the most actively contested frontier in lattice QFT, and this project's formal analysis is the only machine-checked contribution to the debate.
 
 ---
 
@@ -154,7 +161,7 @@ Recently completed (Phase 5p, April 8 2026):
 - Gauge erasure: only U(1)_EM survives passage through a fluid layer. SU(2) and SU(3) produce domain walls, not Goldstone modes. Universal structural theorem, machine-proved. Implication: non-Abelian gauge forces cannot emerge from fluid dynamics but CAN originate from topological order (via the quantum group route in Chain 3).
 
 **What's open:**
-- Abelian instantons (Csaki et al. 2024) generate unsuppressed 8-fermion vertices for N_f=4 — a non-perturbative mechanism that could bridge the coupling deficit. Not formalized.
+- Abelian instantons (Csaki et al. 2024) generate unsuppressed 8-fermion vertices for N_f=4 — a non-perturbative mechanism that could bridge the coupling deficit. **Assessed as NOT formalizable** (Phase 5s): the needed index theorem (half-integer Chern number on R⁴ minus a line with bag boundary conditions) does not exist in mathematics. The O(1) coupling is real physics (confirmed by exact Schwinger model reduction) but cannot be machine-checked.
 - Volovik's vestigial gravity (metric without tetrad): mean-field confirms the vestigial window, MC pending (L=8 RHMC running, matrix-free stencil unlocks L=12+).
 - Fermi-point |N|=2 gauge emergence: formalized with explicit rigor tracking (theorem/heuristic/speculative per step). Theorem-level through step 2 only. SU(3) more speculative than SU(2) (proved). Could bypass the spin-connection gap but introduces its own unsolved chirality problem (vector coupling, not chiral).
 - The spin-connection gap (U(1) to SO(3,1)) has no known path. This is the true showstopper for the Wen-ADW route.
@@ -196,7 +203,7 @@ Recently completed (Phase 5p, April 8 2026):
 - Fibonacci universality for quantum computation
 
 **Layer 2 — Solid structural results with known gaps:**
-- The quantum group → MTC → TQFT chain (21 sorry from RingQuot bug, not mathematical difficulty)
+- The quantum group → MTC → TQFT chain (17 sorry: 15 from RingQuot bug + 2 CenterFunctor, not mathematical difficulty)
 - Chirality wall three-pillar analysis (gaps clearly identified, rigor-tracked)
 - ADW gap equation (solution exists, G_c proved, coupling deficit quantified)
 - Fermi-point gauge emergence (rigor tracked: theorem/heuristic/speculative)
@@ -211,7 +218,7 @@ Recently completed (Phase 5p, April 8 2026):
 
 ### Publication situation
 
-14 papers, 0 submitted. The project is in its 3rd week. Earlier papers' foundations and claims shifted as development continued (e.g., KMS bug discovered in Phase 1, FDR sign uniqueness resolved in Phase 2, coupling deficit discovered in Phase 5f). The strategy of pushing boundaries before locking down papers has been deliberate — parallel processing advantage and chain strengthening while allowing stabilization.
+15 papers, 0 submitted. The project is in its 3rd week. Earlier papers' foundations and claims shifted as development continued (e.g., KMS bug discovered in Phase 1, FDR sign uniqueness resolved in Phase 2, coupling deficit discovered in Phase 5f). The strategy of pushing boundaries before locking down papers has been deliberate — parallel processing advantage and chain strengthening while allowing stabilization.
 
 External constraints:
 - arXiv requires a voucher for first submissions
@@ -219,7 +226,7 @@ External constraints:
 
 ### Strongest publication candidates
 
-1. **Paper 10 (modular generation constraint)** — clean, surprising, fully proved with zero axioms. Independent of other chains.
+1. **Paper 10 (modular generation constraint)** — clean, surprising, fully proved with zero axioms. Now backed by machine-checked Ext computation (Phase 5q) + change-of-rings discharge (Phase 5r). Independent of other chains.
 2. **Paper 11 (quantum group formalization)** — genuine firsts (Hopf algebra, quantum group). The Muger center + FP dimension work strengthens it further.
 3. **Paper 12 (polariton analog Hawking)** — experimentally actionable, timely (Paris group active).
 4. **Papers 7/8 (chirality wall)** — timely given active TPF/GS debate in lattice QFT community.
@@ -230,7 +237,7 @@ The single highest-leverage fix is resolving the RingQuot typeclass divergence i
 
 ---
 
-## Module Inventory (~128 Lean modules as of April 8, 2026)
+## Module Inventory (~130 Lean modules as of April 8, 2026)
 
 ### Phase 1-2 (7 modules): AcousticMetric, SKDoubling, HawkingUniversality, SecondOrderSK, WKBAnalysis, CGLTransform, Basic
 ### Phase 3 (6 modules): ThirdOrderSK, GaugeErasure, WKBConnection, ADWMechanism, ChiralityWall, VestigialGravity
@@ -244,7 +251,9 @@ The single highest-leverage fix is resolving the RingQuot typeclass divergence i
 ### Phase 5f-5g (3 modules): TQFTPartition, FigureEightKnot, EmergentGravityBounds
 ### Phase 5h-5j (5 modules): SPTClassification, GaugingStep, Uqsl3, Uqsl3Hopf, SU3kFusion, PolyQuotQ, FermiPointTopology
 ### Phase 5k-5p (30 modules, new): TemperleyLieb, JonesWenzl, WRTInvariant, WRTComputation, SurgeryPresentation, QuantumGroupHopf, QuantumGroupGeneric, KMatrixAnomaly, SPTStacking, VillainHamiltonian, TPFDisentangler, StringNet, KacWaltonFusion, FPDimension, MugerCenter, IsingGates, FibonacciBraiding, FibonacciQutrit, FibonacciUniversality, FibonacciQutritUniversality, QCyc5Ext, + ExtractDeps (infrastructure)
-### Phase 5q (4 modules, new): A1Ring (Steenrod multiplication verified), A1Resolution (d^2=0 + exactness), A1Ext (minimality + Ext dimensions), ExtBordismBridge (4 decomposed hypotheses + generation constraint chain)
+### Phase 5q (4 modules): A1Ring, A1Resolution, A1Ext, ExtBordismBridge
+### Phase 5r (1 module): ChangeOfRings (H2 discharged)
+### Phase 5s (2 new modules + 1 updated): FKGappedInterface (FK 8-Majorana gapping, first in any proof assistant), ModularityTheorem (general det(S)≠0 → Z₂ trivial), SU2kFusion extended (k=5 fusion + comm + assoc verified)
 
 ---
 

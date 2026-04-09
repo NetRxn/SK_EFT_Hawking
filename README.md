@@ -86,8 +86,9 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ## Technical Summary
 
-**Lean 4 formalization:** 2232 theorems (2150 substantive + 82 placeholder) across 94 modules. 1 axiom (gapped_interface_axiom), 33 sorry pending Aristotle.
-307+ Aristotle-proved across 43+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** 2237+ theorems (2153+ substantive + ~84 placeholder) across 128 modules. 1 axiom (gapped_interface_axiom), 17 sorry (Aristotle in flight).
+322+ Aristotle-proved across 43+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**First machine-checked Ext computation over any Steenrod subalgebra** (Phase 5q, April 2026).
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
 
@@ -97,7 +98,7 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (2232 theorems, 1 axiom, 94 modules, 33 sorry pending Aristotle)
+├── lean/                              # Lean 4 formalization (2237+ theorems, 1 axiom, 128 modules, 17 sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
 │   ├── lean-toolchain                 # Lean 4 v4.28.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 94 theorem modules)
@@ -208,7 +209,7 @@ SK_EFT_Hawking/
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (307+ proved, 33 sorry)
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (322+ proved, 17 sorry)
 │   │   ├── visualizations.py          # Plotly figures (89 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
@@ -416,14 +417,14 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
 | Browse the dashboard | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
 | Read non-technical summaries | `docs/stakeholder/` — implications and strategic positioning per phase |
-| See what's next | [`docs/roadmaps/Phase5q_Roadmap.md`](docs/roadmaps/Phase5q_Roadmap.md) (Ext computation), [`Phase5r_Roadmap.md`](docs/roadmaps/Phase5r_Roadmap.md) (bordism chain), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
+| See what's next | [`docs/roadmaps/Phase5s_Roadmap.md`](docs/roadmaps/Phase5s_Roadmap.md) (FK gapped interface, Muger general, KL data, sorry closure), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
 | Understand the broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
 | Read the critical review | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
 | See the deep research corpus | `Lit-Search/` — 40+ research files across Phases 3-5j |
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (2232 theorems — 1 axiom, 33 sorry pending Aristotle)
+## Theorem Inventory (2237+ theorems — 1 axiom, 17 sorry)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|

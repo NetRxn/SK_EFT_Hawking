@@ -125,6 +125,9 @@ import SKEFTHawking.A1Ring
 import SKEFTHawking.A1Resolution
 import SKEFTHawking.A1Ext
 import SKEFTHawking.ExtBordismBridge
+import SKEFTHawking.ChangeOfRings
+import SKEFTHawking.FKGappedInterface
+import SKEFTHawking.ModularityTheorem
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

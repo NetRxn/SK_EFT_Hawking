@@ -176,6 +176,14 @@ def main():
                         help='MD integration steps per trajectory. '
                              'Higher = better acceptance, slower per traj. '
                              'L=4: 20, L=8: 80, L=16: 100+. Target |dH| < 1.')
+    parser.add_argument('--tau', type=float, default=None,
+                        help='MD trajectory length. Default: n_md_steps/160 '
+                             '(preserves step size eps=1/160 from the original tuning). '
+                             'Shorter tau = smaller |dH| but worse autocorrelation.')
+    parser.add_argument('--n-poles', type=int, default=12,
+                        help='Zolotarev poles for rational approximation. '
+                             '12 = good balance of accuracy and CG cache pressure. '
+                             '24 = original (slower due to L2 thrashing at L>=8).')
     parser.add_argument('--workers', type=int, default=4,
                         help='Parallel coupling workers. '
                              'Keep <= physical cores - 2 to avoid thermal throttling.')
@@ -186,6 +194,11 @@ def main():
     args = parser.parse_args()
 
     L = args.l
+    # Tau defaults to n_md_steps/160 to preserve the step size eps=1/160
+    # that was tuned for L=8 acceptance. Shorter tau = fewer steps at same eps.
+    tau = args.tau if args.tau is not None else args.n_md_steps / 160.0
+    n_poles = args.n_poles
+
     g_values = np.linspace(args.g_min, args.g_max, args.n_couplings)
     # Optionally add fine-grained points in the critical region
     if args.g_critical_min is not None and args.g_critical_max is not None:
@@ -203,17 +216,18 @@ def main():
             else:
                 n_partial += 1
 
+    eps = tau / args.n_md_steps
     print(f"{'='*70}")
-    print(f"RHMC Production: L={L}, {args.n_couplings} couplings x {args.n_traj} traj")
-    print(f"  Complex pseudofermion (Schaich-DeGrand), 24-pole Zolotarev")
+    print(f"RHMC Production: L={L}, {len(g_values)} couplings x {args.n_traj} traj")
+    print(f"  Complex pseudofermion (Schaich-DeGrand), {n_poles}-pole Zolotarev")
+    print(f"  tau={tau:.3f}, eps={eps:.6f}, MD steps={args.n_md_steps}")
     print(f"  Progress: {n_complete} complete, {n_partial} partial, "
-          f"{args.n_couplings - n_complete - n_partial} new")
-    print(f"  Workers: {args.workers}, MD steps: {args.n_md_steps}, "
-          f"chunk: {args.chunk_size} traj")
+          f"{len(g_values) - n_complete - n_partial} new")
+    print(f"  Workers: {args.workers}, chunk: {args.chunk_size} traj")
     print(f"  Output: {DATA_DIR}/L{L}_g*.npz")
     print(f"{'='*70}")
 
-    if n_complete == args.n_couplings:
+    if n_complete == len(g_values):
         print("All couplings already complete!")
         return
 
@@ -223,12 +237,12 @@ def main():
         L, g_values[len(g_values)//2], args.seed, 50, *cg)
     print(f"  Spectrum: [{lam_min:.3f}, {lam_max:.1f}], kappa={lam_max/lam_min:.0f}")
 
-    a0, alphas, betas = compute_zolotarev_coefficients(24, lam_min, lam_max, -0.25)
-    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(24, lam_min, lam_max, -0.375)
+    a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.25)
+    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.375)
 
     tasks = []
     for i, g in enumerate(g_values):
-        tasks.append((L, g, args.n_traj, args.n_therm, args.n_md_steps, 1.0,
+        tasks.append((L, g, args.n_traj, args.n_therm, args.n_md_steps, tau,
                        a0, np.array(alphas), np.array(betas),
                        a0_hb, np.array(alphas_hb), np.array(betas_hb),
                        args.seed + i * 10000, cg, args.chunk_size))

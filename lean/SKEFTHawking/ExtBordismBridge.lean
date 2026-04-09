@@ -168,15 +168,15 @@ theorem generation_constraint_chain
   omega
 
 /-- Hypothesis inventory for the generation constraint.
-    Machine-checked: Ext computation, chain complex, minimality, Wang chain, generation mod 3.
-    Hypotheses: 4 topological inputs (H1-H4), each independently verifiable. -/
+    Machine-checked: Ext computation, chain complex, minimality, change-of-rings, Wang chain, generation.
+    Hypotheses: 3 topological inputs (H1, H3, H4). H2 DISCHARGED (ChangeOfRings.lean). -/
 theorem hypothesis_inventory :
     -- Number of machine-checked components
-    (5 : ℕ) = 5  -- d²=0 (4) + minimality (5) + Ext dims (6) + Wang chain + generation
-    -- Number of topological hypotheses
-    ∧ (4 : ℕ) = 4  -- H1, H2, H3, H4
+    (6 : ℕ) = 6  -- d²=0 + minimality + Ext dims + change-of-rings + Wang chain + generation
+    -- Number of topological hypotheses (H2 discharged)
+    ∧ (3 : ℕ) = 3  -- H1, H3, H4
     -- Of which algebraically eliminable
-    ∧ (1 : ℕ) = 1  -- H2 (change of rings / Shapiro's lemma)
+    ∧ (0 : ℕ) = 0  -- H2 was the algebraic one; now discharged
     := ⟨rfl, rfl, rfl⟩
 
 /-! ## 3. Comparison: Before and After

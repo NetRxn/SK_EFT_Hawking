@@ -117,8 +117,13 @@ def test_no_active_sorry():
     Files in SORRY_ALLOWED are awaiting Aristotle proof-filling and are
     expected to contain sorry stubs. Remove from this set as proofs are filled.
     """
-    # Sorry stubs pending Aristotle proof-filling
-    SORRY_ALLOWED = {"QNumber.lean", "Uqsl2.lean"}
+    # Sorry stubs pending Aristotle proof-filling (17 sorry across 3 files)
+    # Aristotle 6dbc9447 in flight targeting these.
+    SORRY_ALLOWED = {
+        "Uqsl2AffineHopf.lean",   # 12 sorry (RingQuot typeclass workaround needed)
+        "Uqsl3Hopf.lean",         # 3 sorry (same RingQuot pattern)
+        "CenterFunctor.lean",     # 2 sorry (needs actual functor construction)
+    }
 
     lean_dir = LEAN_DIR / "SKEFTHawking"
     for lean_file in lean_dir.glob("*.lean"):
@@ -156,23 +161,30 @@ def test_no_active_sorry():
 def test_sorry_gap_registry():
     """Verify the Aristotle sorry-gap registry state.
 
-    Wave 4A adds 11 new sorry stubs (4 KLinearCategory + 7 SphericalCategory)
-    pending Aristotle proof-filling. Prior waves have all gaps filled.
+    17 sorry across 3 files (Uqsl2AffineHopf 12, Uqsl3Hopf 3, CenterFunctor 2).
+    Registry tracks 9 unfilled gap GROUPS (some groups contain multiple sorry).
+    Aristotle 6dbc9447 in flight targeting all of these.
     """
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
-    # 9 unfilled sorry gap groups registered across Phases 5d-5f
-    # Batch 1 (in flight): su2k_mtc_pentagon_twist, fibonacci_mtc_pentagon_dim
-    # Batch 2 (P1): affine_hopf_relation_respect, coideal_embedding_proofs
-    # Batch 3 (P2): stimulated_hawking_analysis, verified_statistics_bounds, rep_uq_fusion_algebraic
-    # Batch 4 (P3): center_functor_equivalence, kerr_schild_inverse, emergent_gravity_coupling_bounds
+    # 9 unfilled sorry gap groups as of April 8, 2026
+    # Phase 5d-5f (carried forward):
+    #   affine_hopf_relation_respect (12 sorry in Uqsl2AffineHopf)
+    #   stimulated_hawking_analysis, rep_uq_fusion_algebraic
+    #   center_functor_equivalence, emergent_gravity_coupling_bounds
+    # Phase 5i (Uqsl3Hopf):
+    #   comulFreeAlg3_respects_rel, counitFreeAlg3_respects_rel
+    #   antipodeFreeAlg3_respects_rel, uq3_antipode_squared
     expected_unfilled = {
-        "su2k_mtc_pentagon_twist", "fibonacci_mtc_pentagon_dim",
-        "affine_hopf_relation_respect", "coideal_embedding_proofs",
-        "stimulated_hawking_analysis", "verified_statistics_bounds",
+        "affine_hopf_relation_respect",
+        "stimulated_hawking_analysis",
         "rep_uq_fusion_algebraic",
-        "center_functor_equivalence", "kerr_schild_inverse",
+        "center_functor_equivalence",
         "emergent_gravity_coupling_bounds",
+        "comulFreeAlg3_respects_rel",
+        "counitFreeAlg3_respects_rel",
+        "antipodeFreeAlg3_respects_rel",
+        "uq3_antipode_squared",
     }
     actual_unfilled = {g.name for g in unfilled}
     assert actual_unfilled == expected_unfilled, (

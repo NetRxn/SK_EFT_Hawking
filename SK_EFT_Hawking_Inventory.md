@@ -636,8 +636,9 @@
 | Phase5d_Roadmap.md | docs/roadmaps/ | Complete — tetrad gap, MTC instances, polariton, verified statistics |
 | Phase5e_Roadmap.md | docs/roadmaps/ | Complete — braided MTCs, knot invariants, affine Hopf, higher-k. Phases 5h-5j active (gauging, rank-2 QG, SU(3)_k, Fermi-point) |
 | Phase5f-5p_Roadmaps | docs/roadmaps/ | Phases 5f-5p: TQFT, matrix-free CG, chirality 3+1D, rank-2 QG, Fermi-point, WRT TQFT, TQC, generic U_q(g), anomaly inflow, community value, Muger center |
-| Phase5q_Roadmap.md | docs/roadmaps/ | **NEW** — Ext computation over A(1): algebraic core of Rokhlin (deep research ready) |
-| Phase5r_Roadmap.md | docs/roadmaps/ | **NEW** — Change-of-rings and bordism chain decomposition (blocked on 5q) |
+| Phase5q_Roadmap.md | docs/roadmaps/ | **COMPLETE** — Ext computation over A(1): first in any proof assistant |
+| Phase5r_Roadmap.md | docs/roadmaps/ | **COMPLETE** — H2 discharged, H3/H4 assessed as irreducibly topological |
+| Phase5s_Roadmap.md | docs/roadmaps/ | **NEW** — Obstacle decomposition: FK 2+1D gapped interface, Muger general theorem, KL data k=3-5, sorry closure |
 | RESEARCH_STATUS_OVERVIEW.md | docs/ | **NEW** — Big-picture assessment of all 6 proof chains, gaps, implications |
 | Phase6_Roadmap.md | docs/roadmaps/ | Planning |
 | Phase6_Deferred_Targets.md | docs/roadmaps/ | Deferred targets |

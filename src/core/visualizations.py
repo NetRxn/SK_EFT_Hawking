@@ -6355,5 +6355,242 @@ def fig_surgery_presentation() -> go.Figure:
     return fig
 
 
+def fig_ext_chart() -> go.Figure:
+    """Ext chart for A(1) in the (stem, filtration) plane.
+
+    Shows the E₂ page of the Adams spectral sequence for ko:
+    Ext^{s,t}_{A(1)}(F₂, F₂) with stem = t-s on x-axis, filtration = s on y-axis.
+    The infinite h₀-tower in stem 4 detects π₄(ko) ≅ ℤ.
+
+    Machine-checked: A1Ext.lean (dims 1,2,2,2,3,4), A1Resolution.lean (d²=0, exactness)
+    Lean: ext_dim_0..ext_dim_5, h0_tower_stem4_starts
+    """
+    from src.core.formulas import a1_ext_generator_bidegrees
+
+    # Ext generators with labels
+    generators = {
+        0: [((0, 0), '1')],
+        1: [((1, 1), 'h₀'), ((1, 2), 'h₁')],
+        2: [((2, 2), 'h₀²'), ((2, 4), 'h₁²')],
+        3: [((3, 3), 'h₀³'), ((3, 7), 'v')],
+        4: [((4, 4), 'h₀⁴'), ((4, 8), 'h₀v'), ((4, 12), 'w₁')],
+        5: [((5, 5), 'h₀⁵'), ((5, 9), 'h₀²v'), ((5, 13), 'h₀w₁'), ((5, 14), 'h₁w₁')],
+    }
+
+    stems = []
+    filts = []
+    labels = []
+    colors = []
+
+    for n, gens in generators.items():
+        for (s, t), label in gens:
+            stem = t - s
+            stems.append(stem)
+            filts.append(s)
+            labels.append(label)
+            # Color by family
+            if 'h₁' in label and 'h₀' not in label:
+                colors.append(COLORS.get('heidelberg', '#B44682'))
+            elif 'v' in label or 'w' in label:
+                colors.append(COLORS.get('trento', '#D4A843'))
+            else:
+                colors.append(COLORS.get('steinhauer', '#4682B4'))
+
+    fig = go.Figure()
+
+    # Plot generators as dots
+    fig.add_trace(go.Scatter(
+        x=stems, y=filts, mode='markers+text',
+        marker=dict(size=12, color=colors, line=dict(width=1, color='black')),
+        text=labels, textposition='top center',
+        textfont=dict(size=10, family='CMU Serif, serif'),
+        hovertemplate='stem=%{x}, s=%{y}, %{text}<extra></extra>',
+    ))
+
+    # Draw h₀-towers (vertical lines connecting h₀-multiples)
+    tower_stems = {0: [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                   4: [(3, 7), (4, 8), (5, 9)]}
+    for stem_val, points in tower_stems.items():
+        ss = [t - s for s, t in points]
+        fs = [s for s, t in points]
+        fig.add_trace(go.Scatter(
+            x=ss, y=fs, mode='lines',
+            line=dict(color=COLORS.get('steinhauer', '#4682B4'), width=2, dash='dot'),
+            showlegend=False, hoverinfo='skip',
+        ))
+
+    apply_layout(fig,
+        xaxis=dict(title='Stem (t − s)', dtick=1, range=[-0.5, 10.5]),
+        yaxis=dict(title='Filtration (s)', dtick=1, range=[-0.5, 6.5], autorange='reversed'),
+        title=dict(
+            text='Ext<sup>s,t</sup><sub>A(1)</sub>(F₂, F₂) — Adams E₂ Page for ko',
+            font=TITLE_FONT),
+        height=450, width=700,
+        margin=dict(l=60, r=20, t=60, b=60),
+    )
+
+    # Annotations
+    fig.add_annotation(x=0, y=6.2, text='h₀-tower → ℤ',
+        showarrow=False, font=dict(size=11, color=COLORS.get('steinhauer', '#4682B4')))
+    fig.add_annotation(x=4, y=6.2, text='h₀-tower → ℤ (stem 4)',
+        showarrow=False, font=dict(size=11, color=COLORS.get('trento', '#D4A843')))
+
+    return fig
+
+
+def fig_a1_resolution_structure() -> go.Figure:
+    """Resolution structure diagram for F₂ over A(1).
+
+    Shows the bidiagonal pattern of the minimal free resolution:
+    Sq(1) on diagonal, Sq(2,1) on superdiagonal, with ranks and
+    generator degrees at each level.
+
+    Machine-checked: A1Resolution.lean (d²=0, RREF witnesses, exactness)
+    Lean: d1_d2_zero..d4_d5_zero, d1_kernel_card..d3_kernel_card, d4_rref_valid, d5_rref_valid
+    """
+    ranks = [1, 2, 2, 2, 3, 4]
+    gen_degrees = [
+        [0],           # P₀
+        [1, 2],        # P₁
+        [2, 4],        # P₂
+        [3, 7],        # P₃
+        [4, 8, 12],    # P₄
+        [5, 9, 13, 14], # P₅
+    ]
+    diff_labels = ['ε', 'd₁', 'd₂', 'd₃', 'd₄', 'd₅']
+    diff_entries = [
+        'proj',
+        '[Sq(1), Sq(2)]',
+        '[[Sq(1), Sq(3)], [0, Sq(2)]]',
+        '[[Sq(1), Sq(2,1)], [0, Sq(3)]]',
+        '[[Sq(1), Sq(2,1), 0], [0, Sq(1), Sq(2,1)]]',
+        '[[Sq(1), Sq(2,1), 0, 0], ...]',
+    ]
+
+    fig = go.Figure()
+
+    # Module boxes
+    for i, (r, degs) in enumerate(zip(ranks, gen_degrees)):
+        x = i * 1.5
+        deg_str = ', '.join(str(d) for d in degs)
+        fig.add_trace(go.Scatter(
+            x=[x], y=[0], mode='markers+text',
+            marker=dict(size=40, color=COLORS.get('steinhauer', '#4682B4'),
+                       symbol='square', opacity=0.3),
+            text=[f'P_{i}<br>rk {r}<br>({deg_str})'],
+            textposition='middle center',
+            textfont=dict(size=9, family='CMU Serif, serif'),
+            showlegend=False,
+            hovertemplate=f'P_{i}: rank {r}, generators at degrees {deg_str}<extra></extra>',
+        ))
+
+    # Arrows between modules
+    for i in range(len(ranks) - 1):
+        fig.add_annotation(
+            x=i * 1.5 + 0.4, y=0,
+            ax=(i + 1) * 1.5 - 0.4, ay=0,
+            xref='x', yref='y', axref='x', ayref='y',
+            showarrow=True, arrowhead=2, arrowsize=1.5,
+            arrowcolor=COLORS.get('dissipative', '#C0392B'),
+        )
+        fig.add_annotation(
+            x=(i * 1.5 + (i + 1) * 1.5) / 2, y=0.15,
+            text=diff_labels[i + 1], showarrow=False,
+            font=dict(size=10, color=COLORS.get('dissipative', '#C0392B')),
+        )
+
+    # F₂ target
+    fig.add_trace(go.Scatter(
+        x=[-1.2], y=[0], mode='markers+text',
+        marker=dict(size=30, color=COLORS.get('trento', '#D4A843'),
+                   symbol='square', opacity=0.3),
+        text=['F₂'], textposition='middle center',
+        textfont=dict(size=11, family='CMU Serif, serif', color='black'),
+        showlegend=False,
+    ))
+    fig.add_annotation(
+        x=-0.85, y=0, ax=0 - 0.4, ay=0,
+        xref='x', yref='y', axref='x', ayref='y',
+        showarrow=True, arrowhead=2, arrowsize=1.5,
+        arrowcolor=COLORS.get('dissipative', '#C0392B'),
+    )
+    fig.add_annotation(x=-0.6, y=0.15, text='ε', showarrow=False,
+        font=dict(size=10, color=COLORS.get('dissipative', '#C0392B')))
+
+    apply_layout(fig,
+        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False,
+                  range=[-1.8, 8.2]),
+        yaxis=dict(showticklabels=False, showgrid=False, zeroline=False,
+                  range=[-0.5, 0.5]),
+        title=dict(
+            text='Minimal Free Resolution of F₂ over A(1)',
+            font=TITLE_FONT),
+        height=250, width=900,
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
+
+    # Pattern annotation
+    fig.add_annotation(x=3.5, y=-0.35,
+        text='Bidiagonal pattern: Sq(1) diagonal, Sq(2,1) superdiagonal — 4-fold periodic via w₁',
+        showarrow=False, font=dict(size=10, color='gray'))
+
+    return fig
+
+
+def fig_fk_spectrum() -> go.Figure:
+    """Fidkowski-Kitaev 8-Majorana Hamiltonian spectrum.
+
+    Shows the 5 distinct eigenvalues with multiplicities,
+    highlighting the unique ground state at E₀=-7 and spectral gap Δ=2.
+
+    Machine-checked: FKGappedInterface.lean (20 theorems, zero sorry)
+    Lean: complete_spectrum, spectral_gap_positive, H_FK_symmetric
+    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010)
+    """
+    eigenvalues = [-7, -5, -1, 1, 3]
+    multiplicities = [1, 1, 4, 7, 3]
+    labels = ['E₀=-7\n(ground, unique)', 'E₁=-5', 'E₂=-1', 'E₃=+1', 'E₄=+3']
+
+    fig = go.Figure()
+
+    # Energy levels as horizontal lines
+    for i, (E, m, label) in enumerate(zip(eigenvalues, multiplicities, labels)):
+        color = COLORS.get('dissipative', '#C0392B') if i == 0 else \
+                COLORS.get('steinhauer', '#4682B4') if i == 1 else \
+                COLORS.get('horizon', '#808080')
+        width = 4 if i == 0 else 2
+
+        fig.add_trace(go.Scatter(
+            x=[0.2, 0.8], y=[E, E], mode='lines',
+            line=dict(color=color, width=width),
+            showlegend=False,
+            hovertemplate=f'E={E}, multiplicity={m}<extra></extra>',
+        ))
+        fig.add_annotation(x=1.05, y=E, text=f'm={m}',
+            showarrow=False, font=dict(size=11, color=color))
+
+    # Spectral gap arrow
+    fig.add_annotation(
+        x=0.1, y=-7, ax=0.1, ay=-5,
+        xref='x', yref='y', axref='x', ayref='y',
+        showarrow=True, arrowhead=3, arrowsize=1.5,
+        arrowcolor=COLORS.get('trento', '#D4A843'),
+    )
+    fig.add_annotation(x=-0.05, y=-6, text='Δ=2',
+        showarrow=False, font=dict(size=12, color=COLORS.get('trento', '#D4A843')))
+
+    apply_layout(fig,
+        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.3, 1.5]),
+        yaxis=dict(title='Energy', dtick=2),
+        title=dict(
+            text='Fidkowski-Kitaev 8-Majorana Spectrum (Machine-Checked)',
+            font=TITLE_FONT),
+        height=400, width=400,
+        margin=dict(l=60, r=60, t=60, b=40),
+    )
+
+    return fig
+
+
 if __name__ == "__main__":
     main()

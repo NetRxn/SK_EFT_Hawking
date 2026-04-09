@@ -192,6 +192,34 @@ class TestExt:
         assert 12 - 4 == 8  # w₁ stem = 8
 
 
+class TestBordismHypotheses:
+    """Tests for the bordism hypothesis decomposition (Phase 5r)."""
+
+    def test_hypothesis_count(self):
+        """3 topological hypotheses remain after H2 discharged."""
+        from src.core.formulas import bordism_hypothesis_count
+        status = bordism_hypothesis_count()
+        assert status['total_hypotheses'] == 3
+        assert status['discharged'] == 1
+        assert status['topological'] == 3
+        assert status['sorry_introduced'] == 0
+        assert status['axioms_introduced'] == 0
+
+    def test_hypothesis_registry(self):
+        """All 4 hypotheses tracked in constants with correct eliminability."""
+        from src.core.constants import BORDISM_HYPOTHESES
+        assert len(BORDISM_HYPOTHESES) == 4
+        assert BORDISM_HYPOTHESES['H2']['eliminability'] == 'algebraic'
+        for key in ['H1', 'H3', 'H4']:
+            assert BORDISM_HYPOTHESES[key]['eliminability'] == 'topological'
+
+    def test_machine_checked_components(self):
+        """6 machine-checked components in the generation constraint chain."""
+        from src.core.formulas import bordism_hypothesis_count
+        status = bordism_hypothesis_count()
+        assert status['machine_checked_components'] == 6
+
+
 class TestRREF:
     """Tests for RREF witness computation."""
 

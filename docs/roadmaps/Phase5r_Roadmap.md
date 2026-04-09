@@ -157,13 +157,14 @@ Tracks A, B, C are independent after Phase 5q completes. Track A is highest valu
 
 | Wave | Scope | LOE | Dependencies | Status |
 |------|-------|-----|-------------|--------|
-| Wave 1 | Deep research: A/A(1) freeness | 1-2 days | Phase 5q complete | Blocked |
-| Wave 2 | Steenrod algebra in low degrees | 2-3 weeks | Wave 1 | Blocked |
-| Wave 3 | Change-of-rings in degree 4 | 2-4 weeks | Wave 2 + 5q W4 | Blocked |
-| Wave 4 | ASS collapse assessment | 1-3 weeks | Phase 5q complete | Blocked |
-| Wave 5 | K3 formalizability assessment | 1 day | None | Ready (low priority) |
+| Wave 1 | Deep research: A/A(1) freeness | 1-2 days | Phase 5q complete | **BYPASSED** — change-of-rings proved abstractly |
+| Wave 2 | Steenrod algebra in low degrees | 2-3 weeks | Wave 1 | **BYPASSED** — not needed for abstract proof |
+| Wave 3 | Change-of-rings in degree 4 | 2-4 weeks | Wave 2 + 5q W4 | **COMPLETE** (ChangeOfRings.lean, H2 discharged) |
+| Wave 4 | ASS collapse assessment | 1-3 weeks | Phase 5q complete | **ASSESSED** — genuinely topological, cannot be discharged algebraically. Potential d₃(h₁²) → v requires Bott periodicity to rule out. H3 stays as hypothesis. |
+| Wave 5 | K3 formalizability assessment | 1 day | None | **ASSESSED** — Mathlib lacks smooth manifolds/algebraic geometry. H4 stays as hypothesis. |
 
-**Total estimated LOE:** 6-12 weeks (after Phase 5q).
+**Total actual LOE for Track A:** ~1 hour (the abstract adjunction argument bypasses Waves 1-2 entirely).
+**Original estimate:** 6-12 weeks.
 
 ---
 
@@ -171,17 +172,19 @@ Tracks A, B, C are independent after Phase 5q completes. Track A is highest valu
 
 | # | Topic | File | Status |
 |---|-------|------|--------|
-| 1 | A over A(1) freeness in low degrees | Lit-Search/Tasks/Phase5r_steenrod_algebra_A1_freeness.md | Not yet written |
-| 2 | ASS collapse in total degree 4 | Lit-Search/Tasks/Phase5r_ASS_collapse_degree_4.md | Not yet written |
+| 1 | A over A(1) freeness | Lit-Search/Tasks/Phase5r_steenrod_algebra_A1_freeness.md | Written, but **BYPASSED** — abstract argument doesn't need explicit freeness |
+| 2 | ASS collapse in total degree 4 | Lit-Search/Tasks/Phase5r_ASS_collapse_degree_4.md | Not yet written (would discharge H3) |
 | 3 | K3 surface formalizability | Lit-Search/Tasks/Phase5r_K3_surface_formalizability.md | Not yet written |
 
 ---
 
 ## What Success Looks Like
 
-**Minimum viable:** Hypothesis T2 (change-of-rings) discharged or computationally verified. The algebraic chain from A(1) to the full Steenrod algebra is machine-checked.
+**Minimum viable:** Hypothesis H2 (change-of-rings) DISCHARGED. **ACHIEVED** (ChangeOfRings.lean).
 
-**Stretch:** Hypotheses T2 AND T3 discharged. The only remaining topological input is T1 (MSpin cohomology) and T4 (K3 exists) — both concrete, independently verifiable facts.
+**Stretch:** H3 (ASS collapse) discharged via sparsity argument. This would leave only H1 (ko cohomology) and H4 (ABP splitting) as hypotheses — both are deep topological facts with no known algebraic bypass.
+
+**Current status:** H2 discharged. Hypotheses remaining: 3 (H1, H3, H4). The generation constraint N_f = 0 mod 3 rests on machine-checked algebra plus 3 standard textbook topology results.
 
 **Combined with Phase 5q:** The generation constraint N_f ≡ 0 mod 3 rests on machine-checked algebra (Ext⁴ = ℤ/16, change-of-rings, modular invariance) plus two concrete topological inputs (MSpin cohomology and K3 existence). This is the strongest possible formal position short of formalizing all of algebraic topology.
 

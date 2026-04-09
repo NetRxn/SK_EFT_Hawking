@@ -736,6 +736,21 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=2,
         expected_axes={"xaxis": "anyon", "yaxis": "dimension"}, physics_checks=[], color_keys=["Rb87", "Na23", "K39"],
     ),
+    # Phase 5q: Ext computation over A(1)
+    FigureSpec(
+        name="fig_ext_chart",
+        function="fig_ext_chart",
+        caption="Ext chart for A(1): E2 page of the Adams spectral sequence for ko. Machine-checked dims 1,2,2,2,3,4.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "stem", "yaxis": "filtration"}, physics_checks=[], color_keys=["steinhauer", "trento"],
+    ),
+    FigureSpec(
+        name="fig_a1_resolution_structure",
+        function="fig_a1_resolution_structure",
+        caption="Minimal free resolution of F2 over A(1): bidiagonal pattern, ranks 1,2,2,2,3,4.",
+        needs_experiments=False, expected_traces=7,
+        expected_axes={}, physics_checks=[], color_keys=["steinhauer"],
+    ),
 ]
 
 
@@ -810,6 +825,9 @@ def generate_figures() -> dict[str, Path]:
         fig_sm_generation_anomaly,
         fig_sm_generation_constraint,
         fig_drinfeld_equivalence_structure,
+        # Phase 5q: Ext computation
+        fig_ext_chart,
+        fig_a1_resolution_structure,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -916,6 +934,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_sm_generation_anomaly": fig_sm_generation_anomaly,
         "fig_sm_generation_constraint": fig_sm_generation_constraint,
         "fig_drinfeld_equivalence_structure": fig_drinfeld_equivalence_structure,
+        "fig_ext_chart": fig_ext_chart,
+        "fig_a1_resolution_structure": fig_a1_resolution_structure,
     }
 
     paths = {}
@@ -1023,6 +1043,9 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_sm_generation_anomaly,
         fig_sm_generation_constraint,
         fig_drinfeld_equivalence_structure,
+        # Phase 5q: Ext computation
+        fig_ext_chart,
+        fig_a1_resolution_structure,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1127,6 +1150,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_sm_generation_anomaly": fig_sm_generation_anomaly,
         "fig_sm_generation_constraint": fig_sm_generation_constraint,
         "fig_drinfeld_equivalence_structure": fig_drinfeld_equivalence_structure,
+        "fig_ext_chart": fig_ext_chart,
+        "fig_a1_resolution_structure": fig_a1_resolution_structure,
     }
 
     issues: list[CheckIssue] = []

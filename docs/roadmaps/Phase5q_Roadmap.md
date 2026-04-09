@@ -319,7 +319,7 @@ Wave 1 (deep research) ──COMPLETE──→ Wave 2 (A(1) Ring + SageMath)
 | Wave 3 | Resolution + exactness (native_decide) | 1-2 weeks | Wave 2 | **COMPLETE** (A1Resolution.lean, d²=0 all levels) |
 | Wave 4 | Ext dimensions (minimality) | 3-5 days | Wave 3 | **COMPLETE** (A1Ext.lean, dims 1,2,2,2,3,4) |
 | Wave 5 | Hypothesis decomposition | 1 week | Wave 4 | **COMPLETE** (ExtBordismBridge.lean, 4 hypotheses) |
-| Wave 6 | Pipeline integration | 1 week | Wave 4 | **COMPLETE** (test_a1_ext.py, 26 tests, RESEARCH_STATUS_OVERVIEW updated) |
+| Wave 6 | Pipeline integration | 1 week | Wave 4 | **COMPLETE** (26 tests, 2 figures, Paper 10 updated, notebook updated, formulas.py, constants.py, review_figures.py, RESEARCH_STATUS_OVERVIEW, SteenrodA1.lean + RokhlinBridge.lean docstrings corrected) |
 
 **Total actual LOE:** ~4 hours (Waves 2-6 in single session, April 8 2026).
 **Original estimate:** 4-6 weeks.

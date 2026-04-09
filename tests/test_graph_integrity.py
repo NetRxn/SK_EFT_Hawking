@@ -57,9 +57,12 @@ class TestIntegrityReportStructure:
 
         # All numeric summary values are non-negative integers
         # (pg_sync is a string status, not a count)
+        # (pg_vertex_count may be None when PG+AGE container is not running)
         for key, val in summary.items():
             if key == 'pg_sync':
                 assert isinstance(val, str), f"summary[{key}] should be str, got {type(val)}"
+            elif key == 'pg_vertex_count' and val is None:
+                pass  # PG not running — acceptable in non-container environments
             else:
                 assert isinstance(val, int), f"summary[{key}] should be int, got {type(val)}"
                 assert val >= 0, f"summary[{key}] should be non-negative"

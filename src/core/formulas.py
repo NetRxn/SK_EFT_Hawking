@@ -5491,10 +5491,69 @@ def bordism_hypothesis_count():
         dict with hypothesis counts
     """
     return {
-        'total_hypotheses': 4,
-        'algebraically_eliminable': 1,  # H2: change of rings (Shapiro's lemma)
+        'total_hypotheses': 3,           # H1, H3, H4 (all topological)
+        'discharged': 1,                 # H2: change of rings — PROVED (ChangeOfRings.lean)
         'topological': 3,               # H1, H3, H4
-        'machine_checked_components': 5, # d²=0 (4) + minimality (5) + Ext dims (6) + Wang + gen
+        'machine_checked_components': 6, # d²=0 + minimality + Ext dims + change-of-rings + Wang + gen
         'sorry_introduced': 0,
         'axioms_introduced': 0,
     }
+
+
+# =============================================================================
+# Phase 5s: FK Gapped Interface + Modularity Theorem
+# =============================================================================
+
+def fk_hamiltonian():
+    """Build the 16×16 Fidkowski-Kitaev Hamiltonian.
+
+    H = W₁ + W₂ where W₁ is the 6-term intra-pair quartic interaction
+    (diagonal) and W₂ = γ₁γ₃γ₅γ₇ is the inter-pair term (anti-diagonal).
+
+    Eigenvalues: -7 (×1), -5 (×1), -1 (×4), +1 (×7), +3 (×3)
+    Ground state: (|0000⟩ - |1111⟩)/√2, unique, E₀ = -7
+    Spectral gap: Δ = E₁ - E₀ = 2
+
+    Lean: FKGappedInterface.lean (20 theorems, zero sorry)
+    Aristotle: N/A (native_decide)
+    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010)
+    """
+    import numpy as np
+
+    # W1: diagonal
+    diag = np.zeros(16, dtype=int)
+    for k in range(16):
+        N = bin(k).count('1')
+        diag[k] = -2 * (2 - N) ** 2 + 2
+    W1 = np.diag(diag)
+
+    # W2: anti-diagonal with sign (-1)^{b1+b3}
+    W2 = np.zeros((16, 16), dtype=int)
+    for k in range(16):
+        b1 = (k >> 3) & 1
+        b3 = (k >> 1) & 1
+        W2[k, 15 - k] = (-1) ** (b1 + b3)
+
+    return W1 + W2
+
+
+def fk_eigenvalues():
+    """Eigenvalues and multiplicities of the FK Hamiltonian.
+
+    Lean: complete_spectrum, multiplicity_trace_check, multiplicity_frobenius_check
+    """
+    return {
+        -7: 1,   # unique ground state
+        -5: 1,   # first excited
+        -1: 4,
+        1: 7,
+        3: 3,
+    }
+
+
+def fk_spectral_gap():
+    """Spectral gap of the FK Hamiltonian: Δ = E₁ - E₀ = -5 - (-7) = 2.
+
+    Lean: spectral_gap_positive (FKGappedInterface.lean)
+    """
+    return 2

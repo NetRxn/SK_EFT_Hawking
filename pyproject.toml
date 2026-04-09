@@ -75,3 +75,8 @@ sk-eft-rhmc = { path = "rust/", editable = true }
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "maturin>=1.12.6",
+]
