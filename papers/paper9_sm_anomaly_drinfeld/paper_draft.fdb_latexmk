@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1775831750.6584 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775831751.7883 0
-  "./paper_draftNotes.bib" 1775831751.51865 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1775845509.86843 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775845510.94935 0
+  "./paper_draftNotes.bib" 1775845510.70524 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1775831751.51761 5681 359343506a8f2ede80ac7eea23d53d34 "pdflatex"
+  "paper_draft.aux" 1775845510.70423 5745 05026188fe78100c35a758516b2fd5a3 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1775831750.77119 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper9_sm_anomaly_drinfeld/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775831751.78846 0
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper9_sm_anomaly_drinfeld/paper_draft.tex" 1775588350.34025 16730 3ce9a061b38432c50eb4cbca2ccf2f70 ""
+["pdflatex"] 1775845509.97777 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper9_sm_anomaly_drinfeld/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775845510.94954 0
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper9_sm_anomaly_drinfeld/paper_draft.tex" 1775844465.45716 17091 070566ac9b91a2db7a03315355bfcbe5 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -125,10 +125,10 @@
   "figures/fig72_sm_generation_anomaly.png" 1775287198.26441 103466 341bbdb528d12f508e331fa483a04689 ""
   "figures/fig73_sm_generation_constraint.png" 1775287198.26486 81502 f23e3687d2e7956b44d1e4afacd518df ""
   "figures/fig74_drinfeld_equivalence_structure.png" 1775323794.86428 132293 124e7a1b428aee1873867c199ea31452 ""
-  "paper_draft.aux" 1775831751.51761 5681 359343506a8f2ede80ac7eea23d53d34 "pdflatex"
-  "paper_draft.bbl" 1775831750.76919 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
-  "paper_draft.out" 1775831751.51847 2954 3fb4fa1ffdd35ace5e362331f654e275 "pdflatex"
-  "paper_draft.tex" 1775588350.34025 16730 3ce9a061b38432c50eb4cbca2ccf2f70 ""
+  "paper_draft.aux" 1775845510.70423 5745 05026188fe78100c35a758516b2fd5a3 "pdflatex"
+  "paper_draft.bbl" 1775845509.97556 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
+  "paper_draft.out" 1775845510.70506 2954 3fb4fa1ffdd35ace5e362331f654e275 "pdflatex"
+  "paper_draft.tex" 1775844465.45716 17091 070566ac9b91a2db7a03315355bfcbe5 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

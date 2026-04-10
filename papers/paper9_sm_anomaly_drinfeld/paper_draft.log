@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  10 APR 2026 09:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  10 APR 2026 13:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -385,210 +385,208 @@ Underfull \hbox (badness 2073) in paragraph at lines 59--63
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 69.
+(hyperref)                removing `math shift' on input line 70.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 69.
+(hyperref)                removing `subscript' on input line 70.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 69.
+(hyperref)                removing `math shift' on input line 70.
 
 <figures/fig71_sm_fermion_z16_anomaly.png, id=69, 2409.0pt x 1606.0pt>
 File: figures/fig71_sm_fermion_z16_anomaly.png Graphic file (type png)
 <use figures/fig71_sm_fermion_z16_anomaly.png>
-Package pdftex.def Info: figures/fig71_sm_fermion_z16_anomaly.png  used on input line 93.
+Package pdftex.def Info: figures/fig71_sm_fermion_z16_anomaly.png  used on input line 94.
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
-<figures/fig72_sm_generation_anomaly.png, id=71, 1405.25pt x 803.0pt>
+[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./figures/fig71_sm_fermion_z16_anomaly.png>]
+<figures/fig72_sm_generation_anomaly.png, id=108, 1405.25pt x 803.0pt>
 File: figures/fig72_sm_generation_anomaly.png Graphic file (type png)
 <use figures/fig72_sm_generation_anomaly.png>
-Package pdftex.def Info: figures/fig72_sm_generation_anomaly.png  used on input line 108.
+Package pdftex.def Info: figures/fig72_sm_generation_anomaly.png  used on input line 110.
 (pdftex.def)             Requested size: 246.0pt x 140.56386pt.
 
-Package hyperref Warning: Suppressing empty link on input line 122.
 
-[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./figures/fig71_sm_fermion_z16_anomaly.png>]
-
-LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 131.
+Package hyperref Warning: Suppressing empty link on input line 124.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--147
+Underfull \hbox (badness 10000) in paragraph at lines 138--149
 []\OT1/cmr/m/n/10 The bridge from fermion con-tent to gen-er-a-
  []
 
 
-Underfull \hbox (badness 4341) in paragraph at lines 136--147
+Underfull \hbox (badness 4341) in paragraph at lines 138--149
 \OT1/cmr/m/n/10 tion con-straint is for-mal-ized in \OT1/cmtt/m/n/10 WangBridge.lean
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--147
+Underfull \hbox (badness 10000) in paragraph at lines 138--149
 \OT1/cmr/m/n/10 (9 the-o-rems, zero sorry): the the-o-rem
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--147
+Underfull \hbox (badness 10000) in paragraph at lines 138--149
 \OT1/cmr/m/n/10 from \OT1/cmtt/m/n/10 SMFermionData.total[]components[]with[]nu[]R\OT1/cmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 3108) in paragraph at lines 136--147
+Underfull \hbox (badness 3108) in paragraph at lines 138--149
 \OT1/cmr/m/n/10 braic con-straint is in \OT1/cmtt/m/n/10 GenerationConstraint.lean
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--147
+Underfull \hbox (badness 10000) in paragraph at lines 138--149
 \OT1/cmr/m/n/10 (13 the-o-rems, zero sorry, zero ax-ioms):
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--147
+Underfull \hbox (badness 10000) in paragraph at lines 138--149
 \OT1/cmtt/m/n/10 generation[]mod3[]constraint \OT1/cmr/m/n/10 is a con-di-tional \OT1/cmr/m/it/10 if
  []
 
-<figures/fig73_sm_generation_constraint.png, id=112, 1204.5pt x 803.0pt>
+<figures/fig73_sm_generation_constraint.png, id=113, 1204.5pt x 803.0pt>
 File: figures/fig73_sm_generation_constraint.png Graphic file (type png)
 <use figures/fig73_sm_generation_constraint.png>
-Package pdftex.def Info: figures/fig73_sm_generation_constraint.png  used on input line 150.
+Package pdftex.def Info: figures/fig73_sm_generation_constraint.png  used on input line 152.
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 161.
+(hyperref)                removing `math shift' on input line 163.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 161.
+(hyperref)                removing `subscript' on input line 163.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 161.
+(hyperref)                removing `math shift' on input line 163.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 163--168
+Underfull \hbox (badness 10000) in paragraph at lines 165--170
 []\OT1/cmr/m/n/10 We de-fine $[][]$ as \OT1/cmtt/m/n/10 GradedObject (Additive
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 163--168
+Underfull \hbox (badness 10000) in paragraph at lines 165--170
 \OT1/cmtt/m/n/10 G) (ModuleCat k) \OT1/cmr/m/n/10 us-ing Math-lib's graded ob-
  []
 
 
-Underfull \hbox (badness 1953) in paragraph at lines 163--168
+Underfull \hbox (badness 1953) in paragraph at lines 165--170
 \OT1/cmr/m/n/10 ject in-fras-truc-ture. The monoidal struc-ture (Day
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 163--168
+Underfull \hbox (badness 10000) in paragraph at lines 165--170
 \OT1/cmr/m/n/10 con-vo-lu-tion) is proved via type-class syn-the-sis:
  []
 
 
-Underfull \hbox (badness 2547) in paragraph at lines 163--168
+Underfull \hbox (badness 2547) in paragraph at lines 165--170
 \OT1/cmtt/m/n/10 MonoidalCategory (VecG[]Cat k G) \OT1/cmr/m/n/10 syn-the-sizes from
  []
 
 
-Underfull \hbox (badness 2717) in paragraph at lines 163--168
+Underfull \hbox (badness 2717) in paragraph at lines 165--170
 \OT1/cmr/m/n/10 Math-lib's \OT1/cmtt/m/n/10 GradedObject.monoidalCategory \OT1/cmr/m/n/10 in-stance
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 175.
+(hyperref)                removing `math shift' on input line 177.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 175.
+(hyperref)                removing `subscript' on input line 177.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 175.
+(hyperref)                removing `math shift' on input line 177.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 199.
+(hyperref)                removing `math shift' on input line 201.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 199.
+(hyperref)                removing `subscript' on input line 201.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 199.
+(hyperref)                removing `subscript' on input line 201.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 199.
+(hyperref)                removing `math shift' on input line 201.
 
 [2 <./figures/fig72_sm_generation_anomaly.png> <./figures/fig73_sm_generation_constraint.png>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 228.
+(hyperref)                removing `math shift' on input line 230.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 228.
+(hyperref)                removing `subscript' on input line 230.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leftrightarrow' on input line 228.
+(hyperref)                removing `\leftrightarrow' on input line 230.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 228.
+(hyperref)                removing `math shift' on input line 230.
 
 
-Underfull \hbox (badness 4001) in paragraph at lines 230--234
+Underfull \hbox (badness 4001) in paragraph at lines 232--236
 \OT1/cmr/m/n/10 4 toric code anyons and the 4 sim-ple $\OML/cmm/m/it/10 D\OT1/cmr/m/n/10 (\U/msb/m/n/10 Z\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 2)$-
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 235.
+(hyperref)                removing `math shift' on input line 237.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 235.
+(hyperref)                removing `math shift' on input line 237.
 
 
-Underfull \hbox (badness 6978) in paragraph at lines 237--244
+Underfull \hbox (badness 6978) in paragraph at lines 239--246
 \OML/cmm/m/it/10 k$\OT1/cmr/m/n/10 : the twisted con-vo-lu-tion mul-ti-pli-ca-tion, unit
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--244
+Underfull \hbox (badness 10000) in paragraph at lines 239--246
 \OT1/cmr/m/n/10 laws, as-so-cia-tiv-ity (\OT1/cmtt/m/n/10 DrinfeldDoubleAlgebra.lean\OT1/cmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--244
+Underfull \hbox (badness 10000) in paragraph at lines 239--246
 \OT1/cmr/m/n/10 Aris-to-tle \OT1/cmtt/m/n/10 878b181f\OT1/cmr/m/n/10 ), and dis-tribu-tiv-ity
  []
 
 
-Underfull \hbox (badness 2326) in paragraph at lines 237--244
+Underfull \hbox (badness 2326) in paragraph at lines 239--246
 \OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 DrinfeldDoubleRing.lean\OT1/cmr/m/n/10 ). A new-type wrap-per
  []
 
 <figures/fig74_drinfeld_equivalence_structure.png, id=130, 1806.75pt x 803.0pt>
 File: figures/fig74_drinfeld_equivalence_structure.png Graphic file (type png)
 <use figures/fig74_drinfeld_equivalence_structure.png>
-Package pdftex.def Info: figures/fig74_drinfeld_equivalence_structure.png  used on input line 247.
+Package pdftex.def Info: figures/fig74_drinfeld_equivalence_structure.png  used on input line 249.
 (pdftex.def)             Requested size: 246.0pt x 109.33153pt.
 
-Underfull \hbox (badness 4441) in paragraph at lines 288--292
+Underfull \hbox (badness 4441) in paragraph at lines 290--294
 \OT1/cmr/m/n/10 3450 model ($25 \OMS/cmsy/m/n/10 ^^Q \OT1/cmr/m/n/10 1  []  8$ for both left and
  []
 
 [3 <./figures/fig74_drinfeld_equivalence_structure.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 335--336
+Underfull \hbox (badness 10000) in paragraph at lines 339--340
  []\OT1/cmr/m/n/9 J. Wang, Phys. Rev. D \OT1/cmr/bx/n/9 110\OT1/cmr/m/n/9 , 125028 (2024)
  []
 
 (./paper_draft.bbl)
-Underfull \hbox (badness 10000) in paragraph at lines 368--370
+Underfull \hbox (badness 10000) in paragraph at lines 372--374
  []\OT1/cmr/m/n/9 R. Thorn-gren, J. Preskill, and L. Fid-kowski,
  []
 
@@ -603,16 +601,16 @@ Package rerunfilecheck Info: File `paper_draft.out' has not changed.
 Here is how much of TeX's memory you used:
  11761 strings out of 467525
  175783 string characters out of 5418982
- 614689 words of memory out of 5000000
+ 612689 words of memory out of 5000000
  40495 multiletter control sequences out of 15000+600000
  637894 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,9n,79p,764b,546s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,9n,79p,764b,542s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (4 pages, 539722 bytes).
+Output written on paper_draft.pdf (4 pages, 540590 bytes).
 PDF statistics:
- 277 PDF objects out of 1000 (max. 8388607)
- 207 compressed objects within 3 object streams
+ 279 PDF objects out of 1000 (max. 8388607)
+ 209 compressed objects within 3 object streams
  44 named destinations out of 1000 (max. 500000)
  141 words of extra memory for PDF output out of 10000 (max. 10000000)
 

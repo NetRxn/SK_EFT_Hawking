@@ -652,6 +652,69 @@ private theorem affComulFreeAlg_E1F0 :
 -- The F proofs will be completed after relocating those lemmas.
 
 /-
+q-commutation lemmas for coproduct images in A⊗A.
+These are KEY for the bidegree approach to q-Serre coproduct compatibility.
+
+For Δ(E₁) = E₁⊗K₁ + 1⊗E₁, let x = E₁⊗K₁ and y = 1⊗E₁.
+Then x·y = E₁⊗(K₁·E₁) and y·x = E₁⊗(E₁·K₁).
+Using K₁E₁ = T(2)·E₁K₁: x·y = T(2)•(y·x).
+This is the q-commutation relation with q² = T(2).
+-/
+
+/-- q-commutation: (E₁⊗K₁)·(1⊗E₁) = T(2) • (1⊗E₁)·(E₁⊗K₁) in A⊗A.
+    Equivalently: the "left" and "right" summands of Δ(E₁) q-commute. -/
+private theorem deltaE1_q_comm :
+    (uqAffE1 k ⊗ₜ[LaurentPolynomial k] uqAffK1 k) *
+    ((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE1 k) =
+    (T 2 : LaurentPolynomial k) •
+    (((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE1 k) *
+     (uqAffE1 k ⊗ₜ[LaurentPolynomial k] uqAffK1 k)) := by
+  simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+  -- LHS: E₁ ⊗ K₁·E₁.  RHS: T(2) • (E₁ ⊗ E₁·K₁)
+  -- Use K₁E₁ = T(2)·E₁K₁
+  rw [uqAff_K1E1]
+  -- Now: E₁ ⊗ (T(2)·E₁·K₁) = T(2) • (E₁ ⊗ E₁·K₁)
+  simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm,
+             TensorProduct.tmul_smul, mul_assoc]
+
+/-- q-commutation for cross-index: (E₁⊗K₁)·(1⊗E₀) = T(-2) • (1⊗E₀)·(E₁⊗K₁).
+    K₁ commutes past E₀ with q-factor T(-2). -/
+private theorem deltaE1_cross_comm_E0 :
+    (uqAffE1 k ⊗ₜ[LaurentPolynomial k] uqAffK1 k) *
+    ((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE0 k) =
+    (T (-2) : LaurentPolynomial k) •
+    (((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE0 k) *
+     (uqAffE1 k ⊗ₜ[LaurentPolynomial k] uqAffK1 k)) := by
+  simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+  rw [uqAff_K1E0]
+  simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm,
+             TensorProduct.tmul_smul, mul_assoc]
+
+/-- q-commutation: (E₀⊗K₀)·(1⊗E₁) = T(-2) • (1⊗E₁)·(E₀⊗K₀). -/
+private theorem deltaE0_cross_comm_E1 :
+    (uqAffE0 k ⊗ₜ[LaurentPolynomial k] uqAffK0 k) *
+    ((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE1 k) =
+    (T (-2) : LaurentPolynomial k) •
+    (((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE1 k) *
+     (uqAffE0 k ⊗ₜ[LaurentPolynomial k] uqAffK0 k)) := by
+  simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+  rw [uqAff_K0E1]
+  simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm,
+             TensorProduct.tmul_smul, mul_assoc]
+
+/-- q-commutation: (E₀⊗K₀)·(1⊗E₀) = T(2) • (1⊗E₀)·(E₀⊗K₀). -/
+private theorem deltaE0_q_comm :
+    (uqAffE0 k ⊗ₜ[LaurentPolynomial k] uqAffK0 k) *
+    ((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE0 k) =
+    (T 2 : LaurentPolynomial k) •
+    (((1 : Uqsl2Aff k) ⊗ₜ[LaurentPolynomial k] uqAffE0 k) *
+     (uqAffE0 k ⊗ₜ[LaurentPolynomial k] uqAffK0 k)) := by
+  simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+  rw [uqAff_K0E0]
+  simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm,
+             TensorProduct.tmul_smul, mul_assoc]
+
+/-
 q-Serre coproduct cases: PROVIDED SOLUTION (from deep research)
 
 Each q-Serre relation E_i²E_j - [2]_q E_iE_jE_i + E_jE_i² = 0 under Δ
@@ -719,28 +782,25 @@ private theorem affComulFreeAlg_SerreE10 :
        + ascal k (T 2 + 1 + T (-2)) * ag k E1 * ag k E0 * ag k E1 * ag k E1
        - ag k E0 * ag k E1 * ag k E1 * ag k E1) =
     affComulFreeAlg k 0 := by
-  -- Phase 1: RHS = 0
+  -- APPROACH B: work at coproduct-image level, avoid 128-term expansion.
+  -- The brute-force approach fails due to heartbeat limits on 128-term simp passes.
+  --
+  -- Phase 1: substitute coproduct images
   erw [map_zero]
-  -- Phase 2: Expand coproduct on generators, distribute products
   simp only [map_sub, map_add, map_mul, AlgHom.commutes]
   erw [affComulFreeAlg_ι k E0, affComulFreeAlg_ι k E1]
   simp only [affComulOnGen]
-  -- Phase 2+3: expand + K-E normalize with algebraMap_apply
-  set_option maxHeartbeats 1600000 in
-  simp only [mul_add, add_mul,
-             Algebra.TensorProduct.tmul_mul_tmul,
-             Algebra.TensorProduct.algebraMap_apply,
-             mul_one, one_mul, mul_assoc,
-             uqAff_K0E0, uqAff_K0E1, uqAff_K1E0, uqAff_K1E1, uqAff_K0K1_comm]
-  -- Complete deeper K-E via left-assoc/K-E alternation
-  simp only [← mul_assoc]
-  simp only [uqAff_K0E0, uqAff_K0E1, uqAff_K1E0, uqAff_K1E1, uqAff_K0K1_comm, mul_assoc]
-  -- Convert to smul form for match_scalars
-  simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, mul_assoc, one_smul]
-  -- Phase 4: Need grouping by common left tensor factor + coefficient cancellation
-  -- Options: (a) match_scalars + ext/simp/omega for Laurent poly goals
-  --          (b) manual ← tmul_add grouping + Serre/coefficient lemmas
-  -- Deep research: Lit-Search/Phase-5s/Mathlib4 tensor product algebra API...
+  -- Goal: serre(x+y, u+v) = 0 where x=E₁⊗K₁, y=1⊗E₁, u=E₀⊗K₀, v=1⊗E₀
+  -- Key properties: xy = T(2)•yx (deltaE1_q_comm)
+  --                 xv = T(-2)•vx (deltaE1_cross_comm_E0)
+  --                 uy = T(-2)•yu (deltaE0_cross_comm_E1)
+  --
+  -- Strategy: introduce local abbreviations, then compute serre(x+y, u+v) algebraically
+  -- using these q-commutation properties, grouping by bidegree.
+  -- Each bidegree group = (Serre expression in one factor) ⊗ (K-monomial) = 0.
+  --
+  -- Implementation: deep research task for CAS-assisted tactic generation.
+  -- The q-commutation lemmas (deltaE1_q_comm etc.) are proved and ready.
   sorry
 
 private theorem affComulFreeAlg_SerreF01 :

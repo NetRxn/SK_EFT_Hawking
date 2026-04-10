@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1775831650.27965 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775831651.41523 0
-  "./paper_draftNotes.bib" 1775831651.16159 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1775831650.27965 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775845481.3547 0
+  "./paper_draftNotes.bib" 1775845481.0872 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1775831651.16058 4894 407d58c077529198b61a727addedbb7b "pdflatex"
+  "paper_draft.aux" 1775845481.08594 4894 407d58c077529198b61a727addedbb7b "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1775831650.37654 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper3_gauge_erasure/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775831651.4154 0
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper3_gauge_erasure/paper_draft.tex" 1775340432.17184 16988 8ce353b0f817b4f87525d89c25c61cbd ""
+["pdflatex"] 1775845480.20923 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper3_gauge_erasure/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775845481.3549 0
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper3_gauge_erasure/paper_draft.tex" 1775844427.1273 16988 26d7e4541934b763681f2b5b7564fba3 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -110,10 +110,10 @@
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/fig20_sm_scorecard.png" 1774477306.96195 144533 231ef6a9de78d4e4b9af9ffe6c5ff065 ""
   "figures/fig21_erasure_survey.png" 1774477306.96258 196553 5a1568e54b4dfd3077a0fabbac7cf6fe ""
-  "paper_draft.aux" 1775831651.16058 4894 407d58c077529198b61a727addedbb7b "pdflatex"
+  "paper_draft.aux" 1775845481.08594 4894 407d58c077529198b61a727addedbb7b "pdflatex"
   "paper_draft.bbl" 1775831650.37462 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
-  "paper_draft.out" 1775831651.1614 3261 37377993bc5c73c87f61a6278f14e23c "pdflatex"
-  "paper_draft.tex" 1775340432.17184 16988 8ce353b0f817b4f87525d89c25c61cbd ""
+  "paper_draft.out" 1775845481.08683 3261 37377993bc5c73c87f61a6278f14e23c "pdflatex"
+  "paper_draft.tex" 1775844427.1273 16988 26d7e4541934b763681f2b5b7564fba3 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"
