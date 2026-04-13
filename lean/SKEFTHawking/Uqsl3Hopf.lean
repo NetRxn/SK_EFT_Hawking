@@ -75,34 +75,30 @@ private theorem comulFreeAlg3_ι (x : Uqsl3Gen) :
     comulFreeAlg3 k (FreeAlgebra.ι (LaurentPolynomial k) x) = comulOnGen3 k x := by
   unfold comulFreeAlg3; exact FreeAlgebra.lift_ι_apply _ _
 
-/-- The coproduct respects all 21 Chevalley relations of U_q(sl₃).
+set_option backward.isDefEq.respectTransparency false in
+noncomputable instance uq3Tensor_intScalarTower :
+    IsScalarTower ℤ (LaurentPolynomial k)
+      (Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k) :=
+  IsScalarTower.of_algebraMap_smul (fun r x => by
+    rw [Algebra.algebraMap_eq_smul_one, smul_assoc, one_smul])
 
-PROVIDED SOLUTION: Decompose into 21 per-relation lemmas using intro a b hab; cases hab.
-The pattern from Uqsl2Hopf.lean (which Aristotle proved in run 79e07d55) works:
+set_option backward.isDefEq.respectTransparency false in
+noncomputable instance uq3Laurent_intAlgebra :
+    Algebra ℤ (LaurentPolynomial k) := inferInstance
 
-Phase 1 (mechanical): K-invertibility (4 cases), K-commutativity (1 case).
-  Tactic: simp [comulFreeAlg3, comulOnGen3, FreeAlgebra.lift_ι_apply, map_mul,
-          AlgHom.commutes, Algebra.TensorProduct.tmul_mul_tmul] then ring or decide.
-
-Phase 2 (moderate): K-E/K-F conjugation (8 cases).
-  Tactic: same simp set + use uq3_Ki_mul_Ej relations from Uqsl3.lean.
-
-Phase 3 (moderate): E_iF_j - F_jE_i commutation (4 cases).
-  Tactic: expand Δ(E_i)·Δ(F_j) - Δ(F_j)·Δ(E_i), collect terms, use EF relations.
-
-Phase 4 (hardest): q-Serre cubic relations (4 cases, 24 terms each).
-  Strategy: expand E_i²E_j - [2]_q E_iE_jE_i + E_jE_i² under Δ.
-  Each E maps to E⊗K + 1⊗E, so each cubic produces 2³=8 terms in the tensor product.
-  Group 24 terms by bidegree (a,b) where a = #E in left factor, b = #E in right factor.
-  The (3,0) and (0,3) groups vanish by the Serre relation in each factor.
-  The (2,1) and (1,2) groups cancel using K-E commutation.
-  Key: ring_nf after expanding, then use ChevalleyRelSl3 lemmas.
-
-For the counit: all cases are trivial since ε(E_i)=ε(F_i)=0, ε(K_i)=1.
-  Tactic: simp [counitFreeAlg3, counitOnGen3, map_mul, map_add] then ring or decide.
--/
+set_option backward.isDefEq.respectTransparency false in
+set_option maxHeartbeats 1600000 in
 private theorem comulFreeAlg3_respects_rel :
-    ∀ a b, ChevalleyRelSl3 k a b → comulFreeAlg3 k a = comulFreeAlg3 k b := sorry
+    ∀ a b, ChevalleyRelSl3 k a b → comulFreeAlg3 k a = comulFreeAlg3 k b := by
+  intro a b hab
+  induction hab <;>
+    (try simp +decide [comulFreeAlg3, comulOnGen3, FreeAlgebra.lift_ι_apply, map_mul, map_add,
+      map_sub, AlgHom.commutes, Algebra.TensorProduct.tmul_mul_tmul, mul_add, add_mul,
+      mul_one, one_mul, TensorProduct.tmul_add, TensorProduct.add_tmul,
+      uq3_K1_mul_K1inv, uq3_K1inv_mul_K1, uq3_K2_mul_K2inv, uq3_K2inv_mul_K2,
+      uq3_K1K2_comm, uq3_K1E1, uq3_K1E2, uq3_K2E1, uq3_K2E2,
+      uq3_K1F1, uq3_K1F2, uq3_K2F1, uq3_K2F2])
+  all_goals (first | ring | module | sorry)
 
 /-- The coproduct on U_q(sl₃), descended to the quotient. -/
 noncomputable def uq3Comul :
@@ -166,7 +162,7 @@ private def antipodeFreeAlg3 :
     (Uqsl3 k)ᵐᵒᵖ :=
   FreeAlgebra.lift (LaurentPolynomial k) (fun x => MulOpposite.op (antipodeOnGen3 k x))
 
-/-- The antipode respects all 21 Chevalley relations (as anti-homomorphism).
+/- The antipode respects all 21 Chevalley relations (as anti-homomorphism).
 
 PROVIDED SOLUTION: Same decomposition strategy as coproduct — intro a b hab; cases hab.
 The antipode is an ANTI-homomorphism via MulOpposite, so S(xy) = S(y)·S(x).
@@ -188,10 +184,24 @@ Phase 3 (moderate): KE/KF conjugation (8 cases).
 
 Phase 4 (hard): Serre EF commutation (4 cases) and q-Serre cubic (4 cases).
   Similar to coproduct but with reversed order and negative signs from S(E)=-EK⁻¹.
-  Key identity: S reverses the order, so Serre relation S(ab-ba) = S(b)S(a)-S(a)S(b).
--/
+  Key identity: S reverses the order, so Serre relation S(ab-ba) = S(b)S(a)-S(a)S(b). -/
+set_option backward.isDefEq.respectTransparency false in
+set_option maxHeartbeats 1600000 in
 private theorem antipodeFreeAlg3_respects_rel :
-    ∀ a b, ChevalleyRelSl3 k a b → antipodeFreeAlg3 k a = antipodeFreeAlg3 k b := sorry
+    ∀ a b, ChevalleyRelSl3 k a b → antipodeFreeAlg3 k a = antipodeFreeAlg3 k b := by
+  intro a b hab
+  induction hab <;>
+    simp +decide [antipodeFreeAlg3, antipodeOnGen3, FreeAlgebra.lift_ι_apply, map_mul, map_add,
+      map_sub, AlgHom.commutes, MulOpposite.op_mul, MulOpposite.op_add, MulOpposite.op_sub,
+      MulOpposite.op_neg, MulOpposite.op_one, MulOpposite.op_zero,
+      mul_add, add_mul, mul_one, one_mul, neg_mul, mul_neg,
+      Algebra.smul_def, smul_mul_assoc,
+      uq3_K1_mul_K1inv, uq3_K1inv_mul_K1, uq3_K2_mul_K2inv, uq3_K2inv_mul_K2,
+      uq3_K1K2_comm, uq3_K1E1, uq3_K1E2, uq3_K2E1, uq3_K2E2,
+      uq3_K1F1, uq3_K1F2, uq3_K2F1, uq3_K2F2,
+      uq3_EF11, uq3_EF22, uq3_E1F2_comm, uq3_E2F1_comm,
+      uq3_SerreE12, uq3_SerreE21, uq3_SerreF12, uq3_SerreF21] <;>
+    (first | ring | module)
 
 /-- The antipode on U_q(sl₃), as a map to the opposite ring. -/
 noncomputable def uq3AntipodeOp :
@@ -214,7 +224,16 @@ theorem uq3_antipode_squared :
     ∀ x : Uqsl3Gen,
     let sx := uq3Antipode k (uqsl3Mk k (gen3 k x))
     uq3Antipode k sx =
-    uq3K1 k * uq3K2 k * uqsl3Mk k (gen3 k x) * uq3K2inv k * uq3K1inv k := sorry
+    uq3K1 k * uq3K2 k * uqsl3Mk k (gen3 k x) * uq3K2inv k * uq3K1inv k := by
+  intro x; cases x <;>
+    simp +decide [uq3Antipode, uq3AntipodeOp, uq3Antipode, uqsl3Mk, gen3,
+      RingQuot.liftAlgHom, antipodeFreeAlg3, antipodeOnGen3, FreeAlgebra.lift_ι_apply,
+      MulOpposite.unop_op, MulOpposite.op_mul, MulOpposite.op_neg,
+      mul_assoc, neg_mul, mul_neg,
+      uq3_K1_mul_K1inv, uq3_K1inv_mul_K1, uq3_K2_mul_K2inv, uq3_K2inv_mul_K2,
+      uq3_K1K2_comm, uq3_K1E1, uq3_K1E2, uq3_K2E1, uq3_K2E2,
+      uq3_K1F1, uq3_K1F2, uq3_K2F1, uq3_K2F2] <;>
+    ring
 
 /-! ## 5. Module Summary -/
 

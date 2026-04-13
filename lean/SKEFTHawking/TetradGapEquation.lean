@@ -86,6 +86,7 @@ theorem gapIntegral_pos (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
 /-
 The gap integral is strictly decreasing in Δ: if 0 ≤ Δ₁ < Δ₂, then I(Δ₁) > I(Δ₂).
 -/
+set_option backward.isDefEq.respectTransparency false in
 theorem gapIntegral_strictAnti (Δ₁ Δ₂ Λ : ℝ) (hΔ₁ : 0 ≤ Δ₁) (hΔ₂ : 0 ≤ Δ₂)
     (hΛ : 0 < Λ) (h12 : Δ₁ < Δ₂) :
     gapIntegral Δ₂ Λ < gapIntegral Δ₁ Λ := by
@@ -404,6 +405,7 @@ Lower bound on I(Δ): I(Δ) ≥ c₄·Λ²/(2(Λ²+Δ²)) for Δ ≥ 0.
 This provides two-sided control on the gap integral, enabling
 explicit bounds on G_c.
 -/
+set_option backward.isDefEq.respectTransparency false in
 theorem gapIntegral_lower_bound (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
     c₄ * Λ ^ 4 / (4 * (Λ ^ 2 + Δ ^ 2)) ≤ gapIntegral Δ Λ := by
   by_cases hΔ_zero : Δ = 0;

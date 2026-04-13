@@ -200,27 +200,26 @@ related to the Jones polynomial at q = e^{2πi/5}.
 inductive FibSimple | one | tau
   deriving DecidableEq, Fintype
 
-open FibSimple in
 def fib_fusion : FibSimple → FibSimple → FibSimple → ℕ
-  | one, x, y => if x = y then 1 else 0
-  | x, one, y => if x = y then 1 else 0
-  | tau, tau, one => 1
-  | tau, tau, tau => 1
+  | .one, x, y => if x = y then 1 else 0
+  | x, .one, y => if x = y then 1 else 0
+  | .tau, .tau, .one => 1
+  | .tau, .tau, .tau => 1
 
 /-- Unit fusion for Fibonacci. -/
 theorem fib_unit_left (j k : FibSimple) :
     fib_fusion .one j k = if j = k then 1 else 0 := by
-  cases j <;> cases k <;> simp [fib_fusion]
+  cases j <;> cases k <;> simp +decide [fib_fusion]
 
 /-- The key fusion rule: τ ⊗ τ = 𝟙 ⊕ τ. -/
 theorem fib_tau_squared :
     fib_fusion .tau .tau .one = 1 ∧ fib_fusion .tau .tau .tau = 1 := by
-  simp [fib_fusion]
+  simp +decide [fib_fusion]
 
 /-- Commutativity of Fibonacci fusion. -/
 theorem fib_fusion_comm (i j k : FibSimple) :
     fib_fusion i j k = fib_fusion j i k := by
-  cases i <;> cases j <;> cases k <;> simp [fib_fusion]
+  cases i <;> cases j <;> cases k <;> simp +decide [fib_fusion]
 
 /-
 PROBLEM
@@ -237,7 +236,7 @@ theorem fib_assoc (i j k l : FibSimple) :
 /-- Total multiplicity of τ ⊗ τ: N^𝟙 + N^τ = 1 + 1 = 2. -/
 theorem fib_tau_sq_total :
     fib_fusion .tau .tau .one + fib_fusion .tau .tau .tau = 2 := by
-  simp [fib_fusion]
+  simp +decide [fib_fusion]
 
 /-- The Fibonacci quantum dimension satisfies φ² = φ + 1.
     (Already proved in SphericalCategory.lean as fibonacci_global_dim.) -/
