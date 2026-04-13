@@ -9,19 +9,22 @@ Every wave — whether adding new physics, extending formalization, or producing
 ## Pipeline Overview
 
 ```
-Stage 1:  CONSTANTS & PARAMETERS     → Gate: imports succeed
-Stage 2:  FORMULAS                   → Gate: every function has Lean ref
-Stage 3:  LEAN THEOREMS (sorry stubs)→ Gate: lake build compiles
-Stage 4:  ARISTOTLE                  → Gate: all sorrys filled, lake build clean
-Stage 5:  LEAN BUILD VERIFICATION    → Gate: zero sorry, counts match
-Stage 6:  PYTHON TESTS               → Gate: all tests pass
-Stage 7:  CROSS-LAYER VALIDATION     → Gate: validate.py all checks pass
-Stage 8:  VISUALIZATIONS             → Gate: all PNGs generated
-Stage 9:  FIGURE REVIEW              → Gate: LLM review all PASS
-Stage 10: PAPER DRAFT                → Gate: paper_provenance check passes
-Stage 11: NOTEBOOKS                  → Gate: notebook_exec + viz_consistency pass
-Stage 12: DOCUMENT SYNC              → Gate: full validate.py passes, counts consistent
+Stage 1:  CONSTANTS & PARAMETERS           → Gate: imports succeed
+Stage 2:  FORMULAS                         → Gate: every function has Lean ref
+Stage 3a: LEAN — INTERACTIVE MCP LOOP      → Gate: proof closes OR decomposed to sector stubs
+Stage 3b: LEAN — SORRY REGISTRATION        → Gate: lake build compiles, SORRY_GAPS accurate
+Stage 4:  ARISTOTLE (FALLBACK)             → Gate: residual sorrys filled, lake build clean
+Stage 5:  LEAN BUILD VERIFICATION          → Gate: zero sorry, counts match
+Stage 6:  PYTHON TESTS                     → Gate: all tests pass
+Stage 7:  CROSS-LAYER VALIDATION           → Gate: validate.py all checks pass
+Stage 8:  VISUALIZATIONS                   → Gate: all PNGs generated
+Stage 9:  FIGURE REVIEW                    → Gate: LLM review all PASS
+Stage 10: PAPER DRAFT                      → Gate: paper_provenance check passes
+Stage 11: NOTEBOOKS                        → Gate: notebook_exec + viz_consistency pass
+Stage 12: DOCUMENT SYNC                    → Gate: full validate.py passes, counts consistent
 ```
+
+**Stage 3 is split into 3a (interactive MCP proving via `lean-lsp-mcp`) and 3b (sorry registration for residual gaps).** Most proofs should close in 3a. Stage 4 (Aristotle) is reserved for (i) sorries that survive interactive iteration with decomposition, or (ii) batch submissions in future phases where MCP iteration is impractical. See the "Lean interactive tooling (MCP)" section of `CLAUDE.md` for dev-loop details.
 
 ---
 
@@ -86,26 +89,67 @@ passes (all parameters human-verified). Checked before arXiv/journal submission,
 
 **Purpose:** Formalize physics results as machine-checkable proofs.
 
+This stage is now split into two phases: **3a (statement + first-pass proof attempt via interactive MCP tools)** and **3b (sorry registration + scaffolding for any remaining gaps)**. Most proofs should close in 3a. Stage 4 (Aristotle) is now a *fallback* for sorries that survive both.
+
+### 3a. Statement + Interactive Proof Attempt
+
 **Actions:**
 - Write theorem statements in `lean/SKEFTHawking/<Module>.lean` with `sorry` placeholders
 - Add `import SKEFTHawking.<Module>` to the root `lean/SKEFTHawking.lean`
-- Register each sorry stub in `src/core/aristotle_interface.py` as `SorryGap(filled=False)`
+- **Before leaving a sorry in place, make a serious interactive proof attempt using the `lean-lsp-mcp` tools** (see CLAUDE.md "Lean interactive tooling (MCP)" section).
+
+**Required interactive loop per sorry:**
+1. `lean_file_outline` — orient in the file
+2. `lean_goal` at the `sorry` position — read the actual goal state
+3. Identify the proof strategy from any relevant deep research in `Lit-Search/Phase-5*/`. For non-trivial proofs (quantum groups, tensor products, bidegree decompositions, etc.), **read the relevant research document directly, in full**, before iterating on tactics. Agent-summarized research loses tactic-level detail and has caused session failures.
+4. `lean_multi_attempt` with a battery of 4–6 candidate tactic sequences. Start with simpler tactics (`noncomm_ring`, `abel`, `aesop`) and escalate to explicit rewrite chains only if needed.
+5. Iterate: read the resulting goal state for each attempt, pick the winner, write it to the file, re-inspect.
+6. If the proof requires a large decomposition (e.g., bidegree sectors, case splits), **pre-decompose into sub-lemmas with `have` statements** so each sub-goal is small (ideally ≤12 terms). Close each sub-lemma interactively via step 4.
 
 **Theorem Quality Requirements:**
 - Every theorem must encode actual physics — no tautologies (`1 = 1`, `x = x`)
 - Hypotheses must be load-bearing, not vacuously satisfied
 - Beware Lean's total division convention (`0/0 = 0`): add strengthened variants where κ > 0 or c_s ≠ 0 is genuinely used in the proof
-- When in doubt, state the theorem in the strongest form possible; Aristotle can find the proof
+- When in doubt, state the theorem in the strongest form possible
+
+**Antipatterns (do NOT do these — every one has been documented to fail or corrupt sessions):**
+- `set_option maxHeartbeats N` or `synthInstance.maxHeartbeats N` in any proof body (`theorem`, `lemma`, `example`, `def` with tactic-generated body). Heartbeat overrides in proofs indicate a proof-architecture problem, not a compute problem — decompose into `have` sub-lemmas. **Pipeline invariant #10.** (The `ExtractDeps.lean` metaprogram is exempt — see invariant #10 for the precise scope.)
+- `ring` / `ring_nf` on non-commutative rings (`Uqsl2Aff`, `Uqsl3`, `RingQuot`-based types). Use `noncomm_ring` or explicit rewrites.
+- Monolithic `simp` / `simp_rw` calls that try to expand and regroup 50+ terms in one pass. Always decompose via `have` sub-lemmas first.
+- `simp_rw` with rules that can form a cycle (e.g., Serre relation in both directions) — leads to infinite loops.
+- `match_scalars` at the wrong level of decomposition (when cancellation is inter-atom rather than per-atom) — produces unprovable `⊢ 1 = 0`.
+- Blind iteration via `lake build` for hard proofs. The MCP loop is ~1000× faster and gives live goal state. If MCP is not yet installed, installing it is ALWAYS cheaper than grinding on `lake build`.
 
 **Axiom Classification:** New axioms MUST have an entry in `AXIOM_METADATA` (in `src/core/constants.py`) with `eliminability` (eliminable/hard/unknown) and `reason` fields. This surfaces in the Proof Architecture dashboard tab and claims-reviewer agent.
 
-**Gate:** `cd lean && lake build` compiles successfully (sorry warnings are expected, zero errors).
+**Gate (3a):** Either the proof closes interactively and `lake build` is clean for this theorem, OR the proof has been decomposed into sub-lemmas with thorough `PROVIDED SOLUTION` comments and is ready for Stage 3b.
+
+### 3b. Sorry registration (only if 3a left residual gaps)
+
+**Actions:**
+- Register each remaining sorry stub in `src/core/aristotle_interface.py` as `SorryGap(filled=False)` with a precise `strategy_hint` that names the sub-lemmas, helper theorems, and coefficient identities needed
+- Add `PROVIDED SOLUTION` comments inline at each `sorry` site, referencing any relevant `Lit-Search/Phase-5*/` deep research document by path
+- Keep the `SORRY_GAPS` registry in sync: one entry per actual `sorry` in the source (not per "group" of sorries — Aristotle needs granular targets)
+
+**Gate (3b):** `cd lean && lake build` compiles successfully (sorry warnings are expected, zero errors). `SORRY_GAPS` registry matches the lake build output exactly.
 
 ---
 
-## Stage 4: ARISTOTLE
+## Stage 4: ARISTOTLE (FALLBACK)
 
-**Purpose:** Fill sorry gaps with machine-verified proofs. Strengthen manual proofs.
+**Purpose:** Fill sorry gaps that Stage 3a's interactive MCP loop could not close. Also used for cross-cutting batch submissions in future phases where interactive iteration is impractical.
+
+**When to use Stage 4:**
+- Stage 3a's interactive MCP loop on `lean_multi_attempt` has been fully exhausted for the remaining sorries
+- The remaining sorries have been pre-decomposed into sector/sub-lemma `have` targets (≤12 terms each) — Aristotle can handle granular targets much better than monolithic 50+ term goals
+- Every sorry has a thorough `PROVIDED SOLUTION` comment referencing relevant deep research
+- Registry in `src/core/aristotle_interface.py` is accurate (no stale `filled=False` entries for theorems that are actually filled)
+- **User has explicitly authorized the submission.** Each Aristotle batch submits the whole project and takes ~1 day to return.
+
+**When NOT to use Stage 4:**
+- When Stage 3a hasn't been seriously attempted (MCP loop gives 1000× speedup vs. `lake build` iteration)
+- When re-submitting a previously-failed batch without a **materially changed state** — Aristotle failing the same cubic and then being resubmitted on the same state produces the same failure. Insanity is doing the same thing and expecting different results.
+- When some sorries in the batch are still monolithic (50+ terms) — decompose first via Stage 3a scaffolding, THEN submit
 
 **Pre-requisite:** Read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session. It covers Aristotle's capabilities, prompt strategies, and project-specific integration behavior.
 
@@ -447,7 +491,13 @@ These must hold at ALL times, not just at wave completion:
 
 9. **Placeholder theorems are non-load-bearing.** Theorems proved as `True := trivial` encode no mathematical content and MUST NOT be referenced by any other proof, formula, or paper claim. They are documentation markers only. Tracked in `PLACEHOLDER_THEOREMS` in `constants.py`. Substantive theorem count = total - placeholders. Paper claims MUST cite substantive count, not total.
 
-10. **No heartbeat overrides.** No `set_option maxHeartbeats` or `set_option synthInstance.maxHeartbeats` in any Lean file (except ExtractDeps.lean which requires unlimited for dependency extraction). Expensive typeclass synthesis is resolved via `@[local instance]` caching. Heartbeat overrides indicate a proof quality problem that must be fixed, not papered over.
+10. **No heartbeat overrides in proof bodies.** No `set_option maxHeartbeats` or `set_option synthInstance.maxHeartbeats` in any `theorem`, `lemma`, `example`, or `def`/`noncomputable def` whose body is produced by tactics. Proof bodies that hit the heartbeat limit are evidence that the proof architecture is wrong — the fix is `have` sub-lemma decomposition, not raising the budget. Expensive typeclass synthesis is resolved via `@[local instance]` caching, not heartbeat increases.
+
+    **Exception — metaprograms.** Lean metaprograms whose work is intrinsically O(project size) may set unlimited heartbeats in their local `CoreM` / `MetaM` options when no proof-decomposition equivalent exists. The distinguishing test: the work scales with **number of declarations processed**, not with **complexity of a single proof goal**. A proof can always be decomposed into smaller goals; an environment walker cannot be decomposed into "walk fewer declarations" because the requirement is that it walks all of them.
+
+    `ExtractDeps.lean` is currently the only such file in this project. It walks all 2,237+ declarations in the `SKEFTHawking` namespace, runs `collectAxioms` on each to compute transitive axiom closures, and pretty-prints every type signature — total work is O(declarations × per-declaration metadata cost), intrinsically exceeding the default 200K heartbeat budget. Its `maxHeartbeats := 0` lives in the `Lean.Core.Context` for its own `IO Unit` main function and does not leak to any theorem or proof in the project (it is a separate `lean_exe`, not part of `lean_lib SKEFTHawking`).
+
+    Any new file claiming this exception must: (a) be a metaprogram, not contain tactic-generated proofs; (b) demonstrate that its work is intrinsically project-size-bound; (c) justify why no decomposition is possible. If uncertain, assume the rule applies and do not add the override.
 
 ---
 

@@ -2864,12 +2864,445 @@ fn run_rhmc_rust_eo_2pf_defl<'py>(
     Ok(dict.into())
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// Hasenbusch K-level mass-split RHMC with nested Omelyan integrator
+//
+// Splits det(M_e)^{1/4} into K+1 well-conditioned factors:
+//   det(M_e+mu_K^2)^{1/4} × Π det[(M_e+mu_k)/(M_e+mu_{k+1})]^{1/4}
+//
+// Each factor uses CK 2-PF (2 complex PFs). Nested 3-level Omelyan
+// puts expensive (lightest) forces on coarsest timescale, cheap
+// (heaviest) forces on finest timescale.
+//
+// Expected 10-20× speedup: kappa/factor ~16 vs ~6000 original.
+//
+// Source: Deep research "Hasenbusch mass splitting..." Sections 1-8
+// ═══════════════════════════════════════════════════════════════════
+
+/// Nested Omelyan 2MN integrator (recursive multi-level).
+///
+/// Each level has a set of factor indices whose forces are computed at
+/// that timescale. The deepest level performs pure position updates.
+fn nested_omelyan(
+    h: &mut [f64],
+    pi: &mut [f64],
+    tau: f64,
+    level: usize,
+    n_levels: usize,
+    n_steps: &[usize],
+    // Per-factor data (indexed by factor_id)
+    factor_levels: &[usize],
+    factor_action_a0: &[f64],
+    factor_action_al: &[&[f64]],
+    factor_action_be: &[&[f64]],
+    factor_phi_r: &[&[Vec<f64>]],  // [factor][pf_idx] -> even-site vector
+    factor_phi_i: &[&[Vec<f64>]],
+    // Lattice
+    g: f64,
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    n_sites: usize,
+    eo: &EvenOddTables,
+    cg_tol_md: f64,
+    cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+) {
+    let n_h = n_sites * 16;
+    if level >= n_levels {
+        // Leaf: pure position update
+        for i in 0..n_h { h[i] += tau * pi[i]; }
+        return;
+    }
+
+    let dt = tau / n_steps[level] as f64;
+    let lam = 0.1932; // Omelyan 2MN parameter
+
+    for _step in 0..n_steps[level] {
+        // Position block: λ·dt via deeper levels
+        nested_omelyan(h, pi, lam * dt, level + 1, n_levels, n_steps,
+            factor_levels, factor_action_a0, factor_action_al, factor_action_be,
+            factor_phi_r, factor_phi_i, g, fwd, bwd, n_sites, eo,
+            cg_tol_md, cg_max_iter, cg_entries);
+
+        // Momentum kick: dt/2 from this level's forces
+        hasenbusch_level_kick(pi, dt / 2.0, level, n_levels,
+            factor_levels, factor_action_a0, factor_action_al, factor_action_be,
+            factor_phi_r, factor_phi_i, h, g, fwd, bwd, n_sites, eo,
+            cg_tol_md, cg_max_iter, cg_entries);
+
+        // Position block: (1-2λ)·dt
+        nested_omelyan(h, pi, (1.0 - 2.0 * lam) * dt, level + 1, n_levels, n_steps,
+            factor_levels, factor_action_a0, factor_action_al, factor_action_be,
+            factor_phi_r, factor_phi_i, g, fwd, bwd, n_sites, eo,
+            cg_tol_md, cg_max_iter, cg_entries);
+
+        // Momentum kick: dt/2
+        hasenbusch_level_kick(pi, dt / 2.0, level, n_levels,
+            factor_levels, factor_action_a0, factor_action_al, factor_action_be,
+            factor_phi_r, factor_phi_i, h, g, fwd, bwd, n_sites, eo,
+            cg_tol_md, cg_max_iter, cg_entries);
+
+        // Position block: λ·dt
+        nested_omelyan(h, pi, lam * dt, level + 1, n_levels, n_steps,
+            factor_levels, factor_action_a0, factor_action_al, factor_action_be,
+            factor_phi_r, factor_phi_i, g, fwd, bwd, n_sites, eo,
+            cg_tol_md, cg_max_iter, cg_entries);
+    }
+}
+
+/// Apply momentum kicks from all factors assigned to a given level.
+/// Gaussian prior is included only on the finest (deepest) level.
+fn hasenbusch_level_kick(
+    pi: &mut [f64],
+    dt: f64,
+    level: usize,
+    n_levels: usize,
+    factor_levels: &[usize],
+    factor_action_a0: &[f64],
+    factor_action_al: &[&[f64]],
+    factor_action_be: &[&[f64]],
+    factor_phi_r: &[&[Vec<f64>]],
+    factor_phi_i: &[&[Vec<f64>]],
+    h: &[f64],
+    g: f64,
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    n_sites: usize,
+    eo: &EvenOddTables,
+    cg_tol: f64,
+    cg_max_iter: usize,
+    cg_entries: &[CgEntry],
+) {
+    let n_h = n_sites * 16;
+    let mut f_h = vec![0.0; n_h];
+
+    // Gaussian prior on finest level only
+    if level == n_levels - 1 {
+        for i in 0..n_h { f_h[i] = -h[i] / (2.0 * g); }
+    }
+
+    // PF forces from all factors assigned to this level
+    for (fk, &fl) in factor_levels.iter().enumerate() {
+        if fl != level { continue; }
+        // CK 2-PF: 2 complex PFs per factor, each with real + imaginary
+        for pf_idx in 0..2 {
+            compute_pf_force_eo(
+                h, &factor_phi_r[fk][pf_idx],
+                factor_action_al[fk], factor_action_be[fk],
+                fwd, bwd, eo, cg_tol, cg_max_iter, cg_entries, &mut f_h);
+            compute_pf_force_eo(
+                h, &factor_phi_i[fk][pf_idx],
+                factor_action_al[fk], factor_action_be[fk],
+                fwd, bwd, eo, cg_tol, cg_max_iter, cg_entries, &mut f_h);
+        }
+    }
+
+    // Apply kick: pi += dt * f
+    for i in 0..n_h { pi[i] += dt * f_h[i]; }
+}
+
+/// Hasenbusch CK 2-PF trajectory with nested Omelyan.
+fn rhmc_trajectory_eo_2pf_hasenbusch(
+    h: &mut Vec<f64>,
+    g: f64,
+    tau: f64,
+    n_factors: usize,
+    n_poles: usize,
+    // Flattened per-factor action coefficients
+    act_a0s: &[f64],
+    act_als: &[f64],
+    act_bes: &[f64],
+    // Flattened per-factor heatbath coefficients
+    hb_a0s: &[f64],
+    hb_als: &[f64],
+    hb_bes: &[f64],
+    // Integrator config
+    n_steps: &[usize],
+    factor_levels: &[usize],
+    is_heavy: &[bool],
+    mu_sq_vals: &[f64],       // heavy factor mu_K^2 (or 0 for ratio)
+    mu_lo_vals: &[f64],       // ratio factor mu_lo (for heatbath A-trick)
+    mu_hi_vals: &[f64],       // ratio factor mu_hi
+    // Lattice
+    fwd: &[[usize; 4]],
+    bwd: &[[usize; 4]],
+    n_sites: usize,
+    eo: &EvenOddTables,
+    rng: &mut ChaCha20Rng,
+    cg_entries: &[CgEntry],
+    cg_tol_md: f64,
+    cg_tol_mc: f64,
+) -> TrajectoryResult {
+    let n_h = n_sites * 16;
+    let dim_e = 8 * eo.n_even;
+    let n_levels = n_steps.len();
+    let cg_max_iter = 2000;
+    let inv_sqrt2 = 1.0 / f64::sqrt(2.0);
+
+    // Slice per-factor coefficients
+    let act_al_slices: Vec<&[f64]> = (0..n_factors)
+        .map(|f| &act_als[f * n_poles..(f + 1) * n_poles])
+        .collect();
+    let act_be_slices: Vec<&[f64]> = (0..n_factors)
+        .map(|f| &act_bes[f * n_poles..(f + 1) * n_poles])
+        .collect();
+
+    // ── HEATBATH: generate 2 complex PFs per factor ──
+    let mut phi_r: Vec<Vec<Vec<f64>>> = Vec::with_capacity(n_factors);
+    let mut phi_i: Vec<Vec<Vec<f64>>> = Vec::with_capacity(n_factors);
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+
+    for fk in 0..n_factors {
+        let hb_al = &hb_als[fk * n_poles..(fk + 1) * n_poles];
+        let hb_be = &hb_bes[fk * n_poles..(fk + 1) * n_poles];
+        let hb_a0 = hb_a0s[fk];
+
+        let mut factor_phi_r = Vec::with_capacity(2);
+        let mut factor_phi_i = Vec::with_capacity(2);
+
+        for _pf in 0..2 {
+            let xi_r: Vec<f64> = (0..dim_e).map(|_| rand_normal(rng)).collect();
+            let xi_i: Vec<f64> = (0..dim_e).map(|_| rand_normal(rng)).collect();
+
+            // CG solve for heatbath: eta = [a0*xi + Σ al_j*(M_e+be_j)^{-1}*xi]
+            let cg_r = multishift_cg_eo(h, &xi_r, hb_be, cg_tol_md, cg_max_iter,
+                                         fwd, bwd, eo, cg_entries);
+            let cg_i = multishift_cg_eo(h, &xi_i, hb_be, cg_tol_md, cg_max_iter,
+                                         fwd, bwd, eo, cg_entries);
+
+            let mut eta_r = vec![0.0; dim_e];
+            let mut eta_i = vec![0.0; dim_e];
+            for i in 0..dim_e {
+                eta_r[i] = hb_a0 * xi_r[i];
+                eta_i[i] = hb_a0 * xi_i[i];
+            }
+            for k in 0..n_poles {
+                axpy(hb_al[k], &cg_r.solutions[k], &mut eta_r);
+                axpy(hb_al[k], &cg_i.solutions[k], &mut eta_i);
+            }
+
+            if is_heavy[fk] {
+                // Heavy factor: phi = (M_e + mu_K^2) * eta / sqrt(2)
+                let mu_sq = mu_sq_vals[fk];
+                let mut pr = vec![0.0; dim_e];
+                let mut pi_f = vec![0.0; dim_e];
+                apply_me_shifted(h, &eta_r, &mut pr, mu_sq, fwd, bwd, eo,
+                                 &mut scratch_odd, cg_entries);
+                apply_me_shifted(h, &eta_i, &mut pi_f, mu_sq, fwd, bwd, eo,
+                                 &mut scratch_odd, cg_entries);
+                for i in 0..dim_e { pr[i] *= inv_sqrt2; }
+                for i in 0..dim_e { pi_f[i] *= inv_sqrt2; }
+                factor_phi_r.push(pr);
+                factor_phi_i.push(pi_f);
+            } else {
+                // Ratio factor: heatbath uses Q^{-7/8} (already computed) + Q application
+                // Q * v = (M_e+mu_lo)/(M_e+mu_hi) * v
+                //   step 1: w = (M_e+mu_hi)^{-1} v (CG with single shift mu_hi)
+                //   step 2: phi = (M_e+mu_lo) w     (apply_me_shifted with sigma=mu_lo)
+                let mu_lo = mu_lo_vals[fk];
+                let mu_hi = mu_hi_vals[fk];
+
+                // Step 1: solve (M_e + mu_hi) w = eta
+                let cg_q_r = multishift_cg_eo(h, &eta_r, &[mu_hi], cg_tol_md, cg_max_iter,
+                                               fwd, bwd, eo, cg_entries);
+                let cg_q_i = multishift_cg_eo(h, &eta_i, &[mu_hi], cg_tol_md, cg_max_iter,
+                                               fwd, bwd, eo, cg_entries);
+
+                // Step 2: phi = (M_e + mu_lo) * w / sqrt(2)
+                let mut pr = vec![0.0; dim_e];
+                let mut pi_f = vec![0.0; dim_e];
+                apply_me_shifted(h, &cg_q_r.solutions[0], &mut pr, mu_lo, fwd, bwd, eo,
+                                 &mut scratch_odd, cg_entries);
+                apply_me_shifted(h, &cg_q_i.solutions[0], &mut pi_f, mu_lo, fwd, bwd, eo,
+                                 &mut scratch_odd, cg_entries);
+                for i in 0..dim_e { pr[i] *= inv_sqrt2; }
+                for i in 0..dim_e { pi_f[i] *= inv_sqrt2; }
+                factor_phi_r.push(pr);
+                factor_phi_i.push(pi_f);
+            }
+        }
+        phi_r.push(factor_phi_r);
+        phi_i.push(factor_phi_i);
+    }
+
+    // Refresh momenta
+    let mut pi_h: Vec<f64> = (0..n_h).map(|_| rand_normal(rng)).collect();
+    let h_old = h.clone();
+
+    // ── H_old ──
+    let h_old_val = {
+        let k_energy = 0.5 * dot(&pi_h, &pi_h);
+        let s_aux = dot(h, h) / (4.0 * g);
+        let mut s_pf = 0.0;
+        for fk in 0..n_factors {
+            for pf_idx in 0..2 {
+                s_pf += compute_spf_eo(h, &phi_r[fk][pf_idx], act_a0s[fk],
+                    act_al_slices[fk], act_be_slices[fk], fwd, bwd, eo,
+                    cg_tol_mc, cg_max_iter, cg_entries);
+                s_pf += compute_spf_eo(h, &phi_i[fk][pf_idx], act_a0s[fk],
+                    act_al_slices[fk], act_be_slices[fk], fwd, bwd, eo,
+                    cg_tol_mc, cg_max_iter, cg_entries);
+            }
+        }
+        k_energy + s_aux + s_pf
+    };
+
+    // ── Nested Omelyan MD ──
+    // Build references for the integrator
+    let phi_r_refs: Vec<&[Vec<f64>]> = phi_r.iter().map(|v| v.as_slice()).collect();
+    let phi_i_refs: Vec<&[Vec<f64>]> = phi_i.iter().map(|v| v.as_slice()).collect();
+
+    nested_omelyan(
+        h, &mut pi_h, tau, 0, n_levels, n_steps,
+        factor_levels, act_a0s, &act_al_slices, &act_be_slices,
+        &phi_r_refs, &phi_i_refs,
+        g, fwd, bwd, n_sites, eo, cg_tol_md, cg_max_iter, cg_entries);
+
+    // ── H_new ──
+    let h_new_val = {
+        let k_energy = 0.5 * dot(&pi_h, &pi_h);
+        let s_aux = dot(h, h) / (4.0 * g);
+        let mut s_pf = 0.0;
+        for fk in 0..n_factors {
+            for pf_idx in 0..2 {
+                s_pf += compute_spf_eo(h, &phi_r[fk][pf_idx], act_a0s[fk],
+                    act_al_slices[fk], act_be_slices[fk], fwd, bwd, eo,
+                    cg_tol_mc, cg_max_iter, cg_entries);
+                s_pf += compute_spf_eo(h, &phi_i[fk][pf_idx], act_a0s[fk],
+                    act_al_slices[fk], act_be_slices[fk], fwd, bwd, eo,
+                    cg_tol_mc, cg_max_iter, cg_entries);
+            }
+        }
+        k_energy + s_aux + s_pf
+    };
+
+    let delta_h = h_new_val - h_old_val;
+    let accepted = if delta_h <= 0.0 { true } else {
+        let u: f64 = rng.random();
+        u < (-delta_h).exp()
+    };
+    if !accepted { *h = h_old; }
+
+    let (h_sq, tet_m2, tr_q2) = measure_observables(h, n_sites);
+    TrajectoryResult { delta_h, accepted, h_sq, tet_m2, tr_q2 }
+}
+
+/// Hasenbusch K-level mass-split RHMC (PyO3 binding).
+///
+/// Coefficients are flattened: action_alphas[f*n_poles..(f+1)*n_poles] for factor f.
+/// Factor levels assign each factor to a nested integrator timescale.
+/// is_heavy flags control heatbath construction (heavy uses A-trick on M_e+mu^2).
+#[pyfunction]
+fn run_rhmc_rust_eo_2pf_hasenbusch<'py>(
+    py: Python<'py>,
+    l: usize,
+    g: f64,
+    n_traj: usize,
+    n_therm: usize,
+    n_meas_skip: usize,
+    tau: f64,
+    n_factors: usize,
+    n_poles_per_factor: usize,
+    action_alpha0s: PyReadonlyArray1<'py, f64>,
+    action_alphas: PyReadonlyArray1<'py, f64>,
+    action_betas: PyReadonlyArray1<'py, f64>,
+    hb_alpha0s: PyReadonlyArray1<'py, f64>,
+    hb_alphas: PyReadonlyArray1<'py, f64>,
+    hb_betas: PyReadonlyArray1<'py, f64>,
+    n_steps_per_level: PyReadonlyArray1<'py, i64>,
+    factor_levels_arr: PyReadonlyArray1<'py, i64>,
+    is_heavy_flags: PyReadonlyArray1<'py, i64>,
+    mu_sq_values: PyReadonlyArray1<'py, f64>,
+    mu_lo_values: PyReadonlyArray1<'py, f64>,
+    mu_hi_values: PyReadonlyArray1<'py, f64>,
+    seed: u64,
+    cg_a: PyReadonlyArray1<'py, i64>,
+    cg_i: PyReadonlyArray1<'py, i64>,
+    cg_j: PyReadonlyArray1<'py, i64>,
+    cg_val: PyReadonlyArray1<'py, f64>,
+    h_init: Option<PyReadonlyArray1<'py, f64>>,
+) -> PyResult<PyObject> {
+    let act_a0s = action_alpha0s.as_slice()?;
+    let act_als = action_alphas.as_slice()?;
+    let act_bes = action_betas.as_slice()?;
+    let hb_a0s = hb_alpha0s.as_slice()?;
+    let hb_als = hb_alphas.as_slice()?;
+    let hb_bes = hb_betas.as_slice()?;
+    let n_steps_raw = n_steps_per_level.as_slice()?;
+    let n_steps: Vec<usize> = n_steps_raw.iter().map(|&x| x as usize).collect();
+    let factor_levels_raw = factor_levels_arr.as_slice()?;
+    let factor_levels: Vec<usize> = factor_levels_raw.iter().map(|&x| x as usize).collect();
+    let is_heavy_raw = is_heavy_flags.as_slice()?;
+    let is_heavy: Vec<bool> = is_heavy_raw.iter().map(|&x| x != 0).collect();
+    let mu_sq = mu_sq_values.as_slice()?;
+    let mu_lo = mu_lo_values.as_slice()?;
+    let mu_hi = mu_hi_values.as_slice()?;
+    let cg_entries = parse_cg_entries(cg_a.as_slice()?, cg_i.as_slice()?,
+                                       cg_j.as_slice()?, cg_val.as_slice()?);
+
+    let n_sites = l * l * l * l;
+    let (fwd, bwd) = build_neighbors(l);
+    let eo = build_even_odd(l);
+    let mut rng = ChaCha20Rng::seed_from_u64(seed);
+
+    let mut h: Vec<f64> = if let Some(h_in) = h_init {
+        h_in.as_slice()?.to_vec()
+    } else {
+        let sigma_h = (2.0 * g).sqrt();
+        (0..n_sites * 16).map(|_| rand_normal(&mut rng) * sigma_h).collect()
+    };
+
+    let mut h_sq_hist = Vec::new();
+    let mut delta_h_hist = Vec::new();
+    let mut tet_m2_hist = Vec::new();
+    let mut tr_q2_hist = Vec::new();
+    let mut n_accepted: usize = 0;
+
+    for traj in 0..n_traj {
+        if traj % 5 == 0 { py.check_signals()?; }
+
+        let result = rhmc_trajectory_eo_2pf_hasenbusch(
+            &mut h, g, tau, n_factors, n_poles_per_factor,
+            act_a0s, act_als, act_bes, hb_a0s, hb_als, hb_bes,
+            &n_steps, &factor_levels, &is_heavy, mu_sq, mu_lo, mu_hi,
+            &fwd, &bwd, n_sites, &eo, &mut rng, &cg_entries,
+            1e-6, 1e-10,
+        );
+
+        delta_h_hist.push(result.delta_h);
+        if result.accepted { n_accepted += 1; }
+
+        if traj >= n_therm && (traj - n_therm) % n_meas_skip == 0 {
+            h_sq_hist.push(result.h_sq);
+            tet_m2_hist.push(result.tet_m2);
+            tr_q2_hist.push(result.tr_q2);
+        }
+    }
+
+    let dict = pyo3::types::PyDict::new(py);
+    dict.set_item("h_sq_history", h_sq_hist)?;
+    dict.set_item("delta_h_history", delta_h_hist)?;
+    let n_meas = tet_m2_hist.len();
+    dict.set_item("tet_m2_history", tet_m2_hist)?;
+    dict.set_item("tr_q2_history", tr_q2_hist)?;
+    dict.set_item("acceptance_rate", n_accepted as f64 / n_traj as f64)?;
+    dict.set_item("n_measurements", n_meas)?;
+    dict.set_item("hasenbusch", true)?;
+    dict.set_item("n_factors", n_factors)?;
+    dict.set_item("g", g)?;
+    dict.set_item("L", l)?;
+    dict.set_item("h_final", h)?;
+
+    Ok(dict.into())
+}
+
 #[pymodule]
 fn sk_eft_rhmc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(run_rhmc_rust, m)?)?;
     m.add_function(wrap_pyfunction!(run_rhmc_rust_eo, m)?)?;
     m.add_function(wrap_pyfunction!(run_rhmc_rust_eo_2pf, m)?)?;
     m.add_function(wrap_pyfunction!(run_rhmc_rust_eo_2pf_defl, m)?)?;
+    m.add_function(wrap_pyfunction!(run_rhmc_rust_eo_2pf_hasenbusch, m)?)?;
     m.add_function(wrap_pyfunction!(apply_fermion_matrix_py, m)?)?;
     m.add_function(wrap_pyfunction!(estimate_spectral_range_py, m)?)?;
     Ok(())

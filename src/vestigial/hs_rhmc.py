@@ -244,6 +244,203 @@ def compute_zolotarev_coefficients(n_poles, eps, lam_max, power=-0.25):
     return alpha_0, alphas, betas
 
 
+def _variable_transform_q(c0, cj, sj, mu_lo, mu_hi):
+    """Transform Q-variable partial fractions to M_e partial fractions.
+
+    Q = (M_e + mu_lo) / (M_e + mu_hi) has eigenvalues in (0, 1) when mu_lo < mu_hi.
+
+    Given: f(Q) = c0 + sum c_j/(Q + s_j)
+    Returns: f(M_e) = C0 + sum C_j/(M_e + sigma_j) where all C_j > 0.
+
+    Derivation: 1/(Q + s) = (M+mu_hi) / [(1+s)M + mu_lo + s*mu_hi]
+      = 1/(1+s) * [1 + (mu_hi - sigma)/(M + sigma)]
+    where sigma = (mu_lo + s*mu_hi)/(1+s)
+    and mu_hi - sigma = (mu_hi - mu_lo)/(1+s)
+
+    So: c_j/(Q+s_j) = c_j/(1+s_j) + c_j*(mu_hi-mu_lo)/((1+s_j)^2 * (M+sigma_j))
+    """
+    sigma = (mu_lo + sj * mu_hi) / (1.0 + sj)
+    C = cj * (mu_hi - mu_lo) / (1.0 + sj) ** 2  # POSITIVE when mu_hi > mu_lo and c_j > 0
+    C0 = c0 + float(np.sum(cj / (1.0 + sj)))
+    return C0, C, sigma
+
+
+def compute_hasenbusch_schedule(K, lam_min, lam_max):
+    """Geometric mass schedule for K-level Hasenbusch splitting.
+
+    Returns K+1 mass^2 boundaries [0, mu_1^2, ..., mu_K^2] such that
+    each ratio factor has condition number kappa^{1/(K+1)}.
+
+    Source: Deep research "Hasenbusch mass splitting..." Section 2
+    """
+    kappa = lam_max / lam_min
+    ratio = kappa ** (1.0 / (K + 1))
+    mu_sq = [0.0]
+    for k in range(1, K + 1):
+        mu_sq.append(lam_min * ratio ** k)
+    return mu_sq
+
+
+def compute_ratio_factor_coefficients(mu_lo, mu_hi, lam_min, lam_max, n_poles):
+    """Hasenbusch ratio factor coefficients in M_e partial-fraction form.
+
+    Uses Q = (M_e+mu_lo)/(M_e+mu_hi) in (0,1) to avoid positive-power
+    Zolotarev. All approximations use NEGATIVE powers on Q, giving all-positive
+    partial-fraction coefficients after variable transformation to M_e.
+
+    Action: S_k = phi^T Q^{-1/4} phi  (negative power -> positive Zolotarev)
+    Heatbath: phi = Q^{1/8} xi computed via Q * Q^{-7/8} (A trick)
+
+    Returns: dict with 'action' and 'heatbath' coefficients.
+
+    Source: Deep research "Hasenbusch mass splitting..." Sections 4-5
+    """
+    # Q = (lambda+mu_lo)/(lambda+mu_hi) is INCREASING in lambda (since mu_lo < mu_hi)
+    q_min = (lam_min + mu_lo) / (lam_min + mu_hi)
+    q_max = (lam_max + mu_lo) / (lam_max + mu_hi)
+    # Both in (0, 1) since mu_lo < mu_hi
+
+    # Action: Q^{-1/4} on [q_min, q_max] -- standard negative-power Zolotarev
+    a0_q, al_q, be_q = compute_zolotarev_coefficients(n_poles, q_min, q_max, -0.25)
+    act_C0, act_C, act_sigma = _variable_transform_q(a0_q, al_q, be_q, mu_lo, mu_hi)
+
+    # Heatbath: Q^{-7/8} on [q_min, q_max] (for the A-trick: phi = Q * Q^{-7/8} xi)
+    # The A-trick application Q*v = (M_e+mu_lo)(M_e+mu_hi)^{-1} v is done in Rust:
+    #   step 1: w = (M_e+mu_hi)^{-1} v  (CG with shift mu_hi)
+    #   step 2: phi = (M_e+mu_lo) w      (apply_me_shifted with sigma=mu_lo)
+    h0_q, hl_q, he_q = compute_zolotarev_coefficients(n_poles, q_min, q_max, -0.875)
+    hb_D0, hb_D, hb_tau = _variable_transform_q(h0_q, hl_q, he_q, mu_lo, mu_hi)
+
+    return {
+        'action': (act_C0, act_C, act_sigma),
+        'heatbath': (hb_D0, hb_D, hb_tau),
+        'mu_lo': mu_lo,
+        'mu_hi': mu_hi,
+    }
+
+
+def compute_heavy_factor_coefficients(mu_K_sq, lam_min, lam_max, n_poles):
+    """Hasenbusch heavy factor coefficients (absolute determinant).
+
+    Action: (M_e + mu_K^2)^{-1/4} via standard Zolotarev on shifted interval.
+    Heatbath: (M_e + mu_K^2)^{-7/8} via standard Zolotarev (A trick in Rust).
+
+    The Zolotarev is computed on [lam_min+mu_K^2, lam_max+mu_K^2], giving
+    partial fractions in the SHIFTED variable x = lambda + mu_K^2.
+    For multishift CG on M_e (eigenvalues lambda), the shifts must account
+    for the offset: sigma_j = beta_j (from Zolotarev, already in shifted space).
+
+    When multishift CG solves (M_e + sigma_j) psi = phi, the eigenvalues are
+    1/(lambda + sigma_j). The Zolotarev says x^{-1/4} = a0 + sum a_j/(x + beta_j)
+    where x = lambda + mu_K^2. So we need sigma_j such that:
+        lambda + sigma_j = (lambda + mu_K^2) + beta_j = lambda + (mu_K^2 + beta_j)
+    i.e., sigma_j = mu_K^2 + beta_j.
+
+    Returns: dict with 'action' and 'heatbath', each (alpha0, alphas, betas).
+
+    Source: Deep research "Hasenbusch mass splitting..." Section 6
+    """
+    lo = lam_min + mu_K_sq
+    hi = lam_max + mu_K_sq
+
+    a0, al, be = compute_zolotarev_coefficients(n_poles, lo, hi, -0.25)
+    h0, hl, he = compute_zolotarev_coefficients(n_poles, lo, hi, -0.875)
+
+    # Shift betas to M_e space: sigma_j = mu_K^2 + beta_j
+    be_shifted = be + mu_K_sq
+    he_shifted = he + mu_K_sq
+
+    return {
+        'action': (float(a0), al, be_shifted),
+        'heatbath': (float(h0), hl, he_shifted),
+    }
+
+
+def prepare_hasenbusch_coefficients(K, lam_min, lam_max, n_poles=8):
+    """Generate all Hasenbusch coefficient arrays for Rust PyO3 interface.
+
+    Returns dict with flattened numpy arrays ready for the Rust binding:
+    - n_factors, n_poles_per_factor
+    - action_alpha0s, action_alphas, action_betas  (flattened by factor)
+    - hb_alpha0s, hb_alphas, hb_betas
+    - factor_levels, is_heavy_flags, mu_sq_values
+
+    Source: Deep research "Hasenbusch mass splitting..." Section 8
+    """
+    mu_sq = compute_hasenbusch_schedule(K, lam_min, lam_max)
+    n_factors = K + 1
+
+    act_a0s = []
+    act_als = []
+    act_bes = []
+    hb_a0s = []
+    hb_als = []
+    hb_bes = []
+    is_heavy = []
+    mu_vals = []
+
+    mu_lo_vals = []
+    mu_hi_vals = []
+
+    # Ratio factors (k = 0..K-1)
+    for k in range(K):
+        coeffs = compute_ratio_factor_coefficients(
+            mu_sq[k], mu_sq[k + 1], lam_min, lam_max, n_poles)
+        ac0, ac, asig = coeffs['action']
+        hc0, hc, hsig = coeffs['heatbath']
+        act_a0s.append(ac0)
+        act_als.extend(ac)
+        act_bes.extend(asig)
+        hb_a0s.append(hc0)
+        hb_als.extend(hc)
+        hb_bes.extend(hsig)
+        is_heavy.append(0)
+        mu_vals.append(0.0)
+        mu_lo_vals.append(mu_sq[k])
+        mu_hi_vals.append(mu_sq[k + 1])
+
+    # Heavy factor (k = K)
+    coeffs = compute_heavy_factor_coefficients(mu_sq[K], lam_min, lam_max, n_poles)
+    ac0, ac, asig = coeffs['action']
+    hc0, hc, hsig = coeffs['heatbath']
+    act_a0s.append(ac0)
+    act_als.extend(ac)
+    act_bes.extend(asig)
+    hb_a0s.append(hc0)
+    hb_als.extend(hc)
+    hb_bes.extend(hsig)
+    is_heavy.append(1)
+    mu_vals.append(mu_sq[K])
+    mu_lo_vals.append(0.0)
+    mu_hi_vals.append(mu_sq[K])
+
+    # Integrator level assignment (deep research Section 3):
+    # Level 0 (coarsest): lightest ratio factor (most expensive CG)
+    # Level 1 (middle): second ratio factor
+    # Level 2 (finest): remaining ratio + heavy + Gaussian prior
+    factor_levels = list(range(min(K, 3)))  # first K factors on separate levels
+    while len(factor_levels) < n_factors:
+        factor_levels.append(min(K, 3) - 1)  # rest on finest
+
+    return {
+        'n_factors': n_factors,
+        'n_poles_per_factor': n_poles,
+        'action_alpha0s': np.array(act_a0s, dtype=np.float64),
+        'action_alphas': np.array(act_als, dtype=np.float64),
+        'action_betas': np.array(act_bes, dtype=np.float64),
+        'hb_alpha0s': np.array(hb_a0s, dtype=np.float64),
+        'hb_alphas': np.array(hb_als, dtype=np.float64),
+        'hb_betas': np.array(hb_bes, dtype=np.float64),
+        'n_steps_per_level': np.array([5, 3, 4], dtype=np.int64),
+        'factor_levels': np.array(factor_levels, dtype=np.int64),
+        'is_heavy_flags': np.array(is_heavy, dtype=np.int64),
+        'mu_sq_values': np.array(mu_vals, dtype=np.float64),
+        'mu_lo_values': np.array(mu_lo_vals, dtype=np.float64),
+        'mu_hi_values': np.array(mu_hi_vals, dtype=np.float64),
+        'mu_sq_schedule': mu_sq,
+    }
+
+
 # ════════════════════════════════════════════════════════════════════
 # SU(2) exponential (JIT-optimized)
 #

@@ -1391,47 +1391,6 @@ private theorem sect_hUqId_cas10b (k : Type*) [CommRing k] :
     q3·(E₁K₀K₁K₁) = K₀E₁K₁K₁ + K₀K₁E₁K₁ + K₀K₁K₁E₁.
     Atoms normalize to T(-2)•P, T 0•P, T 2•P summing to (1+T 2+T(-2))•P = q3•P. -/
 private theorem sect_hUqId_cas10c (k : Type*) [CommRing k] :
-    (T 2 + 1 + T (-2) : LaurentPolynomial k) •
-    (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) =
-    (uqAffK0 k * uqAffE1 k * uqAffK1 k * uqAffK1 k +
-     uqAffK0 k * uqAffK1 k * uqAffE1 k * uqAffK1 k +
-     uqAffK0 k * uqAffK1 k * uqAffK1 k * uqAffE1 k) := by
-  have h1 := sect_hKE_smul_K1E1 k
-  have h2 := sect_hKE_at_K1E1 k
-  have h3 := sect_hKE_smul_K0E1 k
-  have h4 := sect_hKE_at_K0E1 k
-  -- Normalize each atom to T^n • (E₁K₀K₁K₁) [use this as basis P].
-  have hG1 : uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k =
-      (T 0 : LaurentPolynomial k) • (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) := by
-    rw [T_zero, one_smul]
-  have hG2 : uqAffK0 k * uqAffE1 k * uqAffK1 k * uqAffK1 k =
-      (T (-2) : LaurentPolynomial k) •
-        (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) := by
-    simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-  have hG3 : uqAffK0 k * uqAffK1 k * uqAffE1 k * uqAffK1 k =
-      (T 0 : LaurentPolynomial k) •
-        (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) := by
-    simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
-  have hG4 : uqAffK0 k * uqAffK1 k * uqAffK1 k * uqAffE1 k =
-      (T 2 : LaurentPolynomial k) •
-        (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) := by
-    simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
-  rw [hG2, hG3, hG4]
-  simp only [T_zero, one_smul]
-  -- Goal: q3 • P = T(-2)•P + P + T 2•P
-  -- Prove by rewriting RHS to (T(-2) + 1 + T 2) • P and using q3 arithmetic.
-  rw [show (T (-2) : LaurentPolynomial k) •
-         (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k)
-       + (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k)
-       + (T 2 : LaurentPolynomial k) • (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) =
-       (T (-2) + 1 + T 2 : LaurentPolynomial k) •
-         (uqAffE1 k * uqAffK0 k * uqAffK1 k * uqAffK1 k) from by
-    rw [add_smul, add_smul, one_smul]]
-  rw [show ((T 2 + 1 + T (-2) : LaurentPolynomial k) = T (-2) + 1 + T 2) from by ring]
-
-
 /--
 PROVIDED SOLUTION (from `Lit-Search/Phase-5s/CAS-assisted Lean 4 tactics for Δ
 and the q-Serre relation in U_q(ŝl₂).md`): bidegree decomposition into 8 sectors.
@@ -1891,12 +1850,12 @@ private theorem sect_hUqIdE01_20b (k : Type*) [CommRing k] :
       (T 0 : LaurentPolynomial k) •
         (uqAffE0 k * uqAffE0 k * uqAffK1 k * uqAffK0 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hD5 : uqAffK1 k * uqAffE0 k * uqAffK0 k * uqAffE0 k =
       (T (-2) : LaurentPolynomial k) •
         (uqAffE0 k * uqAffE0 k * uqAffK1 k * uqAffK0 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hD6 : uqAffK1 k * uqAffE0 k * uqAffE0 k * uqAffK0 k =
       (T (-4) : LaurentPolynomial k) •
         (uqAffE0 k * uqAffE0 k * uqAffK1 k * uqAffK0 k) := by
@@ -1936,7 +1895,7 @@ private theorem sect_hUqIdE01_cas10a (k : Type*) [CommRing k] :
       (T 2 : LaurentPolynomial k) •
         (uqAffE0 k * uqAffK0 k * uqAffK0 k * uqAffK1 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   rw [hE1, hE2, hE3, hE4]
   simp only [T_zero, one_smul]
   rw [smul_smul]
@@ -1971,12 +1930,12 @@ private theorem sect_hUqIdE01_cas10b (k : Type*) [CommRing k] :
       (T 0 : LaurentPolynomial k) •
         (uqAffE0 k * uqAffK0 k * uqAffK1 k * uqAffK0 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hb : uqAffK0 k * uqAffK1 k * uqAffK0 k * uqAffE0 k =
       (T 0 : LaurentPolynomial k) •
         (uqAffK0 k * uqAffE0 k * uqAffK1 k * uqAffK0 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   rw [ha, hb, T_zero, one_smul, one_smul]
 
 /-- L. CAS sector (1,0) sub-c E01: left = E₁E₀², 4 atoms (1 G3 + 3 G4).
@@ -2003,12 +1962,12 @@ private theorem sect_hUqIdE01_cas10c (k : Type*) [CommRing k] :
       (T 0 : LaurentPolynomial k) •
         (uqAffE0 k * uqAffK1 k * uqAffK0 k * uqAffK0 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hG4 : uqAffK1 k * uqAffK0 k * uqAffK0 k * uqAffE0 k =
       (T 2 : LaurentPolynomial k) •
         (uqAffE0 k * uqAffK1 k * uqAffK0 k * uqAffK0 k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   rw [hG2, hG3, hG4]
   simp only [T_zero, one_smul]
   rw [show (T (-2) : LaurentPolynomial k) •
@@ -2052,7 +2011,6 @@ private theorem affComulFreeAlg_SerreE01 :
   have hKnorm1 := sect_hKnormE01_1 k
   have hKnorm2 := sect_hKnormE01_2 k
   have hKnorm3 := sect_hKnormE01_3 k
-  rw [ha, hb, hc, hd]
   simp only [mul_add, add_mul, smul_add, smul_mul_assoc,
              Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul,
              hKnorm1, hKnorm2, hKnorm3]
@@ -2277,11 +2235,15 @@ private theorem affComulFreeAlg_SerreE01 :
     rw [hUqId_cas10c]
   simp only [map_add, map_sub, LinearMap.map_smul_of_tower,
              phi_cas10c, TensorProduct.mk_apply] at hSect_cas10c
-  simp only [TensorProduct.tmul_add, smul_add]
+  simp only [TensorProduct.tmul_add, TensorProduct.add_tmul, smul_add]
     at hSect10 hSect11 hSect20a hSect_cas10a hSect20b hSect_cas10b hSect_cas10c
   have h20b := sub_eq_zero_of_eq hSect20b
   have h10b := sub_eq_zero_of_eq hSect_cas10b
   have h10c := sub_eq_zero_of_eq hSect_cas10c
+  simp only [LinearMap.smul_apply, LinearMap.add_apply] at h20b h10b h10c
+  repeat erw [TensorProduct.mk_apply] at h20b
+  repeat erw [TensorProduct.mk_apply] at h10b
+  repeat erw [TensorProduct.mk_apply] at h10c
   clear ha hb hc hd hSerreS hKnorm1 hKnorm2 hKnorm3 phi_L phi_R phi_30 phi_01
     phi_10 phi_11 phi_20a phi_cas10a phi_20b phi_cas10b phi_cas10c hUqId30 hUqId01
     hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
@@ -2289,6 +2251,7 @@ private theorem affComulFreeAlg_SerreE01 :
   clear a b c d
   linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 + hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
 
+set_option maxHeartbeats 400000 in
 set_option maxHeartbeats 400000 in
 private theorem affComulFreeAlg_SerreE10 :
     affComulFreeAlg k
@@ -3090,12 +3053,12 @@ private theorem sect_hUqIdF10_20b (k : Type*) [CommRing k] :
       (T 0 : LaurentPolynomial k) •
         (uqAffF1 k * uqAffF1 k * uqAffK0inv k * uqAffK1inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hD5 : uqAffK0inv k * uqAffF1 k * uqAffK1inv k * uqAffF1 k =
       (T (-2) : LaurentPolynomial k) •
         (uqAffF1 k * uqAffF1 k * uqAffK0inv k * uqAffK1inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hD6 : uqAffK0inv k * uqAffF1 k * uqAffF1 k * uqAffK1inv k =
       (T (-4) : LaurentPolynomial k) •
         (uqAffF1 k * uqAffF1 k * uqAffK0inv k * uqAffK1inv k) := by
@@ -3135,7 +3098,7 @@ private theorem sect_hUqIdF10_cas10a (k : Type*) [CommRing k] :
       (T 2 : LaurentPolynomial k) •
         (uqAffF1 k * uqAffK1inv k * uqAffK1inv k * uqAffK0inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   rw [hE1, hE2, hE3, hE4]
   simp only [T_zero, one_smul]
   rw [smul_smul]
@@ -3189,12 +3152,12 @@ private theorem sect_hUqIdF10_cas10b (k : Type*) [CommRing k] :
       (T 0 : LaurentPolynomial k) •
         (uqAffF1 k * uqAffK1inv k * uqAffK0inv k * uqAffK1inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hR2 : uqAffK1inv k * uqAffK0inv k * uqAffK1inv k * uqAffF1 k =
       (T 2 : LaurentPolynomial k) •
         (uqAffF1 k * uqAffK1inv k * uqAffK0inv k * uqAffK1inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   rw [hL1, hL2, hR1, hR2]
 
 /-- Sector (1,0) CAS sub-part c F10: left = F₀F₁², equation form. -/
@@ -3221,12 +3184,12 @@ private theorem sect_hUqIdF10_cas10c (k : Type*) [CommRing k] :
       (T 0 : LaurentPolynomial k) •
         (uqAffF1 k * uqAffK0inv k * uqAffK1inv k * uqAffK1inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   have hR3 : uqAffK0inv k * uqAffK1inv k * uqAffK1inv k * uqAffF1 k =
       (T 2 : LaurentPolynomial k) •
         (uqAffF1 k * uqAffK0inv k * uqAffK1inv k * uqAffK1inv k) := by
     simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul]
-    congr 1; simp only [← T_add]; norm_num
+    try (congr 1; simp only [← T_add]; norm_num)
   rw [hL, hR1, hR2, hR3]
   simp only [T_zero, one_smul]
   -- Goal: q3 • P = T(-2)•P + P + T(2)•P
@@ -3241,23 +3204,7 @@ private theorem sect_hUqIdF10_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
--- Metaprogram: normalize `OfNat.ofNat` instances on `RingQuot` types in the goal.
--- The `module` tactic hardcodes `AtomM.run .reducible`, making it blind to the
--- RingQuot diamond (RingQuot.instOne vs Ring.toOne) that resolves at `.instances`.
--- This tactic re-synthesizes each `OfNat` instance via `synthInstance` (deterministic,
--- always picks the same canonical path) and `change`s the goal (valid at `.default`).
-open Lean Meta Elab Tactic in
-elab "normalize_ringquot_ofnat" : tactic => do
-  let mvarId ← getMainGoal
-  mvarId.withContext do
-    let target ← mvarId.getType
-    let target' ← withTransparency .instances (reduce target (skipTypes := false) (skipProofs := false))
-    let mvarId' ← mvarId.change target'
-    replaceMainGoal [mvarId']
-
-macro "normalize_module" : tactic => `(tactic| (normalize_ringquot_ofnat; module))
-
-set_option maxHeartbeats 8000000 in
+set_option maxHeartbeats 1600000 in
 private theorem affComulFreeAlg_SerreF10 :
     affComulFreeAlg k
       (ag k F1 * ag k F1 * ag k F1 * ag k F0
@@ -3292,7 +3239,8 @@ private theorem affComulFreeAlg_SerreF10 :
   simp only [mul_add, add_mul, smul_add, smul_mul_assoc,
              Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul,
              hKnorm1, hKnorm2, hKnorm3]
-  -- phi_L sends x ↦ x ⊗ 1; phi_R sends y ↦ K₁⁻³K₀⁻¹ ⊗ y.
+  -- Define two linear maps: phi_L sends x ↦ x ⊗ 1 (for sector (0,0));
+  -- phi_R sends y ↦ K₁⁻³K₀⁻¹ ⊗ y (for sector (3,1)).
   let phi_L : Uqsl2Aff k →ₗ[LaurentPolynomial k]
       Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
     (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
@@ -3521,12 +3469,14 @@ private theorem affComulFreeAlg_SerreF10 :
     hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
     hSect20b hSect_cas10b hSect_cas10c
   clear a b c d
-  linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 +
+  linear_combination (norm := skip) hSect00 + hSect31 + hSect30 + hSect01 +
     hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
+  convert (show (0 : Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k) = 0 from rfl) using 2
+  all_goals first | rfl | module
 
 /-! ### Sector decomposition helpers for SerreF01.
 
-Mirror of the F10 sector helpers with the substitution F₁↔F₀, K₁⁻¹↔K₀⁻¹.
+Mirror of the F10 sector helpers with the substitution 0↔1.
 Δ(F₀) = F₀⊗1 + K₀⁻¹⊗F₀, Δ(F₁) = F₁⊗1 + K₁⁻¹⊗F₁.
 
 Setting a = F₀⊗1, b = K₀⁻¹⊗F₀, c = F₁⊗1, d = K₁⁻¹⊗F₁.
@@ -3534,31 +3484,24 @@ K⁻¹-F commutation: K₀⁻¹F₁ = T(-2)·F₁K₀⁻¹, K₀⁻¹F₀ = T(2)
 K₁⁻¹F₀ = T(-2)·F₀K₁⁻¹, K₁⁻¹F₁ = T(2)·F₁K₁⁻¹.
 -/
 
-/-- Serre F01 in smul form: F₀³F₁ - q3•F₀²F₁F₀ + q3•F₀F₁F₀² - F₁F₀³ = 0. -/
-private theorem sect_hSerreF01_smul (k : Type*) [CommRing k] :
-    uqAffF0 k * uqAffF0 k * uqAffF0 k * uqAffF1 k -
-    (T 2 + 1 + T (-2) : LaurentPolynomial k) •
-      (uqAffF0 k * uqAffF0 k * uqAffF1 k * uqAffF0 k) +
-    (T 2 + 1 + T (-2) : LaurentPolynomial k) •
-      (uqAffF0 k * uqAffF1 k * uqAffF0 k * uqAffF0 k) -
-    uqAffF1 k * uqAffF0 k * uqAffF0 k * uqAffF0 k = 0 := by
-  simp only [Algebra.smul_def, ← mul_assoc]; exact uqAff_SerreF01 k
-
 /-- K⁻¹-product normalization 1: K₀⁻¹K₀⁻¹K₁⁻¹K₀⁻¹ = K₀⁻¹K₀⁻¹K₀⁻¹K₁⁻¹. -/
 private theorem sect_hKnormF01_1 (k : Type*) [CommRing k] :
     uqAffK0inv k * uqAffK0inv k * uqAffK1inv k * uqAffK0inv k =
     uqAffK0inv k * uqAffK0inv k * uqAffK0inv k * uqAffK1inv k := by
   rw [mul_assoc (uqAffK0inv k * uqAffK0inv k) (uqAffK1inv k) (uqAffK0inv k),
-      ← uqAff_K0inv_K1inv_comm, ← mul_assoc]
+      show uqAffK1inv k * uqAffK0inv k = uqAffK0inv k * uqAffK1inv k from
+        (uqAff_K0inv_K1inv_comm k).symm, ← mul_assoc]
 
 /-- K⁻¹-product normalization 2: K₀⁻¹K₁⁻¹K₀⁻¹K₀⁻¹ = K₀⁻¹K₀⁻¹K₀⁻¹K₁⁻¹. -/
 private theorem sect_hKnormF01_2 (k : Type*) [CommRing k] :
     uqAffK0inv k * uqAffK1inv k * uqAffK0inv k * uqAffK0inv k =
     uqAffK0inv k * uqAffK0inv k * uqAffK0inv k * uqAffK1inv k := by
   rw [mul_assoc (uqAffK0inv k) (uqAffK1inv k) (uqAffK0inv k),
-      ← uqAff_K0inv_K1inv_comm,
+      show uqAffK1inv k * uqAffK0inv k = uqAffK0inv k * uqAffK1inv k from
+        (uqAff_K0inv_K1inv_comm k).symm,
       ← mul_assoc, mul_assoc (uqAffK0inv k * uqAffK0inv k) (uqAffK1inv k) (uqAffK0inv k),
-      ← uqAff_K0inv_K1inv_comm, ← mul_assoc]
+      show uqAffK1inv k * uqAffK0inv k = uqAffK0inv k * uqAffK1inv k from
+        (uqAff_K0inv_K1inv_comm k).symm, ← mul_assoc]
 
 /-- K⁻¹-product normalization 3: K₁⁻¹K₀⁻¹K₀⁻¹K₀⁻¹ = K₀⁻¹K₀⁻¹K₀⁻¹K₁⁻¹. -/
 private theorem sect_hKnormF01_3 (k : Type*) [CommRing k] :
@@ -3567,9 +3510,11 @@ private theorem sect_hKnormF01_3 (k : Type*) [CommRing k] :
   rw [show uqAffK1inv k * uqAffK0inv k = uqAffK0inv k * uqAffK1inv k
         from (uqAff_K0inv_K1inv_comm k).symm,
       mul_assoc (uqAffK0inv k) (uqAffK1inv k) (uqAffK0inv k),
-      ← uqAff_K0inv_K1inv_comm,
+      show uqAffK1inv k * uqAffK0inv k = uqAffK0inv k * uqAffK1inv k from
+        (uqAff_K0inv_K1inv_comm k).symm,
       ← mul_assoc, mul_assoc (uqAffK0inv k * uqAffK0inv k) (uqAffK1inv k) (uqAffK0inv k),
-      ← uqAff_K0inv_K1inv_comm, ← mul_assoc]
+      show uqAffK1inv k * uqAffK0inv k = uqAffK0inv k * uqAffK1inv k from
+        (uqAff_K0inv_K1inv_comm k).symm, ← mul_assoc]
 
 /-- Sector (3,0) F01 identity: K₀⁻³F₁ - q3•K₀⁻²F₁K₀⁻¹ + q3•K₀⁻¹F₁K₀⁻² - F₁K₀⁻³ = 0.
     Push F₁ right past all K₀⁻¹'s via K₀⁻¹F₁ = T(-2)•F₁K₀⁻¹. -/
@@ -4037,7 +3982,7 @@ private theorem sect_hUqIdF01_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
-set_option maxHeartbeats 8000000 in
+set_option maxHeartbeats 800000 in
 private theorem affComulFreeAlg_SerreF01 :
     affComulFreeAlg k
       (ag k F0 * ag k F0 * ag k F0 * ag k F1
@@ -4064,7 +4009,13 @@ private theorem affComulFreeAlg_SerreF01 :
   set b := uqAffK0inv k ⊗ₜ[LaurentPolynomial k] uqAffF0 k with hb
   set c := uqAffF1 k ⊗ₜ[LaurentPolynomial k] (1 : Uqsl2Aff k) with hc
   set d := uqAffK1inv k ⊗ₜ[LaurentPolynomial k] uqAffF1 k with hd
-  have hSerreS := sect_hSerreF01_smul k
+  have hSerreS : uqAffF0 k * uqAffF0 k * uqAffF0 k * uqAffF1 k -
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+        (uqAffF0 k * uqAffF0 k * uqAffF1 k * uqAffF0 k) +
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+        (uqAffF0 k * uqAffF1 k * uqAffF0 k * uqAffF0 k) -
+      uqAffF1 k * uqAffF0 k * uqAffF0 k * uqAffF0 k = 0 := by
+    simp only [Algebra.smul_def, ← mul_assoc]; exact uqAff_SerreF01 k
   have hKnorm1 := sect_hKnormF01_1 k
   have hKnorm2 := sect_hKnormF01_2 k
   have hKnorm3 := sect_hKnormF01_3 k
@@ -4302,9 +4253,23 @@ private theorem affComulFreeAlg_SerreF01 :
     hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
     hSect20b hSect_cas10b hSect_cas10c
   clear a b c d
-  linear_combination (norm := normalize_module) hSect00 + hSect31 + hSect30 + hSect01 +
+  linear_combination (norm := skip) hSect00 + hSect31 + hSect30 + hSect01 +
     hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
+  convert (show (0 : Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k) = 0 from rfl) using 2
+  all_goals first | rfl | module
 
+/-! ### Sector decomposition helpers for SerreF01.
+
+Mirror of the F10 sector helpers with the substitution F₁↔F₀, K₁⁻¹↔K₀⁻¹.
+Δ(F₀) = F₀⊗1 + K₀⁻¹⊗F₀, Δ(F₁) = F₁⊗1 + K₁⁻¹⊗F₁.
+
+Setting a = F₀⊗1, b = K₀⁻¹⊗F₀, c = F₁⊗1, d = K₁⁻¹⊗F₁.
+K⁻¹-F commutation: K₀⁻¹F₁ = T(-2)·F₁K₀⁻¹, K₀⁻¹F₀ = T(2)·F₀K₀⁻¹,
+K₁⁻¹F₀ = T(-2)·F₀K₁⁻¹, K₁⁻¹F₁ = T(2)·F₁K₁⁻¹.
+-/
+
+/-- Serre F01 in smul form: F₀³F₁ - q3•F₀²F₁F₀ + q3•F₀F₁F₀² - F₁F₀³ = 0. -/
+private theorem sect_hSerreF01_smul (k : Type*) [CommRing k] :
 /-- The coproduct respects all affine Chevalley relations. -/
 private theorem affComulFreeAlg_respects_rel :
     ∀ ⦃x y : FreeAlgebra (LaurentPolynomial k) Uqsl2AffGen⦄,

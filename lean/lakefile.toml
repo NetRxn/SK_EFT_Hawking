@@ -11,6 +11,14 @@ name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
 
+# Lean REPL binary, version-matched to leanprover/lean4:v4.28.0 (see lean-toolchain).
+# Built into .lake/packages/repl/.lake/build/bin/repl where lean-lsp-mcp auto-discovers it.
+# Zero transitive deps, cannot conflict with Mathlib.
+[[require]]
+name = "repl"
+git = "https://github.com/leanprover-community/repl.git"
+rev = "v4.28.0"
+
 [[lean_lib]]
 name = "SKEFTHawking"
 
