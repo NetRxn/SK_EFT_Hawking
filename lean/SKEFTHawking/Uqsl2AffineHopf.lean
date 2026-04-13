@@ -3294,7 +3294,6 @@ elab "normalize_ringquot_ofnat" : tactic => do
 
 macro "normalize_module" : tactic => `(tactic| (normalize_ringquot_ofnat; module))
 
-set_option backward.isDefEq.respectTransparency true in
 set_option maxHeartbeats 400000 in
 private theorem affComulFreeAlg_SerreF10 :
     affComulFreeAlg k
@@ -4076,7 +4075,6 @@ private theorem sect_hUqIdF01_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
-set_option backward.isDefEq.respectTransparency true in
 set_option maxHeartbeats 400000 in
 private theorem affComulFreeAlg_SerreF01 :
     affComulFreeAlg k
@@ -5427,7 +5425,6 @@ private theorem affConvR_mul_step
     simp +decide [mul_assoc, Algebra.commutes]
   | add x y hx hy => simp_all +decide [mul_add, add_mul]
 
-set_option backward.isDefEq.respectTransparency true in
 set_option maxHeartbeats 400000 in
 private theorem affAntipode_right :
     LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
@@ -5479,7 +5476,6 @@ private theorem affConvL_mul_step
     simp +decide [mul_assoc, ← Algebra.commutes]
   | add x y hx hy => simp_all +decide [mul_add, add_mul]
 
-set_option backward.isDefEq.respectTransparency true in
 set_option maxHeartbeats 400000 in
 private theorem affAntipode_left :
     LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
