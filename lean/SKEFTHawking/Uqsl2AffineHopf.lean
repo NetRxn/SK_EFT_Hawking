@@ -5317,7 +5317,67 @@ noncomputable def affAntipode :
   RingQuot.liftAlgHom (LaurentPolynomial k)
     ⟨affAntipodeFreeAlg k, affAntipodeFreeAlg_respects_rel k⟩
 
-/-! ## 5. Module summary -/
+/-! ## 5. Per-generator coproduct and counit lemmas -/
+
+private theorem affComul_gen (x : Uqsl2AffGen) :
+    affComul k (RingQuot.mkAlgHom _ (AffChevalleyRel k) (FreeAlgebra.ι _ x)) =
+    affComulOnGen k x := by
+  simp [affComul, RingQuot.liftAlgHom, affComulFreeAlg, FreeAlgebra.lift_ι_apply]
+
+private theorem affCounit_gen (x : Uqsl2AffGen) :
+    affCounit k (RingQuot.mkAlgHom _ (AffChevalleyRel k) (FreeAlgebra.ι _ x)) =
+    affCounitOnGen k x := by
+  simp [affCounit, RingQuot.liftAlgHom, affCounitFreeAlg, FreeAlgebra.lift_ι_apply]
+
+/-! ## 6. Bialgebra coherence: coassociativity and counitality -/
+
+private theorem affComul_coassoc :
+    (Algebra.TensorProduct.assoc (LaurentPolynomial k) (LaurentPolynomial k)
+      (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k) (Uqsl2Aff k)).toAlgHom.comp
+      ((Algebra.TensorProduct.map (affComul k)
+        (.id (LaurentPolynomial k) (Uqsl2Aff k))).comp (affComul k)) =
+    (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2Aff k))
+      (affComul k)).comp (affComul k) := by
+  apply RingQuot.ringQuot_ext'
+  apply FreeAlgebra.hom_ext
+  funext x; cases x <;>
+    simp +decide [affComul_gen, affComulOnGen,
+      Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.assoc_tmul,
+      TensorProduct.tmul_add, TensorProduct.add_tmul,
+      AlgebraTensorModule.map_tmul, AlgebraTensorModule.assoc_tmul] <;>
+    erw [affComul_gen] <;>
+    simp +decide [affComulOnGen, Algebra.TensorProduct.map_tmul,
+      Algebra.TensorProduct.assoc_tmul, AlgebraTensorModule.assoc_tmul,
+      TensorProduct.tmul_add, TensorProduct.add_tmul]
+
+private theorem affComul_rTensor_counit :
+    (Algebra.TensorProduct.map (affCounit k)
+      (.id (LaurentPolynomial k) (Uqsl2Aff k))).comp (affComul k) =
+    (Algebra.TensorProduct.lid (LaurentPolynomial k) (Uqsl2Aff k)).symm := by
+  apply RingQuot.ringQuot_ext'
+  apply FreeAlgebra.hom_ext
+  funext x; cases x <;>
+    simp +decide [affComul_gen, affComulOnGen, affCounit_gen, affCounitOnGen,
+      Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.lid] <;>
+    rfl
+
+private theorem affComul_lTensor_counit :
+    (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2Aff k))
+      (affCounit k)).comp (affComul k) =
+    (Algebra.TensorProduct.rid (LaurentPolynomial k) (LaurentPolynomial k)
+      (Uqsl2Aff k)).symm := by
+  apply RingQuot.ringQuot_ext'
+  apply FreeAlgebra.hom_ext
+  funext x; cases x <;>
+    simp +decide [affComul_gen, affComulOnGen, affCounit_gen, affCounitOnGen,
+      Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.rid] <;>
+    rfl
+
+noncomputable instance : Bialgebra (LaurentPolynomial k) (Uqsl2Aff k) :=
+  Bialgebra.ofAlgHom (affComul k) (affCounit k)
+    (affComul_coassoc k) (affComul_rTensor_counit k) (affComul_lTensor_counit k)
+
+/-! ## 7. Module summary -/
 
 theorem uqsl2_affine_hopf_summary : True := trivial
 
