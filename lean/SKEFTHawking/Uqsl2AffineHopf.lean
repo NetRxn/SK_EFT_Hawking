@@ -3251,7 +3251,27 @@ elab "normalize_ringquot_ofnat" : tactic => do
   let mvarId ← getMainGoal
   mvarId.withContext do
     let target ← mvarId.getType
-    let target' ← withTransparency .instances (reduce target (skipTypes := false) (skipProofs := false))
+    let target' ← Meta.transform target (pre := fun e => do
+      unless e.isApp do return .continue
+      let fn := e.getAppFn
+      unless fn.isConst do return .continue
+      let args := e.getAppArgs
+      let fnInfo ← getFunInfo fn args.size
+      let mut changed := false
+      let mut newArgs := args
+      for i in [:args.size] do
+        if h : i < fnInfo.paramInfo.size then
+          let pinfo := fnInfo.paramInfo[i]
+          if pinfo.isInstImplicit then
+            let arg := args[i]!
+            let argTy ← inferType arg
+            let canonInst ← try synthInstance argTy catch _ => continue
+            if arg == canonInst then continue
+            newArgs := newArgs.set! i canonInst
+            changed := true
+      if changed then
+        return .done (mkAppN fn newArgs)
+      return .continue)
     let mvarId' ← mvarId.change target'
     replaceMainGoal [mvarId']
 
@@ -3295,8 +3315,8 @@ private theorem affComulFreeAlg_SerreF10 :
   -- phi_L sends x ↦ x ⊗ 1; phi_R sends y ↦ K₁⁻³K₀⁻¹ ⊗ y.
   let phi_L : Uqsl2Aff k →ₗ[LaurentPolynomial k]
       Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
-    (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
-      (1 : Uqsl2Aff k)
+    (Algebra.TensorProduct.includeLeft
+      (R := LaurentPolynomial k) (A := Uqsl2Aff k) (B := Uqsl2Aff k)).toLinearMap
   let phi_R : Uqsl2Aff k →ₗ[LaurentPolynomial k]
       Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
     TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)
@@ -3319,7 +3339,8 @@ private theorem affComulFreeAlg_SerreF10 :
       LinearMap.map_smul_of_tower phi_L, LinearMap.map_smul_of_tower phi_L] at hSect00
   rw [map_sub phi_R, map_add phi_R, map_sub phi_R,
       LinearMap.map_smul_of_tower phi_R, LinearMap.map_smul_of_tower phi_R] at hSect31
-  simp only [phi_L, phi_R, LinearMap.flip_apply, TensorProduct.mk_apply]
+  simp only [phi_L, phi_R, AlgHom.toLinearMap_apply,
+    Algebra.TensorProduct.includeLeft_apply, LinearMap.flip_apply, TensorProduct.mk_apply]
     at hSect00 hSect31
   ------------------------------------------------------------------------
   -- Sector (3,0): right factor F₁³ (uniform), left has K₁⁻³ + F₀ mix.
@@ -4302,7 +4323,7 @@ private theorem affComulFreeAlg_SerreF01 :
     hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
     hSect20b hSect_cas10b hSect_cas10c
   clear a b c d
-  linear_combination (norm := normalize_module) hSect00 + hSect31 + hSect30 + hSect01 +
+  linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 +
     hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
 
 /-- The coproduct respects all affine Chevalley relations. -/
