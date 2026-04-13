@@ -1,6 +1,8 @@
 import SKEFTHawking.Uqsl2Affine
 import Mathlib
 
+set_option backward.isDefEq.respectTransparency false
+
 /-!
 # Hopf Algebra Structure on U_q(ŝl₂)
 
@@ -525,6 +527,7 @@ private theorem affComul_EF_sub_FE_0 :
   simp +decide [ TensorProduct.add_tmul, TensorProduct.tmul_add, TensorProduct.smul_tmul, add_assoc, add_left_comm, add_comm ];
   simp +decide [ ← add_assoc, ← TensorProduct.tmul_add, ← TensorProduct.add_tmul, ← TensorProduct.smul_tmul ]
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem affComul_EF_sub_FE_1 :
     affComulFreeAlg k (ag k E1 * ag k F1) - affComulFreeAlg k (ag k F1 * ag k E1) =
     (uqAffE1 k * uqAffF1 k - uqAffF1 k * uqAffE1 k) ⊗ₜ[LaurentPolynomial k] uqAffK1 k +
@@ -542,6 +545,7 @@ private theorem affComul_EF_sub_FE_1 :
 /-
 Step 2: Apply Serre relation
 -/
+set_option backward.isDefEq.respectTransparency false in
 private theorem affComul_Serre0_apply :
     algebraMap (LaurentPolynomial k) ((Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k)) (T 1 - T (-1)) *
     ((uqAffE0 k * uqAffF0 k - uqAffF0 k * uqAffE0 k) ⊗ₜ[LaurentPolynomial k] uqAffK0 k +
@@ -559,6 +563,7 @@ private theorem affComul_Serre0_apply :
   simp +decide [ TensorProduct.add_tmul, TensorProduct.tmul_add, TensorProduct.neg_tmul, TensorProduct.tmul_neg ] ; abel_nf;
   rw [ TensorProduct.smul_tmul, TensorProduct.tmul_smul ] ; norm_num ; abel_nf
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem affComul_Serre1_apply :
     algebraMap (LaurentPolynomial k) ((Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k)) (T 1 - T (-1)) *
     ((uqAffE1 k * uqAffF1 k - uqAffF1 k * uqAffE1 k) ⊗ₜ[LaurentPolynomial k] uqAffK1 k +
@@ -1432,6 +1437,17 @@ private theorem sect_hUqId_cas10c (k : Type*) [CommRing k] :
   rw [show ((T 2 + 1 + T (-2) : LaurentPolynomial k) = T (-2) + 1 + T 2) from by ring]
 
 
+set_option backward.isDefEq.respectTransparency false in
+noncomputable instance uqAffLaurent_intAlgebra (k : Type*) [CommRing k] :
+    Algebra ℤ (LaurentPolynomial k) := inferInstance
+
+set_option backward.isDefEq.respectTransparency false in
+noncomputable instance uqAffTensor_intScalarTower (k : Type*) [CommRing k] :
+    IsScalarTower ℤ (LaurentPolynomial k)
+      (Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k) :=
+  IsScalarTower.of_algebraMap_smul (fun r x => by
+    rw [Algebra.algebraMap_eq_smul_one, smul_assoc, one_smul])
+
 /--
 PROVIDED SOLUTION (from `Lit-Search/Phase-5s/CAS-assisted Lean 4 tactics for Δ
 and the q-Serre relation in U_q(ŝl₂).md`): bidegree decomposition into 8 sectors.
@@ -1488,6 +1504,7 @@ See Phase-5p "RingQuot's typeclass diamond" doc for the `have hr := by ...`
 pattern that avoids RingQuot rewrite failures. Use `erw` not `rw` for any
 rewrite that crosses the RingQuot instMul/instSemiring.toMul boundary.
 -/
+
 private theorem sect_hSerreS_smul (k : Type*) [CommRing k] :
     uqAffE1 k * uqAffE1 k * uqAffE1 k * uqAffE0 k -
     (T 2 + 1 + T (-2) : LaurentPolynomial k) •
@@ -3277,6 +3294,7 @@ elab "normalize_ringquot_ofnat" : tactic => do
 
 macro "normalize_module" : tactic => `(tactic| (normalize_ringquot_ofnat; module))
 
+set_option backward.isDefEq.respectTransparency true in
 set_option maxHeartbeats 8000000 in
 private theorem affComulFreeAlg_SerreF10 :
     affComulFreeAlg k
@@ -4058,6 +4076,7 @@ private theorem sect_hUqIdF01_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
+set_option backward.isDefEq.respectTransparency true in
 set_option maxHeartbeats 8000000 in
 private theorem affComulFreeAlg_SerreF01 :
     affComulFreeAlg k
