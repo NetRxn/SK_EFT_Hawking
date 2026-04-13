@@ -3258,20 +3258,28 @@ private theorem sect_hUqIdF10_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
--- Metaprogram: normalize `OfNat.ofNat` instances on `RingQuot` types in the goal.
--- The `module` tactic hardcodes `AtomM.run .reducible`, making it blind to the
--- RingQuot diamond (RingQuot.instOne vs Ring.toOne) that resolves at `.instances`.
--- This tactic re-synthesizes each `OfNat` instance via `synthInstance` (deterministic,
--- always picks the same canonical path) and `change`s the goal (valid at `.default`).
+-- RingQuot is @[irreducible] and instance bodies are stripped at module boundaries.
+-- `module` uses `AtomM.run .instances` where the RingQuot One diamond is unresolvable.
+-- `module_canon` pre-canonicalizes the goal using `Lean.Meta.Canonicalizer.canon` to
+-- collapse instance diamonds before `module` processes atoms. This ensures `ring`'s
+-- synthesized instances match the goal's instances.
+open Lean Meta Mathlib.Tactic Mathlib.Tactic.Module in
+elab "module_canon" : tactic => Lean.Elab.Tactic.liftMetaFinishingTactic fun g ↦ do
+  let target ← g.getType
+  let target' ← Lean.Meta.Canonicalizer.canon target
+  let g' ← g.change target'
+  let mvars ← AtomM.run .instances (matchScalarsAux g')
+  let l ← mvars.mapM postprocess
+  discard <| l.mapM fun mvar ↦ AtomM.run .instances (Ring.proveEq mvar)
 open Lean Meta Elab Tactic in
 elab "normalize_ringquot_ofnat" : tactic => do
   let mvarId ← getMainGoal
   mvarId.withContext do
     let target ← mvarId.getType
-    let target' ← Meta.transform target (pre := fun e => do
-      unless e.isApp do return .continue
+    let target' ← Meta.transform target (post := fun e => do
+      unless e.isApp do return .done e
       let fn := e.getAppFn
-      unless fn.isConst do return .continue
+      unless fn.isConst do return .done e
       let args := e.getAppArgs
       let fnInfo ← getFunInfo fn args.size
       let mut changed := false
@@ -3288,13 +3296,13 @@ elab "normalize_ringquot_ofnat" : tactic => do
             changed := true
       if changed then
         return .done (mkAppN fn newArgs)
-      return .continue)
+      return .done e)
     let mvarId' ← mvarId.change target'
     replaceMainGoal [mvarId']
 
 macro "normalize_module" : tactic => `(tactic| (normalize_ringquot_ofnat; module))
 
-set_option maxHeartbeats 400000 in
+set_option maxHeartbeats 2000000 in
 private theorem affComulFreeAlg_SerreF10 :
     affComulFreeAlg k
       (ag k F1 * ag k F1 * ag k F1 * ag k F0
@@ -3559,8 +3567,11 @@ private theorem affComulFreeAlg_SerreF10 :
     hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
     hSect20b hSect_cas10b hSect_cas10c
   clear a b c d
-  linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 +
+  linear_combination (norm := (match_scalars <;> simp [T_zero, ← T_add]; ring))
+    hSect00 + hSect31 + hSect30 + hSect01 +
     hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
+  -- Remaining goal: ⊢ -T(-2) + (-1 + -T(2)) = 0, i.e., -q₃ = 0 — coefficient error
+  sorry
 
 /-! ### Sector decomposition helpers for SerreF01.
 
@@ -4075,7 +4086,7 @@ private theorem sect_hUqIdF01_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
-set_option maxHeartbeats 400000 in
+set_option maxHeartbeats 2000000 in
 private theorem affComulFreeAlg_SerreF01 :
     affComulFreeAlg k
       (ag k F0 * ag k F0 * ag k F0 * ag k F1
@@ -4340,7 +4351,7 @@ private theorem affComulFreeAlg_SerreF01 :
     hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
     hSect20b hSect_cas10b hSect_cas10c
   clear a b c d
-  linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 +
+  linear_combination (norm := module_all) hSect00 + hSect31 + hSect30 + hSect01 +
     hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
 
 /-- The coproduct respects all affine Chevalley relations. -/
@@ -5425,7 +5436,7 @@ private theorem affConvR_mul_step
     simp +decide [mul_assoc, Algebra.commutes]
   | add x y hx hy => simp_all +decide [mul_add, add_mul]
 
-set_option maxHeartbeats 400000 in
+set_option maxHeartbeats 800000 in
 private theorem affAntipode_right :
     LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
       (affAntipodeLM k).rTensor (Uqsl2Aff k) ∘ₗ
@@ -5476,7 +5487,7 @@ private theorem affConvL_mul_step
     simp +decide [mul_assoc, ← Algebra.commutes]
   | add x y hx hy => simp_all +decide [mul_add, add_mul]
 
-set_option maxHeartbeats 400000 in
+set_option maxHeartbeats 800000 in
 private theorem affAntipode_left :
     LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
       (affAntipodeLM k).lTensor (Uqsl2Aff k) ∘ₗ

@@ -1021,7 +1021,7 @@ theorem antipode_squared_is_ad_K (x : Uqsl2 k) :
       intro r
       simp [antipodeUq];
     convert h_antipode_algMap x using 1;
-    · grind +suggestions;
+    · simp +decide [mul_assoc, mul_comm, mul_left_comm];
     · convert congr_arg ( fun y => algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) x * y ) ( uq_K_mul_Kinv k ) using 1;
       · simp +decide [ mul_assoc, mul_comm, mul_left_comm ];
         rw [ ← mul_assoc, ← mul_assoc ];
