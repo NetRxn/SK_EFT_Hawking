@@ -3295,7 +3295,7 @@ elab "normalize_ringquot_ofnat" : tactic => do
 macro "normalize_module" : tactic => `(tactic| (normalize_ringquot_ofnat; module))
 
 set_option backward.isDefEq.respectTransparency true in
-set_option maxHeartbeats 8000000 in
+set_option maxHeartbeats 400000 in
 private theorem affComulFreeAlg_SerreF10 :
     affComulFreeAlg k
       (ag k F1 * ag k F1 * ag k F1 * ag k F0
@@ -4077,7 +4077,7 @@ private theorem sect_hUqIdF01_cas10c (k : Type*) [CommRing k] :
   congr 1; ring
 
 set_option backward.isDefEq.respectTransparency true in
-set_option maxHeartbeats 8000000 in
+set_option maxHeartbeats 400000 in
 private theorem affComulFreeAlg_SerreF01 :
     affComulFreeAlg k
       (ag k F0 * ag k F0 * ag k F0 * ag k F1
