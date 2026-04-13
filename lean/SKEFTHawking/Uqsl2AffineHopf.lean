@@ -5377,7 +5377,141 @@ noncomputable instance : Bialgebra (LaurentPolynomial k) (Uqsl2Aff k) :=
   Bialgebra.ofAlgHom (affComul k) (affCounit k)
     (affComul_coassoc k) (affComul_rTensor_counit k) (affComul_lTensor_counit k)
 
-/-! ## 7. Module summary -/
+/-! ## 7. HopfAlgebra instance -/
+
+noncomputable def affAntipodeLM :
+    Uqsl2Aff k →ₗ[LaurentPolynomial k] Uqsl2Aff k :=
+  (MulOpposite.opLinearEquiv (LaurentPolynomial k)).symm.toLinearMap.comp
+    (affAntipode k).toLinearMap
+
+private theorem affAntipode_gen (x : Uqsl2AffGen) :
+    affAntipode k (RingQuot.mkAlgHom _ (AffChevalleyRel k) (FreeAlgebra.ι _ x)) =
+    affAntipodeOnGen k x := by
+  simp [affAntipode, RingQuot.liftAlgHom, affAntipodeFreeAlg, FreeAlgebra.lift_ι_apply]
+
+private theorem affAntipodeLM_gen (x : Uqsl2AffGen) :
+    affAntipodeLM k (RingQuot.mkAlgHom _ (AffChevalleyRel k) (FreeAlgebra.ι _ x)) =
+    MulOpposite.unop (affAntipodeOnGen k x) := by
+  simp [affAntipodeLM, affAntipode_gen]
+
+private theorem affAntipodeLM_one : affAntipodeLM k 1 = 1 := by
+  simp [affAntipodeLM, affAntipode]
+
+private theorem affAntipodeLM_mul (a b : Uqsl2Aff k) :
+    affAntipodeLM k (a * b) = affAntipodeLM k b * affAntipodeLM k a := by
+  simp [affAntipodeLM, map_mul]
+
+private theorem affConvR_mul_step
+    (x y : (Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k))
+    (r : LaurentPolynomial k)
+    (hx : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+            ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) x) =
+          algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+      ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) (x * y)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r *
+      (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+        ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) y) := by
+  revert hx
+  induction y using TensorProduct.induction_on with
+  | zero => simp +decide
+  | tmul c d =>
+    intro hx
+    have h_sum : ∃ (s : Finset (Uqsl2Aff k × Uqsl2Aff k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 :=
+      TensorProduct.exists_finset x
+    obtain ⟨s, rfl⟩ := h_sum
+    simp +decide [hx, mul_assoc, Finset.sum_mul _ _ _]
+    simp [affAntipodeLM_mul, ← mul_assoc, ← Finset.sum_mul _ _ _]
+    simp only [← Finset.mul_sum _ _ _, mul_assoc]
+    rw [hx]
+    simp +decide [mul_assoc, Algebra.commutes]
+  | add x y hx hy => simp_all +decide [mul_add, add_mul]
+
+set_option backward.isDefEq.respectTransparency true in
+set_option maxHeartbeats 400000 in
+private theorem affAntipode_right :
+    LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
+      (affAntipodeLM k).rTensor (Uqsl2Aff k) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (LaurentPolynomial k) (Uqsl2Aff k)) ∘ₗ Coalgebra.counit := by
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (AffChevalleyRel k) x
+  induction x using FreeAlgebra.induction with
+  | algebraMap r =>
+    simp +decide [affAntipodeLM, affAntipode, affComul, affCounit,
+      RingQuot.liftAlgHom, affComulFreeAlg, affCounitFreeAlg]
+  | ι x =>
+    cases x <;>
+      simp +decide [affComul_gen, affComulOnGen, affAntipodeLM_gen, affAntipodeOnGen,
+        affCounit_gen, affCounitOnGen, LinearMap.rTensor_tmul, LinearMap.mul'_apply,
+        affAntipodeLM_one, mul_assoc] <;>
+      erw [uqAff_K0inv_mul_K0 k] <;> try erw [uqAff_K1inv_mul_K1 k] <;>
+      simp
+  | mul x y hx hy =>
+    simp_all +decide [mul_assoc, CoalgebraStruct.comul]
+    convert affConvR_mul_step k _ _ _ hy using 1
+    aesop
+  | add x y hx hy => simp_all [map_add]
+
+private theorem affConvL_mul_step
+    (x y : (Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k))
+    (r : LaurentPolynomial k)
+    (hy : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+            ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) y) =
+          algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+      ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) (x * y)) =
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+        ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) x) *
+      algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r := by
+  revert hy
+  induction x using TensorProduct.induction_on with
+  | zero => simp +decide
+  | tmul a b =>
+    intro hy
+    have h_sum : ∃ (s : Finset (Uqsl2Aff k × Uqsl2Aff k)), y = ∑ p ∈ s, p.1 ⊗ₜ p.2 :=
+      TensorProduct.exists_finset y
+    obtain ⟨s, rfl⟩ := h_sum
+    simp +decide [hy, mul_assoc, Finset.mul_sum _ _ _]
+    simp [affAntipodeLM_mul, ← mul_assoc, ← Finset.mul_sum _ _ _]
+    simp only [← Finset.sum_mul _ _ _, mul_assoc]
+    rw [hy]
+    simp +decide [mul_assoc, ← Algebra.commutes]
+  | add x y hx hy => simp_all +decide [mul_add, add_mul]
+
+set_option backward.isDefEq.respectTransparency true in
+set_option maxHeartbeats 400000 in
+private theorem affAntipode_left :
+    LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
+      (affAntipodeLM k).lTensor (Uqsl2Aff k) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (LaurentPolynomial k) (Uqsl2Aff k)) ∘ₗ Coalgebra.counit := by
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (AffChevalleyRel k) x
+  induction x using FreeAlgebra.induction with
+  | algebraMap r =>
+    simp +decide [affAntipodeLM, affAntipode, affComul, affCounit,
+      RingQuot.liftAlgHom, affComulFreeAlg, affCounitFreeAlg]
+  | ι x =>
+    cases x <;>
+      simp +decide [affComul_gen, affComulOnGen, affAntipodeLM_gen, affAntipodeOnGen,
+        affCounit_gen, affCounitOnGen, LinearMap.lTensor_tmul, LinearMap.mul'_apply,
+        affAntipodeLM_one, mul_assoc] <;>
+      erw [uqAff_K0_mul_K0inv k] <;> try erw [uqAff_K1_mul_K1inv k] <;>
+      simp
+  | mul x y hx hy =>
+    simp_all +decide [← LinearMap.comp_assoc, ← RingHom.comp_apply]
+    convert affConvL_mul_step k _ _ _ hx using 1
+    rw [hy]
+    grind
+  | add x y hx hy => simp_all [map_add]
+
+noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl2Aff k) where
+  antipode := affAntipodeLM k
+  mul_antipode_rTensor_comul := affAntipode_right k
+  mul_antipode_lTensor_comul := affAntipode_left k
+
+/-! ## 8. Module summary -/
 
 theorem uqsl2_affine_hopf_summary : True := trivial
 
