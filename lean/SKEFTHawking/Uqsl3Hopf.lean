@@ -1035,21 +1035,125 @@ private theorem sect3_hUqIdE12_11 :
     rw [T_zero]; ring
   rw [hcoef_A, hcoef_B, zero_smul, zero_smul, add_zero]
 
+set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
 private theorem comulFreeAlg3_SerreE12 :
     comulFreeAlg3 k
       (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
     comulFreeAlg3 k
       (scal3' k (T 1 + T (-1)) * gen3 k E1 * gen3 k E2 * gen3 k E1) := by
-  -- TODO: complete via sector helpers sect3_hUqIdE12_{20,01,10_E1E2,10_E2E1,11}
-  -- (already proved above) plus sect3_hSerreE12_smul.
-  -- Strategy attempted: expand both sides via comul + tmul_mul_tmul, normalize
-  -- K-K commute, apply each sector via phi map + map_zero, finish with
-  -- linear_combination (norm := module).
-  -- BLOCKER: module fails to unify atoms across goal (`T r • A ⊗ B` form) and
-  -- hypothesis (`(T 1 + T(-1)) • A ⊗ B` form) — coefficient distribution issue.
-  -- Next session: investigate alternative finalizer or per-sector tmul-equality
-  -- assertion approach (manual chain of `have` with TensorProduct.tmul_zero).
-  sorry
+  rw [← sub_eq_zero, ← map_sub]
+  -- Phase 1: expand Δ + tmul_mul_tmul + algebraMap → scalar
+  simp only [scal3', map_sub, map_add, map_mul, AlgHom.commutes,
+             comulFreeAlg3_ι, comulOnGen3, mul_add, add_mul,
+             Algebra.TensorProduct.algebraMap_apply,
+             Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+  simp only [← Algebra.smul_def, smul_mul_assoc, smul_add, smul_sub]
+  simp only [Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul']
+  -- Phase 2: build sector hypotheses via phi maps + map_zero
+  let phi_LL : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip
+      (uq3K1 k * uq3K1 k * uq3K2 k)
+  let phi_RR : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (1 : Uqsl3 k)
+  have hSerreS := sect3_hSerreE12_smul k
+  have hSect00 :
+      phi_LL (uq3E1 k * uq3E1 k * uq3E2 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3E2 k * uq3E1 k) +
+        uq3E2 k * uq3E1 k * uq3E1 k) = 0 := by
+    rw [hSerreS]; exact map_zero phi_LL
+  have hSect21 :
+      phi_RR (uq3E1 k * uq3E1 k * uq3E2 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3E2 k * uq3E1 k) +
+        uq3E2 k * uq3E1 k * uq3E1 k) = 0 := by
+    rw [hSerreS]; exact map_zero phi_RR
+  rw [map_add phi_LL, map_sub phi_LL,
+      LinearMap.map_smul_of_tower phi_LL] at hSect00
+  rw [map_add phi_RR, map_sub phi_RR,
+      LinearMap.map_smul_of_tower phi_RR] at hSect21
+  simp only [phi_LL, phi_RR, LinearMap.flip_apply, TensorProduct.mk_apply]
+    at hSect00 hSect21
+  have hUqId01 := sect3_hUqIdE12_20 k
+  let phi_01 : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (uq3E1 k * uq3E1 k)
+  have hSect01 :
+      phi_01 (uq3K1 k * uq3K1 k * uq3E2 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3K1 k * uq3E2 k * uq3K1 k) +
+        uq3E2 k * uq3K1 k * uq3K1 k) = 0 := by
+    rw [hUqId01]; exact map_zero phi_01
+  rw [map_add phi_01, map_sub phi_01,
+      LinearMap.map_smul_of_tower phi_01] at hSect01
+  simp only [phi_01, TensorProduct.mk_apply] at hSect01
+  have hUqId20 := sect3_hUqIdE12_01 k
+  let phi_20 : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (uq3E2 k)
+  have hSect20 :
+      phi_20 (uq3E1 k * uq3E1 k * uq3K2 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3K2 k * uq3E1 k) +
+        uq3K2 k * uq3E1 k * uq3E1 k) = 0 := by
+    rw [hUqId20]; exact map_zero phi_20
+  rw [map_add phi_20, map_sub phi_20,
+      LinearMap.map_smul_of_tower phi_20] at hSect20
+  simp only [phi_20, TensorProduct.mk_apply] at hSect20
+  have hUqId10a := sect3_hUqIdE12_10_E1E2 k
+  let phi_10a : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (uq3E1 k * uq3E2 k)
+  have hSect10a :
+      phi_10a (uq3E1 k * uq3K1 k * uq3K2 k + uq3K1 k * uq3E1 k * uq3K2 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3K1 k * uq3K2 k * uq3E1 k)) = 0 := by
+    rw [hUqId10a]; exact map_zero phi_10a
+  rw [map_sub phi_10a, map_add phi_10a,
+      LinearMap.map_smul_of_tower phi_10a] at hSect10a
+  simp only [phi_10a, TensorProduct.mk_apply] at hSect10a
+  have hUqId10b := sect3_hUqIdE12_10_E2E1 k
+  let phi_10b : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (uq3E2 k * uq3E1 k)
+  have hSect10b :
+      phi_10b (uq3K2 k * uq3E1 k * uq3K1 k + uq3K2 k * uq3K1 k * uq3E1 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3K2 k * uq3K1 k)) = 0 := by
+    rw [hUqId10b]; exact map_zero phi_10b
+  rw [map_sub phi_10b, map_add phi_10b,
+      LinearMap.map_smul_of_tower phi_10b] at hSect10b
+  simp only [phi_10b, TensorProduct.mk_apply] at hSect10b
+  have hUqId11 := sect3_hUqIdE12_11 k
+  let phi_11 : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (uq3E1 k)
+  have hSect11 :
+      phi_11 ((uq3E1 k * uq3K1 k * uq3E2 k + uq3K1 k * uq3E1 k * uq3E2 k +
+                uq3E2 k * uq3E1 k * uq3K1 k + uq3E2 k * uq3K1 k * uq3E1 k) -
+        (T 1 + T (-1) : LaurentPolynomial k) •
+          (uq3E1 k * uq3E2 k * uq3K1 k + uq3K1 k * uq3E2 k * uq3E1 k)) = 0 := by
+    rw [hUqId11]; exact map_zero phi_11
+  rw [map_sub phi_11, map_add phi_11, map_add phi_11, map_add phi_11,
+      LinearMap.map_smul_of_tower phi_11, map_add phi_11] at hSect11
+  simp only [phi_11, TensorProduct.mk_apply, TensorProduct.tmul_add, smul_add] at hSect11
+  -- Phase 3: K-normalization on goal (K1²K2 canonical form)
+  have hKK : uq3K2 k * uq3K1 k = uq3K1 k * uq3K2 k := (uq3_K1K2_comm k).symm
+  have hKKK1 : uq3K2 k * uq3K1 k * uq3K1 k = uq3K1 k * uq3K1 k * uq3K2 k := by
+    rw [hKK, mul_assoc, hKK, ← mul_assoc]
+  have hKKK2 : uq3K1 k * uq3K2 k * uq3K1 k = uq3K1 k * uq3K1 k * uq3K2 k := by
+    rw [mul_assoc, hKK, ← mul_assoc]
+  have hKKK3 : uq3K2 k * uq3K1 k * uq3E1 k = uq3K1 k * uq3K2 k * uq3E1 k := by rw [hKK]
+  simp_rw [hKKK1, hKKK2, hKKK3]
+  -- Phase 4 (per Phase-5s research): normalize hypotheses + goal to common form,
+  -- then linear_combination + abel! at .default transparency
+  clear hSerreS hUqId01 hUqId20 hUqId10a hUqId10b hUqId11
+  clear phi_LL phi_RR phi_01 phi_20 phi_10a phi_10b phi_11
+  -- Canonical form: distribute combined scalars + tmul over additions.
+  simp only [add_smul, TensorProduct.add_tmul, TensorProduct.tmul_add,
+             TensorProduct.smul_tmul'] at hSect00 hSect21 hSect01 hSect20 hSect10a hSect10b hSect11 ⊢
+  linear_combination (norm := skip)
+    hSect00 + hSect21 + hSect01 + hSect20 + hSect10a + hSect10b + hSect11
+  -- Residual: K-commute on uq3K2·K1·E1 → K1·K2·E1 (final K-norm), then abel
+  simp_rw [hKKK3]
+  abel!
 
 private theorem comulFreeAlg3_SerreE21 :
     comulFreeAlg3 k
