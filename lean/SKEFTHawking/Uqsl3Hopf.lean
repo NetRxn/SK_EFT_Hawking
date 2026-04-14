@@ -811,6 +811,44 @@ private theorem sect3_hKE_at_K2E2 (x : Uqsl3 k) :
     x * uq3K2 k * uq3E2 k = (T 2 : LaurentPolynomial k) • (x * uq3E2 k * uq3K2 k) := by
   rw [mul_assoc x (uq3K2 k) (uq3E2 k), sect3_hKE_smul_K2E2, mul_smul_comm, ← mul_assoc]
 
+-- === F-side base KinvF rewrites (for F comul: Δ(F_i) = F_i ⊗ 1 + K_i⁻¹ ⊗ F_i) ===
+
+/-- K₁⁻¹·F₁ = T(2)·F₁·K₁⁻¹ in smul form. -/
+private theorem sect3_hKinvF_smul_K1invF1 :
+    uq3K1inv k * uq3F1 k = (T 2 : LaurentPolynomial k) • (uq3F1 k * uq3K1inv k) := by
+  rw [uq3_K1inv_mul_F1, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKinvF_at_K1invF1 (x : Uqsl3 k) :
+    x * uq3K1inv k * uq3F1 k = (T 2 : LaurentPolynomial k) • (x * uq3F1 k * uq3K1inv k) := by
+  rw [mul_assoc x (uq3K1inv k) (uq3F1 k), sect3_hKinvF_smul_K1invF1, mul_smul_comm, ← mul_assoc]
+
+/-- K₁⁻¹·F₂ = T(-1)·F₂·K₁⁻¹ in smul form. -/
+private theorem sect3_hKinvF_smul_K1invF2 :
+    uq3K1inv k * uq3F2 k = (T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k) := by
+  rw [uq3_K1inv_mul_F2, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKinvF_at_K1invF2 (x : Uqsl3 k) :
+    x * uq3K1inv k * uq3F2 k = (T (-1) : LaurentPolynomial k) • (x * uq3F2 k * uq3K1inv k) := by
+  rw [mul_assoc x (uq3K1inv k) (uq3F2 k), sect3_hKinvF_smul_K1invF2, mul_smul_comm, ← mul_assoc]
+
+/-- K₂⁻¹·F₁ = T(-1)·F₁·K₂⁻¹ in smul form. -/
+private theorem sect3_hKinvF_smul_K2invF1 :
+    uq3K2inv k * uq3F1 k = (T (-1) : LaurentPolynomial k) • (uq3F1 k * uq3K2inv k) := by
+  rw [uq3_K2inv_mul_F1, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKinvF_at_K2invF1 (x : Uqsl3 k) :
+    x * uq3K2inv k * uq3F1 k = (T (-1) : LaurentPolynomial k) • (x * uq3F1 k * uq3K2inv k) := by
+  rw [mul_assoc x (uq3K2inv k) (uq3F1 k), sect3_hKinvF_smul_K2invF1, mul_smul_comm, ← mul_assoc]
+
+/-- K₂⁻¹·F₂ = T(2)·F₂·K₂⁻¹ in smul form. -/
+private theorem sect3_hKinvF_smul_K2invF2 :
+    uq3K2inv k * uq3F2 k = (T 2 : LaurentPolynomial k) • (uq3F2 k * uq3K2inv k) := by
+  rw [uq3_K2inv_mul_F2, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKinvF_at_K2invF2 (x : Uqsl3 k) :
+    x * uq3K2inv k * uq3F2 k = (T 2 : LaurentPolynomial k) • (x * uq3F2 k * uq3K2inv k) := by
+  rw [mul_assoc x (uq3K2inv k) (uq3F2 k), sect3_hKinvF_smul_K2invF2, mul_smul_comm, ← mul_assoc]
+
 private theorem comulFreeAlg3_SerreE12 :
     comulFreeAlg3 k
       (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
