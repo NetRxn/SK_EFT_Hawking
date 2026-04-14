@@ -849,6 +849,192 @@ private theorem sect3_hKinvF_at_K2invF2 (x : Uqsl3 k) :
     x * uq3K2inv k * uq3F2 k = (T 2 : LaurentPolynomial k) • (x * uq3F2 k * uq3K2inv k) := by
   rw [mul_assoc x (uq3K2inv k) (uq3F2 k), sect3_hKinvF_smul_K2invF2, mul_smul_comm, ← mul_assoc]
 
+-- === Sector identity helpers for SerreE12 q-Serre coproduct compatibility ===
+
+/-- Sector (2,0): K₁²·E₂ - [2]·K₁·E₂·K₁ + E₂·K₁² = 0.
+    sl_3 analog of `sect_hUqIdE01_30`. Proved by K₁·E₂ = T(-1)·E₂·K₁ commutation
+    + coefficient identity T(-2) - [2]·T(-1) + 1 = 0. -/
+private theorem sect3_hUqIdE12_20 :
+    uq3K1 k * uq3K1 k * uq3E2 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3K1 k * uq3E2 k * uq3K1 k) +
+    uq3E2 k * uq3K1 k * uq3K1 k = 0 := by
+  have hKE_smul := sect3_hKE_smul_K1E2 k
+  have hKE_at := sect3_hKE_at_K1E2 k
+  have hK2E2 : uq3K1 k * uq3K1 k * uq3E2 k =
+      (T (-2) : LaurentPolynomial k) • (uq3E2 k * uq3K1 k * uq3K1 k) := by
+    rw [hKE_at, hKE_smul]
+    simp only [smul_mul_assoc, smul_smul]
+    congr 1; rw [← T_add]; norm_num
+  have hK1E2K1 : uq3K1 k * uq3E2 k * uq3K1 k =
+      (T (-1) : LaurentPolynomial k) • (uq3E2 k * uq3K1 k * uq3K1 k) := by
+    rw [hKE_smul]; simp only [smul_mul_assoc]
+  rw [hK2E2, hK1E2K1, smul_smul]
+  have factor : ∀ (r s : LaurentPolynomial k) (x : Uqsl3 k),
+      r • x - s • x + x = (r - s + 1) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (-2) - (T 1 + T (-1)) * T (-1) + 1 : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show T (-2) - (T 0 + T (-2)) + 1 = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+/-- Sector (0,1): E₁²·K₂ - [2]·E₁·K₂·E₁ + K₂·E₁² = 0.
+    sl_3 analog of `sect_hUqIdE01_01`. Pushes K₂ leftward through E₁'s. -/
+private theorem sect3_hUqIdE12_01 :
+    uq3E1 k * uq3E1 k * uq3K2 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3K2 k * uq3E1 k) +
+    uq3K2 k * uq3E1 k * uq3E1 k = 0 := by
+  have hKE_smul := sect3_hKE_smul_K2E1 k  -- K2·E1 = T(-1)•E1·K2
+  have hKE_at := sect3_hKE_at_K2E1 k       -- x·K2·E1 = T(-1)•(x·E1·K2)
+  -- E1·K2·E1 = E1·T(-1)•(E1·K2) = T(-1)•(E1·E1·K2) — apply via inner K2·E1
+  have hE1K2E1 : uq3E1 k * uq3K2 k * uq3E1 k =
+      (T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3E1 k * uq3K2 k) := by
+    rw [show uq3E1 k * uq3K2 k * uq3E1 k = uq3E1 k * (uq3K2 k * uq3E1 k) from by noncomm_ring,
+        hKE_smul]
+    simp only [mul_smul_comm, ← mul_assoc]
+  -- K2·E1·E1 = T(-1)•(E1·K2·E1) [inner K2E1] = T(-1)•T(-1)•(E1²K2) = T(-2)•(E1²K2)
+  have hK2E1E1 : uq3K2 k * uq3E1 k * uq3E1 k =
+      (T (-2) : LaurentPolynomial k) • (uq3E1 k * uq3E1 k * uq3K2 k) := by
+    rw [show uq3K2 k * uq3E1 k * uq3E1 k = (uq3K2 k * uq3E1 k) * uq3E1 k from by noncomm_ring,
+        hKE_smul]
+    simp only [smul_mul_assoc]
+    rw [show uq3E1 k * uq3K2 k * uq3E1 k = uq3E1 k * (uq3K2 k * uq3E1 k) from by noncomm_ring,
+        hKE_smul]
+    simp only [mul_smul_comm, smul_smul, ← mul_assoc]
+    congr 1; rw [← T_add]; norm_num
+  rw [hE1K2E1, hK2E1E1, smul_smul]
+  have factor : ∀ (s t : LaurentPolynomial k) (x : Uqsl3 k),
+      x - s • x + t • x = (1 - s + t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 - (T 1 + T (-1)) * T (-1) + T (-2) : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 - (T 0 + T (-2)) + T (-2) = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+/-- Sector (1,0) E1E2-left bracket: (E₁·K₁·K₂ + K₁·E₁·K₂) - [2]·K₁·K₂·E₁ = 0.
+    Uses K₁·E₁ = T(2)·E₁·K₁, K-K commute, and K₁·K₂·E₁ = T(1)·E₁·K₁·K₂. -/
+private theorem sect3_hUqIdE12_10_E1E2 :
+    uq3E1 k * uq3K1 k * uq3K2 k + uq3K1 k * uq3E1 k * uq3K2 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3K1 k * uq3K2 k * uq3E1 k) = 0 := by
+  have hK1E1_at := sect3_hKE_at_K1E1 k  -- x·K1·E1 = T(2)•(x·E1·K1)
+  have hK2E1_smul := sect3_hKE_smul_K2E1 k  -- K2·E1 = T(-1)•(E1·K2)
+  have hKK := uq3_K1K2_comm k  -- K1·K2 = K2·K1
+  -- Reduce each to common atom: E1·K1·K2
+  have hE1K1K2 : uq3E1 k * uq3K1 k * uq3K2 k = uq3E1 k * uq3K1 k * uq3K2 k := rfl
+  have hK1E1K2 : uq3K1 k * uq3E1 k * uq3K2 k =
+      (T 2 : LaurentPolynomial k) • (uq3E1 k * uq3K1 k * uq3K2 k) := by
+    have : uq3K1 k * uq3E1 k * uq3K2 k =
+        (T 2 : LaurentPolynomial k) • (uq3E1 k * uq3K1 k) * uq3K2 k := by
+      rw [show uq3K1 k * uq3E1 k = (T 2 : LaurentPolynomial k) • (uq3E1 k * uq3K1 k) from
+        sect3_hKE_smul_K1E1 k]
+    rw [this, smul_mul_assoc]
+  have hK1K2E1 : uq3K1 k * uq3K2 k * uq3E1 k =
+      (T 1 : LaurentPolynomial k) • (uq3E1 k * uq3K1 k * uq3K2 k) := by
+    -- K1·K2·E1 = K2·K1·E1 (KK commute) = K2·T(2)•(E1·K1) [K1E1] = T(2)•K2·E1·K1
+    --         = T(2)•T(-1)•E1·K2·K1 [K2E1] = T(1)•E1·K2·K1 = T(1)•E1·K1·K2 [KK]
+    rw [show uq3K1 k * uq3K2 k * uq3E1 k = uq3K2 k * (uq3K1 k * uq3E1 k) from by
+      rw [show uq3K1 k * uq3K2 k = uq3K2 k * uq3K1 k from hKK]; noncomm_ring]
+    rw [sect3_hKE_smul_K1E1, mul_smul_comm,
+        show uq3K2 k * (uq3E1 k * uq3K1 k) = uq3K2 k * uq3E1 k * uq3K1 k from by noncomm_ring,
+        hK2E1_smul, smul_mul_assoc, smul_smul,
+        show uq3E1 k * uq3K2 k * uq3K1 k = uq3E1 k * uq3K1 k * uq3K2 k from by
+          rw [mul_assoc, ← hKK, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK1E1K2, hK1K2E1, smul_smul]
+  have factor : ∀ (s t : LaurentPolynomial k) (x : Uqsl3 k),
+      x + s • x - t • x = (1 + s - t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 + T 2 - (T 1 + T (-1)) * T 1 : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+/-- Sector (1,0) E2E1-left bracket: (K₂·E₁·K₁ + K₂·K₁·E₁) - [2]·E₁·K₂·K₁ = 0. -/
+private theorem sect3_hUqIdE12_10_E2E1 :
+    uq3K2 k * uq3E1 k * uq3K1 k + uq3K2 k * uq3K1 k * uq3E1 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3K2 k * uq3K1 k) = 0 := by
+  have hK2E1_smul := sect3_hKE_smul_K2E1 k
+  have hK1E1_smul := sect3_hKE_smul_K1E1 k
+  have hKK := uq3_K1K2_comm k
+  -- Reduce to common atom: E1·K1·K2 (or E1·K2·K1, equivalent via hKK)
+  -- Target atom: E1·K2·K1 (matches RHS form)
+  have hK2E1K1 : uq3K2 k * uq3E1 k * uq3K1 k =
+      (T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3K2 k * uq3K1 k) := by
+    rw [hK2E1_smul, smul_mul_assoc]
+  have hK2K1E1 : uq3K2 k * uq3K1 k * uq3E1 k =
+      (T 1 : LaurentPolynomial k) • (uq3E1 k * uq3K2 k * uq3K1 k) := by
+    -- K2·K1·E1 = K1·K2·E1 (K-K commute) = K1·T(-1)•(E1·K2) = T(-1)•K1·E1·K2
+    --         = T(-1)•T(2)•(E1·K1·K2) = T(1)•E1·K1·K2 = T(1)•E1·K2·K1
+    rw [show uq3K2 k * uq3K1 k = uq3K1 k * uq3K2 k from hKK.symm]
+    rw [show uq3K1 k * uq3K2 k * uq3E1 k = uq3K1 k * (uq3K2 k * uq3E1 k) from by noncomm_ring,
+        hK2E1_smul, mul_smul_comm,
+        show uq3K1 k * (uq3E1 k * uq3K2 k) = uq3K1 k * uq3E1 k * uq3K2 k from by noncomm_ring,
+        hK1E1_smul, smul_mul_assoc, smul_smul]
+    rw [show uq3E1 k * uq3K1 k * uq3K2 k = uq3E1 k * uq3K2 k * uq3K1 k from by
+      rw [mul_assoc, hKK, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK2E1K1, hK2K1E1]
+  have factor : ∀ (s t : LaurentPolynomial k) (x : Uqsl3 k),
+      s • x + t • x - (T 1 + T (-1) : LaurentPolynomial k) • x =
+      (s + t - (T 1 + T (-1))) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (-1) + T 1 - (T 1 + T (-1)) : LaurentPolynomial k) = 0 := by ring
+  rw [hcoef, zero_smul]
+
+/-- Sector (1,1) combined: 4 LHS atoms - [2]·(2 RHS atoms) = 0.
+    Reduces atoms to A = E₁·E₂·K₁ and B = E₂·E₁·K₁ via K-E commutations,
+    coefficients sum to 0 by [2] - [2] = 0 and 1 + T(2) - [2]·T(1) = 0. -/
+private theorem sect3_hUqIdE12_11 :
+    (uq3E1 k * uq3K1 k * uq3E2 k + uq3K1 k * uq3E1 k * uq3E2 k +
+     uq3E2 k * uq3E1 k * uq3K1 k + uq3E2 k * uq3K1 k * uq3E1 k) -
+    (T 1 + T (-1) : LaurentPolynomial k) •
+      (uq3E1 k * uq3E2 k * uq3K1 k + uq3K1 k * uq3E2 k * uq3E1 k) = 0 := by
+  have hK1E1 := sect3_hKE_smul_K1E1 k
+  have hK1E2 := sect3_hKE_smul_K1E2 k
+  -- Reduce atoms to A := E1·E2·K1 and B := E2·E1·K1
+  have hE1K1E2 : uq3E1 k * uq3K1 k * uq3E2 k =
+      (T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3E2 k * uq3K1 k) := by
+    rw [show uq3E1 k * uq3K1 k * uq3E2 k = uq3E1 k * (uq3K1 k * uq3E2 k) from by noncomm_ring,
+        hK1E2]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hK1E1E2 : uq3K1 k * uq3E1 k * uq3E2 k =
+      (T 1 : LaurentPolynomial k) • (uq3E1 k * uq3E2 k * uq3K1 k) := by
+    rw [hK1E1, smul_mul_assoc,
+        show uq3E1 k * uq3K1 k * uq3E2 k = uq3E1 k * (uq3K1 k * uq3E2 k) from by noncomm_ring,
+        hK1E2, mul_smul_comm, smul_smul,
+        show uq3E1 k * (uq3E2 k * uq3K1 k) = uq3E1 k * uq3E2 k * uq3K1 k from by noncomm_ring]
+    congr 1; rw [← T_add]; norm_num
+  have hE2K1E1 : uq3E2 k * uq3K1 k * uq3E1 k =
+      (T 2 : LaurentPolynomial k) • (uq3E2 k * uq3E1 k * uq3K1 k) := by
+    rw [show uq3E2 k * uq3K1 k * uq3E1 k = uq3E2 k * (uq3K1 k * uq3E1 k) from by noncomm_ring,
+        hK1E1]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hK1E2E1 : uq3K1 k * uq3E2 k * uq3E1 k =
+      (T 1 : LaurentPolynomial k) • (uq3E2 k * uq3E1 k * uq3K1 k) := by
+    rw [hK1E2, smul_mul_assoc,
+        show uq3E2 k * uq3K1 k * uq3E1 k = uq3E2 k * (uq3K1 k * uq3E1 k) from by noncomm_ring,
+        hK1E1, mul_smul_comm, smul_smul,
+        show uq3E2 k * (uq3E1 k * uq3K1 k) = uq3E2 k * uq3E1 k * uq3K1 k from by noncomm_ring]
+    congr 1; rw [← T_add]; norm_num
+  rw [hE1K1E2, hK1E1E2, hE2K1E1, hK1E2E1]
+  -- Goal: T(-1)•A + T(1)•A + B + T(2)•B - [2]•(A + T(1)•B) = 0
+  -- Where A = E1·E2·K1 and B = E2·E1·K1
+  have factor : ∀ (a b : Uqsl3 k),
+      ((T (-1) : LaurentPolynomial k) • a + (T 1 : LaurentPolynomial k) • a +
+       b + (T 2 : LaurentPolynomial k) • b) -
+      ((T 1 + T (-1) : LaurentPolynomial k)) • (a + (T 1 : LaurentPolynomial k) • b) =
+      ((T (-1) + T 1 - (T 1 + T (-1)) : LaurentPolynomial k)) • a +
+      ((1 + T 2 - (T 1 + T (-1)) * T 1 : LaurentPolynomial k)) • b := by intros; module
+  rw [factor]
+  have hcoef_A : (T (-1) + T 1 - (T 1 + T (-1)) : LaurentPolynomial k) = 0 := by ring
+  have hcoef_B : (1 + T 2 - (T 1 + T (-1)) * T 1 : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef_A, hcoef_B, zero_smul, zero_smul, add_zero]
+
 private theorem comulFreeAlg3_SerreE12 :
     comulFreeAlg3 k
       (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
