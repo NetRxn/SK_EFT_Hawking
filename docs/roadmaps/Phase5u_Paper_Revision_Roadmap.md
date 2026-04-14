@@ -29,9 +29,30 @@ These are **process gaps**, not just edits. The fix is both (a) do the paper edi
 
 ## Track A — Paper 1 Revision (Parameter Correction Propagation)
 
-### Wave 1 — Table 1 regeneration [Pipeline: Stages 1, 2, 6, 7, 10]
+### Wave 1 — Table 1 regeneration [Pipeline: Stages 1, 2, 3, 6, 7, 10]
 
-**Problem:** Paper 1 Table 1 values were computed against a pre-correction parameter set. Current pipeline produces:
+**2026-04-13 — scope expanded after discovering a provenance-grounded pipeline bug.**
+What was originally "rerun transonic solver, update table" turned out to involve a
+dimensional bug in `compute_dissipative_correction` that has been present since the
+function was first committed (`d72f197`). The bug: treats Beliaev-derived transport
+coefficients γ₁, γ₂ (units [m²/s]) as if they were damping rates (units [s⁻¹]),
+missing a k_H² = (κ/c_s)² conversion factor. This produces δ_diss off by a factor
+of ~10⁷–10⁸ from the correct Beliaev prediction.
+
+Four of the project's internal authorities all agree on the correct formula:
+- Lean docstring `SecondOrderSK.lean:352`: δ_diss = Γ_H / κ
+- `formulas.first_order_correction`: matches Lean
+- `formulas.beliaev_transport_coefficients`: returns γ in [m²/s], docstring explicit
+- `provenance.py:657` `PAPER_DEPENDENCIES`: *"Γ_H = (γ₁+γ₂)(κ/c_s)²"*
+
+Only `transonic_background.compute_dissipative_correction` is wrong. **The identity
+Γ_H = (γ₁+γ₂) k_H² has no Lean theorem** — that is the root cause: without a Lean
+anchor, a Python-layer dimensional mistake never tripped a validation check. Tests
+pass because they use hand-picked γ values and only assert `|δ_diss| < 0.1`, which
+any formula satisfies for small inputs.
+
+**Original problem (parameter propagation):**
+Paper 1 Table 1 values were computed against a pre-correction parameter set. Current pipeline produces:
 
 | Platform | Quantity | Paper | Current | Δ |
 |----------|----------|-------|---------|---|
@@ -46,15 +67,51 @@ All 6 rows outside 0.5% tolerance. Also:
 - Inline `a_s = 5.77 nm = 109 a₀` (old) → `5.31 nm = 100.4 a₀` (current, van Kempen 2002)
 - Figures 1–4 derived from these parameters need regeneration
 
-**Deliverables:**
-- [ ] Rerun `uv run python -c "from src.core.transonic_background import ...; ..."` — regenerate Table 1
-- [ ] Update `papers/paper1_first_order/paper_draft.tex` Table 1 (lines 247–251)
-- [ ] Update inline `a_s` text (search for `109 a₀` / `5.77`)
-- [ ] Rerun `scripts/review_figures.py` for fig1–fig4
-- [ ] Copy regenerated PNGs to `papers/paper1_first_order/figures/`
-- [ ] Add main-text note: κ profile-dependence (tanh=4.8 s⁻¹ vs Steinhauer's published step=290 s⁻¹, 60× factor) — currently only in caption
-- [ ] Re-run `physics-qa:claims-reviewer` against Paper 1
-- [ ] Re-run `physics-qa:figure-reviewer` on regenerated figures
+**Deliverables — split into 4 sub-waves:**
+
+#### Wave 1a — Fix `compute_dissipative_correction` dimensional bug [Pipeline: Stage 2]
+- [ ] Edit `src/core/transonic_background.py:compute_dissipative_correction`:
+  introduce `k_H_sq = (kappa / cs)**2`; set `Gamma_H = (gamma_1 + gamma_2) * k_H_sq`;
+  call `first_order_correction(Gamma_H, kappa)`.
+- [ ] Replace the contradictory inline comment "γ₁, γ₂ here have units [s⁻¹]" with
+  the correct "γ₁, γ₂ in [m²/s] (EFT Lagrangian units); Γ_H = (γ₁+γ₂)(κ/c_s)² gives the damping rate".
+- [ ] Remove the `hbar` local variable (unused, set but never referenced in the function).
+
+#### Wave 1b — Ground the identification in Lean [Pipeline: Stage 3]
+- [ ] Add a theorem to `SecondOrderSK.lean` (or equivalently `SKDoubling.lean`):
+  `theorem gamma_H_from_transport (γ₁ γ₂ κ c_s : ℝ) (hc : c_s > 0) : Γ_H γ₁ γ₂ κ c_s = (γ₁+γ₂) * (κ/c_s)^2`
+  with `Γ_H` defined as `(γ₁+γ₂) * (κ/c_s)^2` (i.e., the theorem is `rfl`-provable once the
+  def is in place — the value is in formalizing the def, not in proving anything hard).
+- [ ] Corollary: `delta_diss_from_transport : first_order_correction (Γ_H γ₁ γ₂ κ c_s) κ = (γ₁+γ₂) * κ / c_s^2`
+- [ ] Update `formulas.first_order_correction` docstring to list this theorem as its `Lean:` anchor.
+
+#### Wave 1c — Test coverage for the Beliaev→transport→correction chain [Pipeline: Stage 6]
+- [ ] Add `tests/test_transonic_background.py::TestBeliaevChainConsistency` with:
+  - `test_delta_diss_matches_Gamma_Bel_over_kappa`: run `beliaev_transport_coefficients`,
+    feed to `compute_dissipative_correction`, verify `abs(δ_diss - Γ_Bel/κ) / (Γ_Bel/κ) < 1e-10`.
+  - `test_gamma_units_consistent`: verify `Γ_H = (γ₁+γ₂) * (κ/c_s)²` within float tolerance
+    for all three platforms.
+  - `test_delta_diss_physical_magnitude`: at Steinhauer parameters, assert `1e-6 < δ_diss < 1e-3`
+    (Beliaev regime; tightens the `< 0.1` bound that allowed the bug to persist).
+
+#### Wave 1d — Regenerate paper Table 1 + body + figures [Pipeline: Stages 7, 8, 10]
+- [ ] Rerun transonic solver with bugfix; regenerate all 6 rows of Table 1.
+- [ ] Update `papers/paper1_first_order/paper_draft.tex` Table 1 (lines 247–251).
+- [ ] Update inline `a_s` text: `5.77 nm (109 a₀)` → `5.31 nm (100.4 a₀)`.
+- [ ] Add main-text note: κ profile-dependence (tanh ≈ 4.8 s⁻¹ vs Steinhauer step ≈ 290 s⁻¹ — 60× factor — currently only in caption).
+- [ ] **Rewrite the γ₁ / damping-regime paragraph (§ 4 around line 282).** Paper currently
+  states "γ₁ ~ 10⁻³ to 10⁻¹ s⁻¹" (Zaremba kinetic-theory, finite-T) and derives
+  δ_diss ~ 10⁻⁵ to 10⁻³ without disclosing the regime choice. The pipeline's Beliaev
+  prediction (zero-T, 3-phonon decay) gives ~10⁻⁵ — ~10× smaller than Zaremba at experimental T.
+  Rewrite to explicitly present both regimes: "Pipeline prediction (Beliaev, T=0):
+  δ_diss ≈ 2.4×10⁻⁵ (Steinhauer). Finite-T correction via kinetic-theory Zaremba
+  damping is a factor ~10 larger at typical experimental temperatures." Cite Zaremba 1999
+  and Beliaev 1958 explicitly. Paper's 4.2×10⁻⁴ headline value was apparently a
+  hand-estimate from the Zaremba range — replace with pipeline-computed value with
+  clear regime disclosure.
+- [ ] Rerun `scripts/review_figures.py` for fig1–fig4. Copy regenerated PNGs.
+- [ ] Re-run `physics-qa:claims-reviewer` against Paper 1.
+- [ ] Re-run `physics-qa:figure-reviewer` on regenerated figures.
 
 **Estimated LOE:** 3–5 hours
 **Risk:** Low — purely computational
@@ -67,10 +124,10 @@ All 6 rows outside 0.5% tolerance. Also:
 **State:** Bibitem already extended to include Endlich et al. 2013 as co-citation (fixes partial attribution). Body text NOT yet rewritten.
 
 **Deliverables:**
-- [ ] Paper 1 lines 57, 69, 130 — clarify Son:2002 provides symmetry/EFT structure; non-relativistic adaptation follows Son-Wingate 2005 / Endlich et al. 2013
-- [ ] Paper 2 line 448 — add Endlich co-citation to bibitem (matching Paper 1)
+- [x] Paper 1 lines 57, 69 — rewritten to clarify Son:2002 is the *relativistic* EFT framework; non-relativistic Madelung adaptation follows Endlich \textit{et al.} (PRD 88, 105001, 2013). Line 130 "Galilean Invariance" left as-is — it refers to the axiom constraint on the non-relativistic action used in the paper, which is correctly Galilean-invariant. (2026-04-13)
+- [x] Paper 2 line 448 — bibitem extended: added Son relativistic title and Endlich co-citation. (2026-04-13)
 
-**Estimated LOE:** 30 minutes
+**Estimated LOE:** 30 minutes — DONE
 **Risk:** Low
 
 ---
@@ -144,7 +201,7 @@ Median = 0.40; mean = 0.54. "0.5 μm/ps" is the arithmetic mean, not a value "co
 **Problem:** Paper 3 line 114 says "Z₂ × Z₂ for SO(4k)". Correct: center of SO(4k) is Z₂. Z₂ × Z₂ is center of **Spin**(4k).
 
 **Deliverables:**
-- [ ] Paper 3 line 114 — either change "Z₂ × Z₂" → "Z₂" (if referring to SO(4k)), OR change "SO(4k)" → "Spin(4k)" (if referring to the spin group)
+- [x] Paper 3 line 114 — rewritten to separate SO-group centers (Z₂ for SO(2k)) from Spin-group centers (Z₂ for Spin(2k+1), Z₄ for Spin(4k+2), Z₂×Z₂ for Spin(4k)). (2026-04-13)
 
 **Estimated LOE:** 5 min
 **Risk:** None
@@ -154,10 +211,10 @@ Median = 0.40; mean = 0.54. "0.5 μm/ps" is the arithmetic mean, not a value "co
 **Problem:** Paper 10 lines 197–198 say "topological superconductors with time-reversal symmetry have a ℤ₁₆ classification". Class D has NO time-reversal (particle-hole only). Kitaev's ℤ₁₆ (16-fold way) is specifically for 2D class D free-fermion ℤ reduced to interacting ℤ₁₆.
 
 **Deliverables:**
-- [ ] Paper 10 lines 197–198 — "2D topological superconductors in class D (particle-hole symmetry, **no time-reversal**), where anyonic excitations of the p+ip phase form a ℤ₁₆ classification (Kitaev's sixteenfold way)"
-- [ ] Add `[FidkowskiKitaev2010]` bibitem (arXiv:0904.2197, PRB 81, 134509) — this is the correct reference for interacting ℤ₁₆ reduction; Kitaev 2009 alone gives ℤ (free)
+- [x] Paper 10 lines 196–200 — rewritten: "2D topological superconductors in symmetry class D (particle-hole symmetry, no time-reversal) admit a free-fermion ℤ classification that reduces to ℤ₁₆ under interactions." (2026-04-13)
+- [x] Added `[FidkowskiKitaev2010]` bibitem (arXiv:0904.2197, PRB 81, 134509) for the interacting ℤ₁₆ reduction. (2026-04-13)
 
-**Estimated LOE:** 20 min
+**Estimated LOE:** 20 min — DONE
 **Risk:** Low (textbook-level correction)
 
 ### Wave 9 — Paper 10 "16 = 8 × 2" numerology [Pipeline: Stage 10]
@@ -165,9 +222,9 @@ Median = 0.40; mean = 0.54. "0.5 μm/ps" is the arithmetic mean, not a value "co
 **Problem:** Paper 10 presents "16 = 8 × 2, where 8 is the Bott period and 2 is the Pfaffian factor" as the unifying physical insight. Bott period is 8 for π_n(O) (real K-theory) — correct. But "2 is the Pfaffian factor" is not a theorem; "16 = 8 × 2 connects all four 16s" is an aesthetic heuristic, not a derivation. Wang 2024 connects them via the Smith homomorphism, not via Bott × Pfaffian.
 
 **Deliverables:**
-- [ ] Paper 10 — replace with Smith homomorphism language: "Wang (2024) establishes the connection between the Rokhlin bound, ℤ₁₆ anomaly, and SM fermion count via the string bordism ℤ₂₄ class and Smith homomorphism. The relationship to the Kitaev ℤ₁₆ classification is suggestive but has not been formalized here."
+- [x] Paper 10 "16 Convergence" section — "16 = 8 × 2" numerology removed; replaced with Wang 2024 Smith homomorphism framing: "The four appearances of 16 are connected through the algebraic topology of spin structures in four dimensions: Wang (2024) establishes the relationship between the Rokhlin bound, the ℤ₁₆ anomaly, and the SM fermion count via the string bordism ℤ₂₄ class and the associated Smith homomorphism. The relationship to the Kitaev ℤ₁₆ classification is suggestive but has not been formalized here." (2026-04-13)
 
-**Estimated LOE:** 15 min
+**Estimated LOE:** 15 min — DONE
 
 ---
 
@@ -178,16 +235,14 @@ Median = 0.40; mean = 0.54. "0.5 μm/ps" is the arithmetic mean, not a value "co
 **Problem:** Paper 10 bibliography has multiple verifiable errors.
 
 **Deliverables:**
-- [ ] Paper 10 line 343 — ABP1967 page 256 → **271** (correct first page of Anderson-Brown-Peterson, *Structure of the spin cobordism ring*, Ann. Math. 86)
-- [ ] Paper 10 line 334–335 — Stolz1993 (Math. Ann. 296, 685): verify this citation exists; if not, replace. The Stolz paper actually relevant to A(1) Ext / Rokhlin is NOT this one. Options:
-  - (a) Remove Stolz1993 entirely (ABP1967 + Beaudry-Campbell cover the algebraic topology)
-  - (b) Replace with correct Stolz citation (Ann. Math. 136, 511, 1992 — PSC work, if actually relevant)
-- [ ] Paper 10 line 345 — BeaudryCampbell page 1 → **89** (reviewer claim; verify against Contemp. Math. 718)
-- [ ] Paper 10 line 331 — Kitaev2009 bibitem: add end page `22–30`
-- [ ] Paper 10 Rademacher citation for Casimir/24: add `[diFrancesco1997]` *Conformal Field Theory* (Springer, 1997) for physical interpretation of `c/24`
-- [ ] Add `[FreedHopkins2021]` for framing anomaly context (Wang 2024 cites this extensively)
+- [x] ABP1967 page 256 → **271** and title `Structure of the spin cobordism ring` added to bibitem. (2026-04-13)
+- [x] Stolz1993 removed entirely — option (a) chosen. ABP1967 + BeaudryCampbell cover the algebraic topology needed; the Stolz PSC work is tangential to A(1) Ext / Rokhlin and the cited coordinates (Math. Ann. 296, 685) could not be verified. BeaudryCampbell now cited at Section 6 alongside ABP1967 (was orphan bibitem before). (2026-04-13)
+- [x] BeaudryCampbell page 1 → **89** (also added title and end page 136 for completeness). (2026-04-13)
+- [x] Kitaev2009 end page added (22–30). (2026-04-13)
+- [x] `[diFrancesco1997]` *Conformal Field Theory* added for CFT/Casimir physical interpretation; line 138 reworded to distinguish analytic (Rademacher) from physical (diFrancesco + framing anomaly) origins of the 24 in the modular phase. (2026-04-13)
+- [ ] `[FreedHopkins2021]` — NOT YET ADDED. Wang 2024 cites this for framing anomaly context. Consider adding in a future revision if referee requests deeper context. Low priority since the Wang citation already covers the framing-anomaly argument we use.
 
-**Estimated LOE:** 30 min (or 1 h if primary-source verification needed)
+**Estimated LOE:** 30 min — DONE (except FreedHopkins addition, marked as future)
 **Risk:** Low
 
 ### Wave 11 — Paper 3 Adler page [Pipeline: Stage 10]
@@ -195,9 +250,9 @@ Median = 0.40; mean = 0.54. "0.5 μm/ps" is the arithmetic mean, not a value "co
 **Problem:** Paper 3 line 339 cites Adler et al. 2024, Nature 636, **87**. Correct first page per DOI 10.1038/s41586-024-08188-0 is **80** (pp. 80–85).
 
 **Deliverables:**
-- [ ] Paper 3 line 339 — change `87` → `80`
+- [x] Paper 3 line 339 — changed `87` → `80`. (2026-04-13)
 
-**Estimated LOE:** 1 min
+**Estimated LOE:** 1 min — DONE
 
 ---
 
@@ -214,22 +269,22 @@ Median = 0.40; mean = 0.54. "0.5 μm/ps" is the arithmetic mean, not a value "co
 Proof: `⟨total_components_with_nu_R, by decide, h_rokhlin, total_components_with_nu_R⟩`. Theorem does NOT prove connection between the four 16s — only that 16 appears in four contexts.
 
 **Deliverables:**
-- [ ] Either (a) Strengthen the theorem by adding a non-trivial Kitaev/bordism term connecting to one of the other 16s, OR
-- [ ] (b) Add a docstring comment clearly disclosing: "This theorem records the four appearances of 16 but does NOT prove their equivalence. The physical connection is established conditionally via Wang 2024's Smith homomorphism (not formalized here)."
-- [ ] Update Paper 10 to describe this theorem as "formally recorded" rather than "formally verified convergence"
+- [x] Option (b) chosen: comprehensive docstring added to `sixteen_convergence_full` in `RokhlinBridge.lean` disclosing the structural tautology — three of four conjuncts are either decide-trivial, hypothesis echoes, or retypes of the first. Docstring explicitly states the theorem enumerates but does NOT unify, that the physical connection is Wang (2024) external input, and directs papers to use "formally recorded" not "formally verified convergence". (2026-04-13)
+- [x] Paper 10 "16 Convergence" section rewritten — now uses "formally recorded" language and the Wang Smith-homomorphism framing. (2026-04-13)
 
-**Estimated LOE:** 30 min (option b) / 2+ h (option a, requires Kitaev formalization)
-**Risk:** Low (option b), Medium (option a)
+**Estimated LOE:** 30 min — DONE via option (b)
+**Risk:** None (docstring-only change, no proof mods)
 
 ### Wave 13 — `dai_freed_spin_z4` Equiv.refl placeholder [Pipeline: Stages 3, 10]
 
 **Problem:** `Z16AnomalyComputation.lean:39` — theorem statement is `∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ`. Proves nothing about Dai-Freed spin bordism groups; just that a bijection exists on a finite set (trivially true via `Equiv.refl`).
 
 **Deliverables:**
-- [ ] Add explicit docstring: "PLACEHOLDER. The actual cobordism computation Ω₅^{Spin^{Z₄}} ≅ ℤ₁₆ (Dai-Freed 1994) is beyond current Mathlib scope and remains an external hypothesis. This theorem only records that a bijection on ZMod 16 exists."
-- [ ] Papers 9, 10 text update: "Lean-verified Dai-Freed theorem" → "Lean-formalized consequence of the Dai-Freed theorem (cobordism computation taken as external hypothesis)"
+- [x] Comprehensive docstring added to `dai_freed_spin_z4` in `Z16AnomalyComputation.lean` — labels it PLACEHOLDER, explains the statement is trivially true (Equiv.refl), states the actual Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆ cobordism identification is external (García-Etxebarria–Montero / Dai-Freed), and instructs papers to describe it as an external hypothesis, not a Lean-verified fact. (2026-04-13)
+- [x] Paper 8 line 431 reworded — "former ℤ₁₆ cobordism axiom discharged (tautological)" replaced with explicit "converted to trivially-true placeholder theorem (dai_freed_spin_z4) pending Mathlib cobordism theory; the cobordism computation is an external input, as standard in the ℤ₁₆ literature." (2026-04-13)
+- [N/A] Paper 9, 10 — no claims of "Lean-verified Dai-Freed theorem" found; both papers already cite GarciaEtxebarria2019 as the source of the ℤ₁₆ bordism identification. Paper 9 §SPT Stacking formalizes the GROUP STRUCTURE of ℤ₁₆ stacking (legitimately proved by `decide`), not the cobordism identification. No updates needed there.
 
-**Estimated LOE:** 15 min
+**Estimated LOE:** 15 min — DONE
 **Risk:** None
 
 ---
@@ -308,6 +363,49 @@ Proof: `⟨total_components_with_nu_R, by decide, h_rokhlin, total_components_wi
 
 **Estimated LOE:** 1 h
 
+### Wave 21 — NEW Invariant 12: Lean-grounding audit for formulas.py [Pipeline: Stage 12]
+
+**Problem discovered 2026-04-13 (during Wave 1 investigation):** The δ_diss dimensional
+bug in `compute_dissipative_correction` escaped detection for the project's entire
+lifetime because the **identification** Γ_H = (γ₁+γ₂)(κ/c_s)² existed only in prose
+(`provenance.py:657`, docstring comments) — it had no Lean theorem. Pipeline Invariant 4
+says *"Every formula has a Lean theorem"*, but the project interpreted this as "every
+function name in formulas.py appears in some Lean docstring", not as "every function's
+computational content has a machine-checked Lean statement that could be cross-verified
+against the Python implementation".
+
+The distinction matters: the `first_order_correction` function had its Lean anchor
+(`firstOrder_correction_zero_iff`) — but that theorem only states δ_diss=0 iff Γ_H=0.
+The critical identification that converts EFT transport coefficients to the horizon
+damping rate was entirely unformalized. A reviewer running "check that each formula
+has a Lean theorem" would mark `first_order_correction` as grounded and move on,
+never seeing the unit mismatch.
+
+**Deliverables:**
+- [ ] Add to Pipeline Invariant 4: "A function F in `formulas.py` is considered Lean-grounded
+  only if (i) F has a `Lean:` line in its docstring citing a specific theorem name,
+  (ii) the cited theorem exists in `lean/SKEFTHawking/*.lean`, and (iii) the theorem's
+  statement logically implies the Python computation (not just mentions it). Specifically
+  for identities that convert between unit conventions (e.g., EFT coefficients to damping
+  rates), the identity itself must be formalized — a theorem about boundary conditions
+  (e.g., 'vanishes iff input zero') is not sufficient."
+- [ ] Add to `scripts/validate.py` a new check `lean_grounding_audit`: for each function
+  in `formulas.py`, find its `Lean:` reference, resolve it in the Lean source, verify the
+  theorem's conclusion mentions the function's output structure.
+- [ ] One-time audit: sweep all ~137 functions in `formulas.py`, identify which have weak
+  Lean anchors (existence-only, vanishing-only) vs. strong anchors (the formula identity
+  itself). Results → `docs/validation/lean_grounding_audit.md`.
+- [ ] Update `.claude/plugins/physics-qa/agents/claims-reviewer.md` Layer 2 to include this
+  strength-of-anchor check.
+
+**Estimated LOE:** 3-4 h for infrastructure + audit sweep
+**Risk:** Medium — may uncover more Lean-anchoring gaps similar to the δ_diss bug
+
+**Why this is HIGH VALUE:** The δ_diss bug is a canary. If it existed 9 orders of magnitude
+off for the project's entire history, there are almost certainly other weakly-anchored
+formulas where smaller bugs could hide. Finding them before submission is worth significant
+investigation time.
+
 ---
 
 ## Dependencies
@@ -327,28 +425,34 @@ All tracks are independent; maximum parallelism.
 
 ## Timeline
 
-| Wave | Scope | LOE | Priority |
-|------|-------|-----|----------|
-| Wave 1 | Paper 1 Table 1 regeneration | 3-5 h | 🔴 A (blocks PRL submission) |
-| Wave 2 | Paper 1 Son:2002 framing | 30 min | 🟡 B |
-| Wave 3 | Falque κ resolution (primary source read) | 1-2 h | 🔴 A (blocks Paper 12) |
-| Wave 4 | Paper 12 c_s framing | 1 h | 🟡 B |
-| Wave 5 | Paper 12 "programmable" | 30 min | 🟡 B |
-| Wave 6 | Paper 12 "inside horizon" | 5 min | 🔵 C |
-| Wave 7 | Paper 3 SO(4k) center | 5 min | 🟡 B |
-| Wave 8 | Paper 10 ℤ₁₆ class D | 20 min | 🟡 B |
-| Wave 9 | Paper 10 "16 = 8 × 2" | 15 min | 🟡 B |
-| Wave 10 | Paper 10 bibliography | 30 min | 🟡 B |
-| Wave 11 | Paper 3 Adler page | 1 min | 🟡 B |
-| Wave 12 | sixteen_convergence_full | 30 min | 🟡 B |
-| Wave 13 | dai_freed_spin_z4 | 15 min | 🟡 B |
-| Wave 14 | claims-reviewer Layer 2 ext | 2 h | 🔵 C |
-| Wave 15 | claims-reviewer Layer 4 ext | 4 h | 🔵 C (HIGH VALUE) |
-| Wave 16 | claims-reviewer Layer 3b | 2 h | 🔵 C |
-| Wave 17 | claims-reviewer Layer 5 ext | 3 h | 🔵 C |
-| Wave 18 | Cross-LLM provenance | 2 h | 🔵 C (HIGH VALUE) |
-| Wave 19 | Constants-source fidelity | 2 h | 🔵 C |
-| Wave 20 | Invariant 11 + hook | 1 h | 🔵 C (HIGH VALUE) |
+| Wave | Scope | LOE | Priority | Status (2026-04-13) |
+|------|-------|-----|----------|---------------------|
+| Wave 1a | Fix compute_dissipative_correction k_H² bug | 30 min | 🔴 A | IN PROGRESS 2026-04-13 |
+| Wave 1b | Add Lean theorem `gamma_H_from_transport` | 30 min | 🔴 A | IN PROGRESS 2026-04-13 |
+| Wave 1c | Test Beliaev→transport→correction chain | 30 min | 🔴 A | IN PROGRESS 2026-04-13 |
+| Wave 1d | Regenerate Paper 1 Table 1 + body + figures | 2-3 h | 🔴 A (blocks PRL submission) | IN PROGRESS 2026-04-13 |
+| Wave 2 | Paper 1 Son:2002 framing | 30 min | 🟡 B | **DONE 2026-04-13** |
+| Wave 3 | Falque κ resolution (primary source read) | 1-2 h | 🔴 A (blocks Paper 12) | OPEN — requires human primary-source verification |
+| Wave 4 | Paper 12 c_s framing | 1 h | 🟡 B | OPEN — depends on Wave 3 |
+| Wave 5 | Paper 12 "programmable" | 30 min | 🟡 B | OPEN — depends on Wave 3 |
+| Wave 6 | Paper 12 "inside horizon" | 5 min | 🔵 C | OPEN |
+| Wave 7 | Paper 3 SO(4k) center | 5 min | 🟡 B | **DONE 2026-04-13** |
+| Wave 8 | Paper 10 ℤ₁₆ class D | 20 min | 🟡 B | **DONE 2026-04-13** |
+| Wave 9 | Paper 10 "16 = 8 × 2" | 15 min | 🟡 B | **DONE 2026-04-13** |
+| Wave 10 | Paper 10 bibliography | 30 min | 🟡 B | **DONE 2026-04-13** (FreedHopkins deferred) |
+| Wave 11 | Paper 3 Adler page | 1 min | 🟡 B | **DONE 2026-04-13** |
+| Wave 12 | sixteen_convergence_full | 30 min | 🟡 B | **DONE 2026-04-13** (docstring option b) |
+| Wave 13 | dai_freed_spin_z4 | 15 min | 🟡 B | **DONE 2026-04-13** |
+| Wave 14 | claims-reviewer Layer 2 ext | 2 h | 🔵 C | OPEN — infrastructure |
+| Wave 15 | claims-reviewer Layer 4 ext | 4 h | 🔵 C (HIGH VALUE) | OPEN — infrastructure |
+| Wave 16 | claims-reviewer Layer 3b | 2 h | 🔵 C | OPEN — infrastructure |
+| Wave 17 | claims-reviewer Layer 5 ext | 3 h | 🔵 C | OPEN — infrastructure |
+| Wave 18 | Cross-LLM provenance | 2 h | 🔵 C (HIGH VALUE) | OPEN — infrastructure |
+| Wave 19 | Constants-source fidelity | 2 h | 🔵 C | OPEN — infrastructure |
+| Wave 20 | Invariant 11 + hook | 1 h | 🔵 C (HIGH VALUE) | OPEN — infrastructure |
+| Wave 21 | Invariant 12: Lean-grounding audit | 3-4 h | 🔵 C (HIGH VALUE) | OPEN — uncovered by Wave 1 investigation |
+
+**Progress 2026-04-13**: Waves 2, 7, 8, 9, 10, 11, 12, 13 complete (8 of 13 substantive waves). Remaining substantive: Wave 1 (Paper 1 Table 1 — requires MC-free window to run transonic solver) and Waves 3–6 (Paper 12 polariton — requires human primary-source verification of Falque PRL). Track F (agent checklist upgrades) untouched per user directive (substantive fixes only).
 
 **Total**: ~24 hours of edit + verification work; ~17 hours of agent upgrades. Parallelizable to 1–2 working days with concurrent tracks.
 

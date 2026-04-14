@@ -64,26 +64,50 @@ Previously: axiom rokhlin_theorem (M : SpinManifold4) : (16 : ℤ) ∣ M.signatu
 /-! ## 2. The "16 Convergence" -/
 
 /--
-The same number 16 appears in four independent contexts:
+**Enumerates** four independent occurrences of the number 16 in physics
+and topology. This theorem does NOT prove their mathematical equivalence.
+
+The four occurrences:
 
 1. **SM Weyl count:** 16 left-handed Weyl components per generation
    (Q_L=6, ū_R=3, d̄_R=3, L=2, ē_R=1, ν̄_R=1)
 
-2. **Z₁₆ bordism:** The bordism group Ω₅^{Spin^{Z₄}} ≅ Z₁₆
-   classifies global anomalies of spin manifolds with Z₄ symmetry
+2. **Z₁₆ bordism:** The bordism group Ω₅^{Spin^{Z₄}} ≅ Z₁₆ classifies
+   global anomalies of spin manifolds with Z₄ symmetry
+   (García-Etxebarria–Montero 2019). Not formalized here — enters as
+   external cobordism fact, see `Z16AnomalyComputation.dai_freed_spin_z4`.
 
 3. **Rokhlin signature:** σ(M) ≡ 0 mod 16 for spin 4-manifolds
-   (enters as hypothesis — Rokhlin 1952, well-established)
+   (Rokhlin 1952). Enters as the hypothesis `h_rokhlin`.
 
-4. **Kitaev 16-fold way:** Topological superconductors with T²=−1
-   have a Z₁₆ classification
+4. **Kitaev 16-fold way:** 2D topological superconductors in symmetry
+   class D (particle-hole symmetry, NO time-reversal) have a free-fermion
+   ℤ classification that reduces to ℤ₁₆ under interactions
+   (Fidkowski-Kitaev 2010). Not formalized here.
 
-All four arise from the spin structure of spacetime and the fact that
-π₃(SO) = ℤ (Bott periodicity mod 8) combined with the Pfaffian squaring
-to give mod 16.
+**Structural caveat — what the Lean statement actually proves.**
 
-The Rokhlin clause is conditional: IF σ(M) ≡ 0 mod 16 for all spin
-4-manifolds, THEN the "16" in the signature matches the other three.
+The four conjuncts of the conclusion are:
+- Conjunct 1 (substantive): `Σ components_f = 16` — the SM Weyl count
+  theorem, sourced from `total_components_with_nu_R`.
+- Conjunct 2 (trivial):    `(16 : ZMod 16) = 0` — arithmetic tautology
+  discharged by `decide`.
+- Conjunct 3 (echo):       `∀ M, 16 ∣ σ(M)` — verbatim restatement of
+  the hypothesis `h_rokhlin`.
+- Conjunct 4 (retype):     `Σ components_f = 16` over ℕ — the same claim
+  as Conjunct 1 with a different target type.
+
+The theorem therefore records, in the proof assistant, that the numeral
+"16" appears in these four contexts. It does NOT demonstrate a common
+origin. The actual mathematical connection between the four 16s
+(SM Weyl ↔ Rokhlin ↔ ℤ₁₆ cobordism ↔ Kitaev) is established
+externally by Wang (2024) via the string bordism ℤ₂₄ class and the
+associated Smith homomorphism; formalizing that connection would
+require cobordism theory that is not currently in Mathlib.
+
+**Papers citing this theorem MUST describe it as a formal enumeration,
+not a formal unification.** Suggested phrasing: "formally recorded" or
+"enumerated in Lean", never "formally verified convergence".
 -/
 theorem sixteen_convergence_full
     (h_rokhlin : ∀ M : SpinManifold4, (16 : ℤ) ∣ M.signature) :

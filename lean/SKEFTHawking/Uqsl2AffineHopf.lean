@@ -5571,12 +5571,58 @@ private theorem affConvR_mul_step
     have h_sum : ∃ (s : Finset (Uqsl2Aff k × Uqsl2Aff k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 :=
       TensorProduct.exists_finset x
     obtain ⟨s, rfl⟩ := h_sum
-    simp +decide [hx, mul_assoc, Finset.sum_mul _ _ _]
-    simp [affAntipodeLM_mul, ← mul_assoc, ← Finset.sum_mul _ _ _]
-    simp only [← Finset.mul_sum _ _ _, mul_assoc]
+    -- Distribute map_sum through rTensor and mul' to match the target form
+    rw [map_sum (LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)),
+        map_sum (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))] at hx
+    simp +decide [LinearMap.rTensor_tmul, LinearMap.mul'_apply] at hx
+    simp +decide [map_sum, LinearMap.rTensor_tmul, LinearMap.mul'_apply,
+                  affAntipodeLM_mul, Finset.sum_mul, Finset.mul_sum, mul_assoc]
+    simp only [← mul_assoc, ← Finset.sum_mul]
+    rw [show (∑ i ∈ s, (affAntipodeLM k) c * (affAntipodeLM k) i.1 * i.2) =
+        (affAntipodeLM k) c * (∑ i ∈ s, (affAntipodeLM k) i.1 * i.2) from by
+      rw [Finset.mul_sum]; congr 1; ext i; noncomm_ring]
     rw [hx]
-    simp +decide [mul_assoc, Algebra.commutes]
+    rw [mul_assoc, ← mul_assoc _ _ d, Algebra.commutes]
   | add x y hx hy => simp_all +decide [mul_add, add_mul]
+
+/-- Helper: for grade1 F0/F1 antipode cases (lTensor side), `F + K⁻¹ · (-1 • (K · F)) = 0`
+when `K⁻¹·K = 1`. -/
+private theorem affAntipode_grade1_F_cancel (F Kinv K : Uqsl2Aff k)
+    (h : Kinv * K = 1) : F + Kinv * (-1 • (K * F)) = 0 := by
+  have h1 : Kinv * (K * F) = F := by
+    have : Kinv * K * F = Kinv * (K * F) := mul_assoc Kinv K F
+    rw [← this, h, one_mul]
+  have hsmul : Kinv * (-1 • (K * F)) = -1 • (Kinv * (K * F)) := by
+    rw [mul_smul_comm]
+  calc F + Kinv * (-1 • (K * F))
+      = F + -1 • (Kinv * (K * F)) := by rw [hsmul]
+    _ = F + -1 • F := by rw [h1]
+    _ = F + -F := by rw [neg_one_zsmul]
+    _ = 0 := add_neg_cancel F
+
+/-- Helper: for grade1 E0/E1 antipode cases, `-1 • (E·K⁻¹)·K + E = 0`
+when `K⁻¹·K = 1`. Written at top level to avoid the `ag✝` shadowing issue
+that occurs inside `cases x <;> show ...` blocks. Constructs proof via
+explicit equalities to bypass the RingQuot typeclass diamond on `neg_mul`. -/
+private theorem affAntipode_grade1_E_cancel (E Kinv K : Uqsl2Aff k)
+    (h : Kinv * K = 1) : -1 • (E * Kinv) * K + E = 0 := by
+  -- Step 1: show (E*Kinv)*K = E using associativity and h
+  have hEKKinv : (E * Kinv) * K = E := by
+    have h1 : (E * Kinv) * K = E * (Kinv * K) := mul_assoc E Kinv K
+    have h2 : E * (Kinv * K) = E * 1 := congrArg (E * ·) h
+    have h3 : (E * 1 : Uqsl2Aff k) = E := mul_one E
+    exact h1.trans (h2.trans h3)
+  -- Step 2: -1 • (E*Kinv) = -(E*Kinv)
+  have hneg1smul : -1 • (E * Kinv) = -(E * Kinv) := neg_one_zsmul (E * Kinv)
+  -- Step 3: -(E*Kinv) * K = -((E*Kinv)*K)  (via smul_mul_assoc with scalar = -1)
+  have hsmul_mul : -1 • (E * Kinv) * K = -1 • ((E * Kinv) * K) := by
+    rw [smul_mul_assoc]
+  -- Step 4: combine
+  calc -1 • (E * Kinv) * K + E
+      = -1 • ((E * Kinv) * K) + E := by rw [hsmul_mul]
+    _ = -1 • E + E := by rw [hEKKinv]
+    _ = -E + E := by rw [neg_one_zsmul]
+    _ = 0 := neg_add_cancel E
 
 set_option maxHeartbeats 800000 in
 private theorem affAntipode_right :
@@ -5587,20 +5633,40 @@ private theorem affAntipode_right :
   ext x
   obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (AffChevalleyRel k) x
   induction x using FreeAlgebra.induction with
-  | algebraMap r =>
+  | grade0 r =>
     simp +decide [affAntipodeLM, affAntipode, affComul, affCounit,
       RingQuot.liftAlgHom, affComulFreeAlg, affCounitFreeAlg]
-  | ι x =>
+  | grade1 x =>
     cases x <;>
+      (show (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+          ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) ((affComul k) _)) =
+        (algebraMap (LaurentPolynomial k) (Uqsl2Aff k)) ((affCounit k) _)) <;>
       simp +decide [affComul_gen, affComulOnGen, affAntipodeLM_gen, affAntipodeOnGen,
         affCounit_gen, affCounitOnGen, LinearMap.rTensor_tmul, LinearMap.mul'_apply,
-        affAntipodeLM_one, mul_assoc] <;>
-      erw [uqAff_K0inv_mul_K0 k] <;> try erw [uqAff_K1inv_mul_K1 k] <;>
-      simp
+        affAntipodeLM_one,
+        uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+        uqsl2AffMk,
+        MulOpposite.unop_op, MulOpposite.op_unop, MulOpposite.unop_neg,
+        MulOpposite.unop_mul, MulOpposite.unop_one, neg_one_smul] <;>
+      (try erw [uqAff_K0inv_mul_K0]) <;>
+      (try erw [uqAff_K1inv_mul_K1]) <;>
+      (try erw [uqAff_K0_mul_K0inv]) <;>
+      (try erw [uqAff_K1_mul_K1inv]) <;>
+      (try rfl) <;> (try abel) <;>
+      -- E0/E1: bridge ag✝ shadowing by unfolding everything to raw FreeAlgebra.ι
+      (first
+        | (have h := affAntipode_grade1_E_cancel k (uqAffE0 k) (uqAffK0inv k) (uqAffK0 k)
+             (uqAff_K0inv_mul_K0 k)
+           simp only [uqAffE0, uqAffK0inv, uqAffK0, uqsl2AffMk, ag] at h ⊢
+           exact h)
+        | (have h := affAntipode_grade1_E_cancel k (uqAffE1 k) (uqAffK1inv k) (uqAffK1 k)
+             (uqAff_K1inv_mul_K1 k)
+           simp only [uqAffE1, uqAffK1inv, uqAffK1, uqsl2AffMk, ag] at h ⊢
+           exact h))
   | mul x y hx hy =>
     simp_all +decide [mul_assoc, CoalgebraStruct.comul]
-    convert affConvR_mul_step k _ _ _ hy using 1
-    aesop
+    convert affConvR_mul_step k _ _ _ hx using 1
+    rw [hy]
   | add x y hx hy => simp_all [map_add]
 
 private theorem affConvL_mul_step
@@ -5622,11 +5688,18 @@ private theorem affConvL_mul_step
     have h_sum : ∃ (s : Finset (Uqsl2Aff k × Uqsl2Aff k)), y = ∑ p ∈ s, p.1 ⊗ₜ p.2 :=
       TensorProduct.exists_finset y
     obtain ⟨s, rfl⟩ := h_sum
-    simp +decide [hy, mul_assoc, Finset.mul_sum _ _ _]
-    simp [affAntipodeLM_mul, ← mul_assoc, ← Finset.mul_sum _ _ _]
-    simp only [← Finset.sum_mul _ _ _, mul_assoc]
+    -- Distribute map_sum through lTensor and mul' to match the target form
+    rw [map_sum (LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)),
+        map_sum (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))] at hy
+    simp +decide [LinearMap.lTensor_tmul, LinearMap.mul'_apply] at hy
+    simp +decide [map_sum, LinearMap.lTensor_tmul, LinearMap.mul'_apply,
+                  affAntipodeLM_mul, Finset.sum_mul, Finset.mul_sum, mul_assoc]
+    -- Factor a out on the left and S(b) out on the right, then apply hy, then Algebra.commutes
+    rw [show (∑ i ∈ s, a * (i.1 * ((affAntipodeLM k) i.2 * (affAntipodeLM k) b))) =
+        a * (∑ i ∈ s, i.1 * (affAntipodeLM k) i.2) * (affAntipodeLM k) b from by
+      rw [Finset.mul_sum, Finset.sum_mul]; congr 1; ext i; noncomm_ring]
     rw [hy]
-    simp +decide [mul_assoc, ← Algebra.commutes]
+    rw [mul_assoc, Algebra.commutes]
   | add x y hx hy => simp_all +decide [mul_add, add_mul]
 
 set_option maxHeartbeats 800000 in
@@ -5638,21 +5711,40 @@ private theorem affAntipode_left :
   ext x
   obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (AffChevalleyRel k) x
   induction x using FreeAlgebra.induction with
-  | algebraMap r =>
+  | grade0 r =>
     simp +decide [affAntipodeLM, affAntipode, affComul, affCounit,
       RingQuot.liftAlgHom, affComulFreeAlg, affCounitFreeAlg]
-  | ι x =>
+  | grade1 x =>
     cases x <;>
+      (show (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+          ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) ((affComul k) _)) =
+        (algebraMap (LaurentPolynomial k) (Uqsl2Aff k)) ((affCounit k) _)) <;>
       simp +decide [affComul_gen, affComulOnGen, affAntipodeLM_gen, affAntipodeOnGen,
         affCounit_gen, affCounitOnGen, LinearMap.lTensor_tmul, LinearMap.mul'_apply,
-        affAntipodeLM_one, mul_assoc] <;>
-      erw [uqAff_K0_mul_K0inv k] <;> try erw [uqAff_K1_mul_K1inv k] <;>
-      simp
+        affAntipodeLM_one,
+        uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+        uqsl2AffMk,
+        MulOpposite.unop_op, MulOpposite.op_unop, MulOpposite.unop_neg,
+        MulOpposite.unop_mul, MulOpposite.unop_one, neg_one_smul] <;>
+      (try erw [uqAff_K0inv_mul_K0]) <;>
+      (try erw [uqAff_K1inv_mul_K1]) <;>
+      (try erw [uqAff_K0_mul_K0inv]) <;>
+      (try erw [uqAff_K1_mul_K1inv]) <;>
+      (try rfl) <;> (try abel) <;>
+      -- F0/F1 lTensor: bridge ag✝ shadowing via simp unfolding
+      (first
+        | (have h := affAntipode_grade1_F_cancel k (uqAffF0 k) (uqAffK0inv k) (uqAffK0 k)
+             (uqAff_K0inv_mul_K0 k)
+           simp only [uqAffF0, uqAffK0inv, uqAffK0, uqsl2AffMk, ag] at h ⊢
+           exact h)
+        | (have h := affAntipode_grade1_F_cancel k (uqAffF1 k) (uqAffK1inv k) (uqAffK1 k)
+             (uqAff_K1inv_mul_K1 k)
+           simp only [uqAffF1, uqAffK1inv, uqAffK1, uqsl2AffMk, ag] at h ⊢
+           exact h))
   | mul x y hx hy =>
     simp_all +decide [← LinearMap.comp_assoc, ← RingHom.comp_apply]
-    convert affConvL_mul_step k _ _ _ hx using 1
-    rw [hy]
-    grind
+    convert affConvL_mul_step k _ _ _ hy using 1
+    rw [hx]
   | add x y hx hy => simp_all [map_add]
 
 noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl2Aff k) where

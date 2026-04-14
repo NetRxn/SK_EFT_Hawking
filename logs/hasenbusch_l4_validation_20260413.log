@@ -1,0 +1,84 @@
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/vestigial/hs_rhmc.py:229: RuntimeWarning: overflow encountered in exp
+  al = np.exp(log_al)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/vestigial/hs_rhmc.py:230: RuntimeWarning: overflow encountered in exp
+  be = np.exp(log_be)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/vestigial/hs_rhmc.py:231: RuntimeWarning: invalid value encountered in divide
+  r = a0 + np.sum(al[:, None] / (x_grid[None, :] + be[:, None]), axis=0)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/vestigial/hs_rhmc.py:228: RuntimeWarning: overflow encountered in exp
+  a0 = np.exp(log_a0)
+======================================================================
+RHMC Production: L=4, 14 couplings x 1500 traj
+  Clark-Kennedy 2-PF even-odd, 12-pole Zolotarev x^{-1/4}
+  tau=0.062, eps=0.006250, MD steps=10
+  Progress: 0 complete, 0 partial, 14 new
+  Workers: 4, chunk: 10 traj
+  Output: data/rhmc/L4/g*.npz
+======================================================================
+  Spectrum: [0.152, 1261.2], kappa=8323
+  Hasenbusch K=3: 4 factors × 8 poles/factor
+  mu^2 schedule: ['0.000', '1.447', '13.824', '132.041']
+  Integrator levels: [5, 3, 4]
+
+  Starting...
+
+  g=0.500: 10/1500 traj (1077s, 107.67s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 20/1500 traj (1250s, 62.49s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 10/1500 traj (1305s, 130.54s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 30/1500 traj (1429s, 47.65s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 10/1500 traj (1454s, 145.42s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 20/1500 traj (1523s, 76.14s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 40/1500 traj (1603s, 40.07s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 10/1500 traj (1607s, 160.73s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 20/1500 traj (1688s, 84.41s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 30/1500 traj (1735s, 57.83s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 50/1500 traj (1777s, 35.53s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 20/1500 traj (1873s, 93.65s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 30/1500 traj (1928s, 64.25s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 40/1500 traj (1953s, 48.81s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 60/1500 traj (1955s, 32.58s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 70/1500 traj (2132s, 30.46s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 30/1500 traj (2138s, 71.25s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 40/1500 traj (2167s, 54.16s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 50/1500 traj (2169s, 43.39s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 80/1500 traj (2305s, 28.82s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 60/1500 traj (2383s, 39.71s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 40/1500 traj (2398s, 59.95s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 50/1500 traj (2402s, 48.05s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 90/1500 traj (2479s, 27.55s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 70/1500 traj (2596s, 37.09s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 60/1500 traj (2638s, 43.97s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 100/1500 traj (2653s, 26.53s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 50/1500 traj (2659s, 53.17s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 80/1500 traj (2810s, 35.12s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 110/1500 traj (2826s, 25.69s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 70/1500 traj (2874s, 41.06s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 60/1500 traj (2919s, 48.65s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 120/1500 traj (3000s, 25.00s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 90/1500 traj (3023s, 33.59s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 80/1500 traj (3111s, 38.89s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 130/1500 traj (3174s, 24.41s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 70/1500 traj (3180s, 45.43s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 100/1500 traj (3238s, 32.38s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 140/1500 traj (3363s, 24.02s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 90/1500 traj (3363s, 37.37s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 80/1500 traj (3458s, 43.22s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 110/1500 traj (3469s, 31.54s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 150/1500 traj (3539s, 23.60s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 100/1500 traj (3601s, 36.01s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 120/1500 traj (3684s, 30.70s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 160/1500 traj (3714s, 23.21s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 90/1500 traj (3718s, 41.31s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 110/1500 traj (3838s, 34.89s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 170/1500 traj (3891s, 22.89s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 130/1500 traj (3900s, 30.00s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 100/1500 traj (3978s, 39.78s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 180/1500 traj (4070s, 22.61s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 120/1500 traj (4075s, 33.96s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 140/1500 traj (4120s, 29.43s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 110/1500 traj (4246s, 38.60s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 190/1500 traj (4254s, 22.39s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.654: 130/1500 traj (4322s, 33.24s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 150/1500 traj (4340s, 28.93s/traj, accept=1.00) [Hasenbusch K=3]
+  g=0.500: 200/1500 traj (4433s, 22.17s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.231: 120/1500 traj (4509s, 37.58s/traj, accept=1.00) [Hasenbusch K=3]
+  g=1.077: 160/1500 traj (4554s, 28.46s/traj, accept=1.00) [Hasenbusch K=3]

@@ -54,7 +54,7 @@ The present work addresses this gap by computing the \textit{first} dissipative 
 
 Our approach combines three recent developments:
 \begin{enumerate}
-\item \textbf{Son's superfluid EFT} \cite{Son:2002}: An effective action for phonons in superfluids valid in the hydrodynamic regime, based on the Galilean-invariant Lorentz structure.
+\item \textbf{Son's superfluid EFT} \cite{Son:2002}: the symmetry-breaking and EFT framework for phonons in superfluids valid in the hydrodynamic regime. Son (hep-ph/0204199) constructs this action for a \emph{relativistic} superfluid; the non-relativistic adaptation used here---the Madelung/Galilean form---follows Endlich \textit{et al.}~(\emph{Phys.\ Rev.\ D} \textbf{88}, 105001, 2013).
 \item \textbf{Schwinger--Keldysh formalism for dissipative media} \cite{Crossley:2017,Jana:2020}: A general framework for systematically including dissipation via gradient expansion and transport coefficients.
 \item \textbf{Analog Hawking radiation in BECs} \cite{Coutant:2014,Steinhauer:2019}: Controlled experiments where surface gravity, flow profiles, and microscopic properties are tunable.
 \end{enumerate}
@@ -66,7 +66,10 @@ The plan of the paper is as follows. In \S\ref{sec:son}, we review Son's superfl
 
 \subsection{The Superfluid Action}
 
-Son's effective action for a nonrelativistic superfluid starts from the Galilean-invariant structure of the superfluid phase and density:
+Following Son's EFT framework \cite{Son:2002}---originally formulated for
+a relativistic superfluid---and its non-relativistic Madelung adaptation
+\cite{Son:2002}, the action of a non-relativistic superfluid starts from the
+Galilean-invariant structure of the superfluid phase and density:
 \begin{equation}
 \label{eq:son_action}
 S = \int d^3 x \, dt \left[ n(\partial_t \phi + \vec{v} \cdot \nabla \phi) - P(n, \phi) \right].
@@ -244,11 +247,11 @@ where we have integrated over the Hawking spectrum and used the mean frequency $
 \hline
 Parameter & Units & Steinhauer ($^{87}$Rb) & Heidelberg ($^{39}$K) & Trento ($^{23}$Na) \\
 \hline
-Speed of sound $c_s$ & mm/s & 0.46 & 3.37 & 1.83 \\
-Healing length $\xi$ & $\mu$m & 1.57 & 0.48 & 1.51 \\
+Speed of sound $c_s$ & mm/s & 0.55 & 3.92 & 2.18 \\
+Healing length $\xi$ & $\mu$m & 1.33 & 0.42 & 1.26 \\
 Surface gravity $\kappa$ & s$^{-1}$ & 4.8 & 101.9 & 21.4 \\
 Hawking temperature $T_H$ & nK & 0.006 & 0.124 & 0.026 \\
-Dissipative correction $\delta_{\text{diss}}$ & (dimensionless) & $4.2 \times 10^{-4}$ & $2.0 \times 10^{-5}$ & $9.3 \times 10^{-5}$ \\
+Dissipative correction $\delta_{\text{diss}}$ (Beliaev, $T{=}0$) & (dimensionless) & $2.4 \times 10^{-5}$ & $1.6 \times 10^{-3}$ & $1.4 \times 10^{-5}$ \\
 \hline
 \end{tabular}
 \caption{Parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog Hawking experiments. Heidelberg and Trento are projected configurations. The model $\kappa$ is profile-dependent; Steinhauer's published $\kappa \approx 290$~s$^{-1}$ (step potential) gives $T_H \approx 0.35$~nK. The EFT corrections $\delta_\text{diss}/\delta_\text{disp}$ depend on material properties, not on $\kappa$ directly.}
@@ -274,18 +277,55 @@ and cross-term $\delta_{\text{cross}}$ (gray) for three BEC platforms on log sca
 \label{fig:correction_hierarchy}
 \end{figure}
 
-From kinetic theory in the collisionless (Knudsen) regime---where the mean free path between atomic collisions exceeds the system size, so transport is ballistic rather than diffusive---transitioning to hydrodynamics, we estimate
-\begin{equation}
-\gamma_1 \sim \frac{\hbar}{m} n \sigma \sim 10^{-3} \text{ to } 10^{-1} \text{ s}^{-1},
-\end{equation}
-where the wide range reflects uncertainties in the scattering cross-section $\sigma$ and the phonon mean-free path.
+Two distinct damping mechanisms can contribute to the horizon damping rate
+$\Gamma_H$, active in different temperature regimes:
 
-Substituting into \eqref{eq:delta_diss_explicit}:
+\paragraph*{Beliaev regime ($T \to 0$).}
+The zero-temperature three-phonon decay gives
 \begin{equation}
-\delta_{\text{diss}} \sim \frac{\gamma_1 \kappa}{\pi c_s^2} \sim 10^{-5} \text{ to } 10^{-3}.
+\label{eq:gamma_beliaev}
+\Gamma_{\text{Bel}} \sim \sqrt{n a_s^3}\,\omega^2 / c_s,
 \end{equation}
+with $na_s^3$ the gas parameter ($\sim 10^{-6}$ for dilute BECs). This is the
+regime formalized in our pipeline: Table~\ref{tab:experimental_params} reports
+the Beliaev-regime $\delta_{\text{diss}}$ computed as $\Gamma_{\text{Bel}}/\kappa$
+for each platform. For typical BEC parameters this gives
+$\delta_{\text{diss}} \sim 10^{-5}$.
 
-This is \textbf{below} the current experimental sensitivity of Steinhauer's apparatus, which is limited to $\Delta T / T \sim 10^{-2}$ by shot noise and trap inhomogeneities.
+\paragraph*{Zaremba regime ($T \gtrsim T_c/10$).}
+At non-zero temperature, binary collisions between phonons and the
+thermal cloud~\cite{Zaremba:1999} dominate:
+\begin{equation}
+\label{eq:gamma_estimates_expanded}
+\gamma_1^{\text{(kin)}} \sim \frac{\hbar}{m} n \sigma \sim 10^{-3} \text{ to } 10^{-1} \text{ s}^{-1},
+\end{equation}
+where the wide range reflects uncertainties in the scattering cross-section
+$\sigma$ and the thermal-cloud fraction. Substituting into
+\eqref{eq:delta_diss_explicit}:
+\begin{equation}
+\label{eq:delta_diss_zaremba}
+\delta_{\text{diss}}^{\text{(kin)}} \sim \frac{\gamma_1^{\text{(kin)}} \kappa}{\pi c_s^2} \sim 10^{-4} \text{ to } 10^{-3}.
+\end{equation}
+This is $\sim10\times$ larger than the pure Beliaev prediction and dominates at
+experimentally realized temperatures.
+
+\paragraph*{Experimental reach.} Both regimes give
+$\delta_{\text{diss}} \ll 10^{-2}$, \textbf{below} the current sensitivity of
+Steinhauer's apparatus (limited to $\Delta T / T \sim 10^{-2}$ by shot noise and
+trap inhomogeneities). A measurement of $\delta_{\text{diss}}$ would distinguish
+between the two regimes by its temperature scaling:
+$\delta_{\text{diss}}^{\text{Bel}}$ is $T$-independent, while
+$\delta_{\text{diss}}^{\text{(kin)}}$ scales with the thermal-cloud fraction.
+
+\paragraph*{Note on $\kappa$ profile-dependence.}
+Table~\ref{tab:experimental_params} reports $\kappa \approx 4.8$~s$^{-1}$ for the
+Steinhauer platform under our smooth \textit{tanh} velocity profile. Steinhauer's
+own published value is $\kappa \approx 290$~s$^{-1}$, obtained from a step
+potential; the $\sim\!60\times$ factor between the two values reflects entirely the
+geometric steepness of the assumed velocity profile, not a physical
+disagreement. Our smooth profile models a more idealized experimental
+configuration with reduced spectral contamination; the published step-profile
+value gives $T_H \approx 0.35$~nK in the original Steinhauer analysis.
 
 \begin{figure}[htb]
 \centering
@@ -307,11 +347,20 @@ For $^{23}$Na with a spin-dependent background, the speed of sound can be dramat
 \left(\frac{c_{\text{density}}}{c_{\text{spin}}}\right)^2 \sim 100.
 \end{equation}
 
-This would amplify $\delta_{\text{diss}}$ to
+This amplifies $\delta_{\text{diss}}$ by $\sim 100\times$. Applied to the two
+regimes of Sec.~\ref{sec:results}:
 \begin{equation}
-\delta_{\text{diss}}^{\text{spin}} \sim 100 \times 10^{-3} \sim O(10^{-1} \text{ to } 10^{-2}),
+\delta_{\text{diss}}^{\text{spin, Bel}} \sim 100 \times 10^{-5} \sim 10^{-3},
+\qquad
+\delta_{\text{diss}}^{\text{spin, (kin)}} \sim 100 \times 10^{-3} \sim 10^{-1},
 \end{equation}
-which is now potentially experimentally accessible if noise can be reduced to the $\sim 10^{-3}$ level. Detailed numerical estimates using $^{23}$Na scattering parameters and projected Trento trap geometries are presented in the supplemental material and interactive visualization dashboard accompanying this work.
+so at finite temperature the spin-sonic enhancement could bring
+$\delta_{\text{diss}}$ up to $O(10^{-1})$, potentially accessible if noise can
+be reduced to the $\sim 10^{-3}$ level. Even the pure Beliaev (T=0) regime
+gives $\sim 10^{-3}$ with spin-sonic enhancement, at the threshold of current
+sensitivity. Detailed numerical estimates using $^{23}$Na scattering parameters
+and projected Trento trap geometries are presented in the supplemental material
+and interactive visualization dashboard accompanying this work.
 
 \subsection{Formal Verification}
 

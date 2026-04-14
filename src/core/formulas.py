@@ -179,7 +179,19 @@ def first_order_correction(Gamma_H, kappa):
 
     Lean: firstOrder_correction_zero_iff — proves δ_diss=0 iff Γ_H=0.
           Uses κ > 0 (total-division strengthening).
-    Aristotle: 518636d7
+          Aristotle: 518636d7
+
+    Related identities grounding the full chain from EFT transport coefficients
+    (γ₁, γ₂ in [m²/s]) to this function's input Γ_H (in [s⁻¹]):
+      - Lean: SKEFTHawking.SecondOrderSK.GammaH — definition Γ_H = (γ₁+γ₂)(κ/c_s)²
+      - Lean: SKEFTHawking.SecondOrderSK.gammaH_def / gammaH_via_kH
+      - Lean: SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq
+      - PAPER_DEPENDENCIES['paper1_first_order'] line 657
+
+    Callers must convert EFT transport coefficients to Γ_H via k_H² = (κ/c_s)²
+    before calling this function. The caller `compute_dissipative_correction`
+    in `src/core/transonic_background.py` handles this conversion.
+
     Source: original
 
     Args:

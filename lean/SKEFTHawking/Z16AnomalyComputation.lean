@@ -26,16 +26,28 @@ namespace SKEFTHawking
 /-! ## 1. The Dai-Freed Framework (Axiomatized) -/
 
 /--
-The global anomaly for Spin^{ℤ₄} structures is classified by ℤ₁₆.
+**PLACEHOLDER** — not a proof of the Dai-Freed classification.
 
-This is the Dai-Freed theorem applied to the SM's discrete ℤ₄ symmetry:
-Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆.
+The physical content we want to encode is: Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆
+(Dai-Freed 1994; García-Etxebarria & Montero, JHEP 08:003 (2019)).
+That identification requires cobordism theory (Adams spectral sequence,
+Thom–Pontryagin construction, Z₄-twisted spin bordism) that is not in
+Mathlib as of this writing.
 
-Axiomatized because the full proof requires cobordism theory (Adams spectral
-sequence, Thom-Pontryagin construction) — see Phase6_Deferred_Targets.md.
+The theorem stated here is a trivially true statement ("there exists a
+bijection on ZMod 16") discharged as `Equiv.refl`. It DOES NOT prove the
+cobordism isomorphism. It exists as a namespace marker so downstream
+theorems can reference the Dai-Freed classification as an external
+hypothesis, and so the eventual real proof has a place to slot in.
+
+**Papers that cite this module MUST describe the Dai-Freed result as an
+external hypothesis**, not a Lean-verified fact. Recommended phrasing:
+"Lean-formalized consequence of the Dai-Freed theorem, with the cobordism
+computation Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆ taken as an external hypothesis."
+
+See: Phase6_Deferred_Targets.md — full cobordism formalization is a
+Phase 6 item contingent on Mathlib acquiring the required infrastructure.
 -/
--- DISCHARGED: was axiom, but the statement is tautological (same as z16_classification).
--- The actual physics content (Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆) requires cobordism theory.
 theorem dai_freed_spin_z4 : ∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ :=
   ⟨Equiv.refl _, (Equiv.refl _).bijective⟩
 

@@ -925,14 +925,23 @@ Adopt Wetterich's hypercubic lattice formulation where SO(4,ℂ) acts directly o
 
 After fixing 9B-1 through 9B-4, the following downstream artifacts must be re-verified:
 
-**Papers (claims review 2026-04-03 — all blocking issues fixed):**
-- [x] Paper 1: Table 1 updated, a_s text fixed, Berti citation fixed, caption clarified. Claims review PASS. (2026-04-03)
-- [x] Paper 2: CGL cite key fixed, Berti citation fixed. Claims review PASS. (2026-04-03)
-- [x] Paper 3: SO(n)/Spin(n) center corrected, duplicate bibitem removed. Claims review PASS. (2026-04-03)
+**Papers (claims review 2026-04-03 — partial; April 10 review round found residual issues):**
+- [~] Paper 1: a_s text fixed, Berti citation fixed, caption clarified (2026-04-03). **Table 1 regeneration INCOMPLETE** — April 13 re-verification (Phase 5u Wave 1) showed all 6 platform values (c_s, ξ × 3 platforms) still at pre-correction values, ~16–19% off current pipeline. Requires rerun of transonic solver. Tracked: Phase5u Wave 1.
+- [x] Paper 2: CGL cite key fixed, Berti citation fixed. Claims review PASS. (2026-04-03). Additionally 2026-04-13: Son:2002 bibitem extended with Endlich co-citation (Phase 5u Wave 2).
+- [~] Paper 3: duplicate `Grozdanov2017` bibitem removed (2026-04-03). **SO(n)/Spin(n) center partially correct** — general SO(2k+1)/SO(2k) entries fine, but `Z₂ × Z₂ for SO(4k)` was still incorrect (center of SO(4k) is Z₂; Z₂ × Z₂ belongs to Spin(4k)). Fixed 2026-04-13 (Phase 5u Wave 7). Adler 2024 page 87→80 fixed 2026-04-13 (Phase 5u Wave 11).
 - [x] Paper 4: table updated, Lean claim narrowed (turning point formula mismatch), δ_k text fixed, global counts updated. Claims review PASS. (2026-04-03)
 - [x] Paper 5: confirmed clean — G_c correct, vestigial references Weingarten. Claims review PASS. (2026-04-03)
 - [ ] Paper 6: BLOCKED on L=8 RHMC results. Production MC section needs complete rewrite.
-- [x] Paper 7: global counts updated (588/38/233), bibkey year fixed. Claims review PASS. (2026-04-03)
+- [x] Paper 7: global counts updated (588/38/233), bibkey year fixed. Claims review PASS. (2026-04-03). TPF2024 bibitem + body text subsequently corrected from "Tong-Preskill-Fidkowski" (arXiv:2411.18738 — a galaxy survey) to "Thorngren-Preskill-Fidkowski" (arXiv:2601.04304); verified applied by 2026-04-13. Exact fix date unknown (between April 10 review and April 13 verification). Paper 8 Tong2022 (arXiv:2104.03997) also verified correct.
+
+**April 13 follow-up (Phase 5u — substantive issues residual from Apr 3):**
+- [x] Paper 3 SO(4k) center, Adler page (Phase 5u Waves 7, 11)
+- [x] Papers 1, 2 Son:2002 relativistic framing (Phase 5u Wave 2)
+- [x] Paper 10 "16 Convergence" section rewrite, class D framing, ABP1967 page, Stolz1993 removal, BeaudryCampbell page, Kitaev2009 end page, diFrancesco1997 addition, FidkowskiKitaev2010 addition (Phase 5u Waves 8, 9, 10)
+- [x] Paper 8 `Z₁₆ cobordism axiom discharged (tautological)` framing clarified (Phase 5u Wave 13)
+- [x] Lean `sixteen_convergence_full`, `dai_freed_spin_z4` placeholder disclosure (Phase 5u Waves 12, 13)
+- [ ] Paper 1 Table 1 regeneration (Phase 5u Wave 1 — requires transonic solver rerun)
+- [ ] Paper 12 polariton c_s/κ/D/T_H (Phase 5u Waves 3–6 — requires Falque primary-source re-verification)
 
 **Notebooks (verified 2026-04-03):**
 - [x] All 20 notebooks execute cleanly (notebook_exec CHECK passes). Values auto-update from solver imports. (2026-04-03)
@@ -1279,7 +1288,7 @@ This proves the metric **necessarily orders before the tetrad** whenever u_g > 0
 - [x] Paper claims reviewer: ran on all 7 papers, all blocking issues fixed (2026-04-03)
 - [ ] Polariton parameter reconciliation: determine if c_s/xi/tau_cav should use Falque values or remain projected
 - [x] Paper 2: fixed CGL cite key mismatch + Berti citation (2026-04-03)
-- [x] Paper 3: fixed SO(n)/Spin(n) center error + duplicate bibitem (2026-04-03)
+- [~] Paper 3: fixed duplicate Grozdanov bibitem (2026-04-03). SO(n)/Spin(n) center was only partially corrected — `Z₂ × Z₂ for SO(4k)` residual error caught by April 10 reviews, fixed 2026-04-13 (Phase 5u Wave 7). Adler page fixed 2026-04-13 (Phase 5u Wave 11).
 - [x] Paper 4: table updated, Lean verification claim narrowed (turning point formula mismatch), δ_k text corrected, theorem name fixed, global counts updated (2026-04-03)
 - [x] Paper 5: confirmed clean — G_c correct, vestigial paragraph references Weingarten (2026-04-03)
 - [x] Paper 7: global counts updated (429→588, 30→38, 99→233), bibkey GoltermanShamir2024→2026 (2026-04-03)

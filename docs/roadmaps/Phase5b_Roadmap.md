@@ -226,9 +226,9 @@ The project has **0 axioms** (down from 7 after integrity sweep and Wave 6 axiom
 | 1 | `non_abelian_center_discrete` | GaugeErasure | **Proved as theorem** (Wave 6) |
 | 2 | `gs_nogo_axiom` | GoltermanShamir | **Proved as theorem** (Wave 6) |
 
-**Discharged (converted to theorems — were tautological as Lean statements):**
+**Discharged (converted to placeholder theorems — statements as written were trivially true):**
 - `z16_classification` (Z16Classification): `∃ (φ : ZMod 16 ≃ ZMod 16), Bijective φ` — trivially true, discharged by `⟨Equiv.refl _, Equiv.bijective _⟩`
-- `dai_freed_spin_z4` (Z16AnomalyComputation): same tautological structure as z16_classification
+- `dai_freed_spin_z4` (Z16AnomalyComputation): same tautological structure as z16_classification. **Not a proof of the Dai-Freed cobordism classification** Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆ — that requires cobordism theory not in Mathlib. Docstring updated 2026-04-13 (Phase 5u Wave 13) to disclose placeholder status. Papers 8, 9, 10 must describe the ℤ₁₆ cobordism identification as an external hypothesis, not a Lean-verified fact.
 - `chiral_central_charge_coeff` (GenerationConstraint): `∀ N_f, ∃ c, c = 8*N_f` — trivially true (witness: `8*N_f`)
 - `weyl_anomaly_unit` (Z16AnomalyComputation): `(1 : ZMod 16) ≠ 0` — discharged by `decide`
 
@@ -298,13 +298,22 @@ using Mathlib's existing NumberTheory.ModularForms infrastructure (~85% coverage
 ### Deliverables:
 - [x] `lean/SKEFTHawking/RokhlinBridge.lean` — 14 theorems, zero sorry, zero axioms:
   - Rokhlin's theorem as hypothesis in `sixteen_convergence_full` (not axiom)
-  - "16 convergence": SM Weyl = Z₁₆ = Rokhlin = Kitaev = 16
-  - Bott periodicity: 16 = 8 × 2 (period × Pfaffian)
+  - `sixteen_convergence_full`: **enumerates** (does not mathematically unify) the four
+    appearances of 16 — SM Weyl count, ℤ₁₆ bordism modulus, Rokhlin divisor, Kitaev 16-fold
+    way. See module docstring (updated 2026-04-13 / Phase 5u Wave 12) for the structural
+    caveat: three of four conjuncts are either arithmetic tautologies, hypothesis echoes,
+    or retypes of the first. Mathematical connection between the four 16s is external
+    (Wang 2024 via Smith homomorphism — not formalized).
   - With/without ν_R analysis: N_f=3 with ν_R, N_f=48 without (Aristotle `b54f9611`)
   - Rokhlin sharp (K3 σ=-16), strictly stronger than Hirzebruch (8)
 - [x] Python: rokhlin_sixteen_convergence, generation_constraints_with_without_nu_R
 - [x] Tests: test_rokhlin_bridge.py (12 tests, all pass)
 - [x] Paper 10 updated with with/without ν_R table
+- [x] Paper 10 "16 Convergence" section rewritten (2026-04-13 / Phase 5u Waves 8, 9, 12):
+  Kitaev's ℤ₁₆ now correctly attributed to class D (not "time-reversal symmetry"),
+  `[FidkowskiKitaev2010]` cited for the interacting reduction, "16 = 8 × 2 Bott × Pfaffian"
+  numerology replaced with Wang (2024) Smith-homomorphism framing, `sixteen_convergence_full`
+  described as "formally recorded" not "formally verified convergence".
 
 ---
 
