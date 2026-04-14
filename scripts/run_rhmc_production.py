@@ -49,9 +49,19 @@ from src.vestigial.hs_rhmc import compute_zolotarev_coefficients, prepare_hasenb
 RHMC_BASE = Path("data/rhmc")
 CHUNK_SIZE = 1
 
+# Optional subdir override for diagnostic runs. Set via --output-subdir in main()
+# which exports RHMC_OUTPUT_SUBDIR so spawned workers inherit it at import time.
+_OUTPUT_SUBDIR = os.environ.get('RHMC_OUTPUT_SUBDIR', None)
+
 
 def _data_dir(L):
-    """Per-lattice-size data directory: data/rhmc/L{L}/"""
+    """Per-lattice-size data directory.
+
+    Default: data/rhmc/L{L}/
+    If RHMC_OUTPUT_SUBDIR is set (via --output-subdir flag): data/rhmc/{subdir}/
+    """
+    if _OUTPUT_SUBDIR:
+        return RHMC_BASE / _OUTPUT_SUBDIR
     return RHMC_BASE / f"L{L}"
 
 
@@ -299,7 +309,21 @@ def main():
                              'K=3: 4 factors, κ~16/factor, 8 poles/factor.')
     parser.add_argument('--hasenbusch-poles', type=int, default=8,
                         help='Zolotarev poles per Hasenbusch factor (default 8).')
+    parser.add_argument('--output-subdir', type=str, default=None,
+                        help='Override output directory. Writes to data/rhmc/{subdir}/ '
+                             'instead of data/rhmc/L{L}/. Use for diagnostic runs that '
+                             'must not touch active production data.')
+    parser.add_argument('--g-values', type=str, default=None,
+                        help='Comma-separated explicit g values, e.g. "3.3846" or '
+                             '"1.5,2.5,3.5". Overrides --g-min/--g-max/--n-couplings.')
     args = parser.parse_args()
+
+    # Apply output-subdir override BEFORE any _data_dir() call. Export to
+    # environment so spawn-mode workers inherit at import time.
+    if args.output_subdir:
+        os.environ['RHMC_OUTPUT_SUBDIR'] = args.output_subdir
+        global _OUTPUT_SUBDIR
+        _OUTPUT_SUBDIR = args.output_subdir
 
     L = args.l
     # Tau defaults to n_md_steps/160 to preserve the step size eps=1/160
@@ -307,11 +331,14 @@ def main():
     tau = args.tau if args.tau is not None else args.n_md_steps / 160.0
     n_poles = args.n_poles
 
-    g_values = np.linspace(args.g_min, args.g_max, args.n_couplings)
-    # Optionally add fine-grained points in the critical region
-    if args.g_critical_min is not None and args.g_critical_max is not None:
-        g_critical = np.linspace(args.g_critical_min, args.g_critical_max, args.n_critical)
-        g_values = np.unique(np.sort(np.concatenate([g_values, g_critical])))
+    if args.g_values is not None:
+        g_values = np.array([float(x) for x in args.g_values.split(',')])
+    else:
+        g_values = np.linspace(args.g_min, args.g_max, args.n_couplings)
+        # Optionally add fine-grained points in the critical region
+        if args.g_critical_min is not None and args.g_critical_max is not None:
+            g_critical = np.linspace(args.g_critical_min, args.g_critical_max, args.n_critical)
+            g_values = np.unique(np.sort(np.concatenate([g_values, g_critical])))
     _data_dir(L).mkdir(parents=True, exist_ok=True)
 
     n_complete, n_partial = 0, 0
