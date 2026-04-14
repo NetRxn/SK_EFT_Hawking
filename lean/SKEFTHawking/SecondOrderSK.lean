@@ -428,7 +428,6 @@ theorem deltaDissFromTransport_eq (γ₁ γ₂ κ c_s : ℝ) (hκ : κ ≠ 0) :
     deltaDissFromTransport γ₁ γ₂ κ c_s = (γ₁ + γ₂) * κ / c_s ^ 2 := by
   unfold deltaDissFromTransport GammaH
   field_simp
-  ring
 
 /-- δ_diss from transport vanishes iff γ₁ + γ₂ = 0 (or κ = 0, degenerate).
     Compare `firstOrder_correction_zero_iff` in SKDoubling. -/

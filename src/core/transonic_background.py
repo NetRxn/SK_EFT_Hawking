@@ -424,18 +424,26 @@ if __name__ == "__main__":
         print(f"  Hawking temp:   T_H = {bg.hawking_temp*1e9:.3f} nK")
         print(f"  Adiabaticity:   D = {bg.adiabaticity:.4f}")
 
-        # Estimate dissipative correction with Beliaev damping
-        # γ_B ~ (na³)^{1/2} · ω_H² / c_s, evaluated at ω_H ~ κ
-        n = params.density_upstream
-        a = params.scattering_length
-        na3_half = np.sqrt(n * a**3)
-        omega_H = bg.surface_gravity
-        gamma_beliaev = na3_half * omega_H**2 / params.sound_speed_upstream
+        # Estimate dissipative correction via the Beliaev chain.
+        # IMPORTANT: compute_dissipative_correction expects γ₁, γ₂ in EFT
+        # Lagrangian units [m²/s]; the Beliaev RATE Γ_Bel is in [s⁻¹].
+        # beliaev_transport_coefficients handles the conversion γ = Γ_Bel/(2 k_H²).
+        # (Prior demo versions passed Γ_Bel directly as γ₁ — dimensionally wrong,
+        # producing δ_diss off by a factor of k_H²; fixed in Phase 5u Wave 1a.)
+        from src.core.formulas import beliaev_transport_coefficients
+        tc = beliaev_transport_coefficients(
+            params.density_upstream,
+            params.scattering_length,
+            bg.surface_gravity,
+            params.sound_speed_upstream,
+            params.healing_length,
+        )
         correction = compute_dissipative_correction(
             bg, params,
-            gamma_1=gamma_beliaev,
-            gamma_2=gamma_beliaev * 0.1,  # Anisotropic term is subdominant
+            gamma_1=tc['gamma_1'],
+            gamma_2=tc['gamma_2'],
         )
         print(f"  δ_disp ~ {correction['delta_disp']:.2e}")
-        print(f"  δ_diss ~ {correction['delta_diss']:.2e}")
+        print(f"  δ_diss ~ {correction['delta_diss']:.2e}  (Beliaev T=0)")
+        print(f"  Γ_H = {correction['Gamma_H']:.2e} s⁻¹")
         print(f"  T_eff/T_H = {correction['T_eff_over_T_H']:.8f}")

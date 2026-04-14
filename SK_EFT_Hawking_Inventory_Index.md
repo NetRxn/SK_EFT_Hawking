@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 13, 2026 (Phase 5s: **1 sorry** (was 11). Uqsl2AffineHopf: 0 sorry (all 8 q-Serre closed). Uqsl3Hopf: 1 sorry (F01 remaining, actively in progress). Lean toolchain upgraded to 4.29.0 — 3 files have build errors from upgrade, being resolved in parallel session. 132 Lean modules.)
+**Last synced:** April 13, 2026 (Phase 5s: **1 sorry** (was 11). Uqsl2AffineHopf: 0 sorry (all 8 q-Serre closed). Uqsl3Hopf: 1 sorry (F01 remaining, actively in progress). Lean toolchain upgraded to 4.29.0 — 3 files have build errors from upgrade, being resolved in parallel session. 132 Lean modules. Phase 5u Wave 1b added 5 theorems + 2 defs to SecondOrderSK.lean: `GammaH`, `gammaH_def`, `gammaH_via_kH`, `gammaH_nonneg`, `deltaDissFromTransport`, `deltaDissFromTransport_eq`, `deltaDissFromTransport_zero_iff` — grounds the EFT-transport → horizon-damping-rate identification that was only in prose prior.)
 
 ---
 
@@ -119,7 +119,7 @@
 | AcousticMetric | 8 | det(g)=-ρ², T_H formula |
 | SKDoubling | 9 | Uniqueness, FDR, zeroTemp_nontrivial |
 | HawkingUniversality | 9 | Universality theorem |
-| SecondOrderSK | 19 | Counting formula, positivity constraint |
+| SecondOrderSK | 24 | Counting formula, positivity constraint; Phase 5u Wave 1b added `GammaH`, `gammaH_def/_via_kH/_nonneg`, `deltaDissFromTransport`, `deltaDissFromTransport_eq/_zero_iff` — grounds Γ_H = (γ₁+γ₂)(κ/c_s)² identification |
 | WKBAnalysis | 15 | Damping biconditionals, turning point |
 | CGLTransform | 7 | CGL FDR, Einstein relation |
 | ThirdOrderSK | 14 | Parity alternation (general N) |

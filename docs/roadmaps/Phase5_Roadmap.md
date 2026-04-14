@@ -926,7 +926,7 @@ Adopt Wetterich's hypercubic lattice formulation where SO(4,ℂ) acts directly o
 After fixing 9B-1 through 9B-4, the following downstream artifacts must be re-verified:
 
 **Papers (claims review 2026-04-03 — partial; April 10 review round found residual issues):**
-- [~] Paper 1: a_s text fixed, Berti citation fixed, caption clarified (2026-04-03). **Table 1 regeneration INCOMPLETE** — April 13 re-verification (Phase 5u Wave 1) showed all 6 platform values (c_s, ξ × 3 platforms) still at pre-correction values, ~16–19% off current pipeline. Requires rerun of transonic solver. Tracked: Phase5u Wave 1.
+- [x] Paper 1: a_s text fixed, Berti citation fixed, caption clarified (2026-04-03). Table 1 fully regenerated 2026-04-13 (Phase 5u Wave 1) after April-10 reviews found the 2026-04-03 claim was false — original a_s / caption work was real but Table 1 numerics had not been updated. Wave 1 also discovered and fixed a dimensional bug in `compute_dissipative_correction` (missing k_H² factor, δ_diss off by ~10⁷) that had been present since the project's first commit and survived prior claims reviews. Lean grounding added (`GammaH` family in `SecondOrderSK.lean`). Post-fix claims-reviewer shows all Table 1 values agree with pipeline within 1%.
 - [x] Paper 2: CGL cite key fixed, Berti citation fixed. Claims review PASS. (2026-04-03). Additionally 2026-04-13: Son:2002 bibitem extended with Endlich co-citation (Phase 5u Wave 2).
 - [~] Paper 3: duplicate `Grozdanov2017` bibitem removed (2026-04-03). **SO(n)/Spin(n) center partially correct** — general SO(2k+1)/SO(2k) entries fine, but `Z₂ × Z₂ for SO(4k)` was still incorrect (center of SO(4k) is Z₂; Z₂ × Z₂ belongs to Spin(4k)). Fixed 2026-04-13 (Phase 5u Wave 7). Adler 2024 page 87→80 fixed 2026-04-13 (Phase 5u Wave 11).
 - [x] Paper 4: table updated, Lean claim narrowed (turning point formula mismatch), δ_k text fixed, global counts updated. Claims review PASS. (2026-04-03)
@@ -940,7 +940,7 @@ After fixing 9B-1 through 9B-4, the following downstream artifacts must be re-ve
 - [x] Paper 10 "16 Convergence" section rewrite, class D framing, ABP1967 page, Stolz1993 removal, BeaudryCampbell page, Kitaev2009 end page, diFrancesco1997 addition, FidkowskiKitaev2010 addition (Phase 5u Waves 8, 9, 10)
 - [x] Paper 8 `Z₁₆ cobordism axiom discharged (tautological)` framing clarified (Phase 5u Wave 13)
 - [x] Lean `sixteen_convergence_full`, `dai_freed_spin_z4` placeholder disclosure (Phase 5u Waves 12, 13)
-- [ ] Paper 1 Table 1 regeneration (Phase 5u Wave 1 — requires transonic solver rerun)
+- [x] Paper 1 Table 1 regeneration + compute_dissipative_correction bugfix + Lean grounding (Phase 5u Wave 1a/1b/1c/1d, 2026-04-13)
 - [ ] Paper 12 polariton c_s/κ/D/T_H (Phase 5u Waves 3–6 — requires Falque primary-source re-verification)
 
 **Notebooks (verified 2026-04-03):**

@@ -227,77 +227,109 @@ def fig_transonic_profiles(experiments: dict[str, tuple[BECParameters, Transonic
 def fig_correction_hierarchy(experiments: dict) -> go.Figure:
     """Bar chart comparing δ_disp, δ_diss, δ_cross for all experiments.
 
+    Consumes canonical δ-values via the Beliaev-chain pipeline:
+        beliaev_transport_coefficients(...) → compute_dissipative_correction(...)
+
     This is the central result figure. Shows:
     - The correction magnitudes on a log scale
     - Experimental sensitivity thresholds
-    - The spin-sonic enhancement
+    - The Beliaev-regime prediction for each platform
+
+    Spin-sonic enhancement is a *separate* analysis belonging in
+    fig_spin_sonic_enhancement (fig4); this figure shows the baseline
+    Beliaev prediction for each platform without the (c_density/c_spin)²
+    multiplier. Mixing the two would hide the Beliaev-regime physics
+    signal (notably, the Heidelberg Beliaev-dominance at κ ≈ 100 s⁻¹).
+
+    Pipeline Invariants 1 & 3: all δ-values sourced from
+    `compute_dissipative_correction`; no local reimplementation.
+    Pre-2026-04-13 this function recomputed Γ locally and applied a
+    hardcoded 100× Trento enhancement — fixed in Phase 5u Wave 1e.
     """
+    from src.core.formulas import beliaev_transport_coefficients
+
     fig = go.Figure()
 
-    exp_names = list(experiments.keys())
     corrections_data = []
-
     for name, (params, bg) in experiments.items():
-        # Compute with Beliaev damping estimate
-        n = params.density_upstream
-        a = params.scattering_length
-        cs = params.sound_speed_upstream
-        na3_half = np.sqrt(n * a**3)
-        omega_H = bg.surface_gravity
-        gamma_bel = na3_half * omega_H**2 / cs if cs > 0 else 0
-
+        # Canonical chain: beliaev transport coefficients → dissipative correction.
+        # compute_dissipative_correction applies the k_H² = (κ/c_s)² conversion
+        # per Lean theorem SKEFTHawking.SecondOrderSK.GammaH (added Phase 5u Wave 1b).
+        tc = beliaev_transport_coefficients(
+            params.density_upstream, params.scattering_length,
+            bg.surface_gravity, params.sound_speed_upstream, params.healing_length,
+        )
         corr = compute_dissipative_correction(bg, params,
-            gamma_1=gamma_bel, gamma_2=gamma_bel * 0.1)
-
-        # For Trento, apply spin-sonic enhancement
-        if "Na23" in name or "Trento" in name:
-            enhancement = 100.0
-            corr["delta_diss"] *= enhancement
-            corr["delta_cross"] = corr["delta_disp"] * corr["delta_diss"]
-            corr["T_eff_over_T_H"] = 1 + corr["delta_diss"] + corr["delta_disp"] + corr["delta_cross"]
-
+            gamma_1=tc['gamma_1'], gamma_2=tc['gamma_2'])
         corrections_data.append((name, corr))
 
     # Grouped bars
     categories = ["delta_disp", "delta_diss", "delta_cross"]
     colors_cat = [COLORS["dispersive"], COLORS["dissipative"], COLORS["cross"]]
-    labels = ["Dispersive δ<sub>disp</sub>", "Dissipative δ<sub>diss</sub> (NEW)", "Cross-term δ<sub>cross</sub>"]
+    labels = ["Dispersive δ<sub>disp</sub>", "Dissipative δ<sub>diss</sub> (Beliaev, T=0)",
+              "Cross-term δ<sub>cross</sub>"]
 
-    for i, (cat, color, label) in enumerate(zip(categories, colors_cat, labels)):
+    # Collect all values to size the y-axis honestly (no clipping).
+    all_values = []
+    for cat in categories:
+        for _, c in corrections_data:
+            v = abs(c[cat])
+            if v > 0:
+                all_values.append(v)
+
+    for cat, color, label in zip(categories, colors_cat, labels):
         values = [abs(c[cat]) for _, c in corrections_data]
+        # Plotly log-bar with zero values silently drops them; replace with tiny
+        # positive sentinel so bars render visibly in group and annotation stays readable.
+        y_plot = [v if v > 0 else 1e-20 for v in values]
         fig.add_trace(go.Bar(
             name=label,
             x=[n for n, _ in corrections_data],
-            y=values,
+            y=y_plot,
             marker_color=color,
             marker_line=dict(width=1, color="black"),
-            text=[f"{v:.1e}" for v in values],
+            text=[f"{v:.2e}" if v > 1e-20 else "0" for v in values],
             textposition="outside",
             textfont=dict(size=10),
-            hovertemplate=f"{label}<br>%{{x}}<br>|correction| = %{{y:.2e}}<extra></extra>",
+            hovertemplate=f"{label}<br>%{{x}}<br>|correction| = %{{y:.3e}}<extra></extra>",
         ))
 
-    # Experimental sensitivity bands
-    sensitivities = {
-        "Current (10%)": 0.1,
-        "Near-term (1%)": 0.01,
-        "Projected (0.1%)": 0.001,
-    }
-    for label, val in sensitivities.items():
-        fig.add_hline(y=val, line=dict(color=COLORS["sensitivity"], width=1.5, dash="dash"),
-                      annotation_text=label, annotation_position="right",
-                      annotation_font=dict(size=10, color="#888"))
+    # Experimental sensitivity bands (added as named traces so they appear in legend)
+    sensitivities = [
+        ("Current sensitivity (10%)", 0.1),
+        ("Near-term (1%)", 0.01),
+        ("Projected (0.1%)", 0.001),
+    ]
+    for label, val in sensitivities:
+        fig.add_trace(go.Scatter(
+            x=[n for n, _ in corrections_data],
+            y=[val] * len(corrections_data),
+            mode="lines",
+            line=dict(color=COLORS["sensitivity"], width=1.5, dash="dash"),
+            name=label,
+            hovertemplate=f"{label}<br>δ = {val}<extra></extra>",
+            showlegend=True,
+        ))
 
+    # Honest y-axis range covering the full data span.
+    # Heidelberg Beliaev δ_diss ≈ 1.6×10⁻³; cross-terms ≈ 10⁻⁸ to 10⁻¹⁰.
+    if all_values:
+        y_min_exp = int(np.floor(np.log10(min(all_values)))) - 1
+        y_max_exp = 0  # sensitivity bands go up to 10⁰ = 100%
+    else:
+        y_min_exp, y_max_exp = -10, 0
     fig.update_yaxes(type="log", title_text="|Correction magnitude|",
-                     range=[-8, 0])
+                     range=[y_min_exp, y_max_exp])
     fig.update_xaxes(title_text="Experimental Setup")
 
     apply_layout(fig,
-        height=500, width=750,
-        title=dict(text="<b>Hawking Temperature Corrections: Hierarchy of Effects</b>",
+        height=550, width=800,
+        title=dict(text="<b>Hawking Temperature Corrections: Hierarchy of Effects</b><br>"
+                        "<sub>Beliaev (T=0) regime; finite-T Zaremba damping is ~10× larger</sub>",
                    font=TITLE_FONT),
         barmode="group",
-        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.92)",
+                    font=dict(size=10)),
     )
 
     return fig

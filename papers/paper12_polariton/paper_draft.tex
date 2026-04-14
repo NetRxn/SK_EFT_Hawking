@@ -17,20 +17,32 @@ Reservoir-Corrected Predictions from SK-EFT}
 
 \begin{abstract}
 We present reservoir-corrected spectral predictions for analog Hawking
-radiation in exciton-polariton Bose-Einstein condensates, incorporating
-the 2025 demonstration of programmable acoustic horizons at LKB Paris.
-Our key corrections: (i)~the speed of sound $c_s = 0.5~\mu\text{m/ps}$
-is a factor of 2 lower than previous theoretical estimates due to
-excitonic reservoir effects, confirmed by three independent measurements;
-(ii)~the dispersive parameter $D = \xi\kappa/c_s \approx 0.3{-}0.5$
-places the system in the near-adiabatic regime with ${\sim}10\%$
-dispersive corrections to $T_H$; (iii)~stimulated Hawking detection
-via CW pump-probe spectroscopy achieves signal-to-noise ratios
-$10^3{-}10^6$ times better than spontaneous correlation measurements.
-For the LKB Paris platform ($\kappa = 5 \times 10^{10}~\text{s}^{-1}$),
-we predict $T_H \approx 61~\text{mK}$ with stimulated gain $G(\omega)
-> 0.5$ for $\omega < 0.18\kappa$, requiring only ${\sim}100$ probe
-photons per mode for $5\sigma$ detection. All predictions derive from
+radiation in exciton-polariton Bose-Einstein condensates, anchored to
+the all-optically tunable acoustic horizons demonstrated by Falque
+\textit{et al.} at LKB Paris (2025). Our predictions adopt Falque's
+measured parameters directly: (i)~the condensate speed of sound
+$c_s \approx 0.40~\mu\text{m/ps}$, a factor of $\sim$2.5 below
+reservoir-free theoretical estimates due to the excitonic reservoir
+absorbing 50--75\% of the blueshift without contributing to the dynamic
+sound speed; (ii)~the upstream healing length $\xi \approx 3.4~\mu\text{m}$
+and surface-gravity range $\kappa \in [0.07, 0.11]~\text{ps}^{-1}$
+measured across Falque's smooth and steep horizon configurations;
+(iii)~stimulated Hawking detection via CW pump-probe spectroscopy
+achieves signal-to-noise ratios $10^3{-}10^6$ times better than
+spontaneous correlation measurements.
+
+The smooth-horizon baseline ($\kappa = 7\times 10^{10}~\text{s}^{-1}$)
+gives $T_H \approx 85~\text{mK}$ with dispersive parameter
+$D = \xi\kappa/c_s \approx 0.60$; the steep-horizon maximum
+($\kappa = 1.1\times 10^{11}~\text{s}^{-1}$) gives $T_H \approx 134~\text{mK}$
+at $D \approx 0.93$. The leading dispersive correction
+$-\pi D^2/6$ spans $\sim$0.19 to $\sim$0.46 across the measured range;
+perturbative SK-EFT predictions are reliable in the smooth regime and
+should be treated as leading-order at steep horizon. The stimulated gain
+threshold $G(\omega) > 0.5$ occurs at $\omega < 0.175\kappa$ (exactly,
+$\omega/\kappa = \ln(3)/2\pi$), independent of $\kappa$ — a universal
+spectral signature. Detection requires only ${\sim}100$ probe photons
+per mode for $5\sigma$. All predictions derive from
 a formally verified computation pipeline (1318 Lean~4 theorems,
 0~axioms, verified by \texttt{lake build}). Polariton-specific
 results verified in \texttt{PolaritonTier1.lean} (6~theorems, zero
@@ -108,29 +120,41 @@ was never measured --- it traces to a reservoir-free GPE simulation.}
 \label{tab:cs}
 \end{table}
 
-We adopt $c_s = 0.5~\mu\text{m/ps}$ as a representative
-reservoir-corrected value for resonantly driven GaAs microcavities,
-yielding a healing length $\xi = \hbar/(m^* c_s) \approx 3.0~\mu\text{m}$.
+We adopt Falque's measured values directly: $c_s = 0.40~\mu\text{m/ps}$
+with upstream healing length $\xi \approx 3.4~\mu\text{m}$ (Falque 2025,
+\S IV.1). The slight offset from $\hbar/(m^* c_s) = 3.75~\mu\text{m}$
+reflects the finite density of the driven-dissipative condensate;
+downstream of the horizon $\xi \approx 4.0~\mu\text{m}$.
 
 \subsection{System parameters}
 
-For the LKB Paris platform~\cite{Falque2025}:
+For the LKB Paris platform~\cite{Falque2025}, the smooth and steep horizon
+configurations span a measured range of $\kappa$:
 
 \begin{table}[h]
 \centering
-\begin{tabular}{lcl}
+\begin{tabular}{lccl}
 \toprule
-Parameter & Value & Source \\
+Parameter & Smooth baseline & Steep reach & Source \\
 \midrule
-$m^*$ & $7.0 \times 10^{-35}$~kg & Falque 2025 \\
-$c_s$ & $5.0 \times 10^5$~m/s & This work (Table~\ref{tab:cs}) \\
-$\xi$ & $3.0~\mu$m & $\hbar/(m^* c_s)$ \\
-$\kappa$ & $5.0 \times 10^{10}$~s$^{-1}$ & Projected (SLM-controlled) \\
-$D = \xi\kappa/c_s$ & 0.30 & Near-adiabatic \\
-$T_H$ & 60.8~mK & $\hbar\kappa/(2\pi k_B)$ \\
+$m^*$ & $7.0 \times 10^{-35}$~kg & -- & Falque 2025 \\
+$c_s$ & \multicolumn{2}{c}{$4.0 \times 10^5$~m/s ($0.40~\mu$m/ps)} & Falque 2025 \S IV.1 \\
+$\xi$ & \multicolumn{2}{c}{$3.4~\mu$m (upstream)} & Falque 2025 \S IV.1 \\
+$\kappa$ & $7.0 \times 10^{10}$~s$^{-1}$ & $1.1 \times 10^{11}$~s$^{-1}$ & Falque 2025 Fig.~2 / \S IV.2 \\
+$D = \xi\kappa/c_s$ & 0.60 & 0.93 & computed \\
+$-\pi D^2 / 6$ & $-$0.19 & $-$0.46 & dispersive correction \\
+$T_H$ & 85~mK & 134~mK & $\hbar\kappa/(2\pi k_B)$ \\
 \bottomrule
 \end{tabular}
-\caption{Polariton analog horizon parameters.}
+\caption{Polariton analog horizon parameters for the LKB Paris platform.
+Both smooth (red / purple traces in Falque Fig.~2) and steep
+(Falque \S IV.2) horizon configurations are reported by the primary source.
+The smooth-horizon value is used as the baseline throughout this paper;
+steep-horizon results are quoted as the platform's demonstrated upper reach.
+At steep horizon, $D = 0.93$ places the system in the non-perturbative
+regime where the leading $-\pi D^2/6$ correction is $\sim$46\%, so those
+predictions are leading-order only.}
+\label{tab:params}
 \end{table}
 
 %% ================================================================
@@ -146,8 +170,10 @@ G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\text{eff}}} - 1}
 \end{equation}
 where $\Gamma(\omega)$ is the greybody factor and
 $\kappa_{\text{eff}} \approx \kappa(1 - c_1 D^2)$ incorporates
-dispersive corrections~\cite{Finazzi2012}. For $D \approx 0.3$,
-the correction is ${\sim}10\%$. In the non-dispersive limit,
+dispersive corrections~\cite{Finazzi2012}. For the smooth-horizon baseline
+$D \approx 0.60$, the leading correction $-\pi D^2/6 \approx -0.19$
+(${\sim}19\%$); for the steep-horizon reach $D \approx 0.93$ the
+correction is $\sim$46\% and should be treated as leading-order only. In the non-dispersive limit,
 $G(\omega) \to 1/(e^{2\pi\omega/\kappa} - 1) = n_{\text{Planck}}(\omega, T_H)$.
 
 For an input probe with $n_{\text{in}}$ quanta:
@@ -200,19 +226,23 @@ levels~\cite{Grisins2016,Jacquet2022}.
 \toprule
 Platform & $T_H$ & $\tau_{\text{pol}}$ & $\kappa\tau$ & Feasibility \\
 \midrule
-Paris long (100~ps) & 61~mK & 100~ps & 5.0 & Borderline \\
-Paris ultralong (300~ps) & 61~mK & 300~ps & 15 & \textbf{Perturbative} \\
-Paris standard (3~ps) & 61~mK & 3~ps & 0.15 & Intractable \\
+Paris long (100~ps, projected) & 85~mK & 100~ps & 7.0 & \textbf{Perturbative} \\
+Paris ultralong (300~ps, projected) & 85~mK & 300~ps & 21 & \textbf{Perturbative} \\
+Paris standard (8~ps, Falque actual) & 85~mK & 8~ps & 0.56 & Borderline \\
+Paris steep-horizon reach & 134~mK & 8~ps & 0.88 & Borderline \\
 Steinhauer BEC & 0.35~nK & $\infty$ & $\infty$ & Confirmed \\
 \bottomrule
 \end{tabular}
-\caption{Platform comparison. $\kappa\tau > 1$ is required for
-the Hawking process to develop before polariton decay.
-Feasibility labels reflect the Tier~1 perturbative regime
-classification ($\Gamma_{\text{pol}}/\kappa$): \emph{perturbative}
-($<0.1$), \emph{borderline} ($0.1{-}1$), \emph{intractable} ($>1$).
-The ultralong-lifetime cavity ($\tau \sim 300$~ps,
-$Q \sim 10^6$~\cite{Nelsen2013,Alnatah2024}) is optimal.}
+\caption{Platform comparison. $\kappa\tau > 1$ is required for the Hawking
+process to develop before polariton decay. Values computed from Falque-measured
+$\kappa = 7\times 10^{10}$~s$^{-1}$ (smooth) and $\kappa = 1.1\times 10^{11}$~s$^{-1}$
+(steep). Feasibility labels reflect the Tier~1 perturbative-regime
+classification ($\Gamma_{\text{pol}}/\kappa$): \emph{perturbative} ($<0.1$),
+\emph{borderline} ($0.1{-}1$), \emph{intractable} ($>1$). Falque's actual
+8~ps cavity sits at the borderline; the projected long and ultralong cavities
+with the same SLM profile reach the fully perturbative regime. The steep-horizon
+reach raises $T_H$ at the cost of dispersive-regime $D \approx 0.93$; the
+smooth-horizon baseline keeps $D \approx 0.60$, borderline perturbative.}
 \end{table}
 
 %% ================================================================
@@ -228,8 +258,9 @@ $\kappa\tau_{\text{pol}} > 1$ ensures the Hawking process
 develops before polariton decay.
 
 \item The driven-dissipative steady state carries an effective
-noise temperature $T_{\text{noise}} = m^* c_s^2 / k_B \approx 1.3$~K,
-exceeding $T_H \approx 61$~mK by over an order of magnitude. This
+noise temperature $T_{\text{noise}} = m^* c_s^2 / k_B \approx 0.81$~K
+(with Falque-measured $c_s = 0.40~\mu$m/ps), exceeding
+$T_H \approx 85$~mK (smooth-horizon baseline) by an order of magnitude. This
 noise is spectrally featureless and \textbf{does not affect the
 stimulated measurement}, which operates at the classical
 mean-field level.
@@ -278,7 +309,8 @@ Parameter provenance: all polariton parameters
 ($c_s$, $\xi$, $\kappa$, $\tau_{\text{cav}}$, $m^*$) are
 registered in \texttt{PARAMETER\_PROVENANCE} with
 \texttt{llm\_verified\_date} set and primary source citations.
-The $c_s$ correction from $1.0 \to 0.5~\mu\text{m/ps}$ was
+The $c_s$ correction from $1.0 \to 0.40~\mu\text{m/ps}$ (adopting
+Falque's measured value directly, 2026-04-13 Phase 5u Wave 4) was
 resolved via the Deep Research Reconciliation Protocol
 (3~independent measurements vs.\ 1~theoretical projection).
 

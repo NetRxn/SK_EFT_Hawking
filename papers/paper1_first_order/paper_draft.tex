@@ -34,7 +34,7 @@ We present the first systematic computation of dissipative corrections to Hawkin
 \begin{equation*}
 T_{\text{eff}} = T_H \left(1 + \delta_{\text{disp}} + \delta_{\text{diss}} + \delta_{\text{cross}}\right),
 \end{equation*}
-where $\delta_{\text{diss}} = O(\Gamma_H / \kappa)$ depends on the Schwinger--Keldysh transport coefficients $\gamma_1, \gamma_2$ characterizing dissipative superfluid dynamics. For current BEC experiments (Steinhauer's $^{87}$Rb apparatus), we find $\delta_{\text{diss}} \sim 10^{-5}$ to $10^{-3}$, below present experimental sensitivity. However, for projected spin-sonic experiments (Trento $^{23}$Na), the density-to-spin velocity ratio enhancement $(c_{\text{density}}/c_{\text{spin}})^2$ could amplify $\delta_{\text{diss}}$ to $O(10^{-2})$, rendering it potentially accessible. All core mathematical structures are verified via formal Lean 4 proof code. This work strengthens the universality of Hawking radiation by confirming that dissipative corrections are suppressed at long wavelengths, providing new constraints on trans-Planckian physics.
+where $\delta_{\text{diss}} = O(\Gamma_H / \kappa)$ depends on the Schwinger--Keldysh transport coefficients $\gamma_1, \gamma_2$ characterizing dissipative superfluid dynamics. For the Steinhauer $^{87}$Rb apparatus we find $\delta_{\text{diss}} \sim 10^{-5}$ (Beliaev) to $10^{-4}$ (Zaremba finite-$T$), below present sensitivity. At the higher surface gravity of the Heidelberg $^{39}$K configuration ($\kappa \approx 100~\text{s}^{-1}$), the $\kappa^2$ scaling of Beliaev damping drives $\delta_{\text{diss}}$ to ${\sim}10^{-3}$ (Beliaev) or ${\sim}10^{-2}$ (Zaremba), reaching projected and near-term detector thresholds respectively; at this platform $\delta_{\text{diss}}$ also exceeds $\delta_{\text{disp}}$ by more than an order of magnitude, making Heidelberg our strongest detection target. For projected Trento $^{23}$Na spin-sonic experiments, the $(c_{\text{density}}/c_{\text{spin}})^2$ enhancement could amplify $\delta_{\text{diss}}$ to $O(10^{-1})$. All core mathematical structures are verified via formal Lean 4 proof code. This work strengthens the universality of Hawking radiation by confirming that dissipative corrections remain suppressed as $\Gamma_H / \kappa$ at long wavelengths, providing new constraints on trans-Planckian physics.
 \end{abstract}
 
 \maketitle
@@ -192,12 +192,22 @@ The dispersive terms arise from quantum pressure or higher-derivative interactio
 \end{equation}
 A complete derivation of the joint dispersion relation, incorporating both the Bogoliubov quartic dispersion and the SK dissipative terms through WKB matching across the horizon, will appear in a forthcoming companion paper. Here we work with the leading-order dissipative contribution, which is sufficient for the temperature correction at $O(\Gamma_H/\kappa)$.
 
-This introduces a small imaginary part in the frequency, $\omega = \omega_0 + i\Gamma$, where $\Gamma \sim \gamma_1 (\omega_0^2 + c_s^2 k^2)$ is the damping rate. Modes with frequencies near the Hawking frequency $\omega_H \sim \kappa$ acquire a damping rate
+This introduces a small imaginary part in the frequency, $\omega = \omega_0 + i\Gamma$, where $\Gamma \sim \gamma_1 k^2$ is the damping rate (with $\gamma_1$ in the EFT Lagrangian convention, units [m²/s]). Modes with frequencies near the Hawking frequency $\omega_H \sim \kappa$ have wavenumber $k_H = \kappa/c_s$ from the acoustic dispersion $\omega = c_s k$, so the horizon damping rate is
 \begin{equation}
 \label{eq:hawking_damping}
-\Gamma_H \sim \gamma_1 (\kappa^2 + c_s^2 k_H^2) \sim \gamma_1 \kappa^2,
+\Gamma_H = (\gamma_1 + \gamma_2)\, k_H^2 = (\gamma_1 + \gamma_2)\,\frac{\kappa^2}{c_s^2}.
 \end{equation}
-where we have used $c_s \sim \kappa / k_H$ from the acoustic geometry.
+The \mbox{$(\kappa/c_s)^2$} factor converts between EFT transport coefficients
+$\gamma_{1,2}$ (units [m$^2$/s], the Lagrangian-level coefficients of
+$\psi_a\,\Box\,\psi_r$ and $\psi_a (u\cdot\partial)^2 \psi_r$) and the
+phonon damping rate $\Gamma_H$ (units [s$^{-1}$]) evaluated at the Hawking
+wavenumber. This identification is formalized as the Lean definition
+\texttt{SKEFTHawking.SecondOrderSK.GammaH} with companion identity
+\texttt{gammaH\_def} and the closed form
+$\delta_{\mathrm{diss}} = (\gamma_1+\gamma_2)\,\kappa/c_s^2$
+(\texttt{deltaDissFromTransport\_eq}), ensuring that any caller that
+feeds EFT-convention $\gamma$'s into the numerical pipeline applies the
+conversion.
 
 \subsection{Matching Across the Horizon}
 
@@ -254,7 +264,7 @@ Hawking temperature $T_H$ & nK & 0.006 & 0.124 & 0.026 \\
 Dissipative correction $\delta_{\text{diss}}$ (Beliaev, $T{=}0$) & (dimensionless) & $2.4 \times 10^{-5}$ & $1.6 \times 10^{-3}$ & $1.4 \times 10^{-5}$ \\
 \hline
 \end{tabular}
-\caption{Parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog Hawking experiments. Heidelberg and Trento are projected configurations. The model $\kappa$ is profile-dependent; Steinhauer's published $\kappa \approx 290$~s$^{-1}$ (step potential) gives $T_H \approx 0.35$~nK. The EFT corrections $\delta_\text{diss}/\delta_\text{disp}$ depend on material properties, not on $\kappa$ directly.}
+\caption{Parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog Hawking experiments. Heidelberg and Trento are projected configurations. The model $\kappa$ is profile-dependent; Steinhauer's published $\kappa \approx 290$~s$^{-1}$ (step potential) gives $T_H \approx 0.35$~nK. The dissipative correction $\delta_{\mathrm{diss}}$ reported here is the zero-temperature Beliaev prediction; at experimentally realized temperatures the finite-$T$ Zaremba correction is $\sim\!10\times$ larger (see \S\ref{sec:results}). Note the non-monotonic $\delta_{\mathrm{diss}}$ trend: Beliaev $\Gamma_{\mathrm{Bel}} \propto \kappa^2/c_s$ so $\delta_{\mathrm{diss}} = \Gamma_{\mathrm{Bel}}/\kappa \propto \kappa/c_s$, amplifying at Heidelberg's larger $\kappa$.}
 \label{tab:experimental_params}
 \end{table}
 
@@ -272,8 +282,18 @@ profiles near the sonic horizon.}
 \centering
 \includegraphics[width=\columnwidth]{figures/fig2_correction_hierarchy.png}
 \caption{Hierarchy of corrections to the Hawking temperature: dispersive
-$\delta_{\text{disp}}$ (green), dissipative $\delta_{\text{diss}}$ (red),
-and cross-term $\delta_{\text{cross}}$ (gray) for three BEC platforms on log scale.}
+$\delta_{\text{disp}}$ (green), dissipative $\delta_{\text{diss}}$ (red, Beliaev
+$T{=}0$), and cross-term $\delta_{\text{cross}}$ (gray) for three BEC platforms
+on log scale. Dashed lines mark detector sensitivity thresholds (current
+$10^{-1}$, near-term $10^{-2}$, projected $10^{-3}$). The hierarchy is
+\emph{platform-dependent}: $\delta_{\text{disp}} > \delta_{\text{diss}}$ at
+Steinhauer (low $\kappa$) and Trento (low $\kappa$) but \emph{inverted} at
+Heidelberg, where $\Gamma_{\mathrm{Bel}} \propto \kappa^2$ with $\kappa \approx 102$~s$^{-1}$
+drives $\delta_{\text{diss}}$ to $1.6\times 10^{-3}$, a factor ${\sim}22$ above
+$\delta_{\text{disp}}$. Heidelberg is therefore the most experimentally
+relevant platform for detecting dissipative corrections in the BEC analog
+Hawking setting: $\delta_{\text{diss}}$ there sits at the projected-sensitivity
+threshold even in the pure-Beliaev limit.}
 \label{fig:correction_hierarchy}
 \end{figure}
 
@@ -294,28 +314,52 @@ $\delta_{\text{diss}} \sim 10^{-5}$.
 
 \paragraph*{Zaremba regime ($T \gtrsim T_c/10$).}
 At non-zero temperature, binary collisions between phonons and the
-thermal cloud~\cite{Zaremba:1999} dominate:
+thermal cloud~\cite{Zaremba:1999} dominate. Kinetic theory gives the
+phonon damping \emph{rate} at relevant frequencies directly:
 \begin{equation}
 \label{eq:gamma_estimates_expanded}
-\gamma_1^{\text{(kin)}} \sim \frac{\hbar}{m} n \sigma \sim 10^{-3} \text{ to } 10^{-1} \text{ s}^{-1},
+\Gamma_H^{\text{(kin)}} \sim \tfrac{\hbar}{m}\, n \sigma\, (n_{\text{th}}/n)
+  \sim 10^{-3} \text{ to } 10^{-1} \text{ s}^{-1},
 \end{equation}
-where the wide range reflects uncertainties in the scattering cross-section
-$\sigma$ and the thermal-cloud fraction. Substituting into
-\eqref{eq:delta_diss_explicit}:
+where $n_{\text{th}}/n$ is the thermal-cloud fraction and the wide range
+reflects uncertainties in the scattering cross-section $\sigma$. This is
+a \emph{rate} (dimension [s$^{-1}$]), distinct from the EFT Lagrangian
+coefficients $\gamma_{1,2}$ (units [m$^2$/s]) used in
+\eqref{eq:hawking_damping}. Inserting directly into the Lean reference
+formula $\delta_{\mathrm{diss}} = \Gamma_H/\kappa$:
 \begin{equation}
 \label{eq:delta_diss_zaremba}
-\delta_{\text{diss}}^{\text{(kin)}} \sim \frac{\gamma_1^{\text{(kin)}} \kappa}{\pi c_s^2} \sim 10^{-4} \text{ to } 10^{-3}.
+\delta_{\text{diss}}^{\text{(kin)}} = \Gamma_H^{\text{(kin)}}/\kappa
+  \sim 10^{-4} \text{ to } 10^{-2}
 \end{equation}
-This is $\sim10\times$ larger than the pure Beliaev prediction and dominates at
-experimentally realized temperatures.
+(using Steinhauer $\kappa \approx 4.8$ s$^{-1}$). This is $\sim 10$--$100\times$
+larger than the pure Beliaev prediction and dominates at experimentally
+realized temperatures.
 
-\paragraph*{Experimental reach.} Both regimes give
-$\delta_{\text{diss}} \ll 10^{-2}$, \textbf{below} the current sensitivity of
-Steinhauer's apparatus (limited to $\Delta T / T \sim 10^{-2}$ by shot noise and
-trap inhomogeneities). A measurement of $\delta_{\text{diss}}$ would distinguish
-between the two regimes by its temperature scaling:
-$\delta_{\text{diss}}^{\text{Bel}}$ is $T$-independent, while
-$\delta_{\text{diss}}^{\text{(kin)}}$ scales with the thermal-cloud fraction.
+\paragraph*{Experimental reach.} The $\kappa$-dependence of $\Gamma_H$ makes
+the experimental reach strongly platform-dependent.
+
+For the \emph{Steinhauer} (low-$\kappa$) and \emph{Trento spin-sonic baseline}
+configurations (Table~\ref{tab:experimental_params}), both Beliaev and Zaremba
+regimes give $\delta_{\text{diss}} \lesssim 10^{-4}$, comfortably below the current
+$\Delta T/T \sim 10^{-2}$ sensitivity of Steinhauer's apparatus but reaching
+near-term ($10^{-2}$) and projected ($10^{-3}$) detector thresholds only with the
+spin-sonic enhancement or the Zaremba finite-$T$ correction (discussed below).
+
+For \emph{Heidelberg}, the higher surface gravity $\kappa \approx 102$~s$^{-1}$
+amplifies $\Gamma_{\mathrm{Bel}} \propto \kappa^2$: the pure Beliaev prediction is
+already $\delta_{\text{diss}} \approx 1.6\times 10^{-3}$, at the projected
+$10^{-3}$ sensitivity floor. Adding the Zaremba finite-$T$ contribution would
+push this to the $\sim 10^{-2}$ near-term sensitivity range. \textbf{Heidelberg
+is therefore the most experimentally accessible platform in our predictions}:
+the dispersive $\delta_{\text{disp}} \approx 7\times 10^{-5}$ is much smaller than
+$\delta_{\text{diss}}$ there, so any observed correction at the $10^{-3}$ level
+would be unambiguously dissipative.
+
+A measurement of $\delta_{\text{diss}}$ would distinguish Beliaev from Zaremba
+by its temperature scaling: $\delta_{\text{diss}}^{\text{Bel}}$ is
+$T$-independent, while $\delta_{\text{diss}}^{\text{(kin)}}$ scales with the
+thermal-cloud fraction $n_{\text{th}}/n$.
 
 \paragraph*{Note on $\kappa$ profile-dependence.}
 Table~\ref{tab:experimental_params} reports $\kappa \approx 4.8$~s$^{-1}$ for the
@@ -404,9 +448,25 @@ This provides a new perspective on the trans-Planckian problem: not only are hig
 
 Quantitatively, we have shown:
 \begin{enumerate}
-\item For current BEC experiments, dissipative corrections are $\sim 10^{-5}$ to $10^{-3}$, well below noise levels.
-\item For next-generation spin-sonic experiments, dissipative corrections could reach $\sim 10^{-2}$, potentially observable.
-\item The scaling $\delta_{\text{diss}} \propto \Gamma_H / \kappa$ is independent of the specific microstructure (e.g., atomic species, trap design), reflecting a universal principle.
+\item Across current and projected BEC configurations, Beliaev-regime dissipative
+  corrections span $\delta_{\text{diss}} \approx 10^{-5}$ (Steinhauer $^{87}$Rb, Trento
+  $^{23}$Na) to $10^{-3}$ (Heidelberg $^{39}$K) --- spanning three orders of magnitude
+  driven by the $\Gamma_{\mathrm{Bel}} \propto \kappa^2$ scaling.
+  Finite-temperature Zaremba contributions add a further $\sim\!10\times$ at
+  experimentally realized temperatures.
+\item The relative magnitude of $\delta_{\text{disp}}$ versus $\delta_{\text{diss}}$ is
+  \emph{platform-dependent}: dispersive corrections dominate for Steinhauer and Trento,
+  while dissipative corrections dominate for Heidelberg. Heidelberg is therefore our
+  strongest detection target: $\delta_{\text{diss}} \sim 10^{-3}$ (Beliaev) to $10^{-2}$
+  (Zaremba) sits at or above the projected detector sensitivity, and the dispersive
+  correction is a factor ${\sim}20$ smaller than the dissipative, so any observed
+  correction at this level is cleanly attributable to dissipation.
+\item For next-generation spin-sonic experiments, the $(c_{\mathrm{density}}/c_{\mathrm{spin}})^2$
+  enhancement raises dissipative corrections into the $O(10^{-1})$ range in the Zaremba
+  regime, potentially observable at any current sensitivity.
+\item The scaling $\delta_{\text{diss}} = \Gamma_H / \kappa$ is an IR universal derived
+  from the SK-EFT --- independent of the specific microstructure (atomic species, trap
+  design) at fixed $\Gamma_H / \kappa$.
 \end{enumerate}
 
 \subsection{Connection to Dissipative Gravity and Holography}
