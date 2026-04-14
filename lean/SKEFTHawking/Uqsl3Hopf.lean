@@ -1720,12 +1720,285 @@ private theorem comulFreeAlg3_SerreF12 :
   simp_rw [hKKK3]
   abel!
 
+-- === Sector identity helpers for SerreF21 (mechanical 1↔2 swap of F12 sectors) ===
+
+private theorem sect3_hUqIdF21_20 :
+    uq3K2inv k * uq3K2inv k * uq3F1 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3K2inv k * uq3F1 k * uq3K2inv k) +
+    uq3F1 k * uq3K2inv k * uq3K2inv k = 0 := by
+  have hKF_smul := sect3_hKinvF_smul_K2invF1 k
+  have hKF_at := sect3_hKinvF_at_K2invF1 k
+  have hK2F1 : uq3K2inv k * uq3K2inv k * uq3F1 k =
+      (T (-2) : LaurentPolynomial k) • (uq3F1 k * uq3K2inv k * uq3K2inv k) := by
+    rw [hKF_at, hKF_smul]; simp only [smul_mul_assoc, smul_smul]
+    congr 1; rw [← T_add]; norm_num
+  have hK2F1K2 : uq3K2inv k * uq3F1 k * uq3K2inv k =
+      (T (-1) : LaurentPolynomial k) • (uq3F1 k * uq3K2inv k * uq3K2inv k) := by
+    rw [hKF_smul]; simp only [smul_mul_assoc]
+  rw [hK2F1, hK2F1K2, smul_smul]
+  have factor : ∀ (r s : LaurentPolynomial k) (x : Uqsl3 k),
+      r • x - s • x + x = (r - s + 1) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (-2) - (T 1 + T (-1)) * T (-1) + 1 : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show T (-2) - (T 0 + T (-2)) + 1 = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+private theorem sect3_hUqIdF21_01 :
+    uq3F2 k * uq3F2 k * uq3K1inv k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k * uq3F2 k) +
+    uq3K1inv k * uq3F2 k * uq3F2 k = 0 := by
+  have hKF_smul := sect3_hKinvF_smul_K1invF2 k
+  have hKF_at := sect3_hKinvF_at_K1invF2 k
+  have hF2K1F2 : uq3F2 k * uq3K1inv k * uq3F2 k =
+      (T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3F2 k * uq3K1inv k) := by
+    rw [show uq3F2 k * uq3K1inv k * uq3F2 k = uq3F2 k * (uq3K1inv k * uq3F2 k) from by noncomm_ring,
+        hKF_smul]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hK1F2F2 : uq3K1inv k * uq3F2 k * uq3F2 k =
+      (T (-2) : LaurentPolynomial k) • (uq3F2 k * uq3F2 k * uq3K1inv k) := by
+    rw [show uq3K1inv k * uq3F2 k * uq3F2 k = (uq3K1inv k * uq3F2 k) * uq3F2 k from by noncomm_ring,
+        hKF_smul]
+    simp only [smul_mul_assoc]
+    rw [show uq3F2 k * uq3K1inv k * uq3F2 k = uq3F2 k * (uq3K1inv k * uq3F2 k) from by noncomm_ring,
+        hKF_smul]
+    simp only [mul_smul_comm, smul_smul, ← mul_assoc]
+    congr 1; rw [← T_add]; norm_num
+  rw [hF2K1F2, hK1F2F2, smul_smul]
+  have factor : ∀ (s t : LaurentPolynomial k) (x : Uqsl3 k),
+      x - s • x + t • x = (1 - s + t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 - (T 1 + T (-1)) * T (-1) + T (-2) : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 - (T 0 + T (-2)) + T (-2) = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+private theorem sect3_hUqIdF21_10_F2F1 :
+    uq3F2 k * uq3K2inv k * uq3K1inv k + uq3K2inv k * uq3F2 k * uq3K1inv k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3K2inv k * uq3K1inv k * uq3F2 k) = 0 := by
+  have hK2invF2_at := sect3_hKinvF_at_K2invF2 k
+  have hK1invF2_smul := sect3_hKinvF_smul_K1invF2 k
+  have hKK := uq3_K1inv_K2inv_comm k
+  have hF2K2K1 : uq3F2 k * uq3K2inv k * uq3K1inv k = uq3F2 k * uq3K2inv k * uq3K1inv k := rfl
+  have hK2F2K1 : uq3K2inv k * uq3F2 k * uq3K1inv k =
+      (T 2 : LaurentPolynomial k) • (uq3F2 k * uq3K2inv k * uq3K1inv k) := by
+    have : uq3K2inv k * uq3F2 k * uq3K1inv k =
+        (T 2 : LaurentPolynomial k) • (uq3F2 k * uq3K2inv k) * uq3K1inv k := by
+      rw [show uq3K2inv k * uq3F2 k = (T 2 : LaurentPolynomial k) • (uq3F2 k * uq3K2inv k) from
+        sect3_hKinvF_smul_K2invF2 k]
+    rw [this, smul_mul_assoc]
+  have hK2K1F2 : uq3K2inv k * uq3K1inv k * uq3F2 k =
+      (T 1 : LaurentPolynomial k) • (uq3F2 k * uq3K2inv k * uq3K1inv k) := by
+    rw [show uq3K2inv k * uq3K1inv k * uq3F2 k = uq3K1inv k * (uq3K2inv k * uq3F2 k) from by
+      rw [show uq3K2inv k * uq3K1inv k = uq3K1inv k * uq3K2inv k from hKK.symm]; noncomm_ring]
+    rw [sect3_hKinvF_smul_K2invF2, mul_smul_comm,
+        show uq3K1inv k * (uq3F2 k * uq3K2inv k) = uq3K1inv k * uq3F2 k * uq3K2inv k from by noncomm_ring,
+        hK1invF2_smul, smul_mul_assoc, smul_smul,
+        show uq3F2 k * uq3K1inv k * uq3K2inv k = uq3F2 k * uq3K2inv k * uq3K1inv k from by
+          rw [mul_assoc, hKK, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK2F2K1, hK2K1F2, smul_smul]
+  have factor : ∀ (s t : LaurentPolynomial k) (x : Uqsl3 k),
+      x + s • x - t • x = (1 + s - t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 + T 2 - (T 1 + T (-1)) * T 1 : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+private theorem sect3_hUqIdF21_10_F1F2 :
+    uq3K1inv k * uq3F2 k * uq3K2inv k + uq3K1inv k * uq3K2inv k * uq3F2 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k * uq3K2inv k) = 0 := by
+  have hK1invF2_smul := sect3_hKinvF_smul_K1invF2 k
+  have hK2invF2_smul := sect3_hKinvF_smul_K2invF2 k
+  have hKK := uq3_K1inv_K2inv_comm k
+  have hK1F2K2 : uq3K1inv k * uq3F2 k * uq3K2inv k =
+      (T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k * uq3K2inv k) := by
+    rw [hK1invF2_smul, smul_mul_assoc]
+  have hK1K2F2 : uq3K1inv k * uq3K2inv k * uq3F2 k =
+      (T 1 : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k * uq3K2inv k) := by
+    rw [show uq3K1inv k * uq3K2inv k = uq3K2inv k * uq3K1inv k from hKK]
+    rw [show uq3K2inv k * uq3K1inv k * uq3F2 k = uq3K2inv k * (uq3K1inv k * uq3F2 k) from by noncomm_ring,
+        hK1invF2_smul, mul_smul_comm,
+        show uq3K2inv k * (uq3F2 k * uq3K1inv k) = uq3K2inv k * uq3F2 k * uq3K1inv k from by noncomm_ring,
+        hK2invF2_smul, smul_mul_assoc, smul_smul]
+    rw [show uq3F2 k * uq3K2inv k * uq3K1inv k = uq3F2 k * uq3K1inv k * uq3K2inv k from by
+      rw [mul_assoc, ← hKK, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK1F2K2, hK1K2F2]
+  have factor : ∀ (s t : LaurentPolynomial k) (x : Uqsl3 k),
+      s • x + t • x - (T 1 + T (-1) : LaurentPolynomial k) • x =
+      (s + t - (T 1 + T (-1))) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (-1) + T 1 - (T 1 + T (-1)) : LaurentPolynomial k) = 0 := by ring
+  rw [hcoef, zero_smul]
+
+private theorem sect3_hUqIdF21_11 :
+    (uq3F2 k * uq3K2inv k * uq3F1 k + uq3K2inv k * uq3F2 k * uq3F1 k +
+     uq3F1 k * uq3F2 k * uq3K2inv k + uq3F1 k * uq3K2inv k * uq3F2 k) -
+    (T 1 + T (-1) : LaurentPolynomial k) •
+      (uq3F2 k * uq3F1 k * uq3K2inv k + uq3K2inv k * uq3F1 k * uq3F2 k) = 0 := by
+  have hK2F2 := sect3_hKinvF_smul_K2invF2 k
+  have hK2F1 := sect3_hKinvF_smul_K2invF1 k
+  have hF2K2F1 : uq3F2 k * uq3K2inv k * uq3F1 k =
+      (T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3F1 k * uq3K2inv k) := by
+    rw [show uq3F2 k * uq3K2inv k * uq3F1 k = uq3F2 k * (uq3K2inv k * uq3F1 k) from by noncomm_ring,
+        hK2F1]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hK2F2F1 : uq3K2inv k * uq3F2 k * uq3F1 k =
+      (T 1 : LaurentPolynomial k) • (uq3F2 k * uq3F1 k * uq3K2inv k) := by
+    rw [hK2F2, smul_mul_assoc,
+        show uq3F2 k * uq3K2inv k * uq3F1 k = uq3F2 k * (uq3K2inv k * uq3F1 k) from by noncomm_ring,
+        hK2F1, mul_smul_comm, smul_smul,
+        show uq3F2 k * (uq3F1 k * uq3K2inv k) = uq3F2 k * uq3F1 k * uq3K2inv k from by noncomm_ring]
+    congr 1; rw [← T_add]; norm_num
+  have hF1K2F2 : uq3F1 k * uq3K2inv k * uq3F2 k =
+      (T 2 : LaurentPolynomial k) • (uq3F1 k * uq3F2 k * uq3K2inv k) := by
+    rw [show uq3F1 k * uq3K2inv k * uq3F2 k = uq3F1 k * (uq3K2inv k * uq3F2 k) from by noncomm_ring,
+        hK2F2]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hK2F1F2 : uq3K2inv k * uq3F1 k * uq3F2 k =
+      (T 1 : LaurentPolynomial k) • (uq3F1 k * uq3F2 k * uq3K2inv k) := by
+    rw [hK2F1, smul_mul_assoc,
+        show uq3F1 k * uq3K2inv k * uq3F2 k = uq3F1 k * (uq3K2inv k * uq3F2 k) from by noncomm_ring,
+        hK2F2, mul_smul_comm, smul_smul,
+        show uq3F1 k * (uq3F2 k * uq3K2inv k) = uq3F1 k * uq3F2 k * uq3K2inv k from by noncomm_ring]
+    congr 1; rw [← T_add]; norm_num
+  rw [hF2K2F1, hK2F2F1, hF1K2F2, hK2F1F2]
+  have factor : ∀ (a b : Uqsl3 k),
+      ((T (-1) : LaurentPolynomial k) • a + (T 1 : LaurentPolynomial k) • a +
+       b + (T 2 : LaurentPolynomial k) • b) -
+      ((T 1 + T (-1) : LaurentPolynomial k)) • (a + (T 1 : LaurentPolynomial k) • b) =
+      ((T (-1) + T 1 - (T 1 + T (-1)) : LaurentPolynomial k)) • a +
+      ((1 + T 2 - (T 1 + T (-1)) * T 1 : LaurentPolynomial k)) • b := by intros; module
+  rw [factor]
+  have hcoef_A : (T (-1) + T 1 - (T 1 + T (-1)) : LaurentPolynomial k) = 0 := by ring
+  have hcoef_B : (1 + T 2 - (T 1 + T (-1)) * T 1 : LaurentPolynomial k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : LaurentPolynomial k)
+    rw [T_zero]; ring
+  rw [hcoef_A, hcoef_B, zero_smul, zero_smul, add_zero]
+
+set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
 private theorem comulFreeAlg3_SerreF21 :
     comulFreeAlg3 k
       (gen3 k F2 * gen3 k F2 * gen3 k F1 + gen3 k F1 * gen3 k F2 * gen3 k F2) =
     comulFreeAlg3 k
       (scal3' k (T 1 + T (-1)) * gen3 k F2 * gen3 k F1 * gen3 k F2) := by
-  sorry
+  rw [← sub_eq_zero, ← map_sub]
+  simp only [scal3', map_sub, map_add, map_mul, AlgHom.commutes,
+             comulFreeAlg3_ι, comulOnGen3, mul_add, add_mul,
+             Algebra.TensorProduct.algebraMap_apply,
+             Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+  simp only [← Algebra.smul_def, smul_mul_assoc, smul_add, smul_sub]
+  let phi_LL : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip (1 : Uqsl3 k)
+  let phi_RR : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)
+      (uq3K2inv k * uq3K2inv k * uq3K1inv k)
+  have hSerreS := sect3_hSerreF21_smul k
+  have hSect00 :
+      phi_LL (uq3F2 k * uq3F2 k * uq3F1 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3F1 k * uq3F2 k) +
+        uq3F1 k * uq3F2 k * uq3F2 k) = 0 := by
+    rw [hSerreS]; exact map_zero phi_LL
+  have hSect21 :
+      phi_RR (uq3F2 k * uq3F2 k * uq3F1 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3F1 k * uq3F2 k) +
+        uq3F1 k * uq3F2 k * uq3F2 k) = 0 := by
+    rw [hSerreS]; exact map_zero phi_RR
+  rw [map_add phi_LL, map_sub phi_LL,
+      LinearMap.map_smul_of_tower phi_LL] at hSect00
+  rw [map_add phi_RR, map_sub phi_RR,
+      LinearMap.map_smul_of_tower phi_RR] at hSect21
+  simp only [phi_LL, phi_RR, LinearMap.flip_apply, TensorProduct.mk_apply]
+    at hSect00 hSect21
+  have hUqId01 := sect3_hUqIdF21_20 k
+  let phi_01 : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip (uq3F2 k * uq3F2 k)
+  have hSect01 :
+      phi_01 (uq3K2inv k * uq3K2inv k * uq3F1 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3K2inv k * uq3F1 k * uq3K2inv k) +
+        uq3F1 k * uq3K2inv k * uq3K2inv k) = 0 := by
+    rw [hUqId01]; exact map_zero phi_01
+  rw [map_add phi_01, map_sub phi_01,
+      LinearMap.map_smul_of_tower phi_01] at hSect01
+  simp only [phi_01, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect01
+  have hUqId20 := sect3_hUqIdF21_01 k
+  let phi_20 : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip (uq3F1 k)
+  have hSect20 :
+      phi_20 (uq3F2 k * uq3F2 k * uq3K1inv k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k * uq3F2 k) +
+        uq3K1inv k * uq3F2 k * uq3F2 k) = 0 := by
+    rw [hUqId20]; exact map_zero phi_20
+  rw [map_add phi_20, map_sub phi_20,
+      LinearMap.map_smul_of_tower phi_20] at hSect20
+  simp only [phi_20, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect20
+  have hUqId10a := sect3_hUqIdF21_10_F2F1 k
+  let phi_10a : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip (uq3F2 k * uq3F1 k)
+  have hSect10a :
+      phi_10a (uq3F2 k * uq3K2inv k * uq3K1inv k + uq3K2inv k * uq3F2 k * uq3K1inv k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3K2inv k * uq3K1inv k * uq3F2 k)) = 0 := by
+    rw [hUqId10a]; exact map_zero phi_10a
+  rw [map_sub phi_10a, map_add phi_10a,
+      LinearMap.map_smul_of_tower phi_10a] at hSect10a
+  simp only [phi_10a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect10a
+  have hUqId10b := sect3_hUqIdF21_10_F1F2 k
+  let phi_10b : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip (uq3F1 k * uq3F2 k)
+  have hSect10b :
+      phi_10b (uq3K1inv k * uq3F2 k * uq3K2inv k + uq3K1inv k * uq3K2inv k * uq3F2 k -
+        (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3K1inv k * uq3K2inv k)) = 0 := by
+    rw [hUqId10b]; exact map_zero phi_10b
+  rw [map_sub phi_10b, map_add phi_10b,
+      LinearMap.map_smul_of_tower phi_10b] at hSect10b
+  simp only [phi_10b, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect10b
+  have hUqId11 := sect3_hUqIdF21_11 k
+  let phi_11 : Uqsl3 k →ₗ[LaurentPolynomial k]
+      Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k)).flip (uq3F2 k)
+  have hSect11 :
+      phi_11 ((uq3F2 k * uq3K2inv k * uq3F1 k + uq3K2inv k * uq3F2 k * uq3F1 k +
+                uq3F1 k * uq3F2 k * uq3K2inv k + uq3F1 k * uq3K2inv k * uq3F2 k) -
+        (T 1 + T (-1) : LaurentPolynomial k) •
+          (uq3F2 k * uq3F1 k * uq3K2inv k + uq3K2inv k * uq3F1 k * uq3F2 k)) = 0 := by
+    rw [hUqId11]; exact map_zero phi_11
+  rw [map_sub phi_11, map_add phi_11, map_add phi_11, map_add phi_11,
+      LinearMap.map_smul_of_tower phi_11, map_add phi_11] at hSect11
+  simp only [phi_11, LinearMap.flip_apply, TensorProduct.mk_apply,
+             TensorProduct.add_tmul, smul_add] at hSect11
+  have hKK : uq3K1inv k * uq3K2inv k = uq3K2inv k * uq3K1inv k :=
+    uq3_K1inv_K2inv_comm k
+  have hKKK1 : uq3K1inv k * uq3K2inv k * uq3K2inv k =
+      uq3K2inv k * uq3K2inv k * uq3K1inv k := by
+    rw [hKK, mul_assoc, hKK, ← mul_assoc]
+  have hKKK2 : uq3K2inv k * uq3K1inv k * uq3K2inv k =
+      uq3K2inv k * uq3K2inv k * uq3K1inv k := by
+    rw [mul_assoc, hKK, ← mul_assoc]
+  have hKKK3 : uq3F2 k * uq3K1inv k * uq3K2inv k =
+      uq3F2 k * uq3K2inv k * uq3K1inv k := by
+    rw [mul_assoc, hKK, ← mul_assoc]
+  simp_rw [hKKK1, hKKK2, hKKK3]
+  clear hSerreS hUqId01 hUqId20 hUqId10a hUqId10b hUqId11
+  clear phi_LL phi_RR phi_01 phi_20 phi_10a phi_10b phi_11
+  simp only [add_smul, TensorProduct.add_tmul, TensorProduct.tmul_add,
+             TensorProduct.smul_tmul'] at hSect00 hSect21 hSect01 hSect20 hSect10a hSect10b hSect11 ⊢
+  linear_combination (norm := skip)
+    hSect00 + hSect21 + hSect01 + hSect20 + hSect10a + hSect10b + hSect11
+  simp_rw [hKKK3]
+  abel!
 
 private theorem comulFreeAlg3_respects_rel :
     ∀ a b, ChevalleyRelSl3 k a b → comulFreeAlg3 k a = comulFreeAlg3 k b := by
