@@ -2554,20 +2554,42 @@ private theorem antipodeFreeAlg3_SerreE12 :
     rw [uq3_E1_mul_K2inv]
     simp only [← Algebra.smul_def, smul_mul_assoc, smul_smul, ← T_add]
     norm_num [T_zero, one_smul]
-  -- Phase 8: apply E-Serre via LinearMap.mulRight (per Phase-5s research).
-  -- Both goal and h should canonicalize to matching forms under phased simp.
+  -- Phase 8: Apply hK⁻¹·E rules to the GOAL to push K⁻¹'s right past E's.
+  -- Goal has K⁻¹·E·K⁻¹·E·K⁻¹·E form (all same-index pairs). All hK rewrites give T(-2).
+  -- Iterate mul_assoc + hK*invE* + scalar bubble until fixpoint.
+  simp only [mul_assoc, hK1invE1, hK2invE2, hK1invE2, hK2invE1,
+             mul_smul_comm, smul_mul_assoc, smul_smul] at ⊢
+  -- Consolidate scalar T-powers via forward T_add direction
+  simp only [← T_add] at ⊢
+  -- Simplify integer arithmetic in exponents BEFORE scalar collapse
+  simp only [show (-2 + (-2 + -2) : ℤ) = -6 from by decide,
+             show (7 + (-2 + (-2 + -2)) : ℤ) = 1 from by decide,
+             show (5 + (-2 + (-2 + -2)) : ℤ) = -1 from by decide,
+             show (7 + -6 : ℤ) = 1 from by decide,
+             show (5 + -6 : ℤ) = -1 from by decide] at ⊢
+  -- Simplify scalar products
+  rw [show (-T 6 * T (-6) : LaurentPolynomial k) = -1 from by
+      rw [show (-T 6 * T (-6) : LaurentPolynomial k) = -(T 6 * T (-6)) from by ring,
+          show (T 6 * T (-6) : LaurentPolynomial k) = 1 from by
+            rw [← T_add]; norm_num [T_zero]]]
+  rw [show ((-1 : LaurentPolynomial k) * T 1 : LaurentPolynomial k) = -T 1 from by ring]
+  rw [show ((-1 : LaurentPolynomial k) * T (-1) : LaurentPolynomial k) = -T (-1) from by ring]
+  -- Now the goal is: -A1 - A2 + T(1)•B + T(-1)•B = 0 in X-chain form
+  -- Apply pure E-Serre right-multiplied by K_chain = K₁⁻¹·K₁⁻¹·K₂⁻¹
   have hSE := sect3_hSerreE12_smul k
   have h := congr_arg
     (⇑(LinearMap.mulRight (LaurentPolynomial k)
         (uq3K1inv k * uq3K1inv k * uq3K2inv k))) hSE
   simp only [map_add, map_sub, map_zero, LinearMap.mulRight_apply,
              LinearMap.map_smul_of_tower] at h
-  -- BLOCKER: goal (X-pair form) and h (E_chain·K_chain form) don't unify under simp
-  -- because hK*invE* rules don't apply to h (no K⁻¹·E adjacencies in E_chain·K_chain).
-  -- Need atom-equality lemmas: hA1_eq : E₂E₁²·K_chain = X₂X₁² (goal atom), etc.
-  -- Each requires manual K⁻¹·E commutation + scalar cancellation (T(0) = 1).
-  -- Phase-5s research pattern DOESN'T close these without the atom equalities.
-  -- Next session: prove 3 hA_eq lemmas via explicit calc blocks.
+  -- BLOCKER: simp-based unification of h (E_chain·K_chain form) and goal (X-chain form)
+  -- fails because simp doesn't iterate forward E·K⁻¹ commutation to fixpoint in h.
+  -- Closing requires either:
+  --   (a) 3 atom-equality calc blocks `E_chain·K_chain = X-chain` (scalar cancels T(0)=1),
+  --       each ~30 lines of explicit rewrites with Algebra.commutes for scalar centrality;
+  --   (b) custom norm tactic using `uq3_E_mul_K_inv` + `Algebra.commutes` applied to
+  --       both h and goal until convergence at K_chain·E_chain canonical form.
+  -- See `Lit-Search/Phase-5s/5s-Closing antipode Serre stubs in U_q(sl_3).md` for analysis.
   sorry
 
 private theorem antipodeFreeAlg3_SerreE21 :
