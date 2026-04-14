@@ -153,18 +153,47 @@ CITATION_REGISTRY = {
     # ════════════════════════════════════════════════════════════════
 
     'Falque2025': {
-        'authors': 'Falque, A. et al.',
-        'title': 'Polariton horizon demonstration',
+        'authors': 'Falque, K., Delhom, A., Glorieux, Q., Giacobino, E., Bramati, A., Jacquet, M. J.',
+        'title': 'Polariton Fluids as Quantum Field Theory Simulators on Tailored Curved Spacetimes',
         'journal': 'PRL',
         'volume': 135,
         'page': '023401',
         'year': 2025,
         'doi': '10.1103/PhysRevLett.135.023401',
-        'arxiv': None,
+        'arxiv': '2311.01392',
         'doi_verified': None,
-        'used_in': ['src/core/constants.py'],
-        'provides': ['POLARITON_MASS', 'Paris_long.tau_cav', 'Paris_ultralong.tau_cav'],
-        'notes': 'Paris polariton horizon demonstration.',
+        'used_in': ['src/core/constants.py', 'papers/paper12_polariton'],
+        'provides': [
+            'POLARITON_MASS',
+            'Paris_long.c_s', 'Paris_long.xi', 'Paris_long.kappa',
+            'Paris_ultralong.c_s', 'Paris_ultralong.xi', 'Paris_ultralong.kappa',
+            'Paris_standard.c_s', 'Paris_standard.xi', 'Paris_standard.kappa',
+            'Paris_standard.tau_cav',
+            'FALQUE_STEEP_HORIZON_KAPPA',
+        ],
+        'notes': 'LKB Paris polariton analog horizon demonstration. Reports '
+                 'three measured κ values (0.07, 0.08, 0.11 ps⁻¹) across smooth '
+                 'and steep horizon configurations; c_s = 0.40 μm/ps; '
+                 'ξ ≈ 3.4 μm upstream, 4.0 μm downstream. LLM-re-verified '
+                 'against full text 2026-04-13 (Phase 5u Wave 3).',
+    },
+    'Giacobino2025': {
+        'authors': 'Giacobino, E., Jacquet, M. J.',
+        'title': 'Acoustic horizons and the Hawking effect in polariton fluids of light',
+        'journal': None,  # arXiv preprint / lecture notes
+        'volume': None,
+        'page': None,
+        'year': 2025,
+        'doi': None,
+        'arxiv': '2512.14194',
+        'doi_verified': None,
+        'used_in': ['papers/paper12_polariton'],
+        'provides': [],
+        'notes': '52-page lecture notes from the LKB group. Source of the '
+                 '"programmable simulators of quantum fields on tailored '
+                 'curved spacetimes" framing used in Paper 12 (the word '
+                 '"programmable" appears here, not in the Falque 2025 PRL). '
+                 'Added to registry 2026-04-13 (Phase 5u Wave 5).',
     },
     'Grisins2016': {
         'authors': 'Grisins, P., Nguyen, H. S., Bloch, J., Amo, A., Carusotto, I.',

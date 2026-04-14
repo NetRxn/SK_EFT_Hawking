@@ -3119,12 +3119,17 @@ def fig_polariton_regime_map():
     comparison (all deep in the perturbative regime).
     """
     from src.experimental.polariton_predictions import polariton_regime_map
+    from src.core.constants import POLARITON_PLATFORMS
 
     regime = polariton_regime_map()
 
     # Regime boundaries
     tau_range = np.logspace(-12, -9, 100)  # 1 ps to 1 ns
-    kappa = 5.0e10  # s^-1 (same for all polariton platforms)
+    # Consume κ from canonical POLARITON_PLATFORMS (Pipeline Invariant 3).
+    # All three Paris_* entries share the same Falque-smooth-horizon κ = 7e10
+    # s⁻¹ post Phase 5u Wave 4. Previously hardcoded 5e10 here — that value
+    # was stale relative to constants.py after 2026-04-13.
+    kappa = POLARITON_PLATFORMS['Paris_long']['kappa']  # s^-1
     gamma_over_kappa = 1.0 / (tau_range * kappa)
 
     fig = go.Figure()

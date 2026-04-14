@@ -43,9 +43,10 @@ threshold $G(\omega) > 0.5$ occurs at $\omega < 0.175\kappa$ (exactly,
 $\omega/\kappa = \ln(3)/2\pi$), independent of $\kappa$ — a universal
 spectral signature. Detection requires only ${\sim}100$ probe photons
 per mode for $5\sigma$. All predictions derive from
-a formally verified computation pipeline (1318 Lean~4 theorems,
-0~axioms, verified by \texttt{lake build}). Polariton-specific
-results verified in \texttt{PolaritonTier1.lean} (6~theorems, zero
+a formally verified computation pipeline (2237+ Lean~4 theorems,
+1~axiom [\texttt{gapped\_interface\_axiom}, not used by this paper],
+verified by \texttt{lake build}). Polariton-specific results verified in
+\texttt{PolaritonTier1.lean} (9~theorems, zero
 sorry, all manual proofs): \texttt{attenuation\_ge\_one},
 \texttt{attenuation\_mono\_Gamma}, \texttt{attenuation\_eq\_one\_at\_zero\_decay}.
 Formulas: \texttt{stimulated\_hawking\_gain},
@@ -65,10 +66,11 @@ ${\sim}10^8$-fold temperature advantage, with predicted $T_H \sim 0.1{-}1~\text{
 due to stronger interactions and sharper spatial gradients achievable
 in semiconductor microcavities~\cite{Gerace2012,Nguyen2015}.
 
-The 2025 demonstration of fully programmable acoustic horizons in
-a polariton quantum fluid at LKB Paris~\cite{Falque2025} --- including
-the first observation of negative-energy Bogoliubov modes inside the
-horizon --- establishes every prerequisite for Hawking detection except
+The 2025 demonstration of all-optically tunable acoustic horizons with
+tailored curvature in a polariton quantum fluid at LKB
+Paris~\cite{Falque2025,Giacobino2025} --- including the first observation of
+negative-energy Bogoliubov modes in the supersonic (post-horizon) region ---
+establishes every prerequisite for Hawking detection except
 the measurement itself. We provide the quantitative predictions needed
 to guide that measurement.
 
@@ -87,9 +89,10 @@ that bypass the quantum noise floor, with quasinormal mode
 resonances~\cite{Burkhard2025} further concentrating the signal.
 
 \item \textbf{Formally verified predictions}: All spectral formulas
-derive from a Lean~4 formalization with 1318 verified theorems
-and zero axioms, ensuring internal consistency between the
-EFT framework and platform-specific predictions.
+derive from a Lean~4 formalization with 2237+ verified theorems
+(of which the polariton-specific bounds are in \texttt{PolaritonTier1.lean});
+ensuring internal consistency between the EFT framework and
+platform-specific predictions.
 \end{enumerate}
 
 %% ================================================================
@@ -226,7 +229,7 @@ levels~\cite{Grisins2016,Jacquet2022}.
 \toprule
 Platform & $T_H$ & $\tau_{\text{pol}}$ & $\kappa\tau$ & Feasibility \\
 \midrule
-Paris long (100~ps, projected) & 85~mK & 100~ps & 7.0 & \textbf{Perturbative} \\
+Paris long (100~ps, projected) & 85~mK & 100~ps & 7.0 & Borderline \\
 Paris ultralong (300~ps, projected) & 85~mK & 300~ps & 21 & \textbf{Perturbative} \\
 Paris standard (8~ps, Falque actual) & 85~mK & 8~ps & 0.56 & Borderline \\
 Paris steep-horizon reach & 134~mK & 8~ps & 0.88 & Borderline \\
@@ -321,18 +324,22 @@ Polariton BEC with reservoir-corrected parameters and stimulated
 Hawking detection via CW pump-probe spectroscopy offers a
 realistic pathway to analog Hawking radiation detection at
 temperatures ${\sim}10^8$ times higher than achieved in atomic BEC.
-All predictions are formally verified (1318 Lean~4 theorems,
-zero axioms) and traceable to specific computation modules.
+All predictions are formally verified (2237+ Lean~4 theorems across
+the project; this paper's polariton bounds live in
+\texttt{PolaritonTier1.lean} and are traceable to specific
+computation modules).
 The LKB Paris platform with long-lifetime cavities
-($\tau \sim 100{-}300$~ps) and programmable SLM horizons
-is directly suited for the measurement.
+($\tau \sim 100{-}300$~ps) and all-optically tailored SLM
+horizons~\cite{Falque2025,Giacobino2025} is directly suited for
+the measurement.
 
 \begin{thebibliography}{99}
 \bibitem{Steinhauer2016} J.~Steinhauer, Nat.\ Phys.\ \textbf{12}, 959 (2016).
 \bibitem{deNova2019} J.~R.~M.~de Nova \emph{et al.}, Nature \textbf{569}, 688 (2019).
 \bibitem{Gerace2012} D.~Gerace and I.~Carusotto, Phys.\ Rev.\ B \textbf{86}, 144505 (2012).
 \bibitem{Nguyen2015} H.~S.~Nguyen \emph{et al.}, Phys.\ Rev.\ Lett.\ \textbf{114}, 036402 (2015).
-\bibitem{Falque2025} K.~Falque \emph{et al.}, Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025).
+\bibitem{Falque2025} K.~Falque, A.~Delhom, Q.~Glorieux, E.~Giacobino, A.~Bramati, and M.~J.~Jacquet, ``Polariton Fluids as Quantum Field Theory Simulators on Tailored Curved Spacetimes,'' Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025); arXiv:2311.01392.
+\bibitem{Giacobino2025} E.~Giacobino and M.~J.~Jacquet, ``Acoustic horizons and the Hawking effect in polariton fluids of light,'' arXiv:2512.14194 (2025). [52-page lecture notes introducing the ``programmable simulators'' framing.]
 \bibitem{Estrecho2021} E.~Estrecho \emph{et al.}, Phys.\ Rev.\ Lett.\ \textbf{126}, 075301 (2021).
 \bibitem{Stepanov2019} P.~Stepanov \emph{et al.}, Nat.\ Commun.\ \textbf{10}, 3869 (2019).
 \bibitem{Claude2023} F.~Claude \emph{et al.}, Phys.\ Rev.\ B \textbf{107}, 174507 (2023).

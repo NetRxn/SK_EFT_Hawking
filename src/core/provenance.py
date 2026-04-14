@@ -813,14 +813,16 @@ PAPER_DEPENDENCIES = {
         'lean_modules': ['PolaritonTier1', 'AcousticMetric'],
         'platforms': ['Paris_long', 'Paris_ultralong', 'Paris_standard'],
         'key_claims': [
-            'c_s = 0.5 µm/ps (reservoir-corrected, 3 independent measurements)',
-            'T_H ≈ 61 mK for κ = 5e10 s⁻¹',
-            'D = ξκ/c_s ≈ 0.3 (near-adiabatic, ~10% dispersive correction)',
-            'Stimulated gain G(0.1κ) ≈ 1.14 (amplification exceeds probe)',
-            'SNR ~ sqrt(N_probe) · G(ω) — 10³-10⁶× better than spontaneous',
+            'c_s = 0.40 µm/ps (Falque 2025 measured; adopted in Phase 5u Wave 4)',
+            'ξ ≈ 3.4 µm upstream (Falque 2025 §IV.1)',
+            'Smooth-horizon baseline κ = 7×10¹⁰ s⁻¹ → T_H ≈ 85 mK, D = 0.60',
+            'Steep-horizon reach κ = 1.1×10¹¹ s⁻¹ → T_H ≈ 134 mK, D = 0.93 '
+                '(reported as platform upper bound; non-perturbative dispersive)',
+            'Dispersive correction −π D²/6: −0.19 (smooth) to −0.46 (steep)',
+            'Stimulated gain G(ω) > 0.5 for ω < ln(3)/(2π)·κ ≈ 0.175κ (κ-invariant)',
+            'SNR ~ sqrt(N_probe) · G(ω) — 10³–10⁶× better than spontaneous',
             'κτ_pol > 1 required; ultralong (300 ps) is optimal',
-            '1214 Lean 4 theorems, 0 axioms (formal verification claim)',
-            'PolaritonTier1.lean: 6 theorems, zero sorry',
+            '2237+ Lean 4 theorems across project; PolaritonTier1.lean: 9 theorems, zero sorry',
         ],
     },
 }

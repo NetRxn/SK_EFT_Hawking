@@ -1734,8 +1734,8 @@ SORRY_GAPS: list[SorryGap] = [
         module="SKEFTHawking.Uqsl3Hopf",
         name="uq3_antipode_squared",
         priority=2,
-        description="S² = Ad(K₁K₂) on all 8 generators.",
-        strategy_hint="Check each generator. S²(K_i)=K_i (K⁻¹→K). S²(E_i)=K_iE_iK_i⁻¹. Use K-E conjugation.",
+        description="S² = Ad(K₁²K₂²) on all 8 generators (conjugation by K_{2ρ}).",
+        strategy_hint="Check each generator. S²(K_i)=K_i (K⁻¹→K). S²(E_i)=K_iE_iK_i⁻¹=q²·E_i. Ad(K₁²K₂²) gives q²·E_i via K-E conjugation applied twice. Note: original claim Ad(K₁K₂) was mathematically wrong (gave q·E_i not q²·E_i).",
         filled=False,
     ),
 ]

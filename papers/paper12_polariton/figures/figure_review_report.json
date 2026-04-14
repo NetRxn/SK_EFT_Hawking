@@ -1,0 +1,72 @@
+{
+  "review_date": "2026-04-14T00:00:00Z",
+  "reviewer": "figure-reviewer (physics-qa plugin)",
+  "figures_reviewed": 2,
+  "overall_status": "pass_with_minor_rendering_issues",
+  "figures": [
+    {
+      "name": "fig_stimulated_hawking_spectrum",
+      "path": "papers/paper12_polariton/figures/fig_stimulated_hawking_spectrum.png",
+      "status": "pass",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "x-axis title 'ω / κ' still overlaps/is partially obscured by the bottom-of-plot source-footer annotation (both sit near y=-0.13 paper coords) — pre-existing cosmetic issue, unchanged by Wave-4 fix",
+          "curve terminates visibly near ω/κ ≈ 1.5 (hitting the lower y-bound 10^-4), leaving the right half of the x-range [1.5, 3] empty of signal — plot x-range should be tightened to [0, 1.5] for clarity (pre-existing)",
+          "'optimal probe window' annotation is placed inside the shaded band at top-left and is readable but small (pre-existing)"
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [
+          "VERIFIED post-Wave-4: footer now reads 'T_H = 85.1 mK | κ = 7e+10 s⁻¹' — matches POLARITON_PLATFORMS['Paris_long']['kappa']=7e10 and smooth-horizon T_H=85.1 mK in constants.py. Stale-constants issue from prior review RESOLVED.",
+          "Curve shape is κ-invariant in ω/κ and remains correct: G>10 at small ω/κ, G≈1 near ω/κ≈0.1, G=0.5 crossing near ω/κ≈0.175, G(0.3κ)≈0.18, G(κ)≈0.002 — all consistent with expected values.",
+          "Detection-threshold line (G=0.01) and 5σ/10⁴-photon annotation are correctly positioned"
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": [
+          "Minor: dispersive sage-green (#5C946E) for the gain curve follows palette; dissipative carmine (#E63946) for the threshold matches palette; colorblind-safe"
+        ]
+      },
+      "caption_match": true,
+      "notes": "Wave-4 iteration-2 fix CONFIRMED: footer parameter annotation now reflects live constants (T_H=85.1 mK, κ=7e10 s⁻¹). Physics content is publication-ready. Remaining rendering issues (axis-title/footer overlap, empty right half of x-range, small annotation font) are pre-existing cosmetic concerns that do not block paper inclusion but should be addressed in a future polish pass."
+    },
+    {
+      "name": "fig_polariton_regime_map",
+      "path": "papers/paper12_polariton/figures/fig_polariton_regime_map.png",
+      "status": "pass",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "Regime-band labels ('Intractable', 'Borderline', 'Perturbative (Tier 1)', 'Excellent') still stack in top-left corner and partially overlap with legend entries and with each other near the top border — 'Perturbative (Tier 1)' text continues to overlap the 'Borderline' band edge (pre-existing)",
+          "Figure still appears slightly low-resolution/compressed — small text (tick labels, band labels) borderline legible at display size (pre-existing)"
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [
+          "VERIFIED post-Wave-4: dotted reference line 'Γ_pol/κ = 1/(τκ)' now uses POLARITON_PLATFORMS['Paris_long']['kappa']=7e10 (visualizations.py:3127 hardcode REMOVED). All three Paris_* platform markers sit exactly on the reference line, confirming self-consistency of the κ choice.",
+          "All three platform markers visible and correctly placed: Paris_standard at (τ=8 ps, Γ/κ≈1.78) in 'Intractable' band (previously missing — now rendered); Paris_long at (τ=100 ps, Γ/κ≈0.14) in 'Borderline' band; Paris_ultralong at (τ=300 ps, Γ/κ≈0.048) in 'Perturbative (Tier 1)' band. Tier-1 regime classifications match constants.py."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": [
+          "Regime-band colors (red/amber/sage/blue) follow the project palette and are colorblind-distinguishable",
+          "Diamond markers are distinct and legend is readable"
+        ]
+      },
+      "caption_match": true,
+      "notes": "Wave-4 iteration-2 fixes CONFIRMED: (1) reference-line kappa hardcode replaced with POLARITON_PLATFORMS['Paris_long']['kappa'] — line now self-consistent with platform markers; (2) Paris_standard marker now renders (τ=8 ps in 'Intractable' band). Physics content is publication-ready. Remaining top-left-corner label overlap is pre-existing cosmetic issue, does not block paper inclusion."
+    }
+  ],
+  "summary": "fig_stimulated_hawking_spectrum: PASS — footer now reads T_H=85.1 mK | κ=7e+10 s⁻¹ (stale constants RESOLVED); curve is κ-invariant and physics-correct. fig_polariton_regime_map: PASS — reference-line kappa hardcode REMOVED, all three Paris markers (standard/long/ultralong) now render on the self-consistent 1/(τκ) line with κ=7e10. Both prior blocking issues resolved; only pre-existing cosmetic rendering concerns remain.",
+  "recommendations": [
+    "Both figures now physics-correct and publication-ready under Wave-4 constants. No further physics/data fixes required.",
+    "OPTIONAL (cosmetic polish, non-blocking): In fig_stimulated_hawking_spectrum, tighten x-axis range to [0, 1.5] so the visible curve fills the frame; move the source-footer annotation down (e.g. y=-0.18) to un-collide with the 'ω / κ' axis title.",
+    "OPTIONAL (cosmetic polish, non-blocking): In fig_polariton_regime_map, move regime-band annotations out of the top-left corner (or reduce font size) to stop overlapping with the legend and each other.",
+    "No further figure-reviewer rerun required for Wave-4 iteration-2 acceptance."
+  ]
+}

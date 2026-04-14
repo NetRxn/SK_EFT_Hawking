@@ -955,32 +955,194 @@ noncomputable def uq3AntipodeOp :
 noncomputable def uq3Antipode (x : Uqsl3 k) : Uqsl3 k :=
   MulOpposite.unop (uq3AntipodeOp k x)
 
-/-! ## 4. Squared Antipode -/
+/-! ## 4. Squared Antipode
 
-/-- S²(gen) = K₁K₂ · gen · K₂⁻¹K₁⁻¹ on each generator.
+For U_q(sl_n), S² = Ad(K_{2ρ}) where 2ρ is twice the Weyl vector (= sum of positive
+roots). For sl_3 with positive roots {α₁, α₂, α₁+α₂}, the sum is 2α₁+2α₂, so
+K_{2ρ} = K₁² · K₂². The original statement `S² = Ad(K₁K₂)` was mathematically wrong:
+it would give q·E_i instead of q²·E_i. -/
 
-The proof proceeds case-by-case on the 8 generators:
-- K-generators: K₁K₂·K_i·K₂⁻¹K₁⁻¹ follows from K-commutativity and invertibility.
-- E/F-generators: S²(E_i) = K_i·E_i·K_i⁻¹ by direct computation, which equals
-  K₁K₂·E_i·K₂⁻¹K₁⁻¹ via K-E conjugation + K-commutativity. -/
+/-- Helper: `uq3Antipode k (uqsl3Mk k (gen3 k y)) = antipodeOnGen3 k y`. -/
+private theorem uq3Antipode_gen (y : Uqsl3Gen) :
+    uq3Antipode k (uqsl3Mk k (gen3 k y)) = antipodeOnGen3 k y := by
+  show MulOpposite.unop ((RingQuot.liftAlgHom _ _) (uqsl3Mk k (FreeAlgebra.ι _ y))) = _
+  rw [show uqsl3Mk k (FreeAlgebra.ι _ y) =
+        RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k) (FreeAlgebra.ι _ y) from rfl,
+      RingQuot.liftAlgHom_mkAlgHom_apply]
+  erw [antipodeFreeAlg3_ι]
+  exact MulOpposite.unop_op _
+
+/-- Key cancellation: `K₁²K₂² · K₂⁻²K₁⁻² = 1`. -/
+private theorem uq3_Kprod_cancel :
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k) = 1 := by
+  have h1 : uq3K2 k * uq3K2 k * (uq3K2inv k * uq3K2inv k) = 1 := by
+    calc uq3K2 k * uq3K2 k * (uq3K2inv k * uq3K2inv k)
+        = uq3K2 k * (uq3K2 k * uq3K2inv k) * uq3K2inv k := by noncomm_ring
+      _ = uq3K2 k * 1 * uq3K2inv k := by rw [uq3_K2_mul_K2inv]
+      _ = uq3K2 k * uq3K2inv k := by noncomm_ring
+      _ = 1 := uq3_K2_mul_K2inv k
+  have h2 : uq3K1 k * uq3K1 k * (uq3K1inv k * uq3K1inv k) = 1 := by
+    calc uq3K1 k * uq3K1 k * (uq3K1inv k * uq3K1inv k)
+        = uq3K1 k * (uq3K1 k * uq3K1inv k) * uq3K1inv k := by noncomm_ring
+      _ = uq3K1 k * 1 * uq3K1inv k := by rw [uq3_K1_mul_K1inv]
+      _ = uq3K1 k * uq3K1inv k := by noncomm_ring
+      _ = 1 := uq3_K1_mul_K1inv k
+  calc uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k *
+        (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k)
+      = uq3K1 k * uq3K1 k * (uq3K2 k * uq3K2 k * (uq3K2inv k * uq3K2inv k)) *
+          (uq3K1inv k * uq3K1inv k) := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * 1 * (uq3K1inv k * uq3K1inv k) := by rw [h1]
+    _ = uq3K1 k * uq3K1 k * (uq3K1inv k * uq3K1inv k) := by noncomm_ring
+    _ = 1 := h2
+
+/-- The K-subalgebra {K₁, K₁⁻¹, K₂, K₂⁻¹} is commutative, so any K_i commutes with K₁²K₂².
+This is proved by noting K-generators mutually commute. -/
+private theorem uq3_K1_comm_K1K2sq :
+    uq3K1 k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) =
+    (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K1 k := by
+  have h := uq3_K1K2_comm k
+  have h1 : uq3K2 k * uq3K1 k = uq3K1 k * uq3K2 k := h.symm
+  calc uq3K1 k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k)
+      = uq3K1 k * uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * (uq3K1 k * uq3K2 k) * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * (uq3K2 k * uq3K1 k) * uq3K2 k := by rw [← h1]
+    _ = uq3K1 k * uq3K1 k * uq3K2 k * (uq3K1 k * uq3K2 k) := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * uq3K2 k * (uq3K2 k * uq3K1 k) := by rw [← h1]
+    _ = (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K1 k := by noncomm_ring
+
+private theorem uq3_K1inv_comm_K1K2sq :
+    uq3K1inv k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) =
+    (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K1inv k := by
+  have h := uq3_K2_K1inv_comm k
+  -- K1inv commutes with K2 (derived commutation)
+  have hcomm : uq3K2 k * uq3K1inv k = uq3K1inv k * uq3K2 k := h
+  -- K1inv commutes with K1 (trivially — any element is commutative with itself's inverse
+  -- via the fact that K1·K1inv = 1, and 1 is central). Explicitly:
+  have hK1_K1inv : uq3K1 k * uq3K1inv k = uq3K1inv k * uq3K1 k := by
+    rw [uq3_K1_mul_K1inv, uq3_K1inv_mul_K1]
+  calc uq3K1inv k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k)
+      = uq3K1inv k * uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * uq3K1inv k * uq3K1 k * uq3K2 k * uq3K2 k := by rw [← hK1_K1inv]
+    _ = uq3K1 k * (uq3K1inv k * uq3K1 k) * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * (uq3K1 k * uq3K1inv k) * uq3K2 k * uq3K2 k := by rw [hK1_K1inv]
+    _ = uq3K1 k * uq3K1 k * (uq3K1inv k * uq3K2 k) * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * (uq3K2 k * uq3K1inv k) * uq3K2 k := by rw [← hcomm]
+    _ = uq3K1 k * uq3K1 k * uq3K2 k * (uq3K1inv k * uq3K2 k) := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * uq3K2 k * (uq3K2 k * uq3K1inv k) := by rw [← hcomm]
+    _ = (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K1inv k := by noncomm_ring
+
+private theorem uq3_K2_comm_K1K2sq :
+    uq3K2 k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) =
+    (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K2 k := by
+  have h := uq3_K1K2_comm k
+  have h1 : uq3K2 k * uq3K1 k = uq3K1 k * uq3K2 k := h.symm
+  calc uq3K2 k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k)
+      = (uq3K2 k * uq3K1 k) * uq3K1 k * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = (uq3K1 k * uq3K2 k) * uq3K1 k * uq3K2 k * uq3K2 k := by rw [h1]
+    _ = uq3K1 k * (uq3K2 k * uq3K1 k) * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * (uq3K1 k * uq3K2 k) * uq3K2 k * uq3K2 k := by rw [h1]
+    _ = (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K2 k := by noncomm_ring
+
+private theorem uq3_K2inv_comm_K1K2sq :
+    uq3K2inv k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) =
+    (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K2inv k := by
+  have h := uq3_K1_K2inv_comm k
+  have hcomm : uq3K2inv k * uq3K1 k = uq3K1 k * uq3K2inv k := h.symm
+  have hK2_K2inv : uq3K2 k * uq3K2inv k = uq3K2inv k * uq3K2 k := by
+    rw [uq3_K2_mul_K2inv, uq3_K2inv_mul_K2]
+  calc uq3K2inv k * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k)
+      = (uq3K2inv k * uq3K1 k) * uq3K1 k * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = (uq3K1 k * uq3K2inv k) * uq3K1 k * uq3K2 k * uq3K2 k := by rw [hcomm]
+    _ = uq3K1 k * (uq3K2inv k * uq3K1 k) * uq3K2 k * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * (uq3K1 k * uq3K2inv k) * uq3K2 k * uq3K2 k := by rw [hcomm]
+    _ = uq3K1 k * uq3K1 k * (uq3K2inv k * uq3K2 k) * uq3K2 k := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * (uq3K2 k * uq3K2inv k) * uq3K2 k := by rw [hK2_K2inv]
+    _ = uq3K1 k * uq3K1 k * uq3K2 k * (uq3K2inv k * uq3K2 k) := by noncomm_ring
+    _ = uq3K1 k * uq3K1 k * uq3K2 k * (uq3K2 k * uq3K2inv k) := by rw [hK2_K2inv]
+    _ = (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * uq3K2inv k := by noncomm_ring
+
+/-- Conjugation: K₁²K₂² · y · K₂⁻²K₁⁻² = y when y commutes with K₁²K₂². -/
+private theorem uq3_K_conj_gen (y : Uqsl3 k)
+    (hcomm : y * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) =
+             (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * y) :
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * y *
+      uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k = y := by
+  calc uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * y *
+         uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k
+      = (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) * y *
+          (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k) := by noncomm_ring
+    _ = y * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k) *
+          (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k) := by rw [← hcomm]
+    _ = y * (uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k *
+          (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k)) := by noncomm_ring
+    _ = y * 1 := by rw [uq3_Kprod_cancel]
+    _ = y := mul_one _
+
+private theorem uq3_K_conj_K1 :
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * uq3K1 k *
+      uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k = uq3K1 k :=
+  uq3_K_conj_gen k (uq3K1 k) (uq3_K1_comm_K1K2sq k)
+
+private theorem uq3_K_conj_K1inv :
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * uq3K1inv k *
+      uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k = uq3K1inv k :=
+  uq3_K_conj_gen k (uq3K1inv k) (uq3_K1inv_comm_K1K2sq k)
+
+private theorem uq3_K_conj_K2 :
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * uq3K2 k *
+      uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k = uq3K2 k :=
+  uq3_K_conj_gen k (uq3K2 k) (uq3_K2_comm_K1K2sq k)
+
+private theorem uq3_K_conj_K2inv :
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * uq3K2inv k *
+      uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k = uq3K2inv k :=
+  uq3_K_conj_gen k (uq3K2inv k) (uq3_K2inv_comm_K1K2sq k)
+
 theorem uq3_antipode_squared :
     ∀ x : Uqsl3Gen,
     let sx := uq3Antipode k (uqsl3Mk k (gen3 k x))
     uq3Antipode k sx =
-    uq3K1 k * uq3K2 k * uqsl3Mk k (gen3 k x) * uq3K2inv k * uq3K1inv k := by
+    uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * uqsl3Mk k (gen3 k x) *
+      uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k := by
   intro x
-  -- First, extract the key identity: uq3Antipode k (uqsl3Mk k (gen3 k x)) = antipodeOnGen3 k x
-  have h_antipode_gen : ∀ y : Uqsl3Gen,
-      uq3Antipode k (uqsl3Mk k (gen3 k y)) = antipodeOnGen3 k y := by
-    intro y
-    show MulOpposite.unop ((RingQuot.liftAlgHom _ _) (uqsl3Mk k (FreeAlgebra.ι _ y))) = _
-    rw [show uqsl3Mk k (FreeAlgebra.ι _ y) =
-          RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k) (FreeAlgebra.ι _ y) from rfl,
-        RingQuot.liftAlgHom_mkAlgHom_apply]
-    erw [antipodeFreeAlg3_ι]
-    exact MulOpposite.unop_op _
-  cases x <;> simp only [h_antipode_gen, antipodeOnGen3]
-  all_goals sorry
+  simp only [uq3Antipode_gen]
+  cases x
+  · -- E1: S²(E1) = -S(E1·K1⁻¹) = -S(K1⁻¹)·S(E1) = -K1·(-E1·K1⁻¹) = K1·E1·K1⁻¹ = q²·E1
+    simp only [antipodeOnGen3]
+    sorry
+  · -- E2: analogous to E1
+    simp only [antipodeOnGen3]
+    sorry
+  · -- F1: S²(F1) = K1·F1·K1⁻¹ = q⁻²·F1
+    simp only [antipodeOnGen3]
+    sorry
+  · -- F2: analogous to F1
+    simp only [antipodeOnGen3]
+    sorry
+  · -- K1: S²(K1) = S(K1⁻¹) = K1; Ad(K²ρ)(K1) = K1 via K-commutativity + inv
+    simp only [antipodeOnGen3]
+    rw [show uq3K1inv k = uqsl3Mk k (gen3 k Uqsl3Gen.K1inv) from rfl,
+        uq3Antipode_gen, show uqsl3Mk k (gen3 k Uqsl3Gen.K1) = uq3K1 k from rfl]
+    simp only [antipodeOnGen3]
+    exact (uq3_K_conj_K1 k).symm
+  · -- K1inv: S²(K1⁻¹) = S(K1) = K1⁻¹
+    simp only [antipodeOnGen3]
+    rw [show uq3K1 k = uqsl3Mk k (gen3 k Uqsl3Gen.K1) from rfl,
+        uq3Antipode_gen, show uqsl3Mk k (gen3 k Uqsl3Gen.K1inv) = uq3K1inv k from rfl]
+    simp only [antipodeOnGen3]
+    exact (uq3_K_conj_K1inv k).symm
+  · -- K2: S²(K2) = S(K2⁻¹) = K2
+    simp only [antipodeOnGen3]
+    rw [show uq3K2inv k = uqsl3Mk k (gen3 k Uqsl3Gen.K2inv) from rfl,
+        uq3Antipode_gen, show uqsl3Mk k (gen3 k Uqsl3Gen.K2) = uq3K2 k from rfl]
+    simp only [antipodeOnGen3]
+    exact (uq3_K_conj_K2 k).symm
+  · -- K2inv: S²(K2⁻¹) = S(K2) = K2⁻¹
+    simp only [antipodeOnGen3]
+    rw [show uq3K2 k = uqsl3Mk k (gen3 k Uqsl3Gen.K2) from rfl,
+        uq3Antipode_gen, show uqsl3Mk k (gen3 k Uqsl3Gen.K2inv) = uq3K2inv k from rfl]
+    simp only [antipodeOnGen3]
+    exact (uq3_K_conj_K2inv k).symm
 
 /-! ## 5. Module Summary -/
 

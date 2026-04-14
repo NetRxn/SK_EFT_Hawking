@@ -630,8 +630,8 @@ All tracks are independent; maximum parallelism.
 | Wave 2 | Paper 1 Son:2002 framing | 30 min | 🟡 B | **DONE 2026-04-13** |
 | Wave 3 | Falque κ resolution (primary source read) | 1-2 h | 🔴 A (blocks Paper 12) | **DONE 2026-04-13** — LLM re-verification (arXiv:2311.01392v2 full text) confirms Falque reports κ = 0.07/0.08/0.11 ps⁻¹. Prior 2026-03-31 provenance ("did not report κ") was wrong; LKB audit (2026-04-10) was right. provenance.py updated with correction + 2026-04-13 re-verification dated entry. Unblocks Waves 4-6. |
 | Wave 4 | Adopt Falque values in constants.py + Paper 12 propagation | 1 h | 🟡 B | **DONE 2026-04-13** — constants.py/provenance.py/Paper 12 updated with Falque smooth-horizon defaults (κ=7e10, c_s=4e5, ξ=3.4e-6); steep-horizon reach (κ=1.1e11) quoted in text as platform upper bound; decision rationale documented |
-| Wave 5 | Paper 12 "programmable" | 30 min | 🟡 B | OPEN — depends on Wave 3 |
-| Wave 6 | Paper 12 "inside horizon" | 5 min | 🔵 C | OPEN |
+| Wave 5 | Paper 12 "programmable" attribution | 30 min | 🟡 B | **DONE 2026-04-13** — "programmable" → "all-optically tunable / tailored"; added `[Giacobino2025]` co-citation (arXiv:2512.14194) where the "programmable simulators" framing originates; bibitem added |
+| Wave 6 | Paper 12 "inside horizon" → "supersonic region" | 5 min | 🔵 C | **DONE 2026-04-13** — matches Falque's own language (§IV.2) |
 | Wave 7 | Paper 3 SO(4k) center | 5 min | 🟡 B | **DONE 2026-04-13** |
 | Wave 8 | Paper 10 ℤ₁₆ class D | 20 min | 🟡 B | **DONE 2026-04-13** |
 | Wave 9 | Paper 10 "16 = 8 × 2" | 15 min | 🟡 B | **DONE 2026-04-13** |
@@ -649,7 +649,16 @@ All tracks are independent; maximum parallelism.
 | Wave 21 | Invariant 12: Lean-grounding audit | 3-4 h | 🔵 C (HIGH VALUE) | OPEN — uncovered by Wave 1 investigation |
 | Wave 22 | Paper 1 CITATION_REGISTRY reconciliation | 2 h (P1) / 4-6 h (all) | 🟡 B | OPEN — discovered by Wave 1d claims-reviewer |
 
-**Progress 2026-04-13**: **16 of 17 substantive waves complete** (Wave 1a-1f, 2, 3, 4, 7-13). **Wave 4 done**: Falque values adopted as constants.py defaults (κ=7e10 smooth-horizon baseline, c_s=4e5, ξ=3.4e-6), provenance upgraded to MEASURED tier, Paper 12 body propagated (abstract, Table 2 parameters, Table 4 platform comparison, D claim, noise-temperature paragraph, detection narrative). Steep-horizon reach (κ=1.1e11, T_H=134 mK) reported as platform upper bound but not adopted as default to preserve Paper 12's perturbative SK-EFT framing. Only remaining substantive: Waves 5–6 (Paper 12 "programmable" attribution + "inside horizon" wording — quick edits) and Paper 12 figure regen + claims-reviewer rerun (blocked on figures finishing). Infrastructure/process track (Waves 14–21) + citation cleanup (Wave 22) untouched per user directive ("substantive fixes only").
+**Progress 2026-04-13 / 2026-04-14**: **ALL 17 substantive Phase 5u waves complete** (Wave 1a-1f, 2, 3, 4, 5, 6, 7-13). Paper 1 and Paper 12 body text now both consistent with the pipeline, their Lean anchors, and their cited primary sources.
+
+**Follow-up delegations completed (2026-04-14 morning):**
+- Paper 12 `physics-qa:claims-reviewer` re-run (post-Wave-4): 2 FAIL + 12 WARN + 35 PASS; both FAILs fixed inline (stale "1318 theorems" → 2237+; `Giacobino2025` added to `CITATION_REGISTRY` with full metadata). Metadata drift cleaned: `PAPER_DEPENDENCIES['paper12_polariton'].key_claims` resynced with Wave-4 values; Paris_long "Perturbative" label corrected to "Borderline" in Platform-Comparison table (aligned with `tier1_regime='borderline'` from Γ_pol/κ = 0.143).
+- Paper 12 figure regen + `physics-qa:figure-reviewer` (iteration 1): caught another Pipeline-Invariant-3 violation — `visualizations.py:fig_polariton_regime_map` hardcoded `kappa=5.0e10` on line 3127 (same class of bug as Wave 1e's fig_correction_hierarchy). **Fixed**: replaced with `POLARITON_PLATFORMS['Paris_long']['kappa']`. Also regenerated fig_stimulated_hawking_spectrum which had cached pre-Wave-4 annotation values in its footer.
+- Paper 12 figure-reviewer (iteration 2): **both figures PASS** post-fix. T_H=85.1 mK, κ=7e10 in spectrum footer; reference line in regime map now self-consistent; all three Paris markers render correctly.
+
+**Remaining Phase 5u work:**
+- Infrastructure/process track (Waves 14–21) and citation cleanup (Wave 22) — untouched per user directive ("substantive fixes only"). These are the process-improvement tracks that turn today's bug-fix pattern into permanent invariants.
+- Minor: the Wave 22 audit might now be accelerated by including `Giacobino2025` as a worked example of how to register arXiv-only lecture-notes entries.
 
 **Side fixes applied during Wave 1d** (not separate waves but worth noting):
 - `scripts/review_figures.py` missing `fig_fk_spectrum` import in `run_structural_checks` — fixed

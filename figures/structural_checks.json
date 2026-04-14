@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-09T01:19:04.254119+00:00",
+  "timestamp": "2026-04-14T03:27:34.211941+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -126,64 +126,10 @@
       "severity": "warning",
       "check": "axis_label",
       "message": "xaxis title '' missing expected 'anyon'"
-    },
-    {
-      "figure": "fig_ext_chart",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_ext_chart",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #4682B4 not in COLORS dict"
-    },
-    {
-      "figure": "fig_a1_resolution_structure",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #D4A843 not in COLORS dict"
     }
   ],
   "summary": {
     "errors": 0,
-    "warnings": 30
+    "warnings": 21
   }
 }
