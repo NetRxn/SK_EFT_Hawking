@@ -1056,23 +1056,166 @@ private theorem antipodeFreeAlg3_EF11 :
     antipodeFreeAlg3 k
       (scal3' k (T 1 - T (-1)) * (gen3 k E1 * gen3 k F1 - gen3 k F1 * gen3 k E1)) =
     antipodeFreeAlg3 k (gen3 k K1 - gen3 k K1inv) := by
-  sorry
+  simp only [scal3', map_sub, map_mul, AlgHom.commutes, antipodeFreeAlg3_ι]
+  simp +decide [antipodeOnGen3]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_sub, MulOpposite.unop_mul, MulOpposite.unop_neg, MulOpposite.unop_op]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  -- Goal: (K1·F1·(E1·K1inv) - E1·K1inv·(K1·F1)) * (am(T1) - am(T(-1))) = K1inv - K1
+  -- Simplify K1·F1·E1·K1inv = F1·E1 and E1·K1inv·K1·F1 = E1·F1
+  have h_KFEKinv : uq3K1 k * uq3F1 k * (uq3E1 k * uq3K1inv k) = uq3F1 k * uq3E1 k := by
+    -- Convert to smul form: T(-2)·F1·K1·E1·K1inv = T(-2)·T(2)·F1·E1 = 1·(F1·E1)
+    have step : uq3K1 k * uq3F1 k * (uq3E1 k * uq3K1inv k) =
+        (T 2 * T (-2) : LaurentPolynomial k) • (uq3F1 k * uq3E1 k) := by
+      rw [show uq3K1 k * uq3F1 k * (uq3E1 k * uq3K1inv k) =
+          uq3K1 k * uq3F1 k * uq3E1 k * uq3K1inv k from by noncomm_ring,
+          uq3_K1F1,
+          show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k * uq3K1 k *
+              uq3E1 k * uq3K1inv k =
+              (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k *
+              (uq3K1 k * uq3E1 k) * uq3K1inv k from by noncomm_ring,
+          uq3_K1E1]
+      simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, smul_smul]
+      rw [show uq3F1 k * (uq3E1 k * uq3K1 k) * uq3K1inv k =
+          uq3F1 k * uq3E1 k * (uq3K1 k * uq3K1inv k) from by noncomm_ring,
+          uq3_K1_mul_K1inv, mul_one]
+    rw [step,
+        show (T 2 * T (-2) : LaurentPolynomial k) = 1 from by
+          rw [← T_add]; norm_num [T_zero],
+        one_smul]
+  have h_EKinvKF : uq3E1 k * uq3K1inv k * (uq3K1 k * uq3F1 k) = uq3E1 k * uq3F1 k := by
+    rw [show uq3E1 k * uq3K1inv k * (uq3K1 k * uq3F1 k) =
+        uq3E1 k * (uq3K1inv k * uq3K1 k) * uq3F1 k from by noncomm_ring,
+        uq3_K1inv_mul_K1, mul_one]
+  rw [h_KFEKinv, h_EKinvKF]
+  -- Goal: (F1·E1 - E1·F1) * (am(T1) - am(T(-1))) = K1inv - K1
+  -- Combine scalars, move to left via Algebra.commutes, factor neg, apply uq3_EF11
+  rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) -
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) =
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 - T (-1)) from
+    (map_sub _ _ _).symm]
+  rw [(Algebra.commutes (T 1 - T (-1)) (uq3F1 k * uq3E1 k - uq3E1 k * uq3F1 k)).symm]
+  rw [show uq3F1 k * uq3E1 k - uq3E1 k * uq3F1 k =
+      -(uq3E1 k * uq3F1 k - uq3F1 k * uq3E1 k) from by noncomm_ring,
+      mul_neg]
+  rw [uq3_EF11]
+  noncomm_ring
 
 private theorem antipodeFreeAlg3_EF22 :
     antipodeFreeAlg3 k
       (scal3' k (T 1 - T (-1)) * (gen3 k E2 * gen3 k F2 - gen3 k F2 * gen3 k E2)) =
     antipodeFreeAlg3 k (gen3 k K2 - gen3 k K2inv) := by
-  sorry
+  simp only [scal3', map_sub, map_mul, AlgHom.commutes, antipodeFreeAlg3_ι]
+  simp +decide [antipodeOnGen3]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_sub, MulOpposite.unop_mul, MulOpposite.unop_neg, MulOpposite.unop_op]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  have h_KFEKinv : uq3K2 k * uq3F2 k * (uq3E2 k * uq3K2inv k) = uq3F2 k * uq3E2 k := by
+    have step : uq3K2 k * uq3F2 k * (uq3E2 k * uq3K2inv k) =
+        (T 2 * T (-2) : LaurentPolynomial k) • (uq3F2 k * uq3E2 k) := by
+      rw [show uq3K2 k * uq3F2 k * (uq3E2 k * uq3K2inv k) =
+          uq3K2 k * uq3F2 k * uq3E2 k * uq3K2inv k from by noncomm_ring,
+          uq3_K2F2,
+          show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k * uq3K2 k *
+              uq3E2 k * uq3K2inv k =
+              (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k *
+              (uq3K2 k * uq3E2 k) * uq3K2inv k from by noncomm_ring,
+          uq3_K2E2]
+      simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, smul_smul]
+      rw [show uq3F2 k * (uq3E2 k * uq3K2 k) * uq3K2inv k =
+          uq3F2 k * uq3E2 k * (uq3K2 k * uq3K2inv k) from by noncomm_ring,
+          uq3_K2_mul_K2inv, mul_one]
+    rw [step,
+        show (T 2 * T (-2) : LaurentPolynomial k) = 1 from by
+          rw [← T_add]; norm_num [T_zero],
+        one_smul]
+  have h_EKinvKF : uq3E2 k * uq3K2inv k * (uq3K2 k * uq3F2 k) = uq3E2 k * uq3F2 k := by
+    rw [show uq3E2 k * uq3K2inv k * (uq3K2 k * uq3F2 k) =
+        uq3E2 k * (uq3K2inv k * uq3K2 k) * uq3F2 k from by noncomm_ring,
+        uq3_K2inv_mul_K2, mul_one]
+  rw [h_KFEKinv, h_EKinvKF]
+  rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) -
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) =
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 - T (-1)) from
+    (map_sub _ _ _).symm]
+  rw [(Algebra.commutes (T 1 - T (-1)) (uq3F2 k * uq3E2 k - uq3E2 k * uq3F2 k)).symm]
+  rw [show uq3F2 k * uq3E2 k - uq3E2 k * uq3F2 k =
+      -(uq3E2 k * uq3F2 k - uq3F2 k * uq3E2 k) from by noncomm_ring,
+      mul_neg]
+  rw [uq3_EF22]
+  noncomm_ring
 
 private theorem antipodeFreeAlg3_E1F2comm :
     antipodeFreeAlg3 k (gen3 k E1 * gen3 k F2) =
     antipodeFreeAlg3 k (gen3 k F2 * gen3 k E1) := by
-  sorry
+  erw [map_mul, map_mul, antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+  simp +decide [antipodeOnGen3]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_mul, MulOpposite.unop_neg]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  -- Goal: K2·F2·(E1·K1inv) = E1·K1inv·(K2·F2)
+  -- Reduce both sides to a common normal form using scalars central + commutations.
+  -- Strategy: convert all generator products to smul form via Algebra.smul_def, then
+  -- use abel/noncomm_ring over the scalar ring.
+  have hE1F2 : uq3F2 k * uq3E1 k = uq3E1 k * uq3F2 k := (uq3_E1F2_comm k).symm
+  have hK2E1 := uq3_K2E1 k
+  have hF2K1inv := uq3_F2_mul_K1inv k
+  have hK2K1inv := uq3_K2_K1inv_comm k
+  -- Convert both sides to the common form am(T 0) · (E1·K2·K1inv·F2)
+  have key : uq3K2 k * uq3F2 k * (uq3E1 k * uq3K1inv k) =
+      uq3E1 k * uq3K1inv k * (uq3K2 k * uq3F2 k) := by
+    -- LHS = K2·F2·E1·K1inv = K2·E1·F2·K1inv = am(T(-1))·E1·K2·am(T 1)·K1inv·F2
+    --     = am(T 0)·E1·K2·K1inv·F2 = E1·K1inv·K2·F2
+    rw [show uq3K2 k * uq3F2 k * (uq3E1 k * uq3K1inv k) =
+        uq3K2 k * (uq3F2 k * uq3E1 k) * uq3K1inv k from by noncomm_ring,
+        hE1F2,
+        show uq3K2 k * (uq3E1 k * uq3F2 k) * uq3K1inv k =
+            (uq3K2 k * uq3E1 k) * (uq3F2 k * uq3K1inv k) from by noncomm_ring,
+        hK2E1, hF2K1inv]
+    -- Goal: (am(T(-1)) * E1 * K2) * (am(T 1) * K1inv * F2) = E1 * K1inv * (K2 * F2)
+    -- Use Algebra.smul_def to convert am(T c) * x = T c • x and work at scalar level
+    simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, smul_smul, ← T_add]
+    -- T(-1 + 1) = T 0 = 1; one_smul cleanup
+    norm_num [T_zero]
+    -- Goal: E1·K2·(K1inv·F2) = E1·K1inv·(K2·F2)
+    rw [show uq3E1 k * uq3K2 k * (uq3K1inv k * uq3F2 k) =
+        uq3E1 k * (uq3K2 k * uq3K1inv k) * uq3F2 k from by noncomm_ring,
+        hK2K1inv]
+    noncomm_ring
+  exact key
 
 private theorem antipodeFreeAlg3_E2F1comm :
     antipodeFreeAlg3 k (gen3 k E2 * gen3 k F1) =
     antipodeFreeAlg3 k (gen3 k F1 * gen3 k E2) := by
-  sorry
+  erw [map_mul, map_mul, antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+  simp +decide [antipodeOnGen3]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_mul, MulOpposite.unop_neg]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  -- Goal: K1·F1·(E2·K2inv) = E2·K2inv·(K1·F1)  (symmetric to E1F2comm with 1↔2 swap)
+  have hE2F1 : uq3F1 k * uq3E2 k = uq3E2 k * uq3F1 k := (uq3_E2F1_comm k).symm
+  have hK1E2 := uq3_K1E2 k
+  have hF1K2inv := uq3_F1_mul_K2inv k
+  have hK1K2inv := uq3_K1_K2inv_comm k
+  have key : uq3K1 k * uq3F1 k * (uq3E2 k * uq3K2inv k) =
+      uq3E2 k * uq3K2inv k * (uq3K1 k * uq3F1 k) := by
+    rw [show uq3K1 k * uq3F1 k * (uq3E2 k * uq3K2inv k) =
+        uq3K1 k * (uq3F1 k * uq3E2 k) * uq3K2inv k from by noncomm_ring,
+        hE2F1,
+        show uq3K1 k * (uq3E2 k * uq3F1 k) * uq3K2inv k =
+            (uq3K1 k * uq3E2 k) * (uq3F1 k * uq3K2inv k) from by noncomm_ring,
+        hK1E2, hF1K2inv]
+    simp only [← Algebra.smul_def, smul_mul_assoc, mul_smul_comm, smul_smul, ← T_add]
+    norm_num [T_zero]
+    rw [show uq3E2 k * uq3K1 k * (uq3K2inv k * uq3F1 k) =
+        uq3E2 k * (uq3K1 k * uq3K2inv k) * uq3F1 k from by noncomm_ring,
+        hK1K2inv]
+    noncomm_ring
+  exact key
 
 /- Groups VI/VII: q-Serre antipode (4 helpers) -/
 
