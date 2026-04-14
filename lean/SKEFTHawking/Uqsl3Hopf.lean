@@ -1040,6 +1040,15 @@ private theorem comulFreeAlg3_SerreE12 :
       (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
     comulFreeAlg3 k
       (scal3' k (T 1 + T (-1)) * gen3 k E1 * gen3 k E2 * gen3 k E1) := by
+  -- TODO: complete via sector helpers sect3_hUqIdE12_{20,01,10_E1E2,10_E2E1,11}
+  -- (already proved above) plus sect3_hSerreE12_smul.
+  -- Strategy attempted: expand both sides via comul + tmul_mul_tmul, normalize
+  -- K-K commute, apply each sector via phi map + map_zero, finish with
+  -- linear_combination (norm := module).
+  -- BLOCKER: module fails to unify atoms across goal (`T r • A ⊗ B` form) and
+  -- hypothesis (`(T 1 + T(-1)) • A ⊗ B` form) — coefficient distribution issue.
+  -- Next session: investigate alternative finalizer or per-sector tmul-equality
+  -- assertion approach (manual chain of `have` with TensorProduct.tmul_zero).
   sorry
 
 private theorem comulFreeAlg3_SerreE21 :
