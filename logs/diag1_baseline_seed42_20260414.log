@@ -1,0 +1,40 @@
+======================================================================
+RHMC Production: L=4, 14 couplings x 1500 traj
+  Clark-Kennedy 2-PF even-odd, 12-pole Zolotarev x^{-1/4}
+  tau=0.062, eps=0.006250, MD steps=10
+  Progress: 0 complete, 0 partial, 14 new
+  Workers: 4, chunk: 10 traj
+  Output: data/rhmc/L4_diag_seed42/g*.npz
+======================================================================
+  Spectrum: [0.152, 1261.2], kappa=8323
+
+  Starting...
+
+  g=0.500: 10/1500 traj (191s, 19.13s/traj, accept=1.00)
+  g=1.077: 10/1500 traj (194s, 19.38s/traj, accept=1.00)
+  g=2.231: 10/1500 traj (195s, 19.48s/traj, accept=1.00)
+  g=1.654: 10/1500 traj (195s, 19.49s/traj, accept=1.00)
+  g=0.500: 20/1500 traj (228s, 11.38s/traj, accept=1.00)
+  g=1.077: 20/1500 traj (230s, 11.50s/traj, accept=1.00)
+  g=2.231: 20/1500 traj (232s, 11.59s/traj, accept=1.00)
+  g=1.654: 20/1500 traj (232s, 11.60s/traj, accept=1.00)
+  g=0.500: 30/1500 traj (259s, 8.64s/traj, accept=1.00)
+  g=1.077: 30/1500 traj (261s, 8.69s/traj, accept=1.00)
+  g=1.654: 30/1500 traj (263s, 8.77s/traj, accept=1.00)
+  g=2.231: 30/1500 traj (263s, 8.77s/traj, accept=1.00)
+  g=0.500: 40/1500 traj (289s, 7.24s/traj, accept=1.00)
+  g=1.077: 40/1500 traj (291s, 7.27s/traj, accept=1.00)
+  g=2.231: 40/1500 traj (294s, 7.34s/traj, accept=1.00)
+  g=1.654: 40/1500 traj (294s, 7.35s/traj, accept=1.00)
+  g=0.500: 50/1500 traj (323s, 6.47s/traj, accept=1.00)
+  g=1.077: 50/1500 traj (324s, 6.49s/traj, accept=1.00)
+  g=2.231: 50/1500 traj (328s, 6.55s/traj, accept=1.00)
+  g=1.654: 50/1500 traj (328s, 6.56s/traj, accept=1.00)
+  g=0.500: 60/1500 traj (353s, 5.89s/traj, accept=1.00)
+  g=1.077: 60/1500 traj (354s, 5.90s/traj, accept=1.00)
+  g=2.231: 60/1500 traj (358s, 5.96s/traj, accept=1.00)
+  g=1.654: 60/1500 traj (359s, 5.98s/traj, accept=1.00)
+  g=0.500: 70/1500 traj (383s, 5.48s/traj, accept=1.00)
+  g=1.077: 70/1500 traj (384s, 5.48s/traj, accept=1.00)
+  g=2.231: 70/1500 traj (388s, 5.54s/traj, accept=1.00)
+  g=1.654: 70/1500 traj (389s, 5.56s/traj, accept=1.00)

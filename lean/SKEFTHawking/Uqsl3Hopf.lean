@@ -1156,6 +1156,21 @@ private theorem uq3Antipode_gen (y : Uqsl3Gen) :
   erw [antipodeFreeAlg3_ι]
   exact MulOpposite.unop_op _
 
+/-- uq3Antipode is an anti-homomorphism: S(a·b) = S(b)·S(a). -/
+private theorem uq3Antipode_mul (a b : Uqsl3 k) :
+    uq3Antipode k (a * b) = uq3Antipode k b * uq3Antipode k a := by
+  show MulOpposite.unop (uq3AntipodeOp k (a * b)) = _
+  rw [map_mul]
+  rfl
+
+/-- uq3Antipode preserves negation. -/
+private theorem uq3Antipode_neg (a : Uqsl3 k) :
+    uq3Antipode k (-a) = -uq3Antipode k a := by
+  show MulOpposite.unop ((uq3AntipodeOp k) (-a)) = -MulOpposite.unop ((uq3AntipodeOp k) a)
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  rw [map_neg]
+  rfl
+
 /-- Key cancellation: `K₁²K₂² · K₂⁻²K₁⁻² = 1`. -/
 private theorem uq3_Kprod_cancel :
     uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k) = 1 := by
@@ -1291,17 +1306,13 @@ theorem uq3_antipode_squared :
   intro x
   simp only [uq3Antipode_gen]
   cases x
-  · -- E1: S²(E1) = -S(E1·K1⁻¹) = -S(K1⁻¹)·S(E1) = -K1·(-E1·K1⁻¹) = K1·E1·K1⁻¹ = q²·E1
-    simp only [antipodeOnGen3]
+  · simp only [antipodeOnGen3]
     sorry
-  · -- E2: analogous to E1
-    simp only [antipodeOnGen3]
+  · simp only [antipodeOnGen3]
     sorry
-  · -- F1: S²(F1) = K1·F1·K1⁻¹ = q⁻²·F1
-    simp only [antipodeOnGen3]
+  · simp only [antipodeOnGen3]
     sorry
-  · -- F2: analogous to F1
-    simp only [antipodeOnGen3]
+  · simp only [antipodeOnGen3]
     sorry
   · -- K1: S²(K1) = S(K1⁻¹) = K1; Ad(K²ρ)(K1) = K1 via K-commutativity + inv
     simp only [antipodeOnGen3]

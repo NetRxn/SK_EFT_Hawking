@@ -1,0 +1,15 @@
+======================================================================
+RHMC Production: L=4, 1 couplings x 500 traj
+  Clark-Kennedy 2-PF even-odd, 12-pole Zolotarev x^{-1/4}
+  tau=0.062, eps=0.006250, MD steps=10
+  Progress: 0 complete, 0 partial, 1 new
+  Workers: 1, chunk: 10 traj
+  Output: data/rhmc/L4_diag_g3385_s31415/g*.npz
+======================================================================
+  Spectrum: [0.193, 947.7], kappa=4898
+  Hasenbusch K=3: 4 factors × 8 poles/factor
+  mu^2 schedule: ['0.000', '1.619', '13.541', '113.282']
+  Integrator levels: [5, 3, 4]
+
+  Starting...
+
