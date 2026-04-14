@@ -2685,7 +2685,31 @@ private theorem antipodeFreeAlg3_SerreE12 :
     -- Step 7: collapse T-powers T(-1)·T(2)·T(-1) = T(0) = 1
     rw [alg_T_cancel3 (-1) 2 (-1) _ (by decide)]
     noncomm_ring
-  sorry
+  -- hA1 and hB: analogous atom equalities (sorry stubs — proofs pending, pattern established)
+  have hA1 : uq3E2 k * (uq3E1 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) =
+      uq3E2 k * (uq3K2inv k * (uq3E1 k * (uq3K1inv k * (uq3E1 k * uq3K1inv k)))) := by
+    sorry
+  have hB : uq3E1 k * (uq3E2 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) =
+      uq3E1 k * (uq3K1inv k * (uq3E2 k * (uq3K2inv k * (uq3E1 k * uq3K1inv k)))) := by
+    sorry
+  -- Phase 11: normalize h2's associativity to right-assoc, substitute atom equalities
+  rw [show uq3E1 k * uq3E1 k * uq3E2 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) =
+        uq3E1 k * (uq3E1 k * (uq3E2 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) from by
+      noncomm_ring,
+      show uq3E1 k * uq3E2 k * uq3E1 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) =
+        uq3E1 k * (uq3E2 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) from by
+      noncomm_ring,
+      show uq3E2 k * uq3E1 k * uq3E1 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) =
+        uq3E2 k * (uq3E1 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) from by
+      noncomm_ring] at h2
+  rw [hA2, hA1, hB] at h2
+  -- h2 now: X₁²X₂ - [2]_q • X₁X₂X₁ + X₂X₁² = 0 (palindromic Serre in X-chain form)
+  -- Normalize scalar distribution
+  simp only [add_smul] at h2
+  -- Close via linear_combination + abel!
+  linear_combination (norm := skip) -h2
+  simp only [smul_smul, neg_smul, one_smul]
+  abel!
 
 private theorem antipodeFreeAlg3_SerreE21 :
     antipodeFreeAlg3 k
