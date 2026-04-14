@@ -699,6 +699,118 @@ private theorem comulFreeAlg3_E2F1comm :
 
 /- Groups VI/VII: q-Serre (4 helpers) — placeholders for Tranche B -/
 
+/-! ### Sector infrastructure for q-Serre cubic compatibility
+
+Following the Uqsl2AffineHopf.lean `sect_hSerreE01_*` pattern (L1560-2060), adapted
+for sl_3's quadratic (not cubic) Serre relation. Scalars are T(2)/T(-1)/T(1) not
+T(±2) throughout — the Cartan off-diagonal is -1 for sl_3. -/
+
+-- === smul-form Serre relations (used by both comul and antipode Serre proofs) ===
+
+/-- Serre E12 in smul form: E₁²E₂ - [2]_q·E₁E₂E₁ + E₂E₁² = 0 (equivalent to uq3_SerreE12). -/
+private theorem sect3_hSerreE12_smul :
+    uq3E1 k * uq3E1 k * uq3E2 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3E2 k * uq3E1 k) +
+    uq3E2 k * uq3E1 k * uq3E1 k = 0 := by
+  have h := uq3_SerreE12 k
+  rw [Algebra.smul_def, ← mul_assoc, ← mul_assoc,
+      show uq3E1 k * uq3E1 k * uq3E2 k -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3E1 k * uq3E2 k * uq3E1 k +
+          uq3E2 k * uq3E1 k * uq3E1 k =
+          (uq3E1 k * uq3E1 k * uq3E2 k + uq3E2 k * uq3E1 k * uq3E1 k) -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3E1 k * uq3E2 k * uq3E1 k from by noncomm_ring, h]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  exact sub_self _
+
+private theorem sect3_hSerreE21_smul :
+    uq3E2 k * uq3E2 k * uq3E1 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3E2 k * uq3E1 k * uq3E2 k) +
+    uq3E1 k * uq3E2 k * uq3E2 k = 0 := by
+  have h := uq3_SerreE21 k
+  rw [Algebra.smul_def, ← mul_assoc, ← mul_assoc,
+      show uq3E2 k * uq3E2 k * uq3E1 k -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3E2 k * uq3E1 k * uq3E2 k +
+          uq3E1 k * uq3E2 k * uq3E2 k =
+          (uq3E2 k * uq3E2 k * uq3E1 k + uq3E1 k * uq3E2 k * uq3E2 k) -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3E2 k * uq3E1 k * uq3E2 k from by noncomm_ring, h]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  exact sub_self _
+
+private theorem sect3_hSerreF12_smul :
+    uq3F1 k * uq3F1 k * uq3F2 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3F1 k * uq3F2 k * uq3F1 k) +
+    uq3F2 k * uq3F1 k * uq3F1 k = 0 := by
+  have h := uq3_SerreF12 k
+  rw [Algebra.smul_def, ← mul_assoc, ← mul_assoc,
+      show uq3F1 k * uq3F1 k * uq3F2 k -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3F1 k * uq3F2 k * uq3F1 k +
+          uq3F2 k * uq3F1 k * uq3F1 k =
+          (uq3F1 k * uq3F1 k * uq3F2 k + uq3F2 k * uq3F1 k * uq3F1 k) -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3F1 k * uq3F2 k * uq3F1 k from by noncomm_ring, h]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  exact sub_self _
+
+private theorem sect3_hSerreF21_smul :
+    uq3F2 k * uq3F2 k * uq3F1 k -
+    (T 1 + T (-1) : LaurentPolynomial k) • (uq3F2 k * uq3F1 k * uq3F2 k) +
+    uq3F1 k * uq3F2 k * uq3F2 k = 0 := by
+  have h := uq3_SerreF21 k
+  rw [Algebra.smul_def, ← mul_assoc, ← mul_assoc,
+      show uq3F2 k * uq3F2 k * uq3F1 k -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3F2 k * uq3F1 k * uq3F2 k +
+          uq3F1 k * uq3F2 k * uq3F2 k =
+          (uq3F2 k * uq3F2 k * uq3F1 k + uq3F1 k * uq3F2 k * uq3F2 k) -
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1 + T (-1)) *
+            uq3F2 k * uq3F1 k * uq3F2 k from by noncomm_ring, h]
+  letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+  exact sub_self _
+
+-- === Base KE rewrites in smul and positional form ===
+-- Pattern: each K_i E_j commutation gives two helpers (standalone + positional).
+
+/-- K₁·E₁ = T(2)·E₁·K₁ in smul form. -/
+private theorem sect3_hKE_smul_K1E1 :
+    uq3K1 k * uq3E1 k = (T 2 : LaurentPolynomial k) • (uq3E1 k * uq3K1 k) := by
+  rw [uq3_K1E1, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKE_at_K1E1 (x : Uqsl3 k) :
+    x * uq3K1 k * uq3E1 k = (T 2 : LaurentPolynomial k) • (x * uq3E1 k * uq3K1 k) := by
+  rw [mul_assoc x (uq3K1 k) (uq3E1 k), sect3_hKE_smul_K1E1, mul_smul_comm, ← mul_assoc]
+
+/-- K₁·E₂ = T(-1)·E₂·K₁ in smul form. -/
+private theorem sect3_hKE_smul_K1E2 :
+    uq3K1 k * uq3E2 k = (T (-1) : LaurentPolynomial k) • (uq3E2 k * uq3K1 k) := by
+  rw [uq3_K1E2, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKE_at_K1E2 (x : Uqsl3 k) :
+    x * uq3K1 k * uq3E2 k = (T (-1) : LaurentPolynomial k) • (x * uq3E2 k * uq3K1 k) := by
+  rw [mul_assoc x (uq3K1 k) (uq3E2 k), sect3_hKE_smul_K1E2, mul_smul_comm, ← mul_assoc]
+
+/-- K₂·E₁ = T(-1)·E₁·K₂ in smul form. -/
+private theorem sect3_hKE_smul_K2E1 :
+    uq3K2 k * uq3E1 k = (T (-1) : LaurentPolynomial k) • (uq3E1 k * uq3K2 k) := by
+  rw [uq3_K2E1, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKE_at_K2E1 (x : Uqsl3 k) :
+    x * uq3K2 k * uq3E1 k = (T (-1) : LaurentPolynomial k) • (x * uq3E1 k * uq3K2 k) := by
+  rw [mul_assoc x (uq3K2 k) (uq3E1 k), sect3_hKE_smul_K2E1, mul_smul_comm, ← mul_assoc]
+
+/-- K₂·E₂ = T(2)·E₂·K₂ in smul form. -/
+private theorem sect3_hKE_smul_K2E2 :
+    uq3K2 k * uq3E2 k = (T 2 : LaurentPolynomial k) • (uq3E2 k * uq3K2 k) := by
+  rw [uq3_K2E2, Algebra.smul_def, mul_assoc]
+
+private theorem sect3_hKE_at_K2E2 (x : Uqsl3 k) :
+    x * uq3K2 k * uq3E2 k = (T 2 : LaurentPolynomial k) • (x * uq3E2 k * uq3K2 k) := by
+  rw [mul_assoc x (uq3K2 k) (uq3E2 k), sect3_hKE_smul_K2E2, mul_smul_comm, ← mul_assoc]
+
 private theorem comulFreeAlg3_SerreE12 :
     comulFreeAlg3 k
       (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
