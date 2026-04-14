@@ -2516,21 +2516,24 @@ private theorem antipodeFreeAlg3_SerreE12 :
   simp only [MulOpposite.unop_sub, MulOpposite.unop_add, MulOpposite.unop_mul,
              MulOpposite.unop_op, MulOpposite.unop_zero,
              MulOpposite.algebraMap_apply, mul_assoc]
-  -- Phase 4: push K⁻¹ left past E (same-index) via E·K⁻¹ = algebraMap(T 2)·K⁻¹·E
+  -- Phase 4: push K⁻¹ left past E (same-index) — flips pair order E·K⁻¹ → K⁻¹·E
   simp_rw [uq3_E1_mul_K1inv, uq3_E2_mul_K2inv]
   -- Phase 5: convert negations to (-1)•, collect scalars
   simp only [show ∀ (x : Uqsl3 k), -x = (-1 : LaurentPolynomial k) • x from fun x => by module]
   simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
   norm_num
-  -- Phase 6: convert trailing algebraMap to smul, flatten
+  -- Phase 6: convert trailing algebraMap to smul (no ← Algebra.smul_def — cycle trap)
   have hcentral : ∀ (r : LaurentPolynomial k) (x : Uqsl3 k),
       x * algebraMap (LaurentPolynomial k) (Uqsl3 k) r = r • x :=
     fun r x => by erw [Algebra.smul_def, Algebra.commutes]
-  simp only [mul_add, mul_one, hcentral, smul_mul_assoc, mul_smul_comm, smul_smul,
-             ← Algebra.smul_def, ← T_add]
+  have hcentral_left : ∀ (r : LaurentPolynomial k) (x : Uqsl3 k),
+      algebraMap (LaurentPolynomial k) (Uqsl3 k) r * x = r • x :=
+    fun r x => by rw [Algebra.smul_def]
+  simp only [mul_add, mul_one, hcentral, hcentral_left]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul, ← T_add]
   norm_num [T_zero]
   simp only [one_smul, ← mul_assoc]
-  -- Phase 7: hK⁻¹·E smul-form helpers (push K⁻¹ right past E, all 4 index combinations)
+  -- Phase 7: hK⁻¹·E smul-form commutation helpers (all 4 index combinations)
   have hK1invE1 : uq3K1inv k * uq3E1 k =
       (T (-2) : LaurentPolynomial k) • (uq3E1 k * uq3K1inv k) := by
     rw [uq3_E1_mul_K1inv]
@@ -2551,46 +2554,20 @@ private theorem antipodeFreeAlg3_SerreE12 :
     rw [uq3_E1_mul_K2inv]
     simp only [← Algebra.smul_def, smul_mul_assoc, smul_smul, ← T_add]
     norm_num [T_zero, one_smul]
-  -- Right-assoc + push K⁻¹ right using hK*invE* (pair-form emerges from right-assoc)
-  simp only [mul_assoc, hK1invE1, hK2invE2, hK1invE2, hK2invE1, mul_smul_comm]
-  simp only [smul_mul_assoc, smul_smul]
-  -- Simplify scalars: -T(6)·T(-2)³ = -1, -1·T(7)·T(-2)³ = -T(1), -1·T(5)·T(-2)³ = -T(-1)
-  simp only [show (-T 6 * (T (-2) * (T (-2) * T (-2))) : LaurentPolynomial k) = -1 from by
-    rw [show (T (-2) * (T (-2) * T (-2)) : LaurentPolynomial k) = T (-6) from by
-      rw [← T_add, ← T_add]; norm_num]
-    rw [show (-T 6 * T (-6) : LaurentPolynomial k) = -(T 6 * T (-6)) from by ring]
-    rw [show (T 6 * T (-6) : LaurentPolynomial k) = 1 from by
-      rw [← T_add]; norm_num [T_zero]],
-    show (-1 * (T 7 * (T (-2) * (T (-2) * T (-2)))) : LaurentPolynomial k) = -T 1 from by
-      rw [show (T (-2) * (T (-2) * T (-2)) : LaurentPolynomial k) = T (-6) from by
-        rw [← T_add, ← T_add]; norm_num]
-      rw [show ((-1 : LaurentPolynomial k) * (T 7 * T (-6)) : LaurentPolynomial k) =
-            -(T 7 * T (-6)) from by ring]
-      rw [show (T 7 * T (-6) : LaurentPolynomial k) = T 1 from by
-        rw [← T_add]; norm_num],
-    show (-1 * (T 5 * (T (-2) * (T (-2) * T (-2)))) : LaurentPolynomial k) = -T (-1) from by
-      rw [show (T (-2) * (T (-2) * T (-2)) : LaurentPolynomial k) = T (-6) from by
-        rw [← T_add, ← T_add]; norm_num]
-      rw [show ((-1 : LaurentPolynomial k) * (T 5 * T (-6)) : LaurentPolynomial k) =
-            -(T 5 * T (-6)) from by ring]
-      rw [show (T 5 * T (-6) : LaurentPolynomial k) = T (-1) from by
-        rw [← T_add]; norm_num]]
-  -- Phase 8: prove palindromic Serre atom equalities via simp_rw on E-chain·K_chain form.
-  -- Each X-chain atom equals E-chain · K_chain (with scalar T(0) = 1 after K⁻¹·E push-left).
-  -- Phase 8 (NEXT SESSION): close via palindromic Serre.
-  -- Plan:
-  --   have hA1_eq : E₂·E₁·E₁·K_chain = A1_atom  (= X₂·X₁²)
-  --   have hA2_eq : E₁·E₁·E₂·K_chain = A2_atom  (= X₁²·X₂)
-  --   have hB_eq  : E₁·E₂·E₁·K_chain = B_atom   (= X₁·X₂·X₁)
-  --   where K_chain = K₁⁻¹·K₁⁻¹·K₂⁻¹.
-  -- Each hXX_eq proved by explicit `rw` with uq3_E*_mul_K*inv + algMap scalar
-  --   consolidation (T_add, T_zero; scalars collapse to T(0) = 1).
-  -- Then:
-  --   have h_chain := congr_arg (· * K_chain) (sect3_hSerreE12_smul k)
-  --   simp [zero_mul, sub_mul, add_mul, smul_mul_assoc] at h_chain
-  --   rw [hA1_eq, hA2_eq, hB_eq] at h_chain  -- h_chain is palindromic Serre
-  --   linear_combination -h_chain  -- closes the goal's -A1 - A2 + [2]_q•B = 0
-  -- Estimate: ~70 lines total for this phase.
+  -- Phase 8: apply E-Serre via LinearMap.mulRight (per Phase-5s research).
+  -- Both goal and h should canonicalize to matching forms under phased simp.
+  have hSE := sect3_hSerreE12_smul k
+  have h := congr_arg
+    (⇑(LinearMap.mulRight (LaurentPolynomial k)
+        (uq3K1inv k * uq3K1inv k * uq3K2inv k))) hSE
+  simp only [map_add, map_sub, map_zero, LinearMap.mulRight_apply,
+             LinearMap.map_smul_of_tower] at h
+  -- BLOCKER: goal (X-pair form) and h (E_chain·K_chain form) don't unify under simp
+  -- because hK*invE* rules don't apply to h (no K⁻¹·E adjacencies in E_chain·K_chain).
+  -- Need atom-equality lemmas: hA1_eq : E₂E₁²·K_chain = X₂X₁² (goal atom), etc.
+  -- Each requires manual K⁻¹·E commutation + scalar cancellation (T(0) = 1).
+  -- Phase-5s research pattern DOESN'T close these without the atom equalities.
+  -- Next session: prove 3 hA_eq lemmas via explicit calc blocks.
   sorry
 
 private theorem antipodeFreeAlg3_SerreE21 :
