@@ -847,3 +847,6 @@ RHMC Production: L=4, 14 couplings x 1500 traj
   g=4.538: 320/1500 traj (12256s, 38.30s/traj, accept=1.00) [Hasenbusch K=3]
   g=3.962: 460/1500 traj (16009s, 34.80s/traj, accept=1.00) [Hasenbusch K=3]
   g=3.385: 620/1500 traj (20023s, 32.30s/traj, accept=1.00) [Hasenbusch K=3]
+  g=2.808: 870/1500 traj (25843s, 29.71s/traj, accept=1.00) [Hasenbusch K=3]
+  g=4.538: 330/1500 traj (12593s, 38.16s/traj, accept=1.00) [Hasenbusch K=3]
+  g=3.962: 470/1500 traj (16325s, 34.73s/traj, accept=1.00) [Hasenbusch K=3]

@@ -377,6 +377,50 @@ private theorem uq3_K2inv_mul_F1 :
     _ = algebraMap (LaurentPolynomial k) (Uqsl3 k) (T (-1)) * uq3F1 k * uq3K2inv k := by
         rw [uq3_K2inv_mul_K2, mul_one]
 
+/-- F_i · K_j⁻¹ commutations (derived from K_j · F_i relations). -/
+private theorem uq3_F1_mul_K2inv :
+    uq3F1 k * uq3K2inv k =
+    algebraMap (LaurentPolynomial k) (Uqsl3 k) (T 1) * uq3K2inv k * uq3F1 k := by
+  -- From K₂·F₁ = T(1)·F₁·K₂, derive F₁·K₂⁻¹ = T(1)·K₂⁻¹·F₁.
+  have h : uq3K2 k * uq3F1 k =
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3F1 k * uq3K2 k := uq3_K2F1 k
+  calc uq3F1 k * uq3K2inv k
+      = (uq3K2inv k * uq3K2 k) * uq3F1 k * uq3K2inv k := by
+        rw [uq3_K2inv_mul_K2, one_mul]
+    _ = uq3K2inv k * (uq3K2 k * uq3F1 k) * uq3K2inv k := by noncomm_ring
+    _ = uq3K2inv k * ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3F1 k *
+          uq3K2 k) * uq3K2inv k := by rw [h]
+    _ = (uq3K2inv k * (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1)) * uq3F1 k *
+          (uq3K2 k * uq3K2inv k) := by noncomm_ring
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K2inv k * uq3F1 k *
+          (uq3K2 k * uq3K2inv k) := by
+        rw [(Algebra.commutes (R := LaurentPolynomial k) (A := Uqsl3 k)
+              (T 1) (uq3K2inv k)).symm]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K2inv k * uq3F1 k * 1 := by
+        rw [uq3_K2_mul_K2inv]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K2inv k * uq3F1 k := mul_one _
+
+private theorem uq3_F2_mul_K1inv :
+    uq3F2 k * uq3K1inv k =
+    algebraMap (LaurentPolynomial k) (Uqsl3 k) (T 1) * uq3K1inv k * uq3F2 k := by
+  have h : uq3K1 k * uq3F2 k =
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3F2 k * uq3K1 k := uq3_K1F2 k
+  calc uq3F2 k * uq3K1inv k
+      = (uq3K1inv k * uq3K1 k) * uq3F2 k * uq3K1inv k := by
+        rw [uq3_K1inv_mul_K1, one_mul]
+    _ = uq3K1inv k * (uq3K1 k * uq3F2 k) * uq3K1inv k := by noncomm_ring
+    _ = uq3K1inv k * ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3F2 k *
+          uq3K1 k) * uq3K1inv k := by rw [h]
+    _ = (uq3K1inv k * (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1)) * uq3F2 k *
+          (uq3K1 k * uq3K1inv k) := by noncomm_ring
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K1inv k * uq3F2 k *
+          (uq3K1 k * uq3K1inv k) := by
+        rw [(Algebra.commutes (R := LaurentPolynomial k) (A := Uqsl3 k)
+              (T 1) (uq3K1inv k)).symm]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K1inv k * uq3F2 k * 1 := by
+        rw [uq3_K1_mul_K1inv]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K1inv k * uq3F2 k := mul_one _
+
 /-! ### Per-relation coproduct helpers (21 Chevalley relations) -/
 
 /- Group I: K-invertibility (4 helpers) -/
@@ -938,12 +982,42 @@ private theorem antipodeFreeAlg3_K1F1 :
 private theorem antipodeFreeAlg3_K1F2 :
     antipodeFreeAlg3 k (gen3 k K1 * gen3 k F2) =
     antipodeFreeAlg3 k (scal3' k (T 1) * gen3 k F2 * gen3 k K1) := by
-  sorry
+  simp +decide [mul_assoc, Algebra.algebraMap_eq_smul_one]
+  simp +decide [antipodeFreeAlg3_ι, antipodeOnGen3]
+  have h_comm : uq3K1inv k * uq3K2 k = uq3K2 k * uq3K1inv k := (uq3_K2_K1inv_comm k).symm
+  have hF2_K1inv := uq3_F2_mul_K1inv k
+  simp_all +decide [mul_assoc, mul_left_comm, mul_comm]
+  simp +decide [← mul_assoc, ← MulOpposite.op_mul, ← MulOpposite.op_neg, ← MulOpposite.op_smul]
+  have h_comm2 : uq3K2 k * uq3F2 k * uq3K1inv k =
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K1inv k * (uq3K2 k * uq3F2 k) := by
+    simp +decide [mul_assoc, hF2_K1inv]
+    simp +decide [← mul_assoc, ← h_comm]
+    simp +decide [mul_assoc, mul_left_comm, Algebra.commutes]
+    simp +decide [← mul_assoc, ← h_comm]
+  convert congr_arg Neg.neg h_comm2 using 1 <;> simp +decide [mul_assoc, mul_comm, mul_left_comm]
+  · grind
+  · simp +decide [Algebra.smul_def]
+    grind
 
 private theorem antipodeFreeAlg3_K2F1 :
     antipodeFreeAlg3 k (gen3 k K2 * gen3 k F1) =
     antipodeFreeAlg3 k (scal3' k (T 1) * gen3 k F1 * gen3 k K2) := by
-  sorry
+  simp +decide [mul_assoc, Algebra.algebraMap_eq_smul_one]
+  simp +decide [antipodeFreeAlg3_ι, antipodeOnGen3]
+  have h_comm : uq3K2inv k * uq3K1 k = uq3K1 k * uq3K2inv k := (uq3_K1_K2inv_comm k).symm
+  have hF1_K2inv := uq3_F1_mul_K2inv k
+  simp_all +decide [mul_assoc, mul_left_comm, mul_comm]
+  simp +decide [← mul_assoc, ← MulOpposite.op_mul, ← MulOpposite.op_neg, ← MulOpposite.op_smul]
+  have h_comm2 : uq3K1 k * uq3F1 k * uq3K2inv k =
+      (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 1) * uq3K2inv k * (uq3K1 k * uq3F1 k) := by
+    simp +decide [mul_assoc, hF1_K2inv]
+    simp +decide [← mul_assoc, ← h_comm]
+    simp +decide [mul_assoc, mul_left_comm, Algebra.commutes]
+    simp +decide [← mul_assoc, ← h_comm]
+  convert congr_arg Neg.neg h_comm2 using 1 <;> simp +decide [mul_assoc, mul_comm, mul_left_comm]
+  · grind
+  · simp +decide [Algebra.smul_def]
+    grind
 
 private theorem antipodeFreeAlg3_K2F2 :
     antipodeFreeAlg3 k (gen3 k K2 * gen3 k F2) =
