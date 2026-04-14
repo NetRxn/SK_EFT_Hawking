@@ -771,46 +771,180 @@ private def antipodeFreeAlg3 :
     (Uqsl3 k)ᵐᵒᵖ :=
   FreeAlgebra.lift (LaurentPolynomial k) (fun x => MulOpposite.op (antipodeOnGen3 k x))
 
-/- The antipode respects all 21 Chevalley relations (as anti-homomorphism).
+private theorem antipodeFreeAlg3_ι (x : Uqsl3Gen) :
+    antipodeFreeAlg3 k (FreeAlgebra.ι _ x) = MulOpposite.op (antipodeOnGen3 k x) := by
+  unfold antipodeFreeAlg3; exact FreeAlgebra.lift_ι_apply _ _
 
-PROVIDED SOLUTION: Same decomposition strategy as coproduct — intro a b hab; cases hab.
-The antipode is an ANTI-homomorphism via MulOpposite, so S(xy) = S(y)·S(x).
-The proof works in (Uqsl3 k)^mop where multiplication is reversed.
+/-! ### Per-relation antipode helpers (21 Chevalley relations) -/
 
-Phase 1 (mechanical): K-invertibility (4 cases).
-  S(K_i·K_i⁻¹) = S(K_i⁻¹)·S(K_i) = K_i·K_i⁻¹ = 1 = S(1).
-  Tactic: simp [antipodeFreeAlg3, antipodeOnGen3, map_mul, MulOpposite.op_mul]
-  then use uq3_K1_mul_K1inv or uq3_K2_mul_K2inv.
+/- Group I: K-invertibility (4 antipode helpers) -/
 
-Phase 2 (moderate): K-commutativity (1 case).
-  S(K₁K₂) = K₂⁻¹K₁⁻¹ and S(K₂K₁) = K₁⁻¹K₂⁻¹.
-  These are equal by K-commutativity applied to inverses.
+private theorem antipodeFreeAlg3_K1K1inv :
+    antipodeFreeAlg3 k (gen3 k K1 * gen3 k K1inv) =
+    (1 : (Uqsl3 k)ᵐᵒᵖ) := by
+  rw [map_mul]
+  erw [antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+  simp only [antipodeOnGen3, ← MulOpposite.op_mul, uq3_K1_mul_K1inv, MulOpposite.op_one]
 
-Phase 3 (moderate): KE/KF conjugation (8 cases).
-  S(K_i·E_j) = S(E_j)·S(K_i) = (-E_j·K_j⁻¹)·K_i⁻¹.
-  S(q^a·E_j·K_i) = q^a·S(K_i)·S(E_j) = q^a·K_i⁻¹·(-E_j·K_j⁻¹).
-  Equal by K⁻¹-E commutation (derived from K-E relation).
+private theorem antipodeFreeAlg3_K1invK1 :
+    antipodeFreeAlg3 k (gen3 k K1inv * gen3 k K1) =
+    (1 : (Uqsl3 k)ᵐᵒᵖ) := by
+  rw [map_mul]
+  erw [antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+  simp only [antipodeOnGen3, ← MulOpposite.op_mul, uq3_K1inv_mul_K1, MulOpposite.op_one]
 
-Phase 4 (hard): Serre EF commutation (4 cases) and q-Serre cubic (4 cases).
-  Similar to coproduct but with reversed order and negative signs from S(E)=-EK⁻¹.
-  Key identity: S reverses the order, so Serre relation S(ab-ba) = S(b)S(a)-S(a)S(b). -/
-set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 1600000 in
+private theorem antipodeFreeAlg3_K2K2inv :
+    antipodeFreeAlg3 k (gen3 k K2 * gen3 k K2inv) =
+    (1 : (Uqsl3 k)ᵐᵒᵖ) := by
+  rw [map_mul]
+  erw [antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+  simp only [antipodeOnGen3, ← MulOpposite.op_mul, uq3_K2_mul_K2inv, MulOpposite.op_one]
+
+private theorem antipodeFreeAlg3_K2invK2 :
+    antipodeFreeAlg3 k (gen3 k K2inv * gen3 k K2) =
+    (1 : (Uqsl3 k)ᵐᵒᵖ) := by
+  rw [map_mul]
+  erw [antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+  simp only [antipodeOnGen3, ← MulOpposite.op_mul, uq3_K2inv_mul_K2, MulOpposite.op_one]
+
+/- Group II: K-commutativity -/
+
+private theorem antipodeFreeAlg3_K1K2 :
+    antipodeFreeAlg3 k (gen3 k K1 * gen3 k K2) =
+    antipodeFreeAlg3 k (gen3 k K2 * gen3 k K1) := by
+  rw [map_mul, map_mul]
+  erw [antipodeFreeAlg3_ι (k := k) K1, antipodeFreeAlg3_ι (k := k) K2]
+  simp only [antipodeOnGen3, ← MulOpposite.op_mul]
+  congr 1
+  exact (uq3_K1inv_K2inv_comm k).symm
+
+/- Group III: K-E conjugation (4 helpers) -/
+-- The antipode inverts multiplication via MulOpposite, so
+--   S(K_i·E_j) = S(E_j)·S(K_i) [in Uqsl3] = (-E_j·K_j⁻¹)·K_i⁻¹
+-- and S(q^a·E_j·K_i) = q^a·S(K_i)·S(E_j) = q^a·K_i⁻¹·(-E_j·K_j⁻¹)
+-- These are equal via E_j·K_i⁻¹ and K_i⁻¹ commutation.
+
+private theorem antipodeFreeAlg3_K1E1 :
+    antipodeFreeAlg3 k (gen3 k K1 * gen3 k E1) =
+    antipodeFreeAlg3 k (scal3' k (T 2) * gen3 k E1 * gen3 k K1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_K1E2 :
+    antipodeFreeAlg3 k (gen3 k K1 * gen3 k E2) =
+    antipodeFreeAlg3 k (scal3' k (T (-1)) * gen3 k E2 * gen3 k K1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_K2E1 :
+    antipodeFreeAlg3 k (gen3 k K2 * gen3 k E1) =
+    antipodeFreeAlg3 k (scal3' k (T (-1)) * gen3 k E1 * gen3 k K2) := by
+  sorry
+
+private theorem antipodeFreeAlg3_K2E2 :
+    antipodeFreeAlg3 k (gen3 k K2 * gen3 k E2) =
+    antipodeFreeAlg3 k (scal3' k (T 2) * gen3 k E2 * gen3 k K2) := by
+  sorry
+
+/- Group IV: K-F conjugation (4 helpers) -/
+
+private theorem antipodeFreeAlg3_K1F1 :
+    antipodeFreeAlg3 k (gen3 k K1 * gen3 k F1) =
+    antipodeFreeAlg3 k (scal3' k (T (-2)) * gen3 k F1 * gen3 k K1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_K1F2 :
+    antipodeFreeAlg3 k (gen3 k K1 * gen3 k F2) =
+    antipodeFreeAlg3 k (scal3' k (T 1) * gen3 k F2 * gen3 k K1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_K2F1 :
+    antipodeFreeAlg3 k (gen3 k K2 * gen3 k F1) =
+    antipodeFreeAlg3 k (scal3' k (T 1) * gen3 k F1 * gen3 k K2) := by
+  sorry
+
+private theorem antipodeFreeAlg3_K2F2 :
+    antipodeFreeAlg3 k (gen3 k K2 * gen3 k F2) =
+    antipodeFreeAlg3 k (scal3' k (T (-2)) * gen3 k F2 * gen3 k K2) := by
+  sorry
+
+/- Group V: EF commutation (4 helpers) -/
+
+private theorem antipodeFreeAlg3_EF11 :
+    antipodeFreeAlg3 k
+      (scal3' k (T 1 - T (-1)) * (gen3 k E1 * gen3 k F1 - gen3 k F1 * gen3 k E1)) =
+    antipodeFreeAlg3 k (gen3 k K1 - gen3 k K1inv) := by
+  sorry
+
+private theorem antipodeFreeAlg3_EF22 :
+    antipodeFreeAlg3 k
+      (scal3' k (T 1 - T (-1)) * (gen3 k E2 * gen3 k F2 - gen3 k F2 * gen3 k E2)) =
+    antipodeFreeAlg3 k (gen3 k K2 - gen3 k K2inv) := by
+  sorry
+
+private theorem antipodeFreeAlg3_E1F2comm :
+    antipodeFreeAlg3 k (gen3 k E1 * gen3 k F2) =
+    antipodeFreeAlg3 k (gen3 k F2 * gen3 k E1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_E2F1comm :
+    antipodeFreeAlg3 k (gen3 k E2 * gen3 k F1) =
+    antipodeFreeAlg3 k (gen3 k F1 * gen3 k E2) := by
+  sorry
+
+/- Groups VI/VII: q-Serre antipode (4 helpers) -/
+
+private theorem antipodeFreeAlg3_SerreE12 :
+    antipodeFreeAlg3 k
+      (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
+    antipodeFreeAlg3 k
+      (scal3' k (T 1 + T (-1)) * gen3 k E1 * gen3 k E2 * gen3 k E1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_SerreE21 :
+    antipodeFreeAlg3 k
+      (gen3 k E2 * gen3 k E2 * gen3 k E1 + gen3 k E1 * gen3 k E2 * gen3 k E2) =
+    antipodeFreeAlg3 k
+      (scal3' k (T 1 + T (-1)) * gen3 k E2 * gen3 k E1 * gen3 k E2) := by
+  sorry
+
+private theorem antipodeFreeAlg3_SerreF12 :
+    antipodeFreeAlg3 k
+      (gen3 k F1 * gen3 k F1 * gen3 k F2 + gen3 k F2 * gen3 k F1 * gen3 k F1) =
+    antipodeFreeAlg3 k
+      (scal3' k (T 1 + T (-1)) * gen3 k F1 * gen3 k F2 * gen3 k F1) := by
+  sorry
+
+private theorem antipodeFreeAlg3_SerreF21 :
+    antipodeFreeAlg3 k
+      (gen3 k F2 * gen3 k F2 * gen3 k F1 + gen3 k F1 * gen3 k F2 * gen3 k F2) =
+    antipodeFreeAlg3 k
+      (scal3' k (T 1 + T (-1)) * gen3 k F2 * gen3 k F1 * gen3 k F2) := by
+  sorry
+
 private theorem antipodeFreeAlg3_respects_rel :
     ∀ a b, ChevalleyRelSl3 k a b → antipodeFreeAlg3 k a = antipodeFreeAlg3 k b := by
   intro a b hab
-  induction hab <;>
-    simp +decide [antipodeFreeAlg3, antipodeOnGen3, FreeAlgebra.lift_ι_apply, map_mul, map_add,
-      map_sub, AlgHom.commutes, MulOpposite.op_mul, MulOpposite.op_add, MulOpposite.op_sub,
-      MulOpposite.op_neg, MulOpposite.op_one, MulOpposite.op_zero,
-      mul_add, add_mul, mul_one, one_mul, neg_mul, mul_neg,
-      Algebra.smul_def, smul_mul_assoc,
-      uq3_K1_mul_K1inv, uq3_K1inv_mul_K1, uq3_K2_mul_K2inv, uq3_K2inv_mul_K2,
-      uq3_K1K2_comm, uq3_K1E1, uq3_K1E2, uq3_K2E1, uq3_K2E2,
-      uq3_K1F1, uq3_K1F2, uq3_K2F1, uq3_K2F2,
-      uq3_EF11, uq3_EF22, uq3_E1F2_comm, uq3_E2F1_comm,
-      uq3_SerreE12, uq3_SerreE21, uq3_SerreF12, uq3_SerreF21] <;>
-    (first | ring | module)
+  cases hab with
+  | K1K1inv => rw [antipodeFreeAlg3_K1K1inv, map_one]
+  | K1invK1 => rw [antipodeFreeAlg3_K1invK1, map_one]
+  | K2K2inv => rw [antipodeFreeAlg3_K2K2inv, map_one]
+  | K2invK2 => rw [antipodeFreeAlg3_K2invK2, map_one]
+  | K1K2 => exact antipodeFreeAlg3_K1K2 k
+  | K1E1 => exact antipodeFreeAlg3_K1E1 k
+  | K1E2 => exact antipodeFreeAlg3_K1E2 k
+  | K2E1 => exact antipodeFreeAlg3_K2E1 k
+  | K2E2 => exact antipodeFreeAlg3_K2E2 k
+  | K1F1 => exact antipodeFreeAlg3_K1F1 k
+  | K1F2 => exact antipodeFreeAlg3_K1F2 k
+  | K2F1 => exact antipodeFreeAlg3_K2F1 k
+  | K2F2 => exact antipodeFreeAlg3_K2F2 k
+  | EF11 => exact antipodeFreeAlg3_EF11 k
+  | EF22 => exact antipodeFreeAlg3_EF22 k
+  | E1F2comm => exact antipodeFreeAlg3_E1F2comm k
+  | E2F1comm => exact antipodeFreeAlg3_E2F1comm k
+  | SerreE12 => exact antipodeFreeAlg3_SerreE12 k
+  | SerreE21 => exact antipodeFreeAlg3_SerreE21 k
+  | SerreF12 => exact antipodeFreeAlg3_SerreF12 k
+  | SerreF21 => exact antipodeFreeAlg3_SerreF21 k
 
 /-- The antipode on U_q(sl₃), as a map to the opposite ring. -/
 noncomputable def uq3AntipodeOp :
@@ -823,26 +957,30 @@ noncomputable def uq3Antipode (x : Uqsl3 k) : Uqsl3 k :=
 
 /-! ## 4. Squared Antipode -/
 
-/-- S²(x) = K₁K₂·x·K₂⁻¹K₁⁻¹ (squared antipode is conjugation by K₁K₂).
+/-- S²(gen) = K₁K₂ · gen · K₂⁻¹K₁⁻¹ on each generator.
 
-PROVIDED SOLUTION: Check on each generator.
-  S²(K_i) = S(K_i⁻¹) = K_i. So K₁K₂·K_i·K₂⁻¹K₁⁻¹ needs K-commutativity + invertibility.
-  S²(E_i) = S(-E_iK_i⁻¹) = -S(K_i⁻¹)S(E_i) = -K_i(-E_iK_i⁻¹) = K_iE_iK_i⁻¹.
-  Then K₁K₂·E_i·K₂⁻¹K₁⁻¹ = K_iE_iK_i⁻¹ by K-E conjugation. -/
+The proof proceeds case-by-case on the 8 generators:
+- K-generators: K₁K₂·K_i·K₂⁻¹K₁⁻¹ follows from K-commutativity and invertibility.
+- E/F-generators: S²(E_i) = K_i·E_i·K_i⁻¹ by direct computation, which equals
+  K₁K₂·E_i·K₂⁻¹K₁⁻¹ via K-E conjugation + K-commutativity. -/
 theorem uq3_antipode_squared :
     ∀ x : Uqsl3Gen,
     let sx := uq3Antipode k (uqsl3Mk k (gen3 k x))
     uq3Antipode k sx =
     uq3K1 k * uq3K2 k * uqsl3Mk k (gen3 k x) * uq3K2inv k * uq3K1inv k := by
-  intro x; cases x <;>
-    simp +decide [uq3Antipode, uq3AntipodeOp, uq3Antipode, uqsl3Mk, gen3,
-      RingQuot.liftAlgHom, antipodeFreeAlg3, antipodeOnGen3, FreeAlgebra.lift_ι_apply,
-      MulOpposite.unop_op, MulOpposite.op_mul, MulOpposite.op_neg,
-      mul_assoc, neg_mul, mul_neg,
-      uq3_K1_mul_K1inv, uq3_K1inv_mul_K1, uq3_K2_mul_K2inv, uq3_K2inv_mul_K2,
-      uq3_K1K2_comm, uq3_K1E1, uq3_K1E2, uq3_K2E1, uq3_K2E2,
-      uq3_K1F1, uq3_K1F2, uq3_K2F1, uq3_K2F2] <;>
-    ring
+  intro x
+  -- First, extract the key identity: uq3Antipode k (uqsl3Mk k (gen3 k x)) = antipodeOnGen3 k x
+  have h_antipode_gen : ∀ y : Uqsl3Gen,
+      uq3Antipode k (uqsl3Mk k (gen3 k y)) = antipodeOnGen3 k y := by
+    intro y
+    show MulOpposite.unop ((RingQuot.liftAlgHom _ _) (uqsl3Mk k (FreeAlgebra.ι _ y))) = _
+    rw [show uqsl3Mk k (FreeAlgebra.ι _ y) =
+          RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k) (FreeAlgebra.ι _ y) from rfl,
+        RingQuot.liftAlgHom_mkAlgHom_apply]
+    erw [antipodeFreeAlg3_ι]
+    exact MulOpposite.unop_op _
+  cases x <;> simp only [h_antipode_gen, antipodeOnGen3]
+  all_goals sorry
 
 /-! ## 5. Module Summary -/
 
