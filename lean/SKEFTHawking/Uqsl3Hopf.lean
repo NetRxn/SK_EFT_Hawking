@@ -827,7 +827,24 @@ private theorem antipodeFreeAlg3_K1K2 :
 private theorem antipodeFreeAlg3_K1E1 :
     antipodeFreeAlg3 k (gen3 k K1 * gen3 k E1) =
     antipodeFreeAlg3 k (scal3' k (T 2) * gen3 k E1 * gen3 k K1) := by
-  sorry
+  rw [show antipodeFreeAlg3 k (gen3 k K1 * gen3 k E1) =
+        MulOpposite.op (uq3K1inv k) * MulOpposite.op (-(uq3E1 k * uq3K1inv k)) by
+      erw [map_mul, antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]; rfl]
+  rw [show antipodeFreeAlg3 k (scal3' k (T 2) * gen3 k E1 * gen3 k K1) =
+        MulOpposite.op (-((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+          uq3E1 k * uq3K1inv k)) * MulOpposite.op (uq3K1inv k) from ?_]
+  · simp +decide [← mul_assoc, ← MulOpposite.op_mul, uq3_E1_mul_K1inv]
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3K1inv k * uq3E1 k =
+        uq3K1inv k * ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E1 k) by
+      simp +decide [← mul_assoc, ← Algebra.smul_def]]
+    simp +decide [mul_assoc, mul_comm, mul_left_comm]
+    grind +splitImp
+  · simp +decide [scal3', map_mul, AlgHom.commutes]
+    erw [antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+    simp +decide [antipodeOnGen3, mul_assoc]
+    simp +decide [mul_assoc, mul_left_comm, mul_comm, Algebra.algebraMap_eq_smul_one]
+    simp +decide [mul_assoc, mul_left_comm, mul_comm, Algebra.smul_def]
+    grind +splitImp
 
 private theorem antipodeFreeAlg3_K1E2 :
     antipodeFreeAlg3 k (gen3 k K1 * gen3 k E2) =
@@ -842,7 +859,24 @@ private theorem antipodeFreeAlg3_K2E1 :
 private theorem antipodeFreeAlg3_K2E2 :
     antipodeFreeAlg3 k (gen3 k K2 * gen3 k E2) =
     antipodeFreeAlg3 k (scal3' k (T 2) * gen3 k E2 * gen3 k K2) := by
-  sorry
+  rw [show antipodeFreeAlg3 k (gen3 k K2 * gen3 k E2) =
+        MulOpposite.op (uq3K2inv k) * MulOpposite.op (-(uq3E2 k * uq3K2inv k)) by
+      erw [map_mul, antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]; rfl]
+  rw [show antipodeFreeAlg3 k (scal3' k (T 2) * gen3 k E2 * gen3 k K2) =
+        MulOpposite.op (-((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+          uq3E2 k * uq3K2inv k)) * MulOpposite.op (uq3K2inv k) from ?_]
+  · simp +decide [← mul_assoc, ← MulOpposite.op_mul, uq3_E2_mul_K2inv]
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3K2inv k * uq3E2 k =
+        uq3K2inv k * ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E2 k) by
+      simp +decide [← mul_assoc, ← Algebra.smul_def]]
+    simp +decide [mul_assoc, mul_comm, mul_left_comm]
+    grind +splitImp
+  · simp +decide [scal3', map_mul, AlgHom.commutes]
+    erw [antipodeFreeAlg3_ι, antipodeFreeAlg3_ι]
+    simp +decide [antipodeOnGen3, mul_assoc]
+    simp +decide [mul_assoc, mul_left_comm, mul_comm, Algebra.algebraMap_eq_smul_one]
+    simp +decide [mul_assoc, mul_left_comm, mul_comm, Algebra.smul_def]
+    grind +splitImp
 
 /- Group IV: K-F conjugation (4 helpers) -/
 
