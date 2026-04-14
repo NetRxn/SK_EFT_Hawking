@@ -199,13 +199,13 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
 
 **Deliverables:**
 - [x] q-commutation infrastructure (4 lemmas)
-- [ ] CAS-generated tactic script for E10 coproduct (deep research in progress)
-- [ ] All 8 Uqsl2AffineHopf sorry closed (4 comul + 4 antipode q-Serre)
-- [ ] All 3 Uqsl3Hopf sorry closed (same q-Serre pattern)
-- [ ] Sorry count: 11 → 0
+- [x] CAS-generated tactic script for E10 coproduct
+- [x] All 8 Uqsl2AffineHopf sorry closed (4 comul + 4 antipode q-Serre) — **DONE April 2026**
+- [ ] All 3 Uqsl3Hopf sorry closed — **1 remaining (F01), actively in progress**
+- [ ] Sorry count: 11 → 0 — **currently at 1** (Uqsl3Hopf F01). 3 files have build errors from Lean 4.29 upgrade.
 
-**Estimated LOE:** 3-7 days (depends on deep research turnaround for CAS approach)
-**Risk:** Medium — the mathematical structure is fully understood; this is a proof engineering problem
+**Estimated LOE:** Days (F01 is last remaining q-Serre proof, same pattern as completed E10)
+**Risk:** Low — the mathematical structure is identical to the solved cases
 
 ### Wave 9 — CenterFunctor Hypothesis Elimination (OPTIONAL)
 
@@ -249,7 +249,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 5 | Muger general theorem | 1 week | Deep research | **COMPLETE** — ModularityTheorem.lean, abstract proof |
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
-| Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **IN PROGRESS** — Phase 4 FULLY DIAGNOSED (3 approaches ruled out). 4 q-commutation lemmas proved. Deep research filed for CAS tactic generation. 8 deep research results read. |
+| Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **NEAR COMPLETE** — Uqsl2AffineHopf: 0 sorry (all 8 closed). Uqsl3Hopf: 1 sorry (F01 remaining, actively in progress). 3 files have build errors from Lean 4.29 upgrade. |
 | Wave 9 | CenterFunctor hypotheses | 1 week | None | Optional — 2 hypotheses, 0 sorry |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.

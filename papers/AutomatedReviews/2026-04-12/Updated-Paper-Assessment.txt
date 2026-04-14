@@ -1,0 +1,51 @@
+Paired with Master systematic update - conversation that follows
+
+The master checklist is above. Here's the architecture of it:
+
+35 actionable items organized so you can work through them systematically:
+
+Part 1–3 — citation and bibliographic fixes (mechanical, do first; 3 are catastrophic 🔴)
+
+Part 4–5 — Paper 12 numerical corrections and missing citations (all connected, do together in one editing session)
+
+Part 6 — Physics interpretation fixes across Papers 1, 2, 3, 6, 9, 10
+
+Part 7 — The "16 convergence" narrative rewrites across README and Papers 9/10 (7 items, some are just one sentence)
+
+Part 8 — Lean proof documentation fixes (no math changes needed, just comments and paper text)
+
+Part 9 — Submission strategy items (Paper 7/8 cross-check, Paper 12 reframing, "first in proof assistant" verification)
+
+The Quick Reference table at the bottom maps each file to its open item numbers — useful if you're working file-by-file rather than issue-by-issue. The Verified Clean section gives you the confirmed-good citations you can use as positive anchors when revising.
+
+The three 🔴 blockers (wrong arXiv IDs in Papers 3, 7, 12) should take under an hour to fix and eliminate the most visible submission risk immediately.
+
+
+Good — now I have a fully current picture. The answer is: the checklist was not stale for the major issues, but several items have partial fixes and a few discrepancies are now clearer. Here's the live delta:
+
+What Has Been Fixed Since the Previous Review
+README — TPF author name is correct ✅
+The README now correctly says "Thorngren, Preskill, and Fidkowski." The fix was applied to the README but not yet to Paper 7's bibitem or body text, which still reads "D. Tong, J. Preskill, and L. Fidkowski" with arXiv:2411.18738.
+
+What Is Still Open — With Live Confirmation
+Still broken (confirmed fresh):
+
+Item	Status
+Paper 7 bibitem [TPF2024] = arXiv:2411.18738	❌ Still wrong
+Paper 7 body text says "Tong-Preskill-Fidkowski"	❌ Still wrong
+Paper 12 [Burkhard2025] = arXiv:2511.13189	❌ Still wrong
+Paper 3 [NastaseSonnenschein2025] = arXiv:2501.13263	❌ Still wrong
+Paper 3 Adler2024 page 87 (should be 80)	❌ Still wrong
+Papers 5/6 Volovik2024 title = "Gravity through the prism..."	❌ Still wrong
+Paper 9 "forces hidden sectors" claim	❌ Still present
+Papers 1/2 Son:2002 described as "Galilean-invariant / nonrelativistic"	❌ Still present
+Paper 6 abstract claims "Monte Carlo evidence"	❌ Still present
+Paper 15 says "94 modules, 33 gaps"	❌ Still stale — README now says 131 modules, 17 sorry
+README "all the same 16 / quaternionic structure / Ramanujan / E8 lattice"	❌ All still present
+One new nuance on Paper 12 c_s:
+Paper 12 has a table showing Falque et al. (2025) = 0.40 μm/ps and explicitly acknowledges it — then still adopts c_s = 0.5 μm/ps as its working value, calling it "representative." The justification is that 0.5 is an intermediate between the Falque-measured 0.40 and "naive estimates of ~1.0." This is a deliberate choice, but it will draw a referee question because the paper's own table contradicts its adopted value. The fix needed is to either adopt 0.40 (matching the primary source) or explicitly justify why a higher value is used despite the measured data in the table.
+
+One item now confirmed clean that was uncertain:
+Paper 10 does use "framing anomaly" language correctly in the body — the Ramanujan/modular invariance framing issue is in the README and section heading only, not pervasive through Paper 10's technical sections.
+
+So the master checklist remains accurate — none of the flagged items have been resolved yet in the actual .tex files, with the sole exception of the README's TPF author name.

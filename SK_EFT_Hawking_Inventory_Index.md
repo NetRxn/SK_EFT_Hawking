@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 9, 2026 (Phase 5s: **11 sorry** (was 17 — CenterFunctor 2→hypotheses, Serre0/Serre1 antipode closed, E10 comul corrected). q-Serre coproduct Phases 1-3 SOLVED in code (expansion + K-E normalization). Phase 4 (coefficient cancellation) is sole remaining blocker. 131 Lean modules. See deep research index below.)
+**Last synced:** April 13, 2026 (Phase 5s: **1 sorry** (was 11). Uqsl2AffineHopf: 0 sorry (all 8 q-Serre closed). Uqsl3Hopf: 1 sorry (F01 remaining, actively in progress). Lean toolchain upgraded to 4.29.0 — 3 files have build errors from upgrade, being resolved in parallel session. 132 Lean modules.)
 
 ---
 
@@ -13,9 +13,9 @@
 | Lean theorems | **2237+** (2153+ substantive + ~84 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
 | Placeholders (True := trivial) | **~84** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322+** (319+ machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **11** | 8 Uqsl2AffineHopf (4 comul + 4 antipode q-Serre) + 3 Uqsl3Hopf. CenterFunctor: 0 sorry (2 hypotheses). All blocked by q-Serre Phase 4. |
+| **Sorry gaps** | **1** | Uqsl2AffineHopf: **0 sorry** (all 8 closed). Uqsl3Hopf: **1 sorry** (F01 remaining, in progress). CenterFunctor: 0 sorry (2 hypotheses). Lean 4.29 upgrade: 3 files with build errors being resolved. |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **131** | +36 since last full sync (Phases 5k-5s). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (5q-5r), FKGappedInterface, ModularityTheorem (5s). |
+| Lean modules | **132** | +37 since last full sync (Phases 5k-5s). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (5q-5r), FKGappedInterface, ModularityTheorem (5s). Lean toolchain: 4.29.0. |
 | Python source modules | **53** | Including stencil_dirac.py |
 | Test files | **45** | Including test_a1_ext.py (Phase 5q, 29 tests) |
 | Test count | 1660+ | `pytest tests/ -q` |
@@ -182,7 +182,7 @@
 | Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**ALL PROVED**, Aristotle `7d8efa8f`) |
 | Uqsl2Hopf | 66 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl₂), coproduct/counit/antipode via liftAlgHom, S²=Ad(K), Serre coproduct (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4` + `79e07d55`) |
 | Uqsl3 | 21 | **Phase 5i**: **FIRST rank-2 quantum group in any proof assistant**: U_q(sl₃) via FreeAlgebra+RingQuot, 8 generators, A₂ Cartan matrix [[2,-1],[-1,2]], 21 Chevalley relations (**ALL PROVED, zero sorry**, native proofs, 6.4s build) |
-| Uqsl3Hopf | 2 | **Phase 5i**: Hopf algebra on U_q(sl₃): coproduct Δ, counit ε, antipode S defined via liftAlgHom. S²=Ad(K₁K₂). (**3 sorry**: relation-respect proofs — Aristotle Batch 3) |
+| Uqsl3Hopf | 2 | **Phase 5i**: Hopf algebra on U_q(sl₃): coproduct Δ, counit ε, antipode S defined via liftAlgHom. S²=Ad(K₁K₂). **1 sorry** (F01 remaining, actively in progress). F10 CLOSED. |
 | SU2kFusion | 29 | **SU(2)_k fusion at k=1,2,3**: universal truncated CG rule, Ising (sigma²=1+psi), Fibonacci (tau²=1+tau), charge conjugation, assoc+comm, Fibonacci subcategory closed (**ALL PROVED by native_decide, zero sorry**) |
 | Uqsl2Affine | 9 | U_q(sl_2 hat) affine quantum group: 6 generators, Chevalley + cross-relations, K invertibility, coideal property statement (**ALL PROVED, zero sorry**) |
 | SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
@@ -193,7 +193,7 @@
 | QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
 | FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
-| Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. Serre0/Serre1 antipode CLOSED. **8 sorry** (4 comul + 4 antipode q-Serre). Phases 1-3 working in E10 proof. Phase 4 (Laurent poly coefficient cancellation) blocks all 8. See deep research index. |
+| Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. **ALL PROVED, zero sorry** — all 8 q-Serre proofs closed (4 comul + 4 antipode). |
 | VerifiedStatistics | 6 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | KerrSchild | 7 | Kerr-Schild metrics: null vector, radial_null PROVED, Sherman-Morrison inverse, Schwarzschild, DOF counting (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**ALL PROVED, zero sorry** — native_decide over Q(√2)) |
