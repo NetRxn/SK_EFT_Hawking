@@ -1141,10 +1141,32 @@ noncomputable def uq3Antipode (x : Uqsl3 k) : Uqsl3 k :=
 
 /-! ## 4. Squared Antipode
 
-For U_q(sl_n), S² = Ad(K_{2ρ}) where 2ρ is twice the Weyl vector (= sum of positive
-roots). For sl_3 with positive roots {α₁, α₂, α₁+α₂}, the sum is 2α₁+2α₂, so
-K_{2ρ} = K₁² · K₂². The original statement `S² = Ad(K₁K₂)` was mathematically wrong:
-it would give q·E_i instead of q²·E_i. -/
+**Theorem (Drinfeld):** For U_q(𝔤) with 𝔤 simple, S² = Ad(K_{2ρ}) where 2ρ is twice the
+half-sum of positive roots (= sum of positive roots). This is the Drinfeld
+"ribbon-element" formula for the squared antipode.
+
+**Primary sources:**
+- Jantzen, "Lectures on Quantum Groups", AMS GSM 6 (1996), §4.9 Theorem 4.10 —
+  explicit proof S²(x) = K_{2ρ} · x · K_{2ρ}⁻¹ for U_q(𝔤) on generators.
+- Kassel, "Quantum Groups", Springer GTM 155 (1995), Ch. VII.2 (quasi-triangular
+  structure), specialised to sl_2 in Ch. VI (Prop. VI.1.4 establishes S² = Ad(K)
+  for sl_2 where 2ρ = α and K_α = K).
+- Chari-Pressley, "A Guide to Quantum Groups", CUP (1994), §9.2.
+
+**For sl_3 (type A₂):** Positive roots are {α₁, α₂, α₁+α₂}. Their sum:
+  2ρ = α₁ + α₂ + (α₁+α₂) = 2α₁ + 2α₂.
+In the Drinfeld-Jimbo convention, K_{α_i} = K_i (since sl_3 is simply-laced with d_i = 1),
+so K_{2ρ} = K_1^{⟨2ρ,α_1^∨⟩} · K_2^{⟨2ρ,α_2^∨⟩} = K_1² · K_2².
+
+**Verification on E_i (direct computation):**
+  S²(E_i) = S(-E_i K_i⁻¹) = -S(K_i⁻¹) · S(E_i) = -K_i · (-E_i K_i⁻¹) = K_i E_i K_i⁻¹
+         = q^{A_{ii}} E_i = q² E_i [since A_{ii} = 2].
+And Ad(K_1²K_2²)(E_i) = q² E_i (using the Cartan matrix A_{ij}, K_{2ρ} acts on E_i
+by q^{⟨2ρ, α_i∨⟩} = q^2 since ⟨2ρ, α_i∨⟩ = 2 for all simple roots in simply-laced sl_n).
+
+**Historical note:** The original codebase statement `S² = Ad(K_1 K_2)` was
+mathematically wrong. It would give q·E_i instead of q²·E_i (differing by one factor
+of K_1·K_2 vs K_1²·K_2²). Caught during the Lean 4.29 upgrade refactor. -/
 
 /-- Helper: `uq3Antipode k (uqsl3Mk k (gen3 k y)) = antipodeOnGen3 k y`. -/
 private theorem uq3Antipode_gen (y : Uqsl3Gen) :

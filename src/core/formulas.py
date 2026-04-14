@@ -4244,6 +4244,44 @@ def uqsl2_antipode_squared(x, K, Kinv):
     return K * x * Kinv
 
 
+def uqsl3_antipode_squared(x, K1, K1inv, K2, K2inv):
+    """Squared antipode S²(x) = K₁² K₂² · x · K₂⁻² K₁⁻² for U_q(sl₃).
+
+    This is the specialisation to sl₃ (type A₂) of the Drinfeld formula
+    S² = Ad(K_{2ρ}) where 2ρ is twice the half-sum of positive roots.
+
+    For sl₃, positive roots are {α₁, α₂, α₁+α₂}, so 2ρ = 2α₁ + 2α₂, giving
+    K_{2ρ} = K₁² · K₂² (simply-laced, d_i = 1).
+
+    Verification on generators:
+      S²(E_i) = K_i E_i K_i⁻¹ = q² E_i  (from K_i E_i = q² E_i K_i)
+      S²(F_i) = K_i F_i K_i⁻¹ = q⁻² F_i  (from K_i F_i = q⁻² F_i K_i)
+      S²(K_i) = K_i,  S²(K_i⁻¹) = K_i⁻¹
+    And Ad(K₁²K₂²) acts as multiplication by q^{⟨2ρ,α_i^∨⟩} = q^2 on E_i
+    (q^{-2} on F_i), reproducing S² on all eight generators.
+
+    **Historical correction:** Earlier codebase stated S² = Ad(K₁K₂), which is
+    mathematically wrong (would give q·E_i not q²·E_i). Fixed during the
+    Lean 4.29 upgrade refactor.
+
+    Lean: uq3_antipode_squared (Uqsl3Hopf.lean)
+    Aristotle: (pending — replaces older Ad(K₁K₂) claim)
+    Sources:
+        Jantzen, "Lectures on Quantum Groups" (AMS GSM 6, 1996), §4.9 Theorem 4.10
+        Kassel, "Quantum Groups" (Springer GTM 155, 1995), Ch. VI Prop. VI.1.4
+            (sl_2 case, specialises the general formula)
+        Chari-Pressley, "A Guide to Quantum Groups" (CUP, 1994), §9.2
+
+    Args:
+        x: element of U_q(sl₃)
+        K1, K1inv, K2, K2inv: Cartan generators and their inverses
+
+    Returns:
+        K₁ K₁ K₂ K₂ x K₂⁻¹ K₂⁻¹ K₁⁻¹ K₁⁻¹
+    """
+    return K1 * K1 * K2 * K2 * x * K2inv * K2inv * K1inv * K1inv
+
+
 # ═══════════════════════════════════════════════════════════════
 # Phase 5c Wave 3: SU(2)_k fusion categories
 # ═══════════════════════════════════════════════════════════════
