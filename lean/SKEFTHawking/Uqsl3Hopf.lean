@@ -2582,14 +2582,23 @@ private theorem antipodeFreeAlg3_SerreE12 :
         (uq3K1inv k * uq3K1inv k * uq3K2inv k))) hSE
   simp only [map_add, map_sub, map_zero, LinearMap.mulRight_apply,
              LinearMap.map_smul_of_tower] at h
-  -- BLOCKER: simp-based unification of h (E_chain·K_chain form) and goal (X-chain form)
-  -- fails because simp doesn't iterate forward E·K⁻¹ commutation to fixpoint in h.
-  -- Closing requires either:
-  --   (a) 3 atom-equality calc blocks `E_chain·K_chain = X-chain` (scalar cancels T(0)=1),
-  --       each ~30 lines of explicit rewrites with Algebra.commutes for scalar centrality;
-  --   (b) custom norm tactic using `uq3_E_mul_K_inv` + `Algebra.commutes` applied to
-  --       both h and goal until convergence at K_chain·E_chain canonical form.
-  -- See `Lit-Search/Phase-5s/5s-Closing antipode Serre stubs in U_q(sl_3).md` for analysis.
+  -- Phase 9: construct distributed h via `show` cast + noncomm_ring + smul_mul_assoc
+  have h2 : uq3E1 k * uq3E1 k * uq3E2 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) -
+      (T 1 + T (-1) : LaurentPolynomial k) •
+        (uq3E1 k * uq3E2 k * uq3E1 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k)) +
+      uq3E2 k * uq3E1 k * uq3E1 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) = 0 := by
+    letI : NonUnitalNonAssocRing (Uqsl3 k) := inferInstance
+    have h' := h
+    rw [show (uq3E1 k * uq3E1 k * uq3E2 k - (T 1 + T (-1) : LaurentPolynomial k) •
+            (uq3E1 k * uq3E2 k * uq3E1 k)) * (uq3K1inv k * uq3K1inv k * uq3K2inv k) =
+          uq3E1 k * uq3E1 k * uq3E2 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) -
+          (T 1 + T (-1) : LaurentPolynomial k) •
+            (uq3E1 k * uq3E2 k * uq3E1 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k)) from by
+        rw [sub_mul, smul_mul_assoc]] at h'
+    exact h'
+  -- h2 is now distributed: 3 E_chain·K_chain terms. Goal has 3 X-chain atoms.
+  -- Remaining work: prove each E_chain·K_chain = corresponding X-chain (scalar T(0) = 1).
+  -- See Lit-Search/Phase-5s/5s-Closing antipode Serre stubs in U_q(sl_3).md.
   sorry
 
 private theorem antipodeFreeAlg3_SerreE21 :
