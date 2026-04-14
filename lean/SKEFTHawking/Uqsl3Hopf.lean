@@ -1171,6 +1171,61 @@ private theorem uq3Antipode_neg (a : Uqsl3 k) :
   rw [map_neg]
   rfl
 
+/-- S²(E_i) = T(2)·E_i via K-E conjugation. Helper for S² proof. -/
+private theorem uq3_S2_on_E1_lhs :
+    uq3K1 k * uq3E1 k * uq3K1inv k =
+    (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E1 k := by
+  have h := uq3_K1E1 k
+  calc uq3K1 k * uq3E1 k * uq3K1inv k
+      = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E1 k * uq3K1 k *
+          uq3K1inv k := by rw [h]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E1 k *
+          (uq3K1 k * uq3K1inv k) := by noncomm_ring
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E1 k * 1 := by
+          rw [uq3_K1_mul_K1inv]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E1 k := mul_one _
+
+private theorem uq3_S2_on_E2_lhs :
+    uq3K2 k * uq3E2 k * uq3K2inv k =
+    (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E2 k := by
+  have h := uq3_K2E2 k
+  calc uq3K2 k * uq3E2 k * uq3K2inv k
+      = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E2 k * uq3K2 k *
+          uq3K2inv k := by rw [h]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E2 k *
+          (uq3K2 k * uq3K2inv k) := by noncomm_ring
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E2 k * 1 := by
+          rw [uq3_K2_mul_K2inv]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) * uq3E2 k := mul_one _
+
+/-- S²(F_1) = K₁·F₁·K₁⁻¹ = T(-2)·F₁. -/
+private theorem uq3_S2_on_F1_lhs :
+    uq3K1 k * uq3F1 k * uq3K1inv k =
+    (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k := by
+  have h := uq3_K1F1 k
+  calc uq3K1 k * uq3F1 k * uq3K1inv k
+      = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k * uq3K1 k *
+          uq3K1inv k := by rw [h]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k *
+          (uq3K1 k * uq3K1inv k) := by noncomm_ring
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k * 1 := by
+          rw [uq3_K1_mul_K1inv]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F1 k := mul_one _
+
+private theorem uq3_S2_on_F2_lhs :
+    uq3K2 k * uq3F2 k * uq3K2inv k =
+    (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k := by
+  have h := uq3_K2F2 k
+  calc uq3K2 k * uq3F2 k * uq3K2inv k
+      = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k * uq3K2 k *
+          uq3K2inv k := by rw [h]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k *
+          (uq3K2 k * uq3K2inv k) := by noncomm_ring
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k * 1 := by
+          rw [uq3_K2_mul_K2inv]
+    _ = (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-2)) * uq3F2 k := mul_one _
+
+
 /-- Key cancellation: `K₁²K₂² · K₂⁻²K₁⁻² = 1`. -/
 private theorem uq3_Kprod_cancel :
     uq3K1 k * uq3K1 k * uq3K2 k * uq3K2 k * (uq3K2inv k * uq3K2inv k * uq3K1inv k * uq3K1inv k) = 1 := by
