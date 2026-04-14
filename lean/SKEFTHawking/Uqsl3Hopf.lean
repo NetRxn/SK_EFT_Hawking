@@ -2497,6 +2497,25 @@ private theorem antipodeFreeAlg3_SerreE12 :
       (gen3 k E1 * gen3 k E1 * gen3 k E2 + gen3 k E2 * gen3 k E1 * gen3 k E1) =
     antipodeFreeAlg3 k
       (scal3' k (T 1 + T (-1)) * gen3 k E1 * gen3 k E2 * gen3 k E1) := by
+  -- TODO next session: port `Uqsl2AffineHopf.affAntipodeFreeAlg_SerreE01` (L4946-5078).
+  -- Template follows structure:
+  --   1. Expand S as AlgHom (simp [map_*, AlgHom.commutes, antipodeFreeAlg3_ι, antipodeOnGen3])
+  --   2. sub_eq_zero.mp; MulOpposite.unop_injective
+  --   3. simp_rw [uq3_E{i}_mul_K{i}inv] to push K⁻¹ left
+  --   4. Neg → (-1)•; smul_mul_assoc chain; (-1)^3 = -1
+  --   5. Algebra.smul_def conversions; T_add normalizations
+  --   6. 4 K⁻¹·E helpers (hK1invE1, hK2invE2, hK1invE2, hK2invE1) + positional _at variants
+  --   7. simp to push K⁻¹ rightward through E's
+  --   8. K⁻¹·K⁻¹ commute to canonical order
+  --   9. Apply sect3_hSerreE12_smul via `congr_arg φ` where
+  --      `φ := (LinearMap.mul _ _).flip (K1inv·K2inv·K1inv)`
+  --  10. Convert Algebra.commutes scalar centrality; `convert h_neg using 1; module`
+  -- ATTEMPT made session 4: ~110 lines of port but hit `simp` recursion loop at
+  -- step 6-7 (maxRecDepth). Backed off; clean baseline preserved.
+  -- The proof pattern IS known to work (sl_2 affine cubic works identically);
+  -- sl_3 quadratic should be simpler (3 terms vs 4). Investigation: likely simp
+  -- set ordering between `hK*invE*` and `smul_mul_assoc` — need to avoid
+  -- simp cycling. Use `rw` for precise control instead of simp.
   sorry
 
 private theorem antipodeFreeAlg3_SerreE21 :
