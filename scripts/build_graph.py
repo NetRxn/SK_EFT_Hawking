@@ -1054,15 +1054,123 @@ def extract_review_finding_nodes() -> list[dict]:
     return nodes
 
 
+def _classify_log_tail(log_tail: str) -> tuple[str, str]:
+    """Return (status, reason) from the last ~2KB of a run log.
+
+    Status set: success, crashed, out_of_budget, sign_problem, terminated,
+    unknown. Reason is a short human-readable tag.
+    """
+    t = log_tail.lower()
+    if 'brokenpipeerror' in t or 'traceback' in t:
+        return 'crashed', 'exception in log'
+    if 'sigterm' in t or 'signal 15' in t or 'terminated' in t:
+        return 'terminated', 'SIGTERM / cleanup'
+    if 'out_of_budget' in t or 'out of budget' in t:
+        return 'out_of_budget', 'budget exhausted'
+    if '<sign>' in t and '=0' in t:
+        return 'sign_problem', 'zero sign average'
+    if 'complete' in t or 'successfully' in t or 'finished' in t:
+        return 'success', 'log shows completion'
+    return 'unknown', 'no terminal marker'
+
+
 def extract_production_run_nodes() -> list[dict]:
     """ProductionRun — MC/RHMC/other production runs with status.
 
-    Wired in: Wave 2d. Sources: data/**/summary.json + data/**/*.log tails.
-    Status derived from exit code + last log line (success / crashed /
-    out_of_budget / sign_problem / zombie).
-    Emits: {id: 'run:{kind}:{timestamp}', type: 'ProductionRun', meta.status}.
+    Phase 5v Wave 2e. Scans data/**/summary.json and data/**/*.json files
+    that carry a run-like schema (timestamps, algorithm fields). For each,
+    emit a ProductionRun node with status derived from the paired .log
+    (when present) or from JSON content flags. This surfaces Paper 6's
+    Monte Carlo failure mode (zero-output runs that were claimed as
+    evidence in prose) as graph state the ReadinessGate system can check.
+
+    Status classifications: success, crashed, out_of_budget, sign_problem,
+    terminated, unknown.
     """
-    return []
+    data_dir = PROJECT_ROOT / "data"
+    if not data_dir.exists():
+        return []
+
+    nodes = []
+    seen_ids: set[str] = set()
+
+    for json_path in sorted(data_dir.rglob("*.json")):
+        # Skip obvious non-run JSON files (small config/schema files)
+        try:
+            stat = json_path.stat()
+        except OSError:
+            continue
+        if stat.st_size < 32:
+            continue
+        try:
+            import json as _json
+            with open(json_path) as f:
+                payload = _json.load(f)
+        except (OSError, _json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        # Heuristic: must have a timestamp-ish identifier or an
+        # algorithm-name field to count as a run record
+        is_run = any(
+            k in payload
+            for k in ('algorithm', 'timestamp', 'run_id', 'hmc_steps',
+                     'binder_crossing', 'n_traj', 'seed')
+        )
+        if not is_run:
+            continue
+
+        # Derive a run ID from path or payload
+        stem = json_path.stem
+        kind = 'rhmc' if 'rhmc' in stem.lower() else \
+               'vestigial_mc' if 'vestigial' in stem.lower() else \
+               'mc'
+        node_id = f'run:{kind}:{stem}'
+        if node_id in seen_ids:
+            continue
+        seen_ids.add(node_id)
+
+        # Read paired log for status
+        log_path = json_path.with_suffix('.log')
+        log_tail = ''
+        if log_path.exists():
+            try:
+                with open(log_path) as f:
+                    f.seek(max(0, log_path.stat().st_size - 2048))
+                    log_tail = f.read()
+            except OSError:
+                pass
+        status, reason = _classify_log_tail(log_tail) if log_tail else ('unknown', 'no paired .log')
+
+        # Sign average from payload if present
+        sign_avg = payload.get('sign_average')
+        if sign_avg is not None and abs(float(sign_avg)) < 1e-6:
+            status = 'sign_problem'
+            reason = f'<sign>={sign_avg}'
+
+        nodes.append({
+            'id': node_id,
+            'type': 'ProductionRun',
+            'label': stem[:60],
+            'name': stem,
+            'verification': 'verified' if status == 'success' else 'unverified',
+            'detail': f'{kind} run — status={status} ({reason})',
+            'meta': {
+                'kind': kind,
+                'status': status,
+                'reason': reason,
+                'data_path': str(json_path.relative_to(PROJECT_ROOT)),
+                'log_path': str(log_path.relative_to(PROJECT_ROOT)) if log_path.exists() else None,
+                'algorithm': payload.get('algorithm'),
+                'timestamp': payload.get('timestamp'),
+                'size_bytes': stat.st_size,
+            },
+        })
+
+    if nodes:
+        from collections import Counter as _C
+        st = _C(n['meta']['status'] for n in nodes)
+        logger.info("ProductionRun extraction: %d runs (status: %s)",
+                    len(nodes), dict(st))
+    return nodes
 
 
 # Body patterns that indicate placeholder content. `decide` and
