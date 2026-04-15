@@ -1,43 +1,74 @@
 /-
-# PolyQuotOver: Generic Tower Extension K[w]/(p(w))
+Copyright (c) 2026 John Roehm. All rights reserved.
+Released under Apache 2.0 license as described in the LEAN license.
+Authors: John Roehm, Claude (Anthropic)
+-/
+import Mathlib
+import SKEFTHawking.PolyQuotQ
 
-Generic construction of K[w]/(p(w)) over a base ring K, as coefficient
-tuples over the basis {1, w, ..., w^{m-1}}, where p is monic of degree m.
+-- TODO (Mathlib-upstream PR): narrow the `import Mathlib` to the minimal
+-- set. Approximate target:
+--   import Mathlib.Data.Fin.VecNotation
+--   import Mathlib.Data.Fintype.Fin
+--   import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+-- Exact narrowing deferred to Mathlib review cycle.
 
-This is the tower analog of `PolyQuotQ` (which is specialized to K = ℚ).
-Parametric in base ring K and tower degree m — supports any base with
-`DecidableEq`, `AddCommMonoid`, `One`, `Mul`.
+/-!
+# Generic tower extensions `K[w]/(p(w))`
 
-## Use case
+Generalizes `PolyQuotQ` (the `ℚ`-based construction) to arbitrary
+`DecidableEq` base rings. Elements of `K[w]/(p(w))` for a monic polynomial
+`p` of degree `m` are coefficient tuples `Fin m → K` over the basis
+`{1, w, ..., w^{m-1}}`. The reduction rule `w^m = Σᵢ reductionCoeffs(i) · wⁱ`
+is supplied to multiplication as a plain parameter (same design as
+`PolyQuotQ.mulReduce`).
 
-For QCyc5Ext = Q(ζ₅)[w]/(w² − φ), instantiate as `PolyQuotOver QCyc5 2`
-with reduction `![φ, 0]` encoding w² = φ where φ = -ζ²-ζ³ ∈ Q(ζ₅).
+Typical use: two-level towers `K[w]/(p(w))` where `K = PolyQuotQ n` is
+itself a computable number field. For example, `Q(ζ₅)[w]/(w² − φ)` is
+`PolyQuotOver (PolyQuotQ 4) 2` with reduction `![φ, 0]`.
 
-## Architecture
+## Main definitions
 
-Same pattern as `PolyQuotQ`:
-- `reducePowerOver r p k` returns coefficient of w^k in w^p after reduction,
-  recursive in p with well-founded decrease
-- `mulReduceOver m r x y` computes the product via double-sum + reducePower
+* `PolyQuotOver K m`: coefficient-tuple representation of `K[w]/(p)` at
+  degree `m`, with `DecidableEq`, `Zero`, `One`, `Neg`, `Add`, `Sub`
+  instances derived from the corresponding instances on `K`.
+* `PolyQuotOver.reducePowerOver`: recursive power reduction for general
+  `m` (requires `AddCommMonoid K`).
+* `PolyQuotOver.mulReduceOver`: generic multiplication via the recursive
+  power reduction and a double sum.
+* `PolyQuotOver.mulReduce2`: closed-form multiplication specialized to
+  `m = 2` (degree-2 towers). Requires only `Zero + Add + Mul` on `K`,
+  and eagerly precomputes the two output coefficients to avoid the
+  lazy-closure-reeval issue that `mulReduceOver` still exhibits.
 
-Requires `AddCommMonoid K` for `Finset.sum`. For degree-2 towers the bare-bones
-version `mulReduce2` (below) works without AddCommMonoid.
+## Implementation notes
 
-## Phase 5i Wave 4b.ext (2026-04-15)
+`deriving DecidableEq` does not propagate the `[DecidableEq K]` bound
+through the generic parameter, so we provide the instance manually via
+`decidable_of_iff` on pointwise `coeffs` equality. Pointwise equality is
+decidable because `Fin m` is `Fintype` and `K` has `DecidableEq`.
 
-This completes the number-field consolidation begun in Wave 4a/4b:
-every field in the project now arrives via either `PolyQuotQ n` (over ℚ)
-or `PolyQuotOver K m` (over some other `PolyQuotQ n`).
+### Performance caveats for `mulReduceOver`
+
+The general-`m` variant uses a recursive "split-into-`m`-pieces" power
+reduction, which has `O(m^m)` branching without memoization. It is also
+written with a lazy closure in the output struct, so chained
+multiplications cascade (see `PolyQuotQ.mulReduce` docstring for the
+same failure mode and its fix). Both pitfalls can be eliminated using
+the same Array-based reduction table + eager materialization pattern;
+this refactor is deferred.
+
+For the degree-2 case, `mulReduce2` provides the closed-form expression
+and precomputes its two outputs eagerly, so neither pitfall applies.
+`mulReduce2` is the current recommended primitive for tower extensions
+and is used by all existing tower consumers in this project.
 
 ## References
 
-- Deep research: `Lit-Search/Phase-5i/5i-Decidable algebraic number fields
-  for Lean 4 + Mathlib.md` (recommends tower construction for iterated extensions)
-- Companion: `PolyQuotQ.lean` (base ℚ case)
+- L. Washington, *Introduction to Cyclotomic Fields*, Springer (1997),
+  for tower extensions of cyclotomic fields.
+- Companion: `PolyQuotQ.lean` for the base-`ℚ` construction.
 -/
-
-import Mathlib
-import SKEFTHawking.PolyQuotQ
 
 namespace SKEFTHawking
 
