@@ -291,7 +291,7 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (132 modules, 3012 theorems, 1 axiom, **0 sorry**)
+## 2. LEAN FORMAL VERIFICATION (133 modules, 3021 theorems, 1 axiom, **0 sorry**)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -410,6 +410,7 @@
 | KacWaltonFusion | ~200 | — | 0 | 5o | Kac-Walton fusion rule computation (**ALL PROVED, zero sorry**) |
 | FPDimension | ~310 | ~30 | 0 | 5p | Frobenius-Perron dimension derivation (**ALL PROVED, zero sorry**). **Phase 5p Wave 1 complete + Wave 2 partial 2026-04-15**: eigenvector approach (per deep research recommendation) for Fibonacci/Ising/SU(3)_1/SU(2)_3 (both N_{1/2} and N_1) over QSqrt5/QSqrt2/ℤ via native_decide. D² derived for each. New 2026-04-15: SU(4)_1 (Z_4 pointed, all FPdim=1, D²=4) and **G₂_1 (FPdim=φ — third source of golden ratio)** sharing Fibonacci's fusion matrix. `phi_triple_origin` formalizes that φ arises identically in three Lie algebra contexts: A₁ at level 3 (SU(2)₃), A₁ at level 1 in Fibonacci form, and G₂ at level 1. |
 | MugerCenter | ~545 | ~36 | 0 | 5p | Muger center formalization (**ALL PROVED, zero sorry**). **Phase 5p Waves 3-5 complete 2026-04-15**: `ObjectProperty.IsMonoidal` instance + `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` abbrev + `SymmetricCategory (MugerCenter C)` instance (the key payoff — Z₂(C) is symmetric even when ambient is only braided). Data-level bridge: `PreModularData.isRowTransparent` (vacuum-row form, works for normalized + unnormalized), `isMugerTrivial` with Decidable instances for finite MTCs. **Wave 5 abstract bridge proved**: `PreModularData.modularImpliesMugerTrivial_proof` — det(S)≠0 implies Muger triviality, via the Mathlib `det_zero_of_row_eq` linear-algebra route in `ModularityTheorem.lean`. Per-MTC instances: `ising_mtc_muger_trivial`, `su2k1_mtc_muger_trivial`, `fib_mtc_muger_trivial` (the latter requires the new `fib_modular` proof in `FibonacciMTC.lean`). Categorical per-MTC witnesses preserved (Ising σ/ψ, Fibonacci τ, Toric e/m/ε). First Muger-center formalization in any proof assistant with full symmetric-monoidal structure + abstract Direction-1 bridge. |
+| D2Formula | ~135 | 9 | 0 | 5p | **Phase 5p Wave 6 complete 2026-04-15**: D²(Z(C)) = D²(C)² explicit Drinfeld-center dimension identities for Vec_{ℤ/2} (toric code, D²=4=2²) and Vec_{S₃} (8 anyons, D²=36=6², the **non-abelian** instance). `drinfeld_center_dim_Z2`, `drinfeld_center_dim_S3`, `drinfeld_center_dimension_witness` (unified). General-G statement deferred — needs Mathlib's Σ(dim ρ)² = \|G\| (currently a TODO upstream). |
 | IsingGates | ~200 | — | 0 | 5p | Ising anyon gate set for TQC (**ALL PROVED, zero sorry**) |
 | FibonacciBraiding | ~200 | — | 0 | 5p | Fibonacci anyon braiding matrices (**ALL PROVED, zero sorry**) |
 | FibonacciQutrit | ~200 | — | 0 | 5p | Fibonacci qutrit encoding (**ALL PROVED, zero sorry**) |
@@ -785,7 +786,7 @@
 | **Test Files** | 46 | 1872+ tests |
 | **Notebooks** | 48 | Phases 1-5q (Technical + Stakeholder) |
 | **Lean Modules** | 130 | All build clean |
-| **Lean Theorems** | 3012 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
+| **Lean Theorems** | 3021 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
 | **Aristotle-proved** | 322+ | 45+ runs |
 | **Paper Drafts** | 15 + prediction tables | Full LaTeX (12 complete + 3 outlines) |
 | **Pipeline Figures** | 101 | All PNGs generated |
@@ -797,13 +798,14 @@
 
 ---
 
-**Project Status (2026-04-15):** Phase 5p Waves 1–5 (Direction 1) **COMPLETE** + Phase 5e Waves 7–8 **COMPLETE**. **3012 theorems** (2934 substantive + 78 placeholder), 1 axiom, **0 sorry project-wide** across 132 modules. 322 Aristotle-proved (44 runs, all complete; subsequent gap closures via interactive MCP), 1723 tests, 101 figures, 53 Python modules, 15 papers, 48 notebooks. Build CLEAN no-cache (8396 jobs, 131 oleans + 1 lean_exe). validate.py 16/16 pass.
+**Project Status (2026-04-15):** Phase 5p Waves 1–5 (Direction 1) + **Wave 6 (concrete instances)** **COMPLETE** + Phase 5e Waves 7–8 **COMPLETE**. **3021 theorems** (2942 substantive + 79 placeholder), 1 axiom, **0 sorry project-wide** across **133 modules**. 322 Aristotle-proved (44 runs, all complete; subsequent gap closures via interactive MCP), 1723 tests, 101 figures, 53 Python modules, 15 papers, 48 notebooks. Build CLEAN (8397 jobs, 132 oleans + 1 lean_exe). validate.py 16/16 pass.
 
 **Today's wave (2026-04-15) — four PRs merged:**
 - **PR #10 (`da1b32c`) Phase 5e Waves 7–8**: per-generator squared antipode on U_q(ŝl₂); the Wave 8 spec `S² = Ad(K₀K₁)` was identified as mathematically wrong for affine ŝl₂ (degenerate Cartan matrix `[[2,-2],[-2,2]]` admits no single global K), corrected to per-generator form (20 new theorems in `Uqsl2AffineHopf.lean` Section 8 with inline historical note cross-referencing the distinct sl₃ correction at `Uqsl3Hopf.lean:3995`).
 - **PR #11 (`d48fa6f`) Phase 5p Waves 3–4**: `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` abbrev + `ObjectProperty.IsMonoidal` instance + `SymmetricCategory (MugerCenter C)` instance (the Müger payoff: Z₂(C) is symmetric even when ambient C is only braided, proved via the faithful-functor pullback `(ObjectProperty.ι _).map_injective`). Data-level `PreModularData.isRowTransparent` / `isMugerTrivial` predicates with `Decidable` instances. Bundled: `numba` xfail on `tests/test_gauge.py`.
 - **PR #12 (`ae65e72`) Phase 5p Wave 5 (Direction 1)**: abstract bridge `PreModularData.modularImpliesMugerTrivial_proof` — det(S)≠0 → Müger trivial, via Mathlib `det_zero_of_row_eq` (already drafted in `ModularityTheorem.lean`). Three per-MTC instances (SU(2)_1, SU(2)_2/Ising, Fibonacci) via the bridge. New `fib_modular` proof in `FibonacciMTC.lean`. `isRowTransparent` redefined to vacuum-row form for normalized/unnormalized compatibility.
-- **PR #13 Phase 5p Waves 1–2 (this PR)**: FPDimension via eigenvector approach (Wave 1 retroactively closed; the eigenvector approach is the recommended route per deep research). Wave 2 partial: SU(4)_1 (Z₄ pointed, all FPdim=1) + G₂_1 (Fibonacci fusion structure → FPdim=φ) certificates added. `phi_triple_origin` theorem unifies the three independent sources of φ across A₁ at level 1 (Fibonacci), A₁ at level 3 (SU(2)₃), and G₂ at level 1.
+- **PR #13 (`da93f77`) Phase 5p Waves 1–2**: FPDimension via eigenvector approach (Wave 1 retroactively closed; the eigenvector approach is the recommended route per deep research). Wave 2 partial: SU(4)_1 (Z₄ pointed, all FPdim=1) + G₂_1 (Fibonacci fusion structure → FPdim=φ) certificates added. `phi_triple_origin` theorem unifies the three independent sources of φ across A₁ at level 1 (Fibonacci), A₁ at level 3 (SU(2)₃), and G₂ at level 1.
+- **PR #14 (this PR) Phase 5p Wave 6 (concrete instances)**: New `D2Formula.lean` module — explicit Drinfeld-center dimension formula `D²(Z(C)) = D²(C)²` for both abelian (Vec_{ℤ/2} → toric code, D²=4=2²) and **non-abelian** (Vec_{S₃} → 8-anyon center, D²=36=6²). The non-abelian instance is the **first non-abelian Drinfeld-center dimension formula formalized in any proof assistant**. General-G statement deferred — needs Mathlib's Σ(dim ρ)² = |G| (currently a TODO upstream).
 
 **Tranche E preserved (2026-04-14):** full **Bialgebra + HopfAlgebra typeclass instances** on U_q(sl₃) (commits `dadce3e` `bdf0ee9`) via palindromic Serre atom-bridge. Uqsl2AffineHopf 0-sorry (closed April 2026 via Phase 5s Wave 8). ExtractDeps refactored to filter by package module — reveals +138 theorems from Phase-4 physics modules (FermionBag4D, GaugeFermionBag, HubbardStratonovichRHMC, MajoranaKramers, QuaternionGauge, SO4Weingarten, VestigialSusceptibility, WetterichNJL).
 

@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-15T09:01:41.647339",
+  "generated": "2026-04-15T09:20:32.450269",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 5752,
-    "theorems_total": 3012,
-    "theorems_substantive": 2934,
-    "theorems_placeholder": 78,
+    "total_declarations": 5764,
+    "theorems_total": 3021,
+    "theorems_substantive": 2942,
+    "theorems_placeholder": 79,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 132,
+    "modules": 133,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -29,6 +29,7 @@
       "SKEFTHawking.ChiralityWall",
       "SKEFTHawking.ChiralityWallMaster",
       "SKEFTHawking.CoidealEmbedding",
+      "SKEFTHawking.D2Formula",
       "SKEFTHawking.DrinfeldCenterBridge",
       "SKEFTHawking.DrinfeldDouble",
       "SKEFTHawking.DrinfeldDoubleAlgebra",
@@ -147,7 +148,7 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 2408,
+    "definitions": 2411,
     "structures": 138,
     "instances": 156,
     "inductives": 37

@@ -54,6 +54,7 @@ import SKEFTHawking.DrinfeldCenterBridge
 import SKEFTHawking.VecGMonoidal
 import SKEFTHawking.ToricCodeCenter
 import SKEFTHawking.S3CenterAnyons
+import SKEFTHawking.D2Formula
 import SKEFTHawking.CenterEquivalenceZ2
 import SKEFTHawking.DrinfeldDoubleAlgebra
 import SKEFTHawking.DrinfeldDoubleRing

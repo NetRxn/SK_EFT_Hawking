@@ -86,7 +86,7 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ## Technical Summary
 
-**Lean 4 formalization:** **3012 theorems** (2934 substantive + 78 placeholder) across **132 modules**. 1 axiom (gapped_interface_axiom), **0 sorry project-wide**.
+**Lean 4 formalization:** **3021 theorems** (2942 substantive + 79 placeholder) across **133 modules**. 1 axiom (gapped_interface_axiom), **0 sorry project-wide**.
 322 Aristotle-proved across 44 runs. Lean 4.29.0, Mathlib commit `8850ed93` (the first 4.29.0 commit).
 **First machine-checked Ext computation over any Steenrod subalgebra** (Phase 5q, April 2026).
 **First quantum group + Hopf algebra typeclass-wired in any proof assistant for U_q(sl₃)** (Phase 5i Wave 2 / Tranche E, 2026-04-14): both `Bialgebra` and `HopfAlgebra` Mathlib typeclass instances proven, with the 4 antipode q-Serre cubics (E12/E21/F12/F21) closed via a palindromic Serre atom-bridge approach.
@@ -100,7 +100,7 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (3012 theorems, 1 axiom, 132 modules, 0 sorry)
+├── lean/                              # Lean 4 formalization (3021 theorems, 1 axiom, 133 modules, 0 sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib 8850ed93)
 │   ├── lean-toolchain                 # Lean 4 v4.29.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 131 theorem modules)
@@ -426,7 +426,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (3012 theorems — 1 axiom, **0 sorry**)
+## Theorem Inventory (3021 theorems — 1 axiom, **0 sorry**)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
