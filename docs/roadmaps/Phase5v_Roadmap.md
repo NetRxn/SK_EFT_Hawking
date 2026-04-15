@@ -188,11 +188,11 @@ The **actual gap** is downstream of the script:
 - [x] `extract_has_figure_edges` — parses `\includegraphics{...}` from each paper's `.tex`; matches against both raw name and `fig_`-prefixed variants. Graph HAS_FIGURE: **22 → 32**; logs count of unresolved references (12 currently — bare-name figures like `mtc_hierarchy`, `su3k_fusion` that bypass the `visualizations.py` canonical invariant — a real finding for the readiness system to track).
 
 **Deferred to Wave 2 (require new node types not yet in schema):**
-- [ ] `extract_test_nodes` → PythonTest + VERIFIES
-- [ ] `extract_review_finding_nodes` → ReviewFinding + FLAGS
-- [ ] `extract_production_run_nodes` → ProductionRun + PRODUCES
-- [ ] `extract_placeholder_nodes` → PlaceholderMarker
-- [ ] Widen PaperClaim with `kind ∈ {numeric, theorem-cite, prose}` + ProseClaim subtype
+- [ ] `extract_test_nodes` → PythonTest + VERIFIES (Wave 2c)
+- [ ] `extract_review_finding_nodes` → ReviewFinding + FLAGS (Wave 2d)
+- [ ] `extract_production_run_nodes` → ProductionRun + PRODUCES (Wave 2e)
+- [x] `extract_placeholder_marker_nodes` → PlaceholderMarker (Wave 2b — DONE)
+- [ ] Widen PaperClaim with `kind ∈ {numeric, theorem-cite, prose}` + ProseClaim subtype (Wave 2f)
 
 **Deferred to a later sweep (not blocking):**
 - [ ] Derive `skPrefix` in `ExtractDeps.lean` from `lakefile.toml` (currently hardcoded `` `SKEFTHawking``)

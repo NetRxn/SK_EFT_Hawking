@@ -837,16 +837,147 @@ def extract_production_run_nodes() -> list[dict]:
     return []
 
 
+# Body patterns that indicate placeholder content. `decide` and
+# `native_decide` are deliberately excluded — these are legitimate
+# finite-verification techniques used extensively in Phase 5e MTC work
+# (IsingBraiding, SU3kFusion, etc.).
+_PLACEHOLDER_BODY_PATTERNS = [
+    (re.compile(r'^by\s+rfl\s*$'), 'by rfl'),
+    (re.compile(r'^rfl\s*$'), 'rfl (term)'),
+    (re.compile(r'^by\s+trivial\s*$'), 'by trivial'),
+    (re.compile(r'^trivial\s*$'), 'trivial (term)'),
+    (re.compile(r'Equiv\.refl'), 'Equiv.refl'),
+    (re.compile(r'^by\s+exact\s+rfl\s*$'), 'by exact rfl'),
+]
+
+
+def _scan_lean_theorem_bodies(source: str):
+    """Yield (name, line, body_text) for each `theorem NAME ... := BODY` in
+    a Lean source file. Handles multi-line declarations with parenthesized
+    binders that contain `:`. Body is everything after `:=` up to a blank
+    line or the next top-level declaration keyword.
+    """
+    lines = source.split("\n")
+    i = 0
+    top_kw_re = re.compile(r'^(theorem|lemma|def|noncomputable\s+def|'
+                           r'abbrev|instance|example|axiom|structure|class|'
+                           r'inductive|/--|/-|-- |namespace|end|open|import|'
+                           r'section|variable|variables|attribute|@\[)\b')
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r'^theorem\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
+        if not m:
+            i += 1
+            continue
+        name = m.group(1)
+        line_no = i + 1
+        # Accumulate the full declaration until we see `:=`
+        decl_lines = []
+        assign_offset_in_acc = None
+        j = i
+        while j < len(lines):
+            decl_lines.append(lines[j])
+            acc = "\n".join(decl_lines)
+            # Find a `:=` that is not inside a string/comment (pragmatic:
+            # we treat any `:=` as the assignment)
+            idx = acc.find(':=', len("\n".join(decl_lines[:-1])) if len(decl_lines) > 1 else 0)
+            if idx >= 0:
+                assign_offset_in_acc = idx
+                break
+            j += 1
+        if assign_offset_in_acc is None:
+            i = j + 1
+            continue
+        # Collect body: from after `:=` until blank line / next top-level kw
+        body_start_line = j
+        body_start_col = assign_offset_in_acc + 2  # skip the `:=`
+        # Body on the same line as `:=`
+        body_parts = []
+        first_line = lines[body_start_line][body_start_col:].strip()
+        if first_line:
+            body_parts.append(first_line)
+        # Continuation lines (indented)
+        k = body_start_line + 1
+        while k < len(lines):
+            ln = lines[k]
+            if ln.strip() == '':
+                break
+            if top_kw_re.match(ln.lstrip()) and not ln.startswith((' ', '\t')):
+                break
+            # Indented continuation
+            body_parts.append(ln.strip())
+            k += 1
+        body = " ".join(body_parts).strip()
+        yield name, line_no, body
+        i = k
+
+
 def extract_placeholder_marker_nodes() -> list[dict]:
     """PlaceholderMarker — Lean decls with trivial body on non-trivial claim.
 
-    Wired in: Wave 2b. Sources: scan lean_deps.json for theorems whose body
-    is {rfl, Equiv.refl, decide, native_decide, trivial} but whose statement
-    type has ≥3 tokens in conclusion (filter out True := trivial placeholders,
-    which are already registered in PLACEHOLDER_THEOREMS).
-    Emits: {id: 'placeholder:{lean_full_name}', type: 'PlaceholderMarker'}.
+    Phase 5v Wave 2b. Scans lean/SKEFTHawking/*.lean for theorems whose body
+    matches a 'placeholder pattern' (rfl / trivial / Equiv.refl). Excludes
+    theorems registered in PLACEHOLDER_THEOREMS (True := trivial — already
+    tracked) and excludes decide/native_decide bodies (legitimate finite
+    verification, not a placeholder).
+
+    Caveats — this extractor catches the syntactic red flags only. Semantic
+    tautologies (e.g., `sixteen_convergence_full` where a conclusion conjunct
+    is a hypothesis, body is a non-trivial-looking term construction but
+    conveys no content) require LLM inspection and are caught by Stage 13
+    adversarial review (Wave 6), not this extractor.
     """
-    return []
+    from src.core.constants import PLACEHOLDER_THEOREMS
+
+    placeholder_short_names = set(PLACEHOLDER_THEOREMS.keys()) if PLACEHOLDER_THEOREMS else set()
+
+    nodes = []
+    seen_ids: set[str] = set()
+
+    for lean_file in sorted(LEAN_DIR.glob("*.lean")):
+        try:
+            source = lean_file.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        module_name = lean_file.stem  # e.g. "RokhlinBridge"
+        for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
+            if thm_name in placeholder_short_names:
+                continue
+            pattern_label = None
+            for pattern_re, label in _PLACEHOLDER_BODY_PATTERNS:
+                if pattern_re.search(body):
+                    pattern_label = label
+                    break
+            if pattern_label is None:
+                continue
+
+            full_name = f"SKEFTHawking.{module_name}.{thm_name}"
+            node_id = f'placeholder:{full_name}'
+            if node_id in seen_ids:
+                continue
+            seen_ids.add(node_id)
+
+            nodes.append({
+                'id': node_id,
+                'type': 'PlaceholderMarker',
+                'label': thm_name,
+                'name': thm_name,
+                'verification': 'unverified',
+                'detail': f'{module_name}.lean:{line_no} — body matches {pattern_label!r}',
+                'meta': {
+                    'module': module_name,
+                    'lean_full_name': full_name,
+                    'lean_file': f'lean/SKEFTHawking/{module_name}.lean',
+                    'line': line_no,
+                    'body_pattern': pattern_label,
+                    'body_preview': body[:200],
+                },
+            })
+
+    if nodes:
+        logger.info("PlaceholderMarker extraction: %d placeholders flagged (rfl/trivial/Equiv.refl bodies)",
+                    len(nodes))
+    return nodes
 
 
 def extract_contradiction_nodes() -> list[dict]:
