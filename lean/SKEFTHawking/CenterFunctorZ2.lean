@@ -442,7 +442,148 @@ lemma basis_smul_one {χ : DG k G2 →ₐ[k] k} (d : DG k G2) :
   show ((((χ : DG k G2 →+* k) d) • (⟨1⟩ : SimpleModule χ)) : SimpleModule χ).val = χ d
   simp
 
-/-! ## 11. Module summary -/
+/-! ## 11. Character distinctness: `simpleChi` is injective
+
+When the base ring `k` satisfies `(1 : k) ≠ -1` (i.e., `char k ≠ 2`),
+the four characters are pairwise distinct. This is a prerequisite for
+the Faithful/EssSurj proofs of the full CenterFunctor: the 4 simple
+objects on the target side really are distinct objects. -/
+
+/-- Character values on the basis element `DG.basis (a, g)` simplify to
+    indicator-weighted constants. For a character `χ(f) = c_00 f(e,e) +
+    c_01 f(e,a) + c_10 f(a,e) + c_11 f(a,a)` (only some coefficients
+    nonzero), evaluating on `basis a' g'` picks out the single matching
+    coefficient. We verify this for the four specific characters. -/
+lemma chiTrivTriv_on_basis_ee :
+    chiTrivTrivFun k (DG.basis k G2 e e) = 1 := by
+  unfold chiTrivTrivFun
+  show (DG.basis k G2 e e).coeff (e, e) + (DG.basis k G2 e e).coeff (e, a) = 1
+  show ddBasis k G2 e e (e, e) + ddBasis k G2 e e (e, a) = 1
+  unfold ddBasis
+  simp [a_ne_e]
+
+lemma chiTrivTriv_on_basis_ea :
+    chiTrivTrivFun k (DG.basis k G2 e a) = 1 := by
+  show ddBasis k G2 e a (e, e) + ddBasis k G2 e a (e, a) = 1
+  unfold ddBasis; simp [a_ne_e, a_ne_e.symm]
+
+lemma chiTrivSign_on_basis_ea :
+    chiTrivSignFun k (DG.basis k G2 e a) = -1 := by
+  show ddBasis k G2 e a (e, e) - ddBasis k G2 e a (e, a) = -1
+  unfold ddBasis; simp [a_ne_e.symm]
+
+lemma chiFlipTriv_on_basis_ae :
+    chiFlipTrivFun k (DG.basis k G2 a e) = 1 := by
+  show ddBasis k G2 a e (a, e) + ddBasis k G2 a e (a, a) = 1
+  unfold ddBasis; simp [a_ne_e]
+
+lemma chiFlipSign_on_basis_aa :
+    chiFlipSignFun k (DG.basis k G2 a a) = -1 := by
+  show ddBasis k G2 a a (a, e) - ddBasis k G2 a a (a, a) = -1
+  unfold ddBasis; simp [a_ne_e.symm]
+
+/-- The three "cross-class" characters (not involving index (e, a) or (a, a))
+    vanish on `DG.basis e e`. -/
+lemma chiTrivSign_on_basis_ee : chiTrivSignFun k (DG.basis k G2 e e) = 1 := by
+  show ddBasis k G2 e e (e, e) - ddBasis k G2 e e (e, a) = 1
+  unfold ddBasis; simp [a_ne_e]
+
+lemma chiFlipTriv_on_basis_ee : chiFlipTrivFun k (DG.basis k G2 e e) = 0 := by
+  show ddBasis k G2 e e (a, e) + ddBasis k G2 e e (a, a) = 0
+  unfold ddBasis; simp [a_ne_e.symm]
+
+lemma chiFlipSign_on_basis_ee : chiFlipSignFun k (DG.basis k G2 e e) = 0 := by
+  show ddBasis k G2 e e (a, e) - ddBasis k G2 e e (a, a) = 0
+  unfold ddBasis; simp [a_ne_e.symm]
+
+/-! ### Pairwise distinctness lemmas
+
+Each lemma picks a specific `DG.basis` probe that separates the two
+characters via a concrete value difference. The hypothesis `h : (1 : k) ≠ 0`
+(nontriviality) or `h2 : (1 : k) ≠ -1` (char ≠ 2) is supplied per-pair. -/
+
+/-- `chiTrivTriv ≠ chiFlipTriv` when `(1 : k) ≠ 0`. Probe: `basis e e` (gives 1 vs 0). -/
+lemma chiTrivTriv_ne_chiFlipTriv (h : (1 : k) ≠ 0) :
+    chiTrivTriv k ≠ chiFlipTriv k := by
+  intro heq
+  apply h
+  have := congrArg (· (DG.basis k G2 e e)) heq
+  simpa [chiTrivTriv, chiFlipTriv, chiTrivTriv_on_basis_ee,
+         chiFlipTriv_on_basis_ee] using this
+
+/-- `chiTrivTriv ≠ chiFlipSign` when `(1 : k) ≠ 0`. -/
+lemma chiTrivTriv_ne_chiFlipSign (h : (1 : k) ≠ 0) :
+    chiTrivTriv k ≠ chiFlipSign k := by
+  intro heq
+  apply h
+  have := congrArg (· (DG.basis k G2 e e)) heq
+  simpa [chiTrivTriv, chiFlipSign, chiTrivTriv_on_basis_ee,
+         chiFlipSign_on_basis_ee] using this
+
+/-- `chiTrivSign ≠ chiFlipTriv` when `(1 : k) ≠ 0`. -/
+lemma chiTrivSign_ne_chiFlipTriv (h : (1 : k) ≠ 0) :
+    chiTrivSign k ≠ chiFlipTriv k := by
+  intro heq
+  apply h
+  have := congrArg (· (DG.basis k G2 e e)) heq
+  simpa [chiTrivSign, chiFlipTriv, chiTrivSign_on_basis_ee,
+         chiFlipTriv_on_basis_ee] using this
+
+/-- `chiTrivSign ≠ chiFlipSign` when `(1 : k) ≠ 0`. -/
+lemma chiTrivSign_ne_chiFlipSign (h : (1 : k) ≠ 0) :
+    chiTrivSign k ≠ chiFlipSign k := by
+  intro heq
+  apply h
+  have := congrArg (· (DG.basis k G2 e e)) heq
+  simpa [chiTrivSign, chiFlipSign, chiTrivSign_on_basis_ee,
+         chiFlipSign_on_basis_ee] using this
+
+/-- `chiTrivTriv ≠ chiTrivSign` when `(1 : k) ≠ -1`. Probe: `basis e a` (gives 1 vs -1). -/
+lemma chiTrivTriv_ne_chiTrivSign (h : (1 : k) ≠ -1) :
+    chiTrivTriv k ≠ chiTrivSign k := by
+  intro heq
+  apply h
+  have := congrArg (· (DG.basis k G2 e a)) heq
+  simpa [chiTrivTriv, chiTrivSign, chiTrivTriv_on_basis_ea,
+         chiTrivSign_on_basis_ea] using this
+
+/-- `chiFlipTriv ≠ chiFlipSign` when `(1 : k) ≠ -1`. Probe: `basis a a` (gives 1 vs -1). -/
+lemma chiFlipTriv_ne_chiFlipSign (h : (1 : k) ≠ -1) :
+    chiFlipTriv k ≠ chiFlipSign k := by
+  intro heq
+  apply h
+  have h_ft : chiFlipTrivFun k (DG.basis k G2 a a) = 1 := by
+    show ddBasis k G2 a a (a, e) + ddBasis k G2 a a (a, a) = 1
+    unfold ddBasis; simp [a_ne_e.symm]
+  have := congrArg (· (DG.basis k G2 a a)) heq
+  simpa [chiFlipTriv, chiFlipSign, h_ft, chiFlipSign_on_basis_aa] using this
+
+/-- The 4 characters `chiTrivTriv`, `chiTrivSign`, `chiFlipTriv`, `chiFlipSign`
+    are pairwise distinct whenever `(1 : k) ≠ 0` and `(1 : k) ≠ -1` (i.e.,
+    `k` is nontrivial with characteristic ≠ 2).
+
+    Assembled via the 6 pairwise-distinctness lemmas above. -/
+theorem simpleChi_injective (h1 : (1 : k) ≠ 0) (h2 : (1 : k) ≠ -1) :
+    Function.Injective (simpleChi k) := by
+  intro s t hst
+  rcases s with _ | _ | _ | _ <;> rcases t with _ | _ | _ | _ <;>
+    simp only [simpleChi] at hst <;>
+    first
+    | rfl
+    | exact absurd hst (chiTrivTriv_ne_chiTrivSign k h2)
+    | exact absurd hst (chiTrivTriv_ne_chiTrivSign k h2).symm
+    | exact absurd hst (chiTrivTriv_ne_chiFlipTriv k h1)
+    | exact absurd hst (chiTrivTriv_ne_chiFlipTriv k h1).symm
+    | exact absurd hst (chiTrivTriv_ne_chiFlipSign k h1)
+    | exact absurd hst (chiTrivTriv_ne_chiFlipSign k h1).symm
+    | exact absurd hst (chiTrivSign_ne_chiFlipTriv k h1)
+    | exact absurd hst (chiTrivSign_ne_chiFlipTriv k h1).symm
+    | exact absurd hst (chiTrivSign_ne_chiFlipSign k h1)
+    | exact absurd hst (chiTrivSign_ne_chiFlipSign k h1).symm
+    | exact absurd hst (chiFlipTriv_ne_chiFlipSign k h2)
+    | exact absurd hst (chiFlipTriv_ne_chiFlipSign k h2).symm
+
+/-! ## 12. Module summary -/
 
 /--
 CenterFunctorZ2 module: Phase 5s Wave 9 scaffold.
