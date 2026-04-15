@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-14 (Phase 5i Wave 2 / Tranche E: **0 sorry**, full Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃). All 4 antipode q-Serre cubics (E12, E21, F12, F21) closed via palindromic Serre atom-bridge approach. Build clean from no-cache rebuild of the SKEFTHawking package, 8396 jobs. Lean toolchain 4.29.0 upgrade complete — all upgrade-related build errors resolved. ExtractDeps refactored to filter by package module (not namespace prefix), revealing +138 theorems from Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) that were previously invisible because they declare in non-`SKEFTHawking` namespaces.)
+**Last synced:** 2026-04-15 (Phase 5e Waves 7-8 wrap: Bialgebra + HopfAlgebra instances on U_q(ŝl₂) confirmed wired; **20 new theorems** on Uqsl2AffineHopf for per-generator antipode + S² identities. **Wave 8 spec correction** — the original roadmap deliverable `S² = Ad(K₀K₁)` is mathematically impossible for affine ŝl₂ (degenerate Cartan matrix `[[2,-2],[-2,2]]`, no single `K=K₀^a·K₁^b` implements S² on both E_0 and E_1). Corrected to per-generator form with inline historical note in `Uqsl2AffineHopf.lean` and roadmap note in `Phase5e_Roadmap.md:147–170`, cross-referencing the (different, simpler) sl₃ correction at `Uqsl3Hopf.lean:3995`. Build clean from no-cache rebuild (8396 jobs); validate.py 16/16 pass; 1721 tests pass. Prior Tranche E status preserved.)
 
 ---
 
@@ -12,7 +12,7 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **2981** (2903 substantive + 78 placeholder) | counts.json — package-module-bound count |
+| Lean theorems | **2997** (2919 substantive + 78 placeholder) | counts.json — package-module-bound count |
 | Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
@@ -196,7 +196,7 @@
 | QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
 | FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
-| Uqsl2AffineHopf | 181 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. **ALL PROVED, zero sorry** — all 8 q-Serre proofs closed (4 comul + 4 antipode). Bialgebra/HopfAlgebra typeclass wiring UNBLOCKED 2026-04-14 (Tranche E pattern from Uqsl3Hopf applies). |
+| Uqsl2AffineHopf | 201 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. **ALL PROVED, zero sorry** — all 8 q-Serre proofs closed (4 comul + 4 antipode). Bialgebra + HopfAlgebra instances WIRED. **Phase 5e Wave 8 complete 2026-04-15**: 20 new theorems for per-generator antipode (`uqAff_antipode_*`) + K-conjugation helpers + per-generator S² identities (`uqAff_antipode_squared_*`). Wave 8 original spec `S² = Ad(K₀K₁)` mathematically wrong for affine (rank-deficient Cartan); corrected to per-generator form with inline historical note. |
 | VerifiedStatistics | 6 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | KerrSchild | 7 | Kerr-Schild metrics: null vector, radial_null PROVED, Sherman-Morrison inverse, Schwarzschild, DOF counting (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**ALL PROVED, zero sorry** — native_decide over Q(√2)) |

@@ -86,10 +86,11 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ## Technical Summary
 
-**Lean 4 formalization:** **2981 theorems** (2903 substantive + 78 placeholder) across **132 modules**. 1 axiom (gapped_interface_axiom), **0 sorry project-wide**.
+**Lean 4 formalization:** **2997 theorems** (2919 substantive + 78 placeholder) across **132 modules**. 1 axiom (gapped_interface_axiom), **0 sorry project-wide**.
 322 Aristotle-proved across 44 runs. Lean 4.29.0, Mathlib commit `8850ed93` (the first 4.29.0 commit).
 **First machine-checked Ext computation over any Steenrod subalgebra** (Phase 5q, April 2026).
 **First quantum group + Hopf algebra typeclass-wired in any proof assistant for U_q(sl₃)** (Phase 5i Wave 2 / Tranche E, 2026-04-14): both `Bialgebra` and `HopfAlgebra` Mathlib typeclass instances proven, with the 4 antipode q-Serre cubics (E12/E21/F12/F21) closed via a palindromic Serre atom-bridge approach.
+**First per-generator squared-antipode identity on U_q(ŝl₂) in a proof assistant** (Phase 5e Waves 7-8, 2026-04-15): per-generator S²(x_i) = K_i·x_i·K_i⁻¹ for x_i ∈ {E_i, F_i, K_i, K_i⁻¹}, closing the affine Hopf structure. Note: the global `S² = Ad(K_{2ρ})` formula valid for finite simply-laced types does **not** hold for affine ŝl₂ (degenerate Cartan matrix); the correct affine statement is per-generator only.
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
 
@@ -99,7 +100,7 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (2981 theorems, 1 axiom, 132 modules, 0 sorry)
+├── lean/                              # Lean 4 formalization (2997 theorems, 1 axiom, 132 modules, 0 sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib 8850ed93)
 │   ├── lean-toolchain                 # Lean 4 v4.29.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 131 theorem modules)
@@ -425,7 +426,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (2981 theorems — 1 axiom, **0 sorry**)
+## Theorem Inventory (2997 theorems — 1 axiom, **0 sorry**)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
