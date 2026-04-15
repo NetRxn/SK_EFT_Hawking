@@ -361,7 +361,88 @@ def simpleChi : DZ2Simple → (DG k G2 →ₐ[k] k)
   | .flipTriv => chiFlipTriv k
   | .flipSign => chiFlipSign k
 
-/-! ## 9. Module summary -/
+/-! ## 9. The simple DG(G2)-modules via `Module.compHom`
+
+Each character `χ : DG k G2 →ₐ[k] k` gives a `Module (DG k G2)` structure
+on `k` by `Module.compHom`. To keep the 4 module structures distinct as
+Lean types (so typeclass inference doesn't collapse them), we use a
+wrapper structure parameterized by the character. -/
+
+/-- The 1-dimensional simple `D(G2)`-module associated to a character `χ`.
+    Underlying type is `k`; the `D(G2)`-action is via `χ`.
+
+    `k` is implicit so that instance declarations can write `SimpleModule χ`
+    without having to re-thread `k` through each instance header. -/
+@[ext] structure SimpleModule {k : Type} [CommRing k] (_χ : DG k G2 →ₐ[k] k) where
+  /-- The underlying `k`-valued coordinate. -/
+  val : k
+
+namespace SimpleModule
+
+variable {k : Type} [CommRing k]
+variable (χ : DG k G2 →ₐ[k] k)
+
+instance : Zero (SimpleModule χ) := ⟨⟨0⟩⟩
+instance : Add (SimpleModule χ) := ⟨fun x y => ⟨x.val + y.val⟩⟩
+instance : Neg (SimpleModule χ) := ⟨fun x => ⟨-x.val⟩⟩
+instance : Sub (SimpleModule χ) := ⟨fun x y => ⟨x.val - y.val⟩⟩
+
+@[simp] lemma val_zero : (0 : SimpleModule χ).val = 0 := rfl
+@[simp] lemma val_add (x y : SimpleModule χ) : (x + y).val = x.val + y.val := rfl
+@[simp] lemma val_neg (x : SimpleModule χ) : (-x).val = -x.val := rfl
+@[simp] lemma val_sub (x y : SimpleModule χ) : (x - y).val = x.val - y.val := rfl
+
+instance : AddCommGroup (SimpleModule χ) where
+  add_assoc a b c := by ext; simp [add_assoc]
+  zero_add a := by ext; simp
+  add_zero a := by ext; simp
+  add_comm a b := by ext; simp [add_comm]
+  neg_add_cancel a := by ext; simp
+  sub_eq_add_neg a b := by ext; simp [sub_eq_add_neg]
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+
+/-- `k`-module structure on `SimpleModule χ`: scalar multiplication by `r : k`. -/
+instance : SMul k (SimpleModule χ) := ⟨fun r x => ⟨r * x.val⟩⟩
+
+@[simp] lemma val_smul (r : k) (x : SimpleModule χ) : (r • x).val = r * x.val := rfl
+
+instance : Module k (SimpleModule χ) where
+  smul_add r a b := by ext; simp [mul_add]
+  smul_zero r := by ext; simp
+  add_smul r s a := by ext; simp [add_mul]
+  zero_smul a := by ext; simp
+  one_smul a := by ext; simp
+  mul_smul r s a := by ext; simp [mul_assoc]
+
+/-- The `D(G2)`-module structure on `SimpleModule χ`, with `d · x := χ(d) · x`.
+    Derived via `Module.compHom` from the `k`-module structure and the
+    underlying `RingHom` of the algebra map `χ`. -/
+noncomputable instance : Module (DG k G2) (SimpleModule χ) :=
+  Module.compHom (SimpleModule χ) (χ : DG k G2 →+* k)
+
+end SimpleModule
+
+/-! ## 10. Package the 4 simples + verify distinct DG-actions -/
+
+/-- The 4 simple `D(G2)`-modules, indexed by `DZ2Simple` labels.
+
+    Returns the zero element of the corresponding module — enough to
+    identify the underlying type; the content of the simple is in its
+    module structure, not in any specific value. -/
+def simpleMod : (s : DZ2Simple) → SimpleModule (simpleChi k s) := fun _ => ⟨0⟩
+
+/-- Each simple module's DG action on the distinguished unit `⟨1⟩` recovers
+    the character value: `d · ⟨1⟩ = ⟨χ(d)⟩`. This confirms the four module
+    structures are genuinely different (one per character). -/
+lemma basis_smul_one {χ : DG k G2 →ₐ[k] k} (d : DG k G2) :
+    (d • (⟨1⟩ : SimpleModule χ)).val = χ d := by
+  -- The DG-module structure on SimpleModule χ is via Module.compHom,
+  -- which makes d • x = (χ d : k) • x. Then (r : k) • ⟨v⟩ = ⟨r * v⟩.
+  show ((((χ : DG k G2 →+* k) d) • (⟨1⟩ : SimpleModule χ)) : SimpleModule χ).val = χ d
+  simp
+
+/-! ## 11. Module summary -/
 
 /--
 CenterFunctorZ2 module: Phase 5s Wave 9 scaffold.
