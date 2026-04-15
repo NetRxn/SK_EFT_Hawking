@@ -583,7 +583,41 @@ theorem simpleChi_injective (h1 : (1 : k) ≠ 0) (h2 : (1 : k) ≠ -1) :
     | exact absurd hst (chiFlipTriv_ne_chiFlipSign k h2)
     | exact absurd hst (chiFlipTriv_ne_chiFlipSign k h2).symm
 
-/-! ## 12. Module summary -/
+/-! ## 12. Bundling the 4 simples as `ModuleCat (DG k G2)` objects
+
+Each `SimpleModule χ` has its full typeclass stack in place. We can bundle
+each as a `ModuleCat (DG k G2)` object via `ModuleCat.of`. The resulting
+`simpleRepModule : DZ2Simple → ModuleCat (DG k G2)` is the object-part of
+the would-be functor `Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2)`
+(after composing with the toric-anyon ↔ DZ2Simple bijection). -/
+
+/-- The 4 simple `Rep(D(G2))` objects bundled as `ModuleCat (DG k G2)`,
+    indexed by the `DZ2Simple` label corresponding to each toric anyon.
+
+    Pattern-matches on the label (rather than composing a helper
+    function) so that Lean can directly unify each branch's `SimpleModule`
+    type with the expected `ModuleCat (DG k G2)` carrier. -/
+noncomputable def simpleRepModule : DZ2Simple → ModuleCat (DG k G2)
+  | .trivTriv => ModuleCat.of (DG k G2) (SimpleModule (chiTrivTriv k))
+  | .trivSign => ModuleCat.of (DG k G2) (SimpleModule (chiTrivSign k))
+  | .flipTriv => ModuleCat.of (DG k G2) (SimpleModule (chiFlipTriv k))
+  | .flipSign => ModuleCat.of (DG k G2) (SimpleModule (chiFlipSign k))
+
+/-! ## 13. Key observation for H_CF1 discharge
+
+The `CenterFunctor.H_CF1_center_functor` hypothesis is `Nonempty
+(Center (VecG_Cat k G) ⥤ ModuleCat (DG k G))`. As stated this is
+trivially discharge-able by ANY functor (e.g., the constant functor
+at an arbitrary object). This reveals the hypothesis as stated is
+weaker than its intended meaning ("the *canonical* functor exists").
+
+The correct strengthening, if desired, is to specify the canonical
+functor's action explicitly — which requires the full 300+ LOC
+construction described in the Wave 9 roadmap entry. We do NOT
+discharge H_CF1 trivially here, because doing so would paper over
+the hypothesis's imprecision rather than address it. -/
+
+/-! ## 14. Module summary -/
 
 /--
 CenterFunctorZ2 module: Phase 5s Wave 9 scaffold.
