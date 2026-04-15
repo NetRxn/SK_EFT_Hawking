@@ -107,24 +107,29 @@ _AUTOGEN_SHORT_RE = re.compile(
 _LEAN_SHORT_INDEX: dict[str, list[str]] = {}
 
 
+# Seen-ambiguity dedup: log each unique ambiguous short name at WARNING
+# level once per build_graph run. Subsequent occurrences go to DEBUG.
+_LEAN_AMBIGUITY_SEEN: set[str] = set()
+
+
+def _reset_lean_ambiguity_log() -> None:
+    _LEAN_AMBIGUITY_SEEN.clear()
+
+
 def _resolve_lean_short(name: str, node_ids: set) -> str | None:
     """Resolve a Lean declaration reference to its node ID.
 
     Accepts either a short name (last namespace component) or a full name
     (with dots). Full names resolve directly; short names resolve through
-    _LEAN_SHORT_INDEX. Returns None if missing or ambiguous. Ambiguity is
-    logged at WARNING level so silent edge loss is visible.
+    _LEAN_SHORT_INDEX. Returns None if missing or ambiguous. Each unique
+    ambiguous name is logged once per build — repeat occurrences go to
+    DEBUG to avoid flooding when a common name (e.g. `cs`, `n`) is
+    resolved dozens of times across paper/formula/test extractors.
     """
-    # Full-name lookup: if the input contains a dot, try direct match first.
-    # Registries like HYPOTHESIS_REGISTRY.dependent_theorems and
-    # axiom_deps_project store fully-qualified names.
     if '.' in name:
         direct_id = f'lean:{name}'
         if direct_id in node_ids:
             return direct_id
-        # Fall through to short-name lookup using the last component,
-        # in case the registry name is qualified but the graph only has
-        # a differently-prefixed version.
         short = name.rsplit('.', 1)[-1]
     else:
         short = name
@@ -135,10 +140,17 @@ def _resolve_lean_short(name: str, node_ids: set) -> str | None:
         return None
     if len(in_graph) == 1:
         return in_graph[0]
-    logger.warning(
-        "Ambiguous Lean name %r resolves to %d candidates: %s — edge skipped",
-        name, len(in_graph), in_graph,
-    )
+    if short not in _LEAN_AMBIGUITY_SEEN:
+        _LEAN_AMBIGUITY_SEEN.add(short)
+        logger.warning(
+            "Ambiguous Lean name %r resolves to %d candidates: %s — edges skipped (subsequent hits logged at DEBUG)",
+            name, len(in_graph), in_graph,
+        )
+    else:
+        logger.debug(
+            "Ambiguous Lean name %r (repeat) — edge skipped",
+            name,
+        )
     return None
 
 # Platform -> Atom mapping for USED_BY / DEPENDS_ON edges
@@ -906,6 +918,25 @@ def extract_prose_claim_nodes() -> list[dict]:
 import ast as _ast
 
 
+def _extract_imports(tree: _ast.AST) -> set[str]:
+    """Return the set of top-level names imported at module scope.
+
+    Picks up `from X import a, b` and `import X [as y]`. Used to filter
+    referenced-name extraction in PythonTest nodes so bare Python locals
+    (e.g. `cs`, `n`, `d` — common one-letter parameters) don't flood the
+    VERIFIES-edge resolver with spurious short-name collisions.
+    """
+    names: set[str] = set()
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.ImportFrom):
+            for alias in node.names:
+                names.add(alias.asname or alias.name)
+        elif isinstance(node, _ast.Import):
+            for alias in node.names:
+                names.add((alias.asname or alias.name).split('.')[0])
+    return names
+
+
 def _classify_assertion(node: _ast.AST) -> str | None:
     """Classify a single assertion AST node by its test_kind.
 
@@ -949,11 +980,17 @@ def _classify_assertion(node: _ast.AST) -> str | None:
     return None
 
 
-def _classify_test_function(fn: _ast.FunctionDef) -> tuple[str, list[str]]:
+def _classify_test_function(fn: _ast.FunctionDef,
+                            imports: set[str]) -> tuple[str, list[str]]:
     """Classify a test function by walking its assertions.
 
     Priority: golden > identity > roundtrip > bounds > unknown.
     Returns (test_kind, list_of_referenced_names).
+
+    `imports` is the set of names imported at module scope; only these
+    names (or attribute chains rooted at these names) are recorded as
+    referenced, to avoid false-positive short-name collisions against
+    Lean structure-field projections.
     """
     kinds = []
     names: set[str] = set()
@@ -962,16 +999,19 @@ def _classify_test_function(fn: _ast.FunctionDef) -> tuple[str, list[str]]:
         if kind:
             kinds.append(kind)
         if isinstance(stmt, _ast.Name):
-            names.add(stmt.id)
+            if stmt.id in imports:
+                names.add(stmt.id)
         elif isinstance(stmt, _ast.Attribute):
-            if hasattr(_ast, 'unparse'):
-                names.add(_ast.unparse(stmt))
-    # roundtrip heuristic: function name contains 'roundtrip' / 'inverse' /
-    # 'forward_backward'
+            # Capture attribute chains rooted at an imported name
+            root = stmt
+            while isinstance(root, _ast.Attribute):
+                root = root.value
+            if isinstance(root, _ast.Name) and root.id in imports:
+                if hasattr(_ast, 'unparse'):
+                    names.add(_ast.unparse(stmt))
     lname = fn.name.lower()
     if any(tag in lname for tag in ('roundtrip', 'inverse', 'forward_backward')):
         kinds.append('roundtrip')
-    # Priority ordering
     for preferred in ('roundtrip', 'golden', 'identity', 'bounds', 'unknown'):
         if preferred in kinds:
             return preferred, sorted(names)
@@ -1006,9 +1046,10 @@ def extract_python_test_nodes() -> list[dict]:
             logger.debug("PythonTest: skipping %s (%s)", test_file.name, exc)
             continue
         module = test_file.stem  # e.g. "test_formulas"
+        imports = _extract_imports(tree)
         for node in _ast.walk(tree):
             if isinstance(node, _ast.FunctionDef) and node.name.startswith('test_'):
-                test_kind, refs = _classify_test_function(node)
+                test_kind, refs = _classify_test_function(node, imports)
                 test_id = f'test:{module}::{node.name}'
                 if test_id in seen_ids:
                     continue
@@ -2426,6 +2467,7 @@ def write_graph_to_pg(graph: dict) -> None:
 
 def build_graph_json() -> dict:
     """Build the complete graph and return as a JSON-serializable dict."""
+    _reset_lean_ambiguity_log()  # fresh dedup per build
     nodes = extract_all_nodes()
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
