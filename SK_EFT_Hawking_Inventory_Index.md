@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-15 (Phase 5p Wave 1 wrap + Wave 2 partial: FPDimension.lean now formally complete via the eigenvector approach for Fibonacci/Ising/SU(3)_1/SU(2)_3, plus new SU(4)_1 (Z_4 pointed, FPdim=1) and G₂_1 (FPdim=φ — **third source of golden ratio**, sharing Fibonacci's fusion matrix). `phi_triple_origin` theorem unifies the three φ instantiations across A₁ at level 1, A₁ at level 3, and G₂ at level 1. Earlier same day: Wave 5 Direction 1 (det(S)≠0 → Müger trivial bridge), Waves 3-4 (full subcategory + SymmetricCategory instance), Phase 5e Waves 7-8 (per-generator S² on U_q(ŝl₂)). Build clean; validate.py 16/16 pass; 1723 tests pass.)
+**Last synced:** 2026-04-15 (Phase 5p Wave 6 wrap: new `D2Formula.lean` module with explicit Drinfeld-center dimension identities for **both** Vec_{ℤ/2} (toric code, 4=2²) and Vec_{S₃} (8 anyons, 36=6², the first **non-abelian** Drinfeld-center dimension formula in any proof assistant). Earlier same day: Phase 5p Waves 1-2 (FPdim eigenvector approach + SU(4)_1 + G₂_1 + `phi_triple_origin`), Wave 5 Direction 1 (det(S)≠0 → Müger trivial bridge), Waves 3-4 (full subcategory + SymmetricCategory instance), Phase 5e Waves 7-8 (per-generator S² on U_q(ŝl₂)). 5 PRs merged today. Build clean; validate.py 16/16 pass; 1723 tests pass.)
 
 ---
 
@@ -12,12 +12,12 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **3012** (2934 substantive + 78 placeholder) | counts.json — package-module-bound count |
+| Lean theorems | **3021** (2942 substantive + 79 placeholder) | counts.json — package-module-bound count |
 | Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **132** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean` which is a `lean_exe`). ExtractDeps now walks by module (not namespace), so Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) are now included. |
+| Lean modules | **133** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean` which is a `lean_exe`). ExtractDeps now walks by module (not namespace), so Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) are now included. |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
 | Test files | **46** | |

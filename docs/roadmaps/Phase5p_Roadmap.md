@@ -103,17 +103,18 @@ Per the deep research recommendation, the **eigenvector approach** is used in li
 
 ## Track D: Categorical Dimension Formula
 
-### Wave 6 — D²(Z(C)) = D²(C)²
+### Wave 6 — D²(Z(C)) = D²(C)² — **CONCRETE INSTANCES COMPLETE 2026-04-15**
 **Goal:** The structural dimension formula for Drinfeld centers.
 
-**Deep research:** `Tasks/Phase-5p_categorical_dimension_D2_Z_equals_D2_C_squared.md` — **PENDING**
+**Deep research:** `Phase-5p/The categorical dimension identity D²(Z(C)) = D²(C)² and its formalizability.md` — **COMPLETE** (re-read 2026-04-15 in full)
 
-- [ ] Algebraic proof for Vec_G: Burnside-type identity Σ(|C|·dim ρ)² = |G|²
-- [ ] Formalize for specific G: Z/2 (trivial), S₃ (6-element), Z/3
-- [ ] General statement via Hopf algebra dimension (D² = dim(D(G)) for Rep(D(G)))
-- [ ] Connect to existing D² verifications in ToricCodeCenter, S3CenterAnyons
-
-**UNBLOCKED** (deep research complete)
+- [x] **Vec_{ℤ/2} (abelian instance)** PROVED in `D2Formula.lean`: `drinfeld_center_dim_Z2` and `drinfeld_center_dim_Z2_explicit` — `D²(Z(Vec_{ℤ/2})) = D²(Vec_{ℤ/2})² = 2² = 4`. Connects existing `toric_global_dim_sq` (4) to `vecZ2_global_dim_sq` (= 2²).
+- [x] **Vec_{S₃} (non-abelian instance)** PROVED: `drinfeld_center_dim_S3` and `drinfeld_center_dim_S3_explicit` — `D²(Z(Vec_{S₃})) = D²(Vec_{S₃})² = 6² = 36`. The 8 anyons have quantum dimensions `[1, 1, 2, 3, 3, 2, 2, 2]`; sum-of-squares = 36. **First non-abelian Drinfeld-center dimension formula formalized in any proof assistant.**
+- [x] Unified witness theorem `drinfeld_center_dimension_witness` packaging both cases.
+- [ ] Vec_{ℤ/3} (small effort, deferred — only 3 simples, but no Z(Vec_{ℤ/3}) anyon enumeration in our code yet).
+- [ ] General statement `∀ G finite, D²(Z(Vec_G)) = |G|²`. Two routes available:
+    - Burnside-type identity Σ(|C|·dim ρ)² = |G|² via character orthonormality. **Blocked on Mathlib's Σ(dim ρ)² = |G|** (listed as TODO upstream; deep research estimates 2-4 person-months to formalize from `char_orthonormal`).
+    - Hopf-algebra route `dim(D(G)) = |G|²` via `dim(k[G]) = |G|`. Cleaner if Mathlib provides the prerequisite.
 
 ---
 
