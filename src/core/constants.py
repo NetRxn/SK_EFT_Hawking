@@ -109,35 +109,54 @@ EXPERIMENTS = {
 
 POLARITON_MASS = 7.0e-35      # kg (effective polariton mass, Falque et al.)
 
+# Polariton parameters updated 2026-04-13 (Phase 5u Waves 3–4) to adopt the
+# Falque et al. PRL 135, 023401 (2025) smooth-horizon defaults verified by
+# LLM re-read of arXiv:2311.01392v2 full text:
+#   c_s ≈ 0.40 μm/ps (§IV.1) = 4.0e5 m/s
+#   ξ ≈ 3.4 μm upstream (§IV.1) = 3.4e-6 m
+#   κ measured at 0.07/0.08 ps⁻¹ (smooth horizon) and 0.11 ps⁻¹ (steep horizon)
+# We adopt the smooth-horizon 0.07 ps⁻¹ = 7e10 s⁻¹ as the baseline default.
+# Steep-horizon maximum 1.1e11 s⁻¹ is reported as the platform's upper reach in
+# Paper 12 body text but not used as the constants.py default — steep horizon
+# drives D = ξκ/c_s > 0.9 which pushes the EFT framework into the dispersive
+# regime (π/6·D² ≈ 0.45, 45% correction). Smooth horizon gives D ≈ 0.60:
+# borderline but perturbative. Paper 12 narrative relies on the perturbative
+# regime, hence the default adoption.
 POLARITON_PLATFORMS = {
     'Paris_long': {
-        'description': 'Paris polariton, long-lifetime cavity (100 ps)',
-        'c_s': 5.0e5,             # m/s (0.5 μm/ps, reservoir-corrected; see provenance)
-        'xi': 3.0e-6,             # m (3 μm, consistent with c_s via ξ=ℏ/m*c_s)
-        'kappa': 5.0e10,          # s⁻¹ (0.05 THz, SLM-controlled horizon)
-        'tau_cav': 100e-12,       # s (cavity lifetime)
+        'description': 'Paris polariton, long-lifetime cavity (100 ps) — PROJECTED',
+        'c_s': 4.0e5,             # m/s (0.40 μm/ps, Falque 2025 §IV.1)
+        'xi': 3.4e-6,             # m (3.4 μm upstream, Falque 2025 §IV.1)
+        'kappa': 7.0e10,          # s⁻¹ (0.07 ps⁻¹ smooth-horizon default, Falque 2025 Fig. 2)
+        'tau_cav': 100e-12,       # s (PROJECTED long-lifetime cavity; Falque actual ≈ 8 ps)
         'Gamma_pol': 1.0e10,      # s⁻¹ (1/tau_cav)
         'gamma_phonon_dim': 1e-4, # Dimensionless phonon damping (subdominant)
     },
     'Paris_ultralong': {
-        'description': 'Paris polariton, ultra-long-lifetime cavity (300 ps)',
-        'c_s': 5.0e5,             # m/s (reservoir-corrected)
-        'xi': 3.0e-6,             # m (consistent with c_s)
-        'kappa': 5.0e10,
+        'description': 'Paris polariton, ultra-long-lifetime cavity (300 ps) — PROJECTED',
+        'c_s': 4.0e5,             # m/s (Falque 2025)
+        'xi': 3.4e-6,             # m (Falque 2025)
+        'kappa': 7.0e10,          # s⁻¹ (smooth-horizon default)
         'tau_cav': 300e-12,
         'Gamma_pol': 3.33e9,
         'gamma_phonon_dim': 1e-4,
     },
     'Paris_standard': {
-        'description': 'Paris polariton, standard cavity (3 ps)',
-        'c_s': 5.0e5,             # m/s (reservoir-corrected)
-        'xi': 3.0e-6,             # m (consistent with c_s)
-        'kappa': 5.0e10,
-        'tau_cav': 3e-12,
-        'Gamma_pol': 3.33e11,
+        'description': 'Paris polariton, standard cavity (8 ps) — matches Falque 2025 actual',
+        'c_s': 4.0e5,             # m/s (Falque 2025 measured)
+        'xi': 3.4e-6,             # m (Falque 2025 measured)
+        'kappa': 7.0e10,          # s⁻¹ (Falque 2025 smooth-horizon measured)
+        'tau_cav': 8e-12,         # s (Falque 2025 actual cavity; was 3 ps projected)
+        'Gamma_pol': 1.25e11,     # s⁻¹ (1/tau_cav for 8 ps)
         'gamma_phonon_dim': 1e-4,
     },
 }
+
+# Falque steep-horizon reach — reported but not adopted as default.
+# The steep-horizon configuration (§IV.2) demonstrates κ up to 0.11 ps⁻¹
+# corresponding to T_H ~ 134 mK, at the cost of D ≈ 0.93 (EFT becomes
+# non-perturbative). Quoted in Paper 12 body text.
+FALQUE_STEEP_HORIZON_KAPPA = 1.1e11  # s⁻¹ (0.11 ps⁻¹ maximum measured)
 
 # Derived polariton parameters
 for _name, _plat in POLARITON_PLATFORMS.items():

@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1775831769.10736 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775831770.04542 0
-  "./paper_draftNotes.bib" 1775831769.78845 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1776128687.38227 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1776128688.31842 0
+  "./paper_draftNotes.bib" 1776128688.06378 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1775831769.78753 4338 0d91600fe29ef5dabee03d1728eb2419 "pdflatex"
+  "paper_draft.aux" 1776128688.0628 4495 16d0e7fbcbf512ad0dc0a89a239f1a80 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1775831769.21017 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775831770.04559 0
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex" 1775698047.13279 15728 0bc1f05a5221b6b236640db91ac2bbe6 ""
+["pdflatex"] 1776128687.497 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1776128688.31859 0
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex" 1776127160.38258 17369 95eb22d4fb4e2c47c6b7c8518c0a64c2 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -127,10 +127,10 @@
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/fig73_sm_generation_constraint.png" 1775328529.7687 81502 f23e3687d2e7956b44d1e4afacd518df ""
   "figures/fig75_modular_invariance_phase.png" 1775329368.14127 114396 50136f9c1d74fec902d2f00fc5959655 ""
-  "paper_draft.aux" 1775831769.78753 4338 0d91600fe29ef5dabee03d1728eb2419 "pdflatex"
-  "paper_draft.bbl" 1775831769.20787 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
-  "paper_draft.out" 1775831769.78825 2874 c8a75f24627dfef7be8ecc853ac455ab "pdflatex"
-  "paper_draft.tex" 1775698047.13279 15728 0bc1f05a5221b6b236640db91ac2bbe6 ""
+  "paper_draft.aux" 1776128688.0628 4495 16d0e7fbcbf512ad0dc0a89a239f1a80 "pdflatex"
+  "paper_draft.bbl" 1776128687.49473 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
+  "paper_draft.out" 1776128688.06359 2874 c8a75f24627dfef7be8ecc853ac455ab "pdflatex"
+  "paper_draft.tex" 1776127160.38258 17369 95eb22d4fb4e2c47c6b7c8518c0a64c2 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

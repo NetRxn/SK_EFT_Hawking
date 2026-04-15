@@ -86,21 +86,50 @@ theorem gapIntegral_pos (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
 /-
 The gap integral is strictly decreasing in Δ: if 0 ≤ Δ₁ < Δ₂, then I(Δ₁) > I(Δ₂).
 -/
+set_option backward.isDefEq.respectTransparency false in
 theorem gapIntegral_strictAnti (Δ₁ Δ₂ Λ : ℝ) (hΔ₁ : 0 ≤ Δ₁) (hΔ₂ : 0 ≤ Δ₂)
     (hΛ : 0 < Λ) (h12 : Δ₁ < Δ₂) :
     gapIntegral Δ₂ Λ < gapIntegral Δ₁ Λ := by
   unfold gapIntegral;
   split_ifs <;> try linarith;
   · nlinarith [ show 0 < c₄ by exact one_div_pos.mpr ( by positivity ), show 0 < Δ₂ ^ 2 * Real.log ( 1 + Λ ^ 2 / Δ₂ ^ 2 ) by exact mul_pos ( sq_pos_of_pos ( lt_of_le_of_ne hΔ₂ ( Ne.symm ‹_› ) ) ) ( Real.log_pos ( by norm_num; positivity ) ) ];
-  · -- We'll use the fact that $f(x) = x \log(1 + \frac{\Lambda^2}{x})$ is strictly increasing for $x > 0$.
+  · -- Use the fact that f(x) = x · log(1 + Λ²/x) is strictly increasing on (0, ∞)
     have h_inc : StrictMonoOn (fun x : ℝ => x * Real.log (1 + Λ ^ 2 / x)) (Set.Ioi 0) := by
-      -- Let's calculate the derivative of $f(x) = x \log(1 + \frac{\Lambda^2}{x})$ and show it is positive for $x > 0$.
+      have h_log_ineq : ∀ y > 0, Real.log (1 + y) > y / (1 + y) := fun y hy => by
+        rw [gt_iff_lt, div_lt_iff₀ (by positivity)]
+        nlinarith [Real.log_inv (1 + y),
+                   Real.log_lt_sub_one_of_pos
+                     (inv_pos.mpr (show (0 : ℝ) < 1 + y by linarith))
+                     (by nlinarith [inv_mul_cancel₀
+                           (show (1 + y : ℝ) ≠ 0 from by positivity)]),
+                   inv_mul_cancel₀ (show (1 + y : ℝ) ≠ 0 from by positivity)]
       have h_deriv_pos : ∀ x > 0, deriv (fun x => x * Real.log (1 + Λ ^ 2 / x)) x > 0 := by
-        intro x hx; norm_num [ div_eq_mul_inv, differentiableAt_inv, hx.ne', ne_of_gt ( add_pos zero_lt_one ( mul_pos ( sq_pos_of_pos hΛ ) ( inv_pos.mpr hx ) ) ) ] ; ring_nf; norm_num [ hx.ne', ne_of_gt ( add_pos zero_lt_one ( mul_pos ( sq_pos_of_pos hΛ ) ( inv_pos.mpr hx ) ) ) ] ;
-        have h_log_ineq : ∀ y > 0, Real.log (1 + y) > y / (1 + y) := by
-          exact fun y hy => by rw [ gt_iff_lt ] ; rw [ div_lt_iff₀ ( by positivity ) ] ; nlinarith [ Real.log_inv ( 1 + y ), Real.log_lt_sub_one_of_pos ( inv_pos.mpr ( by positivity : 0 < ( 1 + y ) ) ) ( by nlinarith [ inv_mul_cancel₀ ( by positivity : ( 1 + y ) ≠ 0 ) ] ), inv_mul_cancel₀ ( by positivity : ( 1 + y ) ≠ 0 ) ] ;
-        convert h_log_ineq ( Λ ^ 2 * x⁻¹ ) ( by positivity ) |> lt_of_le_of_lt _ using 1 ; ring;
-        norm_num [ sq, mul_assoc, mul_comm x, hx.ne' ];
+        intro x hx
+        have hx1 : (1 : ℝ) + Λ^2/x > 0 := by positivity
+        have hΛx : Λ^2 / x > 0 := by positivity
+        have h_log_diff : HasDerivAt (fun x : ℝ => Real.log (1 + Λ^2/x))
+                         (-Λ^2 / (x^2 * (1 + Λ^2/x))) x := by
+          have hd : HasDerivAt (fun x : ℝ => Λ^2 / x) (-Λ^2 / x^2) x := by
+            have := (hasDerivAt_id x).inv hx.ne'
+            simpa [div_eq_mul_inv] using this.const_mul (Λ^2)
+          have h1 : HasDerivAt (fun x : ℝ => 1 + Λ^2/x) (0 + -Λ^2 / x^2) x :=
+            (hasDerivAt_const x (1:ℝ)).add hd
+          have h1' : HasDerivAt (fun x : ℝ => 1 + Λ^2/x) (-Λ^2 / x^2) x := by
+            convert h1 using 1; ring
+          have h2 := h1'.log hx1.ne'
+          convert h2 using 1
+          field_simp
+        have h_prod : HasDerivAt (fun x : ℝ => x * Real.log (1 + Λ^2/x))
+                      (Real.log (1 + Λ^2/x) + x * (-Λ^2 / (x^2 * (1 + Λ^2/x)))) x := by
+          have := (hasDerivAt_id x).mul h_log_diff
+          simpa [one_mul] using this
+        rw [h_prod.deriv]
+        have h_rewrite : Real.log (1 + Λ^2/x) + x * (-Λ^2 / (x^2 * (1 + Λ^2/x)))
+                       = Real.log (1 + Λ^2/x) - (Λ^2/x) / (1 + Λ^2/x) := by
+          field_simp
+          ring
+        rw [h_rewrite]
+        linarith [h_log_ineq (Λ^2/x) hΛx]
       apply strictMonoOn_of_deriv_pos;
       · exact convex_Ioi 0;
       · exact continuousOn_of_forall_continuousAt fun x hx => ContinuousAt.mul continuousAt_id <| ContinuousAt.log ( continuousAt_const.add <| continuousAt_const.div continuousAt_id <| ne_of_gt hx ) <| ne_of_gt <| add_pos_of_pos_of_nonneg zero_lt_one <| div_nonneg ( sq_nonneg _ ) hx.out.le;
@@ -404,6 +433,7 @@ Lower bound on I(Δ): I(Δ) ≥ c₄·Λ²/(2(Λ²+Δ²)) for Δ ≥ 0.
 This provides two-sided control on the gap integral, enabling
 explicit bounds on G_c.
 -/
+set_option backward.isDefEq.respectTransparency false in
 theorem gapIntegral_lower_bound (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
     c₄ * Λ ^ 4 / (4 * (Λ ^ 2 + Δ ^ 2)) ≤ gapIntegral Δ Λ := by
   by_cases hΔ_zero : Δ = 0;
@@ -415,8 +445,40 @@ theorem gapIntegral_lower_bound (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
       -- Let's choose any $t > 0$ and simplify the inequality.
       intro t ht
       have h_deriv : ∀ x ∈ Set.Ioo 0 t, deriv (fun x => Real.log (1 + x) - x + x^2 / (2 * (x + 1))) x ≤ 0 := by
-        intro x hx; norm_num [ add_comm, show x + 1 ≠ 0 from by linarith [ hx.1 ] ];
-        rw [ inv_eq_one_div, div_sub_one, div_add_div, div_le_iff₀ ] <;> nlinarith [ hx.1, hx.2 ];
+        intro x hx
+        have hx1 : (1 : ℝ) + x > 0 := by linarith [hx.1]
+        have hx1' : x + 1 > 0 := by linarith [hx.1]
+        -- Compute derivative = -x² / (2(x+1)²) explicitly via HasDerivAt
+        have h_log : HasDerivAt (fun x : ℝ => Real.log (1 + x)) (1/(1 + x)) x := by
+          have h_add : HasDerivAt (fun x : ℝ => 1 + x) 1 x := by
+            have := (hasDerivAt_const x (1:ℝ)).add (hasDerivAt_id x)
+            simpa using this
+          have h1 := h_add.log hx1.ne'
+          convert h1 using 1
+        have h_id : HasDerivAt (fun x : ℝ => x) 1 x := hasDerivAt_id x
+        have h_div : HasDerivAt (fun x : ℝ => x^2 / (2*(x+1))) (x*(x+2) / (2*(x+1)^2)) x := by
+          have h_num : HasDerivAt (fun x : ℝ => x^2) (2*x) x := by
+            have := (hasDerivAt_id x).pow 2
+            simpa using this
+          have h_den : HasDerivAt (fun x : ℝ => 2*(x+1)) 2 x := by
+            have := (hasDerivAt_id x).add_const (1:ℝ)
+            simpa using this.const_mul 2
+          have h_den_ne : 2*(x+1) ≠ 0 := by positivity
+          have := h_num.div h_den h_den_ne
+          convert this using 1
+          field_simp
+          ring
+        have h_total : HasDerivAt (fun x : ℝ => Real.log (1 + x) - x + x^2 / (2*(x+1)))
+                      (1/(1+x) - 1 + x*(x+2) / (2*(x+1)^2)) x :=
+          (h_log.sub h_id).add h_div
+        rw [h_total.deriv]
+        have hrw : (1/(1+x) - 1 + x*(x+2) / (2*(x+1)^2)) = -x^2 / (2*(x+1)^2) := by
+          field_simp
+          ring
+        rw [hrw]
+        have : 0 ≤ x^2 / (2*(x+1)^2) := by positivity
+        have hneg : -x^2 / (2*(x+1)^2) = -(x^2 / (2*(x+1)^2)) := by ring
+        linarith [hneg]
       -- Apply the mean value theorem to the interval $[0, t]$.
       obtain ⟨c, hc⟩ : ∃ c ∈ Set.Ioo 0 t, deriv (fun x => Real.log (1 + x) - x + x^2 / (2 * (x + 1))) c = (Real.log (1 + t) - t + t^2 / (2 * (t + 1)) - (Real.log (1 + 0) - 0 + 0^2 / (2 * (0 + 1)))) / (t - 0) := by
         apply_rules [ exists_deriv_eq_slope ];

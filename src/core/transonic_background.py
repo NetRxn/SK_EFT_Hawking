@@ -313,47 +313,69 @@ def compute_dissipative_correction(
 ) -> dict:
     """Estimate the dissipative correction δ_diss for given transport coefficients.
 
-    This is the central numerical result of the paper. The correction is:
+    Computes the first-order dissipative correction to the Hawking temperature
+    from Schwinger–Keldysh EFT transport coefficients.
 
-        δ_diss ~ γ_eff / (κ · ξ²)
+    The identification chain (all grounded in Lean / PAPER_DEPENDENCIES):
 
-    where γ_eff = γ₁ + γ₂ · (geometric factor depending on flow profile).
+        Γ_H  = (γ₁ + γ₂) · (κ / c_s)²         (Γ_H in [s⁻¹], γ in [m²/s])
+        δ_diss = Γ_H / κ                        (dimensionless)
 
-    For a BEC with Beliaev damping:
-        γ_B ~ (n a³)^{1/2} · ω² / c_s
+    The (κ/c_s)² factor is the Hawking-frequency wavenumber squared: k_H² = (κ/c_s)².
+    This is the conversion factor between the EFT Lagrangian-level transport
+    coefficients (γ₁ ψ_a □ ψ_r in [m²/s]) and the phonon damping rate Γ_H at the
+    horizon frequency ω_H = κ. See:
 
-    evaluated at the Hawking frequency ω_H ~ κ.
+        - Lean: SecondOrderSK.lean: δ_diss = Γ_H/κ (docstring, line 352)
+        - Lean: gamma_H_from_transport (this identification, added 2026-04-13)
+        - PAPER_DEPENDENCIES['paper1_first_order']:
+            "Γ_H = (γ₁+γ₂)(κ/c_s)² (damping rate at horizon)"
+        - Paper 1 body text §4 (for the full derivation)
+
+    Prior to 2026-04-13, this function omitted the k_H² factor, producing δ_diss
+    values wrong by ~10⁷ for typical BEC parameters. The bug was invisible to
+    existing tests (which used hand-picked γ values and only asserted
+    |δ_diss| < 0.1). Fixed in Phase 5u Wave 1a.
+
+    For a BEC with Beliaev damping (T=0, 3-phonon decay):
+        Γ_Bel ~ √(n a³) · ω_H² / c_s
+
+    At finite temperature, Zaremba-style binary-collision damping with the
+    thermal cloud gives larger Γ_H. `beliaev_transport_coefficients` currently
+    returns only the T=0 (Beliaev) values; finite-T corrections must be added
+    separately if the experiment is not at T << T_c.
 
     Args:
         bg: The transonic background solution.
         params: BEC physical parameters.
-        gamma_1, gamma_2: SK-EFT transport coefficients [s⁻¹·m²].
+        gamma_1, gamma_2: SK-EFT transport coefficients in [m²/s]
+            (the coefficients of ψ_a □ ψ_r and ψ_a (u·∂)² ψ_r in the dissipative
+             Lagrangian; see Paper 1 eq. S_diss).
 
     Returns:
         Dictionary with:
-        - delta_diss: the dissipative correction
+        - delta_diss: the dissipative correction (dimensionless)
         - delta_disp: the dispersive correction (for comparison)
         - delta_cross: the cross-term
-        - gamma_eff: the effective damping rate at the Hawking frequency
+        - gamma_eff: (γ₁+γ₂) in [m²/s] — the Lagrangian-level effective coefficient
+        - Gamma_H: (γ₁+γ₂)·k_H² in [s⁻¹] — the damping rate at the horizon frequency
+        - gamma_beliaev: Γ_Bel [s⁻¹] — cross-check against direct Beliaev formula
     """
     kappa = bg.surface_gravity
     xi = params.healing_length
     cs = params.sound_speed_upstream
-    hbar = HBAR
 
-    # The transport coefficients γ₁, γ₂ here have units [s⁻¹] — they are
-    # the phonon damping rate evaluated at the Hawking frequency ω_H ~ κ.
-    # The dimensionless dissipative correction is:
-    #   δ_diss ~ Γ_H / κ
-    # where Γ_H = γ₁ + γ₂ is the total damping rate at ω_H.
-    # This is the ratio of the damping timescale to the Hawking timescale.
     from src.core.formulas import first_order_correction, dispersive_correction
 
-    # gamma_1, gamma_2 are already damping RATES [s⁻¹] at the horizon
-    gamma_eff = gamma_1 + gamma_2
+    # Convert EFT transport coefficients (γ in [m²/s]) to horizon damping rate
+    # (Γ_H in [s⁻¹]) via the Hawking wavenumber k_H = κ/c_s.
+    # Identity grounded in Lean: SecondOrderSK.gamma_H_from_transport
+    k_H_sq = (kappa / cs) ** 2 if cs > 0 else 0.0
+    gamma_eff = gamma_1 + gamma_2              # [m²/s]
+    Gamma_H = gamma_eff * k_H_sq               # [s⁻¹]
 
     D = bg.adiabaticity
-    delta_diss = first_order_correction(gamma_eff, kappa)
+    delta_diss = first_order_correction(Gamma_H, kappa)
     delta_disp = dispersive_correction(D)
 
     # Cross-term: δ_cross ~ δ_disp · δ_diss
@@ -370,7 +392,9 @@ def compute_dissipative_correction(
         "delta_diss": delta_diss,
         "delta_disp": delta_disp,
         "delta_cross": delta_cross,
-        "gamma_eff": gamma_eff,
+        "gamma_eff": gamma_eff,       # [m²/s] Lagrangian-level coefficient sum
+        "Gamma_H": Gamma_H,           # [s⁻¹]  damping rate at horizon frequency
+        "k_H_sq": k_H_sq,             # [m⁻²]  Hawking wavenumber squared
         "gamma_beliaev": gamma_beliaev,
         "kappa": kappa,
         "T_H_nK": bg.hawking_temp * 1e9,
@@ -400,18 +424,26 @@ if __name__ == "__main__":
         print(f"  Hawking temp:   T_H = {bg.hawking_temp*1e9:.3f} nK")
         print(f"  Adiabaticity:   D = {bg.adiabaticity:.4f}")
 
-        # Estimate dissipative correction with Beliaev damping
-        # γ_B ~ (na³)^{1/2} · ω_H² / c_s, evaluated at ω_H ~ κ
-        n = params.density_upstream
-        a = params.scattering_length
-        na3_half = np.sqrt(n * a**3)
-        omega_H = bg.surface_gravity
-        gamma_beliaev = na3_half * omega_H**2 / params.sound_speed_upstream
+        # Estimate dissipative correction via the Beliaev chain.
+        # IMPORTANT: compute_dissipative_correction expects γ₁, γ₂ in EFT
+        # Lagrangian units [m²/s]; the Beliaev RATE Γ_Bel is in [s⁻¹].
+        # beliaev_transport_coefficients handles the conversion γ = Γ_Bel/(2 k_H²).
+        # (Prior demo versions passed Γ_Bel directly as γ₁ — dimensionally wrong,
+        # producing δ_diss off by a factor of k_H²; fixed in Phase 5u Wave 1a.)
+        from src.core.formulas import beliaev_transport_coefficients
+        tc = beliaev_transport_coefficients(
+            params.density_upstream,
+            params.scattering_length,
+            bg.surface_gravity,
+            params.sound_speed_upstream,
+            params.healing_length,
+        )
         correction = compute_dissipative_correction(
             bg, params,
-            gamma_1=gamma_beliaev,
-            gamma_2=gamma_beliaev * 0.1,  # Anisotropic term is subdominant
+            gamma_1=tc['gamma_1'],
+            gamma_2=tc['gamma_2'],
         )
         print(f"  δ_disp ~ {correction['delta_disp']:.2e}")
-        print(f"  δ_diss ~ {correction['delta_diss']:.2e}")
+        print(f"  δ_diss ~ {correction['delta_diss']:.2e}  (Beliaev T=0)")
+        print(f"  Γ_H = {correction['Gamma_H']:.2e} s⁻¹")
         print(f"  T_eff/T_H = {correction['T_eff_over_T_H']:.8f}")

@@ -1,16 +1,17 @@
 # Fdb version 4
-["bibtex paper_draft"] 1775831794.66776 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775845518.02349 0
-  "./paper_draftNotes.bib" 1775845517.76992 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1776171231.78908 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1776171232.78467 0
+  "./paper_draftNotes.bib" 1776171232.52218 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1775845517.76886 5274 1031a775a6f089df571b3ae7ebc37d0a "pdflatex"
+  "paper_draft.aux" 1776171232.52105 6709 f04d33103e541c0743edcc9ebf582901 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1775845517.18002 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper12_polariton/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775845518.02366 0
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper12_polariton/paper_draft.tex" 1775844425.32915 13437 3d8e4432dcde80f402ff093b6b8da65b ""
+["pdflatex"] 1776171231.88896 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper12_polariton/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1776171232.78487 0
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper12_polariton/paper_draft.tex" 1776170965.992 16513 b4daa308c97d287a76f3bd65a0bdaa72 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm0900.tfm" 1136768653 1536 c4f439db76ef96a9c53bc437f35ffe20 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex9.tfm" 1246382020 996 a18840b13b499c08ac2de96a99eda4bc ""
@@ -54,6 +55,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb" 1248133631 31099 c85edf1dd5b9e826d67c9c7293b6786c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb" 1248133631 29078 718ea4567ceff944262b0f5b0800e1d9 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb" 1215737283 149037 995a6f1e12c1d647b99b1cf55db78699 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb" 1215737283 138258 6525c253f16cededa14c7fd0da7f67b2 ""
   "/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty" 1576625341 40635 c40361e206be584d448876bba8a64a3b ""
@@ -116,11 +118,11 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1775585593 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "figures/fig_stimulated_hawking_spectrum.png" 1775424115.57922 95642 b775b6123644110f2bade5240f4032f5 ""
-  "paper_draft.aux" 1775845517.76886 5274 1031a775a6f089df571b3ae7ebc37d0a "pdflatex"
-  "paper_draft.bbl" 1775831794.75798 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
-  "paper_draft.out" 1775845517.76973 2760 5b5184ecfcc4b65a51196327c9e95321 "pdflatex"
-  "paper_draft.tex" 1775844425.32915 13437 3d8e4432dcde80f402ff093b6b8da65b ""
+  "figures/fig_stimulated_hawking_spectrum.png" 1776171230.44157 110810 526ad666dba38bbd2206157110b59b53 ""
+  "paper_draft.aux" 1776171232.52105 6709 f04d33103e541c0743edcc9ebf582901 "pdflatex"
+  "paper_draft.bbl" 1776171231.88689 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
+  "paper_draft.out" 1776171232.52198 2760 5b5184ecfcc4b65a51196327c9e95321 "pdflatex"
+  "paper_draft.tex" 1776170965.992 16513 b4daa308c97d287a76f3bd65a0bdaa72 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

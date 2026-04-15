@@ -1,0 +1,305 @@
+{
+  "timestamp": "20260415T033337Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "notebook_exec": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "13 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "16 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Stakeholder.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Technical.ipynb",
+          "passed": true,
+          "message": "12 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Technical.ipynb",
+          "passed": true,
+          "message": "14 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Technical.ipynb",
+          "passed": true,
+          "message": "11 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "15 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5a_ChiralityWall_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5a_ChiralityWall_Technical.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5a_GTChiralFermion_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5a_GTChiralFermion_Technical.ipynb",
+          "passed": true,
+          "message": "12 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_ModularGeneration_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_ModularGeneration_Technical.ipynb",
+          "passed": true,
+          "message": "10 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_QuantumGroup_Stakeholder.ipynb",
+          "passed": true,
+          "message": "4 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_QuantumGroup_Technical.ipynb",
+          "passed": true,
+          "message": "7 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb",
+          "passed": true,
+          "message": "3 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_SMAnomalyDrinfeld_Technical.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_Synthesis_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_Synthesis_Technical.ipynb",
+          "passed": true,
+          "message": "12 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_E8Rokhlin_Stakeholder.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_E8Rokhlin_Technical.ipynb",
+          "passed": true,
+          "message": "7 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_HopfAlgebra_Stakeholder.ipynb",
+          "passed": true,
+          "message": "4 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_HopfAlgebra_Technical.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_SU2kFusion_Stakeholder.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_SU2kFusion_Technical.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_MTC_Stakeholder.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_MTC_Technical.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_Polariton_Stakeholder.ipynb",
+          "passed": true,
+          "message": "5 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_Polariton_Technical.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_TetradGap_Stakeholder.ipynb",
+          "passed": true,
+          "message": "4 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_TetradGap_Technical.ipynb",
+          "passed": true,
+          "message": "9 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5e_BraidedMTC_Stakeholder.ipynb",
+          "passed": true,
+          "message": "3 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5e_BraidedMTC_Technical.ipynb",
+          "passed": true,
+          "message": "6 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5h_ChiralityWall3D_Stakeholder.ipynb",
+          "passed": false,
+          "message": "\u001b[31mTypeError\u001b[39m: 'int' object is not subscriptable",
+          "warning": false
+        },
+        {
+          "name": "Phase5h_ChiralityWall3D_Technical.ipynb",
+          "passed": false,
+          "message": "\u001b[31mTypeError\u001b[39m: 'int' object is not subscriptable",
+          "warning": false
+        },
+        {
+          "name": "Phase5i_RankTwoQuantumGroups_Stakeholder.ipynb",
+          "passed": true,
+          "message": "3 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5i_RankTwoQuantumGroups_Technical.ipynb",
+          "passed": true,
+          "message": "7 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5j_FermiPointEmergence_Stakeholder.ipynb",
+          "passed": true,
+          "message": "4 code cells executed successfully",
+          "warning": false
+        },
+        {
+          "name": "Phase5j_FermiPointEmergence_Technical.ipynb",
+          "passed": true,
+          "message": "8 code cells executed successfully",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

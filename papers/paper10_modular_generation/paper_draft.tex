@@ -134,9 +134,12 @@ Under the modular $T$-transformation $\tau \to \tau + 1$:
 Therefore $\eta(\tau+1) = \zeta_{24} \cdot \eta(\tau)$, where
 $\zeta_{24} = e^{2\pi i/24} = e^{\pi i/12}$ is a primitive 24th root of unity.
 
-The ``24'' traces to the zeta-function regularization
-$\zeta(-1) = -1/12$~\cite{Rademacher1973}, which gives the Casimir energy
-$E_0 = -c/24$ of a conformal field theory on a torus.
+The ``24'' in the modular phase has two complementary origins. Analytically,
+it is the exponent in the $q$-expansion of $\eta(\tau)$ (standard material;
+see Rademacher~\cite{Rademacher1973}). Physically, it is the Casimir energy
+$E_0 = -c/24$ of a 2D conformal field theory on a torus, which may be
+traced via zeta-function regularization $\zeta(-1)=-1/12$ and the
+framing anomaly on a spin 3-manifold~\cite{diFrancesco1997}.
 
 \subsection{From $\eta$ to the generation constraint}
 
@@ -193,18 +196,29 @@ $\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$ classifying
 global anomalies~\cite{GarciaEtxebarria2019}.
 \item \textbf{Rokhlin's theorem:} $\sigma(M) \equiv 0 \pmod{16}$ for spin
 4-manifolds~\cite{Rokhlin1952}.
-\item \textbf{Kitaev 16-fold way:} topological superconductors with
-time-reversal symmetry have a $\mathbb{Z}_{16}$
-classification~\cite{Kitaev2009}.
+\item \textbf{Kitaev 16-fold way:} two-dimensional topological
+superconductors in symmetry class~D (particle-hole symmetry, \emph{no}
+time-reversal) admit a free-fermion $\mathbb{Z}$ classification
+~\cite{Kitaev2009} that reduces to $\mathbb{Z}_{16}$ under
+interactions~\cite{FidkowskiKitaev2010}.
 \end{enumerate}
-All four are connected through the spin structure of spacetime,
-ultimately tracing to Bott periodicity: $16 = 8 \times 2$, where
-$8$ is the Bott period of $\pi_n(O)$ and $2$ is the Pfaffian factor
-(square root of the determinant for real structures).
+The four appearances of 16 are connected through the algebraic topology
+of spin structures in four dimensions: Wang~(2024)~\cite{Wang2024}
+establishes the relationship between the Rokhlin bound, the
+$\mathbb{Z}_{16}$ anomaly, and the SM fermion count via the string
+bordism $\mathbb{Z}_{24}$ class and the associated Smith homomorphism.
+The relationship to the Kitaev $\mathbb{Z}_{16}$ classification is
+suggestive but has not been formalized here.
 
-The formal verification records the convergence as
-\texttt{sixteen\_convergence\_full} in \texttt{RokhlinBridge.lean}
-(14 theorems; Rokhlin's theorem enters as a hypothesis, not an axiom).
+The formal verification records the four occurrences of the number 16
+as \texttt{sixteen\_convergence\_full} in \texttt{RokhlinBridge.lean}.
+The theorem statement is an enumeration: it asserts that (i)~the SM
+fermion component count equals 16, (ii)~$16 \equiv 0 \pmod{16}$, and
+(iii)~divisibility by 16 of spin-4-manifold signatures holds
+\emph{as a hypothesis} (Rokhlin's theorem). It does \emph{not} prove the
+mathematical equivalence of the four phenomena; that equivalence is
+the content of Wang's cobordism argument, which we use as an external
+input rather than formalize.
 
 \subsection{With vs.\ without $\nu_R$}
 
@@ -293,7 +307,8 @@ in any proof assistant.
 
 The complete generation constraint chain rests on
 machine-checked algebra plus three standard textbook topology results
-(ko cohomology~\cite{Adams1974}, ASS convergence, ABP splitting~\cite{ABP1967}).
+(ko cohomology~\cite{Adams1974}, ASS convergence~\cite{BeaudryCampbell},
+ABP splitting~\cite{ABP1967}).
 
 The same Mathlib infrastructure that formalizes modular forms for number
 theory directly constrains the Standard Model's generation count ---
@@ -319,7 +334,14 @@ JHEP \textbf{08}, 003 (2019) [arXiv:1808.00009].
 
 \bibitem{Rademacher1973}
 H.~Rademacher, \emph{Topics in Analytic Number Theory}
-(Springer, 1973).
+(Springer, 1973). [Cited for the analytic theory of the
+Dedekind $\eta$ function and the $1/24$ in its $q$-expansion exponent.]
+
+\bibitem{diFrancesco1997}
+P.~di Francesco, P.~Mathieu, and D.~S\'en\'echal,
+\emph{Conformal Field Theory} (Springer, 1997).
+[Ch.~5 for the CFT/Casimir-energy origin of the $c/24$
+combination on a spin 3-manifold with framing.]
 
 \bibitem{GrossJackiw1972}
 D.~Gross and R.~Jackiw,
@@ -329,10 +351,13 @@ Phys.\ Rev.\ D \textbf{6}, 477 (1972).
 V.~Rokhlin, Dokl.\ Akad.\ Nauk SSSR \textbf{84}, 221 (1952).
 
 \bibitem{Kitaev2009}
-A.~Kitaev, AIP Conf.\ Proc.\ \textbf{1134}, 22 (2009).
+A.~Kitaev, AIP Conf.\ Proc.\ \textbf{1134}, 22--30 (2009).
 
-\bibitem{Stolz1993}
-S.~Stolz, Math.\ Ann.\ \textbf{296}, 685 (1993).
+\bibitem{FidkowskiKitaev2010}
+L.~Fidkowski and A.~Kitaev,
+Phys.\ Rev.\ B \textbf{81}, 134509 (2010) [arXiv:0904.2197].
+[Interacting reduction of the 2D class-D free-fermion $\mathbb{Z}$
+to $\mathbb{Z}_{16}$ — the sixteenfold way under interactions.]
 
 \bibitem{Adams1974}
 J.~F.~Adams, \emph{Stable Homotopy and Generalised Homology}
@@ -340,11 +365,13 @@ J.~F.~Adams, \emph{Stable Homotopy and Generalised Homology}
 
 \bibitem{ABP1967}
 D.~W.~Anderson, E.~H.~Brown~Jr., and F.~P.~Peterson,
-Ann.\ Math.\ \textbf{86}, 256 (1967).
+\emph{The structure of the spin cobordism ring},
+Ann.\ Math.\ \textbf{86}, 271--298 (1967).
 
 \bibitem{BeaudryCampbell}
 A.~Beaudry and J.~A.~Campbell,
-Contemp.\ Math.\ \textbf{718}, 1 (2018) [arXiv:1801.07530].
+\emph{A guide for computing stable homotopy groups},
+Contemp.\ Math.\ \textbf{718}, 89--136 (2018) [arXiv:1801.07530].
 \end{thebibliography}
 
 \end{document}

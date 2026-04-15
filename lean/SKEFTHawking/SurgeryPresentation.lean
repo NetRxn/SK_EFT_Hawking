@@ -215,9 +215,7 @@ theorem stabilize_destabilize_components (S : SurgeryPresentation) (sign : ℤ) 
     (destabilize (stabilize S sign) (by simp [stabilize])).numComponents = S.numComponents := by
   simp [destabilize, stabilize]
 
-/-- **Full round-trip:** stabilize then destabilize recovers the original
-    linking matrix entries. For any entry (a,b) in the original n×n matrix,
-    the stabilize→destabilize linking matrix has the same value. -/
+set_option backward.isDefEq.respectTransparency false in
 theorem stabilize_destabilize_entry (S : SurgeryPresentation) (sign : ℤ)
     (a b : Fin S.numComponents) :
     (destabilize (stabilize S sign) (by simp [stabilize])).linkingMatrix

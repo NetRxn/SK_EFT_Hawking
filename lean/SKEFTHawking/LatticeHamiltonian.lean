@@ -301,6 +301,7 @@ The space ℓ²(ℤ, ℂ) contains the standard basis vectors e_n for each n ∈
 
 If ℓ²(ℤ,ℂ) were finite-dimensional, it would have finite basis. But ℤ is infinite (use integers_not_finite or Int.infinite), and the standard basis of lp indexed by ℤ has infinitely many linearly independent elements. Alternatively, use that a finite-dimensional space has finite basis, but lp over an infinite index has infinite dimension. Try: the key fact is that ℤ is infinite. If lp were finite-dimensional, its Module.rank would be finite, but it should be at least |ℤ| which is infinite.
 -/
+set_option backward.isDefEq.respectTransparency false in
 theorem rotor_hilbert_not_finite_dim :
     ¬FiniteDimensional ℂ (lp (fun _ : ℤ => ℂ) 2) := by
   -- The standard basis vectors in ℓ²(ℤ) are linearly independent.

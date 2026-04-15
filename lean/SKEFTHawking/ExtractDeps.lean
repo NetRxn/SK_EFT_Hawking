@@ -34,6 +34,19 @@ private def skPrefix : Name := `SKEFTHawking
 private def inSKNamespace (n : Name) : Bool :=
   skPrefix.isPrefixOf n
 
+/-- Check if a Name lives in a module belonging to the SKEFTHawking package
+    (i.e., the module path starts with `SKEFTHawking`). This is the architectural
+    successor to `inSKNamespace`: it includes declarations defined at root namespace
+    (or sub-namespaces like `FermionBag4D`) as long as they live in our package. -/
+private def inSKPackage (env : Environment) (n : Name) : Bool :=
+  match env.getModuleIdxFor? n with
+  | some idx =>
+    let moduleNames := env.header.moduleNames
+    if h : idx.toNat < moduleNames.size then
+      skPrefix.isPrefixOf moduleNames[idx.toNat]
+    else false
+  | none => false
+
 /-- Check if a Name is an auxiliary/internal name (contains `._` component). -/
 private def isAuxName (n : Name) : Bool :=
   n.isInternal
@@ -111,10 +124,10 @@ private def processDecl (env : Environment) (name : Name) (ci : ConstantInfo)
   let moduleName := getModuleName env name
   let typeStr ← ppExprStr ci.type
 
-  -- Collect transitive axiom dependencies
+  -- Collect transitive axiom dependencies (project = our package's modules)
   let axioms ← collectAxioms name
-  let projectAxioms := axioms.filter (fun a => inSKNamespace a)
-  let coreAxioms := axioms.filter (fun a => !inSKNamespace a)
+  let projectAxioms := axioms.filter (fun a => inSKPackage env a)
+  let coreAxioms := axioms.filter (fun a => !inSKPackage env a)
 
   -- Extract structure fields if applicable
   let structFields ← if kind == "structure" || kind == "class" then
@@ -140,12 +153,15 @@ private def shouldSkip (ci : ConstantInfo) : Bool :=
   | .quotInfo _ => true
   | _ => false
 
-/-- Main extraction: iterate over all constants, filter, process. -/
+/-- Main extraction: iterate over all constants, filter, process.
+    Filters by module membership in the SKEFTHawking package, not by namespace.
+    This catches Phase-4 modules (FermionBag4D, SO4Weingarten, etc.) whose
+    declarations live at root/sub-namespace but in a SKEFTHawking.* module. -/
 private def extractAll (env : Environment) : MetaM (Array Json) := do
-  -- Collect all SKEFTHawking declaration names from the SMap using pure fold
+  -- Collect all declaration names from modules in the SKEFTHawking package
   let declNames : Array (Name × ConstantInfo) :=
     env.constants.fold (init := #[]) fun acc name ci =>
-      if inSKNamespace name && !shouldSkip ci && !isAuxName name then
+      if inSKPackage env name && !shouldSkip ci && !isAuxName name then
         acc.push (name, ci)
       else
         acc

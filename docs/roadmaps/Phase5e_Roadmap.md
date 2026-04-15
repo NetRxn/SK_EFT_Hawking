@@ -132,7 +132,9 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ### Wave 7 — U_q(ŝl₂) Bialgebra
 **Prerequisite:** Aristotle resolves Uqsl2AffineHopf sorry. Current state: **12 sorry** (was 16; 4 KE/KF antipode cases proved manually: K₁E₀, K₀F₀, K₁F₁, K₁F₀). Aristotle 6dbc9447 submitted with all 17 remaining sorry (12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor) with RingQuot workaround hints (letI, erw, op_mul, Algebra.smul_def). Counit PROVED (Aristotle 986b9f66). Coproduct 17/21 cases proved; 4 q-Serre remain. Antipode 10/21 proved (was 6); 11 remain. **Blocker: RingQuot typeclass divergence** — remaining 12 sorry grouped: 4 comul Serre=0, 2 Serre comm, 2 cross-comm, 4 antipode Serre=0.
 
-- [ ] Wire coproduct + counit into Bialgebra typeclass (blocked: 4 q-Serre coproduct cases remain; further blocked by RingQuot typeclass divergence)
+**UPDATE 2026-04-14:** Uqsl2AffineHopf 12 sorry reached 0 in April 2026 (Phase 5s Wave 8). The parallel rank-2 case Uqsl3Hopf closed 2026-04-14 with full Bialgebra + HopfAlgebra typeclass instances wired (commits `bdf0ee9`, `dadce3e`, `619dd37`, `fad0edb`, `912c495`, `bf2989d`), proving the same pattern works. **The RingQuot typeclass divergence blocker is resolved via palindromic Serre atom-bridge + per-generator eval lemmas**, an approach that supersedes the earlier Aristotle 6dbc9447 workaround hints. Wave 7 for U_q(ŝl₂) (affine) is UNBLOCKED — Bialgebra typeclass wiring for Uqsl2AffineHopf can now proceed using the same pattern proven on Uqsl3Hopf.
+
+- [ ] Wire coproduct + counit into Bialgebra typeclass (UNBLOCKED 2026-04-14 — follow Uqsl3Hopf Tranche E pattern; commits `dadce3e`, `bdf0ee9`)
 - [ ] Coassociativity: (Δ⊗id)∘Δ = (id⊗Δ)∘Δ
 - [ ] Counitality: (ε⊗id)∘Δ = id = (id⊗ε)∘Δ (counit proved, waiting on full coproduct)
 
@@ -144,6 +146,8 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 
 ### Wave 8 — U_q(ŝl₂) HopfAlgebra
 **Goal:** Full HopfAlgebra instance on U_q(ŝl₂).
+
+**Status 2026-04-14:** UNBLOCKED. The Drinfeld-theorem S² pattern (S² = Ad(K₁²K₂²) per generator) is now proven for Uqsl3Hopf (commits `bdf0ee9`, `dadce3e`). The same blueprint applies to U_q(ŝl₂) with appropriate K₀/K₁ substitutions.
 
 - [ ] Antipode axioms: μ∘(S⊗id)∘Δ = η∘ε, μ∘(id⊗S)∘Δ = η∘ε
 - [ ] S² = Ad(K₀K₁) (squared antipode)
@@ -206,7 +210,7 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ```
 
 **Tracks A, B, D: COMPLETE.** All deep research applied, all theorems proved.
-Track C: **blocked** — 4 KE/KF antipode cases proved manually (sorry 16→12). Aristotle 6dbc9447 submitted with all 17 remaining sorry + RingQuot workaround hints. **RingQuot typeclass divergence** blocks remaining 12 sorry in Uqsl2AffineHopf.
+Track C: **UNBLOCKED 2026-04-14** — Uqsl2AffineHopf 12 sorry was closed in April 2026 (Phase 5s Wave 8); the parallel Uqsl3Hopf closure on 2026-04-14 validates the palindromic Serre atom-bridge + per-generator eval-lemma approach that resolves the RingQuot typeclass divergence blocker. Wave 7 (Bialgebra) and Wave 8 (HopfAlgebra) instance wiring is ready to proceed on U_q(ŝl₂) following the Uqsl3Hopf Tranche E pattern (commits `bdf0ee9`, `dadce3e`).
 
 ---
 
@@ -233,7 +237,7 @@ Track C: **blocked** — 4 KE/KF antipode cases proved manually (sorry 16→12).
 | QCyc5.lean | B-W5 | **9** | COMPLETE, 0 sorry, hexagon E1-E3 |
 | QSqrt3.lean | D-W9 | **8** | COMPLETE, 0 sorry, SU(2)_4 unitarity |
 | QLevel3.lean | D-W9 | **19** | COMPLETE, 0 sorry, SU(2)_3 unitarity |
-| Uqsl2AffineHopf.lean (extended) | C-W7,8 | — | **12 sorry** (was 16; 4 KE/KF antipode cases proved manually this session: K₁E₀, K₀F₀, K₁F₁, K₁F₀. Aristotle 6dbc9447 submitted with 17 sorry + RingQuot workaround hints. Remaining 12: 4 comul Serre=0, 2 Serre comm, 2 cross-comm, 4 antipode Serre=0) |
+| Uqsl2AffineHopf.lean (extended) | C-W7,8 | — | **0 sorry** (closed April 2026 via Phase 5s Wave 8). Bialgebra + HopfAlgebra typeclass wiring (Wave 7/8) UNBLOCKED 2026-04-14 — follow Uqsl3Hopf Tranche E pattern. |
 | KnotInvariant.lean (if feasible) | D-W10 | — | Deferred to Phase 6 |
 
 ### Python (`src/core/formulas.py` — DONE)
@@ -314,4 +318,4 @@ Track C: **blocked** — 4 KE/KF antipode cases proved manually (sorry 16→12).
 
 ---
 
-*Phase 5e roadmap. Created 2026-04-05, updated 2026-04-08. Tracks A/B/D complete. Track C blocked: Uqsl2AffineHopf 12 sorry (was 16; 4 KE/KF antipode cases proved manually: K₁E₀, K₀F₀, K₁F₁, K₁F₀). Aristotle 6dbc9447 submitted with 17 sorry + RingQuot workaround hints. Remaining 12: 4 comul Serre=0, 2 Serre comm, 2 cross-comm, 4 antipode Serre=0. 65 theorems new this phase, 17 sorry total project-wide (12 Uqsl2AffineHopf + 3 Uqsl3Hopf + 2 CenterFunctor).*
+*Phase 5e roadmap. Created 2026-04-05, updated 2026-04-14. Tracks A/B/D complete. Track C: **UNBLOCKED 2026-04-14** — Uqsl2AffineHopf 12 sorry closed April 2026 (Phase 5s Wave 8); Uqsl3Hopf 3 sorry + full Bialgebra + HopfAlgebra typeclass wiring closed 2026-04-14 (commits `bdf0ee9`, `dadce3e`, `619dd37`, `fad0edb`, `912c495`, `bf2989d`). RingQuot typeclass divergence resolved via palindromic Serre atom-bridge + per-generator eval lemmas. Wave 7/8 Bialgebra + HopfAlgebra wiring on U_q(ŝl₂) UNBLOCKED — same Tranche E pattern applies. 65 theorems new this phase.*

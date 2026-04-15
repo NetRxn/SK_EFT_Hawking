@@ -1,615 +1,108 @@
 {
   "paper": "paper12_polariton",
-  "review_date": "2026-04-05T00:00:00Z",
+  "review_date": "2026-04-13T00:00:00Z",
   "overall_status": "issues_found",
+  "reviewer_notes": "Post-Wave 4-6 re-review. Numerics all PASS against Falque smooth/steep values. Lean theorem refs PASS. Main issues: stale theorem count (1318 vs actual 2237+), stale PolaritonTier1 count (6 vs 13 total / 9 substantive), Giacobino2025 bibitem not in CITATION_REGISTRY, orphan bibitems Nelsen2013/Alnatah2024/Amo2009 (Amo2009 cited by name in Table 1 but no \\cite), stale PAPER_DEPENDENCIES.key_claims for paper12 still reflects pre-Wave 4 values (c_s=0.5, T_H=61 mK, D=0.3) and should be synced with 0.4/85/0.60.",
   "numerical_claims": [
-    {
-      "location": "Abstract, line 23: c_s = 0.5 um/ps",
-      "paper_value": "0.5 um/ps = 5e5 m/s",
-      "computed_value": "5e5 m/s (from POLARITON_PLATFORMS['Paris_long']['c_s'])",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Matches constants.py exactly."
-    },
-    {
-      "location": "Abstract, line 30: T_H ~ 61 mK",
-      "paper_value": "61 mK",
-      "computed_value": "60.77 mK (HBAR * 5e10 / (2*pi*K_B))",
-      "delta_pct": 0.38,
-      "status": "PASS",
-      "notes": "Within 0.5% tolerance. The 60.8 mK in Table 2 is more precise and also correct."
-    },
-    {
-      "location": "Table 2, line 129: D = 0.30",
-      "paper_value": "0.30",
-      "computed_value": "0.30 (3e-6 * 5e10 / 5e5)",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Exact match."
-    },
-    {
-      "location": "Table 2, line 126: c_s = 5.0e5 m/s",
-      "paper_value": "5.0e5 m/s",
-      "computed_value": "5.0e5 m/s",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Exact match."
-    },
-    {
-      "location": "Table 2, line 125: m* = 7.0e-35 kg",
-      "paper_value": "7.0e-35 kg",
-      "computed_value": "7.0e-35 kg (POLARITON_MASS)",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Exact match."
-    },
-    {
-      "location": "Table 2, line 127: xi = 3.0 um",
-      "paper_value": "3.0 um",
-      "computed_value": "3.013 um (HBAR/(m*c_s) = 1.0546e-34 / (7e-35 * 5e5))",
-      "delta_pct": 0.43,
-      "status": "PASS",
-      "notes": "Within tolerance. The 3.0 is a round number; exact calc gives 3.013."
-    },
-    {
-      "location": "Table 2, line 128: kappa = 5.0e10 s^-1",
-      "paper_value": "5.0e10 s^-1",
-      "computed_value": "5.0e10 s^-1",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Match. Note: this is PROJECTED, not measured."
-    },
-    {
-      "location": "Table 2, line 130: T_H = 60.8 mK",
-      "paper_value": "60.8 mK",
-      "computed_value": "60.77 mK",
-      "delta_pct": 0.05,
-      "status": "PASS",
-      "notes": "Excellent agreement."
-    },
-    {
-      "location": "Section III, line 165: G(0.1k) ~ 1.14",
-      "paper_value": "1.14",
-      "computed_value": "1.143 (1/(exp(0.2*pi)-1))",
-      "delta_pct": 0.26,
-      "status": "PASS",
-      "notes": "Within tolerance."
-    },
-    {
-      "location": "Section III, line 166: G(0.3k) ~ 0.18",
-      "paper_value": "0.18",
-      "computed_value": "0.179 (1/(exp(0.6*pi)-1))",
-      "delta_pct": 0.56,
-      "status": "PASS",
-      "notes": "Close to tolerance boundary but acceptable for an approximate value in text."
-    },
-    {
-      "location": "Section III, line 166: G(k) ~ 0.002",
-      "paper_value": "0.002",
-      "computed_value": "0.00187 (1/(exp(2*pi)-1))",
-      "delta_pct": 6.5,
-      "status": "WARN",
-      "notes": "Rounded to 1 sig fig. Actual is 0.00187. The paper value 0.002 is ~7% high but acceptable as a rough estimate. Should use 0.0019 for precision."
-    },
-    {
-      "location": "Section III, line 188: SNR ~ 11 with 100 photons",
-      "paper_value": "11",
-      "computed_value": "11.43 (sqrt(100)*1.143)",
-      "delta_pct": 3.8,
-      "status": "PASS",
-      "notes": "Consistent within rounding to 2 sig figs."
-    },
-    {
-      "location": "Section V, line 229: T_noise ~ 1.3 K",
-      "paper_value": "1.3 K",
-      "computed_value": "1.267 K (m*c_s^2/k_B = 7e-35*(5e5)^2/1.38e-23)",
-      "delta_pct": 2.6,
-      "status": "PASS",
-      "notes": "Consistent within rounding."
-    },
-    {
-      "location": "Table 3 (Platform Comparison): kappa*tau values",
-      "paper_value": "Paris long: 5.0, ultralong: 15, standard: 0.15",
-      "computed_value": "5.0, 15.0, 0.15 (from POLARITON_PLATFORMS)",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "All three match exactly."
-    },
-    {
-      "location": "Abstract, line 26: D = xi*kappa/c_s ~ 0.3-0.5",
-      "paper_value": "0.3-0.5",
-      "computed_value": "0.30 (all three platforms share the same c_s, xi, kappa => same D)",
-      "delta_pct": null,
-      "status": "WARN",
-      "notes": "The abstract says 0.3-0.5 but all three platforms have D = 0.30. There is no platform with D = 0.5 in the codebase. The range is misleading."
-    },
-    {
-      "location": "Abstract, lines 27-28: ~20% dispersive corrections to T_H",
-      "paper_value": "~20%",
-      "computed_value": "~9% at D=0.30 (1 - D^2 = 0.91)",
-      "delta_pct": null,
-      "status": "FAIL",
-      "notes": "CRITICAL: At D=0.30, the dispersive correction is ~9%, not ~20%. The ~20% value corresponds to D~0.46 (old parameters before c_s correction). The abstract contradicts the paper body (Section III, line 149) which correctly says ~10%. The formulas.py docstring for dispersive_hawking_correction also has the stale D=0.46 value."
-    },
-    {
-      "location": "Abstract, lines 31-32: G(omega) > 0.5 for omega < 0.3*kappa",
-      "paper_value": "G > 0.5 for omega < 0.3*kappa",
-      "computed_value": "G(0.3k) = 0.179. G > 0.5 only for omega < 0.175*kappa (exp(2*pi*x)=3 => x=ln(3)/(2*pi)=0.1748)",
-      "delta_pct": null,
-      "status": "FAIL",
-      "notes": "CRITICAL: The abstract claim is numerically false. G(0.3k) = 0.18, NOT > 0.5. The crossover G=0.5 occurs at omega/kappa ~ 0.175. Must correct to 'G > 0.5 for omega < 0.17*kappa' or 'G > 0.1 for omega < 0.3*kappa'."
-    }
+    {"location": "Abstract line 24 + Table 2 row c_s", "paper_value": "0.40 um/ps = 4.0e5 m/s", "computed_value": "4.0e5 m/s (POLARITON_PLATFORMS Paris_* smooth-horizon default)", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Abstract line 27 + Table 2 row xi", "paper_value": "3.4 um", "computed_value": "3.4e-6 m", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Abstract line 28 + Table 2 row kappa smooth", "paper_value": "7.0e10 s^-1", "computed_value": "7.0e10 s^-1", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Abstract line 37 + Table 2 row kappa steep", "paper_value": "1.1e11 s^-1", "computed_value": "FALQUE_STEEP_HORIZON_KAPPA = 1.1e11 s^-1", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Abstract line 36 + Table 2 row D smooth", "paper_value": "D = 0.60", "computed_value": "D = xi*kappa/c_s = 3.4e-6 * 7.0e10 / 4.0e5 = 0.595", "delta_pct": 0.84, "status": "PASS", "notes": "Rounding to 0.60 acceptable; POLARITON_PLATFORMS stores 0.595."},
+    {"location": "Abstract line 38 + Table 2 row D steep", "paper_value": "D = 0.93", "computed_value": "D = 0.935", "delta_pct": 0.54, "status": "PASS", "notes": "Rounding acceptable."},
+    {"location": "Abstract line 35 + Table 2 T_H smooth", "paper_value": "T_H = 85 mK", "computed_value": "hbar*7e10/(2*pi*kB) = 85.096 mK", "delta_pct": 0.11, "status": "PASS"},
+    {"location": "Abstract line 37 + Table 2 T_H steep", "paper_value": "T_H = 134 mK", "computed_value": "hbar*1.1e11/(2*pi*kB) = 133.72 mK", "delta_pct": 0.21, "status": "PASS"},
+    {"location": "Abstract + Table 2 -pi D^2/6 smooth", "paper_value": "-0.19", "computed_value": "-pi*0.595^2/6 = -0.1854", "delta_pct": 2.5, "status": "PASS", "notes": "Rounded from -0.185 to -0.19 is standard 2-sigfig display."},
+    {"location": "Abstract + Table 2 -pi D^2/6 steep", "paper_value": "-0.46", "computed_value": "-pi*0.935^2/6 = -0.4577", "delta_pct": 0.5, "status": "PASS"},
+    {"location": "Abstract line 43 G=0.5 threshold", "paper_value": "omega < 0.175 kappa = ln(3)/(2 pi) kappa", "computed_value": "ln(3)/(2*pi) = 0.17485", "delta_pct": 0.09, "status": "PASS"},
+    {"location": "Section III.B (line 192) G(0.1 kappa)", "paper_value": "1.14", "computed_value": "1/(exp(0.2*pi) - 1) = 1.1436", "delta_pct": 0.32, "status": "PASS"},
+    {"location": "Section III.B (line 192) G(0.3 kappa)", "paper_value": "0.18", "computed_value": "0.1790", "delta_pct": 0.56, "status": "PASS", "notes": "Rounded to 2 sig figs."},
+    {"location": "Section III.B (line 192) G(kappa)", "paper_value": "0.002", "computed_value": "0.001871", "delta_pct": 6.9, "status": "PASS", "notes": "Rounded to 1 sig fig (display only)."},
+    {"location": "Section III.C (line 215) SNR at 0.1 kappa with N_probe=100", "paper_value": "~11", "computed_value": "sqrt(100)*1.1436 = 11.44", "delta_pct": 3.8, "status": "PASS"},
+    {"location": "Section V (line 263) T_noise", "paper_value": "0.81 K", "computed_value": "m* c_s^2 / kB = 7e-35 * (4e5)^2 / 1.380649e-23 = 0.8112 K", "delta_pct": 0.14, "status": "PASS"},
+    {"location": "Table 3 Paris long kappa*tau", "paper_value": "7.0", "computed_value": "7.0e10 * 100e-12 = 7.0", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Table 3 Paris ultralong kappa*tau", "paper_value": "21", "computed_value": "7.0e10 * 300e-12 = 21.0", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Table 3 Paris standard (8 ps) kappa*tau smooth", "paper_value": "0.56", "computed_value": "7.0e10 * 8e-12 = 0.56", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Table 3 Paris steep-horizon reach kappa*tau", "paper_value": "0.88", "computed_value": "1.1e11 * 8e-12 = 0.88", "delta_pct": 0.0, "status": "PASS"},
+    {"location": "Abstract line 46 + Conclusion Lean theorem count", "paper_value": "1318 Lean 4 theorems", "computed_value": "2796 theorems+lemmas in SKEFTHawking (lean_deps.json); Inventory Index reports 2237+", "delta_pct": null, "status": "FAIL", "notes": "Theorem count is badly stale — 1318 is a pre-Phase-5 number. Canonical source (Inventory Index) is 2237+. Paper undersells by >40%."},
+    {"location": "Abstract line 48 PolaritonTier1 theorem count", "paper_value": "6 theorems", "computed_value": "13 theorems total in PolaritonTier1 (9 substantive + 4 auto-generated structure accessors)", "delta_pct": null, "status": "WARN", "notes": "Stale count. Update to '9 substantive theorems' or '13 total'."},
+    {"location": "Abstract + Intro 'zero axioms' claim", "paper_value": "0 axioms", "computed_value": "All 3 named polariton theorems have axiom_deps_project = [] in lean_deps.json", "delta_pct": 0.0, "status": "PASS"}
   ],
   "theorem_refs": [
-    {
-      "name": "spatial_attenuation_ge_one (paper abstract, line 37)",
-      "in_lean": false,
-      "actual_lean_name": "attenuation_ge_one (in SKEFTHawking.PolaritonTier1 namespace)",
-      "has_sorry": false,
-      "aristotle": "manual (NOT in ARISTOTLE_THEOREMS)",
-      "status": "FAIL",
-      "notes": "Name mismatch: paper says 'spatial_attenuation_ge_one', actual Lean name is 'attenuation_ge_one'. Also, the paper (Section VI, line 267) claims Aristotle 'da7cb04d' proved this, but da7cb04d is the HubbardStratonovichRHMC run. The PolaritonTier1 theorems are NOT in ARISTOTLE_THEOREMS -- they were proved manually."
-    },
-    {
-      "name": "tier1_regime_monotone (paper abstract, line 38)",
-      "in_lean": false,
-      "actual_lean_name": "attenuation_mono_Gamma (in SKEFTHawking.PolaritonTier1 namespace)",
-      "has_sorry": false,
-      "aristotle": "manual",
-      "status": "FAIL",
-      "notes": "Name mismatch: paper says 'tier1_regime_monotone', actual Lean name is 'attenuation_mono_Gamma'."
-    },
-    {
-      "name": "bec_recovery_limit (paper abstract, line 38)",
-      "in_lean": false,
-      "actual_lean_name": "attenuation_eq_one_at_zero_decay (in SKEFTHawking.PolaritonTier1 namespace)",
-      "has_sorry": false,
-      "aristotle": "manual",
-      "status": "FAIL",
-      "notes": "Name mismatch: paper says 'bec_recovery_limit', actual Lean name is 'attenuation_eq_one_at_zero_decay'."
-    },
-    {
-      "name": "stimulated_hawking_gain (paper abstract, line 39)",
-      "in_lean": false,
-      "actual_lean_name": null,
-      "has_sorry": null,
-      "aristotle": "pending (per formulas.py docstring)",
-      "status": "FAIL",
-      "notes": "The formulas.py docstring references 'stimulated_hawking_gain_pos (future)' as the Lean theorem, but this theorem does not exist in any .lean file. The paper lists this as a verified formula but the Lean formalization is missing."
-    },
-    {
-      "name": "polariton_hawking_temperature (paper abstract, line 40)",
-      "in_lean": true,
-      "actual_lean_name": "hawking_temp_from_surface_gravity (AcousticMetric.lean)",
-      "has_sorry": false,
-      "aristotle": "manual",
-      "status": "PASS",
-      "notes": "formulas.py correctly delegates to hawking_temperature(), which references hawking_temp_from_surface_gravity in AcousticMetric.lean. This theorem exists and is proved."
-    },
-    {
-      "name": "hawking_temp_from_surface_gravity (paper Section VI)",
-      "in_lean": true,
-      "actual_lean_name": "hawking_temp_from_surface_gravity",
-      "has_sorry": false,
-      "aristotle": "manual",
-      "status": "PASS",
-      "notes": "Exists in AcousticMetric.lean line 282, fully proved (rfl)."
-    },
-    {
-      "name": "stimulated_hawking_snr (paper Section VI, line 259)",
-      "in_lean": false,
-      "actual_lean_name": null,
-      "has_sorry": null,
-      "aristotle": "pending",
-      "status": "WARN",
-      "notes": "The formulas.py docstring says 'stimulated_hawking_snr_scaling (future)' -- this Lean theorem does not exist. However, the paper does not explicitly claim this is verified, and the formula (sqrt(N)*G) is trivially correct. WARN because the paper's Section VI says 'All numerical predictions derive from formulas.py' without distinguishing verified from unverified formulas."
-    },
-    {
-      "name": "1214 Lean 4 theorems (abstract line 34, conclusion line 289)",
-      "in_lean": false,
-      "actual_lean_name": null,
-      "has_sorry": null,
-      "aristotle": null,
-      "status": "FAIL",
-      "notes": "CRITICAL: Theorem count is wrong. Actual count from grep: 1187 theorems across 84 .lean files (excluding .backup). The constants.py header says 1179. The paper claims 1214 which matches neither. Must be corrected to the actual count."
-    },
-    {
-      "name": "0 axioms (abstract line 35)",
-      "in_lean": true,
-      "actual_lean_name": null,
-      "has_sorry": null,
-      "aristotle": null,
-      "status": "PASS",
-      "notes": "Confirmed: grep for '^axiom ' in lean/SKEFTHawking/*.lean returns 0 matches. AXIOM_METADATA shows all former axioms have been removed."
-    },
-    {
-      "name": "PolaritonTier1.lean: 6 theorems, zero sorry (abstract line 36)",
-      "in_lean": true,
-      "actual_lean_name": null,
-      "has_sorry": false,
-      "aristotle": null,
-      "status": "PASS",
-      "notes": "Confirmed: PolaritonTier1.lean has exactly 6 theorems and 0 sorry."
-    }
+    {"name": "attenuation_ge_one", "in_lean": true, "module": "SKEFTHawking.PolaritonTier1", "has_sorry": false, "axiom_deps_project": [], "status": "PASS"},
+    {"name": "attenuation_mono_Gamma", "in_lean": true, "module": "SKEFTHawking.PolaritonTier1", "has_sorry": false, "axiom_deps_project": [], "status": "PASS"},
+    {"name": "attenuation_eq_one_at_zero_decay", "in_lean": true, "module": "SKEFTHawking.PolaritonTier1", "has_sorry": false, "axiom_deps_project": [], "status": "PASS"},
+    {"name": "hawking_temp_from_surface_gravity", "in_lean": true, "module": "SKEFTHawking.AcousticMetric", "has_sorry": false, "status": "PASS", "notes": "Referenced as the Lean backing for polariton_hawking_temperature in Section VI."},
+    {"name": "stimulated_hawking_gain", "in_lean": false, "is_formula": true, "formulas_py_line": 820, "status": "PASS", "notes": "Correctly presented as Python formula (not Lean theorem); paper notes 'Aristotle: pending'."},
+    {"name": "polariton_hawking_temperature", "in_lean": false, "is_formula": true, "formulas_py_line": 792, "status": "PASS", "notes": "formulas.py function, Lean-backed via hawking_temp_from_surface_gravity."},
+    {"name": "stimulated_hawking_snr", "in_lean": false, "is_formula": true, "formulas_py_line": 845, "status": "PASS"}
   ],
   "parameter_provenance": [
-    {
-      "key": "POLARITON_MASS",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "MEASURED",
-      "status": "WARN",
-      "notes": "LLM verified 2026-03-31. Not human-verified. Blocks paper submission."
-    },
-    {
-      "key": "Paris_long.c_s",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "EXTRACTED",
-      "status": "WARN",
-      "notes": "LLM verified 2026-04-05 (reservoir correction resolved). Not human-verified."
-    },
-    {
-      "key": "Paris_long.xi",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "EXTRACTED",
-      "status": "WARN",
-      "notes": "LLM verified. Derived from c_s. Not human-verified."
-    },
-    {
-      "key": "Paris_long.kappa",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "PROJECTED",
-      "status": "WARN",
-      "notes": "PROJECTED parameter. Falque 2025 did NOT report kappa directly. Order-of-magnitude estimate. LLM verified notes acknowledge this is projected. Paper Table 2 correctly labels it as 'Projected (SLM-controlled)'. Not human-verified."
-    },
-    {
-      "key": "Paris_long.tau_cav",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "PROJECTED",
-      "status": "WARN",
-      "notes": "PROJECTED. Falque actual cavity is ~8 ps, not 100 ps. Paper Table 3 does not clearly flag this as projected. Not human-verified."
-    },
-    {
-      "key": "Paris_long.Gamma_pol",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "DERIVED",
-      "status": "WARN",
-      "notes": "Derived from tau_cav. Not human-verified."
-    },
-    {
-      "key": "Paris_long.gamma_phonon_dim",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "PROJECTED",
-      "status": "WARN",
-      "notes": "PROJECTED. Source listed as 'NEEDS IDENTIFICATION'. Order-of-magnitude estimate. Not human-verified."
-    },
-    {
-      "key": "Paris_ultralong.tau_cav",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "PROJECTED",
-      "status": "WARN",
-      "notes": "PROJECTED. 300 ps cavity exists (Snoke/Pfeiffer) but not demonstrated with polariton horizons. Not human-verified."
-    },
-    {
-      "key": "Paris_ultralong.Gamma_pol",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "DERIVED",
-      "status": "WARN",
-      "notes": "Derived. Not human-verified."
-    },
-    {
-      "key": "Paris_standard.tau_cav",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "EXTRACTED",
-      "status": "WARN",
-      "notes": "Typical value, no specific paper source. Not human-verified."
-    },
-    {
-      "key": "Paris_standard.Gamma_pol",
-      "llm_verified": true,
-      "human_verified": false,
-      "tier": "DERIVED",
-      "status": "WARN",
-      "notes": "Derived. Not human-verified."
-    }
+    {"key": "Paris_long.c_s", "llm_verified_date": "2026-04-13", "human_verified_date": null, "tier": "MEASURED", "status": "WARN", "notes": "LLM-verified post-Wave 4. Human-verification still pending (blocks submission per CHECK 15)."},
+    {"key": "Paris_long.xi", "llm_verified_date": "2026-04-13", "human_verified_date": null, "tier": "MEASURED", "status": "WARN"},
+    {"key": "Paris_long.kappa", "llm_verified_date": "2026-04-13", "human_verified_date": null, "tier": "MEASURED", "status": "WARN"},
+    {"key": "Paris_long.tau_cav", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "PROJECTED", "status": "WARN"},
+    {"key": "Paris_long.Gamma_pol", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "DERIVED", "status": "WARN"},
+    {"key": "Paris_ultralong.tau_cav", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "PROJECTED", "status": "WARN"},
+    {"key": "Paris_standard.tau_cav", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "EXTRACTED", "status": "WARN", "notes": "Value was corrected 3ps -> 8ps in Wave 4, but llm_verified_date was not advanced. Should be 2026-04-13."},
+    {"key": "POLARITON_MASS", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "MEASURED", "status": "WARN"}
   ],
   "citation_integrity": [
-    {
-      "bibkey": "Steinhauer2016",
-      "in_registry": true,
-      "doi_verified": false,
-      "status": "PASS"
-    },
-    {
-      "bibkey": "deNova2019",
-      "in_registry": true,
-      "doi_verified": false,
-      "status": "PASS"
-    },
-    {
-      "bibkey": "Gerace2012",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Nguyen2015",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Falque2025",
-      "in_registry": true,
-      "doi_verified": false,
-      "status": "PASS"
-    },
-    {
-      "bibkey": "Estrecho2021",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Stepanov2019",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Claude2023",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Grisins2016",
-      "in_registry": true,
-      "doi_verified": false,
-      "status": "PASS"
-    },
-    {
-      "bibkey": "Burkhard2025",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Jacquet2022",
-      "in_registry": true,
-      "doi_verified": false,
-      "status": "PASS"
-    },
-    {
-      "bibkey": "Finazzi2012",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Amelio2020",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Jacquet2023QNM",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Nelsen2013",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Alnatah2024",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    },
-    {
-      "bibkey": "Amo2009",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not found in CITATION_REGISTRY. Must be added."
-    }
+    {"bibkey": "Steinhauer2016", "in_registry": true, "status": "PASS"},
+    {"bibkey": "deNova2019", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Gerace2012", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Nguyen2015", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Falque2025", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Giacobino2025", "in_registry": false, "status": "FAIL", "notes": "New Wave 5 citation (arXiv:2512.14194) not in CITATION_REGISTRY. Must be registered before submission."},
+    {"bibkey": "Estrecho2021", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Stepanov2019", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Claude2023", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Grisins2016", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Burkhard2025", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Jacquet2022", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Finazzi2012", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Amelio2020", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Jacquet2023QNM", "in_registry": true, "status": "PASS"},
+    {"bibkey": "Nelsen2013", "in_registry": true, "status": "WARN", "notes": "bibitem defined but no \\cite in paper text — orphan."},
+    {"bibkey": "Alnatah2024", "in_registry": true, "status": "WARN", "notes": "bibitem defined but no \\cite in paper text — orphan."},
+    {"bibkey": "Amo2009", "in_registry": true, "status": "WARN", "notes": "bibitem defined but no \\cite. Table 1 row references 'Amo et al. (2009)' by name only — add \\cite{Amo2009} or remove bibitem."}
   ],
   "qualitative_claims": [
-    {
-      "claim": "Polariton condensates offer 10^9-fold temperature advantage (line 52)",
-      "support": "T_H_polariton ~ 61 mK vs T_H_BEC ~ 0.35 nK => ratio ~ 1.74e8",
-      "status": "WARN",
-      "notes": "The ratio 61 mK / 0.35 nK = 1.74e8, which is ~10^8, not 10^9. The abstract range '0.1-1 K' would give 10^8-10^9. At 61 mK the advantage is ~10^8. The claim '10^9' overstates by an order of magnitude at the actual predicted T_H. Should say '10^8'."
-    },
-    {
-      "claim": "Stimulated detection 10^3-10^6 times better than spontaneous (abstract line 29, Section III line 189)",
-      "support": "SNR(stimulated, 100 photons) ~ 11 vs SNR(spontaneous) requires ~10^9 shots. The comparison is not apples-to-apples: the 10^3-10^6 factor is not a direct computation output.",
-      "status": "WARN",
-      "notes": "The claim is qualitatively supported by Grisins (2016) but the exact 10^3-10^6 range is not directly computed from the pipeline. It depends on the spontaneous baseline which comes from external references."
-    },
-    {
-      "claim": "Optimal probe window is omega < 0.3*kappa (Section III, line 167)",
-      "support": "G(0.3k) = 0.18, which is >10% of a unit-intensity probe. The 'optimal' designation is reasonable.",
-      "status": "PASS",
-      "notes": "The text correctly defines 'optimal' as 'stimulated signal exceeds 10% of probe intensity', and G(0.3k)=0.18 > 0.10. But this contradicts the abstract claim of G>0.5 at omega<0.3k."
-    },
-    {
-      "claim": "Only ~100 probe photons per mode needed for 5-sigma detection (abstract line 33)",
-      "support": "SNR = sqrt(N_probe)*G at 0.1k: sqrt(100)*1.14 = 11.4 > 5. Confirmed.",
-      "status": "PASS",
-      "notes": "Correct at omega = 0.1*kappa. At higher frequencies, more photons needed."
-    },
-    {
-      "claim": "Ultralong (300 ps) is optimal; standard (3 ps) is 'Marginal' (Table 3)",
-      "support": "kappa*tau: ultralong=15, standard=0.15. Condition kappa*tau>1 satisfied only by long and ultralong.",
-      "status": "PASS",
-      "notes": "Classification is physically reasonable."
-    },
-    {
-      "claim": "Noise T ~ 1.3 K 'does not affect the stimulated measurement' (line 230)",
-      "support": "T_noise/T_H ~ 1.3K/0.061K ~ 21. The claim that stimulated measurement bypasses this noise is qualitatively supported by Grisins (2016).",
-      "status": "PASS",
-      "notes": "Physical argument is sound -- stimulated measurement is at mean-field level."
-    },
-    {
-      "claim": "Conclusion: 10^9 times higher temperatures (line 288)",
-      "support": "Same issue as above: actual ratio is ~10^8.",
-      "status": "WARN",
-      "notes": "See qualitative_claims[0]. Should be ~10^8 at 61 mK."
-    }
+    {"claim": "10^3-10^6 SNR improvement over spontaneous (Abstract line 31 + Section III.C)", "support": "Grisins 2016 quotes ~10^9 repetitions to resolve spontaneous correlations at 5e-5. Stimulated: SNR=11 single-shot with N_probe=100. Ratio span matches 10^3-10^6.", "status": "PASS"},
+    {"claim": "~100 probe photons per mode for 5-sigma (Abstract line 44)", "support": "At omega=0.1*kappa, G=1.14 -> sqrt(N_probe)*1.14=5 -> N_probe ~ 19. Paper quotes 100 for comfortable SNR=11.", "status": "PASS"},
+    {"claim": "Tier 1 labels for Paris_* in Table 3", "support": "POLARITON_PLATFORMS tier1_regime values", "status": "WARN", "notes": "Table 3 labels Paris_long (tau=100 ps) as 'Perturbative', but POLARITON_PLATFORMS['Paris_long'].tier1_regime = 'borderline' (Gamma_pol/kappa = 0.143 > 0.1 cutoff). Align table label with constants.py OR update cutoff."},
+    {"claim": "c_s factor ~2.5 below reservoir-free estimates (Abstract line 25)", "support": "1.0 -> 0.40 um/ps; Table 1 shows 3 independent measurements.", "status": "PASS"},
+    {"claim": "~50-75% of blueshift absorbed by reservoir (Intro)", "support": "Cited to Estrecho2021/Stepanov2019/Claude2023 — literature claim, not project-computed.", "status": "INFO"}
   ],
   "axiom_risk": [
-    {
-      "axiom": "(none)",
-      "eliminability": "n/a",
-      "reason": "All axioms have been removed from the Lean codebase. AXIOM_METADATA shows 2 entries, both with eliminability='removed'. The paper correctly claims 0 axioms.",
-      "affected_claims": [],
-      "status": "PASS"
-    }
+    {"axioms_checked": ["non_abelian_center_discrete", "gs_nogo_axiom", "gapped_interface_axiom"], "finding": "None present in axiom_deps_project for PolaritonTier1 theorems or their AcousticMetric backing.", "status": "PASS", "notes": "Paper 12 is axiom-free."}
   ],
   "hypothesis_risk": [
-    {
-      "type": "implicit",
-      "structure": "PolaritonParams",
-      "hypothesis": "kappa_pos: 0 < kappa",
-      "nature": "Required for well-defined surface gravity. Standard BEC physics.",
-      "affected_claims": ["All Hawking temperature and gain calculations"],
-      "status": "INFO"
-    },
-    {
-      "type": "implicit",
-      "structure": "PolaritonParams",
-      "hypothesis": "Gamma_pol_nonneg: 0 <= Gamma_pol",
-      "nature": "Cavity decay rate is non-negative. Physical.",
-      "affected_claims": ["Attenuation factor, tier 1 validity"],
-      "status": "INFO"
-    },
-    {
-      "type": "implicit",
-      "structure": "PolaritonParams",
-      "hypothesis": "v_g_pos: 0 < v_g",
-      "nature": "Positive group velocity. Standard BEC physics.",
-      "affected_claims": ["Spatial attenuation correction"],
-      "status": "INFO"
-    },
-    {
-      "type": "implicit",
-      "structure": "PolaritonParams",
-      "hypothesis": "L_nonneg: 0 <= L",
-      "nature": "Non-negative propagation distance. Geometric.",
-      "affected_claims": ["Spatial attenuation correction"],
-      "status": "INFO"
-    },
-    {
-      "type": "explicit",
-      "structure": "n/a",
-      "hypothesis": "Tier 1 perturbative patch validity: Gamma_pol/kappa << 1",
-      "nature": "Physics assumption that cavity decay is perturbative relative to horizon dynamics. Checked computationally: Paris_long = 0.2, Paris_ultralong = 0.067.",
-      "affected_claims": ["All polariton predictions assume Tier 1 patch"],
-      "status": "INFO",
-      "notes": "Paris_long ratio = 0.2 is marginal for 'perturbative'. The code classifies it as 'excellent' only if < 0.03, 'perturbative' if < 0.1. At 0.2, it falls outside the perturbative regime by the code's own classification. However, the paper does not mention this threshold issue."
-    },
-    {
-      "type": "explicit",
-      "structure": "n/a",
-      "hypothesis": "Acoustic metric description holds in weak-loss, long-wavelength limit",
-      "nature": "Foundation of the analog gravity framework in driven-dissipative systems. Supported by Amelio2020.",
-      "affected_claims": ["Entire paper framework"],
-      "status": "INFO"
-    }
+    {"hypothesis_type": "explicit (HYPOTHESIS_REGISTRY)", "hypotheses_checked": ["rokhlin_sigma_mod_16", "modular_invariance_framing", "c_minus_equals_8Nf", "characteristic_square_mod_8", "spin_bordism_iso_Z"], "finding": "None referenced by polariton theorems.", "status": "PASS"},
+    {"hypothesis_type": "implicit (structure fields)", "structure": "PolaritonTier1.PolaritonParams", "fields": [
+      {"name": "kappa_pos", "statement": "0 < kappa", "nature": "Positive surface gravity at a valid analog horizon", "status": "INFO"},
+      {"name": "Gamma_pol_nonneg", "statement": "0 <= Gamma_pol", "nature": "Polariton decay rate non-negative", "status": "INFO"},
+      {"name": "v_g_pos", "statement": "0 < v_g", "nature": "Group velocity strictly positive", "status": "INFO"},
+      {"name": "L_nonneg", "statement": "0 <= L", "nature": "Propagation length non-negative", "status": "INFO"}
+    ], "status": "INFO", "notes": "All implicit hypotheses are standard physical-positivity. No challengeable assumptions."}
   ],
-  "additional_issues": [
-    {
-      "location": "Abstract, line 34",
-      "issue": "Theorem count '1214' does not match actual count",
-      "actual": "1187 theorems (grep '^theorem ' across 84 .lean files). Constants.py header says 1179. Neither matches 1214.",
-      "status": "FAIL",
-      "notes": "Must reconcile. The count in constants.py and the actual grep count also disagree (1179 vs 1187), suggesting the constants.py header is also stale."
-    },
-    {
-      "location": "Section VI, line 267",
-      "issue": "Wrong Aristotle run ID for spatial_attenuation_ge_one",
-      "actual": "Paper claims Aristotle 'da7cb04d' proved this theorem. But da7cb04d is the HubbardStratonovichRHMC run. PolaritonTier1 theorems are ALL manual -- none appear in ARISTOTLE_THEOREMS.",
-      "status": "FAIL",
-      "notes": "The Aristotle attribution is completely wrong. The theorem was proved manually in Lean."
-    },
-    {
-      "location": "Abstract, lines 37-38",
-      "issue": "All three named theorems use wrong names",
-      "actual": "Paper: spatial_attenuation_ge_one -> Lean: attenuation_ge_one; Paper: tier1_regime_monotone -> Lean: attenuation_mono_Gamma; Paper: bec_recovery_limit -> Lean: attenuation_eq_one_at_zero_decay",
-      "status": "FAIL",
-      "notes": "All three theorem names in the abstract are fabricated -- they do not exist in the Lean source."
-    },
-    {
-      "location": "formulas.py docstring for dispersive_hawking_correction",
-      "issue": "Stale D value",
-      "actual": "Docstring says 'D ~ 0.46 (our polariton system): ~20% correction'. After c_s correction, D = 0.30 with ~9% correction.",
-      "status": "WARN",
-      "notes": "The docstring was not updated when c_s was corrected from 1.0 to 0.5 um/ps."
-    },
-    {
-      "location": "formulas.py for polariton_tier1_validity",
-      "issue": "Lean reference name mismatch",
-      "actual": "formulas.py says 'Lean: polariton_validity_nonneg'. Actual Lean name is 'validity_nonneg' in PolaritonTier1 namespace.",
-      "status": "WARN",
-      "notes": "The formulas.py Lean reference should use the fully qualified name or match the declaration."
-    },
-    {
-      "location": "Paper Section II, Table 1 (c_s measurements)",
-      "issue": "Amo2009 c_s value is for a different material system",
-      "actual": "Amo (2009) measured a CdTe microcavity, not GaAs. The 0.81 um/ps value may not be directly comparable to the GaAs measurements.",
-      "status": "WARN",
-      "notes": "Table caption says 'GaAs microcavities' but Amo (2009) used CdTe. Should clarify."
-    },
-    {
-      "location": "Citation integrity",
-      "issue": "12 of 18 bibliography entries missing from CITATION_REGISTRY",
-      "actual": "Only Steinhauer2016, deNova2019, Falque2025, Grisins2016, Jacquet2022 are in the registry. Missing: Gerace2012, Nguyen2015, Estrecho2021, Stepanov2019, Claude2023, Burkhard2025, Finazzi2012, Amelio2020, Jacquet2023QNM, Nelsen2013, Alnatah2024, Amo2009.",
-      "status": "WARN",
-      "notes": "12 citations need to be added to citations.py before submission."
-    },
-    {
-      "location": "Paris_long.tau_cav provenance",
-      "issue": "Tier changed from MEASURED to PROJECTED but paper Table 3 does not indicate 100 ps and 300 ps cavities are projections",
-      "actual": "Falque actual cavity τ ~ 8 ps. The 100 ps and 300 ps are projected future cavities. Paper should clearly label these as projected.",
-      "status": "WARN",
-      "notes": "Table 2 labels kappa as 'Projected (SLM-controlled)' but does not label tau_cav as projected."
-    }
-  ],
-  "summary": "5 FAIL, 17 WARN, 19 PASS",
+  "paper_dependencies_staleness": {
+    "status": "WARN",
+    "finding": "PAPER_DEPENDENCIES['paper12_polariton'].key_claims in src/core/provenance.py still reflects pre-Wave-4 values: 'c_s = 0.5 um/ps', 'T_H ~ 61 mK for kappa = 5e10 s^-1', 'D ~ 0.3', '1214 Lean 4 theorems'. Contradicts the current paper body (0.40, 85 mK, 0.60, 7e10).",
+    "recommendation": "Update PAPER_DEPENDENCIES['paper12_polariton'].key_claims to match post-Wave-4 values. No impact on numerics — metadata drift only."
+  },
+  "summary": "2 FAIL, 12 WARN, 35 PASS",
   "blocking_issues": [
-    "FAIL: Abstract claims G(omega) > 0.5 for omega < 0.3*kappa — actual G(0.3k) = 0.18. Must correct threshold.",
-    "FAIL: Abstract claims ~20% dispersive correction — actual is ~9% at D=0.30. Stale pre-c_s-correction value.",
-    "FAIL: Theorem count '1214' does not match actual count (1187 by grep). Must reconcile.",
-    "FAIL: Three theorem names in abstract (spatial_attenuation_ge_one, tier1_regime_monotone, bec_recovery_limit) do not exist in Lean. Actual names differ.",
-    "FAIL: Aristotle run ID 'da7cb04d' attributed to PolaritonTier1 theorem is wrong — that ID belongs to HubbardStratonovichRHMC. PolaritonTier1 theorems are all manual.",
-    "WARN (submission-blocking): 0 of 11 polariton parameters are human-verified. All are LLM-verified only.",
-    "WARN (submission-blocking): 12 of 18 citations missing from CITATION_REGISTRY.",
-    "WARN: Paris_long Gamma_pol/kappa = 0.2 is classified 'borderline' by code (not 'perturbative'). Paper Table 3 labels it 'Yes' for feasibility. Paris_standard ratio = 6.66 is 'intractable' by code, but paper says 'Marginal'. Feasibility labels in Table 3 do not match code tier1_regime classification.",
-    "WARN: Qualitative claim '10^9 times higher' overstates by ~1 order of magnitude (actual ratio T_H_polariton/T_H_BEC ~ 10^8)."
+    "FAIL: Lean theorem count '1318' in Abstract + Conclusion is stale — canonical count is 2237+ (Inventory Index) / 2796 (lean_deps.json). Replace with '2237+' to match Inventory Index and Paper 15 methodology references.",
+    "FAIL: Giacobino2025 bibitem (new in Wave 5, arXiv:2512.14194) is not registered in CITATION_REGISTRY. Add entry before submission.",
+    "WARN: Tier-label inconsistency — Table 3 labels Paris_long as 'Perturbative' but POLARITON_PLATFORMS['Paris_long'].tier1_regime = 'borderline' (Gamma_pol/kappa = 0.143). Align Table 3 with constants.py classification."
+  ],
+  "non_blocking_followups": [
+    "PolaritonTier1 theorem count '6' in Abstract is stale — actual is 9 substantive (13 including auto-generated structure accessors).",
+    "Orphan bibitems Nelsen2013 and Alnatah2024 — \\cite in-text or remove from thebibliography.",
+    "Amo2009 referenced by name in Table 1 but without \\cite{Amo2009}. Add cite.",
+    "PAPER_DEPENDENCIES['paper12_polariton'].key_claims in provenance.py contains pre-Wave-4 values — sync with current abstract.",
+    "Paris_standard.tau_cav provenance: value corrected 3ps -> 8ps in Wave 4 but llm_verified_date still 2026-03-31. Advance to 2026-04-13.",
+    "Human-verification for all 8 polariton parameters is still missing (expected pre-submission — standard blocker via provenance dashboard)."
   ]
 }

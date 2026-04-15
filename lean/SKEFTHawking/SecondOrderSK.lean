@@ -366,6 +366,85 @@ theorem secondOrder_frequency_dependent :
     (2 : ℕ) + 1 = 3 ∧ 3 > 1 := ⟨rfl, by norm_num⟩
 
 /-!
+## From EFT Transport Coefficients to Horizon Damping Rate
+
+The SK-EFT Lagrangian `S_diss = ∫d²x [i γ₁ ψ_a □ ψ_r + i γ₂ ψ_a (u·∂)² ψ_r + ...]`
+has transport coefficients γ₁, γ₂ with units `[m²/s]` (so the whole term is
+dimensionless when integrated over `d²x` with fields of canonical dimension).
+
+The phonon damping rate `Γ_H` at the Hawking frequency `ω_H ≈ κ` is obtained by
+evaluating the dissipative mode on a solution with wavenumber `k_H = κ / c_s`:
+
+  Γ_H = (γ₁ + γ₂) · k_H²  =  (γ₁ + γ₂) · (κ / c_s)²
+
+so that `Γ_H` has units `[s⁻¹]`. The Python pipeline function
+`compute_dissipative_correction` uses this identification; the theorem below
+grounds it in Lean.
+
+This theorem anchors the Python function
+`src.core.transonic_background.compute_dissipative_correction` against the
+same chain used in `PAPER_DEPENDENCIES['paper1_first_order']`:
+  "Γ_H = (γ₁+γ₂)(κ/c_s)² (damping rate at horizon)".
+
+Prior to Phase 5u Wave 1 (2026-04-13), the Python function silently omitted
+the `k_H²` factor — producing δ_diss values wrong by ~10⁷ — because the
+identification had no Lean anchor and was encoded only in prose. Pipeline
+Invariant 4 ("every formula has a Lean theorem") is strengthened in Phase 5u
+Wave 21 to require that unit-conversion identities like this one be formalized,
+not just mentioned.
+-/
+
+/-- Horizon damping rate in terms of EFT transport coefficients.
+    Units: γ₁, γ₂ in `[m²/s]`; κ in `[s⁻¹]`; c_s in `[m/s]`; Γ_H in `[s⁻¹]`.
+    At the Hawking wavenumber k_H = κ/c_s, the effective damping rate on the
+    phonon dispersion ω² = c_s² k² is Γ_H = (γ₁+γ₂)·k_H². -/
+noncomputable def GammaH (γ₁ γ₂ κ c_s : ℝ) : ℝ := (γ₁ + γ₂) * (κ / c_s) ^ 2
+
+/-- Definitional unfold of `GammaH` — the identity the Python pipeline must match. -/
+theorem gammaH_def (γ₁ γ₂ κ c_s : ℝ) :
+    GammaH γ₁ γ₂ κ c_s = (γ₁ + γ₂) * (κ / c_s) ^ 2 := rfl
+
+/-- Alternative form: explicit k_H² factor. If `k_H = κ / c_s` then
+    `Γ_H = (γ₁+γ₂) · k_H²`. -/
+theorem gammaH_via_kH (γ₁ γ₂ κ c_s : ℝ) :
+    GammaH γ₁ γ₂ κ c_s = (γ₁ + γ₂) * (κ / c_s) * (κ / c_s) := by
+  unfold GammaH; ring
+
+/-- Γ_H is non-negative when both transport coefficients are non-negative
+    (positivity of dissipation — SK-EFT first-order uniqueness constraint). -/
+theorem gammaH_nonneg (γ₁ γ₂ κ c_s : ℝ) (h₁ : 0 ≤ γ₁) (h₂ : 0 ≤ γ₂) :
+    0 ≤ GammaH γ₁ γ₂ κ c_s := by
+  unfold GammaH
+  exact mul_nonneg (add_nonneg h₁ h₂) (sq_nonneg _)
+
+/-- δ_diss as computed from transport coefficients. Combines
+    `GammaH` with the Lean identity δ_diss = Γ_H/κ (SKDoubling, line 352).
+    This is the identity that the Python `compute_dissipative_correction` computes. -/
+noncomputable def deltaDissFromTransport (γ₁ γ₂ κ c_s : ℝ) : ℝ :=
+  GammaH γ₁ γ₂ κ c_s / κ
+
+/-- Closed form of δ_diss from transport coefficients. -/
+theorem deltaDissFromTransport_eq (γ₁ γ₂ κ c_s : ℝ) (hκ : κ ≠ 0) :
+    deltaDissFromTransport γ₁ γ₂ κ c_s = (γ₁ + γ₂) * κ / c_s ^ 2 := by
+  unfold deltaDissFromTransport GammaH
+  field_simp
+
+/-- δ_diss from transport vanishes iff γ₁ + γ₂ = 0 (or κ = 0, degenerate).
+    Compare `firstOrder_correction_zero_iff` in SKDoubling. -/
+theorem deltaDissFromTransport_zero_iff
+    (γ₁ γ₂ κ c_s : ℝ) (hκ : 0 < κ) (hc : 0 < c_s) :
+    deltaDissFromTransport γ₁ γ₂ κ c_s = 0 ↔ γ₁ + γ₂ = 0 := by
+  unfold deltaDissFromTransport GammaH
+  rw [div_eq_zero_iff]
+  constructor
+  · rintro (h | h)
+    · exact (mul_eq_zero.mp h).resolve_right (by positivity)
+    · exact absurd h hκ.ne'
+  · intro h
+    left
+    rw [h, zero_mul]
+
+/-!
 ## Full Second-Order Action and Strong Uniqueness
 
 The following section formalizes the FULL general action through second order

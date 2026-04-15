@@ -426,9 +426,13 @@ Phase~5b additions & 169 & Proved (axioms discharged/removed) \\
 \bottomrule
 \end{tabular}
 \caption{Formalization summary. All theorems are machine-checked by
-\texttt{lake build}. All former axioms have been removed: GS no-go theorem and
-gauge erasure universality (non-abelian center discrete) proved as theorems.
-The former $\mathbb{Z}_{16}$ cobordism axiom was discharged (tautological as stated).}
+\texttt{lake build}. Two former axioms are now proved as theorems:
+the GS no-go theorem and gauge erasure universality (non-abelian center
+discrete). A third former axiom---$\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}}
+\cong \mathbb{Z}_{16}$---was converted to a trivially-true placeholder
+theorem (\texttt{dai\_freed\_spin\_z4}) pending the addition of cobordism
+theory to Mathlib; the cobordism computation itself is an external
+input, as is standard in the $\mathbb{Z}_{16}$ literature.}
 \label{tab:summary}
 \end{table}
 

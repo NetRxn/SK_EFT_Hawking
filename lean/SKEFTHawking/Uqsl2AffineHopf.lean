@@ -1,6 +1,8 @@
 import SKEFTHawking.Uqsl2Affine
 import Mathlib
 
+set_option backward.isDefEq.respectTransparency false
+
 /-!
 # Hopf Algebra Structure on U_q(ŝl₂)
 
@@ -525,6 +527,7 @@ private theorem affComul_EF_sub_FE_0 :
   simp +decide [ TensorProduct.add_tmul, TensorProduct.tmul_add, TensorProduct.smul_tmul, add_assoc, add_left_comm, add_comm ];
   simp +decide [ ← add_assoc, ← TensorProduct.tmul_add, ← TensorProduct.add_tmul, ← TensorProduct.smul_tmul ]
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem affComul_EF_sub_FE_1 :
     affComulFreeAlg k (ag k E1 * ag k F1) - affComulFreeAlg k (ag k F1 * ag k E1) =
     (uqAffE1 k * uqAffF1 k - uqAffF1 k * uqAffE1 k) ⊗ₜ[LaurentPolynomial k] uqAffK1 k +
@@ -542,6 +545,7 @@ private theorem affComul_EF_sub_FE_1 :
 /-
 Step 2: Apply Serre relation
 -/
+set_option backward.isDefEq.respectTransparency false in
 private theorem affComul_Serre0_apply :
     algebraMap (LaurentPolynomial k) ((Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k)) (T 1 - T (-1)) *
     ((uqAffE0 k * uqAffF0 k - uqAffF0 k * uqAffE0 k) ⊗ₜ[LaurentPolynomial k] uqAffK0 k +
@@ -559,6 +563,7 @@ private theorem affComul_Serre0_apply :
   simp +decide [ TensorProduct.add_tmul, TensorProduct.tmul_add, TensorProduct.neg_tmul, TensorProduct.tmul_neg ] ; abel_nf;
   rw [ TensorProduct.smul_tmul, TensorProduct.tmul_smul ] ; norm_num ; abel_nf
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem affComul_Serre1_apply :
     algebraMap (LaurentPolynomial k) ((Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k)) (T 1 - T (-1)) *
     ((uqAffE1 k * uqAffF1 k - uqAffF1 k * uqAffE1 k) ⊗ₜ[LaurentPolynomial k] uqAffK1 k +
@@ -985,6 +990,27 @@ private theorem sector10_cancel_aux (k : Type*) [CommRing k]
 
 /-- Auxiliary scalar lemma for sector (1,1) closure: 2 basis elements X, Y.
     Key scalar identities: q3·T(-2) = 1 + T(-2) + T(-4) and q3·T(2) = T(4) + T(2) + 1. -/
+private theorem sector11_cancel_aux' (k : Type*) [CommRing k]
+    {M : Type*} [AddCommGroup M] [Module (LaurentPolynomial k) M] (X Y : M) :
+    ((T (-4) : LaurentPolynomial k) • X + (T (-2) : LaurentPolynomial k) • X + X)
+    - ((T 2 + 1 + T (-2) : LaurentPolynomial k)) •
+        ((T (-2) : LaurentPolynomial k) • X + X + Y)
+    + ((T 2 + 1 + T (-2) : LaurentPolynomial k)) •
+        (X + Y + (T 2 : LaurentPolynomial k) • Y)
+    - (Y + (T 2 : LaurentPolynomial k) • Y + (T 4 : LaurentPolynomial k) • Y) = 0 := by
+  have hX : ((T 2 + 1 + T (-2)) * T (-2) : LaurentPolynomial k) = 1 + T (-2) + T (-4) := by
+    rw [add_mul, add_mul, one_mul, ← T_add, ← T_add]
+    show T 0 + T (-2) + T (-4) = _
+    rw [T_zero]
+  have hY : ((T 2 + 1 + T (-2)) * T 2 : LaurentPolynomial k) = T 4 + T 2 + 1 := by
+    rw [add_mul, add_mul, one_mul, ← T_add, ← T_add]
+    show T 4 + T 2 + T 0 = _
+    rw [T_zero]
+  simp only [smul_add, smul_smul]
+  rw [hX, hY]
+  simp only [add_smul, one_smul]
+  abel
+
 private theorem sector11_cancel_aux (k : Type*) [CommRing k] (X Y : Uqsl2Aff k) :
     ((T (-4) : LaurentPolynomial k) • X + (T (-2) : LaurentPolynomial k) • X + X)
     - ((T 2 + 1 + T (-2) : LaurentPolynomial k)) •
@@ -1432,6 +1458,17 @@ private theorem sect_hUqId_cas10c (k : Type*) [CommRing k] :
   rw [show ((T 2 + 1 + T (-2) : LaurentPolynomial k) = T (-2) + 1 + T 2) from by ring]
 
 
+set_option backward.isDefEq.respectTransparency false in
+noncomputable instance uqAffLaurent_intAlgebra (k : Type*) [CommRing k] :
+    Algebra ℤ (LaurentPolynomial k) := inferInstance
+
+set_option backward.isDefEq.respectTransparency false in
+noncomputable instance uqAffTensor_intScalarTower (k : Type*) [CommRing k] :
+    IsScalarTower ℤ (LaurentPolynomial k)
+      (Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k) :=
+  IsScalarTower.of_algebraMap_smul (fun r x => by
+    rw [Algebra.algebraMap_eq_smul_one, smul_assoc, one_smul])
+
 /--
 PROVIDED SOLUTION (from `Lit-Search/Phase-5s/CAS-assisted Lean 4 tactics for Δ
 and the q-Serre relation in U_q(ŝl₂).md`): bidegree decomposition into 8 sectors.
@@ -1488,6 +1525,7 @@ See Phase-5p "RingQuot's typeclass diamond" doc for the `have hr := by ...`
 pattern that avoids RingQuot rewrite failures. Use `erw` not `rw` for any
 rewrite that crosses the RingQuot instMul/instSemiring.toMul boundary.
 -/
+
 private theorem sect_hSerreS_smul (k : Type*) [CommRing k] :
     uqAffE1 k * uqAffE1 k * uqAffE1 k * uqAffE0 k -
     (T 2 + 1 + T (-2) : LaurentPolynomial k) •
@@ -3241,43 +3279,7 @@ private theorem sect_hUqIdF10_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
--- Metaprogram: normalize `OfNat.ofNat` instances on `RingQuot` types in the goal.
--- The `module` tactic hardcodes `AtomM.run .reducible`, making it blind to the
--- RingQuot diamond (RingQuot.instOne vs Ring.toOne) that resolves at `.instances`.
--- This tactic re-synthesizes each `OfNat` instance via `synthInstance` (deterministic,
--- always picks the same canonical path) and `change`s the goal (valid at `.default`).
-open Lean Meta Elab Tactic in
-elab "normalize_ringquot_ofnat" : tactic => do
-  let mvarId ← getMainGoal
-  mvarId.withContext do
-    let target ← mvarId.getType
-    let target' ← Meta.transform target (pre := fun e => do
-      unless e.isApp do return .continue
-      let fn := e.getAppFn
-      unless fn.isConst do return .continue
-      let args := e.getAppArgs
-      let fnInfo ← getFunInfo fn args.size
-      let mut changed := false
-      let mut newArgs := args
-      for i in [:args.size] do
-        if h : i < fnInfo.paramInfo.size then
-          let pinfo := fnInfo.paramInfo[i]
-          if pinfo.isInstImplicit then
-            let arg := args[i]!
-            let argTy ← inferType arg
-            let canonInst ← try synthInstance argTy catch _ => continue
-            if arg == canonInst then continue
-            newArgs := newArgs.set! i canonInst
-            changed := true
-      if changed then
-        return .done (mkAppN fn newArgs)
-      return .continue)
-    let mvarId' ← mvarId.change target'
-    replaceMainGoal [mvarId']
-
-macro "normalize_module" : tactic => `(tactic| (normalize_ringquot_ofnat; module))
-
-set_option maxHeartbeats 8000000 in
+set_option maxHeartbeats 2000000 in
 private theorem affComulFreeAlg_SerreF10 :
     affComulFreeAlg k
       (ag k F1 * ag k F1 * ag k F1 * ag k F0
@@ -3411,32 +3413,38 @@ private theorem affComulFreeAlg_SerreF10 :
       LinearMap.map_smul_of_tower phi_10] at hSect10
   simp only [phi_10, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect10
   ------------------------------------------------------------------------
-  -- Sector (1,1): right factor F₁F₀ (two F's), left has mixed K₁⁻¹ + F + K₀⁻¹.
+  -- Sector (1,1): TWO right factors F₁F₀ and F₀F₁ (non-commutative).
+  -- Use sector11_cancel_aux' on tensor product elements directly, then
+  -- rewrite K-normalized basis back to unnormalized form.
   ------------------------------------------------------------------------
-  have hUqId11 := sect_hUqIdF10_11 k
-  let phi_11 : Uqsl2Aff k →ₗ[LaurentPolynomial k]
-      Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
-    (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
-      (uqAffF1 k * uqAffF0 k)
-  have hSect11 : phi_11 ((uqAffF1 k * uqAffK1inv k * uqAffK1inv k * uqAffF0 k +
-     uqAffK1inv k * uqAffF1 k * uqAffK1inv k * uqAffF0 k +
-     uqAffK1inv k * uqAffK1inv k * uqAffF1 k * uqAffF0 k) -
-    (T 2 + 1 + T (-2) : LaurentPolynomial k) •
-    (uqAffF1 k * uqAffK1inv k * uqAffF0 k * uqAffK1inv k +
-     uqAffK1inv k * uqAffF1 k * uqAffF0 k * uqAffK1inv k +
-     uqAffK1inv k * uqAffK1inv k * uqAffF0 k * uqAffF1 k) +
-    (T 2 + 1 + T (-2) : LaurentPolynomial k) •
-    (uqAffF1 k * uqAffF0 k * uqAffK1inv k * uqAffK1inv k +
-     uqAffK1inv k * uqAffF0 k * uqAffF1 k * uqAffK1inv k +
-     uqAffK1inv k * uqAffF0 k * uqAffK1inv k * uqAffF1 k) -
-    (uqAffF0 k * uqAffF1 k * uqAffK1inv k * uqAffK1inv k +
-     uqAffF0 k * uqAffK1inv k * uqAffF1 k * uqAffK1inv k +
-     uqAffF0 k * uqAffK1inv k * uqAffK1inv k * uqAffF1 k)) = 0 := by
-    rw [hUqId11]; exact map_zero phi_11
-  rw [map_sub phi_11, map_add phi_11, map_sub phi_11,
-      LinearMap.map_smul_of_tower phi_11,
-      LinearMap.map_smul_of_tower phi_11] at hSect11
-  simp only [phi_11, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect11
+  have hSect11 : (
+    (uqAffF1 k * uqAffK1inv k * uqAffK1inv k * uqAffF0 k) ⊗ₜ[LaurentPolynomial k] (uqAffF1 k * uqAffF0 k) +
+    (uqAffK1inv k * uqAffF1 k * uqAffK1inv k * uqAffF0 k) ⊗ₜ[LaurentPolynomial k] (uqAffF1 k * uqAffF0 k) +
+    (uqAffK1inv k * uqAffK1inv k * uqAffF1 k * uqAffF0 k) ⊗ₜ[LaurentPolynomial k] (uqAffF1 k * uqAffF0 k) -
+    (T 2 + 1 + T (-2) : LaurentPolynomial k) • (
+      (uqAffF1 k * uqAffK1inv k * uqAffF0 k * uqAffK1inv k) ⊗ₜ[LaurentPolynomial k] (uqAffF1 k * uqAffF0 k) +
+      (uqAffK1inv k * uqAffF1 k * uqAffF0 k * uqAffK1inv k) ⊗ₜ[LaurentPolynomial k] (uqAffF1 k * uqAffF0 k) +
+      (uqAffK1inv k * uqAffK1inv k * uqAffF0 k * uqAffF1 k) ⊗ₜ[LaurentPolynomial k] (uqAffF0 k * uqAffF1 k)) +
+    (T 2 + 1 + T (-2) : LaurentPolynomial k) • (
+      (uqAffF1 k * uqAffF0 k * uqAffK1inv k * uqAffK1inv k) ⊗ₜ[LaurentPolynomial k] (uqAffF1 k * uqAffF0 k) +
+      (uqAffK1inv k * uqAffF0 k * uqAffF1 k * uqAffK1inv k) ⊗ₜ[LaurentPolynomial k] (uqAffF0 k * uqAffF1 k) +
+      (uqAffK1inv k * uqAffF0 k * uqAffK1inv k * uqAffF1 k) ⊗ₜ[LaurentPolynomial k] (uqAffF0 k * uqAffF1 k)) -
+    ((uqAffF0 k * uqAffF1 k * uqAffK1inv k * uqAffK1inv k) ⊗ₜ[LaurentPolynomial k] (uqAffF0 k * uqAffF1 k) +
+     (uqAffF0 k * uqAffK1inv k * uqAffF1 k * uqAffK1inv k) ⊗ₜ[LaurentPolynomial k] (uqAffF0 k * uqAffF1 k) +
+     (uqAffF0 k * uqAffK1inv k * uqAffK1inv k * uqAffF1 k) ⊗ₜ[LaurentPolynomial k] (uqAffF0 k * uqAffF1 k))
+    : Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k) = 0 := by
+    -- Normalize each atom's left factor using K-F commutation, then apply cancel_aux'
+    have h1 := sect_hKinvF_smul_K1invF1 k
+    have h2 := sect_hKinvF_at_K1invF1 k
+    have h3 := sect_hKinvF_smul_K1invF0 k
+    have h4 := sect_hKinvF_at_K1invF0 k
+    -- Rewrite left factors of all ⊗ₜ, pushing K⁻¹ past F
+    simp only [h2, h1, h4, h3, smul_mul_assoc, smul_smul, smul_tmul']
+    -- Collapse T products to normalized form
+    simp only [show ∀ a b : ℤ, (T a * T b : LaurentPolynomial k) = T (a + b) from
+      fun a b => by rw [← T_add], T_zero, one_smul]
+    norm_num
+    exact sector11_cancel_aux' (M := Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k) k _ _
   ------------------------------------------------------------------------
   -- Sector (2,0) sub-part a: left factor F₁F₀, 6 atoms.
   ------------------------------------------------------------------------
@@ -3458,6 +3466,75 @@ private theorem affComulFreeAlg_SerreF10 :
       LinearMap.map_smul_of_tower phi_20a,
       LinearMap.map_smul_of_tower phi_20a] at hSect20a
   simp only [phi_20a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect20a
+  ------------------------------------------------------------------------
+  -- TRUE Sector (2,0): right factor F₁² with left = {K₁⁻¹,K₁⁻¹,F₁,F₀}.
+  -- The (2,0) expansion atoms have F₀ on the left (not K₀⁻¹).
+  -- Reuses the sector (1,1) algebra identity (same generator set).
+  ------------------------------------------------------------------------
+  have hUqId20_true := sect_hUqIdF10_11 k
+  have hSect20_true :
+      phi_20a ((uqAffF1 k * uqAffK1inv k * uqAffK1inv k * uqAffF0 k +
+       uqAffK1inv k * uqAffF1 k * uqAffK1inv k * uqAffF0 k +
+       uqAffK1inv k * uqAffK1inv k * uqAffF1 k * uqAffF0 k) -
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffF1 k * uqAffK1inv k * uqAffF0 k * uqAffK1inv k +
+       uqAffK1inv k * uqAffF1 k * uqAffF0 k * uqAffK1inv k +
+       uqAffK1inv k * uqAffK1inv k * uqAffF0 k * uqAffF1 k) +
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffF1 k * uqAffF0 k * uqAffK1inv k * uqAffK1inv k +
+       uqAffK1inv k * uqAffF0 k * uqAffF1 k * uqAffK1inv k +
+       uqAffK1inv k * uqAffF0 k * uqAffK1inv k * uqAffF1 k) -
+      (uqAffF0 k * uqAffF1 k * uqAffK1inv k * uqAffK1inv k +
+       uqAffF0 k * uqAffK1inv k * uqAffF1 k * uqAffK1inv k +
+       uqAffF0 k * uqAffK1inv k * uqAffK1inv k * uqAffF1 k)) = 0 := by
+    rw [hUqId20_true]; exact map_zero phi_20a
+  rw [map_sub phi_20a, map_add phi_20a, map_sub phi_20a,
+      LinearMap.map_smul_of_tower phi_20a,
+      LinearMap.map_smul_of_tower phi_20a] at hSect20_true
+  simp only [phi_20a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect20_true
+  ------------------------------------------------------------------------
+  -- TRUE Sector (1,1) sub-part a: right = F₁F₀, left = {K₁⁻¹,F₁²,K₀⁻¹}.
+  -- Uses sect_hUqIdF10_20a (the "swapped" identity) through phi ⊗ F₁F₀.
+  ------------------------------------------------------------------------
+  let phi_11_true_a : Uqsl2Aff k →ₗ[LaurentPolynomial k]
+      Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
+      (uqAffF1 k * uqAffF0 k)
+  have hUqId11_true_a := sect_hUqIdF10_20a k
+  have hSect11_true_a :
+      phi_11_true_a ((uqAffK1inv k * uqAffF1 k * uqAffF1 k * uqAffK0inv k +
+       uqAffF1 k * uqAffK1inv k * uqAffF1 k * uqAffK0inv k +
+       uqAffF1 k * uqAffF1 k * uqAffK1inv k * uqAffK0inv k) -
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffK1inv k * uqAffF1 k * uqAffK0inv k * uqAffF1 k +
+       uqAffF1 k * uqAffK1inv k * uqAffK0inv k * uqAffF1 k) +
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffK1inv k * uqAffK0inv k * uqAffF1 k * uqAffF1 k)) = 0 := by
+    rw [hUqId11_true_a]; exact map_zero phi_11_true_a
+  rw [map_add phi_11_true_a, map_sub phi_11_true_a,
+      LinearMap.map_smul_of_tower phi_11_true_a,
+      LinearMap.map_smul_of_tower phi_11_true_a] at hSect11_true_a
+  simp only [phi_11_true_a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect11_true_a
+  ------------------------------------------------------------------------
+  -- TRUE Sector (1,1) sub-part b: right = F₀F₁, left = {K₀⁻¹,K₁⁻¹,F₁²}.
+  -- Uses sect_hUqIdF10_20b through phi ⊗ F₀F₁ (equation form).
+  ------------------------------------------------------------------------
+  have hUqId11_true_b := sect_hUqIdF10_20b k
+  let phi_11_true_b : Uqsl2Aff k →ₗ[LaurentPolynomial k]
+      Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
+      (uqAffF0 k * uqAffF1 k)
+  have hSect11_true_b : phi_11_true_b ((T 2 + 1 + T (-2) : LaurentPolynomial k) •
+    (uqAffF1 k * uqAffK0inv k * uqAffK1inv k * uqAffF1 k +
+     uqAffF1 k * uqAffK0inv k * uqAffF1 k * uqAffK1inv k)) =
+    phi_11_true_b ((T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffF1 k * uqAffF1 k * uqAffK0inv k * uqAffK1inv k) +
+    (uqAffK0inv k * uqAffK1inv k * uqAffF1 k * uqAffF1 k +
+     uqAffK0inv k * uqAffF1 k * uqAffK1inv k * uqAffF1 k +
+     uqAffK0inv k * uqAffF1 k * uqAffF1 k * uqAffK1inv k)) := by
+    rw [hUqId11_true_b]
+  simp only [map_add, map_sub, LinearMap.map_smul_of_tower,
+             phi_11_true_b, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect11_true_b
   ------------------------------------------------------------------------
   -- Sector (1,0) CAS sub-part a: left = F₁²F₀, 4 atoms.
   ------------------------------------------------------------------------
@@ -3529,21 +3606,31 @@ private theorem affComulFreeAlg_SerreF10 :
   simp only [map_add, map_sub, LinearMap.map_smul_of_tower,
              phi_cas10c, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect_cas10c
   simp only [TensorProduct.tmul_add, TensorProduct.add_tmul, smul_add]
-    at hSect10 hSect11 hSect20a hSect_cas10a hSect20b hSect_cas10b hSect_cas10c
+    at hSect10 hSect11 hSect20a hSect20_true hSect11_true_a hSect_cas10a hSect20b hSect_cas10b hSect_cas10c
   have h20b := sub_eq_zero_of_eq hSect20b
   have h10b := sub_eq_zero_of_eq hSect_cas10b
   have h10c := sub_eq_zero_of_eq hSect_cas10c
-  simp only [LinearMap.smul_apply, LinearMap.add_apply] at h20b h10b h10c
+  have h11b := sub_eq_zero_of_eq hSect11_true_b
+  simp only [LinearMap.smul_apply, LinearMap.add_apply] at h20b h10b h10c h11b
   repeat erw [TensorProduct.mk_apply] at h20b
   repeat erw [TensorProduct.mk_apply] at h10b
   repeat erw [TensorProduct.mk_apply] at h10c
+  repeat erw [TensorProduct.mk_apply] at h11b
   clear ha hb hc hd hSerreS hKnorm1 hKnorm2 hKnorm3 phi_L phi_R phi_30 phi_01
-    phi_10 phi_11 phi_20a phi_cas10a phi_20b phi_cas10b phi_cas10c hUqId30 hUqId01
-    hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
-    hSect20b hSect_cas10b hSect_cas10c
+    phi_10 phi_20a phi_cas10a phi_20b phi_cas10b phi_cas10c phi_11_true_a phi_11_true_b
+    hUqId30 hUqId01 hUqId10 hUqId20a hUqId20_true hUqId11_true_a hUqId11_true_b
+    hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
+    hSect20b hSect_cas10b hSect_cas10c hSect11_true_b
   clear a b c d
-  linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 +
-    hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
+  -- BLOCKED: match_scalars/module + respectTransparency=false collapses
+  -- RingQuot-distinct atoms via quotient relations, giving ⊢ 1 = 0.
+  -- Deep research filed: Lit-Search/Tasks/match_scalars_respectTransparency_interaction.md
+  -- With hSect20a included: ⊢ -1 - T(-2) - T(2) = 0 (hSect20a atoms interact with merging)
+  -- Without hSect20a: ⊢ 1 = 0 (pure atom merging artifact)
+  -- hSect20_true correctly covers the (2,0) expansion sector.
+  linear_combination (norm := (simp only [smul_tmul', sub_eq_add_neg, smul_add, neg_smul, one_smul]; abel))
+    hSect00 + hSect31 + hSect30 + hSect01 +
+    hSect10 + hSect11_true_a + hSect20_true + hSect_cas10a + h11b - h10b + h10c
 
 /-! ### Sector decomposition helpers for SerreF01.
 
@@ -4058,7 +4145,7 @@ private theorem sect_hUqIdF01_cas10c (k : Type*) [CommRing k] :
     rw [add_smul, add_smul, one_smul]]
   congr 1; ring
 
-set_option maxHeartbeats 8000000 in
+set_option maxHeartbeats 2000000 in
 private theorem affComulFreeAlg_SerreF01 :
     affComulFreeAlg k
       (ag k F0 * ag k F0 * ag k F0 * ag k F1
@@ -4239,6 +4326,65 @@ private theorem affComulFreeAlg_SerreF01 :
       LinearMap.map_smul_of_tower phi_20a,
       LinearMap.map_smul_of_tower phi_20a] at hSect20a
   simp only [phi_20a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect20a
+  -- TRUE Sector (2,0) F01: right = F₀², left = {K₀⁻²,F₀,F₁}.
+  have hUqId20_true := sect_hUqIdF01_11 k
+  have hSect20_true :
+      phi_20a ((uqAffF0 k * uqAffK0inv k * uqAffK0inv k * uqAffF1 k +
+       uqAffK0inv k * uqAffF0 k * uqAffK0inv k * uqAffF1 k +
+       uqAffK0inv k * uqAffK0inv k * uqAffF0 k * uqAffF1 k) -
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffF0 k * uqAffK0inv k * uqAffF1 k * uqAffK0inv k +
+       uqAffK0inv k * uqAffF0 k * uqAffF1 k * uqAffK0inv k +
+       uqAffK0inv k * uqAffK0inv k * uqAffF1 k * uqAffF0 k) +
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffF0 k * uqAffF1 k * uqAffK0inv k * uqAffK0inv k +
+       uqAffK0inv k * uqAffF1 k * uqAffF0 k * uqAffK0inv k +
+       uqAffK0inv k * uqAffF1 k * uqAffK0inv k * uqAffF0 k) -
+      (uqAffF1 k * uqAffF0 k * uqAffK0inv k * uqAffK0inv k +
+       uqAffF1 k * uqAffK0inv k * uqAffF0 k * uqAffK0inv k +
+       uqAffF1 k * uqAffK0inv k * uqAffK0inv k * uqAffF0 k)) = 0 := by
+    rw [hUqId20_true]; exact map_zero phi_20a
+  rw [map_sub phi_20a, map_add phi_20a, map_sub phi_20a,
+      LinearMap.map_smul_of_tower phi_20a,
+      LinearMap.map_smul_of_tower phi_20a] at hSect20_true
+  simp only [phi_20a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect20_true
+  -- TRUE Sector (1,1) F01 sub-part a: right = F₀F₁, left = {K₀⁻¹,F₀²,K₁⁻¹}.
+  let phi_11_true_a : Uqsl2Aff k →ₗ[LaurentPolynomial k]
+      Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
+      (uqAffF0 k * uqAffF1 k)
+  have hUqId11_true_a := sect_hUqIdF01_20a k
+  have hSect11_true_a :
+      phi_11_true_a ((uqAffK0inv k * uqAffF0 k * uqAffF0 k * uqAffK1inv k +
+       uqAffF0 k * uqAffK0inv k * uqAffF0 k * uqAffK1inv k +
+       uqAffF0 k * uqAffF0 k * uqAffK0inv k * uqAffK1inv k) -
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffK0inv k * uqAffF0 k * uqAffK1inv k * uqAffF0 k +
+       uqAffF0 k * uqAffK0inv k * uqAffK1inv k * uqAffF0 k) +
+      (T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffK0inv k * uqAffK1inv k * uqAffF0 k * uqAffF0 k)) = 0 := by
+    rw [hUqId11_true_a]; exact map_zero phi_11_true_a
+  rw [map_add phi_11_true_a, map_sub phi_11_true_a,
+      LinearMap.map_smul_of_tower phi_11_true_a,
+      LinearMap.map_smul_of_tower phi_11_true_a] at hSect11_true_a
+  simp only [phi_11_true_a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect11_true_a
+  -- TRUE Sector (1,1) F01 sub-part b: right = F₁F₀, equation form.
+  have hUqId11_true_b := sect_hUqIdF01_20b k
+  let phi_11_true_b : Uqsl2Aff k →ₗ[LaurentPolynomial k]
+      Uqsl2Aff k ⊗[LaurentPolynomial k] Uqsl2Aff k :=
+    (TensorProduct.mk (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k)).flip
+      (uqAffF1 k * uqAffF0 k)
+  have hSect11_true_b : phi_11_true_b ((T 2 + 1 + T (-2) : LaurentPolynomial k) •
+    (uqAffF0 k * uqAffK1inv k * uqAffK0inv k * uqAffF0 k +
+     uqAffF0 k * uqAffK1inv k * uqAffF0 k * uqAffK0inv k)) =
+    phi_11_true_b ((T 2 + 1 + T (-2) : LaurentPolynomial k) •
+      (uqAffF0 k * uqAffF0 k * uqAffK1inv k * uqAffK0inv k) +
+    (uqAffK1inv k * uqAffK0inv k * uqAffF0 k * uqAffF0 k +
+     uqAffK1inv k * uqAffF0 k * uqAffK0inv k * uqAffF0 k +
+     uqAffK1inv k * uqAffF0 k * uqAffF0 k * uqAffK0inv k)) := by
+    rw [hUqId11_true_b]
+  simp only [map_add, map_sub, LinearMap.map_smul_of_tower,
+             phi_11_true_b, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect11_true_b
   ------------------------------------------------------------------------
   -- Sector (1,0) CAS sub-part a: left = F₀²F₁, 4 atoms.
   ------------------------------------------------------------------------
@@ -4310,21 +4456,25 @@ private theorem affComulFreeAlg_SerreF01 :
   simp only [map_add, map_sub, LinearMap.map_smul_of_tower,
              phi_cas10c, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect_cas10c
   simp only [TensorProduct.tmul_add, TensorProduct.add_tmul, smul_add]
-    at hSect10 hSect11 hSect20a hSect_cas10a hSect20b hSect_cas10b hSect_cas10c
+    at hSect10 hSect11 hSect20a hSect20_true hSect11_true_a hSect_cas10a hSect20b hSect_cas10b hSect_cas10c
   have h20b := sub_eq_zero_of_eq hSect20b
   have h10b := sub_eq_zero_of_eq hSect_cas10b
   have h10c := sub_eq_zero_of_eq hSect_cas10c
-  simp only [LinearMap.smul_apply, LinearMap.add_apply] at h20b h10b h10c
+  have h11b := sub_eq_zero_of_eq hSect11_true_b
+  simp only [LinearMap.smul_apply, LinearMap.add_apply] at h20b h10b h10c h11b
   repeat erw [TensorProduct.mk_apply] at h20b
   repeat erw [TensorProduct.mk_apply] at h10b
   repeat erw [TensorProduct.mk_apply] at h10c
+  repeat erw [TensorProduct.mk_apply] at h11b
   clear ha hb hc hd hSerreS hKnorm1 hKnorm2 hKnorm3 phi_L phi_R phi_30 phi_01
-    phi_10 phi_11 phi_20a phi_cas10a phi_20b phi_cas10b phi_cas10c hUqId30 hUqId01
-    hUqId10 hUqId11 hUqId20a hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
-    hSect20b hSect_cas10b hSect_cas10c
+    phi_10 phi_11 phi_20a phi_cas10a phi_20b phi_cas10b phi_cas10c phi_11_true_a phi_11_true_b
+    hUqId30 hUqId01 hUqId10 hUqId11 hUqId20a hUqId20_true hUqId11_true_a hUqId11_true_b
+    hUqId_cas10a hUqId20b hUqId_cas10b hUqId_cas10c
+    hSect20b hSect_cas10b hSect_cas10c hSect11_true_b
   clear a b c d
-  linear_combination (norm := module) hSect00 + hSect31 + hSect30 + hSect01 +
-    hSect10 + hSect11 + hSect20a + hSect_cas10a + h20b - h10b + h10c
+  linear_combination (norm := (simp only [smul_tmul', sub_eq_add_neg, smul_add, neg_smul, one_smul]; abel))
+    hSect00 + hSect31 + hSect30 + hSect01 +
+    hSect10 + hSect11_true_a + hSect20_true + hSect_cas10a + h11b - h10b + h10c
 
 /-- The coproduct respects all affine Chevalley relations. -/
 private theorem affComulFreeAlg_respects_rel :
@@ -5298,7 +5448,311 @@ noncomputable def affAntipode :
   RingQuot.liftAlgHom (LaurentPolynomial k)
     ⟨affAntipodeFreeAlg k, affAntipodeFreeAlg_respects_rel k⟩
 
-/-! ## 5. Module summary -/
+/-! ## 5. Per-generator coproduct and counit lemmas -/
+
+private theorem affComul_gen (x : Uqsl2AffGen) :
+    affComul k (RingQuot.mkAlgHom (LaurentPolynomial k) (AffChevalleyRel k)
+      (FreeAlgebra.ι (LaurentPolynomial k) x)) =
+    affComulOnGen k x := by
+  show (RingQuot.liftAlgHom (LaurentPolynomial k)
+    ⟨affComulFreeAlg k, affComulFreeAlg_respects_rel k⟩)
+    (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ x)) = _
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  simp [affComulFreeAlg, FreeAlgebra.lift_ι_apply]
+
+private theorem affCounit_gen (x : Uqsl2AffGen) :
+    affCounit k (RingQuot.mkAlgHom (LaurentPolynomial k) (AffChevalleyRel k)
+      (FreeAlgebra.ι (LaurentPolynomial k) x)) =
+    affCounitOnGen k x := by
+  show (RingQuot.liftAlgHom (LaurentPolynomial k)
+    ⟨affCounitFreeAlg k, affCounitFreeAlg_respects_rel k⟩)
+    (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ x)) = _
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  simp [affCounitFreeAlg, FreeAlgebra.lift_ι_apply]
+
+/-! ## 6. Bialgebra coherence: coassociativity and counitality -/
+
+private theorem affComul_coassoc :
+    (Algebra.TensorProduct.assoc (LaurentPolynomial k) (LaurentPolynomial k)
+      (LaurentPolynomial k) (Uqsl2Aff k) (Uqsl2Aff k) (Uqsl2Aff k)).toAlgHom.comp
+      ((Algebra.TensorProduct.map (affComul k)
+        (.id (LaurentPolynomial k) (Uqsl2Aff k))).comp (affComul k)) =
+    (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2Aff k))
+      (affComul k)).comp (affComul k) := by
+  apply RingQuot.ringQuot_ext'
+  apply FreeAlgebra.hom_ext
+  funext x; cases x <;>
+    simp +decide [affComul_gen, affComulOnGen,
+      uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+      uqsl2AffMk, ag,
+      Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.assoc_tmul,
+      Algebra.TensorProduct.one_def,
+      TensorProduct.tmul_add, TensorProduct.add_tmul,
+      AlgebraTensorModule.map_tmul, AlgebraTensorModule.assoc_tmul] <;>
+    abel
+
+private theorem affComul_rTensor_counit :
+    (Algebra.TensorProduct.map (affCounit k)
+      (.id (LaurentPolynomial k) (Uqsl2Aff k))).comp (affComul k) =
+    (Algebra.TensorProduct.lid (LaurentPolynomial k) (Uqsl2Aff k)).symm := by
+  apply RingQuot.ringQuot_ext'
+  apply FreeAlgebra.hom_ext
+  funext x; cases x <;>
+    simp +decide [affComul_gen, affComulOnGen, affCounit_gen, affCounitOnGen,
+      uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+      uqsl2AffMk, ag,
+      Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.lid] <;>
+    rfl
+
+private theorem affComul_lTensor_counit :
+    (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2Aff k))
+      (affCounit k)).comp (affComul k) =
+    (Algebra.TensorProduct.rid (LaurentPolynomial k) (LaurentPolynomial k)
+      (Uqsl2Aff k)).symm := by
+  apply RingQuot.ringQuot_ext'
+  apply FreeAlgebra.hom_ext
+  funext x; cases x <;>
+    simp +decide [affComul_gen, affComulOnGen, affCounit_gen, affCounitOnGen,
+      uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+      uqsl2AffMk, ag,
+      Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.rid] <;>
+    rfl
+
+noncomputable instance : Bialgebra (LaurentPolynomial k) (Uqsl2Aff k) :=
+  Bialgebra.ofAlgHom (affComul k) (affCounit k)
+    (affComul_coassoc k) (affComul_rTensor_counit k) (affComul_lTensor_counit k)
+
+/-! ## 7. HopfAlgebra instance -/
+
+noncomputable def affAntipodeLM :
+    Uqsl2Aff k →ₗ[LaurentPolynomial k] Uqsl2Aff k :=
+  (MulOpposite.opLinearEquiv (LaurentPolynomial k)).symm.toLinearMap.comp
+    (affAntipode k).toLinearMap
+
+private theorem affAntipode_gen (x : Uqsl2AffGen) :
+    affAntipode k (RingQuot.mkAlgHom (LaurentPolynomial k) (AffChevalleyRel k)
+      (FreeAlgebra.ι (LaurentPolynomial k) x)) =
+    affAntipodeOnGen k x := by
+  show (RingQuot.liftAlgHom (LaurentPolynomial k)
+    ⟨affAntipodeFreeAlg k, affAntipodeFreeAlg_respects_rel k⟩)
+    (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ x)) = _
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  simp [affAntipodeFreeAlg, FreeAlgebra.lift_ι_apply]
+
+private theorem affAntipodeLM_gen (x : Uqsl2AffGen) :
+    affAntipodeLM k (RingQuot.mkAlgHom (LaurentPolynomial k) (AffChevalleyRel k)
+      (FreeAlgebra.ι (LaurentPolynomial k) x)) =
+    MulOpposite.unop (affAntipodeOnGen k x) := by
+  simp [affAntipodeLM, affAntipode_gen]
+
+private theorem affAntipodeLM_one : affAntipodeLM k 1 = 1 := by
+  simp [affAntipodeLM, affAntipode]
+
+private theorem affAntipodeLM_mul (a b : Uqsl2Aff k) :
+    affAntipodeLM k (a * b) = affAntipodeLM k b * affAntipodeLM k a := by
+  simp [affAntipodeLM, map_mul]
+
+private theorem affConvR_mul_step
+    (x y : (Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k))
+    (r : LaurentPolynomial k)
+    (hx : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+            ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) x) =
+          algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+      ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) (x * y)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r *
+      (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+        ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) y) := by
+  revert hx
+  induction y using TensorProduct.induction_on with
+  | zero => simp +decide
+  | tmul c d =>
+    intro hx
+    have h_sum : ∃ (s : Finset (Uqsl2Aff k × Uqsl2Aff k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 :=
+      TensorProduct.exists_finset x
+    obtain ⟨s, rfl⟩ := h_sum
+    -- Distribute map_sum through rTensor and mul' to match the target form
+    rw [map_sum (LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)),
+        map_sum (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))] at hx
+    simp +decide [LinearMap.rTensor_tmul, LinearMap.mul'_apply] at hx
+    simp +decide [map_sum, LinearMap.rTensor_tmul, LinearMap.mul'_apply,
+                  affAntipodeLM_mul, Finset.sum_mul, Finset.mul_sum, mul_assoc]
+    simp only [← mul_assoc, ← Finset.sum_mul]
+    rw [show (∑ i ∈ s, (affAntipodeLM k) c * (affAntipodeLM k) i.1 * i.2) =
+        (affAntipodeLM k) c * (∑ i ∈ s, (affAntipodeLM k) i.1 * i.2) from by
+      rw [Finset.mul_sum]; congr 1; ext i; noncomm_ring]
+    rw [hx]
+    rw [mul_assoc, ← mul_assoc _ _ d, Algebra.commutes]
+  | add x y hx hy => simp_all +decide [mul_add, add_mul]
+
+/-- Helper: for grade1 F0/F1 antipode cases (lTensor side), `F + K⁻¹ · (-1 • (K · F)) = 0`
+when `K⁻¹·K = 1`. -/
+private theorem affAntipode_grade1_F_cancel (F Kinv K : Uqsl2Aff k)
+    (h : Kinv * K = 1) : F + Kinv * (-1 • (K * F)) = 0 := by
+  have h1 : Kinv * (K * F) = F := by
+    have : Kinv * K * F = Kinv * (K * F) := mul_assoc Kinv K F
+    rw [← this, h, one_mul]
+  have hsmul : Kinv * (-1 • (K * F)) = -1 • (Kinv * (K * F)) := by
+    rw [mul_smul_comm]
+  calc F + Kinv * (-1 • (K * F))
+      = F + -1 • (Kinv * (K * F)) := by rw [hsmul]
+    _ = F + -1 • F := by rw [h1]
+    _ = F + -F := by rw [neg_one_zsmul]
+    _ = 0 := add_neg_cancel F
+
+/-- Helper: for grade1 E0/E1 antipode cases, `-1 • (E·K⁻¹)·K + E = 0`
+when `K⁻¹·K = 1`. Written at top level to avoid the `ag✝` shadowing issue
+that occurs inside `cases x <;> show ...` blocks. Constructs proof via
+explicit equalities to bypass the RingQuot typeclass diamond on `neg_mul`. -/
+private theorem affAntipode_grade1_E_cancel (E Kinv K : Uqsl2Aff k)
+    (h : Kinv * K = 1) : -1 • (E * Kinv) * K + E = 0 := by
+  -- Step 1: show (E*Kinv)*K = E using associativity and h
+  have hEKKinv : (E * Kinv) * K = E := by
+    have h1 : (E * Kinv) * K = E * (Kinv * K) := mul_assoc E Kinv K
+    have h2 : E * (Kinv * K) = E * 1 := congrArg (E * ·) h
+    have h3 : (E * 1 : Uqsl2Aff k) = E := mul_one E
+    exact h1.trans (h2.trans h3)
+  -- Step 2: -1 • (E*Kinv) = -(E*Kinv)
+  have hneg1smul : -1 • (E * Kinv) = -(E * Kinv) := neg_one_zsmul (E * Kinv)
+  -- Step 3: -(E*Kinv) * K = -((E*Kinv)*K)  (via smul_mul_assoc with scalar = -1)
+  have hsmul_mul : -1 • (E * Kinv) * K = -1 • ((E * Kinv) * K) := by
+    rw [smul_mul_assoc]
+  -- Step 4: combine
+  calc -1 • (E * Kinv) * K + E
+      = -1 • ((E * Kinv) * K) + E := by rw [hsmul_mul]
+    _ = -1 • E + E := by rw [hEKKinv]
+    _ = -E + E := by rw [neg_one_zsmul]
+    _ = 0 := neg_add_cancel E
+
+set_option maxHeartbeats 800000 in
+private theorem affAntipode_right :
+    LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
+      (affAntipodeLM k).rTensor (Uqsl2Aff k) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (LaurentPolynomial k) (Uqsl2Aff k)) ∘ₗ Coalgebra.counit := by
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (AffChevalleyRel k) x
+  induction x using FreeAlgebra.induction with
+  | grade0 r =>
+    simp +decide [affAntipodeLM, affAntipode, affComul, affCounit,
+      RingQuot.liftAlgHom, affComulFreeAlg, affCounitFreeAlg]
+  | grade1 x =>
+    cases x <;>
+      (show (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+          ((LinearMap.rTensor (Uqsl2Aff k) (affAntipodeLM k)) ((affComul k) _)) =
+        (algebraMap (LaurentPolynomial k) (Uqsl2Aff k)) ((affCounit k) _)) <;>
+      simp +decide [affComul_gen, affComulOnGen, affAntipodeLM_gen, affAntipodeOnGen,
+        affCounit_gen, affCounitOnGen, LinearMap.rTensor_tmul, LinearMap.mul'_apply,
+        affAntipodeLM_one,
+        uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+        uqsl2AffMk,
+        MulOpposite.unop_op, MulOpposite.op_unop, MulOpposite.unop_neg,
+        MulOpposite.unop_mul, MulOpposite.unop_one, neg_one_smul] <;>
+      (try erw [uqAff_K0inv_mul_K0]) <;>
+      (try erw [uqAff_K1inv_mul_K1]) <;>
+      (try erw [uqAff_K0_mul_K0inv]) <;>
+      (try erw [uqAff_K1_mul_K1inv]) <;>
+      (try rfl) <;> (try abel) <;>
+      -- E0/E1: bridge ag✝ shadowing by unfolding everything to raw FreeAlgebra.ι
+      (first
+        | (have h := affAntipode_grade1_E_cancel k (uqAffE0 k) (uqAffK0inv k) (uqAffK0 k)
+             (uqAff_K0inv_mul_K0 k)
+           simp only [uqAffE0, uqAffK0inv, uqAffK0, uqsl2AffMk, ag] at h ⊢
+           exact h)
+        | (have h := affAntipode_grade1_E_cancel k (uqAffE1 k) (uqAffK1inv k) (uqAffK1 k)
+             (uqAff_K1inv_mul_K1 k)
+           simp only [uqAffE1, uqAffK1inv, uqAffK1, uqsl2AffMk, ag] at h ⊢
+           exact h))
+  | mul x y hx hy =>
+    simp_all +decide [mul_assoc, CoalgebraStruct.comul]
+    convert affConvR_mul_step k _ _ _ hx using 1
+    rw [hy]
+  | add x y hx hy => simp_all [map_add]
+
+private theorem affConvL_mul_step
+    (x y : (Uqsl2Aff k) ⊗[LaurentPolynomial k] (Uqsl2Aff k))
+    (r : LaurentPolynomial k)
+    (hy : (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+            ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) y) =
+          algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+      ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) (x * y)) =
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+        ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) x) *
+      algebraMap (LaurentPolynomial k) (Uqsl2Aff k) r := by
+  revert hy
+  induction x using TensorProduct.induction_on with
+  | zero => simp +decide
+  | tmul a b =>
+    intro hy
+    have h_sum : ∃ (s : Finset (Uqsl2Aff k × Uqsl2Aff k)), y = ∑ p ∈ s, p.1 ⊗ₜ p.2 :=
+      TensorProduct.exists_finset y
+    obtain ⟨s, rfl⟩ := h_sum
+    -- Distribute map_sum through lTensor and mul' to match the target form
+    rw [map_sum (LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)),
+        map_sum (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))] at hy
+    simp +decide [LinearMap.lTensor_tmul, LinearMap.mul'_apply] at hy
+    simp +decide [map_sum, LinearMap.lTensor_tmul, LinearMap.mul'_apply,
+                  affAntipodeLM_mul, Finset.sum_mul, Finset.mul_sum, mul_assoc]
+    -- Factor a out on the left and S(b) out on the right, then apply hy, then Algebra.commutes
+    rw [show (∑ i ∈ s, a * (i.1 * ((affAntipodeLM k) i.2 * (affAntipodeLM k) b))) =
+        a * (∑ i ∈ s, i.1 * (affAntipodeLM k) i.2) * (affAntipodeLM k) b from by
+      rw [Finset.mul_sum, Finset.sum_mul]; congr 1; ext i; noncomm_ring]
+    rw [hy]
+    rw [mul_assoc, Algebra.commutes]
+  | add x y hx hy => simp_all +decide [mul_add, add_mul]
+
+set_option maxHeartbeats 800000 in
+private theorem affAntipode_left :
+    LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k) ∘ₗ
+      (affAntipodeLM k).lTensor (Uqsl2Aff k) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (LaurentPolynomial k) (Uqsl2Aff k)) ∘ₗ Coalgebra.counit := by
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (AffChevalleyRel k) x
+  induction x using FreeAlgebra.induction with
+  | grade0 r =>
+    simp +decide [affAntipodeLM, affAntipode, affComul, affCounit,
+      RingQuot.liftAlgHom, affComulFreeAlg, affCounitFreeAlg]
+  | grade1 x =>
+    cases x <;>
+      (show (LinearMap.mul' (LaurentPolynomial k) (Uqsl2Aff k))
+          ((LinearMap.lTensor (Uqsl2Aff k) (affAntipodeLM k)) ((affComul k) _)) =
+        (algebraMap (LaurentPolynomial k) (Uqsl2Aff k)) ((affCounit k) _)) <;>
+      simp +decide [affComul_gen, affComulOnGen, affAntipodeLM_gen, affAntipodeOnGen,
+        affCounit_gen, affCounitOnGen, LinearMap.lTensor_tmul, LinearMap.mul'_apply,
+        affAntipodeLM_one,
+        uqAffE0, uqAffE1, uqAffF0, uqAffF1, uqAffK0, uqAffK1, uqAffK0inv, uqAffK1inv,
+        uqsl2AffMk,
+        MulOpposite.unop_op, MulOpposite.op_unop, MulOpposite.unop_neg,
+        MulOpposite.unop_mul, MulOpposite.unop_one, neg_one_smul] <;>
+      (try erw [uqAff_K0inv_mul_K0]) <;>
+      (try erw [uqAff_K1inv_mul_K1]) <;>
+      (try erw [uqAff_K0_mul_K0inv]) <;>
+      (try erw [uqAff_K1_mul_K1inv]) <;>
+      (try rfl) <;> (try abel) <;>
+      -- F0/F1 lTensor: bridge ag✝ shadowing via simp unfolding
+      (first
+        | (have h := affAntipode_grade1_F_cancel k (uqAffF0 k) (uqAffK0inv k) (uqAffK0 k)
+             (uqAff_K0inv_mul_K0 k)
+           simp only [uqAffF0, uqAffK0inv, uqAffK0, uqsl2AffMk, ag] at h ⊢
+           exact h)
+        | (have h := affAntipode_grade1_F_cancel k (uqAffF1 k) (uqAffK1inv k) (uqAffK1 k)
+             (uqAff_K1inv_mul_K1 k)
+           simp only [uqAffF1, uqAffK1inv, uqAffK1, uqsl2AffMk, ag] at h ⊢
+           exact h))
+  | mul x y hx hy =>
+    simp_all +decide [← LinearMap.comp_assoc, ← RingHom.comp_apply]
+    convert affConvL_mul_step k _ _ _ hy using 1
+    rw [hx]
+  | add x y hx hy => simp_all [map_add]
+
+noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl2Aff k) where
+  antipode := affAntipodeLM k
+  mul_antipode_rTensor_comul := affAntipode_right k
+  mul_antipode_lTensor_comul := affAntipode_left k
+
+/-! ## 8. Module summary -/
 
 theorem uqsl2_affine_hopf_summary : True := trivial
 

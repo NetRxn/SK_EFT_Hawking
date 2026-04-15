@@ -1,0 +1,15 @@
+18:10:12 ============================================================
+18:10:12   Vestigial MC Production Run (vectorized + multiprocessing)
+18:10:12   Requested lattice sizes: [4, 6, 8, 10, 12, 14, 16]
+18:10:12   Sweeps: 2500 thermalize + 5000 measure
+18:10:12   Couplings: 40 points
+18:10:12   Cores: 2
+18:10:12   Seed: 20260413
+18:10:12   n_skip (decorrelation): {4: 5, 6: 5, 8: 5, 10: 5, 12: 7, 14: 9, 16: 12}
+18:10:12   Started: 2026-04-13T18:10:12.765492
+18:10:12 ============================================================
+18:10:12 
+[1/3] 4D Binder cumulant crossing analysis...
+18:10:12   Dispatching 280 new jobs across 2 cores (model=adw)...
+/Users/johnroehm/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown: {'/mp-nz5faapk', '/mp-7a1u4tpi', '/mp-m_nob2zb', '/mp-o3n5ezw1', '/mp-44aw_5lb', '/mp-ppdc32ap'}
+  warnings.warn(

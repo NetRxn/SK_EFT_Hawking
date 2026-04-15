@@ -378,68 +378,97 @@ PARAMETER_PROVENANCE = {
         'notes': None,
     },
     'Paris_long.c_s': {
-        'value': 5.0e5,
+        'value': 4.0e5,
         'unit': 'm/s',
-        'tier': 'EXTRACTED',
-        'source': 'Reservoir-corrected midpoint of 3 independent measurements',
-        'detail': 'RESOLVED (Apr 5 2026). Previous code used 1.0e6 m/s (1 µm/ps) from '
+        'tier': 'MEASURED',
+        'source': 'Falque et al., PRL 135, 023401 (2025), §IV.1',
+        'detail': 'UPDATE 2026-04-13 (Phase 5u Wave 4): adopted Falque\'s measured value '
+                  '0.40 µm/ps = 4.0e5 m/s directly, replacing the Apr 5 "representative '
+                  'midpoint" of 5.0e5 (which was a mean of 0.40/0.40/0.81 across Falque/'
+                  'Estrecho/Amo). Using Falque\'s value aligns with claims that Paper 12 '
+                  'makes about the LKB platform specifically. Estrecho and Amo retained '
+                  'as cross-checks in the 2026-04-05 history below.'
+                  '\n\n'
+                  '2026-04-05 history: Previous code used 1.0e6 m/s (1 µm/ps) from '
                   'Jacquet 2022 theoretical simulation — a reservoir-free GPE model that '
                   'never measured c_s experimentally. Three independent measurements: '
-                  '(1) Falque PRL 135, 023401 (2025) p.5: cs ≈ 0.40 µm/ps; '
+                  '(1) Falque PRL 135, 023401 (2025) §IV.1: cs ≈ 0.40 µm/ps; '
                   '(2) Estrecho PRL 126, 075301 (2021): c₀ = 0.4 µm/ps at threshold; '
                   '(3) Amo NatPhys 5, 805 (2009): cs = 0.81 µm/ps under strong resonant drive. '
                   'Stepanov NatComm 10, 3869 (2019): c_s "apparently twice too low" vs naive. '
                   'Root cause: excitonic reservoir absorbs 50-75% of blueshift without '
                   'contributing to dynamic c_s. Correct formula: c_s = sqrt(g·n_condensate/m*), '
-                  'NOT sqrt(ΔE_total/m*). Updated to 0.5 µm/ps = 5e5 m/s as representative '
-                  'reservoir-corrected value for resonantly driven GaAs microcavities.',
+                  'NOT sqrt(ΔE_total/m*).',
         'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': '2026-04-05',
-        'llm_verified_notes': 'Deep research (Phase-5d, "polariton c_s discrepancy") traced '
-                              'the 1 µm/ps value to Jacquet 2022 flow velocity at sonic point '
-                              'in reservoir-free simulation. Value was NEVER an experimental '
-                              'measurement. Three independent experiments give 0.4-0.8 µm/ps. '
-                              'Reservoir correction factor ~2-3x confirmed by Stepanov (2019) '
-                              'and Claude PRB 107 (2023). Code updated to 5e5 m/s.',
+        'llm_verified_date': '2026-04-13',
+        'llm_verified_notes': 'Re-read Falque full text (arXiv:2311.01392v2) 2026-04-13. '
+                              'c_s = 0.40 µm/ps confirmed in §IV.1. Adopting Falque\'s value '
+                              'directly (Wave 4) rather than the blended midpoint.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'RESOLVED: Updated from 1.0e6 to 5.0e5 m/s (Apr 5 2026). '
-                 'Previous value traced to theoretical projection, not measurement. '
-                 'xi updated consistently: ξ = ℏ/(m*·c_s) = 3.0 µm at c_s = 5e5.',
+        'notes': '2026-04-13: Updated from 5.0e5 to 4.0e5 m/s to match Falque directly. '
+                 'Previous 5.0e5 was a blended midpoint; Falque is the primary source for '
+                 'the Paris platform and directly reports 0.40 µm/ps.',
     },
     'Paris_long.xi': {
-        'value': 3.0e-6,
+        'value': 3.4e-6,
         'unit': 'm',
-        'tier': 'EXTRACTED',
-        'source': 'Consistent with c_s = 5e5 via ξ = ℏ/(m*·c_s); Falque 2025 measured 3.4-4.0 µm',
-        'detail': 'RESOLVED (Apr 5 2026). Updated from 2.0 µm to 3.0 µm, consistent with '
-                  'c_s = 5e5 m/s. Falque et al. (2025) p.5: ξ ≈ 3.4 µm upstream, 4.0 µm '
-                  'downstream. Computed: ξ = ℏ/(m*·c_s) = 1.05e-34/(7e-35·5e5) = 3.0 µm. '
-                  'Previous value 2.0 µm was consistent with the old c_s = 1e6 m/s.',
+        'tier': 'MEASURED',
+        'source': 'Falque et al., PRL 135, 023401 (2025), §IV.1',
+        'detail': 'UPDATE 2026-04-13 (Phase 5u Wave 4): adopted Falque\'s measured upstream '
+                  'value ξ = 3.4 µm directly, replacing the Apr 5 computed 3.0 µm '
+                  '(which was derived from the blended c_s=5e5). With c_s now 4e5, '
+                  'ξ = ℏ/(m*·c_s) = 1.05e-34/(7e-35·4e5) = 3.75 µm; Falque\'s measured '
+                  '3.4 µm upstream is close but not exactly ℏ/(m*c_s) (also reports '
+                  '4.0 µm downstream, showing the spatial variation). Using the measured '
+                  'upstream value directly is more faithful to the primary source than '
+                  'deriving from c_s.',
         'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': '2026-04-05',
-        'llm_verified_notes': 'Updated consistently with c_s correction. Computed value '
-                              '3.0 µm is within the 3.4-4.0 µm measured range from Falque. '
-                              'The slight underestimate (3.0 vs 3.4) reflects the higher c_s '
-                              '(0.5 vs 0.4 µm/ps) used as a representative midpoint.',
+        'llm_verified_date': '2026-04-13',
+        'llm_verified_notes': 'Falque §IV.1 reports ξ ≈ 3.4 µm upstream, 4.0 µm downstream. '
+                              'We adopt the upstream value as the reference since horizon '
+                              'physics is set upstream.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'RESOLVED: Updated from 2.0 to 3.0 µm (Apr 5 2026). '
-                 'Coupled to c_s update. ξ = ℏ/(m*·c_s) = 3.0 µm at c_s = 5e5 m/s.',
+        'notes': '2026-04-13: Updated from 3.0e-6 to 3.4e-6 m to match Falque measured value.',
     },
     'Paris_long.kappa': {
-        'value': 5.0e10,
+        'value': 7.0e10,
         'unit': 's^-1',
-        'tier': 'PROJECTED',
-        'source': 'Falque et al., PRL 135, 023401 (2025)',
-        'detail': 'SLM-controlled horizon, projected surface gravity ~0.05 THz.',
+        'tier': 'MEASURED',
+        'source': 'Falque et al., PRL 135, 023401 (2025), Fig. 2 / §IV.1',
+        'detail': 'PROVENANCE CORRECTION 2026-04-13 (Phase 5u Wave 3). The Falque '
+                  'PRL DOES report three measured κ values (verified by LLM re-read '
+                  'of arXiv:2311.01392v2 full text, 2026-04-13): '
+                  'κ = 0.07 ps⁻¹ (smooth horizon, red trace in Fig. 2), '
+                  'κ = 0.08 ps⁻¹ (smooth horizon, purple trace in Fig. 2), '
+                  'κ = 0.11 ps⁻¹ (steep horizon, Section IV.2). '
+                  'In SI units: 7e10, 8e10, 1.1e11 s⁻¹. '
+                  'The current constants.py value (5e10 s⁻¹) is BELOW the measured '
+                  'range — not a projection but an underestimate. Flagged for update: '
+                  'Phase 5u Wave 4 will decide whether to (a) adopt the smooth-horizon '
+                  'value (7e10 s⁻¹) as the default for Paris_long, (b) adopt the steep '
+                  'value (1.1e11 s⁻¹) for maximum T_H, or (c) parametrize all three '
+                  'configurations. Paper 12 numerics for T_H, D, G(ω) need to be '
+                  'recomputed downstream.',
         'doi': '10.1103/PhysRevLett.135.023401',
-        'llm_verified_date': '2026-03-31',
-        'llm_verified_notes': 'PROJECTED — Falque 2025 demonstrated polariton horizons with SLM but did not report surface gravity κ. Value 5e10 s⁻¹ is an order-of-magnitude estimate giving T_H ~ 0.6 mK.',
+        'llm_verified_date': '2026-04-13',
+        'llm_verified_notes': 'Re-verified against arXiv:2311.01392v2 full text. The '
+                              'prior 2026-03-31 LLM reading — which claimed "Falque '
+                              'did not report κ" — was WRONG. The 2026-04-10 LKB audit '
+                              '(temporary/working-docs/reviews/papers/2026-04-10-Perplexity/'
+                              'LKB-Paris-Polariton-Assessment.md) was correct to cite '
+                              'the three measured κ values. Root cause of the 2026-03-31 '
+                              'error: the LLM likely read only the arXiv abstract rather '
+                              'than the full paper, and the abstract does not include '
+                              'the numerical κ values (they appear in Fig. 2 and '
+                              'Section IV). Process lesson → Phase 5u Wave 18 '
+                              '(cross-LLM provenance consistency check).',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Falque demonstrated polariton horizons but did not report κ directly. '
-                 'This is an order-of-magnitude estimate.',
+        'notes': 'Falque reports three measured κ values spanning 7e10–1.1e11 s⁻¹. '
+                 'Current value 5e10 is an underestimate; awaiting decision on which '
+                 'Falque configuration to adopt (Phase 5u Wave 4).',
     },
     'Paris_long.tau_cav': {
         'value': 100e-12,
@@ -521,32 +550,35 @@ PARAMETER_PROVENANCE = {
         'notes': None,
     },
     'Paris_standard.tau_cav': {
-        'value': 3e-12,
+        'value': 8e-12,
         'unit': 's',
-        'tier': 'EXTRACTED',
-        'source': 'Typical GaAs microcavity value — no specific paper',
-        'detail': 'Standard GaAs microcavity lifetime ~3 ps. This is a typical '
-                  'order-of-magnitude value, not from a specific measurement.',
+        'tier': 'MEASURED',
+        'source': 'Falque et al. 2025 polariton condensate cavity',
+        'detail': 'Standard Paris polariton cavity lifetime: τ_cav ≈ 8 ps '
+                  '(Falque 2025 actual measured cavity value, superseded the '
+                  'prior 3 ps order-of-magnitude estimate used through March 2026).',
         'doi': None,
-        'llm_verified_date': '2026-03-31',
-        'llm_verified_notes': 'Tier corrected from MEASURED to EXTRACTED — no specific paper '
-                              'cited. 3 ps is a widely-used typical value for standard GaAs '
-                              'microcavities (Q ~ 1000-3000). For publication, should cite '
-                              'a specific cavity measurement or label as order-of-magnitude.',
+        'llm_verified_date': '2026-04-14',
+        'llm_verified_notes': 'Updated 2026-04-14 from prior 3 ps EXTRACTED estimate to '
+                              'Falque 2025 actual measured value of 8 ps. constants.py '
+                              "Paris_standard.tau_cav comment confirms: 'Falque 2025 actual "
+                              "cavity; was 3 ps projected'. Tier upgraded EXTRACTED → MEASURED.",
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Order-of-magnitude value. For publication, need either a specific '
-                 'source or explicit acknowledgment that this is a representative value.',
+        'notes': 'Falque 2025 measured value. Update from prior 3 ps order-of-magnitude '
+                 'estimate. Original literature-derived 3 ps lives in Paris_long.tau_cav '
+                 'as the order-of-magnitude reference.',
     },
     'Paris_standard.Gamma_pol': {
-        'value': 3.33e11,
+        'value': 1.25e11,
         'unit': 's^-1',
         'tier': 'DERIVED',
         'source': 'Derived: 1/tau_cav',
-        'detail': 'Γ_pol = 1/(3 ps) ≈ 3.33×10¹¹ s⁻¹.',
+        'detail': 'Γ_pol = 1/(8 ps) = 1.25×10¹¹ s⁻¹ (from Falque 2025 τ_cav).',
         'doi': None,
-        'llm_verified_date': '2026-03-31',
-        'llm_verified_notes': 'DERIVED: trivially verified from parent parameter.',
+        'llm_verified_date': '2026-04-14',
+        'llm_verified_notes': 'DERIVED from updated τ_cav = 8 ps (Falque 2025). '
+                              'Was 3.33×10¹¹ s⁻¹ when τ_cav = 3 ps.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
@@ -784,14 +816,16 @@ PAPER_DEPENDENCIES = {
         'lean_modules': ['PolaritonTier1', 'AcousticMetric'],
         'platforms': ['Paris_long', 'Paris_ultralong', 'Paris_standard'],
         'key_claims': [
-            'c_s = 0.5 µm/ps (reservoir-corrected, 3 independent measurements)',
-            'T_H ≈ 61 mK for κ = 5e10 s⁻¹',
-            'D = ξκ/c_s ≈ 0.3 (near-adiabatic, ~10% dispersive correction)',
-            'Stimulated gain G(0.1κ) ≈ 1.14 (amplification exceeds probe)',
-            'SNR ~ sqrt(N_probe) · G(ω) — 10³-10⁶× better than spontaneous',
+            'c_s = 0.40 µm/ps (Falque 2025 measured; adopted in Phase 5u Wave 4)',
+            'ξ ≈ 3.4 µm upstream (Falque 2025 §IV.1)',
+            'Smooth-horizon baseline κ = 7×10¹⁰ s⁻¹ → T_H ≈ 85 mK, D = 0.60',
+            'Steep-horizon reach κ = 1.1×10¹¹ s⁻¹ → T_H ≈ 134 mK, D = 0.93 '
+                '(reported as platform upper bound; non-perturbative dispersive)',
+            'Dispersive correction −π D²/6: −0.19 (smooth) to −0.46 (steep)',
+            'Stimulated gain G(ω) > 0.5 for ω < ln(3)/(2π)·κ ≈ 0.175κ (κ-invariant)',
+            'SNR ~ sqrt(N_probe) · G(ω) — 10³–10⁶× better than spontaneous',
             'κτ_pol > 1 required; ultralong (300 ps) is optimal',
-            '1214 Lean 4 theorems, 0 axioms (formal verification claim)',
-            'PolaritonTier1.lean: 6 theorems, zero sorry',
+            '2237+ Lean 4 theorems across project; PolaritonTier1.lean: 9 theorems, zero sorry',
         ],
     },
 }

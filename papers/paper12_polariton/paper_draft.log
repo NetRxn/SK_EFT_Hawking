@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  10 APR 2026 13:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  14 APR 2026 07:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -415,11 +415,11 @@ Package hyperref Info: Link coloring OFF on input line 9.
 Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 9.
 \openout3 = `paper_draftNotes.bib'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 24.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 24.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
@@ -428,73 +428,86 @@ Class revtex4-2 Warning: Assuming \noaffiliation for authors.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 43.
+(hyperref)                removing `\\' on input line 56.
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+Underfull \hbox (badness 2088) in paragraph at lines 126--131
+\OT1/cmr/m/n/10 3\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 75 \OML/cmm/m/it/10 ^^V[]$ \OT1/cmr/m/n/10 re-flects the fi-nite den-sity of the driven-
+ []
 
-[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+Overfull \hbox (42.74606pt too wide) in paragraph at lines 139--152
+ []$[]$ 
+ []
 
-LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 146.
-
-<figures/fig_stimulated_hawking_spectrum.png, id=115, 1304.875pt x 903.375pt>
+<figures/fig_stimulated_hawking_spectrum.png, id=119, 1606.0pt x 1003.75pt>
 File: figures/fig_stimulated_hawking_spectrum.png Graphic file (type png)
 <use figures/fig_stimulated_hawking_spectrum.png>
-Package pdftex.def Info: figures/fig_stimulated_hawking_spectrum.png  used on input line 172.
-(pdftex.def)             Requested size: 246.0pt x 170.30594pt.
+Package pdftex.def Info: figures/fig_stimulated_hawking_spectrum.png  used on input line 201.
+(pdftex.def)             Requested size: 246.0pt x 153.74171pt.
 
-Overfull \hbox (3.27386pt too wide) in paragraph at lines 199--209
+Overfull \hbox (53.04643pt too wide) in paragraph at lines 228--239
  []$[]$ 
  []
 
 
-Underfull \hbox (badness 6380) in paragraph at lines 221--223
+Underfull \hbox (badness 6380) in paragraph at lines 254--256
 []\OT1/cmr/m/n/10 The po-lari-ton con-den-sate is in-her-ently driven-
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 252--256
+[2 <./figures/fig_stimulated_hawking_spectrum.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 286--290
  []$\OML/cmm/m/it/10 T[] \OT1/cmr/m/n/10 = \U/msb/m/n/10 ~\OML/cmm/m/it/10 ^^T=\OT1/cmr/m/n/10 (2\OML/cmm/m/it/10 ^^Yk[]\OT1/cmr/m/n/10 )$:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 252--256
+Underfull \hbox (badness 10000) in paragraph at lines 286--290
  \OT1/cmtt/m/n/10 polariton[]hawking[]temperature $\OMS/cmsy/m/n/10 !$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 252--256
+Underfull \hbox (badness 10000) in paragraph at lines 286--290
  \OT1/cmtt/m/n/10 hawking[]temp[]from[]surface[]gravity
  []
 
-[2{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./figures/fig_stimulated_hawking_spectrum.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 257--260
+
+Underfull \hbox (badness 10000) in paragraph at lines 291--294
  []$\OML/cmm/m/it/10 G\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 !\OT1/cmr/m/n/10 ) = ^^@\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 ([](2\OML/cmm/m/it/10 ^^Y!=^^T\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1)$:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 257--260
+Underfull \hbox (badness 10000) in paragraph at lines 291--294
  \OT1/cmtt/m/n/10 stimulated[]hawking[]gain \OT1/cmr/m/n/10 (Aris-to-tle: pend-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 261--263
+Underfull \hbox (badness 10000) in paragraph at lines 295--297
  []$[] \OT1/cmr/m/n/10 = [] \OMS/cmsy/m/n/10 ^^A \OML/cmm/m/it/10 G\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 !\OT1/cmr/m/n/10 )$:
  []
 
 
-Underfull \hbox (badness 1509) in paragraph at lines 264--267
+Underfull \hbox (badness 1509) in paragraph at lines 298--301
  []$\OML/cmm/m/it/10 D \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 ^^X^^T=c[]$\OT1/cmr/m/n/10 : de-rived in \OT1/cmtt/m/n/10 constants.py \OT1/cmr/m/n/10 from
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 272--275
+Underfull \hbox (badness 10000) in paragraph at lines 306--309
  []\OT1/cmr/m/n/10 Attenuation mono-tonic-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 272--275
+Underfull \hbox (badness 10000) in paragraph at lines 306--309
  \OT1/cmr/m/n/10 ity: \OT1/cmtt/m/n/10 attenuation[]mono[]Gamma
+ []
+
+
+Underfull \hbox (badness 1975) in paragraph at lines 323--335
+\OT1/cmr/m/n/10 and stim-u-lated Hawk-ing de-tec-tion via CW pump-
+ []
+
+
+Underfull \hbox (badness 1097) in paragraph at lines 341--342
+ \OT1/cmr/m/n/9 Space-times,'' Phys. Rev. Lett. \OT1/cmr/bx/n/9 135\OT1/cmr/m/n/9 , 023401 (2025);
  []
 
 (./paper_draft.bbl) [3] (./paper_draft.aux)
@@ -506,18 +519,18 @@ Package rerunfilecheck Info: File `paper_draft.out' has not changed.
 (rerunfilecheck)             Checksum: 5B5184ECFCC4B65A51196327C9E95321;2760.
  ) 
 Here is how much of TeX's memory you used:
- 15722 strings out of 467525
- 298118 string characters out of 5418982
- 710354 words of memory out of 5000000
- 44439 multiletter control sequences out of 15000+600000
- 634758 words of font info for 68 fonts, out of 8000000 for 9000
+ 15732 strings out of 467525
+ 298270 string characters out of 5418982
+ 710911 words of memory out of 5000000
+ 44447 multiletter control sequences out of 15000+600000
+ 635095 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,80p,697b,1108s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (3 pages, 322221 bytes).
+ 75i,12n,80p,1042b,1106s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on paper_draft.pdf (3 pages, 338178 bytes).
 PDF statistics:
- 259 PDF objects out of 1000 (max. 8388607)
- 201 compressed objects within 3 object streams
- 45 named destinations out of 1000 (max. 500000)
+ 263 PDF objects out of 1000 (max. 8388607)
+ 205 compressed objects within 3 object streams
+ 46 named destinations out of 1000 (max. 500000)
  126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

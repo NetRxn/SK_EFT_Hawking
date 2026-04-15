@@ -17,9 +17,12 @@ Warning--I didn't find a database entry for "Wang2024"
 Warning--I didn't find a database entry for "AlvarezGaumeWitten1984"
 Warning--I didn't find a database entry for "GarciaEtxebarria2019"
 Warning--I didn't find a database entry for "Rademacher1973"
+Warning--I didn't find a database entry for "diFrancesco1997"
 Warning--I didn't find a database entry for "Rokhlin1952"
 Warning--I didn't find a database entry for "Kitaev2009"
+Warning--I didn't find a database entry for "FidkowskiKitaev2010"
 Warning--I didn't find a database entry for "Adams1974"
+Warning--I didn't find a database entry for "BeaudryCampbell"
 Warning--I didn't find a database entry for "ABP1967"
 control{REVTEX42Control}, control.key{N/A}, control.author{N/A}, control.editor{N/A}, control.title{N/A}, control.pages{N/A}, control.year{N/A}, control.eprint{N/A}, 
 control{apsrev42Control}, control.key{N/A}, control.author{08}, control.editor{1}, control.title{0}, control.pages{0}, control.year{1}, control.eprint{N/A}, 
@@ -36,7 +39,7 @@ Control: year (1) truncated
 Control: production of eprint (0) enabled
 You've used 2 entries,
             6079 wiz_defined-function locations,
-            1653 strings with 15269 characters,
+            1659 strings with 15367 characters,
 and the built_in function-call counts, 991 in all, are:
 = -- 12
 > -- 16
@@ -75,4 +78,4 @@ warning$ -- 1
 while$ -- 11
 width$ -- 0
 write$ -- 52
-(There were 10 warnings)
+(There were 13 warnings)

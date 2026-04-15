@@ -226,9 +226,9 @@ The project has **0 axioms** (down from 7 after integrity sweep and Wave 6 axiom
 | 1 | `non_abelian_center_discrete` | GaugeErasure | **Proved as theorem** (Wave 6) |
 | 2 | `gs_nogo_axiom` | GoltermanShamir | **Proved as theorem** (Wave 6) |
 
-**Discharged (converted to theorems — were tautological as Lean statements):**
+**Discharged (converted to placeholder theorems — statements as written were trivially true):**
 - `z16_classification` (Z16Classification): `∃ (φ : ZMod 16 ≃ ZMod 16), Bijective φ` — trivially true, discharged by `⟨Equiv.refl _, Equiv.bijective _⟩`
-- `dai_freed_spin_z4` (Z16AnomalyComputation): same tautological structure as z16_classification
+- `dai_freed_spin_z4` (Z16AnomalyComputation): same tautological structure as z16_classification. **Not a proof of the Dai-Freed cobordism classification** Ω₅^{Spin^{ℤ₄}} ≅ ℤ₁₆ — that requires cobordism theory not in Mathlib. Docstring updated 2026-04-13 (Phase 5u Wave 13) to disclose placeholder status. Papers 8, 9, 10 must describe the ℤ₁₆ cobordism identification as an external hypothesis, not a Lean-verified fact.
 - `chiral_central_charge_coeff` (GenerationConstraint): `∀ N_f, ∃ c, c = 8*N_f` — trivially true (witness: `8*N_f`)
 - `weyl_anomaly_unit` (Z16AnomalyComputation): `(1 : ZMod 16) ≠ 0` — discharged by `decide`
 
@@ -298,13 +298,22 @@ using Mathlib's existing NumberTheory.ModularForms infrastructure (~85% coverage
 ### Deliverables:
 - [x] `lean/SKEFTHawking/RokhlinBridge.lean` — 14 theorems, zero sorry, zero axioms:
   - Rokhlin's theorem as hypothesis in `sixteen_convergence_full` (not axiom)
-  - "16 convergence": SM Weyl = Z₁₆ = Rokhlin = Kitaev = 16
-  - Bott periodicity: 16 = 8 × 2 (period × Pfaffian)
+  - `sixteen_convergence_full`: **enumerates** (does not mathematically unify) the four
+    appearances of 16 — SM Weyl count, ℤ₁₆ bordism modulus, Rokhlin divisor, Kitaev 16-fold
+    way. See module docstring (updated 2026-04-13 / Phase 5u Wave 12) for the structural
+    caveat: three of four conjuncts are either arithmetic tautologies, hypothesis echoes,
+    or retypes of the first. Mathematical connection between the four 16s is external
+    (Wang 2024 via Smith homomorphism — not formalized).
   - With/without ν_R analysis: N_f=3 with ν_R, N_f=48 without (Aristotle `b54f9611`)
   - Rokhlin sharp (K3 σ=-16), strictly stronger than Hirzebruch (8)
 - [x] Python: rokhlin_sixteen_convergence, generation_constraints_with_without_nu_R
 - [x] Tests: test_rokhlin_bridge.py (12 tests, all pass)
 - [x] Paper 10 updated with with/without ν_R table
+- [x] Paper 10 "16 Convergence" section rewritten (2026-04-13 / Phase 5u Waves 8, 9, 12):
+  Kitaev's ℤ₁₆ now correctly attributed to class D (not "time-reversal symmetry"),
+  `[FidkowskiKitaev2010]` cited for the interacting reduction, "16 = 8 × 2 Bott × Pfaffian"
+  numerology replaced with Wang (2024) Smith-homomorphism framing, `sixteen_convergence_full`
+  described as "formally recorded" not "formally verified convergence".
 
 ---
 
@@ -359,9 +368,12 @@ the exact same pattern for U_q(sl₂). No axioms needed.
 - O_q ↪ U_q(ŝl₂) embedding — the coideal embedding is into the AFFINE quantum
   group U_q(ŝl₂) (6 generators), not finite U_q(sl₂) (4 generators).
   See: `Lit-Search/Phase-5b/The q-Onsager algebra as a coideal subalgebra...`
-  Deferred to Phase 6.
+  Deferred to Phase 6. **UPDATE: Completed in Phase 5d Wave 9 (CoidealEmbedding.lean, 0 sorry).**
 - Hopf algebra structure on U_q(sl₂) — Mathlib has the typeclass but wiring
   the coproduct/counit/antipode is ~20 additional theorems. Deferred.
+  **UPDATE: Completed in Phase 5c (Uqsl2Hopf.lean, 66 thms, 0 sorry).
+  Rank-2 analog Uqsl3Hopf.lean also COMPLETE 2026-04-14 (Phase 5i Wave 2) — 
+  full Bialgebra + HopfAlgebra typeclass instances wired.**
 - Rep(U_q(sl₂)) → MTC — requires root-of-unity specialization + semisimplification.
   See: `Lit-Search/Phase-5b/From quantum groups to gauge emergence...`
   Estimated 12-24 months. Phase 6.
@@ -371,8 +383,8 @@ the exact same pattern for U_q(sl₂). No axioms needed.
 ## 9. Deferred Targets (see Phase6_Deferred_Targets.md)
 
 The following remain deferred to Phase 6:
-- O_q ↪ U_q(ŝl₂) coideal embedding (affine quantum group, 6 generators)
-- Hopf algebra structure on U_q(sl₂) (coproduct, counit, antipode)
+- O_q ↪ U_q(ŝl₂) coideal embedding (affine quantum group, 6 generators) — **DONE Phase 5d Wave 9 (CoidealEmbedding.lean, 0 sorry)**
+- Hopf algebra structure on U_q(sl₂) (coproduct, counit, antipode) — **DONE Phase 5c (Uqsl2Hopf.lean, 66 thms, 0 sorry); rank-2 Uqsl3Hopf also DONE 2026-04-14 (Phase 5i Wave 2)**
 - Rep(U_q(sl₂)) → MTC at roots of unity (Chern-Simons connection)
 - Full categorical functor Center(Vec_G) ⥤ ModuleCat(DG k G) (~30-50 thms)
 - Non-Abelian TPF disentangler (Tier 2, requires breakthrough)

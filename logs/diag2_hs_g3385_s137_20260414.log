@@ -1,0 +1,21 @@
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/vestigial/hs_rhmc.py:229: RuntimeWarning: overflow encountered in exp
+  al = np.exp(log_al)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/scipy/optimize/_numdiff.py:686: RuntimeWarning: invalid value encountered in subtract
+  df = [f_eval - f0 for f_eval in f_evals]
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/vestigial/hs_rhmc.py:230: RuntimeWarning: overflow encountered in exp
+  be = np.exp(log_be)
+======================================================================
+RHMC Production: L=4, 1 couplings x 500 traj
+  Clark-Kennedy 2-PF even-odd, 12-pole Zolotarev x^{-1/4}
+  tau=0.062, eps=0.006250, MD steps=10
+  Progress: 0 complete, 0 partial, 1 new
+  Workers: 1, chunk: 10 traj
+  Output: data/rhmc/L4_diag_g3385_s137/g*.npz
+======================================================================
+  Spectrum: [0.129, 944.9], kappa=7332
+  Hasenbusch K=3: 4 factors × 8 poles/factor
+  mu^2 schedule: ['0.000', '1.193', '11.036', '102.119']
+  Integrator levels: [5, 3, 4]
+
+  Starting...
+

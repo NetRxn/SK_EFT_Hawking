@@ -86,9 +86,10 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ## Technical Summary
 
-**Lean 4 formalization:** 2237+ theorems (2153+ substantive + ~84 placeholder) across 131 modules. 1 axiom (gapped_interface_axiom), 17 sorry (Aristotle in flight).
-322+ Aristotle-proved across 43+ runs. Lean 4.28.0, Mathlib commit `8f9d9cff`.
+**Lean 4 formalization:** **2981 theorems** (2903 substantive + 78 placeholder) across **132 modules**. 1 axiom (gapped_interface_axiom), **0 sorry project-wide**.
+322 Aristotle-proved across 44 runs. Lean 4.29.0, Mathlib commit `8850ed93` (the first 4.29.0 commit).
 **First machine-checked Ext computation over any Steenrod subalgebra** (Phase 5q, April 2026).
+**First quantum group + Hopf algebra typeclass-wired in any proof assistant for U_q(sl₃)** (Phase 5i Wave 2 / Tranche E, 2026-04-14): both `Bialgebra` and `HopfAlgebra` Mathlib typeclass instances proven, with the 4 antipode q-Serre cubics (E12/E21/F12/F21) closed via a palindromic Serre atom-bridge approach.
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
 
@@ -98,10 +99,10 @@ Monte Carlo simulations are a workhorse of computational physics, but the statis
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (2237+ theorems, 1 axiom, 131 modules, 17 sorry)
-│   ├── lakefile.toml                  # Lake build config (pinned Mathlib)
-│   ├── lean-toolchain                 # Lean 4 v4.28.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 94 theorem modules)
+├── lean/                              # Lean 4 formalization (2981 theorems, 1 axiom, 132 modules, 0 sorry)
+│   ├── lakefile.toml                  # Lake build config (pinned Mathlib 8850ed93)
+│   ├── lean-toolchain                 # Lean 4 v4.29.0
+│   ├── SKEFTHawking.lean              # Root module (imports all 131 theorem modules)
 │   └── SKEFTHawking/
 │       ├── Basic.lean                 # Shared types and definitions
 │       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
@@ -209,7 +210,7 @@ SK_EFT_Hawking/
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
-│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (322+ proved, 17 sorry)
+│   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (322 proved, 0 sorry)
 │   │   ├── visualizations.py          # Plotly figures (89 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
@@ -424,7 +425,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (2237+ theorems — 1 axiom, 17 sorry)
+## Theorem Inventory (2981 theorems — 1 axiom, **0 sorry**)
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|

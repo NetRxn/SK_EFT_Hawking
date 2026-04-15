@@ -179,7 +179,19 @@ def first_order_correction(Gamma_H, kappa):
 
     Lean: firstOrder_correction_zero_iff — proves δ_diss=0 iff Γ_H=0.
           Uses κ > 0 (total-division strengthening).
-    Aristotle: 518636d7
+          Aristotle: 518636d7
+
+    Related identities grounding the full chain from EFT transport coefficients
+    (γ₁, γ₂ in [m²/s]) to this function's input Γ_H (in [s⁻¹]):
+      - Lean: SKEFTHawking.SecondOrderSK.GammaH — definition Γ_H = (γ₁+γ₂)(κ/c_s)²
+      - Lean: SKEFTHawking.SecondOrderSK.gammaH_def / gammaH_via_kH
+      - Lean: SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq
+      - PAPER_DEPENDENCIES['paper1_first_order'] line 657
+
+    Callers must convert EFT transport coefficients to Γ_H via k_H² = (κ/c_s)²
+    before calling this function. The caller `compute_dissipative_correction`
+    in `src/core/transonic_background.py` handles this conversion.
+
     Source: original
 
     Args:
@@ -2492,7 +2504,7 @@ def fracton_ym_obstruction_count():
 
 def gs_condition_count(n_explicit=6, n_implicit=3):
     """
-    Total number of GS no-go conditions.
+    Decomposition of GS no-go conditions.
 
     The Golterman-Shamir generalized no-go theorem relies on 6 explicit
     conditions (C1-C6) and 3 implicit assumptions (I1-I3) = 9 total.
@@ -2508,9 +2520,16 @@ def gs_condition_count(n_explicit=6, n_implicit=3):
         n_implicit: number of implicit GS assumptions (default 3)
 
     Returns:
-        Total number of conditions
+        dict with keys:
+          - 'n_total': sum of explicit + implicit
+          - 'n_explicit': explicit conditions count
+          - 'n_implicit': implicit assumptions count
     """
-    return n_explicit + n_implicit
+    return {
+        'n_total': n_explicit + n_implicit,
+        'n_explicit': n_explicit,
+        'n_implicit': n_implicit,
+    }
 
 
 def tpf_evasion_count(n_violated=3, n_total=9):
@@ -2534,9 +2553,18 @@ def tpf_evasion_count(n_violated=3, n_total=9):
         n_total: total GS conditions (default 9)
 
     Returns:
-        dict with 'violated', 'applicable', 'margin'
+        dict with keys:
+          - 'n_violated': conditions violated (alias: 'violated')
+          - 'n_total': total conditions
+          - 'evasion_fraction': n_violated / n_total
+          - 'violated': back-compat alias for n_violated
+          - 'applicable': n_total - n_violated (conditions still binding)
+          - 'margin': n_violated - 1 (overkill margin since 1 violation suffices)
     """
     return {
+        'n_violated': n_violated,
+        'n_total': n_total,
+        'evasion_fraction': n_violated / n_total if n_total else 0.0,
         'violated': n_violated,
         'applicable': n_total - n_violated,
         'margin': n_violated - 1,
@@ -3553,10 +3581,22 @@ def onsager_contraction(epsilon, A0_val, A1_val):
     A1_rescaled = epsilon * A1_val
     # [ε·A₀, ε·A₁] = ε² · [A₀, A₁] = ε² · 4 · G₁
     commutator_rescaled = epsilon ** 2 * 4  # coefficient of G₁
+    if epsilon == 0 or np.isclose(epsilon, 0):
+        limit_description = "ε = 0 (contracted to su(2): commutator vanishes)"
+    elif epsilon < 0.01:
+        limit_description = f"deep IR (ε² ≈ {epsilon**2:.1e}, near su(2) limit)"
+    elif epsilon < 0.1:
+        limit_description = f"approaching IR (ε² ≈ {epsilon**2:.1e})"
+    elif epsilon < 1.0:
+        limit_description = f"intermediate (ε² ≈ {epsilon**2:.2f})"
+    else:
+        limit_description = f"UV (ε ≥ 1, full Onsager: ε² ≈ {epsilon**2:.2f})"
     return {
         'A0_rescaled': A0_rescaled,
         'A1_rescaled': A1_rescaled,
         'commutator_coeff': commutator_rescaled,
+        'rescaled_commutator': commutator_rescaled,  # alias for notebook compatibility
+        'limit_description': limit_description,
         'vanishes_at_zero': bool(np.isclose(epsilon, 0)) or epsilon == 0,
         'su2_dim': 3,  # contraction target is 3-dimensional
     }
@@ -4230,6 +4270,44 @@ def uqsl2_antipode_squared(x, K, Kinv):
         K * x * Kinv
     """
     return K * x * Kinv
+
+
+def uqsl3_antipode_squared(x, K1, K1inv, K2, K2inv):
+    """Squared antipode S²(x) = K₁² K₂² · x · K₂⁻² K₁⁻² for U_q(sl₃).
+
+    This is the specialisation to sl₃ (type A₂) of the Drinfeld formula
+    S² = Ad(K_{2ρ}) where 2ρ is twice the half-sum of positive roots.
+
+    For sl₃, positive roots are {α₁, α₂, α₁+α₂}, so 2ρ = 2α₁ + 2α₂, giving
+    K_{2ρ} = K₁² · K₂² (simply-laced, d_i = 1).
+
+    Verification on generators:
+      S²(E_i) = K_i E_i K_i⁻¹ = q² E_i  (from K_i E_i = q² E_i K_i)
+      S²(F_i) = K_i F_i K_i⁻¹ = q⁻² F_i  (from K_i F_i = q⁻² F_i K_i)
+      S²(K_i) = K_i,  S²(K_i⁻¹) = K_i⁻¹
+    And Ad(K₁²K₂²) acts as multiplication by q^{⟨2ρ,α_i^∨⟩} = q^2 on E_i
+    (q^{-2} on F_i), reproducing S² on all eight generators.
+
+    **Historical correction:** Earlier codebase stated S² = Ad(K₁K₂), which is
+    mathematically wrong (would give q·E_i not q²·E_i). Fixed during the
+    Lean 4.29 upgrade refactor.
+
+    Lean: uq3_antipode_squared (Uqsl3Hopf.lean)
+    Aristotle: (pending — replaces older Ad(K₁K₂) claim)
+    Sources:
+        Jantzen, "Lectures on Quantum Groups" (AMS GSM 6, 1996), §4.9 Theorem 4.10
+        Kassel, "Quantum Groups" (Springer GTM 155, 1995), Ch. VI Prop. VI.1.4
+            (sl_2 case, specialises the general formula)
+        Chari-Pressley, "A Guide to Quantum Groups" (CUP, 1994), §9.2
+
+    Args:
+        x: element of U_q(sl₃)
+        K1, K1inv, K2, K2inv: Cartan generators and their inverses
+
+    Returns:
+        K₁ K₁ K₂ K₂ x K₂⁻¹ K₂⁻¹ K₁⁻¹ K₁⁻¹
+    """
+    return K1 * K1 * K2 * K2 * x * K2inv * K2inv * K1inv * K1inv
 
 
 # ═══════════════════════════════════════════════════════════════

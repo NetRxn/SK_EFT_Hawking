@@ -63,15 +63,19 @@ lookups find the cached result instantly.
     Preadditive (ModuleCat.{u} k) := inferInstance
 
 -- Tensor functors preserve colimits (needed for GradedObject tensor)
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorLeft_additive
     (X : ModuleCat.{u} k) : (tensorLeft X).Additive := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorRight_additive
     (X : ModuleCat.{u} k) : (tensorRight X).Additive := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorLeft_preservesCoproducts
     (X : ModuleCat.{u} k) : PreservesFiniteCoproducts (tensorLeft X) := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorRight_preservesCoproducts
     (X : ModuleCat.{u} k) : PreservesFiniteCoproducts (tensorRight X) := inferInstance
 
@@ -138,19 +142,23 @@ variable (k : Type u) [CommRing k] (G : Type u) [CommGroup G] [Fintype G] [Decid
 @[local instance] private noncomputable def mc_preadditive' :
     Preadditive (ModuleCat.{u} k) := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorLeft_additive'
     (X : ModuleCat.{u} k) : (tensorLeft X).Additive := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorRight_additive'
     (X : ModuleCat.{u} k) : (tensorRight X).Additive := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorLeft_preservesCoproducts'
     (X : ModuleCat.{u} k) : PreservesFiniteCoproducts (tensorLeft X) := inferInstance
 
+set_option backward.isDefEq.respectTransparency false in
 @[local instance] private noncomputable def mc_tensorRight_preservesCoproducts'
     (X : ModuleCat.{u} k) : PreservesFiniteCoproducts (tensorRight X) := inferInstance
 
-/-- Vec_G is braided (requires CommGroup G). -/
+set_option backward.isDefEq.respectTransparency false in
 noncomputable instance vecG_braided : BraidedCategory (VecG_Cat k G) := inferInstance
 
 /-- Z(Vec_G) is braided monoidal. -/

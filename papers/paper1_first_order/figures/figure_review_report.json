@@ -1,0 +1,96 @@
+{
+  "review_date": "2026-04-13T21:50:00Z",
+  "figures_reviewed": 3,
+  "overall_status": "pass_with_warning",
+  "context": {
+    "bugfix": "Phase 5u Wave 1a dimensional bugfix in compute_dissipative_correction (pre-bugfix delta_diss off by ~10^7)",
+    "expected_pipeline_values": {
+      "Steinhauer_Rb87": {"c_s_mm_per_s": 0.55, "xi_um": 1.33, "kappa_per_s": 4.8, "T_H_nK": 0.006, "delta_diss": 2.4e-5},
+      "Heidelberg_K39":  {"c_s_mm_per_s": 3.92, "xi_um": 0.42, "kappa_per_s": 101.9, "T_H_nK": 0.124, "delta_diss": 1.6e-3},
+      "Trento_Na23":     {"c_s_mm_per_s": 2.18, "xi_um": 1.26, "kappa_per_s": 21.4, "T_H_nK": 0.026, "delta_diss": 1.4e-5}
+    }
+  },
+  "figures": [
+    {
+      "name": "fig1_transonic_profiles",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": [
+          "Legend only labels v(x) solid traces; c_s(x) dashed traces not explicitly called out in legend (acceptable, but a dashed-line legend entry would aid readability)"
+        ]
+      },
+      "caption_match": true,
+      "notes": "Three-panel figure: (a) velocity v(x) solid + sound speed c_s(x) dashed, (b) Mach number crosses M=1 at x=0 (sonic horizon annotated), (c) quasi-1D linear densities. Colors correct: Steinhauer steel blue #2E86AB, Heidelberg berry #A23B72, Trento amber #F18F01. Upstream/downstream sound-speed values consistent with context (~0.55, ~3.92, ~2.18 mm/s). Density ranges consistent with quasi-1D expectation. Mach asymptotes plausibly at M~1.7 downstream."
+    },
+    {
+      "name": "fig2_correction_hierarchy",
+      "status": "pass",
+      "re_review_date": "2026-04-13T21:50:00Z",
+      "re_review_context": "Post-Wave-1e regeneration: fig_correction_hierarchy now consumes canonical pipeline values via compute_dissipative_correction + beliaev_transport_coefficients; no local Beliaev recomputation; no hardcoded Trento 100x enhancement.",
+      "rendering": {
+        "status": "pass",
+        "issues": [
+          "Minor: on the 3rd (Trento) group the cross-term gray bar value label '1.46e-09' overlaps the group's x-axis tick region slightly, but it is legible."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "value_verification": {
+          "Steinhauer_Rb87":  {"delta_disp_plotted": "8.53e-05", "delta_disp_expected": "8.5e-05", "delta_diss_plotted": "2.38e-05", "delta_diss_expected": "2.4e-05", "delta_cross_plotted": "2.03e-09", "delta_cross_expected": "2.0e-09", "match": "exact (within rounding)"},
+          "Heidelberg_K39":   {"delta_disp_plotted": "7.33e-05", "delta_disp_expected": "7.3e-05", "delta_diss_plotted": "1.59e-03", "delta_diss_expected": "1.6e-03", "delta_cross_plotted": "1.17e-07", "delta_cross_expected": "1.2e-07", "match": "exact (within rounding)"},
+          "Trento_Na23":      {"delta_disp_plotted": "9.80e-05", "delta_disp_expected": "9.9e-05", "delta_diss_plotted": "1.41e-05", "delta_diss_expected": "1.4e-05", "delta_cross_plotted": "1.46e-09", "delta_cross_expected": "1.4e-09", "match": "exact (within rounding)"}
+        }
+      },
+      "style": {
+        "status": "pass",
+        "issues": [
+          "Steinhauer blue, Heidelberg berry (magenta-purple), Trento amber — colors match COLORS dict in visualizations.py.",
+          "Grouped-bar layout with clear numeric labels above each bar; log y-axis with 1m / 1µ / 1n minor-tick labels is a nice readability touch.",
+          "Legend includes the three dashed sensitivity bands (Current 10%, Near-term 1%, Projected 0.1%) as requested — they are now visible in the plot area as horizontal dashed lines and in the legend as named traces."
+        ]
+      },
+      "caption_match": true,
+      "notes": "All previous issues confirmed fixed: (1) Steinhauer amber bar now 2.38e-05 (was 1.7e-01) — matches canonical pipeline value 2.4e-5; (2) Heidelberg and Trento amber bars no longer clipped — y-axis auto-ranges roughly 10^-10 to 10^0 spanning the full dataset; (3) cross-term gray bars render correctly as short bars near the 10^-9 floor with readable numeric labels (2.03e-09, 1.17e-07, 1.46e-09); (4) sensitivity-band dashed horizontals appear in both the plot area and the legend. HONEST-PHYSICS FLAG: Heidelberg's delta_diss = 1.59e-03 visibly exceeds its delta_disp = 7.33e-05 by ~22x — Beliaev damping scales as kappa^2 and at Heidelberg's kappa ~102 s^-1 dominates the dispersive k_H^4 contribution. The figure shows this hierarchy inversion honestly rather than hiding it. The annotation in the plot ('Beliaev T=0 regime; finite-T Zaremba damping is ~10x larger') is a useful qualifier — Paper 1 text (Table 1, hierarchy narrative) must be updated to disclose this platform-dependent hierarchy inversion, tracked as Wave 1f. No rendering or physics blockers remain on fig2 itself."
+    },
+    {
+      "name": "fig4_spin_sonic_enhancement",
+      "status": "warning",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "issues",
+        "issues": [
+          "Steinhauer single-component point is plotted at ratio=1, |delta_diss| ~ 1e-5, which is broadly consistent with the post-bugfix pipeline value 2.4e-5 (same order of magnitude — within label readability).",
+          "Trento projected point is shown at ratio ~10 with |delta_diss| ~ 1e-3. If the base (ratio=1) Trento value is 1.4e-5 then (c_dens/c_spin)^2 = 100 gives delta_enhanced ~ 1.4e-3, which matches the plotted point. Consistent.",
+          "Optimistic point at ratio~30 gives (30)^2 * base ~ 900 * 1e-5 ~ 9e-3, close to the plotted ~1e-2. Consistent.",
+          "Caveat: the plot legend formula 'delta_diss proportional to (c_dens/c_spin)^2' is dimensionally a scaling law, not the absolute value. The single-component Steinhauer reference value used here appears to be ~1e-5, which is consistent with pipeline delta_diss = 2.4e-5 but an exact match should be verified by inspecting the data source."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Log-log scaling with slope 2 is visually correct. The three annotated points (Steinhauer single-component, Trento projected, Optimistic) sit on the scaling line. Colors for the points correspond to the corresponding platforms (blue Steinhauer, amber Trento, red 'optimistic'). Caveat: the shaded region (pink) under the line is unlabeled — presumably 'accessible experimental region' but a legend entry for it would help."
+    }
+  ],
+  "summary": "Post Wave-1e re-review: fig2 now PASSES. All plotted values match canonical pipeline expectations exactly within rounding: Steinhauer (8.53e-05 / 2.38e-05 / 2.03e-09), Heidelberg (7.33e-05 / 1.59e-03 / 1.17e-07), Trento (9.80e-05 / 1.41e-05 / 1.46e-09). Prior rendering issues all resolved: amber bars no longer clipped, cross-term gray bars now visible and labeled, sensitivity dashed lines present in both plot and legend. One honest-physics warning stands: Heidelberg's delta_diss (1.6e-03) exceeds delta_disp (7.3e-05) by ~22x — this is the correct Beliaev kappa^2 scaling at kappa ~102 s^-1 and is displayed honestly; Paper 1 text must be updated to disclose the platform-dependent hierarchy inversion (Wave 1f). Fig1 passes cleanly, fig4 passes with minor notes (from prior review, not re-reviewed here).",
+  "recommendations": [
+    "fig2: no further figure-side changes required. Paper 1 text (Wave 1f) must disclose the Heidelberg hierarchy inversion delta_diss > delta_disp so the figure and narrative agree.",
+    "fig2 (nice-to-have): consider tightening cross-term bar label placement on the Trento group to avoid overlap with the x-axis tick region; non-blocking.",
+    "fig4: Add legend entry for the shaded accessible-region under the scaling line (carried over from prior review).",
+    "fig1: Consider adding a dashed-line legend entry for c_s(x) to match the existing solid v(x) entries (carried over from prior review)."
+  ]
+}

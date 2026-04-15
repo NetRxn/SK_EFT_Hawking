@@ -1056,6 +1056,8 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 5q: Ext computation
         fig_ext_chart,
         fig_a1_resolution_structure,
+        # Phase 5s: FK gapped interface
+        fig_fk_spectrum,
         COLORS,
     )
     from src.core.transonic_background import (
