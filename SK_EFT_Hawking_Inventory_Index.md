@@ -215,7 +215,7 @@
 | SU3kFusion | 99 | **Phase 5i**: **FIRST SU(3)_k fusion in any proof assistant**: SU(3)₁ Z₃ fusion (3 objects) + SU(3)₂ (6 anyons, Fibonacci subcategory τ⊗τ=1+τ), charge conjugation, associativity+commutativity (**ALL PROVED by native_decide, zero sorry**) |
 | GaugingStep | 34 | **Phase 5h**: Gauging obstruction: NotOnSiteSymmetry, SymmetryDisentangler, GT Models 1+2, SM anomaly 16≡0 mod 16, SMGPhaseData (BCH+HW), Golterman-Shamir propagator-zero, ChiralityWall3DStatus (**ALL PROVED, zero sorry**) |
 | FermiPointTopology | 33 | **Phase 5j W1-3**: Fermi-point gauge emergence: VZ Theorem 2.1 (|N|=1 → U(1)+vierbein), Mechanism A vs B, charge splitting, multi-Weyl classification (|N|≤3), SU(2) emergence chain (3 theorem + 2 heuristic + 1 speculative), SU(3) more speculative than SU(2), full emergence chain status, bridges to EmergentGravityBounds/GaugingStep/SPT (**ALL PROVED, zero sorry**) |
-| PolyQuotQ | 15 | **Phase 5i**: Q(ζ₃) cyclotomic field via polynomial quotient for SU(3)₁ S-matrix verification (**ALL PROVED, zero sorry**) |
+| PolyQuotQ | 10 | **Phase 5i Wave 4a (2026-04-15)**: **First generic computable polynomial quotient ring over ℚ in Lean 4**. Parametric `PolyQuotQ n` structure with `mulReduce n r x y` generic multiplication. `native_decide` reduces through the generic layer at degrees 2 (Q(√2), Q(ζ₃)) and 4 (Q(ζ₅), 5-iteration ζ⁵=1 test). Q(ζ₃) preserved as `abbrev QCyc3 := PolyQuotQ 2` instance retaining the original 9 theorems. Consolidates the polynomial-reduction logic; backward compat preserved via `toPoly`/`ofPoly` coercions in concrete fields. Unblocks 4b/4c/4d and Phase 5g Track B (Mathlib upstream). |
 
 ---
 

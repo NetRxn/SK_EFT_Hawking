@@ -77,14 +77,39 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 ### Wave 4 — Unified Algebraic Number Field Infrastructure
 **Goal:** Consolidate custom number fields into a generic framework.
 
-**Context:** The project currently has 6 hand-written number field types (QSqrt2, QSqrt3, QSqrt5, QCyc5, QCyc16, QLevel3), each with manually defined arithmetic and DecidableEq. SU(3)₂ requires Q(ζ₁₅) (degree 8 over ℚ). This pattern does not scale.
+**Context:** The project currently has 7 hand-written number field types (QSqrt2, QSqrt3, QSqrt5, QCyc5, QCyc16, QLevel3, QCyc5Ext) plus PolyQuotQ as an already-generic Q(ζ₃) proof-of-concept. Each has manually defined arithmetic and DecidableEq. SU(3)₂ requires Q(ζ₁₅) (degree 8 over ℚ). This pattern does not scale.
 
-**Deliverables:**
-- [ ] Generic `CyclotomicField n` or `AdjoinRoot` type with DecidableEq
-- [ ] Refactor existing types as instances of the generic construction
-- [ ] Q(ζ₁₅) for SU(3)₂ S-matrix verification
-- [ ] **BLOCKS**: Mathlib PR for categorical infrastructure (Phase 5g Track B)
-  - Mathlib reviewers will reject 6 hand-written number types
+**Sub-wave breakdown (added 2026-04-15):**
+
+- **4a — Generic infrastructure + proof-of-concept** [in progress 2026-04-15]
+  - Build `CyclotomicFieldQ n` (or `AdjoinRootQ p`) with derived `DecidableEq`, `CommRing`, `Field` instances
+  - Canary instance: refactor QSqrt2 onto the generic construction
+  - **Critical gate: `native_decide` must reduce through the generic layer** (6.5/10 risk — if it breaks, 4b-4d require a different design)
+  - Ship: `lake build` clean, 0 sorry, all `IsingBraiding.lean` proofs using QSqrt2 still pass
+- **4b — Bulk refactor of degree-2 and cyclotomic types**
+  - Convert QSqrt3, QSqrt5, QCyc5, QCyc16, QLevel3 to the generic construction
+  - Tower extension QCyc5Ext = Q(ζ₅)[w]/(w²−φ) — may need separate tower primitive; defer to 4b.ext if non-trivial
+  - All consuming modules (FibonacciMTC, SU2kMTC, IsingBraiding, QLevel3-users) continue to close by native_decide
+- **4c — Q(ζ₁₅) + SU(3)₂ S-matrix verification**
+  - New instance at degree 8 using generic construction
+  - SU(3)₂ modular data loaded from `su3_level2_modular_data_cyclotomic15.md` deep research deliverable
+  - Verify S-matrix unitarity, modular SL(2,Z) relations, Verlinde formula via native_decide
+  - Closes W3's deferred "S-matrix verification requires Q(ζ₃) and Q(ζ₁₅)" bullet
+- **4d — Mathlib contribution prep**
+  - Style adaptation for Mathlib conventions
+  - Zulip engagement per Phase 5g Track B W4
+  - Hands off to Phase 5g Track B for upstream PRs
+
+**Deep research queued:**
+- `Lit-Search/Tasks/su3_level2_modular_data_cyclotomic15.md` — HIGH priority, unblocks 4c. Deliverable: explicit S/T/F coefficient tables in Q(ζ₁₅) basis, CAS-verified, Lean-ready.
+- `Lit-Search/Tasks/generic_decidable_algebraic_number_field_mathlib_design.md` — MEDIUM priority, de-risks 4a architecture choice. Deliverable: architecture recommendation + native_decide performance prediction + Mathlib PR strategy.
+
+**Deliverables (overall):**
+- [ ] Generic `CyclotomicField n` or `AdjoinRoot` type with DecidableEq (4a)
+- [ ] Refactor existing types as instances of the generic construction (4b)
+- [ ] Q(ζ₁₅) for SU(3)₂ S-matrix verification (4c)
+- [ ] **BLOCKS**: Mathlib PR for categorical infrastructure (Phase 5g Track B) (4d)
+  - Mathlib reviewers will reject 7 hand-written number types
   - Generic construction is prerequisite for upstreaming
 
 ---
