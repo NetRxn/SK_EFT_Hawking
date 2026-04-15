@@ -79,6 +79,36 @@ For f, g : DDAlg k G, the product (f * g) at index (a, h) is:
 
 On basis elements this reduces to:
   (δ_a ⊗ g1) * (δ_b ⊗ g2) = δ_{a, g1*b*g1⁻¹} * (δ_a ⊗ g1*g2)
+
+**Performance note (latent risk, not active):**
+
+This definition returns a lazy closure `fun p => Σ ...`. Each query
+`(f * g) p` re-executes the full sum. For chained multiplications
+`(f * g) * h`, the outer mul's `|G|²` queries to `(f * g) p` each
+trigger re-execution of the inner sum — producing exponential cascade
+through chain depth, exactly like the PolyQuotQ.mulReduce bug
+(commit e7e111a, "Phase 5i Wave 4c-part1").
+
+**Current status: safe.** All existing proofs about D(G)
+multiplication use `simp`/`rw`/`ring`, which rewrite symbolically and
+do not evaluate. The lazy closure never runs.
+
+**When this would bite:** If a future theorem uses `native_decide` on
+a chained D(G) product (e.g., verifying D(S₃) modular data by explicit
+computation), the cascade would hit exactly as it did for QCyc15. To
+fix: materialize the output before wrapping in the struct. For
+`DG k G` specifically, the eager recipe (used once `[Fintype G]
+[DecidableEq G]` are available) is:
+
+    let values : List ((G × G) × k) :=
+      (Finset.univ : Finset (G × G)).toList.map (fun p =>
+        (p, ∑ g1 : G, f (p.1, g1) * g (g1⁻¹ * p.1 * g1, g1⁻¹ * p.2)))
+    fun p => (values.find? (fun kv => kv.1 = p)).elim 0 Prod.snd
+
+Defer the materialization refactor to the first wave that needs
+`native_decide` on D(G); do NOT change the lazy definition
+preemptively, as the abstract `simp [ddAlgMul]` proofs depend on
+the current symbolic form.
 -/
 def ddAlgMul (f g : DDAlg k G) : DDAlg k G :=
   fun p => ∑ g1 : G, f (p.1, g1) * g (g1⁻¹ * p.1 * g1, g1⁻¹ * p.2)
