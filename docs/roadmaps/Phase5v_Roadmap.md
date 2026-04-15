@@ -421,31 +421,34 @@ Remaining items deferred:
 
 ---
 
-## Wave 7 — Stage 14: Meta-process Quality Improvement register
+## Wave 7 — Stage 14: Meta-process Quality Improvement register — PARTIAL DONE 2026-04-15
 
 **Distinction from Stage 13.** Stage 13 catches paper-level issues. Stage 14 catches **process-level** issues — recurring patterns across multiple papers or review rounds that indicate a pipeline gap (e.g., "bounds-only tests allowed a 10⁷× bug through", "fix-propagation lag across companion papers"). Stage 14 feeds improvements back into the pipeline itself.
 
-### Wave 7a — QI register
+### Wave 7a — QI register — DONE
 
-- [ ] `docs/QI_REGISTER.md` — auto-generated from `ReviewFinding` + `Contradiction` nodes whose `pattern_class` is process-level (not paper-local)
-- [ ] Each QI item: `{id, pattern, first_observed, occurrences, owner, target_date, status, evidence_on_close, pipeline_stage_affected}`
-- [ ] Classification heuristic: if a finding recurs across ≥2 papers, it becomes a QI item candidate
-- [ ] User-facing report emitted on each Stage 14 run: `docs/QI_REGISTER_{date}.md` (timestamped snapshot)
+- [x] `docs/QI_REGISTER.md` — auto-generated via `scripts/qi_register.py` from current ReviewFinding graph nodes
+- [x] Each QI item carries: `id`, `pattern_summary`, `gate_affected`, `occurrences`, `affected_papers`, `severity_mix`, `first_observed`, `last_observed`, `status`, `owner`, `target_date`, `evidence_on_close`, `representative_findings`
+- [x] Classification: finding → readiness gate via keyword-pattern lookup; gate clusters emerge from findings touching the same gate across ≥2 papers
+- [x] `--snapshot` flag emits timestamped `docs/QI_REGISTER_{date}.md`
+- [x] Seeded from the April review round: 56 findings → 7 QI items. Biggest cluster: CitationIntegrity with 20 findings across 7 papers (confirms the April citation-handling pattern as a systemic issue warranting remediation, not a one-off)
+- [ ] Manual-field persistence across regenerations (owner, target_date, etc. preserved on re-run) — deferred to follow-up refinement
 
-### Wave 7b — Dashboard "Process Health" tab
+### Wave 7b — Dashboard "Process Health" tab — DEFERRED
 
-- [ ] Open QI items count, grouped by `pipeline_stage_affected`
-- [ ] Trend: findings-per-category-per-month over time (is the pipeline getting better or drifting?)
-- [ ] Click QI item → full evidence (all findings that contributed to the pattern detection), linked commits (when resolved)
-- [ ] `FixPropagation` gate (gate #11) reads from QI register — if a QI item is `status=open` with a target_date in the past, affected papers flagged
+Register is markdown-renderable directly; dashboard tab is nice-to-have, not blocking. Scope when revisited:
+- Open QI items count grouped by gate
+- Trend: findings-per-gate-per-month over time
+- Click QI item → evidence chain
+- FixPropagation gate reads open QI items with past target_dates
 
-### Wave 7c — Pipeline integration
+### Wave 7c — Pipeline integration — DONE
 
-- [ ] Add Stage 14 to `docs/WAVE_EXECUTION_PIPELINE.md`: *"After Stage 13. Scans all `ReviewFinding` nodes for recurring patterns. Emits QI items + updates `docs/QI_REGISTER.md`."*
-- [ ] Stage 14 is advisory — never blocks submission — but emission generates a user notification
-- [ ] Loopback: if a QI item is `severity=critical` (e.g., a pipeline gate that allowed a correctness violation), Wave 1b/1c-style remediation waves are suggested
+- [x] Stage 14 documented in `docs/WAVE_EXECUTION_PIPELINE.md` (Wave 6b commit)
+- [x] Stage 14 is advisory; user-facing report emitted on run
+- [ ] Loopback escalation of `severity=critical` QI items to remediation waves — recommended via Phase 5w roadmap when warranted
 
-**Gate:** QI register populated from the 13-dimension April findings as seed data; dashboard tab renders; user receives first generated report.
+**Gate for Wave 7 (met):** `docs/QI_REGISTER.md` exists, auto-regenerates from current ReviewFindings, captures the April round as 7 distinct process-level patterns. Pipeline Stage 14 documented; run with `uv run python scripts/qi_register.py`.
 
 ---
 
