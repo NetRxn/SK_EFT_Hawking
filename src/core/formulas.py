@@ -2504,7 +2504,7 @@ def fracton_ym_obstruction_count():
 
 def gs_condition_count(n_explicit=6, n_implicit=3):
     """
-    Total number of GS no-go conditions.
+    Decomposition of GS no-go conditions.
 
     The Golterman-Shamir generalized no-go theorem relies on 6 explicit
     conditions (C1-C6) and 3 implicit assumptions (I1-I3) = 9 total.
@@ -2520,9 +2520,16 @@ def gs_condition_count(n_explicit=6, n_implicit=3):
         n_implicit: number of implicit GS assumptions (default 3)
 
     Returns:
-        Total number of conditions
+        dict with keys:
+          - 'n_total': sum of explicit + implicit
+          - 'n_explicit': explicit conditions count
+          - 'n_implicit': implicit assumptions count
     """
-    return n_explicit + n_implicit
+    return {
+        'n_total': n_explicit + n_implicit,
+        'n_explicit': n_explicit,
+        'n_implicit': n_implicit,
+    }
 
 
 def tpf_evasion_count(n_violated=3, n_total=9):
@@ -2546,9 +2553,18 @@ def tpf_evasion_count(n_violated=3, n_total=9):
         n_total: total GS conditions (default 9)
 
     Returns:
-        dict with 'violated', 'applicable', 'margin'
+        dict with keys:
+          - 'n_violated': conditions violated (alias: 'violated')
+          - 'n_total': total conditions
+          - 'evasion_fraction': n_violated / n_total
+          - 'violated': back-compat alias for n_violated
+          - 'applicable': n_total - n_violated (conditions still binding)
+          - 'margin': n_violated - 1 (overkill margin since 1 violation suffices)
     """
     return {
+        'n_violated': n_violated,
+        'n_total': n_total,
+        'evasion_fraction': n_violated / n_total if n_total else 0.0,
         'violated': n_violated,
         'applicable': n_total - n_violated,
         'margin': n_violated - 1,
@@ -3565,10 +3581,22 @@ def onsager_contraction(epsilon, A0_val, A1_val):
     A1_rescaled = epsilon * A1_val
     # [ε·A₀, ε·A₁] = ε² · [A₀, A₁] = ε² · 4 · G₁
     commutator_rescaled = epsilon ** 2 * 4  # coefficient of G₁
+    if epsilon == 0 or np.isclose(epsilon, 0):
+        limit_description = "ε = 0 (contracted to su(2): commutator vanishes)"
+    elif epsilon < 0.01:
+        limit_description = f"deep IR (ε² ≈ {epsilon**2:.1e}, near su(2) limit)"
+    elif epsilon < 0.1:
+        limit_description = f"approaching IR (ε² ≈ {epsilon**2:.1e})"
+    elif epsilon < 1.0:
+        limit_description = f"intermediate (ε² ≈ {epsilon**2:.2f})"
+    else:
+        limit_description = f"UV (ε ≥ 1, full Onsager: ε² ≈ {epsilon**2:.2f})"
     return {
         'A0_rescaled': A0_rescaled,
         'A1_rescaled': A1_rescaled,
         'commutator_coeff': commutator_rescaled,
+        'rescaled_commutator': commutator_rescaled,  # alias for notebook compatibility
+        'limit_description': limit_description,
         'vanishes_at_zero': bool(np.isclose(epsilon, 0)) or epsilon == 0,
         'su2_dim': 3,  # contraction target is 3-dimensional
     }

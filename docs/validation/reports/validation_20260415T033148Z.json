@@ -1,0 +1,41 @@
+{
+  "timestamp": "20260415T033148Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "parameter_provenance": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "coverage",
+          "passed": true,
+          "message": "All 33 parameters have provenance entries",
+          "warning": false
+        },
+        {
+          "name": "llm_verification",
+          "passed": true,
+          "message": "All parameters LLM-verified",
+          "warning": false
+        },
+        {
+          "name": "human_verification",
+          "passed": true,
+          "message": "33 params not yet human-verified (blocks paper submission)",
+          "warning": true
+        },
+        {
+          "name": "value_consistency",
+          "passed": false,
+          "message": "2 mismatches: Paris_standard.tau_cav: registry=3e-12, code=8e-12; Paris_standard.Gamma_pol: registry=333000000000.0, code=125000000000.0",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

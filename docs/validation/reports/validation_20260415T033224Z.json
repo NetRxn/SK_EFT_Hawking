@@ -1,0 +1,41 @@
+{
+  "timestamp": "20260415T033224Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "parameter_provenance": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "coverage",
+          "passed": true,
+          "message": "All 33 parameters have provenance entries",
+          "warning": false
+        },
+        {
+          "name": "llm_verification",
+          "passed": true,
+          "message": "All parameters LLM-verified",
+          "warning": false
+        },
+        {
+          "name": "human_verification",
+          "passed": true,
+          "message": "33 params not yet human-verified (blocks paper submission)",
+          "warning": true
+        },
+        {
+          "name": "value_consistency",
+          "passed": true,
+          "message": "All provenance values match code",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

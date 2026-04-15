@@ -1,0 +1,11 @@
+SK-EFT Hawking Validation Report
+Generated: 20260415T033148Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] parameter_provenance
+  + coverage — All 33 parameters have provenance entries
+  + llm_verification — All parameters LLM-verified
+  + human_verification — 33 params not yet human-verified (blocks paper submission)
+  - value_consistency — 2 mismatches: Paris_standard.tau_cav: registry=3e-12, code=8e-12; Paris_standard.Gamma_pol: registry=333000000000.0, code=125000000000.0
+
+Overall: 0/1 passed

@@ -550,32 +550,35 @@ PARAMETER_PROVENANCE = {
         'notes': None,
     },
     'Paris_standard.tau_cav': {
-        'value': 3e-12,
+        'value': 8e-12,
         'unit': 's',
-        'tier': 'EXTRACTED',
-        'source': 'Typical GaAs microcavity value — no specific paper',
-        'detail': 'Standard GaAs microcavity lifetime ~3 ps. This is a typical '
-                  'order-of-magnitude value, not from a specific measurement.',
+        'tier': 'MEASURED',
+        'source': 'Falque et al. 2025 polariton condensate cavity',
+        'detail': 'Standard Paris polariton cavity lifetime: τ_cav ≈ 8 ps '
+                  '(Falque 2025 actual measured cavity value, superseded the '
+                  'prior 3 ps order-of-magnitude estimate used through March 2026).',
         'doi': None,
-        'llm_verified_date': '2026-03-31',
-        'llm_verified_notes': 'Tier corrected from MEASURED to EXTRACTED — no specific paper '
-                              'cited. 3 ps is a widely-used typical value for standard GaAs '
-                              'microcavities (Q ~ 1000-3000). For publication, should cite '
-                              'a specific cavity measurement or label as order-of-magnitude.',
+        'llm_verified_date': '2026-04-14',
+        'llm_verified_notes': 'Updated 2026-04-14 from prior 3 ps EXTRACTED estimate to '
+                              'Falque 2025 actual measured value of 8 ps. constants.py '
+                              "Paris_standard.tau_cav comment confirms: 'Falque 2025 actual "
+                              "cavity; was 3 ps projected'. Tier upgraded EXTRACTED → MEASURED.",
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Order-of-magnitude value. For publication, need either a specific '
-                 'source or explicit acknowledgment that this is a representative value.',
+        'notes': 'Falque 2025 measured value. Update from prior 3 ps order-of-magnitude '
+                 'estimate. Original literature-derived 3 ps lives in Paris_long.tau_cav '
+                 'as the order-of-magnitude reference.',
     },
     'Paris_standard.Gamma_pol': {
-        'value': 3.33e11,
+        'value': 1.25e11,
         'unit': 's^-1',
         'tier': 'DERIVED',
         'source': 'Derived: 1/tau_cav',
-        'detail': 'Γ_pol = 1/(3 ps) ≈ 3.33×10¹¹ s⁻¹.',
+        'detail': 'Γ_pol = 1/(8 ps) = 1.25×10¹¹ s⁻¹ (from Falque 2025 τ_cav).',
         'doi': None,
-        'llm_verified_date': '2026-03-31',
-        'llm_verified_notes': 'DERIVED: trivially verified from parent parameter.',
+        'llm_verified_date': '2026-04-14',
+        'llm_verified_notes': 'DERIVED from updated τ_cav = 8 ps (Falque 2025). '
+                              'Was 3.33×10¹¹ s⁻¹ when τ_cav = 3 ps.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': None,
