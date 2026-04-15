@@ -2685,13 +2685,178 @@ private theorem antipodeFreeAlg3_SerreE12 :
     -- Step 7: collapse T-powers T(-1)·T(2)·T(-1) = T(0) = 1
     rw [alg_T_cancel3 (-1) 2 (-1) _ (by decide)]
     noncomm_ring
-  -- hA1 and hB: analogous atom equalities (sorry stubs — proofs pending, pattern established)
+  -- hA1: E₂·E₁·E₁·K_chain = X₂·X₁²  (scalars T(-1)·T(-1)·T 2 = T(0) = 1)
   have hA1 : uq3E2 k * (uq3E1 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) =
       uq3E2 k * (uq3K2inv k * (uq3E1 k * (uq3K1inv k * (uq3E1 k * uq3K1inv k)))) := by
-    sorry
+    -- Step 0: permute K-chain K₁⁻¹·K₁⁻¹·K₂⁻¹ → K₂⁻¹·K₁⁻¹·K₁⁻¹ (2 K·K commutes)
+    rw [show uq3K1inv k * (uq3K1inv k * uq3K2inv k) =
+          uq3K2inv k * (uq3K1inv k * uq3K1inv k) from by
+        rw [uq3_K1inv_K2inv_comm, ← mul_assoc, uq3_K1inv_K2inv_comm, mul_assoc]]
+    -- Step 1: expose innermost E₁·K₂⁻¹ pair
+    rw [show uq3E2 k * (uq3E1 k * (uq3E1 k * (uq3K2inv k * (uq3K1inv k * uq3K1inv k)))) =
+          uq3E2 k * (uq3E1 k * ((uq3E1 k * uq3K2inv k) * (uq3K1inv k * uq3K1inv k))) from by
+        noncomm_ring, uq3_E1_mul_K2inv]
+    -- Step 2: pull algMap(T(-1)) left through E₁ and E₂
+    rw [show uq3E2 k * (uq3E1 k *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) * uq3K2inv k * uq3E1 k *
+              (uq3K1inv k * uq3K1inv k))) =
+          uq3E2 k * (uq3E1 k *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3K2inv k * uq3E1 k * (uq3K1inv k * uq3K1inv k)))) from by noncomm_ring,
+        move_alg_left (T (-1)) (uq3E1 k),
+        move_alg_left (T (-1)) (uq3E2 k)]
+    -- Step 3: expose next E₁·K₂⁻¹ (outer one)
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            (uq3E2 k *
+              (uq3E1 k * (uq3K2inv k * uq3E1 k * (uq3K1inv k * uq3K1inv k)))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            (uq3E2 k *
+              ((uq3E1 k * uq3K2inv k) * uq3E1 k * (uq3K1inv k * uq3K1inv k))) from by
+        noncomm_ring, uq3_E1_mul_K2inv]
+    -- Step 4: pull algMap(T(-1)) left
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            (uq3E2 k *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) * uq3K2inv k * uq3E1 k *
+                uq3E1 k * (uq3K1inv k * uq3K1inv k))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            (uq3E2 k *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                (uq3K2inv k * uq3E1 k * uq3E1 k * (uq3K1inv k * uq3K1inv k)))) from by
+        noncomm_ring,
+        move_alg_left (T (-1)) (uq3E2 k)]
+    -- Step 5: expose last E₁·K₁⁻¹ pair and apply rule (inline to avoid RHS match)
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E2 k * (uq3K2inv k * uq3E1 k * uq3E1 k * (uq3K1inv k * uq3K1inv k)))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E2 k *
+                (uq3K2inv k * uq3E1 k *
+                  ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+                    uq3K1inv k * uq3E1 k) * uq3K1inv k))) from by
+        rw [show uq3K2inv k * uq3E1 k * uq3E1 k * (uq3K1inv k * uq3K1inv k) =
+              uq3K2inv k * uq3E1 k * (uq3E1 k * uq3K1inv k) * uq3K1inv k from by
+            noncomm_ring, uq3_E1_mul_K1inv]]
+    -- Step 6: pull algMap(T 2) left
+    -- Reassoc inner (algMap * K₁⁻¹ * E₁) → (algMap * (K₁⁻¹ * E₁))
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E2 k *
+                (uq3K2inv k * uq3E1 k *
+                  ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+                    uq3K1inv k * uq3E1 k) * uq3K1inv k))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E2 k *
+                (uq3K2inv k * uq3E1 k *
+                  ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+                    (uq3K1inv k * uq3E1 k)) * uq3K1inv k))) from by noncomm_ring]
+    -- Apply move_alg_left with x = K₂⁻¹·E₁ to pull algMap(T 2) left one level
+    rw [move_alg_left (T 2) (uq3K2inv k * uq3E1 k)]
+    -- Reassoc outer · K₁⁻¹ to come inside algMap, and · uq3E2 on other side
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E2 k *
+                ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+                  (uq3K2inv k * uq3E1 k * (uq3K1inv k * uq3E1 k)) * uq3K1inv k))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E2 k *
+                ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+                  (uq3K2inv k * uq3E1 k * (uq3K1inv k * uq3E1 k) * uq3K1inv k)))) from by
+        noncomm_ring]
+    -- Apply move_alg_left with x = uq3E2 k
+    rw [move_alg_left (T 2) (uq3E2 k)]
+    -- Step 7: collapse T-powers T(-1)·T(-1)·T(2) = T(0) = 1
+    rw [alg_T_cancel3 (-1) (-1) 2 _ (by decide)]
+    noncomm_ring
+  -- hB: E₁·E₂·E₁·K_chain = X₁·X₂·X₁  (scalars T 2·T(-1)·T(-1) = T(0) = 1)
   have hB : uq3E1 k * (uq3E2 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) =
       uq3E1 k * (uq3K1inv k * (uq3E2 k * (uq3K2inv k * (uq3E1 k * uq3K1inv k)))) := by
-    sorry
+    -- Step 1: expose last E₁·K₁⁻¹ pair + apply rule (inline to avoid RHS match)
+    rw [show uq3E1 k * (uq3E2 k * (uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) =
+          uq3E1 k * (uq3E2 k *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+              uq3K1inv k * uq3E1 k * (uq3K1inv k * uq3K2inv k))) from by
+        rw [show uq3E1 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)) =
+              (uq3E1 k * uq3K1inv k) * (uq3K1inv k * uq3K2inv k) from by noncomm_ring,
+            uq3_E1_mul_K1inv]]
+    -- Step 2: pull algMap(T 2) left through E₂ and E₁
+    rw [show uq3E1 k * (uq3E2 k *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+              uq3K1inv k * uq3E1 k * (uq3K1inv k * uq3K2inv k))) =
+          uq3E1 k * (uq3E2 k *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+              (uq3K1inv k * uq3E1 k * (uq3K1inv k * uq3K2inv k)))) from by noncomm_ring,
+        move_alg_left (T 2) (uq3E2 k),
+        move_alg_left (T 2) (uq3E1 k)]
+    -- Step 3: expose E₂·K₁⁻¹ + apply rule (safe — no E₂·K₁⁻¹ in target RHS)
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            (uq3E1 k * (uq3E2 k * (uq3K1inv k * uq3E1 k * (uq3K1inv k * uq3K2inv k)))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            (uq3E1 k * ((uq3E2 k * uq3K1inv k) * uq3E1 k * (uq3K1inv k * uq3K2inv k))) from by
+        noncomm_ring, uq3_E2_mul_K1inv]
+    -- Step 4: pull algMap(T(-1)) left through E₁
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            (uq3E1 k *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) * uq3K1inv k * uq3E2 k *
+                uq3E1 k * (uq3K1inv k * uq3K2inv k))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            (uq3E1 k *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                (uq3K1inv k * uq3E2 k * uq3E1 k * (uq3K1inv k * uq3K2inv k)))) from by
+        noncomm_ring,
+        move_alg_left (T (-1)) (uq3E1 k)]
+    -- Step 5: commute last K₁⁻¹·K₂⁻¹ → K₂⁻¹·K₁⁻¹
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E1 k * (uq3K1inv k * uq3E2 k * uq3E1 k * (uq3K1inv k * uq3K2inv k)))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E1 k * (uq3K1inv k * uq3E2 k * uq3E1 k * (uq3K2inv k * uq3K1inv k)))) from by
+        rw [uq3_K1inv_K2inv_comm]]
+    -- Step 6: expose E₁·K₂⁻¹ + apply rule (safe — no E₁·K₂⁻¹ in target RHS)
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E1 k * (uq3K1inv k * uq3E2 k * uq3E1 k * (uq3K2inv k * uq3K1inv k)))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E1 k * (uq3K1inv k * uq3E2 k *
+                (uq3E1 k * uq3K2inv k) * uq3K1inv k))) from by
+        noncomm_ring, uq3_E1_mul_K2inv]
+    -- Step 7: pull algMap(T(-1)) left through nesting
+    rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              (uq3E1 k * (uq3K1inv k * uq3E2 k *
+                ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) * uq3K2inv k * uq3E1 k) *
+                uq3K1inv k))) =
+          (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+            ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                (uq3E1 k * (uq3K1inv k *
+                  (uq3E2 k * (uq3K2inv k * (uq3E1 k * uq3K1inv k))))))) from by
+        rw [show uq3K1inv k * uq3E2 k *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) * uq3K2inv k * uq3E1 k) *
+              uq3K1inv k =
+              uq3K1inv k * uq3E2 k *
+                ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                  (uq3K2inv k * uq3E1 k)) * uq3K1inv k from by noncomm_ring,
+            move_alg_left (T (-1)) (uq3K1inv k * uq3E2 k)]
+        rw [show (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+              ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                (uq3E1 k *
+                  ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                    (uq3K1inv k * uq3E2 k * (uq3K2inv k * uq3E1 k)) * uq3K1inv k))) =
+              (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T 2) *
+                ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                  (uq3E1 k *
+                    ((algebraMap (LaurentPolynomial k) (Uqsl3 k)) (T (-1)) *
+                      (uq3K1inv k * uq3E2 k * (uq3K2inv k * uq3E1 k) * uq3K1inv k)))) from by
+            noncomm_ring,
+            move_alg_left (T (-1)) (uq3E1 k)]
+        noncomm_ring]
+    -- Step 8: collapse T-powers T(2)·T(-1)·T(-1) = T(0) = 1
+    rw [alg_T_cancel3 2 (-1) (-1) _ (by decide)]
   -- Phase 11: normalize h2's associativity to right-assoc, substitute atom equalities
   rw [show uq3E1 k * uq3E1 k * uq3E2 k * (uq3K1inv k * uq3K1inv k * uq3K2inv k) =
         uq3E1 k * (uq3E1 k * (uq3E2 k * (uq3K1inv k * (uq3K1inv k * uq3K2inv k)))) from by
