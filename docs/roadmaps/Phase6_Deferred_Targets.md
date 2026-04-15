@@ -17,7 +17,7 @@ SpinBordismData → rokhlin_from_bordism (16|σ) → c₋=8N_f → 24|c₋ → 3
 All 7 modules in the chain (SpinBordism, WangBridge, GenerationConstraint, ModularInvarianceConstraint, RokhlinBridge, AlgebraicRokhlin, E8Lattice) are zero sorry. The E8 counterexample (σ=8 ≢ 0 mod 16) is proved. Algebraic Serre bound (σ≡0 mod 8) is proved. The 2-factor topological gap (mod 8 → mod 16) enters as the SpinBordismData hypothesis.
 
 ### Quantum Group Chain: CORE COMPLETE (0 sorry on finite type)
-All finite-type modules zero sorry: QNumber, Uqsl2, Uqsl2Hopf (66 thms), SU2kFusion, SU2kSMatrix, RestrictedUq, RibbonCategory. **Uqsl3 (Phase 5i Wave 1): First rank-2 quantum group in any proof assistant — 21 Chevalley relations, ALL PROVED, zero sorry.** Affine extension has 3+4 sorry (Uqsl2AffineHopf + CoidealEmbedding). MTC instances have 8 sorry (SU2kMTC + FibonacciMTC).
+All finite-type modules zero sorry: QNumber, Uqsl2, Uqsl2Hopf (66 thms), SU2kFusion, SU2kSMatrix, RestrictedUq, RibbonCategory. **Uqsl3 (Phase 5i Wave 1): First rank-2 quantum group in any proof assistant — 21 Chevalley relations, ALL PROVED, zero sorry.** **Uqsl3Hopf (Phase 5i Wave 2): COMPLETE 2026-04-14 — first rank-2 quantum group HopfAlgebra instance in any proof assistant. 0 sorry, Bialgebra + HopfAlgebra typeclass wired, all 21 Δ/ε/S relation-respect proofs closed, 4 antipode q-Serre cubics (E12/E21/F12/F21) proven, S² = Ad(K₁²K₂²) Drinfeld theorem proven.** Affine extension: Uqsl2AffineHopf 0 sorry (closed April 2026) + CoidealEmbedding 0 sorry. MTC instances 0 sorry (SU2kMTC + FibonacciMTC closed earlier).
 
 ### Tetrad Gap Equation: First Explicit Derivation
 Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensation: Δ = G·N_f·Δ·I(Δ). G_c = 8π²/(N_f·Λ²) matches V_eff exactly (proved in Lean). 20 theorems (12 proved + 8 sorry). Python solver + observables + figures complete.
@@ -76,6 +76,16 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - **First rank-2 quantum group in any proof assistant.** 8 generators, 21 Chevalley relations, Cartan matrix A₂ = [[2,-1],[-1,2]].
 - ALL 21 relation theorems PROVED, **zero sorry**. Builds in 6.4s.
 - Completed without Aristotle (all proofs native). Promoted from Tier 2 → DONE.
+
+### U_q(sl₃) Hopf Algebra Structure — **COMPLETE 2026-04-14** (Phase 5i Wave 2)
+- **First rank-2 quantum group HopfAlgebra instance in any proof assistant.**
+- `lean/SKEFTHawking/Uqsl3Hopf.lean` — 0 sorry, 0 errors. Full SKEFTHawking package builds clean no-cache (8396 jobs, 131 oleans).
+- Bialgebra + HopfAlgebra typeclass instances wired.
+- All 21 Δ/ε/S relation-respect proofs closed across Tranches A-D.
+- All 4 antipode q-Serre cubics proven (E12/E21/F12/F21): commits `bf2989d` (SerreE12), `912c495` (SerreE21), `fad0edb` (SerreF12), `619dd37` (SerreF21). Palindromic Serre atom-bridge resolved.
+- S² = Ad(K₁²K₂²) per generator (Drinfeld theorem) proven.
+- Tranche E closing commits: `dadce3e` (per-generator eval lemmas + Bialgebra instance), `bdf0ee9` (HopfAlgebra typeclass).
+- 24 per-generator evaluation lemmas added; 3 coalgebra axioms (coassoc, rTensor_counit, lTensor_counit) proven.
 
 ### SteenrodA1 Adem Relations — **PROVED** (Phase 5g)
 - 3 Adem relation theorems (adem_sq1_sq1, adem_sq1_sq2, adem_sq2_sq2) proved via native_decide.
@@ -173,7 +183,7 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 | CenterFunctor.lean | 5 | Aristotle Batch 4 |
 | CoidealEmbedding.lean | 4 | **Aristotle Batch 2 IN FLIGHT** |
 | VerifiedStatistics.lean | 4 | Aristotle Batch 3 |
-| Uqsl3Hopf.lean | 4 | Aristotle Batch 3 (Δ/ε/S relation-respect + S²) |
+| Uqsl3Hopf.lean | 0 | **COMPLETE 2026-04-14** — all Δ/ε/S relation-respect + S² closed (commits `bdf0ee9`, `dadce3e`, `619dd37`, `fad0edb`, `912c495`, `bf2989d`); Bialgebra + HopfAlgebra instances wired |
 | Uqsl2AffineHopf.lean | 3 | **Aristotle Batch 2 IN FLIGHT** |
 | RepUqFusion.lean | 2 | Aristotle Batch 3 |
 | EmergentGravityBounds.lean | 2 | Aristotle Batch 4 |

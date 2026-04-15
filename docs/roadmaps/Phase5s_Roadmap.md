@@ -201,11 +201,14 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
 - [x] q-commutation infrastructure (4 lemmas)
 - [x] CAS-generated tactic script for E10 coproduct
 - [x] All 8 Uqsl2AffineHopf sorry closed (4 comul + 4 antipode q-Serre) — **DONE April 2026**
-- [ ] All 3 Uqsl3Hopf sorry closed — **1 remaining (F01), actively in progress**
-- [ ] Sorry count: 11 → 0 — **currently at 1** (Uqsl3Hopf F01). 3 files have build errors from Lean 4.29 upgrade.
+- [x] All Uqsl3Hopf sorry closed — **DONE 2026-04-14** (all 4 antipode q-Serre cubics E12/E21/F12/F21 proven; commits `bf2989d` SerreE12, `912c495` SerreE21, `fad0edb` SerreF12, `619dd37` SerreF21; atom-bridge for palindromic Serre resolved via per-generator eval lemmas)
+- [x] Sorry count: 11 → 0 — **DONE 2026-04-14**. Uqsl3Hopf.lean builds clean (0 sorry, 0 errors); full SKEFTHawking package builds clean no-cache (8396 jobs, 131 oleans).
+- [x] Bialgebra + HopfAlgebra typeclass instances wired for U_q(sl_3) — **DONE 2026-04-14** (Tranche E, commits `dadce3e` per-generator eval lemmas + Bialgebra instance; `bdf0ee9` HopfAlgebra typeclass complete). Includes S² = Ad(K₁²K₂²) per generator (Drinfeld theorem), all 21 relation-respect proofs for Δ/ε/S, 24 per-generator evaluation lemmas, 3 coalgebra axioms (coassoc, rTensor_counit, lTensor_counit).
 
 **Estimated LOE:** Days (F01 is last remaining q-Serre proof, same pattern as completed E10)
 **Risk:** Low — the mathematical structure is identical to the solved cases
+
+**Wave 8 status: COMPLETE 2026-04-14.** All q-Serre sorry across Uqsl2AffineHopf and Uqsl3Hopf closed. Phase 5s success criterion ("11 → 0 sorry; First formalization of quantum group Hopf algebra compatibility in any proof assistant") achieved for the q-Serre track.
 
 ### Wave 9 — CenterFunctor Hypothesis Elimination (OPTIONAL)
 
@@ -249,7 +252,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 5 | Muger general theorem | 1 week | Deep research | **COMPLETE** — ModularityTheorem.lean, abstract proof |
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
-| Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **NEAR COMPLETE** — Uqsl2AffineHopf: 0 sorry (all 8 closed). Uqsl3Hopf: 1 sorry (F01 remaining, actively in progress). 3 files have build errors from Lean 4.29 upgrade. |
+| Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **COMPLETE 2026-04-14** — Uqsl2AffineHopf: 0 sorry. Uqsl3Hopf: 0 sorry (all 4 antipode Serre cubics E12/E21/F12/F21 closed; Bialgebra + HopfAlgebra typeclass instances wired). Full SKEFTHawking package builds clean no-cache. |
 | Wave 9 | CenterFunctor hypotheses | 1 week | None | Optional — 2 hypotheses, 0 sorry |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.

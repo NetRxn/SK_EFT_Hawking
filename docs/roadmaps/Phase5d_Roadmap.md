@@ -359,9 +359,9 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 - [x] Coproduct, counit, antipode DEFINED via RingQuot.liftAlgHom
 - [x] Counit proved (Aristotle 986b9f66)
 - [x] Coproduct: 17/21 cases proved (Aristotle 91434dbd/986b9f66); 4 q-Serre cases remain
-- [ ] 4 q-Serre coproduct cases remain (Aristotle 2c668068 in-flight)
-- [ ] Antipode: 6/21 cases proved, 15 remain (Aristotle 2c668068 in-flight)
-- [ ] Bialgebra axioms (deferred — need relation-respect first)
+- [x] 4 q-Serre coproduct cases closed — **DONE April 2026** (Phase 5s Wave 8)
+- [x] Antipode: all cases closed — **DONE April 2026** (Phase 5s Wave 8)
+- [ ] Bialgebra axioms — **UNBLOCKED 2026-04-14** (Uqsl3Hopf Tranche E provides the Bialgebra + HopfAlgebra typeclass-wiring pattern; commits `dadce3e`, `bdf0ee9`). Follow rank-2 blueprint for affine sl₂ wiring.
 
 ---
 
@@ -440,7 +440,7 @@ Phase-5 vestigial research gives G_c = 8π²/(N_f Λ²). Phase-5d gap equation g
 | 3 | MC production (L=4,6,8) | — | — | L=8 running |
 | 4 | Ising + Fibonacci MTC | 39 | 0 | **COMPLETE** (Aristotle 78dcc5f4 + native_decide; all MTC sorry filled, pentagon/hexagon proved) |
 | 5 | Polariton paper (Paper 12) | — | — | Claims reviewed, all FAIL fixed |
-| 6 | U_q(ŝl₂) affine Hopf | — | 19 | IN FLIGHT (Aristotle 91434dbd/986b9f66 decomposed; counit proved, 17/21 coproduct, 4 q-Serre + 15 antipode remain; Aristotle 2c668068 in-flight) |
+| 6 | U_q(ŝl₂) affine Hopf | — | 0 | **COMPLETE April 2026** (Phase 5s Wave 8: all 8 q-Serre + antipode closed). Bialgebra typeclass wiring **UNBLOCKED 2026-04-14** by Uqsl3Hopf Tranche E pattern. |
 | 7 | Verified statistics (Lean) | 7 | 0 | **COMPLETE** (Aristotle 986b9f66) |
 | 8 | Kerr-Schild metrics | 8 | 0 | **COMPLETE** (Aristotle 986b9f66; formula corrected to raised indices) |
 | 9 | Coideal embedding | 6 | 0 | **COMPLETE** (Aristotle 986b9f66) |

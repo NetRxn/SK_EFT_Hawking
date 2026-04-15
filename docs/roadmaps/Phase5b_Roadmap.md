@@ -368,9 +368,12 @@ the exact same pattern for U_q(sl₂). No axioms needed.
 - O_q ↪ U_q(ŝl₂) embedding — the coideal embedding is into the AFFINE quantum
   group U_q(ŝl₂) (6 generators), not finite U_q(sl₂) (4 generators).
   See: `Lit-Search/Phase-5b/The q-Onsager algebra as a coideal subalgebra...`
-  Deferred to Phase 6.
+  Deferred to Phase 6. **UPDATE: Completed in Phase 5d Wave 9 (CoidealEmbedding.lean, 0 sorry).**
 - Hopf algebra structure on U_q(sl₂) — Mathlib has the typeclass but wiring
   the coproduct/counit/antipode is ~20 additional theorems. Deferred.
+  **UPDATE: Completed in Phase 5c (Uqsl2Hopf.lean, 66 thms, 0 sorry).
+  Rank-2 analog Uqsl3Hopf.lean also COMPLETE 2026-04-14 (Phase 5i Wave 2) — 
+  full Bialgebra + HopfAlgebra typeclass instances wired.**
 - Rep(U_q(sl₂)) → MTC — requires root-of-unity specialization + semisimplification.
   See: `Lit-Search/Phase-5b/From quantum groups to gauge emergence...`
   Estimated 12-24 months. Phase 6.
@@ -380,8 +383,8 @@ the exact same pattern for U_q(sl₂). No axioms needed.
 ## 9. Deferred Targets (see Phase6_Deferred_Targets.md)
 
 The following remain deferred to Phase 6:
-- O_q ↪ U_q(ŝl₂) coideal embedding (affine quantum group, 6 generators)
-- Hopf algebra structure on U_q(sl₂) (coproduct, counit, antipode)
+- O_q ↪ U_q(ŝl₂) coideal embedding (affine quantum group, 6 generators) — **DONE Phase 5d Wave 9 (CoidealEmbedding.lean, 0 sorry)**
+- Hopf algebra structure on U_q(sl₂) (coproduct, counit, antipode) — **DONE Phase 5c (Uqsl2Hopf.lean, 66 thms, 0 sorry); rank-2 Uqsl3Hopf also DONE 2026-04-14 (Phase 5i Wave 2)**
 - Rep(U_q(sl₂)) → MTC at roots of unity (Chern-Simons connection)
 - Full categorical functor Center(Vec_G) ⥤ ModuleCat(DG k G) (~30-50 thms)
 - Non-Abelian TPF disentangler (Tier 2, requires breakthrough)

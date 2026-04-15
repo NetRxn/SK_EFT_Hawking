@@ -101,6 +101,9 @@ All 6 rows outside 0.5% tolerance. Also:
 - Note: NOT built via `lake build` today (parallel Lean session active on Uqsl3Hopf F01;
   Lean 4.29 upgrade produced 3 files with build errors elsewhere). All additions are
   `rfl` / `ring` / `positivity` / `field_simp` proofs — no heavy elaboration risk.
+  (UPDATE 2026-04-14: Uqsl3Hopf F01 parallel session concluded — Uqsl3Hopf now 0 sorry
+  with Bialgebra + HopfAlgebra typeclass instances wired; full SKEFTHawking package
+  builds clean no-cache. See Phase 5s Wave 8 / Phase 5i Wave 2 for details.)
 
 #### Wave 1c — Test coverage for the Beliaev→transport→correction chain [Pipeline: Stage 6] — DONE 2026-04-13
 - [x] Added `tests/test_transonic_background.py::TestBeliaevChainConsistency` with 8 tests:
@@ -692,7 +695,7 @@ All tracks are independent; maximum parallelism.
 
 - **Counts**: Per user directive (2026-04-13), count staleness is deferred — counts will change as Lean work continues. Will be reconciled atomically at paper submission.
 - **Paper 6 MC status**: Per user directive, paper is NOT modified to indicate crashed status. Phase 4/5 roadmaps already track MC not-done. The Apr 10 reviews referenced legacy `run_vestigial_production.py` runs (fermion-bag), **which was superseded on 2026-04-02 by HS+RHMC** (see Phase6_Roadmap line 30, 63: "fermion-bag hits O(V⁴) percolation wall"). The current production path is `scripts/run_rhmc_epochs.sh --l 8` using `run_rhmc_production.py` (Rust-accelerated via `sk_eft_rhmc`). L=8 state as of 2026-04-13: only 2 couplings completed (g=0.5, g=2.0 from Apr 10); needs full coupling scan to resolve vestigial phase. Any new MC production for Paper 6 must use the HS+RHMC path, not the legacy fermion-bag path.
-- **Lean 4.29 build errors in 3 files (Uqsl2AffineHopf, Uqsl3Hopf, TetradGapEquation)**: Tracked in parallel Lean session (Phase 5s Wave 8, Uqsl3Hopf F01 closure). Not duplicated here.
+- **Lean 4.29 build errors in 3 files (Uqsl2AffineHopf, Uqsl3Hopf, TetradGapEquation)**: Tracked in parallel Lean session (Phase 5s Wave 8, Uqsl3Hopf F01 closure). Not duplicated here. (UPDATE 2026-04-14: Uqsl3Hopf resolved — 0 sorry, Bialgebra + HopfAlgebra typeclass wired, full SKEFTHawking package builds clean no-cache. Uqsl2AffineHopf and TetradGapEquation Lean 4.29 status should be re-verified.)
 - **Mathlib PR process** (Phase 5g Wave 4+): Independent track, out of scope.
 - **arXiv voucher / paper submissions** (Phase 5g Wave 7+): Depends on Tier A items (Wave 1, Wave 3) completing first.
 
