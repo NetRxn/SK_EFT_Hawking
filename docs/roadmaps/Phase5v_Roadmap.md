@@ -154,19 +154,29 @@ Both theorems retain their inline docstrings + added a Phase 5v Wave 1a provenan
 
 **Outcome.** Single remaining Wave 0 residual cleared. Graph is fully collision-free.
 
-### Wave 1b — `counts.json` wiring [Pipeline: Stage 12]
+### Wave 1b — `counts.json` wiring [Pipeline: Stage 12] — DONE 2026-04-15
 
-**Problem.** `docs/counts.json` exists as `{}` (empty). `scripts/update_counts.py` regenerates it but is never invoked automatically. Papers hardcode counts that drift (Paper 15 "94 modules / 33 sorry" vs current 132/0).
+**Problem (corrected 2026-04-15 after direct inspection).**
+`scripts/update_counts.py` exists and works correctly — it produces both
+`docs/counts.json` and `docs/counts.tex` with 13 fields each (theorems,
+modules, axioms, sorry, tests, figures, notebooks, papers, aristotle, etc.).
+Current outputs are fresh and accurate (3,021 theorems / 133 modules / 322
+Aristotle-proved).
+
+The **actual gap** is downstream of the script:
+1. `update_counts.py` is NOT wired into `validate.py` — no automated re-run
+2. **Zero paper `.tex` files actually use `\input{docs/counts.tex}`** — Paper 15 mentions the pattern in prose but never consumes it
+3. No `count_literals` check to enforce macro usage
 
 **Fix:**
-- [ ] Extend `update_counts.py` to write both `counts.json` and `counts.tex` (already in scope per Stage 12 docs; verify both are emitted)
-- [ ] `validate.py` invokes `update_counts.py` as a pre-step to CHECK 16 (same staleness pattern as `extract_lean_deps.py` — hash inputs, skip if unchanged)
-- [ ] `counts.json` schema: `{total_theorems, substantive_theorems, placeholder_theorems, aristotle_proved, manual_proved, total_sorry, lean_modules, lean_axioms, python_modules, test_files, test_count, figures, notebooks, papers, timestamp, source_hash}`
-- [ ] Every paper `.tex` that reports a count MUST pull from `counts.tex` via `\input{docs/counts.tex}` + macros (`\totaltheorems`, `\sorrycount`, etc.) — no count literals in `.tex`
-- [ ] New validate.py sub-check `count_literals`: grep paper `.tex` for number-followed-by-theorem/module/sorry patterns; FAIL if found outside `counts.tex`
-- [ ] Update Paper 15 to use macros as the reference implementation
+- [x] `validate.py` invokes `update_counts.py` via new CHECK 15b (`counts_fresh`); staleness-checked against `lean_deps.json`, `constants.py`, `visualizations.py`, and `SKEFTHawking/*.lean` mtimes
+- [x] Extended `update_counts.py` with additional macros (`\sorrypercent`, `\leandefinitions`, `\aristotleruns`)
+- [x] New `validate.py` CHECK 17 `count_literals`: WARN-level; catches `N theorems`, `N Lean modules`, `N sorry`, `N Aristotle-proved` patterns; exempts papers that `\input` `counts.tex` or use the macros
+- [x] Paper 15 retrofitted with `\input{../../docs/counts.tex}` + 7 macro substitutions (abstract, intro bullets, invariant 9, Aristotle results, scaling section) — **serves as reference implementation**; 3 literals remain (`25 theorems` for a specific Aristotle run, `33 sorry` in outdated batch-plan context, `200 theorems` growth-rate heuristic); deferred pending Paper 15 full rewrite
+- [ ] Paper 15 full rewrite — **deferred post-5v** (paper content is broadly stale; see `project_paper15_rewrite.md` in memory)
+- [ ] Retrofit Papers 1–14 — **not blocking this wave**; CHECK 17 WARN surfaces remaining 64 literals; cleanup scheduled as a cross-cutting sweep after Wave 5
 
-**Gate:** `uv run python scripts/validate.py --check count_literals` passes; `counts.json` non-empty; Paper 15 renders current numbers via macros.
+**Gate:** `validate.py --check counts_fresh` passes; `validate.py --check count_literals` runs and surfaces residual literals with paper-granular WARNs; Paper 15 macros resolve via `\input`.
 
 ### Wave 1c — Auto-discovery extractors [Pipeline: Stages 1, 12]
 

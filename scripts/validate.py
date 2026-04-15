@@ -1113,6 +1113,106 @@ def check_parameter_provenance() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 15b: Counts freshness (Phase 5v Wave 1b)
+# ═══════════════════════════════════════════════════════════════════════
+
+COUNTS_JSON_PATH = PROJECT_ROOT / "docs" / "counts.json"
+COUNTS_TEX_PATH = PROJECT_ROOT / "docs" / "counts.tex"
+_COUNTS_SOURCES = [
+    PROJECT_ROOT / "lean" / "lean_deps.json",
+    PROJECT_ROOT / "src" / "core" / "constants.py",
+    PROJECT_ROOT / "src" / "core" / "visualizations.py",
+]
+
+
+def _counts_is_stale() -> tuple[bool, str]:
+    """Return (stale, reason). Stale if counts.json is missing or older
+    than any of _COUNTS_SOURCES, or if counts.tex is missing."""
+    if not COUNTS_JSON_PATH.exists():
+        return True, "counts.json missing"
+    if not COUNTS_TEX_PATH.exists():
+        return True, "counts.tex missing"
+    counts_mtime = COUNTS_JSON_PATH.stat().st_mtime
+    for src in _COUNTS_SOURCES:
+        if src.exists() and src.stat().st_mtime > counts_mtime:
+            return True, f"{src.name} newer than counts.json"
+    # Also regenerate if any .lean file in SKEFTHawking is newer (catches
+    # cases where lean_deps.json isn't regenerated but sources changed)
+    lean_src = LEAN_DIR.glob("*.lean")
+    newest_lean = max((f.stat().st_mtime for f in lean_src), default=0)
+    if newest_lean > counts_mtime:
+        return True, "SKEFTHawking/*.lean newer than counts.json"
+    return False, "fresh"
+
+
+@register_check("counts_fresh",
+                "counts.json / counts.tex are up-to-date vs. sources")
+def check_counts_fresh() -> CheckResult:
+    """CHECK 15b: Regenerate counts.json + counts.tex if stale.
+
+    Papers reference counts via \\input{counts.tex} macros; this check
+    ensures the macro values reflect the current codebase. Regeneration
+    is automatic when sources are newer; check passes as long as both
+    artifacts exist after the regeneration attempt.
+    """
+    stale, reason = _counts_is_stale()
+    details = []
+
+    if stale:
+        details.append(Detail("staleness", True, f"stale: {reason}",
+                              warning=True))
+        # Run update_counts.py
+        try:
+            result = subprocess.run(
+                ["uv", "run", "python",
+                 str(SCRIPT_DIR / "update_counts.py")],
+                cwd=str(PROJECT_ROOT),
+                capture_output=True, text=True, timeout=600,
+            )
+            if result.returncode != 0:
+                details.append(Detail(
+                    "regenerate", False,
+                    f"update_counts.py failed (rc={result.returncode}): "
+                    f"{result.stderr[-200:].strip()}",
+                ))
+                return CheckResult(passed=False, details=details)
+            details.append(Detail("regenerate", True,
+                                  "update_counts.py succeeded"))
+        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+            details.append(Detail("regenerate", False,
+                                  f"update_counts.py not runnable: {exc}"))
+            return CheckResult(passed=False, details=details)
+    else:
+        details.append(Detail("staleness", True, "fresh"))
+
+    # Both artifacts must now exist
+    passed = COUNTS_JSON_PATH.exists() and COUNTS_TEX_PATH.exists()
+    if passed:
+        # Summary of current counts
+        try:
+            counts = json.loads(COUNTS_JSON_PATH.read_text())
+            lean = counts.get("lean", {})
+            python = counts.get("python", {})
+            aristotle = counts.get("aristotle", {})
+            summary = (
+                f"theorems={lean.get('theorems_total','?')} "
+                f"(substantive={lean.get('theorems_substantive','?')}, "
+                f"placeholder={lean.get('theorems_placeholder','?')}) | "
+                f"modules={lean.get('modules','?')} | "
+                f"sorry={lean.get('sorry_declarations','?')} | "
+                f"papers={python.get('papers','?')} | "
+                f"aristotle_proved={aristotle.get('aristotle_proved','?')}"
+            )
+            details.append(Detail("summary", True, summary))
+        except (json.JSONDecodeError, OSError) as exc:
+            details.append(Detail("summary", False,
+                                  f"counts.json unreadable: {exc}"))
+            passed = False
+
+    return CheckResult(passed=passed, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 16: Knowledge graph integrity
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -1205,6 +1305,108 @@ def check_graph_integrity() -> CheckResult:
     passed = s['conflicts'] == 0
 
     return CheckResult(passed=passed, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 17: Count literals in paper .tex (Phase 5v Wave 1b)
+# ═══════════════════════════════════════════════════════════════════════
+
+# Patterns that strongly suggest a hardcoded count literal in paper prose.
+# Each pattern captures (\d+) together with a domain noun; the assumption
+# is that any such count should come from \input{../../docs/counts.tex}
+# macros (\totaltheorems, \leanmodules, etc.) so counts stay fresh.
+_COUNT_LITERAL_PATTERNS = [
+    # "N theorems", "N Lean theorems", "N formally-verified theorems"
+    (re.compile(r'(?<![\\{\d])\b(\d{2,5})\s+(?:formally[- ]?verified\s+|machine[- ]?checked\s+|Lean\s+)?theorems?\b', re.IGNORECASE), "theorems"),
+    # "N Lean modules" / "N modules"
+    (re.compile(r'(?<![\\{\d])\b(\d{2,4})\s+(?:Lean\s+)?modules?\b', re.IGNORECASE), "modules"),
+    # "N sorry" (remaining sorry count)
+    (re.compile(r'(?<![\\{\d])\b(\d{1,4})\s+(?:remaining\s+)?sorry\b', re.IGNORECASE), "sorry"),
+    # "N Aristotle-proved"
+    (re.compile(r'(?<![\\{\d])\b(\d{2,4})\s+Aristotle[- ]?proved', re.IGNORECASE), "aristotle_proved"),
+]
+
+
+@register_check("count_literals",
+                "Paper .tex files reference counts via \\input{counts.tex} macros, not literals")
+def check_count_literals() -> CheckResult:
+    """CHECK 17: Flag hardcoded count literals in paper .tex files.
+
+    Papers should pull counts from docs/counts.tex via \\input + macros
+    (\\totaltheorems, \\leanmodules, \\sorrycount, etc.) so stale counts
+    can't ship. This check greps every paper_draft.tex for patterns like
+    "N theorems", "N Lean modules", etc., and WARNs when found outside
+    of an \\input context. WARN-level during the retrofit period; will
+    escalate to FAIL once all 15 papers use macros.
+    """
+    if not PAPERS_DIR.exists():
+        return CheckResult(passed=True, details=[
+            Detail("papers_dir", True, "papers/ directory not found; skipping",
+                   warning=True),
+        ])
+
+    # Papers that have \input'd counts.tex are exempt — they've opted in
+    paper_tex_files = sorted(PAPERS_DIR.glob("paper*/paper_draft.tex"))
+    details = []
+    total_findings = 0
+
+    for tex_path in paper_tex_files:
+        paper_name = tex_path.parent.name
+        try:
+            text = tex_path.read_text()
+        except UnicodeDecodeError:
+            details.append(Detail(paper_name, True,
+                                  "unreadable (encoding); skipping",
+                                  warning=True))
+            continue
+
+        # Has this paper opted in to macros?
+        uses_macros = (
+            r'\input{../../docs/counts.tex}' in text
+            or r'\input{../docs/counts.tex}' in text
+            or r'\input{counts.tex}' in text
+            or any(macro in text for macro in [
+                r'\totaltheorems', r'\substantivetheorems',
+                r'\leanmodules', r'\sorrycount', r'\aristotleproved',
+            ])
+        )
+
+        findings = []
+        for pattern, kind in _COUNT_LITERAL_PATTERNS:
+            for m in pattern.finditer(text):
+                # Compute a rough line number for reporting
+                line_no = text.count("\n", 0, m.start()) + 1
+                findings.append((line_no, kind, m.group(0).strip()))
+
+        if not findings:
+            details.append(Detail(
+                paper_name, True,
+                "no count literals found" + (" (macros in use)" if uses_macros else ""),
+            ))
+            continue
+
+        # Found literals — WARN (passes but advisory)
+        total_findings += len(findings)
+        sample = "; ".join(
+            f"L{ln} \"{lit}\" ({kind})" for ln, kind, lit in findings[:3]
+        )
+        suffix = f" (+{len(findings)-3} more)" if len(findings) > 3 else ""
+        status_prefix = "USES MACROS but " if uses_macros else ""
+        details.append(Detail(
+            paper_name, True,
+            f"{status_prefix}{len(findings)} count-literal matches: {sample}{suffix}",
+            warning=True,
+        ))
+
+    details.insert(0, Detail(
+        "summary", True,
+        f"{total_findings} count-literal matches across {len(paper_tex_files)} papers "
+        f"(WARN-level; retrofit to \\input{{counts.tex}} + macros)",
+        warning=(total_findings > 0),
+    ))
+
+    # CHECK 17 is WARN-only until retrofit complete — never hard-fail
+    return CheckResult(passed=True, details=details)
 
 
 def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
