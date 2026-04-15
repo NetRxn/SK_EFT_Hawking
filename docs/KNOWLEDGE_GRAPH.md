@@ -49,24 +49,41 @@ Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawkin
 
 ## Graph Schema
 
-### Node Types (13)
+### Node Types (22 — Phase 1 + 1.5 + 5v Wave 2a)
+
+**Phase 1 / 1.5 base types (14):**
 
 | Node Type | Shape | Color | Source | ID Format |
 |-----------|-------|-------|--------|-----------|
-| **Paper** | Square | Steel blue (#2E86AB) | provenance.py | `paper:{key}` |
+| **Paper** | Square | Steel blue (#2E86AB) | papers/ (fs) + provenance.py | `paper:{key}` |
 | **PaperClaim** | Circle | Gold (#E8C547) | provenance.py | `claim:{paper}:{index}` |
 | **Formula** | Circle | Amber (#F18F01) | formulas.py | `formula:{name}` |
 | **Parameter** | Diamond | Berry (#A23B72) | provenance.py | `param:{key}` |
 | **PrimarySource** | Triangle | Grey (#c8ccd0) | citations.py | `source:{key}` |
-| **Figure** | Circle | Purple (#9b6dff) | review_figures.py | `figure:{name}` |
+| **Figure** | Circle | Purple (#9b6dff) | review_figures.py + visualizations.py (fs) | `figure:{name}` |
 | **AristotleRun** | Circle | Green (#22c55e) | constants.py | `aristotle:{run_id}` |
-| **LeanAxiom** | Diamond | Amber (#d97706) | lean_deps.json | `lean:{name}` |
+| **LeanAxiom** | Diamond | Amber (#d97706) | lean_deps.json | `lean:{full_name}` |
 | **Hypothesis** | Diamond | Coral (#f97316) | constants.py HYPOTHESIS_REGISTRY | `hyp:{key}` |
-| **LeanTheorem** | Circle | Sage (#5C946E) | lean_deps.json | `lean:{name}` |
-| **LeanDef** | Circle | Blue (#60a5fa) | lean_deps.json | `lean:{name}` |
-| **LeanStructure** | Square | Purple (#c084fc) | lean_deps.json | `lean:{name}` |
-| **LeanInductive** | Square | Amber (#fbbf24) | lean_deps.json | `lean:{name}` |
-| **LeanInstance** | Circle | Indigo (#818cf8) | lean_deps.json | `lean:{name}` |
+| **LeanTheorem** | Circle | Sage (#5C946E) | lean_deps.json | `lean:{full_name}` |
+| **LeanDef** | Circle | Blue (#60a5fa) | lean_deps.json | `lean:{full_name}` |
+| **LeanStructure** | Square | Purple (#c084fc) | lean_deps.json | `lean:{full_name}` |
+| **LeanInductive** | Square | Amber (#fbbf24) | lean_deps.json | `lean:{full_name}` |
+| **LeanInstance** | Circle | Indigo (#818cf8) | lean_deps.json | `lean:{full_name}` |
+
+Note: Lean IDs switched from `{short_name}` to `{full_name}` in Phase 5v Wave 0 to eliminate silent short-name collisions (~42% drop → 0). Short-name lookups still work via `_LEAN_SHORT_INDEX` with ambiguity logging.
+
+**Phase 5v Wave 2a readiness-system types (8 — stubs, wired in Waves 2b–4):**
+
+| Node Type | Shape | Wired in | Purpose |
+|-----------|-------|---------|---------|
+| **ProseClaim** | Circle | Wave 2e | Narrative statements not tied to a Formula |
+| **PythonTest** | Square | Wave 2a+ | Test functions + test_kind ∈ {golden, bounds, identity, roundtrip} |
+| **ReviewFinding** | Triangle | Wave 2c / 6 | Internal + external adversarial review findings |
+| **ProductionRun** | Circle | Wave 2d | MC/RHMC run records + status |
+| **PlaceholderMarker** | Diamond | Wave 2b | Lean decls with trivial body on non-trivial statement |
+| **Contradiction** | Triangle | Wave 2f | Concrete cross-paper inconsistency instance |
+| **CountMetric** | Diamond | Wave 2g | counts.json snapshot at a point in time |
+| **ReadinessGate** | Square | Wave 4 | Per-paper × per-dimension state (11 gates × N papers) |
 
 Every node has a uniform schema: `{id, type, label, name, verification, detail, meta}`.
 
@@ -89,7 +106,9 @@ Shapes encode semantic roles — a visual dimension independent of color:
 - `projected` — PROJECTED tier parameter (no primary source expected)
 - `unverified` — no verification
 
-### Edge Types (11)
+### Edge Types (20 — Phase 1 + 1.5 + 5v Wave 2a)
+
+**Phase 1 / 1.5 base edges (12):**
 
 | Edge | From | To | Semantics |
 |------|------|----|-----------|
@@ -101,10 +120,23 @@ Shapes encode semantic roles — a visual dimension independent of color:
 | `SOURCED_FROM` | Parameter | PrimarySource | Parameter from this paper |
 | `DEPENDS_ON` | Paper | Parameter | Paper uses this parameter |
 | `CITES` | Formula | PrimarySource | Formula cites this source |
-| `HAS_FIGURE` | Paper | Figure | Paper includes this figure |
+| `HAS_FIGURE` | Paper | Figure | Paper includes this figure (auto-discovered from `\includegraphics` in Wave 1c) |
 | `IMPORTS` | Formula | Formula | Formula calls another formula |
 | `DEPENDS_ON_AXIOM` | LeanTheorem/LeanDef | LeanAxiom | Transitive axiom dependency (from `collectAxioms`) |
 | `ASSUMES` | LeanTheorem | Hypothesis | Theorem takes this hypothesis as a parameter (from HYPOTHESIS_REGISTRY.dependent_theorems) |
+
+**Phase 5v Wave 2a readiness-system edges (8):**
+
+| Edge | From | To | Purpose | Wired in |
+|------|------|----|---------|----------|
+| `VERIFIES` | PythonTest | Formula/Parameter/LeanTheorem | Test covers artifact; carries `test_kind` attribute | Wave 2a+ |
+| `FLAGS` | ReviewFinding | any | Review flagged this artifact | Wave 2c |
+| `SUPERSEDES` | ReviewFinding | ReviewFinding | Later review resolved/reopened earlier finding | Wave 2c |
+| `PRODUCES` | ProductionRun | Formula/PaperClaim | Run generated data this depends on | Wave 2d |
+| `REPORTS` | Paper | CountMetric | Paper reports a count value (comparable to canonical) | Wave 2g |
+| `SUPPORTS` | artifact | artifact | Mutual reinforcement (dual of CONTRADICTS) | Wave 2f |
+| `CONTRADICTS` | artifact | artifact | Cross-artifact inconsistency | Wave 2f |
+| `IMPACTED_BY` | ReadinessGate | any | Gate flips to `needs-recheck` if upstream changes | Wave 4 |
 
 ### Lean Node Metadata
 

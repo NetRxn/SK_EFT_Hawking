@@ -41,8 +41,11 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
 
-# Shape map for all 13 node types
+# Shape map for all node types (22 after Phase 5v Wave 2a schema extension).
+# Shape vocabulary: diamond = trust boundary (accepted without derivation),
+# circle = derived, square = structural, triangle = external.
 SHAPE_MAP: dict[str, str] = {
+    # Phase 1 base types
     'Paper': 'square',
     'PaperClaim': 'circle',
     'Formula': 'circle',
@@ -57,6 +60,16 @@ SHAPE_MAP: dict[str, str] = {
     'LeanInductive': 'square',
     'LeanInstance': 'circle',
     'Hypothesis': 'diamond',
+    # Phase 5v Wave 2a — readiness-system node types.
+    # Extractors are stubbed in this wave; populated in Waves 2b–2g.
+    'ProseClaim': 'circle',         # Narrative claim not tied to a Formula
+    'PythonTest': 'square',         # Test function + test_kind classification
+    'ReviewFinding': 'triangle',    # Adversarial review finding (Wave 6)
+    'ProductionRun': 'circle',      # MC/RHMC run record + status
+    'PlaceholderMarker': 'diamond', # Lean decl with trivial body on non-trivial statement
+    'Contradiction': 'triangle',    # Cross-paper inconsistency
+    'CountMetric': 'diamond',       # counts.json snapshot
+    'ReadinessGate': 'square',      # Per-paper × per-dimension state (Wave 4)
 }
 
 LEAN_KIND_TO_TYPE: dict[str, str] = {
@@ -775,6 +788,99 @@ def extract_figure_nodes() -> list[dict]:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Phase 5v Wave 2a — Readiness system node-type stubs
+# ═══════════════════════════════════════════════════════════════════════
+# These extractors are registered so downstream aggregators + integrity
+# checks see the new node types as first-class, but return empty lists
+# until their wiring waves (2b–2g). Each has a module-stable docstring
+# describing the contract so wiring can be done independently.
+
+
+def extract_prose_claim_nodes() -> list[dict]:
+    """ProseClaim — narrative statements in paper prose not tied to a Formula.
+
+    Wired in: Wave 2e. Sources: parse paper .tex for declarative sentences
+    outside figure/table/equation environments; heuristic classification.
+    Emits: {id: 'proseclaim:{paper}:{index}', type: 'ProseClaim', ...}.
+    """
+    return []
+
+
+def extract_python_test_nodes() -> list[dict]:
+    """PythonTest — test functions with test_kind classification.
+
+    Wired in: Wave 2a+. Sources: AST-parse tests/test_*.py for `def test_*`;
+    classify asserts via pattern ∈ {golden, bounds, identity, roundtrip}.
+    Emits: {id: 'test:{module}::{func}', type: 'PythonTest', meta.test_kind}.
+    """
+    return []
+
+
+def extract_review_finding_nodes() -> list[dict]:
+    """ReviewFinding — findings from internal/external adversarial reviews.
+
+    Wired in: Wave 2c / Wave 6. Sources: parse papers/AutomatedReviews/**/*.md
+    for structured findings (severity, status, target). Emits:
+    {id: 'review:{review_id}:{finding_id}', type: 'ReviewFinding', ...}.
+    """
+    return []
+
+
+def extract_production_run_nodes() -> list[dict]:
+    """ProductionRun — MC/RHMC/other production runs with status.
+
+    Wired in: Wave 2d. Sources: data/**/summary.json + data/**/*.log tails.
+    Status derived from exit code + last log line (success / crashed /
+    out_of_budget / sign_problem / zombie).
+    Emits: {id: 'run:{kind}:{timestamp}', type: 'ProductionRun', meta.status}.
+    """
+    return []
+
+
+def extract_placeholder_marker_nodes() -> list[dict]:
+    """PlaceholderMarker — Lean decls with trivial body on non-trivial claim.
+
+    Wired in: Wave 2b. Sources: scan lean_deps.json for theorems whose body
+    is {rfl, Equiv.refl, decide, native_decide, trivial} but whose statement
+    type has ≥3 tokens in conclusion (filter out True := trivial placeholders,
+    which are already registered in PLACEHOLDER_THEOREMS).
+    Emits: {id: 'placeholder:{lean_full_name}', type: 'PlaceholderMarker'}.
+    """
+    return []
+
+
+def extract_contradiction_nodes() -> list[dict]:
+    """Contradiction — concrete cross-paper inconsistency instance.
+
+    Wired in: Wave 2f. Sources: derived from CONTRADICTS edges + ReviewFinding
+    pattern clustering. Emits: {id: 'contradiction:{hash}',
+    type: 'Contradiction', meta.a_ref, meta.b_ref, meta.detail}.
+    """
+    return []
+
+
+def extract_count_metric_nodes() -> list[dict]:
+    """CountMetric — snapshot of a counts.json field at a point in time.
+
+    Wired in: Wave 2g. Sources: docs/counts.json. One node per metric per
+    regeneration; compared against paper REPORTS edges for CountFreshness
+    gate. Emits: {id: 'count:{metric}:{timestamp}', type: 'CountMetric'}.
+    """
+    return []
+
+
+def extract_readiness_gate_nodes() -> list[dict]:
+    """ReadinessGate — per-paper × per-dimension state (11 gates × N papers).
+
+    Wired in: Wave 4. Aggregates evidence from other nodes to produce a
+    per-paper readiness state. Each gate has state ∈ {open, in-review,
+    passed, blocked, needs-recheck}. Emits: {id: 'gate:{paper}:{gate_name}',
+    type: 'ReadinessGate', meta.state, meta.evidence}.
+    """
+    return []
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # Aggregate node extraction
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -794,6 +900,16 @@ def extract_all_nodes() -> list[dict]:
     hyp_nodes, _hyp_edges = extract_hypothesis_nodes()
     nodes.extend(hyp_nodes)
     # (edges are added separately in build_all_edges)
+
+    # Phase 5v Wave 2a — readiness-system node types (stubs until wired)
+    nodes.extend(extract_prose_claim_nodes())
+    nodes.extend(extract_python_test_nodes())
+    nodes.extend(extract_review_finding_nodes())
+    nodes.extend(extract_production_run_nodes())
+    nodes.extend(extract_placeholder_marker_nodes())
+    nodes.extend(extract_contradiction_nodes())
+    nodes.extend(extract_count_metric_nodes())
+    nodes.extend(extract_readiness_gate_nodes())
 
     # Add shape metadata to all node types that don't already have it
     for node in nodes:

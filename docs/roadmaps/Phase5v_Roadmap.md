@@ -204,18 +204,27 @@ The **actual gap** is downstream of the script:
 
 ## Wave 2 — Schema extension for readiness
 
-### Wave 2a — New node types
+### Wave 2a — Schema skeleton (node types + edge types) — DONE 2026-04-15
 
-| Node | Shape | Color | Source | ID format |
-|---|---|---|---|---|
-| **ProseClaim** | circle | muted gold | `extract_paper_claim_nodes` (widened) | `proseclaim:{paper}:{index}` |
-| **PythonTest** | square | teal | `extract_test_nodes` | `test:{module}::{func}` |
-| **ReviewFinding** | triangle | red/amber/grey (by severity) | `extract_review_finding_nodes` | `review:{review_id}:{finding_id}` |
-| **ProductionRun** | circle | emerald/crimson (by status) | `extract_production_run_nodes` | `run:{kind}:{timestamp}` |
-| **PlaceholderMarker** | diamond | orange | `extract_placeholder_nodes` | `placeholder:{lean_full_name}` |
-| **Contradiction** | triangle | bright red | derived: paired `ReviewFinding`s or symmetric differences | `contradiction:{hash}` |
-| **CountMetric** | diamond | slate | `counts.json` | `count:{metric}:{timestamp}` |
-| **ReadinessGate** | square | state-colored | `extract_readiness_gates` (Wave 4) | `gate:{paper}:{gate_name}` |
+Registered 8 new node types in `SHAPE_MAP` and 8 new edge types in the
+schema docs. All stub extractors return `[]`; nodes materialize as each
+wiring wave lands (2b–2g, then 4).
+
+| Node | Shape | Wired in | Purpose |
+|---|---|---|---|
+| **ProseClaim** | circle | Wave 2e | Narrative statements not tied to a Formula |
+| **PythonTest** | square | Wave 2a+ | Test functions + test_kind ∈ {golden, bounds, identity, roundtrip} |
+| **ReviewFinding** | triangle | Wave 2c / 6 | Adversarial review findings (internal + external) |
+| **ProductionRun** | circle | Wave 2d | MC/RHMC run records + status |
+| **PlaceholderMarker** | diamond | Wave 2b | Lean decls with trivial body on non-trivial statement |
+| **Contradiction** | triangle | Wave 2f | Concrete cross-paper inconsistency instance |
+| **CountMetric** | diamond | Wave 2g | counts.json snapshot at a point in time |
+| **ReadinessGate** | square | Wave 4 | Per-paper × per-dimension state (11 gates × 15 papers) |
+
+Verified: `SHAPE_MAP` has 22 types, graph emits 14 (the 8 new ones are
+stubs), same totals as pre-Wave 2a (4086 nodes / 1468 edges), all 35
+graph tests pass. `docs/KNOWLEDGE_GRAPH.md` schema table updated to
+reflect 22 node types + 20 edge types (12 base + 8 readiness).
 
 ### Wave 2b — New edge types
 
