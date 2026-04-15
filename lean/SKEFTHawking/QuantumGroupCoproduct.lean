@@ -18,11 +18,21 @@ with A_{ij} ∈ {0, -1} for off-diagonals.
 This module is under multi-session development. Current scope:
   - comulOnGenQG : QGGen r → tensor product (DONE)
   - comulFreeAlgQG : FreeAlgebra → tensor (DONE)
-  - Per-relation respect for K-invertibility, K-commutativity, KE, KF,
-    EF cases (mechanical) (DONE)
-  - SerreE_comm, SerreF_comm respect (A_{ij} = 0 case) (DONE)
-  - SerreE_quad, SerreF_quad respect (A_{ij} = -1 case): MULTI-SESSION
-    work, requires palindromic atom-bridge per CAS deep research
+  - Per-relation respect:
+    * K-invertibility (KKinv, KinvK) — DONE
+    * K-commutativity (KK_comm) — DONE
+    * KE conjugation — DONE
+    * KF conjugation — DONE (uses derived qg_K_Kinv_comm)
+    * SerreE_comm, SerreF_comm (A_{ij} = 0 case) — DONE (under assumption
+      A_{ji} = 0, satisfied automatically for symmetrizable Cartan)
+    * EF_diag, EF_off — pending (require additional commutation lemmas)
+    * SerreE_quad, SerreF_quad (A_{ij} = -1 case): MULTI-SESSION
+      work, requires palindromic atom-bridge per CAS deep research
+  - Derived helpers shipped:
+    * qg_K_Kinv_comm (cross K-Kinv commutation)
+    * qg_Kinv_Kinv_comm (via Mathlib Units API)
+    * qg_Kinv_F_comm (cross Kinv-F commutation when A_{ij}=0)
+    * qg_SerreF_comm' (Serre F commutativity in quotient)
 
 References:
   Drinfeld, Proc. ICM 1986; Jimbo, Lett. Math. Phys. 11, 247 (1986)
@@ -131,6 +141,129 @@ theorem comulFreeAlgQG_KK_comm (i j : Fin r) :
     rw [map_mul]
     erw [comulFreeAlgQG_ι, comulFreeAlgQG_ι, Algebra.TensorProduct.tmul_mul_tmul]
   rw [hL, hR, qg_KK_comm]
+
+/-! ### Group III: K-E conjugation -/
+
+/-- comul respects K_i · E_j = q^{A_{ij}} E_j · K_i. -/
+theorem comulFreeAlgQG_KE (i j : Fin r) :
+    comulFreeAlgQG k A (qgI k (.K i) * qgI k (.E j)) =
+    comulFreeAlgQG k A
+      (algebraMap (QBase k) (FreeAlgebra (QBase k) (QGGen r)) (T (A i j)) *
+       qgI k (.E j) * qgI k (.K i)) := by
+  simp +decide [comulFreeAlgQG, comulOnGenQG]
+  simp +decide [mul_add, add_mul, mul_assoc, qg_KE]
+  simp +decide [Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul', qg_KK_comm]
+
+/-- Cross-index K-Kinv commutation, derived from K-K commutativity. -/
+theorem qg_K_Kinv_comm (i j : Fin r) :
+    qgK k A i * qgKinv k A j = qgKinv k A j * qgK k A i := by
+  have h := qg_KK_comm k A i j
+  calc qgK k A i * qgKinv k A j
+      = qgKinv k A j * qgK k A j * qgK k A i * qgKinv k A j := by
+        rw [qg_Kinv_mul_K, one_mul]
+    _ = qgKinv k A j * (qgK k A j * qgK k A i) * qgKinv k A j := by noncomm_ring
+    _ = qgKinv k A j * (qgK k A i * qgK k A j) * qgKinv k A j := by rw [← h]
+    _ = qgKinv k A j * qgK k A i * (qgK k A j * qgKinv k A j) := by noncomm_ring
+    _ = qgKinv k A j * qgK k A i * 1 := by rw [qg_K_mul_Kinv]
+    _ = qgKinv k A j * qgK k A i := by rw [mul_one]
+
+/-- K-inverse commutation: K_i⁻¹ * K_j⁻¹ = K_j⁻¹ * K_i⁻¹.
+    Proof via Mathlib's Units API: both equal `(K_j * K_i)⁻¹` once we
+    promote K_i, K_j to units (qgK_unit) and use `mul_inv_rev` + qg_KK_comm. -/
+theorem qg_Kinv_Kinv_comm (i j : Fin r) :
+    qgKinv k A i * qgKinv k A j = qgKinv k A j * qgKinv k A i := by
+  have hUnitEq : qgK_unit k A j * qgK_unit k A i = qgK_unit k A i * qgK_unit k A j := by
+    apply Units.ext
+    show qgK k A j * qgK k A i = qgK k A i * qgK k A j
+    exact (qg_KK_comm k A i j).symm
+  have hUnit : ((qgK_unit k A i)⁻¹ * (qgK_unit k A j)⁻¹).val =
+                ((qgK_unit k A j)⁻¹ * (qgK_unit k A i)⁻¹).val := by
+    rw [show (qgK_unit k A i)⁻¹ * (qgK_unit k A j)⁻¹ = (qgK_unit k A j * qgK_unit k A i)⁻¹ from
+        (mul_inv_rev _ _).symm]
+    rw [show (qgK_unit k A j)⁻¹ * (qgK_unit k A i)⁻¹ = (qgK_unit k A i * qgK_unit k A j)⁻¹ from
+        (mul_inv_rev _ _).symm]
+    rw [hUnitEq]
+  exact hUnit
+
+/-! ### Group IV: K-F conjugation -/
+
+/-- comul respects K_i · F_j = q^{-A_{ij}} F_j · K_i. -/
+theorem comulFreeAlgQG_KF (i j : Fin r) :
+    comulFreeAlgQG k A (qgI k (.K i) * qgI k (.F j)) =
+    comulFreeAlgQG k A
+      (algebraMap (QBase k) (FreeAlgebra (QBase k) (QGGen r)) (T (-(A i j))) *
+       qgI k (.F j) * qgI k (.K i)) := by
+  simp +decide [comulFreeAlgQG, comulOnGenQG]
+  simp +decide [mul_add, add_mul, mul_assoc, qg_KF]
+  simp +decide [Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul',
+                TensorProduct.tmul_smul, qg_K_Kinv_comm]
+
+/-! ### Group VI/VII: Serre commutativity (A_{ij} = 0 case)
+
+These cases require both `A i j = 0` and `A j i = 0` (symmetry condition,
+satisfied automatically for symmetrizable Cartan matrices — the standard
+Drinfeld-Jimbo case). For asymmetric Cartan, the comul respect would
+need a one-sided variant. -/
+
+/-- Quantum Serre F (commutativity case): F_i F_j = F_j F_i when A_{ij} = 0. -/
+theorem qg_SerreF_comm' (A' : Matrix (Fin r) (Fin r) ℤ) (i j : Fin r)
+    (h : A' i j = 0) (hij : i ≠ j) :
+    qgF k A' i * qgF k A' j = qgF k A' j * qgF k A' i := by
+  show qgMk k A' (FreeAlgebra.ι (QBase k) (.F i)) * qgMk k A' (FreeAlgebra.ι (QBase k) (.F j)) =
+       qgMk k A' (FreeAlgebra.ι (QBase k) (.F j)) * qgMk k A' (FreeAlgebra.ι (QBase k) (.F i))
+  rw [← map_mul, ← map_mul]
+  exact RingQuot.mkAlgHom_rel _ (QGRel.SerreF_comm i j h hij)
+
+/-- comul respects E_i · E_j = E_j · E_i when A_{ij} = A_{ji} = 0. -/
+theorem comulFreeAlgQG_SerreE_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0)
+    (hij : i ≠ j) :
+    comulFreeAlgQG k A (qgI k (.E i) * qgI k (.E j)) =
+    comulFreeAlgQG k A (qgI k (.E j) * qgI k (.E i)) := by
+  simp +decide [comulFreeAlgQG, comulOnGenQG]
+  simp +decide [mul_add, add_mul, qg_SerreE_comm _ _ _ _ h hij, qg_KK_comm]
+  simp +decide [Algebra.algebraMap_eq_smul_one,
+                qg_KE _ A i j, qg_KE _ A j i, h, h', T_zero, one_mul]
+  abel
+
+/-- Cross-index Kinv-F commutation when -A_{ij} = 0 (i.e., A_{ij} = 0).
+    Derived from qg_KF + qg_K_mul_Kinv. -/
+theorem qg_Kinv_F_comm (i j : Fin r) (h : A i j = 0) :
+    qgKinv k A i * qgF k A j = qgF k A j * qgKinv k A i := by
+  -- From qg_KF i j: K_i*F_j = q^{-A_{ij}}*F_j*K_i = q^0*F_j*K_i = 1*F_j*K_i = F_j*K_i
+  have hKF : qgK k A i * qgF k A j = qgF k A j * qgK k A i := by
+    have := qg_KF k A i j
+    rw [h, neg_zero, T_zero, map_one, one_mul] at this
+    exact this
+  -- Multiply both sides by K_i⁻¹ from left and right:
+  -- K_i⁻¹ * (K_i * F_j) * K_i⁻¹ = K_i⁻¹ * (F_j * K_i) * K_i⁻¹
+  -- F_j * K_i⁻¹ = K_i⁻¹ * F_j  (after K-Kinv cancellations)
+  have hL : qgKinv k A i * (qgK k A i * qgF k A j) * qgKinv k A i =
+            qgF k A j * qgKinv k A i := by
+    rw [show qgKinv k A i * (qgK k A i * qgF k A j) =
+        (qgKinv k A i * qgK k A i) * qgF k A j from by noncomm_ring]
+    rw [qg_Kinv_mul_K, one_mul]
+  have hR : qgKinv k A i * (qgF k A j * qgK k A i) * qgKinv k A i =
+            qgKinv k A i * qgF k A j := by
+    rw [show qgKinv k A i * (qgF k A j * qgK k A i) * qgKinv k A i =
+        qgKinv k A i * qgF k A j * (qgK k A i * qgKinv k A i) from by noncomm_ring]
+    rw [qg_K_mul_Kinv, mul_one]
+  -- Apply hKF to bridge
+  have := congrArg (fun z => qgKinv k A i * z * qgKinv k A i) hKF
+  simp only at this
+  rw [hL, hR] at this
+  exact this.symm
+
+/-- comul respects F_i · F_j = F_j · F_i when A_{ij} = A_{ji} = 0. -/
+theorem comulFreeAlgQG_SerreF_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0)
+    (hij : i ≠ j) :
+    comulFreeAlgQG k A (qgI k (.F i) * qgI k (.F j)) =
+    comulFreeAlgQG k A (qgI k (.F j) * qgI k (.F i)) := by
+  simp +decide [comulFreeAlgQG, comulOnGenQG]
+  simp +decide [mul_add, add_mul, qg_SerreF_comm' k A i j h hij,
+                qg_Kinv_Kinv_comm,
+                qg_Kinv_F_comm k (A := A) i j h,
+                qg_Kinv_F_comm k (A := A) j i h']
+  abel_nf
 
 /-! ## 4. Module summary (work in progress) -/
 
