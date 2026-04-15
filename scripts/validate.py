@@ -1409,6 +1409,102 @@ def check_count_literals() -> CheckResult:
     return CheckResult(passed=True, details=details)
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 18: Readiness submission gate (Phase 5v Wave 4)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("readiness_submission_gate",
+                "Every paper has all P1 readiness gates passed (Phase 5v Wave 4)")
+def check_readiness_submission_gate() -> CheckResult:
+    """CHECK 18: Aggregate per-paper readiness state.
+
+    Iterates every Paper node's 11 ReadinessGate instances. A paper is
+    submission-ready iff ALL priority-1 gates are `passed` and no
+    priority-2 gate is `blocked`. Priority-2 `needs-recheck`/`open` are
+    advisory warnings.
+
+    The check is WARN-only during the readiness rollout — existing drafts
+    will light up red (as intended) until remediation lands. To block
+    submission, run `validate.py --strict` (future flag) or grep for
+    'readiness-status: red' in archived reports.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from build_graph import build_graph_json
+    except ImportError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("import", True, f"build_graph not available ({exc}); skipping",
+                   warning=True),
+        ])
+
+    graph = build_graph_json()
+    gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
+    if not gates:
+        return CheckResult(passed=True, details=[
+            Detail("gates", True,
+                   "no ReadinessGate nodes found (readiness_gates not wired?)",
+                   warning=True),
+        ])
+
+    # Aggregate per-paper
+    from collections import defaultdict
+    per_paper: dict[str, dict] = defaultdict(lambda: {
+        'p1_blocked': [], 'p2_blocked': [], 'p2_advisory': [],
+        'passed': [], 'open': [],
+    })
+    for g in gates:
+        m = g['meta']
+        paper = m['paper']
+        entry = (m['gate'], m['state'], m.get('notes', ''))
+        if m['state'] == 'passed':
+            per_paper[paper]['passed'].append(entry)
+        elif m['priority'] == 1 and m['state'] == 'blocked':
+            per_paper[paper]['p1_blocked'].append(entry)
+        elif m['priority'] == 2 and m['state'] == 'blocked':
+            per_paper[paper]['p2_blocked'].append(entry)
+        elif m['priority'] == 2 and m['state'] in ('needs-recheck', 'open'):
+            per_paper[paper]['p2_advisory'].append(entry)
+        else:
+            per_paper[paper]['open'].append(entry)
+
+    # Classification
+    green, yellow, red = [], [], []
+    for paper, state in sorted(per_paper.items()):
+        if state['p1_blocked'] or state['p2_blocked']:
+            red.append(paper)
+        elif state['p2_advisory'] or state['open']:
+            yellow.append(paper)
+        else:
+            green.append(paper)
+
+    details = [
+        Detail("summary", True,
+               f"{len(green)} green / {len(yellow)} yellow / {len(red)} red "
+               f"across {len(per_paper)} papers"),
+    ]
+
+    for paper in green:
+        details.append(Detail(paper, True, "all 11 gates passed"))
+    for paper in yellow:
+        s = per_paper[paper]
+        details.append(Detail(
+            paper, True,
+            f"all P1 passed; advisory on: "
+            f"{', '.join(g for g,_,_ in s['p2_advisory'] + s['open'])}",
+            warning=True))
+    for paper in red:
+        s = per_paper[paper]
+        blockers = s['p1_blocked'] + s['p2_blocked']
+        details.append(Detail(
+            paper, True,  # WARN not FAIL during rollout
+            f"{len(blockers)} blocked: "
+            f"{', '.join(g for g,_,_ in blockers[:5])}"
+            + (f" (+{len(blockers)-5} more)" if len(blockers) > 5 else ""),
+            warning=True))
+
+    return CheckResult(passed=True, details=details)
+
+
 def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
     """Look up the actual value in constants for a provenance key like 'Steinhauer.omega_perp'."""
     import numpy as np

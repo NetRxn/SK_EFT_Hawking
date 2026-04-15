@@ -1493,14 +1493,97 @@ def extract_count_metric_nodes() -> list[dict]:
 
 
 def extract_readiness_gate_nodes() -> list[dict]:
-    """ReadinessGate — per-paper × per-dimension state (11 gates × N papers).
+    """ReadinessGate — per-paper × per-dimension state (11 gates × 15 papers).
 
-    Wired in: Wave 4. Aggregates evidence from other nodes to produce a
-    per-paper readiness state. Each gate has state ∈ {open, in-review,
-    passed, blocked, needs-recheck}. Emits: {id: 'gate:{paper}:{gate_name}',
-    type: 'ReadinessGate', meta.state, meta.evidence}.
+    Phase 5v Wave 4. Aggregates evidence from every other node type to
+    produce per-paper per-gate state. Uses `scripts.readiness_gates` for
+    the per-gate evaluators; this function is a thin wrapper that runs
+    them over the current graph and returns ReadinessGate node payloads.
+
+    Implementation note: to avoid circular graph construction (evaluators
+    need a graph; graph extraction produces the nodes), we build a
+    graph-without-gates here, run the evaluators, and return the gate
+    node list. Edges from gates (IMPACTED_BY) are emitted in Wave 4b.
     """
-    return []
+    # Import here to avoid circular imports; readiness_gates imports
+    # only stdlib + logging
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        from readiness_gates import evaluate_all_gates
+    except ImportError as exc:
+        logger.warning("readiness_gates not importable (%s); skipping", exc)
+        return []
+
+    # Build a pre-gate graph view: all nodes except gates, with edges.
+    # We reuse the existing extractors but omit this one to avoid recursion.
+    pre_nodes = []
+    pre_nodes.extend(extract_parameter_nodes())
+    pre_nodes.extend(extract_formula_nodes())
+    pre_nodes.extend(extract_lean_declaration_nodes())
+    pre_nodes.extend(extract_aristotle_run_nodes())
+    pre_nodes.extend(extract_primary_source_nodes())
+    pre_nodes.extend(extract_paper_nodes())
+    pre_nodes.extend(extract_paper_claim_nodes())
+    pre_nodes.extend(extract_figure_nodes())
+    hyp_nodes, _ = extract_hypothesis_nodes()
+    pre_nodes.extend(hyp_nodes)
+    pre_nodes.extend(extract_prose_claim_nodes())
+    pre_nodes.extend(extract_python_test_nodes())
+    pre_nodes.extend(extract_review_finding_nodes())
+    pre_nodes.extend(extract_production_run_nodes())
+    pre_nodes.extend(extract_placeholder_marker_nodes())
+    pre_nodes.extend(extract_contradiction_nodes())
+    pre_nodes.extend(extract_count_metric_nodes())
+
+    node_ids = {n['id'] for n in pre_nodes}
+    pre_edges = extract_all_edges_without_gates(node_ids)
+
+    graph_view = {'nodes': pre_nodes, 'links': pre_edges}
+    results = evaluate_all_gates(graph_view)
+    nodes = [r.to_node_payload() for r in results]
+
+    if nodes:
+        from collections import Counter as _C
+        states = _C(n['meta']['state'] for n in nodes)
+        logger.info("ReadinessGate extraction: %d gates across %d papers (%s)",
+                    len(nodes),
+                    len(set(n['meta']['paper'] for n in nodes)),
+                    dict(states))
+    return nodes
+
+
+def extract_all_edges_without_gates(node_ids: set) -> list[dict]:
+    """Extract all edges except gate-derived IMPACTED_BY. Used when
+    building the graph-view that readiness evaluators consume, to break
+    the recursion (gates need a graph, graph wants gate nodes+edges).
+    """
+    edges = []
+    edges.extend(extract_claims_edges(node_ids))
+    edges.extend(extract_grounded_in_edges(node_ids))
+    edges.extend(extract_verified_by_edges(node_ids))
+    edges.extend(extract_proved_by_edges(node_ids))
+    edges.extend(extract_used_by_edges(node_ids))
+    edges.extend(extract_sourced_from_edges(node_ids))
+    edges.extend(extract_depends_on_edges(node_ids))
+    edges.extend(extract_cites_edges(node_ids))
+    edges.extend(extract_has_figure_edges(node_ids))
+    edges.extend(extract_imports_edges(node_ids))
+    edges.extend(extract_depends_on_axiom_edges(node_ids))
+    edges.extend(extract_verifies_edges(node_ids))
+    edges.extend(extract_flags_edges(node_ids))
+    edges.extend(extract_reports_edges(node_ids))
+    _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
+    for edge in hyp_edges:
+        if edge['source'] in node_ids and edge['target'] in node_ids:
+            edges.append(edge)
+    deduped = []
+    seen = set()
+    for edge in edges:
+        key = (edge['source'], edge['target'], edge['type'])
+        if key not in seen:
+            seen.add(key)
+            deduped.append(edge)
+    return deduped
 
 
 # ═══════════════════════════════════════════════════════════════════════

@@ -279,9 +279,9 @@ reflect 22 node types + 20 edge types (12 base + 8 readiness).
 
 ---
 
-## Wave 4 — Readiness state machine
+## Wave 4 — Readiness state machine — DONE 2026-04-15
 
-### Wave 4a — Gate extraction
+### Wave 4a — Gate extraction — DONE
 
 For each Paper × each of 11 gate definitions, emit a `ReadinessGate` node with state `{open, in-review, passed, blocked, needs-recheck}` and aggregate evidence. 15 papers × 11 gates = 165 gate instances.
 
@@ -304,18 +304,38 @@ def evaluate_fix_propagation(paper_node) -> GateResult: ...
 
 Each returns `{state, evidence: [node_ids], blockers: [finding_ids], owner, last_evaluated}`.
 
-### Wave 4b — Auto-invalidation
+**Live snapshot (initial 165-gate run, 2026-04-15):**
+- 165 ReadinessGate nodes across 15 papers × 11 gates
+- State distribution: 90 passed / 37 blocked / 30 needs-recheck / 8 open
+- Paper state: **15/15 RED** (all papers have ≥1 P1 blocked — as expected given April adversarial-review-not-yet-remediated state)
+- Gate blocker patterns:
+  - CitationIntegrity: ~14 papers (bibkey registry coverage — registry has 44 entries but many papers cite keys not in it)
+  - NarrativeGrounding: 8 papers ("interesting" prose claims without SUPPORTS edges)
+  - ComputationCorrectness: 6 papers (formulas with no tests or bounds-only tests)
+  - ParameterProvenance: 4 papers (parameters without `human_verified_date`)
+  - ProductionRunHealth: Paper 6 (MC claim without successful run — the exact April finding)
+  - LeanProofSubstance: Paper 9 (cites a placeholder theorem)
 
-- [ ] `build_graph.compute_source_hash()` already hashes canonical sources. Extend: per-node content hash
-- [ ] When any node's content hash changes vs. last graph build, walk `IMPACTED_BY` reverse edges; flip each dependent ReadinessGate to `needs-recheck`
-- [ ] `IMPACTED_BY` edges are generated from the gate evaluator's `evidence` list: every node cited as evidence implicitly creates an `IMPACTED_BY` from gate to evidence
+Paper 6 gate output exemplifies the whole point — automatic surfacing of the April MC failure:
 
-### Wave 4c — Pre-submit enforcement
+```
+  ❌ P1 NarrativeGrounding  blocked  "Monte Carlo evidence" claim lacks SUPPORTS edge
+  ❌ P1 ProductionRunHealth blocked  paper prose claims MC evidence but no successful ProductionRun linked
+  ⚠️  P1 CrossPaperConsistency needs-recheck  3 inter-paper count disagreements
+```
 
-- [ ] New `validate.py` CHECK 18: `readiness_submission_gate` — for each paper marked `submission_pending` in metadata, all P1 gates must be `passed`; P2 gates `passed` or `accepted-with-note`
-- [ ] Paper submission workflow requires CHECK 18 green before `pre-submit.sh` (if/when we create such a script) succeeds
+### Wave 4b — Auto-invalidation — DEFERRED
 
-**Gate:** All 165 gate instances evaluate on `build_graph.py` run; dashboard shows per-paper state; upstream change to any parameter/formula/claim flips affected gates visibly.
+Explicit `IMPACTED_BY` edges + hash-diff propagation are **deferred** because the whole-graph rebuild is currently fast enough (~10s) that every `build_graph.py` run re-evaluates all gates from fresh state. Auto-invalidation happens implicitly: change any input, rebuild, all dependent gates flip visibly. Re-enable IMPACTED_BY in Wave 3 (PG SoT) when incremental re-evaluation becomes the performance-limiting concern.
+
+### Wave 4c — CHECK 18 readiness_submission_gate — DONE
+
+- [x] `scripts/validate.py` registers `readiness_submission_gate` check
+- [x] Aggregates 165 ReadinessGate nodes into per-paper state (green / yellow / red)
+- [x] Red = any P1/P2 gate blocked; yellow = all P1 passed but ≥1 P2 advisory; green = all 11 gates passed
+- [x] WARN-only during rollout (expected to flag all 15 papers red until remediation) — escalate to FAIL when papers start hitting green
+
+**Gate for Wave 4 (met):** 165 gate instances evaluate on every `build_graph.py` run; gate blockers surface as structured blockers lists per GateResult; CHECK 18 summary shows `0 green / 0 yellow / 15 red` snapshot at wave-completion; all 35 graph tests pass.
 
 ---
 
