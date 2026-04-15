@@ -1,4 +1,5 @@
 import Mathlib
+import SKEFTHawking.PolyQuotQ
 
 /-!
 # Q(ζ₁₆): 16th Cyclotomic Field
@@ -47,18 +48,24 @@ instance : Sub QCyc16 where
   sub x y := ⟨x.c0-y.c0, x.c1-y.c1, x.c2-y.c2, x.c3-y.c3,
               x.c4-y.c4, x.c5-y.c5, x.c6-y.c6, x.c7-y.c7⟩
 
-/-- Multiplication mod ζ⁸ = -1. For ζⁱ·ζʲ with i+j≥8: ζ^{i+j} = -ζ^{i+j-8}. -/
+/-- Reduction coefficients for Q(ζ₁₆): x⁸ = -1.
+
+Phase 5i Wave 4b refactor (2026-04-15): Mul delegates to the generic
+`PolyQuotQ.mulReduce 8 reduction`. The reduction rule x⁸ = -1 means
+x⁹ = -x, x¹⁰ = -x², etc. — the generic reducePower handles this
+recursively. Struct API and all Ising braiding / trefoil call sites preserved. -/
+def reduction : Fin 8 → ℚ := ![-1, 0, 0, 0, 0, 0, 0, 0]
+
+/-- Coerce QCyc16 ↔ PolyQuotQ 8 for the generic multiplication bridge. -/
+def toPoly (x : QCyc16) : PolyQuotQ 8 :=
+  ⟨![x.c0, x.c1, x.c2, x.c3, x.c4, x.c5, x.c6, x.c7]⟩
+def ofPoly (p : PolyQuotQ 8) : QCyc16 :=
+  ⟨p.coeffs 0, p.coeffs 1, p.coeffs 2, p.coeffs 3,
+   p.coeffs 4, p.coeffs 5, p.coeffs 6, p.coeffs 7⟩
+
+/-- Multiplication mod ζ⁸ = -1, via the generic mulReduce. -/
 instance : Mul QCyc16 where
-  mul x y :=
-    let a := x; let b := y
-    ⟨ a.c0*b.c0 - (a.c1*b.c7 + a.c2*b.c6 + a.c3*b.c5 + a.c4*b.c4 + a.c5*b.c3 + a.c6*b.c2 + a.c7*b.c1),
-      (a.c0*b.c1 + a.c1*b.c0) - (a.c2*b.c7 + a.c3*b.c6 + a.c4*b.c5 + a.c5*b.c4 + a.c6*b.c3 + a.c7*b.c2),
-      (a.c0*b.c2 + a.c1*b.c1 + a.c2*b.c0) - (a.c3*b.c7 + a.c4*b.c6 + a.c5*b.c5 + a.c6*b.c4 + a.c7*b.c3),
-      (a.c0*b.c3 + a.c1*b.c2 + a.c2*b.c1 + a.c3*b.c0) - (a.c4*b.c7 + a.c5*b.c6 + a.c6*b.c5 + a.c7*b.c4),
-      (a.c0*b.c4 + a.c1*b.c3 + a.c2*b.c2 + a.c3*b.c1 + a.c4*b.c0) - (a.c5*b.c7 + a.c6*b.c6 + a.c7*b.c5),
-      (a.c0*b.c5 + a.c1*b.c4 + a.c2*b.c3 + a.c3*b.c2 + a.c4*b.c1 + a.c5*b.c0) - (a.c6*b.c7 + a.c7*b.c6),
-      (a.c0*b.c6 + a.c1*b.c5 + a.c2*b.c4 + a.c3*b.c3 + a.c4*b.c2 + a.c5*b.c1 + a.c6*b.c0) - a.c7*b.c7,
-      a.c0*b.c7 + a.c1*b.c6 + a.c2*b.c5 + a.c3*b.c4 + a.c4*b.c3 + a.c5*b.c2 + a.c6*b.c1 + a.c7*b.c0⟩
+  mul x y := ofPoly (PolyQuotQ.mulReduce 8 reduction x.toPoly y.toPoly)
 
 /-- ζ₁₆ = e^{iπ/8}. -/
 def zeta : QCyc16 := ⟨0, 1, 0, 0, 0, 0, 0, 0⟩

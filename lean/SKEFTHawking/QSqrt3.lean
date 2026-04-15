@@ -1,11 +1,16 @@
 import Mathlib
+import SKEFTHawking.PolyQuotQ
 
 /-!
 # Q(√3): Rationals Extended by √3
 
 Arithmetic type for SU(2)₄ S-matrix verification.
 Elements are a + b√3 with a, b ∈ ℚ, equipped with DecidableEq.
-Same pattern as QSqrt2 (Ising) and QSqrt5 (Fibonacci).
+
+## Phase 5i Wave 4b refactor (2026-04-15)
+
+Mul now delegates to `PolyQuotQ.mulReduce 2 ![3, 0]` (encoding x² = 3).
+Struct API and all ⟨a, b⟩ call sites preserved.
 -/
 
 namespace SKEFTHawking
@@ -24,9 +29,17 @@ instance : Neg QSqrt3 where neg x := ⟨-x.a, -x.b⟩
 instance : Add QSqrt3 where add x y := ⟨x.a + y.a, x.b + y.b⟩
 instance : Sub QSqrt3 where sub x y := ⟨x.a - y.a, x.b - y.b⟩
 
-/-- Multiplication: (a₁+b₁√3)(a₂+b₂√3) = (a₁a₂+3b₁b₂) + (a₁b₂+b₁a₂)√3. -/
+/-- Reduction coefficients for Q(√3): x² = 3. -/
+def reduction : Fin 2 → ℚ := ![3, 0]
+
+/-- Coerce QSqrt3 ↔ PolyQuotQ 2 for the generic multiplication bridge. -/
+def toPoly (x : QSqrt3) : PolyQuotQ 2 := ⟨![x.a, x.b]⟩
+def ofPoly (p : PolyQuotQ 2) : QSqrt3 := ⟨p.coeffs 0, p.coeffs 1⟩
+
+/-- Multiplication: delegates to generic mulReduce with x² = 3.
+    Equivalent to (a₁+b₁√3)(a₂+b₂√3) = (a₁a₂+3b₁b₂) + (a₁b₂+b₁a₂)√3. -/
 instance : Mul QSqrt3 where
-  mul x y := ⟨x.a * y.a + 3 * x.b * y.b, x.a * y.b + x.b * y.a⟩
+  mul x y := ofPoly (PolyQuotQ.mulReduce 2 reduction x.toPoly y.toPoly)
 
 /-- √3 = (0, 1). -/
 def sqrt3 : QSqrt3 := ⟨0, 1⟩

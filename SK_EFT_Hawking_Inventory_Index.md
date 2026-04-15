@@ -193,8 +193,8 @@
 | RibbonCategory | 4 | BalancedCategory, RibbonCategory, MTC definitions, su2k1/su2k2 modular (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | E8Lattice | 19 | E8 Cartan matrix: det=1, even diagonal, symmetric, positive definite, Rokhlin gap σ=8, hyperbolic plane, Serre mod 8, classification (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | AlgebraicRokhlin | 10 | Algebraic Serre theorem σ≡0 mod 8, unimodular/even/symmetric defs, characteristic vectors, E8 bridge (**ALL PROVED, zero sorry**) |
-| QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
-| QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
+| QSqrt2 | 3 | Q(√2) for Ising MTC. **Phase 5i Wave 4a refactor (2026-04-15)**: Mul delegates to `PolyQuotQ.mulReduce 2 ![2, 0]` via toPoly/ofPoly; struct API preserved (**ALL PROVED, zero sorry**) |
+| QSqrt5 | 7 | Q(√5) for Fibonacci MTC: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I. **Phase 5i Wave 4b refactor (2026-04-15)**: Mul delegates via `mulReduce 2 ![5, 0]` (**ALL PROVED by native_decide**) |
 | FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
 | Uqsl2AffineHopf | 201 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. **ALL PROVED, zero sorry** — all 8 q-Serre proofs closed (4 comul + 4 antipode). Bialgebra + HopfAlgebra instances WIRED. **Phase 5e Wave 8 complete 2026-04-15**: 20 new theorems for per-generator antipode (`uqAff_antipode_*`) + K-conjugation helpers + per-generator S² identities (`uqAff_antipode_squared_*`). Wave 8 original spec `S² = Ad(K₀K₁)` mathematically wrong for affine (rank-deficient Cartan); corrected to per-generator form with inline historical note. |
 | VerifiedStatistics | 6 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |

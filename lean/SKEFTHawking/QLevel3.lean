@@ -1,4 +1,5 @@
 import Mathlib
+import SKEFTHawking.PolyQuotQ
 
 /-!
 # Q[x]/(20x⁴-10x²+1): SU(2)₃ S-matrix Number Field
@@ -36,27 +37,22 @@ instance : Neg QLevel3 where neg x := ⟨-x.c0, -x.c1, -x.c2, -x.c3⟩
 instance : Add QLevel3 where add x y := ⟨x.c0+y.c0, x.c1+y.c1, x.c2+y.c2, x.c3+y.c3⟩
 instance : Sub QLevel3 where sub x y := ⟨x.c0-y.c0, x.c1-y.c1, x.c2-y.c2, x.c3-y.c3⟩
 
-/-- Multiplication mod x⁴ = x²/2 - 1/20.
+/-- Reduction coefficients for Q[x]/(20x⁴-10x²+1): x⁴ = x²/2 - 1/20.
 
-Raw product has degrees 0-6. Reduce using:
-  x⁴ = x²/2 - 1/20
-  x⁵ = x³/2 - x/20
-  x⁶ = x⁴/2 - x²/20 = (x²/2-1/20)/2 - x²/20 = x²/4 - 1/40 - x²/20 = x²·(1/4-1/20) - 1/40 = x²/5 - 1/40
--/
+Phase 5i Wave 4b refactor (2026-04-15): Mul delegates to
+`PolyQuotQ.mulReduce 4 reduction`. Non-cyclotomic minimal polynomial
+confirming the generic construction handles arbitrary rational reductions.
+Struct API and all SU(2)₃ S-matrix / Verlinde / quantum-dim call sites preserved. -/
+def reduction : Fin 4 → ℚ := ![-1/20, 0, 1/2, 0]
+
+/-- Coerce QLevel3 ↔ PolyQuotQ 4 for the generic multiplication bridge. -/
+def toPoly (x : QLevel3) : PolyQuotQ 4 := ⟨![x.c0, x.c1, x.c2, x.c3]⟩
+def ofPoly (p : PolyQuotQ 4) : QLevel3 :=
+  ⟨p.coeffs 0, p.coeffs 1, p.coeffs 2, p.coeffs 3⟩
+
+/-- Multiplication mod 20x⁴-10x²+1 via the generic mulReduce. -/
 instance : Mul QLevel3 where
-  mul a b :=
-    let r0 := a.c0*b.c0
-    let r1 := a.c0*b.c1 + a.c1*b.c0
-    let r2 := a.c0*b.c2 + a.c1*b.c1 + a.c2*b.c0
-    let r3 := a.c0*b.c3 + a.c1*b.c2 + a.c2*b.c1 + a.c3*b.c0
-    let r4 := a.c1*b.c3 + a.c2*b.c2 + a.c3*b.c1  -- coeff of x⁴
-    let r5 := a.c2*b.c3 + a.c3*b.c2                -- coeff of x⁵
-    let r6 := a.c3*b.c3                             -- coeff of x⁶
-    -- x⁴ = x²/2 - 1/20, x⁵ = x³/2 - x/20, x⁶ = x²/5 - 1/40
-    ⟨r0 - r4/20 - r6/40,
-     r1 - r5/20,
-     r2 + r4/2 + r6/5,
-     r3 + r5/2⟩
+  mul x y := ofPoly (PolyQuotQ.mulReduce 4 reduction x.toPoly y.toPoly)
 
 /-! ## S-matrix entries -/
 

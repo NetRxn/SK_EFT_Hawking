@@ -1,4 +1,5 @@
 import Mathlib
+import SKEFTHawking.PolyQuotQ
 
 /-!
 # Q(√5): Rationals Extended by √5
@@ -11,6 +12,11 @@ Key values:
   φ = (1+√5)/2 = (1/2, 1/2)     — golden ratio
   φ⁻¹ = (√5-1)/2 = (-1/2, 1/2)  — inverse golden ratio
   -φ⁻¹ = (1-√5)/2 = (1/2, -1/2)
+
+## Phase 5i Wave 4b refactor (2026-04-15)
+
+Mul now delegates to `PolyQuotQ.mulReduce 2 ![5, 0]` (encoding x² = 5).
+Struct API preserved; all Fibonacci MTC and SU(2)_3 call sites unchanged.
 -/
 
 namespace SKEFTHawking
@@ -35,10 +41,17 @@ instance : Add QSqrt5 where
 instance : Sub QSqrt5 where
   sub x y := ⟨x.a - y.a, x.b - y.b⟩
 
-/-- Multiplication: (a₁+b₁√5)(a₂+b₂√5) = (a₁a₂+5b₁b₂) + (a₁b₂+b₁a₂)√5. -/
+/-- Reduction coefficients for Q(√5): x² = 5. -/
+def reduction : Fin 2 → ℚ := ![5, 0]
+
+/-- Coerce QSqrt5 ↔ PolyQuotQ 2 for the generic multiplication bridge. -/
+def toPoly (x : QSqrt5) : PolyQuotQ 2 := ⟨![x.a, x.b]⟩
+def ofPoly (p : PolyQuotQ 2) : QSqrt5 := ⟨p.coeffs 0, p.coeffs 1⟩
+
+/-- Multiplication: delegates to generic mulReduce with x² = 5.
+    Equivalent to (a₁+b₁√5)(a₂+b₂√5) = (a₁a₂+5b₁b₂) + (a₁b₂+b₁a₂)√5. -/
 instance : Mul QSqrt5 where
-  mul x y := ⟨x.a * y.a + 5 * x.b * y.b,
-              x.a * y.b + x.b * y.a⟩
+  mul x y := ofPoly (PolyQuotQ.mulReduce 2 reduction x.toPoly y.toPoly)
 
 /-- Golden ratio φ = (1+√5)/2. -/
 def phi : QSqrt5 := ⟨1/2, 1/2⟩

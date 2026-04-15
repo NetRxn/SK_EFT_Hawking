@@ -1,4 +1,5 @@
 import Mathlib
+import SKEFTHawking.PolyQuotQ
 
 /-!
 # Q(ζ₅): 5th Cyclotomic Field
@@ -49,31 +50,21 @@ instance : Add QCyc5 where
 instance : Sub QCyc5 where
   sub x y := ⟨x.c0-y.c0, x.c1-y.c1, x.c2-y.c2, x.c3-y.c3⟩
 
-/--
-Multiplication mod ζ⁴ = -1 - ζ - ζ² - ζ³.
+/-- Reduction coefficients for Q(ζ₅): x⁴ = -1 - x - x² - x³.
 
-Product (a₀+a₁ζ+a₂ζ²+a₃ζ³)(b₀+b₁ζ+b₂ζ²+b₃ζ³):
-Raw degree-6 polynomial, then reduce ζ⁴, ζ⁵, ζ⁶ using:
-  ζ⁴ = -1 - ζ - ζ² - ζ³
-  ζ⁵ = ζ·ζ⁴ = -ζ - ζ² - ζ³ - ζ⁴ = -ζ - ζ² - ζ³ + 1 + ζ + ζ² + ζ³ = 1
-  ζ⁶ = ζ·ζ⁵ = ζ
--/
+Phase 5i Wave 4b refactor (2026-04-15): Mul now delegates to
+`PolyQuotQ.mulReduce 4 reduction` via toPoly/ofPoly coercions.
+Struct API and all Fibonacci MTC / hexagon / trefoil call sites preserved. -/
+def reduction : Fin 4 → ℚ := ![-1, -1, -1, -1]
+
+/-- Coerce QCyc5 ↔ PolyQuotQ 4 for the generic multiplication bridge. -/
+def toPoly (x : QCyc5) : PolyQuotQ 4 := ⟨![x.c0, x.c1, x.c2, x.c3]⟩
+def ofPoly (p : PolyQuotQ 4) : QCyc5 :=
+  ⟨p.coeffs 0, p.coeffs 1, p.coeffs 2, p.coeffs 3⟩
+
+/-- Multiplication mod ζ⁴ = -1 - ζ - ζ² - ζ³, via the generic mulReduce. -/
 instance : Mul QCyc5 where
-  mul x y :=
-    let a := x; let b := y
-    -- Raw polynomial coefficients (degree 0-6):
-    let r0 := a.c0*b.c0
-    let r1 := a.c0*b.c1 + a.c1*b.c0
-    let r2 := a.c0*b.c2 + a.c1*b.c1 + a.c2*b.c0
-    let r3 := a.c0*b.c3 + a.c1*b.c2 + a.c2*b.c1 + a.c3*b.c0
-    let r4 := a.c1*b.c3 + a.c2*b.c2 + a.c3*b.c1
-    let r5 := a.c2*b.c3 + a.c3*b.c2
-    let r6 := a.c3*b.c3
-    -- Reduce: ζ⁶ = ζ, ζ⁵ = 1, ζ⁴ = -1-ζ-ζ²-ζ³
-    ⟨r0 - r4 + r5,
-     r1 - r4 + r6,
-     r2 - r4,
-     r3 - r4⟩
+  mul x y := ofPoly (PolyQuotQ.mulReduce 4 reduction x.toPoly y.toPoly)
 
 /-! ## Key Constants -/
 

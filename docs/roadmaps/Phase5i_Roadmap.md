@@ -81,15 +81,27 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 
 **Sub-wave breakdown (added 2026-04-15):**
 
-- **4a — Generic infrastructure + proof-of-concept** [in progress 2026-04-15]
-  - Build `CyclotomicFieldQ n` (or `AdjoinRootQ p`) with derived `DecidableEq`, `CommRing`, `Field` instances
-  - Canary instance: refactor QSqrt2 onto the generic construction
-  - **Critical gate: `native_decide` must reduce through the generic layer** (6.5/10 risk — if it breaks, 4b-4d require a different design)
-  - Ship: `lake build` clean, 0 sorry, all `IsingBraiding.lean` proofs using QSqrt2 still pass
-- **4b — Bulk refactor of degree-2 and cyclotomic types**
-  - Convert QSqrt3, QSqrt5, QCyc5, QCyc16, QLevel3 to the generic construction
-  - Tower extension QCyc5Ext = Q(ζ₅)[w]/(w²−φ) — may need separate tower primitive; defer to 4b.ext if non-trivial
-  - All consuming modules (FibonacciMTC, SU2kMTC, IsingBraiding, QLevel3-users) continue to close by native_decide
+- **4a — Generic infrastructure + proof-of-concept** [DONE 2026-04-15, commit `bd92d3b`]
+  - Built `structure PolyQuotQ (n : ℕ) where coeffs : Fin n → ℚ` with `deriving DecidableEq`
+  - `reducePower r m k` recursive power reduction, `mulReduce n r x y` generic multiplication
+  - Design: plain function, not typeclass — avoids diamond when fields share degree
+  - Canary: QSqrt2 refactored, Mul delegates via `toPoly`/`ofPoly` coercions
+  - **Critical gate PASSED: native_decide reduces cleanly through the generic layer**
+    at degrees 2 and 4 (including 5-iteration ζ⁵=1 chained test). De-risks 4b-4d.
+  - Q(ζ₃) preserved as `abbrev QCyc3 := PolyQuotQ 2` with all 9 original SU(3)₁ theorems.
+- **4b — Bulk refactor of degree-2 and cyclotomic types** [DONE 2026-04-15]
+  - Refactored: QSqrt3 (deg 2, x²=3), QSqrt5 (deg 2, x²=5), QCyc5 (deg 4 cyclotomic),
+    QCyc16 (deg 8, x⁸=-1), QLevel3 (deg 4 non-cyclotomic, x⁴=x²/2-1/20).
+  - All five now delegate Mul through `PolyQuotQ.mulReduce n reduction` via `toPoly`/`ofPoly`.
+  - **Key validation:** QLevel3's non-cyclotomic, rational-coefficient reduction confirms
+    the generic construction handles arbitrary monic rational minimal polynomials
+    (not just cyclotomics). Identical pattern works at degrees 2, 4, 8.
+  - All downstream consumers (FibonacciMTC, SU2kMTC, IsingBraiding, SU2kSMatrix,
+    FigureEightKnot, WRTComputation, IsingGates, FibonacciQutrit) build clean — full
+    package (8397 jobs) with every existing `native_decide` proof intact.
+  - Deferred: QCyc5Ext tower extension (Q(ζ₅)[w]/(w²-φ)) — needs `PolyQuotOver K n`
+    primitive (base ring K ≠ ℚ), genuinely separate infrastructure. QCyc5Ext's Mul
+    already benefits indirectly since QCyc5 arithmetic now routes through `mulReduce`.
 - **4c — Q(ζ₁₅) + SU(3)₂ S-matrix verification**
   - New instance at degree 8 using generic construction
   - SU(3)₂ modular data loaded from `su3_level2_modular_data_cyclotomic15.md` deep research deliverable
