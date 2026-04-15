@@ -82,17 +82,18 @@
 
 ## Track C: S-matrix ↔ Muger Equivalence
 
-### Wave 5 — The Bridge Theorem
+### Wave 5 — The Bridge Theorem — **DIRECTION 1 COMPLETE 2026-04-15**
 **Goal:** det(S) ≠ 0 ⟺ Z₂(B) = Vec.
 
-**Deep research:** `Tasks/Phase-5p_S_matrix_nondegeneracy_Muger_equivalence.md` — **PENDING**
+**Deep research:** `Tasks/Phase-5p_S_matrix_nondegeneracy_Muger_equivalence.md` — **COMPLETE** (re-read 2026-04-15 in full per CLAUDE.md rule)
 
-- [ ] Direction 1: det(S) ≠ 0 → Z₂ trivial (algebraic, likely tractable)
-- [ ] Direction 2: Z₂ trivial → det(S) ≠ 0 (harder, may need Deligne or case analysis)
-- [ ] Identify which steps need Deligne and which don't
-- [ ] "Poor man's version" for finitely many simples (exhaustive check)
+- [x] **Direction 1: det(S) ≠ 0 → Z₂ trivial (PROVED 2026-04-15)** — `PreModularData.modularImpliesMugerTrivial_proof` in `MugerCenter.lean`. Pure linear algebra via `det_ne_zero_no_proportional_rows` (already drafted in `ModularityTheorem.lean`, applied here). Replaces 3 case-by-case `native_decide` proofs with **one abstract theorem** applicable to any finite pre-modular data over an integral domain.
+- [x] Per-MTC instantiations: `ising_mtc_muger_trivial`, `su2k1_mtc_muger_trivial`, `fib_mtc_muger_trivial` (via the bridge applied to existing modularity witnesses; `fib_modular` newly proved in `FibonacciMTC.lean`).
+- [x] `isRowTransparent` definition refined to vacuum-row proportionality form (`S i j = d i * S 0 j`), works for both normalized and unnormalized PreModularData conventions.
+- [ ] Direction 2: Z₂ trivial → det(S) ≠ 0 (harder direction; needs S² = dim(C)·C identity from Müger Lemma 2.15 — **deferred to follow-up**).
+- [ ] "Poor man's version" already covered: per-MTC instances above ARE the poor-man's version using the bridge.
 
-**UNBLOCKED** (deep research complete) + Wave 3 (Muger center definition)
+**Status:** Direction 1 complete and applicable to any finite pre-modular data. Direction 2 is the only remaining piece for the full ⟺ equivalence; it requires the categorical S² = dim(C)·C identity, which needs Verlinde + cabling arguments not yet formalized in Mathlib.
 
 ---
 

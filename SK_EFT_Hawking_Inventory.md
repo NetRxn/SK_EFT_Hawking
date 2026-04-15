@@ -409,7 +409,7 @@
 | StringNet | ~200 | — | 0 | 5o | String-net model formalization (**ALL PROVED, zero sorry**) |
 | KacWaltonFusion | ~200 | — | 0 | 5o | Kac-Walton fusion rule computation (**ALL PROVED, zero sorry**) |
 | FPDimension | ~200 | — | 0 | 5o | Frobenius-Perron dimension derivation (**ALL PROVED, zero sorry**) |
-| MugerCenter | ~455 | ~30 | 0 | 5p | Muger center formalization (**ALL PROVED, zero sorry**). **Phase 5p Waves 3-4 complete 2026-04-15**: `ObjectProperty.IsMonoidal` instance + `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` abbrev + `SymmetricCategory (MugerCenter C)` instance (the key payoff — Z₂(C) is symmetric even when ambient is only braided). Data-level bridge: `PreModularData.isRowTransparent`, `isMugerTrivial` with Decidable instances for finite MTCs, plus `modularImpliesMugerTrivial` as the Wave 5 target. Per-MTC triviality via native_decide: Ising (σ, ψ), Fibonacci (τ), toric D(ℤ₂) (e, m, ε). First Muger-center formalization in any proof assistant with full symmetric-monoidal structure. |
+| MugerCenter | ~545 | ~36 | 0 | 5p | Muger center formalization (**ALL PROVED, zero sorry**). **Phase 5p Waves 3-5 complete 2026-04-15**: `ObjectProperty.IsMonoidal` instance + `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` abbrev + `SymmetricCategory (MugerCenter C)` instance (the key payoff — Z₂(C) is symmetric even when ambient is only braided). Data-level bridge: `PreModularData.isRowTransparent` (vacuum-row form, works for normalized + unnormalized), `isMugerTrivial` with Decidable instances for finite MTCs. **Wave 5 abstract bridge proved**: `PreModularData.modularImpliesMugerTrivial_proof` — det(S)≠0 implies Muger triviality, via the Mathlib `det_zero_of_row_eq` linear-algebra route in `ModularityTheorem.lean`. Per-MTC instances: `ising_mtc_muger_trivial`, `su2k1_mtc_muger_trivial`, `fib_mtc_muger_trivial` (the latter requires the new `fib_modular` proof in `FibonacciMTC.lean`). Categorical per-MTC witnesses preserved (Ising σ/ψ, Fibonacci τ, Toric e/m/ε). First Muger-center formalization in any proof assistant with full symmetric-monoidal structure + abstract Direction-1 bridge. |
 | IsingGates | ~200 | — | 0 | 5p | Ising anyon gate set for TQC (**ALL PROVED, zero sorry**) |
 | FibonacciBraiding | ~200 | — | 0 | 5p | Fibonacci anyon braiding matrices (**ALL PROVED, zero sorry**) |
 | FibonacciQutrit | ~200 | — | 0 | 5p | Fibonacci qutrit encoding (**ALL PROVED, zero sorry**) |
@@ -785,7 +785,7 @@
 | **Test Files** | 46 | 1872+ tests |
 | **Notebooks** | 48 | Phases 1-5q (Technical + Stakeholder) |
 | **Lean Modules** | 130 | All build clean |
-| **Lean Theorems** | 2998 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
+| **Lean Theorems** | 3004 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
 | **Aristotle-proved** | 322+ | 45+ runs |
 | **Paper Drafts** | 15 + prediction tables | Full LaTeX (12 complete + 3 outlines) |
 | **Pipeline Figures** | 101 | All PNGs generated |
