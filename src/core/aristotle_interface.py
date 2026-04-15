@@ -558,7 +558,7 @@ SORRY_GAPS: list[SorryGap] = [
              priority=1,
              description="GS no-go: applicable_count = 2 ∧ applicable_count < length. "
                          "Strengthened from vacuous `true` conclusion.",
-             strategy_hint="native_decide on concrete gs_conditions list",
+             strategy_hint="native_decide on concrete gs_conditions_core4 list",
              filled=True),
     SorryGap(module="SKEFTHawking.SKDoubling", name="zeroTemp_nontrivial",
              priority=1,

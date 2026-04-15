@@ -173,8 +173,12 @@ theorem bridge_gt_tpf_pipeline :
     What is AXIOMATIZED: z16_classification (Pin⁺ bordism), HasSpectralGap
     What is CONDITIONAL: GT gaplessness (on anomaly matching axiom) -/
 structure ChiralityWallStatus where
-  /-- Pillar 1: GS no-go has 9 conditions, all formalized -/
-  gs_conditions : ℕ := 9
+  /-- Pillar 1: GS no-go has 9 conditions, all formalized.
+      Renamed from `gs_conditions` (Phase 5v, 2026-04-15) to disambiguate
+      from `ChiralityWall.gs_conditions_core4` (a 4-element list of the
+      top-level conditions). The value 9 here reflects the granular
+      decomposition in `GoltermanShamir.GSConditionsBundle`. -/
+  gs_bundle_condition_count : ℕ := 9
   /-- Pillar 1: TPF violates 5 of them -/
   tpf_violations : ℕ := 5
   /-- Pillar 2: GT has exactly 1 Weyl node (chiral) -/
@@ -195,7 +199,7 @@ def chiralityWall2026 : ChiralityWallStatus := {}
 
 /-- All status fields are consistent with the formalized theorems. -/
 theorem chirality_wall_consistent :
-    chiralityWall2026.gs_conditions = 9 ∧
+    chiralityWall2026.gs_bundle_condition_count = 9 ∧
     chiralityWall2026.tpf_violations = 5 ∧
     chiralityWall2026.gt_weyl_nodes = 1 ∧
     chiralityWall2026.onsager_dg = DG_COEFF ∧

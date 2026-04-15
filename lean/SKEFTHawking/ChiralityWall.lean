@@ -75,11 +75,11 @@ def gs_interpolating : GSCondition where
   applies_to_tpf := false
 
 /-- The list of all 4 GS conditions. -/
-def gs_conditions : List GSCondition :=
+def gs_conditions_core4 : List GSCondition :=
   [gs_translation, gs_finite_range, gs_relativistic, gs_interpolating]
 
 /-- There are exactly 4 GS no-go conditions. -/
-theorem gs_condition_count : gs_conditions.length = 4 := by native_decide
+theorem gs_condition_count : gs_conditions_core4.length = 4 := by native_decide
 
 /-!
 ## TPF Disentangler Ingredients
@@ -130,7 +130,7 @@ def evaded_count (conditions : List GSCondition) : Nat :=
   (conditions.filter (fun c => !c.applies_to_tpf)).length
 
 /-- At least 2 GS conditions are evaded by the TPF construction. -/
-theorem evaded_condition_count : evaded_count gs_conditions ≥ 2 := by native_decide
+theorem evaded_condition_count : evaded_count gs_conditions_core4 ≥ 2 := by native_decide
 
 /-- Count the number of TPF ingredients that evade a GS condition. -/
 def evasion_ingredient_count (ingredients : List TPFIngredient) : Nat :=
@@ -145,11 +145,11 @@ def applicable_count (conditions : List GSCondition) : Nat :=
   (conditions.filter (fun c => c.applies_to_tpf)).length
 
 /-- Exactly 2 GS conditions still apply to the TPF construction. -/
-theorem applicable_condition_count : applicable_count gs_conditions = 2 := by native_decide
+theorem applicable_condition_count : applicable_count gs_conditions_core4 = 2 := by native_decide
 
 /-- The evaded + applicable counts sum to the total. -/
 theorem evaded_plus_applicable :
-    evaded_count gs_conditions + applicable_count gs_conditions = gs_conditions.length := by
+    evaded_count gs_conditions_core4 + applicable_count gs_conditions_core4 = gs_conditions_core4.length := by
   native_decide
 
 /-!
@@ -206,13 +206,13 @@ theorem wall_conditional_if_unproven (n : Nat) :
     The TPF construction evades ≥2 GS conditions, but the critical 4+1D gapped
     interface conjecture is unproven. -/
 theorem wall_status_conditional :
-    wall_status ConjectureStatus.unproven (evaded_count gs_conditions) = WallStatus.conditional := by
+    wall_status ConjectureStatus.unproven (evaded_count gs_conditions_core4) = WallStatus.conditional := by
   rfl
 
 /-- **Conditional positive result:** IF the conjecture were proven, the wall
     would fall because TPF evades ≥2 GS conditions. -/
 theorem wall_would_fall_if_proven :
-    wall_status ConjectureStatus.proven (evaded_count gs_conditions) = WallStatus.falls := by
+    wall_status ConjectureStatus.proven (evaded_count gs_conditions_core4) = WallStatus.falls := by
   native_decide
 
 /-!
@@ -230,7 +230,7 @@ This is sufficient: ¬C1 alone breaks the conjunction.
 /-
 PROBLEM
 The GS theorem requires ALL conditions to hold. Evading any one is sufficient
-    to break the no-go. For gs_conditions: only 2 of 4 apply to TPF, so the
+    to break the no-go. For gs_conditions_core4: only 2 of 4 apply to TPF, so the
     conjunction of all 4 fails.
 
     Strengthened from vacuous `true` conclusion (quality audit 2026-03-26).
@@ -239,12 +239,12 @@ PROVIDED SOLUTION
 Both conjuncts are decidable computations on concrete lists. Use `native_decide` or `decide`.
 -/
 theorem gs_nogo_requires_all :
-    applicable_count gs_conditions = 2 ∧ applicable_count gs_conditions < gs_conditions.length := by
+    applicable_count gs_conditions_core4 = 2 ∧ applicable_count gs_conditions_core4 < gs_conditions_core4.length := by
   native_decide +revert
 
 /-- Stronger: TPF evades exactly 2 conditions, which is more than sufficient. -/
 theorem tpf_evades_two_sufficient :
-    evaded_count gs_conditions ≥ 2 ∧ evaded_count gs_conditions ≥ 1 := by
+    evaded_count gs_conditions_core4 ≥ 2 ∧ evaded_count gs_conditions_core4 ≥ 1 := by
   native_decide
 
 /-- The number of non-evaded conditions. Some still apply to TPF. -/
@@ -253,7 +253,7 @@ def applying_count (conditions : List GSCondition) : Nat :=
 
 /-- Evaded + applying = total. Conservation law for condition classification. -/
 theorem condition_conservation :
-    evaded_count gs_conditions + applying_count gs_conditions = gs_conditions.length := by
+    evaded_count gs_conditions_core4 + applying_count gs_conditions_core4 = gs_conditions_core4.length := by
   native_decide
 
 /-!
@@ -286,8 +286,8 @@ theorem translation_invariance_applies : gs_translation.applies_to_tpf = true :=
 -- PROVIDED SOLUTION: evaded_count + applying_count = 4 (condition_conservation).
 -- If evaded ≥ 1, then applying ≤ 3 < 4, so not all 4 hold.
 theorem evading_one_breaks_nogo :
-    evaded_count gs_conditions ≥ 1 →
-    applying_count gs_conditions < gs_conditions.length := by
+    evaded_count gs_conditions_core4 ≥ 1 →
+    applying_count gs_conditions_core4 < gs_conditions_core4.length := by
   intro _
   native_decide
 
@@ -300,7 +300,7 @@ theorem evading_one_breaks_nogo :
     proves a different statement about a different evasion count. -/
 -- PROVIDED SOLUTION: evaded_count = 2 (by native_decide), so 2 ≥ 1 + 1.
 theorem tpf_evades_at_least_two :
-    evaded_count gs_conditions ≥ 1 + 1 := by
+    evaded_count gs_conditions_core4 ≥ 1 + 1 := by
   native_decide
 
 end SKEFTHawking.ChiralityWall
