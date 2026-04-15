@@ -225,6 +225,33 @@ theorem comulFreeAlgQG_SerreE_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0
                 qg_KE _ A i j, qg_KE _ A j i, h, h', T_zero, one_mul]
   abel
 
+/-- Cross-index E-Kinv commutation when A_{ji} = 0.
+    Derived from qg_KE j i + qg_K_mul_Kinv. -/
+theorem qg_E_Kinv_comm (i j : Fin r) (h : A j i = 0) :
+    qgE k A i * qgKinv k A j = qgKinv k A j * qgE k A i := by
+  -- From qg_KE j i: K_j * E_i = q^{A_ji} * E_i * K_j = q^0 * E_i * K_j = E_i * K_j
+  have hKE : qgK k A j * qgE k A i = qgE k A i * qgK k A j := by
+    have := qg_KE k A j i
+    rw [h, T_zero, map_one, one_mul] at this
+    exact this
+  -- Multiply both sides by K_j⁻¹ * _ * K_j⁻¹:
+  --   K_j⁻¹ * (K_j * E_i) * K_j⁻¹ = E_i * K_j⁻¹
+  --   K_j⁻¹ * (E_i * K_j) * K_j⁻¹ = K_j⁻¹ * E_i
+  have hL : qgKinv k A j * (qgK k A j * qgE k A i) * qgKinv k A j =
+            qgE k A i * qgKinv k A j := by
+    rw [show qgKinv k A j * (qgK k A j * qgE k A i) =
+        (qgKinv k A j * qgK k A j) * qgE k A i from by noncomm_ring]
+    rw [qg_Kinv_mul_K, one_mul]
+  have hR : qgKinv k A j * (qgE k A i * qgK k A j) * qgKinv k A j =
+            qgKinv k A j * qgE k A i := by
+    rw [show qgKinv k A j * (qgE k A i * qgK k A j) * qgKinv k A j =
+        qgKinv k A j * qgE k A i * (qgK k A j * qgKinv k A j) from by noncomm_ring]
+    rw [qg_K_mul_Kinv, mul_one]
+  have := congrArg (fun z => qgKinv k A j * z * qgKinv k A j) hKE
+  simp only at this
+  rw [hL, hR] at this
+  exact this
+
 /-- Cross-index Kinv-F commutation when -A_{ij} = 0 (i.e., A_{ij} = 0).
     Derived from qg_KF + qg_K_mul_Kinv. -/
 theorem qg_Kinv_F_comm (i j : Fin r) (h : A i j = 0) :
@@ -264,6 +291,26 @@ theorem comulFreeAlgQG_SerreF_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0
                 qg_Kinv_F_comm k (A := A) i j h,
                 qg_Kinv_F_comm k (A := A) j i h']
   abel_nf
+
+/-! ### Group V: EF commutation (off-diagonal, decoupled case) -/
+
+/-- comul respects E_i · F_j = F_j · E_i for i ≠ j, when A_{ij} = A_{ji} = 0
+    (the "non-adjacent" case in the Dynkin diagram). For the coupled case
+    (A_{ij} = -1, A_{ji} = -1 by symmetry) the comul respect requires the
+    q-scalar cancellation argument and is deferred to future session. -/
+theorem comulFreeAlgQG_EF_off (i j : Fin r) (hij : i ≠ j)
+    (h : A i j = 0) (h' : A j i = 0) :
+    comulFreeAlgQG k A (qgI k (.E i) * qgI k (.F j)) =
+    comulFreeAlgQG k A (qgI k (.F j) * qgI k (.E i)) := by
+  simp +decide [comulFreeAlgQG, comulOnGenQG]
+  -- qg_KF i j with A_ij = 0 gives K_iF_j = F_jK_i directly
+  have hKF : qgK k A i * qgF k A j = qgF k A j * qgK k A i := by
+    have := qg_KF k A i j
+    rw [h, neg_zero, T_zero, map_one, one_mul] at this
+    exact this
+  simp +decide [mul_add, add_mul, qg_EF_off _ A _ _ hij,
+                qg_E_Kinv_comm k (A := A) i j h', hKF]
+  abel
 
 /-! ## 4. Module summary (work in progress) -/
 
