@@ -221,6 +221,32 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
 **Estimated LOE:** ~1 week
 **Risk:** Low (algebraic, finite-dimensional)
 
+**Progress:**
+
+- [x] **Wave 9 scaffold — the 4 character AlgHoms** (2026-04-15, commit `642eb8d`).
+  `CenterFunctorZ2.lean` (394 lines) builds the 4 simple `D(ℤ/2)`-modules as
+  explicit characters `DG k G2 →ₐ[k] k` where `G2 := Multiplicative (ZMod 2)`:
+    - `chiTrivTriv(f) = f(e,e) + f(e,a)` (trivial × trivial)
+    - `chiTrivSign(f) = f(e,e) − f(e,a)` (trivial × sign)
+    - `chiFlipTriv(f) = f(a,e) + f(a,a)` (flip × trivial)
+    - `chiFlipSign(f) = f(a,e) − f(a,a)` (flip × sign)
+  Each verified as a full `AlgHom` (map_one, map_mul, map_zero, map_add,
+  commutes). Key helper `DG_mul_coeff_G2` expands `ddAlgMul` over G2's
+  2-element group using abelian-group simplifications
+  (`g1⁻¹·x·g1 = x`, `a·a = e`, `a⁻¹ = a`). 18 theorems, 0 sorry.
+  `simpleChi : DZ2Simple → (DG k G2 →ₐ[k] k)` packages the 4 characters
+  aligning with the `CenterEquivalenceZ2` bijection.
+- [ ] **Wave 9 continuation — Module instances + functor + equivalence**
+  (estimated 300-400 LOC more):
+    - Wrapper types for the 4 simple modules (distinct from each other and
+      from plain `k`)
+    - `Module (DG k G2)` instances via `Module.compHom` + the 4 characters
+    - Functor `centerToRepZ2 : Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2)`
+      via pattern match on toric anyons
+    - Full + Faithful + EssSurj via finite case analysis (4 objects)
+    - Assemble `Equivalence.ofFullyFaithfulEssSurj` → discharge
+      `H_CF1_center_functor` and `H_CF2_center_equivalence` in `CenterFunctor.lean`
+
 ---
 
 ## Dependencies
