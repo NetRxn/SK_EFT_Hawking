@@ -103,7 +103,9 @@ import SKEFTHawking.FermiPointTopology
 import SKEFTHawking.PolyQuotQ
 import SKEFTHawking.PolyQuotOver
 import SKEFTHawking.QCyc15
+import SKEFTHawking.QCyc15SqrtPhi
 import SKEFTHawking.SU3k2SMatrix
+import SKEFTHawking.SU3k2FSymbols
 import SKEFTHawking.QuantumGroupGeneric
 import SKEFTHawking.TemperleyLieb
 import SKEFTHawking.JonesWenzl
