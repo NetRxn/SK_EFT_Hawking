@@ -305,6 +305,10 @@
            href="?tab=graph">
             Knowledge Graph
         </a>
+        <a class="tab {% if tab == 'readiness' %}active{% endif %}"
+           href="?tab=readiness">
+            Paper Readiness
+        </a>
     </div>
 </div>
 
@@ -849,6 +853,13 @@
     {% if tab == 'graph' %}
     <div class="tab-content active" style="padding: 0; max-width: none;">
         {% include 'partials/graph_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ PAPER READINESS TAB (Phase 5v Wave 5) ═══ -->
+    {% if tab == 'readiness' %}
+    <div class="tab-content active">
+        {% include 'partials/readiness_tab.html' %}
     </div>
     {% endif %}
 

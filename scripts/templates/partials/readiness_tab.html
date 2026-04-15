@@ -1,0 +1,260 @@
+<!-- Paper Readiness tab (Phase 5v Wave 5).
+
+The heatmap + summary are built via explicit createElement calls, NOT
+innerHTML concatenation — all server-sourced values flow through
+textContent so no rendering path can inject HTML. -->
+
+<style>
+    .readiness-heatmap { border-collapse: collapse; font-size: 0.8rem; margin: 16px 0; }
+    .readiness-heatmap th, .readiness-heatmap td {
+        border: 1px solid var(--border); padding: 6px 8px; text-align: center;
+        min-width: 76px;
+    }
+    .readiness-heatmap th.paper-col { text-align: left; font-weight: 600;
+        background: var(--grey-bg); position: sticky; left: 0; z-index: 1; }
+    .readiness-heatmap th.gate-head { transform: rotate(-35deg);
+        transform-origin: left bottom; white-space: nowrap; vertical-align: bottom;
+        padding: 4px; min-width: 24px; }
+    .readiness-heatmap th.priority-label { font-size: 0.7rem; color: var(--grey);
+        background: var(--grey-bg); }
+    .gate-cell { cursor: pointer; font-weight: 600; }
+    .gate-cell.passed { background: #d4edda; color: #155724; }
+    .gate-cell.blocked { background: #f8d7da; color: #721c24; }
+    .gate-cell.needs-recheck { background: #fff3cd; color: #856404; }
+    .gate-cell.open { background: #e2e3e5; color: #383d41; }
+    .gate-cell:hover { outline: 2px solid var(--blue); }
+    .readiness-summary { display: flex; gap: 24px; margin: 16px 0;
+        padding: 12px; background: var(--grey-bg); border-radius: 4px;
+        align-items: center; }
+    .readiness-summary .count { font-size: 1.4rem; font-weight: 700; }
+    .paper-state-RED { background: #f8d7da; color: #721c24; padding: 2px 8px;
+        border-radius: 3px; font-size: 0.75rem; font-weight: 600; }
+    .paper-state-YELLOW { background: #fff3cd; color: #856404; padding: 2px 8px;
+        border-radius: 3px; font-size: 0.75rem; font-weight: 600; }
+    .paper-state-GREEN { background: #d4edda; color: #155724; padding: 2px 8px;
+        border-radius: 3px; font-size: 0.75rem; font-weight: 600; }
+    #readiness-detail { margin-top: 20px; padding: 16px;
+        background: var(--grey-bg); border-radius: 4px; font-size: 0.9rem;
+        display: none; }
+    #readiness-detail h4 { margin: 0 0 8px 0; }
+    #readiness-detail ul { margin: 4px 0 8px 20px; }
+    #readiness-detail .evidence li { color: #2d6d3a; }
+    #readiness-detail .blockers li { color: #9c3a3a; }
+</style>
+
+<h2>Paper Readiness — 11 gates × 15 papers</h2>
+<p style="color: var(--grey);">
+    Auto-generated per-paper × per-dimension readiness state. Gates 1–8 are
+    Priority 1 (correctness blockers). Gates 9–11 are Priority 2 (UX/trust).
+    A paper is submission-ready iff all P1 gates pass and no P2 gate blocks.
+    Click any cell for details.
+</p>
+
+<div id="readiness-summary-row" class="readiness-summary">
+    <div>Loading readiness data…</div>
+</div>
+
+<div style="overflow-x: auto; padding-top: 30px;">
+    <table id="readiness-heatmap" class="readiness-heatmap">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="readiness-detail"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    const GATES = [
+        ['CitationIntegrity', 1],
+        ['CrossPaperConsistency', 1],
+        ['ParameterProvenance', 1],
+        ['ComputationCorrectness', 1],
+        ['LeanProofSubstance', 1],
+        ['AssumptionDisclosure', 1],
+        ['NarrativeGrounding', 1],
+        ['ProductionRunHealth', 1],
+        ['CountFreshness', 2],
+        ['FirstClaimVerification', 2],
+        ['FixPropagation', 2],
+    ];
+
+    // Safe-DOM helpers. All text goes through textContent — no innerHTML,
+    // no HTML-string concatenation with user data.
+    function el(tag, opts) {
+        const node = document.createElement(tag);
+        opts = opts || {};
+        if (opts.class) node.className = opts.class;
+        if (opts.text != null) node.textContent = String(opts.text);
+        if (opts.title != null) node.title = String(opts.title);
+        if (opts.dataset) {
+            for (const k in opts.dataset) node.dataset[k] = String(opts.dataset[k]);
+        }
+        if (opts.style) Object.assign(node.style, opts.style);
+        if (opts.children) opts.children.forEach(c => { if (c) node.appendChild(c); });
+        return node;
+    }
+
+    function classifyPaper(gateStates) {
+        if (gateStates.some(g => g.state === 'blocked')) return 'RED';
+        if (gateStates.some(g => g.state !== 'passed')) return 'YELLOW';
+        return 'GREEN';
+    }
+
+    function renderHeatmap(data) {
+        const thead = document.querySelector('#readiness-heatmap thead');
+        const tbody = document.querySelector('#readiness-heatmap tbody');
+        thead.replaceChildren();
+        tbody.replaceChildren();
+
+        // Header row
+        const headRow = el('tr');
+        headRow.appendChild(el('th', {class: 'paper-col', text: 'Paper'}));
+        headRow.appendChild(el('th', {text: 'State'}));
+        for (const [gate, prio] of GATES) {
+            headRow.appendChild(el('th', {
+                class: 'gate-head', text: gate, title: gate + ' (P' + prio + ')'
+            }));
+        }
+        thead.appendChild(headRow);
+
+        // Priority row
+        const prioRow = el('tr');
+        prioRow.appendChild(el('th', {class: 'paper-col'}));
+        prioRow.appendChild(el('th'));
+        for (const [gate, prio] of GATES) {
+            prioRow.appendChild(el('th', {class: 'priority-label', text: 'P' + prio}));
+        }
+        thead.appendChild(prioRow);
+
+        // Body rows
+        const summary = { RED: 0, YELLOW: 0, GREEN: 0 };
+        for (const paper of data.papers) {
+            const byGate = {};
+            for (const g of paper.gates) byGate[g.gate] = g;
+            const gateList = GATES.map(([name, prio]) =>
+                byGate[name] || { gate: name, priority: prio, state: 'open' });
+            const state = classifyPaper(gateList);
+            summary[state] = (summary[state] || 0) + 1;
+            const passed = gateList.filter(g => g.state === 'passed').length;
+
+            const row = el('tr');
+            row.appendChild(el('th', {class: 'paper-col', text: paper.paper}));
+
+            const stateCell = el('td');
+            stateCell.appendChild(el('span', {
+                class: 'paper-state-' + state, text: state
+            }));
+            stateCell.appendChild(document.createTextNode(' '));
+            stateCell.appendChild(el('span', {
+                text: passed + '/11',
+                style: { color: 'var(--grey)', fontSize: '0.75rem' }
+            }));
+            row.appendChild(stateCell);
+
+            for (const [name, prio] of GATES) {
+                const g = byGate[name] || { state: 'open' };
+                const cell = el('td', {
+                    class: 'gate-cell ' + g.state,
+                    text: g.state.charAt(0).toUpperCase(),
+                    title: name + ' — ' + g.state,
+                    dataset: { paper: paper.paper, gate: name },
+                });
+                row.appendChild(cell);
+            }
+            tbody.appendChild(row);
+        }
+
+        // Summary
+        const summaryRow = document.getElementById('readiness-summary-row');
+        summaryRow.replaceChildren();
+        const blocks = [
+            { n: summary.GREEN, label: 'green', color: '#155724' },
+            { n: summary.YELLOW, label: 'yellow', color: '#856404' },
+            { n: summary.RED, label: 'red', color: '#721c24' },
+        ];
+        for (const b of blocks) {
+            summaryRow.appendChild(el('div', { children: [
+                el('div', { class: 'count', text: b.n, style: { color: b.color } }),
+                el('div', { text: b.label }),
+            ]}));
+        }
+        const total = data.papers.length;
+        summaryRow.appendChild(el('div', {
+            style: { marginLeft: 'auto', color: 'var(--grey)' },
+            text: total + ' papers · last evaluated ' + (data.last_evaluated || 'unknown'),
+        }));
+
+        // Click → detail
+        tbody.addEventListener('click', (ev) => {
+            const cell = ev.target.closest('.gate-cell');
+            if (!cell) return;
+            const paperKey = cell.dataset.paper;
+            const gateName = cell.dataset.gate;
+            const paperData = data.papers.find(p => p.paper === paperKey);
+            if (!paperData) return;
+            const gateData = (paperData.gates || []).find(g => g.gate === gateName);
+            if (!gateData) return;
+
+            const detail = document.getElementById('readiness-detail');
+            detail.replaceChildren();
+
+            const stateClass = gateData.state === 'passed' ? 'GREEN' :
+                               (gateData.state === 'blocked' ? 'RED' : 'YELLOW');
+            const h = el('h4', {});
+            h.appendChild(document.createTextNode(paperKey + ' — ' + gateName + ' '));
+            h.appendChild(el('span', {
+                class: 'paper-state-' + stateClass, text: gateData.state
+            }));
+            detail.appendChild(h);
+
+            detail.appendChild(el('div', { children: [
+                el('strong', { text: 'Notes: ' }),
+                document.createTextNode(gateData.notes || '(none)'),
+            ]}));
+
+            const evUl = el('ul');
+            (gateData.evidence || []).forEach(e => evUl.appendChild(el('li', { text: e })));
+            if (!(gateData.evidence || []).length) evUl.appendChild(el('li', { text: '(none)' }));
+            detail.appendChild(el('div', {
+                class: 'evidence', children: [
+                    el('strong', { text: 'Evidence:' }), evUl,
+                ]
+            }));
+
+            const blUl = el('ul');
+            (gateData.blockers || []).forEach(b => blUl.appendChild(el('li', { text: b })));
+            if (!(gateData.blockers || []).length) blUl.appendChild(el('li', { text: '(none)' }));
+            detail.appendChild(el('div', {
+                class: 'blockers', children: [
+                    el('strong', { text: 'Blockers:' }), blUl,
+                ]
+            }));
+
+            detail.appendChild(el('div', {
+                style: { color: 'var(--grey)', fontSize: '0.75rem' },
+                text: 'Last evaluated: ' + (gateData.last_evaluated || 'unknown'),
+            }));
+
+            detail.style.display = 'block';
+            detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+
+    function renderError(message) {
+        const row = document.getElementById('readiness-summary-row');
+        row.replaceChildren();
+        row.appendChild(el('div', {
+            text: 'Failed to load readiness data: ' + message,
+            style: { color: '#721c24' },
+        }));
+    }
+
+    fetch('/api/readiness')
+        .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+        .then(renderHeatmap)
+        .catch(e => renderError(String(e)));
+})();
+</script>

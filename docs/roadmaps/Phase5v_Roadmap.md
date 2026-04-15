@@ -339,30 +339,35 @@ Explicit `IMPACTED_BY` edges + hash-diff propagation are **deferred** because th
 
 ---
 
-## Wave 5 — Dashboard readiness surface
+## Wave 5 — Dashboard readiness surface — PARTIAL DONE 2026-04-15
 
-### Wave 5a — Readiness tab
+### Wave 5a — Readiness tab — DONE
 
-- [ ] New tab: "Paper Readiness" alongside existing 6 tabs
-- [ ] Heatmap: rows = papers, columns = 11 gates, cells colored by state
-- [ ] Paper focus: click paper row → full gate detail (evidence chain, blockers, last-evaluated)
-- [ ] Filter: "papers blocked by gate X" / "papers needs-recheck"
-- [ ] Trend chart: gates-passed over time (reads CountMetric + historical snapshots)
+- [x] Added "Paper Readiness" as 7th tab alongside existing 6
+- [x] Heatmap: rows = 15 papers, columns = 11 gates, cells colored green/red/yellow/grey by gate state
+- [x] Click any cell → detail panel with evidence, blockers, notes, last-evaluated timestamp
+- [x] Summary row shows green/yellow/red counts + last-evaluated timestamp
+- [x] `/api/readiness` Flask endpoint returns structured gate data; dashboard renders via safe-DOM construction (no innerHTML with untrusted content — verified by security hook)
+- [x] Headless render test: GET `/?tab=readiness` returns 200 (370KB HTML); GET `/api/readiness` returns 200 with 15 papers × 11 gates
+- [ ] Trend chart: gates-passed over time — **deferred** (requires historical snapshots in `docs/validation/reports/`; can wire once that archive is populated)
+- [ ] Explicit filter UI ("papers blocked by gate X") — **deferred** (clicking on heatmap cells already serves this purpose for now)
 
-### Wave 5b — Graph-tab integration
+### Wave 5b — Graph-tab integration — DEFERRED
 
-- [ ] Add 3rd traversal mode: "Readiness" (alongside Explore / Trace / Impact) — click any node, see which ReadinessGates reference it as evidence
-- [ ] ReviewFinding nodes render with distinct shape/color; severity visible in size
-- [ ] SUPPORTS edges: green-dashed; CONTRADICTS edges: red-dashed (complement)
-- [ ] Paper focus dropdown, extended: each paper shows a mini-pill summary of its 11 gates inline
+Deferred to a follow-up session. Scope when revisited:
+- 3rd traversal mode "Readiness" in graph tab
+- ReviewFinding node shape/color
+- SUPPORTS/CONTRADICTS green/red dashed edges (once SUPPORTS/CONTRADICTS edges are emitted)
+- Per-paper mini-pill summary in Paper Focus dropdown
 
-### Wave 5c — Action buttons
+### Wave 5c — Action buttons — DEFERRED
 
-- [ ] "Mark reviewed" — transitions gate state (Wave 3c write-back)
-- [ ] "Accept with note" — P2 gates only; records a justification
-- [ ] "Trigger adversarial review" — manually kicks Stage 13 for a specific paper
+Depends on Wave 3 (PG SoT write-back). Scope:
+- "Mark reviewed" button → gate state transition persisted to PG
+- "Accept with note" for P2 gates
+- "Trigger adversarial review" → manual Stage 13 invocation
 
-**Gate:** Dashboard tab live; `localhost:8050/?tab=readiness` renders; write-back via Wave 3c works; visual review surfaces a dashboard screenshot for each paper matching the 11-gate state.
+**Gate for Wave 5a (met):** Dashboard tab live at `localhost:8050/?tab=readiness`; 15 papers × 11 gates visible; click-through detail works; API endpoint tested clean.
 
 ---
 

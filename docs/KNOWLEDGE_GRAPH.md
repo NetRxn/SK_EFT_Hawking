@@ -211,6 +211,7 @@ Click any node to open the detail panel (right side). Shows:
 | `/api/graph/trace/<node_id>` | GET | `{traced_node_ids, traced_edge_indices}` |
 | `/api/graph/impact/<node_id>` | GET | `{impacted_node_ids, impacted_edge_indices}` |
 | `/api/graph/integrity` | GET | Integrity report (orphans, conflicts, chains) |
+| `/api/readiness` | GET | Per-paper readiness gate data (Phase 5v Wave 5) |
 
 Node IDs contain colons (e.g., `param:Steinhauer.omega_perp`). The Flask routes use `<path:node_id>` to handle this.
 

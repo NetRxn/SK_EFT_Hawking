@@ -974,6 +974,53 @@ def api_integrity():
     return jsonify(run_integrity_checks())
 
 
+@app.route("/api/readiness")
+def api_readiness():
+    """Return per-paper readiness gate data structured for the dashboard.
+
+    Phase 5v Wave 5. Builds a graph, pulls the ReadinessGate nodes, and
+    reshapes into {papers: [{paper, gates: [{gate, priority, state,
+    evidence, blockers, notes, last_evaluated}]}]}. The heatmap renders
+    from this payload via safe-DOM construction (see readiness_tab.html).
+    """
+    from build_graph import build_graph_json
+
+    graph = build_graph_json()
+    gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
+    if not gates:
+        return jsonify({"papers": [], "last_evaluated": None,
+                        "error": "no ReadinessGate nodes"})
+
+    from collections import defaultdict
+    by_paper: dict[str, list[dict]] = defaultdict(list)
+    last_evaluated = None
+    for g in gates:
+        m = g.get('meta', {})
+        paper = m.get('paper', '?')
+        by_paper[paper].append({
+            'gate': m.get('gate'),
+            'priority': m.get('priority'),
+            'state': m.get('state'),
+            'evidence': m.get('evidence', []),
+            'blockers': m.get('blockers', []),
+            'notes': m.get('notes', ''),
+            'last_evaluated': m.get('last_evaluated', ''),
+        })
+        if m.get('last_evaluated'):
+            last_evaluated = m['last_evaluated']
+
+    papers = [
+        {'paper': paper, 'gates': sorted(
+            by_paper[paper], key=lambda g: (g['priority'] or 99, g['gate'] or ''))}
+        for paper in sorted(by_paper.keys())
+    ]
+    return jsonify({
+        'papers': papers,
+        'last_evaluated': last_evaluated,
+        'gate_count': sum(len(p['gates']) for p in papers),
+    })
+
+
 # ════════════════════════════════════════════════════════════════════
 # CLI
 # ════════════════════════════════════════════════════════════════════
