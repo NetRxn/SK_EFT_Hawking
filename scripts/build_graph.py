@@ -70,6 +70,64 @@ LEAN_KIND_TO_TYPE: dict[str, str] = {
     'opaque': 'LeanDef',
 }
 
+# Lean auto-generated helper names (recursors, eliminators, boilerplate).
+# ExtractDeps filters .ctorInfo/.recInfo/.quotInfo, but Lean also emits
+# per-type helpers classified as theorems/defs: `noConfusion`, `casesOn`,
+# `recOn`, `sizeOf_spec`, injectivity lemmas, `match_N`, etc. These carry no
+# research content and would otherwise pollute the graph with ~2,100 noise
+# nodes, crowding out the ~3,600 substantive declarations.
+_AUTOGEN_SHORT_RE = re.compile(
+    r'^('
+    r'noConfusion(Type)?|casesOn|recOn|sizeOf_spec|'
+    r'ctorIdx|ctorElim(Type)?|toCtorIdx|'
+    r'elim|inj|injEq|'
+    r'match_\d+|eq_\d+|'
+    r'repr|toString|decEq|fromNat|ofNat|'
+    r'below|brecOn|binductionOn'
+    r')$'
+)
+
+# Populated by extract_lean_declaration_nodes; consumed by
+# _resolve_lean_short() in edge extractors. Maps short name -> list of full
+# node IDs so short-name collisions surface as ambiguity (logged + skipped)
+# instead of silent drops.
+_LEAN_SHORT_INDEX: dict[str, list[str]] = {}
+
+
+def _resolve_lean_short(name: str, node_ids: set) -> str | None:
+    """Resolve a Lean declaration reference to its node ID.
+
+    Accepts either a short name (last namespace component) or a full name
+    (with dots). Full names resolve directly; short names resolve through
+    _LEAN_SHORT_INDEX. Returns None if missing or ambiguous. Ambiguity is
+    logged at WARNING level so silent edge loss is visible.
+    """
+    # Full-name lookup: if the input contains a dot, try direct match first.
+    # Registries like HYPOTHESIS_REGISTRY.dependent_theorems and
+    # axiom_deps_project store fully-qualified names.
+    if '.' in name:
+        direct_id = f'lean:{name}'
+        if direct_id in node_ids:
+            return direct_id
+        # Fall through to short-name lookup using the last component,
+        # in case the registry name is qualified but the graph only has
+        # a differently-prefixed version.
+        short = name.rsplit('.', 1)[-1]
+    else:
+        short = name
+
+    candidates = _LEAN_SHORT_INDEX.get(short, [])
+    in_graph = [c for c in candidates if c in node_ids]
+    if not in_graph:
+        return None
+    if len(in_graph) == 1:
+        return in_graph[0]
+    logger.warning(
+        "Ambiguous Lean name %r resolves to %d candidates: %s — edge skipped",
+        name, len(in_graph), in_graph,
+    )
+    return None
+
 # Platform -> Atom mapping for USED_BY / DEPENDS_ON edges
 PLATFORM_ATOM_MAP = {
     'Steinhauer': 'Rb87',
@@ -293,6 +351,9 @@ def extract_lean_declaration_nodes() -> list[dict]:
 
     nodes = []
     seen_ids = set()
+    _LEAN_SHORT_INDEX.clear()
+    _dropped_autogen = 0
+    _dropped_duplicate = 0
 
     for decl in declarations:
         kind = decl.get('kind', '')
@@ -304,10 +365,21 @@ def extract_lean_declaration_nodes() -> list[dict]:
         # Short name: last component after last '.'
         short_name = full_name.rsplit('.', 1)[-1] if '.' in full_name else full_name
 
-        node_id = f'lean:{short_name}'
+        # Skip Lean auto-generated helpers (noConfusion, casesOn, match_N, etc.).
+        if _AUTOGEN_SHORT_RE.match(short_name):
+            _dropped_autogen += 1
+            continue
+
+        # Use the full name as the node ID so theorems with identical short
+        # names in different namespaces do not silently collide. The short
+        # name is retained as the display label and registered in
+        # _LEAN_SHORT_INDEX for edge resolution.
+        node_id = f'lean:{full_name}'
         if node_id in seen_ids:
+            _dropped_duplicate += 1
             continue
         seen_ids.add(node_id)
+        _LEAN_SHORT_INDEX.setdefault(short_name, []).append(node_id)
 
         # Module name: strip "SKEFTHawking." prefix, take first component
         raw_module = decl.get('module', '')
@@ -352,6 +424,7 @@ def extract_lean_declaration_nodes() -> list[dict]:
                 'aristotle_run_id': ARISTOTLE_THEOREMS.get(short_name),
                 'shape': SHAPE_MAP.get(node_type, 'circle'),
                 'lean_kind': kind,
+                'full_name': full_name,
                 'axiom_deps_project': axiom_deps_project_short,
                 'axiom_deps_core': axiom_deps_core_short,
                 'eliminability': eliminability,
@@ -361,6 +434,15 @@ def extract_lean_declaration_nodes() -> list[dict]:
             },
         })
 
+    _colliding = sum(1 for v in _LEAN_SHORT_INDEX.values() if len(v) > 1)
+    logger.info(
+        "Lean extraction: %d decls in, %d nodes out "
+        "(%d autogen skipped, %d duplicate-id skipped, "
+        "%d unique short names, %d colliding short names)",
+        len(declarations), len(nodes),
+        _dropped_autogen, _dropped_duplicate,
+        len(_LEAN_SHORT_INDEX), _colliding,
+    )
     return nodes
 
 
@@ -398,14 +480,31 @@ def extract_hypothesis_nodes():
             },
         })
 
-        # Create ASSUMES edges from dependent theorems
+        # Create ASSUMES edges from dependent theorems. HYPOTHESIS_REGISTRY
+        # stores fully-qualified names (e.g. `SKEFTHawking.Foo.bar`), which
+        # we emit directly as full-name node IDs. Short-name entries (no
+        # dot) are resolved via _LEAN_SHORT_INDEX; ambiguity is logged.
+        # node_ids filtering happens later in extract_all_edges.
         for thm_name in hyp.get('dependent_theorems', []):
-            lean_id = f"lean:{thm_name}"
-            edges.append({
-                'source': lean_id,
-                'target': node_id,
-                'type': 'ASSUMES',
-            })
+            if '.' in thm_name:
+                edges.append({
+                    'source': f'lean:{thm_name}',
+                    'target': node_id,
+                    'type': 'ASSUMES',
+                })
+                continue
+            candidates = _LEAN_SHORT_INDEX.get(thm_name, [])
+            if len(candidates) == 1:
+                edges.append({
+                    'source': candidates[0],
+                    'target': node_id,
+                    'type': 'ASSUMES',
+                })
+            elif len(candidates) > 1:
+                logger.warning(
+                    "ASSUMES edge: short name %r ambiguous (%d candidates) — skipped",
+                    thm_name, len(candidates),
+                )
 
     return nodes, edges
 
@@ -664,16 +763,17 @@ def extract_verified_by_edges(node_ids: set) -> list[dict]:
             clean_ref = ref.split('(')[0].strip().split(' ')[0].strip()
             if not clean_ref:
                 continue
-            lean_id = f'lean:{clean_ref}'
-            if lean_id in node_ids:
-                edge_key = (formula_id, lean_id)
-                if edge_key not in seen:
-                    seen.add(edge_key)
-                    edges.append({
-                        'source': formula_id,
-                        'target': lean_id,
-                        'type': 'VERIFIED_BY',
-                    })
+            lean_id = _resolve_lean_short(clean_ref, node_ids)
+            if lean_id is None:
+                continue
+            edge_key = (formula_id, lean_id)
+            if edge_key not in seen:
+                seen.add(edge_key)
+                edges.append({
+                    'source': formula_id,
+                    'target': lean_id,
+                    'type': 'VERIFIED_BY',
+                })
 
     return edges
 
@@ -687,17 +787,20 @@ def extract_proved_by_edges(node_ids: set) -> list[dict]:
     for thm_name, run_id in ARISTOTLE_THEOREMS.items():
         if run_id == 'manual':
             continue
-        lean_id = f'lean:{thm_name}'
+        lean_id = _resolve_lean_short(thm_name, node_ids)
+        if lean_id is None:
+            continue
         aristotle_id = f'aristotle:{run_id}'
-        if lean_id in node_ids and aristotle_id in node_ids:
-            edge_key = (lean_id, aristotle_id)
-            if edge_key not in seen:
-                seen.add(edge_key)
-                edges.append({
-                    'source': lean_id,
-                    'target': aristotle_id,
-                    'type': 'PROVED_BY',
-                })
+        if aristotle_id not in node_ids:
+            continue
+        edge_key = (lean_id, aristotle_id)
+        if edge_key not in seen:
+            seen.add(edge_key)
+            edges.append({
+                'source': lean_id,
+                'target': aristotle_id,
+                'type': 'PROVED_BY',
+            })
 
     return edges
 
@@ -933,8 +1036,8 @@ def extract_depends_on_axiom_edges(node_ids: set) -> list[dict]:
             continue
         short_name = node['name']
         for axiom_short in node.get('meta', {}).get('axiom_deps_project', []):
-            target_id = f'lean:{axiom_short}'
-            if target_id not in node_ids:
+            target_id = _resolve_lean_short(axiom_short, node_ids)
+            if target_id is None:
                 continue
             # Skip self-edges
             if src_id == target_id:

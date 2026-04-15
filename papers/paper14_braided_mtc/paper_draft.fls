@@ -164,8 +164,8 @@ INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm1
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
 INPUT /usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
@@ -208,6 +208,8 @@ INPUT ./figures/su3k_fusion.png
 INPUT ./figures/su3k_fusion.png
 INPUT ./figures/su3k_fusion.png
 INPUT ./figures/su3k_fusion.png
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/ueuf.fd
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/ueuf.fd
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/ueuf.fd
@@ -227,6 +229,7 @@ INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pf
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb

@@ -150,6 +150,9 @@ INPUT ./figures/fig6_on_shell_vanishing.pdf
 INPUT ./figures/fig6_on_shell_vanishing.pdf
 INPUT ./figures/fig6_on_shell_vanishing.pdf
 INPUT ./figures/fig6_on_shell_vanishing.pdf
+INPUT ./paper_draft.bbl
+INPUT ./paper_draft.bbl
+INPUT paper_draft.bbl
 INPUT paper_draft.aux
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb

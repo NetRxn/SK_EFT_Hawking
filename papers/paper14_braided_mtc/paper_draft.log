@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  10 APR 2026 09:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  15 APR 2026 10:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -367,137 +367,209 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-<figures/mtc_hierarchy.png, id=124, 1606.0pt x 702.625pt>
+{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (40.56659pt too wide) in paragraph at lines 49--50
+[]\OT1/cmr/m/n/12 The first non-abelian Drinfeld-center di-men-sion for-mula in any proof as-sis-tant: $\OML/cmm/m/it/12 D[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 Z\OT1/cmr/m/n/12 ([][])) =
+ []
+
+[2]
+<figures/mtc_hierarchy.png, id=144, 1606.0pt x 702.625pt>
 File: figures/mtc_hierarchy.png Graphic file (type png)
 <use figures/mtc_hierarchy.png>
-Package pdftex.def Info: figures/mtc_hierarchy.png  used on input line 92.
+Package pdftex.def Info: figures/mtc_hierarchy.png  used on input line 95.
 (pdftex.def)             Requested size: 422.77664pt x 184.96179pt.
- [3 <./figures/mtc_hierarchy.png>]
-<figures/number_field.png, id=133, 1706.375pt x 562.1pt>
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3]
+<figures/number_field.png, id=154, 1706.375pt x 562.1pt>
 File: figures/number_field.png Graphic file (type png)
 <use figures/number_field.png>
-Package pdftex.def Info: figures/number_field.png  used on input line 119.
+Package pdftex.def Info: figures/number_field.png  used on input line 122.
 (pdftex.def)             Requested size: 446.26582pt x 147.00024pt.
+ [4 <./figures/mtc_hierarchy.png> <./figures/number_field.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 133.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 130.
+(hyperref)                removing `subscript' on input line 133.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 130.
+(hyperref)                removing `math shift' on input line 133.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 130.
-
-[4 <./figures/number_field.png>]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 144.
+(hyperref)                removing `math shift' on input line 147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 144.
+(hyperref)                removing `subscript' on input line 147.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 144.
+(hyperref)                removing `math shift' on input line 147.
 
-<figures/knot_table.png, id=143, 1606.0pt x 501.875pt>
+[5]
+<figures/knot_table.png, id=172, 1606.0pt x 501.875pt>
 File: figures/knot_table.png Graphic file (type png)
 <use figures/knot_table.png>
-Package pdftex.def Info: figures/knot_table.png  used on input line 156.
+Package pdftex.def Info: figures/knot_table.png  used on input line 159.
 (pdftex.def)             Requested size: 422.77664pt x 132.11557pt.
-[5 <./figures/knot_table.png>]
-<figures/tqft_partition.png, id=151, 1204.5pt x 803.0pt>
+<figures/tqft_partition.png, id=173, 1204.5pt x 803.0pt>
 File: figures/tqft_partition.png Graphic file (type png)
 <use figures/tqft_partition.png>
-Package pdftex.def Info: figures/tqft_partition.png  used on input line 176.
+Package pdftex.def Info: figures/tqft_partition.png  used on input line 179.
 (pdftex.def)             Requested size: 328.82707pt x 219.21445pt.
 
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 182.
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 182.
+(hyperref)                removing `math shift' on input line 185.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 182.
+(hyperref)                removing `subscript' on input line 185.
 
-[6 <./figures/tqft_partition.png>]
-<figures/su3k_fusion.png, id=159, 1806.75pt x 803.0pt>
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 185.
+
+[6 <./figures/knot_table.png>]
+<figures/su3k_fusion.png, id=182, 1806.75pt x 803.0pt>
 File: figures/su3k_fusion.png Graphic file (type png)
 <use figures/su3k_fusion.png>
-Package pdftex.def Info: figures/su3k_fusion.png  used on input line 193.
+Package pdftex.def Info: figures/su3k_fusion.png  used on input line 196.
 (pdftex.def)             Requested size: 446.26582pt x 198.33571pt.
- [7 <./figures/su3k_fusion.png>]
-Overfull \hbox (13.87383pt too wide) in paragraph at lines 263--275
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (12.08641pt too wide) in paragraph at lines 214--216
+\OT1/cmr/m/n/12 The unit-closure (\OT1/cmtt/m/n/12 containsUnit[]isTransparent\OT1/cmr/m/n/12 ) and tensor-closure (\OT1/cmtt/m/n/12 tensor[]isTransparent\OT1/cmr/m/n/12 )
+ []
+
+
+Overfull \hbox (48.44096pt too wide) in paragraph at lines 214--216
+\OT1/cmr/m/n/12 in-stances syn-the-size via Math-lib's \OT1/cmtt/m/n/12 ObjectProperty.IsMonoidal \OT1/cmr/m/n/12 into the in-her-ited \OT1/cmtt/m/n/12 MonoidalCategory
+ []
+
+
+Overfull \hbox (30.88313pt too wide) in paragraph at lines 214--216
+\OT1/cmr/m/n/12 and \OT1/cmtt/m/n/12 BraidedCategory \OT1/cmr/m/n/12 struc-ture on the sub-cat-e-gory. The de-ci-sive pay-off is the \OT1/cmtt/m/n/12 SymmetricCategory
+ []
+
+[7 <./figures/tqft_partition.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 221.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\not' on input line 221.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\Rightarrow' on input line 221.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 221.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 221.
+
+[8 <./figures/su3k_fusion.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 229.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `superscript' on input line 229.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `superscript' on input line 229.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `superscript' on input line 229.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 229.
+
+[9]
+Overfull \hbox (13.87383pt too wide) in paragraph at lines 300--312
 []\OT1/cmr/bx/n/12 Ising (SU(2)$[]$, 4 $\OML/cmm/m/it/12 ^^[$\OT1/cmr/bx/n/12 -anyons): $\OML/cmm/m/it/12 ^^[[] \OT1/cmr/m/n/12 = [](\OML/cmm/m/it/12 ^^P[]; ^^P[]\OT1/cmr/m/n/12 )$ acts on the qubit $\OMS/cmsy/m/n/12 fj\OT1/cmr/m/n/12 0\OMS/cmsy/m/n/12 i \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 ^^[^^[\OT1/cmr/m/n/12 )[](\OML/cmm/m/it/12 ^^[^^[\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ;  \OMS/cmsy/m/n/12 j\OT1/cmr/m/n/12 1\OMS/cmsy/m/n/12 i \OT1/cmr/m/n/12 =
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 293.
+(hyperref)                removing `math shift' on input line 330.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\zeta' on input line 293.
+(hyperref)                removing `\zeta' on input line 330.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 293.
+(hyperref)                removing `subscript' on input line 330.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\@ifnextchar' on input line 293.
+(hyperref)                removing `\@ifnextchar' on input line 330.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\varphi' on input line 293.
+(hyperref)                removing `\varphi' on input line 330.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 293.
+(hyperref)                removing `math shift' on input line 330.
 
-[8]
-Overfull \hbox (17.76468pt too wide) in paragraph at lines 315--322
+[10]
+Overfull \hbox (17.76468pt too wide) in paragraph at lines 352--359
 \OT1/cmr/m/n/12 gen-er-a-tors are: $\OML/cmm/m/it/12 ^^[[] \OT1/cmr/m/n/12 = [](\OML/cmm/m/it/12 R[]; R[]; R[]\OT1/cmr/m/n/12 )$, $\OML/cmm/m/it/12 ^^[[] \OT1/cmr/m/n/12 = \OML/cmm/m/it/12 R[] \OMS/cmsy/m/n/12 ^^H \OT1/cmr/m/n/12 [[]\OMS/cmsy/m/n/12 f\OML/cmm/m/it/12 e[]; e[]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 ]$, and $\OML/cmm/m/it/12 ^^[[] \OT1/cmr/m/n/12 = [[]\OMS/cmsy/m/n/12 f\OML/cmm/m/it/12 e[]; e[]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 ] \OMS/cmsy/m/n/12 ^^H
  []
 
-LaTeX Font Info:    Trying to load font information for U+euf on input line 337.
+LaTeX Font Info:    Trying to load font information for U+euf on input line 374.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
-) [9] [10]
-Overfull \hbox (46.16667pt too wide) in paragraph at lines 401--407
+) [11]
+Overfull \hbox (46.16667pt too wide) in paragraph at lines 438--444
 \OT1/cmr/m/n/12 cyclotomic $\OML/cmm/m/it/12 K$\OT1/cmr/m/n/12 ) with \OT1/cmtt/m/n/12 native[]decide \OT1/cmr/m/n/12 ver-i-fi-ca-tion, and the cat-e-gor-i-cal in-fras-truc-ture (\OT1/cmtt/m/n/12 PivotalCategory\OT1/cmr/m/n/12 ,
  []
 
-[11] (./paper_draft.aux)
+[12] [13] (./paper_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `paper_draft.out' has not changed.
-(rerunfilecheck)             Checksum: 0417AF180C85544FE8F404A6051E736C;4245.
+(rerunfilecheck)             Checksum: 998C4826FE2D36BE93B775946EA4AF0B;6036.
  ) 
 Here is how much of TeX's memory you used:
- 10584 strings out of 467525
- 161042 string characters out of 5418982
- 580141 words of memory out of 5000000
- 39307 multiletter control sequences out of 15000+600000
- 642218 words of font info for 96 fonts, out of 8000000 for 9000
+ 10606 strings out of 467525
+ 161351 string characters out of 5418982
+ 580232 words of memory out of 5000000
+ 39318 multiletter control sequences out of 15000+600000
+ 642554 words of font info for 98 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,1730b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on paper_draft.pdf (11 pages, 425553 bytes).
+ 75i,8n,79p,2367b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on paper_draft.pdf (13 pages, 449586 bytes).
 PDF statistics:
- 295 PDF objects out of 1000 (max. 8388607)
- 233 compressed objects within 3 object streams
- 59 named destinations out of 1000 (max. 500000)
- 194 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 334 PDF objects out of 1000 (max. 8388607)
+ 268 compressed objects within 3 object streams
+ 69 named destinations out of 1000 (max. 500000)
+ 234 words of extra memory for PDF output out of 10000 (max. 10000000)
 

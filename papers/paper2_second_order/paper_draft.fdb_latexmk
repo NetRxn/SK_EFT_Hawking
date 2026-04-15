@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1775831618.55577 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775831619.37456 0
-  "./paper_draftNotes.bib" 1775831619.11246 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1776225697.84797 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1776225699.29823 0
+  "./paper_draftNotes.bib" 1776225699.09478 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1775831619.11161 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
+  "paper_draft.aux" 1776225699.09423 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1775831618.67542 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775831619.37474 2
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" 1775239639.82964 35814 b39263a40b285828bb42109ad00fb397 ""
+["pdflatex"] 1776225698.71661 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1776225699.29837 2
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" 1776225697.62078 36044 0e4ca04ee5ccf7070f13e241e8fe02a3 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -103,9 +103,9 @@
   "figures/fig4_cgl_fdr_pattern.pdf" 1774456889.18801 72265 4681b1f7a3e45c5b7eebb78447f3e836 ""
   "figures/fig5_even_odd_kernel.pdf" 1774455375.23671 145209 d8b92329074468fcd39690286521a46b ""
   "figures/fig6_on_shell_vanishing.pdf" 1774456891.58676 121099 ed4b5c92e65a7ae43cda95ebd20c6484 ""
-  "paper_draft.aux" 1775831619.11161 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
-  "paper_draft.bbl" 0 -1 0 "bibtex paper_draft"
-  "paper_draft.tex" 1775239639.82964 35814 b39263a40b285828bb42109ad00fb397 ""
+  "paper_draft.aux" 1776225699.09423 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
+  "paper_draft.bbl" 1776225697.961 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
+  "paper_draft.tex" 1776225697.62078 36044 0e4ca04ee5ccf7070f13e241e8fe02a3 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

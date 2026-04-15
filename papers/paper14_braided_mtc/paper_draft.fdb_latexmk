@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1775831816.02662 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper14_braided_mtc/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775831816.73073 0
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper14_braided_mtc/paper_draft.tex" 1775695938.27737 29861 4b0e92aca85041347473f5aa40d3ca01 ""
+["pdflatex"] 1776265684.13896 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper14_braided_mtc/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1776265684.77141 0
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper14_braided_mtc/paper_draft.tex" 1776265683.29793 36397 c7ae8279c08a8f296b94b6b18c3adafc ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -31,6 +31,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmti12.tfm" 1136768653 1484 ed72f8f5cf654cda15ecc8e32bfcbee5 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm" 1136768653 768 1321e9409b4137d6fb428ac9dc956269 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm" 1136768653 772 9a936b7f5e2ff0557fce0f62822f0bbf ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm" 1136768653 768 d7b9a2629a0c353102ad947dc9221d49 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1248133631 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb" 1248133631 32166 b0c356b15f19587482a9217ce1d8fa67 ""
@@ -41,6 +42,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1248133631 32362 179c33bbf43f19adbb3825bb4e36e57a ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1248133631 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
@@ -110,9 +112,9 @@
   "figures/number_field.png" 1775529601.8414 70818 093477c2c97a7c3fe62d98c79e53396e ""
   "figures/su3k_fusion.png" 1775529597.93572 70106 5cc29218ec0fcf9bfc181b619ac44a8f ""
   "figures/tqft_partition.png" 1775529600.87788 60668 db95ff44291ba00488b513e4ee969ede ""
-  "paper_draft.aux" 1775831816.67432 6249 dbbf2bf2c25b3d86cf7d06b2196771dc "pdflatex"
-  "paper_draft.out" 1775831816.67522 4245 0417af180c85544fe8f404a6051e736c "pdflatex"
-  "paper_draft.tex" 1775695938.27737 29861 4b0e92aca85041347473f5aa40d3ca01 ""
+  "paper_draft.aux" 1776265684.71547 7249 6cd9df7e72734f4f6084eca9db99d2a1 "pdflatex"
+  "paper_draft.out" 1776265684.71631 6036 998c4826fe2d36be93b775946ea4af0b "pdflatex"
+  "paper_draft.tex" 1776265683.29793 36397 c7ae8279c08a8f296b94b6b18c3adafc ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"
