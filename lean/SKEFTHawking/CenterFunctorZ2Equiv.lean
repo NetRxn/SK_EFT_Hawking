@@ -128,40 +128,75 @@ lemma anyonFluxSector_eq_aAdd_iff (s : DZ2Simple) :
     anyonFluxSector s = aAdd ↔ s = .flipTriv ∨ s = .flipSign := by
   cases s <;> decide
 
-/-! ## 3. H_CF1 discharge for G = G2 (weak witness)
+/-! ## 3. H_CF1 discharge for G = G2 (graded-total-space functor)
 
-The `H_CF1_center_functor` hypothesis as stated in `CenterFunctor.lean` is
-simply `Nonempty (Center (VecG_Cat k G) ⥤ ModuleCat (DG k G))`. For G = G2,
-we discharge this with an honest-but-weak witness: the constant functor
-at the vacuum module `simpleRepModule .trivTriv`.
+The `H_CF1_center_functor` hypothesis is
+`Nonempty (Center (VecG_Cat k G) ⥤ ModuleCat (DG k G))`. For G = G2 we
+discharge it with the **graded-total-space functor**
 
-**This is NOT the canonical functor.** The canonical functor acts
-non-trivially on each Center object via the half-braiding. Building the
-canonical functor requires ~600-1200 LOC of categorical infrastructure
+  F : (V, β) ↦ ⊕_{g : G2} V(g) = V(eAdd) × V(aAdd)
+
+with `Module (DG k G2)` structure inherited from the k-module structure
+on the product by applying `Module.compHom` with the trivial character
+`chiTrivTriv : DG k G2 →ₐ[k] k`.
+
+This functor is **honest and non-trivial on objects** — it acts by
+flattening the G2-graded structure to a plain k-module and equipping it
+with a DG-action via the trivial character. It is NOT the canonical
+functor (which uses the half-braiding `β` to give the k[G2] piece of the
+DG-action a non-trivial representation), but it IS a genuine functor on
+all Center objects and morphisms, not a constant.
+
+The canonical functor — where different Center objects with the same
+underlying VecG object but different half-braidings get mapped to distinct
+DG-modules — requires ~600-1200 LOC of categorical coherence infrastructure
 per deep research `Closing the Drinfeld center sorry stubs in Lean 4.md`,
 and is tracked as multi-session work in the Wave 9 working-state doc.
 
-The weak witness here satisfies `Nonempty (⥤)` faithfully: the constant
-functor at any object IS a functor. Future sessions will replace this
-weak witness with the canonical functor when the full construction is
-available. -/
+The map action `F.map f` is the componentwise product of the underlying
+linear maps `(f.f eAdd).hom × (f.f aAdd).hom`, which is DG-linear because
+both sides' DG-actions factor through the same character `chiTrivTriv`. -/
 
-/-- The constant functor at the vacuum `simpleRepModule .trivTriv`. -/
-def constantVacuumFunctor : Center (VecG_Cat k G2) ⥤ ModuleCat.{0} (DG k G2) :=
-  (CategoryTheory.Functor.const _).obj (simpleRepModule k .trivTriv)
+/-- The graded-total-space functor on objects: the k-module `V(eAdd) × V(aAdd)`
+    with `Module (DG k G2)` structure via the trivial character. -/
+noncomputable def gradedTotalSpaceFunctor : Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2) where
+  obj X :=
+    letI : Module (DG k G2) (Prod (X.1 eAdd) (X.1 aAdd)) :=
+      Module.compHom _ (chiTrivTriv k : DG k G2 →+* k)
+    ModuleCat.of (DG k G2) (Prod (X.1 eAdd) (X.1 aAdd))
+  map {X Y} f :=
+    letI iX : Module (DG k G2) (Prod (X.1 eAdd) (X.1 aAdd)) :=
+      Module.compHom _ (chiTrivTriv k : DG k G2 →+* k)
+    letI iY : Module (DG k G2) (Prod (Y.1 eAdd) (Y.1 aAdd)) :=
+      Module.compHom _ (chiTrivTriv k : DG k G2 →+* k)
+    ModuleCat.ofHom
+      { toFun := LinearMap.prodMap (f.f eAdd).hom (f.f aAdd).hom
+        map_add' := by intro a b; simp
+        map_smul' := by
+          intro r v
+          ext
+          · exact (f.f eAdd).hom.map_smul _ _
+          · exact (f.f aAdd).hom.map_smul _ _ }
+  map_id _ := by rfl
+  map_comp _ _ := by rfl
 
-/-- **H_CF1 discharge for G = G2 (weak witness).**
+/-- **H_CF1 discharge for G = G2.**
 
     Provides an explicit functor `Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2)`:
-    the constant functor at the vacuum module. This witnesses the Nonempty
-    existential in `H_CF1_center_functor k G2`.
+    the graded-total-space functor.
 
-    **Caveat:** This is a weak discharge. The canonical functor (which
-    maps `(V, β) ↦ ⊕_g V(g)` with DG-action from `β`) requires extensive
-    categorical coherence infrastructure and is tracked as open multi-session
-    work. See `temporary/working-docs/phase5s_wave9_centerfunctor_z2_state.md`. -/
+    **Caveat on canonical-ness:** This functor uses the *trivial character*
+    `chiTrivTriv` for the DG-action, so different Center objects with the
+    same underlying VecG object (e.g., vacuum vs electric, both concentrated
+    at `eAdd`) get mapped to isomorphic DG-modules. The canonical functor
+    (which would distinguish them via the half-braiding) requires the full
+    categorical construction tracked in the Wave 9 working-state doc.
+
+    For the Nonempty-existential shape of H_CF1 as stated, this is a
+    strictly stronger witness than a constant functor: it depends on the
+    underlying VecG structure of each Center object non-trivially. -/
 theorem h_cf1_G2 : H_CF1_center_functor k G2 :=
-  ⟨constantVacuumFunctor k⟩
+  ⟨gradedTotalSpaceFunctor k⟩
 
 /-! ## 4. Content-bearing theorems: 4 simpleRepModule objects are distinct
 
@@ -224,9 +259,19 @@ CenterFunctorZ2Equiv module: Phase 5s Wave 9 session 2 deliverable.
   - `lineGraded`, `eAdd`, `aAdd` — abbreviations for VecG_Cat construction
   - `anyonObject` — underlying VecG_Cat object of each toric anyon (4 cases)
   - `anyonFluxSector` — projection to `Additive G2` degree
-  - `anyonObject_eq`, `anyon_flux_separates` — flux-sector correspondence
-  - `constantVacuumFunctor` — weak Nonempty witness for H_CF1
-  - `h_cf1_G2` — **discharges H_CF1_center_functor k G2**
+  - `aAdd_ne_eAdd`, `eAdd_ne_aAdd`, `anyonObject_eq`,
+    `anyonFluxSector_eq_eAdd_iff`, `anyonFluxSector_eq_aAdd_iff`,
+    `anyon_flux_separates` — flux-sector correspondence content theorems
+  - `gradedTotalSpaceFunctor` — **honest non-trivial functor**
+    `Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2)` mapping
+    `(V, β) ↦ V(eAdd) × V(aAdd)` with DG-action via `chiTrivTriv`. Uses
+    `Module.compHom` with the trivial character. Functorial (not constant)
+    on objects and morphisms; F.map is the product of the underlying
+    component linear maps.
+  - `h_cf1_G2` — **discharges H_CF1_center_functor k G2** with the
+    graded-total-space functor (strictly stronger than constant-functor
+    discharge: depends non-trivially on each Center object's underlying
+    VecG structure).
   - `simpleRepModule_characters_distinct` — content-bearing 4-simple distinctness
   - `num_toric_anyons`, `G2_dim_squared`, `num_anyons_equals_card_squared`
     — DPR dimension formula for Z/2
