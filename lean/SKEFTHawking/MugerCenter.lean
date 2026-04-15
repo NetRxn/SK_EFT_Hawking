@@ -27,6 +27,8 @@ import SKEFTHawking.QSqrt2
 import SKEFTHawking.QSqrt5
 import SKEFTHawking.ToricCodeCenter
 import SKEFTHawking.RibbonCategory
+import SKEFTHawking.ModularityTheorem
+import SKEFTHawking.FibonacciMTC
 
 open CategoryTheory MonoidalCategory BraidedCategory
 
@@ -417,14 +419,24 @@ Fin-indexed S-matrix + DecidableEq on the coefficient field
 
 namespace SKEFTHawking
 
-/-- **Row transparency (data level).** Index `i` in a `PreModularData`
-    is row-transparent if `S(i, j) = d(i) · d(j)` for every simple `j`,
-    i.e. the `i`-th row is proportional to the vacuum row with ratio `d(i)`.
-    Müger Prop 2.5: this is the data-level shadow of the categorical
-    transparency condition on the simple object indexed by `i`. -/
+/-- **Row transparency (data level — vacuum-row form).** Index `i` in a
+    `PreModularData` is row-transparent if its row is proportional to the
+    vacuum row (index 0) with ratio `d(i)`: `S(i, j) = d(i) · S(0, j)` for
+    every `j`.
+
+    This is the data-level shadow of Müger Prop 2.5 (transparency ⇒
+    `S(X, Y) = d(X) · d(Y)`), valid for **both** normalized and unnormalized
+    S-matrix conventions:
+    - Unnormalized: `S(0, j) = d(j)` so the form reduces to `S(i, j) = d(i) · d(j)`.
+    - Normalized (S' = S / D where D² = Σ d(i)²): both sides scale by 1/D,
+      so the proportionality `S'(i, j) = d(i) · S'(0, j)` holds iff the
+      unnormalized `S(i, j) = d(i) · d(j)` does.
+
+    The vacuum-row form is what the abstract bridge `modularImpliesMugerTrivial`
+    can leverage directly via `det_ne_zero_no_proportional_rows`. -/
 def PreModularData.isRowTransparent {R : Type*} [CommRing R]
     (D : PreModularData R) (i : Fin D.n) : Prop :=
-  ∀ j : Fin D.n, D.S i j = D.d i * D.d j
+  ∀ j : Fin D.n, D.S i j = D.d i * D.S ⟨0, D.hn⟩ j
 
 /-- **Data-level Müger-center triviality.** The Müger center of a
     `PreModularData` is trivial when the only row-transparent simple
@@ -462,13 +474,71 @@ already proved `isMugerTrivial` pointwise for our three flagship MTCs
 (Ising, Fibonacci, Toric D(ℤ₂)) via native_decide above. The
 `isMugerTrivial` predicate provides the common target. -/
 
-/-- **Wave 5 target (abstract bridge, not proved here):**
+/-- **Wave 5 target (abstract bridge):**
     For any `PreModularData` over a `Nontrivial` commutative ring, modularity
-    (det(S) ≠ 0) should imply data-level Müger triviality. Stating this as a
-    `Prop`-valued predicate on the data, we can later provide the Müger-2003
-    proof as an instance. -/
+    (det(S) ≠ 0) implies data-level Müger triviality. -/
 def PreModularData.modularImpliesMugerTrivial {R : Type*} [CommRing R] [Nontrivial R]
     (D : PreModularData R) : Prop :=
   D.modular → D.isMugerTrivial
+
+/-! ## 10. Wave 5 — Müger bridge theorem (Direction 1)
+
+**Theorem (Müger 2003 Cor. 2.16, Direction 1).** For a pre-modular category
+data `D : PreModularData R` over an integral domain, modularity (`det(S) ≠ 0`)
+implies the Müger center is trivial: only the vacuum (index 0) is transparent.
+
+**Proof:** If `i` is row-transparent (`S i = d(i) • S 0` componentwise), then
+the `i`-th and `0`-th rows of `S` are proportional. By
+`det_ne_zero_no_proportional_rows` (in `ModularityTheorem.lean`), this is
+impossible unless `i = 0`.
+
+This replaces the per-MTC `native_decide` proofs (Ising, Fibonacci, Toric)
+with one abstract theorem applicable to **any** finite pre-modular data
+over an integral domain. -/
+
+theorem PreModularData.modularImpliesMugerTrivial_proof {R : Type*}
+    [CommRing R] [IsDomain R] (D : PreModularData R) :
+    D.modularImpliesMugerTrivial := by
+  intro h_mod i h_transp
+  -- Suppose i.val ≠ 0; derive contradiction from det ≠ 0 + row proportionality.
+  by_contra h_ne_zero
+  have h_i_ne : i ≠ ⟨0, D.hn⟩ := by
+    intro h_eq
+    apply h_ne_zero
+    rw [h_eq]
+  -- Build the row-proportionality witness for det_ne_zero_no_proportional_rows.
+  have h_prop : D.S i = D.d i • D.S ⟨0, D.hn⟩ := by
+    funext j
+    rw [Pi.smul_apply, smul_eq_mul]
+    exact h_transp j
+  exact det_ne_zero_no_proportional_rows D.S h_mod i ⟨0, D.hn⟩ h_i_ne (D.d i) h_prop
+
+/-- Convenience: `det(S) ≠ 0 → isMugerTrivial`, the unfolded form. -/
+theorem PreModularData.modular_imp_mugerTrivial {R : Type*}
+    [CommRing R] [IsDomain R] (D : PreModularData R)
+    (h_mod : D.modular) : D.isMugerTrivial :=
+  D.modularImpliesMugerTrivial_proof h_mod
+
+/-! ## 11. Per-MTC instantiations of the abstract bridge
+
+The abstract `modular_imp_mugerTrivial` theorem can now be applied directly
+to each PreModularData instance with a proven `modular` witness. -/
+
+/-- **Ising (SU(2)₂) Müger center is trivial** — via the abstract bridge.
+    The categorical statement `Z₂(C_Ising) = Vec` follows from `det(S) ≠ 0`,
+    proved earlier in `RibbonCategory.lean` as `su2k2_modular`. -/
+theorem ising_mtc_muger_trivial : su2k2_data.isMugerTrivial :=
+  su2k2_data.modular_imp_mugerTrivial su2k2_modular
+
+/-- **SU(2)₁ Müger center is trivial** — via the abstract bridge. -/
+theorem su2k1_mtc_muger_trivial : su2k1_data.isMugerTrivial :=
+  su2k1_data.modular_imp_mugerTrivial su2k1_modular
+
+/-- **Fibonacci Müger center is trivial** — via the abstract bridge.
+    Uses `fib_modular` (proved 2026-04-15 in FibonacciMTC.lean). -/
+theorem fib_mtc_muger_trivial :
+    SKEFTHawking.FibonacciMTC.fibData.isMugerTrivial :=
+  SKEFTHawking.FibonacciMTC.fibData.modular_imp_mugerTrivial
+    SKEFTHawking.FibonacciMTC.fib_modular
 
 end SKEFTHawking

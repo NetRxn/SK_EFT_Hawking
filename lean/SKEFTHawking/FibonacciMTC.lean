@@ -157,6 +157,26 @@ theorem fib_dim_consistency :
 
 theorem fib_chiral : (14 : ℚ) / 5 ≠ 0 := by norm_num
 
+/-- **Fibonacci is modular**: `det(fibS) ≠ 0`.
+    `det(fibS) = (1/D)·(-1/D) − (φ/D)² = -(1 + φ²)/D²`, with `1 + φ² > 0`
+    and `D² > 0`, so the determinant is strictly negative (in particular nonzero). -/
+theorem fib_modular : fibData.modular := by
+  have h5 : (0 : ℝ) ≤ 5 := by norm_num
+  have hD2_pos : (0 : ℝ) < 2 + (1 + Real.sqrt 5) / 2 := by
+    have := Real.sqrt_nonneg (5 : ℝ); linarith
+  have hD_ne : Real.sqrt (2 + (1 + Real.sqrt 5) / 2) ≠ 0 :=
+    (Real.sqrt_pos.mpr hD2_pos).ne'
+  have hD_sq : Real.sqrt (2 + (1 + Real.sqrt 5) / 2) *
+      Real.sqrt (2 + (1 + Real.sqrt 5) / 2) = 2 + (1 + Real.sqrt 5) / 2 :=
+    Real.mul_self_sqrt hD2_pos.le
+  have h5sq : Real.sqrt 5 * Real.sqrt 5 = 5 := Real.mul_self_sqrt h5
+  show fibS.det ≠ 0
+  unfold fibS
+  rw [Matrix.det_fin_two_of]
+  intro h
+  field_simp at h
+  nlinarith [h, hD_sq, h5sq, Real.sqrt_nonneg (5:ℝ), sq_nonneg (1 + Real.sqrt 5)]
+
 end -- noncomputable section
 
 /-! ## 5. Module summary -/

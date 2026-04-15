@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-15 (Phase 5p Waves 3-4 wrap: MugerCenter full subcategory + `SymmetricCategory` instance (the Muger payoff — Z₂(C) is symmetric even when ambient is only braided), data-level `PreModularData.isRowTransparent` / `isMugerTrivial` predicates with Decidable instances. Per-MTC triviality already proved for Ising/Fibonacci/toric via native_decide. Also: Phase 5e Waves 7-8 earlier same day — per-generator S² on U_q(ŝl₂) (global Ad(K₀K₁) impossible, see `Uqsl2AffineHopf.lean` historical note). Build clean; validate.py 16/16 pass; 1723 tests pass.)
+**Last synced:** 2026-04-15 (Phase 5p Wave 5 wrap: abstract bridge `det(S)≠0 → isMugerTrivial` PROVED via Mathlib linear-algebra route in `MugerCenter.lean` + 3 per-MTC instances using the bridge (SU(2)_1, SU(2)_2/Ising, Fibonacci). `isRowTransparent` redefined to vacuum-row proportionality form to work for both normalized and unnormalized PreModularData conventions. New `fib_modular` proof in `FibonacciMTC.lean`. Earlier same day: Wave 3-4 (full subcategory + SymmetricCategory instance), Phase 5e Waves 7-8 (per-generator S² on U_q(ŝl₂)). Build clean; validate.py 16/16 pass; 1723 tests pass.)
 
 ---
 
@@ -12,7 +12,7 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **2998** (2920 substantive + 78 placeholder) | counts.json — package-module-bound count |
+| Lean theorems | **3004** (2926 substantive + 78 placeholder) | counts.json — package-module-bound count |
 | Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
