@@ -185,7 +185,10 @@ def load_lean_theorems():
 
 
 def load_paper_claims():
-    """Load per-paper claim analysis from declared PAPER_DEPENDENCIES."""
+    """Load per-paper claim analysis. For each paper on disk, merges
+    declared PAPER_DEPENDENCIES metadata with auto-extracted PaperClaim
+    nodes from the graph (covers papers without PAPER_DEPENDENCIES
+    entries so every paper surfaces its claims)."""
     from src.core.provenance import PAPER_DEPENDENCIES, PARAMETER_PROVENANCE
     from src.core.constants import ARISTOTLE_THEOREMS
 
@@ -195,6 +198,22 @@ def load_paper_claims():
 
     if not papers_dir.exists():
         return papers
+
+    # Pull PaperClaim nodes from the graph so papers without declared
+    # PAPER_DEPENDENCIES entries still surface their auto-extracted claims.
+    sys.path.insert(0, str(SCRIPT_DIR))
+    from build_graph import extract_paper_claim_nodes
+    claim_nodes = extract_paper_claim_nodes()
+    claims_by_paper: dict[str, list[dict]] = {}
+    for cn in claim_nodes:
+        paper = cn.get('meta', {}).get('paper')
+        if not paper:
+            continue
+        claims_by_paper.setdefault(paper, []).append({
+            'text': cn.get('name', ''),
+            'source': cn.get('meta', {}).get('source', 'declared'),
+            'index': cn.get('meta', {}).get('index', 0),
+        })
 
     # Build set of all Lean theorem names for cross-referencing
     lean_names = set()
@@ -326,6 +345,13 @@ def load_paper_claims():
         else:
             param_status = 'pending'
 
+        # Merge declared + auto-extracted claims (declared take precedence;
+        # if PAPER_DEPENDENCIES has key_claims, PaperClaim nodes mirror
+        # them; otherwise PaperClaim nodes are tex-auto and fill the gap).
+        graph_claims = sorted(claims_by_paper.get(paper_dir.name, []),
+                              key=lambda c: c['index'])
+        claim_source = graph_claims[0]['source'] if graph_claims else 'none'
+
         papers.append({
             'name': paper_dir.name,
             'title': meta.get('title', paper_dir.name),
@@ -335,6 +361,9 @@ def load_paper_claims():
             'lean_module_details': lean_module_details,
             'formula_deps': formula_deps,
             'key_claims': meta.get('key_claims', []),
+            'graph_claims': graph_claims,
+            'claim_count': len(graph_claims),
+            'claim_source': claim_source,
             'lines': line_count,
             'figure_count': fig_count,
             'has_fbox': has_fbox,

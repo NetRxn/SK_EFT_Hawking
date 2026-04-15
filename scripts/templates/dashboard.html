@@ -295,7 +295,7 @@
         </a>
         <a class="tab {% if tab == 'papers' %}active{% endif %}"
            href="?tab=papers">
-            Paper Claims ({{ papers|length }})
+            Paper Claims ({{ papers|sum(attribute='claim_count') }} across {{ papers|length }} papers)
         </a>
         <a class="tab {% if tab == 'citations' %}active{% endif %}"
            href="?tab=citations">
@@ -724,14 +724,35 @@
             </div>
             {% endif %}
 
-            <!-- Key claims -->
-            {% if p.key_claims %}
+            <!-- Claims (declared + auto-extracted from .tex) -->
+            {% if p.graph_claims %}
             <div style="margin: 8px 0; padding: 8px; background: #f0f9ff; border: 1px solid var(--blue-border); border-radius: 4px;">
-                <div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">
-                    Key Claims</div>
-                {% for claim in p.key_claims %}
-                <div style="font-size: 0.8rem; margin: 2px 0; padding-left: 12px;">{{ claim }}</div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                    <div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; text-transform: uppercase;">
+                        Claims ({{ p.claim_count }})
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--grey);">
+                        source:
+                        {% if p.claim_source == 'declared' %}
+                        <span style="color: var(--green); font-weight: 600;">declared (PAPER_DEPENDENCIES)</span>
+                        {% elif p.claim_source == 'tex-auto' %}
+                        <span style="color: var(--yellow); font-weight: 600;">auto-extracted from .tex — consider curating</span>
+                        {% else %}
+                        <span>none</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% for claim in p.graph_claims %}
+                <div style="font-size: 0.8rem; margin: 2px 0; padding-left: 12px;">
+                    <span style="color: var(--grey); font-size: 0.7rem;">{{ loop.index }}.</span>
+                    {{ claim.text }}
+                </div>
                 {% endfor %}
+            </div>
+            {% else %}
+            <div style="margin: 8px 0; padding: 6px 8px; font-size: 0.75rem; color: var(--grey); background: #fef3c7; border-radius: 4px;">
+                ⚠ No claims detected for this paper — neither PAPER_DEPENDENCIES
+                nor .tex auto-extraction produced any matches.
             </div>
             {% endif %}
 

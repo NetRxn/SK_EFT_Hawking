@@ -690,27 +690,163 @@ def extract_paper_nodes() -> list[dict]:
     return nodes
 
 
+# Claim-verb triggers for auto-extracting claim sentences from paper .tex
+# when no declared key_claims list exists. Targets the same sentence shape
+# as the kind of thing a human would put in a bulleted "Results" list:
+# "we prove X", "we show Y", "we formalize Z", "first proof of W", etc.
+_CLAIM_VERB_RE = re.compile(
+    r'\b(we\s+(prove|show|demonstrate|formaliz[es]|verif[yi]|derive|'
+    r'construct|establish|give|present|compute|confirm|obtain|extend|'
+    r'find|observe|report)|'
+    r'(formally\s+verified?|machine[- ]checked|'
+    r'(the\s+)?first\s+(formally\s+verified|in\s+any\s+proof\s+assistant|'
+    r'complete|computed|explicit)))\b',
+    re.IGNORECASE,
+)
+
+
+def _auto_extract_paper_claims(tex: str, limit: int = 12) -> list[str]:
+    """Heuristic claim extraction from paper .tex for papers without a
+    declared key_claims list. Scans:
+
+      1. Each \\item line in the first bulleted list (usually appears in
+         abstract or intro and lists paper contributions)
+      2. Each sentence in the abstract that carries a claim-verb marker
+
+    Deduplicates, caps at `limit` items. Used by `extract_paper_claim_nodes`
+    when PAPER_DEPENDENCIES.<paper>.key_claims is missing or empty.
+    """
+    claims: list[str] = []
+    seen: set[str] = set()
+
+    # Pass 1: bulleted items. Match the first `\begin{itemize}...\end{itemize}`
+    # or `\begin{enumerate}...\end{enumerate}` that appears anywhere.
+    list_match = re.search(
+        r'\\begin\{(itemize|enumerate)\}(.*?)\\end\{\1\}',
+        tex, flags=re.DOTALL,
+    )
+    if list_match:
+        for item_match in re.finditer(r'\\item\s+(.+?)(?=\\item|$)',
+                                      list_match.group(2), flags=re.DOTALL):
+            text = item_match.group(1).strip()
+            # Strip LaTeX formatting for the claim text
+            text = re.sub(r'\\cite\{[^}]*\}', '', text)
+            text = re.sub(r'\\emph\{([^}]*)\}', r'\1', text)
+            text = re.sub(r'\\texttt\{([^}]*)\}', r'\1', text)
+            text = re.sub(r'\\text[a-z]*\{([^}]*)\}', r'\1', text)
+            text = re.sub(r'\\[a-zA-Z]+\*?', ' ', text)
+            text = re.sub(r'[{}]', '', text)
+            text = re.sub(r'\s+', ' ', text).strip()
+            if len(text) >= 10 and text not in seen:
+                seen.add(text)
+                claims.append(text)
+                if len(claims) >= limit:
+                    return claims
+
+    # Pass 2: abstract sentences carrying a claim-verb marker.
+    abstract_match = re.search(
+        r'\\begin\{abstract\}(.*?)\\end\{abstract\}',
+        tex, flags=re.DOTALL,
+    )
+    if abstract_match:
+        abs_text = abstract_match.group(1)
+        abs_text = re.sub(r'\\cite\{[^}]*\}', '', abs_text)
+        abs_text = re.sub(r'\\emph\{([^}]*)\}', r'\1', abs_text)
+        abs_text = re.sub(r'\\texttt\{([^}]*)\}', r'\1', abs_text)
+        abs_text = re.sub(r'\\text[a-z]*\{([^}]*)\}', r'\1', abs_text)
+        abs_text = re.sub(r'\\[a-zA-Z]+\*?', ' ', abs_text)
+        abs_text = re.sub(r'[{}]', '', abs_text)
+        abs_text = re.sub(r'\s+', ' ', abs_text).strip()
+        # Split on sentence boundaries, respecting e.g./i.e.
+        sentences = re.split(
+            r'(?<!\be\.g)(?<!\bi\.e)(?<!\bvs)(?<=[.!?])\s+(?=[A-Z])',
+            abs_text,
+        )
+        for sent in sentences:
+            sent = sent.strip(' .')
+            if len(sent) < 30 or sent in seen:
+                continue
+            if _CLAIM_VERB_RE.search(sent):
+                seen.add(sent)
+                claims.append(sent)
+                if len(claims) >= limit:
+                    break
+
+    return claims
+
+
 def extract_paper_claim_nodes() -> list[dict]:
-    """Extract paper claim nodes from key_claims in PAPER_DEPENDENCIES."""
+    """Extract PaperClaim nodes from every paper on disk.
+
+    Phase 5v Wave 1c+ refinement. Previously gated on
+    PAPER_DEPENDENCIES.<paper>.key_claims, so 6 of 15 papers produced
+    zero claim nodes (papers 8, 9, 10, 11, 14, 15, 16). Now iterates all
+    paper directories:
+
+      - If PAPER_DEPENDENCIES has a declared `key_claims` list, use it
+        (curated claims are authoritative).
+      - Otherwise auto-extract from the paper's .tex via
+        `_auto_extract_paper_claims`, flagging the source as 'tex-auto'
+        so the dashboard can surface the distinction.
+    """
     from src.core.provenance import PAPER_DEPENDENCIES
 
+    papers_dir = PROJECT_ROOT / "papers"
     nodes = []
-    for paper_key, entry in PAPER_DEPENDENCIES.items():
-        for idx, claim_text in enumerate(entry.get('key_claims', [])):
+    auto_count = 0
+    declared_count = 0
+
+    if not papers_dir.exists():
+        # Fallback to pre-widening behavior
+        for paper_key, entry in PAPER_DEPENDENCIES.items():
+            for idx, claim_text in enumerate(entry.get('key_claims', [])):
+                nodes.append({
+                    'id': f'claim:{paper_key}:{idx}',
+                    'type': 'PaperClaim',
+                    'label': claim_text[:60] + ('...' if len(claim_text) > 60 else ''),
+                    'name': claim_text,
+                    'verification': 'verified',
+                    'detail': claim_text,
+                    'meta': {'paper': paper_key, 'index': idx,
+                             'full_text': claim_text, 'source': 'declared'},
+                })
+        return nodes
+
+    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        paper_key = tex_path.parent.name
+        entry = PAPER_DEPENDENCIES.get(paper_key, {})
+        declared = entry.get('key_claims', [])
+        if declared:
+            claims = declared
+            source = 'declared'
+            declared_count += len(claims)
+        else:
+            try:
+                tex = tex_path.read_text()
+            except (OSError, UnicodeDecodeError):
+                continue
+            claims = _auto_extract_paper_claims(tex)
+            source = 'tex-auto'
+            auto_count += len(claims)
+
+        for idx, claim_text in enumerate(claims):
             nodes.append({
                 'id': f'claim:{paper_key}:{idx}',
                 'type': 'PaperClaim',
                 'label': claim_text[:60] + ('...' if len(claim_text) > 60 else ''),
                 'name': claim_text,
-                'verification': 'verified',
+                'verification': 'verified' if source == 'declared' else 'unverified',
                 'detail': claim_text,
                 'meta': {
                     'paper': paper_key,
                     'index': idx,
                     'full_text': claim_text,
+                    'source': source,
                 },
             })
 
+    logger.info("PaperClaim extraction: %d nodes (%d declared + %d tex-auto)",
+                len(nodes), declared_count, auto_count)
     return nodes
 
 
