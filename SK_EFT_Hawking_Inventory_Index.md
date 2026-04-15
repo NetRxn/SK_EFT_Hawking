@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-15 (Phase 5e Waves 7-8 wrap: Bialgebra + HopfAlgebra instances on U_q(ŝl₂) confirmed wired; **20 new theorems** on Uqsl2AffineHopf for per-generator antipode + S² identities. **Wave 8 spec correction** — the original roadmap deliverable `S² = Ad(K₀K₁)` is mathematically impossible for affine ŝl₂ (degenerate Cartan matrix `[[2,-2],[-2,2]]`, no single `K=K₀^a·K₁^b` implements S² on both E_0 and E_1). Corrected to per-generator form with inline historical note in `Uqsl2AffineHopf.lean` and roadmap note in `Phase5e_Roadmap.md:147–170`, cross-referencing the (different, simpler) sl₃ correction at `Uqsl3Hopf.lean:3995`. Build clean from no-cache rebuild (8396 jobs); validate.py 16/16 pass; 1721 tests pass. Prior Tranche E status preserved.)
+**Last synced:** 2026-04-15 (Phase 5p Waves 3-4 wrap: MugerCenter full subcategory + `SymmetricCategory` instance (the Muger payoff — Z₂(C) is symmetric even when ambient is only braided), data-level `PreModularData.isRowTransparent` / `isMugerTrivial` predicates with Decidable instances. Per-MTC triviality already proved for Ising/Fibonacci/toric via native_decide. Also: Phase 5e Waves 7-8 earlier same day — per-generator S² on U_q(ŝl₂) (global Ad(K₀K₁) impossible, see `Uqsl2AffineHopf.lean` historical note). Build clean; validate.py 16/16 pass; 1723 tests pass.)
 
 ---
 
@@ -12,7 +12,7 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **2997** (2919 substantive + 78 placeholder) | counts.json — package-module-bound count |
+| Lean theorems | **2998** (2920 substantive + 78 placeholder) | counts.json — package-module-bound count |
 | Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |

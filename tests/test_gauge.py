@@ -8,6 +8,13 @@ fermion-bag algorithm with gamma matrices and sign monitoring.
 import numpy as np
 import pytest
 
+# All tests in this file depend on src.vestigial.gauge_fermion_bag*, which
+# unconditionally imports numba. numba is an optional extra (pyproject.toml
+# `fermion-bag` / `mc-all` groups); skip the whole file when it's not
+# installed. To run these tests in CI/locally, install with
+# `uv sync --extra fermion-bag`.
+pytest.importorskip("numba")
+
 
 # ════════════════════════════════════════════════════════════════════
 # Quaternion Algebra Tests
