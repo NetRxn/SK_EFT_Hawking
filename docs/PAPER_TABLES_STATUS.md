@@ -9,11 +9,11 @@
 | paper1_first_order | 1 (platform params) | **1/1** | `platform_rows` |
 | paper2_second_order | 2 (platform corrections, hierarchy taxonomy) | **1/2** (T2 done; T1 deferred) | `correction_types` |
 | paper3_gauge_erasure | 0 | N/A | — |
-| paper4_wkb_connection | 1 (WKB platforms) | 0/1 (deferred) | — |
+| paper4_wkb_connection | 1 (WKB platforms) | **1/1** | `wkb_platform_rows` |
 | paper5_adw_gap | 0 | N/A | — |
 | paper6_vestigial | 0 | N/A | — |
 | paper7_chirality_formal | 1 (verification summary) | **1/1** | `lean_module_summary` |
-| paper8_chirality_master | 1 (pillar formalization summary) | 0/1 (deferred — needs pillar→module mapping) | — |
+| paper8_chirality_master | 1 (pillar formalization summary) | **1/1** | `lean_module_summary` with pillar mapping in tables.py |
 | paper9_sm_anomaly_drinfeld | 0 | N/A | — |
 | paper10_modular_generation | 2 (SM fermion content, Z16 constraints) | **paper-authored (permanent)** | — |
 | paper11_quantum_group | 1 (formalization chain, 19 modules) | **1/1** | `lean_module_summary` |
@@ -24,11 +24,11 @@
 
 ## Summary
 
-- **7 of 10 papers with tables fully retrofitted** (1, 2, 7, 11, 12, 15; Paper 2 partial)
+- **9 of 10 papers with tables fully retrofitted** (1, 4, 7, 8, 11, 12, 15; Paper 2 partial — T2 done)
 - **2 papers permanently paper-authored** (10, 14 — content that doesn't drift)
-- **3 tables deferred** (Paper 2 Table 1, Paper 4, Paper 8) — each blocked on specific content-domain decisions, not framework gaps
+- **1 table deferred** (Paper 2 Table 1) — blocked on a Lean theorem registered in `Phase5v_Roadmap.md` (Bogoliubov wavenumber small-k expansion), to be executed via lean-lsp/MCP in a focused session
 
-**9 autogen tables live, 2 new source functions added, 1 engine feature landed (`\multicolumn` spans via `Span` class).**
+**10 autogen tables live, 6 source functions added, 1 engine feature landed (`\multicolumn` spans via `Span` class).**
 
 ## Deferred retrofit work — with specific blockers
 

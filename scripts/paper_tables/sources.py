@@ -71,6 +71,93 @@ def correction_types() -> list[dict]:
     ]
 
 
+def wkb_platform_rows(platforms: list[str]) -> list[dict]:
+    """Per-quantity rows × per-platform columns in WKB natural units (c_s=1,
+    κ=1). Uses the existing PlatformParams + SpectrumPoint machinery in
+    src/wkb/spectrum.py — no new formulas or Lean theorems required
+    (the natural-unit normalization is Paper 4's presentation choice).
+
+    Rows: D, γ_dim, δ_diss(T_H), δ_k(T_H), n_noise(T_H), ω_max/T_H
+    Columns: (quantity, <platform>, ...)
+    """
+    import src.wkb.spectrum as _wkb
+    from src.wkb.connection_formula import exact_connection_formula
+    from src.wkb.bogoliubov import modified_bogoliubov_coefficients
+
+    _factories = {
+        'Steinhauer': _wkb.steinhauer_platform,
+        'Heidelberg': _wkb.heidelberg_platform,
+        'Trento':     _wkb.trento_platform,
+    }
+
+    platform_data: dict[str, dict] = {}
+    for p in platforms:
+        factory = _factories.get(p)
+        if factory is None:
+            raise ValueError(
+                f"Unknown WKB platform {p!r}. Known: "
+                f"{sorted(_factories)}."
+            )
+        plat = factory()
+        # Evaluate at ω = T_H (the most physically relevant frequency)
+        T_H = plat.T_H
+        conn = exact_connection_formula(
+            T_H, plat.kappa, plat.c_s, plat.xi,
+            plat.gamma_1, plat.gamma_2,
+            plat.gamma_2_1, plat.gamma_2_2,
+            plat.gamma_3_1, plat.gamma_3_2, plat.gamma_3_3,
+        )
+        bog = modified_bogoliubov_coefficients(conn, T_env=0.0)
+        platform_data[p] = {
+            'D':            plat.D,
+            'gamma_dim':    plat.gamma_dim,
+            'delta_diss':   conn.kappa_eff.delta_diss,
+            'delta_k':      conn.delta_k,
+            'n_noise':      bog.n_noise,
+            'omega_max_TH': plat.omega_max / T_H,
+        }
+
+    def _fmt(val: float, precision: int = 1) -> str:
+        """Paper 4 uses mixed formatting: non-scientific for O(1), sci for small."""
+        if abs(val) >= 0.01:
+            return f'{val:.3f}'
+        mantissa, exp = f'{val:.{precision}e}'.split('e')
+        return fr'${mantissa}\times10^{{{int(exp)}}}$'
+
+    rows = []
+    row = {'quantity': '$D$'}
+    for p in platforms:
+        row[p] = _fmt(platform_data[p]['D'], precision=3)
+    rows.append(row)
+
+    row = {'quantity': r'$\gamma_\text{dim}$'}
+    for p in platforms:
+        row[p] = _fmt(platform_data[p]['gamma_dim'], precision=1)
+    rows.append(row)
+
+    row = {'quantity': r'$\delta_\text{diss}(T_H)$'}
+    for p in platforms:
+        row[p] = _fmt(platform_data[p]['delta_diss'], precision=1)
+    rows.append(row)
+
+    row = {'quantity': r'$\delta_k(T_H)$'}
+    for p in platforms:
+        row[p] = _fmt(platform_data[p]['delta_k'], precision=1)
+    rows.append(row)
+
+    row = {'quantity': r'$n_\text{noise}(T_H)$'}
+    for p in platforms:
+        row[p] = _fmt(platform_data[p]['n_noise'], precision=1)
+    rows.append(row)
+
+    row = {'quantity': r'$\omega_\text{max}/T_H$'}
+    for p in platforms:
+        row[p] = f'{platform_data[p]["omega_max_TH"]:.0f}'
+    rows.append(row)
+
+    return rows
+
+
 def polariton_c_s_measurements() -> list[dict]:
     """Measured polariton speed of sound in GaAs microcavities (Paper 12
     Table 1). Values are literature measurements from three LKB-adjacent

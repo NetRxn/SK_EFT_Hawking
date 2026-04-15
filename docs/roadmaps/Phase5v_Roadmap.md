@@ -34,6 +34,32 @@
 
 ---
 
+## Follow-up TODOs surfaced by the retrofit pass
+
+### Paper 2 Table 1 — Bogoliubov wavenumber small-k expansion (Lean + formulas.py)
+
+Paper 2 Table 1 reports `δ^(2)(ω=κ)` and `δ^(2)(ω=5κ)` at values ~10⁻⁵–10⁻¹². These are off-shell evaluations using the Bogoliubov-corrected horizon wavenumber:
+
+    k_H ≈ (ω/c_s)·(1 − ω²ξ²/(2c_s²))
+
+This is a perturbative small-kξ expansion of the existing `bogoliubovDispersion` theorem in `HawkingUniversality.lean`. It is **not yet canonicalized**. Paper 2's current table values live only in the paper; the off-shell wavenumber convention isn't a pipeline function.
+
+**Work to register:**
+1. **Lean (`lean/SKEFTHawking/WKBAnalysis.lean`)** — Add theorem `bogoliubov_wavenumber_small_k_approx`:
+   - Statement: for `ω c_s ξ : ℝ`, `0 < c_s`, the approximation `k ≈ (ω/c_s)·(1 − (ωξ/c_s)²/2)` satisfies the Bogoliubov dispersion to O((ωξ/c_s)⁴):
+     `|c_s²·k²·(1 + (kξ)²) − ω²| ≤ (ωξ/c_s)⁴ · ω²` (exact coefficient TBD)
+   - Cite parent theorem `bogoliubov_superluminal` (already proved)
+   - Target tactic: `nlinarith` or manual algebraic rewrite; escalate to `polyrith` if needed
+   - **Work this via lean-lsp/MCP in a focused session (no Aristotle)**
+2. **formulas.py** — Add `bogoliubov_wavenumber_small_k(omega, c_s, xi)` with docstring: `Lean: bogoliubov_wavenumber_small_k_approx`, `Aristotle: manual`, `Source: Paper 2 §5 Eq. (N)` (fill in N after final numbering)
+3. **tests/** — Add test verifying the small-k expansion matches `bogoliubov_superluminal`'s full expression within tolerance for Steinhauer/Heidelberg/Trento regimes
+4. **paper_tables/sources.py** — Add `platform_correction_rows(platforms, omega_factors=(1, 5))` that uses the new wavenumber function + existing `second_order_correction`
+5. **papers/paper2_second_order/tables.py** — Spec Table 1 pointing at the new source; retrofit `paper_draft.tex` inline table to `\input{tables/...}`
+
+**Not scope-expansion of Phase 2** (which is marked COMPLETE) — this is a retrofit-driven follow-up that formalizes a convention the paper has been using implicitly. Adding the theorem only sharpens existing formal content.
+
+---
+
 ## Absorption of Original KG Roadmap
 
 The existing `docs/KNOWLEDGE_GRAPH.md` lists a Phase 2 and Phase 3 that predate this scoping exercise. Status of each item under Phase 5v:
