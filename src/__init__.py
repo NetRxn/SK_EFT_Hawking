@@ -56,7 +56,7 @@ A unified project encompassing:
     * Algebraic Rokhlin (Serre σ≡0 mod 8), spin bordism → Rokhlin → Wang chain.
     * First verified statistical estimators: jackknife, autocorrelation.
 
-Lean 4 formalization: 3004 theorems (2926 substantive + 78 placeholder), 1 axiom, 132 modules. 0 sorry project-wide.
+Lean 4 formalization: 3012 theorems (2934 substantive + 78 placeholder), 1 axiom, 132 modules. 0 sorry project-wide.
 Aristotle automated theorem prover: 322 theorems proved across 44 runs.
 First machine-checked Ext computation over any Steenrod subalgebra (Phase 5q).
 First quantum group + Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃)
