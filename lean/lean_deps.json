@@ -4241,6 +4241,15 @@
   "axiom_deps_project": [],
   "axiom_deps_core": []},
  {"type":
+  "GE.ge (SKEFTHawking.ChiralityWall.evaded_count SKEFTHawking.ChiralityWall.gs_conditions) (instHAdd.hAdd 1 1)",
+  "structure_fields": [],
+  "name": "SKEFTHawking.ChiralityWall.tpf_evades_at_least_two",
+  "module": "SKEFTHawking.ChiralityWall",
+  "kind": "theorem",
+  "axiom_deps_project":
+  ["SKEFTHawking.ChiralityWall.tpf_evades_at_least_two._native.native_decide.ax_1_1"],
+  "axiom_deps_core": []},
+ {"type":
   "And (GE.ge (SKEFTHawking.ChiralityWall.evaded_count SKEFTHawking.ChiralityWall.gs_conditions) 2)\n  (GE.ge (SKEFTHawking.ChiralityWall.evaded_count SKEFTHawking.ChiralityWall.gs_conditions) 1)",
   "structure_fields": [],
   "name": "SKEFTHawking.ChiralityWall.tpf_evades_two_sufficient",
@@ -4248,15 +4257,6 @@
   "kind": "theorem",
   "axiom_deps_project":
   ["SKEFTHawking.ChiralityWall.tpf_evades_two_sufficient._native.native_decide.ax_1_1"],
-  "axiom_deps_core": []},
- {"type":
-  "GE.ge (SKEFTHawking.ChiralityWall.evaded_count SKEFTHawking.ChiralityWall.gs_conditions) (instHAdd.hAdd 1 1)",
-  "structure_fields": [],
-  "name": "SKEFTHawking.ChiralityWall.tpf_evasion_margin",
-  "module": "SKEFTHawking.ChiralityWall",
-  "kind": "theorem",
-  "axiom_deps_project":
-  ["SKEFTHawking.ChiralityWall.tpf_evasion_margin._native.native_decide.ax_1_1"],
   "axiom_deps_core": []},
  {"type": "SKEFTHawking.ChiralityWall.TPFIngredient",
   "structure_fields": [],
@@ -17124,15 +17124,6 @@
   "kind": "theorem",
   "axiom_deps_project": [],
   "axiom_deps_core": ["propext", "Quot.sound"]},
- {"type":
-  "Eq (instHSub.hSub (Fintype.card SKEFTHawking.LatticeHamiltonian.TPFViolation) 1) 2",
-  "structure_fields": [],
-  "name": "SKEFTHawking.LatticeHamiltonian.tpf_evasion_margin",
-  "module": "SKEFTHawking.LatticeHamiltonian",
-  "kind": "theorem",
-  "axiom_deps_project":
-  ["SKEFTHawking.LatticeHamiltonian.tpf_evasion_margin._native.native_decide.ax_1_1"],
-  "axiom_deps_core": ["propext", "Quot.sound", "Classical.choice"]},
  {"type": "GE.ge (Fintype.card SKEFTHawking.LatticeHamiltonian.TPFViolation) 1",
   "structure_fields": [],
   "name": "SKEFTHawking.LatticeHamiltonian.tpf_evasion_sufficient",
@@ -17148,6 +17139,15 @@
   "kind": "theorem",
   "axiom_deps_project":
   ["SKEFTHawking.LatticeHamiltonian.tpf_violation_count._native.native_decide.ax_1_1"],
+  "axiom_deps_core": ["propext", "Quot.sound", "Classical.choice"]},
+ {"type":
+  "Eq (instHSub.hSub (Fintype.card SKEFTHawking.LatticeHamiltonian.TPFViolation) 1) 2",
+  "structure_fields": [],
+  "name": "SKEFTHawking.LatticeHamiltonian.tpf_violation_surplus",
+  "module": "SKEFTHawking.LatticeHamiltonian",
+  "kind": "theorem",
+  "axiom_deps_project":
+  ["SKEFTHawking.LatticeHamiltonian.tpf_violation_surplus._native.native_decide.ax_1_1"],
   "axiom_deps_core": ["propext", "Quot.sound", "Classical.choice"]},
  {"type":
   "∀ {d n : Nat} {H : (Fin d → Int) → Matrix (Fin n) (Fin n) Complex},\n  SKEFTHawking.LatticeHamiltonian.TranslationInvariant d n H →\n    ∀ (x a b : Fin d → Int), Eq (H (instHAdd.hAdd (instHAdd.hAdd x a) b)) (H x)",

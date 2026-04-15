@@ -293,9 +293,13 @@ theorem evading_one_breaks_nogo :
 
 /-- **TPF's evasion margin: it evades 2, only needs 1.**
     The margin of safety is 1 — even if one evasion turns out to be
-    incorrect, the construction still breaks the no-go. -/
+    incorrect, the construction still breaks the no-go.
+
+    Renamed from `tpf_evasion_margin` (Phase 5v Wave 1a, 2026-04-15) to
+    disambiguate from `LatticeHamiltonian.tpf_violation_surplus`, which
+    proves a different statement about a different evasion count. -/
 -- PROVIDED SOLUTION: evaded_count = 2 (by native_decide), so 2 ≥ 1 + 1.
-theorem tpf_evasion_margin :
+theorem tpf_evades_at_least_two :
     evaded_count gs_conditions ≥ 1 + 1 := by
   native_decide
 

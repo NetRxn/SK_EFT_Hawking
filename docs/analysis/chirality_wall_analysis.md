@@ -205,7 +205,7 @@ The logical structure of the chirality wall analysis is formally verified in `Ch
 - **`evaded_condition_count`**: TPF evades >= 2 conditions (verified by `native_decide`)
 - **`condition_conservation`**: evaded + applying = total (conservation law)
 - **`evading_one_breaks_nogo`**: Evading any 1 of 4 conditions is sufficient to escape the no-go (Aristotle-verified: `intro _; native_decide`)
-- **`tpf_evasion_margin`**: TPF evades 2 >= 1+1, providing a safety margin of 1 (Aristotle-verified: `native_decide`)
+- **`tpf_evades_at_least_two`**: TPF evades 2 >= 1+1, providing a safety margin of 1 (Aristotle-verified: `native_decide`; renamed from `tpf_evasion_margin` in Phase 5v Wave 1a)
 - **`wall_status_conditional`**: Current wall status is "conditional" given unproven conjecture (verified by `rfl`)
 - **`wall_would_fall_if_proven`**: If conjecture proven, wall falls (verified by `native_decide`)
 - **`translation_invariance_applies`**: TPF preserves translation invariance (connects to Nielsen-Ninomiya)

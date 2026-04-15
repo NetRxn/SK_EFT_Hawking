@@ -154,8 +154,12 @@ theorem gs_nogo_structure (n_violated n_total : ℕ) (h_total : n_total = 9)
 theorem tpf_evasion_sufficient :
     Fintype.card TPFViolation ≥ 1 := by native_decide
 
-/-- **Evasion margin: TPF violates 3, needs 1 → margin of 2.** -/
-theorem tpf_evasion_margin :
+/-- **Evasion margin: TPF violates 3, needs 1 → margin of 2.**
+
+    Renamed from `tpf_evasion_margin` (Phase 5v Wave 1a, 2026-04-15) to
+    disambiguate from `ChiralityWall.tpf_evades_at_least_two`, which proves
+    a related-but-distinct statement about the 4-condition formulation. -/
+theorem tpf_violation_surplus :
     Fintype.card TPFViolation - 1 = 2 := by native_decide
 
 /-- **Applicable conditions: 9 - 3 = 6 conditions still hold for TPF.** -/

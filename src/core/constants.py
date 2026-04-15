@@ -874,7 +874,7 @@ ARISTOTLE_THEOREMS = {
     'phase_levels_ordered': 'b1ea2eb7',
     'metric_dof_equals_gr': 'b1ea2eb7',
     'evading_one_breaks_nogo': 'b1ea2eb7',
-    'tpf_evasion_margin': 'b1ea2eb7',
+    'tpf_evades_at_least_two': 'b1ea2eb7',  # renamed from tpf_evasion_margin (Phase 5v Wave 1a)
     'obstructions_individually_sufficient': 'b1ea2eb7',
     'param_gap_grows': 'b1ea2eb7',
 
