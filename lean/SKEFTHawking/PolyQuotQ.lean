@@ -76,45 +76,78 @@ instance : Add (PolyQuotQ n) where
 instance : Sub (PolyQuotQ n) where
   sub x y := ⟨fun i => x.coeffs i - y.coeffs i⟩
 
-/-! ## 3. Power reduction modulo minimal polynomial
+/-! ## 3. Power reduction via explicit Array-based reduction table
 
-Given reductionCoeffs `r : Fin n → ℚ` encoding x^n = Σᵢ rᵢ · x^i, the function
-`reducePower r m k` returns the coefficient of x^k in x^m after full
-reduction. For m < n it is `if m = k then 1 else 0`. For m ≥ n it recursively
-reduces x^m = x^(m-n) · (Σᵢ rᵢ · x^i) = Σᵢ rᵢ · x^(m-n+i).
+Earlier closure-based implementations (using recursive `reducePower r m k`)
+had two independent performance problems at higher degrees:
 
-Termination: each recursive call drops m strictly (m-n+i ≤ m-n+(n-1) = m-1). -/
+1. **Exponential branching.** The split-into-n-pieces recursion spawned n
+   sub-calls per step, giving O(n^n) leaf computations for unmemoized
+   queries. Manageable for sparse reductions (Φ₁₆, where only 1
+   coefficient is nonzero) but pathological for dense reductions like
+   Φ₁₅ (7 nonzero coefficients at degree 8).
 
-/-- Coefficient of x^k in x^m after full reduction mod p(x). -/
-def reducePower (r : Fin n → ℚ) (m : ℕ) (k : Fin n) : ℚ :=
-  if m < n then
-    if m = k.val then (1 : ℚ) else 0
-  else
-    -- m ≥ n case: x^m = Σᵢ rᵢ · x^(m-n+i), each term has degree < m
-    Finset.univ.sum (fun i : Fin n =>
-      r i * reducePower r (m - n + i.val) k)
-  termination_by m
-  decreasing_by
-    -- Goal: m - n + i.val < m, given ¬(m < n) so m ≥ n, and i.val < n
-    have hin : i.val < n := i.isLt
-    omega
+2. **Lazy closure re-evaluation.** The returned struct's `coeffs` field
+   was a lazy closure over the full double sum. Each query to
+   `(x * y).coeffs k` re-executed the sum, which in turn queried
+   `x.coeffs` and `y.coeffs`. For chained muls `(a * b) * c`, the outer
+   mul's 8 queries to `(a * b).coeffs` each triggered a full re-execution
+   of the inner mul — cascading exponentially through chain depth
+   (measured: 3-mul chain ~23s, 4-mul chain >2min).
+
+Both problems are eliminated here:
+
+1. `buildPowerTable` computes the reduction table explicitly as an
+   `Array (Array ℚ)` — O(n²) setup, O(1) lookup.
+2. `mulReduce` materializes the output coefficients into `outArr` before
+   wrapping in the struct — subsequent queries are O(1) array reads and
+   no cascade through chained muls.
+
+Complexity: O(n²) for table build + O(n³) for output = O(n³) per `mulReduce`.
+At n = 8: ≲ 600 ops. `native_decide` at dense reductions builds in ~3s. -/
+
+/-- Shift-by-x: given the coefficient array for x^m (length n), return the
+    coefficient array for x^(m+1) after reducing x^n = Σᵢ rᵢ x^i. -/
+private def shiftByXArr {n : ℕ} (r : Fin n → ℚ) (prev : Array ℚ) : Array ℚ :=
+  if h : 0 < n then
+    let topVal := prev[n - 1]!
+    Array.ofFn (fun k : Fin n =>
+      let shifted := if k.val = 0 then 0 else prev[k.val - 1]!
+      shifted + topVal * r k)
+  else prev
+
+/-- Build the power table. Entries 0..n-1 are the unit vectors; entries
+    n..2n-2 are derived iteratively via shiftByXArr. -/
+private def buildPowerTable {n : ℕ} (r : Fin n → ℚ) : Array (Array ℚ) :=
+  let base : Array (Array ℚ) :=
+    Array.ofFn (n := n) (fun m : Fin n =>
+      Array.ofFn (fun k : Fin n => if k.val = m.val then 1 else 0))
+  Nat.fold (n - 1) (fun _ _ acc =>
+    acc.push (shiftByXArr r (acc[acc.size - 1]!))) base
 
 /-! ## 4. Generic multiplication
 
-`mulReduce n r x y` computes the product of two `PolyQuotQ n` elements using
-reduction coefficients `r`. The formula:
+Build the power table once, then compute the output via a double sum:
 
-  (x · y)[k] = Σ_{p, q : Fin n} x[p] · y[q] · reducePower r (p+q) k
+  out[k] = Σ_{p, q : Fin n} x[p] * y[q] * powerTable[p + q][k]
 
-This captures:
-  - For p+q < n: diagonal contribution x[p] · y[q] when p+q = k
-  - For p+q ≥ n: x[p] · y[q] times the reduced coefficient at x^k of x^{p+q}
-
-All computation is over ℚ (computable), no classical logic, no Finsupp. -/
+O(n³) total. At n = 8: 512 operations per call — well within `native_decide`
+budgets even for dense reduction polynomials like Φ_15. -/
 def mulReduce (n : ℕ) (r : Fin n → ℚ) (x y : PolyQuotQ n) : PolyQuotQ n :=
-  ⟨fun k => Finset.univ.sum (fun p : Fin n =>
-             Finset.univ.sum (fun q : Fin n =>
-               x.coeffs p * y.coeffs q * reducePower r (p.val + q.val) k))⟩
+  let table := buildPowerTable r
+  -- CRITICAL: materialize the x and y coefficients into arrays to break
+  -- lazy-closure re-evaluation. Without this, each query to the result's
+  -- `coeffs` re-runs the full double sum, which re-queries x.coeffs and
+  -- y.coeffs, cascading through chained muls exponentially.
+  let xArr : Array ℚ := Array.ofFn (n := n) (fun i : Fin n => x.coeffs i)
+  let yArr : Array ℚ := Array.ofFn (n := n) (fun i : Fin n => y.coeffs i)
+  let outArr : Array ℚ := Array.ofFn (n := n) (fun k : Fin n =>
+    Finset.univ.sum (fun p : Fin n =>
+      Finset.univ.sum (fun q : Fin n =>
+        xArr[p.val]! * yArr[q.val]! *
+          (table[p.val + q.val]!)[k.val]!)))
+  -- Return struct that looks up from the materialized output array in O(1).
+  ⟨fun k => outArr[k.val]!⟩
 
 /-! ## 5. Sanity checks
 

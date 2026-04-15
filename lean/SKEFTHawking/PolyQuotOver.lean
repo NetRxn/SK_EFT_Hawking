@@ -96,7 +96,22 @@ def reducePowerOver [AddCommMonoid K] [One K] [Mul K]
     have hin : i.val < m := i.isLt
     omega
 
-/-- Generic multiplication: delegates to reducePowerOver + Finset.sum. -/
+/-- Generic multiplication: delegates to reducePowerOver + Finset.sum.
+
+**Known limitations (Phase 5i Wave 4 follow-up):**
+1. `reducePowerOver` uses exponential split-into-m-pieces recursion, so
+   dense reduction polynomials (≥ 3 nonzero reduction coefficients) cause
+   native_decide perf blowup at higher degrees. The `PolyQuotQ.mulReduce`
+   counterpart (over ℚ) was rewritten with an Array-based power table
+   and eager output materialization to avoid both the exponential recursion
+   AND lazy-closure reeval bug (see PolyQuotQ.mulReduce docstring).
+2. The returned struct's `.coeffs` is a lazy closure over the Finset.sum —
+   chained muls will cascade. Users of `mulReduceOver` with more than 2
+   chained muls should materialize intermediate results.
+
+The degree-2 specialization `mulReduce2` (below) does not suffer from
+these issues and is the current default for degree-2 towers. Generalizing
+to higher-degree towers via the Array-based approach is deferred. -/
 def mulReduceOver [AddCommMonoid K] [One K] [Mul K]
     (m : ℕ) (r : Fin m → K) (x y : PolyQuotOver K m) : PolyQuotOver K m :=
   ⟨fun k => Finset.univ.sum (fun p : Fin m =>
@@ -113,16 +128,21 @@ typeclass wiring. -/
 /-- Degree-2 tower multiplication in closed form.
 
     Given w² = r₀ + r₁·w and elements x = x₀ + x₁·w, y = y₀ + y₁·w:
-      x·y = (x₀·y₀ + r₀·x₁·y₁) + (x₀·y₁ + x₁·y₀ + r₁·x₁·y₁)·w -/
+      x·y = (x₀·y₀ + r₀·x₁·y₁) + (x₀·y₁ + x₁·y₀ + r₁·x₁·y₁)·w
+
+    Pre-computes both output coefficients eagerly to prevent the
+    lazy-closure-reeval bug (see PolyQuotQ.mulReduce docstring): without
+    the eager captures `c0`, `c1`, each query to the result's `.coeffs`
+    would re-run the inner arithmetic and cascade through chained muls. -/
 def mulReduce2 [Zero K] [Add K] [Mul K]
     (r : Fin 2 → K) (x y : PolyQuotOver K 2) : PolyQuotOver K 2 :=
   let a0 := x.coeffs 0
   let a1 := x.coeffs 1
   let b0 := y.coeffs 0
   let b1 := y.coeffs 1
-  ⟨fun i => if i.val = 0
-            then a0 * b0 + r 0 * (a1 * b1)
-            else a0 * b1 + a1 * b0 + r 1 * (a1 * b1)⟩
+  let c0 := a0 * b0 + r 0 * (a1 * b1)
+  let c1 := a0 * b1 + a1 * b0 + r 1 * (a1 * b1)
+  ⟨fun i => if i.val = 0 then c0 else c1⟩
 
 /-! ## 5. Sanity check
 
