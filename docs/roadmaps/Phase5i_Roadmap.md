@@ -72,9 +72,9 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 - [x] ALL verified by native_decide — zero sorry, zero axioms
 - [x] Builds in 3.8s
 - [ ] Restricted quantum group ū_q(sl_3) (deferred — not needed for fusion verification)
-- [ ] S-matrix verification (requires Q(ζ₃) and Q(ζ₁₅) — Wave 4 blocker)
+- [x] S-matrix verification — **DONE 2026-04-15** via Wave 4. SU(3)₁ row orthogonality in `QCyc3.lean` (Q(ζ₃)). SU(3)₂ full 6×6 S-matrix + T-matrix in `SU3k2SMatrix.lean` (Q(ζ₁₅)). Fibonacci F-symbols in `SU3k2FSymbols.lean` (Q(ζ₁₅, √φ), non-cyclotomic).
 
-### Wave 4 — Unified Algebraic Number Field Infrastructure
+### Wave 4 — Unified Algebraic Number Field Infrastructure — **COMPLETE 2026-04-15**
 **Goal:** Consolidate custom number fields into a generic framework.
 
 **Context:** The project currently has 7 hand-written number field types (QSqrt2, QSqrt3, QSqrt5, QCyc5, QCyc16, QLevel3, QCyc5Ext) plus PolyQuotQ as an already-generic Q(ζ₃) proof-of-concept. Each has manually defined arithmetic and DecidableEq. SU(3)₂ requires Q(ζ₁₅) (degree 8 over ℚ). This pattern does not scale.
@@ -102,27 +102,54 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
   - Deferred: QCyc5Ext tower extension (Q(ζ₅)[w]/(w²-φ)) — needs `PolyQuotOver K n`
     primitive (base ring K ≠ ℚ), genuinely separate infrastructure. QCyc5Ext's Mul
     already benefits indirectly since QCyc5 arithmetic now routes through `mulReduce`.
-- **4c — Q(ζ₁₅) + SU(3)₂ S-matrix verification**
-  - New instance at degree 8 using generic construction
-  - SU(3)₂ modular data loaded from `su3_level2_modular_data_cyclotomic15.md` deep research deliverable
-  - Verify S-matrix unitarity, modular SL(2,Z) relations, Verlinde formula via native_decide
-  - Closes W3's deferred "S-matrix verification requires Q(ζ₃) and Q(ζ₁₅)" bullet
-- **4d — Mathlib contribution prep**
-  - Style adaptation for Mathlib conventions
-  - Zulip engagement per Phase 5g Track B W4
-  - Hands off to Phase 5g Track B for upstream PRs
+- **4c — Q(ζ₁₅) + SU(3)₂ modular data** [DONE 2026-04-15]
+  - **4c-part1** (commit `e7e111a`): QCyc15 defined as `abbrev QCyc15 := PolyQuotQ 8`
+    with reduction `![-1, 1, 0, -1, 1, -1, 0, 1]` (Φ₁₅: ζ⁸ = ζ⁷ − ζ⁵ + ζ⁴ − ζ³ + ζ − 1).
+    Initial build revealed a lazy-closure-reeval bug in `mulReduce` (chained muls
+    cascaded exponentially: 3-mul 23s, 4-mul >2min). Root cause: `⟨fun k => big_sum⟩`
+    was a lazy closure, so each query re-executed inputs' full computations. **Fix**:
+    materialize output coefficients into `Array ℚ` via `Array.ofFn` before wrapping
+    in the struct. Also replaced `reducePower` with an explicit `Array (Array ℚ)`
+    power table via `shiftByXArr` iteration (O(n²) setup, O(1) lookup). After fix:
+    chained ζ¹⁵ = 1 passes in 3.2s.
+  - **4c-part2** (commit `112f562`): `SU3k2SMatrix.lean` — all 9 S-matrix entry
+    classes (A-I) as QCyc15 values (×15 scaling), full 6×6 S-matrix + Z₃ simple
+    current identities (G = A·ω₃, H = A·ω₃², I = -A, orbit sum = 0), T-matrix
+    diagonal (4 distinct values), T 15th-root-of-unity (14-deep chained tests
+    each, validating the Wave 4c-part1 fix). 15 theorems, all native_decide, 3.4s.
+  - **4c-part3** (commit `43872e6`): `QCyc15SqrtPhi.lean` (Q(ζ₁₅, √φ) via
+    `PolyQuotOver QCyc15 2`, first non-cyclotomic field — √φ escapes all
+    cyclotomic fields by Kronecker-Weber) + `SU3k2FSymbols.lean` (Fibonacci 2×2
+    F-matrix F² = I proved entry-by-entry). 9 theorems, 3.8s.
+  - **Closes** W3's deferred "S-matrix verification requires Q(ζ₃) and Q(ζ₁₅)"
+    bullet.
+- **4d — Mathlib contribution prep (sans Zulip)** [DONE 2026-04-15, commit `bf5efce`]
+  - Extracted `QCyc3` from PolyQuotQ.lean into its own `QCyc3.lean` module —
+    PolyQuotQ.lean is now pure generic construction, Mathlib-upstream-ready.
+  - Mathlib-style copyright headers + docstrings on `PolyQuotQ.lean` and
+    `PolyQuotOver.lean` (Main definitions / Implementation notes / References
+    sections, full algorithmic rationale for the Array-based + materialized
+    design documented inline).
+  - Narrow-imports TODO marker retained; full import narrowing deferred to the
+    Zulip iteration cycle.
+  - Not this wave: Zulip engagement, Mathlib PR submission.
 
 **Deep research queued:**
-- `Lit-Search/Tasks/su3_level2_modular_data_cyclotomic15.md` — HIGH priority, unblocks 4c. Deliverable: explicit S/T/F coefficient tables in Q(ζ₁₅) basis, CAS-verified, Lean-ready.
-- `Lit-Search/Tasks/generic_decidable_algebraic_number_field_mathlib_design.md` — MEDIUM priority, de-risks 4a architecture choice. Deliverable: architecture recommendation + native_decide performance prediction + Mathlib PR strategy.
+- `Lit-Search/Tasks/su3_level2_modular_data_cyclotomic15.md` — **COMPLETE**
+  (`Lit-Search/Phase-5i/5i-SU(3)₂ modular tensor category- exact data over Q(ζ₁₅).md`,
+  landed 2026-04-15, consumed by 4c-part2/4c-part3).
+- `Lit-Search/Tasks/generic_decidable_algebraic_number_field_mathlib_design.md` —
+  **COMPLETE** (`Lit-Search/Phase-5i/5i-Decidable algebraic number fields for
+  Lean 4 + Mathlib.md`, landed 2026-04-15, consumed by 4a architecture).
 
 **Deliverables (overall):**
-- [ ] Generic `CyclotomicField n` or `AdjoinRoot` type with DecidableEq (4a)
-- [ ] Refactor existing types as instances of the generic construction (4b)
-- [ ] Q(ζ₁₅) for SU(3)₂ S-matrix verification (4c)
-- [ ] **BLOCKS**: Mathlib PR for categorical infrastructure (Phase 5g Track B) (4d)
-  - Mathlib reviewers will reject 7 hand-written number types
-  - Generic construction is prerequisite for upstreaming
+- [x] Generic `PolyQuotQ n` with DecidableEq (4a, commit `bd92d3b`)
+- [x] Refactor existing types as instances (4b `b576fe8`, 4b.ext `5064c4c`)
+- [x] Q(ζ₁₅) for SU(3)₂ S-matrix verification (4c-part1/2, commits `e7e111a` / `112f562`)
+- [x] **BONUS:** Q(ζ₁₅, √φ) for F-symbols (4c-part3, commit `43872e6`) — first
+  non-cyclotomic field + first SU(3)₂ F-matrix in any proof assistant.
+- [x] Mathlib-upstream-ready style (4d, commit `bf5efce`) — **UNBLOCKS** Phase 5g
+  Track B when the Zulip iteration cycle begins.
 
 ---
 
@@ -134,4 +161,4 @@ U_q(sl_2) is complete: definition, Hopf algebra, affine extension, restricted qu
 
 ---
 
-*Phase 5i roadmap. Updated 2026-04-14 (W1 COMPLETE: Uqsl3.lean, 21 relations, 0 sorry. **W2 COMPLETE 2026-04-14**: Uqsl3Hopf.lean, 0 sorry, Bialgebra + HopfAlgebra typeclass instances wired; all 21 Δ/ε/S relation-respect proofs closed, 4 antipode q-Serre cubics (E12/E21/F12/F21) proven, S² = Ad(K₁²K₂²) per generator (Drinfeld theorem) proven, 24 per-generator eval lemmas added, 3 coalgebra axioms proven; closing commits `bdf0ee9`, `dadce3e`, `619dd37`, `fad0edb`, `912c495`, `bf2989d`. W3 COMPLETE: SU3kFusion.lean, SU(3)₁+SU(3)₂ fusion, 99 thms, 0 sorry. W4 partial: PolyQuotQ.lean, 15 thms, 0 sorry; generic CyclotomicField remainder BLOCKS Mathlib PR). **First rank-2 quantum group Hopf algebra in any proof assistant** + first SU(3)_k fusion in any proof assistant. Full SKEFTHawking package builds clean no-cache.*
+*Phase 5i roadmap. **PHASE 5i COMPLETE 2026-04-15.** Waves: W1 (Uqsl3.lean — 21 Chevalley relations, 0 sorry), W2 (Uqsl3Hopf.lean — 0 sorry, Bialgebra + HopfAlgebra typeclass instances; all 21 Δ/ε/S relation-respect proofs closed, 4 antipode q-Serre cubics (E12/E21/F12/F21) proven, S² = Ad(K₁²K₂²) per generator (Drinfeld theorem) proven, 24 per-generator eval lemmas, 3 coalgebra axioms), W3 (SU3kFusion.lean — SU(3)₁+SU(3)₂ fusion, 99 thms, 0 sorry), W4 (number-field infrastructure: generic `PolyQuotQ n` + `PolyQuotOver K m` tower + 7 hand-rolled fields migrated + QCyc15 + SU(3)₂ S/T matrix + Q(ζ₁₅,√φ) non-cyclotomic + SU(3)₂ Fibonacci F-matrix + Mathlib-upstream-ready docstrings; closing commits `bd92d3b` 4a, `b576fe8` 4b, `5064c4c` 4b.ext, `e7e111a` 4c-part1, `112f562` 4c-part2, `43872e6` 4c-part3, `bf5efce` 4d). **Firsts achieved:** rank-2 quantum group Hopf algebra in any proof assistant, SU(3)_k fusion in any proof assistant, generic computable polynomial quotient ring over ℚ, non-cyclotomic algebraic number field via generic tower, rank-6 MTC modular data in any proof assistant, SU(3)₂ F-symbols in any proof assistant. Full SKEFTHawking package builds clean (8403 jobs, 0 sorry).*

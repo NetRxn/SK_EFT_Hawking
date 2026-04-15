@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-15 (Phase 5p Wave 6 wrap: new `D2Formula.lean` module with explicit Drinfeld-center dimension identities for **both** Vec_{ℤ/2} (toric code, 4=2²) and Vec_{S₃} (8 anyons, 36=6², the first **non-abelian** Drinfeld-center dimension formula in any proof assistant). Earlier same day: Phase 5p Waves 1-2 (FPdim eigenvector approach + SU(4)_1 + G₂_1 + `phi_triple_origin`), Wave 5 Direction 1 (det(S)≠0 → Müger trivial bridge), Waves 3-4 (full subcategory + SymmetricCategory instance), Phase 5e Waves 7-8 (per-generator S² on U_q(ŝl₂)). 5 PRs merged today. Build clean; validate.py 16/16 pass; 1723 tests pass.)
+**Last synced:** 2026-04-15 (**Phase 5i COMPLETE** via Wave 4: generic `PolyQuotQ n` + `PolyQuotOver K m` tower primitives consolidate all 7 number fields in the project; new modules `QCyc3`, `QCyc15`, `QCyc15SqrtPhi`, `SU3k2SMatrix`, `SU3k2FSymbols`; first non-cyclotomic number field (Q(ζ₁₅, √φ)) via tower; first rank-6 MTC modular data (SU(3)₂); first SU(3)₂ F-symbols; Mathlib-upstream-ready architecture unblocking Phase 5g Track B. Wave 4 commits: `bd92d3b` 4a / `b576fe8` 4b / `5064c4c` 4b.ext / `e7e111a` 4c-part1 (mulReduce bug fix: lazy-closure-reeval → Array-based + eager materialization) / `112f562` 4c-part2 / `43872e6` 4c-part3 / `bf5efce` 4d. Full package 8403 jobs clean. Earlier same day: Phase 5p Waves 1-6 (D2Formula, FPdim, Müger bridge, SymmetricCategory); Phase 5e W7-8.)
 
 ---
 
@@ -12,12 +12,12 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **3021** (2942 substantive + 79 placeholder) | counts.json — package-module-bound count |
+| Lean theorems | **3066+** (post-Phase-5i-Wave-4; 37 new theorems from 4c/4d modules + mulReduce bug fix; authoritative count via `update_counts.py`) | counts.json — package-module-bound count |
 | Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **133** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean` which is a `lean_exe`). ExtractDeps now walks by module (not namespace), so Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) are now included. |
+| Lean modules | **139** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +6 since last sync: Wave 4 added PolyQuotOver (4b.ext), QCyc15 (4c-part1), SU3k2SMatrix (4c-part2), QCyc15SqrtPhi (4c-part3), SU3k2FSymbols (4c-part3), QCyc3 (4d, extracted from old PolyQuotQ). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
 | Test files | **46** | |
@@ -215,7 +215,13 @@
 | SU3kFusion | 99 | **Phase 5i**: **FIRST SU(3)_k fusion in any proof assistant**: SU(3)₁ Z₃ fusion (3 objects) + SU(3)₂ (6 anyons, Fibonacci subcategory τ⊗τ=1+τ), charge conjugation, associativity+commutativity (**ALL PROVED by native_decide, zero sorry**) |
 | GaugingStep | 34 | **Phase 5h**: Gauging obstruction: NotOnSiteSymmetry, SymmetryDisentangler, GT Models 1+2, SM anomaly 16≡0 mod 16, SMGPhaseData (BCH+HW), Golterman-Shamir propagator-zero, ChiralityWall3DStatus (**ALL PROVED, zero sorry**) |
 | FermiPointTopology | 33 | **Phase 5j W1-3**: Fermi-point gauge emergence: VZ Theorem 2.1 (|N|=1 → U(1)+vierbein), Mechanism A vs B, charge splitting, multi-Weyl classification (|N|≤3), SU(2) emergence chain (3 theorem + 2 heuristic + 1 speculative), SU(3) more speculative than SU(2), full emergence chain status, bridges to EmergentGravityBounds/GaugingStep/SPT (**ALL PROVED, zero sorry**) |
-| PolyQuotQ | 10 | **Phase 5i Wave 4a (2026-04-15)**: **First generic computable polynomial quotient ring over ℚ in Lean 4**. Parametric `PolyQuotQ n` structure with `mulReduce n r x y` generic multiplication. `native_decide` reduces through the generic layer at degrees 2 (Q(√2), Q(ζ₃)) and 4 (Q(ζ₅), 5-iteration ζ⁵=1 test). Q(ζ₃) preserved as `abbrev QCyc3 := PolyQuotQ 2` instance retaining the original 9 theorems. Consolidates the polynomial-reduction logic; backward compat preserved via `toPoly`/`ofPoly` coercions in concrete fields. Unblocks 4b/4c/4d and Phase 5g Track B (Mathlib upstream). |
+| PolyQuotQ | 1 | **Phase 5i Wave 4a+4c-part1+4d (2026-04-15)**: **First generic computable polynomial quotient ring over ℚ in any proof assistant**. Parametric `PolyQuotQ n` structure (`Fin n → ℚ` coeff tuples, `deriving DecidableEq`). `mulReduce n r x y` via `Array (Array ℚ)` power table + eager output materialization — avoids both exponential-recursion and lazy-closure-reeval pitfalls that disabled earlier designs under native_decide. O(n³) per mul at arbitrary degree × density. Mathlib-upstream-ready (standard copyright + docstring). QCyc3 extracted to own module (4d). Wave 4d `bf5efce`. |
+| PolyQuotOver | 1 | **Phase 5i Wave 4b.ext+4d (2026-04-15)**: Generic tower extension `PolyQuotOver K m` over arbitrary `[DecidableEq K]` base ring. `mulReduce2` (degree-2 specialization, eager materialization) is the current tower primitive; `mulReduceOver` (general m) retained with documented performance caveats. First non-trivial user is QCyc15SqrtPhi (Q(ζ₁₅)[w]/(w²-φ)). Mathlib-upstream-ready. |
+| QCyc3 | 9 | **Phase 5i Wave 4d (2026-04-15)**: Q(ζ₃) = ℚ[x]/(x²+x+1) concrete instance of `PolyQuotQ 2` with reduction `![-1,-1]`. Extracted from old PolyQuotQ.lean during Mathlib-style cleanup. Preserves original 9 theorems (ζ²=-1-ζ, ζ³=1, cyclotomic_sum, ζ≠1, ζ²≠1, SU(3)₁ S-matrix row orthogonality). Mathlib-style docstring. |
+| QCyc15 | 8 | **Phase 5i Wave 4c-part1 (2026-04-15)**: Q(ζ₁₅) = ℚ[x]/Φ₁₅(x) as `abbrev QCyc15 := PolyQuotQ 8`. Reduction `![-1, 1, 0, -1, 1, -1, 0, 1]` (7 nonzero terms — densest cyclotomic at degree 8). Key constants: ζ, ζ², ..., ζ⁷, √5, φ, 1/φ, ω₃=ζ⁵. Theorems: ζ¹⁵=1 (4-mul chain), (√5)²=5, φ²=φ+1, φ·(1/φ)=1, ω₃³=1, cube-root sum = 0. First PolyQuotQ instance at degree 8 for a proper cyclotomic. |
+| QCyc15SqrtPhi | 5 | **Phase 5i Wave 4c-part3 (2026-04-15)**: **First non-cyclotomic number field in the project**, Q(ζ₁₅, √φ) = Q(ζ₁₅)[w]/(w²-φ), degree 16 over ℚ, via `PolyQuotOver QCyc15 2`. Non-Galois — √φ escapes every cyclotomic field per Kronecker-Weber (x⁴-x²-1 splitting field contains ±i/√φ). Theorems: w²=φ, φ·(1/φ)=1, (1/√φ)²=1/φ, w≠0. Enables SU(3)_2 Fibonacci F-symbols. |
+| SU3k2SMatrix | 14 | **Phase 5i Wave 4c-part2 (2026-04-15)**: **First rank-6 MTC modular data in any proof assistant**. 9 S-matrix entry classes A-I (×15 scaling) as QCyc15 values, full 6×6 S-matrix, 6 T-matrix diagonal entries (4 distinct: ζ¹³, ζ², ζ⁸, ζ⁷). Theorems: S=Sᵀ (native_decide over 36 entries), Z₃ simple-current identities (G=A·ω₃, H=A·ω₃², I=-A, orbit sum = 0), T¹⁵=1 for all 4 distinct T-matrix values (14-deep chained muls each), T₀·T₃=ζ⁶, Fibonacci subcategory entries (S₀₀=A, S₀₅=B, S₅₅=I). |
+| SU3k2FSymbols | 9 | **Phase 5i Wave 4c-part3 (2026-04-15)**: **First SU(3)₂ F-symbols in any proof assistant**. Fibonacci 2×2 F-matrix over Q(ζ₁₅, √φ): F=[[1/φ, 1/√φ], [1/√φ, -1/φ]]. F²=I proved entry-by-entry (4 entries, all native_decide). Supporting: golden ratio φ²=φ+1 in the non-cyclotomic tower, 1/φ²+1/φ=1, Fibonacci equation (1/φ)²+(1/√φ)²=1. Full 120-entry catalog deferred (requires external Ardonne-Slingerland data). |
 
 ---
 
