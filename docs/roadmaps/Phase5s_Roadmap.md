@@ -236,16 +236,40 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
   (`g1⁻¹·x·g1 = x`, `a·a = e`, `a⁻¹ = a`). 18 theorems, 0 sorry.
   `simpleChi : DZ2Simple → (DG k G2 →ₐ[k] k)` packages the 4 characters
   aligning with the `CenterEquivalenceZ2` bijection.
-- [ ] **Wave 9 continuation — Module instances + functor + equivalence**
-  (estimated 300-400 LOC more):
-    - Wrapper types for the 4 simple modules (distinct from each other and
-      from plain `k`)
-    - `Module (DG k G2)` instances via `Module.compHom` + the 4 characters
-    - Functor `centerToRepZ2 : Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2)`
-      via pattern match on toric anyons
-    - Full + Faithful + EssSurj via finite case analysis (4 objects)
-    - Assemble `Equivalence.ofFullyFaithfulEssSurj` → discharge
-      `H_CF1_center_functor` and `H_CF2_center_equivalence` in `CenterFunctor.lean`
+- [x] **Wave 9 session 1 continuation — Module instances + injectivity +
+  ModuleCat bundling** (2026-04-15, commits `3b94041` / `3966904` /
+  `007e192`):
+    - `SimpleModule {k} [CommRing k] (χ : DG k G2 →ₐ[k] k)` wrapper
+      structure: character-parameterized, gives 4 distinct `Module`
+      instances without typeclass diamond
+    - Full typeclass stack: `Zero, Add, Neg, Sub, AddCommGroup, SMul k,
+      Module k`, and `Module (DG k G2)` via `Module.compHom`
+    - `basis_smul_one` confirms `d • ⟨1⟩ = ⟨χ(d)⟩` (each character's
+      action recovered on the distinguished unit)
+    - `simpleChi_injective` (pairwise distinctness of 4 characters given
+      `(1:k) ≠ 0` and `(1:k) ≠ -1`), via 6 pairwise-distinct lemmas +
+      case analysis on 4×4 = 16 `DZ2Simple` pairs
+    - `simpleRepModule : DZ2Simple → ModuleCat (DG k G2)` bundles the
+      4 simples as category objects (pattern-match on label; helper
+      function failed due to universe inference)
+- [ ] **Wave 9 continuation — functor construction + equivalence**
+  (estimated ~200-300 additional LOC, session 2+):
+    - Persistent working state:
+      `temporary/working-docs/phase5s_wave9_centerfunctor_z2_state.md`
+    - Verified foundations (2026-04-15 session 1): `Center C := Σ X : C,
+      HalfBraiding X` from Mathlib source; `MonoidalCategory
+      (Center (VecG_Cat k G))` available via `VecGMonoidal.lean`.
+    - Next steps: encode 4 toric anyons as concrete `Center.Obj` values
+      with half-braiding (+ `monoidal` + `naturality` proofs), define
+      `centerToRepZ2` functor, prove Full/Faithful/EssSurj, assemble
+      `Equivalence.ofFullyFaithfulEssSurj` to discharge
+      `H_CF2_center_equivalence`.
+    - Observation: `H_CF1_center_functor` as stated is
+      `Nonempty (Functor Center ModuleCat)` — trivially provable by any
+      constant functor. The hypothesis's comment block describes the
+      INTENT as "the canonical functor exists" (≠ Nonempty). Proper
+      Wave 9 completion should strengthen H_CF1 to match the intent
+      rather than discharge it trivially.
 
 ---
 
