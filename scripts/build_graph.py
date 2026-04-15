@@ -942,14 +942,116 @@ def extract_python_test_nodes() -> list[dict]:
     return nodes
 
 
-def extract_review_finding_nodes() -> list[dict]:
-    """ReviewFinding — findings from internal/external adversarial reviews.
+# Severity marker glyphs used in review docs (including Master Checklist)
+_SEV_GLYPHS = {
+    '🔴': 'critical',
+    '🟡': 'major',
+    '🔵': 'minor',
+}
 
-    Wired in: Wave 2c / Wave 6. Sources: parse papers/AutomatedReviews/**/*.md
-    for structured findings (severity, status, target). Emits:
-    {id: 'review:{review_id}:{finding_id}', type: 'ReviewFinding', ...}.
+# Section heading pattern for Master Checklist / Comprehensive / Citation
+# review format: `### N.N — Paper X — ...` or `### N — Paper Y — ...`
+# also allow plain `### N.N Heading` without em-dashes.
+_REVIEW_SECTION_RE = re.compile(
+    r'^###\s+(\d+(?:\.\d+)?)\s*[—\-–]\s*(.+?)$',
+    re.MULTILINE,
+)
+
+
+def _infer_paper_key_from_text(text: str) -> str | None:
+    """Best-effort extraction of a paper key (paper1_first_order, etc.)
+    from the body text of a finding. Returns None if none found."""
+    m = re.search(r'`?paper(\d{1,2}[_A-Za-z0-9]*)`?', text, re.IGNORECASE)
+    if m:
+        return f'paper{m.group(1).lower()}'
+    return None
+
+
+def extract_review_finding_nodes() -> list[dict]:
+    """ReviewFinding — findings from adversarial reviews.
+
+    Phase 5v Wave 2d. Scans `papers/AutomatedReviews/<date>/*.md` for
+    structured findings (numbered `### N.N — ...` headings) with severity
+    glyphs (🔴/🟡/🔵). Emits one ReviewFinding node per finding. Status
+    defaults to 'open' unless the finding text contains ✅/✓ markers.
+    The Master Checklist is the canonical source here; other reviews are
+    also scanned.
+
+    Node meta carries: severity, status, review_file, review_date,
+    section_index, inferred_paper (if any). FLAGS edges to target
+    artifacts (Paper/Formula/LeanTheorem) are emitted in
+    extract_flags_edges.
     """
-    return []
+    reviews_dir = PROJECT_ROOT / "papers" / "AutomatedReviews"
+    if not reviews_dir.exists():
+        return []
+
+    nodes = []
+    seen_ids: set[str] = set()
+    for md_path in sorted(reviews_dir.glob("*/*.md")):
+        date_dir = md_path.parent.name        # e.g. "2026-04-12"
+        review_name = md_path.stem            # e.g. "CitationReview-01"
+        try:
+            source = md_path.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        # Split source into sections by `### N.N` headings and compute per-section bodies
+        matches = list(_REVIEW_SECTION_RE.finditer(source))
+        for idx, m in enumerate(matches):
+            section_num = m.group(1)
+            heading = m.group(2).strip()
+            start = m.end()
+            end = matches[idx + 1].start() if idx + 1 < len(matches) else len(source)
+            body = source[start:end].strip()
+
+            # Severity from heading or body
+            severity = 'advisory'
+            for glyph, sev in _SEV_GLYPHS.items():
+                if glyph in heading or glyph in body[:600]:
+                    severity = sev
+                    break
+
+            # Status: fixed if ✅ or "fixed" / "done" markers present
+            status = 'open'
+            if re.search(r'[✅✓]|\bfixed\b|\bresolved\b|\bdone\b', heading, re.IGNORECASE):
+                status = 'fixed'
+            if re.search(r'[❌✗]\s+still', body[:400], re.IGNORECASE):
+                status = 'open'
+
+            inferred_paper = _infer_paper_key_from_text(heading + " " + body[:400])
+
+            finding_id = f'review:{date_dir}:{review_name}:{section_num}'
+            if finding_id in seen_ids:
+                continue
+            seen_ids.add(finding_id)
+
+            nodes.append({
+                'id': finding_id,
+                'type': 'ReviewFinding',
+                'label': f'{section_num} {heading[:50]}',
+                'name': heading[:200],
+                'verification': 'verified',
+                'detail': body[:400].replace("\n", " "),
+                'meta': {
+                    'severity': severity,
+                    'status': status,
+                    'review_file': str(md_path.relative_to(PROJECT_ROOT)),
+                    'review_date': date_dir,
+                    'review_name': review_name,
+                    'section': section_num,
+                    'inferred_paper': inferred_paper,
+                },
+            })
+
+    if nodes:
+        from collections import Counter as _C
+        sev = _C(n['meta']['severity'] for n in nodes)
+        st = _C(n['meta']['status'] for n in nodes)
+        logger.info("ReviewFinding extraction: %d findings across %d review docs (severity: %s; status: %s)",
+                    len(nodes),
+                    len(list(reviews_dir.glob("*/*.md"))),
+                    dict(sev), dict(st))
+    return nodes
 
 
 def extract_production_run_nodes() -> list[dict]:
@@ -1550,6 +1652,41 @@ def extract_depends_on_axiom_edges(node_ids: set) -> list[dict]:
     return edges
 
 
+def extract_flags_edges(node_ids: set) -> list[dict]:
+    """FLAGS: ReviewFinding -> Paper / Formula / LeanTheorem / etc.
+
+    Phase 5v Wave 2d. For each ReviewFinding whose meta.inferred_paper
+    resolves to a Paper node, emit a FLAGS edge. This is a minimal wiring
+    — finer-grained targeting (finding -> specific formula / Lean theorem
+    mentioned in the finding text) is deferred; the readiness system
+    (Wave 4) will read body text to resolve more targets if needed.
+    """
+    findings = extract_review_finding_nodes()
+    edges = []
+    seen: set[tuple[str, str]] = set()
+    for f in findings:
+        paper = f.get('meta', {}).get('inferred_paper')
+        if not paper:
+            continue
+        paper_id = f'paper:{paper}'
+        if paper_id not in node_ids:
+            continue
+        if f['id'] not in node_ids:
+            continue
+        edge_key = (f['id'], paper_id)
+        if edge_key in seen:
+            continue
+        seen.add(edge_key)
+        edges.append({
+            'source': f['id'],
+            'target': paper_id,
+            'type': 'FLAGS',
+            'severity': f.get('meta', {}).get('severity', 'advisory'),
+            'status': f.get('meta', {}).get('status', 'open'),
+        })
+    return edges
+
+
 def extract_verifies_edges(node_ids: set) -> list[dict]:
     """VERIFIES: PythonTest -> Formula / Parameter / LeanTheorem.
 
@@ -1673,6 +1810,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_imports_edges(node_ids))
     edges.extend(extract_depends_on_axiom_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
+    edges.extend(extract_flags_edges(node_ids))
 
     # ASSUMES edges from HYPOTHESIS_REGISTRY
     _hyp_nodes, hyp_edges = extract_hypothesis_nodes()

@@ -189,7 +189,7 @@ The **actual gap** is downstream of the script:
 
 **Deferred to Wave 2 (require new node types not yet in schema):**
 - [x] `extract_python_test_nodes` + `extract_verifies_edges` → PythonTest + VERIFIES (Wave 2c — DONE; 1831 tests; 515 bounds / 772 identity / 177 golden / 6 roundtrip / 361 unknown; 23 formulas are bounds-only — direct targets for ComputationCorrectness gate)
-- [ ] `extract_review_finding_nodes` → ReviewFinding + FLAGS (Wave 2d)
+- [x] `extract_review_finding_nodes` + `extract_flags_edges` → ReviewFinding + FLAGS (Wave 2d — DONE; 56 findings extracted from 4 Perplexity review docs, 34 FLAGS→Paper edges inferred from body text; severity/status classification coarse — refinement deferred to Wave 6 when adversarial-reviewer emits structured output natively)
 - [ ] `extract_production_run_nodes` → ProductionRun + PRODUCES (Wave 2e)
 - [x] `extract_placeholder_marker_nodes` → PlaceholderMarker (Wave 2b — DONE)
 - [ ] Widen PaperClaim with `kind ∈ {numeric, theorem-cite, prose}` + ProseClaim subtype (Wave 2f)
