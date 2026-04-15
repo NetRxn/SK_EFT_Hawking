@@ -2,9 +2,9 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Fifteen papers (Phases 1-5s) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), U_q(sl₃) with **full Bialgebra + HopfAlgebra typeclass instances**, affine U_q(sl_2 hat), restricted u_q, SU(2)_k/SU(3)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators, tetrad gap equation, Fibonacci/Ising MTC, coideal embedding, Rep(u_q) fusion correspondence, Phase 5e braided MTCs (cyclotomic fields Q(ζ₁₆)/Q(ζ₅), Ising hexagon+ribbon+trefoil, Fibonacci hexagon+twist, SU(2)₃/SU(2)₄ S-matrix unitarity), Phase 5h-5j (gauging obstruction, Fermi-point topology, rank-2 quantum groups, SU(3)_k fusion), Phase 5k-5p (WRT TQFT, TQC, generic quantum groups, anomaly inflow, SPT stacking, Muger center, Fibonacci universality), Phase 5q (Ext computation over A(1)), Phase 5r (change of rings), Phase 5s (FK gapped interface, Muger general theorem), Phase 5i Wave 2 / Tranche E (Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃) wired). Lean 4 formalization: **2981 theorems, 1 axiom across 132 modules, 0 sorry**. 322 Aristotle-proved (44 runs). 1660+ tests, 101 pipeline figures, 48 notebooks, 53 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Fifteen papers (Phases 1-5s) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), U_q(sl₃) with **full Bialgebra + HopfAlgebra typeclass instances**, affine U_q(sl_2 hat) with **per-generator squared-antipode identities** — global Ad(K) impossible due to degenerate affine Cartan, see `Uqsl2AffineHopf.lean:5755+` historical note — restricted u_q, SU(2)_k/SU(3)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators, tetrad gap equation, Fibonacci/Ising MTC, coideal embedding, Rep(u_q) fusion correspondence, Phase 5e braided MTCs (cyclotomic fields Q(ζ₁₆)/Q(ζ₅), Ising hexagon+ribbon+trefoil, Fibonacci hexagon+twist, SU(2)₃/SU(2)₄ S-matrix unitarity), Phase 5h-5j (gauging obstruction, Fermi-point topology, rank-2 quantum groups, SU(3)_k fusion), Phase 5k-5p (WRT TQFT, TQC, generic quantum groups, anomaly inflow, SPT stacking, **Müger center full-category formalization with `SymmetricCategory` instance**, **`det(S)≠0 → isMugerTrivial` abstract bridge (Direction 1)**, **Frobenius-Perron dimension via eigenvector approach (third source of φ from G₂_1)**, Fibonacci universality), Phase 5q (Ext computation over A(1)), Phase 5r (change of rings), Phase 5s (FK gapped interface, Muger general theorem), Phase 5i Wave 2 / Tranche E (Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃) wired). Lean 4 formalization: **3012 theorems, 1 axiom across 132 modules, 0 sorry**. 322 Aristotle-proved (44 runs, all closed; subsequent gap closures via interactive MCP tooling). 1723 tests, 101 pipeline figures, 48 notebooks, 53 Python source modules.
 
-**Last verified:** 2026-04-14 (Phase 5i Wave 2 / Tranche E — Uqsl3Hopf 0-sorry milestone with full Bialgebra + HopfAlgebra typeclass instances. All 4 antipode q-Serre cubics (E12, E21, F12, F21) closed via palindromic Serre atom-bridge approach (commits `bf2989d`, `912c495`, `fad0edb`, `619dd37`); Bialgebra + HopfAlgebra wiring (commits `dadce3e`, `bdf0ee9`). Lean toolchain 4.29.0 upgrade complete. ExtractDeps refactored to filter by package module (not namespace prefix), revealing +138 theorems from Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) that were previously invisible. Project state: **2981 thm, 1 ax, 132 modules, 0 sorry**, build CLEAN no-cache. Stale prior state: 2237+ thm, 17 sorry across 3 files (Aristotle 6dbc9447 batch was superseded by interactive MCP closure of all 17 between April 8 and April 14).)
+**Last verified:** 2026-04-15 (PRs #10–#13 merged this day: Phase 5e Waves 7-8 — per-generator S² on U_q(ŝl₂) + Wave 8 specification correction (`S² = Ad(K₀K₁)` is mathematically impossible for affine ŝl₂; replaced with per-generator identities); Phase 5p Waves 3-5 — Müger center full subcategory, `SymmetricCategory` payoff, `det(S)≠0 → isMugerTrivial` abstract bridge proved via Mathlib linear-algebra route, plus 3 per-MTC instances (SU(2)_1, SU(2)_2/Ising, Fibonacci) with new `fib_modular` proof; Phase 5p Waves 1-2 — FPDimension via eigenvector approach for Fibonacci/Ising/SU(3)_1/SU(2)_3 plus new SU(4)_1 (Z₄ pointed) and G₂_1 (Fibonacci fusion structure → **third source of φ**) certificates with `phi_triple_origin` theorem; Tranche E (2026-04-14) preserved: full Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃) via palindromic Serre atom-bridge. Lean toolchain 4.29.0. ExtractDeps refactored to filter by package module. Project state: **3012 thm, 1 ax, 132 modules, 0 sorry**, build CLEAN no-cache, validate.py 16/16, 1723 tests pass.)
 
 ---
 
@@ -21,7 +21,7 @@
 - `HBAR`, `K_B` — SI physical constants
 - `ATOMS` dict — Atomic properties (mass, scattering length) for Rb87, K39, Na23
 - `EXPERIMENTS` dict — Experimental parameters (density, velocity, omega_perp) for Steinhauer, Heidelberg, Trento
-- `ARISTOTLE_THEOREMS` dict — 322+ theorem→run_id mappings across 45+ runs (Aristotle `6dbc9447` in flight)
+- `ARISTOTLE_THEOREMS` dict — 322+ theorem→run_id mappings across 45+ runs (all complete; Aristotle `6dbc9447` was the last in-flight batch, superseded by interactive MCP closure 2026-04-08–2026-04-14)
 - `ARISTOTLE_PROVED_COUNT = 322`
 - `A1_MILNOR_BASIS`, `A1_RESOLUTION_RANKS`, `A1_EXT_DIMENSIONS` — Ext computation data
 - `A1_EXT_GENERATORS`, `A1_EXT_RELATIONS`, `BORDISM_HYPOTHESES` — Ext generators and spin bordism hypotheses
@@ -291,7 +291,7 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (132 modules, 2981 theorems, 1 axiom, **0 sorry**)
+## 2. LEAN FORMAL VERIFICATION (132 modules, 3012 theorems, 1 axiom, **0 sorry**)
 
 ### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
 
@@ -376,7 +376,7 @@
 | SU2kMTC | ~220 | 11 | 0 | 5d | Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**ALL PROVED, zero sorry** — native_decide over Q(√2)) |
 | QSqrt2 | ~50 | 3 | 0 | 5d | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | ~80 | 7 | 0 | 5d | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
-| FibonacciMTC | ~180 | 11 | 0 | 5d | Fibonacci MTC: F-symbols in Q(√5), F²=I PROVED, PreModularData, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
+| FibonacciMTC | ~200 | 12 | 0 | 5d/5p | Fibonacci MTC: F-symbols in Q(√5), F²=I PROVED, PreModularData, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)). **Wave 5 add 2026-04-15:** `fib_modular` proof (det(fibS) ≠ 0 over ℝ via Matrix.det_fin_two_of + field_simp + nlinarith) — enables `fib_mtc_muger_trivial` via the abstract Müger bridge. |
 | Uqsl2AffineHopf | ~6010 | 201 | 0 | 5d/5e | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom; all 8 q-Serre proofs closed (4 comul + 4 antipode) — **0 sorry**. Bialgebra + HopfAlgebra typeclass instances WIRED (prior Tranche E work). **Phase 5e Wave 8 complete 2026-04-15**: 20 new theorems (8 per-generator antipode evals `uqAff_antipode_{E,F,K}_i`, 4 K-conjugation helpers, 8 per-generator S² identities `uqAff_antipode_squared_*`). Wave 8 original spec `S² = Ad(K₀K₁)` was mathematically wrong (affine Cartan matrix rank-deficient — no single global K implements S² on both simple-root generators); corrected to per-generator form with inline historical note cross-referencing the `Uqsl3Hopf.lean:3995` sl₃ correction. |
 | VerifiedStatistics | ~150 | 6 | 0 | 5d | Statistics extension: sample variance non-neg, Cauchy-Schwarz, jackknife mean-case, N_eff ≤ N (**ALL PROVED**) |
 | KerrSchild | ~100 | 7 | 0 | 5d | Kerr-Schild metrics: null vector, radial_null, Sherman-Morrison inverse, Schwarzschild, DOF counting (**ALL PROVED**) |
@@ -408,7 +408,7 @@
 | TPFDisentangler | ~200 | — | 0 | 5o | TPF disentangler for community value (**ALL PROVED, zero sorry**) |
 | StringNet | ~200 | — | 0 | 5o | String-net model formalization (**ALL PROVED, zero sorry**) |
 | KacWaltonFusion | ~200 | — | 0 | 5o | Kac-Walton fusion rule computation (**ALL PROVED, zero sorry**) |
-| FPDimension | ~200 | — | 0 | 5o | Frobenius-Perron dimension derivation (**ALL PROVED, zero sorry**) |
+| FPDimension | ~310 | ~30 | 0 | 5p | Frobenius-Perron dimension derivation (**ALL PROVED, zero sorry**). **Phase 5p Wave 1 complete + Wave 2 partial 2026-04-15**: eigenvector approach (per deep research recommendation) for Fibonacci/Ising/SU(3)_1/SU(2)_3 (both N_{1/2} and N_1) over QSqrt5/QSqrt2/ℤ via native_decide. D² derived for each. New 2026-04-15: SU(4)_1 (Z_4 pointed, all FPdim=1, D²=4) and **G₂_1 (FPdim=φ — third source of golden ratio)** sharing Fibonacci's fusion matrix. `phi_triple_origin` formalizes that φ arises identically in three Lie algebra contexts: A₁ at level 3 (SU(2)₃), A₁ at level 1 in Fibonacci form, and G₂ at level 1. |
 | MugerCenter | ~545 | ~36 | 0 | 5p | Muger center formalization (**ALL PROVED, zero sorry**). **Phase 5p Waves 3-5 complete 2026-04-15**: `ObjectProperty.IsMonoidal` instance + `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` abbrev + `SymmetricCategory (MugerCenter C)` instance (the key payoff — Z₂(C) is symmetric even when ambient is only braided). Data-level bridge: `PreModularData.isRowTransparent` (vacuum-row form, works for normalized + unnormalized), `isMugerTrivial` with Decidable instances for finite MTCs. **Wave 5 abstract bridge proved**: `PreModularData.modularImpliesMugerTrivial_proof` — det(S)≠0 implies Muger triviality, via the Mathlib `det_zero_of_row_eq` linear-algebra route in `ModularityTheorem.lean`. Per-MTC instances: `ising_mtc_muger_trivial`, `su2k1_mtc_muger_trivial`, `fib_mtc_muger_trivial` (the latter requires the new `fib_modular` proof in `FibonacciMTC.lean`). Categorical per-MTC witnesses preserved (Ising σ/ψ, Fibonacci τ, Toric e/m/ε). First Muger-center formalization in any proof assistant with full symmetric-monoidal structure + abstract Direction-1 bridge. |
 | IsingGates | ~200 | — | 0 | 5p | Ising anyon gate set for TQC (**ALL PROVED, zero sorry**) |
 | FibonacciBraiding | ~200 | — | 0 | 5p | Fibonacci anyon braiding matrices (**ALL PROVED, zero sorry**) |
@@ -481,7 +481,7 @@
 | 78dcc5f4 | 2026-04-05 | 34+ | Phase 5d Wave 1: Uqsl2Hopf (all sorry filled), SU2kSMatrix, RestrictedUq, RibbonCategory, E8Lattice, SpinBordism, VerifiedJackknife (all proved) |
 | 79e07d55 | 2026-04-05 | 19+ | Phase 5d Wave 2: TetradGapEquation (19 proved), Uqsl2Hopf Serre coproduct |
 | *Phase 5e-5p* | 2026-04-06–07 | 15+ | Phase 5e-5p sorry closure: VerifiedStatistics, KerrSchild, CoidealEmbedding, RepUqFusion, StimulatedHawking, CenterFunctor partial |
-| 6dbc9447 | 2026-04-08 | — | **In flight** — Phase 5s sorry closure batch |
+| 6dbc9447 | 2026-04-08 | — | **Complete** — Phase 5s sorry closure batch (superseded by interactive MCP closure of all 17 sorry between 2026-04-08 and 2026-04-14) |
 
 ---
 
@@ -553,7 +553,7 @@
 | paper7_chirality_formal | PRD/CPC | ~330 | GS no-go formal verification + TPF evasion in Lean 4 (54 thms, bibliography standardized) |
 | paper8_chirality_master | PRL | ~300 | Three-pillar chirality wall: GS + GT + Z₁₆ + FK 2+1D evidence (counts: 132 modules, 322 Aristotle) |
 | paper9_sm_anomaly_drinfeld | PRL | ~300 | SM anomaly in Z₁₆ + Drinfeld center formalization |
-| paper10_modular_generation | PRD | ~300 | Modular invariance → generation constraint N_f ≡ 0 mod 3 + Ext computation paragraph (counts: 2981/132) |
+| paper10_modular_generation | PRD | ~300 | Modular invariance → generation constraint N_f ≡ 0 mod 3 + Ext computation paragraph (counts: 3012/132) |
 | paper11_quantum_group | PRD | ~300 | First quantum group formalization U_q(sl₂) |
 | paper12_polariton | PRL | ~300 | Polariton analog Hawking: stimulated amplification protocol |
 | paper14_braided_mtc | PRD | outline | Braided MTC formalization: Ising/Fibonacci hexagon, ribbon, knot invariants + Muger general theorem |
@@ -651,7 +651,7 @@
 | uv.lock | uv package manager lock file |
 | .python-version | Python >=3.14 |
 | lean/lakefile.toml | Lean Lake build config (depends on Mathlib) |
-| lean/lean-toolchain | v4.28.0 |
+| lean/lean-toolchain | v4.29.0 |
 | lean/lake-manifest.json | Lean package manifest |
 | .env | ARISTOTLE_API_KEY (not committed) |
 | .gitignore | Excludes __pycache__, .venv, .env, figures/*.html, data/ |
@@ -785,16 +785,26 @@
 | **Test Files** | 46 | 1872+ tests |
 | **Notebooks** | 48 | Phases 1-5q (Technical + Stakeholder) |
 | **Lean Modules** | 130 | All build clean |
-| **Lean Theorems** | 3004 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
+| **Lean Theorems** | 3012 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
 | **Aristotle-proved** | 322+ | 45+ runs |
 | **Paper Drafts** | 15 + prediction tables | Full LaTeX (12 complete + 3 outlines) |
 | **Pipeline Figures** | 101 | All PNGs generated |
 | **Validation Checks** | 16 | All passing |
 | **Scripts** | 15 | validate, review_figures, submit_to_aristotle, 3 production runners, provenance_dashboard, generate_a1_resolution, 7 utilities |
-| **Stakeholder Docs** | 24 | Phases 1-5e |
+| **Stakeholder Docs** | 24 | Phases 1-5e + Phase 5i (no 5p docs yet — Müger / FPdim work is theory-only as of 2026-04-15) |
 | **Analysis Docs** | 3 | Vestigial, fracton, chirality |
 | **Roadmaps** | 16+ | Phases 1-5s + Phase 6 + deferred + verified statistics |
 
 ---
 
-**Project Status (2026-04-14):** Phase 5i Wave 2 / Tranche E **COMPLETE**. **2981 theorems** (2903 substantive + 78 placeholder), 1 axiom, **0 sorry project-wide** across 132 modules. 322 Aristotle-proved (44 runs), 1660+ tests, 101 figures, 53 Python modules, 15 papers, 48 notebooks. Build CLEAN no-cache (8396 jobs, 131 oleans + 1 lean_exe). **Lean toolchain 4.29.0 upgrade complete** — all upgrade-related build errors resolved (was: 3 files with errors at April 8). **Uqsl3Hopf 0-sorry milestone** (was: 3 sorry pending Aristotle Batch 3): all 4 antipode q-Serre cubics (E12, E21, F12, F21) closed via interactive MCP loop using a palindromic Serre atom-bridge approach (right-multiplication by K-chain for E case, left-multiplication for F case, with derived F·K helper rules), bridging E_chain·K_chain form to X-chain form via 3 atom equalities per theorem (~1500 lines, commits `1692714` `bf2989d` `912c495` `fad0edb` `619dd37`). Tranche E: full **Bialgebra + HopfAlgebra typeclass instances** wired (commits `dadce3e` `bdf0ee9`) — 24 per-generator eval lemmas + uq3AntipodeLin linear-map version + 3 coalgebra axioms (coassoc + 2 counital) + 16 antipode convolution helpers + 2 antipode laws. **Uqsl2AffineHopf 0-sorry** (was: 12 sorry, closed in earlier April 2026 Phase 5s Wave 8 via same atom-bridge pattern). ExtractDeps refactored to filter by package module (not namespace prefix) — reveals +138 theorems from Phase-4 physics modules (FermionBag4D, GaugeFermionBag, HubbardStratonovichRHMC, MajoranaKramers, QuaternionGauge, SO4Weingarten, VestigialSusceptibility, WetterichNJL) that declare in non-`SKEFTHawking.*` namespaces but live in package modules. Phase 5q-5s prior wave additions all preserved.
+**Project Status (2026-04-15):** Phase 5p Waves 1–5 (Direction 1) **COMPLETE** + Phase 5e Waves 7–8 **COMPLETE**. **3012 theorems** (2934 substantive + 78 placeholder), 1 axiom, **0 sorry project-wide** across 132 modules. 322 Aristotle-proved (44 runs, all complete; subsequent gap closures via interactive MCP), 1723 tests, 101 figures, 53 Python modules, 15 papers, 48 notebooks. Build CLEAN no-cache (8396 jobs, 131 oleans + 1 lean_exe). validate.py 16/16 pass.
+
+**Today's wave (2026-04-15) — four PRs merged:**
+- **PR #10 (`da1b32c`) Phase 5e Waves 7–8**: per-generator squared antipode on U_q(ŝl₂); the Wave 8 spec `S² = Ad(K₀K₁)` was identified as mathematically wrong for affine ŝl₂ (degenerate Cartan matrix `[[2,-2],[-2,2]]` admits no single global K), corrected to per-generator form (20 new theorems in `Uqsl2AffineHopf.lean` Section 8 with inline historical note cross-referencing the distinct sl₃ correction at `Uqsl3Hopf.lean:3995`).
+- **PR #11 (`d48fa6f`) Phase 5p Waves 3–4**: `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` abbrev + `ObjectProperty.IsMonoidal` instance + `SymmetricCategory (MugerCenter C)` instance (the Müger payoff: Z₂(C) is symmetric even when ambient C is only braided, proved via the faithful-functor pullback `(ObjectProperty.ι _).map_injective`). Data-level `PreModularData.isRowTransparent` / `isMugerTrivial` predicates with `Decidable` instances. Bundled: `numba` xfail on `tests/test_gauge.py`.
+- **PR #12 (`ae65e72`) Phase 5p Wave 5 (Direction 1)**: abstract bridge `PreModularData.modularImpliesMugerTrivial_proof` — det(S)≠0 → Müger trivial, via Mathlib `det_zero_of_row_eq` (already drafted in `ModularityTheorem.lean`). Three per-MTC instances (SU(2)_1, SU(2)_2/Ising, Fibonacci) via the bridge. New `fib_modular` proof in `FibonacciMTC.lean`. `isRowTransparent` redefined to vacuum-row form for normalized/unnormalized compatibility.
+- **PR #13 Phase 5p Waves 1–2 (this PR)**: FPDimension via eigenvector approach (Wave 1 retroactively closed; the eigenvector approach is the recommended route per deep research). Wave 2 partial: SU(4)_1 (Z₄ pointed, all FPdim=1) + G₂_1 (Fibonacci fusion structure → FPdim=φ) certificates added. `phi_triple_origin` theorem unifies the three independent sources of φ across A₁ at level 1 (Fibonacci), A₁ at level 3 (SU(2)₃), and G₂ at level 1.
+
+**Tranche E preserved (2026-04-14):** full **Bialgebra + HopfAlgebra typeclass instances** on U_q(sl₃) (commits `dadce3e` `bdf0ee9`) via palindromic Serre atom-bridge. Uqsl2AffineHopf 0-sorry (closed April 2026 via Phase 5s Wave 8). ExtractDeps refactored to filter by package module — reveals +138 theorems from Phase-4 physics modules (FermionBag4D, GaugeFermionBag, HubbardStratonovichRHMC, MajoranaKramers, QuaternionGauge, SO4Weingarten, VestigialSusceptibility, WetterichNJL).
+
+**Open / next-up:** Phase 5p Wave 5 Direction 2 (Z₂ trivial → det(S)≠0) requires Müger Lemma 2.15 (S² = dim(C)·C) and is deferred. Phase 5p Wave 6 (D²(Z(C)) = D²(C)²) and Phase 5i Wave 4 (CyclotomicField generic refactor for Mathlib PR) are the highest-value follow-ups.

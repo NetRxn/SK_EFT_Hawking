@@ -22,26 +22,30 @@
 
 ## Track A: Frobenius-Perron Dimension (Most Tractable)
 
-### Wave 1 — FP Dimension from Fusion Matrices
+### Wave 1 — FP Dimension from Fusion Matrices — **COMPLETE 2026-04-15**
 **Goal:** Derive quantum dimensions as eigenvalues of fusion matrices.
 
-**Deep research:** `Tasks/Phase-5p_Frobenius_Perron_dimension_eigenvalue_theory.md` — **PENDING**
+**Deep research:** `Phase-5p/Frobenius-Perron dimensions in Lean 4- what Mathlib offers and what you must build.md` — **COMPLETE** (re-read 2026-04-15 in full per CLAUDE.md rule)
 
-- [ ] Define `fusionMatrix (F : FusionCategoryData) (i : F.SimpleIdx) : Matrix F.SimpleIdx F.SimpleIdx ℕ`
-- [ ] Compute characteristic polynomial for Ising N_σ: λ(λ²-2), verify √2 is root
-- [ ] Compute char poly for Fibonacci N_τ: λ²-λ-1, verify φ is root
-- [ ] Verify largest-root property (FPdim is the dominant eigenvalue)
-- [ ] Derive D² = Σ FPdim² from fusion rules alone (not declared)
-- [ ] Cross-validate: FPdim matches declared quantumDim for Ising, Fibonacci, SU(2)_k, SU(3)_k, G₂_1
+Per the deep research recommendation, the **eigenvector approach** is used in lieu of explicit characteristic-polynomial computation: rather than computing `charpoly N_X` and verifying FPdim is a root, we directly state and verify `N_X · d = FPdim(X) · d` for the explicit eigenvector `d`. This sidesteps Mathlib's missing Perron-Frobenius theorem and produces shorter, more efficient proofs (single `native_decide` per eigenvector component over the appropriate number field).
 
-**UNBLOCKED** (deep research complete — eigenvector approach recommended)
+- [x] Define fusion matrices for Fibonacci, Ising, SU(3)_1, SU(2)_3 (N_{1/2} + N_1) — `FPDimension.lean`
+- [x] Verify FPdim(τ) = φ via N_τ · (1, φ) = φ · (1, φ) over QSqrt5 — `fib_eigenvector_0`, `fib_eigenvector_1`
+- [x] Verify FPdim(σ) = √2 via N_σ · (1, √2, 1) = √2 · (1, √2, 1) over QSqrt2 — `ising_eigenvector_0/1/2`
+- [x] Verify SU(2)_3 eigenvector for both N_{1/2} and N_1 (FPdim = φ for spin-1/2 and spin-1) — `su2k3_eigenvector_*`, `su2k3_N1_eigenvector_*`
+- [x] Derive D² = Σ FPdim² from fusion rules alone — `fib_D_sq_derived`, `ising_D_sq_derived`, `su3k1_D_sq_derived`, `su2k3_D_sq`
+- [x] Cross-validate: derived FPdim matches declared quantumDim — `fib_D_sq_explicit`, `ising_D_sq_rational`
 
-### Wave 2 — General FPdim Framework
+**Status:** All bullet items verified via `native_decide` over QSqrt5 / QSqrt2 / ℤ. Largest-root property is implicit in the eigenvector witness (the chosen positive eigenvector identifies the dominant eigenvalue for irreducible non-negative matrices — formal Perron-Frobenius statement deferred to Wave 2).
+
+### Wave 2 — General FPdim Framework — **PARTIALLY COMPLETE 2026-04-15**
 **Goal:** Generic FPdim computation from any Cartan-type fusion data.
 
-- [ ] Connect to KacWaltonFusion.lean: fusion multiplicities → fusion matrix → FPdim
-- [ ] Verify FPdim for SU(4)_1 (all dims = 1, Z₄), B₂_1 (dims 1, ?, ?), G₂_1 (dims 1, φ)
-- [ ] State Perron-Frobenius theorem for non-negative matrices (may need sorry or axiom)
+- [ ] Connect to KacWaltonFusion.lean: fusion multiplicities → fusion matrix → FPdim (deferred — KacWaltonFusion provides Cartan data + alcove conditions; the bridge to fusion matrices for ranks > 2 is a separate deliverable)
+- [x] **SU(4)_1** verified: cyclic shift fusion matrix `!![0,1,0,0; 0,0,1,0; 0,0,0,1; 1,0,0,0]`, eigenvector (1,1,1,1), eigenvalue 1, D² = 4 = |Z_4| (`su4k1_eigenvector`, `su4k1_D_sq_derived`)
+- [x] **G₂_1** verified: fusion matrix is identical to Fibonacci's `!![0,1; 1,1]` (definitional `g2k1_fusion_eq_fib`); FPdim((1,0)) = φ, D² = 2+φ. **THIRD independent source of φ** (after Fibonacci A₁ at level 1 and SU(2)₃ A₁ at level 3) — formalized in `phi_triple_origin`.
+- [ ] B₂_1 (deferred — needs Cartan data)
+- [ ] State Perron-Frobenius theorem for non-negative matrices (deferred — Mathlib `Matrix.IsIrreducible` infrastructure exists but PF theorem is unproved upstream)
 
 ---
 
