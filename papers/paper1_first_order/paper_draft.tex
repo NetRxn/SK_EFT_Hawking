@@ -253,17 +253,10 @@ where we have integrated over the Hawking spectrum and used the mean frequency $
 
 \begin{table}
 \centering
-\begin{tabular}{lccccc}
-\hline
-Parameter & Units & Steinhauer ($^{87}$Rb) & Heidelberg ($^{39}$K) & Trento ($^{23}$Na) \\
-\hline
-Speed of sound $c_s$ & mm/s & 0.55 & 3.92 & 2.18 \\
-Healing length $\xi$ & $\mu$m & 1.33 & 0.42 & 1.26 \\
-Surface gravity $\kappa$ & s$^{-1}$ & 4.8 & 101.9 & 21.4 \\
-Hawking temperature $T_H$ & nK & 0.006 & 0.124 & 0.026 \\
-Dissipative correction $\delta_{\text{diss}}$ (Beliaev, $T{=}0$) & (dimensionless) & $2.4 \times 10^{-5}$ & $1.6 \times 10^{-3}$ & $1.4 \times 10^{-5}$ \\
-\hline
-\end{tabular}
+% Data rows generated from formulas.py / transonic_background.py via
+% scripts/render_paper_tables.py. DO NOT hand-edit values; regenerate
+% after any constants/formula change. Spec: papers/paper1_first_order/tables.py
+\input{tables/table1_experimental_params.tex}
 \caption{Parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog Hawking experiments. Heidelberg and Trento are projected configurations. The model $\kappa$ is profile-dependent; Steinhauer's published $\kappa \approx 290$~s$^{-1}$ (step potential) gives $T_H \approx 0.35$~nK. The dissipative correction $\delta_{\mathrm{diss}}$ reported here is the zero-temperature Beliaev prediction; at experimentally realized temperatures the finite-$T$ Zaremba correction is $\sim\!10\times$ larger (see \S\ref{sec:results}). Note the non-monotonic $\delta_{\mathrm{diss}}$ trend: Beliaev $\Gamma_{\mathrm{Bel}} \propto \kappa^2/c_s$ so $\delta_{\mathrm{diss}} = \Gamma_{\mathrm{Bel}}/\kappa \propto \kappa/c_s$, amplifying at Heidelberg's larger $\kappa$.}
 \label{tab:experimental_params}
 \end{table}

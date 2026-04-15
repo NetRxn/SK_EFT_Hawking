@@ -158,19 +158,35 @@ Interesting-claim heuristic tags:
 
 ## Priority 2 — UX / trust gates (3)
 
-### Gate 9 — CountFreshness
+### Gate 9 — NumericalFreshness
 
-**Intent:** Count literals in the paper (N theorems, N Lean modules, N sorry, etc.) reflect the live codebase, not a snapshot from a past commit.
+**Intent:** Every numerical claim in the paper reflects the current canonical pipeline output, not a snapshot from a past commit. Covers both count-style literals ("N theorems") and quantity-style literals ("c_s = 0.548 mm/s"). A paper is fresh iff every numerical value it reports — in prose, tables, or figures — comes from the canonical source (`counts.tex` macros, `tables/<id>.tex` autogen files, or `formulas.py` computations verified by CHECK 14).
 
-**Evaluator input:** `REPORTS` edges from the Paper to `CountMetric` nodes; each edge's `paper_value`, `canonical_value`, `delta_pct`, `stale` attributes.
+**Evaluator input:**
+- `REPORTS` edges from Paper to `CountMetric` nodes (each edge carries `paper_value`, `canonical_value`, `delta_pct`, `stale`)
+- `validate.py --check count_literals` — WARN on count literals outside `\input{counts.tex}` macros
+- `validate.py --check tables_fresh` — FAIL if any `tables/*.tex` is stale vs sources
+- `validate.py --check numerical_literals` — WARN on unit-bearing numerical literals outside `\input{tables/*.tex}` blocks
+- `validate.py --check paper_provenance` — FAIL on >0.5% drift between any paper numerical claim and its pipeline value
 
 **Passes iff:**
 - No REPORTS edge has `stale == True` (drift > 0.5%)
+- `tables_fresh` passes (all autogen tables current vs source inputs)
+- `numerical_literals` and `count_literals` are WARN-acceptable at draft stage; FAIL at submission once retrofit is complete
+- `paper_provenance` passes
 
 **Blocks on any:**
 - A stale REPORTS edge
+- A stale `tables/*.tex` file (tables_fresh would auto-regen; blocked only if regen fails)
+- `paper_provenance` drift
+- At submission: any remaining inline literal flagged by `count_literals` or `numerical_literals`
 
-**Remediation:** Retrofit the paper to use `\input{../../docs/counts.tex}` + `\totaltheorems{}` / `\leanmodules{}` / etc. macros. `validate.py --check count_literals` surfaces remaining literal sites.
+**Remediation:**
+- Counts: retrofit paper with `\input{../../docs/counts.tex}` + `\totaltheorems{}` / `\leanmodules{}` / etc. macros
+- Tables: write `papers/<paper>/tables.py` spec; replace inline data rows with `\input{tables/<id>.tex}`; `render_paper_tables.py` regenerates automatically via `tables_fresh`
+- Inline prose literals: move quotable values into the same `\input{}` chain, or tag with a `\pipelinevalue{...}` macro that expands to the canonical value at compile time
+
+**Why this gate name changed (Phase 5v).** Originally "CountFreshness" — expanded to "NumericalFreshness" when the `tables.py` spec framework landed, because the same anti-drift principle applies to all numerical content, not just counts. The ReadinessGate dashboard cell for this gate now evaluates both count-level and table-level freshness in a single pass.
 
 ### Gate 10 — FirstClaimVerification
 

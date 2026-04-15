@@ -20,7 +20,7 @@ Gates (priority order — P1 before P2):
     8. ProductionRunHealth     — no failed runs backing claims
 
   P2 (UX / trust):
-    9. CountFreshness          — REPORTS edges all fresh
+    9. NumericalFreshness      — REPORTS edges fresh + autogen tables fresh + no inline literals
    10. FirstClaimVerification  — "first in proof assistant" ledger-backed
    11. FixPropagation          — ReviewFindings fixed/propagated
 
@@ -512,31 +512,93 @@ def _eval_production_run_health(paper: dict, idx: GraphIndex) -> GateResult:
     return r
 
 
-def _eval_count_freshness(paper: dict, idx: GraphIndex) -> GateResult:
-    """Gate 9 (P2): CountFreshness.
+def _eval_numerical_freshness(paper: dict, idx: GraphIndex) -> GateResult:
+    """Gate 9 (P2): NumericalFreshness.
 
-    Fail if any REPORTS edge from this paper has stale=True.
+    Fails if any of:
+      - a REPORTS edge to CountMetric has stale=True
+      - the paper has inline unit-bearing numerical literals outside of
+        \\input{tables/...} blocks (proxy: count inline literals in the
+        paper .tex)
+      - autogen tables/*.tex files for this paper are stale relative to
+        their spec / source mtimes (proxy: check if newer tables.py
+        newer than matching tables/*.tex)
+
+    Renamed from `CountFreshness` (Phase 5v, tables.py framework): the
+    same anti-drift principle applies to all numerical content, not
+    just count metrics. Evaluation considers both count-level and
+    table-level freshness.
     """
+    import re as _re
     paper_key = paper['id'].replace('paper:', '', 1)
-    r = GateResult(gate='CountFreshness', paper=paper_key, priority=2)
+    r = GateResult(gate='NumericalFreshness', paper=paper_key, priority=2)
 
+    # --- 1. REPORTS→CountMetric drift (count-literal layer) ---
     reports = idx.outgoing(paper['id'], 'REPORTS')
-    stale = [e for e in reports if e.get('stale')]
-    r.evidence.append(f'{len(reports)} REPORTS edges; {len(stale)} stale (>0.5% drift)')
-    if stale:
-        r.blockers = [
+    stale_reports = [e for e in reports if e.get('stale')]
+
+    # --- 2. Inline numerical literals outside \input{tables/...} ---
+    tex = idx.paper_tex(paper_key)
+    inline_literals = 0
+    if tex:
+        stripped = _re.sub(r'\\input\{tables/[^}]+\}', '', tex)
+        stripped = _re.sub(r'\\caption\{[^}]*\}', '', stripped, flags=_re.DOTALL)
+        lit_re = _re.compile(
+            r'(?<!\\)\b(\d+\.\d+|\d+(?:\.\d+)?e[+-]?\d+)\s*(~?)\\?(?:'
+            r'(?:mu|\\mu)\s*m\b|nK\b|mK\b|\\mathrm\{[a-zA-Z]+\}|'
+            r's\^?(?:-|\{-|\^{-)1\}?|mm/s\b|\\mu m\b|\\times\s*10\^'
+            r')',
+            _re.IGNORECASE,
+        )
+        inline_literals = len(lit_re.findall(stripped))
+
+    # --- 3. Autogen table staleness (table-level freshness) ---
+    tables_dir = PAPERS_DIR / paper_key / 'tables'
+    tables_py = PAPERS_DIR / paper_key / 'tables.py'
+    stale_tables_count = 0
+    if tables_py.exists() and tables_dir.exists():
+        spec_mtime = tables_py.stat().st_mtime
+        for tex_file in tables_dir.glob('*.tex'):
+            if tex_file.stat().st_mtime < spec_mtime:
+                stale_tables_count += 1
+
+    r.evidence.append(
+        f'{len(reports)} REPORTS edges ({len(stale_reports)} stale); '
+        f'{inline_literals} inline numerical literals in body; '
+        f'{stale_tables_count} stale tables/*.tex files'
+    )
+
+    blockers: list[str] = []
+    if stale_reports:
+        blockers.extend(
             f'{e["target"].replace("count:","",1)}: paper={e.get("paper_value")} '
             f'vs canonical={e.get("canonical_value")} (Δ={e.get("delta_pct")}%)'
-            for e in stale[:10]
-        ]
+            for e in stale_reports[:6]
+        )
+    if stale_tables_count:
+        blockers.append(f'{stale_tables_count} autogen tables/*.tex are stale vs tables.py spec')
+    if inline_literals:
+        blockers.append(f'{inline_literals} inline unit-bearing literals in body — move to \\input{{tables/*.tex}}')
+
+    if blockers:
+        r.blockers = blockers[:10]
         r.state = 'needs-recheck'
-        r.notes = f'{len(stale)} count literals drifted from canonical'
-    elif not reports:
+        parts = []
+        if stale_reports:
+            parts.append(f'{len(stale_reports)} stale count literal(s)')
+        if inline_literals:
+            parts.append(f'{inline_literals} inline numerical literal(s)')
+        if stale_tables_count:
+            parts.append(f'{stale_tables_count} stale autogen table(s)')
+        r.notes = '; '.join(parts)
+    elif not reports and not inline_literals:
         r.state = 'passed'
-        r.notes = 'no count literals (uses \\input{counts.tex} macros)'
+        r.notes = ('no numerical literals (uses \\input{counts.tex} + \\input{tables/*.tex})'
+                   if tables_py.exists() else
+                   'no numerical literals detected')
     else:
         r.state = 'passed'
-        r.notes = 'all reported counts match canonical'
+        r.notes = 'all numerical content current'
     return r
 
 
@@ -613,7 +675,7 @@ GATES: list[tuple[str, int, Callable[[dict, GraphIndex], GateResult]]] = [
     ('AssumptionDisclosure',   1, _eval_assumption_disclosure),
     ('NarrativeGrounding',     1, _eval_narrative_grounding),
     ('ProductionRunHealth',    1, _eval_production_run_health),
-    ('CountFreshness',         2, _eval_count_freshness),
+    ('NumericalFreshness',     2, _eval_numerical_freshness),
     ('FirstClaimVerification', 2, _eval_first_claim_verification),
     ('FixPropagation',         2, _eval_fix_propagation),
 ]
