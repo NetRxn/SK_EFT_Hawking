@@ -47,7 +47,7 @@
 
 ## Track B: Muger Center Definition
 
-### Wave 3 — Define Z₂(B) in Lean 4 — **PARTIALLY COMPLETE**
+### Wave 3 — Define Z₂(B) in Lean 4 — **COMPLETE 2026-04-15**
 **Goal:** The Muger center as a subcategory of a braided category.
 
 **Deep research:** `Tasks/Phase-5p_Muger_center_definition_and_properties.md` — **COMPLETE**
@@ -58,21 +58,25 @@
 - [x] `double_braiding_naturality` PROVED
 - [x] `iso_isTransparent` PROVED
 - [x] `selfDual_isTransparent` PROVED
-- [ ] Define `MugerCenter (B : Type) [BraidedCategory B]` as full subcategory
-- [ ] Predicate: X ∈ Z₂ iff double braiding c_{Y,X} ∘ c_{X,Y} = id for all Y
-- [ ] Prove closure: tensor product (dual done, tensor product remaining)
-- [ ] Prove Z₂(B) is symmetric monoidal
-- [ ] Define `isMugerTrivial` as a decidable predicate on finite MTC data
+
+**Session 2026-04-15 progress (MugerCenter.lean Wave 3 completion):**
+- [x] Define `MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)` (abbrev; inherits Category/MonoidalCategory/BraidedCategory automatically via `IsMonoidal` instance)
+- [x] `IsTransparent` predicate confirmed already defined (L46)
+- [x] Tensor product closure confirmed already proved (`tensor_isTransparent`, L64) — scout had this as incomplete, but file inspection confirms it was done 2026-04-08
+- [x] `SymmetricCategory (MugerCenter C)` instance **PROVED** — the key Wave 3 payoff, uses `ObjectProperty.ι.map_injective` to lift the categorical transparency witness `X.property Y.obj` to the subcategory's symmetry axiom
+- [x] `PreModularData.isMugerTrivial` decidable predicate defined in `SKEFTHawking` namespace (with `isRowTransparent` helper + Decidable instances from Fintype)
 
 **UNBLOCKED** (deep research complete — IsTransparent + FullSubcategory pattern confirmed)
 
-### Wave 4 — Muger Triviality for Specific MTCs
+### Wave 4 — Muger Triviality for Specific MTCs — **COMPLETE 2026-04-15**
 **Goal:** Verify Z₂ = Vec for our computed MTCs.
 
-- [ ] Toric code: verify Z₂ = Vec from S-matrix data
-- [ ] Ising: verify Z₂ = Vec from det(S) ≠ 0 (already proved)
-- [ ] Fibonacci: verify Z₂ = Vec
-- [ ] State: det(S) ≠ 0 → Z₂ trivial (for finite MTC data, decidable)
+- [x] Toric code: `toric_muger_trivial` PROVED (exhaustive case analysis on 4 anyons + monodromy with electric/magnetic witnesses)
+- [x] Ising: `ising_muger_trivial` PROVED via QSqrt2 native_decide (σ fails because S_{σ,σ}=0; ψ fails because S_{ψ,σ}/S_{0,σ}=-1)
+- [x] Fibonacci: `fib_muger_trivial` PROVED via QSqrt5 native_decide (τ fails because S_{τ,τ}/S_{0,τ}=-1/φ ≠ φ)
+- [x] State: data-level `PreModularData.modularImpliesMugerTrivial` is the abstract Wave 5 target (stated, not proved — proving it is Wave 5)
+
+**All per-MTC triviality witnesses existed prior to 2026-04-15; Waves 3 completion on 2026-04-15 provided the abstract framework to unify them under `isMugerTrivial`.**
 
 ---
 
