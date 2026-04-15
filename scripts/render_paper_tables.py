@@ -28,10 +28,14 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PAPERS_DIR = PROJECT_ROOT / 'papers'
 SCRIPT_DIR = Path(__file__).resolve().parent
 
+# Standardize on `scripts.paper_tables` as the canonical import path so
+# paper specs and this renderer see the same `Span` / `Col` class
+# objects. Earlier versions added SCRIPT_DIR to sys.path which allowed
+# `from paper_tables import ...` — that created a second module copy
+# and broke `isinstance(value, Span)` checks in `render_table`.
 sys.path.insert(0, str(PROJECT_ROOT))
-sys.path.insert(0, str(SCRIPT_DIR))
 
-from paper_tables import render_table  # noqa: E402
+from scripts.paper_tables import render_table  # noqa: E402
 
 
 def discover_specs() -> dict[str, dict]:

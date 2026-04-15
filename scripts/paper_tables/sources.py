@@ -37,6 +37,169 @@ def _format_sci(x: float, precision: int = 1) -> str:
     return f'${mantissa} \\times 10^{{{exp_int}}}$'
 
 
+def correction_types() -> list[dict]:
+    """The EFT correction hierarchy (Paper 2 Table 2). Each correction's
+    scaling / frequency-dependence / spatial-parity. Static reference;
+    encoded here so the paper inherits the authoritative taxonomy if
+    future work adds new correction types.
+    """
+    return [
+        {
+            'correction': r'$\delta_{\text{disp}}$',
+            'scaling':    r'$D^2$',
+            'omega_dep':  'No',
+            'parity':     'Even',
+        },
+        {
+            'correction': r'$\delta_{\text{diss}}$',
+            'scaling':    r'$\Gamma_H/\kappa$',
+            'omega_dep':  'No',
+            'parity':     'Even',
+        },
+        {
+            'correction': r'$\delta^{(2)}(\omega)$',
+            'scaling':    r'$(\omega/\Lambda)^3$',
+            'omega_dep':  r'\textbf{Yes}',
+            'parity':     r'\textbf{Odd}',
+        },
+        {
+            'correction': r'$\delta_{\text{cross}}$',
+            'scaling':    r'$D^2 \cdot \Gamma_H/\kappa$',
+            'omega_dep':  'No',
+            'parity':     'Even',
+        },
+    ]
+
+
+def polariton_c_s_measurements() -> list[dict]:
+    """Measured polariton speed of sound in GaAs microcavities (Paper 12
+    Table 1). Values are literature measurements from three LKB-adjacent
+    groups. Static content; retrofit is for consistency with the
+    autogen pattern rather than drift prevention.
+    """
+    return [
+        {'group': 'Falque et al.~(2025)',   'c_s': '0.40', 'method': 'Bogoliubov spectrum'},
+        {'group': 'Estrecho et al.~(2021)', 'c_s': '0.40', 'method': 'Dipole oscillations'},
+        {'group': 'Amo et al.~(2009)',      'c_s': '0.81', 'method': 'Cherenkov cone'},
+    ]
+
+
+def polariton_horizon_params() -> list[dict]:
+    """Paris polariton platform horizon parameters from Falque et al. 2025
+    (Paper 12 Table 2). Literature values (m*, c_s, ξ) from Falque §IV.1
+    / Fig. 2; κ (smooth + steep) from §IV.2. Derivatives D, dispersive
+    correction, T_H computed here.
+    """
+    import math
+    from . import Span
+
+    m_star = 7.0e-35
+    c_s = 4.0e5
+    xi = 3.4e-6
+    kappa_smooth = 7.0e10
+    kappa_steep = 1.1e11
+
+    HBAR = 1.054571817e-34
+    K_B = 1.380649e-23
+
+    def _D(k): return xi * k / c_s
+    def _T_H_mK(k): return HBAR * k / (2 * math.pi * K_B) * 1000
+    def _disp_corr(k): return -math.pi * _D(k)**2 / 6
+    def _neg(x): return (r'$-$' + f'{abs(x):.2f}') if x < 0 else f'{x:.2f}'
+
+    return [
+        {
+            'parameter': '$m^*$',
+            'smooth':    r'$7.0 \times 10^{-35}$~kg',
+            'steep':     '--',
+            'source':    'Falque 2025',
+        },
+        {
+            'parameter': '$c_s$',
+            'smooth':    Span(r'$4.0 \times 10^5$~m/s ($0.40~\mu$m/ps)',
+                              cols=('smooth', 'steep'), align='c'),
+            'source':    r'Falque 2025 \S IV.1',
+        },
+        {
+            'parameter': r'$\xi$',
+            'smooth':    Span(r'$3.4~\mu$m (upstream)',
+                              cols=('smooth', 'steep'), align='c'),
+            'source':    r'Falque 2025 \S IV.1',
+        },
+        {
+            'parameter': r'$\kappa$',
+            'smooth':    r'$7.0 \times 10^{10}$~s$^{-1}$',
+            'steep':     r'$1.1 \times 10^{11}$~s$^{-1}$',
+            'source':    r'Falque 2025 Fig.~2 / \S IV.2',
+        },
+        {
+            'parameter': r'$D = \xi\kappa/c_s$',
+            'smooth':    f'{_D(kappa_smooth):.2f}',
+            'steep':     f'{_D(kappa_steep):.2f}',
+            'source':    'computed',
+        },
+        {
+            'parameter': r'$-\pi D^2 / 6$',
+            'smooth':    _neg(_disp_corr(kappa_smooth)),
+            'steep':     _neg(_disp_corr(kappa_steep)),
+            'source':    'dispersive correction',
+        },
+        {
+            'parameter': r'$T_H$',
+            'smooth':    f'{_T_H_mK(kappa_smooth):.0f}~mK',
+            'steep':     f'{_T_H_mK(kappa_steep):.0f}~mK',
+            'source':    r'$\hbar\kappa/(2\pi k_B)$',
+        },
+    ]
+
+
+def polariton_platform_comparison() -> list[dict]:
+    """Platform feasibility comparison (Paper 12 Table 3). Uses Falque-
+    measured κ (smooth + steep) and projected cavity lifetimes.
+    """
+    import math
+    HBAR = 1.054571817e-34
+    K_B = 1.380649e-23
+
+    def _T_H_mK(k): return HBAR * k / (2 * math.pi * K_B) * 1000
+    def _T_H_nK(k): return HBAR * k / (2 * math.pi * K_B) * 1e9
+
+    kappa_smooth = 7.0e10
+    kappa_steep = 1.1e11
+    kappa_steinhauer = 290.0
+
+    def _feas(kt) -> str:
+        if kt == float('inf'):
+            return 'Confirmed'
+        if kt > 1:
+            return r'\textbf{Perturbative}'
+        return 'Borderline'
+
+    rows = []
+    for name, tau_ps, kappa in [
+        ('Paris long (100~ps, projected)',       100.0, kappa_smooth),
+        ('Paris ultralong (300~ps, projected)',  300.0, kappa_smooth),
+        ('Paris standard (8~ps, Falque actual)',   8.0, kappa_smooth),
+        ('Paris steep-horizon reach',              8.0, kappa_steep),
+    ]:
+        kt = kappa * (tau_ps * 1e-12)
+        rows.append({
+            'platform':    name,
+            'T_H':         f'{_T_H_mK(kappa):.0f}~mK',
+            'tau':         f'{tau_ps:g}~ps',
+            'kappa_tau':   f'{kt:.2g}',
+            'feasibility': _feas(kt),
+        })
+    rows.append({
+        'platform':    'Steinhauer BEC',
+        'T_H':         f'{_T_H_nK(kappa_steinhauer):.2f}~nK',
+        'tau':         r'$\infty$',
+        'kappa_tau':   r'$\infty$',
+        'feasibility': _feas(float('inf')),
+    })
+    return rows
+
+
 def lean_module_summary(modules: list[str],
                         columns: tuple[str, ...] = ('theorems', 'aristotle', 'sorry')) -> list[dict]:
     """Per-Lean-module theorem/axiom/sorry counts for paper formalization
