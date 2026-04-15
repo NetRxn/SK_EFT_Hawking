@@ -102,6 +102,8 @@ import SKEFTHawking.GaugingStep
 import SKEFTHawking.FermiPointTopology
 import SKEFTHawking.PolyQuotQ
 import SKEFTHawking.PolyQuotOver
+import SKEFTHawking.QCyc15
+import SKEFTHawking.SU3k2SMatrix
 import SKEFTHawking.QuantumGroupGeneric
 import SKEFTHawking.TemperleyLieb
 import SKEFTHawking.JonesWenzl
