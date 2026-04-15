@@ -253,9 +253,29 @@ relations $E_0^3 E_1 - [3]_q E_0^2 E_1 E_0 + \cdots = 0$.
 We define the Hopf structure on $U_q(\widehat{\mathfrak{sl}}_2)$
 following the same architecture as the finite type: coproduct, counit,
 and antipode on all 8 generators via \texttt{RingQuot.liftAlgHom}
-(\texttt{Uqsl2AffineHopf.lean}, 4 theorems). The Bialgebra/HopfAlgebra
-instances require proving compatibility of $\Delta$, $\varepsilon$, $S$
-with the 11 Chevalley + Serre relations (pending Aristotle).
+(\texttt{Uqsl2AffineHopf.lean}, 201 theorems, zero \sorry{}). The
+\texttt{Bialgebra} and \texttt{HopfAlgebra} instances are fully wired:
+the coproduct $\Delta$, counit $\varepsilon$, and antipode $S$ have
+been proved compatible with all 11 Chevalley + Serre relations, and
+the Bialgebra/HopfAlgebra typeclass coherences (coassociativity,
+counitality, antipode convolution) are machine-checked.
+
+A subtle structural fact distinguishes the affine case from the finite
+one: the squared antipode $S^2$ is \emph{not} given by conjugation by
+a single group-like element. For the finite type $U_q(\mathfrak{sl}_2)$
+we have $S^2 = \mathrm{Ad}(K)$, and for $U_q(\mathfrak{sl}_3)$ the
+analogous identity is $S^2 = \mathrm{Ad}(K_1^2 K_2^2)$ (Drinfeld's
+theorem, proved in \texttt{Uqsl3Hopf.lean}). For the affine
+$U_q(\widehat{\mathfrak{sl}}_2)$ no such global element exists: the
+affine Cartan matrix $A = \begin{pmatrix}2 & -2\\-2 & 2\end{pmatrix}$
+is rank-deficient ($\det A = 0$), so requiring
+$\mathrm{Ad}(K)(E_i) = q^2 E_i$ simultaneously for $i = 0, 1$ forces
+both $a - b = 1$ and $b - a = 1$ for any $K = K_0^a K_1^b$, a
+contradiction. The correct affine formulation is per-generator:
+$S^2(E_i) = K_i E_i K_i^{-1} = q^2 E_i$, $S^2(F_i) = q^{-2} F_i$,
+$S^2(K_i^{\pm 1}) = K_i^{\pm 1}$ for $i = 0, 1$. This is proved in
+\texttt{Uqsl2AffineHopf.lean} (8 per-generator $S^2$ theorems) with a
+historical note documenting the correction.
 
 \subsection{Coideal embedding}
 
@@ -268,8 +288,7 @@ $B_i = F_i + E_i K_i^{-1}$ ($i = 0,1$). The coideal property is:
 which shows $\Delta(O_q) \subseteq U_q(\widehat{\mathfrak{sl}}_2) \otimes O_q$.
 This is proved by expanding $\Delta(F_i + E_i K_i^{-1})$ using linearity of
 $\Delta$ and the relation $K_i K_i^{-1} = 1$ (\texttt{CoidealEmbedding.lean},
-6 theorems; proofs pending Aristotle). The counit satisfies
-$\varepsilon(B_i) = 0$.
+6 theorems, zero \sorry{}). The counit satisfies $\varepsilon(B_i) = 0$.
 
 This completes the chain Onsager $\to$ $O_q$ $\to$
 $U_q(\widehat{\mathfrak{sl}}_2)$ connecting the lattice integrable system
@@ -287,7 +306,7 @@ reproduces the SU(2)$_k$ fusion rules. We verify:
 \item Fusion rules match \texttt{su2kFusion} (structural equality)
 \end{itemize}
 The Peter-Weyl theorem $\sum_{j=0}^k (j+1)^2 = (k+1)(k+2)(2k+3)/6$
-is stated (\texttt{RepUqFusion.lean}, 14 theorems; pending Aristotle).
+is stated and proved (\texttt{RepUqFusion.lean}, 14 theorems, zero \sorry{}).
 
 %% ══════════════════════════════════════════════════════════════════
 \section{SU(2)$_k$ Fusion Rules and Modularity}
