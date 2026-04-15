@@ -101,6 +101,7 @@ import SKEFTHawking.SPTClassification
 import SKEFTHawking.GaugingStep
 import SKEFTHawking.FermiPointTopology
 import SKEFTHawking.PolyQuotQ
+import SKEFTHawking.PolyQuotOver
 import SKEFTHawking.QuantumGroupGeneric
 import SKEFTHawking.TemperleyLieb
 import SKEFTHawking.JonesWenzl

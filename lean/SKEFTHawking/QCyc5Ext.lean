@@ -22,6 +22,7 @@ References:
 
 import Mathlib
 import SKEFTHawking.QCyc5
+import SKEFTHawking.PolyQuotOver
 
 namespace SKEFTHawking
 
@@ -54,13 +55,28 @@ instance : Add QCyc5Ext where
 instance : Sub QCyc5Ext where
   sub x y := ⟨x.re - y.re, x.im - y.im⟩
 
-/-- Multiplication in K: (a₁+b₁w)(a₂+b₂w) = (a₁a₂ + φ·b₁b₂) + (a₁b₂+a₂b₁)w
-    where φ = -ζ²-ζ³ in Q(ζ₅) (the golden ratio). -/
+/-- Reduction coefficients for the degree-2 tower K = Q(ζ₅)[w]/(w² − φ):
+    w² = φ + 0·w where φ = -ζ²-ζ³ ∈ Q(ζ₅).
+
+Phase 5i Wave 4b.ext refactor (2026-04-15): Mul now delegates to the generic
+tower primitive `PolyQuotOver.mulReduce2` via toPoly/ofPoly coercions.
+Struct API (re, im) and all Fibonacci F-matrix / σ₂ / Yang-Baxter call sites
+preserved. First consumer of `PolyQuotOver QCyc5 2`. -/
+def reduction : Fin 2 → QCyc5 :=
+  ![⟨0, 0, -1, -1⟩, 0]  -- w² = φ = -ζ²-ζ³ in Q(ζ₅), coefficient of w is 0
+
+/-- Coerce QCyc5Ext ↔ PolyQuotOver QCyc5 2 for the generic-tower bridge. -/
+def toPoly (x : QCyc5Ext) : PolyQuotOver QCyc5 2 := ⟨![x.re, x.im]⟩
+def ofPoly (p : PolyQuotOver QCyc5 2) : QCyc5Ext := ⟨p.coeffs 0, p.coeffs 1⟩
+
+/-- Multiplication in K: (a₁+b₁w)(a₂+b₂w) = (a₁a₂ + φ·b₁b₂) + (a₁b₂+a₂b₁)·w.
+
+    Now delegates to `PolyQuotOver.mulReduce2 reduction` — the base-ring
+    arithmetic flows through QCyc5's Mul (itself a `PolyQuotQ.mulReduce 4`
+    delegation after Wave 4b), so the two-level construction is fully
+    threaded through the generic infrastructure. -/
 instance : Mul QCyc5Ext where
-  mul x y :=
-    let phi_cyc : QCyc5 := ⟨0, 0, -1, -1⟩  -- φ = -ζ²-ζ³
-    ⟨x.re * y.re + phi_cyc * x.im * y.im,
-     x.re * y.im + x.im * y.re⟩
+  mul x y := ofPoly (PolyQuotOver.mulReduce2 reduction x.toPoly y.toPoly)
 
 /-! ## 2. The Generator w = √φ -/
 
