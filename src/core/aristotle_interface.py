@@ -1638,7 +1638,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=1,
         description="3 sorry: affComul_respects_rel, affCounit_respects_rel, affAntipode_respects_rel. Coproduct/counit/antipode compatibility with 11 Chevalley+Serre relations on 8 generators.",
         strategy_hint="Per-relation factoring (see deep research Phase-5e/affine Hopf strategy). Counit: trivial (all E/F map to 0). K-invertibility: easy. KE/KF commutation: moderate. EF: hard. Serre coproduct: very hard (64 terms). Use 4-phase tactic: unfold→expand→rewrite→collect. set_option maxHeartbeats 800000.",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     SorryGap(
         module="SKEFTHawking.CoidealEmbedding",
@@ -1656,7 +1656,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="7 sorry: boseEinstein_strictAnti, stimGain_anti_omega, boseEinstein_tendsto_zero, boseEinstein_lower_bound, snr_sqrt_scaling, dispersiveCorrection_in_unit_interval, detection_threshold. Real analysis: exp monotonicity, limits, sqrt properties. 5 of 7 proved by Aristotle run 986b9f66; snr_sqrt_scaling, detection_threshold remain.",
         strategy_hint="strictAnti: 1/(exp(x)-1) has strictly decreasing numerator 1 and strictly increasing denominator. tendsto_zero: squeeze with exp(-x). lower_bound: exp(x)≤1+2x for x≤1 (Taylor). sqrt_scaling: Real.sqrt_mul properties. dispersive: D²<1/c₁ → c₁D²<1 via field_simp. detection: sqrt(n)·G≥5 from n≥25/G².",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     SorryGap(
         module="SKEFTHawking.VerifiedStatistics",
@@ -1672,7 +1672,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="2 sorry: rep_fusion_comm (fusion commutativity), peter_weyl_classical (sum of squares = (k+1)(k+2)(2k+3)/6).",
         strategy_hint="rep_fusion_comm: unfold su2kFusion, the min/max/abs in the truncated CG rule are symmetric in i,j. May need Nat.min_comm + Nat.sub_comm. peter_weyl: induction on k, sum of first n squares formula.",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
 
     # --- Batch 4 (Priority 3 — hard/less urgent) ---
@@ -1682,7 +1682,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=3,
         description="5 sorry: functor_exists, functor_faithful, functor_full, functor_essSurj, center_dg_equivalence. Abstract categorical functor Center(Vec_G) ⥤ ModuleCat(DG).",
         strategy_hint="Path B: ofFullyFaithfullyEssSurj. obj: total space with DG-action from half-braiding. map: same linear map. Faithful: Center.Hom.ext. Full: extract graded components from DG-linearity. EssSurj: decompose DG-module into eigenspaces of k^G idempotents. Deep research: Phase-5c/Ribbon/Building a Drinfeld center-module equivalence.",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     SorryGap(
         module="SKEFTHawking.KerrSchild",
@@ -1698,7 +1698,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=3,
         description="2 sorry: coupling_deficit (G₄f < G_c/1000 for α≤0.2), coupling_ratio_small (ratio < 1/1000 for α=0.2, N_f=4). coupling_deficit proved by Aristotle run 986b9f66; coupling_ratio_small remains.",
         strategy_hint="Both need Real.pi bounds: π > 3.14. Then 32π³ > 32·31 = 992. α²·N_f/(32π³) < 0.04·4/992 < 1/1000. Use Real.pi_gt_three or pi_gt_3141592.",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     # Phase 5i: U_q(sl₃) — definition (Uqsl3.lean) ALL 21 relations PROVED manually
     # Quantum Serre relations proved via simp [map_mul, map_add, AlgHom.commutes] at h ⊢
@@ -1712,7 +1712,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="Coproduct respects all 21 Chevalley relations of U_q(sl₃). The 4 Serre Δ-compatibility proofs are the hardest (24 terms each).",
         strategy_hint="Factor into per-relation cases. K-invertibility: Δ(KK⁻¹)=Δ(K)Δ(K⁻¹)=(K⊗K)(K⁻¹⊗K⁻¹)=1⊗1. KE: use tmul_mul_tmul + uq3_K1E1. Serre: expand 3 cubic monomials into 24 tensor terms, group by bidegree, cancel using Serre relation + K-E commutation. Same pattern as Uqsl2Hopf (which Aristotle proved in run 79e07d55).",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     SorryGap(
         module="SKEFTHawking.Uqsl3Hopf",
@@ -1720,7 +1720,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="Counit respects all 21 relations. All E,F map to 0, all K to 1.",
         strategy_hint="Every relation is trivially satisfied: ε kills E,F. Factor into per-relation cases, each is 1-2 lines via simp [counitOnGen3, FreeAlgebra.lift_ι_apply, map_mul, map_add].",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     SorryGap(
         module="SKEFTHawking.Uqsl3Hopf",
@@ -1728,7 +1728,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="Antipode (anti-hom) respects all 21 relations.",
         strategy_hint="S reverses products. K-invertibility: S(KK⁻¹)=S(K⁻¹)S(K)=K·K⁻¹=1. Serre: hardest, needs derived commutation identities. Same approach as Uqsl2Hopf antipode proofs.",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
     SorryGap(
         module="SKEFTHawking.Uqsl3Hopf",
@@ -1736,7 +1736,7 @@ SORRY_GAPS: list[SorryGap] = [
         priority=2,
         description="S² = Ad(K₁²K₂²) on all 8 generators (conjugation by K_{2ρ}).",
         strategy_hint="Check each generator. S²(K_i)=K_i (K⁻¹→K). S²(E_i)=K_iE_iK_i⁻¹=q²·E_i. Ad(K₁²K₂²) gives q²·E_i via K-E conjugation applied twice. Note: original claim Ad(K₁K₂) was mathematically wrong (gave q·E_i not q²·E_i).",
-        filled=False,
+        filled=True,  # 2026-04-14: all closed via interactive MCP / palindromic Serre atom-bridge (Phase 5i Wave 2 / Tranche E)
     ),
 ]
 

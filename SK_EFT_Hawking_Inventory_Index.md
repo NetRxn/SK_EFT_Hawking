@@ -2,29 +2,32 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** April 13, 2026 (Phase 5s: **1 sorry** (was 11). Uqsl2AffineHopf: 0 sorry (all 8 q-Serre closed). Uqsl3Hopf: 1 sorry (F01 remaining, actively in progress). Lean toolchain upgraded to 4.29.0 — 3 files have build errors from upgrade, being resolved in parallel session. 132 Lean modules. Phase 5u Wave 1b added 5 theorems + 2 defs to SecondOrderSK.lean: `GammaH`, `gammaH_def`, `gammaH_via_kH`, `gammaH_nonneg`, `deltaDissFromTransport`, `deltaDissFromTransport_eq`, `deltaDissFromTransport_zero_iff` — grounds the EFT-transport → horizon-damping-rate identification that was only in prose prior.)
+**Last synced:** 2026-04-14 (Phase 5i Wave 2 / Tranche E: **0 sorry**, full Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃). All 4 antipode q-Serre cubics (E12, E21, F12, F21) closed via palindromic Serre atom-bridge approach. Build clean from no-cache rebuild of the SKEFTHawking package, 8396 jobs. Lean toolchain 4.29.0 upgrade complete — all upgrade-related build errors resolved. ExtractDeps refactored to filter by package module (not namespace prefix), revealing +138 theorems from Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) that were previously invisible because they declare in non-`SKEFTHawking` namespaces.)
 
 ---
 
 ## Counts (ground truth — update atomically)
 
+**Source of truth:** `docs/counts.json`, regenerated via `scripts/update_counts.py` (which re-runs `extract_lean_deps.py` when Lean source hashes change).
+
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **2237+** (2153+ substantive + ~84 placeholder) | Placeholders are `True := trivial` — documentation markers, not proofs |
-| Placeholders (True := trivial) | **~84** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
-| Aristotle-proved | **322+** (319+ machine + 3 manual) | ARISTOTLE_THEOREMS in constants.py |
-| **Sorry gaps** | **1** | Uqsl2AffineHopf: **0 sorry** (all 8 closed). Uqsl3Hopf: **1 sorry** (F01 remaining, in progress). CenterFunctor: 0 sorry (2 hypotheses). Lean 4.29 upgrade: 3 files with build errors being resolved. |
+| Lean theorems | **2981** (2903 substantive + 78 placeholder) | counts.json — package-module-bound count |
+| Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
+| Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
+| **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **132** | +37 since last full sync (Phases 5k-5s). Includes A1Ring, A1Resolution, A1Ext, ExtBordismBridge, ChangeOfRings (5q-5r), FKGappedInterface, ModularityTheorem (5s). Lean toolchain: 4.29.0. |
-| Python source modules | **53** | Including stencil_dirac.py |
-| Test files | **45** | Including test_a1_ext.py (Phase 5q, 29 tests) |
+| Lean modules | **132** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean` which is a `lean_exe`). ExtractDeps now walks by module (not namespace), so Phase-4 physics modules (FermionBag4D, SO4Weingarten, etc.) are now included. |
+| Lean definitions | **2400** | counts.json |
+| Python source modules | **53** | |
+| Test files | **46** | |
 | Test count | 1660+ | `pytest tests/ -q` |
-| Figures | **100** | `grep -c "^def fig_" src/core/visualizations.py` (includes fig_ext_chart, fig_a1_resolution_structure) |
+| Figures | **101** | `grep -c "^def fig_" src/core/visualizations.py` |
 | Notebooks | **48** | `ls notebooks/*.ipynb` |
 | Papers | **15** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
-| Aristotle runs | 43+ | See Aristotle run table in full inventory |
+| Aristotle runs | 44 | See Aristotle run table in full inventory |
 | Deep research tasks | 18 + 8 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e
 
 
@@ -182,7 +185,7 @@
 | Uqsl2 | 6 | **FIRST quantum group in a proof assistant**: U_q(sl_2) via FreeAlgebra+RingQuot, zero axioms, Chevalley relations (**ALL PROVED**, Aristotle `7d8efa8f`) |
 | Uqsl2Hopf | 66 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl₂), coproduct/counit/antipode via liftAlgHom, S²=Ad(K), Serre coproduct (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4` + `79e07d55`) |
 | Uqsl3 | 21 | **Phase 5i**: **FIRST rank-2 quantum group in any proof assistant**: U_q(sl₃) via FreeAlgebra+RingQuot, 8 generators, A₂ Cartan matrix [[2,-1],[-1,2]], 21 Chevalley relations (**ALL PROVED, zero sorry**, native proofs, 6.4s build) |
-| Uqsl3Hopf | 2 | **Phase 5i**: Hopf algebra on U_q(sl₃): coproduct Δ, counit ε, antipode S defined via liftAlgHom. S²=Ad(K₁K₂). **1 sorry** (F01 remaining, actively in progress). F10 CLOSED. |
+| Uqsl3Hopf | 189 | **Phase 5i Wave 2 / Tranche E COMPLETE 2026-04-14**: Full Hopf algebra wiring for U_q(sl₃). Coproduct Δ + counit ε + antipode S defined via RingQuot.liftAlgHom; all 21 Δ/ε/S relation-respect proofs done (incl. 4 antipode q-Serre cubics E12/E21/F12/F21 closed via palindromic Serre atom-bridge). S² = Ad(K₁²K₂²) per generator (Drinfeld theorem, Tranche D). 24 per-generator evaluation lemmas. 4 derived F·K commutation rules at module scope. 3 coalgebra axioms (coassoc + 2 counital). 16 antipode convolution helpers (8 right + 8 left + algebraMap + mul_step). **`Bialgebra` instance** (via Bialgebra.ofAlgHom) and **`HopfAlgebra` instance** (via direct constructor) wired. **0 sorry**, ~5230 lines. |
 | SU2kFusion | 29 | **SU(2)_k fusion at k=1,2,3**: universal truncated CG rule, Ising (sigma²=1+psi), Fibonacci (tau²=1+tau), charge conjugation, assoc+comm, Fibonacci subcategory closed (**ALL PROVED by native_decide, zero sorry**) |
 | Uqsl2Affine | 9 | U_q(sl_2 hat) affine quantum group: 6 generators, Chevalley + cross-relations, K invertibility, coideal property statement (**ALL PROVED, zero sorry**) |
 | SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
@@ -193,7 +196,7 @@
 | QSqrt2 | 3 | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | 7 | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
 | FibonacciMTC | 11 | Fibonacci MTC: F-symbols in Q(√5) isotopy gauge, F²=I PROVED, PreModularData instance, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
-| Uqsl2AffineHopf | 4 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. **ALL PROVED, zero sorry** — all 8 q-Serre proofs closed (4 comul + 4 antipode). |
+| Uqsl2AffineHopf | 181 | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom. **ALL PROVED, zero sorry** — all 8 q-Serre proofs closed (4 comul + 4 antipode). Bialgebra/HopfAlgebra typeclass wiring UNBLOCKED 2026-04-14 (Tranche E pattern from Uqsl3Hopf applies). |
 | VerifiedStatistics | 6 | Statistics extension: sample variance non-neg PROVED, Cauchy-Schwarz bound, jackknife mean-case, N_eff ≤ N (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | KerrSchild | 7 | Kerr-Schild metrics: null vector, radial_null PROVED, Sherman-Morrison inverse, Schwarzschild, DOF counting (**ALL PROVED, zero sorry**, Aristotle `986b9f66`) |
 | SU2kMTC | 11 | **Phase 5d**: Ising F-symbols (F^σ_{ψσψ}=-1 corrected), pentagon, ModularTensorData instance (**ALL PROVED, zero sorry** — native_decide over Q(√2)) |
