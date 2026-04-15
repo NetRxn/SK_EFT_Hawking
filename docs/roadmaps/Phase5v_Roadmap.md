@@ -262,6 +262,13 @@ reflect 22 node types + 20 edge types (12 base + 8 readiness).
 - [ ] Add a write path: `write_to_graph(node_type, attrs)` inserts into PG + emits a migration to keep the Python dict consistent during the transition period
 - [ ] Generated files carry `# GENERATED FROM GRAPH — DO NOT EDIT BY HAND` banner
 
+**Append-only logs that also migrate to PG tables in Wave 3:**
+- `docs/citation_verifications.jsonl` → `citation_verifications` table (primary key `(bibkey, bibitem_hash)`, most-recent-wins at query time). `scripts/citation_cache.py` swaps flat-file reads for `psycopg` queries; agent-facing API unchanged.
+- `docs/QI_REGISTER.md` (Wave 7a) → `qi_items` table when that wave lands.
+- `docs/validation/reports/validation_*.json` archives → optional `validation_runs` table for historical trend charts on the dashboard.
+
+All three schemas are deliberately PG-shaped (ISO-8601 timestamps, scalar columns, composite PKs) so migration is mechanical when Wave 3 fires.
+
 ### Wave 3b — Migration & verification
 
 - [ ] One-shot full migration: JSON → PG+AGE seed, comparison test to confirm byte-identical reads
