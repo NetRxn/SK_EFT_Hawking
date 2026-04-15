@@ -202,7 +202,12 @@ def load_paper_claims():
     # Pull PaperClaim nodes from the graph so papers without declared
     # PAPER_DEPENDENCIES entries still surface their auto-extracted claims.
     sys.path.insert(0, str(SCRIPT_DIR))
-    from build_graph import extract_paper_claim_nodes
+    from build_graph import (
+        extract_paper_claim_nodes,
+        extract_cites_source_edges,
+        extract_cites_theorem_edges,
+        extract_all_nodes,
+    )
     claim_nodes = extract_paper_claim_nodes()
     claims_by_paper: dict[str, list[dict]] = {}
     for cn in claim_nodes:
@@ -214,6 +219,23 @@ def load_paper_claims():
             'source': cn.get('meta', {}).get('source', 'declared'),
             'index': cn.get('meta', {}).get('index', 0),
         })
+
+    # Pull CITES_SOURCE and CITES_THEOREM coverage for each paper so the
+    # dashboard surfaces bibliographic + theorem-citation coverage
+    # alongside the top-line contributions. This is the Phase 5v
+    # coverage-gap fix — the readiness pipeline now has explicit graph
+    # edges for two of the three claim-surface levels that previously
+    # lived implicitly.
+    all_nodes = extract_all_nodes()
+    node_ids = {n['id'] for n in all_nodes}
+    cites_source = extract_cites_source_edges(node_ids)
+    cites_theorem = extract_cites_theorem_edges(node_ids)
+    cites_source_by_paper: dict[str, list[str]] = {}
+    cites_theorem_by_paper: dict[str, list[str]] = {}
+    for e in cites_source:
+        cites_source_by_paper.setdefault(e['source'], []).append(e.get('bibkey', ''))
+    for e in cites_theorem:
+        cites_theorem_by_paper.setdefault(e['source'], []).append(e.get('reference', ''))
 
     # Build set of all Lean theorem names for cross-referencing
     lean_names = set()
@@ -352,6 +374,19 @@ def load_paper_claims():
                               key=lambda c: c['index'])
         claim_source = graph_claims[0]['source'] if graph_claims else 'none'
 
+        # Bibliographic coverage: registered bibkeys vs total bibitems in .tex
+        paper_id_key = f'paper:{paper_dir.name}'
+        all_bibkeys_in_tex = set(re.findall(r'\\bibitem\{([^}]+)\}', tex))
+        registered_bibkeys = set(cites_source_by_paper.get(paper_id_key, []))
+        unregistered_bibkeys = sorted(all_bibkeys_in_tex - registered_bibkeys)
+        bib_coverage_pct = (
+            round(100 * len(registered_bibkeys) / len(all_bibkeys_in_tex), 1)
+            if all_bibkeys_in_tex else None
+        )
+
+        # Theorem-citation coverage: resolved \texttt theorem refs
+        resolved_theorem_cites = sorted(set(cites_theorem_by_paper.get(paper_id_key, [])))
+
         papers.append({
             'name': paper_dir.name,
             'title': meta.get('title', paper_dir.name),
@@ -364,6 +399,11 @@ def load_paper_claims():
             'graph_claims': graph_claims,
             'claim_count': len(graph_claims),
             'claim_source': claim_source,
+            'registered_bibkeys': sorted(registered_bibkeys),
+            'unregistered_bibkeys': unregistered_bibkeys,
+            'bib_coverage_pct': bib_coverage_pct,
+            'resolved_theorem_cites': resolved_theorem_cites,
+            'theorem_cite_count': len(resolved_theorem_cites),
             'lines': line_count,
             'figure_count': fig_count,
             'has_fbox': has_fbox,

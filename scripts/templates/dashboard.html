@@ -295,7 +295,7 @@
         </a>
         <a class="tab {% if tab == 'papers' %}active{% endif %}"
            href="?tab=papers">
-            Paper Claims ({{ papers|sum(attribute='claim_count') }} across {{ papers|length }} papers)
+            Paper Contributions ({{ papers|sum(attribute='claim_count') }} across {{ papers|length }} papers)
         </a>
         <a class="tab {% if tab == 'citations' %}active{% endif %}"
            href="?tab=citations">
@@ -724,12 +724,72 @@
             </div>
             {% endif %}
 
-            <!-- Claims (declared + auto-extracted from .tex) -->
+            <!-- Claim-surface coverage (Phase 5v coverage gaps) -->
+            <div style="margin: 8px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 220px; padding: 6px 10px; background: #fafafa; border: 1px solid var(--border); border-radius: 4px;">
+                    <div style="font-size: 0.7rem; color: var(--grey); font-weight: 600; text-transform: uppercase;">
+                        Bibliographic coverage
+                    </div>
+                    <div style="font-size: 0.85rem; margin-top: 2px;">
+                        {% if p.bib_coverage_pct is none %}
+                        <span style="color: var(--grey);">(no \bibitem entries)</span>
+                        {% else %}
+                        <strong style="color: {% if p.unregistered_bibkeys %}var(--red){% else %}var(--green){% endif %};">
+                            {{ p.registered_bibkeys|length }} / {{ p.registered_bibkeys|length + p.unregistered_bibkeys|length }}
+                        </strong>
+                        <span style="color: var(--grey); font-size: 0.75rem;">
+                            ({{ p.bib_coverage_pct }}%) registered in CITATION_REGISTRY
+                        </span>
+                        {% if p.unregistered_bibkeys %}
+                        <details style="margin-top: 4px;">
+                            <summary style="cursor: pointer; font-size: 0.75rem; color: var(--red);">
+                                {{ p.unregistered_bibkeys|length }} unregistered
+                            </summary>
+                            <div style="margin-top: 4px; font-size: 0.75rem; font-family: var(--mono);">
+                                {% for bk in p.unregistered_bibkeys %}
+                                <span style="display: inline-block; padding: 1px 6px; margin: 1px;
+                                              background: #fef2f2; color: #991b1b;
+                                              border-radius: 2px;">{{ bk }}</span>
+                                {% endfor %}
+                            </div>
+                        </details>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 220px; padding: 6px 10px; background: #fafafa; border: 1px solid var(--border); border-radius: 4px;">
+                    <div style="font-size: 0.7rem; color: var(--grey); font-weight: 600; text-transform: uppercase;">
+                        Lean theorem citations
+                    </div>
+                    <div style="font-size: 0.85rem; margin-top: 2px;">
+                        <strong>{{ p.theorem_cite_count }}</strong>
+                        <span style="color: var(--grey); font-size: 0.75rem;">
+                            \texttt{} references resolved to LeanTheorem nodes
+                        </span>
+                        {% if p.resolved_theorem_cites %}
+                        <details style="margin-top: 4px;">
+                            <summary style="cursor: pointer; font-size: 0.75rem; color: var(--blue);">
+                                show {{ p.theorem_cite_count }} theorem names
+                            </summary>
+                            <div style="margin-top: 4px; font-size: 0.75rem; font-family: var(--mono);">
+                                {% for thm in p.resolved_theorem_cites %}
+                                <span style="display: inline-block; padding: 1px 6px; margin: 1px;
+                                              background: #eff6ff; color: #1e40af;
+                                              border-radius: 2px;">{{ thm }}</span>
+                                {% endfor %}
+                            </div>
+                        </details>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contributions (declared + auto-extracted from .tex) -->
             {% if p.graph_claims %}
             <div style="margin: 8px 0; padding: 8px; background: #f0f9ff; border: 1px solid var(--blue-border); border-radius: 4px;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
                     <div style="font-size: 0.75rem; color: var(--blue); font-weight: 600; text-transform: uppercase;">
-                        Claims ({{ p.claim_count }})
+                        Top-line contributions ({{ p.claim_count }})
                     </div>
                     <div style="font-size: 0.7rem; color: var(--grey);">
                         source:

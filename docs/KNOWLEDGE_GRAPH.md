@@ -137,6 +137,8 @@ Shapes encode semantic roles — a visual dimension independent of color:
 | `SUPPORTS` | artifact | artifact | Mutual reinforcement (dual of CONTRADICTS) | Wave 2f |
 | `CONTRADICTS` | artifact | artifact | Cross-artifact inconsistency | Wave 2f |
 | `IMPACTED_BY` | ReadinessGate | any | Gate flips to `needs-recheck` if upstream changes | Wave 4 |
+| `CITES_SOURCE` | Paper | PrimarySource | `\bibitem{key}` in paper .tex resolves to a registered CITATION_REGISTRY entry | Phase 5v coverage fix |
+| `CITES_THEOREM` | Paper | LeanTheorem/LeanDef | `\texttt{name}` in paper .tex resolves uniquely to a Lean declaration | Phase 5v coverage fix |
 
 ### Lean Node Metadata
 

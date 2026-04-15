@@ -1749,6 +1749,8 @@ def extract_all_edges_without_gates(node_ids: set) -> list[dict]:
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
     edges.extend(extract_reports_edges(node_ids))
+    edges.extend(extract_cites_source_edges(node_ids))
+    edges.extend(extract_cites_theorem_edges(node_ids))
     _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
     for edge in hyp_edges:
         if edge['source'] in node_ids and edge['target'] in node_ids:
@@ -2196,6 +2198,133 @@ _REPORTS_PATTERNS = [
 ]
 
 
+def extract_cites_source_edges(node_ids: set) -> list[dict]:
+    """CITES_SOURCE: Paper -> PrimarySource.
+
+    Phase 5v coverage-gap fix. For every \\bibitem{key} in each paper's
+    .tex, emit an edge to the matching PrimarySource node (if the bibkey
+    is in CITATION_REGISTRY). Unregistered bibkeys produce no edge but
+    are counted in paper meta as `unregistered_bibkeys` so the
+    CitationIntegrity gate can surface the gap.
+    """
+    papers_dir = PROJECT_ROOT / "papers"
+    if not papers_dir.exists():
+        return []
+
+    edges = []
+    seen: set[tuple[str, str]] = set()
+    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        paper_key = tex_path.parent.name
+        paper_id = f'paper:{paper_key}'
+        if paper_id not in node_ids:
+            continue
+        try:
+            text = tex_path.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for m in re.finditer(r'\\bibitem\{([^}]+)\}', text):
+            bibkey = m.group(1).strip()
+            target = f'source:{bibkey}'
+            if target not in node_ids:
+                continue  # unregistered bibkeys are tracked elsewhere
+            key = (paper_id, target)
+            if key in seen:
+                continue
+            seen.add(key)
+            edges.append({
+                'source': paper_id,
+                'target': target,
+                'type': 'CITES_SOURCE',
+                'bibkey': bibkey,
+            })
+    return edges
+
+
+def extract_cites_theorem_edges(node_ids: set) -> list[dict]:
+    """CITES_THEOREM: Paper -> LeanTheorem.
+
+    Phase 5v coverage-gap fix. Scans each paper's .tex for
+    `\\texttt{identifier}` / `\\textsc{identifier}` / `\\verb|identifier|`
+    references where `identifier` resolves to exactly one LeanTheorem
+    short name. Handles LaTeX-escaped underscores (`\\_` → `_`) which
+    papers use routinely inside `\\texttt{}`.
+
+    Filters to LeanTheorem targets only — references that resolve to
+    LeanDef / LeanStructure / LeanInstance (typeclass names, structure
+    types, etc.) are skipped so the edge carries "this paper cites
+    this proved result" semantics, not "this paper names this type".
+    """
+    papers_dir = PROJECT_ROOT / "papers"
+    if not papers_dir.exists():
+        return []
+
+    # Build a local type index for LeanTheorem filtering. We can't
+    # reuse extract_lean_declaration_nodes (circular in the aggregator
+    # sense); instead read _LEAN_SHORT_INDEX which maps short → full IDs,
+    # and look up type from the corresponding node by ID via a lazy
+    # index built on first need.
+    # The cheapest approach: pull the subset of nodes with type
+    # 'LeanTheorem' and keep their IDs as an acceptance set.
+    theorem_ids = set()
+    for node_id in node_ids:
+        # Fast path: we only need to know which IDs are LeanTheorem.
+        # The node_ids set doesn't carry type info, so we need to
+        # reconstruct. Do one pass via extract_lean_declaration_nodes
+        # (cached by lru of the lean_deps.json load).
+        pass
+    # One-shot: get the theorem-only ID set
+    _lean_nodes = extract_lean_declaration_nodes()
+    theorem_ids = {n['id'] for n in _lean_nodes if n['type'] == 'LeanTheorem'}
+
+    edges = []
+    seen: set[tuple[str, str]] = set()
+    # Matches \texttt{name}, \textsc{name}, \verb|name|; name may include
+    # LaTeX-escaped underscores `\_` which we un-escape before resolving.
+    ref_re = re.compile(
+        r'\\texttt\{([A-Za-z_][A-Za-z0-9_\\]*?)\}|'
+        r'\\textsc\{([A-Za-z_][A-Za-z0-9_\\]*?)\}|'
+        r'\\verb\|([A-Za-z_][A-Za-z0-9_\\]*?)\|'
+    )
+    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        paper_key = tex_path.parent.name
+        paper_id = f'paper:{paper_key}'
+        if paper_id not in node_ids:
+            continue
+        try:
+            text = tex_path.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for m in ref_re.finditer(text):
+            raw = m.group(1) or m.group(2) or m.group(3) or ''
+            # Un-escape LaTeX-escaped underscores
+            name = raw.replace(r'\_', '_').replace('\\_', '_')
+            # Drop anything still containing backslashes or dots — not a
+            # clean identifier (catches `LatticeHamiltonian.lean`,
+            # `Pi.compactSpace`, stray commands)
+            if '\\' in name or '.' in name:
+                continue
+            # Single-word names without underscores are usually type
+            # names (Ring, Algebra, FreeAlgebra, etc.), not theorems
+            if '_' not in name:
+                continue
+            target = _resolve_lean_short(name, node_ids)
+            if target is None:
+                continue
+            if target not in theorem_ids:
+                continue  # LeanDef / LeanStructure / LeanInstance — skip
+            key = (paper_id, target)
+            if key in seen:
+                continue
+            seen.add(key)
+            edges.append({
+                'source': paper_id,
+                'target': target,
+                'type': 'CITES_THEOREM',
+                'reference': name,
+            })
+    return edges
+
+
 def extract_reports_edges(node_ids: set) -> list[dict]:
     """REPORTS: Paper -> CountMetric.
 
@@ -2430,6 +2559,8 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
     edges.extend(extract_reports_edges(node_ids))
+    edges.extend(extract_cites_source_edges(node_ids))
+    edges.extend(extract_cites_theorem_edges(node_ids))
 
     # ASSUMES edges from HYPOTHESIS_REGISTRY
     _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
