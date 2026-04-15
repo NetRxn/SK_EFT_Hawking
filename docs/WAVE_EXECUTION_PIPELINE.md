@@ -22,6 +22,8 @@ Stage 9:  FIGURE REVIEW                    → Gate: LLM review all PASS
 Stage 10: PAPER DRAFT                      → Gate: paper_provenance check passes
 Stage 11: NOTEBOOKS                        → Gate: notebook_exec + viz_consistency pass
 Stage 12: DOCUMENT SYNC                    → Gate: full validate.py passes, counts consistent
+Stage 13: ADVERSARIAL REVIEW               → Gate: fresh-context Opus sweep shows zero BLOCKERs
+Stage 14: META-PROCESS QI                  → Advisory: systemic findings logged to QI register
 ```
 
 **Stage 3 is split into 3a (interactive MCP proving via `lean-lsp-mcp`) and 3b (sorry registration for residual gaps).** Most proofs should close in 3a. Stage 4 (Aristotle) is reserved for (i) sorries that survive interactive iteration with decomposition, or (ii) batch submissions in future phases where MCP iteration is impractical. See the "Lean interactive tooling (MCP)" section of `CLAUDE.md` for dev-loop details.
@@ -466,6 +468,58 @@ The Inventory (`SK_EFT_Hawking_Inventory.md`) is the comprehensive source of tru
 - `docs/validation/VALIDATION_REPORT.md` — Deprecated; superseded by `validate.py` automated checks. Kept for historical reference only.
 
 **Gate:** `validate.py` full suite passes. Manual spot-check of 3 count-sensitive files confirms consistency.
+
+---
+
+## Stage 13: ADVERSARIAL REVIEW
+
+**Purpose:** Catch every failure class that Stages 1–12 cannot detect by construction — wrong-target citations, parameter drift from primary sources, Lean theorems cited as "verified" but discharged as placeholders, cross-paper contradictions, narrative overclaims, and production-run claims without backing evidence.
+
+This stage exists because the April 2026 external adversarial-review round found a 13-dimension problem space that slipped through the 12-stage internal pipeline. The detail is in `docs/READINESS_GATES.md` — the canonical definition of the 11 readiness gates this stage backstops.
+
+**Actions:**
+
+1. Ensure Stages 1–12 are all green (`validate.py` passes). Stage 13 is meaningful only on a codebase that passes its own internal checks.
+2. Invoke the `adversarial-reviewer` agent (`.claude/plugins/physics-qa/agents/adversarial-reviewer.md`) with the target paper key:
+   > "Run the adversarial-reviewer on `paper<N>_<name>`"
+3. The agent runs in a fresh-context Opus window and works 8 finding-classes in order (one per readiness gate). It emits a structured markdown report at:
+   ```
+   papers/AutomatedReviews/{YYYY-MM-DD-HHMM}-internal-adversarial/{paper_key}.md
+   ```
+4. Findings are auto-picked up by `scripts/build_graph.extract_review_finding_nodes` on next graph build — each finding becomes a `ReviewFinding` node with `FLAGS` edges to the paper; `BLOCKER` findings also flip the affected `ReadinessGate` to `blocked`.
+5. Re-run `validate.py --check readiness_submission_gate` — the paper's aggregate state surfaces in the summary (green / yellow / red).
+
+**Rules:**
+
+- One agent invocation = one paper per report file. Do not batch across papers.
+- Citation findings of any kind are **BLOCKER** at submission time, no exceptions. The `docs/citation_verifications.jsonl` cache + `scripts/citation_cache.py` helpers amortize re-fetch cost across rounds so every arXiv / DOI resolve gets verified at most once per 90 days per (bibkey, bibitem_hash) pair.
+- Findings marked `fixed` by the author must pass a **re-invocation** showing no new BLOCKERs in the affected class before the gate flips back to `passed`. "The author says it's fixed" is not evidence; the re-run is evidence.
+- If the agent surfaces a systemic finding (a failure class that affects multiple papers or indicates a pipeline gap), it emits a `## QI Candidate` section — that feeds Stage 14.
+
+**Gate:** Every paper marked "submission-pending" has ZERO `BLOCKER` findings under `papers/AutomatedReviews/` with `status != fixed`. `validate.py --check readiness_submission_gate` shows no RED papers among submission candidates.
+
+**Do NOT use Stage 13 to fix issues.** The agent output is findings-only. The author fixes; the author re-invokes. Separation of the fix-and-review roles is the whole reason the agent exists.
+
+---
+
+## Stage 14: META-PROCESS QUALITY IMPROVEMENT (advisory)
+
+**Purpose:** Surface systemic issues — recurring failure classes across papers or evidence of pipeline gaps — and track them as improvement items with owners and deadlines. Stage 13 catches paper-level issues; Stage 14 catches process-level issues.
+
+**Actions:**
+
+1. Scan `ReviewFinding` nodes across all papers for patterns: findings with the same `pattern_class` appearing in ≥2 papers, or findings that indicate a gate the pipeline can't enforce automatically.
+2. Emit QI items to `docs/QI_REGISTER.md` (auto-generated). Each item carries: id, pattern summary, first_observed_date, occurrence_count, pipeline_stage_affected, owner, target_date, status, evidence_on_close.
+3. User-facing report emitted to `docs/QI_REGISTER_{date}.md` on each Stage 14 run (timestamped snapshot).
+4. Dashboard "Process Health" tab surfaces open QI items + trend of findings-per-category over time.
+
+**Rules:**
+
+- Stage 14 is **advisory** — it never blocks submission. Its purpose is feeding pipeline improvements back into Phase 5v+ work.
+- If a QI item's `severity == critical` (indicates a gate that allowed a correctness violation to ship), the item gets escalated to a Phase 5w+ remediation wave. Example: the April round's 13-dimension problem space is captured as the QI register's seed data.
+- Closed QI items have an `evidence_on_close` field pointing to the commit or wave that remediated the pattern.
+
+**Gate (advisory, no blocking):** QI register exists, is regenerated on Stage 14 runs, and is linked from the dashboard Process Health tab.
 
 ---
 

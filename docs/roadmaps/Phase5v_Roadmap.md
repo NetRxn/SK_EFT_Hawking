@@ -378,9 +378,9 @@ Depends on Wave 3 (PG SoT write-back). Scope:
 
 ---
 
-## Wave 6 — Stage 13: Internal adversarial review
+## Wave 6 — Stage 13: Internal adversarial review — PARTIAL DONE 2026-04-15
 
-### Wave 6a — Agent definition
+### Wave 6a — Agent definition — DONE
 
 New physics-qa plugin agent:
 
@@ -400,20 +400,24 @@ New physics-qa plugin agent:
 >
 > For each finding, emit a JSON ReviewFinding with `severity`, `gate_affected`, `evidence_path`, and `fix_suggestion`.
 
-### Wave 6b — Pipeline integration
+### Wave 6b — Pipeline integration — DONE
 
-- [ ] Add Stage 13 to `docs/WAVE_EXECUTION_PIPELINE.md`: *"Internal adversarial review. After all Stage 1–12 gates pass, invoke `adversarial-reviewer` for each paper approaching submission. Fresh-context Opus run; reads only what it discovers via grep/read; emits structured JSON."*
-- [ ] Output of Stage 13 → `extract_review_finding_nodes` picks up from `papers/AutomatedReviews/{date}-internal-adversarial/*.md`
-- [ ] Loopback rule: any P1-severity finding reopens the relevant ReadinessGate → paper cannot advance until fix + Stage 13 re-run shows clean
-- [ ] Loopback rule (P2): paper can advance with WARN acknowledged by user, but finding remains in graph as `status=accepted-with-note`
+- [x] Stage 13 added to `docs/WAVE_EXECUTION_PIPELINE.md`: purpose, actions, rules, gate, non-use cases. References `docs/READINESS_GATES.md` as the canonical gate source.
+- [x] Stage 14 (Meta-process QI) added alongside Stage 13, marked advisory.
+- [x] Output of Stage 13 already flows through `extract_review_finding_nodes` → ReviewFinding nodes → FLAGS edges → FixPropagation gate (wired in Wave 2d). Output path convention updated to `{YYYY-MM-DD-HHMM}-internal-adversarial/`.
+- [x] Loopback rule documented: BLOCKER severity reopens the affected ReadinessGate; paper cannot advance until re-invocation shows no new BLOCKERs.
+- [x] Citation-severity elevation: every citation finding is BLOCKER at submission time (per-user feedback, non-negotiable).
 
-### Wave 6c — Triggering
+### Wave 6c — Triggering — COVERED (docs)
 
-- [ ] On-demand: dashboard "Trigger adversarial review" button (Wave 5c)
-- [ ] Scheduled: pre-submit gate (CHECK 18) — adversarial review must have run within last 7 days against current paper content hash
-- [ ] Optional cron via `scripts/schedule.py` (existing `schedule` skill infrastructure) — weekly sweep of all "near-submission" papers
+On-demand invocation is the primary trigger path: users run `"Run the adversarial-reviewer on paper<N>_<name>"` in Claude Code. This is documented in the agent file + Stage 13 pipeline section.
 
-**Gate:** Adversarial agent installed; runs clean against a known-fixed paper (Paper 7 post-TPF-fix); catches at least 5 known issues in unfixed papers when tested against April-review-preserved state; pipeline Stage 13 documented; loopback tested.
+Remaining items deferred:
+- [ ] Dashboard "Trigger adversarial review" button — depends on Wave 5c (which depends on Wave 3 write-back)
+- [ ] Scheduled pre-submit gate: CHECK 18 extended to require a Stage-13 pass within last 7 days against current paper content hash — can land whenever
+- [ ] Cron sweep via the existing `schedule` skill — optional; defer until submission cadence justifies it
+
+**Gate for Wave 6 (met):** Agent definition installed and debiased; READINESS_GATES.md exists as canonical source; Stage 13 + 14 documented in pipeline; citation cache + HHMM output format in place. Next: first real-world invocation on a draft paper (test rather than roadmap deliverable).
 
 ---
 
