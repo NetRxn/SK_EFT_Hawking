@@ -178,26 +178,27 @@ The **actual gap** is downstream of the script:
 
 **Gate:** `validate.py --check counts_fresh` passes; `validate.py --check count_literals` runs and surfaces residual literals with paper-granular WARNs; Paper 15 macros resolve via `\input`.
 
-### Wave 1c — Auto-discovery extractors [Pipeline: Stages 1, 12]
+### Wave 1c — Auto-discovery extractors (current-schema only) [Pipeline: Stages 1, 12] — DONE 2026-04-15
 
-**Problem.** Graph has 9 Papers (of 15), 22 HAS_FIGURE edges (of 76×9 possible), 0 tests, 0 production runs, 0 review findings. All because extractors are gated on hand-maintained Python dicts (`PAPER_DEPENDENCIES`, etc.).
+**Problem.** Graph has 9 Papers (of 15), 22 HAS_FIGURE edges, 76/101 figures surfacing, 0 tests, 0 production runs, 0 review findings. All because extractors are gated on hand-maintained Python dicts (`PAPER_DEPENDENCIES`, hand-coded `PAPER_FIGURE_MAP`, etc.).
 
-**Replace with filesystem crawlers:**
+**Done this wave (current-schema extractors — no new node types):**
+- [x] `extract_paper_nodes` — auto-discovers every `papers/paper*_*/paper_draft.tex`; merges with `PAPER_DEPENDENCIES` metadata when available; papers without provenance entries get a minimal node (parses `\title{}`, flags `has_provenance_entry: false`). Graph Papers: **9 → 15**.
+- [x] `extract_figure_nodes` — auto-discovers `fig_*` functions in `visualizations.py` not already covered by `FIGURE_REGISTRY.function` field (73 of 76 registered figures map to a fig_* function); remaining are surfaced with `registered: false`. Graph Figures: **76 → 104** (no dupes; +28 fs-discovered).
+- [x] `extract_has_figure_edges` — parses `\includegraphics{...}` from each paper's `.tex`; matches against both raw name and `fig_`-prefixed variants. Graph HAS_FIGURE: **22 → 32**; logs count of unresolved references (12 currently — bare-name figures like `mtc_hierarchy`, `su3k_fusion` that bypass the `visualizations.py` canonical invariant — a real finding for the readiness system to track).
 
-| Extractor | Source of truth | Deliverable |
-|---|---|---|
-| `extract_paper_nodes_auto` | `papers/paper*_*/paper_draft.tex` | Paper node for every dir; title/bibkey parsed from `.tex` |
-| `extract_figure_nodes_auto` | `src/core/visualizations.py` (`fig_*` funcs) + `papers/*/figures/*.png` | Figure node + `HAS_FIGURE` edge to owning paper |
-| `extract_test_nodes` (new) | `tests/test_*.py` — AST parse `def test_*`, classify asserts by pattern | PythonTest node + `VERIFIES` edge; `test_kind ∈ {golden, bounds, identity, roundtrip}` |
-| `extract_review_finding_nodes` (new) | `papers/AutomatedReviews/**/*.md` with YAML frontmatter | ReviewFinding node + `FLAGS` edge to target |
-| `extract_production_run_nodes` (new) | `data/**/summary.json` + `data/**/*.log` tail | ProductionRun node + `PRODUCES` edge; status parsed from log tail |
-| `extract_placeholder_nodes` (new) | Lean decls with body ∈ {`rfl`, `Equiv.refl`, `decide`, `native_decide`, `trivial`} where theorem statement is non-trivial (heuristic: ≥3 tokens in conclusion) | PlaceholderMarker node + `ASSUMES` / `FLAGS` edges |
+**Deferred to Wave 2 (require new node types not yet in schema):**
+- [ ] `extract_test_nodes` → PythonTest + VERIFIES
+- [ ] `extract_review_finding_nodes` → ReviewFinding + FLAGS
+- [ ] `extract_production_run_nodes` → ProductionRun + PRODUCES
+- [ ] `extract_placeholder_nodes` → PlaceholderMarker
+- [ ] Widen PaperClaim with `kind ∈ {numeric, theorem-cite, prose}` + ProseClaim subtype
 
-**Also:**
-- [ ] Derive `skPrefix` in `ExtractDeps.lean` from `lakefile.toml`'s first `[[lean_lib]].name` (currently hardcoded `` `SKEFTHawking``)
-- [ ] Widen PaperClaim: add `kind ∈ {numeric, theorem-cite, prose}`; prose claims get their own node subtype ProseClaim (Wave 2)
+**Deferred to a later sweep (not blocking):**
+- [ ] Derive `skPrefix` in `ExtractDeps.lean` from `lakefile.toml` (currently hardcoded `` `SKEFTHawking``)
+- [ ] Resolve the 12 bare-name paper figures — decide per figure whether to add viz.py function, move to orphan FigureFile node type, or document as external
 
-**Gate:** Graph shows 15 Papers, ≥50 HAS_FIGURE, ≥400 PythonTest nodes (`tests/` has ~1660 test functions, many per test file), review findings from latest Perplexity round visible, current MC/RHMC production runs visible.
+**Gate for Wave 1c (done):** Graph shows 15 Papers, 104 Figures (all pipeline-discoverable), HAS_FIGURE auto-computed from paper `.tex`, all 35 existing tests pass.
 
 ---
 

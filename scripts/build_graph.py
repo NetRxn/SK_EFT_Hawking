@@ -575,12 +575,73 @@ def extract_primary_source_nodes() -> list[dict]:
     return nodes
 
 
+def _parse_tex_title(tex_path: Path) -> str | None:
+    """Pull \\title{...} from a .tex file. Returns None if not found."""
+    try:
+        text = tex_path.read_text()
+    except (OSError, UnicodeDecodeError):
+        return None
+    # Non-greedy match; allow balanced-ish braces inside
+    m = re.search(r'\\title\{([^}]*(?:\\\\[^}]*)*)\}', text)
+    if not m:
+        return None
+    title = m.group(1).replace(r'\\', ' ').strip()
+    return title[:200] if title else None
+
+
 def extract_paper_nodes() -> list[dict]:
-    """Extract paper nodes from PAPER_DEPENDENCIES in provenance.py."""
+    """Extract paper nodes. Auto-discovers every papers/paper*_*/paper_draft.tex
+    on the filesystem; enriches with PAPER_DEPENDENCIES metadata when available.
+
+    Previously this extractor was gated on PAPER_DEPENDENCIES, so only 9 of 15
+    papers appeared in the graph. Phase 5v Wave 1c switches to filesystem
+    discovery so every paper on disk is graph-visible; papers without
+    provenance entries get a minimal node with title parsed from \\title{}.
+    """
     from src.core.provenance import PAPER_DEPENDENCIES
 
+    papers_dir = PROJECT_ROOT / "papers"
+    # Skip registry pseudo-entries that don't correspond to a paper directory
+    _NON_PAPER_KEYS = {'experimental_predictions'}
+
     nodes = []
+    seen_keys: set[str] = set()
+
+    # Start from filesystem (ground truth)
+    if papers_dir.exists():
+        for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+            key = tex_path.parent.name  # e.g. "paper1_first_order"
+            entry = PAPER_DEPENDENCIES.get(key, {})
+            title = (
+                entry.get('title')
+                or _parse_tex_title(tex_path)
+                or key.replace('_', ' ').title()
+            )
+            nodes.append({
+                'id': f'paper:{key}',
+                'type': 'Paper',
+                'label': key,
+                'name': title,
+                'verification': 'verified' if entry else 'unverified',
+                'detail': entry.get('topic', '')
+                          or f"Filesystem-discovered; no PAPER_DEPENDENCIES entry",
+                'meta': {
+                    'topic': entry.get('topic', ''),
+                    'formulas': entry.get('formulas', []),
+                    'lean_modules': entry.get('lean_modules', []),
+                    'platforms': entry.get('platforms', []),
+                    'n_claims': len(entry.get('key_claims', [])),
+                    'tex_path': str(tex_path.relative_to(PROJECT_ROOT)),
+                    'has_provenance_entry': bool(entry),
+                },
+            })
+            seen_keys.add(key)
+
+    # Include any PAPER_DEPENDENCIES entries that don't map to a paper
+    # directory (e.g. cross-cutting predictions); skip known pseudo-entries
     for key, entry in PAPER_DEPENDENCIES.items():
+        if key in seen_keys or key in _NON_PAPER_KEYS:
+            continue
         nodes.append({
             'id': f'paper:{key}',
             'type': 'Paper',
@@ -594,9 +655,13 @@ def extract_paper_nodes() -> list[dict]:
                 'lean_modules': entry.get('lean_modules', []),
                 'platforms': entry.get('platforms', []),
                 'n_claims': len(entry.get('key_claims', [])),
+                'tex_path': None,
+                'has_provenance_entry': True,
             },
         })
 
+    logger.info("Paper extraction: %d nodes (of which %d fs-discovered)",
+                len(nodes), len(seen_keys))
     return nodes
 
 
@@ -645,9 +710,15 @@ def extract_figure_nodes() -> list[dict]:
         sys.argv = _orig_argv
 
     nodes = []
+    seen_ids: set[str] = set()
+    registered_functions: set[str] = set()
     for fig_spec in mod.FIGURE_REGISTRY:
+        fig_id = f'figure:{fig_spec.name}'
+        seen_ids.add(fig_id)
+        if fig_spec.function:
+            registered_functions.add(fig_spec.function)
         nodes.append({
-            'id': f'figure:{fig_spec.name}',
+            'id': fig_id,
             'type': 'Figure',
             'label': fig_spec.name,
             'name': fig_spec.name,
@@ -657,8 +728,48 @@ def extract_figure_nodes() -> list[dict]:
                 'function': fig_spec.function,
                 'caption': fig_spec.caption,
                 'expected_traces': fig_spec.expected_traces,
+                'registered': True,
             },
         })
+
+    # Auto-discover fig_* functions in visualizations.py that are NOT already
+    # registered (via either name or function field). Previously some figures
+    # lived only as functions without review registry entries; this surfaces
+    # them with minimal metadata so they appear in the graph.
+    # Phase 5v Wave 1c.
+    viz_path = PROJECT_ROOT / "src" / "core" / "visualizations.py"
+    if viz_path.exists():
+        fn_re = re.compile(r'^def\s+(fig_[A-Za-z0-9_]+)\s*\(', re.MULTILINE)
+        source = viz_path.read_text()
+        extras = 0
+        for m in fn_re.finditer(source):
+            fn_name = m.group(1)
+            # Skip functions already covered by FIGURE_REGISTRY under either
+            # their numbered `name` or their `function` field (73 of 76
+            # registered figures map to a fig_* function in viz.py).
+            if fn_name in registered_functions:
+                continue
+            fig_id = f'figure:{fn_name}'
+            if fig_id in seen_ids:
+                continue
+            seen_ids.add(fig_id)
+            nodes.append({
+                'id': fig_id,
+                'type': 'Figure',
+                'label': fn_name,
+                'name': fn_name,
+                'verification': 'unverified',
+                'detail': 'fs-discovered; not in FIGURE_REGISTRY',
+                'meta': {
+                    'function': fn_name,
+                    'caption': '',
+                    'expected_traces': [],
+                    'registered': False,
+                },
+            })
+            extras += 1
+        logger.info("Figure extraction: %d registered + %d fs-discovered = %d total",
+                    len(nodes) - extras, extras, len(nodes))
 
     return nodes
 
@@ -968,58 +1079,70 @@ def extract_cites_edges(node_ids: set) -> list[dict]:
 def extract_has_figure_edges(node_ids: set) -> list[dict]:
     """HAS_FIGURE: Paper -> Figure.
 
-    Maps papers to the figures they include, inferred from \\includegraphics
-    in paper .tex files.  Since claim-level figure assignments aren't yet
-    available, edges go from Paper nodes directly to Figure nodes.
+    Auto-discovers paper -> figure relationships by parsing \\includegraphics
+    references in each paper_draft.tex file. Previously this extractor used a
+    hand-maintained PAPER_FIGURE_MAP covering only 7 papers (22 edges total);
+    Phase 5v Wave 1c switches to filesystem discovery so every included figure
+    in every paper surfaces as an edge. Figure node matching is generous:
+    tries both the raw basename and fig_-prefixed variants to accommodate
+    naming drift between visualizations.py (fig_*) and FIGURE_REGISTRY
+    (fig<N>_*).
     """
-    PAPER_FIGURE_MAP = {
-        'paper1_first_order': [
-            'fig1_transonic_profiles', 'fig2_correction_hierarchy',
-            'fig4_spin_sonic_enhancement',
-        ],
-        'paper2_second_order': [
-            'fig7_cgl_fdr_pattern', 'fig8_even_vs_odd_kernel',
-            'fig11_on_shell_vanishing',
-        ],
-        'paper3_gauge_erasure': [
-            'fig20_sm_scorecard', 'fig21_erasure_survey',
-        ],
-        'paper4_wkb_connection': [
-            'fig22_complex_turning_point', 'fig25_hawking_spectrum_exact',
-            'fig27_exact_vs_perturbative',
-        ],
-        'paper5_adw_gap': [
-            'fig28_adw_effective_potential', 'fig29_adw_phase_diagram',
-            'fig30_adw_ng_modes',
-        ],
-        'paper6_vestigial': [
-            'fig45_vestigial_effective_potential', 'fig42_vestigial_phase_diagram',
-            'fig51_vestigial_binder_crossing', 'fig52_vestigial_susceptibility_split',
-        ],
-        'paper7_chirality_formal': [
-            'fig53_gs_condition_formalization', 'fig54_lean_theorem_summary',
-            'fig60_tpf_evasion_architecture', 'fig61_fock_exterior_algebra',
-        ],
-    }
+    papers_dir = PROJECT_ROOT / "papers"
+    if not papers_dir.exists():
+        return []
+
+    include_re = re.compile(
+        r'\\includegraphics(?:\[[^\]]*\])?\{(?:[^{}]*?/)?(?:figures/)?([^{}.]+)(?:\.(?:png|pdf|jpg|jpeg))?\}'
+    )
 
     edges = []
-    seen = set()
-    for paper_key, figure_names in PAPER_FIGURE_MAP.items():
+    seen: set[tuple[str, str]] = set()
+    unresolved_counter: dict[str, int] = {}
+
+    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        paper_key = tex_path.parent.name
         paper_id = f'paper:{paper_key}'
         if paper_id not in node_ids:
             continue
-        for fig_name in figure_names:
-            figure_id = f'figure:{fig_name}'
-            if figure_id in node_ids:
-                edge_key = (paper_id, figure_id)
-                if edge_key not in seen:
-                    seen.add(edge_key)
-                    edges.append({
-                        'source': paper_id,
-                        'target': figure_id,
-                        'type': 'HAS_FIGURE',
-                    })
+        try:
+            text = tex_path.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for m in include_re.finditer(text):
+            raw = m.group(1).strip()
+            # Candidates in priority order
+            candidates = [raw]
+            if not raw.startswith('fig_') and not re.match(r'^fig\d', raw):
+                candidates.append(f'fig_{raw}')
+            figure_id = None
+            for cand in candidates:
+                cid = f'figure:{cand}'
+                if cid in node_ids:
+                    figure_id = cid
+                    break
+            if figure_id is None:
+                unresolved_counter[raw] = unresolved_counter.get(raw, 0) + 1
+                continue
+            edge_key = (paper_id, figure_id)
+            if edge_key not in seen:
+                seen.add(edge_key)
+                edges.append({
+                    'source': paper_id,
+                    'target': figure_id,
+                    'type': 'HAS_FIGURE',
+                })
 
+    if unresolved_counter:
+        top = sorted(unresolved_counter.items(), key=lambda x: -x[1])[:5]
+        logger.debug(
+            "HAS_FIGURE: %d references could not be resolved to Figure nodes; "
+            "top unresolved: %s",
+            sum(unresolved_counter.values()),
+            ", ".join(f"{n} (x{c})" for n, c in top),
+        )
+    logger.info("HAS_FIGURE: %d edges discovered (%d figure refs unresolved)",
+                len(edges), sum(unresolved_counter.values()))
     return edges
 
 
