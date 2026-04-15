@@ -1,0 +1,19 @@
+SK-EFT Hawking Validation Report
+Generated: 20260415T150645Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] paper_provenance
+  + paper10_modular_generation/figures — 2 figure files present
+  + paper12_polariton/figures — 2 figure files present
+  + paper14_braided_mtc/figures — 5 figure files present
+  + paper1_first_order/figures — 3 figure files present
+  + paper2_second_order/figures — 6 figure files present
+  + paper3_gauge_erasure/figures — 2 figure files present
+  + paper4_wkb_connection/figures — 3 figure files present
+  + paper5_adw_gap/figures — 5 figure files present
+  + paper6_vestigial/figures — 5 figure files present
+  + paper7_chirality_formal/figures — 6 figure files present
+  + paper8_chirality_master/figures — 5 figure files present
+  + paper9_sm_anomaly_drinfeld/figures — 5 figure files present
+
+Overall: 1/1 passed

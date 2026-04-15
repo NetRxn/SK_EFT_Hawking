@@ -605,6 +605,27 @@ investigation time.
 
 ---
 
+## Track G — Paper 11 + Paper 14 integration of Phase 5e/5p new theorems [DONE 2026-04-15]
+
+**Trigger:** Five PRs (#10–#14) merged 2026-04-15 added substantial new content (per-generator affine S², Müger center symmetric structure, det(S)≠0 → isMugerTrivial bridge, FPdim eigenvector + φ-triple-origin, D²(Z(C))=D²(C)² formula). Paper 11 (quantum group) and Paper 14 (braided MTC) were the natural homes for these results but their drafts predated the new theorems.
+
+### Wave 23 — Paper 11 affine Hopf section update [Pipeline: Stage 10] — DONE 2026-04-15
+- [x] Replaced "(pending Aristotle)" stale label on `Uqsl2AffineHopf.lean` Bialgebra/HopfAlgebra wiring (the wiring is now complete in Tranche E + Phase 5e Waves 7-8).
+- [x] Added per-generator squared-antipode subsection: explains why no global `S² = Ad(K)` exists for affine ŝl₂ (rank-deficient Cartan), with the full rank-2 contradiction proof inline. Cross-references the (different) sl₃ correction at `Uqsl3Hopf.lean:3995`.
+- [x] Updated theorem counts: `Uqsl2AffineHopf.lean` 4 → 201, `CoidealEmbedding.lean` 6 (zero sorry, was "pending Aristotle"), `RepUqFusion.lean` 14 (zero sorry, was "pending Aristotle").
+
+### Wave 24 — Paper 14 abstract + contributions + new section [Pipeline: Stage 10] — DONE 2026-04-15
+- [x] Updated abstract: stale counts (2237/130) → current (3021+/133); added Müger center / FPdim eigenvector / D²(Z(C))=D²(C)² formula claims; expanded Müger center mention to include `SymmetricCategory` instance.
+- [x] Updated contributions list: added 3 new items (Müger center symmetric subcategory + Direction~1 bridge; FPdim eigenvector + φ-triple-origin; non-abelian Drinfeld-center dimension formula).
+- [x] Added new full section `Müger Center, FPdim, and Drinfeld-Center Dimension Formula` between `SU(3)_k Fusion Categories` and `Temperley-Lieb Algebra and Jones-Wenzl Idempotents` (~50 lines, 4 subsections supporting each abstract claim with Lean file references).
+
+**Out of scope for this track:**
+- Reproducing the full proofs of the new theorems in the paper body (paper-style sketches; readers can consult the cited Lean files for full verification).
+- LLM claims-reviewer pass on the updated papers (run separately when you do a comprehensive paper-claims review).
+- Other papers (paper 1, 12, 15, etc.) — Phase 5e/5p content does not affect them.
+
+---
+
 ## Dependencies
 
 ```
