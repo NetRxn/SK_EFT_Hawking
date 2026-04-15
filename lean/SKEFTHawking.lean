@@ -57,6 +57,7 @@ import SKEFTHawking.S3CenterAnyons
 import SKEFTHawking.D2Formula
 import SKEFTHawking.CenterEquivalenceZ2
 import SKEFTHawking.CenterFunctorZ2
+import SKEFTHawking.CenterFunctorZ2Equiv
 import SKEFTHawking.DrinfeldDoubleAlgebra
 import SKEFTHawking.DrinfeldDoubleRing
 import SKEFTHawking.DrinfeldEquivalence
