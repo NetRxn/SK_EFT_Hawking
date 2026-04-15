@@ -348,16 +348,17 @@ Explicit `IMPACTED_BY` edges + hash-diff propagation are **deferred** because th
 
 ## Wave 5 — Dashboard readiness surface — PARTIAL DONE 2026-04-15
 
-### Wave 5a — Readiness tab — DONE
+### Wave 5a — Readiness tab — DONE (with UI enhancement pass)
 
 - [x] Added "Paper Readiness" as 7th tab alongside existing 6
-- [x] Heatmap: rows = 15 papers, columns = 11 gates, cells colored green/red/yellow/grey by gate state
-- [x] Click any cell → detail panel with evidence, blockers, notes, last-evaluated timestamp
-- [x] Summary row shows green/yellow/red counts + last-evaluated timestamp
+- [x] Heatmap: rows = 15 papers, columns = 11 gates (compact gate abbreviations in rotated headers), cells colored green/red/yellow/grey by gate state
+- [x] **Paper-focus sidebar** (UI enhancement pass): click paper name or any gate cell → sticky right-side panel shows all 11 gates for that paper with evidence/blockers expanded for the selected gate and auto-expanded for any non-passed gates. Replaces the inline per-cell detail panel.
+- [x] **Filter row** (UI enhancement pass): buttons for red/yellow/green paper-state filter + dropdown for "blocked by gate X" + click any gate header in the heatmap to toggle the gate filter. "Clear filters" button resets.
+- [x] Legend + priority labels (P1 / P2) under every gate header
+- [x] Summary row: green/yellow/red counts, paper total, last-evaluated timestamp
 - [x] `/api/readiness` Flask endpoint returns structured gate data; dashboard renders via safe-DOM construction (no innerHTML with untrusted content — verified by security hook)
-- [x] Headless render test: GET `/?tab=readiness` returns 200 (370KB HTML); GET `/api/readiness` returns 200 with 15 papers × 11 gates
+- [x] Headless render tests: GET `/?tab=readiness` returns 200; GET `/api/readiness` returns 200 with 15 papers × 11 gates
 - [ ] Trend chart: gates-passed over time — **deferred** (requires historical snapshots in `docs/validation/reports/`; can wire once that archive is populated)
-- [ ] Explicit filter UI ("papers blocked by gate X") — **deferred** (clicking on heatmap cells already serves this purpose for now)
 
 ### Wave 5b — Graph-tab integration — DEFERRED
 
@@ -434,13 +435,17 @@ Remaining items deferred:
 - [x] Seeded from the April review round: 56 findings → 7 QI items. Biggest cluster: CitationIntegrity with 20 findings across 7 papers (confirms the April citation-handling pattern as a systemic issue warranting remediation, not a one-off)
 - [ ] Manual-field persistence across regenerations (owner, target_date, etc. preserved on re-run) — deferred to follow-up refinement
 
-### Wave 7b — Dashboard "Process Health" tab — DEFERRED
+### Wave 7b — Dashboard "Process Health" tab — DONE
 
-Register is markdown-renderable directly; dashboard tab is nice-to-have, not blocking. Scope when revisited:
-- Open QI items count grouped by gate
-- Trend: findings-per-gate-per-month over time
-- Click QI item → evidence chain
-- FixPropagation gate reads open QI items with past target_dates
+- [x] Added "Process Health" as 8th dashboard tab
+- [x] `/api/qi` endpoint: runs `qi_register.cluster_findings` against current ReviewFinding nodes; returns items with severity mix, affected papers, occurrence counts, representative findings
+- [x] Tab renders QI items as severity-color-bordered cards (critical/major/minor/advisory)
+- [x] Each card shows: gate pill, occurrence count, status, first/last seen, affected-paper chips, representative findings list
+- [x] Toolbar: "open only" / "all" filter
+- [x] Safe-DOM construction (createElement + textContent throughout)
+- [x] Verified: GET /?tab=qi returns 200; /api/qi returns 7 items from 56 findings
+- [ ] Trend chart: findings-per-gate-per-month — **deferred** (same blocker as readiness trend: needs historical snapshots)
+- [ ] FixPropagation gate reading QI register for past target_dates — **deferred** (requires persistent manual-field state on QI items, not yet wired)
 
 ### Wave 7c — Pipeline integration — DONE
 

@@ -974,6 +974,28 @@ def api_integrity():
     return jsonify(run_integrity_checks())
 
 
+@app.route("/api/qi")
+def api_qi():
+    """Return the Stage 14 QI register (Phase 5v Wave 7b).
+
+    Runs `scripts.qi_register.cluster_findings` against the current
+    ReviewFinding graph nodes and returns the structured QI items.
+    Shape matches what the Process Health dashboard tab consumes.
+    """
+    from datetime import datetime, timezone
+    try:
+        from qi_register import load_review_findings, cluster_findings
+    except ImportError as exc:
+        return jsonify({"error": f"qi_register unavailable: {exc}"}), 500
+    findings = load_review_findings()
+    items = cluster_findings(findings)
+    return jsonify({
+        'findings_total': len(findings),
+        'items': items,
+        'generated': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+    })
+
+
 @app.route("/api/readiness")
 def api_readiness():
     """Return per-paper readiness gate data structured for the dashboard.

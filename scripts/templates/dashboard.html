@@ -309,6 +309,10 @@
            href="?tab=readiness">
             Paper Readiness
         </a>
+        <a class="tab {% if tab == 'qi' %}active{% endif %}"
+           href="?tab=qi">
+            Process Health
+        </a>
     </div>
 </div>
 
@@ -860,6 +864,13 @@
     {% if tab == 'readiness' %}
     <div class="tab-content active">
         {% include 'partials/readiness_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ PROCESS HEALTH TAB (Phase 5v Wave 7b) ═══ -->
+    {% if tab == 'qi' %}
+    <div class="tab-content active">
+        {% include 'partials/qi_tab.html' %}
     </div>
     {% endif %}
 

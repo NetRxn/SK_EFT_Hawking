@@ -1,0 +1,256 @@
+<!-- Process Health tab — Stage 14 QI Register visualization (Phase 5v Wave 7b).
+
+Renders QI items (cross-paper failure-class patterns) via /api/qi.
+Safe DOM construction (createElement + textContent; no innerHTML with data). -->
+
+<style>
+    .qi-summary {
+        display: flex; gap: 24px; margin: 16px 0;
+        padding: 12px; background: var(--grey-bg); border-radius: 4px;
+        align-items: center;
+    }
+    .qi-summary .count { font-size: 1.4rem; font-weight: 700; }
+
+    .qi-items { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+
+    .qi-item {
+        border: 1px solid var(--border); border-left: 4px solid var(--blue);
+        border-radius: 4px; padding: 12px 14px; background: white;
+    }
+    .qi-item.severity-critical { border-left-color: #dc2626; }
+    .qi-item.severity-major    { border-left-color: #f59e0b; }
+    .qi-item.severity-minor    { border-left-color: #0ea5e9; }
+    .qi-item.severity-advisory { border-left-color: #a3a3a3; }
+
+    .qi-item h4 {
+        margin: 0 0 4px 0; font-size: 0.95rem;
+        display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .qi-item h4 .qi-id { font-family: var(--mono); color: var(--grey); font-size: 0.75rem; }
+    .qi-item .qi-meta {
+        color: var(--grey); font-size: 0.78rem; margin-bottom: 8px;
+    }
+    .qi-item .qi-meta span { margin-right: 14px; }
+    .qi-item .qi-papers {
+        margin: 6px 0; display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .qi-item .qi-papers .paper-chip {
+        padding: 2px 8px; background: #eef2ff; color: #3730a3;
+        border-radius: 3px; font-size: 0.72rem;
+    }
+    .qi-item .qi-findings {
+        margin-top: 8px; font-size: 0.78rem; padding-left: 18px;
+        color: var(--grey);
+    }
+    .qi-item .qi-findings li { margin: 2px 0; }
+
+    .qi-gate-pill {
+        display: inline-block; padding: 2px 8px;
+        background: #fef3c7; color: #92400e;
+        border-radius: 3px; font-size: 0.72rem; font-weight: 600;
+    }
+
+    .qi-empty {
+        color: var(--grey); font-style: italic;
+        padding: 40px; text-align: center; background: var(--grey-bg);
+        border-radius: 4px;
+    }
+
+    .qi-toolbar {
+        display: flex; gap: 8px; align-items: center;
+        margin: 8px 0 16px 0;
+    }
+    .qi-toolbar button {
+        padding: 4px 10px; border-radius: 3px;
+        border: 1px solid var(--border); background: white;
+        cursor: pointer; font-size: 0.8rem;
+    }
+    .qi-toolbar button:hover { background: #f0f6ff; }
+    .qi-toolbar .qi-regen-note {
+        font-size: 0.72rem; color: var(--grey); margin-left: auto;
+    }
+</style>
+
+<h2>Process Health — Stage 14 Quality Improvement Register</h2>
+<p style="color: var(--grey);">
+    Cross-paper failure-class patterns detected across
+    <a href="javascript:void(0)" onclick="location.href='?tab=readiness'">ReviewFindings</a>.
+    A QI item emerges when the same readiness gate is flagged in ≥2 papers — these are
+    <strong>process-level</strong> issues, not paper-local. Fixing the QI item fixes the class
+    of issue across all affected papers.
+</p>
+
+<div id="qi-summary" class="qi-summary">
+    <div>Loading QI register…</div>
+</div>
+
+<div class="qi-toolbar">
+    <button id="qi-filter-open">open only</button>
+    <button id="qi-filter-all" class="active">all</button>
+    <span class="qi-regen-note">Regenerate via <code>uv run python scripts/qi_register.py</code></span>
+</div>
+
+<div id="qi-items" class="qi-items">
+    <div class="qi-empty">Loading…</div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    let rawData = null;
+    let showOpenOnly = false;
+
+    function el(tag, opts) {
+        const node = document.createElement(tag);
+        opts = opts || {};
+        if (opts.class) node.className = opts.class;
+        if (opts.text != null) node.textContent = String(opts.text);
+        if (opts.dataset) for (const k in opts.dataset) node.dataset[k] = String(opts.dataset[k]);
+        if (opts.style) Object.assign(node.style, opts.style);
+        if (opts.children) opts.children.forEach(c => { if (c) node.appendChild(c); });
+        if (opts.onclick) node.addEventListener('click', opts.onclick);
+        return node;
+    }
+
+    function deriveSeverity(mix) {
+        if (!mix) return 'advisory';
+        if (mix.critical) return 'critical';
+        if (mix.major) return 'major';
+        if (mix.minor) return 'minor';
+        return 'advisory';
+    }
+
+    function renderSummary(data) {
+        const pane = document.getElementById('qi-summary');
+        pane.replaceChildren();
+        const open = data.items.filter(i => i.status === 'open').length;
+        const closed = data.items.length - open;
+        const byGate = {};
+        for (const it of data.items) byGate[it.gate_affected] = (byGate[it.gate_affected] || 0) + 1;
+        const gateCount = Object.keys(byGate).length;
+
+        const fig = (n, l, c) => el('div', { children: [
+            el('div', { class: 'count', text: n, style: { color: c } }),
+            el('div', { text: l }),
+        ]});
+
+        pane.appendChild(fig(data.items.length, 'QI items', '#3730a3'));
+        pane.appendChild(fig(open, 'open', '#b45309'));
+        pane.appendChild(fig(closed, 'closed', '#166534'));
+        pane.appendChild(fig(gateCount, 'gates affected', '#475569'));
+        pane.appendChild(fig(data.findings_total, 'ReviewFindings source', '#6b7280'));
+
+        pane.appendChild(el('div', {
+            style: { marginLeft: 'auto', color: 'var(--grey)', fontSize: '0.8rem' },
+            text: 'Generator run: ' + (data.generated || 'unknown'),
+        }));
+    }
+
+    function renderItems() {
+        const pane = document.getElementById('qi-items');
+        pane.replaceChildren();
+        if (!rawData || !rawData.items.length) {
+            pane.appendChild(el('div', {
+                class: 'qi-empty',
+                text: 'No QI items yet — no cross-paper failure patterns detected.',
+            }));
+            return;
+        }
+        const items = rawData.items.filter(it => !showOpenOnly || it.status === 'open');
+        if (!items.length) {
+            pane.appendChild(el('div', { class: 'qi-empty', text: 'No open items.' }));
+            return;
+        }
+        for (const item of items) {
+            const severity = deriveSeverity(item.severity_mix);
+            const card = el('div', { class: 'qi-item severity-' + severity });
+
+            // Header
+            card.appendChild(el('h4', { children: [
+                el('span', { text: item.pattern_summary }),
+                el('span', { class: 'qi-id', text: item.id }),
+            ]}));
+
+            // Meta row
+            const meta = el('div', { class: 'qi-meta' });
+            meta.appendChild(el('span', { class: 'qi-gate-pill', text: item.gate_affected }));
+            meta.appendChild(el('span', { text: ' ' + item.occurrences + ' findings' }));
+            meta.appendChild(el('span', {
+                text: 'status: ' + (item.status || 'open'),
+                style: { fontWeight: '600', color: item.status === 'closed' ? '#166534' : '#b45309' },
+            }));
+            meta.appendChild(el('span', {
+                text: 'first seen: ' + (item.first_observed || '?'),
+            }));
+            meta.appendChild(el('span', {
+                text: 'last seen: ' + (item.last_observed || '?'),
+            }));
+            if (item.owner) meta.appendChild(el('span', { text: 'owner: ' + item.owner }));
+            if (item.target_date) meta.appendChild(el('span', { text: 'target: ' + item.target_date }));
+            card.appendChild(meta);
+
+            // Papers
+            if (item.affected_papers && item.affected_papers.length) {
+                const papersRow = el('div', { class: 'qi-papers' });
+                for (const p of item.affected_papers) {
+                    papersRow.appendChild(el('span', { class: 'paper-chip', text: p }));
+                }
+                card.appendChild(papersRow);
+            }
+
+            // Representative findings
+            if (item.representative_findings && item.representative_findings.length) {
+                const ul = el('ul', { class: 'qi-findings' });
+                for (const rf of item.representative_findings) {
+                    const li = el('li');
+                    li.appendChild(el('span', { text: rf.label || rf.id || '?' }));
+                    if (rf.file) {
+                        li.appendChild(el('span', {
+                            text: ' (' + rf.file + ')',
+                            style: { color: '#9ca3af' },
+                        }));
+                    }
+                    ul.appendChild(li);
+                }
+                card.appendChild(ul);
+            }
+
+            pane.appendChild(card);
+        }
+    }
+
+    function renderError(message) {
+        const pane = document.getElementById('qi-summary');
+        pane.replaceChildren();
+        pane.appendChild(el('div', {
+            text: 'Failed to load QI register: ' + message,
+            style: { color: '#721c24' },
+        }));
+        document.getElementById('qi-items').replaceChildren();
+    }
+
+    // Toolbar wiring
+    document.getElementById('qi-filter-open').onclick = () => {
+        showOpenOnly = true;
+        document.getElementById('qi-filter-open').classList.add('active');
+        document.getElementById('qi-filter-all').classList.remove('active');
+        renderItems();
+    };
+    document.getElementById('qi-filter-all').onclick = () => {
+        showOpenOnly = false;
+        document.getElementById('qi-filter-all').classList.add('active');
+        document.getElementById('qi-filter-open').classList.remove('active');
+        renderItems();
+    };
+
+    fetch('/api/qi')
+        .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+        .then(data => {
+            rawData = data;
+            renderSummary(data);
+            renderItems();
+        })
+        .catch(e => renderError(String(e)));
+})();
+</script>
