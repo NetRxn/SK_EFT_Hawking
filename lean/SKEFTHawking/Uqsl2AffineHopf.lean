@@ -5752,7 +5752,238 @@ noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl2Aff k) where
   mul_antipode_rTensor_comul := affAntipode_right k
   mul_antipode_lTensor_comul := affAntipode_left k
 
-/-! ## 8. Module summary -/
+/-! ## 8. Squared antipode (per-generator identities)
+
+**Theorem (per-generator):** For U_q(ŝl₂) with affine Cartan matrix
+`A = [[2, -2], [-2, 2]]`:
+* `S²(E_i) = K_i · E_i · K_i⁻¹ = q² · E_i = algebraMap(T 2) · E_i` for i ∈ {0, 1}
+* `S²(F_i) = K_i · F_i · K_i⁻¹ = q⁻² · F_i = algebraMap(T (-2)) · F_i` for i ∈ {0, 1}
+* `S²(K_i) = K_i`, `S²(K_i⁻¹) = K_i⁻¹`
+
+**Historical note (2026-04-15):** An earlier Phase 5e Wave 8 specification
+listed `S² = Ad(K₀K₁)` as the deliverable. This is mathematically wrong for
+the affine case, and qualitatively different from the Uqsl3Hopf historical
+correction (`Uqsl3Hopf.lean:3995`). Reasoning:
+* The affine Cartan matrix `A = [[2, -2], [-2, 2]]` is rank-deficient
+  (`det A = 0`, as for every affine extension).
+* For any `K = K₀^a · K₁^b`, `Ad(K)(E_j) = q^{a·A_{0j} + b·A_{1j}} · E_j`.
+* Requiring `Ad(K)(E_i) = q²·E_i` simultaneously for i = 0, 1 forces both
+  `a − b = 1` AND `b − a = 1`. Contradiction.
+* Unlike finite simply-laced types (where `K_{2ρ} = ∏ K_i` implements S² globally),
+  **no single group-like element in ⟨K₀, K₁⟩ implements S² across both simple-root
+  generators** for affine ŝl₂. The "K_{2ρ}" element for affine root systems lives
+  in a completion of U_q(ŝl₂), not in the Drinfeld-Jimbo / Lusztig form.
+
+The correct per-generator statement below avoids this pitfall — it matches what
+the Drinfeld theorem actually proves at each generator; the global
+`S² = Ad(K_{2ρ})` repackaging only works when a single K implements it, which
+fails for degenerate Cartan matrices.
+
+See `docs/roadmaps/Phase5e_Roadmap.md` Wave 8 for the tracked correction
+(2026-04-15) and the analogous (but distinct) sl₃ correction at
+`Uqsl3Hopf.lean:3970–3997`. -/
+
+/-! ### 8a. Antipode on individual generators (linear map version) -/
+
+theorem uqAff_antipode_E0 :
+    affAntipodeLM k (uqAffE0 k) = -(uqAffE0 k * uqAffK0inv k) := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffE0 uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_E1 :
+    affAntipodeLM k (uqAffE1 k) = -(uqAffE1 k * uqAffK1inv k) := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffE1 uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_F0 :
+    affAntipodeLM k (uqAffF0 k) = -(uqAffK0 k * uqAffF0 k) := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffF0 uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_F1 :
+    affAntipodeLM k (uqAffF1 k) = -(uqAffK1 k * uqAffF1 k) := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffF1 uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_K0 :
+    affAntipodeLM k (uqAffK0 k) = uqAffK0inv k := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffK0 uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_K1 :
+    affAntipodeLM k (uqAffK1 k) = uqAffK1inv k := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffK1 uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_K0inv :
+    affAntipodeLM k (uqAffK0inv k) = uqAffK0 k := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffK0inv uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+theorem uqAff_antipode_K1inv :
+    affAntipodeLM k (uqAffK1inv k) = uqAffK1 k := by
+  unfold affAntipodeLM affAntipode
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uqAffK1inv uqsl2AffMk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold affAntipodeFreeAlg
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold affAntipodeOnGen
+  rfl
+
+/-! ### 8b. K-conjugation of simple-root generators (for S² proof) -/
+
+private theorem uqAff_K0_conj_E0 :
+    uqAffK0 k * uqAffE0 k * uqAffK0inv k =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE0 k := by
+  calc uqAffK0 k * uqAffE0 k * uqAffK0inv k
+      = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE0 k * uqAffK0 k *
+          uqAffK0inv k := by rw [uqAff_K0E0]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE0 k *
+          (uqAffK0 k * uqAffK0inv k) := by noncomm_ring
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE0 k * 1 := by
+          rw [uqAff_K0_mul_K0inv]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE0 k := mul_one _
+
+private theorem uqAff_K1_conj_E1 :
+    uqAffK1 k * uqAffE1 k * uqAffK1inv k =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE1 k := by
+  calc uqAffK1 k * uqAffE1 k * uqAffK1inv k
+      = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE1 k * uqAffK1 k *
+          uqAffK1inv k := by rw [uqAff_K1E1]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE1 k *
+          (uqAffK1 k * uqAffK1inv k) := by noncomm_ring
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE1 k * 1 := by
+          rw [uqAff_K1_mul_K1inv]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE1 k := mul_one _
+
+private theorem uqAff_K0_conj_F0 :
+    uqAffK0 k * uqAffF0 k * uqAffK0inv k =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF0 k := by
+  calc uqAffK0 k * uqAffF0 k * uqAffK0inv k
+      = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF0 k *
+          uqAffK0 k * uqAffK0inv k := by rw [uqAff_K0F0]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF0 k *
+          (uqAffK0 k * uqAffK0inv k) := by noncomm_ring
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF0 k * 1 := by
+          rw [uqAff_K0_mul_K0inv]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF0 k := mul_one _
+
+private theorem uqAff_K1_conj_F1 :
+    uqAffK1 k * uqAffF1 k * uqAffK1inv k =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF1 k := by
+  calc uqAffK1 k * uqAffF1 k * uqAffK1inv k
+      = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF1 k *
+          uqAffK1 k * uqAffK1inv k := by rw [uqAff_K1F1]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF1 k *
+          (uqAffK1 k * uqAffK1inv k) := by noncomm_ring
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF1 k * 1 := by
+          rw [uqAff_K1_mul_K1inv]
+    _ = algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF1 k := mul_one _
+
+/-! ### 8c. Squared-antipode per-generator identities -/
+
+/-- `S²(E₀) = K₀·E₀·K₀⁻¹ = q²·E₀`. -/
+theorem uqAff_antipode_squared_E0 :
+    affAntipodeLM k (affAntipodeLM k (uqAffE0 k)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE0 k := by
+  rw [uqAff_antipode_E0]
+  -- Force canonical `Neg` instance on `Uqsl2Aff k` so `map_neg` matches
+  -- (works around the `RingQuot.instNeg` vs `AddGroup.toSubNegMonoid.toNeg` diamond).
+  letI : Ring (Uqsl2Aff k) := inferInstance
+  rw [map_neg, affAntipodeLM_mul, uqAff_antipode_K0inv, uqAff_antipode_E0,
+      mul_neg, neg_neg, ← mul_assoc, uqAff_K0_conj_E0]
+
+/-- `S²(E₁) = K₁·E₁·K₁⁻¹ = q²·E₁`. -/
+theorem uqAff_antipode_squared_E1 :
+    affAntipodeLM k (affAntipodeLM k (uqAffE1 k)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T 2) * uqAffE1 k := by
+  rw [uqAff_antipode_E1]
+  letI : Ring (Uqsl2Aff k) := inferInstance
+  rw [map_neg, affAntipodeLM_mul, uqAff_antipode_K1inv, uqAff_antipode_E1,
+      mul_neg, neg_neg, ← mul_assoc, uqAff_K1_conj_E1]
+
+/-- `S²(F₀) = K₀·F₀·K₀⁻¹ = q⁻²·F₀`. -/
+theorem uqAff_antipode_squared_F0 :
+    affAntipodeLM k (affAntipodeLM k (uqAffF0 k)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF0 k := by
+  rw [uqAff_antipode_F0]
+  letI : Ring (Uqsl2Aff k) := inferInstance
+  rw [map_neg, affAntipodeLM_mul, uqAff_antipode_F0, uqAff_antipode_K0,
+      neg_mul, neg_neg, uqAff_K0_conj_F0]
+
+/-- `S²(F₁) = K₁·F₁·K₁⁻¹ = q⁻²·F₁`. -/
+theorem uqAff_antipode_squared_F1 :
+    affAntipodeLM k (affAntipodeLM k (uqAffF1 k)) =
+    algebraMap (LaurentPolynomial k) (Uqsl2Aff k) (T (-2)) * uqAffF1 k := by
+  rw [uqAff_antipode_F1]
+  letI : Ring (Uqsl2Aff k) := inferInstance
+  rw [map_neg, affAntipodeLM_mul, uqAff_antipode_F1, uqAff_antipode_K1,
+      neg_mul, neg_neg, uqAff_K1_conj_F1]
+
+/-- `S²(K₀) = K₀`. -/
+theorem uqAff_antipode_squared_K0 :
+    affAntipodeLM k (affAntipodeLM k (uqAffK0 k)) = uqAffK0 k := by
+  rw [uqAff_antipode_K0, uqAff_antipode_K0inv]
+
+/-- `S²(K₁) = K₁`. -/
+theorem uqAff_antipode_squared_K1 :
+    affAntipodeLM k (affAntipodeLM k (uqAffK1 k)) = uqAffK1 k := by
+  rw [uqAff_antipode_K1, uqAff_antipode_K1inv]
+
+/-- `S²(K₀⁻¹) = K₀⁻¹`. -/
+theorem uqAff_antipode_squared_K0inv :
+    affAntipodeLM k (affAntipodeLM k (uqAffK0inv k)) = uqAffK0inv k := by
+  rw [uqAff_antipode_K0inv, uqAff_antipode_K0]
+
+/-- `S²(K₁⁻¹) = K₁⁻¹`. -/
+theorem uqAff_antipode_squared_K1inv :
+    affAntipodeLM k (affAntipodeLM k (uqAffK1inv k)) = uqAffK1inv k := by
+  rw [uqAff_antipode_K1inv, uqAff_antipode_K1]
+
+/-! ## 9. Module summary -/
 
 theorem uqsl2_affine_hopf_summary : True := trivial
 

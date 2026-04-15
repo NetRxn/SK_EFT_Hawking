@@ -56,11 +56,14 @@ A unified project encompassing:
     * Algebraic Rokhlin (Serre σ≡0 mod 8), spin bordism → Rokhlin → Wang chain.
     * First verified statistical estimators: jackknife, autocorrelation.
 
-Lean 4 formalization: 2981 theorems (2903 substantive + 78 placeholder), 1 axiom, 132 modules. 0 sorry project-wide.
+Lean 4 formalization: 2997 theorems (2919 substantive + 78 placeholder), 1 axiom, 132 modules. 0 sorry project-wide.
 Aristotle automated theorem prover: 322 theorems proved across 44 runs.
 First machine-checked Ext computation over any Steenrod subalgebra (Phase 5q).
 First quantum group + Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃)
 in any proof assistant (Phase 5i Wave 2 / Tranche E, 2026-04-14).
+First per-generator squared-antipode identity on U_q(ŝl₂) in a proof assistant
+(Phase 5e Waves 7-8, 2026-04-15) — the affine analog, where no global Ad(K)
+is possible because the affine Cartan matrix is rank-deficient.
 
 Subpackages:
     src.core          -- Shared infrastructure (transonic solver, Aristotle, viz)

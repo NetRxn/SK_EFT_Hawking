@@ -377,7 +377,7 @@
 | QSqrt2 | ~50 | 3 | 0 | 5d | Q(√2) number field with DecidableEq for Ising MTC (**ALL PROVED, zero sorry**) |
 | QSqrt5 | ~80 | 7 | 0 | 5d | Q(√5) number field: golden ratio φ²=φ+1, φ·φ⁻¹=1, Fibonacci F²=I (**ALL PROVED by native_decide**) |
 | FibonacciMTC | ~180 | 11 | 0 | 5d | Fibonacci MTC: F-symbols in Q(√5), F²=I PROVED, PreModularData, chirality (**ALL PROVED, zero sorry** — native_decide over Q(√5)) |
-| Uqsl2AffineHopf | ~5760 | 181 | 0 | 5d/5e | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom; all 8 q-Serre proofs closed (4 comul + 4 antipode) — **0 sorry**. Bialgebra/HopfAlgebra typeclass instance wiring UNBLOCKED 2026-04-14 (pattern proven on Uqsl3Hopf Tranche E). |
+| Uqsl2AffineHopf | ~6010 | 201 | 0 | 5d/5e | U_q(ŝl₂) Hopf algebra: coproduct/counit/antipode via RingQuot.liftAlgHom; all 8 q-Serre proofs closed (4 comul + 4 antipode) — **0 sorry**. Bialgebra + HopfAlgebra typeclass instances WIRED (prior Tranche E work). **Phase 5e Wave 8 complete 2026-04-15**: 20 new theorems (8 per-generator antipode evals `uqAff_antipode_{E,F,K}_i`, 4 K-conjugation helpers, 8 per-generator S² identities `uqAff_antipode_squared_*`). Wave 8 original spec `S² = Ad(K₀K₁)` was mathematically wrong (affine Cartan matrix rank-deficient — no single global K implements S² on both simple-root generators); corrected to per-generator form with inline historical note cross-referencing the `Uqsl3Hopf.lean:3995` sl₃ correction. |
 | VerifiedStatistics | ~150 | 6 | 0 | 5d | Statistics extension: sample variance non-neg, Cauchy-Schwarz, jackknife mean-case, N_eff ≤ N (**ALL PROVED**) |
 | KerrSchild | ~100 | 7 | 0 | 5d | Kerr-Schild metrics: null vector, radial_null, Sherman-Morrison inverse, Schwarzschild, DOF counting (**ALL PROVED**) |
 | CoidealEmbedding | ~130 | 6 | 0 | 5d | Coideal subalgebra embedding B_i into U_q(ŝl₂), Dolan-Grady from Chevalley (**ALL PROVED**) |
@@ -785,7 +785,7 @@
 | **Test Files** | 46 | 1872+ tests |
 | **Notebooks** | 48 | Phases 1-5q (Technical + Stakeholder) |
 | **Lean Modules** | 130 | All build clean |
-| **Lean Theorems** | 2981 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
+| **Lean Theorems** | 2997 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
 | **Aristotle-proved** | 322+ | 45+ runs |
 | **Paper Drafts** | 15 + prediction tables | Full LaTeX (12 complete + 3 outlines) |
 | **Pipeline Figures** | 101 | All PNGs generated |

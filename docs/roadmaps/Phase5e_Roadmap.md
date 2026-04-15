@@ -147,10 +147,22 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ### Wave 8 — U_q(ŝl₂) HopfAlgebra
 **Goal:** Full HopfAlgebra instance on U_q(ŝl₂).
 
-**Status 2026-04-14:** UNBLOCKED. The Drinfeld-theorem S² pattern (S² = Ad(K₁²K₂²) per generator) is now proven for Uqsl3Hopf (commits `bdf0ee9`, `dadce3e`). The same blueprint applies to U_q(ŝl₂) with appropriate K₀/K₁ substitutions.
+**Status 2026-04-14:** UNBLOCKED. Per-generator S²(x_i) = K_i·x_i·K_i⁻¹ pattern is proven for Uqsl3Hopf (commits `bdf0ee9`, `dadce3e`). The same blueprint applies per-generator to U_q(ŝl₂).
+
+**Correction 2026-04-15 — global Ad(K) does NOT exist for affine:**
+An earlier version of this wave listed "S² = Ad(K₀K₁) (squared antipode)" as a deliverable. This is **mathematically wrong** for the affine case, and different in kind from the Uqsl3Hopf `S² = Ad(K₁K₂) → K₁²K₂²` correction (`Uqsl3Hopf.lean:3995`). Reasoning:
+- The affine Cartan matrix for ŝl₂ is `A = [[2,-2],[-2,2]]`, det A = 0 (rank-deficient by design of affine extensions).
+- For any `K = K₀^a · K₁^b`, `Ad(K)(E_j) = q^{a·A_{0j} + b·A_{1j}} · E_j`.
+- Requiring Ad(K)(E_i) = q²·E_i simultaneously for i = 0, 1 forces both `a − b = 1` AND `b − a = 1`. Contradiction.
+- Unlike the finite simply-laced case (where K_{2ρ} = ∏ K_i^{d_i} with d_i > 0 implements S² globally), **no single group-like element in ⟨K₀, K₁⟩ implements S² across both simple-root generators** for affine ŝl₂. The "K_{2ρ}" element for affine root systems lives in a completion, not in the Lusztig form.
+
+Correct affine Wave 8 deliverable is **per-generator** S² identities (which is all the finite case actually proves anyway; the "= Ad(K_{2ρ})" repackaging only works when a single K implements it).
 
 - [ ] Antipode axioms: μ∘(S⊗id)∘Δ = η∘ε, μ∘(id⊗S)∘Δ = η∘ε
-- [ ] S² = Ad(K₀K₁) (squared antipode)
+- [ ] Per-generator S² identities:
+    - S²(E_i) = K_i·E_i·K_i⁻¹ = q²·E_i = algebraMap(T 2)·E_i for i ∈ {0, 1}
+    - S²(F_i) = K_i·F_i·K_i⁻¹ = q⁻²·F_i = algebraMap(T (-2))·F_i for i ∈ {0, 1}
+    - S²(K_i) = K_i, S²(K_i⁻¹) = K_i⁻¹
 - [ ] Complete the chain: U_q(sl₂) Hopf → U_q(ŝl₂) Hopf
 
 **Deliverables:**
@@ -210,7 +222,7 @@ Twist θτ = ζ² verified. Writhe removal formula proved.
 ```
 
 **Tracks A, B, D: COMPLETE.** All deep research applied, all theorems proved.
-Track C: **UNBLOCKED 2026-04-14** — Uqsl2AffineHopf 12 sorry was closed in April 2026 (Phase 5s Wave 8); the parallel Uqsl3Hopf closure on 2026-04-14 validates the palindromic Serre atom-bridge + per-generator eval-lemma approach that resolves the RingQuot typeclass divergence blocker. Wave 7 (Bialgebra) and Wave 8 (HopfAlgebra) instance wiring is ready to proceed on U_q(ŝl₂) following the Uqsl3Hopf Tranche E pattern (commits `bdf0ee9`, `dadce3e`).
+Track C: **COMPLETE 2026-04-15** — Uqsl2AffineHopf 12 sorry was closed in April 2026 (Phase 5s Wave 8). Bialgebra + HopfAlgebra typeclass instances are wired (prior merged work, confirmed 2026-04-15 audit). Wave 8 squared-antipode deliverable **corrected 2026-04-15** from the mathematically wrong `S² = Ad(K₀K₁)` to per-generator form (20 new theorems: 8 per-generator antipode evals + 4 K-conjugation helpers + 8 per-generator S² identities). The original Ad(K₀K₁) statement fails because the affine Cartan matrix `A = [[2,-2],[-2,2]]` is rank-deficient — no single `K ∈ ⟨K₀, K₁⟩` implements S² on both simple-root generators (contrast with the finite sl₃ case where K₁²K₂² does work globally).
 
 ---
 
@@ -237,7 +249,7 @@ Track C: **UNBLOCKED 2026-04-14** — Uqsl2AffineHopf 12 sorry was closed in Apr
 | QCyc5.lean | B-W5 | **9** | COMPLETE, 0 sorry, hexagon E1-E3 |
 | QSqrt3.lean | D-W9 | **8** | COMPLETE, 0 sorry, SU(2)_4 unitarity |
 | QLevel3.lean | D-W9 | **19** | COMPLETE, 0 sorry, SU(2)_3 unitarity |
-| Uqsl2AffineHopf.lean (extended) | C-W7,8 | — | **0 sorry** (closed April 2026 via Phase 5s Wave 8). Bialgebra + HopfAlgebra typeclass wiring (Wave 7/8) UNBLOCKED 2026-04-14 — follow Uqsl3Hopf Tranche E pattern. |
+| Uqsl2AffineHopf.lean (extended) | C-W7,8 | **201** | **0 sorry, COMPLETE 2026-04-15**. Bialgebra + HopfAlgebra typeclass instances wired. Wave 8 deliverable corrected from `S² = Ad(K₀K₁)` (impossible for affine — degenerate Cartan) to per-generator S²: 20 new theorems (8 antipode evals + 4 K-conjugation + 8 S²). Inline historical note documents the correction. |
 | KnotInvariant.lean (if feasible) | D-W10 | — | Deferred to Phase 6 |
 
 ### Python (`src/core/formulas.py` — DONE)
@@ -318,4 +330,4 @@ Track C: **UNBLOCKED 2026-04-14** — Uqsl2AffineHopf 12 sorry was closed in Apr
 
 ---
 
-*Phase 5e roadmap. Created 2026-04-05, updated 2026-04-14. Tracks A/B/D complete. Track C: **UNBLOCKED 2026-04-14** — Uqsl2AffineHopf 12 sorry closed April 2026 (Phase 5s Wave 8); Uqsl3Hopf 3 sorry + full Bialgebra + HopfAlgebra typeclass wiring closed 2026-04-14 (commits `bdf0ee9`, `dadce3e`, `619dd37`, `fad0edb`, `912c495`, `bf2989d`). RingQuot typeclass divergence resolved via palindromic Serre atom-bridge + per-generator eval lemmas. Wave 7/8 Bialgebra + HopfAlgebra wiring on U_q(ŝl₂) UNBLOCKED — same Tranche E pattern applies. 65 theorems new this phase.*
+*Phase 5e roadmap. Created 2026-04-05, updated 2026-04-15. **All tracks COMPLETE.** Tracks A/B/D complete from earlier waves. Track C: Uqsl2AffineHopf 12 sorry closed April 2026 (Phase 5s Wave 8); Uqsl3Hopf 3 sorry + full Bialgebra + HopfAlgebra typeclass wiring closed 2026-04-14 (commits `bdf0ee9`, `dadce3e`, `619dd37`, `fad0edb`, `912c495`, `bf2989d`). **Waves 7-8 COMPLETE 2026-04-15** — Uqsl2AffineHopf Bialgebra + HopfAlgebra instance wiring confirmed in place, and Wave 8 squared-antipode deliverable corrected from the mathematically wrong global `S² = Ad(K₀K₁)` to 20 per-generator S² identities (8 antipode evals + 4 K-conjugation helpers + 8 S² theorems). RingQuot `Neg` diamond workaround (`letI : Ring := inferInstance` before `map_neg`) documented in memory. 85 theorems new this phase total.*

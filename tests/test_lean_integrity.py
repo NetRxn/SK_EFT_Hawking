@@ -100,11 +100,11 @@ def test_lakefile_exists():
 
 
 def test_lean_toolchain():
-    """Verify lean-toolchain specifies v4.28.0."""
+    """Verify lean-toolchain specifies v4.29.0 (upgraded from v4.28.0)."""
     toolchain = LEAN_DIR / "lean-toolchain"
     assert toolchain.exists(), "Missing lean-toolchain"
     content = toolchain.read_text().strip()
-    assert "v4.28.0" in content
+    assert "v4.29.0" in content
 
 
 def test_no_active_sorry():
@@ -117,13 +117,11 @@ def test_no_active_sorry():
     Files in SORRY_ALLOWED are awaiting Aristotle proof-filling and are
     expected to contain sorry stubs. Remove from this set as proofs are filled.
     """
-    # Sorry stubs pending Aristotle proof-filling (17 sorry across 3 files)
-    # Aristotle 6dbc9447 in flight targeting these.
-    SORRY_ALLOWED = {
-        "Uqsl2AffineHopf.lean",   # 12 sorry (RingQuot typeclass workaround needed)
-        "Uqsl3Hopf.lean",         # 3 sorry (same RingQuot pattern)
-        "CenterFunctor.lean",     # 2 sorry (needs actual functor construction)
-    }
+    # All previous sorry stubs were closed during 2026-04-14 Tranche E wrap-up
+    # (Uqsl2AffineHopf 12→0, Uqsl3Hopf 3→0, CenterFunctor 2→0). Project is
+    # 0-sorry as of 2026-04-15. Keep this set empty — any future sorry should
+    # either be added here (with tracking rationale) or immediately closed.
+    SORRY_ALLOWED: set[str] = set()
 
     lean_dir = LEAN_DIR / "SKEFTHawking"
     for lean_file in lean_dir.glob("*.lean"):
@@ -161,36 +159,18 @@ def test_no_active_sorry():
 def test_sorry_gap_registry():
     """Verify the Aristotle sorry-gap registry state.
 
-    17 sorry across 3 files (Uqsl2AffineHopf 12, Uqsl3Hopf 3, CenterFunctor 2).
-    Registry tracks 9 unfilled gap GROUPS (some groups contain multiple sorry).
-    Aristotle 6dbc9447 in flight targeting all of these.
+    All sorry gaps closed during 2026-04-14 Tranche E wrap-up. The registry
+    is retained as historical provenance (run IDs, strategy hints) but no
+    entry should remain unfilled. Any future sorry should be registered here
+    with `filled=False` until closed.
     """
     from src.core.aristotle_interface import SORRY_GAPS
     unfilled = [g for g in SORRY_GAPS if not g.filled]
-    # 9 unfilled sorry gap groups as of April 8, 2026
-    # Phase 5d-5f (carried forward):
-    #   affine_hopf_relation_respect (12 sorry in Uqsl2AffineHopf)
-    #   stimulated_hawking_analysis, rep_uq_fusion_algebraic
-    #   center_functor_equivalence, emergent_gravity_coupling_bounds
-    # Phase 5i (Uqsl3Hopf):
-    #   comulFreeAlg3_respects_rel, counitFreeAlg3_respects_rel
-    #   antipodeFreeAlg3_respects_rel, uq3_antipode_squared
-    expected_unfilled = {
-        "affine_hopf_relation_respect",
-        "stimulated_hawking_analysis",
-        "rep_uq_fusion_algebraic",
-        "center_functor_equivalence",
-        "emergent_gravity_coupling_bounds",
-        "comulFreeAlg3_respects_rel",
-        "counitFreeAlg3_respects_rel",
-        "antipodeFreeAlg3_respects_rel",
-        "uq3_antipode_squared",
-    }
-    actual_unfilled = {g.name for g in unfilled}
-    assert actual_unfilled == expected_unfilled, (
-        f"Unexpected unfilled sorry gaps: "
-        f"expected={expected_unfilled}, got={actual_unfilled}"
+    assert unfilled == [], (
+        f"Expected 0 unfilled sorry gaps (project is 0-sorry as of 2026-04-15), "
+        f"got {len(unfilled)}: {[g.name for g in unfilled]}"
     )
+    # Registry still expected to hold >= 45 historical entries as provenance.
     assert len(SORRY_GAPS) >= 45, (
-        f"Expected ≥45 sorry gaps in registry, got {len(SORRY_GAPS)}"
+        f"Expected ≥45 sorry gaps in registry (historical), got {len(SORRY_GAPS)}"
     )

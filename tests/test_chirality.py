@@ -543,14 +543,20 @@ class TestLatticeFormulas:
     """Test the lattice framework formulas."""
 
     def test_gs_condition_count_default(self):
-        """gs_condition_count() returns 9 with defaults."""
+        """gs_condition_count() returns dict with n_total=9 at defaults."""
         from src.core.formulas import gs_condition_count
-        assert gs_condition_count() == 9
+        result = gs_condition_count()
+        assert result['n_total'] == 9
+        assert result['n_explicit'] == 6
+        assert result['n_implicit'] == 3
 
     def test_gs_condition_count_custom(self):
         """gs_condition_count works with custom inputs."""
         from src.core.formulas import gs_condition_count
-        assert gs_condition_count(4, 2) == 6
+        result = gs_condition_count(4, 2)
+        assert result['n_total'] == 6
+        assert result['n_explicit'] == 4
+        assert result['n_implicit'] == 2
 
     def test_tpf_evasion_count_default(self):
         """tpf_evasion_count() returns correct dict."""
