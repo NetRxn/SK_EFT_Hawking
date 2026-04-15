@@ -4883,7 +4883,341 @@ noncomputable instance : Bialgebra (LaurentPolynomial k) (Uqsl3 k) :=
   Bialgebra.ofAlgHom (uq3Comul k) (uq3Counit k)
     (uq3_comul_coassoc k) (uq3_comul_rTensor_counit k) (uq3_comul_lTensor_counit k)
 
-/-! ## 8. Module Summary -/
+/-! ## 8. HopfAlgebra antipode helpers -/
+
+/-- S(1) = 1. -/
+private theorem uq3AntipodeLin_one :
+    uq3AntipodeLin k 1 = 1 := by
+  simp +decide [uq3AntipodeLin, uq3AntipodeOp]
+
+/-- rTensor(S) on Comul of scalars: ∇ ∘ rTensor(S) ∘ Δ ∘ algebraMap = algebraMap. -/
+private theorem uq3_convR_algebraMap (r : LaurentPolynomial k) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (algebraMap (LaurentPolynomial k) (Uqsl3 k) r))) =
+    algebraMap (LaurentPolynomial k) (Uqsl3 k) r := by
+  unfold uq3AntipodeLin
+  simp +decide [uq3AntipodeOp]
+
+/-- Convolution helper for E1: ∇ ∘ rTensor(S) ∘ Δ (E1) = 0. -/
+private theorem uq3_convR_E1 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3E1 k))) = 0 := by
+  rw [uq3_comul_E1]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3_antipode_E1, uq3AntipodeLin_one]
+  rw [show -(uq3E1 k * uq3K1inv k) * uq3K1 k = -(uq3E1 k * (uq3K1inv k * uq3K1 k)) from by
+      letI : Ring (Uqsl3 k) := inferInstance; rw [neg_mul, mul_assoc],
+      uq3_K1inv_mul_K1, mul_one, one_mul]
+  abel1
+
+private theorem uq3_convR_E2 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3E2 k))) = 0 := by
+  rw [uq3_comul_E2]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3_antipode_E2, uq3AntipodeLin_one]
+  rw [show -(uq3E2 k * uq3K2inv k) * uq3K2 k = -(uq3E2 k * (uq3K2inv k * uq3K2 k)) from by
+      letI : Ring (Uqsl3 k) := inferInstance; rw [neg_mul, mul_assoc],
+      uq3_K2inv_mul_K2, mul_one, one_mul]
+  abel1
+
+private theorem uq3_convR_F1 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3F1 k))) = 0 := by
+  rw [uq3_comul_F1]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3_antipode_F1, uq3_antipode_K1inv]
+  abel1
+
+private theorem uq3_convR_F2 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3F2 k))) = 0 := by
+  rw [uq3_comul_F2]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3_antipode_F2, uq3_antipode_K2inv]
+  abel1
+
+private theorem uq3_convR_K1 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K1 k))) = 1 := by
+  rw [uq3_comul_K1, LinearMap.rTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K1]
+  exact uq3_K1inv_mul_K1 k
+
+private theorem uq3_convR_K1inv :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K1inv k))) = 1 := by
+  rw [uq3_comul_K1inv, LinearMap.rTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K1inv]
+  exact uq3_K1_mul_K1inv k
+
+private theorem uq3_convR_K2 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K2 k))) = 1 := by
+  rw [uq3_comul_K2, LinearMap.rTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K2]
+  exact uq3_K2inv_mul_K2 k
+
+private theorem uq3_convR_K2inv :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K2inv k))) = 1 := by
+  rw [uq3_comul_K2inv, LinearMap.rTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K2inv]
+  exact uq3_K2_mul_K2inv k
+
+/-- Antipode anti-hom: S(a·b) = S(b)·S(a) (linear-map version, for use in convR_mul_step). -/
+private theorem uq3AntipodeLin_mul (a b : Uqsl3 k) :
+    uq3AntipodeLin k (a * b) = uq3AntipodeLin k b * uq3AntipodeLin k a := by
+  unfold uq3AntipodeLin
+  simp +decide
+
+/-- Multiplicativity inductive step for right convolution. -/
+private theorem uq3_convR_mul_step
+    (x y : (Uqsl3 k) ⊗[LaurentPolynomial k] (Uqsl3 k))
+    (r : LaurentPolynomial k)
+    (hx : (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+            ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) x) =
+          algebraMap (LaurentPolynomial k) (Uqsl3 k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) (x * y)) =
+    algebraMap (LaurentPolynomial k) (Uqsl3 k) r *
+      (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+        ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) y) := by
+  revert hx
+  induction' y using TensorProduct.induction_on with c d
+  · simp +decide
+  · intro hx
+    have h_sum : ∃ (s : Finset (Uqsl3 k × Uqsl3 k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 := by
+      exact?
+    obtain ⟨s, rfl⟩ := h_sum
+    simp +decide [hx, mul_assoc, Finset.sum_mul _ _ _]
+    simp_all +decide [← mul_assoc, ← Finset.sum_mul _ _ _, uq3AntipodeLin_mul]
+    simp +decide only [← Finset.mul_sum _ _ _, mul_assoc]
+    rw [hx]
+    simp +decide [mul_assoc, Algebra.commutes]
+  · simp_all +decide [mul_add, add_mul]
+
+/-- **Right antipode law**: ∇ ∘ rTensor(S) ∘ Δ = unit ∘ ε. -/
+theorem uq3_antipode_right :
+    LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k) ∘ₗ
+      (uq3AntipodeLin k).rTensor (Uqsl3 k) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (LaurentPolynomial k) (Uqsl3 k)) ∘ₗ Coalgebra.counit := by
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (ChevalleyRelSl3 k) x
+  induction' x using FreeAlgebra.induction with r x y hx hy
+  · convert uq3_convR_algebraMap k r using 1
+    · simp +decide [uq3Comul]
+    · simp +decide [uqsl3Mk]
+  · cases x <;> simp +decide [*]
+    · convert uq3_convR_E1 k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E1 k) using 1
+    · convert uq3_convR_E2 k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E2 k) using 1
+    · convert uq3_convR_F1 k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F1 k) using 1
+    · convert uq3_convR_F2 k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F2 k) using 1
+    · convert uq3_convR_K1 k using 1
+      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
+              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K1) = uq3K1 k from rfl]
+      exact congr_arg _ (uq3_counit_K1 k)
+    · convert uq3_convR_K1inv k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K1inv k) using 1
+    · convert uq3_convR_K2 k using 1
+      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
+              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K2) = uq3K2 k from rfl]
+      exact congr_arg _ (uq3_counit_K2 k)
+    · convert uq3_convR_K2inv k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K2inv k) using 1
+  · simp_all +decide [mul_assoc, CoalgebraStruct.comul]
+    convert uq3_convR_mul_step k _ _ _ hy using 1
+    aesop
+  · aesop
+
+/-! ## 9. HopfAlgebra antipode helpers (left convolution) -/
+
+private theorem uq3_convL_E1 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3E1 k))) = 0 := by
+  rw [uq3_comul_E1]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3_antipode_E1, uq3_antipode_K1]
+  abel1
+
+private theorem uq3_convL_E2 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3E2 k))) = 0 := by
+  rw [uq3_comul_E2]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3_antipode_E2, uq3_antipode_K2]
+  abel1
+
+private theorem uq3_convL_F1 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3F1 k))) = 0 := by
+  rw [uq3_comul_F1]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3AntipodeLin_one, uq3_antipode_F1]
+  rw [show uq3K1inv k * -(uq3K1 k * uq3F1 k) = -(uq3K1inv k * uq3K1 k * uq3F1 k) from by
+      letI : Ring (Uqsl3 k) := inferInstance; rw [mul_neg, mul_assoc],
+      uq3_K1inv_mul_K1, one_mul, mul_one]
+  abel1
+
+private theorem uq3_convL_F2 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3F2 k))) = 0 := by
+  rw [uq3_comul_F2]
+  erw [LinearMap.map_add]
+  simp +decide [LinearMap.mul']
+  rw [uq3AntipodeLin_one, uq3_antipode_F2]
+  rw [show uq3K2inv k * -(uq3K2 k * uq3F2 k) = -(uq3K2inv k * uq3K2 k * uq3F2 k) from by
+      letI : Ring (Uqsl3 k) := inferInstance; rw [mul_neg, mul_assoc],
+      uq3_K2inv_mul_K2, one_mul, mul_one]
+  abel1
+
+private theorem uq3_convL_K1 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K1 k))) = 1 := by
+  rw [uq3_comul_K1, LinearMap.lTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K1]
+  exact uq3_K1_mul_K1inv k
+
+private theorem uq3_convL_K1inv :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K1inv k))) = 1 := by
+  rw [uq3_comul_K1inv, LinearMap.lTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K1inv]
+  exact uq3_K1inv_mul_K1 k
+
+private theorem uq3_convL_K2 :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K2 k))) = 1 := by
+  rw [uq3_comul_K2, LinearMap.lTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K2]
+  exact uq3_K2_mul_K2inv k
+
+private theorem uq3_convL_K2inv :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (uq3K2inv k))) = 1 := by
+  rw [uq3_comul_K2inv, LinearMap.lTensor_tmul]
+  simp +decide [LinearMap.mul'_apply, uq3_antipode_K2inv]
+  exact uq3_K2inv_mul_K2 k
+
+private theorem uq3_convL_algebraMap (r : LaurentPolynomial k) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+        ((uq3Comul k) (algebraMap (LaurentPolynomial k) (Uqsl3 k) r))) =
+    algebraMap (LaurentPolynomial k) (Uqsl3 k) r := by
+  simp +decide [RingQuot.liftAlgHom]
+  rw [uq3AntipodeLin_one, mul_one]
+
+/-- Multiplicativity inductive step for left convolution (factoring on y). -/
+private theorem uq3_convL_mul_step
+    (x y : (Uqsl3 k) ⊗[LaurentPolynomial k] (Uqsl3 k))
+    (r : LaurentPolynomial k)
+    (hy : (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+            ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) y) =
+          algebraMap (LaurentPolynomial k) (Uqsl3 k) r) :
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) (x * y)) =
+    (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+      ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) x) *
+    algebraMap (LaurentPolynomial k) (Uqsl3 k) r := by
+  induction' x using TensorProduct.induction_on with a b ihx ihy
+  · simp +decide
+  · have h_eval : ∀ (x : Uqsl3 k ⊗[LaurentPolynomial k] Uqsl3 k),
+        (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k))
+            (a ⊗ₜ[LaurentPolynomial k] b * x)) =
+        a * (LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k))
+              ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) x) * uq3AntipodeLin k b := by
+      intro x; induction' x using TensorProduct.induction_on with c d ihx ihy
+      · aesop
+      · simp +decide [uq3AntipodeLin_mul, mul_assoc]
+      · simp_all +decide [mul_add, add_mul]
+    rw [h_eval, hy]
+    simp +decide [mul_assoc, mul_comm, mul_left_comm, Algebra.commutes]
+  · simp_all +decide [add_mul, mul_add]
+
+/-- **Left antipode law**: ∇ ∘ lTensor(S) ∘ Δ = unit ∘ ε. -/
+theorem uq3_antipode_left :
+    LinearMap.mul' (LaurentPolynomial k) (Uqsl3 k) ∘ₗ
+      (uq3AntipodeLin k).lTensor (Uqsl3 k) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (LaurentPolynomial k) (Uqsl3 k)) ∘ₗ Coalgebra.counit := by
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (LaurentPolynomial k) (ChevalleyRelSl3 k) x
+  induction' x using FreeAlgebra.induction with r x y hx hy
+  · -- algebraMap case: both sides equal algebraMap r
+    rw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
+          ((algebraMap (LaurentPolynomial k) (FreeAlgebra (LaurentPolynomial k) Uqsl3Gen)) r) =
+          algebraMap (LaurentPolynomial k) (Uqsl3 k) r from AlgHom.commutes _ _]
+    show LinearMap.mul' _ _
+        ((LinearMap.lTensor _ (uq3AntipodeLin k))
+          ((uq3Comul k) (algebraMap _ _ r))) = _
+    rw [uq3_convL_algebraMap]
+    simp [AlgHom.commutes]
+  · rcases x with _ | _ | _ | _ | _ | _ | _ | _ <;> simp +decide [*]
+    · convert uq3_convL_E1 k
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E1 k) using 1
+    · convert uq3_convL_E2 k
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E2 k) using 1
+    · convert uq3_convL_F1 k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F1 k) using 1
+    · convert uq3_convL_F2 k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F2 k) using 1
+    · convert uq3_convL_K1 k using 1
+      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
+              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K1) = uq3K1 k from rfl]
+      exact congr_arg _ (uq3_counit_K1 k)
+    · convert uq3_convL_K1inv k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K1inv k) using 1
+    · convert uq3_convL_K2 k using 1
+      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
+              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K2) = uq3K2 k from rfl]
+      exact congr_arg _ (uq3_counit_K2 k)
+    · convert uq3_convL_K2inv k using 1
+      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K2inv k) using 1
+  · simp_all +decide [← LinearMap.comp_assoc, ← RingHom.comp_apply]
+    convert uq3_convL_mul_step k _ _ _ _ using 1
+    rw [hy]
+    grind
+  · aesop
+
+/-! ## 10. HopfAlgebra instance -/
+
+/-- **HopfAlgebra instance for U_q(sl₃).** -/
+noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl3 k) where
+  antipode := uq3AntipodeLin k
+  mul_antipode_rTensor_comul := uq3_antipode_right k
+  mul_antipode_lTensor_comul := uq3_antipode_left k
+
+/-! ## 11. Module Summary -/
 
 /--
 Uqsl3Hopf module: Hopf algebra structure on U_q(sl₃). **Status: 0 sorries.**
