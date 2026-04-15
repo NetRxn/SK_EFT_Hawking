@@ -192,7 +192,8 @@ The **actual gap** is downstream of the script:
 - [x] `extract_review_finding_nodes` + `extract_flags_edges` → ReviewFinding + FLAGS (Wave 2d — DONE; 56 findings extracted from 4 Perplexity review docs, 34 FLAGS→Paper edges inferred from body text; severity/status classification coarse — refinement deferred to Wave 6 when adversarial-reviewer emits structured output natively)
 - [x] `extract_production_run_nodes` → ProductionRun (Wave 2e — DONE; 14 runs extracted; status heuristic from paired .log tail). PRODUCES edges deferred to Wave 4 where run-to-claim mapping is curated.
 - [x] `extract_placeholder_marker_nodes` → PlaceholderMarker (Wave 2b — DONE)
-- [ ] Widen PaperClaim with `kind ∈ {numeric, theorem-cite, prose}` + ProseClaim subtype (Wave 2f)
+- [x] `extract_prose_claim_nodes` → ProseClaim (Wave 2f — DONE; 113 abstract sentences across 15 papers, heuristic tags `first-claim` / `unification-claim` / `attribution-claim` / `feasibility-claim` / `simulation-evidence-claim`)
+- [x] `extract_count_metric_nodes` + `extract_reports_edges` → CountMetric + REPORTS (Wave 2g — DONE; 14 canonical metrics; 9 stale REPORTS edges surface project-total claims in Papers 4/6/7/8/9 that drift from canonical)
 
 **Deferred to a later sweep (not blocking):**
 - [ ] Derive `skPrefix` in `ExtractDeps.lean` from `lakefile.toml` (currently hardcoded `` `SKEFTHawking``)

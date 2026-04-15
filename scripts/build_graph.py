@@ -796,14 +796,111 @@ def extract_figure_nodes() -> list[dict]:
 # describing the contract so wiring can be done independently.
 
 
-def extract_prose_claim_nodes() -> list[dict]:
-    """ProseClaim — narrative statements in paper prose not tied to a Formula.
+_ABSTRACT_BLOCK_RE = re.compile(
+    r'\\begin\{abstract\}(.*?)\\end\{abstract\}',
+    re.DOTALL,
+)
 
-    Wired in: Wave 2e. Sources: parse paper .tex for declarative sentences
-    outside figure/table/equation environments; heuristic classification.
-    Emits: {id: 'proseclaim:{paper}:{index}', type: 'ProseClaim', ...}.
+
+def _split_sentences(text: str) -> list[str]:
+    """Dumb sentence splitter for LaTeX prose. Strips common LaTeX
+    commands and splits on periods that aren't part of common
+    abbreviations/numbers."""
+    t = re.sub(r'\\cite\{[^}]*\}', '', text)
+    t = re.sub(r'\\ref\{[^}]*\}', '', t)
+    t = re.sub(r'\\label\{[^}]*\}', '', t)
+    t = re.sub(r'\\emph\{([^}]*)\}', r'\1', t)
+    t = re.sub(r'\\text[a-z]*\{([^}]*)\}', r'\1', t)
+    t = re.sub(r'\\[a-zA-Z]+', ' ', t)  # strip remaining commands
+    t = re.sub(r'\s+', ' ', t).strip()
+    # Period-split respecting abbreviations
+    parts = re.split(r'(?<!\be\.g)(?<!\bi\.e)(?<!\bvs)(?<=[.!?])\s+(?=[A-Z])', t)
+    return [p.strip(' .') for p in parts if len(p.strip()) > 20]
+
+
+# Heuristic "interesting claim" triggers — sentences matching any of these
+# patterns are flagged as 'interesting: true' in the node meta so the
+# NarrativeGrounding readiness gate can prioritize them.
+_INTERESTING_PATTERNS = [
+    (re.compile(r'\bfirst\b.*\b(proof\s+assistant|formali[sz]ed|verified|computed)\b', re.IGNORECASE), 'first-claim'),
+    (re.compile(r'\ball\s+the\s+same\b|\bconverge\b.*\b16\b|\brooted\s+in\b', re.IGNORECASE), 'unification-claim'),
+    (re.compile(r'\b(Dedekind|Ramanujan|eta\s+function)\b', re.IGNORECASE), 'attribution-claim'),
+    (re.compile(r'\b(programmable|tunable|within\s+reach|feasible)\b', re.IGNORECASE), 'feasibility-claim'),
+    (re.compile(r'\b(Monte\s+Carlo\s+evidence|evidence\s+from\s+simulation)\b', re.IGNORECASE), 'simulation-evidence-claim'),
+]
+
+
+def extract_prose_claim_nodes() -> list[dict]:
+    """ProseClaim — narrative statements not tied to a Formula.
+
+    Phase 5v Wave 2f (minimal scope). Extracts one ProseClaim per sentence
+    of each paper's `\\begin{abstract}...\\end{abstract}` block. The
+    abstract is the highest-density region for narrative overclaims —
+    "all the same 16", "Ramanujan", "first in any proof assistant", etc.
+    all lived there.
+
+    Sentences that match heuristic "interesting-claim" patterns (first-claim,
+    unification-claim, attribution-claim, etc.) are tagged in meta for the
+    Wave 4 NarrativeGrounding readiness gate to prioritize.
+
+    Broader paper prose (intro, conclusions, body sections) is deferred —
+    Stage 13 adversarial review (Wave 6) will catch overclaims in those
+    regions without needing a precomputed ProseClaim node per sentence.
     """
-    return []
+    papers_dir = PROJECT_ROOT / "papers"
+    if not papers_dir.exists():
+        return []
+
+    nodes = []
+    seen_ids: set[str] = set()
+
+    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        paper_key = tex_path.parent.name
+        try:
+            text = tex_path.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        abstract_match = _ABSTRACT_BLOCK_RE.search(text)
+        if not abstract_match:
+            continue
+        abstract = abstract_match.group(1).strip()
+        sentences = _split_sentences(abstract)
+
+        for idx, sent in enumerate(sentences):
+            # Classify against interesting patterns
+            tags = []
+            for pat, tag in _INTERESTING_PATTERNS:
+                if pat.search(sent):
+                    tags.append(tag)
+            interesting = bool(tags)
+
+            node_id = f'proseclaim:{paper_key}:{idx}'
+            if node_id in seen_ids:
+                continue
+            seen_ids.add(node_id)
+
+            nodes.append({
+                'id': node_id,
+                'type': 'ProseClaim',
+                'label': sent[:70] + ('…' if len(sent) > 70 else ''),
+                'name': sent[:250],
+                'verification': 'unverified',
+                'detail': sent[:400],
+                'meta': {
+                    'paper': paper_key,
+                    'region': 'abstract',
+                    'sentence_index': idx,
+                    'interesting': interesting,
+                    'tags': tags,
+                    'full_text': sent,
+                },
+            })
+
+    if nodes:
+        flagged = sum(1 for n in nodes if n['meta']['interesting'])
+        logger.info("ProseClaim extraction: %d abstract sentences (%d flagged as interesting)",
+                    len(nodes), flagged)
+    return nodes
 
 
 import ast as _ast
@@ -1327,13 +1424,72 @@ def extract_contradiction_nodes() -> list[dict]:
 
 
 def extract_count_metric_nodes() -> list[dict]:
-    """CountMetric — snapshot of a counts.json field at a point in time.
+    """CountMetric — snapshot of a counts.json field.
 
-    Wired in: Wave 2g. Sources: docs/counts.json. One node per metric per
-    regeneration; compared against paper REPORTS edges for CountFreshness
-    gate. Emits: {id: 'count:{metric}:{timestamp}', type: 'CountMetric'}.
+    Phase 5v Wave 2g. Reads docs/counts.json and emits one CountMetric
+    node per canonical count field. A single "current snapshot" is
+    produced per run (not per-regeneration history — historical snapshots
+    can be added later by scanning docs/validation/reports/).
+
+    Each node's detail carries the current value. REPORTS edges from
+    Paper nodes (extract_reports_edges) compare this canonical value
+    against the count literals that appear in each paper's .tex.
     """
-    return []
+    counts_path = PROJECT_ROOT / "docs" / "counts.json"
+    if not counts_path.exists():
+        return []
+    try:
+        import json as _json
+        with open(counts_path) as f:
+            data = _json.load(f)
+    except (OSError, _json.JSONDecodeError):
+        return []
+
+    timestamp = data.get('generated', 'unknown')
+    lean = data.get('lean', {})
+    python = data.get('python', {})
+    aristotle = data.get('aristotle', {})
+
+    # Flatten into (metric_name, value) pairs. Only surface metrics that
+    # papers actually cite in prose (matches CHECK 17 patterns).
+    flat = {
+        'total_theorems': lean.get('theorems_total'),
+        'substantive_theorems': lean.get('theorems_substantive'),
+        'placeholder_theorems': lean.get('theorems_placeholder'),
+        'axioms': lean.get('axioms'),
+        'sorry': lean.get('sorry_declarations'),
+        'lean_modules': lean.get('modules'),
+        'lean_definitions': lean.get('definitions'),
+        'python_modules': python.get('python_modules'),
+        'test_files': python.get('test_files'),
+        'figures': python.get('figures'),
+        'notebooks': python.get('notebooks'),
+        'papers': python.get('papers'),
+        'aristotle_proved': aristotle.get('aristotle_proved'),
+        'aristotle_runs': aristotle.get('aristotle_runs'),
+    }
+
+    nodes = []
+    for metric, value in flat.items():
+        if value is None:
+            continue
+        node_id = f'count:{metric}:current'
+        nodes.append({
+            'id': node_id,
+            'type': 'CountMetric',
+            'label': metric,
+            'name': metric,
+            'verification': 'verified',
+            'detail': f'canonical value {value} (generated {timestamp})',
+            'meta': {
+                'metric': metric,
+                'value': value,
+                'timestamp': timestamp,
+                'source': 'docs/counts.json',
+            },
+        })
+    logger.info("CountMetric extraction: %d metrics", len(nodes))
+    return nodes
 
 
 def extract_readiness_gate_nodes() -> list[dict]:
@@ -1760,6 +1916,100 @@ def extract_depends_on_axiom_edges(node_ids: set) -> list[dict]:
     return edges
 
 
+# Patterns mapping paper-.tex literal phrases to canonical CountMetric
+# node IDs. Each pattern captures (\d+) plus context.
+_REPORTS_PATTERNS = [
+    (re.compile(r'(\d{2,5})\s+(?:formally[- ]?verified\s+|machine[- ]?checked\s+|Lean\s+)?theorems?\b', re.IGNORECASE),
+     'count:total_theorems:current'),
+    (re.compile(r'(\d{2,4})\s+(?:Lean\s+)?modules?\b', re.IGNORECASE),
+     'count:lean_modules:current'),
+    (re.compile(r'(\d{1,4})\s+(?:remaining\s+)?sorry\b', re.IGNORECASE),
+     'count:sorry:current'),
+    (re.compile(r'(\d{2,4})\s+Aristotle[- ]?proved', re.IGNORECASE),
+     'count:aristotle_proved:current'),
+    (re.compile(r'(\d{1,3})\s+papers?\b', re.IGNORECASE),
+     'count:papers:current'),
+    (re.compile(r'(\d{1,4})\s+notebooks?\b', re.IGNORECASE),
+     'count:notebooks:current'),
+    (re.compile(r'(\d{1,4})\s+figures?\b', re.IGNORECASE),
+     'count:figures:current'),
+]
+
+
+def extract_reports_edges(node_ids: set) -> list[dict]:
+    """REPORTS: Paper -> CountMetric.
+
+    Phase 5v Wave 2g. For each paper_draft.tex, scan for count literals
+    (same patterns as CHECK 17); for each match, emit a REPORTS edge
+    to the corresponding CountMetric node, carrying the paper_value and
+    a delta_pct vs the canonical value. The readiness gate
+    CountFreshness compares paper_value to canonical value — any paper
+    with a REPORTS edge whose delta_pct > 0 is stale.
+
+    Papers that use `\\input{counts.tex}` macros produce no literal
+    matches → no REPORTS edges → automatically pass the gate.
+    """
+    papers_dir = PROJECT_ROOT / "papers"
+    if not papers_dir.exists():
+        return []
+
+    # Build canonical value lookup from CountMetric nodes
+    count_nodes = {n['id']: n for n in extract_count_metric_nodes()}
+
+    edges = []
+    seen: set[tuple[str, str, int]] = set()  # (paper_id, target, value) triples
+    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        paper_key = tex_path.parent.name
+        paper_id = f'paper:{paper_key}'
+        if paper_id not in node_ids:
+            continue
+        try:
+            text = tex_path.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for pattern, target_id in _REPORTS_PATTERNS:
+            if target_id not in node_ids:
+                continue
+            canonical = count_nodes.get(target_id, {}).get('meta', {}).get('value')
+            for m in pattern.finditer(text):
+                try:
+                    paper_value = int(m.group(1))
+                except ValueError:
+                    continue
+                # Magnitude filter — only treat this as a project-total
+                # claim if the paper value is within 10× of canonical on
+                # either side. Sub-10% values are almost always per-module
+                # or per-run counts ("24 theorems in Uqsl2Hopf"), not
+                # stale project-total claims.
+                if canonical and canonical > 0:
+                    ratio = paper_value / canonical
+                    if ratio < 0.1 or ratio > 10:
+                        continue
+                # Dedupe by (paper, metric, value)
+                key = (paper_id, target_id, paper_value)
+                if key in seen:
+                    continue
+                seen.add(key)
+                delta_pct = None
+                if canonical and canonical > 0:
+                    delta_pct = round(100 * (paper_value - canonical) / canonical, 1)
+                stale = bool(delta_pct and abs(delta_pct) > 0.5)
+                edges.append({
+                    'source': paper_id,
+                    'target': target_id,
+                    'type': 'REPORTS',
+                    'paper_value': paper_value,
+                    'canonical_value': canonical,
+                    'delta_pct': delta_pct,
+                    'stale': stale,
+                })
+    if edges:
+        stale_count = sum(1 for e in edges if e.get('stale'))
+        logger.info("REPORTS: %d paper→CountMetric edges (%d stale >0.5%%)",
+                    len(edges), stale_count)
+    return edges
+
+
 def extract_flags_edges(node_ids: set) -> list[dict]:
     """FLAGS: ReviewFinding -> Paper / Formula / LeanTheorem / etc.
 
@@ -1919,6 +2169,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_depends_on_axiom_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
+    edges.extend(extract_reports_edges(node_ids))
 
     # ASSUMES edges from HYPOTHESIS_REGISTRY
     _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
