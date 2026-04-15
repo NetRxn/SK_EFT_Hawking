@@ -806,14 +806,140 @@ def extract_prose_claim_nodes() -> list[dict]:
     return []
 
 
+import ast as _ast
+
+
+def _classify_assertion(node: _ast.AST) -> str | None:
+    """Classify a single assertion AST node by its test_kind.
+
+    Returns one of {golden, bounds, identity, roundtrip, unknown}, or None
+    if the node is not an assertion.
+    """
+    # Assert statements
+    if isinstance(node, _ast.Assert):
+        test = node.test
+        # pytest.approx / math.isclose / np.allclose / np.isclose: golden comparison
+        if isinstance(test, _ast.Compare):
+            # Walk the comparators to find allclose/isclose/approx calls
+            for sub in _ast.walk(test):
+                if isinstance(sub, _ast.Call):
+                    fn = _ast.unparse(sub.func) if hasattr(_ast, 'unparse') else ''
+                    if any(tag in fn for tag in ('allclose', 'isclose', 'approx')):
+                        return 'golden'
+            # Pure equality between two names: identity
+            ops = test.ops
+            if len(ops) == 1 and isinstance(ops[0], _ast.Eq):
+                return 'identity'
+            # Inequalities: bounds check (< <= > >=)
+            if all(isinstance(op, (_ast.Lt, _ast.LtE, _ast.Gt, _ast.GtE))
+                   for op in ops):
+                return 'bounds'
+        # Function calls directly as assertion body
+        if isinstance(test, _ast.Call):
+            fn = _ast.unparse(test.func) if hasattr(_ast, 'unparse') else ''
+            if 'allclose' in fn or 'isclose' in fn or 'approx' in fn:
+                return 'golden'
+        return 'unknown'
+    # Method calls: self.assertAlmostEqual, self.assertEqual, etc.
+    if isinstance(node, _ast.Expr) and isinstance(node.value, _ast.Call):
+        fn = _ast.unparse(node.value.func) if hasattr(_ast, 'unparse') else ''
+        if 'assertAlmostEqual' in fn or 'assert_allclose' in fn:
+            return 'golden'
+        if 'assertEqual' in fn or 'assertIs' in fn:
+            return 'identity'
+        if 'assertGreater' in fn or 'assertLess' in fn:
+            return 'bounds'
+    return None
+
+
+def _classify_test_function(fn: _ast.FunctionDef) -> tuple[str, list[str]]:
+    """Classify a test function by walking its assertions.
+
+    Priority: golden > identity > roundtrip > bounds > unknown.
+    Returns (test_kind, list_of_referenced_names).
+    """
+    kinds = []
+    names: set[str] = set()
+    for stmt in _ast.walk(fn):
+        kind = _classify_assertion(stmt)
+        if kind:
+            kinds.append(kind)
+        if isinstance(stmt, _ast.Name):
+            names.add(stmt.id)
+        elif isinstance(stmt, _ast.Attribute):
+            if hasattr(_ast, 'unparse'):
+                names.add(_ast.unparse(stmt))
+    # roundtrip heuristic: function name contains 'roundtrip' / 'inverse' /
+    # 'forward_backward'
+    lname = fn.name.lower()
+    if any(tag in lname for tag in ('roundtrip', 'inverse', 'forward_backward')):
+        kinds.append('roundtrip')
+    # Priority ordering
+    for preferred in ('roundtrip', 'golden', 'identity', 'bounds', 'unknown'):
+        if preferred in kinds:
+            return preferred, sorted(names)
+    return 'unknown', sorted(names)
+
+
 def extract_python_test_nodes() -> list[dict]:
     """PythonTest — test functions with test_kind classification.
 
-    Wired in: Wave 2a+. Sources: AST-parse tests/test_*.py for `def test_*`;
-    classify asserts via pattern ∈ {golden, bounds, identity, roundtrip}.
-    Emits: {id: 'test:{module}::{func}', type: 'PythonTest', meta.test_kind}.
+    Phase 5v Wave 2c. AST-parses every tests/test_*.py file; emits one
+    PythonTest node per `def test_*` function. test_kind classification
+    priority: roundtrip > golden > identity > bounds > unknown. Bounds-only
+    tests are the failure mode that let the k_H² bug through — the
+    ComputationCorrectness ReadinessGate (Wave 4) fails any Formula whose
+    VERIFIES edges are exclusively `test_kind=bounds`.
+
+    VERIFIES edges (Formula / Parameter / LeanTheorem targets) are
+    populated from names referenced in each test function; link-resolution
+    uses the existing Formula/Parameter/LeanTheorem node IDs.
     """
-    return []
+    tests_dir = PROJECT_ROOT / "tests"
+    if not tests_dir.exists():
+        return []
+
+    nodes = []
+    seen_ids: set[str] = set()
+    for test_file in sorted(tests_dir.glob("test_*.py")):
+        try:
+            source = test_file.read_text()
+            tree = _ast.parse(source, filename=str(test_file))
+        except (OSError, UnicodeDecodeError, SyntaxError) as exc:
+            logger.debug("PythonTest: skipping %s (%s)", test_file.name, exc)
+            continue
+        module = test_file.stem  # e.g. "test_formulas"
+        for node in _ast.walk(tree):
+            if isinstance(node, _ast.FunctionDef) and node.name.startswith('test_'):
+                test_kind, refs = _classify_test_function(node)
+                test_id = f'test:{module}::{node.name}'
+                if test_id in seen_ids:
+                    continue
+                seen_ids.add(test_id)
+                nodes.append({
+                    'id': test_id,
+                    'type': 'PythonTest',
+                    'label': node.name,
+                    'name': node.name,
+                    'verification': 'verified',
+                    'detail': f'{module}.py:{node.lineno} — test_kind={test_kind}',
+                    'meta': {
+                        'module': module,
+                        'file': f'tests/{module}.py',
+                        'line': node.lineno,
+                        'test_kind': test_kind,
+                        'referenced_names': refs[:50],  # cap for readability
+                    },
+                })
+
+    if nodes:
+        from collections import Counter as _C
+        kind_counts = _C(n['meta']['test_kind'] for n in nodes)
+        logger.info("PythonTest extraction: %d tests across %d files (%s)",
+                    len(nodes),
+                    len(list(tests_dir.glob("test_*.py"))),
+                    ", ".join(f"{k}={v}" for k, v in kind_counts.most_common()))
+    return nodes
 
 
 def extract_review_finding_nodes() -> list[dict]:
@@ -1424,6 +1550,58 @@ def extract_depends_on_axiom_edges(node_ids: set) -> list[dict]:
     return edges
 
 
+def extract_verifies_edges(node_ids: set) -> list[dict]:
+    """VERIFIES: PythonTest -> Formula / Parameter / LeanTheorem.
+
+    Phase 5v Wave 2c. For each PythonTest, inspect its `referenced_names`
+    meta; for each name that matches a Formula function name, a Parameter
+    short key, or a Lean declaration short name, emit a VERIFIES edge with
+    the test_kind attribute. Resolution via _LEAN_SHORT_INDEX for Lean.
+    """
+    test_nodes = [n for n in extract_python_test_nodes()]
+    formula_nodes = [n for n in extract_formula_nodes()]
+    param_nodes = [n for n in extract_parameter_nodes()]
+
+    formula_name_to_id = {n['name']: n['id'] for n in formula_nodes}
+    # Parameter keys can have dotted forms like 'Steinhauer.omega_perp';
+    # also accept the undotted tail
+    param_name_to_id: dict[str, str] = {}
+    for n in param_nodes:
+        param_name_to_id[n['name']] = n['id']
+        tail = n['name'].rsplit('.', 1)[-1]
+        param_name_to_id.setdefault(tail, n['id'])
+
+    edges = []
+    seen: set[tuple[str, str]] = set()
+    for test in test_nodes:
+        if test['id'] not in node_ids:
+            continue
+        test_kind = test.get('meta', {}).get('test_kind', 'unknown')
+        for raw in test.get('meta', {}).get('referenced_names', []):
+            # Try Formula first
+            target = formula_name_to_id.get(raw)
+            if target is None:
+                target = param_name_to_id.get(raw)
+            if target is None:
+                # Try Lean short-name resolution (returns None if ambiguous/missing)
+                lean_id = _resolve_lean_short(raw, node_ids)
+                if lean_id is not None:
+                    target = lean_id
+            if target is None or target not in node_ids:
+                continue
+            edge_key = (test['id'], target)
+            if edge_key in seen:
+                continue
+            seen.add(edge_key)
+            edges.append({
+                'source': test['id'],
+                'target': target,
+                'type': 'VERIFIES',
+                'test_kind': test_kind,
+            })
+    return edges
+
+
 def extract_imports_edges(node_ids: set) -> list[dict]:
     """IMPORTS: Formula -> Formula (if one formula calls another, limited in Phase 1)."""
     # Phase 1: detect direct calls from formulas.py source
@@ -1494,6 +1672,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_has_figure_edges(node_ids))
     edges.extend(extract_imports_edges(node_ids))
     edges.extend(extract_depends_on_axiom_edges(node_ids))
+    edges.extend(extract_verifies_edges(node_ids))
 
     # ASSUMES edges from HYPOTHESIS_REGISTRY
     _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
