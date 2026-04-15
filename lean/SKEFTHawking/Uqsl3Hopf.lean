@@ -4499,15 +4499,402 @@ theorem uq3_antipode_squared :
     simp only [antipodeOnGen3]
     exact (uq3_K_conj_K2inv k).symm
 
-/-! ## 5. Module Summary -/
+/-! ## 5. Per-Generator Evaluation Lemmas (Tranche E foundation)
+
+These lemmas reduce each map applied to a generator to its closed-form expression.
+Each follows the same RingQuot.liftAlgHom + FreeAlgebra.lift unfolding pattern.
+-/
+
+/-! ### 5a. Coproduct on generators -/
+
+theorem uq3_comul_E1 : uq3Comul k (uq3E1 k) =
+    uq3E1 k ⊗ₜ uq3K1 k + 1 ⊗ₜ uq3E1 k := by
+  unfold uq3Comul uq3E1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_E2 : uq3Comul k (uq3E2 k) =
+    uq3E2 k ⊗ₜ uq3K2 k + 1 ⊗ₜ uq3E2 k := by
+  unfold uq3Comul uq3E2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_F1 : uq3Comul k (uq3F1 k) =
+    uq3F1 k ⊗ₜ (1 : Uqsl3 k) + uq3K1inv k ⊗ₜ uq3F1 k := by
+  unfold uq3Comul uq3F1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_F2 : uq3Comul k (uq3F2 k) =
+    uq3F2 k ⊗ₜ (1 : Uqsl3 k) + uq3K2inv k ⊗ₜ uq3F2 k := by
+  unfold uq3Comul uq3F2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_K1 : uq3Comul k (uq3K1 k) = uq3K1 k ⊗ₜ uq3K1 k := by
+  unfold uq3Comul uq3K1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_K1inv : uq3Comul k (uq3K1inv k) =
+    uq3K1inv k ⊗ₜ uq3K1inv k := by
+  unfold uq3Comul uq3K1inv uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_K2 : uq3Comul k (uq3K2 k) = uq3K2 k ⊗ₜ uq3K2 k := by
+  unfold uq3Comul uq3K2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+theorem uq3_comul_K2inv : uq3Comul k (uq3K2inv k) =
+    uq3K2inv k ⊗ₜ uq3K2inv k := by
+  unfold uq3Comul uq3K2inv uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold comulFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  rfl
+
+/-! ### 5b. Counit on generators -/
+
+theorem uq3_counit_E1 : uq3Counit k (uq3E1 k) = 0 := by
+  unfold uq3Counit uq3E1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_E2 : uq3Counit k (uq3E2 k) = 0 := by
+  unfold uq3Counit uq3E2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_F1 : uq3Counit k (uq3F1 k) = 0 := by
+  unfold uq3Counit uq3F1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_F2 : uq3Counit k (uq3F2 k) = 0 := by
+  unfold uq3Counit uq3F2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_K1 : uq3Counit k (uq3K1 k) = 1 := by
+  unfold uq3Counit uq3K1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_K1inv : uq3Counit k (uq3K1inv k) = 1 := by
+  unfold uq3Counit uq3K1inv uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_K2 : uq3Counit k (uq3K2 k) = 1 := by
+  unfold uq3Counit uq3K2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+theorem uq3_counit_K2inv : uq3Counit k (uq3K2inv k) = 1 := by
+  unfold uq3Counit uq3K2inv uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold counitFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]; rfl
+
+/-! ### 5c. Antipode as a linear map (needed for HopfAlgebra typeclass) -/
+
+/-- **Antipode on U_q(sl₃)** as a linear map (composition of opposite algebra hom + opLinearEquiv.symm). -/
+noncomputable def uq3AntipodeLin :
+    Uqsl3 k →ₗ[LaurentPolynomial k] Uqsl3 k :=
+  (MulOpposite.opLinearEquiv (LaurentPolynomial k)).symm.toLinearMap.comp
+    (uq3AntipodeOp k).toLinearMap
+
+/-! ### 5d. Antipode on generators (linear map version) -/
+
+theorem uq3_antipode_E1 : uq3AntipodeLin k (uq3E1 k) = -(uq3E1 k * uq3K1inv k) := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3E1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_E2 : uq3AntipodeLin k (uq3E2 k) = -(uq3E2 k * uq3K2inv k) := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3E2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_F1 : uq3AntipodeLin k (uq3F1 k) = -(uq3K1 k * uq3F1 k) := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3F1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_F2 : uq3AntipodeLin k (uq3F2 k) = -(uq3K2 k * uq3F2 k) := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3F2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_K1 : uq3AntipodeLin k (uq3K1 k) = uq3K1inv k := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3K1 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_K1inv : uq3AntipodeLin k (uq3K1inv k) = uq3K1 k := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3K1inv uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_K2 : uq3AntipodeLin k (uq3K2 k) = uq3K2inv k := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3K2 uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+theorem uq3_antipode_K2inv : uq3AntipodeLin k (uq3K2inv k) = uq3K2 k := by
+  unfold uq3AntipodeLin uq3AntipodeOp
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  unfold uq3K2inv uqsl3Mk
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  unfold antipodeFreeAlg3
+  rw [FreeAlgebra.lift_ι_apply]
+  unfold antipodeOnGen3
+  rfl
+
+/-! ## 6. Coalgebra axioms -/
+
+/-- Coassociativity: (Δ ⊗ id) ∘ Δ = (id ⊗ Δ) ∘ Δ. -/
+theorem uq3_comul_coassoc :
+    (Algebra.TensorProduct.assoc (LaurentPolynomial k) (LaurentPolynomial k)
+      (LaurentPolynomial k) (Uqsl3 k) (Uqsl3 k) (Uqsl3 k)).toAlgHom.comp
+      ((Algebra.TensorProduct.map (uq3Comul k) (.id (LaurentPolynomial k) (Uqsl3 k))).comp
+        (uq3Comul k)) =
+    (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl3 k)) (uq3Comul k)).comp
+      (uq3Comul k) := by
+  ext x
+  rcases x with _ | _ | _ | _ | _ | _ | _ | _
+  · -- E1
+    simp +decide [uq3_comul_E1]
+    erw [uq3_comul_E1]
+    simp +decide [uq3_comul_E1, uq3_comul_K1]
+    simp +decide [add_mul, mul_add, TensorProduct.tmul_add, TensorProduct.add_tmul]
+    erw [Algebra.TensorProduct.assoc_tmul]
+    simp +decide [add_assoc]
+  · -- E2
+    simp +decide [uq3_comul_E2]
+    erw [uq3_comul_E2]
+    simp +decide [uq3_comul_E2, uq3_comul_K2]
+    simp +decide [add_mul, mul_add, TensorProduct.tmul_add, TensorProduct.add_tmul]
+    erw [Algebra.TensorProduct.assoc_tmul]
+    simp +decide [add_assoc]
+  · -- F1
+    simp +decide [Algebra.TensorProduct.assoc, Algebra.TensorProduct.map]
+    erw [uq3_comul_F1]
+    simp +decide [AlgebraTensorModule.map_tmul, AlgebraTensorModule.assoc_tmul]
+    erw [uq3_comul_F1, uq3_comul_K1inv]
+    simp +decide [AlgebraTensorModule.assoc_tmul, TensorProduct.tmul_add, TensorProduct.add_tmul]
+    rw [add_assoc]
+    congr
+  · -- F2
+    simp +decide [Algebra.TensorProduct.assoc, Algebra.TensorProduct.map]
+    erw [uq3_comul_F2]
+    simp +decide [AlgebraTensorModule.map_tmul, AlgebraTensorModule.assoc_tmul]
+    erw [uq3_comul_F2, uq3_comul_K2inv]
+    simp +decide [AlgebraTensorModule.assoc_tmul, TensorProduct.tmul_add, TensorProduct.add_tmul]
+    rw [add_assoc]
+    congr
+  · -- K1
+    simp +decide [uq3_comul_K1]
+    erw [uq3_comul_K1]
+    simp +decide [Algebra.TensorProduct.map_tmul, uq3_comul_K1]
+  · -- K1inv
+    simp +decide [uq3_comul_K1inv]
+    erw [show (uq3Comul k) (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ _)) =
+            uq3K1inv k ⊗ₜ uq3K1inv k from ?_]
+    · simp +decide [Algebra.TensorProduct.map_tmul, uq3_comul_K1inv]
+    · convert uq3_comul_K1inv k using 1
+  · -- K2
+    simp +decide [uq3_comul_K2]
+    erw [uq3_comul_K2]
+    simp +decide [Algebra.TensorProduct.map_tmul, uq3_comul_K2]
+  · -- K2inv
+    simp +decide [uq3_comul_K2inv]
+    erw [show (uq3Comul k) (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ _)) =
+            uq3K2inv k ⊗ₜ uq3K2inv k from ?_]
+    · simp +decide [Algebra.TensorProduct.map_tmul, uq3_comul_K2inv]
+    · convert uq3_comul_K2inv k using 1
+
+/-- Right counitality: (ε ⊗ id) ∘ Δ = lid.symm. -/
+theorem uq3_comul_rTensor_counit :
+    (Algebra.TensorProduct.map (uq3Counit k) (.id (LaurentPolynomial k) (Uqsl3 k))).comp
+      (uq3Comul k) =
+    (Algebra.TensorProduct.lid (LaurentPolynomial k) (Uqsl3 k)).symm := by
+  ext x
+  rcases x with _ | _ | _ | _ | _ | _ | _ | _
+  · -- E1
+    simp +decide [Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.lid]
+    erw [uq3_comul_E1]; simp +decide [Algebra.TensorProduct.map_tmul]
+    erw [uq3_counit_E1]
+    simp +decide [Algebra.TensorProduct.algEquivOfLinearEquivTensorProduct]
+    rfl
+  · -- E2
+    simp +decide [Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.lid]
+    erw [uq3_comul_E2]; simp +decide [Algebra.TensorProduct.map_tmul]
+    erw [uq3_counit_E2]
+    simp +decide [Algebra.TensorProduct.algEquivOfLinearEquivTensorProduct]
+    rfl
+  · -- F1
+    simp +zetaDelta at *
+    erw [uq3_comul_F1]
+    simp +decide [uq3_counit_F1, uq3_counit_K1inv]
+    rfl
+  · -- F2
+    simp +zetaDelta at *
+    erw [uq3_comul_F2]
+    simp +decide [uq3_counit_F2, uq3_counit_K2inv]
+    rfl
+  · -- K1
+    convert congr_arg
+      (fun x : (Uqsl3 k) ⊗[LaurentPolynomial k] (Uqsl3 k) =>
+        (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k))) x)
+      (uq3_comul_K1 k) using 1
+    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K1]
+    rfl
+  · -- K1inv
+    convert congr_arg
+      (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k)))
+      (uq3_comul_K1inv k) using 1
+    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K1inv]
+    rfl
+  · -- K2
+    convert congr_arg
+      (fun x : (Uqsl3 k) ⊗[LaurentPolynomial k] (Uqsl3 k) =>
+        (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k))) x)
+      (uq3_comul_K2 k) using 1
+    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K2]
+    rfl
+  · -- K2inv
+    convert congr_arg
+      (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k)))
+      (uq3_comul_K2inv k) using 1
+    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K2inv]
+    rfl
+
+/-- Left counitality: (id ⊗ ε) ∘ Δ = rid.symm. -/
+theorem uq3_comul_lTensor_counit :
+    (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl3 k)) (uq3Counit k)).comp
+      (uq3Comul k) =
+    (Algebra.TensorProduct.rid (LaurentPolynomial k) (LaurentPolynomial k) (Uqsl3 k)).symm := by
+  ext x
+  rcases x with _ | _ | _ | _ | _ | _ | _ | _ <;> simp +decide [*]
+  · -- E1
+    erw [uq3_comul_E1]
+    simp +decide [uq3_counit_K1, uq3_counit_E1]
+    rfl
+  · -- E2
+    erw [uq3_comul_E2]
+    simp +decide [uq3_counit_K2, uq3_counit_E2]
+    rfl
+  · -- F1
+    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
+      (uq3_comul_F1 k) using 1
+    simp +decide [Algebra.TensorProduct.map_tmul]
+    rw [uq3_counit_F1]; aesop
+  · -- F2
+    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
+      (uq3_comul_F2 k) using 1
+    simp +decide [Algebra.TensorProduct.map_tmul]
+    rw [uq3_counit_F2]; aesop
+  · -- K1
+    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
+      (uq3_comul_K1 k) using 1
+    simp +decide [uq3K1]
+    congr! 1
+    exact Eq.symm (uq3_counit_K1 k)
+  · -- K1inv
+    erw [uq3_comul_K1inv]
+    erw [Algebra.TensorProduct.map_tmul]
+    simp +decide [*]
+    exact congr_arg₂ _ rfl (uq3_counit_K1inv k)
+  · -- K2
+    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
+      (uq3_comul_K2 k) using 1
+    simp +decide [uq3K2]
+    congr! 1
+    exact Eq.symm (uq3_counit_K2 k)
+  · -- K2inv
+    erw [uq3_comul_K2inv]
+    erw [Algebra.TensorProduct.map_tmul]
+    simp +decide [*]
+    exact congr_arg₂ _ rfl (uq3_counit_K2inv k)
+
+/-! ## 7. Bialgebra instance -/
+
+/-- **Bialgebra instance for U_q(sl₃).** -/
+noncomputable instance : Bialgebra (LaurentPolynomial k) (Uqsl3 k) :=
+  Bialgebra.ofAlgHom (uq3Comul k) (uq3Counit k)
+    (uq3_comul_coassoc k) (uq3_comul_rTensor_counit k) (uq3_comul_lTensor_counit k)
+
+/-! ## 8. Module Summary -/
 
 /--
-Uqsl3Hopf module: Hopf algebra structure on U_q(sl₃).
-  - Coproduct Δ defined via FreeAlgebra.lift + RingQuot.liftAlgHom (3 sorry: relation-respect)
-  - Counit ε defined and descended (sorry: relation-respect)
-  - Antipode S defined as anti-homomorphism via MulOpposite (sorry: relation-respect)
-  - S² = Ad(K₁K₂) (sorry)
-  - Bialgebra/HopfAlgebra typeclass wiring deferred until relation-respect proofs filled
+Uqsl3Hopf module: Hopf algebra structure on U_q(sl₃). **Status: 0 sorries.**
+  - Coproduct Δ defined via FreeAlgebra.lift + RingQuot.liftAlgHom; all 21 relation-respects proven.
+  - Counit ε defined and descended; relation-respect proven via simp+ring.
+  - Antipode S defined as anti-homomorphism via MulOpposite; all 21 relation-respects proven,
+    including the 4 antipode q-Serre cubics (E12, E21, F12, F21) — palindromic Serre approach
+    via right-multiplication (E case) or left-multiplication (F case) of pure Serre by K-chain,
+    bridged via 3 atom-equality helpers per theorem.
+  - S² = Ad(K₁²K₂²) per generator (Drinfeld theorem, Jantzen GSM 6 §4.9).
+  - Bialgebra/HopfAlgebra typeclass instance wiring: pending Tranche E (stretch goal).
 -/
 theorem uqsl3_hopf_summary : True := trivial
 
