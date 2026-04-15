@@ -44,10 +44,22 @@ We proved sl_2 and sl_3 by hand, repeating the same pattern. A generic framework
 ### Wave 2 — Hopf Algebra Structure
 **Goal:** Generic Δ/ε/S from Cartan data.
 
-- [ ] Coproduct: Δ(E_i) = E_i ⊗ K_i + 1 ⊗ E_i (same for all types)
-- [ ] Counit: ε(E_i) = ε(F_i) = 0, ε(K_i) = 1 (same for all types)
-- [ ] Antipode: S(E_i) = -E_iK_i^{-1}, S(F_i) = -K_iF_i, S(K_i) = K_i^{-1}
-- [ ] Relation-respect: factor into mechanical (K cases) + hard (Serre cases)
+- [x] **Counit** — FULLY PROVED in `QuantumGroupHopf.lean` (2026-04-15
+  discovery: was already in codebase). `qgCounit A : QuantumGroup k A →ₐ QBase k`
+  descended via `RingQuot.liftAlgHom`; all 11 QGRel constructor groups
+  (including both q-Serre cases) discharged by a single `simp` pass
+  because every E/F generator maps to 0. Named-generator evaluations
+  `qgCounit_{E, F, K, Kinv}` provided. 7 theorems.
+- [ ] Coproduct: Δ(E_i) = E_i ⊗ K_i + 1 ⊗ E_i — requires generic q-Serre
+  respect for both comul_SerreE_quad and comul_SerreF_quad (the A_{ij} = -1
+  case). Pattern established by Uqsl3Hopf's palindromic Serre atom-bridge
+  (E12/E21 tranches); generalization to arbitrary A is a dedicated wave.
+- [ ] Antipode: S(E_i) = -E_iK_i^{-1}, S(F_i) = -K_iF_i, S(K_i) = K_i^{-1} —
+  analogously requires q-Serre respect (F12/F21 tranches in Uqsl3Hopf).
+- [ ] Relation-respect: mechanical cases (K-invertibility, K-commutativity,
+  KE, KF, EF) admit single-line simp proofs with the standard simp set;
+  Serre cases require the atom-bridge template.
+- [ ] `Bialgebra` + `HopfAlgebra` typeclass instances on `QuantumGroup k A`.
 
 ### Wave 3 — Fusion Rules from Representation Theory
 **Goal:** SU(N)_k fusion from truncated tensor product.
