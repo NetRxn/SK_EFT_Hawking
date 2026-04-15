@@ -225,6 +225,38 @@ theorem comulFreeAlgQG_SerreE_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0
                 qg_KE _ A i j, qg_KE _ A j i, h, h', T_zero, one_mul]
   abel
 
+/-- General E-Kinv scaled commutation: E_i K_j⁻¹ = q^{A_{ji}} K_j⁻¹ E_i. -/
+theorem qg_E_Kinv_scaled (i j : Fin r) :
+    qgE k A i * qgKinv k A j =
+    ((T (A j i) : QBase k) • (qgKinv k A j * qgE k A i)) := by
+  have hKE : qgK k A j * qgE k A i = (T (A j i) : QBase k) • (qgE k A i * qgK k A j) := by
+    have := qg_KE k A j i
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+    exact this
+  have hL : qgKinv k A j * (qgK k A j * qgE k A i) * qgKinv k A j =
+            qgE k A i * qgKinv k A j := by
+    rw [show qgKinv k A j * (qgK k A j * qgE k A i) =
+        (qgKinv k A j * qgK k A j) * qgE k A i from by noncomm_ring]
+    rw [qg_Kinv_mul_K, one_mul]
+  have hR : qgKinv k A j * ((T (A j i) : QBase k) • (qgE k A i * qgK k A j)) * qgKinv k A j =
+            (T (A j i) : QBase k) • (qgKinv k A j * qgE k A i) := by
+    rw [mul_smul_comm, smul_mul_assoc]
+    congr 1
+    rw [show qgKinv k A j * (qgE k A i * qgK k A j) * qgKinv k A j =
+        qgKinv k A j * qgE k A i * (qgK k A j * qgKinv k A j) from by noncomm_ring]
+    rw [qg_K_mul_Kinv, mul_one]
+  have := congrArg (fun z => qgKinv k A j * z * qgKinv k A j) hKE
+  simp only at this
+  rw [hL, hR] at this
+  exact this
+
+/-- K-F scaled commutation in scalar form: K_i F_j = q^{-A_{ij}} F_j K_i. -/
+theorem qg_KF_scaled (i j : Fin r) :
+    qgK k A i * qgF k A j = ((T (-A i j) : QBase k) • (qgF k A j * qgK k A i)) := by
+  have := qg_KF k A i j
+  rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+  exact this
+
 /-- Cross-index E-Kinv commutation when A_{ji} = 0.
     Derived from qg_KE j i + qg_K_mul_Kinv. -/
 theorem qg_E_Kinv_comm (i j : Fin r) (h : A j i = 0) :
@@ -291,6 +323,24 @@ theorem comulFreeAlgQG_SerreF_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0
                 qg_Kinv_F_comm k (A := A) i j h,
                 qg_Kinv_F_comm k (A := A) j i h']
   abel_nf
+
+/-! ### Group V: EF commutation (diagonal case)
+
+Per Uqsl3Hopf's `comulFreeAlg3_E1F1_sub_F1E1` template (3-helper structure:
+cross_terms cancellation → sub formula → apply EF11 q-commutator).
+Generic version: works for any (i, i) since the cross-term q-scalars
+T(A_ii) * T(-A_ii) = T(0) = 1 cancel UNCONDITIONALLY at the diagonal. -/
+
+/-- Cross-term cancellation at the diagonal: the q-scalars from
+    `qg_E_Kinv_scaled i i` and `qg_KF_scaled i i` cancel since
+    `T(A_ii) * T(-A_ii) = 1`. -/
+theorem comulFreeAlgQG_EFi_cross_terms (i : Fin r) :
+    (qgE k A i * qgKinv k A i) ⊗ₜ[QBase k] (qgK k A i * qgF k A i) =
+    (qgKinv k A i * qgE k A i) ⊗ₜ[QBase k] (qgF k A i * qgK k A i) := by
+  rw [qg_E_Kinv_scaled, qg_KF_scaled]
+  rw [← TensorProduct.smul_tmul', ← TensorProduct.tmul_smul, smul_smul]
+  rw [show (T (A i i) : QBase k) * T (-A i i) = 1 by rw [← T_add]; norm_num]
+  rw [one_smul]
 
 /-! ### Group V: EF commutation (off-diagonal, decoupled case) -/
 
