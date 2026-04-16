@@ -48,8 +48,8 @@ The entire 1+1D BEC chain has been extended to the 2+1D graphene Dirac fluid —
 
 **What's missing:**
 - Experimental verification (BEC/polariton). The Paris polariton group (Falque et al.) has observed negative-energy partner modes; spontaneous Hawking radiation detection is plausible within 1-2 years.
-- Experimental verification (graphene). The Dean group has the sonic horizon; the Kim group (Harvard) has the noise thermometer. Neither has attempted Hawking detection. Collaboration outreach to Lucas/Dean not yet initiated (awaiting Wave 10a noise formula resolution).
-- The graphene noise formula S_I(ω) is a leading-order estimate, not a first-principles derivation. Deep research on Landauer-Büttiker noise for electronic analog horizons is pending (Wave 10a).
+- Experimental verification (graphene). The Dean group has the sonic horizon; the Kim group (Harvard) has the noise thermometer. Neither has attempted Hawking detection. Collaboration outreach to Lucas/Dean can now proceed — noise formula is derived.
+- The graphene noise formula ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω) is derived from first principles (Keldysh FDT + Landauer-Büttiker, Wave 10a COMPLETE). Principal remaining uncertainty: the device-specific greybody factor Γ(ω).
 - Paper submission. Papers 1 (PRL), 2 (PRD), 4 (PRD) cover BEC; Paper 12 covers polariton; Paper 16 (new) covers graphene. None submitted.
 
 **Key insight discovered during formalization:** The original KMS symmetry axiom was too weak (only constrained 4/9 action components). Aristotle found a counterexample. The corrected FirstOrderKMS constrains all 9 components. This is a concrete case of formal verification catching a physics error.

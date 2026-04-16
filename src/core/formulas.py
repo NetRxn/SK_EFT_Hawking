@@ -5912,3 +5912,46 @@ def dirac_fluid_dissipation_window(T_H_K, l_mr_m, v_F=1.0e6):
     omega_H = K_B * T_H_K / HBAR
     Gamma_mr = v_F / l_mr_m
     return omega_H / Gamma_mr
+
+
+def graphene_hawking_noise_psd(omega, sigma_Q_SI, T_H_K, greybody=1.0):
+    """Current noise PSD from analog Hawking radiation in graphene.
+
+    The Hawking-induced excess current noise at a bilayer-graphene
+    de Laval nozzle, derived from both Keldysh and Landauer-Büttiker
+    with Bogoliubov mixing (symmetrized emission convention):
+
+        ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_H(ω)
+
+    where:
+        ℏω     = photon energy [J]
+        σ_Q    = quantum-critical conductance [S]
+        Γ(ω)   = greybody transmission factor (≤ 1)
+        n_H(ω) = 1/(exp(ℏω/k_BT_H) - 1) = Hawking occupation
+
+    Units: [J] × [S] × [1] × [1] = [A²·s] = [A²/Hz]  ✓
+
+    The previously used prefactor (2e²/π) is DIMENSIONALLY WRONG:
+    [C²] × [S] × [s⁻¹] = [A⁴·s⁴/(kg·m²)] ≠ [A²/Hz].
+    The error is the substitution ℏ → e²/π, introducing an extraneous
+    conductance quantum 2e²/h ≈ 77.5 μS.
+
+    Lean: grapheneNoisePSD_dimensional (GrapheneNoiseFormula.lean)
+    Aristotle: pending
+    Source: Derived in Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md
+            Keldysh route: Callen-Welton FDT + mode-resolved F_u(ω)
+            Landauer route: Büttiker multichannel + Bogoliubov mixing
+            (Anantram & Datta PRB 53, 16390 structural template)
+
+    Args:
+        omega: Angular frequency [s⁻¹] (scalar or array).
+        sigma_Q_SI: Quantum-critical conductance [S].
+        T_H_K: Hawking temperature [K].
+        greybody: Greybody factor Γ(ω), scalar or array (default 1.0 = step horizon).
+
+    Returns:
+        ΔS_I [A²/Hz] (same shape as omega).
+    """
+    from src.core.constants import HBAR, K_B
+    n_H = 1.0 / (np.exp(HBAR * omega / (K_B * T_H_K)) - 1.0)
+    return 2 * HBAR * omega * sigma_Q_SI * greybody * n_H

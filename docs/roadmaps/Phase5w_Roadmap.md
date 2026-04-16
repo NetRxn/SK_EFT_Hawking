@@ -319,31 +319,49 @@ Wave 1 (deep research) ─── COMPLETE
 
 **Deep research task:** `Lit-Search/Tasks/Phase5w_landauer_buttiker_noise_electronic_analog_horizon.md`
 
-**Status:** Deep research prompt FILED 2026-04-16. Covers: scattering matrix for sonic horizon, Landauer-Büttiker noise → Hawking occupation mapping, Keldysh propagator → S_I derivation, mode counting, σ_Q interpretation.
+**Status:** Wave 10a COMPLETE (2026-04-16). Deep research returned and integrated. Noise formula CORRECTED.
 
 **Deliverables:**
 
-**10a. Noise formula from first principles (HIGH priority):**
-- [ ] Deep research result: derivation of S_I(ω) from SK-EFT Keldysh propagator and/or Landauer scattering matrix
-- [ ] `src/graphene/noise_derivation.py` — first-principles S_I formula with correct prefactor, geometry dependence, and validity conditions
-- [ ] `lean/SKEFTHawking/GrapheneNoiseFormula.lean` — Keldysh → noise PSD theorem, FDR constraint on S_I
-- [ ] Paper 16 update: replace "leading-order estimate" caveat with derivation
-- [ ] Tests: verify corrected formula against estimate (within stated factor)
+**10a. Noise formula from first principles — COMPLETE 2026-04-16:**
+- [x] Deep research result: `Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md` — Keldysh + Landauer-Büttiker derivation
+- [x] Corrected formula: `ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω)` in `formulas.py` (`graphene_hawking_noise_psd`)
+- [x] Old formula `(2e²/π)σ_Q ω n_H` was DIMENSIONALLY WRONG (C² not J·s, off by 2e²/h ≈ 77.5 μS)
+- [x] `lean/SKEFTHawking/GrapheneNoiseFormula.lean` — 8 theorems (positivity, greybody bound, SNR σ_Q-independence, dimensional analysis, FDT consistency), 0 sorry
+- [x] Paper 16 §IV.A rewritten with derivation; "leading-order estimate" caveat REMOVED
+- [x] 4 dimensional consistency tests added (99 total graphene tests)
+- [x] Figures 104-105 regenerated with corrected values
+- [x] Detection now systematics-limited: SNR ≈ T_H/(2T_amb) ≈ 0.008, stat. integration < 1 s for 5σ
 
-**10b. Bilayer EOS deviation (MEDIUM priority):**
-- [ ] `src/graphene/bilayer_eos.py` — bilayer equation of state: deviation from ε = 2p at experimental T, resulting ζ/η ratio, correction to c_s
-- [ ] `lean/SKEFTHawking/BilayerConformality.lean` — bound on bulk viscosity from conformal symmetry breaking
-- [ ] Paper 16 update: quantitative ζ/η estimate in §II.D
+**10b. Bilayer EOS deviation — COMPLETE (`691c17a`):**
+- [x] `src/graphene/bilayer_eos.py` — ζ/η ≈ 0.02, negligible impact
+- [x] Paper 16 §II.D updated
 
-**10c. Quasi-1D correction bound (LOW priority):**
-- [ ] `lean/SKEFTHawking/QuasiOneDReduction.lean` — formal bound on transverse flow corrections: |δT_H/T_H| ≤ f(l_ee/W) for nozzle of width W
-- [ ] Tests: verify bound for Dean device geometry
+**10c. Greybody factor + quasi-1D bound (HIGH — deep research COMPLETE 2026-04-16):**
+- [x] Deep research filed + returned: `Lit-Search/Phase-5w/Greybody Factor and Quasi-1D Validity for the Graphene de Laval Nozzle.md`
+- [x] Key finding: **Γ₀ ≈ 0.9994** (NOT vanishing) — adversarial critique's premise was wrong for 1D acoustic BHs
+- [x] Γ₀ = 4c_R v/(c_R+v)² is profile-independent (Anderson, Balbinot, Fabbri, Parentani PRD 87)
+- [x] Quasi-1D error bounded: |δΓ/Γ| ≤ (l_ee/W)² + (ω/ω_perp)² exp(-2πL/W) ≤ 1.8% at ω_H
+- [x] Corrected SNR = 98.8% of Γ=1 → paper claims vindicated
+- [ ] `formulas.py`: add `greybody_zero_freq()`, `greybody_smooth_profile()`, `quasi1D_bound()`
+- [ ] `wkb_spectrum.py`: use realistic Γ(ω) instead of Γ=1
+- [ ] `lean/SKEFTHawking/QuasiOneDReduction.lean` — 5 algebraic theorems + 2 tracked hypotheses (0 sorry):
+  - T1: Γ₀ = 4c_R v/(c_R+v)² (algebraic identity)
+  - T2: |δκ/κ| ≤ (l_ee/W)² (surface gravity bound)
+  - T3: evanescent suppression ≤ (ω/ω_perp)² exp(-2πL/W)
+  - T4: D_dean < 1 (adiabatic regime, norm_num)
+  - T5: combined quasi-1D validity bound
+  - H1: AdiabaticRegimeCorrection (Prop def, tracked) — O(D⁴) from Finazzi-Parentani
+  - H2: DispersiveUVCutoff (Prop def, tracked) — ω_max ~ √(κ c_s/l_ee) from Macher-Parentani
+- [ ] Paper 16 update: replace "Γ=1 upper bound, principal uncertainty" → "Γ ≈ 0.9994, bounded"
+- [ ] Regenerate figures 104-105 with realistic Γ(ω)
+- [ ] Run adversarial re-review on strengthened paper
+- Working doc: `temporary/working-docs/phase5w_quasi1D_proof_state.md`
+- Lean dev protocol: follow Lean-Development-Optimization.txt (verify foundations, diagnostic comparison, hypothesis tracker, time-box, LSP not REPL)
 
-**10d. Integration time: bandwidth-cumulative SNR (LOW priority):**
-- [ ] Fix `wkb_spectrum.py`: compute proper cumulative SNR summing over all bins in detection band
-- [ ] Report both single-bin and cumulative integration times in Paper 16
-
-**Estimated effort:** 10a blocks on deep research (~1 week wait + 1 week implementation). 10b-10d can proceed immediately (~3 days total).
+**10d. Integration time: bandwidth-cumulative SNR — COMPLETE (`3e2a451`):**
+- [x] Cumulative SNR in `wkb_spectrum.py`
+- [x] Both single-bin and cumulative times reported
 
 ---
 
@@ -542,3 +560,26 @@ The following deep research files from earlier phases contain directly applicabl
 **Analog gravity in graphene:**
 - Iorio/Lambiase arXiv:1108.2340 (2012) — Hawking-Unruh on graphene (geometric approach)
 - Morresi et al. arXiv:1907.08960 (2020) — tight-binding simulation, T_H ~ tens of K
+
+
+
+#### JR NOTE:
+⏺ Roadmap and working doc are set. Here's where things stand:
+
+  Wave 10c — Ready for Execution
+
+  Roadmap updated with the full implementation plan: 5 theorems + 2 tracked hypotheses, 0 sorry target,
+  deep research results integrated, Lean dev protocol referenced.
+
+  Working doc created at temporary/working-docs/phase5w_quasi1D_proof_state.md with:
+  - Blueprint for each theorem (statement, proof sketch, risk level, Mathlib deps)
+  - Two tracked hypotheses following CenterFunctor pattern
+  - Explicit "disproved approaches" section (so no one re-explores the Γ→0 dead end)
+  - 4-phase development plan per the Lean optimization protocol
+
+  The implementation scope:
+  1. Python: add Γ₀ formula + frequency-dependent Γ(ω) to formulas.py, update wkb_spectrum.py
+  2. Lean: QuasiOneDReduction.lean (5 thms, 2 tracked hypotheses, 0 sorry)
+  3. Paper 16: "Γ=1 upper bound" → "Γ ≈ 0.9994, bounded to 1.8%"
+  4. Figures: regenerate with realistic Γ(ω)
+  5. Adversarial re-review

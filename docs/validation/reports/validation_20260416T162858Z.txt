@@ -1,0 +1,338 @@
+SK-EFT Hawking Validation Report
+Generated: 20260416T162858Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] formulas
+  + count_coefficients — Refs: secondOrder_count, secondOrder_count_with_parity, thirdOrder_count
+  + enumerate_monomials — Refs: secondOrder_count_with_parity, secondOrder_requires_parity_breaking
+  + damping_rate — Refs: dampingRate_eq_zero_iff
+  + dispersive_correction — Refs: dispersive_correction_bound, bogoliubov_superluminal
+  + first_order_correction — Refs: firstOrder_correction_zero_iff
+  + effective_temperature_ratio — Refs: effective_temp_zeroth_order
+  + turning_point_shift — Refs: turning_point_shift_nonzero, turning_point_shift
+
+[PASS] numerical
+  + Steinhauer.c_s — expected=5.476e-04, actual=5.476e-04, err=0.0%
+  + Steinhauer.xi — expected=1.334e-06, actual=1.334e-06, err=0.0%
+  + Steinhauer.kappa — expected=4.800e+00, actual=4.758e+00, err=0.9%
+  + Steinhauer.T_H — expected=5.780e-12, actual=5.784e-12, err=0.1%
+  + Heidelberg.c_s — expected=3.919e-03, actual=3.919e-03, err=0.0%
+  + Heidelberg.xi — expected=4.159e-07, actual=4.159e-07, err=0.0%
+  + Heidelberg.kappa — expected=1.019e+02, actual=1.019e+02, err=0.0%
+  + Heidelberg.T_H — expected=1.240e-10, actual=1.239e-10, err=0.1%
+  + Trento.c_s — expected=2.185e-03, actual=2.185e-03, err=0.0%
+  + Trento.xi — expected=1.264e-06, actual=1.264e-06, err=0.0%
+  + Trento.kappa — expected=2.140e+01, actual=2.141e+01, err=0.0%
+  + Trento.T_H — expected=2.600e-11, actual=2.602e-11, err=0.1%
+
+[PASS] identities
+  + count(1)==2
+  + count(2)==2
+  + count(3)==3
+  + disp(0)==0
+  + 1st_order(0,kappa)==0
+  + Gamma(k,w,cs,0,0,0,0)==0
+  + delta2_acoustic_vanishes — value=0.000e+00
+
+[PASS] paper_table
+  + Steinhauer.c_s — paper=5.476e-04, code=5.476e-04
+  + Steinhauer.xi — paper=1.334e-06, code=1.334e-06
+  + Steinhauer.kappa — paper=4.800e+00, code=4.758e+00
+  + Steinhauer.T_H — paper=6.000e-12, code=5.784e-12
+  + Heidelberg.c_s — paper=3.919e-03, code=3.919e-03
+  + Heidelberg.xi — paper=4.159e-07, code=4.159e-07
+  + Heidelberg.kappa — paper=1.019e+02, code=1.019e+02
+  + Heidelberg.T_H — paper=1.240e-10, code=1.239e-10
+  + Trento.c_s — paper=2.185e-03, code=2.185e-03
+  + Trento.xi — paper=1.264e-06, code=1.264e-06
+  + Trento.kappa — paper=2.140e+01, code=2.141e+01
+  + Trento.T_H — paper=2.600e-11, code=2.602e-11
+
+[PASS] theorems
+  + TOTAL_THEOREMS — actual=322, expected=322
+  + len(ARISTOTLE_THEOREMS) — actual=322, expected=322
+  + consistency — TOTAL=322, dict=322
+
+[PASS] notebooks
+  + Phase1_Stakeholder.ipynb — clean
+  + Phase1_Technical.ipynb — clean
+  + Phase2_Stakeholder.ipynb — clean
+  + Phase2_Technical.ipynb — clean
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — clean
+  + Phase3a_ThirdOrder_Technical.ipynb — clean
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — clean
+  + Phase3b_GaugeErasure_Technical.ipynb — clean
+  + Phase3c_WKBConnection_Stakeholder.ipynb — clean
+  + Phase3c_WKBConnection_Technical.ipynb — clean
+  + Phase3d_ADW_Stakeholder.ipynb — clean
+  + Phase3d_ADW_Technical.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — clean
+  + Phase4b_Vestigial_Stakeholder.ipynb — clean
+  + Phase4b_Vestigial_Technical.ipynb — clean
+  + Phase5a_ChiralityWall_Stakeholder.ipynb — clean
+  + Phase5a_ChiralityWall_Technical.ipynb — clean
+  + Phase5a_GTChiralFermion_Stakeholder.ipynb — clean
+  + Phase5a_GTChiralFermion_Technical.ipynb — clean
+  + Phase5b_ModularGeneration_Stakeholder.ipynb — clean
+  + Phase5b_ModularGeneration_Technical.ipynb — clean
+  + Phase5b_QuantumGroup_Stakeholder.ipynb — clean
+  + Phase5b_QuantumGroup_Technical.ipynb — clean
+  + Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb — clean
+  + Phase5b_SMAnomalyDrinfeld_Technical.ipynb — clean
+  + Phase5b_Synthesis_Stakeholder.ipynb — clean
+  + Phase5b_Synthesis_Technical.ipynb — clean
+  + Phase5c_E8Rokhlin_Stakeholder.ipynb — clean
+  + Phase5c_E8Rokhlin_Technical.ipynb — clean
+  + Phase5c_HopfAlgebra_Stakeholder.ipynb — clean
+  + Phase5c_HopfAlgebra_Technical.ipynb — clean
+  + Phase5c_SU2kFusion_Stakeholder.ipynb — clean
+  + Phase5c_SU2kFusion_Technical.ipynb — clean
+  + Phase5d_MTC_Stakeholder.ipynb — clean
+  + Phase5d_MTC_Technical.ipynb — clean
+  + Phase5d_Polariton_Stakeholder.ipynb — clean
+  + Phase5d_Polariton_Technical.ipynb — clean
+  + Phase5d_TetradGap_Stakeholder.ipynb — clean
+  + Phase5d_TetradGap_Technical.ipynb — clean
+  + Phase5e_BraidedMTC_Stakeholder.ipynb — clean
+  + Phase5e_BraidedMTC_Technical.ipynb — clean
+  + Phase5h_ChiralityWall3D_Stakeholder.ipynb — clean
+  + Phase5h_ChiralityWall3D_Technical.ipynb — clean
+  + Phase5i_RankTwoQuantumGroups_Stakeholder.ipynb — clean
+  + Phase5i_RankTwoQuantumGroups_Technical.ipynb — clean
+  + Phase5j_FermiPointEmergence_Stakeholder.ipynb — clean
+  + Phase5j_FermiPointEmergence_Technical.ipynb — clean
+  + Phase5w_GrapheneDiracFluid_Stakeholder.ipynb — clean
+  + Phase5w_GrapheneDiracFluid_Technical.ipynb — clean
+
+[PASS] lean_source
+  + dampingRate_eq_zero_iff — Lean ident 'dampingRate_eq_zero_iff' found
+  + dispersive_bound — Lean ident 'dispersive_correction_bound' found
+  + firstOrder_correction_zero_iff — Lean ident 'firstOrder_correction_zero_iff' found
+  + acoustic_metric_determinant — Lean ident 'acousticMetric_det' found
+  + secondOrder_count — Lean ident 'secondOrder_count' found
+  + fracton_exceeds_standard_general — Lean ident 'fracton_exceeds_standard_general' found
+  + binomial_strict_mono — Lean ident 'binomial_strict_mono' found
+  + dof_gap_positive_2_through_8 — Lean ident 'dof_gap_positive_2_through_8' found
+  + evading_one_breaks_nogo — Lean ident 'evading_one_breaks_nogo' found
+  + ep_distinguishes_phases — Lean ident 'ep_distinguishes_phases' found
+  + obstructions_individually_sufficient — Lean ident 'obstructions_individually_sufficient' found
+
+[PASS] cgl_fdr
+  + einstein_relation — σ = γ/β₀ for Brownian particle
+  + first_order_bec — K_N = 2Γ/β₀ for BEC with damping
+  + second_order_real — Second-order noise kernel is real
+  + noise_count_pattern — Noise counts: {0: 1, 1: 0, 2: 2, 3: 0, 4: 3}
+
+[PASS] lean_build
+  + lake_bin — /Users/johnroehm/.elan/bin/lake
+  + lean_root — /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean
+  + lake_build — build succeeded (8410 jobs)
+
+[PASS] viz_consistency
+  + Phase1_Stakeholder.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase1_Technical.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase2_Stakeholder.ipynb — WARN: 6 untagged .show() call(s)
+  + Phase2_Technical.ipynb — WARN: 9 untagged .show() call(s)
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — clean
+  + Phase3a_ThirdOrder_Technical.ipynb — clean
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — clean
+  + Phase3b_GaugeErasure_Technical.ipynb — clean
+  + Phase3c_WKBConnection_Stakeholder.ipynb — clean
+  + Phase3c_WKBConnection_Technical.ipynb — clean
+  + Phase3d_ADW_Stakeholder.ipynb — clean
+  + Phase3d_ADW_Technical.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — clean
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — clean
+  + Phase4b_Vestigial_Stakeholder.ipynb — WARN: 2 untagged .show() call(s)
+  + Phase4b_Vestigial_Technical.ipynb — WARN: 4 untagged .show() call(s)
+  + Phase5a_ChiralityWall_Stakeholder.ipynb — clean
+  + Phase5a_ChiralityWall_Technical.ipynb — clean
+  + Phase5a_GTChiralFermion_Stakeholder.ipynb — WARN: 3 untagged .show() call(s)
+  + Phase5a_GTChiralFermion_Technical.ipynb — WARN: 5 untagged .show() call(s)
+  + Phase5b_ModularGeneration_Stakeholder.ipynb — clean
+  + Phase5b_ModularGeneration_Technical.ipynb — WARN: 2 untagged .show() call(s)
+  + Phase5b_QuantumGroup_Stakeholder.ipynb — clean
+  + Phase5b_QuantumGroup_Technical.ipynb — clean
+  + Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb — clean
+  + Phase5b_SMAnomalyDrinfeld_Technical.ipynb — clean
+  + Phase5b_Synthesis_Stakeholder.ipynb — clean
+  + Phase5b_Synthesis_Technical.ipynb — clean
+  + Phase5c_E8Rokhlin_Stakeholder.ipynb — clean
+  + Phase5c_E8Rokhlin_Technical.ipynb — clean
+  + Phase5c_HopfAlgebra_Stakeholder.ipynb — clean
+  + Phase5c_HopfAlgebra_Technical.ipynb — clean
+  + Phase5c_SU2kFusion_Stakeholder.ipynb — clean
+  + Phase5c_SU2kFusion_Technical.ipynb — clean
+  + Phase5d_MTC_Stakeholder.ipynb — clean
+  + Phase5d_MTC_Technical.ipynb — clean
+  + Phase5d_Polariton_Stakeholder.ipynb — clean
+  + Phase5d_Polariton_Technical.ipynb — clean
+  + Phase5d_TetradGap_Stakeholder.ipynb — clean
+  + Phase5d_TetradGap_Technical.ipynb — clean
+  + Phase5e_BraidedMTC_Stakeholder.ipynb — clean
+  + Phase5e_BraidedMTC_Technical.ipynb — clean
+  + Phase5h_ChiralityWall3D_Stakeholder.ipynb — clean
+  + Phase5h_ChiralityWall3D_Technical.ipynb — clean
+  + Phase5i_RankTwoQuantumGroups_Stakeholder.ipynb — clean
+  + Phase5i_RankTwoQuantumGroups_Technical.ipynb — clean
+  + Phase5j_FermiPointEmergence_Stakeholder.ipynb — clean
+  + Phase5j_FermiPointEmergence_Technical.ipynb — clean
+  + Phase5w_GrapheneDiracFluid_Stakeholder.ipynb — WARN: 2 untagged .show() call(s)
+  + Phase5w_GrapheneDiracFluid_Technical.ipynb — WARN: 2 untagged .show() call(s)
+
+[PASS] notebook_exec
+  + Phase1_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase1_Technical.ipynb — 10 code cells executed successfully
+  + Phase2_Stakeholder.ipynb — 13 code cells executed successfully
+  + Phase2_Technical.ipynb — 16 code cells executed successfully
+  + Phase3a_ThirdOrder_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3a_ThirdOrder_Technical.ipynb — 12 code cells executed successfully
+  + Phase3b_GaugeErasure_Stakeholder.ipynb — 8 code cells executed successfully
+  + Phase3b_GaugeErasure_Technical.ipynb — 10 code cells executed successfully
+  + Phase3c_WKBConnection_Stakeholder.ipynb — 9 code cells executed successfully
+  + Phase3c_WKBConnection_Technical.ipynb — 9 code cells executed successfully
+  + Phase3d_ADW_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase3d_ADW_Technical.ipynb — 14 code cells executed successfully
+  + Phase4a_ExperimentalPredictions_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase4a_ExperimentalPredictions_Technical.ipynb — 11 code cells executed successfully
+  + Phase4b_Vestigial_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase4b_Vestigial_Technical.ipynb — 15 code cells executed successfully
+  + Phase5a_ChiralityWall_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5a_ChiralityWall_Technical.ipynb — 9 code cells executed successfully
+  + Phase5a_GTChiralFermion_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5a_GTChiralFermion_Technical.ipynb — 12 code cells executed successfully
+  + Phase5b_ModularGeneration_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5b_ModularGeneration_Technical.ipynb — 10 code cells executed successfully
+  + Phase5b_QuantumGroup_Stakeholder.ipynb — 4 code cells executed successfully
+  + Phase5b_QuantumGroup_Technical.ipynb — 7 code cells executed successfully
+  + Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb — 3 code cells executed successfully
+  + Phase5b_SMAnomalyDrinfeld_Technical.ipynb — 5 code cells executed successfully
+  + Phase5b_Synthesis_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5b_Synthesis_Technical.ipynb — 12 code cells executed successfully
+  + Phase5c_E8Rokhlin_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase5c_E8Rokhlin_Technical.ipynb — 7 code cells executed successfully
+  + Phase5c_HopfAlgebra_Stakeholder.ipynb — 4 code cells executed successfully
+  + Phase5c_HopfAlgebra_Technical.ipynb — 6 code cells executed successfully
+  + Phase5c_SU2kFusion_Stakeholder.ipynb — 6 code cells executed successfully
+  + Phase5c_SU2kFusion_Technical.ipynb — 9 code cells executed successfully
+  + Phase5d_MTC_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase5d_MTC_Technical.ipynb — 8 code cells executed successfully
+  + Phase5d_Polariton_Stakeholder.ipynb — 5 code cells executed successfully
+  + Phase5d_Polariton_Technical.ipynb — 8 code cells executed successfully
+  + Phase5d_TetradGap_Stakeholder.ipynb — 4 code cells executed successfully
+  + Phase5d_TetradGap_Technical.ipynb — 9 code cells executed successfully
+  + Phase5e_BraidedMTC_Stakeholder.ipynb — 3 code cells executed successfully
+  + Phase5e_BraidedMTC_Technical.ipynb — 6 code cells executed successfully
+  + Phase5h_ChiralityWall3D_Stakeholder.ipynb — 3 code cells executed successfully
+  + Phase5h_ChiralityWall3D_Technical.ipynb — 10 code cells executed successfully
+  + Phase5i_RankTwoQuantumGroups_Stakeholder.ipynb — 3 code cells executed successfully
+  + Phase5i_RankTwoQuantumGroups_Technical.ipynb — 7 code cells executed successfully
+  + Phase5j_FermiPointEmergence_Stakeholder.ipynb — 4 code cells executed successfully
+  + Phase5j_FermiPointEmergence_Technical.ipynb — 8 code cells executed successfully
+  + Phase5w_GrapheneDiracFluid_Stakeholder.ipynb — 3 code cells executed successfully
+  + Phase5w_GrapheneDiracFluid_Technical.ipynb — 7 code cells executed successfully
+
+[PASS] physical_bounds
+  + steinhauer/T_H > 0 — OK
+  + steinhauer/kappa > 0 — OK
+  + steinhauer/0 < D < 1 — OK
+  + steinhauer/0 < delta_diss < 1 — OK
+  + steinhauer/n_noise >= 0 — OK
+  + steinhauer/shots > 10^4 (delta=6.0e-07) — OK
+  + heidelberg/T_H > 0 — OK
+  + heidelberg/kappa > 0 — OK
+  + heidelberg/0 < D < 1 — OK
+  + heidelberg/0 < delta_diss < 1 — OK
+  + heidelberg/n_noise >= 0 — OK
+  + heidelberg/shots > 10^4 (delta=4.0e-05) — OK
+  + trento/T_H > 0 — OK
+  + trento/kappa > 0 — OK
+  + trento/0 < D < 1 — OK
+  + trento/0 < delta_diss < 1 — OK
+  + trento/n_noise >= 0 — OK
+  + trento/shots > 10^4 (delta=3.6e-07) — OK
+
+[PASS] cross_path_consistency
+  + delta_diss: spectrum vs direct — spectrum=6.0214e-07, direct=6.0214e-07, rel_diff=0.0000
+  + decoherence: spectrum vs formulas — spectrum=1.2043e-06, formulas=1.2043e-06, rel_diff=0.0000
+
+[FAIL] paper_provenance
+  + paper10_modular_generation/figures — 2 figure files present
+  + paper12_polariton/figures — 2 figure files present
+  + paper14_braided_mtc/figures — 5 figure files present
+  - paper16_graphene_sk_eft/figures — Uses \includegraphics but figures/ is empty
+  + paper1_first_order/figures — 3 figure files present
+  + paper2_second_order/figures — 6 figure files present
+  + paper3_gauge_erasure/figures — 2 figure files present
+  + paper4_wkb_connection/figures — 3 figure files present
+  + paper5_adw_gap/figures — 5 figure files present
+  + paper6_vestigial/figures — 5 figure files present
+  + paper7_chirality_formal/figures — 6 figure files present
+  + paper8_chirality_master/figures — 5 figure files present
+  + paper9_sm_anomaly_drinfeld/figures — 5 figure files present
+
+[PASS] parameter_provenance
+  + coverage — All 40 parameters have provenance entries
+  + llm_verification — All parameters LLM-verified
+  + human_verification — 40 params not yet human-verified (blocks paper submission)
+  + value_consistency — All provenance values match code
+
+[PASS] counts_fresh
+  + staleness — stale: lean_deps.json newer than counts.json
+  + regenerate — update_counts.py succeeded
+  + summary — theorems=3144 (substantive=3059, placeholder=85) | modules=141 | sorry=0 | papers=16 | aristotle_proved=322
+
+[PASS] tables_fresh
+  + staleness — stale: formulas.py newer than oldest output
+  + regenerate — render_paper_tables.py succeeded: 11 table(s) rendered across 8 paper(s)
+
+[PASS] numerical_literals
+  + summary — 21 inline literals across papers; 11 \input{tables/} references in use (WARN-level during retrofit)
+  + paper10_modular_generation — no inline unit-bearing literals in body
+  + paper11_quantum_group — no inline unit-bearing literals in body (uses 1 \input tables)
+  + paper12_polariton — uses 3 \input, 2 inline literal(s): L37 "1.1\times 10^"; L204 "1.1\times 10^"
+  + paper14_braided_mtc — no inline unit-bearing literals in body
+  + paper15_methodology — no inline unit-bearing literals in body (uses 2 \input tables)
+  + paper16_graphene_sk_eft — 1 inline literal(s): L239 "3.5\times 10^"
+  + paper16_wrt_tqft — no inline unit-bearing literals in body
+  + paper1_first_order — uses 1 \input, 2 inline literal(s): L283 "1.6\times 10^"; L342 "1.6\times 10^"
+  + paper2_second_order — uses 1 \input, 15 inline literal(s): L296 "5.9 \times 10^"; L296 "9.4 \times 10^"; L296 "5.9 \times 10^" (+12 more)
+  + paper3_gauge_erasure — no inline unit-bearing literals in body
+  + paper4_wkb_connection — uses 1 \input, 1 inline literal(s): L213 "1.6\times10^"
+  + paper5_adw_gap — no inline unit-bearing literals in body
+  + paper6_vestigial — no inline unit-bearing literals in body
+  + paper7_chirality_formal — no inline unit-bearing literals in body (uses 1 \input tables)
+  + paper8_chirality_master — no inline unit-bearing literals in body (uses 1 \input tables)
+  + paper9_sm_anomaly_drinfeld — no inline unit-bearing literals in body
+
+[FAIL] graph_integrity
+  ERROR: ExtractDeps failed: uncaught exception: object file '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/.lake/build/lib/lean/SKEFTHawking/ExtractDeps.olean' of module SKEFTHawking.ExtractDeps does not exist
+
+
+[PASS] count_literals
+  + summary — 54 count-literal matches across 16 papers (WARN-level; retrofit to \input{counts.tex} + macros)
+  + paper10_modular_generation — no count literals found
+  + paper11_quantum_group — 4 count-literal matches: L62 "24
+theorems" (theorems); L64 "87 theorems" (theorems); L237 "201 theorems" (theorems) (+1 more)
+  + paper12_polariton — no count literals found
+  + paper14_braided_mtc — 7 count-literal matches: L83 "18 theorems" (theorems); L86 "14 theorems" (theorems); L137 "25 theorems" (theorems) (+4 more)
+  + paper15_methodology — USES MACROS but 3 count-literal matches: L121 "25 theorems" (theorems); L180 "200 theorems" (theorems); L110 "33 sorry" (sorry)
+  + paper16_graphene_sk_eft — no count literals found
+  + paper16_wrt_tqft — no count literals found
+  + paper1_first_order — no count literals found
+  + paper2_second_order — 2 count-literal matches: L362 "6 sorry" (sorry); L366 "22 sorry" (sorry)
+  + paper3_gauge_erasure — 1 count-literal matches: L37 "12 theorems" (theorems)
+  + paper4_wkb_connection — 5 count-literal matches: L33 "17 theorems" (theorems); L271 "17 theorems" (theorems); L290 "968 theorems" (theorems) (+2 more)
+  + paper5_adw_gap — 6 count-literal matches: L37 "21 theorems" (theorems); L39 "20 theorems" (theorems); L318 "21 theorems" (theorems) (+3 more)
+  + paper6_vestigial — 5 count-literal matches: L42 "14 theorems" (theorems); L538 "18 theorems" (theorems); L538 "16 theorems" (theorems) (+2 more)
+  + paper7_chirality_formal — 10 count-literal matches: L51 "54
+theorems" (theorems); L193 "12 theorems" (theorems); L271 "54 theorems" (theorems) (+7 more)
+  + paper8_chirality_master — 1 count-literal matches: L430 "130 Lean modules" (modules)
+  + paper9_sm_anomaly_drinfeld — 10 count-literal matches: L82 "19 theorems" (theorems); L106 "23 theorems" (theorems); L144 "13 theorems" (theorems) (+7 more)
+
+[FAIL] readiness_submission_gate
+  ERROR: ExtractDeps failed: uncaught exception: object file '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/.lake/build/lib/lean/SKEFTHawking/ExtractDeps.olean' of module SKEFTHawking.ExtractDeps does not exist
+
+
+Overall: 18/21 passed

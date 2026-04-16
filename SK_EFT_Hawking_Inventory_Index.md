@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-16 (**Phase 5m ALL WAVES COMPLETE**: generic U_q(𝔤) HopfAlgebra + instantiation verification + Kac-Walton fusion with buildWeightDiagram + SU(5)₁ Z₅ + exceptional E₆/E₇/E₈/F₄ Cartan data + named generators. 7 new/updated Phase 5m Lean modules, ~4766 LOC, 0 sorry. Clean build 8410 jobs.)
+**Last synced:** 2026-04-16 (**Phase 5w Wave 10a COMPLETE**: corrected noise formula ΔS_I = 2ℏω σ_Q Γ n_H (Keldysh + Landauer-Büttiker derivation). GrapheneNoiseFormula.lean (8 thms). Previous formula was dimensionally wrong — off by conductance quantum. Detection now systematics-limited, not statistics-limited. Clean build 8411 jobs.)
 
 ---
 
@@ -17,10 +17,10 @@
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **148** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +6 Phase 5m: QuantumGroupGeneric, QuantumGroupCoproduct, QuantumGroupAntipode, QuantumGroupHopf, QuantumGroupInstantiation, QuantumGroupMeta (KacWaltonFusion pre-existing, updated). |
+| Lean modules | **149** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +1 Phase 5w: GrapheneNoiseFormula (8 thms, noise PSD derivation + dimensional analysis). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
-| Test files | **51** | +5 Phase 5w: test_graphene_metric (26), _hawking (21), _spectrum (17), _transport (17), test_platform_comparison (14) = 95 total graphene tests |
+| Test files | **51** | +5 Phase 5w: test_graphene_metric (26), _hawking (21), _spectrum (21), _transport (17), test_platform_comparison (14) = 99 total graphene tests |
 | Test count | 1660+ | `pytest tests/ -q` |
 | Figures | **105** | `grep -c "^def fig_" src/core/visualizations.py` (+4: T_H sweep, dissipation window, noise PSD, SNR) |
 | Notebooks | **49** | `ls notebooks/*.ipynb` (+1: Phase5w_GrapheneDiracFluid_Technical) |
@@ -28,7 +28,7 @@
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 44 | See Aristotle run table in full inventory |
-| Deep research tasks | 18 + 8 + 6 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e + 6 Phase-5x (DM/DE — all COMPLETE)
+| Deep research tasks | 18 + 8 + 6 + 6 + 6 + 3 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e + 6 Phase-5x (W1 COMPLETE) + 3 Phase-5x (W1b COMPLETE — KV/DESI Level D, fracton NON-VIABLE weak, merger CONDITIONAL GO)
 
 
 ---

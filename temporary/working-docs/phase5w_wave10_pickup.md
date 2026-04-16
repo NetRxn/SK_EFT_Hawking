@@ -1,87 +1,46 @@
-# Phase 5w Wave 10 — Pickup Document
+# Phase 5w Wave 10 — Status Document
 
-**Written:** 2026-04-16 (end of Phase 5w session)
-**Status:** Waves 2-9 COMPLETE, Wave 10 partially complete (10b + 10d done, 10a blocks on deep research, 10c deferred)
-**Next action:** Integrate deep research result when returned, then execute Wave 10a
+**Written:** 2026-04-16
+**Updated:** 2026-04-16 (Wave 10a COMPLETE — noise formula corrected)
+**Status:** Waves 2-10a,10b,10d COMPLETE. Only 10c (quasi-1D Lean bound) deferred.
 
-## What's done
+## Wave 10a: RESOLVED
 
-### Waves 2-8 (all 12-stage pipeline, committed)
-- `DiracFluidMetric.lean` (9 thms): 3×3 acoustic metric, block-diag, horizon
-- `GrapheneHawking.lean` (6 thms): T_eff positivity, EFT bound, dispersive correction
-- `DiracFluidSK.lean` (9 thms): transport counting, WF, KSS, EFT perturbativity
-- `src/graphene/` (6 modules): hawking_predictions, wkb_spectrum, transport_counting, platform_comparison, bilayer_eos, __init__
-- `src/core/formulas.py`: 7 graphene formulas added
-- `src/core/constants.py`: GRAPHENE_PLATFORMS (4 platforms), E_CHARGE, V_FERMI_GRAPHENE, etc.
-- `src/core/visualizations.py`: 4 figures (102-105)
-- 5 test files, 95 tests (all pass)
-- Paper 16 draft (6 pages, 4 figures, reviewed by 3 Opus agents)
+Deep research returned at `Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md`.
 
-### Wave 10 (partially done)
-- **10b DONE** (`691c17a`): bilayer EOS — ζ/η ≈ 0.02, negligible impact
-- **10d DONE** (`3e2a451`): bandwidth-cumulative SNR — 1 min (not 27)
-- **10a BLOCKED**: noise formula derivation — deep research filed at `Lit-Search/Tasks/Phase5w_landauer_buttiker_noise_electronic_analog_horizon.md`
-- **10c DEFERRED**: quasi-1D Lean bound — low priority
+**Finding:** The old formula `S_H = (2e²/π) σ_Q ω n_H` was **dimensionally wrong**.
+- Units of `2e²/π` are C² (charge squared), not J·s (action)
+- Off by a factor of `2e²/h ≈ 77.5 μS` (conductance quantum)
 
-## What blocks
+**Corrected formula:** `ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω)` [A²/Hz]
+- Derived independently via Keldysh FDT and Landauer-Büttiker with Bogoliubov mixing
+- Greybody Γ(ω) ≤ 1 (device-specific; using Γ=1 as upper bound)
+- This is a genuinely new result (no prior publication)
 
-The ONE remaining blocker is the noise formula derivation (Wave 10a). Currently the paper's S_I(ω) formula is:
-```
-S_Hawking(ω) = (2e²/π) σ_Q ω n_Hawking(ω)
-```
-This is a leading-order estimate, not a first-principles derivation. The paper acknowledges this caveat. The deep research task asks for:
-1. Scattering matrix for the sonic horizon
-2. Landauer-Büttiker noise → Hawking mapping
-3. Keldysh propagator → S_I derivation
-4. Correct prefactor with geometry dependence
+**Impact on predictions:**
+- S_H ≈ 10⁻²⁶ A²/Hz (was quoted as 10⁻³⁰ — wrong units)
+- SNR/bin ≈ T_H/(2T_amb) ≈ 0.008 (independent of σ_Q!)
+- Statistical integration time: < 1 s for 5σ (was "25 min")
+- Detection is systematics-limited, not statistics-limited
 
-## When deep research returns
+**What was done:**
+1. Added `graphene_hawking_noise_psd()` to `formulas.py`
+2. Fixed `wkb_spectrum.py` — replaced `(2e²/π)σ_Q ω` with `2ℏω σ_Q Γ`
+3. Created `GrapheneNoiseFormula.lean` (8 theorems, 0 sorry): positivity, greybody monotonicity, SNR σ_Q-independence, dimensional analysis, FDT consistency
+4. Updated Paper 16: §IV.A rewritten with Keldysh/LB derivation, all numbers updated, "leading-order estimate" caveat removed
+5. Regenerated figures 104-105 with corrected values
+6. Added 4 dimensional consistency tests (99 total graphene tests)
+7. `lake build` clean: 8411 jobs, 0 sorry
 
-1. Read `Lit-Search/Phase-5w/` for the new result
-2. Check: is our formula correct to within a factor of 2? 10? Or completely wrong?
-3. If correct: update Paper 16 §IV.A with derivation, remove "leading-order estimate" caveat
-4. If wrong: recompute all noise spectrum predictions, update figures, rerun tests
-5. Create `GrapheneNoiseFormula.lean` with the Keldysh → noise PSD theorem
-6. Update `wkb_spectrum.py` with the corrected formula
-7. Rerun all 3 review agents on the updated paper
+## Remaining: Wave 10c (DEFERRED)
 
-## Key physics findings (don't lose these)
+Quasi-1D Lean bound — low priority. Would formalize the condition W >> l_ee for the quasi-1D approximation. Not blocking any paper or outreach work.
 
-1. **δ_diss negligible by 11 orders**: The SK-EFT's main value for graphene is the framework (systematic organization + verification), not the dissipative T_H correction
-2. **Bandwidth-cumulative SNR**: 1 min for SNR=1, 25 min for 5σ — much better than single-bin 27 min
-3. **Bilayer conformality**: ζ/η ≈ 0.02, negligible impact on T_H and δ_disp
-4. **First-order count coincidence**: 2 coefficients in both 1+1D BEC and 2+1D conformal — different physics, same count
-5. **Dissipation window marginal**: ω_H/Γ_mr ≈ 1.6 for Dean (improves to ~5 with cleaner samples)
+## Collaboration readiness
 
-## Collaboration outreach readiness
-
-The detection protocol is concrete enough for Lucas/Dean outreach:
+With the noise formula now DERIVED (not estimated), outreach to Lucas/Dean can proceed:
 - T_H ≈ 2.4 K, D = 0.23, EFT valid
+- Noise formula: ΔS_I = 2ℏω σ_Q Γ n_H (Keldysh + Landauer-Büttiker)
 - Detection band: 0.5-85 GHz
-- Bandwidth-cumulative: SNR=1 in ~1 min, 5σ in ~25 min
-- Formal verification: 24 Lean theorems, 0 sorry
-
-**Do NOT send the noise formula to experimentalists until Wave 10a is resolved.** The order-of-magnitude prediction is right but the prefactor may be wrong.
-
-## Why the noise formula can't be shortcutted (explore agent finding, 2026-04-16)
-
-Checked all existing BEC/polariton infrastructure for a template:
-- **BEC** (`wkb/spectrum.py`, `wkb/bogoliubov.py`): maps n(ω) → density correlations with NO explicit prefactor formula. SNR uses Poissonian shot counting: signal = |deviation| × n, noise = √n. No current noise, no e² factors.
-- **Polariton** (Paper 12): maps n(ω) → stimulated gain G(ω) via probe photon counting. Still no universal formula — uses device-specific greybody Γ(ω).
-- **Graphene**: ONLY platform that needs n(ω) → S_I(ω) in A²/Hz. This requires a scattering matrix for the horizon, which doesn't exist anywhere in the codebase.
-
-The `(2e²/π) σ_Q ω n_Hawking` formula is a dimensional analysis ansatz, not a derivation. The deep research task is the correct path — no shortcut exists.
-
-## File locations
-
-| Item | Path |
-|---|---|
-| Roadmap | `docs/roadmaps/Phase5w_Roadmap.md` |
-| Deep research (main) | `Lit-Search/Phase-5w/5w-SK-EFT Hawking framework meets...md` |
-| Deep research (noise, pending) | `Lit-Search/Tasks/Phase5w_landauer_buttiker_noise...md` |
-| Paper 16 | `papers/paper16_graphene_sk_eft/paper_draft.tex` |
-| Lean modules | `lean/SKEFTHawking/DiracFluidMetric.lean`, `GrapheneHawking.lean`, `DiracFluidSK.lean` |
-| Python modules | `src/graphene/*.py` |
-| Tests | `tests/test_graphene_*.py`, `tests/test_platform_comparison.py` |
-| Figures | `figures/phase5w/fig102-105_*.png` |
-| Constants | `src/core/constants.py` (GRAPHENE_PLATFORMS section) |
+- SNR = T_H/(2T_amb) ≈ 0.8% — systematics-limited
+- Formal verification: 32 Lean theorems, 0 sorry

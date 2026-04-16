@@ -164,16 +164,11 @@ def graphene_hawking_prediction(platform_name):
 
 
 def graphene_noise_spectrum(platform_name, n_points=200, omega_max_ratio=5.0):
-    """Predicted current noise power spectrum S_I(ω) near a graphene sonic horizon.
+    """Hawking occupation spectrum and thermal occupation for a graphene platform.
 
-    The Hawking radiation manifests as excess noise at frequencies
-    ω ~ k_B T_H / ℏ above the thermal Johnson-Nyquist background.
-
-    S_I(ω) = S_thermal(ω) + S_Hawking(ω)
-
-    where:
-    - S_thermal(ω) = 4 k_B T σ(ω) (Johnson-Nyquist)
-    - S_Hawking(ω) ∝ n_Hawking(ω) × (transmission coefficient)
+    Computes n_Hawking(ω) and n_thermal(ω) for plotting the spectral shape.
+    For the full current noise PSD S_I(ω) in A²/Hz, use
+    wkb_spectrum.compute_graphene_spectrum() instead.
 
     The Hawking occupation number follows from the modified
     Bogoliubov relation with dissipative corrections:

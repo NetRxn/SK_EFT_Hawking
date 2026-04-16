@@ -143,6 +143,9 @@ import SKEFTHawking.InstantonZeroModes
 import SKEFTHawking.DiracFluidMetric
 import SKEFTHawking.GrapheneHawking
 import SKEFTHawking.DiracFluidSK
+import SKEFTHawking.GrapheneNoiseFormula
+import SKEFTHawking.QuantumGroupInstantiation
+import SKEFTHawking.QuantumGroupMeta
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

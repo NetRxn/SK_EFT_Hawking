@@ -32,11 +32,15 @@ The dissipative correction $\delta_{\rm diss} \sim 10^{-13}$ is negligible---11
 orders of magnitude below the dispersive correction---because the viscous
 damping rate $\Gamma_H \approx \SI{0.3}{\per\second}$ is vastly smaller
 than the surface gravity $\kappa \sim \SI{e12}{\per\second}$. The Hawking
-signal manifests as excess current noise $S_{\rm Hawking} \sim
-\SI{e-30}{\ampere\squared/\hertz}$ across a \SIrange{0.5}{85}{\giga\hertz}
-band, extractable from the thermal Johnson-Nyquist background via broadband
-correlation analysis in approximately 1~minute of bandwidth-cumulative
-integration (or ${\sim}25$~minutes for $5\sigma$ discovery).
+signal manifests as excess current noise $\Delta S_I \approx
+\SI{e-26}{\ampere\squared/\hertz}$ across a \SIrange{0.5}{85}{\giga\hertz}
+band---roughly 1\% of the thermal Johnson-Nyquist background---extractable
+via broadband correlation analysis. The corrected noise formula
+$\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)$,
+derived independently from Keldysh FDT and Landauer-B\"uttiker with
+Bogoliubov mixing, gives statistical integration times under one second
+for $5\sigma$ discovery (greybody $\Gamma \geq 0.01$), making the
+measurement systematics-limited rather than statistics-limited.
 
 We classify transport coefficients for the 2+1D charged conformal fluid:
 2~independent first-order coefficients ($\eta$, $\sigma_Q$) matching the
@@ -45,8 +49,8 @@ the richer tensor structure of 2+1D. The giant Wiedemann-Franz violation
 ($L/L_0 > 200\times$, Majumdar~\textit{et~al.}, 2025) arises from two-channel
 transport: charge ($\sigma_Q$) and heat ($\kappa_{\rm th} \propto s^2/\sigma_Q$),
 consistent with the SK-EFT two-channel structure. All predictions are
-formally verified in Lean~4 (24~theorems, zero sorry) and derive from
-a computation pipeline with 95~tests.
+formally verified in Lean~4 (32~theorems, zero sorry) and derive from
+a computation pipeline with 99~tests.
 \end{abstract}
 
 \maketitle
@@ -228,21 +232,27 @@ temperature) and $T_{\rm imp} \approx \SI{80}{\kelvin}$ (disorder scale).}
 \end{figure}
 
 \begin{table}[t]
-\caption{Analog Hawking temperature for graphene constriction geometries.
+\caption{Platform comparison: graphene constriction geometries and BEC.
 All predictions from the SK-EFT framework with formally verified correction
-bounds.}
+bounds. $\omega_H/\Gamma_{\rm diss}$ is the dissipation window (ratio $>1$
+required for detection).}
 \label{tab:platforms}
 \begin{ruledtabular}
-\begin{tabular}{lcccc}
-Geometry & $c_s$ (km/s) & $L$ (nm) & $T_H$ (K) & $D$ \\
+\begin{tabular}{lccccc}
+Geometry & $T_H$ (K) & $D$ & $\omega_H/\Gamma$ & $\Gamma(\omega)$ \\
 \hline
-Dean bilayer nozzle & 440 & 200 & 2.4 & 0.23 \\
-Monolayer $W\sim\SI{100}{\nano\meter}$ & 710 & 100 & 8.7 & 0.76 \\
-Monolayer $W\sim\SI{50}{\nano\meter}$ & 710 & 50 & 17 & 1.5$^*$ \\
-BEC (Steinhauer) & $5\times 10^{-4}$ & 5000 & $3.5\times 10^{-10}$ & 0.013 \\
+Dean bilayer nozzle & 2.4 & 0.23 & 1.6$^\dagger$ & unknown \\
+Mono.\ $W{\sim}\SI{100}{\nano\meter}$ & 8.7 & 0.76 & 11 & unknown \\
+Mono.\ $W{\sim}\SI{50}{\nano\meter}$ & 17 & 1.5$^*$ & 22 & unknown \\
+BEC (Steinhauer) & $3.5{\times}10^{-10}$ & 0.013 & $\gg 1$ & computed$^\ddagger$ \\
 \end{tabular}
 \end{ruledtabular}
-{\footnotesize $^*$EFT breaks down ($D > 1$); non-perturbative regime.}
+{\footnotesize $^*$EFT breaks down ($D > 1$).
+$^\dagger$Marginal; improves to ${\sim}5$ with cleaner samples
+($l_{\rm mr} \sim \SI{15}{\micro\meter}$).
+$^\ddagger$Macher \& Parentani~\cite{CoutantParentani2010}; closed-form
+for step-like BEC horizons. No analogous calculation exists for graphene
+nozzle geometries.}
 \end{table}
 
 \subsection{Dispersive correction}
@@ -289,38 +299,77 @@ not the specific dissipative modification to~$T_H$.
 \subsection{Current noise power spectrum}
 
 The Hawking radiation manifests as excess current noise at frequencies
-$\omega \sim k_B T_H / \hbar \approx \SI{51}{\giga\hertz}$. In the
-Landauer-B\"uttiker scattering formalism~\cite{Blanter2000}, the excess
-noise from pair production at a scattering barrier (here, the sonic
-horizon) takes the form
+$\omega \sim k_B T_H / \hbar \approx \SI{51}{\giga\hertz}$. We derive the
+noise PSD via two independent routes---Keldysh FDT and Landauer-B\"uttiker
+with Bogoliubov mixing---both yielding the same result
+(Sec.~\ref{sec:lean}).
+
+\textit{Keldysh route.}---The Callen-Welton
+FDT~\cite{CallenWelton1951} gives the symmetrized noise
+$S_I(\omega) = \hbar\omega\coth(\hbar\omega/2k_BT)\,\mathrm{Re}\,G(\omega)$.
+At a sonic horizon, pair creation replaces the thermal $\coth$ by the
+mode-resolved distribution $F_u(\omega) = 1 + 2\Gamma(\omega)\,n_H(\omega)$,
+where $\Gamma(\omega) \leq 1$ is the greybody transmission
+factor~\cite{AndersonBFP2013}. The \emph{excess} over the vacuum floor is:
+
+\textit{Landauer route.}---B\"uttiker's multichannel noise
+formula~\cite{Blanter2000}, generalized to Bogoliubov-mixing channels
+following Anantram and Datta~\cite{AnantramDatta1996}, gives the identical
+result. For a 2D conductor with $N_{\rm eff} = \sigma_Q h/(2e^2)$ effective
+channels:
 \begin{equation}
-S_{\rm Hawking}(\omega) \sim \frac{2 e^2}{\pi} \, G_Q \, \omega \, n_{\rm Hawking}(\omega),
+\boxed{\;\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,
+n_H(\omega)\;}
+\label{eq:noise_psd}
 \end{equation}
-where $G_Q = \sigma_Q$ is the quantum critical conductance (sample-specific;
-for the Dean device $\sigma_Q \approx 4\,e^2/h$), and
-$n_{\rm Hawking}(\omega) = |\beta_\omega|^2/(1-\delta_k) + n_{\rm noise}$
-includes the modified Planck factor $|\beta_\omega|^2 =
-1/(e^{2\pi\omega/\kappa_{\rm eff}} - 1)$ and the FDR-mandated noise floor.
-This formula is a leading-order estimate: the precise prefactor depends on
-the nozzle transmission function and the number of transverse modes, which
-require device-specific scattering-matrix calculation. Our predictions for
-$S_{\rm Hawking}$ should be understood as order-of-magnitude estimates
-pending such a calculation.
+where $\sigma_Q \approx 4\,e^2/h$ is the quantum-critical conductance
+(for the Dean device), $\Gamma(\omega)$ is the analog-horizon greybody
+factor, and $n_H(\omega) = [e^{\hbar\omega/k_BT_H} - 1]^{-1}$ is the
+Hawking occupation number (with dispersive and dissipative corrections
+entering through $\kappa_{\rm eff}$; see Sec.~\ref{sec:hawking}).
+
+The \emph{dimensional consistency} of Eq.~\eqref{eq:noise_psd} is
+$[\hbar\omega]\times[\sigma_Q] = \SI{}{\joule}\times\SI{}{\siemens} =
+\SI{}{\ampere\squared\second} = \SI{}{\ampere\squared/\hertz}$, which
+is correct.
+An earlier version of this analysis used the prefactor $(2e^2/\pi)$
+instead of $2\hbar$; this is dimensionally \emph{wrong} (units $C^2$,
+not $J{\cdot}s$), off by a factor of $2e^2/h \approx \SI{77.5}{\micro\siemens}$
+(twice the conductance quantum $G_0 = e^2/h$). The corrected formula changes the predicted
+noise level by several orders of magnitude relative to that incorrect
+expression.
+
+The greybody factor $\Gamma(\omega)$ encodes the horizon's deviation from
+a perfect thermal emitter and depends on the nozzle velocity profile.
+For a step discontinuity, $\Gamma = 1$; for smooth profiles,
+$\Gamma(\omega) < 1$ with $\Gamma \to 0$ as $\omega \to 0$ in dispersive
+systems~\cite{AndersonBFP2013}. The low-$\omega$ suppression is
+particularly important because the bandwidth-cumulative SNR is dominated
+by low-frequency bins where $n_H$ is largest; a frequency-dependent
+$\Gamma(\omega) \propto \omega$ at low $\omega$ would reduce the
+cumulative SNR relative to the $\Gamma = 1$ estimate. Numerical
+predictions below use $\Gamma = 1$ (upper bound on signal, lower bound
+on integration time). The nozzle-specific $\Gamma(\omega)$ from the
+Bogoliubov S-matrix at the supersonic transition is required for
+quantitative detection forecasts and is the principal remaining
+theoretical uncertainty in this analysis.
 
 The thermal background is Johnson-Nyquist:
 $S_{\rm thermal} = 4 k_B T_{\rm amb} \sigma_Q \approx
-\SI{e-24}{\ampere\squared/\hertz}$.
+\SI{1.3e-24}{\ampere\squared/\hertz}$.
 
-The Hawking signal $S_{\rm Hawking} \sim \SI{e-30}{\ampere\squared/\hertz}$
-sits six orders of magnitude below the thermal floor (Fig.~\ref{fig:spectrum}).
-However, the Hawking excess has a \emph{distinct spectral shape}---Planck at
+With $\Gamma = 1$, the Hawking signal $\Delta S_I \approx
+\SI{e-26}{\ampere\squared/\hertz}$ at the peak, sitting approximately
+two orders of magnitude below the thermal floor (Fig.~\ref{fig:spectrum}).
+The Hawking excess has a \emph{distinct spectral shape}---Planck at
 $T_H$---while the thermal background is white (frequency-independent in the
 hydrodynamic regime). Correlation analysis exploits this shape difference.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig104_graphene_noise_spectrum.png}
-\caption{Current noise power spectral density for the Dean bilayer nozzle.
-$S_{\rm Hawking}$ (blue) sits ${\sim}6$ orders below the Johnson-Nyquist
+\caption{Current noise power spectral density for the Dean bilayer nozzle
+($\Gamma = 1$).
+$\Delta S_I$ (blue) sits ${\sim}2$ orders below the Johnson-Nyquist
 background $S_{\rm thermal}$ (amber dashed). The Hawking signal is flat
 below $\omega_H \approx \SI{51}{\giga\hertz}$ and Boltzmann-suppressed
 above. Shaded region: detection band (\SIrange{0.5}{85}{\giga\hertz}).}
@@ -329,28 +378,47 @@ above. Shaded region: detection band (\SIrange{0.5}{85}{\giga\hertz}).}
 
 \subsection{Detection feasibility}
 
-The per-bin signal-to-noise ratio $S_{\rm Hawking}/S_{\rm thermal} \approx
-6 \times 10^{-7}$ is small, but the detection bandwidth is wide
-(\SIrange{0.5}{85}{\giga\hertz}). The cumulative SNR scales as
-${\rm SNR}_{\rm cumul} = {\rm SNR}_{\rm bin} \times \sqrt{\Delta f \cdot t}$,
-reaching unity in approximately \SI{27}{\minute} in a single frequency bin.
-Exploiting the full detection bandwidth (\SIrange{0.5}{85}{\giga\hertz},
-${\sim}300$ independent bins with comparable SNR) via bandwidth-cumulative
-integration reduces this to ${\sim}\SI{1}{\minute}$---a $26\times$ speedup
-(Fig.~\ref{fig:snr}). These estimates assume the radiometer equation
-(Gaussian noise, independent frequency bins, no systematic backgrounds).
-Hydrodynamic mode coupling, 1/$f$ noise from contacts, and non-Gaussian
-fluctuations near quantum criticality could increase the required time.
-A $5\sigma$ discovery threshold requires $25\times$ longer, giving
-${\sim}\SI{25}{\minute}$ for cumulative bandwidth integration---still
-well within reach of a single measurement session.
+The per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal} \approx
+T_H\Gamma/(2T_{\rm amb})$ is approximately $8 \times 10^{-3}$ ($\Gamma=1$)
+at low frequencies, independent of $\sigma_Q$ (the conductance cancels in
+the ratio; Lean theorem \texttt{snr\_independent\_of\_sigma\_Q}).
+The cumulative SNR scales as
+${\rm SNR}_{\rm cumul}^2 = \sum_i {\rm SNR}_{{\rm bin},i}^2 \cdot \Delta f
+\cdot t$,
+exploiting the full detection bandwidth (\SIrange{0.5}{85}{\giga\hertz},
+${\sim}300$ independent bins) via bandwidth-cumulative integration.
+
+The radiometer equation gives the statistical integration time
+$t = [{\rm SNR}_{\rm target}^2] / [\sum_i {\rm SNR}_{{\rm bin},i}^2
+\cdot \Delta f]$.
+For $\Gamma = 1$ (step-horizon upper bound): $t_{5\sigma} < \SI{1}{\milli\second}$.
+Even with a pessimistic greybody $\Gamma = 0.01$, the 5$\sigma$ integration
+time remains under \SI{1}{\second}. At $\Gamma = 10^{-3}$:
+$t_{5\sigma} \sim \SI{10}{\second}$. In all physically plausible regimes,
+\emph{detection is limited by systematic calibration, not by photon
+statistics} (Fig.~\ref{fig:snr}).
+
+These estimates assume the ideal radiometer equation (Gaussian noise,
+independent frequency bins, $\Gamma$ frequency-independent). Practical
+limiting factors include: (i)~amplifier noise temperature $T_N \sim
+\SI{2}{\kelvin}$--\SI{5}{\kelvin}$ for cryogenic HEMTs at GHz frequencies,
+adding ${\sim}3\%$ to the effective noise floor at $T_{\rm amb} =
+\SI{150}{\kelvin}$ (but becoming dominant if $T_{\rm amb}$ is reduced
+toward $T_H$); (ii)~frequency-dependent $\Gamma(\omega)$, which
+suppresses low-$\omega$ bins that dominate the cumulative SNR;
+(iii)~1/$f$ noise from contacts; (iv)~non-Gaussian fluctuations near
+quantum criticality. These factors may increase the effective integration
+time by orders of magnitude beyond the statistical limit, but the margin
+is large: even $10^4\times$ degradation leaves the measurement feasible
+within a single session.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig105_graphene_snr_frequency.png}
-\caption{Per-bin signal-to-noise ratio $S_{\rm Hawking}/S_{\rm thermal}$
-vs.\ frequency for the Dean bilayer nozzle. The ratio is ${\sim}6\times
-10^{-7}$ below $\omega_H$ and drops exponentially above. Cumulative
-SNR reaches unity in ${\sim}\SI{27}{\minute}$ of broadband integration.}
+\caption{Per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal}$
+vs.\ frequency for the Dean bilayer nozzle ($\Gamma = 1$). The ratio is
+${\sim}8\times 10^{-3}$ below $\omega_H$ (approximately $T_H/2T_{\rm amb}$)
+and drops exponentially above. Detection is statistics-limited only for
+$\Gamma \lesssim 10^{-3}$.}
 \label{fig:snr}
 \end{figure}
 
@@ -478,8 +546,9 @@ Module & Theorems & Key result \\
 \texttt{DiracFluidMetric} & 9 & 3$\times$3 metric, block-diag \\
 \texttt{GrapheneHawking} & 6 & $T_{\rm eff}$ positivity, EFT bound \\
 \texttt{DiracFluidSK} & 9 & Transport counting, WF, KSS \\
+\texttt{GrapheneNoiseFormula} & 8 & Noise PSD, FDT, greybody \\
 \hline
-Total new & 25 & Zero sorry \\
+Total new & 32 & Zero sorry \\
 Reused (1+1D) & 109 of 119 available & 92\% unmodified \\
 \end{tabular}
 \end{ruledtabular}
@@ -513,8 +582,9 @@ nozzle throat using Johnson noise thermometry
 background $S_{\rm thermal} = 4k_B T \sigma_Q$. The residual should follow
 a Planck distribution at $T_H \approx \SI{2.4}{\kelvin}$ (bilayer).
 
-\item \textbf{Integration:} ${\sim}\SI{1}{\minute}$ for bandwidth-cumulative
-SNR~$=1$; ${\sim}\SI{25}{\minute}$ for $5\sigma$.
+\item \textbf{Integration:} Statistical limit $< \SI{1}{\second}$ for
+$5\sigma$ ($\Gamma \geq 0.01$); practical time dominated by systematic
+calibration.
 
 \item \textbf{Verification:} Vary the nozzle geometry (bias voltage) and
 confirm $T_H \propto \kappa \propto 1/L$.
@@ -533,7 +603,14 @@ maturity of the SK-EFT Lean framework---creates a concrete opportunity for
 the first observation of analog Hawking radiation in an electronic system.
 The predicted temperature $T_H \approx \SI{2.4}{\kelvin}$ is nine orders
 of magnitude above BEC, the EFT is well-controlled ($D = 0.23$), and the
-signal is detectable in ${\sim}\SI{25}{\minute}$ at $5\sigma$.
+corrected noise formula---derived from both Keldysh FDT and
+Landauer-B\"uttiker with Bogoliubov mixing---gives a signal roughly 1\%
+of the thermal background, making detection statistics-limited only for
+greybody factors below ${\sim}10^{-3}$. Relative to BEC, graphene
+offers dramatically higher $T_H$ and subluminal dispersion but has a
+marginal dissipation window ($\omega_H/\Gamma_{\rm mr} \approx 1.6$) and
+an as-yet-uncomputed greybody factor (Table~\ref{tab:platforms}); the
+two platforms are complementary rather than competing.
 
 The deeper theoretical finding is that for graphene, the \emph{dispersive}
 correction dominates the \emph{dissipative} correction by 11~orders of
@@ -553,9 +630,9 @@ yield the device-specific noise spectrum predictions needed for
 experimental design.
 
 \begin{acknowledgments}
-Computation pipeline formally verified with 24~new Lean~4 theorems
+Computation pipeline formally verified with 32~new Lean~4 theorems
 (zero sorry), building on 109~reused theorems from the 1+1D BEC
-framework. All numerical predictions generated by a 95-test
+framework. All numerical predictions generated by a 99-test
 Python pipeline.
 \end{acknowledgments}
 
@@ -598,6 +675,12 @@ Python pipeline.
 \bibitem{Blanter2000} Ya.~M.~Blanter and M.~B\"uttiker, Phys. Rep. \textbf{336}, 1 (2000).
 
 \bibitem{Romatschke2010} P.~Romatschke, Int. J. Mod. Phys. E \textbf{19}, 1 (2010).
+
+\bibitem{CallenWelton1951} H.~B.~Callen and T.~A.~Welton, Phys. Rev. \textbf{83}, 34 (1951).
+
+\bibitem{AnantramDatta1996} M.~P.~Anantram and S.~Datta, Phys. Rev. B \textbf{53}, 16390 (1996).
+
+\bibitem{AndersonBFP2013} P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani, Phys. Rev. D \textbf{87}, 124018 (2013).
 
 \end{thebibliography}
 

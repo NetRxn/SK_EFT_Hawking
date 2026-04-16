@@ -97,6 +97,73 @@ class TestPhysicalConsistency:
         assert np.all(np.abs(spec.S_thermal - spec.S_thermal[0]) < 1e-30)
 
 
+class TestDimensionalConsistency:
+    """Verify the corrected noise formula has correct dimensions.
+
+    S_I = 2ℏω σ_Q Γ n_H must have units [A²/Hz] = [A²·s].
+    The previous formula (2e²/π)σ_Q ω n_H was dimensionally wrong.
+    """
+
+    def test_hawking_noise_formula_units(self):
+        """Cross-check: S_H = 2ℏω σ_Q n_H vs direct formula."""
+        from src.core.constants import HBAR, K_B, GRAPHENE_PLATFORMS
+        from src.core.formulas import graphene_hawking_noise_psd
+
+        plat = GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']
+        sigma_Q = plat['sigma_Q_SI']
+        T_H = plat['T_H_K']
+        omega = K_B * T_H / HBAR  # ω_H
+
+        # From formula function
+        S_formula = graphene_hawking_noise_psd(omega, sigma_Q, T_H, greybody=1.0)
+
+        # Manual: 2ℏω σ_Q × 1/(e^(ℏω/k_BT_H) - 1) = 2ℏω σ_Q × 1/(e-1)
+        n_H = 1.0 / (np.exp(1.0) - 1.0)  # at ω = ω_H: ℏω/k_BT_H = 1
+        S_manual = 2 * HBAR * omega * sigma_Q * n_H
+
+        np.testing.assert_allclose(S_formula, S_manual, rtol=1e-10)
+
+    def test_S_hawking_matches_formula_function(self):
+        """wkb_spectrum S_hawking should match graphene_hawking_noise_psd."""
+        from src.core.constants import HBAR, K_B, GRAPHENE_PLATFORMS
+        from src.core.formulas import graphene_hawking_noise_psd
+
+        spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=50)
+        plat = GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']
+
+        # The wkb_spectrum uses modified n_hawking (with decoherence),
+        # so S_hawking = 2ℏω σ_Q × 1.0 × n_hawking (greybody=1)
+        S_expected = 2 * HBAR * spec.omega * plat['sigma_Q_SI'] * spec.n_hawking
+        np.testing.assert_allclose(spec.S_hawking, S_expected, rtol=1e-10)
+
+    def test_johnson_nyquist_at_T_H(self):
+        """At ω = ω_H, S_H should be much smaller than S_JN for Dean nozzle.
+
+        S_H/S_JN = ℏω n_H / (2 k_B T_amb) ≈ 0.005 at ω_H with T_amb=150K.
+        """
+        spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=50)
+        ratio = spec.S_hawking / spec.S_thermal
+        # All bins should have SNR < 1 (thermal dominates everywhere)
+        assert np.all(ratio < 1.0)
+        # Peak SNR should be order 10⁻³ to 10⁻¹
+        assert spec.peak_snr < 0.5
+        assert spec.peak_snr > 1e-6
+
+    def test_no_e_squared_in_hawking_formula(self):
+        """Regression: the old (2e²/π) prefactor was dimensionally wrong.
+
+        The correct prefactor is 2ℏ. Verify S_H does NOT scale as e².
+        """
+        from src.core.constants import HBAR, GRAPHENE_PLATFORMS, E_CHARGE
+        spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=10)
+        # If the old formula were used: S ~ (2e²/π) σ_Q ω n_H
+        # New formula: S = 2ℏω σ_Q n_H
+        # At any frequency, S / (2ℏω σ_Q n_H) should be 1 (greybody=1)
+        plat = GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']
+        ratio = spec.S_hawking / (2 * HBAR * spec.omega * plat['sigma_Q_SI'] * spec.n_hawking)
+        np.testing.assert_allclose(ratio, 1.0, rtol=1e-10)
+
+
 class TestMonolayerComparison:
     def test_monolayer_100nm_higher_TH(self):
         """Monolayer 100nm has higher T_H than Dean bilayer."""

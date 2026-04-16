@@ -685,8 +685,7 @@
 | Phase5f-5p_Roadmaps | docs/roadmaps/ | Phases 5f-5p: TQFT, matrix-free CG, chirality 3+1D, rank-2 QG, Fermi-point, WRT TQFT, TQC, generic U_q(g), anomaly inflow, community value, Muger center |
 | Phase5q_Roadmap.md | docs/roadmaps/ | **COMPLETE** — Ext computation over A(1): first in any proof assistant |
 | Phase5r_Roadmap.md | docs/roadmaps/ | **COMPLETE** — H2 discharged, H3/H4 assessed as irreducibly topological |
-| Phase5s_Roadmap.md | docs/roadmaps/ | **NEW** — Obstacle decomposition: FK 2+1D gapped interface, Muger general theorem, KL data k=3-5, sorry closure |
-| RESEARCH_STATUS_OVERVIEW.md | docs/ | **NEW** — Big-picture assessment of all 6 proof chains, gaps, implications |
+| Phase5s_Roadmap.md | docs/roadmaps/ | **NEW** — Obstacle decomposition: FK 2+1D gapped interface, Muger general theorem, KL data k=3-5, sorry closure || Phase5x_Roadmap.md | docs/roadmaps/ | **NEW** — Dark sector connections: ℤ₁₆ hidden sector DM, ADW CC/DE, Fang-Gu torsion DM, SFDM SK-EFT, vestigial relics, fracton DM. 9 waves, 3 tracks. 6/6 deep research COMPLETE. 26 near-term + 17 deferred Lean theorems. || RESEARCH_STATUS_OVERVIEW.md | docs/ | **NEW** — Big-picture assessment of all 6 proof chains, gaps, implications |
 | Phase6_Roadmap.md | docs/roadmaps/ | Planning |
 | Phase6_Deferred_Targets.md | docs/roadmaps/ | Deferred targets |
 | Phase6_VerifiedStatistics_Roadmap.md | docs/roadmaps/ | Verified statistics roadmap |

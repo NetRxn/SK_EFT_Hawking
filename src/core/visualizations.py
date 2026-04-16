@@ -6850,10 +6850,11 @@ def fig_graphene_snr_frequency():
                   annotation_text=f'ω_H ≈ {omega_H_GHz:.0f} GHz')
 
     fig.add_annotation(
-        x=np.log10(2), y=np.log10(spec.peak_snr * 0.5),
-        text=f'Integration time: {spec.integration_time_s:.0f} s<br>'
-             f'for cumulative SNR = 1',
-        showarrow=False, font=dict(size=11),
+        x=np.log10(2), y=np.log10(spec.peak_snr * 0.3),
+        text=f'Peak SNR/bin ≈ {spec.peak_snr:.1e}<br>'
+             f'SNR = T_H/(2T_amb) ≈ {spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
+             f'(Γ = 1, systematics-limited)',
+        showarrow=False, font=dict(size=10),
         xref='x', yref='y',
     )
 

@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-15T10:46:09.147804",
+  "generated": "2026-04-16T11:28:49.799306",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 5764,
-    "theorems_total": 3021,
-    "theorems_substantive": 2942,
-    "theorems_placeholder": 79,
+    "total_declarations": 6015,
+    "theorems_total": 3144,
+    "theorems_substantive": 3059,
+    "theorems_placeholder": 85,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 133,
+    "modules": 141,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -25,6 +25,8 @@
       "SKEFTHawking.CGLTransform",
       "SKEFTHawking.CenterEquivalenceZ2",
       "SKEFTHawking.CenterFunctor",
+      "SKEFTHawking.CenterFunctorZ2",
+      "SKEFTHawking.CenterFunctorZ2Equiv",
       "SKEFTHawking.ChangeOfRings",
       "SKEFTHawking.ChiralityWall",
       "SKEFTHawking.ChiralityWallMaster",
@@ -83,8 +85,12 @@
       "SKEFTHawking.OnsagerContraction",
       "SKEFTHawking.PauliMatrices",
       "SKEFTHawking.PolaritonTier1",
+      "SKEFTHawking.PolyQuotOver",
       "SKEFTHawking.PolyQuotQ",
+      "SKEFTHawking.QCyc15",
+      "SKEFTHawking.QCyc15SqrtPhi",
       "SKEFTHawking.QCyc16",
+      "SKEFTHawking.QCyc3",
       "SKEFTHawking.QCyc5",
       "SKEFTHawking.QCyc5Ext",
       "SKEFTHawking.QLevel3",
@@ -110,6 +116,8 @@
       "SKEFTHawking.SU2kFusion",
       "SKEFTHawking.SU2kMTC",
       "SKEFTHawking.SU2kSMatrix",
+      "SKEFTHawking.SU3k2FSymbols",
+      "SKEFTHawking.SU3k2SMatrix",
       "SKEFTHawking.SU3kFusion",
       "SKEFTHawking.SecondOrderSK",
       "SKEFTHawking.SphericalCategory",
@@ -148,17 +156,17 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 2411,
-    "structures": 138,
-    "instances": 156,
-    "inductives": 37
+    "definitions": 2517,
+    "structures": 140,
+    "instances": 174,
+    "inductives": 39
   },
   "python": {
-    "python_modules": 53,
-    "test_files": 46,
-    "notebooks": 48,
-    "papers": 15,
-    "figures": 101
+    "python_modules": 58,
+    "test_files": 51,
+    "notebooks": 50,
+    "papers": 16,
+    "figures": 105
   },
   "aristotle": {
     "aristotle_proved": 322,

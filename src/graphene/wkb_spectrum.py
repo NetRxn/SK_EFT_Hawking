@@ -17,13 +17,14 @@ Phase 5w Wave 4.
 import numpy as np
 from dataclasses import dataclass
 
-from src.core.constants import HBAR, K_B, E_CHARGE, GRAPHENE_PLATFORMS
+from src.core.constants import HBAR, K_B, GRAPHENE_PLATFORMS
 from src.core.formulas import (
     hawking_temperature,
     dispersive_correction,
     first_order_correction,
     decoherence_parameter,
     fdr_noise_floor,
+    graphene_hawking_noise_psd,
 )
 from src.graphene.hawking_predictions import (
     graphene_hawking_prediction,
@@ -90,8 +91,8 @@ def compute_graphene_spectrum(
     """Compute the full current noise spectrum for a graphene platform.
 
     The noise power spectral density has two components:
-    1. Johnson-Nyquist thermal noise: S_JN(ω) = 4 k_B T_amb σ_Q
-    2. Hawking excess noise: S_H(ω) ∝ n_Hawking(ω) × σ_Q × ℏω
+    1. Johnson-Nyquist thermal noise: S_JN(ω) = 4 k_B T_amb σ_Q  [A²/Hz]
+    2. Hawking excess noise: ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_H(ω)   [A²/Hz]
 
     The Hawking occupation includes dispersive and dissipative corrections.
 
@@ -147,9 +148,18 @@ def compute_graphene_spectrum(
     S_thermal = 4 * K_B * T_ambient * sigma_Q_SI * np.ones_like(omega)
 
     # Hawking noise PSD: excess current noise from pair production
-    # S_H(ω) = 2 e² σ_Q ℏω n_Hawking(ω) / (π ℏ)  [quantum noise formula]
-    # Simplified: S_H ∝ n_Hawking × ω × σ_Q × (2e²/π)
-    S_hawking = (2 * E_CHARGE**2 / np.pi) * sigma_Q_SI * omega * n_hawking
+    # Derived via Keldysh + Landauer-Büttiker with Bogoliubov mixing:
+    #   ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_Hawking(ω)    [A²/Hz]
+    #
+    # Greybody Γ(ω) = 1 (step-horizon / leading-order approximation).
+    # This is an upper bound on the signal; the nozzle-specific Γ(ω)
+    # from the Bogoliubov S-matrix calculation is a refinement.
+    #
+    # Note: the previous formula (2e²/π)σ_Q ω n_H was dimensionally wrong
+    # (off by conductance quantum 2e²/h ≈ 77.5 μS).
+    # See Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md for derivation.
+    greybody = 1.0  # Γ(ω) = 1 (step horizon, upper bound)
+    S_hawking = 2 * HBAR * omega * sigma_Q_SI * greybody * n_hawking
 
     S_total = S_thermal + S_hawking
 
