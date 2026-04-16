@@ -34,8 +34,9 @@ damping rate $\Gamma_H \approx \SI{0.3}{\per\second}$ is vastly smaller
 than the surface gravity $\kappa \sim \SI{e12}{\per\second}$. The Hawking
 signal manifests as excess current noise $S_{\rm Hawking} \sim
 \SI{e-30}{\ampere\squared/\hertz}$ across a \SIrange{0.5}{85}{\giga\hertz}
-band, extractable from the thermal Johnson-Nyquist background via correlation
-analysis in approximately 27~minutes of integration.
+band, extractable from the thermal Johnson-Nyquist background via broadband
+correlation analysis in approximately 1~minute of bandwidth-cumulative
+integration (or ${\sim}25$~minutes for $5\sigma$ discovery).
 
 We classify transport coefficients for the 2+1D charged conformal fluid:
 2~independent first-order coefficients ($\eta$, $\sigma_Q$) matching the
@@ -332,14 +333,17 @@ The per-bin signal-to-noise ratio $S_{\rm Hawking}/S_{\rm thermal} \approx
 6 \times 10^{-7}$ is small, but the detection bandwidth is wide
 (\SIrange{0.5}{85}{\giga\hertz}). The cumulative SNR scales as
 ${\rm SNR}_{\rm cumul} = {\rm SNR}_{\rm bin} \times \sqrt{\Delta f \cdot t}$,
-reaching unity in approximately \SI{27}{\minute} of integration
-(Fig.~\ref{fig:snr}). This estimate assumes the radiometer equation
+reaching unity in approximately \SI{27}{\minute} in a single frequency bin.
+Exploiting the full detection bandwidth (\SIrange{0.5}{85}{\giga\hertz},
+${\sim}300$ independent bins with comparable SNR) via bandwidth-cumulative
+integration reduces this to ${\sim}\SI{1}{\minute}$---a $26\times$ speedup
+(Fig.~\ref{fig:snr}). These estimates assume the radiometer equation
 (Gaussian noise, independent frequency bins, no systematic backgrounds).
 Hydrodynamic mode coupling, 1/$f$ noise from contacts, and non-Gaussian
-fluctuations near quantum criticality could increase the required integration
-time. The 27-minute figure should be understood as a \emph{lower bound};
-a $5\sigma$ discovery threshold would require ${\sim}25\times$ longer or
-multi-device correlation.
+fluctuations near quantum criticality could increase the required time.
+A $5\sigma$ discovery threshold requires $25\times$ longer, giving
+${\sim}\SI{25}{\minute}$ for cumulative bandwidth integration---still
+well within reach of a single measurement session.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig105_graphene_snr_frequency.png}
@@ -509,8 +513,8 @@ nozzle throat using Johnson noise thermometry
 background $S_{\rm thermal} = 4k_B T \sigma_Q$. The residual should follow
 a Planck distribution at $T_H \approx \SI{2.4}{\kelvin}$ (bilayer).
 
-\item \textbf{Integration:} ${\sim}\SI{27}{\minute}$ for cumulative
-SNR~$=1$ across the detection band.
+\item \textbf{Integration:} ${\sim}\SI{1}{\minute}$ for bandwidth-cumulative
+SNR~$=1$; ${\sim}\SI{25}{\minute}$ for $5\sigma$.
 
 \item \textbf{Verification:} Vary the nozzle geometry (bias voltage) and
 confirm $T_H \propto \kappa \propto 1/L$.
@@ -529,7 +533,7 @@ maturity of the SK-EFT Lean framework---creates a concrete opportunity for
 the first observation of analog Hawking radiation in an electronic system.
 The predicted temperature $T_H \approx \SI{2.4}{\kelvin}$ is nine orders
 of magnitude above BEC, the EFT is well-controlled ($D = 0.23$), and the
-signal is detectable in ${\sim}\SI{27}{\minute}$.
+signal is detectable in ${\sim}\SI{25}{\minute}$ at $5\sigma$.
 
 The deeper theoretical finding is that for graphene, the \emph{dispersive}
 correction dominates the \emph{dissipative} correction by 11~orders of

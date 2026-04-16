@@ -77,7 +77,8 @@ class GrapheneNoiseSpectrum:
     # Detection protocol
     optimal_freq_Hz: float      # frequency of max SNR
     peak_snr: float             # maximum per-bin SNR
-    integration_time_s: float   # time to reach SNR=1 (cumulative)
+    integration_time_s: float   # time to reach SNR=1 (bandwidth-cumulative)
+    integration_time_single_bin_s: float  # time for single best bin
     freq_window_Hz: tuple       # (f_low, f_high) detection band
 
 
@@ -160,14 +161,26 @@ def compute_graphene_spectrum(
     optimal_freq = freq_Hz[best_idx]
     peak_snr = snr_per_bin[best_idx]
 
-    # Integration time to reach cumulative SNR = 1
-    # SNR_cumulative = SNR_per_bin × √(Δf × t_int)
-    # For SNR_cum = 1: t_int = 1 / (SNR_per_bin² × Δf)
+    # Integration time to reach SNR = 1
+    # Two estimates: single best bin, and bandwidth-cumulative (all bins in window)
+    #
+    # Single bin: SNR_cum = SNR_bin × √(Δf × t)  →  t = 1/(SNR_bin² × Δf)
+    # Bandwidth:  SNR_cum² = Σ_i SNR_bin_i² × Δf × t  →  t = 1/(Σ SNR_i² × Δf)
     delta_f = freq_Hz[1] - freq_Hz[0] if len(freq_Hz) > 1 else 1e9
     if peak_snr > 0:
-        integration_time = 1.0 / (peak_snr**2 * delta_f)
+        integration_time_single_bin = 1.0 / (peak_snr**2 * delta_f)
     else:
-        integration_time = np.inf
+        integration_time_single_bin = np.inf
+
+    # Bandwidth-cumulative: sum SNR² over all bins in detection window
+    snr_sq_sum = np.sum(snr_per_bin**2)
+    if snr_sq_sum > 0:
+        integration_time_cumulative = 1.0 / (snr_sq_sum * delta_f)
+    else:
+        integration_time_cumulative = np.inf
+
+    # Report the cumulative (more physically meaningful) as primary
+    integration_time = integration_time_cumulative
 
     # Detection frequency window: where SNR > peak_snr / e
     threshold = peak_snr / np.e
@@ -201,6 +214,7 @@ def compute_graphene_spectrum(
         optimal_freq_Hz=optimal_freq,
         peak_snr=peak_snr,
         integration_time_s=integration_time,
+        integration_time_single_bin_s=integration_time_single_bin,
         freq_window_Hz=freq_window,
     )
 
@@ -230,7 +244,8 @@ def detection_protocol_summary(platform_name: str) -> dict:
             'optimal_freq_GHz': spec.optimal_freq_Hz / 1e9,
             'optimal_freq_band': f'{spec.freq_window_Hz[0]/1e9:.1f}–{spec.freq_window_Hz[1]/1e9:.1f} GHz',
             'peak_snr_per_bin': spec.peak_snr,
-            'integration_time_s': spec.integration_time_s,
+            'integration_time_cumulative_s': spec.integration_time_s,
+            'integration_time_single_bin_s': spec.integration_time_single_bin_s,
             'feasible': spec.integration_time_s < 3600,
         },
         'comparison_to_BEC': {

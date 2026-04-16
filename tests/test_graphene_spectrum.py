@@ -58,7 +58,7 @@ class TestDetectionProtocol:
 
     def test_integration_time_finite(self):
         proto = detection_protocol_summary('Dean_bilayer_nozzle')
-        assert proto['detection']['integration_time_s'] < np.inf
+        assert proto['detection']['integration_time_cumulative_s'] < np.inf
 
     def test_integration_time_feasible(self):
         """Integration time should be < 1 hour for Dean nozzle."""

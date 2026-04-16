@@ -304,7 +304,46 @@ Wave 1 (deep research) ─── COMPLETE
 **Critical path:** W2 → W3 → W4 (4-7 months to first experimentally testable noise spectrum prediction — compressed from 5-10 by 92% Lean reuse).
 **Parallel track:** W5 → W6 → W7 (8-12 months, with W6 as highest-risk item).
 **Merge and paper:** W8 → W9 (after both tracks complete).
+**Strengthening:** W10 (from adversarial review — noise formula derivation, bilayer EOS, quasi-1D bound).
 **Lean formalization overlay:** 4-5 weeks total across all waves (~1500-2000 LOC new), leveraging 109 existing theorems. Can be front-loaded into Stage 1 (1-2 weeks) and integrated per-wave thereafter.
+
+---
+
+## Track D: Adversarial Strengthening (Post-Review)
+
+### Wave 10 — Noise Formula Derivation & Bilayer EOS [Pipeline: Stages 1-8]
+
+**Goal:** Address the three BLOCKERs from the adversarial review of Paper 16. Strengthen the noise spectrum prediction from an order-of-magnitude estimate to a first-principles derivation, and quantify the bilayer conformality deviation.
+
+**Prerequisites:** Wave 9 (Paper 16 draft COMPLETE). Deep research on Landauer-Büttiker noise (pending).
+
+**Deep research task:** `Lit-Search/Tasks/Phase5w_landauer_buttiker_noise_electronic_analog_horizon.md`
+
+**Status:** Deep research prompt FILED 2026-04-16. Covers: scattering matrix for sonic horizon, Landauer-Büttiker noise → Hawking occupation mapping, Keldysh propagator → S_I derivation, mode counting, σ_Q interpretation.
+
+**Deliverables:**
+
+**10a. Noise formula from first principles (HIGH priority):**
+- [ ] Deep research result: derivation of S_I(ω) from SK-EFT Keldysh propagator and/or Landauer scattering matrix
+- [ ] `src/graphene/noise_derivation.py` — first-principles S_I formula with correct prefactor, geometry dependence, and validity conditions
+- [ ] `lean/SKEFTHawking/GrapheneNoiseFormula.lean` — Keldysh → noise PSD theorem, FDR constraint on S_I
+- [ ] Paper 16 update: replace "leading-order estimate" caveat with derivation
+- [ ] Tests: verify corrected formula against estimate (within stated factor)
+
+**10b. Bilayer EOS deviation (MEDIUM priority):**
+- [ ] `src/graphene/bilayer_eos.py` — bilayer equation of state: deviation from ε = 2p at experimental T, resulting ζ/η ratio, correction to c_s
+- [ ] `lean/SKEFTHawking/BilayerConformality.lean` — bound on bulk viscosity from conformal symmetry breaking
+- [ ] Paper 16 update: quantitative ζ/η estimate in §II.D
+
+**10c. Quasi-1D correction bound (LOW priority):**
+- [ ] `lean/SKEFTHawking/QuasiOneDReduction.lean` — formal bound on transverse flow corrections: |δT_H/T_H| ≤ f(l_ee/W) for nozzle of width W
+- [ ] Tests: verify bound for Dean device geometry
+
+**10d. Integration time: bandwidth-cumulative SNR (LOW priority):**
+- [ ] Fix `wkb_spectrum.py`: compute proper cumulative SNR summing over all bins in detection band
+- [ ] Report both single-bin and cumulative integration times in Paper 16
+
+**Estimated effort:** 10a blocks on deep research (~1 week wait + 1 week implementation). 10b-10d can proceed immediately (~3 days total).
 
 ---
 
