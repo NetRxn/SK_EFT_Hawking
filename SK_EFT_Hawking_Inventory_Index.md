@@ -2,7 +2,7 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-15 (**Phase 5i COMPLETE** via Wave 4: generic `PolyQuotQ n` + `PolyQuotOver K m` tower primitives consolidate all 7 number fields in the project; new modules `QCyc3`, `QCyc15`, `QCyc15SqrtPhi`, `SU3k2SMatrix`, `SU3k2FSymbols`; first non-cyclotomic number field (Q(ζ₁₅, √φ)) via tower; first rank-6 MTC modular data (SU(3)₂); first SU(3)₂ F-symbols; Mathlib-upstream-ready architecture unblocking Phase 5g Track B. Wave 4 commits: `bd92d3b` 4a / `b576fe8` 4b / `5064c4c` 4b.ext / `e7e111a` 4c-part1 (mulReduce bug fix: lazy-closure-reeval → Array-based + eager materialization) / `112f562` 4c-part2 / `43872e6` 4c-part3 / `bf5efce` 4d. Full package 8403 jobs clean. Earlier same day: Phase 5p Waves 1-6 (D2Formula, FPdim, Müger bridge, SymmetricCategory); Phase 5e W7-8.)
+**Last synced:** 2026-04-16 (**Phase 5m ALL WAVES COMPLETE**: generic U_q(𝔤) HopfAlgebra + instantiation verification + Kac-Walton fusion with buildWeightDiagram + SU(5)₁ Z₅ + exceptional E₆/E₇/E₈/F₄ Cartan data + named generators. 7 new/updated Phase 5m Lean modules, ~4766 LOC, 0 sorry. Clean build 8410 jobs.)
 
 ---
 
@@ -12,12 +12,12 @@
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **3066+** (post-Phase-5i-Wave-4; 37 new theorems from 4c/4d modules + mulReduce bug fix; authoritative count via `update_counts.py`) | counts.json — package-module-bound count |
-| Placeholders (True := trivial) | **78** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
+| Lean theorems | **3300+** (post-Phase-5m; +247 from 7 Phase 5m modules; authoritative count via `update_counts.py`) | counts.json — package-module-bound count |
+| Placeholders (True := trivial) | **85** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **142** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +3 since 5i: Phase 5w W2 DiracFluidMetric (9), W3 GrapheneHawking (7), W5-7 DiracFluidSK (9). |
+| Lean modules | **148** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +6 Phase 5m: QuantumGroupGeneric, QuantumGroupCoproduct, QuantumGroupAntipode, QuantumGroupHopf, QuantumGroupInstantiation, QuantumGroupMeta (KacWaltonFusion pre-existing, updated). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
 | Test files | **51** | +5 Phase 5w: test_graphene_metric (26), _hawking (21), _spectrum (17), _transport (17), test_platform_comparison (14) = 95 total graphene tests |
@@ -28,7 +28,7 @@
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 44 | See Aristotle run table in full inventory |
-| Deep research tasks | 18 + 8 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e
+| Deep research tasks | 18 + 8 + 6 + 6 + 6 | 18 Phase-5 + 8 Phase-5a + 6 Phase-5b + 6 Phase-5e + 6 Phase-5x (DM/DE — all COMPLETE)
 
 
 ---
@@ -189,6 +189,13 @@
 | Uqsl2Hopf | 66 | **FIRST Hopf algebra in a proof assistant**: Bialgebra + HopfAlgebra instances on U_q(sl₂), coproduct/counit/antipode via liftAlgHom, S²=Ad(K), Serre coproduct (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4` + `79e07d55`) |
 | Uqsl3 | 21 | **Phase 5i**: **FIRST rank-2 quantum group in any proof assistant**: U_q(sl₃) via FreeAlgebra+RingQuot, 8 generators, A₂ Cartan matrix [[2,-1],[-1,2]], 21 Chevalley relations (**ALL PROVED, zero sorry**, native proofs, 6.4s build) |
 | Uqsl3Hopf | 189 | **Phase 5i Wave 2 / Tranche E COMPLETE 2026-04-14**: Full Hopf algebra wiring for U_q(sl₃). Coproduct Δ + counit ε + antipode S defined via RingQuot.liftAlgHom; all 21 Δ/ε/S relation-respect proofs done (incl. 4 antipode q-Serre cubics E12/E21/F12/F21 closed via palindromic Serre atom-bridge). S² = Ad(K₁²K₂²) per generator (Drinfeld theorem, Tranche D). 24 per-generator evaluation lemmas. 4 derived F·K commutation rules at module scope. 3 coalgebra axioms (coassoc + 2 counital). 16 antipode convolution helpers (8 right + 8 left + algebraMap + mul_step). **`Bialgebra` instance** (via Bialgebra.ofAlgHom) and **`HopfAlgebra` instance** (via direct constructor) wired. **0 sorry**, ~5230 lines. |
+| QuantumGroupGeneric | 29 | **Phase 5m Wave 1 (2026-04-16)**: **FIRST parameterized quantum group in any proof assistant**: `QuantumGroup k A` for arbitrary Cartan matrix A via `RingQuot (QGRel k A)`. 4r generators (E_i, F_i, K_i, K_i⁻¹), 11 relation types. Cartan matrices A₁-A₃, D₄, B₂, C₂, G₂, B₃ with symmetrizability + determinant verification (**ALL PROVED, zero sorry**) |
+| QuantumGroupCoproduct | 44 | **Phase 5m Wave 2 (2026-04-16)**: Generic coproduct Δ for U_q(𝔤). 11/11 QGRel relation-respect proofs (incl. SerreE/F_quad via palindromic atom-bridge, EF_diag via diamond bypass). Descended `qgComul` via `RingQuot.liftAlgHom`. Eval lemmas E/F/K/Kinv. **1347 LOC, 0 sorry** |
+| QuantumGroupAntipode | 25 | **Phase 5m Wave 2 (2026-04-16)**: Generic antipode S for U_q(𝔤) via `MulOpposite`. 11/11 QGRel respect proofs. Anti-multiplicativity S(ab)=S(b)S(a). Descended `qgAntipode`. **811 LOC, 0 sorry** |
+| QuantumGroupHopf | 31 | **Phase 5m Wave 2 (2026-04-16)**: Generic HopfAlgebra instance for U_q(𝔤). Counit (11/11 + descent), coalgebra (coassoc + 2 counit laws), Bialgebra via `Bialgebra.ofAlgHom`, convolution laws via `FreeAlgebra.induction` + `TensorProduct.exists_finset`. **563 LOC, 0 sorry. First generic quantum group HopfAlgebra in any proof assistant** |
+| QuantumGroupInstantiation | 39 | **Phase 5m Wave 1 strengthening (2026-04-16)**: `qgA1EquivUqsl2 : QuantumGroup k cartanA1 ≃ₐ Uqsl2 k` + `qgA2EquivUqsl3 : QuantumGroup k cartanA2 ≃ₐ Uqsl3 k`. Full AlgEquiv via forward/backward AlgHom + roundtrip via `RingQuot.ringQuot_ext'` + `FreeAlgebra.hom_ext`. **629 LOC, 0 sorry, 0 sorryAx** |
+| QuantumGroupMeta | 16 | **Phase 5m Wave 4 (2026-04-16)**: Exceptional Cartan matrices E₆/E₇/E₈/F₄ with symmetry verification. CartanTypeData for all exceptional types. Named generator abbreviations for SU(4) + E₆. Level 1 alcove: E₆₁=ℤ₃, E₇₁=ℤ₂, E₈₁=trivial, F₄₁=ℤ₂. **First E₆/E₇/E₈ quantum group generators in any proof assistant. 220 LOC, 0 sorry** |
+| KacWaltonFusion | 63 | **Phase 5m Wave 3 (2026-04-15, updated 2026-04-16)**: Kac-Walton fusion algorithm parameterized over arbitrary Cartan types. `buildWeightDiagram` for minuscule reps via BFS building-up. SU(5)₁ Z₅ fusion ring verified (8 theorems). Cross-validated generated vs hardcoded WDs. SU(2)₁₋₃, SU(3)₁, SU(4)₁, G₂₁ Fibonacci, B₂₁ Ising fusion. **741 LOC, 0 sorry. First Kac-Walton implementation in any proof assistant** |
 | SU2kFusion | 29 | **SU(2)_k fusion at k=1,2,3**: universal truncated CG rule, Ising (sigma²=1+psi), Fibonacci (tau²=1+tau), charge conjugation, assoc+comm, Fibonacci subcategory closed (**ALL PROVED by native_decide, zero sorry**) |
 | Uqsl2Affine | 9 | U_q(sl_2 hat) affine quantum group: 6 generators, Chevalley + cross-relations, K invertibility, coideal property statement (**ALL PROVED, zero sorry**) |
 | SU2kSMatrix | 16 | SU(2)_k S-matrices at k=1,2: unitarity S*S^T=I, Verlinde formula, non-degeneracy/modularity (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
