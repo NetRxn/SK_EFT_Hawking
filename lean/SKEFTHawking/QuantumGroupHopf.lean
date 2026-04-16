@@ -206,14 +206,125 @@ noncomputable def qgAntipodeLin :
   (MulOpposite.opLinearEquiv (QBase k)).symm.toLinearMap.comp
     (qgAntipode k hdiag hsym).toLinearMap
 
-/-! ## 7. Module summary -/
+/-! ### Antipode linear map evaluation -/
+
+theorem qgAntipodeLin_E (i : Fin r) :
+    qgAntipodeLin k hdiag hsym (qgE k A i) = -(qgE k A i * qgKinv k A i) := by
+  unfold qgAntipodeLin
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  rw [qgAntipode_E]; rfl
+
+theorem qgAntipodeLin_F (i : Fin r) :
+    qgAntipodeLin k hdiag hsym (qgF k A i) = -(qgK k A i * qgF k A i) := by
+  unfold qgAntipodeLin
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  rw [qgAntipode_F]; rfl
+
+theorem qgAntipodeLin_K (i : Fin r) :
+    qgAntipodeLin k hdiag hsym (qgK k A i) = qgKinv k A i := by
+  unfold qgAntipodeLin
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  rw [qgAntipode_K]; rfl
+
+theorem qgAntipodeLin_Kinv (i : Fin r) :
+    qgAntipodeLin k hdiag hsym (qgKinv k A i) = qgK k A i := by
+  unfold qgAntipodeLin
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap]
+  rw [qgAntipode_Kinv]; rfl
+
+theorem qgAntipodeLin_one :
+    qgAntipodeLin k hdiag hsym (1 : QuantumGroup k A) = 1 := by
+  unfold qgAntipodeLin
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap, map_one]
+  rfl
+
+/-! ## 7. Right convolution on generators -/
+
+private theorem qg_convR_E (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgE k A i))) = 0 := by
+  rw [qgComul_E]
+  simp only [LinearMap.rTensor_tmul, map_add, LinearMap.mul'_apply]
+  rw [qgAntipodeLin_E, qgAntipodeLin_one, qg_neg_mul, one_mul,
+    show qgE k A i * qgKinv k A i * qgK k A i = qgE k A i * (qgKinv k A i * qgK k A i) from
+      mul_assoc _ _ _, qg_Kinv_mul_K, mul_one]
+  exact neg_add_cancel (G := QuantumGroup k A) _
+
+private theorem qg_convR_F (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgF k A i))) = 0 := by
+  rw [qgComul_F]
+  simp only [LinearMap.rTensor_tmul, map_add, LinearMap.mul'_apply]
+  rw [qgAntipodeLin_F, qgAntipodeLin_Kinv, qg_neg_mul,
+    show qgK k A i * qgF k A i * 1 = qgK k A i * qgF k A i from mul_one _,
+    show qgK k A i * qgF k A i = (qgK k A i * qgF k A i) from rfl]
+  exact neg_add_cancel (G := QuantumGroup k A) _
+
+private theorem qg_convR_K (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgK k A i))) = 1 := by
+  rw [qgComul_K]
+  simp only [LinearMap.rTensor_tmul, LinearMap.mul'_apply, qgAntipodeLin_K]
+  exact qg_Kinv_mul_K (A := A) k i
+
+private theorem qg_convR_Kinv (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgKinv k A i))) = 1 := by
+  rw [qgComul_Kinv]
+  simp only [LinearMap.rTensor_tmul, LinearMap.mul'_apply, qgAntipodeLin_Kinv]
+  exact qg_K_mul_Kinv (A := A) k i
+
+/-! ## 8. Left convolution on generators -/
+
+private theorem qg_convL_E (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgE k A i))) = 0 := by
+  rw [qgComul_E]
+  simp only [LinearMap.lTensor_tmul, map_add, LinearMap.mul'_apply]
+  rw [qgAntipodeLin_K, qgAntipodeLin_E, one_mul]
+  exact add_neg_cancel (G := QuantumGroup k A) _
+
+private theorem qg_convL_F (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgF k A i))) = 0 := by
+  rw [qgComul_F]
+  simp only [LinearMap.lTensor_tmul, map_add, LinearMap.mul'_apply]
+  rw [qgAntipodeLin_one, qgAntipodeLin_F, mul_one, qg_mul_neg,
+    show qgKinv k A i * (qgK k A i * qgF k A i) = (qgKinv k A i * qgK k A i) * qgF k A i from
+      by rw [mul_assoc], qg_Kinv_mul_K, one_mul]
+  exact add_neg_cancel (G := QuantumGroup k A) _
+
+private theorem qg_convL_K (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgK k A i))) = 1 := by
+  rw [qgComul_K]
+  simp only [LinearMap.lTensor_tmul, LinearMap.mul'_apply, qgAntipodeLin_K]
+  exact qg_K_mul_Kinv (A := A) k i
+
+private theorem qg_convL_Kinv (i : Fin r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym) (qgKinv k A i))) = 1 := by
+  rw [qgComul_Kinv]
+  simp only [LinearMap.lTensor_tmul, LinearMap.mul'_apply, qgAntipodeLin_Kinv]
+  exact qg_Kinv_mul_K (A := A) k i
+
+/-! ## 9. Module summary -/
 
 /-- QuantumGroupHopf module: Hopf algebra Bialgebra on U_q(𝔤).
   - counitOnGen + counit_respects_rel + qgCounit: ε fully proved
   - qg_comul_coassoc: (Δ ⊗ id) ∘ Δ = (id ⊗ Δ) ∘ Δ
   - qg_comul_rTensor_counit + qg_comul_lTensor_counit: counit laws
   - qgBialgebra: Bialgebra instance via Bialgebra.ofAlgHom
-  - qgAntipodeLin: antipode as linear map
+  - qgAntipodeLin: antipode as linear map + E/F/K/Kinv evaluation
+  - Right convolution on all generators: qg_convR_E/F/K/Kinv
   - First generic quantum group Bialgebra in any proof assistant
   - Zero sorry. Covers all symmetric Cartan matrices simultaneously. -/
 theorem quantum_group_hopf_summary : True := trivial
