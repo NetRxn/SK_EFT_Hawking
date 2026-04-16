@@ -658,17 +658,10 @@ theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
       rw [qg_KF_scaled k (A := A) i i, hii]
       simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
     rw [show (T 1 * T 1 * T (-2) : QBase k) = 1 from by rw [← T_add, ← T_add]; norm_num, one_smul]
-    sorry -- Remaining interleaving needs mixed KF/FK commutation chain
+    simp only [mul_assoc]
   have hBF : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
     qgK k A i * (qgF k A i * (qgK k A j * (qgF k A j * (qgK k A i * qgF k A i)))) := by
-    -- Step 1: K_j past F_i (cross, T(1))
-    conv_lhs =>
-      rw [show qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
-        qgK k A i * (qgK k A i * ((qgK k A j * qgF k A i) * (qgF k A j * qgF k A i))) from by
-        noncomm_ring]
-      rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
-      simp only [smul_mul_assoc, mul_smul_comm]
-    sorry -- needs hFK-based commutation chain (3 steps, net T(0)=1)
+    sorry -- 3 KF commutations needed: K_i*F_i(T(-2)), K_i*F_j(T(1)), K_j*F_i(T(1)), net T(0)=1
   -- Close: substitute atom helpers, split smul, match to goal
   simp only [mul_assoc] at h_mul
   rw [hA2F, hA1F, hBF] at h_mul
