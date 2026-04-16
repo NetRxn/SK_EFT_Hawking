@@ -326,7 +326,87 @@ theorem qgAntipodeLin_mul (a b : QuantumGroup k A) :
     map_mul]
   rfl
 
-/-! ## 10. Main convolution theorems -/
+/-! ## 10. Convolution multiplicativity step -/
+
+/-- If `mul'(rTensor(S)(u)) = algebraMap(r)`, then
+    `mul'(rTensor(S)(u * v)) = algebraMap(r) * mul'(rTensor(S)(v))`.
+    Core step for the FreeAlgebra.induction mul case. -/
+private theorem qg_convR_mul_step
+    (u v : TensorProduct (QBase k) (QuantumGroup k A) (QuantumGroup k A))
+    (r : QBase k)
+    (hu : (LinearMap.mul' (QBase k) (QuantumGroup k A))
+            ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) u) =
+          algebraMap (QBase k) (QuantumGroup k A) r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) (u * v)) =
+    algebraMap (QBase k) (QuantumGroup k A) r *
+      (LinearMap.mul' (QBase k) (QuantumGroup k A))
+        ((LinearMap.rTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) v) := by
+  revert hu
+  induction v using TensorProduct.induction_on with
+  | zero => simp
+  | tmul c d =>
+    intro hu
+    obtain ⟨s, rfl⟩ := TensorProduct.exists_finset u
+    simp only [Finset.sum_mul, map_sum, LinearMap.rTensor_tmul, LinearMap.mul'_apply,
+      Algebra.TensorProduct.tmul_mul_tmul, qgAntipodeLin_mul] at hu ⊢
+    -- hu : ∑ S(aᵢ) * bᵢ = algebraMap r
+    -- Goal: ∑ S(c) * S(aᵢ) * (bᵢ * d) = algebraMap(r) * (S(c) * d)
+    -- Step 1: reassociate each term
+    simp_rw [show ∀ p : QuantumGroup k A × QuantumGroup k A,
+        (qgAntipodeLin k hdiag hsym) c * (qgAntipodeLin k hdiag hsym) p.1 * (p.2 * d) =
+        ((qgAntipodeLin k hdiag hsym) c * ((qgAntipodeLin k hdiag hsym) p.1 * p.2)) * d from
+        fun p => by noncomm_ring]
+    -- Step 2: factor out d on the right
+    rw [← Finset.sum_mul]
+    -- Step 3: factor out S(c) on the left
+    rw [← Finset.mul_sum]
+    -- Step 4: substitute hu
+    rw [hu]
+    -- Step 5: commute algebraMap(r) past S(c) and reassociate
+    rw [← mul_assoc, Algebra.commutes, mul_assoc]
+  | add v₁ v₂ hv₁ hv₂ =>
+    intro hu; simp only [mul_add, map_add, mul_add]
+    rw [hv₁ hu, hv₂ hu]
+
+/-- Left convolution multiplicativity: factors on y (right argument). -/
+private theorem qg_convL_mul_step
+    (u v : TensorProduct (QBase k) (QuantumGroup k A) (QuantumGroup k A))
+    (r : QBase k)
+    (hv : (LinearMap.mul' (QBase k) (QuantumGroup k A))
+            ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) v) =
+          algebraMap (QBase k) (QuantumGroup k A) r) :
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) (u * v)) =
+    (LinearMap.mul' (QBase k) (QuantumGroup k A))
+      ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) u) *
+    algebraMap (QBase k) (QuantumGroup k A) r := by
+  induction u using TensorProduct.induction_on with
+  | zero => simp
+  | tmul a b =>
+    -- Key helper: mul'(lTensor(S)((a ⊗ₜ b) * z)) = a * mul'(lTensor(S)(z)) * S(b)
+    have h_eval : ∀ z : TensorProduct (QBase k) (QuantumGroup k A) (QuantumGroup k A),
+        (LinearMap.mul' (QBase k) (QuantumGroup k A))
+          ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym))
+            ((a ⊗ₜ b) * z)) =
+        a * (LinearMap.mul' (QBase k) (QuantumGroup k A))
+              ((LinearMap.lTensor (QuantumGroup k A) (qgAntipodeLin k hdiag hsym)) z) *
+        qgAntipodeLin k hdiag hsym b := by
+      intro z; induction z using TensorProduct.induction_on with
+      | zero => simp
+      | tmul c d =>
+        simp only [Algebra.TensorProduct.tmul_mul_tmul, LinearMap.lTensor_tmul,
+          LinearMap.mul'_apply, qgAntipodeLin_mul]
+        noncomm_ring
+      | add z₁ z₂ hz₁ hz₂ => simp [mul_add, add_mul, map_add, hz₁, hz₂]
+    rw [h_eval, hv]
+    simp only [LinearMap.lTensor_tmul, LinearMap.mul'_apply]
+    rw [mul_assoc, Algebra.commutes, ← mul_assoc]
+  | add u₁ u₂ hu₁ hu₂ =>
+    simp only [add_mul, map_add, add_mul]
+    rw [hu₁, hu₂]
+
+/-! ## 12. Main convolution theorems -/
 
 /-- **Right antipode convolution law**: ∇ ∘ rTensor(S) ∘ Δ = unit ∘ ε.
     This is the identity m ∘ (id ⊗ S) ∘ Δ = η ∘ ε (using Mathlib's rTensor convention). -/
@@ -372,9 +452,21 @@ theorem qg_antipode_rTensor :
         ((LinearMap.rTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgKinv k A i)))
         = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgKinv k A i))
       rw [qg_convR_Kinv, qgCounit_Kinv]; simp [Algebra.linearMap_apply]
-  | mul x y hx hy => -- multiplicativity
+  | mul x y hx hy => -- multiplicativity: use qg_convR_mul_step + IH
     simp only [map_mul, LinearMap.comp_apply] at hx hy ⊢
-    sorry
+    -- Step 1: comul(a*b) = comul(a) * comul(b)
+    have hcm := map_mul (qgComul k hdiag hsym)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) x)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) y)
+    rw [show CoalgebraStruct.comul _ = (qgComul k hdiag hsym) _ from rfl, hcm]
+    erw [qg_convR_mul_step k hdiag hsym _ _ _ hx, hy]
+    -- Step 2: ε(a*b) = ε(a) * ε(b) and η is ring hom
+    have hcou := map_mul (qgCounit k A)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) x)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) y)
+    simp only [Algebra.linearMap_apply,
+      show ∀ z, CoalgebraStruct.counit (R := QBase k) z = (qgCounit k A) z from fun _ => rfl]
+    rw [hcou, map_mul]
   | add x y hx hy => -- linearity
     simp only [map_add, LinearMap.comp_apply] at hx hy ⊢
     rw [hx, hy]
@@ -422,14 +514,24 @@ theorem qg_antipode_lTensor :
         ((LinearMap.lTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgKinv k A i)))
         = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgKinv k A i))
       rw [qg_convL_Kinv, qgCounit_Kinv]; simp [Algebra.linearMap_apply]
-  | mul x y hx hy => -- multiplicativity
+  | mul x y hx hy => -- multiplicativity: use qg_convL_mul_step + IH
     simp only [map_mul, LinearMap.comp_apply] at hx hy ⊢
-    sorry
+    have hcm := map_mul (qgComul k hdiag hsym)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) x)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) y)
+    rw [show CoalgebraStruct.comul _ = (qgComul k hdiag hsym) _ from rfl, hcm]
+    erw [qg_convL_mul_step k hdiag hsym _ _ _ hy, hx]
+    have hcou := map_mul (qgCounit k A)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) x)
+      ((RingQuot.mkAlgHom (QBase k) (QGRel k A)) y)
+    simp only [Algebra.linearMap_apply,
+      show ∀ z, CoalgebraStruct.counit (R := QBase k) z = (qgCounit k A) z from fun _ => rfl]
+    rw [hcou, map_mul]
   | add x y hx hy => -- linearity
     simp only [map_add, LinearMap.comp_apply] at hx hy ⊢
     rw [hx, hy]
 
-/-! ## 11. HopfAlgebra instance -/
+/-! ## 13. HopfAlgebra instance -/
 
 /-- **HopfAlgebra instance for U_q(𝔤).** -/
 noncomputable def qgHopfAlgebra :
@@ -450,12 +552,11 @@ noncomputable def qgHopfAlgebra :
   - qgAntipodeLin: antipode as linear map + E/F/K/Kinv/one evaluation
   - qgAntipodeLin_mul: anti-multiplicativity S(ab)=S(b)S(a)
   - All 8 generator convolution lemmas: qg_convR/L_E/F/K/Kinv (0 sorry)
-  - qgHopfAlgebra: HopfAlgebra instance (2 sorry in main convolution theorems)
-  - First generic quantum group Bialgebra+HopfAlgebra in any proof assistant
-  - 2 sorry remaining: rTensor + lTensor mul (multiplicativity) cases
-    Need: mul'(rTensor(S)(comul(a)·comul(b))) = conv(a)·conv(b) when
-    conv(a) is a scalar. Requires TensorProduct.induction_on + anti-mult
-    of S + Algebra.commutes. See Uqsl3Hopf uq3_convR_mul_step pattern. -/
+  - qg_convR/L_mul_step: convolution multiplicativity steps (0 sorry)
+  - qg_antipode_rTensor + qg_antipode_lTensor: main convolution laws (0 sorry)
+  - qgHopfAlgebra: HopfAlgebra instance (0 sorry)
+  - First generic quantum group HopfAlgebra in any proof assistant
+  - ZERO sorry. Covers all symmetric Cartan matrices simultaneously. -/
 theorem quantum_group_hopf_summary : True := trivial
 
 end SKEFTHawking
