@@ -415,13 +415,52 @@ theorem antipodeFreeAlgQG_SerreE_quad (i j : Fin r)
         (qgKinv k A i * qgKinv k A i * qgKinv k A j))) hSE
   simp only [map_add, map_sub, map_zero, LinearMap.mulRight_apply,
              LinearMap.map_smul_of_tower] at h_mul
-  -- h_mul has Serre(E)·Kinv_chain = 0. Goal has dressed Serre.
-  -- Need 3 atom-equality helpers to commute Kinv through E in h_mul,
-  -- each using qg_E_Kinv_scaled step by step (can't use simp_rw because
-  -- left-association doesn't expose bare E·Kinv pairs after ← mul_assoc).
-  -- Per Uqsl3Hopf lines 2690-2942: manual show/rw chain per atom.
-  -- T-scalars cancel palindromically: T(A_ij)*T(A_ii)*T(A_ij) = T(0) = 1.
-  sorry
+  -- Helpers for atom-equality proofs
+  have move_alg_left : ∀ (r : QBase k) (x y : QuantumGroup k A),
+      x * ((algebraMap (QBase k) (QuantumGroup k A)) r * y) =
+      (algebraMap (QBase k) (QuantumGroup k A)) r * (x * y) := by
+    intros r x y; rw [← mul_assoc, (Algebra.commutes r x).symm, mul_assoc]
+  have alg_T_cancel3 : ∀ (a b c : ℤ) (x : QuantumGroup k A), a + b + c = 0 →
+      (algebraMap (QBase k) (QuantumGroup k A)) (T a) *
+        ((algebraMap (QBase k) (QuantumGroup k A)) (T b) *
+          ((algebraMap (QBase k) (QuantumGroup k A)) (T c) * x)) = x := by
+    intros a b c x habc
+    rw [← mul_assoc, ← mul_assoc, ← map_mul, ← map_mul, ← T_add, ← T_add, habc,
+        T_zero, map_one, one_mul]
+  -- hA2: E_i²E_j · Kinv³ = (E_i·Kinv_i)²·(E_j·Kinv_j) via 3 E_Kinv_scaled applications
+  -- Net scalar: T(A_ij)*T(A_ii)*T(A_ij) = T(-1)*T(2)*T(-1) = T(0) = 1
+  have hA2 : qgE k A i * (qgE k A i * (qgE k A j *
+      (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
+    qgE k A i * (qgKinv k A i * (qgE k A i * (qgKinv k A i * (qgE k A j * qgKinv k A j)))) := by
+    -- Expose and commute E_j past Kinv_i
+    rw [show qgE k A i * (qgE k A i * (qgE k A j *
+        (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
+      qgE k A i * (qgE k A i * ((qgE k A j * qgKinv k A i) *
+        (qgKinv k A i * qgKinv k A j))) from by noncomm_ring,
+      qg_E_Kinv_scaled k j i, h]
+    simp only [smul_mul_assoc, mul_smul_comm]
+    sorry -- Steps 2-3: commute E_i past Kinv_i, E_j past Kinv_i, cancel T(-1)*T(2)*T(-1)=1
+  -- hA1: E_jE_i² · Kinv³ = (E_j·Kinv_j)·(E_i·Kinv_i)² (with Kinv chain reorder)
+  have hA1 : qgE k A j * (qgE k A i * (qgE k A i *
+      (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
+    qgE k A j * (qgKinv k A j * (qgE k A i * (qgKinv k A i * (qgE k A i * qgKinv k A i)))) := by
+    sorry -- Same pattern as hA2 with Kinv chain reorder first
+  -- hB: E_iE_jE_i · Kinv³ = (E_i·Kinv_i)·(E_j·Kinv_j)·(E_i·Kinv_i)
+  have hB : qgE k A i * (qgE k A j * (qgE k A i *
+      (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
+    qgE k A i * (qgKinv k A i * (qgE k A j * (qgKinv k A j * (qgE k A i * qgKinv k A i)))) := by
+    sorry -- Same pattern: 3 E_Kinv_scaled + scalar cancel
+  -- Right-associate h_mul to match atom helper patterns, then substitute
+  simp only [mul_assoc] at h_mul
+  rw [hA2, hA1, hB] at h_mul
+  -- h_mul is now in dressed Serre form. Match goal.
+  -- Goal has T-scalar expressions; h_mul is scalar-free after atom substitution.
+  -- The goal's scalars all evaluate to T(0)=1 after Cartan substitution.
+  simp only [hii, hjj] at ⊢
+  norm_num at ⊢
+  try simp only [T_zero, one_smul] at ⊢
+  -- h_mul says A2-[2]B+A1=0, goal says -(A1)-(A2)=-(T(-1)B)-(T(1)B). Same equation.
+  linear_combination (norm := module) -h_mul
 
 theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
     (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
