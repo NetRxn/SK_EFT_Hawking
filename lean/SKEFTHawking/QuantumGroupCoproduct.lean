@@ -1256,7 +1256,45 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
   simp_rw [hKKK3]
   abel!
 
-/-! ## 7. Module summary -/
+/-! ## 7. Coproduct descent to the quotient
+
+All 11 QGRel respect proofs shipped. Descent via `RingQuot.liftAlgHom`
+gives `qgComul : QuantumGroup k A →ₐ[QBase k] QuantumGroup k A ⊗ QuantumGroup k A`
+for any symmetric GCM (diagonal 2, A_ij = A_ji). -/
+
+private theorem comulFreeAlgQG_respects_rel
+    (hdiag : ∀ i : Fin r, A i i = 2)
+    (hsym : ∀ i j : Fin r, A i j = A j i) :
+    ∀ a b, QGRel k A a b → comulFreeAlgQG k A a = comulFreeAlgQG k A b := by
+  intro a b hab
+  induction hab with
+  | KKinv i => rw [comulFreeAlgQG_KKinv, map_one]
+  | KinvK i => rw [comulFreeAlgQG_KinvK, map_one]
+  | KK_comm i j => exact comulFreeAlgQG_KK_comm k i j
+  | KE i j => exact comulFreeAlgQG_KE k i j
+  | KF i j => exact comulFreeAlgQG_KF k i j
+  | EF_diag i => exact comulFreeAlgQG_EF_diag k i
+  | EF_off i j h => exact comulFreeAlgQG_EF_off k i j h (hsym i j)
+  | SerreE_comm i j h hij =>
+    exact comulFreeAlgQG_SerreE_comm k i j h ((hsym j i).trans h) hij
+  | SerreE_quad i j h =>
+    simp only [sq, ← mul_assoc]
+    exact comulFreeAlgQG_SerreE_quad k i j h (hdiag i) ((hsym j i).trans h)
+  | SerreF_comm i j h hij =>
+    exact comulFreeAlgQG_SerreF_comm k i j h ((hsym j i).trans h) hij
+  | SerreF_quad i j h =>
+    simp only [sq, ← mul_assoc]
+    exact comulFreeAlgQG_SerreF_quad k i j h (hdiag i) ((hsym j i).trans h)
+
+noncomputable def qgComul
+    (hdiag : ∀ i : Fin r, A i i = 2)
+    (hsym : ∀ i j : Fin r, A i j = A j i) :
+    QuantumGroup k A →ₐ[QBase k]
+    (QuantumGroup k A) ⊗[QBase k] (QuantumGroup k A) :=
+  RingQuot.liftAlgHom (QBase k)
+    ⟨comulFreeAlgQG k A, comulFreeAlgQG_respects_rel k hdiag hsym⟩
+
+/-! ## 8. Module summary -/
 
 /-- Generic coproduct module: Phase 5m Wave 2 deliverable.
 
@@ -1264,12 +1302,10 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
     - comulOnGenQG: pattern-match on QGGen r → tensor product
     - comulFreeAlgQG: lifted to FreeAlgebra via FreeAlgebra.lift
     - comulFreeAlgQG_ι: evaluation on generators
+    - 11/11 QGRel respect proofs
+    - qgComul: descended coproduct on QuantumGroup k A
 
-    **Still pending (multi-session, requires sl_3 template port):**
-    - Per-relation respect for all 11 QGRel constructors:
-      * Mechanical (KKinv, KinvK, KK_comm, KE, KF, EF_diag, EF_off)
-      * Commutativity Serre (SerreE_comm, SerreF_comm — A_ij = 0)
-      * Quadratic Serre (SerreE_quad, SerreF_quad — A_ij = -1, HARD)
+    **Still pending:**
     - qgComul : QuantumGroup k A →ₐ via RingQuot.liftAlgHom
     - Antipode side (mirror)
     - Bialgebra + HopfAlgebra typeclass instances
