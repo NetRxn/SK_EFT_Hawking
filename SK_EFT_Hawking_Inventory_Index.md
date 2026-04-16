@@ -24,7 +24,7 @@
 | Test count | 1660+ | `pytest tests/ -q` |
 | Figures | **105** | `grep -c "^def fig_" src/core/visualizations.py` (+4: T_H sweep, dissipation window, noise PSD, SNR) |
 | Notebooks | **49** | `ls notebooks/*.ipynb` (+1: Phase5w_GrapheneDiracFluid_Technical) |
-| Papers | **15** | `ls papers/paper*/paper_draft.tex` |
+| Papers | **16** | `ls papers/paper*/paper_draft.tex` (+1: Paper 16 graphene SK-EFT) |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
 | Aristotle runs | 44 | See Aristotle run table in full inventory |

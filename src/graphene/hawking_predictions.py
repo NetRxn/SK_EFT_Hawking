@@ -51,8 +51,8 @@ def graphene_adiabaticity(platform_name):
 
     D = κ · l_ee / c_s
 
-    For the Dean nozzle: κ ~ 2e12, l_ee ~ 25 nm (at 150 K),
-    c_s ~ 4.4e5 m/s → D ≈ 0.11.  This is well within the
+    For the Dean nozzle: κ ~ 2e12, l_ee ~ 51 nm (at 150 K),
+    c_s ~ 4.4e5 m/s → D ≈ 0.23.  This is well within the
     perturbative regime (D < 1).
 
     Args:

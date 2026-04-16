@@ -6669,14 +6669,15 @@ def fig_graphene_hawking_temperature_sweep():
         line=dict(color=COLORS['amber'], width=2.5, dash='dash'),
     ))
 
-    # Platform markers
+    # Platform markers (acoustic horizons only — exclude PN junction)
     platform_colors = {
         'Dean_bilayer_nozzle': COLORS['amber'],
         'Monolayer_100nm': COLORS['steel_blue'],
         'Monolayer_50nm': COLORS['steel_blue'],
-        'PN_junction_10nm': COLORS['dissipative'],
     }
     for name, plat in GRAPHENE_PLATFORMS.items():
+        if name == 'PN_junction_10nm':
+            continue  # Not an acoustic horizon; omit from plot
         fig.add_trace(go.Scatter(
             x=[plat['nozzle_throat_nm']],
             y=[plat['T_H_K']],
@@ -6723,7 +6724,7 @@ def fig_graphene_dissipation_window():
     T_H_range = np.logspace(-1, 2, 200)  # 0.1 to 100 K
     l_mr_values = [1e-6, 5e-6, 15e-6]
     l_mr_labels = ['l_mr = 1 μm', 'l_mr = 5 μm', 'l_mr = 15 μm']
-    l_mr_colors = [COLORS['dissipative'], COLORS['steel_blue'], COLORS['amber']]
+    l_mr_colors = [COLORS['cross'], COLORS['steel_blue'], COLORS['amber']]  # grey, blue, amber
 
     fig = go.Figure()
 
@@ -6859,7 +6860,8 @@ def fig_graphene_snr_frequency():
     apply_layout(fig,
         xaxis=dict(title='Frequency (GHz)', type='log',
                    range=[np.log10(0.3), np.log10(600)]),
-        yaxis=dict(title='S_Hawking / S_thermal (per bin)', type='log'),
+        yaxis=dict(title='S_Hawking / S_thermal (per bin)', type='log',
+                   exponentformat='power'),
         title=dict(text='Detection Signal-to-Noise — Dean Bilayer Nozzle',
                    font=TITLE_FONT),
         height=450, width=700,
