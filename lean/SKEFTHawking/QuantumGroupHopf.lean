@@ -340,8 +340,19 @@ theorem qg_antipode_rTensor :
   ext x
   obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (QBase k) (QGRel k A) x
   induction x using FreeAlgebra.induction with
-  | grade0 r => -- scalar: both sides = algebraMap r
-    sorry
+  | grade0 r => -- scalar: S(algebraMap r) = algebraMap r
+    simp only [LinearMap.comp_apply, AlgHom.commutes (RingQuot.mkAlgHom (QBase k) (QGRel k A))]
+    change (LinearMap.mul' (QBase k) _)
+      ((LinearMap.rTensor _ (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym).toLinearMap (algebraMap _ _ r)))
+      = (Algebra.linearMap (QBase k) _) ((qgCounit k A).toLinearMap (algebraMap _ _ r))
+    simp only [AlgHom.toLinearMap_apply, AlgHom.commutes,
+      Algebra.TensorProduct.algebraMap_apply, LinearMap.rTensor_tmul,
+      LinearMap.mul'_apply, mul_one, Algebra.linearMap_apply,
+      Algebra.algebraMap_eq_smul_one, map_smul, qgAntipodeLin_one]
+    congr 1
+    · rw [map_one, Algebra.TensorProduct.one_def, LinearMap.rTensor_tmul,
+        qgAntipodeLin_one, LinearMap.mul'_apply, mul_one, map_one, one_smul]
   | grade1 x => -- generator
     rcases x with ⟨i⟩ | ⟨i⟩ | ⟨i⟩ | ⟨i⟩ <;>
       simp only [LinearMap.comp_apply]
@@ -376,7 +387,47 @@ theorem qg_antipode_lTensor :
       Coalgebra.comul =
     (Algebra.linearMap (QBase k) (QuantumGroup k A)) ∘ₗ Coalgebra.counit := by
   letI := qgBialgebra k hdiag hsym
-  sorry
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (QBase k) (QGRel k A) x
+  induction x using FreeAlgebra.induction with
+  | grade0 r => -- scalar
+    simp only [LinearMap.comp_apply, AlgHom.commutes (RingQuot.mkAlgHom (QBase k) (QGRel k A))]
+    change (LinearMap.mul' (QBase k) _)
+      ((LinearMap.lTensor _ (qgAntipodeLin k hdiag hsym))
+        ((qgComul k hdiag hsym).toLinearMap (algebraMap _ _ r)))
+      = (Algebra.linearMap (QBase k) _) ((qgCounit k A).toLinearMap (algebraMap _ _ r))
+    simp only [AlgHom.toLinearMap_apply, AlgHom.commutes,
+      Algebra.TensorProduct.algebraMap_apply, LinearMap.lTensor_tmul,
+      LinearMap.mul'_apply, mul_one, Algebra.linearMap_apply,
+      Algebra.algebraMap_eq_smul_one, map_smul, qgAntipodeLin_one]
+    congr 1
+    · rw [map_one, Algebra.TensorProduct.one_def, LinearMap.lTensor_tmul,
+        qgAntipodeLin_one, LinearMap.mul'_apply, mul_one, map_one, one_smul]
+  | grade1 x => -- generator
+    rcases x with ⟨i⟩ | ⟨i⟩ | ⟨i⟩ | ⟨i⟩ <;>
+      simp only [LinearMap.comp_apply]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.lTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgE k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgE k A i))
+      rw [qg_convL_E, qgCounit_E, map_zero]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.lTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgF k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgF k A i))
+      rw [qg_convL_F, qgCounit_F, map_zero]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.lTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgK k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgK k A i))
+      rw [qg_convL_K, qgCounit_K]; simp [Algebra.linearMap_apply]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.lTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgKinv k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgKinv k A i))
+      rw [qg_convL_Kinv, qgCounit_Kinv]; simp [Algebra.linearMap_apply]
+  | mul x y hx hy => -- multiplicativity
+    simp only [map_mul, LinearMap.comp_apply] at hx hy ⊢
+    sorry
+  | add x y hx hy => -- linearity
+    simp only [map_add, LinearMap.comp_apply] at hx hy ⊢
+    rw [hx, hy]
 
 /-! ## 11. HopfAlgebra instance -/
 
