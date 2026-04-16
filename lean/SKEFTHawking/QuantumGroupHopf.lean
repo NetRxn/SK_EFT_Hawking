@@ -337,7 +337,36 @@ theorem qg_antipode_rTensor :
       Coalgebra.comul =
     (Algebra.linearMap (QBase k) (QuantumGroup k A)) ∘ₗ Coalgebra.counit := by
   letI := qgBialgebra k hdiag hsym
-  sorry
+  ext x
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective (QBase k) (QGRel k A) x
+  induction x using FreeAlgebra.induction with
+  | grade0 r => -- scalar: both sides = algebraMap r
+    sorry
+  | grade1 x => -- generator
+    rcases x with ⟨i⟩ | ⟨i⟩ | ⟨i⟩ | ⟨i⟩ <;>
+      simp only [LinearMap.comp_apply]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.rTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgE k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgE k A i))
+      rw [qg_convR_E, qgCounit_E, map_zero]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.rTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgF k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgF k A i))
+      rw [qg_convR_F, qgCounit_F, map_zero]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.rTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgK k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgK k A i))
+      rw [qg_convR_K, qgCounit_K]; simp [Algebra.linearMap_apply]
+    · change (LinearMap.mul' (QBase k) _)
+        ((LinearMap.rTensor _ (qgAntipodeLin k hdiag hsym)) ((qgComul k hdiag hsym) (qgKinv k A i)))
+        = (Algebra.linearMap (QBase k) _) ((qgCounit k A) (qgKinv k A i))
+      rw [qg_convR_Kinv, qgCounit_Kinv]; simp [Algebra.linearMap_apply]
+  | mul x y hx hy => -- multiplicativity
+    simp only [map_mul, LinearMap.comp_apply] at hx hy ⊢
+    sorry
+  | add x y hx hy => -- linearity
+    simp only [map_add, LinearMap.comp_apply] at hx hy ⊢
+    rw [hx, hy]
 
 /-- **Left antipode convolution law**: ∇ ∘ lTensor(S) ∘ Δ = unit ∘ ε. -/
 theorem qg_antipode_lTensor :
@@ -372,9 +401,9 @@ noncomputable def qgHopfAlgebra :
   - All 8 generator convolution lemmas: qg_convR/L_E/F/K/Kinv (0 sorry)
   - qgHopfAlgebra: HopfAlgebra instance (2 sorry in main convolution theorems)
   - First generic quantum group Bialgebra+HopfAlgebra in any proof assistant
-  - 2 sorry remaining: qg_antipode_rTensor + qg_antipode_lTensor
-    (both need FreeAlgebra.induction multiplicativity step; all
-    component lemmas proved, just need the induction glue). -/
+  - 3 sorry remaining in convolution induction:
+    rTensor grade0 (scalar), rTensor mul (multiplicativity), lTensor (full)
+    All component lemmas proved; generator + add cases closed. -/
 theorem quantum_group_hopf_summary : True := trivial
 
 end SKEFTHawking
