@@ -116,6 +116,7 @@ import SKEFTHawking.SurgeryPresentation
 import SKEFTHawking.WRTInvariant
 import SKEFTHawking.QuantumGroupHopf
 import SKEFTHawking.QuantumGroupCoproduct
+import SKEFTHawking.QuantumGroupAntipode
 import SKEFTHawking.KMatrixAnomaly
 import SKEFTHawking.WRTComputation
 import SKEFTHawking.FibonacciBraiding
