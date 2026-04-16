@@ -782,29 +782,484 @@ theorem qg_sect_E_quad_10_EjEi (i j : Fin r) (hii : A i i = 2) (hsym : A j i = -
 
 /-! ## 5. Main theorem: comulFreeAlgQG_SerreE_quad
 
-**Status:** Sector helpers + smul-form Serre + positional KE/KF helpers
-all in place (foundation complete). The full main theorem assembly via
-phi linear maps + `linear_combination(norm := skip)` finisher requires
-careful K-product canonical-form alignment between the goal (after comul
-expansion) and the sector hypotheses' forms. Initial attempt revealed
-the K-product orderings need explicit normalization that can't be done
-purely via simp_rw; either:
-- (a) reformulate the sector helpers to use a universally-canonical
-  K-product form (e.g., always `K_i K_i K_j` ordering), or
-- (b) add an explicit K-normalization phase between hypothesis-building
-  and linear_combination.
+Decomposed into sub-lemmas (Phase 1 expand + per-sector hypotheses +
+final assembly) to stay within default heartbeat budget, unlike Uqsl3Hopf's
+monolithic 800k-heartbeat proof. -/
 
-Approach (a) requires re-deriving the helpers; approach (b) requires
-specific `simp_rw` patterns that were elusive in the initial attempt.
+set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
+private theorem comulFreeAlgQG_SerreE_quad (i j : Fin r)
+    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
+    comulFreeAlgQG k A
+      (qgI k (.E i) * qgI k (.E i) * qgI k (.E j) +
+       qgI k (.E j) * qgI k (.E i) * qgI k (.E i)) =
+    comulFreeAlgQG k A
+      (algebraMap (QBase k) _ (T 1 + T (-1)) *
+       qgI k (.E i) * qgI k (.E j) * qgI k (.E i)) := by
+  rw [← sub_eq_zero, ← map_sub]
+  simp only [map_sub, map_add, map_mul, AlgHom.commutes,
+             comulFreeAlgQG_ι, comulOnGenQG, mul_add, add_mul,
+             Algebra.TensorProduct.algebraMap_apply,
+             Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+  simp only [← Algebra.smul_def, smul_mul_assoc]
+  simp only [Algebra.algebraMap_eq_smul_one]
+  let phi_LL : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
+      (qgK k A i * qgK k A i * qgK k A j)
+  let phi_RR : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (1 : QuantumGroup k A)
+  have hSerreS := qg_SerreE_quad_smul k i j h
+  have hSect00 :
+      phi_LL (qgE k A i * qgE k A i * qgE k A j -
+        (T 1 + T (-1) : QBase k) • (qgE k A i * qgE k A j * qgE k A i) +
+        qgE k A j * qgE k A i * qgE k A i) = 0 := by
+    rw [hSerreS]; exact map_zero phi_LL
+  have hSect21 :
+      phi_RR (qgE k A i * qgE k A i * qgE k A j -
+        (T 1 + T (-1) : QBase k) • (qgE k A i * qgE k A j * qgE k A i) +
+        qgE k A j * qgE k A i * qgE k A i) = 0 := by
+    rw [hSerreS]; exact map_zero phi_RR
+  rw [map_add phi_LL, map_sub phi_LL,
+      LinearMap.map_smul_of_tower phi_LL] at hSect00
+  rw [map_add phi_RR, map_sub phi_RR,
+      LinearMap.map_smul_of_tower phi_RR] at hSect21
+  simp only [phi_LL, phi_RR, LinearMap.flip_apply, TensorProduct.mk_apply]
+    at hSect00 hSect21
+  have hUqId01 := qg_sect_E_quad_20 k i j h
+  let phi_01 : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgE k A i * qgE k A i)
+  have hSect01 :
+      phi_01 (qgK k A i * qgK k A i * qgE k A j -
+        (T 1 + T (-1) : QBase k) • (qgK k A i * qgE k A j * qgK k A i) +
+        qgE k A j * qgK k A i * qgK k A i) = 0 := by
+    rw [hUqId01]; exact map_zero phi_01
+  rw [map_add phi_01, map_sub phi_01,
+      LinearMap.map_smul_of_tower phi_01] at hSect01
+  simp only [phi_01, TensorProduct.mk_apply] at hSect01
+  have hUqId20 := qg_sect_E_quad_02 k i j hsym
+  let phi_20 : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (qgE k A j)
+  have hSect20 :
+      phi_20 (qgE k A i * qgE k A i * qgK k A j -
+        (T 1 + T (-1) : QBase k) • (qgE k A i * qgK k A j * qgE k A i) +
+        qgK k A j * qgE k A i * qgE k A i) = 0 := by
+    rw [hUqId20]; exact map_zero phi_20
+  rw [map_add phi_20, map_sub phi_20,
+      LinearMap.map_smul_of_tower phi_20] at hSect20
+  simp only [phi_20, TensorProduct.mk_apply] at hSect20
+  have hUqId10a := qg_sect_E_quad_10_EiEj k i j hii hsym
+  let phi_10a : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgE k A i * qgE k A j)
+  have hSect10a :
+      phi_10a (qgE k A i * qgK k A i * qgK k A j +
+        qgK k A i * qgE k A i * qgK k A j -
+        (T 1 + T (-1) : QBase k) • (qgK k A i * qgK k A j * qgE k A i)) = 0 := by
+    rw [hUqId10a]; exact map_zero phi_10a
+  rw [map_sub phi_10a, map_add phi_10a,
+      LinearMap.map_smul_of_tower phi_10a] at hSect10a
+  simp only [phi_10a, TensorProduct.mk_apply] at hSect10a
+  have hUqId10b := qg_sect_E_quad_10_EjEi k i j hii hsym
+  let phi_10b : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgE k A j * qgE k A i)
+  have hSect10b :
+      phi_10b (qgK k A j * qgE k A i * qgK k A i +
+        qgK k A j * qgK k A i * qgE k A i -
+        (T 1 + T (-1) : QBase k) • (qgE k A i * qgK k A j * qgK k A i)) = 0 := by
+    rw [hUqId10b]; exact map_zero phi_10b
+  rw [map_sub phi_10b, map_add phi_10b,
+      LinearMap.map_smul_of_tower phi_10b] at hSect10b
+  simp only [phi_10b, TensorProduct.mk_apply] at hSect10b
+  have hUqId11 := qg_sect_E_quad_11 k i j hii h
+  let phi_11 : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (qgE k A i)
+  have hSect11 :
+      phi_11 ((qgE k A i * qgK k A i * qgE k A j +
+                qgK k A i * qgE k A i * qgE k A j +
+                qgE k A j * qgE k A i * qgK k A i +
+                qgE k A j * qgK k A i * qgE k A i) -
+        (T 1 + T (-1) : QBase k) •
+          (qgE k A i * qgE k A j * qgK k A i +
+           qgK k A i * qgE k A j * qgE k A i)) = 0 := by
+    rw [hUqId11]; exact map_zero phi_11
+  rw [map_sub phi_11, map_add phi_11, map_add phi_11, map_add phi_11,
+      LinearMap.map_smul_of_tower phi_11, map_add phi_11] at hSect11
+  simp only [phi_11, TensorProduct.mk_apply, smul_add] at hSect11
+  have hKK : qgK k A j * qgK k A i = qgK k A i * qgK k A j :=
+    (qg_KK_comm k A i j).symm
+  have hKKK1 : qgK k A j * qgK k A i * qgK k A i =
+      qgK k A i * qgK k A i * qgK k A j := by
+    rw [hKK, mul_assoc, hKK, ← mul_assoc]
+  have hKKK2 : qgK k A i * qgK k A j * qgK k A i =
+      qgK k A i * qgK k A i * qgK k A j := by
+    rw [mul_assoc, hKK, ← mul_assoc]
+  have hKKK3 : qgK k A j * qgK k A i * qgE k A i =
+      qgK k A i * qgK k A j * qgE k A i := by rw [hKK]
+  simp_rw [hKKK1, hKKK2, hKKK3]
+  clear hSerreS hUqId01 hUqId20 hUqId10a hUqId10b hUqId11
+  clear phi_LL phi_RR phi_01 phi_20 phi_10a phi_10b phi_11
+  simp only [add_smul, TensorProduct.smul_tmul'] at hSect00 hSect21 hSect01 hSect20 ⊢
+  have smul_expand : ∀ (x : QuantumGroup k A ⊗[QBase k] QuantumGroup k A),
+      (T 1 + T (-1) : QBase k) • x = T 1 • x + T (-1) • x := fun x => add_smul _ _ _
+  rw [smul_expand] at hSect10a hSect10b
+  simp only [smul_expand] at hSect11
+  linear_combination (norm := skip)
+    hSect00 + hSect21 + hSect01 + hSect20 + hSect10a + hSect10b + hSect11
+  simp only [TensorProduct.smul_tmul']
+  simp_rw [hKKK3]
+  abel!
 
-**Heartbeat budget AUTHORIZED** (user 2026-04-15) for this assembly when
-the path is clear; deferred to next session.
+/-! ## 6. SerreF_quad: mirror of SerreE_quad with Kinv replacing K
 
-Per Uqsl3Hopf template, the final assembly is ~285 LOC + heartbeat 800000.
-Generic version may need additional decomposition or careful K-normalization
-helpers. -/
+The F-side coproduct Δ(F_i) = F_i ⊗ 1 + K_i⁻¹ ⊗ F_i has Kinv on the left of
+the tensor. The sector helpers are structurally identical to the E-side but with
+Kinv-F commutation: K_i⁻¹ F_j = T(A_ij) • F_j K_i⁻¹ (same q-power as K-E). -/
 
-/-! ## 6. Module summary (work in progress) -/
+theorem qg_Kinv_F_scaled (i j : Fin r) :
+    qgKinv k A i * qgF k A j =
+    ((T (A i j) : QBase k) • (qgF k A j * qgKinv k A i)) := by
+  have hKF : qgK k A i * qgF k A j = (T (-A i j) : QBase k) • (qgF k A j * qgK k A i) :=
+    qg_KF_scaled k i j
+  have hL : qgKinv k A i * (qgK k A i * qgF k A j) * qgKinv k A i =
+            qgF k A j * qgKinv k A i := by
+    rw [show qgKinv k A i * (qgK k A i * qgF k A j) =
+        (qgKinv k A i * qgK k A i) * qgF k A j from by noncomm_ring]
+    rw [qg_Kinv_mul_K, one_mul]
+  have hR : qgKinv k A i * ((T (-A i j) : QBase k) • (qgF k A j * qgK k A i)) * qgKinv k A i =
+            (T (-A i j) : QBase k) • (qgKinv k A i * qgF k A j) := by
+    rw [mul_smul_comm, smul_mul_assoc]; congr 1
+    rw [show qgKinv k A i * (qgF k A j * qgK k A i) * qgKinv k A i =
+        qgKinv k A i * qgF k A j * (qgK k A i * qgKinv k A i) from by noncomm_ring]
+    rw [qg_K_mul_Kinv, mul_one]
+  have hconj := congrArg (fun z => qgKinv k A i * z * qgKinv k A i) hKF
+  simp only at hconj; rw [hL, hR] at hconj
+  calc qgKinv k A i * qgF k A j
+      = (T (A i j) : QBase k) • ((T (-A i j) : QBase k) • (qgKinv k A i * qgF k A j)) := by
+        rw [smul_smul, show (T (A i j) : QBase k) * T (-A i j) = 1 from by
+          rw [← T_add]; norm_num]; rw [one_smul]
+    _ = (T (A i j) : QBase k) • (qgF k A j * qgKinv k A i) := by rw [hconj]
+
+theorem qg_KinvF_at (i j : Fin r) (x : QuantumGroup k A) :
+    x * qgKinv k A i * qgF k A j =
+    ((T (A i j) : QBase k)) • (x * qgF k A j * qgKinv k A i) := by
+  rw [mul_assoc x (qgKinv k A i) (qgF k A j),
+      qg_Kinv_F_scaled k i j, mul_smul_comm, ← mul_assoc]
+
+theorem qg_sect_F_quad_20 (i j : Fin r) (h : A i j = -1) :
+    qgKinv k A i * qgKinv k A i * qgF k A j -
+    (T 1 + T (-1) : QBase k) • (qgKinv k A i * qgF k A j * qgKinv k A i) +
+    qgF k A j * qgKinv k A i * qgKinv k A i = 0 := by
+  have hKF_smul : qgKinv k A i * qgF k A j =
+      (T (A i j) : QBase k) • (qgF k A j * qgKinv k A i) :=
+    qg_Kinv_F_scaled k i j
+  have hKF_at := qg_KinvF_at k (A := A) i j
+  have hK2F : qgKinv k A i * qgKinv k A i * qgF k A j =
+      (T (2 * A i j) : QBase k) • (qgF k A j * qgKinv k A i * qgKinv k A i) := by
+    rw [hKF_at, hKF_smul]; simp only [smul_mul_assoc, smul_smul]
+    congr 1; rw [← T_add]; ring_nf
+  have hKFK : qgKinv k A i * qgF k A j * qgKinv k A i =
+      (T (A i j) : QBase k) • (qgF k A j * qgKinv k A i * qgKinv k A i) := by
+    rw [hKF_smul]; simp only [smul_mul_assoc]
+  rw [hK2F, hKFK, smul_smul]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      s • x - t • x + x = (s - t + 1) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (2 * A i j) - (T 1 + T (-1)) * T (A i j) + 1 : QBase k) = 0 := by
+    rw [h, add_mul, ← T_add, ← T_add]
+    show T (2 * (-1 : ℤ)) - (T (1 + (-1)) + T (-1 + (-1))) + 1 = (0 : QBase k)
+    rw [show (1 + (-1) : ℤ) = 0 from by ring, T_zero]; ring
+  rw [hcoef, zero_smul]
+
+theorem qg_sect_F_quad_02 (i j : Fin r) (hsym : A j i = -1) :
+    qgF k A i * qgF k A i * qgKinv k A j -
+    (T 1 + T (-1) : QBase k) • (qgF k A i * qgKinv k A j * qgF k A i) +
+    qgKinv k A j * qgF k A i * qgF k A i = 0 := by
+  have hKjFi : qgKinv k A j * qgF k A i =
+      (T (-1) : QBase k) • (qgF k A i * qgKinv k A j) := by
+    rw [qg_Kinv_F_scaled, hsym]
+  have hFiKjFi : qgF k A i * qgKinv k A j * qgF k A i =
+      (T (-1) : QBase k) • (qgF k A i * qgF k A i * qgKinv k A j) := by
+    rw [show qgF k A i * qgKinv k A j * qgF k A i = qgF k A i * (qgKinv k A j * qgF k A i) from by
+        noncomm_ring, hKjFi]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hKjFiFi : qgKinv k A j * qgF k A i * qgF k A i =
+      (T (-2) : QBase k) • (qgF k A i * qgF k A i * qgKinv k A j) := by
+    rw [show qgKinv k A j * qgF k A i * qgF k A i = (qgKinv k A j * qgF k A i) * qgF k A i from by
+        noncomm_ring, hKjFi]
+    simp only [smul_mul_assoc]
+    rw [show qgF k A i * qgKinv k A j * qgF k A i = qgF k A i * (qgKinv k A j * qgF k A i) from by
+        noncomm_ring, hKjFi]
+    simp only [mul_smul_comm, smul_smul, ← mul_assoc]
+    congr 1; rw [← T_add]; norm_num
+  rw [hFiKjFi, hKjFiFi, smul_smul]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      x - s • x + t • x = (1 - s + t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 - (T 1 + T (-1)) * T (-1) + T (-2) : QBase k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 - (T (1 + (-1)) + T (-1 + (-1))) + T (-2) = (0 : QBase k)
+    rw [show (1 + (-1) : ℤ) = 0 from by ring, T_zero]; ring
+  rw [hcoef, zero_smul]
+
+theorem qg_sect_F_quad_11 (i j : Fin r) (hii : A i i = 2) (h : A i j = -1) :
+    (qgF k A i * qgKinv k A i * qgF k A j + qgKinv k A i * qgF k A i * qgF k A j +
+     qgF k A j * qgF k A i * qgKinv k A i + qgF k A j * qgKinv k A i * qgF k A i) -
+    (T 1 + T (-1) : QBase k) •
+      (qgF k A i * qgF k A j * qgKinv k A i + qgKinv k A i * qgF k A j * qgF k A i) = 0 := by
+  have hKiFi : qgKinv k A i * qgF k A i = (T 2 : QBase k) • (qgF k A i * qgKinv k A i) := by
+    rw [qg_Kinv_F_scaled, hii]
+  have hKiFj : qgKinv k A i * qgF k A j = (T (-1) : QBase k) • (qgF k A j * qgKinv k A i) := by
+    rw [qg_Kinv_F_scaled, h]
+  have hFiKiFj : qgF k A i * qgKinv k A i * qgF k A j =
+      (T (-1) : QBase k) • (qgF k A i * qgF k A j * qgKinv k A i) := by
+    rw [show qgF k A i * qgKinv k A i * qgF k A j = qgF k A i * (qgKinv k A i * qgF k A j) from by
+        noncomm_ring, hKiFj]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hKiFiFj : qgKinv k A i * qgF k A i * qgF k A j =
+      (T 1 : QBase k) • (qgF k A i * qgF k A j * qgKinv k A i) := by
+    rw [hKiFi, smul_mul_assoc,
+        show qgF k A i * qgKinv k A i * qgF k A j = qgF k A i * (qgKinv k A i * qgF k A j) from by
+          noncomm_ring, hKiFj, mul_smul_comm, smul_smul,
+        show qgF k A i * (qgF k A j * qgKinv k A i) = qgF k A i * qgF k A j * qgKinv k A i from by
+          noncomm_ring]
+    congr 1; rw [← T_add]; norm_num
+  have hFjKiFi : qgF k A j * qgKinv k A i * qgF k A i =
+      (T 2 : QBase k) • (qgF k A j * qgF k A i * qgKinv k A i) := by
+    rw [show qgF k A j * qgKinv k A i * qgF k A i = qgF k A j * (qgKinv k A i * qgF k A i) from by
+        noncomm_ring, hKiFi]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hKiFjFi : qgKinv k A i * qgF k A j * qgF k A i =
+      (T 1 : QBase k) • (qgF k A j * qgF k A i * qgKinv k A i) := by
+    rw [hKiFj, smul_mul_assoc,
+        show qgF k A j * qgKinv k A i * qgF k A i = qgF k A j * (qgKinv k A i * qgF k A i) from by
+          noncomm_ring, hKiFi, mul_smul_comm, smul_smul,
+        show qgF k A j * (qgF k A i * qgKinv k A i) = qgF k A j * qgF k A i * qgKinv k A i from by
+          noncomm_ring]
+    congr 1; rw [← T_add]; norm_num
+  rw [hFiKiFj, hKiFiFj, hFjKiFi, hKiFjFi]
+  have factor : ∀ (a b : QuantumGroup k A),
+      ((T (-1) : QBase k) • a + (T 1 : QBase k) • a + b + (T 2 : QBase k) • b) -
+      ((T 1 + T (-1) : QBase k)) • (a + (T 1 : QBase k) • b) =
+      ((T (-1) + T 1 - (T 1 + T (-1)) : QBase k)) • a +
+      ((1 + T 2 - (T 1 + T (-1)) * T 1 : QBase k)) • b := by intros; module
+  rw [factor]
+  have hcoef_A : (T (-1) + T 1 - (T 1 + T (-1)) : QBase k) = 0 := by ring
+  have hcoef_B : (1 + T 2 - (T 1 + T (-1)) * T 1 : QBase k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : QBase k)
+    rw [T_zero]; ring
+  rw [hcoef_A, hcoef_B, zero_smul, zero_smul, add_zero]
+
+theorem qg_sect_F_quad_10_FiFj (i j : Fin r) (hii : A i i = 2) (hsym : A j i = -1) :
+    qgF k A i * qgKinv k A i * qgKinv k A j + qgKinv k A i * qgF k A i * qgKinv k A j -
+    (T 1 + T (-1) : QBase k) • (qgKinv k A i * qgKinv k A j * qgF k A i) = 0 := by
+  have hKiFi : qgKinv k A i * qgF k A i = (T 2 : QBase k) • (qgF k A i * qgKinv k A i) := by
+    rw [qg_Kinv_F_scaled, hii]
+  have hKjFi : qgKinv k A j * qgF k A i = (T (-1) : QBase k) • (qgF k A i * qgKinv k A j) := by
+    rw [qg_Kinv_F_scaled, hsym]
+  have hKKinv := qg_Kinv_Kinv_comm (A := A) k i j
+  have hK1F1K2 : qgKinv k A i * qgF k A i * qgKinv k A j =
+      (T 2 : QBase k) • (qgF k A i * qgKinv k A i * qgKinv k A j) := by
+    rw [hKiFi, smul_mul_assoc]
+  have hK1K2F1 : qgKinv k A i * qgKinv k A j * qgF k A i =
+      (T 1 : QBase k) • (qgF k A i * qgKinv k A i * qgKinv k A j) := by
+    rw [show qgKinv k A i * qgKinv k A j * qgF k A i =
+        qgKinv k A j * (qgKinv k A i * qgF k A i) from by
+      rw [show qgKinv k A i * qgKinv k A j = qgKinv k A j * qgKinv k A i from hKKinv]
+      noncomm_ring]
+    rw [hKiFi, mul_smul_comm,
+        show qgKinv k A j * (qgF k A i * qgKinv k A i) = qgKinv k A j * qgF k A i * qgKinv k A i from by
+          noncomm_ring, hKjFi, smul_mul_assoc, smul_smul,
+        show qgF k A i * qgKinv k A j * qgKinv k A i = qgF k A i * qgKinv k A i * qgKinv k A j from by
+          rw [mul_assoc, ← hKKinv, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK1F1K2, hK1K2F1, smul_smul]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      x + s • x - t • x = (1 + s - t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 + T 2 - (T 1 + T (-1)) * T 1 : QBase k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : QBase k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+theorem qg_sect_F_quad_10_FjFi (i j : Fin r) (hii : A i i = 2) (hsym : A j i = -1) :
+    qgKinv k A j * qgF k A i * qgKinv k A i + qgKinv k A j * qgKinv k A i * qgF k A i -
+    (T 1 + T (-1) : QBase k) • (qgF k A i * qgKinv k A j * qgKinv k A i) = 0 := by
+  have hKjFi : qgKinv k A j * qgF k A i = (T (-1) : QBase k) • (qgF k A i * qgKinv k A j) := by
+    rw [qg_Kinv_F_scaled, hsym]
+  have hKiFi : qgKinv k A i * qgF k A i = (T 2 : QBase k) • (qgF k A i * qgKinv k A i) := by
+    rw [qg_Kinv_F_scaled, hii]
+  have hKKinv := qg_Kinv_Kinv_comm (A := A) k i j
+  have hK2F1K1 : qgKinv k A j * qgF k A i * qgKinv k A i =
+      (T (-1) : QBase k) • (qgF k A i * qgKinv k A j * qgKinv k A i) := by
+    rw [hKjFi, smul_mul_assoc]
+  have hK2K1F1 : qgKinv k A j * qgKinv k A i * qgF k A i =
+      (T 1 : QBase k) • (qgF k A i * qgKinv k A j * qgKinv k A i) := by
+    rw [show qgKinv k A j * qgKinv k A i = qgKinv k A i * qgKinv k A j from hKKinv.symm]
+    rw [show qgKinv k A i * qgKinv k A j * qgF k A i =
+        qgKinv k A i * (qgKinv k A j * qgF k A i) from by noncomm_ring,
+        hKjFi, mul_smul_comm,
+        show qgKinv k A i * (qgF k A i * qgKinv k A j) = qgKinv k A i * qgF k A i * qgKinv k A j from by
+          noncomm_ring, hKiFi, smul_mul_assoc, smul_smul]
+    rw [show qgF k A i * qgKinv k A i * qgKinv k A j = qgF k A i * qgKinv k A j * qgKinv k A i from by
+        rw [mul_assoc, hKKinv, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK2F1K1, hK2K1F1]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      s • x + t • x - (T 1 + T (-1) : QBase k) • x =
+      (s + t - (T 1 + T (-1))) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (-1) + T 1 - (T 1 + T (-1)) : QBase k) = 0 := by ring
+  rw [hcoef, zero_smul]
+
+set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
+private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
+    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
+    comulFreeAlgQG k A
+      (qgI k (.F i) * qgI k (.F i) * qgI k (.F j) +
+       qgI k (.F j) * qgI k (.F i) * qgI k (.F i)) =
+    comulFreeAlgQG k A
+      (algebraMap (QBase k) _ (T 1 + T (-1)) *
+       qgI k (.F i) * qgI k (.F j) * qgI k (.F i)) := by
+  rw [← sub_eq_zero, ← map_sub]
+  simp only [map_sub, map_add, map_mul, AlgHom.commutes,
+             comulFreeAlgQG_ι, comulOnGenQG, mul_add, add_mul,
+             Algebra.TensorProduct.algebraMap_apply,
+             Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+  simp only [← Algebra.smul_def, smul_mul_assoc, one_mul,
+             Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul',
+             zsmul_eq_mul, Int.mul_one]
+  let phi_LL : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
+      (qgKinv k A i * qgKinv k A i * qgKinv k A j)
+  let phi_RR : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (1 : QuantumGroup k A)
+  have hSerreS := qg_SerreF_quad_smul k i j h
+  have hSect00 :
+      phi_LL (qgF k A i * qgF k A i * qgF k A j -
+        (T 1 + T (-1) : QBase k) • (qgF k A i * qgF k A j * qgF k A i) +
+        qgF k A j * qgF k A i * qgF k A i) = 0 := by
+    rw [hSerreS]; exact map_zero phi_LL
+  have hSect21 :
+      phi_RR (qgF k A i * qgF k A i * qgF k A j -
+        (T 1 + T (-1) : QBase k) • (qgF k A i * qgF k A j * qgF k A i) +
+        qgF k A j * qgF k A i * qgF k A i) = 0 := by
+    rw [hSerreS]; exact map_zero phi_RR
+  rw [map_add phi_LL, map_sub phi_LL,
+      LinearMap.map_smul_of_tower phi_LL] at hSect00
+  rw [map_add phi_RR, map_sub phi_RR,
+      LinearMap.map_smul_of_tower phi_RR] at hSect21
+  simp only [phi_LL, phi_RR, LinearMap.flip_apply, TensorProduct.mk_apply]
+    at hSect00 hSect21
+  have hUqId01 := qg_sect_F_quad_20 k i j h
+  let phi_01 : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgF k A i * qgF k A i)
+  have hSect01 :
+      phi_01 (qgKinv k A i * qgKinv k A i * qgF k A j -
+        (T 1 + T (-1) : QBase k) • (qgKinv k A i * qgF k A j * qgKinv k A i) +
+        qgF k A j * qgKinv k A i * qgKinv k A i) = 0 := by
+    rw [hUqId01]; exact map_zero phi_01
+  rw [map_add phi_01, map_sub phi_01,
+      LinearMap.map_smul_of_tower phi_01] at hSect01
+  simp only [phi_01, TensorProduct.mk_apply] at hSect01
+  have hUqId20 := qg_sect_F_quad_02 k i j hsym
+  let phi_20 : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (qgF k A j)
+  have hSect20 :
+      phi_20 (qgF k A i * qgF k A i * qgKinv k A j -
+        (T 1 + T (-1) : QBase k) • (qgF k A i * qgKinv k A j * qgF k A i) +
+        qgKinv k A j * qgF k A i * qgF k A i) = 0 := by
+    rw [hUqId20]; exact map_zero phi_20
+  rw [map_add phi_20, map_sub phi_20,
+      LinearMap.map_smul_of_tower phi_20] at hSect20
+  simp only [phi_20, TensorProduct.mk_apply] at hSect20
+  have hUqId10a := qg_sect_F_quad_10_FiFj k i j hii hsym
+  let phi_10a : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgF k A i * qgF k A j)
+  have hSect10a :
+      phi_10a (qgF k A i * qgKinv k A i * qgKinv k A j +
+        qgKinv k A i * qgF k A i * qgKinv k A j -
+        (T 1 + T (-1) : QBase k) • (qgKinv k A i * qgKinv k A j * qgF k A i)) = 0 := by
+    rw [hUqId10a]; exact map_zero phi_10a
+  rw [map_sub phi_10a, map_add phi_10a,
+      LinearMap.map_smul_of_tower phi_10a] at hSect10a
+  simp only [phi_10a, TensorProduct.mk_apply] at hSect10a
+  have hUqId10b := qg_sect_F_quad_10_FjFi k i j hii hsym
+  let phi_10b : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgF k A j * qgF k A i)
+  have hSect10b :
+      phi_10b (qgKinv k A j * qgF k A i * qgKinv k A i +
+        qgKinv k A j * qgKinv k A i * qgF k A i -
+        (T 1 + T (-1) : QBase k) • (qgF k A i * qgKinv k A j * qgKinv k A i)) = 0 := by
+    rw [hUqId10b]; exact map_zero phi_10b
+  rw [map_sub phi_10b, map_add phi_10b,
+      LinearMap.map_smul_of_tower phi_10b] at hSect10b
+  simp only [phi_10b, TensorProduct.mk_apply] at hSect10b
+  have hUqId11 := qg_sect_F_quad_11 k i j hii h
+  let phi_11 : QuantumGroup k A →ₗ[QBase k]
+      QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (qgF k A i)
+  have hSect11 :
+      phi_11 ((qgF k A i * qgKinv k A i * qgF k A j +
+                qgKinv k A i * qgF k A i * qgF k A j +
+                qgF k A j * qgF k A i * qgKinv k A i +
+                qgF k A j * qgKinv k A i * qgF k A i) -
+        (T 1 + T (-1) : QBase k) •
+          (qgF k A i * qgF k A j * qgKinv k A i +
+           qgKinv k A i * qgF k A j * qgF k A i)) = 0 := by
+    rw [hUqId11]; exact map_zero phi_11
+  rw [map_sub phi_11, map_add phi_11, map_add phi_11, map_add phi_11,
+      LinearMap.map_smul_of_tower phi_11, map_add phi_11] at hSect11
+  simp only [phi_11, TensorProduct.mk_apply, smul_add] at hSect11
+  have hKK : qgKinv k A j * qgKinv k A i = qgKinv k A i * qgKinv k A j :=
+    (qg_Kinv_Kinv_comm (A := A) k i j).symm
+  have hKKK1 : qgKinv k A j * qgKinv k A i * qgKinv k A i =
+      qgKinv k A i * qgKinv k A i * qgKinv k A j := by
+    rw [hKK, mul_assoc, hKK, ← mul_assoc]
+  have hKKK2 : qgKinv k A i * qgKinv k A j * qgKinv k A i =
+      qgKinv k A i * qgKinv k A i * qgKinv k A j := by
+    rw [mul_assoc, hKK, ← mul_assoc]
+  have hKKK3 : qgKinv k A j * qgKinv k A i * qgF k A i =
+      qgKinv k A i * qgKinv k A j * qgF k A i := by rw [hKK]
+  simp_rw [hKKK1, hKKK2, hKKK3]
+  clear hSerreS hUqId01 hUqId20 hUqId10a hUqId10b hUqId11
+  clear phi_LL phi_RR phi_01 phi_20 phi_10a phi_10b phi_11
+  simp only [add_smul, TensorProduct.smul_tmul'] at hSect00 hSect21 hSect01 hSect20 ⊢
+  have smul_expand : ∀ (x : QuantumGroup k A ⊗[QBase k] QuantumGroup k A),
+      (T 1 + T (-1) : QBase k) • x = T 1 • x + T (-1) • x := fun x => add_smul _ _ _
+  rw [smul_expand] at hSect10a hSect10b
+  simp only [smul_expand] at hSect11
+  erw [TensorProduct.smul_tmul', TensorProduct.smul_tmul'] at hSect10a
+  erw [TensorProduct.smul_tmul', TensorProduct.smul_tmul'] at hSect10b
+  erw [TensorProduct.smul_tmul', TensorProduct.smul_tmul',
+       TensorProduct.smul_tmul', TensorProduct.smul_tmul'] at hSect11
+  -- All 7 sector hypotheses built, goal K-normalized. Finisher blocked by
+  -- `linear_combination` producing T(-1•1) artifacts (definitionally = T(-1)
+  -- but syntactically different, preventing abel! from closing).
+  -- Resolution: bypass linear_combination with manual hypothesis subtraction.
+  sorry
+
+/-! ## 7. Module summary -/
 
 /-- Generic coproduct module: Phase 5m Wave 2 deliverable.
 
