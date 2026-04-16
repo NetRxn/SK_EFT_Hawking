@@ -661,7 +661,50 @@ theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
     simp only [mul_assoc]
   have hBF : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
     qgK k A i * (qgF k A i * (qgK k A j * (qgF k A j * (qgK k A i * qgF k A i)))) := by
-    sorry -- 3 KF commutations needed: K_i*F_i(T(-2)), K_i*F_j(T(1)), K_j*F_i(T(1)), net T(0)=1
+    -- Step 1: expose K_j*F_i, commute
+    conv_lhs => simp only [mul_assoc]
+    conv_lhs =>
+      rw [show qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
+        qgK k A i * (qgK k A i * ((qgK k A j * qgF k A i) * (qgF k A j * qgF k A i))) from by
+        simp only [mul_assoc]]
+      rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
+      simp only [smul_mul_assoc, mul_smul_comm]
+    -- Step 2: K_i*F_i (same-index, T(-2))
+    conv_lhs =>
+      rw [show (T 1 : QBase k) • (qgK k A i * (qgK k A i *
+          (qgF k A i * qgK k A j * (qgF k A j * qgF k A i)))) =
+        (T 1 : QBase k) • (qgK k A i *
+          ((qgK k A i * qgF k A i) * (qgK k A j * (qgF k A j * qgF k A i)))) from by
+        congr 1; simp only [mul_assoc]]
+      rw [qg_KF_scaled k (A := A) i i, hii]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- KK_comm + Step 3: K_i*F_j (cross, T(1))
+    conv_lhs =>
+      rw [show (T 1 * T (-2) : QBase k) • (qgK k A i *
+          ((qgF k A i * qgK k A i) * (qgK k A j * (qgF k A j * qgF k A i)))) =
+        (T 1 * T (-2) : QBase k) • (qgK k A i *
+          (qgF k A i * (qgK k A j * ((qgK k A i * qgF k A j) * qgF k A i)))) from by
+        congr 1
+        congr 1
+        rw [show qgF k A i * qgK k A i * (qgK k A j * (qgF k A j * qgF k A i)) =
+          qgF k A i * (qgK k A i * qgK k A j) * (qgF k A j * qgF k A i) from by
+            rw [← mul_assoc (qgF k A i) (qgK k A i),
+                mul_assoc (qgF k A i * qgK k A i),
+                mul_assoc (qgF k A i)],
+          qg_KK_comm k A i j,
+          show qgF k A i * (qgK k A j * qgK k A i) * (qgF k A j * qgF k A i) =
+          qgF k A i * (qgK k A j * (qgK k A i * qgF k A j * qgF k A i)) from by
+            rw [mul_assoc, mul_assoc, mul_assoc]]]
+    -- Step 3: K_i*F_j (cross, T(1)) — pair is now exposed
+    -- Step 3 is implicit: the KK_comm + KF_scaled steps already produced
+    -- the correct K*F interleaving. Close via the show's congr + mul_assoc.
+    conv_lhs =>
+      rw [show qgK k A i * qgF k A j * qgF k A i = (qgK k A i * qgF k A j) * qgF k A i from rfl]
+      rw [qg_KF_scaled k (A := A) i j, h]
+    rw [show T (- -1 : ℤ) = (T 1 : QBase k) from by norm_num]
+    rw [smul_mul_assoc, mul_smul_comm, mul_smul_comm, mul_smul_comm, smul_smul]
+    rw [show (T 1 * T (-2) * T 1 : QBase k) = 1 from by
+      rw [← T_add, ← T_add]; norm_num, one_smul]; simp only [mul_assoc]
   -- Close: substitute atom helpers, split smul, match to goal
   simp only [mul_assoc] at h_mul
   rw [hA2F, hA1F, hBF] at h_mul
