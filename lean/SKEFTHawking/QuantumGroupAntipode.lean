@@ -69,17 +69,15 @@ private example (a : QuantumGroup k A) : (0 : QuantumGroup k A) * a = 0 := zero_
 -- Bypass RingQuot Add/Neg diamond: add_mul uses RingQuot.instAdd, but
 -- eq_neg_of_add_eq_zero_left needs AddGroup.toAdd. respectTransparency
 -- false bridges the gap for the `exact` elaboration.
--- BLOCKED: eq_neg_of_add_eq_zero_left uses AddGroup.toAdd but add_mul
--- produces RingQuot.instAdd. The proof via add_mul+add_neg_cancel+zero_mul
--- correctly produces h1 : 0 = a*b + (-a)*b, but the final application
--- of eq_neg_of_add_eq_zero_left fails at elaboration (not defEq).
--- Needs Mathlib RingQuot instance alignment fix.
--- Deep research: Lit-Search/Tasks/ringquot_add_neg_diamond.md
+-- Fix: `letI : NonUnitalNonAssocRing` locally fixes the instance synthesis
+-- path so neg_mul/mul_neg can pattern-match. Used 20+ times in Uqsl3Hopf.
 lemma qg_neg_mul (a b : QuantumGroup k A) : (-a) * b = -(a * b) := by
-  sorry
+  letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
+  exact neg_mul a b
 
 lemma qg_mul_neg (a b : QuantumGroup k A) : a * (-b) = -(a * b) := by
-  sorry
+  letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
+  exact mul_neg a b
 
 /-! ## 2. Per-relation antipode respect helpers (mechanical cases)
 
@@ -131,9 +129,26 @@ theorem antipodeFreeAlgQG_KE (i j : Fin r) :
     antipodeFreeAlgQG k A (qgI' k (.K i) * qgI' k (.E j)) =
     antipodeFreeAlgQG k A
       (algebraMap (QBase k) _ (T (A i j)) * qgI' k (.E j) * qgI' k (.K i)) := by
-  -- Proof approach: expand both sides via MulOpposite, apply anti_KE_helper.
-  -- Blocked by qg_neg_mul sorry (RingQuot Add/Neg diamond).
-  sorry
+  rw [show antipodeFreeAlgQG k A (qgI' k (.K i) * qgI' k (.E j)) =
+      MulOpposite.op (-(qgE k A j * qgKinv k A j) * qgKinv k A i) by
+    rw [map_mul]; erw [antipodeFreeAlgQG_ι, antipodeFreeAlgQG_ι]
+    simp [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]]
+  rw [show antipodeFreeAlgQG k A
+      (algebraMap (QBase k) _ (T (A i j)) * qgI' k (.E j) * qgI' k (.K i)) =
+      MulOpposite.op (qgKinv k A i * (-(qgE k A j * qgKinv k A j) *
+        (algebraMap (QBase k) (QuantumGroup k A)) (T (A i j)))) by
+    rw [map_mul, map_mul, AlgHom.commutes]
+    erw [antipodeFreeAlgQG_ι, antipodeFreeAlgQG_ι]
+    simp [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]]
+  congr 1
+  rw [qg_neg_mul,
+      show qgKinv k A i * (-(qgE k A j * qgKinv k A j) *
+        (algebraMap (QBase k) (QuantumGroup k A)) (T (A i j))) =
+      -(qgKinv k A i * (qgE k A j * qgKinv k A j) *
+        (algebraMap (QBase k) (QuantumGroup k A)) (T (A i j))) from by
+    rw [qg_neg_mul, qg_mul_neg]; noncomm_ring]
+  congr 1
+  rw [anti_KE_helper, Algebra.smul_def, Algebra.commutes (T (A i j))]; noncomm_ring
 
 /-! ### Group IV: K-F conjugation
 
