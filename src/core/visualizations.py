@@ -6767,5 +6767,105 @@ def fig_graphene_dissipation_window():
     return fig
 
 
+def fig_graphene_noise_spectrum():
+    """Fig 104: Current noise power spectrum S_I(ω) for Dean bilayer nozzle.
+
+    Shows S_Hawking (excess noise from analog Hawking radiation),
+    S_thermal (Johnson-Nyquist background), and S_total on log-log axes.
+    Marks the characteristic Hawking frequency ω_H and the optimal
+    detection band.
+    """
+    from src.graphene.wkb_spectrum import compute_graphene_spectrum
+
+    spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=300)
+    f_GHz = spec.freq_Hz / 1e9
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=f_GHz, y=spec.S_thermal,
+        name='S_thermal (Johnson-Nyquist)',
+        line=dict(color=COLORS['dissipative'], width=2, dash='dash'),
+    ))
+    fig.add_trace(go.Scatter(
+        x=f_GHz, y=spec.S_hawking,
+        name='S_Hawking (analog radiation)',
+        line=dict(color=COLORS['steel_blue'], width=2.5),
+    ))
+    fig.add_trace(go.Scatter(
+        x=f_GHz, y=spec.S_total,
+        name='S_total',
+        line=dict(color='black', width=1, dash='dot'),
+    ))
+
+    # Mark ω_H
+    omega_H_GHz = spec.omega_H / (2 * np.pi * 1e9)
+    fig.add_vline(x=omega_H_GHz, line_dash='dot', line_color='grey',
+                  annotation_text=f'ω_H ≈ {omega_H_GHz:.0f} GHz',
+                  annotation_position='top right')
+
+    # Detection window
+    f_lo, f_hi = spec.freq_window_Hz[0] / 1e9, spec.freq_window_Hz[1] / 1e9
+    fig.add_vrect(x0=f_lo, x1=f_hi,
+                  fillcolor='rgba(46,134,171,0.08)', line_width=0,
+                  annotation_text='detection band',
+                  annotation_position='top left')
+
+    apply_layout(fig,
+        xaxis=dict(title='Frequency (GHz)', type='log',
+                   range=[np.log10(0.3), np.log10(600)]),
+        yaxis=dict(title='S_I (A²/Hz)', type='log'),
+        title=dict(text=f'Noise Power Spectrum — Dean Bilayer Nozzle '
+                        f'(T_H = {spec.T_H_K:.1f} K, D = {spec.D:.2f})',
+                   font=TITLE_FONT),
+        height=500, width=750,
+    )
+    return fig
+
+
+def fig_graphene_snr_frequency():
+    """Fig 105: Per-bin SNR vs frequency for the Dean bilayer nozzle.
+
+    Shows the frequency dependence of the Hawking-to-thermal signal ratio.
+    The SNR is roughly flat at low frequencies (both Hawking and thermal
+    scale similarly) and drops exponentially above ω_H.
+    """
+    from src.graphene.wkb_spectrum import compute_graphene_spectrum
+
+    spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=300)
+    f_GHz = spec.freq_Hz / 1e9
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=f_GHz, y=spec.snr_per_bin,
+        name='SNR per bin',
+        line=dict(color=COLORS['steel_blue'], width=2),
+        fill='tozeroy',
+        fillcolor='rgba(46,134,171,0.15)',
+    ))
+
+    omega_H_GHz = spec.omega_H / (2 * np.pi * 1e9)
+    fig.add_vline(x=omega_H_GHz, line_dash='dot', line_color='grey',
+                  annotation_text=f'ω_H ≈ {omega_H_GHz:.0f} GHz')
+
+    fig.add_annotation(
+        x=np.log10(2), y=np.log10(spec.peak_snr * 0.5),
+        text=f'Integration time: {spec.integration_time_s:.0f} s<br>'
+             f'for cumulative SNR = 1',
+        showarrow=False, font=dict(size=11),
+        xref='x', yref='y',
+    )
+
+    apply_layout(fig,
+        xaxis=dict(title='Frequency (GHz)', type='log',
+                   range=[np.log10(0.3), np.log10(600)]),
+        yaxis=dict(title='S_Hawking / S_thermal (per bin)', type='log'),
+        title=dict(text='Detection Signal-to-Noise — Dean Bilayer Nozzle',
+                   font=TITLE_FONT),
+        height=450, width=700,
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

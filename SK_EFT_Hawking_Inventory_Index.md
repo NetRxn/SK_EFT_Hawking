@@ -20,9 +20,9 @@
 | Lean modules | **141** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +2 since last sync: Phase 5w Wave 2 DiracFluidMetric.lean (9 thms), Wave 3 GrapheneHawking.lean (7 thms). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
-| Test files | **48** | +2: test_graphene_metric.py (26), test_graphene_hawking.py (21) |
+| Test files | **49** | +3: test_graphene_metric.py (26), test_graphene_hawking.py (21), test_graphene_spectrum.py (17) |
 | Test count | 1660+ | `pytest tests/ -q` |
-| Figures | **103** | `grep -c "^def fig_" src/core/visualizations.py` (+2: graphene T_H sweep, dissipation window) |
+| Figures | **105** | `grep -c "^def fig_" src/core/visualizations.py` (+4: T_H sweep, dissipation window, noise PSD, SNR) |
 | Notebooks | **49** | `ls notebooks/*.ipynb` (+1: Phase5w_GrapheneDiracFluid_Technical) |
 | Papers | **15** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
