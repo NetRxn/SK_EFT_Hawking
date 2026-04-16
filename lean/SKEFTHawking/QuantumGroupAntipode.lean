@@ -415,12 +415,12 @@ theorem antipodeFreeAlgQG_SerreE_quad (i j : Fin r)
         (qgKinv k A i * qgKinv k A i * qgKinv k A j))) hSE
   simp only [map_add, map_sub, map_zero, LinearMap.mulRight_apply,
              LinearMap.map_smul_of_tower] at h_mul
-  -- Push Kinv past E in h_mul too (same simp chain as Phase 8)
-  -- h_mul has Serre·Kinv_chain, goal has dressed Serre.
-  -- Connecting them requires 3 atom-equality helpers (hA1, hA2, hB), each
-  -- ~70 LOC of E·Kinv commutation chains. Same pattern as Uqsl3Hopf lines
-  -- 2690-2942. The q-factors cancel palindromically: T(A_ii+A_ij+A_ji) = T(0)
-  -- for each atom after full Kinv commutation.
+  -- h_mul has Serre(E)·Kinv_chain = 0. Goal has dressed Serre.
+  -- Need 3 atom-equality helpers to commute Kinv through E in h_mul,
+  -- each using qg_E_Kinv_scaled step by step (can't use simp_rw because
+  -- left-association doesn't expose bare E·Kinv pairs after ← mul_assoc).
+  -- Per Uqsl3Hopf lines 2690-2942: manual show/rw chain per atom.
+  -- T-scalars cancel palindromically: T(A_ij)*T(A_ii)*T(A_ij) = T(0) = 1.
   sorry
 
 theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
