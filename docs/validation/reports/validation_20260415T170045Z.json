@@ -1,0 +1,113 @@
+{
+  "timestamp": "20260415T170045Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "readiness_submission_gate": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "0 green / 0 yellow / 15 red across 15 papers",
+          "warning": false
+        },
+        {
+          "name": "paper10_modular_generation",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper11_quantum_group",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper12_polariton",
+          "passed": true,
+          "message": "3 blocked: ParameterProvenance, ComputationCorrectness, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper14_braided_mtc",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper15_methodology",
+          "passed": true,
+          "message": "1 blocked: CitationIntegrity",
+          "warning": true
+        },
+        {
+          "name": "paper16_wrt_tqft",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper1_first_order",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper2_second_order",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper3_gauge_erasure",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, ParameterProvenance",
+          "warning": true
+        },
+        {
+          "name": "paper4_wkb_connection",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper5_adw_gap",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper6_vestigial",
+          "passed": true,
+          "message": "4 blocked: CitationIntegrity, ComputationCorrectness, NarrativeGrounding, ProductionRunHealth",
+          "warning": true
+        },
+        {
+          "name": "paper7_chirality_formal",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ComputationCorrectness, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper8_chirality_master",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper9_sm_anomaly_drinfeld",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, LeanProofSubstance, NarrativeGrounding",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

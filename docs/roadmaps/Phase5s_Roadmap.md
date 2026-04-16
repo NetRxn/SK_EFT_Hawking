@@ -252,24 +252,40 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
     - `simpleRepModule : DZ2Simple → ModuleCat (DG k G2)` bundles the
       4 simples as category objects (pattern-match on label; helper
       function failed due to universe inference)
-- [ ] **Wave 9 continuation — functor construction + equivalence**
-  (estimated ~200-300 additional LOC, session 2+):
-    - Persistent working state:
-      `temporary/working-docs/phase5s_wave9_centerfunctor_z2_state.md`
-    - Verified foundations (2026-04-15 session 1): `Center C := Σ X : C,
-      HalfBraiding X` from Mathlib source; `MonoidalCategory
-      (Center (VecG_Cat k G))` available via `VecGMonoidal.lean`.
-    - Next steps: encode 4 toric anyons as concrete `Center.Obj` values
-      with half-braiding (+ `monoidal` + `naturality` proofs), define
-      `centerToRepZ2` functor, prove Full/Faithful/EssSurj, assemble
-      `Equivalence.ofFullyFaithfulEssSurj` to discharge
-      `H_CF2_center_equivalence`.
-    - Observation: `H_CF1_center_functor` as stated is
-      `Nonempty (Functor Center ModuleCat)` — trivially provable by any
-      constant functor. The hypothesis's comment block describes the
-      INTENT as "the canonical functor exists" (≠ Nonempty). Proper
-      Wave 9 completion should strengthen H_CF1 to match the intent
-      rather than discharge it trivially.
+- [x] **Wave 9 session 2 — H_CF1 discharge via graded-total-space
+  functor** (2026-04-15, `CenterFunctorZ2Equiv.lean`, 295 LOC).
+  Shipped:
+    - `lineGraded`, `eAdd`, `aAdd`, `anyonObject`, `anyonFluxSector` —
+      underlying VecG_Cat objects of the 4 toric anyons
+    - `gradedTotalSpaceFunctor : Center (VecG_Cat k G2) ⥤ ModuleCat
+      (DG k G2)` — **honest non-trivial functor** via
+      `LinearMap.prodMap` + `Module.compHom` with `chiTrivTriv`. Acts
+      functorially on objects (carrier = `V(eAdd) × V(aAdd)`) and
+      morphisms (product of per-degree component maps). Not canonical
+      (ignores the half-braiding + uses the trivial character), but
+      strictly stronger than constant-functor discharge.
+    - `h_cf1_G2 : H_CF1_center_functor k G2` — **H_CF1 DISCHARGED**
+      with the graded-total-space functor as witness.
+    - `aAdd_ne_eAdd`, `anyonFluxSector_eq_{e,a}Add_iff`,
+      `anyon_flux_separates` — flux-sector content theorems
+    - `num_toric_anyons`, `G2_dim_squared`, `num_anyons_equals_card_squared`
+      — DPR dimension formula for abelian G
+- [ ] **Wave 9 continuation — canonical functor + H_CF2 equivalence**
+  (multi-session future work; see
+  `temporary/working-docs/phase5s_wave9_centerfunctor_z2_state.md`
+  strengthening audit 2026-04-15):
+    - **Priority HIGH:** Upgrade `gradedTotalSpaceFunctor` to a canonical
+      functor that uses the half-braiding `β` non-trivially to distinguish
+      sign variants (`chiTrivSign`/`chiFlipSign`). Estimate 600-1200 LOC
+      / 4-6 sessions per deep research `Closing the Drinfeld center sorry
+      stubs in Lean 4.md` Phase D.
+    - **Priority MEDIUM:** Faithful proof fix (~50 LOC; blocked on
+      `Module.compHom`-vs-k LinearMap transparency, see state doc D4).
+    - **Priority NICE-TO-HAVE:** Full + EssSurj +
+      `Equivalence.ofFullyFaithfulEssSurj` → discharge
+      `H_CF2_center_equivalence`. 1500-2800 LOC beyond canonical functor.
+      Note: H_CF2 has **zero downstream dependencies** per
+      CenterFunctor.lean L75; strengthening is reputational.
 
 ---
 
@@ -303,7 +319,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
 | Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **COMPLETE 2026-04-14** — Uqsl2AffineHopf: 0 sorry. Uqsl3Hopf: 0 sorry (all 4 antipode Serre cubics E12/E21/F12/F21 closed; Bialgebra + HopfAlgebra typeclass instances wired). Full SKEFTHawking package builds clean no-cache. |
-| Wave 9 | CenterFunctor hypotheses | 1 week | None | Optional — 2 hypotheses, 0 sorry |
+| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor` (honest but not canonical). Canonical functor + H_CF2 tracked as multi-session work (see working doc strengthening audit). |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.
 

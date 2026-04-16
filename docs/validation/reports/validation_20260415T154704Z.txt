@@ -1,0 +1,25 @@
+SK-EFT Hawking Validation Report
+Generated: 20260415T154704Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] count_literals
+  + summary — 64 count-literal matches across 15 papers (WARN-level; retrofit to \input{counts.tex} + macros)
+  + paper10_modular_generation — no count literals found
+  + paper11_quantum_group — 13 count-literal matches: L62 "24
+theorems" (theorems); L64 "87 theorems" (theorems); L256 "201 theorems" (theorems) (+10 more)
+  + paper12_polariton — no count literals found
+  + paper14_braided_mtc — 7 count-literal matches: L83 "18 theorems" (theorems); L86 "14 theorems" (theorems); L137 "25 theorems" (theorems) (+4 more)
+  + paper15_methodology — USES MACROS but 3 count-literal matches: L135 "25 theorems" (theorems); L212 "200 theorems" (theorems); L124 "33 sorry" (sorry)
+  + paper16_wrt_tqft — no count literals found
+  + paper1_first_order — no count literals found
+  + paper2_second_order — 2 count-literal matches: L369 "6 sorry" (sorry); L373 "22 sorry" (sorry)
+  + paper3_gauge_erasure — 1 count-literal matches: L37 "12 theorems" (theorems)
+  + paper4_wkb_connection — 5 count-literal matches: L33 "17 theorems" (theorems); L279 "17 theorems" (theorems); L298 "968 theorems" (theorems) (+2 more)
+  + paper5_adw_gap — 6 count-literal matches: L37 "21 theorems" (theorems); L39 "20 theorems" (theorems); L318 "21 theorems" (theorems) (+3 more)
+  + paper6_vestigial — 5 count-literal matches: L42 "14 theorems" (theorems); L538 "18 theorems" (theorems); L538 "16 theorems" (theorems) (+2 more)
+  + paper7_chirality_formal — 11 count-literal matches: L51 "54
+theorems" (theorems); L193 "12 theorems" (theorems); L264 "54 theorems" (theorems) (+8 more)
+  + paper8_chirality_master — 1 count-literal matches: L439 "130 Lean modules" (modules)
+  + paper9_sm_anomaly_drinfeld — 10 count-literal matches: L82 "19 theorems" (theorems); L106 "23 theorems" (theorems); L144 "13 theorems" (theorems) (+7 more)
+
+Overall: 1/1 passed

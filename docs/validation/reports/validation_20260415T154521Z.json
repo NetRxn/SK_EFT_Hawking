@@ -1,0 +1,113 @@
+{
+  "timestamp": "20260415T154521Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "count_literals": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "73 count-literal matches across 15 papers (WARN-level; retrofit to \\input{counts.tex} + macros)",
+          "warning": true
+        },
+        {
+          "name": "paper10_modular_generation",
+          "passed": true,
+          "message": "no count literals found",
+          "warning": false
+        },
+        {
+          "name": "paper11_quantum_group",
+          "passed": true,
+          "message": "13 count-literal matches: L62 \"24\ntheorems\" (theorems); L64 \"87 theorems\" (theorems); L256 \"201 theorems\" (theorems) (+10 more)",
+          "warning": true
+        },
+        {
+          "name": "paper12_polariton",
+          "passed": true,
+          "message": "no count literals found",
+          "warning": false
+        },
+        {
+          "name": "paper14_braided_mtc",
+          "passed": true,
+          "message": "7 count-literal matches: L83 \"18 theorems\" (theorems); L86 \"14 theorems\" (theorems); L137 \"25 theorems\" (theorems) (+4 more)",
+          "warning": true
+        },
+        {
+          "name": "paper15_methodology",
+          "passed": true,
+          "message": "USES MACROS but 12 count-literal matches: L23 \"2237 machine-checked theorems\" (theorems); L36 \"2237 machine-checked theorems\" (theorems); L37 \"307 theorems\" (theorems) (+9 more)",
+          "warning": true
+        },
+        {
+          "name": "paper16_wrt_tqft",
+          "passed": true,
+          "message": "no count literals found",
+          "warning": false
+        },
+        {
+          "name": "paper1_first_order",
+          "passed": true,
+          "message": "no count literals found",
+          "warning": false
+        },
+        {
+          "name": "paper2_second_order",
+          "passed": true,
+          "message": "2 count-literal matches: L369 \"6 sorry\" (sorry); L373 \"22 sorry\" (sorry)",
+          "warning": true
+        },
+        {
+          "name": "paper3_gauge_erasure",
+          "passed": true,
+          "message": "1 count-literal matches: L37 \"12 theorems\" (theorems)",
+          "warning": true
+        },
+        {
+          "name": "paper4_wkb_connection",
+          "passed": true,
+          "message": "5 count-literal matches: L33 \"17 theorems\" (theorems); L279 \"17 theorems\" (theorems); L298 \"968 theorems\" (theorems) (+2 more)",
+          "warning": true
+        },
+        {
+          "name": "paper5_adw_gap",
+          "passed": true,
+          "message": "6 count-literal matches: L37 \"21 theorems\" (theorems); L39 \"20 theorems\" (theorems); L318 \"21 theorems\" (theorems) (+3 more)",
+          "warning": true
+        },
+        {
+          "name": "paper6_vestigial",
+          "passed": true,
+          "message": "5 count-literal matches: L42 \"14 theorems\" (theorems); L538 \"18 theorems\" (theorems); L538 \"16 theorems\" (theorems) (+2 more)",
+          "warning": true
+        },
+        {
+          "name": "paper7_chirality_formal",
+          "passed": true,
+          "message": "11 count-literal matches: L51 \"54\ntheorems\" (theorems); L193 \"12 theorems\" (theorems); L264 \"54 theorems\" (theorems) (+8 more)",
+          "warning": true
+        },
+        {
+          "name": "paper8_chirality_master",
+          "passed": true,
+          "message": "1 count-literal matches: L439 \"130 Lean modules\" (modules)",
+          "warning": true
+        },
+        {
+          "name": "paper9_sm_anomaly_drinfeld",
+          "passed": true,
+          "message": "10 count-literal matches: L82 \"19 theorems\" (theorems); L106 \"23 theorems\" (theorems); L144 \"13 theorems\" (theorems) (+7 more)",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "timestamp": "20260415T223518Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "numerical_literals": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "20 inline literals across papers; 11 \\input{tables/} references in use (WARN-level during retrofit)",
+          "warning": true
+        },
+        {
+          "name": "paper10_modular_generation",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        },
+        {
+          "name": "paper11_quantum_group",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body (uses 1 \\input tables)",
+          "warning": false
+        },
+        {
+          "name": "paper12_polariton",
+          "passed": true,
+          "message": "uses 3 \\input, 2 inline literal(s): L37 \"1.1\\times 10^\"; L204 \"1.1\\times 10^\"",
+          "warning": true
+        },
+        {
+          "name": "paper14_braided_mtc",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        },
+        {
+          "name": "paper15_methodology",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body (uses 2 \\input tables)",
+          "warning": false
+        },
+        {
+          "name": "paper16_wrt_tqft",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        },
+        {
+          "name": "paper1_first_order",
+          "passed": true,
+          "message": "uses 1 \\input, 2 inline literal(s): L283 \"1.6\\times 10^\"; L342 \"1.6\\times 10^\"",
+          "warning": true
+        },
+        {
+          "name": "paper2_second_order",
+          "passed": true,
+          "message": "uses 1 \\input, 15 inline literal(s): L296 \"5.9 \\times 10^\"; L296 \"9.4 \\times 10^\"; L296 \"5.9 \\times 10^\" (+12 more)",
+          "warning": true
+        },
+        {
+          "name": "paper3_gauge_erasure",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        },
+        {
+          "name": "paper4_wkb_connection",
+          "passed": true,
+          "message": "uses 1 \\input, 1 inline literal(s): L213 \"1.6\\times10^\"",
+          "warning": true
+        },
+        {
+          "name": "paper5_adw_gap",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        },
+        {
+          "name": "paper6_vestigial",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        },
+        {
+          "name": "paper7_chirality_formal",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body (uses 1 \\input tables)",
+          "warning": false
+        },
+        {
+          "name": "paper8_chirality_master",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body (uses 1 \\input tables)",
+          "warning": false
+        },
+        {
+          "name": "paper9_sm_anomaly_drinfeld",
+          "passed": true,
+          "message": "no inline unit-bearing literals in body",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

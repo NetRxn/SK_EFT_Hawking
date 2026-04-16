@@ -1,0 +1,23 @@
+SK-EFT Hawking Validation Report
+Generated: 20260415T214215Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] numerical_literals
+  + summary — 32 inline literals across papers; 9 \input{tables/} references in use (WARN-level during retrofit)
+  + paper10_modular_generation — no inline unit-bearing literals in body
+  + paper11_quantum_group — no inline unit-bearing literals in body (uses 1 \input tables)
+  + paper12_polariton — uses 3 \input, 2 inline literal(s): L37 "1.1\times 10^"; L204 "1.1\times 10^"
+  + paper14_braided_mtc — no inline unit-bearing literals in body
+  + paper15_methodology — no inline unit-bearing literals in body (uses 2 \input tables)
+  + paper16_wrt_tqft — no inline unit-bearing literals in body
+  + paper1_first_order — uses 1 \input, 2 inline literal(s): L283 "1.6\times 10^"; L342 "1.6\times 10^"
+  + paper2_second_order — uses 1 \input, 15 inline literal(s): L296 "5.9 \times 10^"; L296 "9.4 \times 10^"; L296 "5.9 \times 10^" (+12 more)
+  + paper3_gauge_erasure — no inline unit-bearing literals in body
+  + paper4_wkb_connection — 13 inline literal(s): L213 "1.6\times10^"; L246 "2.4\times10^"; L246 "1.6\times10^" (+10 more)
+  + paper5_adw_gap — no inline unit-bearing literals in body
+  + paper6_vestigial — no inline unit-bearing literals in body
+  + paper7_chirality_formal — no inline unit-bearing literals in body (uses 1 \input tables)
+  + paper8_chirality_master — no inline unit-bearing literals in body
+  + paper9_sm_anomaly_drinfeld — no inline unit-bearing literals in body
+
+Overall: 1/1 passed
