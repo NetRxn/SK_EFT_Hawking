@@ -464,7 +464,98 @@ theorem comulFreeAlgQG_EF_off (i j : Fin r) (hij : i ≠ j)
   rw [one_smul]
   abel
 
-/-! ## 4. Module summary (work in progress) -/
+/-! ## 4. Foundations for SerreE_quad / SerreF_quad respect
+
+The quadratic Serre relations are the HARDEST mechanical case. Per CAS
+deep research and Uqsl3Hopf template (~283 LOC for a single Serre in
+sl_3-specific code), the comul respect requires a sector decomposition
+into ~6 sectors with q-binomial cancellations.
+
+This section ships the FOUNDATION pieces (smul-form in-quotient Serre +
+positional KE/KF rewrites) — building blocks for the eventual full
+`comulFreeAlgQG_SerreE_quad` / `_SerreF_quad` theorems.
+
+The full main theorems are deferred to multi-session future work
+(estimated 600-1000 LOC each per audited Uqsl3Hopf structure). -/
+
+/-- Quantum Serre E (quad case) in scalar-mul form.
+    `E_i² E_j - [2]_q • (E_i E_j E_i) + E_j E_i² = 0` (when `A_{ij} = -1`).
+    Equivalent to `qg_SerreE_quad` but with the q-coefficient as a `•` scalar
+    (not as `algebraMap`-multiplication), simplifying downstream sector work. -/
+theorem qg_SerreE_quad_smul (i j : Fin r) (h : A i j = -1) :
+    qgE k A i * qgE k A i * qgE k A j -
+    (T 1 + T (-1) : QBase k) • (qgE k A i * qgE k A j * qgE k A i) +
+    qgE k A j * qgE k A i * qgE k A i = 0 := by
+  have hSerre := qg_SerreE_quad k A i j h
+  rw [sq] at hSerre
+  have hSerre' : qgE k A i * qgE k A i * qgE k A j + qgE k A j * qgE k A i * qgE k A i =
+      algebraMap (QBase k) (QuantumGroup k A) (T 1 + T (-1)) *
+        qgE k A i * qgE k A j * qgE k A i := by
+    rw [show qgE k A j * qgE k A i * qgE k A i = qgE k A j * (qgE k A i * qgE k A i) from by
+        noncomm_ring]
+    exact hSerre
+  rw [Algebra.smul_def]
+  rw [show (qgE k A i * qgE k A i * qgE k A j -
+        algebraMap (QBase k) (QuantumGroup k A) (T 1 + T (-1)) *
+          (qgE k A i * qgE k A j * qgE k A i) +
+        qgE k A j * qgE k A i * qgE k A i) =
+        (qgE k A i * qgE k A i * qgE k A j + qgE k A j * qgE k A i * qgE k A i) -
+        algebraMap (QBase k) (QuantumGroup k A) (T 1 + T (-1)) *
+          (qgE k A i * qgE k A j * qgE k A i) from by noncomm_ring,
+      hSerre']
+  noncomm_ring
+
+/-- Quantum Serre F (quad case) in scalar-mul form. Mirror of `qg_SerreE_quad_smul`. -/
+theorem qg_SerreF_quad_smul (i j : Fin r) (h : A i j = -1) :
+    qgF k A i * qgF k A i * qgF k A j -
+    (T 1 + T (-1) : QBase k) • (qgF k A i * qgF k A j * qgF k A i) +
+    qgF k A j * qgF k A i * qgF k A i = 0 := by
+  have hSerre := qg_SerreF_quad k A i j h
+  rw [sq] at hSerre
+  have hSerre' : qgF k A i * qgF k A i * qgF k A j + qgF k A j * qgF k A i * qgF k A i =
+      algebraMap (QBase k) (QuantumGroup k A) (T 1 + T (-1)) *
+        qgF k A i * qgF k A j * qgF k A i := by
+    rw [show qgF k A j * qgF k A i * qgF k A i = qgF k A j * (qgF k A i * qgF k A i) from by
+        noncomm_ring]
+    exact hSerre
+  rw [Algebra.smul_def]
+  rw [show (qgF k A i * qgF k A i * qgF k A j -
+        algebraMap (QBase k) (QuantumGroup k A) (T 1 + T (-1)) *
+          (qgF k A i * qgF k A j * qgF k A i) +
+        qgF k A j * qgF k A i * qgF k A i) =
+        (qgF k A i * qgF k A i * qgF k A j + qgF k A j * qgF k A i * qgF k A i) -
+        algebraMap (QBase k) (QuantumGroup k A) (T 1 + T (-1)) *
+          (qgF k A i * qgF k A j * qgF k A i) from by noncomm_ring,
+      hSerre']
+  noncomm_ring
+
+/-- Positional `qg_KE`: K_i E_j = q^{A_ij} • (E_j K_i), positional variant
+    `x · K_i · E_j = q^{A_ij} • (x · E_j · K_i)` for use inside multi-factor
+    expressions. Useful for sector-helper proofs. -/
+theorem qg_KE_at (i j : Fin r) (x : QuantumGroup k A) :
+    x * qgK k A i * qgE k A j =
+    ((T (A i j) : QBase k)) • (x * qgE k A j * qgK k A i) := by
+  rw [mul_assoc x (qgK k A i) (qgE k A j),
+      show qgK k A i * qgE k A j =
+        (T (A i j) : QBase k) • (qgE k A j * qgK k A i) from by
+        have := qg_KE k A i j
+        rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+        exact this,
+      mul_smul_comm, ← mul_assoc]
+
+/-- Positional `qg_KF`: K_i F_j = q^{-A_ij} • (F_j K_i), positional variant. -/
+theorem qg_KF_at (i j : Fin r) (x : QuantumGroup k A) :
+    x * qgK k A i * qgF k A j =
+    ((T (-A i j) : QBase k)) • (x * qgF k A j * qgK k A i) := by
+  rw [mul_assoc x (qgK k A i) (qgF k A j),
+      show qgK k A i * qgF k A j =
+        (T (-A i j) : QBase k) • (qgF k A j * qgK k A i) from by
+        have := qg_KF k A i j
+        rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+        exact this,
+      mul_smul_comm, ← mul_assoc]
+
+/-! ## 5. Module summary (work in progress) -/
 
 /-- Generic coproduct module: Phase 5m Wave 2 deliverable.
 
