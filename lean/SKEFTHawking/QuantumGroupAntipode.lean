@@ -61,10 +61,20 @@ private abbrev qgI' (x : QGGen r) : FreeAlgebra (QBase k) (QGGen r) :=
 Same pattern as qg_sub_tmul in QuantumGroupCoproduct.lean: RingQuot's Neg
 instance clashes with Ring's Neg, blocking `neg_mul` / `mul_neg`. -/
 
--- These bypass the RingQuot Neg/Add typeclass diamond.
--- RingQuot.instNeg ≠ Ring.toNeg syntactically, blocking neg_mul/mul_neg.
--- Fix: needs systematic HasDistribNeg instance unification, or term-level
--- bypass via neg_eq_neg_one_mul + mul_assoc (if neg_one_mul resolves).
+-- Verify Ring axiom compatibility with RingQuot instances
+private example (a : QuantumGroup k A) : a + (-a) = 0 := add_neg_cancel a
+private example (a b c : QuantumGroup k A) : (a + b) * c = a * c + b * c := add_mul a b c
+private example (a : QuantumGroup k A) : (0 : QuantumGroup k A) * a = 0 := zero_mul a
+
+-- Bypass RingQuot Add/Neg diamond: add_mul uses RingQuot.instAdd, but
+-- eq_neg_of_add_eq_zero_left needs AddGroup.toAdd. respectTransparency
+-- false bridges the gap for the `exact` elaboration.
+-- BLOCKED: eq_neg_of_add_eq_zero_left uses AddGroup.toAdd but add_mul
+-- produces RingQuot.instAdd. The proof via add_mul+add_neg_cancel+zero_mul
+-- correctly produces h1 : 0 = a*b + (-a)*b, but the final application
+-- of eq_neg_of_add_eq_zero_left fails at elaboration (not defEq).
+-- Needs Mathlib RingQuot instance alignment fix.
+-- Deep research: Lit-Search/Tasks/ringquot_add_neg_diamond.md
 lemma qg_neg_mul (a b : QuantumGroup k A) : (-a) * b = -(a * b) := by
   sorry
 
@@ -121,6 +131,8 @@ theorem antipodeFreeAlgQG_KE (i j : Fin r) :
     antipodeFreeAlgQG k A (qgI' k (.K i) * qgI' k (.E j)) =
     antipodeFreeAlgQG k A
       (algebraMap (QBase k) _ (T (A i j)) * qgI' k (.E j) * qgI' k (.K i)) := by
+  -- Proof approach: expand both sides via MulOpposite, apply anti_KE_helper.
+  -- Blocked by qg_neg_mul sorry (RingQuot Add/Neg diamond).
   sorry
 
 /-! ### Group IV: K-F conjugation
