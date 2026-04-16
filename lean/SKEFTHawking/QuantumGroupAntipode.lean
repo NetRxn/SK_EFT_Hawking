@@ -439,17 +439,93 @@ theorem antipodeFreeAlgQG_SerreE_quad (i j : Fin r)
         (qgKinv k A i * qgKinv k A j))) from by noncomm_ring,
       qg_E_Kinv_scaled k j i, h]
     simp only [smul_mul_assoc, mul_smul_comm]
-    sorry -- Steps 2-3: commute E_i past Kinv_i, E_j past Kinv_i, cancel T(-1)*T(2)*T(-1)=1
+    -- Step 2: expose E_i·Kinv_i inside the T(-1)•, apply E_Kinv_scaled
+    rw [show (T (-1) : QBase k) • (qgE k A i * (qgE k A i *
+        (qgKinv k A i * qgE k A j * (qgKinv k A i * qgKinv k A j)))) =
+      (T (-1) : QBase k) • (qgE k A i * ((qgE k A i * qgKinv k A i) *
+        (qgE k A j * (qgKinv k A i * qgKinv k A j)))) from by congr 1; noncomm_ring,
+      qg_E_Kinv_scaled k i i, hii]
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Step 3: expose E_j·Kinv_i inside the (T(-1)*T(2))•
+    rw [show (T (-1) * T 2 : QBase k) • (qgE k A i * ((qgKinv k A i * qgE k A i) *
+        (qgE k A j * (qgKinv k A i * qgKinv k A j)))) =
+      (T (-1) * T 2 : QBase k) • (qgE k A i * (qgKinv k A i * qgE k A i *
+        ((qgE k A j * qgKinv k A i) * qgKinv k A j))) from by congr 1; noncomm_ring,
+      qg_E_Kinv_scaled k j i, h]
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Cancel: T(-1)*T(2)*T(-1) = T(0) = 1
+    rw [show (T (-1) * T 2 * T (-1) : QBase k) = 1 from by rw [← T_add, ← T_add]; norm_num,
+        one_smul]
+    noncomm_ring
   -- hA1: E_jE_i² · Kinv³ = (E_j·Kinv_j)·(E_i·Kinv_i)² (with Kinv chain reorder)
   have hA1 : qgE k A j * (qgE k A i * (qgE k A i *
       (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
     qgE k A j * (qgKinv k A j * (qgE k A i * (qgKinv k A i * (qgE k A i * qgKinv k A i)))) := by
-    sorry -- Same pattern as hA2 with Kinv chain reorder first
+    -- Reorder Kinv chain: Kinv_i²Kinv_j → Kinv_jKinv_i² (via Kinv_Kinv_comm)
+    rw [show qgKinv k A i * (qgKinv k A i * qgKinv k A j) =
+      qgKinv k A j * qgKinv k A i * qgKinv k A i from by
+      rw [mul_assoc, qg_Kinv_Kinv_comm (A := A) k i j, ← mul_assoc,
+          qg_Kinv_Kinv_comm (A := A) k i j, mul_assoc]]
+    -- Step 1: expose E_i·Kinv_j
+    rw [show qgE k A j * (qgE k A i * (qgE k A i *
+        (qgKinv k A j * qgKinv k A i * qgKinv k A i))) =
+      qgE k A j * (qgE k A i * ((qgE k A i * qgKinv k A j) *
+        (qgKinv k A i * qgKinv k A i))) from by noncomm_ring,
+      qg_E_Kinv_scaled k i j, hsym]
+    simp only [smul_mul_assoc, mul_smul_comm]
+    -- Step 2: expose E_i·Kinv_j (second)
+    rw [show (T (-1) : QBase k) • (qgE k A j * (qgE k A i *
+        ((qgKinv k A j * qgE k A i) * (qgKinv k A i * qgKinv k A i)))) =
+      (T (-1) : QBase k) • (qgE k A j * ((qgE k A i * qgKinv k A j) *
+        (qgE k A i * (qgKinv k A i * qgKinv k A i)))) from by congr 1; noncomm_ring,
+      qg_E_Kinv_scaled k i j, hsym]
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Step 3: expose E_i·Kinv_i (same-index pair interleaving) — LHS only
+    conv_lhs =>
+      rw [show (T (-1) * T (-1) : QBase k) • (qgE k A j *
+          ((qgKinv k A j * qgE k A i) * (qgE k A i * (qgKinv k A i * qgKinv k A i)))) =
+        (T (-1) * T (-1) : QBase k) • (qgE k A j *
+          (qgKinv k A j * qgE k A i * ((qgE k A i * qgKinv k A i) * qgKinv k A i))) from by
+        congr 1; noncomm_ring]
+      rw [qg_E_Kinv_scaled k i i, hii]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Cancel: T(-1)*T(-1)*T(2) = T(0) = 1
+    rw [show (T (-1) * T (-1) * T 2 : QBase k) = 1 from by rw [← T_add, ← T_add]; norm_num,
+        one_smul]
+    noncomm_ring
   -- hB: E_iE_jE_i · Kinv³ = (E_i·Kinv_i)·(E_j·Kinv_j)·(E_i·Kinv_i)
   have hB : qgE k A i * (qgE k A j * (qgE k A i *
       (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
     qgE k A i * (qgKinv k A i * (qgE k A j * (qgKinv k A j * (qgE k A i * qgKinv k A i)))) := by
-    sorry -- Same pattern: 3 E_Kinv_scaled + scalar cancel
+    -- Step 1: expose E_i·Kinv_i (innermost pair)
+    conv_lhs =>
+      rw [show qgE k A i * (qgE k A j * (qgE k A i *
+          (qgKinv k A i * (qgKinv k A i * qgKinv k A j)))) =
+        qgE k A i * (qgE k A j * ((qgE k A i * qgKinv k A i) *
+          (qgKinv k A i * qgKinv k A j))) from by noncomm_ring]
+      rw [qg_E_Kinv_scaled k i i, hii]
+      simp only [smul_mul_assoc, mul_smul_comm]
+    -- Step 2: expose E_j·Kinv_i (cross-index)
+    conv_lhs =>
+      rw [show (T 2 : QBase k) • (qgE k A i * (qgE k A j *
+          ((qgKinv k A i * qgE k A i) * (qgKinv k A i * qgKinv k A j)))) =
+        (T 2 : QBase k) • (qgE k A i * ((qgE k A j * qgKinv k A i) *
+          (qgE k A i * (qgKinv k A i * qgKinv k A j)))) from by congr 1; noncomm_ring]
+      rw [qg_E_Kinv_scaled k j i, h]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Step 3: expose E_i·Kinv_j (cross-index, need Kinv reorder first)
+    conv_lhs =>
+      rw [show (T 2 * T (-1) : QBase k) • (qgE k A i *
+          ((qgKinv k A i * qgE k A j) * (qgE k A i * (qgKinv k A i * qgKinv k A j)))) =
+        (T 2 * T (-1) : QBase k) • (qgE k A i *
+          (qgKinv k A i * qgE k A j * ((qgE k A i * qgKinv k A j) * qgKinv k A i))) from by
+        congr 1; rw [qg_Kinv_Kinv_comm (A := A) k i j]; noncomm_ring]
+      rw [qg_E_Kinv_scaled k i j, hsym]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Cancel: T(2)*T(-1)*T(-1) = T(0) = 1
+    rw [show (T 2 * T (-1) * T (-1) : QBase k) = 1 from by rw [← T_add, ← T_add]; norm_num,
+        one_smul]
+    noncomm_ring
   -- Right-associate h_mul to match atom helper patterns, then substitute
   simp only [mul_assoc] at h_mul
   rw [hA2, hA1, hB] at h_mul
