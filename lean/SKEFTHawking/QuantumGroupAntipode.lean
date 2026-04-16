@@ -559,48 +559,72 @@ theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
   -- Handle negation
   letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
   simp only [neg_mul, mul_neg, neg_neg]
-  -- Push K·F to F·K (same-index)
-  simp_rw [qg_KF_scaled k (A := A) i i, qg_KF_scaled k (A := A) j j]
-  -- Convert scalars + simplify
+  -- DON'T push K past F — MulOpposite already gives dressed K*F form
+  -- Convert trailing algebraMap scalars + simplify
   have hcentral : ∀ (r : QBase k) (x : QuantumGroup k A),
       x * algebraMap (QBase k) (QuantumGroup k A) r = r • x :=
     fun r x => by erw [Algebra.smul_def, Algebra.commutes]
-  have hcentral_left : ∀ (r : QBase k) (x : QuantumGroup k A),
-      algebraMap (QBase k) (QuantumGroup k A) r * x = r • x :=
-    fun r x => by rw [Algebra.smul_def]
-  simp only [mul_add, mul_one, hcentral, hcentral_left]
+  simp only [mul_add, mul_one, hcentral]
   simp only [smul_mul_assoc, mul_smul_comm, smul_smul, ← T_add]
   norm_num [T_zero]
-  simp only [one_smul, ← mul_assoc]
-  -- K·F commutation helpers
-  have hKF_ii : qgK k A i * qgF k A i =
-      (T (-2) : QBase k) • (qgF k A i * qgK k A i) := by
-    rw [qg_KF_scaled k (A := A) i i, hii]
-  have hKF_jj : qgK k A j * qgF k A j =
-      (T (-2) : QBase k) • (qgF k A j * qgK k A j) := by
-    rw [qg_KF_scaled k (A := A) j j, hjj]
-  have hKF_ij : qgK k A i * qgF k A j =
-      (T 1 : QBase k) • (qgF k A j * qgK k A i) := by
-    rw [qg_KF_scaled k (A := A) i j, h]; norm_num
-  have hKF_ji : qgK k A j * qgF k A i =
-      (T 1 : QBase k) • (qgF k A i * qgK k A j) := by
-    rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
-  -- Phase 8: push K right past F in goal
-  simp only [mul_assoc, hKF_ii, hKF_jj, hKF_ij, hKF_ji,
-             mul_smul_comm, smul_mul_assoc, smul_smul] at ⊢
-  simp only [← T_add] at ⊢
-  -- Phase 9: apply pure Serre LEFT-multiplied by K chain
+  try simp only [one_smul]
+  -- Goal is now dressed: K_j*F_j*K_i*F_i*K_i*F_i + K_i*F_i*K_i*F_i*K_j*F_j
+  --   = [2]·K_i*F_i*K_j*F_j*K_i*F_i
+  -- Apply pure Serre LEFT-multiplied by K chain
   have hSF := qg_SerreF_quad_smul k i j h
   have h_mul := congr_arg
     (⇑(LinearMap.mulLeft (QBase k)
         (qgK k A i * qgK k A i * qgK k A j))) hSF
   simp only [map_add, map_sub, map_zero, LinearMap.mulLeft_apply,
              LinearMap.map_smul_of_tower] at h_mul
-  -- h_mul has K_chain·Serre(F) = 0. Goal has dressed Serre.
-  -- Need atom helpers (same as E-side: hA2, hA1, hB) to push K RIGHT through F
-  -- in h_mul, using conv_lhs + show/congr 1/noncomm_ring + hKF + scalar cancel.
-  -- Then: simp only [hii, hjj, h, hsym] at h_mul ⊢; norm_num at h_mul ⊢;
-  -- linear_combination (norm := module) -h_mul
-  sorry
+  -- Atom helpers: push K RIGHT through F in each term of h_mul
+  -- hA2F: K²K_j * F²F_j → (K_i*F_i)²*(K_j*F_j), net T(1)*T(1)*T(-2) = T(0)
+  -- 3 commutations: K_j past F_i (twice), K_i past F_i (once)
+  have hA2F : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A i * qgF k A j)))) =
+    qgK k A i * (qgF k A i * (qgK k A i * (qgF k A i * (qgK k A j * qgF k A j)))) := by
+    -- Step 1: K_j past first F_i
+    conv_lhs =>
+      rw [show qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A i * qgF k A j)))) =
+        qgK k A i * (qgK k A i * ((qgK k A j * qgF k A i) * (qgF k A i * qgF k A j))) from by
+        noncomm_ring]
+      rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
+      simp only [smul_mul_assoc, mul_smul_comm]
+    -- Step 2: K_j past second F_i
+    conv_lhs =>
+      rw [show (T 1 : QBase k) • (qgK k A i * (qgK k A i *
+          ((qgF k A i * qgK k A j) * (qgF k A i * qgF k A j)))) =
+        (T 1 : QBase k) • (qgK k A i * (qgK k A i *
+          (qgF k A i * ((qgK k A j * qgF k A i) * qgF k A j)))) from by congr 1; noncomm_ring]
+      rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Step 3: second K_i past F_i (to interleave K*F pairs)
+    conv_lhs =>
+      rw [show (T 1 * T 1 : QBase k) • (qgK k A i * (qgK k A i *
+          (qgF k A i * (qgF k A i * qgK k A j * qgF k A j)))) =
+        (T 1 * T 1 : QBase k) • (qgK k A i *
+          ((qgK k A i * qgF k A i) * (qgF k A i * qgK k A j * qgF k A j))) from by
+        congr 1; noncomm_ring]
+      rw [qg_KF_scaled k (A := A) i i, hii]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Cancel: T(1)*T(1)*T(-2) = T(0) = 1
+    rw [show (T 1 * T 1 * T (-2) : QBase k) = 1 from by
+      rw [← T_add, ← T_add]; norm_num, one_smul]
+    noncomm_ring
+  -- hA1F + hBF: same pattern with different index orderings
+  have hA1F : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A j * (qgF k A i * qgF k A i)))) =
+    qgK k A j * (qgF k A j * (qgK k A i * (qgF k A i * (qgK k A i * qgF k A i)))) := by
+    sorry -- Same 3-step pattern as hA2F with K chain reorder + cross-index KF commutations
+  have hBF : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
+    qgK k A i * (qgF k A i * (qgK k A j * (qgF k A j * (qgK k A i * qgF k A i)))) := by
+    sorry -- Same 3-step pattern: K_i*F_i (T(-2)), K_j*F_j (T(-2)), K_i*F_j (T(1)), net cross T cancel
+  -- Close: substitute atom helpers, split smul, match to goal
+  simp only [mul_assoc] at h_mul
+  rw [hA2F, hA1F, hBF] at h_mul
+  simp only [add_smul] at h_mul
+  linear_combination (norm := skip) -h_mul
+  simp only [mul_assoc, smul_mul_assoc]
+  set_option maxRecDepth 8000 in
+  set_option backward.isDefEq.respectTransparency false in
+  abel!
 
 end SKEFTHawking
