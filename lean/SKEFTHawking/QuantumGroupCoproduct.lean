@@ -434,24 +434,34 @@ theorem comulFreeAlgQG_EF_diag (i : Fin r) :
   rw [qg_sub_tmul, qg_tmul_sub]
   abel
 
-/-! ### Group V: EF commutation (off-diagonal, decoupled case) -/
+/-! ### Group V: EF commutation (off-diagonal) -/
 
-/-- comul respects E_i · F_j = F_j · E_i for i ≠ j, when A_{ij} = A_{ji} = 0
-    (the "non-adjacent" case in the Dynkin diagram). For the coupled case
-    (A_{ij} = -1, A_{ji} = -1 by symmetry) the comul respect requires the
-    q-scalar cancellation argument and is deferred to future session. -/
+/-- Diamond-bypass helper: combine smul on both sides of tensor.
+    (s • a) ⊗ (t • b) = (s * t) • (a ⊗ b). -/
+lemma qg_smul_tmul_smul (s t : QBase k) (a b : QuantumGroup k A) :
+    (s • a) ⊗ₜ[QBase k] (t • b) = (s * t) • (a ⊗ₜ[QBase k] b) := by
+  conv_lhs => rw [← TensorProduct.smul_tmul']
+  conv_lhs => rw [TensorProduct.tmul_smul]
+  rw [smul_smul]
+
+/-- comul respects E_i · F_j = F_j · E_i for i ≠ j, **for arbitrary
+    symmetric Cartan matrix A** (A_{ij} = A_{ji}, automatic for
+    symmetrizable Drinfeld-Jimbo-style Cartan).
+
+    Proof uses the q-scalar cancellation: from `qg_E_Kinv_scaled` and
+    `qg_KF_scaled`, the cross-term acquires a factor T(A_ji - A_ij)
+    which equals 1 under symmetry. -/
 theorem comulFreeAlgQG_EF_off (i j : Fin r) (hij : i ≠ j)
-    (h : A i j = 0) (h' : A j i = 0) :
+    (hsym : A i j = A j i) :
     comulFreeAlgQG k A (qgI k (.E i) * qgI k (.F j)) =
     comulFreeAlgQG k A (qgI k (.F j) * qgI k (.E i)) := by
   simp +decide [comulFreeAlgQG, comulOnGenQG]
-  -- qg_KF i j with A_ij = 0 gives K_iF_j = F_jK_i directly
-  have hKF : qgK k A i * qgF k A j = qgF k A j * qgK k A i := by
-    have := qg_KF k A i j
-    rw [h, neg_zero, T_zero, map_one, one_mul] at this
-    exact this
-  simp +decide [mul_add, add_mul, qg_EF_off _ A _ _ hij,
-                qg_E_Kinv_comm k (A := A) i j h', hKF]
+  simp +decide [add_mul, mul_add]
+  rw [qg_EF_off _ A _ _ hij]
+  rw [qg_E_Kinv_scaled, qg_KF_scaled]
+  rw [qg_smul_tmul_smul]
+  rw [show (T (A j i) : QBase k) * T (-A i j) = 1 by rw [hsym, ← T_add]; norm_num]
+  rw [one_smul]
   abel
 
 /-! ## 4. Module summary (work in progress) -/
