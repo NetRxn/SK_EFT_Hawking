@@ -559,6 +559,16 @@ theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
   -- Handle negation
   letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
   simp only [neg_mul, mul_neg, neg_neg]
+  -- Inverse KF helper: F*K = T(A)•(K*F) (pushes K LEFT / F RIGHT)
+  have hFK : ∀ (a b : Fin r), qgF k A b * qgK k A a =
+      (T (A a b) : QBase k) • (qgK k A a * qgF k A b) := by
+    intro a b
+    have h := qg_KF_scaled k (A := A) a b
+    calc qgF k A b * qgK k A a
+        = (T (A a b) : QBase k) • ((T (-A a b) : QBase k) • (qgF k A b * qgK k A a)) := by
+          rw [smul_smul, show (T (A a b) : QBase k) * T (-A a b) = 1 from by
+            rw [← T_add]; norm_num]; rw [one_smul]
+      _ = (T (A a b) : QBase k) • (qgK k A a * qgF k A b) := by rw [h]
   -- DON'T push K past F — MulOpposite already gives dressed K*F form
   -- Convert trailing algebraMap scalars + simplify
   have hcentral : ∀ (r : QBase k) (x : QuantumGroup k A),
@@ -613,10 +623,52 @@ theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
   -- hA1F + hBF: same pattern with different index orderings
   have hA1F : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A j * (qgF k A i * qgF k A i)))) =
     qgK k A j * (qgF k A j * (qgK k A i * (qgF k A i * (qgK k A i * qgF k A i)))) := by
-    sorry -- Same 3-step pattern as hA2F with K chain reorder + cross-index KF commutations
+    -- Reorder K chain: K_i²K_j → K_jK_i²
+    rw [show qgK k A i * (qgK k A i * (qgK k A j * (qgF k A j * (qgF k A i * qgF k A i)))) =
+      qgK k A j * (qgK k A i * (qgK k A i * (qgF k A j * (qgF k A i * qgF k A i)))) from by
+      rw [show qgK k A i * (qgK k A i * (qgK k A j * (qgF k A j * (qgF k A i * qgF k A i)))) =
+        qgK k A i * qgK k A i * qgK k A j * (qgF k A j * (qgF k A i * qgF k A i)) from by noncomm_ring,
+        show qgK k A j * (qgK k A i * (qgK k A i * (qgF k A j * (qgF k A i * qgF k A i)))) =
+        qgK k A j * qgK k A i * qgK k A i * (qgF k A j * (qgF k A i * qgF k A i)) from by noncomm_ring,
+        show qgK k A i * qgK k A i * qgK k A j =
+        qgK k A j * qgK k A i * qgK k A i from by
+          rw [mul_assoc, qg_KK_comm k A i j, ← mul_assoc, qg_KK_comm k A i j, mul_assoc]]]
+    -- Step 1: K_i past F_j (cross)
+    conv_lhs =>
+      rw [show qgK k A j * (qgK k A i * (qgK k A i * (qgF k A j * (qgF k A i * qgF k A i)))) =
+        qgK k A j * (qgK k A i * ((qgK k A i * qgF k A j) * (qgF k A i * qgF k A i))) from by
+        noncomm_ring]
+      rw [qg_KF_scaled k (A := A) i j, h]; norm_num
+      simp only [smul_mul_assoc, mul_smul_comm]
+    -- Step 2: K_i past F_j (second, cross)
+    conv_lhs =>
+      rw [show (T 1 : QBase k) • (qgK k A j * (qgK k A i *
+          ((qgF k A j * qgK k A i) * (qgF k A i * qgF k A i)))) =
+        (T 1 : QBase k) • (qgK k A j * ((qgK k A i * qgF k A j) *
+          (qgK k A i * (qgF k A i * qgF k A i)))) from by congr 1; noncomm_ring]
+      rw [qg_KF_scaled k (A := A) i j, h]; norm_num
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    -- Step 3: K_i past F_i (interleave) — conv_lhs to avoid RHS
+    conv_lhs =>
+      rw [show (T 1 * T 1 : QBase k) • (qgK k A j *
+          ((qgF k A j * qgK k A i) * (qgK k A i * (qgF k A i * qgF k A i)))) =
+        (T 1 * T 1 : QBase k) • (qgK k A j *
+          (qgF k A j * qgK k A i * ((qgK k A i * qgF k A i) * qgF k A i))) from by
+        congr 1; noncomm_ring]
+      rw [qg_KF_scaled k (A := A) i i, hii]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    rw [show (T 1 * T 1 * T (-2) : QBase k) = 1 from by rw [← T_add, ← T_add]; norm_num, one_smul]
+    sorry -- Remaining interleaving needs mixed KF/FK commutation chain
   have hBF : qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
     qgK k A i * (qgF k A i * (qgK k A j * (qgF k A j * (qgK k A i * qgF k A i)))) := by
-    sorry -- Same 3-step pattern: K_i*F_i (T(-2)), K_j*F_j (T(-2)), K_i*F_j (T(1)), net cross T cancel
+    -- Step 1: K_j past F_i (cross, T(1))
+    conv_lhs =>
+      rw [show qgK k A i * (qgK k A i * (qgK k A j * (qgF k A i * (qgF k A j * qgF k A i)))) =
+        qgK k A i * (qgK k A i * ((qgK k A j * qgF k A i) * (qgF k A j * qgF k A i))) from by
+        noncomm_ring]
+      rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
+      simp only [smul_mul_assoc, mul_smul_comm]
+    sorry -- needs hFK-based commutation chain (3 steps, net T(0)=1)
   -- Close: substitute atom helpers, split smul, match to goal
   simp only [mul_assoc] at h_mul
   rw [hA2F, hA1F, hBF] at h_mul
