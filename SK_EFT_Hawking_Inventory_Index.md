@@ -20,7 +20,7 @@
 | Lean modules | **142** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +3 since 5i: Phase 5w W2 DiracFluidMetric (9), W3 GrapheneHawking (7), W5-7 DiracFluidSK (9). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
-| Test files | **50** | +4: test_graphene_metric (26), test_graphene_hawking (21), test_graphene_spectrum (17), test_graphene_transport (17) |
+| Test files | **51** | +5 Phase 5w: test_graphene_metric (26), _hawking (21), _spectrum (17), _transport (17), test_platform_comparison (14) = 95 total graphene tests |
 | Test count | 1660+ | `pytest tests/ -q` |
 | Figures | **105** | `grep -c "^def fig_" src/core/visualizations.py` (+4: T_H sweep, dissipation window, noise PSD, SNR) |
 | Notebooks | **49** | `ls notebooks/*.ipynb` (+1: Phase5w_GrapheneDiracFluid_Technical) |
