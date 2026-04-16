@@ -780,7 +780,31 @@ theorem qg_sect_E_quad_10_EjEi (i j : Fin r) (hii : A i i = 2) (hsym : A j i = -
   have hcoef : (T (-1) + T 1 - (T 1 + T (-1)) : QBase k) = 0 := by ring
   rw [hcoef, zero_smul]
 
-/-! ## 5. Module summary (work in progress) -/
+/-! ## 5. Main theorem: comulFreeAlgQG_SerreE_quad
+
+**Status:** Sector helpers + smul-form Serre + positional KE/KF helpers
+all in place (foundation complete). The full main theorem assembly via
+phi linear maps + `linear_combination(norm := skip)` finisher requires
+careful K-product canonical-form alignment between the goal (after comul
+expansion) and the sector hypotheses' forms. Initial attempt revealed
+the K-product orderings need explicit normalization that can't be done
+purely via simp_rw; either:
+- (a) reformulate the sector helpers to use a universally-canonical
+  K-product form (e.g., always `K_i K_i K_j` ordering), or
+- (b) add an explicit K-normalization phase between hypothesis-building
+  and linear_combination.
+
+Approach (a) requires re-deriving the helpers; approach (b) requires
+specific `simp_rw` patterns that were elusive in the initial attempt.
+
+**Heartbeat budget AUTHORIZED** (user 2026-04-15) for this assembly when
+the path is clear; deferred to next session.
+
+Per Uqsl3Hopf template, the final assembly is ~285 LOC + heartbeat 800000.
+Generic version may need additional decomposition or careful K-normalization
+helpers. -/
+
+/-! ## 6. Module summary (work in progress) -/
 
 /-- Generic coproduct module: Phase 5m Wave 2 deliverable.
 
