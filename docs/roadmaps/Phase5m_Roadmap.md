@@ -67,29 +67,29 @@ We proved sl_2 and sl_3 by hand, repeating the same pattern. A generic framework
   `qg_E_Kinv_scaled`, `qg_KF_scaled`. **First generic quantum group Hopf
   coproduct in any proof assistant; first EF_diag respect via diamond
   bypass.**
-- [ ] Coproduct relation-respect, remaining 2 (HARDEST):
-  - `SerreE_quad`, `SerreF_quad` (palindromic atom-bridge per CAS
-    deep research). LOC audited 2026-04-15 against Uqsl3Hopf structure:
-    **600-1000 LOC per theorem (generic parametric version)**, including
-    shared sector helpers (5 sect3_hUqId lemmas + 2 q-binomial aux).
-    Uqsl3Hopf comul-side Serre is ~1800 LOC for 4 concrete theorems +
-    shared helpers; generic version needs only ONE theorem per side
-    but parametric indices offset ~40% of savings. 2-3 sessions for
-    SerreE_quad + 1-2 for SerreF_quad mirror.
-- [ ] Antipode: S(E_i) = -E_iK_i^{-1}, S(F_i) = -K_iF_i, S(K_i) = K_i^{-1} —
-  analogously requires q-Serre respect (F12/F21 tranches in Uqsl3Hopf).
-  Historical sl_3 ratio: antipode side = 85% of comul side LOC (not 40%);
-  800-1200 LOC / 2-3 sessions after SerreE/F_quad.
-- [ ] `qgComul` descended via `RingQuot.liftAlgHom` — mechanical (50 LOC)
-  once all 11 relation-respects land.
-- [ ] `Bialgebra` + `HopfAlgebra` typeclass instances on `QuantumGroup k A`
-  — mechanical (~100-300 LOC) via Uqsl3Hopf template (commits `dadce3e`,
-  `bdf0ee9`: 24 per-generator eval lemmas + 3 coalgebra axioms +
-  Drinfeld's S² = Ad(K₁²K₂²)).
-- **Strengthening audit (2026-04-15):** see
-  `temporary/working-docs/phase5m_generic_hopf_state.md ## Strengthening audit`
-  for per-item priorities. TL;DR: SerreE/F_quad is the single blocker for
-  wave closure; everything downstream is mechanical.
+- [x] **SerreE_quad + SerreF_quad coproduct respect** — DONE 2026-04-16 session 2.
+  Both palindromic atom-bridge proofs via Uqsl3Hopf template. 4-phase proof
+  (expand, sector hypotheses, K-normalize, linear_combination finisher).
+  Key innovations: `smul_expand` helper, `conv_lhs` for directional rewrites,
+  F-side phi maps use `.flip`, `set_option maxRecDepth 8000 in abel!`.
+- [x] **11/11 coproduct respect + descent** — `comulFreeAlgQG_respects_rel`
+  dispatches all QGRel constructors. `qgComul` descended via `RingQuot.liftAlgHom`.
+  Eval lemmas: `qgComul_E/F/K/Kinv`. 1347 LOC, 0 sorry.
+- [x] **Antipode: 11/11 respect + descent** — `QuantumGroupAntipode.lean` (811 LOC).
+  `antipodeOnGenQG` → `antipodeFreeAlgQG` via MulOpposite → all 11 QGRel
+  respect proofs (incl. SerreE/F_quad via atom-bridge) → `qgAntipode` descended.
+  Anti-multiplicativity `qgAntipodeLin_mul : S(ab) = S(b)S(a)`.
+  `letI : NonUnitalNonAssocRing` pattern for neg_mul diamond bypass.
+- [x] **Bialgebra instance** — `qgBialgebra` via `Bialgebra.ofAlgHom`:
+  coassociativity + both counit laws proved generator-by-generator.
+- [x] **HopfAlgebra instance** — `qgHopfAlgebra`: both convolution laws
+  `m∘(S⊗id)∘Δ = η∘ε` proved via FreeAlgebra.induction + multiplicativity
+  steps (`qg_convR_mul_step`, `qg_convL_mul_step`) using TensorProduct
+  finset decomposition + anti-multiplicativity + Algebra.commutes.
+- [x] **`QuantumGroupHopf.lean`** — 563 LOC, 0 sorry. Complete Hopf assembly.
+- **Wave 2 COMPLETE** — 3176 LOC across 4 files, ZERO sorry.
+  First generic quantum group HopfAlgebra in any proof assistant.
+  Completed 2026-04-16 over 3 sessions.
 
 ### Wave 3 — Fusion Rules from Representation Theory
 **Goal:** SU(N)_k fusion from truncated tensor product.
@@ -132,4 +132,4 @@ We proved sl_2 and sl_3 by hand, repeating the same pattern. A generic framework
 
 ---
 
-*Phase 5m roadmap. Created 2026-04-07, updated 2026-04-07. Deep research complete. Wave 1 DONE (generic definition + q-binomials + all relation proofs). Next: Hopf structure (W2) → fusion rules (W3) → metaprogramming (W4).*
+*Phase 5m roadmap. Created 2026-04-07, updated 2026-04-16. Waves 1-2 COMPLETE (generic definition + full Hopf algebra). Wave 3 fundamentals done (Kac-Walton shipped). Next: W3 Freudenthal recursion (optional) → W4 metaprogramming (optional).*
