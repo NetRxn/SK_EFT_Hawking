@@ -705,6 +705,81 @@ theorem qg_sect_E_quad_11 (i j : Fin r) (hii : A i i = 2) (h : A i j = -1) :
     rw [T_zero]; ring
   rw [hcoef_A, hcoef_B, zero_smul, zero_smul, add_zero]
 
+/-- **SerreE_quad sector (1,0)_E1E2:** mixed sector with E_i and the K_i, K_j
+    K-product. Reduces to canonical atom E_i K_i K_j.
+    E_i K_i K_j + K_i E_i K_j - [2]_q • (K_i K_j E_i) = 0
+    when A_{ii} = 2 and A_{ji} = -1. -/
+theorem qg_sect_E_quad_10_EiEj (i j : Fin r) (hii : A i i = 2) (hsym : A j i = -1) :
+    qgE k A i * qgK k A i * qgK k A j + qgK k A i * qgE k A i * qgK k A j -
+    (T 1 + T (-1) : QBase k) • (qgK k A i * qgK k A j * qgE k A i) = 0 := by
+  have hKiEi : qgK k A i * qgE k A i = (T 2 : QBase k) • (qgE k A i * qgK k A i) := by
+    have := qg_KE k A i i
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul, hii] at this
+    exact this
+  have hKjEi : qgK k A j * qgE k A i = (T (-1) : QBase k) • (qgE k A i * qgK k A j) := by
+    have := qg_KE k A j i
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul, hsym] at this
+    exact this
+  have hKK := qg_KK_comm k A i j
+  have hK1E1K2 : qgK k A i * qgE k A i * qgK k A j =
+      (T 2 : QBase k) • (qgE k A i * qgK k A i * qgK k A j) := by
+    rw [hKiEi, smul_mul_assoc]
+  have hK1K2E1 : qgK k A i * qgK k A j * qgE k A i =
+      (T 1 : QBase k) • (qgE k A i * qgK k A i * qgK k A j) := by
+    rw [show qgK k A i * qgK k A j * qgE k A i = qgK k A j * (qgK k A i * qgE k A i) from by
+      rw [show qgK k A i * qgK k A j = qgK k A j * qgK k A i from hKK]; noncomm_ring]
+    rw [hKiEi, mul_smul_comm,
+        show qgK k A j * (qgE k A i * qgK k A i) = qgK k A j * qgE k A i * qgK k A i from by
+          noncomm_ring, hKjEi, smul_mul_assoc, smul_smul,
+        show qgE k A i * qgK k A j * qgK k A i = qgE k A i * qgK k A i * qgK k A j from by
+          rw [mul_assoc, ← hKK, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK1E1K2, hK1K2E1, smul_smul]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      x + s • x - t • x = (1 + s - t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 + T 2 - (T 1 + T (-1)) * T 1 : QBase k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 + T 2 - (T 2 + T 0) = (0 : QBase k)
+    rw [T_zero]; ring
+  rw [hcoef, zero_smul]
+
+/-- **SerreE_quad sector (1,0)_E2E1:** mixed sector with K_j on the LEFT.
+    K_j E_i K_i + K_j K_i E_i - [2]_q • (E_i K_j K_i) = 0
+    when A_{ii} = 2 and A_{ji} = -1. -/
+theorem qg_sect_E_quad_10_EjEi (i j : Fin r) (hii : A i i = 2) (hsym : A j i = -1) :
+    qgK k A j * qgE k A i * qgK k A i + qgK k A j * qgK k A i * qgE k A i -
+    (T 1 + T (-1) : QBase k) • (qgE k A i * qgK k A j * qgK k A i) = 0 := by
+  have hKjEi : qgK k A j * qgE k A i = (T (-1) : QBase k) • (qgE k A i * qgK k A j) := by
+    have := qg_KE k A j i
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul, hsym] at this
+    exact this
+  have hKiEi : qgK k A i * qgE k A i = (T 2 : QBase k) • (qgE k A i * qgK k A i) := by
+    have := qg_KE k A i i
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul, hii] at this
+    exact this
+  have hKK := qg_KK_comm k A i j
+  have hK2E1K1 : qgK k A j * qgE k A i * qgK k A i =
+      (T (-1) : QBase k) • (qgE k A i * qgK k A j * qgK k A i) := by
+    rw [hKjEi, smul_mul_assoc]
+  have hK2K1E1 : qgK k A j * qgK k A i * qgE k A i =
+      (T 1 : QBase k) • (qgE k A i * qgK k A j * qgK k A i) := by
+    rw [show qgK k A j * qgK k A i = qgK k A i * qgK k A j from hKK.symm]
+    rw [show qgK k A i * qgK k A j * qgE k A i = qgK k A i * (qgK k A j * qgE k A i) from by
+        noncomm_ring, hKjEi, mul_smul_comm,
+        show qgK k A i * (qgE k A i * qgK k A j) = qgK k A i * qgE k A i * qgK k A j from by
+          noncomm_ring, hKiEi, smul_mul_assoc, smul_smul]
+    rw [show qgE k A i * qgK k A i * qgK k A j = qgE k A i * qgK k A j * qgK k A i from by
+        rw [mul_assoc, hKK, ← mul_assoc]]
+    congr 1; rw [← T_add]; norm_num
+  rw [hK2E1K1, hK2K1E1]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      s • x + t • x - (T 1 + T (-1) : QBase k) • x =
+      (s + t - (T 1 + T (-1))) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (-1) + T 1 - (T 1 + T (-1)) : QBase k) = 0 := by ring
+  rw [hcoef, zero_smul]
+
 /-! ## 5. Module summary (work in progress) -/
 
 /-- Generic coproduct module: Phase 5m Wave 2 deliverable.
