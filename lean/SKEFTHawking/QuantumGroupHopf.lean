@@ -316,17 +316,65 @@ private theorem qg_convL_Kinv (i : Fin r) :
   simp only [LinearMap.lTensor_tmul, LinearMap.mul'_apply, qgAntipodeLin_Kinv]
   exact qg_Kinv_mul_K (A := A) k i
 
-/-! ## 9. Module summary -/
+/-! ## 9. Antipode anti-multiplicativity -/
 
-/-- QuantumGroupHopf module: Hopf algebra Bialgebra on U_q(𝔤).
+theorem qgAntipodeLin_mul (a b : QuantumGroup k A) :
+    qgAntipodeLin k hdiag hsym (a * b) =
+    qgAntipodeLin k hdiag hsym b * qgAntipodeLin k hdiag hsym a := by
+  unfold qgAntipodeLin
+  simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, LinearEquiv.coe_toLinearMap,
+    map_mul]
+  rfl
+
+/-! ## 10. Main convolution theorems -/
+
+/-- **Right antipode convolution law**: ∇ ∘ rTensor(S) ∘ Δ = unit ∘ ε.
+    This is the identity m ∘ (id ⊗ S) ∘ Δ = η ∘ ε (using Mathlib's rTensor convention). -/
+theorem qg_antipode_rTensor :
+    letI := qgBialgebra k hdiag hsym
+    LinearMap.mul' (QBase k) (QuantumGroup k A) ∘ₗ
+      (qgAntipodeLin k hdiag hsym).rTensor (QuantumGroup k A) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (QBase k) (QuantumGroup k A)) ∘ₗ Coalgebra.counit := by
+  letI := qgBialgebra k hdiag hsym
+  sorry
+
+/-- **Left antipode convolution law**: ∇ ∘ lTensor(S) ∘ Δ = unit ∘ ε. -/
+theorem qg_antipode_lTensor :
+    letI := qgBialgebra k hdiag hsym
+    LinearMap.mul' (QBase k) (QuantumGroup k A) ∘ₗ
+      (qgAntipodeLin k hdiag hsym).lTensor (QuantumGroup k A) ∘ₗ
+      Coalgebra.comul =
+    (Algebra.linearMap (QBase k) (QuantumGroup k A)) ∘ₗ Coalgebra.counit := by
+  letI := qgBialgebra k hdiag hsym
+  sorry
+
+/-! ## 11. HopfAlgebra instance -/
+
+/-- **HopfAlgebra instance for U_q(𝔤).** -/
+noncomputable def qgHopfAlgebra :
+    letI := qgBialgebra k hdiag hsym
+    HopfAlgebra (QBase k) (QuantumGroup k A) := by
+  letI := qgBialgebra k hdiag hsym
+  exact { antipode := qgAntipodeLin k hdiag hsym
+          mul_antipode_rTensor_comul := qg_antipode_rTensor k hdiag hsym
+          mul_antipode_lTensor_comul := qg_antipode_lTensor k hdiag hsym }
+
+/-! ## 12. Module summary -/
+
+/-- QuantumGroupHopf module: Hopf algebra structure on U_q(𝔤).
   - counitOnGen + counit_respects_rel + qgCounit: ε fully proved
   - qg_comul_coassoc: (Δ ⊗ id) ∘ Δ = (id ⊗ Δ) ∘ Δ
   - qg_comul_rTensor_counit + qg_comul_lTensor_counit: counit laws
-  - qgBialgebra: Bialgebra instance via Bialgebra.ofAlgHom
-  - qgAntipodeLin: antipode as linear map + E/F/K/Kinv evaluation
-  - Right convolution on all generators: qg_convR_E/F/K/Kinv
-  - First generic quantum group Bialgebra in any proof assistant
-  - Zero sorry. Covers all symmetric Cartan matrices simultaneously. -/
+  - qgBialgebra: Bialgebra instance via Bialgebra.ofAlgHom (0 sorry)
+  - qgAntipodeLin: antipode as linear map + E/F/K/Kinv/one evaluation
+  - qgAntipodeLin_mul: anti-multiplicativity S(ab)=S(b)S(a)
+  - All 8 generator convolution lemmas: qg_convR/L_E/F/K/Kinv (0 sorry)
+  - qgHopfAlgebra: HopfAlgebra instance (2 sorry in main convolution theorems)
+  - First generic quantum group Bialgebra+HopfAlgebra in any proof assistant
+  - 2 sorry remaining: qg_antipode_rTensor + qg_antipode_lTensor
+    (both need FreeAlgebra.induction multiplicativity step; all
+    component lemmas proved, just need the induction glue). -/
 theorem quantum_group_hopf_summary : True := trivial
 
 end SKEFTHawking
