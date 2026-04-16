@@ -156,8 +156,143 @@ S(K_i · F_j) = S(F_j) · S(K_i) = (-K_j F_j) · K_i⁻¹
 S(q^{-A_ij} · F_j · K_i) = q^{-A_ij} · S(K_i) · S(F_j) = q^{-A_ij} · K_i⁻¹ · (-K_j F_j)
 Equal via K_j · K_i⁻¹ = K_i⁻¹ · K_j and F_j · K_i⁻¹ commutation. -/
 
-/-! Remaining antipode respect proofs (Groups IV-VII + Serre) are multi-session
-work. The sector decomposition + palindromic atom-bridge pattern from Uqsl3Hopf
-applies with K→Kinv substitution. Estimated 400-800 LOC remaining. -/
+private theorem qg_F_Kinv_scaled (i j : Fin r) :
+    qgF k A j * qgKinv k A i = (T (-A i j) : QBase k) • (qgKinv k A i * qgF k A j) := by
+  have h := qg_Kinv_F_scaled k (A := A) i j
+  calc qgF k A j * qgKinv k A i
+      = (T (-A i j) : QBase k) • ((T (A i j) : QBase k) • (qgF k A j * qgKinv k A i)) := by
+        rw [smul_smul, show (T (-A i j) : QBase k) * T (A i j) = 1 from by
+          rw [← T_add]; norm_num]; rw [one_smul]
+    _ = (T (-A i j) : QBase k) • (qgKinv k A i * qgF k A j) := by rw [h]
+
+private theorem anti_KF_helper (i j : Fin r) :
+    qgK k A j * qgF k A j * qgKinv k A i =
+    (T (-A i j) : QBase k) • (qgKinv k A i * qgK k A j * qgF k A j) := by
+  rw [show qgK k A j * qgF k A j * qgKinv k A i =
+      qgK k A j * (qgF k A j * qgKinv k A i) from by noncomm_ring,
+      qg_F_Kinv_scaled k i j, mul_smul_comm]
+  congr 1; rw [← mul_assoc, qg_K_Kinv_comm k j i, mul_assoc]
+
+theorem antipodeFreeAlgQG_KF (i j : Fin r) :
+    antipodeFreeAlgQG k A (qgI' k (.K i) * qgI' k (.F j)) =
+    antipodeFreeAlgQG k A
+      (algebraMap (QBase k) _ (T (-(A i j))) * qgI' k (.F j) * qgI' k (.K i)) := by
+  rw [show antipodeFreeAlgQG k A (qgI' k (.K i) * qgI' k (.F j)) =
+      MulOpposite.op (-(qgK k A j * qgF k A j) * qgKinv k A i) by
+    rw [map_mul]; erw [antipodeFreeAlgQG_ι, antipodeFreeAlgQG_ι]
+    simp [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]]
+  rw [show antipodeFreeAlgQG k A
+      (algebraMap (QBase k) _ (T (-(A i j))) * qgI' k (.F j) * qgI' k (.K i)) =
+      MulOpposite.op (qgKinv k A i * (-(qgK k A j * qgF k A j) *
+        (algebraMap (QBase k) (QuantumGroup k A)) (T (-(A i j))))) by
+    rw [map_mul, map_mul, AlgHom.commutes]
+    erw [antipodeFreeAlgQG_ι, antipodeFreeAlgQG_ι]
+    simp [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]]
+  congr 1
+  rw [qg_neg_mul,
+      show qgKinv k A i * (-(qgK k A j * qgF k A j) *
+        (algebraMap (QBase k) (QuantumGroup k A)) (T (-(A i j)))) =
+      -(qgKinv k A i * (qgK k A j * qgF k A j) *
+        (algebraMap (QBase k) (QuantumGroup k A)) (T (-(A i j)))) from by
+    rw [qg_neg_mul, qg_mul_neg]; noncomm_ring]
+  congr 1
+  rw [anti_KF_helper, Algebra.smul_def, Algebra.commutes (T (-(A i j)))]; noncomm_ring
+
+/-! ### Group V: EF commutation -/
+
+theorem antipodeFreeAlgQG_EF_diag (i : Fin r) :
+    antipodeFreeAlgQG k A
+      (algebraMap (QBase k) _ (T 1 - T (-1)) *
+       (qgI' k (.E i) * qgI' k (.F i) - qgI' k (.F i) * qgI' k (.E i))) =
+    antipodeFreeAlgQG k A (qgI' k (.K i) - qgI' k (.Kinv i)) := by
+  sorry
+
+theorem antipodeFreeAlgQG_EF_off (i j : Fin r) (hij : i ≠ j) (hsym : A i j = A j i) :
+    antipodeFreeAlgQG k A (qgI' k (.E i) * qgI' k (.F j)) =
+    antipodeFreeAlgQG k A (qgI' k (.F j) * qgI' k (.E i)) := by
+  sorry
+
+/-! ### Groups VI/VII: Serre commutativity -/
+
+theorem antipodeFreeAlgQG_SerreE_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0)
+    (hij : i ≠ j) :
+    antipodeFreeAlgQG k A (qgI' k (.E i) * qgI' k (.E j)) =
+    antipodeFreeAlgQG k A (qgI' k (.E j) * qgI' k (.E i)) := by
+  rw [map_mul, map_mul]
+  erw [antipodeFreeAlgQG_ι (k := k) (A := A) (.E i),
+       antipodeFreeAlgQG_ι (k := k) (A := A) (.E j)]
+  simp only [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]
+  congr 1
+  -- Goal: -(E_j*Kinv_j) * -(E_i*Kinv_i) = -(E_i*Kinv_i) * -(E_j*Kinv_j)
+  rw [qg_neg_mul, qg_mul_neg, qg_neg_mul, qg_mul_neg]
+  -- -(-(E_j*Kinv_j*E_i*Kinv_i)) = -(-(E_i*Kinv_i*E_j*Kinv_j))
+  -- = E_j*Kinv_j*E_i*Kinv_i = E_i*Kinv_i*E_j*Kinv_j
+  congr 1
+  -- Swap Kinv past E on each side, then use E-comm + Kinv-comm
+  conv_lhs => rw [show qgE k A j * qgKinv k A j * (qgE k A i * qgKinv k A i) =
+    qgE k A j * (qgKinv k A j * qgE k A i) * qgKinv k A i from by noncomm_ring,
+    (qg_E_Kinv_comm k i j h').symm]
+  conv_rhs => rw [show qgE k A i * qgKinv k A i * (qgE k A j * qgKinv k A j) =
+    qgE k A i * (qgKinv k A i * qgE k A j) * qgKinv k A j from by noncomm_ring,
+    (qg_E_Kinv_comm k j i h).symm]
+  rw [show qgE k A j * (qgE k A i * qgKinv k A j) * qgKinv k A i =
+    qgE k A j * qgE k A i * (qgKinv k A j * qgKinv k A i) from by noncomm_ring,
+    show qgE k A i * (qgE k A j * qgKinv k A i) * qgKinv k A j =
+    qgE k A i * qgE k A j * (qgKinv k A i * qgKinv k A j) from by noncomm_ring,
+    qg_SerreE_comm k A i j h hij, qg_Kinv_Kinv_comm (A := A) k j i]
+
+theorem antipodeFreeAlgQG_SerreF_comm (i j : Fin r) (h : A i j = 0) (h' : A j i = 0)
+    (hij : i ≠ j) :
+    antipodeFreeAlgQG k A (qgI' k (.F i) * qgI' k (.F j)) =
+    antipodeFreeAlgQG k A (qgI' k (.F j) * qgI' k (.F i)) := by
+  rw [map_mul, map_mul]
+  erw [antipodeFreeAlgQG_ι (k := k) (A := A) (.F i),
+       antipodeFreeAlgQG_ι (k := k) (A := A) (.F j)]
+  simp only [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]
+  congr 1
+  rw [qg_neg_mul, qg_mul_neg, qg_neg_mul, qg_mul_neg]
+  congr 1
+  -- K_j*F_j * K_i*F_i = K_i*F_i * K_j*F_j
+  -- Uses: F_j*K_i = K_i*F_j (A_ij=0 via KF), K commute
+  have hFjKi : qgF k A j * qgK k A i = qgK k A i * qgF k A j := by
+    have := qg_KF k (A := A) i j; rw [h, neg_zero, T_zero, map_one, one_mul] at this
+    exact this.symm
+  have hFiKj : qgF k A i * qgK k A j = qgK k A j * qgF k A i := by
+    have := qg_KF k (A := A) j i; rw [h', neg_zero, T_zero, map_one, one_mul] at this
+    exact this.symm
+  rw [show qgK k A j * qgF k A j * (qgK k A i * qgF k A i) =
+      qgK k A j * (qgF k A j * qgK k A i) * qgF k A i from by noncomm_ring,
+      hFjKi,
+      show qgK k A i * qgF k A i * (qgK k A j * qgF k A j) =
+      qgK k A i * (qgF k A i * qgK k A j) * qgF k A j from by noncomm_ring,
+      hFiKj]
+  congr 1
+  rw [show qgK k A j * (qgK k A i * qgF k A j) * qgF k A i =
+    qgK k A j * qgK k A i * (qgF k A j * qgF k A i) from by noncomm_ring,
+    show qgK k A i * (qgK k A j * qgF k A i) * qgF k A j =
+    qgK k A i * qgK k A j * (qgF k A i * qgF k A j) from by noncomm_ring,
+    qg_SerreF_comm' k A i j h hij, qg_KK_comm k A j i]
+
+/-! ### Groups VI/VII: Serre quadratic (HARD, multi-session) -/
+
+theorem antipodeFreeAlgQG_SerreE_quad (i j : Fin r)
+    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
+    antipodeFreeAlgQG k A
+      (qgI' k (.E i) * qgI' k (.E i) * qgI' k (.E j) +
+       qgI' k (.E j) * qgI' k (.E i) * qgI' k (.E i)) =
+    antipodeFreeAlgQG k A
+      (algebraMap (QBase k) _ (T 1 + T (-1)) *
+       qgI' k (.E i) * qgI' k (.E j) * qgI' k (.E i)) := by
+  sorry
+
+theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
+    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
+    antipodeFreeAlgQG k A
+      (qgI' k (.F i) * qgI' k (.F i) * qgI' k (.F j) +
+       qgI' k (.F j) * qgI' k (.F i) * qgI' k (.F i)) =
+    antipodeFreeAlgQG k A
+      (algebraMap (QBase k) _ (T 1 + T (-1)) *
+       qgI' k (.F i) * qgI' k (.F j) * qgI' k (.F i)) := by
+  sorry
 
 end SKEFTHawking
