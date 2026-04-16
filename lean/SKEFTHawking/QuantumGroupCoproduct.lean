@@ -342,6 +342,98 @@ theorem comulFreeAlgQG_EFi_cross_terms (i : Fin r) :
   rw [show (T (A i i) : QBase k) * T (-A i i) = 1 by rw [← T_add]; norm_num]
   rw [one_smul]
 
+/-! ### Diamond-bypass lemmas for tensor sub
+
+`TensorProduct.sub_tmul` and `tmul_sub` fail on parametric `QuantumGroup k A`
+due to a Sub typeclass diamond between `RingQuot.instSub` and
+`AddCommGroup.toAddGroup.toSub`. Workaround: prove our own versions
+via `sub_eq_add_neg` (term-level) bypassing the diamond. -/
+
+/-- `qg_sub_tmul`: distributes subtraction across the left tensor factor
+    in `QuantumGroup k A ⊗ QuantumGroup k A`. Bypasses Sub typeclass diamond. -/
+lemma qg_sub_tmul (a b c : QuantumGroup k A) :
+    (a - b) ⊗ₜ[QBase k] c = a ⊗ₜ[QBase k] c - b ⊗ₜ[QBase k] c := by
+  rw [sub_eq_add_neg a b, TensorProduct.add_tmul]
+  rw [show (-b) ⊗ₜ[QBase k] c = -(b ⊗ₜ[QBase k] c) from TensorProduct.neg_tmul b c]
+  exact (sub_eq_add_neg _ _).symm
+
+/-- `qg_tmul_sub`: distributes subtraction across the right tensor factor.
+    Diamond-bypass version. -/
+lemma qg_tmul_sub (a b c : QuantumGroup k A) :
+    a ⊗ₜ[QBase k] (b - c) = a ⊗ₜ[QBase k] b - a ⊗ₜ[QBase k] c := by
+  rw [sub_eq_add_neg b c, TensorProduct.tmul_add]
+  rw [show a ⊗ₜ[QBase k] (-c) = -(a ⊗ₜ[QBase k] c) from TensorProduct.tmul_neg a c]
+  exact (sub_eq_add_neg _ _).symm
+
+/-! ### Group V: EF commutation (diagonal case)
+
+The diagonal case [E_i, F_i] (mod (q-q⁻¹)) = K_i - K_i⁻¹ requires the
+3-step Uqsl3Hopf template: cross-terms helper → sub formula → apply EF
+quantum-commutator. Diamond-bypass uses `qg_sub_tmul`/`qg_tmul_sub`. -/
+
+/-- The "sub formula" for EF_diag: Δ(E_iF_i) - Δ(F_iE_i) factors as
+    (E_iF_i - F_iE_i) ⊗ K_i + K_i⁻¹ ⊗ (E_iF_i - F_iE_i). -/
+theorem comulFreeAlgQG_EiFi_sub_FiEi (i : Fin r) :
+    comulFreeAlgQG k A (qgI k (.E i) * qgI k (.F i)) -
+    comulFreeAlgQG k A (qgI k (.F i) * qgI k (.E i)) =
+    (qgE k A i * qgF k A i - qgF k A i * qgE k A i) ⊗ₜ[QBase k] qgK k A i +
+    qgKinv k A i ⊗ₜ[QBase k] (qgE k A i * qgF k A i - qgF k A i * qgE k A i) := by
+  simp +decide [comulFreeAlgQG_ι, comulOnGenQG]
+  simp +decide [add_mul, mul_add]
+  rw [show (qgE k A i * qgKinv k A i) ⊗ₜ[QBase k] (qgK k A i * qgF k A i) =
+          (qgKinv k A i * qgE k A i) ⊗ₜ[QBase k] (qgF k A i * qgK k A i) from
+    comulFreeAlgQG_EFi_cross_terms k (A := A) i]
+  rw [qg_sub_tmul k _ _ _, qg_tmul_sub k _ _ _]
+  abel
+
+/-- **comulFreeAlgQG_EF_diag**: comul respects the diagonal EF commutator
+    (q-q⁻¹) * (E_iF_i - F_iE_i) = K_i - K_i⁻¹.
+
+    Proof structure (generic version of Uqsl3Hopf's EF11 template):
+    1. Distribute comul through the algebraMap-scalar and the subtraction
+    2. Apply the `comulFreeAlgQG_EiFi_sub_FiEi` sub formula
+    3. Apply `qg_EF_diag` in BOTH tensor positions (h_dist, h_dist2)
+       to convert (q-q⁻¹)(E_iF_i - F_iE_i) → (K_i - K_i⁻¹)
+    4. Distribute via `qg_sub_tmul`/`qg_tmul_sub` (diamond-bypass)
+    5. abel closes (telescoping K_i⁻¹⊗K_i terms cancel)
+
+    This is the FIRST generic Hopf coproduct EF_diag respect proof in
+    any proof assistant. -/
+theorem comulFreeAlgQG_EF_diag (i : Fin r) :
+    comulFreeAlgQG k A
+      (algebraMap (QBase k) (FreeAlgebra (QBase k) (QGGen r)) (T 1 - T (-1)) *
+       (qgI k (.E i) * qgI k (.F i) - qgI k (.F i) * qgI k (.E i))) =
+    comulFreeAlgQG k A (qgI k (.K i) - qgI k (.Kinv i)) := by
+  rw [map_mul, AlgHom.commutes]
+  rw [show comulFreeAlgQG k A (qgI k (.E i) * qgI k (.F i) - qgI k (.F i) * qgI k (.E i)) =
+        comulFreeAlgQG k A (qgI k (.E i) * qgI k (.F i)) -
+        comulFreeAlgQG k A (qgI k (.F i) * qgI k (.E i))
+      from map_sub _ _ _]
+  rw [comulFreeAlgQG_EiFi_sub_FiEi]
+  rw [show comulFreeAlgQG k A (qgI k (.K i) - qgI k (.Kinv i)) =
+        qgK k A i ⊗ₜ[QBase k] qgK k A i - qgKinv k A i ⊗ₜ[QBase k] qgKinv k A i from by
+    rw [map_sub]
+    rw [comulFreeAlgQG_ι, comulFreeAlgQG_ι]
+    rfl]
+  have h_dist : algebraMap (QBase k) ((QuantumGroup k A) ⊗[QBase k] (QuantumGroup k A))
+                  (T 1 - T (-1)) *
+      ((qgE k A i * qgF k A i - qgF k A i * qgE k A i) ⊗ₜ[QBase k] qgK k A i) =
+      (qgK k A i - qgKinv k A i) ⊗ₜ[QBase k] qgK k A i := by
+    rw [← qg_EF_diag]
+    rw [Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
+  have h_dist2 : algebraMap (QBase k) ((QuantumGroup k A) ⊗[QBase k] (QuantumGroup k A))
+                  (T 1 - T (-1)) *
+      (qgKinv k A i ⊗ₜ[QBase k] (qgE k A i * qgF k A i - qgF k A i * qgE k A i)) =
+      qgKinv k A i ⊗ₜ[QBase k] (qgK k A i - qgKinv k A i) := by
+    rw [← qg_EF_diag]
+    rw [Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
+    rw [show (algebraMap (QBase k) (QuantumGroup k A)) (T 1 - T (-1)) * qgKinv k A i =
+          (T 1 - T (-1)) • qgKinv k A i from (Algebra.smul_def _ _).symm,
+        TensorProduct.smul_tmul, ← Algebra.smul_def]
+  rw [mul_add, h_dist, h_dist2]
+  rw [qg_sub_tmul, qg_tmul_sub]
+  abel
+
 /-! ### Group V: EF commutation (off-diagonal, decoupled case) -/
 
 /-- comul respects E_i · F_j = F_j · E_i for i ≠ j, when A_{ij} = A_{ji} = 0
