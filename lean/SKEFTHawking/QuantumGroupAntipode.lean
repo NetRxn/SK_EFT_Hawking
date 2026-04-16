@@ -350,14 +350,77 @@ theorem antipodeFreeAlgQG_SerreF_comm (i j : Fin r) (h : A i j = 0) (h' : A j i 
 
 /-! ### Groups VI/VII: Serre quadratic (HARD, multi-session) -/
 
+set_option maxHeartbeats 1600000 in
+set_option backward.isDefEq.respectTransparency false in
 theorem antipodeFreeAlgQG_SerreE_quad (i j : Fin r)
-    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
+    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) (hjj : A j j = 2) :
     antipodeFreeAlgQG k A
       (qgI' k (.E i) * qgI' k (.E i) * qgI' k (.E j) +
        qgI' k (.E j) * qgI' k (.E i) * qgI' k (.E i)) =
     antipodeFreeAlgQG k A
       (algebraMap (QBase k) _ (T 1 + T (-1)) *
        qgI' k (.E i) * qgI' k (.E j) * qgI' k (.E i)) := by
+  -- Expand both sides directly (skip sub_eq_zero to avoid MulOpposite Sub diamond)
+  simp only [map_add, map_mul, AlgHom.commutes,
+             antipodeFreeAlgQG, antipodeOnGenQG, FreeAlgebra.lift_ι_apply]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_add, MulOpposite.unop_mul,
+             MulOpposite.unop_op,
+             MulOpposite.algebraMap_apply, mul_assoc]
+  -- Phase 4: handle negation via letI + neg_mul/mul_neg
+  letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  -- Phase 5: push E·Kinv to Kinv·E (same-index)
+  simp_rw [qg_E_Kinv_scaled k (A := A) i i, qg_E_Kinv_scaled k (A := A) j j]
+  -- Phase 6: convert trailing algebraMap to smul, collect scalars
+  have hcentral : ∀ (r : QBase k) (x : QuantumGroup k A),
+      x * algebraMap (QBase k) (QuantumGroup k A) r = r • x :=
+    fun r x => by erw [Algebra.smul_def, Algebra.commutes]
+  have hcentral_left : ∀ (r : QBase k) (x : QuantumGroup k A),
+      algebraMap (QBase k) (QuantumGroup k A) r * x = r • x :=
+    fun r x => by rw [Algebra.smul_def]
+  simp only [mul_add, mul_one, hcentral, hcentral_left]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul, ← T_add]
+  norm_num [T_zero]
+  simp only [one_smul, ← mul_assoc]
+  -- Phase 7: Kinv·E commutation helpers for all index pairs
+  have hKinvE_ii : qgKinv k A i * qgE k A i =
+      (T (-2) : QBase k) • (qgE k A i * qgKinv k A i) := by
+    rw [qg_E_Kinv_scaled k (A := A) i i, hii]
+    simp only [← Algebra.smul_def, smul_mul_assoc, smul_smul, ← T_add]
+    norm_num [T_zero, one_smul]
+  have hKinvE_jj : qgKinv k A j * qgE k A j =
+      (T (-2) : QBase k) • (qgE k A j * qgKinv k A j) := by
+    rw [qg_E_Kinv_scaled k (A := A) j j, hjj]
+    simp only [← Algebra.smul_def, smul_mul_assoc, smul_smul, ← T_add]
+    norm_num [T_zero, one_smul]
+  have hKinvE_ij : qgKinv k A i * qgE k A j =
+      (T 1 : QBase k) • (qgE k A j * qgKinv k A i) := by
+    rw [qg_E_Kinv_scaled k (A := A) j i, h]
+    simp only [← Algebra.smul_def, smul_mul_assoc, smul_smul, ← T_add]
+    norm_num [T_zero, one_smul]
+  have hKinvE_ji : qgKinv k A j * qgE k A i =
+      (T 1 : QBase k) • (qgE k A i * qgKinv k A j) := by
+    rw [qg_E_Kinv_scaled k (A := A) i j, hsym]
+    simp only [← Algebra.smul_def, smul_mul_assoc, smul_smul, ← T_add]
+    norm_num [T_zero, one_smul]
+  -- Phase 8: push all Kinv right past E
+  simp only [mul_assoc, hKinvE_ii, hKinvE_jj, hKinvE_ij, hKinvE_ji,
+             mul_smul_comm, smul_mul_assoc, smul_smul] at ⊢
+  simp only [← T_add] at ⊢
+  -- Phase 9: apply pure Serre right-multiplied by Kinv chain
+  have hSE := qg_SerreE_quad_smul k i j h
+  have h_mul := congr_arg
+    (⇑(LinearMap.mulRight (QBase k)
+        (qgKinv k A i * qgKinv k A i * qgKinv k A j))) hSE
+  simp only [map_add, map_sub, map_zero, LinearMap.mulRight_apply,
+             LinearMap.map_smul_of_tower] at h_mul
+  -- Push Kinv past E in h_mul too (same simp chain as Phase 8)
+  -- h_mul has Serre·Kinv_chain, goal has dressed Serre.
+  -- Connecting them requires 3 atom-equality helpers (hA1, hA2, hB), each
+  -- ~70 LOC of E·Kinv commutation chains. Same pattern as Uqsl3Hopf lines
+  -- 2690-2942. The q-factors cancel palindromically: T(A_ii+A_ij+A_ji) = T(0)
+  -- for each atom after full Kinv commutation.
   sorry
 
 theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
