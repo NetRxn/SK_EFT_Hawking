@@ -1137,16 +1137,15 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
              comulFreeAlgQG_ι, comulOnGenQG, mul_add, add_mul,
              Algebra.TensorProduct.algebraMap_apply,
              Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
-  simp only [← Algebra.smul_def, smul_mul_assoc, one_mul,
-             Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul',
-             zsmul_eq_mul, Int.mul_one]
+  simp only [smul_mul_assoc, one_mul, Algebra.algebraMap_eq_smul_one]
   let phi_LL : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
     (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
-      (qgKinv k A i * qgKinv k A i * qgKinv k A j)
+      (1 : QuantumGroup k A)
   let phi_RR : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
-    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (1 : QuantumGroup k A)
+    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+      (qgKinv k A i * qgKinv k A i * qgKinv k A j)
   have hSerreS := qg_SerreF_quad_smul k i j h
   have hSect00 :
       phi_LL (qgF k A i * qgF k A i * qgF k A j -
@@ -1167,7 +1166,7 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
   have hUqId01 := qg_sect_F_quad_20 k i j h
   let phi_01 : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
-    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
       (qgF k A i * qgF k A i)
   have hSect01 :
       phi_01 (qgKinv k A i * qgKinv k A i * qgF k A j -
@@ -1176,11 +1175,12 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
     rw [hUqId01]; exact map_zero phi_01
   rw [map_add phi_01, map_sub phi_01,
       LinearMap.map_smul_of_tower phi_01] at hSect01
-  simp only [phi_01, TensorProduct.mk_apply] at hSect01
+  simp only [phi_01, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect01
   have hUqId20 := qg_sect_F_quad_02 k i j hsym
   let phi_20 : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
-    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (qgF k A j)
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
+      (qgF k A j)
   have hSect20 :
       phi_20 (qgF k A i * qgF k A i * qgKinv k A j -
         (T 1 + T (-1) : QBase k) • (qgF k A i * qgKinv k A j * qgF k A i) +
@@ -1188,11 +1188,11 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
     rw [hUqId20]; exact map_zero phi_20
   rw [map_add phi_20, map_sub phi_20,
       LinearMap.map_smul_of_tower phi_20] at hSect20
-  simp only [phi_20, TensorProduct.mk_apply] at hSect20
+  simp only [phi_20, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect20
   have hUqId10a := qg_sect_F_quad_10_FiFj k i j hii hsym
   let phi_10a : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
-    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
       (qgF k A i * qgF k A j)
   have hSect10a :
       phi_10a (qgF k A i * qgKinv k A i * qgKinv k A j +
@@ -1201,11 +1201,11 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
     rw [hUqId10a]; exact map_zero phi_10a
   rw [map_sub phi_10a, map_add phi_10a,
       LinearMap.map_smul_of_tower phi_10a] at hSect10a
-  simp only [phi_10a, TensorProduct.mk_apply] at hSect10a
+  simp only [phi_10a, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect10a
   have hUqId10b := qg_sect_F_quad_10_FjFi k i j hii hsym
   let phi_10b : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
-    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
       (qgF k A j * qgF k A i)
   have hSect10b :
       phi_10b (qgKinv k A j * qgF k A i * qgKinv k A i +
@@ -1214,11 +1214,12 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
     rw [hUqId10b]; exact map_zero phi_10b
   rw [map_sub phi_10b, map_add phi_10b,
       LinearMap.map_smul_of_tower phi_10b] at hSect10b
-  simp only [phi_10b, TensorProduct.mk_apply] at hSect10b
+  simp only [phi_10b, LinearMap.flip_apply, TensorProduct.mk_apply] at hSect10b
   have hUqId11 := qg_sect_F_quad_11 k i j hii h
   let phi_11 : QuantumGroup k A →ₗ[QBase k]
       QuantumGroup k A ⊗[QBase k] QuantumGroup k A :=
-    TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A) (qgF k A i)
+    (TensorProduct.mk (QBase k) (QuantumGroup k A) (QuantumGroup k A)).flip
+      (qgF k A i)
   have hSect11 :
       phi_11 ((qgF k A i * qgKinv k A i * qgF k A j +
                 qgKinv k A i * qgF k A i * qgF k A j +
@@ -1230,7 +1231,7 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
     rw [hUqId11]; exact map_zero phi_11
   rw [map_sub phi_11, map_add phi_11, map_add phi_11, map_add phi_11,
       LinearMap.map_smul_of_tower phi_11, map_add phi_11] at hSect11
-  simp only [phi_11, TensorProduct.mk_apply, smul_add] at hSect11
+  simp only [phi_11, LinearMap.flip_apply, TensorProduct.mk_apply, smul_add] at hSect11
   have hKK : qgKinv k A j * qgKinv k A i = qgKinv k A i * qgKinv k A j :=
     (qg_Kinv_Kinv_comm (A := A) k i j).symm
   have hKKK1 : qgKinv k A j * qgKinv k A i * qgKinv k A i =
@@ -1249,15 +1250,11 @@ private theorem comulFreeAlgQG_SerreF_quad (i j : Fin r)
       (T 1 + T (-1) : QBase k) • x = T 1 • x + T (-1) • x := fun x => add_smul _ _ _
   rw [smul_expand] at hSect10a hSect10b
   simp only [smul_expand] at hSect11
-  erw [TensorProduct.smul_tmul', TensorProduct.smul_tmul'] at hSect10a
-  erw [TensorProduct.smul_tmul', TensorProduct.smul_tmul'] at hSect10b
-  erw [TensorProduct.smul_tmul', TensorProduct.smul_tmul',
-       TensorProduct.smul_tmul', TensorProduct.smul_tmul'] at hSect11
-  -- All 7 sector hypotheses built, goal K-normalized. Finisher blocked by
-  -- `linear_combination` producing T(-1•1) artifacts (definitionally = T(-1)
-  -- but syntactically different, preventing abel! from closing).
-  -- Resolution: bypass linear_combination with manual hypothesis subtraction.
-  sorry
+  linear_combination (norm := skip)
+    hSect00 + hSect21 + hSect01 + hSect20 + hSect10a + hSect10b + hSect11
+  simp only [TensorProduct.smul_tmul']
+  simp_rw [hKKK3]
+  abel!
 
 /-! ## 7. Module summary -/
 
