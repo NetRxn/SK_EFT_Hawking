@@ -469,6 +469,109 @@ theorem su3k1_fund_fund_no_fund :
 theorem su3k1_antifund_fund_eq_triv :
     fusionMultiplicity dataA2 1 100 ![1, 0] ![0, 0] su3_wd_antifund = 1 := by native_decide
 
+/-! ### G_2 Fibonacci Fusion Verification
+
+V((1,0)) for G_2 is the 7-dimensional fundamental representation. Its
+weight diagram has 7 weights, each multiplicity 1. The Fibonacci fusion
+rule τ × τ = 1 + τ should emerge at level 1. -/
+
+/-- Weight diagram of V((1,0)) for G_2 (7-dim fundamental). Weights derived
+    by building down from highest weight via simple roots:
+      α_1 = (2, -1), α_2 = (-3, 2)
+    yields the 7 distinct weights, all multiplicity 1. -/
+def g2_wd_fund : List (WeightEntry 2) :=
+  [(![1, 0], 1), (![-1, 1], 1), (![2, -1], 1), (![0, 0], 1),
+   (![-2, 1], 1), (![1, -1], 1), (![-1, 0], 1)]
+
+/-- **G_2_1 FIBONACCI: fund ⊗ fund contains trivial with multiplicity 1.**
+    This is the "1" half of the τ × τ = 1 + τ Fibonacci rule. -/
+theorem g2k1_fib_triv :
+    fusionMultiplicity dataG2 1 100 ![1, 0] ![0, 0] g2_wd_fund = 1 := by
+  native_decide
+
+/-- **G_2_1 FIBONACCI: fund ⊗ fund contains fund with multiplicity 1.**
+    This is the "τ" half of the τ × τ = 1 + τ Fibonacci rule.
+    Combined with `g2k1_fib_triv`, this verifies the full Fibonacci
+    fusion in G_2 at level 1, the third independent source of Fibonacci
+    in our project (alongside SU(2)_3 and SU(3)_2). -/
+theorem g2k1_fib_fund :
+    fusionMultiplicity dataG2 1 100 ![1, 0] ![1, 0] g2_wd_fund = 1 := by
+  native_decide
+
+/-! ### SU(4) Z_4 Fusion Verification
+
+V((1,0,0)) — fundamental of SU(4) — has 4 weights at the corners of the
+standard simplex. -/
+
+/-- Weight diagram of V((1,0,0)) for SU(4) (4-dim fundamental).
+    Weights: (1,0,0), (-1,1,0), (0,-1,1), (0,0,-1). -/
+def su4_wd_fund : List (WeightEntry 3) :=
+  [(![1, 0, 0], 1), (![-1, 1, 0], 1), (![0, -1, 1], 1), (![0, 0, -1], 1)]
+
+/-- SU(4)_1: fund ⊗ fund = (0, 1, 0) (the second fundamental, ∧²V). -/
+theorem su4k1_fund_fund_eq_two :
+    fusionMultiplicity dataA3 1 100 ![1, 0, 0] ![0, 1, 0] su4_wd_fund = 1 := by
+  native_decide
+
+/-- SU(4)_1: fund ⊗ fund does NOT contain trivial (it's a Z_4 ring,
+    only fund⁴ = trivial). -/
+theorem su4k1_fund_fund_no_triv :
+    fusionMultiplicity dataA3 1 100 ![1, 0, 0] ![0, 0, 0] su4_wd_fund = 0 := by
+  native_decide
+
+/-! ### B_2 (SO(5))_1 Ising-like Fusion Verification
+
+For B_2 with α_1 short and α_2 long (our convention with cartan
+!![2, -1; -2, 2] and comarks (1,1)):
+- V((1,0)) = SPINOR (4-dim, weights ±(e_1±e_2)/2)
+- V((0,1)) = VECTOR (5-dim, weights ±e_1, ±e_2, 0)
+
+Per general theory, B_n level 1 has 3 simples: trivial, vector, spinor.
+Fusion: spinor × spinor = trivial + vector (Ising-like). vector × vector
+= trivial only. -/
+
+/-- Spinor V((1,0)) for B_2: 4 weights derived from spinor basis
+    (e_1±e_2)/2 in fundamental-weight basis with α_1 short. -/
+def b2_wd_spinor : List (WeightEntry 2) :=
+  [(![1, 0], 1), (![-1, 1], 1), (![-1, 0], 1), (![1, -1], 1)]
+
+/-- Vector V((0,1)) for B_2: 5 weights including the zero weight. -/
+def b2_wd_vector : List (WeightEntry 2) :=
+  [(![0, 1], 1), (![2, -1], 1), (![0, -1], 1), (![-2, 1], 1), (![0, 0], 1)]
+
+/-- **B_2_1 Ising: spinor × spinor contains trivial.** -/
+theorem b2k1_spinor_sq_triv :
+    fusionMultiplicity dataB2 1 100 ![1, 0] ![0, 0] b2_wd_spinor = 1 := by
+  native_decide
+
+/-- **B_2_1 Ising: spinor × spinor contains vector (the OTHER half of
+    the Ising fusion rule σ × σ = 1 + ψ).** -/
+theorem b2k1_spinor_sq_vector :
+    fusionMultiplicity dataB2 1 100 ![1, 0] ![0, 1] b2_wd_spinor = 1 := by
+  native_decide
+
+/-- B_2_1: spinor × spinor does NOT contain spinor itself. -/
+theorem b2k1_spinor_sq_no_spinor :
+    fusionMultiplicity dataB2 1 100 ![1, 0] ![1, 0] b2_wd_spinor = 0 := by
+  native_decide
+
+/-- B_2_1: vector × vector = trivial. The contribution from the zero weight
+    plus the contribution from the σ_0 = -1 reflection (with sign flip)
+    cancels the spurious vector contribution. -/
+theorem b2k1_vector_sq_triv :
+    fusionMultiplicity dataB2 1 100 ![0, 1] ![0, 0] b2_wd_vector = 1 := by
+  native_decide
+
+/-- B_2_1: vector × vector does NOT contain spinor. -/
+theorem b2k1_vector_sq_no_spinor :
+    fusionMultiplicity dataB2 1 100 ![0, 1] ![1, 0] b2_wd_vector = 0 := by
+  native_decide
+
+/-- B_2_1: vector × vector does NOT contain vector itself (sign cancellation). -/
+theorem b2k1_vector_sq_no_vector :
+    fusionMultiplicity dataB2 1 100 ![0, 1] ![0, 1] b2_wd_vector = 0 := by
+  native_decide
+
 /-! ## 14. Module summary
 
 KacWaltonFusion module session 2 deliverable:
