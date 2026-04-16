@@ -140,6 +140,7 @@ import SKEFTHawking.ChangeOfRings
 import SKEFTHawking.FKGappedInterface
 import SKEFTHawking.ModularityTheorem
 import SKEFTHawking.InstantonZeroModes
+import SKEFTHawking.DiracFluidMetric
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -584,6 +584,125 @@ PARAMETER_PROVENANCE = {
         'notes': None,
     },
 
+    # ── Graphene Dirac fluid parameters (Phase 5w) ─────────────────
+
+    'V_FERMI_GRAPHENE': {
+        'value': 1.0e6,
+        'unit': 'm/s',
+        'tier': 'MEASURED',
+        'source': 'Castro Neto et al., Rev. Mod. Phys. 81, 109 (2009)',
+        'detail': 'Fermi velocity in monolayer graphene: v_F ≈ 10⁶ m/s. '
+                  'Measured via ARPES, STS, and magneto-transport. '
+                  'Renormalized by e-e interactions: ~15% enhancement at low carrier '
+                  'density (Elias et al., Nature Physics 7, 701, 2011).',
+        'doi': '10.1103/RevModPhys.81.109',
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'Canonical value from Castro Neto review. '
+                              'Confirmed in Majumdar 2025, Lucas & Fong 2018 review.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': None,
+    },
+    'ALPHA_GRAPHENE_HBN': {
+        'value': 0.7,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Lucas & Fong, JPCM 30, 053001 (2018)',
+        'detail': 'Effective fine structure constant α_g = e²/(ℏv_Fε_eff) on hBN. '
+                  'ε_eff depends on screening model: static ε_eff ≈ (1+ε_hBN)/2 ≈ 2.0 '
+                  'gives α ≈ 1.1; dynamic screening and RPA reduce to 0.5-0.9. '
+                  'Representative value 0.7 used following Gallagher 2019 analysis.',
+        'doi': '10.1088/1361-648X/aaa274',
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'Range 0.5-0.9 confirmed across Lucas & Fong 2018, '
+                              'Gallagher 2019, Majumdar 2025. Midpoint 0.7 adopted.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Range 0.5-0.9; 0.7 is representative midpoint.',
+    },
+    'Dean_bilayer_nozzle.c_s': {
+        'value': 4.4e5,
+        'unit': 'm/s',
+        'tier': 'MEASURED',
+        'source': 'Geurs et al., arXiv:2509.16321 (2025)',
+        'detail': 'Sound speed in bilayer graphene Dirac fluid. Dean group measured '
+                  'supersonic electron flow through de Laval nozzle geometry in '
+                  'hBN-encapsulated bilayer graphene. c_s ≈ 435 km/s in bilayer '
+                  '(lower than monolayer v_F/√2 ≈ 710 km/s due to bilayer band structure).',
+        'doi': None,
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'From Phase 5w deep research survey. Geurs 2025 reports '
+                              'supersonic flow past the hydrodynamic sound speed.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'First electronic sonic horizon. Bilayer c_s < monolayer c_s.',
+    },
+    'Dean_bilayer_nozzle.T_H_K': {
+        'value': 2.4,
+        'unit': 'K',
+        'tier': 'DERIVED',
+        'source': 'Phase 5w deep research (this project)',
+        'detail': 'Predicted analog Hawking temperature for Dean group bilayer nozzle. '
+                  'T_H = ℏ|dv/dx|_horizon/(2πk_B) with |dv/dx| ~ c_s/L, '
+                  'L ~ 200 nm (nozzle throat). T_H ≈ 2.4 K. '
+                  'Ratio T_H/T_ambient ≈ 0.01-0.02.',
+        'doi': None,
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'Computed from deep research §3 parameter table. '
+                              'Consistent with T_H = ℏ × 2e12 / (2π × k_B) ≈ 2.4 K.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'DERIVED from geometry + measured c_s. Not directly measured.',
+    },
+    'Monolayer_100nm.c_s': {
+        'value': 7.1e5,
+        'unit': 'm/s',
+        'tier': 'MEASURED',
+        'source': 'Zhao et al., Nature 614, 688 (2023)',
+        'detail': 'Sound speed in monolayer graphene Dirac fluid: c_s = v_F/√2 ≈ 710 km/s. '
+                  'First direct measurement via hydrodynamic plasmon spectroscopy.',
+        'doi': '10.1038/s41586-022-05619-8',
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'Zhao 2023 directly measures electronic sound velocity. '
+                              'Consistent with conformal prediction c_s = v_F/√2.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used for Monolayer_100nm, Monolayer_50nm, PN_junction_10nm.',
+    },
+    'Majumdar.sigma_Q': {
+        'value': 4.0,
+        'unit': 'e²/h',
+        'tier': 'MEASURED',
+        'source': 'Majumdar et al., Nature Physics 21, 1374 (2025) [arXiv:2501.03193]',
+        'detail': 'Universal quantum critical conductivity σ_Q = (4 ± 1) × e²/h. '
+                  'Device-independent: varies <25% across samples despite σ_min '
+                  'varying by order of magnitude with disorder. Extracted from '
+                  'thermal transport (not electrical σ_min).',
+        'doi': None,
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'Extracted from arXiv:2501.03193 full HTML via WebFetch. '
+                              'σ_Q = (4 ± 1) e²/h confirmed in abstract and results.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used for all graphene platforms as universal value.',
+    },
+    'Majumdar.eta_over_s': {
+        'value': 4.0,
+        'unit': 'ℏ/(4πk_B)',
+        'tier': 'MEASURED',
+        'source': 'Majumdar et al., Nature Physics 21, 1374 (2025) [arXiv:2501.03193]',
+        'detail': 'Viscosity-to-entropy ratio η/s ≈ 4 × ℏ/(4πk_B) in cleanest '
+                  'devices near room temperature. Within factor 4 of KSS bound.',
+        'doi': None,
+        'llm_verified_date': '2026-04-16',
+        'llm_verified_notes': 'From arXiv:2501.03193: "viscosity-to-entropy-density '
+                              'ratio η_th/s_th approaches the theoretical limit '
+                              'ℏ/4πk_B within a factor of four."',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': None,
+    },
+
     # ── Majorana 8×8 representation constants (Wave 7B) ───────────
 
     'MAJORANA_GAMMA_8x8': {
@@ -871,6 +990,11 @@ def get_params_for_paper(paper_num):
                          ['Steinhauer', 'Heidelberg', 'Trento', 'Rb87', 'K39', 'Na23'])]
     polariton_params = [k for k in PARAMETER_PROVENANCE
                         if k.startswith('Paris') or k == 'POLARITON_MASS']
+    graphene_params = [k for k in PARAMETER_PROVENANCE
+                       if any(k.startswith(p) for p in
+                              ['V_FERMI_GRAPHENE', 'ALPHA_GRAPHENE', 'E_CHARGE',
+                               'Dean_bilayer', 'Monolayer_', 'PN_junction',
+                               'Majumdar'])]
 
     paper_map = {
         1: bec_params,

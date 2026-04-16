@@ -5704,3 +5704,211 @@ def fk_spectral_gap():
     Lean: spectral_gap_positive (FKGappedInterface.lean)
     """
     return 2
+
+
+# ════════════════════════════════════════════════════════════════════
+# Graphene Dirac fluid analog metric (Phase 5w)
+#
+# The 2+1D Dirac fluid near the charge neutrality point has an analog
+# acoustic metric determined by the flow velocity v(x), enthalpy w,
+# and sound speed c_s = v_F/√2 (conformal equation of state ε = 2p).
+#
+# For quasi-1D flow (along x with y translational symmetry), the 3×3
+# metric block-diagonalizes: the (t,x) block reproduces the BEC 1+1D
+# acoustic metric with c_s → v_F/√2, and g_yy decouples.
+#
+# References:
+#   - Bilić, CQG 16, 3953 (1999) — relativistic acoustic metric
+#   - Lucas & Fong, JPCM 30, 053001 (2018) — Dirac fluid review
+#   - Geurs et al., arXiv:2509.16321 (2025) — sonic horizon in graphene
+# ════════════════════════════════════════════════════════════════════
+
+
+def dirac_fluid_sound_speed(v_F):
+    """Sound speed of the conformal Dirac fluid: c_s = v_F / √2.
+
+    For a 2+1D conformal fluid with ε = 2p (traceless stress tensor),
+    thermodynamics gives c_s² = ∂p/∂ε = 1/2 in units where v_F = 1,
+    so c_s = v_F / √2.
+
+    Confirmed experimentally by Zhao et al. (Nature 614, 688, 2023).
+
+    Lean: diracFluidSoundSpeed (DiracFluidMetric.lean) — pending
+    Aristotle: pending
+    Source: Lucas & Fong, JPCM 30, 053001 (2018), Eq. (2.7)
+
+    Args:
+        v_F: Fermi velocity [m/s].
+
+    Returns:
+        Sound speed c_s [m/s].
+    """
+    return v_F / np.sqrt(2)
+
+
+def dirac_fluid_metric_3d(v, v_F, w, n):
+    """3×3 acoustic metric for the Dirac fluid in lab coordinates (t, x, y).
+
+    For a 1D flow along x with velocity v(x) in the Dirac fluid:
+
+        G_μν = Ω² × | −(c_s² − v²)/v_F²    −v/v_F²    0 |
+                     |     −v/v_F²               1       0 |
+                     |        0                  0       1 |
+
+    where Ω² = (n/w·c_s)² is the conformal factor, c_s = v_F/√2.
+
+    The horizon forms where v = c_s = v_F/√2.
+
+    For quasi-1D flow, this block-diagonalizes: the (t,x) 2×2 block
+    reproduces the BEC acoustic metric (AcousticMetric.lean) with
+    c_s → v_F/√2 and ρ/c_s → Ω², and g_yy = Ω² decouples.
+
+    Lean: diracFluidMetric_3D, diracFluidMetric_blockDiag (DiracFluidMetric.lean) — pending
+    Aristotle: pending
+    Source: Bilić, CQG 16, 3953 (1999); deep research §2a
+
+    Args:
+        v: Flow velocity [m/s] (scalar, along x).
+        v_F: Fermi velocity [m/s].
+        w: Specific enthalpy density [J/m²] (enthalpy per unit area).
+        n: Number density [m⁻²].
+
+    Returns:
+        3×3 numpy array: the covariant metric G_μν.
+    """
+    c_s = v_F / np.sqrt(2)
+    Omega_sq = (n / (w * c_s)) ** 2
+    return Omega_sq * np.array([
+        [-(c_s**2 - v**2) / v_F**2, -v / v_F**2, 0],
+        [-v / v_F**2,                 1,           0],
+        [0,                           0,           1],
+    ])
+
+
+def dirac_fluid_metric_det(v, v_F, w, n):
+    """Determinant of the 3×3 Dirac fluid acoustic metric.
+
+    det(G) = −Ω⁶ · c_s² / v_F²
+
+    This is negative (Lorentzian signature) and independent of v,
+    analogous to det(g_BEC) = −ρ² for the BEC acoustic metric.
+
+    Lean: diracFluidMetric_det (DiracFluidMetric.lean) — pending
+    Aristotle: pending
+
+    Args:
+        v: Flow velocity [m/s].
+        v_F: Fermi velocity [m/s].
+        w: Specific enthalpy density [J/m²].
+        n: Number density [m⁻²].
+
+    Returns:
+        Determinant (negative real number).
+    """
+    c_s = v_F / np.sqrt(2)
+    Omega_sq = (n / (w * c_s)) ** 2
+    # det of 3×3 block-diag = det(2×2 block) × g_yy
+    # 2×2 block det = Omega_sq^2 × [-(c_s² - v²)/v_F² × 1 - (v/v_F²)²]
+    #               = Omega_sq^2 × [-(c_s² - v² + v²)/v_F²]
+    #               = -Omega_sq^2 × c_s²/v_F²
+    # Full: -Omega_sq^3 × c_s²/v_F²
+    return -(Omega_sq**3) * c_s**2 / v_F**2
+
+
+def dirac_fluid_horizon_velocity(v_F):
+    """Critical velocity for the sonic horizon in the Dirac fluid.
+
+    The horizon forms where the flow velocity equals the sound speed:
+    v_horizon = c_s = v_F / √2.
+
+    This is LOWER than v_F — the electron fluid must reach c_s, not v_F.
+    The Dean group (Geurs 2025) achieved v > c_s in bilayer graphene.
+
+    Lean: diracFluidHorizon_velocity (DiracFluidMetric.lean) — pending
+    Aristotle: pending
+    Source: Deep research §2a, §3
+
+    Args:
+        v_F: Fermi velocity [m/s].
+
+    Returns:
+        Horizon velocity v_horizon [m/s].
+    """
+    return v_F / np.sqrt(2)
+
+
+def dirac_fluid_hawking_temperature(dv_dx, v_F=1.0e6):
+    """Analog Hawking temperature for Dirac fluid flow.
+
+    T_H = ℏ |dv/dx|_horizon / (2π k_B)
+
+    For a constriction of length L: |dv/dx| ~ c_s / L.
+    For the Dean bilayer nozzle (L ~ 200 nm): T_H ~ 2.4 K.
+
+    This is 10⁹ times larger than BEC T_H (~ nK).
+
+    Lean: graphene_T_H_positivity (GrapheneHawking.lean) — pending
+    Aristotle: pending
+    Source: Deep research §3; Unruh PRL 46, 1351 (1981) for general formula
+
+    Args:
+        dv_dx: Velocity gradient at horizon |dv/dx| [s⁻¹].
+        v_F: Fermi velocity [m/s] (default: monolayer graphene).
+
+    Returns:
+        Hawking temperature T_H [K].
+    """
+    from src.core.constants import HBAR, K_B
+    return HBAR * abs(dv_dx) / (2 * np.pi * K_B)
+
+
+def dirac_fluid_hawking_from_geometry(nozzle_length_m, v_F=1.0e6):
+    """Hawking temperature from constriction geometry.
+
+    Estimates T_H for a smooth constriction of length L where the
+    velocity changes by ~c_s across the nozzle:
+    |dv/dx| ≈ c_s / L, so T_H ≈ ℏ c_s / (2π k_B L).
+
+    Lean: pending
+    Aristotle: pending
+    Source: Deep research §3, geometry estimate
+
+    Args:
+        nozzle_length_m: Effective gradient length [m].
+        v_F: Fermi velocity [m/s].
+
+    Returns:
+        Estimated T_H [K].
+    """
+    from src.core.constants import HBAR, K_B
+    c_s = v_F / np.sqrt(2)
+    dv_dx = c_s / nozzle_length_m
+    return HBAR * dv_dx / (2 * np.pi * K_B)
+
+
+def dirac_fluid_dissipation_window(T_H_K, l_mr_m, v_F=1.0e6):
+    """Ratio ω_H / Γ_mr: the dissipation window for Hawking detection.
+
+    ω_H = k_B T_H / ℏ (characteristic Hawking frequency)
+    Γ_mr = v_F / l_mr (momentum-relaxation rate)
+
+    Ratio > 1 means Hawking modes are above the dissipative floor.
+    For Dean nozzle (T_H ≈ 2.4 K, l_mr ≈ 5 μm): ratio ≈ 1.6.
+    For cleaner samples (l_mr ~ 15 μm): ratio ≈ 5.
+
+    Lean: pending
+    Aristotle: pending
+    Source: Deep research §3
+
+    Args:
+        T_H_K: Hawking temperature [K].
+        l_mr_m: Momentum-relaxation mean free path [m].
+        v_F: Fermi velocity [m/s].
+
+    Returns:
+        ω_H / Γ_mr (dimensionless).
+    """
+    from src.core.constants import HBAR, K_B
+    omega_H = K_B * T_H_K / HBAR
+    Gamma_mr = v_F / l_mr_m
+    return omega_H / Gamma_mr

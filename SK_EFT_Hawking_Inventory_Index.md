@@ -17,13 +17,13 @@
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **139** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +6 since last sync: Wave 4 added PolyQuotOver (4b.ext), QCyc15 (4c-part1), SU3k2SMatrix (4c-part2), QCyc15SqrtPhi (4c-part3), SU3k2FSymbols (4c-part3), QCyc3 (4d, extracted from old PolyQuotQ). |
+| Lean modules | **140** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +1 since last sync: Phase 5w Wave 2 added DiracFluidMetric.lean (9 theorems, 3 defs, 0 sorry — graphene Dirac fluid analog acoustic metric). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
-| Test files | **46** | |
+| Test files | **47** | +1: test_graphene_metric.py (26 tests) |
 | Test count | 1660+ | `pytest tests/ -q` |
-| Figures | **101** | `grep -c "^def fig_" src/core/visualizations.py` |
-| Notebooks | **48** | `ls notebooks/*.ipynb` |
+| Figures | **103** | `grep -c "^def fig_" src/core/visualizations.py` (+2: graphene T_H sweep, dissipation window) |
+| Notebooks | **49** | `ls notebooks/*.ipynb` (+1: Phase5w_GrapheneDiracFluid_Technical) |
 | Papers | **15** | `ls papers/paper*/paper_draft.tex` |
 | Validation checks | 16 | `python scripts/validate.py --list` |
 | Stakeholder docs | 22 | See Section 9 of inventory |
@@ -120,6 +120,7 @@
 |--------|------|------------|
 | Basic | 0 | Type definitions |
 | AcousticMetric | 8 | det(g)=-ρ², T_H formula |
+| DiracFluidMetric | 9 | **Phase 5w Wave 2:** 3×3 Dirac fluid acoustic metric, c_s = v_F/√2, block-diag for quasi-1D, horizon at v=c_s, Lorentzian signature (**ALL PROVED, zero sorry**) |
 | SKDoubling | 9 | Uniqueness, FDR, zeroTemp_nontrivial |
 | HawkingUniversality | 9 | Universality theorem |
 | SecondOrderSK | 24 | Counting formula, positivity constraint; Phase 5u Wave 1b added `GammaH`, `gammaH_def/_via_kH/_nonneg`, `deltaDissFromTransport`, `deltaDissFromTransport_eq/_zero_iff` — grounds Γ_H = (γ₁+γ₂)(κ/c_s)² identification |

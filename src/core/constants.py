@@ -172,6 +172,130 @@ for _name, _plat in POLARITON_PLATFORMS.items():
 
 
 # ════════════════════════════════════════════════════════════════════
+# Graphene Dirac fluid parameters (Phase 5w)
+#
+# The graphene Dirac fluid near the charge neutrality point (CNP) is a
+# natively relativistic 2+1D system where electron-hole quasiparticles
+# propagate at the Fermi velocity v_F ≈ 10⁶ m/s.  Hydrodynamic sound
+# waves (plasmons) propagate at c_s = v_F/√2 for the conformal fluid.
+#
+# Unlike BEC analog gravity (where c_s emerges from interactions), the
+# causal speed v_F is set by the band structure.  The sonic horizon
+# forms where the drift velocity reaches c_s, not v_F.
+#
+# Platforms use the same dict-based structure as POLARITON_PLATFORMS.
+# Not BEC — do not feed to transonic_background solver.
+#
+# References:
+#   - Majumdar et al., Nature Physics 21, 1374 (2025) [arXiv:2501.03193]
+#   - Geurs et al., arXiv:2509.16321 (2025) — Dean group nozzle
+#   - Zhao et al., Nature 614, 688 (2023) — c_s measurement
+#   - Gallagher et al., Science 364, 158 (2019) — Planckian scattering
+#   - Lucas & Fong, JPCM 30, 053001 (2018) — Dirac fluid review
+# ════════════════════════════════════════════════════════════════════
+
+# Fundamental graphene constants
+E_CHARGE = 1.602176634e-19            # C (elementary charge, exact SI 2019)
+V_FERMI_GRAPHENE = 1.0e6              # m/s (Fermi velocity in monolayer graphene)
+ALPHA_GRAPHENE_VACUUM = 2.2           # e²/(ℏv_F) ≈ 2.2 in vacuum (suspended)
+HBN_DIELECTRIC_PERP = 3.0             # hBN in-plane dielectric constant (low bound)
+HBN_DIELECTRIC_PARA = 6.7             # hBN out-of-plane dielectric constant
+# Effective fine structure constant on hBN substrate:
+# α_eff = e²/(ℏ v_F ε_eff) where ε_eff ≈ (1 + ε_hBN)/2 ≈ 2.0
+# gives α_eff ≈ 2.2/2.0 ≈ 1.1 (geometric mean approach gives ~0.5-0.9)
+ALPHA_GRAPHENE_HBN = 0.7              # Representative value on hBN (range 0.5-0.9)
+
+GRAPHENE_PLATFORMS = {
+    'Dean_bilayer_nozzle': {
+        'description': 'Dean group bilayer graphene de Laval nozzle '
+                       '(Geurs et al. 2509.16321, first electronic sonic horizon)',
+        'v_F': 1.0e6,                  # m/s (Fermi velocity, bilayer ≈ monolayer)
+        'c_s': 4.4e5,                  # m/s (bilayer sound speed; Geurs 2025)
+        'alpha_eff': 0.7,              # effective coupling on hBN
+        'nozzle_throat_nm': 200,       # nm (effective gradient length scale)
+        'T_ambient_K': 150,            # K (cryogenic operating temperature)
+        'T_imp_K': 80,                 # K (disorder temperature, device-dependent)
+        'l_mr_um': 5.0,               # μm (momentum-relaxation mean free path)
+        'n_min_cm2': 5e10,             # cm⁻² (charge inhomogeneity at CNP)
+        'sigma_Q_e2h': 4.0,           # σ_Q in units of e²/h (universal, Majumdar)
+        'eta_over_s_KSS': 4.0,        # η/s in units of ℏ/(4πk_B) (Majumdar)
+        # Derived Hawking parameters (from deep research §3)
+        'gradient_s1': 2.0e12,         # s⁻¹ (|dv/dx| at horizon, estimated)
+        'T_H_K': 2.4,                 # K (predicted analog Hawking temperature)
+        'dispersion_type': 'subluminal',
+    },
+    'Monolayer_100nm': {
+        'description': 'Monolayer graphene constriction W ~ 100 nm (PROJECTED)',
+        'v_F': 1.0e6,
+        'c_s': 7.1e5,                  # m/s (v_F/√2 for conformal monolayer)
+        'alpha_eff': 0.7,
+        'nozzle_throat_nm': 100,
+        'T_ambient_K': 100,
+        'T_imp_K': 80,
+        'l_mr_um': 10.0,
+        'n_min_cm2': 1e10,
+        'sigma_Q_e2h': 4.0,
+        'eta_over_s_KSS': 4.0,
+        'gradient_s1': 7.1e12,
+        'T_H_K': 8.7,
+        'dispersion_type': 'subluminal',
+    },
+    'Monolayer_50nm': {
+        'description': 'Monolayer graphene constriction W ~ 50 nm (PROJECTED)',
+        'v_F': 1.0e6,
+        'c_s': 7.1e5,
+        'alpha_eff': 0.7,
+        'nozzle_throat_nm': 50,
+        'T_ambient_K': 100,
+        'T_imp_K': 80,
+        'l_mr_um': 10.0,
+        'n_min_cm2': 1e10,
+        'sigma_Q_e2h': 4.0,
+        'eta_over_s_KSS': 4.0,
+        'gradient_s1': 1.4e13,
+        'T_H_K': 17.0,
+        'dispersion_type': 'subluminal',
+    },
+    'PN_junction_10nm': {
+        'description': 'Graphene p-n junction d ~ 10 nm — single-particle Dirac '
+                       'analog (Klein tunneling, NOT acoustic horizon; PROJECTED)',
+        'v_F': 1.0e6,
+        'c_s': 1.0e6,                  # v_F (single-particle, not acoustic)
+        'alpha_eff': 0.7,
+        'nozzle_throat_nm': 10,
+        'T_ambient_K': 100,
+        'T_imp_K': 80,
+        'l_mr_um': 10.0,
+        'n_min_cm2': 1e10,
+        'sigma_Q_e2h': 4.0,
+        'eta_over_s_KSS': 4.0,
+        'gradient_s1': 1.0e14,
+        'T_H_K': 120.0,
+        'dispersion_type': 'subluminal',
+    },
+}
+
+# Derived graphene parameters
+for _name, _plat in GRAPHENE_PLATFORMS.items():
+    _cs = _plat['c_s']
+    _L = _plat['nozzle_throat_nm'] * 1e-9  # convert nm → m
+    # Hawking frequency ω_H = k_B T_H / ℏ
+    _plat['omega_H_s1'] = K_B * _plat['T_H_K'] / HBAR
+    # e-e scattering mean free path at T_ambient
+    _plat['l_ee_nm'] = HBAR * _plat['v_F'] / (K_B * _plat['T_ambient_K']) * 1e9
+    # Momentum-relaxation rate
+    _plat['Gamma_mr_s1'] = _plat['v_F'] / (_plat['l_mr_um'] * 1e-6)
+    # Dissipation window: ω_H / Γ_mr
+    _plat['omega_H_over_Gamma_mr'] = _plat['omega_H_s1'] / _plat['Gamma_mr_s1']
+    # T_H / T_ambient ratio
+    _plat['T_H_over_T_ambient'] = _plat['T_H_K'] / _plat['T_ambient_K']
+    # σ_Q in SI
+    _plat['sigma_Q_SI'] = _plat['sigma_Q_e2h'] * E_CHARGE**2 / (2 * np.pi * HBAR)
+    # Planckian scattering rate (Gallagher 2019: τ_ee⁻¹ = 0.20 k_BT/ℏ)
+    _plat['Gamma_ee_s1'] = 0.20 * K_B * _plat['T_ambient_K'] / HBAR
+
+
+# ════════════════════════════════════════════════════════════════════
 # Kappa-scaling test configuration
 # The kappa-scaling test varies surface gravity kappa while holding
 # BEC material properties fixed. Multipliers applied to each

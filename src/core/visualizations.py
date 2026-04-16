@@ -6631,5 +6631,141 @@ def fig_fk_spectrum() -> go.Figure:
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════
+# Phase 5w: Graphene Dirac fluid analog metric
+# ════════════════════════════════════════════════════════════════════
+
+
+def fig_graphene_hawking_temperature_sweep():
+    """Fig 102: Hawking temperature vs constriction length for graphene platforms.
+
+    Shows T_H as a function of nozzle throat length L for both monolayer
+    (c_s = v_F/√2) and bilayer (c_s = 440 km/s) graphene.  Marks the
+    four platform configurations from GRAPHENE_PLATFORMS.  Includes
+    horizontal lines for T_ambient and T_imp as detection thresholds.
+    """
+    from src.core.formulas import dirac_fluid_hawking_from_geometry
+    from src.core.constants import GRAPHENE_PLATFORMS
+
+    L_nm = np.logspace(1, 3, 200)  # 10 nm to 1 μm
+    L_m = L_nm * 1e-9
+
+    # Monolayer: c_s = v_F/√2
+    T_H_mono = np.array([dirac_fluid_hawking_from_geometry(L, v_F=1.0e6) for L in L_m])
+    # Bilayer: c_s ≈ 440 km/s (use formula with effective v_F = c_s * √2)
+    v_F_eff_bilayer = 4.4e5 * np.sqrt(2)
+    T_H_bi = np.array([dirac_fluid_hawking_from_geometry(L, v_F=v_F_eff_bilayer) for L in L_m])
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=L_nm, y=T_H_mono,
+        name='Monolayer (c_s = v_F/√2)',
+        line=dict(color=COLORS['steel_blue'], width=2.5),
+    ))
+    fig.add_trace(go.Scatter(
+        x=L_nm, y=T_H_bi,
+        name='Bilayer (c_s ≈ 440 km/s)',
+        line=dict(color=COLORS['amber'], width=2.5, dash='dash'),
+    ))
+
+    # Platform markers
+    platform_colors = {
+        'Dean_bilayer_nozzle': COLORS['amber'],
+        'Monolayer_100nm': COLORS['steel_blue'],
+        'Monolayer_50nm': COLORS['steel_blue'],
+        'PN_junction_10nm': COLORS['dissipative'],
+    }
+    for name, plat in GRAPHENE_PLATFORMS.items():
+        fig.add_trace(go.Scatter(
+            x=[plat['nozzle_throat_nm']],
+            y=[plat['T_H_K']],
+            mode='markers+text',
+            name=name.replace('_', ' '),
+            marker=dict(size=10, color=platform_colors.get(name, 'grey'),
+                        symbol='diamond'),
+            text=[f"  {plat['T_H_K']:.1f} K"],
+            textposition='middle right',
+            textfont=dict(size=10),
+            showlegend=False,
+        ))
+
+    # Reference lines
+    fig.add_hline(y=150, line_dash='dot', line_color='grey',
+                  annotation_text='T_ambient (Dean, 150 K)',
+                  annotation_position='top right')
+    fig.add_hline(y=80, line_dash='dot', line_color='lightgrey',
+                  annotation_text='T_imp ≈ 80 K',
+                  annotation_position='bottom right')
+
+    apply_layout(fig,
+        xaxis=dict(title='Nozzle throat length L (nm)', type='log'),
+        yaxis=dict(title='Hawking temperature T_H (K)', type='log',
+                   range=[np.log10(0.5), np.log10(500)]),
+        title=dict(text='Analog Hawking Temperature — Graphene Platforms',
+                   font=TITLE_FONT),
+        height=500, width=700,
+    )
+    return fig
+
+
+def fig_graphene_dissipation_window():
+    """Fig 103: Dissipation window ω_H/Γ_mr vs T_H for different l_mr.
+
+    Shows the ratio of Hawking frequency to momentum-relaxation rate
+    as a function of T_H for three sample qualities (l_mr = 1, 5, 15 μm).
+    The horizontal line at ratio = 1 marks the detection threshold.
+    Platform configurations are marked.
+    """
+    from src.core.formulas import dirac_fluid_dissipation_window
+    from src.core.constants import GRAPHENE_PLATFORMS
+
+    T_H_range = np.logspace(-1, 2, 200)  # 0.1 to 100 K
+    l_mr_values = [1e-6, 5e-6, 15e-6]
+    l_mr_labels = ['l_mr = 1 μm', 'l_mr = 5 μm', 'l_mr = 15 μm']
+    l_mr_colors = [COLORS['dissipative'], COLORS['steel_blue'], COLORS['amber']]
+
+    fig = go.Figure()
+
+    for l_mr, label, color in zip(l_mr_values, l_mr_labels, l_mr_colors):
+        ratios = [dirac_fluid_dissipation_window(T, l_mr) for T in T_H_range]
+        fig.add_trace(go.Scatter(
+            x=T_H_range, y=ratios,
+            name=label,
+            line=dict(color=color, width=2),
+        ))
+
+    # Detection threshold
+    fig.add_hline(y=1.0, line_dash='dash', line_color='black',
+                  annotation_text='ω_H = Γ_mr (detection threshold)',
+                  annotation_position='top left')
+
+    # Platform markers
+    for name, plat in GRAPHENE_PLATFORMS.items():
+        if name == 'PN_junction_10nm':
+            continue  # Not acoustic horizon
+        ratio = plat.get('omega_H_over_Gamma_mr', None)
+        if ratio is not None:
+            fig.add_trace(go.Scatter(
+                x=[plat['T_H_K']], y=[ratio],
+                mode='markers+text',
+                name=name.replace('_', ' '),
+                marker=dict(size=10, color='black', symbol='diamond'),
+                text=[f"  {name.split('_')[0]}"],
+                textposition='middle right',
+                textfont=dict(size=9),
+                showlegend=False,
+            ))
+
+    apply_layout(fig,
+        xaxis=dict(title='Hawking temperature T_H (K)', type='log'),
+        yaxis=dict(title='ω_H / Γ_mr', type='log'),
+        title=dict(text='Dissipation Window for Hawking Detection — Graphene',
+                   font=TITLE_FONT),
+        height=500, width=700,
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()
