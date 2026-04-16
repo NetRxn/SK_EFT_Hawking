@@ -207,10 +207,44 @@ theorem antipodeFreeAlgQG_EF_diag (i : Fin r) :
     antipodeFreeAlgQG k A (qgI' k (.K i) - qgI' k (.Kinv i)) := by
   sorry
 
+private theorem anti_EF_off_helper (i j : Fin r) (hij : i ≠ j) (hsym : A i j = A j i) :
+    qgK k A j * qgF k A j * (qgE k A i * qgKinv k A i) =
+    qgE k A i * qgKinv k A i * (qgK k A j * qgF k A j) := by
+  -- Move E_i left: F_j*E_i = E_i*F_j (EF_off), K_j*E_i = T(A_ji)*E_i*K_j (KE)
+  -- Move Kinv_i left: F_j*Kinv_i = T(-A_ij)*Kinv_i*F_j, K_j*Kinv_i = Kinv_i*K_j
+  -- Net q-factor: T(A_ji)*T(-A_ij) = T(A_ij)*T(-A_ij) = 1 (by hsym)
+  have hFE := qg_EF_off k A i j hij       -- E_i*F_j = F_j*E_i
+  have hKE : qgK k A j * qgE k A i = (T (A j i) : QBase k) • (qgE k A i * qgK k A j) := by
+    have := qg_KE k A j i
+    rwa [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+  have hFK := qg_F_Kinv_scaled k (A := A) i j  -- F_j*Kinv_i = T(-A_ij)•(Kinv_i*F_j)
+  have hKKinv := qg_K_Kinv_comm k (A := A) j i     -- K_j*Kinv_i = Kinv_i*K_j
+  -- Strategy: move E_i left (via EF_off + KE), move Kinv_i left (via F_Kinv_scaled + K_Kinv_comm)
+  -- Net q-factor: T(A_ji)*T(-A_ij) = 1 (by hsym)
+  rw [show qgK k A j * qgF k A j * (qgE k A i * qgKinv k A i) =
+    qgK k A j * (qgF k A j * qgE k A i) * qgKinv k A i from by noncomm_ring, ← hFE,
+    show qgK k A j * (qgE k A i * qgF k A j) = (qgK k A j * qgE k A i) * qgF k A j from by
+      noncomm_ring, hKE, smul_mul_assoc, smul_mul_assoc,
+    show qgE k A i * qgK k A j * qgF k A j * qgKinv k A i =
+      qgE k A i * qgK k A j * (qgF k A j * qgKinv k A i) from by noncomm_ring, hFK,
+    mul_smul_comm]
+  congr 1
+  rw [show qgE k A i * qgK k A j * (qgKinv k A i * qgF k A j) =
+    qgE k A i * (qgK k A j * qgKinv k A i) * qgF k A j from by noncomm_ring, hKKinv]
+  rw [smul_smul, show (T (A j i) : QBase k) * T (-A i j) = 1 from by
+    rw [hsym, ← T_add]; norm_num, one_smul]; noncomm_ring
+
 theorem antipodeFreeAlgQG_EF_off (i j : Fin r) (hij : i ≠ j) (hsym : A i j = A j i) :
     antipodeFreeAlgQG k A (qgI' k (.E i) * qgI' k (.F j)) =
     antipodeFreeAlgQG k A (qgI' k (.F j) * qgI' k (.E i)) := by
-  sorry
+  rw [map_mul, map_mul]
+  erw [antipodeFreeAlgQG_ι (k := k) (A := A) (.E i),
+       antipodeFreeAlgQG_ι (k := k) (A := A) (.F j)]
+  simp only [antipodeOnGenQG, ← MulOpposite.op_neg, ← MulOpposite.op_mul]
+  congr 1
+  rw [qg_neg_mul, qg_mul_neg, qg_neg_mul, qg_mul_neg]
+  congr 1
+  congr 1; exact anti_EF_off_helper k i j hij hsym
 
 /-! ### Groups VI/VII: Serre commutativity -/
 
