@@ -538,14 +538,69 @@ theorem antipodeFreeAlgQG_SerreE_quad (i j : Fin r)
   -- h_mul says A2-[2]B+A1=0, goal says -(A1)-(A2)=-(T(-1)B)-(T(1)B). Same equation.
   linear_combination (norm := module) -h_mul
 
+set_option maxHeartbeats 1600000 in
+set_option backward.isDefEq.respectTransparency false in
 theorem antipodeFreeAlgQG_SerreF_quad (i j : Fin r)
-    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) :
+    (h : A i j = -1) (hii : A i i = 2) (hsym : A j i = -1) (hjj : A j j = 2) :
     antipodeFreeAlgQG k A
       (qgI' k (.F i) * qgI' k (.F i) * qgI' k (.F j) +
        qgI' k (.F j) * qgI' k (.F i) * qgI' k (.F i)) =
     antipodeFreeAlgQG k A
       (algebraMap (QBase k) _ (T 1 + T (-1)) *
        qgI' k (.F i) * qgI' k (.F j) * qgI' k (.F i)) := by
+  -- Mirror of SerreE_quad with K instead of Kinv, mulLeft instead of mulRight.
+  -- Expand via AlgHom + extract from MulOpposite
+  simp only [map_add, map_mul, AlgHom.commutes,
+             antipodeFreeAlgQG, antipodeOnGenQG, FreeAlgebra.lift_ι_apply]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_add, MulOpposite.unop_mul,
+             MulOpposite.unop_op,
+             MulOpposite.algebraMap_apply, mul_assoc]
+  -- Handle negation
+  letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  -- Push K·F to F·K (same-index)
+  simp_rw [qg_KF_scaled k (A := A) i i, qg_KF_scaled k (A := A) j j]
+  -- Convert scalars + simplify
+  have hcentral : ∀ (r : QBase k) (x : QuantumGroup k A),
+      x * algebraMap (QBase k) (QuantumGroup k A) r = r • x :=
+    fun r x => by erw [Algebra.smul_def, Algebra.commutes]
+  have hcentral_left : ∀ (r : QBase k) (x : QuantumGroup k A),
+      algebraMap (QBase k) (QuantumGroup k A) r * x = r • x :=
+    fun r x => by rw [Algebra.smul_def]
+  simp only [mul_add, mul_one, hcentral, hcentral_left]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul, ← T_add]
+  norm_num [T_zero]
+  simp only [one_smul, ← mul_assoc]
+  -- K·F commutation helpers
+  have hKF_ii : qgK k A i * qgF k A i =
+      (T (-2) : QBase k) • (qgF k A i * qgK k A i) := by
+    rw [qg_KF_scaled k (A := A) i i, hii]
+  have hKF_jj : qgK k A j * qgF k A j =
+      (T (-2) : QBase k) • (qgF k A j * qgK k A j) := by
+    rw [qg_KF_scaled k (A := A) j j, hjj]
+  have hKF_ij : qgK k A i * qgF k A j =
+      (T 1 : QBase k) • (qgF k A j * qgK k A i) := by
+    rw [qg_KF_scaled k (A := A) i j, h]; norm_num
+  have hKF_ji : qgK k A j * qgF k A i =
+      (T 1 : QBase k) • (qgF k A i * qgK k A j) := by
+    rw [qg_KF_scaled k (A := A) j i, hsym]; norm_num
+  -- Phase 8: push K right past F in goal
+  simp only [mul_assoc, hKF_ii, hKF_jj, hKF_ij, hKF_ji,
+             mul_smul_comm, smul_mul_assoc, smul_smul] at ⊢
+  simp only [← T_add] at ⊢
+  -- Phase 9: apply pure Serre LEFT-multiplied by K chain
+  have hSF := qg_SerreF_quad_smul k i j h
+  have h_mul := congr_arg
+    (⇑(LinearMap.mulLeft (QBase k)
+        (qgK k A i * qgK k A i * qgK k A j))) hSF
+  simp only [map_add, map_sub, map_zero, LinearMap.mulLeft_apply,
+             LinearMap.map_smul_of_tower] at h_mul
+  -- h_mul has K_chain·Serre(F) = 0. Goal has dressed Serre.
+  -- Need atom helpers (same as E-side: hA2, hA1, hB) to push K RIGHT through F
+  -- in h_mul, using conv_lhs + show/congr 1/noncomm_ring + hKF + scalar cancel.
+  -- Then: simp only [hii, hjj, h, hsym] at h_mul ⊢; norm_num at h_mul ⊢;
+  -- linear_combination (norm := module) -h_mul
   sorry
 
 end SKEFTHawking
