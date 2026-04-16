@@ -35,13 +35,28 @@ SK-EFT axioms (Crossley-Glorioso-Liu) → transport coefficient counting [count(
 - KMS optimality: the first-order constraint is the strongest possible (positivity if and only if both noise coefficients non-negative).
 - Polariton platforms are ~10^10 x hotter than BEC systems. Tier 1 predictions computed with regime classification by cavity lifetime.
 
+**Phase 5w extension (April 2026): Graphene Dirac fluid.**
+The entire 1+1D BEC chain has been extended to the 2+1D graphene Dirac fluid — a natively relativistic system where the Dean group at Columbia demonstrated the first electronic sonic horizon (Geurs et al. 2509.16321, Sept 2025). Key results:
+- 3×3 acoustic metric block-diagonalizes for quasi-1D flow → existing 1+1D WKB machinery applies directly (92% Lean theorem reuse)
+- Predicted T_H ≈ 2.4 K for Dean bilayer nozzle (10⁹× BEC)
+- Dissipative correction δ_diss ~ 10⁻¹³ is negligible (11 orders below dispersive δ_disp ~ -3%)
+- Transport counting in 2+1D: 2 first-order (conformal), ~9 second-order (vs 2 in BEC)
+- Wiedemann-Franz violation L/L₀ > 200× from two-channel transport
+- Detection: current noise S_I(ω) in 0.5-85 GHz, bandwidth-cumulative SNR=1 in ~1 min
+- Lean: DiracFluidMetric (9 thms) + GrapheneHawking (6 thms) + DiracFluidSK (9 thms) = 24 new, 0 sorry
+- Paper 16 drafted, reviewed by 3 independent Opus agents (claims + figures + adversarial)
+
 **What's missing:**
-- Experimental verification. The Paris polariton group has observed negative-energy partner modes; spontaneous Hawking radiation detection is plausible within 1-2 years.
-- Paper submission. Papers 1 (PRL), 2 (PRD), 4 (PRD) cover this chain. None submitted.
+- The noise formula S_I(ω) is a leading-order estimate, not a first-principles derivation. Deep research on Landauer-Büttiker noise for electronic analog horizons is pending (Wave 10a).
+- Experimental verification. The Dean group has the sonic horizon; the Kim group (Harvard) has the noise thermometer. Neither has attempted Hawking detection.
+- Paper submission. Papers 1 (PRL), 2 (PRD), 4 (PRD), 16 (graphene, new) cover this chain. None submitted.
+- Collaboration outreach to Lucas/Dean not yet initiated (awaiting Wave 10a resolution for the noise formula).
 
 **Key insight discovered during formalization:** The original KMS symmetry axiom was too weak (only constrained 4/9 action components). Aristotle found a counterexample. The corrected FirstOrderKMS constrains all 9 components. This is a concrete case of formal verification catching a physics error.
 
-**Implication:** The SK-EFT framework is the correct language for dissipative analog gravity. If polariton experiments confirm the spectral predictions, this validates the EFT methodology for all emergent geometries.
+**Key insight from Phase 5w:** For graphene, dissipative corrections to T_H are negligible by 11 orders of magnitude. The SK-EFT framework's value is the systematic organization (transport counting, FDR constraints, formal verification), not the quantitative shift in T_H. This is an honest finding — the framework is right, but the correction it computes is irrelevant for this platform. The dispersive correction (-3%) is the dominant physical effect.
+
+**Implication:** The SK-EFT framework is the correct language for dissipative analog gravity across platforms. The graphene extension opens a new experimental frontier with T_H nine orders of magnitude above BEC and a realized sonic horizon. If the noise spectrum prediction is confirmed, it would be the first observation of analog Hawking radiation in an electronic system.
 
 ---
 
