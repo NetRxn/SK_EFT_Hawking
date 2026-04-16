@@ -56,7 +56,7 @@ The entire 1+1D BEC chain has been extended to the 2+1D graphene Dirac fluid —
 
 **Key insight from Phase 5w:** For graphene, dissipative corrections to T_H are negligible by 11 orders of magnitude. The SK-EFT framework's value is the systematic organization (transport counting, FDR constraints, formal verification), not the quantitative shift in T_H. This is an honest finding — the framework is right, but the correction it computes is irrelevant for this platform. The dispersive correction (-3%) is the dominant physical effect.
 
-**Implication:** The SK-EFT framework is the correct language for dissipative analog gravity across platforms. The graphene extension opens a new experimental frontier with T_H nine orders of magnitude above BEC and a realized sonic horizon. If the noise spectrum prediction is confirmed, it would be the first observation of analog Hawking radiation in an electronic system.
+**Implication:** The SK-EFT framework is the correct language for dissipative analog gravity. If polariton experiments confirm the spectral predictions, this validates the EFT methodology for all emergent geometries. The graphene extension opens a new experimental frontier with T_H nine orders of magnitude above BEC and a realized sonic horizon. If the noise spectrum prediction is confirmed, it would be the first observation of analog Hawking radiation in an electronic system.
 
 ---
 

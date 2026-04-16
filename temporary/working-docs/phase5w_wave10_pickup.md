@@ -63,6 +63,15 @@ The detection protocol is concrete enough for Lucas/Dean outreach:
 
 **Do NOT send the noise formula to experimentalists until Wave 10a is resolved.** The order-of-magnitude prediction is right but the prefactor may be wrong.
 
+## Why the noise formula can't be shortcutted (explore agent finding, 2026-04-16)
+
+Checked all existing BEC/polariton infrastructure for a template:
+- **BEC** (`wkb/spectrum.py`, `wkb/bogoliubov.py`): maps n(ω) → density correlations with NO explicit prefactor formula. SNR uses Poissonian shot counting: signal = |deviation| × n, noise = √n. No current noise, no e² factors.
+- **Polariton** (Paper 12): maps n(ω) → stimulated gain G(ω) via probe photon counting. Still no universal formula — uses device-specific greybody Γ(ω).
+- **Graphene**: ONLY platform that needs n(ω) → S_I(ω) in A²/Hz. This requires a scattering matrix for the horizon, which doesn't exist anywhere in the codebase.
+
+The `(2e²/π) σ_Q ω n_Hawking` formula is a dimensional analysis ansatz, not a derivation. The deep research task is the correct path — no shortcut exists.
+
 ## File locations
 
 | Item | Path |
