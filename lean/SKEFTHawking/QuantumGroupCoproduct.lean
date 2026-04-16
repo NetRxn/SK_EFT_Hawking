@@ -555,6 +555,91 @@ theorem qg_KF_at (i j : Fin r) (x : QuantumGroup k A) :
         exact this,
       mul_smul_comm, ← mul_assoc]
 
+/-! ### SerreE_quad sector helpers (parametric port of Uqsl3Hopf sect3_hUqIdE12_*)
+
+These helpers correspond to specific bidegree sectors of the
+`SerreE_quad` comul respect expansion. Each isolates one combinatorial
+sector and shows the q-coefficient sum vanishes via specific T-power
+identities. Per CAS deep research blueprint and Uqsl3Hopf template. -/
+
+/-- **SerreE_quad sector (2,0):** at the (2,0)-bidegree of the comul
+    expansion, the K-positions all on the right gives:
+    K_i² · E_j - [2]_q • (K_i · E_j · K_i) + E_j · K_i² = 0
+    when A_{ij} = -1 (parametric).
+
+    Proof: each term reduces to E_j K_i² via qg_KE_at + qg_KE_smul; the
+    remaining q-coefficient identity T(-2) - [2]·T(-1) + 1 = 0 closes. -/
+theorem qg_sect_E_quad_20 (i j : Fin r) (h : A i j = -1) :
+    qgK k A i * qgK k A i * qgE k A j -
+    (T 1 + T (-1) : QBase k) • (qgK k A i * qgE k A j * qgK k A i) +
+    qgE k A j * qgK k A i * qgK k A i = 0 := by
+  have hKE_smul : qgK k A i * qgE k A j = (T (A i j) : QBase k) • (qgE k A j * qgK k A i) := by
+    have := qg_KE k A i j
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+    exact this
+  have hKE_at := qg_KE_at k (A := A) i j
+  have hK2E : qgK k A i * qgK k A i * qgE k A j =
+      (T (2 * A i j) : QBase k) • (qgE k A j * qgK k A i * qgK k A i) := by
+    rw [hKE_at, hKE_smul]
+    simp only [smul_mul_assoc, smul_smul]
+    congr 1
+    rw [← T_add]; ring_nf
+  have hKEK : qgK k A i * qgE k A j * qgK k A i =
+      (T (A i j) : QBase k) • (qgE k A j * qgK k A i * qgK k A i) := by
+    rw [hKE_smul]; simp only [smul_mul_assoc]
+  rw [hK2E, hKEK, smul_smul]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      s • x - t • x + x = (s - t + 1) • x := by intros; module
+  rw [factor]
+  have hcoef : (T (2 * A i j) - (T 1 + T (-1)) * T (A i j) + 1 : QBase k) = 0 := by
+    rw [h]
+    rw [add_mul, ← T_add, ← T_add]
+    show T (2 * (-1 : ℤ)) - (T (1 + (-1)) + T (-1 + (-1))) + 1 = (0 : QBase k)
+    rw [show (1 + (-1) : ℤ) = 0 from by ring, T_zero]
+    ring
+  rw [hcoef, zero_smul]
+
+/-- **SerreE_quad sector (0,2):** at the (0,2)-bidegree, the K-positions
+    on the LEFT pair of E's gives:
+    E_i² · K_j - [2]_q • (E_i · K_j · E_i) + K_j · E_i² = 0
+    when A_{ji} = -1 (parametric, requires symmetric Cartan A_ij = A_ji = -1).
+
+    Proof: each term reduces to E_i² K_j via qg_KE applied at K_j*E_i; the
+    q-coefficient identity 1 - [2]·T(-1) + T(-2) = 0 closes. -/
+theorem qg_sect_E_quad_02 (i j : Fin r) (hsym : A j i = -1) :
+    qgE k A i * qgE k A i * qgK k A j -
+    (T 1 + T (-1) : QBase k) • (qgE k A i * qgK k A j * qgE k A i) +
+    qgK k A j * qgE k A i * qgE k A i = 0 := by
+  have hKjEi : qgK k A j * qgE k A i = (T (-1) : QBase k) • (qgE k A i * qgK k A j) := by
+    have := qg_KE k A j i
+    rw [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul, hsym] at this
+    exact this
+  have hEiKjEi : qgE k A i * qgK k A j * qgE k A i =
+      (T (-1) : QBase k) • (qgE k A i * qgE k A i * qgK k A j) := by
+    rw [show qgE k A i * qgK k A j * qgE k A i = qgE k A i * (qgK k A j * qgE k A i) from by
+        noncomm_ring, hKjEi]
+    simp only [mul_smul_comm, ← mul_assoc]
+  have hKjEiEi : qgK k A j * qgE k A i * qgE k A i =
+      (T (-2) : QBase k) • (qgE k A i * qgE k A i * qgK k A j) := by
+    rw [show qgK k A j * qgE k A i * qgE k A i = (qgK k A j * qgE k A i) * qgE k A i from by
+        noncomm_ring, hKjEi]
+    simp only [smul_mul_assoc]
+    rw [show qgE k A i * qgK k A j * qgE k A i = qgE k A i * (qgK k A j * qgE k A i) from by
+        noncomm_ring, hKjEi]
+    simp only [mul_smul_comm, smul_smul, ← mul_assoc]
+    congr 1
+    rw [← T_add]; norm_num
+  rw [hEiKjEi, hKjEiEi, smul_smul]
+  have factor : ∀ (s t : QBase k) (x : QuantumGroup k A),
+      x - s • x + t • x = (1 - s + t) • x := by intros; module
+  rw [factor]
+  have hcoef : (1 - (T 1 + T (-1)) * T (-1) + T (-2) : QBase k) = 0 := by
+    rw [add_mul, ← T_add, ← T_add]
+    show 1 - (T (1 + (-1)) + T (-1 + (-1))) + T (-2) = (0 : QBase k)
+    rw [show (1 + (-1) : ℤ) = 0 from by ring, T_zero]
+    ring
+  rw [hcoef, zero_smul]
+
 /-! ## 5. Module summary (work in progress) -/
 
 /-- Generic coproduct module: Phase 5m Wave 2 deliverable.
