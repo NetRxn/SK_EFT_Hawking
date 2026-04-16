@@ -200,12 +200,53 @@ theorem antipodeFreeAlgQG_KF (i j : Fin r) :
 
 /-! ### Group V: EF commutation -/
 
+private theorem anti_EF_diag_KFEKinv (i : Fin r) :
+    qgK k A i * qgF k A i * (qgE k A i * qgKinv k A i) = qgF k A i * qgE k A i := by
+  have hKF := qg_KF_scaled k (A := A) i i
+  have hKE : qgK k A i * qgE k A i = (T (A i i) : QBase k) • (qgE k A i * qgK k A i) := by
+    have := qg_KE k A i i
+    rwa [Algebra.algebraMap_eq_smul_one, smul_mul_assoc, smul_mul_assoc, one_mul] at this
+  rw [show qgK k A i * qgF k A i * (qgE k A i * qgKinv k A i) =
+      qgK k A i * qgF k A i * qgE k A i * qgKinv k A i from by noncomm_ring,
+      hKF, smul_mul_assoc, smul_mul_assoc,
+      show qgF k A i * qgK k A i * qgE k A i = qgF k A i * (qgK k A i * qgE k A i) from by
+        noncomm_ring,
+      hKE, mul_smul_comm, smul_mul_assoc, smul_smul,
+      show (T (-A i i) : QBase k) * T (A i i) = 1 from by rw [← T_add]; norm_num, one_smul,
+      show qgF k A i * (qgE k A i * qgK k A i) * qgKinv k A i =
+        qgF k A i * qgE k A i * (qgK k A i * qgKinv k A i) from by noncomm_ring,
+      qg_K_mul_Kinv, mul_one]
+
+private theorem anti_EF_diag_EKinvKF (i : Fin r) :
+    qgE k A i * qgKinv k A i * (qgK k A i * qgF k A i) = qgE k A i * qgF k A i := by
+  rw [show qgE k A i * qgKinv k A i * (qgK k A i * qgF k A i) =
+      qgE k A i * (qgKinv k A i * qgK k A i) * qgF k A i from by noncomm_ring,
+      qg_Kinv_mul_K, mul_one]
+
 theorem antipodeFreeAlgQG_EF_diag (i : Fin r) :
     antipodeFreeAlgQG k A
       (algebraMap (QBase k) _ (T 1 - T (-1)) *
        (qgI' k (.E i) * qgI' k (.F i) - qgI' k (.F i) * qgI' k (.E i))) =
     antipodeFreeAlgQG k A (qgI' k (.K i) - qgI' k (.Kinv i)) := by
-  sorry
+  simp only [map_sub, map_mul, AlgHom.commutes, antipodeFreeAlgQG, antipodeOnGenQG,
+             FreeAlgebra.lift_ι_apply]
+  apply MulOpposite.unop_injective
+  simp only [MulOpposite.unop_sub, MulOpposite.unop_mul, MulOpposite.unop_neg,
+             MulOpposite.unop_op]
+  letI : NonUnitalNonAssocRing (QuantumGroup k A) := inferInstance
+  simp only [neg_mul, mul_neg, neg_neg]
+  rw [anti_EF_diag_KFEKinv k, anti_EF_diag_EKinvKF k]
+  -- Goal has MulOpposite.unop (algebraMap ... (T ...)) — simplify to algebraMap
+  simp only [MulOpposite.algebraMap_apply, MulOpposite.unop_op]
+  -- Goal: (F_i*E_i - E_i*F_i) * (algebraMap(T1) - algebraMap(T(-1))) = Kinv_i - K_i
+  rw [show (algebraMap (QBase k) (QuantumGroup k A)) (T 1) -
+      (algebraMap (QBase k) (QuantumGroup k A)) (T (-1)) =
+      (algebraMap (QBase k) (QuantumGroup k A)) (T 1 - T (-1)) from (map_sub _ _ _).symm,
+      (Algebra.commutes (T 1 - T (-1)) (qgF k A i * qgE k A i - qgE k A i * qgF k A i)).symm,
+      show qgF k A i * qgE k A i - qgE k A i * qgF k A i =
+        -(qgE k A i * qgF k A i - qgF k A i * qgE k A i) from by noncomm_ring,
+      mul_neg, qg_EF_diag]
+  noncomm_ring
 
 private theorem anti_EF_off_helper (i j : Fin r) (hij : i ≠ j) (hsym : A i j = A j i) :
     qgK k A j * qgF k A j * (qgE k A i * qgKinv k A i) =
