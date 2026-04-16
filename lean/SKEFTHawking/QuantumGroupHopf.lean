@@ -452,9 +452,10 @@ noncomputable def qgHopfAlgebra :
   - All 8 generator convolution lemmas: qg_convR/L_E/F/K/Kinv (0 sorry)
   - qgHopfAlgebra: HopfAlgebra instance (2 sorry in main convolution theorems)
   - First generic quantum group Bialgebra+HopfAlgebra in any proof assistant
-  - 3 sorry remaining in convolution induction:
-    rTensor grade0 (scalar), rTensor mul (multiplicativity), lTensor (full)
-    All component lemmas proved; generator + add cases closed. -/
+  - 2 sorry remaining: rTensor + lTensor mul (multiplicativity) cases
+    Need: mul'(rTensor(S)(comul(a)·comul(b))) = conv(a)·conv(b) when
+    conv(a) is a scalar. Requires TensorProduct.induction_on + anti-mult
+    of S + Algebra.commutes. See Uqsl3Hopf uq3_convR_mul_step pattern. -/
 theorem quantum_group_hopf_summary : True := trivial
 
 end SKEFTHawking
