@@ -2,7 +2,7 @@
 
 ## Technical Roadmap — April 2026 (Updated post-Deep-Research)
 
-*Prepared 2026-04-16 | Updated 2026-04-16 post-deep-research | Updated 2026-07-20 post-Wave-1b | Triggered by: brainstorm session identifying 10 concrete-to-speculative connections between the fluid-based physics / SK-EFT-Hawking research program and dark matter (DM) / dark energy (DE). Updated after completion of all 6 Wave 1 deep research tasks and 3 Wave 1b follow-up tasks.*
+*Prepared 2026-04-16 | Updated 2026-04-16 post-deep-research | Updated 2026-07-20 post-Wave-1b | Updated post-Fracton-DM-Kinetic-Stability-Drilldown | Triggered by: brainstorm session identifying 10 concrete-to-speculative connections between the fluid-based physics / SK-EFT-Hawking research program and dark matter (DM) / dark energy (DE). Updated after completion of all 6 Wave 1 deep research tasks and 3 Wave 1b follow-up tasks.*
 
 **Scope:** Investigate how the emergent gravity, anomaly, and dissipative EFT infrastructure developed in Phases 1-5w connects to dark matter and dark energy. Three tracks: (A) anomaly-forced hidden sector + cosmological constant from condensation equilibrium (highest priority — builds on machine-verified theorems), (B) torsion dark matter + vestigial gravity relics (leverages ADW/MC infrastructure), (C) superfluid dark matter + fracton dark matter (new calculation territory, applies SK-EFT framework to DM phenomenology).
 
@@ -42,12 +42,15 @@ T_H for all SFDM astrophysical scenarios is 10⁻²³ to 10⁻²⁹ K. The **pri
 - ⚡**W1b QUANTITATIVE MERGER FORECAST (Conditional GO):** BK fiducial (m=0.6 eV, Λ=0.2 meV) → c_s=1,525 km/s at 10¹⁴ M☉. All 5 canonical mergers supersonic: Bullet M=1.77, Pandora M=2.23, A520 M=1.51, El Gordo M=1.64, MACS J0025 M=1.31. R-H density jump ~49% (corrected for condensate fraction). Single-merger S/N 0.3–1.0; stacking ≥30 mergers → 3.5–5.7σ (Euclid/Roman). First 3σ by ~2028. **Gap confirmed: BK 2025 Physics Reports (arXiv:2505.23900, 118 pages) has NO quantitative merger forecast — Paper 17 fills this gap.** Smoking gun: velocity-threshold step function at M=1 (SFDM-unique). Condensate fraction complication: 10¹⁵ M☉ clusters 0% superfluid; 10¹³ M☉ groups 96% — group-cluster mergers may be better targets. Abell 520 dark core (Jee+2012, >10σ, M/L=588) is contested but potentially SFDM signal. El Gordo cleanest SIDM discriminant. SK-EFT shock width Δr ~ (η/ρ)/(c_s(M²-1)) is unique program contribution. Recommended Paper 17 “money plot”: two-panel figure — DM-galaxy offset vs v/c_s (step function) + stacked κ profile.
 - **Source (W1):** `Lit-Search/Phase-5x/SK-EFT Dissipative Framework Applied to Superfluid Dark Matter  Feasibility Study.md`
 - **Source (W1b):** `Lit-Search/Phase-5x/5x-SFDM Cluster Merger Sonic Boom  Observational Forecast for Euclid Roman.md`
+- ⚡**H₀ Tension Assessment (April 2026):** H0DN Collaboration H₀ = 73.50 ± 0.81 (>5σ vs Planck). **Impact on merger forecast: verdict unchanged.** Σ_cr shifts ~8% higher at H₀ = 73.5 → S/N estimates drop ~4% → well within dominant Λ uncertainty. BK-Wang (2017) phonon-mediated late-time acceleration provides thematic hook connecting SFDM phonon EFT to H₀ tension. S₈ tension (σ₈ low in WL surveys) slightly benefits shock detection — suppressed κ_cluster makes fractional SFDM perturbation more prominent. EDE resolutions do not modify BK merger predictions (different physics/epoch).
 
-### Finding 5: Fracton DM — Strong Phenomenology but Critical Finite-T Vulnerability ⚡W1b: BBN Kills eV-Scale, NON-VIABLE (Weak Form)
-Pressureless fractonic dust from relativistic symmetry (arXiv:2503.14496). Core-cusp naturally resolved by z=4 subdiffusion. Bullet Cluster trivially satisfied (σ_eff = 0). HSF explains diversity problem. **CRITICAL VULNERABILITY:** 3D gapped fracton topological order is destroyed at any T > 0 (no-go theorem). Viable phase is a gapless fracton liquid with **kinetic** (not topological) stability — lifetime depends exponentially on dipole gap M_d/T. YM incompatibility from `FractonNonAbelian.lean` proves fracton DM must be SM gauge singlet. 14 new Lean theorems proposed.
-- ⚡**W1b BBN CONSTRAINT (NON-VIABLE, weak form):** The Shen et al. 2022 no-go does NOT apply to gapless U(1) phases (smooth crossover, screening length λ ~ exp(M_d/2T)). However, **BBN is the killer for eV-scale M_d**: M_d/T_BBN ~ 10⁻⁵ → zero kinetic protection at T_BBN ≈ 0.1 MeV. Arrhenius kinetics require **M_d ≳ 10 MeV** for BBN survival; Haah superexponential (τ ~ exp(c(M_d/T)²)) relaxes to M_d ≳ 1 MeV. **Viable window: 10 MeV ≲ M_d ≲ 100 GeV (4 decades in log-space).** Fatal weakness: **no known UV completion naturally predicts M_d in this window** — this is the weak-form non-viability. All desirable DM signatures (σ_eff=0, z=4 subdiffusion, HSF diversity) are preserved in the viable M_d window. Lean theorem recommendation: split `fracton_3d_kinetic_stability` (theorem 13) into **13a** (no-go exemption, Hard), **13b** (BBN lower bound on M_d, Very Hard), **13c** (Arrhenius/superexponential lifetime bound, Hard).
+### Finding 5: Fracton DM — Strong Phenomenology, Finite-T Vulnerability Resolved ⚡W1b→Drilldown: VIABLE (Conditional)
+Pressureless fractonic dust from relativistic symmetry (arXiv:2503.14496). Core-cusp naturally resolved by z=4 subdiffusion. Bullet Cluster trivially satisfied (σ_eff = 0). HSF explains diversity problem. **CRITICAL VULNERABILITY RESOLVED:** 3D gapped fracton topological order is destroyed at any T > 0 (no-go theorem), BUT the cosmologically relevant phase is the **gapless p-wave dipole superfluid** — thermodynamically stable at all T > 0 in d=3 (Kapustin-Spodyneiko PRB 2022). Dipole SSB throughout entire phase diagram (Jensen-Raz PRL 2024). z=4 subdiffusion survives in p-wave phase (Głódkowski et al. 2024). YM incompatibility from `FractonNonAbelian.lean` proves fracton DM must be SM gauge singlet. 15 new Lean theorems proposed (theorem 13 → 13a-d split).
+- ⚡**W1b BBN CONSTRAINT (originally NON-VIABLE, weak form — ⚡superseded by Drilldown):** ~~The Shen et al. 2022 no-go does NOT apply to gapless U(1) phases. BBN is the killer for eV-scale M_d. Arrhenius kinetics require M_d ≳ 10 MeV. Viable window 10 MeV–100 GeV. No UV completion predicts M_d there.~~
+- ⚡**Drilldown REVISION (VIABLE, conditional):** Four papers fundamentally change the viability landscape. **(1)** Kapustin-Spodyneiko (PRB 2022): dipole SSB allowed in d≥3 at T>0 — the p-wave dipole superfluid is the stable phase. **(2)** Jensen-Raz (PRL 2024): dipole SSB throughout entire phase diagram — no disordered phase exists. **(3)** Głódkowski et al. (2024): z=4 subdiffusion survives in p-wave phase. **(4)** Feistl-Schraven-Warzel (arXiv:2601.23078, Jan 2026): multipole MW extension confirms dipole SSB allowed in d=3. **Revised BBN constraint:** For gapless p-wave condensate, stability is thermodynamic (not kinetic) — requires μ ≳ T_BBN ~ MeV, not the Arrhenius factor of 100×T_BBN. **Revised viable window: ~1 MeV ≲ M_d ≲ M_Pl (conservatively MeV–TeV, ~6–9 decades).** **Dark QCD UV completion** naturally places M_d ~ Λ_dark ~ MeV–GeV. Theorem 13 → **13a** (dipole SSB permanence, Medium), **13b** (p-wave phase stability, Hard), **13c** (BBN condensate condition, Medium), **13d** (gapped scenario lower bound, Hard). Rename `fracton_3d_kinetic_stability` → `fracton_3d_thermodynamic_stability`.
 - **Source (W1):** `Lit-Search/Phase-5x/Fracton Dark Matter  Phenomenological Assessment.md`
 - **Source (W1b):** `Lit-Search/Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md`
+- **Source (Drilldown):** `Lit-Search/Phase-5x/5x-Fracton DM Kinetic Stability  Deep Drilldown on the Viability Verdict/Fracton-DM-Kinetic-Stability-Drilldown.md`
 
 ### Finding 6: Vestigial Relics — Coherent but Requires Extended MC as Gate
 L=6,8 MC data is **insufficient** to determine transition order (first vs second). Must extend to L=10,12,16 and compute Binder cumulants — this is the **decisive gate** for all downstream relic physics. GUT-scale transition (T_c ~ 10¹⁵ GeV) needed for correct relic abundance via KZ mechanism. EP violation (bosons ≠ fermions) is the unique distinguishing signature — below MICROSCOPE sensitivity but within reach of proposed STEP mission (η ~ 10⁻¹⁸). Homotopy groups of GL(4,ℝ)/SO(3,1) coset determine topological defect spectrum — formalizable in Lean.
@@ -138,7 +141,7 @@ The deep research findings substantially reshape the wave priorities:
 1. **Track A confirmed highest priority.** Both ℤ₁₆ (Wave 2) and ADW CC (Wave 3) have concrete, formalizable results with Lean theorem targets identified. Track A alone could yield Paper 17. ⚡W1b: KV empirical hook weakened (Level D tension), but Λ magnitude prediction (~20% accuracy) and QCD topological DE bridge survive.
 2. **Wave 5 (SFDM) reframed ⚡AND ELEVATED.** The original goal of computing T_H for galactic sonic horizons is moot — T_H is unobservable (10⁻²³-10⁻²⁹ K). Redirect entirely to: dissipative MOND corrections, FDR noise in RAR scatter, and cluster merger sonic boom phenomenology. ⚡**W1b: Merger forecast now CONDITIONAL GO with quantitative S/N (3.5–5.7σ stacked ≥30). Fills confirmed BK literature gap. Paper 17's "money plot." PROMOTED to co-primary with Track A.**
 3. **Wave 6 (Vestigial Relics) BLOCKED by MC extension.** All downstream relic physics depends on determining the transition order. L=10,12,16 MC with Binder cumulants is the gate. Cross-reference Phase 5d (ADW/RHMC) for shared infrastructure.
-4. **Wave 7 (Fracton DM) has a critical vulnerability ⚡DOWNGRADED to NON-VIABLE (weak form).** 3D gapped fracton topological order destroyed at T > 0. The cosmologically viable phase is a gapless fracton liquid with kinetic stability. ⚡**W1b: BBN kills eV-scale M_d. Viable window narrowed to 10 MeV–100 GeV. No UV completion predicts M_d in this range. Honest assessment still publishable but upside limited. Theorem 13 split into 13a/13b/13c.**
+4. **Wave 7 (Fracton DM) critical vulnerability resolved ⚡Drilldown: UPGRADED to VIABLE (conditional).** 3D gapped fracton topological order destroyed at T > 0, BUT p-wave dipole superfluid is thermodynamically stable at all T > 0 in d=3 (Kapustin-Spodyneiko PRB 2022, Jensen-Raz PRL 2024). ~~⚡W1b: NON-VIABLE (weak form).~~ ⚡**Drilldown: z=4 subdiffusion survives in p-wave phase (Głódkowski et al. 2024). BBN constraint relaxed from Arrhenius M_d ≳ 10 MeV to condensate condition μ ≳ 1 MeV. Dark QCD UV completion naturally places M_d ~ Λ_dark ~ MeV–GeV. Viable window expanded from 4 decades to ~6–9 decades (MeV–TeV, conservatively). Theorem 13 split into 13a-d (+1 net new).**
 5. **Wave 4 (Fang-Gu) has limited formalization upside.** Mass parametrically undetermined; only 4 priority gaps identified. Best treated as a shorter assessment wave rather than a full 8-stage pipeline.
 6. **NEW: Extend MC computation must be added** as a prerequisite to Wave 6. This can run in parallel with Track A.
 7. ⚡**W1b NEW: DESI DR3 (2026-2027) is a decisive external milestone.** If DESI DR3 strengthens away from (-1,0), KV ruled out; if retreats toward (-1,0), KV less excluded. Paper 17 should be structured to accommodate either outcome.
@@ -171,13 +174,13 @@ The deep research findings substantially reshape the wave priorities:
 | # | Task File | Result File | Feeds | Verdict | Key Outcome |
 |---|---|---|---|---|---|
 | 7 | `Tasks/Phase5x_klinkhamer_volovik_desi_w0wa.md` | `Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md` | W3, W9 | **LEVEL D TENSION** | KV predicts (w₀,wₐ)=(-1,0), excluded at 2.9-4.4σ by DESI DR2. No phantom crossing possible. Reframe Paper 17: keep Λ magnitude prediction (~20% accuracy), withdraw DESI compatibility claim. QCD topological DE (Van Waerbeke-Zhitnitsky 2025) is strongest DESI-compatible bridge. |
-| 8 | `Tasks/Phase5x_gapless_fracton_finite_T_stability.md` | `Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md` | W7 | **NON-VIABLE (weak form)** | BBN kills eV-scale M_d. Arrhenius: M_d ≳ 10 MeV; Haah superexponential: M_d ≳ 1 MeV. Viable window 10 MeV–100 GeV exists but no UV completion predicts M_d there. Theorem 13 → split into 13a/13b/13c. |
+| 8 | `Tasks/Phase5x_gapless_fracton_finite_T_stability.md` | `Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md` | W7 | ~~NON-VIABLE (weak form)~~ **⚡Drilldown: VIABLE (conditional)** | ~~BBN kills eV-scale M_d.~~ Drilldown: p-wave dipole superfluid thermodynamically stable at T>0 in d=3 (Kapustin-Spodyneiko, Jensen-Raz). BBN relaxed to μ ≳ MeV. Dark QCD UV completion viable. Theorem 13 → 13a/13b/13c/13d. |
 | 9 | `Tasks/Phase5x_sfdm_cluster_merger_sonic_boom_forecast.md` | `Phase-5x/5x-SFDM Cluster Merger Sonic Boom  Observational Forecast for Euclid Roman.md` | W5, W9 | **CONDITIONAL GO** | Single S/N 0.3–1.0; stacked ≥30 mergers → 3.5–5.7σ. BK has no quantitative forecast (confirmed gap). Smoking gun: velocity-threshold step function at M=1. First 3σ ~2028. |
 
 **Impact on downstream waves:**
 - **Wave 3:** KV empirical hook weakened → pivot to Λ magnitude prediction + QCD topological DE bridge
 - **Wave 5:** Merger forecast provides Paper 17's "money plot" with concrete stacking strategy
-- **Wave 7:** Fracton DM assessment must include M_d > 10 MeV BBN floor; theorem 13 split required
+- **Wave 7:** ~~Fracton DM assessment must include M_d > 10 MeV BBN floor.~~ ⚡Drilldown: p-wave dipole superfluid resolves finite-T vulnerability; BBN relaxed to μ ≳ MeV; Dark QCD UV completion viable; verdict upgraded to VIABLE (conditional); theorem 13 → 13a-d split
 - **Wave 9:** Paper 17 structure revised — KV claims downgraded, merger forecast elevated, fracton viability narrowed
 
 ---
@@ -342,6 +345,12 @@ The deep research findings substantially reshape the wave priorities:
 - **SK-EFT unique contribution:** Shock width Δr ~ (η/ρ)/(c_s(M²-1)) from dissipative transport coefficients. Existing `transonic_background.py` adaptable. `AcousticMetric.lean` (12 theorems) applies directly. FDR noise sets theoretical lower bound on shock sharpness.
 - **Recommended Paper 17 structure (8 sections from W1b §Block 12):** BK review → R-H analysis → condensate fraction → 5-target forecast → stacking statistics → SIDM/CDM discriminants → SK-EFT shock width → predictions timeline.
 - **Money plot:** Two-panel figure — DM-galaxy offset vs v/c_s (step function) + stacked κ profile for N=30/50 mergers.
+- ⚡**H₀ Tension Impact (H0DN April 2026: H₀ = 73.50 ± 0.81, >5σ vs Planck):**
+  - **Σ_cr = c²D_S/(4πG D_L D_LS):** All angular diameter distances are H₀-dependent. Shifting from Planck H₀=67.4 to H0DN H₀=73.5 increases Σ_cr by ~8% at Bullet Cluster z_L=0.296 → κ_shock estimates ~8% smaller → S/N shifts ~4%. **Not meaningful for go/no-go — well within dominant Λ uncertainty (factor of several).**
+  - **BK-Wang 2017 connection:** Berezhiani-Khoury-Wang (2017) proposes DM-baryon phonon-mediated late-time cosmic acceleration — superfluid DM approach to H₀ tension via the same phonon EFT underpinning as the merger sonic boom. As H₀ tension strengthens (>5σ confirmed April 2026), this mechanism becomes more phenomenologically interesting. **Paper 17 introduction hook: one paragraph linking phonon EFT → merger observables → H₀ tension motivation.**
+  - **S₈ tension benefit:** If σ₈ genuinely low (as in Euclid/Roman WL surveys), background κ_cluster suppressed ~5–10%, making SFDM shock perturbation fractionally *more* prominent. Minor benefit.
+  - **EDE independence:** Early Dark Energy resolutions reduce sound horizon at recombination but do not modify BK merger predictions (different physics, different epoch). BK 2015 explicitly avoided this coupling.
+  - **SFDM is NOT an H₀ resolution:** BK SFDM is pressureless on cosmological scales → inherits ΛCDM Hubble tension. The model does not help with H₀.
 
 **Lean Formalization Targets (from deep research §Block 5):**
 
@@ -369,6 +378,7 @@ The deep research findings substantially reshape the wave priorities:
 - [ ] ⚡**W1b NEW:** `src/dark_sector/sfdm_merger_forecast.py` — Rankine-Hugoniot jump conditions for SFDM; 5-target S/N table as function of (m, Λ); stacking statistics; condensate fraction model
 - [ ] ⚡**W1b NEW:** `notebooks/sfdm_merger_money_plot.ipynb` — two-panel figure: DM-galaxy offset vs v/c_s (step function) + stacked κ profile at N=30/50
 - [ ] ⚡**W1b NEW:** El Gordo / A520 / Bullet detailed comparison worksheet (SIDM tension analysis from W1b §Block 9)
+- [ ] ⚡**H₀ Tension NEW:** Σ_cr sensitivity table: S/N at Planck H₀=67.4 vs H0DN H₀=73.5 for all 5 canonical targets. Include in Paper 17 §5 systematic error budget. Add BK-Wang (2017) phonon-mediated acceleration as introduction paragraph.
 
 **Lean infrastructure reuse:** WKBConnection (18), WKBAnalysis (17), HawkingUniversality (8), AcousticMetric (~12). **Estimated: 6 new theorems (2 easy, 2 medium, 2 hard).**
 
@@ -436,9 +446,9 @@ The deep research findings substantially reshape the wave priorities:
 
 ## Track C: Fracton DM + Extended Phenomenology (SFDM now reframed above)
 
-### Wave 7 — Fracton Dark Matter Phenomenology [Pipeline: Stages 1-8] ⚡W1b: NON-VIABLE (Weak Form)
+### Wave 7 — Fracton Dark Matter Phenomenology [Pipeline: Stages 1-8] ⚡W1b→Drilldown: VIABLE (Conditional)
 
-**Goal:** Assess fracton restricted mobility, topological stability, and gravitational attraction as DM properties. Compute density profiles and compare to small-scale structure observations. Address the critical finite-T vulnerability. ⚡**W1b: BBN constraint kills eV-scale M_d. Viable window narrowed to 10 MeV–100 GeV. Classification downgraded from "critical vulnerability" to "non-viable (weak form)" — phenomenology survives but no UV completion predicts M_d in viable range.**
+**Goal:** Assess fracton restricted mobility, topological stability, and gravitational attraction as DM properties. Compute density profiles and compare to small-scale structure observations. Address the critical finite-T vulnerability. ~~⚡W1b: NON-VIABLE (weak form).~~ ⚡**Drilldown: VIABLE (conditional). p-wave dipole superfluid (Kapustin-Spodyneiko PRB 2022, Jensen-Raz PRL 2024) is thermodynamically stable at all T > 0 in d=3. BBN constraint relaxed to μ ≳ MeV. Dark QCD UV completion provides natural M_d ~ Λ_dark ~ MeV–GeV. z=4 subdiffusion preserved in p-wave phase (Głódkowski et al. 2024). Viable window expanded to ~MeV–TeV (conservatively 6–9 decades). Theorem 13 → 13a-d split.**
 
 **Prerequisites:** Wave 1 Task 6 ✅ COMPLETE. Wave 1b Task 8 ✅ COMPLETE.
 
@@ -449,9 +459,9 @@ The deep research findings substantially reshape the wave priorities:
 - **Bullet Cluster trivially satisfied**: σ_eff = 0 for isolated fracton from dipole conservation + locality. No free parameter.
 - **HSF → diversity problem**: Krylov sector memory → exponential number of distinct final profiles at fixed total charge. Explains observed diversity of dwarf galaxy rotation curves without baryonic feedback.
 - **CRITICAL VULNERABILITY: 3D gapped fracton topological order DESTROYED at any T > 0** (Shen et al. 2022 no-go theorem). The 4D X-cube model supports finite-T order, but this requires Euclidean interpretation, not cosmological dynamics.
-  - **Escape route:** The cosmologically viable DM candidate is a **gapless (U(1)) fracton liquid in 3D** with KINETIC stability: τ ~ τ₀ exp(M_d/T). For M_d ~ eV and T_CMB: τ/τ₀ ~ e^{4000} — spectacularly long. For M_d ~ meV: τ/τ₀ ~ e^{4} — only mildly long. The required M_d is not predicted by the EFT.
+  - **Escape route:** The cosmologically viable DM candidate is a **gapless (U(1)) fracton liquid in 3D** with KINETIC stability: τ ~ τ₀ exp(M_d/T). For M_d ~ eV and T_CMB: τ/τ₀ ~ e^{4000} — spectacularly long. For M_d ~ meV: τ/τ₀ ~ e^{4} — only mildly long. The required M_d is not predicted by the EFT. ⚡**Drilldown: Better escape route identified — p-wave dipole superfluid is THERMODYNAMICALLY stable (not merely kinetically) at all T>0 in d=3. See drilldown findings below.**
 
-**⚡W1b Deep Research Findings — Fracton Finite-T Stability (NON-VIABLE, weak form):**
+**⚡W1b Deep Research Findings — Fracton Finite-T Stability (originally NON-VIABLE, weak form — ⚡superseded by Drilldown below):**
 
 - **Shen et al. 2022 no-go does NOT apply to gapless U(1) phases** — smooth crossover with screening length λ ~ exp(M_d/2T), not sharp destruction.
 - **BBN IS THE KILLER for eV-scale M_d:** At T_BBN ≈ 0.1 MeV, M_d/T_BBN ~ 10⁻⁵ for eV-scale M_d → **zero kinetic protection**. The spectacular CMB lifetime (τ/τ₀ ~ e⁴⁰⁰⁰) is meaningless if the phase cannot survive BBN.
@@ -468,7 +478,23 @@ The deep research findings substantially reshape the wave priorities:
 - **Distinguishing signatures vs CDM/SIDM**: Fracton DM is MORE collisionless than CDM but produces CORED profiles — the opposite combination from SIDM. This is unique and testable. Halo anisotropy from Lorentz-breaking framid. Kination fluid secondary component in early universe.
 - **BBN constraint**: Kination fluid + fracton dust → μ > few keV bound.
 
-**Lean Formalization Targets (from deep research §6, 14 proposed theorems):**
+**⚡Drilldown Deep Research Findings — Fracton DM Thermodynamic Stability (VIABLE, conditional):**
+
+> **This section supersedes the W1b NON-VIABLE (weak form) verdict.** See `Lit-Search/Phase-5x/5x-Fracton DM Kinetic Stability  Deep Drilldown on the Viability Verdict/Fracton-DM-Kinetic-Stability-Drilldown.md`.
+
+- **Kapustin-Spodyneiko theorem (PRB 106, 245125, 2022):** Generalized Hohenberg-Mermin-Wagner for dipole symmetry. Dipole SSB allowed for d ≥ 3 at T > 0. Charge SSB forbidden for d ≤ 4. → The stable T > 0 phase in 3D is the **p-wave dipole superfluid** (dipole SSB, charge preserved).
+- **Jensen-Raz large-N solution (PRL 2024):** Exact solution at finite T and μ. Dipole SSB throughout entire phase diagram — no disordered (normal) phase exists. p-wave phase: immobile fractons, mobile dipoles — all DM properties preserved.
+- **Głódkowski-Peña-Benítez-Surówka (2024):** Full dissipative hydrodynamics of fracton superfluids. p-wave phase retains ω ~ -ik⁴ subdiffusion. z=4 transport survives at finite T — not thermally degraded.
+- **Feistl-Schraven-Warzel (arXiv:2601.23078, Jan 2026):** Multipole MW extension confirms Kapustin-Spodyneiko. Higher multipole symmetries protect lower-order ones.
+- **Revised stability mechanism:** For gapless p-wave condensate, stability is **thermodynamic** (phase is the equilibrium state at all T > 0 in d=3), not kinetic (no Arrhenius barrier to surmount). The Arrhenius analysis applies only to the gapped scenario.
+- **Revised BBN constraint:** Condensate condition μ ≳ T_BBN ~ MeV (factor ~100 weaker than Arrhenius M_d ≳ 10 MeV). No activation barrier argument needed.
+- **Dark QCD UV completion:** Dark confinement scale Λ_dark ~ MeV–GeV naturally places M_d in viable range. Fracton-elasticity duality maps dark QCD phase transition to fracton condensation. SU(N_dark) × U(1)_fracton gauge structure compatible with FractonNonAbelian.lean (separate dark gauge group, not coupled to SM SU(3)). Resolves the W1b "no UV completion" problem.
+- **Revised viable window:** Gapless p-wave: ~1 MeV ≲ μ ≲ M_Pl (formally ~22 decades; **conservatively MeV–TeV, ~6–9 decades** accounting for production mechanism and N_eff constraints). Gapped Arrhenius: 10 MeV–100 GeV (4 decades, unchanged from W1b).
+- **Remaining threats:** (1) Explicit dipole symmetry breaking from gravity — suppressed by (H₀/M_d)² ~ 10⁻⁶⁰, negligible. (2) First-order p-wave→s-wave transition — suppressed to T=0 by Kapustin-Spodyneiko. (3) Stahl-Lake-Nandkishore generalized MW — reconciled: p-wave Goldstone has z=2, not z=4; Kapustin-Spodyneiko Bogoliubov inequality gives d ≤ 2 for dipole SSB prohibition. (4) **Production mechanism — genuinely the top remaining gap** (how does the universe enter the p-wave condensate phase?).
+- **Lean formalization update:** Theorem 13 → 13a–d split. Rename from `fracton_3d_kinetic_stability` to `fracton_3d_thermodynamic_stability`. New theorem 13d (gapped scenario lower bound, Hard). Priority: 13a + 13c first (Medium), then 13b (Hard), then 13d (Hard).
+- **Verdict: VIABLE (conditional)** on p-wave dipole superfluid being the equilibrium phase with μ ≳ 1 MeV.
+
+**Lean Formalization Targets (from deep research §6, ⚡Drilldown: 15 proposed theorems):**
 
 | ID | Theorem | Statement | Difficulty |
 |---|---|---|---|
@@ -488,20 +514,21 @@ The deep research findings substantially reshape the wave priorities:
 | 13a | `fracton_nogo_exemption` | Gapless U(1) fracton liquid exempt from Shen et al. 2022 no-go | Hard |
 | 13b | `fracton_bbn_md_lower_bound` | BBN survival requires M_d ≳ 10 MeV (Arrhenius) or M_d ≳ 1 MeV (Haah) | Very Hard |
 | 13c | `fracton_lifetime_arrhenius` | τ ≥ τ₀ exp(M_d/T) (Arrhenius) or τ ≥ τ₀ exp(c(M_d/T)²) (superexponential) | Hard |
+| 13d | `fracton_bbn_condensate_condition` | ⚡Drilldown: p-wave condensate with μ >> T_BBN survives all cosmic epochs without Arrhenius barrier | Hard |
 | 14 | `fracton_nfw_core_comparison` | Formal comparison to NFW/Burkert; core-cusp theorem | Medium |
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [ ] `lean/SKEFTHawking/FractonDarkMatter.lean` — theorems 1-4, 8-11 (near-term, 8 theorems); 5-7, 12, 14 (medium-term, 5 theorems); 13a, 13c (hard); 13b (very hard, stretch)
+- [ ] `lean/SKEFTHawking/FractonDarkMatter.lean` — theorems 1-4, 8-11 (near-term, 8 theorems); 5-7, 12, 14 (medium-term, 5 theorems); 13a, 13c (medium); 13b, 13d (hard); ⚡Drilldown: rename module theorem from `fracton_3d_kinetic_stability` to `fracton_3d_thermodynamic_stability`
 - [ ] `src/dark_sector/fracton_dm.py` — subdiffusion density profiles, Bullet Cluster constraint (σ=0 automatic), thermal lifetime as function of M_d/T, BBN constraint
 - [ ] Small-scale structure predictions: core-cusp resolution, satellite problem, diversity from HSF
 - [ ] Density profile comparison: fracton (analytical) vs NFW vs Burkert vs observed (Oman et al. 2015)
 - [ ] Finite-T risk assessment: gapless fracton liquid stability window (M_d vs T_CMB parameter space). ⚡**W1b: Now quantitative — viable window is 10 MeV ≲ M_d ≲ 100 GeV, with Arrhenius and Haah superexponential lifetime curves.**
 - [ ] Lab analog opportunities table (Adler et al. 2024 Nature — 2D observation of HSF + fractonic excitations)
 - [ ] ⚡**W1b NEW:** BBN survival phase diagram: M_d vs T_BBN with Arrhenius/Haah/superexponential contours marking τ > τ_BBN
-- [ ] ⚡**W1b NEW:** UV completion survey memo: which (if any) condensed matter or high-energy frameworks predict M_d in the 10 MeV–100 GeV window
+- [ ] ⚡**W1b NEW → Drilldown RESOLVED:** UV completion survey → **Dark QCD is the preferred UV completion** (Λ_dark ~ MeV–GeV); fracton-elasticity duality maps dark QCD confinement to fracton condensation. Memo: assess SU(N_dark) × U(1)_fracton gauge structure compatibility with FractonNonAbelian.lean
 
-**Lean infrastructure reuse:** FractonGravity (20), FractonHydro (17), FractonFormulas (45), FractonNonAbelian (4). **Estimated: 17 new theorems (14 original + 3 from theorem 13 split, bringing FractonDM.lean to largest module in fracton suite).**
+**Lean infrastructure reuse:** FractonGravity (20), FractonHydro (17), FractonFormulas (45), FractonNonAbelian (4). **Estimated: ⚡18 new theorems (14 original + 4 from theorem 13 → 13a-d split, bringing FractonDM.lean to largest module in fracton suite).**
 
 ---
 
@@ -537,7 +564,7 @@ The deep research findings substantially reshape the wave priorities:
     5. ⚡**W1b NEW:** DESI DR3 (2026-2027) — if w₀ strengthens away from -1, KV ruled out decisively; if retreats, KV less excluded
 - Which connections survive adversarial scrutiny?
   - **Strongest:** ℤ₁₆ + ADW CC (machine-verified constraints + quantitative coincidence). ⚡W1b: KV w₀-wₐ dynamics demoted to Level D tension, but Λ magnitude prediction survives.
-  - **Strong phenomenology, weak foundations:** Fracton DM (no finite-T topological protection in 3D). ⚡W1b: Downgraded further to **NON-VIABLE (weak form)** — BBN kills eV-scale M_d, no UV completion predicts viable M_d window.
+  - **Strong phenomenology, ⚡foundations upgraded:** Fracton DM (no finite-T topological protection in 3D for gapped phases, BUT p-wave dipole superfluid is thermodynamically stable). ~~⚡W1b: NON-VIABLE (weak form).~~ ⚡**Drilldown: VIABLE (conditional)** — p-wave phase resolves finite-T vulnerability; Dark QCD UV completion viable; BBN relaxed to μ ≳ MeV.
   - **Elevated:** SFDM cluster merger — ⚡W1b: Now **strongest empirical prediction** with quantitative forecast and confirmed literature gap.
   - **Coherent but speculative:** Vestigial relics (needs MC extension gate)
   - **Structurally sound, parametrically undetermined:** Fang-Gu torsion DM
@@ -557,15 +584,15 @@ The deep research findings substantially reshape the wave priorities:
 **Prerequisites:** Waves 2-8 (at minimum: Waves 2-3 + Wave 8 synthesis).
 
 **Paper structure (⚡revised based on W1b outcomes):**
-1. Introduction: emergent gravity programs and the dark sector — the unique position of machine-verified constraints
+1. Introduction: emergent gravity programs and the dark sector — the unique position of machine-verified constraints. ⚡**H₀ tension hook: BK-Wang (2017) phonon-mediated acceleration connects SFDM phonon EFT to H₀ tension; >5σ (H0DN April 2026) strengthens motivation for phonon-sector observational testing**
 2. **Machine-verified anomaly constraints on the hidden sector** (ℤ₁₆): 3 gen → +3 mod 16; minimal solutions (S-0, T-0); Wang T-0 as preferred candidate; 24,576 deformation classes
 3. **Cosmological constant from tetrad condensation equilibrium** (ADW): Volovik mechanism; ρ_vac ~ T⁴ ~ (meV)⁴; ~~DESI DR2 compatibility~~ ⚡**honest assessment: Λ magnitude prediction is compelling (~20% accuracy), but KV oscillating vacuum is in Level D tension with DESI DR2 (2.9–4.4σ)**; T_dS = H/π; QCD topological DE as DESI-compatible bridge
-4. **Fracton dark matter from machine-verified gauge constraints**: YM incompatibility → SM singlet; z=4 subdiffusion → core-cusp; σ_eff = 0 → Bullet Cluster; ⚡**BBN-constrained viable window 10 MeV ≲ M_d ≲ 100 GeV; NON-VIABLE (weak form) — honest assessment**
+4. **Fracton dark matter from machine-verified gauge constraints**: YM incompatibility → SM singlet; z=4 subdiffusion → core-cusp; σ_eff = 0 → Bullet Cluster; ⚡**Drilldown: p-wave dipole superfluid thermodynamically stable in d=3 at T>0 (Kapustin-Spodyneiko, Jensen-Raz); BBN relaxed to μ ≳ MeV; Dark QCD UV completion; VIABLE (conditional)**
 5. ⚡**PROMOTED: SFDM cluster merger sonic boom forecast** — Rankine-Hugoniot analysis; 5 canonical targets; stacking strategy for 3–5σ detection; condensate fraction; Euclid/Roman S/N; **Paper 17's "money plot"** (fills confirmed BK literature gap)
 6. SK-EFT for superfluid dark matter — dissipative MOND corrections and FDR noise (complementary to §5)
 7. Torsion dark matter from topological gravity — ADW compatibility, two torsion channels (shorter section)
 8. Speculative connections: vestigial relics, EP violation, ℤ₁₆ × vestigial cross-constraint
-9. Experimental tests and observational predictions (ranked table — ⚡W1b: merger #1, DESI DR3 #5 NEW)
+9. Experimental tests and observational predictions (ranked table — ⚡W1b: merger #1, DESI DR3 #5 NEW, ⚡H₀ tension: H0DN >5σ strengthens overall Phase 5x motivation)
 10. Formal verification summary: which claims are Lean-verified, which are heuristic
 11. Discussion and outlook
 
@@ -584,7 +611,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
   │
   ├──→ Wave 1b (3 follow-up tasks — parallel) ✅ COMPLETE
   │     ├──→ Task 7 (KV w₀-wₐ) ✅ LEVEL D ─→ Wave 3 (KV reframed: Λ magnitude survives, DESI dynamics withdrawn)
-  │     ├──→ Task 8 (fracton finite-T) ✅ NON-VIABLE (weak) ─→ Wave 7 (BBN floor M_d ≳ 10 MeV, theorem 13 split)
+  │     ├──→ Task 8 (fracton finite-T) ✅ ~~NON-VIABLE (weak)~~ ⚡VIABLE (conditional) ─→ Wave 7 (p-wave phase stable, μ ≳ MeV, theorem 13→13a-d)
   │     └──→ Task 9 (merger forecast) ✅ CONDITIONAL GO ─→ Wave 5 (money plot confirmed, fills BK gap)
   │
   ├──→ Task 1 ✅──→ Wave 2 (ℤ₁₆ hidden sector) ──────────────────┐
@@ -593,7 +620,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
   ├──→ Task 3 ✅──→ Wave 4 (torsion DM — short assessment) ───────┤         │
   ├──→ Task 4 ✅──→ Wave 5 (SFDM — merger PROMOTED) ──────────────┤    Wave 9 (paper)
   ├──→ Task 5 ✅──→ Wave 6a (MC extension — GATE) ──→ Wave 6b ────┤
-  └──→ Task 6 ✅──→ Wave 7 (fracton DM — NON-VIABLE weak) ────────┘
+  └──→ Task 6 ✅──→ Wave 7 (fracton DM — ⚡Drilldown: VIABLE conditional) ─┐
 ```
 
 **Critical path:** W2 → W3 → W5 → W8 → W9 (⚡W1b: W5 added to critical path — merger forecast is now co-primary with Track A)
@@ -604,7 +631,7 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 **Earliest publishable result:** W2 alone (ℤ₁₆ hidden sector classification with Lean-verified constraints)
 **⚡W1b alternative earliest result:** W5 merger forecast alone (fills confirmed BK literature gap with quantitative predictions)
 **Blocked:** Wave 6b (vestigial relics) blocked on Wave 6a (MC extension gate)
-**⚡W1b deprioritized:** Wave 7 fracton DM — honest assessment still valuable, but weak-form non-viability limits upside
+**⚡Drilldown RE-PRIORITIZED:** Wave 7 fracton DM — upgraded to VIABLE (conditional); p-wave phase + Dark QCD UV completion substantially increase upside; consider elevating to co-secondary with Wave 5
 
 ---
 
@@ -626,8 +653,9 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | Deep Research Result | Waves | Verdict | Key Content |
 |---|---|---|---|
 | `Lit-Search/Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs. DESI DR2  Quantitative w₀-wₐ Assessment.md` | W3, W9 | **LEVEL D TENSION** | KV predicts (w₀,wₐ)=(-1,0), excluded at 2.9–4.4σ by DESI DR2; no phantom crossing; RVM ν~10⁻¹²² too small by 10⁸²; Λ magnitude ~20% accuracy survives; QCD topological DE (arXiv:2506.14182) is DESI-compatible bridge; 6 alternative DE models compared; Paper 17 claims table (5 claims) |
-| `Lit-Search/Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md` | W7 | **NON-VIABLE (weak form)** | Shen no-go exempt for gapless U(1); BBN kills eV-scale M_d; Arrhenius M_d ≳ 10 MeV; Haah superexponential M_d ≳ 1 MeV; viable window 10 MeV–100 GeV; no UV completion predicts M_d there; theorem 13 → 13a/13b/13c split; 6 gapless phases surveyed |
+| `Lit-Search/Phase-5x/5x-Gapless Fracton Liquid Stability at Finite Temperature  The Kinetic Stability Window for Fracton Dark Matter/Fracton-DM-Thermal-Stability-Assessment.md` | W7 | ~~NON-VIABLE (weak form)~~ ⚡**Drilldown: VIABLE (conditional)** | Shen no-go exempt for gapless U(1); ~~BBN kills eV-scale M_d~~ Drilldown: p-wave phase thermodynamically stable; Arrhenius applies only to gapped scenario; condensate condition μ ≳ MeV; Dark QCD UV completion; theorem 13 → 13a/13b/13c/13d split; 6 gapless phases surveyed |
 | `Lit-Search/Phase-5x/5x-SFDM Cluster Merger Sonic Boom  Observational Forecast for Euclid Roman.md` | W5, W9 | **CONDITIONAL GO** | c_s=1525 km/s; all 5 mergers supersonic; S/N 0.3–1.0 single, 3.5–5.7σ stacked ≥30; BK has no forecast (confirmed gap); velocity-threshold smoking gun; condensate fraction complication; A520 dark core; El Gordo SIDM discriminant; SK-EFT shock width; first 3σ ~2028 |
+| `Lit-Search/Phase-5x/5x-Fracton DM Kinetic Stability  Deep Drilldown on the Viability Verdict/Fracton-DM-Kinetic-Stability-Drilldown.md` | W7 | **⚡VIABLE (conditional)** | Kapustin-Spodyneiko (PRB 2022) dipole SSB allowed d≥3; Jensen-Raz (PRL 2024) SSB throughout phase diagram; Głódkowski et al. (2024) z=4 in p-wave; Feistl-Schraven-Warzel (2026) multipole MW; Dark QCD UV completion; μ ≳ MeV replaces Arrhenius; theorem 13→13a-d; supersedes W1b NON-VIABLE |
 
 ### Prior Deep Research (HIGH relevance — must read before corresponding wave)
 
@@ -667,9 +695,9 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | ⚡**KV oscillating vacuum incompatible with DESI** | Medium | "Marginally compatible" | **LEVEL D TENSION (2.9–4.4σ)** | High | Λ magnitude prediction (~20% accuracy) survives. QCD topological DE (Van Waerbeke-Zhitnitsky 2025) provides DESI-compatible bridge. Paper 17: withdraw dynamics claim, keep magnitude claim. DESI DR3 (2026-2027) falsifiable. | **Reframed** |
 | Fang-Gu torsion DM mass scale is Planck-scale (unobservable) | Medium | **Confirmed: mass undetermined** | Unchanged | High | Mass parametrically undetermined → BLOCKER for quant. predictions. Wave 4 shortened to assessment. | Partially mitigated |
 | SFDM sonic horizons impossible | Medium | **Resolved: T_H real but unobservable** | Unchanged | Low | T_H exists (10⁻²³-10⁻²⁹ K) but too cold. Redirect to MOND corrections, FDR noise, cluster mergers → HIGHER payoff. | Fully mitigated |
-| ⚡**SFDM merger forecast not competitive** | — | Rank 1 observable (qualitative) | **CONDITIONAL GO (quantitative)** | Low | S/N 3.5–5.7σ stacked ≥30; fills confirmed BK literature gap; first 3σ ~2028; Paper 17 money plot. | **Fully mitigated** |
+| ⚡**SFDM merger forecast not competitive** | — | Rank 1 observable (qualitative) | **CONDITIONAL GO (quantitative)** | Low | S/N 3.5–5.7σ stacked ≥30; fills confirmed BK literature gap; first 3σ ~2028; Paper 17 money plot. H₀ tension (H0DN >5σ) shifts Σ_cr ~8%, S/N ~4% — not meaningful. | **Fully mitigated** |
 | Vestigial relics too speculative for publication | Medium-High | **Narrowed: coherent but gated** | Unchanged | Medium | MC extension gate (Wave 6a) resolves. If transition is 2nd order → KZ relics viable. If crossover → no relics. | Downstream resolution |
-| Fracton DM incompatible with 3+1D gravity | Medium | **Clarified: finite-T no-go for gapped 3D** | ⚡**NON-VIABLE (weak form)** | **Very High** | ⚡BBN kills eV-scale M_d. Viable window 10 MeV–100 GeV exists but no UV completion predicts M_d there. Phenomenology (σ=0, z=4 subdiffusion, HSF diversity) all survive in viable window. Honest assessment publishable. Theorem 13 → 13a/13b/13c split. | **Partially mitigated → accepted** |
+| Fracton DM incompatible with 3+1D gravity | Medium | **Clarified: finite-T no-go for gapped 3D** | ⚡**Drilldown: VIABLE (conditional)** | **Medium** | ⚡Drilldown: p-wave dipole superfluid thermodynamically stable at T>0 in d=3 (Kapustin-Spodyneiko, Jensen-Raz). BBN relaxed to μ ≳ MeV. Dark QCD UV completion viable. Remaining gap: production mechanism. Phenomenology (σ=0, z=4, HSF) all survive. Theorem 13 → 13a-d split. | **⚡Substantially mitigated** |
 | No single connection strong enough for a focused paper | Low | **Resolved: Track A is paper-ready** | ⚡**Strengthened: Track A + W5 merger** | N/A | ℤ₁₆ + ADW CC + merger forecast + fracton DM → Paper 17 with 4 strong sections. Merger fills genuine literature gap. | Fully mitigated |
 | **NEW: MC extension computationally expensive** | — | Medium | Unchanged | Medium | L=10,12,16 requires significant HPC time. Coordinate with Phase 5d RHMC infrastructure. Can run in parallel. | Plan exists |
 | **NEW: Deep research invisible DM candidates unpublishable** | — | Low | Unchanged | Medium | "All emergent gravity DM is invisible to direct detection" is itself a thematic result — unified by theoretical structure. | Thematic framing |
@@ -685,10 +713,10 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 | W4 | (no new module) | 0 | 0 | 0 | ADWMechanism, VestigialGravity (assessment only) |
 | W5 | SFDMAcousticMetric.lean | 4 (L1-L2 easy, L3 L6 med) | 2 (L4-L5 hard) | 200-400 | WKBConnection (18), WKBAnalysis (17), HawkingUniv (8), AcousticMetric (12) |
 | W6b | VestigialRelics.lean | 4 (coset homotopy, EP bound, skyrmion τ, self-int) | 1 (KZ density) | 150-300 | VestigialGravity (18), ADWMechanism (21), SO4Weingarten (16) |
-| W7 | FractonDarkMatter.lean | 8 (theorems 1-4, 8-11) | ⚡**9** (theorems 5-7, 12, 13a, 13b, 13c, 14) | 450-650 | FractonGravity (20), FractonHydro (17), FractonFormulas (45), FractonNonAbelian (4) |
-| **Total** | | **26 near-term** | ⚡**20 deferred/hard** | **1300-2250** | **~190 reused across waves** |
+| W7 | FractonDarkMatter.lean | 8 (theorems 1-4, 8-11) | ⚡**10** (theorems 5-7, 12, 13a, 13b, 13c, 13d, 14) | 500-700 | FractonGravity (20), FractonHydro (17), FractonFormulas (45), FractonNonAbelian (4) |
+| **Total** | | **26 near-term** | ⚡**21 deferred/hard** | **1350-2300** | **~190 reused across waves** |
 
-**⚡W1b changes:** Wave 7 deferred count increased from 6 to 9 (theorem 13 split into 13a/13b/13c adds 2 net new). Total deferred/hard increased from 17 to 20. Total theorems: 46 (up from 43).
+**⚡W1b changes:** Wave 7 deferred count increased from 6 to 9 (theorem 13 split into 13a/13b/13c adds 2 net new). ⚡**Drilldown:** +1 theorem (13d: BBN condensate condition). Total deferred/hard: 21. Total theorems: 47 (26 near-term + 21 deferred).
 
 ---
 
@@ -713,8 +741,8 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 - [ ] MC extension (Wave 6a) completed → vestigial relic physics resolved
 - [ ] Synthesis document with cross-connections and unified experimental prediction table
 - [ ] Paper 17 through full 12-stage pipeline (⚡W1b: now 11 sections, merger section promoted)
-- [ ] 26 near-term Lean theorems verified (+ up to ⚡20 deferred), ~1300-2250 LOC
-- [ ] FractonDarkMatter.lean at ⚡~17 theorems (theorem 13 split into 13a/13b/13c)
+- [ ] 26 near-term Lean theorems verified (+ up to ⚡21 deferred), ~1350-2300 LOC
+- [ ] FractonDarkMatter.lean at ⚡~18 theorems (theorem 13 split into 13a/13b/13c/13d)
 
 ---
 
@@ -776,6 +804,11 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 - Krishna, Bridgeman, Bartlett, "Gapped fracton phases at finite T: 3D no-go," arXiv:2407.09625 (2024)
 - Bidussi, Doshi, Hofman, Stremoukhov, "Fractons as dust," arXiv:2503.14496 (2025)
 - Oman et al., "The unexpected diversity of dwarf galaxy rotation curves," MNRAS 452 (2015) — core-cusp
+- ⚡**Drilldown:**
+- Kapustin, Spodyneiko, "Hohenberg-Mermin-Wagner-type theorems for systems with continuous symmetries and dipole symmetry," PRB 106, 245125 (2022) — dipole SSB allowed in d≥3
+- Jensen, Raz, "Large-N dipole superfluid," PRL (2024) — SSB throughout entire phase diagram, p-wave phase dominates at T>0 in d=3
+- Głódkowski, Peña-Benítez, Surówka, "Hydrodynamics of dipole-conserving superfluids" (2024) — z=4 subdiffusion survives in p-wave phase
+- Feistl, Schraven, Warzel, "Mermin-Wagner-type theorems for quantum lattice systems with multipole symmetries," arXiv:2601.23078 (Jan 2026) — confirms Kapustin-Spodyneiko, extends to multipoles
 
 **⚡W1b Additional References:**
 - DESI Collaboration, "DESI DR2 baryon acoustic oscillations: measurement of the expansion rate and geometry at z < 2.1," arXiv:2503.14738 (2025) — KV Level D tension source
@@ -785,3 +818,8 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 - Prem, Haah, Nandkishore, "Glassy quantum dynamics in translation invariant fracton models," PRB 95, 155133 (2017) — superexponential relaxation
 - Jee et al., "The dark core in Abell 520," ApJ 747, 96 (2012) — >10σ dark core detection, M/L=588
 - Solà Peracaula, "Running vacuum model," Int. J. Mod. Phys. D 24 (2015) — RVM with ν~10⁻³
+
+**⚡H₀ Tension References (April 2026):**
+- H0 Distance Network (H0DN) Collaboration, H₀ = 73.50 ± 0.81 km/s/Mpc (April 10, 2026) — >5σ vs Planck, ~1% precision
+- Berezhiani, Khoury, Wang, "DM-baryon phonon-mediated late-time cosmic acceleration," (2017) — SFDM approach to H₀ tension via phonon EFT; thematic hook for Paper 17
+- ACT DR6 (March 2025) — no statistically significant departure from ΛCDM; cannot pull H₀ above ~69.9 even with EDE

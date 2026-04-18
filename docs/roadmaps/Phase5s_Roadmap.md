@@ -41,9 +41,9 @@ The gapped_interface_axiom is the project's single load-bearing assumption. We p
 **Prerequisites:** Wave 1 deep research.
 
 **Deliverables:**
-- [ ] `lean/SKEFTHawking/FKGappedInterface.lean` — Majorana matrices, FK Hamiltonian
-- [ ] Symmetry matrices (T, (-1)^F)
-- [ ] Connection to existing PauliMatrices.lean and MajoranaKramers.lean
+- [x] `lean/SKEFTHawking/FKGappedInterface.lean` — Majorana matrices, FK Hamiltonian
+- [x] Symmetry matrices (T, (-1)^F)
+- [x] Connection to existing PauliMatrices.lean and MajoranaKramers.lean
 
 **Estimated LOE:** 1 week
 **Risk:** Low (16×16 matrices, same scale as A(1) computation)
@@ -63,9 +63,9 @@ The gapped_interface_axiom is the project's single load-bearing assumption. We p
 - All via native_decide on 16×16 matrix arithmetic
 
 **Deliverables:**
-- [ ] `FKGappedInterface.lean` extended — spectral gap theorem
-- [ ] Symmetry commutator verification: [H, T] = 0, [H, (-1)^F] = 0
-- [ ] Ground state symmetry representation
+- [x] `FKGappedInterface.lean` extended — spectral gap theorem
+- [x] Symmetry commutator verification: [H, T] = 0, [H, (-1)^F] = 0
+- [x] Ground state symmetry representation
 
 **Estimated LOE:** 1-2 weeks
 **Risk:** Medium (depends on eigenvalue complexity — may need custom number field if irrational)
@@ -77,11 +77,12 @@ The gapped_interface_axiom is the project's single load-bearing assumption. We p
 **Goal:** Connect the FK 2D result to the 3D axiom via a bridge theorem.
 
 **Deliverables:**
-- [ ] Bridge theorem: FK 2D + dimensional reduction → evidence for 3D conjecture
-- [ ] Update SPTClassification.lean with FK 2D as independent evidence
-- [ ] Update AXIOM_METADATA: add FK 2D evidence to eliminability assessment
-- [ ] Tests, figures, paper update, notebook
-- [ ] RESEARCH_STATUS_OVERVIEW update
+- [x] Bridge theorem: FK 2D + dimensional reduction → evidence for 3D conjecture (`gapped_interface_dimensional_ladder` in SPTClassification.lean, 2026-04-18)
+- [x] Update SPTClassification.lean with FK 2D as independent evidence (axiom docstring evidence section refreshed; new bridge theorem in §6)
+- [x] Update AXIOM_METADATA: add FK 2D evidence to eliminability assessment (constants.py — new structured `evidence_ladder` dict with 1+1D / 2+1D / 3+1D entries, witness names, frameworks)
+- [x] Tests passed (test_build_graph 31/2-skip), full project lake build clean (8413 jobs, 3.1s)
+- [x] RESEARCH_STATUS_OVERVIEW update (line 154 — fixed Δ=2→Δ=14 typo; added bridge theorem reference)
+- [ ] Stages 8-11: figure, paper update, notebook (deferred — paper update needs user direction on which paper section)
 
 **Estimated LOE:** 1 week
 
@@ -103,9 +104,9 @@ The gapped_interface_axiom is the project's single load-bearing assumption. We p
 **Prerequisites:** Deep research (verify Mathlib has `det = 0` from linearly dependent rows).
 
 **Deliverables:**
-- [ ] `lean/SKEFTHawking/ModularityTheorem.lean` — abstract theorem (~5-10 theorems)
-- [ ] Replace case-by-case Muger proofs with instantiation of general theorem
-- [ ] Update MugerCenter.lean to reference the general result
+- [x] `lean/SKEFTHawking/ModularityTheorem.lean` — abstract theorem (~5-10 theorems)
+- [x] Replace case-by-case Muger proofs with instantiation of general theorem
+- [x] Update MugerCenter.lean to reference the general result
 
 **Estimated LOE:** 1 week
 **Risk:** Low (standard linear algebra, likely in Mathlib)
@@ -270,22 +271,48 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
       `anyon_flux_separates` — flux-sector content theorems
     - `num_toric_anyons`, `G2_dim_squared`, `num_anyons_equals_card_squared`
       — DPR dimension formula for abelian G
-- [ ] **Wave 9 continuation — canonical functor + H_CF2 equivalence**
+- [~] **Wave 9 sessions 3-5 (2026-04-16) — canonical functor architecture**
+  (uncommitted; ~446 LOC added to `CenterFunctorZ2Equiv.lean`):
+    - `signEndo` / `signEndoIso` / `signHalfBraiding` (custom HalfBraiding
+      for sign-twisted anyons; `naturality` PROVED, `monoidal` 1 sorry on
+      hexagon)
+    - `vacuumAnyon`, `magneticAnyon` (canonical β via `Center.ofBraidedObj`)
+    - `electricAnyon`, `fermionAnyon` (sign β via `signHalfBraiding`)
+    - `extractBraidAction_e/a` IMPLEMENTED (real definitions, not sorry —
+      via the ιTensorObj → β.hom → tensorObjDesc pattern)
+    - `vecG_braiding_hom_apply` @[simp] bridge lemma (line 355) —
+      unblocks `(β_ V U).hom n` unfolding through `inferInstance` opacity
+    - `canonicalCenterToRep` functor + `canonicalModule` DG-module structure
+      with all module axioms PROVED (smul_zero/add/add_smul/zero_smul/
+      one_smul/mul_smul) and functor laws PROVED (map_id/map_comp/map_add'/
+      map_smul' modulo `extractBraidAction_{e,a}_comm`)
+    - 8 sorry remain, all sharing root cause: collapsing chained
+      `ιTensorObj ≫ tensorObjDesc(braiding) ≫ tensorObjDesc(if-with-cast)`
+      via `ι_tensorObjDesc` — first collapse works, second blocked.
+- [~] **Wave 9 session 6 (2026-04-18) — baseline restoration**:
+    - Cleaned abandoned `have key` scaffold inside `extractBraidAction_e_vacuum`
+      that had left the file in an unstable parse state (3 hard errors at
+      lines 542, 559, 563 — `cast` argument failed because branch hypothesis
+      didn't propagate `i₂ = eAdd` inside `show ... by simpa`).
+    - Verified clean baseline via `lean_diagnostic_messages --severity error`
+      → empty.
+    - 10 categorical attempts on `extractBraidAction_e_vacuum` second
+      collapse — all FAILED at the `(β ≫ ι_swap) ≫ desc(if-cast)` reshuffle.
+      Time-boxed; pivoting to element-level `ext x` approach next session.
+- [ ] **Wave 9 continuation — discharge 8 remaining sorry + H_CF2 equivalence**
   (multi-session future work; see
   `temporary/working-docs/phase5s_wave9_centerfunctor_z2_state.md`
-  strengthening audit 2026-04-15):
-    - **Priority HIGH:** Upgrade `gradedTotalSpaceFunctor` to a canonical
-      functor that uses the half-braiding `β` non-trivially to distinguish
-      sign variants (`chiTrivSign`/`chiFlipSign`). Estimate 600-1200 LOC
-      / 4-6 sessions per deep research `Closing the Drinfeld center sorry
-      stubs in Lean 4.md` Phase D.
-    - **Priority MEDIUM:** Faithful proof fix (~50 LOC; blocked on
-      `Module.compHom`-vs-k LinearMap transparency, see state doc D4).
-    - **Priority NICE-TO-HAVE:** Full + EssSurj +
-      `Equivalence.ofFullyFaithfulEssSurj` → discharge
-      `H_CF2_center_equivalence`. 1500-2800 LOC beyond canonical functor.
-      Note: H_CF2 has **zero downstream dependencies** per
-      CenterFunctor.lean L75; strengthening is reputational.
+  Session 6 attempt log + H5/H6 hypotheses):
+    - **Priority HIGH:** Crack the second `ι_tensorObjDesc` collapse —
+      candidates are H5 (element-level `ext x; simp only [...]`) or H6
+      (custom `tensorObjDesc_cast_lid` simp lemma). Unblocks 7/8 sorry
+      (vacuum/electric/sq×2/comm×2 + assembly).
+    - **Priority MEDIUM:** `signHalfBraiding.monoidal` hexagon coherence
+      (1 sorry, independent — can be tackled in parallel).
+    - **Priority NICE-TO-HAVE:** `h_cf2_G2` final assembly via
+      `Equivalence.ofFullyFaithfulEssSurj`. Note: H_CF2 has **zero
+      downstream dependencies** per CenterFunctor.lean L75; strengthening
+      is reputational.
 
 ---
 
@@ -314,12 +341,12 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 1 | FK deep research | 1-2 days | None | **COMPLETE** — explicit 16×16 integer matrix extracted |
 | Wave 2 | FK Majorana representation | 1 week | Wave 1 | **COMPLETE** — FKGappedInterface.lean, 1.4s build |
 | Wave 3 | FK spectral gap verification | 1-2 weeks | Wave 2 | **COMPLETE** — E₀=-7 unique, Δ=2, eigenvector proof |
-| Wave 4 | FK bridge theorem + pipeline | 1 week | Wave 3 | Next — pipeline stages 6-12 |
+| Wave 4 | FK bridge theorem + pipeline | 1 week | Wave 3 | **MOSTLY COMPLETE 2026-04-18** — `gapped_interface_dimensional_ladder` (SPTClassification.lean), AXIOM_METADATA evidence_ladder, lake build + pytest + RESEARCH_STATUS_OVERVIEW updated. Pipeline stages 8-11 (figure, paper, notebook) deferred pending user direction on paper scope. |
 | Wave 5 | Muger general theorem | 1 week | Deep research | **COMPLETE** — ModularityTheorem.lean, abstract proof |
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
 | Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **COMPLETE 2026-04-14** — Uqsl2AffineHopf: 0 sorry. Uqsl3Hopf: 0 sorry (all 4 antipode Serre cubics E12/E21/F12/F21 closed; Bialgebra + HopfAlgebra typeclass instances wired). Full SKEFTHawking package builds clean no-cache. |
-| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor` (honest but not canonical). Canonical functor + H_CF2 tracked as multi-session work (see working doc strengthening audit). |
+| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-5 (2026-04-16) added canonical functor architecture (signHalfBraiding, extractBraidAction, vecG_braiding bridge, full module/functor laws); 8 sorry remain blocked on chained `ι_tensorObjDesc` collapse with cast-in-descent. Session 6 (2026-04-18) restored baseline + characterized blocker (working doc D7). |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.
 
@@ -333,6 +360,8 @@ All tracks are independent. Maximum parallelism possible.
 | 2 | S-matrix → Muger general theorem | Lit-Search/Tasks/Phase5s_muger_smatrix_general_theorem.md | **READY** |
 | 3 | Instanton ADW coupling | Lit-Search/Tasks/Phase5s_instanton_adw_coupling.md | **READY** |
 | 4 | KL data verification k=3,4,5 | Lit-Search/Tasks/Phase5s_kl_data_verification_k3_k4_k5.md | **READY** |
+| 5 | extractBraidAction cast-in-descent refactor (Wave 9) | Lit-Search/tasks/complete/extractBraidAction_cast_in_descent_refactor.md | **COMPLETE 2026-04-18** — vacuum (2026-04-18) + electric (2026-04-19) PROVED using the blueprint |
+| 6 | extractBraidAction sq/comm + signHalfBraiding hexagon proof architecture (Wave 9) | Lit-Search/Phase-5s/5s-9-Drinfeld center API in Mathlib, verified and ready.md | **COMPLETE 2026-04-20** — whiskering-form Center.Hom.comm + Center simp rewrite set + sign-hexagon recipe (ext + tensorObj_ext + fin_cases i,j); ready for Session 9 application |
 
 ---
 

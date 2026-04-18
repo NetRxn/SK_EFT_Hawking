@@ -18,6 +18,8 @@ Design decisions:
       consistently across all notebooks and visualizations.
 """
 
+from typing import Any
+
 import numpy as np
 
 
@@ -1332,7 +1334,7 @@ TOTAL_THEOREMS = ARISTOTLE_PROVED_COUNT
 # Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════
 
-AXIOM_METADATA: dict[str, dict[str, str]] = {
+AXIOM_METADATA: dict[str, dict[str, Any]] = {
     'non_abelian_center_discrete': {
         'eliminability': 'removed',
         'reason': 'Proved as theorem (Wave 6 axiom removal)',
@@ -1346,9 +1348,35 @@ AXIOM_METADATA: dict[str, dict[str, str]] = {
     'gapped_interface_axiom': {
         'eliminability': 'hard',
         'reason': 'TPF 2026 conjecture: gapped interface for anomaly-free SPT. '
-                  'Plausible but unproven. Exactly solvable in 1+1D only. '
-                  '4+1D numerically intractable. Single bottleneck for TPF program.',
+                  'Plausible but unproven. Machine-checked dimensional ladder of '
+                  'evidence: 1+1D proven (VillainHamiltonian, K-matrix gappability '
+                  'for 3450 model), 2+1D proven (FKGappedInterface, FK 16x16 '
+                  'Hamiltonian, spectral gap Delta=14, native_decide). '
+                  '3+1D / 4+1D remain conjectural — 4+1D numerically intractable. '
+                  'Bridge theorem: gapped_interface_dimensional_ladder '
+                  '(SPTClassification.lean). Single bottleneck for TPF program.',
         'module': 'SPTClassification',
+        'evidence_ladder': {
+            '1+1D': {
+                'status': 'proven',
+                'witness': 'VillainHamiltonian.k3450_gappable',
+                'framework': 'K-matrix / null-vector (mirror sector)',
+                'verification': 'native_decide on 4x4 integer matrix',
+            },
+            '2+1D': {
+                'status': 'proven (Wave 3, 2026-04-15)',
+                'witness': 'FK.fk_summary',
+                'framework': 'Cayley calibration / 8-Majorana',
+                'verification': 'native_decide on 16x16 integer matrix; '
+                                'spectral gap Delta = 14; ground state E0 = -14',
+            },
+            '3+1D / 4+1D': {
+                'status': 'conjectural (axiom)',
+                'witness': 'gapped_interface_axiom (this entry)',
+                'framework': 'Numerically intractable (Hilbert space too large)',
+                'verification': 'No counterexample known; TPF "plausible but unproven"',
+            },
+        },
     },
 }
 
