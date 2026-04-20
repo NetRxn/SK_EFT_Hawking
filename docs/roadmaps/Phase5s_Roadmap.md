@@ -299,20 +299,85 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
     - 10 categorical attempts on `extractBraidAction_e_vacuum` second
       collapse — all FAILED at the `(β ≫ ι_swap) ≫ desc(if-cast)` reshuffle.
       Time-boxed; pivoting to element-level `ext x` approach next session.
-- [ ] **Wave 9 continuation — discharge 8 remaining sorry + H_CF2 equivalence**
-  (multi-session future work; see
-  `temporary/working-docs/phase5s_wave9_centerfunctor_z2_state.md`
-  Session 6 attempt log + H5/H6 hypotheses):
-    - **Priority HIGH:** Crack the second `ι_tensorObjDesc` collapse —
-      candidates are H5 (element-level `ext x; simp only [...]`) or H6
-      (custom `tensorObjDesc_cast_lid` simp lemma). Unblocks 7/8 sorry
-      (vacuum/electric/sq×2/comm×2 + assembly).
-    - **Priority MEDIUM:** `signHalfBraiding.monoidal` hexagon coherence
-      (1 sorry, independent — can be tackled in parallel).
-    - **Priority NICE-TO-HAVE:** `h_cf2_G2` final assembly via
-      `Equivalence.ofFullyFaithfulEssSurj`. Note: H_CF2 has **zero
-      downstream dependencies** per CenterFunctor.lean L75; strengthening
-      is reputational.
+- [x] **Wave 9 sessions 7-20 — vacuum/electric/sq/comm proofs** (2026-04-18 — 2026-04-19):
+    - `extractBraidAction_e_vacuum` PROVED via eqToHom descent + double-`show`
+      reassociation + symmetric-monoidal unit coherence (Session 6 round 3)
+    - `extractBraidAction_e_electric` PROVED via signEndo scaffolding + blueprint
+      monoidal finisher
+    - `signHalfBraiding.monoidal` PROVED (Session ~12)
+    - `middleSwap_eq_braiding` + `middleSwap_eq_braiding_a` helpers PROVED
+      (Helper 2 + Helper 2_a, summand-level identification)
+    - `halfBraiding_at_unit` auxiliary PROVED using Mathlib's
+      `CategoryTheory.braiding_tensorUnit_right` on Center C
+    - `uu_iso_graded : U⊗U ≅ 𝟙_ (VecG_Cat k G2)` full graded iso constructed
+      (Helper 3 infrastructure)
+    - `extractBraidAction_e_sq` / `_a_sq` + `_e_comm` / `_a_comm` reduced
+      to `halfBraiding_sq_identity` (+ mirror) via uniform scaffolding
+- [~] **Wave 9 sessions 21-33 — halfBraiding_sq_identity architecture** (2026-04-19 — 2026-04-20):
+    - Sessions 21-28: helper infrastructure — `h_key` (category-level hexagon),
+      `h_pre` (summand decomposition at eAdd), `hpost`, `hB`, 5-step reduction
+      of hA from 8-factor α/β chain to summand-level hexagon form.
+    - Session 29: heartbeat bumps DISPROVED as bottleneck (typeclass unifier
+      wall, not compute).
+    - Session 30: element-level ext DISPROVED as silver bullet.
+    - Session 31: `halfBraiding_hA_alpha_merge` helper proved (combines
+      triangle + comp_whiskerRight cleanly).
+    - Session 32 attempted `simp; erw [hpost]; erw [hB]` — REVERTED as
+      structurally CIRCULAR.
+    - Session 33: Aristotle retrieved with errors; cherry-picked faithful
+      only; reverted Session 32's circular refactor; added conv_rhs middleSwap
+      (5 steps, build clean).
+    - Sessions 34-35: deep research prompt filed for element-level hA proof
+      (`Lit-Search/Tasks/submitted/5s-9-hexagon-aAdd-summand-element-proof.md`);
+      circularity-equivalence formally documented.
+- [~] **Wave 9 session 36 (2026-04-20) — deep research returned + focused subagent**:
+    - Deep research result received at
+      `Lit-Search/Phase-5s/5s-9-Proof body for hA in halfBraiding_sq_identity.md`.
+      Two proof strategies: Proof A (category-level, ~70 LOC) + Proof B
+      (element-level fallback, ~210 LOC).
+    - Analysis: Proof A has structural gap against hA due to `pre := X ◁ λ.inv`
+      prefix + summand-decomposed hexagon form; element-level Proof B is the
+      cleaner path.
+    - Manual element-level trace verified non-circular content: h_key_eAdd at
+      x ⊗ (1⊗1) gives f̃² = 𝟙 (where f̃ is the unitor-normalized endomorphism
+      of X.fst eAdd from β_X(U) aAdd). Parent.LHS at x ⊗ 1 = f̃²(x), RHS = x.
+    - Focused `lean4:sorry-filler-deep` subagent dispatched in background
+      with full context + element-descent strategy + anti-patterns.
+    - MAJOR UNBLOCK end of session: refactored parent from circular hA chain
+      to direct element descent via `apply ModuleCat.hom_ext; ext v;
+      induction v using TensorProduct.induction_on`. Zero + add cases CLOSED
+      via explicit LinearMap.map_zero/map_add + congrArg₂. Tmul case remains
+      as single sorry with clean algebraic content.
+- [~] **Wave 9 session 37 (2026-04-20) — explore-driven refinement**:
+    - 2 parallel Explore agents: identified 8 key Mathlib lemmas (ι_tensorObjDesc,
+      tensorObj_ext, ι_tensorHom, rightUnitor/leftUnitor_hom_apply,
+      vecG_braiding_hom_apply, braiding_tensorUnit_left, ι_mapBifunctorMapObjDesc)
+      + 3 tactic strategies from existing file patterns.
+    - `erw [ModuleCat.MonoidalCategory.rightUnitor_hom_apply]` FIRES on tmul
+      case, reducing RHS from `(ρ_).hom.hom (x ⊗ c)` to `c • x`.
+    - Dispatched lean4:sorry-filler-deep subagent with full context including
+      algebraic content derivation and 3 concrete strategies. Subagent
+      UNABLE to close — confirmed structural blocker is graded hexagon
+      summand extraction at (eAdd, aAdd, aAdd) summand requiring Mathlib
+      API navigation beyond what's readily available.
+    - Strategic pivot: preserve 3 well-characterized sorries; move to
+      Wave 9 Stages 8-12 downstream work. 37 sessions accumulated on
+      the hexagon summand blocker; mathematical content VERIFIED via
+      manual trace (g² = 𝟙 follows from h_key_eAdd), but Lean encoding
+      of the graded summand extraction remains open.
+- [ ] **Wave 9 remaining work — Session 37+ delivery**:
+    - **Priority HIGH (blocked):** Close halfBraiding_sq_identity tmul +
+      halfBraiding_sq_identity_a tmul. Options: (a) develop reusable
+      `graded_hexagon_summand` helper (potential Mathlib contribution),
+      (b) propose halfBraiding_sq_identity axiom with AXIOM_METADATA
+      eliminability tracking (requires user permission per CLAUDE.md).
+    - **Priority MEDIUM:** Close h_cf2_G2 — build Full + EssSurj instances
+      (Faithful already proved Session 33), assemble via
+      `Equivalence.ofFullyFaithfulEssSurj`. NOTE: H_CF2 has zero downstream
+      dependencies per CenterFunctor.lean L75; strengthening is reputational.
+      Estimated 1500-2800 LOC for Full + EssSurj independently.
+    - **Priority NICE-TO-HAVE:** Wave 9 Stages 8-12 (figures, paper update,
+      notebook, validate.py, Inventory sync) gated on Lean build clean.
 
 ---
 
@@ -346,7 +411,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
 | Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **COMPLETE 2026-04-14** — Uqsl2AffineHopf: 0 sorry. Uqsl3Hopf: 0 sorry (all 4 antipode Serre cubics E12/E21/F12/F21 closed; Bialgebra + HopfAlgebra typeclass instances wired). Full SKEFTHawking package builds clean no-cache. |
-| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-5 (2026-04-16) added canonical functor architecture (signHalfBraiding, extractBraidAction, vecG_braiding bridge, full module/functor laws); 8 sorry remain blocked on chained `ι_tensorObjDesc` collapse with cast-in-descent. Session 6 (2026-04-18) restored baseline + characterized blocker (working doc D7). |
+| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL — H_CF1 ✓, H_CF2 IN-PROGRESS (2026-04-20 Session 37)** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-20 built canonical functor architecture (signHalfBraiding monoidal ✓, extractBraidAction_{e,a}_vacuum ✓, _electric ✓, canonicalCenterToRep.Faithful ✓ via Aristotle cherry-pick). Session 21-33: unblocked extractBraidAction_{e,a}_sq via halfBraiding_sq_identity + _a pair, decomposed via middleSwap_eq_braiding helper + uu_iso_graded graded iso + halfBraiding_at_unit. Session 36 (2026-04-20): MAJOR UNBLOCK — refactored parent from circular hA chain to direct element descent via TensorProduct.induction_on. Zero + add cases CLOSED via explicit LinearMap.map_zero/map_add. Session 37 (2026-04-20): `erw [rightUnitor_hom_apply]` fires reducing RHS to `c • x`; subagent dispatched with full context + algebraic derivation (g² = 𝟙 via h_key_eAdd), unable to close. Current state: **3 active sorries** in CenterFunctorZ2Equiv.lean — halfBraiding_sq_identity tmul (line 1020, algebraic content verified elementwise but Lean encoding of graded hexagon summand extraction at (eAdd,aAdd,aAdd) remains open), halfBraiding_sq_identity_a tmul (line 1416, mirror), h_cf2_G2 (line 1924, needs Full + EssSurj — estimated 1500-2800 LOC independent from tmul blocker). Build clean, 1930 LOC, 56 theorems in CenterFunctorZ2Equiv.lean + 51 in CenterFunctorZ2.lean + 4 in CenterFunctor.lean. |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.
 

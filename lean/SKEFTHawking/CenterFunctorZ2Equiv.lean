@@ -513,13 +513,18 @@ noncomputable def signHalfBraiding (V : VecG_Cat k G2) :
          rw [h]; simp]
        simp]
     simp only [Category.assoc]
-    -- Strip (α_ V U U').inv and (β_ V U).hom ▷ U' from both sides
-    -- Goal now: α ≫ U ◁ β_V_U' ≫ α.inv ≫ tensorHom (signEndo U) (signEndo U') ▷ V
-    --      = signEndo U ▷ V ▷ U' ≫ α ≫ U ◁ β_V_U' ≫ U ◁ signEndo U' ▷ V ≫ α.inv
-    -- The residual "signEndo factors commute with α-conjugated β_V_U'" follows from
-    -- whisker_exchange + associator naturality. `monoidal` + targeted rewrites close.
-    -- This is the 1-2h tactic chain referenced in sq blueprint; deferred.
-    sorry
+    -- Residual: α.inv ≫ β_V_U ▷ U' ≫ α.hom ≫ U ◁ β_V_U' ≫ α.inv ≫ tensorHom (signEndo U) (signEndo U') ▷ V
+    --        = α.inv ≫ β_V_U ▷ U' ≫ signEndo U ▷ V ▷ U' ≫ α.hom ≫ U ◁ β_V_U' ≫ U ◁ signEndo U' ▷ V ≫ α.inv
+    -- Closure: expand tensorHom via whiskering; slide signEndo factors past β/α via naturalities
+    -- and `whisker_exchange`. Each step is LSP-verified via lean_multi_attempt.
+    rw [GradedObject.Monoidal.tensorHom_def]
+    show (α_ V U U').inv ≫ (β_ V U).hom ▷ U' ≫ (α_ U V U').hom ≫ U ◁ (β_ V U').hom ≫
+        (α_ U U' V).inv ≫ ((signEndo k U ▷ U') ≫ (U ◁ signEndo k U')) ▷ V = _
+    rw [MonoidalCategory.comp_whiskerRight,
+        ← MonoidalCategory.associator_inv_naturality_left_assoc,
+        MonoidalCategory.whisker_exchange_assoc,
+        ← MonoidalCategory.associator_naturality_left_assoc,
+        ← MonoidalCategory.associator_inv_naturality_middle]
   naturality {U U'} f := by
     -- Goal: (V ◁ f) ≫ β_sign(U').hom = β_sign(U).hom ≫ (f ▷ V)
     -- β_sign(X).hom = (β_ V X).hom ≫ signEndo k X ▷ V
@@ -635,14 +640,809 @@ noncomputable def extractBraidAction_a (X : Center (VecG_Cat k G2)) :
       else 0)
   exact step1 ≫ step2 ≫ step3 ≫ step4
 
-/-- The braid action is involutive (a² = e in G2). -/
+/-! ### Helpers for extractBraidAction_e_sq
+
+Per blueprint `Lit-Search/Phase-5s/5s-9-extractBraidAction_sq_blueprint.md`, the
+sq_e proof requires three helpers that together decompose the canonical
+summand-swap at the middle `desc ≫ ρ⁻¹ ≫ ι` junction into a form
+`HalfBraiding.monoidal` can consume. -/
+
+/-- **Helper 1 (forward map)**: from the (aAdd, aAdd) summand of `(U⊗U)(eAdd)`
+    project to `𝟙_(ModuleCat k)` via `eqToHom` + left unitor; zero on the
+    (eAdd, eAdd) summand (whose domain is `PUnit ⊗ PUnit = 0`). -/
+noncomputable def uu_at_eAdd_hom :
+    GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd) eAdd ⟶
+      𝟙_ (ModuleCat k) :=
+  GradedObject.Monoidal.tensorObjDesc (A := 𝟙_ (ModuleCat k))
+    (fun i₁ i₂ (hij : i₁ + i₂ = eAdd) =>
+      if h₁ : i₁ = aAdd then
+        have h₂ : i₂ = aAdd := by
+          subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+        (eqToHom (show lineGraded k aAdd i₁ ⊗ lineGraded k aAdd i₂ =
+            𝟙_ (ModuleCat k) ⊗ 𝟙_ (ModuleCat k) by
+          subst h₁; subst h₂; rfl)) ≫ (λ_ (𝟙_ (ModuleCat k))).hom
+      else 0)
+
+/-- **Helper 1 (inverse map)**: inject `𝟙_(ModuleCat k)` through the (aAdd, aAdd)
+    summand of `(U⊗U)(eAdd)` via the left unitor inverse + ι. -/
+noncomputable def uu_at_eAdd_inv :
+    𝟙_ (ModuleCat k) ⟶
+      GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd) eAdd :=
+  (λ_ (𝟙_ (ModuleCat k))).inv ≫
+    (eqToHom (show 𝟙_ (ModuleCat k) ⊗ 𝟙_ (ModuleCat k) =
+        lineGraded k aAdd aAdd ⊗ lineGraded k aAdd aAdd from by rfl)) ≫
+    GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd) (lineGraded k aAdd)
+      aAdd aAdd eAdd (by decide)
+
+/-- **Helper 1 (iso)**: `(U⊗U)(eAdd) ≅ 𝟙_(ModuleCat k)` where `U = lineGraded k aAdd`.
+    This packages the forward/inverse maps. -/
+noncomputable def uu_at_eAdd_iso :
+    GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd) eAdd ≅
+      𝟙_ (ModuleCat k) where
+  hom := uu_at_eAdd_hom k
+  inv := uu_at_eAdd_inv k
+  hom_inv_id := by
+    refine GradedObject.Monoidal.tensorObj_ext _ _ (fun i₁ i₂ hij => ?_)
+    unfold uu_at_eAdd_hom uu_at_eAdd_inv
+    rw [GradedObject.Monoidal.ι_tensorObjDesc_assoc]
+    by_cases h₁ : i₁ = aAdd
+    · have h₂ : i₂ = aAdd := by subst h₁; revert i₂ hij; decide
+      subst h₁; subst h₂
+      simp only [dite_true]
+      simp only [Category.assoc, Iso.hom_inv_id_assoc, Category.comp_id]
+      congr 1
+    · have h₁' : i₁ = eAdd := by
+        fin_cases i₁ <;> [rfl; (exfalso; apply h₁; decide)]
+      have h₂' : i₂ = eAdd := by subst h₁'; revert i₂ hij; decide
+      subst h₁'; subst h₂'
+      simp only [dite_false, h₁]
+      simp only [Category.comp_id]
+      apply Limits.IsZero.eq_of_src
+      exact Functor.map_isZero (tensorLeft _)
+        (ModuleCat.isZero_of_subsingleton (ModuleCat.of k PUnit))
+  inv_hom_id := by
+    unfold uu_at_eAdd_hom uu_at_eAdd_inv
+    simp only [Category.assoc]
+    erw [GradedObject.Monoidal.ι_tensorObjDesc]
+    simp only [dite_true]
+    -- (λ_).inv ≫ eqToHom ≫ eqToHom ≫ (λ_).hom = 𝟙 via unitor iso identity
+    convert Iso.inv_hom_id _ using 1
+
+/-- **Helper 2 (middleSwap identification)**: the middle `desc ≫ ρ⁻¹ ≫ ι` in
+    `extractBraidAction_e ≫ extractBraidAction_e` equals the canonical VecG_Cat
+    Day-convolution braiding `(β_ U X.fst).hom aAdd` at degree aAdd.
+
+    Proof intuition: both maps agree summand-wise. The (aAdd, eAdd) summand of
+    `(U⊗X.fst)(aAdd)` (= `U(aAdd) ⊗ X.fst(eAdd) = 𝟙_ ⊗ X.fst(eAdd)`) is the only
+    nontrivial summand. On it, `desc ≫ ρ⁻¹ ≫ ι` goes via `(λ_).hom ≫ (ρ_).inv`,
+    which matches `β_{ModuleCat, 𝟙_, X.fst eAdd}` = `(λ_).hom ≫ (ρ_).inv` (by
+    `braiding_tensorUnit_left`). The (eAdd, aAdd) summand on both sides is 0
+    (PUnit factor on source of desc / canonical β). -/
+private lemma middleSwap_eq_braiding (X : Center (VecG_Cat k G2)) :
+    (GradedObject.Monoidal.tensorObjDesc (A := X.fst eAdd)
+        (fun i₁ i₂ (hij : i₁ + i₂ = aAdd) =>
+          if h₁ : i₁ = aAdd then
+            have h₂ : i₂ = eAdd := by
+              subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+            (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
+                𝟙_ (ModuleCat k) ⊗ X.fst eAdd by
+              subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst eAdd)).hom
+          else 0)) ≫
+      (ρ_ (X.fst eAdd)).inv ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd)
+        eAdd aAdd aAdd (by decide) =
+    (BraidedCategory.braiding (lineGraded k aAdd) X.fst).hom aAdd := by
+  simp only [vecG_braiding_hom_apply]
+  refine GradedObject.Monoidal.tensorObj_ext _ _ (fun i₁ i₂ hij => ?_)
+  rw [GradedObject.Monoidal.ι_tensorObjDesc_assoc, GradedObject.Monoidal.ι_tensorObjDesc]
+  by_cases h₁ : i₁ = aAdd
+  · have h₂ : i₂ = eAdd := by subst h₁; revert i₂ hij; decide
+    subst h₁; subst h₂
+    simp only [dite_true]
+    change (eqToHom rfl ≫ (λ_ (X.fst eAdd)).hom) ≫ (ρ_ (X.fst eAdd)).inv ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd (by decide) =
+      (β_ (𝟙_ (ModuleCat k)) (X.fst eAdd)).hom ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd (by decide)
+    erw [braiding_tensorUnit_left, eqToHom_refl, Category.id_comp]
+    rfl
+  · have h₁' : i₁ = eAdd := by fin_cases i₁ <;> [rfl; (exfalso; apply h₁; decide)]
+    have h₂' : i₂ = aAdd := by subst h₁'; revert i₂ hij; decide
+    subst h₁'; subst h₂'
+    simp only [dite_false, h₁]
+    apply Limits.IsZero.eq_of_src
+    exact Functor.map_isZero (tensorRight _)
+      (ModuleCat.isZero_of_subsingleton (ModuleCat.of k PUnit))
+
+/-! ### Helper 3 infrastructure: `halfBraiding_at_unit` and `uu_iso_graded`
+
+Session 18 (2026-04-26): build both auxiliary pieces used by Helper 3 — the
+standard category-theoretic fact `(X.2.β 𝟙_).hom = (ρ_).hom ≫ (λ_).inv` and
+the full graded iso `U⊗U ≅ 𝟙_(VecG_Cat k G2)`. -/
+
+/-- **Auxiliary (halfBraiding at unit)**: For any Center object X in any
+    monoidal category, the half-braiding at the tensor unit equals the
+    canonical unitor composite.
+
+    **Proof:** Apply `BraidedCategory.braiding_tensorUnit_right` to X IN Center C
+    (which is always braided, even when C is not). Extract the underlying
+    morphism `.f` via `congrArg` + simp on Center coercions. -/
+private lemma halfBraiding_at_unit
+    {D : Type*} [Category D] [MonoidalCategory D] (X : Center D) :
+    (X.2.β (𝟙_ D)).hom = (ρ_ X.1).hom ≫ (λ_ X.1).inv := by
+  have h := CategoryTheory.braiding_tensorUnit_right X
+  have := congrArg Center.Hom.f h
+  simp only [Center.comp_f, Center.rightUnitor_hom_f, Center.leftUnitor_inv_f] at this
+  convert this
+
+/-- **Graded unit iso hom direction**: `(U⊗U) ⟶ 𝟙_(VecG_Cat k G2)` as a
+    morphism of graded objects (function `i ↦ morphism at degree i`).
+    At eAdd: uses Helper 1 (`uu_at_eAdd_hom`) combined with the defeq
+    `(𝟙_(VecG_Cat k G2)) eAdd = 𝟙_(ModuleCat k)`. At aAdd: zero map. -/
+noncomputable def uu_iso_graded_hom :
+    GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd) ⟶
+      (𝟙_ (VecG_Cat k G2)) := fun i =>
+  if h : i = eAdd then
+    eqToHom (by subst h; rfl) ≫ uu_at_eAdd_hom k ≫ eqToHom (by subst h; rfl)
+  else
+    0
+
+/-- **Graded unit iso inv direction**: `𝟙_(VecG_Cat k G2) ⟶ (U⊗U)` as a
+    morphism of graded objects. -/
+noncomputable def uu_iso_graded_inv :
+    (𝟙_ (VecG_Cat k G2)) ⟶
+      GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd) :=
+  fun i =>
+    if h : i = eAdd then
+      eqToHom (by subst h; rfl) ≫ uu_at_eAdd_inv k ≫ eqToHom (by subst h; rfl)
+    else
+      0
+
+/-- **Graded unit iso**: full VecG_Cat iso `U⊗U ≅ 𝟙_`. The hom direction
+    collapses (U⊗U)(eAdd) onto `𝟙_(ModuleCat k)` (via Helper 1's uu_at_eAdd_hom);
+    at aAdd, both sides are zero (U supported only at aAdd forces U⊗U(aAdd)=0;
+    unit graded at 0=eAdd has initial/zero value at aAdd≠0). -/
+noncomputable def uu_iso_graded :
+    GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd) ≅
+      (𝟙_ (VecG_Cat k G2)) where
+  hom := uu_iso_graded_hom k
+  inv := uu_iso_graded_inv k
+  hom_inv_id := by
+    funext i
+    unfold uu_iso_graded_hom uu_iso_graded_inv
+    by_cases h : i = eAdd
+    · subst h
+      simp only [dite_true, eqToHom_refl, Category.id_comp, Category.comp_id]
+      exact (uu_at_eAdd_iso k).hom_inv_id
+    · simp only [dite_false, h]
+      have h_aAdd : i = aAdd := by
+        fin_cases i <;> [exact absurd rfl h; rfl]
+      subst h_aAdd
+      refine GradedObject.Monoidal.tensorObj_ext _ _ (fun i₁ i₂ hij => ?_)
+      simp only [comp_zero]
+      by_cases h₁ : i₁ = aAdd
+      · have h₂ : i₂ = eAdd := by subst h₁; revert i₂ hij; decide
+        apply Limits.IsZero.eq_of_src
+        subst h₁; subst h₂
+        exact Functor.map_isZero (tensorLeft _)
+          (ModuleCat.isZero_of_subsingleton (ModuleCat.of k PUnit))
+      · have h₁' : i₁ = eAdd := by
+          fin_cases i₁ <;> [rfl; (exact absurd rfl h₁)]
+        apply Limits.IsZero.eq_of_src
+        subst h₁'
+        exact Functor.map_isZero (tensorRight _)
+          (ModuleCat.isZero_of_subsingleton (ModuleCat.of k PUnit))
+  inv_hom_id := by
+    funext i
+    unfold uu_iso_graded_hom uu_iso_graded_inv
+    by_cases h : i = eAdd
+    · subst h
+      simp only [dite_true, eqToHom_refl, Category.id_comp, Category.comp_id]
+      exact (uu_at_eAdd_iso k).inv_hom_id
+    · simp only [dite_false, h]
+      apply Limits.IsZero.eq_of_src
+      have h_aAdd : i = aAdd := by
+        fin_cases i <;> [exact absurd rfl h; rfl]
+      subst h_aAdd
+      exact Limits.IsInitial.isZero
+        (GradedObject.Monoidal.isInitialTensorUnitApply aAdd (by decide))
+
+/-! ### Session 31: hA sub-helper lemmas (modular decomposition per refactor plan)
+
+These helpers close the `halfBraiding_sq_identity` sub-claim `hA` via modular
+decomposition (mirroring hB's proven pattern). Each takes minimal explicit
+context to avoid the 12-hypothesis accumulator that triggers graded typeclass
+unifier walls (see `feedback_graded_typeclass_unifier_wall.md`). -/
+
+/-- **Session 31 helper 1 (alpha_merge)**: collapse `X ◁ λ⁻¹ ≫ α⁻¹ ≫ (ι ▷ U)` to
+    `(ρ⁻¹ ≫ ι) ▷ U` via triangle identity + comp_whiskerRight. Low-risk port of
+    Session 27 steps 1-4 to an isolated-context lemma. -/
+private lemma halfBraiding_hA_alpha_merge (X : Center (VecG_Cat k G2)) :
+    X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv ≫
+      (α_ (X.fst eAdd) (lineGraded k aAdd aAdd) (lineGraded k aAdd aAdd)).inv ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd
+        (by decide) ▷ lineGraded k aAdd aAdd =
+    ((ρ_ (X.fst eAdd)).inv ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd)
+        eAdd aAdd aAdd (by decide)) ▷ lineGraded k aAdd aAdd := by
+  have h_tri : X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv ≫
+      (α_ (X.fst eAdd) (lineGraded k aAdd aAdd) (lineGraded k aAdd aAdd)).inv =
+      (ρ_ (X.fst eAdd)).inv ▷ lineGraded k aAdd aAdd :=
+    CategoryTheory.MonoidalCategory.triangle_assoc_comp_left_inv
+      (X.fst eAdd) (lineGraded k aAdd aAdd)
+  rw [reassoc_of% h_tri]
+  exact (MonoidalCategory.comp_whiskerRight _ _ (lineGraded k aAdd aAdd)).symm
+
+
+/-- **Helper 3 (halfBraiding double-swap identity)**: The key identity required
+    by sq_e and sq_a. For ANY X : Center (VecG_Cat k G2), the composite
+    `ι ≫ β_X(U) ≫ β_can ≫ β_X(U) ≫ desc` at the appropriate degree indices
+    equals the right-unitor.
+
+    **Proof strategy** (infrastructure built in Session 18): use
+    `halfBraiding_at_unit` to collapse `β_X(𝟙_)` to unitor composite,
+    `uu_iso_graded` to relate `β_X(U⊗U)` ↔ `β_X(𝟙_)` via naturality,
+    `HalfBraiding.monoidal` to expand `β_X(U⊗U)` into 2 copies of `β_X(U)`,
+    then extract the graded (aAdd,aAdd,aAdd) summand via
+    `ιTensorObj₃'_associator_*`.
+
+    **Status:** proof body deferred; Helper 3 body still sorry pending the
+    graded-associator pointwise extraction (~100 LOC).
+
+    PROVIDED SOLUTION (Session 32 refactor, 2026-04-19)
+    The outer proof establishes hypotheses h_unit, h_nat, h_beta_UU, h_mon,
+    h_key, h_key_eAdd, h_pre, hpost, hgr, hρ, hlambda, hB (proved inline),
+    and assembles goal via `exact hA.symm.trans (hpost ▸ hB)`.
+
+    **hA body (Session 32, 3 tactic steps + sorry)**:
+    ```lean
+    simp only [Category.assoc]
+    erw [hpost]  -- LHS reduces to pre ≫ hpost.RHS = hB.LHS
+    erw [hB]     -- LHS reduces to (ρ_ X(eAdd)).hom
+    sorry        -- Goal: (ρ_ X(eAdd)).hom = middleSwap_form
+    ```
+
+    **Remaining sorry = parent_goal.symm**. The sorry content is exactly the
+    `.symm` of the parent `halfBraiding_sq_identity` statement (after rw [←
+    middleSwap_eq_braiding]). Closing it means proving the algebraic identity
+    `(ρ_ X(eAdd)).hom = ι ≫ β aAdd ≫ desc ≫ ρ⁻¹ ≫ ι ≫ β aAdd ≫ desc`.
+
+    **Strategy for Aristotle**: Either
+    (a) direct algebraic reduction via element-level `ext v` + induction on
+        TensorProduct + explicit substitution of `(X.snd.β U).hom aAdd`, OR
+    (b) structural: `rw [middleSwap_eq_braiding]` to convert RHS's
+        `desc ≫ ρ⁻¹ ≫ ι` back to `β_can aAdd`, giving the pre-middleSwap form
+        `(ρ_ X(eAdd)).hom = ι ≫ β ≫ β_can ≫ β ≫ desc`. Then prove via
+        summand-level extraction at (eAdd, aAdd, aAdd) of (X⊗U⊗U)(eAdd).
+
+    **Alternative**: mimic Mathlib's
+    `CategoryTheory.GradedObject.Monoidal.hexagon_reverse` (Braiding.lean
+    lines 101-135). Recipe: `ext k i₁ i₂ i₃ h; dsimp [braiding]; conv_lhs =>
+    rw [ιTensorObj₃_associator_inv_assoc, ιTensorObj₃'_eq X Y Z i₁ i₂ i₃ k h _ rfl,
+    assoc, ι_tensorObjDesc_assoc, assoc, ← MonoidalCategory.tensorHom_id,
+    BraidedCategory.braiding_naturality_assoc, BraidedCategory.braiding_tensor_left_hom,
+    ...]`. Adapt by replacing `BraidedCategory.braiding` with `X.snd.β`.
+
+    Do NOT add `set_option maxHeartbeats` overrides — the project builds clean at default.
+
+    Key lemmas available: `GradedObject.Monoidal.ι_tensorHom`, `ι_tensorHom_assoc`,
+    `ιTensorObj₃_eq`, `ιTensorObj₃'_eq`, `ιTensorObj₃_associator_inv`,
+    `ιTensorObj₃'_associator_hom`, `ι_tensorObjDesc`, `ι_tensorObjDesc_assoc`,
+    `middleSwap_eq_braiding` (above), `MonoidalCategory.comp_whiskerRight_assoc`,
+    `MonoidalCategory.tensorHom_id`, `tensorHom_comp_tensorHom_assoc`.
+
+    Also fill sorry at `halfBraiding_sq_identity_a` (mirror structure with
+    `eAdd ↔ aAdd` swap — Session 32 refactor pattern applies identically)
+    and h_cf2_G2 (H_CF2_center_equivalence assembly, requires full equivalence
+    construction via Equivalence.ofFullyFaithfulEssSurj). -/
+private lemma halfBraiding_sq_identity (X : Center (VecG_Cat k G2)) :
+    GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd
+        (by decide) ≫
+      (X.snd.β (lineGraded k aAdd)).hom aAdd ≫
+      (BraidedCategory.braiding (lineGraded k aAdd) X.fst).hom aAdd ≫
+      (X.snd.β (lineGraded k aAdd)).hom aAdd ≫
+      (GradedObject.Monoidal.tensorObjDesc (A := X.fst eAdd)
+        (fun i₁ i₂ (hij : i₁ + i₂ = aAdd) =>
+          if h₁ : i₁ = aAdd then
+            have h₂ : i₂ = eAdd := by
+              subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+            (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
+                𝟙_ (ModuleCat k) ⊗ X.fst eAdd by
+              subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst eAdd)).hom
+          else 0)) = (ρ_ (X.fst eAdd)).hom := by
+  -- Session 36 refactor (2026-04-20): element-level descent via
+  -- TensorProduct.induction_on. Uses LinearMap.map_zero/map_add explicitly
+  -- (simp doesn't propagate through ModuleCat.Hom.hom wrappers).
+  --
+  -- Setup h_key (non-circular: from HalfBraiding.monoidal + naturality + at_unit):
+  have h_unit := halfBraiding_at_unit X
+  have h_nat : X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv =
+      (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd))).hom ≫ (uu_iso_graded k).hom ▷ X.fst := by
+    have := X.2.naturality (uu_iso_graded k).hom
+    rw [h_unit] at this
+    exact this
+  have h_beta_UU :
+      (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd))).hom =
+      X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv ≫
+        (uu_iso_graded k).inv ▷ X.fst := by
+    have hiso : (uu_iso_graded k).hom ≫ (uu_iso_graded k).inv = 𝟙 _ :=
+      (uu_iso_graded k).hom_inv_id
+    rw [show (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+            (lineGraded k aAdd))).hom =
+          (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+            (lineGraded k aAdd))).hom ≫ (uu_iso_graded k).hom ▷ X.fst ≫
+              (uu_iso_graded k).inv ▷ X.fst by
+          rw [← MonoidalCategory.comp_whiskerRight, hiso,
+              MonoidalCategory.id_whiskerRight, Category.comp_id]]
+    rw [← Category.assoc, ← h_nat]
+    simp [Category.assoc]
+  have h_mon :
+      (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd))).hom =
+      (α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv ≫
+        (X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd ≫
+        (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom ≫
+        lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom ≫
+        (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv :=
+    X.2.monoidal (lineGraded k aAdd) (lineGraded k aAdd)
+  have h_key :
+      (α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv ≫
+        (X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd ≫
+        (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom ≫
+        lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom ≫
+        (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv =
+      X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv ≫
+        (uu_iso_graded k).inv ▷ X.fst := by
+    rw [← h_mon, h_beta_UU]
+  have h_key_eAdd := congrFun h_key eAdd
+  -- Session 37 (2026-04-20): Category-level Proof A via middleSwap substitution.
+  --
+  -- Strategy: rewrite `β_{can,U,X}.hom aAdd` (the middle braiding) using
+  -- `middleSwap_eq_braiding` in reverse, revealing the structure
+  --   LHS = (ι ≫ β(U)_a ≫ desc) ≫ ρ⁻¹ ≫ (ι ≫ β(U)_a ≫ desc)
+  -- Define `k := ι ≫ β(U)_a ≫ desc` : X.fst eAdd ⊗ U aAdd → X.fst eAdd.
+  -- Since U aAdd = 𝟙_(ModuleCat k), `k` has type X.fst eAdd ⊗ 𝟙_ → X.fst eAdd
+  -- same as `ρ.hom`. Goal: k ≫ ρ⁻¹ ≫ k = ρ.hom.
+  --
+  -- This is the element-descent tmul case pending algebraic content extraction.
+  apply ModuleCat.hom_ext
+  ext v
+  induction v using TensorProduct.induction_on with
+  | zero => exact (LinearMap.map_zero _).trans (LinearMap.map_zero _).symm
+  | add v₁ v₂ ih₁ ih₂ =>
+      exact (LinearMap.map_add _ v₁ v₂).trans
+        ((congrArg₂ (· + ·) ih₁ ih₂).trans (LinearMap.map_add _ v₁ v₂).symm)
+  | tmul x c =>
+      simp only [← ModuleCat.comp_apply, Category.assoc]
+      rw [← middleSwap_eq_braiding k X]
+      erw [ModuleCat.MonoidalCategory.rightUnitor_hom_apply]
+      -- Session 37 (2026-04-20): structural blocker is graded hexagon summand
+      -- extraction at (eAdd, aAdd, aAdd) of (X ⊗ U ⊗ U) eAdd. Algebraic content
+      -- verified: g² = 𝟙 where g = extractBraidAction_e element action, derived
+      -- from h_key_eAdd at `x ⊗ ι(1 ⊗ 1)`. 37 sessions attempted; Mathlib API
+      -- for ιTensorObj₃ summand extraction + abstract β(U) navigation not yet
+      -- sufficient. See working-docs/phase5s_wave9_centerfunctor_z2_state.md.
+      sorry
+  /- Session 33 proof retained as comment for reference:
+  -- Strategy: combine halfBraiding_at_unit + naturality of uu_iso_graded + HalfBraiding.monoidal
+  -- to pin down β_X(U⊗U). Then extract (eAdd,aAdd,aAdd) summand at degree eAdd.
+  have h_unit := halfBraiding_at_unit X
+  -- h_nat: naturality-at-uu collapsed via halfBraiding_at_unit
+  have h_nat : X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv =
+      (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd))).hom ≫ (uu_iso_graded k).hom ▷ X.fst := by
+    have := X.2.naturality (uu_iso_graded k).hom
+    rw [h_unit] at this
+    exact this
+  -- h_beta_UU: isolate β_X(U⊗U) by post-composing with uu.inv ▷ X
+  have h_beta_UU :
+      (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd))).hom =
+      X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv ≫
+        (uu_iso_graded k).inv ▷ X.fst := by
+    have hiso : (uu_iso_graded k).hom ≫ (uu_iso_graded k).inv = 𝟙 _ :=
+      (uu_iso_graded k).hom_inv_id
+    rw [show (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+            (lineGraded k aAdd))).hom =
+          (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+            (lineGraded k aAdd))).hom ≫ (uu_iso_graded k).hom ▷ X.fst ≫
+              (uu_iso_graded k).inv ▷ X.fst by
+          rw [← MonoidalCategory.comp_whiskerRight, hiso,
+              MonoidalCategory.id_whiskerRight, Category.comp_id]]
+    rw [← Category.assoc, ← h_nat]
+    simp [Category.assoc]
+  -- h_mon: HalfBraiding.monoidal expansion at (U, U), normalized to match h_beta_UU
+  have h_mon :
+      (X.snd.β (GradedObject.Monoidal.tensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd))).hom =
+      (α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv ≫
+        (X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd ≫
+        (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom ≫
+        lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom ≫
+        (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv :=
+    X.2.monoidal (lineGraded k aAdd) (lineGraded k aAdd)
+  -- Combine: 5-step α/β chain equals the unit-based expression
+  have h_key :
+      (α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv ≫
+        (X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd ≫
+        (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom ≫
+        lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom ≫
+        (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv =
+      X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv ≫
+        (uu_iso_graded k).inv ▷ X.fst := by
+    rw [← h_mon, h_beta_UU]
+  -- h_key_eAdd: evaluate h_key at degree eAdd. Pointwise in GradedObject.
+  have h_key_eAdd : ((α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv ≫
+      (X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd ≫
+      (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom ≫
+      lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom ≫
+      (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv) eAdd =
+    (X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom ≫ (λ_ X.fst).inv ≫
+      (uu_iso_graded k).inv ▷ X.fst) eAdd :=
+    congrFun h_key eAdd
+  -- Precompose h_key with ιTensorObj₃ at (eAdd, aAdd, aAdd) then evaluate at eAdd.
+  -- This gives a ModuleCat equation suitable for summand-level extraction.
+  have h_pre : GradedObject.Monoidal.ιTensorObj₃ X.fst (lineGraded k aAdd)
+      (lineGraded k aAdd) eAdd aAdd aAdd eAdd (by decide) ≫
+      ((α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv eAdd) ≫
+      ((X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd) eAdd ≫
+      ((α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom eAdd) ≫
+      (lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom) eAdd ≫
+      ((α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv eAdd) =
+    GradedObject.Monoidal.ιTensorObj₃ X.fst (lineGraded k aAdd)
+      (lineGraded k aAdd) eAdd aAdd aAdd eAdd (by decide) ≫
+      (X.fst ◁ (uu_iso_graded k).hom) eAdd ≫
+      (ρ_ X.fst).hom eAdd ≫
+      (λ_ X.fst).inv eAdd ≫
+      ((uu_iso_graded k).inv ▷ X.fst) eAdd := by
+    have := congrArg (fun (f : GradedObject.Monoidal.tensorObj X.fst
+        (GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd)) ⟶
+          GradedObject.Monoidal.tensorObj (GradedObject.Monoidal.tensorObj
+            (lineGraded k aAdd) (lineGraded k aAdd)) X.fst) =>
+      GradedObject.Monoidal.ιTensorObj₃ X.fst (lineGraded k aAdd) (lineGraded k aAdd)
+        eAdd aAdd aAdd eAdd (by decide) ≫ f eAdd) h_key
+    simpa using this
+  -- Collapse LHS associator via ιTensorObj₃_associator_inv_assoc (note: erw due
+  -- to defeq between α_ (VecG_Cat MonoidalCategoryStruct) and
+  -- GradedObject.Monoidal.associator)
+  erw [GradedObject.Monoidal.ιTensorObj₃_associator_inv_assoc,
+    GradedObject.Monoidal.ιTensorObj₃'_eq _ _ _ eAdd aAdd aAdd eAdd
+      (by decide) aAdd (by decide : eAdd + aAdd = aAdd)] at h_pre
+  -- Bridge `▷` / `◁` to `tensorHom` form so `ι_tensorHom` applies (defeq at rfl).
+  rw [show ((X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd) =
+        GradedObject.Monoidal.tensorHom (X.snd.β (lineGraded k aAdd)).hom
+          (𝟙 (lineGraded k aAdd)) from rfl,
+      show (lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom) =
+        GradedObject.Monoidal.tensorHom (𝟙 (lineGraded k aAdd))
+          (X.snd.β (lineGraded k aAdd)).hom from rfl] at h_pre
+  -- Session 21 pivot (2026-04-19): replace β_can_aAdd with `desc ≫ ρ⁻¹ ≫ ι` via
+  -- `middleSwap_eq_braiding` (already proven at line 721). This collapses the
+  -- goal from `ι ≫ β_X(U) ≫ β_can ≫ β_X(U) ≫ desc = ρ.hom` into the structurally
+  -- cleaner `(ι ≫ β_X(U) ≫ desc) ≫ ρ⁻¹ ≫ (ι ≫ β_X(U) ≫ desc) = ρ.hom` — which is
+  -- algebraically equivalent to `extractBraidAction_e² = 𝟙`.
+  rw [← middleSwap_eq_braiding]
+  -- Goal: ι ≫ β ≫ (desc ≫ ρ⁻¹ ≫ ι) ≫ β ≫ desc = ρ.hom
+  -- Strategy: post-compose h_pre with (uu.hom ▷ X) eAdd ≫ λ.hom eAdd.
+  -- RHS simplification: (uu.inv ▷ X) ≫ (uu.hom ▷ X) = 𝟙, λ.inv ≫ λ.hom = 𝟙.
+  -- LHS remains the hexagon chain with post-composition, which we then match
+  -- to the goal's structure via pre-composition with (ρ_ (X eAdd ⊗ 𝟙_)).inv.
+  have hpost := congrArg (fun (f : _ ⟶ _) =>
+      f ≫ ((uu_iso_graded k).hom ▷ X.fst) eAdd ≫ (λ_ X.fst).hom eAdd) h_pre
+  simp only [Category.assoc] at hpost
+  -- Graded-level cancellation: (uu.inv ≫ uu.hom) ▷ X = 𝟙
+  have hgr : ((uu_iso_graded k).inv ▷ X.fst) ≫ ((uu_iso_graded k).hom ▷ X.fst) = 𝟙 _ := by
+    rw [← MonoidalCategory.comp_whiskerRight, (uu_iso_graded k).inv_hom_id,
+        MonoidalCategory.id_whiskerRight]
+  have hρ : ((uu_iso_graded k).inv ▷ X.fst) eAdd ≫ ((uu_iso_graded k).hom ▷ X.fst) eAdd =
+      𝟙 _ := congrFun hgr eAdd
+  -- Use reassoc version to handle right-associated composition pattern
+  rw [reassoc_of% hρ] at hpost
+  -- Now hpost RHS: ι₃ ≫ (X ◁ uu.hom) eAdd ≫ ρ.hom eAdd ≫ λ.inv eAdd ≫ λ.hom eAdd
+  -- λ.inv ≫ λ.hom = 𝟙 should also cancel
+  have hlambda : (λ_ X.fst).inv eAdd ≫ (λ_ X.fst).hom eAdd = 𝟙 _ :=
+    congrFun (λ_ X.fst).inv_hom_id eAdd
+  rw [hlambda, Category.comp_id] at hpost
+  -- hpost now: (α⁻¹ ≫ (ι▷ ≫ ι') ≫ β⊗id ≫ α ≫ id⊗β ≫ α⁻¹) ≫ (uu.hom ▷ X) eAdd ≫ λ.hom eAdd
+  --         = ι₃ ≫ (X ◁ uu.hom) eAdd ≫ ρ.hom eAdd
+  --
+  -- Session 23 (2026-04-19): bridge hpost → goal via pre-composition with
+  --   pre := X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv : X(eAdd)⊗𝟙 → X(eAdd)⊗(𝟙⊗𝟙)
+  -- Two sub-claims combined:
+  --   (A) pre ≫ hpost.LHS = goal.LHS  (hexagon ≡ goal summand extraction)
+  --   (B) pre ≫ hpost.RHS = (ρ_ X(eAdd)).hom  (pure unitor coherence via
+  --       rightUnitor_inv_apply + uu_iso_graded definition unfolding)
+  -- Once both close, the goal follows by: goal.LHS = (A.symm) = pre ≫ hpost.LHS
+  --   = pre ≫ hpost.RHS (by hpost) = (B) = (ρ_ X(eAdd)).hom.
+  --
+  -- Session 32 (2026-04-19): REORDER — hB proved first so hA body can use it
+  -- via `rw [hB]` after `simp; erw [hpost]` normalization. This reduces hA's
+  -- remaining sorry from the 8-factor α/β chain to a clean 2-morphism identity
+  -- `(ρ_ X(eAdd)).hom = middleSwap_form` (which is the parent goal's content).
+  have hB : (X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv) ≫
+      GradedObject.Monoidal.ιTensorObj₃ X.fst (lineGraded k aAdd)
+        (lineGraded k aAdd) eAdd aAdd aAdd eAdd (by decide) ≫
+      (X.fst ◁ (uu_iso_graded k).hom) eAdd ≫
+      (ρ_ X.fst).hom eAdd =
+    (ρ_ (X.fst eAdd)).hom := by
+    rw [GradedObject.Monoidal.ιTensorObj₃_eq X.fst (lineGraded k aAdd)
+          (lineGraded k aAdd) eAdd aAdd aAdd eAdd (by decide) eAdd
+          (by decide : aAdd + aAdd = eAdd)]
+    change X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv ≫
+        X.fst eAdd ◁ GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd) aAdd aAdd eAdd (by decide) ≫
+        GradedObject.Monoidal.ιTensorObj X.fst
+          (GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd))
+          eAdd eAdd eAdd (by decide : eAdd + eAdd = eAdd) ≫
+        (X.fst ◁ (uu_iso_graded k).hom) eAdd ≫ (ρ_ X.fst).hom eAdd =
+      (ρ_ (X.fst eAdd)).hom
+    -- Session 25: normalize whiskerLeft to tensorHom first via `show`, then erw
+    show X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv ≫
+        X.fst eAdd ◁ GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd) aAdd aAdd eAdd (by decide) ≫
+        GradedObject.Monoidal.ιTensorObj X.fst
+          (GradedObject.Monoidal.tensorObj (lineGraded k aAdd) (lineGraded k aAdd))
+          eAdd eAdd eAdd (by decide : eAdd + eAdd = eAdd) ≫
+        GradedObject.Monoidal.tensorHom (𝟙 X.fst) (uu_iso_graded k).hom eAdd ≫
+        (ρ_ X.fst).hom eAdd =
+      (ρ_ (X.fst eAdd)).hom
+    erw [GradedObject.Monoidal.ι_tensorHom_assoc (𝟙 X.fst) (uu_iso_graded k).hom
+          eAdd eAdd eAdd (by decide : eAdd + eAdd = eAdd) ((ρ_ X.fst).hom eAdd)]
+    -- Convert `𝟙 X.fst eAdd ⊗ₘ uu.hom eAdd` → `X.fst eAdd ◁ uu.hom eAdd` (defeq).
+    show X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv ≫
+        X.fst eAdd ◁ GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd)
+          (lineGraded k aAdd) aAdd aAdd eAdd (by decide) ≫
+        X.fst eAdd ◁ (uu_iso_graded k).hom eAdd ≫
+        GradedObject.Monoidal.ιTensorObj X.fst (𝟙_ (VecG_Cat k G2)) eAdd eAdd eAdd
+          (by decide : eAdd + eAdd = eAdd) ≫
+        (ρ_ X.fst).hom eAdd =
+      (ρ_ (X.fst eAdd)).hom
+    -- Merge three whiskerings X.fst eAdd ◁ _ into one via functoriality
+    erw [← MonoidalCategory.whiskerLeft_comp_assoc,
+         ← MonoidalCategory.whiskerLeft_comp_assoc]
+    -- Prove the inner composition equals tensorUnit₀.inv
+    have h_inner : ((λ_ (𝟙_ (ModuleCat k))).inv ≫
+          GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd) (lineGraded k aAdd)
+            aAdd aAdd eAdd (by decide)) ≫ (uu_iso_graded k).hom eAdd =
+        GradedObject.Monoidal.tensorUnit₀.inv := by
+      -- Key: `(λ_).inv ≫ ι_UU aAdd aAdd eAdd ≫ uu_at_eAdd_hom = 𝟙` from
+      -- (uu_at_eAdd_iso k).inv_hom_id, since uu_at_eAdd_inv's internal eqToHom is
+      -- rfl (lineGraded k aAdd aAdd = 𝟙 defeq).
+      have h_step : ((λ_ (𝟙_ (ModuleCat k))).inv ≫
+            GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd) (lineGraded k aAdd)
+              aAdd aAdd eAdd (by decide)) ≫ uu_at_eAdd_hom k =
+          𝟙 (𝟙_ (ModuleCat k)) := by
+        have hio := (uu_at_eAdd_iso k).inv_hom_id
+        unfold uu_at_eAdd_inv at hio
+        convert hio using 2
+      -- uu_iso_graded_hom k eAdd reduces to eqToHom ≫ uu_at_eAdd_hom ≫ eqToHom
+      -- after dif_pos rfl. Both outer eqToHoms have rfl proofs (types defeq).
+      change ((λ_ (𝟙_ (ModuleCat k))).inv ≫
+          GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd) (lineGraded k aAdd)
+            aAdd aAdd eAdd (by decide)) ≫ uu_iso_graded_hom k eAdd =
+        GradedObject.Monoidal.tensorUnit₀.inv
+      conv_lhs => rw [show uu_iso_graded_hom k eAdd = uu_at_eAdd_hom k ≫
+        GradedObject.Monoidal.tensorUnit₀.inv from rfl]
+      calc ((λ_ (𝟙_ (ModuleCat k))).inv ≫
+            GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd) (lineGraded k aAdd)
+              aAdd aAdd eAdd (by decide)) ≫
+          uu_at_eAdd_hom k ≫ GradedObject.Monoidal.tensorUnit₀.inv
+          = (((λ_ (𝟙_ (ModuleCat k))).inv ≫
+              GradedObject.Monoidal.ιTensorObj (lineGraded k aAdd) (lineGraded k aAdd)
+                aAdd aAdd eAdd (by decide)) ≫ uu_at_eAdd_hom k) ≫
+            GradedObject.Monoidal.tensorUnit₀.inv := (Category.assoc _ _ _).symm
+        _ = 𝟙 _ ≫ GradedObject.Monoidal.tensorUnit₀.inv := by rw [h_step]; rfl
+        _ = GradedObject.Monoidal.tensorUnit₀.inv := Category.id_comp _
+    rw [h_inner]
+    -- Now goal: X.fst eAdd ◁ tU₀.inv ≫ ι_{X,tU,eAdd,eAdd,eAdd} ≫ (ρ_ X.fst).hom eAdd
+    --        = (ρ_ (X.fst eAdd)).hom
+    -- Use rightUnitor_inv_apply (rfl) to identify X.fst eAdd ◁ tU₀.inv ≫ ι as
+    -- (ρ_ X(eAdd)).hom ≫ (ρ_ X.fst).inv eAdd, then cancel ρ.inv ≫ ρ.hom.
+    -- Direct derivation using rfl form of (ρ_ X.fst).inv eAdd.
+    have h_ρ_inv : (ρ_ X.fst).inv eAdd = (ρ_ (X.fst eAdd)).inv ≫
+        X.fst eAdd ◁ GradedObject.Monoidal.tensorUnit₀.inv ≫
+        GradedObject.Monoidal.ιTensorObj X.fst (𝟙_ (VecG_Cat k G2)) eAdd eAdd eAdd
+          (by decide : eAdd + eAdd = eAdd) := rfl
+    -- ρ hom_inv_id, pointwise at eAdd
+    have h_ρ_inv_hom_eAdd : (ρ_ X.fst).inv eAdd ≫ (ρ_ X.fst).hom eAdd =
+        𝟙 (X.fst eAdd) := congrFun (ρ_ X.fst).inv_hom_id eAdd
+    -- Step 1: show X ◁ tU₀.inv ≫ ι = (ρ_ X(eAdd)).hom ≫ (ρ_ X.fst).inv eAdd
+    have step1 : X.fst eAdd ◁ GradedObject.Monoidal.tensorUnit₀.inv ≫
+        GradedObject.Monoidal.ιTensorObj X.fst (𝟙_ (VecG_Cat k G2)) eAdd eAdd eAdd
+          (by decide : eAdd + eAdd = eAdd) =
+        (ρ_ (X.fst eAdd)).hom ≫ (ρ_ X.fst).inv eAdd := by
+      rw [h_ρ_inv]
+      exact (Iso.hom_inv_id_assoc (ρ_ (X.fst eAdd)) _).symm
+    -- Step 2: close via step1 + pointwise ρ inv_hom_id
+    calc X.fst eAdd ◁ GradedObject.Monoidal.tensorUnit₀.inv ≫
+          GradedObject.Monoidal.ιTensorObj X.fst (𝟙_ (VecG_Cat k G2)) eAdd eAdd eAdd
+            (by decide : eAdd + eAdd = eAdd) ≫ (ρ_ X.fst).hom eAdd
+        = (X.fst eAdd ◁ GradedObject.Monoidal.tensorUnit₀.inv ≫
+            GradedObject.Monoidal.ιTensorObj X.fst (𝟙_ (VecG_Cat k G2)) eAdd eAdd eAdd
+              (by decide : eAdd + eAdd = eAdd)) ≫ (ρ_ X.fst).hom eAdd :=
+          (Category.assoc _ _ _).symm
+      _ = ((ρ_ (X.fst eAdd)).hom ≫ (ρ_ X.fst).inv eAdd) ≫ (ρ_ X.fst).hom eAdd :=
+          congrArg (· ≫ (ρ_ X.fst).hom eAdd) step1
+      _ = (ρ_ (X.fst eAdd)).hom ≫ ((ρ_ X.fst).inv eAdd ≫ (ρ_ X.fst).hom eAdd) :=
+          Category.assoc _ _ _
+      _ = (ρ_ (X.fst eAdd)).hom ≫ 𝟙 _ := by rw [h_ρ_inv_hom_eAdd]
+      _ = (ρ_ (X.fst eAdd)).hom := Category.comp_id _
+  have hA : (X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv) ≫
+      ((α_ (X.fst eAdd) (lineGraded k aAdd aAdd) (lineGraded k aAdd aAdd)).inv ≫
+        GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd
+            (by decide) ▷ lineGraded k aAdd aAdd ≫
+          GradedObject.Monoidal.ιTensorObj
+              (GradedObject.Monoidal.tensorObj X.fst (lineGraded k aAdd))
+              (lineGraded k aAdd) aAdd aAdd eAdd (by decide) ≫
+            GradedObject.Monoidal.tensorHom (X.snd.β (lineGraded k aAdd)).hom
+                (𝟙 (lineGraded k aAdd)) eAdd ≫
+              (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom eAdd ≫
+                GradedObject.Monoidal.tensorHom (𝟙 (lineGraded k aAdd))
+                    (X.snd.β (lineGraded k aAdd)).hom eAdd ≫
+                  (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv eAdd) ≫
+      ((uu_iso_graded k).hom ▷ X.fst) eAdd ≫ (λ_ X.fst).hom eAdd =
+    GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd
+        (by decide) ≫
+      (X.snd.β (lineGraded k aAdd)).hom aAdd ≫
+      ((GradedObject.Monoidal.tensorObjDesc (A := X.fst eAdd)
+            (fun i₁ i₂ (hij : i₁ + i₂ = aAdd) =>
+              if h₁ : i₁ = aAdd then
+                have h₂ : i₂ = eAdd := by
+                  subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+                (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
+                    𝟙_ (ModuleCat k) ⊗ X.fst eAdd by
+                  subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst eAdd)).hom
+              else 0)) ≫
+          (ρ_ (X.fst eAdd)).inv ≫
+          GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) eAdd aAdd aAdd
+              (by decide)) ≫
+      (X.snd.β (lineGraded k aAdd)).hom aAdd ≫
+      GradedObject.Monoidal.tensorObjDesc (A := X.fst eAdd)
+        (fun i₁ i₂ (hij : i₁ + i₂ = aAdd) =>
+          if h₁ : i₁ = aAdd then
+            have h₂ : i₂ = eAdd := by
+              subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+            (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
+                𝟙_ (ModuleCat k) ⊗ X.fst eAdd by
+              subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst eAdd)).hom
+          else 0) := by
+    -- Session 36 (2026-04-20): Proof A (category-level) per deep research
+    -- `5s-9-Proof body for hA in halfBraiding_sq_identity.md`.
+    --
+    -- Session 36 progress: built `h_simp_cat`, a non-circular category-level
+    -- form of the hexagon identity: postcomposing h_key with
+    --   (uu_iso_graded k).hom ▷ X.fst ≫ (λ_ X.fst).hom
+    -- and cancelling the two iso pairs (uu.inv ▷ X ≫ uu.hom ▷ X = 𝟙 via hgr,
+    -- and λ.inv ≫ λ.hom = 𝟙 via Iso.inv_hom_id) yields
+    --   hexagon ≫ (uu_iso_graded k).hom ▷ X.fst ≫ (λ_ X.fst).hom
+    --   = X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom.
+    -- Evaluating at eAdd via congrFun gives `h_simp_e`, an eAdd-pointwise
+    -- equality of compositions in ModuleCat k. This matches the LHS of hA's
+    -- preamble-reduced goal ONLY UP TO SUMMAND EXTRACTION via α-associators,
+    -- tensorHom reshapes, and the graded colimit ι inclusion — the residual
+    -- content is the genuinely-hard graded hexagon identity at the (aAdd,aAdd)
+    -- summand of U⊗U at eAdd (Session 35 analysis). Closing the sorry
+    -- requires matching h_simp_e.type with the residual goal via the
+    -- mathlib `GradedObject.Monoidal.ιTensorObj₃_eq` family plus manual
+    -- unfolding of graded `α` and `tensorHom` at eAdd.
+    have h_simp_cat :
+        ((α_ X.fst (lineGraded k aAdd) (lineGraded k aAdd)).inv ≫
+            (X.snd.β (lineGraded k aAdd)).hom ▷ lineGraded k aAdd ≫
+            (α_ (lineGraded k aAdd) X.fst (lineGraded k aAdd)).hom ≫
+            lineGraded k aAdd ◁ (X.snd.β (lineGraded k aAdd)).hom ≫
+            (α_ (lineGraded k aAdd) (lineGraded k aAdd) X.fst).inv) ≫
+          (uu_iso_graded k).hom ▷ X.fst ≫ (λ_ X.fst).hom =
+        X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom := by
+      rw [h_key]
+      show (X.fst ◁ (uu_iso_graded k).hom) ≫ ((ρ_ X.fst).hom ≫
+          ((λ_ X.fst).inv ≫ ((uu_iso_graded k).inv ▷ X.fst ≫
+            ((uu_iso_graded k).hom ▷ X.fst ≫ (λ_ X.fst).hom)))) =
+          X.fst ◁ (uu_iso_graded k).hom ≫ (ρ_ X.fst).hom
+      rw [reassoc_of% hgr, Iso.inv_hom_id, Category.comp_id]
+    have _h_simp_e := congrFun h_simp_cat eAdd
+    -- h_simp_e : hexagon_at_eAdd ≫ (uu.hom▷X) eAdd ≫ λ.hom eAdd
+    --          = (X ◁ uu.hom) eAdd ≫ ρ.hom eAdd
+    -- Preamble: 5 reductions on hA's goal (inherited from Session 33).
+    simp only [Category.assoc]
+    rw [reassoc_of% (halfBraiding_hA_alpha_merge (k := k) X)]
+    erw [GradedObject.Monoidal.ι_tensorHom_assoc]
+    erw [← MonoidalCategory.comp_whiskerRight_assoc]
+    conv_rhs => { slice 3 5; erw [middleSwap_eq_braiding (k := k) X] }
+    sorry
+  exact hA.symm.trans (hpost ▸ hB)
+  -/
+
+/-- **Helper 2 (a-case)**: the middle `desc_eAdd ≫ ρ⁻¹ ≫ ι_eAdd` in
+    `extractBraidAction_a ≫ extractBraidAction_a` equals the canonical VecG_Cat
+    Day-convolution braiding `(β_ U X.fst).hom eAdd` at degree eAdd. Parallel
+    to `middleSwap_eq_braiding` but at eAdd instead of aAdd.
+    (Session 21 2026-04-19: moved above Helper 3_a to enable the
+    `rw [← middleSwap_eq_braiding_a]` structural rewrite in Helper 3_a.) -/
+private lemma middleSwap_eq_braiding_a (X : Center (VecG_Cat k G2)) :
+    (GradedObject.Monoidal.tensorObjDesc (A := X.fst aAdd)
+        (fun i₁ i₂ (hij : i₁ + i₂ = eAdd) =>
+          if h₁ : i₁ = aAdd then
+            have h₂ : i₂ = aAdd := by
+              subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+            (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
+                𝟙_ (ModuleCat k) ⊗ X.fst aAdd by
+              subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst aAdd)).hom
+          else 0)) ≫
+      (ρ_ (X.fst aAdd)).inv ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd)
+        aAdd aAdd eAdd (by decide) =
+    (BraidedCategory.braiding (lineGraded k aAdd) X.fst).hom eAdd := by
+  simp only [vecG_braiding_hom_apply]
+  refine GradedObject.Monoidal.tensorObj_ext _ _ (fun i₁ i₂ hij => ?_)
+  rw [GradedObject.Monoidal.ι_tensorObjDesc_assoc, GradedObject.Monoidal.ι_tensorObjDesc]
+  by_cases h₁ : i₁ = aAdd
+  · have h₂ : i₂ = aAdd := by subst h₁; revert i₂ hij; decide
+    subst h₁; subst h₂
+    simp only [dite_true]
+    change (eqToHom rfl ≫ (λ_ (X.fst aAdd)).hom) ≫ (ρ_ (X.fst aAdd)).inv ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) aAdd aAdd eAdd (by decide) =
+      (β_ (𝟙_ (ModuleCat k)) (X.fst aAdd)).hom ≫
+      GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) aAdd aAdd eAdd (by decide)
+    erw [braiding_tensorUnit_left, eqToHom_refl, Category.id_comp]
+    rfl
+  · have h₁' : i₁ = eAdd := by fin_cases i₁ <;> [rfl; (exfalso; apply h₁; decide)]
+    have h₂' : i₂ = eAdd := by subst h₁'; revert i₂ hij; decide
+    subst h₁'; subst h₂'
+    simp only [dite_false, h₁]
+    apply Limits.IsZero.eq_of_src
+    exact Functor.map_isZero (tensorRight _)
+      (ModuleCat.isZero_of_subsingleton (ModuleCat.of k PUnit))
+
+/-- **Helper 3 analog (a-case)**: parallel identity needed for sq_a. -/
+private lemma halfBraiding_sq_identity_a (X : Center (VecG_Cat k G2)) :
+    GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) aAdd aAdd eAdd
+        (by decide) ≫
+      (X.snd.β (lineGraded k aAdd)).hom eAdd ≫
+      (BraidedCategory.braiding (lineGraded k aAdd) X.fst).hom eAdd ≫
+      (X.snd.β (lineGraded k aAdd)).hom eAdd ≫
+      (GradedObject.Monoidal.tensorObjDesc (A := X.fst aAdd)
+        (fun i₁ i₂ (hij : i₁ + i₂ = eAdd) =>
+          if h₁ : i₁ = aAdd then
+            have h₂ : i₂ = aAdd := by
+              subst h₁; revert i₂; intro i₂ hij; revert hij; revert i₂; decide
+            (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
+                𝟙_ (ModuleCat k) ⊗ X.fst aAdd by
+              subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst aAdd)).hom
+          else 0)) = (ρ_ (X.fst aAdd)).hom := by
+  -- Session 36 (2026-04-20): parallel refactor to parent's element descent.
+  -- Zero + add cases close via LinearMap.map_zero / map_add. Tmul case
+  -- requires same algebraic content as parent (f̃² = 𝟙 via h_key at aAdd).
+  apply ModuleCat.hom_ext
+  ext v
+  induction v using TensorProduct.induction_on with
+  | zero => exact (LinearMap.map_zero _).trans (LinearMap.map_zero _).symm
+  | add v₁ v₂ ih₁ ih₂ =>
+      exact (LinearMap.map_add _ v₁ v₂).trans
+        ((congrArg₂ (· + ·) ih₁ ih₂).trans (LinearMap.map_add _ v₁ v₂).symm)
+  | tmul x c => sorry
+
 lemma extractBraidAction_e_sq (X : Center (VecG_Cat k G2)) :
     extractBraidAction_e k X ≫ extractBraidAction_e k X = 𝟙 _ := by
-  sorry
+  unfold extractBraidAction_e
+  simp only [Category.assoc]
+  slice_lhs 4 6 => erw [middleSwap_eq_braiding]
+  -- Residual: ρ⁻¹ ≫ ι ≫ β_X(U) ≫ β_can ≫ β_X(U) ≫ desc = 𝟙
+  -- Peel off ρ⁻¹ via Iso.inv_hom_id; reduce to halfBraiding_sq_identity.
+  rw [show (𝟙 (X.fst eAdd) : X.fst eAdd ⟶ X.fst eAdd) =
+        (ρ_ (X.fst eAdd)).inv ≫ (ρ_ (X.fst eAdd)).hom from (Iso.inv_hom_id _).symm]
+  congr 1
+  exact halfBraiding_sq_identity k X
 
 lemma extractBraidAction_a_sq (X : Center (VecG_Cat k G2)) :
     extractBraidAction_a k X ≫ extractBraidAction_a k X = 𝟙 _ := by
-  sorry
+  unfold extractBraidAction_a
+  simp only [Category.assoc]
+  slice_lhs 4 6 => erw [middleSwap_eq_braiding_a]
+  -- Reduce to halfBraiding_sq_identity_a via unitor coherence.
+  rw [show (𝟙 (X.fst aAdd) : X.fst aAdd ⟶ X.fst aAdd) =
+        (ρ_ (X.fst aAdd)).inv ≫ (ρ_ (X.fst aAdd)).hom from (Iso.inv_hom_id _).symm]
+  congr 1
+  exact halfBraiding_sq_identity_a k X
 
 /-- For the vacuum anyon (canonical braiding), the braid action is identity.
     PROVED 2026-04-18 (Session 6 round 3) via the deep-research-blueprint
@@ -1108,9 +1908,25 @@ noncomputable def canonicalCenterToRep : Center (VecG_Cat k G2) ⥤ ModuleCat (D
   map_id X := by ext v <;> dsimp <;> simp
   map_comp {X Y Z} f g := by ext v <;> dsimp <;> simp
 
+/-- Faithfulness of the canonical center-to-rep functor: two morphisms agreeing
+    pointwise on `eAdd` and `aAdd` are equal.  Cherry-picked from Aristotle run
+    `5d5951c1` (2026-04-20); the only component the prover produced that
+    compiles cleanly under Lean 4.29 + our `set_option` hygiene. -/
+private noncomputable instance canonicalCenterToRep_faithful [Field k] [CharZero k] :
+    (canonicalCenterToRep k).Faithful := by
+  refine ⟨ ?_ ⟩
+  intro X Y f g hfg
+  have h_eq : f.f eAdd = g.f eAdd ∧ f.f aAdd = g.f aAdd := by
+    injection hfg with hfg
+    simp_all +decide [funext_iff, ModuleCat.hom_ext_iff]
+    exact ⟨DFunLike.ext _ _ fun x => hfg x 0 |>.1,
+           DFunLike.ext _ _ fun x => hfg 0 x |>.2⟩
+  exact (by ext i; fin_cases i <;> tauto)
+
 /-- H_CF2 discharge for G = G2: the canonical functor gives an equivalence. -/
 theorem h_cf2_G2 [Field k] [CharZero k] : H_CF2_center_equivalence k G2 := by
-  -- Assemble via Equivalence.ofFullyFaithfulEssSurj once Full/Faithful/EssSurj proved
+  -- Assemble via Equivalence.ofFullyFaithfulEssSurj once Full/Faithful/EssSurj proved.
+  -- Faithful is already established above (Aristotle cherry-pick, Session 33).
   sorry
 
 end AnyonConstruction
