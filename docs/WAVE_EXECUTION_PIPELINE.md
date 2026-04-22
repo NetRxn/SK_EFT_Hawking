@@ -232,9 +232,25 @@ uv run python scripts/submit_to_aristotle.py --resume <UUID>
 
 **Actions:**
 ```bash
-cd lean && lake build                    # Must complete with zero sorry, zero errors
+cd lean
+lake build                               # Library only (per defaultTargets); must complete clean
+lake build SKEFTHawking.ExtractDeps      # Library + ExtractDeps.olean (needed by graph_integrity, counts_fresh)
 grep -c "^theorem " SKEFTHawking/*.lean  # Count theorems per module
 grep -c "^axiom " SKEFTHawking/*.lean    # Count axioms
+
+# Trustworthy clean baseline (no-cache rebuild — use after toolchain/structural changes):
+rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps
+# ^ Single command rebuilds library + ExtractDeps.olean from scratch without
+#   triggering the macOS native-link failure. Do NOT use `lake build` alone —
+#   it leaves ExtractDeps.olean missing (breaks graph_integrity, counts_fresh).
+#   Do NOT use `lake build extractDeps` — macOS argument-length limit fails the link.
+#
+# Historical note (2026-04-22): prior to this date, the published clean-rebuild
+# procedure was just `lake build`. That produced a silent gap: the bare build
+# succeeded with the library only, and downstream tests expecting lean_deps.json
+# failed because ExtractDeps.olean was missing. An attempted fix of adding
+# extractDeps to defaultTargets triggered the macOS link failure. Correct fix:
+# single explicit command above.
 ```
 
 - Verify total theorem count matches the header comment in `constants.py`

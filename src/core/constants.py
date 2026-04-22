@@ -214,7 +214,10 @@ GRAPHENE_PLATFORMS = {
         'v_F': 1.0e6,                  # m/s (Fermi velocity, bilayer ≈ monolayer)
         'c_s': 4.4e5,                  # m/s (bilayer sound speed; Geurs 2025)
         'alpha_eff': 0.7,              # effective coupling on hBN
-        'nozzle_throat_nm': 200,       # nm (effective gradient length scale)
+        'nozzle_throat_nm': 200,       # nm (throat length L; gradient length scale)
+        'channel_width_nm': 1000,      # nm (channel width W; Dean geometry, Phase 5w §2)
+        'l_ee_nm': 51,                 # nm (electron-electron mean free path; deep research §1.4)
+        'v_over_c_s_horizon': 0.985,   # dimensionless (flow velocity / c_s at horizon for Γ₀ ≈ 0.9994)
         'T_ambient_K': 150,            # K (cryogenic operating temperature)
         'T_imp_K': 80,                 # K (disorder temperature, device-dependent)
         'l_mr_um': 5.0,               # μm (momentum-relaxation mean free path)

@@ -189,7 +189,9 @@ The deep research findings substantially reshape the wave priorities:
 
 ### Wave 2 — ℤ₁₆ Hidden Sector DM Candidate Classification [Pipeline: Stages 1-5]
 
-**Goal:** Enumerate all minimal hidden sector fermion representations satisfying +3 mod 16 anomaly. Formalize Wang's key results. Match against known DM candidate profiles.
+**Goal:** Enumerate minimal **SM-singlet** hidden-sector fermion representations satisfying the +3 mod 16 ℤ₁₆ anomaly cancellation rule. Formalize Wang's key results for this channel. Match against known DM candidate profiles; mark mixed-charge and topological candidates (C-1, T-0) as out-of-scope for this wave with explicit pointers to Wave 2b.
+
+**Scope note (2026-04-22):** This wave formalizes the **pure-singlet cancellation channel only** — hidden fermions with no U(1)_X charge, where ℤ₁₆ cancellation reduces to `N mod 16 == 3`. The mixed-charge channel (C-1, which requires ℤ₁₆ ⊕ ℤ₄ joint anomaly algebra) and the topological channel (T-0, K-gauge TQFT, zero particles) are deferred to Wave 2b. Theorem T11 (`z4x_singlet_constraint`) proves the singlet channel is distinct from the mixed-charge channel — ℤ₁₆ alone does not imply U(1)_X³ cancellation.
 
 **Prerequisites:** Wave 1 Task 1 ✅ COMPLETE.
 
@@ -228,13 +230,79 @@ The deep research findings substantially reshape the wave priorities:
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [ ] `lean/SKEFTHawking/HiddenSectorClassification.lean` — theorems T1, T2, T3, T10, T11, T12 (~7 new theorems, Easy-Medium)
-- [ ] `src/dark_sector/z16_hidden_sector.py` — enumerate all solutions ≤ 32 Weyl; compute anomaly index; match to DM types
-- [ ] Hidden sector ↔ DM matching matrix (Table from deep research §1.4)
-- [ ] Wang deformation class analysis summary (24,576 classes, focusing on Class B)
-- [ ] `tests/test_z16_hidden_sector.py` — verify anomaly cancellation for each solution
+- [x] `lean/SKEFTHawking/HiddenSectorClassification.lean` — T1, T2, T3, T10, T11, T12 **PLUS** three corollary / sanity-check theorems (9 total). **SHIPPED 2026-04-22**: 0 sorry, 0 axioms; full-project `lake build` clean (8414 jobs).
+- [x] `src/dark_sector/z16_hidden_sector.py` — enumerate all solutions ≤ 32 Weyl; compute anomaly index; match to DM types. **SHIPPED 2026-04-22**.
+- [x] Hidden sector ↔ DM matching matrix (S-0 / S-1 / C-1 / T-0 with `singlet_cancellation` flag distinguishing pure-N-mod-16 candidates from mixed-charge / topological ones). **SHIPPED 2026-04-22** as `DM_CANDIDATE_MATRIX` in the Python module.
+- [ ] Wang deformation class analysis summary (24,576 classes, focusing on Class B) — deferred; tracked as Wave 8 synthesis task.
+- [x] `tests/test_z16_hidden_sector.py` — 36 tests, all passing; verifies every enumerated solution satisfies ℤ₁₆, checks periodicity-16 structure, cross-checks Lean T2/T3/T10/T11/T12 witnesses. **SHIPPED 2026-04-22**.
 
-**Lean infrastructure reuse:** Z16AnomalyComputation (23 direct), SMFermionData (18 direct), GenerationConstraint (4 direct). **Estimated: 7 new theorems (near-term) + 5 deferred.**
+**Lean infrastructure reuse:** Z16AnomalyComputation (23 direct), SMFermionData (18 direct), GenerationConstraint (4 direct). **Delivered: 9 new theorems (near-term) — 2 more than estimated; all Easy-Medium via decide/rfl/interval_cases. 5 Hard theorems (T4-T7, T9) remain deferred to Phase 6.**
+
+---
+
+### Wave 2b — Non-Singlet Channels: Mixed-Charge (C-1) & Topological (T-0) [Pipeline: Stages 1-5]
+
+**Origin (2026-04-22):** Wave 2 test suite caught that C-1 (Wan-Wang Table IV mixed-charge candidate, 7 q=-2 + 1 q=+6 = 8 Weyl) does **not** satisfy `N mod 16 == 3`. Its cancellation works via ℤ₁₆ ⊕ ℤ₄ joint charge algebra. T-0 (K-gauge TQFT, 0 particles) uses a different mechanism again — bordism-invariant carrying +3 directly. Wave 2 formalized only the SM-singlet channel; this wave extends to the remaining two channels so the full DM-candidate taxonomy is covered rigorously rather than informally.
+
+**Goal:** Extend the ℤ₁₆ formalism in `HiddenSectorClassification.lean` to cover (a) the mixed-charge channel (U(1)_X-charge-tracked hidden fermions satisfying joint ℤ₁₆ ⊕ ℤ₄ cancellation), and (b) the topological channel (K-gauge TQFT carrying the +3 anomaly without particle content, deferred-infrastructure tracking).
+
+**Prerequisites:** Wave 2 ✅ COMPLETE. Access to Wan-Wang arXiv:2512.25038 Table IV (cited in Wave 1 deep research).
+
+---
+
+**Track X — Mixed-charge channel (C-1-class solutions)**
+
+Formalizable with existing Mathlib + project infrastructure. Parallel in structure to Wave 2.
+
+Lean Formalization Targets:
+
+| ID | Theorem | Statement | Difficulty |
+|---|---|---|---|
+| X1 | `HiddenFermion` structure | Carries `n_weyl : ℕ` and `z4_charges : Fin n_weyl → ZMod 4` (or `ℤ`); wraps `singletSectorAnomaly` as the n_weyl = 0-charge case | Trivial (structure def) |
+| X2 | `u1x_cubic_sum_zero` | ∑ (q_i)³ ≡ 0 mod 4 is necessary for U(1)_X³ perturbative anomaly cancellation | Easy (ZMod arithmetic) |
+| X3 | `u1x_gravity_sum_zero` | ∑ q_i ≡ 0 mod 4 (or 2 for ℤ₂-twisted) is necessary for U(1)_X × gravity² mixed anomaly | Easy |
+| X4 | `mixed_channel_joint_constraint` | A hidden sector cancels the full SM ℤ₁₆ anomaly iff (a) SM+hidden ℤ₁₆ sum ≡ 0 AND (b) ∑ q³ ≡ 0 mod 4 AND (c) ∑ q ≡ 0 mod 4 | Medium (conjunction of constraints) |
+| X5 | `C1_wan_wang_cancellation` | The Wan-Wang C-1 assignment (7 copies q=-2, 1 copy q=+6) satisfies X4 jointly | Medium (decide over concrete ℤ₄ arithmetic) |
+| X6 | `mixed_channel_orthogonal_to_singlet` | The singlet sub-channel (`HiddenSectorClassification.hidden_sector_anomaly_value`) and the joint constraint X4 are independent: there exist hidden sectors satisfying one but not the other (strengthens T11 with explicit C-1 witness) | Medium |
+
+**Deliverables:**
+- [ ] `lean/SKEFTHawking/HiddenSectorMixedCharge.lean` — X1-X6 (6 theorems, Easy-Medium; all decide-able over finite ℤ₄ / ℤ₁₆ arithmetic). Import and extend `HiddenSectorClassification`.
+- [ ] Add `z4_charges` field (or a parallel `MixedChargeCandidate` dataclass) to `src/dark_sector/z16_hidden_sector.py`; implement `verify_joint_cancellation(n_weyl, charges)`.
+- [ ] Extend `tests/test_z16_hidden_sector.py` — verify every `singlet_cancellation=False` entry in `DM_CANDIDATE_MATRIX` satisfies the joint constraint (or is flagged topological).
+- [ ] Update `DM_CANDIDATE_MATRIX.C-1` entry: populate its ℤ₄ charges so the joint verifier passes.
+
+**Estimated LOE:** 1 session (~150-250 LOC Lean, ~100 LOC Python). Lower-risk than Wave 2 — all constraints reduce to `decide` over finite ℤ₄.
+
+---
+
+**Track Y — Topological channel (T-0)**
+
+**Not near-term formalizable.** T-0's +3 mod 16 anomaly is carried by a K-gauge TQFT (K = ℤ₂ or ℤ₄) in 4d. This requires:
+  - 4d gauge TQFT formalism (not in Mathlib as of 2026-04)
+  - Bordism invariants Ω₅^{Spin × ℤ₄} → ZMod 16 (already axiomatized in `Z16AnomalyComputation.dai_freed_spin_z4` as a trivial existence placeholder; real cobordism formalization deferred to Phase 6)
+  - APS η-invariant machinery
+
+**Wave 2b strategy for T-0:**
+- [ ] `lean/SKEFTHawking/HiddenSectorTopological.lean` — declare two tracked `Prop` hypotheses matching the `CenterFunctor.lean` precedent:
+      - `def H_KGaugeTQFT_carries_anomaly_three (K : Type) [Group K] [Fintype K] : Prop` — the 4d K-gauge TQFT with K ∈ {ℤ₂, ℤ₄} carries ℤ₁₆ anomaly index = 3
+      - `def H_TQFT_zero_particle_content (K : Type) [Group K] [Fintype K] : Prop` — the K-gauge TQFT has no perturbative particle spectrum
+- [ ] Single wrapper theorem: `topological_dm_candidate_existence` quantifies over both hypotheses and produces the T-0 candidate witness. Zero sorry; all downstream claims explicit about depending on these hypotheses.
+- [ ] Add AXIOM_METADATA entries if we prefer axiom over hypothesis (decide based on `CenterFunctorZ2Equiv`'s hypothesis precedent — hypotheses preferred unless the statement is a genuinely external mathematical fact).
+- [ ] Document `T-0` candidate in `DM_CANDIDATE_MATRIX` as `topological_cancellation=True` (parallel to `singlet_cancellation`) with `detection_notes` pointing at the hypothesis.
+
+**Alternative (if user prefers not to open TQFT track):** extend Wave 2b to Track X only; leave Track Y as a standalone prose note in Paper 17 that T-0 is known from the literature (Wan-Wang, García-Etxebarria) but not formally verified pending Mathlib bordism infrastructure. Matches the `gapped_interface_axiom` precedent.
+
+---
+
+**Deliverables (combined):**
+- [ ] Track X: `HiddenSectorMixedCharge.lean` + Python + tests (all Easy-Medium)
+- [ ] Track Y: `HiddenSectorTopological.lean` with 2 tracked hypotheses (or skip per alternative)
+- [ ] Update `DM_CANDIDATE_MATRIX` with concrete ℤ₄ charges for C-1 and `topological_cancellation` flag for T-0
+- [ ] Extend `z4x_singlet_constraint` (T11) commentary to cite Track X as the positive formalization of the mixed-charge channel
+
+**Cross-wave interaction:** Wave 7 (Fracton DM) and Wave 5 (SFDM) may benefit from the same pattern — each has multiple candidate sub-channels. Wave 2b serves as the reference implementation for "formalize one channel at a time, mark boundaries explicitly, use tracked hypotheses for infrastructure gaps." Recommend reading this wave before starting 5 or 7.
+
+**Scope boundary for Paper 17:** after 2b, the dark-sector claim in Paper 17 becomes "we formally verify the singlet and mixed-charge channels of ℤ₁₆ hidden-sector DM classification; the topological channel is tracked as a Prop hypothesis pending Mathlib bordism/TQFT infrastructure (see `H_KGaugeTQFT_carries_anomaly_three`)." That's the honest claim the wider project's correctness-over-expediency standard asks for.
 
 ---
 

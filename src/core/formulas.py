@@ -5955,3 +5955,198 @@ def graphene_hawking_noise_psd(omega, sigma_Q_SI, T_H_K, greybody=1.0):
     from src.core.constants import HBAR, K_B
     n_H = 1.0 / (np.exp(HBAR * omega / (K_B * T_H_K)) - 1.0)
     return 2 * HBAR * omega * sigma_Q_SI * greybody * n_H
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5w Wave 10b: Quasi-1D greybody factor for graphene de Laval nozzle
+#
+# Closed-form formulas replacing the Γ=1 upper bound used in Paper 16.
+# Derived from Anderson-Balbinot-Fabbri-Parentani (PRD 87) for the
+# profile-independent zero-frequency limit, plus WKB expansion of the
+# effective potential for the smooth-profile frequency dependence.
+#
+# Deep research: Lit-Search/Phase-5w/Greybody Factor and Quasi-1D
+#   Validity for the Graphene de Laval Nozzle.md (Blocks 1-2).
+# Lean: SKEFTHawking.QuasiOneDReduction (T1-T5).
+# ════════════════════════════════════════════════════════════════════
+
+
+def greybody_zero_freq(c_R, v):
+    """Zero-frequency greybody factor for a 1D acoustic horizon.
+
+    Γ(ω→0) = 4·c_R·v / (c_R + v)²
+
+    Profile-independent; follows from solving the Schwarzschild-time mode
+    equation at ω=0 exactly and matching to asymptotic WKB forms
+    (Anderson-Balbinot-Fabbri-Parentani, PRD 87). For the Dean graphene
+    nozzle with c_R ≈ c_s and v ≈ c_s near the horizon, Γ₀ ≈ 0.9994.
+
+    Note: 1D acoustic horizons have Γ₀ ≠ 0 even at ω=0 (unlike 4D
+    Schwarzschild where Γ ∝ ω²). This is the "topological" reason the
+    cumulative SNR remains finite in the IR.
+
+    Lean: SKEFTHawking.QuasiOneDReduction.greybody_zero_freq (T1)
+    Aristotle: manual
+    Source: Anderson et al., PRD 87, 124018 (2013), Eq. 15
+
+    Parameters
+    ----------
+    c_R : float or array
+        Speed of sound on the subsonic (right) side of the horizon [m/s].
+    v : float or array
+        Flow velocity at the horizon [m/s]. Must be ≤ c_R for subsonic side.
+
+    Returns
+    -------
+    float or array
+        Γ₀ ∈ [0, 1]. Equals 1 exactly iff v = c_R (step-horizon limit).
+    """
+    denom = (c_R + v) ** 2
+    return 4.0 * c_R * v / denom
+
+
+def greybody_smooth_profile(omega, c_R, v, omega_max):
+    """Frequency-dependent greybody factor for a smooth 1D velocity profile.
+
+    Γ(ω) ≈ Γ₀ · [1 - (ω/ω_max)²],   ω ≪ ω_max
+
+    WKB expansion of the effective potential for a linear-ramp profile
+    (Anderson et al. Eq. 15). Valid in the adiabatic regime D ≪ 1 where
+    D = κ·l_disp/c_s. For the Dean graphene nozzle D = 0.232 (Block 1 §1.4
+    of the deep research).
+
+    Clamped to [0, 1] to guard against ω > ω_max edge cases (outside the
+    detection band in practice).
+
+    Lean: SKEFTHawking.QuasiOneDReduction (T1 at ω=0)
+    Aristotle: manual
+    Source: Anderson et al., PRD 87, 124018 (2013), §V-VI
+
+    Parameters
+    ----------
+    omega : float or array
+        Angular frequency [rad/s].
+    c_R : float
+        Subsonic-side sound speed [m/s].
+    v : float
+        Horizon flow velocity [m/s].
+    omega_max : float
+        Dispersive UV cutoff [rad/s]; see ``dispersive_uv_cutoff``.
+
+    Returns
+    -------
+    float or array
+        Γ(ω) ∈ [0, 1].
+    """
+    gamma_0 = greybody_zero_freq(c_R, v)
+    correction = 1.0 - (omega / omega_max) ** 2
+    gamma = gamma_0 * correction
+    return np.clip(gamma, 0.0, 1.0)
+
+
+def dispersive_uv_cutoff(kappa, c_s, l_disp):
+    """Dispersive UV cutoff frequency above which Hawking radiation is suppressed.
+
+    ω_max = √(κ · c_s / l_disp)
+
+    Universal form for subluminal dispersion (Macher-Parentani;
+    Finazzi-Parentani). For the Dean graphene nozzle with l_disp = l_ee
+    (electron-electron mean free path), ω_max/ω_H ≈ 13.4 — well above
+    the detection band.
+
+    Lean: SKEFTHawking.QuasiOneDReduction (pending — PDE gap, tracked
+        hypothesis rather than theorem; see H_DispersiveUVCutoff)
+    Aristotle: manual
+    Source: Macher & Parentani, PRD 80, 043601 (2009); Finazzi &
+        Parentani, PRD 83, 084010 (2011)
+
+    Parameters
+    ----------
+    kappa : float
+        Surface gravity [1/s].
+    c_s : float
+        Sound speed [m/s].
+    l_disp : float
+        Dispersive length scale [m] (healing length in BEC; electronic
+        mean free path l_ee in a Dirac fluid).
+
+    Returns
+    -------
+    float
+        ω_max [rad/s].
+    """
+    return np.sqrt(kappa * c_s / l_disp)
+
+
+def dean_adiabaticity_parameter(kappa, l_disp, c_s):
+    """Dean / Finazzi-Parentani adiabaticity parameter.
+
+    D = κ · l_disp / c_s
+
+    D < 1 places the horizon in the adiabatic regime where dispersive
+    corrections to the Hawking temperature are O(D⁴). D ∼ 1 is the
+    abrupt regime with strong modifications. For the Dean graphene
+    nozzle D = 0.232 (adiabatic).
+
+    Lean: SKEFTHawking.QuasiOneDReduction.dean_adiabatic (T4)
+    Aristotle: manual
+    Source: Finazzi & Parentani, PRD 83, 084010 (2011), §III
+
+    Parameters
+    ----------
+    kappa : float
+        Surface gravity [1/s].
+    l_disp : float
+        Dispersive length [m].
+    c_s : float
+        Sound speed [m/s].
+
+    Returns
+    -------
+    float
+        Dimensionless D.
+    """
+    return kappa * l_disp / c_s
+
+
+def quasi1d_correction_bound(omega, omega_perp, L, W, l_ee):
+    """Upper bound on fractional error in Γ from quasi-1D approximation.
+
+    |δΓ/Γ|_2D→1D  ≤  (l_ee/W)²  +  (ω/ω_⊥)² · exp(-2π·L/W)
+
+    Two contributions:
+      (a) Surface-gravity transverse-profile correction: (l_ee/W)².
+          Bounds |δκ/κ| under a flow-profile monotonicity assumption.
+      (b) Evanescent transverse-mode leakage: (ω/ω_⊥)²·exp(-2πL/W).
+          Sub-threshold (ω < ω_⊥) transverse modes decay exponentially
+          over the throat length L with slope 2π/W.
+
+    For the Dean graphene nozzle at ω = ω_H this bound evaluates to
+    ~1.8% (Block 2 §2.3 of the deep research).
+
+    Lean: SKEFTHawking.QuasiOneDReduction.quasi1D_validity_bound (T5)
+    Aristotle: manual
+    Source: Dudley-Anderson-Balbinot-Fabbri Eq. for transverse mode
+        structure; aggregated in Lit-Search/Phase-5w/Greybody...md §2.3
+
+    Parameters
+    ----------
+    omega : float or array
+        Detection-band angular frequency [rad/s].
+    omega_perp : float
+        First transverse-mode threshold ω_⊥ = π·c_s/W [rad/s].
+    L : float
+        Throat length [m].
+    W : float
+        Channel width [m].
+    l_ee : float
+        Electron-electron mean free path [m].
+
+    Returns
+    -------
+    float or array
+        Dimensionless upper bound on |δΓ/Γ|. Always non-negative.
+    """
+    surface_gravity_term = (l_ee / W) ** 2
+    evanescent_term = (omega / omega_perp) ** 2 * np.exp(-2.0 * np.pi * L / W)
+    return surface_gravity_term + evanescent_term

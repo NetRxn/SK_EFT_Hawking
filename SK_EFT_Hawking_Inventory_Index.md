@@ -2,7 +2,9 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-04-16 (**Phase 5w Wave 10a COMPLETE**: corrected noise formula ΔS_I = 2ℏω σ_Q Γ n_H (Keldysh + Landauer-Büttiker derivation). GrapheneNoiseFormula.lean (8 thms). Previous formula was dimensionally wrong — off by conductance quantum. Detection now systematics-limited, not statistics-limited. Clean build 8411 jobs.)
+**Last synced:** 2026-04-22 (**Phase 5x Wave 2 COMPLETE**: HiddenSectorClassification.lean with 9 theorems formalizing ℤ₁₆ hidden-sector DM candidate constraints — T1 anomaly_index_weyl_singlet, T2 hidden_sector_anomaly_value, T3 minimal_singlet_count (+sanity corollary), T10 all_singlet_solutions_bounded (+nineteen sanity), T11 z4x_singlet_constraint, T12 generation_independent_z16. 0 sorry, 0 axioms. First verifier-backed DM candidate constraint from formal methods. Python companion `src/dark_sector/z16_hidden_sector.py` + 36 passing tests in `tests/test_z16_hidden_sector.py`. Full-project `lake build` clean 8414 jobs.
+
+**2026-04-22 earlier:** **Phase 5s Wave 9 CLOSED via hypothesis refactor**: 3 research-grade sorries in CenterFunctorZ2Equiv.lean converted to 2 tracked `Prop` hypotheses (`H_CFZ2_sq_e`, `H_CFZ2_sq_a`) matching `CenterFunctor.lean` precedent; h_cf2_G2 deleted. Zero axioms introduced. Verified by clean no-cache `lake build` (8413 jobs). **Phase 5w Wave 10a COMPLETE**: corrected noise formula ΔS_I = 2ℏω σ_Q Γ n_H (Keldysh + Landauer-Büttiker derivation). GrapheneNoiseFormula.lean (8 thms).)
 
 ---
 
@@ -15,9 +17,9 @@
 | Lean theorems | **3300+** (post-Phase-5m; +247 from 7 Phase 5m modules; authoritative count via `update_counts.py`) | counts.json — package-module-bound count |
 | Placeholders (True := trivial) | **85** | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
-| **Sorry gaps** | **0** | Project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs). |
+| **Sorry gaps** | **0** | Project-wide (verified 2026-04-22 via clean no-cache `lake build`, 8413 jobs). Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses as `Prop` defs: H_CF1_center_functor, H_CF2_center_equivalence). **CenterFunctorZ2Equiv 0 sorry (2026-04-22 refactor, Phase 5s W9 Option A)**: 2 new tracked `Prop` hypotheses `H_CFZ2_sq_e` / `H_CFZ2_sq_a` park the graded-tensor summand-extraction gap; eliminable pending Mathlib API. h_cf2_G2 deleted (consumers take `H_CF2_center_equivalence k G2` directly). |
 | **Axioms** | **1** | gapped_interface_axiom in SPTClassification.lean |
-| Lean modules | **149** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +1 Phase 5w: GrapheneNoiseFormula (8 thms, noise PSD derivation + dimensional analysis). |
+| Lean modules | **150** | All `.lean` files in `lean/SKEFTHawking/*` (excluding `ExtractDeps.lean`). +1 Phase 5x W2 (2026-04-22): HiddenSectorClassification (9 thms, ℤ₁₆ hidden sector DM constraints). +1 Phase 5w: GrapheneNoiseFormula (8 thms, noise PSD derivation + dimensional analysis). |
 | Lean definitions | **2400** | counts.json |
 | Python source modules | **53** | |
 | Test files | **51** | +5 Phase 5w: test_graphene_metric (26), _hawking (21), _spectrum (21), _transport (17), test_platform_comparison (14) = 99 total graphene tests |

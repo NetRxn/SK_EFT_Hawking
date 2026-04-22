@@ -637,6 +637,60 @@ PARAMETER_PROVENANCE = {
         'human_verified_notes': None,
         'notes': 'First electronic sonic horizon. Bilayer c_s < monolayer c_s.',
     },
+    'Dean_bilayer_nozzle.channel_width_nm': {
+        'value': 1000,
+        'unit': 'nm',
+        'tier': 'EXTRACTED',
+        'source': 'Geurs et al., arXiv:2509.16321 (2025); Phase 5w deep research §2',
+        'detail': 'Channel width W for the Dean bilayer nozzle, used in the quasi-1D '
+                  'reduction bound (Phase 5w Wave 10b). The first transverse-mode '
+                  'threshold is ω_⊥ = π·c_s/W ≈ 1.38e12 rad/s for W=1 μm, placing all '
+                  'transverse modes evanescent within the detection band (ω_⊥/ω_H ≈ 4.46). '
+                  'Evanescent suppression factor exp(-2π·L/W) ≈ 0.284 at L/W=0.2.',
+        'doi': None,
+        'llm_verified_date': '2026-04-22',
+        'llm_verified_notes': 'Dean geometry standard per Phase 5w deep research Block 2 §2.1-2.3.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Required by greybody quasi-1D correction bound (Lean T5 in QuasiOneDReduction).',
+    },
+    'Dean_bilayer_nozzle.l_ee_nm': {
+        'value': 51,
+        'unit': 'nm',
+        'tier': 'EXTRACTED',
+        'source': 'Phase 5w deep research §1.4 (Finazzi-Parentani regime analysis)',
+        'detail': 'Electron-electron mean free path l_ee for the Dean hydrodynamic '
+                  'regime. Sets the dispersive length in the Dean adiabaticity parameter '
+                  'D = κ·l_ee/c_s = 0.232 (adiabatic regime D<1). Also sets the dispersive '
+                  'UV cutoff ω_max = √(κ c_s/l_ee) ≈ 4.15e12 rad/s via Macher-Parentani.',
+        'doi': None,
+        'llm_verified_date': '2026-04-22',
+        'llm_verified_notes': 'Deep research cites standard hydrodynamic regime l_ee ≈ 50 nm '
+                              'for high-mobility graphene at Dean operating temperatures; '
+                              'reproduces D = 0.232 quoted in deep research §1.4.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Distinct from momentum-relaxation l_mr (5 μm); l_ee governs dispersion.',
+    },
+    'Dean_bilayer_nozzle.v_over_c_s_horizon': {
+        'value': 0.985,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Phase 5w deep research §1.1 (Anderson et al. PRD 87 profile-independent limit)',
+        'detail': 'Flow velocity at the horizon expressed as v/c_s. Chosen such that the '
+                  'profile-independent zero-frequency greybody Γ₀ = 4·c_R·v/(c_R+v)² matches '
+                  'the deep-research quoted value 0.9994 for the Dean nozzle. The exact value '
+                  'depends on the asymptotic flow parameters which the deep research fixes '
+                  'via nozzle geometry. Value is a single-point choice; the full v(x) profile '
+                  'is a PDE-gap tracked hypothesis (see QuasiOneDReduction).',
+        'doi': None,
+        'llm_verified_date': '2026-04-22',
+        'llm_verified_notes': 'Derived from Anderson-Balbinot-Fabbri-Parentani (PRD 87) closed-form; '
+                              'the 0.9994 quote places v/c_s at ~0.985 for subsonic-side c_R = c_s.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Only used to evaluate Γ₀; the Lean greybody_zero_freq theorem is fully general.',
+    },
     'Dean_bilayer_nozzle.T_H_K': {
         'value': 2.4,
         'unit': 'K',

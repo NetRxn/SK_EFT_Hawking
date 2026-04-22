@@ -388,19 +388,28 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
     infrastructure ~95% complete with 3 well-characterized isolated sorries
     representing the boundary of current Mathlib graded-tensor infrastructure.
     Zero downstream dependencies; no pipeline/paper/validate.py impact.
-- [ ] **Wave 9 remaining (Option A implementation)**:
-    - **Documentation**: Lean comment blocks at 3 sorries cite Session 37-38
-      findings + working-doc reference. DONE.
-    - **Working doc + memory + roadmap**: Session 38 conclusions captured in
-      `temporary/working-docs/phase5s_wave9_option_b_helpers.md` (NEW) and
-      `phase5s_wave9_centerfunctor_z2_state.md` (extended). Memory file
-      `project_phase5s_wave9_state.md` synced. DONE.
-    - **Future sprint (low priority)**: File standalone Mathlib issue for
-      graded 3-way tensor summand extraction helpers; if Mathlib receptive,
-      revisit Wave 9 H_CF2 closure.
+- [x] **Wave 9 sorry → hypothesis refactor (2026-04-22)**:
+    Per user directive, 3 research-grade sorries converted to tracked
+    `Prop` hypotheses matching the `CenterFunctor.lean` (`H_CF1_center_functor`
+    / `H_CF2_center_equivalence`) precedent. Result: **zero active sorry**
+    in `CenterFunctorZ2Equiv.lean`; full-project `lake build` clean.
+    - New hypotheses (`CenterFunctorZ2Equiv.lean`):
+      - `def H_CFZ2_sq_e (k) : Prop` — tracks `halfBraiding_sq_identity` eAdd sector
+      - `def H_CFZ2_sq_a (k) : Prop` — tracks `halfBraiding_sq_identity_a` aAdd sector
+      - H_CF2 tracking for G = G2 → consumers take `H_CF2_center_equivalence k G2`
+        directly (no `h_cf2_G2` wrapper needed; wrapper deleted)
+    - Propagated through: `extractBraidAction_{e,a}_sq`, `canonicalModule`
+      (converted `instance` → `def`), `canonicalCenterToRep`,
+      `canonicalCenterToRep_faithful` (instance → def). All internal; zero
+      external callers (verified pre-refactor).
+    - Abandoned Session-32–38 proof bodies preserved as block comments for
+      historical record.
+- [ ] **Wave 9 remaining (low priority)**:
+    - **Future sprint**: File standalone Mathlib issue for graded 3-way tensor
+      summand extraction helpers; if Mathlib receptive, discharge
+      `H_CFZ2_sq_e` / `H_CFZ2_sq_a` directly and remove the hypotheses.
     - **Stages 8-12**: Figures, paper, notebook, validate.py, Inventory sync
-      — deferrable; Wave 9 H_CF2 is OPTIONAL per roadmap with zero
-      downstream dependencies.
+      — deferrable; H_CF2 story is OPTIONAL with zero downstream dependencies.
 
 ---
 
@@ -434,7 +443,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
 | Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **COMPLETE 2026-04-14** — Uqsl2AffineHopf: 0 sorry. Uqsl3Hopf: 0 sorry (all 4 antipode Serre cubics E12/E21/F12/F21 closed; Bialgebra + HopfAlgebra typeclass instances wired). Full SKEFTHawking package builds clean no-cache. |
-| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL CLOSURE — H_CF1 ✓, H_CF2 research-grade gaps (2026-04-20 Session 38 EOD)** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-20 built canonical functor architecture (signHalfBraiding monoidal ✓, extractBraidAction_{e,a}_vacuum ✓, _electric ✓, canonicalCenterToRep.Faithful ✓ via Aristotle cherry-pick). Sessions 21-36: progressed halfBraiding_sq_identity through circularity analysis + element descent refactor + 2 deep research rounds. Session 37: `erw [rightUnitor_hom_apply]` fires reducing RHS to `c • x`; explore agents identified 8 key Mathlib lemmas. Session 38: Option B (helper infrastructure) tested via focused subagent; independently validated as structurally equivalent to Option A — element-level decomposition relocates rather than simplifies the graded hexagon summand extraction blocker. **Wave 9 closure decision: Option A accepted** — accept 3 well-characterized research-grade sorries with full session log preserved; zero downstream dependencies. Current state: **3 active sorries** in CenterFunctorZ2Equiv.lean — halfBraiding_sq_identity tmul (line 1035), halfBraiding_sq_identity_a tmul (line 1431), h_cf2_G2 (line 1939). Algebraic content VERIFIED via manual trace (g² = 𝟙 from h_key_eAdd); Lean encoding blocker is missing Mathlib API for abstract-morphism-indexed graded 3-way tensor summand extraction. Build clean, 1938 LOC, 56 theorems in CenterFunctorZ2Equiv.lean + 51 in CenterFunctorZ2.lean + 4 in CenterFunctor.lean. Phase 5s core contribution (Wave 8 q-Serre) is 100% complete and UNAFFECTED. |
+| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **CLOSED as tracked-hypothesis refactor (2026-04-22)** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-38: canonical functor architecture built; 3 residual research-grade gaps accepted as Option A. **2026-04-22 refactor**: 3 sorries converted to 2 tracked `Prop` hypotheses (`H_CFZ2_sq_e`, `H_CFZ2_sq_a`) plus deletion of `h_cf2_G2` wrapper (consumers take `H_CF2_center_equivalence k G2` directly). Propagated through `extractBraidAction_{e,a}_sq`, `canonicalModule` (instance → def), `canonicalCenterToRep`, `canonicalCenterToRep_faithful` (instance → def). All internal; zero external callers. Result: **zero active sorries project-wide**, full-project `lake build` clean (8413 jobs); hypotheses eliminable pending Mathlib graded-tensor summand-extraction API. Abandoned Session-32–38 proof bodies preserved as block comments. Phase 5s core contribution (Wave 8 q-Serre) is 100% complete and UNAFFECTED. |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.
 

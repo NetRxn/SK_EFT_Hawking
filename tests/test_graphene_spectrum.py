@@ -124,16 +124,27 @@ class TestDimensionalConsistency:
         np.testing.assert_allclose(S_formula, S_manual, rtol=1e-10)
 
     def test_S_hawking_matches_formula_function(self):
-        """wkb_spectrum S_hawking should match graphene_hawking_noise_psd."""
+        """wkb_spectrum S_hawking should match graphene_hawking_noise_psd
+        with the realistic greybody factor Γ(ω) (Phase 5w Wave 10b)."""
         from src.core.constants import HBAR, K_B, GRAPHENE_PLATFORMS
-        from src.core.formulas import graphene_hawking_noise_psd
+        from src.core.formulas import (
+            greybody_smooth_profile, dispersive_uv_cutoff,
+        )
 
         spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=50)
         plat = GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']
+        c_s = plat['c_s']
+        kappa = plat['gradient_s1']
+        l_ee = plat['l_ee_nm'] * 1e-9
+        v_horizon = plat['v_over_c_s_horizon'] * c_s
 
-        # The wkb_spectrum uses modified n_hawking (with decoherence),
-        # so S_hawking = 2ℏω σ_Q × 1.0 × n_hawking (greybody=1)
-        S_expected = 2 * HBAR * spec.omega * plat['sigma_Q_SI'] * spec.n_hawking
+        omega_max = dispersive_uv_cutoff(kappa, c_s, l_ee)
+        greybody = greybody_smooth_profile(spec.omega, c_s, v_horizon, omega_max)
+
+        # S_hawking = 2ℏω σ_Q Γ(ω) n_hawking
+        S_expected = (
+            2 * HBAR * spec.omega * plat['sigma_Q_SI'] * greybody * spec.n_hawking
+        )
         np.testing.assert_allclose(spec.S_hawking, S_expected, rtol=1e-10)
 
     def test_johnson_nyquist_at_T_H(self):
@@ -152,16 +163,20 @@ class TestDimensionalConsistency:
     def test_no_e_squared_in_hawking_formula(self):
         """Regression: the old (2e²/π) prefactor was dimensionally wrong.
 
-        The correct prefactor is 2ℏ. Verify S_H does NOT scale as e².
+        The correct prefactor is 2ℏ. Verify S_H does NOT scale as e². Under
+        realistic greybody Γ(ω) ∈ [0, 1] (Phase 5w Wave 10b), the ratio
+        S_H / (2ℏω σ_Q n_H) equals Γ(ω) rather than 1, but must remain bounded
+        in [0, 1] — which rules out an e² prefactor (would make it ~e²/ℏ).
         """
         from src.core.constants import HBAR, GRAPHENE_PLATFORMS, E_CHARGE
         spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=10)
-        # If the old formula were used: S ~ (2e²/π) σ_Q ω n_H
-        # New formula: S = 2ℏω σ_Q n_H
-        # At any frequency, S / (2ℏω σ_Q n_H) should be 1 (greybody=1)
         plat = GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']
         ratio = spec.S_hawking / (2 * HBAR * spec.omega * plat['sigma_Q_SI'] * spec.n_hawking)
-        np.testing.assert_allclose(ratio, 1.0, rtol=1e-10)
+        # Ratio equals Γ(ω), bounded in [0, 1]
+        assert np.all(ratio >= 0.0), f"Γ(ω) must be non-negative; min={ratio.min()}"
+        assert np.all(ratio <= 1.0 + 1e-10), f"Γ(ω) must be ≤1; max={ratio.max()}"
+        # Regression: if e² prefactor were present, ratio would be ~e²/ℏ ≈ 2.4e2
+        assert np.all(ratio < 2.0), f"Suspicious dimensional prefactor; max ratio={ratio.max()}"
 
 
 class TestMonolayerComparison:

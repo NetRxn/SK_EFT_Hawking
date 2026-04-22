@@ -1,4 +1,18 @@
 name = "sk-eft-hawking"
+# Default target is the SKEFTHawking library. The `extractDeps` executable
+# target (see below) is NOT in defaultTargets because its native-link step
+# exceeds macOS's argument-length limit when pulling Mathlib .c.o files.
+#
+# For Python consumers (scripts/extract_lean_deps.py, validate.py, dashboard),
+# the .olean is what matters — Python invokes it via `lake env lean --run`
+# (interpreted mode), not via the compiled binary. The .olean is built by
+# `lake build SKEFTHawking.ExtractDeps` (no link), which is the canonical
+# "build ExtractDeps output" command.
+#
+# Trustworthy clean baseline after a structural change:
+#   rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps
+# This single command builds the library + the ExtractDeps .olean cleanly.
+# See CLAUDE.md and docs/WAVE_EXECUTION_PIPELINE.md.
 defaultTargets = ["SKEFTHawking"]
 
 [leanOptions]

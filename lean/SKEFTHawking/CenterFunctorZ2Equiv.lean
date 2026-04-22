@@ -1473,6 +1473,7 @@ private lemma halfBraiding_sq_identity (h_sq_e : H_CFZ2_sq_e k)
     sorry
   exact hA.symm.trans (hpost ▸ hB)
   -/
+-/
 
 /-- **Helper 2 (a-case)**: the middle `desc_eAdd ≫ ρ⁻¹ ≫ ι_eAdd` in
     `extractBraidAction_a ≫ extractBraidAction_a` equals the canonical VecG_Cat
@@ -1515,8 +1516,33 @@ private lemma middleSwap_eq_braiding_a (X : Center (VecG_Cat k G2)) :
     exact Functor.map_isZero (tensorRight _)
       (ModuleCat.isZero_of_subsingleton (ModuleCat.of k PUnit))
 
+/- # ABANDONED PROOF ATTEMPT (a-case, Session 36, 2026-04-20)
+
+   Mirror of `halfBraiding_sq_identity`'s abandoned body with the index triple
+   (aAdd, aAdd, aAdd) at target eAdd → aAdd. Same structural blocker: graded
+   hexagon summand extraction at the (aAdd, aAdd) summand of (X ⊗ U ⊗ U) aAdd.
+
+   Algebraic content VERIFIED via `h_key` evaluated at `aAdd` (Session 38,
+   mirror of parent's `h_key_eAdd` construction).
+
+   Refactored 2026-04-22 to take `H_CFZ2_sq_a k` as an explicit hypothesis
+   (Phase 5s Wave 9 Option A closure). Session log retained below verbatim.
+
+  apply ModuleCat.hom_ext
+  ext v
+  induction v using TensorProduct.induction_on with
+  | zero => exact (LinearMap.map_zero _).trans (LinearMap.map_zero _).symm
+  | add v₁ v₂ ih₁ ih₂ =>
+      exact (LinearMap.map_add _ v₁ v₂).trans
+        ((congrArg₂ (· + ·) ih₁ ih₂).trans (LinearMap.map_add _ v₁ v₂).symm)
+  | tmul x c =>
+      -- Tmul case: same structural blocker as parent. See
+      -- `working-docs/phase5s_wave9_option_b_helpers.md` for full log.
+      sorry
+-/
 /-- **Helper 3 analog (a-case)**: parallel identity needed for sq_a. -/
-private lemma halfBraiding_sq_identity_a (X : Center (VecG_Cat k G2)) :
+private lemma halfBraiding_sq_identity_a (h_sq_a : H_CFZ2_sq_a k)
+    (X : Center (VecG_Cat k G2)) :
     GradedObject.Monoidal.ιTensorObj X.fst (lineGraded k aAdd) aAdd aAdd eAdd
         (by decide) ≫
       (X.snd.β (lineGraded k aAdd)).hom eAdd ≫
@@ -1530,31 +1556,10 @@ private lemma halfBraiding_sq_identity_a (X : Center (VecG_Cat k G2)) :
             (eqToHom (show lineGraded k aAdd i₁ ⊗ X.fst i₂ =
                 𝟙_ (ModuleCat k) ⊗ X.fst aAdd by
               subst h₁; subst h₂; rfl)) ≫ (λ_ (X.fst aAdd)).hom
-          else 0)) = (ρ_ (X.fst aAdd)).hom := by
-  -- Session 36 (2026-04-20): parallel refactor to parent's element descent.
-  -- Zero + add cases close via LinearMap.map_zero / map_add. Tmul case
-  -- requires same algebraic content as parent (f̃² = 𝟙 via h_key at aAdd).
-  apply ModuleCat.hom_ext
-  ext v
-  induction v using TensorProduct.induction_on with
-  | zero => exact (LinearMap.map_zero _).trans (LinearMap.map_zero _).symm
-  | add v₁ v₂ ih₁ ih₂ =>
-      exact (LinearMap.map_add _ v₁ v₂).trans
-        ((congrArg₂ (· + ·) ih₁ ih₂).trans (LinearMap.map_add _ v₁ v₂).symm)
-  | tmul x c =>
-      -- Wave 9 Option A closure (2026-04-20 Session 38): mirror of
-      -- halfBraiding_sq_identity's tmul sorry. Same structural blocker —
-      -- graded hexagon summand extraction at (aAdd, aAdd, aAdd) of
-      -- (X ⊗ U ⊗ U) aAdd requires missing Mathlib API for navigating
-      -- `ι ≫ abstract_morphism ≫ desc` chains. 38 sessions tested; Option B
-      -- (helper infrastructure) validated as structurally equivalent to
-      -- Option A (direct closure) by lean4:sorry-filler-deep subagent.
-      -- Algebraic content VERIFIED: `g² = 𝟙` via h_key_aAdd at specific
-      -- summand element. Zero downstream dependencies (H_CF2 is optional).
-      -- See `working-docs/phase5s_wave9_option_b_helpers.md` for full log.
-      sorry
+          else 0)) = (ρ_ (X.fst aAdd)).hom :=
+  h_sq_a X
 
-lemma extractBraidAction_e_sq (X : Center (VecG_Cat k G2)) :
+lemma extractBraidAction_e_sq (h_sq_e : H_CFZ2_sq_e k) (X : Center (VecG_Cat k G2)) :
     extractBraidAction_e k X ≫ extractBraidAction_e k X = 𝟙 _ := by
   unfold extractBraidAction_e
   simp only [Category.assoc]
@@ -1564,9 +1569,9 @@ lemma extractBraidAction_e_sq (X : Center (VecG_Cat k G2)) :
   rw [show (𝟙 (X.fst eAdd) : X.fst eAdd ⟶ X.fst eAdd) =
         (ρ_ (X.fst eAdd)).inv ≫ (ρ_ (X.fst eAdd)).hom from (Iso.inv_hom_id _).symm]
   congr 1
-  exact halfBraiding_sq_identity k X
+  exact halfBraiding_sq_identity k h_sq_e X
 
-lemma extractBraidAction_a_sq (X : Center (VecG_Cat k G2)) :
+lemma extractBraidAction_a_sq (h_sq_a : H_CFZ2_sq_a k) (X : Center (VecG_Cat k G2)) :
     extractBraidAction_a k X ≫ extractBraidAction_a k X = 𝟙 _ := by
   unfold extractBraidAction_a
   simp only [Category.assoc]
@@ -1575,7 +1580,7 @@ lemma extractBraidAction_a_sq (X : Center (VecG_Cat k G2)) :
   rw [show (𝟙 (X.fst aAdd) : X.fst aAdd ⟶ X.fst aAdd) =
         (ρ_ (X.fst aAdd)).inv ≫ (ρ_ (X.fst aAdd)).hom from (Iso.inv_hom_id _).symm]
   congr 1
-  exact halfBraiding_sq_identity_a k X
+  exact halfBraiding_sq_identity_a k h_sq_a X
 
 /-- For the vacuum anyon (canonical braiding), the braid action is identity.
     PROVED 2026-04-18 (Session 6 round 3) via the deep-research-blueprint
@@ -1949,7 +1954,8 @@ noncomputable def canonicalSMul (X : Center (VecG_Cat k G2))
 /-- The DG-module instance on V(eAdd) × V(aAdd) via the canonical action.
     Module axioms require: linearity of coeff + ρ being a module endomorphism
     + DG multiplication rule compatibility (grading + conjugation). -/
-noncomputable instance canonicalModule (X : Center (VecG_Cat k G2)) :
+noncomputable def canonicalModule (h_sq_e : H_CFZ2_sq_e k) (h_sq_a : H_CFZ2_sq_a k)
+    (X : Center (VecG_Cat k G2)) :
     Module (DG k G2) (Prod (X.1 eAdd) (X.1 aAdd)) where
   smul := canonicalSMul k X
   one_smul v := by
@@ -1976,8 +1982,8 @@ noncomputable instance canonicalModule (X : Center (VecG_Cat k G2)) :
     have ρa_add := (extractBraidAction_a k X).hom.map_add
     have ρa_smul := (extractBraidAction_a k X).hom.map_smul
     -- ρ² = id (involutive)
-    have ρe_sq := extractBraidAction_e_sq k X
-    have ρa_sq := extractBraidAction_a_sq k X
+    have ρe_sq := extractBraidAction_e_sq k h_sq_e X
+    have ρa_sq := extractBraidAction_a_sq k h_sq_a X
     -- Extract ρ(ρ(v)) = v from involutivity
     have ρe_inv : ∀ w, (extractBraidAction_e k X).hom ((extractBraidAction_e k X).hom w) = w := by
       intro w; have := congr_arg (fun f => f.hom w) ρe_sq; simp at this; exact this
@@ -2009,14 +2015,20 @@ noncomputable instance canonicalModule (X : Center (VecG_Cat k G2)) :
     rfl
 
 /-- The canonical functor on objects: V(eAdd) × V(aAdd) with DG-action
-    from grading + half-braiding extraction. -/
-noncomputable def canonicalCenterToRep : Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2) where
+    from grading + half-braiding extraction.
+
+    Takes the tracked hypotheses `H_CFZ2_sq_e k` and `H_CFZ2_sq_a k` as
+    explicit args because `canonicalModule` (used internally) needs them.
+    See `H_CFZ2_sq_e` / `H_CFZ2_sq_a` docstrings for the tracking rationale. -/
+noncomputable def canonicalCenterToRep
+    (h_sq_e : H_CFZ2_sq_e k) (h_sq_a : H_CFZ2_sq_a k) :
+    Center (VecG_Cat k G2) ⥤ ModuleCat (DG k G2) where
   obj X := by
-    letI := canonicalModule k X
+    letI := canonicalModule k h_sq_e h_sq_a X
     exact ModuleCat.of (DG k G2) (Prod (X.1 eAdd) (X.1 aAdd))
   map {X Y} f := by
-    letI := canonicalModule k X
-    letI := canonicalModule k Y
+    letI := canonicalModule k h_sq_e h_sq_a X
+    letI := canonicalModule k h_sq_e h_sq_a Y
     exact ModuleCat.ofHom
       { toFun := fun v => ((f.f eAdd).hom v.1, (f.f aAdd).hom v.2)
         map_add' := by intro a b; ext <;> simp [_root_.map_add]
@@ -2038,15 +2050,21 @@ noncomputable def canonicalCenterToRep : Center (VecG_Cat k G2) ⥤ ModuleCat (D
               (extractBraidAction_a k Y).hom ((f.f aAdd).hom w) := by
             intro w; exact congr_arg (fun g => g.hom w) ha
           simp only [he_pw, ha_pw] }
-  map_id X := by ext v <;> dsimp <;> simp
-  map_comp {X Y Z} f g := by ext v <;> dsimp <;> simp
+  map_id X := by rfl
+  map_comp {X Y Z} f g := by rfl
 
 /-- Faithfulness of the canonical center-to-rep functor: two morphisms agreeing
     pointwise on `eAdd` and `aAdd` are equal.  Cherry-picked from Aristotle run
     `5d5951c1` (2026-04-20); the only component the prover produced that
-    compiles cleanly under Lean 4.29 + our `set_option` hygiene. -/
-private noncomputable instance canonicalCenterToRep_faithful [Field k] [CharZero k] :
-    (canonicalCenterToRep k).Faithful := by
+    compiles cleanly under Lean 4.29 + our `set_option` hygiene.
+
+    Converted from `instance` to `def` as part of the Phase 5s Wave 9 Option A
+    hypothesis refactor (2026-04-22): `canonicalCenterToRep` now takes
+    `H_CFZ2_sq_e k` and `H_CFZ2_sq_a k` as explicit arguments, so the
+    corresponding `Faithful` fact must thread those too. -/
+private noncomputable def canonicalCenterToRep_faithful [Field k] [CharZero k]
+    (h_sq_e : H_CFZ2_sq_e k) (h_sq_a : H_CFZ2_sq_a k) :
+    (canonicalCenterToRep k h_sq_e h_sq_a).Faithful := by
   refine ⟨ ?_ ⟩
   intro X Y f g hfg
   have h_eq : f.f eAdd = g.f eAdd ∧ f.f aAdd = g.f aAdd := by
@@ -2056,16 +2074,19 @@ private noncomputable instance canonicalCenterToRep_faithful [Field k] [CharZero
            DFunLike.ext _ _ fun x => hfg 0 x |>.2⟩
   exact (by ext i; fin_cases i <;> tauto)
 
-/-- H_CF2 discharge for G = G2: the canonical functor gives an equivalence.
+/- **H_CF2 for G = G2 — DEFERRED (Phase 5s Wave 9 Option A, 2026-04-20).**
 
-    **Wave 9 Option A closure (2026-04-20 Session 38)**: Faithful proved Session 33
-    via Aristotle cherry-pick. Full + EssSurj deferred — estimated 1500-2800 LOC
-    per Phase5s_Roadmap. Independent of tmul sorries in halfBraiding_sq_identity;
-    can be closed in a future dedicated session. H_CF2 has zero downstream
-    dependencies per CenterFunctor.lean L75; closure is reputational/research-grade.
-    See `working-docs/phase5s_wave9_option_b_helpers.md` for full context. -/
-theorem h_cf2_G2 [Field k] [CharZero k] : H_CF2_center_equivalence k G2 := by
-  sorry
+    Proof of `H_CF2_center_equivalence k G2` requires `Equivalence.ofFullyFaithfulEssSurj`
+    with Full + EssSurj discharge (estimated 1500-2800 LOC per Phase5s_Roadmap).
+    The `canonicalCenterToRep` functor is constructed above and is Faithful (via
+    `canonicalCenterToRep_faithful`, conditional on H_CFZ2_sq_e + H_CFZ2_sq_a).
+
+    Consumers needing this result should take `H_CF2_center_equivalence k G2` as
+    a hypothesis directly (from `SKEFTHawking.CenterFunctor`); it is designed as
+    a tracked Prop precisely for this case.
+
+    Zero downstream dependencies as of 2026-04-22. See
+    `working-docs/phase5s_wave9_option_b_helpers.md` for 38-session log. -/
 
 end AnyonConstruction
 

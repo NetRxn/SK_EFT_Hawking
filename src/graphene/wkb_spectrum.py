@@ -151,14 +151,27 @@ def compute_graphene_spectrum(
     # Derived via Keldysh + Landauer-Büttiker with Bogoliubov mixing:
     #   ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_Hawking(ω)    [A²/Hz]
     #
-    # Greybody Γ(ω) = 1 (step-horizon / leading-order approximation).
-    # This is an upper bound on the signal; the nozzle-specific Γ(ω)
-    # from the Bogoliubov S-matrix calculation is a refinement.
+    # Phase 5w Wave 10b (2026-04-22): realistic frequency-dependent Γ(ω)
+    # replaces the Γ=1 upper bound. Closed-form per Anderson-Balbinot-Fabbri-
+    # Parentani (PRD 87) + WKB smooth-profile expansion:
+    #   Γ₀ = 4 c_R v / (c_R + v)²    (zero-freq, profile-independent)
+    #   Γ(ω) ≈ Γ₀ · [1 - (ω/ω_max)²] (adiabatic regime D≪1)
+    #   ω_max = √(κ c_s / l_ee)      (dispersive UV cutoff)
+    # For Dean nozzle: Γ₀ ≈ 0.9994, ω_max/ω_H ≈ 7.8 (SNR ratio ≈ 0.999).
     #
-    # Note: the previous formula (2e²/π)σ_Q ω n_H was dimensionally wrong
-    # (off by conductance quantum 2e²/h ≈ 77.5 μS).
-    # See Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md for derivation.
-    greybody = 1.0  # Γ(ω) = 1 (step horizon, upper bound)
+    # See Lit-Search/Phase-5w/Greybody Factor and Quasi-1D Validity...md
+    # and Lean SKEFTHawking.QuasiOneDReduction for formalization.
+    from src.core.formulas import (
+        greybody_smooth_profile, dispersive_uv_cutoff,
+    )
+    # Dean platform has measured / deep-research geometry; PROJECTED
+    # Monolayer platforms fall back to typical hydrodynamic-regime values.
+    l_ee = plat.get('l_ee_nm', 30) * 1e-9                          # m
+    v_ratio = plat.get('v_over_c_s_horizon', 0.985)                # dimensionless
+    v_horizon = v_ratio * c_s                                       # m/s
+    c_R = c_s                                                       # subsonic asymptote ≈ c_s
+    omega_max = dispersive_uv_cutoff(kappa, c_s, l_ee)
+    greybody = greybody_smooth_profile(omega, c_R, v_horizon, omega_max)
     S_hawking = 2 * HBAR * omega * sigma_Q_SI * greybody * n_hawking
 
     S_total = S_thermal + S_hawking

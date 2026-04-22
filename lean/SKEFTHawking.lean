@@ -50,6 +50,8 @@ import SKEFTHawking.ChiralityWallMaster
 import SKEFTHawking.SMFermionData
 import SKEFTHawking.Z16AnomalyComputation
 import SKEFTHawking.GenerationConstraint
+import SKEFTHawking.HiddenSectorClassification
+import SKEFTHawking.QuasiOneDReduction
 import SKEFTHawking.DrinfeldCenterBridge
 import SKEFTHawking.VecGMonoidal
 import SKEFTHawking.ToricCodeCenter
