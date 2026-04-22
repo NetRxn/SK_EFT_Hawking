@@ -120,10 +120,23 @@ Recently completed (Phase 5p, April 8 2026):
 - Fibonacci braiding is proved universal for quantum computation via Lie algebra spanning (commutator matrices generate su(2) for qubit, su(3) directions for qutrit).
 
 **What's missing:**
-- **17 sorry remaining**, all technical not mathematical:
-  - 8 in Uqsl2AffineHopf (4 comul + 4 antipode q-Serre) — all blocked by Phase 4 of 4-phase proof strategy (Laurent polynomial coefficient cancellation in tensor product). Phases 1-3 (expansion + K-E normalization) working in code. RingQuot workaround found. Serre0/Serre1 antipode + 2 KE/KF antipode closed. CenterFunctor: 2 sorry → 2 tracked hypotheses (H_CF1, H_CF2). See `Phase5s_Roadmap.md` Track E for next steps and deep research index.
-  - 3 in Uqsl3Hopf — same q-Serre pattern (21 Chevalley relations including cubic Serre for rank 2).
-  - 2 in CenterFunctor — needs actual functor construction, not Nonempty.
+- **3 active sorry remaining** (all in CenterFunctorZ2Equiv, Wave 9 research-grade gaps):
+  - `halfBraiding_sq_identity` tmul case (line 1035) — graded hexagon summand
+    extraction at (eAdd, aAdd, aAdd) of (X ⊗ U ⊗ U) eAdd. Mathematical content
+    VERIFIED (g² = 𝟙 via h_key_eAdd manual trace); blocker is missing Mathlib
+    API for navigating `ι ≫ abstract_morphism ≫ desc` chains.
+  - `halfBraiding_sq_identity_a` tmul case (line 1442) — mirror of above.
+  - `h_cf2_G2` (line 1955) — needs Full + EssSurj for canonicalCenterToRep
+    (estimated 1500-2800 LOC, independent of the tmul blocker).
+- Plus 1 FALSE-wrapped placeholder in TetradGapEquation (not a real axiom).
+- **Wave 8 q-Serre track COMPLETE 2026-04-14**: Uqsl2AffineHopf + Uqsl3Hopf both
+  0 sorry. First formalization of quantum group Hopf algebra compatibility in
+  any proof assistant.
+- Wave 9 H_CF1 ✓ discharged 2026-04-15 via `gradedTotalSpaceFunctor`.
+- Wave 9 H_CF2 ~95% infrastructure complete; 3 active sorries + Full/EssSurj
+  pending. Zero downstream dependencies (OPTIONAL per roadmap).
+- See `Phase5s_Roadmap.md` for full wave-by-wave status and `working-docs/
+  phase5s_wave9_option_b_helpers.md` for 38-session Wave 9 investigation log.
 - The Kazhdan-Lusztig equivalence Rep(u_q) = SU(2)_k-MTC is stated but not constructively proved (the full proof is 200 pages). Data-level verification done for k=1,2.
 - The S-matrix/Muger bridge theorem Direction 1 (det(S) ≠ 0 → Z₂ trivial) is now proved as a GENERAL theorem (ModularityTheorem.lean) — pure linear algebra, no MTC-specific properties needed. Direction 2 (Z₂ trivial → det(S) ≠ 0) requires Muger's categorical trace machinery and is not yet formalized.
 - Generic Hopf algebra structure for U_q(g) (Wave 2 of Phase 5m) not yet built.

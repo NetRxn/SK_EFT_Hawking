@@ -27,6 +27,17 @@ from scripts.build_graph import (
     extract_paper_nodes,
     extract_paper_claim_nodes,
     extract_figure_nodes,
+    extract_prose_claim_nodes,
+    extract_python_test_nodes,
+    extract_review_finding_nodes,
+    extract_production_run_nodes,
+    extract_placeholder_marker_nodes,
+    extract_contradiction_nodes,
+    extract_count_metric_nodes,
+    extract_readiness_gate_nodes,
+    extract_verifies_edges,
+    extract_flags_edges,
+    extract_reports_edges,
     extract_all_nodes,
     extract_all_edges,
     extract_claims_edges,
@@ -36,6 +47,8 @@ from scripts.build_graph import (
     compute_source_hash,
     SHAPE_MAP,
 )
+
+_REQUIRED_NODE_FIELDS = {'id', 'type', 'label', 'name', 'verification', 'detail', 'meta'}
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -454,3 +467,220 @@ class TestPGWrite:
         }
         # Should complete without raising regardless of PG availability
         write_graph_to_pg(dummy_graph)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Phase 5v Wave 2c — new node type extractor tests
+# ═══════════════════════════════════════════════════════════════════════
+
+def _assert_valid_node(node: dict, expected_type: str, id_prefix: str) -> None:
+    assert _REQUIRED_NODE_FIELDS.issubset(node.keys()), (
+        f"Missing fields in {node.get('id')}: {_REQUIRED_NODE_FIELDS - node.keys()}"
+    )
+    assert node['type'] == expected_type, (
+        f"Expected type {expected_type!r}, got {node['type']!r} on {node['id']}"
+    )
+    assert node['id'].startswith(id_prefix), (
+        f"Expected id prefix {id_prefix!r}, got {node['id']!r}"
+    )
+
+
+def _assert_unique_ids(nodes: list[dict]) -> None:
+    ids = [n['id'] for n in nodes]
+    dupes = [x for x in ids if ids.count(x) > 1]
+    assert not dupes, f"Duplicate ids: {dupes[:5]}"
+
+
+class TestExtractProseClaimNodes:
+    """ProseClaim — abstract sentences with narrative-claim tagging."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_prose_claim_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_prose_claim_nodes()
+        if not nodes:
+            pytest.skip("No ProseClaim nodes (no papers with abstracts?)")
+        _assert_unique_ids(nodes)
+        for n in nodes[:10]:
+            _assert_valid_node(n, 'ProseClaim', 'proseclaim:')
+            assert 'paper' in n['meta']
+            assert 'sentence_index' in n['meta']
+            assert 'interesting' in n['meta']
+            assert isinstance(n['meta'].get('tags'), list)
+
+
+class TestExtractPythonTestNodes:
+    """PythonTest — test functions with test_kind classification."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_python_test_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_python_test_nodes()
+        if not nodes:
+            pytest.skip("No PythonTest nodes")
+        assert len(nodes) > 100, f"Expected >100 test functions, got {len(nodes)}"
+        _assert_unique_ids(nodes)
+        valid_kinds = {'golden', 'bounds', 'identity', 'roundtrip', 'unknown'}
+        for n in nodes[:20]:
+            _assert_valid_node(n, 'PythonTest', 'test:')
+            test_kind = n['meta'].get('test_kind')
+            assert test_kind in valid_kinds, (
+                f"Invalid test_kind {test_kind!r} on {n['id']}"
+            )
+            assert 'module' in n['meta']
+            assert 'referenced_names' in n['meta']
+
+
+class TestExtractReviewFindingNodes:
+    """ReviewFinding — adversarial review findings with severity + status."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_review_finding_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_review_finding_nodes()
+        if not nodes:
+            pytest.skip("No ReviewFinding nodes (no AutomatedReviews dir?)")
+        _assert_unique_ids(nodes)
+        valid_severity = {'blocker', 'major', 'minor', 'info', 'advisory', 'unknown'}
+        valid_status = {'open', 'fixed', 'wontfix', 'duplicate', 'unknown'}
+        for n in nodes[:10]:
+            _assert_valid_node(n, 'ReviewFinding', 'review:')
+            assert n['meta'].get('severity') in valid_severity
+            assert n['meta'].get('status') in valid_status
+
+
+class TestExtractProductionRunNodes:
+    """ProductionRun — MC / RHMC / Aristotle run records."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_production_run_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_production_run_nodes()
+        if not nodes:
+            pytest.skip("No ProductionRun nodes")
+        _assert_unique_ids(nodes)
+        for n in nodes[:10]:
+            _assert_valid_node(n, 'ProductionRun', 'run:')
+            assert 'kind' in n['meta']
+            assert 'status' in n['meta']
+
+
+class TestExtractPlaceholderMarkerNodes:
+    """PlaceholderMarker — Lean decls with trivial body on non-trivial statement."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_placeholder_marker_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_placeholder_marker_nodes()
+        if not nodes:
+            pytest.skip("No PlaceholderMarker nodes")
+        _assert_unique_ids(nodes)
+        for n in nodes[:10]:
+            _assert_valid_node(n, 'PlaceholderMarker', 'placeholder:')
+            assert 'lean_full_name' in n['meta']
+            assert 'body_pattern' in n['meta']
+
+
+class TestExtractContradictionNodes:
+    """Contradiction — stub extractor (Wave 2f future wiring)."""
+
+    def test_returns_list(self):
+        """Stub returns []; if later wired, each node must validate."""
+        nodes = extract_contradiction_nodes()
+        assert isinstance(nodes, list)
+        for n in nodes:
+            _assert_valid_node(n, 'Contradiction', 'contradiction:')
+
+
+class TestExtractCountMetricNodes:
+    """CountMetric — snapshots of canonical counts."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_count_metric_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_count_metric_nodes()
+        if not nodes:
+            pytest.skip("No CountMetric nodes (counts.json missing?)")
+        _assert_unique_ids(nodes)
+        for n in nodes[:10]:
+            _assert_valid_node(n, 'CountMetric', 'count:')
+            assert 'value' in n['meta']
+            assert 'metric' in n['meta']
+
+
+class TestExtractReadinessGateNodes:
+    """ReadinessGate — per-paper × per-dimension gate state."""
+
+    def test_returns_list(self):
+        assert isinstance(extract_readiness_gate_nodes(), list)
+
+    def test_node_shape(self):
+        nodes = extract_readiness_gate_nodes()
+        if not nodes:
+            pytest.skip("No ReadinessGate nodes (readiness_gates import failed?)")
+        _assert_unique_ids(nodes)
+        valid_states = {'passed', 'blocked', 'needs-recheck', 'in-progress', 'pending', 'open'}
+        for n in nodes[:10]:
+            _assert_valid_node(n, 'ReadinessGate', 'gate:')
+            assert 'paper' in n['meta']
+            assert 'gate' in n['meta']
+            assert n['meta'].get('state') in valid_states
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Phase 5v Wave 2c — new edge type tests
+# ═══════════════════════════════════════════════════════════════════════
+
+class TestVerifiesEdges:
+    """VERIFIES: PythonTest -> Formula / Parameter / LeanTheorem (with test_kind)."""
+
+    def test_edges_carry_test_kind(self):
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        edges = extract_verifies_edges(node_ids)
+        if not edges:
+            pytest.skip("No VERIFIES edges")
+        valid_kinds = {'golden', 'bounds', 'identity', 'roundtrip', 'unknown'}
+        for e in edges:
+            assert e['type'] == 'VERIFIES'
+            assert e['source'].startswith('test:')
+            assert e.get('test_kind') in valid_kinds
+
+
+class TestFlagsEdges:
+    """FLAGS: ReviewFinding -> any artifact."""
+
+    def test_edge_shape(self):
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        edges = extract_flags_edges(node_ids)
+        if not edges:
+            pytest.skip("No FLAGS edges")
+        for e in edges:
+            assert e['type'] == 'FLAGS'
+            assert e['source'].startswith('review:')
+            assert e['source'] in node_ids
+            assert e['target'] in node_ids
+
+
+class TestReportsEdges:
+    """REPORTS: Paper -> CountMetric (paper_value + delta_pct attributes)."""
+
+    def test_edges_carry_delta(self):
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        edges = extract_reports_edges(node_ids)
+        if not edges:
+            pytest.skip("No REPORTS edges")
+        for e in edges:
+            assert e['type'] == 'REPORTS'
+            assert e['source'].startswith('paper:')
+            assert e['target'].startswith('count:')
+            # delta_pct optional (may be None if canonical value missing)
+            assert 'paper_value' in e or 'value' in e

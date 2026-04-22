@@ -383,7 +383,9 @@
 | CoidealEmbedding | ~130 | 6 | 0 | 5d | Coideal subalgebra embedding B_i into U_q(ŝl₂), Dolan-Grady from Chevalley (**ALL PROVED**) |
 | RepUqFusion | ~160 | 13 | 0 | 5d | Rep(u_q) → SU(2)_k fusion data correspondence, dim formulas, Peter-Weyl (**ALL PROVED**) |
 | StimulatedHawking | ~200 | 11 | 0 | 5d | Stimulated Hawking amplification protocol, signal-to-noise, phonon statistics (**ALL PROVED**) |
-| CenterFunctor | ~200 | 9 | 0 | 5d | Abstract functor Center(Vec_G) → ModuleCat(DG), natural transformation (**2 sorry**) |
+| CenterFunctor | ~200 | 9 | 0 | 5d | Abstract functor Center(Vec_G) → ModuleCat(DG), natural transformation (**0 sorry — 2 tracked hypotheses H_CF1 ✓, H_CF2 partial**) |
+| CenterFunctorZ2 | ~640 | 51 | 0 | 5s W9 | 4 D(Z/2) simple characters as AlgHoms, Module instances, simpleChi injectivity, pairwise distinctness, simpleRepModule bundling (**ALL PROVED**) |
+| CenterFunctorZ2Equiv | ~1950 | 56 | 3 | 5s W9 | H_CF1 discharge via `gradedTotalSpaceFunctor` ✓, canonical functor architecture, signHalfBraiding monoidal ✓, extractBraidAction_{e,a}_{vacuum,electric} ✓, middleSwap_eq_braiding ✓, uu_iso_graded ✓, halfBraiding_at_unit ✓, canonicalCenterToRep.Faithful ✓ via Aristotle. **3 research-grade sorries: halfBraiding_sq_identity tmul (graded hexagon summand), halfBraiding_sq_identity_a tmul (mirror), h_cf2_G2 assembly (Full+EssSurj pending).** See `working-docs/phase5s_wave9_option_b_helpers.md` for 38-session investigation log. Zero downstream dependencies (H_CF2 OPTIONAL per CenterFunctor.lean L75). |
 | QCyc16 | ~100 | 6 | 0 | 5e | Q(ζ₁₆) cyclotomic field: ζ⁸=-1, ζ¹⁶=1, (√2)²=2 (**ALL PROVED by native_decide, zero sorry**) |
 | QCyc5 | ~155 | 9 | 0 | 5e | Q(ζ₅) cyclotomic field: ζ⁵=1, Fibonacci hexagon E1-E3, twist, writhe removal (**ALL PROVED by native_decide, zero sorry**) |
 | IsingBraiding | ~200 | 25 | 0 | 5e | **COMPLETE braided Ising MTC**: R-matrix, twist, 6 hexagon eqs, 4 ribbon conditions, Gauss sum p₊=2ζ (c_top=1/2), trefoil=-1 (**ALL PROVED by native_decide, zero sorry**, FIRST verified knot invariant) |
@@ -785,7 +787,7 @@
 | **Test Files** | 46 | 1872+ tests |
 | **Notebooks** | 48 | Phases 1-5q (Technical + Stakeholder) |
 | **Lean Modules** | 130 | All build clean |
-| **Lean Theorems** | 3021 (1 axiom) | **0 sorry** project-wide. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0. CenterFunctor 0 (2 tracked hypotheses as `Prop` defs). |
+| **Lean Theorems** | ~3120 (1 axiom) | **3 research-grade sorries** all in CenterFunctorZ2Equiv (Wave 9 H_CF2 partial closure, zero downstream deps). Phase 5s core (Wave 8 q-Serre): Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3, Uqsl3Hopf all 0 sorry. CenterFunctor 0 sorry (2 tracked hypotheses: H_CF1 discharged ✓, H_CF2 `Nonempty` assembly pending with 3 in-body sorries). See Phase5s_Roadmap.md Wave 9 + `working-docs/phase5s_wave9_option_b_helpers.md` for 38-session log. |
 | **Aristotle-proved** | 322+ | 45+ runs |
 | **Paper Drafts** | 15 + prediction tables | Full LaTeX (12 complete + 3 outlines) |
 | **Pipeline Figures** | 101 | All PNGs generated |

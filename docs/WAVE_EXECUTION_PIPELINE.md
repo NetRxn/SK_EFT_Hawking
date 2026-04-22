@@ -454,7 +454,7 @@ Adding a new paper table:
    caption envelope)
 4. Run `uv run python scripts/render_paper_tables.py --paper <key>`
 
-**Content-sensitive docs (NOT automated — require human/LLM judgment):**
+**Content-sensitive docs (NOT automated — require human/LLM judgment) MUST STAY IN SYNC:**
 
 | Category | Files | What to update |
 |----------|-------|---------------|
@@ -463,6 +463,7 @@ Adding a new paper table:
 | **Root** | `README.MD` | Project tree, architecture description |
 | **Root** | `SK_EFT_Hawking_Inventory.md` | Module descriptions, section content |
 | **Root** | `CLAUDE.md` (repo root) | Architecture, conventions |
+| **Docs** | `docs/RESEARCH_STATUS_OVERVIEW.md` | Proof Chains, strategic situation, module inventory |
 | **Stakeholder** | `docs/stakeholder/companion_guide.md` | Status table + content synthesis |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Implications.md` | Content for this phase |
 | **Stakeholder** | `docs/stakeholder/Phase<N>_Strategic_Positioning.md` | Content for this phase |
@@ -484,7 +485,7 @@ The Inventory (`SK_EFT_Hawking_Inventory.md`) is the comprehensive source of tru
 2. Update the Inventory's relevant sections (the Index tells you which sections to update for each type of change)
 3. Update the Index's "Counts" table
 4. Update the Index's "Last synced" date
-5. Spot-check: read 3 random sections of the Inventory and verify they match the current codebase
+5. Spot-check: read 3 recently altered sections of the Inventory and verify they match the current codebase
 
 **Common staleness patterns to watch for:**
 - New modules added but not listed in Section 1
@@ -585,7 +586,7 @@ These must hold at ALL times, not just at wave completion:
 
     `ExtractDeps.lean` is currently the only such file in this project. It walks all 2,237+ declarations in the `SKEFTHawking` namespace, runs `collectAxioms` on each to compute transitive axiom closures, and pretty-prints every type signature — total work is O(declarations × per-declaration metadata cost), intrinsically exceeding the default 200K heartbeat budget. Its `maxHeartbeats := 0` lives in the `Lean.Core.Context` for its own `IO Unit` main function and does not leak to any theorem or proof in the project (it is a separate `lean_exe`, not part of `lean_lib SKEFTHawking`).
 
-    Any new file claiming this exception must: (a) be a metaprogram, not contain tactic-generated proofs; (b) demonstrate that its work is intrinsically project-size-bound; (c) justify why no decomposition is possible. If uncertain, assume the rule applies and do not add the override.
+    Any new file claiming this exception must: (a) be a metaprogram, not contain tactic-generated proofs; (b) demonstrate that its work is intrinsically project-size-bound; (c) justify why no decomposition is possible coordinate with user for approval. When in doubt, assume the rule applies and do not add the override.
 
 ---
 

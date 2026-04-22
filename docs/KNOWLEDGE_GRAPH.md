@@ -29,10 +29,10 @@ This starts PG on port 5433 (separate from any other PG instances). The graph ex
 
 ```
 Python registries          build_graph.py           Flask API          D3 visualization
-(constants.py,        -->  (8 node types,     -->   /api/graph    -->  Force-directed
- provenance.py,             10 edge types,          /api/trace         SVG with 4 layouts
- citations.py,              ~980 nodes,             /api/impact        + Explore/Trace/
- formulas.py,               ~1058 edges)            /api/integrity     Impact modes
+(constants.py,        -->  (22 node types,    -->   /api/graph    -->  Force-directed
+ provenance.py,             22 edge types,          /api/trace         SVG with 4 layouts
+ citations.py,              ~5500 nodes,            /api/impact        + Explore/Trace/
+ formulas.py,               ~3500 edges)            /api/integrity     Impact modes
  lean/*.lean,
  review_figures.py)
 ```
@@ -106,7 +106,7 @@ Shapes encode semantic roles — a visual dimension independent of color:
 - `projected` — PROJECTED tier parameter (no primary source expected)
 - `unverified` — no verification
 
-### Edge Types (20 — Phase 1 + 1.5 + 5v Wave 2a)
+### Edge Types (22 — Phase 1 + 1.5 + 5v Wave 2a + Phase 5v coverage fix)
 
 **Phase 1 / 1.5 base edges (12):**
 

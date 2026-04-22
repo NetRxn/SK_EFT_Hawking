@@ -365,19 +365,42 @@ These encode how the two summands of Δ(Eᵢ) q-commute in A⊗A via K-E relatio
       the hexagon summand blocker; mathematical content VERIFIED via
       manual trace (g² = 𝟙 follows from h_key_eAdd), but Lean encoding
       of the graded summand extraction remains open.
-- [ ] **Wave 9 remaining work — Session 37+ delivery**:
-    - **Priority HIGH (blocked):** Close halfBraiding_sq_identity tmul +
-      halfBraiding_sq_identity_a tmul. Options: (a) develop reusable
-      `graded_hexagon_summand` helper (potential Mathlib contribution),
-      (b) propose halfBraiding_sq_identity axiom with AXIOM_METADATA
-      eliminability tracking (requires user permission per CLAUDE.md).
-    - **Priority MEDIUM:** Close h_cf2_G2 — build Full + EssSurj instances
-      (Faithful already proved Session 33), assemble via
-      `Equivalence.ofFullyFaithfulEssSurj`. NOTE: H_CF2 has zero downstream
-      dependencies per CenterFunctor.lean L75; strengthening is reputational.
-      Estimated 1500-2800 LOC for Full + EssSurj independently.
-    - **Priority NICE-TO-HAVE:** Wave 9 Stages 8-12 (figures, paper update,
-      notebook, validate.py, Inventory sync) gated on Lean build clean.
+- [~] **Wave 9 session 38 (2026-04-20) — Option B (helper infrastructure) tested**:
+    - Hypothesis: build `GradedObject.tensorProductGradedEval`-style helper
+      (~100-200 LOC) to bypass the graded hexagon summand extraction blocker.
+    - Dispatched focused `lean4:sorry-filler-deep` subagent with Option B task:
+      build `half_braiding_sq_id_element_aux` (element-level g² = 𝟙 on X.fst eAdd).
+    - **Subagent result (verbatim)**: "Element-level decomposition (Helper 1)
+      has essentially the same proof obligation as the category-level statement.
+      Moving to element level does not bypass the graded-associator/descent-body
+      simp structure — it just relocates it. Both routes require the same
+      `ιTensorObj₃_eq` + `ι_tensorObjDesc` + unitor coherence simp-normalization
+      step."
+    - **Conclusion**: Option B is NOT structurally easier than Option A. The
+      irreducible hard part is Lean encoding of graded 3-way tensor summand
+      extraction with abstract `(X.snd.β U).hom aAdd` — missing from current
+      Mathlib infrastructure.
+    - Session 38 net progress: `erw [ModuleCat.MonoidalCategory.rightUnitor_hom_apply]`
+      fires on tmul goal reducing RHS to `c • x` (new tactic discovery).
+- [x] **Wave 9 CLOSURE DECISION (2026-04-20)**: Option A accepted. Phase 5s
+    main contribution (q-Serre quantum group Hopf algebra formalization, Wave 8)
+    is 100% complete and locked in. Wave 9's H_CF1 ✓ discharged; H_CF2
+    infrastructure ~95% complete with 3 well-characterized isolated sorries
+    representing the boundary of current Mathlib graded-tensor infrastructure.
+    Zero downstream dependencies; no pipeline/paper/validate.py impact.
+- [ ] **Wave 9 remaining (Option A implementation)**:
+    - **Documentation**: Lean comment blocks at 3 sorries cite Session 37-38
+      findings + working-doc reference. DONE.
+    - **Working doc + memory + roadmap**: Session 38 conclusions captured in
+      `temporary/working-docs/phase5s_wave9_option_b_helpers.md` (NEW) and
+      `phase5s_wave9_centerfunctor_z2_state.md` (extended). Memory file
+      `project_phase5s_wave9_state.md` synced. DONE.
+    - **Future sprint (low priority)**: File standalone Mathlib issue for
+      graded 3-way tensor summand extraction helpers; if Mathlib receptive,
+      revisit Wave 9 H_CF2 closure.
+    - **Stages 8-12**: Figures, paper, notebook, validate.py, Inventory sync
+      — deferrable; Wave 9 H_CF2 is OPTIONAL per roadmap with zero
+      downstream dependencies.
 
 ---
 
@@ -411,7 +434,7 @@ All tracks are independent. Maximum parallelism possible.
 | Wave 6 | KL data k=3,4,5 | 2-3 weeks | Deep research | **PARTIAL** — k=4 already done, k=5 fusion COMPLETE (comm + assoc, 4.2s). S-matrix k=5 pending (needs Q(cos(2π/7)) field). |
 | Wave 7 | Instanton zero-mode counting | 1-2 days | None | **COMPLETE** — RED→GREEN. 4D index theorem BYPASSED via separation of variables. InstantonZeroModes.lean: 9 theorems, 0 sorry, 1.5s. Clifford decomposition + 6×6 angular kernel + polynomial dim → 2|qn|=4. |
 | Wave 8 | q-Serre sorry closure | 3-7 days | CAS deep research | **COMPLETE 2026-04-14** — Uqsl2AffineHopf: 0 sorry. Uqsl3Hopf: 0 sorry (all 4 antipode Serre cubics E12/E21/F12/F21 closed; Bialgebra + HopfAlgebra typeclass instances wired). Full SKEFTHawking package builds clean no-cache. |
-| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL — H_CF1 ✓, H_CF2 IN-PROGRESS (2026-04-20 Session 37)** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-20 built canonical functor architecture (signHalfBraiding monoidal ✓, extractBraidAction_{e,a}_vacuum ✓, _electric ✓, canonicalCenterToRep.Faithful ✓ via Aristotle cherry-pick). Session 21-33: unblocked extractBraidAction_{e,a}_sq via halfBraiding_sq_identity + _a pair, decomposed via middleSwap_eq_braiding helper + uu_iso_graded graded iso + halfBraiding_at_unit. Session 36 (2026-04-20): MAJOR UNBLOCK — refactored parent from circular hA chain to direct element descent via TensorProduct.induction_on. Zero + add cases CLOSED via explicit LinearMap.map_zero/map_add. Session 37 (2026-04-20): `erw [rightUnitor_hom_apply]` fires reducing RHS to `c • x`; subagent dispatched with full context + algebraic derivation (g² = 𝟙 via h_key_eAdd), unable to close. Current state: **3 active sorries** in CenterFunctorZ2Equiv.lean — halfBraiding_sq_identity tmul (line 1020, algebraic content verified elementwise but Lean encoding of graded hexagon summand extraction at (eAdd,aAdd,aAdd) remains open), halfBraiding_sq_identity_a tmul (line 1416, mirror), h_cf2_G2 (line 1924, needs Full + EssSurj — estimated 1500-2800 LOC independent from tmul blocker). Build clean, 1930 LOC, 56 theorems in CenterFunctorZ2Equiv.lean + 51 in CenterFunctorZ2.lean + 4 in CenterFunctor.lean. |
+| Wave 9 | CenterFunctor hypotheses | 1 week (H_CF1); multi-week (canonical functor + H_CF2) | None | **PARTIAL CLOSURE — H_CF1 ✓, H_CF2 research-grade gaps (2026-04-20 Session 38 EOD)** — H_CF1 discharged 2026-04-15 via `gradedTotalSpaceFunctor`. Sessions 3-20 built canonical functor architecture (signHalfBraiding monoidal ✓, extractBraidAction_{e,a}_vacuum ✓, _electric ✓, canonicalCenterToRep.Faithful ✓ via Aristotle cherry-pick). Sessions 21-36: progressed halfBraiding_sq_identity through circularity analysis + element descent refactor + 2 deep research rounds. Session 37: `erw [rightUnitor_hom_apply]` fires reducing RHS to `c • x`; explore agents identified 8 key Mathlib lemmas. Session 38: Option B (helper infrastructure) tested via focused subagent; independently validated as structurally equivalent to Option A — element-level decomposition relocates rather than simplifies the graded hexagon summand extraction blocker. **Wave 9 closure decision: Option A accepted** — accept 3 well-characterized research-grade sorries with full session log preserved; zero downstream dependencies. Current state: **3 active sorries** in CenterFunctorZ2Equiv.lean — halfBraiding_sq_identity tmul (line 1035), halfBraiding_sq_identity_a tmul (line 1431), h_cf2_G2 (line 1939). Algebraic content VERIFIED via manual trace (g² = 𝟙 from h_key_eAdd); Lean encoding blocker is missing Mathlib API for abstract-morphism-indexed graded 3-way tensor summand extraction. Build clean, 1938 LOC, 56 theorems in CenterFunctorZ2Equiv.lean + 51 in CenterFunctorZ2.lean + 4 in CenterFunctor.lean. Phase 5s core contribution (Wave 8 q-Serre) is 100% complete and UNAFFECTED. |
 
 **Total estimated LOE:** 7-11 weeks across all tracks, but most are parallelizable.
 
