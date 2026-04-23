@@ -63,18 +63,31 @@
 
 ---
 
-### Wave 3 — Reduced 3×3 Singlet Block [Pipeline: Stages 1-5]
+### Wave 3 — Reduced 3×3 Singlet Block [Pipeline: Stages 1-5] ✅ SHIPPED 2026-04-24 session 7
 
 **Goal:** Isolate the `S = {D+, D-, s}` sector and prove it matches the effective Hamiltonian used in the paper.
 
-**Deliverables:**
-- [ ] `singletBlock` definition for the 3×3 reduced Hamiltonian
-- [ ] Exact identification of the `U`, `Δ`, `t` dependence
-- [ ] Computational-space embedding theorems: how `|↑,↓⟩`, `|↓,↑⟩` map into `|t0⟩`, `|s⟩`
-- [ ] Optional Python cross-check script stub for eigenvalues / basis sanity
+**Shipped (2026-04-24 session 7):**
+- [x] `H_singlet` definition retained from W2 (3×3 reduced Hamiltonian in {|D₊⟩, |D₋⟩, |s⟩} basis, `!![U, Δ, -2t; Δ, U, 0; -2t, 0, 0]`)
+- [x] Exact `U`, `Δ`, `t` dependence confirmed via block-match theorems below
+- [x] New Section 3b added to `lean/SKEFTHawking/FermiHubbardDimer.lean` (~90 LOC, 10 theorems, 0 sorry)
+  - Unnormalized symmetry-adapted basis vectors as `Fin 6 → ℝ`: `v_Dplus`, `v_Dminus`, `v_s`, `v_t0`, plus computational basis `up_down`, `down_up`
+  - **W3a** `H_full_acts_on_v_Dplus`: `H₆ · |D₊⟩ = U • |D₊⟩ + Δ • |D₋⟩ + (-2t) • |s⟩` (first row of H_singlet)
+  - **W3b** `H_full_acts_on_v_Dminus`: `H₆ · |D₋⟩ = Δ • |D₊⟩ + U • |D₋⟩` (second row; no s-coupling — sublattice structure)
+  - **W3c** `H_full_acts_on_v_s`: `H₆ · |s⟩ = (-2t) • |D₊⟩` (third row; no self-coupling)
+  - **W3d** `H_full_acts_on_v_t0`: `H₆ · |t₀⟩ = 0` — triplet decoupling from the (-t, +t) alternating-sign cancellation
+  - **W3e** `two_updown_eq_t0_plus_s`: `2 • |↑,↓⟩ = |t₀⟩ + |s⟩` (computational-basis decomposition)
+  - **W3f** `two_downup_eq_t0_minus_s`: `2 • |↓,↑⟩ = |t₀⟩ − |s⟩`
+- [x] Python mirror `src/fermi_hubbard/dimer.py` extended with `V_DPLUS`, `V_DMINUS`, `V_S`, `V_T0`, `UP_DOWN`, `DOWN_UP` constants + `block_match_Dplus/Dminus/s` helpers
+- [x] Tests: `TestSymmetryAdaptedBasisEmbeddings` class in `tests/test_fermi_hubbard_dimer.py` with 34 new tests (basis components, orthogonality, block-match on deterministic + random grids, computational decomposition, row-consistency via projection onto H_singlet entries). 108 dimer tests pass.
 
-**Estimated LOE:** 2-3 days
-**Risk:** Low
+**Design decision (recorded):** Used **unnormalized** symmetry-adapted basis (omitting `1/√2` normalization) so every W3 theorem closes over `ℝ` via `ext ; fin_cases ; simp ; ring` without dragging `Real.sqrt 2` through row identities. The `1/√2` re-enters only if W6 needs unitarity on the normalized computational qubit subspace. The block-match identities (W3a-c) are exactly the rows of `H_singlet` re-expressed in the 6-dim site basis, verified by Python projection onto `{v_Dplus, v_Dminus, v_s}` (test `test_block_match_singlet_rows_match_H_singlet`).
+
+**Wave 3 deferred (promoted to W4+ or deferred):**
+- Explicit 6×6 → 3×3 basis-change unitary P and `P†H₆P = diag(0₃, H₃)` (T11 — ~80 LOC, defers to W5 or is superseded by W3a-d + T10a-c which together establish the block structure without needing P explicitly)
+
+**Estimated LOE:** 2-3 days (actual: ~1 session)
+**Risk:** Low (actual: zero blockers; one mixed-closure pattern hit and resolved via `first | (simp; ring) | simp` per prior feedback memory)
 
 ---
 

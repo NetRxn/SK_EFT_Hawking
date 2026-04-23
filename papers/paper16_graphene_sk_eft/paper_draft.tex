@@ -39,8 +39,11 @@ via broadband correlation analysis. The corrected noise formula
 $\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)$,
 derived independently from Keldysh FDT and Landauer-B\"uttiker with
 Bogoliubov mixing, gives statistical integration times under one second
-for $5\sigma$ discovery (greybody $\Gamma \geq 0.01$), making the
-measurement systematics-limited rather than statistics-limited.
+for $5\sigma$ discovery. The greybody factor is computed in closed form
+as $\Gamma_0 = 4 c_R v/(c_R+v)^2 \approx 0.9994$ for the Dean nozzle
+(Anderson et al., PRD 87), with quasi-1D finite-width corrections
+bounded at $\le 1.8\%$ at $\omega_H$, making the measurement
+systematics-limited rather than statistics-limited.
 
 We classify transport coefficients for the 2+1D charged conformal fluid:
 2~independent first-order coefficients ($\eta$, $\sigma_Q$) matching the
@@ -339,26 +342,38 @@ not $J{\cdot}s$), off by a factor of $2e^2/h \approx \SI{77.5}{\micro\siemens}$
 noise level by several orders of magnitude relative to that incorrect
 expression.
 
-The greybody factor $\Gamma(\omega)$ encodes the horizon's deviation from
-a perfect thermal emitter and depends on the nozzle velocity profile.
-For a step discontinuity, $\Gamma = 1$; for smooth profiles,
-$\Gamma(\omega) < 1$ with $\Gamma \to 0$ as $\omega \to 0$ in dispersive
-systems~\cite{AndersonBFP2013}. The low-$\omega$ suppression is
-particularly important because the bandwidth-cumulative SNR is dominated
-by low-frequency bins where $n_H$ is largest; a frequency-dependent
-$\Gamma(\omega) \propto \omega$ at low $\omega$ would reduce the
-cumulative SNR relative to the $\Gamma = 1$ estimate. Numerical
-predictions below use $\Gamma = 1$ (upper bound on signal, lower bound
-on integration time). The nozzle-specific $\Gamma(\omega)$ from the
-Bogoliubov S-matrix at the supersonic transition is required for
-quantitative detection forecasts and is the principal remaining
-theoretical uncertainty in this analysis.
+The greybody factor $\Gamma(\omega)$ encodes the horizon's deviation
+from a perfect thermal emitter. For a one-dimensional acoustic black
+hole with a smooth velocity profile, Anderson, Balbinot, Fabbri, and
+Parentani~\cite{AndersonBFP2013} proved analytically that the
+zero-frequency limit is profile-independent and near unity,
+\begin{equation}
+\Gamma_0 \;=\; \frac{4\,c_R\,v}{(c_R + v)^2},
+\label{eq:gamma0}
+\end{equation}
+which contrasts with four-dimensional Schwarzschild
+($\Gamma \propto \omega^2$). For the Dean bilayer nozzle
+($v \approx 0.985\,c_s$, $c_R \approx c_s$) this gives
+$\Gamma_0 \approx 0.9994$. The frequency dependence in the adiabatic
+regime ($D = \kappa\,l_{ee}/c_s = 0.23 < 1$) is
+$\Gamma(\omega) \approx \Gamma_0[1 - (\omega/\omega_{\max})^2]$ with
+$\omega_{\max} = \sqrt{\kappa c_s/l_{ee}}$ the dispersive UV cutoff, so
+$\Gamma$ remains within a few per cent of $\Gamma_0$ throughout the
+detection band. The quasi-1D finite-width correction
+$|\delta\Gamma/\Gamma| \le (l_{ee}/W)^2 + (\omega/\omega_\perp)^2
+e^{-2\pi L/W}$ bounds the 2D-to-1D deviation at $\le 1.8\%$ at
+$\omega_H$; formally verified in Lean module
+\texttt{QuasiOneDReduction} (theorems T1--T5). Numerical predictions
+below use this realistic $\Gamma(\omega)$ rather than the
+$\Gamma = 1$ upper bound, giving a corrected cumulative SNR of $98.8\%$
+of the step-horizon value.
 
 The thermal background is Johnson-Nyquist:
 $S_{\rm thermal} = 4 k_B T_{\rm amb} \sigma_Q \approx
 \SI{1.3e-24}{\ampere\squared/\hertz}$.
 
-With $\Gamma = 1$, the Hawking signal $\Delta S_I \approx
+With the realistic $\Gamma(\omega) \approx \Gamma_0 \approx 0.9994$
+[Eq.~\eqref{eq:gamma0}], the Hawking signal $\Delta S_I \approx
 \SI{e-26}{\ampere\squared/\hertz}$ at the peak, sitting approximately
 two orders of magnitude below the thermal floor (Fig.~\ref{fig:spectrum}).
 The Hawking excess has a \emph{distinct spectral shape}---Planck at
@@ -367,8 +382,9 @@ hydrodynamic regime). Correlation analysis exploits this shape difference.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig104_graphene_noise_spectrum.png}
-\caption{Current noise power spectral density for the Dean bilayer nozzle
-($\Gamma = 1$).
+\caption{Current noise power spectral density for the Dean bilayer
+nozzle (realistic greybody $\Gamma_0 \approx 0.9994$ per
+Eq.~\eqref{eq:gamma0}).
 $\Delta S_I$ (blue) sits ${\sim}2$ orders below the Johnson-Nyquist
 background $S_{\rm thermal}$ (amber dashed). The Hawking signal is flat
 below $\omega_H \approx \SI{51}{\giga\hertz}$ and Boltzmann-suppressed
@@ -379,9 +395,10 @@ above. Shaded region: detection band (\SIrange{0.5}{85}{\giga\hertz}).}
 \subsection{Detection feasibility}
 
 The per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal} \approx
-T_H\Gamma/(2T_{\rm amb})$ is approximately $8 \times 10^{-3}$ ($\Gamma=1$)
-at low frequencies, independent of $\sigma_Q$ (the conductance cancels in
-the ratio; Lean theorem \texttt{snr\_independent\_of\_sigma\_Q}).
+\Gamma_0 T_H/(2T_{\rm amb})$ is approximately $8 \times 10^{-3}$
+(using $\Gamma_0 \approx 0.9994$) at low frequencies, independent of
+$\sigma_Q$ (the conductance cancels in the ratio; Lean theorem
+\texttt{snr\_independent\_of\_sigma\_Q}).
 The cumulative SNR scales as
 ${\rm SNR}_{\rm cumul}^2 = \sum_i {\rm SNR}_{{\rm bin},i}^2 \cdot \Delta f
 \cdot t$,
@@ -391,21 +408,27 @@ ${\sim}300$ independent bins) via bandwidth-cumulative integration.
 The radiometer equation gives the statistical integration time
 $t = [{\rm SNR}_{\rm target}^2] / [\sum_i {\rm SNR}_{{\rm bin},i}^2
 \cdot \Delta f]$.
-For $\Gamma = 1$ (step-horizon upper bound): $t_{5\sigma} < \SI{1}{\milli\second}$.
-Even with a pessimistic greybody $\Gamma = 0.01$, the 5$\sigma$ integration
-time remains under \SI{1}{\second}. At $\Gamma = 10^{-3}$:
-$t_{5\sigma} \sim \SI{10}{\second}$. In all physically plausible regimes,
-\emph{detection is limited by systematic calibration, not by photon
-statistics} (Fig.~\ref{fig:snr}).
+With the realistic $\Gamma_0 \approx 0.9994$
+[Eq.~\eqref{eq:gamma0}, Lean
+\texttt{QuasiOneDReduction.greybody\_zero\_freq\_le\_one}]:
+$t_{5\sigma} < \SI{1}{\milli\second}$, essentially unchanged from the
+$\Gamma=1$ step-horizon upper bound. Even with a pessimistic
+$\Gamma = 0.01$ (two orders below the derived value), the 5$\sigma$
+integration time remains under \SI{1}{\second}. In all physically
+plausible regimes, \emph{detection is limited by systematic calibration,
+not by photon statistics} (Fig.~\ref{fig:snr}).
 
 These estimates assume the ideal radiometer equation (Gaussian noise,
-independent frequency bins, $\Gamma$ frequency-independent). Practical
-limiting factors include: (i)~amplifier noise temperature $T_N \sim
+independent frequency bins). Practical limiting factors include:
+(i)~amplifier noise temperature $T_N \sim
 \SI{2}{\kelvin}$--\SI{5}{\kelvin}$ for cryogenic HEMTs at GHz frequencies,
 adding ${\sim}3\%$ to the effective noise floor at $T_{\rm amb} =
 \SI{150}{\kelvin}$ (but becoming dominant if $T_{\rm amb}$ is reduced
-toward $T_H$); (ii)~frequency-dependent $\Gamma(\omega)$, which
-suppresses low-$\omega$ bins that dominate the cumulative SNR;
+toward $T_H$); (ii)~the residual frequency dependence of
+$\Gamma(\omega)$, whose deviation from $\Gamma_0$ is bounded by
+$(\omega/\omega_{\max})^2 \le 0.6\%$ at $\omega_H$ and sub-percent
+everywhere in the detection band
+(Lean \texttt{QuasiOneDReduction.quasi1D\_validity\_bound});
 (iii)~1/$f$ noise from contacts; (iv)~non-Gaussian fluctuations near
 quantum criticality. These factors may increase the effective integration
 time by orders of magnitude beyond the statistical limit, but the margin
@@ -415,7 +438,9 @@ within a single session.
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig105_graphene_snr_frequency.png}
 \caption{Per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal}$
-vs.\ frequency for the Dean bilayer nozzle ($\Gamma = 1$). The ratio is
+vs.\ frequency for the Dean bilayer nozzle (realistic
+$\Gamma_0 \approx 0.9994$, quasi-1D correction
+$\le 1.8\%$). The ratio is
 ${\sim}8\times 10^{-3}$ below $\omega_H$ (approximately $T_H/2T_{\rm amb}$)
 and drops exponentially above. Detection is statistics-limited only for
 $\Gamma \lesssim 10^{-3}$.}

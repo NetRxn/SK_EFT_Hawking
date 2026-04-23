@@ -13,11 +13,20 @@ import pytest
 
 from src.fermi_hubbard.dimer import (
     BASIS_6,
+    DOWN_UP,
     H_full,
     H_singlet,
     TRIPLET_MINUS,
     TRIPLET_PLUS,
     TRIPLET_ZERO_UNNORM,
+    UP_DOWN,
+    V_DMINUS,
+    V_DPLUS,
+    V_S,
+    V_T0,
+    block_match_Dminus,
+    block_match_Dplus,
+    block_match_s,
     bright_energies_U0,
     chiral_anticommutator_U0,
     chiral_op,
@@ -209,3 +218,102 @@ class TestFullHamiltonianTriplet:
         for t, delta, U in random_params:
             H = H_full(float(t), float(delta), float(U))
             assert np.allclose(H, H.T, atol=1e-12)
+
+
+class TestSymmetryAdaptedBasisEmbeddings:
+    """Phase 5t W3: basis-change block-match + computational decomposition."""
+
+    def test_basis_vector_components(self):
+        # Sanity: the unnormalized basis vectors have the expected
+        # components in the {|↑,↑⟩, |↑↓,0⟩, |↑,↓⟩, |↓,↑⟩, |0,↑↓⟩, |↓,↓⟩} site
+        # ordering.
+        np.testing.assert_array_equal(V_DPLUS, [0, 1, 0, 0, 1, 0])
+        np.testing.assert_array_equal(V_DMINUS, [0, 1, 0, 0, -1, 0])
+        np.testing.assert_array_equal(V_S, [0, 0, 1, -1, 0, 0])
+        np.testing.assert_array_equal(V_T0, [0, 0, 1, 1, 0, 0])
+        np.testing.assert_array_equal(UP_DOWN, [0, 0, 1, 0, 0, 0])
+        np.testing.assert_array_equal(DOWN_UP, [0, 0, 0, 1, 0, 0])
+
+    def test_symmetry_basis_are_mutually_orthogonal(self):
+        # {D+, D-, s, t0} span the S_z = 0 subspace with distinct symmetries;
+        # they must be pairwise orthogonal in the site basis.
+        basis = [V_DPLUS, V_DMINUS, V_S, V_T0]
+        for i, v in enumerate(basis):
+            for j, w in enumerate(basis):
+                if i != j:
+                    assert np.dot(v, w) == 0.0, f"{i},{j} not orthogonal"
+
+    @pytest.mark.parametrize("t, delta, U", PARAM_GRID)
+    def test_H_full_acts_on_v_Dplus(self, t, delta, U):
+        # Lean W3a: H_full · v_Dplus = U·v_Dplus + Δ·v_Dminus + (-2t)·v_s.
+        H = H_full(t, delta, U)
+        assert np.allclose(H @ V_DPLUS, block_match_Dplus(t, delta, U),
+                            atol=1e-12)
+
+    @pytest.mark.parametrize("t, delta, U", PARAM_GRID)
+    def test_H_full_acts_on_v_Dminus(self, t, delta, U):
+        # Lean W3b: H_full · v_Dminus = Δ·v_Dplus + U·v_Dminus.
+        H = H_full(t, delta, U)
+        assert np.allclose(H @ V_DMINUS, block_match_Dminus(t, delta, U),
+                            atol=1e-12)
+
+    @pytest.mark.parametrize("t, delta, U", PARAM_GRID)
+    def test_H_full_acts_on_v_s(self, t, delta, U):
+        # Lean W3c: H_full · v_s = (-2t)·v_Dplus.
+        H = H_full(t, delta, U)
+        assert np.allclose(H @ V_S, block_match_s(t, delta, U),
+                            atol=1e-12)
+
+    @pytest.mark.parametrize("t, delta, U", PARAM_GRID)
+    def test_H_full_acts_on_v_t0_is_zero(self, t, delta, U):
+        # Lean W3d: triplet t0 decouples at zero energy for all (t, Δ, U).
+        H = H_full(t, delta, U)
+        assert np.allclose(H @ V_T0, np.zeros(6), atol=1e-12)
+
+    def test_H_full_acts_on_symmetry_basis_on_random_grid(self, random_params):
+        # The four block-match identities on a broader random grid.
+        for t, delta, U in random_params:
+            t_, d_, U_ = float(t), float(delta), float(U)
+            H = H_full(t_, d_, U_)
+            assert np.allclose(H @ V_DPLUS, block_match_Dplus(t_, d_, U_),
+                                atol=1e-12)
+            assert np.allclose(H @ V_DMINUS, block_match_Dminus(t_, d_, U_),
+                                atol=1e-12)
+            assert np.allclose(H @ V_S, block_match_s(t_, d_, U_),
+                                atol=1e-12)
+            assert np.allclose(H @ V_T0, np.zeros(6), atol=1e-12)
+
+    def test_updown_decomposition(self):
+        # Lean W3e: 2·up_down = v_t0 + v_s.
+        np.testing.assert_array_equal(2.0 * UP_DOWN, V_T0 + V_S)
+
+    def test_downup_decomposition(self):
+        # Lean W3f: 2·down_up = v_t0 - v_s.
+        np.testing.assert_array_equal(2.0 * DOWN_UP, V_T0 - V_S)
+
+    def test_block_match_singlet_rows_match_H_singlet(self, random_params):
+        # The three block-match RHSs are exactly the (D+, D-, s) rows of
+        # H_singlet re-expressed in the 6-dim site basis. Project the RHS
+        # onto the {v_Dplus, v_Dminus, v_s} basis and compare to H_singlet
+        # row-by-row.
+        norm_Dplus = np.dot(V_DPLUS, V_DPLUS)  # = 2
+        norm_Dminus = np.dot(V_DMINUS, V_DMINUS)  # = 2
+        norm_s = np.dot(V_S, V_S)  # = 2
+        for t, delta, U in random_params:
+            t_, d_, U_ = float(t), float(delta), float(U)
+            Hs = H_singlet(t_, d_, U_)
+            # Row 0 (D+):
+            rhs0 = block_match_Dplus(t_, d_, U_)
+            assert np.isclose(np.dot(V_DPLUS, rhs0) / norm_Dplus, Hs[0, 0])
+            assert np.isclose(np.dot(V_DMINUS, rhs0) / norm_Dminus, Hs[0, 1])
+            assert np.isclose(np.dot(V_S, rhs0) / norm_s, Hs[0, 2])
+            # Row 1 (D-):
+            rhs1 = block_match_Dminus(t_, d_, U_)
+            assert np.isclose(np.dot(V_DPLUS, rhs1) / norm_Dplus, Hs[1, 0])
+            assert np.isclose(np.dot(V_DMINUS, rhs1) / norm_Dminus, Hs[1, 1])
+            assert np.isclose(np.dot(V_S, rhs1) / norm_s, Hs[1, 2])
+            # Row 2 (s):
+            rhs2 = block_match_s(t_, d_, U_)
+            assert np.isclose(np.dot(V_DPLUS, rhs2) / norm_Dplus, Hs[2, 0])
+            assert np.isclose(np.dot(V_DMINUS, rhs2) / norm_Dminus, Hs[2, 1])
+            assert np.isclose(np.dot(V_S, rhs2) / norm_s, Hs[2, 2])

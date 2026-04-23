@@ -6775,6 +6775,11 @@ def fig_graphene_noise_spectrum():
     S_thermal (Johnson-Nyquist background), and S_total on log-log axes.
     Marks the characteristic Hawking frequency ω_H and the optimal
     detection band.
+
+    Phase 5w W10c: the signal uses the realistic frequency-dependent
+    greybody Γ(ω) from `greybody_smooth_profile` (with Γ₀ ≈ 0.9994
+    per Anderson et al. PRD 87, Lean `QuasiOneDReduction.T1`), not the
+    Γ = 1 upper bound.
     """
     from src.graphene.wkb_spectrum import compute_graphene_spectrum
 
@@ -6830,10 +6835,21 @@ def fig_graphene_snr_frequency():
     Shows the frequency dependence of the Hawking-to-thermal signal ratio.
     The SNR is roughly flat at low frequencies (both Hawking and thermal
     scale similarly) and drops exponentially above ω_H.
+
+    Phase 5w W10c: uses the realistic greybody Γ(ω) ≈ Γ₀ = 0.9994 (Lean
+    `QuasiOneDReduction.greybody_zero_freq_le_one`, Anderson et al.
+    PRD 87), not the `Γ=1` upper bound.
     """
     from src.graphene.wkb_spectrum import compute_graphene_spectrum
+    from src.core.formulas import greybody_zero_freq
+    from src.core.constants import GRAPHENE_PLATFORMS
 
     spec = compute_graphene_spectrum('Dean_bilayer_nozzle', n_points=300)
+    plat = GRAPHENE_PLATFORMS['Dean_bilayer_nozzle']
+    v_ratio = plat.get('v_over_c_s_horizon', 0.985)
+    c_s = plat['c_s']
+    gamma_0 = greybody_zero_freq(c_s, v_ratio * c_s)
+
     f_GHz = spec.freq_Hz / 1e9
 
     fig = go.Figure()
@@ -6852,8 +6868,8 @@ def fig_graphene_snr_frequency():
     fig.add_annotation(
         x=np.log10(2), y=np.log10(spec.peak_snr * 0.3),
         text=f'Peak SNR/bin ≈ {spec.peak_snr:.1e}<br>'
-             f'SNR = T_H/(2T_amb) ≈ {spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
-             f'(Γ = 1, systematics-limited)',
+             f'SNR = Γ₀ T_H/(2T_amb) ≈ {gamma_0 * spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
+             f'(Γ₀ ≈ {gamma_0:.4f}, quasi-1D corr. ≤ 1.8%)',
         showarrow=False, font=dict(size=10),
         xref='x', yref='y',
     )

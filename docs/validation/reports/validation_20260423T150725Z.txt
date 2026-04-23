@@ -1,0 +1,27 @@
+SK-EFT Hawking Validation Report
+Generated: 20260423T150725Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] count_literals
+  + summary — 65 count-literal matches across 17 papers (WARN-level; retrofit to \input{counts.tex} + macros)
+  + paper10_modular_generation — no count literals found
+  + paper11_quantum_group — 4 count-literal matches: L63 "24
+theorems" (theorems); L65 "87 theorems" (theorems); L238 "201 theorems" (theorems) (+1 more)
+  + paper12_polariton — no count literals found
+  + paper14_braided_mtc — 7 count-literal matches: L83 "18 theorems" (theorems); L86 "14 theorems" (theorems); L137 "25 theorems" (theorems) (+4 more)
+  + paper15_methodology — USES MACROS but 3 count-literal matches: L121 "25 theorems" (theorems); L180 "200 theorems" (theorems); L110 "33 sorry" (sorry)
+  + paper16_graphene_sk_eft — no count literals found
+  + paper16_wrt_tqft — no count literals found
+  + paper17_dark_sector — 11 count-literal matches: L46 "22 theorems" (theorems); L47 "30 theorems" (theorems); L48 "3569 theorems" (theorems) (+8 more)
+  + paper1_first_order — no count literals found
+  + paper2_second_order — 2 count-literal matches: L362 "6 sorry" (sorry); L366 "22 sorry" (sorry)
+  + paper3_gauge_erasure — 1 count-literal matches: L37 "12 theorems" (theorems)
+  + paper4_wkb_connection — 5 count-literal matches: L33 "17 theorems" (theorems); L271 "17 theorems" (theorems); L290 "968 theorems" (theorems) (+2 more)
+  + paper5_adw_gap — 6 count-literal matches: L37 "21 theorems" (theorems); L39 "20 theorems" (theorems); L318 "21 theorems" (theorems) (+3 more)
+  + paper6_vestigial — 5 count-literal matches: L42 "14 theorems" (theorems); L538 "18 theorems" (theorems); L538 "16 theorems" (theorems) (+2 more)
+  + paper7_chirality_formal — 10 count-literal matches: L51 "54
+theorems" (theorems); L193 "12 theorems" (theorems); L271 "54 theorems" (theorems) (+7 more)
+  + paper8_chirality_master — 1 count-literal matches: L430 "130 Lean modules" (modules)
+  + paper9_sm_anomaly_drinfeld — 10 count-literal matches: L82 "19 theorems" (theorems); L106 "23 theorems" (theorems); L144 "13 theorems" (theorems) (+7 more)
+
+Overall: 1/1 passed

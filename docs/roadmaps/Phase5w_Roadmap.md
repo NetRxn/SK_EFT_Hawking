@@ -337,27 +337,28 @@ Wave 1 (deep research) ─── COMPLETE
 - [x] `src/graphene/bilayer_eos.py` — ζ/η ≈ 0.02, negligible impact
 - [x] Paper 16 §II.D updated
 
-**10c. Greybody factor + quasi-1D bound (HIGH — deep research COMPLETE 2026-04-16):**
+**10c. Greybody factor + quasi-1D bound (HIGH — COMPLETE 2026-04-23):**
 - [x] Deep research filed + returned: `Lit-Search/Phase-5w/Greybody Factor and Quasi-1D Validity for the Graphene de Laval Nozzle.md`
 - [x] Key finding: **Γ₀ ≈ 0.9994** (NOT vanishing) — adversarial critique's premise was wrong for 1D acoustic BHs
 - [x] Γ₀ = 4c_R v/(c_R+v)² is profile-independent (Anderson, Balbinot, Fabbri, Parentani PRD 87)
 - [x] Quasi-1D error bounded: |δΓ/Γ| ≤ (l_ee/W)² + (ω/ω_perp)² exp(-2πL/W) ≤ 1.8% at ω_H
 - [x] Corrected SNR = 98.8% of Γ=1 → paper claims vindicated
-- [ ] `formulas.py`: add `greybody_zero_freq()`, `greybody_smooth_profile()`, `quasi1D_bound()`
-- [ ] `wkb_spectrum.py`: use realistic Γ(ω) instead of Γ=1
-- [ ] `lean/SKEFTHawking/QuasiOneDReduction.lean` — 5 algebraic theorems + 2 tracked hypotheses (0 sorry):
-  - T1: Γ₀ = 4c_R v/(c_R+v)² (algebraic identity)
-  - T2: |δκ/κ| ≤ (l_ee/W)² (surface gravity bound)
-  - T3: evanescent suppression ≤ (ω/ω_perp)² exp(-2πL/W)
-  - T4: D_dean < 1 (adiabatic regime, norm_num)
-  - T5: combined quasi-1D validity bound
-  - H1: AdiabaticRegimeCorrection (Prop def, tracked) — O(D⁴) from Finazzi-Parentani
-  - H2: DispersiveUVCutoff (Prop def, tracked) — ω_max ~ √(κ c_s/l_ee) from Macher-Parentani
-- [ ] Paper 16 update: replace "Γ=1 upper bound, principal uncertainty" → "Γ ≈ 0.9994, bounded"
-- [ ] Regenerate figures 104-105 with realistic Γ(ω)
-- [ ] Run adversarial re-review on strengthened paper
+- [x] `formulas.py`: added `greybody_zero_freq()`, `greybody_smooth_profile()`, `dispersive_uv_cutoff()`, `dean_adiabaticity_parameter()`, `quasi1d_correction_bound()`
+- [x] `src/graphene/wkb_spectrum.py`: uses realistic Γ(ω) via `greybody_smooth_profile`
+- [x] `lean/SKEFTHawking/QuasiOneDReduction.lean` — 5 algebraic theorems (strengthened to bound-propagation form) + 2 tracked hypotheses (0 sorry):
+  - T1 (three parts): Γ₀ nonneg + ≤ 1 + eq 1 ↔ c_R = v
+  - T2: `surface_gravity_correction_bound` — abstract δκ/κ bounded by (l_ee/W)² and < 1
+  - T3: `evanescent_bound` — abstract δΓ/Γ bounded, with exp(-2πL/W) ≤ 1 tightening
+  - T4: `dean_adiabatic` — D_dean < 1 (norm_num over rationals)
+  - T5: `quasi1D_validity_bound` — composition by triangle inequality
+  - H1: `H_AdiabaticRegimeCorrection` (Prop def, tracked) — parameterized over abstract T_H
+  - H2: `H_DispersiveUVCutoff` (Prop def, tracked) — parameterized over abstract ω_max
+- [x] Paper 16 update: replaced "Γ=1 upper bound, principal uncertainty" with "Γ ≈ 0.9994, bounded ≤ 1.8% at ω_H" (abstract + §IV + figure captions)
+- [x] Figures 104-105 regenerated with realistic Γ(ω); fig_graphene_snr_frequency annotation updated from "(Γ = 1, systematics-limited)" to "(Γ₀ ≈ 0.9994, quasi-1D corr. ≤ 1.8%)"
+- [x] Dedicated tests added: `TestGreybodyZeroFreq` (5), `TestDeanAdiabaticityParameter` (3), `TestQuasi1DCorrectionBound` (4), `TestDispersiveUVCutoff` (3), `TestGreybodySmoothProfile` (3) — 18 new tests, all passing
+- [ ] Run adversarial re-review on strengthened paper (USER-DIRECTED)
 - Working doc: `temporary/working-docs/phase5w_quasi1D_proof_state.md`
-- Lean dev protocol: follow Lean-Development-Optimization.txt (verify foundations, diagnostic comparison, hypothesis tracker, time-box, LSP not REPL)
+- Lean dev protocol: followed Lean-Development-Optimization.txt (verify foundations, hypothesis tracker, LSP not REPL, time-box)
 
 **10d. Integration time: bandwidth-cumulative SNR — COMPLETE (`3e2a451`):**
 - [x] Cumulative SNR in `wkb_spectrum.py`

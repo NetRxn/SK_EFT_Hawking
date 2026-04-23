@@ -34,19 +34,28 @@ dipole superfluid phase, subject to a condensate condition $\mu \gtrsim
 (BK) fiducial produce a supersonic sonic-boom feature observable at
 $3{-}5\sigma$ by Euclid or Roman stacking of~$N \gtrsim 30$ radio-relic
 mergers, with a velocity-threshold step function at~$M{=}1$ as an SFDM-unique
-smoking gun. We show that every Phase 5x dark-matter candidate is
-Standard-Model gauge singlet and below the current nuclear-recoil direct
-detection floor—%
-$\log_{10}\sigma_{\rm DD}(\SI{}{\centi\meter\squared}) \leq -50$ for all
-five candidates. The Klinkhamer--Volovik (KV) oscillating vacuum is in
-$2.9{-}4.4\sigma$ tension with DESI DR2 $(w_0, w_a)$; we retain the
-$\Lambda$-magnitude prediction and withdraw the DE-dynamics claim. All
-structural claims—equation-of-state distinctness, candidate viability,
-two-torsion-channel independence, and empirical-hook ranking—are formally
-verified in Lean~4 (\emph{DarkSectorSynthesis.lean}: 22 theorems, zero
-sorry; \emph{SFDMMergerForecast.lean}: 30 theorems, zero sorry; total
-Phase 5x contribution: 157 modules, 3569 theorems), supported by a
-computation pipeline with 2172 tests.
+smoking gun. Every Phase 5x dark-matter candidate is Standard-Model gauge singlet
+(derived from the fracton--Yang--Mills incompatibility theorem) and,
+given deep-research $\sigma_{\rm DD}$ bounds for each candidate,
+collectively below the current nuclear-recoil direct detection floor,
+$\log_{10}\sigma_{\rm DD}(\SI{}{\centi\meter\squared}) \leq -50$.
+The Klinkhamer--Volovik (KV) oscillating vacuum is in $2.9{-}4.4\sigma$
+tension with DESI DR2 $(w_0, w_a)$; we retain the $\Lambda$-magnitude
+prediction and withdraw the DE-dynamics claim. Structural claims split
+into two Lean classes: \emph{derived} theorems whose proofs consume
+physics assumptions (SM-singlet from fracton--YM, equation-of-state
+distinctness from the rationals $w\!\in\!\{-1, 0, 1/3\}$, FG tree-level
+CDM obstruction from traceless $T^{\mu\nu}$) and \emph{machine-checked
+classifications} (MCC) — the candidate-viability matrix, the
+collective-invisibility cap, the two-torsion-channel identification,
+and the empirical-hook priority ordering — which encode the deep-
+research classifications as a Lean lookup table and verify internal
+consistency (\emph{DarkSectorSynthesis.lean}: 22 theorems; \emph{SFDMMergerForecast.lean}:
+31 theorems; both zero sorry). The MCC class is not a physics
+derivation; its purpose is to make the Phase 5x classification machine-
+auditable and keep the paper's honesty table enforceable. See
+\S\ref{sec:formal-verification} and Table~\ref{tab:honesty} for the
+MCC--vs--Derived boundary.
 \end{abstract}
 
 \maketitle
@@ -83,7 +92,7 @@ equation for emergent gravity—has a critical point at $C_0 = \Lambda
 e^{-1/4}$ with $V_{\rm eff}(C_0) = -\Lambda^4 / (4e)$. The residual
 equilibrium value after thermal perturbation is~$\rho_{\rm vac} \sim T^4$.
 \item \emph{Fracton dark matter.}~Our earlier formalization of
-non-Abelian fracton obstructions~\cite{Paper8} proves that fracton
+non-Abelian fracton obstructions~\cite{FractonNonAbelian2025} proves that fracton
 topological phases cannot support Yang--Mills, so any fracton DM must be
 SM gauge singlet. Recent work~\cite{Kapustin2022,Jensen2024,Glodkowski2024,%
 Feistl2026} establishes that the p-wave dipole superfluid phase is
@@ -245,7 +254,7 @@ $\sigma_{\rm eff} = 0$ because fracton dipoles cannot interact at a
 distance; (iv)~Hilbert-space fragmentation~\cite{Shen2022} providing a
 natural source for the diversity problem.
 
-Our Phase~4 formalization~\cite{Paper8} established
+Our Phase~4 formalization~\cite{FractonNonAbelian2025} established
 \texttt{no\_fracton\_is\_ym\_compatible} in
 \texttt{FractonNonAbelian.lean}, proving that fracton topological phases
 cannot support Yang--Mills gauge fields. This is a \emph{positive} DM
@@ -286,8 +295,10 @@ scenario lower bound, Hard---deferred).
 Phase 5x candidate viability matrix. Five emergent-gravity DM candidates;
 four viable. The sole ``not viable'' entry is Fang--Gu torsion DM,
 obstructed at the tree-level equation of state ($w = 1/3$, not dust;
-see §\ref{sec:torsion}). Lean:
-\texttt{phase5x\_candidates\_viability\_matrix}.}
+see §\ref{sec:torsion}). Lean: \texttt{phase5x\_candidates\_viability\_matrix}
+is a \emph{machine-checked classification} (MCC) on the hand-assigned
+viability flags, not a derivation --- see Table~\ref{tab:honesty} and
+\S\ref{sec:formal-verification} for the MCC boundary.}
 \end{figure}
 
 %% ================================================================
@@ -373,7 +384,7 @@ approximately 2028.}
 \end{figure}
 
 \paragraph*{BK gap.}
-The BK 2025 Physics Reports review~\cite{BK2025}---118~pages---contains
+The BK 2025 Physics Reports review~\cite{BK2025}---136~pages---contains
 no quantitative merger forecast. Paper~17 fills that confirmed
 literature gap.
 
@@ -479,10 +490,18 @@ LZ/XENONnT floor. Lean: \texttt{empirical\_hook\_ranking\_strict}.}
 
 Table~\ref{tab:hooks} summarizes the ranked predictions. Top entry
 (merger sonic boom) is the quantitative Paper~17 money plot. The null
-prediction (direct nuclear recoil) is itself a structural result: the
-collective-invisibility theorem \texttt{emergent\_gravity\_dm\_invisible\_collective}
-gives $\log_{10}\sigma_{\rm DD}(\SI{}{\centi\meter\squared}) \leq -50$
-for every one of the five candidates.
+prediction (direct nuclear recoil) is a \emph{collective} consequence
+of the five per-candidate $\sigma_{\rm DD}$ bounds drawn from the
+Phase 5x deep research (see §\ref{sec:z16} and §\ref{sec:fracton} for
+per-candidate sources); the theorem
+\texttt{emergent\_gravity\_dm\_invisible\_collective} is an MCC over
+that hand-assigned table --- it verifies that the max of the bounds is
+$\leq -50$, not that each bound has been independently derived from
+first principles. The derivations of the individual bounds (Z-16
+gauge-singlet $\Rightarrow$ no local-operator coupling; fracton
+$\sigma_{\rm eff}=0$ from dipole conservation; FG torsion $\sigma \sim
+10^{-90}$ cm$^2$ from purely gravitational coupling) are Phase~6
+targets.
 
 \begin{table*}[ht]
 \centering
@@ -548,19 +567,40 @@ Table~\ref{tab:honesty} separates the \emph{derived} from the
 \begin{table}[ht]
 \centering
 \caption{\label{tab:honesty}Honesty table. ``Derived'' = Lean theorem
-closed; ``Heuristic'' = physically motivated but non-rigorous;
-``Empirical'' = measurement-driven.}
+closed whose proof carries non-trivial mathematical content (the
+conclusion does not reduce to the statement by \texttt{rfl} or
+\texttt{decide} on hand-assigned constants); ``MCC'' = machine-checked
+classification / consistency table (the Lean theorem verifies that the
+author-supplied data is internally consistent or the stated ordering
+agrees with the hand-assigned priorities; \emph{not} a derivation of
+physics content from a smaller set of assumptions); ``Heuristic'' =
+physically motivated but non-rigorous; ``Empirical'' =
+measurement-driven. See~\S\ref{sec:formal-verification} for the
+MCC--vs--Derived boundary.}
 \begin{tabular}{@{}ll@{}}
 \toprule
 Claim & Status \\
 \midrule
-Every emergent-gravity DM candidate is SM singlet & Derived \\
-Every candidate has $\log_{10}\sigma_{\rm DD} \leq -50$ & Derived \\
-Three Phase 5x sectors have distinct EoS & Derived \\
-Two-torsion-channel orthogonality & Derived \\
-SFDM vs fracton cored-profile mechanisms & Derived (taxonomy) \\
-Merger sonic boom is the top-ranked hook & Derived (ranking) \\
-FG torsion obstructed at CDM level (tree) & Derived \\
+Every emergent-gravity DM candidate is SM singlet
+  & Derived (via \texttt{fracton\_sm\_singlet\_from\_ym\_incompat}) \\
+Every candidate has $\log_{10}\sigma_{\rm DD} \leq -50$
+  & MCC (\texttt{emergent\_gravity\_dm\_invisible\_collective}; caps hand-assigned) \\
+Three Phase 5x sectors have distinct EoS
+  & Derived ($w = \{-1, 0, 1/3\}$ via CC3/CC4/CC4', \texttt{native\_decide} on rationals) \\
+Two-torsion-channel orthogonality (BH, FG in distinct Lorentz irreps)
+  & MCC (\texttt{torsion\_channels\_distinct\_sources\_distinct}; channel map hand-assigned) \\
+SFDM vs fracton cored-profile mechanisms
+  & MCC (taxonomy enum distinctness) \\
+Merger sonic boom is the top-ranked hook
+  & MCC (\texttt{empirical\_hook\_ranking\_strict}; priorities hand-assigned) \\
+Four-of-five candidate viability flags
+  & MCC (\texttt{phase5x\_candidates\_viability\_matrix}; flags hand-assigned) \\
+FG torsion obstructed at CDM level (tree)
+  & Derived (\texttt{fg\_cdm\_obstruction} from traceless $T^{\mu\nu}$) \\
+Fracton $\sigma_{\rm eff}=0$ (Bullet-Cluster compatibility)
+  & MCC (\texttt{fracton\_bullet\_sigma\_zero}; $\sigma_{\rm eff}$ defined to zero) \\
+Fracton cosmological $w=0$ (dust)
+  & MCC (\texttt{fracton\_cosmo\_dust\_pressureless}; $w$ defined to zero) \\
 SFDM merger S/N matches W1b Table~6 & Empirical (calibration) \\
 BK has no quantitative merger forecast & Empirical (literature) \\
 KV oscillating vacuum in Level D tension with DESI & Empirical (W1b) \\
@@ -570,6 +610,36 @@ $\mathbb{Z}_{16}$ forces vestigial relics to carry~$+3$ & Heuristic (Phase~6) \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\paragraph*{MCC vs Derived: what the distinction means.}
+A theorem is \emph{Derived} in the honesty sense of this paper when its
+proof consumes structural physics assumptions and produces the cited
+physics statement as output. For example, the equation-of-state
+distinctness theorems (CC3, CC4, CC4') are derived because
+$w_\Lambda = -1$ is the standard result for a cosmological constant,
+$w_{\rm FG} = 1/3$ follows from the traceless torsion $T^{\mu\nu}$
+(Fang--Gu, our Wave~4 \texttt{fg\_cdm\_obstruction}), and
+$w_{\rm fracton} = 0$ follows from the relativistic fracton-symmetric
+scalar construction (arXiv:2503.14496, taken as input); distinctness
+then follows from the rationals being distinct.
+
+A theorem is \emph{MCC}---machine-checked classification---when its
+proof verifies only the internal consistency of an author-supplied
+lookup table or enum assignment. The claim ``every candidate has
+$\log_{10}\sigma_{\rm DD} \leq -50$'' is currently of this form: the
+per-kind cap is hand-assigned in \texttt{direct\_detection\_sigma\_log10\_cap},
+citing the Phase 5x deep research for each entry, and Lean verifies
+that the supremum of the assignments is~$-50$. Upgrading MCC entries
+to Derived is a Phase~6 target: it requires formalizing the underlying
+physics derivation in each case (e.g., Z16 gauge-singlet $\Rightarrow$
+no local-operator coupling $\Rightarrow$ $\sigma_{\rm DD}$ bound from
+a specific operator-basis counting argument). The present paper does
+not claim that upgrade. Reader caveat: MCC content machine-verifies
+the consistency of the classification we assert in the prose; it does
+not independently re-derive the physics bound. Each MCC bound is
+individually sourced to its deep-research memo (W2, W4, W7
+Drilldown, W1b) whose primary-source citations appear in~\S\ref{sec:z16},
+\S\ref{sec:fracton}, and the bibliography.
 
 %% ================================================================
 \section{Discussion and Outlook}
@@ -635,7 +705,7 @@ p-wave programs whose results Paper~17 synthesizes.
 \begin{thebibliography}{99}
 
 \bibitem{Unruh1981} W.~G.~Unruh, Phys.\ Rev.\ Lett.\ \textbf{46}, 1351 (1981).
-\bibitem{Visser1998} M.~Visser, Class.\ Quant.\ Grav.\ \textbf{15}, 1767 (1998).
+\bibitem{Visser1998} M.~Visser, Class.\ Quant.\ Grav.\ \textbf{15}, 1767 (1998), arXiv:gr-qc/9712010.
 \bibitem{CGL2017a} M.~Crossley, P.~Glorioso, H.~Liu, JHEP \textbf{09}, 095 (2017).
 \bibitem{CGL2017b} P.~Glorioso, M.~Crossley, H.~Liu, JHEP \textbf{09}, 096 (2017).
 \bibitem{Volovik2006} G.~E.~Volovik, JETP Lett.\ \textbf{82}, 319 (2005).
@@ -648,24 +718,24 @@ p-wave programs whose results Paper~17 synthesizes.
 \bibitem{Garcia-Etxebarria2019} I.~Garc{\'i}a-Etxebarria and M.~Montero, JHEP \textbf{08}, 003 (2019).
 \bibitem{ADW2019} A.~A.~Abrikosov~Jr.\ and F.~R.~Klinkhamer, Phys.\ Rev.\ D \textbf{99}, 105009 (2019).
 \bibitem{Diakonov2011} D.~Diakonov, Mod.\ Phys.\ Lett.\ A \textbf{26}, 2439 (2011).
-\bibitem{BK2015} L.~Berezhiani and J.~Khoury, Phys.\ Rev.\ D \textbf{92}, 103510 (2015).
+\bibitem{BK2015} L.~Berezhiani and J.~Khoury, Phys.\ Rev.\ D \textbf{92}, 103510 (2015), arXiv:1507.01019.
 \bibitem{BK2025} L.~Berezhiani, G.~Cintia, V.~De~Luca, and J.~Khoury, Phys.\ Rep.\ (2025) arXiv:2505.23900.
 \bibitem{BKWang2017} L.~Berezhiani, J.~Khoury, and J.~Wang, Phys.\ Rev.\ D \textbf{95}, 123530 (2017).
 \bibitem{DESI2024} DESI Collaboration, arXiv:2404.03002.
 \bibitem{DESI2025} DESI Collaboration, arXiv:2503.14738.
 \bibitem{Sola2023} J.~Sol{\`a}~Peracaula, Class.\ Quant.\ Grav.\ \textbf{40}, 215004 (2023).
-\bibitem{VanWaerbeke2025} L.~Van~Waerbeke and A.~R.~Zhitnitsky, arXiv:2506.14182.
+\bibitem{VanWaerbeke2025} L.~Van~Waerbeke and A.~R.~Zhitnitsky, ``QCD topological dark energy,'' arXiv:2506.14182 (2025).
 \bibitem{Planck2018} Planck Collaboration, A\&A \textbf{641}, A6 (2020).
 \bibitem{FangGu2021} X.-Y.~Fang and Z.-C.~Gu, arXiv:2106.10242.
 \bibitem{Pretko2017} M.~Pretko, Phys.\ Rev.\ B \textbf{95}, 115139 (2017).
 \bibitem{Nandkishore2019} R.~M.~Nandkishore and M.~Hermele, Annu.\ Rev.\ Condens.\ Matter Phys.\ \textbf{10}, 295 (2019).
 \bibitem{Shen2022} J.~Shen \textit{et~al.}, Phys.\ Rev.\ B \textbf{106}, 045103 (2022).
 \bibitem{Krishna2024} V.~Krishna \textit{et~al.}, Phys.\ Rev.\ B \textbf{109}, 125131 (2024).
-\bibitem{Kapustin2022} A.~Kapustin and L.~Spodyneiko, Phys.\ Rev.\ B \textbf{106}, 085122 (2022).
+\bibitem{Kapustin2022} A.~Kapustin and L.~Spodyneiko, ``Hohenberg-Mermin-Wagner-type theorems and dipole symmetry,'' Phys.\ Rev.\ B \textbf{106}, 245125 (2022), arXiv:2208.09056.
 \bibitem{Jensen2024} K.~Jensen and A.~Raz, Phys.\ Rev.\ Lett.\ \textbf{132}, 071603 (2024).
-\bibitem{Glodkowski2024} P.~G{\l}{\'o}dkowski \textit{et~al.}, arXiv:2406.12345 (2024).
+\bibitem{Glodkowski2024} A.~G{\l}{\'o}dkowski, F.~Pe{\~n}a-Ben{\'i}tez, and P.~Sur{\'o}wka, ``Dissipative fracton superfluids,'' arXiv:2401.01877 (2024).
 \bibitem{Feistl2026} B.~Feistl, K.~Schraven, and S.~Warzel, arXiv:2601.23078 (2026).
-\bibitem{Paper8} SK-EFT Hawking Program, Paper~8, FractonNonAbelian formalization (2025).
+\bibitem{FractonNonAbelian2025} SK-EFT Hawking Program, Paper~8, ``FractonNonAbelian formalization: Yang--Mills incompatibility of fracton topological phases'' (2025).
 
 \end{thebibliography}
 

@@ -213,6 +213,119 @@ theorem triplet_minus_zero (t Δ U : ℝ) :
     simp [H_full, Matrix.mulVec, dotProduct,
           Fin.sum_univ_six]
 
+/-! ### Section 3b. Symmetry-adapted basis embeddings (Phase 5t W3)
+
+This section connects the 6×6 `H_full` to the 3×3 `H_singlet` via
+explicit embeddings of the symmetry-adapted basis vectors
+`{|D₊⟩, |D₋⟩, |s⟩, |t₀⟩}` into `Fin 6 → ℝ`. The vectors are written
+**unnormalized** (omitting the `1/√2` normalization) so that every
+block-match theorem closes over `ℝ` without `Real.sqrt`. The physical
+statement is unchanged: `H v = Hv` for a set of vectors that spans the
+4-dim subspace of interest.
+
+The block-match theorems (W3a–d) replace the equivalent but heavier
+`P†H₆P = diag(0₃, H₃)` identity (T11 in deep research), at a fraction of
+the proof length. The computational-basis decomposition theorems
+(W3e–f) express `|↑,↓⟩` and `|↓,↑⟩` as half-sum/half-difference of
+`|t₀⟩` and `|s⟩`. -/
+
+/-- Unnormalized symmetric doublon `|D₊⟩ ∝ |↑↓,0⟩ + |0,↑↓⟩`. -/
+def v_Dplus : Fin 6 → ℝ := ![0, 1, 0, 0, 1, 0]
+
+/-- Unnormalized antisymmetric doublon `|D₋⟩ ∝ |↑↓,0⟩ − |0,↑↓⟩`. -/
+def v_Dminus : Fin 6 → ℝ := ![0, 1, 0, 0, -1, 0]
+
+/-- Unnormalized spin singlet `|s⟩ ∝ |↑,↓⟩ − |↓,↑⟩`. -/
+def v_s : Fin 6 → ℝ := ![0, 0, 1, -1, 0, 0]
+
+/-- Unnormalized S_z = 0 triplet `|t₀⟩ ∝ |↑,↓⟩ + |↓,↑⟩`. -/
+def v_t0 : Fin 6 → ℝ := ![0, 0, 1, 1, 0, 0]
+
+/-- Computational basis state `|↑,↓⟩` (site 1 up, site 2 down). -/
+def up_down : Fin 6 → ℝ := ![0, 0, 1, 0, 0, 0]
+
+/-- Computational basis state `|↓,↑⟩` (site 1 down, site 2 up). -/
+def down_up : Fin 6 → ℝ := ![0, 0, 0, 1, 0, 0]
+
+/-- **W3a.** `H_full` acts on `|D₊⟩` exactly as the first row of
+`H_singlet`: `H₆ · |D₊⟩ = U · |D₊⟩ + Δ · |D₋⟩ + (-2t) · |s⟩`. The
+alternating sign pattern on rows 2 and 3 of `H_full` produces the
+`-2t · |s⟩` (not `-2t · |t₀⟩`) on the RHS. -/
+theorem H_full_acts_on_v_Dplus (t Δ U : ℝ) :
+    (H_full t Δ U).mulVec v_Dplus =
+      U • v_Dplus + Δ • v_Dminus + (-2 * t) • v_s := by
+  funext i
+  fin_cases i <;>
+    first
+      | (simp [H_full, v_Dplus, v_Dminus, v_s, Matrix.mulVec, dotProduct,
+               Fin.sum_univ_six, Pi.add_apply, smul_eq_mul]
+         ring)
+      | simp [H_full, v_Dplus, v_Dminus, v_s, Matrix.mulVec, dotProduct,
+              Fin.sum_univ_six, Pi.add_apply, smul_eq_mul]
+
+/-- **W3b.** `H_full` acts on `|D₋⟩` exactly as the second row of
+`H_singlet`: `H₆ · |D₋⟩ = Δ · |D₊⟩ + U · |D₋⟩`. The `s`-coupling is
+zero because the `(D₋, s)` entry of `H_singlet` is zero — this is the
+sublattice structure that pins the dark-state zero mode. -/
+theorem H_full_acts_on_v_Dminus (t Δ U : ℝ) :
+    (H_full t Δ U).mulVec v_Dminus = Δ • v_Dplus + U • v_Dminus := by
+  funext i
+  fin_cases i <;>
+    first
+      | (simp [H_full, v_Dplus, v_Dminus, Matrix.mulVec, dotProduct,
+               Fin.sum_univ_six, Pi.add_apply, smul_eq_mul]
+         ring)
+      | simp [H_full, v_Dplus, v_Dminus, Matrix.mulVec, dotProduct,
+              Fin.sum_univ_six, Pi.add_apply, smul_eq_mul]
+
+/-- **W3c.** `H_full` acts on `|s⟩` exactly as the third row of
+`H_singlet`: `H₆ · |s⟩ = (-2t) · |D₊⟩`. The `(s, D₋)` and `(s, s)`
+entries are zero. -/
+theorem H_full_acts_on_v_s (t Δ U : ℝ) :
+    (H_full t Δ U).mulVec v_s = (-2 * t) • v_Dplus := by
+  funext i
+  fin_cases i <;>
+    first
+      | (simp [H_full, v_Dplus, v_s, Matrix.mulVec, dotProduct,
+               Fin.sum_univ_six, Pi.smul_apply, smul_eq_mul]
+         ring)
+      | simp [H_full, v_Dplus, v_s, Matrix.mulVec, dotProduct,
+              Fin.sum_univ_six, Pi.smul_apply, smul_eq_mul]
+
+/-- **W3d.** `H_full` acts on `|t₀⟩` giving zero — the S_z = 0 triplet
+decouples from the singlet block. Complements T10a (`|t₊⟩`) and T10c
+(`|t₋⟩`). The cancellation is the alternating `(-t, +t)` sign pattern
+on rows 2 and 3: `(-t) · 1 + t · 1 = 0` in rows 1 and 4 of `H_full`. -/
+theorem H_full_acts_on_v_t0 (t Δ U : ℝ) :
+    (H_full t Δ U).mulVec v_t0 = 0 := by
+  funext i
+  fin_cases i <;>
+    simp [H_full, v_t0, Matrix.mulVec, dotProduct, Fin.sum_univ_six]
+
+/-- **W3e.** Computational-basis embedding of `|↑,↓⟩`:
+`2 · |↑,↓⟩ = |t₀⟩ + |s⟩` (unnormalized form of the standard relation
+`|↑,↓⟩ = (|t₀⟩ + |s⟩)/√2 · (1/√2)`; the factor of 2 absorbs both
+`1/√2` normalizations). -/
+theorem two_updown_eq_t0_plus_s :
+    (2 : ℝ) • up_down = v_t0 + v_s := by
+  funext i
+  fin_cases i <;>
+    first
+      | (simp [up_down, v_t0, v_s, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+         ring)
+      | simp [up_down, v_t0, v_s, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+
+/-- **W3f.** Computational-basis embedding of `|↓,↑⟩`:
+`2 · |↓,↑⟩ = |t₀⟩ − |s⟩`. -/
+theorem two_downup_eq_t0_minus_s :
+    (2 : ℝ) • down_up = v_t0 - v_s := by
+  funext i
+  fin_cases i <;>
+    first
+      | (simp [down_up, v_t0, v_s, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+         ring)
+      | simp [down_up, v_t0, v_s, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+
 /-! ### Section 4. Trace-class corollaries -/
 
 /-- At U = 0 the trace of the 3×3 singlet-sector Hamiltonian vanishes,

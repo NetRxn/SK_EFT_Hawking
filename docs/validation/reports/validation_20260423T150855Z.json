@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260423T150855Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "tables_fresh": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "staleness",
+          "passed": true,
+          "message": "stale: lean_deps.json newer than oldest output",
+          "warning": true
+        },
+        {
+          "name": "regenerate",
+          "passed": true,
+          "message": "render_paper_tables.py succeeded: 11 table(s) rendered across 8 paper(s)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

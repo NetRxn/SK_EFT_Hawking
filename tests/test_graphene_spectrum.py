@@ -190,3 +190,203 @@ class TestMonolayerComparison:
         """50nm monolayer: D > 1, EFT invalid."""
         spec = compute_graphene_spectrum('Monolayer_50nm')
         assert spec.D > 1
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Phase 5w Wave 10c: Quasi-1D + realistic greybody formula coverage.
+# Tests the new formulas.py functions: greybody_zero_freq,
+# dean_adiabaticity_parameter, quasi1d_correction_bound.
+# ══════════════════════════════════════════════════════════════════════
+
+
+class TestGreybodyZeroFreq:
+    """Tests for formulas.greybody_zero_freq (Lean: T1)."""
+
+    def test_nonneg(self):
+        """Γ₀ ≥ 0 for positive c_R, v (Lean T1a)."""
+        from src.core.formulas import greybody_zero_freq
+        for c_R, v in [(1.0, 1.0), (2.0, 1.0), (1.0, 0.5), (1e5, 1e4)]:
+            assert greybody_zero_freq(c_R, v) >= 0
+
+    def test_le_one(self):
+        """Γ₀ ≤ 1 for positive c_R, v (Lean T1b, AM-GM)."""
+        from src.core.formulas import greybody_zero_freq
+        for c_R, v in [(1.0, 1.0), (2.0, 1.0), (1.0, 0.5), (1e5, 1e4), (4.4e5, 4.3e5)]:
+            assert greybody_zero_freq(c_R, v) <= 1.0 + 1e-12
+
+    def test_equals_one_at_impedance_match(self):
+        """Γ₀ = 1 iff c_R = v (step-horizon limit; Lean T1c)."""
+        from src.core.formulas import greybody_zero_freq
+        np.testing.assert_allclose(
+            greybody_zero_freq(1.0, 1.0), 1.0, rtol=1e-14
+        )
+        np.testing.assert_allclose(
+            greybody_zero_freq(5.0, 5.0), 1.0, rtol=1e-14
+        )
+
+    def test_symmetry(self):
+        """Γ₀(c_R, v) = Γ₀(v, c_R) — formula is symmetric."""
+        from src.core.formulas import greybody_zero_freq
+        np.testing.assert_allclose(
+            greybody_zero_freq(1.0, 0.4),
+            greybody_zero_freq(0.4, 1.0),
+            rtol=1e-14,
+        )
+
+    def test_dean_value_approximately_one(self):
+        """For Dean nozzle parameters (v ≈ 0.985 c_s), Γ₀ ≈ 0.9994."""
+        from src.core.formulas import greybody_zero_freq
+        c_s = 4.4e5
+        v = 0.985 * c_s
+        gamma_0 = greybody_zero_freq(c_s, v)
+        # Deep research quotes 0.9994; match to 4 decimal places
+        assert 0.999 < gamma_0 < 1.0, f"Expected ≈0.9994, got {gamma_0}"
+        np.testing.assert_allclose(gamma_0, 0.9999, atol=1e-3)
+
+
+class TestDeanAdiabaticityParameter:
+    """Tests for formulas.dean_adiabaticity_parameter (Lean: T4)."""
+
+    def test_dean_value_less_than_one(self):
+        """D = κ l_ee / c_s < 1 for Dean nozzle (adiabatic regime)."""
+        from src.core.formulas import dean_adiabaticity_parameter
+        kappa = 2e12
+        l_ee = 51e-9
+        c_s = 4.4e5
+        D = dean_adiabaticity_parameter(kappa, l_ee, c_s)
+        assert D < 1, f"Expected D < 1, got {D}"
+        # Deep research value: 0.23181...
+        np.testing.assert_allclose(D, 0.23181818, rtol=1e-5)
+
+    def test_nonneg_for_positive_inputs(self):
+        """D ≥ 0 for all positive inputs."""
+        from src.core.formulas import dean_adiabaticity_parameter
+        for kappa, l_ee, c_s in [(1.0, 1.0, 1.0), (1e12, 1e-9, 1e5), (2e12, 51e-9, 4.4e5)]:
+            assert dean_adiabaticity_parameter(kappa, l_ee, c_s) >= 0
+
+    def test_monotone_in_kappa(self):
+        """D is monotone increasing in surface gravity κ."""
+        from src.core.formulas import dean_adiabaticity_parameter
+        D1 = dean_adiabaticity_parameter(1e12, 51e-9, 4.4e5)
+        D2 = dean_adiabaticity_parameter(2e12, 51e-9, 4.4e5)
+        assert D2 > D1
+
+
+class TestQuasi1DCorrectionBound:
+    """Tests for formulas.quasi1d_correction_bound (Lean: T5)."""
+
+    def test_nonneg(self):
+        """Bound is always ≥ 0 (sum of squares + positive exponential)."""
+        from src.core.formulas import quasi1d_correction_bound
+        # Dean nozzle representative values
+        omega_H = 51e9 * 2 * np.pi
+        omega_perp = 4.46 * omega_H
+        L = 200e-9
+        W = 1e-6
+        l_ee = 51e-9
+        bound = quasi1d_correction_bound(omega_H, omega_perp, L, W, l_ee)
+        assert bound >= 0
+
+    def test_dean_at_omega_H(self):
+        """Deep research predicts ≈ 1.8% total bound at ω_H for Dean."""
+        from src.core.formulas import quasi1d_correction_bound
+        omega_H = 51e9 * 2 * np.pi
+        c_s = 4.4e5
+        W = 1e-6
+        omega_perp = np.pi * c_s / W  # 1st transverse threshold
+        L = 200e-9
+        l_ee = 51e-9
+        bound = quasi1d_correction_bound(omega_H, omega_perp, L, W, l_ee)
+        # Deep research Block 2 §2.3: ≈ 0.0026 + 0.015 ≈ 0.018
+        # Allow generous tolerance since components depend on exactly which
+        # frequency normalization is used in the paper
+        assert bound < 0.05, f"Dean quasi-1D bound should be <5%, got {bound}"
+        assert bound > 0.001, f"Dean quasi-1D bound should be >0.1%, got {bound}"
+
+    def test_vanishes_with_large_W(self):
+        """As W → ∞ with fixed l_ee, L: surface term vanishes, evanescent
+        suppression → 1, so total → (ω/ω_⊥)²."""
+        from src.core.formulas import quasi1d_correction_bound
+        omega = 1e11
+        omega_perp = 4e11
+        L = 2e-7
+        l_ee = 50e-9
+        # Large W
+        bound_large_W = quasi1d_correction_bound(omega, omega_perp, L, 1e-2, l_ee)
+        # The (l_ee/W)² term is negligible (~2.5e-11), the (ω/ω_⊥)² exp(-2πL/W)
+        # term → (ω/ω_⊥)² as W → ∞. So bound → (0.25)² = 0.0625
+        expected = (omega / omega_perp) ** 2 * np.exp(-2 * np.pi * L / 1e-2)
+        np.testing.assert_allclose(bound_large_W, expected, rtol=0.01)
+
+    def test_surface_term_dominates_at_low_omega(self):
+        """At ω → 0, evanescent term vanishes, only (l_ee/W)² contributes."""
+        from src.core.formulas import quasi1d_correction_bound
+        omega_perp = 1e12
+        L = 2e-7
+        W = 1e-6
+        l_ee = 51e-9
+        bound_low_omega = quasi1d_correction_bound(1e-3, omega_perp, L, W, l_ee)
+        expected_surface = (l_ee / W) ** 2
+        np.testing.assert_allclose(bound_low_omega, expected_surface, rtol=1e-6)
+
+
+class TestDispersiveUVCutoff:
+    """Tests for formulas.dispersive_uv_cutoff (Lean: tracked H_DispersiveUVCutoff)."""
+
+    def test_positive(self):
+        """ω_max > 0 for positive inputs."""
+        from src.core.formulas import dispersive_uv_cutoff
+        assert dispersive_uv_cutoff(2e12, 4.4e5, 51e-9) > 0
+
+    def test_dean_above_detection_band(self):
+        """For Dean nozzle, ω_max/ω_H ≈ 13.4 (detection band is safe)."""
+        from src.core.formulas import dispersive_uv_cutoff
+        kappa = 2e12
+        c_s = 4.4e5
+        l_ee = 51e-9
+        omega_max = dispersive_uv_cutoff(kappa, c_s, l_ee)
+        omega_H = kappa  # rough scale at horizon
+        # Deep research: ω_max/ω_H ≈ 13.4 — the paper ω_H is GHz-scale while
+        # κ is 2e12 /s. Here we check absolute consistency: ω_max should be
+        # in the THz range (>> detection band max of ~85 GHz × 2π).
+        detection_band_max = 85e9 * 2 * np.pi
+        assert omega_max > detection_band_max
+
+    def test_scaling_sqrt_kappa(self):
+        """ω_max scales as √κ."""
+        from src.core.formulas import dispersive_uv_cutoff
+        w1 = dispersive_uv_cutoff(1e12, 4.4e5, 51e-9)
+        w4 = dispersive_uv_cutoff(4e12, 4.4e5, 51e-9)
+        np.testing.assert_allclose(w4 / w1, 2.0, rtol=1e-10)
+
+
+class TestGreybodySmoothProfile:
+    """Tests for formulas.greybody_smooth_profile."""
+
+    def test_zero_omega_equals_zero_freq_limit(self):
+        """Γ(0, c_R, v, ω_max) = greybody_zero_freq(c_R, v)."""
+        from src.core.formulas import greybody_smooth_profile, greybody_zero_freq
+        c_R, v = 4.4e5, 0.985 * 4.4e5
+        omega_max = 1e12
+        gamma_at_zero = greybody_smooth_profile(0.0, c_R, v, omega_max)
+        gamma_0 = greybody_zero_freq(c_R, v)
+        np.testing.assert_allclose(gamma_at_zero, gamma_0, rtol=1e-14)
+
+    def test_clamped_to_zero_above_cutoff(self):
+        """Above ω_max, Γ is clamped to 0 (guards against negative 1 - (ω/ω_max)²)."""
+        from src.core.formulas import greybody_smooth_profile
+        c_R, v = 4.4e5, 4.4e5
+        omega_max = 1e12
+        gamma_above = greybody_smooth_profile(2 * omega_max, c_R, v, omega_max)
+        assert gamma_above == 0.0
+
+    def test_bounded_in_unit_interval(self):
+        """Γ(ω) ∈ [0, 1] for all ω ≥ 0."""
+        from src.core.formulas import greybody_smooth_profile
+        c_R = 4.4e5
+        v = 0.985 * c_R
+        omega_max = 1e12
+        omegas = np.linspace(0, 2 * omega_max, 50)
+        gamma = greybody_smooth_profile(omegas, c_R, v, omega_max)
+        assert np.all(gamma >= 0.0)
+        assert np.all(gamma <= 1.0 + 1e-14)

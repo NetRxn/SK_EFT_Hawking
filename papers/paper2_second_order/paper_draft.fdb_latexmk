@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex paper_draft"] 1776225697.84797 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1776954164.71002 0
-  "./paper_draftNotes.bib" 1776954164.46461 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1776225697.84797 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1776957461.45453 0
+  "./paper_draftNotes.bib" 1776957461.22375 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1776954164.46375 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
+  "paper_draft.aux" 1776957461.22297 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1776954164.00504 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1776954164.71021 2
+["pdflatex"] 1776957460.79956 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1776957461.45469 2
   "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex" 1776289313.2022 35816 880a375fc041bb43ad0c356d4c2507ce ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -103,10 +103,10 @@
   "figures/fig4_cgl_fdr_pattern.pdf" 1774456889.18801 72265 4681b1f7a3e45c5b7eebb78447f3e836 ""
   "figures/fig5_even_odd_kernel.pdf" 1774455375.23671 145209 d8b92329074468fcd39690286521a46b ""
   "figures/fig6_on_shell_vanishing.pdf" 1774456891.58676 121099 ed4b5c92e65a7ae43cda95ebd20c6484 ""
-  "paper_draft.aux" 1776954164.46375 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
+  "paper_draft.aux" 1776957461.22297 7272 17606b1a6551188681ecc6effa686d2d "pdflatex"
   "paper_draft.bbl" 1776225697.961 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
   "paper_draft.tex" 1776289313.2022 35816 880a375fc041bb43ad0c356d4c2507ce ""
-  "tables/table2_hierarchy.tex" 1776954162.82313 644 0cfc1227bd09da9b640cd85edc9244d8 ""
+  "tables/table2_hierarchy.tex" 1776957460.5639 644 0cfc1227bd09da9b640cd85edc9244d8 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

@@ -117,6 +117,51 @@ TRIPLET_MINUS = np.array([0, 0, 0, 0, 0, 1], dtype=float)
 
 
 # ---------------------------------------------------------------------------
+# 2b. Symmetry-adapted basis embeddings (Phase 5t W3)
+# ---------------------------------------------------------------------------
+
+#: Unnormalized symmetric doublon |D+⟩ ∝ |↑↓,0⟩ + |0,↑↓⟩.
+#: Matches ``SKEFTHawking.FermiHubbardDimer.v_Dplus``.
+V_DPLUS = np.array([0, 1, 0, 0, 1, 0], dtype=float)
+
+#: Unnormalized antisymmetric doublon |D-⟩ ∝ |↑↓,0⟩ − |0,↑↓⟩.
+#: Matches ``SKEFTHawking.FermiHubbardDimer.v_Dminus``.
+V_DMINUS = np.array([0, 1, 0, 0, -1, 0], dtype=float)
+
+#: Unnormalized spin singlet |s⟩ ∝ |↑,↓⟩ − |↓,↑⟩.
+#: Matches ``SKEFTHawking.FermiHubbardDimer.v_s``.
+V_S = np.array([0, 0, 1, -1, 0, 0], dtype=float)
+
+#: Unnormalized S_z = 0 triplet |t0⟩ ∝ |↑,↓⟩ + |↓,↑⟩.
+#: Matches ``SKEFTHawking.FermiHubbardDimer.v_t0``.
+V_T0 = np.array([0, 0, 1, 1, 0, 0], dtype=float)
+
+#: Computational basis |↑,↓⟩.
+#: Matches ``SKEFTHawking.FermiHubbardDimer.up_down``.
+UP_DOWN = np.array([0, 0, 1, 0, 0, 0], dtype=float)
+
+#: Computational basis |↓,↑⟩.
+#: Matches ``SKEFTHawking.FermiHubbardDimer.down_up``.
+DOWN_UP = np.array([0, 0, 0, 1, 0, 0], dtype=float)
+
+
+def block_match_Dplus(t: float, delta: float, U: float) -> np.ndarray:
+    """Return the expected RHS of Lean W3a: ``U·v_Dplus + Δ·v_Dminus − 2t·v_s``.
+    """
+    return U * V_DPLUS + delta * V_DMINUS + (-2.0 * t) * V_S
+
+
+def block_match_Dminus(t: float, delta: float, U: float) -> np.ndarray:
+    """Return the expected RHS of Lean W3b: ``Δ·v_Dplus + U·v_Dminus``."""
+    return delta * V_DPLUS + U * V_DMINUS
+
+
+def block_match_s(t: float, delta: float, U: float) -> np.ndarray:
+    """Return the expected RHS of Lean W3c: ``(−2t)·v_Dplus``."""
+    return (-2.0 * t) * V_DPLUS
+
+
+# ---------------------------------------------------------------------------
 # 3. Derived quantities (bright-state energies, characteristic polynomial)
 # ---------------------------------------------------------------------------
 
