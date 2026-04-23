@@ -22,7 +22,9 @@ from src.dark_sector.z16_hidden_sector import (
     enumerate_bounded_solutions,
     match_n_weyl_to_candidates,
     singlet_anomaly_index,
+    u1x_linear_sum,
     verify_anomaly_cancellation,
+    verify_joint_cancellation,
     z4x_cubic_anomaly,
 )
 
@@ -220,6 +222,82 @@ class TestZ4XCubicAnomaly:
         charges = [1, 1, 1]
         assert verify_anomaly_cancellation(n_weyl)  # ℤ₁₆ cancels
         assert z4x_cubic_anomaly(charges) != 0  # but U(1)_X³ does not
+
+
+class TestMixedChargeChannel:
+    """Lean anchor: HiddenSectorMixedCharge (Phase 5x Wave 2b Track X).
+
+    Verifies the Wan-Wang ℤ₁₆ ⊕ ℤ₄ mixed-charge channel's two
+    *decidable* conditions:
+
+    - (b) ∑ Xᵢ³ ≡ 0 mod 4 (U(1)_X³ cubic)
+    - (c) ∑ Xᵢ   ≡ 0 mod 4 (U(1)_X × gravity² linear)
+
+    The third condition (ℤ₁₆ cancellation via the ℤ₁₆ ⊕ ℤ₄ mechanism)
+    is the Lean tracked hypothesis ``H_MixedChannelZ16Cancels`` and is
+    NOT exercised by these tests.
+    """
+
+    def test_c1_linear_sum(self):
+        """C-1: 7 × (-2) + 6 = -8."""
+        c1 = DM_CANDIDATE_MATRIX["C-1"]
+        assert u1x_linear_sum(c1.x_charges) == -8
+
+    def test_c1_cubic_sum(self):
+        """C-1: 7 × (-8) + 216 = 160."""
+        c1 = DM_CANDIDATE_MATRIX["C-1"]
+        assert z4x_cubic_anomaly(list(c1.x_charges)) == 160
+
+    def test_c1_joint_cancellation(self):
+        """C-1 satisfies both U(1)_X conditions (160 and -8 both ≡ 0 mod 4)."""
+        c1 = DM_CANDIDATE_MATRIX["C-1"]
+        assert verify_joint_cancellation(c1.n_weyl, c1.x_charges)
+
+    def test_non_singlet_candidates_have_u1x_verification(self):
+        """Every non-singlet candidate with x_charges populated satisfies (b) ∧ (c).
+
+        T-0 has empty x_charges (topological, no particle content) and is
+        excluded; the topological channel is deferred (Track Y).
+        """
+        for tag, candidate in DM_CANDIDATE_MATRIX.items():
+            if candidate.singlet_cancellation or not candidate.x_charges:
+                continue
+            assert verify_joint_cancellation(
+                candidate.n_weyl, candidate.x_charges
+            ), f"Mixed-charge candidate {tag} fails joint U(1)_X cancellation"
+
+    def test_c1_not_in_singlet_channel(self):
+        """X6 witness: C-1 fails the pure-singlet rule (N mod 16 = 3).
+
+        Matches Lean ``mixed_channel_orthogonal_to_singlet``.
+        """
+        c1 = DM_CANDIDATE_MATRIX["C-1"]
+        assert c1.n_weyl % 16 == 8
+        assert c1.n_weyl % 16 != HIDDEN_SECTOR_REQUIRED_INDEX
+
+    def test_c1_wan_wang_canonical_assignment(self):
+        """Wan-Wang arXiv:2512.25038 Table IV: 7 q=-2 + 1 q=+6."""
+        c1 = DM_CANDIDATE_MATRIX["C-1"]
+        assert c1.x_charges == (-2, -2, -2, -2, -2, -2, -2, 6)
+        assert sum(1 for q in c1.x_charges if q == -2) == 7
+        assert sum(1 for q in c1.x_charges if q == 6) == 1
+
+    def test_verify_joint_rejects_wrong_length(self):
+        """Mismatched n_weyl and charge-list length raises ValueError."""
+        with pytest.raises(ValueError):
+            verify_joint_cancellation(3, [1, -1])
+
+    def test_dmcandidate_rejects_inconsistent_charges(self):
+        """Construction with mismatched x_charges length raises ValueError."""
+        with pytest.raises(ValueError):
+            DMCandidate(
+                tag="TEST",
+                n_weyl=4,
+                dm_types=("test",),
+                detection_notes="",
+                singlet_cancellation=False,
+                x_charges=(1, 2, 3),  # length 3, not 4
+            )
 
 
 class TestGenerationIndependenceFromZ16:

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-16T17:06:16.417824+00:00",
+  "generated": "2026-04-22T22:15:29.366087+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1866,6 +1866,111 @@
       "physics_checks": [],
       "color_keys": [
         "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_sfdm_velocity_threshold_step",
+      "function": "fig_sfdm_velocity_threshold_step",
+      "caption": "Paper 17 money plot (left) \u2014 DM-galaxy offset vs v_infall/c_s. SFDM step function at M=1 vs SIDM smooth rise vs CDM null. 5 canonical mergers overlaid.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_velocity_threshold_step.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_velocity_threshold_step.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "mach",
+        "yaxis": "offset"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_sfdm_stacked_kappa_profile",
+      "function": "fig_sfdm_stacked_kappa_profile",
+      "caption": "Paper 17 money plot (right) \u2014 stacked S/N vs N mergers for Euclid + Roman. 3\u03c3 and 5\u03c3 thresholds marked. First 3\u03c3 ~2028.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_stacked_kappa_profile.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sfdm_stacked_kappa_profile.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "N",
+        "yaxis": "snr"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_phase5x_candidate_viability_matrix",
+      "function": "fig_phase5x_candidate_viability_matrix",
+      "caption": "Paper 17 \u00a74/\u00a78 \u2014 Five emergent-gravity DM candidates classified by basic viability. 4/5 viable; FG torsion obstructed at tree-level EoS. Lean: phase5x_candidates_viability_matrix.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_candidate_viability_matrix.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_candidate_viability_matrix.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "viability",
+        "yaxis": "candidate"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "dissipative"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_phase5x_empirical_hook_ranking",
+      "function": "fig_phase5x_empirical_hook_ranking",
+      "caption": "Paper 17 \u00a79 \u2014 Five empirical hooks ranked by Phase 5x detectability + timeline. Merger sonic boom top; direct nuclear recoil last (all candidates invisible). Lean: empirical_hook_ranking_strict.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_empirical_hook_ranking.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_phase5x_empirical_hook_ranking.html",
+      "expected_traces": 1,
+      "expected_axes": {
+        "xaxis": "priority",
+        "yaxis": "hook"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

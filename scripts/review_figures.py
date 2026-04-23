@@ -759,6 +759,40 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=5,
         expected_axes={"yaxis": "energy"}, physics_checks=[], color_keys=["dissipative"],
     ),
+    # Phase 5x Wave 5: SFDM cluster-merger money plot (two panels)
+    FigureSpec(
+        name="fig_sfdm_velocity_threshold_step",
+        function="fig_sfdm_velocity_threshold_step",
+        caption="Paper 17 money plot (left) — DM-galaxy offset vs v_infall/c_s. SFDM step function at M=1 vs SIDM smooth rise vs CDM null. 5 canonical mergers overlaid.",
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "mach", "yaxis": "offset"},
+        physics_checks=[], color_keys=["steel_blue", "amber", "dissipative"],
+    ),
+    FigureSpec(
+        name="fig_sfdm_stacked_kappa_profile",
+        function="fig_sfdm_stacked_kappa_profile",
+        caption="Paper 17 money plot (right) — stacked S/N vs N mergers for Euclid + Roman. 3σ and 5σ thresholds marked. First 3σ ~2028.",
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "N", "yaxis": "snr"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
+    # Phase 5x Wave 8/9: Paper 17 candidate-matrix and empirical-hook ranking
+    FigureSpec(
+        name="fig_phase5x_candidate_viability_matrix",
+        function="fig_phase5x_candidate_viability_matrix",
+        caption="Paper 17 §4/§8 — Five emergent-gravity DM candidates classified by basic viability. 4/5 viable; FG torsion obstructed at tree-level EoS. Lean: phase5x_candidates_viability_matrix.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={"xaxis": "viability", "yaxis": "candidate"},
+        physics_checks=[], color_keys=["steel_blue", "dissipative"],
+    ),
+    FigureSpec(
+        name="fig_phase5x_empirical_hook_ranking",
+        function="fig_phase5x_empirical_hook_ranking",
+        caption="Paper 17 §9 — Five empirical hooks ranked by Phase 5x detectability + timeline. Merger sonic boom top; direct nuclear recoil last (all candidates invisible). Lean: empirical_hook_ranking_strict.",
+        needs_experiments=False, expected_traces=1,
+        expected_axes={"xaxis": "priority", "yaxis": "hook"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
 ]
 
 
@@ -837,6 +871,12 @@ def generate_figures() -> dict[str, Path]:
         fig_ext_chart,
         fig_a1_resolution_structure,
         fig_fk_spectrum,
+        # Phase 5x Wave 5: SFDM merger money plot
+        fig_sfdm_velocity_threshold_step,
+        fig_sfdm_stacked_kappa_profile,
+        # Phase 5x Wave 8/9: Paper 17 synthesis figures
+        fig_phase5x_candidate_viability_matrix,
+        fig_phase5x_empirical_hook_ranking,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -946,6 +986,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_ext_chart": fig_ext_chart,
         "fig_a1_resolution_structure": fig_a1_resolution_structure,
         "fig_fk_spectrum": fig_fk_spectrum,
+        "fig_sfdm_velocity_threshold_step": fig_sfdm_velocity_threshold_step,
+        "fig_sfdm_stacked_kappa_profile": fig_sfdm_stacked_kappa_profile,
+        "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
+        "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
     }
 
     paths = {}
@@ -1058,6 +1102,12 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_a1_resolution_structure,
         # Phase 5s: FK gapped interface
         fig_fk_spectrum,
+        # Phase 5x Wave 5: SFDM merger money plot
+        fig_sfdm_velocity_threshold_step,
+        fig_sfdm_stacked_kappa_profile,
+        # Phase 5x Wave 8/9: Paper 17 synthesis figures
+        fig_phase5x_candidate_viability_matrix,
+        fig_phase5x_empirical_hook_ranking,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1165,6 +1215,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_ext_chart": fig_ext_chart,
         "fig_a1_resolution_structure": fig_a1_resolution_structure,
         "fig_fk_spectrum": fig_fk_spectrum,
+        "fig_sfdm_velocity_threshold_step": fig_sfdm_velocity_threshold_step,
+        "fig_sfdm_stacked_kappa_profile": fig_sfdm_stacked_kappa_profile,
+        "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
+        "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
     }
 
     issues: list[CheckIssue] = []

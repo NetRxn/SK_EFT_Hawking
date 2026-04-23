@@ -936,18 +936,35 @@ def check_paper_provenance() -> CheckResult:
                 "Has \\fbox placeholder figures — must use \\includegraphics"
             ))
         elif '\\includegraphics' in tex:
-            fig_dir = paper_dir / "figures"
-            png_count = len(list(fig_dir.glob("*.png"))) if fig_dir.exists() else 0
-            if png_count == 0:
+            # Resolve each \includegraphics{PATH} relative to the paper tex dir.
+            # Papers may reference local figures/ (most) or shared figures/phase*/ (paper16).
+            includegraphics_refs = re.findall(
+                r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}', tex
+            )
+            missing_figs = []
+            resolved_count = 0
+            for ref in includegraphics_refs:
+                ref_path = (paper_dir / ref).resolve()
+                # Accept the exact path, or the path with any of the common
+                # graphics extensions appended (LaTeX auto-appends .pdf/.png).
+                candidates = [ref_path] + [
+                    ref_path.with_suffix(ext) for ext in ('.png', '.pdf', '.jpg')
+                ]
+                if any(c.exists() for c in candidates):
+                    resolved_count += 1
+                else:
+                    missing_figs.append(ref)
+            if missing_figs:
                 all_pass = False
                 details.append(Detail(
                     f"{paper_dir.name}/figures", False,
-                    "Uses \\includegraphics but figures/ is empty"
+                    f"Missing {len(missing_figs)} referenced figure(s): {missing_figs[:3]}"
+                    + (f" (+{len(missing_figs) - 3} more)" if len(missing_figs) > 3 else "")
                 ))
             else:
                 details.append(Detail(
                     f"{paper_dir.name}/figures", True,
-                    f"{png_count} figure files present"
+                    f"{resolved_count} referenced figure(s) resolved"
                 ))
 
         # Check 3: No placeholder bibliography entries

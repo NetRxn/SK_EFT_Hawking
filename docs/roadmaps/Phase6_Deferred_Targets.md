@@ -173,6 +173,106 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 - Deep research submitted: `Phase5g_sparse_fermion_matrix_lattice.txt`
 - **PROMOTED to Phase 5g Track A** — the physics bottleneck
 
+### Fang-Gu Torsion DM Rescue Paths — **NEW 2026-04-22 session 3**
+
+Two narrow Lean modules that would strengthen / close the Fang-Gu kinematic-obstruction story
+shipped in Phase 5x Wave 4 (see `lean/SKEFTHawking/FangGuTorsionDM.lean` + memo
+`docs/dark_sector/W4_FangGu_Torsion_DM_Assessment.md`).
+
+**Trigger (either):** (a) published FG extension computes a one-loop anomaly coefficient or a
+non-equilibrium string-network cosmology; (b) Paper 17 reviewer pushes back on the kinematic
+obstruction; (c) user explicitly requests strengthening. None yet fired — memo's current
+framing is load-bearing for Paper 17 as-is.
+
+#### `FangGuTraceAnomaly.lean` — trace-anomaly conditional rescue (~6 theorems)
+- **Claim:** *if* one-loop anomaly data `(β, O)` for FG e-loops satisfies `β·O = −ρ`, the
+  effective quantum pressure vanishes and FG-DM recovers CDM scaling.
+- **Pattern:** tracked-Prop hypothesis `H_FG_Anomaly_Coefficient_MinusOne : Prop` following
+  `CenterFunctor.H_CF1_center_functor` and `HiddenSectorMixedCharge.H_MixedChannelZ16Cancels`
+  precedent — non-trivial (real equation on β, O), discharge requires Feynman-diagram
+  computation outside Lean scope.
+- **Structure:**
+  - `AnomalyData` struct (β, O)
+  - `quantum_trace`, `quantum_pressure`, `quantum_eos_w` defs
+  - `AnomalyLinearInRho` (relates β·O to ρ linearly as in QCD trace anomaly)
+  - `trace_anomaly_rescues_cdm` theorem (conditional on `AnomalyLinearInRho a (-1) ρ`)
+  - `partial_rescue_is_not_dust` (obstruction persists for k ≠ −1)
+  - `H_FG_Anomaly_Coefficient_MinusOne` tracked Prop
+- **Mathlib needs:** none new (perfect-fluid algebra + tracked Prop pattern).
+- **Session sizing:** 1 focused session (similar to FangGuTorsionDM.lean, different tracked
+  hypothesis).
+
+#### `FangGuStringGasClosure.lean` — cosmic-string-gas closure (~5 theorems)
+- **Claim:** under bulk SO(3) isotropy and perfect-fluid macroscopic approximation, microscopic
+  tracelessness of extended 1D defects still forces macroscopic `w = 1/3`. Cosmic-string-gas
+  averaging does NOT rescue FG-DM under these assumptions. *Strengthens* the obstruction by
+  closing this escape hatch.
+- **Physics note (new to session 3):** the naïve "w ≈ −1/3 cosmic-string rescue" fails because
+  Nambu-Goto cosmic strings have non-traceless `T^μ_μ = −2ρ`, contradicting FG's required
+  microscopic tracelessness. The genuine escape — non-equilibrium string-network cosmology
+  tracking correlation functions — is beyond perfect fluid and beyond current scope.
+- **Structure:**
+  - `AnisotropicStress` struct (ρ, T_long, T_trans)
+  - `aniso_trace`, `isotropic_average` defs
+  - `isotropic_traceless_forces_radiation` (closure theorem: `w_eff = 1/3`)
+  - `nambu_goto_not_traceless` (concrete witness that cosmic strings can't satisfy FG)
+  - `rescue_requires_anisotropy` (biconditional flagging observationally excluded case)
+  - Tracked Prop `H_FG_NonPerfectFluid_Network` for the non-equilibrium-network rescue
+- **Mathlib needs:** none new. Uses only elementary real arithmetic.
+- **Session sizing:** 0.5 focused session (shorter than trace-anomaly; pure algebra closure).
+
+**Both together** complete the "Paper 17 claim discipline" around FG-DM: the kinematic
+obstruction (shipped) + trace-anomaly conditional (Phase 6) + string-gas closure (Phase 6)
+would give a fully audited map of which FG-DM rescues are open and which are closed. Not
+needed for Paper 17 draft; needed only if the FG section becomes a contested point.
+
+---
+
+### Discharge paths opened by Phase 5x Wave 8 (2026-04-22 session 4)
+
+Wave 8 (`DarkSectorSynthesis.lean`) shipped seven cross-connection theorems across the
+Phase 5x waves (see `docs/dark_sector/W8_Synthesis_and_CrossConnections.md`). Two items
+parked there have explicit discharge paths registered below.
+
+#### `H_VestigialRelicCarriesZ16Charge` — tracked `Prop` hypothesis
+
+- **Parking site:** `DarkSectorSynthesis.lean` §6 (theorem `z16_vestigial_stability_under_hypothesis`).
+- **Content:** the hypothesis that a vestigial relic produced by the ADW → tetrad phase
+  transition carries the ℤ₁₆ anomaly charge `+3` required by the SM anomaly equation
+  (W2 `hidden_sector_anomaly_value`).
+- **Discharge requires (in order):**
+  1. **Wave 6a** (MC extension to L = 10, 12, 16 + Binder cumulants) — confirms the
+     transition order + identifies the relic class (domain wall vs monopole vs skyrmion).
+  2. **Wave 6b Target 1** `adw_coset_homotopy` — computes π₀, π₁, π₂, π₃ of
+     `GL(4,ℝ)/SO(3,1)`, pinning down the topological defect spectrum. Medium difficulty,
+     Mathlib-available.
+  3. **Phase 6 bordism infrastructure** — upgrades `Z16AnomalyComputation.dai_freed_spin_z4`
+     from its existence-placeholder to a real homomorphism `Ω₅^{Spin × ℤ₄} → ZMod 16`.
+     Requires APS η-invariant machinery not in Mathlib.
+  4. **Bridge theorem** — maps relic's topological charge onto the ℤ₁₆ bordism invariant
+     under the Dai-Freed pairing.
+- **Partial discharge available now:** just Target 1 (coset homotopy) already reduces the
+  hypothesis from "carries the charge" to "if the π_k image lands in the correct anomaly
+  class." That is a 1-session module — registered under Wave 6b, not here.
+- **Trigger:** W6a completion OR user-requested Phase 6 tour.
+- **Session sizing:** 1 session for Target 1 alone; the full discharge is Phase 6 open.
+
+#### Torsion-channel identification — modelling choice upgrade
+
+- **Parking site:** `DarkSectorSynthesis.lean` §7 definition `channel_of_source`.
+- **Content:** the assignments `DiracAxial ↦ Antisymmetric`, `FGLoopTheta ↦ Trace`,
+  `NoSource ↦ PureTensor` are encoded as a definition, not derived from variational
+  Lagrangians.
+- **Discharge:** a Phase 6 memo (likely paired with the above `FangGuTraceAnomaly.lean`
+  or its own `TorsionIrrepDerivation.lean`) that derives the channel assignments from:
+  - Dirac-Lagrangian variation → Kibble-Sciama-Hehl totally antisymmetric torsion (standard)
+  - FG loop-θ-term variation → trace vector torsion (FG 2021 Eq. (3.6))
+- **Mathlib needs:** none new — linear algebra + Clifford algebra (already in project
+  as `PauliMatrices`, `BdGHamiltonian`, etc.).
+- **Trigger:** Phase 6 FG memo trigger (same as `FangGuTraceAnomaly.lean`).
+- **Session sizing:** 0.5-1 session (pure algebraic decomposition + bridge to Lagrangian
+  variational calculus).
+
 ---
 
 ## 33 Remaining Sorry Gaps (entire project)

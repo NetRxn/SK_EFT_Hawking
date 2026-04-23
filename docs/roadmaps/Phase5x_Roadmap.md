@@ -295,9 +295,9 @@ Lean Formalization Targets:
 ---
 
 **Deliverables (combined):**
-- [ ] Track X: `HiddenSectorMixedCharge.lean` + Python + tests (all Easy-Medium)
+- [x] Track X: `HiddenSectorMixedCharge.lean` (X1-X6, 6 theorems + 3 helpers, 0 sorry, 0 new axioms; 1 tracked `Prop` hypothesis `H_MixedChannelZ16Cancels` for the Wan-Wang ℤ₁₆⊕ℤ₄ joint mechanism) + Python extension (`x_charges` field + `verify_joint_cancellation`) + 8 new tests (SHIPPED 2026-04-22)
 - [ ] Track Y: `HiddenSectorTopological.lean` with 2 tracked hypotheses (or skip per alternative)
-- [ ] Update `DM_CANDIDATE_MATRIX` with concrete ℤ₄ charges for C-1 and `topological_cancellation` flag for T-0
+- [x] Update `DM_CANDIDATE_MATRIX` with concrete ℤ₄ charges for C-1 (`x_charges=(-2,-2,-2,-2,-2,-2,-2,6)`); T-0 topological flag already present via `singlet_cancellation=False`
 - [ ] Extend `z4x_singlet_constraint` (T11) commentary to cite Track X as the positive formalization of the mixed-charge channel
 
 **Cross-wave interaction:** Wave 7 (Fracton DM) and Wave 5 (SFDM) may benefit from the same pattern — each has multiple candidate sub-channels. Wave 2b serves as the reference implementation for "formalize one channel at a time, mark boundaries explicitly, use tracked hypotheses for infrastructure gaps." Recommend reading this wave before starting 5 or 7.
@@ -336,8 +336,8 @@ Lean Formalization Targets:
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [ ] `lean/SKEFTHawking/CosmologicalConstant.lean` — T2, T3 (near-term); T1, T4 (medium-term)
-- [ ] `src/dark_sector/adw_cosmological_constant.py` — Λ from gap equation equilibrium; w(z) from phase transition parametrization; Klinkhamer-Volovik oscillation model
+- [x] `lean/SKEFTHawking/CosmologicalConstant.lean` (PARTIAL 2026-04-22) — T1 double-temperature relation (algebraic form), T3 quartic Coleman-Weinberg critical-point identity (general math backbone, `-A²/(4B)` not the specific `-Λ⁴/(4e)`), Λ magnitude-ratio utilities. **0 sorry, 0 new axioms**. Deferred: T2 `volovik_equilibrium` (needs thermodynamic axioms), full T3 ADW specialization (needs RG/log-potential infrastructure), T4-T6 (Hard, Phase 6).
+- [x] `src/dark_sector/adw_cosmological_constant.py` (PARTIAL 2026-04-22) — T_dS/T_GH formulas, Λ magnitude ratio (2.8/2.3)⁴ ≈ 2.20, W1b-corrected Klinkhamer-Volovik prediction (frozen plateau; does NOT explain DESI), quartic CW critical-point helper, structured `assess_cosmological_constant_status` summary. 45 tests. Deferred: w(z) phase-transition parametrization, numerical `Λ from gap equation` runner (existing `src/adw/gap_equation.py` already covers NJL-form Λ via `adw_effective_potential`).
 - [ ] `src/dark_sector/de_sitter_sk_eft.py` — SK-EFT transport coefficients for cosmological horizon; δ_diss mapping to stochastic inflation noise
 - [ ] ΛCDM compatibility table (from deep research §4.2 — ADW vs DESI DR2 vs Planck). ⚡**W1b: Must now include KV Level D tension column — ADW plateau gives w=-1 (consistent with Planck), KV oscillations give w_eff=0 (CDM-like, inconsistent with DESI). Add QCD topological DE row as DESI-compatible bridge.**
 - [ ] Assessment memo: is the CC problem "solved" or "reframed" by ADW? (Answer from deep research: **reframed** — heuristic argument, not theorem, but quantitatively compelling). ⚡**W1b addendum: honest statement that KV oscillating vacuum does NOT explain DESI DR2, but Λ magnitude prediction stands.**
@@ -375,11 +375,17 @@ Lean Formalization Targets:
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [ ] ADW compatibility assessment memo (from deep research §5 — structurally excellent, but 2 reconciliation questions)
-- [ ] Detection signatures table (from deep research §Block 4 — FG-DM vs WIMP vs axion vs sterile ν)
-- [ ] `src/dark_sector/torsion_dm.py` — torsion DM cross-sections (gravitational only), R=0 cosmological constraint assessment
+- [x] **Shipped 2026-04-22 session 3** — `docs/dark_sector/W4_FangGu_Torsion_DM_Assessment.md` (memo, initially written by background agent, strengthened in session 3 review). Memo revision tightened the verdict from "structurally sound but parametrically undetermined" to "structurally compatible but kinematically obstructed at the CDM level": the traceless `T_μν` of FG e-loops forces `w = 1/3` as a tree-level algebraic identity, which is radiation-like and incompatible with CDM `ρ ∝ a⁻³` scaling. Memo now has explicit §3.1 "kinematic obstruction" walkthrough, §5 tree-level caveat on two-channel torsion orthogonality, §6 Lean-module rationale, §7 revised Paper 17 framing ("compatible-but-kinematically-obstructed"). Escape hatches (cosmic-string-gas averaging, sub-sonic velocity dispersion, quantum trace anomaly) flagged as logically open but not realized in published FG 2021/2023 construction.
+- [x] **Shipped 2026-04-22 session 3 strengthening** — `lean/SKEFTHawking/FangGuTorsionDM.lean` (10 theorems, 0 sorry, 0 new axioms; only standard `propext` / `Classical.choice` / `Quot.sound` per `lean_verify`). Narrow perfect-fluid algebraic module: `PerfectFluidData` struct, definitions `mink_trace`, `eos_w`, `is_dust`, `poisson_source`. Main theorems: FG1 `traceless_iff_w_one_third`, FG2 `traceless_not_dust`, FG3 `traceless_poisson_source_doubled`, FG4 `dust_poisson_source_equals_rho`, FG5 `fg_cdm_obstruction` (conjunction synthesis). Supporting: `dust_not_traceless`, three numerical witnesses, module summary. Builds clean at 8419 jobs. Makes the CDM obstruction load-bearing for Paper 17, not just narrative.
+- [~] Detection signatures table — folded into the memo §3 + §3.1.
+- [ ] `src/dark_sector/torsion_dm.py` — torsion DM cross-sections (gravitational only), R=0 cosmological constraint assessment. **Deferred** — memo establishes Python implementation is not warranted at current parametric state; revisit if a loop-condensation model pins m_DM.
 
-**Note:** No Lean formalization targets identified for Wave 4. The FG results are phenomenological assessments, not formalizable theorems given the parametric underdetermination. The two-torsion-channel observation is a conceptual insight, not a computation.
+**Note:** W4 is now a memo + narrow-Lean hybrid. The FG mass spectrum remains parametrically undetermined (no Python module, no quantitative relic-abundance prediction) but the traceless-T → `w = 1/3` kinematic obstruction is formally captured. Full-pipeline W4 revisit triggers (see memo §6) remain: derivation of `θ` from ADW gap equation; trace-anomalous completion; EP-violation observable from W6.
+
+**Deferred rescue-path modules (Phase 6):** Two follow-on Lean modules sized during session 3 and registered in `docs/roadmaps/Phase6_Deferred_Targets.md`:
+- `FangGuTraceAnomaly.lean` (~6 theorems) — tracked-Prop conditional rescue: if one-loop anomaly data `(β, O)` satisfies `β·O = −ρ`, then the quantum effective pressure vanishes and FG-DM recovers CDM. Non-trivial discharge requires explicit Feynman-diagram computation of the FG e-loop anomaly coefficient.
+- `FangGuStringGasClosure.lean` (~5 theorems) — **closure, not rescue**: under bulk SO(3) isotropy + perfect-fluid approximation, microscopic tracelessness + orientation averaging still forces `w = 1/3`. Confirms that the naïve "Vilenkin-Shellard cosmic-string rescue" fails (Nambu-Goto strings have non-traceless `T^μ_μ = −2ρ`, contradicting FG's required tracelessness). The only real escape is non-equilibrium string-network cosmology beyond perfect fluid.
+- Trigger condition for either: published FG extension supplies the relevant physics, OR Paper 17 reviewer pushback, OR user request. Neither needed for Paper 17 draft as currently framed.
 
 ---
 
@@ -433,20 +439,17 @@ Lean Formalization Targets:
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [ ] `src/dark_sector/sfdm_sk_eft.py` — **PRIMARY**: dissipative MOND force correction; FDR noise floor in RAR; cluster merger Landau threshold dynamics. **SECONDARY**: T_H for completeness
-- [ ] `lean/SKEFTHawking/SFDMAcousticMetric.lean` — theorems L1, L2 (near-term); L3, L6 (medium-term); L4, L5 (hard, stretch)
-- [ ] `notebooks/sfdm_parameter_sweep.ipynb` — contour plots: MOND force correction vs (m, Λ, α); RAR scatter vs T_phonon; merger velocity threshold vs halo mass
-- [ ] Observable signatures ranked by detectability (from deep research §Block 4):
-  - **Rank 1**: Cluster merger sonic boom (DETECTABLE NOW — Euclid/Roman)
-  - **Rank 2**: Galaxy rotation curve diversity (CURRENT DATA — but SK-EFT correction ~10⁻³, below precision)
-  - **Rank 3**: Gravitational wave from DM phase transitions (FUTURE — h ~ 10⁻³⁰, undetectable)
-  - **Rank 4**: CMB spectral distortions (MARGINAL — below PIXIE)
-  - **Rank 5**: 21cm (INDIRECT — HERA/SKA, second-order)
-- [ ] SFDM vs Fuzzy DM vs SIDM comparison table (from deep research §Block 4 table)
-- [ ] ⚡**W1b NEW:** `src/dark_sector/sfdm_merger_forecast.py` — Rankine-Hugoniot jump conditions for SFDM; 5-target S/N table as function of (m, Λ); stacking statistics; condensate fraction model
-- [ ] ⚡**W1b NEW:** `notebooks/sfdm_merger_money_plot.ipynb` — two-panel figure: DM-galaxy offset vs v/c_s (step function) + stacked κ profile at N=30/50
-- [ ] ⚡**W1b NEW:** El Gordo / A520 / Bullet detailed comparison worksheet (SIDM tension analysis from W1b §Block 9)
-- [ ] ⚡**H₀ Tension NEW:** Σ_cr sensitivity table: S/N at Planck H₀=67.4 vs H0DN H₀=73.5 for all 5 canonical targets. Include in Paper 17 §5 systematic error budget. Add BK-Wang (2017) phonon-mediated acceleration as introduction paragraph.
+- [x] **Shipped 2026-04-22 session 4** — `src/dark_sector/sfdm_sk_eft.py` (~400 LOC): BK fiducial constants per halo mass (c_s table, condensate fraction table); sound-speed formula `c_s² = 2μ/m`; condensate fraction via BK Eq.17 (both table lookup + formula); Bondi radius + 5-scenario analog Hawking temperature (all 23-29 orders below T_CMB); MOND `a_φ = √(a_N·a_0)` + FDR noise-floor order-of-magnitude bound; `assess_sfdm_sk_eft()` structured verdict.
+- [x] **Shipped 2026-04-22 session 4** — `lean/SKEFTHawking/SFDMMergerForecast.lean` (30 theorems, 0 sorry, 0 new axioms). Covers: BK fiducial constants + monotonicity across halo masses; `sfdm_sound_speed_sq` + positivity + linear-μ / inverse-m scaling (L1); Landau criterion + decidable `MergerRegime`; 5 canonical merger structs + `all_canonical_mergers_supersonic` + `pandora_highest_mach` + `macs_j0025_lowest_mach` (native_decide); Rankine-Hugoniot density jump general + SFDM special case γ=2 + subtractive form `3−6/(M²+2)` + `delta_rho_monotone_in_mach_sfdm` + `delta_rho_corrected_nonneg`; stacked S/N scaling theorems (`snr_stacked_single`, `snr_stacked_monotone`, `snr_stacked_sq`, `three_sigma_threshold`); 5 decidable numerical S/N witnesses (Bullet/Roman at N=18/30/50, A520/Euclid at N=30/50); SFDM backreaction direction (μ↓ ⇒ c_s² ↓ ⇒ Mach↑); `sfdm_offset_step_function` smoking-gun predicate (L6 partial). L4 (MOND force derivation) + L5 (FDR noise-floor bound on RAR) deferred to Phase 6.
+- [~] `notebooks/sfdm_parameter_sweep.ipynb` — deferred; covered at the memo/figure level for Paper 17 purposes. Full MC-adjacent sweep is a W9 deliverable.
+- [x] **Shipped 2026-04-22 session 4** — Observable signatures ranked by detectability (`EmpiricalHook` ranking in W8 `DarkSectorSynthesis.lean`). Rank 1 merger sonic boom; Rank 2 fracton core-cusp; Rank 3 EP violation; Rank 4 DESI DR3; Rank 5 direct nuclear recoil. Strictly linearly ordered via `empirical_hook_ranking_strict`.
+- [~] SFDM vs Fuzzy DM vs SIDM comparison table — addressed at the figure level (the money-plot-left panel `fig_sfdm_velocity_threshold_step` overlays SFDM step vs SIDM smooth rise vs CDM null with the 5 canonical mergers). Full comparison table deferred to Paper 17 §9.
+- [x] **Shipped 2026-04-22 session 4** — `src/dark_sector/sfdm_merger_forecast.py` (~500 LOC): Rankine-Hugoniot density jump; condensate-fraction corrected δρ; Σ_cr in g/cm² (calibrated to Bullet W1b 0.63); shock convergence κ = δΣ/Σ_cr; 5-target single-cluster S/N (Bullet Euclid 0.83 / Roman 1.04 exactly matches W1b Table 6); stacking S/N √N scaling + `n_clusters_for_target_snr` threshold; `CANONICAL_MERGERS` dataclass catalog; `stacking_forecast_table` across N ∈ {10, 30, 50, 100, 200} × 2 surveys; H₀ sensitivity table (Planck vs H0DN, Σ_cr shifts ~9%); smoking-gun `sfdm_dm_galaxy_offset_kpc` step function vs smooth `sidm_dm_galaxy_offset_kpc` vs `cdm_dm_galaxy_offset_kpc` null; structured `assess_sfdm_merger_forecast()` returning `CONDITIONAL GO` verdict.
+- [x] **Shipped 2026-04-22 session 4** — Two new figures in `src/core/visualizations.py`: **`fig_sfdm_velocity_threshold_step` (Fig 106 — money plot LEFT)**: DM-galaxy offset vs Mach for SFDM (step at M=1) vs SIDM (smooth rise) vs CDM (null), with 5 canonical mergers overlaid as diamonds at fiducial Mach numbers; **`fig_sfdm_stacked_kappa_profile` (Fig 107 — money plot RIGHT)**: stacked S/N vs N (log-x) for Euclid and Roman at Bullet single-cluster reference, 3σ/5σ horizontal thresholds + N=30/50 vertical reference lines. Registered in `scripts/review_figures.py` `FIGURE_REGISTRY` + both `func_map` sites. 0 errors on `review_figures.py`.
+- [x] El Gordo / A520 / Bullet / Pandora / MACS J0025 comparison in shipped forecast — all 5 canonical targets have per-merger `MergerForecastResult` with per-survey S/N (Bullet Euclid 0.83 / Roman 1.04 matches W1b exactly; others within ~1.5× W1b Table 6 due to per-cluster geometry approximation). Full SIDM-tension analysis deferred to Paper 17 §5-§9.
+- [x] **Shipped 2026-04-22 session 4** — H₀ sensitivity table computed by `h0_sensitivity_table()`: Planck `H_0 = 67.4 km/s/Mpc` → Σ_cr_Bullet = 0.625 g/cm² (baseline ratio 1.000); H0DN `H_0 = 73.50 km/s/Mpc` → Σ_cr_Bullet = 0.682 g/cm² (ratio 1.091, ~9% shift). Below dominant Λ uncertainty — not meaningful for go/no-go. Fed into Paper 17 §5 via `SFDMMergerForecastAssessment.sigma_cr_ratio_h0dn_vs_planck`.
+- [x] **Shipped 2026-04-22 session 4** — Memo `docs/dark_sector/W5_SFDM_Merger_Forecast.md` (full 9-section structure): purpose, framework inputs, 30-theorem Lean roster, Python chain walkthrough, figure catalog, H₀-tension block, Paper 17 / Phase 6 deferred list, triggers-to-update, references.
+- [x] **Shipped 2026-04-22 session 4** — `tests/test_sfdm_merger_forecast.py` (86 passing): 14 test classes covering BK fiducials, sound-speed formula, condensate fraction, R-H jump, canonical mergers, single-cluster S/N, stacked S/N, stacking-forecast table, Σ_cr, H₀ sensitivity, smoking-gun step function, Hawking temperature scenarios, MOND+FDR, feature-area geometry, and explicit Python↔Lean cross-checks for every mirrored constant.
 
 **Lean infrastructure reuse:** WKBConnection (18), WKBAnalysis (17), HawkingUniversality (8), AcousticMetric (~12). **Estimated: 6 new theorems (2 easy, 2 medium, 2 hard).**
 
@@ -587,16 +590,16 @@ Lean Formalization Targets:
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
-- [ ] `lean/SKEFTHawking/FractonDarkMatter.lean` — theorems 1-4, 8-11 (near-term, 8 theorems); 5-7, 12, 14 (medium-term, 5 theorems); 13a, 13c (medium); 13b, 13d (hard); ⚡Drilldown: rename module theorem from `fracton_3d_kinetic_stability` to `fracton_3d_thermodynamic_stability`
-- [ ] `src/dark_sector/fracton_dm.py` — subdiffusion density profiles, Bullet Cluster constraint (σ=0 automatic), thermal lifetime as function of M_d/T, BBN constraint
-- [ ] Small-scale structure predictions: core-cusp resolution, satellite problem, diversity from HSF
+- [x] **Near-term shipped 2026-04-22 (session 3)** — `lean/SKEFTHawking/FractonDarkMatter.lean` (25 theorems, 0 sorry, 0 new axioms). Covers target theorems 1 (`fracton_bullet_sigma_zero` + `fracton_bullet_cluster_satisfied`), 2 (`fracton_z4_subdiffusion_preserved` via `FractonFormulas.dipole_k4_damping`), 3 (via `fracton_sm_singlet_from_ym_incompat`), 8 (`fracton_cosmo_dust_pressureless`), 9 (`fracton_bbn_md_ordering` + the Arrhenius/condensate lower-bound constants), 10 (`fracton_sound_speed_subluminal`), 11 (`fracton_gravity_attractive`), 12 (`fracton_ww_bypass`). 13a → `fracton_nogo_exemption` + `pwave_fully_exempt` + `kapustin_selects_pwave` (Shen/Krishna phase-scope + Kapustin-Spodyneiko s-wave suppression encoded as decidable classifications on `FractonDMPhase` × `FractonNoGoTheorem`). 13c → `fracton_lifetime_arrhenius` + `fracton_10MeV_passes_arrhenius`. 13d → `fracton_bbn_condensate_sufficient` + `fracton_1MeV_passes_condensate` + `condensate_weaker_than_arrhenius`. Viable-window theorems `fracton_viable_arrhenius_window`, `fracton_viable_pwave_window`, `pwave_window_extends_arrhenius`. Synthesis classifier `is_viable_at_epoch` + 4 executable witnesses (`dilldown_witness_viable`, `arrhenius_witness_viable`, `eV_scale_excluded_at_bbn`, `swave_always_excluded`). **Deferred** (⚡Phase 6, need thermodynamic / Bogoliubov / hydrodynamic / large-N Mathlib infrastructure): 13b (BBN lower bound as thermodynamic theorem), theorems 5 (Mach inertia), 6 (Krylov diversity), 7 (dipole tidal resistance), 14 (NFW core comparison).
+- [x] **Near-term shipped 2026-04-22 (session 3)** — `src/dark_sector/fracton_dm.py` (~470 lines, 86 passing tests in `tests/test_fracton_dm.py`). Module-level constants in MeV units; `arrhenius_lifetime(M_d, T, τ₀)`, `haah_superexponential_lifetime`, `hubble_radiation_era_inv_MeV(T, g_*)`, `arrhenius_md_bbn_lower_bound_MeV()` (computes ~10.46 MeV for default g_*=10.75), `arrhenius_survives_bbn`, `condensate_cold`, `condensate_lower_bound_at_epoch_MeV`, `fracton_subdiffusion_core_radius_estimate`, `fracton_dust_eos`, `bullet_cluster_passes`, `fracton_gravity_attractive`, `fracton_ww_bypass_applies`, `z4_subdiffusion_preserved_in_phase`, `fracton_viable_at_epoch`. `FractonDMPhase` enum + `FractonDMCandidate` dataclass + three canonical witnesses (`DRILLDOWN_PWAVE_1MeV`, `ARRHENIUS_GAPPED_10MeV`, `EXCLUDED_GAPPED_EV`). `assess_fracton_dm_status()` returns structured VIABLE-conditional verdict with viable/excluded phase lists + 7 signature booleans + surviving empirical hooks + remaining gaps (production mechanism as top Drilldown §X gap).
+- [ ] Small-scale structure predictions: core-cusp resolution (⚡partial — core-radius estimator shipped), satellite problem, diversity from HSF
 - [ ] Density profile comparison: fracton (analytical) vs NFW vs Burkert vs observed (Oman et al. 2015)
-- [ ] Finite-T risk assessment: gapless fracton liquid stability window (M_d vs T_CMB parameter space). ⚡**W1b: Now quantitative — viable window is 10 MeV ≲ M_d ≲ 100 GeV, with Arrhenius and Haah superexponential lifetime curves.**
+- [x] **Partial 2026-04-22 (session 3)** — Finite-T risk assessment surfaced via `is_viable_at_epoch` classifier and four executable witnesses (pwave 1 MeV viable, gapped 10 MeV viable, gapped 1 eV excluded, s-wave always excluded). Full M_d vs T parameter-space phase diagram (visualization) still deferred.
 - [ ] Lab analog opportunities table (Adler et al. 2024 Nature — 2D observation of HSF + fractonic excitations)
 - [ ] ⚡**W1b NEW:** BBN survival phase diagram: M_d vs T_BBN with Arrhenius/Haah/superexponential contours marking τ > τ_BBN
 - [ ] ⚡**W1b NEW → Drilldown RESOLVED:** UV completion survey → **Dark QCD is the preferred UV completion** (Λ_dark ~ MeV–GeV); fracton-elasticity duality maps dark QCD confinement to fracton condensation. Memo: assess SU(N_dark) × U(1)_fracton gauge structure compatibility with FractonNonAbelian.lean
 
-**Lean infrastructure reuse:** FractonGravity (20), FractonHydro (17), FractonFormulas (45), FractonNonAbelian (4). **Estimated: ⚡18 new theorems (14 original + 4 from theorem 13 → 13a-d split, bringing FractonDM.lean to largest module in fracton suite).**
+**Lean infrastructure reuse:** FractonGravity (20), FractonHydro (17), FractonFormulas (45), FractonNonAbelian (4). **Session 3 near-term shipped 2026-04-22:** 25 theorems in `FractonDarkMatter.lean` against a ~18-theorem roadmap target, covering the Easy + Medium + 13a/c/d rows. Remaining targets (13b, 5/6/7/14 Medium-Hard, density-profile comparison, Haah phase diagram, UV-completion memo) sized for a follow-up session.
 
 ---
 
@@ -638,16 +641,23 @@ Lean Formalization Targets:
   - **Structurally sound, parametrically undetermined:** Fang-Gu torsion DM
 
 **Deliverables:**
-- [ ] Synthesis document: unified assessment of all 6 dark sector connections with cross-connection matrix
-- [ ] Priority ranking for further development. ⚡**W1b: SFDM merger likely promoted to co-equal with Track A.**
-- [ ] Experimental prediction summary table (ranked by detectability and timeline)
-- [ ] "Which combinations are consistent?" analysis document
+- [x] **Shipped 2026-04-22 session 4** — `docs/dark_sector/W8_Synthesis_and_CrossConnections.md` (memo) + `lean/SKEFTHawking/DarkSectorSynthesis.lean` (22 theorems, 0 sorry, 0 new axioms, 1 tracked `Prop` hypothesis `H_VestigialRelicCarriesZ16Charge` for the ℤ₁₆ × vestigial cross-connection; discharge path registered in `docs/roadmaps/Phase6_Deferred_Targets.md`). Full-project `lake build SKEFTHawking.ExtractDeps` clean (8420 jobs). `src/dark_sector/synthesis.py` (cross-connection matrix of 7 entries, Python mirror of Lean constants). `tests/test_dark_sector_synthesis.py` (70 passing tests, cross-checking EoS distinctness, collective invisibility, cored-profile taxonomy, torsion-channel independence, candidate matrix, empirical-hook ranking, cross-connection matrix, overall assessment). Covers CC1 hidden-sector × fracton compatibility; CC2 collective invisibility (log10 σ_DD ≤ -50 for all five emergent-gravity DM kinds); CC3/CC4/CC4' EoS distinctness across the three Phase 5x stress-energy sectors; CC5 cored-profile mechanism taxonomy (`SolitonCondensate ≠ Z4Subdiffusion`); CC6 ℤ₁₆ × vestigial stability (conditional on tracked hypothesis); CC7/CC7' two-torsion-channel independence (Dirac axial ⊥ FG loop, full discharge); Synth2 candidate viability matrix (4 of 5 canonical candidates basic-viable; FG excluded at CDM level); Rank1/Rank2 empirical-hook ranking (merger sonic boom > fracton core-cusp > EP violation > DESI DR3 > direct nuclear recoil).
+- [x] Priority ranking for further development — SFDM merger promoted (Rank 1, Lean-decidable). Cross-connection matrix has 6 of 7 entries Lean-backed; the 1 memo-only entry (ADW-CC × SFDM conceptual link) waits for W5 numerics.
+- [x] Experimental prediction summary table — shipped in §5 of the memo (ranked by detectability + timeline; pins the Paper 17 §9 ranking claim to Lean-decidable ground via `empirical_hook_ranking_strict`).
+- [x] "Which combinations are consistent?" analysis — shipped in §3 of the memo, with per-claim honesty table in §6.
 
 ---
 
-### Wave 9 — Paper 17: Dark Sector Connections from Emergent Gravity [Pipeline: Stages 1-12] ⚡W1b: Structure Revised
+### Wave 9 — Paper 17: Dark Sector Connections from Emergent Gravity [Pipeline: Stages 1-12] ✅ SHIPPED 2026-04-22 session 5
 
 **Goal:** Draft a paper presenting the dark sector connections. Focus on the strongest, most concrete results (Track A: ℤ₁₆ hidden sector + ADW cosmological constant + fracton DM phenomenology). ⚡**W1b: SFDM cluster merger forecast elevated from "shorter section" to co-primary (fills confirmed BK literature gap with quantitative predictions). KV/DESI section reframed. Fracton M_d window narrowed.**
+
+**Shipped (2026-04-22 session 5):**
+- `papers/paper17_dark_sector/paper_draft.tex` — 11 sections + bibliography, covering the roadmap structure with Lean-traced claims for every structural assertion.
+- 6 figures (4 Phase 5x-specific + 2 reused from earlier phases): money plot L/R (fig 106/107), candidate viability matrix (fig 108 NEW), empirical-hook ranking (fig 109 NEW), SM scorecard (fig 20), ADW effective potential (fig 28).
+- 24 Lean theorem names cited; all verified present in `SKEFTHawking/*.lean` by `validate.py --check paper_provenance`.
+- 2 new Paper 17 figure smoke tests in `tests/test_dark_sector_synthesis.py`.
+- Full `validate.py` suite: 21/21 passing (paper_provenance check also fixed this session — it now resolves `\includegraphics{PATH}` relative to each paper's tex dir, not just `paper_dir/figures/`).
 
 **Prerequisites:** Waves 2-8 (at minimum: Waves 2-3 + Wave 8 synthesis).
 
@@ -665,10 +675,16 @@ Lean Formalization Targets:
 11. Discussion and outlook
 
 **Deliverables:**
-- [ ] `papers/paper17_dark_sector/paper_draft.tex`
-- [ ] All figures via `src/dark_sector/visualizations.py`
-- [ ] All claims traced to Lean theorems where applicable
-- [ ] Full 12-stage pipeline closure
+- [x] `papers/paper17_dark_sector/paper_draft.tex` ✅
+- [x] All figures via `src/core/visualizations.py` (4 Phase 5x-specific) ✅
+- [x] All claims traced to Lean theorems where applicable (24 cited names verified) ✅
+- [x] Full pipeline closure through Stage 12 — Stage 13 (adversarial review) and Stage 14 (meta-QI) remain user-gated pre-submission ✅
+
+**Deferred for pre-submission work (Stage 13 / Paper 17 polish):**
+- Adversarial review sweep (`physics-qa:adversarial-reviewer` agent)
+- `physics-qa:claims-reviewer` LLM sweep on §§2-11
+- Per-cluster weak-lensing likelihood modelling to tighten §5
+- Phase 6 hard-theorem discharge (L4 `mond_force_derivation`, L5 `fdr_noise_bound_rar`, W6a MC extension, W8 vestigial-charge hypothesis)
 
 ---
 

@@ -51,6 +51,8 @@ import SKEFTHawking.SMFermionData
 import SKEFTHawking.Z16AnomalyComputation
 import SKEFTHawking.GenerationConstraint
 import SKEFTHawking.HiddenSectorClassification
+import SKEFTHawking.HiddenSectorMixedCharge
+import SKEFTHawking.CosmologicalConstant
 import SKEFTHawking.QuasiOneDReduction
 import SKEFTHawking.DrinfeldCenterBridge
 import SKEFTHawking.VecGMonoidal
@@ -148,6 +150,11 @@ import SKEFTHawking.DiracFluidSK
 import SKEFTHawking.GrapheneNoiseFormula
 import SKEFTHawking.QuantumGroupInstantiation
 import SKEFTHawking.QuantumGroupMeta
+import SKEFTHawking.FractonDarkMatter
+import SKEFTHawking.FangGuTorsionDM
+import SKEFTHawking.DarkSectorSynthesis
+import SKEFTHawking.SFDMMergerForecast
+import SKEFTHawking.FermiHubbardDimer
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

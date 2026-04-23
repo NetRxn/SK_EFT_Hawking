@@ -118,6 +118,14 @@ class DMCandidate:
         False for mixed-charge candidates (C-1) whose cancellation
         requires ℤ₁₆ ⊕ ℤ₄ charge algebra, and for TQFT candidates (T-0)
         whose cancellation is topological.
+    x_charges : tuple[int, ...]
+        Integer U(1)_X charges of the hidden-sector Weyl fermions.
+        Default ``()`` for pure-singlet and TQFT candidates (absent
+        charge structure). Length must equal ``n_weyl`` when non-empty.
+        Used by ``verify_joint_cancellation`` for mixed-charge
+        candidates (Phase 5x Wave 2b Track X). Matches the
+        ``x_charges`` field of
+        ``HiddenSectorMixedCharge.MixedChargeHiddenSector``.
     """
 
     tag: str
@@ -125,6 +133,14 @@ class DMCandidate:
     dm_types: tuple[str, ...]
     detection_notes: str
     singlet_cancellation: bool
+    x_charges: tuple[int, ...] = ()
+
+    def __post_init__(self) -> None:
+        if self.x_charges and len(self.x_charges) != self.n_weyl:
+            raise ValueError(
+                f"x_charges length {len(self.x_charges)} must equal "
+                f"n_weyl {self.n_weyl} for candidate {self.tag}"
+            )
 
 
 #: Hidden-sector ↔ DM-type matching matrix.
@@ -162,6 +178,7 @@ DM_CANDIDATE_MATRIX: dict[str, DMCandidate] = {
             "Wan-Wang arXiv:2512.25038 Table IV"
         ),
         singlet_cancellation=False,
+        x_charges=(-2, -2, -2, -2, -2, -2, -2, 6),
     ),
     "T-0": DMCandidate(
         tag="T-0",
@@ -215,6 +232,53 @@ def verify_anomaly_cancellation(n_weyl: int) -> bool:
     bool
     """
     return (SM_3GEN_NO_NUR_ANOMALY + n_weyl) % 16 == 0
+
+
+def u1x_linear_sum(x_charges: tuple[int, ...] | list[int]) -> int:
+    """U(1)_X × gravity² linear anomaly sum ∑ X for a hidden fermion sector.
+
+    Lean: ``HiddenSectorMixedCharge.u1x_linear_mod4``.
+    """
+    return sum(x_charges)
+
+
+def verify_joint_cancellation(
+    n_weyl: int,
+    x_charges: tuple[int, ...] | list[int],
+) -> bool:
+    """Verify the Wan-Wang joint U(1)_X anomaly-cancellation conditions.
+
+    A mixed-charge hidden sector must additionally satisfy:
+
+    - (b) ∑ Xᵢ³ ≡ 0 mod 4 — U(1)_X³ perturbative anomaly
+    - (c) ∑ Xᵢ    ≡ 0 mod 4 — U(1)_X × gravity² mixed anomaly
+
+    These are the two decidable U(1)_X conditions formalized in
+    ``HiddenSectorMixedCharge.U1XCubicAnomalyFree`` /
+    ``U1XLinearAnomalyFree``. The third condition — the full ℤ₁₆ ⊕ ℤ₄
+    mechanism by which e.g. C-1 cancels the SM ℤ₁₆ anomaly — is a
+    Wan-Wang literature claim tracked as the Lean `Prop` hypothesis
+    ``H_MixedChannelZ16Cancels`` and is NOT verified by this function.
+
+    Lean: ``HiddenSectorMixedCharge.c1_wan_wang_satisfies_u1x``.
+
+    Parameters
+    ----------
+    n_weyl : int
+        Number of Weyl fermions in the hidden sector.
+    x_charges : tuple[int, ...] | list[int]
+        Integer U(1)_X charges; must have length ``n_weyl``.
+
+    Returns
+    -------
+    bool
+        True iff both (b) and (c) hold.
+    """
+    if len(x_charges) != n_weyl:
+        raise ValueError(
+            f"x_charges length {len(x_charges)} must equal n_weyl {n_weyl}"
+        )
+    return z4x_cubic_anomaly(list(x_charges)) % 4 == 0 and u1x_linear_sum(x_charges) % 4 == 0
 
 
 def z4x_cubic_anomaly(x_charges: list[int]) -> int:

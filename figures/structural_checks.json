@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-16T17:06:17.770501+00:00",
+  "timestamp": "2026-04-22T22:15:30.713416+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -126,10 +126,22 @@
       "severity": "warning",
       "check": "axis_label",
       "message": "xaxis title '' missing expected 'anyon'"
+    },
+    {
+      "figure": "fig_phase5x_candidate_viability_matrix",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title '' missing expected 'candidate'"
+    },
+    {
+      "figure": "fig_phase5x_empirical_hook_ranking",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title '' missing expected 'hook'"
     }
   ],
   "summary": {
     "errors": 0,
-    "warnings": 21
+    "warnings": 23
   }
 }

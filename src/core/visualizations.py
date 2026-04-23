@@ -6870,5 +6870,281 @@ def fig_graphene_snr_frequency():
     return fig
 
 
+def fig_sfdm_velocity_threshold_step():
+    """Fig 106: Paper 17 money-plot left panel — DM-galaxy offset vs
+    v_infall/c_s for SFDM, SIDM, and CDM.
+
+    The defining SFDM smoking-gun observable: a step function at M=1.
+    SIDM predicts a smooth monotonic rise; CDM predicts zero offset at
+    all Mach numbers. This comparison is unique to SFDM and motivates
+    the 5-target Euclid/Roman stacking strategy.
+    """
+    from src.dark_sector.sfdm_merger_forecast import (
+        CANONICAL_MERGERS,
+        MERGER_A520,
+        MERGER_BULLET,
+        MERGER_EL_GORDO,
+        MERGER_MACS_J0025,
+        MERGER_PANDORA,
+        cdm_dm_galaxy_offset_kpc,
+        mach_number,
+        sfdm_dm_galaxy_offset_kpc,
+        sidm_dm_galaxy_offset_kpc,
+    )
+    from src.dark_sector.sfdm_sk_eft import C_S_KMS_FIDUCIAL, HaloMassClass
+
+    c_s = C_S_KMS_FIDUCIAL[HaloMassClass.SUBCLUSTER]
+    mach_range = np.linspace(0.3, 3.0, 300)
+
+    sfdm_offsets = [sfdm_dm_galaxy_offset_kpc(M) for M in mach_range]
+    sidm_offsets = [sidm_dm_galaxy_offset_kpc(M, sigma_over_m=1.0) for M in mach_range]
+    cdm_offsets = [cdm_dm_galaxy_offset_kpc(M) for M in mach_range]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=mach_range, y=sfdm_offsets,
+        name='SFDM (velocity-threshold step)',
+        line=dict(color=COLORS['steel_blue'], width=3),
+    ))
+    fig.add_trace(go.Scatter(
+        x=mach_range, y=sidm_offsets,
+        name='SIDM (σ/m = 1 cm²/g, smooth rise)',
+        line=dict(color=COLORS['amber'], width=2.5, dash='dash'),
+    ))
+    fig.add_trace(go.Scatter(
+        x=mach_range, y=cdm_offsets,
+        name='CDM (null)',
+        line=dict(color='grey', width=1.5, dash='dot'),
+    ))
+
+    # Overlay canonical merger Mach numbers as markers (y at 150 kpc).
+    merger_names_short = {
+        MERGER_BULLET.name: "Bullet",
+        MERGER_EL_GORDO.name: "El Gordo",
+        MERGER_PANDORA.name: "Pandora",
+        MERGER_A520.name: "A520",
+        MERGER_MACS_J0025.name: "MACS J0025",
+    }
+    x_marker = []
+    labels = []
+    for merger in CANONICAL_MERGERS:
+        M = mach_number(merger.v_infall_kms, c_s)
+        x_marker.append(M)
+        labels.append(merger_names_short.get(merger.name, merger.name))
+    fig.add_trace(go.Scatter(
+        x=x_marker, y=[160.0] * len(x_marker),
+        mode='markers+text',
+        text=labels,
+        textposition='top center',
+        marker=dict(size=10, color=COLORS['dissipative'], symbol='diamond'),
+        name='Canonical mergers (BK fiducial)',
+        showlegend=True,
+    ))
+
+    # Mark M = 1 threshold.
+    fig.add_vline(x=1.0, line_dash='solid', line_color=COLORS['horizon'],
+                  line_width=1.5, annotation_text='M = 1 (Landau threshold)',
+                  annotation_position='top right')
+
+    apply_layout(fig,
+        xaxis=dict(title='Mach number M = v_infall / c_s',
+                   range=[0.3, 3.0]),
+        yaxis=dict(title='DM–galaxy offset (kpc)', range=[-10, 220]),
+        title=dict(text='Money Plot Left — Velocity-Threshold DM–Galaxy Offset',
+                   font=TITLE_FONT),
+        height=500, width=750,
+        showlegend=True,
+    )
+    return fig
+
+
+def fig_sfdm_stacked_kappa_profile():
+    """Fig 107: Paper 17 money-plot right panel — stacked κ profile for
+    N = 30 and N = 50 mergers across Euclid and Roman.
+
+    Shows the expected SFDM convergence-amplitude sensitivity as a
+    function of stacking depth, with the 3σ and 5σ thresholds marked.
+    Demonstrates the "conditional GO" verdict: first 3σ achievable by
+    ~2028, 5σ by ~2029-2030.
+    """
+    from src.dark_sector.sfdm_merger_forecast import (
+        EUCLID_WIDE,
+        MERGER_BULLET,
+        ROMAN_HLSS,
+        forecast_single_merger,
+        stacked_snr,
+    )
+
+    bullet = forecast_single_merger(MERGER_BULLET)
+    N_range = np.arange(1, 151)
+
+    stacked_euclid = [stacked_snr(bullet.snr_euclid, int(N)) for N in N_range]
+    stacked_roman = [stacked_snr(bullet.snr_roman, int(N)) for N in N_range]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=N_range, y=stacked_euclid,
+        name=f'Euclid (n_gal={EUCLID_WIDE.n_gal_arcmin2:.0f}/arcmin², σ_γ={EUCLID_WIDE.shape_noise:.2f})',
+        line=dict(color=COLORS['steel_blue'], width=2.5),
+    ))
+    fig.add_trace(go.Scatter(
+        x=N_range, y=stacked_roman,
+        name=f'Roman HLSS (n_gal={ROMAN_HLSS.n_gal_arcmin2:.0f}/arcmin², σ_γ={ROMAN_HLSS.shape_noise:.2f})',
+        line=dict(color=COLORS['amber'], width=2.5, dash='dash'),
+    ))
+
+    # 3σ and 5σ thresholds.
+    fig.add_hline(y=3.0, line_dash='dot', line_color='green',
+                  annotation_text='3σ', annotation_position='top right')
+    fig.add_hline(y=5.0, line_dash='dot', line_color='purple',
+                  annotation_text='5σ', annotation_position='top right')
+
+    # Mark N = 30 and N = 50 from W1b stacking strategy.
+    fig.add_vline(x=30.0, line_dash='dashdot', line_color='grey',
+                  annotation_text='N = 30', annotation_position='bottom left')
+    fig.add_vline(x=50.0, line_dash='dashdot', line_color='grey',
+                  annotation_text='N = 50', annotation_position='bottom')
+
+    apply_layout(fig,
+        xaxis=dict(title='Number of stacked mergers N', type='log',
+                   range=[np.log10(1), np.log10(200)]),
+        yaxis=dict(title='Stacked SNR (Bullet-referenced)',
+                   range=[0, 10]),
+        title=dict(text='Money Plot Right — Stacked SFDM Sonic-Boom S/N vs N',
+                   font=TITLE_FONT),
+        height=500, width=750,
+        showlegend=True,
+    )
+    return fig
+
+
+def fig_phase5x_candidate_viability_matrix():
+    """Fig 108: Paper 17 §4/§8 — Phase 5x candidate viability matrix.
+
+    Visual of Lean theorem ``phase5x_candidates_viability_matrix``. Five
+    emergent-gravity DM candidates are classified by basic viability; four
+    of five are viable, FG torsion DM is obstructed at the tree-level EoS
+    (w_FG = 1/3, not dust). Each candidate is tagged with the Wave that
+    produced the verdict.
+
+    Cross-refs:
+        Lean: ``DarkSectorSynthesis.phase5x_candidates_viability_matrix``
+        Python: ``src.dark_sector.synthesis.PHASE5X_CANDIDATE_MATRIX``
+    """
+    from src.dark_sector.synthesis import PHASE5X_CANDIDATE_MATRIX
+
+    labels = [c.label for c in PHASE5X_CANDIDATE_MATRIX]
+    verdicts = ["viable" if c.basic_viability else "not viable"
+                for c in PHASE5X_CANDIDATE_MATRIX]
+    sources = [c.verdict_source for c in PHASE5X_CANDIDATE_MATRIX]
+
+    colors = [COLORS['steel_blue'] if v == "viable" else COLORS['dissipative']
+              for v in verdicts]
+    values = [1 if v == "viable" else 0 for v in verdicts]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=labels,
+        x=values,
+        orientation='h',
+        marker=dict(color=colors),
+        text=[f"{v}<br><i>{s}</i>" for v, s in zip(verdicts, sources)],
+        textposition='outside',
+        hoverinfo='text+y',
+        showlegend=False,
+    ))
+    apply_layout(fig,
+        xaxis=dict(
+            title='Basic viability verdict',
+            tickmode='array',
+            tickvals=[0, 1],
+            ticktext=['NOT VIABLE', 'VIABLE'],
+            range=[-0.2, 2.2],
+        ),
+        yaxis=dict(title='', automargin=True),
+        title=dict(
+            text=('Phase 5x candidate viability matrix '
+                  '(Lean: <i>phase5x_candidates_viability_matrix</i>)'),
+            font=TITLE_FONT,
+        ),
+        height=420, width=820,
+    )
+    return fig
+
+
+def fig_phase5x_empirical_hook_ranking():
+    """Fig 109: Paper 17 §9 — Five empirical hooks ranked by Phase 5x
+    detectability + timeline.
+
+    Visual of Lean theorem ``empirical_hook_ranking_strict``. The merger
+    sonic boom is the top-priority Phase 5x observable; direct nuclear
+    recoil is last because every candidate is invisible (CC2).
+
+    Cross-refs:
+        Lean: ``DarkSectorSynthesis.empirical_hook_ranking_strict``
+        Python: ``src.dark_sector.synthesis.HOOK_PRIORITY``
+    """
+    from src.dark_sector.synthesis import (
+        HOOK_PRIORITY,
+        EmpiricalHook,
+        ranked_empirical_hooks,
+    )
+
+    labels = {
+        EmpiricalHook.MERGER_SONIC_BOOM:
+            "SFDM cluster-merger sonic boom (Euclid/Roman, first 3σ ~2028)",
+        EmpiricalHook.FRACTON_CORE_CUSP:
+            "Fracton DM core-cusp resolution (next-gen dwarf kinematics)",
+        EmpiricalHook.EP_VIOLATION_STEP:
+            "EP violation η ~ 1e-18 (STEP, Phase 6 vestigial)",
+        EmpiricalHook.DESI_DR3:
+            "DESI DR3 w(z) evolution (2026-2027)",
+        EmpiricalHook.DIRECT_NUCLEAR_RECOIL:
+            "Direct nuclear recoil (DARWIN — predicted null)",
+    }
+    waves = {
+        EmpiricalHook.MERGER_SONIC_BOOM: "W5 (PROMOTED, money plot)",
+        EmpiricalHook.FRACTON_CORE_CUSP: "W7 (Drilldown)",
+        EmpiricalHook.EP_VIOLATION_STEP: "Phase 6 (W6 gated)",
+        EmpiricalHook.DESI_DR3: "W3 (KV reframed)",
+        EmpiricalHook.DIRECT_NUCLEAR_RECOIL: "All kinds (CC2)",
+    }
+
+    hooks = ranked_empirical_hooks()
+    priorities = [HOOK_PRIORITY[h] for h in hooks]
+    texts = [labels[h] for h in hooks]
+    wave_tags = [waves[h] for h in hooks]
+
+    # Colour top hook differently (it is the Paper 17 money plot).
+    colors = [COLORS['steel_blue'] if i == 0 else COLORS['amber']
+              for i in range(len(hooks))]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=priorities,
+        y=texts,
+        orientation='h',
+        marker=dict(color=colors),
+        text=wave_tags,
+        textposition='outside',
+        showlegend=False,
+    ))
+    # Reverse so that rank 1 appears at the top.
+    fig.update_yaxes(autorange="reversed")
+
+    apply_layout(fig,
+        xaxis=dict(title='Phase 5x hook priority score (5 = top)',
+                   range=[0, 7]),
+        yaxis=dict(title='', automargin=True),
+        title=dict(
+            text=('Phase 5x empirical hook ranking '
+                  '(Lean: <i>empirical_hook_ranking_strict</i>)'),
+            font=TITLE_FONT,
+        ),
+        height=460, width=900,
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()
