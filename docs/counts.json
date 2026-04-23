@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-22T17:17:09.489405",
+  "generated": "2026-04-23T09:38:06.940167",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 6874,
-    "theorems_total": 3569,
-    "theorems_substantive": 3471,
-    "theorems_placeholder": 98,
+    "total_declarations": 6896,
+    "theorems_total": 3587,
+    "theorems_substantive": 3488,
+    "theorems_placeholder": 99,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 157,
+    "modules": 158,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -48,6 +48,7 @@
       "SKEFTHawking.FKGappedInterface",
       "SKEFTHawking.FPDimension",
       "SKEFTHawking.FangGuTorsionDM",
+      "SKEFTHawking.FermiHubbardDimer",
       "SKEFTHawking.FermiPointTopology",
       "SKEFTHawking.FermionBag4D",
       "SKEFTHawking.FibonacciBraiding",
@@ -172,14 +173,14 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 2909,
+    "definitions": 2913,
     "structures": 147,
     "instances": 201,
     "inductives": 47
   },
   "python": {
-    "python_modules": 64,
-    "test_files": 56,
+    "python_modules": 65,
+    "test_files": 57,
     "notebooks": 50,
     "papers": 17,
     "figures": 109

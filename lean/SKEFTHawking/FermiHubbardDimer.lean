@@ -121,9 +121,11 @@ theorem dark_state_in_kernel (t Δ : ℝ) :
     (H_singlet t Δ 0).mulVec (darkVec t Δ) = 0 := by
   funext i
   fin_cases i <;>
-    simp [H_singlet, darkVec, Matrix.mulVec, Matrix.dotProduct,
-          Fin.sum_univ_three] <;>
-    ring
+    first
+      | (simp [H_singlet, darkVec, Matrix.mulVec, dotProduct,
+               Fin.sum_univ_three]; ring)
+      | simp [H_singlet, darkVec, Matrix.mulVec, dotProduct,
+              Fin.sum_univ_three]
 
 /-- **T3.** The dark-state vector is nonzero whenever parameters are
 nontrivial (`t ≠ 0` or `Δ ≠ 0`). -/
@@ -145,8 +147,7 @@ theorem chiralOp_sq :
     chiralOp * chiralOp = (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralOp, Matrix.mul_apply, Fin.sum_univ_three,
-          Matrix.one_apply]
+    simp [chiralOp, Matrix.mul_apply, Fin.sum_univ_three]
 
 /-- **T5.** At U = 0 the Hamiltonian anticommutes with the chiral
 operator, `{Γ, H₃} = 0`. This pins the zero eigenvalue (odd-dimensional
@@ -155,9 +156,7 @@ theorem chiral_anticommutes (t Δ : ℝ) :
     chiralOp * H_singlet t Δ 0 + H_singlet t Δ 0 * chiralOp = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralOp, H_singlet, Matrix.mul_apply,
-          Fin.sum_univ_three] <;>
-    ring
+    simp [chiralOp, H_singlet]
 
 /-- **T6.** The determinant of the 3×3 singlet-sector Hamiltonian is
 `det H₃ = -4 U t²`. -/
@@ -177,7 +176,7 @@ theorem det_H_singlet_U0 (t Δ : ℝ) :
 at U = 0, exactly balanced. -/
 theorem trace_H_singlet (t Δ U : ℝ) :
     (H_singlet t Δ U).trace = 2 * U := by
-  simp [H_singlet, Matrix.trace_fin_three]
+  simp [H_singlet, Matrix.trace_fin_three]; ring
 
 /-! ### Section 3. 6×6 triplet eigenvectors (T10a–T10c) -/
 
@@ -189,7 +188,7 @@ theorem triplet_plus_zero (t Δ U : ℝ) :
     (H_full t Δ U).mulVec ![1, 0, 0, 0, 0, 0] = 0 := by
   funext i
   fin_cases i <;>
-    simp [H_full, Matrix.mulVec, Matrix.dotProduct,
+    simp [H_full, Matrix.mulVec, dotProduct,
           Fin.sum_univ_six]
 
 /-- **T10b.** The unnormalized triplet state `|t₀⟩ ∝ |↑,↓⟩ + |↓,↑⟩`
@@ -201,9 +200,8 @@ theorem triplet_zero_zero (t Δ U : ℝ) :
     (H_full t Δ U).mulVec ![0, 0, 1, 1, 0, 0] = 0 := by
   funext i
   fin_cases i <;>
-    simp [H_full, Matrix.mulVec, Matrix.dotProduct,
-          Fin.sum_univ_six] <;>
-    ring
+    simp [H_full, Matrix.mulVec, dotProduct,
+          Fin.sum_univ_six]
 
 /-- **T10c.** The triplet state `|t₋⟩ = |↓,↓⟩` is a zero-energy
 eigenvector of the full 6×6 Hamiltonian — for all parameters t, Δ, U.
@@ -212,7 +210,7 @@ theorem triplet_minus_zero (t Δ U : ℝ) :
     (H_full t Δ U).mulVec ![0, 0, 0, 0, 0, 1] = 0 := by
   funext i
   fin_cases i <;>
-    simp [H_full, Matrix.mulVec, Matrix.dotProduct,
+    simp [H_full, Matrix.mulVec, dotProduct,
           Fin.sum_univ_six]
 
 /-! ### Section 4. Trace-class corollaries -/

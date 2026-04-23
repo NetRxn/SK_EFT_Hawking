@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  14 APR 2026 23:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  23 APR 2026 09:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -367,180 +367,181 @@ Overfull \hbox (105.97253pt too wide) in paragraph at lines 292--301
  []$[]$ 
  []
 
+(./tables/table2_hierarchy.tex)
 <figures/fig1_transonic.pdf, id=33, 527.08919pt x 565.15138pt>
 File: figures/fig1_transonic.pdf Graphic file (type pdf)
 <use figures/fig1_transonic.pdf>
-Package pdftex.def Info: figures/fig1_transonic.pdf  used on input line 325.
+Package pdftex.def Info: figures/fig1_transonic.pdf  used on input line 318.
 (pdftex.def)             Requested size: 246.0pt x 263.76712pt.
 <figures/fig2_correction_hierarchy.pdf, id=34, 565.15138pt x 376.52669pt>
 File: figures/fig2_correction_hierarchy.pdf Graphic file (type pdf)
 <use figures/fig2_correction_hierarchy.pdf>
-Package pdftex.def Info: figures/fig2_correction_hierarchy.pdf  used on input line 332.
+Package pdftex.def Info: figures/fig2_correction_hierarchy.pdf  used on input line 325.
 (pdftex.def)             Requested size: 246.0pt x 163.89694pt.
 <figures/fig3_parameter_space.pdf, id=35, 527.08919pt x 414.58888pt>
 File: figures/fig3_parameter_space.pdf Graphic file (type pdf)
 <use figures/fig3_parameter_space.pdf>
-Package pdftex.def Info: figures/fig3_parameter_space.pdf  used on input line 339.
+Package pdftex.def Info: figures/fig3_parameter_space.pdf  used on input line 332.
 (pdftex.def)             Requested size: 246.0pt x 193.49667pt.
 <figures/fig4_cgl_fdr_pattern.pdf, id=36, 527.08919pt x 339.18718pt>
 File: figures/fig4_cgl_fdr_pattern.pdf Graphic file (type pdf)
 <use figures/fig4_cgl_fdr_pattern.pdf>
-Package pdftex.def Info: figures/fig4_cgl_fdr_pattern.pdf  used on input line 346.
+Package pdftex.def Info: figures/fig4_cgl_fdr_pattern.pdf  used on input line 339.
 (pdftex.def)             Requested size: 246.0pt x 158.30525pt.
 <figures/fig5_even_odd_kernel.pdf, id=37, 602.25pt x 489.74968pt>
 File: figures/fig5_even_odd_kernel.pdf Graphic file (type pdf)
 <use figures/fig5_even_odd_kernel.pdf>
-Package pdftex.def Info: figures/fig5_even_odd_kernel.pdf  used on input line 353.
+Package pdftex.def Info: figures/fig5_even_odd_kernel.pdf  used on input line 346.
 (pdftex.def)             Requested size: 246.0pt x 200.05136pt.
 <figures/fig6_on_shell_vanishing.pdf, id=38, 489.74968pt x 301.125pt>
 File: figures/fig6_on_shell_vanishing.pdf Graphic file (type pdf)
 <use figures/fig6_on_shell_vanishing.pdf>
-Package pdftex.def Info: figures/fig6_on_shell_vanishing.pdf  used on input line 360.
+Package pdftex.def Info: figures/fig6_on_shell_vanishing.pdf  used on input line 353.
 (pdftex.def)             Requested size: 246.0pt x 151.25594pt.
-[4]
+ [4]
 
-LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 372.
+LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 365.
 
 [5 <./figures/fig1_transonic.pdf> <./figures/fig2_correction_hierarchy.pdf> <./figures/fig3_parameter_space.pdf>]
 
-LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 382.
+LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 375.
 
 
-/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:383: LaTeX Error: Unicode character ✓ (U+2713)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:376: LaTeX Error: Unicode character ✓ (U+2713)
                not set up for use with LaTeX.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.383 ...quires $\kappa > 0$). \textbf{✓ PROVED}
+l.376 ...quires $\kappa > 0$). \textbf{✓ PROVED}
                                                    — One-liner div\_ne\_zero.
 You may provide a definition with
 \DeclareUnicodeCharacter 
 
 
-/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:384: LaTeX Error: Unicode character ✓ (U+2713)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:377: LaTeX Error: Unicode character ✓ (U+2713)
                not set up for use with LaTeX.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.384 ...o distinguish cases). \textbf{✓ PROVED}
+l.377 ...o distinguish cases). \textbf{✓ PROVED}
                                                    — Via div\_eq\_iff hk.ne'.
 You may provide a definition with
 \DeclareUnicodeCharacter 
 
 
-/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:385: LaTeX Error: Unicode character ✓ (U+2713)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:378: LaTeX Error: Unicode character ✓ (U+2713)
                not set up for use with LaTeX.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.385 ...neq 0$ to avoid 0/0). \textbf{✓ PROVED}
+l.378 ...neq 0$ to avoid 0/0). \textbf{✓ PROVED}
                                                    — Forward direction eva...
 You may provide a definition with
 \DeclareUnicodeCharacter 
 
 
-/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:385: LaTeX Error: Unicode character ω (U+03C9)
+/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper2_second_order/paper_draft.tex:378: LaTeX Error: Unicode character ω (U+03C9)
                not set up for use with LaTeX.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.385 ...d direction evaluates at 4 specific (k,ω
+l.378 ...d direction evaluates at 4 specific (k,ω
                                                   ) pairs.
 You may provide a definition with
 \DeclareUnicodeCharacter 
 
 
-Underfull \hbox (badness 2359) in paragraph at lines 385--386
+Underfull \hbox (badness 2359) in paragraph at lines 378--379
  []\OT1/cmtt/m/n/10 dampingRate[]eq[]zero[]iff\OT1/cmr/m/n/10 : True bi-con-di-tional:
  []
 
 [6 <./figures/fig4_cgl_fdr_pattern.pdf> <./figures/fig5_even_odd_kernel.pdf> <./figures/fig6_on_shell_vanishing.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 393--394
+Underfull \hbox (badness 10000) in paragraph at lines 386--387
 \OT1/cmr/m/n/10 proved the bi-con-di-tional: pos-i-tiv-ity un-der
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 395--396
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 []\OT1/cmr/bx/n/10 No-dissipation limit. \OT1/cmr/m/n/10 Tests
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 395--396
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 \OT1/cmtt/m/n/10 no[]dissipation[]zero[]damping\OT1/cmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 395--396
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 \OT1/cmtt/m/n/10 turning[]point[]no[]shift\OT1/cmr/m/n/10 , and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 395--396
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 \OT1/cmtt/m/n/10 firstOrder[]correction[]zero[]iff[]no[]dissipation
  []
 
 
-Underfull \hbox (badness 3758) in paragraph at lines 399--400
+Underfull \hbox (badness 3758) in paragraph at lines 392--393
 []\OT1/cmr/bx/n/10 Key dis-cov-ery: \OT1/cmr/m/n/10 WKB anal-y-sis re-vealed that
  []
 
 
-Underfull \hbox (badness 1831) in paragraph at lines 412--413
+Underfull \hbox (badness 1831) in paragraph at lines 405--406
 \OT1/cmr/m/n/10 arises from the Bo-goli-ubov quar-tic dis-per-sion, the
  []
 
 
-Underfull \hbox (badness 2707) in paragraph at lines 423--424
+Underfull \hbox (badness 2707) in paragraph at lines 416--417
  \OT1/cmr/m/n/10 CGL deriva-tion shows this FDR pairs noise
  []
 
 
-LaTeX Warning: Reference `tab:corrections' on page 7 undefined on input line 425.
+LaTeX Warning: Reference `tab:corrections' on page 7 undefined on input line 418.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 427--428
+Underfull \hbox (badness 10000) in paragraph at lines 420--421
  []\OT1/cmr/bx/n/10 Boundary terms near hori-zon (RE-
  []
 
 
-Underfull \hbox (badness 1132) in paragraph at lines 427--428
+Underfull \hbox (badness 1132) in paragraph at lines 420--421
  \OT1/cmr/bx/n/10 SOLVED). \OT1/cmr/m/n/10 IBP with position-dependent $\OML/cmm/m/it/10 ^^M\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 )$
  []
 
 
-Underfull \hbox (badness 2103) in paragraph at lines 427--428
+Underfull \hbox (badness 2103) in paragraph at lines 420--421
  \OT1/cmr/m/n/10 10[]$. The ex-tra mono-mial is al-ready cap-
  []
 
 
-Underfull \hbox (badness 7030) in paragraph at lines 427--428
+Underfull \hbox (badness 7030) in paragraph at lines 420--421
  \OT1/cmr/m/n/10 tured by the re-laxed frame-work (Aris-to-tle:
  []
 
 
-Underfull \hbox (badness 1297) in paragraph at lines 429--430
+Underfull \hbox (badness 1297) in paragraph at lines 422--423
  []\OT1/cmr/bx/n/10 KMS op-ti-mal-ity (RE-SOLVED). \OT1/cmr/m/n/10 The first-
  []
 
 [7]
 
-LaTeX Warning: Reference `LastBibItem' on page 8 undefined on input line 440.
+LaTeX Warning: Reference `LastBibItem' on page 8 undefined on input line 433.
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 448--449
+Underfull \hbox (badness 2096) in paragraph at lines 441--442
  []\OT1/cmr/m/n/9 D. T. Son, \OT1/cmr/m/it/9 Low-Energy Quan-tum Ef-fec-tive Ac-tion
  []
 
 
-Underfull \hbox (badness 1688) in paragraph at lines 454--455
+Underfull \hbox (badness 1688) in paragraph at lines 447--448
  []\OT1/cmr/m/n/9 O. Coutant and R. Parentani, \OT1/cmr/m/it/9 Phys. Rev. D \OT1/cmr/bx/n/9 90\OT1/cmr/m/n/9 ,
  []
 
@@ -567,15 +568,15 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 6498 strings out of 467525
- 94700 string characters out of 5418982
+ 6505 strings out of 467525
+ 94885 string characters out of 5418982
  545588 words of memory out of 5000000
- 35348 multiletter control sequences out of 15000+600000
+ 35351 multiletter control sequences out of 15000+600000
  634937 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  73i,12n,79p,1537b,338s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (8 pages, 1076355 bytes).
+Output written on paper_draft.pdf (8 pages, 1076348 bytes).
 PDF statistics:
  455 PDF objects out of 1000 (max. 8388607)
  277 compressed objects within 3 object streams

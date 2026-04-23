@@ -32,24 +32,34 @@
 
 ---
 
-### Wave 2 — `FermiHubbardDimer.lean` [Pipeline: Stages 1-5]
+### Wave 2 — `FermiHubbardDimer.lean` [Pipeline: Stages 1-5] ✅ SHIPPED 2026-04-23 session 6
 
 **Goal:** Define the doublon-gate Hamiltonian in the site basis and prove the block decomposition into triplet and singlet sectors.
 
-**Deliverables:**
-- [ ] `lean/SKEFTHawking/FermiHubbardDimer.lean` — 6×6 Hamiltonian in the ordered basis
-- [ ] Explicit basis change from site basis to `{t+, t0, t-, D+, D-, s}`
-- [ ] Triplet/singlet block decomposition theorem
-- [ ] Triplet decoupling theorem from fermionic antisymmetry
-- [ ] Import added to `lean/SKEFTHawking.lean`
+**Shipped (2026-04-23 session 6):**
+- [x] `lean/SKEFTHawking/FermiHubbardDimer.lean` — ~230 LOC, 14 theorems, 0 sorry, 0 new axioms
+  - 3×3 singlet-sector Hamiltonian `H_singlet` in the {D+, D-, s} basis
+  - 6×6 site-basis Hamiltonian `H_full` with alternating ±t signs encoding fermionic anticommutation
+  - Chiral operator `chiralOp = diag(+1, -1, -1)` and dark-state vector `darkVec = (0, 2t, Δ)`
+- [x] Layer-1 core theorems T1-T7:
+  - T1 `H_singlet_isSymm` — Hᵀ = H (real symmetric, all U)
+  - T2 `dark_state_in_kernel` — H₃(t, Δ, 0) · (0, 2t, Δ) = 0
+  - T3 `darkVec_ne_zero` — nonzero unless (t, Δ) = (0, 0)
+  - T4 `chiralOp_sq` — Γ² = I
+  - T5 `chiral_anticommutes` — {Γ, H₃(t, Δ, 0)} = 0
+  - T6 `det_H_singlet` — det = -4Ut² (T6a det_U0 = 0)
+  - T7 `trace_H_singlet` — tr = 2U (trace_U0 = 0)
+- [x] Triplet eigenvectors T10a-c: |↑,↑⟩, |↑,↓⟩+|↓,↑⟩, |↓,↓⟩ all zero-energy for all (t, Δ, U)
+- [x] Corollary `dark_state_nontrivial_kernel` (T2 + T3 bundled)
+- [x] Import added to `lean/SKEFTHawking.lean`
+- [x] Python mirror `src/fermi_hubbard/dimer.py` + 74 parametric/random-grid tests in `tests/test_fermi_hubbard_dimer.py`
 
-**Target theorem types:**
-- structural matrix equalities
-- basis-change conjugation identities
-- exact decoupling of triplet from singlet/doublon sector
+**Wave 2 deferred (promoted to W3+):**
+- Explicit 6×6 ↔ 3×3 basis-change unitary P and the block-diagonal proof P†H₆P = diag(0₃, H₃) (~80 LOC of `fromBlocks` bookkeeping — T11 in deep research)
+- Full characteristic polynomial λ³ − 2Uλ² + (U² − Δ² − 4t²)λ + 4Ut² (T8 — needs `charmatrix` + polynomial coefficient matching)
 
-**Estimated LOE:** 2-4 days
-**Risk:** Low
+**Estimated LOE:** 2-4 days (actual: ~1 session)
+**Risk:** Low (actual: zero blockers)
 
 ---
 

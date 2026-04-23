@@ -120,6 +120,9 @@ OUTPUT paper_draft.pdf
 INPUT /usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm
+INPUT ./tables/table2_hierarchy.tex
+INPUT ./tables/table2_hierarchy.tex
+INPUT tables/table2_hierarchy.tex
 INPUT ./figures/fig1_transonic.pdf
 INPUT ./figures/fig1_transonic.pdf
 INPUT ./figures/fig1_transonic.pdf
