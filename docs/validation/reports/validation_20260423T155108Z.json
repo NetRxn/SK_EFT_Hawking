@@ -1,0 +1,16 @@
+{
+  "timestamp": "20260423T155108Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "graph_integrity": {
+      "passed": false,
+      "error": "ExtractDeps failed: ",
+      "details": []
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

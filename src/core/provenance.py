@@ -835,6 +835,101 @@ PARAMETER_PROVENANCE = {
         'human_verified_notes': None,
         'notes': 'Lean: j1_j2_anticommute (MajoranaKramers.lean). Proved, zero sorry.',
     },
+
+    # ── SFDM / BK fiducial parameters (Phase 5x, paper 17) ─────────────
+    # Added 2026-04-24 in response to adversarial-review finding 3.1
+    # (paper17, ParameterProvenance gate). Values drawn from:
+    #   - BK2015 (Berezhiani–Khoury, PRD 92, 103510, 2015, arXiv:1507.01019)
+    #   - BK2025 (BK, Cintia, De Luca, Khoury, Phys Rep, arXiv:2505.23900)
+    # Paper-17 classification tier: THEORETICAL — the BK values are
+    # model parameters (scalar mass, self-coupling), not experimentally-
+    # measured quantities. They fix the scale of the superfluid DM model;
+    # measurement-driven constraints come later via Euclid/Roman forecasts.
+
+    'SFDM.m_DM_BK': {
+        'value': 0.6,  # eV
+        'unit': 'eV',
+        'tier': 'THEORETICAL',
+        'source': 'Berezhiani & Khoury, PRD 92, 103510 (2015)',
+        'detail': 'Scalar-field DM mass in the BK fiducial: m_DM = 0.6 eV. '
+                  'Fixed by requiring the superfluid phase to form on galactic '
+                  'scales (de Broglie wavelength at halo velocity dispersion). '
+                  'See BK2015 Eq. (2.3) and surrounding discussion; same '
+                  'fiducial carried through BK2025 Phys. Rep. review.',
+        'doi': '10.1103/PhysRevD.92.103510',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Value repeatedly cited across BK corpus and in '
+                              'the Phase 5x W1b merger forecast memo '
+                              '(Lit-Search/Phase-5x/5x-SFDM Cluster Merger *.md). '
+                              'Primary source: BK2015 PRD 92, 103510.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Paper 17 abstract + §SFDM merger. Model parameter, not '
+                 'measurement — tier THEORETICAL.',
+    },
+    'SFDM.Lambda_BK': {
+        'value': 0.2,  # meV
+        'unit': 'meV',
+        'tier': 'THEORETICAL',
+        'source': 'Berezhiani & Khoury, PRD 92, 103510 (2015)',
+        'detail': 'Self-coupling scale Λ = 0.2 meV in the BK fiducial. '
+                  'Sets the chemical potential (μ ~ Λ) and hence the '
+                  'sub-cluster sound speed c_s = sqrt(2μ/m).',
+        'doi': '10.1103/PhysRevD.92.103510',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'BK2015 fiducial scaling; used throughout paper 17 '
+                              '§sfdm-merger. Primary source same as SFDM.m_DM_BK.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Paper 17 abstract + §SFDM merger. Model parameter, not measurement.',
+    },
+    'SFDM.c_s_subcluster_BK': {
+        'value': 1525,  # km/s
+        'unit': 'km/s',
+        'tier': 'DERIVED',
+        'source': 'Berezhiani & Khoury, PRD 92, 103510 (2015) + W1b derivation',
+        'detail': 'Sub-cluster sound speed c_s^{subcl} = sqrt(2μ/m) computed '
+                  'from BK fiducial m_DM = 0.6 eV and Λ = 0.2 meV at a '
+                  'galaxy-cluster scale (~10^14 M_sun). Derived in '
+                  'Lit-Search/Phase-5x/5x-SFDM Cluster Merger Sonic Boom *.md '
+                  'from the BK equation-of-state ρ ∝ μ^3 using μ ~ Λ(ρ/ρ0)^{1/2}.',
+        'doi': None,
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Value and derivation traced in W1b merger-forecast '
+                              'memo; anchors all five Mach numbers in paper 17 '
+                              '§sfdm-merger (Bullet 1.77, Pandora 2.23, A520 1.51, '
+                              'El Gordo 1.64, MACS J0025 1.31).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Paper 17 §sfdm-merger Eq. for c_s^{subcl}. Cross-checked in '
+                 'src/dark_sector/sfdm_merger_forecast.py (same value).',
+    },
+    'SFDM.merger_Mach_canonical': {
+        'value': {'Bullet': 1.77, 'Pandora': 2.23, 'A520': 1.51,
+                  'ElGordo': 1.64, 'MACSJ0025': 1.31},
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'W1b deep research / infall-velocity compilation',
+        'detail': 'Mach numbers M = v_infall / c_s for the five canonical '
+                  'radio-relic cluster mergers, computed using the BK '
+                  'sub-cluster sound speed (SFDM.c_s_subcluster_BK) and '
+                  'observational infall velocities (per-cluster references '
+                  'collected in the W1b SFDM-merger memo). Paper 17 uses all '
+                  'five in §sfdm-merger and Fig. money-plot-left.',
+        'doi': None,
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Values match the SFDMMergerForecast.lean module '
+                              'and the all_canonical_mergers_supersonic Lean '
+                              'theorem. Per-cluster infall-velocity sources '
+                              'require separate human-verification audit at '
+                              'submission — collected in the Phase 5x Roadmap '
+                              'Wave 10 action list.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Tier DERIVED because v_infall is observational per-cluster but '
+                 'c_s is theoretical — the product is mixed. Paper 17 submission '
+                 'requires human verification of each per-cluster v_infall.',
+    },
 }
 
 

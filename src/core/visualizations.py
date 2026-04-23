@@ -7162,5 +7162,173 @@ def fig_phase5x_empirical_hook_ranking():
     return fig
 
 
+def fig_doublon_gate_spectrum():
+    """Fig 110: Phase 5t doublon-gate spectrum and direct-vs-superexchange
+    scaling.
+
+    Two-panel figure cross-validating the Phase 5t algebraic core:
+
+    **Left panel — singlet-sector spectrum vs U (Δ = 0).** Three
+    eigenvalues of ``H_singlet(t=1, 0, U)`` plotted as a function of
+    `U`: `E_plus(t, U)` (upper branch), `E_minus(t, U)` (lower branch),
+    and `U` itself (antisymmetric doublon at `|D₋⟩`, decoupled when
+    `Δ = 0`). Markers: closed-form (Lean W7 `E_plus`/`E_minus`),
+    line: numpy `eigh` diagonalization. Cross-verification of Lean
+    W7l charpoly factorization `(X − U)(X² − U·X − 4t²)`.
+
+    **Right panel — superexchange gap `J(t, U) = E_plus − U` vs U,
+    log-log scale.** At large `U`, `J → 4t²/U` (textbook superexchange).
+    At `U = 0`, `J = 2|t|` (direct-exchange value). The dotted
+    `4t²/U` asymptote and the Lean W7i bound `|J − 4t²/U| ≤ 16t⁴/U³`
+    show the approximation quality.
+
+    Cross-refs:
+        Lean: ``charpoly_H_singlet_Δ0_factored`` (W7l),
+              ``E_plus_hasDerivAt_at_zero`` (W7d),
+              ``J_superexchange_bound`` (W7i).
+        Python: ``src.experimental.doublon_gate.scaling_comparison_curves``
+              + ``bench_superexchange_bound``.
+    """
+    from src.experimental.doublon_gate import (
+        bench_superexchange_bound,
+        exact_diagonalize,
+        scaling_comparison_curves,
+    )
+
+    t = 1.0
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            'Singlet-sector spectrum vs U (t=1, Δ=0)',
+            'Superexchange gap |J| (log-log) with 4t²/U asymptote',
+        ),
+        horizontal_spacing=0.12,
+    )
+
+    # --- Left panel: spectrum sweep ---
+    Us = np.linspace(-4.0, 10.0, 141)
+    curves = scaling_comparison_curves(t, Us)
+    E_plus_vals = curves['E_plus']
+    E_minus_vals = curves['E_minus']
+
+    # Numpy ED values (sanity cross-check)
+    ED_plus = np.zeros_like(Us)
+    ED_minus = np.zeros_like(Us)
+    ED_U = np.zeros_like(Us)
+    for i, U in enumerate(Us):
+        evals = exact_diagonalize(t, 0.0, U).eigenvalues_3x3
+        ED_minus[i], ED_U[i], ED_plus[i] = sorted(evals)
+
+    fig.add_trace(
+        go.Scatter(
+            x=Us, y=E_plus_vals,
+            name='E+ (Lean closed-form)',
+            line=dict(color=COLORS['steel_blue'], width=2.5),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=Us, y=E_minus_vals,
+            name='E- (Lean closed-form)',
+            line=dict(color=COLORS['dissipative'], width=2.5),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=Us, y=Us,
+            name='U (antisymmetric doublon)',
+            line=dict(color=COLORS['cross'], width=1.5, dash='dash'),
+        ),
+        row=1, col=1,
+    )
+    # ED sanity markers (sparse)
+    marker_idx = np.linspace(0, len(Us) - 1, 15).astype(int)
+    fig.add_trace(
+        go.Scatter(
+            x=Us[marker_idx], y=ED_plus[marker_idx],
+            mode='markers',
+            marker=dict(color=COLORS['steel_blue'], symbol='circle-open',
+                        size=7, line=dict(width=1.5)),
+            name='E+ (numpy eigh)',
+            showlegend=True,
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=Us[marker_idx], y=ED_minus[marker_idx],
+            mode='markers',
+            marker=dict(color=COLORS['dissipative'], symbol='circle-open',
+                        size=7, line=dict(width=1.5)),
+            name='E- (numpy eigh)',
+            showlegend=True,
+        ),
+        row=1, col=1,
+    )
+
+    # --- Right panel: superexchange bound ---
+    U_pos = np.linspace(4.0, 200.0, 100)
+    bench = bench_superexchange_bound(t, U_pos / (4.0 * abs(t)))
+    U_for_plot = bench['U']
+    # Evaluate E_plus closed-form directly on U_for_plot (Lean W7 E_plus def)
+    # to cover the right-panel U range [4, 200] without grid clamping.
+    E_plus_pos = 0.5 * (U_for_plot + np.sqrt(U_for_plot**2 + 16.0 * t**2))
+    J_vals = E_plus_pos - U_for_plot
+    J_asym = 4.0 * t**2 / U_for_plot
+    bound_upper = J_asym + bench['bound']
+    bound_lower = np.maximum(J_asym - bench['bound'], 1e-6)
+
+    fig.add_trace(
+        go.Scatter(
+            x=U_for_plot, y=J_vals,
+            name='J(t, U) exact',
+            line=dict(color=COLORS['steel_blue'], width=2.5),
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=U_for_plot, y=J_asym,
+            name='4t²/U asymptote',
+            line=dict(color=COLORS['dissipative'], width=2, dash='dot'),
+        ),
+        row=1, col=2,
+    )
+    # Shaded bound region (error envelope)
+    fig.add_trace(
+        go.Scatter(
+            x=np.concatenate([U_for_plot, U_for_plot[::-1]]),
+            y=np.concatenate([bound_upper, bound_lower[::-1]]),
+            fill='toself',
+            fillcolor='rgba(212, 168, 67, 0.18)',
+            line=dict(width=0),
+            name='Lean W7i bound ±16t⁴/U³',
+            showlegend=True,
+        ),
+        row=1, col=2,
+    )
+
+    apply_layout(
+        fig,
+        xaxis=dict(title='Interaction U (in units of t)'),
+        yaxis=dict(title='Eigenvalue (in units of t)'),
+        xaxis2=dict(title='Interaction U (in units of t)', type='log'),
+        yaxis2=dict(title='|J| (in units of t)', type='log'),
+        title=dict(
+            text=('Phase 5t doublon gate — spectrum + scaling '
+                  '(Lean: <i>charpoly_H_singlet_Δ0_factored</i>, '
+                  '<i>J_superexchange_bound</i>)'),
+            font=TITLE_FONT,
+        ),
+        height=500, width=1000,
+        legend=dict(orientation='h', yanchor='bottom', y=-0.28,
+                    xanchor='center', x=0.5),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

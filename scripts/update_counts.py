@@ -120,7 +120,7 @@ def count_lean(deps_path: Path) -> dict:
 
 
 def count_python() -> dict:
-    """Count Python source modules, test files, figures."""
+    """Count Python source modules, test files, pytest cases, figures."""
     src_modules = list(SRC_DIR.rglob("*.py"))
     src_modules = [f for f in src_modules if f.name != "__init__.py"]
 
@@ -137,9 +137,28 @@ def count_python() -> dict:
             if line.startswith("def fig_"):
                 fig_count += 1
 
+    # Pytest collection: total individual test cases (not just file count).
+    # Uses --collect-only -q which is much faster than execution.
+    pytest_cases = 0
+    try:
+        result = subprocess.run(
+            ["uv", "run", "python", "-m", "pytest", "tests/",
+             "--collect-only", "-q", "--no-header"],
+            cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=120,
+        )
+        # pytest -q --collect-only ends with a line like "N tests collected in X.YZs"
+        import re
+        m = re.search(r"(\d+)\s+tests?\s+collected", result.stdout or result.stderr)
+        if m:
+            pytest_cases = int(m.group(1))
+    except Exception:
+        # Keep graceful degradation; 0 indicates "not collected this run"
+        pytest_cases = 0
+
     return {
         "python_modules": len(src_modules),
         "test_files": len(test_files),
+        "pytest_cases": pytest_cases,
         "notebooks": len(notebooks),
         "papers": len(papers),
         "figures": fig_count,
@@ -160,6 +179,36 @@ def count_aristotle() -> dict:
         }
     except ImportError:
         return {"aristotle_proved": 0, "aristotle_runs": 0}
+
+
+def count_per_section_theorems(lean_path: Path) -> dict:
+    """Parse a single Lean file and count `^theorem` declarations per
+    `/-! ### Section <label>` block. Returns dict mapping section
+    label (string, e.g. "1", "3b", "19") to theorem count. Uses string
+    keys so sub-sections like "3b" are distinct from "3".
+
+    Matches the section-header convention
+    ``/-! ### Section <label>[.<text>]...`` where ``<label>`` is the
+    regex ``\\w+`` (digits + optional letter suffix).
+    """
+    import re
+    if not lean_path.exists():
+        return {}
+    text = lean_path.read_text()
+    section_pat = re.compile(r"^/-!\s*###\s*Section\s+(\w+)", re.MULTILINE)
+    matches = list(section_pat.finditer(text))
+    per_section: dict = {}
+    for i, m in enumerate(matches):
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        block = text[start:end]
+        label = m.group(1)
+        per_section[label] = sum(
+            1 for line in block.split("\n") if line.startswith("theorem ")
+        )
+    per_section["_total"] = sum(1 for line in text.split("\n")
+                                if line.startswith("theorem "))
+    return per_section
 
 
 def generate_tex(counts: dict, path: Path):
@@ -186,12 +235,46 @@ def generate_tex(counts: dict, path: Path):
         f"\\newcommand{{\\leandefinitions}}{{{lean.get('definitions', '?')}}}",
         f"\\newcommand{{\\pythonmodules}}{{{python.get('python_modules', '?')}}}",
         f"\\newcommand{{\\testfiles}}{{{python.get('test_files', '?')}}}",
+        f"\\newcommand{{\\totaltests}}{{{python.get('pytest_cases', '?')}}}",
         f"\\newcommand{{\\figurecount}}{{{python.get('figures', '?')}}}",
         f"\\newcommand{{\\notebookcount}}{{{python.get('notebooks', '?')}}}",
         f"\\newcommand{{\\papercount}}{{{python.get('papers', '?')}}}",
         f"\\newcommand{{\\aristotleproved}}{{{aristotle.get('aristotle_proved', '?')}}}",
         f"\\newcommand{{\\aristotleruns}}{{{aristotle.get('aristotle_runs', '?')}}}",
     ]
+
+    # --- Per-module macros for papers that cite per-section totals ---
+    # FermiHubbardDimer.lean (Phase 5t / Paper 18)
+    # Wave groupings (from paper18_doublon_gate/paper_draft.tex Table 1):
+    #   W2 Layer-1  (sections 1-4): core defs + T1-T10c + trace corollaries
+    #   W3          (section 3b):    symmetry-adapted basis matrix-action
+    #   W4 spectrum (sections 5-9):  charpoly, brights, U=0 spectrum
+    #   W5 BDI      (sections 10-11): Γ H Γ = -H + projectors
+    #   W6A-C       (sections 12-14): EuclideanSpace, OrthoBasis, Householder
+    #   W6r2+def    (sections 15, 18): scalar-mult + 6x6 lift
+    #   W7+r2       (sections 16-17): Vieta + Lipschitz + superexch bound
+    #   W8          (section 19):     Berry-phase sign flip
+    fhd_path = LEAN_DIR / "SKEFTHawking" / "FermiHubbardDimer.lean"
+    fhd_sec = count_per_section_theorems(fhd_path)
+    if fhd_sec:
+        lines.append("% --- Paper 18 / Phase 5t per-section counts (FermiHubbardDimer.lean) ---")
+        lines.append(f"\\newcommand{{\\fhdTotal}}{{{fhd_sec.get('_total', '?')}}}")
+        fhd_w2 = sum(fhd_sec.get(s, 0) for s in ("1", "2", "3", "4"))
+        fhd_w3 = fhd_sec.get("3b", 0)
+        fhd_w4 = sum(fhd_sec.get(s, 0) for s in ("5", "6", "7", "8", "9"))
+        fhd_w5 = sum(fhd_sec.get(s, 0) for s in ("10", "11"))
+        fhd_w6abc = sum(fhd_sec.get(s, 0) for s in ("12", "13", "14"))
+        fhd_w6_extra = sum(fhd_sec.get(s, 0) for s in ("15", "18"))
+        fhd_w7 = sum(fhd_sec.get(s, 0) for s in ("16", "17"))
+        fhd_w8 = fhd_sec.get("19", 0)
+        lines.append(f"\\newcommand{{\\fhdWaveTwo}}{{{fhd_w2}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveThree}}{{{fhd_w3}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveFour}}{{{fhd_w4}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveFive}}{{{fhd_w5}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveSixABC}}{{{fhd_w6abc}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveSixExtra}}{{{fhd_w6_extra}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveSeven}}{{{fhd_w7}}}")
+        lines.append(f"\\newcommand{{\\fhdWaveEight}}{{{fhd_w8}}}")
     path.write_text("\n".join(lines) + "\n")
 
 

@@ -793,6 +793,14 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "priority", "yaxis": "hook"},
         physics_checks=[], color_keys=["steel_blue", "amber"],
     ),
+    FigureSpec(
+        name="fig_doublon_gate_spectrum",
+        function="fig_doublon_gate_spectrum",
+        caption="Phase 5t W9 — Fermi-Hubbard dimer singlet-sector spectrum vs U (Δ=0) plus direct-vs-superexchange scaling. Left: three eigenvalues (E_plus, E_minus, U) cross-verified by numpy eigh vs Lean closed-form (W7l charpoly factorization). Right: superexchange gap J(t,U) with 4t²/U asymptote and the Lean W7i bound envelope ±16t⁴/U³.",
+        needs_experiments=False, expected_traces=5,
+        expected_axes={"xaxis": "U", "yaxis": "Eigenvalue"},
+        physics_checks=[], color_keys=["steel_blue", "dissipative", "cross"],
+    ),
 ]
 
 
@@ -877,6 +885,8 @@ def generate_figures() -> dict[str, Path]:
         # Phase 5x Wave 8/9: Paper 17 synthesis figures
         fig_phase5x_candidate_viability_matrix,
         fig_phase5x_empirical_hook_ranking,
+        # Phase 5t Wave 9: doublon-gate spectrum + scaling
+        fig_doublon_gate_spectrum,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -990,6 +1000,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_sfdm_stacked_kappa_profile": fig_sfdm_stacked_kappa_profile,
         "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
+        "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
     }
 
     paths = {}
@@ -1108,6 +1119,8 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 5x Wave 8/9: Paper 17 synthesis figures
         fig_phase5x_candidate_viability_matrix,
         fig_phase5x_empirical_hook_ranking,
+        # Phase 5t Wave 9: doublon-gate spectrum + scaling
+        fig_doublon_gate_spectrum,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1219,6 +1232,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_sfdm_stacked_kappa_profile": fig_sfdm_stacked_kappa_profile,
         "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
+        "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
     }
 
     issues: list[CheckIssue] = []

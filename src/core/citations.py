@@ -860,7 +860,10 @@ CITATION_REGISTRY = {
         'doi': '10.1007/978-3-030-79876-5_37',
         'arxiv': None,
         'doi_verified': None,
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'used_in': [
+            'papers/paper17_dark_sector/paper_draft.tex',
+            'papers/paper18_doublon_gate/paper_draft.tex',
+        ],
         'provides': [],
         'notes': 'Lean 4 citation. Conference: CADE-28, Pittsburgh 2021.',
     },
@@ -874,7 +877,10 @@ CITATION_REGISTRY = {
         'doi': '10.1145/3372885.3373824',
         'arxiv': '1910.09336',
         'doi_verified': None,
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'used_in': [
+            'papers/paper17_dark_sector/paper_draft.tex',
+            'papers/paper18_doublon_gate/paper_draft.tex',
+        ],
         'provides': [],
         'notes': 'Mathlib paper, CPP 2020 (Certified Programs and Proofs).',
     },
@@ -1220,6 +1226,101 @@ CITATION_REGISTRY = {
         'notes': 'Internal project companion paper (was "Paper8" bibkey in paper17 '
                  'prior to 2026-04-24 remediation; renamed to disambiguate from '
                  'paper7 which uses "Paper8" for the Chirality Wall work).',
+    },
+    # ────────────────────────────────────────────────────────────────
+    # Paper 18 (doublon gate) — added 2026-04-26
+    # ────────────────────────────────────────────────────────────────
+    'Berry1984': {
+        'authors': 'Berry, M. V.',
+        'title': 'Quantal phase factors accompanying adiabatic changes',
+        'journal': 'Proc. R. Soc. Lond. A',
+        'volume': 392,
+        'page': '45',
+        'year': 1984,
+        'doi': '10.1098/rspa.1984.0023',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Berry phase foundational paper. No arXiv (pre-arXiv era).',
+    },
+    'Zanardi1999': {
+        'authors': 'Zanardi, P., Rasetti, M.',
+        'title': 'Holonomic quantum computation',
+        'journal': 'Phys. Lett. A',
+        'volume': 264,
+        'page': '94',
+        'year': 1999,
+        'doi': '10.1016/S0375-9601(99)00803-8',
+        'arxiv': 'quant-ph/9904011',
+        'doi_verified': None,
+        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Original holonomic quantum computation proposal.',
+    },
+    'Leek2007': {
+        'authors': 'Leek, P. J. et al.',
+        'title': "Observation of Berry's phase in a solid-state qubit",
+        'journal': 'Science',
+        'volume': 318,
+        'page': '1889',
+        'year': 2007,
+        'doi': '10.1126/science.1149858',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
+        'provides': [],
+        'notes': 'First Berry-phase observation in a superconducting qubit. '
+                 'DOI verified against Science 318, 1889 (2007).',
+    },
+    'Kiefer2026': {
+        'authors': 'Kiefer, S., Zhu, Y., Fischer, P., Jele, Y., '
+                   'Gächter, R., Bisson, L., Viebahn, P., Esslinger, T.',
+        'title': 'Protected quantum gates using qubit doublons in '
+                 'dynamical optical lattices',
+        'journal': 'Nature',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,  # Nature DOI pending publication
+        'arxiv': '2507.22112',
+        'doi_verified': None,
+        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Experimental realization of the doublon geometric SWAP gate. '
+                 'arXiv:2507.22112 (Nature 2026). Central experimental reference '
+                 'for Paper 18 formalization.',
+    },
+    'Kitaev2009': {
+        'authors': 'Kitaev, A.',
+        'title': 'Periodic table for topological insulators and superconductors',
+        'journal': 'AIP Conf. Proc.',
+        'volume': 1134,
+        'page': '22',
+        'year': 2009,
+        'doi': '10.1063/1.3149495',
+        'arxiv': '0901.2686',
+        'doi_verified': None,
+        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Tenfold-way periodic table of topological phases (Kitaev 2009). '
+                 'BDI class reference for Paper 18 W5 symmetry layer.',
+    },
+    'AltlandZirnbauer': {
+        'authors': 'Altland, A., Zirnbauer, M. R.',
+        'title': 'Nonstandard symmetry classes in mesoscopic '
+                 'normal-superconducting hybrid structures',
+        'journal': 'Phys. Rev. B',
+        'volume': 55,
+        'page': '1142',
+        'year': 1997,
+        'doi': '10.1103/PhysRevB.55.1142',
+        'arxiv': 'cond-mat/9602137',
+        'doi_verified': None,
+        'used_in': ['papers/paper18_doublon_gate/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Foundational Altland-Zirnbauer symmetry classification. '
+                 'Original 10-fold way / BDI class definition used in Paper 18.',
     },
 }
 

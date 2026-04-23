@@ -1,11 +1,11 @@
 {
-  "generated": "2026-04-23T10:17:40.464633",
+  "generated": "2026-04-23T17:35:33.630135",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 6899,
-    "theorems_total": 3590,
-    "theorems_substantive": 3491,
-    "theorems_placeholder": 99,
+    "total_declarations": 7064,
+    "theorems_total": 3729,
+    "theorems_substantive": 3618,
+    "theorems_placeholder": 111,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
@@ -173,17 +173,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 2913,
+    "definitions": 2939,
     "structures": 147,
     "instances": 201,
     "inductives": 47
   },
   "python": {
-    "python_modules": 65,
-    "test_files": 57,
-    "notebooks": 50,
-    "papers": 17,
-    "figures": 109
+    "python_modules": 66,
+    "test_files": 58,
+    "pytest_cases": 2831,
+    "notebooks": 52,
+    "papers": 18,
+    "figures": 110
   },
   "aristotle": {
     "aristotle_proved": 322,

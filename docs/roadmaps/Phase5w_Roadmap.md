@@ -353,6 +353,23 @@ Wave 1 (deep research) ─── COMPLETE
   - T5: `quasi1D_validity_bound` — composition by triangle inequality
   - H1: `H_AdiabaticRegimeCorrection` (Prop def, tracked) — parameterized over abstract T_H
   - H2: `H_DispersiveUVCutoff` (Prop def, tracked) — parameterized over abstract ω_max
+
+**10c-post. Hypothesis signature tightening — session 7, 2026-04-24:**
+
+During the Paper 17 adversarial-review round (which landed the `constant-eq-constant-rfl` / semantic-tautology QI candidate), a manual audit of the W10c tracked hypotheses found that the original signatures quantified universally over what should have been parameters:
+
+- `H_AdiabaticRegimeCorrection` had `∀ (T_H_exact T_H_leading : ℝ)` **inside** the Prop body → the Prop was **false as stated** (pick `T_H_exact = 1`, `T_H_leading = 0.1` for any small `D` → `|diff|/T_H_leading = 9 ≰ C · D⁴`). Any downstream consumer that `intro`'d this hypothesis was silently assuming a false premise.
+- `H_DispersiveUVCutoff` had `∀ (ω_max : ℝ), ... → ∃ (C : ℝ), ...` → the `∃C` absorbed any positive `ω_max` (set `C := ω_max / √(κ·c_s/l_ee)`, bound becomes `0 ≤ 1/10`). **Vacuously true** for all physical `ω_max`.
+
+Fix applied (no downstream breakage; zero citers at time of fix):
+- `H_AdiabaticRegimeCorrection (kappa c_s l_ee C_const T_H_exact T_H_leading : ℝ)` — now takes the specific `(T_H_exact, T_H_leading)` pair as **parameters**, adds `T_H_leading > 0` positivity.
+- `H_DispersiveUVCutoff (kappa c_s l_ee ω_max C : ℝ)` — now takes the specific `(ω_max, C)` pair as parameters, adds `ω_max > 0` positivity.
+- Docstrings expanded with a "Parameterization discipline" block explaining why universal quantification inside the Prop is forbidden. Matches the `CenterFunctor.H_CF1` / `H_CF2` precedent.
+- Also fixed pre-existing unused-variable warning on `evanescent_bound.hωp` → `_hωp`.
+
+Verification: `lake build SKEFTHawking.ExtractDeps` clean (8422 jobs, 0 errors, 0 warnings on QuasiOneDReduction), `pytest` 2300/2300 (+16 skip, 0 fail), `validate.py` 21/21 pass.
+
+Process lesson saved to memory (`feedback_subagent_lean_quality.md`): subagent-shipped Lean `Prop` definitions require line-by-line semantic audit; prefer direct Lean work when tracked hypotheses are in scope.
 - [x] Paper 16 update: replaced "Γ=1 upper bound, principal uncertainty" with "Γ ≈ 0.9994, bounded ≤ 1.8% at ω_H" (abstract + §IV + figure captions)
 - [x] Figures 104-105 regenerated with realistic Γ(ω); fig_graphene_snr_frequency annotation updated from "(Γ = 1, systematics-limited)" to "(Γ₀ ≈ 0.9994, quasi-1D corr. ≤ 1.8%)"
 - [x] Dedicated tests added: `TestGreybodyZeroFreq` (5), `TestDeanAdiabaticityParameter` (3), `TestQuasi1DCorrectionBound` (4), `TestDispersiveUVCutoff` (3), `TestGreybodySmoothProfile` (3) — 18 new tests, all passing

@@ -1,0 +1,67 @@
+{
+  "review_date": "2026-04-23T00:00:00+00:00",
+  "reviewer": "Claude Opus 4.7 (1M context) — physics-qa:figure-reviewer",
+  "scope": "Paper 18 finalization — single-figure review",
+  "figures_reviewed": 1,
+  "overall_status": "ISSUES_FOUND",
+  "figures": [
+    {
+      "name": "fig_doublon_gate_spectrum",
+      "path": "SK_EFT_Hawking/figures/fig_doublon_gate_spectrum.png",
+      "source": "src/core/visualizations.py:7165 — fig_doublon_gate_spectrum()",
+      "status": "FAIL",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "fail",
+        "issues": [
+          "RIGHT PANEL PHYSICS BUG (critical): The 'J(t, U) exact' steel-blue curve is computed by lookup from the left-panel grid Us = np.linspace(-4.0, 10.0, 141) using `curves['E_plus'][np.argmin(abs(Us - U))] - U` for every U on U_for_plot (which extends up to ~200). For any right-panel U > 10, np.argmin clamps to the last Us index (U=10), so J_vals ≈ E_plus(U=10) - U ≈ 10.4 - U. This crosses zero near U≈10 (explaining the visible vertical plunge of the blue curve on the log-log plot) and then grows linearly negative as U increases — it does NOT track the 4t²/U asymptote across the plotted range. The figure's central claim (exact J within the Lean W7i bound envelope about the 4t²/U asymptote at large U) is therefore not demonstrated: only the asymptote and the vanishingly thin envelope are visible at large U; the exact curve is absent / wrong.",
+          "Fix: replace the nearest-neighbor lookup with a direct evaluation of E_plus on U_for_plot. In `scaling_comparison_curves` (or inline), compute `E_plus_large = 0.5*(U_for_plot + np.sqrt(U_for_plot**2 + 16*t**2))` and then `J_vals = E_plus_large - U_for_plot`. This matches the Lean W7 closed form directly and avoids any grid-interpolation artifacts."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "notes": "Colors (steel_blue #2E86AB, dissipative #D4A843, cross #8D99AE) all resolve through the project COLORS dict. Legend is horizontal at the bottom, two rows, all 8 traces labeled with no visible overlap. Font family CMU Serif/Times consistent with project convention. Line widths (1.5–2.5 px) and open-circle markers for the numpy eigh cross-check are publication-appropriate."
+      },
+      "caption_match": false,
+      "caption_notes": "Caption asserts cross-verification of the Lean W7l charpoly factorization (left panel) AND demonstration of the Lean W7i bound envelope about the 4t²/U asymptote (right panel). Left panel matches the caption cleanly. Right panel does not — see physics issue above; the 'J(t,U) exact' trace as currently plotted cannot serve its advertised role.",
+      "rendering_checks": {
+        "axes_readable": true,
+        "legend_present_all_traces_labeled": true,
+        "expected_traces_min_5": true,
+        "actual_trace_count": 8,
+        "xaxis_contains_U": true,
+        "yaxis_contains_Eigenvalue": true,
+        "log_log_right_panel": true,
+        "no_clipping": true,
+        "no_rendering_artifacts": true
+      },
+      "left_panel_checks": {
+        "E_plus_geq_E_minus_across_U": true,
+        "E_plus_at_U0_near_plus_2t": true,
+        "E_minus_at_U0_near_minus_2t": true,
+        "E_plus_asymptotes_to_U_at_large_positive_U": true,
+        "E_minus_asymptotes_to_zero_at_large_positive_U": true,
+        "antisymmetric_doublon_line_equals_U": true,
+        "numpy_eigh_markers_lie_on_closed_form_curves": true,
+        "three_lines_distinguishable": true
+      },
+      "right_panel_checks": {
+        "log_log_axes_correctly_oriented": true,
+        "4t_sq_over_U_asymptote_correctly_plotted": true,
+        "bound_envelope_visible": "partial — only clearly visible near U≈4–10 where the O(1/U³) width is non-negligible; collapses to an imperceptible sliver along the asymptote for larger U (expected mathematically, but see viz suggestion)",
+        "J_exact_curve_tracks_asymptote": false,
+        "J_exact_curve_within_bound_envelope": false
+      },
+      "notes": "The left panel is submission-ready and faithfully cross-validates the Lean W7l charpoly factorization via the numpy eigh markers. The right panel is the blocker — a single-line fix in fig_doublon_gate_spectrum() will restore the intended physics demonstration."
+    }
+  ],
+  "summary": "fig_doublon_gate_spectrum: FAIL. Left panel is publication-grade and cross-validates Lean W7l correctly. Right panel has a data-lookup bug — J_vals is computed by nearest-index lookup into a U-grid that maxes at 10, while the plotted range extends to ~200, so the 'J exact' curve is wrong for U > 10 and does not demonstrate the claimed Lean W7i bound. Must fix before Paper 18 submission.",
+  "recommendations": [
+    "Replace the nearest-index lookup at visualizations.py:7277-7278 with a direct closed-form evaluation on U_for_plot: `E_plus_on_Upos = 0.5*(U_for_plot + np.sqrt(U_for_plot**2 + 16*t**2))` then `J_vals = E_plus_on_Upos - U_for_plot`. Regenerate figure and re-review.",
+    "Optional visual enhancement: once J_vals is correct, consider plotting |J - 4t²/U| vs U on a secondary log-log axis (or inset) so the bound envelope ±16t⁴/U³ is visibly non-trivial across the full U range rather than collapsing to a sliver on the current scale."
+  ]
+}

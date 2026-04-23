@@ -907,3 +907,136 @@ Wave 1 (6 deep research tasks — parallel) ✅ COMPLETE
 - H0 Distance Network (H0DN) Collaboration, H₀ = 73.50 ± 0.81 km/s/Mpc (April 10, 2026) — >5σ vs Planck, ~1% precision
 - Berezhiani, Khoury, Wang, "DM-baryon phonon-mediated late-time cosmic acceleration," (2017) — SFDM approach to H₀ tension via phonon EFT; thematic hook for Paper 17
 - ACT DR6 (March 2025) — no statistically significant departure from ΛCDM; cannot pull H₀ above ~69.9 even with EDE
+
+---
+
+## Wave 10 — Paper 17 Adversarial Remediation (session 7, 2026-04-24)
+
+**Trigger:** Adversarial-review report
+`papers/AutomatedReviews/2026-04-23-1500-internal-adversarial/paper17_dark_sector.md`
+(session 6 Stage 13 output) flagged 4 BLOCKERs, 6 REQUIREDs, 4
+RECOMMENDEDs spanning readiness gates 1, 2, 3, 5, 6, 7, 8, 9. Wave 10
+remediates the paper 17 findings in-session; the QI Candidate for a
+`SemanticTautology` graph extractor is proposed to a separate
+graph-pipeline wave (not executed here).
+
+**Approach (per user mandate, paper-17-adversarial-remediation prompt):**
+fix what's addressable in-session; block on user for items that require
+external data (arXiv-ID searches that need a web search engine, MC run
+IDs that need access to production data subdirectories). No Lean-theorem
+modifications — the Lean theorems themselves are valid `lake build`-clean
+content; the issue is how paper 17's prose and honesty table claim them
+as "derivations" when they are classification/consistency-checks.
+Paper 17 is revised; Lean content is untouched. Main session's Phase 5t
+W4 work on `FermiHubbardDimer.lean` and the `QuasiOneDReduction.lean`
+audit is unaffected.
+
+### BLOCKER status
+
+| # | Finding | Gate | Status | Evidence |
+|---|---|---|---|---|
+| 1.1 | `Glodkowski2024` wrong-target arXiv (2406.12345 → fuzzy-logic paper) | CitationIntegrity | **FIXED** | `paper17/paper_draft.tex:666` now cites arXiv:2401.01877 ("Dissipative fracton superfluids", Głódkowski–Peña-Benítez–Surówka), verified via WebFetch 2026-04-24; `src/core/citations.py` has matching `Glodkowski2024` registry entry with `arxiv: '2401.01877'` |
+| 1.2 | 30 of 32 paper17 bibkeys missing from `CITATION_REGISTRY` | CitationIntegrity | **FIXED (with caveats — user verify)** | `src/core/citations.py` extended with 30 new entries under "Paper 17 (dark sector) bibkeys" section. All 32 paper17 bibkeys now resolve. Registry total: 74 entries (up from 44). **User-action items:** 8 entries marked `arXiv tentative — user verify` in `notes` field: `CGL2017b`, `Volovik2006`, `KV2008`, `Wan2019`, `Wang2020`, `Wang2021`, `Garcia-Etxebarria2019`, `Pretko2017`, `Nandkishore2019`, `Krishna2024`, `BKWang2017`, `Sola2023`, `DESI2024`, `DESI2025`, `Shen2022`. Additionally `Jensen2024` arXiv ID could not be located via available tools (WebSearch permission denied) — flagged as `NEEDS USER VERIFICATION` in the note |
+| 2.1 | `Paper8` bibkey collides with paper7 | CrossPaperConsistency | **FIXED** | `paper17/paper_draft.tex` renamed `\cite{Paper8}` → `\cite{FractonNonAbelian2025}` at L86, L248, L668 (three occurrences). `paper7_chirality_formal/paper_draft.tex` Paper8 bibkey (Chirality Wall companion) left untouched. `CITATION_REGISTRY` has both `Paper8`-adjacent entry: `FractonNonAbelian2025` for paper17, original `Paper8` left in paper7 alone (not in central registry yet — flagged for a separate audit wave) |
+| 5.1 | `fracton_bullet_sigma_zero` = `rfl` on hardcoded constant | LeanProofSubstance | **FIXED (via paper reframe, not Lean change)** | Lean theorem unmodified (correct as a data-consistency check). Paper 17 §Fracton Dark Matter prose updated: the claim is now explicitly flagged as "machine-checked definition, physics content sourced to Pretko2017 + arXiv:2503.14496; derivation is a Phase 6 target." Honesty table row updated from "Derived" to "MCC". Formal Verification Summary §10 adds the "MCC vs Derived" boundary definition with this theorem listed as MCC |
+| 5.2 | `phase5x_candidates_viability_matrix` = consistency on hardcoded flags | LeanProofSubstance | **FIXED (via paper reframe)** | Same pattern as 5.1. Fig. 108 caption now flags it as MCC. Honesty table row updated. `sec:formal-verification` lists it under MCC |
+| 5.3 | `emergent_gravity_dm_invisible_collective` = `decide` on hardcoded lookup | LeanProofSubstance | **FIXED (via paper reframe)** | Same pattern. Abstract softened: "given deep-research σ_DD bounds for each candidate... collectively below the floor". §Experimental paragraph rewritten: "The null prediction ... is a collective consequence of the five per-candidate σ_DD bounds drawn from the Phase 5x deep research... the theorem ... is an MCC over that hand-assigned table". Honesty table + Formal Verification Summary list it under MCC. Discussion L666 `precisely predicted` softened |
+
+### REQUIRED status
+
+| # | Finding | Gate | Status | Evidence |
+|---|---|---|---|---|
+| 1.3 | `BK2025` page count 118 → 136 | CitationIntegrity | **FIXED** | `paper17/paper_draft.tex:376` now reads "136 pages" (was "118"); verified via WebFetch of arXiv:2505.23900 abstract comment field |
+| 3.1 | No `PARAMETER_PROVENANCE` entries for paper 17 parameters | ParameterProvenance | **FIXED (LLM-verified tier)** | `src/core/provenance.py` extended with SFDM.m_DM_BK (0.6 eV), SFDM.Lambda_BK (0.2 meV), SFDM.c_s_subcluster_BK (1525 km/s), SFDM.merger_Mach_canonical (dict of 5 Mach numbers). All tier THEORETICAL / DERIVED, `llm_verified_date: 2026-04-24`. **User-action item:** human_verification of per-cluster infall velocities (Bullet 2700, El Gordo 2500, Pandora 3400, A520 2300, MACS J0025 2000 km/s) required before paper-17 submission; each needs a specific per-cluster paper citation in the provenance entry. Flagged in `SFDM.merger_Mach_canonical` notes. CHECK 15 still WARN-level acceptable at draft |
+| 3.2 | `T_dS = 2 × T_GH` tuning claim undisclosed | ParameterProvenance | **FIXED** | `paper17/paper_draft.tex` §adw-cc rewritten. Removed the "(few) × T_dS ≈ 2.8 meV" number and the "20% agreement" language. New language: "reproduces the meV scale without tuning; the specific O(1) prefactor is deferred to Phase 6". Abstract + Discussion updated to match |
+| 5.4 | `torsion_channels_distinct_sources_distinct` = enum distinctness | LeanProofSubstance | **FIXED (via paper reframe)** | Honesty table row updated from "Derived" to "MCC". Formal Verification Summary lists it under MCC with full annotation (channel identification sourced to Boos-Hehl 2019 + Fang-Gu Eq. (3.6); Lorentz-irrep decomposition proof is a Phase 6 target) |
+| 5.5 | `empirical_hook_ranking_strict` = hand-chosen priorities | LeanProofSubstance | **FIXED (via paper reframe)** | Fig. 109 caption updated. Table 1 caption updated. Honesty table row → MCC. Formal Verification Summary lists it under MCC with Phase 6 target (a `detectability` scoring function deriving the order from Euclid/Roman S/N + DESI + STEP + DARWIN sensitivities) |
+| 6.1 | `H_MixedChannelZ16Cancels` load-bearing for C-1 but not named in prose | AssumptionDisclosure | **FIXED** | §Z16 C-1 bullet now explicitly states: "This theorem takes a tracked Prop hypothesis `H_MixedChannelZ16Cancels`... C-1 viability is therefore conditional on the Wan-Wang mechanism; discharging the hypothesis requires the Phase 6 bordism upgrade" |
+| 7.1 | 11 inline count-literals (stale) | NumericalFreshness | **FIXED (macros + self-describing source)** | `paper17/paper_draft.tex` preamble now has `\input{../../docs/counts.tex}`. Abstract theorem/module counts removed from inline text; redirected to "§formal-verification and docs/counts.tex". Formal Verification Summary now uses `\leanmodules{}`, `\totaltheorems{}`, `\substantivetheorems{}`, `\placeholdertheorems{}` macros (auto-updating). Per-module counts (e.g., "DarkSectorSynthesis: 22 theorems") left inline but each is a stable Wave 8 deliverable — not subject to ambient drift. One remaining inline: "ADWMechanism.lean (21 theorems, shipped in Phase 5)" — intentional historical reference to Wave ship count |
+| 8.1 | MC evidence unlinked to successful ProductionRun | ProductionRunHealth | **BLOCKED-ON-DATA (partial fix)** | §Speculative paragraph rewritten to explicitly acknowledge the `L=6, 8` ADW MC production-run structure (three-phase, split transition Δ≈0.63), point readers at `docs/dark_sector/` + `data/rhmc/L*` + the provenance-dashboard ProductionRun nodes, and flag the current `needs-recheck` state of the ReadinessGate 8 cell. **User-action item:** link the specific `ProductionRun` graph-node UUIDs into Paper 17 via the knowledge-graph `PRODUCES` edges (or the equivalent paper-level claim→run binding in `provenance.py`). Requires data-graph access + probably a Wave 10b infrastructure touch-up |
+
+### RECOMMENDED status
+
+| # | Finding | Gate | Status |
+|---|---|---|---|
+| 1.4 | Bibitems missing arXiv IDs where available | CitationIntegrity | **PARTIAL FIX** — Visser1998 → gr-qc/9712010, BK2015 → 1507.01019, Kapustin2022 → 2208.09056 added to .tex bibitems. Others added only to registry. The 16 unaugmented .tex bibitems are a Wave 10b cosmetic task |
+| 2.2 | Paper 17 is sole citer of 5 BK/KV/Volovik bibkeys | CrossPaperConsistency | **DEFERRED** — audit of paper5, paper6 for Volovik/KV sharing is a Wave 10b bibkey-consistency sweep task. Not blocking |
+| 5.6 | `lambda_magnitude_ratio_exact` is `T/T = 1` tautology | LeanProofSubstance | **FIXED (via paper reframe)** — §adw-cc cross-reference rewritten to point at `lambda_magnitude_ratio_pos` (non-trivial positivity of the ratio given T_p, T_o > 0); explicitly acknowledges the `_exact` variant is tautological and was erroneously cited |
+| 7.2 | `placeholdertheorems=99` not surfaced in paper's count | NumericalFreshness | **FIXED** — Formal Verification Summary §10 now surfaces the substantive/placeholder split via the `\substantivetheorems{}` and `\placeholdertheorems{}` macros |
+
+### QI Candidate — `SemanticTautology` extractor
+
+The adversarial reviewer emitted a QI Candidate proposing a
+`SemanticTautology` extractor in `scripts/build_graph.py`
+(pattern: `theorem T : f(c) = rhs := rfl / decide / native_decide`
+where `c` is a `def`-level author-supplied constant and `rhs` is a
+literal matching `c`'s definition — i.e., "I typed what I said I typed").
+Paper 17 alone has 5 instances (5.1 / 5.2 / 5.3 / 5.4 / 5.5).
+
+**Wave 10 recommendation:** propose (do not implement) the extractor.
+The `SemanticTautology` pattern is a sub-type of `PlaceholderMarker`
+that the existing syntactic extractor misses because the theorem
+statement is non-trivial at the syntactic level (`sigma = 0` where
+`sigma : ℝ` is not a tautology as a type signature) but semantically
+vacuous (given the `def sigma := 0` line right above).
+
+Implementation sketch (for a future graph-pipeline wave):
+1. Add to `scripts/build_graph.py`: new `extract_semantic_tautology_nodes`
+   function that walks Lean declarations, filters for theorems whose
+   proof body is exactly `rfl` / `decide` / `native_decide`, then
+   inspects the goal's LHS — if it's `constant_def.x = literal` where
+   `constant_def.x`'s body is exactly `literal` (one-hop unfold), emit
+   a `SemanticTautology` node.
+2. Extend Gate 5 evaluator to BLOCK on `SemanticTautology` citations
+   in paper body unless the paper's honesty table classifies the
+   citation as MCC (or equivalent "machine-checked classification" tag).
+3. Audit papers 15, 16, 17 (all three synthesis papers) with the new
+   extractor; expect false positives for any MCC-classified theorem
+   which is FINE — the paper metadata absorbs them.
+
+**Priority:** P1. Currently paper 17's MCC designation is carried only
+by human-readable language in the honesty table + Formal Verification
+Summary. A machine check would harden this against regression.
+
+**Not implemented in this wave.** Wave 10b (or a Phase 5v continuation)
+should schedule the extractor work.
+
+### Next-actions list for user
+
+1. **Review the 15 `arXiv tentative — user verify` registry entries** in
+   `src/core/citations.py`. Web-search for each via arXiv / INSPIRE /
+   DOI and update `arxiv` + `doi` fields. Highest priority: `Jensen2024`
+   (could not be located via WebFetch — PRL 132, 071603 2024, "Large-N
+   dipole superfluid", Jensen & Raz).
+2. **Human-verify the SFDM parameter-provenance entries** (4 new in
+   `src/core/provenance.py`). BK fiducial m_DM, Λ, c_s already have
+   `llm_verified_date: 2026-04-24`; human verification unblocks paper 17
+   submission per Gate 3 / CHECK 15 strict mode.
+3. **Add per-cluster infall-velocity provenance** entries — each of
+   Bullet / El Gordo / Pandora / A520 / MACS J0025 needs its own
+   citation + v_infall value + source paper. Extend
+   `SFDM.merger_Mach_canonical` to split per-cluster, or add
+   `SFDM.merger_Bullet.v_infall`, etc.
+4. **Wave 10b — link ProductionRun nodes for paper 17**: the paper
+   cites "L=6, 8 insufficient" but the graph currently has no
+   `PRODUCES` edges from a `ProductionRun` to paper 17's claim nodes.
+   Needs either graph-edge addition in `scripts/build_graph.py` or
+   a `DEPENDS_ON_RUN` entry in `PAPER_DEPENDENCIES` (depending on
+   current Phase 5v graph schema).
+5. **Wave 10b — finish the `\input{}` retrofit** for the remaining per-
+   module theorem counts in paper 17 (e.g., "23 theorems" for
+   Z16AnomalyComputation at L141). Low priority — stable per-module
+   counts don't drift the way aggregate counts do.
+6. **Wave 10b — propose `SemanticTautology` extractor** (see QI
+   candidate section above). P1 priority for the graph pipeline.
+7. **Wave 10b — bibkey-consistency sweep** paper5 / paper6 /
+   paper7 / paper17 for shared Volovik / KV references (finding 2.2).
+8. **Re-run adversarial reviewer** on paper 17 after user completes
+   items 1–4 to confirm the gates flip from `blocked` → `passed`.
+
+### Build/test status at Wave 10 close
+
+- `uv run python -m pytest tests/ -v`: **2300 passed, 16 skipped** (no test changes — Wave 10 is paper / registry / provenance content, no Python code paths altered)
+- `uv run python scripts/validate.py`: **21/21 checks passed** (51 warnings; paper 17 `readiness_submission_gate` improved from several blockers down to 1: ProductionRunHealth, per finding 8.1)
+- Lean: **not rebuilt by this wave** (no Lean changes; main session has the active `lake build` state on Phase 5t W4)
+- `paper_draft.tex` syntax: brace-balance preserved via `Edit` replacements; `\input{../../docs/counts.tex}` directive added to preamble. `pdflatex` not run in-session (no TeX toolchain invocation attempted)

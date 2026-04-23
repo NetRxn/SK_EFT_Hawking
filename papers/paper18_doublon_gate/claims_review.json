@@ -1,0 +1,252 @@
+{
+  "paper": "paper18_doublon_gate",
+  "review_date": "2026-04-23",
+  "overall_status": "issues_found",
+  "summary": "3 FAIL, 4 WARN, 21 PASS. Paper does NOT compile clean despite user-reported status: 35 undefined-control-sequence errors in paper_draft.log (primarily \\ket and \\totaltests). All Lean theorem references resolve, all 8 bibliography entries are in CITATION_REGISTRY, and all verifiable structural/numerical claims match the FermiHubbardDimer.lean source.",
+  "blocking_issues": [
+    "FAIL-1: \\ket{...} command is used ~20 times but never defined (missing \\usepackage{physics} or \\usepackage{braket} or local \\newcommand{\\ket}). LaTeX log shows 33 of 35 'Undefined control sequence' errors from \\ket — the paper will render with missing math content.",
+    "FAIL-2: \\totaltests macro is referenced at paper lines 120 and 460 but is NOT defined in docs/counts.tex. The canonical counts pipeline (scripts/update_counts.py) emits \\testfiles (file count), not \\totaltests (individual pytest count). Paper body will render '~project tests' with nothing filled in.",
+    "FAIL-3: Paper claims '139 theorems in FermiHubbardDimer.lean' (abstract line 44, Section 4 narrative, Table 1 total, Section 6 line 554). Actual count is 141 top-level theorem+lemma declarations (all 'theorem' keyword, zero 'lemma'). The Section I breakdown 15+10+20+21+39+12+17+5=139 does not sum to 141 and does not match the per-wave distribution in the source (W2=32, W3=1, W4=8, W5=10, W5r2=12, W6A=20, W6B=7, W6C=11, W6r2=7, W7=10, W7r2=9, W6def=8, W8=6)."
+  ],
+  "compilation_status": {
+    "user_reported": "compiles clean, 6 pages",
+    "actual": "compiles but with 35 'Undefined control sequence' errors and 1 undefined citation warning",
+    "log_path": "papers/paper18_doublon_gate/paper_draft.log",
+    "status": "FAIL"
+  },
+  "numerical_claims": [
+    {
+      "location": "Eq. (5), Section 3: U_SWAP = I - (2/(Δ²+4t²))|d><d|",
+      "lean_theorem": "U_SWAP_singlet (noncomputable def at line 1555)",
+      "match": "1 - (2 / (Δ^2 + 4*t^2)) • Matrix.of (fun i j => darkVec t Δ i * darkVec t Δ j)",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 3: dark state = (0, 2t, Δ)^T, norm = √(Δ²+4t²)",
+      "lean_theorem": "darkVec / darkVecE_norm_sq (lines 120, 1212)",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 3: bright eigenvalues ±√(Δ²+4t²)",
+      "lean_theorem": "H_singlet_U0_brightVecPlus / H_singlet_U0_brightVecMinus (lines 404, 427)",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4, Fig caption / Table 1 W6C: U_SWAP eigenvalues {-1, +1, +1}, det=-1, trace=+1",
+      "lean_theorem": "U_SWAP_singlet_eigenvalues (1658), U_SWAP_singlet_det (1673) proves det=-1, U_SWAP_singlet_trace (1687) proves trace=1",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4, eq (6): E_± = (U ± √(U²+16t²))/2",
+      "lean_theorem": "E_plus / E_minus definitions; E_plus_value_at_zero (1857) gives E_plus(t,0) = 2|t|",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4: E_+ + E_- = U  (Vieta sum)",
+      "lean_theorem": "E_plus_plus_E_minus at line 1869",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4: E_+ · E_- = -4t²  (Vieta product)",
+      "lean_theorem": "E_plus_times_E_minus at line 1877: proves E_plus t U * E_minus t U = -(4 * t^2)",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4: HasDerivAt(E_+(t,·), 1/2, 0) for t≠0",
+      "lean_theorem": "E_plus_hasDerivAt_at_zero at line 1892",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4, Contribution (iv) + W7q: |E_+(t,U₁) - E_+(t,U₂)| ≤ |U₁-U₂|",
+      "lean_theorem": "E_plus_lipschitz at line 2185",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4 + Contribution (iv): |J(t,U) - 4t²/U| ≤ 16t⁴/U³ for U ≥ 4|t| > 0",
+      "lean_theorem": "J_superexchange_bound at line 1980: hypothesis `4 * |t| ≤ U`, conclusion `|J_superexchange t U - 4 * t^2 / U| ≤ 16 * t^4 / U^3`",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4: charpoly = (X-U)(X²-UX-4t²)",
+      "lean_theorem": "charpoly_H_singlet_Δ0_factored at line 2115",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 4: antisymmetric doublon eigenvalue = U via (0,1,0)",
+      "lean_theorem": "H_singlet_Δ0_U_eigenvector at line 2159",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 5 W8a: |dark(θ+π)⟩ = -|dark(θ)⟩",
+      "lean_theorem": "darkStateθ_add_pi_sign_flip at line 2454",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 5 W8b: |dark(θ+2π)⟩ = |dark(θ)⟩",
+      "lean_theorem": "darkStateθ_add_two_pi at line 2466",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 5 W8c: ⟨dark|dark⟩ = 1",
+      "lean_theorem": "darkStateθ_dotProduct_self at line 2481",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 5 W8d: ⟨dark|H|dark⟩ = 0 (dynamical phase vanishes)",
+      "lean_theorem": "dark_state_dynamical_phase_vanishes at line 2500",
+      "status": "PASS"
+    },
+    {
+      "location": "Section 5 W8e: bundled geometric phase = -1",
+      "lean_theorem": "geometric_phase_minus_one_on_pi_loop at line 2522",
+      "status": "PASS"
+    }
+  ],
+  "theorem_refs": [
+    {"name": "H_singlet_isSymm (T1)", "in_lean": true, "line": 112, "status": "PASS"},
+    {"name": "dark_state_in_kernel", "in_lean": true, "line": 120, "status": "PASS"},
+    {"name": "chiralOp_sq (Γ²=I)", "in_lean": true, "line": 146, "status": "PASS"},
+    {"name": "chiral_anticommutes", "in_lean": true, "line": 155, "status": "PASS"},
+    {"name": "det_H_singlet / trace_H_singlet", "in_lean": true, "lines": [163, 177], "status": "PASS"},
+    {"name": "triplet_{plus,zero,minus}_zero (T10a-c)", "in_lean": true, "lines": [187, 199, 209], "status": "PASS"},
+    {"name": "charpoly_H_singlet (W4)", "in_lean": true, "line": 526, "status": "PASS"},
+    {"name": "chiralOp_conjugation_neg (W5a: ΓHΓ = -H)", "in_lean": true, "line": 758, "status": "PASS"},
+    {"name": "chiral_maps_eigenvector (W5b)", "in_lean": true, "line": 772, "status": "PASS"},
+    {"name": "spectrum_pairing_U0 (W5k)", "in_lean": true, "line": 795, "status": "PASS"},
+    {"name": "darkVec_in_chiral_minus_eigenspace (W5i)", "in_lean": true, "line": 824, "status": "PASS"},
+    {"name": "zero_mode_unique_up_to_scalar (W5p)", "in_lean": true, "line": 1084, "status": "PASS"},
+    {"name": "chiralProj_* algebra (W5l-o2)", "in_lean": true, "lines": [996, 1005, 1016, 1025, 1037], "status": "PASS"},
+    {"name": "eigenBasis_change_of_basis_unitary (W6B)", "in_lean": true, "line": 1501, "status": "PASS"},
+    {"name": "U_SWAP_singlet_darkVec/brightVec± (W6C-A1/A2/A3)", "in_lean": true, "lines": [1564, 1582, 1597], "status": "PASS"},
+    {"name": "U_SWAP_singlet_sq (W6C-S2: U²=I)", "in_lean": true, "line": 1626, "status": "PASS"},
+    {"name": "U_SWAP_singlet_mem_unitaryGroup (W6C-U1)", "in_lean": true, "line": 1764, "uses_claimed_apis": ["Matrix.mem_unitaryGroup_iff'", "Matrix.conjTranspose_eq_transpose_of_trivial"], "status": "PASS"},
+    {"name": "U_SWAP_singlet_on_kernel (W6C-K1)", "in_lean": true, "line": 1778, "status": "PASS"},
+    {"name": "U_SWAP_adapted_* (6x6 lift W6-deferred)", "in_lean": true, "lines": [2317, 2328, 2337, 2343, 2351, 2364, 2379], "status": "PASS"},
+    {"name": "sorry count in FermiHubbardDimer.lean", "value": 0, "status": "PASS"}
+  ],
+  "citation_integrity": [
+    {"bibkey": "Berry1984", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
+    {"bibkey": "Zanardi1999", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
+    {"bibkey": "Leek2007", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS", "notes": "Registry notes DOI verified against Science 318, 1889"},
+    {"bibkey": "Kiefer2026", "in_registry": true, "doi": null, "arxiv": "2507.22112", "doi_verified": null, "used_in_matches": true, "status": "PASS", "notes": "DOI pending publication"},
+    {"bibkey": "Kitaev2009", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
+    {"bibkey": "AltlandZirnbauer", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
+    {"bibkey": "Lean4", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
+    {"bibkey": "Mathlib", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS", "compile_note": "natbib issued 'Citation `Mathlib' on page 1 undefined on input line 88' warning due to revtex4-2 natbib mode; the \\bibitem is defined later in the file but natbib resolves in order. Cosmetic issue but indicates the paper may not cross-reference properly without a rerun."}
+  ],
+  "counts_macros": [
+    {"macro": "\\totaltheorems", "defined_in_counts_tex": true, "value": 3728, "paper_uses": true, "status": "PASS"},
+    {"macro": "\\substantivetheorems", "defined_in_counts_tex": true, "value": 3617, "paper_uses": true, "status": "PASS"},
+    {"macro": "\\placeholdertheorems", "defined_in_counts_tex": true, "value": 111, "paper_uses": true, "status": "PASS"},
+    {"macro": "\\totaltests", "defined_in_counts_tex": false, "paper_uses": true, "usage_lines": [120, 460], "status": "FAIL", "fix": "Either (a) add \\totaltests to update_counts.py and counts.tex (wiring pytest collection into the counts pipeline), or (b) replace \\totaltests with \\testfiles (file count, already emitted — value 58) and reword the sentence as 'tests across \\testfiles test files' (semantics change)."}
+  ],
+  "structural_claims": [
+    {
+      "location": "Abstract line 44, Section 4 Table 1 total, Conclusion",
+      "claim": "139 theorems in FermiHubbardDimer.lean",
+      "actual": 141,
+      "delta": 2,
+      "status": "FAIL",
+      "notes": "141 top-level 'theorem'/'lemma' declarations. Discrepancy may reflect: (a) excluded wave-summary markers (13 marker theorems; 141-13=128, not 139 either), or (b) paper was drafted before 2 theorems were added. Re-count required."
+    },
+    {
+      "location": "Section 6 line 554",
+      "claim": "~2,400 lines of Lean source",
+      "actual": "2541 lines",
+      "delta_pct": 5.9,
+      "status": "WARN",
+      "notes": "Close but rounded low. '~2,500 lines' or '~2,540 lines' would be more accurate. Not blocking."
+    },
+    {
+      "location": "Table 1 per-section breakdown (15+10+20+21+39+12+17+5)",
+      "claim": "Sum = 139",
+      "actual_sum_of_row_claims": 139,
+      "actual_per_wave_in_source": "W2=32 W3=1 W4=8 W5=10 W5r2=12 W6A=20 W6B=7 W6C=11 W6r2=7 W7=10 W7r2=9 W6def=8 W8=6 (total 141)",
+      "status": "WARN",
+      "notes": "Paper's per-section numbers don't map cleanly to wave-boundary theorem counts. Paper may be grouping differently (e.g., counting defs or grouping across section boundaries). Table numbers should be regenerated by a count script rather than hand-coded."
+    },
+    {
+      "location": "Abstract line 44, line 557, Section 6",
+      "claim": "zero sorry, zero new axioms",
+      "actual": "FermiHubbardDimer.lean grep sorry = 0; project axioms = 1 (gapped_interface_axiom in SPTClassification.lean)",
+      "status": "PASS",
+      "notes": "Paper correctly qualifies this at line 455 as 'a single axiom (gapped_interface_axiom in SPTClassification.lean, unrelated to this paper)'. 'zero new axioms' in the scope of this formalization is correct."
+    }
+  ],
+  "qualitative_claims": [
+    {
+      "location": "Abstract line 28, Introduction line 93, 'first end-to-end formalization of a geometric quantum gate in any interactive proof assistant'",
+      "claim": "first end-to-end formalization of a geometric quantum gate in any interactive proof assistant",
+      "status": "WARN",
+      "notes": "Strong precedence claim. No systematic search documented. Before submission, verify against: Isabelle/HOL quantum libraries (isabelle-afp quantum), Coq QWIRE / QuantumLib, Lean Mathlib existing unitary/geometric-phase material. Paper qualifies scope ('algebraic core', 'discrete-step'), which is good defensive phrasing, but 'first in any proof assistant' should be backed by either a review or weakened to 'first in Lean 4' which is easier to defend."
+    },
+    {
+      "location": "Section 4 line 338, 'factor-of-2 difference underlies the observed 4× robustness'",
+      "claim": "factor-of-2 sensitivity difference underlies the observed 4× robustness",
+      "status": "WARN",
+      "notes": "Hand-wavy connection: a factor of 2 in ∂-sensitivity does not straightforwardly imply 4× noise robustness. The 4× figure is from Kiefer2026 experimental data; the paper's 2-vs-1 derivative-ratio argument is a plausibility story, not a derivation. Consider softening to 'is consistent with' or 'contributes to' rather than 'underlies'."
+    },
+    {
+      "location": "Introduction lines 106-121, Contributions",
+      "claim": "'The first Lean formalization of the Fermi-Hubbard dimer singlet-sector spectrum' + 'The first formal proof, in any proof assistant, of the discrete-step statement underlying the Kiefer et al. SWAP gate'",
+      "status": "WARN",
+      "notes": "Same precedence caveat as above. Lean-specific first is defensible; any-proof-assistant first requires evidence."
+    }
+  ],
+  "scope_boundary_honesty": [
+    {
+      "item": "No adiabatic theorem claimed",
+      "location": "Abstract line 51, Introduction line 124, Section 5 line 408, Section 7",
+      "status": "PASS",
+      "notes": "Explicitly and repeatedly stated that Kato's adiabatic theorem is NOT formalized; the paper proves the discrete-step statement conditional on the Kato reduction being valid."
+    },
+    {
+      "item": "No Berry connection 1-form",
+      "location": "Abstract line 51, Section 5 line 414, Section 7",
+      "status": "PASS",
+      "notes": "Paper explicitly states Berry-connection holonomy picture is deferred to Target B / Layer 2."
+    },
+    {
+      "item": "No fiber bundles / differential geometry",
+      "location": "Section 6 line 490",
+      "status": "PASS",
+      "notes": "Explicitly disavowed as not present."
+    },
+    {
+      "item": "Geometric vs dynamical phase argument",
+      "location": "Section 5 line 381",
+      "status": "PASS",
+      "notes": "Paper carefully frames the gate's geometric interpretation as resting on 'two independent finite-dimensional facts' (sign flip + dynamical phase vanishes), which matches the Lean bundle (W8e)."
+    }
+  ],
+  "parameter_provenance": [
+    {
+      "notes": "Paper 18 does not invoke PARAMETER_PROVENANCE — it does not reference experimental parameters (no t, U, Δ numerical values from a BEC/optical-lattice setup). All physics parameters are symbolic. No provenance check applies. Status: N/A."
+    }
+  ],
+  "axiom_risk": [
+    {
+      "axiom": "gapped_interface_axiom",
+      "source": "SPTClassification.lean",
+      "affects_paper_18": false,
+      "status": "PASS",
+      "notes": "Project's single axiom is in SPTClassification.lean and is not in any dependency chain of FermiHubbardDimer.lean. Paper 18 correctly calls this out as 'unrelated to this paper' (line 456)."
+    }
+  ],
+  "hypothesis_risk": [
+    {
+      "notes": "FermiHubbardDimer.lean does not rely on any Physics structure with hypothesis fields (FluidBackground, DissipativeCoeffs). All theorems are bare propositions over `t Δ U : ℝ` with optional `(t ≠ 0 ∨ Δ ≠ 0)` hypotheses. No HYPOTHESIS_REGISTRY entries apply. Status: N/A."
+    }
+  ],
+  "recommended_fixes_pre_figure_reviewer": [
+    "FIX-1 (blocking): Add `\\usepackage{physics}` OR define `\\newcommand{\\ket}[1]{|#1\\rangle}` in the preamble. This is load-bearing for ~20 math expressions.",
+    "FIX-2 (blocking): Decide and implement totaltests semantics. Options: (a) add `\\totaltests` to update_counts.py with pytest --collect-only parse; (b) swap to existing `\\testfiles` and rephrase; (c) hard-code the number with a comment.",
+    "FIX-3 (blocking): Reconcile the '139 theorems' claim with the actual source. Either recount (likely 141) and update abstract+table+conclusion, or confirm the grouping convention the paper intends and add a footnote clarifying what is counted.",
+    "FIX-4 (important): Recompile after FIX-1/2 and verify zero 'Undefined control sequence' errors remain in paper_draft.log.",
+    "FIX-5 (optional): Soften 'first in any proof assistant' claims to 'first in Lean 4' unless a precedence search is documented."
+  ],
+  "verdict": {
+    "ready_for_figure_reviewer": false,
+    "reason": "Paper does NOT compile cleanly — 35 Undefined control sequence errors from \\ket (load-bearing) and \\totaltests (canonical-macro drift). These must be fixed before visual review; currently the rendered PDF has missing math content. Note: Lean-side claims, citations, and structural claims are overwhelmingly sound — the paper is substantively correct, it just needs ~10 minutes of LaTeX cleanup plus a theorem recount."
+  }
+}

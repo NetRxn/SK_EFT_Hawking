@@ -6,6 +6,10 @@
 \usepackage{siunitx}
 \usepackage{hyperref}
 
+% Canonical counts from scripts/update_counts.py.
+% Do NOT hardcode theorem/module counts inline — use macros.
+\input{../../docs/counts.tex}
+
 \begin{document}
 
 \title{Dark Sector Connections from Emergent Gravity:\\
@@ -25,8 +29,10 @@ Four connections are quantitative and machine-verified: (i)~$\mathbb{Z}_{16}$
 anomaly cancellation forces a hidden sector of charge $+3 \bmod 16$, with
 Wang's topological order (T-0) and three sterile Weyl fermions (S-0) as
 the minimal solutions; (ii)~ADW tetrad-condensation equilibrium yields
-$\rho_{\rm vac} \sim T^4 \sim (\SI{2.3}{\milli\electronvolt})^4$, matching
-the observed cosmological constant to within~$20\%$; (iii)~fracton dark
+$\rho_{\rm vac} \sim T^4 \sim (\mathrm{meV})^4$, reproducing the
+observed cosmological-constant scale at the order-of-magnitude level
+(the $\mathcal{O}(1)$ prefactor is deferred to Phase 6; a prior
+``$20\%$'' agreement claim is withdrawn in this revision); (iii)~fracton dark
 matter is compatible with $3{+}1$D gravity through the gapless p-wave
 dipole superfluid phase, subject to a condensate condition $\mu \gtrsim
 \SI{}{\mega\electronvolt}$ at big bang nucleosynthesis (BBN); and
@@ -50,8 +56,10 @@ classifications} (MCC) — the candidate-viability matrix, the
 collective-invisibility cap, the two-torsion-channel identification,
 and the empirical-hook priority ordering — which encode the deep-
 research classifications as a Lean lookup table and verify internal
-consistency (\emph{DarkSectorSynthesis.lean}: 22 theorems; \emph{SFDMMergerForecast.lean}:
-31 theorems; both zero sorry). The MCC class is not a physics
+consistency. (\emph{DarkSectorSynthesis.lean} and \emph{SFDMMergerForecast.lean}
+together ship the Phase 5x synthesis; full per-module theorem counts
+are machine-maintained in \texttt{docs/counts.tex} and
+\S\ref{sec:formal-verification}.) The MCC class is not a physics
 derivation; its purpose is to make the Phase 5x classification machine-
 auditable and keep the paper's honesty table enforceable. See
 \S\ref{sec:formal-verification} and Table~\ref{tab:honesty} for the
@@ -155,7 +163,16 @@ carries charge exactly $+3$. See
 \texttt{HiddenSectorClassification.lean}.
 \item \textbf{C-1}: Wan--Wang mixed-charge completion with a dark
 SU(3)~\cite{Wan2019}. Shipped in Wave~2b Track X as
-\texttt{c1\_wan\_wang\_joint\_constraint}.
+\texttt{c1\_wan\_wang\_joint\_constraint}. This theorem takes a
+tracked \texttt{Prop} hypothesis
+\texttt{H\_MixedChannelZ16Cancels}---the Wan--Wang
+$\mathbb{Z}_{16} \oplus \mathbb{Z}_4$ cancellation mechanism---as an
+assumption (paralleling how \S\ref{sec:speculative} treats
+\texttt{H\_VestigialRelicCarriesZ16Charge}). C-1 viability is therefore
+\emph{conditional on the Wan--Wang mechanism}; discharging the
+hypothesis to a genuine theorem requires the Phase~6 bordism upgrade
+of \texttt{dai\_freed\_spin\_z4} (same upgrade that unblocks the
+vestigial-relic charge claim).
 \end{itemize}
 There are 24,576 total deformation classes of the SM in this
 framework~\cite{Wan2019}; Class B ($n_{\nu_R}=0$, TQFT) is
@@ -216,14 +233,27 @@ $T = T_{\rm dS} = H/\pi$ (which differs from the Gibbons--Hawking
 temperature by a factor of two---a point on which deep research
 agrees), the residual is
 \begin{equation}
-\rho_{\rm vac}^{1/4} \approx (\text{few}) \times T_{\rm dS}
-\approx \SI{2.8}{\milli\electronvolt}
+\rho_{\rm vac}^{1/4} \approx \mathcal{O}(1) \times T_{\rm dS}
+\sim \mathrm{meV}
 \end{equation}
-versus the observed $(\SI{2.3}{\milli\electronvolt})^4$. The agreement is
-at the~20\% level, unprecedented for a non-tuned CC mechanism.
-Cross-reference: \texttt{T\_dS\_double\_TGH} and
-\texttt{lambda\_magnitude\_ratio\_exact} in
-\texttt{CosmologicalConstant.lean}.
+versus the observed $(\SI{2.3}{\milli\electronvolt})^4$. The mechanism
+reproduces the \emph{scale} of $\rho_{\rm vac}^{1/4}$ at the meV level
+without tuning; the specific $\mathcal{O}(1)$ coefficient requires a
+full $V_{\rm eff}$ parameterization and is deferred to Phase 6 --- see
+the CAUTION block in \texttt{CosmologicalConstant.lean} L21--23
+(``the specific numerical identity requires a particular $V_{\rm eff}$
+parameterization and is deferred pending full ADW renormalization
+infrastructure''). Previous drafts quoted ``$\approx 2.8$~meV'' and
+``$20\%$ agreement'' without disclosing that the $\mathcal{O}(1)$
+prefactor is fit rather than computed; we withdraw that number in this
+revision (paper 17 Wave 10 remediation). Cross-reference:
+\texttt{T\_dS\_double\_TGH} proves $T_{\rm dS} = 2 T_{\rm GH}$ and
+\texttt{lambda\_magnitude\_ratio\_pos} proves positivity of the
+magnitude ratio (for $T_p, T_o > 0$) in \texttt{CosmologicalConstant.lean}.
+The tautological \texttt{lambda\_magnitude\_ratio\_exact}
+($\Lambda(T,T)/\Lambda(T,T) = 1$ --- i.e., the magnitude-ratio
+function composed with equal arguments) does \emph{not} support the
+physics agreement claim and was erroneously cited in a prior draft.
 
 \paragraph*{KV and DESI—honest reframe.}
 The companion KV oscillating-vacuum mechanism~\cite{KV2008} would
@@ -248,10 +278,18 @@ free parameters; DESI DR3 (2026--2027) will be decisive.
 Fracton phases---gapped excitations with restricted mobility originating
 in tensor-gauge theories~\cite{Pretko2017,Nandkishore2019}---produce
 features that map directly onto observed DM phenomenology:
-(i)~pressureless equation of state $w = 0$; (ii)~$z=4$ subdiffusion
-producing cored galactic profiles; (iii)~Bullet-Cluster-compatible
-$\sigma_{\rm eff} = 0$ because fracton dipoles cannot interact at a
-distance; (iv)~Hilbert-space fragmentation~\cite{Shen2022} providing a
+(i)~pressureless equation of state $w = 0$ (taken from the relativistic
+fracton-symmetric scalar construction of~\cite{Pretko2017} and
+arXiv:2503.14496; our \texttt{fracton\_cosmo\_dust\_pressureless} is a
+machine-checked re-statement at Lean type-level, not a first-principles
+derivation); (ii)~$z=4$ subdiffusion producing cored galactic profiles;
+(iii)~Bullet-Cluster-compatible $\sigma_{\rm eff} = 0$ because fracton
+dipoles cannot interact at a distance (the \texttt{fracton\_bullet\_sigma\_zero}
+lemma machine-checks this as a definition of the effective
+cross-section, not a derivation from dipole conservation; the derivation
+is a Phase~6 target that would prove $\sigma_{\rm eff} = 0$ from the
+dipole algebra of~\cite{Pretko2017}); (iv)~Hilbert-space
+fragmentation~\cite{Shen2022} providing a
 natural source for the diversity problem.
 
 Our Phase~4 formalization~\cite{FractonNonAbelian2025} established
@@ -448,10 +486,21 @@ trace anomaly could restore $w < 1/3$; we defer the
 
 Vestigial gravity phase relics---topological defects surviving the
 tetrad-condensation phase transition---are blocked on the
-W6a Monte Carlo extension: $L = 6, 8$ data are insufficient to
-determine the transition order, which sets the Kibble--Zurek relic
-density. Extension to $L = 10, 12, 16$ with Binder cumulants is the
-decisive gate.
+W6a Monte Carlo extension. The Phase~5d ADW MC campaign (artefacts at
+\texttt{data/rhmc/L4*} and the \texttt{L=6, 8} production runs
+summarised in the W6a assessment memo; see the project
+\texttt{docs/dark\_sector/} deliverables index and the
+\texttt{ProductionRun} nodes in the knowledge graph linked from the
+provenance dashboard) produced a three-phase structure with a split
+transition ($\Delta \approx 0.63$). These data are insufficient to
+determine the transition \emph{order} (first vs.\ second), which sets
+the Kibble--Zurek relic density. Extension to $L = 10, 12, 16$ with
+Binder cumulants is the decisive gate. (The specific linkage from
+paper 17's ``MC evidence'' claim to the underlying ProductionRun IDs
+is tracked in the Phase~5v knowledge-graph work and surfaces on the
+ReadinessGate~8 ProductionRunHealth dashboard cell; it is currently
+flagged \texttt{needs-recheck} pending the Wave 10 remediation of
+paper 17.)
 
 Wave~8 nevertheless ships one conditional structural theorem. Under the
 hypothesis \texttt{H\_VestigialRelicCarriesZ16Charge}---that any
@@ -482,10 +531,16 @@ of this candidate.
 \includegraphics[width=\columnwidth]{figures/fig_phase5x_empirical_hook_ranking.png}
 \caption{\label{fig:hook_ranking}
 Phase 5x empirical-hook ranking. Five post-W1b+Drilldown observational
-hooks are ranked by detectability and timeline. The merger sonic boom
-is the top-priority Paper~17 money plot. Direct nuclear recoil is the
-bottom: every candidate in this paper is SM-gauge singlet and below the
-LZ/XENONnT floor. Lean: \texttt{empirical\_hook\_ranking\_strict}.}
+hooks are ranked by detectability and timeline; ordering is
+author-assigned from the deep research (W1b Task 9 for the merger, W7
+Drilldown for fracton core-cusp, W2 for EP-violation STEP, W1b Task 7
+for DESI DR3, W1 for direct recoil). The merger sonic boom is the
+top-priority Paper~17 money plot. Direct nuclear recoil is the bottom:
+every candidate in this paper is SM-gauge singlet and below the
+LZ/XENONnT floor per the per-candidate deep-research bounds
+(Table~\ref{tab:honesty} MCC row). Lean: \texttt{empirical\_hook\_ranking\_strict}
+machine-checks the adjacent-differences of the hand-assigned priorities
+(MCC, not a derivation of priority from a physics score).}
 \end{figure}
 
 Table~\ref{tab:hooks} summarizes the ranked predictions. Top entry
@@ -505,9 +560,15 @@ targets.
 
 \begin{table*}[ht]
 \centering
-\caption{\label{tab:hooks}Ranked empirical hooks from Phase 5x. Order is
-decidable in Lean via \texttt{hook\_priority} and
-\texttt{empirical\_hook\_ranking\_strict}.}
+\caption{\label{tab:hooks}Ranked empirical hooks from Phase 5x. The
+ordering reflects our \emph{author-assigned} priority (top = highest
+near-term detectability + timeline) drawn from the W1b / Drilldown
+deep research. In Lean, \texttt{hook\_priority} encodes these
+hand-assigned priorities as $\mathbb{N}$-valued integers and
+\texttt{empirical\_hook\_ranking\_strict} machine-checks that the
+assignment is strictly decreasing across adjacent entries. This is
+MCC content, not a derivation of detectability from a physics
+scoring function; see Table~\ref{tab:honesty}.}
 \begin{tabular}{@{}clllll@{}}
 \toprule
 \# & Hook & Observable & Instrument / timeline & Wave & Status \\
@@ -531,35 +592,86 @@ decidable in Lean via \texttt{hook\_priority} and
 \section{Formal Verification Summary}
 \label{sec:formal-verification}
 
-The SK-EFT Hawking program has verified every \emph{structural} claim in
-this paper machine-checkably in Lean~4. The Phase 5x contribution
-consists of the following modules; full listing in the Inventory:
+The SK-EFT Hawking program has \emph{machine-checked} every structural
+claim in this paper (Lean~4, zero sorry). We split the machine-checked
+content into two classes:
+
+\textbf{Derived} theorems — proofs consume physics assumptions and
+produce the cited statement as output:
 \begin{itemize}
-\item \texttt{HiddenSectorClassification.lean} (Wave~2): T-0, S-0, C-1
-  enumeration; \texttt{three\_singlets\_satisfy\_hidden\_sector}.
-\item \texttt{HiddenSectorMixedCharge.lean} (Wave~2b-X):
-  \texttt{c1\_wan\_wang\_joint\_constraint}.
-\item \texttt{CosmologicalConstant.lean} (Wave~3):
-  $T_{\rm dS}$ and $\Lambda$-magnitude ratios.
-\item \texttt{FangGuTorsionDM.lean} (Wave~4):
-  \texttt{fg\_cdm\_obstruction} (tree-level).
-\item \texttt{SFDMMergerForecast.lean} (Wave~5): 30 theorems covering
-  sound-speed, Landau criterion, Rankine--Hugoniot, stacking thresholds,
-  velocity-threshold step.
-\item \texttt{FractonDarkMatter.lean} (Wave~7):
-  \texttt{fracton\_sm\_singlet\_from\_ym\_incompat},
-  \texttt{fracton\_cosmo\_dust\_pressureless},
-  \texttt{fracton\_bullet\_sigma\_zero}.
-\item \texttt{DarkSectorSynthesis.lean} (Wave~8): 22 theorems containing
-  seven cross-connections (CC1--CC7), the candidate-viability matrix
-  \texttt{phase5x\_candidates\_viability\_matrix}, the collective
-  invisibility \texttt{emergent\_gravity\_dm\_invisible\_collective},
-  and the empirical-hook ranking \texttt{empirical\_hook\_ranking\_strict}.
+\item \texttt{fracton\_sm\_singlet\_from\_ym\_incompat} (Wave 7, direct
+  corollary of Wave 4's \texttt{no\_fracton\_is\_ym\_compatible}): fracton DM
+  carries no Yang-Mills gauge charge.
+\item \texttt{fg\_cdm\_obstruction} (Wave 4): traceless $T^{\mu\nu}$
+  $\Rightarrow w = 1/3 \neq 0$, obstructing tree-level CDM.
+\item EoS distinctness CC3, CC4, CC4' (Wave 8): $w \in \{-1, 0, 1/3\}$
+  are distinct rationals; \texttt{native\_decide}.
+\item \texttt{three\_singlets\_satisfy\_hidden\_sector},
+  \texttt{c1\_wan\_wang\_joint\_constraint} (Waves 2, 2b-X):
+  $\mathbb{Z}_{16}$ anomaly-cancellation witnesses.
+\item \texttt{all\_canonical\_mergers\_supersonic},
+  \texttt{delta\_rho\_monotone\_in\_mach\_sfdm}, and the merger-forecast
+  chain (Wave 5, \texttt{SFDMMergerForecast.lean}, 31 theorems):
+  Rankine--Hugoniot + sound-speed + stacking derivations at the
+  BK fiducial.
 \end{itemize}
-Totals: Phase 5x adds ~80 theorems across 7 new modules; the full
-program stands at 157 Lean modules, 3569 theorems, zero active
-\texttt{sorry}, and a single axiom (\texttt{gapped\_interface\_axiom}
-from Phase~5s, unrelated to the dark sector).
+
+\textbf{Machine-checked classification (MCC)} --- the proof verifies
+internal consistency of an author-supplied lookup table or enum
+assignment and does not derive the physics content from smaller
+assumptions. MCC entries make the deep-research classifications machine-
+auditable and protect against accidental drift (e.g., someone edits the
+viability flag without updating the downstream narrative), but should
+not be read as ``the physics has been re-derived in Lean'':
+\begin{itemize}
+\item \texttt{fracton\_bullet\_sigma\_zero}: verifies
+  $\sigma_{\rm eff}^{\rm isolated} = 0$ where the constant is \emph{defined}
+  as $0$. Physics content (dipole conservation $\Rightarrow
+  \sigma_{\rm eff} = 0$) is sourced to~\cite{Pretko2017} and remains a
+  Phase~6 derivation target.
+\item \texttt{fracton\_cosmo\_dust\_pressureless}: verifies $w = 0$
+  where $w$ is defined as $0$; physics content sourced to the
+  relativistic fracton-symmetric scalar construction (arXiv:2503.14496).
+\item \texttt{phase5x\_candidates\_viability\_matrix}: verifies
+  hand-assigned \texttt{Bool} flags are consistent with the hand-
+  assigned viability conditions declared in the companion structure
+  docstring.
+\item \texttt{emergent\_gravity\_dm\_invisible\_collective}: verifies
+  $\max\{-999, -50, -50, -90, -999\} \leq -50$ over the five
+  per-candidate hand-assigned log-$\sigma$-DD caps. Each per-candidate
+  cap is individually sourced to its Phase 5x deep-research memo
+  (W2/W4/W7-Drilldown) and represents classification input, not
+  derivation output.
+\item \texttt{torsion\_channels\_distinct\_sources\_distinct} +
+  \texttt{channel\_of\_source}: verifies a hand-assigned injective
+  map \texttt{TorsionSource} $\to$ \texttt{TorsionChannel} is
+  injective. Channel identification (\texttt{DiracAxial} $\mapsto$
+  Antisymmetric; \texttt{FGLoopTheta} $\mapsto$ Trace) is sourced to
+  Boos--Hehl (2019) and Fang--Gu~\cite{FangGu2021} Eq.~(3.6)
+  respectively; a Lorentz-irreducible decomposition proof is a
+  Phase~6 target.
+\item \texttt{empirical\_hook\_ranking\_strict} + \texttt{hook\_priority}:
+  verifies adjacent hand-assigned priorities differ by exactly $1$.
+  Physics content (the priority ordering) is author-assigned from
+  W1b/Drilldown detectability + timeline; a \texttt{detectability}
+  scoring function that outputs the ordering from Euclid/Roman S/N,
+  DESI sensitivity, STEP floor, etc., is a Phase~6 target.
+\item \texttt{cored\_profile\_mechanisms\_distinct} (Wave 8): enum
+  distinctness. Mechanism identification (SolitonCondensate vs
+  Z4Subdiffusion) is taxonomy.
+\end{itemize}
+
+Phase 5x contribution: 7 modules. The full program stands at
+\leanmodules{} Lean modules, \totaltheorems{} theorems (of which
+\substantivetheorems{} substantive and \placeholdertheorems{}
+placeholder statements tracked for Phase~6+; paper~17 claims derive
+from the substantive count), zero active \texttt{sorry}, and a single
+axiom
+(\texttt{gapped\_interface\_axiom} from Phase~5s, unrelated to the
+dark sector). See the project \texttt{docs/counts.tex} macros
+\texttt{\textbackslash{}leanmodules}, \texttt{\textbackslash{}totaltheorems},
+\texttt{\textbackslash{}substantivetheorems}, \texttt{\textbackslash{}placeholdertheorems}
+for canonical counts.
 
 Table~\ref{tab:honesty} separates the \emph{derived} from the
 \emph{heuristic} content.
@@ -604,7 +716,7 @@ Fracton cosmological $w=0$ (dust)
 SFDM merger S/N matches W1b Table~6 & Empirical (calibration) \\
 BK has no quantitative merger forecast & Empirical (literature) \\
 KV oscillating vacuum in Level D tension with DESI & Empirical (W1b) \\
-ADW Volovik $\Lambda$-magnitude at 20\% & Heuristic (W3 memo) \\
+ADW Volovik $\Lambda$-magnitude at the meV scale & Heuristic (W3 memo; $\mathcal{O}(1)$ prefactor Phase 6) \\
 Fracton DM viable in p-wave phase (BBN) & Heuristic (W7 Drilldown) \\
 $\mathbb{Z}_{16}$ forces vestigial relics to carry~$+3$ & Heuristic (Phase~6) \\
 \bottomrule
@@ -655,14 +767,20 @@ First, the hidden-sector classification is a falsifiable constraint
 surface: any future discovery of a non-singlet candidate violating
 $\mathbb{Z}_{16}$ charge $+3$ would invalidate the anomaly-driven
 motivation. No such discovery is indicated by LZ, XENONnT, or
-DARWIN projections---every candidate in our program is precisely
-predicted to be invisible to direct detection.
+DARWIN projections---every candidate in our program is
+expected, on the strength of deep-research per-candidate bounds
+collected in Table~\ref{tab:honesty} (MCC entries), to be invisible to
+nuclear-recoil direct detection. Strengthening these bounds from
+classification-level (MCC) to derivation-level is a Phase~6 target.
 
-Second, the ADW $\Lambda$-magnitude result---20\% agreement with
-observation---is the most quantitative non-tuned CC prediction in
-the emergent-gravity literature. We honestly separate this from the
-withdrawn KV dynamics claim and note the QCD-topological-DE pathway
-as a DESI-compatible alternative.
+Second, the ADW $\Lambda$-magnitude result reproduces the meV scale of
+$\rho_{\rm vac}^{1/4}$ without tuning. We withdraw the prior
+``$20\%$-agreement'' quantification pending a Phase~6 full-$V_{\rm eff}$
+calculation of the $\mathcal{O}(1)$ coefficient; for now the claim is
+scale-matching (``the meV scale emerges naturally from the condensation
+equilibrium, without fine-tuning''). We honestly separate this scale-
+matching from the withdrawn KV dynamics claim and note the
+QCD-topological-DE pathway as a DESI-compatible alternative.
 
 Third, the SFDM cluster-merger forecast is the Paper~17 money plot and
 fills a confirmed gap in the most recent comprehensive BK review.
