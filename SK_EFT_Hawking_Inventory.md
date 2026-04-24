@@ -749,7 +749,14 @@ All roadmaps live in `docs/roadmaps/`. Each phase has its own file; Phase 6 has 
 
 ### Stakeholder Documents
 
-Located in `docs/stakeholder/`. Includes `companion_guide.md` (plain-language overview); per-phase `Phase{N}_Implications.md` + `Phase{N}_Strategic_Positioning.md` pairs for Phases 1–5e and 5i; plus the Phase 5y closure memo `Phase5y_Closure_Summary.md` and four cross-phase impact notes (`Phase5y_Impact_on_5d.md`, `Phase5y_Impact_on_5u.md`, `Phase5y_Impact_on_5w.md`, `Phase5y_Impact_on_5x.md`). Several phases (5f–5h, 5j–5x) do not yet have dedicated stakeholder pairs; content for those phases is carried by the Implications / Strategic Positioning hierarchy of the enclosing super-phase plus the closure and impact memos.
+Located in `docs/stakeholder/`. Plain-language overview: `companion_guide.md`. Per-phase Implications + Strategic Positioning pairs for Phases 1, 2, 3, 4, 5, 5a, 5b, 5c, 5d, 5e, 5i. Phase 5y uses a closure-summary pattern instead: `Phase5y_Closure_Summary.md` plus four cross-phase impact notes (`Phase5y_Impact_on_5d.md`, `Phase5y_Impact_on_5u.md`, `Phase5y_Impact_on_5w.md`, `Phase5y_Impact_on_5x.md`).
+
+Three arc-consolidation pairs cover the phases between 5f and 5x that don't have dedicated per-phase pairs:
+- `Phase5f-5p_LatticeToTQC_Implications.md` + `Phase5f-5p_LatticeToTQC_Strategic_Positioning.md` — TQFT partitions, WRT pipeline, Temperley–Lieb / Jones–Wenzl, generic `QuantumGroup k A` + Kac–Walton, Muger center + FP-dim (Phases 5f, 5k, 5l, 5m, 5p).
+- `Phase5h-5s_ChiralityBordism_Implications.md` + `Phase5h-5s_ChiralityBordism_Strategic_Positioning.md` — chirality-wall 3+1D extension, Fermi-point → emergent gauge, anomaly inflow, Ext over A(1), change-of-rings discharge, FK 2+1D gapped interface, general modularity, instanton counting (Phases 5h, 5j, 5n, 5q, 5r, 5s).
+- `Phase5t-5x_NewChains_Implications.md` + `Phase5t-5x_NewChains_Strategic_Positioning.md` — three new proof chains: Fermi-Hubbard geometric gate, graphene Dirac-fluid platform, dark-sector connections (Phases 5t, 5w, 5x).
+
+Infrastructure/process phases are covered by a single retrospective memo: `Phase5_Infrastructure_Retrospective.md` (Phases 5g matrix-free CG, 5o community-value extraction, 5u paper revision cycle, 5v knowledge-graph foundation).
 
 ### Analysis Documents
 | Document | Location | Topic |

@@ -1,11 +1,15 @@
-<!-- Research Status (Proof-Chain-Viz) Tab — Phase 5v Wave 9d.
-     L0 verdict strip per chain → click to expand to L1 milestone DAG.
-     L1 uses deterministic topo-layered layout (no force sim — figures must be
-     reproducible). L2 is a modal that opens the full chain subgraph in a new
-     tab on the existing Knowledge Graph view, focused on the clicked milestone.
+{#
+  Research Status (Proof-Chain-Viz) — Phase 5v Wave 9d, Datastar port Wave 9h.
+  Reference: docs/references/Datastar_Dashboard_Reference.md
 
-     Design spec: Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard/docs/SUBGRAPH_CONTRACT.md
--->
+  State: $expandedChain (chain_id | '') — at most one chain open at a time.
+  Morph target (patched via SSE from /api/chain/list):
+    #rs-chains-list    — all cards; the expanded card's body contains the
+                         server-rendered SVG milestone DAG (L1).
+    #rs-unclassified   — count chip in the header.
+
+  Design: Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard/docs/SUBGRAPH_CONTRACT.md
+#}
 <style>
     .rs-wrap {
         --rs-bg: #0f1520;
@@ -119,318 +123,19 @@
     .rs-error { color: var(--rs-bad); padding: 12px; }
 </style>
 
-<div class="rs-wrap">
+<div class="rs-wrap"
+     id="rs-root"
+     data-signals="{expandedChain: ''}"
+     data-on-intersect__once="@get('/api/chain/list')">
+
     <div class="rs-header">
         <div class="rs-title">Research Status</div>
         <div class="rs-subtitle">Proof chains auto-discovered from registered chain_ids</div>
         <div class="rs-unclassified" id="rs-unclassified"></div>
     </div>
+
+    {# Morph target — cards list, server-rendered with expansion state. #}
     <div id="rs-chains-list">
         <div class="rs-empty">Loading chains…</div>
     </div>
 </div>
-
-<script>
-(function() {
-    const listEl = document.getElementById('rs-chains-list');
-    const unclassEl = document.getElementById('rs-unclassified');
-
-    // Human-readable titles for known chains. Unknown chain_ids fall back
-    // to the id itself — the taxonomy is dynamic, so the UI shouldn't
-    // require a code change to display a new chain.
-    const CHAIN_TITLES = {
-        'hawking':         'Dissipative Hawking Radiation',
-        'graphene':        'Graphene Dirac Fluid (2+1D)',
-        'generations':     'Generation Constraint + ℤ₁₆ Convergence',
-        'gauge-emergence': 'Gauge Emergence & Drinfeld Center',
-        'chirality-wall':  'Chirality Wall (GS / TPF / GT)',
-        'fracton':         'Fracton Gravity & Hydrodynamics',
-        'vestigial':       'Vestigial Gravity (Dim. Reduction)',
-        'dark-sector':     'Dark Sector (SFDM / fracton-DM / FG / hidden sectors)',
-        'gate-engineering':'Geometric Quantum Gate (Fermi-Hubbard Dimer)',
-    };
-
-    function verdictLabel(v) {
-        return ({
-            'solid':       'Machine-verified',
-            'solid-gaps':  'Structural, known gaps',
-            'mixed':       'Mixed results',
-            'contested':   'Contested gaps',
-            'in-progress': 'Work in progress',
-        }[v] || v);
-    }
-
-    // Small helpers — build DOM via createElement + textContent to satisfy
-    // the dashboard's safe-DOM policy (no innerHTML with untrusted input).
-    function el(tag, attrs, children) {
-        const n = document.createElement(tag);
-        if (attrs) for (const k in attrs) {
-            if (k === 'className') n.className = attrs[k];
-            else if (k === 'style') n.style.cssText = attrs[k];
-            else n.setAttribute(k, attrs[k]);
-        }
-        if (children) for (const c of children) {
-            if (c == null) continue;
-            if (typeof c === 'string') n.appendChild(document.createTextNode(c));
-            else n.appendChild(c);
-        }
-        return n;
-    }
-    function svgEl(tag, attrs) {
-        const n = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        if (attrs) for (const k in attrs) n.setAttribute(k, attrs[k]);
-        return n;
-    }
-
-    // Deterministic topo-layered DAG layout (see SUBGRAPH_CONTRACT.md §5).
-    // Width-aware column spacing; edges rendered as orthogonal polylines
-    // annotated with hop_count when > 1.
-    function layoutDAG(nodes, edges, W, H, margin) {
-        const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
-        const outgoing = {}, incoming = {};
-        nodes.forEach(n => { outgoing[n.id] = []; incoming[n.id] = []; });
-        edges.forEach(e => {
-            if (byId[e.from] && byId[e.to]) {
-                outgoing[e.from].push(e.to);
-                incoming[e.to].push(e.from);
-            }
-        });
-        const layer = {};
-        function visit(id, depth) {
-            if (layer[id] != null && layer[id] >= depth) return;
-            layer[id] = depth;
-            outgoing[id].forEach(s => visit(s, depth + 1));
-        }
-        const sources = nodes.filter(n => incoming[n.id].length === 0);
-        if (sources.length === 0 && nodes.length > 0) {
-            nodes.forEach(n => layer[n.id] = 0);
-        } else {
-            sources.forEach(n => visit(n.id, 0));
-            nodes.forEach(n => { if (layer[n.id] == null) layer[n.id] = 0; });
-        }
-        const maxLayer = Math.max(0, ...Object.values(layer));
-        const byLayer = {};
-        for (let i = 0; i <= maxLayer; i++) byLayer[i] = [];
-        nodes.forEach(n => byLayer[layer[n.id]].push(n));
-        Object.values(byLayer).forEach(ns => ns.sort((a, b) => {
-            const ao = a.milestone_order ?? 99;
-            const bo = b.milestone_order ?? 99;
-            if (ao !== bo) return ao - bo;
-            return (a.label || '').localeCompare(b.label || '');
-        }));
-        const colCount = maxLayer + 1;
-        const colW = (W - margin * 2) / Math.max(colCount, 1);
-        const positions = {};
-        for (let L = 0; L <= maxLayer; L++) {
-            const layerNs = byLayer[L];
-            const rowH = (H - margin * 2) / Math.max(layerNs.length, 1);
-            layerNs.forEach((n, i) => {
-                positions[n.id] = {
-                    x: margin + colW * L + colW / 2,
-                    y: margin + rowH * i + rowH / 2,
-                };
-            });
-        }
-        return positions;
-    }
-
-    function renderMilestoneDAG(container, data) {
-        while (container.firstChild) container.removeChild(container.firstChild);
-        if (!data.nodes || data.nodes.length === 0) {
-            const msg = el('div', { className: 'rs-empty' });
-            msg.appendChild(document.createTextNode('No milestones registered for this chain yet. Add short names to CHAIN_MILESTONES in src/core/constants.py.'));
-            container.appendChild(msg);
-            return;
-        }
-        const W = container.clientWidth || 900;
-        const H = 380;
-        const margin = 50;
-        const svg = svgEl('svg', { class: 'rs-dag-svg', viewBox: `0 0 ${W} ${H}` });
-        const positions = layoutDAG(data.nodes, data.edges, W, H, margin);
-
-        // Edges first (so nodes render on top)
-        data.edges.forEach(e => {
-            const p1 = positions[e.from]; const p2 = positions[e.to];
-            if (!p1 || !p2) return;
-            const midX = (p1.x + p2.x) / 2;
-            const path = svgEl('path', {
-                class: 'rs-dag-edge',
-                d: `M ${p1.x} ${p1.y} Q ${midX} ${p1.y}, ${midX} ${(p1.y + p2.y) / 2} T ${p2.x} ${p2.y}`,
-            });
-            if (e.confidence === 'conjectured') path.setAttribute('stroke-dasharray', '4 3');
-            svg.appendChild(path);
-            if (e.hop_count && e.hop_count > 1) {
-                const label = svgEl('text', {
-                    class: 'rs-dag-edge-hop-label',
-                    x: String(midX),
-                    y: String((p1.y + p2.y) / 2 - 6),
-                });
-                label.textContent = `${e.hop_count}↷`;
-                svg.appendChild(label);
-            }
-        });
-
-        // Nodes
-        data.nodes.forEach(n => {
-            const p = positions[n.id];
-            if (!p) return;
-            const g = svgEl('g', { transform: `translate(${p.x} ${p.y})`, 'data-node-id': n.id });
-            g.style.cursor = 'pointer';
-            const isAxiom = n.node_shape === 'diamond' || n.is_external_axiom;
-            const fill = isAxiom ? '#fde68a' : '#86c9a8';
-            const stroke = isAxiom ? '#b45309' : '#166534';
-            const label = (n.label || (n.id || '').split(':').pop()).slice(0, 22);
-            const labelW = Math.max(label.length * 6.6 + 16, 70);
-            const rect = svgEl('rect', {
-                class: 'rs-dag-node-rect',
-                x: String(-labelW / 2), y: '-14',
-                width: String(labelW), height: '28', rx: '3',
-                fill, stroke, 'fill-opacity': '0.22',
-            });
-            g.appendChild(rect);
-            const text = svgEl('text', { class: 'rs-dag-node-label', y: '4' });
-            text.textContent = label;
-            g.appendChild(text);
-            g.addEventListener('click', () => {
-                window.location.href = `?tab=graph#trace=${encodeURIComponent(n.id)}`;
-            });
-            svg.appendChild(g);
-        });
-
-        container.appendChild(svg);
-    }
-
-    function renderChainCard(chain) {
-        const card = el('div', { className: 'rs-chain-card' });
-        card.dataset.chainId = chain.chain_id;
-
-        const dot = el('span', { className: 'rs-verdict-dot' });
-
-        const name = el('div', { className: 'rs-chain-name' });
-        name.textContent = CHAIN_TITLES[chain.chain_id] || chain.chain_id;
-
-        const stats = el('div', { className: 'rs-chain-stats' });
-        const statNodesSpan = el('span');
-        const valNodes = el('span', { className: 'val' });
-        valNodes.textContent = String(chain.node_count);
-        statNodesSpan.appendChild(valNodes);
-        statNodesSpan.appendChild(document.createTextNode(' nodes'));
-        const loadingSpan = el('span', { style: 'opacity:0.6' });
-        loadingSpan.textContent = 'loading…';
-        stats.appendChild(statNodesSpan);
-        stats.appendChild(loadingSpan);
-
-        const verdictBadge = el('span', { className: 'rs-chain-verdict' });
-        verdictBadge.textContent = '—';
-
-        const expand = el('span', { className: 'rs-chain-expand' });
-        expand.textContent = '›';
-
-        const strip = el('div', { className: 'rs-chain-strip' }, [dot, name, stats, verdictBadge, expand]);
-        card.appendChild(strip);
-
-        const body = el('div', { className: 'rs-chain-body' });
-        const placeholder = el('div', { className: 'rs-empty' });
-        placeholder.textContent = 'Click to load milestone DAG…';
-        body.appendChild(placeholder);
-        card.appendChild(body);
-
-        let bodyLoaded = false;
-
-        strip.addEventListener('click', async () => {
-            const expanded = strip.classList.toggle('expanded');
-            body.classList.toggle('expanded', expanded);
-            if (!expanded || bodyLoaded) return;
-            while (body.firstChild) body.removeChild(body.firstChild);
-            const loading = el('div', { className: 'rs-empty' });
-            loading.textContent = 'Loading…';
-            body.appendChild(loading);
-            try {
-                const resp = await fetch(`/api/chain/${encodeURIComponent(chain.chain_id)}/milestones`);
-                const data = await resp.json();
-                while (body.firstChild) body.removeChild(body.firstChild);
-                const dagHost = el('div');
-                body.appendChild(dagHost);
-                renderMilestoneDAG(dagHost, data);
-                const actions = el('div', { className: 'rs-chain-actions' });
-                const openGraphBtn = el('button');
-                openGraphBtn.textContent = 'Open full subgraph (L2) →';
-                openGraphBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    window.open(`?tab=graph#chain=${encodeURIComponent(chain.chain_id)}`, '_self');
-                };
-                actions.appendChild(openGraphBtn);
-                body.appendChild(actions);
-                bodyLoaded = true;
-            } catch (err) {
-                while (body.firstChild) body.removeChild(body.firstChild);
-                const errDiv = el('div', { className: 'rs-error' });
-                errDiv.textContent = `Failed to load milestones: ${err.message}`;
-                body.appendChild(errDiv);
-            }
-        });
-
-        fetch(`/api/chain/${encodeURIComponent(chain.chain_id)}/summary`)
-            .then(r => r.json())
-            .then(data => {
-                dot.classList.add(data.verdict || 'mixed');
-                verdictBadge.textContent = verdictLabel(data.verdict);
-                const c = data.counts || {};
-                const thm = c.theorems || {};
-                const ax = c.axioms || {};
-                while (stats.firstChild) stats.removeChild(stats.firstChild);
-                const mkStat = (valText, label) => {
-                    const span = el('span');
-                    const v = el('span', { className: 'val' });
-                    v.textContent = valText;
-                    span.appendChild(v);
-                    span.appendChild(document.createTextNode(' ' + label));
-                    return span;
-                };
-                const thmSpan = el('span');
-                const tv = el('span', { className: 'val' });
-                tv.textContent = String(thm.verified || 0);
-                const tt = el('span', { className: 'val' });
-                tt.textContent = String(thm.total || 0);
-                thmSpan.appendChild(tv);
-                thmSpan.appendChild(document.createTextNode('/'));
-                thmSpan.appendChild(tt);
-                thmSpan.appendChild(document.createTextNode(' thms'));
-                stats.appendChild(thmSpan);
-                stats.appendChild(mkStat(String(ax.total || 0), 'ax'));
-                stats.appendChild(mkStat(String(c.milestones || 0), 'milestones'));
-            })
-            .catch(() => {
-                while (stats.firstChild) stats.removeChild(stats.firstChild);
-                const err = el('span', { style: 'color:var(--rs-bad)' });
-                err.textContent = 'summary fetch failed';
-                stats.appendChild(err);
-            });
-
-        return card;
-    }
-
-    fetch('/api/chain/list')
-        .then(r => r.json())
-        .then(data => {
-            const chains = data.chains || [];
-            while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
-            if (chains.length === 0) {
-                const empty = el('div', { className: 'rs-empty' });
-                empty.textContent = 'No chains discovered yet. Add entries to MODULE_CHAIN_MAP in src/core/constants.py to register chains.';
-                listEl.appendChild(empty);
-                return;
-            }
-            chains.forEach(c => listEl.appendChild(renderChainCard(c)));
-            if (data.unclassified_lean_nodes) {
-                unclassEl.textContent = `${data.unclassified_lean_nodes} Lean decls unclassified`;
-            }
-        })
-        .catch(err => {
-            while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
-            const errDiv = el('div', { className: 'rs-error' });
-            errDiv.textContent = `Failed to load chains: ${err.message}`;
-            listEl.appendChild(errDiv);
-        });
-})();
-</script>

@@ -1996,6 +1996,7 @@ version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "aristotlelib" },
+    { name = "datastar-py" },
     { name = "flask" },
     { name = "ipykernel" },
     { name = "ipywidgets" },
@@ -2020,9 +2021,6 @@ fermion-bag = [
 gpu = [
     { name = "torch" },
 ]
-graph = [
-    { name = "datastar-py" },
-]
 jax-cpu = [
     { name = "jax" },
 ]
@@ -2040,7 +2038,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aristotlelib", specifier = ">=1.0.0" },
-    { name = "datastar-py", marker = "extra == 'graph'", specifier = ">=0.5" },
+    { name = "datastar-py", specifier = ">=0.5" },
     { name = "flask", specifier = ">=3.0" },
     { name = "ipykernel", specifier = ">=6.29" },
     { name = "ipywidgets", specifier = ">=8.1" },
@@ -2063,7 +2061,7 @@ requires-dist = [
     { name = "torch", marker = "extra == 'gpu'", specifier = ">=2.11" },
     { name = "torch", marker = "extra == 'mc-all'", specifier = ">=2.11" },
 ]
-provides-extras = ["fermion-bag", "jax-cpu", "gpu", "rust", "mc-all", "graph"]
+provides-extras = ["fermion-bag", "jax-cpu", "gpu", "rust", "mc-all"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "maturin", specifier = ">=1.12.6" }]

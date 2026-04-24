@@ -310,7 +310,23 @@
     .kg-node.pinned .kg-pin-indicator { opacity: 0.85; }
 </style>
 
-<div class="kg-wrap" id="kg-wrap">
+{# Phase 5v Wave 9h — Datastar integration strategy for graph_tab.
+
+   The D3 force-directed simulation owns too much imperative state (zoom/pan,
+   drag, fixed-node positions, force parameters) to let Datastar own the SVG
+   canvas. The compromise per the roadmap: wrap the topbar + filter state in
+   Datastar signals so cross-tab navigation + URL deep-links work coherently,
+   but the D3 code keeps direct control of selects/pills for its own updates.
+   A declared $kgMode / $kgLayout signal lets other tabs set state
+   programmatically (e.g., "open subgraph for paper12" from the readiness tab)
+   without synthetic click events.
+
+   The selects + buttons carry existing onclick / onchange handlers — those
+   still drive D3. data-on:click here only PATCHES SIGNALS so the state is
+   observable and shareable across tabs. Keep both until the D3 code is
+   refactored to be signal-driven (future wave, not blocking). #}
+<div class="kg-wrap" id="kg-wrap"
+     data-signals="{kgMode: 'explore', kgLayout: 'force', kgActivePaper: '', kgSearch: ''}">
     <div class="kg-topbar" id="kg-topbar">
         <!-- Row 1: primary controls. Always visible, never wraps upward. -->
         <div class="kg-topbar-row primary">

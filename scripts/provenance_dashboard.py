@@ -30,9 +30,41 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(SCRIPT_DIR))
 
+# Datastar SDK glue (Phase 5v Wave 9h). See docs/references/Datastar_Dashboard_Reference.md
+from datastar_helpers import SSE, is_datastar_request, read_signals, sse_response, esc
+
 app = Flask(__name__, template_folder=str(Path(__file__).parent / "templates"))
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
+
+# Expose shared constants to Jinja templates (GATE_DEFS is defined below
+# the routes; wire it at registration time via a context_processor so the
+# forward reference resolves cleanly).
+@app.context_processor
+def _inject_readiness_constants():
+    return {"GATE_DEFS": GATE_DEFS, "PP_PAPERS_LIST": _pp_list_papers}
+
+
+def _pp_list_papers() -> list[dict]:
+    """Walk papers/paper*_*/ and return the list the provenance dropdown
+    needs. Called from Jinja via PP_PAPERS_LIST() — inlined at render time
+    so the tab needs no separate /api/papers/list round-trip."""
+    papers_dir = PROJECT_ROOT / 'papers'
+    out: list[dict] = []
+    if not papers_dir.exists():
+        return out
+    for paper_dir in sorted(papers_dir.iterdir()):
+        tex = paper_dir / 'paper_draft.tex'
+        if not tex.exists():
+            continue
+        paper_id = paper_dir.name
+        cr = _pp_load_claims_review(paper_id)
+        out.append({
+            'paper_id': paper_id,
+            'has_claims_review': cr is not None,
+            'overall_status': cr.get('overall_status') if cr else None,
+        })
+    return out
 
 logger = logging.getLogger(__name__)
 
@@ -1488,19 +1520,35 @@ def _chain_nodes(graph: dict, chain_id: str) -> list[dict]:
             if chain_id in (n.get('meta', {}).get('chain_ids') or [])]
 
 
-@app.route("/api/chain/list")
-def api_chain_list():
-    """Return the set of chain_ids present in the current graph, with
-    per-chain node counts and a rough verdict (from summary counts)."""
-    graph = get_cached_graph()
+CHAIN_TITLES = {
+    'hawking':          'Dissipative Hawking Radiation',
+    'graphene':         'Graphene Dirac Fluid (2+1D)',
+    'generations':      'Generation Constraint + ℤ₁₆ Convergence',
+    'gauge-emergence':  'Gauge Emergence & Drinfeld Center',
+    'chirality-wall':   'Chirality Wall (GS / TPF / GT)',
+    'fracton':          'Fracton Gravity & Hydrodynamics',
+    'vestigial':        'Vestigial Gravity (Dim. Reduction)',
+    'dark-sector':      'Dark Sector (SFDM / fracton-DM / FG / hidden sectors)',
+    'gate-engineering': 'Geometric Quantum Gate (Fermi-Hubbard Dimer)',
+}
+CHAIN_VERDICT_LABELS = {
+    'solid': 'Machine-verified',
+    'solid-gaps': 'Structural, known gaps',
+    'mixed': 'Mixed results',
+    'contested': 'Contested gaps',
+    'in-progress': 'Work in progress',
+}
+
+
+def _chain_list_build() -> dict:
+    """Compute chain list + per-chain summary once so all renderers share it."""
     from collections import Counter
+    graph = get_cached_graph()
     chain_counter: Counter = Counter()
     unclassified = 0
     for n in graph['nodes']:
         ids = n.get('meta', {}).get('chain_ids')
         if not ids:
-            # Only count Lean nodes as unclassified (Paper / Formula etc.
-            # may legitimately lack a chain tag).
             if n['type'] in (
                 'LeanTheorem', 'LeanAxiom', 'LeanDef',
                 'LeanStructure', 'LeanInductive', 'LeanInstance',
@@ -1509,17 +1557,213 @@ def api_chain_list():
             continue
         for cid in ids:
             chain_counter[cid] += 1
-    chains = [
-        {
-            'chain_id': cid,
-            'node_count': count,
-        }
-        for cid, count in sorted(chain_counter.items(), key=lambda x: -x[1])
+    chains = []
+    for cid, count in sorted(chain_counter.items(), key=lambda x: -x[1]):
+        chain_ns = _chain_nodes(graph, cid)
+        thm_total = sum(1 for n in chain_ns if n['type'] == 'LeanTheorem')
+        thm_verified = sum(1 for n in chain_ns if n['type'] == 'LeanTheorem'
+                           and n.get('verification') == 'verified')
+        ax_total = sum(1 for n in chain_ns if n['type'] == 'LeanAxiom')
+        ms_count = sum(1 for n in chain_ns if n.get('meta', {}).get('is_milestone'))
+        placeholders = sum(
+            1 for n in chain_ns
+            if n.get('meta', {}).get('method') == 'manual'
+            and any(t in (n.get('label', '').lower()) for t in ('placeholder', 'stub'))
+        )
+        if thm_verified == thm_total and placeholders == 0:
+            verdict = 'solid'
+        elif placeholders:
+            verdict = 'solid-gaps'
+        else:
+            verdict = 'mixed'
+        chains.append({
+            'chain_id': cid, 'node_count': count, 'verdict': verdict,
+            'thm_total': thm_total, 'thm_verified': thm_verified,
+            'ax_total': ax_total, 'ms_count': ms_count,
+        })
+    return {'chains': chains, 'unclassified_lean_nodes': unclassified,
+            'built_at': _GRAPH_CACHE['built_at']}
+
+
+def _chain_milestone_svg(chain_id: str, W: int = 900, H: int = 380,
+                         margin: int = 50) -> str:
+    """Server-side port of layoutDAG + SVG render from the old chains_tab JS.
+    Produces a deterministic topo-layered milestone DAG — no D3, no client
+    geometry. Edges are smooth quadratic curves; hop_count > 1 emits an
+    inline label. Node click still bubbles up to the document for deep-link
+    navigation."""
+    data = _chain_milestones_data(chain_id) or {}
+    nodes = data.get('nodes', [])
+    edges = data.get('edges', [])
+    if not nodes:
+        return ('<div class="rs-empty">No milestones registered for this chain yet. '
+                'Add short names to CHAIN_MILESTONES in src/core/constants.py.</div>')
+
+    # --- Topo-layered layout, ported from scripts/templates/partials/chains_tab.html::layoutDAG
+    outgoing: dict[str, list[str]] = {n['id']: [] for n in nodes}
+    incoming: dict[str, list[str]] = {n['id']: [] for n in nodes}
+    by_id = {n['id']: n for n in nodes}
+    for e in edges:
+        if e['from'] in by_id and e['to'] in by_id:
+            outgoing[e['from']].append(e['to'])
+            incoming[e['to']].append(e['from'])
+    layer: dict[str, int] = {}
+
+    def visit(nid: str, depth: int) -> None:
+        if nid in layer and layer[nid] >= depth:
+            return
+        layer[nid] = depth
+        for s in outgoing[nid]:
+            visit(s, depth + 1)
+
+    sources = [n for n in nodes if not incoming[n['id']]]
+    if not sources:
+        for n in nodes:
+            layer[n['id']] = 0
+    else:
+        for s in sources:
+            visit(s['id'], 0)
+        for n in nodes:
+            layer.setdefault(n['id'], 0)
+    max_layer = max(layer.values()) if layer else 0
+    by_layer: dict[int, list[dict]] = {i: [] for i in range(max_layer + 1)}
+    for n in nodes:
+        by_layer[layer[n['id']]].append(n)
+    for ln in by_layer.values():
+        ln.sort(key=lambda n: (
+            n.get('milestone_order') if n.get('milestone_order') is not None else 99,
+            n.get('label', ''),
+        ))
+
+    col_count = max_layer + 1
+    col_w = (W - margin * 2) / max(col_count, 1)
+    positions: dict[str, tuple[float, float]] = {}
+    for L in range(max_layer + 1):
+        layer_ns = by_layer[L]
+        row_h = (H - margin * 2) / max(len(layer_ns), 1)
+        for i, n in enumerate(layer_ns):
+            positions[n['id']] = (
+                margin + col_w * L + col_w / 2,
+                margin + row_h * i + row_h / 2,
+            )
+
+    # --- SVG rendering (edges first so nodes layer on top)
+    svg_parts = [f'<svg class="rs-dag-svg" viewBox="0 0 {W} {H}">']
+    for e in edges:
+        if e['from'] not in positions or e['to'] not in positions:
+            continue
+        p1x, p1y = positions[e['from']]
+        p2x, p2y = positions[e['to']]
+        mid_x = (p1x + p2x) / 2
+        mid_y = (p1y + p2y) / 2
+        d = f'M {p1x} {p1y} Q {mid_x} {p1y}, {mid_x} {mid_y} T {p2x} {p2y}'
+        dash = ' stroke-dasharray="4 3"' if e.get('confidence') == 'conjectured' else ''
+        svg_parts.append(f'<path class="rs-dag-edge" d="{d}"{dash}/>')
+        if (e.get('hop_count') or 0) > 1:
+            svg_parts.append(
+                f'<text class="rs-dag-edge-hop-label" x="{mid_x}" y="{mid_y - 6}">'
+                f'{e["hop_count"]}↷</text>'
+            )
+    for n in nodes:
+        if n['id'] not in positions:
+            continue
+        px, py = positions[n['id']]
+        is_axiom = n.get('node_shape') == 'diamond' or n.get('is_external_axiom')
+        fill = '#fde68a' if is_axiom else '#86c9a8'
+        stroke = '#b45309' if is_axiom else '#166534'
+        label = (n.get('label') or n['id'].split(':')[-1])[:22]
+        label_w = max(len(label) * 6.6 + 16, 70)
+        # Click navigates to graph tab traced at this node.
+        nav = f"window.location.href='?tab=graph#trace=' + encodeURIComponent('{esc(n['id'])}')"
+        svg_parts.append(
+            f'<g transform="translate({px} {py})" style="cursor:pointer" '
+            f'data-on:click="{esc(nav)}" data-node-id="{esc(n["id"])}">'
+            f'<rect class="rs-dag-node-rect" x="{-label_w/2}" y="-14" '
+            f'width="{label_w}" height="28" rx="3" fill="{fill}" stroke="{stroke}" '
+            f'fill-opacity="0.22"/>'
+            f'<text class="rs-dag-node-label" y="4">{esc(label)}</text>'
+            f'</g>'
+        )
+    svg_parts.append('</svg>')
+    return ''.join(svg_parts)
+
+
+def _chain_card_html(entry: dict, expanded_chain: str) -> str:
+    cid = entry['chain_id']
+    expanded = (expanded_chain == cid)
+    title = CHAIN_TITLES.get(cid, cid)
+    verdict = entry.get('verdict', 'mixed')
+    verdict_label = CHAIN_VERDICT_LABELS.get(verdict, verdict)
+    toggle_expr = f"$expandedChain = $expandedChain === '{esc(cid)}' ? '' : '{esc(cid)}'; @get('/api/chain/list')"
+
+    strip = (
+        f'<div class="rs-chain-strip{" expanded" if expanded else ""}" '
+        f'data-on:click="{esc(toggle_expr)}">'
+        f'<span class="rs-verdict-dot {esc(verdict)}"></span>'
+        f'<div class="rs-chain-name">{esc(title)}</div>'
+        f'<div class="rs-chain-stats">'
+        f'<span><span class="val">{entry["thm_verified"]}</span>/'
+        f'<span class="val">{entry["thm_total"]}</span> thms</span>'
+        f'<span><span class="val">{entry["ax_total"]}</span> ax</span>'
+        f'<span><span class="val">{entry["ms_count"]}</span> milestones</span>'
+        f'</div>'
+        f'<span class="rs-chain-verdict">{esc(verdict_label)}</span>'
+        f'<span class="rs-chain-expand">›</span>'
+        f'</div>'
+    )
+    body_inner = _chain_milestone_svg(cid) if expanded else ''
+    # When expanded, also show a link to the full L2 subgraph.
+    body_actions = ''
+    if expanded:
+        l2_nav = f"window.open('?tab=graph#chain=' + encodeURIComponent('{esc(cid)}'),'_self')"
+        body_actions = (
+            '<div class="rs-chain-actions">'
+            f'<button data-on:click="{esc(l2_nav)}">Open full subgraph (L2) →</button>'
+            '</div>'
+        )
+    body = (
+        f'<div class="rs-chain-body{" expanded" if expanded else ""}">'
+        + body_inner + body_actions +
+        '</div>'
+    )
+    return f'<div class="rs-chain-card" data-chain-id="{esc(cid)}">{strip}{body}</div>'
+
+
+def _chain_list_sse_events(data: dict, signals: dict):
+    expanded = signals.get('expandedChain') or ''
+    chains = data.get('chains', [])
+    if not chains:
+        html_body = ('<div class="rs-empty">No chains discovered yet. '
+                     'Add entries to MODULE_CHAIN_MAP in src/core/constants.py '
+                     'to register chains.</div>')
+    else:
+        html_body = ''.join(_chain_card_html(c, expanded) for c in chains)
+    yield SSE.patch_elements(f'<div id="rs-chains-list">{html_body}</div>')
+    unclass = data.get('unclassified_lean_nodes', 0)
+    unclass_html = (f'{unclass} Lean decls unclassified' if unclass else '')
+    yield SSE.patch_elements(f'<div class="rs-unclassified" id="rs-unclassified">{esc(unclass_html)}</div>')
+
+
+@app.route("/api/chain/list")
+def api_chain_list():
+    """Chain taxonomy + per-chain summary (Wave 9d; Datastar port Wave 9h).
+
+    JSON shape unchanged for backward compat (omits verdict/counts only in
+    the JSON path to keep callers stable; SSE path computes them inline).
+    """
+    data = _chain_list_build()
+    if is_datastar_request():
+        signals = read_signals()
+        return sse_response(lambda: _chain_list_sse_events(data, signals))
+    # Legacy JSON shape — kept identical to the Wave 9d contract.
+    chains_legacy = [
+        {'chain_id': c['chain_id'], 'node_count': c['node_count']}
+        for c in data['chains']
     ]
     return jsonify({
-        'chains': chains,
-        'unclassified_lean_nodes': unclassified,
-        'built_at': _GRAPH_CACHE['built_at'],
+        'chains': chains_legacy,
+        'unclassified_lean_nodes': data['unclassified_lean_nodes'],
+        'built_at': data['built_at'],
     })
 
 
@@ -1570,17 +1814,14 @@ def api_chain_summary(chain_id: str):
     })
 
 
-@app.route("/api/chain/<chain_id>/milestones")
-def api_chain_milestones(chain_id: str):
-    """L1 — milestone DAG: 6–12 pillar nodes + proved-edges between them.
-
-    Edges between milestones are computed as graph reachability through
-    non-milestone intermediates (hop_count = shortest path length).
-    """
+def _chain_milestones_data(chain_id: str) -> dict | None:
+    """Compute milestone nodes + edges for a chain. Extracted so both the
+    JSON endpoint and the SSE SVG renderer consume the same shape without
+    re-entering the Flask request context."""
     graph = get_cached_graph()
     chain_ns = _chain_nodes(graph, chain_id)
     if not chain_ns:
-        return jsonify({'error': f'Unknown chain: {chain_id}'}), 404
+        return None
 
     milestones = [n for n in chain_ns if n.get('meta', {}).get('is_milestone')]
     milestone_ids = {n['id'] for n in milestones}
@@ -1645,12 +1886,22 @@ def api_chain_milestones(chain_id: str):
         n['label']
     ))
 
-    return jsonify({
+    return {
         'chain_id': chain_id,
         'nodes': nodes_out,
         'edges': edges,
         'built_at': _GRAPH_CACHE['built_at'],
-    })
+    }
+
+
+@app.route("/api/chain/<chain_id>/milestones")
+def api_chain_milestones(chain_id: str):
+    """L1 — milestone DAG data. Returned as JSON; SSE consumers use
+    _chain_milestones_data directly to avoid re-entering the request path."""
+    data = _chain_milestones_data(chain_id)
+    if data is None:
+        return jsonify({'error': f'Unknown chain: {chain_id}'}), 404
+    return jsonify(data)
 
 
 @app.route("/api/chain/<chain_id>/subgraph")
@@ -1869,38 +2120,19 @@ def api_papers_list():
     return jsonify({'papers': out})
 
 
-@app.route("/api/papers/<paper_id>/provenance")
-def api_paper_provenance(paper_id: str):
-    """Aggregate per-claim 8-layer verdict for a paper.
-
-    Returns the shape the v2 design's `paper-review.js` consumes:
-    ``{paper_id, review_date, overall, counts, blocking, nonBlocking,
-       layers: [...], claims: {claim_id: {quote, location, findings: [...]}}, ...}``.
-
-    Data sources:
-    - `papers/<paper>/claims_review.json` — 8-layer findings (generated
-      by the physics-qa:claims-reviewer agent)
-    - `papers/<paper>/figures/figure_review_report.json` — FIG layer
-      (generated by physics-qa:figure-reviewer)
-    - `PAPER_DEPENDENCIES[paper]` — declared formulas/modules/key_claims
-    - `PARAMETER_PROVENANCE` — tier + verification dates
-    - `CITATION_REGISTRY` — bibkey resolution
-    - Live `lean_deps.json` via the cached graph — axiom/theorem status
-
-    404 if paper_draft.tex doesn't exist. 200 with best-effort data if
-    claims_review.json is missing (falls back to synthesising from live
-    registries + graph state so the tab still works on newer papers).
-    """
+def _pp_build_data(paper_id: str) -> dict | None:
+    """Extract of the original api_paper_provenance body so both JSON and
+    SSE consumers share the same computation. Returns None if the paper
+    dir is missing (caller emits the appropriate 404 or error event)."""
     papers_dir = PROJECT_ROOT / 'papers'
     paper_dir = papers_dir / paper_id
     tex = paper_dir / 'paper_draft.tex'
     if not tex.exists():
-        return jsonify({'error': f'Unknown paper: {paper_id}'}), 404
+        return None
 
     cr = _pp_load_claims_review(paper_id)
     fr = _pp_load_figure_review(paper_id)
 
-    # Counts + top-level status
     counts = {'pass': 0, 'warn': 0, 'fail': 0, 'info': 0}
     claims_out: dict[str, dict] = {}
     blocking: list[str] = []
@@ -1933,7 +2165,6 @@ def api_paper_provenance(paper_id: str):
                 if st in counts:
                     counts[st] += 1
 
-    # FIG layer: pull figure_review_report.json
     if fr:
         figs = fr.get('figures') or []
         for fidx, f in enumerate(figs):
@@ -1964,17 +2195,28 @@ def api_paper_provenance(paper_id: str):
             if st in counts:
                 counts[st] += 1
 
-    # Fallback title from paper_draft.tex if claims_review missing
     title = ''
     try:
         tex_src = tex.read_text(errors='replace')
-        m = re.search(r'\\title\{([^}]+)\}', tex_src)
+        # Balanced-brace extractor — `[^}]+` regex breaks on nested
+        # `{...}` like `\pmod{3}` inside the title.
+        m = re.search(r'\\title\s*\{', tex_src)
         if m:
-            title = m.group(1).replace('\\\\', ' ').strip()[:200]
+            depth = 1
+            i = m.end()
+            while i < len(tex_src) and depth > 0:
+                if tex_src[i] == '{':
+                    depth += 1
+                elif tex_src[i] == '}':
+                    depth -= 1
+                    if depth == 0:
+                        break
+                i += 1
+            title = tex_src[m.end():i].replace('\\\\', ' ').strip()[:300]
     except Exception:
         pass
 
-    return jsonify({
+    return {
         'paper_id': paper_id,
         'title': title,
         'review_date': review_date,
@@ -1991,47 +2233,1015 @@ def api_paper_provenance(paper_id: str):
         'has_claims_review': cr is not None,
         'has_figure_review': fr is not None,
         'total_claims': len(claims_out),
-    })
+    }
+
+
+# Worst-status ordering for `worstStatus(claim)` — matches the original JS.
+_PP_STATUS_ORDER = {'FAIL': 4, 'WARN': 3, 'INFO': 2, 'PASS': 1}
+
+
+def _pp_worst_status(claim: dict) -> str:
+    best = 'PASS'
+    best_n = 0
+    for f in claim.get('findings', []):
+        n = _PP_STATUS_ORDER.get(f.get('status', 'INFO'), 0)
+        if n > best_n:
+            best_n = n
+            best = f['status']
+    return best
+
+
+def _pp_filtered_claims(data: dict, filter_layers: list[str]) -> list[tuple[str, dict]]:
+    """Return (claim_id, claim) pairs visible under the current layer filter."""
+    filt = set(filter_layers or [])
+    pairs = []
+    for cid, claim in (data.get('claims') or {}).items():
+        if not filt:
+            pairs.append((cid, claim))
+            continue
+        if any(f.get('layer') in filt for f in claim.get('findings', [])):
+            pairs.append((cid, claim))
+    # Sort: by layer-of-first-finding, then by worst-status, then by cid
+    # Matches the original paper-provenance.js ordering.
+    return sorted(pairs, key=lambda kv: (
+        kv[1]['findings'][0].get('layer', 'ZZZ') if kv[1].get('findings') else 'ZZZ',
+        -_PP_STATUS_ORDER.get(_pp_worst_status(kv[1]), 0),
+        kv[0],
+    ))
+
+
+# ── LaTeX → HTML renderer for abstract bodies (Wave 9h final pass) ──
+#
+# Full pandoc pipeline is Wave 9g-2 (paper.tex → claim-anchored HTML via a
+# `\claim{}` macro). Meanwhile, we render a best-effort HTML view of the
+# abstract using a minimal LaTeX subset: enough physics commands for
+# paper-grade math inlines (Greek letters, sub/superscripts, ≈, ×, ∈, …).
+# Anything we don't understand passes through unchanged rather than
+# 500-ing.
+
+_LATEX_SYMBOLS = {
+    r'\alpha': 'α', r'\beta': 'β', r'\gamma': 'γ', r'\delta': 'δ',
+    r'\epsilon': 'ε', r'\varepsilon': 'ε', r'\zeta': 'ζ', r'\eta': 'η',
+    r'\theta': 'θ', r'\vartheta': 'ϑ', r'\iota': 'ι', r'\kappa': 'κ',
+    r'\lambda': 'λ', r'\mu': 'μ', r'\nu': 'ν', r'\xi': 'ξ', r'\pi': 'π',
+    r'\rho': 'ρ', r'\sigma': 'σ', r'\tau': 'τ', r'\upsilon': 'υ',
+    r'\phi': 'φ', r'\varphi': 'φ', r'\chi': 'χ', r'\psi': 'ψ', r'\omega': 'ω',
+    r'\Gamma': 'Γ', r'\Delta': 'Δ', r'\Theta': 'Θ', r'\Lambda': 'Λ',
+    r'\Xi': 'Ξ', r'\Pi': 'Π', r'\Sigma': 'Σ', r'\Phi': 'Φ', r'\Psi': 'Ψ',
+    r'\Omega': 'Ω',
+    r'\approx': '≈', r'\pm': '±', r'\mp': '∓', r'\sim': '∼',
+    r'\times': '×', r'\cdot': '·', r'\in': '∈', r'\notin': '∉',
+    r'\subset': '⊂', r'\subseteq': '⊆', r'\supset': '⊃',
+    r'\leq': '≤', r'\geq': '≥', r'\ne': '≠', r'\neq': '≠',
+    r'\ll': '≪', r'\gg': '≫', r'\to': '→', r'\rightarrow': '→',
+    r'\leftarrow': '←', r'\Leftarrow': '⇐', r'\Rightarrow': '⇒',
+    r'\mapsto': '↦', r'\infty': '∞', r'\partial': '∂', r'\nabla': '∇',
+    r'\int': '∫', r'\sum': '∑', r'\prod': '∏', r'\hbar': 'ℏ',
+    r'\ell': 'ℓ', r'\langle': '⟨', r'\rangle': '⟩', r'\cup': '∪',
+    r'\cap': '∩', r'\ldots': '…', r'\dots': '…', r'\cdots': '⋯',
+}
+
+_SUP_MAP = str.maketrans('0123456789+-=()', '⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾')
+_SUB_MAP = str.maketrans('0123456789+-=()aeioruvxhklmnpst',
+                          '₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑᵢₒᵣᵤᵥₓₕₖₗₘₙₚₛₜ')
+
+
+def _unicode_script(s: str, which: str) -> str | None:
+    """Try to convert an entire substring to Unicode sub/superscript;
+    return None if any char has no mapping (caller will use HTML <sub>/<sup>)."""
+    table = _SUP_MAP if which == 'sup' else _SUB_MAP
+    out = s.translate(table)
+    # If every char was translated the length is same and no untranslated
+    # alphabetic chars remain.
+    if all(c in table.values() or c in (' ',) for c in out):
+        return out
+    return None
+
+
+# Math-mode named operators (LaTeX renders these upright + small spaces).
+# Inline math doesn't carry full typography, so we just emit the name.
+_MATH_OPERATORS = {
+    r'\ln': 'ln', r'\log': 'log', r'\exp': 'exp',
+    r'\sin': 'sin', r'\cos': 'cos', r'\tan': 'tan',
+    r'\arcsin': 'arcsin', r'\arccos': 'arccos', r'\arctan': 'arctan',
+    r'\sinh': 'sinh', r'\cosh': 'cosh', r'\tanh': 'tanh',
+    r'\det': 'det', r'\dim': 'dim', r'\ker': 'ker',
+    r'\inf': 'inf', r'\sup': 'sup', r'\max': 'max', r'\min': 'min',
+    r'\arg': 'arg', r'\Re': 'Re', r'\Im': 'Im', r'\mod': 'mod',
+}
+
+
+def _render_math_inline(expr: str) -> str:
+    """Render a single `$...$` block to HTML. Conservative subset.
+
+    Order of operations matters:
+      1. Symbol commands (`\\mu`, `\\pi`, …) FIRST with word-boundary
+         regex so `\\pm` doesn't eat the start of `\\pmod`. Doing
+         symbols before `\\text{...}` collapse is critical: `\\mu\\text{m}`
+         must NOT first become `\\mum` (which then can't match `\\mu`
+         because `m` is a letter). Symbol-first preserves the boundary
+         since `\\mu` is followed by `\\` (not a letter).
+      2. Special argument-taking commands (`\\frac`, `\\sqrt`, `\\pmod`).
+      3. Named operators (`\\ln`, `\\sin`, `\\equiv`, …).
+      4. Text-mode collapse (`\\text{...}`, `\\mathrm{...}`).
+      5. Backslash escapes (`\\_`, `\\&`, …).
+      6. Sub/superscripts.
+    """
+    s = expr
+    # Step 1: Greek + operator symbols with word boundary.
+    for k in sorted(_LATEX_SYMBOLS, key=len, reverse=True):
+        s = re.sub(re.escape(k) + r'(?![a-zA-Z])', _LATEX_SYMBOLS[k], s)
+
+    # Step 2: Argument-taking special forms.
+    # \frac{a}{b} → a/b (flat horizontal form fine for inline)
+    s = re.sub(r'\\frac\{([^{}]*)\}\{([^{}]*)\}', r'\1/\2', s)
+    # \sqrt{x} → √x
+    s = re.sub(r'\\sqrt\{([^{}]*)\}', r'√\1', s)
+    # \pmod{x} → (mod x)
+    s = re.sub(r'\\pmod\{([^{}]*)\}', r' (mod \1)', s)
+
+    # Step 3: Named operators (multi-letter, can't be in symbol table).
+    for k, v in _MATH_OPERATORS.items():
+        s = re.sub(re.escape(k) + r'(?![a-zA-Z])', v, s)
+    # \bmod and \equiv are also operators-ish.
+    s = re.sub(r'\\bmod(?![a-zA-Z])', 'mod', s)
+    s = re.sub(r'\\equiv(?![a-zA-Z])', '≡', s)
+
+    # Step 4: Text-mode commands → just the inner text. Must come AFTER
+    # symbol replacement so `\mu\text{m}` first becomes `μ\text{m}`,
+    # then `μm` rather than the buggy `\mum` order.
+    s = re.sub(r'\\text\{([^{}]*)\}', r'\1', s)
+    s = re.sub(r'\\mathrm\{([^{}]*)\}', r'\1', s)
+    s = re.sub(r'\\mathbf\{([^{}]*)\}', r'<strong>\1</strong>', s)
+
+    # Step 5: Backslash escapes for special characters.
+    s = re.sub(r'\\([_&$%#{}])', r'\1', s)
+    # ~ is a non-breaking space in math
+    s = s.replace('~', ' ')
+    # \\ → break (rare in inline math, just treat as space)
+    s = s.replace('\\\\', ' ')
+    # \, \: \; \! → thin spaces / no space — collapse to space
+    s = re.sub(r'\\[,;: ]', ' ', s)
+    s = s.replace(r'\!', '')
+
+    # Superscripts / subscripts: prefer Unicode (⁻¹, ₀, …); HTML <sup>/<sub> fallback.
+    def _sup(m):
+        inner = m.group(1)
+        u = _unicode_script(inner, 'sup')
+        return u if u else f'<sup>{inner}</sup>'
+
+    def _sub(m):
+        inner = m.group(1)
+        u = _unicode_script(inner, 'sub')
+        return u if u else f'<sub>{inner}</sub>'
+
+    s = re.sub(r'\^\{([^{}]*)\}', _sup, s)
+    s = re.sub(r'_\{([^{}]*)\}', _sub, s)
+    s = re.sub(r'\^(\S)', lambda m: _unicode_script(m.group(1), 'sup') or f'<sup>{m.group(1)}</sup>', s)
+    s = re.sub(r'_(\S)', lambda m: _unicode_script(m.group(1), 'sub') or f'<sub>{m.group(1)}</sub>', s)
+    # `{-}` / `{+}` / `{=}` → just the operator
+    s = re.sub(r'\{([+\-=])\}', r'\1', s)
+    # Drop any remaining bare braces
+    s = s.replace('{', '').replace('}', '')
+    return s
+
+
+def _latex_to_html(tex: str, citation_claims: dict[str, str] | None = None,
+                   active_claim: str = '') -> str:
+    """Render a paragraph of LaTeX to HTML. Conservative: passes unknown
+    commands through unchanged. HTML-escapes text segments; math `$...$`
+    goes through `_render_math_inline` which emits safe HTML.
+
+    ``citation_claims`` maps bibkey → claim_id for the CIT layer — when
+    present, `\\cite{Bibkey}` is rendered as an inline claim span so it
+    visibly highlights citation issues in the abstract. This is the
+    partial-heuristic fallback until Wave 9g-3 (`\\claim{id}{text}`
+    authoring in the TeX source) gives every claim a canonical anchor.
+    """
+    citation_claims = citation_claims or {}
+    out_parts: list[str] = []
+    i = 0
+    n = len(tex)
+    while i < n:
+        c = tex[i]
+        if c == '$':
+            # Inline math: find closing $
+            j = i + 1
+            while j < n and tex[j] != '$':
+                if tex[j] == '\\' and j + 1 < n:
+                    j += 2
+                else:
+                    j += 1
+            math_raw = tex[i + 1:j]
+            out_parts.append(f'<span class="pp-math">{_render_math_inline(math_raw)}</span>')
+            i = j + 1
+        elif c == '\\':
+            # Backslash-escape FIRST (`\_`, `\&`, `\$`, `\%`, `\#`, `\{`,
+            # `\}`) — these aren't command names; they're literal char
+            # escapes. Must be checked before the `\name` regex or
+            # `\\_` falls through and becomes literal `\_` in HTML.
+            if i + 1 < n and tex[i + 1] in '_&$%#{}':
+                out_parts.append(esc(tex[i + 1]))
+                i += 2
+                continue
+            # `\\` → line break in text mode
+            if i + 1 < n and tex[i + 1] == '\\':
+                out_parts.append('<br>')
+                i += 2
+                continue
+            # Command: \name{...} or \name
+            m = re.match(r'\\([a-zA-Z]+)\*?(\{([^{}]*)\})?', tex[i:])
+            if not m:
+                # Lone backslash with no token — drop it.
+                i += 1
+                continue
+            cmd = m.group(1)
+            arg = m.group(3) or ''
+            consumed = m.end()
+            if cmd in ('textit', 'emph'):
+                out_parts.append(f'<em>{esc(arg)}</em>')
+            elif cmd == 'textbf':
+                out_parts.append(f'<strong>{esc(arg)}</strong>')
+            elif cmd == 'texttt':
+                out_parts.append(f'<code>{esc(arg)}</code>')
+            elif cmd == 'cite':
+                # Split multi-key cites (`\cite{A,B,C}`) and wrap each
+                # with a claim span if the bibkey has a CIT finding.
+                keys = [k.strip() for k in arg.split(',') if k.strip()]
+                rendered_keys: list[str] = []
+                for k in keys:
+                    cid = citation_claims.get(k)
+                    if cid:
+                        cls = 'pp-claim-span pp-claim-span--warn'
+                        # Any citation-integrity FAIL dominates
+                        if citation_claims.get(k + ':fail'):
+                            cls = 'pp-claim-span pp-claim-span--fail'
+                        if cid == active_claim:
+                            cls += ' pp-claim-span--active'
+                        on_click = (
+                            f"$activeClaim = '{esc(cid)}'; "
+                            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+                        )
+                        rendered_keys.append(
+                            f'<span class="{cls}" data-claim-id="{esc(cid)}" '
+                            f'data-on:click="{esc(on_click)}" '
+                            f'title="{esc(cid)}">{esc(k)}</span>'
+                        )
+                    else:
+                        rendered_keys.append(esc(k))
+                if rendered_keys:
+                    out_parts.append(' [' + ', '.join(rendered_keys) + ']')
+            elif cmd == 'ref' or cmd == 'eqref':
+                out_parts.append('')
+            elif cmd == 'label':
+                out_parts.append('')
+            elif cmd in ('begin', 'end'):
+                # Skip the rest of the begin{env}/end{env} — the abstract
+                # extractor already trimmed these; if one slips through,
+                # drop it.
+                out_parts.append('')
+            elif cmd == 'maketitle' or cmd == 'today':
+                out_parts.append('')
+            else:
+                # Unknown command — look up symbol table first; pass
+                # raw LaTeX through so physicists can spot missing
+                # symbols instead of silently eating content.
+                if '\\' + cmd in _LATEX_SYMBOLS:
+                    out_parts.append(_LATEX_SYMBOLS['\\' + cmd])
+                else:
+                    out_parts.append(esc(m.group(0)))
+            i += consumed
+        elif c == '~':
+            out_parts.append(' ')
+            i += 1
+        elif c == '-' and tex[i:i + 3] == '---':
+            out_parts.append('—')
+            i += 3
+        elif c == '-' and tex[i:i + 2] == '--':
+            out_parts.append('–')
+            i += 2
+        elif c == '\n':
+            # Treat two newlines as paragraph break; single newline as space
+            if tex[i:i + 2] == '\n\n':
+                out_parts.append('</p><p>')
+                i += 2
+            else:
+                out_parts.append(' ')
+                i += 1
+        elif c == '%':
+            # LaTeX comment — skip to end of line
+            j = tex.find('\n', i)
+            i = n if j < 0 else j
+        else:
+            out_parts.append(esc(c))
+            i += 1
+    html = ''.join(out_parts)
+    # Collapse whitespace runs
+    html = re.sub(r' {2,}', ' ', html).strip()
+    return f'<p>{html}</p>'
+
+
+def _pp_extract_abstract(tex_path: Path) -> str:
+    """Pull `\\begin{abstract}...\\end{abstract}` from a paper .tex. Returns
+    an empty string if not found or the file can't be read."""
+    try:
+        src = tex_path.read_text(errors='replace')
+    except Exception:
+        return ''
+    m = re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}', src, re.DOTALL)
+    return m.group(1).strip() if m else ''
+
+
+def _pp_claim_span_class(claim: dict) -> str:
+    """Pick a highlight style for an inline claim span based on the
+    worst-status finding. Matches the v2 design cream theme: FAIL = solid
+    red underline, WARN = amber wavy, INFO = blue dotted, PASS = no style
+    (unannotated)."""
+    w = _pp_worst_status(claim)
+    return {
+        'FAIL': 'pp-claim-span pp-claim-span--fail',
+        'WARN': 'pp-claim-span pp-claim-span--warn',
+        'INFO': 'pp-claim-span pp-claim-span--info',
+        'PASS': 'pp-claim-span pp-claim-span--pass',
+    }.get(w, 'pp-claim-span')
+
+
+def _pp_wrap_claim_spans(html_body: str, claims: dict[str, dict],
+                         active_claim: str) -> str:
+    """Best-effort wrap of claim-quote substrings inside the rendered
+    abstract with `<span class="pp-claim-span" ...>` so the v2 design's
+    inline highlight works without a `\\claim{}` macro in the TeX source.
+
+    Heuristic — will miss claims whose quotes don't appear verbatim
+    (most numerics that get math-rendered). Covered today:
+      1. Exact quote substring match (rare — English-language claims)
+      2. Citation bibkey author-name (e.g. `Falque2025` → highlight
+         any bare mention of "Falque" in the abstract text)
+
+    Everything else surfaces in the right-pane dossier list. The real
+    fix is Wave 9g-3: author `\\claim{id}{text}` anchors in the TeX
+    source so every claim has a canonical span.
+    """
+    def make_span(cid: str, claim: dict, visible: str) -> str:
+        cls = _pp_claim_span_class(claim)
+        if cid == active_claim:
+            cls += ' pp-claim-span--active'
+        on_click = (
+            f"$activeClaim = '{esc(cid)}'; "
+            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+        )
+        return (
+            f'<span class="{cls}" data-claim-id="{esc(cid)}" '
+            f'data-on:click="{esc(on_click)}" '
+            f'title="{esc(cid)}">{visible}</span>'
+        )
+
+    # Sort claims by quote length DESC so the longest substring wins.
+    items = [(cid, c) for cid, c in claims.items() if c.get('quote')]
+    items.sort(key=lambda kv: -len(kv[1]['quote']))
+
+    # Pass 1: exact substring match on the rendered HTML.
+    for cid, claim in items:
+        quote = claim['quote'].strip()
+        if not quote or len(quote) < 3:
+            continue
+        esc_quote = esc(quote)
+        if esc_quote not in html_body:
+            continue
+        html_body = html_body.replace(esc_quote, make_span(cid, claim, esc_quote), 1)
+
+    # Pass 2: citation bibkeys → author-name mentions.
+    # `Falque2025` → match bare "Falque" (outside existing tags). Only
+    # wrap the first occurrence per bibkey so each author mention
+    # resolves to its primary citation claim.
+    cite_ids = [(cid, c) for cid, c in claims.items()
+                if cid.startswith('citation_integrity:')]
+    for cid, claim in cite_ids:
+        bibkey = cid.split(':', 1)[1]
+        # Strip trailing digits to derive author surname (Falque2025 → Falque).
+        author = re.sub(r'\d+$', '', bibkey)
+        if len(author) < 4:
+            continue
+        # Word-boundary match, avoid matching inside existing spans/tags.
+        pattern = re.compile(
+            r'(?<![A-Za-z<>])' + re.escape(author) + r'(?![A-Za-z])'
+        )
+        # Split by tags so we don't replace inside attributes.
+        out_parts: list[str] = []
+        pos = 0
+        done = False
+        for tag in re.finditer(r'<[^>]+>', html_body):
+            segment = html_body[pos:tag.start()]
+            if not done:
+                new_seg, n = pattern.subn(make_span(cid, claim, author), segment, count=1)
+                if n:
+                    done = True
+                    out_parts.append(new_seg)
+                else:
+                    out_parts.append(segment)
+            else:
+                out_parts.append(segment)
+            out_parts.append(tag.group(0))
+            pos = tag.end()
+        # Tail
+        tail = html_body[pos:]
+        if not done:
+            tail, _ = pattern.subn(make_span(cid, claim, author), tail, count=1)
+        out_parts.append(tail)
+        html_body = ''.join(out_parts)
+
+    return html_body
+
+
+def _pp_paper_body_html(data: dict, active_claim: str) -> str:
+    """Render the paper body — title + subtitle + abstract — as HTML with
+    inline claim spans. Served as the morph target ``#pp-paper-body``."""
+    paper_id = data.get('paper_id', '')
+    full_title = data.get('title') or paper_id
+    # Split on `:` to get subtitle. Run BOTH halves through `_latex_to_html`
+    # so embedded math (e.g. paper10's `$N_f \equiv 0 \pmod{3}$`) renders
+    # rather than appearing as raw LaTeX.
+    title_main, _, subtitle = full_title.partition(':')
+    title_inner = _latex_to_html(title_main.strip()).removeprefix('<p>').removesuffix('</p>')
+    title_html = f'{title_inner}:' if subtitle else title_inner
+    subtitle_html = ''
+    if subtitle:
+        sub_inner = _latex_to_html(subtitle.strip()).removeprefix('<p>').removesuffix('</p>')
+        subtitle_html = f'<div class="pp-paper__subtitle">{sub_inner}</div>'
+
+    # Render abstract; fall back to a placeholder if none available
+    tex_path = PROJECT_ROOT / 'papers' / paper_id / 'paper_draft.tex'
+    abstract_raw = _pp_extract_abstract(tex_path) if paper_id else ''
+    if abstract_raw:
+        # Build a {bibkey: claim_id} lookup so \cite{Bibkey} renders
+        # inline as a highlighted claim span. Wave 9g-3 (\claim{}
+        # macro authoring) will extend this to numeric + qualitative
+        # layers; today only the CIT layer has a canonical anchor.
+        citation_claims: dict[str, str] = {}
+        for cid, claim in (data.get('claims') or {}).items():
+            if not cid.startswith('citation_integrity:'):
+                continue
+            bibkey = cid.split(':', 1)[1]
+            citation_claims[bibkey] = cid
+            worst = _pp_worst_status(claim)
+            if worst == 'FAIL':
+                citation_claims[bibkey + ':fail'] = cid
+        abstract_html = _latex_to_html(abstract_raw, citation_claims, active_claim)
+        # Also run the plain-substring heuristic for any claim whose
+        # quote happens to appear verbatim in the rendered HTML (rare
+        # but occasionally hits English-language qualitative claims).
+        abstract_html = _pp_wrap_claim_spans(
+            abstract_html, data.get('claims') or {}, active_claim
+        )
+    else:
+        abstract_html = (
+            '<p class="pp-paper__placeholder">No abstract could be extracted '
+            'from paper_draft.tex. Render requires a '
+            r'<code>\begin{abstract}…\end{abstract}</code> block.</p>'
+        )
+
+    return (
+        '<article id="pp-paper-body" class="pp-paper">'
+        '<div class="pp-paper__kicker">ARXIV PREPRINT · SUBMITTED TO PRD</div>'
+        f'<h1 class="pp-paper__title">{title_html}</h1>'
+        + subtitle_html +
+        '<div class="pp-paper__byline">SK-EFT Hawking Research Program</div>'
+        '<hr class="pp-paper__rule"/>'
+        '<div class="pp-paper__section-label">ABSTRACT</div>'
+        f'<div class="pp-paper__abstract">{abstract_html}</div>'
+        '</article>'
+    )
+
+
+def _pp_default_dossier_html(data: dict) -> str:
+    """Right-pane default view: PROVENANCE DOSSIER header + blocking
+    issues + non-blocking follow-ups. Replaces the keyboard-hint empty
+    state once a paper is loaded. Morphed into ``#pp-detail``."""
+    blocking = data.get('blocking') or []
+    non_blocking = data.get('non_blocking') or []
+    parts = [
+        '<div id="pp-detail" class="pp-dossier">',
+        '<div class="pp-dossier__section-label">PROVENANCE DOSSIER</div>',
+        '<p class="pp-dossier__intro"><em>Hover or click any highlighted span '
+        'in the paper to see every layer&rsquo;s verdict for that claim.</em></p>',
+    ]
+    if blocking:
+        parts.append(
+            f'<div class="pp-dossier__section-label">BLOCKING ISSUES '
+            f'<span class="pp-dossier__count pp-dossier__count--fail">{len(blocking)}</span></div>'
+        )
+        parts.append('<ul class="pp-dossier__list pp-dossier__list--fail">')
+        for b in blocking:
+            text = b if isinstance(b, str) else json.dumps(b)
+            parts.append(f'<li>{esc(text)}</li>')
+        parts.append('</ul>')
+    if non_blocking:
+        parts.append(
+            f'<div class="pp-dossier__section-label">NON-BLOCKING FOLLOW-UPS '
+            f'<span class="pp-dossier__count pp-dossier__count--warn">{len(non_blocking)}</span></div>'
+        )
+        parts.append('<ul class="pp-dossier__list pp-dossier__list--warn">')
+        for b in non_blocking:
+            text = b if isinstance(b, str) else json.dumps(b)
+            parts.append(f'<li>{esc(text)}</li>')
+        parts.append('</ul>')
+    if not blocking and not non_blocking:
+        parts.append(
+            '<p class="pp-dossier__empty">No blocking issues or follow-ups recorded '
+            'in <code>claims_review.json</code> for this paper.</p>'
+        )
+    parts.append('</div>')
+    return ''.join(parts)
+
+
+def _pp_banner_html(data: dict) -> str:
+    """Emit the four banner morph targets as a single SSE payload string.
+
+    The four ids — pp-banner-title-block / pp-banner-meter / pp-banner-review
+    / pp-banner-verdict — sit in separate grid columns of .pp-banner, so they
+    each need to be top-level elements in the patched fragment rather than
+    wrapped. Datastar's morph applies them by id independently."""
+    paper_id = data.get('paper_id') or ''
+    full_title = data.get('title') or paper_id
+    title_main, _, subtitle = full_title.partition(':')
+    title_line = esc(title_main.strip())
+    rd = data.get('review_date')
+    review_s = f'REVIEW {esc(rd[:10])}' if rd else 'NO REVIEW'
+    counts = data.get('counts') or {}
+    overall = data.get('overall_status') or 'unknown'
+    overall_label = 'ISSUES FOUND' if overall == 'issues_found' else (
+        'PASS' if overall == 'pass' else 'UNKNOWN'
+    )
+    verdict_cls = 'issues_found' if overall == 'issues_found' else ('pass' if overall == 'pass' else 'unknown')
+
+    def meter(key: str, label: str) -> str:
+        return (f'<div class="pp-meter" data-s="{key}">'
+                f'<span class="pp-meter__n">{counts.get(key, 0)}</span>'
+                f'<span class="pp-meter__l">{label}</span>'
+                f'</div>')
+
+    title_block = (
+        f'<div class="pp-banner__title-block" id="pp-banner-title-block">'
+        f'<div class="pp-banner__pid">{esc(paper_id)}</div>'
+        f'<div class="pp-banner__title">{title_line}</div>'
+        f'</div>'
+    )
+    meter_block = (
+        '<div class="pp-banner__meter" id="pp-banner-meter">'
+        + meter('fail', 'FAIL') + meter('warn', 'WARN')
+        + meter('pass', 'PASS') + meter('info', 'INFO')
+        + '</div>'
+    )
+    review_block = (
+        f'<div class="pp-banner__review" id="pp-banner-review">{review_s}</div>'
+    )
+    verdict_block = (
+        f'<div class="pp-verdict" id="pp-banner-verdict" data-v="{esc(verdict_cls)}">'
+        f'{esc(overall_label)}</div>'
+    )
+    return title_block + meter_block + review_block + verdict_block
+
+
+def _pp_filter_chips_html(data: dict, filter_layers: list[str]) -> str:
+    # Count claims per layer (unique per layer per claim)
+    layer_counts: dict[str, int] = {l['code']: 0 for l in data.get('layers', [])}
+    for claim in (data.get('claims') or {}).values():
+        seen: set[str] = set()
+        for f in claim.get('findings', []):
+            lay = f.get('layer')
+            if lay and lay not in seen:
+                seen.add(lay)
+                layer_counts[lay] = layer_counts.get(lay, 0) + 1
+    parts = ['<div id="pp-filter-chips" style="display:contents">']
+    active = set(filter_layers or [])
+    for l in data.get('layers', []):
+        code = l['code']
+        n = layer_counts.get(code, 0)
+        if n == 0:
+            continue
+        cls = 'pp-chip' + (' pp-chip--on' if code in active else '')
+        # Toggle membership in the $filterLayers array signal. Uses
+        # Datastar's JS expression runtime: array push/filter idiom.
+        toggle = (
+            f"$filterLayers = ($filterLayers || []).includes('{code}') "
+            f"? ($filterLayers || []).filter(x => x !== '{code}') "
+            f": [...($filterLayers || []), '{code}']; "
+            f"$activeClaim = ''; "
+            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+        )
+        parts.append(
+            f'<button class="{cls}" title="{esc(l["desc"])}" '
+            f'data-on:click="{esc(toggle)}">'
+            f'<span>{esc(l["label"])}</span>'
+            f'<span class="pp-chip__n">{n}</span>'
+            f'</button>'
+        )
+    parts.append('</div>')
+    return ''.join(parts)
+
+
+def _pp_nav_html(data: dict, filter_layers: list[str], active_claim: str) -> str:
+    filtered = _pp_filtered_claims(data, filter_layers)
+    visible = bool(filter_layers)
+    if not visible:
+        return '<div class="pp-nav" id="pp-nav" style="display:none"></div>'
+    if not filtered:
+        cnt = '0 of 0'
+    else:
+        ids = [cid for cid, _ in filtered]
+        if active_claim in ids:
+            cnt = f'{ids.index(active_claim) + 1} of {len(ids)}'
+        else:
+            cnt = f'— of {len(ids)}'
+    # URL-param `?nav=...` rather than `{payload: {nav: ...}}` so the
+    # server reads it via `request.args.get('nav')` consistently with
+    # the keyboard shortcuts (which embed in URL). Datastar puts the
+    # signal snapshot in `?datastar=...` — `?nav=` is independent.
+    prev_expr = "@get(`/api/papers/${$activePaper}/provenance?nav=prev`)"
+    next_expr = "@get(`/api/papers/${$activePaper}/provenance?nav=next`)"
+    clear_expr = ("$filterLayers = []; "
+                  "@get(`/api/papers/${$activePaper}/provenance`)")
+    return (
+        '<div class="pp-nav" id="pp-nav">'
+        f'<button data-on:click="{esc(prev_expr)}" title="Previous (←)">◀</button>'
+        f'<span id="pp-nav-count">{esc(cnt)}</span>'
+        f'<button data-on:click="{esc(next_expr)}" title="Next (→)">▶</button>'
+        f'<button data-on:click="{esc(clear_expr)}" title="Clear filters (Esc)">clear</button>'
+        '</div>'
+    )
+
+
+def _pp_claim_list_html(data: dict, filter_layers: list[str], active_claim: str) -> str:
+    filtered = _pp_filtered_claims(data, filter_layers)
+    total = len(data.get('claims') or {})
+    header = f'Claims · {len(filtered)}' + (f' of {total}' if filter_layers else '')
+    parts = [
+        f'<div class="pp-left__title" id="pp-left-title">{esc(header)}</div>',
+        '<div class="pp-left__hint" id="pp-left-hint">',
+        'Interactive paper-body with inline claim anchoring lands in Wave 9g-2 '
+        '(pandoc + <code>\\claim{}</code> LaTeX macro). Meanwhile, every claim '
+        'from <code>claims_review.json</code> + <code>figure_review_report.json</code> '
+        'is listed here.',
+        '</div>',
+        '<div class="pp-claim-list" id="pp-claim-list">',
+    ]
+    for cid, claim in filtered:
+        worst = _pp_worst_status(claim)
+        active_cls = ' is-active' if cid == active_claim else ''
+        quote = esc(claim.get('quote') or '(no quote)')
+        loc = claim.get('location') or ''
+        id_line = esc(cid + (f' · {loc}' if loc else ''))
+        # Build per-layer dots (dedup by layer)
+        seen: set[str] = set()
+        dots = []
+        for f in claim.get('findings', []):
+            lay = f.get('layer')
+            if lay in seen or not lay:
+                continue
+            seen.add(lay)
+            st = esc(f.get('status', 'INFO'))
+            dots.append(
+                f'<span class="pp-claim__layer-dot" data-s="{st}" title="{esc(lay)}: {st}"></span>'
+            )
+        click_expr = (
+            f"$activeClaim = '{esc(cid)}'; "
+            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+        )
+        parts.append(
+            f'<div class="pp-claim{active_cls}" tabindex="0" '
+            f'data-on:click="{esc(click_expr)}">'
+            f'<div class="pp-claim__badge" data-s="{esc(worst)}">{esc(worst)}</div>'
+            f'<div>'
+            f'<div class="pp-claim__quote">{quote}</div>'
+            f'<div class="pp-claim__id">{id_line}</div>'
+            f'</div>'
+            f'<div class="pp-claim__layers">{"".join(dots)}</div>'
+            f'</div>'
+        )
+    parts.append('</div>')
+    return '<div id="pp-left-pane-inner" style="display:contents">' + ''.join(parts) + '</div>'
+
+
+def _pp_dossier_html(data: dict, active_claim: str) -> str:
+    if not active_claim or active_claim not in (data.get('claims') or {}):
+        # Empty state with blocking/non-blocking lists
+        parts = [
+            '<div id="pp-detail">'
+            '<div class="pp-empty">'
+            '<div class="pp-empty__hint">'
+            'Click any claim on the left to see its 8-layer verdict matrix.<br/>'
+            '<kbd>←</kbd> <kbd>→</kbd> cycle claims<br/>'
+            '<kbd>F</kbd> next FAIL · <kbd>W</kbd> next WARN · <kbd>Esc</kbd> clear'
+            '</div>'
+            '<div class="pp-issues" id="pp-issues">'
+        ]
+        blocking = data.get('blocking') or []
+        non_blocking = data.get('non_blocking') or []
+        if blocking:
+            parts.append(f'<div class="pp-issues__title">Blocking ({len(blocking)})</div><ul>')
+            for b in blocking:
+                text = b if isinstance(b, str) else json.dumps(b)
+                parts.append(f'<li data-b="true">{esc(text)}</li>')
+            parts.append('</ul>')
+        if non_blocking:
+            parts.append(
+                f'<div class="pp-issues__title" style="margin-top:16px">Non-blocking ({len(non_blocking)})</div><ul>'
+            )
+            for b in non_blocking:
+                text = b if isinstance(b, str) else json.dumps(b)
+                parts.append(f'<li>{esc(text)}</li>')
+            parts.append('</ul>')
+        parts.append('</div></div></div>')
+        return ''.join(parts)
+
+    c = data['claims'][active_claim]
+    layers = data.get('layers', [])
+    by_layer: dict[str, list[dict]] = {}
+    for f in c.get('findings', []):
+        by_layer.setdefault(f.get('layer'), []).append(f)
+
+    back_expr = (
+        "$activeClaim = ''; "
+        "@get(`/api/papers/${$activePaper}/provenance`)"
+    )
+    parts = [
+        '<div id="pp-detail" class="pp-dossier">',
+        f'<button class="pp-dossier__back" data-on:click="{esc(back_expr)}">← back to dossier</button>',
+        '<div class="pp-dossier__section-label">Claim</div>',
+        f'<div class="pp-dossier__claim-quote">{esc(c.get("quote", ""))}</div>',
+    ]
+    if c.get('location'):
+        parts.append(f'<div class="pp-dossier__loc">{esc(c["location"])}</div>')
+    parts.append('<div class="pp-dossier__section-label">Vetting layers</div>')
+    parts.append('<div class="pp-matrix">')
+    for l in layers:
+        code = l['code']
+        fs = by_layer.get(code)
+        if not fs:
+            parts.append(
+                '<div class="pp-matrix__row" data-na="true">'
+                f'<div class="pp-matrix__layer">{esc(l["label"])}</div>'
+                '<div class="pp-matrix__status" data-s="NA">—</div>'
+                '<div class="pp-matrix__note">not applicable</div>'
+                '</div>'
+            )
+            continue
+        for i, f in enumerate(fs):
+            layer_cell = esc(l['label']) if i == 0 else ''
+            note = ''
+            if f.get('delta'):
+                note += f'<span class="pp-delta">Δ {esc(f["delta"])}</span>'
+            note += esc(f.get('note', ''))
+            parts.append(
+                '<div class="pp-matrix__row">'
+                f'<div class="pp-matrix__layer">{layer_cell}</div>'
+                f'<div class="pp-matrix__status" data-s="{esc(f.get("status", "INFO"))}">{esc(f.get("status", "INFO"))}</div>'
+                f'<div class="pp-matrix__note">{note}</div>'
+                '</div>'
+            )
+    parts.append('</div></div>')
+    return ''.join(parts)
+
+
+def _pp_apply_nav(data: dict, signals: dict, payload_nav: str | None) -> str:
+    """If a keyboard/button nav hint was sent, compute the new activeClaim."""
+    active = signals.get('activeClaim') or ''
+    filter_layers = list(signals.get('filterLayers') or [])
+    filtered = _pp_filtered_claims(data, filter_layers)
+    if not filtered:
+        return active
+    ids = [cid for cid, _ in filtered]
+    if payload_nav == 'next' or payload_nav == 'prev':
+        if active not in ids:
+            return ids[0] if payload_nav == 'next' else ids[-1]
+        idx = ids.index(active)
+        delta = 1 if payload_nav == 'next' else -1
+        return ids[(idx + delta) % len(ids)]
+    if payload_nav in ('FAIL', 'WARN'):
+        target = payload_nav
+        # Find next claim whose worstStatus == target after current position
+        if active in ids:
+            order = ids[ids.index(active) + 1:] + ids[:ids.index(active) + 1]
+        else:
+            order = ids
+        for cid in order:
+            if _pp_worst_status(data['claims'][cid]) == target:
+                return cid
+        return active
+    return active
+
+
+def _pp_sse_events(data: dict, signals: dict, payload_nav: str | None):
+    # Apply nav hint (may update activeClaim)
+    new_active = _pp_apply_nav(data, signals, payload_nav)
+    filter_layers = list(signals.get('filterLayers') or [])
+
+    # Patch signals: sync activeClaim if server changed it via a nav hint
+    if new_active != (signals.get('activeClaim') or ''):
+        yield SSE.patch_signals({'activeClaim': new_active})
+
+    yield SSE.patch_elements(_pp_banner_html(data))
+    yield SSE.patch_elements(_pp_filter_chips_html(data, filter_layers))
+    yield SSE.patch_elements(_pp_nav_html(data, filter_layers, new_active))
+    # Paper body with inline claim spans (v2 design, Wave 9h final pass).
+    yield SSE.patch_elements(_pp_paper_body_html(data, new_active))
+    # Right pane: dossier matrix if a claim is active, else the default
+    # PROVENANCE DOSSIER view with blocking + non-blocking lists.
+    if new_active and new_active in (data.get('claims') or {}):
+        yield SSE.patch_elements(_pp_dossier_html(data, new_active))
+    else:
+        yield SSE.patch_elements(_pp_default_dossier_html(data))
+
+
+@app.route("/api/papers/<paper_id>/provenance", methods=["GET", "POST"])
+def api_paper_provenance(paper_id: str):
+    """Per-claim 8-layer provenance dossier (Wave 9g; Datastar port Wave 9h).
+
+    Auto-negotiates SSE vs JSON. SSE consumers drive the Paper Provenance
+    tab via four signals: ``$activePaper``, ``$activeClaim``,
+    ``$filterLayers`` (array of layer codes), and an optional ``nav``
+    payload on the request (``'next' | 'prev' | 'FAIL' | 'WARN'``) that
+    moves the active claim without the client needing the full claim
+    list. JSON path unchanged from Wave 9g for backward compat.
+
+    404 if paper_draft.tex doesn't exist. 200 with best-effort data if
+    claims_review.json is missing (falls back to synthesising from live
+    registries + graph state so the tab still works on newer papers).
+    """
+    data = _pp_build_data(paper_id)
+    if data is None:
+        return jsonify({'error': f'Unknown paper: {paper_id}'}), 404
+    if is_datastar_request():
+        signals = read_signals()
+        # `nav` is passed as a URL query param (`?nav=next`) by both the
+        # keyboard shortcuts and the prev/next/F/W buttons — uniform.
+        payload_nav = request.args.get('nav')
+        return sse_response(lambda: _pp_sse_events(data, signals, payload_nav))
+    return jsonify(data)
+
+
+def _qi_derive_severity(mix: dict | None) -> str:
+    if not mix:
+        return 'advisory'
+    if mix.get('critical'):
+        return 'critical'
+    if mix.get('major'):
+        return 'major'
+    if mix.get('minor'):
+        return 'minor'
+    return 'advisory'
+
+
+def _qi_summary_html(data: dict) -> str:
+    items = data.get('items', [])
+    open_n = sum(1 for i in items if i.get('status') == 'open')
+    closed_n = len(items) - open_n
+    by_gate = {}
+    for it in items:
+        g = it.get('gate_affected')
+        by_gate[g] = by_gate.get(g, 0) + 1
+    gate_count = len(by_gate)
+    generated = esc(data.get('generated') or 'unknown')
+
+    def fig(n: int, label: str, color: str) -> str:
+        return (f'<div><div class="count" style="color:{color}">{n}</div>'
+                f'<div>{esc(label)}</div></div>')
+
+    return (
+        '<div id="qi-summary" class="qi-summary">'
+        + fig(len(items), 'QI items', '#3730a3')
+        + fig(open_n, 'open', '#b45309')
+        + fig(closed_n, 'closed', '#166534')
+        + fig(gate_count, 'gates affected', '#475569')
+        + fig(data.get('findings_total', 0), 'ReviewFindings source', '#6b7280')
+        + f'<div style="margin-left:auto;color:var(--grey);font-size:0.8rem">Generator run: {generated}</div>'
+        + '</div>'
+    )
+
+
+def _qi_items_html(data: dict, signals: dict) -> str:
+    items = data.get('items', [])
+    show_open_only = bool(signals.get('qiShowOpenOnly'))
+    if not items:
+        return ('<div id="qi-items" class="qi-items">'
+                '<div class="qi-empty">No QI items yet — no cross-paper failure patterns detected.</div>'
+                '</div>')
+    filtered = [i for i in items if not show_open_only or i.get('status') == 'open']
+    if not filtered:
+        return ('<div id="qi-items" class="qi-items">'
+                '<div class="qi-empty">No open items.</div>'
+                '</div>')
+
+    parts = ['<div id="qi-items" class="qi-items">']
+    for item in filtered:
+        sev = _qi_derive_severity(item.get('severity_mix'))
+        status = esc(item.get('status') or 'open')
+        status_color = '#166534' if item.get('status') == 'closed' else '#b45309'
+        parts.append(f'<div class="qi-item severity-{esc(sev)}">')
+        parts.append(
+            '<h4><span>' + esc(item.get('pattern_summary', '?')) + '</span>'
+            '<span class="qi-id">' + esc(item.get('id', '')) + '</span></h4>'
+        )
+        meta = [
+            '<span class="qi-gate-pill">' + esc(item.get('gate_affected', '?')) + '</span>',
+            f' <span>{item.get("occurrences", 0)} findings</span>',
+            f'<span style="font-weight:600;color:{status_color}">status: {status}</span>',
+            f'<span>first seen: {esc(item.get("first_observed") or "?")}</span>',
+            f'<span>last seen: {esc(item.get("last_observed") or "?")}</span>',
+        ]
+        if item.get('owner'):
+            meta.append(f'<span>owner: {esc(item["owner"])}</span>')
+        if item.get('target_date'):
+            meta.append(f'<span>target: {esc(item["target_date"])}</span>')
+        parts.append('<div class="qi-meta">' + ''.join(meta) + '</div>')
+        papers = item.get('affected_papers') or []
+        if papers:
+            parts.append('<div class="qi-papers">' +
+                         ''.join(f'<span class="paper-chip">{esc(p)}</span>' for p in papers) +
+                         '</div>')
+        rfs = item.get('representative_findings') or []
+        if rfs:
+            parts.append('<ul class="qi-findings">')
+            for rf in rfs:
+                label = esc(rf.get('label') or rf.get('id') or '?')
+                file_s = rf.get('file')
+                suffix = (f'<span style="color:#9ca3af"> ({esc(file_s)})</span>'
+                          if file_s else '')
+                parts.append(f'<li><span>{label}</span>{suffix}</li>')
+            parts.append('</ul>')
+        parts.append('</div>')
+    parts.append('</div>')
+    return ''.join(parts)
+
+
+def _qi_build_data() -> dict:
+    from datetime import datetime, timezone as _tz
+    try:
+        from qi_register import load_review_findings, cluster_findings
+    except ImportError as exc:
+        return {'error': f'qi_register unavailable: {exc}'}
+    findings = load_review_findings()
+    items = cluster_findings(findings)
+    return {
+        'findings_total': len(findings),
+        'items': items,
+        'generated': datetime.now(_tz.utc).isoformat(timespec='seconds'),
+    }
+
+
+def _qi_sse_events(data: dict, signals: dict):
+    yield SSE.patch_elements(_qi_summary_html(data))
+    yield SSE.patch_elements(_qi_items_html(data, signals))
 
 
 @app.route("/api/qi")
 def api_qi():
-    """Return the Stage 14 QI register (Phase 5v Wave 7b).
+    """Stage 14 QI register (Phase 5v Wave 7b; Datastar port Wave 9h).
 
-    Runs `scripts.qi_register.cluster_findings` against the current
-    ReviewFinding graph nodes and returns the structured QI items.
-    Shape matches what the Process Health dashboard tab consumes.
+    Auto-negotiates SSE (Datastar) vs JSON (tests/scripts). Signals
+    consumed: `qiShowOpenOnly` — boolean to filter closed items out.
     """
-    from datetime import datetime, timezone
-    try:
-        from qi_register import load_review_findings, cluster_findings
-    except ImportError as exc:
-        return jsonify({"error": f"qi_register unavailable: {exc}"}), 500
-    findings = load_review_findings()
-    items = cluster_findings(findings)
-    return jsonify({
-        'findings_total': len(findings),
-        'items': items,
-        'generated': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-    })
+    data = _qi_build_data()
+    if 'error' in data:
+        return jsonify(data), 500
+    if is_datastar_request():
+        signals = read_signals()
+        return sse_response(lambda: _qi_sse_events(data, signals))
+    return jsonify(data)
 
 
-@app.route("/api/readiness")
-def api_readiness():
-    """Return per-paper readiness gate data structured for the dashboard.
+# ── Readiness tab — shared metadata + SSE render helpers (Wave 9h) ──
+#
+# GATE_DEFS is the canonical list of the 11 readiness gates in display
+# order. The Datastar-driven tab reads this from the server rather than
+# duplicating it in JS (the previous port carried two parallel copies).
 
-    Phase 5v Wave 5. Pulls ReadinessGate nodes from the cached graph
-    and reshapes into {papers: [{paper, gates: [{gate, priority, state,
-    evidence, blockers, notes, last_evaluated}]}]}. The heatmap renders
-    from this payload via safe-DOM construction (see readiness_tab.html).
-    """
+GATE_DEFS: list[tuple[str, int, str]] = [
+    ('CitationIntegrity',       1, 'Cit'),
+    ('CrossPaperConsistency',   1, 'XPaper'),
+    ('ParameterProvenance',     1, 'Param'),
+    ('ComputationCorrectness',  1, 'Comp'),
+    ('LeanProofSubstance',      1, 'LeanP'),
+    ('AssumptionDisclosure',    1, 'Assum'),
+    ('NarrativeGrounding',      1, 'Narr'),
+    ('ProductionRunHealth',     1, 'ProdRun'),
+    ('NumericalFreshness',      2, 'Num'),
+    ('FirstClaimVerification',  2, '1st'),
+    ('FixPropagation',          2, 'Fix'),
+]
+
+
+def _readiness_build_data() -> dict:
+    """Pull ReadinessGate nodes from the cached graph and shape into the
+    {papers: [{paper, gates: [...]}], last_evaluated, ...} payload both
+    SSE and JSON paths consume. Extracted so _readiness_sse_events can
+    share it with the legacy JSON response."""
+    from collections import defaultdict
     graph = get_cached_graph()
     gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
     if not gates:
-        return jsonify({"papers": [], "last_evaluated": None,
-                        "error": "no ReadinessGate nodes"})
-
-    from collections import defaultdict
+        return {"papers": [], "last_evaluated": None,
+                "error": "no ReadinessGate nodes"}
     by_paper: dict[str, list[dict]] = defaultdict(list)
     last_evaluated = None
     for g in gates:
@@ -2048,17 +3258,242 @@ def api_readiness():
         })
         if m.get('last_evaluated'):
             last_evaluated = m['last_evaluated']
-
     papers = [
         {'paper': paper, 'gates': sorted(
             by_paper[paper], key=lambda g: (g['priority'] or 99, g['gate'] or ''))}
         for paper in sorted(by_paper.keys())
     ]
-    return jsonify({
+    return {
         'papers': papers,
         'last_evaluated': last_evaluated,
         'gate_count': sum(len(p['gates']) for p in papers),
-    })
+    }
+
+
+def _classify_paper(gate_states: list[str]) -> str:
+    if any(s == 'blocked' for s in gate_states):
+        return 'RED'
+    if any(s != 'passed' for s in gate_states):
+        return 'YELLOW'
+    return 'GREEN'
+
+
+def _paper_gate_list(paper: dict) -> list[dict]:
+    """Normalize each paper to a 11-entry gate list in GATE_DEFS order."""
+    by_gate = {g['gate']: g for g in paper['gates']}
+    out = []
+    for name, prio, _abbrev in GATE_DEFS:
+        g = by_gate.get(name) or {
+            'gate': name, 'priority': prio, 'state': 'open',
+            'evidence': [], 'blockers': [], 'notes': '', 'last_evaluated': '',
+        }
+        out.append(g)
+    return out
+
+
+def _readiness_summary_html(data: dict) -> str:
+    if 'error' in data:
+        return (
+            '<div id="readiness-summary-row" class="readiness-summary">'
+            f'<div style="color:#721c24">Failed to load: {esc(data["error"])}</div>'
+            '</div>'
+        )
+    counts = {'RED': 0, 'YELLOW': 0, 'GREEN': 0}
+    for paper in data['papers']:
+        states = [g['state'] for g in _paper_gate_list(paper)]
+        counts[_classify_paper(states)] += 1
+    last = esc(data.get('last_evaluated') or 'unknown')
+    n = len(data['papers'])
+    return (
+        '<div id="readiness-summary-row" class="readiness-summary">'
+        f'<div><div class="count" style="color:#155724">{counts["GREEN"]}</div><div>green</div></div>'
+        f'<div><div class="count" style="color:#856404">{counts["YELLOW"]}</div><div>yellow</div></div>'
+        f'<div><div class="count" style="color:#721c24">{counts["RED"]}</div><div>red</div></div>'
+        f'<div style="margin-left:auto;color:var(--grey);font-size:0.8rem">{n} papers · last evaluated {last}</div>'
+        '</div>'
+    )
+
+
+def _should_show_paper(paper: dict, state_filter: str | None, gate_filter: str | None) -> bool:
+    gate_list = _paper_gate_list(paper)
+    states = [g['state'] for g in gate_list]
+    pstate = _classify_paper(states)
+    if state_filter and pstate != state_filter:
+        return False
+    if gate_filter:
+        g = next((gg for gg in gate_list if gg['gate'] == gate_filter), None)
+        if not g or g['state'] == 'passed':
+            return False
+    return True
+
+
+def _readiness_heatmap_html(data: dict, signals: dict) -> str:
+    """Full heatmap table with header + priority row + body, filtered by signals.
+    Morph target is <table id="readiness-heatmap">; we return the complete
+    table so Datastar's morph preserves scroll state and cell outlines."""
+    state_f = (signals.get('paperStateFilter') or '').upper() or None
+    gate_f = signals.get('gateFilter') or None
+    active_paper = signals.get('activePaper') or None
+    active_gate = signals.get('activeGate') or None
+
+    # Header row
+    thead = ['<tr>',
+             '<th class="paper-col">Paper</th>',
+             '<th>State</th>']
+    for name, prio, abbrev in GATE_DEFS:
+        cls = 'gate-head' + (' filtered' if gate_f == name else '')
+        expr = (
+            f"$gateFilter=$gateFilter==='{name}'?'':'{name}'; "
+            f"@get('/api/readiness')"
+        )
+        thead.append(
+            f'<th class="{cls}" '
+            f'title="{esc(name)} (P{prio}) — click to filter to papers failing this gate" '
+            f'data-on:click="{esc(expr)}">{esc(abbrev)}</th>'
+        )
+    thead.append('</tr>')
+    # Priority row
+    thead.append('<tr><th class="paper-col"></th><th></th>')
+    for _name, prio, _abbrev in GATE_DEFS:
+        thead.append(f'<th class="priority-label">P{prio}</th>')
+    thead.append('</tr>')
+
+    # Body rows
+    rows = []
+    if 'papers' in data:
+        visible = [p for p in data['papers'] if _should_show_paper(p, state_f, gate_f)]
+        for paper in visible:
+            gate_list = _paper_gate_list(paper)
+            states = [g['state'] for g in gate_list]
+            pstate = _classify_paper(states)
+            passed = sum(1 for s in states if s == 'passed')
+            paper_id = paper['paper']
+            focused_cls = ' focused' if active_paper == paper_id else ''
+            focus_expr = (
+                f"$activePaper='{esc(paper_id)}'; $activeGate=''; @get('/api/readiness')"
+            )
+            rows.append(
+                f'<tr><th class="paper-col{focused_cls}" '
+                f'data-on:click="{esc(focus_expr)}">{esc(paper_id)}</th>'
+                f'<td><span class="paper-state-{pstate}">{pstate}</span> '
+                f'<span style="color:var(--grey);font-size:0.72rem">{passed}/11</span></td>'
+            )
+            for g in gate_list:
+                is_focus_cell = (active_paper == paper_id and active_gate == g['gate'])
+                cell_cls = 'gate-cell ' + g['state'] + (' active-focus' if is_focus_cell else '')
+                cell_expr = (
+                    f"$activePaper='{esc(paper_id)}'; "
+                    f"$activeGate='{esc(g['gate'])}'; @get('/api/readiness')"
+                )
+                letter = g['state'][0].upper() if g['state'] else '?'
+                title = f"{g['gate']} — {g['state']}"
+                rows.append(
+                    f'<td class="{cell_cls}" title="{esc(title)}" '
+                    f'data-on:click="{esc(cell_expr)}">{esc(letter)}</td>'
+                )
+            rows.append('</tr>')
+
+    return (
+        '<table id="readiness-heatmap" class="readiness-heatmap">'
+        '<thead>' + ''.join(thead) + '</thead>'
+        '<tbody>' + ''.join(rows) + '</tbody>'
+        '</table>'
+    )
+
+
+def _readiness_focus_html(data: dict, signals: dict) -> str:
+    active_paper = signals.get('activePaper') or None
+    active_gate = signals.get('activeGate') or None
+    if not active_paper or 'papers' not in data:
+        return (
+            '<aside id="readiness-focus" class="focus-pane">'
+            '<div class="placeholder">Click a paper name or a gate cell to see details.</div>'
+            '</aside>'
+        )
+    paper = next((p for p in data['papers'] if p['paper'] == active_paper), None)
+    if not paper:
+        return (
+            '<aside id="readiness-focus" class="focus-pane">'
+            '<div class="placeholder">Paper not found.</div>'
+            '</aside>'
+        )
+    gate_list = _paper_gate_list(paper)
+    states = [g['state'] for g in gate_list]
+    pstate = _classify_paper(states)
+    passed = sum(1 for s in states if s == 'passed')
+
+    parts = [
+        '<aside id="readiness-focus" class="focus-pane">',
+        f'<h3>{esc(active_paper)}</h3>',
+        '<div class="paper-meta">',
+        f'<span class="paper-state-{pstate}">{pstate}</span> ',
+        f'{passed}/11 gates passed',
+        '</div>',
+    ]
+    for g in gate_list:
+        expanded = (g['state'] != 'passed') or (active_gate == g['gate'])
+        row_cls = 'gate-row' + (' expanded' if expanded else '')
+        toggle = (
+            f"$activeGate=$activeGate==='{esc(g['gate'])}'?'':'{esc(g['gate'])}'; "
+            f"@get('/api/readiness')"
+        )
+        chip = ('GREEN' if g['state'] == 'passed'
+                else 'RED' if g['state'] == 'blocked' else 'YELLOW')
+        parts.append(
+            f'<div class="{row_cls}" data-on:click="{esc(toggle)}">'
+            '<div class="gate-title">'
+            f'<span style="font-size:0.85rem">P{g["priority"]} · {esc(g["gate"])}</span>'
+            f'<span class="gate-chip paper-state-{chip}">{esc(g["state"])}</span>'
+            '</div>'
+        )
+        if expanded:
+            if g.get('notes'):
+                parts.append(f'<div class="gate-notes">{esc(g["notes"])}</div>')
+            if g.get('evidence'):
+                parts.append('<div><strong style="font-size:0.75rem">Evidence</strong>'
+                             '<ul class="evidence">')
+                for e in g['evidence']:
+                    parts.append(f'<li>{esc(e)}</li>')
+                parts.append('</ul></div>')
+            if g.get('blockers'):
+                parts.append('<div><strong style="font-size:0.75rem">Blockers</strong>'
+                             '<ul class="blockers">')
+                for b in g['blockers']:
+                    parts.append(f'<li>{esc(b)}</li>')
+                parts.append('</ul></div>')
+            if g.get('last_evaluated'):
+                parts.append(
+                    f'<div class="gate-notes">Last evaluated: {esc(g["last_evaluated"])}</div>'
+                )
+        parts.append('</div>')
+    parts.append('</aside>')
+    return ''.join(parts)
+
+
+def _readiness_sse_events(data: dict, signals: dict):
+    """Emit three morph targets in order: summary, heatmap, focus.
+    Filter row is static HTML with Datastar attrs — no server emit needed.
+    Datastar's morph is by id, so re-emitting idempotent fragments is cheap."""
+    yield SSE.patch_elements(_readiness_summary_html(data))
+    yield SSE.patch_elements(_readiness_heatmap_html(data, signals))
+    yield SSE.patch_elements(_readiness_focus_html(data, signals))
+
+
+@app.route("/api/readiness")
+def api_readiness():
+    """Per-paper readiness gate data. Auto-negotiates SSE (Datastar) vs JSON.
+
+    SSE path (Accept: text/event-stream): streams patch_elements for the
+    four morph targets — summary, filters, heatmap, focus — with filter
+    state taken from client-provided Datastar signals. See Wave 9h.
+
+    JSON path: unchanged from Wave 5a — preserved for tests + scripts.
+    """
+    data = _readiness_build_data()
+    if is_datastar_request():
+        signals = read_signals()
+        return sse_response(lambda: _readiness_sse_events(data, signals))
+    return jsonify(data)
 
 
 # ════════════════════════════════════════════════════════════════════

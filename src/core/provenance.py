@@ -930,6 +930,272 @@ PARAMETER_PROVENANCE = {
                  'c_s is theoretical — the product is mixed. Paper 17 submission '
                  'requires human verification of each per-cluster v_infall.',
     },
+
+    # ════════════════════════════════════════════════════════════════
+    # Phase 5z: Electroweak sector (Wave 1 — ScalarRungInterpretation)
+    # ════════════════════════════════════════════════════════════════
+
+    'EW.M_W_GEV': {
+        'value': 80.3692,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Review of Particle Physics (2024)',
+        'detail': 'W boson mass: m_W = 80.3692 ± 0.0133 GeV (PDG 2024 world average). '
+                  'Dominant input from CDF II, ATLAS, LHCb tensions handled via PDG scale factor.',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PDG 2024 values. Used in EW.ew_mass_matrix_from_scalar_vev Lean '
+                              'theorem (ScalarRungInterpretation.lean).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5z Wave 1 canonical value. M_W/M_Z ratio with cos θ_W gives '
+                 'a tight consistency test for the scalar-rung Anderson-Higgs prediction.',
+    },
+    'EW.M_Z_GEV': {
+        'value': 91.1876,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Review of Particle Physics (2024)',
+        'detail': 'Z boson mass: m_Z = 91.1876 ± 0.0021 GeV (PDG 2024, LEP/SLD combined).',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PDG 2024 values. Definitional Z-pole mass.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5z Wave 1 canonical value. Enters Anderson-Higgs consistency check '
+                 'M_W/M_Z = cos θ_W.',
+    },
+    'EW.M_H_GEV': {
+        'value': 125.25,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Review of Particle Physics (2024)',
+        'detail': 'Higgs boson mass: m_H = 125.25 ± 0.17 GeV (PDG 2024 world average from '
+                  'ATLAS + CMS diphoton and 4-lepton channels).',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PDG 2024 world average. Correctness-push target for Phase 5z '
+                              'Wave 1 HiggsMassFromCondensate predicate.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5z Wave 1 FALSIFIABILITY ANCHOR. Scalar-rung framing is a '
+                 'quantitative EWSB theory iff the microscopic prediction falls within '
+                 'M_H_MATCH_TOLERANCE of this value.',
+    },
+    'EW.V_EW_GEV': {
+        'value': 246.21965,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'Derived from Fermi constant G_F via v = (√2·G_F)^{-1/2}',
+        'detail': 'EW vacuum expectation value v = 246.21965 ± 0.00014 GeV. Computed as '
+                  'v = (√2 · G_F)^{-1/2} with G_F = 1.1663787 × 10⁻⁵ GeV⁻² (muon lifetime).',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Standard EW-sector derived quantity. Value consistent '
+                              'with PDG 2024 Electroweak Model review.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Scale-setting parameter for the Anderson-Higgs mass matrix: M_W = g·v/2, '
+                 'M_Z = √(g²+g\'²)·v/2.',
+    },
+    'EW.SIN2_THETA_W': {
+        'value': 0.23121,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Review of Particle Physics (2024), on-shell scheme',
+        'detail': 'On-shell weak mixing angle sin²θ_W = 1 − M_W²/M_Z² = 0.22337 tree-level, '
+                  '0.23121 with PDG 2024 effective-scheme value at M_Z.',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PDG 2024 effective-scheme value. Two schemes exist (on-shell '
+                              'vs MS-bar); we use the effective-scheme on-shell for the '
+                              'scalar-rung matrix-element derivation.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Fixes g / g\' ratio. Enters Anderson-Higgs M_W/M_Z consistency theorem.',
+    },
+    'EW.G_FERMI_GEV_M2': {
+        'value': 1.1663787e-5,
+        'unit': 'GeV⁻²',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Review of Particle Physics (2024), from muon lifetime',
+        'detail': 'Fermi constant G_F = 1.1663787(6) × 10⁻⁵ GeV⁻², from muon lifetime with '
+                  'full radiative corrections (MuLan 2011 experiment + theory).',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PDG 2024 tabulated value, MuLan final result.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Sets v via v = (√2 G_F)^{-1/2}. Fundamental low-energy EW parameter.',
+    },
+    'EW.G_SU2': {
+        'value': 0.6536,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Derived from α_EM(M_Z) and sin²θ_W via g = e/sin θ_W',
+        'detail': 'SU(2)_L gauge coupling at M_Z: g ≈ 0.6536, using α_EM(M_Z)⁻¹ = 127.934 '
+                  '(running value) and sin²θ_W = 0.23121.',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Standard PDG-derived value. Used in Anderson-Higgs M_W theorem.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Enters M_W = g v / 2 via the scalar-rung W/Z mass-matrix theorem.',
+    },
+    'EW.G_U1Y': {
+        'value': 0.3489,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Derived from α_EM(M_Z) and sin²θ_W via g\' = e/cos θ_W',
+        'detail': 'U(1)_Y hypercharge gauge coupling at M_Z: g\' ≈ 0.3489. '
+                  'Satisfies tan θ_W = g\'/g.',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Standard PDG-derived value.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Enters M_Z = √(g² + g\'²) v / 2 via the Anderson-Higgs theorem.',
+    },
+    'EW.LAMBDA_SM_HIGGS': {
+        'value': 0.129,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Derived from m_H and v via λ = m_H²/(2 v²) at tree level',
+        'detail': 'Tree-level SM Higgs quartic: λ = m_H²/(2 v²) = (125.25)²/(2·246.22²) ≈ 0.129. '
+                  'Running λ(M_H) differs by a few percent from tree value.',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Standard tree-level derivation. Used as comparison to '
+                              'Wetterich scalar-channel quartic in the microscopic m_H scan.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Target value for the scalar-rung Mexican-hat quartic at the matching scale.',
+    },
+    'EW.Y_TOP': {
+        'value': 0.9946,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Derived from top-quark pole mass m_t = 172.76 GeV and v',
+        'detail': 'Top Yukawa y_t = √2 m_t/v = √2 · 172.76 / 246.22 ≈ 0.9946. Near-unity '
+                  'y_t is a natural outcome of any overlap-integral picture where top is '
+                  'strong-coupled to the scalar condensate.',
+        'doi': '10.1093/ptep/ptae163',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PDG 2024 top mass m_t = 172.69 ± 0.30 GeV (pole-mass combination). '
+                              'Using 172.76 as central for Yukawa — well within PDG uncertainty.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Top-Yukawa near-unity is a key input to the m_H microscopic prediction '
+                 'via the RG running of λ.',
+    },
+    'EW.LAMBDA_UV_FIDUCIAL_GEV': {
+        'value': 1.0e16,
+        'unit': 'GeV',
+        'tier': 'PROJECTED',
+        'source': 'Wetterich spinor-gravity substrate scale, GUT-adjacent',
+        'detail': 'Fiducial UV cutoff Λ_UV for the ADW / Wetterich 4-fermion substrate. '
+                  'Chosen at the GUT scale (10^16 GeV) as the natural anchor for a condensate-'
+                  'based EWSB in which the scalar-rung VEV v ≈ 246 GeV is ~14 orders of '
+                  'magnitude below the substrate scale. Phase 5z Wave 1 m_H scan sweeps '
+                  'over (10^10 — 10^19) GeV.',
+        'doi': None,
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PROJECTED — no primary source pins this to a unique value. '
+                              'Choice is motivated by GUT-adjacent substrate + Planck '
+                              'hierarchy. Full scan in src/scalar_rung/higgs_prediction.py.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Parameter sweep variable; fiducial value only for point predictions. '
+                 'All paper 20 claims derive from the full scan, not this one value.',
+    },
+    'EW.N_F_FIDUCIAL': {
+        'value': 15,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'SM Weyl fermion content per generation (García-Etxebarria & Montero)',
+        'detail': 'Without ν_R: 15 Weyl components per generation (6+3+3+2+1). '
+                  'SMFermionData.lean encodes this. Used as default N_f for the m_H scan '
+                  'absent Embedding I resolution of O.3.',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Matches SM_FERMION_DATA in constants.py and the 15 ≡ -1 mod 16 '
+                              'anomaly result in HiddenSectorClassification.lean.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Tier MEASURED because SM fermion count is definitionally fixed from '
+                 'experimental observation of the known fermions.',
+    },
+    'EW.N_F_WITH_NU_R': {
+        'value': 16,
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'ℤ₁₆-anomaly-preferred extension (García-Etxebarria & Montero)',
+        'detail': 'With right-handed neutrino ν_R: 16 Weyl components per generation. '
+                  'Matches the ℤ₁₆ period exactly — 16 ≡ 0 mod 16, anomaly-free per generation. '
+                  'Alternative N_f value for the m_H scan under seesaw Embedding I (O.3).',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'Consistent with one_gen_anomaly_with_nuR and ℤ₁₆-period '
+                              'coincidence documented in Z16AnomalyComputation.lean.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Theoretical extension; ν_R itself is not observed. Used only under '
+                 'Embedding I in Phase 5z Wave 2 follow-up.',
+    },
+    'EW.G_C_FIDUCIAL': {
+        'value': 1.0,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'ADW / NJL tetrad gap-equation critical-coupling nominal unit',
+        'detail': 'Fiducial dimensionless 4-fermion coupling G_c for the scalar channel. '
+                  'Phase 5z Wave 1 m_H scan sweeps G_c over (0.1 — 10) at fixed Λ_UV; '
+                  'G_c = 1.0 is the order-unity anchor point. Maps to physical g_EH via '
+                  'the NJL-ADW correspondence (WetterichNJL.lean: g_EH = 16 g_njl).',
+        'doi': None,
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PROJECTED; no primary source. Order-unity choice motivated by '
+                              'ADW critical-coupling calculations and TetradGapEquation bifurcation point.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Parameter sweep variable. Correctness-push conclusions depend on range, '
+                 'not this single value.',
+    },
+    'EW.LAMBDA_4_FIDUCIAL': {
+        'value': 0.13,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Tuned to tree-level SM quartic λ_SM_HIGGS for baseline m_H scan',
+        'detail': 'Fiducial scalar-channel quartic λ_4 matched to λ_SM_HIGGS = 0.129 at the '
+                  'matching scale, giving the "expected" microscopic value under the '
+                  'scalar-rung identification. Phase 5z Wave 1 scan sweeps 0.01 — 1.0.',
+        'doi': None,
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PROJECTED; baseline value only. Full scan in '
+                              'src/scalar_rung/higgs_prediction.py.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Deliberately chosen near SM value to highlight deviations from the '
+                 'substrate-driven microscopic prediction.',
+    },
+    'EW.M_H_MATCH_TOLERANCE': {
+        'value': 0.5,
+        'unit': 'dimensionless (fractional)',
+        'tier': 'PROJECTED',
+        'source': 'Phase 5z Wave 1 correctness-push operational threshold',
+        'detail': 'Order-of-magnitude match tolerance for the Higgs microscopic prediction. '
+                  'If |m_H_predicted − 125.25 GeV| / 125.25 < 0.5 over a natural parameter range, '
+                  'the scalar-rung framing is "quantitatively compatible" with 125 GeV. '
+                  'Otherwise the framing is structural-only. Defines Gate Z.1 activation.',
+        'doi': None,
+        'llm_verified_date': '2026-04-24',
+        'llm_verified_notes': 'PROJECTED — operational choice for the falsifiability anchor. '
+                              '50% allows for RG-running uncertainty + substrate-specific '
+                              'corrections; tighter than 1-order-of-magnitude.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5z roadmap Gate Z.1. User decision at Stage 10 paper submission on '
+                 'whether tighter tolerance is warranted.',
+    },
 }
 
 

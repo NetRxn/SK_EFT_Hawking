@@ -1782,6 +1782,47 @@ SM_ANOMALY = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 5z: Electroweak Sector — Measured SM Parameters + ADW Fiducial
+#
+# Canonical electroweak values (PDG 2024) and fiducial ADW-substrate
+# parameters used by the Phase 5z scalar-rung interpretation.
+#
+# Units: GeV where natural for SM physics; dimensionless elsewhere.
+# All values traced via PARAMETER_PROVENANCE (src/core/provenance.py).
+# Phase 5z Wave 1 (ScalarRungInterpretation.lean) consumes these via
+# src/scalar_rung/.
+# ════════════════════════════════════════════════════════════════════
+
+EW_PARAMS = {
+    # ── Measured SM electroweak parameters (PDG 2024) ───────────────
+    'M_W_GEV': 80.3692,           # W boson mass (GeV/c²), PDG 2024
+    'M_Z_GEV': 91.1876,           # Z boson mass (GeV/c²), PDG 2024
+    'M_H_GEV': 125.25,            # Higgs boson mass (GeV/c²), PDG 2024
+    'V_EW_GEV': 246.21965,        # EW vacuum expectation value (GeV)
+    'SIN2_THETA_W': 0.23121,      # On-shell weak mixing angle sin²θ_W
+    'G_FERMI_GEV_M2': 1.1663787e-5,  # Fermi constant (GeV⁻²)
+    'ALPHA_EM_INV': 137.035999084,   # Fine structure constant⁻¹ (low-E)
+    # Canonical SM dimensionless couplings at M_Z (PDG)
+    'G_SU2': 0.6536,              # g = e/sin θ_W at M_Z
+    'G_U1Y': 0.3489,              # g' = e/cos θ_W at M_Z (hypercharge)
+    # SM Higgs sector phenomenology (tree level)
+    'LAMBDA_SM_HIGGS': 0.129,     # λ_SM = m_H²/(2v²) at tree level
+    'Y_TOP': 0.9946,              # y_t = √2 m_t/v with m_t = 172.76 GeV
+    # ── ADW-substrate fiducial values (Wave 1 parameter sweep) ──────
+    # These are PROJECTED — not measured, but used as the natural
+    # Wetterich / ADW substrate scale choices for the m_H microscopic
+    # prediction scan in src/scalar_rung/higgs_prediction.py.
+    'LAMBDA_UV_FIDUCIAL_GEV': 1.0e16,  # GUT-like UV cutoff (GeV)
+    'N_F_FIDUCIAL': 15,               # SM Weyl fermion count / generation (no ν_R)
+    'N_F_WITH_NU_R': 16,              # With ν_R — matches ℤ₁₆ classification
+    'G_C_FIDUCIAL': 1.0,              # Critical 4-fermion coupling (dimensionless)
+    'LAMBDA_4_FIDUCIAL': 0.13,        # Scalar-channel quartic (near λ_SM_HIGGS)
+    # Correctness-push threshold: order-of-magnitude match to m_H = 125 GeV
+    'M_H_MATCH_TOLERANCE': 0.5,       # ±50% = "quantitative match"
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Parameter Provenance Registry (imported from src.core.provenance)
 #
 # Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS must have

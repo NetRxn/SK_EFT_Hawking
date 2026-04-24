@@ -6150,3 +6150,291 @@ def quasi1d_correction_bound(omega, omega_perp, L, W, l_ee):
     surface_gravity_term = (l_ee / W) ** 2
     evanescent_term = (omega / omega_perp) ** 2 * np.exp(-2.0 * np.pi * L / W)
     return surface_gravity_term + evanescent_term
+
+
+# =============================================================================
+# Phase 5z Wave 1: Scalar-rung interpretation (ScalarRungInterpretation.lean)
+# =============================================================================
+
+def mexican_hat_potential(phi, mu_sq, lam):
+    """SM textbook Mexican-hat potential V(φ) = -(1/2)μ²φ² + (1/4)λφ⁴.
+
+    Specialization of the TetradGapEquation bifurcation's symmetric-broken
+    branch, with real-scalar convention (matches Peskin-Schroeder §11.1 and
+    the provenance note for ``EW.LAMBDA_SM_HIGGS = m_H² / (2 v²)``).
+
+    Lean: ScalarRungInterpretation.mexican_hat_is_tetrad_bifurcation
+    Aristotle: pending
+    Source: Nambu-Jona-Lasinio PR 122, 345 (1961), and the standard
+        SSB literature. Peskin-Schroeder §11.1 uses this real-scalar
+        normalization. The Wetterich-NJL specialization is new to
+        Phase 5z (see ``docs/roadmaps/Phase5z_Roadmap.md``).
+
+    Parameters
+    ----------
+    phi : float or array
+        Scalar field value φ.
+    mu_sq : float
+        Negative-mass-squared parameter μ² > 0 (the potential has a minus sign).
+    lam : float
+        Quartic coupling λ > 0 for stability.
+
+    Returns
+    -------
+    float or array
+        V(φ) = -(1/2)μ² φ² + (1/4)λ φ⁴.
+    """
+    return -0.5 * mu_sq * phi ** 2 + 0.25 * lam * phi ** 4
+
+
+def mexican_hat_vev(mu_sq, lam):
+    """VEV |φ|_min = √(μ²/λ) from ∂V/∂φ = 0 on the symmetry-broken branch
+    under SM textbook convention V = -(1/2)μ²φ² + (1/4)λφ⁴.
+
+    Identified with the EW VEV v ≈ 246.22 GeV when the scalar channel is
+    the Higgs bilinear. Matches ``EW.V_EW_GEV`` at (μ², λ) = (λ·v², λ).
+
+    Lean: ScalarRungInterpretation.mexicanHatVev_sq
+    Aristotle: pending
+    Source: Peskin-Schroeder §11.1 (real-scalar convention).
+
+    Parameters
+    ----------
+    mu_sq : float
+        Mass-squared parameter μ² > 0.
+    lam : float
+        Quartic coupling λ > 0.
+
+    Returns
+    -------
+    float
+        |φ|_min = √(μ²/λ).
+    """
+    if mu_sq <= 0 or lam <= 0:
+        raise ValueError("Mexican-hat VEV requires μ² > 0 and λ > 0 for the "
+                         "symmetry-broken branch.")
+    return np.sqrt(mu_sq / lam)
+
+
+def higgs_mass_from_vev(mu_sq, lam):
+    """Tree-level Higgs mass from Mexican-hat potential: m_H = √(2μ²) = √(2λ) v.
+
+    The correctness-push anchor: if this value (using microscopic μ², λ
+    derived from the Wetterich substrate) lands near 125.25 GeV within
+    EW.M_H_MATCH_TOLERANCE, the scalar-rung framing is quantitative.
+
+    Lean: ScalarRungInterpretation.higgsMassSq_eq_two_lam_vev_sq
+    Aristotle: pending
+    Source: Textbook tree-level result (Peskin-Schroeder §11.1). Phase 5z's
+        microscopic prediction expresses μ²(Λ_UV, N_f, G_c) and λ(Λ_UV,
+        N_f, G_c) from the Wetterich scalar-channel gap equation, making
+        the m_H value a prediction rather than a fit.
+
+    Parameters
+    ----------
+    mu_sq : float
+        Mass-squared parameter μ².
+    lam : float
+        Quartic coupling λ.
+
+    Returns
+    -------
+    float
+        m_H² = 2μ² → m_H = √(2μ²).
+    """
+    if mu_sq <= 0 or lam <= 0:
+        raise ValueError("Higgs mass tree formula requires μ² > 0 and λ > 0.")
+    return np.sqrt(2.0 * mu_sq)
+
+
+def w_mass_from_vev(g, v):
+    """W boson mass from Anderson-Higgs on the scalar rung: M_W = g·v / 2.
+
+    Direct specialization of the SU(2)_L Anderson-Higgs mechanism to the
+    scalar-channel condensate VEV. Combined with ``z_mass_from_vev`` gives
+    the full Anderson-Higgs mass-matrix consistency check.
+
+    Lean: ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev
+    Aristotle: pending
+    Source: Peskin-Schroeder §20.2; the scalar-rung specialization is
+        a direct identification after fixing the SU(2)_L-doublet embedding
+        (pending O.2 resolution).
+
+    Parameters
+    ----------
+    g : float
+        SU(2)_L gauge coupling (≈ 0.6536 at M_Z).
+    v : float
+        EW VEV (≈ 246.22 GeV).
+
+    Returns
+    -------
+    float
+        M_W = g v / 2.
+    """
+    return g * v / 2.0
+
+
+def z_mass_from_vev(g, g_prime, v):
+    """Z boson mass from Anderson-Higgs: M_Z = √(g² + g'²) · v / 2.
+
+    Combined with ``w_mass_from_vev`` gives the on-shell weak mixing angle
+    prediction cos θ_W = M_W / M_Z = g / √(g² + g'²).
+
+    Lean: ScalarRungInterpretation.zMass_pos
+    Aristotle: pending
+    Source: Peskin-Schroeder §20.2.
+
+    Parameters
+    ----------
+    g : float
+        SU(2)_L gauge coupling.
+    g_prime : float
+        U(1)_Y hypercharge coupling.
+    v : float
+        EW VEV.
+
+    Returns
+    -------
+    float
+        M_Z = √(g² + g'²) · v / 2.
+    """
+    return np.sqrt(g ** 2 + g_prime ** 2) * v / 2.0
+
+
+def ew_mass_ratio_cos_theta_w(g, g_prime):
+    """M_W/M_Z ratio = cos θ_W = g / √(g² + g'²) from Anderson-Higgs.
+
+    Direct consistency check for the scalar-rung mass-matrix theorem.
+    The value is an ratio of microscopic couplings, not of VEVs, so it
+    is a non-trivial prediction of the Anderson-Higgs identification
+    (independent of the VEV scale).
+
+    Lean: ScalarRungInterpretation.wMass_div_zMass
+    Aristotle: pending
+    Source: Standard EW-textbook identity.
+
+    Parameters
+    ----------
+    g : float
+        SU(2)_L gauge coupling.
+    g_prime : float
+        U(1)_Y hypercharge coupling.
+
+    Returns
+    -------
+    float
+        cos θ_W = g / √(g² + g'²).
+    """
+    return g / np.sqrt(g ** 2 + g_prime ** 2)
+
+
+def yukawa_overlap_coefficient(overlap_density, vev, normalization=1.0):
+    """Yukawa coupling as overlap integral: y_f = (overlap · v) · norm.
+
+    Phenomenological stand-in for the emergent-Weyl-mode overlap integral
+    described in the Phase 5z Open Question O.2 deep research prompt
+    (Phase5z_yukawa_overlap_emergent_weyl_modes.md). In the full
+    formalization, ``overlap_density`` is ∫ d³x ψ_f†(x) σ(x) ψ_g(x) on
+    the FermiPointTopology substrate; here we treat it as a scalar input.
+
+    Lean: ScalarRungInterpretation.yukawaCoupling_additive
+    Aristotle: pending
+    Source: Phase 5z Wave 1 — the microscopic form is deep-research
+        gated on ``Lit-Search/Tasks/Phase5z_yukawa_overlap_emergent_weyl_modes.md``.
+
+    Parameters
+    ----------
+    overlap_density : float or array
+        Dimensionless overlap integral (normalized).
+    vev : float
+        Condensate VEV in GeV.
+    normalization : float, optional
+        Substrate-scale normalization factor (default 1.0).
+
+    Returns
+    -------
+    float or array
+        Dimensionless Yukawa coupling y_f.
+    """
+    # Linear-in-overlap stand-in. ``vev`` is accepted for interface compatibility
+    # with future scalar-channel dressing and does not enter the baseline form;
+    # it resolves once O.2 deep research fixes the microscopic overlap convention.
+    del vev
+    return overlap_density * normalization
+
+
+def higgs_mass_from_condensate(lambda_uv, n_f, g_c, lam4):
+    """Microscopic Higgs mass prediction from the Wetterich scalar-channel
+    gap equation + Mexican-hat quartic.
+
+    Schematic leading-log form:
+
+        m_H² ≈ (2 λ / N_f) · v_cond² (Λ_UV, N_f, G_c)
+
+    where v_cond is the scalar-channel VEV from the gap-equation
+    bifurcation. The full microscopic relation is deep-research gated
+    (``Lit-Search/Tasks/Phase5z_wetterich_njl_ew_index_structure.md``);
+    this is the baseline scan form used by
+    ``src/scalar_rung/higgs_prediction.py``.
+
+    Lean: ScalarRungInterpretation.higgsMassFromCondensate_pos
+    Aristotle: pending
+    Source: Phase 5z Wave 1 correctness-push anchor. The exact form
+        resolves with O.2 deep research (scenario A vs B).
+
+    Parameters
+    ----------
+    lambda_uv : float
+        UV cutoff Λ_UV [GeV].
+    n_f : int
+        Number of Weyl components (15 or 16).
+    g_c : float
+        Dimensionless 4-fermion coupling G_c (order 1).
+    lam4 : float
+        Scalar-channel quartic λ_4.
+
+    Returns
+    -------
+    float
+        Predicted m_H [GeV].
+    """
+    if lambda_uv <= 0 or n_f <= 0 or g_c <= 0 or lam4 <= 0:
+        raise ValueError("All microscopic parameters must be positive.")
+    # Hierarchical-suppression form: v_cond ~ Λ_UV · exp(-π² / (2 n_f g_c))
+    # (NJL gap-equation leading-log closure in 4D, dimensional regularization).
+    v_cond = lambda_uv * np.exp(-np.pi ** 2 / (2.0 * n_f * g_c))
+    m_h = np.sqrt(2.0 * lam4) * v_cond
+    return m_h
+
+
+def scalar_rung_quantitative_match(m_h_pred, m_h_obs=125.25, tolerance=0.5):
+    """Decidable predicate for the correctness-push falsifiability anchor:
+
+        quantitative_match iff |m_h_pred − m_h_obs| / m_h_obs < tolerance
+
+    If True: scalar-rung framing is quantitative EWSB. If False: structural-only,
+    flagship paper is reframed. Gate Z.1 in the Phase 5z roadmap.
+
+    Lean: ScalarRungInterpretation.scalar_rung_quantitative_EWSB_iff_m_H_matches
+    Aristotle: pending
+    Source: Phase 5z Wave 1 operational threshold. Defined in
+        ``EW.M_H_MATCH_TOLERANCE``.
+
+    Parameters
+    ----------
+    m_h_pred : float
+        Microscopic prediction for m_H [GeV].
+    m_h_obs : float
+        Observed m_H [GeV], default 125.25.
+    tolerance : float
+        Fractional tolerance, default 0.5.
+
+    Returns
+    -------
+    bool
+        True iff the microscopic prediction is within `tolerance` of m_h_obs.
+    """
+    if m_h_obs <= 0 or tolerance <= 0:
+        raise ValueError("Observed mass and tolerance must be positive.")
+    return abs(m_h_pred - m_h_obs) / m_h_obs < tolerance

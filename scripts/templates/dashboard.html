@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SK-EFT Provenance Command Center</title>
-    <!-- Datastar CDN — 2026-04-24: npm-scoped URL 404s; using canonical gh-tagged build.
-         Reference: https://data-star.dev/guide/getting_started -->
-    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-beta.11/bundles/datastar.js"></script>
+    <!-- Datastar v1.0.1 — gh-tagged build (npm-scoped URL 404s).
+         SDK datastar-py 0.8.0 emits datastar-patch-elements/signals events;
+         v1.0.0+ consumes these (beta.11 used the old merge-fragments names).
+         Reference: docs/references/Datastar_Dashboard_Reference.md -->
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>

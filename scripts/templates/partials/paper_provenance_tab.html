@@ -1,545 +1,404 @@
-<!-- Paper Provenance Tab — Phase 5v Wave 9g (MVP).
-     Design: Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard-v2/Paper Provenance.html.
+{#
+  Paper Provenance — Phase 5v Wave 9g + 9h (v2 design final pass).
+  Target design: Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard-v2/
+                 Paper Provenance.html
+  Reference: docs/references/Datastar_Dashboard_Reference.md
 
-     Implementation: vanilla JS + fetch, matching the pattern of every other
-     tab in this dashboard (graph_tab, chains_tab, readiness_tab, qi_tab).
-     Datastar migration is tracked as Wave 9h — covers all tabs at once
-     rather than piecemeal. See docs/roadmaps/Phase5v_Roadmap.md §9h.
+  Theme: cream / light (distinct from chains_tab's dark theme). The
+  design treats the paper body as the primary artifact; claim spans are
+  highlighted INLINE with color-by-worst-status underlines; the right
+  pane defaults to the PROVENANCE DOSSIER (blocking + non-blocking
+  lists) and switches to an 8-layer verdict matrix when a claim span
+  is clicked.
 
-     MVP: live dossier + paper selector + layer filter chips + keyboard nav
-     (← → F W Esc). Rendered-HTML paper body with inline claim spans is
-     Wave 9g-2 (pandoc + \claim{} LaTeX macro). Safe-DOM throughout (no
-     innerHTML with data) per dashboard security policy.
--->
+  State:
+    $activePaper   — paper_id (persists to URL ?paper=...)
+    $activeClaim   — claim_id currently selected (empty = dossier default)
+    $filterLayers  — array of active layer-code filters
+
+  Morph targets (all patched from /api/papers/<paper_id>/provenance SSE):
+    #pp-banner-content  — title, meter, verdict / review-date
+    #pp-filter-chips    — 8-layer chips with per-layer counts
+    #pp-nav             — prev/next/clear + position indicator
+    #pp-paper-body      — rendered abstract with inline claim spans
+    #pp-detail          — PROVENANCE DOSSIER default view OR per-claim matrix
+#}
 <style>
     .pp-wrap {
-        --pp-bg: #0f1520; --pp-panel: #151d2e; --pp-border: #1e293b;
-        --pp-text: #e2e8f0; --pp-text-dim: #64748b; --pp-text-bright: #f8fafc;
-        --pp-accent: #2E86AB;
-        --pp-good: #22c55e; --pp-warn: #eab308; --pp-bad: #ef4444; --pp-info: #60a5fa;
-        font-family: 'Instrument Sans', sans-serif;
+        --pp-bg:        #f5f0e6;  /* warm cream page background */
+        --pp-paper-bg:  #faf7f0;  /* lighter cream for paper body */
+        --pp-panel:     #f0ead9;  /* tinted cream for right dossier */
+        --pp-border:    #d9cfb8;  /* tan border */
+        --pp-border-strong: #7a6b54;
+        --pp-text:      #1a2332;  /* dark navy text */
+        --pp-text-soft: #3b4654;
+        --pp-text-dim:  #77705f;
+        --pp-text-muted:#9c9178;
+        --pp-accent:    #2E86AB;
+        --pp-fail:      #b03030;
+        --pp-warn:      #b45309;
+        --pp-pass:      #166534;
+        --pp-info:      #1e40af;
+        --pp-fail-bg:   rgba(176,48,48,0.08);
+        --pp-warn-bg:   rgba(180,83,9,0.08);
+
+        font-family: 'Instrument Sans', 'Inter', sans-serif;
         background: var(--pp-bg); color: var(--pp-text);
-        padding: 0; min-height: calc(100vh - 160px); position: relative;
+        padding: 0; min-height: calc(100vh - 160px);
+        display: flex; flex-direction: column;
     }
 
+    /* ── Top banner: paper_id + title + meter + review-date + ISSUES ── */
     .pp-banner {
-        display: flex; align-items: center; gap: 14px; padding: 12px 20px;
-        background: var(--pp-panel); border-bottom: 1px solid var(--pp-border);
-        flex-wrap: wrap;
+        display: grid; align-items: center;
+        grid-template-columns: minmax(280px, 1.4fr) auto auto auto;
+        gap: 18px; padding: 14px 28px 10px;
+        background: var(--pp-bg); border-bottom: 1px solid var(--pp-border);
     }
     .pp-banner__paper-select {
-        font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem;
-        padding: 4px 10px; border: 1px solid var(--pp-border); border-radius: 4px;
-        background: var(--pp-bg); color: var(--pp-text); min-width: 240px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+        padding: 5px 10px; border: 1px solid var(--pp-border); border-radius: 4px;
+        background: var(--pp-paper-bg); color: var(--pp-text); min-width: 240px;
+        max-width: 420px;
     }
-    .pp-banner__title { font-weight: 600; color: var(--pp-text-bright); font-size: 0.95rem; max-width: 380px; }
-    .pp-banner__date { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--pp-text-dim); }
-    .pp-banner__meter { display: flex; gap: 10px; margin-left: auto; }
+    .pp-banner__idblock {
+        display: flex; flex-direction: column; gap: 2px; min-width: 0;
+    }
+    .pp-banner__pid {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--pp-text-dim);
+    }
+    .pp-banner__title {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-weight: 500; font-size: 1.08rem; color: var(--pp-text);
+        line-height: 1.25; letter-spacing: -0.003em;
+    }
+    .pp-banner__meter { display: flex; gap: 4px; align-items: center; }
     .pp-meter {
         display: flex; flex-direction: column; align-items: center;
-        padding: 4px 10px; border-radius: 4px; background: var(--pp-bg);
-        border: 1px solid var(--pp-border); font-family: 'IBM Plex Mono', monospace;
-        min-width: 54px;
+        padding: 4px 12px; font-family: 'IBM Plex Mono', monospace;
+        min-width: 48px;
     }
-    .pp-meter__n { font-size: 1rem; font-weight: 700; }
-    .pp-meter__l { font-size: 0.6rem; color: var(--pp-text-dim); letter-spacing: 0.06em; }
-    .pp-meter[data-s="fail"] .pp-meter__n { color: var(--pp-bad); }
+    .pp-meter__n { font-size: 1.3rem; font-weight: 600; line-height: 1; }
+    .pp-meter__l {
+        font-size: 0.58rem; color: var(--pp-text-dim); letter-spacing: 0.12em;
+        margin-top: 3px;
+    }
+    .pp-meter[data-s="fail"] .pp-meter__n { color: var(--pp-fail); }
     .pp-meter[data-s="warn"] .pp-meter__n { color: var(--pp-warn); }
-    .pp-meter[data-s="pass"] .pp-meter__n { color: var(--pp-good); }
+    .pp-meter[data-s="pass"] .pp-meter__n { color: var(--pp-pass); }
     .pp-meter[data-s="info"] .pp-meter__n { color: var(--pp-info); }
-    .pp-verdict {
-        padding: 5px 11px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .pp-verdict[data-v="issues_found"] { background: rgba(239,68,68,0.15); color: var(--pp-bad); }
-    .pp-verdict[data-v="pass"] { background: rgba(34,197,94,0.15); color: var(--pp-good); }
-    .pp-verdict[data-v="unknown"] { background: rgba(100,116,139,0.15); color: var(--pp-text-dim); }
 
+    .pp-banner__review {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--pp-text-dim);
+    }
+
+    .pp-verdict {
+        padding: 6px 13px; border-radius: 3px; font-size: 0.66rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        font-family: 'IBM Plex Mono', monospace;
+        border: 1px solid transparent;
+    }
+    .pp-verdict[data-v="issues_found"] {
+        background: var(--pp-fail); color: #faf7f0;
+    }
+    .pp-verdict[data-v="pass"]    { background: var(--pp-pass); color: #faf7f0; }
+    .pp-verdict[data-v="unknown"] {
+        background: transparent; color: var(--pp-text-dim);
+        border-color: var(--pp-border);
+    }
+
+    /* ── Filter row: layer chips + prev/next/clear ── */
     .pp-filters {
-        display: flex; align-items: center; gap: 10px; padding: 10px 20px;
-        background: #111827; border-bottom: 1px solid var(--pp-border);
+        display: flex; align-items: center; gap: 8px; padding: 8px 28px;
+        background: var(--pp-bg); border-bottom: 1px solid var(--pp-border);
         flex-wrap: wrap;
     }
     .pp-filters__label {
-        font-size: 0.66rem; color: var(--pp-text-dim);
-        text-transform: uppercase; letter-spacing: 0.06em;
+        font-size: 0.62rem; color: var(--pp-text-dim);
+        text-transform: uppercase; letter-spacing: 0.1em;
+        font-family: 'IBM Plex Mono', monospace;
     }
     .pp-chip {
-        font-family: 'Instrument Sans', sans-serif; font-size: 0.7rem; font-weight: 600;
-        padding: 4px 10px; border-radius: 14px; border: 1px solid var(--pp-border);
-        background: transparent; color: var(--pp-text); cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+        padding: 4px 10px; border-radius: 3px;
+        border: 1px solid var(--pp-border); background: var(--pp-paper-bg);
+        color: var(--pp-text); cursor: pointer;
+        display: inline-flex; align-items: center; gap: 7px;
     }
-    .pp-chip:hover { border-color: var(--pp-accent); }
-    .pp-chip--on { background: var(--pp-accent); border-color: var(--pp-accent); color: var(--pp-text-bright); }
-    .pp-chip__n { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; opacity: 0.75; }
+    .pp-chip:hover { border-color: var(--pp-border-strong); }
+    .pp-chip--on {
+        background: var(--pp-text); border-color: var(--pp-text); color: var(--pp-paper-bg);
+    }
+    .pp-chip__n { font-size: 0.68rem; opacity: 0.75; }
     .pp-nav {
         margin-left: auto; display: flex; align-items: center; gap: 6px;
-        font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
     }
     .pp-nav button {
-        background: transparent; border: 1px solid var(--pp-border); color: var(--pp-text);
-        padding: 2px 8px; border-radius: 3px; cursor: pointer; font-family: inherit;
+        background: var(--pp-paper-bg); border: 1px solid var(--pp-border);
+        color: var(--pp-text); padding: 3px 9px; border-radius: 3px;
+        cursor: pointer; font-family: inherit; font-size: 0.72rem;
     }
-    .pp-nav button:hover { border-color: var(--pp-accent); }
+    .pp-nav button:hover { border-color: var(--pp-border-strong); }
+    .pp-nav__count {
+        min-width: 60px; text-align: center; color: var(--pp-text-dim);
+    }
 
+    /* ── Split pane: paper body ⇔ provenance dossier ── */
     .pp-split {
-        display: grid; grid-template-columns: 1.3fr 1fr;
-        height: calc(100vh - 260px); overflow: hidden;
+        display: grid; grid-template-columns: 1.5fr 1fr;
+        flex: 1; min-height: 0; overflow: hidden;
     }
-
-    .pp-left {
-        overflow-y: auto; padding: 18px 24px; background: var(--pp-bg);
+    .pp-paper-pane {
+        overflow-y: auto; padding: 28px 40px 60px;
+        background: var(--pp-paper-bg);
         border-right: 1px solid var(--pp-border);
     }
-    .pp-left__title { font-weight: 600; color: var(--pp-text-bright); margin-bottom: 10px; }
-    .pp-left__hint { font-size: 0.75rem; color: var(--pp-text-dim); margin-bottom: 16px; }
-    .pp-claim-list { display: flex; flex-direction: column; gap: 6px; }
-    .pp-claim {
-        display: grid; grid-template-columns: 52px 1fr auto;
-        gap: 10px; padding: 8px 12px; border-radius: 4px;
-        background: var(--pp-panel); border: 1px solid transparent;
-        cursor: pointer; transition: border-color 0.1s;
+    .pp-paper {
+        max-width: 720px; margin: 0 auto;
+        font-family: 'Instrument Serif', Georgia, serif;
+        color: var(--pp-text);
     }
-    .pp-claim:hover { border-color: var(--pp-accent); }
-    .pp-claim.is-active { border-color: var(--pp-accent); background: rgba(46,134,171,0.1); }
-    .pp-claim__badge {
-        font-family: 'IBM Plex Mono', monospace; font-size: 0.64rem; font-weight: 700;
-        padding: 2px 6px; border-radius: 3px; text-align: center;
-        align-self: center;
+    .pp-paper__kicker {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--pp-text-dim); margin-bottom: 18px;
     }
-    .pp-claim__badge[data-s="FAIL"] { background: rgba(239,68,68,0.2); color: var(--pp-bad); }
-    .pp-claim__badge[data-s="WARN"] { background: rgba(234,179,8,0.2); color: var(--pp-warn); }
-    .pp-claim__badge[data-s="PASS"] { background: rgba(34,197,94,0.2); color: var(--pp-good); }
-    .pp-claim__badge[data-s="INFO"] { background: rgba(96,165,250,0.2); color: var(--pp-info); }
-    .pp-claim__quote { font-size: 0.82rem; color: var(--pp-text); line-height: 1.4; }
-    .pp-claim__id { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--pp-text-dim); margin-top: 2px; }
-    .pp-claim__layers {
-        display: flex; gap: 3px; align-items: center; align-self: center;
+    .pp-paper__title {
+        font-size: 1.8rem; font-weight: 500; line-height: 1.18;
+        letter-spacing: -0.012em; color: var(--pp-text);
+        margin: 0 0 8px 0;
     }
-    .pp-claim__layer-dot {
-        width: 6px; height: 6px; border-radius: 50%; background: var(--pp-text-dim);
+    .pp-paper__subtitle {
+        font-size: 1.18rem; font-weight: 400; font-style: italic;
+        color: var(--pp-text-soft); margin-bottom: 18px; line-height: 1.3;
     }
-    .pp-claim__layer-dot[data-s="FAIL"] { background: var(--pp-bad); }
-    .pp-claim__layer-dot[data-s="WARN"] { background: var(--pp-warn); }
-    .pp-claim__layer-dot[data-s="PASS"] { background: var(--pp-good); }
-    .pp-claim__layer-dot[data-s="INFO"] { background: var(--pp-info); }
+    .pp-paper__byline {
+        font-family: 'IBM Plex Mono', monospace;
+        font-variant-caps: all-small-caps; letter-spacing: 0.08em;
+        font-size: 0.82rem; color: var(--pp-text-soft); margin-bottom: 14px;
+    }
+    .pp-paper__rule {
+        border: none; border-top: 1px solid var(--pp-border); margin: 14px 0 20px;
+    }
+    .pp-paper__section-label {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--pp-accent); margin: 18px 0 8px;
+    }
+    .pp-paper__abstract {
+        font-size: 1rem; line-height: 1.6;
+    }
+    .pp-paper__abstract p { margin: 0 0 14px 0; }
+    .pp-paper__abstract p:last-child { margin-bottom: 0; }
+    .pp-paper__placeholder {
+        color: var(--pp-text-dim); font-style: italic;
+    }
+    /* `\texttt{...}` blocks (theorem names, file paths) — keep monospace
+       since that's the LaTeX semantic. */
+    .pp-paper__abstract code,
+    .pp-paper__title code,
+    .pp-paper__subtitle code {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.88em;
+        background: rgba(46,134,171,0.08);
+        padding: 0 4px; border-radius: 2px;
+        white-space: nowrap;
+    }
+    /* `$...$` math — inherits the surrounding serif body so formulas
+       flow with prose. No monospace box. Variables aren't auto-italicized
+       because doing it well requires real math typesetting; the Unicode
+       sub/super already disambiguates `c_s` from `cs`. */
+    .pp-math {
+        font-family: inherit;
+        font-style: normal;
+        white-space: nowrap;
+    }
+    .pp-math sub, .pp-math sup {
+        font-style: italic;
+    }
 
-    .pp-right {
-        overflow-y: auto; padding: 18px 24px; background: var(--pp-panel);
+    /* Inline claim spans — color-coded by worst status. FAIL = solid
+       red underline; WARN = amber wavy; INFO = blue dotted. */
+    .pp-claim-span {
+        cursor: pointer; transition: background 0.12s;
+        border-radius: 1px; padding: 0 1px;
     }
-    .pp-dossier__title {
-        font-size: 0.66rem; color: var(--pp-text-dim);
-        text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+    .pp-claim-span--fail {
+        text-decoration: underline solid var(--pp-fail);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 3px;
     }
-    .pp-dossier__quote {
-        font-size: 0.95rem; font-weight: 500; color: var(--pp-text-bright);
-        line-height: 1.5; margin-bottom: 14px; padding: 10px 12px;
-        background: var(--pp-bg); border-left: 3px solid var(--pp-accent); border-radius: 2px;
+    .pp-claim-span--warn {
+        text-decoration: underline wavy var(--pp-warn);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
     }
-    .pp-dossier__loc { font-size: 0.68rem; color: var(--pp-text-dim); margin-bottom: 18px; font-family: 'IBM Plex Mono', monospace; }
+    .pp-claim-span--info {
+        text-decoration: underline dotted var(--pp-info);
+        text-decoration-thickness: 1.2px;
+        text-underline-offset: 3px;
+    }
+    .pp-claim-span:hover { background: var(--pp-warn-bg); }
+    .pp-claim-span--fail:hover { background: var(--pp-fail-bg); }
+    .pp-claim-span--active {
+        background: rgba(46,134,171,0.16);
+        outline: 1px solid var(--pp-accent);
+    }
 
-    .pp-matrix { display: flex; flex-direction: column; gap: 2px; }
+    /* ── Right pane: PROVENANCE DOSSIER ── */
+    .pp-dossier-pane {
+        overflow-y: auto; padding: 28px 28px 60px;
+        background: var(--pp-panel);
+        font-family: 'Instrument Sans', 'Inter', sans-serif;
+    }
+    .pp-dossier__section-label {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--pp-text-dim); margin: 18px 0 10px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .pp-dossier__count {
+        font-family: 'IBM Plex Mono', monospace;
+        padding: 1px 7px; border-radius: 2px; font-size: 0.72rem;
+        font-weight: 700; letter-spacing: 0;
+    }
+    .pp-dossier__count--fail { background: var(--pp-fail); color: var(--pp-paper-bg); }
+    .pp-dossier__count--warn { background: var(--pp-warn); color: var(--pp-paper-bg); }
+    .pp-dossier__intro {
+        font-size: 0.86rem; color: var(--pp-text-soft); line-height: 1.55;
+        margin: 0 0 14px 0; max-width: 46ch;
+    }
+    .pp-dossier__list {
+        list-style: none; padding: 0; margin: 0 0 16px 0;
+        display: flex; flex-direction: column; gap: 12px;
+    }
+    .pp-dossier__list li {
+        font-size: 0.86rem; line-height: 1.5; color: var(--pp-text);
+        padding-left: 18px; position: relative;
+    }
+    .pp-dossier__list li::before {
+        content: ''; position: absolute; left: 0; top: 9px;
+        width: 8px; height: 8px; border-radius: 50%;
+    }
+    .pp-dossier__list--fail li::before { background: var(--pp-fail); }
+    .pp-dossier__list--warn li::before { background: var(--pp-warn); }
+    .pp-dossier__empty { color: var(--pp-text-dim); font-style: italic; }
+
+    /* Dossier matrix view (when a claim is active) */
+    .pp-dossier__claim-quote {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 1rem; line-height: 1.45; color: var(--pp-text);
+        padding: 10px 12px; background: var(--pp-paper-bg);
+        border-left: 3px solid var(--pp-accent); border-radius: 2px;
+        margin-bottom: 14px;
+    }
+    .pp-dossier__loc {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+        color: var(--pp-text-dim); margin-bottom: 16px;
+    }
+    .pp-matrix { display: flex; flex-direction: column; gap: 3px; }
     .pp-matrix__row {
-        display: grid; grid-template-columns: 90px 60px 1fr;
-        gap: 10px; padding: 6px 8px; background: var(--pp-bg); border-radius: 3px;
+        display: grid; grid-template-columns: 90px 58px 1fr;
+        gap: 10px; padding: 7px 10px; background: var(--pp-paper-bg);
+        border-radius: 3px; align-items: start;
     }
-    .pp-matrix__row[data-na] { opacity: 0.4; }
+    .pp-matrix__row[data-na] { opacity: 0.45; }
     .pp-matrix__layer { font-size: 0.78rem; color: var(--pp-text); font-weight: 500; }
     .pp-matrix__status {
-        font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 700;
-        padding: 2px 6px; border-radius: 3px; text-align: center; align-self: center;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+        font-weight: 700; padding: 2px 6px; border-radius: 2px;
+        text-align: center; align-self: start;
     }
-    .pp-matrix__status[data-s="FAIL"] { background: rgba(239,68,68,0.2); color: var(--pp-bad); }
-    .pp-matrix__status[data-s="WARN"] { background: rgba(234,179,8,0.2); color: var(--pp-warn); }
-    .pp-matrix__status[data-s="PASS"] { background: rgba(34,197,94,0.2); color: var(--pp-good); }
-    .pp-matrix__status[data-s="INFO"] { background: rgba(96,165,250,0.2); color: var(--pp-info); }
-    .pp-matrix__status[data-s="NA"] { background: rgba(100,116,139,0.15); color: var(--pp-text-dim); }
-    .pp-matrix__note { font-size: 0.78rem; color: var(--pp-text); line-height: 1.4; }
+    .pp-matrix__status[data-s="FAIL"] { background: var(--pp-fail); color: var(--pp-paper-bg); }
+    .pp-matrix__status[data-s="WARN"] { background: var(--pp-warn); color: var(--pp-paper-bg); }
+    .pp-matrix__status[data-s="PASS"] { background: var(--pp-pass); color: var(--pp-paper-bg); }
+    .pp-matrix__status[data-s="INFO"] { background: var(--pp-info); color: var(--pp-paper-bg); }
+    .pp-matrix__status[data-s="NA"]   { background: rgba(121,112,95,0.2); color: var(--pp-text-dim); }
+    .pp-matrix__note { font-size: 0.84rem; color: var(--pp-text); line-height: 1.45; }
     .pp-delta {
         font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
         padding: 1px 5px; border-radius: 2px;
-        background: rgba(96,165,250,0.15); color: var(--pp-info); margin-right: 6px;
+        background: rgba(30,64,175,0.12); color: var(--pp-info); margin-right: 6px;
     }
+    .pp-dossier__back {
+        display: inline-block; margin-bottom: 12px; padding: 3px 10px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        letter-spacing: 0.08em; background: transparent;
+        border: 1px solid var(--pp-border); color: var(--pp-text-dim);
+        border-radius: 3px; cursor: pointer;
+    }
+    .pp-dossier__back:hover { border-color: var(--pp-border-strong); color: var(--pp-text); }
 
-    .pp-empty { padding: 60px 20px; text-align: center; color: var(--pp-text-dim); }
-    .pp-empty__hint { font-size: 0.82rem; line-height: 1.6; }
-    .pp-issues { margin-top: 20px; text-align: left; padding: 0 12px; }
-    .pp-issues__title { font-size: 0.74rem; color: var(--pp-text); font-weight: 600; margin-bottom: 6px; }
-    .pp-issues ul { list-style: none; padding: 0; margin: 0; }
-    .pp-issues li { font-size: 0.74rem; color: var(--pp-text-dim); padding: 4px 8px; border-left: 2px solid var(--pp-border); margin-bottom: 4px; }
-    .pp-issues li[data-b="true"] { border-left-color: var(--pp-bad); color: var(--pp-text); }
+    .pp-paper__empty {
+        max-width: 560px; margin: 120px auto; text-align: center;
+        color: var(--pp-text-dim); font-style: italic; line-height: 1.6;
+    }
 </style>
 
-<div class="pp-wrap" id="pp-wrap">
+{% set initial_paper = request.args.get('paper', '') %}
+<div class="pp-wrap" id="pp-wrap"
+     data-signals="{activePaper: '{{ initial_paper }}', activeClaim: '', filterLayers: []}"
+     data-on-intersect__once="$activePaper && @get(`/api/papers/${$activePaper}/provenance`)">
+
+    {# ── Top banner — select + 4 separate grid-cell morph targets ── #}
     <div class="pp-banner">
-        <select class="pp-banner__paper-select" id="pp-paper-select">
-            <option value="">Select a paper…</option>
-        </select>
-        <div class="pp-banner__title" id="pp-paper-title"></div>
-        <div class="pp-banner__date" id="pp-paper-date"></div>
-        <div class="pp-banner__meter" id="pp-meter"></div>
-        <div class="pp-verdict" id="pp-verdict" style="display:none"></div>
+        {# Col 1: paper selector stacked above the rendered title block. #}
+        <div class="pp-banner__idblock">
+            <select class="pp-banner__paper-select"
+                    data-bind:active-paper
+                    data-on:change="$activeClaim=''; $filterLayers=[]; window.history.replaceState({}, '', '?tab=paper&paper=' + encodeURIComponent($activePaper)); @get(`/api/papers/${$activePaper}/provenance`)">
+                <option value="">Select a paper…</option>
+                {% for p in PP_PAPERS_LIST() %}
+                <option value="{{ p.paper_id }}"{% if p.paper_id == initial_paper %} selected{% endif %}>
+                    {{ '●' if p.has_claims_review else '○' }}  {{ p.paper_id }}{% if p.overall_status %} · {{ p.overall_status }}{% endif %}
+                </option>
+                {% endfor %}
+            </select>
+            <div id="pp-banner-title-block"></div>
+        </div>
+        {# Cols 2–4: meter / review-date / verdict — each its own morph target. #}
+        <div id="pp-banner-meter"></div>
+        <div id="pp-banner-review"></div>
+        <div id="pp-banner-verdict"></div>
     </div>
 
+    {# ── Filter row ── #}
     <div class="pp-filters">
         <span class="pp-filters__label">Filter by layer:</span>
         <div id="pp-filter-chips" style="display:contents"></div>
-        <div class="pp-nav" id="pp-nav" style="display:none">
-            <button data-nav="prev" title="Previous (←)">◀</button>
-            <span id="pp-nav-count">—</span>
-            <button data-nav="next" title="Next (→)">▶</button>
-            <button data-nav="clear" title="Clear filters (Esc)">clear</button>
-        </div>
+        <div class="pp-nav" id="pp-nav" style="display:none"></div>
     </div>
 
+    {# ── Split body: paper ⇔ dossier ── #}
     <div class="pp-split">
-        <div class="pp-left">
-            <div class="pp-left__title" id="pp-left-title">Claims</div>
-            <div class="pp-left__hint" id="pp-left-hint">
-                Select a paper above. Interactive paper-body with inline claim anchoring lands in Wave 9g-2 (pandoc + <code>\claim{}</code> LaTeX macro). Meanwhile, every claim from <code>claims_review.json</code> + <code>figure_review_report.json</code> is listed here.
-            </div>
-            <div class="pp-claim-list" id="pp-claim-list"></div>
-        </div>
-
-        <div class="pp-right" id="pp-right">
-            <div class="pp-empty" id="pp-empty">
-                <div class="pp-empty__hint">
-                    Click any claim on the left to see its 8-layer verdict matrix.
-                    <br/><kbd>←</kbd> <kbd>→</kbd> cycle claims
-                    <br/><kbd>F</kbd> next FAIL · <kbd>W</kbd> next WARN · <kbd>Esc</kbd> clear
+        <div class="pp-paper-pane">
+            <article id="pp-paper-body" class="pp-paper">
+                <div class="pp-paper__empty">
+                    Select a paper from the dropdown above to view its abstract
+                    with inline claim provenance highlights.
                 </div>
-                <div class="pp-issues" id="pp-issues"></div>
-            </div>
-            <div id="pp-detail" style="display:none"></div>
+            </article>
         </div>
+        <aside class="pp-dossier-pane">
+            <div id="pp-detail" class="pp-dossier">
+                <div class="pp-dossier__section-label">PROVENANCE DOSSIER</div>
+                <p class="pp-dossier__intro">
+                    Select a paper above. Blocking issues, non-blocking follow-ups, and
+                    per-claim 8-layer verdicts populate here.
+                </p>
+            </div>
+        </aside>
     </div>
+
+    {# Keyboard shortcuts (window-level). #}
+    <div data-on:keydown__window__key.ArrowRight__prevent="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=next`)"></div>
+    <div data-on:keydown__window__key.ArrowLeft__prevent="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=prev`)"></div>
+    <div data-on:keydown__window__key.f="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=FAIL`)"></div>
+    <div data-on:keydown__window__key.w="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=WARN`)"></div>
+    <div data-on:keydown__window__key.Escape="$filterLayers = ($filterLayers && $filterLayers.length) ? [] : $filterLayers; $activeClaim = ''; $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
 </div>
-
-<script>
-(function() {
-    // Safe-DOM (no innerHTML with untrusted data — matches dashboard security hook).
-    const $ = (sel) => document.querySelector(sel);
-    function el(tag, attrs, children) {
-        const n = document.createElement(tag);
-        if (attrs) for (const k in attrs) {
-            if (k === 'className') n.className = attrs[k];
-            else if (k === 'style') n.style.cssText = attrs[k];
-            else n.setAttribute(k, attrs[k]);
-        }
-        if (children) for (const c of children) {
-            if (c == null) continue;
-            if (typeof c === 'string') n.appendChild(document.createTextNode(c));
-            else n.appendChild(c);
-        }
-        return n;
-    }
-    function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
-
-    // State
-    let currentData = null;
-    let activeFilters = new Set();
-    let activeClaimId = null;
-    const ORDER = { FAIL: 4, WARN: 3, INFO: 2, PASS: 1 };
-
-    function worstStatus(claim) {
-        let best = 'PASS', bestN = 0;
-        for (const f of claim.findings) {
-            const n = ORDER[f.status] ?? 0;
-            if (n > bestN) { bestN = n; best = f.status; }
-        }
-        return best;
-    }
-
-    function filteredClaims(statusFilter) {
-        if (!currentData) return [];
-        return Object.entries(currentData.claims).filter(([, c]) => {
-            if (statusFilter && worstStatus(c) !== statusFilter) return false;
-            if (activeFilters.size === 0) return true;
-            return c.findings.some(f => activeFilters.has(f.layer));
-        });
-    }
-
-    function updateNavCount() {
-        const navEl = document.getElementById('pp-nav');
-        const cntEl = document.getElementById('pp-nav-count');
-        if (activeFilters.size === 0) { navEl.style.display = 'none'; return; }
-        const list = filteredClaims();
-        navEl.style.display = '';
-        const idx = list.findIndex(([cid]) => cid === activeClaimId);
-        cntEl.textContent = list.length === 0
-            ? '0 of 0'
-            : (idx === -1 ? `— of ${list.length}` : `${idx + 1} of ${list.length}`);
-    }
-
-    function paintMeter(counts) {
-        const meter = document.getElementById('pp-meter');
-        clear(meter);
-        [['fail', 'FAIL'], ['warn', 'WARN'], ['pass', 'PASS'], ['info', 'INFO']].forEach(([k, label]) => {
-            const div = el('div', { className: 'pp-meter', 'data-s': k });
-            const n = el('span', { className: 'pp-meter__n' }); n.textContent = String(counts[k] || 0);
-            const l = el('span', { className: 'pp-meter__l' }); l.textContent = label;
-            div.appendChild(n); div.appendChild(l);
-            meter.appendChild(div);
-        });
-    }
-
-    function paintFilters(data) {
-        const wrap = document.getElementById('pp-filter-chips');
-        clear(wrap);
-        const layerCounts = {};
-        data.layers.forEach(l => layerCounts[l.code] = 0);
-        Object.values(data.claims).forEach(c => {
-            const seen = new Set();
-            c.findings.forEach(f => {
-                if (!seen.has(f.layer)) { seen.add(f.layer); layerCounts[f.layer] = (layerCounts[f.layer] || 0) + 1; }
-            });
-        });
-        data.layers.forEach(l => {
-            if (layerCounts[l.code] === 0) return;
-            const on = activeFilters.has(l.code);
-            const btn = el('button', { className: 'pp-chip' + (on ? ' pp-chip--on' : ''), title: l.desc });
-            const label = el('span'); label.textContent = l.label;
-            const n = el('span', { className: 'pp-chip__n' }); n.textContent = String(layerCounts[l.code]);
-            btn.appendChild(label); btn.appendChild(n);
-            btn.addEventListener('click', () => {
-                if (activeFilters.has(l.code)) activeFilters.delete(l.code);
-                else activeFilters.add(l.code);
-                paintFilters(data);
-                paintClaimList(data);
-                updateNavCount();
-            });
-            wrap.appendChild(btn);
-        });
-    }
-
-    function paintClaimList(data) {
-        const listEl = document.getElementById('pp-claim-list');
-        clear(listEl);
-        const filtered = filteredClaims();
-        filtered.forEach(([cid, c]) => {
-            const row = el('div', {
-                className: 'pp-claim' + (cid === activeClaimId ? ' is-active' : ''),
-                tabindex: '0',
-            });
-            row.dataset.cid = cid;
-            const badge = el('div', { className: 'pp-claim__badge', 'data-s': worstStatus(c) });
-            badge.textContent = worstStatus(c);
-            const body = el('div');
-            const quote = el('div', { className: 'pp-claim__quote' });
-            quote.textContent = c.quote || '(no quote)';
-            const idEl = el('div', { className: 'pp-claim__id' });
-            idEl.textContent = cid + (c.location ? ' · ' + c.location : '');
-            body.appendChild(quote);
-            body.appendChild(idEl);
-            const layers = el('div', { className: 'pp-claim__layers' });
-            const seen = new Set();
-            c.findings.forEach(f => {
-                if (seen.has(f.layer)) return;
-                seen.add(f.layer);
-                const dot = el('span', { className: 'pp-claim__layer-dot', 'data-s': f.status, title: `${f.layer}: ${f.status}` });
-                layers.appendChild(dot);
-            });
-            row.appendChild(badge);
-            row.appendChild(body);
-            row.appendChild(layers);
-            row.addEventListener('click', () => setActive(cid));
-            row.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(cid); }
-            });
-            listEl.appendChild(row);
-        });
-        document.getElementById('pp-left-title').textContent = `Claims · ${filtered.length}` + (activeFilters.size > 0 ? ` of ${Object.keys(data.claims).length}` : '');
-    }
-
-    function paintIssues(data) {
-        const wrap = document.getElementById('pp-issues');
-        clear(wrap);
-        if (data.blocking && data.blocking.length) {
-            wrap.appendChild(el('div', { className: 'pp-issues__title' },
-                [`Blocking (${data.blocking.length})`]));
-            const ul = el('ul');
-            data.blocking.forEach(b => {
-                const li = el('li', { 'data-b': 'true' });
-                li.textContent = typeof b === 'string' ? b : JSON.stringify(b);
-                ul.appendChild(li);
-            });
-            wrap.appendChild(ul);
-        }
-        if (data.non_blocking && data.non_blocking.length) {
-            wrap.appendChild(el('div', { className: 'pp-issues__title', style: 'margin-top:16px' },
-                [`Non-blocking (${data.non_blocking.length})`]));
-            const ul = el('ul');
-            data.non_blocking.forEach(b => {
-                const li = el('li');
-                li.textContent = typeof b === 'string' ? b : JSON.stringify(b);
-                ul.appendChild(li);
-            });
-            wrap.appendChild(ul);
-        }
-    }
-
-    function setActive(cid) {
-        activeClaimId = cid;
-        if (currentData) paintClaimList(currentData);
-        const empty = document.getElementById('pp-empty');
-        const detail = document.getElementById('pp-detail');
-        if (!cid) {
-            empty.style.display = '';
-            detail.style.display = 'none';
-            return;
-        }
-        empty.style.display = 'none';
-        detail.style.display = '';
-        const c = currentData.claims[cid];
-        if (!c) return;
-        clear(detail);
-        detail.appendChild(el('div', { className: 'pp-dossier__title' }, ['Claim']));
-        const q = el('div', { className: 'pp-dossier__quote' });
-        q.textContent = c.quote;
-        detail.appendChild(q);
-        if (c.location) {
-            const loc = el('div', { className: 'pp-dossier__loc' });
-            loc.textContent = c.location;
-            detail.appendChild(loc);
-        }
-        detail.appendChild(el('div', { className: 'pp-dossier__title' }, ['Vetting layers']));
-        const byLayer = {};
-        c.findings.forEach(f => { (byLayer[f.layer] = byLayer[f.layer] || []).push(f); });
-        const matrix = el('div', { className: 'pp-matrix' });
-        currentData.layers.forEach(l => {
-            const fs = byLayer[l.code];
-            if (!fs) {
-                const row = el('div', { className: 'pp-matrix__row', 'data-na': 'true' });
-                row.appendChild(el('div', { className: 'pp-matrix__layer' }, [l.label]));
-                const st = el('div', { className: 'pp-matrix__status', 'data-s': 'NA' }); st.textContent = '—';
-                row.appendChild(st);
-                row.appendChild(el('div', { className: 'pp-matrix__note' }, ['not applicable']));
-                matrix.appendChild(row);
-                return;
-            }
-            fs.forEach((f, i) => {
-                const row = el('div', { className: 'pp-matrix__row' });
-                row.appendChild(el('div', { className: 'pp-matrix__layer' }, [i === 0 ? l.label : '']));
-                const st = el('div', { className: 'pp-matrix__status', 'data-s': f.status }); st.textContent = f.status;
-                row.appendChild(st);
-                const note = el('div', { className: 'pp-matrix__note' });
-                if (f.delta) {
-                    const d = el('span', { className: 'pp-delta' }); d.textContent = 'Δ ' + f.delta;
-                    note.appendChild(d);
-                }
-                note.appendChild(document.createTextNode(f.note || ''));
-                row.appendChild(note);
-                matrix.appendChild(row);
-            });
-        });
-        detail.appendChild(matrix);
-        updateNavCount();
-    }
-
-    function step(dir, statusFilter) {
-        const list = filteredClaims(statusFilter);
-        if (!list.length) return;
-        const idx = list.findIndex(([cid]) => cid === activeClaimId);
-        const next = idx === -1 ? (dir > 0 ? 0 : list.length - 1) : (idx + dir + list.length) % list.length;
-        setActive(list[next][0]);
-    }
-
-    function loadPaper(paperId) {
-        if (!paperId) return;
-        const titleEl = document.getElementById('pp-paper-title');
-        const dateEl = document.getElementById('pp-paper-date');
-        const verdictEl = document.getElementById('pp-verdict');
-        titleEl.textContent = 'Loading…';
-        dateEl.textContent = '';
-        verdictEl.style.display = 'none';
-        fetch(`/api/papers/${encodeURIComponent(paperId)}/provenance`)
-            .then(r => r.json())
-            .then(data => {
-                currentData = data;
-                activeClaimId = null;
-                activeFilters.clear();
-                titleEl.textContent = data.title || paperId;
-                dateEl.textContent = data.review_date
-                    ? `review ${(data.review_date || '').slice(0, 10)}`
-                    : 'no review';
-                verdictEl.style.display = '';
-                verdictEl.dataset.v = data.overall_status || 'unknown';
-                verdictEl.textContent = (data.overall_status || 'unknown').replace('_', ' ');
-                paintMeter(data.counts);
-                paintFilters(data);
-                paintClaimList(data);
-                paintIssues(data);
-                document.getElementById('pp-empty').style.display = '';
-                document.getElementById('pp-detail').style.display = 'none';
-                updateNavCount();
-            })
-            .catch(err => {
-                titleEl.textContent = 'Error loading paper';
-                console.error(err);
-            });
-    }
-
-    // Populate paper selector
-    const paperSelect = document.getElementById('pp-paper-select');
-    fetch('/api/papers/list')
-        .then(r => r.json())
-        .then(data => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const preselect = urlParams.get('paper');
-            (data.papers || []).forEach(p => {
-                const opt = el('option', { value: p.paper_id });
-                const badge = p.has_claims_review ? '●' : '○';
-                opt.textContent = `${badge}  ${p.paper_id}${p.overall_status ? ' · ' + p.overall_status : ''}`;
-                paperSelect.appendChild(opt);
-            });
-            if (preselect) {
-                paperSelect.value = preselect;
-                loadPaper(preselect);
-            }
-        });
-    paperSelect.addEventListener('change', () => {
-        const v = paperSelect.value;
-        if (v) {
-            const u = new URL(window.location);
-            u.searchParams.set('tab', 'paper');
-            u.searchParams.set('paper', v);
-            window.history.replaceState({}, '', u);
-            loadPaper(v);
-        }
-    });
-
-    document.querySelectorAll('.pp-nav button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const n = btn.dataset.nav;
-            if (n === 'prev') step(-1);
-            else if (n === 'next') step(+1);
-            else if (n === 'clear') {
-                activeFilters.clear();
-                if (currentData) { paintFilters(currentData); paintClaimList(currentData); }
-                updateNavCount();
-            }
-        });
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.target.matches('input, textarea, select')) return;
-        if (!document.getElementById('pp-wrap')) return;
-        switch (e.key) {
-            case 'ArrowRight': e.preventDefault(); step(+1); break;
-            case 'ArrowLeft':  e.preventDefault(); step(-1); break;
-            case 'Escape':
-                if (activeFilters.size > 0) {
-                    activeFilters.clear();
-                    if (currentData) { paintFilters(currentData); paintClaimList(currentData); }
-                    updateNavCount();
-                } else {
-                    setActive(null);
-                }
-                break;
-            case 'f': case 'F': step(+1, 'FAIL'); break;
-            case 'w': case 'W': step(+1, 'WARN'); break;
-        }
-    });
-})();
-</script>

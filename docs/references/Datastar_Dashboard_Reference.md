@@ -14,14 +14,16 @@ Declared in `project_knowledge_graph_status.md` (2026-04-02): **PG 17 + Apache A
 
 **Rationale:** HTML-first reactivity, SSE-driven server push, zero build step, 40 KB runtime. Signals + attributes replace ~200 LOC of per-tab imperative JS. Pair with `datastar-py` SDK server-side to emit typed SSE events.
 
-### Working CDN URL (2026-04-24)
+### Working CDN URL (pinned 2026-04-24)
 
 ```html
 <script type="module"
-        src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-beta.11/bundles/datastar.js"></script>
+        src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js"></script>
 ```
 
-The older `https://cdn.jsdelivr.net/npm/@starfederation/datastar` URL **404s** — don't use it. That was the cause of the silent drift: CDN failed, no one noticed, tabs shipped without Datastar.
+**Why v1.0.1 not beta.11.** `datastar-py` 0.8.0 (the SDK) emits `datastar-patch-elements` / `datastar-patch-signals` SSE events. The v1.0.0-beta.11 client (which this repo originally pinned) uses the older `datastar-merge-fragments` / `datastar-merge-signals` event names and ignores the SDK's output silently — fetches fire, DOM never morphs. The event-name rename landed in v1.0.0-RC.x; v1.0.0 (2026-04-16) and v1.0.1 (2026-04-20) consume the new names. **Any SDK+client version mismatch around this rename produces the "no visible error but nothing updates" failure mode** — the fetch succeeds, the response is structurally correct, the client just doesn't recognise the event.
+
+The older `https://cdn.jsdelivr.net/npm/@starfederation/datastar` URL **404s** — don't use it. That was the cause of the initial silent drift: CDN failed, no one noticed, tabs shipped without Datastar.
 
 ### Signal access from vanilla JS (escape hatch)
 
@@ -296,7 +298,23 @@ Pick once; use consistently across tabs:
 
 ### Signal-name-to-camelCase quirk
 
-Attribute text `data-text="$active-paper"` does NOT work — attribute names get lowercased/hyphen-stripped. Use `$activePaper` (camelCase) everywhere. Server-side when patching signals:
+**Two-part rule (verified 2026-04-24):**
+
+1. **Inside expression bodies**: use `$activePaper` (camelCase). Datastar expressions run as JS, so this is standard identifier matching against the signals declared in `data-signals`.
+
+2. **After the colon in `data-bind:X` / `data-class:X` / `data-attr:X` / `data-signals:X`**: use **kebab-case** (`data-bind:active-paper`). HTML5 parsers lowercase attribute names, so `data-bind:activePaper` becomes `data-bind:activepaper` in the DOM and Datastar binds to a NEW signal `$activepaper`, leaving your declared `$activePaper` stuck at its initial value. Datastar converts `active-paper` → `activePaper` (hyphens→camelCase), so the kebab form correctly resolves to your declared camelCase signal.
+
+```html
+<!-- WRONG: DOM lowercases → binds $activepaper, not $activePaper -->
+<select data-bind:activePaper data-on:change="@get(`/api/papers/${$activePaper}/x`)">
+
+<!-- RIGHT: hyphens preserved → Datastar camelCases → binds $activePaper -->
+<select data-bind:active-paper data-on:change="@get(`/api/papers/${$activePaper}/x`)">
+```
+
+Symptom when this is wrong: the URL-embedded signal snapshot on the fetch shows **two** signals (e.g. `"activePaper":"","activepaper":"paper12"`) and the `@get` template-literal expansion produces `/api/papers//provenance` (empty paper id) → 404. Watch the network tab for the signal snapshot in the `?datastar=...` query param.
+
+Server-side when patching signals, use camelCase directly (no kebab conversion):
 
 ```python
 yield SSE.patch_signals({'activePaper': paper_id})  # camelCase
@@ -360,4 +378,4 @@ For each tab being ported from vanilla JS to Datastar (Wave 9h):
 - Python SDK: <https://github.com/starfederation/datastar-python>
 - Getting started: <https://data-star.dev/guide/getting_started>
 
-This reference is frozen at `datastar@v1.0.0-beta.11` (the pinned CDN version). Update the tag + re-check this doc when bumping.
+This reference is frozen at `datastar@v1.0.1` + `datastar-py@0.8.0`. Update the tag + re-check this doc when bumping — and run a full dashboard smoke test (readiness + qi + chains + paper-provenance tabs) because event-name renames have happened and will happen again.

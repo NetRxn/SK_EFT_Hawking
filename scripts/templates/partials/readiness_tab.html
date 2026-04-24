@@ -1,9 +1,23 @@
-<!-- Paper Readiness tab (Phase 5v Wave 5a, enhanced).
+{#
+  Paper Readiness tab — Phase 5v Wave 9h (Datastar port).
 
-All DOM construction uses createElement + textContent for server-sourced
-values — no innerHTML with untrusted content (verified by the project's
-security hook). -->
+  Stack: Datastar v1.0.0-beta.11 + Flask + datastar-py SDK server-side.
+  Reference: docs/references/Datastar_Dashboard_Reference.md
 
+  State shape:
+    $activePaper        — paper_id | '' (focus pane target)
+    $activeGate         — gate_name | '' (pre-expanded gate in focus pane)
+    $paperStateFilter   — 'RED' | 'YELLOW' | 'GREEN' | '' (heatmap row filter)
+    $gateFilter         — gate_name | '' (heatmap row filter — hide passed gates)
+
+  Server-rendered morph targets (patched in via SSE from /api/readiness):
+    #readiness-summary-row   (counts banner)
+    #readiness-heatmap       (full table — rebuild on every fetch; morph diffs)
+    #readiness-focus         (right-pane detail)
+
+  Filter row is static (Datastar attrs only) — no server round-trip for
+  toggling a button highlight, only to refetch filtered data.
+#}
 <style>
     .readiness-heatmap { border-collapse: collapse; font-size: 0.8rem; margin: 16px 0; }
     .readiness-heatmap th, .readiness-heatmap td {
@@ -132,372 +146,70 @@ security hook). -->
     }
 </style>
 
-<h2>Paper Readiness — 11 gates × 15 papers</h2>
-<p style="color: var(--grey);">
-    Auto-generated per-paper × per-dimension readiness state. Gates 1–8 are
-    Priority 1 (correctness blockers). Gates 9–11 are Priority 2 (UX/trust).
-    A paper is submission-ready iff all 11 gates pass. See
-    <a href="https://github.com/NetRxn/SK-EFT-Hawking/blob/main/docs/READINESS_GATES.md"
-       target="_blank">READINESS_GATES.md</a> for canonical gate definitions.
-</p>
+<div id="readiness-root"
+     data-signals="{activePaper: '', activeGate: '', paperStateFilter: '', gateFilter: ''}"
+     data-on-intersect__once="@get('/api/readiness')">
 
-<div id="readiness-summary-row" class="readiness-summary">
-    <div>Loading readiness data…</div>
-</div>
+    <h2>Paper Readiness — 11 gates × 15 papers</h2>
+    <p style="color: var(--grey);">
+        Auto-generated per-paper × per-dimension readiness state. Gates 1–8 are
+        Priority 1 (correctness blockers). Gates 9–11 are Priority 2 (UX/trust).
+        A paper is submission-ready iff all 11 gates pass. See
+        <a href="https://github.com/NetRxn/SK-EFT-Hawking/blob/main/docs/READINESS_GATES.md"
+           target="_blank">READINESS_GATES.md</a> for canonical gate definitions.
+    </p>
 
-<div id="readiness-filter-row" class="filter-row" style="display: none;">
-    <span class="filter-label">Paper state:</span>
-    <div class="filter-group" id="state-filter-group"></div>
-    <span style="color: var(--border);">|</span>
-    <span class="filter-label">Gate:</span>
-    <select id="gate-filter" style="font-size: 0.8rem; padding: 3px 6px;">
-        <option value="">all</option>
-    </select>
-    <button id="clear-filters" class="filter-clear">clear filters</button>
-    <div class="legend">
-        <span><span class="swatch" style="background: #d4edda;"></span>passed</span>
-        <span><span class="swatch" style="background: #f8d7da;"></span>blocked</span>
-        <span><span class="swatch" style="background: #fff3cd;"></span>needs-recheck</span>
-        <span><span class="swatch" style="background: #e2e3e5;"></span>open</span>
+    {# Summary row — server-rendered via SSE morph. #}
+    <div id="readiness-summary-row" class="readiness-summary">
+        <div>Loading readiness data…</div>
+    </div>
+
+    {# Filter row — STATIC; all state bound to Datastar signals; re-fetch on change. #}
+    <div id="readiness-filter-row" class="filter-row">
+        <span class="filter-label">Paper state:</span>
+        <div class="filter-group">
+            {% for s in ['RED', 'YELLOW', 'GREEN'] %}
+            <button class="filter-btn"
+                    data-class:active="$paperStateFilter === '{{ s }}'"
+                    data-on:click="$paperStateFilter = $paperStateFilter === '{{ s }}' ? '' : '{{ s }}'; @get('/api/readiness')">
+                {{ s.lower() }}
+            </button>
+            {% endfor %}
+        </div>
+        <span style="color: var(--border);">|</span>
+        <span class="filter-label">Gate:</span>
+        <select data-bind:gate-filter
+                data-on:change="@get('/api/readiness')"
+                style="font-size: 0.8rem; padding: 3px 6px;">
+            <option value="">all</option>
+            {% for name, prio, _ in GATE_DEFS %}
+            <option value="{{ name }}">blocked by {{ name }} (P{{ prio }})</option>
+            {% endfor %}
+        </select>
+        <button class="filter-clear"
+                data-on:click="$paperStateFilter=''; $gateFilter=''; $activePaper=''; $activeGate=''; @get('/api/readiness')">
+            clear filters
+        </button>
+        <div class="legend">
+            <span><span class="swatch" style="background: #d4edda;"></span>passed</span>
+            <span><span class="swatch" style="background: #f8d7da;"></span>blocked</span>
+            <span><span class="swatch" style="background: #fff3cd;"></span>needs-recheck</span>
+            <span><span class="swatch" style="background: #e2e3e5;"></span>open</span>
+        </div>
+    </div>
+
+    <div class="readiness-body">
+        <div class="heatmap-pane">
+            {# Morph target — replaced whole-table on fetch. #}
+            <table id="readiness-heatmap" class="readiness-heatmap">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        {# Focus pane — server-rendered via SSE morph. #}
+        <aside id="readiness-focus" class="focus-pane">
+            <div class="placeholder">Click a paper name or a gate cell to see details.</div>
+        </aside>
     </div>
 </div>
-
-<div class="readiness-body">
-    <div class="heatmap-pane">
-        <table id="readiness-heatmap" class="readiness-heatmap">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
-    <aside id="readiness-focus" class="focus-pane">
-        <div class="placeholder">Click a paper name or a gate cell to see details.</div>
-    </aside>
-</div>
-
-<script>
-(function() {
-    'use strict';
-
-    const GATES = [
-        ['CitationIntegrity', 1],
-        ['CrossPaperConsistency', 1],
-        ['ParameterProvenance', 1],
-        ['ComputationCorrectness', 1],
-        ['LeanProofSubstance', 1],
-        ['AssumptionDisclosure', 1],
-        ['NarrativeGrounding', 1],
-        ['ProductionRunHealth', 1],
-        ['NumericalFreshness', 2],
-        ['FirstClaimVerification', 2],
-        ['FixPropagation', 2],
-    ];
-
-    // Gate abbreviations for column headers (keeps the heatmap compact)
-    const GATE_ABBREV = {
-        CitationIntegrity: 'Cit',
-        CrossPaperConsistency: 'XPaper',
-        ParameterProvenance: 'Param',
-        ComputationCorrectness: 'Comp',
-        LeanProofSubstance: 'LeanP',
-        AssumptionDisclosure: 'Assum',
-        NarrativeGrounding: 'Narr',
-        ProductionRunHealth: 'ProdRun',
-        NumericalFreshness: 'Num',
-        FirstClaimVerification: '1st',
-        FixPropagation: 'Fix',
-    };
-
-    // Safe-DOM helpers — no innerHTML with data values.
-    function el(tag, opts) {
-        const node = document.createElement(tag);
-        opts = opts || {};
-        if (opts.class) node.className = opts.class;
-        if (opts.text != null) node.textContent = String(opts.text);
-        if (opts.title != null) node.title = String(opts.title);
-        if (opts.dataset) for (const k in opts.dataset) node.dataset[k] = String(opts.dataset[k]);
-        if (opts.style) Object.assign(node.style, opts.style);
-        if (opts.children) opts.children.forEach(c => { if (c) node.appendChild(c); });
-        if (opts.onclick) node.addEventListener('click', opts.onclick);
-        return node;
-    }
-
-    function classifyPaper(gateStates) {
-        if (gateStates.some(g => g.state === 'blocked')) return 'RED';
-        if (gateStates.some(g => g.state !== 'passed')) return 'YELLOW';
-        return 'GREEN';
-    }
-
-    const STATE_TO_PAPER_CLASS = { blocked: 'RED', passed: 'GREEN' };
-
-    // Module-scoped UI state
-    let rawData = null;
-    const filters = {
-        state: null,       // 'RED' | 'YELLOW' | 'GREEN' | null
-        gate: null,        // gate-name | null — show only papers where THIS gate is blocked/needs-recheck
-        focusPaper: null,  // paper-key | null
-        focusGate: null,   // gate-name | null — pre-expand this gate in focus pane
-    };
-
-    function getPaperGateList(paper) {
-        const byGate = {};
-        for (const g of paper.gates) byGate[g.gate] = g;
-        return GATES.map(([name, prio]) =>
-            byGate[name] || { gate: name, priority: prio, state: 'open',
-                              evidence: [], blockers: [], notes: '', last_evaluated: '' });
-    }
-
-    function shouldShowPaper(paper) {
-        const gateList = getPaperGateList(paper);
-        const paperState = classifyPaper(gateList);
-        if (filters.state && paperState !== filters.state) return false;
-        if (filters.gate) {
-            const g = gateList.find(gg => gg.gate === filters.gate);
-            if (!g || g.state === 'passed') return false;
-        }
-        return true;
-    }
-
-    function renderSummary(data) {
-        const summary = { RED: 0, YELLOW: 0, GREEN: 0 };
-        for (const paper of data.papers) {
-            summary[classifyPaper(getPaperGateList(paper))]++;
-        }
-        const row = document.getElementById('readiness-summary-row');
-        row.replaceChildren();
-        const blocks = [
-            { n: summary.GREEN, label: 'green', color: '#155724' },
-            { n: summary.YELLOW, label: 'yellow', color: '#856404' },
-            { n: summary.RED, label: 'red', color: '#721c24' },
-        ];
-        for (const b of blocks) {
-            row.appendChild(el('div', { children: [
-                el('div', { class: 'count', text: b.n, style: { color: b.color } }),
-                el('div', { text: b.label }),
-            ]}));
-        }
-        row.appendChild(el('div', {
-            style: { marginLeft: 'auto', color: 'var(--grey)', fontSize: '0.8rem' },
-            text: data.papers.length + ' papers · last evaluated ' + (data.last_evaluated || 'unknown'),
-        }));
-        return summary;
-    }
-
-    function renderFilters() {
-        const filterRow = document.getElementById('readiness-filter-row');
-        filterRow.style.display = 'flex';
-        const stateGroup = document.getElementById('state-filter-group');
-        stateGroup.replaceChildren();
-        for (const s of ['RED', 'YELLOW', 'GREEN']) {
-            stateGroup.appendChild(el('button', {
-                class: 'filter-btn' + (filters.state === s ? ' active' : ''),
-                text: s.toLowerCase(),
-                onclick: () => { filters.state = (filters.state === s) ? null : s; renderHeatmap(); renderFilters(); },
-            }));
-        }
-        const gateSel = document.getElementById('gate-filter');
-        if (gateSel.options.length <= 1) {
-            for (const [name, prio] of GATES) {
-                gateSel.appendChild(el('option', { text: 'blocked by ' + name + ' (P' + prio + ')' }));
-                gateSel.options[gateSel.options.length - 1].value = name;
-            }
-            gateSel.addEventListener('change', () => {
-                filters.gate = gateSel.value || null;
-                renderHeatmap();
-                renderFilters();
-            });
-        }
-        gateSel.value = filters.gate || '';
-        document.getElementById('clear-filters').onclick = () => {
-            filters.state = null; filters.gate = null;
-            gateSel.value = '';
-            renderHeatmap(); renderFilters();
-        };
-    }
-
-    function renderHeatmap() {
-        if (!rawData) return;
-        const thead = document.querySelector('#readiness-heatmap thead');
-        const tbody = document.querySelector('#readiness-heatmap tbody');
-        thead.replaceChildren();
-        tbody.replaceChildren();
-
-        // Header row (gate names rotated)
-        const headRow = el('tr');
-        headRow.appendChild(el('th', { class: 'paper-col', text: 'Paper' }));
-        headRow.appendChild(el('th', { text: 'State' }));
-        for (const [gate, prio] of GATES) {
-            const th = el('th', {
-                class: 'gate-head' + (filters.gate === gate ? ' filtered' : ''),
-                text: GATE_ABBREV[gate] || gate.slice(0, 6),
-                title: gate + ' (P' + prio + ') — click to filter to papers failing this gate',
-                dataset: { gate: gate },
-                onclick: () => {
-                    filters.gate = (filters.gate === gate) ? null : gate;
-                    renderHeatmap(); renderFilters();
-                },
-            });
-            headRow.appendChild(th);
-        }
-        thead.appendChild(headRow);
-
-        // Priority row
-        const prioRow = el('tr');
-        prioRow.appendChild(el('th', { class: 'paper-col' }));
-        prioRow.appendChild(el('th'));
-        for (const [gate, prio] of GATES) {
-            prioRow.appendChild(el('th', { class: 'priority-label', text: 'P' + prio }));
-        }
-        thead.appendChild(prioRow);
-
-        // Body
-        const visible = rawData.papers.filter(shouldShowPaper);
-        for (const paper of visible) {
-            const byGate = {};
-            for (const g of paper.gates) byGate[g.gate] = g;
-            const gateList = GATES.map(([name, prio]) =>
-                byGate[name] || { gate: name, priority: prio, state: 'open' });
-            const state = classifyPaper(gateList);
-            const passed = gateList.filter(g => g.state === 'passed').length;
-
-            const row = el('tr');
-            const paperHead = el('th', {
-                class: 'paper-col' + (filters.focusPaper === paper.paper ? ' focused' : ''),
-                text: paper.paper,
-                dataset: { paper: paper.paper },
-                onclick: () => {
-                    filters.focusPaper = paper.paper;
-                    filters.focusGate = null;
-                    renderFocus();
-                    renderHeatmap();
-                },
-            });
-            row.appendChild(paperHead);
-
-            const stateCell = el('td');
-            stateCell.appendChild(el('span', { class: 'paper-state-' + state, text: state }));
-            stateCell.appendChild(el('span', {
-                text: passed + '/11',
-                style: { color: 'var(--grey)', fontSize: '0.72rem' },
-            }));
-            row.appendChild(stateCell);
-
-            for (const [name, prio] of GATES) {
-                const g = byGate[name] || { state: 'open' };
-                const isFocusCell = filters.focusPaper === paper.paper && filters.focusGate === name;
-                const cell = el('td', {
-                    class: 'gate-cell ' + g.state + (isFocusCell ? ' active-focus' : ''),
-                    text: g.state.charAt(0).toUpperCase(),
-                    title: name + ' — ' + g.state,
-                    dataset: { paper: paper.paper, gate: name },
-                    onclick: () => {
-                        filters.focusPaper = paper.paper;
-                        filters.focusGate = name;
-                        renderFocus();
-                        renderHeatmap();
-                    },
-                });
-                row.appendChild(cell);
-            }
-            tbody.appendChild(row);
-        }
-
-        // If filter hid the focused paper, clear focus
-        if (filters.focusPaper && !visible.some(p => p.paper === filters.focusPaper)) {
-            filters.focusPaper = null;
-            filters.focusGate = null;
-            renderFocus();
-        }
-    }
-
-    function renderFocus() {
-        const pane = document.getElementById('readiness-focus');
-        pane.replaceChildren();
-        if (!filters.focusPaper) {
-            pane.appendChild(el('div', {
-                class: 'placeholder',
-                text: 'Click a paper name or a gate cell to see details.',
-            }));
-            return;
-        }
-        const paper = rawData.papers.find(p => p.paper === filters.focusPaper);
-        if (!paper) return;
-        const gateList = getPaperGateList(paper);
-        const state = classifyPaper(gateList);
-        const passed = gateList.filter(g => g.state === 'passed').length;
-
-        pane.appendChild(el('h3', { text: paper.paper }));
-        pane.appendChild(el('div', { class: 'paper-meta', children: [
-            el('span', { class: 'paper-state-' + state, text: state }),
-            document.createTextNode(' ' + passed + '/11 gates passed'),
-        ]}));
-
-        for (const g of gateList) {
-            const expanded = (g.state !== 'passed') || (filters.focusGate === g.gate);
-            const row = el('div', {
-                class: 'gate-row' + (expanded ? ' expanded' : ''),
-                onclick: (ev) => {
-                    ev.stopPropagation();
-                    filters.focusGate = (filters.focusGate === g.gate) ? null : g.gate;
-                    renderFocus();
-                    renderHeatmap();
-                },
-            });
-            const chipClass = 'paper-state-' + (g.state === 'passed' ? 'GREEN' :
-                                                g.state === 'blocked' ? 'RED' : 'YELLOW');
-            row.appendChild(el('div', { class: 'gate-title', children: [
-                el('span', {
-                    text: 'P' + g.priority + ' · ' + g.gate,
-                    style: { fontSize: '0.85rem' },
-                }),
-                el('span', { class: 'gate-chip ' + chipClass, text: g.state }),
-            ]}));
-            if (expanded) {
-                if (g.notes) {
-                    row.appendChild(el('div', { class: 'gate-notes', text: g.notes }));
-                }
-                if ((g.evidence || []).length) {
-                    const ul = el('ul', { class: 'evidence' });
-                    g.evidence.forEach(e => ul.appendChild(el('li', { text: e })));
-                    row.appendChild(el('div', { children: [
-                        el('strong', { text: 'Evidence', style: { fontSize: '0.75rem' } }), ul,
-                    ]}));
-                }
-                if ((g.blockers || []).length) {
-                    const ul = el('ul', { class: 'blockers' });
-                    g.blockers.forEach(b => ul.appendChild(el('li', { text: b })));
-                    row.appendChild(el('div', { children: [
-                        el('strong', { text: 'Blockers', style: { fontSize: '0.75rem' } }), ul,
-                    ]}));
-                }
-                if (g.last_evaluated) {
-                    row.appendChild(el('div', {
-                        class: 'gate-notes',
-                        text: 'Last evaluated: ' + g.last_evaluated,
-                    }));
-                }
-            }
-            pane.appendChild(row);
-        }
-    }
-
-    function renderError(message) {
-        const row = document.getElementById('readiness-summary-row');
-        row.replaceChildren();
-        row.appendChild(el('div', {
-            text: 'Failed to load readiness data: ' + message,
-            style: { color: '#721c24' },
-        }));
-    }
-
-    fetch('/api/readiness')
-        .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
-        .then(data => {
-            rawData = data;
-            renderSummary(data);
-            renderFilters();
-            renderHeatmap();
-            renderFocus();
-        })
-        .catch(e => renderError(String(e)));
-})();
-</script>
