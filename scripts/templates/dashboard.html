@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SK-EFT Provenance Command Center</title>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@starfederation/datastar"></script>
+    <!-- Datastar CDN — 2026-04-24: npm-scoped URL 404s; using canonical gh-tagged build.
+         Reference: https://data-star.dev/guide/getting_started -->
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-beta.11/bundles/datastar.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -316,6 +318,10 @@
         <a class="tab {% if tab == 'chains' %}active{% endif %}"
            href="?tab=chains">
             Research Status
+        </a>
+        <a class="tab {% if tab == 'paper' %}active{% endif %}"
+           href="?tab=paper">
+            Paper Provenance
         </a>
     </div>
 </div>
@@ -963,6 +969,13 @@
     {% if tab == 'chains' %}
     <div class="tab-content active">
         {% include 'partials/chains_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ PAPER PROVENANCE TAB (Phase 5v Wave 9g) ═══ -->
+    {% if tab == 'paper' %}
+    <div class="tab-content active">
+        {% include 'partials/paper_provenance_tab.html' %}
     </div>
     {% endif %}
 

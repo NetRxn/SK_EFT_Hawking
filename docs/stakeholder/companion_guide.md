@@ -2,52 +2,78 @@
 
 ## What Is This Project About?
 
-This project asks a deep question: can the mathematics of exotic states of matter — superfluids, topological insulators, quantum spin liquids — also describe the fundamental forces and particles of the universe? We investigate this with a combination of numerical computation, formal mathematical proof-checking, and automated theorem proving, producing experimentally testable predictions along the way.
+This project asks a deep question: can the mathematics of exotic states of matter — superfluids, topological insulators, quantum spin liquids — also describe the fundamental forces and particles of the universe, and where exactly does that idea break down? We investigate this with a combination of numerical computation, formal mathematical proof-checking in Lean 4, and automated theorem proving, producing experimentally testable predictions along the way.
 
-Everything is machine-checked in the Lean 4 proof assistant: 1318 theorems, zero axioms, across 93 modules.
+Everything is machine-checked in the Lean 4 proof assistant. The library currently contains roughly **3,950 theorems across 166 modules with zero sorry project-wide** and only **one remaining axiom** (the 4+1D gapped-interface conjecture — a standard open question in lattice QFT, not a project-originated assumption).
 
 ---
 
 ## The Big Ideas
 
-### 1. Sound Waves That Behave Like Black Holes
+### 1. Sound waves that behave like black holes
 
-When a fluid flows faster than the speed of sound, it creates a sonic horizon — a boundary that traps sound waves the same way a black hole traps light. Stephen Hawking predicted in 1974 that black holes emit faint radiation due to quantum effects near the horizon. The same physics applies to sonic horizons in laboratory fluids.
+When a fluid flows faster than the speed of sound, it creates a sonic horizon — a boundary that traps sound waves the same way a black hole traps light. Hawking predicted in 1974 that black holes emit faint radiation due to quantum effects near the horizon. The same physics applies to sonic horizons in laboratory fluids.
 
-We computed the first corrections to the acoustic Hawking temperature from dissipation — the fact that real fluids have viscosity. These corrections are tiny (~0.001-0.1%) but have a specific frequency signature that experimentalists can look for. The polariton platform (a type of light-matter hybrid system) is 10 billion times hotter than BEC systems, making it the most accessible route to detecting these effects. A Paris group has already observed the precursor signals.
+We computed the first corrections to the acoustic Hawking temperature from dissipation — the fact that real fluids have viscosity. These corrections are tiny (~0.001–0.1% for BEC, far smaller for graphene) but have a specific frequency signature experimentalists can look for.
 
-### 2. Why Three Generations of Matter
+Two experimental platforms are now in scope:
+- **Polariton superfluids** (light-matter hybrids), roughly 10¹⁰ times hotter than BEC systems. A Paris group (Falque et al.) has observed negative-energy partner modes; spontaneous Hawking radiation detection is plausible within 1–2 years.
+- **Graphene Dirac fluids** (Phase 5w, 2026), a natively relativistic 2+1D platform where the Dean group (Columbia, 2025) has already realized the first electronic sonic horizon. Predicted T_H ≈ 2.4 K for the Dean bilayer nozzle — nine orders of magnitude above BEC — with a detection path via current-noise spectroscopy S_I(ω).
 
-The Standard Model has three copies ("generations") of its fundamental particles — electron/muon/tau and their associated quarks and neutrinos. Nobody knows why three. We derived that the number must be divisible by three, from two independent mathematical facts:
+### 2. Why three generations of matter
 
-- Each generation contributes a chiral central charge of 8 (from its 16 Weyl fermions)
-- The Dedekind eta function — a mathematical object from number theory — forces this charge to be divisible by 24 through a consistency condition called the framing anomaly
+The Standard Model has three copies ("generations") of its fundamental particles. Nobody knows why three. We derived that the number must be divisible by three, from two independent mathematical facts:
 
-The ratio 24/8 = 3 constrains the generation count. The numerator is pure mathematics; the denominator is pure physics. We also show that without right-handed neutrinos, the central charge is fractional (15/2), providing a formal argument for their existence independent of the usual mass-based reasoning.
+- Each generation contributes a chiral central charge of 8 (from its 16 Weyl fermions).
+- The Dedekind eta function forces this charge to be divisible by 24 through a framing-anomaly consistency condition.
 
-### 3. The Number 16 Appears Everywhere
+The ratio 24 / 8 = 3 constrains the generation count, with 1 and 2 proved impossible and 6 the next allowed value.
 
-The Standard Model has 16 Weyl fermions per generation. The anomaly classification lives in Z/16. Rokhlin's theorem says spin manifold signatures are divisible by 16. Kitaev's classification of topological superconductors has 16-fold periodicity.
+The algebraic core of this argument — the Ext computation over the A(1) Steenrod sub-algebra — is itself machine-checked (Phase 5q–5r, April 2026). This is the first machine-checked Ext computation over any Steenrod sub-algebra in any proof assistant. What remains as hypotheses are three standard topological facts (ko-spectrum cohomology, Adams SS collapse, ABP splitting) that require formalizing algebraic topology in Lean, which no proof assistant currently supports.
+
+### 3. The number 16 appears everywhere
+
+The Standard Model has 16 Weyl fermions per generation. The anomaly classification lives in Z/16. Rokhlin's theorem says spin-manifold signatures are divisible by 16. Kitaev's classification of topological superconductors has 16-fold periodicity.
 
 We proved these are all the same 16, and we proved exactly where the number comes from: the algebraic bound from lattice theory is 8 (the E8 lattice achieves this), and the extra factor of 2 requires smooth topology. The jump from 8 to 16 encodes whether a mathematical space can be smoothed — a profound connection between particle physics and geometry.
 
-### 4. A Chain from Lattice Models to Gauge Theory
+### 4. A chain from lattice models to gauge theory
 
 We formalized a complete mathematical chain connecting laboratory-accessible physics to fundamental gauge theory:
 
-**Onsager algebra** (exactly solvable lattice models) → **quantum groups** (q-deformations with Hopf algebra structure) → **fusion categories** (the algebraic data of anyon systems) → **modular tensor categories** (the mathematics underlying topological quantum field theory and Chern-Simons gauge theory)
+**Onsager algebra** (exactly solvable lattice models) → **quantum groups** (q-deformations with Hopf algebra structure) → **fusion categories** → **modular tensor categories** → **TQFT partition functions and knot invariants**.
 
-Every link is machine-checked. The SU(2)_k fusion rules at k=3 contain the Fibonacci anyon — a hypothetical particle whose braiding operations are universal for quantum computing. Our work provides the first formally verified foundation for the fusion operations that future topological quantum computers would perform.
+Every link is machine-checked. The chain was extended to rank-2 in Phase 5i: **U_q(sl₃)** is the first rank-2 quantum group in any proof assistant, and **SU(3)_k fusion** at k=1,2 is the first SU(3)-fusion formalization anywhere. Phase 5m generalized this to a parameterized `QuantumGroup k A` typeclass over arbitrary Cartan matrices, with Kac-Walton fusion as a general algorithm. Phase 5n–5p added the Temperley–Lieb / Jones–Wenzl / WRT pipeline end-to-end, ending in a machine-checked Fibonacci-braiding universality proof for quantum computation.
 
-### 5. The Chirality Problem
+### 5. The chirality problem
 
-The biggest obstacle to deriving the Standard Model from condensed matter physics is chirality: the weak nuclear force only acts on left-handed particles. Putting chiral fermions on a lattice was considered impossible since 1981. A January 2026 construction likely evades the old no-go theorems. We provided the first formal analysis of why the evasion works: 9 no-go conditions formalized, 5 proved violated by the new construction, with a master synthesis theorem assembling the result.
+The biggest obstacle to deriving the Standard Model from condensed-matter physics is chirality. A January-2026 construction by Thorngren–Preskill–Fidkowski (TPF) likely evades the historical Nielsen–Ninomiya / Golterman–Shamir no-go theorems. We provided the first formal analysis of why the evasion works: 9 no-go conditions formalized, 5 proved violated by TPF, with a three-pillar master synthesis theorem (GS evasion + GT positive construction + Z₁₆ anomaly). Phase 5s added the first machine-checked 2+1D Fidkowski–Kitaev Cayley-calibrated gapped-interface construction (16×16 Hamiltonian, explicit E₀ = −14, Δ = 14), bundled with the 1+1D K-matrix analogue via a dimensional-ladder bridge theorem.
 
-### 6. Can Gravity Emerge from Quantum Matter?
+### 6. Can gravity emerge from quantum matter?
 
-The Akama-Diakonov-Wetterich mechanism proposes that gravity emerges from fermion condensation — analogous to how Cooper pairs form in superconductors. We formalized the mean-field structure and identified that the gap equation for tetrad condensation (the gravitational analog of the BCS gap equation) has never been explicitly written down in the published literature. Computing it is the next major open question.
+The Akama–Diakonov–Wetterich (ADW) mechanism proposes that gravity emerges from fermion condensation — analogous to how Cooper pairs form in superconductors. We formalized the mean-field structure, identified the tetrad gap equation (which had not been explicitly written down in the published literature), and proved its existence/uniqueness via IVT + Banach fixed-point. The ADW gap equation has a nontrivial Lorentzian-signature solution for G > G_c = 8π²/(N_f Λ²); two spin-2 graviton modes emerge as Nambu–Goldstone bosons. Instanton-assisted zero-mode counting is machine-checked (`InstantonZeroModes.lean`) by bypassing the 4D index theorem via Clifford separation of variables.
 
-We also proved what doesn't work: fracton gauge theory reproduces linearized gravity perfectly but fails at the nonlinear level (formally verified obstruction). And non-Abelian gauge structure (the strong and weak forces) cannot survive through a fluid layer — this is a structural theorem, not a conjecture.
+What definitively fails: the non-Abelian fracton → gravity route (machine-proved obstruction in `FractonNonAbelian.lean`) and the perturbative Wen–ADW coupling (~6000× too weak, quantified in `EmergentGravityBounds.lean`). Non-Abelian gauge structure cannot survive a fluid layer (gauge erasure is a structural theorem), but *can* originate from topological order via the quantum-group route.
+
+On the dark-energy side, a sequence of deep-research rounds on Klinkhamer–Volovik-style emergent-vacuum mechanisms all returned NO-GO for DESI DR2 compatibility. The obstruction is structural and is now formalized: `GibbsDuhemTheorem.lean` proves that any single-scalar self-tuning emergent-vacuum framework with Gibbs–Duhem equilibrium locks `w_vac = −1` by Lorentz invariance, realization-independently. Paired with the first closed-form derivation of the vestigial-gravity EOS (`VestigialEOS.lean`, `w_vest(τ) = (1−τ²)/(5τ²−1)`) and the four-factor orthogonality principle (`DarkEnergyObstructionPrinciple.lean`), Layer-3 predictive scope is now explicitly scoped to SM+GR emergent physics; the dark-energy sector is documented as outside the architecture's tested predictive scope under the mechanisms explored (see `docs/ARCHITECTURE_SCOPE.md`).
+
+### 7. Dark-matter connections
+
+The same infrastructure that closes the dark-energy quest also lets us classify concrete dark-*matter* candidates:
+
+- **Hidden-sector DM classification** (`HiddenSectorClassification.lean`, `HiddenSectorMixedCharge.lean`) — ℤ₁₆ anomaly-driven enumeration of SM-singlet Weyl sectors; the T-0 TQFT candidate is invisible to all planned direct-detection experiments.
+- **SFDM merger forecast** (`SFDMMergerForecast.lean`, backing Paper 17's "money plot") — superfluid DM produces a smoking-gun sonic-boom step function at galaxy-cluster Mach transitions; Euclid × Roman stacked ≥ 30 mergers reaches 3.5–5.7σ; first 3σ detectable around 2028.
+- **Fracton DM viability** (`FractonDarkMatter.lean`) — a p-wave dipole superfluid phase keeps fracton DM viable at MeV–TeV scales.
+- **Fang–Gu torsion DM obstruction** (`FangGuTorsionDM.lean`) — traceless stress–energy tensor forces w = 1/3, kinematically excluding FG-DM at CDM level.
+- **Dark-sector synthesis** (`DarkSectorSynthesis.lean`) — seven cross-connection theorems pinning the Paper 17 empirical-hook ranking to Lean-decidable ground.
+
+### 8. A geometric quantum gate
+
+A parallel strand uses the same formalization rigour on a finite-dimensional quantum-information target. `FermiHubbardDimer.lean` (backing Paper 18) formalizes a minimal Berry-phase theorem for a two-site Hubbard doublon system: the dark state carries a −1 sign under a π-sweep, the dynamical phase vanishes under the kernel-angle condition, and the accumulated phase is purely geometric. The SWAP unitary on the 3-dimensional singlet sector is realized as a Householder reflection in an explicit orthonormal eigenbasis. This is the first formally verified analysis of a symmetry-protected non-topological two-qubit gate, complementary to the Fibonacci-braiding universality proof in the quantum-group chain.
+
+### 9. A new experimental platform: graphene Dirac fluid
+
+The dissipative-Hawking chain was extended to a 2+1D relativistic Dirac fluid. Modules `DiracFluidMetric.lean`, `GrapheneHawking.lean`, `DiracFluidSK.lean`, `GrapheneNoiseFormula.lean`, and `QuasiOneDReduction.lean` form the graphene track. The 3×3 acoustic metric block-diagonalizes for quasi-1D flow, letting the existing 1+1D WKB machinery apply directly (≈92% Lean theorem reuse). Predicted T_H ≈ 2.4 K for the Dean bilayer nozzle (9 orders above BEC), dissipative correction δ_diss negligible relative to dispersive δ_disp (~−3%), noise formula `ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω)` derived from first principles (Keldysh FDT + Landauer–Büttiker). Paper 16a documents the platform end to end; collaboration outreach to Lucas/Dean (Columbia) and Kim (Harvard) is unblocked.
 
 ---
 
@@ -57,48 +83,62 @@ We also proved what doesn't work: fracton gauge theory reproduces linearized gra
 
 Every result passes through three independent checks:
 
-1. **Python computation** — numerical calculations with real experimental parameters, validated by 1600+ automated tests
-2. **Lean 4 formal proofs** — mathematical theorems machine-checked by the proof assistant, ensuring logical correctness
-3. **Aristotle automated prover** — an AI system that finds proofs for the harder theorem gaps, with 273 theorems proved across 33+ runs
+1. **Python computation** — numerical calculations with real experimental parameters, validated by 2,800+ automated tests.
+2. **Lean 4 formal proofs** — machine-checked theorems ensuring logical correctness.
+3. **Aristotle automated prover** — an AI system that filled 322 theorems across 44 runs where interactive proving was impractical.
 
-### The Provenance Dashboard
+### The Provenance Dashboard and Knowledge Graph
 
-An interactive web dashboard (`localhost:8050`) lets you trace any claim in any paper back through the computation pipeline to its source: which formula computed it, which Lean theorem verifies it, which experimental parameters it depends on, and which published paper those parameters come from. A knowledge graph with 1000+ nodes and 11 edge types visualizes the full provenance chain.
+An interactive web dashboard (`uv run python scripts/provenance_dashboard.py`, localhost:8050) lets you trace any claim in any paper back through the computation pipeline to its source: which formula computed it, which Lean theorem verifies it, which experimental parameters it depends on, and which published paper those parameters come from. A PG+AGE knowledge graph (Phase 5v) with ~1,000+ nodes and 11+ edge types visualizes the full provenance chain, and a per-paper readiness state machine tracks 11 submission gates (citation integrity, parameter provenance, narrative grounding, first-claim verification, etc.).
+
+### Adversarial Review (Stage 13)
+
+Every paper is run through an adversarial-reviewer agent (Opus, fresh context) before submission. Findings are tracked in `papers/AutomatedReviews/` and auto-ingested as `ReviewFinding` nodes in the knowledge graph. Paper 17 and Paper 18 were shipped through this loop in the 2026-04-26 session with all P1 + all RECOMMENDED findings addressed.
 
 ---
 
-## By the Numbers
+## By the Numbers (2026-04-24 snapshot)
 
 | Metric | Count |
 |--------|-------|
-| Lean theorems | 1318 (zero axioms) |
-| Lean modules | 93 |
-| Tracked hypotheses | 5 (all extremely low risk) |
-| Python test files | 41 (1635+ individual tests) |
-| Publication-quality figures | 80 |
-| Paper drafts | 12 |
-| Computational notebooks | 40 (technical + stakeholder pairs) |
-| Aristotle prover runs | 35+ |
-| Deep research files | 50+ |
+| Lean theorems | ~3,950 (3,840 substantive + 110 placeholder) |
+| Lean modules | 166 |
+| Axioms | 1 (4+1D gapped-interface conjecture) |
+| Sorry gaps | 0 project-wide |
+| Python test files | 58 (2,800+ tests) |
+| Python source modules | 66+ across 14 sub-packages including `dark_sector/`, `fermi_hubbard/`, `graphene/` (all new since Phase 5s) |
+| Publication-quality figures | 110 |
+| Paper drafts | 18 |
+| Computational notebooks | 52 (technical + stakeholder pairs) |
+| Aristotle prover runs | 44 |
+| Deep research files | Phase-1 through Phase-5z under `Lit-Search/` |
+| Stakeholder docs | 29+ under `docs/stakeholder/` |
 
 ### Formal Verification Firsts
 
-This project established several firsts in the formal verification of physics:
-
-- First formally verified anomaly constraint in particle physics
-- First quantum group (U_q(sl_2)) in any proof assistant
-- First Hopf algebra instance (non-trivial) in any proof assistant
-- First affine quantum group, restricted quantum group
-- First SU(2)_k fusion rules verified from a quantum group
+- First formally verified anomaly constraint in particle physics (N_f ≡ 0 mod 3)
+- First quantum group (U_q(sl₂)) in any proof assistant — and first Hopf algebra non-trivial instance
+- First rank-2 quantum group (U_q(sl₃)) — and first parameterized `QuantumGroup k A` typeclass over arbitrary Cartan matrices
+- First SU(2)_k and SU(3)_k fusion categories in any proof assistant
+- First affine and restricted quantum groups (U_q(ŝl₂), u_q(sl₂))
 - First ribbon category and modular tensor category definitions
 - First pivotal and spherical category definitions
-- First Drinfeld center computations (toric code, non-abelian D(S_3))
+- First Drinfeld centers computed (toric code, non-abelian D(S₃))
+- First complete braided modular tensor category (Ising: R-matrix, hexagon, ribbon, Gauss sum)
+- First formally verified knot invariants (trefoil = −1, figure-eight from Ising MTC)
+- First WRT TQFT pipeline end-to-end (surgery presentation → invariant computation)
+- First Temperley–Lieb algebra and Jones–Wenzl idempotents in any proof assistant
+- First Muger center formalization; first machine-checked general dual-closure theorem
+- First Kac–Walton fusion algorithm in any proof assistant
 - First E8 lattice verification and algebraic Rokhlin decomposition
-- First verified statistical estimators for lattice Monte Carlo
-- First formal analysis of the chirality wall (GS no-go vs TPF evasion)
-- First complete braided fusion category in any proof assistant (Ising MTC with R-matrix, hexagon, ribbon)
-- First formally verified knot invariant from MTC data (trefoil = -1)
-- First verified SU(2)_3 and SU(2)_4 S-matrix unitarity over algebraic number fields
+- First machine-checked Ext^n_{A(1)}(F₂, F₂) computation over any Steenrod sub-algebra (Phase 5q)
+- First Fidkowski–Kitaev 2+1D Cayley-calibrated gapped-interface construction
+- First machine-checked Gibbs–Duhem obstruction theorem for emergent-vacuum dark-energy frameworks (Phase 5y)
+- First closed-form derivation of the vestigial-gravity effective-fluid EOS
+- First machine-checked Fermi-Hubbard geometric SWAP / Berry-phase theorem (Phase 5t)
+- First verified jackknife and autocorrelation estimators for lattice Monte Carlo
+- First formal analysis of the chirality wall (GS no-go ↔ TPF evasion, master synthesis)
+- First Volovik–Zubkov Fermi-point topological-charge → emergent-gauge-group formalization
 
 ---
 
@@ -106,14 +146,18 @@ This project established several firsts in the formal verification of physics:
 
 | Topic | Document |
 |-------|----------|
-| Full technical details | [`README.MD`](../../SK_EFT_Hawking/README.MD) |
+| Full technical README | [`README.MD`](../../README.MD) |
+| Module inventory and quick-reference index | [`SK_EFT_Hawking_Inventory_Index.md`](../../SK_EFT_Hawking_Inventory_Index.md) |
+| Strategic situation and proof-chain assessment | [`docs/RESEARCH_STATUS_OVERVIEW.md`](../RESEARCH_STATUS_OVERVIEW.md) |
 | What each phase accomplished | `docs/stakeholder/Phase{N}_Implications.md` |
-| Strategic positioning | `docs/stakeholder/Phase{N}_Strategic_Positioning.md` |
-| The broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](../Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
-| Critical assessment of the program | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](../Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
-| What's next | [`docs/roadmaps/Phase6_Deferred_Targets.md`](../roadmaps/Phase6_Deferred_Targets.md) |
-| Interactive exploration | Run `uv run python scripts/provenance_dashboard.py` and open http://localhost:8050 |
+| Strategic positioning per phase | `docs/stakeholder/Phase{N}_Strategic_Positioning.md` |
+| Phase 5y closure (2026-04-23) | [`Phase5y_Closure_Summary.md`](Phase5y_Closure_Summary.md) + four cross-phase impact memos |
+| Predictive-scope boundary | [`docs/ARCHITECTURE_SCOPE.md`](../ARCHITECTURE_SCOPE.md) — Layer 3 scope: SM+GR in, dark sector out under tested mechanisms |
+| The broader research program | [`Feasibility Study`](../Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
+| Critical assessment | [`Consolidated Critical Review v3`](../Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
+| What's next | [`docs/roadmaps/Phase6_Deferred_Targets.md`](../roadmaps/Phase6_Deferred_Targets.md) and [`Phase6_Roadmap.md`](../roadmaps/Phase6_Roadmap.md) |
+| Interactive exploration | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
 
 ---
 
-*Last updated: April 2026. Phase 5e complete: braided Ising/Fibonacci MTCs, SU(2)_3/SU(2)_4 S-matrix unitarity, first verified knot invariant. 1318 theorems, 93 modules, 34 sorry pending Aristotle.*
+*Last updated: 2026-04-24-1439.*

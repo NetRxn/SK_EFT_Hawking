@@ -80,23 +80,48 @@ Can gravity emerge from a condensed matter system the way electromagnetism can? 
 
 Monte Carlo simulations are a workhorse of computational physics, but the statistical tools used to analyze their output — variance estimators, autocorrelation functions — have never been formally verified. We formalized the jackknife variance estimator and autocorrelation function in Lean 4 for the first time in any proof assistant, including a proof that the jackknife variance is non-negative. This opens the path to formally verified data analysis pipelines for lattice quantum field theory.
 
-*33 theorems remain as Aristotle (automated theorem prover) targets across 10 modules.*
+### A fluid-based test of dark-matter phenomenology
+
+Three sub-chains connect the emergent-physics infrastructure to observable dark-sector phenomenology. First, ℤ₁₆-anomaly-driven hidden-sector classification enumerates SM-singlet Weyl configurations (`HiddenSectorClassification.lean`, `HiddenSectorMixedCharge.lean`) — the T-0 TQFT candidate is invisible to all planned direct-detection experiments. Second, a superfluid-dark-matter cluster-merger forecast (`SFDMMergerForecast.lean` + Paper 17 "money plot") predicts a sonic-boom step function in κ-profiles at the galaxy-cluster Mach transition; stacking ≥ 30 mergers with Euclid × Roman reaches 3.5–5.7σ, with first 3σ detectable around 2028. Third, fracton dark matter is machine-checked viable in a p-wave dipole superfluid phase at MeV–TeV scales (`FractonDarkMatter.lean`), while Fang–Gu torsion DM is kinematically excluded at CDM level (`FangGuTorsionDM.lean`). A synthesis module pins the empirical-hook ranking (cluster mergers > direct detection) to Lean-decidable ground (`DarkSectorSynthesis.lean`).
+
+### A structural no-go for emergent dark energy
+
+A sequence of deep-research rounds on Klinkhamer–Volovik-style emergent-vacuum mechanisms (four q-theory realizations + vestigial-gravity reframes) returned a uniform NO-GO for DESI DR2 compatibility. The obstruction is machine-checked and structural: `GibbsDuhemTheorem.lean` proves that any single-scalar self-tuning emergent-vacuum framework with Gibbs–Duhem equilibrium locks `w_vac = −1` by Lorentz invariance, realization-independently. Paired with the first closed-form derivation of the vestigial-gravity EOS `w_vest(τ) = (1 − τ²)/(5τ² − 1)` (`VestigialEOS.lean`) and the four-factor orthogonality decomposition (`DarkEnergyObstructionPrinciple.lean`), the result sharpens the architecture's scope: Layer 3 predictive physics covers SM + GR cleanly, but the dark-energy sector is outside the tested predictive scope under the Volovik-family mechanisms. Full accounting in `docs/ARCHITECTURE_SCOPE.md`.
+
+### A solid-state experimental platform: the graphene Dirac fluid
+
+The BEC + polariton experimental tracks are now joined by a solid-state one. The Dean group at Columbia realized the first electronic sonic horizon in bilayer graphene in 2025. Modules `DiracFluidMetric.lean`, `GrapheneHawking.lean`, `DiracFluidSK.lean`, `GrapheneNoiseFormula.lean`, and `QuasiOneDReduction.lean` carry the SK-EFT chain across to 2+1D: the 3×3 acoustic metric block-diagonalizes for quasi-1D flow, letting the existing WKB machinery apply directly (~92% theorem reuse). Predicted T_H ≈ 2.4 K for the Dean bilayer nozzle — nine orders above BEC — with a current-noise-spectroscopy detection path (Keldysh FDT + Landauer–Büttiker formula). Paper 16a documents the platform end to end.
+
+### A formally verified geometric quantum gate
+
+A finite-dimensional target completes the picture. `FermiHubbardDimer.lean` formalizes a two-site Fermi-Hubbard doublon system and proves a minimal Berry-phase theorem: under a π-sweep the dark state picks up a −1 sign, the dynamical phase vanishes under the kernel-angle condition, and the accumulated phase is purely geometric. The SWAP unitary on the 3-dimensional singlet sector is realized as a Householder reflection in an explicit orthonormal eigenbasis. This is the first formally verified symmetry-protected (non-topological) two-qubit gate — complementary to the Fibonacci-braiding universality proof, which protects gates via topological order rather than chiral symmetry. Paper 18 documents the result.
 
 ---
 
 ## Technical Summary
 
-**Lean 4 formalization:** **3021 theorems** (2942 substantive + 79 placeholder) across **133 modules**. 1 axiom (gapped_interface_axiom), **0 sorry project-wide**.
-322 Aristotle-proved across 44 runs. Lean 4.29.0, Mathlib commit `8850ed93` (the first 4.29.0 commit).
-**First machine-checked Ext computation over any Steenrod subalgebra** (Phase 5q, April 2026).
-**First quantum group + Hopf algebra typeclass-wired in any proof assistant for U_q(sl₃)** (Phase 5i Wave 2 / Tranche E, 2026-04-14): both `Bialgebra` and `HopfAlgebra` Mathlib typeclass instances proven, with the 4 antipode q-Serre cubics (E12/E21/F12/F21) closed via a palindromic Serre atom-bridge approach.
-**First per-generator squared-antipode identity on U_q(ŝl₂) in a proof assistant** (Phase 5e Waves 7-8, 2026-04-15): per-generator S²(x_i) = K_i·x_i·K_i⁻¹ for x_i ∈ {E_i, F_i, K_i, K_i⁻¹}, closing the affine Hopf structure. Note: the global `S² = Ad(K_{2ρ})` formula valid for finite simply-laced types does **not** hold for affine ŝl₂ (degenerate Cartan matrix); the correct affine statement is per-generator only.
+**Lean 4 formalization:** **~3,950 theorems** (~3,840 substantive + ~110 placeholder) across **166 modules**. **1 axiom** (`gapped_interface_axiom`, eliminability: hard — the 4+1D gapped-interface conjecture, a standard open problem in lattice QFT and not a project-originated assumption). **0 sorry project-wide**. 322 theorems Aristotle-proved across 44 runs. Lean 4.29.0, Mathlib commit `8850ed93`.
 
-**First machine-checked Gibbs-Duhem obstruction theorem for emergent-vacuum dark-energy frameworks** (Phase 5y closure, 2026-04-23): `GibbsDuhemTheorem.lean` + `QTheoryNoGoTheorem.lean` + `DarkEnergyObstructionPrinciple.lean` + `DESIComparison.lean` formalize the Round 5 structural result that any single-scalar self-tuning emergent-vacuum framework with Gibbs-Duhem equilibrium locks `w_vac = −1` by Lorentz invariance, realization-independent across the four tested Klinkhamer-Volovik q-theory constructions (4-form, 2-brane, fermionic-crystal, unimodular). Paired with the H4 closed-form vestigial-EOS derivation (`VestigialEOS.lean`) formalizing the first quantitative derivation of `(w_vest, c_s², ζ_vest)` via charge-4e superconductor analogy. Layer-3 dark-sector predictive scope explicitly recalibrated (see `docs/ARCHITECTURE_SCOPE.md`).
+**Representative formal-verification firsts** (each phase has delivered at least one):
+- First formally verified anomaly constraint in particle physics (`N_f ≡ 0 mod 3`, Phases 5a–5b–5q).
+- First quantum group (U_q(sl₂)) and Hopf-algebra non-trivial instance in any proof assistant (Phases 5b–5c–5d).
+- First rank-2 quantum group (U_q(sl₃)) and SU(3)_k fusion formalization (Phase 5i).
+- First parameterized `QuantumGroup k A` typeclass over arbitrary Cartan matrices + first Kac–Walton fusion algorithm (Phase 5m).
+- First complete braided modular tensor category (Ising) and first formally verified knot invariants (trefoil = −1, figure-eight; Phase 5e–5f).
+- First Temperley–Lieb algebra, first Jones–Wenzl idempotents, first end-to-end WRT TQFT pipeline (Phase 5k).
+- First Muger-center formalization and first general machine-checked dual-closure theorem (Phase 5p).
+- First Fermi-point → emergent-gauge-group formalization (|N|=1 → U(1), |N|=2 → SU(2); Phase 5j).
+- First Fidkowski–Kitaev 2+1D Cayley-calibrated gapped-interface construction (Phase 5s).
+- First machine-checked Ext^n_{A(1)}(F₂, F₂) computation over any Steenrod sub-algebra (Phase 5q).
+- First change-of-rings discharge of `Ext_A ≅ Ext_{A(1)}` topological hypothesis H2 (Phase 5r).
+- First verified jackknife + autocorrelation estimators for lattice Monte Carlo (Phase 5c).
+- First Fermi-Hubbard geometric SWAP + minimal Berry-phase theorem (Phase 5t).
+- First graphene-Dirac-fluid analog-Hawking formalization with Keldysh + Landauer–Büttiker noise formula (Phase 5w).
+- First Gibbs–Duhem emergent-vacuum obstruction theorem + closed-form vestigial-gravity EOS (Phase 5y).
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
 
-**Fourteen papers** in a unified codebase — from first-order dissipative corrections (Paper 1) through gauge erasure (Paper 3), exact WKB (Paper 4), emergent gravity (Papers 5-6), chirality wall (Papers 7-8), SM anomaly and Drinfeld center (Paper 9), modular generation counting (Paper 10), quantum groups through MTC (Paper 11), polariton analog Hawking (Paper 12), braided modular tensor categories (Paper 14), and formal verification methodology (Paper 15).
+**Eighteen papers** in a unified codebase: first-order dissipative corrections (Paper 1), second-order (Paper 2), gauge erasure (Paper 3), exact WKB (Paper 4), ADW gap equation (Paper 5), vestigial gravity + MC (Paper 6), chirality formal (Paper 7), chirality master (Paper 8), SM anomaly + Drinfeld center (Paper 9), modular generation (Paper 10), quantum groups through MTC (Paper 11), polariton analog Hawking (Paper 12), braided MTC + knot invariants (Paper 14), verification methodology (Paper 15), graphene Dirac-fluid SK-EFT (Paper 16a), WRT TQFT pipeline formalization (Paper 16b), dark-sector connections (Paper 17), and geometric quantum gate (Paper 18).
 
 ## Project Structure
 
@@ -263,11 +288,26 @@ SK_EFT_Hawking/
 │   │   ├── hs_rhmc_jax.py           # JAX CPU backend (Wave 7C)
 │   │   ├── hs_rhmc_torch.py         # PyTorch CPU production default (Wave 7C)
 │   │   └── stencil_dirac.py         # Stencil Dirac operator (Phase 5f)
-│   └── fracton/                       # Fracton hydrodynamics (Phase 4 Waves 2-3)
-│       ├── sk_eft.py                  # Fracton SK-EFT transport coefficients
-│       ├── information_retention.py   # UV information comparison
-│       ├── gravity_connection.py      # Fracton-gravity Kerr-Schild + bootstrap
-│       └── non_abelian.py             # Non-Abelian fracton analysis
+│   ├── fracton/                       # Fracton hydrodynamics (Phase 4 Waves 2-3, extended 5x)
+│   │   ├── sk_eft.py                  # Fracton SK-EFT transport coefficients
+│   │   ├── information_retention.py   # UV information comparison
+│   │   ├── gravity_connection.py      # Fracton-gravity Kerr-Schild + bootstrap
+│   │   └── non_abelian.py             # Non-Abelian fracton analysis
+│   ├── dark_sector/                   # Dark-sector phenomenology (Phase 5x)
+│   │   ├── z16_hidden_sector.py       # ℤ₁₆-anomaly-driven SM-singlet Weyl enumeration
+│   │   ├── adw_cosmological_constant.py # ADW Λ magnitude + Volovik/GH doubling
+│   │   ├── fracton_dm.py              # Fracton DM phenomenology
+│   │   ├── sfdm_sk_eft.py             # SK-EFT applied to superfluid dark matter
+│   │   ├── sfdm_merger_forecast.py    # SFDM cluster-merger sonic-boom forecast
+│   │   └── synthesis.py               # Seven cross-connection theorems (Wave 8)
+│   ├── fermi_hubbard/                 # Fermi-Hubbard dimer (Phase 5t)
+│   │   └── dimer.py                   # Dimer Hamiltonian, dark state, SWAP, Berry-phase helpers
+│   └── graphene/                      # Graphene Dirac-fluid platform (Phase 5w)
+│       ├── bilayer_eos.py             # Bilayer graphene equation of state
+│       ├── hawking_predictions.py     # T_H + dissipative corrections for the Dean bilayer
+│       ├── platform_comparison.py     # BEC ↔ polariton ↔ graphene platform comparison
+│       ├── transport_counting.py      # 2+1D charged conformal-fluid transport coefficients
+│       └── wkb_spectrum.py            # Quasi-1D WKB spectrum for graphene
 │
 ├── papers/
 │   ├── paper1_first_order/            # PRL submission
@@ -298,6 +338,15 @@ SK_EFT_Hawking/
 │   │   └── paper_draft.tex
 │   ├── paper15_methodology/          # CPC formal verification methodology (Phase 5h)
 │   │   └── paper_draft.tex
+│   ├── paper16_graphene_sk_eft/     # Graphene Dirac-fluid analog Hawking (Phase 5w)
+│   │   └── paper_draft.tex
+│   ├── paper16_wrt_tqft/            # First formal WRT TQFT pipeline (Phase 5k)
+│   │   └── paper_draft.tex
+│   ├── paper17_dark_sector/         # Dark-sector connections + Gibbs-Duhem no-go (Phase 5x-5y)
+│   │   └── paper_draft.tex
+│   ├── paper18_doublon_gate/        # Formal verification of a geometric quantum gate (Phase 5t)
+│   │   └── paper_draft.tex
+│   ├── AutomatedReviews/            # Stage 13 adversarial-reviewer output per paper (Phase 5v)
 │   └── experimental_predictions/     # Standalone prediction tables (Phase 4)
 │       └── prediction_tables.tex
 │
@@ -421,14 +470,17 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
 | Browse the dashboard | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
 | Read non-technical summaries | `docs/stakeholder/` — implications and strategic positioning per phase |
-| See what's next | [`docs/roadmaps/Phase5s_Roadmap.md`](docs/roadmaps/Phase5s_Roadmap.md) (FK gapped interface, Muger general, KL data, sorry closure), [`Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md) |
+| See what's next | [`docs/roadmaps/Phase6_Deferred_Targets.md`](docs/roadmaps/Phase6_Deferred_Targets.md), [`Phase6_Roadmap.md`](docs/roadmaps/Phase6_Roadmap.md), and [`Phase6_VerifiedStatistics_Roadmap.md`](docs/roadmaps/Phase6_VerifiedStatistics_Roadmap.md). For phase-specific context see the full roadmap series [`docs/roadmaps/`](docs/roadmaps/) (Phase 1 through Phase 5y). |
+| Understand predictive scope | [`docs/ARCHITECTURE_SCOPE.md`](docs/ARCHITECTURE_SCOPE.md) — Layer 3 boundary: SM+GR in scope, dark-energy sector out under tested mechanisms |
 | Understand the broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
 | Read the critical review | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
-| See the deep research corpus | `Lit-Search/` — 40+ research files across Phases 3-5j |
+| See the deep research corpus | [`Lit-Search/`](../Lit-Search/) — research files organized Phase-1 through Phase-5z |
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (3021 theorems — 1 axiom, **0 sorry**)
+## Theorem Inventory (~3,950 theorems — 1 axiom, **0 sorry**)
+
+**Canonical counts** live in `docs/counts.json`, regenerated by `scripts/update_counts.py`. The table below summarizes the module-level inventory by phase; for live numbers consult the JSON.
 
 | Module | Phase | Theorems | Notes |
 |---|---|---|---|
@@ -532,12 +584,69 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Uqsl3Hopf.lean | 5i | 2 | U_q(sl₃) Hopf: coproduct/counit/antipode, S²=Ad(K₁K₂) (4 sorry) |
 | SU3kFusion.lean | 5i | 99 | **FIRST SU(3)_k fusion**: Z₃ at k=1, 6 anyons at k=2, Fibonacci subcategory (all proved, native_decide) |
 | PolyQuotQ.lean | 5i | 15 | Q(ζ₃) cyclotomic field for SU(3)₁ S-matrix (all proved) |
-| FermiPointTopology.lean | 5j | 28 | Fermi-point topological charge, |N|=1→U(1), |N|=2→SU(2) gauge emergence (all proved) |
+| FermiPointTopology.lean | 5j | 28+ | Fermi-point topological charge, |N|=1→U(1), |N|=2→SU(2) gauge emergence (all proved) |
+| TemperleyLieb.lean | 5k | — | First TL algebra in any proof assistant; Jones–Wenzl prerequisite |
+| SurgeryPresentation.lean | 5k | — | Kirby-calculus surgery presentation of 3-manifolds |
+| WRTInvariant.lean | 5k | — | Witten–Reshetikhin–Turaev TQFT invariant (definition) |
+| WRTComputation.lean | 5k | — | WRT invariants of S³, S²×S¹, lens spaces, figure-eight complement |
+| JonesWenzl.lean | 5l | — | Jones–Wenzl idempotents at roots of unity |
+| IsingGates.lean | 5l | — | Ising anyon gates generate the Clifford group (Microsoft-Majorana relevance) |
+| FibonacciBraiding.lean | 5l | — | Fibonacci braid-group action at level k=3 |
+| FibonacciUniversality.lean | 5l | — | Braiding Lie-algebra spanning → universality for quantum computation |
+| FibonacciQutrit.lean | 5l | — | Qutrit braid construction |
+| FibonacciQutritUniversality.lean | 5l | — | Qutrit universality |
+| StringNet.lean | 5l | — | First string-net condensation formalization; toric code from Vec_{ℤ/2} |
+| QuantumGroupGeneric.lean | 5m | 29 | `QuantumGroup k A` over arbitrary Cartan matrix A — first parameterized QG |
+| QuantumGroupCoproduct.lean | 5m | 44 | Generic coproduct Δ for U_q(𝔤) |
+| QuantumGroupAntipode.lean | 5m | 25 | Generic antipode S for U_q(𝔤) via MulOpposite |
+| QuantumGroupHopf.lean | 5m | 31 | First generic HopfAlgebra instance for U_q(𝔤) |
+| QuantumGroupInstantiation.lean | 5m | 39 | Equivalences qgA1 ≃ Uqsl2, qgA2 ≃ Uqsl3 |
+| QuantumGroupMeta.lean | 5m | 16 | Exceptional Cartan matrices E₆/E₇/E₈/F₄ |
+| KacWaltonFusion.lean | 5m | 63 | First Kac–Walton fusion algorithm in any proof assistant |
+| KMatrixAnomaly.lean | 5n | — | K-matrix anomaly inflow / 3450 model gappability |
+| VillainHamiltonian.lean | 5n | — | First Villain Hamiltonian formalization |
+| TPFDisentangler.lean | 5n | — | TPF disentangler properties (chirality-wall 1+1D) |
+| SPTStacking.lean | 5n | — | SPT phase stacking (chirality-wall 1+1D) |
+| MugerCenter.lean | 5p | — | First Muger-center formalization; general dual-closure theorem |
+| FPDimension.lean | 5p | — | Frobenius–Perron dimensions derived from fusion matrices |
+| D2Formula.lean | 5p | — | Global-dimension formula D² = Σ (dim V)² |
+| A1Ring.lean | 5q | — | A(1) Steenrod sub-algebra as F₂-algebra (structure + ring) |
+| A1Resolution.lean | 5q | — | Minimal free resolution of F₂ over A(1) through degree 5 |
+| A1Ext.lean | 5q | — | Ext dimensions 1, 2, 2, 2, 3, 4 — first Ext over a Steenrod sub-algebra |
+| ExtBordismBridge.lean | 5q | — | Bridge from Ext to spin-bordism (H1/H3/H4 as focused hypotheses) |
+| ChangeOfRings.lean | 5r | — | Ext_A ≅ Ext_{A(1)} via Hom-tensor adjunction; discharges topological H2 |
+| FKGappedInterface.lean | 5s | — | First Fidkowski–Kitaev 2+1D Cayley-calibrated gapped interface, Δ=14 |
+| ModularityTheorem.lean | 5s | — | General det(S) ≠ 0 → Z₂ trivial (pure linear algebra) |
+| InstantonZeroModes.lean | 5s | — | Zero-mode counting bypassing the 4D index theorem via Clifford separation |
+| CenterFunctorZ2.lean + CenterFunctorZ2Equiv.lean | 5s | — | Continuation of Center(Vec_{ℤ/2}) ≅ Rep(D(ℤ/2)) formalization |
+| FermiHubbardDimer.lean | 5t | 143 | Fermi-Hubbard doublon geometric SWAP + minimal Berry-phase theorem |
+| DiracFluidMetric.lean | 5w | 9 | 3×3 graphene Dirac-fluid acoustic metric, block-diag for quasi-1D |
+| GrapheneHawking.lean | 5w | 7 | Dispersive correction, T_eff positivity, EFT validity for graphene |
+| DiracFluidSK.lean | 5w | 9 | Conformal transport, KSS bound, EFT perturbativity |
+| GrapheneNoiseFormula.lean | 5w | 8 | ΔS_I(ω) from Keldysh FDT + Landauer–Büttiker |
+| QuasiOneDReduction.lean | 5w | — | Quasi-1D bound correction + greybody validation |
+| HiddenSectorClassification.lean | 5x | — | ℤ₁₆-anomaly-driven SM-singlet Weyl enumeration |
+| HiddenSectorMixedCharge.lean | 5x | — | Wan–Wang mixed-charge hidden-sector channel |
+| CosmologicalConstant.lean | 5x | 8 | ADW-derived Λ magnitude + Volovik/Gibbons-Hawking doubling |
+| FangGuTorsionDM.lean | 5x | 10 | Fang–Gu torsion-DM kinematic obstruction (w = 1/3) |
+| FractonDarkMatter.lean | 5x | 25 | p-wave dipole superfluid viability; Arrhenius + BBN conditions |
+| SFDMMergerForecast.lean | 5x | 30 | SFDM merger sonic-boom forecast; Rankine–Hugoniot closed form |
+| DarkSectorSynthesis.lean | 5x | 22 | Seven cross-connection theorems; empirical-hook ranking |
+| GibbsDuhemTheorem.lean | 5y | 16 | First emergent-vacuum obstruction: `w_vac = −1` locked by Lorentz + Gibbs–Duhem |
+| QTheoryNoGoTheorem.lean | 5y | 12 | Obstruction realization-independent across 4 KV q-theory constructions |
+| DarkEnergyObstructionPrinciple.lean | 5y | 8 | Four-factor orthogonality decomposition |
+| DESIComparison.lean | 5y | 8 | DESI DR2 comparison infrastructure |
+| VestigialEOS.lean | 5y | 20 | First closed-form `w_vest(τ) = (1−τ²)/(5τ²−1)` + `c_s²`, `ζ_vest` |
+| VestigialMapping.lean | 5y | 8 | Charge-4e superconductor → vestigial-gravity dictionary |
+| CondensedMatterAnalog.lean | 5y | 10 | Fernandes–Fu condensed-matter EOS correspondence |
+| ClassificationTableDark.lean | 5y | 8 | Dark-sector candidate classification consolidation |
+| ExtractDeps.lean | infra | — | Environment walker / axiom-closure extractor (Invariant #10 exception) |
 
 ## Build Environment
 
-- **Lean:** 4.28.0 with Mathlib (commit 8f9d9cff6bd728b17a24e163c9402775d9e6a365)
-- **Python:** ≥3.14, managed via uv. Key deps: numpy, scipy, sympy, mpmath, plotly, aristotlelib, torch, maturin.
+- **Lean:** 4.29.0 with Mathlib (pinned in `lean/lakefile.toml`, currently commit `8850ed93`).
+- **Python:** ≥ 3.14, managed via uv. Key deps: numpy, scipy, sympy, mpmath, plotly, aristotlelib, torch, maturin.
+- **Rust:** PyO3 extension for RHMC (`rust/src/lib.rs`). Rebuild with `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uv pip install -e rust/ --force-reinstall --no-deps`.
 - **Visualization:** Plotly (not matplotlib). Color scheme: #2E86AB steel blue, #A23B72 berry, #F18F01 amber.
 
 ## Key References
@@ -548,8 +657,12 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 - [Knowledge Graph](docs/KNOWLEDGE_GRAPH.md) — interactive provenance visualization
 - [Dashboard](docs/DASHBOARD.md) — parameter verification, proof architecture, paper claims
 
-**Roadmaps:** [`docs/roadmaps/`](docs/roadmaps/) contains phase-specific execution plans (Phases 1-5j) and the [Phase 6 Deferred Targets](docs/roadmaps/Phase6_Deferred_Targets.md) tracking future work with deep research linkage.
+**Roadmaps:** [`docs/roadmaps/`](docs/roadmaps/) contains phase-specific execution plans (Phases 1 through 5y) and three Phase 6 forward-looking documents: [Phase6_Roadmap.md](docs/roadmaps/Phase6_Roadmap.md) (HPC-dependent vestigial-MC tracks), [Phase6_Deferred_Targets.md](docs/roadmaps/Phase6_Deferred_Targets.md) (continuously updated "future-work" register), and [Phase6_VerifiedStatistics_Roadmap.md](docs/roadmaps/Phase6_VerifiedStatistics_Roadmap.md) (formal-verification extension of the statistics pipeline).
 
-**Stakeholder docs:** [`docs/stakeholder/`](docs/stakeholder/) contains non-technical implications and strategic positioning documents for each phase.
+**Stakeholder docs:** [`docs/stakeholder/`](docs/stakeholder/) contains non-technical implications and strategic positioning documents per phase, plus the Phase 5y closure memo and its four cross-phase impact notes.
 
-**Deep research:** [`Lit-Search/`](../Lit-Search/) contains 40+ research files spanning Phases 3-5j covering quantum groups, modular tensor categories, Rokhlin's theorem, the ADW gap equation, fracton-gravity, verified statistics, polariton protocols, TQFT partition functions, gauging obstructions, SU(3)_k fusion, and Fermi-point topology.
+**Deep research:** [`Lit-Search/`](../Lit-Search/) is organized by phase (`Phase-1-and-Background` through `Phase-5z`) covering quantum groups, modular tensor categories, Rokhlin's theorem, the ADW gap equation, fracton hydrodynamics and gravity, verified statistics, polariton protocols, TQFT partition functions, gauging obstructions, SU(3)_k fusion, Fermi-point topology, chirality-wall 3+1D, FK gapped interface, instanton zero-mode counting, graphene Dirac-fluid transport, dark-sector phenomenology, and Klinkhamer–Volovik q-theory obstruction analysis.
+
+---
+
+*Last updated: 2026-04-24-1439. Counts are a rolling snapshot — `docs/counts.json` is the single source of truth (regenerated by `scripts/update_counts.py`).*

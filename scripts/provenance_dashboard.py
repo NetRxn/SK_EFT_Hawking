@@ -1017,9 +1017,16 @@ def index():
             filtered_params = [p for p in params if p['status'] == status_filter]
     if tier_filter != 'all':
         filtered_params = [p for p in filtered_params if p['tier'] == tier_filter]
-    if paper_filter != 'all':
-        paper_num = int(paper_filter)
-        filtered_params = [p for p in filtered_params if paper_num in p['papers']]
+    # Phase 5v Wave 9g: the Paper Provenance tab uses `?paper=<paper_id>`
+    # (string). This Parameters-tab handler only wants the numeric paper
+    # number; guard against str vs int collision so a non-numeric value
+    # (from the other tab) doesn't 500 out the whole dashboard.
+    if paper_filter != 'all' and tab == 'parameters':
+        try:
+            paper_num = int(paper_filter)
+            filtered_params = [p for p in filtered_params if paper_num in p['papers']]
+        except ValueError:
+            pass  # Other tabs own this param; ignore here.
 
     # Sort: conflicts first, then unverified, then LLM-only, then verified
     status_order = {'unverified': 0, 'llm_verified': 1, 'human_verified': 2}

@@ -2,17 +2,19 @@
 
 **Purpose:** Plain-language, rigorous assessment of all proven chains, their implications, gaps, and strategic situation. Written for the principal investigator and future collaborators.
 
-**Last updated:** April 8, 2026 (end of Week 3, Phase 5q Ext computation complete)
+**Last updated:** 2026-04-24-1439
 
-**Current build:** 131 Lean modules, 2237+ theorems, 1 axiom, **11 sorry** (8 Uqsl2AffineHopf + 3 Uqsl3Hopf; CenterFunctor: 0 sorry, 2 tracked hypotheses). 53 Python modules, 45 test files (1856 tests), 100 figures, 48 notebooks, 15 papers (none submitted). **First machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.** q-Serre coproduct proof Phases 1-3 solved; Phase 4 (Laurent polynomial coefficient cancellation) is sole remaining blocker for all 11 sorry.
+**Current build:** **166 Lean modules, ~3,950 theorems** (3,840 substantive + 110 placeholder), **1 axiom** (`gapped_interface_axiom`, eliminability: hard), **0 sorry project-wide**. 66+ Python modules across 14 sub-packages (including `dark_sector/`, `graphene/`, `fermi_hubbard/` added alongside the earlier `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`, etc.), 58 test files (~2,800 tests), 110 figures, 52 notebooks, 18 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs.
+
+Representative formal-verification firsts across the library — each phase has delivered at least one — include the `N_f ≡ 0 mod 3` generation constraint with machine-checked Ext^n_{A(1)}(F₂, F₂) computation, the first quantum group (U_q(sl₂)) and Hopf algebra in any proof assistant, the first rank-2 quantum group (U_q(sl₃)) and SU(3)_k fusion, the first parameterized `QuantumGroup k A` over arbitrary Cartan matrices with Kac–Walton fusion, the first complete braided modular tensor category (Ising) and verified knot invariants (trefoil = −1, figure-eight), the first Temperley–Lieb / Jones–Wenzl / WRT pipeline, the first Muger center and general dual-closure theorem, the first Fidkowski–Kitaev 2+1D Cayley-calibrated gapped-interface construction, the first Volovik–Zubkov Fermi-point → emergent-gauge formalization, the first Gibbs–Duhem emergent-vacuum obstruction theorem, the first closed-form vestigial-gravity EOS, and the first formally verified Fermi-Hubbard geometric SWAP / Berry-phase theorem.
 
 ---
 
 ## How to Read This Document
 
-The project asks: **Can the mathematical structures of exotic matter also describe fundamental physics?**
+The project asks: **Can the mathematical structures of exotic matter also describe fundamental physics, and where does that idea break down?**
 
-Six independent proof chains address different aspects of this question. Each chain is assessed for:
+Nine proof chains address different aspects of this question. Chains 1–6 are the original programmes — dissipative Hawking radiation, the generation constraint, Onsager → quantum groups → MTC → TQFT → Fibonacci universality, the chirality wall, ADW emergent gravity, and Monte-Carlo vestigial gravity. Chains 7–9 — the Fermi-Hubbard doublon geometric gate, the graphene Dirac-fluid Hawking platform, and dark-sector connections — sit alongside them as peers rather than as extensions. Each chain is assessed for:
 - **Solidity** — what is machine-checked vs. conjectured vs. open
 - **Gaps** — what's missing and whether the gaps are technical or fundamental
 - **Implications** — what follows if the chain holds or breaks
@@ -215,74 +217,155 @@ Recently completed (Phase 5p, April 8 2026):
 
 ---
 
-## Strategic Situation (Week 3)
+## Chain 7: Fermi-Hubbard Geometric Quantum Gate
+
+**Status: SOLID. Fully machine-verified, peer to the topological-quantum-computation strand of Chain 3.**
+
+**The chain:**
+Fermi-Hubbard dimer Hamiltonian on 6-dim Fock space → singlet-sector block decomposition → spectrum at U = 0 (dark state + two brights) → full charpoly factorization `X·(X − C√g)·(X + C√g)` over the singlet block → chiral-symmetry pinning of the zero mode via Γ = σ_x on the sub-lattice basis → symmetry-adapted 6×6 block-diagonal lift → geometric SWAP realized as Householder reflection `U_SWAP = I − (2/gap²) darkVec ⊗ darkVec` → Berry phase theorem: under a π-sweep the dark state picks up a −1 sign (closed-path statement), the dynamical phase vanishes (`⟨darkStateθ, H · darkStateθ⟩ = 0` under the kernel-angle condition), and the accumulated phase is purely geometric.
+
+**What's proved (`FermiHubbardDimer.lean`, 143 theorems, 0 sorry):**
+- Direct-exchange scaling: `E_plus(t, U) = (U + √(U² + 16t²))/2` with `HasDerivAt (E_plus t) (1/2) 0` (Tier-1 linear-in-U scaling).
+- Tier-2 superexchange approximation bound `|J − 4t²/U| ≤ 16t⁴/U³` for `4|t| ≤ U`.
+- Full chiral-symmetry layer: ker(H) is 1-dimensional and exactly `ℝ · darkVec`; sublattice projectors `P_± = (1 ± Γ)/2` are idempotent, orthogonal, and complete; Γ acts as ±1 on ±1 eigenspaces.
+- Geometric SWAP unitarity proved via `OrthonormalBasis.toMatrix_orthonormalBasis_mem_unitary`; 6×6 symmetry-adapted lift `U_SWAP_adapted ∈ Matrix.unitaryGroup`.
+- Minimal Berry-phase theorem bundles sign flip + zero dynamical phase into "accumulated phase is purely geometric and equals −1."
+
+Python mirror (`src/fermi_hubbard/dimer.py` + `src/experimental/doublon_gate.py`, ED API + scaling curves + SWAP witnesses + superexchange benchmark), 43 tests, one figure (`fig_doublon_gate_spectrum`: singlet spectrum cross-verified numpy-vs-closed-form, superexchange envelope ±16t⁴/U³).
+
+**What's missing:** The full adiabatic Aharonov–Anandan / Berry-connection formalism over a parameterized eigenbundle is explicitly deferred to Phase 6 (Target B); the current proof is the minimal geometric content without formalizing parallel transport on an eigenbundle.
+
+**Implication:** First formally verified analysis of a symmetry-protected non-topological two-qubit gate. Distinct from Fibonacci-braiding universality (topological, Chain 3) — here the protection is symmetry-based and non-holonomic. Paper 18 documents the result.
+
+---
+
+## Chain 8: Graphene Dirac-Fluid Hawking Radiation
+
+**Status: SOLID through formalized predictions; detection pending.**
+
+**The chain:**
+Graphene electronic sonic horizon (Dean group, Columbia, Sept 2025) → 3×3 acoustic metric for 2+1D Dirac fluid → block-diagonalization for quasi-1D flow → 1+1D WKB machinery applies directly (≈92% Lean theorem reuse from the existing `WKBAnalysis.lean`, `WKBConnection.lean`, `HawkingUniversality.lean`, `AcousticMetric.lean`) → predicted T_H ≈ 2.4 K for Dean bilayer nozzle (9 orders above BEC) → dissipative δ_diss ~ 10⁻¹³ (negligible) vs. dispersive δ_disp ~ −3% (dominant) → Wiedemann–Franz violation L/L₀ > 200× from two-channel transport → noise-spectrum formula `ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω)` from Keldysh FDT + Landauer–Büttiker.
+
+**Lean modules (all zero sorry):** `DiracFluidMetric.lean` (9 thms), `GrapheneHawking.lean` (7 thms), `DiracFluidSK.lean` (9 thms), `GrapheneNoiseFormula.lean` (8 thms — corrected formula), `QuasiOneDReduction.lean` (extensions; Γ₀ ≈ 0.9994 and quasi-1D bound error ≤ 1.8% verified in Wave 10c). Python companions under `src/graphene/` (`bilayer_eos.py`, `hawking_predictions.py`, `platform_comparison.py`, `transport_counting.py`, `wkb_spectrum.py`).
+
+**What's missing:** Detection itself. The Dean group has the sonic horizon; the Kim group (Harvard) has the noise thermometer; neither has attempted Hawking-radiation detection. Principal device-level uncertainty is the greybody factor `Γ(ω)` — the framework derivation is complete but the experimentalist-specific sample geometry sets the final bandwidth.
+
+**Implication:** Opens a second experimental frontier alongside polaritons. T_H in the 1–3 K range with a realized sonic horizon in a solid-state system. Paper 16a documents the platform end-to-end.
+
+---
+
+## Chain 9: Dark-Sector Connections and the Structural No-Go for Emergent Dark Energy
+
+**Status: SOLID as an obstruction-harvest. The negative results are machine-checked; the positive predictions (SFDM merger forecast, fracton DM viability) are forecasted and awaiting observation.**
+
+**Two coupled sub-chains:**
+
+**Sub-chain 9A — Dark matter candidate classification:**
+ℤ₁₆ anomaly-driven enumeration of SM-singlet Weyl sectors (`HiddenSectorClassification.lean`, `HiddenSectorMixedCharge.lean`; extends Chain 2's anomaly framework) → T-0 TQFT candidate is invisible to all planned direct-detection experiments (`emergent_gravity_dm_invisible_collective` over 5-element enum) → SFDM merger sonic-boom forecast (`SFDMMergerForecast.lean`, 30 theorems; Bullet, El Gordo, Pandora, A520, MACS J0025 canonical-merger table; Rankine–Hugoniot density-jump closed form for γ = 2; Euclid × Roman stacked ≥ 30 mergers reaches 3.5–5.7σ; first 3σ detectable ~2028) → fracton DM viable in p-wave dipole superfluid phase at MeV–TeV (`FractonDarkMatter.lean`, 25 theorems; consumes `FractonFormulas.dipole_k4_damping` + `FractonNonAbelian.no_fracton_is_ym_compatible`) → Fang–Gu torsion DM kinematically excluded at CDM level (`FangGuTorsionDM.lean`, traceless T_μν forces w = 1/3) → seven cross-connection theorems in `DarkSectorSynthesis.lean` pinning the Paper 17 empirical-hook ranking to Lean-decidable ground (merger outranks direct detection).
+
+**Sub-chain 9B — Dark energy structural obstruction:**
+Gibbs–Duhem emergent-vacuum obstruction (`GibbsDuhemTheorem.lean`, 16 theorems) — Lorentz-invariance + Gibbs–Duhem equilibrium → `w_vac = −1` identically for any single-scalar self-tuning emergent-vacuum framework → Klinkhamer–Volovik q-theory no-go (`QTheoryNoGoTheorem.lean`) across all four tested realizations (4-form, 2-brane, fermionic-crystal, unimodular gravity) → four-factor orthogonality decomposition (`DarkEnergyObstructionPrinciple.lean`: Gibbs–Duhem ∩ `c_s² ≥ 0` ∩ natural `T_c` ∩ MICROSCOPE) + DESI DR2 comparison (`DESIComparison.lean`) → first closed-form vestigial-gravity EOS `w_vest(τ) = (1 − τ²)/(5τ² − 1)`, `c_s²(τ) = −(1 − τ²)/(3 − 5τ²)` (`VestigialEOS.lean`, 20 theorems; natural branch is phantom-today + `c_s² < 0` catastrophic gradient instability) → Layer-3 predictive-scope recalibration: SM+GR emergent physics IN, dark-energy sector OUT under the tested mechanisms (`docs/ARCHITECTURE_SCOPE.md`).
+
+**What this does NOT claim:** q-theory is not falsified as a vacuum-stability framework (only as a DESI-compatible dark-energy mechanism). Additional Volovik-family mechanisms (3-form aether, H3 inflation-era q-dynamics) remain logically open but not realized in the phases explored.
+
+**Implication:** A substantial class of emergent-vacuum dark-energy proposals is now structurally obstructed in a machine-checked way. For dark matter, the empirical-hook ordering (SFDM cluster mergers > fracton direct detection > hidden-sector direct detection) is grounded in Lean-decidable theorems. Paper 17 integrates both sub-chains.
+
+---
+
+## Strategic Situation
 
 ### Epistemic layers
 
 **Layer 1 — Rock solid (machine-checked, zero sorry):**
-- SK-EFT corrections to Hawking radiation (complete through all orders)
-- N_f = 0 mod 3 generation constraint (zero axioms, Ext computation machine-checked)
-- **Ext^n_{A(1)}(F_2, F_2) computation** (first in any proof assistant — resolution, d^2=0, minimality, dimensions)
+- SK-EFT corrections to Hawking radiation (complete through all orders, with graphene Dirac-fluid extension)
+- `N_f ≡ 0 mod 3` generation constraint (zero axioms, Ext computation machine-checked)
+- Ext^n_{A(1)}(F₂, F₂) computation (first in any proof assistant — resolution, d² = 0, minimality, dimensions)
+- Change-of-rings isomorphism Ext_A ≅ Ext_{A(1)} (closes topological hypothesis H2)
 - Gauge erasure theorem
 - Fracton-gravity incompatibility
 - E8 / Serre mod 8 / algebra-topology separation
-- Ising + Fibonacci MTCs (complete through modularity + Muger triviality)
-- TQFT partition functions + WRT surgery invariants
-- Fibonacci universality for quantum computation
+- Ising + Fibonacci MTCs (modularity + Muger triviality), SU(2)_k at k=1..5, SU(3)_k at k=1,2
+- TQFT partition functions + WRT surgery invariants (end-to-end pipeline)
+- Fibonacci universality for quantum computation (braiding Lie-algebra spanning)
+- Temperley–Lieb algebra, Jones–Wenzl idempotents, Muger center, FP-dimension eigenvalues
+- Parameterized `QuantumGroup k A` over arbitrary Cartan matrices + Kac–Walton fusion
+- Fermi-Hubbard geometric SWAP and minimal Berry-phase theorem (symmetry-protected qubit gate)
+- Fidkowski–Kitaev 2+1D Cayley-calibrated gapped interface (bridges axiom evidence from 1D → 2D)
+- Gibbs–Duhem emergent-vacuum obstruction + closed-form vestigial-gravity EOS + four-factor orthogonality
+- Verified jackknife + autocorrelation statistical estimators for lattice Monte Carlo
 
 **Layer 2 — Solid structural results with known gaps:**
-- The quantum group → MTC → TQFT chain (11 sorry: 8+3 q-Serre coproduct/antipode — proof engineering blocker, not mathematical difficulty)
-- Chirality wall three-pillar analysis (gaps clearly identified, rigor-tracked)
-- ADW gap equation (solution exists, G_c proved, coupling deficit quantified)
-- Fermi-point gauge emergence (rigor tracked: theorem/heuristic/speculative)
+- Chirality-wall three-pillar analysis (gaps clearly identified, rigor-tracked)
+- ADW gap equation (solution exists, G_c proved, coupling deficit quantified, instanton zero-mode counting machine-checked)
+- Fermi-point |N|=2 → SU(2) gauge emergence (rigor tracked: theorem/heuristic/speculative per step)
+- Paper provenance / readiness state machine (Phase 5v infrastructure; 11 gates, PG+AGE-backed knowledge graph)
 
 **Layer 3 — Open / in progress:**
-- Vestigial gravity MC (L=8 running)
-- Non-perturbative coupling mechanisms (instantons)
-- Full Kazhdan-Lusztig equivalence
-- S-matrix / Muger bridge theorem in full generality
-- Generic U_q(g) Hopf structure
-- Paper submission + Mathlib PR process
+- Vestigial gravity MC at L≥8 (RHMC in flight; matrix-free stencil unlocks L=12+)
+- Full Kazhdan–Lusztig equivalence Rep(u_q) ≅ SU(2)_k-MTC (data-level verified at k=1,2; full constructive proof is a ~200-page theorem)
+- S-matrix ↔ Muger bridge direction 2 (Z₂ trivial → det(S) ≠ 0) requires categorical-trace machinery not yet formalized
+- Paper submission (arXiv voucher prerequisite) + Mathlib PR process (AI-content policy requires relationship-building)
+- Three residual topological hypotheses for the generation-constraint chain (H1 ko-cohomology, H3 ASS collapse, H4 ABP splitting) — each independently verifiable by a topologist; formalizing them requires algebraic-topology machinery no proof assistant currently supports
 
 ### Publication situation
 
-15 papers, 0 submitted. The project is in its 3rd week. Earlier papers' foundations and claims shifted as development continued (e.g., KMS bug discovered in Phase 1, FDR sign uniqueness resolved in Phase 2, coupling deficit discovered in Phase 5f). The strategy of pushing boundaries before locking down papers has been deliberate — parallel processing advantage and chain strengthening while allowing stabilization.
+18 paper drafts, 0 submitted as of 2026-04-24. Papers span all nine chains: first-order (1), second-order (2), gauge erasure (3), exact WKB (4), ADW (5), vestigial gravity + MC (6), chirality formal (7), chirality master (8), SM anomaly + Drinfeld center (9), modular generation constraint (10), quantum group formalization (11), polariton analog Hawking (12), braided MTC + knot invariants (14), verification methodology (15), graphene Dirac-fluid SK-EFT (16a), WRT TQFT pipeline formalization (16b), dark-sector connections (17), and geometric quantum gate (18). The deliberate strategy has been to push boundaries and cross-validate chains before locking down papers; the per-paper readiness state machine (Phase 5v, 11 gates) now gates submission.
 
 External constraints:
 - arXiv requires a voucher for first submissions
 - Mathlib has a guarded stance on AI-generated content; contributing requires substantive discussion and relationship-building, plus strong personal familiarity with the work to communicate effectively
 
-### Strongest publication candidates
+### Strongest publication candidates (balanced across chains)
 
-1. **Paper 10 (modular generation constraint)** — clean, surprising, fully proved with zero axioms. Now backed by machine-checked Ext computation (Phase 5q) + change-of-rings discharge (Phase 5r). Independent of other chains.
-2. **Paper 11 (quantum group formalization)** — genuine firsts (Hopf algebra, quantum group). The Muger center + FP dimension work strengthens it further.
-3. **Paper 12 (polariton analog Hawking)** — experimentally actionable, timely (Paris group active).
-4. **Papers 7/8 (chirality wall)** — timely given active TPF/GS debate in lattice QFT community.
+- **Paper 10 (modular generation constraint)** — zero axioms, backed by machine-checked Ext computation + change-of-rings discharge. Independent of other chains.
+- **Paper 11 (quantum group formalization)** — first quantum group + first Hopf algebra + first rank-2 quantum group in any proof assistant, with Muger center + FP-dimension strengthening.
+- **Paper 12 (polariton analog Hawking)** — experimentally actionable, Paris group active.
+- **Papers 7/8 (chirality wall)** — timely given the ongoing TPF/GS debate in the lattice-QFT community.
+- **Paper 14 (braided MTC + knot invariants)** — first complete Ising braided MTC and first formally verified knot invariants.
+- **Paper 15 (methodology)** — the 12-stage verification pipeline + Stage 13 adversarial review + Stage 14 QI register, written up as a reusable recipe for formal-verification-led physics research.
+- **Paper 16a (graphene Dirac fluid)** — timely given the Dean group's 2025 sonic-horizon realization.
+- **Paper 16b (WRT TQFT formalization)** — first complete surgery-based TQFT pipeline in any proof assistant.
+- **Paper 17 (dark-sector connections)** — SFDM merger forecast is the most actionable new prediction; Gibbs–Duhem obstruction is a genuine structural negative result.
+- **Paper 18 (geometric quantum gate)** — first formally verified symmetry-protected two-qubit gate; quantum-information relevance.
 
 ### Technical blockers
 
-The single highest-leverage fix is closing Phase 4 of the q-Serre coproduct proof: Laurent polynomial coefficient cancellation after tensor product expansion. Phases 1-3 are solved in working code (see `Phase5s_Roadmap.md` Track E). This would close all 11 remaining sorry (8 Uqsl2AffineHopf + 3 Uqsl3Hopf). The RingQuot typeclass bug is worked around. 7 deep research results provide detailed strategies — the most actionable is `Lit-Search/Phase-5s/Mathlib4 tensor product algebra API and q-Serre tactic strategies.md` (recommends `match_scalars` + pre-proved Laurent identities via `ext n; simp; omega`).
+- **L=8 RHMC convergence** for the vestigial-gravity Monte Carlo. Narrow BCS-like phase window may need L ≥ 12. Matrix-free stencil Dirac operator (42 MB vs. 220 GB dense) unlocks L=12+ on workstation hardware; Phase 6A tracks Path A (sparse CG), Path B (Metal GPU), Path C (CUDA).
+- **Topological input for generation-constraint chain** — three standard textbook facts (H1/H3/H4) remain as hypotheses pending Lean algebraic-topology infrastructure.
+- **Mathlib PR pipeline** — the lean-tensor-categories extraction (20 files, 114 theorems, zero sorry) is ready but not yet upstreamed; Mathlib's AI-content policy requires a relationship-building discussion before PR.
+- **arXiv voucher** for first submission.
 
 ---
 
-## Module Inventory (~131 Lean modules as of April 8, 2026)
+## Module Inventory (166 active Lean modules)
 
-### Phase 1-2 (7 modules): AcousticMetric, SKDoubling, HawkingUniversality, SecondOrderSK, WKBAnalysis, CGLTransform, Basic
-### Phase 3 (6 modules): ThirdOrderSK, GaugeErasure, WKBConnection, ADWMechanism, ChiralityWall, VestigialGravity
-### Phase 4 (5 modules): FractonHydro, FractonGravity, FractonNonAbelian, KappaScaling, PolaritonTier1
-### Phase 5 (20 modules): SU2PseudoReality, FermionBag4D, LatticeHamiltonian, GoltermanShamir, TPFEvasion, KLinearCategory, SphericalCategory, FusionCategory, FusionExamples, VecG, DrinfeldDouble, GaugeEmergence, SO4Weingarten, FractonFormulas, WetterichNJL, VestigialSusceptibility, QuaternionGauge, GaugeFermionBag, HubbardStratonovichRHMC, MajoranaKramers
-### Phase 5a (11 modules): OnsagerAlgebra, OnsagerContraction, Z16Classification, SteenrodA1, SMGClassification, PauliMatrices, WilsonMass, BdGHamiltonian, GTCommutation, GTWeylDoublet, ChiralityWallMaster
-### Phase 5b (17 modules): SMFermionData, Z16AnomalyComputation, GenerationConstraint, DrinfeldCenterBridge, VecGMonoidal, ToricCodeCenter, S3CenterAnyons, CenterEquivalenceZ2, DrinfeldDoubleAlgebra, DrinfeldDoubleRing, DrinfeldEquivalence, WangBridge, ModularInvarianceConstraint, RokhlinBridge, QNumber, Uqsl2, Uqsl2Hopf
-### Phase 5c (9 modules): Uqsl2Affine, SU2kFusion, SU2kSMatrix, RestrictedUq, RibbonCategory, E8Lattice, AlgebraicRokhlin, SpinBordism, VerifiedJackknife
-### Phase 5d (11 modules): TetradGapEquation, SU2kMTC, QSqrt2, QSqrt5, FibonacciMTC, Uqsl2AffineHopf, VerifiedStatistics, KerrSchild, CoidealEmbedding, RepUqFusion, StimulatedHawking, CenterFunctor
-### Phase 5e (5 modules): QCyc16, QCyc5, IsingBraiding, QSqrt3, QLevel3
-### Phase 5f-5g (3 modules): TQFTPartition, FigureEightKnot, EmergentGravityBounds
-### Phase 5h-5j (5 modules): SPTClassification, GaugingStep, Uqsl3, Uqsl3Hopf, SU3kFusion, PolyQuotQ, FermiPointTopology
-### Phase 5k-5p (30 modules, new): TemperleyLieb, JonesWenzl, WRTInvariant, WRTComputation, SurgeryPresentation, QuantumGroupHopf, QuantumGroupGeneric, KMatrixAnomaly, SPTStacking, VillainHamiltonian, TPFDisentangler, StringNet, KacWaltonFusion, FPDimension, MugerCenter, IsingGates, FibonacciBraiding, FibonacciQutrit, FibonacciUniversality, FibonacciQutritUniversality, QCyc5Ext, + ExtractDeps (infrastructure)
-### Phase 5q (4 modules): A1Ring, A1Resolution, A1Ext, ExtBordismBridge
-### Phase 5r (1 module): ChangeOfRings (H2 discharged)
-### Phase 5s (3 new modules + 2 updated): FKGappedInterface (FK Cayley calibration, Δ=14, first in any proof assistant), ModularityTheorem (general det(S)≠0 → Z₂ trivial), InstantonZeroModes (zero-mode counting bypasses 4D index theorem, RED→GREEN), SU2kFusion extended (k=5), SU2kSMatrix extended (k=5 unitarity)
+**Phase 1–2 (foundational SK-EFT):** `AcousticMetric`, `SKDoubling`, `HawkingUniversality`, `SecondOrderSK`, `WKBAnalysis`, `CGLTransform`, `Basic`.
+**Phase 3 (emergent geometry & first results):** `ThirdOrderSK`, `GaugeErasure`, `WKBConnection`, `ADWMechanism`, `ChiralityWall`, `VestigialGravity`.
+**Phase 4 (fracton + experimental predictions):** `FractonHydro`, `FractonGravity`, `FractonNonAbelian`, `KappaScaling`, `PolaritonTier1`.
+**Phase 5 (Monte-Carlo core + categorical scaffolding):** `SU2PseudoReality`, `FermionBag4D`, `LatticeHamiltonian`, `GoltermanShamir`, `TPFEvasion`, `KLinearCategory`, `SphericalCategory`, `FusionCategory`, `FusionExamples`, `VecG`, `DrinfeldDouble`, `GaugeEmergence`, `SO4Weingarten`, `FractonFormulas`, `WetterichNJL`, `VestigialSusceptibility`, `QuaternionGauge`, `GaugeFermionBag`, `HubbardStratonovichRHMC`, `MajoranaKramers`.
+**Phase 5a (chirality wall 1+1D infrastructure):** `OnsagerAlgebra`, `OnsagerContraction`, `Z16Classification`, `SteenrodA1`, `SMGClassification`, `PauliMatrices`, `WilsonMass`, `BdGHamiltonian`, `GTCommutation`, `GTWeylDoublet`, `ChiralityWallMaster`.
+**Phase 5b (SM anomaly → modular generation → Drinfeld center → first quantum group):** `SMFermionData`, `Z16AnomalyComputation`, `GenerationConstraint`, `DrinfeldCenterBridge`, `VecGMonoidal`, `ToricCodeCenter`, `S3CenterAnyons`, `CenterEquivalenceZ2`, `DrinfeldDoubleAlgebra`, `DrinfeldDoubleRing`, `DrinfeldEquivalence`, `WangBridge`, `ModularInvarianceConstraint`, `RokhlinBridge`, `QNumber`, `Uqsl2`, `Uqsl2Hopf`.
+**Phase 5c (affine/restricted quantum groups + SU(2)_k fusion + E8/Rokhlin):** `Uqsl2Affine`, `SU2kFusion`, `SU2kSMatrix`, `RestrictedUq`, `RibbonCategory`, `E8Lattice`, `AlgebraicRokhlin`, `SpinBordism`, `VerifiedJackknife`.
+**Phase 5d (tetrad gap equation + Ising/Fibonacci MTCs + polariton):** `TetradGapEquation`, `SU2kMTC`, `QSqrt2`, `QSqrt5`, `FibonacciMTC`, `Uqsl2AffineHopf`, `VerifiedStatistics`, `KerrSchild`, `CoidealEmbedding`, `RepUqFusion`, `StimulatedHawking`, `CenterFunctor`.
+**Phase 5e (braided MTCs + first knot invariant):** `QCyc16`, `QCyc5`, `IsingBraiding`, `QSqrt3`, `QLevel3`, `QCyc5Ext`.
+**Phase 5f (TQFT bridge + emergent-gravity bounds):** `TQFTPartition`, `FigureEightKnot`, `EmergentGravityBounds`.
+**Phase 5h (chirality wall 3+1D + gauging obstruction):** `SPTClassification`, `GaugingStep`.
+**Phase 5i (first rank-2 quantum group + SU(3)_k fusion):** `Uqsl3`, `Uqsl3Hopf`, `SU3kFusion`, `PolyQuotQ`, `PolyQuotOver`, `QCyc3`, `QCyc15`, `QCyc15SqrtPhi`, `SU3k2SMatrix`, `SU3k2FSymbols`.
+**Phase 5j (Fermi-point → emergent gauge group):** `FermiPointTopology`.
+**Phase 5k (WRT TQFT pipeline):** `TemperleyLieb`, `SurgeryPresentation`, `WRTInvariant`, `WRTComputation`.
+**Phase 5l (topological quantum computation):** `JonesWenzl`, `IsingGates`, `FibonacciBraiding`, `FibonacciQutrit`, `FibonacciUniversality`, `FibonacciQutritUniversality`, `StringNet`.
+**Phase 5m (generic parameterized quantum groups + Kac–Walton):** `QuantumGroupGeneric`, `QuantumGroupCoproduct`, `QuantumGroupAntipode`, `QuantumGroupHopf`, `QuantumGroupInstantiation`, `QuantumGroupMeta`, `KacWaltonFusion`.
+**Phase 5n (chirality wall — anomaly inflow + gapping):** `KMatrixAnomaly`, `VillainHamiltonian`, `TPFDisentangler`, `SPTStacking`.
+**Phase 5p (categorical closure — Muger + FP-dim + modularity):** `MugerCenter`, `FPDimension`, `D2Formula`.
+**Phase 5q (first Ext computation over Steenrod sub-algebra):** `A1Ring`, `A1Resolution`, `A1Ext`, `ExtBordismBridge`.
+**Phase 5r (change-of-rings):** `ChangeOfRings`.
+**Phase 5s (chirality-wall 2+1D bridge + general modularity + instanton counting):** `FKGappedInterface`, `ModularityTheorem`, `InstantonZeroModes`; plus k=5 extensions to `SU2kFusion` / `SU2kSMatrix`; plus `CenterFunctorZ2` + `CenterFunctorZ2Equiv`.
+**Phase 5t (Fermi-Hubbard geometric gate):** `FermiHubbardDimer`.
+**Phase 5w (graphene Dirac-fluid platform):** `DiracFluidMetric`, `GrapheneHawking`, `GrapheneNoiseFormula`, `DiracFluidSK`, `QuasiOneDReduction`.
+**Phase 5x (dark-matter classification + SFDM merger forecast + fracton DM):** `HiddenSectorClassification`, `HiddenSectorMixedCharge`, `CosmologicalConstant`, `FangGuTorsionDM`, `FractonDarkMatter`, `SFDMMergerForecast`, `DarkSectorSynthesis`.
+**Phase 5y (dark-energy obstruction + vestigial-EOS closure):** `GibbsDuhemTheorem`, `QTheoryNoGoTheorem`, `DarkEnergyObstructionPrinciple`, `DESIComparison`, `CondensedMatterAnalog`, `VestigialMapping`, `VestigialEOS`, `ClassificationTableDark`; plus extensions to `VestigialGravity`, `VestigialSusceptibility`, `TetradGapEquation`.
+**Infrastructure (cross-phase):** `ExtractDeps` (environment-walker for axiom-dependency extraction; see Pipeline Invariant #10 exception clause).
 
 ---
 
-*This document is a snapshot. For module-level details consult the [Inventory Index](../SK_EFT_Hawking_Inventory_Index.md). For the execution process consult the [Wave Execution Pipeline](WAVE_EXECUTION_PIPELINE.md). For the full module map and theorem counts consult the [Full Inventory](../SK_EFT_Hawking_Inventory.md).*
+*This document is a snapshot. For module-level details consult the [Inventory Index](../SK_EFT_Hawking_Inventory_Index.md). For the execution process consult the [Wave Execution Pipeline](WAVE_EXECUTION_PIPELINE.md). For the full module map and theorem counts consult the [Full Inventory](../SK_EFT_Hawking_Inventory.md). For predictive-scope boundaries consult [ARCHITECTURE_SCOPE.md](ARCHITECTURE_SCOPE.md).*

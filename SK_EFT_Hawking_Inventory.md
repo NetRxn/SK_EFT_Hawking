@@ -2,9 +2,13 @@
 
 **Repository Root:** `SK_EFT_Hawking/`
 
-**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation in BEC sonic black holes. Fifteen papers (Phases 1-5s) + Phase 5 analytical completion, chirality wall formalization, Layer 1 categorical infrastructure, Weingarten/fracton/NJL formalization, vestigial susceptibility, Waves 7A-7C (gauge-link MC + RHMC), quantum group formalization (U_q(sl₂), U_q(sl₃) with **full Bialgebra + HopfAlgebra typeclass instances**, affine U_q(sl_2 hat) with **per-generator squared-antipode identities** — global Ad(K) impossible due to degenerate affine Cartan, see `Uqsl2AffineHopf.lean:5755+` historical note — restricted u_q, SU(2)_k/SU(3)_k fusion/S-matrix), ribbon/MTC definitions, E8 lattice verification, algebraic Rokhlin (Serre mod 8), spin bordism → Rokhlin → Wang chain, verified statistical estimators, tetrad gap equation, Fibonacci/Ising MTC, coideal embedding, Rep(u_q) fusion correspondence, Phase 5e braided MTCs (cyclotomic fields Q(ζ₁₆)/Q(ζ₅), Ising hexagon+ribbon+trefoil, Fibonacci hexagon+twist, SU(2)₃/SU(2)₄ S-matrix unitarity), Phase 5h-5j (gauging obstruction, Fermi-point topology, rank-2 quantum groups, SU(3)_k fusion), Phase 5k-5p (WRT TQFT, TQC, generic quantum groups, anomaly inflow, SPT stacking, **Müger center full-category formalization with `SymmetricCategory` instance**, **`det(S)≠0 → isMugerTrivial` abstract bridge (Direction 1)**, **Frobenius-Perron dimension via eigenvector approach (third source of φ from G₂_1)**, Fibonacci universality), Phase 5q (Ext computation over A(1)), Phase 5r (change of rings), Phase 5s (FK gapped interface, Muger general theorem), Phase 5i Wave 2 / Tranche E (Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃) wired). Lean 4 formalization: **3012 theorems, 1 axiom across 132 modules, 0 sorry**. 322 Aristotle-proved (44 runs, all closed; subsequent gap closures via interactive MCP tooling). 1723 tests, 101 pipeline figures, 48 notebooks, 53 Python source modules.
+**Project Summary:** Formal verification of dissipative effective field theory corrections to analog Hawking radiation and a broader chain-of-chains connecting emergent-physics mechanisms to the Standard Model, quantum information, dark-sector phenomenology, and experimental analog-gravity platforms. Eighteen papers span: Phase 1 dissipative EFT corrections (Papers 1, 2); Phase 3 gauge erasure, exact WKB connection, ADW gap equation, vestigial gravity (Papers 3, 4, 5, 6); Phase 5 and 5a–5b chirality wall formalization + SM anomaly + modular generation (Papers 7, 8, 9, 10); Phase 5b–5i first quantum group / Hopf-algebra / rank-2 quantum group / SU(3)_k fusion (Paper 11); Phase 5d polariton analog Hawking (Paper 12); Phase 5e–5f braided modular tensor categories + knot invariants (Paper 14); Phase 5h formal-verification methodology (Paper 15); Phase 5k WRT TQFT pipeline formalization (Paper 16b); Phase 5w graphene Dirac-fluid SK-EFT (Paper 16a); Phase 5x dark-matter classification + SFDM merger forecast + fracton DM viability (Paper 17); Phase 5t Fermi-Hubbard doublon geometric gate (Paper 18); and Phase 5y machine-checked Gibbs–Duhem emergent-vacuum obstruction + closed-form vestigial EOS (no paper per user preference, harvest formalized into Lean).
 
-**Last verified:** 2026-04-15 (PRs #10–#13 merged this day: Phase 5e Waves 7-8 — per-generator S² on U_q(ŝl₂) + Wave 8 specification correction (`S² = Ad(K₀K₁)` is mathematically impossible for affine ŝl₂; replaced with per-generator identities); Phase 5p Waves 3-5 — Müger center full subcategory, `SymmetricCategory` payoff, `det(S)≠0 → isMugerTrivial` abstract bridge proved via Mathlib linear-algebra route, plus 3 per-MTC instances (SU(2)_1, SU(2)_2/Ising, Fibonacci) with new `fib_modular` proof; Phase 5p Waves 1-2 — FPDimension via eigenvector approach for Fibonacci/Ising/SU(3)_1/SU(2)_3 plus new SU(4)_1 (Z₄ pointed) and G₂_1 (Fibonacci fusion structure → **third source of φ**) certificates with `phi_triple_origin` theorem; Tranche E (2026-04-14) preserved: full Bialgebra + HopfAlgebra typeclass instances on U_q(sl₃) via palindromic Serre atom-bridge. Lean toolchain 4.29.0. ExtractDeps refactored to filter by package module. Project state: **3012 thm, 1 ax, 132 modules, 0 sorry**, build CLEAN no-cache, validate.py 16/16, 1723 tests pass.)
+Infrastructure across phases: Phase 5 Layer 1 categorical scaffolding, Weingarten / fracton / NJL formalization, vestigial susceptibility, Waves 7A–7C (gauge-link MC + RHMC); Phase 5c affine U_q(ŝl₂) / restricted u_q / SU(2)_k fusion and S-matrix / E8 lattice / algebraic Rokhlin / spin-bordism-to-Wang chain / verified statistical estimators; Phase 5d tetrad gap equation, Ising/Fibonacci MTC, coideal embedding, Rep(u_q) fusion correspondence; Phase 5e cyclotomic fields Q(ζ₁₆)/Q(ζ₅), Ising hexagon + ribbon + trefoil, Fibonacci hexagon + twist, SU(2)₃/SU(2)₄ S-matrix unitarity; Phase 5h-5j gauging obstruction, Fermi-point topology, U_q(sl₃), SU(3)_k fusion; Phase 5k-5p WRT TQFT pipeline, topological quantum computation, generic parameterized U_q(𝔤) + Kac–Walton fusion, anomaly inflow / 3450 gappability / Villain Hamiltonian / SPT stacking / TPF disentangler, Muger center + SymmetricCategory instance + det(S)≠0 → isMugerTrivial bridge, Frobenius–Perron eigenvalue dimensions, Fibonacci universality; Phase 5q machine-checked Ext^n_{A(1)}(F₂, F₂); Phase 5r change-of-rings discharge of H2; Phase 5s FK 2+1D Cayley-calibrated gapped interface, general modularity theorem, instanton zero-mode counting, SU(2)_k k=5 extension; Phase 5t Fermi-Hubbard dimer + minimal Berry-phase theorem; Phase 5u paper revision cycle (Paper 1 dimensional bug, Paper 12 Falque parameter reconciliation, textbook-fact and bibliography corrections in Papers 3/10); Phase 5v knowledge-graph foundation + 11-gate readiness state machine + Stage 13 adversarial reviewer + Stage 14 QI register; Phase 5w graphene Dirac-fluid platform; Phase 5x dark-sector phenomenology; Phase 5y terminal closure (Gibbs–Duhem obstruction, q-theory no-go, vestigial-EOS closed form, four-factor orthogonality, classification-table consolidation).
+
+Current scale: **~3,950 theorems** (substantive + placeholder as tracked in `constants.PLACEHOLDER_THEOREMS`), **1 axiom** (`gapped_interface_axiom`, eliminability: hard), across **166 modules**, **0 sorry project-wide**. 322 Aristotle-proved (44 runs, all closed; subsequent gap closures via interactive MCP tooling). ~2,800 tests, 110 pipeline figures, 52 notebooks, 66+ Python source modules across 14 sub-packages (new since Phase 5s: `src/dark_sector/`, `src/graphene/`, `src/fermi_hubbard/`).
+
+**Last verified:** 2026-04-24-1439. Counts in this section are a rolling snapshot; `docs/counts.json` (regenerated by `scripts/update_counts.py`) is the single source of truth for live numbers.
 
 ---
 
@@ -566,33 +570,42 @@
 
 ---
 
-## 5. PAPER DRAFTS (15 papers + prediction tables)
+## 5. PAPER DRAFTS (18 papers + prediction tables)
 
-| Paper | Format | Lines | Topic |
-|-------|--------|-------|-------|
-| paper1_first_order | PRL | 397 | First-order SK-EFT: δ_diss = Γ_H/κ |
-| paper2_second_order | PRD | 453 | Second-order + CGL + counting formula |
-| paper3_gauge_erasure | PRL | 310 | Non-Abelian gauge erasure theorem |
-| paper4_wkb_connection | PRD | 298 | Exact WKB connection formula |
-| paper5_adw_gap | PRD | 397 | ADW mean-field gap equation |
-| paper6_vestigial | PRD | ~620 | Vestigial metric phase + analytical susceptibility + RHMC production (L=4 done, L=8 in flight) |
-| paper7_chirality_formal | PRD/CPC | ~330 | GS no-go formal verification + TPF evasion in Lean 4 (54 thms, bibliography standardized) |
-| paper8_chirality_master | PRL | ~300 | Three-pillar chirality wall: GS + GT + Z₁₆ + FK 2+1D evidence (counts: 132 modules, 322 Aristotle) |
-| paper9_sm_anomaly_drinfeld | PRL | ~300 | SM anomaly in Z₁₆ + Drinfeld center formalization |
-| paper10_modular_generation | PRD | ~300 | Modular invariance → generation constraint N_f ≡ 0 mod 3 + Ext computation paragraph (counts: 3012/132) |
-| paper11_quantum_group | PRD | ~300 | First quantum group formalization U_q(sl₂) |
-| paper12_polariton | PRL | ~300 | Polariton analog Hawking: stimulated amplification protocol |
-| paper14_braided_mtc | PRD | outline | Braided MTC formalization: Ising/Fibonacci hexagon, ribbon, knot invariants + Muger general theorem |
-| paper15_methodology | PRD | outline | Methodology paper: Lean 4 + Aristotle verification pipeline (needs full rewrite) |
-| experimental_predictions | Tables | 156 | Platform spectral predictions |
+| Paper | Format | Topic |
+|-------|--------|-------|
+| paper1_first_order | PRL | First-order SK-EFT: δ_diss = Γ_H/κ |
+| paper2_second_order | PRD | Second-order + CGL + counting formula |
+| paper3_gauge_erasure | PRL | Non-Abelian gauge erasure theorem |
+| paper4_wkb_connection | PRD | Exact WKB connection formula |
+| paper5_adw_gap | PRD | ADW mean-field gap equation |
+| paper6_vestigial | PRD | Vestigial metric phase + analytical susceptibility + RHMC production (L=4 done, L=8 in flight) |
+| paper7_chirality_formal | PRD/CPC | GS no-go formal verification + TPF evasion in Lean 4 |
+| paper8_chirality_master | PRL | Three-pillar chirality wall: GS + GT + Z₁₆ + FK 2+1D evidence |
+| paper9_sm_anomaly_drinfeld | PRL | SM anomaly in Z₁₆ + Drinfeld center formalization |
+| paper10_modular_generation | PRD | Modular invariance → generation constraint N_f ≡ 0 mod 3 + Ext computation |
+| paper11_quantum_group | PRD | Quantum group formalization: U_q(sl₂), U_q(sl₃), generic U_q(𝔤) with HopfAlgebra instances |
+| paper12_polariton | PRL | Polariton analog Hawking: stimulated amplification protocol |
+| paper14_braided_mtc | PRD | Braided MTC formalization: Ising/Fibonacci hexagon, ribbon, knot invariants + Muger general theorem |
+| paper15_methodology | PRD | Methodology paper: Lean 4 + Aristotle verification pipeline + knowledge-graph + readiness state machine |
+| paper16_graphene_sk_eft | — | Analog Hawking Radiation in the Graphene Dirac Fluid — SK-EFT predictions for the Dean-group sonic-horizon platform |
+| paper16_wrt_tqft | — | From Surgery to Invariants: The First Formalization of the WRT TQFT Pipeline in Lean 4 |
+| paper17_dark_sector | — | Dark Sector Connections from Emergent Gravity: hidden-sector DM classification, SFDM merger forecast, Gibbs–Duhem and q-theory no-go theorems |
+| paper18_doublon_gate | — | Formal Verification of a Geometric Quantum Gate: the Fermi-Hubbard doublon Berry-phase SWAP in Lean 4 |
+| experimental_predictions | Tables | Platform spectral predictions |
+| AutomatedReviews/ | Stage 13 outputs | Per-paper adversarial-reviewer findings (Opus fresh context); auto-ingested as ReviewFinding nodes by `scripts/build_graph` |
 
 **Key numerical claims (all traced to formulas.py via CHECK 14):**
-- δ_diss ~ 10⁻⁵-10⁻³ (Paper 1)
+- δ_diss ~ 10⁻⁵–10⁻³ (Paper 1, BEC); δ_diss ~ 10⁻¹³ negligible vs. dispersive (Paper 16a, graphene)
 - δ^(2)(ω) ∝ ω³ (Paper 2)
 - U(1) only SM survivor (Paper 3)
-- Noise floor = δ_diss/(1-δ_diss) (Paper 4)
-- G_c = 8π²/(N_f·Λ²) (Paper 5)
-- Vestigial window: G/G_c ≈ 0.8-1.0 in mean-field (Paper 6)
+- Noise floor = δ_diss / (1 − δ_diss) (Paper 4)
+- G_c = 8π² / (N_f Λ²) (Paper 5)
+- Vestigial window: G/G_c ≈ 0.8–1.0 in mean-field (Paper 6); closed-form `w_vest(τ) = (1−τ²)/(5τ²−1)` (Phase 5y)
+- `w_vac = −1` locked by Lorentz + Gibbs–Duhem for any single-scalar self-tuning emergent vacuum (Paper 17 structural claim)
+- SFDM merger sonic-boom stacked ≥ 30 → 3.5–5.7σ Euclid × Roman; first 3σ ~2028 (Paper 17 money plot)
+- T_H ≈ 2.4 K for Dean bilayer graphene nozzle (Paper 16a)
+- Minimal Berry-phase theorem: accumulated phase = −1 on π-sweep closed path (Paper 18)
 
 ---
 
@@ -695,41 +708,48 @@
 | Critical Review v3 | docs/ | Consolidated evidence evaluation |
 
 ### Roadmaps
-| Document | Location | Status |
-|----------|----------|--------|
-| Phase1_Roadmap.md | docs/roadmaps/ | Complete |
-| Phase2_Roadmap.md | docs/roadmaps/ | Complete |
-| Phase3_Roadmap.md | docs/roadmaps/ | Complete |
-| Phase4_Roadmap.md | docs/roadmaps/ | Complete (includes Wave 5) |
-| Phase5_Roadmap.md | docs/roadmaps/ | Complete (W7C RHMC, L=8 in flight) |
-| Phase5a_Roadmap.md | docs/roadmaps/ | Complete — Onsager algebra + GT + Z₁₆ chirality wall |
-| Phase5b_Roadmap.md | docs/roadmaps/ | Complete — SM anomaly, Drinfeld center, modular generation, quantum group |
-| Phase5c_Roadmap.md | docs/roadmaps/ | Complete — Hopf algebra, SU(2)_k, E8, Rokhlin, statistics |
-| Phase5d_Roadmap.md | docs/roadmaps/ | Complete — tetrad gap, MTC instances, polariton, verified statistics |
-| Phase5e_Roadmap.md | docs/roadmaps/ | Complete — braided MTCs, knot invariants, affine Hopf, higher-k. Phases 5h-5j active (gauging, rank-2 QG, SU(3)_k, Fermi-point) |
-| Phase5f-5p_Roadmaps | docs/roadmaps/ | Phases 5f-5p: TQFT, matrix-free CG, chirality 3+1D, rank-2 QG, Fermi-point, WRT TQFT, TQC, generic U_q(g), anomaly inflow, community value, Muger center |
-| Phase5q_Roadmap.md | docs/roadmaps/ | **COMPLETE** — Ext computation over A(1): first in any proof assistant |
-| Phase5r_Roadmap.md | docs/roadmaps/ | **COMPLETE** — H2 discharged, H3/H4 assessed as irreducibly topological |
-| Phase5s_Roadmap.md | docs/roadmaps/ | **NEW** — Obstacle decomposition: FK 2+1D gapped interface, Muger general theorem, KL data k=3-5, sorry closure || Phase5x_Roadmap.md | docs/roadmaps/ | **NEW** — Dark sector connections: ℤ₁₆ hidden sector DM, ADW CC/DE, Fang-Gu torsion DM, SFDM SK-EFT, vestigial relics, fracton DM. 9 waves, 3 tracks. 6/6 deep research COMPLETE. 26 near-term + 17 deferred Lean theorems. || RESEARCH_STATUS_OVERVIEW.md | docs/ | **NEW** — Big-picture assessment of all 6 proof chains, gaps, implications |
-| Phase6_Roadmap.md | docs/roadmaps/ | Planning |
-| Phase6_Deferred_Targets.md | docs/roadmaps/ | Deferred targets |
-| Phase6_VerifiedStatistics_Roadmap.md | docs/roadmaps/ | Verified statistics roadmap |
 
-### Stakeholder Documents (24 total)
-| Document | Location |
-|----------|----------|
-| companion_guide.md | docs/stakeholder/ |
-| Phase2_companion_guide.md | docs/stakeholder/ |
-| Phase1_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase2_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase3_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase4_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase5_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase5a_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase5b_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase5c_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase5d_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
-| Phase5e_Implications.md + Strategic_Positioning.md | docs/stakeholder/ |
+All roadmaps live in `docs/roadmaps/`. Each phase has its own file; Phase 6 has three (forward-looking) files. Status reflects the roadmap's own closure verdict as of 2026-04-24.
+
+| Document | Status / one-line summary |
+|----------|---------------------------|
+| Phase1_Roadmap.md | Complete — first-order SK-EFT corrections |
+| Phase2_Roadmap.md | Complete — second-order EFT + WKB + CGL FDR |
+| Phase3_Roadmap.md | Complete — gauge erasure, exact WKB, ADW, vestigial |
+| Phase4_Roadmap.md | Complete (Wave 5 included) — fracton + experimental predictions |
+| Phase5_Roadmap.md | Complete — Monte-Carlo core + categorical scaffolding + W7C RHMC (L=4 done, L=8 in flight) |
+| Phase5a_Roadmap.md | Complete — Onsager algebra, GT chiral fermion, Z₁₆ chirality wall 1+1D |
+| Phase5b_Roadmap.md | Complete — SM anomaly, Drinfeld center, modular generation, first quantum group |
+| Phase5c_Roadmap.md | Complete — Hopf algebra, SU(2)_k, E8, Rokhlin, verified statistics |
+| Phase5d_Roadmap.md | Complete — tetrad gap, Ising/Fibonacci MTC, polariton |
+| Phase5e_Roadmap.md | Complete — braided MTCs, knot invariants, affine Hopf, higher-k unitarity |
+| Phase5f_Roadmap.md | Complete — TQFT partition functions + emergent-gravity bounds |
+| Phase5g_Roadmap.md | Partial — matrix-free CG unlocked L=12; Mathlib PR infrastructure scoped |
+| Phase5h_Roadmap.md | Complete — chirality wall 3+1D: SPT classification + gauging step |
+| Phase5i_Roadmap.md | Complete — first rank-2 quantum group U_q(sl₃) + SU(3)_k fusion |
+| Phase5j_Roadmap.md | Complete — Fermi-point topological charge → emergent gauge group |
+| Phase5k_Roadmap.md | Complete — WRT TQFT pipeline (Temperley–Lieb → surgery → invariant) |
+| Phase5l_Roadmap.md | Complete — Topological quantum computation from verified MTCs |
+| Phase5m_Roadmap.md | Complete — Generic parameterized `QuantumGroup k A` + Kac–Walton |
+| Phase5n_Roadmap.md | Partial (Wave 1 done) — chirality-wall anomaly inflow + Villain + SPT stacking |
+| Phase5o_Roadmap.md | Complete — Community-value outputs: lean-tensor-categories extraction, experimental bridging |
+| Phase5p_Roadmap.md | Complete — Muger center, FP-dimension, modularity bridge (Direction 1) |
+| Phase5q_Roadmap.md | Complete — Ext computation over A(1): first in any proof assistant |
+| Phase5r_Roadmap.md | Complete — H2 discharged via change-of-rings; H3/H4 assessed as irreducibly topological |
+| Phase5s_Roadmap.md | Complete (W2-5, W8) — FK 2+1D gapped interface, general modularity, instanton zero modes; Wave 8 q-Serre closure via hypothesis refactor |
+| Phase5t_Roadmap.md | Complete — Fermi-Hubbard doublon geometric SWAP + minimal Berry-phase theorem (Paper 18) |
+| Phase5u_Roadmap.md / Phase5u_Paper_Revision_Roadmap.md | Substantive track closed — paper revision cycle (Paper 1 dimensional bug, Paper 12 Falque parameters, Paper 3/10 textbook + bibliography corrections); process track (Waves 14-24, agent infrastructure) deferred |
+| Phase5v_Roadmap.md | Phase 1 complete — knowledge-graph foundation fixed (+302 recovered decls), counts wiring live; Phase 2 (PG+AGE migration) + Phase 3 (11-gate readiness state machine) + Phase 4 (Stage 13 adversarial, Stage 14 QI register) scoped |
+| Phase5w_Roadmap.md | W1 + W10c complete (deep research, greybody + quasi-1D validation); W2-9 scoped — graphene Dirac-fluid platform (Paper 16a) |
+| Phase5x_Roadmap.md | W1 + W1b complete (6 + 3 deep-research rounds) — dark-sector connections: ℤ₁₆ hidden sector DM, ADW CC (DESI Level D tension), Fang-Gu torsion DM, SFDM SK-EFT + merger forecast, vestigial relics (blocked on MC), fracton DM (upgraded to VIABLE post-drilldown); Paper 17 integrates |
+| Phase5y_Roadmap.md | Complete — terminal closure (2026-04-23): Gibbs–Duhem emergent-vacuum obstruction + q-theory no-go + four-factor orthogonality + closed-form vestigial EOS; no paper per user preference, harvest into Lean |
+| Phase6_Roadmap.md | Planning — HPC-dependent vestigial MC at L=12+ (Path A sparse CG, Path B Metal, Path C CUDA), experimental engagement, polariton Tier 2-3 EFT |
+| Phase6_Deferred_Targets.md | Continuously updated — 56 completed items + Phase-6-tier Tier 1/2 targets |
+| Phase6_VerifiedStatistics_Roadmap.md | Forward — formal-verification extension of the statistics pipeline |
+
+### Stakeholder Documents
+
+Located in `docs/stakeholder/`. Includes `companion_guide.md` (plain-language overview); per-phase `Phase{N}_Implications.md` + `Phase{N}_Strategic_Positioning.md` pairs for Phases 1–5e and 5i; plus the Phase 5y closure memo `Phase5y_Closure_Summary.md` and four cross-phase impact notes (`Phase5y_Impact_on_5d.md`, `Phase5y_Impact_on_5u.md`, `Phase5y_Impact_on_5w.md`, `Phase5y_Impact_on_5x.md`). Several phases (5f–5h, 5j–5x) do not yet have dedicated stakeholder pairs; content for those phases is carried by the Implications / Strategic Positioning hierarchy of the enclosing super-phase plus the closure and impact memos.
 
 ### Analysis Documents
 | Document | Location | Topic |

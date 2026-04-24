@@ -647,6 +647,38 @@ See "Wave 9d — Proof-Chain-Viz (dynamic chain discovery) — DONE 2026-04-24" 
 
 Follow-ups are listed in the Wave 9d shipped section — not blocking for Wave 9 as a whole.
 
+### Wave 9h — Datastar realignment across all dashboard tabs — PENDING 2026-04-24
+
+**Trigger.** User flagged 2026-04-24: "we moved implementations from datastar to HTMX" — actually the truth is the dashboard *drifted* from its own declared stack. Commit `ea97745` (2026-04-03, another agent) is labelled "HTMX→Datastar migration" and added the `<script src="...datastar...">` tag, but the CDN URL was `https://cdn.jsdelivr.net/npm/@starfederation/datastar` which 404s. **No templates were ever ported to use Datastar attributes.** Subsequent dashboard work (readiness_tab, qi_tab, chains_tab, paper_provenance_tab — including everything I shipped in Waves 9a/b/d/g this session) used vanilla JS + fetch, matching the already-drifted pattern rather than the declared stack decision in `project_knowledge_graph_status.md`:
+
+**REQUIRED READING before touching ANY dashboard template in this wave:**
+- `docs/references/Datastar_Dashboard_Reference.md` — consolidated in-repo reference with attribute cheat sheet, action reference, SSE event format, `datastar-py` SDK integration patterns, SK-EFT signal-name vocabulary, security policy, and migration checklist. Pulled from upstream 2026-04-24 so sessions don't need to WebFetch.
+- `feedback_dashboard_datastar_stack.md` memory — records why the drift happened and how to avoid repeating it.
+
+> Stack: PG 17 (local Homebrew) + Apache AGE + D3.js + **Datastar (replaces HTMX)** + Flask
+
+The per-session memory `reference_datastar_docs.md` also flags Datastar docs as "required reading for dashboard development, not in LLM training data" — which I missed. Going forward, dashboard work MUST consult that memory and the Datastar attribute + SSE references before shipping.
+
+**CDN URL fixed 2026-04-24** (`datastar@v1.0.0-beta.11` canonical GH-tagged build, verified 200 / 40 KB) so Datastar actually loads in the browser. But ZERO tabs consume it — this wave ports them.
+
+**Plan (comprehensive, not per-tab):**
+
+- [ ] **9h-1 Audit baseline.** Inventory every template (`scripts/templates/*.html`, `scripts/templates/partials/*.html`) listing what interactivity each needs (fetch, toggle, filter, keyboard, poll). Output a compact matrix so the port is data-driven rather than ad-hoc.
+- [ ] **9h-2 Datastar-Python SDK.** Install `datastar-python` from https://github.com/starfederation/datastar-python. Refactor Flask endpoints that emit dynamic state (readiness, chains, paper provenance, graph) to use SDK-emitted SSE streams (`PatchElements`, `PatchSignals`) instead of returning JSON for the UI to re-paint. Keep JSON endpoints for programmatic callers (tests, scripts).
+- [ ] **9h-3 Signal vocabulary.** Decide shared signal names across tabs so cross-tab state (active paper, current chain, filter state) is coherent: `$activePaper`, `$activeChain`, `$activeClaim`, `$filterLayers`, `$graphFocus`. Flask uses `datastar-python` to patch these signals from the server.
+- [ ] **9h-4 Port readiness_tab.** Simplest: static heatmap + click-through. Good first port to validate the pattern.
+- [ ] **9h-5 Port qi_tab.** Similar to readiness — card list with status badges.
+- [ ] **9h-6 Port chains_tab.** Has per-chain expansion (L1 milestone DAG) — test Datastar's handling of conditional SVG render.
+- [ ] **9h-7 Port paper_provenance_tab.** Most interactive tab (split-pane, dossier, filter chips, keyboard nav). Natural fit for Datastar.
+- [ ] **9h-8 Graph tab decision.** D3 force-directed simulation holds a lot of imperative state; may stay vanilla-JS with Datastar *wrapping* it for the topbar + filter state only. Document the rationale in the tab comment.
+- [ ] **9h-9 Remove vanilla JS duplication.** Each tab's `<script>` block shrinks substantially once Datastar owns state. Target: 60%+ LOC reduction per tab.
+- [ ] **9h-10 Preserve existing security policy.** Safe-DOM rule (no innerHTML with untrusted content) stays binding. Datastar's expression evaluator handles escaping by design for `data-text` / `data-attr`. Any server-side SSE `PatchElements` MUST use the SDK's sanitised output; hand-written raw HTML strings still forbidden.
+- [ ] **9h-11 Playwright smoke test.** After each port, verify Datastar actually attaches (`window.ds` or equivalent global) and the interactive flows work (filter, keyboard nav, deep-link via URL params).
+
+**Effort estimate:** 4–6 days. Not in the critical path for any other wave — can be done between paper cycles.
+
+**Gate:** `grep -rE 'data-signals|data-text|data-on-|data-show' scripts/templates/` returns hits across every tab partial (except graph_tab's D3 canvas); `document.querySelector('[data-signals]')` is non-null on every tab; CDN loads cleanly (no console errors); no regressions in Playwright flows.
+
 ### Wave 9g — Paper Provenance (v2 design) — PENDING 2026-04-24
 
 **Trigger.** User added `Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard-v2/` on 2026-04-24 with a new Paper Provenance feature: per-paper split view showing the paper body with per-claim dossiers across 8 vetting layers. The v2 design is additive to v1 (chain viz unchanged); subgraph contract is identical to v1.
@@ -732,6 +764,7 @@ Follow-ups are listed in the Wave 9d shipped section — not blocking for Wave 9
 | 9e | — | 0 (done 2026-04-24) | Lean extraction: env-var gate for name_deps; baseline ~7 min preserved |
 | 9f | — | 0 (done 2026-04-24) | PG+AGE flip: sync script + /api/graph/cypher + SK_EFT_GRAPH_SOURCE + startup check |
 | 9g | 9e, 9f | 3-4d | **Paper Provenance (v2 design)** — 10th interactive tab + 8-layer dossier + claim-span HTML pipeline |
+| 9h | — | 4-6d | **Datastar realignment** — port all tabs to declared Datastar stack; CDN URL fixed 2026-04-24 |
 
 **Critical path:** Wave 1 → 2 → 3 → 4 → 5a → 4c → 6b → submission-gate functional. ~10 days focused work.
 
