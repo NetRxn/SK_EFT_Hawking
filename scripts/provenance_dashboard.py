@@ -14,8 +14,11 @@ Opens at http://localhost:8050 by default.
 
 import argparse
 import json
+import logging
+import os
 import re
 import sys
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -30,6 +33,192 @@ sys.path.insert(0, str(SCRIPT_DIR))
 app = Flask(__name__, template_folder=str(Path(__file__).parent / "templates"))
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
+
+logger = logging.getLogger(__name__)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Graph cache — Phase 5v Wave 9 perf fix
+# ════════════════════════════════════════════════════════════════════
+#
+# Every /api/graph* endpoint used to call build_graph_json() from
+# scratch. Hot cost was ~15s per request; cold (stale lean_deps.json)
+# triggered a lake subprocess. Paper Focus and Logical Focus fired
+# /api/graph/trace and /api/graph/impact, each rebuilding again — so
+# a single click chained multiple 15s rebuilds. This cache serves the
+# full graph from memory and refreshes lazily when any canonical input
+# file changes (mtime-based staleness, cheap — microseconds to check).
+#
+# PG+AGE sync is now opt-in (build_graph.build_graph_json's sync_pg
+# kwarg) and runs on a separate debounced background thread so HTTP
+# requests never block on DB connectivity.
+
+_GRAPH_CACHE: dict = {'graph': None, 'fingerprint': None, 'built_at': None,
+                      'lean_deps_stale': False}
+_GRAPH_CACHE_LOCK = threading.Lock()
+_PG_SYNC_LOCK = threading.Lock()
+_PG_SYNC_IN_FLIGHT = {'thread': None, 'pending_fingerprint': None}
+
+
+# Phase 5v Wave 9f: source-of-truth flip. Controlled by env var.
+#   json (default) — serve /api/graph* from the in-memory rebuild cache
+#   pg             — route trace/impact/subgraph queries to AGE Cypher
+# Boot-time validation: if set to `pg`, confirm connectivity at startup;
+# fail loudly rather than silently downgrading so setup issues surface.
+def _graph_source() -> str:
+    return os.environ.get('SK_EFT_GRAPH_SOURCE', 'json').strip().lower()
+
+
+def _suppress_lake_refresh() -> bool:
+    """Prevent the dashboard from ever shelling out to ``lake`` on its own.
+
+    ``extract_lean_deps._run_extraction`` invokes ``lake env lean --run
+    SKEFTHawking/ExtractDeps.lean`` as a subprocess. That takes 1-2 min
+    on cold toolchain state and was the true cause of the "reload
+    hangs" behavior — the prewarm thread held the graph cache lock
+    while lake compiled, and concurrent page loads queued behind it.
+
+    Refreshing ``lean_deps.json`` is a heavy, user-intentional action.
+    Users re-run ``uv run python scripts/extract_lean_deps.py`` (or
+    ``lake build SKEFTHawking.ExtractDeps``) themselves when they've
+    changed Lean sources. In the meantime the dashboard serves the
+    cached extraction and surfaces a "stale" indicator.
+
+    Gotcha (fixed 2026-04-24): Python imports ``scripts/extract_lean_deps.py``
+    via TWO different names — top-level ``extract_lean_deps`` (because
+    scripts/ is on sys.path) and package-qualified ``scripts.extract_lean_deps``
+    (because build_graph does ``from scripts.extract_lean_deps import ...``).
+    Those are **two different module objects** in sys.modules. We must
+    patch BOTH, or one call site still shells out and the dashboard hangs.
+    """
+    def _noop_extraction() -> None:
+        logger.warning(
+            "lean_deps.json is stale, but the dashboard won't shell out "
+            "to lake. Run `uv run python scripts/extract_lean_deps.py` "
+            "(or `lake build SKEFTHawking.ExtractDeps`) to refresh. "
+            "Serving cached graph data in the meantime."
+        )
+
+    needs_refresh = False
+    import importlib
+    for modname in ('extract_lean_deps', 'scripts.extract_lean_deps'):
+        try:
+            mod = importlib.import_module(modname)
+        except ImportError:
+            continue
+        # Stamp the stale flag once (they share the same filesystem state).
+        if not needs_refresh:
+            try:
+                needs_refresh = mod._needs_refresh()
+            except Exception:
+                pass
+        mod._run_extraction = _noop_extraction
+
+    _GRAPH_CACHE['lean_deps_stale'] = needs_refresh
+    return needs_refresh
+
+
+def _graph_fingerprint() -> tuple:
+    """Cheap staleness signal for the in-memory graph cache.
+
+    Stat the canonical inputs that build_graph_json consumes and
+    return (path, mtime_ns) pairs. Any change here invalidates the
+    cache on next request. Cost: ~0.5ms — dominated by stat() calls.
+    """
+    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
+    targets: list[Path] = [
+        PROJECT_ROOT / "lean" / "lean_deps.json",
+        PROJECT_ROOT / "src" / "core" / "constants.py",
+        PROJECT_ROOT / "src" / "core" / "provenance.py",
+        PROJECT_ROOT / "src" / "core" / "formulas.py",
+        PROJECT_ROOT / "src" / "core" / "visualizations.py",
+        PROJECT_ROOT / "src" / "core" / "citations.py",
+        PROJECT_ROOT / "src" / "core" / "aristotle_interface.py",
+        PROJECT_ROOT / "scripts" / "build_graph.py",
+        PROJECT_ROOT / "scripts" / "readiness_gates.py",
+        PROJECT_ROOT / "docs" / "counts.json",
+    ]
+    # Papers + Lean sources are globbed; any file touched trips the cache
+    targets.extend(sorted((PROJECT_ROOT / "papers").glob("paper*_*/paper_draft.tex")))
+    targets.extend(sorted(lean_dir.glob("*.lean")))
+    fp = []
+    for p in targets:
+        try:
+            fp.append((str(p), p.stat().st_mtime_ns))
+        except FileNotFoundError:
+            fp.append((str(p), 0))
+    return tuple(fp)
+
+
+def _schedule_pg_sync(graph: dict, fingerprint: tuple) -> None:
+    """Kick a background thread to write the graph to PG+AGE.
+
+    One writer at a time (tracked by ``_PG_SYNC_LOCK``). If a write is
+    already in flight, stash the latest fingerprint so the worker can
+    coalesce — no queue, no piling up. PG failures never affect HTTP
+    responses.
+    """
+    from build_graph import write_graph_to_pg
+
+    with _PG_SYNC_LOCK:
+        if _PG_SYNC_IN_FLIGHT['thread'] and _PG_SYNC_IN_FLIGHT['thread'].is_alive():
+            _PG_SYNC_IN_FLIGHT['pending_fingerprint'] = fingerprint
+            return
+
+        def _worker(g, fp):
+            try:
+                write_graph_to_pg(g)
+            except Exception as exc:
+                logger.warning("PG+AGE background sync failed: %s", exc)
+
+        t = threading.Thread(
+            target=_worker, args=(graph, fingerprint), daemon=True,
+            name="pg-age-sync",
+        )
+        _PG_SYNC_IN_FLIGHT['thread'] = t
+        _PG_SYNC_IN_FLIGHT['pending_fingerprint'] = None
+        t.start()
+
+
+def get_cached_graph(*, force_rebuild: bool = False, sync_pg: bool | None = None) -> dict:
+    """Return the cached graph, rebuilding if inputs have changed.
+
+    ``force_rebuild`` — ignore cache, rebuild unconditionally (used by
+    /api/graph/rebuild).
+
+    ``sync_pg`` — schedule a PG+AGE write after a successful rebuild.
+    ``None`` (default) uses the app config ``PG_SYNC_ENABLED`` flag so
+    the ``--no-pg-sync`` CLI switch applies everywhere. Pass True/False
+    to force the behavior regardless of config (used by the CLI prewarm).
+    """
+    from build_graph import build_graph_json
+
+    if sync_pg is None:
+        sync_pg = app.config.get('PG_SYNC_ENABLED', True)
+
+    fp = _graph_fingerprint()
+    with _GRAPH_CACHE_LOCK:
+        if (
+            not force_rebuild
+            and _GRAPH_CACHE['graph'] is not None
+            and _GRAPH_CACHE['fingerprint'] == fp
+        ):
+            return _GRAPH_CACHE['graph']
+
+        # Build outside the critical section would be better, but
+        # build_graph_json isn't thread-safe against itself (it mutates
+        # module-scoped `_LEAN_AMBIGUITY_SEEN` and `_LEAN_SHORT_INDEX`).
+        # Holding the lock across the ~15s rebuild means requests pile
+        # up serialized — acceptable because this only happens on
+        # staleness, not per request.
+        graph = build_graph_json(sync_pg=False)
+        _GRAPH_CACHE['graph'] = graph
+        _GRAPH_CACHE['fingerprint'] = fp
+        _GRAPH_CACHE['built_at'] = datetime.now(timezone.utc).isoformat(timespec='seconds')
+
+    if sync_pg:
+        _schedule_pg_sync(graph, fp)
+    return graph
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -199,16 +388,14 @@ def load_paper_claims():
     if not papers_dir.exists():
         return papers
 
-    # Pull PaperClaim nodes from the graph so papers without declared
-    # PAPER_DEPENDENCIES entries still surface their auto-extracted claims.
-    sys.path.insert(0, str(SCRIPT_DIR))
-    from build_graph import (
-        extract_paper_claim_nodes,
-        extract_cites_source_edges,
-        extract_cites_theorem_edges,
-        extract_all_nodes,
-    )
-    claim_nodes = extract_paper_claim_nodes()
+    # Pull PaperClaim nodes + citation edges from the cached graph
+    # instead of running the full extractors on every page load. The
+    # original code called extract_paper_claim_nodes + extract_all_nodes
+    # + extract_cites_*_edges inline, which re-ran all heavy Lean/paper
+    # parsing for every request to `/` — the dashboard's "hang on reload"
+    # behavior was traced to this path (Phase 5v Wave 9a fix, 2026-04-24).
+    graph = get_cached_graph()
+    claim_nodes = [n for n in graph['nodes'] if n['type'] == 'PaperClaim']
     claims_by_paper: dict[str, list[dict]] = {}
     for cn in claim_nodes:
         paper = cn.get('meta', {}).get('paper')
@@ -220,22 +407,13 @@ def load_paper_claims():
             'index': cn.get('meta', {}).get('index', 0),
         })
 
-    # Pull CITES_SOURCE and CITES_THEOREM coverage for each paper so the
-    # dashboard surfaces bibliographic + theorem-citation coverage
-    # alongside the top-line contributions. This is the Phase 5v
-    # coverage-gap fix — the readiness pipeline now has explicit graph
-    # edges for two of the three claim-surface levels that previously
-    # lived implicitly.
-    all_nodes = extract_all_nodes()
-    node_ids = {n['id'] for n in all_nodes}
-    cites_source = extract_cites_source_edges(node_ids)
-    cites_theorem = extract_cites_theorem_edges(node_ids)
     cites_source_by_paper: dict[str, list[str]] = {}
     cites_theorem_by_paper: dict[str, list[str]] = {}
-    for e in cites_source:
-        cites_source_by_paper.setdefault(e['source'], []).append(e.get('bibkey', ''))
-    for e in cites_theorem:
-        cites_theorem_by_paper.setdefault(e['source'], []).append(e.get('reference', ''))
+    for e in graph['links']:
+        if e['type'] == 'CITES_SOURCE':
+            cites_source_by_paper.setdefault(e['source'], []).append(e.get('bibkey', ''))
+        elif e['type'] == 'CITES_THEOREM':
+            cites_theorem_by_paper.setdefault(e['source'], []).append(e.get('reference', ''))
 
     # Build set of all Lean theorem names for cross-referencing
     lean_names = set()
@@ -434,15 +612,15 @@ def load_proof_architecture():
     from src.core.constants import AXIOM_METADATA, ARISTOTLE_THEOREMS
     from src.core.provenance import PAPER_DEPENDENCIES
 
-    sys.path.insert(0, str(SCRIPT_DIR))
-    from extract_lean_deps import load_lean_deps
-    from build_graph import (
-        extract_lean_declaration_nodes,
-        extract_depends_on_axiom_edges,
-        extract_all_nodes,
-    )
-
-    lean_nodes = extract_lean_declaration_nodes()
+    # Phase 5v Wave 9a: pull Lean declaration nodes + axiom edges from
+    # the cached graph. Previously this ran extract_lean_declaration_nodes
+    # + extract_all_nodes + extract_depends_on_axiom_edges inline, so
+    # visiting the Proof Architecture tab triggered a full graph
+    # re-extraction (~1.5s) on every page load.
+    graph = get_cached_graph()
+    lean_types = {'LeanAxiom', 'LeanTheorem', 'LeanDef',
+                  'LeanStructure', 'LeanInductive', 'LeanInstance'}
+    lean_nodes = [n for n in graph['nodes'] if n['type'] in lean_types]
 
     # Summary counts by node type
     kind_counts = {}
@@ -479,9 +657,7 @@ def load_proof_architecture():
     # Axiom cards (from live Lean declarations)
     axiom_nodes = [n for n in lean_nodes if n['type'] == 'LeanAxiom']
     axiom_cards = []
-    all_nodes = extract_all_nodes()
-    node_ids = {n['id'] for n in all_nodes}
-    axiom_edges = extract_depends_on_axiom_edges(node_ids)
+    axiom_edges = [e for e in graph['links'] if e['type'] == 'DEPENDS_ON_AXIOM']
 
     live_axiom_names = set()
     for ax in axiom_nodes:
@@ -942,10 +1118,95 @@ def save_all():
 
 @app.route("/api/graph")
 def api_graph():
-    """Return the full provenance graph as JSON for D3 visualization."""
-    from build_graph import build_graph_json
-    graph = build_graph_json()
+    """Return the full provenance graph as JSON for D3 visualization.
+
+    Served from an in-memory cache (see :func:`get_cached_graph`). The
+    cache invalidates when any canonical input file changes, so fresh
+    data shows up automatically on the next request — no manual poke.
+    """
+    graph = get_cached_graph()
     return jsonify(graph)
+
+
+@app.route("/api/graph/rebuild", methods=["POST", "GET"])
+def api_graph_rebuild():
+    """Force a graph rebuild, bypassing the mtime-based staleness check.
+
+    Use when an input changed in a way stat() can't see (e.g., you
+    edited a docstring that re-parses differently but didn't touch any
+    file mtime within the watched set).
+    """
+    graph = get_cached_graph(force_rebuild=True)
+    return jsonify({
+        "rebuilt": True,
+        "node_count": graph['meta']['node_count'],
+        "edge_count": graph['meta']['edge_count'],
+        "built_at": _GRAPH_CACHE['built_at'],
+        "lean_deps_stale": _GRAPH_CACHE['lean_deps_stale'],
+    })
+
+
+@app.route("/api/graph/status")
+def api_graph_status():
+    """Return lightweight cache state — used by the UI to render a
+    "graph is rebuilding" or "Lean deps stale" indicator without pulling
+    the full 5 MB payload.
+    """
+    import extract_lean_deps as eld
+    try:
+        lean_stale = eld._needs_refresh()
+    except Exception:
+        lean_stale = False
+    _GRAPH_CACHE['lean_deps_stale'] = lean_stale
+    return jsonify({
+        "built_at": _GRAPH_CACHE['built_at'],
+        "node_count": (
+            _GRAPH_CACHE['graph']['meta']['node_count']
+            if _GRAPH_CACHE['graph'] else 0
+        ),
+        "edge_count": (
+            _GRAPH_CACHE['graph']['meta']['edge_count']
+            if _GRAPH_CACHE['graph'] else 0
+        ),
+        "lean_deps_stale": lean_stale,
+        "ready": _GRAPH_CACHE['graph'] is not None,
+    })
+
+
+@app.route("/api/graph/refresh_lean_deps", methods=["POST"])
+def api_refresh_lean_deps():
+    """Explicit opt-in endpoint to run ``lake env lean --run
+    SKEFTHawking/ExtractDeps.lean`` from within the dashboard.
+
+    Users normally run this from the CLI. The endpoint exists so the
+    dashboard can wire a button to it (future work). **This blocks for
+    1-2 minutes** and monopolizes the Flask worker that serves it —
+    do NOT invoke from the UI without a loading indicator.
+    """
+    import extract_lean_deps as eld
+    # Temporarily un-suppress lake invocation, run once, re-suppress.
+    _suppressed = eld._run_extraction
+    try:
+        # The module's own `_run_extraction` (pre-suppression) shells
+        # out to lake. We need to reach that original. We captured it
+        # by making _suppress_lake_refresh replace the name — the
+        # original is bound to `_suppressed` above. To run it we must
+        # re-import the module fresh because ``_run_extraction``
+        # internally uses module globals (logger, subprocess). Easiest:
+        # call through load_lean_deps with a hash mismatch.
+        import importlib
+        importlib.reload(eld)
+        eld.load_lean_deps()
+        # Reapply our suppression guard for subsequent calls.
+        _suppress_lake_refresh()
+        # Invalidate graph cache so next /api/graph rebuilds with fresh deps.
+        with _GRAPH_CACHE_LOCK:
+            _GRAPH_CACHE['graph'] = None
+            _GRAPH_CACHE['fingerprint'] = None
+        return jsonify({"refreshed": True,
+                        "hint": "Next /api/graph call will rebuild with fresh Lean deps."})
+    except Exception as exc:
+        return jsonify({"refreshed": False, "error": str(exc)}), 500
 
 
 @app.route("/api/graph/trace/<path:node_id>")
@@ -955,8 +1216,7 @@ def api_trace(node_id):
     Walks forward through outgoing edges (source->target) AND backward
     through incoming edges (target->source) to find the full chain.
     """
-    from build_graph import build_graph_json
-    graph = build_graph_json()
+    graph = get_cached_graph()
     nodes = graph['nodes']
     links = graph['links']
 
@@ -965,29 +1225,30 @@ def api_trace(node_id):
     if node_id not in node_ids:
         return jsonify({'error': f'Unknown node: {node_id}'}), 404
 
-    traced_node_ids = set()
-    traced_edge_indices = set()
+    # Build adjacency indexes once per request — O(E) rather than
+    # scanning the full edge list inside each recursive step.
+    out_idx: dict[str, list[int]] = {}
+    in_idx: dict[str, list[int]] = {}
+    for i, link in enumerate(links):
+        out_idx.setdefault(link['source'], []).append(i)
+        in_idx.setdefault(link['target'], []).append(i)
 
-    def fwd(nid):
-        if nid in traced_node_ids:
-            return
-        traced_node_ids.add(nid)
-        for i, link in enumerate(links):
-            if link['source'] == nid:
+    traced_node_ids: set[str] = set()
+    traced_edge_indices: set[int] = set()
+
+    def walk(nid: str, idx: dict[str, list[int]], link_end: str) -> None:
+        stack = [nid]
+        while stack:
+            cur = stack.pop()
+            if cur in traced_node_ids:
+                continue
+            traced_node_ids.add(cur)
+            for i in idx.get(cur, ()):
                 traced_edge_indices.add(i)
-                fwd(link['target'])
+                stack.append(links[i][link_end])
 
-    def bwd(nid):
-        if nid in traced_node_ids:
-            return
-        traced_node_ids.add(nid)
-        for i, link in enumerate(links):
-            if link['target'] == nid:
-                traced_edge_indices.add(i)
-                bwd(link['source'])
-
-    fwd(node_id)
-    bwd(node_id)
+    walk(node_id, out_idx, 'target')  # forward
+    walk(node_id, in_idx, 'source')   # backward
 
     return jsonify({
         'traced_node_ids': sorted(traced_node_ids),
@@ -1002,8 +1263,7 @@ def api_impact(node_id):
     Walks upstream: find edges where target == current, follow source.
     Also walks downstream: find edges where source == current, follow target.
     """
-    from build_graph import build_graph_json
-    graph = build_graph_json()
+    graph = get_cached_graph()
     nodes = graph['nodes']
     links = graph['links']
 
@@ -1011,24 +1271,35 @@ def api_impact(node_id):
     if node_id not in node_ids:
         return jsonify({'error': f'Unknown node: {node_id}'}), 404
 
-    impacted_node_ids = set([node_id])
-    impacted_edge_indices = set()
+    # One-time adjacency build; O(E) vs re-scanning per recursion step.
+    out_idx: dict[str, list[int]] = {}
+    in_idx: dict[str, list[int]] = {}
+    for i, link in enumerate(links):
+        out_idx.setdefault(link['source'], []).append(i)
+        in_idx.setdefault(link['target'], []).append(i)
 
-    def upstream(nid):
-        for i, link in enumerate(links):
-            if link['target'] == nid and link['source'] not in impacted_node_ids:
-                impacted_node_ids.add(link['source'])
+    impacted_node_ids: set[str] = {node_id}
+    impacted_edge_indices: set[int] = set()
+
+    # Upstream: who depends on me (follow incoming edges backward).
+    stack = [node_id]
+    while stack:
+        cur = stack.pop()
+        for i in in_idx.get(cur, ()):
+            src = links[i]['source']
+            if src not in impacted_node_ids:
+                impacted_node_ids.add(src)
                 impacted_edge_indices.add(i)
-                upstream(link['source'])
+                stack.append(src)
 
-    def downstream(nid):
-        for i, link in enumerate(links):
-            if link['source'] == nid and link['target'] not in impacted_node_ids:
-                impacted_node_ids.add(link['target'])
-                impacted_edge_indices.add(i)
-
-    upstream(node_id)
-    downstream(node_id)
+    # Downstream: one hop from the seed (matches the prior semantics —
+    # the original downstream() didn't recurse, just flagged direct
+    # targets. Keeping that contract to avoid surprising the UI.)
+    for i in out_idx.get(node_id, ()):
+        tgt = links[i]['target']
+        if tgt not in impacted_node_ids:
+            impacted_node_ids.add(tgt)
+            impacted_edge_indices.add(i)
 
     return jsonify({
         'impacted_node_ids': sorted(impacted_node_ids),
@@ -1041,6 +1312,679 @@ def api_integrity():
     """Return the graph integrity report."""
     from graph_integrity import run_integrity_checks
     return jsonify(run_integrity_checks())
+
+
+# ──────────────────────────────────────────────────────────────
+# Read-only Cypher endpoint (Phase 5v Wave 9f)
+# ──────────────────────────────────────────────────────────────
+#
+# Exposes parameterised Cypher queries against the AGE-backed graph
+# (database: sk_eft_provenance, graph: sk_eft). Dashboard subgraph
+# endpoints route through this when SK_EFT_GRAPH_SOURCE=pg; scripts
+# and notebooks can use it directly via HTTP.
+#
+# Safety guards (MANDATORY — do not relax without discussion):
+#   - Only SELECT/MATCH/RETURN allowed. CREATE / DELETE / MERGE / SET /
+#     REMOVE / DROP all rejected with 400. Keeps this endpoint read-only
+#     even if an authenticated client goes rogue.
+#   - Query length capped at 4000 chars. AGE doesn't do automatic timeout
+#     per-query, so big queries are the main DoS vector.
+#   - Parameters passed as a dict; values are escaped through psycopg's
+#     parameter binding for the outer SELECT, not inlined into the
+#     Cypher body. The Cypher body itself is a literal — callers must
+#     validate their own query strings.
+
+_CYPHER_READ_ONLY_RX = re.compile(
+    r'\b(CREATE|DELETE|MERGE|SET|REMOVE|DROP|DETACH|CALL\s+db\.)\b',
+    re.IGNORECASE,
+)
+
+
+@app.route("/api/graph/cypher", methods=["POST"])
+def api_cypher():
+    """Execute a read-only Cypher query against AGE.
+
+    POST body (JSON): ``{"query": "MATCH (n:LeanTheorem) WHERE ... RETURN n LIMIT 50"}``
+
+    Response: ``{"rows": [[...], ...], "columns": ["n"], "ms": 42.3, "count": N}``
+    or ``{"error": "...", "hint": "..."}`` with HTTP 400/500.
+    """
+    body = request.get_json(silent=True) or {}
+    query = (body.get('query') or '').strip()
+
+    if not query:
+        return jsonify({"error": "missing 'query' field in POST body"}), 400
+    if len(query) > 4000:
+        return jsonify({"error": "query too long (4000 char cap)"}), 400
+    if _CYPHER_READ_ONLY_RX.search(query):
+        return jsonify({
+            "error": "write clauses are not permitted on /api/graph/cypher",
+            "hint": "CREATE / DELETE / MERGE / SET / REMOVE / DROP are blocked; "
+                    "use scripts/sync_graph_to_pg.py for writes.",
+        }), 400
+
+    try:
+        import psycopg  # type: ignore
+    except ImportError:
+        return jsonify({"error": "psycopg not installed in the dashboard venv"}), 500
+
+    t0 = __import__('time').monotonic()
+    try:
+        with psycopg.connect(
+            "host=localhost port=5433 dbname=sk_eft_provenance "
+            "user=sk_eft password=sk_eft_local",
+            connect_timeout=5,
+        ) as conn, conn.cursor() as cur:
+            cur.execute("LOAD 'age'")
+            cur.execute("SET search_path = ag_catalog, '$user', public")
+
+            # AGE's Cypher wrapper requires us to declare each returned
+            # column's label as `agtype` in the outer SELECT. We can't
+            # introspect the return shape from Python, so we ask AGE to
+            # wrap the whole result in a single agtype column — the
+            # caller gets stringified agtype values back and parses them
+            # themselves. That's the simplest reliable path.
+            escaped = query.replace("$$", "\\$\\$")
+            wrapped = (
+                f"SELECT agtype_out(r) FROM cypher('sk_eft', $$ "
+                f"{escaped} "
+                f"$$) AS (r agtype)"
+            )
+            cur.execute(wrapped)
+            rows = cur.fetchall()
+    except psycopg.OperationalError as exc:
+        return jsonify({
+            "error": f"PG unreachable: {exc}",
+            "hint": "Confirm docker container is running "
+                    "(port 5433, sk_eft_provenance DB).",
+        }), 503
+    except Exception as exc:
+        return jsonify({"error": f"cypher execution failed: {exc}"}), 500
+
+    t1 = __import__('time').monotonic()
+
+    # Rows are tuples with a single stringified agtype value; flatten.
+    # Callers that want structured values can parse the agtype string.
+    flat_rows = [r[0] if isinstance(r, tuple) and len(r) == 1 else r for r in rows]
+
+    return jsonify({
+        "rows": flat_rows,
+        "count": len(flat_rows),
+        "ms": round((t1 - t0) * 1000, 2),
+        "query": query,
+    })
+
+
+# ──────────────────────────────────────────────────────────────
+# Proof-dependency subgraph (Phase 5v Wave 9c)
+# ──────────────────────────────────────────────────────────────
+#
+# The default /api/graph response omits USES (direct proof-reference)
+# edges because emitting all ~40k of them on every request would inflate
+# the payload ~15x. Instead they're fetched on demand through this
+# endpoint, which re-extracts USES edges once, caches them separately,
+# and returns only the edges themselves (the nodes are already in the
+# base graph). The UI merges these into its D3 data lazily when the
+# "Show proof dependencies" toggle flips on.
+
+_USES_CACHE: dict = {'edges': None, 'fingerprint': None, 'built_at': None}
+_USES_CACHE_LOCK = threading.Lock()
+
+
+def _get_uses_edges() -> list[dict]:
+    """Return the cached USES edges (proof-dep DAG), rebuilding lazily."""
+    import os
+    fp = _graph_fingerprint()
+    with _USES_CACHE_LOCK:
+        if _USES_CACHE['edges'] is not None and _USES_CACHE['fingerprint'] == fp:
+            return _USES_CACHE['edges']
+        # Temporarily flip the env var and re-run the USES extractor only.
+        # We can't reuse the main graph cache here because its fingerprint
+        # coincides and its extraction runs under SK_EFT_INCLUDE_USES=0.
+        prev = os.environ.get('SK_EFT_INCLUDE_USES')
+        os.environ['SK_EFT_INCLUDE_USES'] = '1'
+        try:
+            graph = get_cached_graph()
+            from build_graph import extract_uses_edges
+            node_ids = {n['id'] for n in graph['nodes']}
+            edges = extract_uses_edges(node_ids)
+        finally:
+            if prev is None:
+                os.environ.pop('SK_EFT_INCLUDE_USES', None)
+            else:
+                os.environ['SK_EFT_INCLUDE_USES'] = prev
+        _USES_CACHE['edges'] = edges
+        _USES_CACHE['fingerprint'] = fp
+        _USES_CACHE['built_at'] = datetime.now(timezone.utc).isoformat(timespec='seconds')
+        return edges
+
+
+# ──────────────────────────────────────────────────────────────
+# Chain / Proof-Chain-Viz endpoints (Phase 5v Wave 9d)
+# ──────────────────────────────────────────────────────────────
+#
+# Three zoom levels per the design contract
+# (Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard/docs/SUBGRAPH_CONTRACT.md):
+#   L0 — /api/chain/{id}/summary    — verdict strip
+#   L1 — /api/chain/{id}/milestones — milestone DAG (deterministic layout)
+#   L2 — /api/chain/{id}/subgraph   — full chain subgraph + 1-hop externals
+#
+# Chains are DISCOVERED, not hardcoded. Any node whose meta.chain_ids
+# includes a value materialises that chain. See src/core/constants.py
+# MODULE_CHAIN_MAP for the module-to-chain mapping; adding a new entry
+# there (or adding a node-level chain_id override) creates a new chain
+# in the dashboard with no registry plumbing.
+
+def _chain_nodes(graph: dict, chain_id: str) -> list[dict]:
+    """Return all nodes belonging to the given chain."""
+    return [n for n in graph['nodes']
+            if chain_id in (n.get('meta', {}).get('chain_ids') or [])]
+
+
+@app.route("/api/chain/list")
+def api_chain_list():
+    """Return the set of chain_ids present in the current graph, with
+    per-chain node counts and a rough verdict (from summary counts)."""
+    graph = get_cached_graph()
+    from collections import Counter
+    chain_counter: Counter = Counter()
+    unclassified = 0
+    for n in graph['nodes']:
+        ids = n.get('meta', {}).get('chain_ids')
+        if not ids:
+            # Only count Lean nodes as unclassified (Paper / Formula etc.
+            # may legitimately lack a chain tag).
+            if n['type'] in (
+                'LeanTheorem', 'LeanAxiom', 'LeanDef',
+                'LeanStructure', 'LeanInductive', 'LeanInstance',
+            ):
+                unclassified += 1
+            continue
+        for cid in ids:
+            chain_counter[cid] += 1
+    chains = [
+        {
+            'chain_id': cid,
+            'node_count': count,
+        }
+        for cid, count in sorted(chain_counter.items(), key=lambda x: -x[1])
+    ]
+    return jsonify({
+        'chains': chains,
+        'unclassified_lean_nodes': unclassified,
+        'built_at': _GRAPH_CACHE['built_at'],
+    })
+
+
+@app.route("/api/chain/<chain_id>/summary")
+def api_chain_summary(chain_id: str):
+    """L0 — verdict strip: aggregate counts + state for a chain."""
+    graph = get_cached_graph()
+    chain_ns = _chain_nodes(graph, chain_id)
+    if not chain_ns:
+        return jsonify({'error': f'Unknown chain: {chain_id}'}), 404
+
+    def count_by(pred):
+        return sum(1 for n in chain_ns if pred(n))
+
+    counts = {
+        'axioms': {
+            'total': count_by(lambda n: n['type'] == 'LeanAxiom'),
+            'verified': count_by(lambda n: n['type'] == 'LeanAxiom'
+                                 and n.get('verification') == 'verified'),
+        },
+        'theorems': {
+            'total': count_by(lambda n: n['type'] == 'LeanTheorem'),
+            'verified': count_by(lambda n: n['type'] == 'LeanTheorem'
+                                 and n.get('verification') == 'verified'),
+        },
+        'defs': count_by(lambda n: n['type'] == 'LeanDef'),
+        'structures': count_by(lambda n: n['type'] == 'LeanStructure'),
+        'placeholders': count_by(
+            lambda n: n.get('meta', {}).get('method') == 'manual'
+            and any(tag in (n.get('label', '').lower()) for tag in ('placeholder', 'stub'))
+        ),
+        'milestones': count_by(lambda n: n.get('meta', {}).get('is_milestone')),
+    }
+
+    # Verdict heuristic. Needs tuning once ReadinessGate -> chain_id rollups exist.
+    if counts['theorems']['verified'] == counts['theorems']['total'] and counts['placeholders'] == 0:
+        verdict = 'solid'
+    elif counts['placeholders']:
+        verdict = 'solid-gaps'
+    else:
+        verdict = 'mixed'
+
+    return jsonify({
+        'chain_id': chain_id,
+        'verdict': verdict,
+        'counts': counts,
+        'built_at': _GRAPH_CACHE['built_at'],
+    })
+
+
+@app.route("/api/chain/<chain_id>/milestones")
+def api_chain_milestones(chain_id: str):
+    """L1 — milestone DAG: 6–12 pillar nodes + proved-edges between them.
+
+    Edges between milestones are computed as graph reachability through
+    non-milestone intermediates (hop_count = shortest path length).
+    """
+    graph = get_cached_graph()
+    chain_ns = _chain_nodes(graph, chain_id)
+    if not chain_ns:
+        return jsonify({'error': f'Unknown chain: {chain_id}'}), 404
+
+    milestones = [n for n in chain_ns if n.get('meta', {}).get('is_milestone')]
+    milestone_ids = {n['id'] for n in milestones}
+
+    # Build adjacency for the chain's subgraph (+ 1-hop externals for
+    # traversal fidelity). Use project-meaningful edges only: PROVED_BY,
+    # USES, USED_BY, DEPENDS_ON_AXIOM, IMPORTS, GROUNDED_IN.
+    trav_types = {'PROVED_BY', 'USES', 'USED_BY', 'DEPENDS_ON_AXIOM',
+                  'GROUNDED_IN', 'CLAIMS'}
+    chain_set = {n['id'] for n in chain_ns}
+    adj: dict[str, set[str]] = {}
+    for e in graph['links']:
+        if e['type'] not in trav_types:
+            continue
+        src, tgt = e['source'], e['target']
+        if src in chain_set or tgt in chain_set:
+            adj.setdefault(src, set()).add(tgt)
+
+    # For each pair (milestone, milestone), compute shortest path length
+    # through non-milestone intermediates. Capped at depth 5 to stay cheap.
+    from collections import deque
+    edges: list[dict] = []
+    for m in milestones:
+        seen = {m['id']: 0}
+        q: deque[tuple[str, int]] = deque([(m['id'], 0)])
+        MAX_DEPTH = 5
+        while q:
+            cur, depth = q.popleft()
+            if depth >= MAX_DEPTH:
+                continue
+            for nxt in adj.get(cur, ()):
+                if nxt in seen:
+                    continue
+                seen[nxt] = depth + 1
+                if nxt in milestone_ids and nxt != m['id']:
+                    edges.append({
+                        'from': m['id'],
+                        'to': nxt,
+                        'kind': 'USED_BY',
+                        'hop_count': depth + 1,
+                        'confidence': 'proved',
+                    })
+                    # Don't traverse beyond another milestone
+                    continue
+                q.append((nxt, depth + 1))
+
+    # Shape output per SUBGRAPH_CONTRACT.md section 3
+    nodes_out = [
+        {
+            'id': m['id'],
+            'label': m.get('label', m['id'].split(':')[-1]),
+            'type': m['type'],
+            'node_shape': m.get('meta', {}).get('shape', 'circle'),
+            'verification': m.get('verification', 'verified'),
+            'is_external_axiom': m['type'] == 'LeanAxiom',
+            'milestone_order': m.get('meta', {}).get('milestone_order'),
+        }
+        for m in milestones
+    ]
+    nodes_out.sort(key=lambda n: (
+        n.get('milestone_order') if n.get('milestone_order') is not None else 99,
+        n['label']
+    ))
+
+    return jsonify({
+        'chain_id': chain_id,
+        'nodes': nodes_out,
+        'edges': edges,
+        'built_at': _GRAPH_CACHE['built_at'],
+    })
+
+
+@app.route("/api/chain/<chain_id>/subgraph")
+def api_chain_subgraph(chain_id: str):
+    """L2 — full subgraph for a chain, same node/link shape as /api/graph."""
+    graph = get_cached_graph()
+    chain_ns = _chain_nodes(graph, chain_id)
+    if not chain_ns:
+        return jsonify({'error': f'Unknown chain: {chain_id}'}), 404
+
+    # Chain node set + 1-hop externals
+    chain_set = {n['id'] for n in chain_ns}
+    external: set[str] = set()
+    edges_out: list[dict] = []
+    for e in graph['links']:
+        if e['source'] in chain_set and e['target'] in chain_set:
+            edges_out.append(e)
+        elif e['source'] in chain_set and e['target'] not in chain_set:
+            external.add(e['target'])
+            edges_out.append(e)
+        elif e['target'] in chain_set and e['source'] not in chain_set:
+            external.add(e['source'])
+            edges_out.append(e)
+
+    nodes_out = list(chain_ns)
+    for nid in external:
+        n = next((nn for nn in graph['nodes'] if nn['id'] == nid), None)
+        if n:
+            nodes_out.append({**n, '_external': True})
+
+    return jsonify({
+        'chain_id': chain_id,
+        'nodes': nodes_out,
+        'links': edges_out,
+        'meta': {
+            'internal_count': len(chain_ns),
+            'external_count': len(external),
+            'built_at': _GRAPH_CACHE['built_at'],
+        },
+    })
+
+
+@app.route("/api/graph/uses_edges")
+def api_uses_edges():
+    """Return the proof-dependency (USES) edges.
+
+    These are direct references in each Lean theorem/def's body — "this
+    proof invokes that lemma". Excluded from /api/graph by default
+    because there are ~40k of them (every theorem pulls in ~15 lemmas).
+    Enabled via the "Show proof dependencies" dashboard toggle.
+
+    If ``lean_deps.json`` predates the Wave 9c ExtractDeps upgrade (no
+    ``name_deps_project`` field on declarations), this returns an empty
+    list and a ``reason`` hint so the UI can prompt to re-extract.
+    """
+    edges = _get_uses_edges()
+    hint = None
+    if not edges:
+        # Probe lean_deps.json to distinguish "genuinely zero" from
+        # "extraction hasn't emitted the field yet"
+        try:
+            from extract_lean_deps import load_lean_deps
+            decls = load_lean_deps()
+            has_field = any('name_deps_project' in d for d in decls[:20])
+            if not has_field:
+                hint = ("lean_deps.json predates the Wave 9c ExtractDeps "
+                        "upgrade. Run `uv run python scripts/extract_lean_deps.py` "
+                        "after the next successful `lake build SKEFTHawking.ExtractDeps` "
+                        "to populate name_deps_project, then reload.")
+        except Exception:
+            pass
+    return jsonify({
+        'edges': edges,
+        'count': len(edges),
+        'built_at': _USES_CACHE['built_at'],
+        'hint': hint,
+    })
+
+
+# ──────────────────────────────────────────────────────────────
+# Paper Provenance (Phase 5v Wave 9g)
+# ──────────────────────────────────────────────────────────────
+#
+# Per-paper 8-layer dossier — the interactive-tab deliverable from
+# `Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard-v2/`.
+# Consumes `papers/<paper>/claims_review.json` (generated by the
+# physics-qa:claims-reviewer agent) + `papers/<paper>/figures/
+# figure_review_report.json` (figure-reviewer) + live registries
+# (PARAMETER_PROVENANCE, CITATION_REGISTRY, etc.). Returns the exact
+# shape the v2 `paper-review.js` + `paper-provenance.js` consume so
+# the tab can be a straight port of the design.
+#
+# The 8 layers (matches LAYERS in the v2 design):
+#   NUM · THM · AX · HYP · CIT · PAR · FIG · QUA
+#
+# Claim IDs: for papers without inline `\claim{id}{...}` macros
+# (Wave 9g-3 follow-up), we auto-generate stable IDs from
+# `(layer, location)` so reruns hit the same keys.
+
+_PP_LAYERS_SPEC = [
+    ("NUM", "Numeric", "Recomputed against canonical constants + formulas"),
+    ("THM", "Theorem", "Named Lean theorem exists, no sorry, axiom-deps known"),
+    ("AX",  "Axiom", "Axiom-risk scan — which project axioms (if any) this claim depends on"),
+    ("HYP", "Hypothesis", "Explicit + implicit hypothesis registry cross-check"),
+    ("CIT", "Citation", "Bibkey in CITATION_REGISTRY; \\cite in-text present"),
+    ("PAR", "Parameter", "Parameter provenance — tier, llm-verified date, human-verified date"),
+    ("FIG", "Figure", "Figure regeneration review — data, physics, style, caption match"),
+    ("QUA", "Qualitative", "Non-numeric assertions evaluated against cited literature"),
+]
+
+# Map claims_review.json section name → (layer code, label-extractor fn).
+# Label-extractor pulls a human-readable quote from the entry.
+_CR_SECTION_MAP: dict[str, tuple[str, str]] = {
+    'numerical_claims':    ('NUM', 'paper_value'),
+    'theorem_refs':        ('THM', 'name'),
+    'axiom_risk':          ('AX',  'finding'),
+    'hypothesis_risk':     ('HYP', 'finding'),
+    'citation_integrity':  ('CIT', 'bibkey'),
+    'parameter_provenance':('PAR', 'key'),
+    'qualitative_claims':  ('QUA', 'claim'),
+}
+
+
+def _pp_claim_id(section: str, entry: dict, idx: int) -> str:
+    """Stable auto-generated claim ID for an entry without an explicit
+    `\\claim{id}` anchor. Prefers meaningful fields (bibkey, param key,
+    theorem name) and falls back to `section-{idx}` so IDs stay stable
+    run-over-run even if the entry order shifts."""
+    for key in ('bibkey', 'key', 'name'):
+        if key in entry and isinstance(entry[key], str):
+            return f"{section}:{entry[key]}"
+    # Numerical / qualitative / axiom-risk — use location or stable index
+    loc = (entry.get('location') or '').strip()
+    if loc:
+        safe = re.sub(r'[^A-Za-z0-9._-]+', '-', loc).strip('-').lower()[:60]
+        if safe:
+            return f"{section}:{safe}"
+    return f"{section}:{idx}"
+
+
+def _pp_finding_for_entry(layer: str, entry: dict) -> dict:
+    """Convert a claims_review.json entry into a finding dict matching
+    the v2 design's `{layer, status, delta?, note}` schema."""
+    finding: dict = {
+        'layer': layer,
+        'status': entry.get('status', 'INFO'),
+    }
+    # Numeric claims carry a delta_pct — promote to top-level `delta`
+    if 'delta_pct' in entry and entry['delta_pct'] is not None:
+        try:
+            finding['delta'] = f"{float(entry['delta_pct']):.2f}%"
+        except (TypeError, ValueError):
+            pass
+    note_parts = []
+    for key in ('notes', 'finding', 'computed_value', 'support'):
+        if key in entry and entry[key]:
+            note_parts.append(str(entry[key]))
+    # Show paper_value for numeric claims if no notes
+    if not note_parts and 'paper_value' in entry:
+        note_parts.append(f"paper: {entry['paper_value']}")
+    finding['note'] = ' · '.join(note_parts) if note_parts else '(no notes)'
+    return finding
+
+
+def _pp_load_claims_review(paper_id: str) -> dict | None:
+    """Load `papers/<paper>/claims_review.json` if present."""
+    path = PROJECT_ROOT / 'papers' / paper_id / 'claims_review.json'
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text())
+    except Exception as exc:
+        logger.warning("Failed to parse claims_review for %s: %s", paper_id, exc)
+        return None
+
+
+def _pp_load_figure_review(paper_id: str) -> dict | None:
+    """Load `papers/<paper>/figures/figure_review_report.json` if present."""
+    path = PROJECT_ROOT / 'papers' / paper_id / 'figures' / 'figure_review_report.json'
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text())
+    except Exception as exc:
+        logger.warning("Failed to parse figure_review for %s: %s", paper_id, exc)
+        return None
+
+
+@app.route("/api/papers/list")
+def api_papers_list():
+    """Return all known papers with their review state indicators.
+
+    Pulls the set from filesystem (papers/paper*_*/paper_draft.tex)
+    which is the source of truth; merges status from claims_review.json
+    where present.
+    """
+    papers_dir = PROJECT_ROOT / 'papers'
+    out: list[dict] = []
+    if not papers_dir.exists():
+        return jsonify({'papers': []})
+    for paper_dir in sorted(papers_dir.iterdir()):
+        tex = paper_dir / 'paper_draft.tex'
+        if not tex.exists():
+            continue
+        paper_id = paper_dir.name
+        cr = _pp_load_claims_review(paper_id)
+        fr = _pp_load_figure_review(paper_id)
+        entry = {
+            'paper_id': paper_id,
+            'has_claims_review': cr is not None,
+            'has_figure_review': fr is not None,
+            'review_date': cr.get('review_date') if cr else None,
+            'overall_status': cr.get('overall_status') if cr else None,
+        }
+        out.append(entry)
+    return jsonify({'papers': out})
+
+
+@app.route("/api/papers/<paper_id>/provenance")
+def api_paper_provenance(paper_id: str):
+    """Aggregate per-claim 8-layer verdict for a paper.
+
+    Returns the shape the v2 design's `paper-review.js` consumes:
+    ``{paper_id, review_date, overall, counts, blocking, nonBlocking,
+       layers: [...], claims: {claim_id: {quote, location, findings: [...]}}, ...}``.
+
+    Data sources:
+    - `papers/<paper>/claims_review.json` — 8-layer findings (generated
+      by the physics-qa:claims-reviewer agent)
+    - `papers/<paper>/figures/figure_review_report.json` — FIG layer
+      (generated by physics-qa:figure-reviewer)
+    - `PAPER_DEPENDENCIES[paper]` — declared formulas/modules/key_claims
+    - `PARAMETER_PROVENANCE` — tier + verification dates
+    - `CITATION_REGISTRY` — bibkey resolution
+    - Live `lean_deps.json` via the cached graph — axiom/theorem status
+
+    404 if paper_draft.tex doesn't exist. 200 with best-effort data if
+    claims_review.json is missing (falls back to synthesising from live
+    registries + graph state so the tab still works on newer papers).
+    """
+    papers_dir = PROJECT_ROOT / 'papers'
+    paper_dir = papers_dir / paper_id
+    tex = paper_dir / 'paper_draft.tex'
+    if not tex.exists():
+        return jsonify({'error': f'Unknown paper: {paper_id}'}), 404
+
+    cr = _pp_load_claims_review(paper_id)
+    fr = _pp_load_figure_review(paper_id)
+
+    # Counts + top-level status
+    counts = {'pass': 0, 'warn': 0, 'fail': 0, 'info': 0}
+    claims_out: dict[str, dict] = {}
+    blocking: list[str] = []
+    non_blocking: list[str] = []
+    review_date = None
+    overall = 'unknown'
+    reviewer_notes = None
+
+    if cr:
+        review_date = cr.get('review_date')
+        overall = cr.get('overall_status', 'unknown')
+        reviewer_notes = cr.get('reviewer_notes')
+        blocking = list(cr.get('blocking_issues', []))
+        non_blocking = list(cr.get('non_blocking_followups', []))
+
+        for section, (layer, quote_key) in _CR_SECTION_MAP.items():
+            entries = cr.get(section) or []
+            for idx, entry in enumerate(entries):
+                cid = _pp_claim_id(section, entry, idx)
+                quote = str(entry.get(quote_key, ''))[:200] or section
+                finding = _pp_finding_for_entry(layer, entry)
+                if cid not in claims_out:
+                    claims_out[cid] = {
+                        'quote': quote,
+                        'location': entry.get('location', ''),
+                        'findings': [],
+                    }
+                claims_out[cid]['findings'].append(finding)
+                st = finding['status'].lower()
+                if st in counts:
+                    counts[st] += 1
+
+    # FIG layer: pull figure_review_report.json
+    if fr:
+        figs = fr.get('figures') or []
+        for fidx, f in enumerate(figs):
+            name = f.get('name', f'fig-{fidx}')
+            cid = f'figure:{name}'
+            status = (f.get('status') or 'INFO').upper()
+            note_parts = []
+            for sub_key in ('rendering', 'physics', 'style', 'caption_match', 'notes'):
+                sub = f.get(sub_key)
+                if isinstance(sub, dict):
+                    sub_status = sub.get('status', '').upper()
+                    issues = sub.get('issues') or []
+                    if sub_status and sub_status != 'PASS' and issues:
+                        note_parts.append(f"{sub_key}: {'; '.join(issues[:2])}")
+                elif sub:
+                    note_parts.append(f"{sub_key}: {sub}")
+            finding = {
+                'layer': 'FIG',
+                'status': status if status in ('PASS', 'WARN', 'FAIL', 'INFO') else 'INFO',
+                'note': ' · '.join(note_parts) or 'figure review: no notes',
+            }
+            claims_out.setdefault(cid, {
+                'quote': f"Figure: {name}",
+                'location': f.get('path', ''),
+                'findings': [],
+            })['findings'].append(finding)
+            st = finding['status'].lower()
+            if st in counts:
+                counts[st] += 1
+
+    # Fallback title from paper_draft.tex if claims_review missing
+    title = ''
+    try:
+        tex_src = tex.read_text(errors='replace')
+        m = re.search(r'\\title\{([^}]+)\}', tex_src)
+        if m:
+            title = m.group(1).replace('\\\\', ' ').strip()[:200]
+    except Exception:
+        pass
+
+    return jsonify({
+        'paper_id': paper_id,
+        'title': title,
+        'review_date': review_date,
+        'overall_status': overall,
+        'reviewer_notes': reviewer_notes,
+        'counts': counts,
+        'blocking': blocking,
+        'non_blocking': non_blocking,
+        'layers': [
+            {'code': code, 'label': label, 'desc': desc}
+            for code, label, desc in _PP_LAYERS_SPEC
+        ],
+        'claims': claims_out,
+        'has_claims_review': cr is not None,
+        'has_figure_review': fr is not None,
+        'total_claims': len(claims_out),
+    })
 
 
 @app.route("/api/qi")
@@ -1069,14 +2013,12 @@ def api_qi():
 def api_readiness():
     """Return per-paper readiness gate data structured for the dashboard.
 
-    Phase 5v Wave 5. Builds a graph, pulls the ReadinessGate nodes, and
-    reshapes into {papers: [{paper, gates: [{gate, priority, state,
+    Phase 5v Wave 5. Pulls ReadinessGate nodes from the cached graph
+    and reshapes into {papers: [{paper, gates: [{gate, priority, state,
     evidence, blockers, notes, last_evaluated}]}]}. The heatmap renders
     from this payload via safe-DOM construction (see readiness_tab.html).
     """
-    from build_graph import build_graph_json
-
-    graph = build_graph_json()
+    graph = get_cached_graph()
     gates = [n for n in graph.get('nodes', []) if n['type'] == 'ReadinessGate']
     if not gates:
         return jsonify({"papers": [], "last_evaluated": None,
@@ -1120,6 +2062,12 @@ def main():
     parser = argparse.ArgumentParser(description="SK-EFT Provenance Command Center")
     parser.add_argument("--port", type=int, default=8050, help="Port (default: 8050)")
     parser.add_argument("--no-browser", action="store_true", help="Don't auto-open browser")
+    parser.add_argument("--no-pg-sync", action="store_true",
+                        help="Disable background PG+AGE sync on graph rebuilds "
+                             "(useful if Postgres is down locally).")
+    parser.add_argument("--no-prewarm", action="store_true",
+                        help="Skip building the graph at server start. The first "
+                             "request will pay the rebuild cost instead.")
     parser.add_argument("--write", action="store_true",
                         help="Write current verification state to provenance.py and exit")
     args = parser.parse_args()
@@ -1129,18 +2077,77 @@ def main():
         # TODO: implement file rewriting
         return
 
+    app.config['PG_SYNC_ENABLED'] = not args.no_pg_sync
+
+    # Phase 5v Wave 9f — if SK_EFT_GRAPH_SOURCE=pg, verify connectivity
+    # NOW, not on the first query. Silent fallback hid real issues in
+    # earlier phases; fail loud instead.
+    src = _graph_source()
+    if src == 'pg':
+        try:
+            import psycopg  # type: ignore
+            with psycopg.connect(
+                "host=localhost port=5433 dbname=sk_eft_provenance "
+                "user=sk_eft password=sk_eft_local",
+                connect_timeout=3,
+            ) as _conn, _conn.cursor() as _cur:
+                _cur.execute("LOAD 'age'")
+                _cur.execute("SET search_path = ag_catalog, '$user', public")
+                _cur.execute("SELECT * FROM cypher('sk_eft', $$ MATCH (n) RETURN count(n) $$) AS (c agtype)")
+                pg_count = int(str(_cur.fetchone()[0]))
+            print(f"\n  [PG] SK_EFT_GRAPH_SOURCE=pg — AGE reachable, {pg_count} nodes in sk_eft graph.")
+            if pg_count == 0:
+                print("  [PG] Graph is empty. Run `uv run python scripts/sync_graph_to_pg.py` to populate.\n")
+        except Exception as exc:
+            print(f"\n  [PG] SK_EFT_GRAPH_SOURCE=pg but connectivity check FAILED: {exc}")
+            print("  [PG] Dashboard will exit. Start postgres (port 5433, sk_eft_provenance DB)")
+            print("  [PG] or unset SK_EFT_GRAPH_SOURCE to run in json mode.\n")
+            sys.exit(2)
+    elif src != 'json':
+        print(f"\n  [!] Unknown SK_EFT_GRAPH_SOURCE={src!r} (expected 'json' or 'pg'); defaulting to json.\n")
+
+    # Root-cause fix for the "reload hangs" behavior users saw on cold
+    # starts: the dashboard must never shell out to `lake`. If Lean
+    # sources changed since the last extraction, warn in the console
+    # and display a "stale" indicator in the UI. Users refresh via
+    # `uv run python scripts/extract_lean_deps.py` or by POSTing to
+    # /api/graph/refresh_lean_deps.
+    if _suppress_lake_refresh():
+        print("\n  [!] lean_deps.json is stale (Lean sources changed since last extraction).")
+        print("  [!] Dashboard will serve cached data. To refresh, stop the dashboard and run:")
+        print("  [!]     uv run python scripts/extract_lean_deps.py")
+        print("  [!] (or POST /api/graph/refresh_lean_deps to refresh in-place, blocks ~1-2 min)\n")
+
     import webbrowser
-    import threading
 
     url = f"http://localhost:{args.port}"
     if not args.no_browser:
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
 
+    # Warm the graph cache in a background thread so the first click
+    # doesn't eat the ~1.5s build cost. Because lake is suppressed,
+    # prewarm completes in seconds on cached lean_deps.
+    if not args.no_prewarm:
+        def _prewarm():
+            try:
+                g = get_cached_graph(sync_pg=not args.no_pg_sync)
+                logger.info(
+                    "Graph cache prewarmed: %d nodes, %d edges",
+                    g['meta']['node_count'], g['meta']['edge_count'],
+                )
+            except Exception as exc:
+                logger.warning("Graph prewarm failed: %s", exc)
+        threading.Thread(target=_prewarm, daemon=True, name="graph-prewarm").start()
+
     print(f"\n  SK-EFT Provenance Command Center")
     print(f"  Running at {url}")
     print(f"  Press Ctrl+C to stop\n")
 
-    app.run(host="localhost", port=args.port, debug=False)
+    # threaded=True is the Flask 2.x default but pass explicitly so the
+    # server's concurrency behavior doesn't change if defaults do.
+    # Without it, a slow endpoint (e.g. the one-time graph rebuild)
+    # blocks every other endpoint behind it.
+    app.run(host="localhost", port=args.port, debug=False, threaded=True)
 
 
 if __name__ == "__main__":

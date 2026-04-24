@@ -2,6 +2,25 @@
 
 ## Technical Roadmap — April 2026 (Terminal Revision)
 
+> **STATUS: CLOSED — 2026-04-23.** All 9 waves executed end-to-end.
+> 8 new Lean modules + 3 extensions, **110 new theorems, 0 new sorry**,
+> full no-cache `lake build SKEFTHawking.ExtractDeps` clean (8430 jobs).
+> Architectural scope (`docs/ARCHITECTURE_SCOPE.md`) + 5 stakeholder
+> impact memos + classification table (Lean + markdown) shipped. No
+> papers per user preference. Closure summary:
+> [`docs/stakeholder/Phase5y_Closure_Summary.md`](../stakeholder/Phase5y_Closure_Summary.md).
+>
+> **Per-wave closure log:**
+> - ✅ Wave 1 — `GibbsDuhemTheorem.lean` (16 thms)
+> - ✅ Wave 2 — `QTheoryNoGoTheorem.lean` (12 thms + `massOfRealization` enum)
+> - ✅ Wave 3 — `DarkEnergyObstructionPrinciple.lean` (8) + `DESIComparison.lean` (8)
+> - ✅ Wave 4 — `CondensedMatterAnalog.lean` (10) + `VestigialMapping.lean` (8)
+> - ✅ Wave 5 — `VestigialEOS.lean` (20 + `fine_tuning_log_lower_bound` VE18a)
+> - ✅ Wave 6 — Extensions: `VestigialGravity` +7, `VestigialSusceptibility` +8, `TetradGapEquation` +4
+> - ✅ Wave 7 — `ClassificationTableDark.lean` (8) + companion markdown
+> - ✅ Wave 8 — `ARCHITECTURE_SCOPE.md` (new) + `README.MD` Phase 5y milestone
+> - ✅ Wave 9 — 5 stakeholder memos (Closure_Summary + Impact_on_5x/5u/5d/5w)
+
 *Supersedes `Phase5y_Roadmap.md` v1 (2026-04-22). Closes the phase after six rounds of deep research returned dual NO-GO on the original headline bet and the reframed alternatives. Follows the Phase 5s convention: decompose a program-level outcome ("5y is closed, harvest what was learned") into tractable finite deliverables with clear Tier-0 / Tier-1 / Tier-2 priorities.*
 
 **Entry state:** 3021 Lean theorems, 0 sorry, 1 axiom across 133 modules. `ADWMechanism` (21), `VestigialGravity` (18), `VestigialSusceptibility` (16), `TetradGapEquation` (20), `WetterichNJL` (18), `FractonFormulas` (45), `FractonHydro` (17), `FractonGravity` (20) provide the Layer-1→Layer-2 machinery. `AcousticMetric` (8), `SKDoubling` (9), `CGLTransform` (7), `SecondOrderSK` (19) provide the Layer-2→Layer-3 SK-EFT machinery. `KerrSchild` (7) provides gravitational solutions scaffolding. **The substantive output of 5y's six deep-research rounds is formally ready for Lean harvest.** Paper 6 Monte Carlo remains the standing bottleneck; 5y's terminal formalization wave is explicitly designed to run in parallel without touching it.

@@ -370,7 +370,10 @@ def extract_lean_declaration_nodes() -> list[dict]:
     and LeanInstance nodes with shape metadata and dependency info.
     """
     from scripts.extract_lean_deps import load_lean_deps
-    from src.core.constants import ARISTOTLE_THEOREMS, AXIOM_METADATA, HYPOTHESIS_REGISTRY
+    from src.core.constants import (
+        ARISTOTLE_THEOREMS, AXIOM_METADATA, HYPOTHESIS_REGISTRY,
+        MODULE_CHAIN_MAP, CHAIN_MILESTONES,
+    )
 
     declarations = load_lean_deps()
 
@@ -434,6 +437,29 @@ def extract_lean_declaration_nodes() -> list[dict]:
             n.rsplit('.', 1)[-1] if '.' in n else n
             for n in decl.get('axiom_deps_core', [])
         ]
+        # Name deps (Phase 5v Wave 9c): direct refs in this decl's body.
+        # Kept as full names — the edge extractor resolves them against the
+        # node-id index. Empty list when ExtractDeps hasn't been re-run yet
+        # with the name_deps_project field.
+        name_deps_project_full = decl.get('name_deps_project', [])
+
+        # Chain taxonomy (Phase 5v Wave 9d): derive chain_id from the
+        # module's MODULE_CHAIN_MAP entry. Modules not listed get a None
+        # chain_id — the dashboard surfaces these in an "unclassified"
+        # bucket so we can spot missing taxonomy entries.
+        chain_raw = MODULE_CHAIN_MAP.get(module_name)
+        if chain_raw is None:
+            chain_ids: list[str] = []
+        elif isinstance(chain_raw, list):
+            chain_ids = list(chain_raw)
+        else:
+            chain_ids = [chain_raw]
+
+        # Milestone marker: a declaration is a milestone if its short name
+        # is registered in CHAIN_MILESTONES or if it's an Axiom (every
+        # axiom is always a milestone — trust-boundary clarity).
+        is_milestone = short_name in CHAIN_MILESTONES or kind == 'axiom'
+        milestone_order = CHAIN_MILESTONES.get(short_name)
 
         nodes.append({
             'id': node_id,
@@ -452,10 +478,14 @@ def extract_lean_declaration_nodes() -> list[dict]:
                 'full_name': full_name,
                 'axiom_deps_project': axiom_deps_project_short,
                 'axiom_deps_core': axiom_deps_core_short,
+                'name_deps_project': name_deps_project_full,
                 'eliminability': eliminability,
                 'eliminability_reason': eliminability_reason,
                 'field_constraints': decl.get('structure_fields', []),
                 'type_signature': decl.get('type', ''),
+                'chain_ids': chain_ids,
+                'is_milestone': is_milestone,
+                'milestone_order': milestone_order,
             },
         })
 
@@ -1746,6 +1776,7 @@ def extract_all_edges_without_gates(node_ids: set) -> list[dict]:
     edges.extend(extract_has_figure_edges(node_ids))
     edges.extend(extract_imports_edges(node_ids))
     edges.extend(extract_depends_on_axiom_edges(node_ids))
+    edges.extend(extract_uses_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
     edges.extend(extract_reports_edges(node_ids))
@@ -2144,6 +2175,64 @@ def extract_has_figure_edges(node_ids: set) -> list[dict]:
         )
     logger.info("HAS_FIGURE: %d edges discovered (%d figure refs unresolved)",
                 len(edges), sum(unresolved_counter.values()))
+    return edges
+
+
+def extract_uses_edges(node_ids: set) -> list[dict]:
+    """USES: LeanTheorem/LeanDef -> LeanTheorem/LeanDef/LeanStructure/...
+
+    Direct-reference proof-DAG edges derived from the per-declaration
+    ``name_deps_project`` field emitted by ``ExtractDeps.lean`` (Phase 5v
+    Wave 9c). Each edge means "the source declaration's value (proof body
+    / def body) mentions the target declaration by name".
+
+    This is what the dashboard's "Show proof dependencies" toggle uses —
+    but because the edge count here can reach ~40k (2800 theorems × ~15
+    avg deps), this extractor is **OFF by default** and only runs when
+    the env var ``SK_EFT_INCLUDE_USES`` is set to ``1``/``true``. Callers
+    that want the proof DAG set the env var and re-request the graph.
+
+    Self-edges and edges to autogen names (already filtered at node
+    extraction) are skipped. Duplicate (source, target) pairs collapsed.
+    """
+    import os
+    flag = os.environ.get('SK_EFT_INCLUDE_USES', '').strip().lower()
+    if flag not in ('1', 'true', 'yes', 'on'):
+        return []
+
+    from scripts.extract_lean_deps import load_lean_deps
+    declarations = load_lean_deps()
+
+    edges: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    unresolved = 0
+
+    for decl in declarations:
+        full_name = decl.get('name', '')
+        if not full_name:
+            continue
+        src_id = f'lean:{full_name}'
+        if src_id not in node_ids:
+            continue
+        for dep in decl.get('name_deps_project', []):
+            tgt_id = f'lean:{dep}'
+            if tgt_id not in node_ids:
+                # Autogen-filtered target or Mathlib straggler — skip.
+                unresolved += 1
+                continue
+            if src_id == tgt_id:
+                continue
+            key = (src_id, tgt_id)
+            if key in seen:
+                continue
+            seen.add(key)
+            edges.append({'source': src_id, 'target': tgt_id, 'type': 'USES'})
+
+    if edges:
+        logger.info(
+            "USES edges: emitted %d (unresolved/filtered: %d)",
+            len(edges), unresolved,
+        )
     return edges
 
 
@@ -2556,6 +2645,7 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_has_figure_edges(node_ids))
     edges.extend(extract_imports_edges(node_ids))
     edges.extend(extract_depends_on_axiom_edges(node_ids))
+    edges.extend(extract_uses_edges(node_ids))
     edges.extend(extract_verifies_edges(node_ids))
     edges.extend(extract_flags_edges(node_ids))
     edges.extend(extract_reports_edges(node_ids))
@@ -2732,8 +2822,17 @@ def write_graph_to_pg(graph: dict) -> None:
 # Full graph builder
 # ═══════════════════════════════════════════════════════════════════════
 
-def build_graph_json() -> dict:
-    """Build the complete graph and return as a JSON-serializable dict."""
+def build_graph_json(*, sync_pg: bool = False) -> dict:
+    """Build the complete graph and return as a JSON-serializable dict.
+
+    PG+AGE write is OPT-IN via ``sync_pg=True``. The dashboard serves
+    reads from an in-process cache and keeps the Postgres write on a
+    separate, debounced path (see ``provenance_dashboard`` cache layer
+    and the ``--sync-pg`` CLI flag below). Baking the PG write into
+    every ``build_graph_json`` call would block every HTTP request on
+    DB connectivity and silently waste seconds per request even when
+    the graph is cached upstream.
+    """
     _reset_lean_ambiguity_log()  # fresh dedup per build
     nodes = extract_all_nodes()
     node_ids = {n['id'] for n in nodes}
@@ -2750,10 +2849,11 @@ def build_graph_json() -> dict:
         },
     }
 
-    try:
-        write_graph_to_pg(graph)
-    except Exception as exc:
-        logger.warning("PG+AGE write failed: %s", exc)
+    if sync_pg:
+        try:
+            write_graph_to_pg(graph)
+        except Exception as exc:
+            logger.warning("PG+AGE write failed: %s", exc)
 
     return graph
 
@@ -2767,13 +2867,17 @@ def main():
     parser.add_argument('--json', action='store_true', help='Dump JSON to stdout')
     parser.add_argument('--out', type=str, default=None, help='Write JSON to file')
     parser.add_argument('--check', action='store_true', help='Print source hash only')
+    parser.add_argument('--sync-pg', action='store_true',
+                        help='Also write graph to PostgreSQL + AGE '
+                             '(off by default; opt-in because HTTP reads '
+                             'should never block on DB connectivity).')
     args = parser.parse_args()
 
     if args.check:
         print(compute_source_hash())
         return
 
-    graph = build_graph_json()
+    graph = build_graph_json(sync_pg=args.sync_pg)
 
     if args.out:
         with open(args.out, 'w') as f:

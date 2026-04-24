@@ -507,6 +507,99 @@ TetradGapEquation module: NJL-type gap equation for emergent gravity.
 -/
 theorem tetrad_gap_equation_summary : True := trivial
 
+/-!
+## Phase 5y Wave 6 extensions
+
+Four new theorems for the vestigial-phase BCS-like `T_c` scale and the
+natural-scale obstruction (no dynamical attractor `T_c ∝ H(t)` is known):
+
+- BCS-like exponential suppression `T_{c,vest} = Λ_UV · exp(−1/g̃_*)` (H4 EQ.108)
+- Natural-scale obstruction: `T_c` is a UV-controlled scale, not a
+  cosmological one — no mechanism ties it to `H(t)`
+
+References:
+- `Lit-Search/Phase-5y/Phase 5y Hypothesis 4 — Effective Fluid EOS for Volovik-Style Vestigial Gravity.md` §4, §7
+-/
+
+/-- Vestigial critical temperature per H4 EQ.108:
+    `T_{c,vest} = Λ_UV · exp(−1/g̃_*)`, with `g̃_* > 0` the effective
+    coupling. -/
+noncomputable def T_c_vest (Λ_UV g_tilde_star : ℝ) : ℝ :=
+  Λ_UV * Real.exp (-1 / g_tilde_star)
+
+/-- **W6-TG1 — `T_{c,vest}` is positive for positive UV cutoff and
+    coupling.**
+
+    The exponential `exp(−1/g̃_*)` is strictly positive for any real
+    argument, so `T_c` inherits positivity from `Λ_UV`. -/
+theorem T_c_vest_pos (Λ_UV g_tilde_star : ℝ) (hΛ : 0 < Λ_UV) :
+    0 < T_c_vest Λ_UV g_tilde_star := by
+  unfold T_c_vest
+  exact mul_pos hΛ (Real.exp_pos _)
+
+/-- **W6-TG2 — `T_{c,vest} < Λ_UV` when `g̃_* > 0` (BCS-like suppression).**
+
+    The exponential factor `exp(−1/g̃_*) < 1` for `g̃_* > 0`, so the
+    vestigial critical temperature is strictly below the UV cutoff —
+    the hallmark of BCS-like weak-coupling condensation. -/
+theorem T_c_vest_lt_Λ_UV (Λ_UV g_tilde_star : ℝ)
+    (hΛ : 0 < Λ_UV) (hg : 0 < g_tilde_star) :
+    T_c_vest Λ_UV g_tilde_star < Λ_UV := by
+  unfold T_c_vest
+  have h_arg_neg : -1 / g_tilde_star < 0 :=
+    div_neg_of_neg_of_pos (by norm_num) hg
+  have h_exp : Real.exp (-1 / g_tilde_star) < 1 :=
+    Real.exp_lt_one_iff.mpr h_arg_neg
+  calc Λ_UV * Real.exp (-1 / g_tilde_star)
+      < Λ_UV * 1 := by
+        exact mul_lt_mul_of_pos_left h_exp hΛ
+    _ = Λ_UV := by ring
+
+/-- **W6-TG3a — `T_{c,vest}` is strictly positive iff `Λ_UV > 0`.**
+
+    The BCS-like exponential `exp(−1/g̃_*)` is always positive, so the
+    sign of `T_c` is entirely set by the UV cutoff. -/
+theorem T_c_vest_pos_iff_Λ_UV_pos (Λ_UV g_tilde_star : ℝ) :
+    0 < T_c_vest Λ_UV g_tilde_star ↔ 0 < Λ_UV := by
+  unfold T_c_vest
+  constructor
+  · intro h
+    have h_exp : 0 < Real.exp (-1 / g_tilde_star) := Real.exp_pos _
+    exact (mul_pos_iff_of_pos_right h_exp).mp h
+  · intro h
+    exact mul_pos h (Real.exp_pos _)
+
+/-- **W6-TG3 — Natural-scale obstruction predicate.**
+
+    The obstruction flag: `T_c` is a UV-controlled scale (`∼ Λ_UV`),
+    not a cosmological one (`∼ H₀`). In the H4 framework no dynamical
+    mechanism has been exhibited that forces `T_{c,vest}(t) ∝ H(t)` —
+    this is the §7 gap. We encode this as a predicate that distinguishes
+    UV-tied from H-tied temperatures. -/
+def IsHubbleTiedTc (T_c_of_H : ℝ → ℝ) : Prop :=
+  ∃ c : ℝ, 0 < c ∧ ∀ H : ℝ, T_c_of_H H = c * H
+
+/-- **W6-TG4 — UV-tied `T_c` is NOT Hubble-tied.**
+
+    A `T_c` that depends only on `Λ_UV` and `g̃_*` (no `H` dependence)
+    cannot satisfy `IsHubbleTiedTc` for any `T_c_of_H` that ignores `H`.
+    This is the natural-scale obstruction: the vestigial `T_c` is set by
+    high-energy physics, not by cosmology. -/
+theorem uv_tied_Tc_not_hubble_tied (Λ_UV g_tilde_star : ℝ)
+    (_hΛ : 0 < Λ_UV) (_hg : 0 < g_tilde_star) :
+    ¬ IsHubbleTiedTc (fun _ => T_c_vest Λ_UV g_tilde_star) := by
+  intro ⟨c, hc_pos, hall⟩
+  -- At H = 1: T_c_vest = c * 1 = c
+  have h1 := hall 1
+  -- At H = 2: T_c_vest = c * 2 = 2c
+  have h2 := hall 2
+  -- But T_c_vest is the same constant on both sides
+  -- So c = 2c, hence c = 0, contradicting hc_pos
+  simp at h1 h2
+  have : c = 2 * c := by linarith
+  have : c = 0 := by linarith
+  linarith
+
 end SKEFTHawking.TetradGapEquation
 
 end

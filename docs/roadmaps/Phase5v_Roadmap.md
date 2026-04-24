@@ -509,6 +509,194 @@ Remaining items deferred:
 
 ---
 
+## Wave 9 — Dashboard remediation + Proof-Chain-Viz [session 2026-04-24]
+
+**Trigger.** After Waves 1-8 lands, the KG dashboard is usable in principle but not in practice:
+1. Every `/api/graph*` endpoint called `build_graph_json()` from scratch — ~15s per request in the steady state, ~1-2min on a stale `lean_deps.json` because the handler shelled out to `lake env lean --run ExtractDeps.lean` synchronously. Paper Focus and Logical Focus chained multiple 15s rebuilds per click. `build_graph_json()` also wrote to PG+AGE inline on every call, doubling effective cost when Postgres was up and silently warning-but-still-slow when it was down.
+2. Filter pills used `flex-wrap: wrap` inside a fixed-height (48px) absolutely-positioned topbar with `z-index: 100`. When ≥10 node types were present, pills floated upward past the topbar into the outer dashboard's title + tab bar — making the whole tab-nav unusable.
+3. `"Formulas (200)"` filter-pill labels read as pagination, not as a total count.
+4. Lean graph has 2820 LeanTheorem nodes but only 305 PROVED_BY + 493 USED_BY + 4 DEPENDS_ON_AXIOM edges — no proof-to-proof dependency edges because `ExtractDeps.lean` emits only *axiom* closures (`axiom_deps_project/_core`), not full `name_deps`.
+5. The Proof-Chain-Viz design (`Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard`) needs wiring — registry fields (`chain_id`, `is_milestone`), three endpoints (`/api/chain/{id}/summary|milestones|subgraph`), and a dashboard tab with L0/L1/L2 zoom levels.
+
+### Wave 9a — Dashboard perf + UX (Phase 1) — DONE 2026-04-24
+
+**A1+A3 — In-memory graph cache:** Added `get_cached_graph()` in `scripts/provenance_dashboard.py` with an mtime-based fingerprint across `lean_deps.json`, core Python registries, paper `.tex` files, all `SKEFTHawking/*.lean`, `build_graph.py`, `readiness_gates.py`, and `counts.json`. Cache invalidates lazily on next request after any input changes. **Measured: cold build 1.47s → cached hit ~0.9ms (≈ 1600× speedup).** `/api/graph`, `/api/graph/trace`, `/api/graph/impact`, `/api/readiness` all now served from the cache. Added `/api/graph/rebuild` (POST/GET) for manual invalidation when stat() can't see a change (e.g., docstring edit without mtime bump on the watched set).
+
+**A2 — PG+AGE write decoupled:** `build_graph.build_graph_json()` now takes `sync_pg: bool = False`. Dashboard schedules PG sync on a debounced background thread (`_schedule_pg_sync`, one writer at a time, coalesces if a newer fingerprint arrives while a write is in flight). HTTP responses never block on DB connectivity. `--no-pg-sync` CLI flag added to the dashboard for local dev without Postgres. The bare `lake build --json` path is unchanged (tests still pass).
+
+**A3 — Trace/impact indexes rebuilt per request:** `api_trace` and `api_impact` previously scanned the full edge list inside each recursion step — O(E × V) worst case. Now build outgoing/incoming adjacency indexes once per request (O(E)) then walk iteratively. **Measured: `/api/graph/trace` and `/api/graph/impact` both respond in 1-2ms on 8.3K-node graph** (vs. ≥15s before).
+
+**A5 — Topbar overflow fix:** Split `.kg-topbar` into two rows (`primary` + `secondary`), each scrolls horizontally with `overflow-x: auto` + `flex-wrap: nowrap`. Filter pills moved to the secondary row. Added `--kg-topbar-h` CSS variable synced to real topbar height via `ResizeObserver`; `.kg-graph-container { top: var(--kg-topbar-h) }` follows. Capped topbar at `max-height: 45vh` as a safety rail. **Effect: pills can never overflow upward into the outer dashboard chrome.**
+
+**A6 — Filter-pill label clarity:** `"Formulas (200)"` pattern replaced with a two-span layout: bold type name + muted trailing tabular-numeric badge (`"Formulas 200"` visually). Pluralised the name so the count reads as a total (`Parameter` ↔ `Parameters`). Added tooltip: `"200 Formulas in current graph — click to toggle"`. Inner KG filter pills only; outer dashboard tabs (`Formulas (47)`, etc.) left unchanged — those are navigation-count labels, not filter toggles.
+
+**A-prewarm — Cache warmup on server start:** Dashboard `--no-prewarm` flag optional; by default spawns a daemon thread on startup that pays the first `get_cached_graph()` cost so the first user request is fast (or, if `lean_deps.json` is stale, the prewarm eats the `lake` extraction time while the server accepts connections — the first `/api/graph` request blocks on cache lock rather than repeating the work).
+
+**Shipped files:** `scripts/build_graph.py` (sync_pg kwarg), `scripts/provenance_dashboard.py` (cache layer, four endpoints, CLI flags), `scripts/templates/partials/graph_tab.html` (two-row topbar, ResizeObserver, pill renderer). `tests/test_build_graph.py` passes unchanged.
+
+### Wave 9b — Filter composition + search (Phase 2) — DONE 2026-04-24
+
+- [x] A7: Paper focus, logical focus, type-pill filter, search, and core-axiom toggle AND-compose via a single `filterState` object. Dropdowns no longer silently clear each other. Verified via Playwright: search "graphene" (20 matches) ∩ Paper Focus paper16 = 2 visible nodes.
+- [x] Free-text search box with 120ms debounce; matches label + short-id only (stripping `SKEFTHawking.` prefix so the project name doesn't match everything).
+- [x] "Clear filters" button appears when any filter is active; resets search, paper focus, logical focus, and type pills to defaults.
+- [x] Live `<visible>/<total>` stat in the topbar stats strip.
+- [ ] A9 chain-filter pills — blocked on Wave 9d populating `chain_id` on nodes; will land with the chain viz work.
+
+### Wave 9c — name_deps edges + PG+AGE source-of-truth (Phase 3) — IN PROGRESS 2026-04-24
+
+**Scope refined per user 2026-04-24: emit `name_deps` but gate behind env var so default JSON stays the same size. Dashboard fetches proof-dep edges on demand via new endpoint. Full PG source-of-truth flip stays in later sub-wave.**
+
+Shipped this session:
+- [x] `ExtractDeps.lean` extended with `collectProjectNameDeps` (uses `Expr.getUsedConstantsAsSet`, filtered to in-package refs only). New per-decl field `name_deps_project` added to JSON output. Axioms/opaques/structures get empty list (no value to introspect).
+- [x] `scripts/build_graph.py::extract_uses_edges` — converts `name_deps_project` to `USES` edges between Lean declaration nodes. Gated by env var `SK_EFT_INCLUDE_USES=1`; returns `[]` otherwise so the default `/api/graph` payload keeps its current ~5 MB size.
+- [x] Dashboard endpoint `/api/graph/uses_edges` — flips the env var transiently and rebuilds only the USES subset; caches the result separately keyed to the same fingerprint as the main graph. Returns a `hint` string if `lean_deps.json` predates the Wave 9c upgrade so the UI can prompt the user to re-extract.
+- [x] Dashboard toggle "Proof Deps" in the secondary row. Fetches USES edges on first activation, merges into the D3 link array (without rebuilding nodes), re-runs applyFilters. Toggling off just removes them — no re-fetch. Shows a loading state ("Proof Deps…") during the initial fetch.
+- [x] Tests still pass (`tests/test_build_graph.py`, `tests/test_graph_integrity.py`).
+
+Pending (deferred to a follow-up sub-wave; no blocker for current UX value):
+- [ ] `scripts/sync_graph_to_pg.py` — standalone, idempotent PG+AGE sync script with `USES` edges written as AGE relationships. Runs on demand or via cron; the dashboard doesn't invoke it.
+- [ ] `/api/graph/cypher` endpoint (read-only) — execute parameterised Cypher against AGE for bounded subgraph lookups. Falls back to in-memory traversal when AGE unavailable.
+- [ ] Env var `SK_EFT_GRAPH_SOURCE={json,pg}`; `validate.py --check graph_source_parity` comparing JSON-rebuild vs PG-read.
+- [ ] Retire the full-graph-per-request JSON path in favor of PG-served subgraphs keyed on paper/chain/focus when at 10× current node count.
+- [ ] **Open for next Lean-heavy session:** `ExtractDeps.lean` with `name_deps_project` takes >5 min to complete (vs. ~60s originally) — `Expr.getUsedConstantsAsSet` on elaborated tactic-generated proof terms is the bottleneck. Worth optimising by scanning the type signature + `syntax` value (before elaboration) instead of the fully-unfolded proof, or by caching per-module and extracting incrementally. Until then, users run the extractor manually and accept the wait.
+
+### Wave 9d — Proof-Chain-Viz (dynamic chain discovery) — DONE 2026-04-24
+
+**Dynamic taxonomy per user 2026-04-24**: adding a new module entry to `MODULE_CHAIN_MAP` creates a new chain in the dashboard with no other registry plumbing. The chain list is derived from the set of `chain_id` values actually present on nodes — no hardcoded enum.
+
+Shipped this session:
+- [x] `src/core/constants.py::MODULE_CHAIN_MAP` — 98 modules mapped into 9 chains: `hawking`, `graphene` (dual with hawking), `generations`, `gauge-emergence`, `chirality-wall`, `fracton`, `vestigial`, `dark-sector`, `gate-engineering`. Modules legitimately belonging to multiple chains use a list value (e.g. `DiracFluidMetric` → `['hawking', 'graphene']`).
+- [x] `src/core/constants.py::CHAIN_MILESTONES` — 32 milestone short names registered with per-chain order hints. Every `LeanAxiom` is implicitly a milestone (trust-boundary clarity per SUBGRAPH_CONTRACT §2).
+- [x] `scripts/build_graph.py::extract_lean_declaration_nodes` now stamps every Lean node with `meta.chain_ids: list[str]`, `meta.is_milestone: bool`, `meta.milestone_order: int | None`.
+- [x] Three endpoints per the design contract:
+  - `GET /api/chain/list` — enumerates chain_ids with per-chain node counts + count of unclassified Lean decls
+  - `GET /api/chain/{id}/summary` — L0 verdict strip (counts by kind + verdict heuristic + milestone count)
+  - `GET /api/chain/{id}/milestones` — L1 milestone DAG with `hop_count` computed via bounded BFS (depth ≤ 5) through non-milestone intermediates
+  - `GET /api/chain/{id}/subgraph` — L2 full chain subgraph + 1-hop externals (same shape as /api/graph)
+- [x] `scripts/templates/partials/chains_tab.html` — new 9th tab "Research Status" with:
+  - L0 verdict strip per chain (colored dot + title + counts + verdict badge + expand chevron)
+  - L1 milestone DAG via deterministic topo-layered layout (`layoutDAG()` — no force sim; figures must be reproducible)
+  - L2 deep-link to KG tab filtered by `#chain=<id>` (pending KG-side filter handling)
+  - Safe-DOM construction throughout (no innerHTML with untrusted content — blocked by security hook)
+- [x] Live screenshot verification via Playwright — all 9 chains render with correct per-chain counts; drill-down to milestone DAG works.
+
+Live numbers (cached build, 2026-04-24):
+```
+chain                 node count
+─────────────────────────────────
+gauge-emergence         1,095
+hawking                   487
+chirality-wall            458
+vestigial                 262
+dark-sector               211
+fracton                   204
+generations               195
+gate-engineering          171
+graphene                   39
+─────────────────────────────────
+unclassified Lean        1,794
+```
+
+The 1,794 unclassified Lean decls are mostly pipeline machinery (SK axioms, helper scaffolding) not yet mapped — adding module names to MODULE_CHAIN_MAP auto-absorbs them into chains on next graph rebuild. No code change required.
+
+Follow-ups (tracked in working docs, not blocking):
+- [ ] Register real Lean short names in `CHAIN_MILESTONES` — my initial set was speculative; only ~11 of 32 match live decls. Cross-reference against `SK_EFT_Hawking_Inventory.md` key results per module.
+- [ ] KG tab picks up `#chain=<id>` hash → applies chain filter to current view.
+- [ ] Editorial overlay YAML (`docs/chain_overlays.yaml`) for per-chain prose (verdict text, implication, sidenotes) — L0 strip renders prose from overlay, figures + numbers from graph.
+- [ ] Improve `_chain_summary` verdict heuristic (currently flags gauge-emergence as "structural known gaps" on a placeholder-string match that triggers too eagerly).
+
+### Wave 9e — Lean extraction perf fix (Phase 3b) — DONE 2026-04-24
+
+**Corrected baseline:** The original "extraction takes 60s" estimate was stale — by 2026-04-24 the SK-EFT codebase had grown to 7,655 decls across 158 Lean modules and baseline `lake env lean --run ExtractDeps.lean` is ~7 minutes regardless of name_deps work. The 9c-introduced `collectProjectNameDeps` added another ~1–3 min of Expr traversal on top, bringing total to ~10 min. No rewrite of `getUsedConstantsAsSet` can compress the aggregate cost below O(total-expr-size).
+
+**Solution shipped:**
+- [x] `collectProjectNameDeps` rewritten to use `for n in used do` iterator (no `.toList` materialisation) + `IO.monoMsNow` per-decl 250ms time budget; slow decls emit empty `name_deps_project` + `name_deps_timed_out: true` flag.
+- [x] Slow-decl list written to `lean/lean_name_deps_slow.json` (regression signal).
+- [x] **Feature gated behind `EXTRACT_NAME_DEPS` env var.** Default = OFF → extraction matches pre-9c baseline (~7 min). Set `EXTRACT_NAME_DEPS=1` to opt into full proof-dep extraction (adds ~3–5 min).
+- [x] Fixed Lean 4.29 `String.trim` deprecation (→ `String.trimAscii`) which was polluting stdout with a warning and breaking JSON parsing.
+- [x] `scripts/extract_lean_deps.py` hardened: strips any non-JSON prefix from stdout before parsing; surfaces `[name_deps]` status lines from stderr via logger.
+- [x] Each decl's JSON output carries `name_deps_extracted` (bool) so consumers can distinguish "extraction was disabled" from "extraction ran and found nothing".
+
+**Verified (2026-04-24 15:19):** fast-path run completes in 7:05.78, exit 0, 4.3 MB output, 7,655 decls, `name_deps_extracted: false` on all. Tests 51/51 pass against the regenerated `lean_deps.json`.
+
+**Known follow-up (not blocking):** a full `EXTRACT_NAME_DEPS=1` run on the current codebase likely takes ~10–12 min. Acceptable as a "once per Lean source change" cost; dashboard never triggers it automatically (Wave 9a's `_suppress_lake_refresh` guard).
+
+### Wave 9f — PG+AGE source-of-truth flip (Phase 3a) — DONE 2026-04-24
+
+Also flagged "this sounds bad" on 2026-04-24 — I undersold the cost/benefit in the earlier deferral. The in-memory cache is fine for one-user UX, but:
+- PG+AGE enables real Cypher subgraph queries on demand (no more full-graph reload to answer "who uses this theorem?")
+- Durable state across dashboard restarts — nothing rebuilds on cold start
+- `USES` edges live in AGE, not in the JSON artifact — size stays flat as more edges land
+- Multi-process readers without serialising through the HTTP cache
+
+**Shipped 2026-04-24:**
+- [x] `scripts/sync_graph_to_pg.py` — standalone idempotent sync script. Builds graph via `build_graph_json(sync_pg=False)`, writes nodes + all edges to AGE `sk_eft` graph. Flags `--dry-run` (build + summary, no PG write) and `--pretty` (per-type breakdown). Respects `SK_EFT_INCLUDE_USES=1` for proof-dep edges. **Verified: 8,518 nodes + 2,661 edges written in 13.6s; verification query confirms counts match.**
+- [x] `POST /api/graph/cypher` endpoint — read-only Cypher against AGE. Guards: write-clause regex (CREATE/DELETE/MERGE/SET/REMOVE/DROP/DETACH/CALL db.) → 400; 4000-char query cap; 5s connect timeout. Returns `{rows, count, ms, query}`. **Verified via curl: LeanTheorem count = 2938 in 18ms; write blocked correctly; data queries return real names in 13ms.**
+- [x] Env var `SK_EFT_GRAPH_SOURCE={json,pg}` — `json` (default) = in-memory cache; `pg` routes future subgraph endpoints to Cypher.
+- [x] Startup validation: if `SK_EFT_GRAPH_SOURCE=pg`, dashboard checks AGE connectivity via a `MATCH (n) RETURN count(n)` probe before accepting any HTTP requests; exits with `[PG] connectivity check FAILED` + setup hint if unreachable. **Verified: clean startup with 8,518 nodes reported.**
+
+**Deferred (not blocking — follow-up):**
+- [ ] Wire `SK_EFT_GRAPH_SOURCE=pg` to route `/api/graph/trace`, `/api/graph/impact`, `/api/chain/*/subgraph` to Cypher queries instead of the in-memory cache. Currently in-memory path is fast enough (~1–2 ms per request) that this is cosmetic; gain becomes real once USES edges (1000s more per theorem) land in PG and the in-memory full-graph response grows. Make this sub-wave before Wave 9g's `USES` populated scenarios.
+- [ ] `scripts/validate.py --check graph_source_parity` — rebuild in json mode, query PG via /api/graph/cypher, assert node/edge count identity + per-type breakdown identical.
+
+**Gate (met for Wave 9f core):** sync script + cypher endpoint + env var + startup check all functional and verified end-to-end.
+
+### Wave 9d — Proof-Chain-Viz wiring (Phase 4) — DONE 2026-04-24
+
+See "Wave 9d — Proof-Chain-Viz (dynamic chain discovery) — DONE 2026-04-24" section above (immediately after Wave 9c) for the full shipped list. Summary: 9 chains auto-discovered from `MODULE_CHAIN_MAP`, 4 endpoints (`/api/chain/{list,summary,milestones,subgraph}`), new dashboard tab, verified live via Playwright.
+
+Follow-ups are listed in the Wave 9d shipped section — not blocking for Wave 9 as a whole.
+
+### Wave 9g — Paper Provenance (v2 design) — PENDING 2026-04-24
+
+**Trigger.** User added `Lit-Search/Phase-5v/Designs/Proof-Chein-Viz-Dashboard-v2/` on 2026-04-24 with a new Paper Provenance feature: per-paper split view showing the paper body with per-claim dossiers across 8 vetting layers. The v2 design is additive to v1 (chain viz unchanged); subgraph contract is identical to v1.
+
+**Ship target (user direction 2026-04-24):** live interactive dashboard tab alongside the other 9 tabs. **Not** a side artifact, standalone HTML file, exported report, or anything the user has to open separately. Same app, same Flask server, same click-through navigation as Knowledge Graph / Paper Readiness / Research Status. The design folder's static HTML is a *mockup* — the shipped feature is a tab in `scripts/templates/dashboard.html` with dynamic data from backend endpoints.
+
+**Design summary** (from direct read of `Paper Provenance.html`, `paper-provenance.js`, `paper-review.js`):
+- Split view: left = paper body with inline `<span class="claim" data-claim="id">` anchors; right = dossier with per-claim findings matrix.
+- Top banner: meter (PASS/WARN/FAIL/INFO counts), verdict pill, layer filter chips with nav counter.
+- 8 vetting layers: NUM · THM · AX · HYP · CIT · PAR · FIG · QUA (see paper-review.js for exact emitting code paths).
+- 49-claim mock for `paper12_polariton` with 2 FAIL / 12 WARN / 35 PASS / 4 INFO.
+- Keyboard nav: ← → cycle, F/W jump to next FAIL/WARN, Esc clears filter then deselects.
+- In-memory "mark vetted" toggle (not persisted in the mock — production must POST to an endpoint).
+
+**Codebase-side audit** (from agent + direct reads; the mapping below is the key planning artifact):
+
+| Layer | Existing data source | Gap |
+|---|---|---|
+| NUM | `papers/paper*/claims_review.json[layer_1_numerical_claims]` (emitted by `physics-qa:claims-reviewer` agent) + `formulas.py` for recompute | None if claims_review exists; fallback recompute otherwise |
+| THM | `lean_deps.json` (name, kind, axiom_deps_project, name_deps_project post-Wave-9e) + `ARISTOTLE_THEOREMS` + `PAPER_DEPENDENCIES[paper].lean_modules` | None |
+| AX | `AXIOM_METADATA` + `axiom_deps_project` on each theorem | None |
+| HYP | `HYPOTHESIS_REGISTRY` with `dependent_theorems[]` field | None |
+| CIT | `CITATION_REGISTRY` + `claims_review.json[citation_integrity]` + `\bibitem` + `\cite` scan of paper `.tex` | None |
+| PAR | `PARAMETER_PROVENANCE` (`llm_verified_date`, `human_verified_date`, `tier`) + `claims_review.json[parameter_provenance]` | None |
+| FIG | `papers/paper*/figures/figure_review_report.json` (emitted by `physics-qa:figure-reviewer`) | Only 2 papers have this — most need agent runs |
+| QUA | `claims_review.json[qualitative_claims]` (hand-authored in that file) | Same limitation — depends on claims-reviewer run |
+
+**The two non-trivial gaps** are:
+1. **Paper body as HTML with claim-span anchors.** No `.tex → HTML` step exists. Current: `pdflatex` only. Need a new `scripts/render_paper_html.py` that runs pandoc and post-processes output to wrap claim spans based on a manifest. Two options for the manifest:
+   - **(A) `\claim{id}{body-text}` LaTeX macro**: author the claim IDs directly in the `.tex` source; pandoc carries them as `<span class="claim" id="...">` with zero post-processing. Requires editing every paper's `.tex` once, but the source-of-truth stays in one place.
+   - **(B) Side-file manifest `papers/<paper>/claim_manifest.json`** mapping `{claim_id: text_snippet}`; render-HTML step regex-matches snippets and wraps spans. Zero `.tex` edits, but fragile to prose edits.
+   - **Recommended: option A** — editorial authoring of claim spans is load-bearing, don't want this fragile.
+2. **Adversarial-reviewer output is Markdown, not JSON.** Findings currently live in `papers/AutomatedReviews/*/paper{N}.md` with YAML frontmatter + heading-structured sections. Parsing to `findings[]` requires regex. Either (a) update the agent prompt to also emit a sibling `.json` alongside the `.md`, or (b) add a parser. (a) is cleaner.
+
+**Plan:**
+- [ ] 9g-1: Agent prompt update — `physics-qa:adversarial-reviewer` additionally emits `findings.json` alongside `paper{N}.md`. Schema: `{gate, severity, location, observed, expected, fix, evidence?}`.
+- [ ] 9g-2: `scripts/render_paper_html.py` — pandoc `.tex` → HTML, post-process to strip LaTeX artifacts; add `\claim{id}{body}` macro registration in paper TeX preamble (`docs/tex-macros/claim.sty`) so pandoc emits stable spans. Output: `papers/<paper>/paper_rendered.html`.
+- [ ] 9g-3: Per-paper `claims_manifest.json` or inline `\claim{...}` — retrofit Paper 12 polariton first as the design's reference case (49 claims to author IDs for).
+- [ ] 9g-4: Backend endpoint `GET /api/papers/<paper_id>/provenance` — synthesises 8-layer verdict by joining `claims_review.json` + `figure_review_report.json` + registries + adversarial findings. Returns the exact JSON shape `paper-review.js` consumes (`REVIEW_META` + `CLAIMS` keyed by claim_id + `LAYERS` definition).
+- [ ] 9g-5: Backend endpoint `GET /api/papers/<paper_id>/rendered_html` — serves the pandoc-produced HTML (strips head/body wrappers; returns `<article>…</article>`).
+- [ ] 9g-6: Optional `POST /api/papers/<paper_id>/claims/<claim_id>/vet` — persist the "mark vetted" action. Writes to `papers/<paper>/human_vetted.json` or a new PG table (matches Wave 9f flip decision).
+- [ ] 9g-7: New **interactive tab** `scripts/templates/partials/paper_provenance_tab.html` — live, not a static artifact. Ports the design's split view. Paper selector dropdown lists all 18 papers with their current readiness-state badge. Right-pane dossier and margin mini-rail update in response to click/keyboard events against the live `/api/papers/<paper_id>/provenance` feed (no baked-in JSON). `paper-provenance.js` logic + CSS ported, rewritten where needed for the existing safe-DOM policy (no innerHTML with untrusted content — enforced by the dashboard's security hook).
+- [ ] 9g-8: Wire to main dashboard — new 10th tab link in `dashboard.html`. Picks up paper_id from URL (`?tab=paper&paper=paper12_polariton`) so deep-links from the Knowledge Graph / Readiness tabs work (click a paper node → land on its provenance view).
+
+**Gate:** Paper 12 polariton renders end-to-end — click a claim → dossier shows 8-layer matrix pulled from live registries + claims_review.json; FAIL on Giacobino2025 matches the real `CITATION_REGISTRY` state; all 4 of Wave 9g's registrations tested with Playwright.
+
+**Estimated effort:** 3–4 days. Largest chunk is 9g-2 + 9g-3 (paper-HTML pipeline + claim authoring); the endpoint + tab are ~1 day combined.
+
+---
+
 ## Execution Order & Estimates
 
 | Wave | Blockers | Est. | Note |
@@ -537,6 +725,13 @@ Remaining items deferred:
 | 7c | 7a | 0.25d | Pipeline doc |
 | 8a | 3 | 0.5d | JSON-LD export |
 | 8b | 3 | 0.5d | Notebook helper |
+| 9a | — | 0 (done 2026-04-24) | Dashboard perf + UX (cache + topbar + pill labels + reload-hang root-cause) |
+| 9b | — | 0 (done 2026-04-24) | Filter composition + search (AND-compose; Playwright-verified) |
+| 9c | — | partial (done 2026-04-24) | name_deps extraction in ExtractDeps.lean + /api/graph/uses_edges + UI toggle |
+| 9d | — | 0 (done 2026-04-24) | Dynamic chain viz — 9 chains, L0/L1 tab, 4 endpoints, Playwright-verified |
+| 9e | — | 0 (done 2026-04-24) | Lean extraction: env-var gate for name_deps; baseline ~7 min preserved |
+| 9f | — | 0 (done 2026-04-24) | PG+AGE flip: sync script + /api/graph/cypher + SK_EFT_GRAPH_SOURCE + startup check |
+| 9g | 9e, 9f | 3-4d | **Paper Provenance (v2 design)** — 10th interactive tab + 8-layer dossier + claim-span HTML pipeline |
 
 **Critical path:** Wave 1 → 2 → 3 → 4 → 5a → 4c → 6b → submission-gate functional. ~10 days focused work.
 
@@ -544,18 +739,37 @@ Remaining items deferred:
 - Adversarial agent (6a) can be authored while 3 is in progress
 - External API (8) can proceed after 3 independently of 4/5/6/7
 
+**Wave 9 (dashboard) current state (2026-04-24):** Waves 9a/b/c/d/e/f all landed. Remaining: **9g (Paper Provenance)** — the largest deliverable.
+
+**9g sequencing for the next session:**
+- 9g-1 (adversarial-reviewer JSON output) + 9g-3 (claim-ID authoring in paper TeX) can happen in parallel.
+- 9g-2 (render_paper_html.py + claim.sty) is small but gates 9g-5, 9g-7.
+- 9g-4 (provenance endpoint) reads existing `claims_review.json` + registries; can be built end-to-end without waiting for claim anchoring.
+- 9g-7 (interactive tab) is the user-facing payoff — ports `paper-provenance.js` + CSS to the dashboard's safe-DOM policy; deep-link via `?tab=paper&paper=<id>`.
+- 9g-6 (POST vet) is optional + depends on whether vet state lives in PG (would slot naturally after 9f) or in a JSON sidecar.
+
 ---
 
 ## Success Criteria (end of Phase 5v)
 
+**Original Phase 5v goals (tracking Waves 0–8):**
 - [ ] All 13 April-review failure modes are caught by at least one ReadinessGate in the current graph
-- [ ] Dashboard readiness tab shows all 15 papers × 11 gates; current state visible at a glance
+- [x] Dashboard readiness tab shows all 18 papers × 11 gates; current state visible at a glance (Wave 5a done)
 - [ ] Running Stage 13 adversarial review against a known-bad paper (e.g., pre-fix Paper 7) flags the TPF citation issue; running against a known-good paper clears cleanly
-- [ ] `validate.py` CHECK 17 (graph parity) and CHECK 18 (readiness submission gate) pass in CI
-- [ ] `counts.json` is the single source of truth for every count reference in every paper
-- [ ] `docs/QI_REGISTER.md` tracks the seed findings from April; first regenerated report emitted to user
-- [ ] PG+AGE is source of truth; Python registries are regenerated artifacts
-- [ ] No silent drops, no silent collisions, no silent misses — every gap emits a log line
+- [ ] `validate.py` CHECK 17 (graph parity) passes in CI — needs Wave 9f landed
+- [x] `counts.json` is the single source of truth for every count reference in every paper (Wave 1b done)
+- [x] `docs/QI_REGISTER.md` tracks the seed findings from April; first regenerated report emitted to user (Wave 7a done)
+- [ ] PG+AGE is source of truth; Python registries are regenerated artifacts — pending Wave 9f
+- [x] No silent drops, no silent collisions, no silent misses — every gap emits a log line (Wave 0 + 1c done)
+
+**Wave 9 dashboard extension goals (added mid-phase, 2026-04-24):**
+- [x] Dashboard doesn't hang on cold start (reload-hang fixed Wave 9a)
+- [x] `/api/graph*` endpoints respond in milliseconds on cached hits (Wave 9a: 14.8s → 0.9ms)
+- [x] Filter composition works — search + paper focus + logical focus AND together (Wave 9b)
+- [x] Research Status tab shows 9 chains auto-discovered from `MODULE_CHAIN_MAP` (Wave 9d)
+- [ ] Lean re-extraction with `name_deps_project` completes in <120s (Wave 9e)
+- [ ] Dashboard operates in `SK_EFT_GRAPH_SOURCE=pg` mode with Cypher-powered subgraph queries (Wave 9f)
+- [ ] Paper Provenance tab renders paper12_polariton end-to-end with live 8-layer verdicts per claim (Wave 9g)
 
 ---
 

@@ -291,9 +291,20 @@
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (133 modules, 3021 theorems, 1 axiom, **0 sorry**)
+## 2. LEAN FORMAL VERIFICATION (166 modules, 3958 theorems, 1 axiom, **0 sorry**)
 
-### Lean 4.28.0, Mathlib pinned to commit `8f9d9cff`
+> **2026-04-23 PHASE 5Y CLOSURE SHIPPED.** 8 new modules (`GibbsDuhemTheorem`,
+> `QTheoryNoGoTheorem`, `DarkEnergyObstructionPrinciple`, `DESIComparison`,
+> `CondensedMatterAnalog`, `VestigialMapping`, `VestigialEOS`,
+> `ClassificationTableDark`) + 3 extended modules (`VestigialGravity` +7,
+> `VestigialSusceptibility` +8, `TetradGapEquation` +4). Counts (via
+> `scripts/update_counts.py` post-closure): **3958 theorems** (3847
+> substantive + 111 placeholder), **0 sorry**, **1 axiom**, **166 modules**,
+> **3260 definitions**, **322 Aristotle-proved**. Full no-cache
+> `lake build SKEFTHawking.ExtractDeps` clean (8430 jobs). Phase 5y rows
+> appended to the table below; see `docs/counts.json` for ground truth.
+
+### Lean 4.29.0, Mathlib pinned to commit `8850ed93`
 
 | Module | Lines | Theorems | Axioms | Phase | Key Results |
 |--------|-------|----------|--------|-------|-------------|
@@ -426,6 +437,18 @@
 | ChangeOfRings | ~200 | 5 | 0 | 5r | H2 (change of rings) discharged via Hom-tensor adjunction (**ALL PROVED, zero sorry**) |
 | FKGappedInterface | ~400 | 20 | 0 | 5s | First FK interacting SPT formalization: 16×16 integer Hamiltonian, eigenvalues -7,-5,-1,+1,+3, spectral gap Δ=2 (**ALL PROVED, zero sorry**) |
 | ModularityTheorem | ~200 | 2 | 0 | 5s | General det(S)≠0 → no proportional rows (Muger Direction 1) (**ALL PROVED, zero sorry**) |
+| *(...Phase 5t + 5w + 5x intermediate modules — see counts.json for full roster...)* | | | | | |
+| GibbsDuhemTheorem | ~335 | 16 | 0 | **5y** | **Phase 5y Wave 1**: `w_vac = −1` locked by Lorentz invariance for any single-scalar emergent-vacuum model; `rhoV`, `pV`, `wVac` defs; `GibbsDuhemEquilibrium` struct; main obstruction GD15 with bundled conclusion (`w=−1 ∧ DESI-miss ∧ ρ_V(q₀)=0 ∧ q≠q₀`) (**ALL PROVED, zero sorry**) |
+| QTheoryNoGoTheorem | ~370 | 13 | 0 | **5y** | **Phase 5y Wave 2**: all 4 KV q-theory realizations (`fourForm`, `twoBrane`, `fermionicCrystal`, `unimodular`) collapse to same KVAnsatz; `mDeltaQSq = 1/(χ₀q₀²) ~ M_Pl²`; `massOfRealization` enum + invariance; `NaturalPlanckScale` + `qtheory_closure_no_go` bundled NO-GO (**ALL PROVED, zero sorry**) |
+| DESIComparison | ~230 | 8 | 0 | **5y** | **Phase 5y Wave 3a**: DESI DR2 1σ + 3σ preferred regions encoded (`w₀ ∈ [−0.8,−0.66], w_a ∈ [−1.35,−0.75]`); CPL parameterization; Quintom-B predicate; σ-offset; `lambdaCDM ∉ DESI_1σ` proved (**ALL PROVED, zero sorry**) |
+| DarkEnergyObstructionPrinciple | ~185 | 8 | 0 | **5y** | **Phase 5y Wave 3b**: four-factor orthogonality principle (Gibbs-Duhem ∩ c_s²≥0 ∩ T_c attractor ∩ MICROSCOPE); q-theory and vestigial-gravity models concretely instantiated as non-viable; orthogonality via concrete factor disagreement (**ALL PROVED, zero sorry**) |
+| CondensedMatterAnalog | ~230 | 10 | 0 | **5y** | **Phase 5y Wave 4a**: Fernandes-Fu charge-4e GL template; HS-decoupled channel free energies; Jian-Huang-Yao temperature splitting; Fernandes-Orth-Schmalian vestigial-order classification (nematic/charge4e/density-wave with U(1)-breaking flags) (**ALL PROVED, zero sorry**) |
+| VestigialMapping | ~175 | 8 | 0 | **5y** | **Phase 5y Wave 4b**: H4 §3 dictionary as formal bijection CMRow↔VGRow (12 entries); charge4e↦fourFermionQuartet, T↦deSitterTemp, T_4e↦vestigialTc load-bearing mappings; injectivity via round-trip lemmas (**ALL PROVED, zero sorry**) |
+| VestigialEOS | ~400 | 21 | 0 | **5y** | **Phase 5y Wave 5**: H4 closed-form `w_vest(τ)=(1−τ²)/(5τ²−1)`, `c_s²=−(1−τ²)/(3−5τ²)`, CPL (w₀,w_a); `w_vest(0)=−1`, `c_s²(0)=−1/3<0` gradient instability; phantom-today on natural branch τ²∈(0,1/5); `h4_no_go_main` bundles 3 obstructions; `fine_tuning_log_lower_bound` for Λ₀-augmentation (VE18a) (**ALL PROVED, zero sorry**) |
+| ClassificationTableDark | ~200 | 8 | 0 | **5y** | **Phase 5y Wave 7**: 6 Volovik-family mechanisms × 6 viability columns; `qTheory×4 → 2/4 factors`, `vestigial → 1/4`, `secondSoundGraviton → 0/4`; all DESI-no; all cap ≤ 2/4 orthogonality factors (**ALL PROVED, zero sorry**) |
+| VestigialGravity (ext) | 365 | 25 (was 18, +7) | 0 | **5y W6** | Phase 5y Wave 6 extensions: Z4 symmetry group generators (Volovik arXiv:2406.00718), `sees_gravity_as_{boson,fermion}` predicates, `vestigial_wep_violation` (fermions no-couple, bosons couple → WEP fail), distinguishability from full-tetrad phase |
+| VestigialSusceptibility (ext) | ~325 | 24 (was 16, +8) | 0 | **5y W6** | Phase 5y Wave 6 extensions: `KuboViscosity` struct, FDT noise non-negativity, `chi_RPA` closed form + stability/instability bounds, Kubo↔bulk-viscosity link to Wave 5 `ζ_vest` |
+| TetradGapEquation (ext) | ~600 | 24 (was 20, +4) | 0 | **5y W6** | Phase 5y Wave 6 extensions: BCS-like `T_c_vest = Λ_UV·exp(−1/g̃_*)`, positivity, `T_c_vest < Λ_UV` suppression, **natural-scale obstruction** (UV-tied T_c cannot be Hubble-tied via `IsHubbleTiedTc` contradiction) |
 
 **Axioms:** 1 (`gapped_interface_axiom` in SPTClassification.lean). Previous axioms (`non_abelian_center_discrete`, `gs_nogo_axiom`) removed in Wave 6 — proved as theorems.
 

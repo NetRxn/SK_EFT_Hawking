@@ -62,13 +62,34 @@ def _run_extraction() -> None:
             logger.error("ExtractDeps.lean failed:\n%s", result.stderr[:500])
             raise RuntimeError(f"ExtractDeps failed: {result.stderr[:500]}")
 
+        # Phase 5v Wave 9e: Lean sometimes prints compile warnings
+        # (e.g. "String.trim has been deprecated") to stdout before the
+        # JSON array. Strip any non-JSON prefix before parsing. The
+        # JSON output always begins with `[{` (array of objects).
+        stdout = result.stdout
+        array_start = stdout.find('[{')
+        if array_start > 0:
+            prefix = stdout[:array_start].strip()
+            if prefix:
+                logger.warning("ExtractDeps emitted non-JSON prefix (stripped): %s",
+                               prefix[:300])
+            stdout = stdout[array_start:]
+
         # Validate JSON before writing
-        data = json.loads(result.stdout)
+        data = json.loads(stdout)
         assert isinstance(data, list), "ExtractDeps output must be a JSON array"
 
-        JSON_PATH.write_text(result.stdout)
+        JSON_PATH.write_text(stdout)
         HASH_PATH.write_text(compute_lean_hash())
         logger.info("Wrote %d declarations to %s", len(data), JSON_PATH)
+
+        # Stage EXTRACT_NAME_DEPS diagnostics from stderr to user visibility.
+        if result.stderr:
+            # Lean stderr includes our `[name_deps]` status lines — surface
+            # them so users know whether proof-dep data is populated.
+            for line in result.stderr.splitlines():
+                if line.startswith('[name_deps]'):
+                    logger.info(line)
 
     except FileNotFoundError:
         logger.warning("lake not found — cannot run ExtractDeps. Using cached data if available.")

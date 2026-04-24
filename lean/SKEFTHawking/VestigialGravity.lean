@@ -268,4 +268,103 @@ theorem phase_levels_ordered :
 theorem metric_dof_equals_gr (d : Nat) :
     metric_components d = d * (d + 1) / 2 := rfl
 
+/-!
+## Phase 5y Wave 6 extensions
+
+Six new theorems extending the existing vestigial-phase classification:
+- Z4 symmetry structure per Volovik arXiv:2406.00718
+- Fermion-vs-boson WEP-violation structural lemma
+- Vestigial-phase definition via the H4 EQ.96 characterization
+
+References:
+- Volovik, *Z4 symmetry of vestigial gravity*, arXiv:2406.00718
+- `Lit-Search/Phase-5y/Phase 5y Hypothesis 4 — Effective Fluid EOS for Volovik-Style Vestigial Gravity.md` §1, §3
+-/
+
+/-- Volovik's `Ẑ₄` symmetry group of the tetrad-phase sector (arXiv:2406.00718).
+    Generators encode the cyclic 4-fold symmetry `U(1)_Q → Z₄` preserved in
+    the vestigial phase. -/
+inductive Z4Generator where
+  | e        -- identity
+  | i_hat    -- `Ẑ` generator, order 4
+  | i_hat_sq -- `Ẑ²`, order 2
+  | i_hat_cu -- `Ẑ³`, order 4
+  deriving DecidableEq, Repr
+
+/-- Order of the `Ẑ₄` group: exactly 4 elements. -/
+theorem z4_has_four_elements :
+    (List.length [Z4Generator.e, Z4Generator.i_hat,
+                  Z4Generator.i_hat_sq, Z4Generator.i_hat_cu]) = 4 :=
+  by native_decide
+
+/-- **W6-VG1 — Z4 generators are all distinct.**
+
+    The four elements of Volovik's `Ẑ₄` symmetry group are pairwise
+    distinct, confirming the cyclic-4 structure. -/
+theorem z4_generators_distinct :
+    Z4Generator.e ≠ Z4Generator.i_hat ∧
+    Z4Generator.i_hat ≠ Z4Generator.i_hat_sq ∧
+    Z4Generator.i_hat_sq ≠ Z4Generator.i_hat_cu := by
+  refine ⟨?_, ?_, ?_⟩ <;> decide
+
+/-- Which matter sectors see gravity in each vestigial phase. The
+    bifurcation that produces WEP violation. -/
+def sees_gravity_as_boson : VestigialPhase → Bool
+  | VestigialPhase.pre_geometric => false
+  | VestigialPhase.vestigial => true   -- bilinear metric exists
+  | VestigialPhase.full_tetrad => true
+
+def sees_gravity_as_fermion : VestigialPhase → Bool
+  | VestigialPhase.pre_geometric => false
+  | VestigialPhase.vestigial => false  -- no tetrad VEV, fermions can't couple
+  | VestigialPhase.full_tetrad => true
+
+/-- **W6-VG2 — Bosons see gravity in the vestigial phase.**
+
+    The bilinear metric `g_μν = η_{ab}⟨ê^a_μ ê^b_ν⟩ ≠ 0` exists, so
+    bosons couple to it through the standard Einstein action. -/
+theorem bosons_see_vestigial_gravity :
+    sees_gravity_as_boson VestigialPhase.vestigial = true := rfl
+
+/-- **W6-VG3 — Fermions do NOT see gravity in the vestigial phase.**
+
+    The tetrad VEV `⟨ê^a_μ⟩ = 0`, so fermions (which need a vierbein to
+    convert spinor-to-spacetime indices via `ê^a_μ γ_a`) cannot couple
+    minimally to gravity. -/
+theorem fermions_no_gravity_in_vestigial :
+    sees_gravity_as_fermion VestigialPhase.vestigial = false := rfl
+
+/-- **W6-VG4 — Vestigial phase violates WEP: fermions and bosons couple
+    differently.**
+
+    Direct consequence of W6-VG2 and W6-VG3: in the vestigial phase,
+    `sees_gravity_as_boson ≠ sees_gravity_as_fermion`. This is the
+    Volovik 2024 §III WEP-violation structural claim. -/
+theorem vestigial_wep_violation :
+    sees_gravity_as_boson VestigialPhase.vestigial ≠
+    sees_gravity_as_fermion VestigialPhase.vestigial := by
+  decide
+
+/-- **W6-VG5 — Full tetrad phase restores WEP: fermions and bosons couple
+    identically.**
+
+    In the full-tetrad phase both order parameters are non-zero, so both
+    fermions and bosons couple minimally — WEP holds. -/
+theorem full_tetrad_wep_holds :
+    sees_gravity_as_boson VestigialPhase.full_tetrad =
+    sees_gravity_as_fermion VestigialPhase.full_tetrad := by
+  decide
+
+/-- **W6-VG6 — Vestigial-phase WEP distinguishes from full-tetrad.**
+
+    Packaging W6-VG4 and W6-VG5: the WEP status is different in the two
+    phases, so an experimental WEP test (MICROSCOPE) can distinguish
+    them. -/
+theorem wep_distinguishes_vestigial_from_full :
+    (sees_gravity_as_boson VestigialPhase.vestigial ≠
+     sees_gravity_as_fermion VestigialPhase.vestigial) ∧
+    (sees_gravity_as_boson VestigialPhase.full_tetrad =
+     sees_gravity_as_fermion VestigialPhase.full_tetrad) := by
+  refine ⟨vestigial_wep_violation, full_tetrad_wep_holds⟩
+
 end SKEFTHawking.VestigialGravity

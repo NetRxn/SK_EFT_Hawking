@@ -1893,6 +1893,195 @@ BORDISM_HYPOTHESES = {
 }
 
 
+#
+# Research chain taxonomy (Phase 5v Wave 9d, 2026-04-24).
+#
+# Maps Lean module short-names (the part after `SKEFTHawking.`) to the
+# research chain they belong to. The Proof-Chain-Viz dashboard reads this
+# to populate the "Research Status" tab's L0/L1/L2 views. Chain ids are
+# derived dynamically — adding a new module with a new chain_id here
+# creates a new chain in the dashboard with no other registry changes.
+#
+# A module may legitimately appear in multiple chains (e.g. SK axioms are
+# shared between hawking and graphene). Use a list in that case.
+#
+# The dashboard also accepts a node-level `chain_id` override (on formulas,
+# papers, etc.) when the module-level mapping isn't precise enough.
+#
+MODULE_CHAIN_MAP: dict[str, str | list[str]] = {
+    # === hawking — dissipative Hawking radiation (BEC + polariton + graphene) ===
+    'AcousticMetric': 'hawking',
+    'Axioms': 'hawking',
+    'SKAxioms': 'hawking',
+    'SKDoubling': 'hawking',
+    'HawkingUniversality': 'hawking',
+    'SecondOrderSK': 'hawking',
+    'ThirdOrderSK': 'hawking',
+    'WKBAnalysis': 'hawking',
+    'WKBConnection': 'hawking',
+    'CGLTransform': 'hawking',
+    'QuasiOneDReduction': 'hawking',
+    'DiracFluidMetric': ['hawking', 'graphene'],
+    'DiracFluidSK': ['hawking', 'graphene'],
+    'GrapheneHawking': ['hawking', 'graphene'],
+    'GrapheneNoiseFormula': ['hawking', 'graphene'],
+    'PolaritonTier1': 'hawking',
+    'KappaScaling': 'hawking',
+
+    # === generations — Z16 anomaly + "16 convergence" ===
+    'SMFermionData': 'generations',
+    'Z16AnomalyComputation': 'generations',
+    'Z16Classification': 'generations',
+    'GenerationConstraint': 'generations',
+    'WangBridge': 'generations',
+    'ModularInvarianceConstraint': 'generations',
+    'RokhlinBridge': 'generations',
+    'SteenrodA1': 'generations',
+    'E8Lattice': 'generations',
+
+    # === gauge-emergence — D(G), half-braiding, Drinfeld center ===
+    'DrinfeldDouble': 'gauge-emergence',
+    'DrinfeldDoubleAlgebra': 'gauge-emergence',
+    'DrinfeldDoubleRing': 'gauge-emergence',
+    'DrinfeldCenterBridge': 'gauge-emergence',
+    'DrinfeldEquivalence': 'gauge-emergence',
+    'GaugeEmergence': 'gauge-emergence',
+    'GaugeErasure': 'gauge-emergence',
+    'VecG': 'gauge-emergence',
+    'VecGMonoidal': 'gauge-emergence',
+    'ToricCodeCenter': 'gauge-emergence',
+    'S3CenterAnyons': 'gauge-emergence',
+    'CenterEquivalenceZ2': 'gauge-emergence',
+    'CenterFunctor': 'gauge-emergence',
+    'CenterFunctorZ2Equiv': 'gauge-emergence',
+    'KLinearCategory': 'gauge-emergence',
+    'SphericalCategory': 'gauge-emergence',
+    'FusionCategory': 'gauge-emergence',
+    'FusionExamples': 'gauge-emergence',
+    'RibbonCategory': 'gauge-emergence',
+    'KacWaltonFusion': 'gauge-emergence',
+    'QNumber': 'gauge-emergence',
+    'Uqsl2': 'gauge-emergence',
+    'Uqsl2Affine': 'gauge-emergence',
+    'Uqsl2Hopf': 'gauge-emergence',
+    'Uqsl3': 'gauge-emergence',
+    'Uqsl3Hopf': 'gauge-emergence',
+    'QuantumGroupGeneric': 'gauge-emergence',
+    'QuantumGroupCoproduct': 'gauge-emergence',
+    'QuantumGroupAntipode': 'gauge-emergence',
+    'QuantumGroupHopf': 'gauge-emergence',
+    'QuantumGroupInstantiation': 'gauge-emergence',
+    'QuantumGroupMeta': 'gauge-emergence',
+    'RestrictedUq': 'gauge-emergence',
+    'SU2kFusion': 'gauge-emergence',
+    'SU2kSMatrix': 'gauge-emergence',
+
+    # === chirality-wall — GS / TPF / GT synthesis ===
+    'ChiralityWall': 'chirality-wall',
+    'ChiralityWallMaster': 'chirality-wall',
+    'GoltermanShamir': 'chirality-wall',
+    'TPFEvasion': 'chirality-wall',
+    'GTCommutation': 'chirality-wall',
+    'GTWeylDoublet': 'chirality-wall',
+    'PauliMatrices': 'chirality-wall',
+    'WilsonMass': 'chirality-wall',
+    'BdGHamiltonian': 'chirality-wall',
+    'LatticeHamiltonian': 'chirality-wall',
+    'SMGClassification': 'chirality-wall',
+    'OnsagerAlgebra': 'chirality-wall',
+    'OnsagerContraction': 'chirality-wall',
+    'SPTClassification': 'chirality-wall',
+
+    # === fracton — fracton gravity / hydro / DM ===
+    'FractonHydro': 'fracton',
+    'FractonFormulas': 'fracton',
+    'FractonGravity': 'fracton',
+    'FractonNonAbelian': 'fracton',
+    'FractonDarkMatter': 'fracton',
+
+    # === vestigial — emergent gravity from dim. reduction ===
+    'VestigialGravity': 'vestigial',
+    'VestigialSusceptibility': 'vestigial',
+    'ADWMechanism': 'vestigial',
+    'SO4Weingarten': 'vestigial',
+    'QuaternionGauge': 'vestigial',
+    'FermionBag4D': 'vestigial',
+    'SU2PseudoReality': 'vestigial',
+    'MajoranaKramers': 'vestigial',
+    'HubbardStratonovichRHMC': 'vestigial',
+    'GaugeFermionBag': 'vestigial',
+    'WetterichNJL': 'vestigial',
+
+    # === dark-sector — Phase 5x (SFDM, fracton DM, FG torsion, hidden sectors) ===
+    'HiddenSectorClassification': 'dark-sector',
+    'HiddenSectorMixedCharge': 'dark-sector',
+    'FangGuTorsionDM': 'dark-sector',
+    'CosmologicalConstant': 'dark-sector',
+    'SFDMMergerForecast': 'dark-sector',
+    'DarkSectorSynthesis': 'dark-sector',
+
+    # === gate-engineering — Phase 5t (Fermi-Hubbard dimer geometric SWAP) ===
+    'FermiHubbardDimer': 'gate-engineering',
+}
+
+
+#
+# Milestone markers — which Lean declarations are "pillar" theorems that
+# every chain figure should show. Level L1 (milestone DAG) renders only
+# nodes with `is_milestone=True`; the L2 full-subgraph view shows all
+# chain nodes. Short names here match the final component after `.`.
+#
+# Rule of thumb (per design/docs/SUBGRAPH_CONTRACT.md section 2):
+#   - Every external axiom the chain uses → milestone
+#   - Every terminal claim the chain proves → milestone
+#   - Every named "pillar" theorem a reviewer would cite → milestone
+#   - Intermediate plumbing (lemmas, technical defs) → NOT milestone
+# Target: 6–12 milestones per chain.
+#
+CHAIN_MILESTONES: dict[str, int] = {
+    # hawking
+    'transport_counting_formula': 0,
+    'cgl_fdr_derivation': 1,
+    'parity_alternation_general_N': 2,
+    'wkb_connection_exact': 3,
+    'bogoliubov_decoherence': 4,
+    'hawking_universality': 5,
+    'graphene_T_eff_positive': 6,
+    # generations
+    'anomaly_index_z16': 0,
+    'generation_minimal_nontrivial': 1,
+    'generation_mod3_constraint': 2,
+    'dedekind_eta_modular': 3,
+    'hidden_sector_z16_constraint': 4,
+    # gauge-emergence
+    'drinfeld_equivalence_z2': 0,
+    'drinfeld_equivalence_s3': 1,
+    'vecg_monoidal': 2,
+    'uqsl2_hopf_algebra': 3,
+    'quantum_group_generic_hopf': 4,
+    # chirality-wall
+    'gs_nine_conditions': 0,
+    'tpf_evades_at_least_two': 1,
+    'gt_commutation_central': 2,
+    'chirality_wall_three_pillars': 3,
+    # fracton
+    'binomial_charge_counting': 0,
+    'bootstrap_divergence': 1,
+    'fracton_sm_singlet_from_ym_incompat': 2,
+    # vestigial
+    'critical_coupling_pos': 0,
+    'ng_mode_count': 1,
+    'so4_weingarten_positivity': 2,
+    # dark-sector
+    'anomaly_value_z16': 0,
+    'sfdm_offset_step_function': 3,
+    'fracton_dm_arrhenius': 4,
+    'traceless_iff_w_one_third': 5,
+    # gate-engineering
+    'geometric_phase_necessary_conditions_on_pi_loop': 0,
+}
+
+
 def get_bec_parameters(experiment_name):
     """
     Return a BECParameters object for the named experiment

@@ -419,9 +419,14 @@ class TestPGWrite:
 
     @pytest.fixture(scope="class")
     def built_graph(self, pg_conn):
-        """Build the graph once per class (expensive — runs Lean extraction)."""
+        """Build the graph once per class (expensive — runs Lean extraction).
+
+        Phase 5v Wave 9a: ``build_graph_json`` decoupled PG write from graph
+        construction. The TestPGWrite class is specifically about the PG
+        write path, so pass ``sync_pg=True`` to force the old behavior.
+        """
         from scripts.build_graph import build_graph_json
-        return build_graph_json()
+        return build_graph_json(sync_pg=True)
 
     def test_write_populates_graph(self, pg_conn, built_graph):
         """Vertices exist in PG after write."""

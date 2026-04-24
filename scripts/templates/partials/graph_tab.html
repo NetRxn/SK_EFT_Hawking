@@ -9,17 +9,38 @@
         --kg-bg: #080c14; --kg-bg-panel: #0f1520; --kg-bg-card: #151d2e;
         --kg-border: #1e293b; --kg-text: #e2e8f0; --kg-text-dim: #64748b;
         --kg-text-bright: #f8fafc; --kg-accent: #2E86AB;
+        /* Live topbar height — kept in sync with .kg-topbar via ResizeObserver.
+           Graph container reads this so when the topbar grows (filter row
+           appears, long pill list) the graph area shrinks instead of being
+           covered up. Default matches the minimum one-row topbar height. */
+        --kg-topbar-h: 48px;
         font-family: 'Instrument Sans', sans-serif;
         background: var(--kg-bg); color: var(--kg-text);
         position: relative; width: 100vw; height: calc(100vh - 160px); min-height: 500px;
     }
 
     .kg-topbar {
-        position: absolute; top: 0; left: 0; right: 0; z-index: 100; height: 48px;
+        position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+        /* Auto-grow when the secondary filter row is present; never exceed
+           ~45% of viewport so the graph stays usable even if every filter
+           is showing. Horizontal overflow scrolls within each row. */
+        min-height: 48px; max-height: 45vh;
         background: rgba(8,12,20,0.95); backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--kg-border);
-        display: flex; align-items: center; gap: 16px; padding: 0 20px;
+        display: flex; flex-direction: column;
     }
+    .kg-topbar-row {
+        display: flex; align-items: center; gap: 16px; padding: 0 20px;
+        min-height: 44px;
+        /* Horizontal overflow scrolls — nothing ever wraps upward into the
+           outer dashboard chrome. */
+        overflow-x: auto; overflow-y: hidden;
+        scrollbar-width: thin;
+    }
+    .kg-topbar-row::-webkit-scrollbar { height: 4px; }
+    .kg-topbar-row::-webkit-scrollbar-thumb { background: var(--kg-border); border-radius: 2px; }
+    .kg-topbar-row.secondary { border-top: 1px dashed rgba(30,41,59,0.6); padding-top: 4px; padding-bottom: 4px; }
+    .kg-topbar-row > * { flex-shrink: 0; }
     .kg-topbar-title { font-weight: 700; font-size: 0.9rem; color: var(--kg-text-bright); white-space: nowrap; }
     .kg-topbar-title span { color: var(--kg-accent); }
     .kg-topbar-divider { width: 1px; height: 24px; background: var(--kg-border); }
@@ -47,14 +68,37 @@
     .kg-paper-focus:focus { outline: none; border-color: var(--kg-accent); box-shadow: 0 0 0 2px rgba(46,134,171,0.25); }
     .kg-paper-focus option { background: var(--kg-bg-panel); color: var(--kg-text); }
 
-    .kg-filter-group { display: flex; gap: 5px; flex-wrap: wrap; }
+    /* Search input — free-text substring across labels + ids.
+       Matches the paper-focus dropdown visual vocabulary so the topbar reads
+       as one continuous strip of filter controls. */
+    .kg-search {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
+        padding: 4px 10px; border-radius: 5px; border: 1px solid var(--kg-border);
+        background: var(--kg-bg-panel); color: var(--kg-text);
+        width: 180px;
+    }
+    .kg-search::placeholder { color: var(--kg-text-dim); }
+    .kg-search:hover { border-color: var(--kg-accent); }
+    .kg-search:focus { outline: none; border-color: var(--kg-accent); box-shadow: 0 0 0 2px rgba(46,134,171,0.25); }
+
+    /* Filter pills sit on a single row each; the row scrolls horizontally
+       if they overflow. Never wrap — wrapping used to float pills up into
+       the outer dashboard title/tab area (fixed 2026-04-24). */
+    .kg-filter-group { display: flex; gap: 5px; flex-wrap: nowrap; align-items: center; }
     .kg-filter-pill {
         font-family: 'Instrument Sans', sans-serif; font-size: 0.68rem; font-weight: 600;
         text-transform: uppercase; letter-spacing: 0.04em;
         padding: 3px 9px; border-radius: 16px; border: 1.5px solid;
         cursor: pointer; transition: all 0.2s; background: transparent;
+        display: inline-flex; align-items: baseline; gap: 6px;
+        white-space: nowrap;
     }
     .kg-filter-pill.off { opacity: 0.25; }
+    .kg-filter-pill .count {
+        font-size: 0.62rem; font-weight: 500; opacity: 0.65;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0; text-transform: none;
+    }
 
     .kg-topbar-stats {
         margin-left: auto; display: flex; gap: 14px;
@@ -62,7 +106,7 @@
     }
     .kg-topbar-stats .val { color: var(--kg-text); font-weight: 600; }
 
-    .kg-graph-container { position: absolute; top: 48px; left: 0; right: 0; bottom: 0; }
+    .kg-graph-container { position: absolute; top: var(--kg-topbar-h, 48px); left: 0; right: 0; bottom: 0; transition: top 0.15s ease; }
     .kg-graph-container svg { width: 100%; height: 100%; }
 
     .kg-link { stroke: rgba(255,255,255,0.25); stroke-width: 0.8; fill: none; }
@@ -73,6 +117,8 @@
     .kg-link.traced-bad { stroke: #ef4444; stroke-width: 2.5; }
     .kg-link.impact { stroke: #F18F01; stroke-width: 2.5; stroke-dasharray: 6 3; animation: kg-traceflow 1s linear infinite; }
     .kg-link.axiom-dep { stroke: #d97706; stroke-width: 1.5; stroke-dasharray: 6 3; opacity: 0.6; }
+    .kg-link.uses-dep { stroke: #60a5fa; stroke-width: 0.6; opacity: 0.25; }
+    .kg-link.uses-dep.highlighted { opacity: 0.8; stroke-width: 1.2; }
     @keyframes kg-traceflow { to { stroke-dashoffset: -12; } }
 
     .kg-link-arrow { fill: rgba(255,255,255,0.12); }
@@ -265,41 +311,53 @@
 </style>
 
 <div class="kg-wrap" id="kg-wrap">
-    <div class="kg-topbar">
-        <div class="kg-topbar-title"><span>SK-EFT</span> Provenance Graph</div>
-        <div class="kg-topbar-divider"></div>
-        <div class="kg-mode-group">
-            <button class="kg-mode-btn active" data-mode="explore" id="kg-mode-explore">Explore</button>
-            <button class="kg-mode-btn" data-mode="trace" id="kg-mode-trace">Trace</button>
-            <button class="kg-mode-btn" data-mode="impact" id="kg-mode-impact">Impact</button>
+    <div class="kg-topbar" id="kg-topbar">
+        <!-- Row 1: primary controls. Always visible, never wraps upward. -->
+        <div class="kg-topbar-row primary">
+            <div class="kg-topbar-title"><span>SK-EFT</span> Provenance Graph</div>
+            <div class="kg-topbar-divider"></div>
+            <div class="kg-mode-group">
+                <button class="kg-mode-btn active" data-mode="explore" id="kg-mode-explore">Explore</button>
+                <button class="kg-mode-btn" data-mode="trace" id="kg-mode-trace">Trace</button>
+                <button class="kg-mode-btn" data-mode="impact" id="kg-mode-impact">Impact</button>
+            </div>
+            <div class="kg-topbar-divider"></div>
+            <div class="kg-layout-group">
+                <button class="kg-layout-btn active" data-layout="force" id="kg-layout-force">Force</button>
+                <button class="kg-layout-btn" data-layout="radial" id="kg-layout-radial">Radial</button>
+                <button class="kg-layout-btn" data-layout="hierarchy" id="kg-layout-hierarchy">Hierarchy</button>
+                <button class="kg-layout-btn" data-layout="circle" id="kg-layout-circle">Circle</button>
+            </div>
+            <div class="kg-topbar-divider"></div>
+            <button class="kg-controls-toggle" id="kg-controls-toggle" title="Physics Controls">&#9881;</button>
+            <div class="kg-topbar-divider"></div>
+            <input type="search" id="kg-search" class="kg-search" placeholder="Search nodes…"
+                   title="Free-text substring match on node label + id. Composes AND with filters above." />
+            <div class="kg-topbar-divider"></div>
+            <select id="kg-paper-focus" class="kg-paper-focus" title="Restrict to everything reachable from a paper (via trace)">
+                <option value="">All Papers</option>
+            </select>
+            <select id="kg-logical-focus" class="kg-paper-focus" title="Restrict to everything that depends on / is depended on by an axiom or structure">
+                <option value="">Logical Focus…</option>
+            </select>
+            <button class="kg-toggle-btn" id="kg-clear-filters" style="display:none; border-color:#d97706; color:#fbbf24" title="Clear all active filters (paper focus, logical focus, search, type pills)">Clear</button>
+            <div class="kg-topbar-stats" style="margin-left:auto">
+                <span><span class="val" id="kg-stat-visible">0</span><span style="opacity:0.5">/</span><span class="val" id="kg-stat-nodes">0</span> nodes</span>
+                <span><span class="val" id="kg-stat-edges">0</span> edges</span>
+                <span class="val" id="kg-stat-issues" style="color:#f87171"></span>
+            </div>
         </div>
-        <div class="kg-topbar-divider"></div>
-        <div class="kg-layout-group">
-            <button class="kg-layout-btn active" data-layout="force" id="kg-layout-force">Force</button>
-            <button class="kg-layout-btn" data-layout="radial" id="kg-layout-radial">Radial</button>
-            <button class="kg-layout-btn" data-layout="hierarchy" id="kg-layout-hierarchy">Hierarchy</button>
-            <button class="kg-layout-btn" data-layout="circle" id="kg-layout-circle">Circle</button>
-        </div>
-        <div class="kg-topbar-divider"></div>
-        <button class="kg-controls-toggle" id="kg-controls-toggle" title="Physics Controls">&#9881;</button>
-        <div class="kg-topbar-divider"></div>
-        <div class="kg-filter-group" id="kg-filters"></div>
-        <div class="kg-filter-divider" id="kg-scaffolding-divider" style="display:none"></div>
-        <div class="kg-scaffolding-pills" id="kg-scaffolding-pills"></div>
-        <div class="kg-filter-divider"></div>
-        <button class="kg-toggle-btn" id="kg-scaffolding-toggle" title="Show/hide Lean scaffolding types (Def, Structure, Inductive, Instance)">Scaffolding</button>
-        <button class="kg-toggle-btn" id="kg-core-axioms-toggle" title="Show/hide core axioms (propext, Classical.choice, Quot.sound)">Core Axioms</button>
-        <div class="kg-topbar-divider"></div>
-        <select id="kg-paper-focus" class="kg-paper-focus">
-            <option value="">All Papers</option>
-        </select>
-        <select id="kg-logical-focus" class="kg-paper-focus">
-            <option value="">Logical Focus...</option>
-        </select>
-        <div class="kg-topbar-stats">
-            <span><span class="val" id="kg-stat-nodes">0</span> nodes</span>
-            <span><span class="val" id="kg-stat-edges">0</span> edges</span>
-            <span class="val" id="kg-stat-issues" style="color:#f87171"></span>
+        <!-- Row 2: filter pills + scaffolding toggles. Scrolls horizontally
+             if many types present; no longer overflows vertically. -->
+        <div class="kg-topbar-row secondary">
+            <span style="font-size:0.66rem; color:var(--kg-text-dim); text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0">Filters:</span>
+            <div class="kg-filter-group" id="kg-filters"></div>
+            <div class="kg-filter-divider" id="kg-scaffolding-divider" style="display:none"></div>
+            <div class="kg-scaffolding-pills" id="kg-scaffolding-pills"></div>
+            <div class="kg-filter-divider"></div>
+            <button class="kg-toggle-btn" id="kg-scaffolding-toggle" title="Show/hide Lean scaffolding types (Def, Structure, Inductive, Instance)">Scaffolding</button>
+            <button class="kg-toggle-btn" id="kg-core-axioms-toggle" title="Show/hide core axioms (propext, Classical.choice, Quot.sound)">Core Axioms</button>
+            <button class="kg-toggle-btn" id="kg-proof-deps-toggle" title="Show direct proof-reference edges (USES) — fetched on demand; may take a second to first render">Proof Deps</button>
         </div>
     </div>
     <div class="kg-graph-container">
@@ -434,6 +492,27 @@
     // Radial radius map by type
     const RADIAL_R = { PrimarySource:0, Parameter:150, Formula:300, LeanTheorem:450, LeanAxiom:450, LeanDef:450, LeanStructure:450, LeanInductive:450, LeanInstance:450, AristotleRun:450, PaperClaim:600, Figure:600, Paper:750 };
 
+    // ═══ Topbar height tracker ═══
+    // Filter pills + scaffolding toggles live on a second row that may be
+    // empty before the graph loads. This observer keeps --kg-topbar-h
+    // synced with real measured height so .kg-graph-container pushes down
+    // by exactly that amount (never covers, never leaves a gap).
+    (function syncTopbarHeight() {
+        const topbar = document.getElementById('kg-topbar');
+        const wrap = document.getElementById('kg-wrap');
+        if (!topbar || !wrap) return;
+        const apply = () => {
+            const h = Math.round(topbar.getBoundingClientRect().height);
+            wrap.style.setProperty('--kg-topbar-h', h + 'px');
+        };
+        apply();
+        if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(apply).observe(topbar);
+        } else {
+            window.addEventListener('resize', apply);
+        }
+    })();
+
     // ═══ Fetch graph data from API ═══
     fetch('/api/graph')
         .then(r => r.json())
@@ -452,7 +531,10 @@
     function initGraph() {
         const wrap = document.getElementById('kg-wrap');
         const W = wrap.clientWidth;
-        const H = wrap.clientHeight - 48;
+        const topbarH = parseFloat(
+            getComputedStyle(wrap).getPropertyValue('--kg-topbar-h')
+        ) || 48;
+        const H = wrap.clientHeight - topbarH;
 
         const svg = d3.select('#kg-graph');
         const g = svg.append('g');
@@ -643,40 +725,82 @@
         const scaffoldingPillsContainer = document.getElementById('kg-scaffolding-pills');
         const scaffoldingDivider = document.getElementById('kg-scaffolding-divider');
         const allTypes = [...new Set(nodes.map(n => n.type))];
-        // Active filter set — start with main types + LeanAxiom + LeanTheorem visible, scaffolding hidden
+
+        // Centralised filter state (Phase 5v Wave 9b). Previously paper-focus
+        // and logical-focus each cleared the other and overrode node display
+        // directly — the type-pill toggles lost effect while a focus was
+        // active. Now every predicate lives here and applyFilters() computes
+        // the AND-intersection in one pass.
         const aF = new Set(allTypes.filter(t => !SCAFFOLDING_TYPES.has(t)));
-        // Track core axioms hidden state (nodes with core axiom names)
-        let coreAxiomsVisible = false;
-        // Helper to apply current filter state
-        function applyFilters() {
-            nodeEl.style('display', d => {
-                if (!aF.has(d.type)) return 'none';
-                // Hide core axiom nodes unless toggle is on
-                if (!coreAxiomsVisible && d.type === 'LeanAxiom') {
-                    const name = (d.label || d.id.split(':').pop() || '').trim();
-                    if (CORE_AXIOM_NAMES.has(name)) return 'none';
-                }
-                return null;
-            });
-            linkEl.style('display', d => {
-                const srcType = d.source.type;
-                const tgtType = d.target.type;
-                if (!aF.has(srcType) || !aF.has(tgtType)) return 'none';
-                // Also hide links to/from hidden core axioms
-                if (!coreAxiomsVisible) {
-                    if (srcType === 'LeanAxiom') {
-                        const srcName = (d.source.label || d.source.id.split(':').pop() || '').trim();
-                        if (CORE_AXIOM_NAMES.has(srcName)) return 'none';
-                    }
-                    if (tgtType === 'LeanAxiom') {
-                        const tgtName = (d.target.label || d.target.id.split(':').pop() || '').trim();
-                        if (CORE_AXIOM_NAMES.has(tgtName)) return 'none';
-                    }
-                }
-                return null;
-            });
+        const filterState = {
+            types: aF,                // Set<string> — active type pills
+            coreAxiomsVisible: false, // hide propext/Classical.choice/Quot.sound by default
+            paperFocusIds: null,      // Set<string>|null — trace-reachable from a paper
+            logicalFocusIds: null,    // Set<string>|null — impact/trace-reachable from an axiom/structure
+            search: '',               // substring (lowercased), matches label or id
+        };
+
+        function nodeIsVisible(d) {
+            // Type filter
+            if (!filterState.types.has(d.type)) return false;
+            // Core axiom filter
+            if (!filterState.coreAxiomsVisible && d.type === 'LeanAxiom') {
+                const name = (d.label || d.id.split(':').pop() || '').trim();
+                if (CORE_AXIOM_NAMES.has(name)) return false;
+            }
+            // Paper focus
+            if (filterState.paperFocusIds && !filterState.paperFocusIds.has(d.id)) return false;
+            // Logical focus
+            if (filterState.logicalFocusIds && !filterState.logicalFocusIds.has(d.id)) return false;
+            // Search (substring match on label + short-id, NOT full id).
+            // The full id carries the "SKEFTHawking" / "lean:" prefix that
+            // would otherwise make a search for "hawking" match every Lean
+            // node. Match only the last path segment — that's what the UI
+            // displays on a node label anyway.
+            if (filterState.search) {
+                const shortId = (d.id || '').split(/[:.]/).pop();
+                const hay = ((d.label || '') + ' ' + shortId).toLowerCase();
+                if (!hay.includes(filterState.search)) return false;
+            }
+            return true;
         }
-        // Create a pill for a type, placed in a container
+
+        function applyFilters() {
+            // Pass 1: node visibility
+            const visibleIds = new Set();
+            nodeEl.style('display', d => {
+                const ok = nodeIsVisible(d);
+                if (ok) visibleIds.add(d.id);
+                return ok ? null : 'none';
+            });
+
+            // Pass 2: link visibility — both endpoints must be visible.
+            // d.source/d.target are either id strings (pre-sim) or node
+            // objects (post-sim). Normalise before lookup.
+            linkEl.style('display', d => {
+                const srcId = typeof d.source === 'string' ? d.source : d.source.id;
+                const tgtId = typeof d.target === 'string' ? d.target : d.target.id;
+                return (visibleIds.has(srcId) && visibleIds.has(tgtId)) ? null : 'none';
+            });
+
+            // Update filter-count indicator in the stats strip
+            const totalVis = visibleIds.size;
+            const visEl = document.getElementById('kg-stat-visible');
+            if (visEl) visEl.textContent = totalVis.toLocaleString();
+
+            // Toggle "Clear filters" button visibility
+            const anyActive = (
+                filterState.paperFocusIds !== null ||
+                filterState.logicalFocusIds !== null ||
+                filterState.search !== '' ||
+                filterState.types.size !== allTypes.filter(t => !SCAFFOLDING_TYPES.has(t)).length
+            );
+            const clearBtn = document.getElementById('kg-clear-filters');
+            if (clearBtn) clearBtn.style.display = anyActive ? '' : 'none';
+        }
+        // Create a pill for a type, placed in a container. The count is
+        // rendered as a muted trailing badge, not in parentheses — the
+        // "Formulas (200)" pattern was being misread as pagination.
         function makePill(container, t) {
             const count = nodes.filter(n => n.type === t).length;
             if (count === 0) return null;
@@ -686,9 +810,21 @@
             p.dataset.type = t;
             p.style.borderColor = TC[t] || '#888';
             p.style.color = TC[t] || '#888';
-            // Pretty-print type name
+            // Pretty-print type name, pluralise roughly so counts read as totals.
             const label = t.replace('Lean', '').replace(/([A-Z])/g, ' $1').trim();
-            p.textContent = label + ' (' + count + ')';
+            const plural = count === 1 ? label : (
+                /s$/.test(label) ? label :        // already ends in s
+                /y$/.test(label) ? label.slice(0, -1) + 'ies' :
+                label + 's'
+            );
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = plural;
+            const countSpan = document.createElement('span');
+            countSpan.className = 'count';
+            countSpan.textContent = count.toLocaleString();
+            p.title = `${count.toLocaleString()} ${plural} in current graph — click to toggle`;
+            p.appendChild(nameSpan);
+            p.appendChild(countSpan);
             p.onclick = () => {
                 if (aF.has(t)) { aF.delete(t); p.classList.add('off'); }
                 else { aF.add(t); p.classList.remove('off'); }
@@ -731,12 +867,94 @@
         const coreToggle = document.getElementById('kg-core-axioms-toggle');
         coreToggle.onclick = () => {
             coreAxiomsVisible = coreToggle.classList.toggle('active');
+            filterState.coreAxiomsVisible = coreAxiomsVisible;
             applyFilters();
         };
+
+        // Proof-dependency toggle (Phase 5v Wave 9c).
+        // USES edges are expensive (~40k for the SK-EFT graph) so they're
+        // fetched on demand from /api/graph/uses_edges and merged into the
+        // simulation's links array. Toggling off doesn't re-fetch; it just
+        // removes them from the live graph so the user can flip freely.
+        const proofDepsToggle = document.getElementById('kg-proof-deps-toggle');
+        let usesEdges = null;   // cached response from /api/graph/uses_edges
+        let usesLoading = false;
+        function addUsesToGraph() {
+            if (!usesEdges || !usesEdges.length) return;
+            // Build quick id->node lookup so d3 link resolution succeeds
+            const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
+            const merged = [];
+            for (const e of usesEdges) {
+                const s = nodeById[e.source];
+                const t = nodeById[e.target];
+                if (!s || !t) continue;
+                merged.push({ source: s, target: t, type: 'USES', _uses: true });
+            }
+            links.push(...merged);
+            sim.force('link').links(links);
+            // Re-bind link selection
+            linkEl = linkEl.data(links, d =>
+                (d.source.id || d.source) + '->' + (d.target.id || d.target) + ':' + d.type
+            );
+            const entered = linkEl.enter().append('path')
+                .attr('class', d => 'kg-link' + (d.type === 'DEPENDS_ON_AXIOM' ? ' axiom-dep' : d.type === 'USES' ? ' uses-dep' : ''))
+                .attr('marker-end', 'url(#kg-arr)');
+            linkEl = entered.merge(linkEl);
+            sim.alpha(0.2).restart();
+            applyFilters();
+            document.getElementById('kg-stat-edges').textContent = links.length.toLocaleString();
+        }
+        function removeUsesFromGraph() {
+            links = links.filter(l => !l._uses);
+            sim.force('link').links(links);
+            linkEl = linkEl.data(links, d =>
+                (d.source.id || d.source) + '->' + (d.target.id || d.target) + ':' + d.type
+            );
+            linkEl.exit().remove();
+            sim.alpha(0.2).restart();
+            applyFilters();
+            document.getElementById('kg-stat-edges').textContent = links.length.toLocaleString();
+        }
+        proofDepsToggle.onclick = () => {
+            const active = proofDepsToggle.classList.toggle('active');
+            if (!active) {
+                removeUsesFromGraph();
+                return;
+            }
+            if (usesEdges !== null) {
+                addUsesToGraph();
+                return;
+            }
+            if (usesLoading) return;
+            usesLoading = true;
+            proofDepsToggle.textContent = 'Proof Deps…';
+            fetch('/api/graph/uses_edges')
+                .then(r => r.json())
+                .then(data => {
+                    usesEdges = data.edges || [];
+                    if (data.hint && !usesEdges.length) {
+                        alert(data.hint);
+                        proofDepsToggle.classList.remove('active');
+                    } else {
+                        addUsesToGraph();
+                    }
+                })
+                .catch(err => {
+                    console.error('USES fetch failed:', err);
+                    proofDepsToggle.classList.remove('active');
+                })
+                .finally(() => {
+                    usesLoading = false;
+                    proofDepsToggle.textContent = 'Proof Deps';
+                });
+        };
+
         // Apply initial filter state (hides scaffolding + core axioms)
         applyFilters();
 
-        // Paper Focus dropdown
+        // Paper Focus dropdown — now contributes to filterState.paperFocusIds.
+        // Works in AND with type pills, logical focus, and search; no longer
+        // resets the other dropdowns or directly overrides display.
         const paperSelect = document.getElementById('kg-paper-focus');
         const paperNodes = nodes.filter(n => n.type === 'Paper').sort((a, b) => a.id.localeCompare(b.id));
         paperNodes.forEach(pn => {
@@ -747,34 +965,24 @@
         });
         paperSelect.onchange = function() {
             const val = this.value;
-            // Reset logical focus when paper focus changes
-            document.getElementById('kg-logical-focus').value = '';
             if (!val) {
-                // "All Papers" — restore everything
+                filterState.paperFocusIds = null;
                 clearSel();
                 applyFilters();
-                nodeEl.style('opacity', null);
-                linkEl.style('opacity', null);
                 return;
             }
-            // Fetch traced subgraph for the selected paper
             fetch('/api/graph/trace/' + encodeURIComponent(val))
                 .then(r => r.json())
                 .then(data => {
+                    filterState.paperFocusIds = new Set(data.traced_node_ids);
                     clearSel();
-                    const tr = new Set(data.traced_node_ids);
-                    const tl = new Set(data.traced_edge_indices);
-                    nodeEl
-                        .style('display', n => tr.has(n.id) ? null : 'none')
-                        .style('opacity', null);
-                    linkEl
-                        .style('display', (l, i) => tl.has(i) ? null : 'none')
-                        .style('opacity', null);
+                    applyFilters();
                 })
                 .catch(err => console.error('Paper focus failed:', err));
         };
 
-        // Logical Focus dropdown — axioms first, then structures
+        // Logical Focus dropdown — axioms first, then structures. Also now
+        // additive with paper focus + types + search.
         const logicalSelect = document.getElementById('kg-logical-focus');
         const axiomNodes = nodes.filter(n => n.type === 'LeanAxiom').sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id));
         const structNodes = nodes.filter(n => n.type === 'LeanStructure').sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id));
@@ -802,31 +1010,66 @@
         }
         logicalSelect.onchange = function() {
             const val = this.value;
-            // Reset paper focus when logical focus changes
-            document.getElementById('kg-paper-focus').value = '';
             if (!val) {
+                filterState.logicalFocusIds = null;
                 clearSel();
                 applyFilters();
-                nodeEl.style('opacity', null);
-                linkEl.style('opacity', null);
                 return;
             }
-            // Use impact API to show everything that depends on / is depended on by this axiom/structure
             fetch('/api/graph/impact/' + encodeURIComponent(val))
                 .then(r => r.json())
                 .then(data => {
+                    filterState.logicalFocusIds = new Set(data.impacted_node_ids);
                     clearSel();
-                    const imp = new Set(data.impacted_node_ids);
-                    const il = new Set(data.impacted_edge_indices);
-                    nodeEl
-                        .style('display', n => imp.has(n.id) ? null : 'none')
-                        .style('opacity', null);
-                    linkEl
-                        .style('display', (l, i) => il.has(i) ? null : 'none')
-                        .style('opacity', null);
+                    applyFilters();
                 })
                 .catch(err => console.error('Logical focus failed:', err));
         };
+
+        // Search box — free-text substring against label + id.
+        const searchInput = document.getElementById('kg-search');
+        if (searchInput) {
+            let searchDebounce = null;
+            searchInput.oninput = function() {
+                clearTimeout(searchDebounce);
+                const raw = this.value.trim().toLowerCase();
+                searchDebounce = setTimeout(() => {
+                    filterState.search = raw;
+                    applyFilters();
+                }, 120);
+            };
+        }
+
+        // Clear Filters button — resets everything AND-composable to the
+        // initial "show main types only" state.
+        const clearBtn = document.getElementById('kg-clear-filters');
+        if (clearBtn) {
+            clearBtn.onclick = () => {
+                // Types: restore default main-types set
+                filterState.types.clear();
+                allTypes.filter(t => !SCAFFOLDING_TYPES.has(t))
+                        .forEach(t => filterState.types.add(t));
+                // Paper/logical focus: clear
+                filterState.paperFocusIds = null;
+                filterState.logicalFocusIds = null;
+                // Search: clear
+                filterState.search = '';
+                // Reset UI reflections
+                paperSelect.value = '';
+                logicalSelect.value = '';
+                if (searchInput) searchInput.value = '';
+                // Repaint pills
+                fC.querySelectorAll('.kg-filter-pill').forEach(p => {
+                    const t = p.dataset.type;
+                    if (filterState.types.has(t)) p.classList.remove('off');
+                    else p.classList.add('off');
+                });
+                scaffoldingPillsContainer.querySelectorAll('.kg-filter-pill')
+                    .forEach(p => p.classList.add('off'));
+                clearSel();
+                applyFilters();
+            };
+        }
 
         // Mode buttons
         document.getElementById('kg-mode-explore').onclick = () => setMode('explore');

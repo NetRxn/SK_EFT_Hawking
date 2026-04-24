@@ -155,6 +155,14 @@ import SKEFTHawking.FangGuTorsionDM
 import SKEFTHawking.DarkSectorSynthesis
 import SKEFTHawking.SFDMMergerForecast
 import SKEFTHawking.FermiHubbardDimer
+import SKEFTHawking.GibbsDuhemTheorem
+import SKEFTHawking.QTheoryNoGoTheorem
+import SKEFTHawking.DESIComparison
+import SKEFTHawking.DarkEnergyObstructionPrinciple
+import SKEFTHawking.CondensedMatterAnalog
+import SKEFTHawking.VestigialMapping
+import SKEFTHawking.VestigialEOS
+import SKEFTHawking.ClassificationTableDark
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

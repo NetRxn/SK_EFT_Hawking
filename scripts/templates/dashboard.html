@@ -313,6 +313,10 @@
            href="?tab=qi">
             Process Health
         </a>
+        <a class="tab {% if tab == 'chains' %}active{% endif %}"
+           href="?tab=chains">
+            Research Status
+        </a>
     </div>
 </div>
 
@@ -952,6 +956,13 @@
     {% if tab == 'qi' %}
     <div class="tab-content active">
         {% include 'partials/qi_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ RESEARCH STATUS / PROOF-CHAIN-VIZ TAB (Phase 5v Wave 9d) ═══ -->
+    {% if tab == 'chains' %}
+    <div class="tab-content active">
+        {% include 'partials/chains_tab.html' %}
     </div>
     {% endif %}
 
