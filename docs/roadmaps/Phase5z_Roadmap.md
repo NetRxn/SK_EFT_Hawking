@@ -4,7 +4,21 @@
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22). First new phase after the Phase 5y closure and five-NO-GO dark-energy sweep.*
 
-**Status update 2026-04-25-0150:** Wave 1 (Track A) **SHIPPED end-to-end through Stages 1–13** of the wave-execution pipeline. Strengthening pass replaced 3 vacuous Props with 5 substantive ones; figure review (Stage 9) PASS; technical + stakeholder notebooks (Stage 11) shipped clean; adversarial review (Stage 13) re-invocation **all 18 BLOCKERs closed + 7/8 REQUIREDs closed** (1 deferred REQUIRED is the WebFetch verification on the 10 new bibkeys, awaiting an authorized-WebFetch round per session constraint). New Lean module `ScalarRungInterpretation.lean` ships with **20 theorems** (audit replaced 3 vacuous Props — `IsHiggsBilinear`, `MexicanHatFromTetradBifurcation`, `scalar_rung_quantitative_EWSB_iff_m_H_matches` — with 5 substantive ones, including the tracked-hypothesis bridge `H_ScalarChannelIsTetradBifurcationOutput` and the custodial-symmetry algebraic identity `zMass_sq_minus_wMass_sq`), **zero sorry, zero new axioms**; matching Python package `src/scalar_rung/` with 24 passing tests; figure `fig_higgs_mass_parameter_scan`; flagship paper `papers/paper20_scalar_rung/paper_draft.tex` (4 pages). Three deep-research prompts (O.2 SU(2)×U(1) index structure, Yukawa overlap, O.3 sterile-ν embedding) filed in `Lit-Search/Tasks/`. Falsifiability-anchor verdict: **Gate Z.1 STRUCTURAL-ONLY** at the current schematic-leading-log scope (m_H = 125 GeV reachable only along a 1-D tuning curve in (Λ_UV, G_c)). Quantitative scope unlocks once O.2 deep research lands and the SU(2)×U(1)-dressed scalar channel is formalized.
+**Status update 2026-04-25-0210:** Wave 1 (Track A) **SHIPPED end-to-end through Stages 1–13** of the wave-execution pipeline, and **all three Phase 5z deep-research deliverables have landed** in `Lit-Search/Phase-5z/`.
+
+Wave 1 summary:
+- Strengthening pass replaced 3 vacuous Props with 5 substantive ones (including tracked-hypothesis bridge `H_ScalarChannelIsTetradBifurcationOutput` + custodial-symmetry identity `zMass_sq_minus_wMass_sq`)
+- Stage 9 figure review PASS; Stage 11 technical + stakeholder notebooks shipped clean; Stage 13 adversarial review re-invocation closed all 18 BLOCKERs + 7/8 REQUIREDs (1 deferred WebFetch round on the 10 new bibkeys awaiting authorized session)
+- `ScalarRungInterpretation.lean` ships **20 theorems**, zero sorry, zero new axioms
+- Python `src/scalar_rung/` + 24 passing tests; figure `fig_higgs_mass_parameter_scan`; flagship paper `paper20_scalar_rung` (5 pages, 13/13 bibkeys registered)
+- Falsifiability-anchor verdict: **Gate Z.1 STRUCTURAL-ONLY** at the current schematic-leading-log scope (m_H = 125 GeV reachable only along a 1-D tuning curve in (Λ_UV, G_c))
+
+Deep-research verdicts (delivered):
+- **O.2 Structural (`5z-Open Question 02-Structural.md`):** **Scenario A (doublet-compatible), strength 3/5.** The Wetterich-NJL scalar channel admits an SU(2)_L × U(1)_Y Higgs-compatible extension via the Bardeen-Hill-Lindner auxiliary-field route. Not Wetterich-native; requires a transplant theorem `BHLGaugeEmbedding` in Lean importing the BHL–MTY–Hill construction onto the `WetterichNJL` Clifford-16 Fierz basis. **Gate Z.2 effectively resolved** — Wave 3 proceeds with SU(2)-indexed finite-T potential.
+- **Yukawa overlap (`5z-Yukawa Couplings...Emergent Weyl Modes.md`):** **No closed-form in VZ primary sources.** The VZ construction mechanically supports the overlap definition (projector Π·Ω is explicit, Weyl mode `Ψ = ΠΩψ` is closed-form), but Yukawa `y_fg = ⟨P_FP,f | σ̂ | P_FP,g⟩` is a **derived/proposed extension**, not a theorem of VZ2014. Wave 1 extension must mark the overlap module as a *structural postulate extending VZ2014*. F-theory GUT constructions (Heckman-Vafa, Cremades-Ibáñez-Marchesano, Leontaris) provide an analogue closed-form for future transplantation.
+- **O.3 Sterile-ν embedding (`Phase 5z, Wave 2 — Sterile-Neutrino Embedding...`):** **Hybrid Embedding III recommended.** Fundamental Lean field `ν_R : SterileNeutrino` whose UV interpretation is an ADW-substrate bound state; Majorana mass `M_R` as a Z₁₆-invariant condensate scale. Forced by the proved `hidden_sector_required` theorem (Embedding II incurs +3 mod 16 hidden-sector TQFT burden; Embedding III adds zero IR cost). `M_R` enters as `noncomputable constant` with substrate-bridge axiom marked `informal_lemma` (the `Λ_ADW → M_R` derivation is not closed in primary literature).
+
+Net effect: **Wave 1 quantitative extension, Wave 2, and Wave 3 are all now unblocked.** Next session can pick any.
 
 **Entry state (calibration, 2026-04-22 Inventory_Index snapshot):** 150 modules, 3300+ theorems, 0 sorry, 1 axiom. Core rung machinery in place: `WetterichNJL.lean` (18, scalar/pseudoscalar/vector channels + NJL–ADW correspondence), `TetradGapEquation.lean` (20, generic NJL-type gap equation + bifurcation), `VestigialSusceptibility.lean` (16, RPA bubble + Kubo connection from Phase 5y Wave 6), `FermiPointTopology.lean` (33, emergent-Weyl mode counting), `ADWMechanism.lean` (21), `HiddenSectorClassification.lean` (9, COMPLETE 2026-04-22), `Z16AnomalyComputation.lean` (23), `SpinBordism.lean` (8), `RokhlinBridge.lean` (14), `SMFermionData.lean` (19), `VestigialGravity.lean` (24 after Phase 5y Wave 6), `TetradGapEquation.lean` (24 after 5y Wave 6).
 
@@ -62,7 +76,7 @@ This is the single flagship wave of Phase 5z: paper-bearing, program-bearing, an
 
 ### Wave 1 — `ScalarRungInterpretation.lean` [Pipeline: Stages 1–12]
 
-**Status:** **SHIPPED 2026-04-24** (Stages 1–10/12; Stage 9 figure review + Stage 11 notebooks deferred per session scope).
+**Status:** **SHIPPED 2026-04-24 through Stages 1–13** (end-to-end; Stage 13 re-invocation cleared all BLOCKERs 2026-04-25). Deep-research result for Wave 1 extension (Scenario A via BHL bridge) now available — see header status block; a quantitative-scope follow-up wave (call it Wave 1b) is now unblocked, which would add `BHLGaugeEmbedding`-style SU(2)_L × U(1)_Y-indexed scalar-channel extension as a transplant from BHL–MTY–Hill literature.
 
 **Goal:** Formalize the identification of the WetterichNJL scalar channel with the Higgs bilinear, the Yukawa-as-overlap construction, and the `m_H` microscopic prediction.
 
@@ -210,11 +224,11 @@ The order of the electroweak phase transition (first-order vs crossover) is a mi
 
 ## Decision Gates
 
-**Gate Z.1 — after Wave 1 ships:** Is the `m_H` microscopic prediction within an order of magnitude of 125 GeV under natural parameter ranges? YES → scalar-rung framing is quantitative; proceed with Wave 2 and Wave 3 at full scope. NO → scalar-rung framing is structural-only; Wave 2 continues (independent), Wave 3 scope is reduced to transition-order prediction without EWSB-quantitative claims, flagship paper is reframed as "Structural Theory of EWSB Candidates on Emergent Substrates."
+**Gate Z.1 — after Wave 1 ships:** ✅ **RESOLVED (STRUCTURAL-ONLY branch locked in 2026-04-25).** The microscopic `m_H` prediction reaches 125 GeV only along a 1-D tuning curve in the natural (Λ_UV, G_c) plane under the schematic leading-log closure. Under the current flavor-singlet frame, the scalar-rung framing is therefore *structural-only*. The O.2 deep research (delivered 2026-04-25, verdict Scenario A strength 3/5) shows that a quantitative extension via the BHL auxiliary-field bridge is available; the activated quantitative-scope follow-up would be Wave 1b (`BHLGaugeEmbedding` transplant). Paper 20 is reframed as "structural identification" per roadmap's NO-branch fallback.
 
-**Gate Z.2 — before Wave 3 begins:** Has Open Q O.2 (SU(2)×U(1) index structure) resolved? If NO, Wave 3 proceeds in flavor-singlet frame with a documented structural extension to the SM-embedded case. If YES (doublet-compatible), Wave 3 ships with direct SU(2) indices in the finite-T potential.
+**Gate Z.2 — before Wave 3 begins:** ✅ **RESOLVED (2026-04-25 via O.2 delivery).** O.2 verdict: Scenario A (doublet-compatible) strength 3/5; literature-supported (BHL, MTY, Hill) but requires a transplant theorem `BHLGaugeEmbedding` that is not Wetterich-native. Wave 3 proceeds with direct SU(2) indices in the finite-T potential, citing BHL-class extension as load-bearing for the index structure.
 
-**Gate Z.3 — optional paper gate:** If all three flagship deliverables produce consistent predictions, consider a unified Annals-length review paper bundling Waves 1–3 as a single "Scalar Condensate Ladder" paper rather than three independent papers. User decision.
+**Gate Z.3 — optional paper gate:** If all three flagship deliverables produce consistent predictions, consider a unified Annals-length review paper bundling Waves 1–3 as a single "Scalar Condensate Ladder" paper rather than three independent papers. User decision — defer until Wave 2 + Wave 3 actually ship.
 
 ---
 
@@ -259,9 +273,11 @@ Parallelism:
 
 **O.1** — Repo convention for "interpretation / bridge" modules vs "new physics" modules. Affects 5z packaging and, later, all Phase 6c bridge theorems. Propose: `ScalarRungInterpretation.lean` (interpretation) vs `MajoranaRung.lean` (new-physics rung) — document the convention in `docs/ARCHITECTURE_SCOPE.md` as part of Wave 1 Stage 12.
 
-**O.2 — LOAD-BEARING.** Does `WetterichNJL.lean`'s scalar channel carry a Higgs-compatible `SU(2) × U(1)` structure, or flavor-singlet only? Direct read of `WetterichNJL.lean` before Wave 1 Stage 2 decides this. If unclear, drop prompt to `Lit-Search/Tasks/Phase5z_wetterich_njl_ew_index_structure.md`.
+**O.2 — LOAD-BEARING — ✅ RESOLVED 2026-04-25.** Verdict: **Scenario A (doublet-compatible), strength 3/5.** The Wetterich-NJL scalar channel admits a Higgs-compatible SU(2)_L × U(1)_Y extension via the Bardeen-Hill-Lindner auxiliary-field bridge (BHL 1990, MTY 1989, Hill 2025). Not Wetterich-native; requires a transplant theorem `BHLGaugeEmbedding` in Lean. Full verdict, 15-paper literature survey, and signature proposals in `Lit-Search/Phase-5z/5z-Open Question 02-Structural.md`. Activates Wave 1b (quantitative extension) + tightens Wave 3 (SU(2)-indexed finite-T potential).
 
-**O.3** — Sterile-neutrino embedding choice for Majorana-rung seesaw map: right-handed singlet `ν_R` vs composite Majorana bilinear from paired SM neutrinos. Wave 2 ships either embedding; chose embedding documented in module docstring.
+**O.Yukawa — ✅ RESOLVED 2026-04-25 (honest-gap verdict).** Verdict: **no closed-form in VZ primary sources.** Volovik-Zubkov construction mechanically supports the projector `Ψ = ΠΩψ` in closed form, but Yukawa `y_fg = ⟨P_FP,f | σ̂ | P_FP,g⟩` is a derived/proposed extension, NOT a theorem of VZ2014. Wave 1 overlap module must be marked as a *structural postulate extending VZ2014*. Analogue closed-form available in F-theory GUT constructions (Heckman-Vafa, Cremades-Ibáñez-Marchesano) for future transplantation. Full verdict + signature proposals in `Lit-Search/Phase-5z/5z-Yukawa Couplings as Overlap Integrals on Volovik–Zubkov Fermi-Point Emergent Weyl Modes.md`.
+
+**O.3 — ✅ RESOLVED 2026-04-25.** Verdict: **Hybrid Embedding III recommended.** Fundamental Lean field `ν_R : SterileNeutrino` with UV interpretation as an ADW-substrate bound state; Majorana mass `M_R` as a ℤ₁₆-invariant condensate scale. Z₁₆ classification forces this (Embedding II incurs +3 mod 16 hidden-sector TQFT burden; Embedding III adds zero IR cost while preserving substrate self-consistency). `M_R` enters Lean as `noncomputable constant` with substrate-bridge axiom marked `informal_lemma` since `Λ_ADW → M_R` derivation is not closed in primary literature. Full verdict + signature proposals in `Lit-Search/Phase-5z/Phase 5z, Wave 2 — Sterile-Neutrino Embedding for the Majorana Rung.md`.
 
 **O.4** — Which paper journal targets: `Paper 20 (Scalar Rung)` — Annals or PRD; `Paper 21 (Majorana Rung)` — PRD; `Paper 22 (EW Phase Transition)` — conference or review venue. Finalized at Stage 10 per paper.
 
