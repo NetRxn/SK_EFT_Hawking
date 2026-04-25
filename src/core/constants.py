@@ -1831,7 +1831,7 @@ EW_PARAMS = {
 # hypothesis (open in primary literature).
 #
 # Oscillation parameters: NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216,
-# arXiv:2601.14386), normal ordering (NO), 2024 update.
+# arXiv:2410.05380), normal ordering (NO), 2024 update.
 # 0νββ bounds: KamLAND-Zen 800 (arXiv:2406.11438), LEGEND-1000 PCDR
 # (arXiv:2107.11462).
 #

@@ -28,7 +28,7 @@ pure mathematics (zeta regularization $\zeta(-1) = -1/12$), the denominator
 is pure physics (SM fermion content). Without right-handed neutrinos,
 $c_- = 15/2$ is fractional --- a formally verified independent argument
 for $\nu_R$. The complete chain from modular forms to particle physics
-comprises 2237+~theorems across 130~Lean~4 modules (zero axioms in the
+comprises 2237+~theorems across 170~Lean~4 modules (zero axioms in the
 generation constraint chain); the complete
 derivation chain from modular forms through fermion counting to the
 generation bound is fully machine-checked. The algebraic core of the
@@ -274,15 +274,16 @@ constraint requires $N_f = \mathrm{lcm}(16,3) = 48$ --- providing formal
 evidence for right-handed neutrinos from the observed $N_f = 3$.
 \end{enumerate}
 
-The formal verification comprises 2237+~theorems across 130~Lean~4
+The formal verification comprises 2237+~theorems across 170~Lean~4
 modules (1~axiom, zero in the generation constraint chain). Key modules:
 \texttt{SMFermionData.lean} (fermion enumeration),
 \texttt{WangBridge.lean} ($c_- = 8$ derivation),
 \texttt{GenerationConstraint.lean} ($24 \mid 8N_f \Rightarrow 3 \mid N_f$,
 Aristotle \texttt{a1dfcbde}),
 \texttt{ModularInvarianceConstraint.lean} (framing anomaly from $\eta$,
-Aristotle \texttt{b54f9611}),
-\texttt{RokhlinBridge.lean} (``16'' convergence),
+proved manually, zero \texttt{sorry}),
+\texttt{RokhlinBridge.lean} (``16'' convergence,
+Aristotle \texttt{b54f9611} for \texttt{z16\_anomaly\_without\_nu\_R}),
 \texttt{AlgebraicRokhlin.lean} (Serre's $8 \mid \sigma$, zero \texttt{sorry}),
 \texttt{E8Lattice.lean} ($\sigma(E_8) = 8$, \texttt{native\_decide}),
 and \texttt{SpinBordism.lean} (Wang chain, zero \texttt{sorry}).
@@ -316,7 +317,7 @@ a bridge between pure mathematics and particle physics, machine-checked
 end to end.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v4.28.0, Mathlib \texttt{8f9d9cff}).
+Lean~4 proofs verified by \texttt{lake build} (v4.29.0, Mathlib \texttt{8850ed93}).
 Automated proofs by the Aristotle theorem prover (Harmonic).
 \end{acknowledgments}
 

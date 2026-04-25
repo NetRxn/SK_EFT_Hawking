@@ -1,0 +1,3913 @@
+{
+  "paper": "paper6_vestigial",
+  "review_date": "2026-04-25T19:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper6_vestigial:abstract:d39f702a",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "d39f702a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 25,
+      "tex_line_end": 27,
+      "quote": "We present mean-field and Monte Carlo evidence for a \\emph{vestigial metric} phase in the Akama-Diakonov-Wetterich (ADW) model of emergent gravity.",
+      "quote_normalized": "we present mean-field and monte carlo evidence for a vestigial metric phase in the akama-diakonov-wetterich (adw) model of emergent gravity.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Self-referential abstract opener; substantive claims unpack in body.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:abstract:672a1bbb",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "672a1bbb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 27,
+      "tex_line_end": 29,
+      "quote": "In this phase the tetrad order parameter vanishes, $\\vev{E^a_{\\ \\mu}} = 0$, while the composite metric correlator remains nonzero: $g_{\\mu\\nu} = \\eta_{ab}\\,\\vev{E^a_{\\ \\mu}\\, E^b_{\\ \\nu}} \\neq 0$.",
+      "quote_normalized": "in this phase the tetrad order parameter vanishes, $\\vev{e^a_{\\ \\mu}} = 0$, while the composite metric correlator remains nonzero: $g_{\\mu\\nu} = \\eta_{ab}\\,\\vev{e^a_{\\ \\mu}\\, e^b_{\\ \\nu}} \\neq 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.bosons_see_vestigial_gravity"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.fermions_no_gravity_in_vestigial"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Definitional statement of vestigial phase; matches Lean inductive VestigialPhase.vestigial constructor.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:abstract:4e5c4d2d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "4e5c4d2d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 30,
+      "tex_line_end": 31,
+      "quote": "Gravity exists---bosons follow geodesics of $g_{\\mu\\nu}$---but fermions, which couple to the tetrad, do not; the Equivalence Principle is violated.",
+      "quote_normalized": "gravity exists---bosons follow geodesics of $g_{\\mu\\nu}$---but fermions, which couple to the tetrad, do not; the equivalence principle is violated.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.ep_violation_in_vestigial"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.ep_distinguishes_phases"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "EP violation in vestigial phase; both theorems exist in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:abstract:37459938",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "37459938",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 32,
+      "tex_line_end": 37,
+      "quote": "Working on a four-dimensional Euclidean hypercubic lattice with the Hubbard-Stratonovich--transformed ADW interaction and $\\Nf=4$ Dirac fermion species, we map the three-phase structure as a function of the coupling ratio $G/\\Gc$: a pre-geometric phase ($G \\ll \\Gc$) with neither metric nor tetrad, the vestigial phase ($G \\lesssim \\Gc$), and the full tetrad (Einstein-Cartan) phase ($G > \\Gc$).",
+      "quote_normalized": "working on a four-dimensional euclidean hypercubic lattice with the hubbard-stratonovich--transformed adw interaction and $\\nf=4$ dirac fermion species, we map the three-phase structure as a function of the coupling ratio $g/\\gc$: a pre-geometric phase ($g \\ll \\gc$) with neither metric nor tetrad, the vestigial phase ($g \\lesssim \\gc$), and the full tetrad (einstein-cartan) phase ($g > \\gc$).",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology summary.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:abstract:cfc77156",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "cfc77156",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 37,
+      "tex_line_end": 42,
+      "quote": "We develop the lattice Monte Carlo framework for testing the vestigial phase prediction, including exact SO(4) Haar integration via Weingarten calculus (fundamental + adjoint representation channels) and the fermion-bag algorithm adapted for multi-channel bond coupling.",
+      "quote_normalized": "we develop the lattice monte carlo framework for testing the vestigial phase prediction, including exact so(4) haar integration via weingarten calculus (fundamental + adjoint representation channels) and the fermion-bag algorithm adapted for multi-channel bond coupling.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology summary.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:abstract:fa5683fe",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "fa5683fe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 42,
+      "tex_line_end": 43,
+      "quote": "The Weingarten integration is formally verified in Lean~4 (14 theorems, zero sorry, Aristotle-proved).",
+      "quote_normalized": "the weingarten integration is formally verified in lean~4 (14 theorems, zero sorry, aristotle-proved).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SO4Weingarten"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: grep -c '^theorem ' lean/SKEFTHawking/SO4Weingarten.lean = 14 (matches). Live module sorry count = 0 (matches).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper6_vestigial:abstract:8b3e238d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "abstract",
+        "quote_hash": "8b3e238d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 43,
+      "tex_line_end": 46,
+      "quote": "We discuss the implications for the gravity hierarchy---the vestigial phase constitutes Level~1 of a three-level sequence toward UV-complete emergent gravity---and identify the Equivalence Principle violation as a distinctive experimental signature.",
+      "quote_normalized": "we discuss the implications for the gravity hierarchy---the vestigial phase constitutes level~1 of a three-level sequence toward uv-complete emergent gravity---and identify the equivalence principle violation as a distinctive experimental signature.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Roadmap statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:cb917a7f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "cb917a7f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 55,
+      "tex_line_end": 56,
+      "quote": "The question of whether spacetime geometry can emerge from a pre-geometric microscopic substrate has been given renewed impetus by two developments.",
+      "quote_normalized": "the question of whether spacetime geometry can emerge from a pre-geometric microscopic substrate has been given renewed impetus by two developments.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:ead477ce",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "ead477ce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 56,
+      "tex_line_end": 61,
+      "quote": "First, the Akama-Diakonov-Wetterich (ADW) program~\\cite{Akama1978, Diakonov2011,Wetterich2005} demonstrates that the tetrad can arise as a composite fermion-bilinear order parameter, with a mean-field phase transition at a critical coupling $\\Gc$ that spontaneously generates Lorentzian geometry.",
+      "quote_normalized": "first, the akama-diakonov-wetterich (adw) program~ demonstrates that the tetrad can arise as a composite fermion-bilinear order parameter, with a mean-field phase transition at a critical coupling $\\gc$ that spontaneously generates lorentzian geometry.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Akama1978",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "Diakonov2011",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "Wetterich2005",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Bibitem 'Wetterich2005' is locally defined in thebibliography (line 567); in CITATION_REGISTRY the matching entry is keyed 'Wetterich2004' (PRD 70, 105004 (2004)). Bibitem text gives year 2004 but key says 2005 \u2014 registry-key mismatch, not LaTeX failure. WARN.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:20196999",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "20196999",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 61,
+      "tex_line_end": 64,
+      "quote": "Second, Volovik~\\cite{Volovik2024} argued that an intermediate \\emph{vestigial} phase should exist in which the metric tensor $g_{\\mu\\nu}$---a composite of the composite tetrad---acquires a nonzero expectation value while the tetrad itself remains disordered.",
+      "quote_normalized": "second, volovik~ argued that an intermediate vestigial phase should exist in which the metric tensor $g_{\\mu\\nu}$---a composite of the composite tetrad---acquires a nonzero expectation value while the tetrad itself remains disordered.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Volovik2024",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:cfeddecf",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "cfeddecf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 66,
+      "tex_line_end": 66,
+      "quote": "The vestigial gravity concept has a precise condensed-matter analog.",
+      "quote_normalized": "the vestigial gravity concept has a precise condensed-matter analog.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:1e9d8aac",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "1e9d8aac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 67,
+      "tex_line_end": 70,
+      "quote": "In nematic liquid crystals, the quadrupolar (tensorial) order parameter $Q_{ij} \\sim \\vev{n_i n_j - \\frac{1}{3}\\delta_{ij}}$ can order while the director $\\bm{n}$ remains disordered; the system exhibits orientational order without polarity.",
+      "quote_normalized": "in nematic liquid crystals, the quadrupolar (tensorial) order parameter $q_{ij} \\sim \\vev{n_i n_j - \\frac{1}{3}\\delta_{ij}}$ can order while the director $\\bm{n}$ remains disordered; the system exhibits orientational order without polarity.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Standard textbook analogy; not directly verifiable against pipeline.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:60e04232",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "60e04232",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 70,
+      "tex_line_end": 73,
+      "quote": "Similarly, in frustrated magnets, ``vestigial'' or ``composite'' order parameters---products of primary order parameters---can condense at a higher temperature than the primary order, creating a hierarchy of phase transitions~\\cite{Fernandes2019}.",
+      "quote_normalized": "similarly, in frustrated magnets, ``vestigial'' or ``composite'' order parameters---products of primary order parameters---can condense at a higher temperature than the primary order, creating a hierarchy of phase transitions~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Fernandes2019",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Bibitem 'Fernandes2019' defined locally (line 584) but no entry in CITATION_REGISTRY. Citation appears in paper-local bibliography only.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:17289502",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "17289502",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 75,
+      "tex_line_end": 82,
+      "quote": "For gravity, the hierarchy reads: Level 1: $g_{\\mu\\nu} \\neq 0$, $e^a_{\\ \\mu} = 0$ (vestigial metric), Level 2: $e^a_{\\ \\mu} \\neq 0$ (full tetrad/Einstein-Cartan), Level 3: UV-complete theory.",
+      "quote_normalized": "for gravity, the hierarchy reads: level 1: $g_{\\mu\\nu} \\neq 0$, $e^a_{\\ \\mu} = 0$ (vestigial metric), level 2: $e^a_{\\ \\mu} \\neq 0$ (full tetrad/einstein-cartan), level 3: uv-complete theory.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.VestigialPhase"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Three-phase taxonomy matches Lean inductive VestigialPhase {pre_geometric, vestigial, full_tetrad}.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:a83d3613",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "a83d3613",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 84,
+      "tex_line_end": 85,
+      "quote": "In this paper we provide the first numerical lattice evidence for the vestigial metric phase in the ADW model.",
+      "quote_normalized": "in this paper we provide the first numerical lattice evidence for the vestigial metric phase in the adw model.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:54dc1209",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "54dc1209",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 85,
+      "tex_line_end": 87,
+      "quote": "We work with a Euclidean-signature pilot simulation to avoid the fermion sign problem, deferring the Lorentzian case to future work.",
+      "quote_normalized": "we work with a euclidean-signature pilot simulation to avoid the fermion sign problem, deferring the lorentzian case to future work.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:38935a78",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "38935a78",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 87,
+      "tex_line_end": 88,
+      "quote": "Our lattice model is defined in Sec.~\\ref{sec:lattice}.",
+      "quote_normalized": "our lattice model is defined in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:1ec04fb2",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "1ec04fb2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 88,
+      "tex_line_end": 90,
+      "quote": "The mean-field analysis, which extends the Phase~3 gap equation to include the metric correlator, is presented in Sec.~\\ref{sec:mean_field}.",
+      "quote_normalized": "the mean-field analysis, which extends the phase~3 gap equation to include the metric correlator, is presented in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:4efc4f0d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "4efc4f0d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 90,
+      "tex_line_end": 91,
+      "quote": "The Monte Carlo results are given in Sec.~\\ref{sec:mc}.",
+      "quote_normalized": "the monte carlo results are given in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:a222511f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "a222511f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 91,
+      "tex_line_end": 92,
+      "quote": "The phase diagram is assembled in Sec.~\\ref{sec:phase_diagram}.",
+      "quote_normalized": "the phase diagram is assembled in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:introduction:60068add",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "introduction",
+        "quote_hash": "60068add",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 92,
+      "tex_line_end": 94,
+      "quote": "We discuss Equivalence Principle violation and the gravity hierarchy in Sec.~\\ref{sec:discussion}, and conclude in Sec.~\\ref{sec:conclusions}.",
+      "quote_normalized": "we discuss equivalence principle violation and the gravity hierarchy in sec.~, and conclude in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:c25c6266",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "c25c6266",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 102,
+      "tex_line_end": 103,
+      "quote": "We consider a $d=4$ dimensional Euclidean hypercubic lattice of linear extent $L$, with volume $V = L^4$.",
+      "quote_normalized": "we consider a $d=4$ dimensional euclidean hypercubic lattice of linear extent $l$, with volume $v = l^4$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:69b5920a",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "69b5920a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 103,
+      "tex_line_end": 105,
+      "quote": "At each site $x$ we place a tetrad field $e^a_{\\ \\mu}(x)$, a real $4\\times 4$ matrix with tangent-space index $a$ and coordinate index $\\mu$.",
+      "quote_normalized": "at each site $x$ we place a tetrad field $e^a_{\\ \\mu}(x)$, a real $4\\times 4$ matrix with tangent-space index $a$ and coordinate index $\\mu$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:1e982ec2",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "1e982ec2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 107,
+      "tex_line_end": 110,
+      "quote": "Starting from the ADW 8-fermion cosmological interaction and performing the Hubbard-Stratonovich (HS) decomposition with the tetrad as auxiliary field~\\cite{Vladimirov2012}, one obtains an action quadratic in fermions.",
+      "quote_normalized": "starting from the adw 8-fermion cosmological interaction and performing the hubbard-stratonovich (hs) decomposition with the tetrad as auxiliary field~, one obtains an action quadratic in fermions.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Vladimirov2012",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Bibitem 'Vladimirov2012' defined locally (line 576); CITATION_REGISTRY uses key 'VladimirovDiakonov2012' for the same paper (PRD 86, 104019 (2012)). Registry-key mismatch only.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:1b1d3136",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "1b1d3136",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 110,
+      "tex_line_end": 111,
+      "quote": "Integrating out the fermions yields an effective bosonic action for the tetrad.",
+      "quote_normalized": "integrating out the fermions yields an effective bosonic action for the tetrad.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:f6b480f0",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "f6b480f0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 111,
+      "tex_line_end": 117,
+      "quote": "For the Euclidean pilot ($\\eta_{ab} \\to \\delta_{ab}$), the auxiliary (tree-level) action per site is $S_{\\mathrm{aux}} = \\sum_x \\frac{1}{2G}\\,\\tr\\!\\left(e^T(x)\\, e(x)\\right)$, where $G$ is the ADW four-fermion coupling.",
+      "quote_normalized": "for the euclidean pilot ($\\eta_{ab} \\to \\delta_{ab}$), the auxiliary (tree-level) action per site is $s_{aux} = \\sum_x \\frac{1}{2g}\\,\\tr\\!\\left(e^t(x)\\, e(x)\\right)$, where $g$ is the adw four-fermion coupling.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_aux_action"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard HS decomposition; tree-level auxiliary action.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:519e80de",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "519e80de",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 119,
+      "tex_line_end": 126,
+      "quote": "The one-loop fermion determinant contributes a Coleman-Weinberg effective potential $\\Veff(C) = \\frac{C^2}{2G} - \\frac{\\Nf}{16\\pi^2}\\!\\left[\\Lambda^2 C^2 - C^4\\ln\\!\\left(\\frac{\\Lambda^2}{C^2}+1\\right)\\right]$, where $C = |\\det(e)|^{1/4}$ and $\\Lambda$ is the UV cutoff (lattice scale).",
+      "quote_normalized": "the one-loop fermion determinant contributes a coleman-weinberg effective potential $\\veff(c) = \\frac{c^2}{2g} - \\frac{\\nf}{16\\pi^2}\\!\\left[\\lambda^2 c^2 - c^4\\ln\\!\\left(\\frac{\\lambda^2}{c^2}+1\\right)\\right]$, where $c = |\\det(e)|^{1/4}$ and $\\lambda$ is the uv cutoff (lattice scale).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_effective_potential"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.ADWMechanism"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Coleman-Weinberg V_eff matches formulas.py::adw_curvature_at_origin context (eq references same V_eff).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:21c8394c",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "21c8394c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 127,
+      "tex_line_end": 131,
+      "quote": "The critical coupling at which the origin becomes unstable is $\\Gc = \\frac{8\\pi^2}{\\Nf\\,\\Lambda^2}$.",
+      "quote_normalized": "the critical coupling at which the origin becomes unstable is $\\gc = \\frac{8\\pi^2}{\\nf\\,\\lambda^2}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_critical_coupling",
+            "computed_value": "G_c = 8*pi^2/(N_f*Lambda^2)",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.ADWMechanism.critical_coupling_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Matches formulas.py::adw_critical_coupling exactly: 8*pi^2/(N_f*Lambda^2).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:dabab158",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "dabab158",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 135,
+      "tex_line_end": 135,
+      "quote": "We define two order parameters that distinguish the three phases:",
+      "quote_normalized": "we define two order parameters that distinguish the three phases:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:b9f5cbd4",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "b9f5cbd4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 137,
+      "tex_line_end": 143,
+      "quote": "Tetrad VEV (vectorial, primary): $M_E^{a\\mu} = \\frac{1}{V}\\sum_x e^a_{\\ \\mu}(x)$. Its magnitude $|M_E| = \\sqrt{\\sum_{a\\mu}(M_E^{a\\mu})^2}$ is nonzero only in the full tetrad phase.",
+      "quote_normalized": "tetrad vev (vectorial, primary): $m_e^{a\\mu} = \\frac{1}{v}\\sum_x e^a_{\\ \\mu}(x)$. its magnitude $|m_e| = \\sqrt{\\sum_{a\\mu}(m_e^{a\\mu})^2}$ is nonzero only in the full tetrad phase.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "tetrad_vev_observable"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard order-parameter definition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:372e8dd8",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "372e8dd8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 145,
+      "tex_line_end": 154,
+      "quote": "Metric correlator (tensorial, composite): $M_g^{\\mu\\nu} = \\frac{1}{V}\\sum_x \\delta_{ab}\\, e^a_{\\ \\mu}(x)\\, e^b_{\\ \\nu}(x) = \\frac{1}{V}\\sum_x \\left[e^T(x)\\, e(x)\\right]^{\\mu\\nu}$. This is the Euclidean analog of $g_{\\mu\\nu} = \\eta_{ab}\\,\\vev{E^a_{\\ \\mu}\\, E^b_{\\ \\nu}}$ and is nonzero in both the vestigial and full tetrad phases.",
+      "quote_normalized": "metric correlator (tensorial, composite): $m_g^{\\mu\\nu} = \\frac{1}{v}\\sum_x \\delta_{ab}\\, e^a_{\\ \\mu}(x)\\, e^b_{\\ \\nu}(x) = \\frac{1}{v}\\sum_x \\left[e^t(x)\\, e(x)\\right]^{\\mu\\nu}$. this is the euclidean analog of $g_{\\mu\\nu} = \\eta_{ab}\\,\\vev{e^a_{\\ \\mu}\\, e^b_{\\ \\nu}}$ and is nonzero in both the vestigial and full tetrad phases.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "metric_correlator_observable"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermionBag4D.metric_correlator_nonneg"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Definition matches FermionBag4D.metric_correlator_nonneg theorem.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:ea297b7e",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "ea297b7e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 156,
+      "tex_line_end": 156,
+      "quote": "The phase classification follows from $|M_E|$ and $|M_g|$:",
+      "quote_normalized": "the phase classification follows from $|m_e|$ and $|m_g|$:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:cbb63dea",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "cbb63dea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 158,
+      "tex_line_end": 158,
+      "quote": "Phase I (pre-geometric): $|M_E| = 0$, $|M_g| \\approx 0$.",
+      "quote_normalized": "phase i (pre-geometric): $|m_e| = 0$, $|m_g| \\approx 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.VestigialPhase.pre_geometric"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:024d055f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "024d055f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 159,
+      "tex_line_end": 159,
+      "quote": "Phase II (vestigial metric): $|M_E| = 0$, $|M_g| > 0$.",
+      "quote_normalized": "phase ii (vestigial metric): $|m_e| = 0$, $|m_g| > 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.VestigialPhase.vestigial"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:130ee7ec",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "130ee7ec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 160,
+      "tex_line_end": 160,
+      "quote": "Phase III (full tetrad): $|M_E| > 0$, $|M_g| > 0$.",
+      "quote_normalized": "phase iii (full tetrad): $|m_e| > 0$, $|m_g| > 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.VestigialPhase.full_tetrad"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:e2c16de7",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "e2c16de7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 165,
+      "tex_line_end": 166,
+      "quote": "In the Euclidean pilot, the composite metric $M_g^{\\mu\\nu}$ is a real symmetric matrix with eigenvalues $\\lambda_i$.",
+      "quote_normalized": "in the euclidean pilot, the composite metric $m_g^{\\mu\\nu}$ is a real symmetric matrix with eigenvalues $\\lambda_i$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:4d9244fb",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "4d9244fb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 166,
+      "tex_line_end": 167,
+      "quote": "A well-defined Euclidean geometry requires all $\\lambda_i > 0$.",
+      "quote_normalized": "a well-defined euclidean geometry requires all $\\lambda_i > 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Definitional statement of Euclidean signature.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:84f67197",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "84f67197",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 167,
+      "tex_line_end": 169,
+      "quote": "For the Lorentzian case ($\\eta_{ab} = \\mathrm{diag}(-1,+1,+1,+1)$), one would instead require signature $(-,+,+,+)$, i.e., exactly one negative eigenvalue.",
+      "quote_normalized": "for the lorentzian case ($\\eta_{ab} = diag(-1,+1,+1,+1)$), one would instead require signature $(-,+,+,+)$, i.e., exactly one negative eigenvalue.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Definitional Lorentzian-signature statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:lattice-model:efeaf495",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "lattice-model",
+        "quote_hash": "efeaf495",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lattice-model",
+      "tex_line_start": 171,
+      "tex_line_end": 172,
+      "quote": "We measure the eigenvalues of $M_g$ at each Monte Carlo configuration and verify that they are positive-definite throughout the vestigial phase.",
+      "quote_normalized": "we measure the eigenvalues of $m_g$ at each monte carlo configuration and verify that they are positive-definite throughout the vestigial phase.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:ba568adc",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "ba568adc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 180,
+      "tex_line_end": 181,
+      "quote": "The tetrad VEV $C = \\vev{e^a_{\\ \\mu}}\\delta_a^{\\ \\mu}$ satisfies the gap equation $\\partial\\Veff/\\partial C = 0$.",
+      "quote_normalized": "the tetrad vev $c = \\vev{e^a_{\\ \\mu}}\\delta_a^{\\ \\mu}$ satisfies the gap equation $\\partial\\veff/\\partial c = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_gap_equation"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:7d3e854c",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "7d3e854c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 181,
+      "tex_line_end": 183,
+      "quote": "For $G > \\Gc$, the effective potential develops a nontrivial minimum at $C_{\\min} > 0$ with $\\Veff(C_{\\min}) < 0$ (see Fig.~\\ref{fig:veff}).",
+      "quote_normalized": "for $g > \\gc$, the effective potential develops a nontrivial minimum at $c_{\\min} > 0$ with $\\veff(c_{\\min}) < 0$ (see fig.~).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_critical_coupling"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.ADWMechanism"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:72ff2013",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "72ff2013",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 183,
+      "tex_line_end": 184,
+      "quote": "For $G < \\Gc$, the only minimum is at $C = 0$.",
+      "quote_normalized": "for $g < \\gc$, the only minimum is at $c = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_curvature_at_origin"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:af406af5",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "af406af5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 188,
+      "tex_line_end": 202,
+      "quote": "Even when $C = 0$, the metric correlator receives a contribution from thermal/quantum fluctuations: $\\vev{e^a_{\\ \\mu}\\, e^b_{\\ \\nu}}_{\\mathrm{fluct}} = \\delta^{ab}\\,\\frac{d^2\\, T_{\\mathrm{eff}}}{\\partial^2\\Veff/\\partial C^2\\big|_{C=0}}$, where $T_{\\mathrm{eff}}$ is the effective temperature (lattice scale for the Euclidean theory) and the curvature at the origin is $\\left.\\frac{\\partial^2\\Veff}{\\partial C^2}\\right|_{C=0} = \\frac{1}{G} - \\frac{\\Nf\\Lambda^2}{8\\pi^2}$.",
+      "quote_normalized": "even when $c = 0$, the metric correlator receives a contribution from thermal/quantum fluctuations: $\\vev{e^a_{\\ \\mu}\\, e^b_{\\ \\nu}}_{fluct} = \\delta^{ab}\\,\\frac{d^2\\, t_{eff}}{\\partial^2\\veff/\\partial c^2\\big|_{c=0}}$, where $t_{eff}$ is the effective temperature (lattice scale for the euclidean theory) and the curvature at the origin is $\\left.\\frac{\\partial^2\\veff}{\\partial c^2}\\right|_{c=0} = \\frac{1}{g} - \\frac{\\nf\\lambda^2}{8\\pi^2}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_curvature_at_origin",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Curvature 1/G - N_f*Lambda^2/(8*pi^2) matches formulas.py::adw_curvature_at_origin.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:cdd7c561",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "cdd7c561",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 203,
+      "tex_line_end": 204,
+      "quote": "As $G \\to \\Gc$ from below, this curvature vanishes and the fluctuation contribution diverges---precisely the vestigial ordering mechanism.",
+      "quote_normalized": "as $g \\to \\gc$ from below, this curvature vanishes and the fluctuation contribution diverges---precisely the vestigial ordering mechanism.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_curvature_at_origin"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "At G=Gc, 1/G = 1/(8pi^2/Nf Lambda^2) = Nf Lambda^2/(8pi^2), so curvature vanishes \u2014 algebraically consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:f2818b2e",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "f2818b2e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 205,
+      "tex_line_end": 207,
+      "quote": "The metric correlator becomes macroscopic while the tetrad VEV remains zero because the curvature is positive (the origin is still a minimum), but small enough that fluctuations produce a significant composite order.",
+      "quote_normalized": "the metric correlator becomes macroscopic while the tetrad vev remains zero because the curvature is positive (the origin is still a minimum), but small enough that fluctuations produce a significant composite order.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Mechanism narrative.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:555bdab7",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "555bdab7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 211,
+      "tex_line_end": 211,
+      "quote": "Scanning the coupling ratio $G/\\Gc$, we find three regimes in mean-field:",
+      "quote_normalized": "scanning the coupling ratio $g/\\gc$, we find three regimes in mean-field:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:c5ca51cf",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "c5ca51cf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 213,
+      "tex_line_end": 216,
+      "quote": "$G/\\Gc \\lesssim 0.8$: Pre-geometric. The curvature at the origin $\\partial^2\\Veff/\\partial C^2|_{C=0} = 1/G - \\Nf\\Lambda^2/(8\\pi^2)$ is large; the metric correlation length $\\xi \\sim 1/\\sqrt{\\text{curvature}}$ is short and metric fluctuations are uncorrelated thermal noise.",
+      "quote_normalized": "$g/\\gc \\lesssim 0.8$: pre-geometric. the curvature at the origin $\\partial^2\\veff/\\partial c^2|_{c=0} = 1/g - \\nf\\lambda^2/(8\\pi^2)$ is large; the metric correlation length $\\xi \\sim 1/\\sqrt{curvature}$ is short and metric fluctuations are uncorrelated thermal noise.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_curvature_at_origin"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:cc98ef35",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "cc98ef35",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 216,
+      "tex_line_end": 220,
+      "quote": "$0.8 \\lesssim G/\\Gc \\lesssim 1.0$: Vestigial. The curvature has dropped below $\\sim 30\\%$ of its weak-coupling value; the correlation length grows and metric fluctuations develop collective (vestigial) order, producing $|M_g| > 0$ while $|M_E| = 0$.",
+      "quote_normalized": "$0.8 \\lesssim g/\\gc \\lesssim 1.0$: vestigial. the curvature has dropped below $\\sim 30\\%$ of its weak-coupling value; the correlation length grows and metric fluctuations develop collective (vestigial) order, producing $|m_g| > 0$ while $|m_e| = 0$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Curvature criterion at ~30% threshold; threshold choice is an analytic convention not directly recomputable without explicit definition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:e78e984f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "e78e984f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 221,
+      "tex_line_end": 222,
+      "quote": "$G/\\Gc > 1.0$: Full tetrad. $C_{\\min} > 0$ with $\\Veff < 0$.",
+      "quote_normalized": "$g/\\gc > 1.0$: full tetrad. $c_{\\min} > 0$ with $\\veff < 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_critical_coupling"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:e24b114f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "e24b114f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 223,
+      "tex_line_end": 224,
+      "quote": "The vestigial criterion is curvature-based: the origin remains a minimum but the restoring force is weak enough for correlated metric fluctuations.",
+      "quote_normalized": "the vestigial criterion is curvature-based: the origin remains a minimum but the restoring force is weak enough for correlated metric fluctuations.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:397cbc5d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "397cbc5d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 225,
+      "tex_line_end": 227,
+      "quote": "This is the standard condensed-matter criterion for vestigial order~\\cite{Fernandes2019}---the qualitative three-phase structure is robust against the precise threshold choice.",
+      "quote_normalized": "this is the standard condensed-matter criterion for vestigial order~---the qualitative three-phase structure is robust against the precise threshold choice.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Fernandes2019",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Local bibitem only \u2014 not in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:mean-field-analysis:990faa16",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "mean-field-analysis",
+        "quote_hash": "990faa16",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mean-field-analysis",
+      "tex_line_start": 232,
+      "tex_line_end": 237,
+      "quote": "Effective potential $\\Veff(C)$ at three coupling ratios. $G/\\Gc = 0.5$: strong positive curvature at the origin (pre-geometric). $G/\\Gc = 0.9$: curvature nearly vanishes, enabling vestigial metric fluctuations. $G/\\Gc = 2.0$: Mexican-hat potential with nontrivial minimum at $C_{\\min}/\\Lambda \\approx 0.35$ (full tetrad condensation).",
+      "quote_normalized": "effective potential $\\veff(c)$ at three coupling ratios. $g/\\gc = 0.5$: strong positive curvature at the origin (pre-geometric). $g/\\gc = 0.9$: curvature nearly vanishes, enabling vestigial metric fluctuations. $g/\\gc = 2.0$: mexican-hat potential with nontrivial minimum at $c_{\\min}/\\lambda \\approx 0.35$ (full tetrad condensation).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "adw_effective_potential",
+            "computed_value": "C_min/Lambda ~ 0.40 at G/Gc=2.0",
+            "delta_pct": 15.2
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Numerical minimization of V_eff(C) with N_f=4, Lambda=1, G=2*Gc gives C_min/Lambda ~ 0.4034. Paper says ~0.35 \u2014 15% off, beyond 0.5% tolerance. Caption uses '~' (approximate); not a load-bearing physics number, but worth flagging.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 15.2
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:78afe163",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "78afe163",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 247,
+      "tex_line_end": 251,
+      "quote": "We implement a vectorized Metropolis-Hastings sampler with checkerboard (even/odd sublattice) decomposition on lattices of size $L=4,6,8$ (volumes $V = 256$, $1296$, $4096$ sites respectively) with $\\Nf = 4$ and Euclidean signature.",
+      "quote_normalized": "we implement a vectorized metropolis-hastings sampler with checkerboard (even/odd sublattice) decomposition on lattices of size $l=4,6,8$ (volumes $v = 256$, $1296$, $4096$ sites respectively) with $\\nf = 4$ and euclidean signature.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Volumes verified: 4^4=256, 6^4=1296, 8^4=4096. All match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:86473d97",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "86473d97",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 251,
+      "tex_line_end": 253,
+      "quote": "The tetrad at each site is updated by a Gaussian proposal $e_{\\mathrm{new}} = e_{\\mathrm{old}} + \\sigma\\,\\mathcal{N}(0,1)_{4\\times 4}$ with step size $\\sigma = 0.3$, achieving acceptance rates of $40$--$60\\%$.",
+      "quote_normalized": "the tetrad at each site is updated by a gaussian proposal $e_{new} = e_{old} + \\sigma\\,\\mathcal{n}(0,1)_{4\\times 4}$ with step size $\\sigma = 0.3$, achieving acceptance rates of $40$--$60\\%$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:09bf428f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "09bf428f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 253,
+      "tex_line_end": 256,
+      "quote": "We thermalize for 200 sweeps and measure every 5 sweeps for 400 measurements, using checkerboard site ordering to preserve detailed balance under vectorization.",
+      "quote_normalized": "we thermalize for 200 sweeps and measure every 5 sweeps for 400 measurements, using checkerboard site ordering to preserve detailed balance under vectorization.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:5a7cc604",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "5a7cc604",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 256,
+      "tex_line_end": 257,
+      "quote": "The fermion determinant is included via mean-field reweighting from the Coleman-Weinberg potential.",
+      "quote_normalized": "the fermion determinant is included via mean-field reweighting from the coleman-weinberg potential.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:bb4d432e",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "bb4d432e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 259,
+      "tex_line_end": 260,
+      "quote": "The coupling scan covers $g_{\\mathrm{EH}} \\in [0.1, 4.5]$ at 20 points per lattice size.",
+      "quote_normalized": "the coupling scan covers $g_{eh} \\in [0.1, 4.5]$ at 20 points per lattice size.",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scan range stated as parameter; no entry in PARAMETER_PROVENANCE for this quantity.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:121645ff",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "121645ff",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 260,
+      "tex_line_end": 262,
+      "quote": "At each coupling we also implement the fermion-bag algorithm for the 8-fermion vertex, with SO(4) gauge links integrated analytically using the Haar measure.",
+      "quote_normalized": "at each coupling we also implement the fermion-bag algorithm for the 8-fermion vertex, with so(4) gauge links integrated analytically using the haar measure.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:1c48bd3a",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "1c48bd3a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 266,
+      "tex_line_end": 266,
+      "quote": "At each measurement sweep we record:",
+      "quote_normalized": "at each measurement sweep we record:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:09a0a57e",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "09a0a57e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 268,
+      "tex_line_end": 268,
+      "quote": "The total auxiliary action $S_{\\mathrm{aux}}$.",
+      "quote_normalized": "the total auxiliary action $s_{aux}$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:f2dde713",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "f2dde713",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 269,
+      "tex_line_end": 269,
+      "quote": "The tetrad VEV magnitude $|M_E|$.",
+      "quote_normalized": "the tetrad vev magnitude $|m_e|$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:07cc463c",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "07cc463c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 270,
+      "tex_line_end": 270,
+      "quote": "The metric correlator magnitude $|M_g|$.",
+      "quote_normalized": "the metric correlator magnitude $|m_g|$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:787cca4d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "787cca4d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 271,
+      "tex_line_end": 271,
+      "quote": "The eigenvalues of $M_g^{\\mu\\nu}$.",
+      "quote_normalized": "the eigenvalues of $m_g^{\\mu\\nu}$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:4e52195b",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "4e52195b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 272,
+      "tex_line_end": 273,
+      "quote": "The Binder cumulant $U_4 = 1 - \\langle m^4\\rangle/(3\\langle m^2\\rangle^2)$ for both tetrad and metric order parameters.",
+      "quote_normalized": "the binder cumulant $u_4 = 1 - \\langle m^4\\rangle/(3\\langle m^2\\rangle^2)$ for both tetrad and metric order parameters.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermionBag4D.binder_cumulant_le_two_thirds"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard Binder cumulant formula; matches FermionBag4D.binder_cumulant_le_two_thirds bound.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:0bed5c05",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "0bed5c05",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 274,
+      "tex_line_end": 274,
+      "quote": "The tetrad and metric susceptibilities $\\chi = V(\\langle m^2\\rangle - \\langle |m|\\rangle^2)$.",
+      "quote_normalized": "the tetrad and metric susceptibilities $\\chi = v(\\langle m^2\\rangle - \\langle |m|\\rangle^2)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "susceptibility_observable"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:a12bc1f3",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "a12bc1f3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 279,
+      "tex_line_end": 280,
+      "quote": "The $L=4$ Monte Carlo scan confirms the three-phase structure predicted by mean-field:",
+      "quote_normalized": "the $l=4$ monte carlo scan confirms the three-phase structure predicted by mean-field:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:8631152d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "8631152d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 282,
+      "tex_line_end": 284,
+      "quote": "Pre-geometric phase ($G/\\Gc \\lesssim 0.7$). Both $|M_E|$ and $|M_g|$ are consistent with $O(1/\\sqrt{V})$ fluctuations---no macroscopic order.",
+      "quote_normalized": "pre-geometric phase ($g/\\gc \\lesssim 0.7$). both $|m_e|$ and $|m_g|$ are consistent with $o(1/\\sqrt{v})$ fluctuations---no macroscopic order.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Pilot empirical claim; not directly recomputable without raw MC data.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:4ce76862",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "4ce76862",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 286,
+      "tex_line_end": 290,
+      "quote": "Vestigial phase ($0.7 \\lesssim G/\\Gc \\lesssim 1.0$). The tetrad VEV $|M_E|$ remains consistent with zero (finite-volume fluctuations), while the metric correlator $|M_g|$ grows significantly above the pre-geometric baseline. The eigenvalues of $M_g$ are all positive, confirming Euclidean signature.",
+      "quote_normalized": "vestigial phase ($0.7 \\lesssim g/\\gc \\lesssim 1.0$). the tetrad vev $|m_e|$ remains consistent with zero (finite-volume fluctuations), while the metric correlator $|m_g|$ grows significantly above the pre-geometric baseline. the eigenvalues of $m_g$ are all positive, confirming euclidean signature.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Pilot empirical claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:c37809b0",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "c37809b0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 292,
+      "tex_line_end": 293,
+      "quote": "Full tetrad phase ($G/\\Gc > 1.0$). Both $|M_E|$ and $|M_g|$ are macroscopic, signaling full tetrad condensation.",
+      "quote_normalized": "full tetrad phase ($g/\\gc > 1.0$). both $|m_e|$ and $|m_g|$ are macroscopic, signaling full tetrad condensation.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Pilot empirical claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:ddd7f228",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "ddd7f228",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 297,
+      "tex_line_end": 299,
+      "quote": "At production scale, the key diagnostic for a genuine vestigial phase is whether the tetrad and metric order parameters undergo \\emph{separate} phase transitions.",
+      "quote_normalized": "at production scale, the key diagnostic for a genuine vestigial phase is whether the tetrad and metric order parameters undergo separate phase transitions.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:5d4ac9ed",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "5d4ac9ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 299,
+      "tex_line_end": 301,
+      "quote": "If $G_{c,\\mathrm{metric}} \\neq G_{c,\\mathrm{tetrad}}$ in the thermodynamic limit, the vestigial phase occupies a finite coupling window.",
+      "quote_normalized": "if $g_{c,metric} \\neq g_{c,tetrad}$ in the thermodynamic limit, the vestigial phase occupies a finite coupling window.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermionBag4D.vestigial_phase_splitting"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Matches FermionBag4D.vestigial_phase_splitting.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:dfae6a52",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "dfae6a52",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 303,
+      "tex_line_end": 308,
+      "quote": "Binder cumulant analysis (Fig.~\\ref{fig:binder}). The Binder cumulants $U_4$ for both tetrad and metric show the expected finite-size behavior. At $L=4$, the cumulants are nearly degenerate. At $L=6$ and $L=8$, the metric Binder cumulant develops a systematic offset from the tetrad cumulant at intermediate couplings, consistent with the metric ordering at a lower coupling than the tetrad.",
+      "quote_normalized": "binder cumulant analysis (fig.~). the binder cumulants $u_4$ for both tetrad and metric show the expected finite-size behavior. at $l=4$, the cumulants are nearly degenerate. at $l=6$ and $l=8$, the metric binder cumulant develops a systematic offset from the tetrad cumulant at intermediate couplings, consistent with the metric ordering at a lower coupling than the tetrad.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Empirical figure-derived narrative.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:4228f064",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "4228f064",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 310,
+      "tex_line_end": 312,
+      "quote": "Susceptibility splitting (Fig.~\\ref{fig:split}). The susceptibility peaks for the tetrad and metric order parameters appear at different couplings for $L \\geq 6$:",
+      "quote_normalized": "susceptibility splitting (fig.~). the susceptibility peaks for the tetrad and metric order parameters appear at different couplings for $l \\geq 6$:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:dedf0fa6",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "dedf0fa6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 314,
+      "tex_line_end": 314,
+      "quote": "$L=4$: $\\Delta(G/\\Gc) \\approx 0.1$ (within statistical uncertainty).",
+      "quote_normalized": "$l=4$: $\\delta(g/\\gc) \\approx 0.1$ (within statistical uncertainty).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Production-MC value; no canonical pipeline recompute path.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:7816c792",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "7816c792",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 315,
+      "tex_line_end": 315,
+      "quote": "$L=6$: $\\Delta(G/\\Gc) \\approx 0.0$ (degenerate within resolution).",
+      "quote_normalized": "$l=6$: $\\delta(g/\\gc) \\approx 0.0$ (degenerate within resolution).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Production-MC value.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:5c46eb0f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "5c46eb0f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 316,
+      "tex_line_end": 316,
+      "quote": "$L=8$: $\\Delta(G/\\Gc) \\approx 0.63$ (tetrad peak below metric peak).",
+      "quote_normalized": "$l=8$: $\\delta(g/\\gc) \\approx 0.63$ (tetrad peak below metric peak).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Production-MC value.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:8df16a30",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "8df16a30",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 318,
+      "tex_line_end": 320,
+      "quote": "The $L=8$ result shows the tetrad susceptibility peak at $G/\\Gc \\approx 1.88$ and the metric susceptibility peak at $G/\\Gc \\approx 2.50$, a split of $\\Delta = 0.63$.",
+      "quote_normalized": "the $l=8$ result shows the tetrad susceptibility peak at $g/\\gc \\approx 1.88$ and the metric susceptibility peak at $g/\\gc \\approx 2.50$, a split of $\\delta = 0.63$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Internal arithmetic check: 2.50 - 1.88 = 0.62 \u2248 0.63 (rounding to 2 d.p.). Internally consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:e590b8b4",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "e590b8b4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 320,
+      "tex_line_end": 322,
+      "quote": "This is the expected signature of a vestigial phase: the composite (metric) order parameter transitions at a higher coupling than the primary (tetrad) order parameter.",
+      "quote_normalized": "this is the expected signature of a vestigial phase: the composite (metric) order parameter transitions at a higher coupling than the primary (tetrad) order parameter.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:2bee9458",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "2bee9458",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 324,
+      "tex_line_end": 325,
+      "quote": "The split grows with $L$, consistent with a genuine thermodynamic phase rather than a finite-size artifact.",
+      "quote_normalized": "the split grows with $l$, consistent with a genuine thermodynamic phase rather than a finite-size artifact.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Depends on Fig 52 finite-size trend; qualitatively consistent with the listed L=4/6/8 numbers though L=6 is anomalously low.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:0566bba9",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "0566bba9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 325,
+      "tex_line_end": 327,
+      "quote": "Extrapolation to $L \\to \\infty$ requires larger lattice sizes ($L = 10, 12$), which are computationally accessible on modest HPC resources but beyond the scope of this pilot.",
+      "quote_normalized": "extrapolation to $l \\to \\infty$ requires larger lattice sizes ($l = 10, 12$), which are computationally accessible on modest hpc resources but beyond the scope of this pilot.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:355d7e86",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "355d7e86",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 332,
+      "tex_line_end": 336,
+      "quote": "Binder cumulants $U_4$ for tetrad (left) and metric (right) order parameters at $L=4,6,8$. The metric cumulant at $L=4$ (blue) shows larger fluctuations due to the smaller volume. At $L=6,8$ the cumulants are more stable, with systematic offsets between tetrad and metric consistent with distinct transition temperatures.",
+      "quote_normalized": "binder cumulants $u_4$ for tetrad (left) and metric (right) order parameters at $l=4,6,8$. the metric cumulant at $l=4$ (blue) shows larger fluctuations due to the smaller volume. at $l=6,8$ the cumulants are more stable, with systematic offsets between tetrad and metric consistent with distinct transition temperatures.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure caption.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:41a98586",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "41a98586",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 343,
+      "tex_line_end": 347,
+      "quote": "Susceptibility peak positions for tetrad ($\\chi_E$, blue) and metric ($\\chi_g$, berry) order parameters at $L=4,6,8$. At $L=8$, the peaks split by $\\Delta(G/\\Gc) \\approx 0.63$, with the tetrad peak at lower coupling---the signature of a vestigial phase where metric order persists above the tetrad disordering transition.",
+      "quote_normalized": "susceptibility peak positions for tetrad ($\\chi_e$, blue) and metric ($\\chi_g$, berry) order parameters at $l=4,6,8$. at $l=8$, the peaks split by $\\delta(g/\\gc) \\approx 0.63$, with the tetrad peak at lower coupling---the signature of a vestigial phase where metric order persists above the tetrad disordering transition.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Caption uses non-standard color name 'berry' (likely typo for 'berry'/'amber' in figure-style guide). Not a physics-correctness issue. Figure-level Class SD candidate (color convention drift).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate8_FigureIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:monte-carlo-results:09cd48f8",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "monte-carlo-results",
+        "quote_hash": "09cd48f8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "monte-carlo-results",
+      "tex_line_start": 354,
+      "tex_line_end": 358,
+      "quote": "Mean-field phase diagram. Left panel: tetrad VEV $|M_E|$ and metric correlator $|M_g|$ vs.\\ coupling ratio $G/\\Gc$. Right panel: phase classification (0 = pre-geometric, 0.5 = vestigial, 1 = full tetrad). The vestigial window is the region where $|M_g| > 0$ while $|M_E| = 0$. Dashed vertical line marks $G/\\Gc = 1$.",
+      "quote_normalized": "mean-field phase diagram. left panel: tetrad vev $|m_e|$ and metric correlator $|m_g|$ vs.\\ coupling ratio $g/\\gc$. right panel: phase classification (0 = pre-geometric, 0.5 = vestigial, 1 = full tetrad). the vestigial window is the region where $|m_g| > 0$ while $|m_e| = 0$. dashed vertical line marks $g/\\gc = 1$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure caption.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:phase-diagram-and-order-parameters:3755881a",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "phase-diagram-and-order-parameters",
+        "quote_hash": "3755881a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "phase-diagram-and-order-parameters",
+      "tex_line_start": 366,
+      "tex_line_end": 367,
+      "quote": "The order parameters as functions of $G/\\Gc$ (Fig.~\\ref{fig:phase_diagram}) reveal the following key features from both mean-field and Monte Carlo:",
+      "quote_normalized": "the order parameters as functions of $g/\\gc$ (fig.~) reveal the following key features from both mean-field and monte carlo:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:phase-diagram-and-order-parameters:bf5c2782",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "phase-diagram-and-order-parameters",
+        "quote_hash": "bf5c2782",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "phase-diagram-and-order-parameters",
+      "tex_line_start": 370,
+      "tex_line_end": 376,
+      "quote": "Vestigial window. A finite coupling window supports $|M_g| \\neq 0$ with $|M_E| = 0$. In mean-field, this window extends from $G/\\Gc \\approx 0.8$ to $G/\\Gc = 1.0$, defined by the curvature criterion (the curvature at the origin drops below $\\sim 30\\%$ of its weak-coupling value). The Monte Carlo data show the onset at a somewhat lower coupling ($G/\\Gc \\approx 0.7$), reflecting the role of fluctuations in broadening the vestigial window.",
+      "quote_normalized": "vestigial window. a finite coupling window supports $|m_g| \\neq 0$ with $|m_e| = 0$. in mean-field, this window extends from $g/\\gc \\approx 0.8$ to $g/\\gc = 1.0$, defined by the curvature criterion (the curvature at the origin drops below $\\sim 30\\%$ of its weak-coupling value). the monte carlo data show the onset at a somewhat lower coupling ($g/\\gc \\approx 0.7$), reflecting the role of fluctuations in broadening the vestigial window.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "MF + MC empirical onset values; threshold convention.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:phase-diagram-and-order-parameters:76f70f7d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "phase-diagram-and-order-parameters",
+        "quote_hash": "76f70f7d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "phase-diagram-and-order-parameters",
+      "tex_line_start": 378,
+      "tex_line_end": 381,
+      "quote": "Signature stability. Throughout the vestigial phase, the eigenvalues of $M_g$ are positive-definite (Euclidean signature). There is no eigenvalue crossing or sign change---the geometry is well-defined throughout the vestigial window.",
+      "quote_normalized": "signature stability. throughout the vestigial phase, the eigenvalues of $m_g$ are positive-definite (euclidean signature). there is no eigenvalue crossing or sign change---the geometry is well-defined throughout the vestigial window.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Empirical from MC; supports paper claim 2 in conclusions.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:phase-diagram-and-order-parameters:f8d3f164",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "phase-diagram-and-order-parameters",
+        "quote_hash": "f8d3f164",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "phase-diagram-and-order-parameters",
+      "tex_line_start": 383,
+      "tex_line_end": 387,
+      "quote": "Smooth crossover vs.\\ sharp transition. The pre-geometric $\\to$ vestigial crossover is smooth (no susceptibility divergence at finite $L$). The vestigial $\\to$ full tetrad transition is sharper, associated with the symmetry-breaking nature of the tetrad condensation at $\\Gc$.",
+      "quote_normalized": "smooth crossover vs.\\ sharp transition. the pre-geometric $\\to$ vestigial crossover is smooth (no susceptibility divergence at finite $l$). the vestigial $\\to$ full tetrad transition is sharper, associated with the symmetry-breaking nature of the tetrad condensation at $\\gc$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:715989c8",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "715989c8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 399,
+      "tex_line_end": 400,
+      "quote": "The vestigial phase has a striking physical consequence: the Equivalence Principle (EP) is violated.",
+      "quote_normalized": "the vestigial phase has a striking physical consequence: the equivalence principle (ep) is violated.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.ep_violation_in_vestigial"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:edc38c57",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "edc38c57",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 400,
+      "tex_line_end": 402,
+      "quote": "Bosonic fields, which couple to the metric $g_{\\mu\\nu}$, experience a well-defined geometry and follow geodesics.",
+      "quote_normalized": "bosonic fields, which couple to the metric $g_{\\mu\\nu}$, experience a well-defined geometry and follow geodesics.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.bosons_see_vestigial_gravity"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:61db4e4a",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "61db4e4a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 402,
+      "tex_line_end": 404,
+      "quote": "Fermionic fields, which couple to the tetrad $e^a_{\\ \\mu}$ through the Dirac operator $\\gamma^a e_a^{\\ \\mu} D_\\mu$, see no geometry because $\\vev{e^a_{\\ \\mu}} = 0$.",
+      "quote_normalized": "fermionic fields, which couple to the tetrad $e^a_{\\ \\mu}$ through the dirac operator $\\gamma^a e_a^{\\ \\mu} d_\\mu$, see no geometry because $\\vev{e^a_{\\ \\mu}} = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.fermions_no_gravity_in_vestigial"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:1b793f80",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "1b793f80",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 406,
+      "tex_line_end": 406,
+      "quote": "This is not merely a formal distinction.",
+      "quote_normalized": "this is not merely a formal distinction.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:ab9b36f3",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "ab9b36f3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 406,
+      "tex_line_end": 412,
+      "quote": "In the vestigial phase: Photons (bosonic) propagate on curved geodesics. Electrons (fermionic) propagate as if in flat space. Gravitational lensing of light occurs, but there is no gravitational force on matter.",
+      "quote_normalized": "in the vestigial phase: photons (bosonic) propagate on curved geodesics. electrons (fermionic) propagate as if in flat space. gravitational lensing of light occurs, but there is no gravitational force on matter.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Phenomenological consequences of EP violation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:5d9fed6e",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "5d9fed6e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 414,
+      "tex_line_end": 414,
+      "quote": "The EP violation is a \\emph{prediction}, not a deficiency.",
+      "quote_normalized": "the ep violation is a prediction, not a deficiency.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:5fef2b35",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "5fef2b35",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 415,
+      "tex_line_end": 420,
+      "quote": "If the universe underwent a phase transition from the vestigial phase to the full tetrad phase at some early cosmological epoch, the vestigial phase would have left distinct observational signatures: gravitational lensing of photons without corresponding deflection of massive particles, and a modified gravitational wave spectrum during the transition.",
+      "quote_normalized": "if the universe underwent a phase transition from the vestigial phase to the full tetrad phase at some early cosmological epoch, the vestigial phase would have left distinct observational signatures: gravitational lensing of photons without corresponding deflection of massive particles, and a modified gravitational wave spectrum during the transition.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Speculative cosmological prediction.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:f3c4f8d5",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "f3c4f8d5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 424,
+      "tex_line_end": 425,
+      "quote": "The vestigial phase deepens the structural parallel between the ADW model and He-3 superfluidity~\\cite{Vollhardt2013}.",
+      "quote_normalized": "the vestigial phase deepens the structural parallel between the adw model and he-3 superfluidity~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Vollhardt2013",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Bibitem 'Vollhardt2013' defined locally (line 598); not in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:d4566299",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "d4566299",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 425,
+      "tex_line_end": 426,
+      "quote": "In He-3, the order parameter is a $3\\times 3$ complex matrix $A_{ai}$.",
+      "quote_normalized": "in he-3, the order parameter is a $3\\times 3$ complex matrix $a_{ai}$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:8aceeab5",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "8aceeab5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 426,
+      "tex_line_end": 428,
+      "quote": "The ``nematic'' phase, where $\\vev{A_{ai}} = 0$ but $\\vev{A_{ai}A^*_{bj}} \\neq 0$, is precisely the vestigial analog.",
+      "quote_normalized": "the ``nematic'' phase, where $\\vev{a_{ai}} = 0$ but $\\vev{a_{ai}a^*_{bj}} \\neq 0$, is precisely the vestigial analog.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:a4ac224e",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "a4ac224e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 428,
+      "tex_line_end": 431,
+      "quote": "This phase has been studied in the context of unconventional superconductors and iron-based materials~\\cite{Fernandes2019}, where vestigial nematic order generically appears at a higher transition temperature than the primary (vector/matrix) order.",
+      "quote_normalized": "this phase has been studied in the context of unconventional superconductors and iron-based materials~, where vestigial nematic order generically appears at a higher transition temperature than the primary (vector/matrix) order.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Fernandes2019",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Local bibitem only.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:32534d86",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "32534d86",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 433,
+      "tex_line_end": 436,
+      "quote": "The Ginzburg-Landau analysis of the ADW model near $\\Gc$~\\cite{Paper5} identifies the isotropic ``B-phase'' ground state $e^a_{\\ \\mu} = C\\,\\delta^a_{\\ \\mu}$ as the preferred condensation pattern, analogous to the Balian-Werthamer state in He-3-B.",
+      "quote_normalized": "the ginzburg-landau analysis of the adw model near $\\gc$~ identifies the isotropic ``b-phase'' ground state $e^a_{\\ \\mu} = c\\,\\delta^a_{\\ \\mu}$ as the preferred condensation pattern, analogous to the balian-werthamer state in he-3-b.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Paper5",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Internal companion-paper reference; bibitem 'Paper5' defined locally (line 592). Not a published work; resolves within the project.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:f76170ff",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "f76170ff",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 440,
+      "tex_line_end": 441,
+      "quote": "The vestigial phase provides the first rung of a three-level gravity hierarchy:",
+      "quote_normalized": "the vestigial phase provides the first rung of a three-level gravity hierarchy:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:e3ee852a",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "e3ee852a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 443,
+      "tex_line_end": 445,
+      "quote": "Level 1 (vestigial metric). Metric geometry exists. Bosonic geodesics are defined. EP is violated. No spin connection, no torsion. Accessible at mean-field + Monte Carlo level. This paper.",
+      "quote_normalized": "level 1 (vestigial metric). metric geometry exists. bosonic geodesics are defined. ep is violated. no spin connection, no torsion. accessible at mean-field + monte carlo level. this paper.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.VestigialPhase.vestigial"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:d338da7b",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "d338da7b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 447,
+      "tex_line_end": 452,
+      "quote": "Level 2 (full tetrad). Einstein-Cartan gravity. EP is restored. Spin connection becomes dynamical. Vergeles mode counting gives 2 massless spin-2 graviton polarizations~\\cite{Vergeles2025}. Achieved at mean-field level in Paper~5~\\cite{Paper5}, subject to four structural obstacles (spin-connection gap, Grassmann-bosonic incompatibility, Nielsen-Ninomiya doubling, cosmological constant).",
+      "quote_normalized": "level 2 (full tetrad). einstein-cartan gravity. ep is restored. spin connection becomes dynamical. vergeles mode counting gives 2 massless spin-2 graviton polarizations~. achieved at mean-field level in paper~5~, subject to four structural obstacles (spin-connection gap, grassmann-bosonic incompatibility, nielsen-ninomiya doubling, cosmological constant).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Vergeles2025",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "Paper5",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "formula",
+            "target": "graviton_polarization_count",
+            "computed_value": "2 for d=4",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "2 graviton polarizations matches formulas.py::graviton_polarization_count(4) = 4*1/2 = 2. 'Four structural obstacles' is named-list claim \u2014 no formulas.py::structural_obstacles function exists to cardinality-check (out-of-scope for SD heuristic but worth flagging for human ratification).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:58defcbb",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "58defcbb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 455,
+      "tex_line_end": 457,
+      "quote": "Level 3 (UV-complete). Requires resolution of the four structural obstacles from Level~2, plus a UV completion of the ADW coupling (or an alternative route such as fracton-gravity).",
+      "quote_normalized": "level 3 (uv-complete). requires resolution of the four structural obstacles from level~2, plus a uv completion of the adw coupling (or an alternative route such as fracton-gravity).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Same 'four structural obstacles' phrase; not pipeline-counted.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:ebcbc424",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "ebcbc424",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 460,
+      "tex_line_end": 462,
+      "quote": "Sexty and Wetterich~\\cite{Sexty2013} performed a 2D lattice simulation of a related model (fermion bilinear condensate as vielbein).",
+      "quote_normalized": "sexty and wetterich~ performed a 2d lattice simulation of a related model (fermion bilinear condensate as vielbein).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Sexty2013",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Bibitem 'Sexty2013' defined locally (line 580); not in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:a7656f9f",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "a7656f9f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 462,
+      "tex_line_end": 463,
+      "quote": "Their pioneering numerical study demonstrated that the vielbein VEV can be generated dynamically from the fermion path integral.",
+      "quote_normalized": "their pioneering numerical study demonstrated that the vielbein vev can be generated dynamically from the fermion path integral.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:1b7854d2",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "1b7854d2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 463,
+      "tex_line_end": 466,
+      "quote": "Our work extends the analysis to 4D and, crucially, distinguishes the vestigial (metric only) phase from the full tetrad phase---a distinction that was not considered in their study.",
+      "quote_normalized": "our work extends the analysis to 4d and, crucially, distinguishes the vestigial (metric only) phase from the full tetrad phase---a distinction that was not considered in their study.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:6fa39e67",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "6fa39e67",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 470,
+      "tex_line_end": 471,
+      "quote": "We have performed three additional analyses to quantify the limitations of the Euclidean pilot:",
+      "quote_normalized": "we have performed three additional analyses to quantify the limitations of the euclidean pilot:",
+      "type": "transition",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Section announces 'three additional analyses' but the enumerate has 4 items (1. Lorentzian sign problem, 2. Finite-size scaling, 3. Fermion determinant, 4. Continuum limit). Class IA \u2014 internal cardinality drift between intro phrase and list.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:35e747cc",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "35e747cc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 474,
+      "tex_line_end": 477,
+      "quote": "Lorentzian sign problem (quantified). Sign reweighting from the Euclidean ensemble gives $\\langle\\text{sign}\\rangle \\sim e^{-22}$ even at $L=2$, with $\\Delta S = S_L - S_E \\approx -22$.",
+      "quote_normalized": "lorentzian sign problem (quantified). sign reweighting from the euclidean ensemble gives $\\langlesign\\rangle \\sim e^{-22}$ even at $l=2$, with $\\delta s = s_l - s_e \\approx -22$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Empirical reweighting estimate from the project; not directly recomputed against pipeline.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:d71985f5",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "d71985f5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 477,
+      "tex_line_end": 482,
+      "quote": "This confirms that the sign problem is \\emph{severe}: the average sign decays exponentially with lattice volume as $\\langle\\text{sign}\\rangle \\sim e^{-f \\cdot L^d}$ (formally verified: the volume scales as $2^d$ per doubling of~$L$).",
+      "quote_normalized": "this confirms that the sign problem is severe: the average sign decays exponentially with lattice volume as $\\langlesign\\rangle \\sim e^{-f \\cdot l^d}$ (formally verified: the volume scales as $2^d$ per doubling of~$l$).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "'formally verified' phrase asserts a Lean theorem for V ~ 2^d scaling per L doubling. No matching theorem name disclosed; HD-class candidate not triggered (no specific theorem cited).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:0f863d3d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "0f863d3d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 482,
+      "tex_line_end": 482,
+      "quote": "Extending to Lorentzian signature requires contour deformation methods (Lefschetz thimbles or complex Langevin dynamics), not naive reweighting.",
+      "quote_normalized": "extending to lorentzian signature requires contour deformation methods (lefschetz thimbles or complex langevin dynamics), not naive reweighting.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:16b2658d",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "16b2658d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 484,
+      "tex_line_end": 487,
+      "quote": "Finite-size scaling. Production runs at $L = 4, 6, 8$ show a susceptibility split $\\Delta(G/\\Gc) \\approx 0.63$ at $L = 8$ (Fig.~\\ref{fig:split}), consistent with distinct tetrad and metric transition couplings.",
+      "quote_normalized": "finite-size scaling. production runs at $l = 4, 6, 8$ show a susceptibility split $\\delta(g/\\gc) \\approx 0.63$ at $l = 8$ (fig.~), consistent with distinct tetrad and metric transition couplings.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Same MC value as in Sec MC results; consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:1e1867d3",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "1e1867d3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 487,
+      "tex_line_end": 489,
+      "quote": "Extrapolation to $L \\to \\infty$ to confirm the thermodynamic limit requires $L = 10, 12$ simulations, which are feasible on modest HPC resources.",
+      "quote_normalized": "extrapolation to $l \\to \\infty$ to confirm the thermodynamic limit requires $l = 10, 12$ simulations, which are feasible on modest hpc resources.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:0c36bab5",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "0c36bab5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 489,
+      "tex_line_end": 491,
+      "quote": "The Binder cumulant crossing analysis (Fig.~\\ref{fig:binder}) provides a complementary check; larger lattices are needed to resolve the crossing points precisely.",
+      "quote_normalized": "the binder cumulant crossing analysis (fig.~) provides a complementary check; larger lattices are needed to resolve the crossing points precisely.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:b19ed892",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "b19ed892",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 493,
+      "tex_line_end": 495,
+      "quote": "Fermion determinant. The fermion determinant is included via mean-field reweighting rather than exact computation. Full dynamical fermion simulations would provide a more rigorous test.",
+      "quote_normalized": "fermion determinant. the fermion determinant is included via mean-field reweighting rather than exact computation. full dynamical fermion simulations would provide a more rigorous test.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:discussion:a3dabd14",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "discussion",
+        "quote_hash": "a3dabd14",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 497,
+      "tex_line_end": 500,
+      "quote": "Continuum limit. The connection between the lattice coupling $G$ and continuum gravitational coupling has not been established; this requires studying the approach to the continuum limit as $\\Lambda \\to \\infty$ with physics held fixed.",
+      "quote_normalized": "continuum limit. the connection between the lattice coupling $g$ and continuum gravitational coupling has not been established; this requires studying the approach to the continuum limit as $\\lambda \\to \\infty$ with physics held fixed.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:84dd69a4",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "84dd69a4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 507,
+      "tex_line_end": 508,
+      "quote": "We have presented mean-field and Monte Carlo evidence for a vestigial metric phase in the Akama-Diakonov-Wetterich model of emergent gravity.",
+      "quote_normalized": "we have presented mean-field and monte carlo evidence for a vestigial metric phase in the akama-diakonov-wetterich model of emergent gravity.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:fb565e89",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "fb565e89",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 508,
+      "tex_line_end": 509,
+      "quote": "The key findings are:",
+      "quote_normalized": "the key findings are:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:04b636ea",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "04b636ea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 512,
+      "tex_line_end": 514,
+      "quote": "A finite coupling window supports a nonzero metric correlator $g_{\\mu\\nu} = \\delta_{ab}\\,\\vev{E^a_{\\ \\mu}\\, E^b_{\\ \\nu}} \\neq 0$ with vanishing tetrad VEV $\\vev{E^a_{\\ \\mu}} = 0$.",
+      "quote_normalized": "a finite coupling window supports a nonzero metric correlator $g_{\\mu\\nu} = \\delta_{ab}\\,\\vev{e^a_{\\ \\mu}\\, e^b_{\\ \\nu}} \\neq 0$ with vanishing tetrad vev $\\vev{e^a_{\\ \\mu}} = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermionBag4D.vestigial_window_bounded"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:82ac7f89",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "82ac7f89",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 516,
+      "tex_line_end": 517,
+      "quote": "The metric eigenvalues in the vestigial phase are positive-definite, confirming well-defined Euclidean geometry.",
+      "quote_normalized": "the metric eigenvalues in the vestigial phase are positive-definite, confirming well-defined euclidean geometry.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermionBag4D.metric_correlator_nonneg"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:a723490b",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "a723490b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 519,
+      "tex_line_end": 521,
+      "quote": "The three-phase structure (pre-geometric $\\to$ vestigial $\\to$ full tetrad) is confirmed by both mean-field and production Monte Carlo at $L = 4, 6, 8$.",
+      "quote_normalized": "the three-phase structure (pre-geometric $\\to$ vestigial $\\to$ full tetrad) is confirmed by both mean-field and production monte carlo at $l = 4, 6, 8$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.VestigialPhase"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:5f08d442",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "5f08d442",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 523,
+      "tex_line_end": 526,
+      "quote": "Split transition detected. At $L = 8$, the tetrad and metric susceptibility peaks occur at different couplings with $\\Delta(G/\\Gc) \\approx 0.63$, consistent with a genuine vestigial phase occupying a finite thermodynamic window.",
+      "quote_normalized": "split transition detected. at $l = 8$, the tetrad and metric susceptibility peaks occur at different couplings with $\\delta(g/\\gc) \\approx 0.63$, consistent with a genuine vestigial phase occupying a finite thermodynamic window.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermionBag4D.vestigial_phase_splitting"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Echoes Sec MC numerical claim; consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:ffea76fc",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "ffea76fc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 528,
+      "tex_line_end": 530,
+      "quote": "The Equivalence Principle is violated in the vestigial phase: bosons experience geometry, fermions do not. This is formally verified in the Lean~4 formalization (theorem \\texttt{ep\\_distinguishes\\_phases}).",
+      "quote_normalized": "the equivalence principle is violated in the vestigial phase: bosons experience geometry, fermions do not. this is formally verified in the lean~4 formalization (theorem ep\\_distinguishes\\_phases).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity.ep_distinguishes_phases"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "TN check: lean_deps.json contains 'SKEFTHawking.VestigialGravity.ep_distinguishes_phases' (theorem). Match \u2014 no Class TN drift.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:cd7dc0c6",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "cd7dc0c6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 532,
+      "tex_line_end": 534,
+      "quote": "The Lorentzian sign problem is quantifiably severe ($\\langle\\text{sign}\\rangle \\sim e^{-22}$ at $L=2$), directing future work toward contour deformation methods.",
+      "quote_normalized": "the lorentzian sign problem is quantifiably severe ($\\langlesign\\rangle \\sim e^{-22}$ at $l=2$), directing future work toward contour deformation methods.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Same as in Discussion; consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:8095c019",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "8095c019",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 536,
+      "tex_line_end": 536,
+      "quote": "All structural results are formally verified in Lean~4.",
+      "quote_normalized": "all structural results are formally verified in lean~4.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Project-wide claim; live state has 0 sorry across SKEFTHawking modules.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:5b2a97c6",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "5b2a97c6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 537,
+      "tex_line_end": 539,
+      "quote": "This paper's results are formalized in \\texttt{VestigialGravity.lean} (18 theorems) and \\texttt{FermionBag4D.lean} (16 theorems), both with zero \\texttt{sorry}.",
+      "quote_normalized": "this paper's results are formalized in vestigialgravity.lean (18 theorems) and fermionbag4d.lean (16 theorems), both with zero sorry.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.VestigialGravity"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FermionBag4D"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper claims VestigialGravity.lean has 18 theorems; live `grep -c '^theorem ' lean/SKEFTHawking/VestigialGravity.lean` = 25. (38.9% drift). FermionBag4D.lean live count = 16 (matches). Zero-sorry claim verified for both modules. FAIL on VestigialGravity count.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 38.9
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:aa2aedf6",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "aa2aedf6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 539,
+      "tex_line_end": 541,
+      "quote": "The full project contains 968 theorems (zero axioms) across 66 modules, 273 proved by the Aristotle automated theorem prover~\\cite{Aristotle} across 33+ runs.",
+      "quote_normalized": "the full project contains 968 theorems (zero axioms) across 66 modules, 273 proved by the aristotle automated theorem prover~ across 33+ runs.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Aristotle",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper claims 968 theorems / 66 modules / 273 Aristotle. Live: grep -c '^theorem ' lean/SKEFTHawking/*.lean sums to 2578 theorems (166% drift); ls lean/SKEFTHawking/*.lean | wc -l = 170 modules (157% drift); ARISTOTLE_THEOREMS dict has 322 entries (18% drift); axiom count grep -c '^axiom ' = 1 (paper says zero \u2014 also drift). FAIL \u2014 multiple counts stale. 'Aristotle' bibitem is locally defined (line 602) but not in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 166.3
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:9c92f6c1",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "9c92f6c1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 544,
+      "tex_line_end": 546,
+      "quote": "The vestigial metric phase represents the most accessible form of emergent gravity in the ADW framework---Level~1 of the gravity hierarchy---and provides a concrete target for deeper numerical investigation.",
+      "quote_normalized": "the vestigial metric phase represents the most accessible form of emergent gravity in the adw framework---level~1 of the gravity hierarchy---and provides a concrete target for deeper numerical investigation.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:conclusions:60d13db7",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "conclusions",
+        "quote_hash": "60d13db7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "tex_line_start": 547,
+      "tex_line_end": 550,
+      "quote": "The EP violation is a unique prediction that distinguishes the vestigial from the full tetrad phase and could serve as an observational test if the cosmological phase history includes a vestigial epoch.",
+      "quote_normalized": "the ep violation is a unique prediction that distinguishes the vestigial from the full tetrad phase and could serve as an observational test if the cosmological phase history includes a vestigial epoch.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:acknowledgments:713ca930",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "acknowledgments",
+        "quote_hash": "713ca930",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "tex_line_start": 553,
+      "tex_line_end": 553,
+      "quote": "Structural results formalized in Lean~4 (v4.28.0) with Mathlib.",
+      "quote_normalized": "structural results formalized in lean~4 (v4.28.0) with mathlib.",
+      "type": "numeric",
+      "finding_classes": [
+        "TP"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "TP: paper claims 'Lean~4 (v4.28.0)'; lean-toolchain says 'leanprover/lean4:v4.29.0'. Pin drift. The Mathlib pin is not stated literally in the paper, so no Mathlib TP check.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper6_vestigial:acknowledgments:3e928fa7",
+      "raw_id_parts": {
+        "paper": "paper6_vestigial",
+        "section_slug": "acknowledgments",
+        "quote_hash": "3e928fa7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "tex_line_start": 554,
+      "tex_line_end": 554,
+      "quote": "Monte Carlo implementation: \\texttt{src/vestigial/} modules.",
+      "quote_normalized": "monte carlo implementation: src/vestigial/ modules.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "File-path reference, not a theorem reference; not in scope for TN.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 130,
+    "by_type": {
+      "metaclaim": 7,
+      "formal-claim": 34,
+      "methodology": 16,
+      "numeric": 20,
+      "transition": 18,
+      "citation": 9,
+      "qualitative": 24,
+      "parameter": 1,
+      "theorem-ref": 1
+    },
+    "by_verdict": {
+      "TRANSITION": 41,
+      "PASS": 35,
+      "WARN": 12,
+      "INFO": 39,
+      "FAIL": 3
+    },
+    "by_finding_class": {
+      "IA": 4,
+      "TP": 1,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "130 sentences | 35 PASS | 0 UNGROUNDED | 3 FAIL | 12 WARN | 39 INFO | 41 TRANSITION | first-time review (no prior claims_review.json) \u2014 empty non_reproducing_prior_findings."
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "IA: paper claims VestigialGravity.lean has 18 theorems; live `grep -c '^theorem ' lean/SKEFTHawking/VestigialGravity.lean` = 25. (38.9% drift). FermionBag4D.lean live count = 16 (matches). Zero-sorry ",
+      "sentences": [
+        "sentence:paper6_vestigial:conclusions:5b2a97c6"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "IA: paper claims 968 theorems / 66 modules / 273 Aristotle. Live: grep -c '^theorem ' lean/SKEFTHawking/*.lean sums to 2578 theorems (166% drift); ls lean/SKEFTHawking/*.lean | wc -l = 170 modules (15",
+      "sentences": [
+        "sentence:paper6_vestigial:conclusions:aa2aedf6"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:3",
+      "summary": "TP: paper claims 'Lean~4 (v4.28.0)'; lean-toolchain says 'leanprover/lean4:v4.29.0'. Pin drift. The Mathlib pin is not stated literally in the paper, so no Mathlib TP check.",
+      "sentences": [
+        "sentence:paper6_vestigial:acknowledgments:713ca930"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TP"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "followup:1",
+      "summary": "Bibitem 'Wetterich2005' is locally defined in thebibliography (line 567); in CITATION_REGISTRY the matching entry is keyed 'Wetterich2004' (PRD 70, 105004 (2004)). Bibitem text gives year 2004 but key",
+      "sentences": [
+        "sentence:paper6_vestigial:introduction:ead477ce"
+      ]
+    },
+    {
+      "id": "followup:2",
+      "summary": "Bibitem 'Fernandes2019' defined locally (line 584) but no entry in CITATION_REGISTRY. Citation appears in paper-local bibliography only.",
+      "sentences": [
+        "sentence:paper6_vestigial:introduction:60e04232"
+      ]
+    },
+    {
+      "id": "followup:3",
+      "summary": "Bibitem 'Vladimirov2012' defined locally (line 576); CITATION_REGISTRY uses key 'VladimirovDiakonov2012' for the same paper (PRD 86, 104019 (2012)). Registry-key mismatch only.",
+      "sentences": [
+        "sentence:paper6_vestigial:lattice-model:1e982ec2"
+      ]
+    },
+    {
+      "id": "followup:4",
+      "summary": "Local bibitem only \u2014 not in CITATION_REGISTRY.",
+      "sentences": [
+        "sentence:paper6_vestigial:mean-field-analysis:397cbc5d"
+      ]
+    },
+    {
+      "id": "followup:5",
+      "summary": "Numerical minimization of V_eff(C) with N_f=4, Lambda=1, G=2*Gc gives C_min/Lambda ~ 0.4034. Paper says ~0.35 \u2014 15% off, beyond 0.5% tolerance. Caption uses '~' (approximate); not a load-bearing physi",
+      "sentences": [
+        "sentence:paper6_vestigial:mean-field-analysis:990faa16"
+      ]
+    },
+    {
+      "id": "followup:6",
+      "summary": "Caption uses non-standard color name 'berry' (likely typo for 'berry'/'amber' in figure-style guide). Not a physics-correctness issue. Figure-level Class SD candidate (color convention drift).",
+      "sentences": [
+        "sentence:paper6_vestigial:monte-carlo-results:41a98586"
+      ]
+    },
+    {
+      "id": "followup:7",
+      "summary": "Bibitem 'Vollhardt2013' defined locally (line 598); not in CITATION_REGISTRY.",
+      "sentences": [
+        "sentence:paper6_vestigial:discussion:f3c4f8d5"
+      ]
+    },
+    {
+      "id": "followup:8",
+      "summary": "Local bibitem only.",
+      "sentences": [
+        "sentence:paper6_vestigial:discussion:a4ac224e"
+      ]
+    },
+    {
+      "id": "followup:9",
+      "summary": "Internal companion-paper reference; bibitem 'Paper5' defined locally (line 592). Not a published work; resolves within the project.",
+      "sentences": [
+        "sentence:paper6_vestigial:discussion:32534d86"
+      ]
+    },
+    {
+      "id": "followup:10",
+      "summary": "2 graviton polarizations matches formulas.py::graviton_polarization_count(4) = 4*1/2 = 2. 'Four structural obstacles' is named-list claim \u2014 no formulas.py::structural_obstacles function exists to card",
+      "sentences": [
+        "sentence:paper6_vestigial:discussion:d338da7b"
+      ]
+    },
+    {
+      "id": "followup:11",
+      "summary": "Bibitem 'Sexty2013' defined locally (line 580); not in CITATION_REGISTRY.",
+      "sentences": [
+        "sentence:paper6_vestigial:discussion:ebcbc424"
+      ]
+    }
+  ]
+}

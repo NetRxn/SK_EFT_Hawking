@@ -13,6 +13,9 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 
+% Canonical counts pipeline (Phase 5v: freshness gate).
+\input{../../docs/counts.tex}
+
 \lstset{
   language=,
   basicstyle=\ttfamily\small,
@@ -36,9 +39,11 @@ in Lean~4}
 We present the first formal verification survey of the lattice chirality
 problem---the obstruction to placing chiral fermions on a lattice with the
 correct continuum limit. The formalization in Lean~4 with Mathlib comprises
-968~theorems (zero axioms) across 66~modules (zero \texttt{sorry} in main
-modules), of which 273~are proved by the Aristotle automated theorem prover. The work is
-organized around three complementary pillars.
+$\totaltheorems{}$~theorems with $\axiomcount{}$~axiom
+(\texttt{gapped\_interface\_axiom}) across $\leanmodules{}$~modules
+(zero \texttt{sorry}), of which $\aristotleproved{}$~are proved by the
+Aristotle automated theorem prover. The work is organized around three
+complementary pillars.
 
 \textbf{Pillar~1 (No-Go):} The nine conditions of the Golterman-Shamir
 theorem are formalized as substantive propositions; five are shown violated
@@ -61,8 +66,10 @@ formalization in any proof assistant) is defined via the Dolan-Grady
 presentation, with the Davies isomorphism, Chevalley embedding into $L(\mathfrak{sl}_2)$,
 and In\"on\"u-Wigner contraction to $\mathfrak{su}(2)$ encoding the Witten
 anomaly on the lattice. The $\mathbb{Z}_{16}$ classification of Pin$^+$
-bordism is axiomatized, with the A(1) Steenrod subalgebra computation
-partially discharging the axiom. Bridge theorems connect the Witten
+bordism is formalized in \texttt{Z16Classification.lean} with zero
+axioms; the A(1) Steenrod subalgebra computation supplies the
+machine-checked algebraic core (first Ext computation over any Steenrod
+subalgebra in a proof assistant). Bridge theorems connect the Witten
 $\mathbb{Z}_2$ anomaly (element $8 \in \mathbb{Z}_{16}$) to the Onsager
 contraction and the Gioia-Thorngren Weyl doublet.
 
@@ -100,12 +107,13 @@ standard lattice gauging.
 
 This paper presents a comprehensive formal verification of the
 chirality wall in the Lean~4 proof assistant with Mathlib. The
-formalization totals 2237+~theorems (1~axiom: \texttt{gapped\_interface\_axiom})
-across 130~Lean modules, of which 322+ are proved by the Aristotle
+formalization totals $\totaltheorems{}$~theorems
+($\axiomcount{}$~axiom: \texttt{gapped\_interface\_axiom})
+across $\leanmodules{}$~Lean modules, of which $\aristotleproved{}$ are proved by the Aristotle
 automated theorem prover~\cite{Aristotle2025}. Phase~2 (3+1D extension) adds
-\texttt{GaugingStep.lean} (34~theorems: gauging obstruction, SMG phases,
+\texttt{GaugingStep.lean} (14~theorems: gauging obstruction, SMG phases,
 not-on-site symmetry formalization) and \texttt{SPTClassification.lean}
-(15~theorems + 1~axiom: SPT phase types, gapped interface conjecture,
+(20~theorems + 1~axiom: SPT phase types, gapped interface conjecture,
 conditional chiral gauge theorem). The work is organized
 around three pillars: the no-go (Sec.~\ref{sec:pillar1}), the positive
 construction (Sec.~\ref{sec:pillar2}), and the algebraic framework
@@ -371,7 +379,7 @@ with anomaly cancellation requiring $16n$ Majorana fermions.
 %=================================================================
 
 The three pillars are connected by bridge theorems formalized in
-\texttt{ChiralityWallMaster.lean} (17~theorems):
+\texttt{ChiralityWallMaster.lean} (16~theorems):
 
 \begin{enumerate}
 \item \textbf{Pillar~1$\to$2 (GS$\to$GT):} The GT construction violates
@@ -396,7 +404,7 @@ $16n$ fermions for anomaly cancellation.
 \caption{The three-pillar structure of the chirality wall formal
 verification. Pillar~1 (no-go), Pillar~2 (positive construction), and
 Pillar~3 (anomaly classification) are connected by bridge theorems.
-Total: 968~theorems, zero axioms, 66~modules.}
+Total: $\totaltheorems{}$~theorems, $\axiomcount{}$~axiom, $\leanmodules{}$~modules.}
 \label{fig:three_pillars}
 \end{figure}
 
@@ -427,7 +435,7 @@ input, as is standard in the $\mathbb{Z}_{16}$ literature.}
 \label{tab:summary}
 \end{table}
 
-\noindent\textbf{What is proved:} 2237+ theorems across 130 Lean modules,
+\noindent\textbf{What is proved:} $\totaltheorems{}$ theorems across $\leanmodules{}$ Lean modules,
 including $[H,Q_A]=0$, Wilson mass uniqueness, Pauli algebra, Onsager
 relations, contraction, $\mathbb{Z}_{16}$ conditional theorems, A(1)
 Steenrod Ext computation (first in any proof assistant), GS conditions,
@@ -489,8 +497,8 @@ on which any resolution must stand is now machine-checked.
 %=================================================================
 
 We have presented the first comprehensive formal verification of the
-lattice chirality problem in Lean~4, comprising 2237+~theorems
-(1~axiom: gapped interface) across 130~modules. The three-pillar
+lattice chirality problem in Lean~4, comprising $\totaltheorems{}$~theorems
+($\axiomcount{}$~axiom: gapped interface) across $\leanmodules{}$~modules. The three-pillar
 structure---no-go, positive construction, anomaly classification---provides
 a complete machine-checked map of the chirality wall as of 2026. The
 Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the

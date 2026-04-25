@@ -1203,11 +1203,11 @@ PARAMETER_PROVENANCE = {
     # Embedding III per Lit-Search/Phase-5z/Phase 5z, Wave 2 — Sterile-
     # Neutrino Embedding for the Majorana Rung.md (verdict 2026-04-25).
     # Oscillation values from NuFit-6.0 global fit (Esteban et al. JHEP
-    # 12 (2024) 216, arXiv:2601.14386). 0νββ bounds: KamLAND-Zen 800
+    # 12 (2024) 216, arXiv:2410.05380). 0νββ bounds: KamLAND-Zen 800
     # (arXiv:2406.11438) and LEGEND-1000 PCDR (arXiv:2107.11462).
-    # Citation registration deferred to Stage 10 paper-21 round per
-    # feedback_citation_verification_required (no doi_verified flips
-    # without primary-source WebFetch).
+    # Citations verified 2026-04-25 in CITATION_REGISTRY (NuFit60 +
+    # KamLANDZen800 + LEGEND1000 all doi_verified=True after CrossRef +
+    # arXiv WebFetch round).
     # ════════════════════════════════════════════════════════════════
 
     'MAJORANA.M_R_FIDUCIAL_GEV': {
@@ -1259,9 +1259,9 @@ PARAMETER_PROVENANCE = {
         'source': 'Type-I seesaw with O(1) Yukawa (deep research Block 2.2)',
         'detail': 'Upper edge of the seesaw band: with y ≈ 1 (top-Yukawa-like) and '
                   'm_ν ≈ 0.05 eV, M_R ≈ 1.2e15 GeV. Sets the upper envelope; consistent '
-                  'with cosmological-inflation/leptogenesis fits (Davighi et al., '
-                  'arXiv:2304.10100, reheating ~ 10⁸–10¹⁰ GeV with right-Y-handed leptons '
-                  'living at higher M_R).',
+                  'with cosmological-inflation/leptogenesis fits (Kawasaki & Yanagida, '
+                  'JHEP 11 (2023) 106, arXiv:2304.10100, reheating ~ 10⁸–10¹⁰ GeV with '
+                  'right-handed leptons living at higher M_R).',
         'doi': '10.1007/JHEP08(2024)217',
         'llm_verified_date': '2026-04-26',
         'llm_verified_notes': 'DERIVED — algebraic from y_upper + m_ν_heaviest.',
@@ -1273,7 +1273,7 @@ PARAMETER_PROVENANCE = {
         'value': 7.42e-5,
         'unit': 'eV²',
         'tier': 'MEASURED',
-        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2410.05380)',
         'detail': 'Solar mass-squared splitting Δm²_21 = (7.42 ± 0.21) × 10⁻⁵ eV² from the '
                   'NuFit-6.0 global three-flavor oscillation fit (KamLAND reactor + solar '
                   'experiments dominant). Normal ordering best fit.',
@@ -1290,7 +1290,7 @@ PARAMETER_PROVENANCE = {
         'value': 2.515e-3,
         'unit': 'eV²',
         'tier': 'MEASURED',
-        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2410.05380)',
         'detail': 'Atmospheric mass-squared splitting |Δm²_31| = (2.515 ± 0.028) × 10⁻³ eV² '
                   '(NO best fit). T2K + NOvA + IceCube DeepCore + reactor dominant.',
         'doi': '10.1007/JHEP12(2024)216',
@@ -1304,7 +1304,7 @@ PARAMETER_PROVENANCE = {
         'value': 33.41,
         'unit': 'deg',
         'tier': 'MEASURED',
-        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2410.05380)',
         'detail': 'Solar mixing angle θ₁₂ = 33.41° (NO best fit; sin²θ₁₂ = 0.303 ± 0.012). '
                   'Reactor + solar.',
         'doi': '10.1007/JHEP12(2024)216',
@@ -1318,7 +1318,7 @@ PARAMETER_PROVENANCE = {
         'value': 8.54,
         'unit': 'deg',
         'tier': 'MEASURED',
-        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2410.05380)',
         'detail': 'Reactor mixing angle θ₁₃ = 8.54° (NO; sin²θ₁₃ = 0.02203 ± 0.00056). '
                   'Daya Bay, RENO, Double Chooz dominant.',
         'doi': '10.1007/JHEP12(2024)216',
@@ -1332,7 +1332,7 @@ PARAMETER_PROVENANCE = {
         'value': 49.1,
         'unit': 'deg',
         'tier': 'MEASURED',
-        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2410.05380)',
         'detail': 'Atmospheric mixing angle θ₂₃ = 49.1° (NO; sin²θ₂₃ = 0.572). T2K + NOvA. '
                   'Near-maximal; whether truly maximal vs slightly off is the leading '
                   'open phenomenological question for the next-generation T2HK / DUNE.',
@@ -1350,7 +1350,7 @@ PARAMETER_PROVENANCE = {
         'value': 197.0,
         'unit': 'deg',
         'tier': 'MEASURED',
-        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2410.05380)',
         'detail': 'Dirac CP-violating phase δ_CP = 197° (NO best fit, ~1σ around 195–230°). '
                   'CP-conservation (δ_CP = 0 or π) disfavored at ~2.4σ in NO.',
         'doi': '10.1007/JHEP12(2024)216',

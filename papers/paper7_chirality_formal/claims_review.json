@@ -1,280 +1,2155 @@
 {
-  "review_metadata": {
-    "paper": "papers/paper7_chirality_formal/paper_draft.tex",
-    "reviewer": "claims-reviewer (Opus 4.6, 1M context)",
-    "date": "2026-04-03",
-    "prior_review": "2026-04-03 (initial review found stale broader counts at 429/30; those have since been updated to 748/49 in paper but new discrepancies found)",
-    "sources_checked": [
-      "lean/SKEFTHawking/LatticeHamiltonian.lean (read in full)",
-      "lean/SKEFTHawking/GoltermanShamir.lean (read in full)",
-      "lean/SKEFTHawking/TPFEvasion.lean (read in full)",
-      "lean/SKEFTHawking/*.lean (all 49 modules, grepped for theorem/lemma/instance/axiom/sorry)",
-      "src/core/constants.py (ARISTOTLE_THEOREMS registry, lines 789-1092)",
-      "lake build output (zero sorry confirmed, 8076 jobs)"
-    ]
-  },
-  "overall_verdict": "PASS_WITH_ISSUES",
-  "executive_summary": "Core formal verification claims are solid: zero sorry confirmed by lake build, all cited Lean theorems exist, 14 Aristotle proofs verified against 4 run IDs, master synthesis is a genuine five-part conjunction, 3 axioms confirmed. The primary issues are (1) theorem count discrepancies under different counting conventions (55 claimed for chirality modules vs 54-58 actual, 748 claimed total vs 762 actual), (2) one Aristotle run ID misattribution, and (3) internal inconsistency between Discussion (588/38) and Conclusion (748/49) figures.",
-
-  "claims": [
+  "paper": "paper7_chirality_formal",
+  "review_date": "2026-04-25T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+  "sentences": [
     {
-      "id": "C01",
-      "location": "Abstract line 51-52; Table I; Conclusion line 325",
-      "claim": "55 theorems across three Lean modules (28 + 15 + 12)",
-      "status": "WARN",
-      "detail": "Actual counts by grepping ^(theorem|lemma|private lemma|instance): LH=34 (28 theorems + 1 lemma + 5 instances), GS=18 (14 theorems + 3 private lemmas + 1 instance), TPF=12 (12 theorems). Strict theorem-only count: 28+14+12=54. If the unnamed Module.Finite instance (fock_space_finite_dim) is counted as a theorem: 28+15+12=55. The 55 count is defensible only if: (a) the fock_space_finite_dim instance is counted, AND (b) the 3 private helper lemmas in GS are NOT counted. This is an unusual convention. Prior review accepted 55 under this reasoning.",
-      "severity": "low",
-      "recommendation": "Add footnote: 'counting the fock_space_finite_dim instance and excluding 3 private helper lemmas'"
+      "id": "sentence:paper7_chirality_formal:abstract:cf682d88",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "cf682d88",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 35,
+      "tex_line_end": 36,
+      "quote": "We present the first formal verification of the lattice chirality problem in a proof assistant.",
+      "quote_normalized": "we present the first formal verification of the lattice chirality problem in a proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim ('first formal verification'); not mechanically verifiable. INFO per spec.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C02",
-      "location": "Abstract line 52-53",
-      "claim": "Three modules: LatticeHamiltonian.lean, GoltermanShamir.lean, TPFEvasion.lean",
-      "status": "PASS",
-      "detail": "All three files exist at lean/SKEFTHawking/."
+      "id": "sentence:paper7_chirality_formal:abstract:3f3f8980",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "3f3f8980",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 36,
+      "tex_line_end": 39,
+      "quote": "The nine conditions of the Golterman-Shamir (GS) no-go theorem---six explicit and three implicit---are formalized as substantive Lean~4 propositions using Mathlib infrastructure.",
+      "quote_normalized": "the nine conditions of the golterman-shamir (gs) no-go theorem---six explicit and three implicit---are formalized as substantive lean~4 propositions using mathlib infrastructure.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.gs_explicit_count",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.gs_implicit_count",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.gs_total_conditions",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "GoltermanShamir.lean codifies 6 explicit + 3 implicit + 9 total. Matches paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C03",
-      "location": "Abstract line 53; Conclusion lines 325-326, 330",
-      "claim": "Zero sorry",
-      "status": "PASS",
-      "detail": "lake build completes with 'Build completed successfully (8076 jobs)' and only lint warnings (unused simp args in GTCommutation.lean). Grep for \\bsorry\\b across all .lean files finds only comments/docstrings, never active proof terms."
+      "id": "sentence:paper7_chirality_formal:abstract:35d8cde9",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "35d8cde9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 39,
+      "tex_line_end": 44,
+      "quote": "Seven of nine conditions encode genuine mathematical content: translation invariance via Brillouin zone compactness, fermion-only fields via \\texttt{ExteriorAlgebra} as the fermionic Fock space (finite-dimensionality proved by the Aristotle automated theorem prover via graded decomposition), relativistic spectrum via spectral gap, and Hamiltonian evolution via matrix exponential.",
+      "quote_normalized": "seven of nine conditions encode genuine mathematical content: translation invariance via brillouin zone compactness, fermion-only fields via exterioralgebra as the fermionic fock space (finite-dimensionality proved by the aristotle automated theorem prover via graded decomposition), relativistic spectrum via spectral gap, and hamiltonian evolution via matrix exponential.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.brillouin_zone_compact",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.FermionicFockSpace",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.fock_space_finite_dim",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Substantive 7-of-9 count corresponds to substantive_condition_count in GoltermanShamir.lean. fock_space_finite_dim is unnamed Module.Finite instance proved by Aristotle run_20260328_170451.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C04",
-      "location": "Abstract lines 54-55; Table I; Acknowledgments lines 347-349",
-      "claim": "14 proved by Aristotle across 4 runs",
-      "status": "PASS",
-      "detail": "ARISTOTLE_THEOREMS in constants.py confirms 14 entries across 4 chirality run IDs: run_20260328_132925 (7), run_20260328_142342 (3), run_20260328_151228 (3), run_20260328_170451 (1). Total: 7+3+3+1=14."
+      "id": "sentence:paper7_chirality_formal:abstract:fd52d652",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "fd52d652",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 44,
+      "tex_line_end": 45,
+      "quote": "The remaining two encode physics conjectures as well-typed axioms.",
+      "quote_normalized": "the remaining two encode physics conjectures as well-typed axioms.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Original phrasing calls fields_complete (a Prop struct field) plus an older gs_nogo_axiom 'axioms'. Current chirality module state: 0 active axiom keywords; gs_nogo_axiom was removed (per source comment). 'Two physics conjectures encoded as axioms' is methodological framing \u2014 defensible but loose. WARN.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C05",
-      "location": "Conclusion line 329",
-      "claim": "748 theorems + 3 axioms across 49 modules",
-      "status": "FAIL",
-      "detail": "Grep for ^(theorem|lemma|private lemma|noncomputable instance|instance ) across 49 .lean files yields 762 declarations across 48 files (Basic.lean has 0). Module count 49 is correct. Axiom count 3 is correct (non_abelian_center_discrete, gs_nogo_axiom, z16_classification). Theorem count 748 is 14 fewer than actual 762. No consistent counting convention produces exactly 748.",
-      "severity": "medium",
-      "recommendation": "Recount with explicit convention. If excluding unnamed instances (5 in LH + others), document the convention."
+      "id": "sentence:paper7_chirality_formal:abstract:148ce4ae",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "148ce4ae",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 45,
+      "tex_line_end": 50,
+      "quote": "The Thorngren-Preskill-Fidkowski (TPF) construction is shown to violate five of the nine conditions: smoothness (round function discontinuous at $1/2$), fermion-only (bosonic rotor ancillas), finite local dimension ($\\ell^2(\\mathbb{Z})$ proved infinite-dimensional), extra-dimensional (4+1D SPT slab), and conditionally, no massless bosons.",
+      "quote_normalized": "the thorngren-preskill-fidkowski (tpf) construction is shown to violate five of the nine conditions: smoothness (round function discontinuous at $1/2$), fermion-only (bosonic rotor ancillas), finite local dimension ($\\ell^2(\\mathbb{z})$ proved infinite-dimensional), extra-dimensional (4+1d spt slab), and conditionally, no massless bosons.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.tpf_outside_gs_scope_main",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.round_not_continuous_at_half",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.tpf_violates_C2",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.rotor_hilbert_not_finite_dim",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Five-violation count matches potential_violation_count in TPFEvasion.lean (3 definite + 2 conditional = 5).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C06",
-      "location": "Conclusion line 329",
-      "claim": "49 modules",
-      "status": "PASS",
-      "detail": "ls lean/SKEFTHawking/*.lean | wc -l = 49"
+      "id": "sentence:paper7_chirality_formal:abstract:b96db135",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "b96db135",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 50,
+      "tex_line_end": 51,
+      "quote": "The master synthesis \\texttt{tpf\\_outside\\_gs\\_scope\\_main} is a machine-checked five-part conjunction.",
+      "quote_normalized": "the master synthesis tpf\\_outside\\_gs\\_scope\\_main is a machine-checked five-part conjunction.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.tpf_outside_gs_scope_main",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C07",
-      "location": "Conclusion line 330",
-      "claim": "252 proved by Aristotle across 30+ runs",
-      "status": "PASS",
-      "detail": "constants.py line 1095: assert ARISTOTLE_PROVED_COUNT == 252. Distinct non-manual run IDs: 34 (counted manually from registry). Both 252 and 30+ are accurate."
+      "id": "sentence:paper7_chirality_formal:abstract:0c2e9f59",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "0c2e9f59",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 51,
+      "tex_line_end": 55,
+      "quote": "The formalization comprises 54 theorems across three Lean modules (\\texttt{LatticeHamiltonian.lean}, \\texttt{GoltermanShamir.lean}, \\texttt{TPFEvasion.lean}), with zero \\texttt{sorry}, verified by \\texttt{lake build}.",
+      "quote_normalized": "the formalization comprises 54 theorems across three lean modules (latticehamiltonian.lean, goltermanshamir.lean, tpfevasion.lean), with zero sorry, verified by lake build.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' chirality modules",
+            "computed_value": "28+14+12=54",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Strict theorem count: 28 (LH) + 14 (GS) + 12 (TPF) = 54. Exact match. Zero sorry confirmed: project-wide grep finds 2 occurrences both inside comment blocks.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
     },
     {
-      "id": "C08",
-      "location": "Table I line 257",
-      "claim": "LatticeHamiltonian: 28 thms, 7 Aristotle",
-      "status": "PASS",
-      "detail": "28 theorem declarations (excluding 1 lemma two_pi_pos and 5 instances). 7 Aristotle entries confirmed in constants.py."
+      "id": "sentence:paper7_chirality_formal:abstract:751cae0a",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "751cae0a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 55,
+      "tex_line_end": 56,
+      "quote": "Of these, 14 are proved by the Aristotle automated theorem prover across 4 runs.",
+      "quote_normalized": "of these, 14 are proved by the aristotle automated theorem prover across 4 runs.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "ARISTOTLE_THEOREMS chirality slice",
+            "computed_value": "14 / 4 runs",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "13 chirality Aristotle entries map via lean_deps + 1 unnamed instance fock_space_finite_dim = 14. Distinct run_ids: run_20260328_132925, run_20260328_142342, run_20260328_151228, run_20260328_170451.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
     },
     {
-      "id": "C09",
-      "location": "Table I line 258",
-      "claim": "GoltermanShamir: 15+1ax thms, 7 Aristotle",
-      "status": "WARN",
-      "detail": "14 theorem decls + 3 private lemmas + 1 instance + 1 axiom. Paper's '15' requires counting the unnamed Module.Finite instance but NOT the 3 private helper lemmas. Unusual but defensible. Aristotle count 7 is correct (3+3+1 from 3 runs). Axiom count 1 correct (gs_nogo_axiom).",
-      "severity": "low"
+      "id": "sentence:paper7_chirality_formal:abstract:4f909c3e",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "4f909c3e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 56,
+      "tex_line_end": 59,
+      "quote": "This work provides machine-checked evidence that the GS no-go and TPF construction operate in genuinely different mathematical frameworks---neither proves nor disproves the other.",
+      "quote_normalized": "this work provides machine-checked evidence that the gs no-go and tpf construction operate in genuinely different mathematical frameworks---neither proves nor disproves the other.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C10",
-      "location": "Table I line 259",
-      "claim": "TPFEvasion: 12 thms, 0 Aristotle",
-      "status": "PASS",
-      "detail": "Exact match. 12 theorems, all manual (norm_num, rfl, or reexports). Zero in ARISTOTLE_THEOREMS."
+      "id": "sentence:paper7_chirality_formal:abstract:8faf0be4",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "abstract",
+        "quote_hash": "8faf0be4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 59,
+      "tex_line_end": 62,
+      "quote": "A companion paper~\\cite{Paper8} extends this analysis with the Gioia-Thorngren positive construction ($[H,Q_A]=0$ machine-verified), Onsager algebra formalization, and $\\mathbb{Z}_{16}$ anomaly classification, totaling 2237+~theorems (1~axiom: gapped interface) across 130~modules.",
+      "quote_normalized": "a companion paper~ extends this analysis with the gioia-thorngren positive construction ($[h,q_a]=0$ machine-verified), onsager algebra formalization, and $\\mathbb{z}_{16}$ anomaly classification, totaling 2237+~theorems (1~axiom: gapped interface) across 130~modules.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "SD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' (project total)",
+            "computed_value": "2578"
+          },
+          {
+            "kind": "formula",
+            "target": "ls SKEFTHawking/*.lean | wc -l",
+            "computed_value": "170",
+            "delta_pct": 30.8
+          },
+          {
+            "kind": "formula",
+            "target": "grep '^axiom ' (project total)",
+            "computed_value": "1"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA/SD: paper claims 2237+ theorems / 130 modules. Live: 2578 theorems (within '+' bound) / 170 modules (30.8% drift, '130' is a strict integer -> FAIL). 1 axiom claim matches (gapped_interface_axiom).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 30.8
     },
     {
-      "id": "C11",
-      "location": "Section II (C1), lines 103-105",
-      "claim": "BrillouinZone d := Fin d -> AddCircle (2pi), proved compact via Pi.compactSpace + AddCircle.compact",
-      "status": "PASS",
-      "detail": "LatticeHamiltonian.lean line 68: BrillouinZone d = Fin d -> AddCircle (2*Real.pi). Line 85: brillouin_zone_compact uses Pi.compactSpace."
+      "id": "sentence:paper7_chirality_formal:introduction:b83a4883",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "introduction",
+        "quote_hash": "b83a4883",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "tex_line_start": 72,
+      "tex_line_end": 75,
+      "quote": "The question of whether chiral fermions can be consistently placed on a lattice---with the correct continuum limit reproducing the Standard Model's chiral gauge structure---remains one of the central open problems in lattice field theory~\\cite{Nielsen1981a,Nielsen1981b}.",
+      "quote_normalized": "the question of whether chiral fermions can be consistently placed on a lattice---with the correct continuum limit reproducing the standard model's chiral gauge structure---remains one of the central open problems in lattice field theory~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Cites Nielsen1981a/b; not in CITATION_REGISTRY (foundational classics, bibitem entries provided). WARN \u2014 registry coverage gap.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C12",
-      "location": "Section II (C2), lines 109-115",
-      "claim": "FermionicFockSpace k := ExteriorAlgebra C (Fin k -> C), fock_space_finite_dim via Aristotle run_20260328_170451 using 3 helper lemmas",
-      "status": "PASS",
-      "detail": "GoltermanShamir.lean line 82: abbrev FermionicFockSpace k := ExteriorAlgebra C (Fin k -> C). Line 262: Module.Finite instance. Three helper lemmas at lines 188, 199, 252. constants.py line 888: fock_space_finite_dim -> run_20260328_170451."
+      "id": "sentence:paper7_chirality_formal:introduction:44541fb9",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "introduction",
+        "quote_hash": "44541fb9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "tex_line_start": 75,
+      "tex_line_end": 75,
+      "quote": "Two recent lines of work have produced seemingly contradictory conclusions.",
+      "quote_normalized": "two recent lines of work have produced seemingly contradictory conclusions.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C13",
-      "location": "Section II (I2), line 146",
-      "claim": "c1_implies_i2 via Aristotle run_20260328_142342",
-      "status": "PASS",
-      "detail": "GoltermanShamir.lean line 448: theorem c1_implies_i2. constants.py line 880: run_20260328_142342."
+      "id": "sentence:paper7_chirality_formal:introduction:086e7dfc",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "introduction",
+        "quote_hash": "086e7dfc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "tex_line_start": 76,
+      "tex_line_end": 79,
+      "quote": "Golterman and Shamir~\\cite{GoltermanShamir2026} proved a no-go theorem: under nine conditions (six explicit, three implicit), any lattice Hamiltonian produces a vector-like (equal left- and right-handed) fermion spectrum.",
+      "quote_normalized": "golterman and shamir~ proved a no-go theorem: under nine conditions (six explicit, three implicit), any lattice hamiltonian produces a vector-like (equal left- and right-handed) fermion spectrum.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GoltermanShamir2026",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "GoltermanShamir2026 IS in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C14",
-      "location": "Section II (I3), line 152",
-      "claim": "rotor_hilbert_not_finite_dim via Aristotle run_20260328_132925",
-      "status": "PASS",
-      "detail": "LatticeHamiltonian.lean line 304. constants.py line 871: run_20260328_132925."
+      "id": "sentence:paper7_chirality_formal:introduction:ac1e68cc",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "introduction",
+        "quote_hash": "ac1e68cc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "tex_line_start": 79,
+      "tex_line_end": 83,
+      "quote": "Independently, Thorngren, Preskill, and Fidkowski~\\cite{TPF2024,Tong2022} constructed a disentangler using bosonic rotor degrees of freedom, an infinite-dimensional local Hilbert space, and a 4+1-dimensional SPT slab, achieving a lattice system with a chiral continuum limit.",
+      "quote_normalized": "independently, thorngren, preskill, and fidkowski~ constructed a disentangler using bosonic rotor degrees of freedom, an infinite-dimensional local hilbert space, and a 4+1-dimensional spt slab, achieving a lattice system with a chiral continuum limit.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Cites TPF2024, Tong2022; neither key in CITATION_REGISTRY. Bibitem block has arXiv IDs. WARN \u2014 registry coverage gap.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C15",
-      "location": "Section III.1, line 165",
-      "claim": "round_not_continuous_at_half via Aristotle run_20260328_132925",
-      "status": "PASS",
-      "detail": "LatticeHamiltonian.lean line 332. constants.py line 872: run_20260328_132925."
+      "id": "sentence:paper7_chirality_formal:introduction:ca36cb8e",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "introduction",
+        "quote_hash": "ca36cb8e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "tex_line_start": 85,
+      "tex_line_end": 86,
+      "quote": "These results have been debated informally, with no direct engagement between the two frameworks.",
+      "quote_normalized": "these results have been debated informally, with no direct engagement between the two frameworks.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C16",
-      "location": "Section III.2, line 169",
-      "claim": "tpf_violates_C2 and tpf_bosonic_exceeds_fock via Aristotle run_20260328_142342",
-      "status": "FAIL",
-      "detail": "tpf_violates_C2 IS in run_20260328_142342 (constants.py line 878). But tpf_bosonic_exceeds_fock is in run_20260328_151228 (constants.py line 885), NOT run_20260328_142342 as claimed. The paper incorrectly attributes tpf_bosonic_exceeds_fock to the wrong run.",
-      "severity": "low",
-      "recommendation": "Change to 'Aristotle runs run_20260328_142342 and run_20260328_151228' or cite the correct run for each theorem."
+      "id": "sentence:paper7_chirality_formal:introduction:8f040e7e",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "introduction",
+        "quote_hash": "8f040e7e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "tex_line_start": 86,
+      "tex_line_end": 89,
+      "quote": "We provide the first machine-checked formal analysis, formalizing both sides in Lean~4 with the Mathlib library and identifying precisely which GS conditions the TPF construction violates.",
+      "quote_normalized": "we provide the first machine-checked formal analysis, formalizing both sides in lean~4 with the mathlib library and identifying precisely which gs conditions the tpf construction violates.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Self-referential framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C17",
-      "location": "Section III.3, line 173",
-      "claim": "integers_not_finite proved by Aristotle",
-      "status": "PASS",
-      "detail": "constants.py line 873: integers_not_finite -> run_20260328_132925."
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:1a295f3e",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "1a295f3e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 97,
+      "tex_line_end": 98,
+      "quote": "The GS no-go theorem assumes six explicit conditions on the lattice Hamiltonian H.",
+      "quote_normalized": "the gs no-go theorem assumes six explicit conditions on the lattice hamiltonian h.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C18",
-      "location": "Section III, Master Synthesis, lines 188-192",
-      "claim": "tpf_outside_gs_scope_main is a machine-checked five-part conjunction",
-      "status": "PASS",
-      "detail": "TPFEvasion.lean lines 149-156: five-part conjunction (not_FiniteDimensional, not_Finite_Z, not_ContinuousAt_round, 4+1=5, 9-3<9). Paper's pseudocode uses abbreviated names (violation_I3 etc.) but structure matches exactly."
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:aa81683b",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "aa81683b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 101,
+      "tex_line_end": 106,
+      "quote": "C1. Lattice translation invariance. H(k) is a continuous function on the Brillouin zone $T^d$ with continuous first derivative. Formalized via \\texttt{BrillouinZone d := Fin d $\\to$ AddCircle ($2\\pi$)}, proved compact (\\texttt{Pi.compactSpace} + \\texttt{AddCircle.compact}).",
+      "quote_normalized": "c1. lattice translation invariance. h(k) is a continuous function on the brillouin zone $t^d$ with continuous first derivative. formalized via brillouinzone d := fin d $\\to$ addcircle ($2\\pi$), proved compact (pi.compactspace + addcircle.compact).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.BrillouinZone",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.brillouin_zone_compact",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C19",
-      "location": "Section IV, line 233",
-      "claim": "Lean 4.28.0 with Mathlib commit 8f9d9cff",
-      "status": "WARN",
-      "detail": "CLAUDE.md confirms Mathlib pinned to 8f9d9cff. Prior review verified lean-toolchain says v4.28.0 and lakefile.toml references 8f9d9cff. Not independently re-verified in this review (no lakefile read)."
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:c4169fb1",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "c4169fb1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 107,
+      "tex_line_end": 116,
+      "quote": "C2. Fermion-fields-only Hamiltonian. No scalar, bosonic, or ancilla fields. The local Hilbert space is a fermionic Fock space. Formalized as \\texttt{FermionicFockSpace k := ExteriorAlgebra $\\mathbb{C}$ (Fin k $\\to$ $\\mathbb{C}$)}, with \\texttt{fock\\_space\\_finite\\_dim} proving \\texttt{Module.Finite $\\mathbb{C}$ (FermionicFockSpace k)} via three Aristotle-discovered helper lemmas: \\texttt{exteriorPower\\_eq\\_bot\\_of\\_lt}, \\texttt{exteriorPower\\_iSup\\_range}, \\texttt{exteriorPower\\_sup\\_fg} (Aristotle run \\texttt{run\\_20260328\\_170451}).",
+      "quote_normalized": "c2. fermion-fields-only hamiltonian. no scalar, bosonic, or ancilla fields. the local hilbert space is a fermionic fock space. formalized as \\texttt{fermionicfockspace k := exterioralgebra $\\mathbb{c}$ (fin k $\\to$ $\\mathbb{c}$)}, with fock\\_space\\_finite\\_dim proving \\texttt{module.finite $\\mathbb{c}$ (fermionicfockspace k)} via three aristotle-discovered helper lemmas: exteriorpower\\_eq\\_bot\\_of\\_lt, exteriorpower\\_isup\\_range, exteriorpower\\_sup\\_fg (aristotle run run\\_20260328\\_170451).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.FermionicFockSpace",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.fock_space_finite_dim",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "FermionicFockSpace + fock_space_finite_dim resolved. exteriorPower_* are private lemmas at GoltermanShamir.lean lines 188/199/252 (private not exported in lean_deps but verified by source grep). ARISTOTLE_THEOREMS[\"fock_space_finite_dim\"] = run_20260328_170451: match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C20",
-      "location": "Discussion, line 315",
-      "claim": "588 theorems across 38 modules",
-      "status": "WARN",
-      "detail": "Internal inconsistency: Discussion says 588/38, Conclusion says 748/49. These refer to different snapshots (pre-Phase 5a vs current). Current codebase has 762/49. The 588 figure was accurate at the time of original drafting (per prior review) but conflicts with the 748 in the same paper.",
-      "severity": "medium",
-      "recommendation": "Either pin both figures to the same snapshot or update Discussion to match Conclusion (748/49)."
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:e54f4cc3",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "e54f4cc3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 117,
+      "tex_line_end": 121,
+      "quote": "C3. Relativistic continuum limit with no massless bosons. Formalized via \\texttt{GaplessPoint} (spectral gap vanishes at isolated momenta) and \\texttt{C3\\_relativistic} requiring finitely many gapless points with linear dispersion.",
+      "quote_normalized": "c3. relativistic continuum limit with no massless bosons. formalized via gaplesspoint (spectral gap vanishes at isolated momenta) and c3\\_relativistic requiring finitely many gapless points with linear dispersion.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.GaplessPoint",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.C3_relativistic",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both names exist in module GoltermanShamir; paper uses bare \\texttt without module qualifier so resolution succeeds.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C21",
-      "location": "Fig 4 caption, lines 277-278",
-      "claim": "Phase 5 adds 372 theorems across 22 modules, bringing total to 588 + 2 axioms",
-      "status": "WARN",
-      "detail": "Historical snapshot claim. Conflicts with Conclusion's 748/49. Not verifiable against current codebase which has grown beyond 588."
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:5ec996e5",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "5ec996e5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 122,
+      "tex_line_end": 127,
+      "quote": "C4. Complete set of interpolating fields. Formalized using resolvent infrastructure: \\texttt{C4\\_complete} requires \\texttt{everywhere\\_invertible} (no propagator poles away from gapless points). The physics content (bound-state completeness) is axiomatized via \\texttt{fields\\_complete}.",
+      "quote_normalized": "c4. complete set of interpolating fields. formalized using resolvent infrastructure: c4\\_complete requires everywhere\\_invertible (no propagator poles away from gapless points). the physics content (bound-state completeness) is axiomatized via fields\\_complete.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.C4_complete",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.C4_complete.everywhere_invertible",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.C4_complete.fields_complete",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "everywhere_invertible and fields_complete resolved as nested under C4_complete in lean_deps. fields_complete is a struct field of type Prop (line 324 GS.lean) \u2014 paper accurately calls it \"axiomatized\".",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C22",
-      "location": "Abstract lines 37-48",
-      "claim": "Nine GS conditions (6 explicit + 3 implicit), 7 substantive, TPF violates 5",
-      "status": "PASS",
-      "detail": "LatticeHamiltonian.lean: gs_explicit_count=6, gs_implicit_count=3, gs_total_conditions=9. GoltermanShamir.lean: substantive_condition_count: 7+2=9. TPFEvasion.lean: potential_violation_count: 3+2=5."
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:7a44f4be",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "7a44f4be",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 128,
+      "tex_line_end": 131,
+      "quote": "C5. No spontaneous symmetry breaking. Formalized via \\texttt{C5\\_no\\_ssb} with ground state index, ground state invariance under the symmetry group, and eigenvalue properties.",
+      "quote_normalized": "c5. no spontaneous symmetry breaking. formalized via c5\\_no\\_ssb with ground state index, ground state invariance under the symmetry group, and eigenvalue properties.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.C5_no_ssb",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C23",
-      "location": "Abstract line 61",
-      "claim": "Companion paper extends to 748 theorems across 49 modules",
-      "status": "FAIL",
-      "detail": "Same as C05. Actual count is 762 theorem-like declarations, not 748. Module count 49 is correct.",
-      "severity": "medium"
+      "id": "sentence:paper7_chirality_formal:six-explicit-conditions:fe640b83",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "six-explicit-conditions",
+        "quote_hash": "fe640b83",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Six Explicit Conditions",
+      "tex_line_start": 132,
+      "tex_line_end": 134,
+      "quote": "C6. Propagator zeros are kinematical. Formalized as a well-typed existential over basis enlargements that remove propagator zeros.",
+      "quote_normalized": "c6. propagator zeros are kinematical. formalized as a well-typed existential over basis enlargements that remove propagator zeros.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Paper does not name a specific Lean theorem; methodologically descriptive.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C24",
-      "location": "Conclusion lines 325-326",
-      "claim": "55 theorems + 1 axiom across three Lean 4 modules, with zero sorry",
-      "status": "PASS",
-      "detail": "Repeats C01 (55 defensible with noted convention), C02 (3 modules confirmed), C03 (zero sorry confirmed)."
+      "id": "sentence:paper7_chirality_formal:three-implicit-assumptions:cb6012b5",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "three-implicit-assumptions",
+        "quote_hash": "cb6012b5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Three Implicit Assumptions",
+      "tex_line_start": 140,
+      "tex_line_end": 143,
+      "quote": "I1. Hamiltonian formulation. Formalized via \\texttt{I1\\_hamiltonian} requiring a Hermitian generator H with \\texttt{H.IsHermitian}.",
+      "quote_normalized": "i1. hamiltonian formulation. formalized via i1\\_hamiltonian requiring a hermitian generator h with h.ishermitian.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.I1_hamiltonian",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C25",
-      "location": "Conclusion line 329",
-      "claim": "3 axioms",
-      "status": "PASS",
-      "detail": "Three axioms found: non_abelian_center_discrete (GaugeErasure.lean), gs_nogo_axiom (GoltermanShamir.lean), z16_classification (Z16Classification.lean)."
+      "id": "sentence:paper7_chirality_formal:three-implicit-assumptions:e9d47005",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "three-implicit-assumptions",
+        "quote_hash": "e9d47005",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Three Implicit Assumptions",
+      "tex_line_start": 144,
+      "tex_line_end": 147,
+      "quote": "I2. Local (finite-range) interactions. Formalized via \\texttt{FiniteRange}. Proved to follow from C1: \\texttt{c1\\_implies\\_i2} (Aristotle run \\texttt{run\\_20260328\\_142342}).",
+      "quote_normalized": "i2. local (finite-range) interactions. formalized via finiterange. proved to follow from c1: c1\\_implies\\_i2 (aristotle run run\\_20260328\\_142342).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.FiniteRange",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.c1_implies_i2",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ARISTOTLE_THEOREMS[\"c1_implies_i2\"] = run_20260328_142342. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C26",
-      "location": "Figures",
-      "claim": "fig53, fig54, fig60, fig61 referenced in paper exist",
-      "status": "PASS",
-      "detail": "All four PNG files present in papers/paper7_chirality_formal/figures/."
+      "id": "sentence:paper7_chirality_formal:three-implicit-assumptions:71da0349",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "three-implicit-assumptions",
+        "quote_hash": "71da0349",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Three Implicit Assumptions",
+      "tex_line_start": 148,
+      "tex_line_end": 153,
+      "quote": "I3. Finite-dimensional local Hilbert space. The key condition that the TPF construction violates. Proved that the rotor Hilbert space $\\ell^2(\\mathbb{Z})$ is not finite-dimensional: \\texttt{rotor\\_hilbert\\_not\\_finite\\_dim} via linear independence of \\texttt{lp.single} elements (Aristotle run \\texttt{run\\_20260328\\_132925}).",
+      "quote_normalized": "i3. finite-dimensional local hilbert space. the key condition that the tpf construction violates. proved that the rotor hilbert space $\\ell^2(\\mathbb{z})$ is not finite-dimensional: rotor\\_hilbert\\_not\\_finite\\_dim via linear independence of lp.single elements (aristotle run run\\_20260328\\_132925).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.rotor_hilbert_not_finite_dim",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ARISTOTLE_THEOREMS[\"rotor_hilbert_not_finite_dim\"] = run_20260328_132925. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C27",
-      "location": "Discussion lines 305-309",
-      "claim": "First-ever definitions of pivotal, spherical, fusion categories + Drinfeld double D(G) + gauge emergence theorem in a proof assistant",
-      "status": "WARN",
-      "detail": "Qualitative priority claim. The Lean files exist (KLinearCategory.lean, SphericalCategory.lean, FusionCategory.lean, DrinfeldDouble.lean, GaugeEmergence.lean). 'First-ever' cannot be verified from codebase alone."
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:43f617cd",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "43f617cd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 159,
+      "tex_line_end": 159,
+      "quote": "The TPF construction violates five GS conditions.",
+      "quote_normalized": "the tpf construction violates five gs conditions.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C28",
-      "location": "Abstract line 35; Conclusion line 320",
-      "claim": "First formal verification of lattice chirality in a proof assistant",
-      "status": "WARN",
-      "detail": "Priority claim. Formalization exists and is machine-checked. Cannot verify 'first' without literature survey."
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:a8c8e3f2",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "a8c8e3f2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 162,
+      "tex_line_end": 166,
+      "quote": "C1 (smoothness): The disentangler uses the round function to map continuous variables to integers. Proved discontinuous at 1/2: \\texttt{round\\_not\\_continuous\\_at\\_half} via $\\varepsilon$-$\\delta$ argument (Aristotle run \\texttt{run\\_20260328\\_132925}).",
+      "quote_normalized": "c1 (smoothness): the disentangler uses the round function to map continuous variables to integers. proved discontinuous at 1/2: round\\_not\\_continuous\\_at\\_half via $\\varepsilon$-$\\delta$ argument (aristotle run run\\_20260328\\_132925).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.round_not_continuous_at_half",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ARISTOTLE_THEOREMS[\"round_not_continuous_at_half\"] = run_20260328_132925. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C29",
-      "location": "Section III.2, line 167-168",
-      "claim": "Bosonic rotor ancillas L^2(S^1) are not fermionic, proved by tpf_violates_C2",
-      "status": "PASS",
-      "detail": "GoltermanShamir.lean line 465: theorem tpf_violates_C2 proves existence of N > c.local_dim from TPF's unbounded dimension."
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:89f2a57a",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "89f2a57a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 167,
+      "tex_line_end": 170,
+      "quote": "C2 (fermion-only): Bosonic rotor ancillas $L^2(S^1)$ are not fermionic. Proved: \\texttt{tpf\\_violates\\_C2}, \\texttt{tpf\\_bosonic\\_exceeds\\_fock} (Aristotle run \\texttt{run\\_20260328\\_142342}).",
+      "quote_normalized": "c2 (fermion-only): bosonic rotor ancillas $l^2(s^1)$ are not fermionic. proved: tpf\\_violates\\_c2, tpf\\_bosonic\\_exceeds\\_fock (aristotle run run\\_20260328\\_142342).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.tpf_violates_C2",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.tpf_bosonic_exceeds_fock",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: tpf_violates_C2 IS run_20260328_142342 (correct), but tpf_bosonic_exceeds_fock is run_20260328_151228 per ARISTOTLE_THEOREMS, not 142342 as paper claims. Reproduces prior C16 finding. Suggested fix: cite both runs.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C30",
-      "location": "Acknowledgments, lines 347-349",
-      "claim": "Aristotle filled 14 of the 55 sorry gaps in the chirality modules including fock_space_finite_dim",
-      "status": "PASS",
-      "detail": "14 Aristotle entries confirmed for chirality modules. fock_space_finite_dim specifically via run_20260328_170451."
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:ff4e66b3",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "ff4e66b3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 171,
+      "tex_line_end": 174,
+      "quote": "I3 (finite-dim): $\\ell^2(\\mathbb{Z})$ is countably infinite-dimensional. Proved: \\texttt{rotor\\_hilbert\\_not\\_finite\\_dim}. Also: $\\mathbb{Z}$ is infinite (\\texttt{integers\\_not\\_finite}, Aristotle).",
+      "quote_normalized": "i3 (finite-dim): $\\ell^2(\\mathbb{z})$ is countably infinite-dimensional. proved: rotor\\_hilbert\\_not\\_finite\\_dim. also: $\\mathbb{z}$ is infinite (integers\\_not\\_finite, aristotle).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.rotor_hilbert_not_finite_dim",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.integers_not_finite",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both theorems exist; both have Aristotle entries (run_20260328_132925).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:971e1fe4",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "971e1fe4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 175,
+      "tex_line_end": 178,
+      "quote": "Extra-dimensional: The TPF construction uses a 4+1D SPT slab, operating in dimension D+1 rather than purely D. Encoded as \\texttt{bulk\\_is\\_higher} in the \\texttt{TPFConstruction} structure.",
+      "quote_normalized": "extra-dimensional: the tpf construction uses a 4+1d spt slab, operating in dimension d+1 rather than purely d. encoded as bulk\\_is\\_higher in the tpfconstruction structure.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Methodological claim about TPFConstruction structure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:39e09d28",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "39e09d28",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 179,
+      "tex_line_end": 182,
+      "quote": "C3 (conditional): The rotor degrees of freedom introduce massless Goldstone bosons in the continuum limit, potentially violating C3. Encoded as a conditional violation.",
+      "quote_normalized": "c3 (conditional): the rotor degrees of freedom introduce massless goldstone bosons in the continuum limit, potentially violating c3. encoded as a conditional violation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:d81c2e25",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "d81c2e25",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 186,
+      "tex_line_end": 186,
+      "quote": "The five violations are assembled into a single machine-checked theorem.",
+      "quote_normalized": "the five violations are assembled into a single machine-checked theorem.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:c8abe265",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "c8abe265",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 187,
+      "tex_line_end": 192,
+      "quote": "theorem tpf_outside_gs_scope_main : violation_I3 /\\ violation_Z_infinite /\\ violation_C1 /\\ extra_dim /\\ nogo_fails_with_violations",
+      "quote_normalized": "theorem tpf_outside_gs_scope_main : violation_i3 /\\ violation_z_infinite /\\ violation_c1 /\\ extra_dim /\\ nogo_fails_with_violations",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.tpf_outside_gs_scope_main",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem exists; structure is 5-part conjunction.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:tpf-evasion-analysis:7f2a2b6a",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "tpf-evasion-analysis",
+        "quote_hash": "7f2a2b6a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "TPF Evasion Analysis",
+      "tex_line_start": 193,
+      "tex_line_end": 193,
+      "quote": "Proved in \\texttt{TPFEvasion.lean} (12 theorems, zero sorry).",
+      "quote_normalized": "proved in tpfevasion.lean (12 theorems, zero sorry).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' TPFEvasion.lean",
+            "computed_value": "12",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:64196560",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "64196560",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 202,
+      "tex_line_end": 207,
+      "quote": "Formalization status of the nine GS no-go conditions. Blue: substantive Lean propositions (7 of 9). Amber: well-typed axioms encoding physics conjectures (2 of 9). Berry: conditions violated by the TPF construction (5 of 9). Colorblind-accessible palette.",
+      "quote_normalized": "formalization status of the nine gs no-go conditions. blue: substantive lean propositions (7 of 9). amber: well-typed axioms encoding physics conjectures (2 of 9). berry: conditions violated by the tpf construction (5 of 9). colorblind-accessible palette.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "GoltermanShamir.substantive_condition_count",
+            "computed_value": "7+2=9",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "7 substantive + 2 axiomatic = 9 conditions. Matches GS module counts.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:3d4b9c18",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "3d4b9c18",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 213,
+      "tex_line_end": 219,
+      "quote": "The five GS conditions violated by the TPF construction, with the specific Lean theorem establishing each violation. Berry bars: definite violations (I3, C1, C2, extra-dimensional). Amber bar: conditional violation (C3, rotor Goldstone modes). The master synthesis \\texttt{tpf\\_outside\\_gs\\_scope\\_main} assembles all five into a single machine-checked conjunction.",
+      "quote_normalized": "the five gs conditions violated by the tpf construction, with the specific lean theorem establishing each violation. berry bars: definite violations (i3, c1, c2, extra-dimensional). amber bar: conditional violation (c3, rotor goldstone modes). the master synthesis tpf\\_outside\\_gs\\_scope\\_main assembles all five into a single machine-checked conjunction.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.tpf_outside_gs_scope_main",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:20f9ef63",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "20f9ef63",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 225,
+      "tex_line_end": 230,
+      "quote": "Fermionic Fock space dimension: $\\dim(\\mathrm{ExteriorAlgebra}\\,\\mathbb{C}\\,(k\\to\\mathbb{C})) = 2^k$, verified for $k=1,\\ldots,8$. The finite-dimensionality theorem \\texttt{fock\\_space\\_finite\\_dim} was proved by Aristotle via graded decomposition of the exterior algebra.",
+      "quote_normalized": "fermionic fock space dimension: $\\dim(exterioralgebra\\,\\mathbb{c}\\,(k\\to\\mathbb{c})) = 2^k$, verified for $k=1,\\ldots,8$. the finite-dimensionality theorem fock\\_space\\_finite\\_dim was proved by aristotle via graded decomposition of the exterior algebra.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.fock_space_finite_dim",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Mathlib-verified ExteriorAlgebra dimension formula. Aristotle proof via graded decomposition matches comments in GoltermanShamir.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:2bbd5496",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "2bbd5496",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 233,
+      "tex_line_end": 233,
+      "quote": "The formalization uses Lean~4.28.0 with Mathlib (commit \\texttt{8f9d9cff}).",
+      "quote_normalized": "the formalization uses lean~4.28.0 with mathlib (commit 8f9d9cff).",
+      "type": "parameter",
+      "finding_classes": [
+        "TP"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "lean-toolchain",
+            "link_state": "stale"
+          },
+          {
+            "kind": "parameter",
+            "target": "lakefile.toml.rev",
+            "link_state": "stale"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "TP: lean-toolchain says leanprover/lean4:v4.29.0, paper says 4.28.0. Mathlib rev=8850ed93..., paper says 8f9d9cff. (lakefile.toml comment confirms previous Aristotle pin was 8f9d9cff/v4.28.0.) Prior C19 was WARN; in v2 reproduces as definite TP FAIL with concrete recheck.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:100757bf",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "100757bf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 236,
+      "tex_line_end": 247,
+      "quote": "\\texttt{AddCircle p}: Brillouin zone construction; \\texttt{ExteriorAlgebra}: fermionic Fock space ($\\cong$ \\texttt{CliffordAlgebra 0}); \\texttt{\u03b9\\_sq\\_zero}, \\texttt{\u03b9\\_add\\_mul\\_swap}; \\texttt{lp}: $\\ell^p$ spaces; \\texttt{Matrix.IsHermitian}; \\texttt{Ring.inverse}, \\texttt{spectrum}.",
+      "quote_normalized": "addcircle p: brillouin zone construction; exterioralgebra: fermionic fock space ($\\cong$ cliffordalgebra 0); \u03b9\\_sq\\_zero, \u03b9\\_add\\_mul\\_swap; lp: $\\ell^p$ spaces; matrix.ishermitian; ring.inverse, spectrum.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Mathlib API references (not project-internal). Skipped TN check by spec.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:0b33c634",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "0b33c634",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 258,
+      "tex_line_end": 261,
+      "quote": "Lean verification summary for the GS no-go and TPF evasion modules. All theorems verified by \\texttt{lake build} with zero \\texttt{sorry}. Aristotle column counts proofs filled by the Aristotle automated theorem prover.",
+      "quote_normalized": "lean verification summary for the gs no-go and tpf evasion modules. all theorems verified by lake build with zero sorry. aristotle column counts proofs filled by the aristotle automated theorem prover.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "lake build (zero sorry)",
+            "computed_value": "0 active sorry",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Table caption. Zero sorry confirmed (2 string occurrences, both in comment blocks).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:lean-infrastructure:157c8ee4",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "lean-infrastructure",
+        "quote_hash": "157c8ee4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Lean Infrastructure",
+      "tex_line_start": 268,
+      "tex_line_end": 273,
+      "quote": "Theorem counts per Phase~5 Lean module. Blue: manual proofs. Amber: proofs filled by the Aristotle automated theorem prover. The chirality modules (\\texttt{LatticeHamiltonian}, \\texttt{GoltermanShamir}, \\texttt{TPFEvasion}) contribute 54 theorems. The full project totals 968 theorems (zero axioms) across 66 modules.",
+      "quote_normalized": "theorem counts per phase~5 lean module. blue: manual proofs. amber: proofs filled by the aristotle automated theorem prover. the chirality modules (latticehamiltonian, goltermanshamir, tpfevasion) contribute 54 theorems. the full project totals 968 theorems (zero axioms) across 66 modules.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "SD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' (project total)",
+            "computed_value": "2578",
+            "delta_pct": 166.3
+          },
+          {
+            "kind": "formula",
+            "target": "ls SKEFTHawking/*.lean | wc -l",
+            "computed_value": "170",
+            "delta_pct": 157.6
+          },
+          {
+            "kind": "formula",
+            "target": "grep '^axiom ' (project total)",
+            "computed_value": "1"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA/SD: Fig 4 caption claims 968 theorems / 66 modules / zero axioms. Live: 2578 theorems / 170 modules / 1 axiom. All three numerics stale. Inconsistent with abstract+conclusion which use '2237+/130/1 axiom'. Reproduces prior C20/C21 (Discussion vs Conclusion drift) -- caption frozen at older snapshot.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 166.3
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:bd5f7ba6",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "bd5f7ba6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 280,
+      "tex_line_end": 282,
+      "quote": "The formal analysis reveals that the GS no-go and TPF construction operate in genuinely different mathematical frameworks.",
+      "quote_normalized": "the formal analysis reveals that the gs no-go and tpf construction operate in genuinely different mathematical frameworks.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:2f8af4ef",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "2f8af4ef",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 282,
+      "tex_line_end": 287,
+      "quote": "The GS theorem assumes a finite-dimensional, purely fermionic, lattice-translation-invariant Hamiltonian. The TPF construction uses infinite-dimensional bosonic rotors, a discontinuous disentangler, and an extra spatial dimension. Neither framework contains the other: the GS no-go does not apply to the TPF construction (which violates its hypotheses), and the TPF construction does not disprove the GS no-go (which remains valid within its scope).",
+      "quote_normalized": "the gs theorem assumes a finite-dimensional, purely fermionic, lattice-translation-invariant hamiltonian. the tpf construction uses infinite-dimensional bosonic rotors, a discontinuous disentangler, and an extra spatial dimension. neither framework contains the other: the gs no-go does not apply to the tpf construction (which violates its hypotheses), and the tpf construction does not disprove the gs no-go (which remains valid within its scope).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive synthesis spanning GS+TPF.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:723bd83d",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "723bd83d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 289,
+      "tex_line_end": 290,
+      "quote": "This is the first formal verification result in the lattice chirality literature.",
+      "quote_normalized": "this is the first formal verification result in the lattice chirality literature.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim. Cannot mechanically verify \"first\".",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:72985d45",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "72985d45",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 290,
+      "tex_line_end": 293,
+      "quote": "The machine-checked nature of the analysis eliminates the possibility of subtle errors in the logical structure, which is particularly valuable for a debate where the two sides have not directly engaged.",
+      "quote_normalized": "the machine-checked nature of the analysis eliminates the possibility of subtle errors in the logical structure, which is particularly valuable for a debate where the two sides have not directly engaged.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:21dca6e4",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "21dca6e4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 297,
+      "tex_line_end": 300,
+      "quote": "This work is part of a broader program formalizing the three-layer architecture for emergent physics: Layer~1 (topological/categorical) \u2192 Layer~2 (gauge theory) \u2192 Layer~3 (EFT/hydrodynamics).",
+      "quote_normalized": "this work is part of a broader program formalizing the three-layer architecture for emergent physics: layer~1 (topological/categorical) \u2192 layer~2 (gauge theory) \u2192 layer~3 (eft/hydrodynamics).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:eeb15055",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "eeb15055",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 300,
+      "tex_line_end": 303,
+      "quote": "The chirality wall---whether chiral gauge structure can emerge from a lattice---is one of three structural walls that constrain emergent gravity programs. The formal analysis presented here informs the assessment of whether and how these walls might be breached.",
+      "quote_normalized": "the chirality wall---whether chiral gauge structure can emerge from a lattice---is one of three structural walls that constrain emergent gravity programs. the formal analysis presented here informs the assessment of whether and how these walls might be breached.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:3fa22149",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "3fa22149",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 305,
+      "tex_line_end": 308,
+      "quote": "The broader formalization program has also produced the first-ever definitions of pivotal, spherical, and fusion categories in a proof assistant, along with the first formalization of the Drinfeld double D(G) and the gauge emergence theorem $Z(\\mathrm{Vec}_G) \\cong \\mathrm{Rep}(D(G))$.",
+      "quote_normalized": "the broader formalization program has also produced the first-ever definitions of pivotal, spherical, and fusion categories in a proof assistant, along with the first formalization of the drinfeld double d(g) and the gauge emergence theorem $z(vec_g) \\cong rep(d(g))$.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim (\"first-ever\"). Lean modules SphericalCategory, FusionCategory, DrinfeldDouble exist. INFO.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:discussion:89c0e29a",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "discussion",
+        "quote_hash": "89c0e29a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Discussion",
+      "tex_line_start": 309,
+      "tex_line_end": 311,
+      "quote": "Together, these 968 theorems across 66 modules provide end-to-end formal verification from categorical Layer~1 through gauge Layer~2 to hydrodynamic Layer~3.",
+      "quote_normalized": "together, these 968 theorems across 66 modules provide end-to-end formal verification from categorical layer~1 through gauge layer~2 to hydrodynamic layer~3.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "SD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' (project total)",
+            "computed_value": "2578",
+            "delta_pct": 166.3
+          },
+          {
+            "kind": "formula",
+            "target": "ls SKEFTHawking/*.lean | wc -l",
+            "computed_value": "170",
+            "delta_pct": 157.6
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA/SD: same stale 968/66 figures as fig54 caption. Inconsistent with abstract/conclusion (2237+/130). Reproduces prior C20.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 166.3
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:65e1b15a",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "65e1b15a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 317,
+      "tex_line_end": 319,
+      "quote": "We have presented the first formal verification of the Golterman-Shamir no-go conditions and TPF evasion mechanism in a proof assistant.",
+      "quote_normalized": "we have presented the first formal verification of the golterman-shamir no-go conditions and tpf evasion mechanism in a proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:71bf0c80",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "71bf0c80",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 319,
+      "tex_line_end": 322,
+      "quote": "54 theorems (zero axioms) across three Lean~4 modules, with zero \\texttt{sorry}, provide machine-checked evidence that the lattice chirality debate involves frameworks operating in different mathematical spaces.",
+      "quote_normalized": "54 theorems (zero axioms) across three lean~4 modules, with zero sorry, provide machine-checked evidence that the lattice chirality debate involves frameworks operating in different mathematical spaces.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' (chirality)",
+            "computed_value": "54",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "formula",
+            "target": "grep '^axiom ' (chirality)",
+            "computed_value": "0",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Confirmed: chirality modules have 54 theorems, 0 axioms. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:f0ef688e",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "f0ef688e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 322,
+      "tex_line_end": 325,
+      "quote": "The formalization is part of a broader project containing 2237+ theorems (1~axiom: gapped interface conjecture) across 130 modules, 322+ proved by the Aristotle automated theorem prover across 43+ runs.",
+      "quote_normalized": "the formalization is part of a broader project containing 2237+ theorems (1~axiom: gapped interface conjecture) across 130 modules, 322+ proved by the aristotle automated theorem prover across 43+ runs.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "SD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "grep '^theorem ' (project total)",
+            "computed_value": "2578"
+          },
+          {
+            "kind": "formula",
+            "target": "ls SKEFTHawking/*.lean | wc -l",
+            "computed_value": "170",
+            "delta_pct": 30.8
+          },
+          {
+            "kind": "formula",
+            "target": "ARISTOTLE_PROVED_COUNT",
+            "computed_value": "322"
+          },
+          {
+            "kind": "formula",
+            "target": "distinct ARISTOTLE_THEOREMS run_ids",
+            "computed_value": "44"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA/SD: 2237+ / 322+ / 43+ runs are hedged with '+'; live values are 2578 / 322 / 44 \u2014 within open-bound semantics. But '130 modules' is a literal integer; live=170 (30.8% drift). FAIL on module count specifically.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 30.8
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:1075febf",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "1075febf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 326,
+      "tex_line_end": 327,
+      "quote": "In companion work~\\cite{Paper8}, this analysis is extended in two directions.",
+      "quote_normalized": "in companion work~, this analysis is extended in two directions.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:ea449fcf",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "ea449fcf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 327,
+      "tex_line_end": 332,
+      "quote": "First, the Gioia-Thorngren construction~\\cite{GioiaTh2026} is formalized: the central theorem $[H_{\\mathrm{BdG}}(\\mathbf{k}), q_A(\\mathbf{k})]=0$ is machine-verified for all momenta on any finite lattice, with the chiral charge proved non-on-site and non-compact---violating exactly the GS conditions identified here.",
+      "quote_normalized": "first, the gioia-thorngren construction~ is formalized: the central theorem $[h_{bdg}(\\mathbf{k}), q_a(\\mathbf{k})]=0$ is machine-verified for all momenta on any finite lattice, with the chiral charge proved non-on-site and non-compact---violating exactly the gs conditions identified here.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "GioiaTh2026 not in CITATION_REGISTRY. Bibliography has arXiv 2503.07708. WARN.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:6e340f63",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "6e340f63",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 332,
+      "tex_line_end": 336,
+      "quote": "Second, the anomaly classification framework (Onsager algebra, $\\mathbb{Z}_{16}$ Pin$^+$ bordism, A(1) Steenrod subalgebra) is formalized, connecting the lattice UV structure to the continuum IR anomaly via In\\\"on\\\"u-Wigner contraction.",
+      "quote_normalized": "second, the anomaly classification framework (onsager algebra, $\\mathbb{z}_{16}$ pin$^+$ bordism, a(1) steenrod subalgebra) is formalized, connecting the lattice uv structure to the continuum ir anomaly via in\\\"on\\\"u-wigner contraction.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Cross-paper synthesis claim about Paper 8.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:conclusion:b924393b",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "conclusion",
+        "quote_hash": "b924393b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Conclusion",
+      "tex_line_start": 335,
+      "tex_line_end": 337,
+      "quote": "Together, the two papers provide a three-pillar formal verification of the chirality wall: no-go (this work), positive construction, and anomaly classification~\\cite{Paper8}.",
+      "quote_normalized": "together, the two papers provide a three-pillar formal verification of the chirality wall: no-go (this work), positive construction, and anomaly classification~.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper7_chirality_formal:acknowledgments:80e4aca0",
+      "raw_id_parts": {
+        "paper": "paper7_chirality_formal",
+        "section_slug": "acknowledgments",
+        "quote_hash": "80e4aca0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Acknowledgments",
+      "tex_line_start": 340,
+      "tex_line_end": 344,
+      "quote": "Proofs were assisted by the Aristotle automated theorem prover~\\cite{Aristotle} (Harmonic, Inc.) which filled 14 of the 54 sorry gaps in the chirality modules, including the key \\texttt{fock\\_space\\_finite\\_dim} result via graded decomposition of the exterior algebra.",
+      "quote_normalized": "proofs were assisted by the aristotle automated theorem prover~ (harmonic, inc.) which filled 14 of the 54 sorry gaps in the chirality modules, including the key fock\\_space\\_finite\\_dim result via graded decomposition of the exterior algebra.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "ARISTOTLE_THEOREMS chirality slice",
+            "computed_value": "14",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir.fock_space_finite_dim",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "14 chirality Aristotle entries confirmed (13 mapped via lean_deps + 1 unnamed instance). Aristotle citation key not in CITATION_REGISTRY but bibitem provides URL. Substantive claim PASSES.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
     }
   ],
-
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "C01",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now states '54 theorems' (exact, no convention needed). Strict grep '^theorem ' yields 28+14+12=54.",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "module": "chirality_trio",
+        "prior_value": 55,
+        "current_value": 54,
+        "command": "grep -c '^theorem ' lean/SKEFTHawking/{LatticeHamiltonian,GoltermanShamir,TPFEvasion}.lean"
+      }
+    },
+    {
+      "prior_finding_id": "C05",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper no longer claims '748 theorems / 49 modules'. Now uses '2237+ / 130 modules' (still drifted on module count; recorded as fresh sentence-keyed finding).",
+      "deterministic_recheck": {
+        "kind": "paper_text_grep",
+        "module": "paper7_chirality_formal",
+        "prior_value": 748,
+        "current_value": 0,
+        "command": "grep -c '748' papers/paper7_chirality_formal/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "C06",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper no longer claims '49 modules'. Now '130 modules' (still drifted; recorded as fresh finding).",
+      "deterministic_recheck": {
+        "kind": "paper_text_grep",
+        "module": "paper7_chirality_formal",
+        "prior_value": 49,
+        "current_value": 130,
+        "command": "grep -E '49 modules|130 modules' papers/paper7_chirality_formal/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "C07",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper updated to '322+ across 43+ runs'. Live ARISTOTLE_PROVED_COUNT=322; 44 distinct run_ids. Both within '+' bound.",
+      "deterministic_recheck": {
+        "kind": "aristotle_count",
+        "module": "project_total",
+        "prior_value": 252,
+        "current_value": 322,
+        "command": "uv run python -c 'from src.core.constants import ARISTOTLE_PROVED_COUNT; print(ARISTOTLE_PROVED_COUNT)'"
+      }
+    },
+    {
+      "prior_finding_id": "C08",
+      "prior_run_date": "2026-04-03",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Table 1 (lines 251-263) is now auto-generated via render_paper_tables.py from lean_deps.json. Original prose claim no longer in paper text.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "C09",
+      "prior_run_date": "2026-04-03",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Same as C08 \u2014 table auto-rendered.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "C10",
+      "prior_run_date": "2026-04-03",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Same as C08 \u2014 table auto-rendered.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "C19",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "v1 finding was WARN ('not independently re-verified'); v2 reproduces as definite TP FAIL with concrete recheck (lean-toolchain=v4.29.0, Mathlib rev=8850ed93..., paper claims v4.28.0 + 8f9d9cff).",
+      "deterministic_recheck": {
+        "kind": "toolchain_pin_read",
+        "module": "paper7_chirality_formal",
+        "prior_value": "4.28.0/8f9d9cff (claimed)",
+        "current_value": "4.29.0/8850ed93",
+        "command": "cat lean/lean-toolchain && grep rev lean/lakefile.toml"
+      }
+    },
+    {
+      "prior_finding_id": "C20",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper no longer contains '588 theorems' or '38 modules'. Discussion now says '968 theorems / 66 modules' (still stale; recorded as fresh sentence-keyed finding).",
+      "deterministic_recheck": {
+        "kind": "paper_text_grep",
+        "module": "paper7_chirality_formal",
+        "prior_value": 588,
+        "current_value": 0,
+        "command": "grep -c '588' papers/paper7_chirality_formal/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "C21",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper no longer contains '372 theorems' or '22 modules' historical snapshot.",
+      "deterministic_recheck": {
+        "kind": "paper_text_grep",
+        "module": "paper7_chirality_formal",
+        "prior_value": 372,
+        "current_value": 0,
+        "command": "grep -E '372 theorems|22 modules' papers/paper7_chirality_formal/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "C23",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Same as C05 \u2014 paper no longer claims '748'. Updated to 2237+/130.",
+      "deterministic_recheck": {
+        "kind": "paper_text_grep",
+        "module": "paper7_chirality_formal",
+        "prior_value": 748,
+        "current_value": 0,
+        "command": "grep -c '748' papers/paper7_chirality_formal/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "C24",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper conclusion now states '54 theorems (zero axioms)'. Strict grep verifies 54 theorems and 0 axioms in chirality modules.",
+      "deterministic_recheck": {
+        "kind": "lake_grep",
+        "module": "chirality_trio",
+        "prior_value": 55,
+        "current_value": 54,
+        "command": "grep -c '^theorem ' lean/SKEFTHawking/{LatticeHamiltonian,GoltermanShamir,TPFEvasion}.lean"
+      }
+    },
+    {
+      "prior_finding_id": "C25",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now claims '1 axiom' project-wide; live grep yields 1 axiom (gapped_interface_axiom). Match. Prior axioms non_abelian_center_discrete and gs_nogo_axiom were removed (per source comments).",
+      "deterministic_recheck": {
+        "kind": "lake_axiom_grep",
+        "module": "project_total",
+        "prior_value": 3,
+        "current_value": 1,
+        "command": "grep -h '^axiom ' lean/SKEFTHawking/*.lean | wc -l"
+      }
+    },
+    {
+      "prior_finding_id": "C30",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper updated from '14 of 55' to '14 of 54'. 14 chirality Aristotle entries confirmed.",
+      "deterministic_recheck": {
+        "kind": "paper_text_grep",
+        "module": "paper7_chirality_formal",
+        "prior_value": "14 of 55",
+        "current_value": "14 of 54",
+        "command": "grep -E '14 of 5[45]' papers/paper7_chirality_formal/paper_draft.tex"
+      }
+    }
+  ],
   "summary": {
-    "total_claims": 30,
-    "PASS": 20,
-    "FAIL": 3,
-    "WARN": 7,
-    "failures": [
-      {
-        "id": "C05/C23",
-        "severity": "medium",
-        "issue": "Total theorem count 748 does not match actual 762 (14 discrepancy). No consistent counting convention found to produce exactly 748."
-      },
-      {
-        "id": "C16",
-        "severity": "low",
-        "issue": "tpf_bosonic_exceeds_fock attributed to run_20260328_142342 but constants.py shows run_20260328_151228."
-      }
-    ],
-    "warnings": [
-      {
-        "id": "C01/C09",
-        "issue": "55 chirality theorem count requires unusual convention (count unnamed instance, exclude private lemmas). Defensible but should be documented."
-      },
-      {
-        "id": "C20/C21",
-        "issue": "Internal inconsistency: Discussion says 588/38, Conclusion says 748/49. Different snapshots in same paper."
-      },
-      {
-        "id": "C27/C28",
-        "issue": "'First-ever' priority claims unverifiable from codebase alone."
-      }
-    ],
-    "recommended_actions": [
-      "Fix Aristotle run ID for tpf_bosonic_exceeds_fock on line 169 (change run_20260328_142342 to run_20260328_151228, or cite both runs)",
-      "Recount total theorems across all 49 modules with explicit convention; update 748 to actual count",
-      "Reconcile Discussion '588/38' with Conclusion '748/49' (update Discussion to current figures or add explicit snapshot notation)",
-      "Consider adding footnote explaining the 55-count convention (includes fock_space_finite_dim instance, excludes 3 private helper lemmas)"
-    ]
-  }
+    "total_sentences": 58,
+    "by_type": {
+      "metaclaim": 7,
+      "numeric": 12,
+      "formal-claim": 5,
+      "theorem-ref": 15,
+      "qualitative": 7,
+      "citation": 4,
+      "transition": 5,
+      "methodology": 2,
+      "parameter": 1
+    },
+    "by_verdict": {
+      "INFO": 13,
+      "PASS": 28,
+      "WARN": 4,
+      "FAIL": 6,
+      "TRANSITION": 7
+    },
+    "by_finding_class": {
+      "IA": 5,
+      "TP": 1,
+      "SD": 4,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 14,
+    "non_reproducing_auto_closed": 11,
+    "non_reproducing_candidates": 3,
+    "agent_text": "58 sentences | 28 PASS | 6 FAIL | 4 WARN | 13 INFO | 7 TRANSITION | 3 prior findings candidate for supersession | 11 prior findings auto-closed via structural recheck"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "IA/SD: paper claims 2237+ theorems / 130 modules. Live: 2578 theorems (within '+' bound) / 170 modules (30.8% drift, '130' is a strict integer -> FAIL). 1 axiom",
+      "sentences": [
+        "sentence:paper7_chirality_formal:abstract:8faf0be4"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "IA: tpf_violates_C2 IS run_20260328_142342 (correct), but tpf_bosonic_exceeds_fock is run_20260328_151228 per ARISTOTLE_THEOREMS, not 142342 as paper claims. Re",
+      "sentences": [
+        "sentence:paper7_chirality_formal:tpf-evasion-analysis:89f2a57a"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:3",
+      "summary": "TP: lean-toolchain says leanprover/lean4:v4.29.0, paper says 4.28.0. Mathlib rev=8850ed93..., paper says 8f9d9cff. (lakefile.toml comment confirms previous Aris",
+      "sentences": [
+        "sentence:paper7_chirality_formal:lean-infrastructure:2bbd5496"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TP"
+    },
+    {
+      "id": "block:4",
+      "summary": "IA/SD: Fig 4 caption claims 968 theorems / 66 modules / zero axioms. Live: 2578 theorems / 170 modules / 1 axiom. All three numerics stale. Inconsistent with ab",
+      "sentences": [
+        "sentence:paper7_chirality_formal:lean-infrastructure:157c8ee4"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:5",
+      "summary": "IA/SD: same stale 968/66 figures as fig54 caption. Inconsistent with abstract/conclusion (2237+/130). Reproduces prior C20.",
+      "sentences": [
+        "sentence:paper7_chirality_formal:discussion:89c0e29a"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:6",
+      "summary": "IA/SD: 2237+ / 322+ / 43+ runs are hedged with '+'; live values are 2578 / 322 / 44 \u2014 within open-bound semantics. But '130 modules' is a literal integer; live=",
+      "sentences": [
+        "sentence:paper7_chirality_formal:conclusion:f0ef688e"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": []
 }

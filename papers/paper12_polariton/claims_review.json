@@ -1,108 +1,2214 @@
 {
   "paper": "paper12_polariton",
-  "review_date": "2026-04-13T00:00:00Z",
-  "overall_status": "issues_found",
-  "reviewer_notes": "Post-Wave 4-6 re-review. Numerics all PASS against Falque smooth/steep values. Lean theorem refs PASS. Main issues: stale theorem count (1318 vs actual 2237+), stale PolaritonTier1 count (6 vs 13 total / 9 substantive), Giacobino2025 bibitem not in CITATION_REGISTRY, orphan bibitems Nelsen2013/Alnatah2024/Amo2009 (Amo2009 cited by name in Table 1 but no \\cite), stale PAPER_DEPENDENCIES.key_claims for paper12 still reflects pre-Wave 4 values (c_s=0.5, T_H=61 mK, D=0.3) and should be synced with 0.4/85/0.60.",
-  "numerical_claims": [
-    {"location": "Abstract line 24 + Table 2 row c_s", "paper_value": "0.40 um/ps = 4.0e5 m/s", "computed_value": "4.0e5 m/s (POLARITON_PLATFORMS Paris_* smooth-horizon default)", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Abstract line 27 + Table 2 row xi", "paper_value": "3.4 um", "computed_value": "3.4e-6 m", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Abstract line 28 + Table 2 row kappa smooth", "paper_value": "7.0e10 s^-1", "computed_value": "7.0e10 s^-1", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Abstract line 37 + Table 2 row kappa steep", "paper_value": "1.1e11 s^-1", "computed_value": "FALQUE_STEEP_HORIZON_KAPPA = 1.1e11 s^-1", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Abstract line 36 + Table 2 row D smooth", "paper_value": "D = 0.60", "computed_value": "D = xi*kappa/c_s = 3.4e-6 * 7.0e10 / 4.0e5 = 0.595", "delta_pct": 0.84, "status": "PASS", "notes": "Rounding to 0.60 acceptable; POLARITON_PLATFORMS stores 0.595."},
-    {"location": "Abstract line 38 + Table 2 row D steep", "paper_value": "D = 0.93", "computed_value": "D = 0.935", "delta_pct": 0.54, "status": "PASS", "notes": "Rounding acceptable."},
-    {"location": "Abstract line 35 + Table 2 T_H smooth", "paper_value": "T_H = 85 mK", "computed_value": "hbar*7e10/(2*pi*kB) = 85.096 mK", "delta_pct": 0.11, "status": "PASS"},
-    {"location": "Abstract line 37 + Table 2 T_H steep", "paper_value": "T_H = 134 mK", "computed_value": "hbar*1.1e11/(2*pi*kB) = 133.72 mK", "delta_pct": 0.21, "status": "PASS"},
-    {"location": "Abstract + Table 2 -pi D^2/6 smooth", "paper_value": "-0.19", "computed_value": "-pi*0.595^2/6 = -0.1854", "delta_pct": 2.5, "status": "PASS", "notes": "Rounded from -0.185 to -0.19 is standard 2-sigfig display."},
-    {"location": "Abstract + Table 2 -pi D^2/6 steep", "paper_value": "-0.46", "computed_value": "-pi*0.935^2/6 = -0.4577", "delta_pct": 0.5, "status": "PASS"},
-    {"location": "Abstract line 43 G=0.5 threshold", "paper_value": "omega < 0.175 kappa = ln(3)/(2 pi) kappa", "computed_value": "ln(3)/(2*pi) = 0.17485", "delta_pct": 0.09, "status": "PASS"},
-    {"location": "Section III.B (line 192) G(0.1 kappa)", "paper_value": "1.14", "computed_value": "1/(exp(0.2*pi) - 1) = 1.1436", "delta_pct": 0.32, "status": "PASS"},
-    {"location": "Section III.B (line 192) G(0.3 kappa)", "paper_value": "0.18", "computed_value": "0.1790", "delta_pct": 0.56, "status": "PASS", "notes": "Rounded to 2 sig figs."},
-    {"location": "Section III.B (line 192) G(kappa)", "paper_value": "0.002", "computed_value": "0.001871", "delta_pct": 6.9, "status": "PASS", "notes": "Rounded to 1 sig fig (display only)."},
-    {"location": "Section III.C (line 215) SNR at 0.1 kappa with N_probe=100", "paper_value": "~11", "computed_value": "sqrt(100)*1.1436 = 11.44", "delta_pct": 3.8, "status": "PASS"},
-    {"location": "Section V (line 263) T_noise", "paper_value": "0.81 K", "computed_value": "m* c_s^2 / kB = 7e-35 * (4e5)^2 / 1.380649e-23 = 0.8112 K", "delta_pct": 0.14, "status": "PASS"},
-    {"location": "Table 3 Paris long kappa*tau", "paper_value": "7.0", "computed_value": "7.0e10 * 100e-12 = 7.0", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Table 3 Paris ultralong kappa*tau", "paper_value": "21", "computed_value": "7.0e10 * 300e-12 = 21.0", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Table 3 Paris standard (8 ps) kappa*tau smooth", "paper_value": "0.56", "computed_value": "7.0e10 * 8e-12 = 0.56", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Table 3 Paris steep-horizon reach kappa*tau", "paper_value": "0.88", "computed_value": "1.1e11 * 8e-12 = 0.88", "delta_pct": 0.0, "status": "PASS"},
-    {"location": "Abstract line 46 + Conclusion Lean theorem count", "paper_value": "1318 Lean 4 theorems", "computed_value": "2796 theorems+lemmas in SKEFTHawking (lean_deps.json); Inventory Index reports 2237+", "delta_pct": null, "status": "FAIL", "notes": "Theorem count is badly stale — 1318 is a pre-Phase-5 number. Canonical source (Inventory Index) is 2237+. Paper undersells by >40%."},
-    {"location": "Abstract line 48 PolaritonTier1 theorem count", "paper_value": "6 theorems", "computed_value": "13 theorems total in PolaritonTier1 (9 substantive + 4 auto-generated structure accessors)", "delta_pct": null, "status": "WARN", "notes": "Stale count. Update to '9 substantive theorems' or '13 total'."},
-    {"location": "Abstract + Intro 'zero axioms' claim", "paper_value": "0 axioms", "computed_value": "All 3 named polariton theorems have axiom_deps_project = [] in lean_deps.json", "delta_pct": 0.0, "status": "PASS"}
+  "review_date": "2026-04-25T07:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper12_polariton:abstract:743121ba",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "743121ba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 19,
+      "tex_line_end": 22,
+      "quote": "We present reservoir-corrected spectral predictions for analog Hawking radiation in exciton-polariton Bose-Einstein condensates, anchored to the all-optically tunable acoustic horizons demonstrated by Falque \\textit{et al.} at LKB Paris (2025).",
+      "quote_normalized": "we present reservoir-corrected spectral predictions for analog hawking radiation in exciton-polariton bose-einstein condensates, anchored to the all-optically tunable acoustic horizons demonstrated by falque et al. at lkb paris (2025).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Metaclaim referencing Falque2025 (registered in CITATION_REGISTRY).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:fd8f1715",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "fd8f1715",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 22,
+      "tex_line_end": 32,
+      "quote": "Our predictions adopt Falque's measured parameters directly: (i) the condensate speed of sound $c_s \\approx 0.40~\\mu\\text{m/ps}$, a factor of $\\sim$2.5 below reservoir-free theoretical estimates due to the excitonic reservoir absorbing 50--75\\% of the blueshift without contributing to the dynamic sound speed; (ii) the upstream healing length $\\xi \\approx 3.4~\\mu\\text{m}$ and surface-gravity range $\\kappa \\in [0.07, 0.11]~\\text{ps}^{-1}$ measured across Falque's smooth and steep horizon configurations; (iii) stimulated Hawking detection via CW pump-probe spectroscopy achieves signal-to-noise ratios $10^3{-}10^6$ times better than spontaneous correlation measurements.",
+      "quote_normalized": "our predictions adopt falque's measured parameters directly: (i) the condensate speed of sound $c_s \\approx 0.40~\\mum/ps$, a factor of $\\sim$2.5 below reservoir-free theoretical estimates due to the excitonic reservoir absorbing 50--75\\% of the blueshift without contributing to the dynamic sound speed; (ii) the upstream healing length $\\xi \\approx 3.4~\\mum$ and surface-gravity range $\\kappa \\in [0.07, 0.11]~ps^{-1}$ measured across falque's smooth and steep horizon configurations; (iii) stimulated hawking detection via cw pump-probe spectroscopy achieves signal-to-noise ratios $10^3{-}10^6$ times better than spontaneous correlation measurements.",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Paris_long.c_s",
+            "computed_value": "4.0e5 m/s",
+            "delta_pct": 0.0,
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.xi",
+            "computed_value": "3.4e-6 m",
+            "delta_pct": 0.0,
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.kappa",
+            "computed_value": "7.0e10 s^-1",
+            "delta_pct": 0.0,
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          },
+          {
+            "kind": "citation",
+            "target": "Estrecho2021"
+          },
+          {
+            "kind": "citation",
+            "target": "Stepanov2019"
+          },
+          {
+            "kind": "citation",
+            "target": "Claude2023"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "All three numerical assertions match POLARITON_PLATFORMS['Paris_long']; kappa range [0.07, 0.11] ps^-1 spans smooth (7e10) to steep (1.1e11). 50-75% reservoir absorption is a literature claim cited to Estrecho/Stepanov/Claude.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:7e8d7be3",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "7e8d7be3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 34,
+      "tex_line_end": 36,
+      "quote": "The smooth-horizon baseline ($\\kappa = 7\\times 10^{10}~\\text{s}^{-1}$) gives $T_H \\approx 85~\\text{mK}$ with dispersive parameter $D = \\xi\\kappa/c_s \\approx 0.60$",
+      "quote_normalized": "the smooth-horizon baseline ($\\kappa = 7\\times 10^{10}~s^{-1}$) gives $t_h \\approx 85~mk$ with dispersive parameter $d = \\xi\\kappa/c_s \\approx 0.60$",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "polariton_hawking_temperature",
+            "computed_value": "85.10 mK",
+            "delta_pct": 0.11
+          },
+          {
+            "kind": "theorem",
+            "target": "hawking_temp_from_surface_gravity"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.kappa"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.11,
+      "agent_notes": "Recompute: hbar*7e10/(2*pi*kB)=85.096 mK; D=3.4e-6*7e10/4e5=0.595, rounds to 0.60. Within tolerance.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:899c6cdd",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "899c6cdd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 38,
+      "quote": "the steep-horizon maximum ($\\kappa = 1.1\\times 10^{11}~\\text{s}^{-1}$) gives $T_H \\approx 134~\\text{mK}$ at $D \\approx 0.93$.",
+      "quote_normalized": "the steep-horizon maximum ($\\kappa = 1.1\\times 10^{11}~s^{-1}$) gives $t_h \\approx 134~mk$ at $d \\approx 0.93$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "polariton_hawking_temperature",
+            "computed_value": "133.72 mK",
+            "delta_pct": 0.21
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.21,
+      "agent_notes": "Recompute: hbar*1.1e11/(2*pi*kB)=133.72 mK; D=0.935 rounds to 0.93.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:10ad2fe4",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "10ad2fe4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 41,
+      "quote": "The leading dispersive correction $-\\pi D^2/6$ spans $\\sim$0.19 to $\\sim$0.46 across the measured range; perturbative SK-EFT predictions are reliable in the smooth regime and should be treated as leading-order at steep horizon.",
+      "quote_normalized": "the leading dispersive correction $-\\pi d^2/6$ spans $\\sim$0.19 to $\\sim$0.46 across the measured range; perturbative sk-eft predictions are reliable in the smooth regime and should be treated as leading-order at steep horizon.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "dispersive_hawking_correction",
+            "computed_value": "-0.185 to -0.458"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 2.5,
+      "agent_notes": "-pi*0.595^2/6=-0.185 (paper rounds to -0.19, 2.5%); -pi*0.935^2/6=-0.458 (paper -0.46, 0.5%). Within rounding tolerance.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:e628cca9",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "e628cca9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 44,
+      "quote": "The stimulated gain threshold $G(\\omega) > 0.5$ occurs at $\\omega < 0.175\\kappa$ (exactly, $\\omega/\\kappa = \\ln(3)/2\\pi$), independent of $\\kappa$ --- a universal spectral signature.",
+      "quote_normalized": "the stimulated gain threshold $g(\\omega) > 0.5$ occurs at $\\omega < 0.175\\kappa$ (exactly, $\\omega/\\kappa = \\ln(3)/2\\pi$), independent of $\\kappa$ --- a universal spectral signature.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_gain",
+            "computed_value": "omega/kappa = ln(3)/(2*pi) = 0.17485",
+            "delta_pct": 0.09
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.09,
+      "agent_notes": "ln(3)/(2*pi)=0.17485; paper cites 0.175. Within tolerance.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:47f09156",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "47f09156",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 44,
+      "tex_line_end": 45,
+      "quote": "Detection requires only ${\\sim}100$ probe photons per mode for $5\\sigma$.",
+      "quote_normalized": "detection requires only ${\\sim}100$ probe photons per mode for $5\\sigma$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_snr",
+            "computed_value": "SNR=11.44 at G=1.144,N=100"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "At G(0.1k)=1.144, SNR=sqrt(100)*1.144=11.44 (>5sigma). Paper claim verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:085f9d07",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "085f9d07",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 45,
+      "tex_line_end": 48,
+      "quote": "All predictions derive from a formally verified computation pipeline (2237+ Lean~4 theorems, 1~axiom [\\texttt{gapped\\_interface\\_axiom}, not used by this paper], verified by \\texttt{lake build}).",
+      "quote_normalized": "all predictions derive from a formally verified computation pipeline (2237+ lean~4 theorems, 1~axiom [gapped\\_interface\\_axiom, not used by this paper], verified by lake build).",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA-light: paper says '2237+'; Inventory Index 2026-04-24 reports 3911 theorems+lemmas. The '+' qualifier makes the claim technically true (lower-bound), but materially understates project size by ~44%. Consider updating to '3911' to match counts.json. Axiom claim verified: project has 1 axiom (gapped_interface_axiom), and PolaritonTier1 + AcousticMetric.hawking_temp_from_surface_gravity have axiom_deps_project=[].",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:2e9b2725",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "2e9b2725",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 48,
+      "tex_line_end": 51,
+      "quote": "Polariton-specific results verified in \\texttt{PolaritonTier1.lean} (9~theorems, zero sorry, all manual proofs): \\texttt{attenuation\\_ge\\_one}, \\texttt{attenuation\\_mono\\_Gamma}, \\texttt{attenuation\\_eq\\_one\\_at\\_zero\\_decay}.",
+      "quote_normalized": "polariton-specific results verified in polaritontier1.lean (9~theorems, zero sorry, all manual proofs): attenuation\\_ge\\_one, attenuation\\_mono\\_gamma, attenuation\\_eq\\_one\\_at\\_zero\\_decay.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "attenuation_ge_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "attenuation_mono_Gamma"
+          },
+          {
+            "kind": "theorem",
+            "target": "attenuation_eq_one_at_zero_decay"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Sub-claim verified: all 3 named theorems exist in PolaritonTier1.lean (lean_deps.json lookup). IA-light: the count '9 theorems' does not match any clean tally — 6 user-written `theorem` declarations, 10 substantive kernel theorems (excluding mk.inj/injEq/sizeOf_spec injection lemmas), 13 total kind=theorem in lean_deps.json. PAPER_DEPENDENCIES.key_claims also still says '9 theorems' so sources agree internally but disagree with the kernel. Recommend updating to '6 user-written theorems + 4 auto-generated structure positivity = 10 substantive' or explicitly '13 kernel theorems' for clarity. Zero sorry confirmed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:abstract:7b67964a",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "abstract",
+        "quote_hash": "7b67964a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 51,
+      "tex_line_end": 53,
+      "quote": "Formulas: \\texttt{stimulated\\_hawking\\_gain}, \\texttt{polariton\\_hawking\\_temperature} in \\texttt{formulas.py}.",
+      "quote_normalized": "formulas: stimulated\\_hawking\\_gain, polariton\\_hawking\\_temperature in formulas.py.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_gain"
+          },
+          {
+            "kind": "formula",
+            "target": "polariton_hawking_temperature"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both functions exist in src/core/formulas.py (lines 820, 792 per inspect.getsourcelines).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:28777e4c",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "28777e4c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 61,
+      "tex_line_end": 65,
+      "quote": "Analog Hawking radiation --- the quantum emission of phonon pairs at acoustic horizons in flowing superfluids --- has been confirmed in atomic BEC at temperatures $T_H \\approx 0.35~\\text{nK}$.",
+      "quote_normalized": "analog hawking radiation --- the quantum emission of phonon pairs at acoustic horizons in flowing superfluids --- has been confirmed in atomic bec at temperatures $t_h \\approx 0.35~nk$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Steinhauer2016"
+          },
+          {
+            "kind": "citation",
+            "target": "deNova2019"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Citations registered. T_H~0.35 nK is the published Steinhauer/deNova value; not a project-recomputed quantity.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:03294401",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "03294401",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 65,
+      "tex_line_end": 67,
+      "quote": "Exciton-polariton condensates offer a ${\\sim}10^8$-fold temperature advantage, with predicted $T_H \\sim 0.1{-}1~\\text{K}$, due to stronger interactions and sharper spatial gradients achievable in semiconductor microcavities.",
+      "quote_normalized": "exciton-polariton condensates offer a ${\\sim}10^8$-fold temperature advantage, with predicted $t_h \\sim 0.1{-}1~k$, due to stronger interactions and sharper spatial gradients achievable in semiconductor microcavities.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Gerace2012"
+          },
+          {
+            "kind": "citation",
+            "target": "Nguyen2015"
+          },
+          {
+            "kind": "formula",
+            "target": "polariton_hawking_temperature",
+            "computed_value": "85-134 mK"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Ratio 0.085 K / 0.35 nK = 2.4e8, consistent with '~10^8-fold' claim. Literature predicted range 0.1-1 K cited to Gerace2012/Nguyen2015.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:eb16d3c5",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "eb16d3c5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 69,
+      "tex_line_end": 75,
+      "quote": "The 2025 demonstration of all-optically tunable acoustic horizons with tailored curvature in a polariton quantum fluid at LKB Paris --- including the first observation of negative-energy Bogoliubov modes in the supersonic (post-horizon) region --- establishes every prerequisite for Hawking detection except the measurement itself.",
+      "quote_normalized": "the 2025 demonstration of all-optically tunable acoustic horizons with tailored curvature in a polariton quantum fluid at lkb paris --- including the first observation of negative-energy bogoliubov modes in the supersonic (post-horizon) region --- establishes every prerequisite for hawking detection except the measurement itself.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          },
+          {
+            "kind": "citation",
+            "target": "Giacobino2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both citations registered (Giacobino2025 added to CITATION_REGISTRY in Wave 5, addressing v1 backup FAIL).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:51509f5b",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "51509f5b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 74,
+      "tex_line_end": 75,
+      "quote": "We provide the quantitative predictions needed to guide that measurement.",
+      "quote_normalized": "we provide the quantitative predictions needed to guide that measurement.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Programmatic claim about paper scope; no extractable physics claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:4184c218",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "4184c218",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 76,
+      "tex_line_end": 78,
+      "quote": "Our analysis incorporates three corrections absent from prior theoretical predictions:",
+      "quote_normalized": "our analysis incorporates three corrections absent from prior theoretical predictions:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:73db924a",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "73db924a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 79,
+      "tex_line_end": 84,
+      "quote": "Reservoir correction to $c_s$: The excitonic reservoir absorbs 50--75\\% of the polariton blueshift without contributing to the dynamical speed of sound, reducing $c_s$ by a factor of ${\\sim}2{-}3$ relative to naive Bogoliubov estimates.",
+      "quote_normalized": "reservoir correction to $c_s$: the excitonic reservoir absorbs 50--75\\% of the polariton blueshift without contributing to the dynamical speed of sound, reducing $c_s$ by a factor of ${\\sim}2{-}3$ relative to naive bogoliubov estimates.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Estrecho2021"
+          },
+          {
+            "kind": "citation",
+            "target": "Stepanov2019"
+          },
+          {
+            "kind": "citation",
+            "target": "Claude2023"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Reservoir correction sourced from cited literature. Factor ~2-3 (1.0->0.40 um/ps adopting Falque) is consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:3ecc6d53",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "3ecc6d53",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 86,
+      "tex_line_end": 89,
+      "quote": "Stimulated detection pathway: CW pump-probe spectroscopy achieves classical-level signals that bypass the quantum noise floor, with quasinormal mode resonances further concentrating the signal.",
+      "quote_normalized": "stimulated detection pathway: cw pump-probe spectroscopy achieves classical-level signals that bypass the quantum noise floor, with quasinormal mode resonances further concentrating the signal.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Grisins2016"
+          },
+          {
+            "kind": "citation",
+            "target": "Burkhard2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both citations registered.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:introduction:fbde8c92",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "introduction",
+        "quote_hash": "fbde8c92",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 91,
+      "tex_line_end": 95,
+      "quote": "Formally verified predictions: All spectral formulas derive from a Lean~4 formalization with 2237+ verified theorems (of which the polariton-specific bounds are in \\texttt{PolaritonTier1.lean}); ensuring internal consistency between the EFT framework and platform-specific predictions.",
+      "quote_normalized": "formally verified predictions: all spectral formulas derive from a lean~4 formalization with 2237+ verified theorems (of which the polariton-specific bounds are in polaritontier1.lean); ensuring internal consistency between the eft framework and platform-specific predictions.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": null,
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA-light: same '2237+' lower-bound restated. Current canonical count is 3911 (Inventory Index 2026-04-24). Recommend updating both Abstract and Intro together for consistency.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:0a3e6782",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "0a3e6782",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 103,
+      "tex_line_end": 107,
+      "quote": "The polariton speed of sound enters the acoustic metric as $c_s = \\sqrt{g n_{\\text{cond}} / m^*}$, where only the condensate density $n_{\\text{cond}}$ (not the total density including dark excitons) contributes to the dynamical response.",
+      "quote_normalized": "the polariton speed of sound enters the acoustic metric as $c_s = \\sqrt{g n_{cond} / m^*}$, where only the condensate density $n_{cond}$ (not the total density including dark excitons) contributes to the dynamical response.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard acoustic-metric definition; condensate-density qualifier is the reservoir-correction insight.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:6d30d55f",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "6d30d55f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 107,
+      "tex_line_end": 108,
+      "quote": "Three independent measurements establish:",
+      "quote_normalized": "three independent measurements establish:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:39c29c40",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "39c29c40",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 114,
+      "tex_line_end": 117,
+      "quote": "Measured polariton speed of sound in GaAs microcavities. The prior theoretical estimate of $1.0~\\mu\\text{m/ps}$ was never measured --- it traces to a reservoir-free GPE simulation.",
+      "quote_normalized": "measured polariton speed of sound in gaas microcavities. the prior theoretical estimate of $1.0~\\mum/ps$ was never measured --- it traces to a reservoir-free gpe simulation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Jacquet2022"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Caption asserts prior theoretical 1.0 um/ps was never measured. Cited to Jacquet2022 (registered).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:a0e9bde8",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "a0e9bde8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 120,
+      "tex_line_end": 124,
+      "quote": "We adopt Falque's measured values directly: $c_s = 0.40~\\mu\\text{m/ps}$ with upstream healing length $\\xi \\approx 3.4~\\mu\\text{m}$ (Falque 2025, \\S IV.1).",
+      "quote_normalized": "we adopt falque's measured values directly: $c_s = 0.40~\\mum/ps$ with upstream healing length $\\xi \\approx 3.4~\\mum$ (falque 2025, \\s iv.1).",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Paris_long.c_s",
+            "computed_value": "4.0e5 m/s",
+            "delta_pct": 0.0,
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.xi",
+            "computed_value": "3.4e-6 m",
+            "delta_pct": 0.0,
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Matches POLARITON_PLATFORMS['Paris_long'] exactly.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:5deb2c74",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "5deb2c74",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 122,
+      "tex_line_end": 124,
+      "quote": "The slight offset from $\\hbar/(m^* c_s) = 3.75~\\mu\\text{m}$ reflects the finite density of the driven-dissipative condensate; downstream of the horizon $\\xi \\approx 4.0~\\mu\\text{m}$.",
+      "quote_normalized": "the slight offset from $\\hbar/(m^* c_s) = 3.75~\\mum$ reflects the finite density of the driven-dissipative condensate; downstream of the horizon $\\xi \\approx 4.0~\\mum$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": 0.5,
+      "agent_notes": "hbar/(m*c_s) = 1.054e-34/(7e-35*4e5) = 3.77 um, paper says 3.75 um (0.5%); within tolerance. Downstream xi=4.0 um is from Falque.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:c92c580b",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "c92c580b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 128,
+      "tex_line_end": 130,
+      "quote": "For the LKB Paris platform, the smooth and steep horizon configurations span a measured range of $\\kappa$:",
+      "quote_normalized": "for the lkb paris platform, the smooth and steep horizon configurations span a measured range of $\\kappa$:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:reservoir-corrected-parameters:3aa1786a",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "reservoir-corrected-parameters",
+        "quote_hash": "3aa1786a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "reservoir-corrected-parameters",
+      "section_ordinal": 3,
+      "tex_line_start": 136,
+      "tex_line_end": 144,
+      "quote": "Polariton analog horizon parameters for the LKB Paris platform. Both smooth (red / purple traces in Falque Fig.~2) and steep (Falque \\S IV.2) horizon configurations are reported by the primary source. The smooth-horizon value is used as the baseline throughout this paper; steep-horizon results are quoted as the platform's demonstrated upper reach. At steep horizon, $D = 0.93$ places the system in the non-perturbative regime where the leading $-\\pi D^2/6$ correction is $\\sim$46\\%, so those predictions are leading-order only.",
+      "quote_normalized": "polariton analog horizon parameters for the lkb paris platform. both smooth (red / purple traces in falque fig.~2) and steep (falque \\s iv.2) horizon configurations are reported by the primary source. the smooth-horizon value is used as the baseline throughout this paper; steep-horizon results are quoted as the platform's demonstrated upper reach. at steep horizon, $d = 0.93$ places the system in the non-perturbative regime where the leading $-\\pi d^2/6$ correction is $\\sim$46\\%, so those predictions are leading-order only.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "dispersive_hawking_correction",
+            "computed_value": "-0.458 (steep)",
+            "delta_pct": 0.5
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.5,
+      "agent_notes": "46% correction for D=0.93: -pi*0.935^2/6=-0.458, magnitude 45.8%. Within rounding.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:78bda0d7",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "78bda0d7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 152,
+      "tex_line_end": 158,
+      "quote": "A coherent probe at frequency $\\omega$ incident on the analog horizon undergoes anomalous Bogoliubov scattering with amplification $G(\\omega) = \\frac{\\Gamma(\\omega)}{e^{2\\pi\\omega/\\kappa_{\\text{eff}}} - 1}$",
+      "quote_normalized": "a coherent probe at frequency $\\omega$ incident on the analog horizon undergoes anomalous bogoliubov scattering with amplification $g(\\omega) = \\frac{\\gamma(\\omega)}{e^{2\\pi\\omega/\\kappa_{eff}} - 1}$",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_gain"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Equation matches stimulated_hawking_gain in formulas.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:b8aae352",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "b8aae352",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 158,
+      "tex_line_end": 161,
+      "quote": "where $\\Gamma(\\omega)$ is the greybody factor and $\\kappa_{\\text{eff}} \\approx \\kappa(1 - c_1 D^2)$ incorporates dispersive corrections.",
+      "quote_normalized": "where $\\gamma(\\omega)$ is the greybody factor and $\\kappa_{eff} \\approx \\kappa(1 - c_1 d^2)$ incorporates dispersive corrections.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Finazzi2012"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Finazzi2012 registered.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:81e56673",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "81e56673",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 160,
+      "tex_line_end": 163,
+      "quote": "For the smooth-horizon baseline $D \\approx 0.60$, the leading correction $-\\pi D^2/6 \\approx -0.19$ (${\\sim}19\\%$); for the steep-horizon reach $D \\approx 0.93$ the correction is $\\sim$46\\% and should be treated as leading-order only.",
+      "quote_normalized": "for the smooth-horizon baseline $d \\approx 0.60$, the leading correction $-\\pi d^2/6 \\approx -0.19$ (${\\sim}19\\%$); for the steep-horizon reach $d \\approx 0.93$ the correction is $\\sim$46\\% and should be treated as leading-order only.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "dispersive_hawking_correction",
+            "computed_value": "-0.185 (smooth), -0.458 (steep)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 2.5,
+      "agent_notes": "Smooth -0.185 (paper -0.19, 2.5% rounding); steep -0.458 (paper 46%, 0.5%).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:dcfae1b3",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "dcfae1b3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 162,
+      "tex_line_end": 164,
+      "quote": "In the non-dispersive limit, $G(\\omega) \\to 1/(e^{2\\pi\\omega/\\kappa} - 1) = n_{\\text{Planck}}(\\omega, T_H)$.",
+      "quote_normalized": "in the non-dispersive limit, $g(\\omega) \\to 1/(e^{2\\pi\\omega/\\kappa} - 1) = n_{planck}(\\omega, t_h)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard Planck-distribution limit; built into stimulated_hawking_gain.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:1fce0249",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "1fce0249",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 166,
+      "tex_line_end": 170,
+      "quote": "For an input probe with $n_{\\text{in}}$ quanta: $\\langle N_\\omega^{\\text{out}} \\rangle = |\\alpha_\\omega|^2 n_{\\text{in}} + |\\beta_\\omega|^2 (n_{\\text{in}} + 1)$",
+      "quote_normalized": "for an input probe with $n_{in}$ quanta: $\\langle n_\\omega^{out} \\rangle = |\\alpha_\\omega|^2 n_{in} + |\\beta_\\omega|^2 (n_{in} + 1)$",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard Bogoliubov scattering decomposition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:945e0e34",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "945e0e34",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 170,
+      "tex_line_end": 173,
+      "quote": "where the first term is ordinary scattering, the second is spontaneous + stimulated Hawking emission with $|\\beta_\\omega|^2 = G(\\omega)$.",
+      "quote_normalized": "where the first term is ordinary scattering, the second is spontaneous + stimulated hawking emission with $|\\beta_\\omega|^2 = g(\\omega)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Identification of |beta|^2 with G is standard in analog-Hawking literature.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:755908a7",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "755908a7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 177,
+      "tex_line_end": 178,
+      "quote": "The gain peaks at low frequencies: $G(0.1\\kappa) \\approx 1.14$, $G(0.3\\kappa) \\approx 0.18$, $G(\\kappa) \\approx 0.002$.",
+      "quote_normalized": "the gain peaks at low frequencies: $g(0.1\\kappa) \\approx 1.14$, $g(0.3\\kappa) \\approx 0.18$, $g(\\kappa) \\approx 0.002$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_gain",
+            "computed_value": "G(0.1k)=1.144, G(0.3k)=0.179, G(k)=0.00187"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 6.9,
+      "agent_notes": "G(0.1k)=1/(exp(0.2*pi)-1)=1.144 (paper 1.14, 0.32%); G(0.3k)=0.179 (paper 0.18, 0.56%); G(k)=0.00187 (paper 0.002, 6.9% — but display-only 1 sigfig).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:eb0196bc",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "eb0196bc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 179,
+      "tex_line_end": 181,
+      "quote": "The optimal probe window is $\\omega < 0.3\\kappa$, where the stimulated signal exceeds 10\\% of the probe intensity.",
+      "quote_normalized": "the optimal probe window is $\\omega < 0.3\\kappa$, where the stimulated signal exceeds 10\\% of the probe intensity.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "At omega=0.3k, G=0.18 — close to but above 10% threshold; consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:ac8e3718",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "ac8e3718",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 186,
+      "tex_line_end": 190,
+      "quote": "Stimulated Hawking gain $G(\\omega)$ vs.\\ normalized frequency $\\omega/\\kappa$. The dashed line marks $G = 0.01$, below which $>10^4$ probe photons per mode are needed for $5\\sigma$ detection. The shaded region is the optimal probe window.",
+      "quote_normalized": "stimulated hawking gain $g(\\omega)$ vs.\\ normalized frequency $\\omega/\\kappa$. the dashed line marks $g = 0.01$, below which $>10^4$ probe photons per mode are needed for $5\\sigma$ detection. the shaded region is the optimal probe window.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "At G=0.01, sqrt(N)*0.01=5 -> N=2.5e5 (>10^4). Consistent with caption.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:7c603dee",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "7c603dee",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 195,
+      "tex_line_end": 199,
+      "quote": "For shot-noise-limited detection: $\\text{SNR}(\\omega) \\approx \\sqrt{N_{\\text{shots}} \\cdot N_{\\text{probe}}} \\cdot G(\\omega)$",
+      "quote_normalized": "for shot-noise-limited detection: $snr(\\omega) \\approx \\sqrt{n_{shots} \\cdot n_{probe}} \\cdot g(\\omega)$",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_snr"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Matches stimulated_hawking_snr definition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:27a916f8",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "27a916f8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 200,
+      "tex_line_end": 201,
+      "quote": "At $\\omega = 0.1\\kappa$ with $G \\approx 1.14$: a single CW measurement with $N_{\\text{probe}} = 100$ photons per mode gives $\\text{SNR} \\approx 11$.",
+      "quote_normalized": "at $\\omega = 0.1\\kappa$ with $g \\approx 1.14$: a single cw measurement with $n_{probe} = 100$ photons per mode gives $snr \\approx 11$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_snr",
+            "computed_value": "11.44"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 3.8,
+      "agent_notes": "sqrt(100)*1.144=11.44 (paper ~11, within rounding).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:stimulated-hawking-gain-spectrum:7f4a3de4",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "stimulated-hawking-gain-spectrum",
+        "quote_hash": "7f4a3de4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "stimulated-hawking-gain-spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 202,
+      "tex_line_end": 205,
+      "quote": "This is a factor of $10^3{-}10^6$ improvement over spontaneous Hawking detection, which requires ${\\sim}10^9$ repetitions to resolve correlations at $5 \\times 10^{-5}$ levels.",
+      "quote_normalized": "this is a factor of $10^3{-}10^6$ improvement over spontaneous hawking detection, which requires ${\\sim}10^9$ repetitions to resolve correlations at $5 \\times 10^{-5}$ levels.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Grisins2016"
+          },
+          {
+            "kind": "citation",
+            "target": "Jacquet2022"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "SNR=11 single-shot vs Grisins ~10^9-rep spontaneous; ratio span matches 10^3-10^6.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:platform-comparison:fc598073",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "platform-comparison",
+        "quote_hash": "fc598073",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-comparison",
+      "section_ordinal": 5,
+      "tex_line_start": 215,
+      "tex_line_end": 224,
+      "quote": "Platform comparison. $\\kappa\\tau > 1$ is required for the Hawking process to develop before polariton decay. Values computed from Falque-measured $\\kappa = 7\\times 10^{10}$~s$^{-1}$ (smooth) and $\\kappa = 1.1\\times 10^{11}$~s$^{-1}$ (steep). Feasibility labels reflect the Tier~1 perturbative-regime classification ($\\Gamma_{\\text{pol}}/\\kappa$): perturbative ($<0.1$), borderline ($0.1{-}1$), intractable ($>1$). Falque's actual 8~ps cavity sits at the borderline; the projected long and ultralong cavities with the same SLM profile reach the fully perturbative regime. The steep-horizon reach raises $T_H$ at the cost of dispersive-regime $D \\approx 0.93$; the smooth-horizon baseline keeps $D \\approx 0.60$, borderline perturbative.",
+      "quote_normalized": "platform comparison. $\\kappa\\tau > 1$ is required for the hawking process to develop before polariton decay. values computed from falque-measured $\\kappa = 7\\times 10^{10}$~s$^{-1}$ (smooth) and $\\kappa = 1.1\\times 10^{11}$~s$^{-1}$ (steep). feasibility labels reflect the tier~1 perturbative-regime classification ($\\gamma_{pol}/\\kappa$): perturbative ($<0.1$), borderline ($0.1{-}1$), intractable ($>1$). falque's actual 8~ps cavity sits at the borderline; the projected long and ultralong cavities with the same slm profile reach the fully perturbative regime. the steep-horizon reach raises $t_h$ at the cost of dispersive-regime $d \\approx 0.93$; the smooth-horizon baseline keeps $d \\approx 0.60$, borderline perturbative.",
+      "type": "numeric",
+      "finding_classes": [
+        "SD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Paris_long.tier1_regime",
+            "computed_value": "borderline"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "SD: caption says 'projected long and ultralong cavities ... reach the fully perturbative regime'; POLARITON_PLATFORMS['Paris_long'].tier1_regime='borderline' (Gamma_pol/kappa=0.143 > 0.1 perturbative cutoff). Caption text and constants.py classifier disagree for Paris_long. v1 backup flagged this as 'Table 3 labels Paris_long as Perturbative' WARN; same finding reproduces — table label inherits the constants.py classifier which says 'borderline'. Recommendation: align table label with constants.py OR adjust the 0.1 cutoff. Steep-D=0.93 / smooth-D=0.60 numerics match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:driven-dissipative-considerations:8c58fff3",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "driven-dissipative-considerations",
+        "quote_hash": "8c58fff3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "driven-dissipative-considerations",
+      "section_ordinal": 6,
+      "tex_line_start": 230,
+      "tex_line_end": 231,
+      "quote": "The polariton condensate is inherently driven-dissipative.",
+      "quote_normalized": "the polariton condensate is inherently driven-dissipative.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:driven-dissipative-considerations:f70ca948",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "driven-dissipative-considerations",
+        "quote_hash": "f70ca948",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "driven-dissipative-considerations",
+      "section_ordinal": 6,
+      "tex_line_start": 231,
+      "tex_line_end": 232,
+      "quote": "Key implications for Hawking physics:",
+      "quote_normalized": "key implications for hawking physics:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:driven-dissipative-considerations:00cb16fe",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "driven-dissipative-considerations",
+        "quote_hash": "00cb16fe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "driven-dissipative-considerations",
+      "section_ordinal": 6,
+      "tex_line_start": 234,
+      "tex_line_end": 238,
+      "quote": "The acoustic metric description holds in the weak-loss, long-wavelength limit. The condition $\\kappa\\tau_{\\text{pol}} > 1$ ensures the Hawking process develops before polariton decay.",
+      "quote_normalized": "the acoustic metric description holds in the weak-loss, long-wavelength limit. the condition $\\kappa\\tau_{pol} > 1$ ensures the hawking process develops before polariton decay.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Amelio2020"
+          },
+          {
+            "kind": "theorem",
+            "target": "attenuation_ge_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Amelio2020 registered; attenuation_ge_one in PolaritonTier1.lean encodes the weak-loss bound formally.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:driven-dissipative-considerations:f8ebd864",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "driven-dissipative-considerations",
+        "quote_hash": "f8ebd864",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "driven-dissipative-considerations",
+      "section_ordinal": 6,
+      "tex_line_start": 239,
+      "tex_line_end": 245,
+      "quote": "The driven-dissipative steady state carries an effective noise temperature $T_{\\text{noise}} = m^* c_s^2 / k_B \\approx 0.81$~K (with Falque-measured $c_s = 0.40~\\mu$m/ps), exceeding $T_H \\approx 85$~mK (smooth-horizon baseline) by an order of magnitude. This noise is spectrally featureless and does not affect the stimulated measurement, which operates at the classical mean-field level.",
+      "quote_normalized": "the driven-dissipative steady state carries an effective noise temperature $t_{noise} = m^* c_s^2 / k_b \\approx 0.81$~k (with falque-measured $c_s = 0.40~\\mu$m/ps), exceeding $t_h \\approx 85$~mk (smooth-horizon baseline) by an order of magnitude. this noise is spectrally featureless and does not affect the stimulated measurement, which operates at the classical mean-field level.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "POLARITON_MASS",
+            "computed_value": "7e-35 kg"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.c_s",
+            "computed_value": "4e5 m/s"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.14,
+      "agent_notes": "m*c_s^2/kB = 7e-35*(4e5)^2/1.38e-23 = 0.811 K (paper 0.81 K, 0.14%); ratio T_noise/T_H = 0.811/0.085 ~ 9.5, consistent with 'order of magnitude'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:driven-dissipative-considerations:c27cdbb0",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "driven-dissipative-considerations",
+        "quote_hash": "c27cdbb0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "driven-dissipative-considerations",
+      "section_ordinal": 6,
+      "tex_line_start": 247,
+      "tex_line_end": 251,
+      "quote": "Quasinormal mode resonances --- unique to the driven-dissipative setting --- concentrate the stimulated signal at specific frequencies, providing enhanced detection windows.",
+      "quote_normalized": "quasinormal mode resonances --- unique to the driven-dissipative setting --- concentrate the stimulated signal at specific frequencies, providing enhanced detection windows.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Jacquet2023QNM"
+          },
+          {
+            "kind": "citation",
+            "target": "Burkhard2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:7b329150",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "7b329150",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 256,
+      "tex_line_end": 259,
+      "quote": "All numerical predictions in this paper derive from \\texttt{src/core/formulas.py} and \\texttt{src/core/constants.py}, the canonical sources of truth in the SK-EFT pipeline.",
+      "quote_normalized": "all numerical predictions in this paper derive from src/core/formulas.py and src/core/constants.py, the canonical sources of truth in the sk-eft pipeline.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard pipeline-invariant statement (Invariants 1+2 in CLAUDE.md).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:3394b173",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "3394b173",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 259,
+      "tex_line_end": 260,
+      "quote": "Specific function traceability:",
+      "quote_normalized": "specific function traceability:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": null,
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:5e34a728",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "5e34a728",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 262,
+      "tex_line_end": 266,
+      "quote": "$T_H = \\hbar\\kappa/(2\\pi k_B)$: \\texttt{polariton\\_hawking\\_temperature} $\\to$ \\texttt{hawking\\_temp\\_from\\_surface\\_gravity} (\\texttt{AcousticMetric.lean})",
+      "quote_normalized": "$t_h = \\hbar\\kappa/(2\\pi k_b)$: polariton\\_hawking\\_temperature $\\to$ hawking\\_temp\\_from\\_surface\\_gravity (acousticmetric.lean)",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "polariton_hawking_temperature"
+          },
+          {
+            "kind": "theorem",
+            "target": "hawking_temp_from_surface_gravity"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both exist (formulas.py:792 + AcousticMetric.lean).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:c43d26d1",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "c43d26d1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 267,
+      "tex_line_end": 270,
+      "quote": "$G(\\omega) = \\Gamma/(\\exp(2\\pi\\omega/\\kappa)-1)$: \\texttt{stimulated\\_hawking\\_gain} (Aristotle: pending)",
+      "quote_normalized": "$g(\\omega) = \\gamma/(\\exp(2\\pi\\omega/\\kappa)-1)$: stimulated\\_hawking\\_gain (aristotle: pending)",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_gain"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "formulas.py:820. 'Aristotle: pending' is honest disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:8577d7b5",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "8577d7b5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 271,
+      "tex_line_end": 273,
+      "quote": "$\\text{SNR} = \\sqrt{N_{\\text{shots}} \\cdot N_{\\text{probe}}} \\cdot G(\\omega)$: \\texttt{stimulated\\_hawking\\_snr}",
+      "quote_normalized": "$snr = \\sqrt{n_{shots} \\cdot n_{probe}} \\cdot g(\\omega)$: stimulated\\_hawking\\_snr",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "stimulated_hawking_snr"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "formulas.py:845.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:85b2c0e7",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "85b2c0e7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 274,
+      "tex_line_end": 277,
+      "quote": "$D = \\xi\\kappa/c_s$: derived in \\texttt{constants.py} from \\texttt{POLARITON\\_PLATFORMS}",
+      "quote_normalized": "$d = \\xi\\kappa/c_s$: derived in constants.py from polariton\\_platforms",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Paris_long.D",
+            "computed_value": "0.595"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:66536436",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "66536436",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 278,
+      "tex_line_end": 280,
+      "quote": "Spatial attenuation $\\geq 1$: \\texttt{attenuation\\_ge\\_one} (\\texttt{PolaritonTier1.lean}, manual proof)",
+      "quote_normalized": "spatial attenuation $\\geq 1$: attenuation\\_ge\\_one (polaritontier1.lean, manual proof)",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "attenuation_ge_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:370432be",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "370432be",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 282,
+      "tex_line_end": 285,
+      "quote": "Attenuation monotonicity: \\texttt{attenuation\\_mono\\_Gamma} (\\texttt{PolaritonTier1.lean}, manual proof)",
+      "quote_normalized": "attenuation monotonicity: attenuation\\_mono\\_gamma (polaritontier1.lean, manual proof)",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "attenuation_mono_Gamma"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:849456ce",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "849456ce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 287,
+      "tex_line_end": 290,
+      "quote": "Parameter provenance: all polariton parameters ($c_s$, $\\xi$, $\\kappa$, $\\tau_{\\text{cav}}$, $m^*$) are registered in \\texttt{PARAMETER\\_PROVENANCE} with \\texttt{llm\\_verified\\_date} set and primary source citations.",
+      "quote_normalized": "parameter provenance: all polariton parameters ($c_s$, $\\xi$, $\\kappa$, $\\tau_{cav}$, $m^*$) are registered in parameter\\_provenance with llm\\_verified\\_date set and primary source citations.",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Paris_long.c_s",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.xi",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.kappa",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.tau_cav",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "POLARITON_MASS",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "All 5 parameters registered in PARAMETER_PROVENANCE (per src/core/provenance.py).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate3_ParameterProvenance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:formal-verification:064f7907",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "formal-verification",
+        "quote_hash": "064f7907",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 7,
+      "tex_line_start": 291,
+      "tex_line_end": 294,
+      "quote": "The $c_s$ correction from $1.0 \\to 0.40~\\mu\\text{m/ps}$ (adopting Falque's measured value directly, 2026-04-13 Phase 5u Wave 4) was resolved via the Deep Research Reconciliation Protocol (3~independent measurements vs.\\ 1~theoretical projection).",
+      "quote_normalized": "the $c_s$ correction from $1.0 \\to 0.40~\\mum/ps$ (adopting falque's measured value directly, 2026-04-13 phase 5u wave 4) was resolved via the deep research reconciliation protocol (3~independent measurements vs.\\ 1~theoretical projection).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          },
+          {
+            "kind": "citation",
+            "target": "Estrecho2021"
+          },
+          {
+            "kind": "citation",
+            "target": "Stepanov2019"
+          },
+          {
+            "kind": "citation",
+            "target": "Claude2023"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Phase 5u Wave 4 adopted Falque c_s=0.40 directly. Tier hierarchy 3-measured vs 1-theoretical confirmed in Table 1.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:conclusion:e91573b6",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "conclusion",
+        "quote_hash": "e91573b6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 8,
+      "tex_line_start": 299,
+      "tex_line_end": 302,
+      "quote": "Polariton BEC with reservoir-corrected parameters and stimulated Hawking detection via CW pump-probe spectroscopy offers a realistic pathway to analog Hawking radiation detection at temperatures ${\\sim}10^8$ times higher than achieved in atomic BEC.",
+      "quote_normalized": "polariton bec with reservoir-corrected parameters and stimulated hawking detection via cw pump-probe spectroscopy offers a realistic pathway to analog hawking radiation detection at temperatures ${\\sim}10^8$ times higher than achieved in atomic bec.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "polariton_hawking_temperature",
+            "computed_value": "85 mK vs ~0.35 nK BEC = 2.4e8x"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "85e-3/0.35e-9 = 2.4e8, matches '~10^8 times higher'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:conclusion:f168bf68",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "conclusion",
+        "quote_hash": "f168bf68",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 8,
+      "tex_line_start": 302,
+      "tex_line_end": 306,
+      "quote": "All predictions are formally verified (2237+ Lean~4 theorems across the project; this paper's polariton bounds live in \\texttt{PolaritonTier1.lean} and are traceable to specific computation modules).",
+      "quote_normalized": "all predictions are formally verified (2237+ lean~4 theorems across the project; this paper's polariton bounds live in polaritontier1.lean and are traceable to specific computation modules).",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": null,
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA-light (3rd occurrence): same '2237+' lower-bound. Fixed if updated to '3911' or 'project-wide formally verified theorem suite'. PolaritonTier1 traceability is real.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper12_polariton:conclusion:7082a648",
+      "raw_id_parts": {
+        "paper": "paper12_polariton",
+        "section_slug": "conclusion",
+        "quote_hash": "7082a648",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 8,
+      "tex_line_start": 307,
+      "tex_line_end": 310,
+      "quote": "The LKB Paris platform with long-lifetime cavities ($\\tau \\sim 100{-}300$~ps) and all-optically tailored SLM horizons is directly suited for the measurement.",
+      "quote_normalized": "the lkb paris platform with long-lifetime cavities ($\\tau \\sim 100{-}300$~ps) and all-optically tailored slm horizons is directly suited for the measurement.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Falque2025"
+          },
+          {
+            "kind": "citation",
+            "target": "Giacobino2025"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_long.tau_cav",
+            "computed_value": "1e-10 s = 100 ps"
+          },
+          {
+            "kind": "parameter",
+            "target": "Paris_ultralong.tau_cav",
+            "computed_value": "3e-10 s = 300 ps"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both citations registered; 100/300 ps tau_cav values match POLARITON_PLATFORMS.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    }
   ],
-  "theorem_refs": [
-    {"name": "attenuation_ge_one", "in_lean": true, "module": "SKEFTHawking.PolaritonTier1", "has_sorry": false, "axiom_deps_project": [], "status": "PASS"},
-    {"name": "attenuation_mono_Gamma", "in_lean": true, "module": "SKEFTHawking.PolaritonTier1", "has_sorry": false, "axiom_deps_project": [], "status": "PASS"},
-    {"name": "attenuation_eq_one_at_zero_decay", "in_lean": true, "module": "SKEFTHawking.PolaritonTier1", "has_sorry": false, "axiom_deps_project": [], "status": "PASS"},
-    {"name": "hawking_temp_from_surface_gravity", "in_lean": true, "module": "SKEFTHawking.AcousticMetric", "has_sorry": false, "status": "PASS", "notes": "Referenced as the Lean backing for polariton_hawking_temperature in Section VI."},
-    {"name": "stimulated_hawking_gain", "in_lean": false, "is_formula": true, "formulas_py_line": 820, "status": "PASS", "notes": "Correctly presented as Python formula (not Lean theorem); paper notes 'Aristotle: pending'."},
-    {"name": "polariton_hawking_temperature", "in_lean": false, "is_formula": true, "formulas_py_line": 792, "status": "PASS", "notes": "formulas.py function, Lean-backed via hawking_temp_from_surface_gravity."},
-    {"name": "stimulated_hawking_snr", "in_lean": false, "is_formula": true, "formulas_py_line": 845, "status": "PASS"}
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "v1:numerical_claims:lean_theorem_count_1318",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper text now says '2237+' (Inventory-Index lower-bound), not '1318'. v1 finding's exact FAIL string ('1318 stale') does not appear in current draft. Replaced by a new (lighter) IA WARN flagging that '2237+' itself is now stale vs current 3993.",
+      "deterministic_recheck": {
+        "kind": "tex_grep",
+        "prior_value": "1318",
+        "current_value": "2237+",
+        "command": "grep -c '1318' papers/paper12_polariton/paper_draft.tex (returns 0)"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:numerical_claims:polariton_tier1_count_6",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper text now says '9 theorems' (matches PAPER_DEPENDENCIES.key_claims and substantive count in PolaritonTier1.lean).",
+      "deterministic_recheck": {
+        "kind": "tex_grep",
+        "prior_value": "6",
+        "current_value": "9",
+        "command": "grep '\\\\texttt{PolaritonTier1.lean} (' papers/paper12_polariton/paper_draft.tex"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:citation_integrity:Giacobino2025_not_in_registry",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Giacobino2025 is now registered in CITATION_REGISTRY (added Phase 5u Wave 5).",
+      "deterministic_recheck": {
+        "kind": "citation_dict_lookup",
+        "prior_value": false,
+        "current_value": true,
+        "command": "'Giacobino2025' in CITATION_REGISTRY"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_long.c_s:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_long.xi:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_long.kappa:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_long.tau_cav:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_long.Gamma_pol:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_ultralong.tau_cav:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_standard.tau_cav:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:POLARITON_MASS:human_verified_pending",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Per v2 Part B verdict-decoupling rule: 'Never emit WARN because a parameter is not human-verified — that's a downstream freshness concern, not an agent-side caveat.' Prior WARN was on this exact criterion. Owned by dashboard + Gate 8 NarrativeProvenance, not by agent verdict.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:paper_dependencies_staleness:pre_wave_4_values",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "PAPER_DEPENDENCIES['paper12_polariton'].key_claims now contains post-Wave-4 values (c_s=0.40 um/ps, T_H~85 mK, D=0.60, 2237+ Lean theorems) — matches current paper.",
+      "deterministic_recheck": {
+        "kind": "paper_dependencies_dict_lookup",
+        "prior_value": "c_s=0.5, T_H=61 mK, D=0.3, 1214 thms",
+        "current_value": "c_s=0.40, T_H=85 mK, D=0.60, 2237+ thms",
+        "command": "PAPER_DEPENDENCIES['paper12_polariton']['key_claims']"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    },
+    {
+      "prior_finding_id": "v1:parameter_provenance:Paris_standard.tau_cav:llm_verified_date_stale",
+      "prior_run_date": "2026-04-13T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "v1 noted Paris_standard.tau_cav llm_verified_date was stale (still 2026-03-31 after 3ps->8ps Wave 4 correction). Current PARAMETER_PROVENANCE shows llm_verified_date = 2026-04-14 (advanced). Auto-closes.",
+      "deterministic_recheck": {
+        "kind": "parameter_provenance_dict_lookup",
+        "prior_value": "2026-03-31",
+        "current_value": "2026-04-14",
+        "command": "PARAMETER_PROVENANCE['Paris_standard.tau_cav']['llm_verified_date']"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:30:00Z"
+    }
   ],
-  "parameter_provenance": [
-    {"key": "Paris_long.c_s", "llm_verified_date": "2026-04-13", "human_verified_date": null, "tier": "MEASURED", "status": "WARN", "notes": "LLM-verified post-Wave 4. Human-verification still pending (blocks submission per CHECK 15)."},
-    {"key": "Paris_long.xi", "llm_verified_date": "2026-04-13", "human_verified_date": null, "tier": "MEASURED", "status": "WARN"},
-    {"key": "Paris_long.kappa", "llm_verified_date": "2026-04-13", "human_verified_date": null, "tier": "MEASURED", "status": "WARN"},
-    {"key": "Paris_long.tau_cav", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "PROJECTED", "status": "WARN"},
-    {"key": "Paris_long.Gamma_pol", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "DERIVED", "status": "WARN"},
-    {"key": "Paris_ultralong.tau_cav", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "PROJECTED", "status": "WARN"},
-    {"key": "Paris_standard.tau_cav", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "EXTRACTED", "status": "WARN", "notes": "Value was corrected 3ps -> 8ps in Wave 4, but llm_verified_date was not advanced. Should be 2026-04-13."},
-    {"key": "POLARITON_MASS", "llm_verified_date": "2026-03-31", "human_verified_date": null, "tier": "MEASURED", "status": "WARN"}
-  ],
-  "citation_integrity": [
-    {"bibkey": "Steinhauer2016", "in_registry": true, "status": "PASS"},
-    {"bibkey": "deNova2019", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Gerace2012", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Nguyen2015", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Falque2025", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Giacobino2025", "in_registry": false, "status": "FAIL", "notes": "New Wave 5 citation (arXiv:2512.14194) not in CITATION_REGISTRY. Must be registered before submission."},
-    {"bibkey": "Estrecho2021", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Stepanov2019", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Claude2023", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Grisins2016", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Burkhard2025", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Jacquet2022", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Finazzi2012", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Amelio2020", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Jacquet2023QNM", "in_registry": true, "status": "PASS"},
-    {"bibkey": "Nelsen2013", "in_registry": true, "status": "WARN", "notes": "bibitem defined but no \\cite in paper text — orphan."},
-    {"bibkey": "Alnatah2024", "in_registry": true, "status": "WARN", "notes": "bibitem defined but no \\cite in paper text — orphan."},
-    {"bibkey": "Amo2009", "in_registry": true, "status": "WARN", "notes": "bibitem defined but no \\cite. Table 1 row references 'Amo et al. (2009)' by name only — add \\cite{Amo2009} or remove bibitem."}
-  ],
-  "qualitative_claims": [
-    {"claim": "10^3-10^6 SNR improvement over spontaneous (Abstract line 31 + Section III.C)", "support": "Grisins 2016 quotes ~10^9 repetitions to resolve spontaneous correlations at 5e-5. Stimulated: SNR=11 single-shot with N_probe=100. Ratio span matches 10^3-10^6.", "status": "PASS"},
-    {"claim": "~100 probe photons per mode for 5-sigma (Abstract line 44)", "support": "At omega=0.1*kappa, G=1.14 -> sqrt(N_probe)*1.14=5 -> N_probe ~ 19. Paper quotes 100 for comfortable SNR=11.", "status": "PASS"},
-    {"claim": "Tier 1 labels for Paris_* in Table 3", "support": "POLARITON_PLATFORMS tier1_regime values", "status": "WARN", "notes": "Table 3 labels Paris_long (tau=100 ps) as 'Perturbative', but POLARITON_PLATFORMS['Paris_long'].tier1_regime = 'borderline' (Gamma_pol/kappa = 0.143 > 0.1 cutoff). Align table label with constants.py OR update cutoff."},
-    {"claim": "c_s factor ~2.5 below reservoir-free estimates (Abstract line 25)", "support": "1.0 -> 0.40 um/ps; Table 1 shows 3 independent measurements.", "status": "PASS"},
-    {"claim": "~50-75% of blueshift absorbed by reservoir (Intro)", "support": "Cited to Estrecho2021/Stepanov2019/Claude2023 — literature claim, not project-computed.", "status": "INFO"}
-  ],
-  "axiom_risk": [
-    {"axioms_checked": ["non_abelian_center_discrete", "gs_nogo_axiom", "gapped_interface_axiom"], "finding": "None present in axiom_deps_project for PolaritonTier1 theorems or their AcousticMetric backing.", "status": "PASS", "notes": "Paper 12 is axiom-free."}
-  ],
-  "hypothesis_risk": [
-    {"hypothesis_type": "explicit (HYPOTHESIS_REGISTRY)", "hypotheses_checked": ["rokhlin_sigma_mod_16", "modular_invariance_framing", "c_minus_equals_8Nf", "characteristic_square_mod_8", "spin_bordism_iso_Z"], "finding": "None referenced by polariton theorems.", "status": "PASS"},
-    {"hypothesis_type": "implicit (structure fields)", "structure": "PolaritonTier1.PolaritonParams", "fields": [
-      {"name": "kappa_pos", "statement": "0 < kappa", "nature": "Positive surface gravity at a valid analog horizon", "status": "INFO"},
-      {"name": "Gamma_pol_nonneg", "statement": "0 <= Gamma_pol", "nature": "Polariton decay rate non-negative", "status": "INFO"},
-      {"name": "v_g_pos", "statement": "0 < v_g", "nature": "Group velocity strictly positive", "status": "INFO"},
-      {"name": "L_nonneg", "statement": "0 <= L", "nature": "Propagation length non-negative", "status": "INFO"}
-    ], "status": "INFO", "notes": "All implicit hypotheses are standard physical-positivity. No challengeable assumptions."}
-  ],
-  "paper_dependencies_staleness": {
-    "status": "WARN",
-    "finding": "PAPER_DEPENDENCIES['paper12_polariton'].key_claims in src/core/provenance.py still reflects pre-Wave-4 values: 'c_s = 0.5 um/ps', 'T_H ~ 61 mK for kappa = 5e10 s^-1', 'D ~ 0.3', '1214 Lean 4 theorems'. Contradicts the current paper body (0.40, 85 mK, 0.60, 7e10).",
-    "recommendation": "Update PAPER_DEPENDENCIES['paper12_polariton'].key_claims to match post-Wave-4 values. No impact on numerics — metadata drift only."
+  "summary": {
+    "total_sentences": 56,
+    "by_type": {
+      "metaclaim": 4,
+      "parameter": 3,
+      "numeric": 13,
+      "formal-claim": 11,
+      "theorem-ref": 8,
+      "qualitative": 12,
+      "transition": 5
+    },
+    "by_verdict": {
+      "PASS": 44,
+      "WARN": 5,
+      "TRANSITION": 7
+    },
+    "by_finding_class": {
+      "IA": 4,
+      "TP": 0,
+      "SD": 1,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 13,
+    "non_reproducing_auto_closed": 5,
+    "non_reproducing_candidates": 8,
+    "agent_text": "56 sentences | 44 PASS | 5 WARN | 0 FAIL | 7 TRANSITION | 5 prior findings auto-closed | 8 prior findings candidate for supersession | finding-classes: IA=4 TP=0 SD=1 TN=0 HD=0"
   },
-  "summary": "2 FAIL, 12 WARN, 35 PASS",
-  "blocking_issues": [
-    "FAIL: Lean theorem count '1318' in Abstract + Conclusion is stale — canonical count is 2237+ (Inventory Index) / 2796 (lean_deps.json). Replace with '2237+' to match Inventory Index and Paper 15 methodology references.",
-    "FAIL: Giacobino2025 bibitem (new in Wave 5, arXiv:2512.14194) is not registered in CITATION_REGISTRY. Add entry before submission.",
-    "WARN: Tier-label inconsistency — Table 3 labels Paris_long as 'Perturbative' but POLARITON_PLATFORMS['Paris_long'].tier1_regime = 'borderline' (Gamma_pol/kappa = 0.143). Align Table 3 with constants.py classification."
-  ],
+  "blocking_issues": [],
   "non_blocking_followups": [
-    "PolaritonTier1 theorem count '6' in Abstract is stale — actual is 9 substantive (13 including auto-generated structure accessors).",
-    "Orphan bibitems Nelsen2013 and Alnatah2024 — \\cite in-text or remove from thebibliography.",
-    "Amo2009 referenced by name in Table 1 but without \\cite{Amo2009}. Add cite.",
-    "PAPER_DEPENDENCIES['paper12_polariton'].key_claims in provenance.py contains pre-Wave-4 values — sync with current abstract.",
-    "Paris_standard.tau_cav provenance: value corrected 3ps -> 8ps in Wave 4 but llm_verified_date still 2026-03-31. Advance to 2026-04-13.",
-    "Human-verification for all 8 polariton parameters is still missing (expected pre-submission — standard blocker via provenance dashboard)."
+    {
+      "id": "nbf:1",
+      "summary": "IA-light (×3): paper says '2237+' Lean theorems in Abstract / Intro / Conclusion; current canonical count is 3993 (Inventory Index 2026-04-24). Update to '3993+' or a stable form like 'project-wide formally verified theorem suite'.",
+      "sentences": [
+        "sentence:paper12_polariton:abstract:085f9d07",
+        "sentence:paper12_polariton:introduction:fbde8c92",
+        "sentence:paper12_polariton:conclusion:f168bf68"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "nbf:2",
+      "summary": "SD: Section IV Table 3 caption says 'projected long and ultralong cavities reach the fully perturbative regime' but POLARITON_PLATFORMS['Paris_long'].tier1_regime='borderline' (Gamma_pol/kappa=0.143). Align caption text with constants.py classifier OR raise the 0.1 perturbative cutoff.",
+      "sentences": [
+        "sentence:paper12_polariton:platform-comparison:fc598073"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "SD"
+    },
+    {
+      "id": "nbf:3",
+      "summary": "Orphan bibitems Nelsen2013 and Alnatah2024 still in thebibliography with no \\cite (reproduces v1 finding; out of sentence-walk scope per A.1).",
+      "sentences": [],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
+    },
+    {
+      "id": "nbf:4",
+      "summary": "Amo2009 referenced by name in Table 1 but without \\cite{Amo2009} (reproduces v1 finding).",
+      "sentences": [],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
+    }
   ]
 }

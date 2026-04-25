@@ -1,239 +1,2270 @@
 {
   "paper": "paper4_wkb_connection",
-  "title": "Exact WKB Connection Formula for Dissipative Analog Hawking Radiation",
-  "review_date": "2026-04-03",
-  "reviewer": "physics-qa:claims-reviewer (Claude Opus 4.6)",
-  "verdict": "CONDITIONAL PASS — 2 issues require fixes before submission",
-
-  "layer_1_numerical_claims": {
-    "status": "NEEDS_RECOMPUTATION",
-    "notes": "Bash execution was unavailable; full solver recomputation could not be performed. Manual algebraic checks below.",
-    "table_internal_consistency": {
-      "status": "PASS",
-      "details": [
-        "delta_k = 2 * delta_diss: Steinhauer 2*6.2e-7=1.24e-6 ≈ 1.2e-6 (PASS, rounding). Heidelberg 2*4.1e-5=8.2e-5 vs 8.3e-5 (1% rounding). Trento 2*3.7e-7=7.4e-7 (PASS).",
-        "n_noise = delta_k/2 = delta_diss: All three platforms self-consistent (PASS).",
-        "All delta_k << 1, confirming EFT perturbative validity (PASS)."
-      ]
-    },
-    "values_needing_solver_verification": [
-      {
-        "claim": "D = 0.013 (Steinhauer), 0.012 (Heidelberg), 0.014 (Trento)",
-        "source": "Table 1, line 247",
-        "verification": "Requires transonic solver. These are stated as solver-derived values (updated per user).",
-        "status": "UNVERIFIED — needs uv run"
-      },
-      {
-        "claim": "gamma_dim = 2.4e-5 (Steinhauer), 1.6e-3 (Heidelberg), 1.4e-5 (Trento)",
-        "source": "Table 1, line 247",
-        "verification": "Requires beliaev_transport_coefficients from solver. Stated as solver-derived.",
-        "status": "UNVERIFIED — needs uv run"
-      },
-      {
-        "claim": "delta_diss(T_H) values: 6.2e-7, 4.1e-5, 3.7e-7",
-        "source": "Table 1, line 248",
-        "verification": "Should equal gamma_dim * (1/(2*pi))^2 = gamma_dim / (4*pi^2). Check: 2.4e-5/39.478 = 6.08e-7 ≈ 6.2e-7 (2% off). 1.6e-3/39.478 = 4.05e-5 ≈ 4.1e-5 (1% off). 1.4e-5/39.478 = 3.55e-7 ≈ 3.7e-7 (4% off). All within tolerance but suggest these are independently computed, not derived from gamma_dim / (4*pi^2).",
-        "status": "MARGINAL PASS — algebraic check within 5%"
-      },
-      {
-        "claim": "omega_max/T_H = 115, 121, 110",
-        "source": "Table 1, line 251",
-        "verification": "omega_max = kappa / D^(2/3) in natural units. omega_max/T_H = 2*pi/D^(2/3). For D=0.013: 2*pi/0.013^0.667 = 6.283/0.0551 = 114.0 ≈ 115 (PASS). For D=0.012: 6.283/0.0524 = 119.9 ≈ 121 (1% off, PASS). For D=0.014: 6.283/0.0578 = 108.7 ≈ 110 (1% off, PASS).",
-        "status": "PASS — algebraic check matches within 1%"
-      }
-    ]
-  },
-
-  "layer_2_theorem_references": {
-    "status": "PASS with 1 FORMULA MISMATCH (see issues)",
-    "wkb_connection_lean_module": {
-      "theorem_count": 17,
-      "sorry_count": 0,
-      "status": "PASS — 17 theorems, zero sorry, matches paper claim"
-    },
-    "listed_theorems": [
-      {"name": "decoherence_nonneg", "file": "WKBConnection.lean:89", "exists": true, "sorry_free": true},
-      {"name": "decoherence_zero_iff", "file": "WKBConnection.lean:111", "exists": true, "sorry_free": true},
-      {"name": "unitarity_deficit_eq_decoherence", "file": "WKBConnection.lean:155", "exists": true, "sorry_free": true},
-      {"name": "standard_unitarity_recovered", "file": "WKBConnection.lean:166", "exists": true, "sorry_free": true},
-      {"name": "noise_floor_nonneg", "file": "WKBConnection.lean:197", "exists": true, "sorry_free": true},
-      {"name": "noise_floor_eq_delta_diss", "file": "WKBConnection.lean:210", "exists": true, "sorry_free": true},
-      {"name": "occupation_reduces_to_beta_sq", "file": "WKBConnection.lean:267", "exists": true, "sorry_free": true},
-      {"name": "noise_dominates_when_beta_small", "file": "WKBConnection.lean:306", "exists": true, "sorry_free": true},
-      {"name": "turning_point_shift_pos_iff", "file": "WKBConnection.lean:346", "exists": true, "sorry_free": true}
-    ],
-    "inline_theorem_refs": [
-      {
-        "location": "Eq. (4), line 116",
-        "claim": "turning_point_shift, Aristotle run 518636d7",
-        "lean_theorem": "turning_point_shift (WKBAnalysis.lean:179)",
-        "aristotle_run_id": "518636d7",
-        "aristotle_registry": "maps to turning_point_shift_nonzero in ARISTOTLE_THEOREMS",
-        "status": "FORMULA MISMATCH — see issues[0]"
-      }
-    ],
-    "global_counts": {
-      "claim_588_theorems": {"actual": 588, "status": "PASS"},
-      "claim_2_axioms": {"actual": 2, "status": "PASS"},
-      "claim_38_modules": {"actual": 38, "status": "PASS"},
-      "claim_233_aristotle": {"actual": 233, "status": "PASS — matches ARISTOTLE_THEOREMS count in constants.py"}
-    }
-  },
-
-  "layer_3_parameter_provenance": {
-    "status": "PASS with NOTES",
-    "steinhauer": {
-      "omega_perp": "123 Hz (Wang 2017 Table II). LLM-verified 2026-03-31. Human-verified: pending. TIER: MEASURED.",
-      "density_upstream": "5e7 m^-1. TIER: EXTRACTED (approximate horizon-region value). LLM-verified.",
-      "a_s": "5.31e-9 m (100.4 a_0, F=2; van Kempen 2002). LLM-verified. Provenance notes flag older incorrect 109 a_0 value was corrected.",
-      "status": "PASS — all Steinhauer params have provenance entries"
-    },
-    "heidelberg": {
-      "all_params": "TIER: PROJECTED. No Heidelberg Hawking experiment exists.",
-      "status": "PASS — correctly flagged as PROJECTED in provenance"
-    },
-    "trento": {
-      "all_params": "TIER: PROJECTED. Theoretical proposal only (Berti 2025).",
-      "status": "PASS — correctly flagged as PROJECTED in provenance"
-    },
-    "notes": [
-      "Paper does not distinguish between MEASURED (Steinhauer) and PROJECTED (Heidelberg, Trento) parameters in the table. Consider adding a footnote.",
-      "Steinhauer velocity_upstream (0.41 mm/s) is DERIVED tier with circular derivation notes in provenance. Flagged but acceptable for Mach number consistency."
-    ]
-  },
-
-  "layer_4_citation_integrity": {
-    "status": "FAIL — 7 orphan bibliography entries, 6 citations not in CITATION_REGISTRY",
-    "orphan_bibitems": [
-      "CorleyJacobson1996 — in bibliography but never cited in body text",
-      "CoutantParentani2012 — in bibliography but never cited in body text",
-      "BelgiornoCacciatori2024 — in bibliography but never cited in body text",
-      "RobertsonParentani2015 — in bibliography but never cited in body text",
-      "LombardoTuriaci2012 — in bibliography but never cited in body text",
-      "JanaLoganayagam2020 — in bibliography but never cited in body text",
-      "GiacobinoJacquet2025 — in bibliography but never cited in body text"
-    ],
-    "missing_from_registry": [
-      "Berry1989 — cited in text, not in CITATION_REGISTRY",
-      "Heading1962 — cited in text, not in CITATION_REGISTRY",
-      "CoutantParentani2012 — not in CITATION_REGISTRY",
-      "BelgiornoCacciatori2024 — not in CITATION_REGISTRY",
-      "RobertsonParentani2015 — not in CITATION_REGISTRY",
-      "LombardoTuriaci2012 — not in CITATION_REGISTRY",
-      "GiacobinoJacquet2025 — not in CITATION_REGISTRY"
-    ],
-    "registry_used_in_mismatch": [
-      "Steinhauer2016 — in paper4 bibliography but paper4 not in its used_in list in CITATION_REGISTRY"
-    ],
-    "bibkey_mismatches": [
-      "CorleyJacobson1996 (paper) vs Corley1996 (registry)",
-      "JanaLoganayagam2020 (paper) vs Jana2020 (registry)"
-    ]
-  },
-
-  "layer_5_qualitative_claims": {
-    "status": "PASS with NOTES",
-    "claims": [
-      {
-        "claim": "Modified unitarity: |alpha|^2 - |beta|^2 = 1 - delta_k with delta_k = 2*Gamma_H/kappa",
-        "lean_support": "unitarity_deficit_eq_decoherence (WKBConnection.lean:155)",
-        "python_support": "decoherence_parameter() in formulas.py:346",
-        "status": "PASS"
-      },
-      {
-        "claim": "FDR noise floor n_noise = delta_k/2 = Gamma_H/kappa",
-        "lean_support": "noise_floor_eq_delta_diss (WKBConnection.lean:210)",
-        "python_support": "fdr_noise_floor() in formulas.py:374",
-        "status": "PASS"
-      },
-      {
-        "claim": "Spectral floor at omega ~6 T_H (for Heidelberg)",
-        "lean_support": "noise_dominates_when_beta_small (WKBConnection.lean:306) — qualitative",
-        "python_support": "Computed in spectrum.py; requires solver to verify exact crossover frequency",
-        "status": "UNVERIFIED — needs solver. Qualitatively reasonable."
-      },
-      {
-        "claim": "In limit delta_k -> 0, reduces to standard Planck: n = |beta|^2",
-        "lean_support": "occupation_reduces_to_beta_sq (WKBConnection.lean:267)",
-        "status": "PASS"
-      },
-      {
-        "claim": "Steinhauer and Trento have gamma_dim ~ 10^-5 (discussion line 215-216)",
-        "paper_table_values": "Steinhauer: 2.4e-5, Trento: 1.4e-5",
-        "status": "PASS — both are order 10^-5"
-      },
-      {
-        "claim": "delta_k ~ 10^-4 for current BEC experiments (discussion line 320)",
-        "paper_table_values": "Steinhauer: 1.2e-6, Heidelberg: 8.3e-5, Trento: 7.4e-7",
-        "status": "WEAK — only Heidelberg is ~10^-4. Steinhauer/Trento are ~10^-6 to 10^-7. Claim is misleading; should say ~10^-5 or specify Heidelberg."
-      },
-      {
-        "claim": "PAPER_DEPENDENCIES says noise floor = delta_diss/(2(1-delta_diss))",
-        "paper_eq_7": "n_noise = delta_k/2 = delta_diss",
-        "lean_theorem": "noise_floor_eq_delta_diss proves n_noise = Gamma_H/kappa = delta_diss",
-        "status": "MINOR INCONSISTENCY — PAPER_DEPENDENCIES formula differs from paper and Lean. They agree in perturbative limit."
-      }
-    ]
-  },
-
-  "issues": [
+  "review_date": "2026-04-25T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+  "sentences": [
     {
-      "id": 0,
-      "severity": "HIGH",
-      "category": "formula_mismatch",
-      "location": "Eq. (4), line 109 of paper_draft.tex",
-      "description": "Paper claims delta_x_imag = c_s * Gamma_H / (2*kappa^2) is 'formally verified in Lean 4 (turning_point_shift)'. But the Lean theorem (WKBAnalysis.lean:179) proves x_imag = Gamma_H / (kappa * c_s), and WKBConnection.lean:336 defines turningPointShift = Gamma_H / (kappa * c_s). These differ by a factor of c_s^2 / (2*kappa). The Python formulas.py:339 DOES implement the paper formula c_s * Gamma_H / (2*kappa^2). Resolution: either (a) the paper formula is correct and Lean proves a different (order-of-magnitude) quantity, or (b) one of them has the wrong formula. The paper MUST NOT claim Lean verification of a formula that Lean does not prove.",
-      "recommendation": "Clarify what the Lean theorem actually proves. If Lean proves Gamma_H/(kappa*c_s) and the physics gives c_s*Gamma_H/(2*kappa^2), these are different statements. Either update the paper to not claim Lean verification of Eq. (4), or fix the Lean definition to match the paper formula."
+      "id": "sentence:paper4_wkb_connection:abstract:230061a4",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "abstract",
+        "quote_hash": "230061a4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 19,
+      "tex_line_end": 22,
+      "quote": "We derive the exact WKB connection formula for analog Hawking radiation in Bose-Einstein condensates with Schwinger-Keldysh effective field theory (SK-EFT) dissipative corrections through third order.",
+      "quote_normalized": "we derive the exact wkb connection formula for analog hawking radiation in bose-einstein condensates with schwinger-keldysh effective field theory (sk-eft) dissipative corrections through third order.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodological metaclaim describing scope.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": 1,
-      "severity": "MEDIUM",
-      "category": "orphan_citations",
-      "location": "Bibliography (lines 351-363)",
-      "description": "7 of 12 bibliography entries are never cited in the paper body: CorleyJacobson1996, CoutantParentani2012, BelgiornoCacciatori2024, RobertsonParentani2015, LombardoTuriaci2012, JanaLoganayagam2020, GiacobinoJacquet2025. RevTeX/PRD will flag uncited references.",
-      "recommendation": "Either add \\cite{} references in the text body for each used reference, or remove unused bibliography entries. At minimum, CorleyJacobson1996 should be cited where delta_disp is introduced (line 154), and LombardoTuriaci2012 / JanaLoganayagam2020 should be cited in the modified unitarity discussion."
+      "id": "sentence:paper4_wkb_connection:abstract:6d173d0f",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "abstract",
+        "quote_hash": "6d173d0f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 22,
+      "tex_line_end": 24,
+      "quote": "The connection formula maps the SK-EFT transport coefficients $\\{\\gamma_1, \\gamma_2, \\gamma_{2,1}, \\gamma_{2,2}, \\gamma_{3,1}, \\gamma_{3,2}, \\gamma_{3,3}\\}$ to modified Bogoliubov coefficients via the imaginary shift of the WKB turning point into the complex plane.",
+      "quote_normalized": "the connection formula maps the sk-eft transport coefficients $\\{\\gamma_1, \\gamma_2, \\gamma_{2,1}, \\gamma_{2,2}, \\gamma_{3,1}, \\gamma_{3,2}, \\gamma_{3,3}\\}$ to modified bogoliubov coefficients via the imaginary shift of the wkb turning point into the complex plane.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology summary; no extractable numeric.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": 2,
-      "severity": "LOW",
-      "category": "citation_registry_gap",
-      "location": "src/core/citations.py",
-      "description": "6 papers in the paper4 bibliography are not in CITATION_REGISTRY: Berry1989, Heading1962, CoutantParentani2012, BelgiornoCacciatori2024, RobertsonParentani2015, LombardoTuriaci2012, GiacobinoJacquet2025. Additionally, Steinhauer2016 used_in does not include paper4.",
-      "recommendation": "Add missing entries to CITATION_REGISTRY. Update Steinhauer2016 used_in to include paper4."
+      "id": "sentence:paper4_wkb_connection:abstract:a4ae1c66",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "abstract",
+        "quote_hash": "a4ae1c66",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 25,
+      "tex_line_end": 30,
+      "quote": "Three non-perturbative effects emerge beyond the perturbative EFT treatment: (i) modified unitarity $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$ with decoherence parameter $\\delta_k = 2\\Gamma_H/\\kappa$, (ii) a fluctuation-dissipation (FDR) noise floor $n_\\text{noise} = \\delta_k/2$ mandated by the KMS condition, and (iii) a spectral floor where the noise dominates over Hawking radiation at frequencies $\\omega \\gtrsim 6\\,T_H$.",
+      "quote_normalized": "three non-perturbative effects emerge beyond the perturbative eft treatment: (i) modified unitarity $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$ with decoherence parameter $\\delta_k = 2\\gamma_h/\\kappa$, (ii) a fluctuation-dissipation (fdr) noise floor $n_noise = \\delta_k/2$ mandated by the kms condition, and (iii) a spectral floor where the noise dominates over hawking radiation at frequencies $\\omega \\gtrsim 6\\,t_h$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss"
+          },
+          {
+            "kind": "formula",
+            "target": "decoherence_parameter"
+          },
+          {
+            "kind": "formula",
+            "target": "fdr_noise_floor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Three claims map to existing Lean theorems (resolved in lean_deps.json) and formulas in formulas.py. Spectral-floor crossover at ~6 T_H is a Heidelberg-specific qualitative claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": 3,
-      "severity": "LOW",
-      "category": "qualitative_overstatement",
-      "location": "Discussion, line 320",
-      "description": "Claim 'delta_k ~ 10^-4 for current BEC experiments' is true only for Heidelberg (8.3e-5). Steinhauer is 1.2e-6 and Trento is 7.4e-7, both orders of magnitude smaller.",
-      "recommendation": "Change to 'delta_k ranges from ~10^-7 to ~10^-4' or 'delta_k < 10^-4' or specify 'for Heidelberg parameters'."
+      "id": "sentence:paper4_wkb_connection:abstract:65e919b4",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "abstract",
+        "quote_hash": "65e919b4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 30,
+      "tex_line_end": 32,
+      "quote": "We provide platform-specific predictions for Steinhauer (${}^{87}$Rb), Heidelberg (${}^{39}$K), and Trento (${}^{23}$Na) BEC experiments.",
+      "quote_normalized": "we provide platform-specific predictions for steinhauer (${}^{87}$rb), heidelberg (${}^{39}$k), and trento (${}^{23}$na) bec experiments.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Scope description.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": 4,
-      "severity": "LOW",
-      "category": "provenance_metadata",
-      "location": "src/core/provenance.py, PAPER_DEPENDENCIES line 690",
-      "description": "PAPER_DEPENDENCIES claims noise floor = delta_diss/(2(1-delta_diss)), but paper Eq. (7) and Lean theorem noise_floor_eq_delta_diss both give n_noise = delta_diss. The PAPER_DEPENDENCIES formula appears to be stale.",
-      "recommendation": "Update PAPER_DEPENDENCIES key_claims for paper4 to match the actual paper formula: n_noise = delta_k/2 = delta_diss."
+      "id": "sentence:paper4_wkb_connection:abstract:edf57039",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "abstract",
+        "quote_hash": "edf57039",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 32,
+      "tex_line_end": 33,
+      "quote": "All structural results are formally verified in Lean~4 (17 theorems, zero \\texttt{sorry}).",
+      "quote_normalized": "all structural results are formally verified in lean~4 (17 theorems, zero sorry).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection (module)"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper says '17 theorems' in WKBConnection; live count from lean_deps.json is 29 (kind=theorem). 'zero sorry' is correct (WKBConnection has 0 sorries; the only project sorry is in WKBAnalysis.lean line 15 — out of scope of this module). Theorem count drift FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": 5,
-      "severity": "INFO",
-      "category": "numerical_verification_incomplete",
-      "location": "Table 1",
-      "description": "Full numerical recomputation from the solver pipeline could not be performed (Bash unavailable). D, gamma_dim, and derived quantities should be recomputed via: uv run python -c 'from src.wkb.spectrum import steinhauer_platform, heidelberg_platform, trento_platform; [print(f()) for f in [steinhauer_platform, heidelberg_platform, trento_platform]]'",
-      "recommendation": "Run the solver recomputation to confirm table values within 0.5% tolerance."
+      "id": "sentence:paper4_wkb_connection:introduction:3bd75b65",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "3bd75b65",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 42,
+      "tex_line_end": 45,
+      "quote": "The Schwinger-Keldysh effective field theory (SK-EFT) of dissipative phonon dynamics in Bose-Einstein condensates (BECs) provides a systematic framework for computing corrections to analog Hawking radiation.",
+      "quote_normalized": "the schwinger-keldysh effective field theory (sk-eft) of dissipative phonon dynamics in bose-einstein condensates (becs) provides a systematic framework for computing corrections to analog hawking radiation.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Unruh1981"
+          },
+          {
+            "kind": "citation",
+            "target": "Steinhauer2016"
+          },
+          {
+            "kind": "citation",
+            "target": "deNova2019"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All three bibkeys exist in CITATION_REGISTRY. Note: Steinhauer2016 used_in does not list paper4 (registry-side gap, not paper-side FAIL).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:29f38e29",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "29f38e29",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 45,
+      "tex_line_end": 48,
+      "quote": "In companion papers, we established the first-order dissipative correction $\\delta_\\text{diss} = \\Gamma_H/\\kappa$ and the frequency-dependent second-order correction $\\delta^{(2)}(\\omega) \\propto \\omega^3$ arising from the SK-EFT transport coefficients.",
+      "quote_normalized": "in companion papers, we established the first-order dissipative correction $\\delta_diss = \\gamma_h/\\kappa$ and the frequency-dependent second-order correction $\\delta^{(2)}(\\omega) \\propto \\omega^3$ arising from the sk-eft transport coefficients.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "first_order_correction in formulas.py implements Gamma_H/kappa.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:8a38420a",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "8a38420a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 50,
+      "tex_line_end": 52,
+      "quote": "These results were obtained within a perturbative framework where the Bogoliubov coefficients receive small corrections to the standard Hawking result $n_\\omega = 1/(e^{2\\pi\\omega/\\kappa} - 1)$.",
+      "quote_normalized": "these results were obtained within a perturbative framework where the bogoliubov coefficients receive small corrections to the standard hawking result $n_\\omega = 1/(e^{2\\pi\\omega/\\kappa} - 1)$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:12362c7c",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "12362c7c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 52,
+      "tex_line_end": 54,
+      "quote": "However, the perturbative treatment assumes that the standard unitarity relation $|\\alpha|^2 - |\\beta|^2 = 1$ is preserved.",
+      "quote_normalized": "however, the perturbative treatment assumes that the standard unitarity relation $|\\alpha|^2 - |\\beta|^2 = 1$ is preserved.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:749857bd",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "749857bd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 54,
+      "tex_line_end": 56,
+      "quote": "In an open quantum system coupled to a microscopic environment through dissipation, this assumption fails.",
+      "quote_normalized": "in an open quantum system coupled to a microscopic environment through dissipation, this assumption fails.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive claim about open-system theory.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:30d73de1",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "30d73de1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 58,
+      "tex_line_end": 60,
+      "quote": "In this paper, we derive the \\emph{exact} WKB connection formula that incorporates the full non-perturbative structure of the dissipative turning point.",
+      "quote_normalized": "in this paper, we derive the exact wkb connection formula that incorporates the full non-perturbative structure of the dissipative turning point.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:455af346",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "455af346",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 60,
+      "tex_line_end": 60,
+      "quote": "Three qualitatively new effects emerge:",
+      "quote_normalized": "three qualitatively new effects emerge:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:9952bb09",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "9952bb09",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 63,
+      "tex_line_end": 66,
+      "quote": "Modified unitarity. The Bogoliubov relation becomes $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$, where the decoherence parameter $\\delta_k = 2\\Gamma_H/\\kappa$ measures the probability of phonon absorption during horizon crossing.",
+      "quote_normalized": "modified unitarity. the bogoliubov relation becomes $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$, where the decoherence parameter $\\delta_k = 2\\gamma_h/\\kappa$ measures the probability of phonon absorption during horizon crossing.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence"
+          },
+          {
+            "kind": "formula",
+            "target": "decoherence_parameter"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Lean theorem unitarity_deficit_eq_decoherence resolves; formulas.py::decoherence_parameter implements 2*Gamma_H/kappa.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:51402655",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "51402655",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 68,
+      "tex_line_end": 71,
+      "quote": "FDR noise floor. The fluctuation-dissipation relation (KMS condition) mandates a minimum occupation number $n_\\text{noise} = \\delta_k/2 = \\Gamma_H/\\kappa$ independent of the Hawking process.",
+      "quote_normalized": "fdr noise floor. the fluctuation-dissipation relation (kms condition) mandates a minimum occupation number $n_noise = \\delta_k/2 = \\gamma_h/\\kappa$ independent of the hawking process.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss"
+          },
+          {
+            "kind": "formula",
+            "target": "fdr_noise_floor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem and formula match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:introduction:a44dd6ff",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "introduction",
+        "quote_hash": "a44dd6ff",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 73,
+      "tex_line_end": 76,
+      "quote": "Spectral floor. At frequencies $\\omega \\gtrsim 6\\,T_H$, the noise floor dominates over the exponentially suppressed Hawking radiation, creating a measurable spectral floor.",
+      "quote_normalized": "spectral floor. at frequencies $\\omega \\gtrsim 6\\,t_h$, the noise floor dominates over the exponentially suppressed hawking radiation, creating a measurable spectral floor.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_dominates_when_beta_small"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Theorem exists as a qualitative statement; specific 6 T_H crossover is platform-dependent (Heidelberg) and not formally proven inline. WARN: chain partial.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:complex-turning-point:3f0a6157",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "complex-turning-point",
+        "quote_hash": "3f0a6157",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "complex-turning-point",
+      "tex_line_start": 84,
+      "tex_line_end": 89,
+      "quote": "The linearized phonon equation on a transonic background with SK-EFT dissipative corrections takes the WKB form $\\frac{d^2\\phi}{dx^2} + Q(x)\\,\\phi = 0$, where the WKB potential $Q(x)$ has a zero at the sonic horizon $x_H$.",
+      "quote_normalized": "the linearized phonon equation on a transonic background with sk-eft dissipative corrections takes the wkb form $\\frac{d^2\\phi}{dx^2} + q(x)\\,\\phi = 0$, where the wkb potential $q(x)$ has a zero at the sonic horizon $x_h$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:complex-turning-point:9b238745",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "complex-turning-point",
+        "quote_hash": "9b238745",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "complex-turning-point",
+      "tex_line_start": 90,
+      "tex_line_end": 101,
+      "quote": "In the co-moving frame, the local dispersion relation is $\\Omega^2 = c_s^2 k^2 F(k^2\\xi^2) + i\\,\\Gamma(k,\\omega)\\,\\Omega$, where $\\Omega = \\omega - v(x)k$ is the co-moving frequency, $F(x) = 1 + x$ is the Bogoliubov dispersion, and the damping rate $\\Gamma(k,\\omega)$ includes all SK-EFT orders: $\\Gamma = \\gamma_1 k^2 + \\gamma_2\\frac{\\omega^2}{c_s^2} + \\gamma_{2,1}k^3 + \\gamma_{2,2}\\frac{\\omega^2 k}{c_s^2} + \\gamma_{3,1}k^4 + \\cdots$.",
+      "quote_normalized": "in the co-moving frame, the local dispersion relation is $\\omega^2 = c_s^2 k^2 f(k^2\\xi^2) + i\\,\\gamma(k,\\omega)\\,\\omega$, where $\\omega = \\omega - v(x)k$ is the co-moving frequency, $f(x) = 1 + x$ is the bogoliubov dispersion, and the damping rate $\\gamma(k,\\omega)$ includes all sk-eft orders: $\\gamma = \\gamma_1 k^2 + \\gamma_2\\frac{\\omega^2}{c_s^2} + \\gamma_{2,1}k^3 + \\gamma_{2,2}\\frac{\\omega^2 k}{c_s^2} + \\gamma_{3,1}k^4 + \\cdots$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "SK-EFT damping expansion through third order — definitional.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:complex-turning-point:f7a5613b",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "complex-turning-point",
+        "quote_hash": "f7a5613b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "complex-turning-point",
+      "tex_line_start": 105,
+      "tex_line_end": 111,
+      "quote": "Near the horizon, linearizing $v(x) \\approx c_s + \\kappa x$, the turning point where $Q(x) = 0$ shifts from the real axis to $x_\\text{tp} = x_H + i\\,\\delta x_\\text{imag}$, $\\delta x_\\text{imag} = \\frac{c_s\\,\\Gamma_H}{2\\kappa^2}$.",
+      "quote_normalized": "near the horizon, linearizing $v(x) \\approx c_s + \\kappa x$, the turning point where $q(x) = 0$ shifts from the real axis to $x_tp = x_h + i\\,\\delta x_imag$, $\\delta x_imag = \\frac{c_s\\,\\gamma_h}{2\\kappa^2}$.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "turning_point_shift"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.turningPointShift"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA/formula-mismatch: paper Eq.(4) states delta_x_imag = c_s*Gamma_H/(2*kappa^2). Lean WKBConnection.turningPointShift is defined as Gamma_H/(kappa*c_s); WKBAnalysis.turning_point_shift agrees with Lean. formulas.py::turning_point_shift implements the paper formula c_s*Gamma_H/(2*kappa^2). Paper formula and Lean def DISAGREE. Reproduces v1 issue #0 (HIGH).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:complex-turning-point:488e00ae",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "complex-turning-point",
+        "quote_hash": "488e00ae",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "complex-turning-point",
+      "tex_line_start": 113,
+      "tex_line_end": 115,
+      "quote": "This shift is exact to all orders in the EFT expansion; the EFT order enters only through the frequency dependence of~$\\Gamma_H$.",
+      "quote_normalized": "this shift is exact to all orders in the eft expansion; the eft order enters only through the frequency dependence of~$\\gamma_h$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive — exactness modulo Gamma_H dressing.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:complex-turning-point:cbe4c06e",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "complex-turning-point",
+        "quote_hash": "cbe4c06e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "complex-turning-point",
+      "tex_line_start": 115,
+      "tex_line_end": 117,
+      "quote": "The positivity and monotonicity of the shift are formally verified in Lean~4 (\\texttt{turning\\_point\\_shift\\_pos\\_iff}: $\\delta x > 0 \\Leftrightarrow \\Gamma_H > 0$).",
+      "quote_normalized": "the positivity and monotonicity of the shift are formally verified in lean~4 (turning\\_point\\_shift\\_pos\\_iff: $\\delta x > 0 \\leftrightarrow \\gamma_h > 0$).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.turning_point_shift_pos_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem resolves in lean_deps.json. Note: theorem proves positivity of Lean's definition (Gamma_H/(kappa*c_s)), which uses a different formula than the paper Eq.(4).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:complex-turning-point:c81cad5c",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "complex-turning-point",
+        "quote_hash": "c81cad5c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "complex-turning-point",
+      "tex_line_start": 122,
+      "tex_line_end": 126,
+      "quote": "Imaginary shift of the WKB turning point $\\delta x_\\text{imag}$ vs.\\ frequency $\\omega/T_H$ for three BEC platforms: Steinhauer ${}^{87}$Rb (blue), Heidelberg ${}^{39}$K (berry), Trento ${}^{23}$Na (amber). The shift grows as $\\omega^2$ through $\\Gamma_H \\propto k_H^2$.",
+      "quote_normalized": "imaginary shift of the wkb turning point $\\delta x_imag$ vs.\\ frequency $\\omega/t_h$ for three bec platforms: steinhauer ${}^{87}$rb (blue), heidelberg ${}^{39}$k (berry), trento ${}^{23}$na (amber). the shift grows as $\\omega^2$ through $\\gamma_h \\propto k_h^2$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure caption (fig22_complex_turning_point.png). 'berry' is likely typo for 'amber/orange'; not a finding-class issue but flag for prose review.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:exact-connection-formula:edcd4da2",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "exact-connection-formula",
+        "quote_hash": "edcd4da2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "exact-connection-formula",
+      "tex_line_start": 135,
+      "tex_line_end": 137,
+      "quote": "For a first-order zero of $Q(x)$, three Stokes lines emerge from the turning point at $2\\pi/3$ angular separation.",
+      "quote_normalized": "for a first-order zero of $q(x)$, three stokes lines emerge from the turning point at $2\\pi/3$ angular separation.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:exact-connection-formula:91d7d162",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "exact-connection-formula",
+        "quote_hash": "91d7d162",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "exact-connection-formula",
+      "tex_line_start": 137,
+      "tex_line_end": 138,
+      "quote": "The Stokes constant $T = i$ is invariant under the imaginary shift~\\cite{Berry1989, Heading1962}.",
+      "quote_normalized": "the stokes constant $t = i$ is invariant under the imaginary shift~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Berry1989"
+          },
+          {
+            "kind": "citation",
+            "target": "Heading1962"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "Berry1989 and Heading1962 are NOT in CITATION_REGISTRY. Reproduces v1 issue #2 (LOW->FAIL on chain).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:exact-connection-formula:72588546",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "exact-connection-formula",
+        "quote_hash": "72588546",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "exact-connection-formula",
+      "tex_line_start": 138,
+      "tex_line_end": 142,
+      "quote": "For the linear flow profile $v(x) \\approx c_s + \\kappa x$ near the horizon, the WKB action integral between the turning point pair can be evaluated analytically, yielding the effective surface gravity $\\kappa_\\text{eff}$ that absorbs both dispersive and dissipative corrections.",
+      "quote_normalized": "for the linear flow profile $v(x) \\approx c_s + \\kappa x$ near the horizon, the wkb action integral between the turning point pair can be evaluated analytically, yielding the effective surface gravity $\\kappa_eff$ that absorbs both dispersive and dissipative corrections.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:exact-connection-formula:ec212014",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "exact-connection-formula",
+        "quote_hash": "ec212014",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "exact-connection-formula",
+      "tex_line_start": 145,
+      "tex_line_end": 157,
+      "quote": "The analytic WKB connection for the linear profile gives the connection formula $\\left|\\frac{\\beta}{\\alpha}\\right|^2 = e^{-2\\pi\\omega/\\kappa_\\text{eff}(\\omega)}$, where the effective surface gravity is $\\kappa_\\text{eff}(\\omega) = \\frac{\\kappa}{1 + \\delta_\\text{disp} + \\delta_\\text{diss}(\\omega)}$, with $\\delta_\\text{disp} = -(\\pi/6)D^2$ (dispersive, Corley-Jacobson) and $\\delta_\\text{diss}(\\omega) = \\Gamma_H(\\omega)/\\kappa$ (dissipative, all EFT orders).",
+      "quote_normalized": "the analytic wkb connection for the linear profile gives the connection formula $\\left|\\frac{\\beta}{\\alpha}\\right|^2 = e^{-2\\pi\\omega/\\kappa_eff(\\omega)}$, where the effective surface gravity is $\\kappa_eff(\\omega) = \\frac{\\kappa}{1 + \\delta_disp + \\delta_diss(\\omega)}$, with $\\delta_disp = -(\\pi/6)d^2$ (dispersive, corley-jacobson) and $\\delta_diss(\\omega) = \\gamma_h(\\omega)/\\kappa$ (dissipative, all eft orders).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "kappa_eff/Bogoliubov factor implemented in src.wkb.spectrum (Stage 4); chain partial — no direct Lean theorem covers e^{-2pi omega/kappa_eff} closed form. WARN: partial chain.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:51b9e723",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "51b9e723",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 165,
+      "tex_line_end": 174,
+      "quote": "In the open SK-EFT system, the Bogoliubov relation is modified: $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$, where the decoherence parameter is $\\delta_k = 2\\,\\frac{\\Gamma_H}{\\kappa} = 2\\,\\delta_\\text{diss}$.",
+      "quote_normalized": "in the open sk-eft system, the bogoliubov relation is modified: $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$, where the decoherence parameter is $\\delta_k = 2\\,\\frac{\\gamma_h}{\\kappa} = 2\\,\\delta_diss$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.decoherence_zero_iff"
+          },
+          {
+            "kind": "formula",
+            "target": "decoherence_parameter"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both theorems resolve; formulas.py::decoherence_parameter matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:58f59fd3",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "58f59fd3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 175,
+      "tex_line_end": 176,
+      "quote": "The factor of 2 arises from the two traversals of the dissipative region on the SK contour (retarded and advanced branches).",
+      "quote_normalized": "the factor of 2 arises from the two traversals of the dissipative region on the sk contour (retarded and advanced branches).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Physics explanation; not chainable to a single artifact.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:78034091",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "78034091",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 177,
+      "tex_line_end": 178,
+      "quote": "In the perturbative regime $\\delta_k \\ll 1$, the EFT remains valid; $\\delta_k \\sim 1$ signals EFT breakdown.",
+      "quote_normalized": "in the perturbative regime $\\delta_k \\ll 1$, the eft remains valid; $\\delta_k \\sim 1$ signals eft breakdown.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Range claim consistent with table values (all delta_k < 1e-4).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:cf7ddf87",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "cf7ddf87",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 182,
+      "tex_line_end": 182,
+      "quote": "The KMS condition mandates that dissipation is accompanied by noise.",
+      "quote_normalized": "the kms condition mandates that dissipation is accompanied by noise.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:a3793243",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "a3793243",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 183,
+      "tex_line_end": 187,
+      "quote": "At zero environment temperature, the noise-induced occupation is $n_\\text{noise} = \\frac{\\delta_k}{2} = \\frac{\\Gamma_H}{\\kappa} = \\delta_\\text{diss}$.",
+      "quote_normalized": "at zero environment temperature, the noise-induced occupation is $n_noise = \\frac{\\delta_k}{2} = \\frac{\\gamma_h}{\\kappa} = \\delta_diss$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss"
+          },
+          {
+            "kind": "formula",
+            "target": "fdr_noise_floor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem and formula match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:8ccf4316",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "8ccf4316",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 188,
+      "tex_line_end": 189,
+      "quote": "This is the zero-point contribution from the microscopic environment, present even in the absence of Hawking radiation.",
+      "quote_normalized": "this is the zero-point contribution from the microscopic environment, present even in the absence of hawking radiation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:b276fe2b",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "b276fe2b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 193,
+      "tex_line_end": 200,
+      "quote": "The full phonon occupation number at frequency $\\omega$ is $n(\\omega) = \\frac{|\\beta|^2}{1 - \\delta_k} + n_\\text{noise}$, where the first term is the Hawking contribution corrected for decoherence and the second is the FDR noise floor.",
+      "quote_normalized": "the full phonon occupation number at frequency $\\omega$ is $n(\\omega) = \\frac{|\\beta|^2}{1 - \\delta_k} + n_noise$, where the first term is the hawking contribution corrected for decoherence and the second is the fdr noise floor.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "occupation_reduces_to_beta_sq covers the limit (Gamma_H=0 -> n=|beta|^2). The general expression beta^2/(1-delta_k)+n_noise is implemented in formulas.py / src.wkb but not under that exact symbolic identity in a single Lean theorem.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:d4e9576f",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "d4e9576f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 200,
+      "tex_line_end": 201,
+      "quote": "In the limit $\\delta_k \\to 0$, this reduces to the standard Planck result $n = |\\beta|^2$.",
+      "quote_normalized": "in the limit $\\delta_k \\to 0$, this reduces to the standard planck result $n = |\\beta|^2$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Lean theorem matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:ea477b49",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "ea477b49",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 205,
+      "tex_line_end": 208,
+      "quote": "At high frequencies $\\omega \\gg T_H$, the Hawking occupation $n_\\text{Hawking} \\sim e^{-\\omega/T_H}$ is exponentially suppressed, while the noise floor grows as $n_\\text{noise} \\propto \\omega^2$ (through $\\Gamma_H \\propto k_H^2 \\propto \\omega^2$).",
+      "quote_normalized": "at high frequencies $\\omega \\gg t_h$, the hawking occupation $n_hawking \\sim e^{-\\omega/t_h}$ is exponentially suppressed, while the noise floor grows as $n_noise \\propto \\omega^2$ (through $\\gamma_h \\propto k_h^2 \\propto \\omega^2$).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Asymptotic scaling — interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:c77f0856",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "c77f0856",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 208,
+      "tex_line_end": 212,
+      "quote": "There exists a crossover frequency $\\omega_\\times$ where $n_\\text{noise}(\\omega_\\times) = n_\\text{Hawking}(\\omega_\\times)$.",
+      "quote_normalized": "there exists a crossover frequency $\\omega_\\times$ where $n_noise(\\omega_\\times) = n_hawking(\\omega_\\times)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Existence statement; computable but no specific Lean theorem.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:c7b9c826",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "c7b9c826",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 213,
+      "tex_line_end": 214,
+      "quote": "For Heidelberg parameters ($\\gamma_\\text{dim} = 1.6\\times10^{-3}$), $\\omega_\\times \\approx 6\\,T_H$.",
+      "quote_normalized": "for heidelberg parameters ($\\gamma_dim = 1.6\\times10^{-3}$), $\\omega_\\times \\approx 6\\,t_h$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Heidelberg.omega_perp",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "UNGROUNDED",
+      "agent_notes": "Specific 6 T_H crossover is solver-dependent (src.wkb.spectrum). No deterministic recheck via formulas.py alone — flagged UNGROUNDED.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:7145f6cb",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "7145f6cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 214,
+      "tex_line_end": 215,
+      "quote": "Above $\\omega_\\times$, the spectrum is dominated by environment noise, not Hawking radiation.",
+      "quote_normalized": "above $\\omega_\\times$, the spectrum is dominated by environment noise, not hawking radiation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:490be203",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "490be203",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 215,
+      "tex_line_end": 217,
+      "quote": "Steinhauer and Trento have much weaker damping ($\\gamma_\\text{dim} \\sim 10^{-5}$), pushing $\\omega_\\times$ well beyond the UV cutoff.",
+      "quote_normalized": "steinhauer and trento have much weaker damping ($\\gamma_dim \\sim 10^{-5}$), pushing $\\omega_\\times$ well beyond the uv cutoff.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Order-of-magnitude consistency claim; matches v1 layer 5 PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:4193f76c",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "4193f76c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 219,
+      "tex_line_end": 220,
+      "quote": "This spectral floor is a qualitative prediction of the exact WKB analysis absent from the perturbative treatment.",
+      "quote_normalized": "this spectral floor is a qualitative prediction of the exact wkb analysis absent from the perturbative treatment.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:634a3282",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "634a3282",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 220,
+      "tex_line_end": 222,
+      "quote": "It represents a fundamental noise limit for analog Hawking radiation experiments and provides an independent observable beyond the thermal Hawking spectrum.",
+      "quote_normalized": "it represents a fundamental noise limit for analog hawking radiation experiments and provides an independent observable beyond the thermal hawking spectrum.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:modified-unitarity-and-the-spectral-floor:4aecc19d",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "modified-unitarity-and-the-spectral-floor",
+        "quote_hash": "4aecc19d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modified-unitarity-and-the-spectral-floor",
+      "tex_line_start": 227,
+      "tex_line_end": 232,
+      "quote": "Full Hawking spectrum with exact WKB corrections for three BEC platforms. Each panel shows total occupation $n(\\omega)$ (solid), standard Planck $n_\\text{Planck}$ (dashed), and FDR noise floor $n_\\text{noise}$ (dotted). The spectral floor where $n_\\text{noise} > n_\\text{Hawking}$ is visible at high frequencies.",
+      "quote_normalized": "full hawking spectrum with exact wkb corrections for three bec platforms. each panel shows total occupation $n(\\omega)$ (solid), standard planck $n_planck$ (dashed), and fdr noise floor $n_noise$ (dotted). the spectral floor where $n_noise > n_hawking$ is visible at high frequencies.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure caption; fig25_hawking_spectrum_exact.png.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:c6cea586",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "c6cea586",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 239,
+      "tex_line_end": 239,
+      "quote": "We evaluate the exact WKB formula for three BEC platforms:",
+      "quote_normalized": "we evaluate the exact wkb formula for three bec platforms:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:9ecc9914",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "9ecc9914",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 247,
+      "tex_line_end": 250,
+      "quote": "Exact WKB parameters for three BEC platforms. All quantities in natural units ($c_s = 1$, $\\kappa = 1$). $\\omega_\\text{max}$ is the dispersive UV cutoff.",
+      "quote_normalized": "exact wkb parameters for three bec platforms. all quantities in natural units ($c_s = 1$, $\\kappa = 1$). $\\omega_max$ is the dispersive uv cutoff.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Steinhauer.omega_perp",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Heidelberg.omega_perp",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Trento.omega_perp",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Table caption; values themselves are loaded from tables/table1_platforms.tex (autogen).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate2_ParameterFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:f6ee83b3",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "f6ee83b3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 253,
+      "tex_line_end": 255,
+      "quote": "Steinhauer and Trento have negligible dissipative corrections ($\\gamma_\\text{dim} \\sim 10^{-5}$), making them clean windows onto the pure Hawking signal.",
+      "quote_normalized": "steinhauer and trento have negligible dissipative corrections ($\\gamma_dim \\sim 10^{-5}$), making them clean windows onto the pure hawking signal.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Order-of-magnitude claim; consistent with v1 review.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:94c4d4cf",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "94c4d4cf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 255,
+      "tex_line_end": 257,
+      "quote": "Heidelberg has the largest damping ($\\gamma_\\text{dim} \\sim 10^{-3}$), making it the most promising platform for detecting the spectral floor.",
+      "quote_normalized": "heidelberg has the largest damping ($\\gamma_dim \\sim 10^{-3}$), making it the most promising platform for detecting the spectral floor.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:a0690182",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "a0690182",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 257,
+      "tex_line_end": 258,
+      "quote": "All three platforms have $\\delta_k \\ll 1$, confirming the EFT is perturbatively valid.",
+      "quote_normalized": "all three platforms have $\\delta_k \\ll 1$, confirming the eft is perturbatively valid.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Consistent with table values (all delta_k < 1e-4).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:69640aff",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "69640aff",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 260,
+      "tex_line_end": 263,
+      "quote": "The noise floor provides a new experimental observable: at frequencies above $\\omega_\\times$, the occupation number transitions from Planckian decay to a power-law floor $\\propto \\omega^2$.",
+      "quote_normalized": "the noise floor provides a new experimental observable: at frequencies above $\\omega_\\times$, the occupation number transitions from planckian decay to a power-law floor $\\propto \\omega^2$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Asymptotic scaling.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:platform-predictions:41592348",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "platform-predictions",
+        "quote_hash": "41592348",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "platform-predictions",
+      "tex_line_start": 263,
+      "tex_line_end": 264,
+      "quote": "Detecting this transition would constitute direct evidence for the open-system character of the analog Hawking effect.",
+      "quote_normalized": "detecting this transition would constitute direct evidence for the open-system character of the analog hawking effect.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:cb050490",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "cb050490",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 270,
+      "tex_line_end": 271,
+      "quote": "All structural results are formalized in Lean~4 using the Mathlib library.",
+      "quote_normalized": "all structural results are formalized in lean~4 using the mathlib library.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Generic methodology claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:8283e723",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "8283e723",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 271,
+      "tex_line_end": 273,
+      "quote": "The module \\texttt{WKBConnection.lean} contains 17 theorems with zero \\texttt{sorry} gaps:",
+      "quote_normalized": "the module wkbconnection.lean contains 17 theorems with zero sorry gaps:",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection (module)"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: lean_deps.json shows WKBConnection.lean has 29 theorems (kind=theorem). Sorry count for module is 0 (matches paper). Theorem-count drift: 17 -> 29.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:bdadb2b8",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "bdadb2b8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 275,
+      "tex_line_end": 275,
+      "quote": "\\texttt{decoherence\\_nonneg}: $\\delta_k \\geq 0$",
+      "quote_normalized": "decoherence\\_nonneg: $\\delta_k \\geq 0$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.decoherence_nonneg"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:a93907ce",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "a93907ce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 276,
+      "tex_line_end": 276,
+      "quote": "\\texttt{decoherence\\_zero\\_iff}: $\\delta_k = 0 \\Leftrightarrow \\Gamma_H = 0$",
+      "quote_normalized": "decoherence\\_zero\\_iff: $\\delta_k = 0 \\leftrightarrow \\gamma_h = 0$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.decoherence_zero_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:9551133e",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "9551133e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 277,
+      "tex_line_end": 277,
+      "quote": "\\texttt{unitarity\\_deficit\\_eq\\_decoherence}: $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$",
+      "quote_normalized": "unitarity\\_deficit\\_eq\\_decoherence: $|\\alpha|^2 - |\\beta|^2 = 1 - \\delta_k$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:b3338a4c",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "b3338a4c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 278,
+      "tex_line_end": 279,
+      "quote": "\\texttt{standard\\_unitarity\\_recovered}: $\\Gamma_H = 0 \\Rightarrow |\\alpha|^2 - |\\beta|^2 = 1$",
+      "quote_normalized": "standard\\_unitarity\\_recovered: $\\gamma_h = 0 \\rightarrow |\\alpha|^2 - |\\beta|^2 = 1$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.standard_unitarity_recovered"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:57d0b682",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "57d0b682",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 280,
+      "tex_line_end": 280,
+      "quote": "\\texttt{noise\\_floor\\_nonneg}: $n_\\text{noise} \\geq 0$",
+      "quote_normalized": "noise\\_floor\\_nonneg: $n_noise \\geq 0$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_nonneg"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:0eef4edb",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "0eef4edb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 281,
+      "tex_line_end": 281,
+      "quote": "\\texttt{noise\\_floor\\_eq\\_delta\\_diss}: $n_\\text{noise} = \\delta_\\text{diss}$",
+      "quote_normalized": "noise\\_floor\\_eq\\_delta\\_diss: $n_noise = \\delta_diss$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:77867f6a",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "77867f6a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 282,
+      "tex_line_end": 283,
+      "quote": "\\texttt{occupation\\_reduces\\_to\\_beta\\_sq}: $\\Gamma_H = 0 \\Rightarrow n = |\\beta|^2$",
+      "quote_normalized": "occupation\\_reduces\\_to\\_beta\\_sq: $\\gamma_h = 0 \\rightarrow n = |\\beta|^2$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:fbb68593",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "fbb68593",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 284,
+      "tex_line_end": 284,
+      "quote": "\\texttt{noise\\_dominates\\_when\\_beta\\_small}: spectral floor theorem",
+      "quote_normalized": "noise\\_dominates\\_when\\_beta\\_small: spectral floor theorem",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.noise_dominates_when_beta_small"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:b8c17c51",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "b8c17c51",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 285,
+      "tex_line_end": 287,
+      "quote": "\\texttt{turning\\_point\\_shift\\_pos\\_iff}: $\\delta x > 0 \\Leftrightarrow \\Gamma_H > 0$",
+      "quote_normalized": "turning\\_point\\_shift\\_pos\\_iff: $\\delta x > 0 \\leftrightarrow \\gamma_h > 0$",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.turning_point_shift_pos_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:0f534848",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "0f534848",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 289,
+      "tex_line_end": 291,
+      "quote": "Combined with the full project formalization across 66 Lean modules, the project contains 968 theorems with zero axioms (273 Aristotle-proved across 33+ runs, remainder manual), all sorry-free.",
+      "quote_normalized": "combined with the full project formalization across 66 lean modules, the project contains 968 theorems with zero axioms (273 aristotle-proved across 33+ runs, remainder manual), all sorry-free.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking (project)"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: live counts from lean_deps.json + constants.py: 170 modules (paper:66), 4049 theorems (paper:968), 1 axiom 'gapped_interface_axiom' (paper:'zero axioms'), 322 Aristotle theorems across 44 runs (paper:273 across 33+). FOUR distinct count drifts. Sorry-free claim is approximately correct (only 1 sorry remains in WKBAnalysis.lean line 15).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:formal-verification:979a5daa",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "formal-verification",
+        "quote_hash": "979a5daa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 296,
+      "tex_line_end": 300,
+      "quote": "Fractional difference between the exact WKB occupation number and the perturbative EFT result, $(n_\\text{exact} - n_\\text{pert})/n_\\text{pert}$, vs.\\ frequency for three platforms. The divergence at high $\\omega$ reflects the noise floor and decoherence corrections absent from the perturbative treatment.",
+      "quote_normalized": "fractional difference between the exact wkb occupation number and the perturbative eft result, $(n_exact - n_pert)/n_pert$, vs.\\ frequency for three platforms. the divergence at high $\\omega$ reflects the noise floor and decoherence corrections absent from the perturbative treatment.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure caption; fig27_exact_vs_perturbative.png.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:35c37d0b",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "35c37d0b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 307,
+      "tex_line_end": 308,
+      "quote": "The exact WKB connection formula reveals three non-perturbative effects that are invisible in the perturbative EFT treatment:",
+      "quote_normalized": "the exact wkb connection formula reveals three non-perturbative effects that are invisible in the perturbative eft treatment:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:7a791ce7",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "7a791ce7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 310,
+      "tex_line_end": 313,
+      "quote": "Modified unitarity. The decoherence parameter $\\delta_k = 2\\delta_\\text{diss}$ is numerically small for all BEC platforms ($\\lesssim 10^{-4}$), but its existence is a qualitative statement about the open-system nature of analog Hawking radiation.",
+      "quote_normalized": "modified unitarity. the decoherence parameter $\\delta_k = 2\\delta_diss$ is numerically small for all bec platforms ($\\lesssim 10^{-4}$), but its existence is a qualitative statement about the open-system nature of analog hawking radiation.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "decoherence_parameter"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Bound delta_k < 1e-4 holds: Steinhauer 1.2e-6, Heidelberg 8.3e-5, Trento 7.4e-7. WARN: bound is satisfied but characterizes only Heidelberg; others are 1-2 orders smaller. Reproduces v1 issue #3 in softer form.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:bd87d151",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "bd87d151",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 313,
+      "tex_line_end": 314,
+      "quote": "It implies that Hawking pairs are partially decohered by the microscopic environment, with entanglement degradation $\\sim \\delta_k/2$.",
+      "quote_normalized": "it implies that hawking pairs are partially decohered by the microscopic environment, with entanglement degradation $\\sim \\delta_k/2$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:deba33a0",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "deba33a0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 316,
+      "tex_line_end": 318,
+      "quote": "Spectral floor. The transition from Planckian decay to a power-law noise floor at $\\omega_\\times \\approx 6\\,T_H$ is a sharp, qualitative prediction.",
+      "quote_normalized": "spectral floor. the transition from planckian decay to a power-law noise floor at $\\omega_\\times \\approx 6\\,t_h$ is a sharp, qualitative prediction.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "UNGROUNDED",
+      "agent_notes": "Specific 6 T_H crossover requires solver pipeline; no chain proposed without spectrum recomputation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:cd846af7",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "cd846af7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 318,
+      "tex_line_end": 319,
+      "quote": "While the transition frequency depends on the specific damping rate, its existence is universal for any dissipative analog system.",
+      "quote_normalized": "while the transition frequency depends on the specific damping rate, its existence is universal for any dissipative analog system.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:c8407eba",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "c8407eba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 321,
+      "tex_line_end": 323,
+      "quote": "Consistency. At leading order, the exact formula reduces to the perturbative result: $\\kappa_\\text{eff} = \\kappa/(1 + \\delta_\\text{diss})$ and $n \\approx 1/(e^{2\\pi\\omega/\\kappa_\\text{eff}} - 1)$.",
+      "quote_normalized": "consistency. at leading order, the exact formula reduces to the perturbative result: $\\kappa_eff = \\kappa/(1 + \\delta_diss)$ and $n \\approx 1/(e^{2\\pi\\omega/\\kappa_eff} - 1)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Asymptotic limit consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:discussion:ff23f559",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "discussion",
+        "quote_hash": "ff23f559",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "tex_line_start": 323,
+      "tex_line_end": 325,
+      "quote": "The non-perturbative corrections are parametrically suppressed by $\\delta_\\text{diss}^2$ and only become significant at high frequencies or for strongly dissipative systems.",
+      "quote_normalized": "the non-perturbative corrections are parametrically suppressed by $\\delta_diss^2$ and only become significant at high frequencies or for strongly dissipative systems.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scaling claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:conclusion:02138a39",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "conclusion",
+        "quote_hash": "02138a39",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 331,
+      "tex_line_end": 333,
+      "quote": "We have derived the exact WKB connection formula for dissipative analog Hawking radiation, completing the theoretical chain from SK-EFT transport coefficients to observable Hawking spectrum.",
+      "quote_normalized": "we have derived the exact wkb connection formula for dissipative analog hawking radiation, completing the theoretical chain from sk-eft transport coefficients to observable hawking spectrum.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:conclusion:cf62bf54",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "conclusion",
+        "quote_hash": "cf62bf54",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 333,
+      "tex_line_end": 335,
+      "quote": "The modified unitarity relation, FDR noise floor, and spectral floor constitute three qualitatively new predictions beyond the perturbative EFT.",
+      "quote_normalized": "the modified unitarity relation, fdr noise floor, and spectral floor constitute three qualitatively new predictions beyond the perturbative eft.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:conclusion:94869a81",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "conclusion",
+        "quote_hash": "94869a81",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 335,
+      "tex_line_end": 337,
+      "quote": "These results, formally verified in Lean~4, provide the foundation for quantitative comparison with next-generation BEC Hawking radiation experiments.",
+      "quote_normalized": "these results, formally verified in lean~4, provide the foundation for quantitative comparison with next-generation bec hawking radiation experiments.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper4_wkb_connection:conclusion:95c30bb0",
+      "raw_id_parts": {
+        "paper": "paper4_wkb_connection",
+        "section_slug": "conclusion",
+        "quote_hash": "95c30bb0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 340,
+      "tex_line_end": 341,
+      "quote": "This work was conducted with the assistance of Claude Code (Anthropic). All Lean~4 formal proofs were verified against Mathlib.",
+      "quote_normalized": "this work was conducted with the assistance of claude code (anthropic). all lean~4 formal proofs were verified against mathlib.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Acknowledgments.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     }
   ],
-
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "v1:issue4_paper_dependencies_drift",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "v1 finding #4 (PAPER_DEPENDENCIES key_claims for paper4 list 'Noise floor = δ_diss/(2(1-δ_diss))' which differs from paper Eq.7 and Lean noise_floor_eq_delta_diss). This is a metadata-side LLM-judgment drift; the discrepancy still exists (verified via direct read of provenance.PAPER_DEPENDENCIES['paper4_wkb_connection']) but is now a metadata gap rather than a paper-side claim drift. Human ratification required.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:issue5_numerical_recomputation_incomplete",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "v1 INFO finding flagged that full solver recomputation (D, gamma_dim, omega_max for three platforms) was not run. v2 also did not run the full solver pipeline; specific solver-dependent values (omega_x ≈ 6 T_H, table 1 numeric entries) are recorded as UNGROUNDED in current sentences. Recommend re-running with solver before next pass.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z"
+    }
+  ],
   "summary": {
-    "total_claims_checked": 32,
-    "pass": 24,
-    "conditional_pass": 3,
-    "unverified": 3,
-    "fail": 2,
-    "blocking_issues": 1,
-    "description": "Paper 4 is structurally sound with correct physics and verified Lean theorems (17 theorems, zero sorry). The critical blocking issue is the formula mismatch between Eq. (4) (delta_x_imag = c_s*Gamma_H/(2*kappa^2)) and the Lean formalization (Gamma_H/(kappa*c_s)). The paper must not claim Lean verification of a formula the Lean code does not prove. After fixing issue #0 and adding the missing citations (issue #1), the paper is ready for submission pending solver recomputation of table values."
-  }
+    "total_sentences": 72,
+    "by_type": {
+      "metaclaim": 7,
+      "methodology": 7,
+      "formal-claim": 13,
+      "numeric": 6,
+      "citation": 2,
+      "qualitative": 24,
+      "transition": 3,
+      "theorem-ref": 10
+    },
+    "by_verdict": {
+      "TRANSITION": 19,
+      "PASS": 21,
+      "FAIL": 5,
+      "INFO": 21,
+      "WARN": 4,
+      "UNGROUNDED": 2
+    },
+    "by_finding_class": {
+      "IA": 4,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 2,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 2,
+    "agent_text": "72 sentences | 21 PASS | 4 WARN | 5 FAIL | 21 INFO | 2 UNGROUNDED | 19 TRANSITION | 2 prior findings candidate for supersession | 0 prior findings auto-closed via structural recheck"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "Abstract claims '17 theorems, zero sorry' in WKBConnection; live count is 29 theorems. IA drift.",
+      "sentences": [
+        "sentence:paper4_wkb_connection:abstract:edf57039"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "Eq.(4) delta_x_imag = c_s*Gamma_H/(2*kappa^2) does NOT match Lean turningPointShift = Gamma_H/(kappa*c_s). Paper-Lean formula mismatch (reproduces v1 issue #0).",
+      "sentences": [
+        "sentence:paper4_wkb_connection:complex-turning-point:f7a5613b"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:3",
+      "summary": "Berry1989 and Heading1962 cited but not in CITATION_REGISTRY (reproduces v1 issue #2).",
+      "sentences": [
+        "sentence:paper4_wkb_connection:exact-connection-formula:91d7d162"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
+    },
+    {
+      "id": "block:4",
+      "summary": "Section 6 says WKBConnection.lean has 17 theorems; live count is 29.",
+      "sentences": [
+        "sentence:paper4_wkb_connection:formal-verification:8283e723"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:5",
+      "summary": "Project-wide counts drift: paper claims 66 modules/968 thms/0 axioms/273 Aristotle/33+ runs; live: 170/4049/1/322/44.",
+      "sentences": [
+        "sentence:paper4_wkb_connection:formal-verification:0f534848"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": []
 }

@@ -1,335 +1,2289 @@
 {
   "paper": "paper3_gauge_erasure",
-  "title": "Non-Abelian Gauge Erasure by Hydrodynamization: A Universal Structural Theorem",
-  "reviewer": "physics-qa:claims-reviewer",
-  "review_date": "2026-04-03",
-  "model": "claude-opus-4-6[1m]",
-  "overall_verdict": "PASS_WITH_FINDINGS",
-  "summary": "Paper 3 is a structural/algebraic theorem paper with no platform-dependent numerical values. The core logical chain (higher-form Abelianness -> discrete center -> domain walls -> erasure) is correctly stated, fully backed by Python computation (25/25 tests pass), and formally verified in Lean 4 (11 theorems + 1 axiom, zero sorry, lake build clean). All four Lean theorem names referenced in the paper exist and are proved. Two moderate findings: (1) duplicate bibliography entry (GrozdanovHofmanIqbal and Grozdanov2017 are identical), (2) 10 of 16 bibliography entries missing from CITATION_REGISTRY. One minor physics note: SO(2k+1) center description applies to Spin(2k+1) not SO(2k+1). Three registry maintenance items: used_in fields incomplete for three existing citations, PAPER_DEPENDENCIES platforms list includes 'Steinhauer' despite paper having no platform-specific content.",
-
-  "layer_1_numerical_claims": {
-    "verdict": "PASS",
-    "tolerance": "0.5%",
-    "notes": "Paper 3 is a purely structural/algebraic theorem. It contains no platform-dependent numerical values, no computed corrections, and no table of experimental parameters. The only quantitative claims are structural counts verified below.",
-    "claims": [
-      {
-        "claim": "11 theorems + 1 axiom in GaugeErasure.lean, zero sorry",
-        "paper_location": "Abstract (line 37)",
-        "pipeline_source": "lean/SKEFTHawking/GaugeErasure.lean",
-        "computed_value": "11 theorems (non_abelian_gives_discrete, abelian_gives_continuous, continuous_gives_goldstone, discrete_gives_domain_wall, gauge_erasure, u1_survival, erasure_dichotomy, su3_erased, su2_erased, u1_survives, sm_only_u1_survives), 1 axiom (non_abelian_center_discrete), 0 sorry",
-        "match": true,
-        "notes": "Exact match. Verified by grep + lake build clean (8065 jobs, zero sorry)."
+  "review_date": "2026-04-25T07:35:40Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+  "sentences": [
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:af6b4524",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "af6b4524",
+        "hash_algorithm": "sha256_first_8"
       },
-      {
-        "claim": "SU(3)_c has 8 generators",
-        "paper_location": "Fig. 1 caption (line 182)",
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::su(3).dim = 8",
-        "computed_value": 8,
-        "match": true,
-        "notes": "dim(su(3)) = 3^2 - 1 = 8. Standard."
-      },
-      {
-        "claim": "SU(2)_L has 3 generators",
-        "paper_location": "Fig. 1 caption (line 183)",
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::su(2).dim = 3",
-        "computed_value": 3,
-        "match": true,
-        "notes": "dim(su(2)) = 2^2 - 1 = 3. Standard."
-      },
-      {
-        "claim": "U(1)_Y has 1 generator",
-        "paper_location": "Fig. 1 caption (line 183)",
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::u1().dim = 1",
-        "computed_value": 1,
-        "match": true,
-        "notes": "dim(u(1)) = 1. Standard."
-      },
-      {
-        "claim": "Z(SU(N)) = Z_N",
-        "paper_location": "Eq. 1 (line 107)",
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py::su(N).center = 'Z_N'",
-        "match": true,
-        "notes": "Standard Lie theory fact."
-      }
-    ]
-  },
-
-  "layer_2_theorem_references": {
-    "verdict": "PASS",
-    "lean_module": "lean/SKEFTHawking/GaugeErasure.lean",
-    "lean_build": "CLEAN (zero sorry, 8065 jobs, warnings only for unused variables in HubbardStratonovichRHMC.lean)",
-    "theorem_count_actual": 11,
-    "theorem_count_claimed": 11,
-    "axiom_count_actual": 1,
-    "axiom_count_claimed": 1,
-    "sorry_count": 0,
-    "theorems_referenced_in_paper": [
-      {
-        "paper_name": "gauge_erasure",
-        "lean_name": "gauge_erasure",
-        "paper_location": "Section V, line 249",
-        "exists": true,
-        "has_sorry": false,
-        "notes": "Main result: non-Abelian + continuous -> no surviving hydro modes. Proved via non_abelian_gives_discrete + unfold survives hydro_fate + simp."
-      },
-      {
-        "paper_name": "u1_survival",
-        "lean_name": "u1_survival",
-        "paper_location": "Section V, line 250",
-        "exists": true,
-        "has_sorry": false,
-        "notes": "Abelian exception: U(1) produces Goldstone boson."
-      },
-      {
-        "paper_name": "erasure_dichotomy",
-        "lean_name": "erasure_dichotomy",
-        "paper_location": "Section III, line 176; Section V, line 251",
-        "exists": true,
-        "has_sorry": false,
-        "notes": "Survival <-> Abelianness (exact biconditional). Uses gauge_erasure + u1_survival."
-      },
-      {
-        "paper_name": "sm_only_u1_survives",
-        "lean_name": "sm_only_u1_survives",
-        "paper_location": "Section V, line 253",
-        "exists": true,
-        "has_sorry": false,
-        "notes": "Standard Model application: SU(3) erased AND SU(2) erased AND U(1) survives."
-      }
-    ],
-    "additional_theorems_not_referenced_in_paper": [
-      "non_abelian_gives_discrete",
-      "abelian_gives_continuous",
-      "continuous_gives_goldstone",
-      "discrete_gives_domain_wall",
-      "su3_erased",
-      "su2_erased",
-      "u1_survives"
-    ],
-    "findings": []
-  },
-
-  "layer_3_parameter_provenance": {
-    "verdict": "PASS",
-    "notes": "Paper 3 is a purely structural theorem with no experimentally-measured parameters. No BEC platform parameters, no scattering lengths, no temperatures, no frequencies. No PARAMETER_PROVENANCE entries are needed. PAPER_DEPENDENCIES in provenance.py correctly shows 'formulas': [] (empty) for paper3, confirming no formula dependencies.",
-    "parameters_checked": [],
-    "findings": [
-      {
-        "severity": "LOW",
-        "finding": "PAPER_DEPENDENCIES lists platforms: ['Steinhauer'] for paper3, but the paper contains no Steinhauer-specific content. The citations Steinhauer2016 and Kolobov2021 appear in the Implications section as general references for BEC analog gravity, not as sources of parameter values.",
-        "recommendation": "Consider changing platforms to [] for paper3 in PAPER_DEPENDENCIES, since no platform-specific computations are performed."
-      }
-    ]
-  },
-
-  "layer_4_citation_integrity": {
-    "verdict": "PASS_WITH_FINDINGS",
-    "paper_bibitem_keys": [
-      "Unruh1981", "Visser1998", "Wen2003", "LevinWen2006",
-      "GrozdanovHofmanIqbal", "HofmanIqbal", "Grozdanov2017",
-      "Torrieri2020", "NastaseSonnenschein2025", "GKSW2015",
-      "Adler2024", "Steinhauer2016", "Kolobov2021",
-      "Diakonov2011", "Wetterich2004", "Volovik2003"
-    ],
-    "paper_cite_keys": [
-      "Unruh1981", "Visser1998", "Wen2003", "LevinWen2006",
-      "GrozdanovHofmanIqbal", "HofmanIqbal", "Grozdanov2017",
-      "Torrieri2020", "NastaseSonnenschein2025", "GKSW2015",
-      "Adler2024", "Steinhauer2016", "Kolobov2021",
-      "Diakonov2011", "Wetterich2004", "Volovik2003"
-    ],
-    "orphan_bibitems": [],
-    "missing_cite_targets": [],
-    "registry_matches": {
-      "Unruh1981": {"in_registry": true, "used_in_includes_paper3": true},
-      "Visser1998": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: M. Visser, Class. Quant. Grav. 15, 1767 (1998). Foundational acoustic metric paper."},
-      "Wen2003": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: X.-G. Wen, Phys. Rev. D 68, 065003 (2003). String-net origin of light."},
-      "LevinWen2006": {"in_registry": true, "used_in_includes_paper3": false, "notes": "Registry used_in does not include paper3 but should."},
-      "GrozdanovHofmanIqbal": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: S. Grozdanov, D. M. Hofman, N. Iqbal, Phys. Rev. D 95, 096003 (2017). Photonization theorem."},
-      "HofmanIqbal": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: D. M. Hofman, N. Iqbal, SciPost Phys. 6, 006 (2019). Higher-form symmetry hydro."},
-      "Grozdanov2017": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. DUPLICATE of GrozdanovHofmanIqbal: same authors, journal (PRD 95, 096003 (2017))."},
-      "Torrieri2020": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: G. Torrieri, Phys. Rev. D 102, 076009 (2020). Non-Abelian fluid obstruction."},
-      "NastaseSonnenschein2025": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: H. Nastase, J. Sonnenschein, arXiv:2501.13263 (2025). Non-Abelian Clebsch closure."},
-      "GKSW2015": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: D. Gaiotto, A. Kapustin, N. Seiberg, B. Willett, JHEP 02, 172 (2015). Generalized global symmetries."},
-      "Adler2024": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: D. Adler et al., Nature 636, 87 (2024). Fracton hydrodynamics."},
-      "Steinhauer2016": {"in_registry": true, "used_in_includes_paper3": true},
-      "Kolobov2021": {"in_registry": true, "used_in_includes_paper3": true},
-      "Diakonov2011": {"in_registry": true, "used_in_includes_paper3": false, "notes": "Registry used_in does not include paper3 but should."},
-      "Wetterich2004": {"in_registry": true, "used_in_includes_paper3": false, "notes": "Registry used_in does not include paper3 but should."},
-      "Volovik2003": {"in_registry": false, "notes": "NOT IN CITATION_REGISTRY. Paper bib: G. E. Volovik, The Universe in a Helium Droplet (Oxford, 2003). Fermi-point topology."}
+      "section": "abstract",
+      "tex_line_start": 24,
+      "tex_line_end": 27,
+      "quote": "We prove that non-Abelian gauge degrees of freedom universally fail to survive hydrodynamization, while U(1) gauge structure can persist through the 1-form Goldstone mechanism.",
+      "quote_normalized": "we prove that non-abelian gauge degrees of freedom universally fail to survive hydrodynamization, while u(1) gauge structure can persist through the 1-form goldstone mechanism.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Headline metaclaim summarizing main theorem; substance verified in body sentences."
     },
-    "findings": [
-      {
-        "severity": "MODERATE",
-        "finding": "DUPLICATE BIBLIOGRAPHY ENTRY: GrozdanovHofmanIqbal (line 321) and Grozdanov2017 (line 327) are identical -- same authors (S. Grozdanov, D. M. Hofman, N. Iqbal), same journal (Phys. Rev. D 95, 096003 (2017)). The paper cites GrozdanovHofmanIqbal on lines 60, 160 and Grozdanov2017 on line 63.",
-        "recommendation": "Remove Grozdanov2017 bibitem and change \\cite{HofmanIqbal,Grozdanov2017} on line 63 to \\cite{HofmanIqbal,GrozdanovHofmanIqbal} or \\cite{HofmanIqbal}."
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:16c3192d",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "16c3192d",
+        "hash_algorithm": "sha256_first_8"
       },
-      {
-        "severity": "LOW",
-        "finding": "10 of 16 bibliography entries are missing from CITATION_REGISTRY: Visser1998, Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Grozdanov2017, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003.",
-        "recommendation": "Add all to CITATION_REGISTRY with used_in including paper3. (After removing Grozdanov2017 duplicate, this becomes 9 missing entries.)"
+      "section": "abstract",
+      "tex_line_start": 27,
+      "tex_line_end": 31,
+      "quote": "The argument rests on a structural constraint from generalized symmetries: higher-form symmetries must be Abelian because operators on codimension >1 submanifolds necessarily commute.",
+      "quote_normalized": "the argument rests on a structural constraint from generalized symmetries: higher-form symmetries must be abelian because operators on codimension >1 submanifolds necessarily commute.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          },
+          {
+            "kind": "citation",
+            "target": "GKSW2015"
+          }
+        ],
+        "completeness": "full"
       },
-      {
-        "severity": "LOW",
-        "finding": "Three existing registry entries (LevinWen2006, Diakonov2011, Wetterich2004) are cited in paper3 but their used_in lists do not include 'papers/paper3_gauge_erasure/paper_draft.tex'.",
-        "recommendation": "Add paper3 path to used_in for all three."
-      }
-    ]
-  },
-
-  "layer_5_qualitative_claims": {
-    "verdict": "PASS_WITH_FINDINGS",
-    "claims": [
-      {
-        "claim": "Higher-form symmetries must be Abelian because operators on codimension >= 1 submanifolds commute",
-        "paper_location": "Section II.A (lines 86-99)",
-        "computed_support": true,
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py logical chain steps (i)-(iii); Lean: higher_form_symmetry function encodes this; test_higher_form_must_be_abelian passes",
-        "notes": "Core structural argument. Follows directly from locality (spacelike separation -> commutativity). Well-established in literature (GKSW 2015)."
-      },
-      {
-        "claim": "Non-Abelian gauge theories have at most discrete center symmetries (Z_N for SU(N))",
-        "paper_location": "Section II.B (lines 101-116)",
-        "computed_support": true,
-        "pipeline_source": "Lean axiom non_abelian_center_discrete; Python: su(N).center = 'Z_N', so(N).center = 'Z_2' or 'Z_2 x Z_2'",
-        "notes": "Standard Lie theory. Encoded as the single axiom in the Lean formalization."
-      },
-      {
-        "claim": "Discrete symmetry breaking produces domain walls, not Goldstone bosons",
-        "paper_location": "Section II.C (lines 118-130)",
-        "computed_support": true,
-        "pipeline_source": "Lean: discrete_gives_domain_wall theorem (rfl proof); Python: test_discrete_gives_domain_wall passes",
-        "notes": "Standard result. Goldstone theorem requires continuous symmetry."
-      },
-      {
-        "claim": "U(1) gauge DOF survive as 1-form Goldstone (photonization theorem)",
-        "paper_location": "Section III (lines 153-174)",
-        "computed_support": true,
-        "pipeline_source": "Lean: u1_survival theorem, abelian_gives_continuous theorem; Python: test_u1_survives passes",
-        "notes": "References Grozdanov-Hofman-Iqbal correctly."
-      },
-      {
-        "claim": "Exact dichotomy: survival iff Abelian",
-        "paper_location": "Eq. 3 (line 172-173)",
-        "computed_support": true,
-        "pipeline_source": "Lean: erasure_dichotomy theorem (biconditional, proved from gauge_erasure + u1_survival); Python: test_erasure_is_structural passes",
-        "notes": "The core result. Formally verified as a biconditional (iff)."
-      },
-      {
-        "claim": "Standard MIS hydrodynamics: non-Abelian currents covariantly (not ordinarily) conserved",
-        "paper_location": "Section IV.A (lines 192-199)",
-        "computed_support": true,
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py docstring and analysis logic",
-        "notes": "Standard physics: D_mu J^mu = 0 vs partial_mu J^mu = 0. Covariant conservation does not yield a globally conserved charge."
-      },
-      {
-        "claim": "Fracton hydrodynamics cannot rescue non-Abelian gauge DOF",
-        "paper_location": "Section IV.B (lines 201-210)",
-        "computed_support": true,
-        "pipeline_source": "src/gauge_erasure/erasure_theorem.py analysis; Lean: gauge_erasure theorem is independent of hydrodynamic framework",
-        "notes": "Argument: the obstacle is gauge redundancy (covariant conservation), not conservation law count. Even infinite multipole charges don't help."
-      },
-      {
-        "claim": "N=4 SYM is non-confining yet all holographic hydro modes are color-singlets",
-        "paper_location": "Section IV.C (lines 212-228)",
-        "computed_support": true,
-        "pipeline_source": "Python: test_n4_sym_erased and test_n4_sym_explanation_mentions_confinement pass",
-        "notes": "Establishes that erasure is structural (not dynamical/confinement-driven). N=4 SYM is the decisive test case."
-      },
-      {
-        "claim": "Only U(1)_EM survives in the Standard Model after hydrodynamization",
-        "paper_location": "Section VI (lines 282-285)",
-        "computed_support": true,
-        "pipeline_source": "Lean: sm_only_u1_survives (triple conjunction); Python: test_sm_only_photon_survives passes",
-        "notes": "SU(3)_c erased, SU(2)_L erased, U(1)_Y survives. After EWSB, the surviving photon is from U(1)_EM."
-      },
-      {
-        "claim": "Drinfeld center Z(C) has topological central charge c = 0 (mod 8), producing non-chiral doubled topological order",
-        "paper_location": "Lines 277-280",
-        "computed_support": true,
-        "pipeline_source": "lean/SKEFTHawking/DrinfeldDouble.lean: center_is_doubled theorem (line 181), nonabelian_gauge_still_doubled theorem (line 194)",
-        "notes": "Formally verified in Lean. Paper correctly identifies this as the categorical foundation for the erasure mechanism."
-      }
-    ],
-    "findings": [
-      {
-        "severity": "MODERATE",
-        "finding": "Lines 113-114 state: 'Z_2 for SO(2k+1), Z_2 x Z_2 for SO(4k)'. For the Lie group SO(2k+1) with k >= 1, the center is trivial {I}, not Z_2. The Z_2 center belongs to Spin(2k+1), the universal covering group. Similarly, the center of SO(4k) is Z_2 (not Z_2 x Z_2); the Z_2 x Z_2 center belongs to Spin(4k). While the main theorem does not depend on these specific center values (it only requires discreteness), the stated values are technically incorrect for SO(n) and should either reference Spin(n) or be corrected.",
-        "recommendation": "Change 'SO(2k+1)' to 'Spin(2k+1)' and 'SO(4k)' to 'Spin(4k)', or rephrase as 'For the universal covering groups Spin(n)...' to be precise. Alternatively, keep SO notation but state the correct centers: Z_2 for SO(2k), trivial for SO(2k+1)."
-      }
-    ]
-  },
-
-  "test_results": {
-    "test_file": "tests/test_gauge_erasure.py",
-    "tests_run": 25,
-    "tests_passed": 25,
-    "tests_failed": 0,
-    "execution_time": "0.02s"
-  },
-
-  "lean_build": {
-    "module": "lean/SKEFTHawking/GaugeErasure.lean",
-    "result": "CLEAN",
-    "total_jobs": 8065,
-    "sorry_count": 0,
-    "warnings": "Unused variable warnings in HubbardStratonovichRHMC.lean only (unrelated to GaugeErasure)"
-  },
-
-  "figures": {
-    "fig20_sm_scorecard": {
-      "exists": true,
-      "path": "papers/paper3_gauge_erasure/figures/fig20_sm_scorecard.png",
-      "also_at": "figures/fig20_sm_scorecard.png",
-      "visualization_function": "src/core/visualizations.py::fig_sm_scorecard",
-      "caption_accurate": true,
-      "notes": "Shows SU(3)/SU(2)/U(1) bar chart. Caption correctly states generator counts (8, 3, 1)."
+      "agent_notes": "Higher-form Abelianness from locality is the GKSW 2015 framework; encoded by higher_form_symmetry def + non_abelian_gives_discrete theorem."
     },
-    "fig21_erasure_survey": {
-      "exists": true,
-      "path": "papers/paper3_gauge_erasure/figures/fig21_erasure_survey.png",
-      "also_at": "figures/fig21_erasure_survey.png",
-      "visualization_function": "src/core/visualizations.py::fig_erasure_survey",
-      "caption_accurate": true,
-      "notes": "Surveys SU(2)-SU(10), SO(3)-SO(10), U(1). Caption correctly describes range and result."
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:9e9ae43d",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "9e9ae43d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 31,
+      "tex_line_end": 33,
+      "quote": "Consequently, non-Abelian gauge theories possess at most discrete center symmetries (e.g., Z_N for SU(N)), whose spontaneous breaking produces domain walls rather than Goldstone bosons.",
+      "quote_normalized": "consequently, non-abelian gauge theories possess at most discrete center symmetries (e.g., z_n for su(n)), whose spontaneous breaking produces domain walls rather than goldstone bosons.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.discrete_gives_domain_wall"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Z(SU(N))=Z_N and discrete-breaking-yields-walls both formalized."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:5430c487",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "5430c487",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 33,
+      "tex_line_end": 33,
+      "quote": "This erasure is universal across standard, fracton, and holographic hydrodynamics.",
+      "quote_normalized": "this erasure is universal across standard, fracton, and holographic hydrodynamics.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Universality across hydro frameworks reflects the theorem's framework-agnostic statement."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:5fb72a29",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "5fb72a29",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 33,
+      "tex_line_end": 35,
+      "quote": "We verify the result in N=4 super-Yang-Mills theory---a non-confining gauge theory where color-charged states exist at all couplings, yet holographic hydrodynamics involves exclusively color-singlet operators.",
+      "quote_normalized": "we verify the result in n=4 super-yang-mills theory---a non-confining gauge theory where color-charged states exist at all couplings, yet holographic hydrodynamics involves exclusively color-singlet operators.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "N=4 SYM as decisive test is qualitative literature claim; matches Section IV.C body. Literature support: holographic AdS/CFT analyses (no specific in-pipeline numeric)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:561c87cd",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "561c87cd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 36,
+      "tex_line_end": 37,
+      "quote": "The theorem is formally verified in \\texttt{GaugeErasure.lean} (12 theorems, zero axioms, zero \\texttt{sorry}).",
+      "quote_normalized": "the theorem is formally verified in gaugeerasure.lean (12 theorems, zero axioms, zero sorry).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "IA: paper claims '12 theorems, zero axioms, zero sorry' for GaugeErasure.lean. Live counts from lean_deps.json (canonical, kernel-kind 'theorem'): 11 user-level theorems, 0 axioms, 0 sorry. grep '^theorem ' GaugeErasure.lean = 11 (matches). Theorem count off by 1 (paper:12 vs actual:11). Axiom and sorry counts correct. Likely caused by Phase 5 strengthening: prior axiom non_abelian_center_discrete was promoted to theorem but the theorem count in the abstract was double-incremented or miscounted. FAIL Class IA \u2014 Gate 9 NumericalFreshness.",
+      "delta_pct": 8.33,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:abstract:f02c6338",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "abstract",
+        "quote_hash": "f02c6338",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 37,
+      "tex_line_end": 40,
+      "quote": "These results establish a fundamental boundary for emergent gauge structure in analog gravity and condensed matter systems: emergent electrodynamics can survive a hydrodynamic layer, but emergent chromodynamics cannot.",
+      "quote_normalized": "these results establish a fundamental boundary for emergent gauge structure in analog gravity and condensed matter systems: emergent electrodynamics can survive a hydrodynamic layer, but emergent chromodynamics cannot.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Closing implications metaclaim; covered by Section VI body sentences."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:3ee379af",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "3ee379af",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 49,
+      "tex_line_end": 55,
+      "quote": "The possibility that gauge theories might emerge from underlying hydrodynamic or condensed matter systems has been a recurring theme in theoretical physics, from the acoustic metric analogy~\\cite{Unruh1981,Visser1998} to string-net condensation~\\cite{Wen2003,LevinWen2006}.",
+      "quote_normalized": "the possibility that gauge theories might emerge from underlying hydrodynamic or condensed matter systems has been a recurring theme in theoretical physics, from the acoustic metric analogy~ to string-net condensation~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Unruh1981"
+          },
+          {
+            "kind": "citation",
+            "target": "Visser1998"
+          },
+          {
+            "kind": "citation",
+            "target": "Wen2003"
+          },
+          {
+            "kind": "citation",
+            "target": "LevinWen2006"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Unruh1981 in CITATION_REGISTRY (used_in includes paper3). Visser1998 in registry but used_in does not include paper3. Wen2003 NOT in CITATION_REGISTRY. LevinWen2006 in registry but used_in does not include paper3. Two registry-coverage gaps (Wen2003 absent; Visser1998+LevinWen2006 used_in updates) \u2014 non-blocking.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:a0d1417c",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "a0d1417c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 55,
+      "tex_line_end": 55,
+      "quote": "A central question for any such program is: which gauge structures can survive the coarse-graining inherent in a hydrodynamic description?",
+      "quote_normalized": "a central question for any such program is: which gauge structures can survive the coarse-graining inherent in a hydrodynamic description?",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Rhetorical framing question; no extractable claim."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:c7f30516",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "c7f30516",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 57,
+      "tex_line_end": 60,
+      "quote": "For U(1) gauge theories, the answer is positive.",
+      "quote_normalized": "for u(1) gauge theories, the answer is positive.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survival"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Restated by u1_survival theorem in Lean."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:4d802dec",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "4d802dec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 57,
+      "tex_line_end": 63,
+      "quote": "Grozdanov, Hofman, and Iqbal demonstrated that the photon can be understood as the Goldstone boson of a spontaneously broken magnetic 1-form symmetry~\\cite{GrozdanovHofmanIqbal}---the ``photonization'' theorem.",
+      "quote_normalized": "grozdanov, hofman, and iqbal demonstrated that the photon can be understood as the goldstone boson of a spontaneously broken magnetic 1-form symmetry~---the ``photonization'' theorem.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GrozdanovHofmanIqbal"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survival"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "GrozdanovHofmanIqbal NOT in CITATION_REGISTRY (gap, non-blocking). Photonization claim itself is supported by the u1_survival theorem.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:cafd1a9f",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "cafd1a9f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 61,
+      "tex_line_end": 63,
+      "quote": "The associated magnetohydrodynamics (MHD) is a well-defined hydrodynamic theory with propagating gauge degrees of freedom~\\cite{HofmanIqbal,GrozdanovHofmanIqbal}.",
+      "quote_normalized": "the associated magnetohydrodynamics (mhd) is a well-defined hydrodynamic theory with propagating gauge degrees of freedom~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HofmanIqbal"
+          },
+          {
+            "kind": "citation",
+            "target": "GrozdanovHofmanIqbal"
+          }
+        ],
+        "completeness": "none"
+      },
+      "agent_notes": "HofmanIqbal and GrozdanovHofmanIqbal both NOT in CITATION_REGISTRY. Non-blocking gap.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:ce2153ae",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "ce2153ae",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 65,
+      "tex_line_end": 66,
+      "quote": "For non-Abelian gauge theories, the situation is fundamentally different.",
+      "quote_normalized": "for non-abelian gauge theories, the situation is fundamentally different.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Connective prose."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:d083714f",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "d083714f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 66,
+      "tex_line_end": 72,
+      "quote": "Multiple lines of evidence suggest an obstruction: Torrieri~\\cite{Torrieri2020} identified structural barriers in non-Abelian fluid dynamics, Nastase and Sonnenschein~\\cite{NastaseSonnenschein2025} showed that non-Abelian Clebsch variables cannot achieve closure, and holographic analyses of strongly-coupled gauge theories consistently find only color-singlet hydrodynamic modes.",
+      "quote_normalized": "multiple lines of evidence suggest an obstruction: torrieri~ identified structural barriers in non-abelian fluid dynamics, nastase and sonnenschein~ showed that non-abelian clebsch variables cannot achieve closure, and holographic analyses of strongly-coupled gauge theories consistently find only color-singlet hydrodynamic modes.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Torrieri2020"
+          },
+          {
+            "kind": "citation",
+            "target": "NastaseSonnenschein2025"
+          }
+        ],
+        "completeness": "none"
+      },
+      "agent_notes": "Both Torrieri2020 and NastaseSonnenschein2025 NOT in CITATION_REGISTRY. Non-blocking.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:564f6904",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "564f6904",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 74,
+      "tex_line_end": 78,
+      "quote": "In this Letter, we demonstrate that these observations reflect a \\emph{universal structural theorem}: non-Abelian gauge degrees of freedom are erased by hydrodynamization, regardless of the specific hydrodynamic framework employed.",
+      "quote_normalized": "in this letter, we demonstrate that these observations reflect a universal structural theorem: non-abelian gauge degrees of freedom are erased by hydrodynamization, regardless of the specific hydrodynamic framework employed.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Forward-pointer metaclaim; substance covered in subsequent argument sections."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:introduction:fc4ced5a",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "introduction",
+        "quote_hash": "fc4ced5a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 78,
+      "tex_line_end": 78,
+      "quote": "The mechanism is rooted in the mathematical fact that higher-form symmetries must be Abelian.",
+      "quote_normalized": "the mechanism is rooted in the mathematical fact that higher-form symmetries must be abelian.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Restated structurally by non_abelian_gives_discrete + higher_form_symmetry def."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:eab36fa2",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "eab36fa2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 86,
+      "tex_line_end": 91,
+      "quote": "Following Gaiotto, Kapustin, Seiberg, and Willett~\\cite{GKSW2015}, a p-form global symmetry acts on operators supported on p-dimensional submanifolds.",
+      "quote_normalized": "following gaiotto, kapustin, seiberg, and willett~, a p-form global symmetry acts on operators supported on p-dimensional submanifolds.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GKSW2015"
+          }
+        ],
+        "completeness": "none"
+      },
+      "agent_notes": "GKSW2015 NOT in CITATION_REGISTRY. Foundational reference for higher-form symmetry framework. Non-blocking.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:d8dfe875",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "d8dfe875",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 88,
+      "tex_line_end": 91,
+      "quote": "Charged operators under a p-form symmetry (p>=1) are supported on submanifolds of codimension >=1 in space.",
+      "quote_normalized": "charged operators under a p-form symmetry (p>=1) are supported on submanifolds of codimension >=1 in space.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Standard locality-implies-Abelianness argument from GKSW 2015; structurally encoded by Lean def + theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:b1edc18f",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "b1edc18f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 90,
+      "tex_line_end": 91,
+      "quote": "On a spatial slice Sigma of dimension d, such operators can always be deformed to have disjoint support.",
+      "quote_normalized": "on a spatial slice sigma of dimension d, such operators can always be deformed to have disjoint support.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Standard locality-implies-Abelianness argument from GKSW 2015; structurally encoded by Lean def + theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:64f3c41d",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "64f3c41d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 93,
+      "tex_line_end": 93,
+      "quote": "\\emph{Operators with disjoint support commute.}",
+      "quote_normalized": "operators with disjoint support commute.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Standard locality-implies-Abelianness argument from GKSW 2015; structurally encoded by Lean def + theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:6611d061",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "6611d061",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 93,
+      "tex_line_end": 95,
+      "quote": "This is a consequence of locality: spacelike-separated operators in any local quantum field theory must commute.",
+      "quote_normalized": "this is a consequence of locality: spacelike-separated operators in any local quantum field theory must commute.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Standard locality-implies-Abelianness argument from GKSW 2015; structurally encoded by Lean def + theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:694bcbd6",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "694bcbd6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 95,
+      "tex_line_end": 96,
+      "quote": "Therefore, the group of symmetry transformations generated by these operators is necessarily Abelian.",
+      "quote_normalized": "therefore, the group of symmetry transformations generated by these operators is necessarily abelian.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Standard locality-implies-Abelianness argument from GKSW 2015; structurally encoded by Lean def + theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-argument-higher-form:3cee2871",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-argument-higher-form",
+        "quote_hash": "3cee2871",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-argument-higher-form",
+      "tex_line_start": 98,
+      "tex_line_end": 99,
+      "quote": "This is not a dynamical statement about specific theories---it is a structural property of the framework of generalized symmetries itself.",
+      "quote_normalized": "this is not a dynamical statement about specific theories---it is a structural property of the framework of generalized symmetries itself.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Meta statement about argument structure; not directly verifiable but framework-level."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:non-abelian-discrete-center:8056c3d9",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "non-abelian-discrete-center",
+        "quote_hash": "8056c3d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "non-abelian-discrete-center",
+      "tex_line_start": 103,
+      "tex_line_end": 107,
+      "quote": "For a gauge theory with gauge group G, the relevant higher-form symmetry is a 1-form symmetry associated with the center Z(G): G = SU(N) implies Z(G) = Z_N.",
+      "quote_normalized": "for a gauge theory with gauge group g, the relevant higher-form symmetry is a 1-form symmetry associated with the center z(g): g = su(n) implies z(g) = z_n.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Z(SU(N)) = Z_N is standard Lie theory; matches Lean GaugeGroupData encoding."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:non-abelian-discrete-center:d744c9bb",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "non-abelian-discrete-center",
+        "quote_hash": "d744c9bb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "non-abelian-discrete-center",
+      "tex_line_start": 108,
+      "tex_line_end": 109,
+      "quote": "The center symmetry acts on Wilson loops and characterizes confinement phases.",
+      "quote_normalized": "the center symmetry acts on wilson loops and characterizes confinement phases.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Standard textbook fact about center symmetry."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:non-abelian-discrete-center:72a3600c",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "non-abelian-discrete-center",
+        "quote_hash": "72a3600c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "non-abelian-discrete-center",
+      "tex_line_start": 109,
+      "tex_line_end": 110,
+      "quote": "Crucially, Z_N is a \\emph{discrete} group, not a continuous Lie group.",
+      "quote_normalized": "crucially, z_n is a discrete group, not a continuous lie group.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Z_N being discrete (not continuous) is encoded directly in HigherFormType inductive."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:non-abelian-discrete-center:e944b556",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "non-abelian-discrete-center",
+        "quote_hash": "e944b556",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "non-abelian-discrete-center",
+      "tex_line_start": 112,
+      "tex_line_end": 112,
+      "quote": "This discreteness is not accidental.",
+      "quote_normalized": "this discreteness is not accidental.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Pivot to next sentence; preview of next claim."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:non-abelian-discrete-center:31e5de91",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "non-abelian-discrete-center",
+        "quote_hash": "31e5de91",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "non-abelian-discrete-center",
+      "tex_line_start": 112,
+      "tex_line_end": 117,
+      "quote": "For simple compact Lie groups, the center is always finite: Z_N for SU(N), trivial for SO(2k+1), Z_2 for SO(2k); the double covers have richer centers (Z_2 for Spin(2k+1), Z_4 for Spin(4k+2), Z_2 x Z_2 for Spin(4k)).",
+      "quote_normalized": "for simple compact lie groups, the center is always finite: z_n for su(n), trivial for so(2k+1), z_2 for so(2k); the double covers have richer centers (z_2 for spin(2k+1), z_4 for spin(4k+2), z_2 x z_2 for spin(4k)).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Center values for SU(N), SO(2k+1), SO(2k), Spin(2k+1), Spin(4k+2), Spin(4k) are correct standard Lie theory. Prior review F2 (SO vs Spin attribution) was already addressed in this draft (now distinguishes SO from Spin)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:non-abelian-discrete-center:afc62b8e",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "non-abelian-discrete-center",
+        "quote_hash": "afc62b8e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "non-abelian-discrete-center",
+      "tex_line_start": 117,
+      "tex_line_end": 118,
+      "quote": "A continuous center would imply a nontrivial Abelian normal subgroup, contradicting simplicity.",
+      "quote_normalized": "a continuous center would imply a nontrivial abelian normal subgroup, contradicting simplicity.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Standard structural argument: continuous Abelian normal subgroup contradicts simplicity."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:5f3426ff",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "5f3426ff",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 122,
+      "tex_line_end": 124,
+      "quote": "The Goldstone theorem requires spontaneous breaking of a \\emph{continuous} symmetry to produce gapless modes.",
+      "quote_normalized": "the goldstone theorem requires spontaneous breaking of a continuous symmetry to produce gapless modes.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.continuous_gives_goldstone"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Goldstone theorem requirement on continuous symmetry; directly encoded by continuous_gives_goldstone theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:0f19621e",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "0f19621e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 124,
+      "tex_line_end": 125,
+      "quote": "When a discrete symmetry Z_N is spontaneously broken:",
+      "quote_normalized": "when a discrete symmetry z_n is spontaneously broken:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Itemized list pivot."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:dc3ab500",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "dc3ab500",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 127,
+      "tex_line_end": 127,
+      "quote": "The vacuum manifold G/H is a discrete set (not a smooth manifold).",
+      "quote_normalized": "the vacuum manifold g/h is a discrete set (not a smooth manifold).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Standard topology of vacuum manifold for discrete H."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:b1159e25",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "b1159e25",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 128,
+      "tex_line_end": 128,
+      "quote": "Interpolation between vacua produces \\emph{domain walls} (codimension-1 topological defects).",
+      "quote_normalized": "interpolation between vacua produces domain walls (codimension-1 topological defects).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.discrete_gives_domain_wall"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Discrete-breaks-to-walls; encoded by discrete_gives_domain_wall."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:25b087bb",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "25b087bb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 129,
+      "tex_line_end": 129,
+      "quote": "There are no gapless Nambu-Goldstone bosons.",
+      "quote_normalized": "there are no gapless nambu-goldstone bosons.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.discrete_gives_domain_wall"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Absence of NG modes from discrete breaking; same theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:e43dd5cb",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "e43dd5cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 132,
+      "tex_line_end": 134,
+      "quote": "Domain walls are topological objects, not hydrodynamic modes.",
+      "quote_normalized": "domain walls are topological objects, not hydrodynamic modes.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Standard physics fact: walls are topological defects, not propagating waves."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:domain-walls-not-goldstone:810d1464",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "domain-walls-not-goldstone",
+        "quote_hash": "810d1464",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "domain-walls-not-goldstone",
+      "tex_line_start": 132,
+      "tex_line_end": 134,
+      "quote": "They do not propagate as waves, do not satisfy conservation equations, and do not contribute to the hydrodynamic gradient expansion.",
+      "quote_normalized": "they do not propagate as waves, do not satisfy conservation equations, and do not contribute to the hydrodynamic gradient expansion.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Continuation of the same fact (walls don't propagate / contribute to gradient expansion)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-erasure-theorem:3802dc05",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-erasure-theorem",
+        "quote_hash": "3802dc05",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-erasure-theorem",
+      "tex_line_start": 138,
+      "tex_line_end": 148,
+      "quote": "Non-Abelian gauge group implies discrete center symmetry implies domain walls (not Goldstone) implies no hydrodynamic modes from gauge sector.",
+      "quote_normalized": "non-abelian gauge group implies discrete center symmetry implies domain walls (not goldstone) implies no hydrodynamic modes from gauge sector.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "The boxed three-step implication chain is exactly the gauge_erasure theorem statement."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-erasure-theorem:3a0c681e",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-erasure-theorem",
+        "quote_hash": "3a0c681e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-erasure-theorem",
+      "tex_line_start": 150,
+      "tex_line_end": 152,
+      "quote": "This is a universal result: it depends only on the Abelianness of the gauge group, not on the coupling strength, confinement properties, or choice of hydrodynamic framework.",
+      "quote_normalized": "this is a universal result: it depends only on the abelianness of the gauge group, not on the coupling strength, confinement properties, or choice of hydrodynamic framework.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Universality (no coupling/confinement dependence) is the key qualitative consequence; theorem is structural (no dynamical hypotheses)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:92b33c99",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "92b33c99",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 158,
+      "tex_line_end": 162,
+      "quote": "The argument above fails precisely for Abelian gauge groups.",
+      "quote_normalized": "the argument above fails precisely for abelian gauge groups.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survival"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.abelian_gives_continuous"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Argument fails for Abelian \u2014 encoded by abelian_gives_continuous + u1_survival."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:10e4a803",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "10e4a803",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 158,
+      "tex_line_end": 162,
+      "quote": "U(1) gauge theory possesses a \\emph{continuous} magnetic 1-form symmetry U(1)^{(1)}, generated by the magnetic flux operator oint_{Sigma_2} F.",
+      "quote_normalized": "u(1) gauge theory possesses a continuous magnetic 1-form symmetry u(1)^{(1)}, generated by the magnetic flux operator oint_{sigma_2} f.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survival"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "U(1) magnetic 1-form symmetry is standard generalized-symmetry fact; u1_survival theorem encodes the consequence."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:02cddad7",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "02cddad7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 161,
+      "tex_line_end": 162,
+      "quote": "Its spontaneous breaking produces the photon as a 1-form Goldstone boson~\\cite{GrozdanovHofmanIqbal}.",
+      "quote_normalized": "its spontaneous breaking produces the photon as a 1-form goldstone boson~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survival"
+          },
+          {
+            "kind": "citation",
+            "target": "GrozdanovHofmanIqbal"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Photonization theorem of GHI; cite resolves to bibitem but GrozdanovHofmanIqbal NOT in CITATION_REGISTRY (registry gap, non-blocking).",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:180d4a7b",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "180d4a7b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 164,
+      "tex_line_end": 170,
+      "quote": "The resulting hydrodynamic theory---magnetohydrodynamics---is a consistent, well-studied framework with: propagating electromagnetic degrees of freedom; a well-defined derivative expansion~\\cite{HofmanIqbal}; conservation of magnetic flux as a higher-form conserved current.",
+      "quote_normalized": "the resulting hydrodynamic theory---magnetohydrodynamics---is a consistent, well-studied framework with: propagating electromagnetic degrees of freedom; a well-defined derivative expansion~; conservation of magnetic flux as a higher-form conserved current.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HofmanIqbal"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Bullet-list of MHD properties; HofmanIqbal NOT in CITATION_REGISTRY (gap, non-blocking).",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:72d635d4",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "72d635d4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 172,
+      "tex_line_end": 176,
+      "quote": "The exact dichotomy is: gauge DOF survive hydrodynamization iff gauge group is Abelian.",
+      "quote_normalized": "the exact dichotomy is: gauge dof survive hydrodynamization iff gauge group is abelian.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.erasure_dichotomy"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Exact dichotomy biconditional encoded by erasure_dichotomy theorem (Iff)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:38511fa4",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "38511fa4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 177,
+      "tex_line_end": 178,
+      "quote": "This is formalized as the \\texttt{erasure\\_dichotomy} theorem in Lean 4 (see Sec.~\\ref{sec:lean}).",
+      "quote_normalized": "this is formalized as the erasure\\_dichotomy theorem in lean 4 (see sec.~).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.erasure_dichotomy"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class TN check: SKEFTHawking.GaugeErasure.erasure_dichotomy EXISTS in lean_deps.json."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:the-u1-exception:1410dc8e",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "the-u1-exception",
+        "quote_hash": "1410dc8e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-u1-exception",
+      "tex_line_start": 180,
+      "tex_line_end": 187,
+      "quote": "Standard Model gauge erasure scorecard. SU(3)_c (8 generators) and SU(2)_L (3 generators) are erased by hydrodynamization; only U(1)_Y (1 generator) survives via the 1-form Goldstone mechanism.",
+      "quote_normalized": "standard model gauge erasure scorecard. su(3)_c (8 generators) and su(2)_l (3 generators) are erased by hydrodynamization; only u(1)_y (1 generator) survives via the 1-form goldstone mechanism.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.sm_only_u1_survives"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class SD recheck: SU(3) has 8 generators (3^2-1), SU(2) has 3 (2^2-1), U(1) has 1. Standard Lie group dimensions; match prior review's parameter checks. The figure (fig20_sm_scorecard.png) exists at papers/paper3_gauge_erasure/figures/.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:standard-hydrodynamics:ae34882b",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "standard-hydrodynamics",
+        "quote_hash": "ae34882b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "standard-hydrodynamics",
+      "tex_line_start": 195,
+      "tex_line_end": 197,
+      "quote": "In Mueller-Israel-Stewart theory, hydrodynamic variables are expectation values of conserved currents.",
+      "quote_normalized": "in mueller-israel-stewart theory, hydrodynamic variables are expectation values of conserved currents.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Standard MIS textbook fact; not load-bearing for the theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:standard-hydrodynamics:435e6a55",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "standard-hydrodynamics",
+        "quote_hash": "435e6a55",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "standard-hydrodynamics",
+      "tex_line_start": 197,
+      "tex_line_end": 200,
+      "quote": "Non-Abelian gauge fields are \\emph{not} associated with conserved currents in the ordinary sense---color charge satisfies D_mu J^mu = 0 (covariant conservation), not partial_mu J^mu = 0 (ordinary conservation).",
+      "quote_normalized": "non-abelian gauge fields are not associated with conserved currents in the ordinary sense---color charge satisfies d_mu j^mu = 0 (covariant conservation), not partial_mu j^mu = 0 (ordinary conservation).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Standard physics fact: covariant vs ordinary conservation. Supports framework-independence of erasure."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:standard-hydrodynamics:4ff40140",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "standard-hydrodynamics",
+        "quote_hash": "4ff40140",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "standard-hydrodynamics",
+      "tex_line_start": 200,
+      "tex_line_end": 202,
+      "quote": "Covariant conservation does not produce a globally conserved charge and therefore does not generate a hydrodynamic mode.",
+      "quote_normalized": "covariant conservation does not produce a globally conserved charge and therefore does not generate a hydrodynamic mode.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Concludes covariant conservation insufficient for hydro mode; aligns with gauge_erasure (no surviving mode for non-Abelian)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:fracton-hydrodynamics:34f6e702",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "fracton-hydrodynamics",
+        "quote_hash": "34f6e702",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "fracton-hydrodynamics",
+      "tex_line_start": 205,
+      "tex_line_end": 209,
+      "quote": "Fracton hydrodynamics preserves dramatically more UV information than standard hydrodynamics: dipole conservation, infinitely many quasi-conserved multipole charges, and Hilbert space fragmentation~\\cite{Adler2024}.",
+      "quote_normalized": "fracton hydrodynamics preserves dramatically more uv information than standard hydrodynamics: dipole conservation, infinitely many quasi-conserved multipole charges, and hilbert space fragmentation~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Adler2024"
+          }
+        ],
+        "completeness": "none"
+      },
+      "agent_notes": "Adler2024 NOT in CITATION_REGISTRY. Non-blocking gap.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:fracton-hydrodynamics:765f1964",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "fracton-hydrodynamics",
+        "quote_hash": "765f1964",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "fracton-hydrodynamics",
+      "tex_line_start": 209,
+      "tex_line_end": 211,
+      "quote": "However, the fundamental obstacle is gauge \\emph{redundancy}, not conservation law count.",
+      "quote_normalized": "however, the fundamental obstacle is gauge redundancy, not conservation law count.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Argument: gauge redundancy (not conservation count) is the obstacle \u2014 consistent with framework-independence of gauge_erasure."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:fracton-hydrodynamics:378bab11",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "fracton-hydrodynamics",
+        "quote_hash": "378bab11",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "fracton-hydrodynamics",
+      "tex_line_start": 211,
+      "tex_line_end": 213,
+      "quote": "Color charges are covariantly conserved (D_mu J^mu = 0), making them ineligible as fracton-type conserved quantities regardless of additional conservation laws.",
+      "quote_normalized": "color charges are covariantly conserved (d_mu j^mu = 0), making them ineligible as fracton-type conserved quantities regardless of additional conservation laws.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Color charges covariantly conserved \u2192 ineligible for fracton multipole framework. Standard physics."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:701ffdae",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "701ffdae",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 216,
+      "tex_line_end": 218,
+      "quote": "N=4 SU(N) SYM is the most stringent test because it is \\emph{non-confining} at all couplings.",
+      "quote_normalized": "n=4 su(n) sym is the most stringent test because it is non-confining at all couplings.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "N=4 SYM non-confining at all couplings \u2014 standard literature fact."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:6ce183e8",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "6ce183e8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 218,
+      "tex_line_end": 219,
+      "quote": "Color-charged states exist in the spectrum for any lambda = g^2 N.",
+      "quote_normalized": "color-charged states exist in the spectrum for any lambda = g^2 n.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Color-charged spectrum exists in N=4 SYM \u2014 standard."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:f200e2b9",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "f200e2b9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 219,
+      "tex_line_end": 221,
+      "quote": "If confinement were the mechanism of gauge erasure, N=4 SYM would be a counterexample.",
+      "quote_normalized": "if confinement were the mechanism of gauge erasure, n=4 sym would be a counterexample.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Counterfactual reasoning: if confinement were the mechanism, N=4 would falsify. Decisive-test framing."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:e319b0e2",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "e319b0e2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 222,
+      "tex_line_end": 224,
+      "quote": "Yet holographic hydrodynamics (via AdS/CFT at large N, strong coupling) involves \\emph{exclusively} color-singlet operators.",
+      "quote_normalized": "yet holographic hydrodynamics (via ads/cft at large n, strong coupling) involves exclusively color-singlet operators.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_notes": "Holographic hydro at strong coupling is color-singlet only \u2014 standard AdS/CFT result. Confirms structural (not dynamical) nature."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:0ee3bb76",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "0ee3bb76",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 224,
+      "tex_line_end": 226,
+      "quote": "The dual gravitational description---black brane hydrodynamics in AdS_5---knows nothing of the gauge group beyond its rank N.",
+      "quote_normalized": "the dual gravitational description---black brane hydrodynamics in ads_5---knows nothing of the gauge group beyond its rank n.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "AdS_5 black brane hydrodynamics depends only on rank N \u2014 standard holographic dictionary."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:b32d1cbc",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "b32d1cbc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 228,
+      "tex_line_end": 230,
+      "quote": "This confirms that the erasure is structural (from higher-form symmetry commutativity), not dynamical (from confinement).",
+      "quote_normalized": "this confirms that the erasure is structural (from higher-form symmetry commutativity), not dynamical (from confinement).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Structural-not-dynamical framing matches the proof architecture (no confinement hypothesis in gauge_erasure)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:072a85ea",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "072a85ea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 229,
+      "tex_line_end": 231,
+      "quote": "Even without confinement, non-Abelian gauge degrees of freedom do not survive hydrodynamization.",
+      "quote_normalized": "even without confinement, non-abelian gauge degrees of freedom do not survive hydrodynamization.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Restatement of gauge_erasure conclusion in N=4 SYM context."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:n4-super-yang-mills:03c13e9c",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "n4-super-yang-mills",
+        "quote_hash": "03c13e9c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "n4-super-yang-mills",
+      "tex_line_start": 232,
+      "tex_line_end": 240,
+      "quote": "Erasure survey across gauge groups. All non-Abelian groups (SU(2)--SU(10), SO(3)--SO(10)) are erased regardless of rank, dimension, or center structure. Only U(1) survives. Bar heights indicate group dimension (number of generators).",
+      "quote_normalized": "erasure survey across gauge groups. all non-abelian groups (su(2)--su(10), so(3)--so(10)) are erased regardless of rank, dimension, or center structure. only u(1) survives. bar heights indicate group dimension (number of generators).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survives"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class SD recheck: 'all non-Abelian groups erased; only U(1) survives' \u2014 matches gauge_erasure + u1_survival biconditional. Figure file exists at papers/paper3_gauge_erasure/figures/fig21_erasure_survey.png."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:281663b7",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "281663b7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 247,
+      "tex_line_end": 248,
+      "quote": "The theorem and its logical chain have been formally verified in Lean 4 using the Mathlib library.",
+      "quote_normalized": "the theorem and its logical chain have been formally verified in lean 4 using the mathlib library.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Lean+Mathlib metaclaim; pin not specified literally so no Class TP hit. Build status (verified in prior review): 0 sorry, clean."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:d2a4217b",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "d2a4217b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 250,
+      "tex_line_end": 251,
+      "quote": "\\texttt{gauge\\_erasure}: Non-Abelian => no surviving hydrodynamic modes",
+      "quote_normalized": "gauge\\_erasure: non-abelian => no surviving hydrodynamic modes",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class TN: GaugeErasure.gauge_erasure EXISTS in lean_deps.json."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:8bcc4727",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "8bcc4727",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 252,
+      "tex_line_end": 252,
+      "quote": "\\texttt{u1\\_survival}: U(1) => photon as 1-form Goldstone",
+      "quote_normalized": "u1\\_survival: u(1) => photon as 1-form goldstone",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.u1_survival"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class TN: GaugeErasure.u1_survival EXISTS in lean_deps.json."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:7c6cbd62",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "7c6cbd62",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 253,
+      "tex_line_end": 253,
+      "quote": "\\texttt{erasure\\_dichotomy}: Survival iff Abelianness (exact dichotomy)",
+      "quote_normalized": "erasure\\_dichotomy: survival iff abelianness (exact dichotomy)",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.erasure_dichotomy"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class TN: GaugeErasure.erasure_dichotomy EXISTS in lean_deps.json."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:728354b4",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "728354b4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 254,
+      "tex_line_end": 254,
+      "quote": "\\texttt{sm\\_only\\_u1\\_survives}: Standard Model application (SU(3) x SU(2) x U(1))",
+      "quote_normalized": "sm\\_only\\_u1\\_survives: standard model application (su(3) x su(2) x u(1))",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.sm_only_u1_survives"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Class TN: GaugeErasure.sm_only_u1_survives EXISTS in lean_deps.json."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:3eefae44",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "3eefae44",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 257,
+      "tex_line_end": 258,
+      "quote": "The Lie-theoretic fact that the center of a non-Abelian Lie group is finite (discrete), previously axiomatized, is now proved as a theorem.",
+      "quote_normalized": "the lie-theoretic fact that the center of a non-abelian lie group is finite (discrete), previously axiomatized, is now proved as a theorem.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.non_abelian_gives_discrete"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "This sentence is supported by current Lean state: the GaugeErasure module has 0 axioms (grep + lean_deps.json both confirm); the previously axiomatized non_abelian_center_discrete axiom no longer exists. The corresponding fact is now packaged inside non_abelian_gives_discrete (or analogous theorem) without a standalone axiom. This sentence is consistent with the current axiom-count=0 state, though the new theorem name carrying the discreteness fact is non_abelian_gives_discrete (per lean_deps.json).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:formal-verification:bed40e86",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "formal-verification",
+        "quote_hash": "bed40e86",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "tex_line_start": 259,
+      "tex_line_end": 259,
+      "quote": "All results are proved from definitions.",
+      "quote_normalized": "all results are proved from definitions.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "No axioms remain in GaugeErasure module (verified via lean_deps.json + grep). Statement holds."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:0eb33aa8",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "0eb33aa8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 265,
+      "tex_line_end": 269,
+      "quote": "\\textbf{For analog gravity:} The acoustic metric program~\\cite{Unruh1981,Visser1998} and its extensions to BEC systems~\\cite{Steinhauer2016,Kolobov2021} can incorporate U(1) gauge structure through magnetohydrodynamic analogs, but cannot reproduce non-Abelian gauge dynamics through any fluid-based mechanism.",
+      "quote_normalized": "for analog gravity: the acoustic metric program~ and its extensions to bec systems~ can incorporate u(1) gauge structure through magnetohydrodynamic analogs, but cannot reproduce non-abelian gauge dynamics through any fluid-based mechanism.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Unruh1981"
+          },
+          {
+            "kind": "citation",
+            "target": "Visser1998"
+          },
+          {
+            "kind": "citation",
+            "target": "Steinhauer2016"
+          },
+          {
+            "kind": "citation",
+            "target": "Kolobov2021"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Unruh1981, Steinhauer2016, Kolobov2021 in registry with paper3 used_in. Visser1998 in registry but used_in does not include paper3. Non-blocking citation gap.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:9fccb531",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "9fccb531",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 271,
+      "tex_line_end": 275,
+      "quote": "\\textbf{For emergent gravity:} Programs seeking to derive gravity from condensed matter systems (e.g., the Akama-Diakonov-Wetterich tetrad mechanism~\\cite{Diakonov2011,Wetterich2004}) must route non-Abelian gauge structure around any hydrodynamic layer, not through it.",
+      "quote_normalized": "for emergent gravity: programs seeking to derive gravity from condensed matter systems (e.g., the akama-diakonov-wetterich tetrad mechanism~) must route non-abelian gauge structure around any hydrodynamic layer, not through it.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Diakonov2011"
+          },
+          {
+            "kind": "citation",
+            "target": "Wetterich2004"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Diakonov2011 and Wetterich2004 both in CITATION_REGISTRY but used_in does not include paper3 (registry-coverage gap, non-blocking).",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:f9ff83a5",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "f9ff83a5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 275,
+      "tex_line_end": 277,
+      "quote": "String-net condensation~\\cite{Wen2003} and Fermi-point topology~\\cite{Volovik2003} provide such bypass routes at the microscopic level.",
+      "quote_normalized": "string-net condensation~ and fermi-point topology~ provide such bypass routes at the microscopic level.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Wen2003"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2003"
+          }
+        ],
+        "completeness": "none"
+      },
+      "agent_notes": "Wen2003 and Volovik2003 both NOT in CITATION_REGISTRY. Non-blocking gap.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ]
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:b6b6c5c7",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "b6b6c5c7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 277,
+      "tex_line_end": 282,
+      "quote": "However, these routes are not unconstrained: the Drinfeld center Z(C) of any fusion category C always has topological central charge c equiv 0 (mod 8), meaning string-net condensation intrinsically produces non-chiral (doubled) topological order.",
+      "quote_normalized": "however, these routes are not unconstrained: the drinfeld center z(c) of any fusion category c always has topological central charge c equiv 0 (mod 8), meaning string-net condensation intrinsically produces non-chiral (doubled) topological order.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.DrinfeldDouble.center_is_doubled"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.DrinfeldDouble.nonabelian_gauge_still_doubled"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Drinfeld center c=0 (mod 8) \u2014 formalized in DrinfeldDouble.lean (per prior review)."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:5da42b7c",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "5da42b7c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 281,
+      "tex_line_end": 282,
+      "quote": "This categorical constraint is the formal foundation for the erasure mechanism proved here.",
+      "quote_normalized": "this categorical constraint is the formal foundation for the erasure mechanism proved here.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Categorical-foundation framing \u2014 meta-statement about preceding sentence; not separately verifiable."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:18822bf5",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "18822bf5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 284,
+      "tex_line_end": 286,
+      "quote": "\\textbf{For the Standard Model:} Of the three factors in SU(3)_c x SU(2)_L x U(1)_Y, only U(1) can survive hydrodynamization.",
+      "quote_normalized": "for the standard model: of the three factors in su(3)_c x su(2)_l x u(1)_y, only u(1) can survive hydrodynamization.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.sm_only_u1_survives"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "SM factorization SU(3)xSU(2)xU(1) and only U(1) survives \u2014 sm_only_u1_survives theorem."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:implications:fe8555fd",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "implications",
+        "quote_hash": "fe8555fd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "implications",
+      "tex_line_start": 286,
+      "tex_line_end": 287,
+      "quote": "After electroweak symmetry breaking, only the photon (from U(1)_EM) persists as a hydrodynamic mode.",
+      "quote_normalized": "after electroweak symmetry breaking, only the photon (from u(1)_em) persists as a hydrodynamic mode.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Post-EWSB photon comes from U(1)_EM \u2014 standard EW symmetry breaking textbook result."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:conclusion:f2407b33",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "conclusion",
+        "quote_hash": "f2407b33",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 293,
+      "tex_line_end": 295,
+      "quote": "We have demonstrated that non-Abelian gauge erasure by hydrodynamization is a universal structural theorem, not a dynamical accident.",
+      "quote_normalized": "we have demonstrated that non-abelian gauge erasure by hydrodynamization is a universal structural theorem, not a dynamical accident.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Restatement of main theorem framing."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:conclusion:356d008d",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "conclusion",
+        "quote_hash": "356d008d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 295,
+      "tex_line_end": 298,
+      "quote": "The mechanism is the Abelianness constraint on higher-form symmetries, which forces non-Abelian gauge theories to have only discrete center symmetries---producing domain walls rather than Goldstone bosons upon spontaneous breaking.",
+      "quote_normalized": "the mechanism is the abelianness constraint on higher-form symmetries, which forces non-abelian gauge theories to have only discrete center symmetries---producing domain walls rather than goldstone bosons upon spontaneous breaking.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.gauge_erasure"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.discrete_gives_domain_wall"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Mechanism summary: Abelianness constraint \u2192 discrete center \u2192 walls."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:conclusion:a92f039d",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "conclusion",
+        "quote_hash": "a92f039d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 298,
+      "tex_line_end": 300,
+      "quote": "The exact dichotomy (survival iff Abelian) and its application to the Standard Model are formally verified in Lean 4.",
+      "quote_normalized": "the exact dichotomy (survival iff abelian) and its application to the standard model are formally verified in lean 4.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.erasure_dichotomy"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GaugeErasure.sm_only_u1_survives"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Dichotomy + SM application both Lean-verified."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:conclusion:d2ac2ca1",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "conclusion",
+        "quote_hash": "d2ac2ca1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 300,
+      "tex_line_end": 302,
+      "quote": "This result establishes a sharp boundary for any program seeking to derive gauge theories from hydrodynamic or fluid-based systems.",
+      "quote_normalized": "this result establishes a sharp boundary for any program seeking to derive gauge theories from hydrodynamic or fluid-based systems.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Implications metaclaim; covered by Section VI."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:acknowledgments:61bb1bd9",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "acknowledgments",
+        "quote_hash": "61bb1bd9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "tex_line_start": 305,
+      "tex_line_end": 306,
+      "quote": "Formal verification performed using Lean 4 with the Mathlib library.",
+      "quote_normalized": "formal verification performed using lean 4 with the mathlib library.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Acknowledgment metaclaim."
+    },
+    {
+      "id": "sentence:paper3_gauge_erasure:acknowledgments:2f1cedf7",
+      "raw_id_parts": {
+        "paper": "paper3_gauge_erasure",
+        "section_slug": "acknowledgments",
+        "quote_hash": "2f1cedf7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "tex_line_start": 306,
+      "tex_line_end": 307,
+      "quote": "Computational analysis implemented in Python with formal cross-validation.",
+      "quote_normalized": "computational analysis implemented in python with formal cross-validation.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:35:40Z",
+      "tombstone": false,
+      "agent_notes": "Acknowledgment metaclaim."
     }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "F1",
+      "prior_run_date": "2026-04-03",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Duplicate Grozdanov2017 bibitem has been removed from paper_draft.tex. Line 329 now reads '% Grozdanov2017 removed -- duplicate of GrozdanovHofmanIqbal above'. No \\cite{Grozdanov2017} or \\bibitem{Grozdanov2017} present.",
+      "deterministic_recheck": {
+        "kind": "tex_grep_bibitem",
+        "target": "Grozdanov2017",
+        "prior_value": "present (line 327 bibitem + line 63 cite)",
+        "current_value": "absent (line 329 only contains removal comment)",
+        "command": "grep -n 'bibitem{Grozdanov2017}\\|cite{[^}]*Grozdanov2017' papers/paper3_gauge_erasure/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "F2",
+      "prior_run_date": "2026-04-03",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Sentence ar12 (lines 112-117) now correctly distinguishes SO from Spin: 'trivial for SO(2k+1), Z_2 for SO(2k); the double covers have richer centers (Z_2 for Spin(2k+1), Z_4 for Spin(4k+2), Z_2 x Z_2 for Spin(4k))'. Prior finding's recommended fix appears to have been applied. Marking candidate_for_supersession because semantic-correctness assessment is LLM-judgment.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "F3",
+      "prior_run_date": "2026-04-03",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Prior finding listed 10 missing citations including Grozdanov2017 (now removed from bib). Of remaining 9 (Visser1998, Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003), all 9 still NOT in CITATION_REGISTRY. Note: Visser1998 IS now in CITATION_REGISTRY (just used_in lacks paper3) \u2014 so the actual still-missing count is 8: Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003. Finding partially reproduces; citation-integrity attention still needed but reduced scope. Marked candidate_for_supersession because the prior finding's exact set has shifted.",
+      "deterministic_recheck": null
+    }
+  ],
+  "summary": {
+    "total_sentences": 79,
+    "by_type": {
+      "metaclaim": 6,
+      "qualitative": 48,
+      "numeric": 2,
+      "citation": 11,
+      "transition": 2,
+      "formal-claim": 5,
+      "theorem-ref": 5
+    },
+    "by_verdict": {
+      "TRANSITION": 8,
+      "PASS": 57,
+      "FAIL": 1,
+      "WARN": 11,
+      "INFO": 2
+    },
+    "by_finding_class": {
+      "IA": 1,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 3,
+    "non_reproducing_auto_closed": 1,
+    "non_reproducing_candidates": 2,
+    "agent_text": "79 sentences | 57 PASS | 0 UNGROUNDED | 1 FAIL | 11 WARN | 2 INFO | 8 TRANSITION | 3 prior findings reconciled (1 auto-closed, 2 candidates)"
   },
-
-  "findings_summary": [
+  "blocking_issues": [
     {
-      "id": "F1",
-      "severity": "MODERATE",
-      "category": "citation",
-      "description": "DUPLICATE BIBLIOGRAPHY ENTRY: GrozdanovHofmanIqbal (bibitem line 321) and Grozdanov2017 (bibitem line 327) are identical references -- same authors, journal, volume, page, year (Phys. Rev. D 95, 096003 (2017)).",
-      "recommendation": "Remove Grozdanov2017 bibitem. Change \\cite{HofmanIqbal,Grozdanov2017} on line 63 to \\cite{HofmanIqbal,GrozdanovHofmanIqbal}."
+      "id": "block:1",
+      "summary": "Abstract states 'GaugeErasure.lean (12 theorems, zero axioms, zero sorry)' but live count is 11 theorems, 0 axioms, 0 sorry. Theorem count off by 1 (Class IA).",
+      "sentences": [
+        "sentence:paper3_gauge_erasure:abstract:561c87cd"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "nb:1",
+      "summary": "8 bibliography entries still missing from CITATION_REGISTRY: Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003. (Reduced from prior 10; Grozdanov2017 removed as duplicate; Visser1998 now in registry.)",
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
     },
     {
-      "id": "F2",
-      "severity": "MODERATE",
-      "category": "physics",
-      "description": "Lines 113-114 incorrectly attribute center subgroups to SO(n) when they belong to Spin(n). SO(2k+1) has trivial center for k >= 1; Z_2 is the center of Spin(2k+1). SO(4k) has center Z_2; Z_2 x Z_2 is the center of Spin(4k).",
-      "recommendation": "Replace SO(2k+1), SO(4k) with Spin(2k+1), Spin(4k) or correct the center values for SO groups. The main theorem is unaffected since all centers remain discrete."
+      "id": "nb:2",
+      "summary": "Three existing CITATION_REGISTRY entries (Visser1998, LevinWen2006, Diakonov2011, Wetterich2004) cited by paper3 but used_in lists do not include paper3. Registry-coverage update needed.",
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
     },
     {
-      "id": "F3",
-      "severity": "LOW",
-      "category": "citation",
-      "description": "10 of 16 bibliography entries are missing from CITATION_REGISTRY: Visser1998, Wen2003, GrozdanovHofmanIqbal, HofmanIqbal, Grozdanov2017, Torrieri2020, NastaseSonnenschein2025, GKSW2015, Adler2024, Volovik2003.",
-      "recommendation": "Add all (minus the duplicate Grozdanov2017) to CITATION_REGISTRY with used_in including paper3."
-    },
-    {
-      "id": "F4",
-      "severity": "LOW",
-      "category": "citation",
-      "description": "Three existing registry entries (LevinWen2006, Diakonov2011, Wetterich2004) cite paper3 but their used_in lists do not include paper3.",
-      "recommendation": "Add 'papers/paper3_gauge_erasure/paper_draft.tex' to used_in for all three."
-    },
-    {
-      "id": "F5",
-      "severity": "LOW",
-      "category": "provenance",
-      "description": "PAPER_DEPENDENCIES lists platforms: ['Steinhauer'] for paper3, but the paper performs no platform-specific computations. Steinhauer2016 and Kolobov2021 appear only as general references in the Implications section.",
-      "recommendation": "Change platforms to [] in PAPER_DEPENDENCIES for paper3."
+      "id": "nb:3",
+      "summary": "PAPER_DEPENDENCIES['paper3_gauge_erasure']['platforms'] = ['Steinhauer'], but paper performs no platform-specific computations. Steinhauer2016 + Kolobov2021 appear only as general references in the Implications section. Reproduces prior F5; should be set to [].",
+      "gate": "Gate2_FormulaProvenance",
+      "finding_class": null
     }
   ]
 }

@@ -32,7 +32,7 @@ modules in a proof assistant, compute the Drinfeld centers of $\mathrm{Vec}_{\ma
 establish $Z(\mathrm{Vec}_G)$ as a braided monoidal category via Mathlib's
 infrastructure. All modules referenced in this paper are verified by
 \texttt{lake build} with zero \texttt{sorry}. The broader project comprises
-1179~theorems across 79~Lean~4 modules (zero axioms), with 307
+4049~theorems across 170~Lean~4 modules (1 axiom), with 322
 filled by the Aristotle automated prover.
 \end{abstract}
 
@@ -79,7 +79,7 @@ where $B-L$ is baryon minus lepton number and $Y$ is weak hypercharge
 $X \bmod 4$ determines the anomaly contribution.
 
 All six SM fermion types have \emph{odd} $\mathbb{Z}_4$ charge ($X \equiv 1 \pmod{4}$),
-verified exhaustively in \texttt{SMFermionData.lean} (19 theorems, zero sorry).
+verified exhaustively in \texttt{SMFermionData.lean} (48 theorems, zero sorry).
 Each left-handed Weyl component with odd charge contributes $+1$ to the
 anomaly index valued in $\mathbb{Z}_{16}$.
 
@@ -136,7 +136,7 @@ Together:
 $N_f = 3$ is the minimal nontrivial solution.
 
 The bridge from fermion content to generation constraint is formalized in
-\texttt{WangBridge.lean} (9 theorems, zero sorry): the theorem
+\texttt{WangBridge.lean} (10 theorems, zero sorry): the theorem
 \texttt{fermion\_count\_gives\_central\_charge} derives $c_- = 8$ from
 \texttt{SMFermionData.total\_components\_with\_nu\_R}, and
 \texttt{central\_charge\_fractional\_without\_nu\_R} proves that 15/2 is
@@ -166,7 +166,7 @@ We define $\mathrm{Vec}_G$ as \texttt{GradedObject (Additive G) (ModuleCat k)}
 using Mathlib's graded object infrastructure. The monoidal structure (Day convolution)
 is proved via typeclass synthesis: \texttt{MonoidalCategory (VecG\_Cat k G)}
 synthesizes from Mathlib's \texttt{GradedObject.monoidalCategory} instance
-(\texttt{VecGMonoidal.lean}, 12 theorems, zero sorry).
+(\texttt{VecGMonoidal.lean}, 11 theorems, zero sorry).
 
 The Drinfeld center $Z(\mathrm{Vec}_G)$ is then automatically a braided
 monoidal category via Mathlib's \texttt{Center} construction. The braided
@@ -195,7 +195,7 @@ $\varepsilon$ (fermion) & 1 & $-1$ & 1 \\
 Fusion rules ($\mathbb{Z}/2 \times \mathbb{Z}/2$ group), associativity, and
 commutativity are proved exhaustively. The toric code signature
 $R(e,m) = -1$ (mutual $\pi$-statistics) is verified as
-\texttt{braiding\_em\_is\_minus\_one}. All 25 theorems in
+\texttt{braiding\_em\_is\_minus\_one}. All 52 theorems in
 \texttt{ToricCodeCenter.lean} are proved without sorry.
 
 \subsection{Non-abelian center: $Z(\mathrm{Vec}_{S_3})$}
@@ -225,13 +225,13 @@ $\{(123),\ldots\}$ & $\omega^2$ & $C_3$ & 2 & 4 \\
 The non-abelian fusion rule $A_3 \otimes A_3 = A_1 \oplus A_2 \oplus A_3$
 (dimension check: $4 = 1 + 1 + 2$) is verified. The global dimension
 $D^2 = 36 = |S_3|^2$ matches the Drinfeld double formula.
-All 22 theorems in \texttt{S3CenterAnyons.lean} are proved without sorry.
+All 55 theorems in \texttt{S3CenterAnyons.lean} are proved without sorry.
 
 \subsection{Concrete equivalence: $Z(\mathrm{Vec}_{\mathbb{Z}/2}) \leftrightarrow D(\mathbb{Z}/2)$}
 
 We verify the concrete correspondence between the 4 toric code anyons and the
 4 simple $D(\mathbb{Z}/2)$-modules: the bijection preserves grading, character,
-fusion rules, and braiding phases. All 10 theorems in
+fusion rules, and braiding phases. All 30 theorems in
 \texttt{CenterEquivalenceZ2.lean} are proved by exhaustive case analysis (zero sorry).
 
 \subsection{D(G) as a $k$-algebra}
@@ -242,7 +242,7 @@ the twisted convolution multiplication, unit laws, associativity
 distributivity (\texttt{DrinfeldDoubleRing.lean}). A newtype wrapper \texttt{DG}
 avoids conflict with Pi's pointwise \texttt{Mul} instance. The Hopf algebra
 structure---coproduct, counit, and involutive antipode---is verified in
-\texttt{DrinfeldEquivalence.lean} (12 theorems, zero sorry).
+\texttt{DrinfeldEquivalence.lean} (9 theorems, zero sorry).
 
 \begin{figure}[t]
 \centering
@@ -310,10 +310,10 @@ algebra structure (coproduct, counit, involutive antipode), establishing the
 algebraic foundation for $Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$.
 \end{enumerate}
 
-The formal verification comprises 1179 theorems across 79 Lean~4
-modules, with zero axioms. All modules referenced
-in this paper have zero \texttt{sorry}; 307 theorems are filled by the
-Aristotle automated prover (304 machine-proved, 3 manual) across 35+ runs.
+The formal verification comprises 4049 theorems across 170 Lean~4
+modules, with 1 axiom. All modules referenced
+in this paper have zero \texttt{sorry}; 322 theorems are filled by the
+Aristotle automated prover across 44 runs.
 The broader project includes the first Hopf algebra, quantum group fusion
 rules, and modular tensor category definitions in any proof assistant.
 
@@ -326,7 +326,7 @@ gauge emergence through Mathlib's verified infrastructure, establishing a
 formally verified path from topological order to gauge theory.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v4.28.0, Mathlib \texttt{8f9d9cff}).
+Lean~4 proofs verified by \texttt{lake build} (v4.29.0, Mathlib \texttt{8850ed93}).
 Automated proofs by the Aristotle theorem prover (Harmonic).
 \end{acknowledgments}
 

@@ -1,252 +1,4096 @@
 {
   "paper": "paper18_doublon_gate",
-  "review_date": "2026-04-23",
-  "overall_status": "issues_found",
-  "summary": "3 FAIL, 4 WARN, 21 PASS. Paper does NOT compile clean despite user-reported status: 35 undefined-control-sequence errors in paper_draft.log (primarily \\ket and \\totaltests). All Lean theorem references resolve, all 8 bibliography entries are in CITATION_REGISTRY, and all verifiable structural/numerical claims match the FermiHubbardDimer.lean source.",
-  "blocking_issues": [
-    "FAIL-1: \\ket{...} command is used ~20 times but never defined (missing \\usepackage{physics} or \\usepackage{braket} or local \\newcommand{\\ket}). LaTeX log shows 33 of 35 'Undefined control sequence' errors from \\ket — the paper will render with missing math content.",
-    "FAIL-2: \\totaltests macro is referenced at paper lines 120 and 460 but is NOT defined in docs/counts.tex. The canonical counts pipeline (scripts/update_counts.py) emits \\testfiles (file count), not \\totaltests (individual pytest count). Paper body will render '~project tests' with nothing filled in.",
-    "FAIL-3: Paper claims '139 theorems in FermiHubbardDimer.lean' (abstract line 44, Section 4 narrative, Table 1 total, Section 6 line 554). Actual count is 141 top-level theorem+lemma declarations (all 'theorem' keyword, zero 'lemma'). The Section I breakdown 15+10+20+21+39+12+17+5=139 does not sum to 141 and does not match the per-wave distribution in the source (W2=32, W3=1, W4=8, W5=10, W5r2=12, W6A=20, W6B=7, W6C=11, W6r2=7, W7=10, W7r2=9, W6def=8, W8=6)."
+  "review_date": "2026-04-25T07:42:01Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+  "sentences": [
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:12a359aa",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "12a359aa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 31,
+      "tex_line_end": 35,
+      "quote": "We report what we believe to be the first end-to-end formalization of a geometric quantum gate in Lean~4; we have not located a comparable Berry-phase-gate formalization in the Isabelle/HOL AFP, Coq (QuantumLib / QWIRE), or Agda quantum libraries, and invite correction if prior work exists.",
+      "quote_normalized": "we report what we believe to be the first end-to-end formalization of a geometric quantum gate in lean~4; we have not located a comparable berry-phase-gate formalization in the isabelle/hol afp, coq (quantumlib / qwire), or agda quantum libraries, and invite correction if prior work exists.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedged precedence claim with explicit caveat ('we believe', 'invite correction'). Verifiable in principle only via systematic AFP/Coq/Agda search; not mechanically resolvable. Soft hedge accepted.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:96cb4405",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "96cb4405",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 35,
+      "tex_line_end": 38,
+      "quote": "The target is the doublon geometric SWAP gate recently demonstrated by Kiefer~\\textit{et~al.} (Nature~2026, arXiv:2507.22112) in a Fermi-Hubbard dimer with dynamical optical lattices.",
+      "quote_normalized": "the target is the doublon geometric swap gate recently demonstrated by kiefer~et~al. (nature~2026, arxiv:2507.22112) in a fermi-hubbard dimer with dynamical optical lattices.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Kiefer2026 in CITATION_REGISTRY; arXiv:2507.22112 matches registry entry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:99a0cef4",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "99a0cef4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 47,
+      "quote": "Working entirely within Lean~4 + Mathlib, we formalize the exact $3\\times 3$ singlet-sector Hamiltonian, its charge-conjugation (BDI) symmetry protection, the explicit closed-form spectrum and dark state, the geometric SWAP operator as a real-Householder reflection $\\USWAP = I - (2/\\text{gap}^2)\\,|d\\rangle\\langle d|$, and the two necessary finite-dimensional conditions for a Berry-phase interpretation of the gate action: the dark state acquires a $-1$ sign on a $\\pi$-sweep of the mixing angle, and the Hamiltonian expectation value vanishes pointwise along the zero-energy path (so the integrated dynamical phase vanishes for any continuous extension).",
+      "quote_normalized": "working entirely within lean~4 + mathlib, we formalize the exact $3\\times 3$ singlet-sector hamiltonian, its charge-conjugation (bdi) symmetry protection, the explicit closed-form spectrum and dark state, the geometric swap operator as a real-householder reflection $\\uswap = i - (2/gap^2)\\,|d\\rangle\\langle d|$, and the two necessary finite-dimensional conditions for a berry-phase interpretation of the gate action: the dark state acquires a $-1$ sign on a $\\pi$-sweep of the mixing angle, and the hamiltonian expectation value vanishes pointwise along the zero-energy path (so the integrated dynamical phase vanishes for any continuous extension).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_pi_sign_flip"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_dynamical_phase_vanishes"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Meta-summary of paper deliverables; each named result resolves to a Lean theorem.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:674f880c",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "674f880c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 48,
+      "tex_line_end": 50,
+      "quote": "We also ship the Tier-2 algebraic scaling theorem that distinguishes direct exchange (linear in $U$) from superexchange ($4t^2/U$) with an explicit remainder bound.",
+      "quote_normalized": "we also ship the tier-2 algebraic scaling theorem that distinguishes direct exchange (linear in $u$) from superexchange ($4t^2/u$) with an explicit remainder bound.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_hasDerivAt_at_zero"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.J_superexchange_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both theorems exist in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:64ae5352",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "64ae5352",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 50,
+      "tex_line_end": 54,
+      "quote": "The complete formalization lives in a single module (\\texttt{FermiHubbardDimer.lean}), consists of \\fhdTotal{}~theorems (across the 19 internal sections), with zero sorry, zero new axioms, and a Python cross-validation layer covering every theorem.",
+      "quote_normalized": "the complete formalization lives in a single module (fermihubbarddimer.lean), consists of \\fhdtotal{}~theorems (across the 19 internal sections), with zero sorry, zero new axioms, and a python cross-validation layer covering every theorem.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer (module-level count)",
+            "computed_value": "143",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "\\fhdTotal in counts.tex = 143; grep '^theorem ' FermiHubbardDimer.lean = 143 (also 0 'lemma '). Sorry count = 0. Project axiom count = 1 (gapped_interface_axiom in SPTClassification.lean) — paper qualifies as 'zero new axioms' which is correct in scope of this formalization.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:b2d5eeed",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "b2d5eeed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 54,
+      "tex_line_end": 58,
+      "quote": "The deliberate scope boundary is Layer~2 of the deep-research target hierarchy: all results are finite-dimensional linear algebra over Mathlib's existing \\texttt{Matrix}, \\texttt{EuclideanSpace}, and \\texttt{OrthonormalBasis} API.",
+      "quote_normalized": "the deliberate scope boundary is layer~2 of the deep-research target hierarchy: all results are finite-dimensional linear algebra over mathlib's existing matrix, euclideanspace, and orthonormalbasis api.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-boundary statement; consistent with rest of paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:9dcc0498",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "9dcc0498",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 58,
+      "tex_line_end": 60,
+      "quote": "Full adiabatic holonomy (continuous parameterized eigenvector bundles, Berry connection, Kato's theorem) is explicitly deferred to future work.",
+      "quote_normalized": "full adiabatic holonomy (continuous parameterized eigenvector bundles, berry connection, kato's theorem) is explicitly deferred to future work.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope disclaimer; matches Section 6 (Target B) and Conclusion.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:abstract:b6dca090",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "abstract",
+        "quote_hash": "b6dca090",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 60,
+      "tex_line_end": 64,
+      "quote": "The formalization demonstrates that the Kiefer \\textit{et~al.} gate mechanism is not, at its core, a fact about connections on line bundles---it is the observation that $\\cos(\\pi) = -1$ composed with an explicit rank-1 Householder reflection on a parameterized real symmetric $3\\times 3$ matrix.",
+      "quote_normalized": "the formalization demonstrates that the kiefer et~al. gate mechanism is not, at its core, a fact about connections on line bundles---it is the observation that $\\cos(\\pi) = -1$ composed with an explicit rank-1 householder reflection on a parameterized real symmetric $3\\times 3$ matrix.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Interpretive summary; the constituent claims (cos(pi)=-1 sign flip via W8a; rank-1 Householder reflection via U_SWAP_singlet) are formalized.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:ea6e24f2",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "ea6e24f2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 73,
+      "tex_line_end": 76,
+      "quote": "Berry phases underlie one of the most experimentally compelling classes of quantum gates: \\emph{geometric} gates, whose unitary action depends only on the topology of a closed path in parameter space, not on the traversal speed or duration~\\cite{Berry1984,Zanardi1999}.",
+      "quote_normalized": "berry phases underlie one of the most experimentally compelling classes of quantum gates: geometric gates, whose unitary action depends only on the topology of a closed path in parameter space, not on the traversal speed or duration~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Berry1984"
+          },
+          {
+            "kind": "citation",
+            "target": "Zanardi1999"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both bibkeys in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:b204abec",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "b204abec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 76,
+      "tex_line_end": 80,
+      "quote": "Geometric gates promise intrinsic robustness against control-pulse fluctuations---a property that has motivated sustained experimental effort from superconducting qubits~\\cite{Leek2007} through trapped ions and neutral atoms to, most recently, dynamical optical lattices.",
+      "quote_normalized": "geometric gates promise intrinsic robustness against control-pulse fluctuations---a property that has motivated sustained experimental effort from superconducting qubits~ through trapped ions and neutral atoms to, most recently, dynamical optical lattices.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Leek2007"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Leek2007 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:4ba69058",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "4ba69058",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 82,
+      "tex_line_end": 84,
+      "quote": "In April~2026, Kiefer~\\textit{et~al.}~\\cite{Kiefer2026} reported the first neutral-atom realization of a geometric SWAP gate in a Fermi-Hubbard dimer.",
+      "quote_normalized": "in april~2026, kiefer~et~al.~ reported the first neutral-atom realization of a geometric swap gate in a fermi-hubbard dimer.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Kiefer2026 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:2b41c39f",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "2b41c39f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 84,
+      "tex_line_end": 86,
+      "quote": "The experiment uses ${}^{40}$K atoms in a dynamical two-site superlattice, and drives a closed loop in the $(t, \\Delta)$ control-parameter plane (tunnel coupling, inter-well bias).",
+      "quote_normalized": "the experiment uses ${}^{40}$k atoms in a dynamical two-site superlattice, and drives a closed loop in the $(t, \\delta)$ control-parameter plane (tunnel coupling, inter-well bias).",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Restatement of cited experiment.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:0f78d515",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "0f78d515",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 86,
+      "tex_line_end": 91,
+      "quote": "At the end of the loop, the dark state of the singlet sector---which remains at zero energy for the entire cycle---has acquired a $-1$ sign, implementing \\textbf{SWAP} on the computational subspace $\\{\\ket{\\uparrow\\downarrow}, \\ket{\\downarrow\\uparrow}\\}$ with loss-corrected amplitude fidelity $\\sim 99.9\\%$.",
+      "quote_normalized": "at the end of the loop, the dark state of the singlet sector---which remains at zero energy for the entire cycle---has acquired a $-1$ sign, implementing swap on the computational subspace $\\{\\ket{\\uparrow\\downarrow}, \\ket{\\downarrow\\uparrow}\\}$ with loss-corrected amplitude fidelity $\\sim 99.9\\%$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "The 99.9% fidelity is reported from Kiefer2026; not independently recomputed here. Verifiable only by reading source.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:450929d9",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "450929d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 91,
+      "tex_line_end": 93,
+      "quote": "The robustness is striking: the gate is $4\\times$ less sensitive to lattice imperfections than the comparable superexchange gate~\\cite{Kiefer2026}.",
+      "quote_normalized": "the robustness is striking: the gate is $4\\times$ less sensitive to lattice imperfections than the comparable superexchange gate~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Quantitative robustness claim cited to source. The paper's Section 4 separately discusses a derivative-ratio (factor-of-2) interpretation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:ccb00f90",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "ccb00f90",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 95,
+      "tex_line_end": 96,
+      "quote": "This paper formalizes the algebraic core of the Kiefer~\\textit{et~al.} mechanism in the Lean~4 proof assistant~\\cite{Lean4,Mathlib}.",
+      "quote_normalized": "this paper formalizes the algebraic core of the kiefer~et~al. mechanism in the lean~4 proof assistant~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Lean4"
+          },
+          {
+            "kind": "citation",
+            "target": "Mathlib"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both bibkeys in CITATION_REGISTRY. Note: revtex4-2 natbib emits a forward-reference 'undefined on first pass' warning (cosmetic, resolves on rerun).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:126f97c5",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "126f97c5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 96,
+      "tex_line_end": 100,
+      "quote": "The target is deliberately scoped: we formalize the finite-dimensional matrix content---the Hamiltonian, the dark state, the SWAP operator, the sign flip, the dynamical-phase-vanishes statement---without touching the adiabatic theorem, fiber bundles, or connections on vector bundles.",
+      "quote_normalized": "the target is deliberately scoped: we formalize the finite-dimensional matrix content---the hamiltonian, the dark state, the swap operator, the sign flip, the dynamical-phase-vanishes statement---without touching the adiabatic theorem, fiber bundles, or connections on vector bundles.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope statement consistent with formalization.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:8ab78b33",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "8ab78b33",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 100,
+      "tex_line_end": 104,
+      "quote": "The result is the \\emph{first end-to-end formalization of a geometric quantum gate in Lean~4}; we have not located comparable prior work in the Isabelle/HOL AFP, Coq (QuantumLib / QWIRE), or Agda quantum libraries.",
+      "quote_normalized": "the result is the first end-to-end formalization of a geometric quantum gate in lean~4; we have not located comparable prior work in the isabelle/hol afp, coq (quantumlib / qwire), or agda quantum libraries.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedged precedence claim. Same caveat as abstract — not mechanically resolvable. Hedge ('we have not located') accepted.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:4523b0a1",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "4523b0a1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 106,
+      "tex_line_end": 111,
+      "quote": "Our scope choice is informed by the deep-research landscape review (Lit-Search/Phase-5t, December~2025), which identified a three-layer formalization hierarchy: Layer~1 (explicit doublon matrix computation), Layer~2 ($\\mathbb{Z}_2$ Berry-phase quantization theorem for real-symmetric matrices), and Layer~3 (discrete Berry phase gauge-invariance).",
+      "quote_normalized": "our scope choice is informed by the deep-research landscape review (lit-search/phase-5t, december~2025), which identified a three-layer formalization hierarchy: layer~1 (explicit doublon matrix computation), layer~2 ($\\mathbb{z}_2$ berry-phase quantization theorem for real-symmetric matrices), and layer~3 (discrete berry phase gauge-invariance).",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Internal-research provenance statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:e6abaa1d",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "e6abaa1d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 111,
+      "tex_line_end": 114,
+      "quote": "This work completes Layer~1 with substantial Layer~2 quantitative scaling content, and leaves the full Berry-connection holonomy formalization (Target~B in our internal roadmap) for future work.",
+      "quote_normalized": "this work completes layer~1 with substantial layer~2 quantitative scaling content, and leaves the full berry-connection holonomy formalization (target~b in our internal roadmap) for future work.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope summary; consistent with Section 6.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:028082cc",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "028082cc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 116,
+      "tex_line_end": 119,
+      "quote": "(i)~A Lean~4 formalization of the Fermi-Hubbard dimer singlet-sector spectrum, covering the $3\\times 3$ charge-conjugation Hamiltonian at zero detuning, the exact dark state, and the bright-state eigenvectors.",
+      "quote_normalized": "(i)~a lean~4 formalization of the fermi-hubbard dimer singlet-sector spectrum, covering the $3\\times 3$ charge-conjugation hamiltonian at zero detuning, the exact dark state, and the bright-state eigenvectors.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_in_kernel"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_U0_brightVecPlus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_U0_brightVecMinus"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:26c8ebef",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "26c8ebef",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 119,
+      "tex_line_end": 124,
+      "quote": "(ii)~A formal proof (to our knowledge the first in any interactive proof assistant) of the discrete-step statement underlying the Kiefer \\textit{et~al.} SWAP gate: $\\darkstate(\\theta + \\pi) = -\\darkstate(\\theta)$ with zero dynamical phase.",
+      "quote_normalized": "(ii)~a formal proof (to our knowledge the first in any interactive proof assistant) of the discrete-step statement underlying the kiefer et~al. swap gate: $\\darkstate(\\theta + \\pi) = -\\darkstate(\\theta)$ with zero dynamical phase.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_pi_sign_flip"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_dynamical_phase_vanishes"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.geometric_phase_minus_one_on_pi_loop"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both component theorems present. 'First in any IPA' is a hedged precedence claim ('to our knowledge').",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:6360b912",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "6360b912",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 124,
+      "tex_line_end": 126,
+      "quote": "(iii)~A Mathlib-native construction of the SWAP operator as a real Householder reflection on \\texttt{EuclideanSpace}, with canonical-form unitarity via \\texttt{Matrix.unitaryGroup}.",
+      "quote_normalized": "(iii)~a mathlib-native construction of the swap operator as a real householder reflection on euclideanspace, with canonical-form unitarity via matrix.unitarygroup.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet_mem_unitaryGroup"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:92d52caa",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "92d52caa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 126,
+      "tex_line_end": 129,
+      "quote": "(iv)~A quantitative direct-exchange-vs-superexchange scaling theorem with explicit remainder bound $|J(t,U) - 4t^2/U| \\le 16t^4/U^3$ for $U \\ge 4|t| > 0$.",
+      "quote_normalized": "(iv)~a quantitative direct-exchange-vs-superexchange scaling theorem with explicit remainder bound $|j(t,u) - 4t^2/u| \\le 16t^4/u^3$ for $u \\ge 4|t| > 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.J_superexchange_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem hypothesis (4|t| ≤ U) and conclusion match prose exactly.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:5fee83b4",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "5fee83b4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 129,
+      "tex_line_end": 132,
+      "quote": "(v)~A Python cross-validation layer (\\texttt{src/experimental/doublon\\_gate.py}, \\totaltests{}~project tests) exercising every Lean theorem against random parameter grids and numpy exact diagonalization.",
+      "quote_normalized": "(v)~a python cross-validation layer (src/experimental/doublon\\_gate.py, \\totaltests{}~project tests) exercising every lean theorem against random parameter grids and numpy exact diagonalization.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "\\totaltests = 2884 (counts.tex). Phrase '\\totaltests~project tests' is project-wide test count — not the per-paper-18 cross-validation count. Slightly loose but technically PASS (the macro is canonical).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:2362c9c7",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "2362c9c7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 134,
+      "tex_line_end": 138,
+      "quote": "The gate's \\emph{adiabatic} interpretation---the mapping from a closed loop in continuous parameter space to the discrete-step statement we prove---is a separate layer of the argument (Kato's adiabatic theorem, Berry's geometric phase as a connection 1-form).",
+      "quote_normalized": "the gate's adiabatic interpretation---the mapping from a closed loop in continuous parameter space to the discrete-step statement we prove---is a separate layer of the argument (kato's adiabatic theorem, berry's geometric phase as a connection 1-form).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-boundary disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:654fe4bb",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "654fe4bb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 138,
+      "tex_line_end": 139,
+      "quote": "None of that machinery exists in current Mathlib.",
+      "quote_normalized": "none of that machinery exists in current mathlib.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Mathlib state assertion (true at pinned rev 8850ed93).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:intro:f52dc026",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "intro",
+        "quote_hash": "f52dc026",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 2,
+      "tex_line_start": 139,
+      "tex_line_end": 143,
+      "quote": "Our claim is strictly the finite-dimensional algebraic core: under the assumption that the continuous dynamics reduces to the discrete dark-state evolution (an assumption verified in~\\cite{Kiefer2026} experimentally and, in general, by Kato's theorem), the gate action is exactly SWAP.",
+      "quote_normalized": "our claim is strictly the finite-dimensional algebraic core: under the assumption that the continuous dynamics reduces to the discrete dark-state evolution (an assumption verified in~ experimentally and, in general, by kato's theorem), the gate action is exactly swap.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Hypothesis-disclosure-style scope statement; the externalized assumption is named in prose.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:26f0215c",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "26f0215c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 149,
+      "tex_line_end": 150,
+      "quote": "The two-site Fermi-Hubbard dimer at half filling has a six-dimensional two-particle Hilbert space.",
+      "quote_normalized": "the two-site fermi-hubbard dimer at half filling has a six-dimensional two-particle hilbert space.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard Fermi-Hubbard combinatorics statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:02302cf9",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "02302cf9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 150,
+      "tex_line_end": 153,
+      "quote": "We work in the site basis $\\{\\ket{\\uparrow\\uparrow}, \\ket{\\uparrow\\!\\downarrow, 0}, \\ket{\\uparrow,\\downarrow}, \\ket{\\downarrow,\\uparrow}, \\ket{0, \\uparrow\\!\\downarrow}, \\ket{\\downarrow\\downarrow}\\}$.",
+      "quote_normalized": "we work in the site basis $\\{\\ket{\\uparrow\\uparrow}, \\ket{\\uparrow\\!\\downarrow, 0}, \\ket{\\uparrow,\\downarrow}, \\ket{\\downarrow,\\uparrow}, \\ket{0, \\uparrow\\!\\downarrow}, \\ket{\\downarrow\\downarrow}\\}$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Basis-choice declaration.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:c6f60e82",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "c6f60e82",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 153,
+      "tex_line_end": 165,
+      "quote": "Fermionic anti-symmetry (Pauli exclusion + hopping sign conventions) gives the full Hamiltonian~\\cite{Kiefer2026} [equation block].",
+      "quote_normalized": "fermionic anti-symmetry (pauli exclusion + hopping sign conventions) gives the full hamiltonian~ [equation block].",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_isSymm"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "The 6x6 Hamiltonian is defined in Lean as Matrix (Fin 6) (Fin 6) ℝ; Kiefer2026 cited.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:5ca27b4b",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "5ca27b4b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 166,
+      "tex_line_end": 167,
+      "quote": "where $t$ is the tunnel coupling, $\\Delta$ is the inter-well detuning, and $U$ is the on-site Hubbard repulsion.",
+      "quote_normalized": "where $t$ is the tunnel coupling, $\\delta$ is the inter-well detuning, and $u$ is the on-site hubbard repulsion.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Variable definitions.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:a6fd3376",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "a6fd3376",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 167,
+      "tex_line_end": 171,
+      "quote": "The triplet sector $\\{\\ket{\\uparrow\\uparrow}, (\\ket{\\uparrow,\\downarrow}+\\ket{\\downarrow,\\uparrow})/\\sqrt{2}, \\ket{\\downarrow\\downarrow}\\}$ decouples at zero energy for all parameters (Pauli exclusion + anti-symmetric hopping cancellation), leaving the nontrivial dynamics in the singlet sector.",
+      "quote_normalized": "the triplet sector $\\{\\ket{\\uparrow\\uparrow}, (\\ket{\\uparrow,\\downarrow}+\\ket{\\downarrow,\\uparrow})/\\sqrt{2}, \\ket{\\downarrow\\downarrow}\\}$ decouples at zero energy for all parameters (pauli exclusion + anti-symmetric hopping cancellation), leaving the nontrivial dynamics in the singlet sector.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.triplet_plus_zero"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.triplet_zero_zero"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.triplet_minus_zero"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "T10a/T10b/T10c triplet zero theorems exist (lines 187/199/209 per prior review).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:8ad1d55b",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "8ad1d55b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 173,
+      "tex_line_end": 185,
+      "quote": "In the symmetry-adapted singlet basis $\\{\\Dplus, \\Dminus, \\sstate\\}$ where $\\Dplus = (\\ket{\\uparrow\\!\\downarrow,0}+\\ket{0,\\uparrow\\!\\downarrow})/\\sqrt{2}$, $\\Dminus = (\\ket{\\uparrow\\!\\downarrow,0}-\\ket{0,\\uparrow\\!\\downarrow})/\\sqrt{2}$, $\\sstate = (\\ket{\\uparrow,\\downarrow}-\\ket{\\downarrow,\\uparrow})/\\sqrt{2}$, the reduced Hamiltonian is [equation block].",
+      "quote_normalized": "in the symmetry-adapted singlet basis $\\{\\dplus, \\dminus, \\sstate\\}$ where $\\dplus = (\\ket{\\uparrow\\!\\downarrow,0}+\\ket{0,\\uparrow\\!\\downarrow})/\\sqrt{2}$, $\\dminus = (\\ket{\\uparrow\\!\\downarrow,0}-\\ket{0,\\uparrow\\!\\downarrow})/\\sqrt{2}$, $\\sstate = (\\ket{\\uparrow,\\downarrow}-\\ket{\\downarrow,\\uparrow})/\\sqrt{2}$, the reduced hamiltonian is [equation block].",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "3x3 H_singlet matrix matches Lean def at line 112+ region.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:a893cd3e",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "a893cd3e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 186,
+      "tex_line_end": 186,
+      "quote": "The gate operates at $U = 0$.",
+      "quote_normalized": "the gate operates at $u = 0$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Configuration statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:6c62b1e9",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "6c62b1e9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 186,
+      "tex_line_end": 188,
+      "quote": "At $\\Delta = 0$, $\\Dminus$ decouples from the rest of the singlet block, leaving a 2$\\times$2 symmetric sector whose charpoly is exactly $\\lambda^2 - U\\lambda - 4t^2$.",
+      "quote_normalized": "at $\\delta = 0$, $\\dminus$ decouples from the rest of the singlet block, leaving a 2$\\times$2 symmetric sector whose charpoly is exactly $\\lambda^2 - u\\lambda - 4t^2$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.charpoly_H_singlet"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Lean has charpoly_H_singlet (W4) and charpoly_H_singlet_Δ0_factored (line 2115) which gives (X-U)(X^2-UX-4t^2).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:3bccedfc",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "3bccedfc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 191,
+      "tex_line_end": 193,
+      "quote": "The 3$\\times$3 and 6$\\times$6 Hamiltonians are defined as explicit \\texttt{Matrix (Fin~3) (Fin~3)~$\\mathbb{R}$} and \\texttt{Matrix (Fin~6) (Fin~6)~$\\mathbb{R}$} values.",
+      "quote_normalized": "the 3$\\times$3 and 6$\\times$6 hamiltonians are defined as explicit \\texttt{matrix (fin~3) (fin~3)~$\\mathbb{r}$} and \\texttt{matrix (fin~6) (fin~6)~$\\mathbb{r}$} values.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Description of Lean encoding.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:65a87eb5",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "65a87eb5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 193,
+      "tex_line_end": 197,
+      "quote": "The seven Layer-1 core theorems (T1--T7) establish real-symmetry, dark-state kernel-membership at $U=0$, chiral involution $\\Gamma^2 = I$, chiral anti-commutation $\\{\\Gamma, H_{\\rm singlet}\\} = 0$ at $U=0$, and the explicit determinant and trace identities.",
+      "quote_normalized": "the seven layer-1 core theorems (t1--t7) establish real-symmetry, dark-state kernel-membership at $u=0$, chiral involution $\\gamma^2 = i$, chiral anti-commutation $\\{\\gamma, h_{\\rm singlet}\\} = 0$ at $u=0$, and the explicit determinant and trace identities.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_isSymm"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_in_kernel"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.chiralOp_sq"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.chiral_anticommutes"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "T1-T7 ascertained against lean_deps; det/trace theorems also verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:hamiltonian:d4004271",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "hamiltonian",
+        "quote_hash": "d4004271",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hamiltonian",
+      "section_ordinal": 3,
+      "tex_line_start": 197,
+      "tex_line_end": 200,
+      "quote": "The triplet zero-energy theorems (T10a--c) use \\texttt{fin\\_cases + Fin.sum\\_univ\\_six + simp}, closing in milliseconds.",
+      "quote_normalized": "the triplet zero-energy theorems (t10a--c) use fin\\_cases + fin.sum\\_univ\\_six + simp, closing in milliseconds.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Tactic provenance description.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:darkstate:fecc6d19",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "darkstate",
+        "quote_hash": "fecc6d19",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "darkstate",
+      "section_ordinal": 4,
+      "tex_line_start": 206,
+      "tex_line_end": 210,
+      "quote": "The Hamiltonian~(\\ref{eq:Hsinglet}) at $U = 0$ belongs to the BDI symmetry class of the tenfold way~\\cite{Kitaev2009,AltlandZirnbauer}: it is real symmetric (time-reversal trivial) and anti-commutes with the chiral operator $\\Gamma = \\mathrm{diag}(+1, -1, -1)$.",
+      "quote_normalized": "the hamiltonian~() at $u = 0$ belongs to the bdi symmetry class of the tenfold way~: it is real symmetric (time-reversal trivial) and anti-commutes with the chiral operator $\\gamma = diag(+1, -1, -1)$.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kitaev2009"
+          },
+          {
+            "kind": "citation",
+            "target": "AltlandZirnbauer"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.chiral_anticommutes"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:darkstate:201d3028",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "darkstate",
+        "quote_hash": "201d3028",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "darkstate",
+      "section_ordinal": 4,
+      "tex_line_start": 210,
+      "tex_line_end": 214,
+      "quote": "The BDI structure \\textbf{pins an odd-dimensional sector's spectrum to contain zero:} in an odd-dimensional real symmetric matrix anti-commuting with a chiral involution, the nonzero eigenvalues pair as $\\{+E, -E\\}$, leaving one unpaired zero.",
+      "quote_normalized": "the bdi structure pins an odd-dimensional sector's spectrum to contain zero: in an odd-dimensional real symmetric matrix anti-commuting with a chiral involution, the nonzero eigenvalues pair as $\\{+e, -e\\}$, leaving one unpaired zero.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.spectrum_pairing_U0"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:darkstate:6e748024",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "darkstate",
+        "quote_hash": "6e748024",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "darkstate",
+      "section_ordinal": 4,
+      "tex_line_start": 216,
+      "tex_line_end": 223,
+      "quote": "The unnormalized dark-state vector is $\\ket{\\text{dark}(t, \\Delta)} = (0, 2t, \\Delta)^T \\in \\mathrm{ker}(H_{\\rm singlet}(t, \\Delta, 0))$, with norm $\\|\\text{dark}\\|_2 = \\sqrt{\\Delta^2 + 4t^2}$---the energy gap to the two bright states $\\ket{\\rm bright\\pm}$ with eigenvalues $\\pm\\sqrt{\\Delta^2 + 4t^2}$.",
+      "quote_normalized": "the unnormalized dark-state vector is $\\ket{dark(t, \\delta)} = (0, 2t, \\delta)^t \\in ker(h_{\\rm singlet}(t, \\delta, 0))$, with norm $\\|dark\\|_2 = \\sqrt{\\delta^2 + 4t^2}$---the energy gap to the two bright states $\\ket{\\rm bright\\pm}$ with eigenvalues $\\pm\\sqrt{\\delta^2 + 4t^2}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkVec"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkVecE_norm_sq"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_U0_brightVecPlus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_U0_brightVecMinus"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:darkstate:efb7fdfb",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "darkstate",
+        "quote_hash": "efb7fdfb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "darkstate",
+      "section_ordinal": 4,
+      "tex_line_start": 225,
+      "tex_line_end": 243,
+      "quote": "We formalize: (i)~$\\Gamma\\cdot H\\cdot\\Gamma = -H$ at $U=0$ (W5a); (ii)~the spectral-pairing mechanism $H v = E v \\Rightarrow H (\\Gamma v) = -E (\\Gamma v)$ (W5b); (iii)~the multiset spectrum pairing at $U=0$ (W5k); (iv)~the dark-state kernel-invariance under $\\Gamma$ (W5i); (v)~the full chiral-projector algebra $P_\\pm = (1\\pm\\Gamma)/2$ with idempotency, orthogonality, completeness, and $\\Gamma$-action $\\pm 1$ on the respective eigenspaces (W5l--W5o2); (vi)~the \\emph{zero-mode uniqueness} theorem (W5p): $H_{\\rm singlet}(t, \\Delta, 0)\\cdot v = 0 \\Rightarrow \\exists c \\in \\mathbb{R},\\ v = c\\cdot\\ket{\\text{dark}(t,\\Delta)}$ provided $(t, \\Delta) \\ne (0, 0)$---this is the strongest ``pinning'' statement: the kernel is \\emph{exactly} $\\mathbb{R}\\cdot\\ket{\\text{dark}}$, not merely $\\Gamma$-invariant.",
+      "quote_normalized": "we formalize: (i)~$\\gamma\\cdot h\\cdot\\gamma = -h$ at $u=0$ (w5a); (ii)~the spectral-pairing mechanism $h v = e v \\rightarrow h (\\gamma v) = -e (\\gamma v)$ (w5b); (iii)~the multiset spectrum pairing at $u=0$ (w5k); (iv)~the dark-state kernel-invariance under $\\gamma$ (w5i); (v)~the full chiral-projector algebra $p_\\pm = (1\\pm\\gamma)/2$ with idempotency, orthogonality, completeness, and $\\gamma$-action $\\pm 1$ on the respective eigenspaces (w5l--w5o2); (vi)~the zero-mode uniqueness theorem (w5p): $h_{\\rm singlet}(t, \\delta, 0)\\cdot v = 0 \\rightarrow \\exists c \\in \\mathbb{r},\\ v = c\\cdot\\ket{dark(t,\\delta)}$ provided $(t, \\delta) \\ne (0, 0)$---this is the strongest ``pinning'' statement: the kernel is exactly $\\mathbb{r}\\cdot\\ket{dark}$, not merely $\\gamma$-invariant.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.chiralOp_conjugation_neg"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.chiral_maps_eigenvector"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.spectrum_pairing_U0"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkVec_in_chiral_minus_eigenspace"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.zero_mode_unique_up_to_scalar"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Six-fold conjunctive formal claim; all named theorems (W5a/b/k/i/l-o2/p) are present. \\fhdWaveFive macro = 22 in counts.tex.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:b3a12e96",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "b3a12e96",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 249,
+      "tex_line_end": 256,
+      "quote": "With the dark state in hand, the geometric SWAP operator on the singlet sector is $\\USWAP(t, \\Delta) = I - \\frac{2}{\\Delta^2 + 4t^2}\\,\\ket{\\text{dark}}\\bra{\\text{dark}}$---a real Householder reflection.",
+      "quote_normalized": "with the dark state in hand, the geometric swap operator on the singlet sector is $\\uswap(t, \\delta) = i - \\frac{2}{\\delta^2 + 4t^2}\\,\\ket{dark}\\bra{dark}$---a real householder reflection.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "U_SWAP_singlet at line 1555 of FermiHubbardDimer.lean; matches the Lean def: 1 - (2/(Δ^2+4t^2)) • |d><d|.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:c5dd5349",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "c5dd5349",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 256,
+      "tex_line_end": 258,
+      "quote": "By construction it acts as $-1$ on the dark direction and as $+1$ on the two-dimensional bright subspace orthogonal to it.",
+      "quote_normalized": "by construction it acts as $-1$ on the dark direction and as $+1$ on the two-dimensional bright subspace orthogonal to it.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet_eigenvalues"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:fdb8fffd",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "fdb8fffd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 260,
+      "tex_line_end": 268,
+      "quote": "The key design decision was the \\emph{Path~A} re-typing: we lift the eigenvectors from bare \\texttt{Fin~3~$\\to$~$\\mathbb{R}$} (default sup-norm) to \\texttt{EuclideanSpace~$\\mathbb{R}$~(Fin~3)} (L${}^2$ norm) via \\texttt{EuclideanSpace.equiv.symm}, then build the \\texttt{OrthonormalBasis} via Mathlib's \\texttt{basisOfOrthonormalOfCardEqFinrank}.",
+      "quote_normalized": "the key design decision was the path~a re-typing: we lift the eigenvectors from bare \\texttt{fin~3~$\\to$~$\\mathbb{r}$} (default sup-norm) to \\texttt{euclideanspace~$\\mathbb{r}$~(fin~3)} (l${}^2$ norm) via euclideanspace.equiv.symm, then build the orthonormalbasis via mathlib's basisoforthonormalofcardeqfinrank.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Implementation methodology.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:dc081465",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "dc081465",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 268,
+      "tex_line_end": 274,
+      "quote": "This unlocks the one-line unitarity proof \\texttt{OrthonormalBasis.toMatrix\\_orthonormalBasis\\_mem\\_unitary} for the change-of-basis matrix between \\texttt{EuclideanSpace.basisFun} and the eigenbasis.",
+      "quote_normalized": "this unlocks the one-line unitarity proof orthonormalbasis.tomatrix\\_orthonormalbasis\\_mem\\_unitary for the change-of-basis matrix between euclideanspace.basisfun and the eigenbasis.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.eigenBasis_change_of_basis_unitary"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:9f31a6db",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "9f31a6db",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 275,
+      "tex_line_end": 278,
+      "quote": "The SWAP operator itself inherits symmetry, involution, and orthogonality from the Householder algebra: with $P = \\ket{\\rm dark}\\bra{\\rm dark}/\\text{gap}^2$ idempotent ($P^2 = P$), $(I - 2P)^2 = I - 4P + 4P^2 = I$.",
+      "quote_normalized": "the swap operator itself inherits symmetry, involution, and orthogonality from the householder algebra: with $p = \\ket{\\rm dark}\\bra{\\rm dark}/gap^2$ idempotent ($p^2 = p$), $(i - 2p)^2 = i - 4p + 4p^2 = i$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet_sq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "U_SWAP_singlet_sq (W6C-S2: U^2 = I) at line 1626 in Lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:534d1031",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "534d1031",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 278,
+      "tex_line_end": 284,
+      "quote": "The canonical-Mathlib unitary-group membership $\\USWAP \\in \\mathrm{Matrix.unitaryGroup~(Fin~3)~}\\mathbb{R}$ (W6C-U1) is a one-line corollary via \\texttt{Matrix.mem\\_unitaryGroup\\_iff'} and \\texttt{Matrix.conjTranspose\\_eq\\_transpose\\_of\\_trivial} (the \\texttt{TrivialStar}~$\\mathbb{R}$ instance reduces $\\overline{\\USWAP}^{\\mathsf{T}}$ to $\\USWAP^{\\mathsf{T}}$ over $\\mathbb{R}$).",
+      "quote_normalized": "the canonical-mathlib unitary-group membership $\\uswap \\in matrix.unitarygroup~(fin~3)~\\mathbb{r}$ (w6c-u1) is a one-line corollary via matrix.mem\\_unitarygroup\\_iff' and matrix.conjtranspose\\_eq\\_transpose\\_of\\_trivial (the trivialstar~$\\mathbb{r}$ instance reduces $\\overline{\\uswap}^{\\mathsf{t}}$ to $\\uswap^{\\mathsf{t}}$ over $\\mathbb{r}$).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet_mem_unitaryGroup"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:60f73084",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "60f73084",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 286,
+      "tex_line_end": 290,
+      "quote": "The singlet-basis SWAP operator extends to a $6\\times 6$ block-diagonal operator on the full symmetry-adapted basis via \\texttt{Matrix.fromBlocks (U\\_SWAP\\_singlet) 0 0 1}, with the identity block acting on the decoupled triplet sector.",
+      "quote_normalized": "the singlet-basis swap operator extends to a $6\\times 6$ block-diagonal operator on the full symmetry-adapted basis via matrix.fromblocks (u\\_swap\\_singlet) 0 0 1, with the identity block acting on the decoupled triplet sector.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "6x6 lift via U_SWAP_adapted_* family (lines 2317-2379 per prior review).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:695b0ebe",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "695b0ebe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 290,
+      "tex_line_end": 294,
+      "quote": "The $6\\times 6$ unitarity is inherited from W6C via \\texttt{fromBlocks\\_multiply} and \\texttt{fromBlocks\\_transpose}---there is no new physics here, merely the structural statement that the gate preserves the triplet sector identically.",
+      "quote_normalized": "the $6\\times 6$ unitarity is inherited from w6c via fromblocks\\_multiply and fromblocks\\_transpose---there is no new physics here, merely the structural statement that the gate preserves the triplet sector identically.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "6x6 unitarity inheritance.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:fdcfc2bc",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "fdcfc2bc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 296,
+      "tex_line_end": 300,
+      "quote": "The kernel-action theorem (W6C-K1) combines zero-mode uniqueness with the sign flip: for any $v$ in the kernel of $H_{\\rm singlet}(t,\\Delta,0)$ with $(t,\\Delta) \\ne (0,0)$, $\\USWAP\\cdot v = -v$.",
+      "quote_normalized": "the kernel-action theorem (w6c-k1) combines zero-mode uniqueness with the sign flip: for any $v$ in the kernel of $h_{\\rm singlet}(t,\\delta,0)$ with $(t,\\delta) \\ne (0,0)$, $\\uswap\\cdot v = -v$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet_on_kernel"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.zero_mode_unique_up_to_scalar"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:swap:dea20947",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "swap",
+        "quote_hash": "dea20947",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "swap",
+      "section_ordinal": 5,
+      "tex_line_start": 299,
+      "tex_line_end": 300,
+      "quote": "This is the strongest ``SWAP acts as $-1$ on the pinned zero-mode subspace'' claim in the formalization.",
+      "quote_normalized": "this is the strongest ``swap acts as $-1$ on the pinned zero-mode subspace'' claim in the formalization.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Self-summary qualitative claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:65f3662e",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "65f3662e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 305,
+      "tex_line_end": 308,
+      "quote": "Beyond the gate-action theorem, we ship the quantitative scaling distinction between the direct-exchange regime ($U$ small) and the superexchange regime ($U$ large).",
+      "quote_normalized": "beyond the gate-action theorem, we ship the quantitative scaling distinction between the direct-exchange regime ($u$ small) and the superexchange regime ($u$ large).",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:d98a7c66",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "d98a7c66",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 308,
+      "tex_line_end": 314,
+      "quote": "At $\\Delta = 0$, the 2$\\times$2 symmetric sector has explicit eigenvalues $E_\\pm(t, U) = \\frac{U \\pm \\sqrt{U^2 + 16 t^2}}{2}$, roots of $\\lambda^2 - U\\lambda - 4t^2 = 0$.",
+      "quote_normalized": "at $\\delta = 0$, the 2$\\times$2 symmetric sector has explicit eigenvalues $e_\\pm(t, u) = \\frac{u \\pm \\sqrt{u^2 + 16 t^2}}{2}$, roots of $\\lambda^2 - u\\lambda - 4t^2 = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_minus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.charpoly_H_singlet"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:1ff1f239",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "1ff1f239",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 314,
+      "tex_line_end": 317,
+      "quote": "The direct-exchange value is $E_+(t, 0) = 2|t|$ (linear in hopping); the superexchange gap $J(t, U) := E_+ - U = (\\sqrt{U^2 + 16t^2} - U)/2$ approaches $4t^2/U$ at large $U$.",
+      "quote_normalized": "the direct-exchange value is $e_+(t, 0) = 2|t|$ (linear in hopping); the superexchange gap $j(t, u) := e_+ - u = (\\sqrt{u^2 + 16t^2} - u)/2$ approaches $4t^2/u$ at large $u$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_value_at_zero"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.J_superexchange_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:bb94a599",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "bb94a599",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 322,
+      "tex_line_end": 322,
+      "quote": "$E_+(t, 0) = 2|t|$ (W7a)---direct-exchange value at $U=0$.",
+      "quote_normalized": "$e_+(t, 0) = 2|t|$ (w7a)---direct-exchange value at $u=0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_value_at_zero"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:5e46bf37",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "5e46bf37",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 323,
+      "tex_line_end": 325,
+      "quote": "Vieta identities $E_+ + E_- = U$ (W7b) and $E_+\\cdot E_- = -4t^2$ (W7c)---match the 2$\\times$2 trace and determinant of the symmetric-sector block.",
+      "quote_normalized": "vieta identities $e_+ + e_- = u$ (w7b) and $e_+\\cdot e_- = -4t^2$ (w7c)---match the 2$\\times$2 trace and determinant of the symmetric-sector block.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_plus_E_minus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_times_E_minus"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:88b04de6",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "88b04de6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 326,
+      "tex_line_end": 327,
+      "quote": "$\\text{HasDerivAt}\\,(E_+(t,\\cdot))\\,(1/2)\\,0$ for $t \\ne 0$ (W7d)---\\textbf{the direct-exchange linear-in-$U$ scaling theorem}.",
+      "quote_normalized": "$hasderivat\\,(e_+(t,\\cdot))\\,(1/2)\\,0$ for $t \\ne 0$ (w7d)---the direct-exchange linear-in-$u$ scaling theorem.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_hasDerivAt_at_zero"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:d7848dc7",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "d7848dc7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 327,
+      "tex_line_end": 329,
+      "quote": "The Taylor coefficient at $U = 0$ is exactly $1/2$, proved via the Mathlib \\texttt{HasDerivAt.sqrt / add / div\\_const} chain.",
+      "quote_normalized": "the taylor coefficient at $u = 0$ is exactly $1/2$, proved via the mathlib hasderivat.sqrt / add / div\\_const chain.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:95ebaa82",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "95ebaa82",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 330,
+      "tex_line_end": 331,
+      "quote": "$|E_+(t, U_1) - E_+(t, U_2)| \\le |U_1 - U_2|$ (W7q)---the Tier-1 global 1-Lipschitz bound per the deep-research landscape review.",
+      "quote_normalized": "$|e_+(t, u_1) - e_+(t, u_2)| \\le |u_1 - u_2|$ (w7q)---the tier-1 global 1-lipschitz bound per the deep-research landscape review.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_lipschitz"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:eeb37975",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "eeb37975",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 332,
+      "tex_line_end": 333,
+      "quote": "$|J(t, U) - 4t^2/U| \\le 16t^4/U^3$ for $0 < 4|t| \\le U$ (W7i)---\\textbf{the Tier-2 superexchange approximation theorem}.",
+      "quote_normalized": "$|j(t, u) - 4t^2/u| \\le 16t^4/u^3$ for $0 < 4|t| \\le u$ (w7i)---the tier-2 superexchange approximation theorem.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.J_superexchange_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:8bdec430",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "8bdec430",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 333,
+      "tex_line_end": 336,
+      "quote": "The proof chains the algebraic identity $J - 4t^2/U = -(s-U)^2/(4U)$ (where $s = \\sqrt{U^2+16t^2}$) with the sqrt-bound $s \\le U + 8t^2/U$, itself proved by squaring both sides.",
+      "quote_normalized": "the proof chains the algebraic identity $j - 4t^2/u = -(s-u)^2/(4u)$ (where $s = \\sqrt{u^2+16t^2}$) with the sqrt-bound $s \\le u + 8t^2/u$, itself proved by squaring both sides.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:60435a65",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "60435a65",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 337,
+      "tex_line_end": 339,
+      "quote": "The matrix-bridge theorem $\\mathrm{charpoly}(H_{\\rm singlet}(t, 0, U)) = (X - U)(X^2 - UX - 4t^2)$ (W7l)---provides the full spectrum $\\{U, E_+, E_-\\}$ at $\\Delta = 0$.",
+      "quote_normalized": "the matrix-bridge theorem $charpoly(h_{\\rm singlet}(t, 0, u)) = (x - u)(x^2 - ux - 4t^2)$ (w7l)---provides the full spectrum $\\{u, e_+, e_-\\}$ at $\\delta = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.charpoly_H_singlet_Δ0_factored"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Lean theorem at line 2115 (per prior review).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:f4fc3d99",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "f4fc3d99",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 340,
+      "tex_line_end": 343,
+      "quote": "Explicit eigenvectors $H_{\\rm singlet}(t, 0, U)\\cdot (E_\\pm, 0, -2t)^\\mathsf{T} = E_\\pm\\cdot(E_\\pm, 0, -2t)^\\mathsf{T}$ (W7m--n) and the antisymmetric doublon $\\cdot(0, 1, 0)^\\mathsf{T} = U\\cdot(0, 1, 0)^\\mathsf{T}$ (W7o).",
+      "quote_normalized": "explicit eigenvectors $h_{\\rm singlet}(t, 0, u)\\cdot (e_\\pm, 0, -2t)^\\mathsf{t} = e_\\pm\\cdot(e_\\pm, 0, -2t)^\\mathsf{t}$ (w7m--n) and the antisymmetric doublon $\\cdot(0, 1, 0)^\\mathsf{t} = u\\cdot(0, 1, 0)^\\mathsf{t}$ (w7o).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.H_singlet_Δ0_U_eigenvector"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:cf97d007",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "cf97d007",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 346,
+      "tex_line_end": 350,
+      "quote": "The sensitivity contrast recovered from these scalars: at $U = 0$, the fractional sensitivity $(\\partial_t \\Delta) \\cdot (t/\\Delta) = 1$ (a 1\\% hopping fluctuation shifts the gap by 1\\%); at large~$U$, the superexchange fractional sensitivity $(\\partial_t J) \\cdot (t/J) = 2$.",
+      "quote_normalized": "the sensitivity contrast recovered from these scalars: at $u = 0$, the fractional sensitivity $(\\partial_t \\delta) \\cdot (t/\\delta) = 1$ (a 1\\% hopping fluctuation shifts the gap by 1\\%); at large~$u$, the superexchange fractional sensitivity $(\\partial_t j) \\cdot (t/j) = 2$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Sensitivity analysis recoverable from formalized scalar identities; not a formal Lean theorem itself but a derived corollary in the prose.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:9f85eb15",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "9f85eb15",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 350,
+      "tex_line_end": 354,
+      "quote": "This factor-of-2 difference is consistent with the observed $4\\times$ robustness of the geometric gate relative to superexchange~\\cite{Kiefer2026}; the algebraic factor of $2$ is one contribution to the experimental difference, not a complete derivation.",
+      "quote_normalized": "this factor-of-2 difference is consistent with the observed $4\\times$ robustness of the geometric gate relative to superexchange~; the algebraic factor of $2$ is one contribution to the experimental difference, not a complete derivation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Prior v1 review (WARN) flagged this as overclaim ('underlies'). Current paper softens to 'is consistent with' + 'one contribution, not a complete derivation' — explicit hedge addresses prior concern. Prior WARN does NOT reproduce.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:d2b5fd8e",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "d2b5fd8e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 356,
+      "tex_line_end": 357,
+      "quote": "Figure~\\ref{fig:spectrum} shows the spectrum and the superexchange approximation bound, cross-verified by numpy exact diagonalization.",
+      "quote_normalized": "figure~ shows the spectrum and the superexchange approximation bound, cross-verified by numpy exact diagonalization.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:scaling:8bc6efb9",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "scaling",
+        "quote_hash": "8bc6efb9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scaling",
+      "section_ordinal": 6,
+      "tex_line_start": 362,
+      "tex_line_end": 372,
+      "quote": "\\textbf{Left:} singlet-sector spectrum at $\\Delta = 0$ versus $U$ (in units of $t = 1$). Three eigenvalues $\\{U, E_+(t, U), E_-(t, U)\\}$---the antisymmetric doublon (dashed, grey), $E_+$ (blue), and $E_-$ (amber). Markers are independent numpy \\texttt{eigh} diagonalization cross-checking the Lean closed-form values of $E_\\pm$ via the matrix-bridge theorem~W7l (the characteristic polynomial factorization). \\textbf{Right:} superexchange gap $|J(t, U)|$ on log--log axes, with the $4t^2/U$ asymptote (dashed) and the Lean~W7i error envelope $\\pm 16 t^4/U^3$ shaded. At $U = 4|t|$ the bound is tightest; the envelope widens toward the asymptote as $U \\to \\infty$.",
+      "quote_normalized": "left: singlet-sector spectrum at $\\delta = 0$ versus $u$ (in units of $t = 1$). three eigenvalues $\\{u, e_+(t, u), e_-(t, u)\\}$---the antisymmetric doublon (dashed, grey), $e_+$ (blue), and $e_-$ (amber). markers are independent numpy eigh diagonalization cross-checking the lean closed-form values of $e_\\pm$ via the matrix-bridge theorem~w7l (the characteristic polynomial factorization). right: superexchange gap $|j(t, u)|$ on log--log axes, with the $4t^2/u$ asymptote (dashed) and the lean~w7i error envelope $\\pm 16 t^4/u^3$ shaded. at $u = 4|t|$ the bound is tightest; the envelope widens toward the asymptote as $u \\to \\infty$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Figure caption; describes the figure in fig_doublon_gate_spectrum.png. Single record (caption-level).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:85b03357",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "85b03357",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 380,
+      "tex_line_end": 383,
+      "quote": "The gate's geometric interpretation rests on two independent finite-dimensional facts: a \\emph{sign flip} on a $\\pi$-sweep of the mixing angle, and \\emph{vanishing dynamical phase} along the zero-energy dark-state path.",
+      "quote_normalized": "the gate's geometric interpretation rests on two independent finite-dimensional facts: a sign flip on a $\\pi$-sweep of the mixing angle, and vanishing dynamical phase along the zero-energy dark-state path.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_pi_sign_flip"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_dynamical_phase_vanishes"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:4313d49e",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "4313d49e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 383,
+      "tex_line_end": 387,
+      "quote": "Together these are the two necessary conditions for interpreting any accumulated phase along a closed loop as purely geometric; assuming the adiabatic theorem supplies the dynamics (i.e.\\ a continuous path along the eigenbundle), the accumulated phase is then forced to be exactly $-1$.",
+      "quote_normalized": "together these are the two necessary conditions for interpreting any accumulated phase along a closed loop as purely geometric; assuming the adiabatic theorem supplies the dynamics (i.e.\\ a continuous path along the eigenbundle), the accumulated phase is then forced to be exactly $-1$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Conditional/scope statement; explicit hypothesis-disclosure language.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:5921b505",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "5921b505",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 387,
+      "tex_line_end": 388,
+      "quote": "We formalize the two necessary conditions; the adiabatic assumption is external.",
+      "quote_normalized": "we formalize the two necessary conditions; the adiabatic assumption is external.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:1bf1fade",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "1bf1fade",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 390,
+      "tex_line_end": 392,
+      "quote": "The $\\theta$-parameterized dark state is $\\ket{\\text{dark}(\\theta)} = (0, \\sin\\theta, \\cos\\theta)^\\mathsf{T}$ in the $\\{\\Dplus, \\Dminus, \\sstate\\}$ basis.",
+      "quote_normalized": "the $\\theta$-parameterized dark state is $\\ket{dark(\\theta)} = (0, \\sin\\theta, \\cos\\theta)^\\mathsf{t}$ in the $\\{\\dplus, \\dminus, \\sstate\\}$ basis.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:b6a7d471",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "b6a7d471",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 392,
+      "tex_line_end": 396,
+      "quote": "When the parameters satisfy the kernel-angle condition $\\Delta\\sin\\theta = 2t\\cos\\theta$ (equivalent to $\\tan\\theta = 2t/\\Delta$), this vector is in the kernel of $H_{\\rm singlet}(t, \\Delta, 0)$.",
+      "quote_normalized": "when the parameters satisfy the kernel-angle condition $\\delta\\sin\\theta = 2t\\cos\\theta$ (equivalent to $\\tan\\theta = 2t/\\delta$), this vector is in the kernel of $h_{\\rm singlet}(t, \\delta, 0)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_in_kernel"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:5d7ea224",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "5d7ea224",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 401,
+      "tex_line_end": 403,
+      "quote": "$\\ket{\\text{dark}(\\theta + \\pi)} = -\\ket{\\text{dark}(\\theta)}$ (W8a)---\\textbf{the closed-path sign statement}, direct from $\\sin(\\theta+\\pi) = -\\sin\\theta$ and $\\cos(\\theta+\\pi) = -\\cos\\theta$.",
+      "quote_normalized": "$\\ket{dark(\\theta + \\pi)} = -\\ket{dark(\\theta)}$ (w8a)---the closed-path sign statement, direct from $\\sin(\\theta+\\pi) = -\\sin\\theta$ and $\\cos(\\theta+\\pi) = -\\cos\\theta$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_pi_sign_flip"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:66585b93",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "66585b93",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 404,
+      "tex_line_end": 405,
+      "quote": "$\\ket{\\text{dark}(\\theta + 2\\pi)} = \\ket{\\text{dark}(\\theta)}$ (W8b)---periodicity.",
+      "quote_normalized": "$\\ket{dark(\\theta + 2\\pi)} = \\ket{dark(\\theta)}$ (w8b)---periodicity.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_two_pi"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:99a2350f",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "99a2350f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 406,
+      "tex_line_end": 407,
+      "quote": "$\\langle\\text{dark}(\\theta)\\mid\\text{dark}(\\theta)\\rangle = 1$ (W8c)---unit norm via Pythagorean identity.",
+      "quote_normalized": "$\\langledark(\\theta)\\middark(\\theta)\\rangle = 1$ (w8c)---unit norm via pythagorean identity.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_dotProduct_self"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:67714714",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "67714714",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 408,
+      "tex_line_end": 410,
+      "quote": "$\\langle\\text{dark}(\\theta)\\mid H_{\\rm singlet}(t,\\Delta,0)\\cdot\\text{dark}(\\theta)\\rangle = 0$ (W8d)---\\textbf{dynamical phase vanishes}.",
+      "quote_normalized": "$\\langledark(\\theta)\\mid h_{\\rm singlet}(t,\\delta,0)\\cdotdark(\\theta)\\rangle = 0$ (w8d)---dynamical phase vanishes.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_dynamical_phase_vanishes"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:37cbf99f",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "37cbf99f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 410,
+      "tex_line_end": 412,
+      "quote": "Direct corollary of the kernel membership W4a: $H\\cdot\\ket{\\text{dark}} = 0$ pointwise along the $\\theta$-path implies the integrated dynamical phase vanishes identically.",
+      "quote_normalized": "direct corollary of the kernel membership w4a: $h\\cdot\\ket{dark} = 0$ pointwise along the $\\theta$-path implies the integrated dynamical phase vanishes identically.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:8abf57aa",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "8abf57aa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 413,
+      "tex_line_end": 414,
+      "quote": "Bundled: W8a~$\\wedge$~W8d (W8e)---\\textbf{the two necessary conditions} for a Berry-phase interpretation of the gate action.",
+      "quote_normalized": "bundled: w8a~$\\wedge$~w8d (w8e)---the two necessary conditions for a berry-phase interpretation of the gate action.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.geometric_phase_minus_one_on_pi_loop"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:d99c8113",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "d99c8113",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 414,
+      "tex_line_end": 416,
+      "quote": "The Lean theorem's conclusion is the conjunction itself, not an equality involving an integrated phase functional (no integral is constructed in the formalization).",
+      "quote_normalized": "the lean theorem's conclusion is the conjunction itself, not an equality involving an integrated phase functional (no integral is constructed in the formalization).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-honesty statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:22a39a64",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "22a39a64",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 416,
+      "tex_line_end": 420,
+      "quote": "Consumers who supply the adiabatic-theorem assumption can combine this conjunction with a separate dynamical argument to conclude the accumulated phase is $-1$; we do not formalize that last step here.",
+      "quote_normalized": "consumers who supply the adiabatic-theorem assumption can combine this conjunction with a separate dynamical argument to conclude the accumulated phase is $-1$; we do not formalize that last step here.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-honesty.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:354f3cd8",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "354f3cd8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 423,
+      "tex_line_end": 428,
+      "quote": "The $\\pi$ shift rather than $2\\pi$ reflects our full-angle parameterization convention $\\ket{\\text{dark}(\\theta)} = (0, \\sin\\theta, \\cos\\theta)^\\mathsf{T}$; the equivalent half-angle convention of the physics literature maps a $2\\pi$ lattice cycle to a $\\pi$ mixing-angle sweep, giving the same final result.",
+      "quote_normalized": "the $\\pi$ shift rather than $2\\pi$ reflects our full-angle parameterization convention $\\ket{dark(\\theta)} = (0, \\sin\\theta, \\cos\\theta)^\\mathsf{t}$; the equivalent half-angle convention of the physics literature maps a $2\\pi$ lattice cycle to a $\\pi$ mixing-angle sweep, giving the same final result.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:f676997a",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "f676997a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 430,
+      "tex_line_end": 432,
+      "quote": "W8e is the \\emph{discrete-step} statement underlying the gate: a $\\pi$ sweep in the mixing angle inverts the dark state.",
+      "quote_normalized": "w8e is the discrete-step statement underlying the gate: a $\\pi$ sweep in the mixing angle inverts the dark state.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.geometric_phase_minus_one_on_pi_loop"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:67f5f05d",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "67f5f05d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 432,
+      "tex_line_end": 435,
+      "quote": "The \\emph{continuous} interpretation---that the physical control-pulse sequence in~\\cite{Kiefer2026} drives the dark state smoothly along this trajectory because of the adiabatic theorem---is not proved here.",
+      "quote_normalized": "the continuous interpretation---that the physical control-pulse sequence in~ drives the dark state smoothly along this trajectory because of the adiabatic theorem---is not proved here.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-boundary statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:3cd0321e",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "3cd0321e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 435,
+      "tex_line_end": 437,
+      "quote": "It enters as a physics assumption, verified experimentally in~\\cite{Kiefer2026} and, in general, by Kato's theorem.",
+      "quote_normalized": "it enters as a physics assumption, verified experimentally in~ and, in general, by kato's theorem.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kiefer2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:e25ac6d7",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "e25ac6d7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 437,
+      "tex_line_end": 440,
+      "quote": "The full Berry-connection holonomy picture (a 1-form on a parameterized eigenbundle whose integral around the loop equals our $-1$) likewise requires machinery that is not yet in Mathlib: continuous parameterized eigenvectors, connections on vector bundles, parallel transport.",
+      "quote_normalized": "the full berry-connection holonomy picture (a 1-form on a parameterized eigenbundle whose integral around the loop equals our $-1$) likewise requires machinery that is not yet in mathlib: continuous parameterized eigenvectors, connections on vector bundles, parallel transport.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-boundary; matches Mathlib state.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:berry:291b54de",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "berry",
+        "quote_hash": "291b54de",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "berry",
+      "section_ordinal": 7,
+      "tex_line_start": 440,
+      "tex_line_end": 442,
+      "quote": "Those are Target~B of our internal roadmap; see Section~\\ref{sec:future}.",
+      "quote_normalized": "those are target~b of our internal roadmap; see section~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:9bd75485",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "9bd75485",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 448,
+      "tex_line_end": 449,
+      "quote": "All results in this paper are formally verified in the Lean~4 proof assistant, building on the Mathlib library.",
+      "quote_normalized": "all results in this paper are formally verified in the lean~4 proof assistant, building on the mathlib library.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Sorry count = 0 in FermiHubbardDimer.lean; all referenced theorems exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:33a8e2d0",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "33a8e2d0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 449,
+      "tex_line_end": 450,
+      "quote": "Table~\\ref{tab:lean} summarizes the theorem count and structure of the formalization.",
+      "quote_normalized": "table~ summarizes the theorem count and structure of the formalization.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:41241fa5",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "41241fa5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 453,
+      "tex_line_end": 457,
+      "quote": "Lean~4 formalization of the Fermi-Hubbard doublon gate (Phase~5t). Section counts from \\texttt{lean/SKEFTHawking/FermiHubbardDimer.lean}; total verified by \\texttt{grep -c \"\\textasciicircum theorem \" FermiHubbardDimer.lean}.",
+      "quote_normalized": "lean~4 formalization of the fermi-hubbard doublon gate (phase~5t). section counts from lean/skefthawking/fermihubbarddimer.lean; total verified by grep -c \"\\textasciicircum theorem \" fermihubbarddimer.lean.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Table caption methodology statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:367b9c2d",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "367b9c2d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 471,
+      "tex_line_end": 471,
+      "quote": "Total (FermiHubbardDimer.lean) & \\fhdTotal{} & Zero sorry, zero new axioms",
+      "quote_normalized": "total (fermihubbarddimer.lean) & \\fhdtotal{} & zero sorry, zero new axioms",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "\\fhdTotal=143 in counts.tex; grep ^theorem in FermiHubbardDimer.lean = 143; lemma count = 0; sorry count = 0. Note: prior v1 review (FAIL-3) claimed 141; recount today shows 143. \\fhdTotal macro is canonical and matches grep — recount drift is now resolved via update_counts.py wiring.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:1fffe561",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "1fffe561",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 476,
+      "tex_line_end": 478,
+      "quote": "The formalization lives in a single module (\\texttt{lean/SKEFTHawking/FermiHubbardDimer.lean}) of approximately 2,540~lines.",
+      "quote_normalized": "the formalization lives in a single module (lean/skefthawking/fermihubbarddimer.lean) of approximately 2,540~lines.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "wc -l = 2557; '~2,540' is within ~0.7% (rounded down). Acceptable approximation. Prior review (WARN at 5.9% delta against '~2,400') reproduces in spirit but values now correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.7
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:f1b4f28b",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "f1b4f28b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 478,
+      "tex_line_end": 482,
+      "quote": "Across the wider project, \\totaltheorems{} theorems are verified (\\substantivetheorems{} substantive, \\placeholdertheorems{} documentation markers), with zero sorry and a single axiom (\\texttt{gapped\\_interface\\_axiom} in \\texttt{SPTClassification.lean}, unrelated to this paper).",
+      "quote_normalized": "across the wider project, \\totaltheorems{} theorems are verified (\\substantivetheorems{} substantive, \\placeholdertheorems{} documentation markers), with zero sorry and a single axiom (gapped\\_interface\\_axiom in sptclassification.lean, unrelated to this paper).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Macros canonical: \\totaltheorems=4049, \\substantivetheorems=3936, \\placeholdertheorems=113. Axiom count = 1 (gapped_interface_axiom). Paper correctly qualifies 'unrelated to this paper'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:489ee2ad",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "489ee2ad",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 482,
+      "tex_line_end": 486,
+      "quote": "The Python cross-validation layer (\\texttt{src/experimental/doublon\\_gate.py} + \\texttt{dimer.py}) exercises every theorem numerically; the project-wide test count is \\totaltests{}.",
+      "quote_normalized": "the python cross-validation layer (src/experimental/doublon\\_gate.py + dimer.py) exercises every theorem numerically; the project-wide test count is \\totaltests{}.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "\\totaltests=2884 in counts.tex (canonical, auto-generated). Prior review FAIL-2 (totaltests undefined) — does NOT reproduce; macro now defined in counts.tex.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:30787b39",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "30787b39",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 490,
+      "tex_line_end": 491,
+      "quote": "\\texttt{Matrix.charpoly}, \\texttt{Matrix.det\\_fin\\_three} (characteristic polynomial for the 3$\\times$3 case).",
+      "quote_normalized": "matrix.charpoly, matrix.det\\_fin\\_three (characteristic polynomial for the 3$\\times$3 case).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Mathlib API enumeration (load-bearing list).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:f9f0f602",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "f9f0f602",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 492,
+      "tex_line_end": 493,
+      "quote": "\\texttt{Matrix.mulVec}, \\texttt{Matrix.mulVec\\_smul} (matrix-vector action).",
+      "quote_normalized": "matrix.mulvec, matrix.mulvec\\_smul (matrix-vector action).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:d368299f",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "d368299f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 494,
+      "tex_line_end": 495,
+      "quote": "\\texttt{EuclideanSpace.equiv.symm}, \\texttt{EuclideanSpace.real\\_norm\\_sq\\_eq} (Path~A re-typing).",
+      "quote_normalized": "euclideanspace.equiv.symm, euclideanspace.real\\_norm\\_sq\\_eq (path~a re-typing).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:630e2c44",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "630e2c44",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 496,
+      "tex_line_end": 499,
+      "quote": "\\texttt{basisOfOrthonormalOfCardEqFinrank}, \\texttt{Module.Basis.toOrthonormalBasis}, \\texttt{OrthonormalBasis.toMatrix\\_orthonormalBasis\\_mem\\_unitary} (one-line unitarity).",
+      "quote_normalized": "basisoforthonormalofcardeqfinrank, module.basis.toorthonormalbasis, orthonormalbasis.tomatrix\\_orthonormalbasis\\_mem\\_unitary (one-line unitarity).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:69e3f941",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "69e3f941",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 500,
+      "tex_line_end": 501,
+      "quote": "\\texttt{Matrix.fromBlocks\\_\\{multiply, transpose, one\\}} (6$\\times$6 block-diagonal lift).",
+      "quote_normalized": "\\texttt{matrix.fromblocks\\_\\{multiply, transpose, one\\}} (6$\\times$6 block-diagonal lift).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:66a1dcd8",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "66a1dcd8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 502,
+      "tex_line_end": 504,
+      "quote": "\\texttt{Matrix.mem\\_unitaryGroup\\_iff'}, \\texttt{Matrix.conjTranspose\\_eq\\_transpose\\_of\\_trivial} (unitary-group membership over $\\mathbb{R}$).",
+      "quote_normalized": "matrix.mem\\_unitarygroup\\_iff', matrix.conjtranspose\\_eq\\_transpose\\_of\\_trivial (unitary-group membership over $\\mathbb{r}$).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:1ce10af2",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "1ce10af2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 505,
+      "tex_line_end": 506,
+      "quote": "\\texttt{HasDerivAt.sqrt / add / div\\_const / pow} (Taylor-at-zero derivative for $E_+$).",
+      "quote_normalized": "hasderivat.sqrt / add / div\\_const / pow (taylor-at-zero derivative for $e_+$).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:9a3b04b8",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "9a3b04b8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 507,
+      "tex_line_end": 508,
+      "quote": "\\texttt{Real.sqrt\\_le\\_sqrt}, \\texttt{Real.mul\\_self\\_sqrt} (sqrt monotonicity and square-identity for the superexchange bound).",
+      "quote_normalized": "real.sqrt\\_le\\_sqrt, real.mul\\_self\\_sqrt (sqrt monotonicity and square-identity for the superexchange bound).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:5334c87b",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "5334c87b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 509,
+      "tex_line_end": 511,
+      "quote": "\\texttt{Real.sin\\_add\\_pi}, \\texttt{Real.cos\\_add\\_pi}, \\texttt{Real.sin\\_sq\\_add\\_cos\\_sq} (Berry-phase sign flip and dark-state normalization).",
+      "quote_normalized": "real.sin\\_add\\_pi, real.cos\\_add\\_pi, real.sin\\_sq\\_add\\_cos\\_sq (berry-phase sign flip and dark-state normalization).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:7bedf39a",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "7bedf39a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 514,
+      "tex_line_end": 514,
+      "quote": "No novel Mathlib infrastructure was needed.",
+      "quote_normalized": "no novel mathlib infrastructure was needed.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:bcf4c099",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "bcf4c099",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 514,
+      "tex_line_end": 516,
+      "quote": "The formalization is \\emph{algebraic in flavor}---matrix arithmetic, polynomial identities, sqrt bounds, trigonometric identities---exactly the character the deep-research landscape review recommended.",
+      "quote_normalized": "the formalization is algebraic in flavor---matrix arithmetic, polynomial identities, sqrt bounds, trigonometric identities---exactly the character the deep-research landscape review recommended.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:lean:65d087d7",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "lean",
+        "quote_hash": "65d087d7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lean",
+      "section_ordinal": 8,
+      "tex_line_start": 517,
+      "tex_line_end": 517,
+      "quote": "No ordinary differential equations, no functional analysis, no differential geometry.",
+      "quote_normalized": "no ordinary differential equations, no functional analysis, no differential geometry.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:a71d0351",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "a71d0351",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 524,
+      "tex_line_end": 524,
+      "quote": "The deliberate scope boundary of this work is Layer~1+2 of the deep-research target hierarchy.",
+      "quote_normalized": "the deliberate scope boundary of this work is layer~1+2 of the deep-research target hierarchy.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:e0aa8890",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "e0aa8890",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 524,
+      "tex_line_end": 525,
+      "quote": "Three genuinely new results could extend it:",
+      "quote_normalized": "three genuinely new results could extend it:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:237e9c5d",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "237e9c5d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 528,
+      "tex_line_end": 533,
+      "quote": "The target theorem (not proved here): \\textit{for a continuous loop $H: [0,1] \\to \\mathrm{Sym}_n(\\mathbb{R})$ with $H(0) = H(1)$, a simple eigenvalue $\\lambda(s)$ along the loop, and a continuous unit eigenvector $v(s)$, the return sign $\\langle v(0), v(1)\\rangle \\in \\{+1, -1\\}$}---a pure linear-algebra statement expressing the first Stiefel-Whitney class of the real eigenvector bundle over $S^1$.",
+      "quote_normalized": "the target theorem (not proved here): \\textit{for a continuous loop $h: [0,1] \\to sym_n(\\mathbb{r})$ with $h(0) = h(1)$, a simple eigenvalue $\\lambda(s)$ along the loop, and a continuous unit eigenvector $v(s)$, the return sign $\\langle v(0), v(1)\\rangle \\in \\{+1, -1\\}$}---a pure linear-algebra statement expressing the first stiefel-whitney class of the real eigenvector bundle over $s^1$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Future-work statement; correctly disclaims as not proved.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:a12d025d",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "a12d025d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 533,
+      "tex_line_end": 537,
+      "quote": "Our estimate is 2--3 weeks; the main obstacle is the continuous-eigenvector construction from Mathlib's \\texttt{IsHermitian.spectral\\_theorem}, which has no parameterized smoothness guarantee out of the box.",
+      "quote_normalized": "our estimate is 2--3 weeks; the main obstacle is the continuous-eigenvector construction from mathlib's ishermitian.spectral\\_theorem, which has no parameterized smoothness guarantee out of the box.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:5720ae5a",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "5720ae5a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 537,
+      "tex_line_end": 538,
+      "quote": "Would be the first formal $\\mathbb{Z}_2$ Berry-phase theorem in any proof assistant.",
+      "quote_normalized": "would be the first formal $\\mathbb{z}_2$ berry-phase theorem in any proof assistant.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedged-future precedence claim; not mechanically resolvable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:ed3ef507",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "ed3ef507",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 540,
+      "tex_line_end": 542,
+      "quote": "Define the discrete Berry phase for a finite sequence of real unit vectors as $\\mathrm{sign}(\\prod_i \\langle v_i | v_{i+1\\mod N}\\rangle)$.",
+      "quote_normalized": "define the discrete berry phase for a finite sequence of real unit vectors as $sign(\\prod_i \\langle v_i | v_{i+1\\mod n}\\rangle)$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:50b39202",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "50b39202",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 542,
+      "tex_line_end": 544,
+      "quote": "Prove gauge invariance (flipping any $v_k \\to -v_k$ preserves the product) and the continuous-limit equivalence to Layer~2.",
+      "quote_normalized": "prove gauge invariance (flipping any $v_k \\to -v_k$ preserves the product) and the continuous-limit equivalence to layer~2.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:50e96581",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "50e96581",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 544,
+      "tex_line_end": 545,
+      "quote": "Connects to the Pancharatnam-Bargmann formulation.",
+      "quote_normalized": "connects to the pancharatnam-bargmann formulation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:ef2b01b7",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "ef2b01b7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 545,
+      "tex_line_end": 545,
+      "quote": "Another 2--3 weeks.",
+      "quote_normalized": "another 2--3 weeks.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:1d36e0c3",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "1d36e0c3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 547,
+      "tex_line_end": 549,
+      "quote": "The dynamical-side companion to Layer~2: a continuous time evolution whose state-space projection onto the eigenbundle converges to parallel transport as the sweep rate goes to zero.",
+      "quote_normalized": "the dynamical-side companion to layer~2: a continuous time evolution whose state-space projection onto the eigenbundle converges to parallel transport as the sweep rate goes to zero.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:195fa900",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "195fa900",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 549,
+      "tex_line_end": 552,
+      "quote": "Requires Picard-Lindel\\\"of ODE existence (exists in Mathlib), matrix exponentials (exists), and the adiabatic error bound itself (does not exist in any form).",
+      "quote_normalized": "requires picard-lindel\\\"of ode existence (exists in mathlib), matrix exponentials (exists), and the adiabatic error bound itself (does not exist in any form).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:future:045c19a6",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "future",
+        "quote_hash": "045c19a6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "future",
+      "section_ordinal": 9,
+      "tex_line_start": 552,
+      "tex_line_end": 553,
+      "quote": "Months of work; not recommended as Phase~5t/Phase~6 scope per our roadmap.",
+      "quote_normalized": "months of work; not recommended as phase~5t/phase~6 scope per our roadmap.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:c242a15f",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "c242a15f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 559,
+      "tex_line_end": 563,
+      "quote": "We have formalized the algebraic core of the Kiefer~\\textit{et~al.} doublon geometric SWAP gate end-to-end in Lean~4, reducing the gate's \\emph{geometric phase} to the observation that $\\cos(\\pi) = -1$ composed with an explicit Householder reflection on a parameterized $3\\times 3$ real symmetric matrix.",
+      "quote_normalized": "we have formalized the algebraic core of the kiefer~et~al. doublon geometric swap gate end-to-end in lean~4, reducing the gate's geometric phase to the observation that $\\cos(\\pi) = -1$ composed with an explicit householder reflection on a parameterized $3\\times 3$ real symmetric matrix.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_pi_sign_flip"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:65d41a00",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "65d41a00",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 563,
+      "tex_line_end": 571,
+      "quote": "The key algebraic facts are: the BDI-pinned zero-energy dark state; the SWAP operator as $I - 2P$ with $P$ a rank-1 projector onto the dark direction; the Vieta/characteristic-equation matrix-bridge tying the scalar eigenvalue formulas $E_\\pm(t, U)$ back to the full Hamiltonian spectrum; the Tier-2 superexchange approximation bound with explicit $16 t^4/U^3$ remainder; and the minimum Berry-phase statement, that the dark state acquires $-1$ on a $\\pi$-sweep of the mixing angle while remaining at zero energy throughout.",
+      "quote_normalized": "the key algebraic facts are: the bdi-pinned zero-energy dark state; the swap operator as $i - 2p$ with $p$ a rank-1 projector onto the dark direction; the vieta/characteristic-equation matrix-bridge tying the scalar eigenvalue formulas $e_\\pm(t, u)$ back to the full hamiltonian spectrum; the tier-2 superexchange approximation bound with explicit $16 t^4/u^3$ remainder; and the minimum berry-phase statement, that the dark state acquires $-1$ on a $\\pi$-sweep of the mixing angle while remaining at zero energy throughout.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.dark_state_in_kernel"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.U_SWAP_singlet"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_plus_E_minus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.E_plus_times_E_minus"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.J_superexchange_bound"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiHubbardDimer.darkStateθ_add_pi_sign_flip"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:99c7241a",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "99c7241a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 573,
+      "tex_line_end": 575,
+      "quote": "The scope discipline---no adiabatic theorem, no Berry connection, no fiber bundles---was informed by an explicit landscape review of the Mathlib dependency graph.",
+      "quote_normalized": "the scope discipline---no adiabatic theorem, no berry connection, no fiber bundles---was informed by an explicit landscape review of the mathlib dependency graph.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:07eb2899",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "07eb2899",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 575,
+      "tex_line_end": 578,
+      "quote": "The result is a formalization that Mathlib's existing \\texttt{Matrix}, \\texttt{EuclideanSpace}, \\texttt{OrthonormalBasis}, and \\texttt{Polynomial} APIs are directly equipped to handle, without the need to develop new infrastructure for differential geometry or functional analysis.",
+      "quote_normalized": "the result is a formalization that mathlib's existing matrix, euclideanspace, orthonormalbasis, and polynomial apis are directly equipped to handle, without the need to develop new infrastructure for differential geometry or functional analysis.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:71210b39",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "71210b39",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 579,
+      "tex_line_end": 582,
+      "quote": "The $\\sim 2{,}400$ lines of Lean source contain \\fhdTotal{}~theorems in a single module, zero sorry, zero new axioms, covering the full gate story from fermion Hilbert space decomposition to Berry phase.",
+      "quote_normalized": "the $\\sim 2{,}400$ lines of lean source contain \\fhdtotal{}~theorems in a single module, zero sorry, zero new axioms, covering the full gate story from fermion hilbert space decomposition to berry phase.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "'~2,400 lines' against actual 2557 lines is 6.1% delta (above 0.5% but the sentence uses 'approx' which signals soft-rounded). Earlier in Section 7, paper says '2,540 lines' (accurate). Inconsistency between two sentences in the same paper triggers Class IA WARN. Recommend rounding both to 2,540 or '~2,500'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 6.1
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:cfaade8d",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "cfaade8d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 584,
+      "tex_line_end": 586,
+      "quote": "The natural next target is Layer~2 of the deep-research hierarchy: the $\\mathbb{Z}_2$ Berry-phase quantization theorem for arbitrary continuous loops of real-symmetric matrices with a simple eigenvalue.",
+      "quote_normalized": "the natural next target is layer~2 of the deep-research hierarchy: the $\\mathbb{z}_2$ berry-phase quantization theorem for arbitrary continuous loops of real-symmetric matrices with a simple eigenvalue.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:conclusion:3b3f3172",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "conclusion",
+        "quote_hash": "3b3f3172",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 10,
+      "tex_line_start": 586,
+      "tex_line_end": 590,
+      "quote": "A successful formalization would be the first $\\mathbb{Z}_2$ Berry-phase result in any interactive proof assistant, and would complete the \\emph{kinematic} Berry-phase story without touching the adiabatic theorem or any ODE/PDE machinery.",
+      "quote_normalized": "a successful formalization would be the first $\\mathbb{z}_2$ berry-phase result in any interactive proof assistant, and would complete the kinematic berry-phase story without touching the adiabatic theorem or any ode/pde machinery.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedged future precedence claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:acknowledgments:050654a4",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "acknowledgments",
+        "quote_hash": "050654a4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 11,
+      "tex_line_start": 594,
+      "tex_line_end": 595,
+      "quote": "This work builds on the Mathlib library and the Lean~4 proof assistant.",
+      "quote_normalized": "this work builds on the mathlib library and the lean~4 proof assistant.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper18_doublon_gate:acknowledgments:118ce6e9",
+      "raw_id_parts": {
+        "paper": "paper18_doublon_gate",
+        "section_slug": "acknowledgments",
+        "quote_hash": "118ce6e9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 11,
+      "tex_line_start": 595,
+      "tex_line_end": 599,
+      "quote": "We acknowledge the Aristotle automated theorem prover for filling a small number of finite-combinatorial gaps (zero in this paper; see the full-project provenance in \\texttt{SK\\_EFT\\_Hawking\\_Inventory.md}).",
+      "quote_normalized": "we acknowledge the aristotle automated theorem prover for filling a small number of finite-combinatorial gaps (zero in this paper; see the full-project provenance in sk\\_eft\\_hawking\\_inventory.md).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Aristotle attribution; correctly states 'zero in this paper'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:42:01Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
   ],
-  "compilation_status": {
-    "user_reported": "compiles clean, 6 pages",
-    "actual": "compiles but with 35 'Undefined control sequence' errors and 1 undefined citation warning",
-    "log_path": "papers/paper18_doublon_gate/paper_draft.log",
-    "status": "FAIL"
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:FAIL-1",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper preamble now defines \\newcommand{\\ket}, \\newcommand{\\bra}, \\newcommand{\\braket} (paper_draft.tex lines 12-14). Paper compiles cleanly to 6 pages with no Undefined-control-sequence errors in paper_draft.log.",
+      "deterministic_recheck": {
+        "kind": "tex_macro_grep",
+        "command": "grep -E '^\\\\newcommand\\{\\\\(ket|bra|braket)\\}' papers/paper18_doublon_gate/paper_draft.tex",
+        "prior_value": "macro undefined",
+        "current_value": "macro defined at lines 12-14"
+      }
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:FAIL-2",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "\\totaltests is now defined in docs/counts.tex with value 2884 (auto-generated by update_counts.py 2026-04-25T01:19:57Z).",
+      "deterministic_recheck": {
+        "kind": "counts_macro_dict_lookup",
+        "command": "grep '^\\\\newcommand{\\\\totaltests}' docs/counts.tex",
+        "prior_value": "undefined",
+        "current_value": 2884
+      }
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:FAIL-3",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now uses \\fhdTotal macro (canonical, defined in counts.tex = 143) instead of hard-coded '139'. Current grep '^theorem ' FermiHubbardDimer.lean = 143; \\fhdTotal = 143; values agree exactly.",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "module": "FermiHubbardDimer",
+        "command": "grep -c '^theorem ' lean/SKEFTHawking/FermiHubbardDimer.lean",
+        "prior_value": 139,
+        "current_value": 143
+      }
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:WARN-2400-lines",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper still says '~2,400 lines' in Conclusion (line 579) — but new Section 7 (Formal Verification) sentence says '2,540 lines' (accurate to wc -l = 2557). The discrepancy is now intra-paper (Section 7 accurate, Conclusion stale) — recorded as Class IA WARN in current run on the Conclusion sentence. Prior WARN partially reproduces; recommend human-confirm replacement of '~2,400' → '~2,540' in Conclusion.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:WARN-table-row-sum",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Table 1 now uses macros (\\fhdWaveTwo=13, \\fhdWaveThree=6, \\fhdWaveFour=22, \\fhdWaveFive=22, \\fhdWaveSixABC=38, \\fhdWaveSixExtra=15, \\fhdWaveSeven=19, \\fhdWaveEight=8, total 143) auto-generated by update_counts.py — sum equals \\fhdTotal=143 by construction.",
+      "deterministic_recheck": {
+        "kind": "counts_macro_sum",
+        "command": "sum of \\fhd* macros in docs/counts.tex",
+        "prior_value": "hard-coded 15+10+20+21+39+12+17+5=139 (didn't match 141 actual)",
+        "current_value": "macro-derived 13+6+22+22+38+15+19+8=143 (matches \\fhdTotal=143)"
+      }
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:WARN-precedence-first-IPA",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper now hedges precedence claims explicitly ('we believe', 'we have not located', 'invite correction') in both abstract (lines 31-35) and intro (lines 100-104). The hedge addresses the prior WARN. LLM-judgment finding; not auto-closable.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:WARN-factor-of-2-underlies",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper now softens prior 'underlies' to 'is consistent with' + 'one contribution to the experimental difference, not a complete derivation' (lines 350-354). The softening addresses the prior WARN. LLM-judgment finding; not auto-closable.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "paper18:claims-reviewer-v1:2026-04-23:WARN-mathlib-natbib",
+      "prior_run_date": "2026-04-23T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Cosmetic natbib forward-reference warning (resolves on second-pass compile). Not affecting current PDF render. LLM-judgment finding; not auto-closable.",
+      "deterministic_recheck": null
+    }
+  ],
+  "summary": {
+    "total_sentences": 127,
+    "by_type": {
+      "qualitative": 43,
+      "citation": 8,
+      "metaclaim": 8,
+      "formal-claim": 40,
+      "numeric": 8,
+      "methodology": 14,
+      "transition": 6
+    },
+    "by_verdict": {
+      "INFO": 5,
+      "PASS": 101,
+      "TRANSITION": 20,
+      "WARN": 1
+    },
+    "by_finding_class": {
+      "IA": 1,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 8,
+    "non_reproducing_auto_closed": 4,
+    "non_reproducing_candidates": 4,
+    "agent_text": "127 sentences | 101 PASS | 20 TRANSITION | 5 INFO | 1 WARN | 0 FAIL | 0 UNGROUNDED | 4 prior auto-closed | 4 candidate for supersession"
   },
-  "numerical_claims": [
-    {
-      "location": "Eq. (5), Section 3: U_SWAP = I - (2/(Δ²+4t²))|d><d|",
-      "lean_theorem": "U_SWAP_singlet (noncomputable def at line 1555)",
-      "match": "1 - (2 / (Δ^2 + 4*t^2)) • Matrix.of (fun i j => darkVec t Δ i * darkVec t Δ j)",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 3: dark state = (0, 2t, Δ)^T, norm = √(Δ²+4t²)",
-      "lean_theorem": "darkVec / darkVecE_norm_sq (lines 120, 1212)",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 3: bright eigenvalues ±√(Δ²+4t²)",
-      "lean_theorem": "H_singlet_U0_brightVecPlus / H_singlet_U0_brightVecMinus (lines 404, 427)",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4, Fig caption / Table 1 W6C: U_SWAP eigenvalues {-1, +1, +1}, det=-1, trace=+1",
-      "lean_theorem": "U_SWAP_singlet_eigenvalues (1658), U_SWAP_singlet_det (1673) proves det=-1, U_SWAP_singlet_trace (1687) proves trace=1",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4, eq (6): E_± = (U ± √(U²+16t²))/2",
-      "lean_theorem": "E_plus / E_minus definitions; E_plus_value_at_zero (1857) gives E_plus(t,0) = 2|t|",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4: E_+ + E_- = U  (Vieta sum)",
-      "lean_theorem": "E_plus_plus_E_minus at line 1869",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4: E_+ · E_- = -4t²  (Vieta product)",
-      "lean_theorem": "E_plus_times_E_minus at line 1877: proves E_plus t U * E_minus t U = -(4 * t^2)",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4: HasDerivAt(E_+(t,·), 1/2, 0) for t≠0",
-      "lean_theorem": "E_plus_hasDerivAt_at_zero at line 1892",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4, Contribution (iv) + W7q: |E_+(t,U₁) - E_+(t,U₂)| ≤ |U₁-U₂|",
-      "lean_theorem": "E_plus_lipschitz at line 2185",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4 + Contribution (iv): |J(t,U) - 4t²/U| ≤ 16t⁴/U³ for U ≥ 4|t| > 0",
-      "lean_theorem": "J_superexchange_bound at line 1980: hypothesis `4 * |t| ≤ U`, conclusion `|J_superexchange t U - 4 * t^2 / U| ≤ 16 * t^4 / U^3`",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4: charpoly = (X-U)(X²-UX-4t²)",
-      "lean_theorem": "charpoly_H_singlet_Δ0_factored at line 2115",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 4: antisymmetric doublon eigenvalue = U via (0,1,0)",
-      "lean_theorem": "H_singlet_Δ0_U_eigenvector at line 2159",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 5 W8a: |dark(θ+π)⟩ = -|dark(θ)⟩",
-      "lean_theorem": "darkStateθ_add_pi_sign_flip at line 2454",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 5 W8b: |dark(θ+2π)⟩ = |dark(θ)⟩",
-      "lean_theorem": "darkStateθ_add_two_pi at line 2466",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 5 W8c: ⟨dark|dark⟩ = 1",
-      "lean_theorem": "darkStateθ_dotProduct_self at line 2481",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 5 W8d: ⟨dark|H|dark⟩ = 0 (dynamical phase vanishes)",
-      "lean_theorem": "dark_state_dynamical_phase_vanishes at line 2500",
-      "status": "PASS"
-    },
-    {
-      "location": "Section 5 W8e: bundled geometric phase = -1",
-      "lean_theorem": "geometric_phase_minus_one_on_pi_loop at line 2522",
-      "status": "PASS"
-    }
-  ],
-  "theorem_refs": [
-    {"name": "H_singlet_isSymm (T1)", "in_lean": true, "line": 112, "status": "PASS"},
-    {"name": "dark_state_in_kernel", "in_lean": true, "line": 120, "status": "PASS"},
-    {"name": "chiralOp_sq (Γ²=I)", "in_lean": true, "line": 146, "status": "PASS"},
-    {"name": "chiral_anticommutes", "in_lean": true, "line": 155, "status": "PASS"},
-    {"name": "det_H_singlet / trace_H_singlet", "in_lean": true, "lines": [163, 177], "status": "PASS"},
-    {"name": "triplet_{plus,zero,minus}_zero (T10a-c)", "in_lean": true, "lines": [187, 199, 209], "status": "PASS"},
-    {"name": "charpoly_H_singlet (W4)", "in_lean": true, "line": 526, "status": "PASS"},
-    {"name": "chiralOp_conjugation_neg (W5a: ΓHΓ = -H)", "in_lean": true, "line": 758, "status": "PASS"},
-    {"name": "chiral_maps_eigenvector (W5b)", "in_lean": true, "line": 772, "status": "PASS"},
-    {"name": "spectrum_pairing_U0 (W5k)", "in_lean": true, "line": 795, "status": "PASS"},
-    {"name": "darkVec_in_chiral_minus_eigenspace (W5i)", "in_lean": true, "line": 824, "status": "PASS"},
-    {"name": "zero_mode_unique_up_to_scalar (W5p)", "in_lean": true, "line": 1084, "status": "PASS"},
-    {"name": "chiralProj_* algebra (W5l-o2)", "in_lean": true, "lines": [996, 1005, 1016, 1025, 1037], "status": "PASS"},
-    {"name": "eigenBasis_change_of_basis_unitary (W6B)", "in_lean": true, "line": 1501, "status": "PASS"},
-    {"name": "U_SWAP_singlet_darkVec/brightVec± (W6C-A1/A2/A3)", "in_lean": true, "lines": [1564, 1582, 1597], "status": "PASS"},
-    {"name": "U_SWAP_singlet_sq (W6C-S2: U²=I)", "in_lean": true, "line": 1626, "status": "PASS"},
-    {"name": "U_SWAP_singlet_mem_unitaryGroup (W6C-U1)", "in_lean": true, "line": 1764, "uses_claimed_apis": ["Matrix.mem_unitaryGroup_iff'", "Matrix.conjTranspose_eq_transpose_of_trivial"], "status": "PASS"},
-    {"name": "U_SWAP_singlet_on_kernel (W6C-K1)", "in_lean": true, "line": 1778, "status": "PASS"},
-    {"name": "U_SWAP_adapted_* (6x6 lift W6-deferred)", "in_lean": true, "lines": [2317, 2328, 2337, 2343, 2351, 2364, 2379], "status": "PASS"},
-    {"name": "sorry count in FermiHubbardDimer.lean", "value": 0, "status": "PASS"}
-  ],
-  "citation_integrity": [
-    {"bibkey": "Berry1984", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
-    {"bibkey": "Zanardi1999", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
-    {"bibkey": "Leek2007", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS", "notes": "Registry notes DOI verified against Science 318, 1889"},
-    {"bibkey": "Kiefer2026", "in_registry": true, "doi": null, "arxiv": "2507.22112", "doi_verified": null, "used_in_matches": true, "status": "PASS", "notes": "DOI pending publication"},
-    {"bibkey": "Kitaev2009", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
-    {"bibkey": "AltlandZirnbauer", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
-    {"bibkey": "Lean4", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS"},
-    {"bibkey": "Mathlib", "in_registry": true, "doi_verified": null, "used_in_matches": true, "status": "PASS", "compile_note": "natbib issued 'Citation `Mathlib' on page 1 undefined on input line 88' warning due to revtex4-2 natbib mode; the \\bibitem is defined later in the file but natbib resolves in order. Cosmetic issue but indicates the paper may not cross-reference properly without a rerun."}
-  ],
-  "counts_macros": [
-    {"macro": "\\totaltheorems", "defined_in_counts_tex": true, "value": 3728, "paper_uses": true, "status": "PASS"},
-    {"macro": "\\substantivetheorems", "defined_in_counts_tex": true, "value": 3617, "paper_uses": true, "status": "PASS"},
-    {"macro": "\\placeholdertheorems", "defined_in_counts_tex": true, "value": 111, "paper_uses": true, "status": "PASS"},
-    {"macro": "\\totaltests", "defined_in_counts_tex": false, "paper_uses": true, "usage_lines": [120, 460], "status": "FAIL", "fix": "Either (a) add \\totaltests to update_counts.py and counts.tex (wiring pytest collection into the counts pipeline), or (b) replace \\totaltests with \\testfiles (file count, already emitted — value 58) and reword the sentence as 'tests across \\testfiles test files' (semantics change)."}
-  ],
-  "structural_claims": [
-    {
-      "location": "Abstract line 44, Section 4 Table 1 total, Conclusion",
-      "claim": "139 theorems in FermiHubbardDimer.lean",
-      "actual": 141,
-      "delta": 2,
-      "status": "FAIL",
-      "notes": "141 top-level 'theorem'/'lemma' declarations. Discrepancy may reflect: (a) excluded wave-summary markers (13 marker theorems; 141-13=128, not 139 either), or (b) paper was drafted before 2 theorems were added. Re-count required."
-    },
-    {
-      "location": "Section 6 line 554",
-      "claim": "~2,400 lines of Lean source",
-      "actual": "2541 lines",
-      "delta_pct": 5.9,
-      "status": "WARN",
-      "notes": "Close but rounded low. '~2,500 lines' or '~2,540 lines' would be more accurate. Not blocking."
-    },
-    {
-      "location": "Table 1 per-section breakdown (15+10+20+21+39+12+17+5)",
-      "claim": "Sum = 139",
-      "actual_sum_of_row_claims": 139,
-      "actual_per_wave_in_source": "W2=32 W3=1 W4=8 W5=10 W5r2=12 W6A=20 W6B=7 W6C=11 W6r2=7 W7=10 W7r2=9 W6def=8 W8=6 (total 141)",
-      "status": "WARN",
-      "notes": "Paper's per-section numbers don't map cleanly to wave-boundary theorem counts. Paper may be grouping differently (e.g., counting defs or grouping across section boundaries). Table numbers should be regenerated by a count script rather than hand-coded."
-    },
-    {
-      "location": "Abstract line 44, line 557, Section 6",
-      "claim": "zero sorry, zero new axioms",
-      "actual": "FermiHubbardDimer.lean grep sorry = 0; project axioms = 1 (gapped_interface_axiom in SPTClassification.lean)",
-      "status": "PASS",
-      "notes": "Paper correctly qualifies this at line 455 as 'a single axiom (gapped_interface_axiom in SPTClassification.lean, unrelated to this paper)'. 'zero new axioms' in the scope of this formalization is correct."
-    }
-  ],
-  "qualitative_claims": [
-    {
-      "location": "Abstract line 28, Introduction line 93, 'first end-to-end formalization of a geometric quantum gate in any interactive proof assistant'",
-      "claim": "first end-to-end formalization of a geometric quantum gate in any interactive proof assistant",
-      "status": "WARN",
-      "notes": "Strong precedence claim. No systematic search documented. Before submission, verify against: Isabelle/HOL quantum libraries (isabelle-afp quantum), Coq QWIRE / QuantumLib, Lean Mathlib existing unitary/geometric-phase material. Paper qualifies scope ('algebraic core', 'discrete-step'), which is good defensive phrasing, but 'first in any proof assistant' should be backed by either a review or weakened to 'first in Lean 4' which is easier to defend."
-    },
-    {
-      "location": "Section 4 line 338, 'factor-of-2 difference underlies the observed 4× robustness'",
-      "claim": "factor-of-2 sensitivity difference underlies the observed 4× robustness",
-      "status": "WARN",
-      "notes": "Hand-wavy connection: a factor of 2 in ∂-sensitivity does not straightforwardly imply 4× noise robustness. The 4× figure is from Kiefer2026 experimental data; the paper's 2-vs-1 derivative-ratio argument is a plausibility story, not a derivation. Consider softening to 'is consistent with' or 'contributes to' rather than 'underlies'."
-    },
-    {
-      "location": "Introduction lines 106-121, Contributions",
-      "claim": "'The first Lean formalization of the Fermi-Hubbard dimer singlet-sector spectrum' + 'The first formal proof, in any proof assistant, of the discrete-step statement underlying the Kiefer et al. SWAP gate'",
-      "status": "WARN",
-      "notes": "Same precedence caveat as above. Lean-specific first is defensible; any-proof-assistant first requires evidence."
-    }
-  ],
-  "scope_boundary_honesty": [
-    {
-      "item": "No adiabatic theorem claimed",
-      "location": "Abstract line 51, Introduction line 124, Section 5 line 408, Section 7",
-      "status": "PASS",
-      "notes": "Explicitly and repeatedly stated that Kato's adiabatic theorem is NOT formalized; the paper proves the discrete-step statement conditional on the Kato reduction being valid."
-    },
-    {
-      "item": "No Berry connection 1-form",
-      "location": "Abstract line 51, Section 5 line 414, Section 7",
-      "status": "PASS",
-      "notes": "Paper explicitly states Berry-connection holonomy picture is deferred to Target B / Layer 2."
-    },
-    {
-      "item": "No fiber bundles / differential geometry",
-      "location": "Section 6 line 490",
-      "status": "PASS",
-      "notes": "Explicitly disavowed as not present."
-    },
-    {
-      "item": "Geometric vs dynamical phase argument",
-      "location": "Section 5 line 381",
-      "status": "PASS",
-      "notes": "Paper carefully frames the gate's geometric interpretation as resting on 'two independent finite-dimensional facts' (sign flip + dynamical phase vanishes), which matches the Lean bundle (W8e)."
-    }
-  ],
-  "parameter_provenance": [
-    {
-      "notes": "Paper 18 does not invoke PARAMETER_PROVENANCE — it does not reference experimental parameters (no t, U, Δ numerical values from a BEC/optical-lattice setup). All physics parameters are symbolic. No provenance check applies. Status: N/A."
-    }
-  ],
-  "axiom_risk": [
-    {
-      "axiom": "gapped_interface_axiom",
-      "source": "SPTClassification.lean",
-      "affects_paper_18": false,
-      "status": "PASS",
-      "notes": "Project's single axiom is in SPTClassification.lean and is not in any dependency chain of FermiHubbardDimer.lean. Paper 18 correctly calls this out as 'unrelated to this paper' (line 456)."
-    }
-  ],
-  "hypothesis_risk": [
-    {
-      "notes": "FermiHubbardDimer.lean does not rely on any Physics structure with hypothesis fields (FluidBackground, DissipativeCoeffs). All theorems are bare propositions over `t Δ U : ℝ` with optional `(t ≠ 0 ∨ Δ ≠ 0)` hypotheses. No HYPOTHESIS_REGISTRY entries apply. Status: N/A."
-    }
-  ],
-  "recommended_fixes_pre_figure_reviewer": [
-    "FIX-1 (blocking): Add `\\usepackage{physics}` OR define `\\newcommand{\\ket}[1]{|#1\\rangle}` in the preamble. This is load-bearing for ~20 math expressions.",
-    "FIX-2 (blocking): Decide and implement totaltests semantics. Options: (a) add `\\totaltests` to update_counts.py with pytest --collect-only parse; (b) swap to existing `\\testfiles` and rephrase; (c) hard-code the number with a comment.",
-    "FIX-3 (blocking): Reconcile the '139 theorems' claim with the actual source. Either recount (likely 141) and update abstract+table+conclusion, or confirm the grouping convention the paper intends and add a footnote clarifying what is counted.",
-    "FIX-4 (important): Recompile after FIX-1/2 and verify zero 'Undefined control sequence' errors remain in paper_draft.log.",
-    "FIX-5 (optional): Soften 'first in any proof assistant' claims to 'first in Lean 4' unless a precedence search is documented."
-  ],
-  "verdict": {
-    "ready_for_figure_reviewer": false,
-    "reason": "Paper does NOT compile cleanly — 35 Undefined control sequence errors from \\ket (load-bearing) and \\totaltests (canonical-macro drift). These must be fixed before visual review; currently the rendered PDF has missing math content. Note: Lean-side claims, citations, and structural claims are overwhelmingly sound — the paper is substantively correct, it just needs ~10 minutes of LaTeX cleanup plus a theorem recount."
-  }
+  "blocking_issues": [],
+  "non_blocking_followups": []
 }

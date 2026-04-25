@@ -58,7 +58,7 @@ operate in genuinely different mathematical frameworks---neither proves
 nor disproves the other. A companion paper~\cite{Paper8} extends this
 analysis with the Gioia-Thorngren positive construction ($[H,Q_A]=0$
 machine-verified), Onsager algebra formalization, and $\mathbb{Z}_{16}$
-anomaly classification, totaling 2237+~theorems (1~axiom: gapped interface) across 130~modules.
+anomaly classification, totaling 2237+~theorems (1~axiom: gapped interface) across 170~modules.
 \end{abstract}
 
 \maketitle
@@ -165,8 +165,9 @@ The TPF construction violates five GS conditions:
   argument (Aristotle run \texttt{run\_20260328\_132925}).
 
 \item \textbf{C2 (fermion-only):} Bosonic rotor ancillas $L^2(S^1)$ are not
-  fermionic. Proved: \texttt{tpf\_violates\_C2}, \texttt{tpf\_bosonic\_exceeds\_fock}
-  (Aristotle run \texttt{run\_20260328\_142342}).
+  fermionic. Proved: \texttt{tpf\_violates\_C2} (Aristotle run
+  \texttt{run\_20260328\_142342}), \texttt{tpf\_bosonic\_exceeds\_fock}
+  (Aristotle run \texttt{run\_20260328\_151228}).
 
 \item \textbf{I3 (finite-dim):} $\ell^2(\mathbb{Z})$ is countably
   infinite-dimensional. Proved: \texttt{rotor\_hilbert\_not\_finite\_dim}.
@@ -230,7 +231,7 @@ Proved in \texttt{TPFEvasion.lean} (12 theorems, zero sorry).
 \label{fig:fock_space}
 \end{figure}
 
-The formalization uses Lean~4.28.0 with Mathlib (commit \texttt{8f9d9cff}).
+The formalization uses Lean~4.29.0 with Mathlib (commit \texttt{8850ed93}).
 Key Mathlib infrastructure:
 
 \begin{itemize}
@@ -269,7 +270,7 @@ automated theorem prover.}
   Amber: proofs filled by the Aristotle automated theorem prover.
   The chirality modules (\texttt{LatticeHamiltonian},
   \texttt{GoltermanShamir}, \texttt{TPFEvasion}) contribute 54 theorems.
-  The full project totals 968 theorems (zero axioms) across 66 modules.}
+  The full project totals 4049 theorems (1~axiom) across 170 modules.}
 \label{fig:theorem_summary}
 \end{figure}
 
@@ -306,7 +307,7 @@ The broader formalization program has also produced the first-ever
 definitions of pivotal, spherical, and fusion categories in a proof
 assistant, along with the first formalization of the Drinfeld double
 $D(G)$ and the gauge emergence theorem $Z(\mathrm{Vec}_G) \cong
-\mathrm{Rep}(D(G))$. Together, these 968 theorems across 66 modules
+\mathrm{Rep}(D(G))$. Together, these 4049 theorems across 170 modules
 provide end-to-end formal verification from categorical Layer~1 through
 gauge Layer~2 to hydrodynamic Layer~3.
 
@@ -320,7 +321,7 @@ no-go conditions and TPF evasion mechanism in a proof assistant.
 \texttt{sorry}, provide machine-checked evidence that the lattice
 chirality debate involves frameworks operating in different mathematical
 spaces. The formalization is part of a broader project containing
-2237+ theorems (1~axiom: gapped interface conjecture) across 130 modules,
+2237+ theorems (1~axiom: gapped interface conjecture) across 170 modules,
 322+ proved by the Aristotle automated theorem prover across 43+ runs.
 
 In companion work~\cite{Paper8}, this analysis is extended in two

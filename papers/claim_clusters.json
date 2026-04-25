@@ -1,0 +1,8 @@
+{
+  "cluster_count": 0,
+  "clusters": [],
+  "constructed_at": "2026-04-25T07:41:00Z",
+  "constructed_by": "cluster_detect.py:all",
+  "paper_coverage": [],
+  "version": 1
+}

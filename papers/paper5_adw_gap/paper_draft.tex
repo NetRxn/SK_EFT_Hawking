@@ -27,7 +27,7 @@ the tetrad acquires a nonzero vacuum expectation value with automatically
 Lorentzian signature, producing 2 massless spin-2 graviton modes as Higgs
 bosons of the tetrad order parameter. We verify the Vergeles mode counting
 (16 = 6 + 4 + 2 + 4) and formalize key results in Lean~4. However, we
-identify five structural obstacles---a ${\sim}6{,}000\times$ perturbative coupling
+identify four structural obstacles---a ${\sim}6{,}000\times$ perturbative coupling
 deficit from Wen's emergent QED, the spin-connection gap, Grassmann-bosonic
 incompatibility, Nielsen-Ninomiya doubling, and the cosmological constant
 problem---that prevent a complete emergent fermion bootstrap at this level.
@@ -36,10 +36,11 @@ instanton mechanism may bypass the perturbative deficit.
 All structural theorems are formally verified in \texttt{ADWMechanism.lean}
 (21 theorems, zero \texttt{sorry}; 1 proved by Aristotle run \texttt{f8de66d1}).
 Additionally, the explicit NJL-type gap equation is formalized in
-\texttt{TetradGapEquation.lean} (20 theorems, zero \texttt{sorry}; 9 proved
+\texttt{TetradGapEquation.lean} (23 theorems, zero \texttt{sorry}; 9 proved
 by Aristotle run \texttt{79e07d55}), including existence, uniqueness, and
 monotonicity of the nontrivial solution, with one claimed property
-(\texttt{gap\_solution\_bounded}) disproved by automated counterexample.
+disproved by automated counterexample (a documented counterexample,
+commented in \texttt{TetradGapEquation.lean}).
 \end{abstract}
 
 \maketitle
@@ -314,10 +315,11 @@ general theorem (formalized rigor status in \texttt{FermiPointTopology.lean}:
 
 \section{Formal Verification}
 
-All structural results are formalized in Lean~4 (v4.28.0) with Mathlib,
-across three modules: \texttt{ADWMechanism.lean} (21 theorems, zero
-\texttt{sorry}), \texttt{TetradGapEquation.lean} (20 theorems, 1 \texttt{sorry}),
-and \texttt{EmergentGravityBounds.lean} (14 theorems, 1 \texttt{sorry}).
+All structural results are formalized in Lean~4 (v4.29.0) with Mathlib
+(\texttt{8850ed93}), across three modules: \texttt{ADWMechanism.lean}
+(21 theorems, zero \texttt{sorry}), \texttt{TetradGapEquation.lean}
+(23 theorems, zero \texttt{sorry}), and \texttt{EmergentGravityBounds.lean}
+(14 theorems, zero \texttt{sorry}).
 All verified by \texttt{lake build}. 9 gap equation theorems proved by
 Aristotle automated prover (run \texttt{79e07d55}); 1 disproved by counterexample.
 
@@ -340,7 +342,7 @@ Aristotle automated prover (run \texttt{79e07d55}); 1 disproved by counterexampl
 \item \texttt{gap\_nontrivial\_exists}: IVT existence for $G > G_c$
 \item \texttt{gap\_solution\_monotone}: $\Delta^*(G)$ increasing
 \item \texttt{bifurcation\_at\_Gc}: continuous onset at $G_c$
-\item \texttt{gap\_solution\_bounded}: \textbf{disproved} (counterexample)
+\item gap-solution boundedness by $\Lambda$: \textbf{disproved} via a documented counterexample (commented in \texttt{TetradGapEquation.lean})
 \end{itemize}
 
 \section{Conclusions}
@@ -358,10 +360,10 @@ $\Delta$ approaches the cutoff.
 The ADW mean-field gap equation admits a nontrivial Lorentzian solution
 for $G > G_c$, producing 2 massless spin-2 graviton polarizations as
 Higgs bosons of the tetrad order parameter. The Vergeles mode counting is
-verified both numerically and formally (41 theorems across two Lean modules,
+verified both numerically and formally (37 theorems across two Lean modules,
 zero \texttt{sorry}).
 
-However, the emergent fermion bootstrap at Level~2 faces five structural
+However, the emergent fermion bootstrap at Level~2 faces four structural
 obstacles, the most quantitatively severe being the ${\sim}6{,}000\times$
 perturbative coupling deficit (\texttt{coupling\_ratio\_small}, proved).
 This is a \emph{qualified positive result}: the mechanism works at

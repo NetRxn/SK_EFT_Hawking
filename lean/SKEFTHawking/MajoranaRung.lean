@@ -45,8 +45,8 @@ chosen path rather than "open" — relabeled accordingly during Wave 2a:
 ### Load-bearing under Embedding III (Wave 2 chosen path)
 
 - **WAVE2-OPEN-1**: BCS-exponential substrate bridge for `M_R`,
-  conditional on lepton-number violation (Antusch-Kingman-Lindner-
-  Wetterich Nucl. Phys. B 658 (2003) 203, hep-ph/0211385). Wave 2b
+  conditional on lepton-number violation (Antusch-Kersten-Lindner-
+  Ratz Nucl. Phys. B 658 (2003) 203, hep-ph/0211385). Wave 2b
   encoded as the canonical strong-form predicate
   `H_MR_FromADWSubstrate_BCS_LNV` with the L-symmetry obstruction
   theorem `lepton_number_symmetry_obstructs_BCS_form`. The Wave 2a
@@ -173,7 +173,7 @@ that no primary source closes `Λ_ADW → M_R`, but surfaces a clean
 The Majorana bilinear `½ ν_R^T C ν_R` carries `ΔL = 2`. If the substrate
 preserves U(1)_L (or its discrete remnant ℤ_{4,X}), the four-fermion
 Majorana-channel coupling `G_M (ν_R^T C ν_R)(ν_R^T C ν_R)*` is forbidden
-by symmetry. Antusch-Kingman-Lindner-Wetterich (Nucl. Phys. B 658 (2003)
+by symmetry. Antusch-Kersten-Lindner-Ratz (Nucl. Phys. B 658 (2003)
 203, hep-ph/0211385) state this explicitly:
 
 > "We have included huge Majorana masses for the right-handed neutrinos,
@@ -237,7 +237,7 @@ def H_MR_FromADWSubstrate_BCS_LNV
 
 /-- **WAVE2-OPEN-1 obstruction theorem (Wave 2b)**: if the substrate does
 NOT violate lepton number, the strong BCS-exponential M_R hypothesis
-cannot hold. This formalizes Antusch-Kingman-Lindner-Wetterich's symmetry
+cannot hold. This formalizes Antusch-Kersten-Lindner-Ratz's symmetry
 argument and is the cleanest no-go content available from the deep
 research.
 

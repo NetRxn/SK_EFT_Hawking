@@ -43,10 +43,10 @@ threshold $G(\omega) > 0.5$ occurs at $\omega < 0.175\kappa$ (exactly,
 $\omega/\kappa = \ln(3)/2\pi$), independent of $\kappa$ — a universal
 spectral signature. Detection requires only ${\sim}100$ probe photons
 per mode for $5\sigma$. All predictions derive from
-a formally verified computation pipeline (2237+ Lean~4 theorems,
+a formally verified computation pipeline (4049+ Lean~4 theorems,
 1~axiom [\texttt{gapped\_interface\_axiom}, not used by this paper],
 verified by \texttt{lake build}). Polariton-specific results verified in
-\texttt{PolaritonTier1.lean} (9~theorems, zero
+\texttt{PolaritonTier1.lean} (6~theorems, zero
 sorry, all manual proofs): \texttt{attenuation\_ge\_one},
 \texttt{attenuation\_mono\_Gamma}, \texttt{attenuation\_eq\_one\_at\_zero\_decay}.
 Formulas: \texttt{stimulated\_hawking\_gain},
@@ -89,7 +89,7 @@ that bypass the quantum noise floor, with quasinormal mode
 resonances~\cite{Burkhard2025} further concentrating the signal.
 
 \item \textbf{Formally verified predictions}: All spectral formulas
-derive from a Lean~4 formalization with 2237+ verified theorems
+derive from a Lean~4 formalization with 4049+ verified theorems
 (of which the polariton-specific bounds are in \texttt{PolaritonTier1.lean});
 ensuring internal consistency between the EFT framework and
 platform-specific predictions.
@@ -219,7 +219,9 @@ $\kappa = 7\times 10^{10}$~s$^{-1}$ (smooth) and $\kappa = 1.1\times 10^{11}$~s$
 classification ($\Gamma_{\text{pol}}/\kappa$): \emph{perturbative} ($<0.1$),
 \emph{borderline} ($0.1{-}1$), \emph{intractable} ($>1$). Falque's actual
 8~ps cavity sits at the borderline; the projected long and ultralong cavities
-with the same SLM profile reach the fully perturbative regime. The steep-horizon
+with the same SLM profile remain borderline by the
+$\Gamma_{\text{pol}}/\kappa = 0.143$ classifier ($> 0.1$ perturbative cutoff),
+approaching but not yet reaching the fully perturbative regime. The steep-horizon
 reach raises $T_H$ at the cost of dispersive-regime $D \approx 0.93$; the
 smooth-horizon baseline keeps $D \approx 0.60$, borderline perturbative.}
 \end{table}
@@ -300,7 +302,7 @@ Polariton BEC with reservoir-corrected parameters and stimulated
 Hawking detection via CW pump-probe spectroscopy offers a
 realistic pathway to analog Hawking radiation detection at
 temperatures ${\sim}10^8$ times higher than achieved in atomic BEC.
-All predictions are formally verified (2237+ Lean~4 theorems across
+All predictions are formally verified (4049+ Lean~4 theorems across
 the project; this paper's polariton bounds live in
 \texttt{PolaritonTier1.lean} and are traceable to specific
 computation modules).

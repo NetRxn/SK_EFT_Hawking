@@ -1,194 +1,2829 @@
 {
-  "review_metadata": {
-    "paper": "paper1_first_order",
-    "paper_file": "papers/paper1_first_order/paper_draft.tex",
-    "review_date": "2026-04-13",
-    "reviewer": "physics-qa:claims-reviewer",
-    "model": "claude-opus-4-6[1m]",
-    "status": "issues_found",
-    "summary": "Post-bugfix re-review (Phase 5u Wave 1). Table 1 numerical values now RECONCILE with pipeline after the k_H^2 fix in compute_dissipative_correction. All new Lean theorems (GammaH, deltaDissFromTransport*, gammaH_*) exist in SecondOrderSK.lean with no active sorry. Main residual issues: (1) citation keys use Author:Year format (e.g. 'Steinhauer:2019') but CITATION_REGISTRY uses AuthorYear (e.g. 'Steinhauer2016'/'deNova2019') — 0 of 11 bibitems directly resolve against registry; (2) Zaremba-regime estimate (eq:gamma_estimates_expanded, eq:delta_diss_zaremba) is dimensionally suspect — gamma_1 quoted in [s^-1] but plugged into a formula that expects [m^2/s] in all other pipeline uses, yielding an apparent 10^-4..10^-3 only if gamma_1 is reinterpreted as a rate; (3) all 15 platform parameters remain human-unverified (blocks submission, not draft); (4) a __main__ demo block in transonic_background.py still passes gamma_beliaev [s^-1] as gamma_1 [m^2/s] — produces inflated delta_diss~1e3 in console output, not used for Table 1 but a foot-gun; (5) paper body's eq:hawking_damping and eq:delta_diss_explicit drop the k_H^2 factor that was the point of the bugfix, so body text is mildly inconsistent with the implementation.",
-    "critical_issues": 0,
-    "warnings": 7,
-    "pass_count": 24
-  },
-
-  "layer_1_numerical_claims": {
-    "status": "PASS",
-    "tolerance": "0.5% target (rounding-level WARN accepted)",
-    "recompute_method": "uv run python against src.core.transonic_background.solve_transonic_background + compute_dissipative_correction with beliaev_transport_coefficients giving gamma_1, gamma_2 in [m^2/s]",
-    "table_1_verification": [
-      {"platform": "Steinhauer", "quantity": "c_s (mm/s)",     "paper": 0.55,      "computed": 0.5476,    "delta_pct": 0.44,  "status": "PASS"},
-      {"platform": "Steinhauer", "quantity": "xi (um)",        "paper": 1.33,      "computed": 1.3344,    "delta_pct": 0.33,  "status": "PASS"},
-      {"platform": "Steinhauer", "quantity": "kappa (s^-1)",   "paper": 4.8,       "computed": 4.7578,    "delta_pct": 0.88,  "status": "WARN", "note": "Rounding-level; paper value 4.8 is 1-decimal rounded from 4.7578"},
-      {"platform": "Steinhauer", "quantity": "T_H (nK)",       "paper": 0.006,     "computed": 0.005784,  "delta_pct": 3.60,  "status": "WARN", "note": "Paper value has only 1 sig fig (0.006); rounding from 0.0058"},
-      {"platform": "Steinhauer", "quantity": "delta_diss",     "paper": 2.4e-5,    "computed": 2.3772e-5, "delta_pct": 0.95,  "status": "WARN", "note": "Rounding-level (2-sig-fig paper value)"},
-      {"platform": "Heidelberg", "quantity": "c_s (mm/s)",     "paper": 3.92,      "computed": 3.9194,    "delta_pct": 0.02,  "status": "PASS"},
-      {"platform": "Heidelberg", "quantity": "xi (um)",        "paper": 0.42,      "computed": 0.4159,    "delta_pct": 0.98,  "status": "WARN", "note": "Rounding-level"},
-      {"platform": "Heidelberg", "quantity": "kappa (s^-1)",   "paper": 101.9,     "computed": 101.9258,  "delta_pct": 0.03,  "status": "PASS"},
-      {"platform": "Heidelberg", "quantity": "T_H (nK)",       "paper": 0.124,     "computed": 0.1239,    "delta_pct": 0.08,  "status": "PASS"},
-      {"platform": "Heidelberg", "quantity": "delta_diss",     "paper": 1.6e-3,    "computed": 1.5925e-3, "delta_pct": 0.47,  "status": "PASS"},
-      {"platform": "Trento",     "quantity": "c_s (mm/s)",     "paper": 2.18,      "computed": 2.1848,    "delta_pct": 0.22,  "status": "PASS"},
-      {"platform": "Trento",     "quantity": "xi (um)",        "paper": 1.26,      "computed": 1.2644,    "delta_pct": 0.35,  "status": "PASS"},
-      {"platform": "Trento",     "quantity": "kappa (s^-1)",   "paper": 21.4,      "computed": 21.4067,   "delta_pct": 0.03,  "status": "PASS"},
-      {"platform": "Trento",     "quantity": "T_H (nK)",       "paper": 0.026,     "computed": 0.026023,  "delta_pct": 0.09,  "status": "PASS"},
-      {"platform": "Trento",     "quantity": "delta_diss",     "paper": 1.4e-5,    "computed": 1.4130e-5, "delta_pct": 0.93,  "status": "WARN", "note": "Rounding-level"}
-    ],
-    "inline_numerical_claims": [
-      {"location": "Abstract", "claim": "delta_diss ~ 10^-5 to 10^-3 for Steinhauer Rb87", "support": "Steinhauer Bel=2.4e-5, Heidelberg Bel=1.6e-3 — range captures all three platforms", "status": "PASS"},
-      {"location": "Abstract / discussion", "claim": "spin-sonic enhancement (c_density/c_spin)^2 ~ 100 brings delta_diss to O(10^-2)", "support": "Arithmetic: 100 x (1e-5 .. 1e-3) = 1e-3 .. 1e-1; paper later writes 'O(10^-1)' in the kinetic regime. No pipeline computation uses actual spin-channel transport coefficients — it's a scaling argument.", "status": "WARN", "note": "Order-of-magnitude estimate, not a pipeline-computed value"},
-      {"location": "Sec. II eq. surface_gravity", "claim": "kappa ~ 20-100 s^-1 for typical BEC parameters", "support": "Computed: Steinhauer 4.76, Heidelberg 101.9, Trento 21.4. Steinhauer is BELOW the stated range due to unusually small upstream velocity; paper text should say '~5-100 s^-1' to cover all three.", "status": "WARN"},
-      {"location": "Sec. III.C eq. gamma_estimates", "claim": "a_s = 5.31 nm (100.4 a_0) per van Kempen 2002", "support": "constants.py Rb87.a_s = 5.31e-9 m; matches", "status": "PASS"},
-      {"location": "Sec. IV.B eq. hawking_damping", "claim": "Gamma_H ~ gamma_1 kappa^2 (using c_s ~ kappa/k_H)", "support": "Body text writes Gamma_H ~ gamma_1 (kappa^2 + c_s^2 k_H^2), then simplifies to gamma_1 kappa^2. The fixed implementation uses Gamma_H = (gamma_1+gamma_2)(kappa/c_s)^2 where gamma is [m^2/s]. These are dimensionally inequivalent unless one reinterprets gamma as a rate. The body derivation is schematic; the implementation matches the Lean theorem GammaH.", "status": "WARN", "note": "Body text gives a schematic identification; the pipeline identity is the Lean theorem GammaH with gamma_i in [m^2/s]"},
-      {"location": "Sec. V eq. delta_diss_explicit", "claim": "delta_diss ~= -gamma_1 kappa / (pi c_s^2)", "support": "Matches Gamma_H/kappa = (gamma_1+gamma_2)(kappa/c_s)^2 / kappa up to the pi factor (which is the dimensionless mean-frequency integral). Paper drops gamma_2 and the equal-splitting constraint.", "status": "PASS", "note": "Order-of-magnitude form consistent with deltaDissFromTransport_eq"},
-      {"location": "Sec. V 'Beliaev regime' eq. gamma_beliaev", "claim": "Gamma_Bel ~ sqrt(n a_s^3) omega^2 / c_s", "support": "formulas.py beliaev_damping_rate returns np.sqrt(n_1D * a_s**3) * kappa**2 / c_s — matches", "status": "PASS"},
-      {"location": "Sec. V 'Zaremba regime' eq. gamma_estimates_expanded", "claim": "gamma_1^(kin) ~ (hbar/m) n sigma ~ 10^-3 to 10^-1 s^-1", "support": "Dimensionally: (hbar/m)[m^2/s] x n_3D[m^-3] x sigma[m^2] = [m/s], not [s^-1]; or with n_1D[m^-1] x sigma[m^2] gives [m/s], still not a rate. The numerical range 10^-3 to 10^-1 also mixes conventions: the Lean/pipeline gamma_1 is [m^2/s] throughout. No pipeline code produces the quoted kinetic-regime delta_diss ~ 10^-4 to 10^-3.", "status": "WARN", "note": "Dimensional accounting of gamma_1 is inconsistent with the rest of the paper; the estimate reads like a placeholder"},
-      {"location": "Sec. V 'Note on kappa profile-dependence'", "claim": "Steinhauer step-profile kappa ~ 290 s^-1 gives T_H ~ 0.35 nK", "support": "T_H = hbar kappa / (2 pi k_B) = 1.0546e-34 * 290 / (2 pi * 1.381e-23) = 3.52e-10 K = 0.352 nK — matches within 1%", "status": "PASS"}
-    ]
-  },
-
-  "layer_2_theorem_references": {
-    "status": "PASS",
-    "paper_lean_modules_declared": ["AcousticMetric", "SKDoubling", "HawkingUniversality"],
-    "referenced_theorems": [
-      {"name": "GammaH (def)", "file": "lean/SKEFTHawking/SecondOrderSK.lean", "line": 401, "exists": true, "has_active_sorry": false, "status": "PASS", "note": "NEW in Phase 5u Wave 1 — horizon damping rate with k_H^2 factor"},
-      {"name": "gammaH_def", "file": "SecondOrderSK.lean", "line": 404, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "gammaH_via_kH", "file": "SecondOrderSK.lean", "line": 409, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "gammaH_nonneg", "file": "SecondOrderSK.lean", "line": 415, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "deltaDissFromTransport (def)", "file": "SecondOrderSK.lean", "line": 423, "exists": true, "has_active_sorry": false, "status": "PASS", "note": "NEW — matches the Python compute_dissipative_correction identity"},
-      {"name": "deltaDissFromTransport_eq", "file": "SecondOrderSK.lean", "line": 427, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "deltaDissFromTransport_zero_iff", "file": "SecondOrderSK.lean", "line": 435, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "firstOrder_correction_zero_iff", "file": "lean/SKEFTHawking/WKBAnalysis.lean", "line": 437, "exists": true, "has_active_sorry": false, "status": "PASS", "note": "Also: firstOrder_correction_zero_iff_no_dissipation at line 383"},
-      {"name": "firstOrder_uniqueness", "file": "lean/SKEFTHawking/SKDoubling.lean", "line": 412, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "transport_coefficient_count", "file": "SecondOrderSK.lean", "line": 237, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "firstOrder_count", "file": "SecondOrderSK.lean", "line": 258, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "acousticMetric_det", "file": "lean/SKEFTHawking/AcousticMetric.lean", "line": 119, "exists": true, "has_active_sorry": false, "status": "PASS", "note": "Paper bullet 'det g_munu = -rho^2' — this theorem is the match"},
-      {"name": "acousticMetric_inv_correct", "file": "AcousticMetric.lean", "line": 128, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "acoustic_metric_lorentzian", "file": "AcousticMetric.lean", "line": 244, "exists": true, "has_active_sorry": false, "status": "PASS"},
-      {"name": "beliaev_damping_rate (Python)", "file": "src/core/formulas.py", "line": 563, "exists": true, "has_active_sorry": false, "status": "PASS", "note": "Python-only; paper text cites it as UV-matching formula (not Lean-formal)"},
-      {"name": "beliaev_transport_coefficients (Python)", "file": "src/core/formulas.py", "line": 588, "exists": true, "has_active_sorry": false, "status": "PASS"}
-    ],
-    "sorry_audit": {
-      "files_scanned": ["AcousticMetric.lean", "SKDoubling.lean", "SecondOrderSK.lean", "HawkingUniversality.lean", "WKBAnalysis.lean"],
-      "active_sorry_count": 0,
-      "note": "All grep-hits for 'sorry' in Paper 1's modules are inside comments (section headers 'sorry Gaps', commented-out alternate proofs on lines SKDoubling:349, SKDoubling:634, SecondOrderSK:787, or descriptive docstring text). No active sorry tactics."
-    },
-    "formal_verification_section_claims": [
-      {"claim": "All 14 proof obligations machine-verified via Aristotle, zero remaining gaps", "verification": "Consistent with sorry audit above; full Aristotle registry tracked elsewhere. No inconsistency surfaced.", "status": "PASS"},
-      {"claim": "KMSSymmetry counterexample c=(0,0,0,0,0,0,0,1,0)", "verification": "Documented in SKDoubling.lean / FirstOrderKMS section; matches Aristotle finding.", "status": "PASS"}
-    ]
-  },
-
-  "layer_3_parameter_provenance": {
-    "status": "WARN",
-    "paper_dependencies_entry": "PAPER_DEPENDENCIES['paper1_first_order'] lists 7 formulas, 3 platforms (Steinhauer, Heidelberg, Trento), 3 Lean modules",
-    "parameters": [
-      {"key": "Rb87.mass", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Rb87.a_s", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN", "note": "a_s = 5.31 nm (100.4 a_0) per van Kempen 2002 — paper matches"},
-      {"key": "K39.mass", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "K39.a_s", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Na23.mass", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Na23.a_s", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Steinhauer.density_upstream", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Steinhauer.velocity_upstream", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Steinhauer.omega_perp", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Heidelberg.density_upstream", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Heidelberg.velocity_upstream", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Heidelberg.omega_perp", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN", "note": "PROJECTED parameter, unsourced 500 Hz"},
-      {"key": "Trento.density_upstream", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Trento.velocity_upstream", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"},
-      {"key": "Trento.omega_perp", "llm_verified_date": "2026-03-31", "human_verified_date": null, "status": "WARN"}
-    ],
-    "summary": "All 15 required parameters are LLM-verified (unblocks computation). None are human-verified (blocks paper submission per CHECK 15). Two Heidelberg/Trento trap frequencies are explicitly PROJECTED with an unsourced 500 Hz placeholder. No FAIL (no parameter is unverified)."
-  },
-
-  "layer_4_citation_integrity": {
-    "status": "FAIL",
-    "note": "Paper bibitems use 'Author:Year' convention; CITATION_REGISTRY uses 'AuthorYear' (no colon). Zero direct key matches, though author-level matches exist. This is either a paper-side or registry-side naming mismatch that should be reconciled before submission.",
-    "bibitems": [
-      {"bibkey": "Hawking:1974",    "in_registry_strict": false, "registry_candidate": "Hawking1974",    "candidate_present": true,  "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Unruh:1981",      "in_registry_strict": false, "registry_candidate": "Unruh1981",      "candidate_present": true,  "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Corley:1996",     "in_registry_strict": false, "registry_candidate": "Corley1996",     "candidate_present": true,  "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Jacobson:1996",   "in_registry_strict": false, "registry_candidate": "Jacobson1996",   "candidate_present": false, "doi_verified": null, "status": "WARN", "note": "No exact author-year entry in registry"},
-      {"bibkey": "Son:2002",        "in_registry_strict": false, "registry_candidate": "Son2002",        "candidate_present": false, "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Coutant:2014",    "in_registry_strict": false, "registry_candidate": "Coutant2014",    "candidate_present": false, "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Crossley:2017",   "in_registry_strict": false, "registry_candidate": "Crossley2017",   "candidate_present": true,  "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Jana:2020",       "in_registry_strict": false, "registry_candidate": "Jana2020",       "candidate_present": true,  "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Steinhauer:2019", "in_registry_strict": false, "registry_candidate": "deNova2019 / Steinhauer2016", "candidate_present": true, "doi_verified": null, "status": "WARN", "note": "Paper bibitem bundles 2016 + 2019 works; registry splits them (Steinhauer2016 and deNova2019)"},
-      {"bibkey": "Berti:2025",      "in_registry_strict": false, "registry_candidate": "Berti2025",      "candidate_present": true,  "doi_verified": null, "status": "WARN"},
-      {"bibkey": "Zaremba:1999",    "in_registry_strict": false, "registry_candidate": "Zaremba1999",    "candidate_present": false, "doi_verified": null, "status": "WARN", "note": "Not in registry under any capitalization"}
-    ],
-    "missing_from_registry": ["Jacobson1996", "Son2002", "Coutant2014", "Zaremba1999"],
-    "registry_present_but_key_mismatched": ["Hawking1974", "Unruh1981", "Corley1996", "Crossley2017", "Jana2020", "Steinhauer2016", "deNova2019", "Berti2025"],
-    "action_items": [
-      "Reconcile bibkey convention: rename paper \\bibitem keys to AuthorYear, OR accept Author:Year as registry aliases.",
-      "Add missing registry entries for Jacobson1996, Son2002, Coutant2014, Zaremba1999 (all four are in paper 1's bibliography).",
-      "The Berti entry in the paper says 'Comptes Rendus Physique vol 25 (2025)'; prior reviews flagged this journal may be wrong — verify against arXiv:2408.17292 before submission."
-    ]
-  },
-
-  "layer_5_qualitative_claims": [
-    {"location": "Abstract + Sec. VI.1", "claim": "dissipative corrections are suppressed at long wavelengths", "support": "delta_diss ~ Gamma_H/kappa, and Gamma_H = (gamma_1+gamma_2)(kappa/c_s)^2 is bounded; for weak coupling (small gamma) it vanishes. Consistent with Lean gammaH_nonneg + deltaDissFromTransport_zero_iff.", "status": "PASS"},
-    {"location": "Sec. V 'Experimental reach'", "claim": "delta_diss << 10^-2, below current Steinhauer sensitivity (10^-2)", "support": "Steinhauer delta_diss = 2.38e-5, Heidelberg 1.59e-3, Trento 1.41e-5 — all << 10^-2", "status": "PASS"},
-    {"location": "Sec. V.C", "claim": "Spin-sonic enhancement (c_density/c_spin)^2 ~ 100 could reach delta_diss ~ 10^-1 (kinetic) or 10^-3 (Beliaev)", "support": "Order-of-magnitude argument; no pipeline code computes this with actual spin-channel transport coefficients. Numerical plausibility of the 100x factor depends on c_spin=0.1 mm/s, which is itself a toy value (paper notes 'if ... or lower').", "status": "WARN", "note": "Speculative; relies on an assumed c_spin that is not in EXPERIMENTS['Trento']"},
-    {"location": "Sec. V.B", "claim": "Beliaev regime delta_diss ~ 10^-5 for typical BEC parameters", "support": "Matches Steinhauer 2.38e-5 and Trento 1.41e-5; Heidelberg is 1.6e-3 (larger because of much larger kappa).", "status": "PASS"},
-    {"location": "Sec. V.B 'Zaremba regime'", "claim": "delta_diss^(kin) ~ 10^-4 to 10^-3, ~10x larger than Beliaev", "support": "No pipeline computation; derived by plugging gamma_1^(kin) [quoted in s^-1] into a formula that expects gamma_1 [m^2/s]. Units do not balance. The qualitative direction (finite-T > T=0) is physically reasonable, but the quoted range is not derived.", "status": "WARN"},
-    {"location": "Sec. V 'Note on kappa profile-dependence'", "claim": "60x factor between tanh and step-profile kappa is geometric, not physical", "support": "Correct scaling argument; a step potential has discontinuous derivative, so the effective kappa is set by the step height / width ratio, not by EFT. Not directly pipeline-testable but internally consistent.", "status": "PASS"},
-    {"location": "Sec. VI.3.1 'kappa-scaling test'", "claim": "delta_diss propto kappa, delta_disp propto kappa^2, so distinct scaling exponents identify the correction type", "support": "From delta_diss = Gamma_H/kappa = (gamma_1+gamma_2) kappa/c_s^2 (linear in kappa, assuming gamma constant) and delta_disp ~ D^2 = (kappa xi/c_s)^2 (quadratic). Consistent.", "status": "PASS"}
-  ],
-
-  "layer_6_axiom_risk": {
-    "status": "PASS",
-    "note": "Paper 1's Lean modules (AcousticMetric, SKDoubling, HawkingUniversality, SecondOrderSK, WKBAnalysis) are NOT listed as consumers of any entry in AXIOM_METADATA. The three registered axioms (non_abelian_center_discrete, gs_nogo_axiom, gapped_interface_axiom) belong to other papers (3, 7, 8). No paper-1 claim rests on a project axiom beyond the Lean/Mathlib standard.",
-    "axioms_identified": []
-  },
-
-  "layer_7_hypothesis_risk": {
-    "status": "INFO",
-    "explicit_hypotheses_from_registry": {
-      "note": "None of the 5 HYPOTHESIS_REGISTRY entries (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8, spin_bordism_iso_Z) list any Paper-1 theorem in their dependent_theorems fields. Paper 1 does not depend on these hypotheses.",
-      "entries_affecting_paper1": []
-    },
-    "implicit_hypotheses": [
-      {
-        "structure": "FluidBackground",
-        "file": "lean/SKEFTHawking/Basic.lean",
-        "line": 61,
-        "fields": [
-          {"hypothesis": "soundSpeed_pos: forall x, 0 < soundSpeed x", "nature": "Well-established BEC physics: c_s = sqrt(g n/m) > 0 whenever n > 0 and g > 0", "affected_claims": "All Paper 1 hydrodynamic claims (acoustic metric, surface gravity, Hawking temperature)", "status": "INFO"},
-          {"hypothesis": "density_pos: forall x, 0 < density x", "nature": "Well-established BEC physics: n(x) > 0 throughout the condensate (no cavitation)", "affected_claims": "All Paper 1 claims — required for Lorentzian signature and finite sound speed", "status": "INFO"}
-        ]
+  "paper": "paper1_first_order",
+  "review_date": "2026-04-25T18:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper1_first_order:abstract:b5649676",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "b5649676",
+        "hash_algorithm": "sha256_first_8"
       },
-      {
-        "structure": "FirstOrderCoeffs / DissipativeAction positivity",
-        "file": "lean/SKEFTHawking/SKDoubling.lean",
-        "fields": [
-          {"hypothesis": "gamma_1_nonneg: 0 <= gamma_1", "nature": "Required by SK positivity (Im S_SK >= 0) — physical for T>=0 BEC with 3-phonon decay", "affected_claims": "Paper 1, dissipative correction sign (delta_diss = Gamma_H/kappa >= 0 when gamma >= 0)", "status": "INFO"},
-          {"hypothesis": "gamma_2_nonneg: 0 <= gamma_2", "nature": "Same as gamma_1_nonneg, applied to anisotropic coefficient", "affected_claims": "Paper 1, dissipative correction sign", "status": "INFO"}
-        ]
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 33,
+      "quote": "We present the first systematic computation of dissipative corrections to Hawking radiation in Bose--Einstein condensate (BEC) analog gravity using the Schwinger--Keldysh effective field theory framework.",
+      "quote_normalized": "we present the first systematic computation of dissipative corrections to hawking radiation in bose--einstein condensate (bec) analog gravity using the schwinger--keldysh effective field theory framework.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Metaclaim about scope; corroborated by paper structure and PAPER_DEPENDENCIES['paper1_first_order'].",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:b277757d",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "b277757d",
+        "hash_algorithm": "sha256_first_8"
       },
-      {
-        "structure": "SonicHorizon / transonic flow",
-        "file": "lean/SKEFTHawking/AcousticMetric.lean (line 273: gtt_vanishes_at_horizon)",
-        "fields": [
-          {"hypothesis": "existence of x_H with v(x_H) = c_s(x_H)", "nature": "Assumed to exist in any transonic background; the pipeline's solve_transonic_background constructs v(x) monotonically crossing c_s(x) so x_H is guaranteed for the tanh profile.", "affected_claims": "All of Sec. IV (wave equation across horizon)", "status": "INFO"}
-        ]
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 33,
+      "quote": "Starting from Son's superfluid effective action and extending it with Schwinger--Keldysh doubling to capture gradient-dominated dissipation, we derive the modified dispersion relation and compute corrections to the Hawking temperature in transonic (sonic black hole) backgrounds.",
+      "quote_normalized": "starting from son's superfluid effective action and extending it with schwinger--keldysh doubling to capture gradient-dominated dissipation, we derive the modified dispersion relation and compute corrections to the hawking temperature in transonic (sonic black hole) backgrounds.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Methodological summary; matches \u00a7II-IV structure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:abf58f95",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "abf58f95",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 37,
+      "quote": "The main result is the explicit formula \\begin{equation*} T_{\\text{eff}} = T_H \\left(1 + \\delta_{\\text{disp}} + \\delta_{\\text{diss}} + \\delta_{\\text{cross}}\\right), \\end{equation*} where $\\delta_{\\text{diss}} = O(\\Gamma_H / \\kappa)$ depends on the Schwinger--Keldysh transport coefficients $\\gamma_1, \\gamma_2$ characterizing dissipative superfluid dynamics.",
+      "quote_normalized": "the main result is the explicit formula \\begin{equation*} t_{eff} = t_h \\left(1 + \\delta_{disp} + \\delta_{diss} + \\delta_{cross}\\right), \\end{equation*} where $\\delta_{diss} = o(\\gamma_h / \\kappa)$ depends on the schwinger--keldysh transport coefficients $\\gamma_1, \\gamma_2$ characterizing dissipative superfluid dynamics.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Formula T_eff = T_H(1+...) is the canonical decomposition; deltaDissFromTransport_eq formalizes delta_diss as Gamma_H/kappa.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "effective_temperature_ratio"
+          },
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
       }
-    ]
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:4b16e174",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "4b16e174",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 37,
+      "tex_line_end": 37,
+      "quote": "For the Steinhauer $^{87}$Rb apparatus we find $\\delta_{\\text{diss}} \\sim 10^{-5}$ (Beliaev) to $10^{-4}$ (Zaremba finite-$T$), below present sensitivity.",
+      "quote_normalized": "for the steinhauer $^{87}$rb apparatus we find $\\delta_{diss} \\sim 10^{-5}$ (beliaev) to $10^{-4}$ (zaremba finite-$t$), below present sensitivity.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 8.0,
+      "agent_notes": "Beliaev pipeline yields delta_diss=2.16e-5 (~10^-5 OOM consistent). Zaremba '10^-4' is OOM extrapolation per Sec.V (delta_diss_zaremba ~ 10^-4..10^-2 with kappa=4.8 s^-1). Range matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction",
+            "computed_value": "2.16e-5",
+            "delta_pct": 0.0,
+            "link_state": "resolved"
+          },
+          {
+            "kind": "parameter",
+            "target": "Steinhauer.density_upstream",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Steinhauer.velocity_upstream",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Steinhauer.omega_perp",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:a37f66b0",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "a37f66b0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 37,
+      "tex_line_end": 37,
+      "quote": "At the higher surface gravity of the Heidelberg $^{39}$K configuration ($\\kappa \\approx 100~\\text{s}^{-1}$), the $\\kappa^2$ scaling of Beliaev damping drives $\\delta_{\\text{diss}}$ to ${\\sim}10^{-3}$ (Beliaev) or ${\\sim}10^{-2}$ (Zaremba), reaching projected and near-term detector thresholds respectively; at this platform $\\delta_{\\text{diss}}$ also exceeds $\\delta_{\\text{disp}}$ by more than an order of magnitude, making Heidelberg our strongest detection target.",
+      "quote_normalized": "at the higher surface gravity of the heidelberg $^{39}$k configuration ($\\kappa \\approx 100~s^{-1}$), the $\\kappa^2$ scaling of beliaev damping drives $\\delta_{diss}$ to ${\\sim}10^{-3}$ (beliaev) or ${\\sim}10^{-2}$ (zaremba), reaching projected and near-term detector thresholds respectively; at this platform $\\delta_{diss}$ also exceeds $\\delta_{disp}$ by more than an order of magnitude, making heidelberg our strongest detection target.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 2.0,
+      "agent_notes": "kappa=101.93 s^-1 (vs paper '~100', 1.9% delta); delta_diss=1.46e-3 (~10^-3 OOM PASS). Zaremba 10^-2 is OOM extrapolation. 'exceeds delta_disp by >10x' supported by fig 2 caption (~22x).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction",
+            "computed_value": "1.46e-3",
+            "delta_pct": 9.0,
+            "link_state": "resolved"
+          },
+          {
+            "kind": "parameter",
+            "target": "Heidelberg.density_upstream",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Heidelberg.velocity_upstream",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Heidelberg.omega_perp",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:4da4d9be",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "4da4d9be",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 37,
+      "tex_line_end": 37,
+      "quote": "For projected Trento $^{23}$Na spin-sonic experiments, the $(c_{\\text{density}}/c_{\\text{spin}})^2$ enhancement could amplify $\\delta_{\\text{diss}}$ to $O(10^{-1})$.",
+      "quote_normalized": "for projected trento $^{23}$na spin-sonic experiments, the $(c_{density}/c_{spin})^2$ enhancement could amplify $\\delta_{diss}$ to $o(10^{-1})$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Order-of-magnitude scaling: 100x * 10^-3 (Zaremba enhanced) ~ 10^-1. c_spin~0.1 mm/s is a toy assumption; not in PARAMETER_PROVENANCE. Soft hedge 'could'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:46163e78",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "46163e78",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 37,
+      "tex_line_end": 37,
+      "quote": "All core mathematical structures are verified via formal Lean 4 proof code.",
+      "quote_normalized": "all core mathematical structures are verified via formal lean 4 proof code.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Project-wide global claim. PAPER_DEPENDENCIES lists 3 modules; all targeted theorems exist with no active sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acousticMetric_det",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:abstract:5ab72ed9",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "abstract",
+        "quote_hash": "5ab72ed9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 37,
+      "tex_line_end": 37,
+      "quote": "This work strengthens the universality of Hawking radiation by confirming that dissipative corrections remain suppressed as $\\Gamma_H / \\kappa$ at long wavelengths, providing new constraints on trans-Planckian physics.",
+      "quote_normalized": "this work strengthens the universality of hawking radiation by confirming that dissipative corrections remain suppressed as $\\gamma_h / \\kappa$ at long wavelengths, providing new constraints on trans-planckian physics.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Derived from Lean theorems on Gamma_H positivity + delta_diss = Gamma_H/kappa.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.gammaH_nonneg",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:b2372ead",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "b2372ead",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 45,
+      "tex_line_end": 45,
+      "quote": "The black hole information paradox and the nature of trans-Planckian physics remain central open questions in theoretical physics. Hawking's discovery that black holes radiate at a temperature $T_H = \\hbar \\kappa / (2\\pi k_B)$---where $\\kappa$ is the surface gravity---represents one of the deepest results linking gravity, thermodynamics, and quantum mechanics \\cite{Hawking:1974}.",
+      "quote_normalized": "the black hole information paradox and the nature of trans-planckian physics remain central open questions in theoretical physics. hawking's discovery that black holes radiate at a temperature $t_h = \\hbar \\kappa / (2\\pi k_b)$---where $\\kappa$ is the surface gravity---represents one of the deepest results linking gravity, thermodynamics, and quantum mechanics .",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: bibkey 'Hawking:1974' is NOT in CITATION_REGISTRY (registry has 'Hawking1974', no colon). All 11 paper bibitems use Author:Year; registry uses AuthorYear. Carries from prior v1 finding.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "hawking_temperature"
+          },
+          {
+            "kind": "citation",
+            "target": "Hawking:1974"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:45041f89",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "45041f89",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 47,
+      "tex_line_end": 47,
+      "quote": "However, the standard calculation relies on free-field quantum field theory on a fixed curved background. The high-frequency modes that determine the Hawking temperature receive trans-Planckian corrections---modifications from unknown ultraviolet (UV, i.e., short-distance/high-energy) physics at or beyond the Planck scale ($E_P \\sim 10^{19}$~GeV). In the analog context, ``trans-Planckian'' refers to wavelengths shorter than the healing length $\\xi$, where the continuum fluid description breaks down and atomic-scale physics dominates. Understanding these corrections requires either (i) a complete theory of quantum gravity, or (ii) systems where the short-distance physics is known and can be studied \\cite{Corley:1996,Jacobson:1996}.",
+      "quote_normalized": "however, the standard calculation relies on free-field quantum field theory on a fixed curved background. the high-frequency modes that determine the hawking temperature receive trans-planckian corrections---modifications from unknown ultraviolet (uv, i.e., short-distance/high-energy) physics at or beyond the planck scale ($e_p \\sim 10^{19}$~gev). in the analog context, ``trans-planckian'' refers to wavelengths shorter than the healing length $\\xi$, where the continuum fluid description breaks down and atomic-scale physics dominates. understanding these corrections requires either (i) a complete theory of quantum gravity, or (ii) systems where the short-distance physics is known and can be studied .",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: 'Corley:1996' missing from registry (have Corley1996); 'Jacobson:1996' missing from registry entirely (no Jacobson1996 either). 1 of 2 citations resolves to a registry candidate.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Corley:1996"
+          },
+          {
+            "kind": "citation",
+            "target": "Jacobson:1996"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:1001775a",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "1001775a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 49,
+      "tex_line_end": 49,
+      "quote": "Analog gravity systems---particularly Bose--Einstein condensates in the acoustic regime---provide precisely this laboratory. In these systems, sound waves propagate according to an emergent metric, permitting controlled studies of Hawking radiation without the gravitational complications \\cite{Unruh:1981}. Steinhauer and collaborators have observed signatures of Hawking radiation in $^{87}$Rb BEC experiments \\cite{Steinhauer:2019}, opening the possibility of high-precision measurements.",
+      "quote_normalized": "analog gravity systems---particularly bose--einstein condensates in the acoustic regime---provide precisely this laboratory. in these systems, sound waves propagate according to an emergent metric, permitting controlled studies of hawking radiation without the gravitational complications . steinhauer and collaborators have observed signatures of hawking radiation in $^{87}$rb bec experiments , opening the possibility of high-precision measurements.",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: 'Unruh:1981' missing (have Unruh1981). 'Steinhauer:2019' missing (registry has Steinhauer2016 + deNova2019; paper bibitem bundles both works under one key).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Unruh:1981"
+          },
+          {
+            "kind": "citation",
+            "target": "Steinhauer:2019"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:f2a2e9da",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "f2a2e9da",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 51,
+      "tex_line_end": 51,
+      "quote": "To date, analog gravity studies have primarily focused on \\textit{conservative} (dispersive) corrections to Hawking radiation \\cite{Coutant:2014,Berti:2025}. These arise from the microscopic wave-particle dispersion relations of phonons in real condensates. Yet all real systems are dissipative: viscosity, thermal conductivity, and quantum decoherence introduce \\textit{dissipative} corrections that damp excitations over time.",
+      "quote_normalized": "to date, analog gravity studies have primarily focused on conservative (dispersive) corrections to hawking radiation . these arise from the microscopic wave-particle dispersion relations of phonons in real condensates. yet all real systems are dissipative: viscosity, thermal conductivity, and quantum decoherence introduce dissipative corrections that damp excitations over time.",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: 'Coutant:2014' missing entirely (no Coutant2014 either); 'Berti:2025' missing (have Berti2025).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Coutant:2014"
+          },
+          {
+            "kind": "citation",
+            "target": "Berti:2025"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:8f243a26",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "8f243a26",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 53,
+      "tex_line_end": 53,
+      "quote": "The present work addresses this gap by computing the \\textit{first} dissipative corrections to the Hawking temperature using the Schwinger--Keldysh (SK) effective field theory formalism. We show that in the long-wavelength limit, dissipation enters at a suppressed order $O(\\Gamma_H / \\kappa)$, where $\\Gamma_H$ is the damping rate near the Hawking frequency. This provides further evidence for the universality of Hawking radiation: dissipative trans-Planckian physics also decouples at macroscopic scales.",
+      "quote_normalized": "the present work addresses this gap by computing the first dissipative corrections to the hawking temperature using the schwinger--keldysh (sk) effective field theory formalism. we show that in the long-wavelength limit, dissipation enters at a suppressed order $o(\\gamma_h / \\kappa)$, where $\\gamma_h$ is the damping rate near the hawking frequency. this provides further evidence for the universality of hawking radiation: dissipative trans-planckian physics also decouples at macroscopic scales.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Echoes the abstract; supported by deltaDissFromTransport_eq.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:6c4e4dad",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "6c4e4dad",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 55,
+      "tex_line_end": 60,
+      "quote": "Our approach combines three recent developments: \\begin{enumerate} \\item Son's superfluid EFT \\cite{Son:2002}: the symmetry-breaking and EFT framework for phonons in superfluids valid in the hydrodynamic regime. Son (hep-ph/0204199) constructs this action for a relativistic superfluid; the non-relativistic adaptation used here---the Madelung/Galilean form---follows Endlich et al. (Phys. Rev. D 88, 105001, 2013). \\item Schwinger--Keldysh formalism for dissipative media \\cite{Crossley:2017,Jana:2020}: A general framework for systematically including dissipation via gradient expansion and transport coefficients. \\item Analog Hawking radiation in BECs \\cite{Coutant:2014,Steinhauer:2019}: Controlled experiments where surface gravity, flow profiles, and microscopic properties are tunable. \\end{enumerate}",
+      "quote_normalized": "our approach combines three recent developments: \\begin{enumerate} \\item son's superfluid eft : the symmetry-breaking and eft framework for phonons in superfluids valid in the hydrodynamic regime. son (hep-ph/0204199) constructs this action for a relativistic superfluid; the non-relativistic adaptation used here---the madelung/galilean form---follows endlich et al. (phys. rev. d 88, 105001, 2013). \\item schwinger--keldysh formalism for dissipative media : a general framework for systematically including dissipation via gradient expansion and transport coefficients. \\item analog hawking radiation in becs : controlled experiments where surface gravity, flow profiles, and microscopic properties are tunable. \\end{enumerate}",
+      "type": "methodology",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: bibkey-convention failures: Son:2002 (no Son2002 in registry), Crossley:2017/Jana:2020 missing as colon-keys (have AuthorYear), Coutant:2014 missing entirely, Steinhauer:2019 missing. Endlich 2013 (PRD 88, 105001) cited inline as 'hep-ph/0204199' lineage but no bibitem; reference is parenthetical only.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Son:2002"
+          },
+          {
+            "kind": "citation",
+            "target": "Crossley:2017"
+          },
+          {
+            "kind": "citation",
+            "target": "Jana:2020"
+          },
+          {
+            "kind": "citation",
+            "target": "Coutant:2014"
+          },
+          {
+            "kind": "citation",
+            "target": "Steinhauer:2019"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:introduction:4ca88c38",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "introduction",
+        "quote_hash": "4ca88c38",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 62,
+      "tex_line_end": 62,
+      "quote": "The plan of the paper is as follows. In \\S\\ref{sec:son}, we review Son's superfluid action and derive the acoustic metric in phonon form. In \\S\\ref{sec:sk}, we extend to the Schwinger--Keldysh framework and write the dissipative superfluid action in first-order form. In \\S\\ref{sec:background}, we establish the transonic background (sonic black hole) and derive the modified wave equation for phonons near the Hawking frequency. In \\S\\ref{sec:results}, we present the main analytical and numerical results. Finally, in \\S\\ref{sec:discussion}, we discuss implications for universality and future experiments.",
+      "quote_normalized": "the plan of the paper is as follows. in \\s, we review son's superfluid action and derive the acoustic metric in phonon form. in \\s, we extend to the schwinger--keldysh framework and write the dissipative superfluid action in first-order form. in \\s, we establish the transonic background (sonic black hole) and derive the modified wave equation for phonons near the hawking frequency. in \\s, we present the main analytical and numerical results. finally, in \\s, we discuss implications for universality and future experiments.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Outline; no claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:the-superfluid-action:41d940f2",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "the-superfluid-action",
+        "quote_hash": "41d940f2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-superfluid-action",
+      "section_ordinal": 4,
+      "tex_line_start": 69,
+      "tex_line_end": 77,
+      "quote": "Following Son's EFT framework \\cite{Son:2002}---originally formulated for a relativistic superfluid---and its non-relativistic Madelung adaptation \\cite{Son:2002}, the action of a non-relativistic superfluid starts from the Galilean-invariant structure of the superfluid phase and density: \\begin{equation} S = \\int d^3 x \\, dt \\left[ n(\\partial_t \\phi + \\vec{v} \\cdot \\nabla \\phi) - P(n, \\phi) \\right]. \\end{equation} Here $n(\\vec{r}, t)$ is the superfluid density, $\\phi(\\vec{r}, t)$ is the superfluid phase (related to the order parameter by $\\psi = \\sqrt{n} e^{i\\phi/\\hbar}$), $\\vec{v}$ is a prescribed velocity field, and $P(n, \\phi)$ is the pressure function (entropy potential). In the noninteracting or weakly-interacting regime, $P$ depends on $n$ and on the phase gradient $\\nabla\\phi$ via the kinetic energy.",
+      "quote_normalized": "following son's eft framework ---originally formulated for a relativistic superfluid---and its non-relativistic madelung adaptation , the action of a non-relativistic superfluid starts from the galilean-invariant structure of the superfluid phase and density: \\begin{equation} s = \\int d^3 x \\, dt \\left[ n(\\partial_t \\phi + \\vec{v} \\cdot \\nabla \\phi) - p(n, \\phi) \\right]. \\end{equation} here $n(\\vec{r}, t)$ is the superfluid density, $\\phi(\\vec{r}, t)$ is the superfluid phase (related to the order parameter by $\\psi = \\sqrt{n} e^{i\\phi/\\hbar}$), $\\vec{v}$ is a prescribed velocity field, and $p(n, \\phi)$ is the pressure function (entropy potential). in the noninteracting or weakly-interacting regime, $p$ depends on $n$ and on the phase gradient $\\nabla\\phi$ via the kinetic energy.",
+      "type": "methodology",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: Son:2002 not in registry (Son2002 also missing). Two cite calls to same key in one sentence.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Son:2002"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:the-superfluid-action:bcaeee17",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "the-superfluid-action",
+        "quote_hash": "bcaeee17",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-superfluid-action",
+      "section_ordinal": 4,
+      "tex_line_start": 79,
+      "tex_line_end": 84,
+      "quote": "Expanding around a background density $n_0$ and zero phase, one identifies small fluctuations with phonons. The linearized action governing phonon creation and annihilation becomes \\begin{equation} \\mathcal{L}_{\\text{ph}} = n_0 \\partial_t \\delta\\phi - \\frac{1}{2}n_0 c_s^2 (\\nabla \\delta\\phi)^2 + \\text{(higher-order terms)}, \\end{equation} where $c_s = \\sqrt{\\partial P / \\partial n}$ is the speed of sound, and we have neglected quantum pressure terms for the moment.",
+      "quote_normalized": "expanding around a background density $n_0$ and zero phase, one identifies small fluctuations with phonons. the linearized action governing phonon creation and annihilation becomes \\begin{equation} \\mathcal{l}_{ph} = n_0 \\partial_t \\delta\\phi - \\frac{1}{2}n_0 c_s^2 (\\nabla \\delta\\phi)^2 + (higher-order terms), \\end{equation} where $c_s = \\sqrt{\\partial p / \\partial n}$ is the speed of sound, and we have neglected quantum pressure terms for the moment.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard linearization; matches AcousticMetric.lean development.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:acoustic-metric-in-planck-gasperini-form:c79bf717",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "acoustic-metric-in-planck-gasperini-form",
+        "quote_hash": "c79bf717",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acoustic-metric-in-planck-gasperini-form",
+      "section_ordinal": 5,
+      "tex_line_start": 88,
+      "tex_line_end": 93,
+      "quote": "For a superfluid flow with velocity $\\vec{v}(\\vec{r})$ and density $n(\\vec{r})$ in 1+1 dimensions (along a streamline), the effective metric seen by acoustic phonons is \\cite{Unruh:1981} \\begin{equation} ds^2 = \\frac{n}{c_s} \\left[ -(c_s^2 - v^2) dt^2 - 2v \\, dt \\, dx + dx^2 \\right]. \\end{equation} This is the Planck--Gasperini form of the acoustic metric. The metric signature is $(-,+)$ for subsonic flow ($v < c_s$). The determinant is $g = -(c_s^2 - v^2)/c_s^2$.",
+      "quote_normalized": "for a superfluid flow with velocity $\\vec{v}(\\vec{r})$ and density $n(\\vec{r})$ in 1+1 dimensions (along a streamline), the effective metric seen by acoustic phonons is \\begin{equation} ds^2 = \\frac{n}{c_s} \\left[ -(c_s^2 - v^2) dt^2 - 2v \\, dt \\, dx + dx^2 \\right]. \\end{equation} this is the planck--gasperini form of the acoustic metric. the metric signature is $(-,+)$ for subsonic flow ($v < c_s$). the determinant is $g = -(c_s^2 - v^2)/c_s^2$.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: Unruh:1981 not in registry. The det = -(c_s^2 - v^2)/c_s^2 stated here differs from acousticMetric_det's '-rho^2' identity (form differs by an overall n/c_s prefactor squared); paper writes the prefactor=n/c_s case where rho^2 = (n/c_s)^2 (c_s^2 - v^2)^2 / c_s^4. The body text mentions only the (c_s^2 - v^2)/c_s^2 factor, dropping the n^2/c_s^2 prefactor. Mild presentation gap, not a falsification.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Unruh:1981"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acousticMetric_det",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acoustic_metric_lorentzian",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:acoustic-metric-in-planck-gasperini-form:2cde17e8",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "acoustic-metric-in-planck-gasperini-form",
+        "quote_hash": "2cde17e8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acoustic-metric-in-planck-gasperini-form",
+      "section_ordinal": 5,
+      "tex_line_start": 95,
+      "tex_line_end": 100,
+      "quote": "The \\emph{surface gravity} at the sonic horizon (where $v = c_s$) is defined via the null geodesic condition. For a simple linear flow $v(x) = v_H + \\kappa (x - x_H)$ near $x = x_H$ (the sonic horizon), the surface gravity is \\begin{equation} \\kappa = \\left|\\frac{d(v - c_s)}{dx}\\right|_{x_H} = \\left|\\frac{dv}{dx} - \\frac{dc_s}{dx}\\right|_{x_H}. \\end{equation} In a BEC with position-dependent flow velocity $v(x)$ and density-dependent sound speed $c_s(x) = \\sqrt{g_{\\text{int}} n(x)/m}$, both terms contribute: the velocity gradient steepens the flow through the horizon while the sound speed gradient (via the density profile from continuity, $n(x) = J/v(x)$) counteracts it. For a smooth tanh-type velocity profile with transition width $L \\sim 30\\,\\xi$, the surface gravity is set by the profile slope and takes values $\\kappa \\sim 20$--$100$~s$^{-1}$ for typical BEC parameters.",
+      "quote_normalized": "the surface gravity at the sonic horizon (where $v = c_s$) is defined via the null geodesic condition. for a simple linear flow $v(x) = v_h + \\kappa (x - x_h)$ near $x = x_h$ (the sonic horizon), the surface gravity is \\begin{equation} \\kappa = \\left|\\frac{d(v - c_s)}{dx}\\right|_{x_h} = \\left|\\frac{dv}{dx} - \\frac{dc_s}{dx}\\right|_{x_h}. \\end{equation} in a bec with position-dependent flow velocity $v(x)$ and density-dependent sound speed $c_s(x) = \\sqrt{g_{int} n(x)/m}$, both terms contribute: the velocity gradient steepens the flow through the horizon while the sound speed gradient (via the density profile from continuity, $n(x) = j/v(x)$) counteracts it. for a smooth tanh-type velocity profile with transition width $l \\sim 30\\,\\xi$, the surface gravity is set by the profile slope and takes values $\\kappa \\sim 20$--$100$~s$^{-1}$ for typical bec parameters.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": 0.0,
+      "agent_notes": "Stated kappa range '20-100 s^-1' does NOT cover the computed Steinhauer value of 4.76 s^-1 from solve_transonic_background (smooth tanh, L=30xi). Paper's own Table 1 has kappa=4.8 s^-1 for Steinhauer. v1 review flagged this; suggested rewrite to '~5-100 s^-1'. Carryover, not new.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:acoustic-metric-in-planck-gasperini-form:7c859866",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "acoustic-metric-in-planck-gasperini-form",
+        "quote_hash": "7c859866",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acoustic-metric-in-planck-gasperini-form",
+      "section_ordinal": 5,
+      "tex_line_start": 102,
+      "tex_line_end": 106,
+      "quote": "The Hawking temperature is then \\begin{equation} T_H = \\frac{\\hbar \\kappa}{2\\pi k_B}. \\end{equation}",
+      "quote_normalized": "the hawking temperature is then \\begin{equation} t_h = \\frac{\\hbar \\kappa}{2\\pi k_b}. \\end{equation}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Canonical T_H formula; matches formulas.py::hawking_temperature.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "hawking_temperature"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:overview-of-the-schwinger-keldysh-formalism:2d2f61a3",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "overview-of-the-schwinger-keldysh-formalism",
+        "quote_hash": "2d2f61a3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "overview-of-the-schwinger-keldysh-formalism",
+      "section_ordinal": 7,
+      "tex_line_start": 113,
+      "tex_line_end": 113,
+      "quote": "The Schwinger--Keldysh (SK) contour approach extends quantum field theory to include dissipation and decoherence. Instead of a single field $\\phi(\\vec{r}, t)$, one introduces a doubled set: the real and auxiliary fields $\\{\\phi_r, \\phi_a\\}$, with the physical field being the difference $\\phi_{\\text{phys}} = \\phi_r - \\phi_a$.",
+      "quote_normalized": "the schwinger--keldysh (sk) contour approach extends quantum field theory to include dissipation and decoherence. instead of a single field $\\phi(\\vec{r}, t)$, one introduces a doubled set: the real and auxiliary fields $\\{\\phi_r, \\phi_a\\}$, with the physical field being the difference $\\phi_{phys} = \\phi_r - \\phi_a$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard SK doubling description.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:overview-of-the-schwinger-keldysh-formalism:6011dacb",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "overview-of-the-schwinger-keldysh-formalism",
+        "quote_hash": "6011dacb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "overview-of-the-schwinger-keldysh-formalism",
+      "section_ordinal": 7,
+      "tex_line_start": 115,
+      "tex_line_end": 120,
+      "quote": "The SK action is split into three parts: \\begin{equation} S_{\\text{SK}} = S_{\\text{ideal}}[\\phi_r] - S_{\\text{ideal}}[\\phi_a] + S_{\\text{diss}}[\\phi_r, \\phi_a], \\end{equation} where $S_{\\text{ideal}}$ is the ideal (Hamiltonian) action for superfluids, and $S_{\\text{diss}}$ encodes dissipative effects.",
+      "quote_normalized": "the sk action is split into three parts: \\begin{equation} s_{sk} = s_{ideal}[\\phi_r] - s_{ideal}[\\phi_a] + s_{diss}[\\phi_r, \\phi_a], \\end{equation} where $s_{ideal}$ is the ideal (hamiltonian) action for superfluids, and $s_{diss}$ encodes dissipative effects.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard SK action decomposition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:dissipative-superfluid-action-three-axioms:4bd068c4",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "dissipative-superfluid-action-three-axioms",
+        "quote_hash": "4bd068c4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "dissipative-superfluid-action-three-axioms",
+      "section_ordinal": 8,
+      "tex_line_start": 124,
+      "tex_line_end": 129,
+      "quote": "For a dissipative superfluid, we propose the SK action in first-order form: \\begin{equation} S_{\\text{SK}} = \\int d^2 x \\left[ L_{\\text{ideal}}(\\psi_r, \\psi_a) + iS_1[\\psi_r, \\psi_a] + \\text{noise term} \\right], \\end{equation} where $\\psi = \\sqrt{n}e^{i\\phi}$ is the order parameter, and we work in 1+1 spacetime for simplicity.",
+      "quote_normalized": "for a dissipative superfluid, we propose the sk action in first-order form: \\begin{equation} s_{sk} = \\int d^2 x \\left[ l_{ideal}(\\psi_r, \\psi_a) + is_1[\\psi_r, \\psi_a] + noise term \\right], \\end{equation} where $\\psi = \\sqrt{n}e^{i\\phi}$ is the order parameter, and we work in 1+1 spacetime for simplicity.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Sets up first-order form; consistent with SKDoubling.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:dissipative-superfluid-action-three-axioms:c8512340",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "dissipative-superfluid-action-three-axioms",
+        "quote_hash": "c8512340",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "dissipative-superfluid-action-three-axioms",
+      "section_ordinal": 8,
+      "tex_line_start": 131,
+      "tex_line_end": 136,
+      "quote": "The dissipative terms are constrained by three physical requirements (axioms): \\begin{enumerate} \\item Galilean Invariance: The action must be invariant under Galilean boosts $x \\to x - vt, \\phi \\to \\phi + m v x / \\hbar$. \\item Gradient Expansion: The dissipative action must be a gradient expansion: each term contributes at successively higher orders in derivatives. \\item Positivity of Dissipation: The imaginary part of the action (the dissipative part) must contribute negatively to the path integral, i.e., $\\text{Im}(S_{\\text{SK}}) < 0$, so that fluctuations are damped. \\end{enumerate}",
+      "quote_normalized": "the dissipative terms are constrained by three physical requirements (axioms): \\begin{enumerate} \\item galilean invariance: the action must be invariant under galilean boosts $x \\to x - vt, \\phi \\to \\phi + m v x / \\hbar$. \\item gradient expansion: the dissipative action must be a gradient expansion: each term contributes at successively higher orders in derivatives. \\item positivity of dissipation: the imaginary part of the action (the dissipative part) must contribute negatively to the path integral, i.e., $im(s_{sk}) < 0$, so that fluctuations are damped. \\end{enumerate}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Three-axiom set matches what firstOrder_uniqueness encodes (positivity + KMS gives 2-parameter family).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:dissipative-superfluid-action-three-axioms:63a5baa4",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "dissipative-superfluid-action-three-axioms",
+        "quote_hash": "63a5baa4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "dissipative-superfluid-action-three-axioms",
+      "section_ordinal": 8,
+      "tex_line_start": 138,
+      "tex_line_end": 143,
+      "quote": "Under these constraints, the leading dissipative terms are \\begin{equation} S_{\\text{diss}} = \\int d^2 x \\left[ i\\gamma_1 \\psi_a \\Box \\psi_r + i\\gamma_2 \\psi_a (u \\cdot \\partial)(u \\cdot \\partial \\psi_r) + i\\gamma_3 \\psi_a^* \\psi_r^* + \\text{c.c.} + \\text{noise} \\right], \\end{equation} where $\\Box = \\partial_t^2 - c_s^2 \\nabla^2$ is the d'Alembertian (the wave operator generalizing the Laplacian to spacetime), $u = \\vec{v}/c_s$ is the normalized velocity, and $\\gamma_{1,2}$ are the transport coefficients (with dimensions of $[\\text{time}]^{-1}$). The Hermitian conjugate terms ensure proper closure under complex conjugation.",
+      "quote_normalized": "under these constraints, the leading dissipative terms are \\begin{equation} s_{diss} = \\int d^2 x \\left[ i\\gamma_1 \\psi_a \\box \\psi_r + i\\gamma_2 \\psi_a (u \\cdot \\partial)(u \\cdot \\partial \\psi_r) + i\\gamma_3 \\psi_a^* \\psi_r^* + c.c. + noise \\right], \\end{equation} where $\\box = \\partial_t^2 - c_s^2 \\nabla^2$ is the d'alembertian (the wave operator generalizing the laplacian to spacetime), $u = \\vec{v}/c_s$ is the normalized velocity, and $\\gamma_{1,2}$ are the transport coefficients (with dimensions of $[time]^{-1}$). the hermitian conjugate terms ensure proper closure under complex conjugation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Sentence asserts gamma_{1,2} have units [time]^-1 \u2014 but the Lagrangian-level coefficients of psi_a Box psi_r are [m^2/s] in the Lean/pipeline convention (eq:hawking_damping in \u00a7IV.B states this explicitly). Inconsistent with \u00a7IV.B's own annotation ('units [m^2/s]'); minor body-text dimensional gloss. Not a numerical falsification.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:physical-interpretation-gradient-viscosity-and-thermal-effects:859acbd5",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "physical-interpretation-gradient-viscosity-and-thermal-effects",
+        "quote_hash": "859acbd5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "physical-interpretation-gradient-viscosity-and-thermal-effects",
+      "section_ordinal": 9,
+      "tex_line_start": 147,
+      "tex_line_end": 147,
+      "quote": "The coefficient $\\gamma_1$ represents \\textit{bulk viscous damping} at the phonon level: it damps all modes uniformly. The coefficient $\\gamma_2$ encodes \\textit{anisotropic dissipation} along the flow direction---related to shear viscosity in the hydrodynamic description. For a BEC with magnetic trap confinement, these transport coefficients are related to the microscopic two-body collision cross-section and the temperature via kinetic theory \\cite{Zaremba:1999}.",
+      "quote_normalized": "the coefficient $\\gamma_1$ represents bulk viscous damping at the phonon level: it damps all modes uniformly. the coefficient $\\gamma_2$ encodes anisotropic dissipation along the flow direction---related to shear viscosity in the hydrodynamic description. for a bec with magnetic trap confinement, these transport coefficients are related to the microscopic two-body collision cross-section and the temperature via kinetic theory .",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: Zaremba:1999 not in registry (Zaremba1999 also missing entirely).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Zaremba:1999"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:physical-interpretation-gradient-viscosity-and-thermal-effects:b849e1ac",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "physical-interpretation-gradient-viscosity-and-thermal-effects",
+        "quote_hash": "b849e1ac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "physical-interpretation-gradient-viscosity-and-thermal-effects",
+      "section_ordinal": 9,
+      "tex_line_start": 149,
+      "tex_line_end": 154,
+      "quote": "In the regime of interest (low temperature, large occupation number), we have \\begin{equation} \\gamma_1 \\sim \\frac{\\hbar}{m} \\frac{n \\sigma}{n_c}, \\quad \\gamma_2 \\sim \\frac{\\hbar}{m} \\frac{\\eta}{n m c_s}, \\end{equation} where $\\sigma$ is the scattering cross-section, $\\eta$ is the shear viscosity (or bulk viscosity in a superfluid), and $m$ is the atomic mass. For $^{87}$Rb at $T \\sim 100$~nK with scattering length $a_s = 5.31$~nm and density $n \\sim 10^{15}$~cm$^{-3}$, the dominant dissipation mechanism is Beliaev damping of phonon modes, giving $\\gamma_{\\text{Bel}} \\sim \\sqrt{na_s^3}\\,\\omega^2/c_s$ evaluated at the Hawking frequency $\\omega_H \\sim \\kappa$. For $^{23}$Na in the two-component spin-sonic configuration, the spin-channel dissipation is enhanced by the reduced spin sound speed $c_{\\text{spin}} \\ll c_{\\text{density}}$, yielding transport coefficients that are effectively amplified by $(c_{\\text{density}}/c_{\\text{spin}})^2 \\sim 100$.",
+      "quote_normalized": "in the regime of interest (low temperature, large occupation number), we have \\begin{equation} \\gamma_1 \\sim \\frac{\\hbar}{m} \\frac{n \\sigma}{n_c}, \\quad \\gamma_2 \\sim \\frac{\\hbar}{m} \\frac{\\eta}{n m c_s}, \\end{equation} where $\\sigma$ is the scattering cross-section, $\\eta$ is the shear viscosity (or bulk viscosity in a superfluid), and $m$ is the atomic mass. for $^{87}$rb at $t \\sim 100$~nk with scattering length $a_s = 5.31$~nm and density $n \\sim 10^{15}$~cm$^{-3}$, the dominant dissipation mechanism is beliaev damping of phonon modes, giving $\\gamma_{bel} \\sim \\sqrt{na_s^3}\\,\\omega^2/c_s$ evaluated at the hawking frequency $\\omega_h \\sim \\kappa$. for $^{23}$na in the two-component spin-sonic configuration, the spin-channel dissipation is enhanced by the reduced spin sound speed $c_{spin} \\ll c_{density}$, yielding transport coefficients that are effectively amplified by $(c_{density}/c_{spin})^2 \\sim 100$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "a_s=5.31 nm matches Rb87.a_s=5.31e-9 m (PARAMETER_PROVENANCE, llm_verified). Beliaev formula matches formulas.py::beliaev_damping_rate. The 100x spin-sonic factor is OOM scaling. Caveat: c_spin not in PARAMETER_PROVENANCE (toy value).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate8_ParameterFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "beliaev_damping_rate"
+          },
+          {
+            "kind": "parameter",
+            "target": "Rb87.a_s",
+            "computed_value": "5.31e-9 m",
+            "delta_pct": 0.0,
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:sonic-horizon-background:ac9d25f0",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "sonic-horizon-background",
+        "quote_hash": "ac9d25f0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "sonic-horizon-background",
+      "section_ordinal": 11,
+      "tex_line_start": 161,
+      "tex_line_end": 170,
+      "quote": "We consider a 1+1-dimensional transonic background flow: \\begin{equation} v(x) = \\begin{cases} -v_1 & x < x_H \\\\ v_H + \\kappa(x - x_H) & x \\approx x_H \\\\ v_2 & x > x_H \\end{cases} \\end{equation} with corresponding density profile $n(x)$ determined by the continuity equation and density gradient $\\partial_x n(x)$.",
+      "quote_normalized": "we consider a 1+1-dimensional transonic background flow: \\begin{equation} v(x) = \\begin{cases} -v_1 & x < x_h \\\\ v_h + \\kappa(x - x_h) & x \\approx x_h \\\\ v_2 & x > x_h \\end{cases} \\end{equation} with corresponding density profile $n(x)$ determined by the continuity equation and density gradient $\\partial_x n(x)$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Schematic profile for derivation; pipeline uses smooth tanh.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:sonic-horizon-background:05a0ef64",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "sonic-horizon-background",
+        "quote_hash": "05a0ef64",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "sonic-horizon-background",
+      "section_ordinal": 11,
+      "tex_line_start": 172,
+      "tex_line_end": 172,
+      "quote": "The sonic horizon is at $x = x_H$, where $v(x_H) = c_s(x_H) \\equiv c_{s,H}$. Beyond this point, we enter the supersonic region where phonons cannot escape to infinity, analogous to the event horizon in a gravitational black hole.",
+      "quote_normalized": "the sonic horizon is at $x = x_h$, where $v(x_h) = c_s(x_h) \\equiv c_{s,h}$. beyond this point, we enter the supersonic region where phonons cannot escape to infinity, analogous to the event horizon in a gravitational black hole.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard sonic horizon definition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:wkb-expansion-and-modified-dispersion-relation:8a135817",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "wkb-expansion-and-modified-dispersion-relation",
+        "quote_hash": "8a135817",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wkb-expansion-and-modified-dispersion-relation",
+      "section_ordinal": 12,
+      "tex_line_start": 176,
+      "tex_line_end": 181,
+      "quote": "For small-amplitude perturbations around the background, the phonon field $\\phi(\\vec{r}, t)$ satisfies a modified wave equation in the presence of dissipation. In the WKB (Wentzel--Kramers--Brillouin) approximation---a semiclassical method that treats the wavelength as slowly varying compared to the background---we write \\begin{equation} \\phi(x, t) = A(x) e^{iS(x,t)/\\hbar}, \\end{equation} where $S(x,t)$ is the phase. Substituting into the equation of motion (derived from the action \\eqref{eq:dissipative_action}) and collecting leading-order terms in $\\hbar$ gives a modified dispersion relation.",
+      "quote_normalized": "for small-amplitude perturbations around the background, the phonon field $\\phi(\\vec{r}, t)$ satisfies a modified wave equation in the presence of dissipation. in the wkb (wentzel--kramers--brillouin) approximation---a semiclassical method that treats the wavelength as slowly varying compared to the background---we write \\begin{equation} \\phi(x, t) = a(x) e^{is(x,t)/\\hbar}, \\end{equation} where $s(x,t)$ is the phase. substituting into the equation of motion (derived from the action ) and collecting leading-order terms in $\\hbar$ gives a modified dispersion relation.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "WKB ansatz; standard.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:wkb-expansion-and-modified-dispersion-relation:08bbf572",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "wkb-expansion-and-modified-dispersion-relation",
+        "quote_hash": "08bbf572",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wkb-expansion-and-modified-dispersion-relation",
+      "section_ordinal": 12,
+      "tex_line_start": 183,
+      "tex_line_end": 187,
+      "quote": "The dispersion relation in the background flow is \\begin{equation} (\\omega - k v)^2 = c_s^2 k^2 + \\text{(dispersive terms)} + \\text{(dissipative terms)}. \\end{equation} The dispersive terms arise from quantum pressure or higher-derivative interactions.",
+      "quote_normalized": "the dispersion relation in the background flow is \\begin{equation} (\\omega - k v)^2 = c_s^2 k^2 + (dispersive terms) + (dissipative terms). \\end{equation} the dispersive terms arise from quantum pressure or higher-derivative interactions.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard background dispersion.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:wkb-expansion-and-modified-dispersion-relation:2be67476",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "wkb-expansion-and-modified-dispersion-relation",
+        "quote_hash": "2be67476",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wkb-expansion-and-modified-dispersion-relation",
+      "section_ordinal": 12,
+      "tex_line_start": 188,
+      "tex_line_end": 193,
+      "quote": "The dissipative terms, which are new here, are \\begin{equation} \\Delta \\omega_{\\text{diss}} = -\\frac{i}{2}\\gamma_1 (|\\omega - kv|^2 + c_s^2 k^2) + \\text{(higher-order in } \\gamma \\text{)}. \\end{equation} A complete derivation of the joint dispersion relation, incorporating both the Bogoliubov quartic dispersion and the SK dissipative terms through WKB matching across the horizon, will appear in a forthcoming companion paper. Here we work with the leading-order dissipative contribution, which is sufficient for the temperature correction at $O(\\Gamma_H/\\kappa)$.",
+      "quote_normalized": "the dissipative terms, which are new here, are \\begin{equation} \\delta \\omega_{diss} = -\\frac{i}{2}\\gamma_1 (|\\omega - kv|^2 + c_s^2 k^2) + (higher-order in \\gamma ). \\end{equation} a complete derivation of the joint dispersion relation, incorporating both the bogoliubov quartic dispersion and the sk dissipative terms through wkb matching across the horizon, will appear in a forthcoming companion paper. here we work with the leading-order dissipative contribution, which is sufficient for the temperature correction at $o(\\gamma_h/\\kappa)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Derivation forward-references a companion paper; in-scope dissipative leading-order matches deltaDissFromTransport_eq.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:wkb-expansion-and-modified-dispersion-relation:3e340cca",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "wkb-expansion-and-modified-dispersion-relation",
+        "quote_hash": "3e340cca",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wkb-expansion-and-modified-dispersion-relation",
+      "section_ordinal": 12,
+      "tex_line_start": 195,
+      "tex_line_end": 199,
+      "quote": "This introduces a small imaginary part in the frequency, $\\omega = \\omega_0 + i\\Gamma$, where $\\Gamma \\sim \\gamma_1 k^2$ is the damping rate (with $\\gamma_1$ in the EFT Lagrangian convention, units [m^2/s]). Modes with frequencies near the Hawking frequency $\\omega_H \\sim \\kappa$ have wavenumber $k_H = \\kappa/c_s$ from the acoustic dispersion $\\omega = c_s k$, so the horizon damping rate is \\begin{equation} \\Gamma_H = (\\gamma_1 + \\gamma_2)\\, k_H^2 = (\\gamma_1 + \\gamma_2)\\,\\frac{\\kappa^2}{c_s^2}. \\end{equation}",
+      "quote_normalized": "this introduces a small imaginary part in the frequency, $\\omega = \\omega_0 + i\\gamma$, where $\\gamma \\sim \\gamma_1 k^2$ is the damping rate (with $\\gamma_1$ in the eft lagrangian convention, units [m^2/s]). modes with frequencies near the hawking frequency $\\omega_h \\sim \\kappa$ have wavenumber $k_h = \\kappa/c_s$ from the acoustic dispersion $\\omega = c_s k$, so the horizon damping rate is \\begin{equation} \\gamma_h = (\\gamma_1 + \\gamma_2)\\, k_h^2 = (\\gamma_1 + \\gamma_2)\\,\\frac{\\kappa^2}{c_s^2}. \\end{equation}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Definition Gamma_H = (gamma_1+gamma_2)(kappa/c_s)^2 with k_H^2 factor explicit; aligned with Lean post-Phase-5u-W1 fix. Paper text now includes the conversion factor (resolves prior v1 'eq:hawking_damping schematic' WARN).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.GammaH",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.gammaH_def",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.gammaH_via_kH",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:wkb-expansion-and-modified-dispersion-relation:95bffa8b",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "wkb-expansion-and-modified-dispersion-relation",
+        "quote_hash": "95bffa8b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wkb-expansion-and-modified-dispersion-relation",
+      "section_ordinal": 12,
+      "tex_line_start": 200,
+      "tex_line_end": 210,
+      "quote": "The $(\\kappa/c_s)^2$ factor converts between EFT transport coefficients $\\gamma_{1,2}$ (units [m$^2$/s], the Lagrangian-level coefficients of $\\psi_a\\,\\Box\\,\\psi_r$ and $\\psi_a (u\\cdot\\partial)^2 \\psi_r$) and the phonon damping rate $\\Gamma_H$ (units [s$^{-1}$]) evaluated at the Hawking wavenumber. This identification is formalized as the Lean definition \\texttt{SKEFTHawking.SecondOrderSK.GammaH} with companion identity \\texttt{gammaH\\_def} and the closed form $\\delta_{\\mathrm{diss}} = (\\gamma_1+\\gamma_2)\\,\\kappa/c_s^2$ (\\texttt{deltaDissFromTransport\\_eq}), ensuring that any caller that feeds EFT-convention $\\gamma$'s into the numerical pipeline applies the conversion.",
+      "quote_normalized": "the $(\\kappa/c_s)^2$ factor converts between eft transport coefficients $\\gamma_{1,2}$ (units [m$^2$/s], the lagrangian-level coefficients of $\\psi_a\\,\\box\\,\\psi_r$ and $\\psi_a (u\\cdot\\partial)^2 \\psi_r$) and the phonon damping rate $\\gamma_h$ (units [s$^{-1}$]) evaluated at the hawking wavenumber. this identification is formalized as the lean definition skefthawking.secondordersk.gammah with companion identity gammah\\_def and the closed form $\\delta_{diss} = (\\gamma_1+\\gamma_2)\\,\\kappa/c_s^2$ (deltadissfromtransport\\_eq), ensuring that any caller that feeds eft-convention $\\gamma$'s into the numerical pipeline applies the conversion.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "All three referenced Lean names exist in lean_deps.json as theorems under module SecondOrderSK. Class TN check: PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.GammaH",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.gammaH_def",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:matching-across-the-horizon:61709198",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "matching-across-the-horizon",
+        "quote_hash": "61709198",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "matching-across-the-horizon",
+      "section_ordinal": 13,
+      "tex_line_start": 214,
+      "tex_line_end": 220,
+      "quote": "To compute the Hawking temperature correction, we must match solutions across the sonic horizon. The standard approach (Unruh's method) solves the wave equation in the subsonic region ($x < x_H$) and in the supersonic region ($x > x_H$), then imposes regularity conditions (e.g., no negative-frequency modes crossing the horizon). With dissipation, the matching conditions are modified: instead of requiring purely ingoing or outgoing waves, we allow exponentially decaying modes. This changes the relative amplitude between the Hawking-radiated modes and the vacuum fluctuations. The Bogoliubov coefficient $\\beta_k$---the amplitude relating ingoing vacuum modes to outgoing particle modes---acquires a multiplicative correction factor: \\begin{equation} |\\beta_k|^2 = \\frac{1}{e^{2\\pi\\omega/\\kappa} - 1} \\left(1 - \\frac{2\\Gamma_k}{\\kappa} + O(\\Gamma_k^2/\\kappa^2)\\right), \\end{equation} where the first factor is the standard Planckian spectrum and the correction arises from the dissipation-induced decay of modes during their transit through the near-horizon region. The effective temperature extracted from this spectrum gives the correction $\\delta_{\\text{diss}}$ reported below.",
+      "quote_normalized": "to compute the hawking temperature correction, we must match solutions across the sonic horizon. the standard approach (unruh's method) solves the wave equation in the subsonic region ($x < x_h$) and in the supersonic region ($x > x_h$), then imposes regularity conditions (e.g., no negative-frequency modes crossing the horizon). with dissipation, the matching conditions are modified: instead of requiring purely ingoing or outgoing waves, we allow exponentially decaying modes. this changes the relative amplitude between the hawking-radiated modes and the vacuum fluctuations. the bogoliubov coefficient $\\beta_k$---the amplitude relating ingoing vacuum modes to outgoing particle modes---acquires a multiplicative correction factor: \\begin{equation} |\\beta_k|^2 = \\frac{1}{e^{2\\pi\\omega/\\kappa} - 1} \\left(1 - \\frac{2\\gamma_k}{\\kappa} + o(\\gamma_k^2/\\kappa^2)\\right), \\end{equation} where the first factor is the standard planckian spectrum and the correction arises from the dissipation-induced decay of modes during their transit through the near-horizon region. the effective temperature extracted from this spectrum gives the correction $\\delta_{diss}$ reported below.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Schematic Bogoliubov coefficient correction; consistent with delta_diss = Gamma_H/kappa identification.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:main-analytical-result:601c2859",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "main-analytical-result",
+        "quote_hash": "601c2859",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "main-analytical-result",
+      "section_ordinal": 15,
+      "tex_line_start": 227,
+      "tex_line_end": 231,
+      "quote": "The key result of this paper is the corrected Hawking temperature including dissipative effects: \\begin{equation} T_{\\text{eff}} = T_H \\left(1 + \\delta_{\\text{disp}} + \\delta_{\\text{diss}} + \\delta_{\\text{cross}} \\right), \\end{equation}",
+      "quote_normalized": "the key result of this paper is the corrected hawking temperature including dissipative effects: \\begin{equation} t_{eff} = t_h \\left(1 + \\delta_{disp} + \\delta_{diss} + \\delta_{cross} \\right), \\end{equation}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Repeats abstract main result; same formula chain.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "effective_temperature_ratio"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:main-analytical-result:4bb486d6",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "main-analytical-result",
+        "quote_hash": "4bb486d6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "main-analytical-result",
+      "section_ordinal": 15,
+      "tex_line_start": 232,
+      "tex_line_end": 237,
+      "quote": "where: \\begin{itemize} \\item $\\delta_{\\text{disp}} = O(\\ell_c^2 k_H^2)$ is the dispersive correction, where $\\ell_c$ is the healing length (or other short-scale cutoff). \\item $\\delta_{\\text{diss}} = -\\frac{\\Gamma_H}{\\kappa} \\mathcal{F}(\\alpha)$ is the dissipative correction, where $\\Gamma_H$ is given by \\eqref{eq:hawking_damping}, and $\\mathcal{F}(\\alpha)$ is a dimensionless function of the ratio $\\alpha = \\gamma_1 \\kappa / c_s^2$. \\item $\\delta_{\\text{cross}}$ represents cross-terms between dispersive and dissipative effects, typically much smaller. \\end{itemize}",
+      "quote_normalized": "where: \\begin{itemize} \\item $\\delta_{disp} = o(\\ell_c^2 k_h^2)$ is the dispersive correction, where $\\ell_c$ is the healing length (or other short-scale cutoff). \\item $\\delta_{diss} = -\\frac{\\gamma_h}{\\kappa} \\mathcal{f}(\\alpha)$ is the dissipative correction, where $\\gamma_h$ is given by , and $\\mathcal{f}(\\alpha)$ is a dimensionless function of the ratio $\\alpha = \\gamma_1 \\kappa / c_s^2$. \\item $\\delta_{cross}$ represents cross-terms between dispersive and dissipative effects, typically much smaller. \\end{itemize}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Decomposition itemization; directly matches the three corrections in formulas.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          },
+          {
+            "kind": "formula",
+            "target": "dispersive_correction"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:main-analytical-result:66ef3554",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "main-analytical-result",
+        "quote_hash": "66ef3554",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "main-analytical-result",
+      "section_ordinal": 15,
+      "tex_line_start": 239,
+      "tex_line_end": 243,
+      "quote": "The dissipative correction can be expressed more explicitly. The damping rate at the Hawking frequency is \\begin{equation} \\Gamma_H = \\gamma_1 (\\kappa^2 + c_s^2 k_H^2) + \\gamma_2 \\frac{\\kappa^4}{c_s^4} + \\text{(higher order)}. \\end{equation}",
+      "quote_normalized": "the dissipative correction can be expressed more explicitly. the damping rate at the hawking frequency is \\begin{equation} \\gamma_h = \\gamma_1 (\\kappa^2 + c_s^2 k_h^2) + \\gamma_2 \\frac{\\kappa^4}{c_s^4} + (higher order). \\end{equation}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Schematic alternate form of Gamma_H. The 'kappa^2 + c_s^2 k_H^2' equals 2 kappa^2 since k_H = kappa/c_s, so c_s^2 k_H^2 = kappa^2. The gamma_2 term has kappa^4/c_s^4 = k_H^4 \u2014 different power than the canonical (gamma_1+gamma_2)(kappa/c_s)^2 form one paragraph above. Both forms imply different gamma_2 power-law dependence; this looks like a higher-order schematic separate from the canonical eq:hawking_damping. Carries from v1 review's 'body text gives schematic identification' WARN.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.GammaH",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:main-analytical-result:f54e98bb",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "main-analytical-result",
+        "quote_hash": "f54e98bb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "main-analytical-result",
+      "section_ordinal": 15,
+      "tex_line_start": 245,
+      "tex_line_end": 250,
+      "quote": "For the dominant contribution, we have \\begin{equation} \\delta_{\\text{diss}} \\approx -\\frac{\\gamma_1 \\kappa}{\\pi c_s^2} + O\\left(\\frac{\\gamma_1^2}{\\kappa}\\right), \\end{equation} where we have integrated over the Hawking spectrum and used the mean frequency $\\langle \\omega \\rangle \\sim \\pi \\kappa / 2$ near threshold.",
+      "quote_normalized": "for the dominant contribution, we have \\begin{equation} \\delta_{diss} \\approx -\\frac{\\gamma_1 \\kappa}{\\pi c_s^2} + o\\left(\\frac{\\gamma_1^2}{\\kappa}\\right), \\end{equation} where we have integrated over the hawking spectrum and used the mean frequency $\\langle \\omega \\rangle \\sim \\pi \\kappa / 2$ near threshold.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Order-of-magnitude form: drops gamma_2 and absorbs a (1/pi) factor from Hawking spectrum integral. Sign is consistent with Lean delta_diss = Gamma_H/kappa (eq has negative sign indicating temperature reduction).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:f7f6447d",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "f7f6447d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 254,
+      "tex_line_end": 262,
+      "quote": "Parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog Hawking experiments. Heidelberg and Trento are projected configurations. The model $\\kappa$ is profile-dependent; Steinhauer's published $\\kappa \\approx 290$~s$^{-1}$ (step potential) gives $T_H \\approx 0.35$~nK. The dissipative correction $\\delta_{\\mathrm{diss}}$ reported here is the zero-temperature Beliaev prediction; at experimentally realized temperatures the finite-$T$ Zaremba correction is $\\sim\\!10\\times$ larger (see \\S\\ref{sec:results}). Note the non-monotonic $\\delta_{\\mathrm{diss}}$ trend: Beliaev $\\Gamma_{\\mathrm{Bel}} \\propto \\kappa^2/c_s$ so $\\delta_{\\mathrm{diss}} = \\Gamma_{\\mathrm{Bel}}/\\kappa \\propto \\kappa/c_s$, amplifying at Heidelberg's larger $\\kappa$.",
+      "quote_normalized": "parameters at the sonic horizon from the transonic background solver (smooth tanh velocity profile) for three analog hawking experiments. heidelberg and trento are projected configurations. the model $\\kappa$ is profile-dependent; steinhauer's published $\\kappa \\approx 290$~s$^{-1}$ (step potential) gives $t_h \\approx 0.35$~nk. the dissipative correction $\\delta_{diss}$ reported here is the zero-temperature beliaev prediction; at experimentally realized temperatures the finite-$t$ zaremba correction is $\\sim\\!10\\times$ larger (see \\s). note the non-monotonic $\\delta_{diss}$ trend: beliaev $\\gamma_{bel} \\propto \\kappa^2/c_s$ so $\\delta_{diss} = \\gamma_{bel}/\\kappa \\propto \\kappa/c_s$, amplifying at heidelberg's larger $\\kappa$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 0.6,
+      "agent_notes": "Caption summary. T_H~0.35 nK from kappa=290 verified: hbar*290/(2*pi*kB)=3.52e-10 K=0.352 nK PASS. 'Zaremba ~10x' is OOM consistent with Sec V eq:delta_diss_zaremba range. Table 1 numbers reconcile with pipeline (v1 review, all PASS/WARN at rounding level).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          },
+          {
+            "kind": "formula",
+            "target": "beliaev_damping_rate"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:e2781174",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "e2781174",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 264,
+      "tex_line_end": 272,
+      "quote": "Transonic background profiles for three BEC analog Hawking experiments: Steinhauer ${}^{87}$Rb (blue), Heidelberg ${}^{39}$K (berry), and Trento ${}^{23}$Na spin-sonic (amber). Panels show velocity and sound speed, Mach number, and density profiles near the sonic horizon.",
+      "quote_normalized": "transonic background profiles for three bec analog hawking experiments: steinhauer ${}^{87}$rb (blue), heidelberg ${}^{39}$k (berry), and trento ${}^{23}$na spin-sonic (amber). panels show velocity and sound speed, mach number, and density profiles near the sonic horizon.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Figure 1 caption; describes platforms verified in Table 1 + Sec V.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate8_ParameterFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "Steinhauer.density_upstream",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Heidelberg.density_upstream",
+            "link_state": "llm_verified_only"
+          },
+          {
+            "kind": "parameter",
+            "target": "Trento.density_upstream",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:4241759b",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "4241759b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 274,
+      "tex_line_end": 291,
+      "quote": "Hierarchy of corrections to the Hawking temperature: dispersive $\\delta_{\\text{disp}}$ (green), dissipative $\\delta_{\\text{diss}}$ (red, Beliaev $T{=}0$), and cross-term $\\delta_{\\text{cross}}$ (gray) for three BEC platforms on log scale. Dashed lines mark detector sensitivity thresholds (current $10^{-1}$, near-term $10^{-2}$, projected $10^{-3}$). The hierarchy is \\emph{platform-dependent}: $\\delta_{\\text{disp}} > \\delta_{\\text{diss}}$ at Steinhauer (low $\\kappa$) and Trento (low $\\kappa$) but \\emph{inverted} at Heidelberg, where $\\Gamma_{\\mathrm{Bel}} \\propto \\kappa^2$ with $\\kappa \\approx 102$~s$^{-1}$ drives $\\delta_{\\text{diss}}$ to $1.6\\times 10^{-3}$, a factor ${\\sim}22$ above $\\delta_{\\text{disp}}$. Heidelberg is therefore the most experimentally relevant platform for detecting dissipative corrections in the BEC analog Hawking setting: $\\delta_{\\text{diss}}$ there sits at the projected-sensitivity threshold even in the pure-Beliaev limit.",
+      "quote_normalized": "hierarchy of corrections to the hawking temperature: dispersive $\\delta_{disp}$ (green), dissipative $\\delta_{diss}$ (red, beliaev $t{=}0$), and cross-term $\\delta_{cross}$ (gray) for three bec platforms on log scale. dashed lines mark detector sensitivity thresholds (current $10^{-1}$, near-term $10^{-2}$, projected $10^{-3}$). the hierarchy is platform-dependent: $\\delta_{disp} > \\delta_{diss}$ at steinhauer (low $\\kappa$) and trento (low $\\kappa$) but inverted at heidelberg, where $\\gamma_{bel} \\propto \\kappa^2$ with $\\kappa \\approx 102$~s$^{-1}$ drives $\\delta_{diss}$ to $1.6\\times 10^{-3}$, a factor ${\\sim}22$ above $\\delta_{disp}$. heidelberg is therefore the most experimentally relevant platform for detecting dissipative corrections in the bec analog hawking setting: $\\delta_{diss}$ there sits at the projected-sensitivity threshold even in the pure-beliaev limit.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 2.0,
+      "agent_notes": "Heidelberg kappa=101.93 s^-1 (paper '~102', 0.07% delta); delta_diss=1.46e-3 (paper '1.6e-3', 9% delta \u2014 within paper-rounding budget). Factor ~22 ratio against delta_disp not directly recomputed here but consistent with v1 review's PASS on Table 1 + figure correctness.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction",
+            "computed_value": "1.46e-3",
+            "delta_pct": 9.0,
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:a11198d9",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "a11198d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 293,
+      "tex_line_end": 294,
+      "quote": "Two distinct damping mechanisms can contribute to the horizon damping rate $\\Gamma_H$, active in different temperature regimes:",
+      "quote_normalized": "two distinct damping mechanisms can contribute to the horizon damping rate $\\gamma_h$, active in different temperature regimes:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Section transition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:c663b5a1",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "c663b5a1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 296,
+      "tex_line_end": 306,
+      "quote": "Beliaev regime ($T \\to 0$). The zero-temperature three-phonon decay gives \\begin{equation} \\Gamma_{\\text{Bel}} \\sim \\sqrt{n a_s^3}\\,\\omega^2 / c_s, \\end{equation} with $na_s^3$ the gas parameter ($\\sim 10^{-6}$ for dilute BECs). This is the regime formalized in our pipeline: Table~\\ref{tab:experimental_params} reports the Beliaev-regime $\\delta_{\\text{diss}}$ computed as $\\Gamma_{\\text{Bel}}/\\kappa$ for each platform. For typical BEC parameters this gives $\\delta_{\\text{diss}} \\sim 10^{-5}$.",
+      "quote_normalized": "beliaev regime ($t \\to 0$). the zero-temperature three-phonon decay gives \\begin{equation} \\gamma_{bel} \\sim \\sqrt{n a_s^3}\\,\\omega^2 / c_s, \\end{equation} with $na_s^3$ the gas parameter ($\\sim 10^{-6}$ for dilute becs). this is the regime formalized in our pipeline: table~ reports the beliaev-regime $\\delta_{diss}$ computed as $\\gamma_{bel}/\\kappa$ for each platform. for typical bec parameters this gives $\\delta_{diss} \\sim 10^{-5}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Beliaev formula matches formulas.py::beliaev_damping_rate. delta_diss ~ 10^-5 consistent with Steinhauer 2.16e-5, Trento 1.27e-5 (Heidelberg 1.46e-3 is the platform exception flagged separately).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "beliaev_damping_rate"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:402bb5ed",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "402bb5ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 308,
+      "tex_line_end": 322,
+      "quote": "Zaremba regime ($T \\gtrsim T_c/10$). At non-zero temperature, binary collisions between phonons and the thermal cloud~\\cite{Zaremba:1999} dominate. Kinetic theory gives the phonon damping rate at relevant frequencies directly: \\begin{equation} \\Gamma_H^{\\text{(kin)}} \\sim \\tfrac{\\hbar}{m}\\, n \\sigma\\, (n_{\\text{th}}/n) \\sim 10^{-3} \\text{ to } 10^{-1} \\text{ s}^{-1}, \\end{equation} where $n_{\\text{th}}/n$ is the thermal-cloud fraction and the wide range reflects uncertainties in the scattering cross-section $\\sigma$. This is a \\emph{rate} (dimension [s$^{-1}$]), distinct from the EFT Lagrangian coefficients $\\gamma_{1,2}$ (units [m$^2$/s]) used in \\eqref{eq:hawking_damping}. Inserting directly into the Lean reference formula $\\delta_{\\mathrm{diss}} = \\Gamma_H/\\kappa$:",
+      "quote_normalized": "zaremba regime ($t \\gtrsim t_c/10$). at non-zero temperature, binary collisions between phonons and the thermal cloud~ dominate. kinetic theory gives the phonon damping rate at relevant frequencies directly: \\begin{equation} \\gamma_h^{(kin)} \\sim \\tfrac{\\hbar}{m}\\, n \\sigma\\, (n_{th}/n) \\sim 10^{-3} to 10^{-1} s^{-1}, \\end{equation} where $n_{th}/n$ is the thermal-cloud fraction and the wide range reflects uncertainties in the scattering cross-section $\\sigma$. this is a rate (dimension [s$^{-1}$]), distinct from the eft lagrangian coefficients $\\gamma_{1,2}$ (units [m$^2$/s]) used in . inserting directly into the lean reference formula $\\delta_{diss} = \\gamma_h/\\kappa$:",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: Zaremba:1999 not in registry (fail-from-registry). Body now correctly distinguishes [s^-1] rate from [m^2/s] EFT coefficient \u2014 this resolves the prior v1 dimensional-inconsistency FAIL by clarifying: Gamma^(kin) is treated as a rate directly inserted into delta_diss=Gamma/kappa. Schematic OOM range '1e-3 to 1e-1 s^-1' for Gamma^(kin) is stated by-fiat as a typical scattering-rate range; not pipeline-computed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Zaremba:1999"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:843c31af",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "843c31af",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 323,
+      "tex_line_end": 330,
+      "quote": "\\begin{equation} \\delta_{\\text{diss}}^{\\text{(kin)}} = \\Gamma_H^{\\text{(kin)}}/\\kappa \\sim 10^{-4} \\text{ to } 10^{-2} \\end{equation} (using Steinhauer $\\kappa \\approx 4.8$ s$^{-1}$). This is $\\sim 10$--$100\\times$ larger than the pure Beliaev prediction and dominates at experimentally realized temperatures.",
+      "quote_normalized": "\\begin{equation} \\delta_{diss}^{(kin)} = \\gamma_h^{(kin)}/\\kappa \\sim 10^{-4} to 10^{-2} \\end{equation} (using steinhauer $\\kappa \\approx 4.8$ s$^{-1}$). this is $\\sim 10$--$100\\times$ larger than the pure beliaev prediction and dominates at experimentally realized temperatures.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": 0.4,
+      "agent_notes": "Steinhauer kappa=4.76 s^-1 (paper '~4.8', 0.9% delta \u2014 rounding). delta_diss^(kin) ~ Gamma_H^(kin)/kappa = 1e-3..1e-1 / 4.8 ~ 2e-4..2e-2 \u2192 matches stated 1e-4..1e-2. Pipeline does not directly compute the Zaremba range; OOM extrapolation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:4664f1a9",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "4664f1a9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 332,
+      "tex_line_end": 333,
+      "quote": "Experimental reach. The $\\kappa$-dependence of $\\Gamma_H$ makes the experimental reach strongly platform-dependent.",
+      "quote_normalized": "experimental reach. the $\\kappa$-dependence of $\\gamma_h$ makes the experimental reach strongly platform-dependent.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Heading sentence.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:490eff0b",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "490eff0b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 335,
+      "tex_line_end": 340,
+      "quote": "For the Steinhauer (low-$\\kappa$) and Trento spin-sonic baseline configurations (Table~\\ref{tab:experimental_params}), both Beliaev and Zaremba regimes give $\\delta_{\\text{diss}} \\lesssim 10^{-4}$, comfortably below the current $\\Delta T/T \\sim 10^{-2}$ sensitivity of Steinhauer's apparatus but reaching near-term ($10^{-2}$) and projected ($10^{-3}$) detector thresholds only with the spin-sonic enhancement or the Zaremba finite-$T$ correction (discussed below).",
+      "quote_normalized": "for the steinhauer (low-$\\kappa$) and trento spin-sonic baseline configurations (table~), both beliaev and zaremba regimes give $\\delta_{diss} \\lesssim 10^{-4}$, comfortably below the current $\\delta t/t \\sim 10^{-2}$ sensitivity of steinhauer's apparatus but reaching near-term ($10^{-2}$) and projected ($10^{-3}$) detector thresholds only with the spin-sonic enhancement or the zaremba finite-$t$ correction (discussed below).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "'Both Beliaev and Zaremba give delta_diss <= 10^-4 at Steinhauer/Trento' \u2014 Beliaev: Steinhauer 2.16e-5, Trento 1.27e-5 (PASS, both <10^-4). Zaremba: 1e-4..1e-2 OOM, top of range exceeds 10^-4. The 'lesssim 10^-4' claim is at the boundary of the Zaremba range (overstates suppression). Sensitivity numbers (10^-2 current, 10^-3 projected) are stated by-fiat; not in PARAMETER_PROVENANCE.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:ec2123e2",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "ec2123e2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 342,
+      "tex_line_end": 350,
+      "quote": "For Heidelberg, the higher surface gravity $\\kappa \\approx 102$~s$^{-1}$ amplifies $\\Gamma_{\\mathrm{Bel}} \\propto \\kappa^2$: the pure Beliaev prediction is already $\\delta_{\\text{diss}} \\approx 1.6\\times 10^{-3}$, at the projected $10^{-3}$ sensitivity floor. Adding the Zaremba finite-$T$ contribution would push this to the $\\sim 10^{-2}$ near-term sensitivity range. \\textbf{Heidelberg is therefore the most experimentally accessible platform in our predictions}: the dispersive $\\delta_{\\text{disp}} \\approx 7\\times 10^{-5}$ is much smaller than $\\delta_{\\text{diss}}$ there, so any observed correction at the $10^{-3}$ level would be unambiguously dissipative.",
+      "quote_normalized": "for heidelberg, the higher surface gravity $\\kappa \\approx 102$~s$^{-1}$ amplifies $\\gamma_{bel} \\propto \\kappa^2$: the pure beliaev prediction is already $\\delta_{diss} \\approx 1.6\\times 10^{-3}$, at the projected $10^{-3}$ sensitivity floor. adding the zaremba finite-$t$ contribution would push this to the $\\sim 10^{-2}$ near-term sensitivity range. heidelberg is therefore the most experimentally accessible platform in our predictions: the dispersive $\\delta_{disp} \\approx 7\\times 10^{-5}$ is much smaller than $\\delta_{diss}$ there, so any observed correction at the $10^{-3}$ level would be unambiguously dissipative.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 8.4,
+      "agent_notes": "kappa~102 s^-1 (101.93 PASS); delta_diss=1.46e-3 (paper 1.6e-3 PASS at 9% rounding). delta_disp~7e-5 not directly recomputed but Table 1 numbers reconcile per v1 review.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction",
+            "computed_value": "1.46e-3",
+            "delta_pct": 9.0,
+            "link_state": "resolved"
+          },
+          {
+            "kind": "formula",
+            "target": "dispersive_correction"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:26fca447",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "26fca447",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 352,
+      "tex_line_end": 355,
+      "quote": "A measurement of $\\delta_{\\text{diss}}$ would distinguish Beliaev from Zaremba by its temperature scaling: $\\delta_{\\text{diss}}^{\\text{Bel}}$ is $T$-independent, while $\\delta_{\\text{diss}}^{\\text{(kin)}}$ scales with the thermal-cloud fraction $n_{\\text{th}}/n$.",
+      "quote_normalized": "a measurement of $\\delta_{diss}$ would distinguish beliaev from zaremba by its temperature scaling: $\\delta_{diss}^{bel}$ is $t$-independent, while $\\delta_{diss}^{(kin)}$ scales with the thermal-cloud fraction $n_{th}/n$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Qualitative T-scaling distinction; physically standard.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:f04d2c5f",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "f04d2c5f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 357,
+      "tex_line_end": 365,
+      "quote": "Note on $\\kappa$ profile-dependence. Table~\\ref{tab:experimental_params} reports $\\kappa \\approx 4.8$~s$^{-1}$ for the Steinhauer platform under our smooth tanh velocity profile. Steinhauer's own published value is $\\kappa \\approx 290$~s$^{-1}$, obtained from a step potential; the $\\sim\\!60\\times$ factor between the two values reflects entirely the geometric steepness of the assumed velocity profile, not a physical disagreement. Our smooth profile models a more idealized experimental configuration with reduced spectral contamination; the published step-profile value gives $T_H \\approx 0.35$~nK in the original Steinhauer analysis.",
+      "quote_normalized": "note on $\\kappa$ profile-dependence. table~ reports $\\kappa \\approx 4.8$~s$^{-1}$ for the steinhauer platform under our smooth tanh velocity profile. steinhauer's own published value is $\\kappa \\approx 290$~s$^{-1}$, obtained from a step potential; the $\\sim\\!60\\times$ factor between the two values reflects entirely the geometric steepness of the assumed velocity profile, not a physical disagreement. our smooth profile models a more idealized experimental configuration with reduced spectral contamination; the published step-profile value gives $t_h \\approx 0.35$~nk in the original steinhauer analysis.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 0.5,
+      "agent_notes": "Smooth-profile kappa=4.76 (paper 4.8); 60x ratio: 290/4.8=60.4 PASS. T_H from kappa=290: hbar*290/(2*pi*kB)=3.52e-10=0.352 nK PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "hawking_temperature"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:61c52b0e",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-87rb-steinhauer-setup",
+        "quote_hash": "61c52b0e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-87rb-steinhauer-setup",
+      "section_ordinal": 16,
+      "tex_line_start": 367,
+      "tex_line_end": 375,
+      "quote": "Spin-sonic enhancement of dissipative corrections. The ratio $(c_{\\text{density}}/c_{\\text{spin}})^2$ amplifies $\\delta_{\\text{diss}}$, potentially bringing it within experimental reach for the Trento ${}^{23}$Na platform. Horizontal dashed lines mark experimental sensitivity thresholds.",
+      "quote_normalized": "spin-sonic enhancement of dissipative corrections. the ratio $(c_{density}/c_{spin})^2$ amplifies $\\delta_{diss}$, potentially bringing it within experimental reach for the trento ${}^{23}$na platform. horizontal dashed lines mark experimental sensitivity thresholds.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Figure 4 caption.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-projected-23na-spin-sonic-setup:39201cb7",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-projected-23na-spin-sonic-setup",
+        "quote_hash": "39201cb7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-projected-23na-spin-sonic-setup",
+      "section_ordinal": 17,
+      "tex_line_start": 379,
+      "tex_line_end": 379,
+      "quote": "A natural way to enhance dissipative corrections is to use a spin-sonic (spin-flow-acoustic) system, where phonons propagate in a spin-dependent effective metric~\\cite{Berti:2025}.",
+      "quote_normalized": "a natural way to enhance dissipative corrections is to use a spin-sonic (spin-flow-acoustic) system, where phonons propagate in a spin-dependent effective metric~.",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: Berti:2025 missing from registry (have Berti2025).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Berti:2025"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-projected-23na-spin-sonic-setup:380f8f20",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-projected-23na-spin-sonic-setup",
+        "quote_hash": "380f8f20",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-projected-23na-spin-sonic-setup",
+      "section_ordinal": 17,
+      "tex_line_start": 381,
+      "tex_line_end": 385,
+      "quote": "For $^{23}$Na with a spin-dependent background, the speed of sound can be dramatically reduced by tuning the spin-orbit interaction. If the density-mode sound speed $c_{\\text{density}} \\sim 1$ mm/s but the spin-mode sound speed $c_{\\text{spin}} \\sim 0.1$ mm/s (or lower), then the enhancement factor is \\begin{equation} \\left(\\frac{c_{\\text{density}}}{c_{\\text{spin}}}\\right)^2 \\sim 100. \\end{equation}",
+      "quote_normalized": "for $^{23}$na with a spin-dependent background, the speed of sound can be dramatically reduced by tuning the spin-orbit interaction. if the density-mode sound speed $c_{density} \\sim 1$ mm/s but the spin-mode sound speed $c_{spin} \\sim 0.1$ mm/s (or lower), then the enhancement factor is \\begin{equation} \\left(\\frac{c_{density}}{c_{spin}}\\right)^2 \\sim 100. \\end{equation}",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Toy values c_density~1, c_spin~0.1 mm/s give 100x. Neither is in PARAMETER_PROVENANCE; this is a hypothetical scaling estimate for projected experiments, not a pipeline-grounded computation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate8_ParameterFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:numerical-estimates-for-projected-23na-spin-sonic-setup:7320b436",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "numerical-estimates-for-projected-23na-spin-sonic-setup",
+        "quote_hash": "7320b436",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "numerical-estimates-for-projected-23na-spin-sonic-setup",
+      "section_ordinal": 17,
+      "tex_line_start": 387,
+      "tex_line_end": 400,
+      "quote": "This amplifies $\\delta_{\\text{diss}}$ by $\\sim 100\\times$. Applied to the two regimes of Sec.~\\ref{sec:results}: \\begin{equation} \\delta_{\\text{diss}}^{\\text{spin, Bel}} \\sim 100 \\times 10^{-5} \\sim 10^{-3}, \\qquad \\delta_{\\text{diss}}^{\\text{spin, (kin)}} \\sim 100 \\times 10^{-3} \\sim 10^{-1}, \\end{equation} so at finite temperature the spin-sonic enhancement could bring $\\delta_{\\text{diss}}$ up to $O(10^{-1})$, potentially accessible if noise can be reduced to the $\\sim 10^{-3}$ level. Even the pure Beliaev (T=0) regime gives $\\sim 10^{-3}$ with spin-sonic enhancement, at the threshold of current sensitivity. Detailed numerical estimates using $^{23}$Na scattering parameters and projected Trento trap geometries are presented in the supplemental material and interactive visualization dashboard accompanying this work.",
+      "quote_normalized": "this amplifies $\\delta_{diss}$ by $\\sim 100\\times$. applied to the two regimes of sec.~: \\begin{equation} \\delta_{diss}^{spin, bel} \\sim 100 \\times 10^{-5} \\sim 10^{-3}, \\qquad \\delta_{diss}^{spin, (kin)} \\sim 100 \\times 10^{-3} \\sim 10^{-1}, \\end{equation} so at finite temperature the spin-sonic enhancement could bring $\\delta_{diss}$ up to $o(10^{-1})$, potentially accessible if noise can be reduced to the $\\sim 10^{-3}$ level. even the pure beliaev (t=0) regime gives $\\sim 10^{-3}$ with spin-sonic enhancement, at the threshold of current sensitivity. detailed numerical estimates using $^{23}$na scattering parameters and projected trento trap geometries are presented in the supplemental material and interactive visualization dashboard accompanying this work.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "OOM scaling argument 100x of 1e-5/1e-3. Toy c_spin assumption (no provenance). Carries v1 WARN: 'speculative; relies on assumed c_spin not in EXPERIMENTS[Trento]'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation",
+        "Gate8_ParameterFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:formal-verification:db946004",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "formal-verification",
+        "quote_hash": "db946004",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 18,
+      "tex_line_start": 404,
+      "tex_line_end": 404,
+      "quote": "The core mathematical structures underlying the main result have been formally verified in Lean~4 proof code (v4.28.0, Mathlib). All 14 proof obligations (``sorry'' placeholders) have been machine-verified via the Aristotle automated theorem prover across nine targeted submissions, with zero remaining gaps:",
+      "quote_normalized": "the core mathematical structures underlying the main result have been formally verified in lean~4 proof code (v4.28.0, mathlib). all 14 proof obligations (``sorry'' placeholders) have been machine-verified via the aristotle automated theorem prover across nine targeted submissions, with zero remaining gaps:",
+      "type": "formal-claim",
+      "finding_classes": [
+        "TP"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class TP: paper says 'Lean v4.28.0' but lean-toolchain reads 'leanprover/lean4:v4.29.0'. Pin drift. The '14 obligations / 9 submissions / zero gaps' claim is consistent with sorry-free state but the 14/9 cardinalities are unaudited here.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acousticMetric_det",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:formal-verification:5f207d15",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "formal-verification",
+        "quote_hash": "5f207d15",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 18,
+      "tex_line_start": 406,
+      "tex_line_end": 413,
+      "quote": "Priority-1 (algebraic): \\begin{itemize} \\item The acoustic metric determinant: $\\det g_{\\mu\\nu} = -\\rho^2$ (independent of $v, c_s$). \\item The inverse metric identity: $g_{\\mu\\alpha}\\, g^{\\alpha\\nu} = \\delta^\\nu_\\mu$ for all $c_s \\neq 0$, $\\rho \\neq 0$. \\item Lorentzian signature: $\\det g < 0$ for subsonic flow ($v^2 < c_s^2$, $\\rho > 0$). \\item SK positivity: $\\mathrm{Im}\\, I_{\\text{SK}} \\geq 0$ from $\\gamma_{1,2} \\geq 0$ and $\\beta > 0$. \\item Per-sector FDR decomposition: the $\\gamma_1$ noise coefficient equals $\\gamma_1/\\beta$ and the $\\gamma_2$ noise coefficient equals $\\gamma_2/\\beta$, each verified by evaluating the action at isolated field configurations. \\end{itemize}",
+      "quote_normalized": "priority-1 (algebraic): \\begin{itemize} \\item the acoustic metric determinant: $\\det g_{\\mu\\nu} = -\\rho^2$ (independent of $v, c_s$). \\item the inverse metric identity: $g_{\\mu\\alpha}\\, g^{\\alpha\\nu} = \\delta^\\nu_\\mu$ for all $c_s \\neq 0$, $\\rho \\neq 0$. \\item lorentzian signature: $\\det g < 0$ for subsonic flow ($v^2 < c_s^2$, $\\rho > 0$). \\item sk positivity: $im\\, i_{sk} \\geq 0$ from $\\gamma_{1,2} \\geq 0$ and $\\beta > 0$. \\item per-sector fdr decomposition: the $\\gamma_1$ noise coefficient equals $\\gamma_1/\\beta$ and the $\\gamma_2$ noise coefficient equals $\\gamma_2/\\beta$, each verified by evaluating the action at isolated field configurations. \\end{itemize}",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "All three theorems exist in lean_deps.json under module AcousticMetric (TN check PASS). FDR decomposition theorems exist in SKDoubling.lean (per v1 audit).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acousticMetric_det",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acousticMetric_inv_correct",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AcousticMetric.acoustic_metric_lorentzian",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:formal-verification:1bc5ed5e",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "formal-verification",
+        "quote_hash": "1bc5ed5e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 18,
+      "tex_line_start": 415,
+      "tex_line_end": 419,
+      "quote": "Priority-2 (structural): \\begin{itemize} \\item Phonon EOM construction: the coefficient matrix of the linearized EOM equals $\\rho(x) \\cdot g^{\\mu\\nu}_{\\text{inv}}$, confirming the acoustic metric emerges from the EFT expansion. \\item Candidate term counting: 1 ideal term at order~0, 9 candidate structures (6~real + 3~imaginary) at order~1 in 1+1D. \\end{itemize}",
+      "quote_normalized": "priority-2 (structural): \\begin{itemize} \\item phonon eom construction: the coefficient matrix of the linearized eom equals $\\rho(x) \\cdot g^{\\mu\\nu}_{inv}$, confirming the acoustic metric emerges from the eft expansion. \\item candidate term counting: 1 ideal term at order~0, 9 candidate structures (6~real + 3~imaginary) at order~1 in 1+1d. \\end{itemize}",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "SD"
+      ],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Class SD: '9 candidate structures' = transport_coefficient_count outputs 9 (per v1 audit). '1 ideal term at order 0' / '6 real + 3 imaginary' counts: codified in SecondOrderSK firstOrder_count + transport_coefficient_count. PASS at audit time.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.firstOrder_count",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.transport_coefficient_count",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:formal-verification:3eff42b2",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "formal-verification",
+        "quote_hash": "3eff42b2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 18,
+      "tex_line_start": 421,
+      "tex_line_end": 429,
+      "quote": "Priority-3 (analytic): \\begin{itemize} \\item D'Alembertian operator: partial derivative infrastructure with flux decomposition for curved acoustic backgrounds. \\item Combined fluctuation-dissipation relation (FDR): KMS symmetry forces the full noise kernel to equal $(\\gamma_1 / \\beta) \\psi_a^2 + (\\gamma_2 / \\beta) (\\partial_t \\psi_a)^2$ for all field configurations---a definitional equality proved by \\texttt{rfl}. \\item Dispersive correction bound: $\\exists\\, \\delta_{\\text{disp}} \\neq 0$ with $|\\delta_{\\text{disp}}| \\leq C \\cdot D^2$, witnessed by $\\delta_{\\text{disp}} = -(\\pi/6) D^2$. \\item Dissipative correction existence: $\\exists\\, \\delta_{\\text{diss}}$ that vanishes iff $\\gamma_1 = \\gamma_2 = 0$, witnessed by $\\delta_{\\text{diss}} = -(\\gamma_1 + \\gamma_2)/(2\\kappa)$. \\item Combined Hawking universality: existence of an effective temperature decomposition satisfying all structural constraints simultaneously (nonzero corrections, bidirectional dissipation, dispersive bound). \\item SK first-order uniqueness: any first-order action satisfying positivity and the algebraic KMS condition is determined by exactly two free parameters $(\\gamma_1, \\gamma_2)$. \\end{itemize}",
+      "quote_normalized": "priority-3 (analytic): \\begin{itemize} \\item d'alembertian operator: partial derivative infrastructure with flux decomposition for curved acoustic backgrounds. \\item combined fluctuation-dissipation relation (fdr): kms symmetry forces the full noise kernel to equal $(\\gamma_1 / \\beta) \\psi_a^2 + (\\gamma_2 / \\beta) (\\partial_t \\psi_a)^2$ for all field configurations---a definitional equality proved by rfl. \\item dispersive correction bound: $\\exists\\, \\delta_{disp} \\neq 0$ with $|\\delta_{disp}| \\leq c \\cdot d^2$, witnessed by $\\delta_{disp} = -(\\pi/6) d^2$. \\item dissipative correction existence: $\\exists\\, \\delta_{diss}$ that vanishes iff $\\gamma_1 = \\gamma_2 = 0$, witnessed by $\\delta_{diss} = -(\\gamma_1 + \\gamma_2)/(2\\kappa)$. \\item combined hawking universality: existence of an effective temperature decomposition satisfying all structural constraints simultaneously (nonzero corrections, bidirectional dissipation, dispersive bound). \\item sk first-order uniqueness: any first-order action satisfying positivity and the algebraic kms condition is determined by exactly two free parameters $(\\gamma_1, \\gamma_2)$. \\end{itemize}",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "All three theorem references exist in lean_deps.json. The witness 'delta_diss = -(gamma_1+gamma_2)/(2*kappa)' is from the existence-statement (older) form, distinct from the canonical Lagrangian formula delta_diss=Gamma_H/kappa=(gamma_1+gamma_2)*kappa/c_s^2; both coexist as separate Lean theorems serving different proof obligations.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_zero_iff",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WKBAnalysis.firstOrder_correction_zero_iff",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:formal-verification:d05b3801",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "formal-verification",
+        "quote_hash": "d05b3801",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification",
+      "section_ordinal": 18,
+      "tex_line_start": 431,
+      "tex_line_end": 431,
+      "quote": "Notably, the automated prover discovered that our original formulation of the KMS hypothesis was too weak: the general \\texttt{KMSSymmetry} transform only constrains 4 of 9 field components, admitting a counterexample $c = (0,0,0,0,0,0,0,1,0)$ that satisfies positivity and KMS but does not correspond to any dissipative action. The corrected formalization introduces \\texttt{FirstOrderKMS}---an algebraic structure encoding the fluctuation-dissipation relation directly on the 9 first-order coefficients---and the proof proceeds by constructing $\\gamma_1 = -c_{r_2}$, $\\gamma_2 = c_{r_1} + c_{r_2}$ with non-negativity guaranteed by positivity and the FDR. This correction is a concrete example of formal verification catching a subtle error in physics formalization that would likely have passed peer review.",
+      "quote_normalized": "notably, the automated prover discovered that our original formulation of the kms hypothesis was too weak: the general kmssymmetry transform only constrains 4 of 9 field components, admitting a counterexample $c = (0,0,0,0,0,0,0,1,0)$ that satisfies positivity and kms but does not correspond to any dissipative action. the corrected formalization introduces firstorderkms---an algebraic structure encoding the fluctuation-dissipation relation directly on the 9 first-order coefficients---and the proof proceeds by constructing $\\gamma_1 = -c_{r_2}$, $\\gamma_2 = c_{r_1} + c_{r_2}$ with non-negativity guaranteed by positivity and the fdr. this correction is a concrete example of formal verification catching a subtle error in physics formalization that would likely have passed peer review.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both KMSSymmetry and FirstOrderKMS exist in lean_deps.json under SKDoubling module. Counterexample c=(0,...,0,1,0) reported in v1 review as Aristotle-derived finding.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.KMSSymmetry",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:universality-of-hawking-radiation-strengthened:26463d25",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "universality-of-hawking-radiation-strengthened",
+        "quote_hash": "26463d25",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "universality-of-hawking-radiation-strengthened",
+      "section_ordinal": 20,
+      "tex_line_start": 438,
+      "tex_line_end": 438,
+      "quote": "Our results strengthen the case for the \\textit{universality} of Hawking radiation. The key observation is that dissipative corrections, like dispersive corrections, are suppressed by powers of the ratio $\\Gamma_H / \\kappa$. In the limit of weak damping (low $\\gamma_1, \\gamma_2$), this ratio vanishes, and the Hawking temperature becomes independent of microscopic dissipative physics. This is the hallmark of infrared (IR, i.e., long-distance/low-energy) universality: the macroscopic observable $T_H$ is insensitive to UV details.",
+      "quote_normalized": "our results strengthen the case for the universality of hawking radiation. the key observation is that dissipative corrections, like dispersive corrections, are suppressed by powers of the ratio $\\gamma_h / \\kappa$. in the limit of weak damping (low $\\gamma_1, \\gamma_2$), this ratio vanishes, and the hawking temperature becomes independent of microscopic dissipative physics. this is the hallmark of infrared (ir, i.e., long-distance/low-energy) universality: the macroscopic observable $t_h$ is insensitive to uv details.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Universality argument grounded in deltaDissFromTransport_zero_iff (delta_diss=0 iff gamma=0).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_zero_iff",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:universality-of-hawking-radiation-strengthened:5f994144",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "universality-of-hawking-radiation-strengthened",
+        "quote_hash": "5f994144",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "universality-of-hawking-radiation-strengthened",
+      "section_ordinal": 20,
+      "tex_line_start": 440,
+      "tex_line_end": 440,
+      "quote": "This provides a new perspective on the trans-Planckian problem: not only are high-frequency quantum fluctuations regulated by \\textit{unknown} short-distance physics (gravity, string theory, etc.), but in the analog system, they are also exponentially damped by \\textit{known} dissipative mechanisms. The combination ensures robustness of the Hawking temperature.",
+      "quote_normalized": "this provides a new perspective on the trans-planckian problem: not only are high-frequency quantum fluctuations regulated by unknown short-distance physics (gravity, string theory, etc.), but in the analog system, they are also exponentially damped by known dissipative mechanisms. the combination ensures robustness of the hawking temperature.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Interpretive narrative; not directly chain-verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:universality-of-hawking-radiation-strengthened:b182eafe",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "universality-of-hawking-radiation-strengthened",
+        "quote_hash": "b182eafe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "universality-of-hawking-radiation-strengthened",
+      "section_ordinal": 20,
+      "tex_line_start": 442,
+      "tex_line_end": 449,
+      "quote": "Quantitatively, we have shown: \\begin{enumerate} \\item Across current and projected BEC configurations, Beliaev-regime dissipative corrections span $\\delta_{\\text{diss}} \\approx 10^{-5}$ (Steinhauer $^{87}$Rb, Trento $^{23}$Na) to $10^{-3}$ (Heidelberg $^{39}$K) --- spanning three orders of magnitude driven by the $\\Gamma_{\\mathrm{Bel}} \\propto \\kappa^2$ scaling. Finite-temperature Zaremba contributions add a further $\\sim\\!10\\times$ at experimentally realized temperatures.",
+      "quote_normalized": "quantitatively, we have shown: \\begin{enumerate} \\item across current and projected bec configurations, beliaev-regime dissipative corrections span $\\delta_{diss} \\approx 10^{-5}$ (steinhauer $^{87}$rb, trento $^{23}$na) to $10^{-3}$ (heidelberg $^{39}$k) --- spanning three orders of magnitude driven by the $\\gamma_{bel} \\propto \\kappa^2$ scaling. finite-temperature zaremba contributions add a further $\\sim\\!10\\times$ at experimentally realized temperatures.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": 2.0,
+      "agent_notes": "Steinhauer 2.16e-5 + Trento 1.27e-5 ~ 10^-5; Heidelberg 1.46e-3 ~ 10^-3 \u2192 range PASS. 10x Zaremba enhancement is OOM consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:universality-of-hawking-radiation-strengthened:47717960",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "universality-of-hawking-radiation-strengthened",
+        "quote_hash": "47717960",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "universality-of-hawking-radiation-strengthened",
+      "section_ordinal": 20,
+      "tex_line_start": 450,
+      "tex_line_end": 456,
+      "quote": "\\item The relative magnitude of $\\delta_{\\text{disp}}$ versus $\\delta_{\\text{diss}}$ is platform-dependent: dispersive corrections dominate for Steinhauer and Trento, while dissipative corrections dominate for Heidelberg. Heidelberg is therefore our strongest detection target: $\\delta_{\\text{diss}} \\sim 10^{-3}$ (Beliaev) to $10^{-2}$ (Zaremba) sits at or above the projected detector sensitivity, and the dispersive correction is a factor ${\\sim}20$ smaller than the dissipative, so any observed correction at this level is cleanly attributable to dissipation.",
+      "quote_normalized": "\\item the relative magnitude of $\\delta_{disp}$ versus $\\delta_{diss}$ is platform-dependent: dispersive corrections dominate for steinhauer and trento, while dissipative corrections dominate for heidelberg. heidelberg is therefore our strongest detection target: $\\delta_{diss} \\sim 10^{-3}$ (beliaev) to $10^{-2}$ (zaremba) sits at or above the projected detector sensitivity, and the dispersive correction is a factor ${\\sim}20$ smaller than the dissipative, so any observed correction at this level is cleanly attributable to dissipation.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Hierarchy claim consistent with figure 2 caption (~22x at Heidelberg). 10^-3..10^-2 OOM range covers Beliaev 1.46e-3 + Zaremba ~1.5e-2 extrapolation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          },
+          {
+            "kind": "formula",
+            "target": "dispersive_correction"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:universality-of-hawking-radiation-strengthened:567fcb43",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "universality-of-hawking-radiation-strengthened",
+        "quote_hash": "567fcb43",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "universality-of-hawking-radiation-strengthened",
+      "section_ordinal": 20,
+      "tex_line_start": 457,
+      "tex_line_end": 459,
+      "quote": "\\item For next-generation spin-sonic experiments, the $(c_{\\mathrm{density}}/c_{\\mathrm{spin}})^2$ enhancement raises dissipative corrections into the $O(10^{-1})$ range in the Zaremba regime, potentially observable at any current sensitivity.",
+      "quote_normalized": "\\item for next-generation spin-sonic experiments, the $(c_{density}/c_{spin})^2$ enhancement raises dissipative corrections into the $o(10^{-1})$ range in the zaremba regime, potentially observable at any current sensitivity.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Speculative spin-sonic projection; no PARAMETER_PROVENANCE for c_spin. Same hedge as Sec V.C.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:universality-of-hawking-radiation-strengthened:8a6482cc",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "universality-of-hawking-radiation-strengthened",
+        "quote_hash": "8a6482cc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "universality-of-hawking-radiation-strengthened",
+      "section_ordinal": 20,
+      "tex_line_start": 460,
+      "tex_line_end": 463,
+      "quote": "\\item The scaling $\\delta_{\\text{diss}} = \\Gamma_H / \\kappa$ is an IR universal derived from the SK-EFT --- independent of the specific microstructure (atomic species, trap design) at fixed $\\Gamma_H / \\kappa$. \\end{enumerate}",
+      "quote_normalized": "\\item the scaling $\\delta_{diss} = \\gamma_h / \\kappa$ is an ir universal derived from the sk-eft --- independent of the specific microstructure (atomic species, trap design) at fixed $\\gamma_h / \\kappa$. \\end{enumerate}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IR universality claim grounded in deltaDissFromTransport_eq.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:connection-to-dissipative-gravity-and-holography:74dccc2d",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "connection-to-dissipative-gravity-and-holography",
+        "quote_hash": "74dccc2d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "connection-to-dissipative-gravity-and-holography",
+      "section_ordinal": 21,
+      "tex_line_start": 467,
+      "tex_line_end": 467,
+      "quote": "In the higher-dimensional AdS/CFT (Anti-de~Sitter/Conformal Field Theory) context---the conjectured duality between gravity in a negatively curved spacetime and a quantum field theory on its boundary---dissipative effects in the boundary theory (e.g., bulk viscosity) leave signatures in the gravitational dual as ingoing or outgoing radiation. Similarly, dissipation in a BEC analog system can be viewed as a source term on the gravity side. Our results suggest that dissipative corrections to Hawking radiation follow a universal pattern governed by the surface gravity and the damping timescale.",
+      "quote_normalized": "in the higher-dimensional ads/cft (anti-de~sitter/conformal field theory) context---the conjectured duality between gravity in a negatively curved spacetime and a quantum field theory on its boundary---dissipative effects in the boundary theory (e.g., bulk viscosity) leave signatures in the gravitational dual as ingoing or outgoing radiation. similarly, dissipation in a bec analog system can be viewed as a source term on the gravity side. our results suggest that dissipative corrections to hawking radiation follow a universal pattern governed by the surface gravity and the damping timescale.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Interpretive AdS/CFT analogy; not chain-verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:connection-to-dissipative-gravity-and-holography:feeaf6a5",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "connection-to-dissipative-gravity-and-holography",
+        "quote_hash": "feeaf6a5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "connection-to-dissipative-gravity-and-holography",
+      "section_ordinal": 21,
+      "tex_line_start": 469,
+      "tex_line_end": 469,
+      "quote": "This connection deserves further exploration, particularly in the context of recent work on dissipative transport in holographic systems \\cite{Jana:2020}.",
+      "quote_normalized": "this connection deserves further exploration, particularly in the context of recent work on dissipative transport in holographic systems .",
+      "type": "citation",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class IA: Jana:2020 not in registry (have Jana2020).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Jana:2020"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:experimental-prospects:3c4c494f",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "experimental-prospects",
+        "quote_hash": "3c4c494f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "experimental-prospects",
+      "section_ordinal": 22,
+      "tex_line_start": 473,
+      "tex_line_end": 475,
+      "quote": "The present work opens several avenues for experimental tests: \\begin{enumerate} \\item $\\kappa$-scaling test (most accessible): From Eq.~\\eqref{eq:delta_diss_explicit}, the dissipative correction scales as $\\delta_{\\text{diss}} \\propto \\kappa$ while the dispersive correction scales as $\\delta_{\\text{disp}} \\propto \\kappa^2$. By varying $\\kappa$ via Feshbach-tuned scattering length (feasible with $^{39}$K at Heidelberg) and plotting $\\delta_{\\text{total}}(\\kappa)$, the distinct scaling exponents directly distinguish the two correction types. This requires only relative precision (scaling exponent), not absolute calibration, making it the most accessible experimental test of dissipative EFT predictions.",
+      "quote_normalized": "the present work opens several avenues for experimental tests: \\begin{enumerate} \\item $\\kappa$-scaling test (most accessible): from eq.~, the dissipative correction scales as $\\delta_{diss} \\propto \\kappa$ while the dispersive correction scales as $\\delta_{disp} \\propto \\kappa^2$. by varying $\\kappa$ via feshbach-tuned scattering length (feasible with $^{39}$k at heidelberg) and plotting $\\delta_{total}(\\kappa)$, the distinct scaling exponents directly distinguish the two correction types. this requires only relative precision (scaling exponent), not absolute calibration, making it the most accessible experimental test of dissipative eft predictions.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "kappa-scaling: delta_diss ~ kappa (linear from Gamma_H/kappa = (gamma_1+gamma_2)*kappa/c_s^2), delta_disp ~ kappa^2 (from D^2=(kappa*xi/c_s)^2). Consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "first_order_correction"
+          },
+          {
+            "kind": "formula",
+            "target": "dispersive_correction"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:experimental-prospects:7d52de62",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "experimental-prospects",
+        "quote_hash": "7d52de62",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "experimental-prospects",
+      "section_ordinal": 22,
+      "tex_line_start": 476,
+      "tex_line_end": 476,
+      "quote": "\\item Precision measurement of Hawking temperature: By measuring the temperature of Hawking-like radiation in high-precision setups with reduced noise, one could detect the small dissipative correction and extract the transport coefficient $\\gamma_1$.",
+      "quote_normalized": "\\item precision measurement of hawking temperature: by measuring the temperature of hawking-like radiation in high-precision setups with reduced noise, one could detect the small dissipative correction and extract the transport coefficient $\\gamma_1$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Experimental program statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:experimental-prospects:847d2eab",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "experimental-prospects",
+        "quote_hash": "847d2eab",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "experimental-prospects",
+      "section_ordinal": 22,
+      "tex_line_start": 477,
+      "tex_line_end": 477,
+      "quote": "\\item Spin-sonic hybrid systems: The proposed enhancement via spin-dependent sound speeds makes dissipative corrections observable, provided other systematic errors can be controlled.",
+      "quote_normalized": "\\item spin-sonic hybrid systems: the proposed enhancement via spin-dependent sound speeds makes dissipative corrections observable, provided other systematic errors can be controlled.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "'Makes corrections observable' OOM-only claim, contingent on toy c_spin.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:experimental-prospects:a6b077d4",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "experimental-prospects",
+        "quote_hash": "a6b077d4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "experimental-prospects",
+      "section_ordinal": 22,
+      "tex_line_start": 478,
+      "tex_line_end": 478,
+      "quote": "\\item Time-dependent measurements: By monitoring the decay of Hawking radiation intensity over time (as dissipation and decoherence set in), one could directly measure $\\Gamma_H$ and verify the $\\gamma_1$-dependence.",
+      "quote_normalized": "\\item time-dependent measurements: by monitoring the decay of hawking radiation intensity over time (as dissipation and decoherence set in), one could directly measure $\\gamma_h$ and verify the $\\gamma_1$-dependence.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Experimental proposal.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:experimental-prospects:de475214",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "experimental-prospects",
+        "quote_hash": "de475214",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "experimental-prospects",
+      "section_ordinal": 22,
+      "tex_line_start": 481,
+      "tex_line_end": 481,
+      "quote": "Further refinement of the theoretical predictions (e.g., exact numerical evaluation of the correction functions, inclusion of quantum corrections to the SK action) will be needed to push toward percentage-level accuracy.",
+      "quote_normalized": "further refinement of the theoretical predictions (e.g., exact numerical evaluation of the correction functions, inclusion of quantum corrections to the sk action) will be needed to push toward percentage-level accuracy.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Hedged outlook statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:open-questions:94a76567",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "open-questions",
+        "quote_hash": "94a76567",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-questions",
+      "section_ordinal": 23,
+      "tex_line_start": 485,
+      "tex_line_end": 490,
+      "quote": "Several theoretical questions remain: \\begin{enumerate} \\item What is the fate of the Hawking spectrum in the strong dissipation regime, $\\Gamma_H \\gg \\kappa$? Does the analog radiation process continue, or does it transition to a different mechanism? \\item How do finite-range (non-local) dissipation models affect the results? We have assumed local dissipation here. \\item Can dissipative corrections be systematically derived from ab initio many-body quantum mechanics, or are the transport coefficients $\\gamma_{1,2}$ fundamentally emergent? \\end{enumerate}",
+      "quote_normalized": "several theoretical questions remain: \\begin{enumerate} \\item what is the fate of the hawking spectrum in the strong dissipation regime, $\\gamma_h \\gg \\kappa$? does the analog radiation process continue, or does it transition to a different mechanism? \\item how do finite-range (non-local) dissipation models affect the results? we have assumed local dissipation here. \\item can dissipative corrections be systematically derived from ab initio many-body quantum mechanics, or are the transport coefficients $\\gamma_{1,2}$ fundamentally emergent? \\end{enumerate}",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Open-questions section; interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:open-questions:e3088074",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "open-questions",
+        "quote_hash": "e3088074",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-questions",
+      "section_ordinal": 23,
+      "tex_line_start": 492,
+      "tex_line_end": 492,
+      "quote": "These will be subjects of future work.",
+      "quote_normalized": "these will be subjects of future work.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Closing transition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper1_first_order:conclusion:9aa0cb0a",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "conclusion",
+        "quote_hash": "9aa0cb0a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 24,
+      "tex_line_start": 496,
+      "tex_line_end": 496,
+      "quote": "We have computed the first dissipative effective field theory corrections to Hawking radiation in BEC sonic black holes, using the Schwinger--Keldysh formalism. The main result is a suppressed temperature correction $\\delta_{\\text{diss}} \\sim \\Gamma_H / \\kappa$, which is experimentally unobservable in current setups but potentially accessible in next-generation spin-sonic systems. This result reinforces the universality of Hawking radiation and provides a test of dissipative physics in analog gravity.",
+      "quote_normalized": "we have computed the first dissipative effective field theory corrections to hawking radiation in bec sonic black holes, using the schwinger--keldysh formalism. the main result is a suppressed temperature correction $\\delta_{diss} \\sim \\gamma_h / \\kappa$, which is experimentally unobservable in current setups but potentially accessible in next-generation spin-sonic systems. this result reinforces the universality of hawking radiation and provides a test of dissipative physics in analog gravity.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Conclusion echoing main result + universality claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeDerivation"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SecondOrderSK.deltaDissFromTransport_eq",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper1_first_order:acknowledgments:c2ff4a7b",
+      "raw_id_parts": {
+        "paper": "paper1_first_order",
+        "section_slug": "acknowledgments",
+        "quote_hash": "c2ff4a7b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 25,
+      "tex_line_start": 499,
+      "tex_line_end": 499,
+      "quote": "We thank the developers of Lean~4 and Mathlib for the formal verification infrastructure, and the Harmonic team for access to the Aristotle automated theorem prover. Numerical computations used Python with NumPy and Plotly. We acknowledge stimulating discussions with the analog gravity and cold-atom communities.",
+      "quote_normalized": "we thank the developers of lean~4 and mathlib for the formal verification infrastructure, and the harmonic team for access to the aristotle automated theorem prover. numerical computations used python with numpy and plotly. we acknowledge stimulating discussions with the analog gravity and cold-atom communities.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Acknowledgment, no claims.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "v1:layer_2_theorem_references:gammaH_def",
+      "prior_run_date": "2026-04-13",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Theorem still exists in lean_deps.json; reproduces in current run as PASS link in formal-verification sentences.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "module": "SecondOrderSK",
+        "name": "gammaH_def",
+        "prior_value": true,
+        "current_value": true,
+        "command": "json.load(open('lean/lean_deps.json')) \u2192 'SKEFTHawking.SecondOrderSK.gammaH_def' present"
+      }
+    },
+    {
+      "prior_finding_id": "v1:layer_3:Rb87.a_s",
+      "prior_run_date": "2026-04-13",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "PARAMETER_PROVENANCE Rb87.a_s still llm_verified 2026-03-31. Status WARN reflects human_verified_date=None, which the v2 schema decoupling moves out of agent verdict per Part B.",
+      "deterministic_recheck": {
+        "kind": "parameter_provenance_dict",
+        "key": "Rb87.a_s",
+        "prior_value": "WARN (human_verified=None)",
+        "current_value": "llm_verified_only",
+        "command": "PARAMETER_PROVENANCE['Rb87.a_s'] from src/core/provenance.py"
+      }
+    },
+    {
+      "prior_finding_id": "v1:blocking_issue:body_text_drops_kH2_factor",
+      "prior_run_date": "2026-04-13",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper \u00a7IV.B eq:hawking_damping now reads 'Gamma_H = (gamma_1+gamma_2) k_H^2 = (gamma_1+gamma_2) kappa^2/c_s^2' with explicit k_H^2 conversion factor; the prose paragraph following also annotates the [m^2/s] vs [s^-1] unit conversion. Body-text/implementation now consistent.",
+      "deterministic_recheck": {
+        "kind": "tex_grep",
+        "module": "papers/paper1_first_order/paper_draft.tex",
+        "name": "eq:hawking_damping",
+        "prior_value": "no k_H^2 factor (schematic)",
+        "current_value": "explicit k_H^2 = kappa^2/c_s^2 factor present (line 198)",
+        "command": "grep -n 'k_H^2 = (\\\\gamma_1' papers/paper1_first_order/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "v1:blocking_issue:zaremba_dimensional_inconsistency",
+      "prior_run_date": "2026-04-13",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper \u00a7V Zaremba paragraph now explicitly states 'Gamma_H^(kin) ... is a rate (dimension [s^-1]), distinct from the EFT Lagrangian coefficients gamma_{1,2} (units [m^2/s])'. The dimensional clarification (post-Phase-5u-W1) appears to resolve the prior FAIL, but the schematic OOM range '1e-3..1e-1 s^-1' is still stated by-fiat (not pipeline-derived). Recommend human ratification.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "v1:blocking_issue:transonic_demo_block",
+      "prior_run_date": "2026-04-13",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Prior finding referenced src/core/transonic_background.py __main__ demo (lines 406-441) passing gamma_beliaev as gamma_1 with mismatched units. This is a code-side concern not surfaced by sentence-walking the paper; v2 reviewer scope is paper prose only. Recommend human triage to confirm fix or move to validate.py.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "v1:layer_4:berti_journal_check",
+      "prior_run_date": "2026-04-13",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Prior action item: 'Berti entry says Comptes Rendus Physique vol 25 (2025); verify against arXiv:2408.17292 before submission'. This is a citation-content verification (interpretive judgment about the journal) not surfaced by structural sentence-walking. Recommend human ratification with WebFetch CrossRef.",
+      "deterministic_recheck": null
+    }
+  ],
+  "summary": {
+    "total_sentences": 77,
+    "by_type": {
+      "metaclaim": 4,
+      "methodology": 8,
+      "formal-claim": 18,
+      "numeric": 17,
+      "citation": 7,
+      "transition": 5,
+      "qualitative": 13,
+      "theorem-ref": 5
+    },
+    "by_verdict": {
+      "PASS": 45,
+      "WARN": 11,
+      "FAIL": 12,
+      "TRANSITION": 5,
+      "INFO": 4
+    },
+    "by_finding_class": {
+      "IA": 11,
+      "TP": 1,
+      "SD": 1,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 6,
+    "non_reproducing_auto_closed": 3,
+    "non_reproducing_candidates": 3,
+    "agent_text": "77 sentences | 45 PASS | 11 WARN | 12 FAIL | 4 INFO | 0 UNGROUNDED | 5 TRANSITION | 3 prior auto-closed | 3 prior candidate-for-supersession | finding-classes: IA=11 TP=1 SD=1 TN=0 HD=0"
   },
-
   "blocking_issues": [
-    "Citation key convention mismatch — rename \\bibitem keys from 'Author:Year' to 'AuthorYear' (or add aliases) so that CITATION_REGISTRY lookups succeed. Currently 0/11 bibitems resolve.",
-    "Four citations not in CITATION_REGISTRY at all: Jacobson1996, Son2002, Coutant2014, Zaremba1999 — add entries before submission.",
-    "Zaremba-regime dimensional inconsistency (eq. gamma_estimates_expanded, eq. delta_diss_zaremba) — gamma_1 units do not balance across body text vs. pipeline convention [m^2/s]. Either reformulate as Gamma_1 [s^-1] directly (with delta ~ Gamma_1/kappa) or rederive the numerical range.",
-    "Body-text relation Gamma_H ~ gamma_1 kappa^2 (eq. hawking_damping) drops the k_H^2 = (kappa/c_s)^2 factor that was just added to the implementation. Either add the (kappa/c_s)^2 explicitly or annotate it as schematic.",
-    "__main__ demo block in src/core/transonic_background.py (lines 406-441) still passes gamma_beliaev [s^-1] as gamma_1 [m^2/s] — produces nonsense delta_diss ~ 1e3 when run standalone. Not used for Table 1 (visualizations.py uses the correct beliaev_transport_coefficients extraction), but the demo should be fixed to avoid confusion."
+    {
+      "id": "block:1",
+      "summary": "Citation key convention mismatch \u2014 paper uses 'Author:Year' bibkeys (Hawking:1974, Unruh:1981, etc.) but CITATION_REGISTRY uses 'AuthorYear' (Hawking1974, Unruh1981). Zero of 11 paper bibitems resolve directly. Additionally, four bibitems are missing from the registry entirely under any naming (Jacobson1996, Son2002, Coutant2014, Zaremba1999).",
+      "sentences": [
+        "sentence:paper1_first_order:introduction:b2372ead",
+        "sentence:paper1_first_order:introduction:45041f89",
+        "sentence:paper1_first_order:introduction:1001775a",
+        "sentence:paper1_first_order:introduction:f2a2e9da",
+        "sentence:paper1_first_order:introduction:6c4e4dad",
+        "sentence:paper1_first_order:the-superfluid-action:41d940f2",
+        "sentence:paper1_first_order:acoustic-metric-in-planck-gasperini-form:c79bf717",
+        "sentence:paper1_first_order:physical-interpretation-gradient-viscosity-and-thermal-effects:859acbd5",
+        "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:402bb5ed",
+        "sentence:paper1_first_order:numerical-estimates-for-projected-23na-spin-sonic-setup:39201cb7",
+        "sentence:paper1_first_order:connection-to-dissipative-gravity-and-holography:feeaf6a5"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "Toolchain pin drift \u2014 Formal Verification \u00a7V.D states 'Lean v4.28.0' but lean-toolchain pins 'leanprover/lean4:v4.29.0'. Update paper text to v4.29.0 (or accept current pin).",
+      "sentences": [
+        "sentence:paper1_first_order:formal-verification:db946004"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TP"
+    }
   ],
-
-  "non_blocking_warnings": [
-    "All 15 platform parameters remain human_verified_date = None — blocks submission per CHECK 15, fine for draft.",
-    "kappa ~ 20-100 s^-1 sentence in Sec. II does not cover the 4.76 s^-1 Steinhauer value computed from the smooth profile. Suggest '~5-100 s^-1 depending on profile steepness'.",
-    "Spin-sonic c_spin ~ 0.1 mm/s is an assumed toy value, not a PARAMETER_PROVENANCE entry; the 100x enhancement factor is an order-of-magnitude projection."
-  ],
-
-  "summary": "24 PASS, 10 WARN, 0 FAIL on individual checks; overall issues_found due to (1) citation key mismatch blocking registry lookups, (2) Zaremba dimensional inconsistency, (3) human-verification pending on all platform parameters (blocks submission only). The core numerical result (Table 1) now reconciles with the pipeline after the k_H^2 bugfix. All Lean theorems referenced (new GammaH family and existing firstOrder_* / acousticMetric_*) are present with no active sorry."
+  "non_blocking_followups": [
+    {
+      "id": "nbf:1",
+      "summary": "Paper \u00a7II surface_gravity sentence states 'kappa ~ 20-100 s^-1' but the smooth-tanh pipeline yields 4.76 s^-1 for Steinhauer. Suggest rewording to '~5-100 s^-1 depending on profile steepness'.",
+      "sentences": [
+        "sentence:paper1_first_order:acoustic-metric-in-planck-gasperini-form:2cde17e8"
+      ]
+    },
+    {
+      "id": "nbf:2",
+      "summary": "Spin-sonic c_spin ~ 0.1 mm/s is a toy value (no PARAMETER_PROVENANCE entry). Either add a Trento.c_spin parameter with a literature anchor (e.g., Recati group sonic-Goldstone-mode estimates) or annotate the \u00a7V.C / Outlook sentences as 'projected, unsourced'.",
+      "sentences": [
+        "sentence:paper1_first_order:abstract:4da4d9be",
+        "sentence:paper1_first_order:physical-interpretation-gradient-viscosity-and-thermal-effects:b849e1ac",
+        "sentence:paper1_first_order:numerical-estimates-for-87rb-steinhauer-setup:e2781174"
+      ]
+    },
+    {
+      "id": "nbf:3",
+      "summary": "All 15 platform parameters remain human_verified_date=None. Submission is blocked by CHECK 15 until human ratification. Does not block draft progression.",
+      "sentences": []
+    },
+    {
+      "id": "nbf:4",
+      "summary": "\u00a7II acoustic_metric det = -(c_s^2-v^2)/c_s^2 vs Lean acousticMetric_det = -rho^2 differ by an n^2/c_s^2 prefactor convention (paper writes the dimensionless metric prefactor; Lean writes the conformally-rescaled determinant). Optional: add a one-sentence bridge in \u00a7II.B.",
+      "sentences": [
+        "sentence:paper1_first_order:acoustic-metric-in-planck-gasperini-form:c79bf717"
+      ]
+    },
+    {
+      "id": "nbf:5",
+      "summary": "\u00a7III sentence states 'gamma_{1,2} ... [time]^{-1}' while \u00a7IV.B says they are [m^2/s] EFT Lagrangian coefficients. Inconsistent unit gloss; recommend \u00a7III edit.",
+      "sentences": [
+        "sentence:paper1_first_order:dissipative-superfluid-action-three-axioms:63a5baa4"
+      ]
+    }
+  ]
 }

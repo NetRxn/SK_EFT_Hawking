@@ -1,0 +1,2983 @@
+{
+  "paper": "paper21_majorana_rung",
+  "review_date": "2026-04-25T07:51:17Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+  "sentences": [
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:c448b870",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "c448b870",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 30,
+      "tex_line_end": 33,
+      "quote": "We report a Lean~4 formalization that places the sterile-neutrino right-handed Weyl field $\\SterileNu$ as a $\\mathbb{Z}_2$-graded rung on the same fermionic substrate that hosts the scalar (Higgs) and tetrad condensates of our Phase 5z program (Wave 1, \\texttt{ScalarRungInterpretation.lean}) and Phase 4y program (\\texttt{TetradGapEquation.lean}).",
+      "quote_normalized": "we report a lean~4 formalization that places the sterile-neutrino right-handed weyl field $\\sterilenu$ as a $\\mathbb{z}_2$-graded rung on the same fermionic substrate that hosts the scalar (higgs) and tetrad condensates of our phase 5z program (wave 1, scalarrunginterpretation.lean) and phase 4y program (tetradgapequation.lean).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Meta description; module file references resolve.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation"
+          },
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:18aad29d",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "18aad29d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 33,
+      "tex_line_end": 38,
+      "quote": "The new module \\texttt{MajoranaRung.lean} ($14$ substantive theorems, zero sorry, zero new axioms) realizes the \\emph{Embedding-III hybrid} construction recommended by our deep-research scoping report.",
+      "quote_normalized": "the new module majoranarung.lean ($14$ substantive theorems, zero sorry, zero new axioms) realizes the embedding-iii hybrid construction recommended by our deep-research scoping report.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: abstract states '14 substantive theorems' for MajoranaRung.lean but Section VII Table I (line 414) states '19'. lean_deps.json (excl mk.inj/mk.injEq/mk.sizeOf_spec) = 17; if structure-projection theorems excluded = 14. Internal IA conflict. TN (next sentence covers it): bare H_MR_FromADWSubstrate is referenced.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung",
+            "computed_value": "17 substantive (or 14 excl structure-projections)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:5a2a13ae",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "5a2a13ae",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 38,
+      "tex_line_end": 43,
+      "quote": "$\\SterileNu$ is a fundamental Lean field carrying $\\mathbb{Z}_{16}$ charge $+1$, and the heavy Majorana mass $\\HeavyMaj$ is identified with a $\\mathbb{Z}_{16}$-invariant condensate scale of the Akama-Diakonov-Wetterich (ADW) substrate---an identification that no primary source closes, and that we therefore encode as a \\emph{tracked Prop hypothesis} (\\texttt{H\\_MR\\_FromADWSubstrate}) rather than a derived theorem.",
+      "quote_normalized": "$\\sterilenu$ is a fundamental lean field carrying $\\mathbb{z}_{16}$ charge $+1$, and the heavy majorana mass $\\heavymaj$ is identified with a $\\mathbb{z}_{16}$-invariant condensate scale of the akama-diakonov-wetterich (adw) substrate---an identification that no primary source closes, and that we therefore encode as a tracked prop hypothesis (h\\_mr\\_fromadwsubstrate) rather than a derived theorem.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: H_MR_FromADWSubstrate (bare name) NOT in lean_deps.json under MajoranaRung; only H_MR_FromADWSubstrate_BCS_LNV exists. Wave 2b cleanup canonicalized to the BCS_LNV-conjunction form per memory note.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate_BCS_LNV"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:05d2d874",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "05d2d874",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 43,
+      "tex_line_end": 50,
+      "quote": "The $\\mathbb{Z}_{16}$ singlet-branch bridge to our prior \\texttt{HiddenSectorClassification.lean} and \\texttt{Z16AnomalyComputation.lean} infrastructure is proved directly: three fundamental $\\SterileNu$ Weyl fermions saturate the proved $\\mathrm{SM}_{\\rm w/o\\nu_R}$ deficit $45 \\equiv -3 \\pmod{16}$ to reach $48 \\equiv 0 \\pmod{16}$, matching observed anomaly cancellation without a hidden TQFT/CFT sector.",
+      "quote_normalized": "the $\\mathbb{z}_{16}$ singlet-branch bridge to our prior hiddensectorclassification.lean and z16anomalycomputation.lean infrastructure is proved directly: three fundamental $\\sterilenu$ weyl fermions saturate the proved $sm_{\\rm w/o\\nu_r}$ deficit $45 \\equiv -3 \\pmod{16}$ to reach $48 \\equiv 0 \\pmod{16}$, matching observed anomaly cancellation without a hidden tqft/cft sector.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Z16 arithmetic: 45 mod 16 = 13 \u2261 -3 mod 16; 48 = 16*3 \u2261 0. Bridge theorem majorana_rung_compatible_with_hidden_singlet exists (cites three_singlets_satisfy_hidden_sector + three_nu_R_cancel_three_gen).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.majorana_rung_compatible_with_hidden_singlet"
+          },
+          {
+            "kind": "theorem",
+            "target": "Z16AnomalyComputation.three_nu_R_cancel_three_gen"
+          },
+          {
+            "kind": "theorem",
+            "target": "HiddenSectorClassification.three_singlets_satisfy_hidden_sector"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:1e9d52c2",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "1e9d52c2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 50,
+      "tex_line_end": 53,
+      "quote": "The Type-I seesaw mass relation $\\LightNu = y^2 v^2 / \\HeavyMaj$ is formalized algebraically with a strict-monotonicity-in-$\\HeavyMaj$ theorem and a falsifiability-anchor predicate \\texttt{IsObservedSeesawMatch}.",
+      "quote_normalized": "the type-i seesaw mass relation $\\lightnu = y^2 v^2 / \\heavymaj$ is formalized algebraically with a strict-monotonicity-in-$\\heavymaj$ theorem and a falsifiability-anchor predicate isobservedseesawmatch.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "seesawNeutrinoMass_strictMono_inv_M_R + IsObservedSeesawMatch present in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.IsObservedSeesawMatch"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:60afbfbb",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "60afbfbb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 53,
+      "tex_line_end": 59,
+      "quote": "A companion module \\texttt{NeutrinoMixing.lean} ($7$ theorems) provides a HepLean-style structure note for the PMNS matrix as a $3\\!\\times\\!3$ unitary on $\\mathbb{C}$, with a tracked hypothesis $H\\_{\\rm PMNSAnglesFromSubstrate}$ for the open $\\theta_{23} \\approx \\pi/4$-from-substrate-symmetry conjecture.",
+      "quote_normalized": "a companion module neutrinomixing.lean ($7$ theorems) provides a heplean-style structure note for the pmns matrix as a $3\\!\\times\\!3$ unitary on $\\mathbb{c}$, with a tracked hypothesis $h\\_{\\rm pmnsanglesfromsubstrate}$ for the open $\\theta_{23} \\approx \\pi/4$-from-substrate-symmetry conjecture.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: abstract states '7 theorems' but Section VII Table I (line 415) states '11'. lean_deps.json substantive count for NeutrinoMixing = 11. TN: H_PMNSAnglesFromSubstrate (bare) NOT in lean_deps.json; Wave 2a split into H_PMNSAnglesFromExactSubstrate and H_PMNSAnglesFromSubstrate_eps.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.PMNSMatrix"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromSubstrate",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromExactSubstrate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:f86d5f1c",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "f86d5f1c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 59,
+      "tex_line_end": 64,
+      "quote": "We report two embedding-agnostic phenomenological figures: the seesaw $(y, \\HeavyMaj)$-band against NuFit-6.0 oscillation anchors, and the $\\mbb$-vs-$m_{\\rm lightest}$ \"lobster plot\" for $0\\nu\\beta\\beta$ against the current KamLAND-Zen 800 bound and the projected LEGEND-1000 reach.",
+      "quote_normalized": "we report two embedding-agnostic phenomenological figures: the seesaw $(y, \\heavymaj)$-band against nufit-6.0 oscillation anchors, and the $\\mbb$-vs-$m_{\\rm lightest}$ \"lobster plot\" for $0\\nu\\beta\\beta$ against the current kamland-zen 800 bound and the projected legend-1000 reach.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Both figures present on disk (figures/fig_seesaw_y_m_r_band.png + fig_m_beta_beta_vs_m_lightest.png). All 3 citations in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "NuFit60"
+          },
+          {
+            "kind": "citation",
+            "target": "KamLANDZen800"
+          },
+          {
+            "kind": "citation",
+            "target": "LEGEND1000"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:6ca9fb1a",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "6ca9fb1a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 64,
+      "tex_line_end": 65,
+      "quote": "We surface five honest $WAVE2$-$OPEN$ flags for which no primary literature closes the derivation.",
+      "quote_normalized": "we surface five honest $wave2$-$open$ flags for which no primary literature closes the derivation.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Section IX enumerates O-1..O-5.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.Wave2OpenManifest"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:abstract:965c1c16",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "abstract",
+        "quote_hash": "965c1c16",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "tex_line_start": 65,
+      "tex_line_end": 68,
+      "quote": "The $\\mathbb{Z}_{16}$ bridge theorem is the load-bearing formal-verification deliverable; the seesaw and PMNS structure notes lift the surrounding infrastructure to the same machine-checked standard.",
+      "quote_normalized": "the $\\mathbb{z}_{16}$ bridge theorem is the load-bearing formal-verification deliverable; the seesaw and pmns structure notes lift the surrounding infrastructure to the same machine-checked standard.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Soft framing claim consistent with main body.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:258f00e4",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "258f00e4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 77,
+      "tex_line_end": 81,
+      "quote": "The Standard Model with three generations is anomaly-free under all local symmetries but acquires a global $\\mathbb{Z}_{16}$ ($\\mathrm{Pin}^+$ Dai-Freed) anomaly when $\\nu_R$ is absent: each generation contributes $+15$ Weyl components, summing to $45 \\equiv -3 \\pmod{16}$ over three generations~\\cite{GarciaEtxebarriaMontero2019,WanWang2020}.",
+      "quote_normalized": "the standard model with three generations is anomaly-free under all local symmetries but acquires a global $\\mathbb{z}_{16}$ ($pin^+$ dai-freed) anomaly when $\\nu_r$ is absent: each generation contributes $+15$ weyl components, summing to $45 \\equiv -3 \\pmod{16}$ over three generations~.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "3*15=45; 45 mod 16 = 13 \u2261 -3 mod 16. Both citations in CITATION_REGISTRY (doi_verified=True).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GarciaEtxebarriaMontero2019"
+          },
+          {
+            "kind": "citation",
+            "target": "WanWang2020"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:47774b01",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "47774b01",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 81,
+      "tex_line_end": 85,
+      "quote": "Anomaly cancellation requires either three additional $\\nu_R$ Weyl fermions (each carrying $\\mathbb{Z}_{16}$ charge $+1$, restoring $48 \\equiv 0 \\pmod{16}$) or a hidden TQFT/CFT sector saturating the $+3 \\pmod{16}$ deficit~\\cite{WanWang2020,KawasakiYanagida2023}.",
+      "quote_normalized": "anomaly cancellation requires either three additional $\\nu_r$ weyl fermions (each carrying $\\mathbb{z}_{16}$ charge $+1$, restoring $48 \\equiv 0 \\pmod{16}$) or a hidden tqft/cft sector saturating the $+3 \\pmod{16}$ deficit~.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "48 = 45 + 3 \u2261 0 mod 16. Citations resolve.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "WanWang2020"
+          },
+          {
+            "kind": "citation",
+            "target": "KawasakiYanagida2023"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:dd493f58",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "dd493f58",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 85,
+      "tex_line_end": 89,
+      "quote": "Our prior formalization (\\texttt{Z16AnomalyComputation.lean}, \\texttt{HiddenSectorClassification.lean}) proved both halves of this ladder in Lean~4: \\texttt{three\\_nu\\_R\\_cancel\\_three\\_gen} and \\texttt{three\\_singlets\\_satisfy\\_hidden\\_sector}.",
+      "quote_normalized": "our prior formalization (z16anomalycomputation.lean, hiddensectorclassification.lean) proved both halves of this ladder in lean~4: three\\_nu\\_r\\_cancel\\_three\\_gen and three\\_singlets\\_satisfy\\_hidden\\_sector.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Both theorems present in lean_deps.json (top-level SKEFTHawking namespace).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Z16AnomalyComputation.three_nu_R_cancel_three_gen"
+          },
+          {
+            "kind": "theorem",
+            "target": "HiddenSectorClassification.three_singlets_satisfy_hidden_sector"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:851c4423",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "851c4423",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 91,
+      "tex_line_end": 94,
+      "quote": "The sterile-neutrino Type-I seesaw, in turn, generates the observed light-neutrino mass scale $\\LightNu \\sim 0.05$~eV via $\\LightNu = y^2 v^2 / \\HeavyMaj$ with $\\HeavyMaj$ in the $10^9$--$10^{15}$~GeV range~\\cite{MohapatraSmirnov2006}.",
+      "quote_normalized": "the sterile-neutrino type-i seesaw, in turn, generates the observed light-neutrino mass scale $\\lightnu \\sim 0.05$~ev via $\\lightnu = y^2 v^2 / \\heavymaj$ with $\\heavymaj$ in the $10^9$--$10^{15}$~gev range~.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard Type-I seesaw; consistent with NuFit-6 m3\u22480.05 eV anchor.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "MohapatraSmirnov2006"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:153bcc8b",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "153bcc8b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 94,
+      "tex_line_end": 98,
+      "quote": "Within the Akama-Diakonov-Wetterich substrate framework that hosts the tetrad gap equation of Phase~3-4 (\\texttt{TetradGapEquation.lean}, \\texttt{ADWMechanism.lean}), $\\HeavyMaj$ admits a natural identification with the $\\mathbb{Z}_{16}$-invariant condensate scale $\\LambdaADW$.",
+      "quote_normalized": "within the akama-diakonov-wetterich substrate framework that hosts the tetrad gap equation of phase~3-4 (tetradgapequation.lean, adwmechanism.lean), $\\heavymaj$ admits a natural identification with the $\\mathbb{z}_{16}$-invariant condensate scale $\\lambdaadw$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Substrate identification claim; encoded as tracked hypothesis (acknowledged next sentence).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation"
+          },
+          {
+            "kind": "theorem",
+            "target": "ADWMechanism"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:1eadb853",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "1eadb853",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 98,
+      "tex_line_end": 102,
+      "quote": "However, no primary source in the ADW~\\cite{ADW}, Wetterich-spinor-gravity~\\cite{WetterichSpinor2013,WetterichSpinor2022}, or Volovik fermionic-quartet~\\cite{Volovik2024Spinor} literature closes the derivation $\\LambdaADW \\to \\HeavyMaj$.",
+      "quote_normalized": "however, no primary source in the adw~, wetterich-spinor-gravity~, or volovik fermionic-quartet~ literature closes the derivation $\\lambdaadw \\to \\heavymaj$.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "All four citations resolve in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "ADW"
+          },
+          {
+            "kind": "citation",
+            "target": "WetterichSpinor2013"
+          },
+          {
+            "kind": "citation",
+            "target": "WetterichSpinor2022"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2024Spinor"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:cff9cb4e",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "cff9cb4e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 104,
+      "tex_line_end": 106,
+      "quote": "This work formalizes the Wave-2 deliverables of the Phase~5z roadmap: the Majorana rung on the same fermionic substrate as the Higgs and tetrad rungs, plus a structure-note PMNS module.",
+      "quote_normalized": "this work formalizes the wave-2 deliverables of the phase~5z roadmap: the majorana rung on the same fermionic substrate as the higgs and tetrad rungs, plus a structure-note pmns module.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:2eff3f47",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "2eff3f47",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 106,
+      "tex_line_end": 110,
+      "quote": "We adopt the \\emph{Embedding-III hybrid} prescription recommended by our deep-research scoping report: $\\SterileNu$ is a fundamental Lean field whose UV interpretation as an ADW-substrate bound state acts only on amplitudes and not on the Lean type signature.",
+      "quote_normalized": "we adopt the embedding-iii hybrid prescription recommended by our deep-research scoping report: $\\sterilenu$ is a fundamental lean field whose uv interpretation as an adw-substrate bound state acts only on amplitudes and not on the lean type signature.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:introduction:f630e3f3",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "introduction",
+        "quote_hash": "f630e3f3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "tex_line_start": 110,
+      "tex_line_end": 112,
+      "quote": "The $\\HeavyMaj = \\LambdaADW$ identification is an explicit \\emph{tracked Prop hypothesis}, not a theorem.",
+      "quote_normalized": "the $\\heavymaj = \\lambdaadw$ identification is an explicit tracked prop hypothesis, not a theorem.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Hypothesis disclosure: H_MR_FromADWSubstrate_BCS_LNV (Wave 2b strengthened).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate_BCS_LNV"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:z16-bridge:f1b88dc7",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "z16-bridge",
+        "quote_hash": "f1b88dc7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16-bridge",
+      "tex_line_start": 117,
+      "tex_line_end": 124,
+      "quote": "The sterile-neutrino structure is encoded as [verbatim block: structure SterileNeutrino where generation : Fin 3; def z16Charge : ZMod 16 := 1].",
+      "quote_normalized": "the sterile-neutrino structure is encoded as [verbatim block: structure sterileneutrino where generation : fin 3; def z16charge : zmod 16 := 1].",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.SterileNeutrino"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.z16Charge"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:z16-bridge:75faa2d5",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "z16-bridge",
+        "quote_hash": "75faa2d5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16-bridge",
+      "tex_line_start": 125,
+      "tex_line_end": 129,
+      "quote": "Each instance carries $\\mathbb{Z}_{16}$ charge $+1$; the assignment is locked by the proved Garcia-Etxebarria-Montero tower~\\cite{GarciaEtxebarriaMontero2019} and the project-existing \\texttt{Z16AnomalyComputation.three\\_nu\\_R\\_cancel\\_three\\_gen} ($48 \\equiv 0 \\pmod{16}$).",
+      "quote_normalized": "each instance carries $\\mathbb{z}_{16}$ charge $+1$; the assignment is locked by the proved garcia-etxebarria-montero tower~ and the project-existing z16anomalycomputation.three\\_nu\\_r\\_cancel\\_three\\_gen ($48 \\equiv 0 \\pmod{16}$).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Z16AnomalyComputation.three_nu_R_cancel_three_gen"
+          },
+          {
+            "kind": "citation",
+            "target": "GarciaEtxebarriaMontero2019"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:z16-bridge:b034bed5",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "z16-bridge",
+        "quote_hash": "b034bed5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16-bridge",
+      "tex_line_start": 131,
+      "tex_line_end": 139,
+      "quote": "The load-bearing bridge theorem [verbatim majorana_rung_compatible_with_hidden_singlet] is proved by direct invocation of \\texttt{HiddenSectorClassification.three\\_singlets\\_satisfy\\_hidden\\_sector} and the Wave-2 \\texttt{majorana\\_rung\\_saturates\\_hidden\\_sector}.",
+      "quote_normalized": "the load-bearing bridge theorem [verbatim majorana_rung_compatible_with_hidden_singlet] is proved by direct invocation of hiddensectorclassification.three\\_singlets\\_satisfy\\_hidden\\_sector and the wave-2 majorana\\_rung\\_saturates\\_hidden\\_sector.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "All three theorems exist in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.majorana_rung_compatible_with_hidden_singlet"
+          },
+          {
+            "kind": "theorem",
+            "target": "HiddenSectorClassification.three_singlets_satisfy_hidden_sector"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.majorana_rung_saturates_hidden_sector"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:z16-bridge:fae6b346",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "z16-bridge",
+        "quote_hash": "fae6b346",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16-bridge",
+      "tex_line_start": 140,
+      "tex_line_end": 143,
+      "quote": "This is the formal statement that Embedding III adds zero IR cost relative to the with-$\\nu_R$ branch: three fundamental $\\SterileNu$ Weyl saturate the SM-without-$\\nu_R$ deficit, with no separate hidden TQFT/CFT content required~\\cite{WanWang2020}.",
+      "quote_normalized": "this is the formal statement that embedding iii adds zero ir cost relative to the with-$\\nu_r$ branch: three fundamental $\\sterilenu$ weyl saturate the sm-without-$\\nu_r$ deficit, with no separate hidden tqft/cft content required~.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "WanWang2020"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:z16-bridge:a094e51d",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "z16-bridge",
+        "quote_hash": "a094e51d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16-bridge",
+      "tex_line_start": 145,
+      "tex_line_end": 147,
+      "quote": "The Wan-Wang Ultra-Unification ladder admits the alternative \"Embedding II\" branch in which $\\nu_R$ is absent and the deficit is saturated by an SM-singlet TQFT plus fermionic vortex zero-mode condensation~\\cite{WanWang2020}.",
+      "quote_normalized": "the wan-wang ultra-unification ladder admits the alternative \"embedding ii\" branch in which $\\nu_r$ is absent and the deficit is saturated by an sm-singlet tqft plus fermionic vortex zero-mode condensation~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "WanWang2020"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:z16-bridge:0900a3b0",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "z16-bridge",
+        "quote_hash": "0900a3b0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16-bridge",
+      "tex_line_start": 147,
+      "tex_line_end": 150,
+      "quote": "That branch is not formalized in this work; the deep-research scoping report finds no primary source that closes the analogous bridge to a substrate condensate.",
+      "quote_normalized": "that branch is not formalized in this work; the deep-research scoping report finds no primary source that closes the analogous bridge to a substrate condensate.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:type-i-seesaw-on-the-majorana-rung:8015f6dd",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "type-i-seesaw-on-the-majorana-rung",
+        "quote_hash": "8015f6dd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "type-i-seesaw-on-the-majorana-rung",
+      "tex_line_start": 156,
+      "tex_line_end": 161,
+      "quote": "Heavy Majorana mass data is bundled in [verbatim: structure MajoranaRungData where M_R: Fin 3 -> R, M_R_pos].",
+      "quote_normalized": "heavy majorana mass data is bundled in [verbatim: structure majoranarungdata where m_r: fin 3 -> r, m_r_pos].",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.MajoranaRungData"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:type-i-seesaw-on-the-majorana-rung:67da5f8a",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "type-i-seesaw-on-the-majorana-rung",
+        "quote_hash": "67da5f8a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "type-i-seesaw-on-the-majorana-rung",
+      "tex_line_start": 162,
+      "tex_line_end": 174,
+      "quote": "The Type-I seesaw light-neutrino mass is the noncomputable definition $\\LightNu = y^2 v^2 / \\HeavyMaj$, formalized as \\texttt{seesawNeutrinoMass} with five algebraic theorems: non-negativity (any real $y, v$); strict positivity for $y, v \\neq 0$; zero-iff-Yukawa-or-VEV-vanishes; and the Type-I-seesaw-signature strict monotonicity.",
+      "quote_normalized": "the type-i seesaw light-neutrino mass is the noncomputable definition $\\lightnu = y^2 v^2 / \\heavymaj$, formalized as seesawneutrinomass with five algebraic theorems: non-negativity (any real $y, v$); strict positivity for $y, v \\neq 0$; zero-iff-yukawa-or-vev-vanishes; and the type-i-seesaw-signature strict monotonicity.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "seesawNeutrinoMass + 5 algebraic theorems (def/_nonneg/_pos_of_nonzero/_zero_iff/_strictMono_inv_M_R) all in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_nonneg"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_pos_of_nonzero"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_zero_iff"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:type-i-seesaw-on-the-majorana-rung:c8bf629c",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "type-i-seesaw-on-the-majorana-rung",
+        "quote_hash": "c8bf629c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "type-i-seesaw-on-the-majorana-rung",
+      "tex_line_start": 175,
+      "tex_line_end": 177,
+      "quote": "(at fixed nonzero $y, v$). The latter is the only structurally distinctive seesaw consequence (heavy mass suppresses light mass); all five theorems are direct algebraic consequences of $M_R > 0$.",
+      "quote_normalized": "(at fixed nonzero $y, v$). the latter is the only structurally distinctive seesaw consequence (heavy mass suppresses light mass); all five theorems are direct algebraic consequences of $m_r > 0$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:type-i-seesaw-on-the-majorana-rung:519560ed",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "type-i-seesaw-on-the-majorana-rung",
+        "quote_hash": "519560ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "type-i-seesaw-on-the-majorana-rung",
+      "tex_line_start": 179,
+      "tex_line_end": 180,
+      "quote": "Figure~\\ref{fig:seesaw-y-m-r-band} shows the (y, $\\HeavyMaj$) plane with NuFit-6.0~\\cite{NuFit60} oscillation anchors.",
+      "quote_normalized": "figure~ shows the (y, $\\heavymaj$) plane with nufit-6.0~ oscillation anchors.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "NuFit60"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:type-i-seesaw-on-the-majorana-rung:7df6b367",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "type-i-seesaw-on-the-majorana-rung",
+        "quote_hash": "7df6b367",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "type-i-seesaw-on-the-majorana-rung",
+      "tex_line_start": 180,
+      "tex_line_end": 182,
+      "quote": "The natural seesaw band runs between the atmospheric mass anchor $m_3 \\approx 0.05$~eV (NO best fit) and the cosmology cap $\\LightNu \\lesssim 0.1$~eV.",
+      "quote_normalized": "the natural seesaw band runs between the atmospheric mass anchor $m_3 \\approx 0.05$~ev (no best fit) and the cosmology cap $\\lightnu \\lesssim 0.1$~ev.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "m3 \u2248 0.0498 eV (NuFit-6.0 NO best fit \u2248 \u221a(7.5e-5 + 2.5e-3) eV); cosmology cap ~0.12 eV (Planck18+BAO). Match within tolerance.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.4
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:type-i-seesaw-on-the-majorana-rung:5981de13",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "type-i-seesaw-on-the-majorana-rung",
+        "quote_hash": "5981de13",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "type-i-seesaw-on-the-majorana-rung",
+      "tex_line_start": 184,
+      "tex_line_end": 194,
+      "quote": "[Figure caption fig:seesaw-y-m-r-band] Type-I seesaw $(y, \\HeavyMaj)$-plane against NuFit-6.0 oscillation anchors. The shaded band marks the natural-seesaw region between the $m_3 \\approx 0.05$~eV atmospheric contour and the $\\LightNu \\lesssim 0.1$~eV cosmology cap. The star marks the canonical Type-I anchor $(y_{\\rm top}, \\LambdaADW \\!\\sim\\! 10^{16}~{\\rm GeV})$; the diamond marks the Wave-2 lower-scan anchor. Lean reference: \\texttt{MajoranaRung.seesawNeutrinoMass\\_strictMono\\_inv\\_M\\_R}.",
+      "quote_normalized": "[figure caption fig:seesaw-y-m-r-band] type-i seesaw $(y, \\heavymaj)$-plane against nufit-6.0 oscillation anchors. the shaded band marks the natural-seesaw region between the $m_3 \\approx 0.05$~ev atmospheric contour and the $\\lightnu \\lesssim 0.1$~ev cosmology cap. the star marks the canonical type-i anchor $(y_{\\rm top}, \\lambdaadw \\!\\sim\\! 10^{16}~{\\rm gev})$; the diamond marks the wave-2 lower-scan anchor. lean reference: majoranarung.seesawneutrinomass\\_strictmono\\_inv\\_m\\_r.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Lean ref resolves; figure file present.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R"
+          },
+          {
+            "kind": "citation",
+            "target": "NuFit60"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:0e2f3403",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "0e2f3403",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 201,
+      "tex_line_end": 205,
+      "quote": "A focussed Wave 2a deep-research return on channel projection of the NJL/Wetterich gap equation onto the lepton-Majorana sector~\\cite{AntuschKerstenLindnerRatz2003,Hill2024Bilocal} confirms that no primary source closes $\\LambdaADW \\to \\HeavyMaj$, and surfaces a clean \\emph{structural obstruction theorem} rooted in lepton-number symmetry.",
+      "quote_normalized": "a focussed wave 2a deep-research return on channel projection of the njl/wetterich gap equation onto the lepton-majorana sector~ confirms that no primary source closes $\\lambdaadw \\to \\heavymaj$, and surfaces a clean structural obstruction theorem rooted in lepton-number symmetry.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AntuschKerstenLindnerRatz2003"
+          },
+          {
+            "kind": "citation",
+            "target": "Hill2024Bilocal"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:f4de32e2",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "f4de32e2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 205,
+      "tex_line_end": 209,
+      "quote": "The Majorana bilinear $\\nu_R^T C \\nu_R$ carries $\\Delta L = 2$; if the substrate preserves $U(1)_L$ (or its discrete remnant $\\mathbb{Z}_{4,X}$), the four-fermion Majorana-channel coupling $G_M (\\nu_R^T C \\nu_R)(\\nu_R^T C \\nu_R)^*$ is forbidden by symmetry.",
+      "quote_normalized": "the majorana bilinear $\\nu_r^t c \\nu_r$ carries $\\delta l = 2$; if the substrate preserves $u(1)_l$ (or its discrete remnant $\\mathbb{z}_{4,x}$), the four-fermion majorana-channel coupling $g_m (\\nu_r^t c \\nu_r)(\\nu_r^t c \\nu_r)^*$ is forbidden by symmetry.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.lepton_number_symmetry_obstructs_BCS_form"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:8ffd8a8c",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "8ffd8a8c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 210,
+      "tex_line_end": 213,
+      "quote": "Antusch-Kersten-Lindner-Ratz~\\cite{AntuschKerstenLindnerRatz2003} state this explicitly: ``We have included huge Majorana masses for the right-handed neutrinos, since there is no protective symmetry.''",
+      "quote_normalized": "antusch-kersten-lindner-ratz~ state this explicitly: ``we have included huge majorana masses for the right-handed neutrinos, since there is no protective symmetry.''",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AntuschKerstenLindnerRatz2003"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:152a0c1c",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "152a0c1c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 213,
+      "tex_line_end": 214,
+      "quote": "The contrapositive is the obstruction: under substrate-$L$ preservation, $G_M \\equiv 0$ and the projected gap equation has only $\\HeavyMaj = 0$.",
+      "quote_normalized": "the contrapositive is the obstruction: under substrate-$l$ preservation, $g_m \\equiv 0$ and the projected gap equation has only $\\heavymaj = 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.lepton_number_symmetry_obstructs_BCS_form"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:66ffbb54",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "66ffbb54",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 216,
+      "tex_line_end": 227,
+      "quote": "When the substrate explicitly violates $U(1)_L$, the qualitative form of $\\HeavyMaj$ is the standard NJL/BCS \\emph{dimensional-transmutation} exponential~\\cite{AntuschKerstenLindnerRatz2003}, formalized as the strong tracked hypothesis \\texttt{MajoranaRung.H\\_MR\\_FromADWSubstrate\\_BCS\\_LNV} [verbatim block].",
+      "quote_normalized": "when the substrate explicitly violates $u(1)_l$, the qualitative form of $\\heavymaj$ is the standard njl/bcs dimensional-transmutation exponential~, formalized as the strong tracked hypothesis majoranarung.h\\_mr\\_fromadwsubstrate\\_bcs\\_lnv [verbatim block].",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "H_MR_FromADWSubstrate_BCS_LNV present in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate_BCS_LNV"
+          },
+          {
+            "kind": "citation",
+            "target": "AntuschKerstenLindnerRatz2003"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:cc82399d",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "cc82399d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 229,
+      "tex_line_end": 231,
+      "quote": "The conjunction with \\texttt{H\\_LeptonNumberViolated} encodes the symmetry obstruction; $G_M > 1$ encodes supercriticality.",
+      "quote_normalized": "the conjunction with h\\_leptonnumberviolated encodes the symmetry obstruction; $g_m > 1$ encodes supercriticality.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_LeptonNumberViolated"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:f7b0dc93",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "f7b0dc93",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 231,
+      "tex_line_end": 234,
+      "quote": "The Wave 2b Lean module ships the obstruction theorem \\texttt{lepton\\_number\\_symmetry\\_obstructs\\_BCS\\_form} as a direct consequence: \\emph{without LNV, the strong BCS hypothesis cannot hold}.",
+      "quote_normalized": "the wave 2b lean module ships the obstruction theorem lepton\\_number\\_symmetry\\_obstructs\\_bcs\\_form as a direct consequence: without lnv, the strong bcs hypothesis cannot hold.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.lepton_number_symmetry_obstructs_BCS_form"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:61d596c2",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "61d596c2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 236,
+      "tex_line_end": 241,
+      "quote": "Two further refinement theorems are shipped: \\texttt{M\\_R\\_pos\\_under\\_BCS\\_form} (the BCS exponential is strictly positive, hence so is $\\HeavyMaj$) and \\texttt{M\\_R\\_lt\\_substrate\\_under\\_BCS\\_form} (the BCS exponential is strictly bounded above by 1, hence $\\HeavyMaj < \\LambdaADW$).",
+      "quote_normalized": "two further refinement theorems are shipped: m\\_r\\_pos\\_under\\_bcs\\_form (the bcs exponential is strictly positive, hence so is $\\heavymaj$) and m\\_r\\_lt\\_substrate\\_under\\_bcs\\_form (the bcs exponential is strictly bounded above by 1, hence $\\heavymaj < \\lambdaadw$).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.M_R_pos_under_BCS_form"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.M_R_lt_substrate_under_BCS_form"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave2-open-1:2df91e9a",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave2-open-1",
+        "quote_hash": "2df91e9a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave2-open-1",
+      "tex_line_start": 243,
+      "tex_line_end": 250,
+      "quote": "This Wave 2b strengthening pattern follows the project's tracked-hypothesis precedent~\\cite{TooBySmithHepLean}: the \\texttt{H\\_ScalarChannelIsTetradBifurcationOutput} hypothesis in \\texttt{ScalarRungInterpretation.lean}, the \\texttt{H\\_MixedChannelZ16Cancels} hypothesis in \\texttt{HiddenSectorMixedCharge.lean}, and the \\texttt{H\\_VestigialRelicCarriesZ16Charge} hypothesis in \\texttt{DarkSectorSynthesis.lean}.",
+      "quote_normalized": "this wave 2b strengthening pattern follows the project's tracked-hypothesis precedent~: the h\\_scalarchannelistetradbifurcationoutput hypothesis in scalarrunginterpretation.lean, the h\\_mixedchannelz16cancels hypothesis in hiddensectormixedcharge.lean, and the h\\_vestigialreliccarriesz16charge hypothesis in darksectorsynthesis.lean.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "All three referenced hypotheses present in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.H_ScalarChannelIsTetradBifurcationOutput"
+          },
+          {
+            "kind": "theorem",
+            "target": "HiddenSectorMixedCharge.H_MixedChannelZ16Cancels"
+          },
+          {
+            "kind": "theorem",
+            "target": "DarkSectorSynthesis.H_VestigialRelicCarriesZ16Charge"
+          },
+          {
+            "kind": "citation",
+            "target": "TooBySmithHepLean"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:11bde50e",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "11bde50e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 256,
+      "tex_line_end": 265,
+      "quote": "The companion module \\texttt{NeutrinoMixing.lean} defines a HepLean-style~\\cite{TooBySmithHepLean} PMNS structure together with element accessors, the unitarity identities $\\PMNSMatrix^\\dagger \\PMNSMatrix = \\PMNSMatrix \\PMNSMatrix^\\dagger = \\mathbb{1}$, and the identity-matrix non-emptiness witness.",
+      "quote_normalized": "the companion module neutrinomixing.lean defines a heplean-style~ pmns structure together with element accessors, the unitarity identities $\\pmnsmatrix^\\dagger \\pmnsmatrix = \\pmnsmatrix \\pmnsmatrix^\\dagger = \\mathbb{1}$, and the identity-matrix non-emptiness witness.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.PMNSMatrix"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.star_mul_self_eq_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.mul_star_self_eq_one"
+          },
+          {
+            "kind": "citation",
+            "target": "TooBySmithHepLean"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:2712276f",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "2712276f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 265,
+      "tex_line_end": 271,
+      "quote": "The Dirac-vs-Majorana physical interpretation is exposed as parametric \\texttt{Prop} markers \\texttt{IsDiracPMNS} and \\texttt{IsMajoranaPMNS}; the PMNS matrix structure is identical in both cases, but the right-hand diagonal phases (two Majorana phases $\\alpha_1, \\alpha_2$) are physical observables in the Majorana case and unphysical phase-rephasings in the Dirac case.",
+      "quote_normalized": "the dirac-vs-majorana physical interpretation is exposed as parametric prop markers isdiracpmns and ismajoranapmns; the pmns matrix structure is identical in both cases, but the right-hand diagonal phases (two majorana phases $\\alpha_1, \\alpha_2$) are physical observables in the majorana case and unphysical phase-rephasings in the dirac case.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.IsDiracPMNS"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.IsMajoranaPMNS"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:6dd8a214",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "6dd8a214",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 273,
+      "tex_line_end": 280,
+      "quote": "The full PMNS standard parameterization $U_{\\rm PMNS} = R_{23}(\\theta_{23}) U_\\delta R_{13}(\\theta_{13}) U_\\delta^{-1} R_{12}(\\theta_{12}) \\cdot \\mathrm{diag}(e^{i\\alpha_1/2}, e^{i\\alpha_2/2}, 1)$ is provided as a Python implementation (\\texttt{src/core/formulas.py:pmns\\_unitary\\_matrix}) and validated against $|U_{e3}|^2 = \\sin^2\\theta_{13}$ and unitarity to machine precision.",
+      "quote_normalized": "the full pmns standard parameterization $u_{\\rm pmns} = r_{23}(\\theta_{23}) u_\\delta r_{13}(\\theta_{13}) u_\\delta^{-1} r_{12}(\\theta_{12}) \\cdot diag(e^{i\\alpha_1/2}, e^{i\\alpha_2/2}, 1)$ is provided as a python implementation (src/core/formulas.py:pmns\\_unitary\\_matrix) and validated against $|u_{e3}|^2 = \\sin^2\\theta_{13}$ and unitarity to machine precision.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "formulas.py:pmns_unitary_matrix exists; standard PDG parameterization.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:84944468",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "84944468",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 280,
+      "tex_line_end": 281,
+      "quote": "The Lean construction of \\texttt{standParam} with unitarity proof is a follow-up wave (Wave 2b or later).",
+      "quote_normalized": "the lean construction of standparam with unitarity proof is a follow-up wave (wave 2b or later).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Explicitly deferred; standParam not in lean_deps.json (consistent with deferral statement).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.standParam",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:6fde0a99",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "6fde0a99",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 283,
+      "tex_line_end": 291,
+      "quote": "The \\texttt{H\\_PMNSAnglesFromSubstrate} hypothesis [verbatim block \u2016get V 1 i\u2016 = \u2016get V 2 i\u2016] encodes the WAVE2-OPEN-2 conjecture: the PMNS $\\mu$-$\\tau$ row is substrate-symmetric, motivating $\\theta_{23} \\approx \\pi/4$ from a putative substrate $\\mu$-$\\tau$ exchange symmetry.",
+      "quote_normalized": "the h\\_pmnsanglesfromsubstrate hypothesis [verbatim block \u2016get v 1 i\u2016 = \u2016get v 2 i\u2016] encodes the wave2-open-2 conjecture: the pmns $\\mu$-$\\tau$ row is substrate-symmetric, motivating $\\theta_{23} \\approx \\pi/4$ from a putative substrate $\\mu$-$\\tau$ exchange symmetry.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: H_PMNSAnglesFromSubstrate (bare) NOT in lean_deps.json. Wave 2a split (per memory feedback note) created H_PMNSAnglesFromExactSubstrate (exact form) and H_PMNSAnglesFromSubstrate_eps (tolerance-parameterized). The verbatim block on lines 285-287 is the OLD pre-Wave-2a definition. Live code defines the same body as H_PMNSAnglesFromExactSubstrate.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromSubstrate",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromExactSubstrate"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromSubstrate_eps"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:1f6ecbc6",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "1f6ecbc6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 291,
+      "tex_line_end": 295,
+      "quote": "The empirical NuFit-6.0 best fit $\\theta_{23} \\approx 49.1^\\circ$ is close to but not exactly $\\pi/4$, so the hypothesis is non-trivial; the lemma \\texttt{identity\\_does\\_not\\_satisfy\\_substrate\\_hypothesis} confirms non-vacuity by exhibiting an explicit failure on the identity PMNS.",
+      "quote_normalized": "the empirical nufit-6.0 best fit $\\theta_{23} \\approx 49.1^\\circ$ is close to but not exactly $\\pi/4$, so the hypothesis is non-trivial; the lemma identity\\_does\\_not\\_satisfy\\_substrate\\_hypothesis confirms non-vacuity by exhibiting an explicit failure on the identity pmns.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: identity_does_not_satisfy_substrate_hypothesis (bare) NOT in lean_deps.json. Live names: identity_does_not_satisfy_exact_substrate_hypothesis and identity_does_not_satisfy_eps_substrate_hypothesis (Wave 2a split). NuFit-6.0 NO \u03b823 best fit \u2248 49.1\u00b0 (consistent with paper).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.identity_does_not_satisfy_substrate_hypothesis",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.identity_does_not_satisfy_exact_substrate_hypothesis"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.identity_does_not_satisfy_eps_substrate_hypothesis"
+          },
+          {
+            "kind": "citation",
+            "target": "NuFit60"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:the-pmns-structure-note:f8e34166",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "the-pmns-structure-note",
+        "quote_hash": "f8e34166",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-pmns-structure-note",
+      "tex_line_start": 295,
+      "tex_line_end": 295,
+      "quote": "No primary source closes the derivation~\\cite{Volovik2024Spinor}.",
+      "quote_normalized": "no primary source closes the derivation~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Volovik2024Spinor"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:effective-majorana-mass-and-0nbb-outlook:506d848f",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "effective-majorana-mass-and-0nbb-outlook",
+        "quote_hash": "506d848f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "effective-majorana-mass-and-0nbb-outlook",
+      "tex_line_start": 300,
+      "tex_line_end": 305,
+      "quote": "The effective Majorana mass probed by neutrinoless double-beta decay is the embedding-agnostic combination $\\mbb = \\left| \\sum_{i=1}^{3} U_{ei}^2 \\, m_i \\right|$.",
+      "quote_normalized": "the effective majorana mass probed by neutrinoless double-beta decay is the embedding-agnostic combination $\\mbb = \\left| \\sum_{i=1}^{3} u_{ei}^2 \\, m_i \\right|$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard 0\u03bd\u03b2\u03b2 definition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "MohapatraSmirnov2006"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:effective-majorana-mass-and-0nbb-outlook:bb14af00",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "effective-majorana-mass-and-0nbb-outlook",
+        "quote_hash": "bb14af00",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "effective-majorana-mass-and-0nbb-outlook",
+      "tex_line_start": 306,
+      "tex_line_end": 309,
+      "quote": "Figure~\\ref{fig:m-bb-vs-m-lightest} shows the standard \"lobster plot\" of $\\mbb$ against the lightest neutrino mass $m_{\\rm lightest}$, swept over the full range of Majorana phases at NuFit-6.0~\\cite{NuFit60} best-fit angles.",
+      "quote_normalized": "figure~ shows the standard \"lobster plot\" of $\\mbb$ against the lightest neutrino mass $m_{\\rm lightest}$, swept over the full range of majorana phases at nufit-6.0~ best-fit angles.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "NuFit60"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:effective-majorana-mass-and-0nbb-outlook:714e7c8e",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "effective-majorana-mass-and-0nbb-outlook",
+        "quote_hash": "714e7c8e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "effective-majorana-mass-and-0nbb-outlook",
+      "tex_line_start": 309,
+      "tex_line_end": 310,
+      "quote": "Both normal ordering (NO) and inverted ordering (IO) bands are shown.",
+      "quote_normalized": "both normal ordering (no) and inverted ordering (io) bands are shown.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:effective-majorana-mass-and-0nbb-outlook:93d0eb3b",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "effective-majorana-mass-and-0nbb-outlook",
+        "quote_hash": "93d0eb3b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "effective-majorana-mass-and-0nbb-outlook",
+      "tex_line_start": 312,
+      "tex_line_end": 323,
+      "quote": "[Figure caption fig:m-bb-vs-m-lightest] Effective Majorana mass $\\mbb$ vs lightest neutrino mass; NO and IO bands at NuFit-6.0 best-fit; KamLAND-Zen 800 90% CL bound (28-122 meV; NME spread); LEGEND-1000 99.7% CL projected reach (9-21 meV); IO fully discoverable; NO largely out of reach; embedding-agnostic. Lean reference: \\texttt{NeutrinoMixing.PMNSMatrix}.",
+      "quote_normalized": "[figure caption fig:m-bb-vs-m-lightest] effective majorana mass $\\mbb$ vs lightest neutrino mass; no and io bands at nufit-6.0 best-fit; kamland-zen 800 90% cl bound (28-122 mev; nme spread); legend-1000 99.7% cl projected reach (9-21 mev); io fully discoverable; no largely out of reach; embedding-agnostic. lean reference: neutrinomixing.pmnsmatrix.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bounds match primary sources (KamLAND-Zen 2406.11438; LEGEND-1000 2107.11462). Lean ref resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "NuFit60"
+          },
+          {
+            "kind": "citation",
+            "target": "KamLANDZen800"
+          },
+          {
+            "kind": "citation",
+            "target": "LEGEND1000"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.PMNSMatrix"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:effective-majorana-mass-and-0nbb-outlook:6fcfda44",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "effective-majorana-mass-and-0nbb-outlook",
+        "quote_hash": "6fcfda44",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "effective-majorana-mass-and-0nbb-outlook",
+      "tex_line_start": 326,
+      "tex_line_end": 331,
+      "quote": "The conclusions are: (i)~the IO band lies entirely within the LEGEND-1000 reach; (ii)~the NO band is largely out of reach and $\\mbb$ provides essentially no embedding discrimination; (iii)~the KamLAND-Zen 800 bound has already excluded the quasi-degenerate (QD) hierarchy region.",
+      "quote_normalized": "the conclusions are: (i)~the io band lies entirely within the legend-1000 reach; (ii)~the no band is largely out of reach and $\\mbb$ provides essentially no embedding discrimination; (iii)~the kamland-zen 800 bound has already excluded the quasi-degenerate (qd) hierarchy region.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard 0\u03bd\u03b2\u03b2 phenomenology consensus.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "LEGEND1000"
+          },
+          {
+            "kind": "citation",
+            "target": "KamLANDZen800"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:effective-majorana-mass-and-0nbb-outlook:ec1306ed",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "effective-majorana-mass-and-0nbb-outlook",
+        "quote_hash": "ec1306ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "effective-majorana-mass-and-0nbb-outlook",
+      "tex_line_start": 331,
+      "tex_line_end": 334,
+      "quote": "There is no embedding-distinguishing $\\mbb$ prediction in any current ADW/Volovik or Wetterich-spinor-gravity source~\\cite{ADW,WetterichSpinor2013,Volovik2024Spinor} (deep research \\S 4); the figure encodes the embedding-agnostic phenomenology only.",
+      "quote_normalized": "there is no embedding-distinguishing $\\mbb$ prediction in any current adw/volovik or wetterich-spinor-gravity source~ (deep research \\s 4); the figure encodes the embedding-agnostic phenomenology only.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "ADW"
+          },
+          {
+            "kind": "citation",
+            "target": "WetterichSpinor2013"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2024Spinor"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:36ee67b7",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "36ee67b7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 340,
+      "tex_line_end": 349,
+      "quote": "A Wave 2a deep-research return on the IR-equivalence of Embedding I (fundamental $\\SterileNu$) and Embedding III (substrate-bound $\\SterileNu$) confirms that the Appelquist-Carazzone decoupling theorem~\\cite{AppelquistCarazzone1975,BallThorne1994} applies cleanly, with leading operator dimension $\\Delta = 5$ (Weinberg-like, LNV) or $\\Delta = 6$ (generic), giving the schematic bound $|\\mathrm{amp}_{\\rm III} - \\mathrm{amp}_{\\rm I}| \\le C \\cdot (E / \\LambdaADW)^k, k \\in \\{1, 2\\}$.",
+      "quote_normalized": "a wave 2a deep-research return on the ir-equivalence of embedding i (fundamental $\\sterilenu$) and embedding iii (substrate-bound $\\sterilenu$) confirms that the appelquist-carazzone decoupling theorem~ applies cleanly, with leading operator dimension $\\delta = 5$ (weinberg-like, lnv) or $\\delta = 6$ (generic), giving the schematic bound $|amp_{\\rm iii} - amp_{\\rm i}| \\le c \\cdot (e / \\lambdaadw)^k, k \\in \\{1, 2\\}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AppelquistCarazzone1975"
+          },
+          {
+            "kind": "citation",
+            "target": "BallThorne1994"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.H_DecouplingBoundDim6"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.H_DecouplingBoundDim5_LNV"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:5fa58c50",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "5fa58c50",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 350,
+      "tex_line_end": 354,
+      "quote": "The natural Wilson-coefficient estimate is $C \\sim N_f/(16\\pi^2) \\simeq 0.1$ for ADW-style substrates with $N_f \\simeq 16$, transplanted from the SILH counting of Giudice-Grojean-Pomarol-Rattazzi~\\cite{GiudiceGrojeanPomarolRattazzi2007} and the bilocal-NJL form-factor analysis of Hill~\\cite{Hill2024Bilocal}.",
+      "quote_normalized": "the natural wilson-coefficient estimate is $c \\sim n_f/(16\\pi^2) \\simeq 0.1$ for adw-style substrates with $n_f \\simeq 16$, transplanted from the silh counting of giudice-grojean-pomarol-rattazzi~ and the bilocal-njl form-factor analysis of hill~.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "N_f/(16\u03c0\u00b2) for N_f=16 = 0.1013 \u2248 0.1.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GiudiceGrojeanPomarolRattazzi2007"
+          },
+          {
+            "kind": "citation",
+            "target": "Hill2024Bilocal"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 1.3
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:3f879dac",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "3f879dac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 354,
+      "tex_line_end": 355,
+      "quote": "The substrate-specific value of $C$ has not been computed in primary literature for ADW; we honestly flag this as the residual gap.",
+      "quote_normalized": "the substrate-specific value of $c$ has not been computed in primary literature for adw; we honestly flag this as the residual gap.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:4048ec10",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "4048ec10",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 358,
+      "tex_line_end": 364,
+      "quote": "A \\texttt{DecouplingRegime} structure encoding $0 < E$, $0 < \\LambdaADW$, $10 E < \\LambdaADW$, plus three predicates excluding cosmological-scale failure modes (vestigial gravity~\\cite{Volovik2024Spinor}; q-theory; FRG strong-coupling). At $E = M_W$ and $\\LambdaADW = 10^{14}$~GeV, all three failure-mode predicates are trivially satisfied.",
+      "quote_normalized": "a decouplingregime structure encoding $0 < e$, $0 < \\lambdaadw$, $10 e < \\lambdaadw$, plus three predicates excluding cosmological-scale failure modes (vestigial gravity~; q-theory; frg strong-coupling). at $e = m_w$ and $\\lambdaadw = 10^{14}$~gev, all three failure-mode predicates are trivially satisfied.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "DecouplingRegime structure with 6 fields all in lean_deps.json. M_W \u2248 80 GeV, \u039b=1e14 GeV \u2192 ratio 8e-13 << threshold.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.DecouplingRegime"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2024Spinor"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:16443341",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "16443341",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 365,
+      "tex_line_end": 366,
+      "quote": "A \\texttt{SubstrateData} structure parameterizing the substrate by $(\\LambdaADW, \\Lambda_{\\rm UV}, N_f)$.",
+      "quote_normalized": "a substratedata structure parameterizing the substrate by $(\\lambdaadw, \\lambda_{\\rm uv}, n_f)$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.SubstrateData"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:82108892",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "82108892",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 367,
+      "tex_line_end": 370,
+      "quote": "Two tracked-hypothesis Props: \\texttt{H\\_DecouplingBoundDim6} (generic, $k=2$) and \\texttt{H\\_DecouplingBoundDim5\\_LNV} (LNV-conditional, $k=1$, dim-5 Weinberg-operator channel).",
+      "quote_normalized": "two tracked-hypothesis props: h\\_decouplingbounddim6 (generic, $k=2$) and h\\_decouplingbounddim5\\_lnv (lnv-conditional, $k=1$, dim-5 weinberg-operator channel).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.H_DecouplingBoundDim6"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.H_DecouplingBoundDim5_LNV"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:ac31f7d8",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "ac31f7d8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 371,
+      "tex_line_end": 373,
+      "quote": "A non-vacuity witness \\texttt{decouplingRegime\\_at\\_electroweak\\_scale} showing the canonical EW point $(E, \\LambdaADW) = (80~\\mathrm{GeV}, 10^{14}~\\mathrm{GeV})$ satisfies the regime predicate.",
+      "quote_normalized": "a non-vacuity witness decouplingregime\\_at\\_electroweak\\_scale showing the canonical ew point $(e, \\lambdaadw) = (80~gev, 10^{14}~gev)$ satisfies the regime predicate.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.decouplingRegime_at_electroweak_scale"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:1a535ea0",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "1a535ea0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 374,
+      "tex_line_end": 376,
+      "quote": "A consistency witness \\texttt{H\\_DecouplingBoundDim6\\_consistent} showing the trivially-zero amplitude difference satisfies the bound for any \\texttt{SubstrateData}.",
+      "quote_normalized": "a consistency witness h\\_decouplingbounddim6\\_consistent showing the trivially-zero amplitude difference satisfies the bound for any substratedata.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.H_DecouplingBoundDim6_consistent"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:6ce04a7e",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "6ce04a7e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 377,
+      "tex_line_end": 380,
+      "quote": "A \\texttt{decoupling\\_isBigOWith} restatement using Mathlib's \\texttt{Asymptotics.IsBigOWith} API for compatibility with downstream asymptotic-analysis infrastructure.",
+      "quote_normalized": "a decoupling\\_isbigowith restatement using mathlib's asymptotics.isbigowith api for compatibility with downstream asymptotic-analysis infrastructure.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: bare name decoupling_isBigOWith NOT in lean_deps.json. Actual name is H_DecouplingBoundDim6_isBigOWith. Likely shorthand drift in paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.decoupling_isBigOWith",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.H_DecouplingBoundDim6_isBigOWith"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:f21ba4fb",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "f21ba4fb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 382,
+      "tex_line_end": 392,
+      "quote": "For $E = M_W \\simeq 80$~GeV and $\\LambdaADW = 10^{14}$~GeV, the leading dim-5 (LNV) suppression is $(E/\\LambdaADW) \\simeq 8 \\times 10^{-13}$, corresponding to $m_\\nu \\sim C \\cdot v^2 / \\LambdaADW \\simeq 0.06$~eV (at $C \\simeq N_f/(16\\pi^2) \\simeq 0.1$, default in \\texttt{src/core/formulas.py:weinberg\\_induced\\_neutrino\\_mass}) \u2014 within the LEGEND-1000~\\cite{LEGEND1000} reach.",
+      "quote_normalized": "for $e = m_w \\simeq 80$~gev and $\\lambdaadw = 10^{14}$~gev, the leading dim-5 (lnv) suppression is $(e/\\lambdaadw) \\simeq 8 \\times 10^{-13}$, corresponding to $m_\\nu \\sim c \\cdot v^2 / \\lambdaadw \\simeq 0.06$~ev (at $c \\simeq n_f/(16\\pi^2) \\simeq 0.1$, default in src/core/formulas.py:weinberg\\_induced\\_neutrino\\_mass) -- within the legend-1000~ reach.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified: 80/1e14 = 8e-13; 0.1*246\u00b2/1e14*1e9 = 0.0605 eV \u2248 0.06 eV (delta 0.9%); formulas.py:weinberg_induced_neutrino_mass exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "weinberg_induced_neutrino_mass",
+            "computed_value": "0.0605 eV",
+            "delta_pct": 0.9
+          },
+          {
+            "kind": "citation",
+            "target": "LEGEND1000"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.9
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:24ba4c3e",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "24ba4c3e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 392,
+      "tex_line_end": 394,
+      "quote": "The dim-6 (generic) suppression is $(E/\\LambdaADW)^2 \\simeq 6 \\times 10^{-25}$, far below DUNE/Hyper-K NSI sensitivity~\\cite{CiriglianoMasterFormula2018}.",
+      "quote_normalized": "the dim-6 (generic) suppression is $(e/\\lambdaadw)^2 \\simeq 6 \\times 10^{-25}$, far below dune/hyper-k nsi sensitivity~.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "(80/1e14)^2 = 6.4e-25 \u2248 6e-25 (delta 6.7% \u2014 within 1-sigfig agreement).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "CiriglianoMasterFormula2018"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 6.7
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:c1231a75",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "c1231a75",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 394,
+      "tex_line_end": 396,
+      "quote": "The phenomenological signature of decoupling is therefore the same as ordinary Type-I seesaw \u2014 it is the \\emph{correct} behavior, not an embedding-distinguishing feature.",
+      "quote_normalized": "the phenomenological signature of decoupling is therefore the same as ordinary type-i seesaw -- it is the correct behavior, not an embedding-distinguishing feature.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:16ed1b11",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "16ed1b11",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 396,
+      "tex_line_end": 401,
+      "quote": "An auxiliary lemma \\texttt{dim6\\_tighter\\_than\\_dim5\\_in\\_decoupling\\_regime} establishes $(E/\\LambdaADW)^2 \\le E/\\LambdaADW$ in the decoupling regime, confirming that the dim-6 bound is \\emph{tighter} (smaller upper bound) than dim-5.",
+      "quote_normalized": "an auxiliary lemma dim6\\_tighter\\_than\\_dim5\\_in\\_decoupling\\_regime establishes $(e/\\lambdaadw)^2 \\le e/\\lambdaadw$ in the decoupling regime, confirming that the dim-6 bound is tighter (smaller upper bound) than dim-5.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling.dim6_tighter_than_dim5_in_decoupling_regime"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:af06f3c5",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+        "quote_hash": "af06f3c5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii",
+      "tex_line_start": 401,
+      "tex_line_end": 403,
+      "quote": "The two bounds therefore apply in different physical regimes \u2014 dim-6 when the substrate preserves $U(1)_L$ and the dim-5 channel is symmetry-forbidden, dim-5 when the substrate violates $U(1)_L$ and the Weinberg operator is allowed \u2014 and are NOT in an implication relation.",
+      "quote_normalized": "the two bounds therefore apply in different physical regimes -- dim-6 when the substrate preserves $u(1)_l$ and the dim-5 channel is symmetry-forbidden, dim-5 when the substrate violates $u(1)_l$ and the weinberg operator is allowed -- and are not in an implication relation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:d9c2ced2",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "d9c2ced2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 414,
+      "tex_line_end": 414,
+      "quote": "Table I row: \\texttt{MajoranaRung.lean} (Wave 2 + 2b \u00a73a): 19 theorems, 0 sorry.",
+      "quote_normalized": "table i row: majoranarung.lean (wave 2 + 2b \u00a73a): 19 theorems, 0 sorry.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: Conflicts with abstract claim of '14 substantive theorems' (line 35). lean_deps.json yields 17 substantive (excl mk.inj/mk.injEq/mk.sizeOf_spec); 14 if also excluding structure projections; 19 implies counting some auto-generated mk.* projections. Internal IA conflict between abstract and Table I.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung",
+            "computed_value": "17 deps; 14 by ^theorem grep"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:a91ec01a",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "a91ec01a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 415,
+      "tex_line_end": 415,
+      "quote": "Table I row: \\texttt{NeutrinoMixing.lean} (Wave 2 + 2a \u00a74 split): 11 theorems, 0 sorry.",
+      "quote_normalized": "table i row: neutrinomixing.lean (wave 2 + 2a \u00a74 split): 11 theorems, 0 sorry.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: Conflicts with abstract claim of '7 theorems' (line 55). lean_deps.json yields 11 substantive; table number internally consistent with deps but abstract is stale.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing",
+            "computed_value": "11 deps"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:c3d6cf0c",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "c3d6cf0c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 416,
+      "tex_line_end": 416,
+      "quote": "Table I row: \\texttt{MajoranaRungDecoupling.lean} (Wave 2b new): 7 theorems, 0 sorry.",
+      "quote_normalized": "table i row: majoranarungdecoupling.lean (wave 2b new): 7 theorems, 0 sorry.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "WARN",
+      "agent_notes": "IA-WARN: lean_deps.json shows 16 substantive theorems for MajoranaRungDecoupling (excl mk.inj). The '7' count appears to exclude all DecouplingRegime.* and SubstrateData.* structure-projection theorems (9 such). Top-level user-written theorems = 7 by manual count. Counting convention internally consistent for this row but inconsistent with the count style implied for the other two rows.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRungDecoupling",
+            "computed_value": "7 user-written / 16 deps"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:23747f9f",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "23747f9f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 418,
+      "tex_line_end": 418,
+      "quote": "Table I total (W2 + W2a + W2b): 37 theorems, 0 sorry.",
+      "quote_normalized": "table i total (w2 + w2a + w2b): 37 theorems, 0 sorry.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: 19+11+7=37 internally additive, but row figures themselves drift from abstract (14, 7).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:91b0b163",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "91b0b163",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 420,
+      "tex_line_end": 427,
+      "quote": "[Table caption] Wave 2 Lean-formalization counts after Wave 2a accuracy round and Wave 2b strengthening. All three modules build clean under \\texttt{lake build SKEFTHawking.ExtractDeps} (8434 jobs total post-Wave-2b). Zero sorry, zero new axioms. The project total post-Wave-2b is \\totaltheorems\\ theorems across \\totalmodules\\ modules with \\sorrycount\\ sorry and \\totalaxioms\\ axiom (\\texttt{gapped\\_interface\\_axiom} unchanged from Phase 4).",
+      "quote_normalized": "[table caption] wave 2 lean-formalization counts after wave 2a accuracy round and wave 2b strengthening. all three modules build clean under lake build skefthawking.extractdeps (8434 jobs total post-wave-2b). zero sorry, zero new axioms. the project total post-wave-2b is \\totaltheorems\\ theorems across \\totalmodules\\ modules with \\sorrycount\\ sorry and \\totalaxioms\\ axiom (gapped\\_interface\\_axiom unchanged from phase 4).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: \\totalmodules and \\totalaxioms are NOT defined in docs/counts.tex (only \\totaltheorems, \\sorrycount, \\axiomcount, \\leanmodules are defined). Paper would render with '??' placeholders for these macros. \\totaltheorems=4049 OK, \\sorrycount=0 OK (the only `sorry` strings in the lean tree are inside `/- ... -/` comment blocks). \\totalmodules should be \\leanmodules=170. \\totalaxioms should be \\axiomcount=1 (gapped_interface_axiom in SPTClassification.lean). '8434 jobs' not directly verifiable here.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "totaltheorems",
+            "computed_value": "4049"
+          },
+          {
+            "kind": "formula",
+            "target": "leanmodules",
+            "computed_value": "170"
+          },
+          {
+            "kind": "formula",
+            "target": "axiomcount",
+            "computed_value": "1"
+          },
+          {
+            "kind": "formula",
+            "target": "sorrycount",
+            "computed_value": "0"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:1fcce95f",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "1fcce95f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 431,
+      "tex_line_end": 431,
+      "quote": "The two new Lean modules are summarized in Table~\\ref{tab:formal-summary}.",
+      "quote_normalized": "the two new lean modules are summarized in table~.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:d126fdab",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "d126fdab",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 432,
+      "tex_line_end": 440,
+      "quote": "Beyond the load-bearing $\\mathbb{Z}_{16}$ singlet-branch bridge, the formalization includes: (i)~five seesaw theorems (positivity, nonzero-positivity, zero-iff, monotonicity, defining identity); (ii)~three substrate-bridge theorems (the \\texttt{H\\_MR\\_FromADWSubstrate} tracked hypothesis, $\\HeavyMaj \\leq \\LambdaADW$ under the bridge, and the bridge-falsifiability witness); (iii)~the \\texttt{IsObservedSeesawMatch} falsifiability anchor with its $M_R$-too-large witness, mirroring Wave 1's $v$-too-large anchor for the Higgs prediction.",
+      "quote_normalized": "beyond the load-bearing $\\mathbb{z}_{16}$ singlet-branch bridge, the formalization includes: (i)~five seesaw theorems (positivity, nonzero-positivity, zero-iff, monotonicity, defining identity); (ii)~three substrate-bridge theorems (the h\\_mr\\_fromadwsubstrate tracked hypothesis, $\\heavymaj \\leq \\lambdaadw$ under the bridge, and the bridge-falsifiability witness); (iii)~the isobservedseesawmatch falsifiability anchor with its $m_r$-too-large witness, mirroring wave 1's $v$-too-large anchor for the higgs prediction.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: H_MR_FromADWSubstrate (bare) NOT in lean_deps.json; only _BCS_LNV variant exists. Other refs OK: IsObservedSeesawMatch \u2713, not_isObservedSeesawMatch_of_M_R_too_large \u2713, M_R_lt_substrate_under_BCS_form \u2713.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate_BCS_LNV"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.IsObservedSeesawMatch"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.not_isObservedSeesawMatch_of_M_R_too_large"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:6b274585",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "6b274585",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 442,
+      "tex_line_end": 448,
+      "quote": "The PMNS module ships seven theorems: two unitarity identities ($\\PMNSMatrix^\\dagger \\PMNSMatrix = \\mathbb{1}$ both ways), two identity-PMNS structural lemmas, the \\texttt{IsMajoranaPMNS\\_of\\_majoranaRungData} bridge to the \\texttt{MajoranaRung} module, and the \\texttt{identity\\_does\\_not\\_satisfy\\_substrate\\_hypothesis} non-vacuity witness for WAVE2-OPEN-2.",
+      "quote_normalized": "the pmns module ships seven theorems: two unitarity identities ($\\pmnsmatrix^\\dagger \\pmnsmatrix = \\mathbb{1}$ both ways), two identity-pmns structural lemmas, the ismajoranapmns\\_of\\_majoranarungdata bridge to the majoranarung module, and the identity\\_does\\_not\\_satisfy\\_substrate\\_hypothesis non-vacuity witness for wave2-open-2.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA",
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: 'seven theorems' here conflicts with Table I (line 415) value 11. Even paper's own enumeration only gets to 6 (2 unitarity + 2 identity + 1 Majorana bridge + 1 non-vacuity = 6). TN: identity_does_not_satisfy_substrate_hypothesis (bare) NOT in lean_deps.json (Wave 2a split into _exact_ and _eps_ variants).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.isMajoranaPMNS_of_majoranaRungData"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.identity_does_not_satisfy_substrate_hypothesis",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.identity_does_not_satisfy_exact_substrate_hypothesis"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:formal-verification-summary:f148f694",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "f148f694",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "tex_line_start": 448,
+      "tex_line_end": 450,
+      "quote": "The full standard PMNS parameterization with unitarity proof is intentionally deferred per the roadmap \"structure note\" scope; the structural type and bridge are the Wave-2 deliverable.",
+      "quote_normalized": "the full standard pmns parameterization with unitarity proof is intentionally deferred per the roadmap \"structure note\" scope; the structural type and bridge are the wave-2 deliverable.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:cross-validation-layer:63368e72",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "cross-validation-layer",
+        "quote_hash": "63368e72",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-validation-layer",
+      "tex_line_start": 454,
+      "tex_line_end": 459,
+      "quote": "A Python cross-validation layer in \\texttt{tests/test\\_majorana\\_rung.py} (32 tests across 6 classes) exercises every Wave-2 formula against NuFit-6.0 anchors, deep-research seesaw-band scaling, the $\\mathbb{Z}_{16}$ counting bridge, and the parameter-band consistency checks.",
+      "quote_normalized": "a python cross-validation layer in tests/test\\_majorana\\_rung.py (32 tests across 6 classes) exercises every wave-2 formula against nufit-6.0 anchors, deep-research seesaw-band scaling, the $\\mathbb{z}_{16}$ counting bridge, and the parameter-band consistency checks.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: tests/test_majorana_rung.py has 40 test functions (grep -cE '^    def test_') across 7 classes (grep -cE '^class Test'). Paper claim '32 tests / 6 classes' is stale.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "test_majorana_rung",
+            "computed_value": "40 tests / 7 classes"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 25.0,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:cross-validation-layer:9e4fe3ee",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "cross-validation-layer",
+        "quote_hash": "9e4fe3ee",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-validation-layer",
+      "tex_line_start": 459,
+      "tex_line_end": 459,
+      "quote": "All tests pass.",
+      "quote_normalized": "all tests pass.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Cannot independently verify pass status without running pytest; not falsifiable from agent state.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:4ae6ac91",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "4ae6ac91",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 464,
+      "tex_line_end": 466,
+      "quote": "We surface five WAVE2-OPEN flags drawn from the deep-research scoping report; none of these is closed in primary literature.",
+      "quote_normalized": "we surface five wave2-open flags drawn from the deep-research scoping report; none of these is closed in primary literature.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Five OPEN flags O-1..O-5 enumerated below.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:712930d8",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "712930d8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 469,
+      "tex_line_end": 473,
+      "quote": "O-1: $\\HeavyMaj = c \\cdot \\LambdaADW$ for any per-generation coefficient $c \\in (0, 1]$. Substrate parameters $(\\Lambda_{\\rm UV}, N_f, G_c)$ leave $\\HeavyMaj$ as a fit parameter in all current sources~\\cite{ADW,WetterichSpinor2013,Volovik2024Spinor}. Encoded as \\texttt{H\\_MR\\_FromADWSubstrate}.",
+      "quote_normalized": "o-1: $\\heavymaj = c \\cdot \\lambdaadw$ for any per-generation coefficient $c \\in (0, 1]$. substrate parameters $(\\lambda_{\\rm uv}, n_f, g_c)$ leave $\\heavymaj$ as a fit parameter in all current sources~. encoded as h\\_mr\\_fromadwsubstrate.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: H_MR_FromADWSubstrate (bare) NOT in lean_deps.json. Wave 2b canonical is _BCS_LNV.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.H_MR_FromADWSubstrate_BCS_LNV"
+          },
+          {
+            "kind": "citation",
+            "target": "ADW"
+          },
+          {
+            "kind": "citation",
+            "target": "WetterichSpinor2013"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2024Spinor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:6ed0ca4a",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "6ed0ca4a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 474,
+      "tex_line_end": 478,
+      "quote": "O-2: PMNS angles from substrate overlaps. In particular $\\theta_{23} \\approx \\pi/4$ from a substrate $\\mu$-$\\tau$ exchange symmetry. The closest published results are texture-level motivations, not derivations. Encoded as \\texttt{H\\_PMNSAnglesFromSubstrate}.",
+      "quote_normalized": "o-2: pmns angles from substrate overlaps. in particular $\\theta_{23} \\approx \\pi/4$ from a substrate $\\mu$-$\\tau$ exchange symmetry. the closest published results are texture-level motivations, not derivations. encoded as h\\_pmnsanglesfromsubstrate.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: H_PMNSAnglesFromSubstrate (bare) NOT in lean_deps.json (Wave 2a split).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromSubstrate",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.H_PMNSAnglesFromExactSubstrate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:ae0e084f",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "ae0e084f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 479,
+      "tex_line_end": 481,
+      "quote": "O-3: Majorana phases from composite-operator structure (Embedding II claim). Unrealized in any source we located.",
+      "quote_normalized": "o-3: majorana phases from composite-operator structure (embedding ii claim). unrealized in any source we located.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:0551eaab",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "0551eaab",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 481,
+      "tex_line_end": 484,
+      "quote": "O-4: $\\mbb$ tied algebraically to a single condensate scale, distinguishing Embedding II from I. The hope that the composite operator $\\langle\\nu_L^T C \\nu_L\\rangle$ predicts an embedding-distinguishing $\\mbb$ is unrealized.",
+      "quote_normalized": "o-4: $\\mbb$ tied algebraically to a single condensate scale, distinguishing embedding ii from i. the hope that the composite operator $\\langle\\nu_l^t c \\nu_l\\rangle$ predicts an embedding-distinguishing $\\mbb$ is unrealized.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:b6798340",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "b6798340",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 485,
+      "tex_line_end": 488,
+      "quote": "O-5: $\\nu_R$-as-substrate-bound-state IR-equivalence map between Embeddings I and III. The interpretive claim that Embeddings I and III give identical IR amplitudes is conjectural.",
+      "quote_normalized": "o-5: $\\nu_r$-as-substrate-bound-state ir-equivalence map between embeddings i and iii. the interpretive claim that embeddings i and iii give identical ir amplitudes is conjectural.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:2b6fb1c4",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "open-hypotheses-and-scope-boundary",
+        "quote_hash": "2b6fb1c4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "open-hypotheses-and-scope-boundary",
+      "tex_line_start": 490,
+      "tex_line_end": 494,
+      "quote": "The Wave-2 scope deliberately excludes: (i)~the full PMNS phenomenology program; (ii)~the Embedding-II composite-operator construction with explicit hidden TQFT formalization; (iii)~the \\texttt{NeutrinoMixing.standParam} construction with unitarity proof.",
+      "quote_normalized": "the wave-2 scope deliberately excludes: (i)~the full pmns phenomenology program; (ii)~the embedding-ii composite-operator construction with explicit hidden tqft formalization; (iii)~the neutrinomixing.standparam construction with unitarity proof.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Scope-exclusion statement; standParam intentionally absent from lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.standParam",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:conclusion:3c0af534",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "3c0af534",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 500,
+      "tex_line_end": 502,
+      "quote": "The Majorana rung is now machine-verified at the same standard as the scalar (Wave 1) and tetrad (Phase 4y) rungs of the SK-EFT fluid-based-gravity Landau hierarchy.",
+      "quote_normalized": "the majorana rung is now machine-verified at the same standard as the scalar (wave 1) and tetrad (phase 4y) rungs of the sk-eft fluid-based-gravity landau hierarchy.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:conclusion:479cbb33",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "479cbb33",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 502,
+      "tex_line_end": 504,
+      "quote": "The load-bearing $\\mathbb{Z}_{16}$ singlet-branch bridge proves directly from existing project infrastructure with no new axioms.",
+      "quote_normalized": "the load-bearing $\\mathbb{z}_{16}$ singlet-branch bridge proves directly from existing project infrastructure with no new axioms.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bridge theorem exists; project axiom count = 1 (gapped_interface_axiom, unchanged from Phase 4) \u2014 no NEW axioms in Wave 2.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.majorana_rung_compatible_with_hidden_singlet"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:conclusion:5dbc271b",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "5dbc271b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 504,
+      "tex_line_end": 506,
+      "quote": "The Type-I seesaw mass relation is formalized algebraically with the Type-I-signature strict-monotonicity-in-$M_R$ theorem.",
+      "quote_normalized": "the type-i seesaw mass relation is formalized algebraically with the type-i-signature strict-monotonicity-in-$m_r$ theorem.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:conclusion:39ccd3e4",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "39ccd3e4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 506,
+      "tex_line_end": 508,
+      "quote": "The PMNS structure note lifts the surrounding mixing-matrix infrastructure to the Mathlib \\texttt{Matrix.unitaryGroup} idiom.",
+      "quote_normalized": "the pmns structure note lifts the surrounding mixing-matrix infrastructure to the mathlib matrix.unitarygroup idiom.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "NeutrinoMixing.PMNSMatrix"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:conclusion:69b73ace",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "69b73ace",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 508,
+      "tex_line_end": 511,
+      "quote": "Five honest WAVE2-OPEN flags are surfaced as comment markers and tracked-hypothesis predicates, preventing downstream consumers from mistaking a parametric identification for a derived theorem.",
+      "quote_normalized": "five honest wave2-open flags are surfaced as comment markers and tracked-hypothesis predicates, preventing downstream consumers from mistaking a parametric identification for a derived theorem.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper21_majorana_rung:conclusion:7cb731d4",
+      "raw_id_parts": {
+        "paper": "paper21_majorana_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "7cb731d4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "tex_line_start": 511,
+      "tex_line_end": 516,
+      "quote": "The result completes Track B of the Phase 5z roadmap; Track C (\\texttt{EWPhaseTransition.lean}) and the BHL-bridge quantitative extension (\\texttt{BHLGaugeEmbedding.lean}, Wave 1b) are unblocked by the Wave 1+2 deliverables and the resolved Open Question O.2 of the roadmap.",
+      "quote_normalized": "the result completes track b of the phase 5z roadmap; track c (ewphasetransition.lean) and the bhl-bridge quantitative extension (bhlgaugeembedding.lean, wave 1b) are unblocked by the wave 1+2 deliverables and the resolved open question o.2 of the roadmap.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward-looking; EWPhaseTransition.lean and BHLGaugeEmbedding.lean are roadmap items (not yet present in lean/SKEFTHawking/) \u2014 intentional forward references.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:51:17Z",
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 90,
+    "by_type": {
+      "metaclaim": 10,
+      "numeric": 20,
+      "theorem-ref": 28,
+      "qualitative": 14,
+      "citation": 8,
+      "methodology": 1,
+      "formal-claim": 7,
+      "transition": 2
+    },
+    "by_verdict": {
+      "TRANSITION": 8,
+      "FAIL": 15,
+      "PASS": 53,
+      "INFO": 13,
+      "WARN": 1
+    },
+    "by_finding_class": {
+      "IA": 9,
+      "TP": 0,
+      "SD": 0,
+      "TN": 10,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "90 sentences | 53 PASS | 15 FAIL | 1 WARN | 13 INFO | 0 UNGROUNDED | 8 TRANSITION | IA=9 TP=0 SD=0 TN=10 HD=0 | first-time review (no prior claims_review.json)"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "Internal arithmetic / count drift: abstract states '14' MajoranaRung theorems and '7' NeutrinoMixing theorems but Section VII Table I states '19' and '11'; test count claim '32 tests / 6 classes' actual is '40 / 7'; \\totalmodules and \\totalaxioms LaTeX macros are undefined in counts.tex (should be \\leanmodules=170 and \\axiomcount=1).",
+      "sentences": [
+        "sentence:paper21_majorana_rung:abstract:18aad29d",
+        "sentence:paper21_majorana_rung:abstract:60afbfbb",
+        "sentence:paper21_majorana_rung:formal-verification-summary:d9c2ced2",
+        "sentence:paper21_majorana_rung:formal-verification-summary:a91ec01a",
+        "sentence:paper21_majorana_rung:formal-verification-summary:23747f9f",
+        "sentence:paper21_majorana_rung:formal-verification-summary:91b0b163",
+        "sentence:paper21_majorana_rung:formal-verification-summary:6b274585",
+        "sentence:paper21_majorana_rung:cross-validation-layer:63368e72"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "Theorem-name reference drift (Wave 2a/2b stale references): bare names H_MR_FromADWSubstrate (5 occurrences in abstract+body+OPEN-list), H_PMNSAnglesFromSubstrate (3 occurrences), identity_does_not_satisfy_substrate_hypothesis (2 occurrences), and decoupling_isBigOWith (1 occurrence) are absent from lean_deps.json. Live names are H_MR_FromADWSubstrate_BCS_LNV; H_PMNSAnglesFromExactSubstrate / H_PMNSAnglesFromSubstrate_eps; identity_does_not_satisfy_exact_substrate_hypothesis / _eps_substrate_hypothesis; H_DecouplingBoundDim6_isBigOWith. These stale references reflect Wave 2a/2b refactors that did not propagate to paper prose.",
+      "sentences": [
+        "sentence:paper21_majorana_rung:abstract:18aad29d",
+        "sentence:paper21_majorana_rung:abstract:5a2a13ae",
+        "sentence:paper21_majorana_rung:abstract:60afbfbb",
+        "sentence:paper21_majorana_rung:the-pmns-structure-note:6fde0a99",
+        "sentence:paper21_majorana_rung:the-pmns-structure-note:1f6ecbc6",
+        "sentence:paper21_majorana_rung:wave-2b-quantitative-decoupling-bound-for-embedding-i-vs-iii:6ce04a7e",
+        "sentence:paper21_majorana_rung:formal-verification-summary:d126fdab",
+        "sentence:paper21_majorana_rung:formal-verification-summary:6b274585",
+        "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:712930d8",
+        "sentence:paper21_majorana_rung:open-hypotheses-and-scope-boundary:6ed0ca4a"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN"
+    }
+  ],
+  "non_blocking_followups": []
+}

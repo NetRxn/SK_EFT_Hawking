@@ -82,7 +82,7 @@ $45 \equiv -3 \pmod{16}$ over three generations~\cite{GarciaEtxebarriaMontero201
 Anomaly cancellation requires either three additional $\nu_R$ Weyl
 fermions (each carrying $\mathbb{Z}_{16}$ charge $+1$, restoring
 $48 \equiv 0 \pmod{16}$) or a hidden TQFT/CFT sector saturating the
-$+3 \pmod{16}$ deficit~\cite{WanWang2020,Davighi2023}. Our prior
+$+3 \pmod{16}$ deficit~\cite{WanWang2020,KawasakiYanagida2023}. Our prior
 formalization (\texttt{Z16AnomalyComputation.lean},
 \texttt{HiddenSectorClassification.lean}) proved both halves of this
 ladder in Lean~4: \texttt{three\_nu\_R\_cancel\_three\_gen} and
@@ -200,14 +200,14 @@ Lepton-Number-Violation Obstruction}
 
 A focussed Wave 2a deep-research return on channel projection of the
 NJL/Wetterich gap equation onto the lepton-Majorana
-sector~\cite{AntuschKingmanLindnerWetterich2003,Hill2024Bilocal} confirms
+sector~\cite{AntuschKerstenLindnerRatz2003,Hill2024Bilocal} confirms
 that no primary source closes $\LambdaADW \to \HeavyMaj$, and surfaces a
 clean \emph{structural obstruction theorem} rooted in lepton-number
 symmetry. The Majorana bilinear $\nu_R^T C \nu_R$ carries $\Delta L = 2$;
 if the substrate preserves $U(1)_L$ (or its discrete remnant
 $\mathbb{Z}_{4,X}$), the four-fermion Majorana-channel coupling
 $G_M (\nu_R^T C \nu_R)(\nu_R^T C \nu_R)^*$ is forbidden by symmetry.
-Antusch-Kingman-Lindner-Wetterich~\cite{AntuschKingmanLindnerWetterich2003}
+Antusch-Kersten-Lindner-Ratz~\cite{AntuschKerstenLindnerRatz2003}
 state this explicitly: \emph{``We have included huge Majorana masses for
 the right-handed neutrinos, since there is no protective symmetry.''} The
 contrapositive is the obstruction: under substrate-$L$ preservation,
@@ -215,7 +215,7 @@ $G_M \equiv 0$ and the projected gap equation has only $\HeavyMaj = 0$.
 
 When the substrate explicitly violates $U(1)_L$, the qualitative form of
 $\HeavyMaj$ is the standard NJL/BCS \emph{dimensional-transmutation}
-exponential~\cite{AntuschKingmanLindnerWetterich2003}, formalized as the
+exponential~\cite{AntuschKerstenLindnerRatz2003}, formalized as the
 strong tracked hypothesis
 \texttt{MajoranaRung.H\_MR\_FromADWSubstrate\_BCS\_LNV}:
 \begin{verbatim}
@@ -534,7 +534,7 @@ JHEP~\textbf{06}, 069 (2022); arXiv:2101.11519.
 \bibitem{Volovik2024Spinor}
 G.~E.~Volovik, ``Fermionic quartet and vestigial gravity,''
 JETP~Lett.~\textbf{119}, 330 (2024); arXiv:2312.09435;
-DOI:~\href{https://doi.org/10.1134/S0021364024600293}{10.1134/S0021364024600293}.
+DOI:~\href{https://doi.org/10.1134/S002136402460006X}{10.1134/S002136402460006X}.
 
 \bibitem{GarciaEtxebarriaMontero2019}
 I.~Garc\'ia-Etxebarria and M.~Montero, ``Dai-Freed anomalies in
@@ -547,9 +547,11 @@ anomalies, topological terms, and dynamical constraints via
 cobordisms,'' JHEP~\textbf{07}, 062 (2020); arXiv:1910.14668;
 DOI:~\href{https://doi.org/10.1007/JHEP07(2020)062}{10.1007/JHEP07(2020)062}.
 
-\bibitem{Davighi2023}
-J.~Davighi, N.~Lohitsiri and R.~Tasnak, ``Dai-Freed anomaly in the
-Standard Model and topological inflation,'' arXiv:2304.10100 (2023).
+\bibitem{KawasakiYanagida2023}
+M.~Kawasaki and T.~T.~Yanagida, ``Dai-Freed anomaly in the
+standard model and topological inflation,'' JHEP~\textbf{11}, 106
+(2023); arXiv:2304.10100;
+DOI:~\href{https://doi.org/10.1007/JHEP11(2023)106}{10.1007/JHEP11(2023)106}.
 
 \bibitem{MohapatraSmirnov2006}
 R.~N.~Mohapatra and A.~Y.~Smirnov, ``Neutrino mass and new physics,''
@@ -557,9 +559,10 @@ Annu.~Rev.~Nucl.~Part.~Sci.~\textbf{56}, 569 (2006); hep-ph/0603118;
 DOI:~\href{https://doi.org/10.1146/annurev.nucl.56.080805.140534}{10.1146/annurev.nucl.56.080805.140534}.
 
 \bibitem{NuFit60}
-I.~Esteban, M.~C.~Gonzalez-Garcia, M.~Maltoni, T.~Schwetz and
-A.~Zhou, ``NuFIT 6.0: three-flavor neutrino oscillation analysis,''
-JHEP~\textbf{12}, 216 (2024); arXiv:2601.14386;
+I.~Esteban, M.~C.~Gonzalez-Garcia, M.~Maltoni, I.~Martinez-Soler,
+J.~P.~Pinheiro and T.~Schwetz, ``NuFit-6.0: updated global analysis
+of three-flavor neutrino oscillations,'' JHEP~\textbf{12}, 216
+(2024); arXiv:2410.05380;
 DOI:~\href{https://doi.org/10.1007/JHEP12(2024)216}{10.1007/JHEP12(2024)216}.
 
 \bibitem{KamLANDZen800}
@@ -576,8 +579,8 @@ J.~Tooby-Smith, ``HepLean: digitalising high energy physics,''
 Comput.~Phys.~Commun.~\textbf{308}, 109457 (2025); arXiv:2405.08863;
 DOI:~\href{https://doi.org/10.1016/j.cpc.2024.109457}{10.1016/j.cpc.2024.109457}.
 
-\bibitem{AntuschKingmanLindnerWetterich2003}
-S.~Antusch, J.~Kingman, M.~Lindner and C.~Wetterich, ``Dynamical
+\bibitem{AntuschKerstenLindnerRatz2003}
+S.~Antusch, J.~Kersten, M.~Lindner and M.~Ratz, ``Dynamical
 electroweak symmetry breaking by a neutrino condensate,''
 Nucl.~Phys.~B~\textbf{658}, 203 (2003); hep-ph/0211385;
 DOI:~\href{https://doi.org/10.1016/S0550-3213(03)00188-3}{10.1016/S0550-3213(03)00188-3}.

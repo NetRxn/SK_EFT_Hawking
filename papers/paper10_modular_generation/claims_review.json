@@ -1,351 +1,2885 @@
 {
   "paper": "paper10_modular_generation",
-  "review_date": "2026-04-04T00:00:00Z",
-  "reviewer": "claims-reviewer agent (Claude Opus 4.6 1M)",
-  "overall_status": "issues_found",
-
-  "numerical_claims": [
+  "review_date": "2026-04-25T07:46:12Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+  "sentences": [
     {
-      "location": "Sec 2, Table: Q_L (3,2) = 6 components, c = 3",
-      "paper_value": "6 components, c = 3",
-      "computed_value": "SM_FERMION_DATA['Q_L']['components'] = 6, c = 6 * 0.5 = 3",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Each Weyl fermion contributes c = 1/2. 6 components -> c = 3."
+      "id": "sentence:paper10_modular_generation:abstract:d32ab0b5",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "d32ab0b5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 18,
+      "tex_line_end": 21,
+      "quote": "We present a formally verified derivation of the Standard Model generation constraint $N_f \\equiv 0 \\pmod{3}$ from the Dedekind eta function's modular transformation law, machine-checked in Lean~4 with Mathlib.",
+      "quote_normalized": "we present a formally verified derivation of the standard model generation constraint $n_f \\equiv 0 \\pmod{3}$ from the dedekind eta function's modular transformation law, machine-checked in lean~4 with mathlib.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Meta-claim about paper scope; backed by Lean modules WangBridge / ModularInvarianceConstraint / GenerationConstraint (all 0 sorry).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.generation_mod3_constraint"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.generation_constraint_iff"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 2, Table: u_R_bar (3bar,1) = 3 components, c = 3/2",
-      "paper_value": "3 components, c = 3/2",
-      "computed_value": "SM_FERMION_DATA['u_R_bar']['components'] = 3, c = 1.5",
-      "delta_pct": 0.0,
-      "status": "PASS"
+      "id": "sentence:paper10_modular_generation:abstract:2ef45aed",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "2ef45aed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 21,
+      "tex_line_end": 23,
+      "quote": "The chiral central charge $c_- = 8 N_f$ is \\emph{derived} from the SM's 16 Weyl fermion components per generation (not axiomatized).",
+      "quote_normalized": "the chiral central charge $c_- = 8 n_f$ is derived from the sm's 16 weyl fermion components per generation (not axiomatized).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorems exist in WangBridge (verified via lean_deps.json); 0 sorry in module.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.fermion_count_gives_central_charge"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.central_charge_coeff_from_fermions"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 2, Table: d_R_bar (3bar,1) = 3 components, c = 3/2",
-      "paper_value": "3 components, c = 3/2",
-      "computed_value": "SM_FERMION_DATA['d_R_bar']['components'] = 3, c = 1.5",
-      "delta_pct": 0.0,
-      "status": "PASS"
+      "id": "sentence:paper10_modular_generation:abstract:6deb6a77",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "6deb6a77",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 23,
+      "tex_line_end": 26,
+      "quote": "The framing anomaly $c_- \\equiv 0 \\pmod{24}$ follows from $\\eta(\\tau+1) = e^{2\\pi i/24}\\eta(\\tau)$, where the ``24'' traces to Mathlib's Dedekind eta $q$-expansion $\\eta(\\tau) = q^{1/24}\\prod_{n=1}^\\infty(1-q^n)$.",
+      "quote_normalized": "the framing anomaly $c_- \\equiv 0 \\pmod{24}$ follows from $\\eta(\\tau+1) = e^{2\\pi i/24}\\eta(\\tau)$, where the ``24'' traces to mathlib's dedekind eta $q$-expansion $\\eta(\\tau) = q^{1/24}\\prod_{n=1}^\\infty(1-q^n)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "ModularInvarianceConstraint.lean has framing_anomaly_constraint at 0 sorry (prior FAIL auto-closes; see non_reproducing).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.framing_anomaly_constraint"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.qParam_shift"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 2, Table: L (1,2) = 2 components, c = 1",
-      "paper_value": "2 components, c = 1",
-      "computed_value": "SM_FERMION_DATA['L']['components'] = 2, c = 1.0",
-      "delta_pct": 0.0,
-      "status": "PASS"
+      "id": "sentence:paper10_modular_generation:abstract:6f0d1709",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "6f0d1709",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 26,
+      "tex_line_end": 30,
+      "quote": "The factorization $24 = 8 \\times 3$ yields the generation constraint: the numerator is pure mathematics (zeta regularization $\\zeta(-1) = -1/12$), the denominator is pure physics (SM fermion content).",
+      "quote_normalized": "the factorization $24 = 8 \\times 3$ yields the generation constraint: the numerator is pure mathematics (zeta regularization $\\zeta(-1) = -1/12$), the denominator is pure physics (sm fermion content).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "twenty_four_origin proves 24 = 8 * 3 in ModularInvarianceConstraint.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.twenty_four_origin"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.twenty_four_decomposition"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 2, Table: e_R_bar (1,1) = 1 component, c = 1/2",
-      "paper_value": "1 component, c = 1/2",
-      "computed_value": "SM_FERMION_DATA['e_R_bar']['components'] = 1, c = 0.5",
-      "delta_pct": 0.0,
-      "status": "PASS"
+      "id": "sentence:paper10_modular_generation:abstract:eec84c71",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "eec84c71",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 30,
+      "tex_line_end": 32,
+      "quote": "Without right-handed neutrinos, $c_- = 15/2$ is fractional --- a formally verified independent argument for $\\nu_R$.",
+      "quote_normalized": "without right-handed neutrinos, $c_- = 15/2$ is fractional --- a formally verified independent argument for $\\nu_r$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem exists; module 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.central_charge_fractional_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 2, Table: nu_R_bar (1,1) = 1 component, c = 1/2",
-      "paper_value": "1 component, c = 1/2",
-      "computed_value": "SM_FERMION_DATA['nu_R_bar']['components'] = 1, c = 0.5",
-      "delta_pct": 0.0,
-      "status": "PASS"
+      "id": "sentence:paper10_modular_generation:abstract:3d9b324e",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "3d9b324e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 32,
+      "tex_line_end": 34,
+      "quote": "The complete chain from modular forms to particle physics comprises 2237+~theorems across 130~Lean~4 modules (zero axioms in the generation constraint chain); the complete derivation chain from modular forms through fermion counting to the generation bound is fully machine-checked.",
+      "quote_normalized": "the complete chain from modular forms to particle physics comprises 2237+~theorems across 130~lean~4 modules (zero axioms in the generation constraint chain); the complete derivation chain from modular forms through fermion counting to the generation bound is fully machine-checked.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper says '130 Lean 4 modules' but ls SKEFTHawking/*.lean = 170. Theorem count '2237+' is technically OK (current 2578 satisfies '+'). Module count is wrong by ~30.8%. Axiom-in-chain claim PASSES (the 1 axiom gapped_interface_axiom is in SPTClassification.lean, not in WangBridge/Modular/Generation/Rokhlin chain).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "lake_module_count",
+            "computed_value": "170",
+            "delta_pct": 30.8
+          },
+          {
+            "kind": "formula",
+            "target": "lake_theorem_count",
+            "computed_value": "2578"
+          },
+          {
+            "kind": "formula",
+            "target": "lake_axiom_count_in_chain",
+            "computed_value": "0",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 30.8
     },
     {
-      "location": "Sec 2, Table: Total = 16 components, c = 8",
-      "paper_value": "16, c = 8",
-      "computed_value": "6+3+3+2+1+1 = 16, c = 3+1.5+1.5+1+0.5+0.5 = 8",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Matches SM_ANOMALY['COMPONENTS_WITH_NU_R']=16 and SM_ANOMALY['CHIRAL_CENTRAL_CHARGE_COEFF']=8."
+      "id": "sentence:paper10_modular_generation:abstract:d00070fc",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "d00070fc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 34,
+      "tex_line_end": 36,
+      "quote": "The algebraic core of the Rokhlin bound is verified via a machine-checked Ext computation over the Steenrod subalgebra $A(1)$ --- the first such computation in any proof assistant.",
+      "quote_normalized": "the algebraic core of the rokhlin bound is verified via a machine-checked ext computation over the steenrod subalgebra $a(1)$ --- the first such computation in any proof assistant.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "A1Ring/A1Resolution/A1Ext exist with 0 sorry. 'First in any proof assistant' is unverifiable interpretive priority claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Ext_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Ring_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Resolution_module"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 2.2, line 101: Without nu_R, 15 Weyl, c_- = 15/2",
-      "paper_value": "15, c_- = 15/2",
-      "computed_value": "SM_ANOMALY['COMPONENTS_WITHOUT_NU_R'] = 15, 15 * 0.5 = 7.5 = 15/2",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Fractional c_- verified. Lean: central_charge_fractional_without_nu_R in WangBridge.lean."
+      "id": "sentence:paper10_modular_generation:abstract:9fd0d0e5",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "abstract",
+        "quote_hash": "9fd0d0e5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 38,
+      "quote": "This is the first formal derivation connecting number-theoretic modular invariance to a Standard Model constraint.",
+      "quote_normalized": "this is the first formal derivation connecting number-theoretic modular invariance to a standard model constraint.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim; not structurally verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "location": "Sec 3, line 130: zeta_24 = e^{2pi i/24} = e^{pi i/12}",
-      "paper_value": "zeta_24 = e^{pi i/12}",
-      "computed_value": "2*pi*i/24 = pi*i/12. Correct.",
-      "delta_pct": 0.0,
-      "status": "PASS"
+      "id": "sentence:paper10_modular_generation:introduction:cfc6b168",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "cfc6b168",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 46,
+      "tex_line_end": 46,
+      "quote": "Why does the Standard Model have exactly three generations of fermions?",
+      "quote_normalized": "why does the standard model have exactly three generations of fermions?",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "location": "Sec 3.2, Eq (3): 24 | 8 N_f => 3 | N_f",
-      "paper_value": "N_f equiv 0 mod 3",
-      "computed_value": "gcd(8,24) = 8, 24/gcd(8,24) = 3, so 24|8N_f <=> 3|N_f",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Lean: generation_mod3_constraint in GenerationConstraint.lean (Aristotle a1dfcbde)."
+      "id": "sentence:paper10_modular_generation:introduction:1874ad23",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "1874ad23",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 47,
+      "tex_line_end": 51,
+      "quote": "The perturbative anomaly cancellation conditions are satisfied generation-by-generation~\\cite{GrossJackiw1972} and impose no constraint on their number.",
+      "quote_normalized": "the perturbative anomaly cancellation conditions are satisfied generation-by-generation~ and impose no constraint on their number.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bibkey GrossJackiw1972 not in CITATION_REGISTRY but the asserted physics is well-established.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GrossJackiw1972",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
     },
     {
-      "location": "Sec 3.2, line 161-162: 24 | 8*3 but 24 does not divide 8*1 and 24 does not divide 8*2",
-      "paper_value": "sharpness claim",
-      "computed_value": "8*3=24 (yes), 8*1=8 (no), 8*2=16 (no)",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Lean: constraint_sharpness in ModularInvarianceConstraint.lean (proved by omega)."
+      "id": "sentence:paper10_modular_generation:introduction:cc8bbbe2",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "cc8bbbe2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 49,
+      "tex_line_end": 51,
+      "quote": "But the \\emph{global} (non-perturbative) constraint from modular invariance does: it requires $N_f \\equiv 0 \\pmod{3}$, with $N_f = 3$ the minimal nontrivial solution~\\cite{Wang2024}.",
+      "quote_normalized": "but the global (non-perturbative) constraint from modular invariance does: it requires $n_f \\equiv 0 \\pmod{3}$, with $n_f = 3$ the minimal nontrivial solution~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Wang2024 not in CITATION_REGISTRY; theorem generation_minimal_nontrivial exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Wang2024",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.generation_minimal_nontrivial"
+          }
+        ],
+        "completeness": "full"
+      }
     },
     {
-      "location": "Sec 3.2, line 162: 24 = 8 x 3",
-      "paper_value": "24 = 8 x 3",
-      "computed_value": "24 = 8 * 3",
-      "delta_pct": 0.0,
-      "status": "PASS",
-      "notes": "Lean: twenty_four_origin in ModularInvarianceConstraint.lean."
+      "id": "sentence:paper10_modular_generation:introduction:6e38931a",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "6e38931a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 53,
+      "tex_line_end": 53,
+      "quote": "The derivation involves two independent ingredients:",
+      "quote_normalized": "the derivation involves two independent ingredients:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:introduction:2df107cf",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "2df107cf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 55,
+      "tex_line_end": 57,
+      "quote": "Physics: The SM has 16 left-handed Weyl fermion components per generation (with $\\nu_R$), giving chiral central charge $c_- = 16 \\times \\tfrac{1}{2} = 8$ per generation, hence $c_- = 8 N_f$.",
+      "quote_normalized": "physics: the sm has 16 left-handed weyl fermion components per generation (with $\\nu_r$), giving chiral central charge $c_- = 16 \\times \\tfrac{1}{2} = 8$ per generation, hence $c_- = 8 n_f$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "16 Weyl x 1/2 = 8 verified in WangBridge.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "16 * 0.5 = 8",
+            "computed_value": "8",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.fermion_count_gives_central_charge"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:introduction:13928125",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "13928125",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 58,
+      "tex_line_end": 61,
+      "quote": "Mathematics: The Dedekind eta function $\\eta(\\tau) = q^{1/24}\\prod_{n=1}^\\infty(1-q^n)$ satisfies $\\eta(\\tau+1) = e^{2\\pi i/24}\\eta(\\tau)$, forcing the partition function's modular weight to be a multiple of 24.",
+      "quote_normalized": "mathematics: the dedekind eta function $\\eta(\\tau) = q^{1/24}\\prod_{n=1}^\\infty(1-q^n)$ satisfies $\\eta(\\tau+1) = e^{2\\pi i/24}\\eta(\\tau)$, forcing the partition function's modular weight to be a multiple of 24.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Eta T-transformation chain in ModularInvarianceConstraint.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.qParam_shift"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.zeta24_pow_24"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:introduction:4b694c78",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "4b694c78",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 62,
+      "tex_line_end": 63,
+      "quote": "Together: $8 N_f \\equiv 0 \\pmod{24}$, i.e., $N_f \\equiv 0 \\pmod{3}$.",
+      "quote_normalized": "together: $8 n_f \\equiv 0 \\pmod{24}$, i.e., $n_f \\equiv 0 \\pmod{3}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "24 | 8N_f iff 3 | N_f via gcd(8,24)=8.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.div_24_8n_implies_div_3_n"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.generation_mod3_constraint"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:introduction:9495d611",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "9495d611",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 65,
+      "tex_line_end": 68,
+      "quote": "In this Letter, we present the first formally verified version of this derivation, machine-checked in Lean~4 with Mathlib's modular forms infrastructure.",
+      "quote_normalized": "in this letter, we present the first formally verified version of this derivation, machine-checked in lean~4 with mathlib's modular forms infrastructure.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim; not mechanically verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:introduction:b710a689",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "introduction",
+        "quote_hash": "b710a689",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 67,
+      "tex_line_end": 68,
+      "quote": "Every numerical coefficient is either derived from the formalization or enters as a well-motivated physics axiom.",
+      "quote_normalized": "every numerical coefficient is either derived from the formalization or enters as a well-motivated physics axiom.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "HD"
+      ],
+      "agent_verdict": "WARN",
+      "agent_notes": "Paper later (line 250) discloses Rokhlin enters as hypothesis; modular_invariance_framing is described semantically (lines 142, 148). HD passes; phrasing 'physics axiom' is consistent with disclosed hypotheses. WARN flagged because phrasing 'physics axiom' is loose (the hypothesis is technically a tracked Prop, not a Lean axiom).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "rokhlin_sigma_mod_16"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "modular_invariance_framing"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:d52d310d",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "d52d310d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 71,
+      "tex_line_end": 72,
+      "quote": "The Chiral Central Charge",
+      "quote_normalized": "the chiral central charge",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:0b0685c1",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "0b0685c1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 76,
+      "tex_line_end": 77,
+      "quote": "The SM fermion content per generation, in left-handed Weyl basis, is:",
+      "quote_normalized": "the sm fermion content per generation, in left-handed weyl basis, is:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:568005d1",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "568005d1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 78,
+      "tex_line_end": 93,
+      "quote": "Table: Q_L (3,2) 6 components c=3; u_R_bar (3bar,1) 3 c=3/2; d_R_bar (3bar,1) 3 c=3/2; L (1,2) 2 c=1; e_R_bar (1,1) 1 c=1/2; nu_R_bar (1,1) 1 c=1/2; Total 16 c=8.",
+      "quote_normalized": "table: q_l (3,2) 6 components c=3; u_r_bar (3bar,1) 3 c=3/2; d_r_bar (3bar,1) 3 c=3/2; l (1,2) 2 c=1; e_r_bar (1,1) 1 c=1/2; nu_r_bar (1,1) 1 c=1/2; total 16 c=8.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "6+3+3+2+1+1=16; 3+1.5+1.5+1+0.5+0.5=8. Each Weyl contributes c=1/2.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "SM_fermion_components",
+            "computed_value": "16",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "formula",
+            "target": "SM_central_charge_total",
+            "computed_value": "8",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.fermion_count_gives_central_charge"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.chiral_charge_with_nu_R"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:9cf6b231",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "9cf6b231",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 95,
+      "tex_line_end": 97,
+      "quote": "Each Weyl fermion contributes $c = 1/2$ to the chiral central charge upon dimensional reduction to 2D~\\cite{AlvarezGaumeWitten1984}.",
+      "quote_normalized": "each weyl fermion contributes $c = 1/2$ to the chiral central charge upon dimensional reduction to 2d~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Citation not in CITATION_REGISTRY (NPB 234, 269). Standard textbook physics.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AlvarezGaumeWitten1984",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:ed815fd2",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "ed815fd2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 97,
+      "tex_line_end": 98,
+      "quote": "The coefficient ``8'' in $c_- = 8 N_f$ is thus \\emph{derived}: $c_- = 16 \\times \\frac{1}{2} = 8$ per generation.",
+      "quote_normalized": "the coefficient ``8'' in $c_- = 8 n_f$ is thus derived: $c_- = 16 \\times \\frac{1}{2} = 8$ per generation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Derived in WangBridge; 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.central_charge_coeff_from_fermions"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:71f22e54",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "71f22e54",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 100,
+      "tex_line_end": 102,
+      "quote": "This is formalized in \\texttt{WangBridge.lean} (9~theorems, zero \\texttt{sorry}): \\texttt{fermion\\_count\\_gives\\_central\\_charge} derives $c_- = 8$ from \\texttt{SMFermionData.total\\_components\\_with\\_nu\\_R} = 16.",
+      "quote_normalized": "this is formalized in wangbridge.lean (9~theorems, zero sorry): fermion\\_count\\_gives\\_central\\_charge derives $c_- = 8$ from smfermiondata.total\\_components\\_with\\_nu\\_r = 16.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "WangBridge.lean has 9 theorems (verified) and 0 sorry. Both referenced names exist in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.fermion_count_gives_central_charge"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.total_components_with_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:8dbdaf5b",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "8dbdaf5b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 106,
+      "tex_line_end": 109,
+      "quote": "Without right-handed neutrinos, the Weyl count drops to 15, giving $c_- = 15/2$ per generation.",
+      "quote_normalized": "without right-handed neutrinos, the weyl count drops to 15, giving $c_- = 15/2$ per generation.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "15 x 1/2 = 15/2.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "15 * 0.5",
+            "computed_value": "7.5",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.chiral_charge_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:02e5b14e",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "02e5b14e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 108,
+      "tex_line_end": 109,
+      "quote": "A fractional central charge signals a gravitational anomaly~\\cite{AlvarezGaumeWitten1984} --- the 2D theory is inconsistent.",
+      "quote_normalized": "a fractional central charge signals a gravitational anomaly~ --- the 2d theory is inconsistent.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "AGW 1984 not in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AlvarezGaumeWitten1984",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:48e1bef1",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "48e1bef1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 109,
+      "tex_line_end": 112,
+      "quote": "This is \\emph{formally verified} as \\texttt{central\\_charge\\_fractional\\_without\\_nu\\_R} in \\texttt{WangBridge.lean}: the proof constructs an explicit contradiction from the assumption that $15/2 \\in \\mathbb{N}$.",
+      "quote_normalized": "this is formally verified as central\\_charge\\_fractional\\_without\\_nu\\_r in wangbridge.lean: the proof constructs an explicit contradiction from the assumption that $15/2 \\in \\mathbb{n}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem exists, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.central_charge_fractional_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-chiral-central-charge:127f3e6f",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-chiral-central-charge",
+        "quote_hash": "127f3e6f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-chiral-central-charge",
+      "section_ordinal": 3,
+      "tex_line_start": 114,
+      "tex_line_end": 115,
+      "quote": "This provides an independent formal argument for right-handed neutrinos, complementing the $\\mathbb{Z}_{16}$ anomaly argument~\\cite{GarciaEtxebarria2019}.",
+      "quote_normalized": "this provides an independent formal argument for right-handed neutrinos, complementing the $\\mathbb{z}_{16}$ anomaly argument~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "GE2019 not in CITATION_REGISTRY (JHEP 08, 003).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GarciaEtxebarria2019",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:9d85e1f7",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "9d85e1f7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 118,
+      "tex_line_end": 119,
+      "quote": "The Framing Anomaly from the Dedekind Eta Function",
+      "quote_normalized": "the framing anomaly from the dedekind eta function",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:713b8f56",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "713b8f56",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 123,
+      "tex_line_end": 126,
+      "quote": "The Dedekind eta function is $\\eta(\\tau) = q^{1/24} \\prod_{n=1}^{\\infty}(1 - q^n), \\quad q = e^{2\\pi i \\tau}$.",
+      "quote_normalized": "the dedekind eta function is $\\eta(\\tau) = q^{1/24} \\prod_{n=1}^{\\infty}(1 - q^n), \\quad q = e^{2\\pi i \\tau}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard definition; matches Mathlib DedekindEta.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "Dedekind_eta_q_expansion"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:0ca37094",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "0ca37094",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 127,
+      "tex_line_end": 130,
+      "quote": "Under the modular T-transformation: The product $\\prod(1-q^n)$ is invariant; $q(\\tau+1) = q(\\tau)$, since $e^{2\\pi i} = 1$.",
+      "quote_normalized": "under the modular t-transformation: the product $\\prod(1-q^n)$ is invariant; $q(\\tau+1) = q(\\tau)$, since $e^{2\\pi i} = 1$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "qParam_integer_invariant exists in ModularInvarianceConstraint.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.qParam_integer_invariant"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:54531e82",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "54531e82",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 131,
+      "tex_line_end": 133,
+      "quote": "The prefactor shifts: $q^{1/24}(\\tau+1) = e^{2\\pi i(\\tau+1)/24} = e^{2\\pi i/24} \\cdot q^{1/24}(\\tau)$.",
+      "quote_normalized": "the prefactor shifts: $q^{1/24}(\\tau+1) = e^{2\\pi i(\\tau+1)/24} = e^{2\\pi i/24} \\cdot q^{1/24}(\\tau)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "qParam_shift proves the prefactor shift.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.qParam_shift"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:60984aec",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "60984aec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 134,
+      "tex_line_end": 135,
+      "quote": "Therefore $\\eta(\\tau+1) = \\zeta_{24} \\cdot \\eta(\\tau)$, where $\\zeta_{24} = e^{2\\pi i/24} = e^{\\pi i/12}$ is a primitive 24th root of unity.",
+      "quote_normalized": "therefore $\\eta(\\tau+1) = \\zeta_{24} \\cdot \\eta(\\tau)$, where $\\zeta_{24} = e^{2\\pi i/24} = e^{\\pi i/12}$ is a primitive 24th root of unity.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "2pi/24 = pi/12. zeta24^24 = 1 (proved); primitive (proved).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.zeta24_pow_24"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.zeta24_primitive"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:e711efc6",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "e711efc6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 137,
+      "tex_line_end": 142,
+      "quote": "The ``24'' has two complementary origins. Analytically, it is the q-expansion exponent (Rademacher~\\cite{Rademacher1973}). Physically, it is the Casimir energy $E_0 = -c/24$ traced via $\\zeta(-1)=-1/12$ and the framing anomaly~\\cite{diFrancesco1997}.",
+      "quote_normalized": "the ``24'' has two complementary origins. analytically, it is the q-expansion exponent (rademacher~). physically, it is the casimir energy $e_0 = -c/24$ traced via $\\zeta(-1)=-1/12$ and the framing anomaly~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Both bibkeys missing from CITATION_REGISTRY but are standard textbook references.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Rademacher1973",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "citation",
+            "target": "diFrancesco1997",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:6f6d75ae",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "6f6d75ae",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 144,
+      "tex_line_end": 145,
+      "quote": "From eta to the generation constraint",
+      "quote_normalized": "from eta to the generation constraint",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:67c3cc53",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "67c3cc53",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 146,
+      "tex_line_end": 149,
+      "quote": "The 2D partition function $Z(\\tau)$ transforms as $Z(\\tau+1) = e^{2\\pi i c_-/24} Z(\\tau)$, where the phase arises from the gravitational anomaly encoded in the $\\eta$~function.",
+      "quote_normalized": "the 2d partition function $z(\\tau)$ transforms as $z(\\tau+1) = e^{2\\pi i c_-/24} z(\\tau)$, where the phase arises from the gravitational anomaly encoded in the $\\eta$~function.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard CFT result; codified as hypothesis modular_invariance_framing in HYPOTHESIS_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "hypothesis",
+            "target": "modular_invariance_framing"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:ea20efb1",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "ea20efb1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 148,
+      "tex_line_end": 152,
+      "quote": "Modular invariance requires this phase to be trivial: $e^{2\\pi i c_-/24} = 1 \\Longleftrightarrow 24 \\mid c_-$.",
+      "quote_normalized": "modular invariance requires this phase to be trivial: $e^{2\\pi i c_-/24} = 1 \\longleftrightarrow 24 \\mid c_-$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "framing_anomaly_constraint at 0 sorry (prior FAIL auto-closes).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.framing_anomaly_constraint"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:a4c97c14",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "a4c97c14",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 153,
+      "tex_line_end": 157,
+      "quote": "Combined with $c_- = 8 N_f$: $24 \\mid 8 N_f \\Longrightarrow 3 \\mid N_f$.",
+      "quote_normalized": "combined with $c_- = 8 n_f$: $24 \\mid 8 n_f \\longrightarrow 3 \\mid n_f$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified Lean theorem (Aristotle a1dfcbde).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.div_24_8n_implies_div_3_n"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.generation_mod3_constraint"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:9d197399",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "9d197399",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 159,
+      "tex_line_end": 167,
+      "quote": "Figure 1 caption: T-transformation phase cycles through cube roots of unity; phase = 1 only for $N_f \\equiv 0 \\pmod{3}$.",
+      "quote_normalized": "figure 1 caption: t-transformation phase cycles through cube roots of unity; phase = 1 only for $n_f \\equiv 0 \\pmod{3}$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "N_f=0:1, N_f=1:w, N_f=2:w^2, N_f=3:1.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate8_FigureFidelity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "phase_cube_roots",
+            "computed_value": "{1, w, w^2}",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:1be92cd3",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "1be92cd3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 169,
+      "tex_line_end": 172,
+      "quote": "The constraint is sharp: $24 \\mid 8 \\cdot 3$ but $24 \\nmid 8 \\cdot 1$ and $24 \\nmid 8 \\cdot 2$.",
+      "quote_normalized": "the constraint is sharp: $24 \\mid 8 \\cdot 3$ but $24 \\nmid 8 \\cdot 1$ and $24 \\nmid 8 \\cdot 2$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "8*1=8 (24 nmid); 8*2=16 (24 nmid); 8*3=24 (divides). Verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.constraint_sharpness"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.one_and_two_excluded"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:9fce4881",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "9fce4881",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 170,
+      "tex_line_end": 172,
+      "quote": "The factorization $24 = 8 \\times 3$ encodes both ingredients: 24 from zeta regularization, 8 from fermion counting.",
+      "quote_normalized": "the factorization $24 = 8 \\times 3$ encodes both ingredients: 24 from zeta regularization, 8 from fermion counting.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "24 = 8*3 verified. coprime(8,3) verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.twenty_four_origin"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.twenty_four_decomposition"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:6b41f1ca",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "6b41f1ca",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 172,
+      "tex_line_end": 173,
+      "quote": "Their ratio is the generation constraint.",
+      "quote_normalized": "their ratio is the generation constraint.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:9c74b184",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "9c74b184",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 174,
+      "tex_line_end": 177,
+      "quote": "This is formalized in \\texttt{ModularInvarianceConstraint.lean} (12~theorems): the $q$-parameter shift \\texttt{qParam\\_shift} is proved from Mathlib's \\texttt{Complex.exp\\_add}, and the framing anomaly constraint \\texttt{framing\\_anomaly\\_constraint} proves $e^{2\\pi i c/24} = 1 \\Leftrightarrow 24 \\mid c$.",
+      "quote_normalized": "this is formalized in modularinvarianceconstraint.lean (12~theorems): the $q$-parameter shift qparam\\_shift is proved from mathlib's complex.exp\\_add, and the framing anomaly constraint framing\\_anomaly\\_constraint proves $e^{2\\pi i c/24} = 1 \\leftrightarrow 24 \\mid c$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "ModularInvarianceConstraint has 12 theorems (matches grep). Both names exist; both 0 sorry — major change vs prior review.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.qParam_shift"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.framing_anomaly_constraint"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-framing-anomaly-from-the-dedekind-eta-function:5ecd55fd",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-framing-anomaly-from-the-dedekind-eta-function",
+        "quote_hash": "5ecd55fd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-framing-anomaly-from-the-dedekind-eta-function",
+      "section_ordinal": 4,
+      "tex_line_start": 179,
+      "tex_line_end": 185,
+      "quote": "Figure 2 caption: Chiral central charge $c_- = 8 N_f$ vs. modular invariance $c_- \\equiv 0 \\pmod{24}$; blue bars for $N_f$ divisible by 3.",
+      "quote_normalized": "figure 2 caption: chiral central charge $c_- = 8 n_f$ vs. modular invariance $c_- \\equiv 0 \\pmod{24}$; blue bars for $n_f$ divisible by 3.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Visualization caption matches main-text formulas.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate8_FigureFidelity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "c_minus_8Nf_vs_24div"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:f0afc95f",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "f0afc95f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 188,
+      "tex_line_end": 188,
+      "quote": "The ``16'' Convergence",
+      "quote_normalized": "the ``16'' convergence",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:442f5e8f",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "442f5e8f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 190,
+      "tex_line_end": 191,
+      "quote": "The number 16 appears independently in four areas:",
+      "quote_normalized": "the number 16 appears independently in four areas:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:20e733f9",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "20e733f9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 192,
+      "tex_line_end": 194,
+      "quote": "SM fermion content: 16 Weyl components per generation.",
+      "quote_normalized": "sm fermion content: 16 weyl components per generation.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Total = 16 (Q+u+d+L+e+nu).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.total_components_with_nu_R"
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:e7cf9d7c",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "e7cf9d7c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 194,
+      "tex_line_end": 197,
+      "quote": "$\\mathbb{Z}_{16}$ classification: the bordism group $\\Omega_5^{\\mathrm{Spin}^{\\mathbb{Z}_4}} \\cong \\mathbb{Z}_{16}$ classifying global anomalies~\\cite{GarciaEtxebarria2019}.",
+      "quote_normalized": "$\\mathbb{z}_{16}$ classification: the bordism group $\\omega_5^{spin^{\\mathbb{z}_4}} \\cong \\mathbb{z}_{16}$ classifying global anomalies~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "GE2019 missing from CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GarciaEtxebarria2019",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:526c8eca",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "526c8eca",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 197,
+      "tex_line_end": 199,
+      "quote": "Rokhlin's theorem: $\\sigma(M) \\equiv 0 \\pmod{16}$ for spin 4-manifolds~\\cite{Rokhlin1952}.",
+      "quote_normalized": "rokhlin's theorem: $\\sigma(m) \\equiv 0 \\pmod{16}$ for spin 4-manifolds~.",
+      "type": "citation",
+      "finding_classes": [
+        "HD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "Hypothesis disclosed (line 218, 250). HD pass. Rokhlin1952 missing from CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Rokhlin1952",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "rokhlin_sigma_mod_16"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:7e957b13",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "7e957b13",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 199,
+      "tex_line_end": 204,
+      "quote": "Kitaev 16-fold way: 2D class-D topological superconductors admit free-fermion $\\mathbb{Z}$ classification~\\cite{Kitaev2009} reducing to $\\mathbb{Z}_{16}$ under interactions~\\cite{FidkowskiKitaev2010}.",
+      "quote_normalized": "kitaev 16-fold way: 2d class-d topological superconductors admit free-fermion $\\mathbb{z}$ classification~ reducing to $\\mathbb{z}_{16}$ under interactions~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Kitaev2009 IS in CITATION_REGISTRY (verified). FidkowskiKitaev2010 missing.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Kitaev2009",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "FidkowskiKitaev2010",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:c69bf60b",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "c69bf60b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 205,
+      "tex_line_end": 211,
+      "quote": "The four appearances of 16 are connected through algebraic topology of spin structures: Wang~(2024) establishes the relationship via the string bordism $\\mathbb{Z}_{24}$ class and the Smith homomorphism.",
+      "quote_normalized": "the four appearances of 16 are connected through algebraic topology of spin structures: wang~(2024) establishes the relationship via the string bordism $\\mathbb{z}_{24}$ class and the smith homomorphism.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Wang2024 missing from CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Wang2024",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:9a684e42",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "9a684e42",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 210,
+      "tex_line_end": 211,
+      "quote": "The relationship to the Kitaev $\\mathbb{Z}_{16}$ classification is suggestive but has not been formalized here.",
+      "quote_normalized": "the relationship to the kitaev $\\mathbb{z}_{16}$ classification is suggestive but has not been formalized here.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Honest scope hedge.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:5bed257f",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "5bed257f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 213,
+      "tex_line_end": 221,
+      "quote": "The formal verification records the four occurrences as \\texttt{sixteen\\_convergence\\_full} in \\texttt{RokhlinBridge.lean}; the theorem is an enumeration: (i) SM fermion components = 16; (ii) $16 \\equiv 0 \\pmod{16}$; (iii) divisibility by 16 of spin-4-manifold signatures holds \\emph{as a hypothesis} (Rokhlin's theorem).",
+      "quote_normalized": "the formal verification records the four occurrences as sixteen\\_convergence\\_full in rokhlinbridge.lean; the theorem is an enumeration: (i) sm fermion components = 16; (ii) $16 \\equiv 0 \\pmod{16}$; (iii) divisibility by 16 of spin-4-manifold signatures holds as a hypothesis (rokhlin's theorem).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "HD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem exists; hypothesis disclosed in same sentence ('as a hypothesis').",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.sixteen_convergence_full"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "rokhlin_sigma_mod_16"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:646a53e6",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "646a53e6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 219,
+      "tex_line_end": 222,
+      "quote": "It does \\emph{not} prove the mathematical equivalence of the four phenomena; that equivalence is the content of Wang's cobordism argument, which we use as an external input rather than formalize.",
+      "quote_normalized": "it does not prove the mathematical equivalence of the four phenomena; that equivalence is the content of wang's cobordism argument, which we use as an external input rather than formalize.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Honest scope hedge.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:98dc794e",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "98dc794e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 223,
+      "tex_line_end": 224,
+      "quote": "With vs. without nu_R subsection",
+      "quote_normalized": "with vs. without nu_r subsection",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:55f0a6e2",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "55f0a6e2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 225,
+      "tex_line_end": 227,
+      "quote": "The $\\mathbb{Z}_{16}$ anomaly and modular invariance are \\emph{independent} constraints on $N_f$:",
+      "quote_normalized": "the $\\mathbb{z}_{16}$ anomaly and modular invariance are independent constraints on $n_f$:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:9f1454ad",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "9f1454ad",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 228,
+      "tex_line_end": 238,
+      "quote": "Table: With nu_R: Z16 none, modular 3|N_f, combined min N_f=3. Without nu_R: Z16 16|N_f, combined min lcm(16,3)=48.",
+      "quote_normalized": "table: with nu_r: z16 none, modular 3|n_f, combined min n_f=3. without nu_r: z16 16|n_f, combined min lcm(16,3)=48.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "lcm(16,3)=48 verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.constraints_with_nu_R"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.constraints_without_nu_R"
+          },
+          {
+            "kind": "formula",
+            "target": "lcm(16,3)",
+            "computed_value": "48",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:82bdd585",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "82bdd585",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 240,
+      "tex_line_end": 243,
+      "quote": "With $\\nu_R$, the $\\mathbb{Z}_{16}$ anomaly automatically vanishes for any $N_f$ (\\texttt{z16\\_anomaly\\_always\\_cancels\\_with\\_nu\\_R} in \\texttt{RokhlinBridge.lean}), leaving only modular invariance: $N_f = 3$ is the minimal solution.",
+      "quote_normalized": "with $\\nu_r$, the $\\mathbb{z}_{16}$ anomaly automatically vanishes for any $n_f$ (z16\\_anomaly\\_always\\_cancels\\_with\\_nu\\_r in rokhlinbridge.lean), leaving only modular invariance: $n_f = 3$ is the minimal solution.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem name resolves in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.z16_anomaly_always_cancels_with_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:69977dfc",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "69977dfc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 245,
+      "tex_line_end": 248,
+      "quote": "Without $\\nu_R$, both constraints must hold simultaneously. The minimal solution is $N_f = \\mathrm{lcm}(16, 3) = 48$ (\\texttt{constraints\\_without\\_nu\\_R}). Since $N_f = 3$ is observed, this provides formal evidence for the existence of $\\nu_R$.",
+      "quote_normalized": "without $\\nu_r$, both constraints must hold simultaneously. the minimal solution is $n_f = lcm(16, 3) = 48$ (constraints\\_without\\_nu\\_r). since $n_f = 3$ is observed, this provides formal evidence for the existence of $\\nu_r$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem exists, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.constraints_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:the-16-convergence:60a4458b",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "the-16-convergence",
+        "quote_hash": "60a4458b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-16-convergence",
+      "section_ordinal": 5,
+      "tex_line_start": 250,
+      "tex_line_end": 254,
+      "quote": "Rokhlin's theorem enters as a hypothesis (not an axiom) in the key theorems. It is a well-established result (1952, hundreds of citations). The bound is sharp: K3 has $\\sigma = -16$, while $E_8$ has $\\sigma = 8$ but is \\emph{not} spin --- formally verified as \\texttt{rokhlin\\_strictly\\_stronger}: $16 \\nmid 8$.",
+      "quote_normalized": "rokhlin's theorem enters as a hypothesis (not an axiom) in the key theorems. it is a well-established result (1952, hundreds of citations). the bound is sharp: k3 has $\\sigma = -16$, while $e_8$ has $\\sigma = 8$ but is not spin --- formally verified as rokhlin\\_strictly\\_stronger: $16 \\nmid 8$.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "HD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "Explicit hypothesis disclosure. rokhlin_strictly_stronger and rokhlin_sharp both exist (verified). 16 nmid 8 trivially correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.rokhlin_strictly_stronger"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "rokhlin_sigma_mod_16"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:3990f37f",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "3990f37f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 257,
+      "tex_line_end": 258,
+      "quote": "Conclusions",
+      "quote_normalized": "conclusions",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:ff0fbb28",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "ff0fbb28",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 259,
+      "tex_line_end": 261,
+      "quote": "We have established the first formally verified derivation of the SM generation constraint $N_f \\equiv 0 \\pmod{3}$ from modular form theory:",
+      "quote_normalized": "we have established the first formally verified derivation of the sm generation constraint $n_f \\equiv 0 \\pmod{3}$ from modular form theory:",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim, qualitative.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:8fd0889c",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "8fd0889c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 262,
+      "tex_line_end": 263,
+      "quote": "The coefficient $c_- = 8$ is \\emph{derived} from the 16 Weyl fermions per SM generation, not a free parameter.",
+      "quote_normalized": "the coefficient $c_- = 8$ is derived from the 16 weyl fermions per sm generation, not a free parameter.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem exists, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.fermion_count_gives_central_charge"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:4be79d0e",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "4be79d0e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 264,
+      "tex_line_end": 266,
+      "quote": "The constraint $24 \\mid c_-$ follows from the Dedekind eta function's $T$-transformation $\\eta(\\tau+1) = \\zeta_{24} \\eta(\\tau)$, using Mathlib's \\texttt{Complex.exp\\_add} for the $q$-parameter shift.",
+      "quote_normalized": "the constraint $24 \\mid c_-$ follows from the dedekind eta function's $t$-transformation $\\eta(\\tau+1) = \\zeta_{24} \\eta(\\tau)$, using mathlib's complex.exp\\_add for the $q$-parameter shift.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Both theorems verified, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.framing_anomaly_constraint"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.qParam_shift"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:24b2ca98",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "24b2ca98",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 267,
+      "tex_line_end": 268,
+      "quote": "Without $\\nu_R$, $c_- = 15/2$ is fractional --- a formally verified independent argument for right-handed neutrinos.",
+      "quote_normalized": "without $\\nu_r$, $c_- = 15/2$ is fractional --- a formally verified independent argument for right-handed neutrinos.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.central_charge_fractional_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:243163fe",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "243163fe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 269,
+      "tex_line_end": 271,
+      "quote": "The factorization $24 = 8 \\times 3$ connects zeta regularization to fermion counting, with the generation constraint as their ratio.",
+      "quote_normalized": "the factorization $24 = 8 \\times 3$ connects zeta regularization to fermion counting, with the generation constraint as their ratio.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.twenty_four_decomposition"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:d3764afd",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "d3764afd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 272,
+      "tex_line_end": 275,
+      "quote": "Without $\\nu_R$, the combined $\\mathbb{Z}_{16}$ + modular invariance constraint requires $N_f = \\mathrm{lcm}(16,3) = 48$ --- providing formal evidence for right-handed neutrinos from the observed $N_f = 3$.",
+      "quote_normalized": "without $\\nu_r$, the combined $\\mathbb{z}_{16}$ + modular invariance constraint requires $n_f = lcm(16,3) = 48$ --- providing formal evidence for right-handed neutrinos from the observed $n_f = 3$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.constraints_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:ccdf6932",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "ccdf6932",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 277,
+      "tex_line_end": 278,
+      "quote": "The formal verification comprises 2237+~theorems across 130~Lean~4 modules (1~axiom, zero in the generation constraint chain).",
+      "quote_normalized": "the formal verification comprises 2237+~theorems across 130~lean~4 modules (1~axiom, zero in the generation constraint chain).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper says 130 modules; ls SKEFTHawking/*.lean = 170 (drift ~30.8%). 2237+ theorems is consistent with current 2578. 1 axiom (gapped_interface_axiom in SPTClassification.lean) — NOT in generation chain (PASS for that sub-claim).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "module_count",
+            "computed_value": "170",
+            "delta_pct": 30.8
+          },
+          {
+            "kind": "formula",
+            "target": "theorem_count",
+            "computed_value": "2578"
+          },
+          {
+            "kind": "formula",
+            "target": "axiom_count",
+            "computed_value": "1",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "delta_pct": 30.8
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:db6aa2cb",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "db6aa2cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 279,
+      "tex_line_end": 282,
+      "quote": "Key modules: \\texttt{SMFermionData.lean}, \\texttt{WangBridge.lean}, \\texttt{GenerationConstraint.lean} ($24 \\mid 8N_f \\Rightarrow 3 \\mid N_f$, Aristotle \\texttt{a1dfcbde}),",
+      "quote_normalized": "key modules: smfermiondata.lean, wangbridge.lean, generationconstraint.lean ($24 \\mid 8n_f \\rightarrow 3 \\mid n_f$, aristotle a1dfcbde),",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Aristotle ID a1dfcbde matches generation_mod3_constraint in ARISTOTLE_THEOREMS dict (verified).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.generation_mod3_constraint"
+          },
+          {
+            "kind": "axiom",
+            "target": "ARISTOTLE_THEOREMS[generation_mod3_constraint]=a1dfcbde"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:366a5858",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "366a5858",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 283,
+      "tex_line_end": 284,
+      "quote": "\\texttt{ModularInvarianceConstraint.lean} (framing anomaly from $\\eta$, Aristotle \\texttt{b54f9611}),",
+      "quote_normalized": "modularinvarianceconstraint.lean (framing anomaly from $\\eta$, aristotle b54f9611),",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper attributes Aristotle ID b54f9611 to ModularInvarianceConstraint.lean (framing anomaly), but ARISTOTLE_THEOREMS dict shows b54f9611 = z16_anomaly_without_nu_R, which lives in RokhlinBridge.lean. Wrong attribution. Either remove the parenthetical or fix the module/theorem mapping.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "ARISTOTLE_THEOREMS lookup b54f9611 -> z16_anomaly_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:aef1e7f0",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "aef1e7f0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 285,
+      "tex_line_end": 288,
+      "quote": "\\texttt{RokhlinBridge.lean} (``16'' convergence), \\texttt{AlgebraicRokhlin.lean} (Serre's $8 \\mid \\sigma$, zero \\texttt{sorry}), \\texttt{E8Lattice.lean} ($\\sigma(E_8) = 8$, \\texttt{native\\_decide}), and \\texttt{SpinBordism.lean} (Wang chain, zero \\texttt{sorry}).",
+      "quote_normalized": "rokhlinbridge.lean (``16'' convergence), algebraicrokhlin.lean (serre's $8 \\mid \\sigma$, zero sorry), e8lattice.lean ($\\sigma(e_8) = 8$, native\\_decide), and spinbordism.lean (wang chain, zero sorry).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "All 4 modules exist and are 0 sorry per grep.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.AlgebraicRokhlin_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.E8Lattice_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SpinBordism_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.RokhlinBridge_module"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:353ba8ca",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "353ba8ca",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 290,
+      "tex_line_end": 292,
+      "quote": "Machine-checked Ext computation. The algebraic content of the Rokhlin bound --- the reason ``16'' rather than 8 or 32 --- is now machine-checked.",
+      "quote_normalized": "machine-checked ext computation. the algebraic content of the rokhlin bound --- the reason ``16'' rather than 8 or 32 --- is now machine-checked.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "A1Ext module exists with 14 theorems, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Ext_module"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:e9de483e",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "e9de483e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 293,
+      "tex_line_end": 299,
+      "quote": "The minimal free resolution of $\\mathbb{F}_2$ over $A(1)$ is verified through homological degree~5 in modules: \\texttt{A1Ring.lean}, \\texttt{A1Resolution.lean}, \\texttt{A1Ext.lean} (minimality, $\\dim \\mathrm{Ext}^n = 1,2,2,2,3,4$ for $n=0,\\ldots,5$).",
+      "quote_normalized": "the minimal free resolution of $\\mathbb{f}_2$ over $a(1)$ is verified through homological degree~5 in modules: a1ring.lean, a1resolution.lean, a1ext.lean (minimality, $\\dim ext^n = 1,2,2,2,3,4$ for $n=0,\\ldots,5$).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "All three modules exist with 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Ring_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Resolution_module"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.A1Ext_module"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:4e50ec7f",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "4e50ec7f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 300,
+      "tex_line_end": 304,
+      "quote": "The Hom-tensor adjunction $\\mathrm{Hom}_A(A \\otimes_{A(1)} M, N) \\cong \\mathrm{Hom}_{A(1)}(M, N)$ (\\texttt{ChangeOfRings.lean}) establishes the change-of-rings isomorphism, reducing the full Adams spectral sequence to the finite $A(1)$ computation.",
+      "quote_normalized": "the hom-tensor adjunction $hom_a(a \\otimes_{a(1)} m, n) \\cong hom_{a(1)}(m, n)$ (changeofrings.lean) establishes the change-of-rings isomorphism, reducing the full adams spectral sequence to the finite $a(1)$ computation.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Module exists, 0 sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.ChangeOfRings_module"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:c0b005c6",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "c0b005c6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 305,
+      "tex_line_end": 306,
+      "quote": "This is the first machine-checked Ext computation over any Steenrod subalgebra in any proof assistant.",
+      "quote_normalized": "this is the first machine-checked ext computation over any steenrod subalgebra in any proof assistant.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority claim; not mechanically verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:84cb1b6c",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "84cb1b6c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 308,
+      "tex_line_end": 311,
+      "quote": "The complete generation constraint chain rests on machine-checked algebra plus three textbook topology results (ko cohomology~\\cite{Adams1974}, ASS convergence~\\cite{BeaudryCampbell}, ABP splitting~\\cite{ABP1967}).",
+      "quote_normalized": "the complete generation constraint chain rests on machine-checked algebra plus three textbook topology results (ko cohomology~, ass convergence~, abp splitting~).",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "All three bibkeys missing from CITATION_REGISTRY but are well-established textbook references.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Adams1974",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "citation",
+            "target": "BeaudryCampbell",
+            "link_state": "missing_target"
+          },
+          {
+            "kind": "citation",
+            "target": "ABP1967",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:conclusions:f4a76030",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "conclusions",
+        "quote_hash": "f4a76030",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusions",
+      "section_ordinal": 6,
+      "tex_line_start": 313,
+      "tex_line_end": 316,
+      "quote": "The same Mathlib infrastructure that formalizes modular forms for number theory directly constrains the SM generation count --- a bridge between pure mathematics and particle physics, machine-checked end to end.",
+      "quote_normalized": "the same mathlib infrastructure that formalizes modular forms for number theory directly constrains the sm generation count --- a bridge between pure mathematics and particle physics, machine-checked end to end.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Closing rhetorical metaclaim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper10_modular_generation:acknowledgments:d2c6aaa3",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "acknowledgments",
+        "quote_hash": "d2c6aaa3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 7,
+      "tex_line_start": 318,
+      "tex_line_end": 320,
+      "quote": "Lean~4 proofs verified by \\texttt{lake build} (v4.28.0, Mathlib \\texttt{8f9d9cff}).",
+      "quote_normalized": "lean~4 proofs verified by lake build (v4.28.0, mathlib 8f9d9cff).",
+      "type": "parameter",
+      "finding_classes": [
+        "TP"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_notes": "TP: paper claims 'v4.28.0' / Mathlib '8f9d9cff' but lean-toolchain says 'leanprover/lean4:v4.29.0' and lakefile.toml says rev='8850ed93863d6ce27210a673f9ed235a4e8a2994'. Both pin claims drift.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "lean-toolchain",
+            "computed_value": "leanprover/lean4:v4.29.0"
+          },
+          {
+            "kind": "parameter",
+            "target": "lakefile.toml mathlib rev",
+            "computed_value": "8850ed93"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:paper10_modular_generation:acknowledgments:ce92f4a9",
+      "raw_id_parts": {
+        "paper": "paper10_modular_generation",
+        "section_slug": "acknowledgments",
+        "quote_hash": "ce92f4a9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 7,
+      "tex_line_start": 320,
+      "tex_line_end": 321,
+      "quote": "Automated proofs by the Aristotle theorem prover (Harmonic).",
+      "quote_normalized": "automated proofs by the aristotle theorem prover (harmonic).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Tooling acknowledgment.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T07:46:12Z",
+      "gates_invoked": [
+        "Gate11_NarrativeAlignment"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     }
   ],
-
-  "theorem_refs": [
+  "non_reproducing_prior_findings": [
     {
-      "name": "WangBridge.lean (9 theorems, zero sorry)",
-      "in_lean": true,
-      "has_sorry": false,
-      "theorem_count_match": true,
-      "paper_count": 9,
-      "actual_count": 9,
-      "status": "PASS"
+      "prior_finding_id": "paper10_modular_invariance_4_sorry",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "ModularInvarianceConstraint.lean now has 0 sorry (prior finding claimed 4: zeta24_pow_24, zeta24_ne_one, zeta24_primitive, qParam_integer_invariant).",
+      "deterministic_recheck": {
+        "kind": "lake_sorry_grep",
+        "module": "ModularInvarianceConstraint",
+        "prior_value": 4,
+        "current_value": 0,
+        "command": "grep -c '^  sorry' lean/SKEFTHawking/ModularInvarianceConstraint.lean"
+      }
     },
     {
-      "name": "fermion_count_gives_central_charge (WangBridge.lean)",
-      "in_lean": true,
-      "has_sorry": false,
-      "status": "PASS",
-      "notes": "Line 73 of WangBridge.lean. Derives c_- = 8 from total_components_with_nu_R = 16."
+      "prior_finding_id": "paper10_framing_anomaly_constraint_sorry",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "framing_anomaly_constraint is now fully proved (module 0 sorry).",
+      "deterministic_recheck": {
+        "kind": "lean_deps_existence",
+        "target": "SKEFTHawking.framing_anomaly_constraint",
+        "prior_value": "has_sorry=True",
+        "current_value": "has_sorry=False (module 0 sorry)",
+        "command": "grep -c '^  sorry' lean/SKEFTHawking/ModularInvarianceConstraint.lean"
+      }
     },
     {
-      "name": "central_charge_fractional_without_nu_R (WangBridge.lean)",
-      "in_lean": true,
-      "has_sorry": false,
-      "status": "PASS",
-      "notes": "Line 109 of WangBridge.lean. Proves 15/2 is not a natural number."
+      "prior_finding_id": "paper10_abstract_zero_sorry_global",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current abstract no longer says 'zero sorry' globally; phrasing is now 'zero axioms in the generation constraint chain'. Prior finding's exact wording does not appear.",
+      "deterministic_recheck": null
     },
     {
-      "name": "wang_sixteen_convergence (WangBridge.lean)",
-      "in_lean": true,
-      "has_sorry": false,
-      "status": "PASS",
-      "notes": "Line 128. Referenced on paper line 197."
+      "prior_finding_id": "paper10_conclusions_all_zero_sorry",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Conclusions paragraph rewritten; no longer claims 'all with zero sorry' for the listed key modules. Independently, ModularInvarianceConstraint is now genuinely 0 sorry.",
+      "deterministic_recheck": {
+        "kind": "lake_sorry_grep",
+        "module": "ModularInvarianceConstraint",
+        "prior_value": 4,
+        "current_value": 0,
+        "command": "grep -c '^  sorry' lean/SKEFTHawking/ModularInvarianceConstraint.lean"
+      }
     },
     {
-      "name": "GenerationConstraint.lean (13 theorems, zero sorry)",
-      "in_lean": true,
-      "has_sorry": false,
-      "theorem_count_match": true,
-      "paper_count": 13,
-      "actual_count": 13,
-      "status": "PASS",
-      "notes": "Paper does not state theorem count but Inventory Index confirms 13."
+      "prior_finding_id": "paper10_first_formal_derivation_qualifier",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Underlying technical reason (4 sorry in modular chain) now resolved; the 'first formal derivation' claim no longer needs the 'modulo 4 pending lemmas' qualifier.",
+      "deterministic_recheck": null
     },
     {
-      "name": "generation_mod3_constraint (Aristotle a1dfcbde)",
-      "in_lean": true,
-      "has_sorry": false,
-      "aristotle": "a1dfcbde",
-      "status": "PASS",
-      "notes": "Line 77 of GenerationConstraint.lean. Confirmed in ARISTOTLE_THEOREMS."
+      "prior_finding_id": "paper10_complex_exp_pending_aristotle",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Current draft no longer contains 'complex exponential identities pending Aristotle' parenthetical; sentence rewritten (a new IA finding now applies for wrong Aristotle ID b54f9611).",
+      "deterministic_recheck": null
     },
     {
-      "name": "SMFermionData.lean",
-      "in_lean": true,
-      "has_sorry": false,
-      "actual_count": 19,
-      "status": "PASS",
-      "notes": "Referenced on paper line 97 via SMFermionData.total_components_with_nu_R."
+      "prior_finding_id": "paper10_citation_missing_Stolz1993",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Stolz1993 no longer appears in paper bibliography (orphan removed).",
+      "deterministic_recheck": {
+        "kind": "tex_grep",
+        "bibkey": "Stolz1993",
+        "prior_value": "in_bibliography",
+        "current_value": "absent",
+        "command": "grep -n 'Stolz1993' papers/paper10_modular_generation/paper_draft.tex"
+      }
     },
     {
-      "name": "ModularInvarianceConstraint.lean (12 theorems)",
-      "in_lean": true,
-      "has_sorry": true,
-      "theorem_count_match": true,
-      "paper_count": 12,
-      "actual_count": 12,
-      "sorry_count": 4,
-      "status": "FAIL",
-      "notes": "Paper lines 219-225 lists ModularInvarianceConstraint.lean among 'key modules---all with zero sorry'. This is FALSE. The module has 4 theorems with sorry: zeta24_pow_24 (line 50), zeta24_ne_one (line 59), zeta24_primitive (line 69), qParam_integer_invariant (line 99). Additionally, framing_anomaly_constraint (line 115) has 2 sorry branches in its proof. Paper line 225 does note 'complex exponential identities pending Aristotle' but this contradicts the 'all with zero sorry' framing."
+      "prior_finding_id": "paper10_citation_missing_Kitaev2009",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Kitaev2009 is now present in CITATION_REGISTRY.",
+      "deterministic_recheck": {
+        "kind": "citation_registry_lookup",
+        "bibkey": "Kitaev2009",
+        "prior_value": "missing",
+        "current_value": "present",
+        "command": "uv run python -c \"from src.core.citations import CITATION_REGISTRY; print('Kitaev2009' in CITATION_REGISTRY)\""
+      }
     },
     {
-      "name": "qParam_shift (ModularInvarianceConstraint.lean)",
-      "in_lean": true,
-      "has_sorry": false,
-      "status": "PASS",
-      "notes": "Line 84. Proved using Complex.exp_add + ring. Paper correctly notes this is proved (line 167)."
+      "prior_finding_id": "paper10_not_in_paper_dependencies",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper 10 still not in PAPER_DEPENDENCIES per provenance.py. This remains a non-blocking infrastructure follow-up.",
+      "deterministic_recheck": null
     },
     {
-      "name": "framing_anomaly_constraint (ModularInvarianceConstraint.lean)",
-      "in_lean": true,
-      "has_sorry": true,
-      "status": "FAIL",
-      "notes": "Line 115. Both directions of the biconditional have sorry. Paper line 169 claims it 'proves 24|c <=> e^{2pi i c/24}=1' but the proof is incomplete."
+      "prior_finding_id": "paper10_inventory_paper_count",
+      "prior_run_date": "2026-04-04T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Inventory Index paper count check is out of scope of agent v2 sentence walk; flag for human ratification.",
+      "deterministic_recheck": null
     }
   ],
-
-  "parameter_provenance": [
-    {
-      "key": "N/A",
-      "status": "PASS",
-      "notes": "Paper 10 has no experimental parameter dependencies. All claims are algebraic/number-theoretic. No BEC/polariton platform needed."
-    }
-  ],
-
-  "citation_integrity": [
-    {
-      "bibkey": "Wang2024",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. PRD 110, 125028 (2024), arXiv:2312.14928."
+  "summary": {
+    "total_sentences": 78,
+    "by_type": {
+      "metaclaim": 6,
+      "formal-claim": 18,
+      "numeric": 11,
+      "qualitative": 6,
+      "transition": 12,
+      "citation": 11,
+      "theorem-ref": 13,
+      "parameter": 1,
+      "methodology": 0
     },
-    {
-      "bibkey": "AlvarezGaumeWitten1984",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. NPB 234, 269 (1984)."
+    "by_verdict": {
+      "PASS": 55,
+      "FAIL": 4,
+      "INFO": 6,
+      "TRANSITION": 12,
+      "WARN": 1,
+      "UNGROUNDED": 0
     },
-    {
-      "bibkey": "GarciaEtxebarria2019",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. JHEP 08, 003 (2019)."
+    "by_finding_class": {
+      "IA": 3,
+      "TP": 1,
+      "SD": 0,
+      "TN": 0,
+      "HD": 4
     },
-    {
-      "bibkey": "Rademacher1973",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. Rademacher, Topics in Analytic Number Theory (Springer, 1973). Book reference."
-    },
-    {
-      "bibkey": "GrossJackiw1972",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. PRD 6, 477 (1972)."
-    },
-    {
-      "bibkey": "Rokhlin1952",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. Dokl. Akad. Nauk SSSR 84, 221 (1952)."
-    },
-    {
-      "bibkey": "Kitaev2009",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. AIP Conf. Proc. 1134, 22 (2009)."
-    },
-    {
-      "bibkey": "Stolz1993",
-      "in_registry": false,
-      "doi_verified": false,
-      "status": "WARN",
-      "notes": "Not in CITATION_REGISTRY. Math. Ann. 296, 685 (1993). Cited in bibliography but never \\cite'd in paper text."
-    }
-  ],
-
-  "qualitative_claims": [
-    {
-      "claim": "First formal derivation connecting number-theoretic modular invariance to a Standard Model constraint (abstract, conclusions)",
-      "support": "WangBridge.lean (c_-=8 from fermion content), GenerationConstraint.lean (24|8N_f => 3|N_f, Aristotle proved), ModularInvarianceConstraint.lean (eta transformation, q-parameter shift proved). Chain is formalized though 4 sorry remain in complex exponential lemmas.",
-      "status": "WARN",
-      "notes": "The derivation chain is substantially formalized but not fully complete: 4 sorry gaps in ModularInvarianceConstraint.lean mean the eta->24->constraint chain has unproved links. The 'first formal derivation' claim should be qualified with 'modulo 4 pending complex exponential lemmas'."
-    },
-    {
-      "claim": "Without nu_R, c_- = 15/2 is fractional -- a formally verified independent argument for nu_R (Sec 2.2)",
-      "support": "Lean theorem central_charge_fractional_without_nu_R in WangBridge.lean (proved, zero sorry). formulas.py wang_bridge_central_charge(15) returns 7.5.",
-      "status": "PASS"
-    },
-    {
-      "claim": "The coefficient 8 in c_- = 8 N_f is derived from the SM's 16 Weyl fermion components, not a free parameter (abstract, Sec 2.1)",
-      "support": "Lean: fermion_count_gives_central_charge derives c_- = 8 from total_components_with_nu_R = 16. The coefficient is computed, not axiomatized.",
-      "status": "PASS"
-    },
-    {
-      "claim": "The 24 traces to zeta regularization zeta(-1) = -1/12 (Sec 3.1, line 132-134)",
-      "support": "Standard CFT result: Casimir energy E_0 = -c/24, arising from regularized sum 1+2+3+... = -1/12. Well-established physics; Lean formalization records the q^{1/24} prefactor.",
-      "status": "PASS",
-      "notes": "Physics claim, not numerically verifiable from pipeline. Standard textbook result."
-    },
-    {
-      "claim": "The factorization 24 = 8 x 3 encodes both ingredients (Sec 3.2, line 162-164)",
-      "support": "Lean: twenty_four_origin (24 = 8*3) and twenty_four_decomposition (24 = 8*3 and Coprime 8 3). Both proved.",
-      "status": "PASS"
-    },
-    {
-      "claim": "T-transformation phase cycles through cube roots of unity (Fig 1 caption, line 155-156)",
-      "support": "Phase = e^{2pi i * 8N_f/24} = e^{2pi i N_f/3}. For N_f=0: 1, N_f=1: omega, N_f=2: omega^2, N_f=3: 1. Correct.",
-      "status": "PASS"
-    },
-    {
-      "claim": "'16 convergence': number 16 appears in 4 independent areas (Sec 4)",
-      "support": "Lean: wang_sixteen_convergence in WangBridge.lean records SM Weyl count = Z16 modulus.",
-      "status": "PASS",
-      "notes": "Qualitative claim about conceptual connections, well-supported by formal verification."
-    }
-  ],
-
-  "project_level_counts": [
-    {
-      "location": "Abstract line 31: '936 theorems + 2 axioms across 63 Lean 4 modules'",
-      "status": "PASS",
-      "notes": "Verified: 936 theorems, 2 axioms, 63 .lean files."
-    },
-    {
-      "location": "Abstract line 31-32: 'with zero sorry'",
-      "status": "FAIL",
-      "notes": "The abstract says '936 theorems + 2 axioms across 63 Lean 4 modules with zero sorry'. ModularInvarianceConstraint.lean has 4 theorems with sorry. The project is NOT zero-sorry. This is a global claim that is factually incorrect."
-    },
-    {
-      "location": "Conclusions line 218-219: '936 theorems + 2 axioms across 63 Lean 4 modules. The key modules---all with zero sorry'",
-      "status": "FAIL",
-      "notes": "ModularInvarianceConstraint.lean is listed as a 'key module' on line 224 but has 4 sorry. The 'all with zero sorry' claim is false for this module."
-    },
-    {
-      "location": "Conclusions line 224-225: 'ModularInvarianceConstraint.lean (framing anomaly: q-parameter shift proved, complex exponential identities pending Aristotle)'",
-      "status": "WARN",
-      "notes": "The parenthetical correctly notes some identities are 'pending Aristotle', but this contradicts the overarching 'all with zero sorry' claim on line 219. The sentence structure is misleading."
-    }
-  ],
-
-  "infrastructure_issues": [
-    {
-      "issue": "Paper 10 not in PAPER_DEPENDENCIES (provenance.py)",
-      "status": "WARN",
-      "notes": "Paper 10 should be added to PAPER_DEPENDENCIES."
-    },
-    {
-      "issue": "All 8 citations missing from CITATION_REGISTRY (citations.py)",
-      "status": "WARN",
-      "notes": "Wang2024, AlvarezGaumeWitten1984, GarciaEtxebarria2019, Rademacher1973, GrossJackiw1972, Rokhlin1952, Kitaev2009, Stolz1993 -- all absent."
-    },
-    {
-      "issue": "Stolz1993 in bibliography but never \\cite'd in text",
-      "status": "WARN",
-      "notes": "Orphan bibliography entry. Either cite it or remove it."
-    },
-    {
-      "issue": "Inventory Index says 9 papers but 10 exist (Paper 10 not counted)",
-      "status": "WARN",
-      "notes": "Inventory Index line 24 says 'Papers: 9' but paper10_modular_generation exists."
-    }
-  ],
-
-  "summary": "3 FAIL, 13 WARN, 24 PASS",
+    "non_reproducing_count": 10,
+    "non_reproducing_auto_closed": 4,
+    "non_reproducing_candidates": 6,
+    "agent_text": "78 sentences | 55 PASS | 4 FAIL | 1 WARN | 6 INFO | 12 TRANSITION | 6 prior candidate | 4 prior auto-closed"
+  },
   "blocking_issues": [
-    "Abstract claims 'zero sorry' globally -- FALSE. ModularInvarianceConstraint.lean has 4 sorry theorems. Fix: either add 'except 4 pending in ModularInvarianceConstraint' or wait for Aristotle to fill them.",
-    "Conclusions line 219 claims 'key modules---all with zero sorry' but lists ModularInvarianceConstraint.lean which has 4 sorry. Fix: either exclude it from the 'zero sorry' claim or note the 4 pending sorry explicitly.",
-    "framing_anomaly_constraint claimed as proved (line 169) but both directions have sorry. Fix: say 'stated and partially proved' or 'proof pending Aristotle'."
+    {
+      "id": "block:1",
+      "summary": "Internal arithmetic / count drift: '130 modules' (actual 170) and wrong Aristotle ID attribution for ModularInvarianceConstraint (b54f9611 actually maps to z16_anomaly_without_nu_R in RokhlinBridge).",
+      "sentences": [
+        "sentence:paper10_modular_generation:abstract:3d9b324e",
+        "sentence:paper10_modular_generation:conclusions:ccdf6932",
+        "sentence:paper10_modular_generation:conclusions:366a5858"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "Toolchain pin drift: paper acknowledgment says Lean v4.28.0 / Mathlib 8f9d9cff; current pins are v4.29.0 / 8850ed93.",
+      "sentences": [
+        "sentence:paper10_modular_generation:acknowledgments:d2c6aaa3"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TP"
+    }
   ],
-  "non_blocking_issues": [
-    "All 8 bibliography entries missing from CITATION_REGISTRY -- blocks submission per CHECK 15.",
-    "Paper not in PAPER_DEPENDENCIES -- blocks provenance tracking.",
-    "Stolz1993 in bibliography but never \\cite'd in text.",
-    "Inventory Index paper count (9) does not include Paper 10.",
-    "'First formal derivation' claim should be qualified given 4 sorry in the modular invariance chain."
+  "non_blocking_followups": [
+    {
+      "id": "nb:1",
+      "summary": "Several bibliography entries (Wang2024, AlvarezGaumeWitten1984, GarciaEtxebarria2019, Rademacher1973, GrossJackiw1972, Rokhlin1952, FidkowskiKitaev2010, Adams1974, BeaudryCampbell, ABP1967, diFrancesco1997) are absent from CITATION_REGISTRY. Submission gate per CHECK 15.",
+      "gate": "Gate1_CitationIntegrity"
+    },
+    {
+      "id": "nb:2",
+      "summary": "Paper 10 is not registered in PAPER_DEPENDENCIES (src/core/provenance.py).",
+      "gate": "Gate9_NumericalFreshness"
+    }
   ]
 }

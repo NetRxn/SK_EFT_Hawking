@@ -1535,29 +1535,38 @@ CITATION_REGISTRY = {
     },
 
     # ────────────────────────────────────────────────────────────────
-    # Phase 5z Wave 2 (paper 21 majorana_rung) — pending WebFetch verification
-    # All entries `doi_verified: None`. Per feedback_citation_verification_required.md,
-    # these MUST be verified against primary sources via the Stage 13
-    # WebFetch round before paper 21 submission.
+    # Phase 5z Wave 2 (paper 21 majorana_rung) — verified 2026-04-25
+    # WebFetch round per feedback_citation_verification_required.md.
+    # Three corrections applied during the round (see individual notes):
+    #   - NuFit60: arXiv ID hallucinated (was 2601.14386, corrected to
+    #     2410.05380); author list missing two co-authors and contained one
+    #     spurious entry; title corrected.
+    #   - Davighi2023 → KawasakiYanagida2023: bibkey rename — arXiv:2304.10100
+    #     is by Kawasaki & Yanagida, NOT Davighi-Lohitsiri-Tasnak; published
+    #     JHEP 11 (2023) 106 (DOI added).
+    #   - Volovik2024Spinor: DOI corrected from 10.1134/S0021364024600293
+    #     (404) to 10.1134/S002136402460006X (per NASA ADS + CrossRef).
     # ────────────────────────────────────────────────────────────────
     'NuFit60': {
-        'authors': 'Esteban, I., Gonzalez-Garcia, M. C., Maltoni, M., Schwetz, T., Zhou, A.',
-        'title': 'NuFIT 6.0: Three-flavor neutrino oscillation analysis',
+        'authors': 'Esteban, I., Gonzalez-Garcia, M. C., Maltoni, M., Martinez-Soler, I., Pinheiro, J. P., Schwetz, T.',
+        'title': 'NuFit-6.0: Updated global analysis of three-flavor neutrino oscillations',
         'journal': 'JHEP',
         'volume': '12',
         'page': '216',
         'year': 2024,
         'doi': '10.1007/JHEP12(2024)216',
-        'arxiv': '2601.14386',
-        'doi_verified': None,
+        'arxiv': '2410.05380',
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'src/core/provenance.py'],
         'provides': [],
         'notes': 'NuFit-6.0 global three-flavor oscillation fit; source for '
                  'MAJORANA.DELTA_M_SQ_21 / DELTA_M_SQ_31 / THETA_12 / THETA_13 / '
-                 'THETA_23 / DELTA_CP. doi_verified pending Stage 13 WebFetch '
-                 'verification round (per feedback_citation_verification_required '
-                 'rule — never flip None → True without primary-source fetch).',
+                 'THETA_23 / DELTA_CP. Verified via CrossRef DOI lookup '
+                 '2026-04-25 (corrected: arXiv 2601.14386 was a hallucination — '
+                 'pointed to a different paper; correct ID is 2410.05380; '
+                 'authors corrected to add Martinez-Soler + Pinheiro and remove '
+                 'spurious Zhou; title corrected to match published version).',
     },
     'KamLANDZen800': {
         'authors': 'KamLAND-Zen Collaboration (Abe, S. et al.)',
@@ -1568,14 +1577,14 @@ CITATION_REGISTRY = {
         'year': 2024,
         'doi': '10.48550/arXiv.2406.11438',
         'arxiv': '2406.11438',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'src/core/provenance.py'],
         'provides': [],
         'notes': 'KamLAND-Zen 800 full-dataset 0νββ search. T_{1/2} > 3.8 × 10²⁶ '
                  'yr at 90% CL; m_ββ < 28-122 meV depending on NME. v2 March '
-                 '2026. Source for MAJORANA.M_BB_KAMLAND_ZEN_*. doi_verified '
-                 'pending Stage 13 round.',
+                 '2026. Source for MAJORANA.M_BB_KAMLAND_ZEN_*. Verified via '
+                 'arXiv abstract page 2026-04-25.',
     },
     'LEGEND1000': {
         'authors': 'LEGEND Collaboration (Abgrall, N. et al.)',
@@ -1586,14 +1595,15 @@ CITATION_REGISTRY = {
         'year': 2021,
         'doi': '10.48550/arXiv.2107.11462',
         'arxiv': '2107.11462',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'src/core/provenance.py'],
         'provides': [],
         'notes': 'LEGEND-1000 PCDR. Projected 99.7% CL discovery sensitivity '
                  'T_{1/2} = 1.3 × 10²⁸ yr; m_ββ = 9-21 meV reach. Covers full '
                  'inverted-ordering parameter space at 10 yr live time. '
-                 'Source for MAJORANA.M_BB_LEGEND_*. doi_verified pending Stage 13.',
+                 'Source for MAJORANA.M_BB_LEGEND_*. Verified via arXiv abstract '
+                 'page 2026-04-25.',
     },
     'MohapatraSmirnov2006': {
         'authors': 'Mohapatra, R. N., Smirnov, A. Y.',
@@ -1604,14 +1614,14 @@ CITATION_REGISTRY = {
         'year': 2006,
         'doi': '10.1146/annurev.nucl.56.080805.140534',
         'arxiv': 'hep-ph/0603118',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'src/core/provenance.py'],
         'provides': [],
         'notes': 'Canonical Type-I seesaw review. Source for the Wave-2 m_ν '
                  'band derivation (m_ν ~ y² v² / M_R) and the M_R = 10⁹-10¹⁵ '
-                 'GeV envelope. Cited in deep-research §2.2. doi_verified '
-                 'pending Stage 13.',
+                 'GeV envelope. Cited in deep-research §2.2. Verified via '
+                 'CrossRef DOI lookup 2026-04-25 (page range 569-628).',
     },
     'GarciaEtxebarriaMontero2019': {
         'authors': 'García-Etxebarria, I., Montero, M.',
@@ -1622,7 +1632,7 @@ CITATION_REGISTRY = {
         'year': 2019,
         'doi': '10.1007/JHEP08(2019)003',
         'arxiv': '1808.00009',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'src/core/provenance.py',
                     'lean/SKEFTHawking/Z16AnomalyComputation.lean'],
@@ -1630,7 +1640,7 @@ CITATION_REGISTRY = {
         'notes': 'Garcia-Etxebarria & Montero Dai-Freed anomaly framework: '
                  'sets ν_R = Z₁₆ charge +1, locks Embedding III\'s structural '
                  'choice. Source for MAJORANA.* Z₁₆ context and EW.N_F_WITH_NU_R. '
-                 'doi_verified pending Stage 13.',
+                 'Verified via CrossRef DOI lookup 2026-04-25.',
     },
     'WanWang2020': {
         'authors': 'Wan, Z., Wang, J.',
@@ -1641,27 +1651,31 @@ CITATION_REGISTRY = {
         'year': 2020,
         'doi': '10.1007/JHEP07(2020)062',
         'arxiv': '1910.14668',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Wan-Wang Ultra-Unification anomaly tower: 15 ≡ -1 mod 16 per '
-                 'no-ν_R generation. doi_verified pending Stage 13.',
+                 'no-ν_R generation. Verified via CrossRef DOI lookup 2026-04-25.',
     },
-    'Davighi2023': {
-        'authors': 'Davighi, J., Lohitsiri, N., Tasnak, R.',
+    'KawasakiYanagida2023': {
+        'authors': 'Kawasaki, M., Yanagida, T. T.',
         'title': 'Dai-Freed anomaly in the standard model and topological inflation',
-        'journal': 'arXiv',
-        'volume': None,
-        'page': None,
+        'journal': 'JHEP',
+        'volume': '11',
+        'page': '106',
         'year': 2023,
-        'doi': '10.48550/arXiv.2304.10100',
+        'doi': '10.1007/JHEP11(2023)106',
         'arxiv': '2304.10100',
-        'doi_verified': None,
-        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
+        'doi_verified': True,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'src/core/provenance.py'],
         'provides': [],
-        'notes': 'Davighi et al. Dai-Freed-anomaly + topological inflation. '
+        'notes': 'Kawasaki & Yanagida Dai-Freed-anomaly + topological inflation. '
                  'Embedding III phenomenology consistent with reheating ~10⁸ '
-                 'GeV. doi_verified pending Stage 13.',
+                 'GeV. Verified via arXiv abstract + NASA ADS + CrossRef '
+                 '2026-04-25 (corrected: prior bibkey "Davighi2023" was a '
+                 'hallucinated author attribution — arXiv 2304.10100 is by '
+                 'Kawasaki & Yanagida, published JHEP 11 (2023) 106).',
     },
     'Volovik2024Spinor': {
         'authors': 'Volovik, G. E.',
@@ -1670,16 +1684,18 @@ CITATION_REGISTRY = {
         'volume': 119,
         'page': 330,
         'year': 2024,
-        'doi': '10.1134/S0021364024600293',
+        'doi': '10.1134/S002136402460006X',
         'arxiv': '2312.09435',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Volovik 2024 fermionic-quartet/vestigial-gravity construction. '
                  'Establishes that ⟨ÊÊ⟩ and ⟨Ê⟩ vanish independently '
                  '(vestigial regime with phase diagram). Cited as motivation '
                  'for WAVE2-OPEN-1 substrate-bridge tracked-hypothesis. '
-                 'doi_verified pending Stage 13.',
+                 'Verified via NASA ADS + CrossRef 2026-04-25 (corrected DOI: '
+                 'prior 10.1134/S0021364024600293 was a 404; correct DOI is '
+                 '10.1134/S002136402460006X).',
     },
     'TooBySmithHepLean': {
         'authors': 'Tooby-Smith, J.',
@@ -1690,30 +1706,33 @@ CITATION_REGISTRY = {
         'year': 2025,
         'doi': '10.1016/j.cpc.2024.109457',
         'arxiv': '2405.08863',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'lean/SKEFTHawking/NeutrinoMixing.lean'],
         'provides': [],
         'notes': 'HepLean reference: source for the CKMMatrix structure-note '
-                 'idiom mirrored by NeutrinoMixing.PMNSMatrix. doi_verified '
-                 'pending Stage 13.',
+                 'idiom mirrored by NeutrinoMixing.PMNSMatrix. Verified via '
+                 'CrossRef DOI lookup 2026-04-25.',
     },
 
     # ────────────────────────────────────────────────────────────────
-    # Phase 5z Wave 2b — strengthening citations
-    # All entries `doi_verified: None`. WebFetch verification deferred
-    # to Stage 13 paper-21 round per feedback_citation_verification_required.
+    # Phase 5z Wave 2b — strengthening citations (verified 2026-04-25)
+    # One correction applied:
+    #   - AntuschKingmanLindnerWetterich2003 → AntuschKerstenLindnerRatz2003:
+    #     bibkey rename — actual authors of arXiv:hep-ph/0211385 are Antusch,
+    #     Kersten, Lindner, Ratz (NOT Kingman/Wetterich, which were
+    #     hallucinated). Journal-ref Nucl.Phys.B658:203-216 (2003) confirmed.
     # ────────────────────────────────────────────────────────────────
-    'AntuschKingmanLindnerWetterich2003': {
-        'authors': 'Antusch, S., Kingman, J., Lindner, M., Wetterich, C.',
-        'title': 'Dynamical electroweak symmetry breaking by a neutrino condensate',
+    'AntuschKerstenLindnerRatz2003': {
+        'authors': 'Antusch, S., Kersten, J., Lindner, M., Ratz, M.',
+        'title': 'Dynamical Electroweak Symmetry Breaking by a Neutrino Condensate',
         'journal': 'Nucl. Phys. B',
         'volume': 658,
         'page': 203,
         'year': 2003,
         'doi': '10.1016/S0550-3213(03)00188-3',
         'arxiv': 'hep-ph/0211385',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'lean/SKEFTHawking/MajoranaRung.lean'],
         'provides': [],
@@ -1721,7 +1740,11 @@ CITATION_REGISTRY = {
                  'coupled Dirac-Majorana NJL gap equations with M_R as '
                  'external input + supercritical bifurcation. Cited '
                  'verbatim in MajoranaRung §3a for the lepton-number-symmetry '
-                 'obstruction theorem. doi_verified pending Stage 13.',
+                 'obstruction theorem. Verified via arXiv abstract 2026-04-25 '
+                 '(corrected: prior bibkey "AntuschKingmanLindnerWetterich2003" '
+                 'had hallucinated authors — actual authors are Antusch, '
+                 'Kersten, Lindner, Ratz; journal-ref Nucl.Phys.B658:203-216 '
+                 'confirmed).',
     },
     'AppelquistCarazzone1975': {
         'authors': 'Appelquist, T., Carazzone, J.',
@@ -1732,31 +1755,32 @@ CITATION_REGISTRY = {
         'year': 1975,
         'doi': '10.1103/PhysRevD.11.2856',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
         'provides': [],
         'notes': 'Original Appelquist-Carazzone decoupling theorem. Source '
                  'for Wave 2b WAVE2-OPEN-5 quantitative bound encoding via '
-                 'DecouplingRegime + H_DecouplingBoundDim6. doi_verified '
-                 'pending Stage 13.',
+                 'DecouplingRegime + H_DecouplingBoundDim6. Verified via '
+                 'CrossRef DOI lookup 2026-04-25 (page range 2856-2861).',
     },
     'BallThorne1994': {
         'authors': 'Ball, R. D., Thorne, R. S.',
-        'title': 'The decoupling theorem in effective scalar field theory',
-        'journal': 'arXiv',
-        'volume': None,
-        'page': None,
-        'year': 1994,
+        'title': 'The Decoupling Theorem in Effective Scalar Field Theory',
+        'journal': 'Ann. Phys.',
+        'volume': 241,
+        'page': 368,
+        'year': 1995,
         'doi': '10.48550/arXiv.hep-th/9404156',
         'arxiv': 'hep-th/9404156',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Wilsonian-EFT rigorous proof of AC decoupling with '
                  'explicit (E/M)^k bounds. Cited as the post-2000 sharper '
                  'AC version that the Wave 2b decoupling encoding follows. '
-                 'doi_verified pending Stage 13.',
+                 'Verified via arXiv abstract 2026-04-25 (journal-ref '
+                 'Ann.Phys.241:368-393, 1995; arXiv preprint April 1994).',
     },
     'GiudiceGrojeanPomarolRattazzi2007': {
         'authors': 'Giudice, G. F., Grojean, C., Pomarol, A., Rattazzi, R.',
@@ -1767,31 +1791,32 @@ CITATION_REGISTRY = {
         'year': 2007,
         'doi': '10.1088/1126-6708/2007/06/045',
         'arxiv': 'hep-ph/0703164',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
         'provides': [],
         'notes': 'SILH framework: source for naturalC = N_f / (16π²) '
                  'estimate adopted in MajoranaRungDecoupling.naturalC. '
-                 'doi_verified pending Stage 13.',
+                 'Verified via CrossRef DOI lookup 2026-04-25.',
     },
     'Hill2024Bilocal': {
         'authors': 'Hill, C. T.',
-        'title': 'Bilocal field theory for composite scalar bosons',
+        'title': 'Bilocal Field Theory for Composite Scalar Bosons',
         'journal': 'Entropy',
         'volume': 26,
         'page': 146,
         'year': 2024,
         'doi': '10.3390/e26020146',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
         'provides': [],
         'notes': 'Bilocal NJL form-factor analysis: source for the bound-'
                  'state coefficient form used in Wave 2b naturalC. Verifies '
                  'the SILH counting C ~ N_f / (16π²) for ADW-style four-'
-                 'fermion substrates. doi_verified pending Stage 13.',
+                 'fermion substrates. Verified via CrossRef DOI lookup '
+                 '2026-04-25.',
     },
     'CiriglianoMasterFormula2018': {
         'authors': 'Cirigliano, V., Dekens, W., de Vries, J., Graesser, M. L., Mereghetti, E.',
@@ -1802,14 +1827,14 @@ CITATION_REGISTRY = {
         'year': 2018,
         'doi': '10.1007/JHEP12(2018)097',
         'arxiv': '1806.02780',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'SMEFT master formula for 0νββ: rigorous EFT chain LNV → '
                  'SMEFT → LEFT → χEFT → nuclear ME. Cited in Wave 2b '
                  'paper 21 §6 as the canonical reference for the '
-                 'embedding-agnostic m_ββ phenomenology. doi_verified '
-                 'pending Stage 13.',
+                 'embedding-agnostic m_ββ phenomenology. Verified via '
+                 'CrossRef DOI lookup 2026-04-25.',
     },
 }
 

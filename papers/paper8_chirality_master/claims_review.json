@@ -1,288 +1,2016 @@
 {
-  "review_metadata": {
-    "paper": "paper8_chirality_master/paper_draft.tex",
-    "reviewer": "claims-reviewer (Claude Opus 4.6)",
-    "date": "2026-04-03",
-    "overall_status": "PASS with minor warnings"
-  },
-  "claims": [
+  "paper": "paper8_chirality_master",
+  "review_date": "2026-04-25T18:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+  "sentences": [
     {
-      "id": "C1",
-      "claim": "748 theorems + 3 axioms",
-      "location": "Abstract (line 39), Introduction (line 103), Table 1 (line 417), Conclusion (line 470)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' across 49 Lean modules yields exactly 748. grep '^lemma ' yields 1 additional (two_pi_pos in LatticeHamiltonian.lean), not counted as a 'theorem'. grep '^axiom ' yields exactly 3: z16_classification (Z16Classification.lean), gs_nogo_axiom (GoltermanShamir.lean), non_abelian_center_discrete (GaugeErasure.lean)."
+      "id": "sentence:paper8_chirality_master:abstract:a3dd5a70",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "a3dd5a70",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 41,
+      "quote": "We present the first formal verification survey of the lattice chirality problem---the obstruction to placing chiral fermions on a lattice with the correct continuum limit. The formalization in Lean~4 with Mathlib comprises 968~theorems (zero axioms) across 66~modules (zero \\texttt{sorry} in main modules), of which 273~are proved by the Aristotle automated theorem prover.",
+      "quote_normalized": "we present the first formal verification survey of the lattice chirality problem---the obstruction to placing chiral fermions on a lattice with the correct continuum limit. the formalization in lean~4 with mathlib comprises 968~theorems (zero axioms) across 66~modules (zero sorry in main modules), of which 273~are proved by the aristotle automated theorem prover.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gapped_interface_axiom"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "IA: abstract claims '968 theorems (zero axioms) across 66 modules ... 273 Aristotle' — current grep yields 2578 theorems, 1 axiom (gapped_interface_axiom), 170 modules, ARISTOTLE_PROVED_COUNT=322. Also internally inconsistent with paper's own Introduction (line 103: '2237+ theorems, 1 axiom, 130 modules, 322+ Aristotle'). FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C2",
-      "claim": "49 modules",
-      "location": "Abstract (line 39), Introduction (line 103), Figure 5 caption (line 392)",
-      "status": "PASS",
-      "evidence": "Glob of lean/SKEFTHawking/*.lean returns exactly 49 files."
+      "id": "sentence:paper8_chirality_master:abstract:f4e7c8b9",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "f4e7c8b9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 41,
+      "quote": "The work is organized around three complementary pillars.",
+      "quote_normalized": "the work is organized around three complementary pillars.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Structural connector; no extractable claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C3",
-      "claim": "252 Aristotle-proved theorems",
-      "location": "Abstract (line 40), Introduction (line 104)",
-      "status": "PASS",
-      "evidence": "constants.py line 1094-1095: ARISTOTLE_PROVED_COUNT = len(ARISTOTLE_THEOREMS) with assert == 252. The ARISTOTLE_THEOREMS dict contains 252 entries."
+      "id": "sentence:paper8_chirality_master:abstract:a920b575",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "a920b575",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 43,
+      "tex_line_end": 46,
+      "quote": "\\textbf{Pillar~1 (No-Go):} The nine conditions of the Golterman-Shamir theorem are formalized as substantive propositions; five are shown violated by the Thorngren-Preskill-Fidkowski construction, establishing that the two frameworks operate in different mathematical regimes.",
+      "quote_normalized": "pillar~1 (no-go): the nine conditions of the golterman-shamir theorem are formalized as substantive propositions; five are shown violated by the thorngren-preskill-fidkowski construction, establishing that the two frameworks operate in different mathematical regimes.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TPFEvasion.tpf_outside_gs_scope_main"
+          },
+          {
+            "kind": "citation",
+            "target": "GoltermanShamir2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "tpf_outside_gs_scope_main exists in lean_deps.json (TPFEvasion module). 'Five conditions violated' is the structural conjunction surfaced by potential_violation_count = 5 in TPFEvasion.lean (recorded WARN in v1 review, kept here for prose-walk).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C4",
-      "claim": "zero sorry",
-      "location": "Abstract (line 39), Table 1 (line 417), Conclusion (line 470)",
-      "status": "PASS",
-      "evidence": "grep '^\\s*sorry' across all 49 Lean modules returns 0 matches. All occurrences of 'sorry' in files are inside comments (-- or /- -/) only."
+      "id": "sentence:paper8_chirality_master:abstract:85ba23ec",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "85ba23ec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 48,
+      "tex_line_end": 57,
+      "quote": "\\textbf{Pillar~2 (Positive Construction):} The Gioia-Thorngren BdG Hamiltonian on a 3+1D lattice is formalized with Pauli matrix infrastructure, Wilson mass function, and Bogoliubov-de~Gennes Nambu structure. The central theorem $[H_{\\mathrm{BdG}}(\\mathbf{k}), q_A(\\mathbf{k})] = 0$---exact chiral symmetry---is machine-verified at each momentum via a 2$\\times$2 trigonometric identity ($\\sin^2 + \\cos^2 = 1$). The chiral charge is proved non-on-site (range $R=1$) and non-compact (eigenvalues $\\pm\\cos(p_3/2)$), violating exactly the Golterman-Shamir conditions identified in Pillar~1. This is the first formal verification of a lattice chiral fermion construction in any proof assistant.",
+      "quote_normalized": "pillar~2 (positive construction): the gioia-thorngren bdg hamiltonian on a 3+1d lattice is formalized with pauli matrix infrastructure, wilson mass function, and bogoliubov-de~gennes nambu structure. the central theorem $[h_{bdg}(\\mathbf{k}), q_a(\\mathbf{k})] = 0$---exact chiral symmetry---is machine-verified at each momentum via a 2$\\times$2 trigonometric identity ($\\sin^2 + \\cos^2 = 1$). the chiral charge is proved non-on-site (range $r=1$) and non-compact (eigenvalues $\\pm\\cos(p_3/2)$), violating exactly the golterman-shamir conditions identified in pillar~1. this is the first formal verification of a lattice chiral fermion construction in any proof assistant.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_commutation_4x4"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_chiral_charge_non_on_site"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_chiral_charge_non_compact"
+          },
+          {
+            "kind": "citation",
+            "target": "GioiaTh2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "All three theorem refs exist in lean_deps.json. 'First formal verification' is a priority claim — outside structural verification scope; reproduces v1 WARN as candidate-for-supersession (LLM-judgment).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C5",
-      "claim": "gt_commutation_4x4 theorem exists and proves [H_BdG, q_A] = 0",
-      "location": "Theorem box (line 248-254), Section 2.4 (line 244-246)",
-      "status": "PASS",
-      "evidence": "GTCommutation.lean line 71: 'theorem gt_commutation_4x4 (r : R) (p1 p2 p3 : R) : H_BdG r p1 p2 p3 * q_A p3 - q_A p3 * H_BdG r p1 p2 p3 = 0'. Fully proved, no sorry."
+      "id": "sentence:paper8_chirality_master:abstract:e8c6630f",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "e8c6630f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 59,
+      "tex_line_end": 67,
+      "quote": "\\textbf{Pillar~3 (Algebraic Framework):} The Onsager algebra (first formalization in any proof assistant) is defined via the Dolan-Grady presentation, with the Davies isomorphism, Chevalley embedding into $L(\\mathfrak{sl}_2)$, and In\\\"on\\\"u-Wigner contraction to $\\mathfrak{su}(2)$ encoding the Witten anomaly on the lattice. The $\\mathbb{Z}_{16}$ classification of Pin$^+$ bordism is axiomatized, with the A(1) Steenrod subalgebra computation partially discharging the axiom.",
+      "quote_normalized": "pillar~3 (algebraic framework): the onsager algebra (first formalization in any proof assistant) is defined via the dolan-grady presentation, with the davies isomorphism, chevalley embedding into $l(\\mathfrak{sl}_2)$, and in\\\"on\\\"u-wigner contraction to $\\mathfrak{su}(2)$ encoding the witten anomaly on the lattice. the $\\mathbb{z}_{16}$ classification of pin$^+$ bordism is axiomatized, with the a(1) steenrod subalgebra computation partially discharging the axiom.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.contraction_rescaling"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.dolan_grady_coeff_eq"
+          },
+          {
+            "kind": "citation",
+            "target": "DolanGrady1982"
+          },
+          {
+            "kind": "citation",
+            "target": "Davies1990"
+          },
+          {
+            "kind": "citation",
+            "target": "InonuWigner1953"
+          },
+          {
+            "kind": "citation",
+            "target": "FreedHopkins2021"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "IA: 'Z16 classification of Pin+ bordism is axiomatized' is stale — Z16Classification.lean now has 22 theorems and zero axioms (axiom count grep returns 0); paper's table caption (line 421-426) acknowledges this conversion. Abstract still says 'axiomatized'. FAIL on internal-arithmetic drift between abstract and table caption.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C6",
-      "claim": "wilson_mass_zero_iff_cos_eq_one exists in WilsonMass.lean",
-      "location": "Section 2.2 (lines 186-196)",
-      "status": "PASS",
-      "evidence": "WilsonMass.lean line 74: 'theorem wilson_mass_zero_iff_cos_eq_one (kx ky kz : R) : wilsonMass kx ky kz = 0 <-> cos kx = 1 /\\ cos ky = 1 /\\ cos kz = 1'. Fully proved."
+      "id": "sentence:paper8_chirality_master:abstract:e02337cf",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "e02337cf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 67,
+      "tex_line_end": 68,
+      "quote": "Bridge theorems connect the Witten $\\mathbb{Z}_2$ anomaly (element $8 \\in \\mathbb{Z}_{16}$) to the Onsager contraction and the Gioia-Thorngren Weyl doublet.",
+      "quote_normalized": "bridge theorems connect the witten $\\mathbb{z}_2$ anomaly (element $8 \\in \\mathbb{z}_{16}$) to the onsager contraction and the gioia-thorngren weyl doublet.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Witten1982"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Bridge theorems exist in ChiralityWallMaster.lean (16 theorems present); 8 ∈ Z_16 as unique order-2 element is structural arithmetic.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C7",
-      "claim": "tpf_outside_gs_scope_main exists in TPFEvasion.lean",
-      "location": "Section 1.2 (lines 149-152)",
-      "status": "PASS",
-      "evidence": "TPFEvasion.lean line 149: 'theorem tpf_outside_gs_scope_main'. Proves conjunction of I3 violation, Z infinite, C1 violation, extra-dim, and nogo-fails."
+      "id": "sentence:paper8_chirality_master:abstract:4425dba2",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "abstract",
+        "quote_hash": "4425dba2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 69,
+      "tex_line_end": 71,
+      "quote": "A master synthesis theorem assembles all three pillars with explicit bridge connections, providing a complete machine-checked map of what is proved, what is axiomatized, and what remains open in the chirality wall problem.",
+      "quote_normalized": "a master synthesis theorem assembles all three pillars with explicit bridge connections, providing a complete machine-checked map of what is proved, what is axiomatized, and what remains open in the chirality wall problem.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Synthesis claim — no extractable structural assertion beyond pillar bridge existence (covered above).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C8",
-      "claim": "Aristotle run ID 18969de2 for GTCommutation.lean",
-      "location": "Section 2.4 (line 246)",
-      "status": "PASS",
-      "evidence": "constants.py lines 1089-1091: gt_tau_commutator_vanishes, gt_commutation_4x4, gt_chiral_charge_non_compact all mapped to run '18969de2'."
+      "id": "sentence:paper8_chirality_master:introduction:9d41afe8",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "introduction",
+        "quote_hash": "9d41afe8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 80,
+      "tex_line_end": 87,
+      "quote": "The question of whether chiral gauge theories---and in particular the Standard Model---can be consistently formulated on a lattice has resisted solution for over four decades. The Nielsen-Ninomiya theorem establishes that na\\\"ive lattice fermions with exact, on-site, quantized chiral symmetry necessarily produce equal numbers of left- and right-handed Weyl fermions.",
+      "quote_normalized": "the question of whether chiral gauge theories---and in particular the standard model---can be consistently formulated on a lattice has resisted solution for over four decades. the nielsen-ninomiya theorem establishes that na\\\"ive lattice fermions with exact, on-site, quantized chiral symmetry necessarily produce equal numbers of left- and right-handed weyl fermions.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Nielsen1981a"
+          },
+          {
+            "kind": "citation",
+            "target": "Nielsen1981b"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Citations Nielsen1981a / Nielsen1981b not present in CITATION_REGISTRY (citations.py). Bibliography entries exist but the registry-anchored chain is missing — Class IA-adjacent (citation-integrity).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C9",
-      "claim": "Aristotle run ID 90ed1a98 for PauliMatrices + WilsonMass + BdGHamiltonian",
-      "location": "Not explicitly cited in paper text, but in constants.py",
-      "status": "PASS",
-      "evidence": "constants.py lines 1074-1087: 14 theorems mapped to run '90ed1a98' covering sigma matrices, Wilson mass, and Kronecker identity."
+      "id": "sentence:paper8_chirality_master:introduction:5bed0845",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "introduction",
+        "quote_hash": "5bed0845",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 87,
+      "tex_line_end": 88,
+      "quote": "Circumventing this ``chirality wall'' is a prerequisite for non-perturbative lattice formulations of the Standard Model.",
+      "quote_normalized": "circumventing this ``chirality wall'' is a prerequisite for non-perturbative lattice formulations of the standard model.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Standard motivational framing; not a structural claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C10",
-      "claim": "Aristotle run ID 36b7796f for OnsagerContraction.lean",
-      "location": "Section 3.2 (line 325)",
-      "status": "PASS",
-      "evidence": "constants.py line 1072: contraction_rescaling mapped to run '36b7796f'."
+      "id": "sentence:paper8_chirality_master:introduction:e010e470",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "introduction",
+        "quote_hash": "e010e470",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 89,
+      "tex_line_end": 99,
+      "quote": "Three recent developments have transformed the landscape. First, Golterman and Shamir systematized the no-go into nine explicit conditions, under which any lattice Hamiltonian yields a vector-like spectrum. Second, Gioia and Thorngren constructed explicit 3+1D lattice Hamiltonians with exact chiral symmetry, evading Nielsen-Ninomiya by using non-on-site, non-compact charge operators. Third, Thorngren, Preskill, and Fidkowski showed that when 't~Hooft anomalies cancel, a constant-depth quantum circuit (symmetry disentangler) can make non-on-site symmetries on-site, enabling standard lattice gauging.",
+      "quote_normalized": "three recent developments have transformed the landscape. first, golterman and shamir systematized the no-go into nine explicit conditions, under which any lattice hamiltonian yields a vector-like spectrum. second, gioia and thorngren constructed explicit 3+1d lattice hamiltonians with exact chiral symmetry, evading nielsen-ninomiya by using non-on-site, non-compact charge operators. third, thorngren, preskill, and fidkowski showed that when 't~hooft anomalies cancel, a constant-depth quantum circuit (symmetry disentangler) can make non-on-site symmetries on-site, enabling standard lattice gauging.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GoltermanShamir2026"
+          },
+          {
+            "kind": "citation",
+            "target": "GioiaTh2026"
+          },
+          {
+            "kind": "citation",
+            "target": "TPF2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "GoltermanShamir2026 in CITATION_REGISTRY ✓. GioiaTh2026 and TPF2026 NOT in CITATION_REGISTRY — citation-integrity gap.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C11",
-      "claim": "GoltermanShamir.lean has 14 theorems",
-      "location": "Section 1.1 (line 140)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' GoltermanShamir.lean = 14."
+      "id": "sentence:paper8_chirality_master:introduction:b9a88134",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "introduction",
+        "quote_hash": "b9a88134",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 100,
+      "tex_line_end": 114,
+      "quote": "This paper presents a comprehensive formal verification of the chirality wall in the Lean~4 proof assistant with Mathlib. The formalization totals 2237+~theorems (1~axiom: \\texttt{gapped\\_interface\\_axiom}) across 130~Lean modules, of which 322+ are proved by the Aristotle automated theorem prover. Phase~2 (3+1D extension) adds \\texttt{GaugingStep.lean} (34~theorems: gauging obstruction, SMG phases, not-on-site symmetry formalization) and \\texttt{SPTClassification.lean} (15~theorems + 1~axiom: SPT phase types, gapped interface conjecture, conditional chiral gauge theorem).",
+      "quote_normalized": "this paper presents a comprehensive formal verification of the chirality wall in the lean~4 proof assistant with mathlib. the formalization totals 2237+~theorems (1~axiom: gapped\\_interface\\_axiom) across 130~lean modules, of which 322+ are proved by the aristotle automated theorem prover. phase~2 (3+1d extension) adds gaugingstep.lean (34~theorems: gauging obstruction, smg phases, not-on-site symmetry formalization) and sptclassification.lean (15~theorems + 1~axiom: spt phase types, gapped interface conjecture, conditional chiral gauge theorem).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gapped_interface_axiom"
+          },
+          {
+            "kind": "citation",
+            "target": "Aristotle2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "IA: '2237+ theorems' vs current 2578 (under-counts by 341). '130 Lean modules' vs current 170 (under-counts by 40). '322+ Aristotle' matches ARISTOTLE_PROVED_COUNT=322 ✓. 'GaugingStep.lean (34 theorems)' — actual grep yields 14 theorems (lemma+theorem grep also = 14). MAJOR drift. 'SPTClassification.lean (15 theorems + 1 axiom)' — actual grep yields 20 theorems and 1 axiom. The '1 axiom: gapped_interface_axiom' phrase IS correct (SPTClassification axiom matches). Aristotle2025 not in CITATION_REGISTRY (citation gap). FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C12",
-      "claim": "LatticeHamiltonian.lean has 28 theorems",
-      "location": "Section 1.1 (line 144)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' LatticeHamiltonian.lean = 28. (Also has 1 lemma, not counted.)"
+      "id": "sentence:paper8_chirality_master:introduction:1b5b065c",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "introduction",
+        "quote_hash": "1b5b065c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 109,
+      "tex_line_end": 114,
+      "quote": "The work is organized around three pillars: the no-go (Sec.~\\ref{sec:pillar1}), the positive construction (Sec.~\\ref{sec:pillar2}), and the algebraic framework (Sec.~\\ref{sec:pillar3}). Bridge theorems connecting the pillars are presented in Sec.~\\ref{sec:bridges}, and a master synthesis theorem is given in Sec.~\\ref{sec:master}.",
+      "quote_normalized": "the work is organized around three pillars: the no-go (sec.~), the positive construction (sec.~), and the algebraic framework (sec.~). bridge theorems connecting the pillars are presented in sec.~, and a master synthesis theorem is given in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Section roadmap; no extractable claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C13",
-      "claim": "TPFEvasion.lean has 12 theorems",
-      "location": "Section 1.2 (line 150)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' TPFEvasion.lean = 12."
+      "id": "sentence:paper8_chirality_master:pillar-1-the-golterman-shamir-no-go:cef6fe1c",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-1-the-golterman-shamir-no-go",
+        "quote_hash": "cef6fe1c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-1-the-golterman-shamir-no-go",
+      "section_ordinal": 3,
+      "tex_line_start": 121,
+      "tex_line_end": 127,
+      "quote": "The Golterman-Shamir theorem identifies nine conditions under which a lattice Hamiltonian $H$ on $\\mathbb{Z}^d$ with internal symmetry group $G$ necessarily produces a vector-like massless fermion spectrum (equal left- and right-handed Weyl counts):",
+      "quote_normalized": "the golterman-shamir theorem identifies nine conditions under which a lattice hamiltonian $h$ on $\\mathbb{z}^d$ with internal symmetry group $g$ necessarily produces a vector-like massless fermion spectrum (equal left- and right-handed weyl counts):",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GoltermanShamir2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "GoltermanShamir2026 registered in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C14",
-      "claim": "BdGHamiltonian.lean has 8 theorems",
-      "location": "Section 2.1 (line 181)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' BdGHamiltonian.lean = 8."
+      "id": "sentence:paper8_chirality_master:pillar-1-the-golterman-shamir-no-go:4a12ae6e",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-1-the-golterman-shamir-no-go",
+        "quote_hash": "4a12ae6e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-1-the-golterman-shamir-no-go",
+      "section_ordinal": 3,
+      "tex_line_start": 128,
+      "tex_line_end": 141,
+      "quote": "The nine GS conditions C1-C6 and I1-I3 (translation-invariance, Fock fermionic site, spectral gap, locality, unique GS, on-site/compact charges, Hermiticity, integer charge spectrum, interacting one-particle effective description).",
+      "quote_normalized": "the nine gs conditions c1-c6 and i1-i3 (translation-invariance, fock fermionic site, spectral gap, locality, unique gs, on-site/compact charges, hermiticity, integer charge spectrum, interacting one-particle effective description).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Itemized restatement of the nine conditions; structural enumeration with no extractable numeric verdict beyond cardinality 9.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C15",
-      "claim": "WilsonMass.lean has 11 theorems",
-      "location": "Section 2.2 (line 188)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' WilsonMass.lean = 11."
+      "id": "sentence:paper8_chirality_master:pillar-1-the-golterman-shamir-no-go:5ab5cd66",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-1-the-golterman-shamir-no-go",
+        "quote_hash": "5ab5cd66",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-1-the-golterman-shamir-no-go",
+      "section_ordinal": 3,
+      "tex_line_start": 142,
+      "tex_line_end": 148,
+      "quote": "In Lean~4, these are formalized as propositions in \\texttt{GoltermanShamir.lean} (14~theorems, zero \\texttt{sorry}). The key formal structures are \\texttt{LatticeHamiltonianData} (dimension $d$, bands $n$), \\texttt{TranslationInvariant}, \\texttt{FiniteRange}, and \\texttt{WeylSpectrum} (defined in \\texttt{LatticeHamiltonian.lean}, 28~theorems).",
+      "quote_normalized": "in lean~4, these are formalized as propositions in goltermanshamir.lean (14~theorems, zero sorry). the key formal structures are latticehamiltoniandata (dimension $d$, bands $n$), translationinvariant, finiterange, and weylspectrum (defined in latticehamiltonian.lean, 28~theorems).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "GoltermanShamir.lean theorem count = 14 (matches). LatticeHamiltonian.lean theorem count = 28 (matches). Sorry = 0 in both (only sorry in tree are inside comments). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C16",
-      "claim": "PauliMatrices.lean has 15 theorems",
-      "location": "Section 2.5 (line 288)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' PauliMatrices.lean = 15."
+      "id": "sentence:paper8_chirality_master:pillar-1-the-golterman-shamir-no-go:1a2ed7eb",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-1-the-golterman-shamir-no-go",
+        "quote_hash": "1a2ed7eb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-1-the-golterman-shamir-no-go",
+      "section_ordinal": 3,
+      "tex_line_start": 150,
+      "tex_line_end": 156,
+      "quote": "The TPF construction violates five of the nine conditions (C1, C2, I3, extra-dimensional, and C3 conditionally), as proved in \\texttt{TPFEvasion.lean} (12~theorems). The machine-checked conjunction \\texttt{tpf\\_outside\\_gs\\_scope\\_main} establishes that GS and TPF operate in genuinely different mathematical frameworks.",
+      "quote_normalized": "the tpf construction violates five of the nine conditions (c1, c2, i3, extra-dimensional, and c3 conditionally), as proved in tpfevasion.lean (12~theorems). the machine-checked conjunction tpf\\_outside\\_gs\\_scope\\_main establishes that gs and tpf operate in genuinely different mathematical frameworks.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TPFEvasion.tpf_outside_gs_scope_main"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "TPFEvasion.lean theorem count = 12 (matches). tpf_outside_gs_scope_main exists in lean_deps.json (TPFEvasion module). v1 review noted condition-label mismatch between paper text {C1,C2,I3,extra-dim,C3} and Lean's literal violations {I3,C1,extra-dim} — reproduces as candidate-for-supersession (LLM-judgment label-match).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C17",
-      "claim": "GTCommutation.lean has 10 theorems",
-      "location": "Section 2.4 (line 245)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' GTCommutation.lean = 10."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:7051d78e",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "7051d78e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 165,
+      "tex_line_end": 186,
+      "quote": "Gioia and Thorngren construct a single Weyl fermion via a modified Karsten-Wilczek Hamiltonian in the Bogoliubov-de~Gennes (Nambu) formalism. At each momentum $\\mathbf{k}$ on the discrete Brillouin zone $(\\mathrm{Fin}\\;L)^3$, the BdG Hamiltonian is a $4\\times4$ matrix in the tensor product $\\sigma$ (spin) $\\otimes$ $\\tau$ (Nambu): [eq:bdg] [eq:heff] with Wilson mass $W(\\mathbf{p}) = 2 - \\cos p_1 - \\cos p_2$ and Wilson parameter $r$. This is formalized in \\texttt{BdGHamiltonian.lean} (8~theorems).",
+      "quote_normalized": "gioia and thorngren construct a single weyl fermion via a modified karsten-wilczek hamiltonian in the bogoliubov-de~gennes (nambu) formalism. at each momentum $\\mathbf{k}$ on the discrete brillouin zone $(fin\\;l)^3$, the bdg hamiltonian is a $4\\times4$ matrix in the tensor product $\\sigma$ (spin) $\\otimes$ $\\tau$ (nambu): [eq:bdg] [eq:heff] with wilson mass $w(\\mathbf{p}) = 2 - \\cos p_1 - \\cos p_2$ and wilson parameter $r$. this is formalized in bdghamiltonian.lean (8~theorems).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GioiaTh2026"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "BdGHamiltonian.lean theorem count = 8 (matches). GioiaTh2026 NOT in CITATION_REGISTRY — citation-integrity caveat. WARN due to citation gap; structural count agrees.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C18",
-      "claim": "OnsagerAlgebra.lean has 24 theorems",
-      "location": "Section 3.1 (line 304)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' OnsagerAlgebra.lean = 24."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:a48de112",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "a48de112",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 188,
+      "tex_line_end": 200,
+      "quote": "The full Wilson mass $M(\\mathbf{k}) = 3 - \\cos k_x - \\cos k_y - \\cos k_z$ gaps all doubler fermions. The key property, proved in \\texttt{WilsonMass.lean} (11~theorems): [eq:wilson_zero] for all finite lattice sizes $L \\geq 1$. The proof uses $\\cos\\theta \\leq 1$ for all $\\theta$ (\\texttt{Real.cos\\_le\\_one}): the equation $\\cos k_x + \\cos k_y + \\cos k_z = 3$ forces each cosine to equal~1. This ensures exactly one massless Weyl node---a chiral, not vector-like, spectrum.",
+      "quote_normalized": "the full wilson mass $m(\\mathbf{k}) = 3 - \\cos k_x - \\cos k_y - \\cos k_z$ gaps all doubler fermions. the key property, proved in wilsonmass.lean (11~theorems): [eq:wilson_zero] for all finite lattice sizes $l \\geq 1$. the proof uses $\\cos\\theta \\leq 1$ for all $\\theta$ (real.cos\\_le\\_one): the equation $\\cos k_x + \\cos k_y + \\cos k_z = 3$ forces each cosine to equal~1. this ensures exactly one massless weyl node---a chiral, not vector-like, spectrum.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wilson_mass_zero_iff_cos_eq_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "WilsonMass.lean theorem count = 11 (matches). wilson_mass_zero_iff_cos_eq_one exists in lean_deps.json. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C19",
-      "claim": "OnsagerContraction.lean has 12 theorems",
-      "location": "Section 3.2 (line 317)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' OnsagerContraction.lean = 12."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:3df38a49",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "3df38a49",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 202,
+      "tex_line_end": 209,
+      "quote": "BdG band structure along the high-symmetry path $\\Gamma$--$X$--$M$--$\\Gamma$--$R$ for $r=1$. The single gapless point at $\\Gamma$ is the Weyl node; all doublers are gapped by the Wilson mass.",
+      "quote_normalized": "bdg band structure along the high-symmetry path $\\gamma$--$x$--$m$--$\\gamma$--$r$ for $r=1$. the single gapless point at $\\gamma$ is the weyl node; all doublers are gapped by the wilson mass.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Figure caption qualitatively interpreting band structure; consistent with Wilson mass uniqueness.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C20",
-      "claim": "Z16Classification.lean has 21 theorems + 1 axiom",
-      "location": "Section 3.3 (line 334)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' Z16Classification.lean = 21. grep '^axiom ' = 1 (z16_classification)."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:cd7a0283",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "cd7a0283",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 211,
+      "tex_line_end": 218,
+      "quote": "Wilson mass $M(k_x,k_y,0)$ on the $k_z=0$ plane of the Brillouin zone. The unique zero at $(0,0)$ marks the Weyl node. All other points have $M > 0$.",
+      "quote_normalized": "wilson mass $m(k_x,k_y,0)$ on the $k_z=0$ plane of the brillouin zone. the unique zero at $(0,0)$ marks the weyl node. all other points have $m > 0$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Figure caption qualitatively confirming Wilson mass uniqueness on a 2D slice.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C21",
-      "claim": "SteenrodA1.lean has 17 theorems",
-      "location": "Section 3.3 (line 342)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' SteenrodA1.lean = 17."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:a5cfce6f",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "a5cfce6f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 222,
+      "tex_line_end": 235,
+      "quote": "The chiral charge at momentum $\\mathbf{p}$ acts as identity in spin space: [eq:chiral_charge] This operator is non-on-site (depends on $p_3$, real-space range $R=1$, nearest-neighbor along $\\hat{z}$); non-compact (eigenvalues $\\pm\\cos(p_3/2)$, a continuous non-integer spectrum); Ginsparg-Wilson ($q_A^2 = \\cos^2(p_3/2)\\;\\mathbf{1}_4$).",
+      "quote_normalized": "the chiral charge at momentum $\\mathbf{p}$ acts as identity in spin space: [eq:chiral_charge] this operator is non-on-site (depends on $p_3$, real-space range $r=1$, nearest-neighbor along $\\hat{z}$); non-compact (eigenvalues $\\pm\\cos(p_3/2)$, a continuous non-integer spectrum); ginsparg-wilson ($q_a^2 = \\cos^2(p_3/2)\\;\\mathbf{1}_4$).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_chiral_charge_non_on_site"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_chiral_charge_non_compact"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both theorems exist in lean_deps.json. Range R=1 and non-integer spectrum encoded via the existence-witness theorems.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C22",
-      "claim": "GTWeylDoublet.lean has 12 theorems",
-      "location": "Section 3.4 (line 352)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' GTWeylDoublet.lean = 12."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:bf4ba132",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "bf4ba132",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 237,
+      "tex_line_end": 245,
+      "quote": "Left: chiral charge eigenvalues $\\pm\\cos(p_3/2)$, demonstrating non-compact (non-integer) spectrum. Dotted lines at $\\pm1,0$ show the integer lattice is never reached except at $p_3=0$. Right: Ginsparg-Wilson norm $\\cos^2(p_3/2)$.",
+      "quote_normalized": "left: chiral charge eigenvalues $\\pm\\cos(p_3/2)$, demonstrating non-compact (non-integer) spectrum. dotted lines at $\\pm1,0$ show the integer lattice is never reached except at $p_3=0$. right: ginsparg-wilson norm $\\cos^2(p_3/2)$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Figure caption qualitatively confirming non-compact eigenvalue spectrum.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C23",
-      "claim": "ChiralityWallMaster.lean has 17 theorems",
-      "location": "Section 4 (line 367)",
-      "status": "PASS",
-      "evidence": "grep '^theorem ' ChiralityWallMaster.lean = 17."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:f0c1640f",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "f0c1640f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 247,
+      "tex_line_end": 258,
+      "quote": "The central result, formalized in \\texttt{GTCommutation.lean} (10~theorems, proved by Aristotle run \\texttt{18969de2}): For all $r \\in \\mathbb{R}$ and all momenta $(p_1,p_2,p_3)$: $[H_{\\mathrm{BdG}}(\\mathbf{p}),\\; q_A(\\mathbf{p})] = 0$ (gt\\_commutation\\_4x4).",
+      "quote_normalized": "the central result, formalized in gtcommutation.lean (10~theorems, proved by aristotle run 18969de2): for all $r \\in \\mathbb{r}$ and all momenta $(p_1,p_2,p_3)$: $[h_{bdg}(\\mathbf{p}),\\; q_a(\\mathbf{p})] = 0$ (gt\\_commutation\\_4x4).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_commutation_4x4"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "GTCommutation.lean theorem count = 10 (matches). gt_commutation_4x4 exists in lean_deps.json. constants.py ARISTOTLE_THEOREMS maps gt_commutation_4x4 → '18969de2' (matches paper).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C24",
-      "claim": "sin^2 + cos^2 = 1 is the proof structure for [H,Q_A]=0",
-      "location": "Abstract (line 52-53), Section 2.4 (lines 270-272)",
-      "status": "PASS",
-      "evidence": "GTCommutation.lean proof of gt_tau_commutator_vanishes (line 56) explicitly uses 'Complex.sin_sq, Complex.cos_sq' then 'ring'. The 4x4 proof gt_commutation_4x4 also uses 'Complex.sin_sq, Complex.cos_sq' at multiple matrix entries (lines 80, 85, 90, 95). The paper's description 'sin^2(p3) - (1-cos^2(p3)) = 0' is exactly what these rewrites establish."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:bdae16d2",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "bdae16d2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 260,
+      "tex_line_end": 273,
+      "quote": "The proof decomposes into three parts: the $\\sigma_1\\!\\otimes\\!\\mathbf{1}$ and $\\sigma_3\\!\\otimes\\!\\mathbf{1}$ terms commute with $\\mathbf{1}\\!\\otimes\\! q_\\tau$ by the mixed Kronecker identity $[A\\!\\otimes\\!\\mathbf{1},\\,\\mathbf{1}\\!\\otimes\\! B]=0$. The scalar part $r\\,W\\,\\mathbf{1}_\\tau$ of $h_{\\mathrm{eff}}$ commutes trivially. The $\\tau$-dependent part reduces to a $2\\times2$ identity [eq:tau_identity].",
+      "quote_normalized": "the proof decomposes into three parts: the $\\sigma_1\\!\\otimes\\!\\mathbf{1}$ and $\\sigma_3\\!\\otimes\\!\\mathbf{1}$ terms commute with $\\mathbf{1}\\!\\otimes\\! q_\\tau$ by the mixed kronecker identity $[a\\!\\otimes\\!\\mathbf{1},\\,\\mathbf{1}\\!\\otimes\\! b]=0$. the scalar part $r\\,w\\,\\mathbf{1}_\\tau$ of $h_{eff}$ commutes trivially. the $\\tau$-dependent part reduces to a $2\\times2$ identity [eq:tau_identity].",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_tau_commutator_vanishes"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Three-part decomposition matches Lean proof structure; gt_tau_commutator_vanishes is the 2×2 reduction.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C25",
-      "claim": "TPF violates 5 of 9 GS conditions (C2, C3, C4, C6, I2)",
-      "location": "Section 1.2 (lines 148-152)",
-      "status": "WARN",
-      "evidence": "TPFEvasion.lean proves 3 violations rigorously (I3/infinite Hilbert space, C1/round discontinuity, extra dimension) plus the count theorem 'potential_violation_count : 3 + 2 = 5'. The '5 violations' includes 2 that are structural/conditional (C2 Fock space, C3 spectral gap). Paper text says 'five of the nine conditions (C2, C3, C4, C6, I2)' but the Lean code's concrete violations are {I3, C1, extra-dim} not exactly {C2, C3, C4, C6, I2}. The condition labels differ between paper text and Lean code."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:b756ac9e",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "b756ac9e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 274,
+      "tex_line_end": 276,
+      "quote": "Equation~(\\ref{eq:tau_identity}) expands via $[\\tau_z,\\tau_x]=2i\\tau_y$ to $i\\sin^2\\!p_3\\,\\tau_y - i(1\\!-\\!\\cos^2\\!p_3)\\,\\tau_y = 0$, which is the Pythagorean identity in disguise.",
+      "quote_normalized": "equation~() expands via $[\\tau_z,\\tau_x]=2i\\tau_y$ to $i\\sin^2\\!p_3\\,\\tau_y - i(1\\!-\\!\\cos^2\\!p_3)\\,\\tau_y = 0$, which is the pythagorean identity in disguise.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Pythagorean identity $\\sin^2 + \\cos^2 = 1$ is the proof structure; matches Complex.sin_sq + Complex.cos_sq usage in GTCommutation.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C26",
-      "claim": "Three axioms are: Pin+ bordism Z16, HasSpectralGap (Yang-Mills), gauge erasure universality",
-      "location": "Table 1 caption (lines 421-423)",
-      "status": "WARN",
-      "evidence": "The three axioms in Lean are: (1) z16_classification -- matches 'Pin+ bordism Z16'. (2) gs_nogo_axiom -- axiomatizes the GS no-go statement, related to but not identical to 'HasSpectralGap'. The paper says 'Yang-Mills difficulty' but the axiom is the GS no-go theorem itself (which requires a spectral gap as one of its 9 conditions). (3) non_abelian_center_discrete -- matches 'gauge erasure universality'. Axiom 2's description in the paper is imprecise but not incorrect."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:ea7dc697",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "ea7dc697",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 278,
+      "tex_line_end": 286,
+      "quote": "Numerical verification of $[H,Q_A]=0$ on an $L=8$ lattice (512~$k$-points). The maximum absolute commutator entry is at machine epsilon ($\\sim10^{-16}$) for every $k$-point, consistent with the Lean proof of exact vanishing.",
+      "quote_normalized": "numerical verification of $[h,q_a]=0$ on an $l=8$ lattice (512~$k$-points). the maximum absolute commutator entry is at machine epsilon ($\\sim10^{-16}$) for every $k$-point, consistent with the lean proof of exact vanishing.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Figure caption qualitative recomputation note; agreement with Lean theorem at machine precision.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C27",
-      "claim": "Table 1 row totals: GS 54, GT 56, Anomaly 103, Bridges 17, Prior 518, Total 748",
-      "location": "Table 1 (lines 407-418)",
-      "status": "WARN",
-      "evidence": "The total 748 is verified. ChiralityWallMaster.lean = 17 matches 'Bridges'. However, the pillar groupings cannot be independently verified because the paper does not specify which of the 49 modules belong to each row. The sum 54+56+103+17+518 = 748 is arithmetically correct. The modules explicitly named in each section's text have theorem counts matching per-module claims. But the assignment of the 31 'prior infrastructure' modules (518 theorems) to that bucket vs a pillar bucket is not verifiable from the paper alone."
+      "id": "sentence:paper8_chirality_master:pillar-2-the-gioia-thorngren-construction:6d950700",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-2-the-gioia-thorngren-construction",
+        "quote_hash": "6d950700",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-2-the-gioia-thorngren-construction",
+      "section_ordinal": 4,
+      "tex_line_start": 290,
+      "tex_line_end": 297,
+      "quote": "The Pauli matrices $\\sigma_x$, $\\sigma_y$, $\\sigma_z$ are defined as explicit $2\\times2$ complex matrices in \\texttt{PauliMatrices.lean} (15~theorems). The commutation relations $[\\sigma_i,\\sigma_j] = 2i\\,\\varepsilon_{ijk}\\,\\sigma_k$, anti-commutation $\\{\\sigma_i,\\sigma_j\\}=2\\delta_{ij}$, involutivity $\\sigma_i^2=\\mathbf{1}$, and tracelessness are all machine-verified. This infrastructure is reusable for any future lattice fermion formalization.",
+      "quote_normalized": "the pauli matrices $\\sigma_x$, $\\sigma_y$, $\\sigma_z$ are defined as explicit $2\\times2$ complex matrices in paulimatrices.lean (15~theorems). the commutation relations $[\\sigma_i,\\sigma_j] = 2i\\,\\varepsilon_{ijk}\\,\\sigma_k$, anti-commutation $\\{\\sigma_i,\\sigma_j\\}=2\\delta_{ij}$, involutivity $\\sigma_i^2=\\mathbf{1}$, and tracelessness are all machine-verified. this infrastructure is reusable for any future lattice fermion formalization.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "PauliMatrices.lean theorem count = 15 (matches).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C28",
-      "claim": "DG_COEFF = 16 in the Dolan-Grady relation",
-      "location": "Section 3.1 (line 309), Section 4 (line 376)",
-      "status": "PASS",
-      "evidence": "OnsagerAlgebra.lean line 43: 'def DG_COEFF : Z := 16'. Theorem dolan_grady_coeff_eq proves DG_COEFF = 16."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:4fdf80c3",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "4fdf80c3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 306,
+      "tex_line_end": 310,
+      "quote": "The Onsager algebra $\\mathcal{O}$, discovered in the exact solution of the 2D Ising model, is formalized for the first time in any proof assistant in \\texttt{OnsagerAlgebra.lean} (24~theorems).",
+      "quote_normalized": "the onsager algebra $\\mathcal{o}$, discovered in the exact solution of the 2d ising model, is formalized for the first time in any proof assistant in onsageralgebra.lean (24~theorems).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Onsager1944"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "OnsagerAlgebra.lean theorem count = 24 (matches). 'first formalization in any proof assistant' is priority claim — outside structural verification scope. Onsager1944 NOT in CITATION_REGISTRY (citation gap).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C29",
-      "claim": "Contraction epsilon * A_m commutator identity proved by Aristotle",
-      "location": "Section 3.2 (lines 322-325)",
-      "status": "PASS",
-      "evidence": "OnsagerContraction.lean line 69: theorem contraction_rescaling. constants.py line 1072: mapped to Aristotle run '36b7796f'."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:dee39a3d",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "dee39a3d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 310,
+      "tex_line_end": 314,
+      "quote": "The Dolan-Grady presentation uses two generators $A_0,A_1$ satisfying $[A_0,[A_0,[A_0,A_1]]] = 16[A_0,A_1]$ (and symmetric).",
+      "quote_normalized": "the dolan-grady presentation uses two generators $a_0,a_1$ satisfying $[a_0,[a_0,[a_0,a_1]]] = 16[a_0,a_1]$ (and symmetric).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.dolan_grady_coeff_eq"
+          },
+          {
+            "kind": "citation",
+            "target": "DolanGrady1982"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "DG_COEFF=16 in ONSAGER_ALGEBRA dict (constants.py). dolan_grady_coeff_eq exists in lean_deps.json. DolanGrady1982 NOT in CITATION_REGISTRY (citation gap).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C30",
-      "claim": "sl2_dim = 3 (su(2) is 3-dimensional)",
-      "location": "Section 3.2 (line 327)",
-      "status": "PASS",
-      "evidence": "OnsagerAlgebra.lean: theorem gt_onsager_connection proves sl2_dim = 3 AND DG_COEFF = 16."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:c972200f",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "c972200f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 314,
+      "tex_line_end": 317,
+      "quote": "The Davies isomorphism to the infinite-generator presentation $\\{A_m,G_n\\}$ and the Chevalley embedding into the loop algebra $L(\\mathfrak{sl}_2)$ are formalized as structural theorems.",
+      "quote_normalized": "the davies isomorphism to the infinite-generator presentation $\\{a_m,g_n\\}$ and the chevalley embedding into the loop algebra $l(\\mathfrak{sl}_2)$ are formalized as structural theorems.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Davies1990"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Davies1990 NOT in CITATION_REGISTRY (citation gap). Structural theorems exist within OnsagerAlgebra.lean (24 theorems).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C31",
-      "claim": "c equiv 0 mod 8 proved for string-nets in GaugeEmergence.lean",
-      "location": "Section 3.3 (lines 336-338)",
-      "status": "PASS",
-      "evidence": "GaugeEmergence.lean line 109: 'Z(Vec_G) is always non-chiral: the topological central charge c equiv 0 (mod 8)' with corresponding theorem."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:aabed3e0",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "aabed3e0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 321,
+      "tex_line_end": 332,
+      "quote": "In \\texttt{OnsagerContraction.lean} (12~theorems), the In\\\"on\\\"u-Wigner contraction $\\mathcal{O} \\to \\mathfrak{su}(2)$ is formalized. The rescaling $A_m \\to \\varepsilon\\cdot A_m$, $G_n \\to \\varepsilon^2\\cdot G_n$ with the commutator identity [eq:contraction] is proved by Aristotle (run \\texttt{36b7796f}) via Lie bracket bilinearity. As $\\varepsilon\\to0$, the infinite-dimensional algebra degenerates to the 3-dimensional $\\mathfrak{su}(2)$---the emanant symmetry of the continuum limit.",
+      "quote_normalized": "in onsagercontraction.lean (12~theorems), the in\\\"on\\\"u-wigner contraction $\\mathcal{o} \\to \\mathfrak{su}(2)$ is formalized. the rescaling $a_m \\to \\varepsilon\\cdot a_m$, $g_n \\to \\varepsilon^2\\cdot g_n$ with the commutator identity [eq:contraction] is proved by aristotle (run 36b7796f) via lie bracket bilinearity. as $\\varepsilon\\to0$, the infinite-dimensional algebra degenerates to the 3-dimensional $\\mathfrak{su}(2)$---the emanant symmetry of the continuum limit.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.contraction_rescaling"
+          },
+          {
+            "kind": "citation",
+            "target": "InonuWigner1953"
+          },
+          {
+            "kind": "citation",
+            "target": "Seiberg2023"
+          },
+          {
+            "kind": "citation",
+            "target": "SeibergShao2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "OnsagerContraction.lean theorem count = 12 (matches). contraction_rescaling → Aristotle run '36b7796f' confirmed in constants.py. None of {InonuWigner1953, Seiberg2023, SeibergShao2024} in CITATION_REGISTRY — citation gap.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C32",
-      "claim": "First formal verification of a lattice chiral fermion construction",
-      "location": "Abstract (line 56-57), Discussion (line 447-448)",
-      "status": "WARN",
-      "evidence": "The formalization exists and is complete (verified: gt_commutation_4x4 proved, zero sorry). The 'first' priority claim requires external literature survey and cannot be computationally verified against the codebase alone. No competing formalizations were found in the Lean source comments."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:180a5eaf",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "180a5eaf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 336,
+      "tex_line_end": 349,
+      "quote": "The Pin$^+$ bordism classification $\\Omega_4^{\\mathrm{Pin}^+} \\cong \\mathbb{Z}_{16}$ is axiomatized in \\texttt{Z16Classification.lean} (22~theorems, zero axioms). Conditional theorems derive the 16-fold way for super-modular categories and the strengthening of the chirality limitation from $c \\equiv 0\\pmod{8}$ (proved for string-nets in \\texttt{GaugeEmergence.lean}) to $c \\equiv 0\\pmod{16}$.",
+      "quote_normalized": "the pin$^+$ bordism classification $\\omega_4^{pin^+} \\cong \\mathbb{z}_{16}$ is axiomatized in z16classification.lean (22~theorems, zero axioms). conditional theorems derive the 16-fold way for super-modular categories and the strengthening of the chirality limitation from $c \\equiv 0\\pmod{8}$ (proved for string-nets in gaugeemergence.lean) to $c \\equiv 0\\pmod{16}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "FreedHopkins2021"
+          },
+          {
+            "kind": "citation",
+            "target": "BruillardGRW2017"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Z16Classification.lean: 22 theorems and 0 axioms (matches paper text). 'is axiomatized' phrasing contradicts 'zero axioms' in same sentence — internally inconsistent prose; the Pin+ assertion is NOT axiomatized in Z16Classification.lean (axiom count = 0). FAIL on internal contradiction (Class IA-flavored). FreedHopkins2021 / BruillardGRW2017 not in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C33",
-      "claim": "First formalization of the Onsager algebra in any proof assistant",
-      "location": "Abstract (line 59), Discussion (line 449)",
-      "status": "WARN",
-      "evidence": "OnsagerAlgebra.lean exists with 24 theorems covering Dolan-Grady, Davies isomorphism, Chevalley embedding. Priority claim requires external verification."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:a2b234e7",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "a2b234e7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 342,
+      "tex_line_end": 349,
+      "quote": "The A(1) Steenrod subalgebra---the first formalization of any Steenrod algebra in a proof assistant---partially discharges the axiom via the finite computation $\\dim_{\\mathbb{F}_2} {\\rm Ext}^4_{A(1)}(\\mathbb{F}_2,\\mathbb{F}_2) = 3$ (\\texttt{A1Ring.lean}+\\texttt{A1Resolution.lean}+\\texttt{A1Ext.lean}, first machine-checked Ext computation over any Steenrod subalgebra). The number 16 enters through the infinite $h_0$-tower in stem~4 assembling to~$\\mathbb{Z}$ via Adams spectral sequence extensions.",
+      "quote_normalized": "the a(1) steenrod subalgebra---the first formalization of any steenrod algebra in a proof assistant---partially discharges the axiom via the finite computation $\\dim_{\\mathbb{f}_2} {\\rm ext}^4_{a(1)}(\\mathbb{f}_2,\\mathbb{f}_2) = 3$ (a1ring.lean+a1resolution.lean+a1ext.lean, first machine-checked ext computation over any steenrod subalgebra). the number 16 enters through the infinite $h_0$-tower in stem~4 assembling to~$\\mathbb{z}$ via adams spectral sequence extensions.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Files A1Ring.lean / A1Resolution.lean / A1Ext.lean exist (verified by ls). Priority claim 'first formalization of any Steenrod algebra in a proof assistant' is interpretive — reproduces v1 WARN as candidate-for-supersession.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C34",
-      "claim": "First formalization of the A(1) Steenrod subalgebra",
-      "location": "Discussion (line 450)",
-      "status": "WARN",
-      "evidence": "SteenrodA1.lean exists with 17 theorems. The file itself states (line 18): 'This is the first formalization of ANY piece of the Steenrod algebra in a proof assistant.' Priority claim requires external verification."
+      "id": "sentence:paper8_chirality_master:pillar-3-anomaly-classification:8a886896",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "pillar-3-anomaly-classification",
+        "quote_hash": "8a886896",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "pillar-3-anomaly-classification",
+      "section_ordinal": 5,
+      "tex_line_start": 353,
+      "tex_line_end": 366,
+      "quote": "The Witten SU(2) anomaly ($\\pi_4(SU(2)) = \\mathbb{Z}_2$) embeds as element $8 \\in \\mathbb{Z}_{16}$---the unique element of order~2. In the GT Weyl doublet (Model~2), the two charges $Q_V$ (on-site) and $Q_A$ (non-on-site) generate the Onsager algebra on the lattice, which contracts to $SU(2)$ in the IR. This emanant $SU(2)$ carries the Witten anomaly, protecting gaplessness. This chain is formalized in \\texttt{GTWeylDoublet.lean} (12~theorems) [eq:anomaly_chain] with anomaly cancellation requiring $16n$ Majorana fermions.",
+      "quote_normalized": "the witten su(2) anomaly ($\\pi_4(su(2)) = \\mathbb{z}_2$) embeds as element $8 \\in \\mathbb{z}_{16}$---the unique element of order~2. in the gt weyl doublet (model~2), the two charges $q_v$ (on-site) and $q_a$ (non-on-site) generate the onsager algebra on the lattice, which contracts to $su(2)$ in the ir. this emanant $su(2)$ carries the witten anomaly, protecting gaplessness. this chain is formalized in gtweyldoublet.lean (12~theorems) [eq:anomaly_chain] with anomaly cancellation requiring $16n$ majorana fermions.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Witten1982"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "GTWeylDoublet.lean theorem count = 12 (matches). 8 ∈ Z_16 as unique order-2 element is structural arithmetic ✓. Witten1982 NOT in CITATION_REGISTRY — citation gap.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C35",
-      "claim": "Chiral charge eigenvalues are +-cos(p3/2)",
-      "location": "Abstract (line 54), Section 2.3 (line 229)",
-      "status": "PASS",
-      "evidence": "GTCommutation.lean theorem gt_chiral_charge_non_compact (line 141-152) proves existence of p3 where cos(p3/2) is not 0, 1, or -1, establishing non-compact spectrum. The eigenvalue formula is structural from the q_tau definition."
+      "id": "sentence:paper8_chirality_master:bridge-theorems:93b7e11d",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "bridge-theorems",
+        "quote_hash": "93b7e11d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bridge-theorems",
+      "section_ordinal": 6,
+      "tex_line_start": 372,
+      "tex_line_end": 374,
+      "quote": "The three pillars are connected by bridge theorems formalized in \\texttt{ChiralityWallMaster.lean} (17~theorems):",
+      "quote_normalized": "the three pillars are connected by bridge theorems formalized in chiralitywallmaster.lean (17~theorems):",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "ChiralityWallMaster.lean theorem count = 16 (paper claims 17). Off-by-one drift. FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C36",
-      "claim": "Chiral charge is non-on-site with range R=1",
-      "location": "Abstract (line 53), Section 2.3 (line 226-227)",
-      "status": "PASS",
-      "evidence": "GTCommutation.lean theorem gt_chiral_charge_non_on_site (line 132-133): proves (1 : N) != 0, encoding R=1 > 0."
+      "id": "sentence:paper8_chirality_master:bridge-theorems:a3991c4b",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "bridge-theorems",
+        "quote_hash": "a3991c4b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bridge-theorems",
+      "section_ordinal": 6,
+      "tex_line_start": 376,
+      "tex_line_end": 379,
+      "quote": "Pillar~1$\\to$2 (GS$\\to$GT): The GT construction violates exactly the conditions the GS no-go requires---non-on-site $Q_A$ (condition C6/I2) and non-compact spectrum (condition I3). The evasion is precise.",
+      "quote_normalized": "pillar~1$\\to$2 (gs$\\to$gt): the gt construction violates exactly the conditions the gs no-go requires---non-on-site $q_a$ (condition c6/i2) and non-compact spectrum (condition i3). the evasion is precise.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_chiral_charge_non_on_site"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_chiral_charge_non_compact"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both supporting theorems exist; bridge is consistent with Pillar 2 sec.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C37",
-      "claim": "Witten anomaly as element 8 in Z16",
-      "location": "Section 3.4 (lines 347-348), Section 4 (line 377)",
-      "status": "PASS",
-      "evidence": "Z16Classification.lean and GTWeylDoublet.lean formalize this connection. The 'unique element of order 2' in Z16 is 8."
+      "id": "sentence:paper8_chirality_master:bridge-theorems:bfa43f41",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "bridge-theorems",
+        "quote_hash": "bfa43f41",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bridge-theorems",
+      "section_ordinal": 6,
+      "tex_line_start": 381,
+      "tex_line_end": 385,
+      "quote": "Pillar~2$\\to$3 (GT$\\to$Anomaly): The GT doublet generates the Onsager algebra ($\\mathrm{DG\\_COEFF}=16$), which contracts to $\\mathfrak{su}(2)$ ($\\dim=3$), carrying the Witten $\\mathbb{Z}_2$ (element $8 \\in \\mathbb{Z}_{16}$). Anomaly cancellation at $16n$ Majorana connects to the TPF gauging pipeline.",
+      "quote_normalized": "pillar~2$\\to$3 (gt$\\to$anomaly): the gt doublet generates the onsager algebra ($dg\\_coeff=16$), which contracts to $\\mathfrak{su}(2)$ ($\\dim=3$), carrying the witten $\\mathbb{z}_2$ (element $8 \\in \\mathbb{z}_{16}$). anomaly cancellation at $16n$ majorana connects to the tpf gauging pipeline.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.contraction_rescaling"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.dolan_grady_coeff_eq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "DG_COEFF=16, SL2_DIM=3 confirmed in constants.py ONSAGER_ALGEBRA. 8 ∈ Z_16 as Witten element is structural.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
     },
     {
-      "id": "C38",
-      "claim": "All 5 figures exist (fig66-fig70)",
-      "location": "Figures 1-5",
-      "status": "PASS",
-      "evidence": "All 5 PNGs found in papers/paper8_chirality_master/figures/: fig66_gt_band_structure.png, fig67_wilson_mass_bz.png, fig68_chiral_charge_spectrum.png, fig69_gt_commutator_verification.png, fig70_chirality_wall_three_pillars.png."
+      "id": "sentence:paper8_chirality_master:bridge-theorems:cbd4fff9",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "bridge-theorems",
+        "quote_hash": "cbd4fff9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bridge-theorems",
+      "section_ordinal": 6,
+      "tex_line_start": 387,
+      "tex_line_end": 390,
+      "quote": "Pillar~1$\\to$3 (GS$\\to\\mathbb{Z}_{16}$): Together, the GS no-go and $\\mathbb{Z}_{16}$ constrain the chirality wall from both sides: any lattice construction must either violate GS conditions or use $16n$ fermions for anomaly cancellation.",
+      "quote_normalized": "pillar~1$\\to$3 (gs$\\to\\mathbb{z}_{16}$): together, the gs no-go and $\\mathbb{z}_{16}$ constrain the chirality wall from both sides: any lattice construction must either violate gs conditions or use $16n$ fermions for anomaly cancellation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Bridge synthesis claim consistent with prior pillar assertions.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:bridge-theorems:a5d8ca83",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "bridge-theorems",
+        "quote_hash": "a5d8ca83",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bridge-theorems",
+      "section_ordinal": 6,
+      "tex_line_start": 393,
+      "tex_line_end": 401,
+      "quote": "The three-pillar structure of the chirality wall formal verification. Pillar~1 (no-go), Pillar~2 (positive construction), and Pillar~3 (anomaly classification) are connected by bridge theorems. Total: 968~theorems, zero axioms, 66~modules.",
+      "quote_normalized": "the three-pillar structure of the chirality wall formal verification. pillar~1 (no-go), pillar~2 (positive construction), and pillar~3 (anomaly classification) are connected by bridge theorems. total: 968~theorems, zero axioms, 66~modules.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "IA: figure caption restates abstract's stale '968 theorems, zero axioms, 66 modules' — current totals are 2578 theorems, 1 axiom, 170 modules. Drift between caption and reality. Also drifts from Introduction's '2237+ / 1 axiom / 130 modules'. FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:0ba27599",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "0ba27599",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 408,
+      "tex_line_end": 411,
+      "quote": "The \\texttt{ChiralityWallStatus} structure in \\texttt{ChiralityWallMaster.lean} encodes the complete state of the formalization:",
+      "quote_normalized": "the chiralitywallstatus structure in chiralitywallmaster.lean encodes the complete state of the formalization:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Section opener; structural reference to ChiralityWallStatus in ChiralityWallMaster.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:bda35bcf",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "bda35bcf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 419,
+      "tex_line_end": 421,
+      "quote": "Formalization summary. All theorems are machine-checked by \\texttt{lake build}.",
+      "quote_normalized": "formalization summary. all theorems are machine-checked by lake build.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "lake build is the canonical verification command (CLAUDE.md pipeline invariant 4).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:a9fe0bb9",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "a9fe0bb9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 421,
+      "tex_line_end": 426,
+      "quote": "Two former axioms are now proved as theorems: the GS no-go theorem and gauge erasure universality (non-abelian center discrete). A third former axiom---$\\Omega_5^{\\mathrm{Spin}^{\\mathbb{Z}_4}} \\cong \\mathbb{Z}_{16}$---was converted to a trivially-true placeholder theorem (\\texttt{dai\\_freed\\_spin\\_z4}) pending the addition of cobordism theory to Mathlib; the cobordism computation itself is an external input, as is standard in the $\\mathbb{Z}_{16}$ literature.",
+      "quote_normalized": "two former axioms are now proved as theorems: the gs no-go theorem and gauge erasure universality (non-abelian center discrete). a third former axiom---$\\omega_5^{spin^{\\mathbb{z}_4}} \\cong \\mathbb{z}_{16}$---was converted to a trivially-true placeholder theorem (dai\\_freed\\_spin\\_z4) pending the addition of cobordism theory to mathlib; the cobordism computation itself is an external input, as is standard in the $\\mathbb{z}_{16}$ literature.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.dai_freed_spin_z4"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "dai_freed_spin_z4 exists in lean_deps.json. Total project axiom count is 1 (gapped_interface_axiom only) — consistent with 'two former axioms proved' + 'third converted to placeholder'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:3ee83221",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "3ee83221",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 430,
+      "tex_line_end": 436,
+      "quote": "\\noindent\\textbf{What is proved:} 2237+ theorems across 130 Lean modules, including $[H,Q_A]=0$, Wilson mass uniqueness, Pauli algebra, Onsager relations, contraction, $\\mathbb{Z}_{16}$ conditional theorems, A(1) Steenrod Ext computation (first in any proof assistant), GS conditions, TPF evasion, SM anomaly in $\\mathbb{Z}_{16}$, generation constraint, Drinfeld center computations, Fidkowski-Kitaev 2+1D gapped interface (first FK formalization), and all bridge connections.",
+      "quote_normalized": "\\noindentwhat is proved: 2237+ theorems across 130 lean modules, including $[h,q_a]=0$, wilson mass uniqueness, pauli algebra, onsager relations, contraction, $\\mathbb{z}_{16}$ conditional theorems, a(1) steenrod ext computation (first in any proof assistant), gs conditions, tpf evasion, sm anomaly in $\\mathbb{z}_{16}$, generation constraint, drinfeld center computations, fidkowski-kitaev 2+1d gapped interface (first fk formalization), and all bridge connections.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "IA: '2237+ theorems / 130 modules' — actual 2578 theorems / 170 modules. Drift mirroring Introduction. FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:e8962c8a",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "e8962c8a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 438,
+      "tex_line_end": 442,
+      "quote": "\\noindent\\textbf{What was formerly axiomatized:} GS no-go theorem and gauge erasure universality are proved as theorems. The $\\mathbb{Z}_{16}$ cobordism algebraic core is machine-checked (Ext computation). One axiom remains: \\texttt{gapped\\_interface\\_axiom} (4+1D gapped interface conjecture), supported by machine-checked 1+1D and 2+1D evidence.",
+      "quote_normalized": "\\noindentwhat was formerly axiomatized: gs no-go theorem and gauge erasure universality are proved as theorems. the $\\mathbb{z}_{16}$ cobordism algebraic core is machine-checked (ext computation). one axiom remains: gapped\\_interface\\_axiom (4+1d gapped interface conjecture), supported by machine-checked 1+1d and 2+1d evidence.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gapped_interface_axiom"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "gapped_interface_axiom present in lean_deps.json (single project axiom, matching grep '^axiom ' = 1).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:ddd1e49a",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "ddd1e49a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 444,
+      "tex_line_end": 450,
+      "quote": "\\noindent\\textbf{Machine-checked evidence for the gapped interface:} The analogous statement is machine-verified in two lower dimensions: (i) in 1+1D via the 3450 K-matrix model (\\texttt{VillainHamiltonian.lean}), and (ii) in 2+1D via the Fidkowski-Kitaev construction (\\texttt{FKGappedInterface.lean}, 20~theorems)---the first machine-checked proof that 8~Majorana fermions can be gapped to a unique ground state (spectral gap $\\Delta=2$) while preserving symmetry.",
+      "quote_normalized": "\\noindentmachine-checked evidence for the gapped interface: the analogous statement is machine-verified in two lower dimensions: (i) in 1+1d via the 3450 k-matrix model (villainhamiltonian.lean), and (ii) in 2+1d via the fidkowski-kitaev construction (fkgappedinterface.lean, 20~theorems)---the first machine-checked proof that 8~majorana fermions can be gapped to a unique ground state (spectral gap $\\delta=2$) while preserving symmetry.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "FK2010"
+          },
+          {
+            "kind": "citation",
+            "target": "FK2011"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "FKGappedInterface.lean theorem count = 20 (matches). VillainHamiltonian.lean exists. FK2010 / FK2011 NOT in CITATION_REGISTRY — citation gap. 'first machine-checked' is priority claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:master-synthesis:fac47df0",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "master-synthesis",
+        "quote_hash": "fac47df0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "master-synthesis",
+      "section_ordinal": 7,
+      "tex_line_start": 452,
+      "tex_line_end": 456,
+      "quote": "\\noindent\\textbf{What remains open:} The 4+1D gapped interface conjecture (TPF, the project's single axiom), the gauging step from vector-like SMG to chiral gauge coupling, and the full $\\mathbb{Z}_{16}$ cobordism proof (algebraic core machine-checked via the Ext computation; 3~topological hypotheses remain).",
+      "quote_normalized": "\\noindentwhat remains open: the 4+1d gapped interface conjecture (tpf, the project's single axiom), the gauging step from vector-like smg to chiral gauge coupling, and the full $\\mathbb{z}_{16}$ cobordism proof (algebraic core machine-checked via the ext computation; 3~topological hypotheses remain).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Open-problem framing; consistent with one remaining axiom and HYPOTHESIS_REGISTRY tracked hypotheses.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:discussion:e0ee725b",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "discussion",
+        "quote_hash": "e0ee725b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 8,
+      "tex_line_start": 463,
+      "tex_line_end": 463,
+      "quote": "This work establishes several firsts:",
+      "quote_normalized": "this work establishes several firsts:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Section opener.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:discussion:7e7ace53",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "discussion",
+        "quote_hash": "7e7ace53",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 8,
+      "tex_line_start": 464,
+      "tex_line_end": 476,
+      "quote": "Firsts: lattice chiral fermion construction ($[H,Q_A]=0$ for the GT model); Onsager algebra; A(1) Steenrod subalgebra; GS-TPF compatibility analysis; three-pillar synthesis; Fidkowski-Kitaev interacting SPT classification (2+1D gapped interface, $\\Delta=2$); Ext computation over any Steenrod subalgebra (Z16 algebraic core).",
+      "quote_normalized": "firsts: lattice chiral fermion construction ($[h,q_a]=0$ for the gt model); onsager algebra; a(1) steenrod subalgebra; gs-tpf compatibility analysis; three-pillar synthesis; fidkowski-kitaev interacting spt classification (2+1d gapped interface, $\\delta=2$); ext computation over any steenrod subalgebra (z16 algebraic core).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "FK2010"
+          },
+          {
+            "kind": "citation",
+            "target": "FK2011"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Seven priority claims — outside structural verification scope; reproduces v1 priority WARN as candidate-for-supersession.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:discussion:bca23a2d",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "discussion",
+        "quote_hash": "bca23a2d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 8,
+      "tex_line_start": 478,
+      "tex_line_end": 484,
+      "quote": "The formalization demonstrates that the chirality wall is ``fracturing under coordinated assault'': the no-go's scope is limited (5/9 conditions violable), an explicit construction evades it (GT, machine-verified), and the anomaly framework explains why the evasion works (Onsager $\\to$ $\\mathfrak{su}(2)$ $\\to$ Witten $\\to$ $\\mathbb{Z}_{16}$). Three critical gaps remain, but the formal framework on which any resolution must stand is now machine-checked.",
+      "quote_normalized": "the formalization demonstrates that the chirality wall is ``fracturing under coordinated assault'': the no-go's scope is limited (5/9 conditions violable), an explicit construction evades it (gt, machine-verified), and the anomaly framework explains why the evasion works (onsager $\\to$ $\\mathfrak{su}(2)$ $\\to$ witten $\\to$ $\\mathbb{z}_{16}$). three critical gaps remain, but the formal framework on which any resolution must stand is now machine-checked.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "CriticalReview2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "CriticalReview2026 NOT in CITATION_REGISTRY — citation gap. Narrative framing is consistent with prior pillar findings.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:conclusion:569b7cba",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "conclusion",
+        "quote_hash": "569b7cba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 491,
+      "tex_line_end": 500,
+      "quote": "We have presented the first comprehensive formal verification of the lattice chirality problem in Lean~4, comprising 2237+~theorems (1~axiom: gapped interface) across 130~modules. The three-pillar structure---no-go, positive construction, anomaly classification---provides a complete machine-checked map of the chirality wall as of 2026. The Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the Onsager algebra is formalized for the first time, and all bridge connections between the three pillars are machine-checked.",
+      "quote_normalized": "we have presented the first comprehensive formal verification of the lattice chirality problem in lean~4, comprising 2237+~theorems (1~axiom: gapped interface) across 130~modules. the three-pillar structure---no-go, positive construction, anomaly classification---provides a complete machine-checked map of the chirality wall as of 2026. the gioia-thorngren chiral symmetry $[h,q_a]=0$ is formally verified, the onsager algebra is formalized for the first time, and all bridge connections between the three pillars are machine-checked.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.gt_commutation_4x4"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "IA: '2237+ theorems / 1 axiom / 130 modules' — actual 2578 / 1 / 170. Same drift as Introduction and Master Synthesis. Axiom count of 1 is correct; theorem and module counts under-report. FAIL.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper8_chirality_master:conclusion:20b417d9",
+      "raw_id_parts": {
+        "paper": "paper8_chirality_master",
+        "section_slug": "conclusion",
+        "quote_hash": "20b417d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 498,
+      "tex_line_end": 501,
+      "quote": "Resolution of the chirality wall---one of the central open problems in lattice field theory---will build on this formal foundation.",
+      "quote_normalized": "resolution of the chirality wall---one of the central open problems in lattice field theory---will build on this formal foundation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Closing motivational sentence; no extractable structural claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "v1:C1:748_theorems_3_axioms",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior finding asserted '748 theorems + 3 axioms' was the ground truth. Current grep yields 2578 theorems and 1 axiom (gapped_interface_axiom). Two prior axioms (gs_nogo_axiom, non_abelian_center_discrete) are now proved as theorems; z16_classification was converted to dai_freed_spin_z4 placeholder. Replaced by current IA findings on abstract/intro/conclusion count drift.",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "prior_value": 748,
+        "current_value": 2578,
+        "command": "grep -rh '^theorem ' lean/SKEFTHawking/ --include='*.lean' | wc -l"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C2:49_modules",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior count of 49 modules is now 170 (find lean/SKEFTHawking -name '*.lean' -type f | wc -l). Replaced by current IA findings.",
+      "deterministic_recheck": {
+        "kind": "lean_module_count",
+        "prior_value": 49,
+        "current_value": 170,
+        "command": "find lean/SKEFTHawking -name '*.lean' -type f | wc -l"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C3:252_aristotle",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior count of 252 Aristotle-proved is now 322 (ARISTOTLE_PROVED_COUNT in constants.py).",
+      "deterministic_recheck": {
+        "kind": "ARISTOTLE_PROVED_COUNT",
+        "prior_value": 252,
+        "current_value": 322,
+        "command": "grep ARISTOTLE_PROVED_COUNT src/core/constants.py"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C4:zero_sorry",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Reproduces — current grep '^  sorry|^sorry$' returns 2 hits, both inside Lean comments (KerrSchild.lean:60 and TetradGapEquation.lean:320 both within `/- ... -/` blocks). Effective sorry = 0 (consistent with paper).",
+      "deterministic_recheck": {
+        "kind": "lake_sorry_grep",
+        "prior_value": 0,
+        "current_value": 0,
+        "command": "grep -rn '^  sorry|^sorry$' lean/SKEFTHawking --include='*.lean' (both in comments)"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C20:Z16Classification_21_thm_1_axiom",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior count was '21 theorems + 1 axiom'. Z16Classification.lean now has 22 theorems and 0 axioms. Paper updated section 3.3 text accordingly.",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "prior_value": "21 thm + 1 ax",
+        "current_value": "22 thm + 0 ax",
+        "command": "grep -c '^theorem ' lean/SKEFTHawking/Z16Classification.lean && grep -c '^axiom ' lean/SKEFTHawking/Z16Classification.lean"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C21:SteenrodA1_17_thm",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper text in current draft no longer mentions a single SteenrodA1.lean theorem count — the A(1) Ext computation is now described as split across A1Ring.lean+A1Resolution.lean+A1Ext.lean (line 346-347). Prior count claim doesn't reproduce on a single sentence.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C25:TPF_5_violations_label_mismatch",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Reproduces in spirit at sentence 'pillar-1-the-golterman-shamir-no-go' / TPF evasion subsection — paper now says '(C1, C2, I3, extra-dimensional, and C3 conditionally)' which still differs from Lean's literal {I3, C1, extra-dim} concrete violations. LLM-judgment label-match — not auto-closeable.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C26:axiom_2_imprecise_description",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now correctly describes the axiom inventory (one axiom: gapped_interface_axiom). Prior 'three axioms' framing fully retracted in current draft (Master Synthesis section, line 438-442).",
+      "deterministic_recheck": {
+        "kind": "lake_axiom_grep",
+        "prior_value": 3,
+        "current_value": 1,
+        "command": "grep -rh '^axiom ' lean/SKEFTHawking/ --include='*.lean' | wc -l"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C27:table1_pillar_groupings",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Table 1 has been regenerated by scripts/render_paper_tables.py and now reports per-pillar counts (164/69/307/19/559) plus 'zero axioms zero sorry' — but those totals also disagree with current 2578/170/1 reality. The 'verifiability of pillar groupings' is an LLM-judgment audit; not auto-closeable.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C32:first_lattice_chiral_priority",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Priority claim reproduces in current Abstract+Discussion. Outside structural-verification scope per Part D.2; requires external literature sweep.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C33:first_onsager_priority",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Priority claim reproduces; not auto-closeable.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
+    },
+    {
+      "prior_finding_id": "v1:C34:first_a1_steenrod_priority",
+      "prior_run_date": "2026-04-03T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Priority claim reproduces; not auto-closeable.",
+      "deterministic_recheck": null,
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T18:00:00Z"
     }
   ],
   "summary": {
-    "total_claims": 38,
-    "PASS": 31,
-    "FAIL": 0,
-    "WARN": 7,
-    "warnings_detail": [
-      "C25: TPF violation conditions listed in paper text (C2,C3,C4,C6,I2) don't exactly match Lean's concrete violations (I3,C1,extra-dim). Count of 5 is justified by potential_violation_count theorem but only 3 are rigorous.",
-      "C26: Axiom 2 described as 'HasSpectralGap (Yang-Mills difficulty)' but actual axiom is gs_nogo_axiom (full GS no-go statement). Imprecise but defensible.",
-      "C27: Table 1 pillar groupings cannot be independently verified (paper doesn't specify module-to-pillar mapping). Arithmetic 54+56+103+17+518=748 is correct. Per-module counts in text all match.",
-      "C32-C34: 'First in any proof assistant' claims (lattice chiral fermion verification, Onsager algebra, A(1) Steenrod) require external literature survey to verify priority."
-    ]
-  }
+    "total_sentences": 51,
+    "by_type": {
+      "numeric": 19,
+      "transition": 4,
+      "formal-claim": 10,
+      "metaclaim": 1,
+      "citation": 3,
+      "qualitative": 9,
+      "theorem-ref": 3,
+      "methodology": 2
+    },
+    "by_verdict": {
+      "FAIL": 10,
+      "TRANSITION": 5,
+      "PASS": 18,
+      "INFO": 10,
+      "WARN": 8
+    },
+    "by_finding_class": {
+      "IA": 7,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 12,
+    "non_reproducing_auto_closed": 6,
+    "non_reproducing_candidates": 6,
+    "agent_text": "51 sentences | 18 PASS | 10 FAIL | 8 WARN | 10 INFO | 0 UNGROUNDED | 5 TRANSITION | 6 prior auto-closed | 6 prior candidate-for-supersession | finding-classes: IA=7 TP=0 SD=0 TN=0 HD=0"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "IA: Abstract claims '968 theorems, zero axioms, 66 modules, 273 Aristotle' while the same paper's Introduction claims '2237+ theorems, 1 axiom, 130 modules, 322+ Aristotle'. Reality: 2578 theorems, 1 axiom, 170 modules, 322 Aristotle. Three different sets of headline numbers across abstract / intro / conclusion / fig70 caption / Table-1 caption (559).",
+      "sentences": [
+        "sentence:paper8_chirality_master:abstract:a3dd5a70",
+        "sentence:paper8_chirality_master:abstract:e8c6630f",
+        "sentence:paper8_chirality_master:introduction:b9a88134",
+        "sentence:paper8_chirality_master:bridge-theorems:93b7e11d",
+        "sentence:paper8_chirality_master:bridge-theorems:a5d8ca83",
+        "sentence:paper8_chirality_master:master-synthesis:3ee83221",
+        "sentence:paper8_chirality_master:conclusion:569b7cba"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "IA: Paper claims 'GaugingStep.lean (34 theorems)' but the file has only 14 theorems (and 14 theorem+lemma combined). Off by 20.",
+      "sentences": [],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:3",
+      "summary": "IA: Paper claims 'SPTClassification.lean (15 theorems + 1 axiom)' but file has 20 theorems + 1 axiom.",
+      "sentences": [],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:4",
+      "summary": "IA: Paper bridge intro 'ChiralityWallMaster.lean (17 theorems)' but file has 16 theorems.",
+      "sentences": [],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:5",
+      "summary": "Citation integrity: 19 of 21 bibitems are NOT in CITATION_REGISTRY (only GoltermanShamir2026 is registered). Missing: Nielsen1981a, Nielsen1981b, GioiaTh2026, TPF2026, Aristotle2025, Onsager1944, DolanGrady1982, Davies1990, InonuWigner1953, Seiberg2023, SeibergShao2024, Witten1982, FreedHopkins2021, BruillardGRW2017, FK2010, FK2011, Misumi2025, Tong2022, Wilson1974, TongTurner2020, CriticalReview2026.",
+      "sentences": [],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
+    },
+    {
+      "id": "block:6",
+      "summary": "IA: Pillar 3 abstract says Z_16 classification is 'axiomatized' but Z16Classification.lean has 0 axioms (axiom was discharged); same paragraph admits 'A(1) Steenrod ... partially discharging the axiom' — internal narrative tension. Master Synthesis line 421-426 acknowledges the conversion explicitly.",
+      "sentences": [],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "nbf:1",
+      "summary": "TP: paper does not name a Lean toolchain version; current pin is leanprover/lean4:v4.29.0 with Mathlib 8850ed93 (verified). No drift, but explicit toolchain disclosure would strengthen reproducibility.",
+      "sentences": [],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TP"
+    },
+    {
+      "id": "nbf:2",
+      "summary": "HD: 0 — none of the paper's referenced theorems (gt_commutation_4x4, wilson_mass_zero_iff_cos_eq_one, tpf_outside_gs_scope_main, gt_chiral_charge_*, gt_tau_commutator_vanishes, dolan_grady_coeff_eq, contraction_rescaling, dai_freed_spin_z4, gapped_interface_axiom) appear in any HYPOTHESIS_REGISTRY entry's `dependent_theorems` list. No HD findings.",
+      "sentences": [],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD"
+    },
+    {
+      "id": "nbf:3",
+      "summary": "Per-module counts that DO match: GoltermanShamir 14, LatticeHamiltonian 28, TPFEvasion 12, BdGHamiltonian 8, WilsonMass 11, PauliMatrices 15, GTCommutation 10, OnsagerAlgebra 24, OnsagerContraction 12, GTWeylDoublet 12, FKGappedInterface 20, Z16Classification 22+0ax. Mismatches concentrated in three modules + headline totals.",
+      "sentences": [],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": null
+    }
+  ]
 }

@@ -1,12 +1,46 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  25 APR 2026 01:26
-entering extended mode
- restricted \write18 enabled.
- %&-line parsing enabled.
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.3.22)  25 APR 2026 02:50
+ restricted system commands enabled.
 **paper_draft.tex
 (./paper_draft.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
-(/usr/local/texlive/2026/texmf-dist/tex/latex/revtex/revtex4-2.cls
+Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
+Lua module: lualibs 2023-07-13 v2.76 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended 
+collection.
+luaotfload | conf : Root cache directory is "/Users/johnroehm/Library/texlive/20
+26/texmf-var/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-res
+olved path "/usr/local/texlive/2026/texmf-dist/tex/luatex/luaotfload/fontloader-
+2023-12-28.lua".
+Lua-only attribute luaotfload@noligature = 1
+luaotfload | init : Context OpenType loader version 3.134
+Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 2
+luaotfload | conf : Root cache directory is "/Users/johnroehm/Library/texlive/20
+26/texmf-var/luatex-cache/generic/names".
+Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
+Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
+Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
+Inserting `luaotfload.harf.glyphstream' in `glyph_stream_provider'.
+Inserting `luaotfload.harf.finalize_vlist' in `post_linebreak_filter'.
+Inserting `luaotfload.harf.finalize_hlist' in `hpack_filter'.
+Inserting `luaotfload.cleanup_files' in `wrapup_run'.
+Inserting `luaotfload.harf.finalize_unicode' in `finish_pdffile'.
+Inserting `luaotfload.glyphinfo' in `glyph_info'.
+Lua-only attribute luaotfload.letterspace_done = 3
+Inserting `luaotfload.aux.set_sscale_dimens' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_font_index' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.patch_cambria_domh' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
+Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'.
+Inserting `tracingstacklevels' in `input_level_string'. (/usr/local/texlive/202
+6/texmf-dist/tex/latex/revtex/revtex4-2.cls
 Document Class: revtex4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for
  documentation)
  Copyright (c) 2019 American Physical Society.
@@ -23,18 +57,18 @@ LaTeX Info: Redefining \@centercr on input line 356.
 Class revtex4-2 Info: Repairing hyperref-unfriendly LaTeX definition of \mpfoot
 note on input line 492.
 Class revtex4-2 Info: Repairing broken LateX \@sect on input line 814.
-\intertabularlinepenalty=\count275
-\@tbpen=\count276
+\intertabularlinepenalty=\count273
+\@tbpen=\count274
 \@arstrutbox@hline=\box53
 Class revtex4-2 Info: Repairing broken LaTeX \@xbitor on input line 1845.
 Class revtex4-2 Info: Making \typeout \long on input line 2110.
 ltxfront[2022/06/05 4.2f frontmatter package (AO,DPC,MD)]
-\c@affil=\count277
-\c@collab=\count278
+\c@affil=\count275
+\c@collab=\count276
 \absbox=\box54
 ltxgrid[2022/06/05 4.2f page grid package (portions licensed from W. E. Baxter 
 web at superscript.com)]
-\c@linecount=\count279
+\c@linecount=\count277
 \output@latex=\toks17
 \box@size@1=\box55
 \box@size@2=\box56
@@ -45,22 +79,22 @@ web at superscript.com)]
 \column@recovered=\box60
 \pagesofar=\box61
 \footsofar=\box62
-\pagegrid@col=\count280
+\pagegrid@col=\count278
 Class revtex4-2 Info: Overriding \@vspace, \@vspacer, \@no@pgbk, \@newline, and
  \\  on input line 5676.
-\c@part=\count281
-\c@section=\count282
-\c@subsection=\count283
-\c@subsubsection=\count284
-\c@paragraph=\count285
-\c@subparagraph=\count286
+\c@part=\count279
+\c@section=\count280
+\c@subsection=\count281
+\c@subsubsection=\count282
+\c@paragraph=\count283
+\c@subparagraph=\count284
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
-\c@figure=\count287
+\c@figure=\count285
 \fbox@1=\box63
-\c@table=\count288
+\c@table=\count286
 \fbox@2=\box64
-\c@video=\count289
+\c@video=\count287
 \fbox@4=\box65
 \@bibdataout=\write3
 \widetext@top=\box66
@@ -95,7 +129,7 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip51
 \bibsep=\skip52
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count290
+\c@NAT@ctr=\count288
 )
 Class revtex4-2 Info: Repairing natbib's \BibitemShut on input line 7676.
 
@@ -103,7 +137,9 @@ Class revtex4-2 Info: Repairing natbib's \BibitemShut on input line 7676.
 Package: revsymb4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for docum
 entation)
 LaTeX Info: Redefining \REV@mathfrak on input line 128.
-))
+)
+luaotfload | db : Font names database loaded from /Users/johnroehm/Library/texli
+ve/2026/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip53
@@ -115,25 +151,25 @@ Package: amstext 2024/11/17 v2.01 AMS text
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks19
-\ex@=\dimen148
+\ex@=\dimen147
 )
 LaTeX Info: Redefining \text on input line 28.
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen149
+\pmbraise@=\dimen148
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count291
-LaTeX Info: Redefining \frac on input line 233.
-\uproot@=\count292
-\leftroot@=\count293
+\inf@bad=\count289
+LaTeX Info: Redefining \frac on input line 235.
+\uproot@=\count290
+\leftroot@=\count291
 LaTeX Info: Redefining \overline on input line 398.
 LaTeX Info: Redefining \colon on input line 409.
-\classnum@=\count294
-\DOTSCASE@=\count295
+\classnum@=\count292
+\DOTSCASE@=\count293
 LaTeX Info: Redefining \ldots on input line 495.
 LaTeX Info: Redefining \dots on input line 498.
 LaTeX Info: Redefining \cdots on input line 619.
@@ -143,30 +179,30 @@ LaTeX Info: Redefining \big on input line 721.
 LaTeX Info: Redefining \Big on input line 722.
 LaTeX Info: Redefining \bigg on input line 723.
 LaTeX Info: Redefining \Bigg on input line 724.
-\big@size=\dimen150
+\big@size=\dimen149
 LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
-\macc@depth=\count296
+\macc@depth=\count294
 LaTeX Info: Redefining \bmod on input line 904.
 LaTeX Info: Redefining \pmod on input line 909.
 LaTeX Info: Redefining \smash on input line 939.
 LaTeX Info: Redefining \relbar on input line 969.
 LaTeX Info: Redefining \Relbar on input line 970.
-\c@MaxMatrixCols=\count297
+\c@MaxMatrixCols=\count295
 \dotsspace@=\muskip18
-\c@parentequation=\count298
-\dspbrk@lvl=\count299
+\c@parentequation=\count296
+\dspbrk@lvl=\count297
 \tag@help=\toks20
-\row@=\count300
-\column@=\count301
-\maxfields@=\count302
+\row@=\count298
+\column@=\count299
+\maxfields@=\count300
 \andhelp@=\toks21
-\eqnshift@=\dimen151
-\alignsep@=\dimen152
-\tagshift@=\dimen153
-\tagwidth@=\dimen154
-\totwidth@=\dimen155
-\lineht@=\dimen156
+\eqnshift@=\dimen150
+\alignsep@=\dimen151
+\tagshift@=\dimen152
+\tagwidth@=\dimen153
+\totwidth@=\dimen154
+\lineht@=\dimen155
 \@envbody=\toks22
 \multlinegap=\skip54
 \multlinetaggap=\skip55
@@ -203,50 +239,50 @@ Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: pdftex.def on input line 106.
+Package graphics Info: Driver file: luatex.def on input line 106.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/pdftex.def
-File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/luatex.def
+File: luatex.def 2025/09/29 v1.2f Graphics/color driver for luatex
 ))
-\Gin@req@height=\dimen157
-\Gin@req@width=\dimen158
+\Gin@req@height=\dimen156
+\Gin@req@width=\dimen157
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen159
-\lightrulewidth=\dimen160
-\cmidrulewidth=\dimen161
-\belowrulesep=\dimen162
-\belowbottomsep=\dimen163
-\aboverulesep=\dimen164
-\abovetopsep=\dimen165
-\cmidrulesep=\dimen166
-\cmidrulekern=\dimen167
-\defaultaddspace=\dimen168
-\@cmidla=\count303
-\@cmidlb=\count304
-\@aboverulesep=\dimen169
-\@belowrulesep=\dimen170
-\@thisruleclass=\count305
-\@lastruleclass=\count306
-\@thisrulewidth=\dimen171
+\heavyrulewidth=\dimen158
+\lightrulewidth=\dimen159
+\cmidrulewidth=\dimen160
+\belowrulesep=\dimen161
+\belowbottomsep=\dimen162
+\aboverulesep=\dimen163
+\abovetopsep=\dimen164
+\cmidrulesep=\dimen165
+\cmidrulekern=\dimen166
+\defaultaddspace=\dimen167
+\@cmidla=\count301
+\@cmidlb=\count302
+\@aboverulesep=\dimen168
+\@belowrulesep=\dimen169
+\@thisruleclass=\count303
+\@lastruleclass=\count304
+\@thisrulewidth=\dimen170
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/siunitx/siunitx.sty
 Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
-\l__siunitx_number_uncert_offset_int=\count307
-\l__siunitx_number_exponent_fixed_int=\count308
-\l__siunitx_number_min_decimal_int=\count309
-\l__siunitx_number_min_integer_int=\count310
-\l__siunitx_number_round_precision_int=\count311
-\l__siunitx_number_lower_threshold_int=\count312
-\l__siunitx_number_upper_threshold_int=\count313
-\l__siunitx_number_group_first_int=\count314
-\l__siunitx_number_group_size_int=\count315
-\l__siunitx_number_group_minimum_int=\count316
-\l__siunitx_angle_tmp_dim=\dimen172
+\l__siunitx_number_uncert_offset_int=\count305
+\l__siunitx_number_exponent_fixed_int=\count306
+\l__siunitx_number_min_decimal_int=\count307
+\l__siunitx_number_min_integer_int=\count308
+\l__siunitx_number_round_precision_int=\count309
+\l__siunitx_number_lower_threshold_int=\count310
+\l__siunitx_number_upper_threshold_int=\count311
+\l__siunitx_number_group_first_int=\count312
+\l__siunitx_number_group_size_int=\count313
+\l__siunitx_number_group_minimum_int=\count314
+\l__siunitx_angle_tmp_dim=\dimen171
 \l__siunitx_angle_marker_box=\box70
 \l__siunitx_angle_unit_box=\box71
-\l__siunitx_compound_count_int=\count317
+\l__siunitx_compound_count_int=\count315
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations.sty
 Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
@@ -254,7 +290,7 @@ Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count318
+\etb@tempcnta=\count316
 )
 (/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
@@ -272,27 +308,28 @@ Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
+\pdftexcmds@toks=\toks25
 ))
 \l__siunitx_table_tmp_box=\box72
-\l__siunitx_table_tmp_dim=\dimen173
-\l__siunitx_table_column_width_dim=\dimen174
+\l__siunitx_table_tmp_dim=\dimen172
+\l__siunitx_table_column_width_dim=\dimen173
 \l__siunitx_table_integer_box=\box73
 \l__siunitx_table_decimal_box=\box74
 \l__siunitx_table_uncert_box=\box75
 \l__siunitx_table_before_box=\box76
 \l__siunitx_table_after_box=\box77
-\l__siunitx_table_before_dim=\dimen175
-\l__siunitx_table_carry_dim=\dimen176
-\l__siunitx_unit_tmp_int=\count319
-\l__siunitx_unit_position_int=\count320
-\l__siunitx_unit_total_int=\count321
+\l__siunitx_table_before_dim=\dimen174
+\l__siunitx_table_carry_dim=\dimen175
+\l__siunitx_unit_tmp_int=\count317
+\l__siunitx_unit_position_int=\count318
+\l__siunitx_unit_total_int=\count319
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
-\col@sep=\dimen177
+\col@sep=\dimen176
 \ar@mcellbox=\box78
-\extrarowheight=\dimen178
-\NC@list=\toks25
+\extrarowheight=\dimen177
+\NC@list=\toks26
 \extratabsurround=\skip56
 \backup@length=\skip57
 \ar@cellbox=\box79
@@ -330,29 +367,25 @@ Package nameref Warning: The definition of \label has changed!
 (nameref)                Replacing it with the kernel definition on input line 
 161.
 
-\c@section@level=\count322
+\c@section@level=\count320
 ) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen179
-\Hy@linkcounter=\count323
-\Hy@pagecounter=\count324
+\@linkdim=\dimen178
+\Hy@linkcounter=\count321
+\Hy@pagecounter=\count322
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
-Now handling font encoding PD1 ...
-... no UTF-8 mapping file for font encoding PD1
 )
 (/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count325
+\Hy@SavedSpaceFactor=\count323
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
-Now handling font encoding PU ...
-... no UTF-8 mapping file for font encoding PU
 )
 Package hyperref Info: Hyper figures OFF on input line 4201.
 Package hyperref Info: Link nesting OFF on input line 4206.
@@ -362,9 +395,9 @@ Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
 LaTeX Info: Redefining \href on input line 4718.
-\c@Hy@tempcnt=\count326
+\c@Hy@tempcnt=\count324
 LaTeX Info: Redefining \url on input line 4807.
-\XeTeXLinkMargin=\dimen180
+\XeTeXLinkMargin=\dimen179
 
 (/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -373,9 +406,9 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count327
-\Field@Width=\dimen181
-\Fld@charsize=\dimen182
+\Fld@menulength=\count325
+\Field@Width=\dimen180
+\Fld@charsize=\dimen181
 Package hyperref Info: Hyper figures OFF on input line 6084.
 Package hyperref Info: Link nesting OFF on input line 6089.
 Package hyperref Info: Hyper index ON on input line 6092.
@@ -383,16 +416,16 @@ Package hyperref Info: backreferencing OFF on input line 6099.
 Package hyperref Info: Link coloring OFF on input line 6104.
 Package hyperref Info: Link coloring with OCG OFF on input line 6109.
 Package hyperref Info: PDF/A mode OFF on input line 6114.
-\Hy@abspage=\count328
-\c@Item=\count329
-\c@Hfootnote=\count330
+\Hy@abspage=\count326
+\c@Item=\count327
+\c@Hfootnote=\count328
 )
-Package hyperref Info: Driver (autodetected): hpdftex.
+Package hyperref Info: Driver (autodetected): hluatex.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2026-01-29 v7.01p Hyperref driver for pdfTeX
-\Fld@listcount=\count331
-\c@bookmark@seq@number=\count332
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hluatex.def
+File: hluatex.def 2026-01-29 v7.01p Hyperref driver for luaTeX
+\Fld@listcount=\count329
+\c@bookmark@seq@number=\count330
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
@@ -419,15 +452,15 @@ Package: color 2025/01/14 v1.3e Standard LaTeX Color (DPC)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
-Package color Info: Driver file: pdftex.def on input line 149.
+Package color Info: Driver file: luatex.def on input line 149.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count333
-)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
+File: l3backend-luatex.def 2025-10-09 L3 backend support: PDF output (LuaTeX)
+\l__color_backend_stack_int=\count331
+Inserting `l3color' in `luaotfload.parse_color'.)
 (./paper_draft.aux)
-\openout1 = `paper_draft.aux'.
+\openout1 = paper_draft.aux
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
@@ -438,6 +471,8 @@ LaTeX Font Info:    ... okay on input line 19.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
 LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
@@ -450,17 +485,17 @@ LaTeX Font Info:    ... okay on input line 19.
 
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count334
-\scratchdimen=\dimen183
+\scratchcounter=\count332
+\scratchdimen=\dimen182
 \scratchbox=\box80
-\nofMPsegments=\count335
-\nofMParguments=\count336
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count337
-\MPscratchDim=\dimen184
-\MPnumerator=\count338
-\makeMPintoPDFobject=\count339
-\everyMPtoPDFconversion=\toks27
+\nofMPsegments=\count333
+\nofMParguments=\count334
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count335
+\MPscratchDim=\dimen183
+\MPnumerator=\count336
+\makeMPintoPDFobject=\count337
+\everyMPtoPDFconversion=\toks28
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -480,11 +515,11 @@ or `english'. on input line 19.
 Package hyperref Info: Link coloring OFF on input line 19.
  (./paper_draft.out) (./paper_draft.out)
 \@outlinefile=\write4
-\openout4 = `paper_draft.out'.
 
+\openout4 = paper_draft.out
 Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 19.
-\openout3 = `paper_draftNotes.bib'.
 
+\openout3 = paper_draftNotes.bib
 LaTeX Font Info:    Trying to load font information for U+msa on input line 31.
 
 
@@ -517,40 +552,75 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 71.
 
 
-Underfull \hbox (badness 3780) in paragraph at lines 77--90
-[]\OT1/cmr/m/n/10 The Stan-dard Model with three gen-er-a-tions is
+Package natbib Warning: Citation `GarciaEtxebarriaMontero2019' on page 1 undefi
+ned on input line 81.
+
+
+Package natbib Warning: Citation `WanWang2020' on page 1 undefined on input lin
+e 81.
+
+
+Package natbib Warning: Citation `WanWang2020' on page 1 undefined on input lin
+e 85.
+
+
+Package natbib Warning: Citation `KawasakiYanagida2023' on page 1 undefined on 
+input line 85.
+
+
+Underfull \hbox (badness 3792) in paragraph at lines 77--90
+[]\TU/lmr/m/n/10 The Stan-dard Model with three gen-er-a-tions is
  []
 
 
-Underfull \hbox (badness 1755) in paragraph at lines 77--90
-\OT1/cmr/m/n/10 each gen-er-a-tion con-tributes $+15$ Weyl com-po-nents,
+Underfull \hbox (badness 1762) in paragraph at lines 77--90
+\TU/lmr/m/n/10 each gen-er-a-tion con-tributes $\OT1/cmr/m/n/10 +15$ \TU/lmr/m/
+n/10 Weyl com-po-nents,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 77--90
-\OT1/cmr/m/n/10 prior for-mal-iza-tion (\OT1/cmtt/m/n/10 Z16AnomalyComputation.
-lean\OT1/cmr/m/n/10 ,
+\TU/lmr/m/n/10 prior for-mal-iza-tion (\TU/lmtt/m/n/10 Z16AnomalyComputation.lea
+n\TU/lmr/m/n/10 ,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 77--90
-\OT1/cmtt/m/n/10 HiddenSectorClassification.lean\OT1/cmr/m/n/10 )
+\TU/lmtt/m/n/10 HiddenSectorClassification.lean\TU/lmr/m/n/10 ) proved
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 77--90
-\OT1/cmr/m/n/10 proved both halves of this lad-der in
+\TU/lmr/m/n/10 both halves of this lad-der in Lean 4:
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 77--90
-\OT1/cmr/m/n/10 Lean 4: \OT1/cmtt/m/n/10 three[]nu[]R[]cancel[]three[]gen \OT1/
-cmr/m/n/10 and
+\TU/lmtt/m/n/10 three_nu_R_cancel_three_gen \TU/lmr/m/n/10 and
  []
 
 
-Underfull \hbox (badness 1052) in paragraph at lines 104--113
-\OT1/cmr/m/n/10 fermionic sub-strate as the Higgs and tetrad rungs,
+Package natbib Warning: Citation `MohapatraSmirnov2006' on page 1 undefined on 
+input line 94.
+
+
+Package natbib Warning: Citation `ADW' on page 1 undefined on input line 100.
+
+
+Package natbib Warning: Citation `WetterichSpinor2013' on page 1 undefined on i
+nput line 100.
+
+
+Package natbib Warning: Citation `WetterichSpinor2022' on page 1 undefined on i
+nput line 100.
+
+
+Package natbib Warning: Citation `Volovik2024Spinor' on page 1 undefined on inp
+ut line 101.
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 104--113
+\TU/lmr/m/n/10 fermionic sub-strate as the Higgs and tetrad rungs,
  []
 
 
@@ -566,103 +636,84 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 115.
 
 
-Overfull \hbox (16.49771pt too wide) in paragraph at lines 124--124
-[]\OT1/cmtt/m/n/10 def z16Charge (_ : SterileNeutrino) : ZMod 16 := 1[] 
+Overfull \hbox (16.5pt too wide) in paragraph at lines 124--124
+[]\TU/lmtt/m/n/10 def z16Charge (_ : SterileNeutrino) : ZMod 16 := 1[] 
  []
 
 
-Underfull \hbox (badness 2165) in paragraph at lines 125--130
-\OT1/cmr/m/n/10 Each in-stance car-ries $\U/msb/m/n/10 Z[]$ \OT1/cmr/m/n/10 cha
-rge $+1$; the as-sign-
+Package natbib Warning: Citation `GarciaEtxebarriaMontero2019' on page 1 undefi
+ned on input line 127.
+
+
+Underfull \hbox (badness 2173) in paragraph at lines 125--130
+\TU/lmr/m/n/10 Each in-stance car-ries $\U/msb/m/n/10 Z[]$ \TU/lmr/m/n/10 charge
+ $\OT1/cmr/m/n/10 +1$\TU/lmr/m/n/10 ; the as-sign-
  []
 
 
-Underfull \hbox (badness 4001) in paragraph at lines 125--130
-\OT1/cmr/m/n/10 ment is locked by the proved Garcia-Etxebarria-
+Underfull \hbox (badness 4013) in paragraph at lines 125--130
+\TU/lmr/m/n/10 ment is locked by the proved Garcia-Etxebarria-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 125--130
-\OT1/cmr/m/n/10 Montero tower [[]] and the project-existing
+Underfull \hbox (badness 3514) in paragraph at lines 125--130
+\TU/lmr/m/n/10 Montero tower [\TU/lmr/bx/n/10 ? \TU/lmr/m/n/10 ] and the project
+-existing
  []
 
 
-Overfull \hbox (3.89775pt too wide) in paragraph at lines 125--130
-\OT1/cmtt/m/n/10 Z16AnomalyComputation.three[]nu[]R[]cancel[]three[]gen
+Overfull \hbox (11.25pt too wide) in paragraph at lines 125--130
+\TU/lmtt/m/n/10 Z16AnomalyComputation.three_nu_R_cancel_three_gen
  []
 
 
-Overfull \hbox (37.49753pt too wide) in paragraph at lines 136--136
-[]\OT1/cmtt/m/n/10 theorem majorana_rung_compatible_with_hidden_singlet :[] 
+Overfull \hbox (37.5pt too wide) in paragraph at lines 136--136
+[]\TU/lmtt/m/n/10 theorem majorana_rung_compatible_with_hidden_singlet :[] 
  []
 
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
 
-! LaTeX Error: Unicode character ∧ (U+2227)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.136 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Package natbib Warning: Citation `WanWang2020' on page 1 undefined on input lin
+e 143.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 137--144
-\OT1/cmr/m/n/10 proved by di-rect in-vo-ca-tion of
+\TU/lmr/m/n/10 proved by di-rect in-vo-ca-tion of
  []
 
 
-Overfull \hbox (78.86711pt too wide) in paragraph at lines 137--144
-\OT1/cmtt/m/n/10 HiddenSectorClassification.three[]singlets[]satisfy[]hidden[]s
-ector
+Overfull \hbox (84.75pt too wide) in paragraph at lines 137--144
+\TU/lmtt/m/n/10 HiddenSectorClassification.three_singlets_satisfy_hidden_sector
  []
 
 
-Overfull \hbox (13.7573pt too wide) in paragraph at lines 137--144
-\OT1/cmr/m/n/10 and the Wave-2 \OT1/cmtt/m/n/10 majorana[]rung[]saturates[]hidd
-en[]sector\OT1/cmr/m/n/10 .
+Overfull \hbox (19.64pt too wide) in paragraph at lines 137--144
+\TU/lmr/m/n/10 and the Wave-2 \TU/lmtt/m/n/10 majorana_rung_saturates_hidden_sec
+tor\TU/lmr/m/n/10 .
  []
 
 
-Underfull \hbox (badness 2735) in paragraph at lines 137--144
-\OT1/cmr/m/n/10 fun-da-men-tal $\OML/cmm/m/it/10 ^^W[]$ \OT1/cmr/m/n/10 Weyl sa
-t-u-rate the SM-without-$\OML/cmm/m/it/10 ^^W[]$
+Underfull \hbox (badness 2744) in paragraph at lines 137--144
+\TU/lmr/m/n/10 fun-da-men-tal $\OML/cmm/m/it/10 []$ \TU/lmr/m/n/10 Weyl sat-u-r
+ate the SM-without-$\OML/cmm/m/it/10 []$
  []
 
-[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+]
 
-! LaTeX Error: Unicode character ℝ (U+211D)
-               not set up for use with LaTeX.
+Package natbib Warning: Citation `WanWang2020' on page 2 undefined on input lin
+e 148.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.161 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
 
-
-! LaTeX Error: Unicode character ∀ (U+2200)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.161 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-Overfull \hbox (24.71399pt too wide) detected at line 166
+Overfull \hbox (24.71396pt too wide) detected at line 166
 [][][]\OML/cmm/m/it/10 m[] \OT1/cmr/m/n/10 = []\OML/cmm/m/it/10 ;  [] m y v i \
-OMS/cmsy/m/n/10 ^^Q \OML/cmm/m/it/10 y[]v[]=m:M[] i;
+OMS/cmsy/m/n/10  \OML/cmm/m/it/10 y[]v[]=m:M[] i;
  []
 
 
@@ -671,303 +722,235 @@ Overfull \hbox (85.25252pt too wide) detected at line 174
  > [] m[]
  []
 
-<figures/fig_seesaw_y_m_r_band.png, id=105, 2409.0pt x 1606.0pt>
+
+Package natbib Warning: Citation `NuFit60' on page 2 undefined on input line 18
+0.
+
+<figures/fig_seesaw_y_m_r_band.png, id=67, 2409.0pt x 1606.0pt>
 File: figures/fig_seesaw_y_m_r_band.png Graphic file (type png)
 <use figures/fig_seesaw_y_m_r_band.png>
-Package pdftex.def Info: figures/fig_seesaw_y_m_r_band.png  used on input line 
+Package luatex.def Info: figures/fig_seesaw_y_m_r_band.png  used on input line 
 185.
-(pdftex.def)             Requested size: 246.0pt x 163.99117pt.
+(luatex.def)             Requested size: 246.0pt x 163.99117pt.
+
+Package natbib Warning: Citation `AntuschKerstenLindnerRatz2003' on page 2 unde
+fined on input line 203.
+
+
+Package natbib Warning: Citation `Hill2024Bilocal' on page 2 undefined on input
+ line 203.
+
+
+Package natbib Warning: Citation `AntuschKerstenLindnerRatz2003' on page 2 unde
+fined on input line 210.
+
+
+Package natbib Warning: Citation `AntuschKerstenLindnerRatz2003' on page 2 unde
+fined on input line 218.
+
 
 Underfull \hbox (badness 10000) in paragraph at lines 216--221
-[]\OT1/cmr/m/n/10 When the sub-strate ex-plic-itly vi-o-lates $\OML/cmm/m/it/10
- U\OT1/cmr/m/n/10 (1)[]$,
+[]\TU/lmr/m/n/10 When the sub-strate ex-plic-itly vi-o-lates $\OML/cmm/m/it/10 
+U\OT1/cmr/m/n/10 (1)[]$\TU/lmr/m/n/10 ,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 216--221
-\OT1/cmr/m/n/10 the qual-i-ta-tive form of $\OML/cmm/m/it/10 M[]$ \OT1/cmr/m/n/
-10 is the stan-dard
+\TU/lmr/m/n/10 the qual-i-ta-tive form of $\OML/cmm/m/it/10 M[]$ \TU/lmr/m/n/10
+ is the stan-dard
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 216--221
-\OT1/cmr/m/n/10 NJL/BCS \OT1/cmr/m/it/10 dimensional-transmutation \OT1/cmr/m/n
-/10 ex-po-nen-
+\TU/lmr/m/n/10 NJL/BCS \TU/lmr/m/it/10 dimensional-transmutation \TU/lmr/m/n/10
+ ex-po-nen-
+ []
+
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+
+Overfull \hbox (3.55pt too wide) in paragraph at lines 227--227
+[]    \TU/lmtt/m/n/10 (m : MajoranaRungData) (Λ_ADW : ℝ󰀀) : Prop :=[] 
+ []
+
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∃ (U+2203) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∃ (U+2203) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+[]    \TU/lmtt/m/n/10 ∀󰀀 i, m.M_R i = Λ_ADW * Real.exp(-1/(2*(G_M-
  []
 
 
-! LaTeX Error: Unicode character Λ (U+039B)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character ℝ (U+211D)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character ∧ (U+2227)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character ∃ (U+2203)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character ℝ (U+211D)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character ∧ (U+2227)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character ∀ (U+2200)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-! LaTeX Error: Unicode character Λ (U+039B)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.227 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-Overfull \hbox (11.24776pt too wide) in paragraph at lines 227--227
-[]     \OT1/cmtt/m/n/10 i, m.M_R i = _ADW * Real.exp(-1/(2*(G_M-1)))[] 
+Underfull \hbox (badness 3396) in paragraph at lines 229--235
+\TU/lmr/m/n/10 codes the sym-me-try ob-struc-tion; $\OML/cmm/m/it/10 G[] > \OT1
+/cmr/m/n/10 1$ \TU/lmr/m/n/10 en-
  []
 
 
-Underfull \hbox (badness 3386) in paragraph at lines 229--235
-\OT1/cmr/m/n/10 codes the sym-me-try ob-struc-tion; $\OML/cmm/m/it/10 G[] > \OT
-1/cmr/m/n/10 1$ en-
+Underfull \hbox (badness 3758) in paragraph at lines 229--235
+\TU/lmr/m/n/10 codes su-per-crit-i-cal-ity (in units where the crit-i-cal
  []
 
 
-Underfull \hbox (badness 3746) in paragraph at lines 229--235
-\OT1/cmr/m/n/10 codes su-per-crit-i-cal-ity (in units where the crit-i-cal
+Underfull \hbox (badness 6842) in paragraph at lines 229--235
+\TU/lmr/m/n/10 cou-pling is nor-mal-ized to unity). The Wave
  []
 
 
-Underfull \hbox (badness 6825) in paragraph at lines 229--235
-\OT1/cmr/m/n/10 cou-pling is nor-mal-ized to unity). The Wave
+Underfull \hbox (badness 7133) in paragraph at lines 229--235
+\TU/lmr/m/n/10 2b Lean mod-ule ships the ob-struc-tion the-o-rem
  []
 
 
-Underfull \hbox (badness 7116) in paragraph at lines 229--235
-\OT1/cmr/m/n/10 2b Lean mod-ule ships the ob-struc-tion the-o-rem
+Underfull \hbox (badness 2828) in paragraph at lines 229--235
+\TU/lmtt/m/n/10 lepton_number_symmetry_obstructs_BCS_form \TU/lmr/m/n/10 as a
  []
 
 
-Underfull \hbox (badness 7168) in paragraph at lines 236--242
-[]\OT1/cmr/m/n/10 Two fur-ther re-fine-ment the-o-rems are shipped:
+Underfull \hbox (badness 7722) in paragraph at lines 236--242
+[]\TU/lmr/m/n/10 Two fur-ther re-fine-ment the-o-rems are shipped:
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 236--242
-\OT1/cmtt/m/n/10 M[]R[]pos[]under[]BCS[]form \OT1/cmr/m/n/10 (the BCS ex-po-nen
--
+\TU/lmtt/m/n/10 M_R_pos_under_BCS_form \TU/lmr/m/n/10 (the BCS ex-po-nen-
  []
 
 
-Underfull \hbox (badness 6188) in paragraph at lines 236--242
-\OT1/cmr/m/n/10 tial is strictly pos-i-tive, hence so is $\OML/cmm/m/it/10 M[]$
-\OT1/cmr/m/n/10 ) and
+Underfull \hbox (badness 6220) in paragraph at lines 236--242
+\TU/lmr/m/n/10 tial is strictly pos-i-tive, hence so is $\OML/cmm/m/it/10 M[]$\
+TU/lmr/m/n/10 ) and
  []
 
 
-Underfull \hbox (badness 1997) in paragraph at lines 243--251
-[]\OT1/cmr/m/n/10 This Wave 2b strength-en-ing pat-tern fol-lows the
+Underfull \hbox (badness 10000) in paragraph at lines 236--242
+\TU/lmtt/m/n/10 M_R_lt_substrate_under_BCS_form \TU/lmr/m/n/10 (the BCS ex-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 243--251
-\OT1/cmr/m/n/10 project's tracked-hypothesis prece-dent [[]]: the
+Underfull \hbox (badness 3407) in paragraph at lines 236--242
+\TU/lmr/m/n/10 po-nen-tial is strictly bounded above by 1, hence
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 243--251
-\OT1/cmtt/m/n/10 H[]ScalarChannelIsTetradBifurcationOutput \OT1/cmr/m/n/10 hy-
+Package natbib Warning: Citation `TooBySmithHepLean' on page 2 undefined on inp
+ut line 244.
+
+
+Underfull \hbox (badness 2005) in paragraph at lines 243--251
+[]\TU/lmr/m/n/10 This Wave 2b strength-en-ing pat-tern fol-lows the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 243--251
-\OT1/cmr/m/n/10 poth-e-sis in \OT1/cmtt/m/n/10 ScalarRungInterpretation.lean\OT
-1/cmr/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 243--251
-\OT1/cmr/m/n/10 the \OT1/cmtt/m/n/10 H[]MixedChannelZ16Cancels \OT1/cmr/m/n/10 
-hy-poth-e-sis
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 243--251
-\OT1/cmr/m/n/10 in \OT1/cmtt/m/n/10 HiddenSectorMixedCharge.lean\OT1/cmr/m/n/10
- , and the
+Underfull \hbox (badness 2495) in paragraph at lines 243--251
+\TU/lmr/m/n/10 project’s tracked-hypothesis prece-dent [\TU/lmr/bx/n/10 ? \TU
+/lmr/m/n/10 ]: the
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 243--251
-\OT1/cmtt/m/n/10 H[]VestigialRelicCarriesZ16Charge \OT1/cmr/m/n/10 hy-poth-e-si
-s in
+\TU/lmtt/m/n/10 H_ScalarChannelIsTetradBifurcationOutput \TU/lmr/m/n/10 hy-
  []
 
-[2{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-} <./figures/fig_seesaw_y_m_r_band.png>]
 
-! LaTeX Error: Unicode character ℂ (U+2102)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.262 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Underfull \hbox (badness 10000) in paragraph at lines 243--251
+\TU/lmr/m/n/10 poth-e-sis in \TU/lmtt/m/n/10 ScalarRungInterpretation.lean\TU/l
+mr/m/n/10 ,
+ []
 
 
-! LaTeX Error: Unicode character ∈ (U+2208)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.262 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Underfull \hbox (badness 10000) in paragraph at lines 243--251
+\TU/lmr/m/n/10 the \TU/lmtt/m/n/10 H_MixedChannelZ16Cancels \TU/lmr/m/n/10 hy-po
+th-e-sis
+ []
 
 
-! LaTeX Error: Unicode character ℂ (U+2102)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.262 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Underfull \hbox (badness 10000) in paragraph at lines 243--251
+\TU/lmr/m/n/10 in \TU/lmtt/m/n/10 HiddenSectorMixedCharge.lean\TU/lmr/m/n/10 , 
+and the
+ []
 
 
-Overfull \hbox (26.99762pt too wide) in paragraph at lines 262--262
-[]  \OT1/cmtt/m/n/10 isUnitary : toMatrix  Matrix.unitaryGroup (Fin 3) [] 
+Underfull \hbox (badness 10000) in paragraph at lines 243--251
+\TU/lmtt/m/n/10 H_VestigialRelicCarriesZ16Charge \TU/lmr/m/n/10 hy-poth-e-sis in
+
+ []
+
+[2
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∃ (U+2203) in font [lmmono10-regular]:!
+Missing character: There is no ℝ (U+211D) in font [lmmono10-regular]:!
+Missing character: There is no ∧ (U+2227) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+<./figures/fig_seesaw_y_m_r_band.png>]
+
+Package natbib Warning: Citation `TooBySmithHepLean' on page 3 undefined on inp
+ut line 257.
+
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ∈ (U+2208) in font [lmmono10-regular]:!
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ∈ (U+2208) in font [lmmono10-regular]:!
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ∈ (U+2208) in font [lmmono10-regular]:!
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ∈ (U+2208) in font [lmmono10-regular]:!
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+
+Overfull \hbox (32.6pt too wide) in paragraph at lines 262--262
+[]  \TU/lmtt/m/n/10 isUnitary : toMatrix ∈󰀀 Matrix.unitaryGroup (Fin 3) 
+ℂ󰀀[] 
  []
 
 
 Underfull \hbox (badness 3679) in paragraph at lines 273--282
-\OML/cmm/m/it/10 R[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R[]\OT1/cmr/m/n/10 )\OM
-L/cmm/m/it/10 U[]R[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R[]\OT1/cmr/m/n/10 )\OM
-L/cmm/m/it/10 U[]R[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R[]\OT1/cmr/m/n/10 ) \O
-MS/cmsy/m/n/10 ^^A []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 e[]; e[]; \OT1/cmr/m/n/1
-0 1)$
+\OML/cmm/m/it/10 R[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OML/
+cmm/m/it/10 U[]R[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 )\OML/cm
+m/m/it/10 U[]R[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 ) \OMS/cms
+y/m/n/10  []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 e[]; e[]; \OT1/cmr/m/n/10 1)$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 273--282
-\OT1/cmr/m/n/10 is pro-vided as a Python im-ple-men-ta-tion
+\TU/lmr/m/n/10 is pro-vided as a Python im-ple-men-ta-tion
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 273--282
-\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 src/core/formulas.py:pmns[]unitary[]matrix\OT
-1/cmr/m/n/10 ) and
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 src/core/formulas.py:pmns_unitary_matrix\TU/lmr
+/m/n/10 )
  []
 
 
-Overfull \hbox (47.99744pt too wide) in paragraph at lines 287--287
-[]\OT1/cmtt/m/n/10 def H_PMNSAnglesFromSubstrate (V : PMNSMatrix) : Prop :=[] 
+Overfull \hbox (48.0pt too wide) in paragraph at lines 287--287
+[]\TU/lmtt/m/n/10 def H_PMNSAnglesFromSubstrate (V : PMNSMatrix) : Prop :=[] 
  []
 
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
 
-! LaTeX Error: Unicode character ∀ (U+2200)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.287 \end{verbatim}
-                    
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Package natbib Warning: Citation `Volovik2024Spinor' on page 3 undefined on inp
+ut line 295.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 288--296
-\OT1/cmtt/m/n/10 identity[]does[]not[]satisfy[]substrate[]hypothesis
+\TU/lmtt/m/n/10 identity_does_not_satisfy_substrate_hypothesis
  []
 
 
@@ -990,142 +973,205 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 298.
 
-<figures/fig_m_beta_beta_vs_m_lightest.png, id=130, 2409.0pt x 1606.0pt>
+
+Package natbib Warning: Citation `NuFit60' on page 3 undefined on input line 30
+8.
+
+<figures/fig_m_beta_beta_vs_m_lightest.png, id=80, 2409.0pt x 1606.0pt>
 File: figures/fig_m_beta_beta_vs_m_lightest.png Graphic file (type png)
 <use figures/fig_m_beta_beta_vs_m_lightest.png>
-Package pdftex.def Info: figures/fig_m_beta_beta_vs_m_lightest.png  used on inp
+Package luatex.def Info: figures/fig_m_beta_beta_vs_m_lightest.png  used on inp
 ut line 313.
-(pdftex.def)             Requested size: 246.0pt x 163.99117pt.
+(luatex.def)             Requested size: 246.0pt x 163.99117pt.
 
-Underfull \hbox (badness 1226) in paragraph at lines 340--345
-\OT1/cmr/m/n/10 (substrate-bound $\OML/cmm/m/it/10 ^^W[]$\OT1/cmr/m/n/10 ) con-
-firms that the Appelquist-
+Package natbib Warning: Citation `NuFit60' on page 3 undefined on input line 32
+2.
+
+
+Package natbib Warning: Citation `KamLANDZen800' on page 3 undefined on input l
+ine 322.
+
+
+Package natbib Warning: Citation `LEGEND1000' on page 3 undefined on input line
+ 322.
+
+
+Package natbib Warning: Citation `NuFit60' on page 3 undefined on input line 32
+2.
+
+
+Package natbib Warning: Citation `KamLANDZen800' on page 3 undefined on input l
+ine 322.
+
+
+Package natbib Warning: Citation `LEGEND1000' on page 3 undefined on input line
+ 322.
+
+
+Package natbib Warning: Citation `ADW' on page 3 undefined on input line 333.
+
+
+Package natbib Warning: Citation `WetterichSpinor2013' on page 3 undefined on i
+nput line 333.
+
+
+Package natbib Warning: Citation `Volovik2024Spinor' on page 3 undefined on inp
+ut line 333.
+
+
+Package natbib Warning: Citation `AppelquistCarazzone1975' on page 3 undefined 
+on input line 342.
+
+
+Package natbib Warning: Citation `BallThorne1994' on page 3 undefined on input 
+line 342.
+
+
+Underfull \hbox (badness 1221) in paragraph at lines 340--345
+\TU/lmr/m/n/10 (substrate-bound $\OML/cmm/m/it/10 []$\TU/lmr/m/n/10 ) con-firms
+ that the Appelquist-
  []
 
 
-Overfull \hbox (1.48062pt too wide) detected at line 349
+Overfull \hbox (1.48059pt too wide) detected at line 349
 [][][]\OMS/cmsy/m/n/10 j[][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 E\OT1/cmr/m/n/10 
-) \OMS/cmsy/m/n/10 ^^@ [][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 E\OT1/cmr/m/n/10 )
-\OMS/cmsy/m/n/10 j  ^^T  \OML/cmm/m/it/10 C \OMS/cmsy/m/n/10 ^^A \OT1/cmr/m/n/1
-0 (\OML/cmm/m/it/10 E=\OT1/cmr/m/n/10 ^^C[])[]\OML/cmm/m/it/10 ;  k \OMS/cmsy/m
-/n/10 2 f\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 2\OMS/cmsy/m/n/10 
-g\OML/cmm/m/it/10 :
+) \OMS/cmsy/m/n/10 ^^@ [][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 E\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/10 j    \OML/cmm/m/it/10 C \OMS/cmsy/m/n/10  \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 E=\OT1/cmr/m/n/10 [])[]\OML/cmm/m/it/10 ;  k \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 2\OMS/cmsy/m/n/10 g\OML/cmm/m/it/10 :
  []
 
 
-Underfull \hbox (badness 5217) in paragraph at lines 349--356
-\OT1/cmr/m/n/10 The nat-u-ral Wilson-coefficient es-ti-mate is $\OML/cmm/m/it/1
-0 C \OMS/cmsy/m/n/10 ^^X
+Package natbib Warning: Citation `GiudiceGrojeanPomarolRattazzi2007' on page 3 
+undefined on input line 352.
+
+
+Package natbib Warning: Citation `Hill2024Bilocal' on page 3 undefined on input
+ line 353.
+
+
+Underfull \hbox (badness 5245) in paragraph at lines 349--356
+\TU/lmr/m/n/10 The nat-u-ral Wilson-coefficient es-ti-mate is $\OML/cmm/m/it/10
+ C \OMS/cmsy/m/n/10 
  []
 
-
-Underfull \hbox (badness 2547) in paragraph at lines 349--356
-\OML/cmm/m/it/10 N[]=\OT1/cmr/m/n/10 (16\OML/cmm/m/it/10 ^^Y[]\OT1/cmr/m/n/10 )
- \OMS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 1$ for A
-DW-style sub-strates with
- []
-
-[3 <./figures/fig_m_beta_beta_vs_m_lightest.png>]
+[3
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ∈ (U+2208) in font [lmmono10-regular]:!
+Missing character: There is no ℂ (U+2102) in font [lmmono10-regular]:!
+Missing character: There is no ∀ (U+2200) in font [lmmono10-regular]:!
+<./figures/fig_m_beta_beta_vs_m_lightest.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 357--358
-[]\OT1/cmr/m/n/10 The Wave 2b Lean mod-ule
+[]\TU/lmr/m/n/10 The Wave 2b Lean mod-ule
  []
 
 
+Package natbib Warning: Citation `Volovik2024Spinor' on page 4 undefined on inp
+ut line 361.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 367--371
- []\OT1/cmr/m/n/10 Two tracked-hypothesis Props:
+ []\TU/lmr/m/n/10 Two tracked-hypothesis Props:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 367--371
- \OT1/cmtt/m/n/10 H[]DecouplingBoundDim5[]LNV \OT1/cmr/m/n/10 (LNV-conditional,
-
+Underfull \hbox (badness 6876) in paragraph at lines 367--371
+ \TU/lmtt/m/n/10 H_DecouplingBoundDim5_LNV \TU/lmr/m/n/10 (LNV-conditional,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 371--374
- []\OT1/cmr/m/n/10 A non-vacuity wit-ness
+ []\TU/lmr/m/n/10 A non-vacuity wit-ness
  []
 
 
-Underfull \hbox (badness 4205) in paragraph at lines 371--374
- \OT1/cmr/m/n/10 ing the canon-i-cal EW point $(\OML/cmm/m/it/10 E; \OT1/cmr/m/
-n/10 ^^C[]) =
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 374--377
- []\OT1/cmr/m/n/10 A con-sis-tency wit-ness
+Underfull \hbox (badness 10000) in paragraph at lines 371--374
+ \TU/lmtt/m/n/10 decouplingRegime_at_electroweak_scale
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 374--377
- \OT1/cmtt/m/n/10 H[]DecouplingBoundDim6[]consistent \OT1/cmr/m/n/10 show-ing
+ []\TU/lmr/m/n/10 A con-sis-tency wit-ness
  []
 
 
-Underfull \hbox (badness 6808) in paragraph at lines 377--380
- []\OT1/cmr/m/n/10 A \OT1/cmtt/m/n/10 decoupling[]isBigOWith \OT1/cmr/m/n/10 re
--state-ment us-ing
+Underfull \hbox (badness 10000) in paragraph at lines 374--377
+ \TU/lmtt/m/n/10 H_DecouplingBoundDim6_consistent \TU/lmr/m/n/10 show-
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 382--394
-\OT1/cmr/m/n/10 sup-pres-sion is $(\OML/cmm/m/it/10 E=\OT1/cmr/m/n/10 ^^C[]) \O
-MS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 8 \OMS/cmsy/m/n/10 ^^B \OT1/cmr/m/n/10 10[]$, 
-cor-re-
+Underfull \hbox (badness 5460) in paragraph at lines 377--380
+ []\TU/lmr/m/n/10 A \TU/lmtt/m/n/10 decoupling_isBigOWith \TU/lmr/m/n/10 re-stat
+e-ment us-ing
  []
 
 
-Underfull \hbox (badness 3612) in paragraph at lines 382--394
-\OT1/cmr/m/n/10 spond-ing to $\OML/cmm/m/it/10 m[] \OMS/cmsy/m/n/10 ^^X \OML/cm
-m/m/it/10 C \OMS/cmsy/m/n/10 ^^A \OML/cmm/m/it/10 v[]=\OT1/cmr/m/n/10 ^^C[] \OM
-S/cmsy/m/n/10 ' \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 06$ eV
+Package natbib Warning: Citation `LEGEND1000' on page 4 undefined on input line
+ 389.
+
+
+Package natbib Warning: Citation `CiriglianoMasterFormula2018' on page 4 undefi
+ned on input line 391.
+
+
+Underfull \hbox (badness 4792) in paragraph at lines 382--394
+\TU/lmr/m/n/10 sup-pres-sion is $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 E=\OT1/cmr/m
+/n/10 []) \OMS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 8 \OMS/cmsy/m/n/10  \OT1/cmr/m/n
+/10 10[]$\TU/lmr/m/n/10 , cor-re-
  []
 
 
-Underfull \hbox (badness 6978) in paragraph at lines 382--394
-\OT1/cmr/m/n/10 (at the SILH nat-u-ral Wil-son co-ef-fi-cient $\OML/cmm/m/it/10
- C \OMS/cmsy/m/n/10 '
+Underfull \hbox (badness 3769) in paragraph at lines 382--394
+\TU/lmr/m/n/10 spond-ing to $\OML/cmm/m/it/10 m[] \OMS/cmsy/m/n/10  \OML/cmm/m
+/it/10 C \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 v[]=\OT1/cmr/m/n/10 [] \OMS/cmsy/
+m/n/10 ' \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 06$ \TU/lmr/m/n/10 
+eV
+ []
+
+
+Underfull \hbox (badness 6995) in paragraph at lines 382--394
+\TU/lmr/m/n/10 (at the SILH nat-u-ral Wil-son co-ef-fi-cient $\OML/cmm/m/it/10 
+C \OMS/cmsy/m/n/10 '
  []
 
 
 Underfull \hbox (badness 1675) in paragraph at lines 382--394
-\OML/cmm/m/it/10 N[]=\OT1/cmr/m/n/10 (16\OML/cmm/m/it/10 ^^Y[]\OT1/cmr/m/n/10 )
- \OMS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 1$, im-p
-le-mented as the de-fault in
+\OML/cmm/m/it/10 N[]=\OT1/cmr/m/n/10 (16\OML/cmm/m/it/10 []\OT1/cmr/m/n/10 ) \
+OMS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 1$\TU/lmr/
+m/n/10 , im-ple-mented as the de-fault in
  []
 
 
-Overfull \hbox (21.22656pt too wide) in paragraph at lines 382--394
-\OT1/cmtt/m/n/10 src/core/formulas.py:weinberg[]induced[]neutrino[]mass\OT1/cmr
-/m/n/10 )
+Overfull \hbox (25.64pt too wide) in paragraph at lines 382--394
+\TU/lmtt/m/n/10 src/core/formulas.py:weinberg_induced_neutrino_mass\TU/lmr/m/n/
+10 )
  []
 
 
 Underfull \hbox (badness 1308) in paragraph at lines 382--394
-\OT1/cmr/m/n/10 (generic) sup-pres-sion is $(\OML/cmm/m/it/10 E=\OT1/cmr/m/n/10
- ^^C[])[] \OMS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 6 \OMS/cmsy/m/n/10 ^^B \OT1/cmr/m/
-n/10 10[]$,
+\TU/lmr/m/n/10 (generic) sup-pres-sion is $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 E=\OT1/cmr/m/n/10 [])[] \OMS/cmsy/m/n/10 ' \OT1/cmr/m/n/10 6 \OMS/cmsy/m/n/10  \OT1/cmr/m/n/10 10[]$\TU/lmr/m/n/10 ,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 395--403
-[]\OT1/cmr/bx/n/10 Independence (not re-fine-
+[]\TU/lmr/bx/n/10 In-de-pen-dence (not re-fine-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 395--403
-\OT1/cmr/bx/n/10 ment). \OT1/cmr/m/n/10 An aux-il-iary lemma
+\TU/lmr/bx/n/10 ment). \TU/lmr/m/n/10 An aux-il-iary lemma
  []
 
 
-Overfull \hbox (19.08795pt too wide) in paragraph at lines 410--421
+Underfull \hbox (badness 10000) in paragraph at lines 395--403
+\TU/lmtt/m/n/10 dim6_tighter_than_dim5_in_decoupling_regime
+ []
+
+
+Overfull \hbox (19.0713pt too wide) in paragraph at lines 410--421
  []$[]$ 
  []
 
 ! Undefined control sequence.
 <argument> ...ems \ theorems across \totalmodules 
-                                                  \^^Mmodules with \sorrycou...
+                                                  \modules with \sorrycount...
 l.427 ...terface\_axiom} unchanged from Phase 4).}
                                                   
 The control sequence at the end of the top line
@@ -1147,7 +1193,7 @@ and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
 <argument> ...ems \ theorems across \totalmodules 
-                                                  \^^Mmodules with \sorrycou...
+                                                  \modules with \sorrycount...
 l.427 ...terface\_axiom} unchanged from Phase 4).}
                                                   
 The control sequence at the end of the top line
@@ -1169,7 +1215,7 @@ and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
 <argument> ...ems \ theorems across \totalmodules 
-                                                  \^^Mmodules with \sorrycou...
+                                                  \modules with \sorrycount...
 l.427 ...terface\_axiom} unchanged from Phase 4).}
                                                   
 The control sequence at the end of the top line
@@ -1190,216 +1236,279 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-Underfull \hbox (badness 1721) in paragraph at lines 431--441
-\OT1/cmtt/m/n/10 H[]MR[]FromADWSubstrate \OT1/cmr/m/n/10 tracked hy-poth-e-sis,
- $\OML/cmm/m/it/10 M[] \OMS/cmsy/m/n/10 ^^T
+Underfull \hbox (badness 10000) in paragraph at lines 427--427
+[]\TU/lmr/m/n/9 TA-BLE I. []Wave 2 Lean-formalization counts af-ter
+ []
+
+
+Underfull \hbox (badness 5908) in paragraph at lines 427--427
+\TU/lmr/m/n/9 Wave 2a ac-cu-racy round and Wave 2b strength-en-
+ []
+
+
+Underfull \hbox (badness 1112) in paragraph at lines 427--427
+\TU/lmr/m/n/9 ing. All three mod-ules build clean un-der \TU/lmtt/m/n/9 lake bui
+ld
+ []
+
+
+LaTeX Warning: Reference `tab:formal-summary' on page 4 undefined on input line
+ 431.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 442--451
+[]\TU/lmr/m/n/10 The PMNS mod-ule ships seven the-o-rems:
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 442--451
-[]\OT1/cmr/m/n/10 The PMNS mod-ule ships seven the-o-rems:
+\TU/lmr/m/n/10 two uni-tar-ity iden-ti-ties ($\OML/cmm/m/it/10 U[]U[] \OT1/cmr/
+m/n/10 = \U/msb/m/n/10 1$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 442--451
-\OT1/cmr/m/n/10 two uni-tar-ity iden-ti-ties ($\OML/cmm/m/it/10 U[]U[] \OT1/cmr
-/m/n/10 = \U/msb/m/n/10 1$
+\TU/lmr/m/n/10 both ways), two identity-PMNS struc-tural lem-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 442--451
-\OT1/cmr/m/n/10 both ways), two identity-PMNS struc-tural lem-
+\TU/lmr/m/n/10 mas, the \TU/lmtt/m/n/10 IsMajoranaPMNS_of_majoranaRungData
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 442--451
-\OT1/cmr/m/n/10 mas, the \OT1/cmtt/m/n/10 IsMajoranaPMNS[]of[]majoranaRungData
+\TU/lmr/m/n/10 bridge to the \TU/lmtt/m/n/10 MajoranaRung \TU/lmr/m/n/10 mod-ule
+, and the
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 442--451
-\OT1/cmr/m/n/10 bridge to the \OT1/cmtt/m/n/10 MajoranaRung \OT1/cmr/m/n/10 mod
--ule, and the
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 442--451
-\OT1/cmtt/m/n/10 identity[]does[]not[]satisfy[]substrate[]hypothesis
+\TU/lmtt/m/n/10 identity_does_not_satisfy_substrate_hypothesis
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 454--460
-[]\OT1/cmr/m/n/10 A Python cross-validation layer in
+[]\TU/lmr/m/n/10 A Python cross-validation layer in
  []
 
 
-Underfull \hbox (badness 7888) in paragraph at lines 454--460
-\OT1/cmtt/m/n/10 tests/test[]majorana[]rung.py \OT1/cmr/m/n/10 (32 tests across
- 6
+Underfull \hbox (badness 5741) in paragraph at lines 454--460
+\TU/lmtt/m/n/10 tests/test_majorana_rung.py \TU/lmr/m/n/10 (32 tests across 6
  []
 
 [4]
-Underfull \hbox (badness 2035) in paragraph at lines 485--488
- []$\OML/cmm/m/it/10 ^^W[]$\OT1/cmr/m/n/10 -as-substrate-bound-state IR-equival
-ence map
+
+Package natbib Warning: Citation `ADW' on page 5 undefined on input line 472.
+
+
+Package natbib Warning: Citation `WetterichSpinor2013' on page 5 undefined on i
+nput line 472.
+
+
+Package natbib Warning: Citation `Volovik2024Spinor' on page 5 undefined on inp
+ut line 472.
+
+
+Underfull \hbox (badness 2057) in paragraph at lines 485--488
+ []$\OML/cmm/m/it/10 []$\TU/lmr/m/n/10 -as-substrate-bound-state IR-equivalence
+ map
  []
 
 
-Underfull \hbox (badness 1270) in paragraph at lines 490--495
-[]\OT1/cmr/m/n/10 The Wave-2 scope de-lib-er-ately ex-cludes: (i) the
+Underfull \hbox (badness 1275) in paragraph at lines 490--495
+[]\TU/lmr/m/n/10 The Wave-2 scope de-lib-er-ately ex-cludes: (i) the
  []
 
 
 Underfull \hbox (badness 2027) in paragraph at lines 490--495
-\OT1/cmr/m/n/10 full PMNS phe-nomenol-ogy pro-gram (CKM-like fit-
+\TU/lmr/m/n/10 full PMNS phe-nomenol-ogy pro-gram (CKM-like fit-
  []
 
 
-Underfull \hbox (badness 1622) in paragraph at lines 490--495
-\OT1/cmr/m/n/10 ting, lep-to-ge-n-e-sis dy-nam-ics, mass-hierarchy fit-ting);
+Underfull \hbox (badness 1629) in paragraph at lines 490--495
+\TU/lmr/m/n/10 ting, lep-to-ge-n-e-sis dy-nam-ics, mass-hierarchy fit-ting);
  []
 
 
 Underfull \hbox (badness 1394) in paragraph at lines 490--495
-\OT1/cmr/m/n/10 with ex-plicit hid-den TQFT for-mal-iza-tion; (iii) the
+\TU/lmr/m/n/10 with ex-plicit hid-den TQFT for-mal-iza-tion; (iii) the
+ []
+
+
+LaTeX Warning: Reference `LastBibItem' on page 5 undefined on input line 519.
+
+
+Underfull \hbox (badness 8019) in paragraph at lines 527--529
+ []\TU/lmr/m/n/9 C. Wet-terich, ``Spinor grav-ity and grav-i-ta-tional
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 527--529
- []\OT1/cmr/m/n/9 C. Wet-terich, ``Spinor grav-ity and grav-i-ta-tional
+ \TU/lmr/m/n/9 anomaly,'' Lect. Notes Phys. \TU/lmr/bx/n/9 863\TU/lmr/m/n/9 , 67
+ (2013);
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 527--529
- \OT1/cmr/m/n/9 anomaly,'' Lect. Notes Phys. \OT1/cmr/bx/n/9 863\OT1/cmr/m/n/9 
-, 67 (2013);
+Underfull \hbox (badness 3302) in paragraph at lines 540--543
+ []\TU/lmr/m/n/9 I. García-Etxebarria and M. Mon-tero, ``Dai-Freed
  []
 
 
-Underfull \hbox (badness 3557) in paragraph at lines 540--543
- []\OT1/cmr/m/n/9 I. Garc^^S^^Pa-Etxebarria and M. Mon-tero, ``Dai-Freed
+Underfull \hbox (badness 3713) in paragraph at lines 545--549
+ []\TU/lmr/m/n/9 Z. Wan and J. Wang, ``Be-yond Stan-dard Mod-
  []
 
 
-Underfull \hbox (badness 3907) in paragraph at lines 545--549
- []\OT1/cmr/m/n/9 Z. Wan and J. Wang, ``Be-yond Stan-dard Mod-
+Underfull \hbox (badness 4084) in paragraph at lines 545--549
+ \TU/lmr/m/n/9 els and Grand Uni-fi-ca-tions: anoma-lies, topo-log-
  []
 
 
-Underfull \hbox (badness 4441) in paragraph at lines 545--549
- \OT1/cmr/m/n/9 els and Grand Uni-fi-ca-tions: anoma-lies, topo-log-
+Underfull \hbox (badness 3386) in paragraph at lines 545--549
+ \TU/lmr/m/n/9 i-cal terms, and dy-nam-i-cal con-straints via cobor-
  []
 
 
-Underfull \hbox (badness 3690) in paragraph at lines 545--549
- \OT1/cmr/m/n/9 i-cal terms, and dy-nam-i-cal con-straints via cobor-
+Underfull \hbox (badness 3407) in paragraph at lines 545--549
+ \TU/lmr/m/n/9 disms,'' JHEP \TU/lmr/bx/n/9 07\TU/lmr/m/n/9 , 062 (2020); arXiv:
+1910.14668;
  []
 
 
-Underfull \hbox (badness 3646) in paragraph at lines 545--549
- \OT1/cmr/m/n/9 disms,'' JHEP \OT1/cmr/bx/n/9 07\OT1/cmr/m/n/9 , 062 (2020); ar
-Xiv:1910.14668;
+Underfull \hbox (badness 7907) in paragraph at lines 551--555
+ []\TU/lmr/m/n/9 M. Kawasaki and T. T. Yanagida, ``Dai-Freed
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 555--558
- \OT1/cmr/m/n/9 569 (2006); hep-ph/0603118; DOI: []10.1146/an-
+Underfull \hbox (badness 2486) in paragraph at lines 551--555
+ \TU/lmr/m/n/9 fla-tion,'' JHEP \TU/lmr/bx/n/9 11\TU/lmr/m/n/9 , 106 (2023); arX
+iv:2304.10100;
  []
 
 
-Underfull \hbox (badness 3746) in paragraph at lines 560--564
- []\OT1/cmr/m/n/9 I. Es-te-ban, M. C. Gonzalez-Garcia, M. Mal-toni,
+Underfull \hbox (badness 10000) in paragraph at lines 557--560
+ \TU/lmr/m/n/9 569 (2006); hep-ph/0603118; DOI: []10.1146/an-
  []
 
 
-Underfull \hbox (badness 5388) in paragraph at lines 595--599
- \OT1/cmr/m/n/9 045 (2007); hep-ph/0703164; DOI: []10.1088/1126-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 601--604
- []\OT1/cmr/m/n/9 C. T. Hill, ``Bilo-cal field the-ory for com-pos-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 601--604
- \OT1/cmr/m/n/9 ite scalar bosons,'' En-tropy \OT1/cmr/bx/n/9 26\OT1/cmr/m/n/9 
-, 146 (2024);
- []
-
-
-Underfull \hbox (badness 4726) in paragraph at lines 606--611
- \OT1/cmr/m/n/9 and E. Mereghetti, ``A neu-tri-no-less dou-ble beta
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 606--611
- \OT1/cmr/m/n/9 de-cay mas-ter for-mula from ef-fec-tive field the-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 606--611
- \OT1/cmr/m/n/9 ory,'' JHEP \OT1/cmr/bx/n/9 12\OT1/cmr/m/n/9 , 097 (2018); arXi
-v:1806.02780;
+Underfull \hbox (badness 3439) in paragraph at lines 562--567
+ []\TU/lmr/m/n/9 I. Es-te-ban, M. C. Gonzalez-Garcia, M. Mal-toni,
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 623--626
- []\OT1/cmr/m/n/9 The Math-lib Com-mu-nity, ``The Lean Math-e-
+Underfull \hbox (badness 4886) in paragraph at lines 598--602
+ \TU/lmr/m/n/9 045 (2007); hep-ph/0703164; DOI: []10.1088/1126-
  []
 
 
-Underfull \hbox (badness 5741) in paragraph at lines 623--626
- \OT1/cmr/m/n/9 mat-i-cal Li-brary,'' Proc. CPP 2020, 367 (2020);
+Underfull \hbox (badness 10000) in paragraph at lines 604--607
+ []\TU/lmr/m/n/9 C. T. Hill, ``Bilo-cal field the-ory for com-pos-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 604--607
+ \TU/lmr/m/n/9 ite scalar bosons,'' En-tropy \TU/lmr/bx/n/9 26\TU/lmr/m/n/9 , 14
+6 (2024);
+ []
+
+
+Underfull \hbox (badness 4467) in paragraph at lines 609--614
+ \TU/lmr/m/n/9 and E. Mereghetti, ``A neu-tri-no-less dou-ble beta
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 609--614
+ \TU/lmr/m/n/9 de-cay mas-ter for-mula from ef-fec-tive field the-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 609--614
+ \TU/lmr/m/n/9 ory,'' JHEP \TU/lmr/bx/n/9 12\TU/lmr/m/n/9 , 097 (2018); arXiv:18
+06.02780;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 626--629
+ []\TU/lmr/m/n/9 The Math-lib Com-mu-nity, ``The Lean Math-e-
+ []
+
+
+Underfull \hbox (badness 5446) in paragraph at lines 626--629
+ \TU/lmr/m/n/9 mat-i-cal Li-brary,'' Proc. CPP 2020, 367 (2020);
  []
 
 No file paper_draft.bbl.
-[6] (./paper_draft.aux)
+
+Package natbib Warning: There were undefined citations.
+
+[6] (./paper_draft.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-Package rerunfilecheck Info: File `paper_draft.out' has not changed.
-(rerunfilecheck)             Checksum: B95220EA0E0BE5ED8B0DAD6C9B353FBB;3568.
- ) 
-Here is how much of TeX's memory you used:
- 15825 strings out of 467525
- 299838 string characters out of 5418982
- 709744 words of memory out of 5000000
- 44531 multiletter control sequences out of 15000+600000
- 639032 words of font info for 85 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 75i,8n,80p,777b,1240s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
-usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
-sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/
-local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
-cal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/loca
-l/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
-texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/tex
-live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texliv
-e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2
-026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf
--dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fo
-nts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2026/texmf-dis
-t/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf
--dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2026/texmf-d
-ist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dis
-t/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on paper_draft.pdf (6 pages, 658472 bytes).
-PDF statistics:
- 326 PDF objects out of 1000 (max. 8388607)
- 255 compressed objects within 3 object streams
- 47 named destinations out of 1000 (max. 500000)
- 123 words of extra memory for PDF output out of 10000 (max. 10000000)
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `paper_draft.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `paper_draft.out':
+(rerunfilecheck)             Before: B98C5EAAB5409343801E8AFC3BAE37E1;2751
+(rerunfilecheck)             After:  B95220EA0E0BE5ED8B0DAD6C9B353FBB;3568.
+)
+
+Here is how much of LuaTeX's memory you used:
+ 16061 strings out of 476076
+ 156267,794899 words of node,token memory allocated
+ 609 words of node memory still in use:
+   10 hlist, 2 vlist, 2 rule, 1 glue, 4 kern, 1 glyph, 20 attribute, 57 glue_spe
+c, 20 attribute_list, 3 pdf_action nodes
+   avail lists: 1:1,2:757,3:630,4:98,5:899,6:72,7:17505,8:55,9:668,10:25,11:979
+ 38246 multiletter control sequences out of 65536+600000
+ 73 fonts using 5076487 bytes
+ 73i,8n,76p,763b,1093s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.ot
+f></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono10-regular.
+otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.
+otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman9-bold.o
+tf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman9-italic.
+otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono9-regular
+.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman9-regul
+ar.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman10-re
+gular.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman12
+-bold.otf></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cme
+x10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
+0.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.p
+fb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb>
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></u
+sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/loca
+l/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/te
+xlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
+e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/20
+26/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/
+fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2026/texmf-di
+st/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on paper_draft.pdf (6 pages, 574130 bytes).
+
+PDF statistics: 265 PDF objects out of 1000 (max. 8388607)
+ 206 compressed objects within 3 object streams
+ 47 named destinations out of 1000 (max. 1048576)
+ 73 words of extra memory for PDF output out of 10000 (max. 100000000)
 

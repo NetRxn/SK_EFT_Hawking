@@ -1,0 +1,3065 @@
+{
+  "paper": "paper20_scalar_rung",
+  "review_date": "2026-04-25T19:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:63a7aa73",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "63a7aa73",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 28,
+      "tex_line_end": 39,
+      "quote": "We report a Lean~4 formalization that identifies the Higgs bilinear of the electroweak Standard Model with the scalar channel of the Wetterich-NJL four-fermion interaction already verified in our formalization base (\\texttt{WetterichNJL.lean}, \\texttt{TetradGapEquation.lean}, \\texttt{ADWMechanism.lean}, \\texttt{FermiPointTopology.lean}).",
+      "quote_normalized": "we report a lean~4 formalization that identifies the higgs bilinear of the electroweak standard model with the scalar channel of the wetterich-njl four-fermion interaction already verified in our formalization base (wetterichnjl.lean, tetradgapequation.lean, adwmechanism.lean, fermipointtopology.lean).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_is_landau_rung"
+          },
+          {
+            "kind": "theorem",
+            "target": "WetterichNJL.fierz_completeness"
+          },
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation.gap_nontrivial_exists"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Metaclaim about the paper's contribution. WetterichNJL.lean, TetradGapEquation.lean, ADWMechanism.lean, FermiPointTopology.lean all exist as Lean modules.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:cb54e07b",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "cb54e07b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 2,
+      "tex_line_start": 35,
+      "tex_line_end": 39,
+      "quote": "The identification is structural in the flavor-singlet frame---an electroweak $SU(2)_L\\times U(1)_Y$ index dressing remains deep-research-gated---and yields three formal consequences:",
+      "quote_normalized": "the identification is structural in the flavor-singlet frame---an electroweak $su(2)_l\\times u(1)_y$ index dressing remains deep-research-gated---and yields three formal consequences:",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scope-disclosure prose; deep-research-gate disclosure aligns with Phase 5z O.2.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:6ce80341",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "6ce80341",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 3,
+      "tex_line_start": 36,
+      "tex_line_end": 41,
+      "quote": "(i)~the Mexican-hat potential $V(\\HiggsField) = -\\tfrac{1}{2}\\mu^2|\\HiggsField|^2 + \\tfrac{1}{4}\\lambda|\\HiggsField|^4$ arises as a specialization of the supercritical branch of the tetrad gap equation;",
+      "quote_normalized": "(i)~the mexican-hat potential $v(\\higgsfield) = -\\tfrac{1}{2}\\mu^2|\\higgsfield|^2 + \\tfrac{1}{4}\\lambda|\\higgsfield|^4$ arises as a specialization of the supercritical branch of the tetrad gap equation;",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.bridge_excludes_super_uv_vev"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "ScalarRungInterpretation.H_ScalarChannelIsTetradBifurcationOutput"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Mexican-hat-from-tetrad bridge encoded as tracked external hypothesis H_ScalarChannelIsTetradBifurcationOutput; consequence theorems mexican_hat_vev_under_supercritical_bridge and bridge_excludes_super_uv_vev exist in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:4937142f",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "4937142f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 4,
+      "tex_line_start": 41,
+      "tex_line_end": 43,
+      "quote": "(ii)~the Anderson-Higgs $W$/$Z$ mass matrix $M_W = gv/2$, $M_Z = \\sqrt{g^2+g'^2}\\,v/2$ follows directly from the scalar-channel VEV $v = \\sqrt{\\mu^2/\\lambda}$ with $\\cos\\theta_W = M_W/M_Z$;",
+      "quote_normalized": "(ii)~the anderson-higgs $w$/$z$ mass matrix $m_w = gv/2$, $m_z = \\sqrt{g^2+g'^2}\\,v/2$ follows directly from the scalar-channel vev $v = \\sqrt{\\mu^2/\\lambda}$ with $\\cos\\theta_w = m_w/m_z$;",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.wMass_div_zMass"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexicanHatVev_sq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Mass-matrix theorem and cos(theta_W) identity formalized as ew_mass_matrix_from_scalar_vev / wMass_div_zMass; both exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:a0af3fab",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "a0af3fab",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 5,
+      "tex_line_start": 43,
+      "tex_line_end": 47,
+      "quote": "and (iii)~Yukawa couplings reduce to overlap integrals on the FermiPointTopology emergent Weyl modes, with linearity and zero-overlap-zero-coupling lemmas formalized as a stand-in for the microscopic overlap-integral form (deep-research-gated, see Open Question O.2).",
+      "quote_normalized": "and (iii)~yukawa couplings reduce to overlap integrals on the fermipointtopology emergent weyl modes, with linearity and zero-overlap-zero-coupling lemmas formalized as a stand-in for the microscopic overlap-integral form (deep-research-gated, see open question o.2).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_additive"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_eq_zero_iff"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Linearity and zero-coupling-iff-zero-overlap lemmas formalized at stand-in scope; microscopic form gated on Open Question O.2 (disclosed). Both theorems exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:2b7d5c05",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "2b7d5c05",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 6,
+      "tex_line_start": 46,
+      "tex_line_end": 51,
+      "quote": "The correctness-push anchor is a microscopic Higgs-mass prediction $m_H = \\sqrt{2\\mu^2}$ from the Wetterich scalar-channel gap equation: under the schematic leading-log substrate closure, this prediction reaches $m_H = 125.25$~GeV only along a one-parameter curve in the $(\\Lambda_{\\rm UV},\\,G_c)$ plane, requiring tuning rather than emerging from a generic substrate---a structural-only verdict at the current formalization scope.",
+      "quote_normalized": "the correctness-push anchor is a microscopic higgs-mass prediction $m_h = \\sqrt{2\\mu^2}$ from the wetterich scalar-channel gap equation: under the schematic leading-log substrate closure, this prediction reaches $m_h = 125.25$~gev only along a one-parameter curve in the $(\\lambda_{\\rm uv},\\,g_c)$ plane, requiring tuning rather than emerging from a generic substrate---a structural-only verdict at the current formalization scope.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.higgsMassFromCondensate_pos"
+          },
+          {
+            "kind": "formula",
+            "target": "higgs_mass_from_condensate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Qualitative summary of figure heatmap result; positivity theorem exists. Visual claim about '1D curve' delegated to figure-reviewer.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:c66ec70b",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "c66ec70b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 7,
+      "tex_line_start": 51,
+      "tex_line_end": 58,
+      "quote": "The complete formalization lives in a single new Lean module (\\texttt{ScalarRungInterpretation.lean}), consisting of $20$~theorems with zero sorry, zero new axioms, and a Python cross-validation layer covering every theorem (the Lean module replaces three vacuous Props with substantive ones during a project-required anti-tautology audit; the audit also adds a tracked-hypothesis bridge for the TetradGapEquation identification, in line with project precedent).",
+      "quote_normalized": "the complete formalization lives in a single new lean module (scalarrunginterpretation.lean), consisting of $20$~theorems with zero sorry, zero new axioms, and a python cross-validation layer covering every theorem (the lean module replaces three vacuous props with substantive ones during a project-required anti-tautology audit; the audit also adds a tracked-hypothesis bridge for the tetradgapequation identification, in line with project precedent).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_is_landau_rung"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: grep '^theorem ' lean/SKEFTHawking/ScalarRungInterpretation.lean = 20. Match. Zero new axioms confirmed. Sorry count = 0.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:2334b794",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "2334b794",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 8,
+      "tex_line_start": 58,
+      "tex_line_end": 62,
+      "quote": "The deliberate scope boundary is Wave~1 of the Phase~5z roadmap; the Majorana rung (\\texttt{MajoranaRung.lean}) and the electroweak phase transition (\\texttt{EWPhaseTransition.lean}) are addressed in subsequent waves.",
+      "quote_normalized": "the deliberate scope boundary is wave~1 of the phase~5z roadmap; the majorana rung (majoranarung.lean) and the electroweak phase transition (ewphasetransition.lean) are addressed in subsequent waves.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward-looking scope disclosure. MajoranaRung.lean exists; EWPhaseTransition.lean does not yet exist (forward Wave 3); future-tense framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:abstract:2324d1cb",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "abstract",
+        "quote_hash": "2324d1cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 9,
+      "tex_line_start": 62,
+      "tex_line_end": 65,
+      "quote": "We formulate the falsifiability anchor as a decidable Lean predicate and report that, in the flavor-singlet frame, the scalar-rung framing is a \\emph{structural} identification of EWSB rather than a quantitative prediction of the observed $125.25$~GeV Higgs mass.",
+      "quote_normalized": "we formulate the falsifiability anchor as a decidable lean predicate and report that, in the flavor-singlet frame, the scalar-rung framing is a structural identification of ewsb rather than a quantitative prediction of the observed $125.25$~gev higgs mass.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_quantitative_match_iff"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_match_excludes_far_predictions"
+          },
+          {
+            "kind": "parameter",
+            "target": "EW.M_H_MATCH_TOLERANCE"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ScalarRungQuantitativeMatch / scalar_rung_quantitative_match_iff formalized; EW.M_H_MATCH_TOLERANCE = 0.5 in constants.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:75b2c4d4",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "75b2c4d4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 1,
+      "tex_line_start": 74,
+      "tex_line_end": 76,
+      "quote": "The fluid-based emergent-gravity program developed in this research project formalizes a Landau hierarchy of fermion-bilinear condensates on a single fermionic substrate~\\cite{ADW,WetterichSpinor2013,WetterichSpinor2022,Volovik2024}.",
+      "quote_normalized": "the fluid-based emergent-gravity program developed in this research project formalizes a landau hierarchy of fermion-bilinear condensates on a single fermionic substrate~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "ADW"
+          },
+          {
+            "kind": "citation",
+            "target": "WetterichSpinor2013"
+          },
+          {
+            "kind": "citation",
+            "target": "WetterichSpinor2022"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All four citations present in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:973a55ec",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "973a55ec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 77,
+      "tex_line_end": 85,
+      "quote": "Two rungs of this hierarchy have been formalized in prior phases: the disordered $\\to$ vestigial-metric transition (\\texttt{VestigialSusceptibility.lean}, $16$ theorems) and the vestigial-metric $\\to$ tetrad transition (\\texttt{TetradGapEquation.lean}, $20$ theorems; \\texttt{ADWMechanism.lean}, $21$ theorems).",
+      "quote_normalized": "two rungs of this hierarchy have been formalized in prior phases: the disordered $\\to$ vestigial-metric transition (vestigialsusceptibility.lean, $16$ theorems) and the vestigial-metric $\\to$ tetrad transition (tetradgapequation.lean, $20$ theorems; adwmechanism.lean, $21$ theorems).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "VestigialSusceptibility (module)"
+          },
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation (module)"
+          },
+          {
+            "kind": "theorem",
+            "target": "ADWMechanism (module)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper claims VestigialSusceptibility=16, TetradGapEquation=20, ADWMechanism=21. Recheck via 'grep -c ^theorem ': VestigialSusceptibility=24, TetradGapEquation=24, ADWMechanism=21. Two FAILs (VestigialSusceptibility off by +8; TetradGapEquation off by +4); ADWMechanism matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:dc8d2bce",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "dc8d2bce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 3,
+      "tex_line_start": 82,
+      "tex_line_end": 85,
+      "quote": "Both rungs share the Wetterich-NJL four-fermion infrastructure (\\texttt{WetterichNJL.lean}, $18$ theorems) and the FermiPointTopology emergent-Weyl substrate (\\texttt{FermiPointTopology.lean}, $33$ theorems).",
+      "quote_normalized": "both rungs share the wetterich-njl four-fermion infrastructure (wetterichnjl.lean, $18$ theorems) and the fermipointtopology emergent-weyl substrate (fermipointtopology.lean, $33$ theorems).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WetterichNJL (module)"
+          },
+          {
+            "kind": "theorem",
+            "target": "FermiPointTopology (module)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA: paper claims WetterichNJL=18 (PASS), FermiPointTopology=33 (FAIL: actual 29). FermiPointTopology has 4 fewer theorems than paper text — likely from same Phase 5z anti-tautology audit.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:7a8326f9",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "7a8326f9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 4,
+      "tex_line_start": 87,
+      "tex_line_end": 88,
+      "quote": "In this paper we add a third rung: the \\emph{scalar rung}, identified with the Higgs bilinear of the electroweak Standard Model.",
+      "quote_normalized": "in this paper we add a third rung: the scalar rung, identified with the higgs bilinear of the electroweak standard model.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_is_landau_rung"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Metaclaim; supported by scalar_rung_is_landau_rung theorem.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:dd2c503a",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "dd2c503a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 5,
+      "tex_line_start": 89,
+      "tex_line_end": 95,
+      "quote": "The identification is the natural completion of the Wetterich-NJL Fierz decomposition---the scalar channel ($\\Gamma = \\mathbb{1}$ in the spacetime Clifford basis) is the only flavor-singlet attractive channel that drives a parity-even condensate.",
+      "quote_normalized": "the identification is the natural completion of the wetterich-njl fierz decomposition---the scalar channel ($\\gamma = \\mathbb{1}$ in the spacetime clifford basis) is the only flavor-singlet attractive channel that drives a parity-even condensate.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WetterichNJL.fierz_completeness"
+          },
+          {
+            "kind": "citation",
+            "target": "NJL61"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Qualitative attribution; Fierz decomposition formalized via fierz_completeness. Uniqueness assertion is physics interpretation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:06c87ed0",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "06c87ed0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 6,
+      "tex_line_start": 91,
+      "tex_line_end": 97,
+      "quote": "If the same scalar channel is identified with $\\HiggsField^\\dagger \\HiggsField$ on an $SU(2)_L$-doublet-extended substrate, the Mexican-hat potential, the Anderson-Higgs $W$/$Z$ mass matrix, and Yukawa couplings as overlap integrals all emerge as direct consequences of the existing formalization infrastructure---without new physics input.",
+      "quote_normalized": "if the same scalar channel is identified with $\\higgsfield^\\dagger \\higgsfield$ on an $su(2)_l$-doublet-extended substrate, the mexican-hat potential, the anderson-higgs $w$/$z$ mass matrix, and yukawa couplings as overlap integrals all emerge as direct consequences of the existing formalization infrastructure---without new physics input.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_additive"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Conditional ('if ... then ...') framing; full SU(2)_L extension gated on O.2.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:58bcadea",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "58bcadea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 7,
+      "tex_line_start": 99,
+      "tex_line_end": 104,
+      "quote": "The identification is at structural scope because the $SU(2)_L\\times U(1)_Y$ electroweak index structure of the Wetterich-NJL scalar channel is currently deep-research gated.",
+      "quote_normalized": "the identification is at structural scope because the $su(2)_l\\times u(1)_y$ electroweak index structure of the wetterich-njl scalar channel is currently deep-research gated.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scope disclosure for deep-research gate.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:a10d0fbd",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "a10d0fbd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 8,
+      "tex_line_start": 101,
+      "tex_line_end": 104,
+      "quote": "We therefore work in the \\emph{flavor-singlet frame}: the scalar channel carries no electroweak indices; the Higgs identification is structural in the sense that it commutes with the gauge-singlet projection of the SM Higgs.",
+      "quote_normalized": "we therefore work in the flavor-singlet frame: the scalar channel carries no electroweak indices; the higgs identification is structural in the sense that it commutes with the gauge-singlet projection of the sm higgs.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:46b83c4e",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "46b83c4e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 9,
+      "tex_line_start": 105,
+      "tex_line_end": 107,
+      "quote": "The $SU(2)_L\\times U(1)_Y$-dressed extension is documented as a Wave~1 follow-up gated on Open Question O.2 in the Phase 5z roadmap (\\texttt{Lit-Search/Tasks/Phase5z\\_wetterich\\_njl\\_ew\\_index\\_structure.md}).",
+      "quote_normalized": "the $su(2)_l\\times u(1)_y$-dressed extension is documented as a wave~1 follow-up gated on open question o.2 in the phase 5z roadmap (lit-search/tasks/phase5z\\_wetterich\\_njl\\_ew\\_index\\_structure.md).",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward reference to Lit-Search task.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:02931c33",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "02931c33",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 10,
+      "tex_line_start": 109,
+      "tex_line_end": 112,
+      "quote": "\\textbf{Contributions.} (i)~The first formal-verification-grade identification of the Higgs bilinear with a Wetterich-NJL scalar channel, formalized in Lean~4 in the flavor-singlet frame (\\texttt{ScalarRungInterpretation.lean}, $20$ theorems, zero sorry).",
+      "quote_normalized": "contributions. (i)~the first formal-verification-grade identification of the higgs bilinear with a wetterich-njl scalar channel, formalized in lean~4 in the flavor-singlet frame (scalarrunginterpretation.lean, $20$ theorems, zero sorry).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation (module)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: ScalarRungInterpretation.lean theorem count = 20. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:f7e518d2",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "f7e518d2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 11,
+      "tex_line_start": 112,
+      "tex_line_end": 115,
+      "quote": "(ii)~Three formal consequences of the identification: the Mexican-hat $\\leftrightarrow$ tetrad-bifurcation bridge, the Anderson-Higgs $W$/$Z$ mass-matrix theorem, and the Yukawa-overlap-linear lemma.",
+      "quote_normalized": "(ii)~three formal consequences of the identification: the mexican-hat $\\leftrightarrow$ tetrad-bifurcation bridge, the anderson-higgs $w$/$z$ mass-matrix theorem, and the yukawa-overlap-linear lemma.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_additive"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All three named consequences map to existing theorems.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:5205ecdf",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "5205ecdf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 12,
+      "tex_line_start": 116,
+      "tex_line_end": 120,
+      "quote": "(iii)~A decidable Lean predicate \\texttt{ScalarRungQuantitativeMatch} encoding the Phase 5z Gate~Z.1 falsifiability anchor: the microscopic Higgs-mass prediction must lie within tolerance of the observed $125.25$~GeV for the scalar-rung framing to constitute a quantitative theory of EWSB.",
+      "quote_normalized": "(iii)~a decidable lean predicate scalarrungquantitativematch encoding the phase 5z gate~z.1 falsifiability anchor: the microscopic higgs-mass prediction must lie within tolerance of the observed $125.25$~gev for the scalar-rung framing to constitute a quantitative theory of ewsb.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ScalarRungQuantitativeMatch"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_quantitative_match_iff"
+          },
+          {
+            "kind": "parameter",
+            "target": "EW.M_H_MATCH_TOLERANCE"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ScalarRungQuantitativeMatch + scalar_rung_quantitative_match_iff exist; EW.M_H_MATCH_TOLERANCE=0.5 in constants.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:d319cd6a",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "d319cd6a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 13,
+      "tex_line_start": 121,
+      "tex_line_end": 124,
+      "quote": "(iv)~A Python parameter-scan layer (\\texttt{src/scalar\\_rung/}) and a 24-test pytest suite covering every Lean theorem, with the canonical $\\cos\\theta_W = M_W/M_Z$ identity reproducing the PDG~2024 value.",
+      "quote_normalized": "(iv)~a python parameter-scan layer (src/scalar\\_rung/) and a 24-test pytest suite covering every lean theorem, with the canonical $\\cos\\theta_w = m_w/m_z$ identity reproducing the pdg~2024 value.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "anderson_higgs_w_z_masses"
+          },
+          {
+            "kind": "citation",
+            "target": "PDG2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: src/scalar_rung/ exists; tests/test_scalar_rung.py has 24 test functions. PDG2024 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:introduction:f51132a1",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "introduction",
+        "quote_hash": "f51132a1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 14,
+      "tex_line_start": 125,
+      "tex_line_end": 130,
+      "quote": "(v)~A heatmap visualization (Fig.~\\ref{fig:scalar_rung_scan}) showing that, under the schematic leading-log substrate closure, $m_H = 125.25$~GeV is attained only along a 1D tuning curve in the natural $(\\Lambda_{\\rm UV},\\,G_c)$ parameter plane---a structural-only Gate~Z.1 verdict at the current scope.",
+      "quote_normalized": "(v)~a heatmap visualization (fig.~) showing that, under the schematic leading-log substrate closure, $m_h = 125.25$~gev is attained only along a 1d tuning curve in the natural $(\\lambda_{\\rm uv},\\,g_c)$ parameter plane---a structural-only gate~z.1 verdict at the current scope.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "higgs_mass_from_condensate"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Qualitative figure summary; figure file fig_higgs_mass_parameter_scan.png exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:fc0aa0a1",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "fc0aa0a1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 1,
+      "tex_line_start": 135,
+      "tex_line_end": 144,
+      "quote": "The Wetterich-NJL four-fermion interaction~\\cite{WetterichNJL} on a fermionic substrate $\\psi_x$ admits the Fierz decomposition with $\\Gamma_\\alpha\\in\\{\\mathbb{1},\\gamma_5,\\gamma_\\mu,\\gamma_\\mu\\gamma_5,\\sigma_{\\mu\\nu}\\}$ and the Fierz-completeness identity $1 + 1 + 4 + 4 + 6 = 16 = 4^2$~\\cite{Fierz}, formalized as \\texttt{WetterichNJL.fierz\\_completeness} in our base.",
+      "quote_normalized": "the wetterich-njl four-fermion interaction~ on a fermionic substrate $\\psi_x$ admits the fierz decomposition with $\\gamma_\\alpha\\in\\{\\mathbb{1},\\gamma_5,\\gamma_\\mu,\\gamma_\\mu\\gamma_5,\\sigma_{\\mu\\nu}\\}$ and the fierz-completeness identity $1 + 1 + 4 + 4 + 6 = 16 = 4^2$~, formalized as wetterichnjl.fierz\\_completeness in our base.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "WetterichNJL"
+          },
+          {
+            "kind": "citation",
+            "target": "Fierz"
+          },
+          {
+            "kind": "theorem",
+            "target": "WetterichNJL.fierz_completeness"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "WetterichNJL.fierz_completeness exists. 1+1+4+4+6=16=4^2 verified arithmetic. Both citations in registry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:a2b5196e",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "a2b5196e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 2,
+      "tex_line_start": 145,
+      "tex_line_end": 148,
+      "quote": "The scalar channel ($\\Gamma_\\alpha = \\mathbb{1}$) is the unique flavor-singlet attractive channel in the Fierz basis and drives the leading parity-even condensation~\\cite{NJL61}.",
+      "quote_normalized": "the scalar channel ($\\gamma_\\alpha = \\mathbb{1}$) is the unique flavor-singlet attractive channel in the fierz basis and drives the leading parity-even condensation~.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "NJL61"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Physics interpretation; NJL61 citation present.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:f0656db6",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "f0656db6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 3,
+      "tex_line_start": 150,
+      "tex_line_end": 156,
+      "quote": "The Wetterich-NJL scalar channel and the Higgs bilinear are identified via a non-trivial *candidacy* predicate parameterized over an observed EW VEV $v_{\\rm obs}$ and tolerance $\\tau$: \\texttt{IsHiggsBilinearCandidate}(\\WetterichScalar; v_{\\rm obs}, \\tau) iff |sqrt(mu^2/lambda) - v_obs| < tau v_obs.",
+      "quote_normalized": "the wetterich-njl scalar channel and the higgs bilinear are identified via a non-trivial *candidacy* predicate parameterized over an observed ew vev $v_{\\rm obs}$ and tolerance $\\tau$: ishiggsbilinearcandidate(\\wetterichscalar; v_{\\rm obs}, \\tau) iff |sqrt(mu^2/lambda) - v_obs| < tau v_obs.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.IsHiggsBilinearCandidate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IsHiggsBilinearCandidate exists in lean_deps.json. Note: paper uses post-rename name 'IsHiggsBilinearCandidate' (not the renamed-out 'IsHiggsBilinear'); correctly updated post-Phase-5z-W1 audit. No TN issue.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:4fdf7b43",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "4fdf7b43",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 4,
+      "tex_line_start": 157,
+      "tex_line_end": 159,
+      "quote": "A scalar channel qualifies as a Higgs-bilinear candidate at the observed EW VEV iff its Mexican-hat VEV reproduces $v_{\\rm obs}$ within fractional tolerance $\\tau$.",
+      "quote_normalized": "a scalar channel qualifies as a higgs-bilinear candidate at the observed ew vev iff its mexican-hat vev reproduces $v_{\\rm obs}$ within fractional tolerance $\\tau$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.IsHiggsBilinearCandidate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Restatement of the predicate; matches Lean def.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:beb33cd2",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "beb33cd2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 5,
+      "tex_line_start": 159,
+      "tex_line_end": 161,
+      "quote": "The predicate is genuinely non-trivial: super-VEV scalar channels fail it.",
+      "quote_normalized": "the predicate is genuinely non-trivial: super-vev scalar channels fail it.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.not_isHiggsBilinearCandidate_of_vev_too_large"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "not_isHiggsBilinearCandidate_of_vev_too_large is the load-bearing falsifier; exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:0662c06c",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "0662c06c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 6,
+      "tex_line_start": 160,
+      "tex_line_end": 163,
+      "quote": "The Lean theorem \\texttt{ScalarRungInterpretation.not\\_isHiggsBilinearCandidate\\_of\\_vev\\_too\\_large} is a load-bearing falsifiability witness establishing that $(1+\\tau)v_{\\rm obs} \\le \\sqrt{\\mu^2/\\lambda}$ rules out candidacy.",
+      "quote_normalized": "the lean theorem scalarrunginterpretation.not\\_ishiggsbilinearcandidate\\_of\\_vev\\_too\\_large is a load-bearing falsifiability witness establishing that $(1+\\tau)v_{\\rm obs} \\le \\sqrt{\\mu^2/\\lambda}$ rules out candidacy.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.not_isHiggsBilinearCandidate_of_vev_too_large"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Direct theorem-ref match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:2ef6cd28",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "2ef6cd28",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 7,
+      "tex_line_start": 164,
+      "tex_line_end": 165,
+      "quote": "The full SU(2)$_L$$\\times$U(1)$_Y$-dressed identification predicate remains deep-research-gated on Open Question O.2.",
+      "quote_normalized": "the full su(2)$_l$$\\times$u(1)$_y$-dressed identification predicate remains deep-research-gated on open question o.2.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scope disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:bb1896e2",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "bb1896e2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 8,
+      "tex_line_start": 167,
+      "tex_line_end": 174,
+      "quote": "The Mexican-hat potential V(Phi) = -1/2 mu^2 |Phi|^2 + 1/4 lambda |Phi|^4 arises as a specialization of the supercritical branch of the tetrad gap equation.",
+      "quote_normalized": "the mexican-hat potential v(phi) = -1/2 mu^2 |phi|^2 + 1/4 lambda |phi|^4 arises as a specialization of the supercritical branch of the tetrad gap equation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge"
+          },
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation.gap_nontrivial_exists"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Bridge encoded via tracked-hypothesis pattern. Both supporting theorems exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:e37f0c41",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "e37f0c41",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 9,
+      "tex_line_start": 173,
+      "tex_line_end": 178,
+      "quote": "The full quantitative bridge (mapping $\\mu^2$ and $\\lambda$ to GL-expansion coefficients of the tetrad gap-equation bifurcation) is deep-research-gated on Open Question O.2.",
+      "quote_normalized": "the full quantitative bridge (mapping $\\mu^2$ and $\\lambda$ to gl-expansion coefficients of the tetrad gap-equation bifurcation) is deep-research-gated on open question o.2.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Disclosure of deep-research gating.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:279ccb89",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "279ccb89",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 10,
+      "tex_line_start": 176,
+      "tex_line_end": 183,
+      "quote": "Pending its resolution the bridge is encoded as a *tracked external hypothesis* carrying the kinematic constraint that the scalar-channel VEV is bounded above by the UV cutoff: \\texttt{H\\_ScalarChannelIsTetradBifurcationOutput}(\\WetterichScalar, \\Lambda_{\\rm UV}) iff sqrt(mu^2/lambda) <= Lambda_UV.",
+      "quote_normalized": "pending its resolution the bridge is encoded as a *tracked external hypothesis* carrying the kinematic constraint that the scalar-channel vev is bounded above by the uv cutoff: h\\_scalarchannelistetradbifurcationoutput(\\wetterichscalar, \\lambda_{\\rm uv}) iff sqrt(mu^2/lambda) <= lambda_uv.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "HD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "hypothesis",
+            "target": "ScalarRungInterpretation.H_ScalarChannelIsTetradBifurcationOutput"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Class HD: paper EXPLICITLY discloses the tracked hypothesis H_ScalarChannelIsTetradBifurcationOutput. Disclosure pattern OK. Note: the hypothesis is NOT registered in src/core/constants.py::HYPOTHESIS_REGISTRY; only Lean-side def. Registry-level audit gap is project-side, not paper-claim drift; flagged as non-blocking followup.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:5afc9b93",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "5afc9b93",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 11,
+      "tex_line_start": 184,
+      "tex_line_end": 186,
+      "quote": "The hypothesis is genuinely non-trivial — it can fail for super-UV condensates.",
+      "quote_normalized": "the hypothesis is genuinely non-trivial -- it can fail for super-uv condensates.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.bridge_excludes_super_uv_vev"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Non-triviality witness: bridge_excludes_super_uv_vev exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:f9ab04e5",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "f9ab04e5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 12,
+      "tex_line_start": 185,
+      "tex_line_end": 190,
+      "quote": "The load-bearing consequence theorem \\texttt{ScalarRungInterpretation.mexican\\_hat\\_vev\\_under\\_supercritical\\_bridge} derives, under the hypothesis, both $0 < v_{\\rm cond}$ \\emph{and} $v_{\\rm cond} \\le \\Lambda_{\\rm UV}$.",
+      "quote_normalized": "the load-bearing consequence theorem scalarrunginterpretation.mexican\\_hat\\_vev\\_under\\_supercritical\\_bridge derives, under the hypothesis, both $0 < v_{\\rm cond}$ and $v_{\\rm cond} \\le \\lambda_{\\rm uv}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Direct theorem-ref match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:b7c7bc57",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "b7c7bc57",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 13,
+      "tex_line_start": 188,
+      "tex_line_end": 191,
+      "quote": "The sharp contrapositive \\texttt{bridge\\_excludes\\_super\\_uv\\_vev} establishes structural falsifiability.",
+      "quote_normalized": "the sharp contrapositive bridge\\_excludes\\_super\\_uv\\_vev establishes structural falsifiability.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.bridge_excludes_super_uv_vev"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Direct theorem-ref match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:cb5d8668",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "cb5d8668",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 14,
+      "tex_line_start": 190,
+      "tex_line_end": 196,
+      "quote": "The same tracked-hypothesis pattern is used elsewhere in the project for cross-pillar bridges where the quantitative coefficient matching is not yet formalized — for example \\texttt{HiddenSectorMixedCharge.H\\_MixedChannelZ16Cancels} and \\texttt{DarkSectorSynthesis.H\\_VestigialRelicCarriesZ16Charge}.",
+      "quote_normalized": "the same tracked-hypothesis pattern is used elsewhere in the project for cross-pillar bridges where the quantitative coefficient matching is not yet formalized -- for example hiddensectormixedcharge.h\\_mixedchannelz16cancels and darksectorsynthesis.h\\_vestigialreliccarriesz16charge.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "HiddenSectorMixedCharge.H_MixedChannelZ16Cancels"
+          },
+          {
+            "kind": "theorem",
+            "target": "DarkSectorSynthesis.H_VestigialRelicCarriesZ16Charge"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both cited tracked-hypothesis examples exist in lean_deps.json (modules SKEFTHawking.HiddenSectorMixedCharge and DarkSectorSynthesis).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:51d88725",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "51d88725",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 15,
+      "tex_line_start": 195,
+      "tex_line_end": 197,
+      "quote": "The underlying NJL-supercritical-existence theorem is \\texttt{TetradGapEquation.gap\\_nontrivial\\_exists}~\\cite{NJL61,GiesScherer}.",
+      "quote_normalized": "the underlying njl-supercritical-existence theorem is tetradgapequation.gap\\_nontrivial\\_exists~.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation.gap_nontrivial_exists"
+          },
+          {
+            "kind": "citation",
+            "target": "NJL61"
+          },
+          {
+            "kind": "citation",
+            "target": "GiesScherer"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "TetradGapEquation.gap_nontrivial_exists exists; both citations in registry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:9b2e8398",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "9b2e8398",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 16,
+      "tex_line_start": 198,
+      "tex_line_end": 203,
+      "quote": "The vacuum expectation value $v = \\sqrt{\\mu^2/\\lambda}$ (\\texttt{ScalarRungInterpretation.mexicanHatVev\\_sq}) and the tree-level Higgs mass-squared $m_H^2 = 2\\mu^2$ (\\texttt{ScalarRungInterpretation.higgsMassSq\\_pos}, \\texttt{higgsMassSq\\_eq\\_two\\_lam\\_vev\\_sq}) reproduce the standard SM identities.",
+      "quote_normalized": "the vacuum expectation value $v = \\sqrt{\\mu^2/\\lambda}$ (scalarrunginterpretation.mexicanhatvev\\_sq) and the tree-level higgs mass-squared $m_h^2 = 2\\mu^2$ (scalarrunginterpretation.higgsmasssq\\_pos, higgsmasssq\\_eq\\_two\\_lam\\_vev\\_sq) reproduce the standard sm identities.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexicanHatVev_sq"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.higgsMassSq_pos"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.higgsMassSq_eq_two_lam_vev_sq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All three theorem refs exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-wetterich-njl-scalar-channel-and-the-higgs-bilinear:6f33d128",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+        "quote_hash": "6f33d128",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wetterich-njl-scalar-channel-and-the-higgs-bilinear",
+      "section_ordinal": 17,
+      "tex_line_start": 203,
+      "tex_line_end": 207,
+      "quote": "The Python implementation \\texttt{higgs\\_mass\\_from\\_vev} matches PDG~2024 within RG-running uncertainty: $\\mu^2 = \\lambda v^2$ with $\\lambda = 0.129$ and $v = 246.22$~GeV gives $m_H = 125.06$~GeV, against the observed $125.25 \\pm 0.17$~GeV.",
+      "quote_normalized": "the python implementation higgs\\_mass\\_from\\_vev matches pdg~2024 within rg-running uncertainty: $\\mu^2 = \\lambda v^2$ with $\\lambda = 0.129$ and $v = 246.22$~gev gives $m_h = 125.06$~gev, against the observed $125.25 \\pm 0.17$~gev.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "higgs_mass_from_vev",
+            "computed_value": "125.0642 GeV",
+            "delta_pct": 0.003
+          },
+          {
+            "kind": "parameter",
+            "target": "lambda_higgs_self_coupling"
+          },
+          {
+            "kind": "parameter",
+            "target": "ew_vev"
+          },
+          {
+            "kind": "citation",
+            "target": "PDG2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recompute m_H = sqrt(2*0.129)*246.22 = 125.0642 GeV; paper says 125.06. delta_pct=0.003%. Within 0.5% tolerance.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.003
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:a3e93760",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "a3e93760",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 1,
+      "tex_line_start": 212,
+      "tex_line_end": 220,
+      "quote": "The scalar-channel VEV provides the single dimensionful input to the Anderson-Higgs $W$/$Z$ mass matrix. The Lean theorem \\texttt{ScalarRungInterpretation.ew\\_mass\\_matrix\\_from\\_scalar\\_vev} states the bundled result: $M_W = (1/2) g v$, $M_Z = (1/2) \\sqrt{g^2 + g'^2} v$, with $g$ the $SU(2)_L$ gauge coupling, $g'$ the $U(1)_Y$ hypercharge coupling, and $v$ the scalar-channel VEV.",
+      "quote_normalized": "the scalar-channel vev provides the single dimensionful input to the anderson-higgs $w$/$z$ mass matrix. the lean theorem scalarrunginterpretation.ew\\_mass\\_matrix\\_from\\_scalar\\_vev states the bundled result: $m_w = (1/2) g v$, $m_z = (1/2) \\sqrt{g^2 + g'^2} v$, with $g$ the $su(2)_l$ gauge coupling, $g'$ the $u(1)_y$ hypercharge coupling, and $v$ the scalar-channel vev.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ew_mass_matrix_from_scalar_vev exists; bundled M_W and M_Z formulas. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:1396e0ef",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "1396e0ef",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 2,
+      "tex_line_start": 221,
+      "tex_line_end": 224,
+      "quote": "The Lean signature is parameterized over the \\texttt{EWMassMatrixInputs} structure; the positivity theorems \\texttt{wMass\\_pos} and \\texttt{zMass\\_pos} ensure both masses are strictly positive whenever $g > 0$ and $v > 0$.",
+      "quote_normalized": "the lean signature is parameterized over the ewmassmatrixinputs structure; the positivity theorems wmass\\_pos and zmass\\_pos ensure both masses are strictly positive whenever $g > 0$ and $v > 0$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.EWMassMatrixInputs"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.wMass_pos"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.zMass_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All three exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:bc119a7b",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "bc119a7b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 3,
+      "tex_line_start": 226,
+      "tex_line_end": 231,
+      "quote": "The on-shell weak-mixing identity $M_W/M_Z = g/\\sqrt{g^2+g'^2} = \\cos\\theta_W$ is formalized as \\texttt{wMass\\_div\\_zMass} (when $g'>0$).",
+      "quote_normalized": "the on-shell weak-mixing identity $m_w/m_z = g/\\sqrt{g^2+g'^2} = \\cos\\theta_w$ is formalized as wmass\\_div\\_zmass (when $g'>0$).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.wMass_div_zMass"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "wMass_div_zMass exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:d8c3ae29",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "d8c3ae29",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 4,
+      "tex_line_start": 231,
+      "tex_line_end": 238,
+      "quote": "Two strengthened forms address the bound: \\texttt{zMass\\_ge\\_wMass} establishes the weak inequality $M_Z \\geq M_W$ for any $g'\\geq 0$ (no positivity strictness required), and \\texttt{wMass\\_lt\\_zMass\\_of\\_g'\\_pos} gives the strict inequality when $g' > 0$.",
+      "quote_normalized": "two strengthened forms address the bound: zmass\\_ge\\_wmass establishes the weak inequality $m_z \\geq m_w$ for any $g'\\geq 0$ (no positivity strictness required), and wmass\\_lt\\_zmass\\_of\\_g'\\_pos gives the strict inequality when $g' > 0$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.zMass_ge_wMass"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.wMass_lt_zMass_of_g'_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:110a9d72",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "110a9d72",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 5,
+      "tex_line_start": 234,
+      "tex_line_end": 239,
+      "quote": "Together these formalize the fact that the on-shell weak mixing angle is in $(0,\\pi/2)$ exactly when both gauge couplings are nonzero.",
+      "quote_normalized": "together these formalize the fact that the on-shell weak mixing angle is in $(0,\\pi/2)$ exactly when both gauge couplings are nonzero.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive consequence statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:c3a443ac",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "c3a443ac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 6,
+      "tex_line_start": 240,
+      "tex_line_end": 245,
+      "quote": "\\textbf{Numerical consistency.} Using the PDG~2024 values $g = 0.6536$, $g' = 0.3489$, $v = 246.22$~GeV, the Python wrapper \\texttt{anderson\\_higgs\\_w\\_z\\_masses} produces $M_W = 80.47$~GeV (PDG: $80.37$~GeV) and $M_Z = 91.21$~GeV (PDG: $91.19$~GeV)---both within $0.2\\%$, well inside the running-coupling slop.",
+      "quote_normalized": "numerical consistency. using the pdg~2024 values $g = 0.6536$, $g' = 0.3489$, $v = 246.22$~gev, the python wrapper anderson\\_higgs\\_w\\_z\\_masses produces $m_w = 80.47$~gev (pdg: $80.37$~gev) and $m_z = 91.21$~gev (pdg: $91.19$~gev)---both within $0.2\\%$, well inside the running-coupling slop.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "anderson_higgs_w_z_masses",
+            "computed_value": "M_W=80.4647 GeV, M_Z=91.2115 GeV",
+            "delta_pct": 0.005
+          },
+          {
+            "kind": "citation",
+            "target": "PDG2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recompute: M_W = 0.5*0.6536*246.22 = 80.4647 GeV (paper: 80.47). M_Z = 0.5*sqrt(0.6536^2+0.3489^2)*246.22 = 91.2115 GeV (paper: 91.21). PDG-vs-recomputed deltas: M_W 0.12%, M_Z 0.02% — both <0.2% as paper asserts.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.005
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-anderson-higgs-w-z-mass-matrix:26acde7c",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-anderson-higgs-w-z-mass-matrix",
+        "quote_hash": "26acde7c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-anderson-higgs-w-z-mass-matrix",
+      "section_ordinal": 7,
+      "tex_line_start": 245,
+      "tex_line_end": 248,
+      "quote": "The $\\cos\\theta_W = 0.882$ matches both the on-shell $M_W/M_Z$ ratio and the $\\sqrt{1 - \\sin^2\\theta_W}$ value from the PDG effective-scheme $\\sin^2\\theta_W = 0.231$ within $1\\%$.",
+      "quote_normalized": "the $\\cos\\theta_w = 0.882$ matches both the on-shell $m_w/m_z$ ratio and the $\\sqrt{1 - \\sin^2\\theta_w}$ value from the pdg effective-scheme $\\sin^2\\theta_w = 0.231$ within $1\\%$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "sin2_theta_W_eff"
+          },
+          {
+            "kind": "citation",
+            "target": "PDG2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recompute: M_W/M_Z = 80.4647/91.2115 = 0.88218 (paper: 0.882). sqrt(1-0.231) = 0.87693. Delta = |0.882-0.877|/0.882 = 0.57% < 1%.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:3f1b1907",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "3f1b1907",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 1,
+      "tex_line_start": 254,
+      "tex_line_end": 259,
+      "quote": "The third structural consequence of the scalar-rung identification is that Yukawa couplings reduce to overlap integrals on the FermiPointTopology emergent Weyl modes.",
+      "quote_normalized": "the third structural consequence of the scalar-rung identification is that yukawa couplings reduce to overlap integrals on the fermipointtopology emergent weyl modes.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.WeylOverlap"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Qualitative thesis statement; structurally supported by WeylOverlap structure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:432e1be3",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "432e1be3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 2,
+      "tex_line_start": 256,
+      "tex_line_end": 263,
+      "quote": "Formally, the Lean \\texttt{WeylOverlap} structure carries a real-valued overlap density $\\rho_{fg}$ and a substrate normalization $N$, and the Yukawa coupling is the linear functional $y_f = \\rho_{fg} N$.",
+      "quote_normalized": "formally, the lean weyloverlap structure carries a real-valued overlap density $\\rho_{fg}$ and a substrate normalization $n$, and the yukawa coupling is the linear functional $y_f = \\rho_{fg} n$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.WeylOverlap"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "WeylOverlap structure + yukawaCoupling def both exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:d00c04bb",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "d00c04bb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 3,
+      "tex_line_start": 263,
+      "tex_line_end": 267,
+      "quote": "Linearity in the overlap density (Lean: \\texttt{yukawaCoupling\\_additive}) and the zero-coupling iff zero-overlap lemma (\\texttt{yukawaCoupling\\_eq\\_zero\\_iff}) are formalized at the level of these stand-in objects.",
+      "quote_normalized": "linearity in the overlap density (lean: yukawacoupling\\_additive) and the zero-coupling iff zero-overlap lemma (yukawacoupling\\_eq\\_zero\\_iff) are formalized at the level of these stand-in objects.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_additive"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_eq_zero_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both lemmas exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:a94347a6",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "a94347a6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 4,
+      "tex_line_start": 268,
+      "tex_line_end": 272,
+      "quote": "The \\emph{microscopic} form of $\\rho_{fg}$ as an overlap integral on the emergent Weyl modes is deep-research-gated; we have filed the open question (\\texttt{Phase5z\\_yukawa\\_overlap\\_emergent\\_weyl\\_modes.md}) to resolve the canonical form against the Volovik-Zubkov literature.",
+      "quote_normalized": "the microscopic form of $\\rho_{fg}$ as an overlap integral on the emergent weyl modes is deep-research-gated; we have filed the open question (phase5z\\_yukawa\\_overlap\\_emergent\\_weyl\\_modes.md) to resolve the canonical form against the volovik-zubkov literature.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward reference to deep-research task; scope disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:0fafe80f",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "0fafe80f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 5,
+      "tex_line_start": 273,
+      "tex_line_end": 276,
+      "quote": "At this scope, the formalization establishes two structural relations---linearity in the overlap density and zero-coupling iff zero-overlap---that any concrete microscopic realization must satisfy.",
+      "quote_normalized": "at this scope, the formalization establishes two structural relations---linearity in the overlap density and zero-coupling iff zero-overlap---that any concrete microscopic realization must satisfy.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_additive"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_eq_zero_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Restatement of formal scope; both lemmas exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:7aabf892",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "7aabf892",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 6,
+      "tex_line_start": 276,
+      "tex_line_end": 279,
+      "quote": "A formal orthogonality statement on distinct Fermi points requires the microscopic overlap form (gated on the Yukawa overlap deep-research task), so it is deferred.",
+      "quote_normalized": "a formal orthogonality statement on distinct fermi points requires the microscopic overlap form (gated on the yukawa overlap deep-research task), so it is deferred.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scope disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:yukawa-couplings-as-overlap-integrals:b5cbd164",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "yukawa-couplings-as-overlap-integrals",
+        "quote_hash": "b5cbd164",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "yukawa-couplings-as-overlap-integrals",
+      "section_ordinal": 7,
+      "tex_line_start": 280,
+      "tex_line_end": 285,
+      "quote": "The phenomenological observation that the top Yukawa $y_t \\approx 1$ is naturally realized by an overlap density of order unity supports the interpretation; we record this in \\texttt{TestYukawaOverlap::test\\_top\\_yukawa\\_unity\\_natural}, but defer the quantitative explanation of the lepton-quark Yukawa hierarchy to the deep research follow-up.",
+      "quote_normalized": "the phenomenological observation that the top yukawa $y_t \\approx 1$ is naturally realized by an overlap density of order unity supports the interpretation; we record this in testyukawaoverlap::test\\_top\\_yukawa\\_unity\\_natural, but defer the quantitative explanation of the lepton-quark yukawa hierarchy to the deep research follow-up.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Phenomenological note + pytest test reference (not Lean theorem). Out of scope for direct theorem-ref check.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:7da32851",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "7da32851",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 1,
+      "tex_line_start": 290,
+      "tex_line_end": 304,
+      "quote": "The Phase 5z Gate~Z.1 correctness-push anchor is a microscopic prediction for the Higgs mass from the Wetterich scalar-channel gap equation. Under the schematic leading-log substrate closure $m_H = \\sqrt{2\\lambda_4} \\Lambda_{UV} \\exp(-\\pi^2/(2 N_f G_c))$, where $\\Lambda_{UV}$ is the UV cutoff, $N_f$ is the Weyl-component count, $G_c$ is the dimensionless 4-fermion coupling, and $\\lambda_4$ is the scalar-channel quartic, the Lean theorem \\texttt{higgsMassFromCondensate\\_pos} establishes $m_H > 0$ for positive substrate parameters.",
+      "quote_normalized": "the phase 5z gate~z.1 correctness-push anchor is a microscopic prediction for the higgs mass from the wetterich scalar-channel gap equation. under the schematic leading-log substrate closure $m_h = \\sqrt{2\\lambda_4} \\lambda_{uv} \\exp(-\\pi^2/(2 n_f g_c))$, where $\\lambda_{uv}$ is the uv cutoff, $n_f$ is the weyl-component count, $g_c$ is the dimensionless 4-fermion coupling, and $\\lambda_4$ is the scalar-channel quartic, the lean theorem higgsmassfromcondensate\\_pos establishes $m_h > 0$ for positive substrate parameters.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.higgsMassFromCondensate_pos"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.higgsMassFromCondensate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "higgsMassFromCondensate (def) + higgsMassFromCondensate_pos (theorem) exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:e6accd91",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "e6accd91",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 2,
+      "tex_line_start": 305,
+      "tex_line_end": 315,
+      "quote": "The decidable Lean predicate \\texttt{ScalarRungQuantitativeMatch} encodes the falsifiability anchor: $|m_H^{pred} - m_H^{obs}| < \\tau \\cdot m_H^{obs}$, with $\\tau$ the $\\texttt{EW.M\\_H\\_MATCH\\_TOLERANCE} = 0.5$ operational threshold from the project's parameter registry.",
+      "quote_normalized": "the decidable lean predicate scalarrungquantitativematch encodes the falsifiability anchor: $|m_h^{pred} - m_h^{obs}| < \\tau \\cdot m_h^{obs}$, with $\\tau$ the $ew.m\\_h\\_match\\_tolerance = 0.5$ operational threshold from the project's parameter registry.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ScalarRungQuantitativeMatch"
+          },
+          {
+            "kind": "parameter",
+            "target": "EW.M_H_MATCH_TOLERANCE"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "ScalarRungQuantitativeMatch exists; EW.M_H_MATCH_TOLERANCE = 0.5 in src/core/constants.py line 1821.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:70c060f0",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "70c060f0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 3,
+      "tex_line_start": 311,
+      "tex_line_end": 316,
+      "quote": "The \\texttt{scalar\\_rung\\_quantitative\\_match\\_iff} theorem reduces the absolute-value form to the explicit two-sided bound $(1-\\tau) m_H^{obs} < m_H^{pred} < (1+\\tau) m_H^{obs}$.",
+      "quote_normalized": "the scalar\\_rung\\_quantitative\\_match\\_iff theorem reduces the absolute-value form to the explicit two-sided bound $(1-\\tau) m_h^{obs} < m_h^{pred} < (1+\\tau) m_h^{obs}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_quantitative_match_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "scalar_rung_quantitative_match_iff exists. Note: the user-mentioned 'scalar_rung_quantitative_EWSB_iff_m_H_matches' name was renamed in Phase 5z W1 to 'scalar_rung_quantitative_match_iff' — paper correctly uses the post-rename name. No TN issue.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:bd24a90d",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "bd24a90d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 4,
+      "tex_line_start": 317,
+      "tex_line_end": 324,
+      "quote": "Figure~\\ref{fig:scalar_rung_scan} shows the microscopic prediction heatmap over the natural $(\\Lambda_{UV}, G_c)$ plane at $N_f = 15$, $\\lambda_4 = 0.13$. The 125.25 GeV target traces a curve through the plane: at $\\Lambda_{UV}$ TeV-scale, $G_c \\sim 0.5$ to 2 (super-critical); at $\\Lambda_{UV}$ GUT scale, $G_c \\sim 0.05$ to 0.1 (sub-critical).",
+      "quote_normalized": "figure~ shows the microscopic prediction heatmap over the natural $(\\lambda_{uv}, g_c)$ plane at $n_f = 15$, $\\lambda_4 = 0.13$. the 125.25 gev target traces a curve through the plane: at $\\lambda_{uv}$ tev-scale, $g_c \\sim 0.5$ to 2 (super-critical); at $\\lambda_{uv}$ gut scale, $g_c \\sim 0.05$ to 0.1 (sub-critical).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "higgs_mass_from_condensate"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure-content qualitative summary. Validation delegated to figure-reviewer.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:e28417e1",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "e28417e1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 5,
+      "tex_line_start": 322,
+      "tex_line_end": 325,
+      "quote": "The $\\pm 50\\%$ tolerance band remains a thin curve through the plane rather than a generic region.",
+      "quote_normalized": "the $\\pm 50\\%$ tolerance band remains a thin curve through the plane rather than a generic region.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "EW.M_H_MATCH_TOLERANCE"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "50% matches M_H_MATCH_TOLERANCE=0.5; visual inspection delegated to figure-reviewer.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:830384c4",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "830384c4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 6,
+      "tex_line_start": 326,
+      "tex_line_end": 337,
+      "quote": "Microscopic Higgs-mass prediction heatmap over the $(\\Lambda_{UV}, G_c)$ plane at fiducial $N_f = 15$, $\\lambda_4 = 0.13$. The gold contour traces $m_H = 125.25$ GeV; dotted lines mark the $\\pm 50\\%$ tolerance band defining \\texttt{EW.M\\_H\\_MATCH\\_TOLERANCE}. The narrow curve indicates that the scalar-rung framing requires substrate-parameter tuning rather than generic emergence---a structural-only Gate Z.1 verdict at this scope.",
+      "quote_normalized": "microscopic higgs-mass prediction heatmap over the $(\\lambda_{uv}, g_c)$ plane at fiducial $n_f = 15$, $\\lambda_4 = 0.13$. the gold contour traces $m_h = 125.25$ gev; dotted lines mark the $\\pm 50\\%$ tolerance band defining ew.m\\_h\\_match\\_tolerance. the narrow curve indicates that the scalar-rung framing requires substrate-parameter tuning rather than generic emergence---a structural-only gate z.1 verdict at this scope.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "EW.M_H_MATCH_TOLERANCE"
+          },
+          {
+            "kind": "formula",
+            "target": "higgs_mass_from_condensate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Figure caption; visual delegated to figure-reviewer. Tolerance value matches constants.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:24d8eb99",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "24d8eb99",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 7,
+      "tex_line_start": 339,
+      "tex_line_end": 347,
+      "quote": "\\textbf{Verdict.} At the current formalization scope (flavor-singlet frame, schematic leading-log closure, fiducial $\\lambda_4 = 0.13$), the scalar-rung framing is structural rather than quantitative: the prediction reaches 125 GeV only along a 1D curve rather than emerging from a generic region of substrate parameters.",
+      "quote_normalized": "verdict. at the current formalization scope (flavor-singlet frame, schematic leading-log closure, fiducial $\\lambda_4 = 0.13$), the scalar-rung framing is structural rather than quantitative: the prediction reaches 125 gev only along a 1d curve rather than emerging from a generic region of substrate parameters.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive verdict statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:the-falsifiability-anchor-microscopic-mh:ce796c47",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "the-falsifiability-anchor-microscopic-mh",
+        "quote_hash": "ce796c47",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-falsifiability-anchor-microscopic-mh",
+      "section_ordinal": 8,
+      "tex_line_start": 343,
+      "tex_line_end": 348,
+      "quote": "This is itself a publishable structural result: it bounds the regime in which any Wetterich-NJL EWSB realization can be quantitative, and points to the subsequent deep-research questions whose resolution would either tighten or relax the verdict.",
+      "quote_normalized": "this is itself a publishable structural result: it bounds the regime in which any wetterich-njl ewsb realization can be quantitative, and points to the subsequent deep-research questions whose resolution would either tighten or relax the verdict.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Self-assessment of result significance; not chain-resolvable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:e9295182",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "e9295182",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 1,
+      "tex_line_start": 352,
+      "tex_line_end": 362,
+      "quote": "The formalization comprises one new Lean module: \\texttt{ScalarRungInterpretation.lean} with 20 theorems.",
+      "quote_normalized": "the formalization comprises one new lean module: scalarrunginterpretation.lean with 20 theorems.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation (module)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: ScalarRungInterpretation.lean = 20 theorems. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:40670046",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "40670046",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 2,
+      "tex_line_start": 363,
+      "tex_line_end": 370,
+      "quote": "plus three structures (\\texttt{ScalarChannel}, \\texttt{EWMassMatrixInputs}, \\texttt{WeylOverlap}), nine non-computable definitions for VEV / mass / Yukawa formulas, and three Prop-level definitions (\\texttt{IsHiggsBilinearCandidate}, \\texttt{ScalarRungQuantitativeMatch}, and the tracked-hypothesis \\texttt{H\\_ScalarChannelIsTetradBifurcationOutput}).",
+      "quote_normalized": "plus three structures (scalarchannel, ewmassmatrixinputs, weyloverlap), nine non-computable definitions for vev / mass / yukawa formulas, and three prop-level definitions (ishiggsbilinearcandidate, scalarrungquantitativematch, and the tracked-hypothesis h\\_scalarchannelistetradbifurcationoutput).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ScalarChannel"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.EWMassMatrixInputs"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.WeylOverlap"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.IsHiggsBilinearCandidate"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ScalarRungQuantitativeMatch"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "ScalarRungInterpretation.H_ScalarChannelIsTetradBifurcationOutput"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All 3 structures + 3 Prop-level defs verified in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:2362ebe5",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "2362ebe5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 3,
+      "tex_line_start": 368,
+      "tex_line_end": 371,
+      "quote": "The module is zero-sorry, introduces zero new axioms, and adds zero heartbeat overrides (Phase~3 pipeline invariant 10).",
+      "quote_normalized": "the module is zero-sorry, introduces zero new axioms, and adds zero heartbeat overrides (phase~3 pipeline invariant 10).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Sorry count for ScalarRungInterpretation.lean = 0. Total project axioms = 1 (gapped_interface_axiom in SPTClassification.lean only); no new axiom from this module.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:ca280ef2",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "ca280ef2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 4,
+      "tex_line_start": 372,
+      "tex_line_end": 376,
+      "quote": "The module integrates with three prior-phase modules: \\texttt{WetterichNJL.lean} (Fierz infrastructure), \\texttt{TetradGapEquation.lean} (gap-equation bifurcation), and \\texttt{ADWMechanism.lean} (NG-mode counting + critical coupling).",
+      "quote_normalized": "the module integrates with three prior-phase modules: wetterichnjl.lean (fierz infrastructure), tetradgapequation.lean (gap-equation bifurcation), and adwmechanism.lean (ng-mode counting + critical coupling).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WetterichNJL.fierz_completeness"
+          },
+          {
+            "kind": "theorem",
+            "target": "TetradGapEquation.gap_nontrivial_exists"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All three prior-phase modules exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:3675f52a",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "3675f52a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 5,
+      "tex_line_start": 376,
+      "tex_line_end": 380,
+      "quote": "A Python companion package \\texttt{src/scalar\\_rung/} provides numerical wrappers for the Anderson-Higgs mass matrix (\\texttt{anderson\\_higgs\\_w\\_z\\_masses}), the $\\cos\\theta_W$ consistency check, and the parameter-scan grid for the microscopic $m_H$ prediction.",
+      "quote_normalized": "a python companion package src/scalar\\_rung/ provides numerical wrappers for the anderson-higgs mass matrix (anderson\\_higgs\\_w\\_z\\_masses), the $\\cos\\theta_w$ consistency check, and the parameter-scan grid for the microscopic $m_h$ prediction.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "anderson_higgs_w_z_masses"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "src/scalar_rung/ exists with ew_mass_matrix.py and higgs_prediction.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:2075a660",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "2075a660",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 6,
+      "tex_line_start": 380,
+      "tex_line_end": 383,
+      "quote": "A 24-test pytest suite covers every Lean theorem; full-project pytest passes (excluding torch-dependent tests unrelated to this work).",
+      "quote_normalized": "a 24-test pytest suite covers every lean theorem; full-project pytest passes (excluding torch-dependent tests unrelated to this work).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: tests/test_scalar_rung.py contains exactly 24 'def test_' functions. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:e48f37e5",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "e48f37e5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 7,
+      "tex_line_start": 384,
+      "tex_line_end": 388,
+      "quote": "The full project status remains: zero sorry across $\\totaltheorems{}$ theorems, $\\substantivetheorems{}$ substantive (excluding placeholder markers), one axiom (\\texttt{gapped\\_interface\\_axiom} in \\texttt{SPTClassification.lean}).",
+      "quote_normalized": "the full project status remains: zero sorry across $\\totaltheorems{}$ theorems, $\\substantivetheorems{}$ substantive (excluding placeholder markers), one axiom (gapped\\_interface\\_axiom in sptclassification.lean).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Macros from docs/counts.tex (auto-generated 2026-04-25): \\totaltheorems=4049, \\substantivetheorems=3936, \\axiomcount=1, \\sorrycount=0. axiom gapped_interface_axiom exists in SPTClassification.lean line 226. All match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:formal-verification-summary:99fdcd18",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "formal-verification-summary",
+        "quote_hash": "99fdcd18",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-verification-summary",
+      "section_ordinal": 8,
+      "tex_line_start": 387,
+      "tex_line_end": 392,
+      "quote": "The Phase~5z Wave~1 closure adds 20 theorems with no axiom or sorry overhead, after a project-required anti-tautology audit replaced three vacuous Props with substantive ones (introducing the tracked-hypothesis bridge and a custodial-symmetry algebraic identity in the process).",
+      "quote_normalized": "the phase~5z wave~1 closure adds 20 theorems with no axiom or sorry overhead, after a project-required anti-tautology audit replaced three vacuous props with substantive ones (introducing the tracked-hypothesis bridge and a custodial-symmetry algebraic identity in the process).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "20 new theorems matches grep count for ScalarRungInterpretation.lean. Anti-tautology audit consistent with user note that Phase 5z W1 strengthening pass renamed/removed IsHiggsBilinear, MexicanHatFromTetradBifurcation, scalar_rung_quantitative_EWSB_iff_m_H_matches and replaced with non-vacuous IsHiggsBilinearCandidate, mexican_hat_vev_under_supercritical_bridge, scalar_rung_quantitative_match_iff. Paper updated post-rename — verified by full TN sweep over all paper-cited Lean symbols (zero TN violations).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:884769e7",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "884769e7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 1,
+      "tex_line_start": 396,
+      "tex_line_end": 398,
+      "quote": "The Wave~1 deliberate scope boundary is the flavor-singlet frame. Three subsequent program elements address related questions:",
+      "quote_normalized": "the wave~1 deliberate scope boundary is the flavor-singlet frame. three subsequent program elements address related questions:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Section transition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:f66b6ace",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "f66b6ace",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 2,
+      "tex_line_start": 400,
+      "tex_line_end": 406,
+      "quote": "\\textbf{Wave~2 (\\texttt{MajoranaRung.lean})} formalizes a Majorana bilinear as a $\\mathbb{Z}_2$-graded rung on the same Landau hierarchy, bridging sterile-neutrino seesaw phenomenology to the proved $\\mathbb{Z}_{16}$ hidden-sector classification (\\texttt{HiddenSectorClassification.lean}, $9$ theorems, complete).",
+      "quote_normalized": "\\textbf{wave~2 (majoranarung.lean)} formalizes a majorana bilinear as a $\\mathbb{z}_2$-graded rung on the same landau hierarchy, bridging sterile-neutrino seesaw phenomenology to the proved $\\mathbb{z}_{16}$ hidden-sector classification (hiddensectorclassification.lean, $9$ theorems, complete).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "HiddenSectorClassification (module)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: HiddenSectorClassification.lean = 9 theorems. Match. MajoranaRung.lean exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:2d69dc07",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "2d69dc07",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 3,
+      "tex_line_start": 405,
+      "tex_line_end": 407,
+      "quote": "The \\texttt{NeutrinoMixing.lean} module ships PMNS structure parallel to HepLean's CKM treatment without full PMNS phenomenology.",
+      "quote_normalized": "the neutrinomixing.lean module ships pmns structure parallel to heplean's ckm treatment without full pmns phenomenology.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "NeutrinoMixing.lean exists. Structurally consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:c84739ad",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "c84739ad",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 4,
+      "tex_line_start": 408,
+      "tex_line_end": 412,
+      "quote": "\\textbf{Wave~3 (\\texttt{EWPhaseTransition.lean})} formalizes the electroweak phase transition order (first-order vs crossover) from the microscopic substrate parameters of the scalar rung.",
+      "quote_normalized": "\\textbf{wave~3 (ewphasetransition.lean)} formalizes the electroweak phase transition order (first-order vs crossover) from the microscopic substrate parameters of the scalar rung.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward-tense reference to Wave 3. EWPhaseTransition.lean does NOT exist yet (verified). Paper's framing 'Wave 3 ... formalizes ...' is forward-looking; no TN finding because context indicates planned future work.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:7019d936",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "7019d936",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 5,
+      "tex_line_start": 411,
+      "tex_line_end": 413,
+      "quote": "The transition order feeds the bridge theorem of Phase~6c.2 (electroweak baryogenesis $\\leftrightarrow$ chirality wall).",
+      "quote_normalized": "the transition order feeds the bridge theorem of phase~6c.2 (electroweak baryogenesis $\\leftrightarrow$ chirality wall).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward roadmap reference.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:80ade378",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "80ade378",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 6,
+      "tex_line_start": 414,
+      "tex_line_end": 418,
+      "quote": "\\textbf{Open Question O.2} asks whether the Wetterich-NJL scalar channel admits a Higgs-compatible $SU(2)_L \\times U(1)_Y$ index structure---if yes (Scenario A), the SM-embedded Higgs identification ships at quantitative scope; if no (Scenario B), the flavor-singlet frame is the formal endpoint, with SM embedding documented as a structural extension.",
+      "quote_normalized": "open question o.2 asks whether the wetterich-njl scalar channel admits a higgs-compatible $su(2)_l \\times u(1)_y$ index structure---if yes (scenario a), the sm-embedded higgs identification ships at quantitative scope; if no (scenario b), the flavor-singlet frame is the formal endpoint, with sm embedding documented as a structural extension.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Open-question disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:af055722",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "af055722",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 7,
+      "tex_line_start": 420,
+      "tex_line_end": 423,
+      "quote": "\\textbf{Open Question O.3} asks which sterile-neutrino embedding (fundamental $\\nu_R$ vs composite Majorana bilinear) is preferred under the proved $\\mathbb{Z}_{16}$ structure.",
+      "quote_normalized": "open question o.3 asks which sterile-neutrino embedding (fundamental $\\nu_r$ vs composite majorana bilinear) is preferred under the proved $\\mathbb{z}_{16}$ structure.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Open-question disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:scope-boundary-and-future-work:4af338c3",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "scope-boundary-and-future-work",
+        "quote_hash": "4af338c3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "scope-boundary-and-future-work",
+      "section_ordinal": 8,
+      "tex_line_start": 422,
+      "tex_line_end": 423,
+      "quote": "Both deep-research questions are filed as tasks in \\texttt{Lit-Search/Tasks/}.",
+      "quote_normalized": "both deep-research questions are filed as tasks in lit-search/tasks/.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Task-tracking metaclaim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:prior-art-search:47c9a389",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "prior-art-search",
+        "quote_hash": "47c9a389",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "prior-art-search",
+      "section_ordinal": 1,
+      "tex_line_start": 427,
+      "tex_line_end": 431,
+      "quote": "To our knowledge, no prior formalization in any interactive proof assistant identifies the Higgs bilinear with a Wetterich-NJL scalar channel.",
+      "quote_normalized": "to our knowledge, no prior formalization in any interactive proof assistant identifies the higgs bilinear with a wetterich-njl scalar channel.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Prior-art metaclaim. Self-attested; not chain-resolvable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:prior-art-search:7c911206",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "prior-art-search",
+        "quote_hash": "7c911206",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "prior-art-search",
+      "section_ordinal": 2,
+      "tex_line_start": 429,
+      "tex_line_end": 437,
+      "quote": "We searched: HepLean's existing modules (\\texttt{HepLean/SM}, \\texttt{HepLean/StandardModel}; the existing formalization treats the Higgs as a fundamental field, not a condensate); the Lean community Zulip archive for \\emph{Higgs}, \\emph{Wetterich}, and \\emph{NJL}; the Mathlib changelog for any \\texttt{StandardModel} / \\texttt{Higgs} contributions; and the Coq QuantumLib + QWIRE + metamath ecosystem for SM-related formalizations (none found).",
+      "quote_normalized": "we searched: heplean's existing modules (heplean/sm, heplean/standardmodel; the existing formalization treats the higgs as a fundamental field, not a condensate); the lean community zulip archive for higgs, wetterich, and njl; the mathlib changelog for any standardmodel / higgs contributions; and the coq quantumlib + qwire + metamath ecosystem for sm-related formalizations (none found).",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Search methodology disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:prior-art-search:18438caf",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "prior-art-search",
+        "quote_hash": "18438caf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "prior-art-search",
+      "section_ordinal": 3,
+      "tex_line_start": 437,
+      "tex_line_end": 438,
+      "quote": "Comparable activity in Isabelle/HOL AFP and Agda was likewise not found.",
+      "quote_normalized": "comparable activity in isabelle/hol afp and agda was likewise not found.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Prior-art note.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:prior-art-search:98069b27",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "prior-art-search",
+        "quote_hash": "98069b27",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "prior-art-search",
+      "section_ordinal": 4,
+      "tex_line_start": 438,
+      "tex_line_end": 441,
+      "quote": "We invite correction if prior work exists; the ``first formal-verification-grade identification'' phrasing in the abstract and conclusion is intended in the \\emph{condensate-as-Higgs-bilinear} sense, not in the broader sense of ``first formalization touching the Higgs sector.''",
+      "quote_normalized": "we invite correction if prior work exists; the ``first formal-verification-grade identification'' phrasing in the abstract and conclusion is intended in the condensate-as-higgs-bilinear sense, not in the broader sense of ``first formalization touching the higgs sector.''",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "agent_notes": "Scope-of-priority disclaimer.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:conclusion:1a77e2f6",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "1a77e2f6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 1,
+      "tex_line_start": 444,
+      "tex_line_end": 449,
+      "quote": "The Wetterich-NJL scalar channel, the Mexican-hat potential, the Anderson-Higgs $W$/$Z$ mass matrix, and Yukawa couplings as overlap integrals are formal consequences of a single structural identification: that the Higgs bilinear sits at the same rung of the Landau hierarchy as the tetrad and---in subsequent work---Majorana condensates.",
+      "quote_normalized": "the wetterich-njl scalar channel, the mexican-hat potential, the anderson-higgs $w$/$z$ mass matrix, and yukawa couplings as overlap integrals are formal consequences of a single structural identification: that the higgs bilinear sits at the same rung of the landau hierarchy as the tetrad and---in subsequent work---majorana condensates.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_is_landau_rung"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Summary metaclaim; supported by scalar_rung_is_landau_rung.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:conclusion:7354c3fe",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "7354c3fe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 2,
+      "tex_line_start": 449,
+      "tex_line_end": 452,
+      "quote": "The identification is at structural scope in the flavor-singlet frame; we have established the corresponding decidable falsifiability predicate and reported a structural-only Gate Z.1 verdict at the current formalization scope.",
+      "quote_normalized": "the identification is at structural scope in the flavor-singlet frame; we have established the corresponding decidable falsifiability predicate and reported a structural-only gate z.1 verdict at the current formalization scope.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.scalar_rung_quantitative_match_iff"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Verdict statement; consistent with body.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:conclusion:ac083b2e",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "ac083b2e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 3,
+      "tex_line_start": 454,
+      "tex_line_end": 457,
+      "quote": "The Lean module \\texttt{ScalarRungInterpretation.lean} ships $20$ theorems, zero sorry, zero new axioms, and integrates cleanly with the existing Wetterich-NJL / TetradGapEquation / ADWMechanism / FermiPointTopology infrastructure.",
+      "quote_normalized": "the lean module scalarrunginterpretation.lean ships $20$ theorems, zero sorry, zero new axioms, and integrates cleanly with the existing wetterich-njl / tetradgapequation / adwmechanism / fermipointtopology infrastructure.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "IA recheck: ScalarRungInterpretation.lean = 20 theorems. Zero sorry. Zero new axioms. Match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:conclusion:cf01a618",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "cf01a618",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 4,
+      "tex_line_start": 457,
+      "tex_line_end": 462,
+      "quote": "Three formal consequences---the Mexican-hat $\\leftrightarrow$ tetrad-bifurcation bridge, the Anderson-Higgs $W$/$Z$ mass-matrix theorem, and the Yukawa-overlap linearity lemma---constitute the first formal-verification-grade identification of the Higgs bilinear with a four-fermion-substrate condensate.",
+      "quote_normalized": "three formal consequences---the mexican-hat $\\leftrightarrow$ tetrad-bifurcation bridge, the anderson-higgs $w$/$z$ mass-matrix theorem, and the yukawa-overlap linearity lemma---constitute the first formal-verification-grade identification of the higgs bilinear with a four-fermion-substrate condensate.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev"
+          },
+          {
+            "kind": "theorem",
+            "target": "ScalarRungInterpretation.yukawaCoupling_additive"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Summary listing of three formal consequences; all theorems exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper20_scalar_rung:conclusion:70cd51c5",
+      "raw_id_parts": {
+        "paper": "paper20_scalar_rung",
+        "section_slug": "conclusion",
+        "quote_hash": "70cd51c5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 5,
+      "tex_line_start": 462,
+      "tex_line_end": 464,
+      "quote": "The deep-research-gated extensions to the $SU(2)_L \\times U(1)_Y$-dressed scalar channel and the canonical overlap-integral form remain the natural next steps.",
+      "quote_normalized": "the deep-research-gated extensions to the $su(2)_l \\times u(1)_y$-dressed scalar channel and the canonical overlap-integral form remain the natural next steps.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Closing-paragraph forward reference.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T19:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 87,
+    "by_type": {
+      "metaclaim": 7,
+      "qualitative": 30,
+      "formal-claim": 7,
+      "numeric": 16,
+      "methodology": 6,
+      "citation": 1,
+      "theorem-ref": 19,
+      "transition": 1
+    },
+    "by_verdict": {
+      "PASS": 52,
+      "INFO": 30,
+      "FAIL": 2,
+      "TRANSITION": 3
+    },
+    "by_finding_class": {
+      "IA": 10,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 1
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "87 sentences | 52 PASS | 0 UNGROUNDED | 2 FAIL | 0 WARN | 30 INFO | 3 TRANSITION | IA=10 TP=0 SD=0 TN=0 HD=1 | first-time review (no prior claims_review.json)"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "Introduction module-theorem-count drift: paper says VestigialSusceptibility=16 (current 24), TetradGapEquation=20 (current 24), FermiPointTopology=33 (current 29). Module counts shifted since paper draft (post-Phase 5z anti-tautology audit + later waves). Update Section 'Introduction' counts before submission.",
+      "sentences": [
+        "sentence:paper20_scalar_rung:introduction:973a55ec",
+        "sentence:paper20_scalar_rung:introduction:dc8d2bce"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "followup:1",
+      "summary": "Project-side gap (not paper-claim drift): tracked hypothesis H_ScalarChannelIsTetradBifurcationOutput is referenced and disclosed in paper text + Lean module, but is NOT registered in src/core/constants.py::HYPOTHESIS_REGISTRY. Paper-side HD disclosure is sound; recommend wiring registry entry to align with Wave 1c precedent (rokhlin_sigma_mod_16, modular_invariance_framing, etc.).",
+      "sentences": [],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD"
+    }
+  ]
+}

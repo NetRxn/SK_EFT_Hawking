@@ -30,7 +30,7 @@ noise floor $n_\text{noise} = \delta_k/2$ mandated by the KMS condition, and
 frequencies $\omega \gtrsim 6\,T_H$. We provide platform-specific predictions
 for Steinhauer (${}^{87}$Rb), Heidelberg (${}^{39}$K), and Trento (${}^{23}$Na)
 BEC experiments. All structural results are formally verified in Lean~4
-(17 theorems, zero \texttt{sorry}).
+(29 theorems, zero \texttt{sorry}).
 \end{abstract}
 
 \maketitle
@@ -268,7 +268,7 @@ character of the analog Hawking effect.
 %═══════════════════════════════════════════════════════
 
 All structural results are formalized in Lean~4 using the Mathlib
-library. The module \texttt{WKBConnection.lean} contains 17 theorems
+library. The module \texttt{WKBConnection.lean} contains 29 theorems
 with zero \texttt{sorry} gaps:
 
 \begin{itemize}
@@ -286,9 +286,10 @@ with zero \texttt{sorry} gaps:
   \Gamma_H > 0$
 \end{itemize}
 
-Combined with the full project formalization across 66 Lean modules,
-the project contains 968 theorems with zero axioms
-(273 Aristotle-proved across 33+ runs, remainder manual), all sorry-free.
+Combined with the full project formalization across 170 Lean modules,
+the project contains 4049 theorems with one axiom
+(\texttt{gapped\_interface\_axiom})
+(322 Aristotle-proved across 44 runs, remainder manual), all sorry-free.
 
 \begin{figure}[htb]
 \centering

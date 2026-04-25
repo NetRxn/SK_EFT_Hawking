@@ -55,7 +55,7 @@ Equivalence Principle violation as a distinctive experimental signature.
 The question of whether spacetime geometry can emerge from a pre-geometric
 microscopic substrate has been given renewed impetus by two developments.
 First, the Akama-Diakonov-Wetterich (ADW) program~\cite{Akama1978,
-Diakonov2011,Wetterich2005} demonstrates that the tetrad can arise as a
+Diakonov2011,Wetterich2004} demonstrates that the tetrad can arise as a
 composite fermion-bilinear order parameter, with a mean-field phase
 transition at a critical coupling $\Gc$ that spontaneously generates
 Lorentzian geometry. Second, Volovik~\cite{Volovik2024} argued that an
@@ -106,7 +106,7 @@ index $a$ and coordinate index $\mu$.
 
 Starting from the ADW 8-fermion cosmological interaction and performing
 the Hubbard-Stratonovich (HS) decomposition with the tetrad as auxiliary
-field~\cite{Vladimirov2012}, one obtains an action quadratic in
+field~\cite{VladimirovDiakonov2012}, one obtains an action quadratic in
 fermions. Integrating out the fermions yields an effective bosonic action
 for the tetrad. For the Euclidean pilot ($\eta_{ab} \to \delta_{ab}$),
 the auxiliary (tree-level) action per site is
@@ -467,7 +467,7 @@ considered in their study.
 
 \subsection{Limitations and Quantitative Assessments}
 
-We have performed three additional analyses to quantify the limitations
+We have performed four additional analyses to quantify the limitations
 of the Euclidean pilot:
 
 \begin{enumerate}
@@ -535,10 +535,10 @@ The key findings are:
 
 \item All structural results are formally verified in Lean~4.
   This paper's results are formalized in \texttt{VestigialGravity.lean}
-  (18 theorems) and \texttt{FermionBag4D.lean} (16 theorems), both
-  with zero \texttt{sorry}. The full project contains 968 theorems
-  (zero axioms) across 66 modules, 273 proved by the Aristotle automated
-  theorem prover~\cite{Aristotle} across 33+ runs.
+  (25 theorems) and \texttt{FermionBag4D.lean} (16 theorems), both
+  with zero \texttt{sorry}. The full project contains 4049 theorems
+  (1 axiom) across 170 modules, 322 proved by the Aristotle automated
+  theorem prover~\cite{Aristotle} across 44 runs.
 \end{enumerate}
 
 The vestigial metric phase represents the most accessible form of
@@ -550,7 +550,7 @@ as an observational test if the cosmological phase history includes a
 vestigial epoch.
 
 \begin{acknowledgments}
-Structural results formalized in Lean~4 (v4.28.0) with Mathlib.
+Structural results formalized in Lean~4 (v4.29.0) with Mathlib.
 Monte Carlo implementation: \texttt{src/vestigial/} modules.
 \end{acknowledgments}
 
@@ -564,7 +564,7 @@ Monte Carlo implementation: \texttt{src/vestigial/} modules.
   ``Towards Lattice-Regularized Quantum Gravity,''
   arXiv:1109.0091 (2011).
 
-\bibitem{Wetterich2005} C.~Wetterich,
+\bibitem{Wetterich2004} C.~Wetterich,
   ``Gravity from spinors,''
   Phys.\ Rev.\ D \textbf{70}, 105004 (2004).
 
@@ -573,7 +573,7 @@ Monte Carlo implementation: \texttt{src/vestigial/} modules.
   JETP Lett.\ \textbf{119}, 330 (2024);
   arXiv:2312.09435.
 
-\bibitem{Vladimirov2012} A.~A.~Vladimirov and D.~Diakonov,
+\bibitem{VladimirovDiakonov2012} A.~A.~Vladimirov and D.~Diakonov,
   ``Phase transitions in spinor quantum gravity on a lattice,''
   Phys.\ Rev.\ D \textbf{86}, 104019 (2012).
 

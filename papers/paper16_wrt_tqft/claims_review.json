@@ -1,0 +1,2237 @@
+{
+  "paper": "paper16_wrt_tqft",
+  "review_date": "2026-04-25T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper16_wrt_tqft:abstract:cb064736",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "abstract",
+        "quote_hash": "cb064736",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 20,
+      "tex_line_end": 22,
+      "quote": "We present the first formalization of the Witten-Reshetikhin-Turaev 3-manifold invariant pipeline in any proof assistant.",
+      "quote_normalized": "we present the first formalization of the witten-reshetikhin-turaev 3-manifold invariant pipeline in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Meta-claim of priority/novelty. Not mechanically verifiable; survey-level claim about prior art absence. No structural drift detectable from pipeline state.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we present the first formalization of the witten-reshetikhin-turaev 3-manifold invariant pipeline in any proof assistant."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:abstract:70a2d970",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "abstract",
+        "quote_hash": "70a2d970",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 22,
+      "tex_line_end": 28,
+      "quote": "Starting from verified modular tensor category data (Ising and Fibonacci MTCs with machine-checked R-matrices, F-symbols, pentagon, hexagon, and ribbon conditions), we build a complete chain through the Temperley-Lieb algebra, Jones-Wenzl idempotents, surgery presentations for 3-manifolds, to the WRT surgery formula connecting topological data to algebraic invariants.",
+      "quote_normalized": "starting from verified modular tensor category data (ising and fibonacci mtcs with machine-checked r-matrices, f-symbols, pentagon, hexagon, and ribbon conditions), we build a complete chain through the temperley-lieb algebra, jones-wenzl idempotents, surgery presentations for 3-manifolds, to the wrt surgery formula connecting topological data to algebraic invariants.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.MTCWithTwist"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.PreModularData"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrtS3"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Methodology summary. Pipeline modules TemperleyLieb, JonesWenzl, SurgeryPresentation, WRTInvariant, WRTComputation all exist with theorems present in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "starting from verified modular tensor category data (ising and fibonacci mtcs with machine-checked r-matrices, f-symbols, pentagon, hexagon, and ribbon conditions), we build a complete chain through the temperley-lieb algebra, jones-wenzl idempotents, surgery presentations for 3-manifolds, to the wrt surgery formula connecting topological data to algebraic invariants."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:abstract:a1fb4ed2",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "abstract",
+        "quote_hash": "a1fb4ed2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 28,
+      "tex_line_end": 30,
+      "quote": "Concrete computations verified by \\nativedecide{}: Ising $D^2 = 4$, Gauss sum $p_+ = 2\\zeta_{16}$; Fibonacci $D^2 = 2 + \\varphi$ with $\\varphi^2 = \\varphi + 1$.",
+      "quote_normalized": "concrete computations verified by \\nativedecide{}: ising $d^2 = 4$, gauss sum $p_+ = 2\\zeta_{16}$; fibonacci $d^2 = 2 + \\varphi$ with $\\varphi^2 = \\varphi + 1$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Concrete numeric claims about D\u00b2 and p_+ for Ising / D\u00b2 for Fibonacci. WRTComputation module hosts native_decide-verified Ising and Fibonacci computations. Phi-quadratic relation phi^2 = phi+1 is the defining minimal polynomial; algebraically routine. Ising D^2 = 1 + 2 + 1 = 4 is correct (sigma has dimension sqrt 2). Fibonacci D^2 = 1 + phi^2 = 2 + phi is correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "concrete computations verified by \\nativedecide{}: ising $d^2 = 4$, gauss sum $p_+ = 2\\zeta_{16}$; fibonacci $d^2 = 2 + \\varphi$ with $\\varphi^2 = \\varphi + 1$."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:abstract:9c1c6a1e",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "abstract",
+        "quote_hash": "9c1c6a1e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 30,
+      "tex_line_end": 33,
+      "quote": "The Temperley-Lieb algebra (3~relation types), Jones-Wenzl recurrence, surgery presentations ($S^3$, $S^2 \\times S^1$, lens spaces), and the WRT formula are all first formalizations in any proof assistant.",
+      "quote_normalized": "the temperley-lieb algebra (3~relation types), jones-wenzl recurrence, surgery presentations ($s^3$, $s^2 \\times s^1$, lens spaces), and the wrt formula are all first formalizations in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TemperleyLieb"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTInvariant"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Three relations match TL1/TL2/TL3 in TemperleyLieb.lean. Priority claim ('first formalizations') is a survey-level meta-claim, not mechanically verifiable here.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the temperley-lieb algebra (3~relation types), jones-wenzl recurrence, surgery presentations ($s^3$, $s^2 \\times s^1$, lens spaces), and the wrt formula are all first formalizations in any proof assistant."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:abstract:c43f19b7",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "abstract",
+        "quote_hash": "c43f19b7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 34,
+      "quote": "Zero sorry, zero axioms across 7~new Lean~4 modules.",
+      "quote_normalized": "zero sorry, zero axioms across 7~new lean~4 modules.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TemperleyLieb"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTInvariant"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.QNumber"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA: abstract says '7 new modules', conclusion (line 167) says 'Nine Lean 4 modules'. Author scoping differs between abstract (pipeline core 7) and conclusion (broader 9 including SU2k/braiding). Sorry/axiom counts confirmed zero across all WRT-pipeline modules (grep -c '^  sorry' / '^axiom ' returns 0). Mark WARN due to internal '7 vs 9' tension, not FAIL since the scopes are textually distinguishable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "zero sorry, zero axioms across 7~new lean~4 modules."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:introduction:37162b90",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "introduction",
+        "quote_hash": "37162b90",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 41,
+      "tex_line_end": 43,
+      "quote": "The Witten-Reshetikhin-Turaev invariant~\\cite{witten1989,rt1991} assigns a complex number $Z(M)$ to each closed oriented 3-manifold $M$, computed from a modular tensor category (MTC).",
+      "quote_normalized": "the witten-reshetikhin-turaev invariant~ assigns a complex number $z(m)$ to each closed oriented 3-manifold $m$, computed from a modular tensor category (mtc).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "witten1989"
+          },
+          {
+            "kind": "citation",
+            "target": "rt1991"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Citation keys 'witten1989' and 'rt1991' are not present in CITATION_REGISTRY (src/core/citations.py). Bibitems exist in paper_draft.tex thebibliography (lines 194-198). Definitional statement about WRT invariant is standard mathematical content. WARN on registry coverage gap; not FAIL because paper bibitems resolve in-document.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the witten-reshetikhin-turaev invariant~ assigns a complex number $z(m)$ to each closed oriented 3-manifold $m$, computed from a modular tensor category (mtc)."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:introduction:047a1a4e",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "introduction",
+        "quote_hash": "047a1a4e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 43,
+      "tex_line_end": 47,
+      "quote": "Despite 35~years of development and central importance in quantum topology, no component of the WRT construction has previously been formalized in any proof assistant --- not the surgery formula, not the Temperley-Lieb algebra, not the Kirby calculus, and not any quantum 3-manifold invariant value.",
+      "quote_normalized": "despite 35~years of development and central importance in quantum topology, no component of the wrt construction has previously been formalized in any proof assistant --- not the surgery formula, not the temperley-lieb algebra, not the kirby calculus, and not any quantum 3-manifold invariant value.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Priority/novelty meta-claim about prior art. Not mechanically verifiable from pipeline state.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "despite 35~years of development and central importance in quantum topology, no component of the wrt construction has previously been formalized in any proof assistant --- not the surgery formula, not the temperley-lieb algebra, not the kirby calculus, and not any quantum 3-manifold invariant value."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:introduction:ba71e198",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "introduction",
+        "quote_hash": "ba71e198",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 49,
+      "tex_line_end": 52,
+      "quote": "We close this gap with a complete formalization pipeline in Lean~4 with Mathlib, building on our prior work establishing the first verified MTC instances (Ising and Fibonacci) with machine-checked pentagon, hexagon, and ribbon coherence~\\cite{paper14}.",
+      "quote_normalized": "we close this gap with a complete formalization pipeline in lean~4 with mathlib, building on our prior work establishing the first verified mtc instances (ising and fibonacci) with machine-checked pentagon, hexagon, and ribbon coherence~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "paper14"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Citation 'paper14' is a self-reference to a companion paper; not in CITATION_REGISTRY. Bibitem present in document.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we close this gap with a complete formalization pipeline in lean~4 with mathlib, building on our prior work establishing the first verified mtc instances (ising and fibonacci) with machine-checked pentagon, hexagon, and ribbon coherence~."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:introduction:db915ff0",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "introduction",
+        "quote_hash": "db915ff0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 52,
+      "tex_line_end": 54,
+      "quote": "The pipeline comprises seven new modules totaling ${\\sim}60$~theorems with zero \\texttt{sorry} and zero axioms.",
+      "quote_normalized": "the pipeline comprises seven new modules totaling ${\\sim}60$~theorems with zero sorry and zero axioms.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TemperleyLieb"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTInvariant"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.QNumber"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA: '~60 theorems' across 7 pipeline modules. Live counts (grep -c '^theorem '): TemperleyLieb=4, JonesWenzl=4, SurgeryPresentation=20, WRTInvariant=3, WRTComputation=30, QNumber=20 \u2192 81 across 6 named modules; with a 7th likely SU2kMTC=15 \u2192 96. Author's '~60' undercounts current state by ~30-50%. Approximation tilde tolerates some drift but this is large; WARN. Sorry/axiom counts confirmed zero.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the pipeline comprises seven new modules totaling ${\\sim}60$~theorems with zero sorry and zero axioms."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-temperley-lieb-algebra:d1310b94",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-temperley-lieb-algebra",
+        "quote_hash": "d1310b94",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-temperley-lieb-algebra",
+      "section_ordinal": 3,
+      "tex_line_start": 59,
+      "tex_line_end": 61,
+      "quote": "The Temperley-Lieb algebra $\\mathrm{TL}_n(\\delta)$ is the algebraic foundation of the BHMV construction~\\cite{bhmv1995} of the WRT TQFT functor.",
+      "quote_normalized": "the temperley-lieb algebra $tl_n(\\delta)$ is the algebraic foundation of the bhmv construction~ of the wrt tqft functor.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "bhmv1995"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Citation 'bhmv1995' not in CITATION_REGISTRY; bibitem present in document. Definitional/historical claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the temperley-lieb algebra $tl_n(\\delta)$ is the algebraic foundation of the bhmv construction~ of the wrt tqft functor."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-temperley-lieb-algebra:dfca32f6",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-temperley-lieb-algebra",
+        "quote_hash": "dfca32f6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-temperley-lieb-algebra",
+      "section_ordinal": 3,
+      "tex_line_start": 61,
+      "tex_line_end": 63,
+      "quote": "We define it in \\lean{TemperleyLieb.lean} as a quotient of the free algebra on $n$ generators $\\{e_0, \\ldots, e_{n-1}\\}$ by three relation families:",
+      "quote_normalized": "we define it in \\lean{temperleylieb.lean} as a quotient of the free algebra on $n$ generators $\\{e_0, \\ldots, e_{n-1}\\}$ by three relation families:",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TemperleyLieb"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Module SKEFTHawking.TemperleyLieb exists (lean/SKEFTHawking/TemperleyLieb.lean); 4 theorems in lean_deps.json under module=SKEFTHawking.TemperleyLieb.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we define it in \\lean{temperleylieb.lean} as a quotient of the free algebra on $n$ generators $\\{e_0, \\ldots, e_{n-1}\\}$ by three relation families:"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-temperley-lieb-algebra:451e28ac",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-temperley-lieb-algebra",
+        "quote_hash": "451e28ac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-temperley-lieb-algebra",
+      "section_ordinal": 3,
+      "tex_line_start": 64,
+      "tex_line_end": 68,
+      "quote": "\\begin{align} \\text{(TL1)} && e_i^2 &= \\delta \\cdot e_i \\label{eq:tl1} \\\\ \\text{(TL2)} && e_i e_j e_i &= e_i \\quad (|i-j|=1) \\label{eq:tl2} \\\\ \\text{(TL3)} && e_i e_j &= e_j e_i \\quad (|i-j| \\ge 2) \\label{eq:tl3} \\end{align}",
+      "quote_normalized": "\\begin{align} (tl1) && e_i^2 &= \\delta \\cdot e_i \\\\ (tl2) && e_i e_j e_i &= e_i \\quad (|i-j|=1) \\\\ (tl3) && e_i e_j &= e_j e_i \\quad (|i-j| \\ge 2) \\end{align}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TemperleyLieb"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Three Temperley-Lieb relation families. Three relation types match TL1/TL2/TL3 in TemperleyLieb.lean. Standard TL presentation in Wenzl/BHMV literature.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "\\begin{align} (tl1) && e_i^2 &= \\delta \\cdot e_i \\\\ (tl2) && e_i e_j e_i &= e_i \\quad (|i-j|=1) \\\\ (tl3) && e_i e_j &= e_j e_i \\quad (|i-j| \\ge 2) \\end{align}"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-temperley-lieb-algebra:c92e21df",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-temperley-lieb-algebra",
+        "quote_hash": "c92e21df",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-temperley-lieb-algebra",
+      "section_ordinal": 3,
+      "tex_line_start": 69,
+      "tex_line_end": 71,
+      "quote": "All three relations are proved via the standard \\lean{RingQuot.mkAlgHom\\_rel} descent from the free algebra.",
+      "quote_normalized": "all three relations are proved via the standard \\lean{ringquot.mkalghom\\_rel} descent from the free algebra.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Mathlib.RingQuot.mkAlgHom_rel"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "RingQuot.mkAlgHom_rel is a Mathlib lemma; not in lean_deps.json (which scans SKEFTHawking only). Standard Mathlib API for RingQuot descent \u2014 TN does not apply to non-SK-EFT identifiers.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "all three relations are proved via the standard \\lean{ringquot.mkalghom\\_rel} descent from the free algebra."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-temperley-lieb-algebra:20fe481b",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-temperley-lieb-algebra",
+        "quote_hash": "20fe481b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-temperley-lieb-algebra",
+      "section_ordinal": 3,
+      "tex_line_start": 71,
+      "tex_line_end": 72,
+      "quote": "The parameter $\\delta$ is the loop value; for SU(2)$_k$ quantum groups, $\\delta = [2]_q = q + q^{-1}$.",
+      "quote_normalized": "the parameter $\\delta$ is the loop value; for su(2)$_k$ quantum groups, $\\delta = [2]_q = q + q^{-1}$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Standard q-number identity [2]_q = q + q^-1; expository definition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the parameter $\\delta$ is the loop value; for su(2)$_k$ quantum groups, $\\delta = [2]_q = q + q^{-1}$."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:jones-wenzl-idempotents:80c436f6",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "jones-wenzl-idempotents",
+        "quote_hash": "80c436f6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "jones-wenzl-idempotents",
+      "section_ordinal": 4,
+      "tex_line_start": 77,
+      "tex_line_end": 82,
+      "quote": "The Jones-Wenzl idempotent $f^{(m)} \\in \\mathrm{TL}_n$ is defined by the Wenzl recurrence~\\cite{wenzl1988}: \\begin{equation} f^{(0)} = 1, \\quad f^{(m+1)} = f^{(m)} - c(m) \\cdot f^{(m)} \\cdot e_m \\cdot f^{(m)} \\end{equation}",
+      "quote_normalized": "the jones-wenzl idempotent $f^{(m)} \\in tl_n$ is defined by the wenzl recurrence~: \\begin{equation} f^{(0)} = 1, \\quad f^{(m+1)} = f^{(m)} - c(m) \\cdot f^{(m)} \\cdot e_m \\cdot f^{(m)} \\end{equation}",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "wenzl1988"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Citation 'wenzl1988' not in CITATION_REGISTRY; bibitem present. JonesWenzl module exists with 4 theorems (grep)/8 (lean_deps).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the jones-wenzl idempotent $f^{(m)} \\in tl_n$ is defined by the wenzl recurrence~: \\begin{equation} f^{(0)} = 1, \\quad f^{(m+1)} = f^{(m)} - c(m) \\cdot f^{(m)} \\cdot e_m \\cdot f^{(m)} \\end{equation}"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:jones-wenzl-idempotents:d7088e6f",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "jones-wenzl-idempotents",
+        "quote_hash": "d7088e6f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "jones-wenzl-idempotents",
+      "section_ordinal": 4,
+      "tex_line_start": 83,
+      "tex_line_end": 83,
+      "quote": "where $c(m) = [m]_q / [m+1]_q$ for the quantum-group specialization.",
+      "quote_normalized": "where $c(m) = [m]_q / [m+1]_q$ for the quantum-group specialization.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Standard Jones-Wenzl coefficient. Expository formula.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "where $c(m) = [m]_q / [m+1]_q$ for the quantum-group specialization."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:jones-wenzl-idempotents:ad32b7cd",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "jones-wenzl-idempotents",
+        "quote_hash": "ad32b7cd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "jones-wenzl-idempotents",
+      "section_ordinal": 4,
+      "tex_line_start": 84,
+      "tex_line_end": 85,
+      "quote": "We parametrize by an abstract coefficient function $c : \\mathbb{N} \\to k$, keeping the definition valid over any commutative ring.",
+      "quote_normalized": "we parametrize by an abstract coefficient function $c : \\mathbb{n} \\to k$, keeping the definition valid over any commutative ring.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Methodology choice (abstract coefficient parametrization) consistent with module pattern in SK-EFT.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we parametrize by an abstract coefficient function $c : \\mathbb{n} \\to k$, keeping the definition valid over any commutative ring."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:jones-wenzl-idempotents:1a4b589e",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "jones-wenzl-idempotents",
+        "quote_hash": "1a4b589e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "jones-wenzl-idempotents",
+      "section_ordinal": 4,
+      "tex_line_start": 85,
+      "tex_line_end": 87,
+      "quote": "The recurrence step, base case $f^{(0)} = 1$, and explicit $f^{(1)} = 1 - c(0) \\cdot e_0$ are all definitional equalities (proved by \\lean{rfl}).",
+      "quote_normalized": "the recurrence step, base case $f^{(0)} = 1$, and explicit $f^{(1)} = 1 - c(0) \\cdot e_0$ are all definitional equalities (proved by \\lean{rfl}).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Definitional-equality claim about JW recurrence and base/explicit cases. JonesWenzl.lean module hosts these; proof-by-rfl pattern is standard.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the recurrence step, base case $f^{(0)} = 1$, and explicit $f^{(1)} = 1 - c(0) \\cdot e_0$ are all definitional equalities (proved by \\lean{rfl})."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:307af474",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "307af474",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 92,
+      "tex_line_end": 93,
+      "quote": "Every closed oriented 3-manifold is obtained by Dehn surgery on a framed link in $S^3$ (Lickorish-Wallace theorem).",
+      "quote_normalized": "every closed oriented 3-manifold is obtained by dehn surgery on a framed link in $s^3$ (lickorish-wallace theorem).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Classical Lickorish-Wallace theorem; standard background statement.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "every closed oriented 3-manifold is obtained by dehn surgery on a framed link in $s^3$ (lickorish-wallace theorem)."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:0c3e1c5a",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "0c3e1c5a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 93,
+      "tex_line_end": 95,
+      "quote": "We encode surgery presentations as symmetric integer linking matrices (\\lean{SurgeryPresentation.lean}), with standard examples:",
+      "quote_normalized": "we encode surgery presentations as symmetric integer linking matrices (\\lean{surgerypresentation.lean}), with standard examples:",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Module SKEFTHawking.SurgeryPresentation exists; 20 theorems by grep, 32 by lean_deps.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we encode surgery presentations as symmetric integer linking matrices (\\lean{surgerypresentation.lean}), with standard examples:"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:79d70da9",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "79d70da9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 97,
+      "tex_line_end": 97,
+      "quote": "$S^3$: empty surgery (0 components)",
+      "quote_normalized": "$s^3$: empty surgery (0 components)",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "S^3 as empty surgery is a definitional fact (zero components, zero linking matrix).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$s^3$: empty surgery (0 components)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:5cf81df1",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "5cf81df1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 98,
+      "tex_line_end": 98,
+      "quote": "$S^2 \\times S^1$: 0-framed unknot (1 component, framing $= 0$)",
+      "quote_normalized": "$s^2 \\times s^1$: 0-framed unknot (1 component, framing $= 0$)",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "0-framed unknot \u2194 S^2 \u00d7 S^1 is classical surgery presentation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$s^2 \\times s^1$: 0-framed unknot (1 component, framing $= 0$)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:76e765b3",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "76e765b3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 99,
+      "tex_line_end": 99,
+      "quote": "$L(p,1)$: $p$-surgery on the unknot",
+      "quote_normalized": "$l(p,1)$: $p$-surgery on the unknot",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "p-surgery on unknot yields lens space L(p,1); textbook surgery presentation.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$l(p,1)$: $p$-surgery on the unknot"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:56b46f3c",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "56b46f3c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 100,
+      "tex_line_end": 100,
+      "quote": "Hopf link: 2 components with linking number 1",
+      "quote_normalized": "hopf link: 2 components with linking number 1",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Hopf link linking number = 1: standard topological invariant.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "hopf link: 2 components with linking number 1"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:ac5d5e57",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "ac5d5e57",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 102,
+      "tex_line_end": 102,
+      "quote": "Framing and linking properties verified for all examples.",
+      "quote_normalized": "framing and linking properties verified for all examples.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Summary statement; SurgeryPresentation.lean has 20+ theorems consistent with this scope.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "framing and linking properties verified for all examples."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:484a669a",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "484a669a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 102,
+      "tex_line_end": 105,
+      "quote": "The key insight from~\\cite{turaev2010}: working with linking matrices avoids smooth 3-manifold topology entirely --- the construction is purely combinatorial.",
+      "quote_normalized": "the key insight from~: working with linking matrices avoids smooth 3-manifold topology entirely --- the construction is purely combinatorial.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "turaev2010"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Citation 'turaev2010' not in CITATION_REGISTRY; bibitem present. Methodological commentary.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the key insight from~: working with linking matrices avoids smooth 3-manifold topology entirely --- the construction is purely combinatorial."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:surgery-presentations:85d438ed",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "surgery-presentations",
+        "quote_hash": "85d438ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "surgery-presentations",
+      "section_ordinal": 5,
+      "tex_line_start": 105,
+      "tex_line_end": 108,
+      "quote": "Kirby handle slides (the second Kirby move) are formalized as concrete matrix operations preserving symmetry, with a trefoil complement presentation $\\bigl(\\begin{smallmatrix} -2 & 1 \\\\ 1 & -3 \\end{smallmatrix}\\bigr)$ verified.",
+      "quote_normalized": "kirby handle slides (the second kirby move) are formalized as concrete matrix operations preserving symmetry, with a trefoil complement presentation $\\bigl(\\begin{smallmatrix} -2 & 1 \\\\ 1 & -3 \\end{smallmatrix}\\bigr)$ verified.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Kirby moves + trefoil complement presentation. SurgeryPresentation.lean's 20+ theorems consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "kirby handle slides (the second kirby move) are formalized as concrete matrix operations preserving symmetry, with a trefoil complement presentation $\\bigl(\\begin{smallmatrix} -2 & 1 \\\\ 1 & -3 \\end{smallmatrix}\\bigr)$ verified."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-wrt-invariant-formula:3d380b65",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-wrt-invariant-formula",
+        "quote_hash": "3d380b65",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wrt-invariant-formula",
+      "section_ordinal": 6,
+      "tex_line_start": 113,
+      "tex_line_end": 114,
+      "quote": "The WRT invariant connects MTC data to 3-manifold topology via the surgery formula.",
+      "quote_normalized": "the wrt invariant connects mtc data to 3-manifold topology via the surgery formula.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Section opening; non-claim transition.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the wrt invariant connects mtc data to 3-manifold topology via the surgery formula."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-wrt-invariant-formula:56e8027a",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-wrt-invariant-formula",
+        "quote_hash": "56e8027a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wrt-invariant-formula",
+      "section_ordinal": 6,
+      "tex_line_start": 114,
+      "tex_line_end": 117,
+      "quote": "We define \\lean{MTCWithTwist} extending \\lean{PreModularData} with topological twist eigenvalues $\\theta_i$, global dimension $D^2 = \\sum_i d_i^2$, and Gauss sum $p_+ = \\sum_i d_i^2 \\theta_i$.",
+      "quote_normalized": "we define \\lean{mtcwithtwist} extending \\lean{premodulardata} with topological twist eigenvalues $\\theta_i$, global dimension $d^2 = \\sum_i d_i^2$, and gauss sum $p_+ = \\sum_i d_i^2 \\theta_i$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.MTCWithTwist"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.PreModularData"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both names exist: SKEFTHawking.MTCWithTwist (WRTInvariant.lean line 47) extends SKEFTHawking.PreModularData (RibbonCategory.lean line 85). Definitions of globalDimSq and gaussPlus appear at WRTInvariant.lean lines 54 and 58.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we define \\lean{mtcwithtwist} extending \\lean{premodulardata} with topological twist eigenvalues $\\theta_i$, global dimension $d^2 = \\sum_i d_i^2$, and gauss sum $p_+ = \\sum_i d_i^2 \\theta_i$."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-wrt-invariant-formula:cae9bc55",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-wrt-invariant-formula",
+        "quote_hash": "cae9bc55",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wrt-invariant-formula",
+      "section_ordinal": 6,
+      "tex_line_start": 117,
+      "tex_line_end": 120,
+      "quote": "The invariant for the empty surgery is: \\begin{equation} Z(S^3) = p_+ \\cdot D^{-2} \\end{equation}",
+      "quote_normalized": "the invariant for the empty surgery is: \\begin{equation} z(s^3) = p_+ \\cdot d^{-2} \\end{equation}",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrtS3"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrt_S3_formula"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "wrtS3 (WRTInvariant.lean line 73) and wrt_S3_formula (line 97) both exist in lean_deps.json. Standard WRT empty-surgery formula.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the invariant for the empty surgery is: \\begin{equation} z(s^3) = p_+ \\cdot d^{-2} \\end{equation}"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:the-wrt-invariant-formula:d7f08041",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "the-wrt-invariant-formula",
+        "quote_hash": "d7f08041",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-wrt-invariant-formula",
+      "section_ordinal": 6,
+      "tex_line_start": 121,
+      "tex_line_end": 122,
+      "quote": "and $Z(S^2 \\times S^1)$ equals the rank (number of simple objects), proved as a definitional equality.",
+      "quote_normalized": "and $z(s^2 \\times s^1)$ equals the rank (number of simple objects), proved as a definitional equality.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrtS2xS1"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrt_S2xS1_eq_rank"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both wrtS2xS1 (WRTInvariant.lean line 83 \u2014 `def wrtS2xS1 (D : MTCWithTwist R) : R := D.n`) and wrt_S2xS1_eq_rank (line 90) exist. Definitional equality consistent with body `D.n`.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "and $z(s^2 \\times s^1)$ equals the rank (number of simple objects), proved as a definitional equality."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:4a14dd15",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "4a14dd15",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 127,
+      "tex_line_end": 127,
+      "quote": "Using verified MTC data from companion work~\\cite{paper14}:",
+      "quote_normalized": "using verified mtc data from companion work~:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "paper14"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Connective; cites companion paper14.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "using verified mtc data from companion work~:"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:0a28f02e",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "0a28f02e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 129,
+      "tex_line_end": 129,
+      "quote": "\\textbf{Ising MTC} (SU(2)$_2$, 3 simple objects $\\{1, \\sigma, \\psi\\}$):",
+      "quote_normalized": "ising mtc (su(2)$_2$, 3 simple objects $\\{1, \\sigma, \\psi\\}$):",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Section header for Ising MTC results; descriptive labelling.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "ising mtc (su(2)$_2$, 3 simple objects $\\{1, \\sigma, \\psi\\}$):"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:2628bfd9",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "2628bfd9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 131,
+      "tex_line_end": 131,
+      "quote": "$D^2 = 1 + (\\sqrt{2})^2 + 1 = 4$ \\quad (\\nativedecide{} over $\\mathbb{Q}(\\zeta_{16})$)",
+      "quote_normalized": "$d^2 = 1 + (\\sqrt{2})^2 + 1 = 4$ \\quad (\\nativedecide{} over $\\mathbb{q}(\\zeta_{16})$)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Ising D^2 = 1 + 2 + 1 = 4. Quantum dimensions for Ising: d_1=1, d_sigma=sqrt(2), d_psi=1. Sum of squares = 1+2+1 = 4. Exact arithmetic match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$d^2 = 1 + (\\sqrt{2})^2 + 1 = 4$ \\quad (\\nativedecide{} over $\\mathbb{q}(\\zeta_{16})$)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:b0fb174e",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "b0fb174e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 132,
+      "tex_line_end": 132,
+      "quote": "$p_+ = 1 + 2\\theta_\\sigma + \\theta_\\psi = 2\\zeta_{16}$ \\quad (proved)",
+      "quote_normalized": "$p_+ = 1 + 2\\theta_\\sigma + \\theta_\\psi = 2\\zeta_{16}$ \\quad (proved)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Ising Gauss sum p_+ = sum_i d_i^2 theta_i. With theta_sigma = zeta_16, theta_psi = -1: p_+ = 1\u00b71 + 2\u00b7zeta_16 + 1\u00b7(-1) = 2\u00b7zeta_16. Algebraically consistent.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$p_+ = 1 + 2\\theta_\\sigma + \\theta_\\psi = 2\\zeta_{16}$ \\quad (proved)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:b2bda5c2",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "b2bda5c2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 133,
+      "tex_line_end": 133,
+      "quote": "$Z(S^2 \\times S^1) = 3$ \\quad (rank)",
+      "quote_normalized": "$z(s^2 \\times s^1) = 3$ \\quad (rank)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrt_S2xS1_eq_rank"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Ising has 3 simple objects \u2192 rank = 3 \u2192 Z(S\u00b2\u00d7S\u00b9) = 3. Matches wrt_S2xS1_eq_rank.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$z(s^2 \\times s^1) = 3$ \\quad (rank)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:c29a4f12",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "c29a4f12",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 134,
+      "tex_line_end": 134,
+      "quote": "Braiding gates: $\\sigma_1 = \\mathrm{diag}(\\zeta^{-1}, \\zeta^3)$ (Clifford)",
+      "quote_normalized": "braiding gates: $\\sigma_1 = diag(\\zeta^{-1}, \\zeta^3)$ (clifford)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.IsingBraiding"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Ising braiding generator on the 2-anyon space. IsingBraiding module has 25 theorems formalizing this; Clifford-group property is standard for Ising MTC.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "braiding gates: $\\sigma_1 = diag(\\zeta^{-1}, \\zeta^3)$ (clifford)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:eedb2842",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "eedb2842",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 135,
+      "tex_line_end": 136,
+      "quote": "\\textbf{Lens space invariants} $Z(L(p,1))$ for $p = 1,2,3,4,8,16$: numerator $= 1 + 2\\theta_\\sigma^p + (-1)^p$, all proved.",
+      "quote_normalized": "lens space invariants $z(l(p,1))$ for $p = 1,2,3,4,8,16$: numerator $= 1 + 2\\theta_\\sigma^p + (-1)^p$, all proved.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "WRT lens-space surgery formula numerator = sum_i d_i^2 theta_i^p (for p-surgery). With Ising d_i=1,sqrt2,1 and theta_psi=-1, theta_1=1: numerator = 1\u00b71 + 2\u00b7theta_sigma^p + 1\u00b7(-1)^p. Matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "lens space invariants $z(l(p,1))$ for $p = 1,2,3,4,8,16$: numerator $= 1 + 2\\theta_\\sigma^p + (-1)^p$, all proved."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:f8ee4489",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "f8ee4489",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 137,
+      "tex_line_end": 138,
+      "quote": "Key: $Z(L(8,1)) = 0$ (vanishing!) and $Z(L(16,1)) = D^2/D^2 = 1$ (trivial), encoding the 16-fold periodicity at the 3-manifold level.",
+      "quote_normalized": "key: $z(l(8,1)) = 0$ (vanishing!) and $z(l(16,1)) = d^2/d^2 = 1$ (trivial), encoding the 16-fold periodicity at the 3-manifold level.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "With theta_sigma = zeta_16 (primitive 16th root): theta_sigma^8 = -1, so numerator at p=8 is 1 + 2\u00b7(-1) + 1 = 0. At p=16: theta_sigma^16 = 1, numerator = 1 + 2 + 1 = 4 = D^2; ratio = 1. 16-fold periodicity follows from theta_sigma being a primitive 16th root.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "key: $z(l(8,1)) = 0$ (vanishing!) and $z(l(16,1)) = d^2/d^2 = 1$ (trivial), encoding the 16-fold periodicity at the 3-manifold level."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:7301f71c",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "7301f71c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 141,
+      "tex_line_end": 141,
+      "quote": "\\textbf{Fibonacci MTC} (2 simple objects $\\{1, \\tau\\}$, $\\tau \\otimes \\tau = 1 \\oplus \\tau$):",
+      "quote_normalized": "fibonacci mtc (2 simple objects $\\{1, \\tau\\}$, $\\tau \\otimes \\tau = 1 \\oplus \\tau$):",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Section header for Fibonacci MTC; descriptive labelling. Fusion rule tau\u2297tau = 1 + tau is the defining Fibonacci fusion.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "fibonacci mtc (2 simple objects $\\{1, \\tau\\}$, $\\tau \\otimes \\tau = 1 \\oplus \\tau$):"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:fb12e956",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "fb12e956",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 143,
+      "tex_line_end": 143,
+      "quote": "$\\varphi^2 = \\varphi + 1$ \\quad (\\nativedecide{} over $\\mathbb{Q}(\\zeta_5)$)",
+      "quote_normalized": "$\\varphi^2 = \\varphi + 1$ \\quad (\\nativedecide{} over $\\mathbb{q}(\\zeta_5)$)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciMTC"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Defining quadratic of golden ratio. Exact identity in Q(zeta_5) where phi = (1+sqrt(5))/2 = -(zeta_5 + zeta_5^4).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$\\varphi^2 = \\varphi + 1$ \\quad (\\nativedecide{} over $\\mathbb{q}(\\zeta_5)$)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:3e9ee9f5",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "3e9ee9f5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 144,
+      "tex_line_end": 144,
+      "quote": "$D^2 = 1 + \\varphi^2 = 2 + \\varphi$ \\quad (proved)",
+      "quote_normalized": "$d^2 = 1 + \\varphi^2 = 2 + \\varphi$ \\quad (proved)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciMTC"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Fibonacci D^2 = 1^2 + phi^2 = 1 + phi^2. Substituting phi^2 = phi+1 \u2192 2 + phi. Exact algebraic match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$d^2 = 1 + \\varphi^2 = 2 + \\varphi$ \\quad (proved)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:e1d4555d",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "e1d4555d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 145,
+      "tex_line_end": 145,
+      "quote": "$\\theta_\\tau = \\zeta_5^2 = e^{4\\pi i/5}$ \\quad (proved)",
+      "quote_normalized": "$\\theta_\\tau = \\zeta_5^2 = e^{4\\pi i/5}$ \\quad (proved)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciMTC"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Fibonacci tau twist eigenvalue \u03b8_\u03c4 = e^(4\u03c0i/5) is the standard SU(2)_3 / Yang-Lee value.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$\\theta_\\tau = \\zeta_5^2 = e^{4\\pi i/5}$ \\quad (proved)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:verified-computations:f21dc7a1",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "verified-computations",
+        "quote_hash": "f21dc7a1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "verified-computations",
+      "section_ordinal": 7,
+      "tex_line_start": 146,
+      "tex_line_end": 146,
+      "quote": "$Z(S^2 \\times S^1) = 2$ \\quad (rank)",
+      "quote_normalized": "$z(s^2 \\times s^1) = 2$ \\quad (rank)",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.wrt_S2xS1_eq_rank"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciMTC"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Fibonacci has 2 simple objects \u2192 rank = 2 \u2192 Z(S\u00b2\u00d7S\u00b9) = 2.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$z(s^2 \\times s^1) = 2$ \\quad (rank)"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:q-binomial-coefficients:4d5e04d4",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "q-binomial-coefficients",
+        "quote_hash": "4d5e04d4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "q-binomial-coefficients",
+      "section_ordinal": 8,
+      "tex_line_start": 152,
+      "tex_line_end": 156,
+      "quote": "The q-binomial coefficient $\\binom{n}{j}_q$ is defined via the Laurent Pascal recurrence without division (\\lean{QNumber.lean}): \\begin{equation} \\binom{n{+}1}{j{+}1}_q = q^{j+1} \\binom{n}{j{+}1}_q + q^{j-n} \\binom{n}{j}_q \\end{equation}",
+      "quote_normalized": "the q-binomial coefficient $\\binom{n}{j}_q$ is defined via the laurent pascal recurrence without division (\\lean{qnumber.lean}): \\begin{equation} \\binom{n{+}1}{j{+}1}_q = q^{j+1} \\binom{n}{j{+}1}_q + q^{j-n} \\binom{n}{j}_q \\end{equation}",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.QNumber"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "QNumber.lean module exists with 20-25 theorems; Laurent-Pascal recurrence is one standard formulation of q-binomial.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the q-binomial coefficient $\\binom{n}{j}_q$ is defined via the laurent pascal recurrence without division (\\lean{qnumber.lean}): \\begin{equation} \\binom{n{+}1}{j{+}1}_q = q^{j+1} \\binom{n}{j{+}1}_q + q^{j-n} \\binom{n}{j}_q \\end{equation}"
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:q-binomial-coefficients:c84514d5",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "q-binomial-coefficients",
+        "quote_hash": "c84514d5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "q-binomial-coefficients",
+      "section_ordinal": 8,
+      "tex_line_start": 157,
+      "tex_line_end": 157,
+      "quote": "with classical limit $\\binom{n}{j}_1 = C(n,j)$ proved by induction.",
+      "quote_normalized": "with classical limit $\\binom{n}{j}_1 = c(n,j)$ proved by induction.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.QNumber"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard classical-limit identity; QNumber.lean covers q-binomial properties.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "with classical limit $\\binom{n}{j}_1 = c(n,j)$ proved by induction."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:q-binomial-coefficients:c301d0a2",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "q-binomial-coefficients",
+        "quote_hash": "c301d0a2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "q-binomial-coefficients",
+      "section_ordinal": 8,
+      "tex_line_start": 158,
+      "tex_line_end": 159,
+      "quote": "Key values: $\\binom{2}{1}_q = [2]_q$ (simply-laced Serre coefficient), $\\binom{3}{1}_q = [3]_q$ (for $B_n/C_n$ types).",
+      "quote_normalized": "key values: $\\binom{2}{1}_q = [2]_q$ (simply-laced serre coefficient), $\\binom{3}{1}_q = [3]_q$ (for $b_n/c_n$ types).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.QNumber"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Standard q-binomial values: C(2,1)_q = [2]_q, C(3,1)_q = [3]_q. Matches Serre relation coefficients in simply-laced and B_n/C_n type quantum groups.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "key values: $\\binom{2}{1}_q = [2]_q$ (simply-laced serre coefficient), $\\binom{3}{1}_q = [3]_q$ (for $b_n/c_n$ types)."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:a6275005",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "a6275005",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 164,
+      "tex_line_end": 167,
+      "quote": "We have presented the first formalization of the WRT 3-manifold invariant pipeline: from algebraic MTC data through the Temperley-Lieb algebra, Jones-Wenzl idempotents, surgery presentations with Kirby moves, to concrete verified invariant values and anyonic braiding gates.",
+      "quote_normalized": "we have presented the first formalization of the wrt 3-manifold invariant pipeline: from algebraic mtc data through the temperley-lieb algebra, jones-wenzl idempotents, surgery presentations with kirby moves, to concrete verified invariant values and anyonic braiding gates.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Closing meta-claim about novelty/scope. Not mechanically verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we have presented the first formalization of the wrt 3-manifold invariant pipeline: from algebraic mtc data through the temperley-lieb algebra, jones-wenzl idempotents, surgery presentations with kirby moves, to concrete verified invariant values and anyonic braiding gates."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:44e5a042",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "44e5a042",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 167,
+      "tex_line_end": 168,
+      "quote": "Nine Lean~4 modules, ${\\sim}115$~theorems, zero sorry, zero axioms.",
+      "quote_normalized": "nine lean~4 modules, ${\\sim}115$~theorems, zero sorry, zero axioms.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.TemperleyLieb"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.JonesWenzl"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SurgeryPresentation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTInvariant"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.WRTComputation"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.QNumber"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.IsingBraiding"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.IsingGates"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciBraiding"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA: Conclusion claims '9 modules, ~115 theorems'. Abstract says '7 modules' (line 33). Aggregate over plausible 9-module set (TL+JW+Surgery+WRTInv+WRTComp+QNumber+IsingBraiding+IsingGates+FibonacciBraiding) by `^theorem ` grep: 4+4+20+3+30+20+25+21+33 = 160. Alternate scope (TL+JW+Surgery+WRTInv+WRTComp+QNumber+IsingBraiding+FibQutrit+FibQutritUniv) = 122. Either way '~115' undercounts current state. Live counts via lean_deps.json kind=theorem: aggregate ~250+ across the 9 plausible modules. WARN: ~ tilde gives loose tolerance but discrepancy is large. Sorry/axiom counts confirmed zero for all WRT modules.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "nine lean~4 modules, ${\\sim}115$~theorems, zero sorry, zero axioms."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:0bcd6d0d",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "0bcd6d0d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 168,
+      "tex_line_end": 171,
+      "quote": "The Ising and Fibonacci computations demonstrate that verified MTC data can produce both verified topological invariants and verified quantum gates --- the first such connections in any proof assistant.",
+      "quote_normalized": "the ising and fibonacci computations demonstrate that verified mtc data can produce both verified topological invariants and verified quantum gates --- the first such connections in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Priority/significance meta-claim; not mechanically verifiable.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the ising and fibonacci computations demonstrate that verified mtc data can produce both verified topological invariants and verified quantum gates --- the first such connections in any proof assistant."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:431d3729",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "431d3729",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 173,
+      "tex_line_end": 175,
+      "quote": "Braiding gates computed via $B = F^{-1}RF$: Ising gates generate the Clifford group, Fibonacci gates generate a dense subgroup of SU(2) (Freedman--Larsen--Wang 2002).",
+      "quote_normalized": "braiding gates computed via $b = f^{-1}rf$: ising gates generate the clifford group, fibonacci gates generate a dense subgroup of su(2) (freedman--larsen--wang 2002).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.IsingBraiding"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciBraiding"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Cites Freedman-Larsen-Wang 2002 as inline reference (no \\cite \u2014 'Freedman--Larsen--Wang 2002' as plain text). Citation is real (Freedman, Larsen, Wang, Comm. Math. Phys. 227, 605 (2002)) but not in CITATION_REGISTRY nor in thebibliography. Standard Fibonacci anyon universality result. Note: a strict citation_integrity gate may flag this inline reference; INFO here since substance is correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "braiding gates computed via $b = f^{-1}rf$: ising gates generate the clifford group, fibonacci gates generate a dense subgroup of su(2) (freedman--larsen--wang 2002)."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:01a2f936",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "01a2f936",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 175,
+      "tex_line_end": 178,
+      "quote": "A self-contained universality proof via Lie algebra spanning avoids the classification of finite simple groups: the commutator $[\\sigma_1, \\sigma_2]$ is nonzero and structurally independent from the generators, spanning $\\mathfrak{su}(2)$.",
+      "quote_normalized": "a self-contained universality proof via lie algebra spanning avoids the classification of finite simple groups: the commutator $[\\sigma_1, \\sigma_2]$ is nonzero and structurally independent from the generators, spanning $\\mathfrak{su}(2)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciUniversality"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "FibonacciUniversality.lean (9 theorems) hosts Lie-algebra-spanning universality proof. su(2) spanning matches Fibonacci structure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "a self-contained universality proof via lie algebra spanning avoids the classification of finite simple groups: the commutator $[\\sigma_1, \\sigma_2]$ is nonzero and structurally independent from the generators, spanning $\\mathfrak{su}(2)$."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:863344f4",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "863344f4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 179,
+      "tex_line_end": 181,
+      "quote": "The full braiding data requires the non-cyclotomic degree-8 field $K = \\mathbb{Q}(\\zeta_5, \\sqrt{\\varphi})$, implemented as 8-tuples of rationals with verified $w^2 = \\varphi$.",
+      "quote_normalized": "the full braiding data requires the non-cyclotomic degree-8 field $k = \\mathbb{q}(\\zeta_5, \\sqrt{\\varphi})$, implemented as 8-tuples of rationals with verified $w^2 = \\varphi$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciBraiding"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciQutrit"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Q(zeta_5, sqrt(phi)) is degree 4\u00b72 = 8 over Q. FibonacciBraiding (33 thms) and FibonacciQutrit (6 thms) host the 8-tuple field implementation; w^2 = phi is the defining relation for the sqrt(phi) extension.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the full braiding data requires the non-cyclotomic degree-8 field $k = \\mathbb{q}(\\zeta_5, \\sqrt{\\varphi})$, implemented as 8-tuples of rationals with verified $w^2 = \\varphi$."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:conclusion:ecbd4204",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "conclusion",
+        "quote_hash": "ecbd4204",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 181,
+      "tex_line_end": 185,
+      "quote": "For 4~anyons on the qutrit space (dim~3), all $B_4$ relations verified as $3 \\times 3$ matrix identities over $K$, with $\\sigma_1 \\neq \\sigma_3$ (genuine $B_4$, not factoring through $B_3$) and su(3) Lie algebra spanning data establishing density in SU(3).",
+      "quote_normalized": "for 4~anyons on the qutrit space (dim~3), all $b_4$ relations verified as $3 \\times 3$ matrix identities over $k$, with $\\sigma_1 \\neq \\sigma_3$ (genuine $b_4$, not factoring through $b_3$) and su(3) lie algebra spanning data establishing density in su(3).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciQutrit"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FibonacciQutritUniversality"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "FibonacciQutrit (9 thms) + FibonacciQutritUniversality (10 thms) host B_4 relations on dim-3 qutrit space and su(3) spanning. Fusion-tree calculation gives dim-3 fusion space for 4 Fibonacci anyons.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "for 4~anyons on the qutrit space (dim~3), all $b_4$ relations verified as $3 \\times 3$ matrix identities over $k$, with $\\sigma_1 \\neq \\sigma_3$ (genuine $b_4$, not factoring through $b_3$) and su(3) lie algebra spanning data establishing density in su(3)."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:acknowledgments:d2c6aaa3",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "acknowledgments",
+        "quote_hash": "d2c6aaa3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 10,
+      "tex_line_start": 188,
+      "tex_line_end": 189,
+      "quote": "Lean~4 proofs verified by \\texttt{lake build} (v4.28.0, Mathlib \\texttt{8f9d9cff}).",
+      "quote_normalized": "lean~4 proofs verified by lake build (v4.28.0, mathlib 8f9d9cff).",
+      "type": "numeric",
+      "finding_classes": [
+        "TP"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "lean_toolchain"
+          },
+          {
+            "kind": "parameter",
+            "target": "mathlib_pin"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TP: paper claims 'Lean v4.28.0' but lean-toolchain says 'leanprover/lean4:v4.29.0'. Paper claims 'Mathlib 8f9d9cff' but lakefile.toml `rev = \"8850ed93863d6ce27210a673f9ed235a4e8a2994\"` (short: 8850ed93). Both pins drift from current. The lakefile comment notes '8f9d9cff' as the previous Aristotle-compatible v4.28.0 pin; paper text is stale. FAIL on both.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "lean~4 proofs verified by lake build (v4.28.0, mathlib 8f9d9cff)."
+      }
+    },
+    {
+      "id": "sentence:paper16_wrt_tqft:acknowledgments:ce92f4a9",
+      "raw_id_parts": {
+        "paper": "paper16_wrt_tqft",
+        "section_slug": "acknowledgments",
+        "quote_hash": "ce92f4a9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 10,
+      "tex_line_start": 189,
+      "tex_line_end": 190,
+      "quote": "Automated proofs by the Aristotle theorem prover (Harmonic).",
+      "quote_normalized": "automated proofs by the aristotle theorem prover (harmonic).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Acknowledgment of Aristotle proof use; not a structural claim. Aristotle is project-standard tooling per CLAUDE.md.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-25T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "automated proofs by the aristotle theorem prover (harmonic)."
+      }
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 56,
+    "by_type": {
+      "metaclaim": 5,
+      "methodology": 2,
+      "numeric": 16,
+      "citation": 5,
+      "theorem-ref": 5,
+      "formal-claim": 13,
+      "qualitative": 8,
+      "transition": 2
+    },
+    "by_verdict": {
+      "INFO": 12,
+      "PASS": 33,
+      "WARN": 8,
+      "TRANSITION": 2,
+      "FAIL": 1
+    },
+    "by_finding_class": {
+      "IA": 3,
+      "TP": 1,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "56 sentences | 33 PASS | 8 WARN | 1 FAIL | 12 INFO | 0 UNGROUNDED | 2 TRANSITION | finding_classes IA=3 TP=1 SD=0 TN=0 HD=0 | 2 blocking issues | first-time review (no prior claims_review.json)"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "Acknowledgments cite Lean v4.28.0 + Mathlib 8f9d9cff; project pins are Lean v4.29.0 + Mathlib 8850ed93. Toolchain pin drift.",
+      "sentences": [
+        "sentence:paper16_wrt_tqft:acknowledgments:d2c6aaa3"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TP"
+    },
+    {
+      "id": "block:2",
+      "summary": "Internal arithmetic drift: abstract claims '7 new modules', conclusion claims 'Nine Lean 4 modules'; intro '~60 theorems' and conclusion '~115 theorems' both undercount live grep counts (81-96 and 122-160 respectively across plausible scopes). All are WARN-level under tilde tolerance but should be reconciled before submission.",
+      "sentences": [
+        "sentence:paper16_wrt_tqft:abstract:c43f19b7",
+        "sentence:paper16_wrt_tqft:introduction:db915ff0",
+        "sentence:paper16_wrt_tqft:conclusion:44e5a042"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "fu:1",
+      "summary": "Citation registry coverage gap: bibitems witten1989, rt1991, bhmv1995, wenzl1988, turaev2010, paper14, paper11 are all present in paper bibliography but absent from CITATION_REGISTRY (src/core/citations.py). Plus inline 'Freedman--Larsen--Wang 2002' (line 174) is referenced without \\cite or bibitem.",
+      "sentences": [],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
+    },
+    {
+      "id": "fu:2",
+      "summary": "paper16_wrt_tqft is not registered in PAPER_DEPENDENCIES (src/core/provenance.py line 1498). Add an entry mapping the paper to its Lean modules (TemperleyLieb, JonesWenzl, SurgeryPresentation, WRTInvariant, WRTComputation, QNumber, IsingBraiding, IsingGates, FibonacciBraiding, FibonacciMTC, FibonacciQutrit, FibonacciQutritUniversality, FibonacciUniversality, SU2kMTC) for downstream traceability.",
+      "sentences": [],
+      "gate": "Gate14_PaperToComputation",
+      "finding_class": null
+    }
+  ]
+}
