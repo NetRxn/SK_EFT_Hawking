@@ -1,0 +1,143 @@
+{
+  "timestamp": "20260425T043213Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "readiness_submission_gate": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "0 green / 3 yellow / 17 red across 20 papers",
+          "warning": false
+        },
+        {
+          "name": "paper18_doublon_gate",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper20_scalar_rung",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper21_majorana_rung",
+          "passed": true,
+          "message": "all P1 passed; advisory on: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper10_modular_generation",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper11_quantum_group",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper12_polariton",
+          "passed": true,
+          "message": "3 blocked: ParameterProvenance, ComputationCorrectness, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper14_braided_mtc",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper15_methodology",
+          "passed": true,
+          "message": "1 blocked: CitationIntegrity",
+          "warning": true
+        },
+        {
+          "name": "paper16_graphene_sk_eft",
+          "passed": true,
+          "message": "1 blocked: CitationIntegrity",
+          "warning": true
+        },
+        {
+          "name": "paper16_wrt_tqft",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper17_dark_sector",
+          "passed": true,
+          "message": "1 blocked: ProductionRunHealth",
+          "warning": true
+        },
+        {
+          "name": "paper1_first_order",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper2_second_order",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper3_gauge_erasure",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, ParameterProvenance",
+          "warning": true
+        },
+        {
+          "name": "paper4_wkb_connection",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper5_adw_gap",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper6_vestigial",
+          "passed": true,
+          "message": "4 blocked: CitationIntegrity, ComputationCorrectness, NarrativeGrounding, ProductionRunHealth",
+          "warning": true
+        },
+        {
+          "name": "paper7_chirality_formal",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ComputationCorrectness, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper8_chirality_master",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper9_sm_anomaly_drinfeld",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, LeanProofSubstance, NarrativeGrounding",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

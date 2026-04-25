@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -44,6 +45,21 @@ def run_integrity_checks() -> dict:
     nodes = extract_all_nodes()
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
+
+    # Phase 5v Wave 10b/10c — apply verification change-bus + annotate
+    # last_modified so the integrity check sees the same {nodes, links}
+    # view that build_graph_json produces for downstream consumers.
+    _graph_view = {'nodes': nodes, 'links': edges}
+    try:
+        from verification_state import apply_to_graph as _apply_verif
+        _apply_verif(_graph_view)
+    except (ImportError, OSError, ValueError):
+        pass  # change-bus optional during integrity walk
+    try:
+        from last_modified import annotate_last_modified
+        annotate_last_modified(_graph_view)
+    except ImportError:
+        pass  # last_modified.py missing; the check will flag every node
 
     # Build lookup maps
     node_by_id = {n['id']: n for n in nodes}
@@ -153,6 +169,89 @@ def run_integrity_checks() -> dict:
     depends_on_axiom_edges = [e for e in edges if e['type'] == 'DEPENDS_ON_AXIOM']
     theorems_with_axiom_deps = {e['source'] for e in depends_on_axiom_edges}
 
+    # --- Phase 5v Wave 10b sentence-level checks ---
+    sentence_chain_incomplete = []
+    sentence_id_collisions = []
+    audit_event_missing_logged_by = []
+    audit_event_malformed_actor = []
+    claim_cluster_inconsistency = []
+    last_modified_missing = []
+    sentence_types_requiring_chain = {
+        'numeric', 'theorem-ref', 'citation', 'parameter', 'formal-claim',
+    }
+
+    # Sentence chain completeness: sentences with claim-carrying types must
+    # have >=1 BACKED_BY edge OR agent_verdict: UNGROUNDED
+    seen_sentence_ids: set[str] = set()
+    for n in nodes:
+        if n['type'] != 'Sentence':
+            continue
+        # Collision check
+        if n['id'] in seen_sentence_ids:
+            sentence_id_collisions.append({'id': n['id']})
+        seen_sentence_ids.add(n['id'])
+        # Skip tombstones
+        if n.get('meta', {}).get('tombstone'):
+            continue
+        stype = n.get('meta', {}).get('sentence_type')
+        verdict = n.get('meta', {}).get('agent_verdict')
+        has_backed_by = any(
+            e['type'] == 'BACKED_BY' for e in outgoing.get(n['id'], [])
+        )
+        if stype in sentence_types_requiring_chain and not has_backed_by and verdict != 'UNGROUNDED':
+            sentence_chain_incomplete.append({
+                'id': n['id'],
+                'sentence_type': stype,
+                'verdict': verdict,
+            })
+
+    # AuditEvent immutability (shallow): each must have at least one LOGGED_BY
+    # outgoing edge; actor must be well-formed
+    _actor_re = re.compile(r'^(?:user:[^\s:]+|agent:[^\s:]+:.+)$')
+    for n in nodes:
+        if n['type'] != 'AuditEvent':
+            continue
+        has_logged_by = any(
+            e['type'] == 'LOGGED_BY' for e in outgoing.get(n['id'], [])
+        )
+        if not has_logged_by:
+            audit_event_missing_logged_by.append({'id': n['id']})
+        actor = n.get('meta', {}).get('actor', '')
+        if not _actor_re.match(str(actor)):
+            audit_event_malformed_actor.append({
+                'id': n['id'],
+                'actor': actor,
+            })
+
+    # ClaimCluster consistency: all members should agree on human_state
+    for n in nodes:
+        if n['type'] != 'ClaimCluster':
+            continue
+        member_edges = [
+            e for e in incoming.get(n['id'], [])
+            if e['type'] == 'MEMBER_OF'
+        ]
+        states = set()
+        for e in member_edges:
+            m_node = node_by_id.get(e['source'])
+            if m_node:
+                states.add(m_node.get('meta', {}).get('human_state'))
+        # Non-None states disagreeing = Gate 2 CrossPaperConsistency issue
+        ratified = states - {None}
+        if len(ratified) > 1:
+            claim_cluster_inconsistency.append({
+                'cluster': n['id'],
+                'states_seen': sorted(str(s) for s in ratified),
+            })
+
+    # last_modified missing (should be annotated on every node by Wave 10b)
+    for n in nodes:
+        if 'last_modified' not in n.get('meta', {}):
+            last_modified_missing.append({
+                'id': n['id'],
+                'type': n['type'],
+            })
+
     # --- 8. PG+AGE sync check (best-effort) ---
     pg_sync_status = 'unavailable'
     pg_vertex_count = None
@@ -182,6 +281,9 @@ def run_integrity_checks() -> dict:
     total_issues = (
         len(orphan_nodes) + len(conflicts) + len(ungrounded_claims)
         + len(broken_chains) + len(missing_provenance)
+        + len(sentence_chain_incomplete) + len(sentence_id_collisions)
+        + len(audit_event_missing_logged_by) + len(audit_event_malformed_actor)
+        + len(claim_cluster_inconsistency)
     )
 
     return {
@@ -191,6 +293,13 @@ def run_integrity_checks() -> dict:
         'broken_chains': broken_chains,
         'missing_provenance': missing_provenance,
         'unclassified_axioms': unclassified_axiom_ids,
+        # Phase 5v Wave 10b checks
+        'sentence_chain_incomplete': sentence_chain_incomplete,
+        'sentence_id_collisions': sentence_id_collisions,
+        'audit_event_missing_logged_by': audit_event_missing_logged_by,
+        'audit_event_malformed_actor': audit_event_malformed_actor,
+        'claim_cluster_inconsistency': claim_cluster_inconsistency,
+        'last_modified_missing': last_modified_missing,
         'summary': {
             'total_nodes': len(nodes),
             'total_edges': len(edges),
@@ -204,6 +313,13 @@ def run_integrity_checks() -> dict:
             'total_axioms': len(axiom_nodes),
             'depends_on_axiom_edges': len(depends_on_axiom_edges),
             'theorems_with_axiom_deps': len(theorems_with_axiom_deps),
+            # Phase 5v Wave 10b
+            'sentence_chain_incomplete': len(sentence_chain_incomplete),
+            'sentence_id_collisions': len(sentence_id_collisions),
+            'audit_event_missing_logged_by': len(audit_event_missing_logged_by),
+            'audit_event_malformed_actor': len(audit_event_malformed_actor),
+            'claim_cluster_inconsistency': len(claim_cluster_inconsistency),
+            'last_modified_missing': len(last_modified_missing),
             'pg_vertex_count': pg_vertex_count,
             'pg_sync': pg_sync_status,
         },

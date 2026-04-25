@@ -49,7 +49,7 @@ Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawkin
 
 ## Graph Schema
 
-### Node Types (22 — Phase 1 + 1.5 + 5v Wave 2a)
+### Node Types (25 — Phase 1 + 1.5 + 5v Wave 2a + 5v Wave 10b)
 
 **Phase 1 / 1.5 base types (14):**
 
@@ -85,7 +85,17 @@ Note: Lean IDs switched from `{short_name}` to `{full_name}` in Phase 5v Wave 0 
 | **CountMetric** | Diamond | Wave 2g | counts.json snapshot at a point in time |
 | **ReadinessGate** | Square | Wave 4 | Per-paper × per-dimension state (11 gates × N papers) |
 
-Every node has a uniform schema: `{id, type, label, name, verification, detail, meta}`.
+**Phase 5v Wave 10b sentence-level prose audit types (3):**
+
+| Node Type | Shape | Wired in | Purpose |
+|-----------|-------|---------|---------|
+| **Sentence** | Circle | Wave 10b | Per-sentence prose unit with chain-of-backing. Content-hash ID `sentence:<paper>:<section_slug>:<sha8>` survives section reorder + benign edits. Emitted from `papers/<paper>/claims_review.json[sentences]` (claims-reviewer-v2) overlaid with `prose_state.json` (human ratification state, CLI-owned). Tombstone state preserves audit history for deleted prose. |
+| **AuditEvent** | Triangle | Wave 10b | Append-only verification event log entry. Emitted from `papers/<paper>/audit_log.jsonl`. Actor field follows `user:<id>` or `agent:<name>:<ISO-timestamp>` discipline — enables chain-of-findings across multiple agent runs (claims-reviewer-v2 → adversarial-reviewer → subsequent rounds). Never updated in place; corrections are new events with `action: re_audit`. |
+| **ClaimCluster** | Square | Wave 10b (data from Wave 10f) | Cross-paper claim equivalence grouping. All equivalence clusters (2+ members) go through this n-ary node — **no pairwise SAME_CLAIM_AS edges**. Source: `papers/claim_clusters.json` (produced by Wave 10f claims-reviewer-cross-paper pass). Safe no-op if the file doesn't exist yet. |
+
+Every node has a uniform schema: `{id, type, label, name, verification, detail, meta}`. **Wave 10b also adds `meta.last_modified`** to every node — computed via `scripts/last_modified.py` dependency walk over PROPAGATION edge types (USED_BY, VERIFIED_BY, DEPENDS_ON_AXIOM, ASSUMES, IMPORTS, CITES, CITES_SOURCE, GROUNDED_IN, BACKED_BY, VERIFIES). Powers the Wave 10c cross-tab change-bus + sentence freshness check.
+
+**Note on retained types.** `ProseClaim` (Wave 2f) stays as the curated high-priority-claim layer at abstract level; it coexists with fine-grained `Sentence`. Different roles; both valuable. `SAME_CLAIM_AS` was considered for cross-paper equivalence but rejected — n-ary relationships as pairwise 2-cliques are awkward and O(n²). `ClaimCluster` + `MEMBER_OF` edges handle all sizes uniformly.
 
 ### Shape Vocabulary
 
@@ -106,7 +116,7 @@ Shapes encode semantic roles — a visual dimension independent of color:
 - `projected` — PROJECTED tier parameter (no primary source expected)
 - `unverified` — no verification
 
-### Edge Types (22 — Phase 1 + 1.5 + 5v Wave 2a + Phase 5v coverage fix)
+### Edge Types (25 — Phase 1 + 1.5 + 5v Wave 2a + Phase 5v coverage fix + 5v Wave 10b)
 
 **Phase 1 / 1.5 base edges (12):**
 
@@ -139,6 +149,16 @@ Shapes encode semantic roles — a visual dimension independent of color:
 | `IMPACTED_BY` | ReadinessGate | any | Gate flips to `needs-recheck` if upstream changes | Wave 4 |
 | `CITES_SOURCE` | Paper | PrimarySource | `\bibitem{key}` in paper .tex resolves to a registered CITATION_REGISTRY entry | Phase 5v coverage fix |
 | `CITES_THEOREM` | Paper | LeanTheorem/LeanDef | `\texttt{name}` in paper .tex resolves uniquely to a Lean declaration | Phase 5v coverage fix |
+
+**Phase 5v Wave 10b sentence-level edges (3):**
+
+| Edge | From | To | Purpose | Wired in |
+|------|------|----|---------|----------|
+| `BACKED_BY` | Sentence | any artifact (Formula / LeanTheorem / LeanAxiom / Parameter / PrimarySource / Hypothesis / AristotleRun / ProductionRun) | One edge per chain link proposed by claims-reviewer-v2. Carries `meta.link_kind` + `meta.link_state` (derived at build-time: `resolved` / `llm_verified_only` / `human_verified` / `stale` / `missing_target` — NOT human-ratified separately; sentence-level is the ratification axis, per-link is UX affordance). | Wave 10b |
+| `LOGGED_BY` | AuditEvent | any node (target of the audit event) | Sentence node + all `LOGGED_BY` edges incoming = full audit trail for that sentence. Emitted from `audit_log.jsonl`. | Wave 10b |
+| `MEMBER_OF` | Sentence | ClaimCluster | Cross-paper claim-cluster membership; replaces pairwise `SAME_CLAIM_AS` for n-ary equivalence. Any cluster size 2+ uses this edge. Carries `meta.member_confidence`. | Wave 10b (data from Wave 10f) |
+
+**Write-path discipline (Wave 10b).** Human verification state + audit events are written EXCLUSIVELY via `scripts/sentence_state.py` CLI. No free-form JSON edits. The CLI enforces schema validation + file-lock + atomic writes. LLMs, dashboard backend, and ad-hoc scripts all route through the same mutation chokepoint. Corresponds to Wave 9f's JSON-canonical-at-rest architecture — PG+AGE is rebuildable mirror; no bidirectional pollution.
 
 ### Lean Node Metadata
 

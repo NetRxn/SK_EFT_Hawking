@@ -6,6 +6,13 @@ then writes all nodes + edges to the ``sk_eft`` graph in AGE. Includes
 ``USES`` edges (Phase 5v Wave 9c/9e proof-dep edges) when the
 ``SK_EFT_INCLUDE_USES=1`` environment variable is set.
 
+**Type-agnostic by design.** Node and edge type labels are derived from the
+graph contents at sync time (see ``build_graph._create_age_labels``); new
+types added to ``SHAPE_MAP`` / emitted by extractors automatically flow
+through without code changes here. Phase 5v Wave 10b added ``Sentence``,
+``AuditEvent``, ``ClaimCluster`` nodes + ``BACKED_BY``, ``LOGGED_BY``,
+``MEMBER_OF`` edges — no update needed in this file.
+
 **Why standalone, not a dashboard hook?** Per Wave 9a fix, HTTP endpoints
 must never block on DB connectivity. Sync is a deliberate, user-controlled
 action (cron, post-extraction hook, or just ``uv run python

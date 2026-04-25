@@ -39,7 +39,8 @@ The scalar channel is the leading attractive interaction for condensation.
 
 ## References
 
-- Wetterich, PLB 901, 136223 (2024) — spinor gravity from pregeometry
+- Wetterich, Ann. Phys. (NY) 327, 2184 (2012); arXiv:1201.6505 —
+  geometry and symmetries in lattice spinor gravity (bond-weight source)
 - Nambu & Jona-Lasinio, PR 122, 345 (1961) — NJL model
 - Fierz, Z. Phys. 104, 553 (1937) — Fierz rearrangement
 -/

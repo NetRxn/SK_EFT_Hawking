@@ -92,6 +92,18 @@ _PG_SYNC_LOCK = threading.Lock()
 _PG_SYNC_IN_FLIGHT = {'thread': None, 'pending_fingerprint': None}
 
 
+def _invalidate_graph_cache() -> None:
+    """Force the next ``get_cached_graph`` call to rebuild.
+
+    Phase 5v Wave 10c — used by verification endpoints so a confirm /
+    reject ripples to dependent claims on the next request without
+    waiting for a file-mtime change to trip the fingerprint.
+    """
+    with _GRAPH_CACHE_LOCK:
+        _GRAPH_CACHE['graph'] = None
+        _GRAPH_CACHE['fingerprint'] = None
+
+
 # Phase 5v Wave 9f: source-of-truth flip. Controlled by env var.
 #   json (default) — serve /api/graph* from the in-memory rebuild cache
 #   pg             — route trace/impact/subgraph queries to AGE Cypher
@@ -168,7 +180,12 @@ def _graph_fingerprint() -> tuple:
         PROJECT_ROOT / "src" / "core" / "aristotle_interface.py",
         PROJECT_ROOT / "scripts" / "build_graph.py",
         PROJECT_ROOT / "scripts" / "readiness_gates.py",
+        PROJECT_ROOT / "scripts" / "verification_state.py",
+        PROJECT_ROOT / "scripts" / "last_modified.py",
         PROJECT_ROOT / "docs" / "counts.json",
+        # Wave 10c — any verification event flips the cache so next
+        # request re-applies the change-bus + freshness propagation.
+        PROJECT_ROOT / "docs" / "verification_log.jsonl",
     ]
     # Papers + Lean sources are globbed; any file touched trips the cache
     targets.extend(sorted((PROJECT_ROOT / "papers").glob("paper*_*/paper_draft.tex")))
@@ -1085,7 +1102,20 @@ def index():
 
 @app.route("/verify", methods=["POST"])
 def verify_param():
-    """HTMX endpoint: mark a parameter as human-verified."""
+    """Legacy Parameters-tab endpoint: mark a parameter human-verified.
+
+    Returns an HTML fragment consumed by ``verifyParam`` in
+    ``dashboard.html`` (vanilla ``fetch`` + ``safeSetHTML`` — HTMX was
+    removed at an earlier checkpoint, and a Datastar port of this tab
+    is a deferred Wave 9h-followup item; the four newer tabs
+    (readiness/qi/chains/paper-provenance) are already on Datastar).
+
+    Wave 10c: every action also lands on the cross-tab change-bus via
+    ``verification_state.record_event``. The verification timestamp
+    propagates to dependent Sentence / ProseClaim nodes on the next
+    graph rebuild, surfacing as a stale (purple-stripe) indicator on
+    Paper Provenance.
+    """
     key = request.form.get('key')
     action = request.form.get('action')  # 'confirm', 'reject', 'flag'
     notes = request.form.get('notes', '')
@@ -1118,9 +1148,135 @@ def verify_param():
     else:
         return f"Unknown action: {action}", 400
 
+    # Wave 10c — change-bus event. Failure to record a verification
+    # event must not break the in-memory PARAMETER_PROVENANCE update
+    # that the user just applied; log + continue.
+    try:
+        from verification_state import record_event
+        actor = request.form.get('actor') or 'user:dashboard'
+        record_event(
+            artifact_type='Parameter',
+            artifact_id=key,
+            action=action,
+            actor=actor,
+            notes=notes or None,
+        )
+        _invalidate_graph_cache()
+    except Exception as exc:  # noqa: BLE001 — defensive on dashboard request path
+        logger.warning("verification_state.record_event failed: %s", exc)
+
     # Return updated card fragment via HTMX
     return f'''<span class="status-badge {status_class}">{status_text}</span>
     <small class="verify-date">{now}</small>'''
+
+
+# ════════════════════════════════════════════════════════════════════
+# Cross-tab verification change-bus (Phase 5v Wave 10c)
+# ════════════════════════════════════════════════════════════════════
+#
+# /verify (above) is the legacy Parameters-tab vanilla-fetch endpoint
+# (will become Datastar in a future Wave 9h-followup port). The
+# generic /api/verification/event endpoint is the entry point for any
+# Datastar tab (current Paper Provenance, future Citations + axiom
+# eliminability, …) that wants to bump an artifact's last_modified
+# through the change-bus. Returns JSON, consumable both from Datastar
+# `@post(...)` actions and vanilla fetch.
+#
+# Both endpoints record into the same docs/verification_log.jsonl via
+# verification_state.record_event, both invalidate the graph cache so
+# the next /api/graph* request observes the bumped timestamp.
+
+@app.route("/api/verification/event", methods=["POST"])
+def api_verification_event():
+    """Record one cross-tab verification event.
+
+    Accepts JSON or form-encoded body with fields:
+      artifact_type, artifact_id, action, actor, notes (optional),
+      node_id (optional override)
+
+    Returns the recorded event with normalized timestamp + auto-derived
+    node_id (when not supplied).
+    """
+    payload = request.get_json(silent=True) or request.form
+    artifact_type = payload.get('artifact_type')
+    artifact_id = payload.get('artifact_id')
+    action = payload.get('action')
+    actor = payload.get('actor') or 'user:dashboard'
+    notes = payload.get('notes') or None
+    node_id = payload.get('node_id') or None
+
+    if not (artifact_type and artifact_id and action):
+        return jsonify({
+            "error": "missing required field(s); expected "
+                     "artifact_type, artifact_id, action"
+        }), 400
+
+    try:
+        from verification_state import record_event
+        ev = record_event(
+            artifact_type=artifact_type,
+            artifact_id=artifact_id,
+            action=action,
+            actor=actor,
+            notes=notes,
+            node_id=node_id,
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("record_event unexpected failure")
+        return jsonify({"error": f"unexpected: {exc}"}), 500
+
+    _invalidate_graph_cache()
+    return jsonify({"event": ev}), 200
+
+
+@app.route("/api/verification/state", methods=["GET"])
+def api_verification_state():
+    """Return the latest verification event per node (or full history).
+
+    Query params:
+      node_id          — return only events for this node id
+      artifact_type    — filter by artifact type
+      artifact_id      — filter by source-of-truth key
+      latest_only=1    — return one event per node (most recent)
+      limit=N          — cap the event list at N (most recent first)
+    """
+    try:
+        from verification_state import read_events, latest_per_node
+    except ImportError as exc:
+        return jsonify({"error": f"verification_state not importable: {exc}"}), 500
+
+    node_id = request.args.get('node_id')
+    artifact_type = request.args.get('artifact_type')
+    artifact_id = request.args.get('artifact_id')
+    latest_only = request.args.get('latest_only') in ('1', 'true', 'yes')
+
+    try:
+        limit = int(request.args.get('limit', '0'))
+    except ValueError:
+        limit = 0
+
+    def _matches(ev: dict) -> bool:
+        if node_id and ev.get('node_id') != node_id:
+            return False
+        if artifact_type and ev.get('artifact_type') != artifact_type:
+            return False
+        if artifact_id and ev.get('artifact_id') != artifact_id:
+            return False
+        return True
+
+    if latest_only:
+        items = [ev for ev in latest_per_node().values() if _matches(ev)]
+        items.sort(key=lambda e: e.get('timestamp', ''), reverse=True)
+    else:
+        items = [ev for ev in read_events() if _matches(ev)]
+        items.sort(key=lambda e: e.get('timestamp', ''), reverse=True)
+
+    if limit > 0:
+        items = items[:limit]
+
+    return jsonify({"events": items, "count": len(items)})
 
 
 @app.route("/save", methods=["POST"])
@@ -2066,6 +2222,118 @@ def _pp_finding_for_entry(layer: str, entry: dict) -> dict:
     return finding
 
 
+# ── Wave 10c — staleness check for paper-provenance findings ──
+#
+# Maps `(layer, claim_entry)` → KG node id, then compares the node's
+# verification timestamp from docs/verification_log.jsonl to the paper's
+# `review_date`. If a verification landed AFTER the review was generated,
+# the claim is "stale" — the prose-level surface needs a re-review.
+# Section keys (e.g. parameter_provenance, citation_integrity) embed the
+# source-of-truth artifact key by convention from `_pp_claim_id`.
+
+def _pp_review_iso(review_date: str | None) -> str:
+    """Normalize a claims_review.json `review_date` to a sortable ISO-Z
+    timestamp. Returns '' if missing or unparseable."""
+    if not review_date:
+        return ''
+    s = str(review_date).strip()
+    # Plain date → start of day UTC.
+    if re.fullmatch(r'\d{4}-\d{2}-\d{2}', s):
+        return f"{s}T00:00:00Z"
+    if s.endswith('+00:00'):
+        return s[:-6] + 'Z'
+    if 'T' in s and not s.endswith('Z'):
+        return s.split('+')[0].rstrip() + ('Z' if 'Z' not in s else '')
+    return s
+
+
+def _pp_artifact_id_for_section(section: str, entry: dict) -> tuple[str, str] | None:
+    """Return (artifact_type, source-of-truth key) for a claims_review entry,
+    or None if the entry doesn't reference a verifiable artifact.
+
+    Mirrors the `_pp_claim_id` field-priority so the (layer, key) we use
+    for staleness lookup matches the cid format the dashboard renders.
+    """
+    if section == 'parameter_provenance':
+        key = entry.get('key') or entry.get('name')
+        return ('Parameter', str(key)) if key else None
+    if section == 'citation_integrity':
+        key = entry.get('bibkey') or entry.get('key')
+        return ('Citation', str(key)) if key else None
+    if section == 'theorem_status':
+        # theorem entries carry 'name' (full Lean decl)
+        key = entry.get('name') or entry.get('theorem')
+        return ('LeanTheorem', str(key)) if key else None
+    if section == 'axiom_risk':
+        key = entry.get('axiom') or entry.get('name')
+        return ('LeanAxiom', str(key)) if key else None
+    return None
+
+
+def _pp_compute_stale_findings(
+    cr_data: dict | None,
+    claims_out: dict,
+) -> tuple[int, dict[str, str]]:
+    """Mark findings whose underlying artifact has been verified AFTER the
+    claims_review was generated. Returns (count_marked, per-cid event-actor map).
+
+    Mutates claims_out in place: each affected `finding` gets
+    `finding['stale'] = True` plus `finding['stale_since']` (timestamp) and
+    `finding['stale_actor']` (who verified). The caller bubbles up a
+    `claim['is_stale']` flag in `_pp_build_data` after this returns.
+    """
+    if not cr_data:
+        return (0, {})
+    review_iso = _pp_review_iso(cr_data.get('review_date'))
+    if not review_iso:
+        return (0, {})
+
+    try:
+        from verification_state import latest_per_node, node_id_for
+    except ImportError:
+        return (0, {})
+
+    latest = latest_per_node()
+    if not latest:
+        return (0, {})
+
+    n_marked = 0
+    cid_to_actor: dict[str, str] = {}
+
+    for section, (layer, _quote_key) in _CR_SECTION_MAP.items():
+        entries = cr_data.get(section) or []
+        for idx, entry in enumerate(entries):
+            cid = _pp_claim_id(section, entry, idx)
+            claim = claims_out.get(cid)
+            if not claim:
+                continue
+            mapping = _pp_artifact_id_for_section(section, entry)
+            if not mapping:
+                continue
+            artifact_type, key = mapping
+            nid = node_id_for(artifact_type, key)
+            if not nid:
+                continue
+            ev = latest.get(nid)
+            if not ev:
+                continue
+            ev_iso = ev.get('timestamp', '')
+            if ev_iso <= review_iso:
+                continue
+            # Mark every finding on this claim that matches the layer.
+            for finding in claim.get('findings', []):
+                if finding.get('layer') != layer:
+                    continue
+                finding['stale'] = True
+                finding['stale_since'] = ev_iso
+                finding['stale_actor'] = ev.get('actor', '')
+                finding['stale_action'] = ev.get('action', '')
+                n_marked += 1
+            cid_to_actor[cid] = ev.get('actor', '')
+
+    return (n_marked, cid_to_actor)
+
+
 def _pp_load_claims_review(paper_id: str) -> dict | None:
     """Load `papers/<paper>/claims_review.json` if present."""
     path = PROJECT_ROOT / 'papers' / paper_id / 'claims_review.json'
@@ -2088,6 +2356,456 @@ def _pp_load_figure_review(paper_id: str) -> dict | None:
     except Exception as exc:
         logger.warning("Failed to parse figure_review for %s: %s", paper_id, exc)
         return None
+
+
+# ── Wave 10d — v2 sentence-keyed data layer ──
+#
+# When ``papers/<paper>/claims_review.json`` carries a ``sentences[]``
+# list (v2 schema), the Paper Provenance tab switches to the sentence-
+# level UI: 3-column layout, per-sentence state machine, per-link
+# verification, audit log pane. v1 schemas (the curated 8-layer dossier)
+# continue to work as before.
+#
+# State storage (Wave 10b CLI is the sole writer):
+#   prose_state.json — human ratification state per sentence
+#   audit_log.jsonl  — append-only event stream
+
+def _pp_is_v2_schema(cr: dict | None) -> bool:
+    return bool(cr) and isinstance(cr.get('sentences'), list)
+
+
+def _pp_load_prose_state(paper_id: str) -> dict:
+    """Load `papers/<paper>/prose_state.json` if present, else empty.
+
+    Schema (managed by sentence_state.py):
+      {"version": 1, "paper": <id>,
+       "sentences": {<sentence_id>: {"human_state", "human_ratified_at",
+                                     "human_ratified_by", "human_notes"}}}
+    """
+    path = PROJECT_ROOT / 'papers' / paper_id / 'prose_state.json'
+    if not path.exists():
+        return {'version': 1, 'paper': paper_id, 'sentences': {}}
+    try:
+        data = json.loads(path.read_text())
+    except Exception as exc:
+        logger.warning("Failed to parse prose_state for %s: %s", paper_id, exc)
+        return {'version': 1, 'paper': paper_id, 'sentences': {}}
+    data.setdefault('sentences', {})
+    return data
+
+
+def _pp_load_audit_log(paper_id: str, *, limit: int = 0) -> list[dict]:
+    """Load `papers/<paper>/audit_log.jsonl` event stream in file order.
+
+    ``limit`` — if > 0, return only the most recent N events.
+    Skips malformed lines with a warning rather than failing the whole load.
+    """
+    path = PROJECT_ROOT / 'papers' / paper_id / 'audit_log.jsonl'
+    if not path.exists():
+        return []
+    events: list[dict] = []
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            for lineno, raw in enumerate(f, 1):
+                line = raw.rstrip('\n')
+                if not line.strip():
+                    continue
+                try:
+                    events.append(json.loads(line))
+                except json.JSONDecodeError as exc:
+                    logger.warning(
+                        "audit_log %s line %d malformed: %s", paper_id, lineno, exc
+                    )
+    except Exception as exc:
+        logger.warning("Failed to read audit_log for %s: %s", paper_id, exc)
+        return []
+    if limit > 0 and len(events) > limit:
+        events = events[-limit:]
+    return events
+
+
+def _pp_audit_events_by_sentence(events: list[dict]) -> dict[str, list[dict]]:
+    """Group audit events by their target sentence_id."""
+    out: dict[str, list[dict]] = {}
+    for ev in events:
+        target = ev.get('target_id') or ev.get('target', {}).get('id')
+        ttype = ev.get('target_type') or ev.get('target', {}).get('type')
+        if ttype and ttype != 'Sentence':
+            continue
+        if not target:
+            continue
+        out.setdefault(target, []).append(ev)
+    return out
+
+
+# Mapping from short state token → palette key for the UI.
+_PP_SENTENCE_STATE_PALETTE = {
+    'human_verified':       'verified',     # green
+    'human_interpretive':   'interpretive', # blue
+    'human_ungrounded':     'ungrounded',   # amber
+    'human_needs_fix':      'needs_fix',    # red
+    'human_needs_recheck':  'needs_recheck',  # purple-stripe
+    None:                   'agent_proposed',  # grey
+}
+
+_PP_VERDICT_TO_DEFAULT_PALETTE = {
+    'PASS': 'agent_proposed',
+    'WARN': 'agent_proposed_warn',
+    'FAIL': 'agent_proposed_fail',
+    'INFO': 'agent_proposed_info',
+    'UNGROUNDED': 'ungrounded_unclaimed',
+    'TRANSITION': 'transition',
+}
+
+
+def _pp_sentence_chain_link_states(
+    sentence: dict,
+    verification_latest: dict[str, dict],
+) -> list[dict]:
+    """Annotate each chain link with derived state.
+
+    For each link in ``sentence.chain_proposed.links`` produce:
+        kind, target, link_state, last_verification (event or None),
+        node_id, computed_value, delta_pct (when present).
+
+    ``link_state`` derivation (matches schema delta §3.3):
+      human_verified  — link target has a human-confirm verification event
+      llm_verified_only  — parameter target has llm_verified_date but no human
+      stale  — last_modified > sentence.human_ratified_at (set by caller)
+      missing_target  — node_id_for() returns None
+      resolved  — default
+    """
+    try:
+        from verification_state import node_id_for as _node_id_for
+    except ImportError:
+        def _node_id_for(t, k):  # noqa: ARG001
+            return None
+
+    chain = sentence.get('chain_proposed') or {}
+    links_in = chain.get('links') or []
+    out: list[dict] = []
+    for raw in links_in:
+        kind = raw.get('kind')
+        target = raw.get('target')
+        # Map link kind → node id type
+        if kind == 'parameter':
+            nid = _node_id_for('Parameter', target)
+        elif kind == 'citation':
+            nid = _node_id_for('Citation', target)
+        elif kind == 'axiom':
+            nid = _node_id_for('LeanAxiom', target)
+        elif kind in ('theorem', 'formula'):
+            # Lean theorems use lean: prefix; formulas use formula:
+            if kind == 'theorem':
+                nid = _node_id_for('LeanTheorem', target)
+            else:
+                nid = _node_id_for('Formula', target)
+        else:
+            nid = None
+
+        ev = verification_latest.get(nid) if nid else None
+        explicit_state = raw.get('link_state')
+        if explicit_state in ('llm_verified_only', 'human_verified',
+                              'stale', 'missing_target', 'resolved'):
+            link_state = explicit_state
+        elif nid is None:
+            link_state = 'missing_target'
+        elif ev and ev.get('action') == 'confirm':
+            link_state = 'human_verified'
+        else:
+            link_state = 'resolved'
+
+        out.append({
+            'kind': kind,
+            'target': target,
+            'node_id': nid,
+            'link_state': link_state,
+            'last_verification': ev,
+            'computed_value': raw.get('computed_value'),
+            'delta_pct': raw.get('delta_pct'),
+        })
+    return out
+
+
+def _pp_sentence_palette_key(
+    sentence: dict, prose_record: dict | None, is_stale: bool,
+) -> str:
+    """Pick the visual palette key for a sentence.
+
+    Priority: stale > human_state > agent_verdict-based default.
+    """
+    if is_stale:
+        return 'needs_recheck'
+    human = (prose_record or {}).get('human_state')
+    if human in _PP_SENTENCE_STATE_PALETTE:
+        return _PP_SENTENCE_STATE_PALETTE[human]
+    verdict = sentence.get('agent_verdict', 'PASS')
+    return _PP_VERDICT_TO_DEFAULT_PALETTE.get(verdict, 'agent_proposed')
+
+
+def _pp_compute_sentence_stale(
+    sentence: dict,
+    prose_record: dict | None,
+    chain_links: list[dict],
+) -> bool:
+    """Return True iff any chain link target's last verification post-dates
+    the sentence's human_ratified_at."""
+    if (prose_record or {}).get('human_state') is None:
+        return False
+    ratified = (prose_record or {}).get('human_ratified_at')
+    if not ratified:
+        return False
+    rat = str(ratified)
+    if rat.endswith('+00:00'):
+        rat = rat[:-6] + 'Z'
+    for link in chain_links:
+        ev = link.get('last_verification')
+        if not ev:
+            continue
+        ts = ev.get('timestamp', '')
+        if ts > rat:
+            return True
+    return False
+
+
+def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
+                     tex_path) -> dict:
+    """Build sentence-keyed dashboard data for v2 schemas.
+
+    Returns the same top-level fields as ``_pp_build_data`` plus:
+      sentences[]  — each enriched with `human_state`, `palette`,
+                     `chain_links` (annotated), `is_stale`, `audit_events`
+      coverage     — counts of sentence states + stale + ungrounded
+      audit_events_by_sentence — preserved for the audit-log pane
+    """
+    # Verification log → latest event per node (used by chain link states +
+    # stale derivation across all sentences)
+    try:
+        from verification_state import latest_per_node
+        v_latest = latest_per_node()
+    except ImportError:
+        v_latest = {}
+
+    prose_state = _pp_load_prose_state(paper_id)
+    audit_events = _pp_load_audit_log(paper_id)
+    audit_by_sentence = _pp_audit_events_by_sentence(audit_events)
+
+    sentences_in = cr.get('sentences', [])
+    sentences_out: list[dict] = []
+
+    coverage = {
+        'verified': 0, 'interpretive': 0, 'ungrounded_human': 0,
+        'needs_fix': 0, 'needs_recheck': 0, 'agent_proposed': 0,
+        'transition': 0, 'tombstone': 0, 'total': 0, 'stale': 0,
+        'ungrounded_agent': 0,
+    }
+
+    for s in sentences_in:
+        sid = s.get('id')
+        if not sid:
+            continue
+        if s.get('tombstone'):
+            coverage['tombstone'] += 1
+            # Tombstones do NOT count toward total / coverage.
+            continue
+        coverage['total'] += 1
+        prose_rec = prose_state['sentences'].get(sid)
+        chain_links = _pp_sentence_chain_link_states(s, v_latest)
+        stale = _pp_compute_sentence_stale(s, prose_rec, chain_links)
+        if stale:
+            coverage['stale'] += 1
+        palette = _pp_sentence_palette_key(s, prose_rec, stale)
+
+        # Coverage bookkeeping
+        human_state = (prose_rec or {}).get('human_state')
+        if human_state == 'human_verified':
+            coverage['verified'] += 1
+        elif human_state == 'human_interpretive':
+            coverage['interpretive'] += 1
+        elif human_state == 'human_needs_fix':
+            coverage['needs_fix'] += 1
+        elif human_state == 'human_needs_recheck':
+            coverage['needs_recheck'] += 1
+        else:
+            verdict = s.get('agent_verdict', 'PASS')
+            if verdict == 'TRANSITION':
+                coverage['transition'] += 1
+            elif verdict == 'UNGROUNDED':
+                coverage['ungrounded_agent'] += 1
+            else:
+                coverage['agent_proposed'] += 1
+
+        sentences_out.append({
+            'id': sid,
+            'section': s.get('section', ''),
+            'section_ordinal': s.get('section_ordinal'),
+            'tex_line_start': s.get('tex_line_start'),
+            'tex_line_end': s.get('tex_line_end'),
+            'quote': s.get('quote', ''),
+            'type': s.get('type', ''),
+            'finding_classes': s.get('finding_classes') or [],
+            'agent_verdict': s.get('agent_verdict', 'PASS'),
+            'agent_notes': s.get('agent_notes', ''),
+            'gates_invoked': s.get('gates_invoked') or [],
+            'rewrite_of': s.get('rewrite_of'),
+            'delta_pct': s.get('delta_pct'),
+            'chain_links': chain_links,
+            'human_state': human_state,
+            'human_ratified_at': (prose_rec or {}).get('human_ratified_at'),
+            'human_ratified_by': (prose_rec or {}).get('human_ratified_by'),
+            'human_notes': (prose_rec or {}).get('human_notes', ''),
+            'is_stale': stale,
+            'palette': palette,
+            'audit_event_count': len(audit_by_sentence.get(sid, [])),
+        })
+
+    # Title parse — share with v1 path below
+    title = ''
+    try:
+        tex_src = tex_path.read_text(errors='replace')
+        m = re.search(r'\\title\s*\{', tex_src)
+        if m:
+            depth = 1
+            i = m.end()
+            while i < len(tex_src) and depth > 0:
+                if tex_src[i] == '{':
+                    depth += 1
+                elif tex_src[i] == '}':
+                    depth -= 1
+                    if depth == 0:
+                        break
+                i += 1
+            title = tex_src[m.end():i].replace('\\\\', ' ').strip()[:300]
+    except Exception:
+        pass
+
+    # Aggregate verdicts to seed the overall_status banner
+    n_fail = sum(1 for s in sentences_out if s['agent_verdict'] == 'FAIL')
+    n_warn = sum(1 for s in sentences_out if s['agent_verdict'] == 'WARN')
+    overall = 'pass' if (n_fail + n_warn) == 0 else 'issues_found'
+
+    return {
+        'paper_id': paper_id,
+        'title': title,
+        'review_date': cr.get('review_date'),
+        'reviewer_version': cr.get('reviewer_version'),
+        'reviewer_run_id': cr.get('reviewer_run_id'),
+        'overall_status': overall,
+        'reviewer_notes': cr.get('summary') or cr.get('reviewer_notes'),
+        'counts': {
+            'fail': n_fail, 'warn': n_warn,
+            'pass': sum(1 for s in sentences_out if s['agent_verdict'] == 'PASS'),
+            'info': sum(1 for s in sentences_out if s['agent_verdict'] == 'INFO'),
+        },
+        'stale_count': coverage['stale'],
+        'coverage': coverage,
+        'blocking': list(cr.get('blocking_issues', [])),
+        'non_blocking': list(cr.get('non_blocking_followups', [])),
+        'sentences': sentences_out,
+        'audit_events_by_sentence': audit_by_sentence,
+        'has_claims_review': True,
+        'has_figure_review': fr is not None,
+        'schema_version': 'v2',
+    }
+
+
+@app.route("/api/papers/<paper_id>/sentences/<path:sentence_id>/verify",
+           methods=["POST"])
+def api_paper_sentence_verify(paper_id: str, sentence_id: str):
+    """Wave 10d sentence-level verification endpoint.
+
+    Body (JSON or form):
+      state  — verified | interpretive | needs_fix | needs_recheck
+      notes  — free-form
+      actor  — user:<id> | agent:<name>:<ts>  (default user:dashboard)
+
+    Routes through ``sentence_state.cmd_mark`` (sole writer to
+    ``prose_state.json`` + ``audit_log.jsonl``). Invalidates the graph
+    cache so dependent reads pick up the new ratification timestamp.
+    """
+    payload = request.get_json(silent=True) or request.form
+    state = payload.get('state')
+    notes = payload.get('notes') or ''
+    actor = payload.get('actor') or 'user:dashboard'
+
+    if state not in ('verified', 'interpretive', 'needs_fix', 'needs_recheck'):
+        return jsonify({
+            "error": "state must be one of: "
+                     "verified | interpretive | needs_fix | needs_recheck"
+        }), 400
+
+    # sentence_id arrives URL-decoded but path: matcher leaves the colons
+    # intact (they're path-safe). Sanity check.
+    if not sentence_id.startswith('sentence:'):
+        return jsonify({
+            "error": "sentence_id must be of the form sentence:<paper>:<slug>:<hash>"
+        }), 400
+    if not sentence_id.split(':')[1] == paper_id:
+        return jsonify({
+            "error": f"sentence_id paper mismatch: expected {paper_id}, "
+                     f"got {sentence_id.split(':')[1]}"
+        }), 400
+
+    # Call CLI in-process (sole-writer pattern; mirrors verification_state).
+    try:
+        from sentence_state import cmd_mark
+    except ImportError as exc:
+        return jsonify({"error": f"sentence_state not importable: {exc}"}), 500
+
+    import argparse as _ap
+    args = _ap.Namespace(
+        sentence_id=sentence_id,
+        state=state,
+        actor=actor,
+        notes=notes,
+    )
+    # cmd_mark writes prose_state.json + audit_log.jsonl, prints {ok, event_id}
+    # to stdout, returns 0 on success / 1 on failure. Capture stdout to relay.
+    import io as _io
+    import contextlib as _ctx
+    out_buf = _io.StringIO()
+    err_buf = _io.StringIO()
+    rc = -1
+    try:
+        with _ctx.redirect_stdout(out_buf), _ctx.redirect_stderr(err_buf):
+            rc = cmd_mark(args)
+    except SystemExit as exc:
+        # _paper_from_sentence_id raises SystemExit on malformed ids.
+        rc = int(exc.code or 1)
+        err_buf.write(str(exc) + "\n")
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("cmd_mark unexpected failure")
+        return jsonify({
+            "error": f"cmd_mark unexpected: {exc}",
+            "stderr": err_buf.getvalue(),
+        }), 500
+
+    if rc != 0:
+        return jsonify({
+            "error": f"cmd_mark failed (rc={rc})",
+            "stderr": err_buf.getvalue().strip(),
+        }), 400
+
+    # Parse the {ok, event_id} JSON cmd_mark printed.
+    try:
+        result = json.loads(out_buf.getvalue().strip().splitlines()[-1])
+    except Exception:
+        result = {'ok': True}
+
+    # Wave 10c — verification ripple.
+    _invalidate_graph_cache()
+
+    # Re-build paper data so the caller can patch sentence state without
+    # a separate fetch. Used by Datastar SSE handler downstream.
+    data = _pp_build_data(paper_id)
+    return jsonify({
+        'ok': bool(result.get('ok', True)),
+        'event_id': result.get('event_id'),
+        'sentence': next(
+            (s for s in (data.get('sentences') or []) if s.get('id') == sentence_id),
+            None,
+        ),
+    }), 200
 
 
 @app.route("/api/papers/list")
@@ -2123,7 +2841,12 @@ def api_papers_list():
 def _pp_build_data(paper_id: str) -> dict | None:
     """Extract of the original api_paper_provenance body so both JSON and
     SSE consumers share the same computation. Returns None if the paper
-    dir is missing (caller emits the appropriate 404 or error event)."""
+    dir is missing (caller emits the appropriate 404 or error event).
+
+    Wave 10d: when ``claims_review.json`` carries the v2 sentence-keyed
+    schema (``sentences[]``), routes to :func:`_pp_build_data_v2` for
+    the 3-column UI. Legacy 8-layer dossier flow stays for v1 papers.
+    """
     papers_dir = PROJECT_ROOT / 'papers'
     paper_dir = papers_dir / paper_id
     tex = paper_dir / 'paper_draft.tex'
@@ -2132,6 +2855,10 @@ def _pp_build_data(paper_id: str) -> dict | None:
 
     cr = _pp_load_claims_review(paper_id)
     fr = _pp_load_figure_review(paper_id)
+
+    # Wave 10d v2 path
+    if _pp_is_v2_schema(cr):
+        return _pp_build_data_v2(paper_id, cr, fr, tex)
 
     counts = {'pass': 0, 'warn': 0, 'fail': 0, 'info': 0}
     claims_out: dict[str, dict] = {}
@@ -2216,6 +2943,15 @@ def _pp_build_data(paper_id: str) -> dict | None:
     except Exception:
         pass
 
+    # Wave 10c — staleness pass. Mark findings whose artifact has been
+    # verified after the claims_review was generated; bubble a `is_stale`
+    # flag onto the claim for the renderer.
+    stale_count, _stale_actors = _pp_compute_stale_findings(cr, claims_out)
+    for cid, claim in claims_out.items():
+        claim['is_stale'] = any(
+            f.get('stale') for f in claim.get('findings', [])
+        )
+
     return {
         'paper_id': paper_id,
         'title': title,
@@ -2223,6 +2959,7 @@ def _pp_build_data(paper_id: str) -> dict | None:
         'overall_status': overall,
         'reviewer_notes': reviewer_notes,
         'counts': counts,
+        'stale_count': stale_count,
         'blocking': blocking,
         'non_blocking': non_blocking,
         'layers': [
@@ -2233,6 +2970,7 @@ def _pp_build_data(paper_id: str) -> dict | None:
         'has_claims_review': cr is not None,
         'has_figure_review': fr is not None,
         'total_claims': len(claims_out),
+        'schema_version': 'v1',
     }
 
 
@@ -2556,14 +3294,18 @@ def _pp_claim_span_class(claim: dict) -> str:
     """Pick a highlight style for an inline claim span based on the
     worst-status finding. Matches the v2 design cream theme: FAIL = solid
     red underline, WARN = amber wavy, INFO = blue dotted, PASS = no style
-    (unannotated)."""
+    (unannotated). Wave 10c: claims with any stale finding pick up the
+    ``pp-claim-span--stale`` modifier (purple-stripe, dashboard CSS)."""
     w = _pp_worst_status(claim)
-    return {
+    cls = {
         'FAIL': 'pp-claim-span pp-claim-span--fail',
         'WARN': 'pp-claim-span pp-claim-span--warn',
         'INFO': 'pp-claim-span pp-claim-span--info',
         'PASS': 'pp-claim-span pp-claim-span--pass',
     }.get(w, 'pp-claim-span')
+    if claim.get('is_stale'):
+        cls += ' pp-claim-span--stale'
+    return cls
 
 
 def _pp_wrap_claim_spans(html_body: str, claims: dict[str, dict],
@@ -2768,11 +3510,20 @@ def _pp_banner_html(data: dict) -> str:
     rd = data.get('review_date')
     review_s = f'REVIEW {esc(rd[:10])}' if rd else 'NO REVIEW'
     counts = data.get('counts') or {}
+    stale_count = data.get('stale_count') or 0
     overall = data.get('overall_status') or 'unknown'
-    overall_label = 'ISSUES FOUND' if overall == 'issues_found' else (
-        'PASS' if overall == 'pass' else 'UNKNOWN'
-    )
-    verdict_cls = 'issues_found' if overall == 'issues_found' else ('pass' if overall == 'pass' else 'unknown')
+    if stale_count > 0:
+        overall_label = 'NEEDS RECHECK'
+        verdict_cls = 'stale'
+    elif overall == 'issues_found':
+        overall_label = 'ISSUES FOUND'
+        verdict_cls = 'issues_found'
+    elif overall == 'pass':
+        overall_label = 'PASS'
+        verdict_cls = 'pass'
+    else:
+        overall_label = 'UNKNOWN'
+        verdict_cls = 'unknown'
 
     def meter(key: str, label: str) -> str:
         return (f'<div class="pp-meter" data-s="{key}">'
@@ -2991,9 +3742,22 @@ def _pp_dossier_html(data: dict, active_claim: str) -> str:
             note = ''
             if f.get('delta'):
                 note += f'<span class="pp-delta">Δ {esc(f["delta"])}</span>'
+            # Wave 10c — stale flag adds a "needs recheck" annotation in
+            # the matrix note column so the dossier reader can see WHY
+            # the claim span shows a purple stripe.
+            if f.get('stale'):
+                actor = f.get('stale_actor', '')
+                action = f.get('stale_action', '')
+                since = (f.get('stale_since', '') or '')[:10]
+                stale_label = (
+                    f'NEEDS RECHECK · {esc(action)} {esc(since)}'
+                    + (f' by {esc(actor)}' if actor else '')
+                )
+                note += f'<span class="pp-stale-badge">{stale_label}</span> '
             note += esc(f.get('note', ''))
+            row_attrs = ' data-stale="true"' if f.get('stale') else ''
             parts.append(
-                '<div class="pp-matrix__row">'
+                f'<div class="pp-matrix__row"{row_attrs}>'
                 f'<div class="pp-matrix__layer">{layer_cell}</div>'
                 f'<div class="pp-matrix__status" data-s="{esc(f.get("status", "INFO"))}">{esc(f.get("status", "INFO"))}</div>'
                 f'<div class="pp-matrix__note">{note}</div>'

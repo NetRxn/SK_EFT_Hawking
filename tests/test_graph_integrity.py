@@ -21,15 +21,21 @@ class TestIntegrityReportStructure:
     """Tests that the integrity report has all expected keys and valid types."""
 
     def test_integrity_report_structure(self):
-        """Report has all expected keys: orphan_nodes, broken_chains,
-        ungrounded_claims, missing_provenance, summary, conflicts."""
+        """Report has all expected keys: legacy (orphan_nodes, broken_chains,
+        ungrounded_claims, missing_provenance, summary, conflicts,
+        unclassified_axioms) plus Phase 5v Wave 10b sentence/audit/cluster
+        + last_modified checks."""
         report = run_integrity_checks()
 
-        # Top-level keys
+        # Top-level keys (Wave 10b adds 6 new check buckets)
         expected_keys = {
             'orphan_nodes', 'broken_chains', 'ungrounded_claims',
             'missing_provenance', 'summary', 'conflicts',
             'unclassified_axioms',
+            # Wave 10b additions
+            'sentence_chain_incomplete', 'sentence_id_collisions',
+            'audit_event_missing_logged_by', 'audit_event_malformed_actor',
+            'claim_cluster_inconsistency', 'last_modified_missing',
         }
         assert expected_keys == set(report.keys()), (
             f"Report keys mismatch. Expected: {expected_keys}, Got: {set(report.keys())}"
@@ -37,10 +43,15 @@ class TestIntegrityReportStructure:
 
         # All issue lists are actually lists
         for key in ('orphan_nodes', 'broken_chains', 'ungrounded_claims',
-                     'missing_provenance', 'conflicts', 'unclassified_axioms'):
+                     'missing_provenance', 'conflicts', 'unclassified_axioms',
+                     'sentence_chain_incomplete', 'sentence_id_collisions',
+                     'audit_event_missing_logged_by',
+                     'audit_event_malformed_actor',
+                     'claim_cluster_inconsistency', 'last_modified_missing'):
             assert isinstance(report[key], list), f"{key} should be a list"
 
-        # Summary has expected sub-keys
+        # Summary has expected sub-keys (Wave 10b adds size summaries
+        # for each new check bucket)
         summary = report['summary']
         expected_summary_keys = {
             'total_nodes', 'total_edges', 'total_issues',
@@ -49,6 +60,10 @@ class TestIntegrityReportStructure:
             'total_axioms', 'unclassified_axioms',
             'depends_on_axiom_edges', 'theorems_with_axiom_deps',
             'pg_vertex_count', 'pg_sync',
+            # Wave 10b summary additions
+            'sentence_chain_incomplete', 'sentence_id_collisions',
+            'audit_event_missing_logged_by', 'audit_event_malformed_actor',
+            'claim_cluster_inconsistency', 'last_modified_missing',
         }
         assert expected_summary_keys == set(summary.keys()), (
             f"Summary keys mismatch. Expected: {expected_summary_keys}, "

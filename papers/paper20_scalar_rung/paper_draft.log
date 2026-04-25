@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  24 APR 2026 20:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  24 APR 2026 22:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1007,15 +1007,15 @@ Underfull \hbox (badness 1067) in paragraph at lines 454--465
  []
 
 [4]
-Underfull \hbox (badness 2913) in paragraph at lines 496--499
- []\OT1/cmr/m/n/9 M. Fierz, \OT1/cmr/m/it/9 Zur Fer-mis-chen The-o-rie des $\OM
-L/cmm/m/it/9 ^^L$\OT1/cmr/m/it/9 -Zerfalls\OT1/cmr/m/n/9 ,
+Underfull \hbox (badness 2285) in paragraph at lines 491--494
+ []\OT1/cmr/m/n/9 C. Wet-terich, \OT1/cmr/m/it/9 Ge-om-e-try and sym-me-tries i
+n lat-tice
  []
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 506--511
- \OT1/cmr/m/it/9 UV fixed point struc-ture of the 3d Thirring model\OT1/cmr/m/n
-/9 ,
+Underfull \hbox (badness 2913) in paragraph at lines 496--499
+ []\OT1/cmr/m/n/9 M. Fierz, \OT1/cmr/m/it/9 Zur Fer-mis-chen The-o-rie des $\OM
+L/cmm/m/it/9 ^^L$\OT1/cmr/m/it/9 -Zerfalls\OT1/cmr/m/n/9 ,
  []
 
 No file paper_draft.bbl.
@@ -1057,7 +1057,7 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-
 dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on paper_draft.pdf (5 pages, 514815 bytes).
+Output written on paper_draft.pdf (5 pages, 515198 bytes).
 PDF statistics:
  229 PDF objects out of 1000 (max. 8388607)
  173 compressed objects within 2 object streams

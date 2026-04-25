@@ -818,6 +818,40 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "Λ_UV", "yaxis": "G_c"},
         physics_checks=[], color_keys=["amber"],
     ),
+    FigureSpec(
+        name="fig_seesaw_y_m_r_band",
+        function="fig_seesaw_y_m_r_band",
+        caption=(
+            "Phase 5z Wave 2 — Type-I seesaw (y, M_R) plane. Three diagonal "
+            "contours mark fixed light-neutrino masses m_ν via "
+            "m_ν = y² v² / M_R: m₃ ≈ 0.0501 eV (atmospheric anchor, NO), "
+            "m₂ ≈ 8.61 meV (solar anchor), and m_ν = 0.1 eV (cosmology cap). "
+            "Shaded band: natural seesaw region between m₃ and the 0.1 eV cap. "
+            "Star: top-Yukawa anchor at GUT scale (canonical seesaw point). "
+            "Diamond: Wave-2 lower scan anchor (Y_NU_LOWER × M_R_LOWER_BOUND). "
+            "Lean: MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R."
+        ),
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "y", "yaxis": "M_R"},
+        physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
+    ),
+    FigureSpec(
+        name="fig_m_beta_beta_vs_m_lightest",
+        function="fig_m_beta_beta_vs_m_lightest",
+        caption=(
+            "Phase 5z Wave 2 — m_ββ vs m_lightest 'lobster plot' at NuFit-6.0 "
+            "best-fit angles. Both NO and IO bands shown, swept over the full "
+            "Majorana-phase Monte Carlo. Horizontal bands: KamLAND-Zen 800 "
+            "current bound (28-122 meV at 90% CL, NME spread) and LEGEND-1000 "
+            "projected discovery reach (9-21 meV). Wave-2 conclusion (deep "
+            "research §4): IO is fully discoverable by LEGEND-1000; most of "
+            "NO is out of reach. Embedding-agnostic across I/II/III. "
+            "Lean: NeutrinoMixing.PMNSMatrix."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "m_lightest", "yaxis": "m_ββ"},
+        physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
+    ),
 ]
 
 
@@ -906,6 +940,9 @@ def generate_figures() -> dict[str, Path]:
         fig_doublon_gate_spectrum,
         # Phase 5z Wave 1: scalar-rung Higgs-mass parameter scan
         fig_higgs_mass_parameter_scan,
+        # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
+        fig_seesaw_y_m_r_band,
+        fig_m_beta_beta_vs_m_lightest,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1021,6 +1058,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
         "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
         "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
+        "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
+        "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
     }
 
     paths = {}
@@ -1143,6 +1182,9 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_doublon_gate_spectrum,
         # Phase 5z Wave 1: scalar-rung Higgs-mass parameter scan
         fig_higgs_mass_parameter_scan,
+        # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
+        fig_seesaw_y_m_r_band,
+        fig_m_beta_beta_vs_m_lightest,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1256,6 +1298,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
         "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
         "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
+        "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
+        "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
     }
 
     issues: list[CheckIssue] = []

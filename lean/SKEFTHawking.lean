@@ -85,6 +85,8 @@ import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.SpinBordism
 import SKEFTHawking.TetradGapEquation
 import SKEFTHawking.ScalarRungInterpretation
+import SKEFTHawking.MajoranaRung
+import SKEFTHawking.NeutrinoMixing
 import SKEFTHawking.QSqrt2
 import SKEFTHawking.QSqrt5
 import SKEFTHawking.SU2kMTC

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24T23:38:24.667900+00:00",
+  "generated": "2026-04-25T04:27:12.301477+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -2023,6 +2023,60 @@
       "physics_checks": [],
       "color_keys": [
         "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_seesaw_y_m_r_band",
+      "function": "fig_seesaw_y_m_r_band",
+      "caption": "Phase 5z Wave 2 \u2014 Type-I seesaw (y, M_R) plane. Three diagonal contours mark fixed light-neutrino masses m_\u03bd via m_\u03bd = y\u00b2 v\u00b2 / M_R: m\u2083 \u2248 0.0501 eV (atmospheric anchor, NO), m\u2082 \u2248 8.61 meV (solar anchor), and m_\u03bd = 0.1 eV (cosmology cap). Shaded band: natural seesaw region between m\u2083 and the 0.1 eV cap. Star: top-Yukawa anchor at GUT scale (canonical seesaw point). Diamond: Wave-2 lower scan anchor (Y_NU_LOWER \u00d7 M_R_LOWER_BOUND). Lean: MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_seesaw_y_m_r_band.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_seesaw_y_m_r_band.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "y",
+        "yaxis": "M_R"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "steel_blue",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_m_beta_beta_vs_m_lightest",
+      "function": "fig_m_beta_beta_vs_m_lightest",
+      "caption": "Phase 5z Wave 2 \u2014 m_\u03b2\u03b2 vs m_lightest 'lobster plot' at NuFit-6.0 best-fit angles. Both NO and IO bands shown, swept over the full Majorana-phase Monte Carlo. Horizontal bands: KamLAND-Zen 800 current bound (28-122 meV at 90% CL, NME spread) and LEGEND-1000 projected discovery reach (9-21 meV). Wave-2 conclusion (deep research \u00a74): IO is fully discoverable by LEGEND-1000; most of NO is out of reach. Embedding-agnostic across I/II/III. Lean: NeutrinoMixing.PMNSMatrix.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_m_beta_beta_vs_m_lightest.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_m_beta_beta_vs_m_lightest.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "m_lightest",
+        "yaxis": "m_\u03b2\u03b2"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "steel_blue",
+        "cross"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

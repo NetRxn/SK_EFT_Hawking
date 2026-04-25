@@ -8,7 +8,7 @@
 
 Wave 1 summary:
 - Strengthening pass replaced 3 vacuous Props with 5 substantive ones (including tracked-hypothesis bridge `H_ScalarChannelIsTetradBifurcationOutput` + custodial-symmetry identity `zMass_sq_minus_wMass_sq`)
-- Stage 9 figure review PASS; Stage 11 technical + stakeholder notebooks shipped clean; Stage 13 adversarial review re-invocation closed all 18 BLOCKERs + 7/8 REQUIREDs (1 deferred WebFetch round on the 10 new bibkeys awaiting authorized session)
+- Stage 9 figure review PASS; Stage 11 technical + stakeholder notebooks shipped clean; Stage 13 adversarial review re-invocation closed all 18 BLOCKERs + 7/8 REQUIREDs; the final deferred REQUIRED (WebFetch verification of 10 new bibkeys) was **CLOSED 2026-04-26** — 4 of 10 bibkeys were wrong (3 wrong-arXiv plus 1 HALLUCINATED citation `WetterichNJL` = nonexistent PLB 901 136223 2024, replaced with Wetterich Ann. Phys. 327, 2184 (2012) / arXiv:1201.6505). All 10 entries now `doi_verified: True`; paper 20 recompiles clean; Lean rebuilds clean. Finding report at `papers/AutomatedReviews/2026-04-26-0130-citation-verification/paper20_scalar_rung.md`.
 - `ScalarRungInterpretation.lean` ships **20 theorems**, zero sorry, zero new axioms
 - Python `src/scalar_rung/` + 24 passing tests; figure `fig_higgs_mass_parameter_scan`; flagship paper `paper20_scalar_rung` (5 pages, 13/13 bibkeys registered)
 - Falsifiability-anchor verdict: **Gate Z.1 STRUCTURAL-ONLY** at the current schematic-leading-log scope (m_H = 125 GeV reachable only along a 1-D tuning curve in (Λ_UV, G_c))
@@ -132,6 +132,8 @@ The Hidden-Sector Classification (Phase 5x Wave 2, COMPLETE 2026-04-22) formaliz
 Phase 5z.2 ships a `NeutrinoMixing.lean` *structure note* (PMNS form parallel to CKM) without pursuing full PMNS phenomenology; phenomenology remains in the backlog.
 
 ### Wave 2 — `MajoranaRung.lean` [Pipeline: Stages 1–8]
+
+**Status (2026-04-26):** **LANDED through Stage 7.** `MajoranaRung.lean` (14 substantive theorems + 5 defs + 1 structure) and `NeutrinoMixing.lean` (7 theorems + structure-note scope) both build clean (`lake build SKEFTHawking.ExtractDeps` 8433 jobs). 32 new pytest in `tests/test_majorana_rung.py` all pass. `validate.py` 21/21 PASS. Embedding III (Hybrid) per O.3 verdict — fundamental Lean ν_R, M_R parameterized inside `MajoranaRungData`, WAVE2-OPEN-1 substrate-bridge tracked-hypothesis (`H_MR_FromADWSubstrate`), Z₁₆ singlet-branch bridge proves from existing `three_nu_R_cancel_three_gen` + `three_singlets_satisfy_hidden_sector`. PMNS structure-note via `Matrix.unitaryGroup (Fin 3) ℂ` with WAVE2-OPEN-2 (`H_PMNSAnglesFromSubstrate`). **Stages 8-13 (figures, paper 21 PRD, notebooks, doc sync, Stage 13 adversarial review) DEFERRED to a follow-up session** — see `temporary/working-docs/phase5z_wave2_landing.md` for the resumption checklist.
 
 **Goal:** Formalize the Majorana bilinear as a ℤ₂-graded rung and bridge to HiddenSectorClassification's ℤ₁₆ singlet branch.
 

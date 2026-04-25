@@ -7445,5 +7445,272 @@ def fig_higgs_mass_parameter_scan():
     return fig
 
 
+# ============================================================
+# Phase 5z Wave 2: Majorana-rung seesaw figures
+# ============================================================
+
+def fig_seesaw_y_m_r_band():
+    """Phase 5z Wave 2: Type-I seesaw (y, M_R) plane with NuFit-6.0 m_ν band.
+
+    Each diagonal line in log-log (y, M_R) corresponds to a fixed light-neutrino
+    mass m_ν via m_ν = y² v² / M_R. Three contours mark:
+      - m_ν = m₃ ≈ 0.0501 eV (NuFit-6.0 atmospheric anchor, NO)
+      - m_ν = m₂ ≈ 8.61 meV (NuFit-6.0 solar anchor)
+      - m_ν = 0.1 eV upper-cosmology bound (illustrative)
+
+    Vertical dashed line at y = y_top ≈ 0.99 marks the natural Yukawa anchor;
+    horizontal dashed line at M_R = Λ_GUT ≈ 1e16 GeV. The intersection
+    (y_top, Λ_GUT) sits NEAR the m_ν = 0.05 eV contour — the canonical
+    seesaw region under Embedding III with Λ_ADW ~ Λ_GUT.
+
+    viz-ref: Phase5z Paper 21 §seesaw-y-m-r-plane
+    """
+    import plotly.graph_objects as go
+    from src.core.constants import EW_PARAMS, MAJORANA_PARAMS
+    from src.core.formulas import seesaw_m_r_from_observed
+
+    v_ew = EW_PARAMS["V_EW_GEV"]
+    y_grid = np.logspace(-6, 0.5, 200)         # y ∈ [1e-6, ~3]
+
+    # m_ν contours (eV → GeV)
+    m_nu_targets = {
+        "m₃ ≈ √|Δm²_31| (NO)": MAJORANA_PARAMS["M_NU_HEAVIEST_EV"] * 1e-9,
+        "m₂ ≈ √Δm²_21": MAJORANA_PARAMS["M_NU_NEXT_EV"] * 1e-9,
+        "m_ν = 0.1 eV (cosmology cap)": 0.1 * 1e-9,
+    }
+    contour_colors = {
+        "m₃ ≈ √|Δm²_31| (NO)": COLORS["amber"],
+        "m₂ ≈ √Δm²_21": COLORS["steel_blue"],
+        "m_ν = 0.1 eV (cosmology cap)": COLORS["cross"],
+    }
+
+    fig = go.Figure()
+
+    # Light-shaded "natural seesaw band" between m₃ and 0.1 eV
+    m_r_top = np.array([
+        seesaw_m_r_from_observed(y, v_ew, 0.1 * 1e-9) for y in y_grid
+    ])
+    m_r_bot = np.array([
+        seesaw_m_r_from_observed(y, v_ew, MAJORANA_PARAMS["M_NU_HEAVIEST_EV"] * 1e-9)
+        for y in y_grid
+    ])
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([y_grid, y_grid[::-1]]),
+        y=np.concatenate([m_r_bot, m_r_top[::-1]]),
+        fill="toself",
+        fillcolor="rgba(241, 143, 1, 0.10)",
+        line=dict(color="rgba(0,0,0,0)"),
+        name="Natural seesaw band",
+        hoverinfo="skip",
+        showlegend=True,
+    ))
+
+    # m_ν contours
+    for label, m_nu in m_nu_targets.items():
+        m_r_curve = np.array([seesaw_m_r_from_observed(y, v_ew, m_nu) for y in y_grid])
+        fig.add_trace(go.Scatter(
+            x=y_grid,
+            y=m_r_curve,
+            mode="lines",
+            line=dict(color=contour_colors[label], width=2.5),
+            name=label,
+        ))
+
+    # Reference markers: (y_top, Λ_GUT) and Λ_ADW fiducial
+    y_top = EW_PARAMS["Y_TOP"]
+    fig.add_trace(go.Scatter(
+        x=[y_top], y=[1e16],
+        mode="markers+text",
+        marker=dict(symbol="star", size=18, color=COLORS["amber"],
+                    line=dict(color="black", width=1.5)),
+        text=["(y_top, Λ_GUT)"],
+        textposition="top center",
+        textfont=dict(size=11),
+        name="Top-Yukawa @ GUT scale",
+    ))
+    fig.add_trace(go.Scatter(
+        x=[1e-3], y=[MAJORANA_PARAMS["M_R_LOWER_BOUND_GEV"]],
+        mode="markers+text",
+        marker=dict(symbol="diamond", size=14, color=COLORS["steel_blue"],
+                    line=dict(color="black", width=1.0)),
+        text=["Y_NU_LOWER × M_R_LOWER"],
+        textposition="bottom right",
+        textfont=dict(size=10),
+        name="Wave-2 lower scan anchor",
+    ))
+
+    apply_layout(
+        fig,
+        xaxis=dict(
+            title="Dirac neutrino Yukawa y",
+            type="log",
+            tickmode="array",
+            tickvals=[1e-6, 1e-4, 1e-2, 1.0],
+            ticktext=["10⁻⁶", "10⁻⁴", "10⁻²", "1"],
+        ),
+        yaxis=dict(
+            title="Heavy Majorana mass M_R [GeV]",
+            type="log",
+            tickmode="array",
+            tickvals=[1e3, 1e6, 1e9, 1e12, 1e15, 1e18],
+            ticktext=["10³", "10⁶", "10⁹", "10¹²", "10¹⁵", "10¹⁸"],
+        ),
+        title=dict(
+            text=(
+                "Phase 5z Wave 2 — Type-I seesaw (y, M_R) plane<br>"
+                "<sub>Contours of m_ν via m_ν = y² v² / M_R; NuFit-6.0 anchors. "
+                "Lean: <i>MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=850,
+    )
+    return fig
+
+
+def fig_m_beta_beta_vs_m_lightest():
+    """Phase 5z Wave 2: m_ββ vs m_lightest with KamLAND-Zen + LEGEND-1000 bands.
+
+    The two-axis 0νββ "lobster plot": effective Majorana mass m_ββ as a
+    function of the lightest neutrino mass m_lightest, separately for normal
+    ordering (NO) and inverted ordering (IO). Both orderings are computed at
+    NuFit-6.0 best-fit angles; Majorana phases swept over the full unit
+    circle to produce the lobster envelopes.
+
+    Two horizontal experimental bands:
+      - KamLAND-Zen 800 (current 90% CL): 28-122 meV (NME spread)
+      - LEGEND-1000 (projected 99.7% CL discovery): 9-21 meV
+
+    Wave 2 conclusion (deep research §4.2): IO is fully discoverable by
+    LEGEND-1000; NO is largely out of reach. Embedding-agnostic — same
+    bands apply to Embeddings I/II/III.
+
+    viz-ref: Phase5z Paper 21 §0nubb-money-plot
+    """
+    import plotly.graph_objects as go
+    from src.core.constants import MAJORANA_PARAMS
+    from src.core.formulas import pmns_unitary_matrix
+
+    # NuFit-6.0 best fit angles in radians
+    t12 = np.deg2rad(MAJORANA_PARAMS["THETA_12_DEG"])
+    t13 = np.deg2rad(MAJORANA_PARAMS["THETA_13_DEG"])
+    t23 = np.deg2rad(MAJORANA_PARAMS["THETA_23_DEG"])
+    dcp = np.deg2rad(MAJORANA_PARAMS["DELTA_CP_DEG"])
+
+    dm21 = MAJORANA_PARAMS["DELTA_M_SQ_21_EV2"]
+    dm31 = MAJORANA_PARAMS["DELTA_M_SQ_31_EV2"]
+
+    n_lightest = 200
+    n_phase = 32  # Majorana-phase Monte Carlo grid
+    m_light_grid = np.logspace(-5, -0.5, n_lightest)  # 10 μeV to ~316 meV
+    alpha_grid = np.linspace(0.0, 2 * np.pi, n_phase, endpoint=False)
+
+    def lobster_envelope(ordering):
+        """Return (m_lightest, m_bb_lower, m_bb_upper) for NO or IO ordering."""
+        m_bb_lo = np.zeros_like(m_light_grid)
+        m_bb_hi = np.zeros_like(m_light_grid)
+        for ix, m_l in enumerate(m_light_grid):
+            if ordering == "NO":
+                m1, m2, m3 = m_l, np.sqrt(m_l ** 2 + dm21), np.sqrt(m_l ** 2 + dm31)
+            else:  # IO
+                m3 = m_l
+                m2 = np.sqrt(m_l ** 2 + dm31)
+                m1 = np.sqrt(m_l ** 2 + dm31 - dm21)
+            vals = []
+            for a1 in alpha_grid:
+                for a2 in alpha_grid:
+                    U = pmns_unitary_matrix(t12, t13, t23, dcp,
+                                            alpha_1=a1, alpha_2=a2)
+                    val = abs(U[0, 0] ** 2 * m1 + U[0, 1] ** 2 * m2 + U[0, 2] ** 2 * m3)
+                    vals.append(val)
+            m_bb_lo[ix] = float(np.min(vals))
+            m_bb_hi[ix] = float(np.max(vals))
+        return m_bb_lo, m_bb_hi
+
+    no_lo, no_hi = lobster_envelope("NO")
+    io_lo, io_hi = lobster_envelope("IO")
+
+    fig = go.Figure()
+
+    # IO band
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([m_light_grid * 1e3, m_light_grid[::-1] * 1e3]),
+        y=np.concatenate([io_lo * 1e3, io_hi[::-1] * 1e3]),
+        fill="toself",
+        fillcolor="rgba(241, 143, 1, 0.30)",
+        line=dict(color=COLORS["amber"], width=1),
+        name="Inverted ordering (IO)",
+    ))
+    # NO band
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([m_light_grid * 1e3, m_light_grid[::-1] * 1e3]),
+        y=np.concatenate([no_lo * 1e3, no_hi[::-1] * 1e3]),
+        fill="toself",
+        fillcolor="rgba(46, 134, 171, 0.30)",
+        line=dict(color=COLORS["steel_blue"], width=1),
+        name="Normal ordering (NO)",
+    ))
+
+    # KamLAND-Zen band (excluded region)
+    kz_lo = MAJORANA_PARAMS["M_BB_KAMLAND_ZEN_MEV_LOWER"]
+    kz_hi = MAJORANA_PARAMS["M_BB_KAMLAND_ZEN_MEV_UPPER"]
+    fig.add_shape(type="rect",
+                  x0=1e-2, x1=1e3,
+                  y0=kz_lo, y1=kz_hi,
+                  fillcolor="rgba(255, 224, 224, 0.55)",
+                  line=dict(color=COLORS["cross"], width=1, dash="dash"),
+                  layer="below")
+    fig.add_annotation(x=200, y=np.sqrt(kz_lo * kz_hi),
+                       text="KamLAND-Zen 800 (28–122 meV)",
+                       showarrow=False, font=dict(size=10),
+                       bgcolor="rgba(255,255,255,0.7)")
+
+    # LEGEND-1000 reach band
+    lg_lo = MAJORANA_PARAMS["M_BB_LEGEND_MEV_LOWER"]
+    lg_hi = MAJORANA_PARAMS["M_BB_LEGEND_MEV_UPPER"]
+    fig.add_shape(type="rect",
+                  x0=1e-2, x1=1e3,
+                  y0=lg_lo, y1=lg_hi,
+                  fillcolor="rgba(218, 226, 248, 0.55)",
+                  line=dict(color=COLORS["steel_blue"], width=1, dash="dot"),
+                  layer="below")
+    fig.add_annotation(x=200, y=np.sqrt(lg_lo * lg_hi),
+                       text="LEGEND-1000 reach (9–21 meV)",
+                       showarrow=False, font=dict(size=10),
+                       bgcolor="rgba(255,255,255,0.7)")
+
+    apply_layout(
+        fig,
+        xaxis=dict(
+            title="Lightest neutrino mass m_lightest [meV]",
+            type="log",
+            tickmode="array",
+            tickvals=[1e-2, 1e-1, 1, 10, 100, 1000],
+            ticktext=["0.01", "0.1", "1", "10", "100", "1000"],
+            range=[-2, 2.5],
+        ),
+        yaxis=dict(
+            title="Effective Majorana mass m_ββ [meV]",
+            type="log",
+            tickmode="array",
+            tickvals=[1e-1, 1, 10, 100, 1000],
+            ticktext=["0.1", "1", "10", "100", "1000"],
+            range=[-1.5, 3],
+        ),
+        title=dict(
+            text=(
+                "Phase 5z Wave 2 — m_ββ vs m_lightest (NuFit-6.0 angles, Majorana phases swept)<br>"
+                "<sub>NO + IO bands; KamLAND-Zen 800 (existing) + LEGEND-1000 (projected reach). "
+                "Embedding-agnostic. Lean: <i>NeutrinoMixing.PMNSMatrix</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=900,
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

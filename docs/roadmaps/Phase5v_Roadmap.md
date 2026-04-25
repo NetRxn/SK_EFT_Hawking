@@ -228,6 +228,53 @@ The **actual gap** is downstream of the script:
 
 **Gate for Wave 1c (done):** Graph shows 15 Papers, 104 Figures (all pipeline-discoverable), HAS_FIGURE auto-computed from paper `.tex`, all 35 existing tests pass.
 
+### Wave 1d — Stale-reference detection [planned 2026-04-26]
+
+**Trigger.** Two QI candidates surfaced within 24 hours each pointing at the same architectural gap: paper prose carries cross-document references (Lean theorem names, tracked hypotheses, citation DOIs/arXiv IDs) that go stale faster than Stage-13 manual sweeps can catch. Three structural validate.py CHECKs close the loop.
+
+**Origin QI candidates:**
+- 2026-04-25, paper20 Stage-13 review — Phase 5z Wave 1 strengthening pass renamed/removed three theorems referenced by paper draft prose. Suggested action: `validate.py --check paper_lean_refs`. Folds into existing `qi-leanproofsubstance` cluster.
+- 2026-04-25, qi-assumptiondisclosure cluster (6 findings across 4 papers) — papers cite Lean theorems as "verified" but the theorems carry tracked `Prop` hypotheses (e.g. `H_VestigialRelicCarriesZ16Charge`, `H_AdiabaticRegimeCorrection`) that the paper's assumptions section doesn't disclose. Same architectural class.
+- 2026-04-26, paper20 citation-verification round (Stage-13 deferred-REQUIRED-1.11 closure) — surfaced **1 entirely fabricated citation** (`WetterichNJL` = nonexistent PLB 901, 136223 (2024); CrossRef 404; not in any deep research; appeared in three load-bearing places: `CITATION_REGISTRY` + Lean docstring + paper TeX) and **3 wrong-arXiv** entries (registry pointed at name-shaped wrong-target arXiv IDs that resolved to unrelated papers — all 200-OK fetches, only fuzzy-title-match catches them). Severity: critical per WAVE_EXECUTION_PIPELINE.md §Stage 14. Report: `papers/AutomatedReviews/2026-04-26-0130-citation-verification/paper20_scalar_rung.md`.
+
+**Architectural rationale (why Wave 1d, not Wave 10g).** All three checks are pipeline plumbing — same class as Wave 1b's `counts_fresh` / `count_literals`. Independent timing — they don't gate on Wave 10's 8-day critical path. Both `paper_lean_refs` and `paper_hypothesis_disclosure` are structural mirrors of claims-reviewer-v2 finding classes (Class TN and Class HD respectively, see Wave 10a) but the cheap deterministic versions land here without waiting on Wave 10's agent infrastructure.
+
+**Deliverables (3 CHECKs):**
+
+- [ ] **`validate.py --check paper_lean_refs`** [offline; cheap, ~50 LOC]
+  - Walk every `papers/paper*/paper_draft.tex` for `\texttt{<Module>.<identifier>}` (also `\mathtt{...}`, `\verb|...|`, `\begin{lstlisting}[language=Lean]` blocks).
+  - Match against the live declarations in `lean/lean_deps.json` (always populated; no `EXTRACT_NAME_DEPS` flag needed).
+  - FAIL = strengthening-pass paper drift (the 2026-04-25 failure class). Sentence-precise location reporting.
+  - Strengthens **Gate 5 LeanProofSubstance** + **Gate 9 NumericalFreshness**.
+
+- [ ] **`validate.py --check paper_hypothesis_disclosure`** [offline; cheap, ~80 LOC]
+  - For each paper, walk `PAPER_DEPENDENCIES[paper].lean_modules` → collect every cited Lean theorem's incoming `ASSUMES` edges (already wired Wave 1c via `HYPOTHESIS_REGISTRY.dependent_theorems[]`).
+  - For each tracked hypothesis depended on by a paper-cited theorem, grep the paper's TeX for the hypothesis name AND for an "Assumptions" / "Hypotheses" section listing it.
+  - FAIL = paper claims "verified" without disclosing the load-bearing hypothesis (the qi-assumptiondisclosure pattern).
+  - Strengthens **Gate 6 AssumptionDisclosure**.
+
+- [ ] **`validate.py --check citation_live_resolution`** [network; gated by Stage-13 readiness, NOT default suite, ~80 LOC]
+  - Walk every `CITATION_REGISTRY` entry with non-null `doi`. HEAD `https://api.crossref.org/works/{doi}` — 404 distinguishes fabricated DOI cleanly (the WetterichNJL pattern).
+  - For non-null `arxiv`, HEAD `https://arxiv.org/abs/{arxiv}`. **200 alone is insufficient** — also pull title and fuzzy-match (token-set ratio ≥ 0.6) against `CITATION_REGISTRY[bibkey]['title']`. The 3 wrong-arXiv cases were all 200-OK but pointed at unrelated papers.
+  - For pre-arXiv era (~1993 and earlier): NASA ADS as proxy (`https://ui.adsabs.harvard.edu/abs/{bibcode}/abstract`) — APS direct returns 403 to WebFetch-class agents.
+  - For ISBN-only textbook entries: Routledge/WorldCat returns 403; flag as `partial_match` not `fetch_failed`.
+  - Cache via existing `scripts/citation_cache.py` 90-day staleness policy. Reviewer field: `llm-webfetch:YYYY-MM-DD` for LLM-driven; `human:<userid>` for spot-check.
+  - Run as part of `validate.py --check readiness_submission_gate` (Stage 13) — NOT default suite — so offline CI doesn't block on network.
+  - **Severity: critical** per WAVE_EXECUTION_PIPELINE.md §Stage 14.
+  - Strengthens **Gate 1 CitationIntegrity**.
+
+**Implementation constraints** (from 2026-04-26 evidence — see `temporary/working-docs/phase5v_wave1d_handoff.md` for full taxonomy):
+- CrossRef HEAD probes — 404 = fabricated; cache 90 days.
+- arXiv HEAD + title fuzzy-match — never trust 200-OK alone.
+- NASA ADS for pre-arXiv; APS/Routledge/WorldCat blocked to WebFetch-class agents.
+- Reuse `scripts/citation_cache.py`'s `bibitem_hash`, `lookup_latest`, `is_stale`, `append_record`.
+
+**QI register update.** After Wave 1d lands, re-run `scripts/qi_register.py` to surface the 2026-04-26 critical-severity finding under `qi-citationintegrity`. Wave 1d closure cites `evidence_on_close = phase5v-wave-1d-commit-sha` for both qi-leanproofsubstance and qi-citationintegrity items.
+
+**Effort:** ~1 session (~3-4h) for all three checks combined. paper_lean_refs is the cheapest (~50 LOC, regex + dict lookup); paper_hypothesis_disclosure builds on existing ASSUMES extraction (~80 LOC); citation_live_resolution reuses citation_cache.py infrastructure (~80 LOC + integration).
+
+**Gate for Wave 1d:** all three CHECKs registered in `validate.py`; offline checks (paper_lean_refs, paper_hypothesis_disclosure) run in default suite; citation_live_resolution gated to Stage-13. QI register regen surfaces fabricated-citation finding as critical. paper20 + papers with tracked-hypothesis deps cleared on first run (or remediated via documented action plan).
+
 ---
 
 ## Wave 2 — Schema extension for readiness
@@ -776,44 +823,82 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 2. **Freshness watchdog**: prior reviews go stale on a ~2-week cycle; per-sentence verification timestamps + per-link `last_modified` propagation auto-flip stale verifications to NEEDS_RECHECK. **This is the highest-value capability** — it kills the "fixes ship without re-runs, dashboard now lies" failure mode that paper 10's audit surfaced.
 3. **Net-new findings (10–25%)**: internal arithmetic drift, toolchain pin drift, stealth pipeline-vs-prose drift, module-internal-docstring drift. Real but not transformative.
 
-**Architectural decisions** (locked in via design review):
+**Architectural decisions** (locked in via design review 2026-04-24, post-feedback revision 2026-04-26):
 - **Single agent, not parallel.** Evolve `claims-reviewer` to be sentence-level; do not build a separate `prose-auditor`. Adversarial-reviewer stays distinct (different role: fresh-context external check). Design: `temporary/working-docs/claims_reviewer_v2_design.md`.
+- **Agent verdict decoupled from human review state.** Agent verdict captures only chain-resolution status (`PASS|FAIL|WARN|INFO|UNGROUNDED|TRANSITION`); human ratification is a separate orthogonal axis owned by the dashboard. The "parameter LLM-verified-only" condition is a per-link `link_state` flag, not a sentence-level WARN.
+- **Reconciliation, not silent supersession.** Prior findings that don't reproduce go to `non_reproducing_prior_findings[]` with `status: candidate_for_supersession`; only deterministic structural checks (re-run grep, re-run lake build counts) auto-close. LLM-judgment findings require human ratify-or-reject before status flips to `superseded`. Asymmetry of risk: silently disappearing a true issue is worse than a stale finding remaining visible.
+- **Content-hash sentence IDs.** `sentence:<paper>:<section_slug>:<sha8(normalized_quote)>`. Survives section reorder, sentence insert/delete, benign edits (punctuation, citation insertion, whitespace) via aggressive normalization. Substantive edits = new ID + tombstone old; near-match heuristic offers "carry forward verification?" prompt for rewrites.
+- **No backward compat.** Sentence-keyed schema is the only schema; no derived typed-section views to maintain long-term. Feature flag during migration; no downstream consumers to preserve.
 - **Verification surface unification.** Paper Provenance becomes the universal verification entry-point because most other tabs lack write-back UX today (only Parameters has Confirm/Reject/Flag). Other tabs become reflective read-views; state is shared.
 - **No pandoc.** Extend the existing minimal LaTeX→HTML renderer (Wave 9g final pass) to handle full body — `\section` / `\subsection`, `\begin{itemize}` / `\begin{enumerate}`, displayed equations as text (`\begin{equation}`, `\begin{align}`, `\[...\]`), figure stubs (`\begin{figure}` → `[Figure N: caption]` placeholder). ~1d of work; pandoc dependency avoided.
-- **KG schema additions.** New node types `Sentence` + `AuditEvent` (deprecates `ProseClaim`); new edge types `BACKED_BY` + `SAME_CLAIM_AS` + `LOGGED_BY`; new `last_modified` field on every artifact node propagated via dependency walk. Total: 25 node types (was 22), 24 edge types (was 22). Design: `temporary/working-docs/sentence_kg_schema_delta.md`.
+- **KG schema additions.** New node types `Sentence` + `AuditEvent` + `ClaimCluster`; `ProseClaim` retained (curated high-priority-claim layer from Wave 2f stays as-is; Sentence is the fine-grained full-coverage layer — different roles, both valuable). New edge types `BACKED_BY` + `LOGGED_BY` + `MEMBER_OF` (Sentence → ClaimCluster). Cross-paper claim equivalence always goes through ClaimCluster nodes — `SAME_CLAIM_AS` pairwise edges **are NOT added** (n-ary relationships modeled as 2-cliques are awkward + O(n²); ClaimCluster handles both 2-member and N-member groupings uniformly). New `last_modified` field on every artifact node propagated via dependency walk. Total: **25 node types** (was 22), **25 edge types** (was 22). Design: `temporary/working-docs/sentence_kg_schema_delta.md`.
+- **CLI is the only writer.** `scripts/sentence_state.py` is the sole path for human-verification + supersession + audit-log writes. LLMs (and the dashboard backend) call the CLI, never edit JSON directly. Maintains JSON-canonical-at-rest / PG-mirror architecture (Wave 9f) and prevents LLM unsafe-edit failure mode.
 - **Paper Contributions tab retires.** Subsumed by per-sentence Paper Provenance once Wave 10 lands. Other 9 tabs keep distinct roles (verification surfaces or exploration views).
 
 ### Wave 10a — claims-reviewer v2 schema + prompt
 
+**Five new finding classes** (the rigor-layer-uniquely-finds work):
+
+1. **Class IA — Internal arithmetic / count drift.** Numbers appearing in two places in the paper text with different values; pipeline-computable counts (theorems / sorry / axioms / modules / tests / structural-obstacles) that differ from live pipeline. Cross-checks against `lake build`, `pytest --collect-only`, `grep ^axiom`, `lean_deps.json`, and `len(...)` of fixed-list constants in `formulas.py` / `constants.py`. Maps to Gate 9 NumericalFreshness.
+
+2. **Class TP — Toolchain pin drift.** Literal `Lean v\d+\.\d+\.\d+` in paper vs. `lean-toolchain` file; `Mathlib <8-char-hash>` vs. `lakefile.toml` mathlib rev. Maps to Gate 9.
+
+3. **Class SD — Stealth pipeline-vs-prose drift.** Prose adjectives/numerals describing structured objects with known cardinality (paper says "five obstacles", `formulas.py::structural_obstacles` returns 4). Bounded heuristic: walk integer-returning functions whose name contains `count` / `total` / `n_` plus `len(...)` of fixed-list constants; cross-check paper for those values. Maps to Gate 9 + relevant downstream gate.
+
+4. **Class TN — Theorem-name reference drift.** [NEW 2026-04-26 from paper20 QI candidate.] Regex extract every `\\texttt{<module>.<symbol>}` in paper TeX; lookup in `lean_deps.json` declaration registry (always populated; no `EXTRACT_NAME_DEPS` needed). FAIL on miss. Sentence-level. Maps to Gate 5 LeanProofSubstance + Gate 9. Addresses the Stage 13 paper20 finding pattern: "paper authoring during a Lean refactor leaves stale theorem-name references in prose."
+
+5. **Class HD — Hypothesis disclosure.** [NEW 2026-04-26 from qi-assumptiondisclosure cluster.] When a sentence's chain links to a Lean theorem (kind=`theorem`), walk the theorem's incoming `ASSUMES` edges (already extracted Wave 1c via HYPOTHESIS_REGISTRY). For each tracked-Prop hypothesis (e.g., `H_VestigialRelicCarriesZ16Charge`, `H_AdiabaticRegimeCorrection`, `H_MixedChannelZ16Cancels`), check the paper's prose for a disclosure of the assumption. FAIL if undisclosed. Maps to Gate 6 AssumptionDisclosure. Mechanism is purely structural — uses HYPOTHESIS_REGISTRY data already wired post-Wave 0.
+
+**Wave 10a deliverables:**
 - [ ] Update `.claude/plugins/physics-qa/agents/claims-reviewer.md` per `claims_reviewer_v2_design.md` §5
-- [ ] Sentence-keyed JSON schema (`sentences[]` primary, typed sections derived) — see design doc §2
-- [ ] Three new finding classes: internal arithmetic drift (Class IA), toolchain pin drift (Class TP), stealth pipeline-vs-prose drift (Class SD)
-- [ ] Supersession protocol: prior `claims_review.json` findings that don't reproduce in current run get `supersession_log[]` records → graph extractor closes corresponding `ReviewFinding` nodes via `SUPERSEDES` edges
-- [ ] Smoke test on paper 12; diff output against existing `claims_review.json` for fidelity
-- [ ] Backward-compat: `_pp_build_data` reads `sentences[]` first, falls back to typed sections; both consumers work
+- [ ] Sentence-keyed JSON schema (`sentences[]` is the only primary store; no derived typed-section views) — see design doc §2
+- [ ] Five finding classes: IA / TP / SD / TN / HD per above
+- [ ] Decoupled verdict semantics: agent verdict in `{PASS, FAIL, WARN, INFO, UNGROUNDED, TRANSITION}` is purely about chain-resolution + recomputation; human ratification state is a separate orthogonal field never set by the agent
+- [ ] Reconciliation protocol: prior findings that don't reproduce go to `non_reproducing_prior_findings[]` with `status: candidate_for_supersession`. Auto-close ONLY when the agent re-ran a deterministic structural check (e.g., re-grepped sorry count, re-extracted Lean decl registry) that produced a different result; cite the check in the entry. LLM-judgment findings require human ratify-or-reject via dashboard.
+- [ ] Content-hash sentence IDs: `sentence:<paper>:<section_slug>:<sha8(normalized_quote)>`. Define normalization (lowercase, whitespace-collapse, strip TeX markup, strip citations); store raw quote alongside hash so diffs surface
+- [ ] Smoke test on paper 12; verify five-finding-class classification correct on hand-curated cases; verify content-hash stability across benign edits
 
-**Effort:** ~1d.
+**Effort:** ~1.25d (was 1d; +0.25 for Class TN + Class HD detection logic + content-hash sentence ID).
 
-### Wave 10b — KG schema delta
+### Wave 10b — KG schema delta + sentence_state.py CLI
 
 - [ ] Add `Sentence` node type to `SHAPE_MAP` + extractor in `build_graph.py` (consumes `claims_review.json[sentences]`)
-- [ ] Add `BACKED_BY` edge extractor; one edge per chain link
-- [ ] Add `AuditEvent` node type + `LOGGED_BY` edge extractor (consumes `papers/<paper>/audit_log.jsonl`)
-- [ ] Add `last_modified` computed field via dependency walk (`scripts/last_modified.py`); update build_graph to populate it on every node
-- [ ] Update `docs/KNOWLEDGE_GRAPH.md` schema tables (22→25 nodes, 22→24 edges)
-- [ ] Validate.py `graph_integrity` extension: `sentence_chain_completeness`, `audit_event_immutability`, `same_claim_consistency`, `last_modified_monotonicity` (per design doc §8)
-- [ ] PG+AGE sync extension (`scripts/sync_graph_to_pg.py`): mirror new node + edge types
+- [ ] Add `BACKED_BY` edge extractor; one edge per chain link. Per-link `link_state` derived from agent verdict + freshness only — no human-rated state on edges (per-link verify is UX affordance over the sentence-level `human_state`, not first-class data)
+- [ ] Add `AuditEvent` node type + `LOGGED_BY` edge extractor (consumes `papers/<paper>/audit_log.jsonl`). `actor` field always carries `agent:<name>:<run-timestamp>` or `user:<id>` so the chain of findings across multiple agents is traceable per sentence.
+- [ ] Add `ClaimCluster` node type for cross-paper claim equivalence (ALL cluster sizes — 2-member through N-member — go through ClaimCluster uniformly; no pairwise SAME_CLAIM_AS edges). Cluster carries `match_kind`, `confidence`, and `constructed_by` metadata
+- [ ] Add `MEMBER_OF` edge (Sentence → ClaimCluster); one edge per sentence in cluster
+- [ ] `ProseClaim` (Wave 2f) **unchanged** — retained as the curated high-priority-claim layer for abstract-level narrative claims; coexists with fine-grained Sentence layer
+- [ ] Add `last_modified` computed field via dependency walk (`scripts/last_modified.py`); populated on every node during build_graph. Direct: file_mtime / human_verified_date / cache_hash_changed_at. Upstream: max over USED_BY / VERIFIED_BY / DEPENDS_ON_AXIOM / ASSUMES / IMPORTS / CITES / GROUNDED_IN / BACKED_BY
+- [ ] Sentence tombstone state: when a `sentence_id` from prior run doesn't appear in current run, emit a `tombstoned` Sentence node (preserves audit history; not counted in coverage ribbon). Near-match Levenshtein heuristic surfaces "is this a rewrite of <old_id>?" candidates for one-click verification rollover
+- [ ] **`scripts/sentence_state.py` CLI** — sole writer to `prose_state.json` + `audit_log.jsonl`:
+   - `mark <sentence_id> verified|interpretive|needs_fix|needs_recheck --notes "..."`
+   - `ingest_agent_run <claims_review.json>` — schema-validates, diffs against prior, generates `non_reproducing_prior_findings[]` candidates
+   - `reconcile` — interactive supersession candidate review (pairs with deterministic auto-close)
+   - `supersede <id> --reason "..."` — explicit human-confirm path
+   - `tombstone-sweep` — detect deleted sentences and emit tombstone records + Levenshtein-match suggestions
+   - All operations: schema validation → atomic write of prose_state.json + append to audit_log.jsonl. Dashboard backend and any agent-driven workflow calls these subcommands; nobody free-form-edits the JSON.
+- [ ] Update `docs/KNOWLEDGE_GRAPH.md` schema tables (22→25 nodes: +Sentence, +AuditEvent, +ClaimCluster; 22→25 edges: +BACKED_BY, +LOGGED_BY, +MEMBER_OF)
+- [ ] Validate.py `graph_integrity` extension: `sentence_chain_completeness`, `audit_event_immutability`, `claim_cluster_consistency` (all members of a cluster agree on `human_state`; disagreement flagged as Gate 2 CrossPaperConsistency issue), `last_modified_monotonicity`, `sentence_id_collision_check` (per design doc §8)
+- [ ] PG+AGE sync extension (`scripts/sync_graph_to_pg.py`): mirror new node + edge types. PG remains read-only mirror — no `prose_state.json` writes go through PG
 
-**Effort:** ~1d.
+**Effort:** ~1.5d (was 1d; +0.5 for sentence_state.py CLI + tombstone state + ClaimCluster).
 
-### Wave 10c — Cross-tab change-bus
+### Wave 10c — Cross-tab change-bus — DONE 2026-04-26
 
-- [ ] Verification action on any tab (Parameters confirm/reject, future Citation verify, future axiom-eliminability ratify) bumps the artifact's `last_modified`
-- [ ] Propagation pass: any artifact's `last_modified` cascades to dependent sentences via existing dependency edges (USED_BY / VERIFIED_BY / DEPENDS_ON_AXIOM / etc.)
-- [ ] Sentence's effective verification flips to `NEEDS_RECHECK` when any link's `last_modified > sentence.human_verified_at`
-- [ ] Dashboard re-renders affected sentences with purple-striped "stale" indicator
+- [x] **`scripts/verification_state.py`** — append-only `docs/verification_log.jsonl` writer + library API. Sole writer to the log (mirrors sentence_state.py pattern). Subcommands: `record` / `list` / `apply`. Library API: `record_event`, `read_events`, `latest_per_node`, `apply_to_graph(graph)`, `node_id_for(artifact_type, artifact_id)`. Atomic flock'd appends; events validated against required-fields + action/actor enums.
+- [x] Verification action on any tab bumps the artifact's `last_modified_explicit`. Wired paths:
+  - `/verify` (Parameters tab; legacy vanilla-`fetch`/`safeSetHTML` — HTMX was removed at an earlier checkpoint, full Datastar port is a deferred Wave 9h-followup) — also calls `verification_state.record_event` + `_invalidate_graph_cache()`
+  - `POST /api/verification/event` (NEW; generic JSON/form endpoint) — for future Citation verify, axiom-eliminability ratify, etc. Validates required fields + auto-derives `node_id` from `(artifact_type, artifact_id)`
+  - `GET /api/verification/state` (NEW) — query event log; supports `?node_id=`, `?artifact_type=`, `?artifact_id=`, `?actor=`, `?latest_only=1`, `?limit=N`
+- [x] Propagation pass: `build_graph_json` now calls `verification_state.apply_to_graph` BEFORE `last_modified.annotate_last_modified`, so explicit verification timestamps land on `meta.last_modified_explicit` and get upstreamed along the existing dependency edges (USED_BY, VERIFIED_BY, DEPENDS_ON_AXIOM, ASSUMES, IMPORTS, CITES, GROUNDED_IN, BACKED_BY, VERIFIES). `graph_integrity.run_integrity_checks` mirrors the same two-step apply.
+- [x] **Bug fix in `scripts/last_modified.py::_direct_last_modified`** surfaced during smoke test: the function previously read `meta.last_modified` (its own OUTPUT) as a fallback input, making it non-idempotent — second annotation pass would short-circuit upstream propagation by reading the prior pass's annotation. Removed `last_modified` from the input fallback chain; `last_modified_explicit` is now the only caller-controlled override.
+- [x] **Schema consolidation** in `last_modified.annotate_last_modified`: graph dict expects `nodes` + `links` (D3 convention; matches `build_graph_json`'s output shape). Earlier draft accepted both `edges` and `links` as a quick patch; consolidated on the single canonical key. All call sites (`build_graph.build_graph_json`, `graph_integrity.run_integrity_checks`) pass `{nodes, links}` consistently.
+- [x] Sentence's effective verification: `last_modified.sentence_is_stale` (Wave 10b) flips Sentence to NEEDS_RECHECK when any BACKED_BY target's `last_modified > sentence.human_ratified_at`. Wired into the dashboard via `_pp_compute_stale_findings`.
+- [x] Dashboard rendering: `_pp_compute_stale_findings` annotates each per-finding-per-claim entry with `stale: True` when the underlying artifact's verification timestamp post-dates `claims_review.review_date`. `_pp_claim_span_class` adds `pp-claim-span--stale`; CSS adds purple diagonal-stripe overlay (`--pp-stale: #6b3fa0`, `--pp-stale-bg`); per-claim layer matrix rows pick up `data-stale="true"` with a left-edge box-shadow + `pp-stale-badge`. Banner verdict pill picks up `data-v="stale"` (purple background, "NEEDS RECHECK" label) when ANY finding is stale, taking precedence over PASS/ISSUES_FOUND.
+- [x] Dashboard graph cache invalidates on verification events: `_graph_fingerprint()` now stats `docs/verification_log.jsonl` + `scripts/verification_state.py` + `scripts/last_modified.py`. New `_invalidate_graph_cache()` helper flips the cache state directly (called inline from `/verify` and `POST /api/verification/event`) so the next request observes the change without waiting for a file mtime tick.
+- [x] Smoke test: `paper12_polariton` review date 2026-04-13. Recorded one `Citation:Falque2025 confirm` + one `Parameter:Paris_long.c_s confirm @2026-04-26T15:00`; `_pp_build_data` reports `stale_count=2` of 66 claims; both findings carry `stale: True` + `stale_since` + `stale_actor`. End-to-end propagation verified: param:HBAR confirmed event → 41 downstream USED_BY formulas all carry the bumped timestamp after `annotate_last_modified`. `validate.py --check graph_integrity` PASS in 1.7s.
 
-**Effort:** ~0.5d.
+**Effort:** ~0.5d (actuals matched estimate; +small bug fix to `_direct_last_modified`).
 
 ### Wave 10d — Paper Provenance redesign (3-column layout + verification UX)
 
@@ -839,12 +924,14 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 
 **Effort:** ~0.5d.
 
-### Wave 10f — Cross-paper SAME_CLAIM_AS detection + propagation
+### Wave 10f — Cross-paper ClaimCluster detection + propagation
 
 - [ ] New `claims-reviewer-cross-paper` pass: after individual paper reviews complete, find sentences making the same factual claim across papers (exact quote match → normalized match → semantic match)
-- [ ] Emit `SAME_CLAIM_AS` edges with `confidence` attribute
-- [ ] Dashboard: when human verifies a sentence with `SAME_CLAIM_AS` cluster, prompt "Apply to N other instances?"; on confirm, propagate state + emit one AuditEvent per propagation
-- [ ] Cross-paper coherence check (Gate 2): clusters with disagreeing `human_state` are flagged
+- [ ] Emit `ClaimCluster` nodes with `match_kind`, `confidence`, `constructed_by` metadata. Cluster sizes 2+ all handled uniformly via ClaimCluster (no pairwise SAME_CLAIM_AS edges)
+- [ ] Emit `MEMBER_OF` edges (Sentence → ClaimCluster), one per member sentence
+- [ ] Dashboard: when human verifies a sentence in a ClaimCluster, prompt "Apply to N other members?"; on confirm, propagate state via cluster membership + emit one AuditEvent per propagation with `propagated_from: <source_sentence_id>` metadata
+- [ ] Cross-paper coherence check (Gate 2): ClaimClusters with disagreeing member `human_state` values are flagged
+- [ ] Verify-once-propagate UX walks cluster membership, not pairwise edges — simpler query + consistent handling for 2-member and N-member clusters
 
 **Effort:** ~0.5d.
 
@@ -856,7 +943,7 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 - [ ] Process Health QI cards deep-link to affected sentences in their paper(s)
 - [ ] Decide whether Research Status (chains) tab survives — if its L1 milestone DAG duplicates `KG?chain=<id>` view, fold into KG; otherwise keep as curated traversal
 
-**Effort:** ~0.25d.
+**Effort:** ~0.25d. (Structural validate.py checks `paper_lean_refs` + `paper_hypothesis_disclosure` previously listed here have moved to **Wave 1d** — same architectural class as Wave 1b's pipeline-plumbing CHECKs, doesn't need to gate on Wave 10's critical path.)
 
 ### Wave 10h — Retrofit run
 
@@ -869,16 +956,57 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 
 ### Total Wave 10 effort
 
-**~7.25 working days + retrofit batch.** Compresses from initial 7-day estimate by absorbing prose-auditor into evolved claims-reviewer (no parallel agent). Critical-path: 10a → 10b → 10c → 10d → 10g.
+**~8 working days + retrofit batch** (revised 2026-04-26 post-feedback; was 7.25d). Expanded from earlier estimate absorbing: Class TN + Class HD finding classes (+0.25d on 10a), sentence_state.py CLI + tombstone state + ClaimCluster (+0.5d on 10b). Structural `validate.py` checks (paper_lean_refs, paper_hypothesis_disclosure) **moved to Wave 1d** 2026-04-26 (independence-of-timing — they're pipeline plumbing, no need to gate on Wave 10's critical path). Critical-path: 9c-followup-cache → 10a → 10b → 10c → 10d → 10h → 10f → 10g.
 
 ### Wave 10 success criteria
 
 - [ ] Every prose unit in every paper has a `Sentence` node with proposed chain or explicit UNGROUNDED tag
 - [ ] Per-link verification UI works for all chain-link types (formula / theorem / axiom / parameter / citation / hypothesis / aristotle / production_run)
 - [ ] Cross-tab change-bus: parameter verification on Parameters tab visibly bumps dependent sentences in Paper Provenance to `NEEDS_RECHECK` within one rebuild
-- [ ] Audit log pane shows full verification history per sentence; events are append-only and survive re-runs
+- [ ] Audit log pane shows full verification history per sentence; events are append-only and survive re-runs; actor field traces findings across multiple agents (claims-reviewer v2 → adversarial-reviewer → subsequent rounds)
+- [ ] Five finding classes live: Class IA (count drift) + Class TP (toolchain pin drift) + Class SD (stealth cardinality drift) + Class TN (theorem-name reference drift) + Class HD (hypothesis disclosure)
+- [ ] `scripts/sentence_state.py` CLI is the sole writer to `prose_state.json` + `audit_log.jsonl`; LLMs never free-form-edit
+- [ ] Content-hash sentence IDs survive benign edits + section reorder; tombstone state preserves history for deleted prose
+- [ ] Reconciliation (not silent supersession): non-reproducing prior findings land as human-ratifiable candidates unless closed by a deterministic structural recheck
 - [ ] Paper 12 (reference paper) reaches 100% `human_verified_*` terminal state via the new UI; submission readiness check passes
 - [ ] Paper 16 (worst coverage) drops from 30% UNGROUNDED to baseline ~9% after running the upgraded claims-reviewer + adversarial-reviewer + Wave 10c freshness machinery
+- [ ] Paper 20 (new Phase 5z) re-audit shows Class TN findings auto-caught (theorem-name drift via ScalarRungInterpretation strengthening pass — the QI candidate that seeded Class TN)
+
+---
+
+## Wave 9c-followup — name_deps cache independence [planned 2026-04-26]
+
+**Trigger.** Wave 9e shipped `EXTRACT_NAME_DEPS` env-var gating for the ~3-5min name_deps extraction cost. Cache is keyed on `.lean` source content only (see `scripts/extract_lean_deps.py:31`), not on the flag. Consequence: if you ran with `EXTRACT_NAME_DEPS=0`, setting `=1` later does not invalidate the cache — you get the old payload missing `name_deps_project`. User must manually `rm lean/lean_deps.json.hash`. Inconvenient + trap-prone.
+
+**Ship plan (cheap, ~0.25d):**
+
+- [ ] Sidecar artifact approach: split output into `lean/lean_deps.json` (basic decls, always extracted, ~7min) + `lean/lean_deps_proof_deps.json` (opt-in name_deps payload, +3-5min). Each file independently cached + hash-keyed.
+- [ ] Basic cache hash = sha256 over `.lean` source content (same as today).
+- [ ] Proof-deps cache hash = sha256 over `.lean` source content AND `EXTRACT_NAME_DEPS` flag value. Invalidates when either changes.
+- [ ] `load_lean_deps()` loads basic unconditionally; new `load_lean_proof_deps()` loads sidecar iff present.
+- [ ] Consumers opt into proof-deps data: build_graph.py `extract_uses_edges` reads sidecar; Wave 10b Class HD extended detection reads sidecar; basic `lean_deps.json` consumers untouched.
+- [ ] Unblocks Class HD transitive-proof-dep walks without re-extracting the basic data; unblocks flipping `EXTRACT_NAME_DEPS` mid-session without manual cache invalidation.
+
+**Deferred (Wave 11+):** per-module incremental ExtractDeps refactor so only changed modules re-walk. Currently the full 7655-decl walk runs on any single-file edit. Amortizes to O(decls in changed modules) after refactor. Larger surgery (~1-2d), not blocking Wave 10.
+
+**Gate:** `rm lean/*.json lean/*.json.hash && EXTRACT_NAME_DEPS=0 uv run python -c 'from scripts.extract_lean_deps import load_lean_deps; load_lean_deps()'` produces basic artifact only; follow-up `EXTRACT_NAME_DEPS=1 uv run python -c 'from scripts.extract_lean_deps import load_lean_proof_deps; load_lean_proof_deps()'` extracts proof-deps sidecar without re-walking basic data.
+
+---
+
+## Wave 9h-followup — Datastar port for the Parameters tab [planned 2026-04-26]
+
+**Trigger.** Wave 9h ported four tabs (`readiness_tab` / `qi_tab` / `chains_tab` / `paper_provenance_tab`) to Datastar. The original Provenance Command Center "Parameters" UI in `dashboard.html` was missed — at some prior checkpoint HTMX was removed from that tab and replaced with vanilla `fetch()` + a hand-rolled `safeSetHTML` DOM helper (see `scripts/templates/dashboard.html:996-1028`). The tab works, but it's the only remaining inconsistency with the rest of the dashboard's stack.
+
+Surfaced 2026-04-26 during the Wave 10c change-bus implementation: when wiring the `/verify` endpoint to record verification events, the misleading "HTMX endpoint" docstring made the inconsistency visible.
+
+**Ship plan (~0.5d):**
+
+- [ ] Port the parameter cards in `dashboard.html` to Datastar `data-on:click="@post('/verify', {…})"` actions; replace `verifyParam(key, action, btn)` with a Datastar binding + signal updates.
+- [ ] Convert `/verify` and `/save` responses from `text/html` fragments to Datastar SSE `patch_elements` events (or keep the JSON path for vanilla fetch and emit SSE on `Accept: text/event-stream`, matching the auto-negotiate pattern in `_pp_*_html` / `_pp_*_sse_events`).
+- [ ] Drop the `safeSetHTML` helper (Datastar handles morph natively); keep the `<script>` block only for the keyboard nav + declaration-browser filter, OR move those to Datastar `data-on:keydown` bindings too.
+- [ ] Smoke test: parameter confirm/reject/flag round-trip through Datastar; status badge updates without a full page reload; the change-bus event still records.
+
+**Not blocking** Wave 10c (already shipped) or Wave 10d (Paper Provenance redesign uses the already-Datastar-ified tab). The `/verify` endpoint's change-bus behavior works identically before and after the port.
 
 ---
 
@@ -895,7 +1023,13 @@ Phase 5v is process work; **Phase 5z is upstream physics deep research that prod
 3. **[Phase 5z Wave 2 — Sterile-Neutrino Embedding for the Majorana Rung](../../../Lit-Search/Phase-5z/Phase 5z, Wave 2 — Sterile-Neutrino Embedding for the Majorana Rung.md)**
    Recommendation: **Embedding III (Hybrid)** — fundamental Lean field `ν_R : SterileNeutrino` with bridge predicate `MajoranaRung.is_substrate_composite` tying `M_R` to ADW tetrad-condensate scale Λ_ADW. Honest flag: no primary source closes the derivation `Λ_ADW → M_R = (10¹⁰–10¹⁴ GeV)`; recommends Lean signatures with `informal_lemma` axiom marking. Implies forthcoming `MajoranaRung.lean` + `NeutrinoMixing.lean` modules + papers documenting the Embedding-III decision — **subject to Wave 10 audit on submission**.
 
-**Forward dependency.** Each Phase 5z deliverable will produce one or more papers. Those papers cite Lean theorems that don't yet exist in the project (`ScalarRungInterpretation.lean`, `MajoranaRung.lean`, `NeutrinoMixing.lean`, gauge-indexed `WetterichNJL` daughter). When the Lean modules land and papers are drafted, **Wave 10's claims-reviewer v2 + per-sentence audit + freshness watchdog become the trust gate** for these explicitly-novel results — the value of the rigor layer is highest precisely on papers proposing structural extensions beyond prior literature, where the temptation to over-claim "derived" / "proved" / "first" is strongest. The honest `informal_lemma` markers proposed in deliverables 1–3 should map cleanly to per-sentence `INTERPRETIVE` / `UNGROUNDED` tags in the Wave 10 schema.
+**Forward dependency.** Each Phase 5z deliverable will produce one or more papers. Those papers cite Lean theorems that don't yet exist in the project (`ScalarRungInterpretation.lean`, `MajoranaRung.lean`, `NeutrinoMixing.lean`, gauge-indexed `WetterichNJL` daughter). When the Lean modules land and papers are drafted, **Wave 10's claims-reviewer v2 + per-sentence audit + freshness watchdog become the trust gate** for these explicitly-novel results — the value of the rigor layer is highest precisely on papers proposing structural extensions beyond prior literature, where the temptation to over-claim "derived" / "proved" / "first" is strongest.
+
+**Load-bearing finding classes for Phase 5z papers:**
+- **Class TN (Theorem-name reference drift)** catches prose citing a Lean theorem name that changed or was removed between paper-drafting and Stage-13 re-invocation. The paper20 QI candidate that seeded this class surfaced exactly this pattern: ScalarRungInterpretation anti-tautology strengthening pass renamed/removed three theorems after the first paper draft landed. Every Phase 5z paper will go through the same risk at ingest — Class TN closes the loop.
+- **Class HD (Hypothesis disclosure)** is essential for the `informal_lemma`-flagged theorems the Phase 5z deep research explicitly recommends (e.g., `MajoranaRung.is_substrate_composite`, Yukawa overlap VZ-extension postulates, Embedding-III `M_R = Λ_ADW` bridges). Each of these is a tracked `Prop` hypothesis; paper prose claiming "we derive" must disclose the hypothesis as an assumption per Gate 6. Class HD makes this structural + automatic.
+
+The honest `informal_lemma` markers proposed in deliverables 1–3 should map cleanly to per-sentence `INTERPRETIVE` / `UNGROUNDED` tags in the Wave 10 schema, with Class HD fail-locking disclosures that are missing from paper prose.
 
 ---
 
@@ -907,6 +1041,7 @@ Phase 5v is process work; **Phase 5z is upstream physics deep research that prod
 | 1a | 0 | 0.25d | Mechanical rename + lake build |
 | 1b | — | 0.5d | `update_counts.py` wiring |
 | 1c | — | 1.5d | 6 extractors; some (ProductionRun log parsing) are tricky |
+| 1d | — | ~0.5d (3-4h) | **Stale-reference detection (NEW 2026-04-26):** `paper_lean_refs` + `paper_hypothesis_disclosure` (offline) + `citation_live_resolution` (network, Stage-13 gated). Closes 2026-04-25 paper20 theorem-name QI + 2026-04-26 fabricated-citation QI. |
 | 2a | 1c | 0.5d | Additive node types |
 | 2b | 2a | 0.5d | Additive edge types |
 | 2c | 2a, 2b | 0.5d | Tests + docs |
@@ -935,13 +1070,14 @@ Phase 5v is process work; **Phase 5z is upstream physics deep research that prod
 | 9f | — | 0 (done 2026-04-24) | PG+AGE flip: sync script + /api/graph/cypher + SK_EFT_GRAPH_SOURCE + startup check |
 | 9g | 9e, 9f | 3-4d | **Paper Provenance (v2 design)** — 10th interactive tab + 8-layer dossier + claim-span HTML pipeline |
 | 9h | — | 0 (done 2026-04-24) | **Datastar realignment** — 4 tabs ported (readiness/qi/chains/paper) + graph wrap; 60–70% LOC reduction per tab |
-| 10a | — | 1d | claims-reviewer v2: sentence-keyed schema + 3 new finding classes (internal arithmetic, toolchain pins, stealth pipeline-vs-prose drift) + supersession protocol |
-| 10b | 10a | 1d | KG schema delta: Sentence + AuditEvent nodes, BACKED_BY + SAME_CLAIM_AS + LOGGED_BY edges, last_modified propagation field |
-| 10c | 10b | 0.5d | Cross-tab change-bus: verification on any tab bumps last_modified, cascades to dependent sentences via existing dep edges |
-| 10d | 10b, Wave 9g (renderer) | 2.5d | Paper Provenance redesign: 3-column layout, full-body LaTeX render, keyboard-first nav, per-link verification UI, in-place link expansion, diff-since-last-verified, coverage ribbon |
+| 9c-followup-cache | — | 0.25d | name_deps sidecar file: basic `lean_deps.json` + opt-in `lean_deps_proof_deps.json` with flag-aware cache hash; unblocks Wave 10b Class HD transitive-proof-dep walks without re-extracting basic data |
+| 10a | 9c-followup-cache | 1.25d | claims-reviewer v2: sentence-keyed schema (no derived views) + **five** finding classes (IA / TP / SD / TN / HD) + decoupled verdicts + reconciliation protocol (not silent supersession) + content-hash sentence IDs |
+| 10b | 10a | 1.5d | KG schema delta: Sentence + AuditEvent + ClaimCluster nodes (ProseClaim retained), BACKED_BY (no human_state) + LOGGED_BY + MEMBER_OF edges (no pairwise SAME_CLAIM_AS), last_modified propagation, **`scripts/sentence_state.py` CLI as the only writer**, tombstone state |
+| 10c | 10b | 0 (done 2026-04-26) | Cross-tab change-bus: verification_state.py log + apply_to_graph; /verify + POST /api/verification/event wired; cascade via existing dep edges; purple-stripe `pp-claim-span--stale` indicator + verdict-pill state. Bug fix to `_direct_last_modified` non-idempotency. |
+| 10d | 10b, Wave 9g (renderer) | 2.5d | Paper Provenance redesign: 3-column layout, full-body LaTeX render, keyboard-first nav, per-link verification UI (power-mode toggle; default sentence-level), in-place link expansion, diff-since-last-verified, coverage ribbon, audit log pane with agent-identity chain |
 | 10e | 10b | 0.5d | Adversarial-reviewer extension: Location field cites sentence_id; findings overlay onto Paper Provenance inspector |
-| 10f | 10a × all-papers retrofit | 0.5d | Cross-paper SAME_CLAIM_AS detection + verify-once-propagate UX |
-| 10g | 10d | 0.25d | Retire Paper Contributions tab; deep-link from Readiness/QI/KG into Paper Provenance |
+| 10f | 10a × all-papers retrofit | 0.5d | Cross-paper ClaimCluster detection + MEMBER_OF edges + verify-once-propagate UX (cluster-membership traversal, no pairwise edges) |
+| 10g | 10d | 0.25d | Retire Paper Contributions tab; deep-link from Readiness/QI/KG into Paper Provenance. (Structural validate.py CHECKs moved to Wave 1d 2026-04-26.) |
 | 10h | 10a | 2h wallclock + agent batch | Retrofit run: re-run claims-reviewer-v2 on all 18 papers |
 
 **Critical path:** Wave 1 → 2 → 3 → 4 → 5a → 4c → 6b → submission-gate functional. ~10 days focused work.
@@ -952,9 +1088,9 @@ Phase 5v is process work; **Phase 5z is upstream physics deep research that prod
 
 **Wave 9 (dashboard) current state (2026-04-24):** Waves 9a/b/c/d/e/f/g/h all landed. Wave 10 is the next major deliverable.
 
-**Wave 10 (sentence-level prose audit + verification UX) sequencing:** 10a (claims-reviewer v2) and 10b (KG schema) must land first; they unlock 10c (change-bus), 10d (UI redesign), 10e (adversarial-reviewer hook). 10f (cross-paper SAME_CLAIM_AS) requires the retrofit (10h) to have run first so per-paper sentences exist. 10g (retirement + deep-link cleanup) is small but should land last to avoid breaking deep-links during the migration.
+**Wave 10 (sentence-level prose audit + verification UX) sequencing:** 9c-followup-cache (sidecar name_deps) unblocks richer Class HD; 10a (claims-reviewer v2) and 10b (KG schema + CLI) must land first; they unlock 10c (change-bus), 10d (UI redesign), 10e (adversarial-reviewer hook). 10f (cross-paper SAME_CLAIM_AS) requires the retrofit (10h) to have run first so per-paper sentences exist. 10g (retirement + deep-link cleanup + structural validate.py checks) is small but should land last to avoid breaking deep-links during the migration.
 
-**Critical path for Wave 10:** 10a → 10b → 10c → 10d → 10e → 10h (retrofit) → 10f → 10g. ~7.25 days end-to-end.
+**Critical path for Wave 10:** 9c-followup-cache → 10a → 10b → 10c → 10d → 10e → 10h (retrofit) → 10f → 10g. ~8.25 days end-to-end (post-feedback-expansion 2026-04-26).
 
 **9g sequencing for the next session:**
 - 9g-1 (adversarial-reviewer JSON output) + 9g-3 (claim-ID authoring in paper TeX) can happen in parallel.
@@ -986,14 +1122,27 @@ Phase 5v is process work; **Phase 5z is upstream physics deep research that prod
 - [ ] Dashboard operates in `SK_EFT_GRAPH_SOURCE=pg` mode with Cypher-powered subgraph queries (Wave 9f)
 - [x] Paper Provenance tab renders paper12_polariton end-to-end with live 8-layer verdicts per claim (Wave 9g + 9h)
 
-**Wave 10 prose-audit goals (added 2026-04-24):**
+**Wave 10 prose-audit goals (added 2026-04-24; revised 2026-04-26):**
 - [ ] Every prose unit in every paper has a Sentence node with proposed chain or explicit UNGROUNDED tag (Wave 10a + 10h)
-- [ ] Per-link human verification UI works for every chain-link type (Wave 10d)
+- [ ] Content-hash sentence IDs survive benign edits + section reorder; tombstone state preserves history for deleted prose (Wave 10a + 10b)
+- [ ] Five finding classes live: Class IA + Class TP + Class SD + Class TN (theorem-name drift, from paper20 QI seed) + Class HD (hypothesis disclosure, from qi-assumptiondisclosure cluster) (Wave 10a)
+- [ ] Agent verdict decoupled from human review state — WARN never triggered by missing human_verified_date (Wave 10a)
+- [ ] Reconciliation protocol: non-reproducing prior findings land as human-ratifiable candidates; deterministic structural rechecks auto-close (Wave 10a)
+- [ ] `scripts/sentence_state.py` CLI is the sole writer to `prose_state.json` + `audit_log.jsonl`; LLMs never free-form-edit (Wave 10b)
+- [ ] AuditEvent `actor` field traces findings across multiple agents (claims-reviewer-v2, adversarial-reviewer, subsequent rounds) (Wave 10b)
+- [ ] Per-link verification UI works for every chain-link type (default sentence-level verify; power-mode expands to per-link) (Wave 10d)
 - [ ] Cross-tab change-bus auto-flips dependent sentences to NEEDS_RECHECK on any artifact verification (Wave 10c)
 - [ ] Audit log surfaces full per-sentence verification history; events append-only and survive re-runs (Wave 10b + 10d)
+- [ ] `validate.py --check paper_lean_refs` catches Class TN findings structurally without agent cost (**Wave 1d**)
+- [ ] `validate.py --check paper_hypothesis_disclosure` catches Class HD findings structurally (**Wave 1d**)
+- [ ] `validate.py --check citation_live_resolution` catches fabricated DOIs + wrong-arXiv via fuzzy-title-match (**Wave 1d**, Stage-13 gated)
 - [ ] Paper 12 (reference) reaches 100% human_verified terminal state via the new UI; submission readiness check passes
 - [ ] Paper 16 (worst coverage) drops from 30% UNGROUNDED to baseline ~9% after Wave 10c freshness machinery + agents re-run
+- [ ] Paper 20 (Phase 5z W1) re-audit auto-catches ScalarRungInterpretation theorem-rename drift via Class TN (the QI candidate that seeded the class)
 - [ ] Paper Contributions tab retired; deep-links from Readiness/QI/KG/Process Health all land in correct Paper Provenance state (Wave 10g)
+
+**Wave 9c-followup goals (added 2026-04-26):**
+- [ ] Name_deps extraction lives in opt-in sidecar `lean/lean_deps_proof_deps.json` with flag-aware cache hash; `EXTRACT_NAME_DEPS=1` flip does not invalidate the basic cache
 
 ---
 

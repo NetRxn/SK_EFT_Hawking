@@ -70,6 +70,10 @@ SHAPE_MAP: dict[str, str] = {
     'Contradiction': 'triangle',    # Cross-paper inconsistency
     'CountMetric': 'diamond',       # counts.json snapshot
     'ReadinessGate': 'square',      # Per-paper × per-dimension state (Wave 4)
+    # Phase 5v Wave 10b — sentence-level prose audit (claims-reviewer-v2)
+    'Sentence': 'circle',           # Per-sentence prose unit with chain-of-backing
+    'AuditEvent': 'triangle',       # Append-only verification event log entry
+    'ClaimCluster': 'square',       # Cross-paper claim equivalence grouping (n-ary; replaces SAME_CLAIM_AS)
 }
 
 LEAN_KIND_TO_TYPE: dict[str, str] = {
@@ -1254,11 +1258,24 @@ _SEV_GLYPHS = {
 }
 
 # Section heading pattern for Master Checklist / Comprehensive / Citation
-# review format: `### N.N — Paper X — ...` or `### N — Paper Y — ...`
+# review formats:
+#   `### N.N — Paper X — ...`        (Master Checklist)
+#   `### N — Paper Y — ...`          (Citation Reviews)
+#   `### Class N — ...`              (Citation Verification format, 2026-04-26+)
 # also allow plain `### N.N Heading` without em-dashes.
 _REVIEW_SECTION_RE = re.compile(
-    r'^###\s+(\d+(?:\.\d+)?)\s*[—\-–]\s*(.+?)$',
+    r'^###\s+(?:Class\s+)?(\d+(?:\.\d+)?)\s*[—\-–]\s*(.+?)$',
     re.MULTILINE,
+)
+# When the heading uses "Class N" form, prepend "C" to the section number so
+# IDs like `review:2026-04-26-...:C2` don't collide with `review:...:2` from
+# numeric-N format reports. Detected at extraction time (see header source).
+_CLASS_HEADING_RE = re.compile(r'^###\s+Class\s+\d', re.MULTILINE)
+
+# Detect "BLOCKER" / "severity: critical" / "FAIL" markers as severity escalators
+_BLOCKER_RE = re.compile(
+    r'\*\*?BLOCKER\*\*?|severity:\s*critical|severity:\s*BLOCKER',
+    re.IGNORECASE,
 )
 
 
@@ -1299,7 +1316,16 @@ def extract_review_finding_nodes() -> list[dict]:
             source = md_path.read_text()
         except (OSError, UnicodeDecodeError):
             continue
-        # Split source into sections by `### N.N` headings and compute per-section bodies
+        # File-level severity escalation: BLOCKER / severity: critical markers
+        # often live in summary tables OR QI Candidate sections (heading level
+        # 2: `## QI Candidate`) outside any `### Class N` finding body. If any
+        # such marker exists in the whole file, the report is critical-class
+        # and findings inherit that severity unless they declare lower locally.
+        file_has_critical_marker = bool(_BLOCKER_RE.search(source))
+
+        # Split source into sections by `### N.N` or `### Class N` headings.
+        # When the heading uses "Class N" form, prefix the section number with
+        # "C" so IDs don't collide across formats.
         matches = list(_REVIEW_SECTION_RE.finditer(source))
         for idx, m in enumerate(matches):
             section_num = m.group(1)
@@ -1308,16 +1334,32 @@ def extract_review_finding_nodes() -> list[dict]:
             end = matches[idx + 1].start() if idx + 1 < len(matches) else len(source)
             body = source[start:end].strip()
 
-            # Severity from heading or body
+            # If the matched heading was "### Class N — ...", tag the section
+            # number with a 'C' prefix to avoid ID collisions.
+            heading_line = source[m.start():m.end()]
+            if _CLASS_HEADING_RE.match(heading_line):
+                section_num = f'C{section_num}'
+
+            # Severity from glyphs OR explicit BLOCKER / severity: critical markers
             severity = 'advisory'
             for glyph, sev in _SEV_GLYPHS.items():
                 if glyph in heading or glyph in body[:600]:
                     severity = sev
                     break
+            # Escalation: explicit BLOCKER / critical markers override glyph-derived severity
+            if _BLOCKER_RE.search(heading) or _BLOCKER_RE.search(body[:1000]):
+                severity = 'critical'
+            # File-level escalation: if any critical marker exists in the report
+            # (e.g. summary table, QI Candidate section), all findings inherit
+            # critical severity unless they explicitly downgrade in body.
+            elif file_has_critical_marker:
+                severity = 'critical'
 
-            # Status: fixed if ✅ or "fixed" / "done" markers present
+            # Status: fixed if ✅ or "fixed" / "done" / "now closed" markers present
             status = 'open'
-            if re.search(r'[✅✓]|\bfixed\b|\bresolved\b|\bdone\b', heading, re.IGNORECASE):
+            if re.search(r'[✅✓]|\bfixed\b|\bresolved\b|\bdone\b|now\s+closed', heading, re.IGNORECASE):
+                status = 'fixed'
+            if re.search(r'(now\s+closed|✅\s*\(?(?:now\s+)?closed)', body[:600], re.IGNORECASE):
                 status = 'fixed'
             if re.search(r'[❌✗]\s+still', body[:400], re.IGNORECASE):
                 status = 'open'
@@ -1699,6 +1741,347 @@ def extract_count_metric_nodes() -> list[dict]:
     return nodes
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# Phase 5v Wave 10b — Sentence-level prose audit node extractors
+# ═══════════════════════════════════════════════════════════════════════
+
+def _iter_paper_dirs():
+    """Yield (paper_key, paper_dir_path) for every papers/paper*_*/ directory."""
+    papers_root = PROJECT_ROOT / "papers"
+    if not papers_root.is_dir():
+        return
+    for d in sorted(papers_root.iterdir()):
+        if d.is_dir() and d.name.startswith('paper'):
+            yield d.name, d
+
+
+def _load_claims_review(paper_dir: Path) -> dict | None:
+    """Load claims_review.json for a paper; return None if missing or v1 schema."""
+    cr = paper_dir / "claims_review.json"
+    if not cr.exists():
+        return None
+    try:
+        with open(cr) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        logger.warning("Failed to parse %s: %s", cr, exc)
+        return None
+    # Only consume v2 schema (sentences[] present). v1 files with typed
+    # sections are ignored until they're regenerated by claims-reviewer-v2.
+    if 'sentences' not in data:
+        return None
+    return data
+
+
+def _load_prose_state(paper_dir: Path) -> dict:
+    """Load prose_state.json for a paper, or return empty shell."""
+    ps = paper_dir / "prose_state.json"
+    if not ps.exists():
+        return {'sentences': {}}
+    try:
+        with open(ps) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        logger.warning("Failed to parse %s: %s", ps, exc)
+        return {'sentences': {}}
+
+
+def _load_audit_log(paper_dir: Path) -> list[dict]:
+    """Load audit_log.jsonl for a paper as list of event dicts."""
+    al = paper_dir / "audit_log.jsonl"
+    if not al.exists():
+        return []
+    events = []
+    try:
+        with open(al) as f:
+            for i, line in enumerate(f, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    events.append(json.loads(line))
+                except json.JSONDecodeError as exc:
+                    logger.warning("Skipping malformed audit_log line %d in %s: %s",
+                                   i, al, exc)
+    except OSError as exc:
+        logger.warning("Failed to read %s: %s", al, exc)
+    return events
+
+
+def extract_sentence_nodes() -> list[dict]:
+    """Sentence — one node per prose unit per paper (Phase 5v Wave 10b).
+
+    Sources claims_review.json (agent-owned) merged with prose_state.json
+    (CLI-owned human ratification). A sentence whose id appears in
+    prose_state but not in current claims_review is emitted as tombstone.
+    """
+    nodes: list[dict] = []
+    total_tombstones = 0
+    papers_seen = 0
+    for paper_key, pd in _iter_paper_dirs():
+        cr = _load_claims_review(pd)
+        if cr is None:
+            continue
+        papers_seen += 1
+        ps = _load_prose_state(pd)
+        ps_sentences = ps.get('sentences', {})
+        current_ids: set[str] = set()
+
+        for s in cr.get('sentences', []):
+            sid = s.get('id')
+            if not sid:
+                continue
+            current_ids.add(sid)
+            meta = dict(s.get('meta', {}) or {})
+            # Merge top-level fields into meta (claims-reviewer v2 inlines)
+            for k in ('section', 'section_ordinal', 'tex_line_start', 'tex_line_end',
+                      'quote', 'quote_normalized', 'type', 'agent_verdict',
+                      'finding_classes', 'delta_pct', 'agent_notes',
+                      'agent_run_id', 'gates_invoked', 'rewrite_of',
+                      'tombstone'):
+                if k in s:
+                    meta.setdefault(k, s[k])
+            meta.setdefault('paper_id', paper_key)
+            meta.setdefault('sentence_type', s.get('type'))
+            # Overlay human ratification state from prose_state.json
+            hs = ps_sentences.get(sid, {})
+            if hs:
+                meta['human_state'] = hs.get('human_state')
+                meta['human_ratified_at'] = hs.get('human_ratified_at')
+                meta['human_ratified_by'] = hs.get('human_ratified_by')
+                meta['human_notes'] = hs.get('human_notes')
+
+            nodes.append({
+                'id': sid,
+                'type': 'Sentence',
+                'label': (s.get('quote') or '')[:80],
+                'meta': meta,
+            })
+
+        # Tombstones: ids in prose_state but not in current run
+        for sid, hs in ps_sentences.items():
+            if sid in current_ids:
+                continue
+            total_tombstones += 1
+            nodes.append({
+                'id': sid,
+                'type': 'Sentence',
+                'label': '(tombstoned)',
+                'meta': {
+                    'paper_id': paper_key,
+                    'tombstone': True,
+                    'human_state': hs.get('human_state'),
+                    'human_ratified_at': hs.get('human_ratified_at'),
+                    'tombstoned_at': hs.get('tombstoned_at'),
+                },
+            })
+
+    if nodes:
+        logger.info("Sentence extraction: %d nodes across %d papers (%d tombstones)",
+                    len(nodes), papers_seen, total_tombstones)
+    return nodes
+
+
+def extract_audit_event_nodes() -> list[dict]:
+    """AuditEvent — append-only verification log (Phase 5v Wave 10b).
+
+    Sources audit_log.jsonl per paper. Each line → one node.
+    """
+    nodes: list[dict] = []
+    for paper_key, pd in _iter_paper_dirs():
+        events = _load_audit_log(pd)
+        for ev in events:
+            eid = ev.get('id')
+            if not eid:
+                continue
+            nodes.append({
+                'id': eid,
+                'type': 'AuditEvent',
+                'label': ev.get('label', 'audit'),
+                'meta': dict(ev.get('meta', {})),
+            })
+    if nodes:
+        logger.info("AuditEvent extraction: %d events", len(nodes))
+    return nodes
+
+
+def extract_claim_cluster_nodes() -> list[dict]:
+    """ClaimCluster — cross-paper claim equivalence groups (Phase 5v Wave 10b).
+
+    Sources a project-level `papers/claim_clusters.json` (produced by the
+    Wave 10f claims-reviewer-cross-paper pass). Safe no-op if the file
+    doesn't exist yet — 10b lands the extractor shape; 10f populates data.
+    """
+    clusters_file = PROJECT_ROOT / "papers" / "claim_clusters.json"
+    if not clusters_file.exists():
+        return []
+    try:
+        with open(clusters_file) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        logger.warning("Failed to parse %s: %s", clusters_file, exc)
+        return []
+    nodes = []
+    for c in data.get('clusters', []):
+        cid = c.get('id')
+        if not cid:
+            continue
+        nodes.append({
+            'id': cid,
+            'type': 'ClaimCluster',
+            'label': c.get('label', cid),
+            'meta': {
+                'constructed_by': c.get('constructed_by'),
+                'match_kind': c.get('match_kind'),
+                'confidence': c.get('confidence'),
+                'human_confirmed_at': c.get('human_confirmed_at'),
+                'member_count': len(c.get('members', [])),
+                'paper_count': len(set(
+                    m.split(':')[1] for m in c.get('members', [])
+                    if m.startswith('sentence:')
+                )),
+            },
+        })
+    if nodes:
+        logger.info("ClaimCluster extraction: %d clusters", len(nodes))
+    return nodes
+
+
+def extract_backed_by_edges(node_ids: set) -> list[dict]:
+    """BACKED_BY: Sentence → artifact (Phase 5v Wave 10b).
+
+    One edge per chain link in claims_review.json sentences[].chain_proposed.links.
+    link_state is derived (link_kind + target node metadata) not stored on edge source.
+    """
+    edges: list[dict] = []
+    # Resolve link targets to existing node ids
+    for paper_key, pd in _iter_paper_dirs():
+        cr = _load_claims_review(pd)
+        if cr is None:
+            continue
+        for s in cr.get('sentences', []):
+            sid = s.get('id')
+            if not sid or sid not in node_ids:
+                continue
+            chain = s.get('chain_proposed') or {}
+            for link in chain.get('links', []) or []:
+                kind = link.get('kind')
+                target = link.get('target')
+                if not kind or not target:
+                    continue
+                # Resolve to node id. Targets are short names / bibkeys etc.;
+                # map to graph id conventions:
+                #   formula      → formula:<name>
+                #   theorem      → lean:<full_name> (via _resolve_lean_short)
+                #   axiom        → lean:<full_name> (same resolver)
+                #   parameter    → param:<key>
+                #   citation     → source:<bibkey>
+                #   hypothesis   → hyp:<name>
+                #   aristotle    → aristotle:<run_id>
+                #   production_run → production:<id>
+                candidates = []
+                if kind == 'formula':
+                    candidates = [f'formula:{target}']
+                elif kind in ('theorem', 'axiom'):
+                    # Prefer short-name resolution
+                    resolved = _resolve_lean_short(target)
+                    candidates = [resolved] if resolved else [f'lean:{target}']
+                elif kind == 'parameter':
+                    candidates = [f'param:{target}']
+                elif kind == 'citation':
+                    candidates = [f'source:{target}']
+                elif kind == 'hypothesis':
+                    candidates = [f'hyp:{target}']
+                elif kind == 'aristotle':
+                    candidates = [f'aristotle:{target}']
+                elif kind == 'production_run':
+                    candidates = [f'production:{target}']
+
+                target_id = next((c for c in candidates if c in node_ids), None)
+                if target_id is None:
+                    # Emit with missing_target so integrity check surfaces it
+                    edges.append({
+                        'source': sid,
+                        'target': candidates[0] if candidates else f'unknown:{target}',
+                        'type': 'BACKED_BY',
+                        'meta': {
+                            'link_kind': kind,
+                            'link_state': 'missing_target',
+                            'computed_value': link.get('computed_value'),
+                            'delta_pct': link.get('delta_pct'),
+                        },
+                    })
+                    continue
+
+                edges.append({
+                    'source': sid,
+                    'target': target_id,
+                    'type': 'BACKED_BY',
+                    'meta': {
+                        'link_kind': kind,
+                        'link_state': 'resolved',  # enriched post-hoc by last_modified pass
+                        'computed_value': link.get('computed_value'),
+                        'delta_pct': link.get('delta_pct'),
+                    },
+                })
+    if edges:
+        logger.info("BACKED_BY extraction: %d edges", len(edges))
+    return edges
+
+
+def extract_logged_by_edges(node_ids: set) -> list[dict]:
+    """LOGGED_BY: AuditEvent → target (Phase 5v Wave 10b)."""
+    edges: list[dict] = []
+    for paper_key, pd in _iter_paper_dirs():
+        events = _load_audit_log(pd)
+        for ev in events:
+            eid = ev.get('id')
+            meta = ev.get('meta', {})
+            target_id = meta.get('target_id')
+            if not eid or not target_id:
+                continue
+            if eid in node_ids and target_id in node_ids:
+                edges.append({
+                    'source': eid,
+                    'target': target_id,
+                    'type': 'LOGGED_BY',
+                    'meta': {},
+                })
+    if edges:
+        logger.info("LOGGED_BY extraction: %d edges", len(edges))
+    return edges
+
+
+def extract_member_of_edges(node_ids: set) -> list[dict]:
+    """MEMBER_OF: Sentence → ClaimCluster (Phase 5v Wave 10b)."""
+    clusters_file = PROJECT_ROOT / "papers" / "claim_clusters.json"
+    if not clusters_file.exists():
+        return []
+    try:
+        with open(clusters_file) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return []
+    edges: list[dict] = []
+    for c in data.get('clusters', []):
+        cid = c.get('id')
+        if not cid or cid not in node_ids:
+            continue
+        for m in c.get('members', []):
+            if m in node_ids:
+                edges.append({
+                    'source': m,
+                    'target': cid,
+                    'type': 'MEMBER_OF',
+                    'meta': {
+                        'member_confidence': c.get('confidence'),
+                    },
+                })
+    if edges:
+        logger.info("MEMBER_OF extraction: %d edges", len(edges))
+    return edges
+
+
 def extract_readiness_gate_nodes() -> list[dict]:
     """ReadinessGate — per-paper × per-dimension state (11 gates × 15 papers).
 
@@ -1826,6 +2209,11 @@ def extract_all_nodes() -> list[dict]:
     nodes.extend(extract_contradiction_nodes())
     nodes.extend(extract_count_metric_nodes())
     nodes.extend(extract_readiness_gate_nodes())
+
+    # Phase 5v Wave 10b — sentence-level prose audit
+    nodes.extend(extract_sentence_nodes())
+    nodes.extend(extract_audit_event_nodes())
+    nodes.extend(extract_claim_cluster_nodes())
 
     # Add shape metadata to all node types that don't already have it
     for node in nodes:
@@ -2652,6 +3040,11 @@ def extract_all_edges(node_ids: set) -> list[dict]:
     edges.extend(extract_cites_source_edges(node_ids))
     edges.extend(extract_cites_theorem_edges(node_ids))
 
+    # Phase 5v Wave 10b — sentence-level prose audit edges
+    edges.extend(extract_backed_by_edges(node_ids))
+    edges.extend(extract_logged_by_edges(node_ids))
+    edges.extend(extract_member_of_edges(node_ids))
+
     # ASSUMES edges from HYPOTHESIS_REGISTRY
     _hyp_nodes, hyp_edges = extract_hypothesis_nodes()
     for edge in hyp_edges:
@@ -2837,6 +3230,28 @@ def build_graph_json(*, sync_pg: bool = False) -> dict:
     nodes = extract_all_nodes()
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
+
+    # Phase 5v Waves 10b/10c — verification change-bus + freshness propagation.
+    # Use the canonical {nodes, links} shape (D3 convention; matches
+    # build_graph_json's return). Apply verification events FIRST so
+    # last_modified_explicit lands before annotate_last_modified walks
+    # the dependency edges.
+    sys.path.insert(0, str(SCRIPT_DIR))
+    _graph_view = {'nodes': nodes, 'links': edges}
+    try:
+        from verification_state import apply_to_graph as _apply_verif
+        _apply_verif(_graph_view)
+    except ImportError as _exc:
+        logger.warning("verification_state not importable (%s); skipping change-bus apply", _exc)
+    except (OSError, ValueError) as _exc:
+        # Don't break graph builds on a malformed verification log line.
+        logger.warning("verification_state.apply_to_graph failed: %s", _exc)
+
+    try:
+        from last_modified import annotate_last_modified
+        annotate_last_modified(_graph_view)
+    except ImportError as _exc:
+        logger.warning("last_modified not importable (%s); skipping freshness annotation", _exc)
 
     graph = {
         'nodes': nodes,

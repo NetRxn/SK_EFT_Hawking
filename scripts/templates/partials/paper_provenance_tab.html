@@ -39,8 +39,10 @@
         --pp-warn:      #b45309;
         --pp-pass:      #166534;
         --pp-info:      #1e40af;
+        --pp-stale:     #6b3fa0;  /* Wave 10c — needs-recheck purple */
         --pp-fail-bg:   rgba(176,48,48,0.08);
         --pp-warn-bg:   rgba(180,83,9,0.08);
+        --pp-stale-bg:  rgba(107,63,160,0.10);
 
         font-family: 'Instrument Sans', 'Inter', sans-serif;
         background: var(--pp-bg); color: var(--pp-text);
@@ -106,6 +108,11 @@
         background: var(--pp-fail); color: #faf7f0;
     }
     .pp-verdict[data-v="pass"]    { background: var(--pp-pass); color: #faf7f0; }
+    .pp-verdict[data-v="stale"]   {
+        /* Wave 10c — verification ripple has flipped at least one
+           finding to NEEDS RECHECK; banner picks up the purple-stripe. */
+        background: var(--pp-stale); color: #faf7f0;
+    }
     .pp-verdict[data-v="unknown"] {
         background: transparent; color: var(--pp-text-dim);
         border-color: var(--pp-border);
@@ -249,6 +256,29 @@
         background: rgba(46,134,171,0.16);
         outline: 1px solid var(--pp-accent);
     }
+    /* Wave 10c — claim is stale: a backing artifact has been verified
+       AFTER the claims_review was generated. Purple diagonal-stripe
+       background overlays the existing FAIL/WARN/INFO/PASS underline
+       so users see "this finding needs re-review". */
+    .pp-claim-span--stale {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            var(--pp-stale-bg) 0,
+            var(--pp-stale-bg) 4px,
+            transparent 4px,
+            transparent 9px
+        );
+        outline: 1px dotted var(--pp-stale);
+    }
+    .pp-claim-span--stale:hover {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            rgba(107,63,160,0.20) 0,
+            rgba(107,63,160,0.20) 4px,
+            transparent 4px,
+            transparent 9px
+        );
+    }
 
     /* ── Right pane: PROVENANCE DOSSIER ── */
     .pp-dossier-pane {
@@ -308,6 +338,26 @@
         border-radius: 3px; align-items: start;
     }
     .pp-matrix__row[data-na] { opacity: 0.45; }
+    /* Wave 10c — stale row picks up a left edge in --pp-stale so it
+       visually pops out of the layer matrix even when status is PASS. */
+    .pp-matrix__row[data-stale="true"] {
+        box-shadow: inset 3px 0 0 var(--pp-stale);
+        background-image: repeating-linear-gradient(
+            -45deg,
+            transparent 0,
+            transparent 6px,
+            rgba(107,63,160,0.06) 6px,
+            rgba(107,63,160,0.06) 11px
+        );
+    }
+    .pp-stale-badge {
+        display: inline-block; font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em;
+        padding: 1px 6px; border-radius: 2px;
+        background: var(--pp-stale-bg); color: var(--pp-stale);
+        border: 1px solid rgba(107,63,160,0.35);
+        margin-right: 6px;
+    }
     .pp-matrix__layer { font-size: 0.78rem; color: var(--pp-text); font-weight: 500; }
     .pp-matrix__status {
         font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;

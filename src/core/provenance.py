@@ -1196,6 +1196,294 @@ PARAMETER_PROVENANCE = {
         'notes': 'Phase 5z roadmap Gate Z.1. User decision at Stage 10 paper submission on '
                  'whether tighter tolerance is warranted.',
     },
+
+    # ════════════════════════════════════════════════════════════════
+    # Phase 5z Wave 2: Majorana Rung — Sterile-Neutrino + PMNS
+    # ════════════════════════════════════════════════════════════════
+    # Embedding III per Lit-Search/Phase-5z/Phase 5z, Wave 2 — Sterile-
+    # Neutrino Embedding for the Majorana Rung.md (verdict 2026-04-25).
+    # Oscillation values from NuFit-6.0 global fit (Esteban et al. JHEP
+    # 12 (2024) 216, arXiv:2601.14386). 0νββ bounds: KamLAND-Zen 800
+    # (arXiv:2406.11438) and LEGEND-1000 PCDR (arXiv:2107.11462).
+    # Citation registration deferred to Stage 10 paper-21 round per
+    # feedback_citation_verification_required (no doi_verified flips
+    # without primary-source WebFetch).
+    # ════════════════════════════════════════════════════════════════
+
+    'MAJORANA.M_R_FIDUCIAL_GEV': {
+        'value': 1.0e14,
+        'unit': 'GeV',
+        'tier': 'PROJECTED',
+        'source': 'Type-I seesaw central scale (Mohapatra & Smirnov, Annu. Rev. Nucl. Part. Sci. 56, 569 (2006), hep-ph/0603118)',
+        'detail': 'Fiducial heavy-Majorana mass M_R for Type-I seesaw with O(1) Yukawa: '
+                  'm_ν ~ y² v² / M_R ⇒ M_R ~ y² · 246² / 0.05e-9 ≈ 1.2e15 GeV at y=1; '
+                  'M_R ≈ 1e14 GeV is the central fiducial taken across canonical reviews. '
+                  'In Embedding III, M_R is the Z₁₆-invariant ADW condensate scale Λ_ADW; '
+                  'the derivation Λ_ADW → M_R is OPEN in primary literature (WAVE2-OPEN-1).',
+        'doi': '10.1146/annurev.nucl.56.080805.140534',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PROJECTED — fiducial Type-I seesaw scale. Used as anchor for '
+                              'the Wave 2 m_ν prediction scan in src/majorana_rung/. Per '
+                              'feedback_citation_verification_required, primary-source '
+                              'WebFetch verification of the Mohapatra-Smirnov review is '
+                              'deferred to Stage 10 paper-21 citation round.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'WAVE2-OPEN-1: M_R = Λ_ADW is a tracked-hypothesis, not a derived theorem. '
+                 'Substrate parameters (Λ_UV, N_f, G_c) leave M_R as a fit parameter in all '
+                 'current ADW / Wetterich / Volovik sources. See deep research Block §2.',
+    },
+    'MAJORANA.M_R_LOWER_BOUND_GEV': {
+        'value': 1.0e9,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'Type-I seesaw with electron-Yukawa-like ν Yukawa (deep research Block 2.2)',
+        'detail': 'Lower edge of the seesaw band: with y ≈ y_e ≈ 3e-6 (electron-Yukawa-like) '
+                  'and m_ν ≈ 0.05 eV, the seesaw relation m_ν = y² v² / M_R gives '
+                  'M_R ≈ 9e-12 · 246² / 0.05e-9 GeV ≈ 1e9 GeV. Sets the lower envelope of '
+                  'M_R in the (y, M_R) plane consistent with NuFit-6.0 mass splittings.',
+        'doi': '10.1007/JHEP08(2024)217',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'DERIVED — algebraic from y_lower + m_ν_heaviest. Cross-check '
+                              'against Fang et al. JHEP 08 (2024) 217 confirms 10⁹ GeV is '
+                              'standard low-y endpoint. WebFetch deferred per Stage 10.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Wave 2 phenomenological scan as the lower band of the (y, M_R) '
+                 'plane that reproduces observed Δm²_atm.',
+    },
+    'MAJORANA.M_R_UPPER_BOUND_GEV': {
+        'value': 1.0e15,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'Type-I seesaw with O(1) Yukawa (deep research Block 2.2)',
+        'detail': 'Upper edge of the seesaw band: with y ≈ 1 (top-Yukawa-like) and '
+                  'm_ν ≈ 0.05 eV, M_R ≈ 1.2e15 GeV. Sets the upper envelope; consistent '
+                  'with cosmological-inflation/leptogenesis fits (Davighi et al., '
+                  'arXiv:2304.10100, reheating ~ 10⁸–10¹⁰ GeV with right-Y-handed leptons '
+                  'living at higher M_R).',
+        'doi': '10.1007/JHEP08(2024)217',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'DERIVED — algebraic from y_upper + m_ν_heaviest.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Upper band of the Wave 2 (y, M_R) phenomenological plane.',
+    },
+    'MAJORANA.DELTA_M_SQ_21_EV2': {
+        'value': 7.42e-5,
+        'unit': 'eV²',
+        'tier': 'MEASURED',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'detail': 'Solar mass-squared splitting Δm²_21 = (7.42 ± 0.21) × 10⁻⁵ eV² from the '
+                  'NuFit-6.0 global three-flavor oscillation fit (KamLAND reactor + solar '
+                  'experiments dominant). Normal ordering best fit.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NuFit-6.0 best-fit value, reported in deep research Block 2.3 '
+                              'and Wikipedia PMNS summary. Primary-source WebFetch deferred '
+                              'to Stage 10 paper-21 citation round.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 oscillation anchor. Enters m_ν_next via √Δm²_21 ≈ 8.6 meV.',
+    },
+    'MAJORANA.DELTA_M_SQ_31_EV2': {
+        'value': 2.515e-3,
+        'unit': 'eV²',
+        'tier': 'MEASURED',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'detail': 'Atmospheric mass-squared splitting |Δm²_31| = (2.515 ± 0.028) × 10⁻³ eV² '
+                  '(NO best fit). T2K + NOvA + IceCube DeepCore + reactor dominant.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NuFit-6.0 best-fit value, normal ordering.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 oscillation anchor. Enters m_ν_heaviest via √|Δm²_31| ≈ 50 meV (NO).',
+    },
+    'MAJORANA.THETA_12_DEG': {
+        'value': 33.41,
+        'unit': 'deg',
+        'tier': 'MEASURED',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'detail': 'Solar mixing angle θ₁₂ = 33.41° (NO best fit; sin²θ₁₂ = 0.303 ± 0.012). '
+                  'Reactor + solar.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NuFit-6.0 best-fit angle.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'PMNS standard-parameterization angle. Wave 2 NeutrinoMixing.lean records.',
+    },
+    'MAJORANA.THETA_13_DEG': {
+        'value': 8.54,
+        'unit': 'deg',
+        'tier': 'MEASURED',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'detail': 'Reactor mixing angle θ₁₃ = 8.54° (NO; sin²θ₁₃ = 0.02203 ± 0.00056). '
+                  'Daya Bay, RENO, Double Chooz dominant.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NuFit-6.0 best-fit angle.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Smallness of θ₁₃ unexplained in either Wave 2 embedding (deep research §3.1).',
+    },
+    'MAJORANA.THETA_23_DEG': {
+        'value': 49.1,
+        'unit': 'deg',
+        'tier': 'MEASURED',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'detail': 'Atmospheric mixing angle θ₂₃ = 49.1° (NO; sin²θ₂₃ = 0.572). T2K + NOvA. '
+                  'Near-maximal; whether truly maximal vs slightly off is the leading '
+                  'open phenomenological question for the next-generation T2HK / DUNE.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NuFit-6.0 best-fit angle (NO; IO has slightly different '
+                              'central value but inside 1σ).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Near-maximal θ₂₃ unexplained in Embedding I/III; "predicted ≈ π/4 from '
+                 'composite μ-τ symmetry" claim under Embedding II is unrealized in any '
+                 'primary source (deep research §3.2). Wave 2 marks as fit, not derived.',
+    },
+    'MAJORANA.DELTA_CP_DEG': {
+        'value': 197.0,
+        'unit': 'deg',
+        'tier': 'MEASURED',
+        'source': 'NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216, arXiv:2601.14386)',
+        'detail': 'Dirac CP-violating phase δ_CP = 197° (NO best fit, ~1σ around 195–230°). '
+                  'CP-conservation (δ_CP = 0 or π) disfavored at ~2.4σ in NO.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NuFit-6.0 best-fit phase. Substantial uncertainty remains; '
+                              'Wave 2 NeutrinoMixing.lean records the value as a free parameter.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Free parameter in Embedding I/III; predicted near ±π/2 only under full '
+                 'μ-τ reflection symmetry (not realized in any primary source).',
+    },
+    'MAJORANA.M_BB_KAMLAND_ZEN_MEV_LOWER': {
+        'value': 28.0,
+        'unit': 'meV',
+        'tier': 'MEASURED',
+        'source': 'KamLAND-Zen Collaboration, arXiv:2406.11438 (v2 March 2026)',
+        'detail': 'Most-stringent NME bound on m_ββ (effective Majorana mass) from the full '
+                  'KamLAND-Zen 800 dataset: m_ββ < 28 meV (90% CL) using the most-favored '
+                  'NME calculation. Half-life T_{1/2} > 3.8 × 10²⁶ yr.',
+        'doi': '10.48550/arXiv.2406.11438',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'Deep research Block 4.1: bounds 28-122 meV; lower edge '
+                              'corresponds to the most-favorable NME (shell-model). '
+                              'Primary-source WebFetch deferred to Stage 10 paper-21 round.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Excludes the quasi-degenerate (QD) mass-hierarchy region for any embedding '
+                 '— embedding-agnostic bound.',
+    },
+    'MAJORANA.M_BB_KAMLAND_ZEN_MEV_UPPER': {
+        'value': 122.0,
+        'unit': 'meV',
+        'tier': 'MEASURED',
+        'source': 'KamLAND-Zen Collaboration, arXiv:2406.11438 (v2 March 2026)',
+        'detail': 'Conservative-NME bound on m_ββ from KamLAND-Zen 800: m_ββ < 122 meV '
+                  '(90% CL) using the least-favorable NME calculation. Half-life same as '
+                  'above (T_{1/2} > 3.8 × 10²⁶ yr); the spread is purely NME-theoretic.',
+        'doi': '10.48550/arXiv.2406.11438',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'NME spread covers full QRPA / IBM-2 / shell-model band.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Conservative complement to the 28 meV bound; reports the full NME envelope.',
+    },
+    'MAJORANA.M_BB_LEGEND_MEV_LOWER': {
+        'value': 9.0,
+        'unit': 'meV',
+        'tier': 'PROJECTED',
+        'source': 'LEGEND-1000 PCDR, arXiv:2107.11462',
+        'detail': 'LEGEND-1000 99.7% CL discovery sensitivity at most-favored NME: '
+                  'm_ββ ≈ 9 meV after 10 years live time. Covers the entire inverted-ordering '
+                  '(IO) parameter space.',
+        'doi': '10.48550/arXiv.2107.11462',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PROJECTED — experiment under construction; design report '
+                              'specifies sensitivity range 9–21 meV.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Reach: discovers IO if real. Embedding-agnostic experimental target.',
+    },
+    'MAJORANA.M_BB_LEGEND_MEV_UPPER': {
+        'value': 21.0,
+        'unit': 'meV',
+        'tier': 'PROJECTED',
+        'source': 'LEGEND-1000 PCDR, arXiv:2107.11462',
+        'detail': 'LEGEND-1000 99.7% CL discovery sensitivity at conservative NME: '
+                  'm_ββ ≈ 21 meV. Conservative complement to the 9 meV reach.',
+        'doi': '10.48550/arXiv.2107.11462',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PROJECTED — design report range upper end.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Conservative-NME LEGEND-1000 reach.',
+    },
+    'MAJORANA.Y_NU_LOWER': {
+        'value': 1.0e-3,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Type-I seesaw natural-Yukawa range (deep research Block 2.2)',
+        'detail': 'Lower edge of the Wave 2 neutrino-Yukawa scan: y ≈ 10⁻³ (much smaller '
+                  'than electron Yukawa y_e ≈ 3e-6 but still in the "natural" envelope '
+                  'used as the lower fiducial in canonical seesaw reviews). Pairs with '
+                  'M_R_LOWER_BOUND_GEV to reproduce m_ν_heaviest.',
+        'doi': None,
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PROJECTED — operational scan choice. Not a measured value.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 Yukawa-overlap scan lower bound.',
+    },
+    'MAJORANA.Y_NU_UPPER': {
+        'value': 1.0,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Type-I seesaw O(1) upper anchor (deep research Block 2.2)',
+        'detail': 'Upper edge of the Wave 2 neutrino-Yukawa scan: y ~ 1 (top-Yukawa-like). '
+                  'Pairs with M_R_UPPER_BOUND_GEV.',
+        'doi': None,
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PROJECTED — O(1) upper anchor.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 Yukawa-overlap scan upper bound.',
+    },
+    'MAJORANA.M_NU_HEAVIEST_EV': {
+        'value': 0.0501,
+        'unit': 'eV',
+        'tier': 'DERIVED',
+        'source': 'Derived from |Δm²_31| (NuFit-6.0) at m_lightest → 0',
+        'detail': 'Heaviest light-neutrino mass m₃ ≈ √|Δm²_31| ≈ 0.0501 eV in the normal-'
+                  'ordering massless-lightest limit. Used as the seesaw target m_ν.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'Standard derivation: m₃ = √(Δm²_31 + m_lightest²) ≈ √Δm²_31 '
+                              'at m_lightest = 0.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 seesaw target. m_ν = y² v² / M_R must reproduce this value.',
+    },
+    'MAJORANA.M_NU_NEXT_EV': {
+        'value': 0.00861,
+        'unit': 'eV',
+        'tier': 'DERIVED',
+        'source': 'Derived from Δm²_21 (NuFit-6.0) at m_lightest → 0',
+        'detail': 'Next-heaviest light-neutrino mass m₂ ≈ √Δm²_21 ≈ 8.61 meV in the NO '
+                  'massless-lightest limit.',
+        'doi': '10.1007/JHEP12(2024)216',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'Standard derivation: m₂ = √(Δm²_21 + m_lightest²) ≈ √Δm²_21.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used as the next mass anchor for the seesaw scan; less constraining than m₃.',
+    },
 }
 
 

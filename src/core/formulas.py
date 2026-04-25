@@ -6438,3 +6438,227 @@ def scalar_rung_quantitative_match(m_h_pred, m_h_obs=125.25, tolerance=0.5):
     if m_h_obs <= 0 or tolerance <= 0:
         raise ValueError("Observed mass and tolerance must be positive.")
     return abs(m_h_pred - m_h_obs) / m_h_obs < tolerance
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5z Wave 2: Majorana-rung interpretation (MajoranaRung.lean +
+#                  NeutrinoMixing.lean)
+# ════════════════════════════════════════════════════════════════════
+# Embedding III per Lit-Search/Phase-5z O.3 verdict: fundamental ν_R,
+# M_R as Z₁₆-invariant condensate scale (open derivation flagged).
+# ════════════════════════════════════════════════════════════════════
+
+
+def seesaw_neutrino_mass(y, v, m_r):
+    """Type-I seesaw light-neutrino mass.
+
+        m_ν = y² v² / M_R
+
+    where y is the Dirac neutrino Yukawa, v is the EW VEV, and M_R is the
+    heavy Majorana mass. In Embedding III (Phase 5z Wave 2), M_R is a
+    Z₁₆-invariant condensate scale; the substrate-bridge derivation
+    M_R = Λ_ADW is a tracked-hypothesis (informal).
+
+    Lean: MajoranaRung.seesaw_mass_from_majorana_rung
+    Aristotle: pending
+    Source: Minkowski 1977 (PLB 67, 421); Mohapatra-Smirnov review,
+        Annu. Rev. Nucl. Part. Sci. 56, 569 (2006), hep-ph/0603118,
+        Eq. (4). Phase 5z Wave 2 deep research Block 2.1-2.2.
+
+    Parameters
+    ----------
+    y : float
+        Dirac neutrino Yukawa coupling (dimensionless).
+    v : float
+        EW vacuum expectation value [GeV].
+    m_r : float
+        Heavy Majorana mass M_R [GeV]. Must be positive.
+
+    Returns
+    -------
+    float
+        Light neutrino mass m_ν [GeV].
+    """
+    if m_r <= 0:
+        raise ValueError("Heavy Majorana mass M_R must be positive.")
+    if v <= 0:
+        raise ValueError("EW VEV v must be positive.")
+    return (y * y) * (v * v) / m_r
+
+
+def seesaw_m_r_from_observed(y, v, m_nu):
+    """Inverse seesaw: solve M_R given y, v, m_ν.
+
+        M_R = y² v² / m_ν
+
+    Used by Wave 2 to map (y, m_ν_observed) → M_R prediction band.
+
+    Lean: MajoranaRung.seesaw_m_r_inverse
+    Aristotle: pending
+    Source: Algebraic inverse of `seesaw_neutrino_mass`.
+
+    Parameters
+    ----------
+    y : float
+        Dirac neutrino Yukawa coupling.
+    v : float
+        EW VEV [GeV].
+    m_nu : float
+        Observed light neutrino mass [GeV]. Must be positive.
+
+    Returns
+    -------
+    float
+        Heavy Majorana mass M_R [GeV].
+    """
+    if m_nu <= 0:
+        raise ValueError("Observed neutrino mass must be positive.")
+    return (y * y) * (v * v) / m_nu
+
+
+def m_nu_heaviest_from_atmospheric_splitting(delta_m_sq_31_ev2):
+    """Heaviest light-neutrino mass under normal-ordering, m_lightest → 0.
+
+        m₃ = √|Δm²_31|
+
+    With NuFit-6.0 |Δm²_31| ≈ 2.515e-3 eV² this gives m₃ ≈ 0.0501 eV.
+
+    Lean: MajoranaRung.m_nu_heaviest_NO_massless_lightest
+    Aristotle: pending
+    Source: Three-flavor oscillation kinematics (PDG 2024, NuFit-6.0).
+
+    Parameters
+    ----------
+    delta_m_sq_31_ev2 : float
+        Atmospheric mass-squared splitting |Δm²_31| [eV²]. Positive.
+
+    Returns
+    -------
+    float
+        m₃ [eV].
+    """
+    if delta_m_sq_31_ev2 <= 0:
+        raise ValueError("|Δm²_31| must be positive.")
+    return float(np.sqrt(delta_m_sq_31_ev2))
+
+
+def pmns_unitary_matrix(theta_12, theta_13, theta_23, delta_cp,
+                        alpha_1=0.0, alpha_2=0.0):
+    """PMNS matrix in PDG standard parameterization (radians input).
+
+    Returns the 3×3 complex unitary matrix
+        U = R₂₃(θ₂₃) · diag(1, 1, e^{−iδ_CP}) · R₁₃(θ₁₃) · diag(1, 1, e^{iδ_CP})
+            · R₁₂(θ₁₂) · diag(e^{iα₁/2}, e^{iα₂/2}, 1)
+    in the canonical PDG factorization. Charged-lepton phase shifts are
+    not absorbed here (they would act as left-multiplication by another
+    diagonal phase matrix). The Majorana phases α₁, α₂ default to 0 to
+    yield the Dirac-only PMNS matrix; supplying them gives the full
+    Majorana-extended form.
+
+    Lean: NeutrinoMixing.standParam (structure-level)
+    Aristotle: pending
+    Source: PDG Review of Particle Physics 2024, §14 "Neutrino Masses,
+        Mixing, and Oscillations", standard parameterization. NuFit-6.0
+        Esteban et al. JHEP 12 (2024) 216 for current best-fit values.
+
+    Parameters
+    ----------
+    theta_12, theta_13, theta_23 : float
+        Mixing angles in radians.
+    delta_cp : float
+        Dirac CP-violating phase in radians.
+    alpha_1, alpha_2 : float
+        Majorana phases in radians. Default 0 for Dirac-only PMNS.
+
+    Returns
+    -------
+    numpy.ndarray
+        3×3 complex unitary PMNS matrix.
+    """
+    c12, s12 = float(np.cos(theta_12)), float(np.sin(theta_12))
+    c13, s13 = float(np.cos(theta_13)), float(np.sin(theta_13))
+    c23, s23 = float(np.cos(theta_23)), float(np.sin(theta_23))
+    e_im = np.exp(-1j * delta_cp)
+    e_ip = np.exp(1j * delta_cp)
+    # PDG standard parameterization U = R23 · U_δ · R13 · U_δ⁻¹ · R12
+    u_dirac = np.array([
+        [c12 * c13,                       s12 * c13,                       s13 * e_im],
+        [-s12 * c23 - c12 * s23 * s13 * e_ip,
+         c12 * c23 - s12 * s23 * s13 * e_ip,
+         s23 * c13],
+        [s12 * s23 - c12 * c23 * s13 * e_ip,
+         -c12 * s23 - s12 * c23 * s13 * e_ip,
+         c23 * c13],
+    ], dtype=complex)
+    if alpha_1 == 0.0 and alpha_2 == 0.0:
+        return u_dirac
+    p_majorana = np.diag([np.exp(0.5j * alpha_1),
+                          np.exp(0.5j * alpha_2),
+                          1.0]).astype(complex)
+    return u_dirac @ p_majorana
+
+
+def m_beta_beta_effective(pmns_matrix, m_nu_diag):
+    """Effective Majorana mass m_ββ probed by 0νββ experiments.
+
+        m_ββ = | Σ_i U_{ei}² · m_i |
+
+    where U is the PMNS matrix and m_i are the light-neutrino masses.
+    Compared against KamLAND-Zen 800 bound (28-122 meV at 90% CL,
+    arXiv:2406.11438) and LEGEND-1000 reach (9-21 meV, arXiv:2107.11462).
+
+    Lean: NeutrinoMixing.m_beta_beta (structural definition)
+    Aristotle: pending
+    Source: Standard 0νββ amplitude (Bilenky-Pontecorvo 1987 onward;
+        Mohapatra-Smirnov review, Eq. 9.3). Phase 5z Wave 2 deep research
+        Block 4.
+
+    Parameters
+    ----------
+    pmns_matrix : numpy.ndarray
+        3×3 complex PMNS matrix from `pmns_unitary_matrix`.
+    m_nu_diag : array-like
+        Three light-neutrino masses (m_1, m_2, m_3) [eV].
+
+    Returns
+    -------
+    float
+        Effective Majorana mass m_ββ [eV].
+    """
+    if pmns_matrix.shape != (3, 3):
+        raise ValueError("PMNS matrix must be 3×3.")
+    m_nu = np.asarray(m_nu_diag, dtype=complex)
+    if m_nu.shape != (3,):
+        raise ValueError("m_nu_diag must have shape (3,).")
+    return float(np.abs(np.sum(pmns_matrix[0, :] ** 2 * m_nu)))
+
+
+def majorana_rung_z16_compatibility_index(n_nu_r):
+    """Z₁₆ index contribution of N right-handed sterile neutrinos.
+
+        index = (N mod 16)
+
+    Each ν_R Weyl carries Z₁₆ charge +1; for N_gen = 3 the total +3
+    saturates the SM-without-ν_R hidden-sector requirement (45 ≡ -3 mod 16
+    + 3 ν_R contributions = 48 ≡ 0 mod 16). Embedding III (Phase 5z Wave 2)
+    locks this branch.
+
+    Lean: MajoranaRung.majorana_rung_compatible_with_hidden_singlet (Z₁₆ bridge)
+    Aristotle: pending
+    Source: García-Etxebarria & Montero, JHEP 08:003 (2019), arXiv:1808.00009;
+        Z16AnomalyComputation.three_nu_R_cancel_three_gen + HiddenSectorClassification.
+        hidden_sector_anomaly_value.
+
+    Parameters
+    ----------
+    n_nu_r : int
+        Number of fundamental ν_R Weyl fermions.
+
+    Returns
+    -------
+    int
+        Z₁₆ index contribution (range 0-15).
+    """
+    if n_nu_r < 0:
+        raise ValueError("Number of ν_R must be non-negative.")
+    return int(n_nu_r) % 16

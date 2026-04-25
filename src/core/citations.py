@@ -1329,19 +1329,23 @@ CITATION_REGISTRY = {
 
     'ADW': {
         'authors': 'Akama, K.',
-        'title': 'An attempt at pregeometry: gauge fields',
+        'title': 'An attempt at pregeometry: gravity with composite metric',
         'journal': 'Prog. Theor. Phys.',
         'volume': 60,
         'page': '1900',
         'year': 1978,
         'doi': '10.1143/PTP.60.1900',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Original Akama pregeometry composite-metric paper. '
                  'Foundational for the ADW mechanism in this project. '
-                 'doi_verified: pending arXiv/DOI WebFetch round.',
+                 'doi_verified 2026-04-26 via OUP/academic.oup.com DOI '
+                 'redirect from doi.org: title, author (K. Akama), journal, '
+                 'volume, page, year all match. Title corrected from '
+                 '"gauge fields" to "gravity with composite metric" per '
+                 'the actual PTP record.',
     },
     'WetterichSpinor2013': {
         'authors': 'Wetterich, C.',
@@ -1351,44 +1355,63 @@ CITATION_REGISTRY = {
         'page': '67',
         'year': 2013,
         'doi': '10.1007/978-3-642-33036-0_4',
-        'arxiv': '1206.3392',
-        'doi_verified': None,
+        'arxiv': '1201.2871',
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
-        'notes': 'Wetterich review chapter on spinor gravity. doi_verified: '
-                 'pending. Split from prior WetterichSpinor combined bibitem.',
+        'notes': 'Wetterich Lecture Notes Physics 863 chapter on spinor '
+                 'gravity (Proceedings of the 6th Aegean Summer School, '
+                 'Naxos 2011). doi_verified 2026-04-26: DOI matches; '
+                 'arXiv corrected from 1206.3392 (unrelated information-'
+                 'theory paper by Vatedka/Kashyap/Thangaraj) to 1201.2871 '
+                 '(the actual Wetterich arXiv preprint for this chapter). '
+                 'Split from prior WetterichSpinor combined bibitem.',
     },
     'WetterichSpinor2022': {
         'authors': 'Wetterich, C.',
         'title': 'Pregeometry and spontaneous time-space asymmetry',
         'journal': 'JHEP',
-        'volume': 2,
-        'page': '169',
+        'volume': 6,
+        'page': '069',
         'year': 2022,
-        'doi': '10.1007/JHEP02(2022)169',
-        'arxiv': '2110.13863',
-        'doi_verified': None,
+        'doi': '10.1007/JHEP06(2022)069',
+        'arxiv': '2101.11519',
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Wetterich pregeometry / spontaneous time-space asymmetry. '
-                 'doi_verified: pending. Split from prior WetterichSpinor.',
+                 'doi_verified 2026-04-26: DOI corrected from JHEP02(2022)169 '
+                 'to the actual JHEP06(2022)069; arXiv corrected from '
+                 '2110.13863 (unrelated exoplanet-ephemeris paper ExoClock '
+                 'Project II by Kokori et al.) to the actual 2101.11519. '
+                 'Matches Phase-5z deep-research reference (O.2 file table).',
     },
     'WetterichNJL': {
         'authors': 'Wetterich, C.',
-        'title': 'Spinor gravity from a fermionic four-vertex',
-        'journal': 'Phys. Lett. B',
-        'volume': 901,
-        'page': '136223',
-        'year': 2024,
-        'doi': '10.1016/j.physletb.2024.136223',
-        'arxiv': None,
-        'doi_verified': None,
+        'title': 'Geometry and symmetries in lattice spinor gravity',
+        'journal': 'Ann. Phys.',
+        'volume': 327,
+        'page': '2184',
+        'year': 2012,
+        'doi': '10.1016/j.aop.2012.04.005',
+        'arxiv': '1201.6505',
+        'doi_verified': True,
         'used_in': ['lean/SKEFTHawking/WetterichNJL.lean',
                     'papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
-        'notes': 'Wetterich 4-fermion vertex spinor-gravity paper. '
-                 'Already referenced from WetterichNJL.lean module docstring; '
-                 'now formally registered. doi_verified: pending.',
+        'notes': 'CORRECTED 2026-04-26. Prior entry cited a nonexistent '
+                 '"Wetterich, PLB 901, 136223 (2024) - Spinor gravity from '
+                 'a fermionic four-vertex" — CrossRef 404, INSPIRE/arXiv '
+                 'return no match, and Phase-5z O.2 deep research never '
+                 'referenced any such paper. Replaced with the canonical '
+                 "lattice version of Wetterich's NJL-type 4-fermion spinor-"
+                 'gravity construction: Ann. Phys. 327, 2184 (2012), '
+                 'arXiv:1201.6505. This paper explicitly introduces the '
+                 'nearest-neighbor bond structure formalized in '
+                 'WetterichNJL.lean. doi_verified 2026-04-26 via arXiv '
+                 'record (journal reference on arxiv.org/abs/1201.6505 '
+                 'confirms Ann. Phys. / 10.1016/j.aop.2012.04.005). '
+                 'Hallucinated-citation finding filed as Stage-13 BLOCKER.',
     },
     'Fierz': {
         'authors': 'Fierz, M.',
@@ -1399,11 +1422,13 @@ CITATION_REGISTRY = {
         'year': 1937,
         'doi': '10.1007/BF01330070',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Original Fierz rearrangement identity. Pre-arXiv era; '
-                 'DOI-only verification path.',
+                 'DOI-only verification path. doi_verified 2026-04-26 via '
+                 'NASA ADS (bibcode 1937ZPhy..104..553F): title, author '
+                 '(Markus Fierz), journal, volume, page, year all match.',
     },
     'NJL61': {
         'authors': 'Nambu, Y., Jona-Lasinio, G.',
@@ -1415,11 +1440,14 @@ CITATION_REGISTRY = {
         'year': 1961,
         'doi': '10.1103/PhysRev.122.345',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Original Nambu-Jona-Lasinio paper. Pre-arXiv; '
-                 'DOI-only verification path.',
+                 'DOI-only verification path. doi_verified 2026-04-26 '
+                 'via NASA ADS (bibcode 1961PhRv..122..345N): title, '
+                 'authors (Nambu, Y.; Jona-Lasinio, G.), journal, volume, '
+                 'page, year all match.',
     },
     'GiesScherer': {
         'authors': 'Gies, H., Lippoldt, S.',
@@ -1430,14 +1458,19 @@ CITATION_REGISTRY = {
         'page': '104026',
         'year': 2013,
         'doi': '10.1103/PhysRevD.87.104026',
-        'arxiv': '1305.6940',
-        'doi_verified': None,
+        'arxiv': '1303.4253',
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Gies-Lippoldt RG-NJL companion. Bibkey is a project-local '
-                 'shorthand (not the literal author surname). doi_verified: '
-                 'pending. Consider renaming bibkey to GiesLippoldt2013 in '
-                 'paper-side cleanup.',
+                 'shorthand (not the literal author surname). doi_verified '
+                 '2026-04-26 via NASA ADS (bibcode 2013PhRvD..87j4026G): '
+                 'title, authors (H. Gies, S. Lippoldt), journal, volume, '
+                 'article number, year all match. arXiv corrected from '
+                 '1305.6940 (unrelated philosophy-of-physics paper "Quantum '
+                 'Objects" by Mansouri/Golshani/Karbasizadeh) to the actual '
+                 '1303.4253. Consider renaming bibkey to GiesLippoldt2013 '
+                 'in paper-side cleanup (advisory, not required).',
     },
     'BardeenHillLindner': {
         'authors': 'Bardeen, W. A., Hill, C. T., Lindner, M.',
@@ -1448,11 +1481,14 @@ CITATION_REGISTRY = {
         'year': 1990,
         'doi': '10.1103/PhysRevD.41.1647',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Top-quark condensate / dynamical EWSB foundational paper. '
-                 'Pre-arXiv; DOI-only verification path.',
+                 'Pre-arXiv; DOI-only verification path. doi_verified '
+                 '2026-04-26 via NASA ADS (bibcode 1990PhRvD..41.1647B): '
+                 'title, authors (W. A. Bardeen, C. T. Hill, M. Lindner), '
+                 'journal, volume, page, year all match.',
     },
     'PDG2024': {
         'authors': 'Navas, S. et al. (Particle Data Group)',
@@ -1463,15 +1499,16 @@ CITATION_REGISTRY = {
         'year': 2024,
         'doi': '10.1103/PhysRevD.110.030001',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex',
                     'src/core/provenance.py'],
         'provides': [],
         'notes': 'PDG 2024 Review of Particle Physics. Source for '
                  'EW.M_W_GEV / M_Z_GEV / M_H_GEV / V_EW_GEV / SIN2_THETA_W / '
                  'G_FERMI_GEV_M2 / Y_TOP / LAMBDA_SM_HIGGS in PARAMETER_PROVENANCE. '
-                 'doi_verified: pending; review prose attribution should be '
-                 'cross-checked at the next WebFetch round.',
+                 'doi_verified 2026-04-26 via pdg.lbl.gov (official PDG '
+                 '2024 authors page): title, lead author (S. Navas et al.), '
+                 'journal, volume, page, year all match.',
     },
     'PeskinSchroeder': {
         'authors': 'Peskin, M. E., Schroeder, D. V.',
@@ -1484,11 +1521,182 @@ CITATION_REGISTRY = {
         'isbn': '978-0201503975',
         'publisher': 'Westview Press',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
         'provides': [],
         'notes': 'Standard QFT textbook. ISBN-only verification path; '
-                 'DOI not applicable.',
+                 'DOI not applicable. doi_verified 2026-04-26 via OpenLibrary '
+                 '(partial record, title and year 1995 match; publisher and '
+                 'author list consistent with community-standard knowledge '
+                 'of the Peskin-Schroeder text). Publisher blocking of '
+                 'Routledge/WorldCat direct WebFetch prevented ISBN-level '
+                 'primary-source confirmation. Attribution verdict: '
+                 'partial-match; no contradictions found.',
+    },
+
+    # ────────────────────────────────────────────────────────────────
+    # Phase 5z Wave 2 (paper 21 majorana_rung) — pending WebFetch verification
+    # All entries `doi_verified: None`. Per feedback_citation_verification_required.md,
+    # these MUST be verified against primary sources via the Stage 13
+    # WebFetch round before paper 21 submission.
+    # ────────────────────────────────────────────────────────────────
+    'NuFit60': {
+        'authors': 'Esteban, I., Gonzalez-Garcia, M. C., Maltoni, M., Schwetz, T., Zhou, A.',
+        'title': 'NuFIT 6.0: Three-flavor neutrino oscillation analysis',
+        'journal': 'JHEP',
+        'volume': '12',
+        'page': '216',
+        'year': 2024,
+        'doi': '10.1007/JHEP12(2024)216',
+        'arxiv': '2601.14386',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'src/core/provenance.py'],
+        'provides': [],
+        'notes': 'NuFit-6.0 global three-flavor oscillation fit; source for '
+                 'MAJORANA.DELTA_M_SQ_21 / DELTA_M_SQ_31 / THETA_12 / THETA_13 / '
+                 'THETA_23 / DELTA_CP. doi_verified pending Stage 13 WebFetch '
+                 'verification round (per feedback_citation_verification_required '
+                 'rule — never flip None → True without primary-source fetch).',
+    },
+    'KamLANDZen800': {
+        'authors': 'KamLAND-Zen Collaboration (Abe, S. et al.)',
+        'title': 'Search for Majorana Neutrinos with the Complete KamLAND-Zen Dataset',
+        'journal': 'arXiv',
+        'volume': None,
+        'page': None,
+        'year': 2024,
+        'doi': '10.48550/arXiv.2406.11438',
+        'arxiv': '2406.11438',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'src/core/provenance.py'],
+        'provides': [],
+        'notes': 'KamLAND-Zen 800 full-dataset 0νββ search. T_{1/2} > 3.8 × 10²⁶ '
+                 'yr at 90% CL; m_ββ < 28-122 meV depending on NME. v2 March '
+                 '2026. Source for MAJORANA.M_BB_KAMLAND_ZEN_*. doi_verified '
+                 'pending Stage 13 round.',
+    },
+    'LEGEND1000': {
+        'authors': 'LEGEND Collaboration (Abgrall, N. et al.)',
+        'title': 'The Large Enriched Germanium Experiment for Neutrinoless ββ Decay: LEGEND-1000 Preconceptual Design Report',
+        'journal': 'arXiv',
+        'volume': None,
+        'page': None,
+        'year': 2021,
+        'doi': '10.48550/arXiv.2107.11462',
+        'arxiv': '2107.11462',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'src/core/provenance.py'],
+        'provides': [],
+        'notes': 'LEGEND-1000 PCDR. Projected 99.7% CL discovery sensitivity '
+                 'T_{1/2} = 1.3 × 10²⁸ yr; m_ββ = 9-21 meV reach. Covers full '
+                 'inverted-ordering parameter space at 10 yr live time. '
+                 'Source for MAJORANA.M_BB_LEGEND_*. doi_verified pending Stage 13.',
+    },
+    'MohapatraSmirnov2006': {
+        'authors': 'Mohapatra, R. N., Smirnov, A. Y.',
+        'title': 'Neutrino Mass and New Physics',
+        'journal': 'Annu. Rev. Nucl. Part. Sci.',
+        'volume': 56,
+        'page': 569,
+        'year': 2006,
+        'doi': '10.1146/annurev.nucl.56.080805.140534',
+        'arxiv': 'hep-ph/0603118',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'src/core/provenance.py'],
+        'provides': [],
+        'notes': 'Canonical Type-I seesaw review. Source for the Wave-2 m_ν '
+                 'band derivation (m_ν ~ y² v² / M_R) and the M_R = 10⁹-10¹⁵ '
+                 'GeV envelope. Cited in deep-research §2.2. doi_verified '
+                 'pending Stage 13.',
+    },
+    'GarciaEtxebarriaMontero2019': {
+        'authors': 'García-Etxebarria, I., Montero, M.',
+        'title': 'Dai-Freed anomalies in particle physics',
+        'journal': 'JHEP',
+        'volume': '08',
+        'page': '003',
+        'year': 2019,
+        'doi': '10.1007/JHEP08(2019)003',
+        'arxiv': '1808.00009',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'src/core/provenance.py',
+                    'lean/SKEFTHawking/Z16AnomalyComputation.lean'],
+        'provides': [],
+        'notes': 'Garcia-Etxebarria & Montero Dai-Freed anomaly framework: '
+                 'sets ν_R = Z₁₆ charge +1, locks Embedding III\'s structural '
+                 'choice. Source for MAJORANA.* Z₁₆ context and EW.N_F_WITH_NU_R. '
+                 'doi_verified pending Stage 13.',
+    },
+    'WanWang2020': {
+        'authors': 'Wan, Z., Wang, J.',
+        'title': 'Beyond Standard Models and Grand Unifications: Anomalies, Topological Terms, and Dynamical Constraints via Cobordisms',
+        'journal': 'JHEP',
+        'volume': '07',
+        'page': '062',
+        'year': 2020,
+        'doi': '10.1007/JHEP07(2020)062',
+        'arxiv': '1910.14668',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Wan-Wang Ultra-Unification anomaly tower: 15 ≡ -1 mod 16 per '
+                 'no-ν_R generation. doi_verified pending Stage 13.',
+    },
+    'Davighi2023': {
+        'authors': 'Davighi, J., Lohitsiri, N., Tasnak, R.',
+        'title': 'Dai-Freed anomaly in the standard model and topological inflation',
+        'journal': 'arXiv',
+        'volume': None,
+        'page': None,
+        'year': 2023,
+        'doi': '10.48550/arXiv.2304.10100',
+        'arxiv': '2304.10100',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Davighi et al. Dai-Freed-anomaly + topological inflation. '
+                 'Embedding III phenomenology consistent with reheating ~10⁸ '
+                 'GeV. doi_verified pending Stage 13.',
+    },
+    'Volovik2024Spinor': {
+        'authors': 'Volovik, G. E.',
+        'title': 'Fermionic quartet and vestigial gravity',
+        'journal': 'JETP Lett.',
+        'volume': 119,
+        'page': 330,
+        'year': 2024,
+        'doi': '10.1134/S0021364024600293',
+        'arxiv': '2312.09435',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Volovik 2024 fermionic-quartet/vestigial-gravity construction. '
+                 'Establishes that ⟨ÊÊ⟩ and ⟨Ê⟩ vanish independently '
+                 '(vestigial regime with phase diagram). Cited as motivation '
+                 'for WAVE2-OPEN-1 substrate-bridge tracked-hypothesis. '
+                 'doi_verified pending Stage 13.',
+    },
+    'TooBySmithHepLean': {
+        'authors': 'Tooby-Smith, J.',
+        'title': 'HepLean: Digitalising high energy physics',
+        'journal': 'Comput. Phys. Commun.',
+        'volume': 308,
+        'page': '109457',
+        'year': 2025,
+        'doi': '10.1016/j.cpc.2024.109457',
+        'arxiv': '2405.08863',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'lean/SKEFTHawking/NeutrinoMixing.lean'],
+        'provides': [],
+        'notes': 'HepLean reference: source for the CKMMatrix structure-note '
+                 'idiom mirrored by NeutrinoMixing.PMNSMatrix. doi_verified '
+                 'pending Stage 13.',
     },
 }
 

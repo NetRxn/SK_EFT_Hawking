@@ -1823,6 +1823,49 @@ EW_PARAMS = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 5z Wave 2: Majorana Rung — Sterile-Neutrino + PMNS parameters
+#
+# Embedding III (Hybrid) per Lit-Search/Phase-5z O.3 verdict:
+# fundamental Lean ν_R : SterileNeutrino with M_R as a Z₁₆-invariant
+# condensate scale; Λ_ADW → M_R derivation flagged as a tracked
+# hypothesis (open in primary literature).
+#
+# Oscillation parameters: NuFit-6.0 (Esteban et al., JHEP 12 (2024) 216,
+# arXiv:2601.14386), normal ordering (NO), 2024 update.
+# 0νββ bounds: KamLAND-Zen 800 (arXiv:2406.11438), LEGEND-1000 PCDR
+# (arXiv:2107.11462).
+#
+# Phase 5z Wave 2 (MajoranaRung.lean, NeutrinoMixing.lean) consumes
+# these via src/majorana_rung/.
+# ════════════════════════════════════════════════════════════════════
+
+MAJORANA_PARAMS = {
+    # ── Type-I seesaw scale (Embedding III: M_R = Λ_ADW open hypothesis) ─
+    'M_R_FIDUCIAL_GEV': 1.0e14,           # Fiducial heavy Majorana mass (Type-I seesaw central)
+    'M_R_LOWER_BOUND_GEV': 1.0e9,         # Lower edge with y ≈ y_e electron-like Yukawa
+    'M_R_UPPER_BOUND_GEV': 1.0e15,        # Upper edge with O(1) Yukawa
+    # ── NuFit-6.0 oscillation parameters (NO; 2024 global fit) ──────
+    'DELTA_M_SQ_21_EV2': 7.42e-5,         # Δm²_solar (eV²)
+    'DELTA_M_SQ_31_EV2': 2.515e-3,        # |Δm²_atm| (eV², NO)
+    'THETA_12_DEG': 33.41,                # Solar mixing angle (deg)
+    'THETA_13_DEG': 8.54,                 # Reactor mixing angle (deg)
+    'THETA_23_DEG': 49.1,                 # Atmospheric mixing angle (deg, NO)
+    'DELTA_CP_DEG': 197.0,                # Dirac CP-violating phase (deg)
+    # ── 0νββ bounds (existing + projected) ───────────────────────────
+    'M_BB_KAMLAND_ZEN_MEV_LOWER': 28.0,   # Most-stringent NME bound (meV)
+    'M_BB_KAMLAND_ZEN_MEV_UPPER': 122.0,  # Conservative NME bound (meV)
+    'M_BB_LEGEND_MEV_LOWER': 9.0,         # LEGEND-1000 99.7% CL discovery sensitivity (meV)
+    'M_BB_LEGEND_MEV_UPPER': 21.0,        # LEGEND-1000 conservative-NME discovery (meV)
+    # ── Wave 2 fiducial Yukawa range for seesaw m_ν predictions ──────
+    'Y_NU_LOWER': 1.0e-3,                 # Electron-Yukawa-like neutrino Yukawa
+    'Y_NU_UPPER': 1.0,                    # O(1) "natural" neutrino Yukawa
+    # ── Light neutrino mass scale anchors (from Δm² + lightest = 0) ──
+    'M_NU_HEAVIEST_EV': 0.0501,           # √|Δm²_31| ≈ 0.05 eV (NO, m_lightest → 0)
+    'M_NU_NEXT_EV': 0.00861,              # √Δm²_21 ≈ 8.61 meV
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Parameter Provenance Registry (imported from src.core.provenance)
 #
 # Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS must have
