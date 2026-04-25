@@ -806,6 +806,132 @@ def cmd_tombstone_sweep(args: argparse.Namespace) -> int:
 # Subcommand: reconcile (interactive-ish — shows candidates)
 # ────────────────────────────────────────────────────────────────────────────
 
+def cmd_rebuild_prose_state(args: argparse.Namespace) -> int:
+    """Replay audit_log.jsonl into prose_state.json.
+
+    Recovery path for ``cmd_mark`` partial-failure scenarios: if
+    ``_append_audit_event`` succeeded but ``_atomic_write_prose_state``
+    failed, the audit log carries an event whose effect didn't land in
+    prose_state. Per design doc §9, the audit log is replay-canonical;
+    this command makes the recovery path executable.
+
+    Modes:
+      --check   compare rebuilt state to current; print diff; exit 1 if drift
+      --write   atomically replace prose_state.json with the rebuilt state
+      (default: --check)
+
+    Replay rules:
+      - Events with ``meta.target_type == 'Sentence'`` and an action in
+        {verify, mark_interpretive, mark_needs_fix, mark_needs_recheck}
+        set the human_state to the canonical mapping.
+      - Events with action == 'tombstone' clear the sentence (entry kept
+        for audit, but ``human_state`` set to None and ``tombstoned_at``
+        carried).
+      - Events with action == 'supersede_confirm' or ``re_audit`` are
+        informational; they don't mutate human_state.
+      - Other events are skipped (no-op for prose_state purposes).
+      - Order: events processed in timestamp order (file order).
+    """
+    paper = args.paper
+    al_path = audit_log_path(paper)
+    if not al_path.exists():
+        print(json.dumps({
+            'paper': paper, 'audit_events': 0, 'rebuilt_sentences': 0,
+            'note': 'no audit_log.jsonl — nothing to replay',
+        }, indent=2))
+        return 0
+
+    # Load all events in file order
+    events: list[dict] = []
+    with open(al_path, 'r', encoding='utf-8') as f:
+        for raw in f:
+            line = raw.strip()
+            if not line:
+                continue
+            try:
+                events.append(json.loads(line))
+            except json.JSONDecodeError as exc:
+                print(f"sentence_state rebuild: skipping malformed line: {exc}",
+                      file=sys.stderr)
+    # Sort by timestamp (defensive — file order should already match,
+    # but if events from concurrent processes interleave on a non-POSIX
+    # FS, timestamps win).
+    events.sort(key=lambda e: (e.get('meta') or {}).get('timestamp', ''))
+
+    # Inverse of _STATE_TO_HUMAN: derive the human_state from action
+    _ACTION_TO_HUMAN = {
+        'verify': 'human_verified',
+        'mark_interpretive': 'human_interpretive',
+        'mark_needs_fix': 'human_needs_fix',
+        'mark_needs_recheck': 'human_needs_recheck',
+    }
+    rebuilt: dict[str, dict] = {}
+    for ev in events:
+        meta = ev.get('meta') or {}
+        if meta.get('target_type') != 'Sentence':
+            continue
+        sid = meta.get('target_id')
+        if not sid:
+            continue
+        action = meta.get('action')
+        if action in _ACTION_TO_HUMAN:
+            rebuilt[sid] = {
+                'human_state': _ACTION_TO_HUMAN[action],
+                'human_ratified_at': meta.get('timestamp'),
+                'human_ratified_by': meta.get('actor'),
+                'human_notes': meta.get('notes') or '',
+            }
+        elif action == 'tombstone':
+            rebuilt[sid] = {
+                'human_state': None,
+                'tombstoned_at': meta.get('timestamp'),
+                'tombstoned_by': meta.get('actor'),
+            }
+        # else: re_audit / supersede_confirm / etc. don't mutate.
+
+    rebuilt_state = {
+        'paper': paper,
+        'schema_version': 'v2',
+        'sentences': rebuilt,
+    }
+
+    # Compare to current
+    current = _load_prose_state(paper)
+    cur_sentences = current.get('sentences') or {}
+    drift_added = sorted(set(rebuilt) - set(cur_sentences))
+    drift_removed = sorted(set(cur_sentences) - set(rebuilt))
+    drift_changed = sorted(
+        sid for sid in (set(rebuilt) & set(cur_sentences))
+        if rebuilt[sid] != cur_sentences[sid]
+    )
+    has_drift = bool(drift_added or drift_removed or drift_changed)
+
+    summary = {
+        'paper': paper,
+        'audit_events': len(events),
+        'rebuilt_sentences': len(rebuilt),
+        'current_sentences': len(cur_sentences),
+        'drift': {
+            'added': drift_added,
+            'removed': drift_removed,
+            'changed': drift_changed,
+        },
+        'has_drift': has_drift,
+    }
+    print(json.dumps(summary, indent=2))
+
+    if args.write:
+        if not has_drift:
+            return 0
+        with _Lock(paper):
+            _atomic_write_prose_state(paper, rebuilt_state)
+        print(f"sentence_state: wrote rebuilt prose_state.json ({len(rebuilt)} sentences)",
+              file=sys.stderr)
+        return 0
+    # --check mode: drift = nonzero exit
+    return 1 if has_drift else 0
+
+
 def cmd_reconcile(args: argparse.Namespace) -> int:
     paper = args.paper
     cr_path = claims_review_path(paper)
@@ -884,6 +1010,21 @@ def build_parser() -> argparse.ArgumentParser:
     pr = sub.add_parser('reconcile', help='List candidate-for-supersession entries')
     pr.add_argument('--paper', required=True)
     pr.set_defaults(func=cmd_reconcile)
+
+    # rebuild_prose_state — Wave 10 strengthening (replay-canonical recovery)
+    pb = sub.add_parser(
+        'rebuild_prose_state',
+        help='Replay audit_log.jsonl into prose_state.json '
+             '(--check for diff, --write to apply)',
+    )
+    pb.add_argument('--paper', required=True)
+    grp = pb.add_mutually_exclusive_group()
+    grp.add_argument('--check', dest='write', action='store_false',
+                     default=False,
+                     help='Compare rebuilt to current; exit 1 on drift (default)')
+    grp.add_argument('--write', dest='write', action='store_true',
+                     help='Atomically replace prose_state.json with rebuilt state')
+    pb.set_defaults(func=cmd_rebuild_prose_state)
 
     return p
 

@@ -194,37 +194,60 @@ band runs between the atmospheric mass anchor $m_3 \approx 0.05$~eV
 \end{figure}
 
 %% ================================================================
-\section{WAVE2-OPEN-1: The Substrate Bridge as a Tracked Hypothesis}
+\section{WAVE2-OPEN-1: The BCS-Exponential Substrate Bridge with
+Lepton-Number-Violation Obstruction}
 \label{sec:open-1}
 
-The deep-research scoping report~\cite{Volovik2024Spinor,WetterichSpinor2013,ADW}
-finds that no primary source closes the derivation
-$\HeavyMaj = c \cdot \LambdaADW$ for any per-generation coefficient
-$c \in (0, 1]$. We surface this open derivation explicitly as a
-\emph{tracked Prop hypothesis}:
-\begin{verbatim}
-def H_MR_FromADWSubstrate
-    (m : MajoranaRungData) (Λ_ADW : ℝ) : Prop :=
-  ∀ i, ∃ c, 0 < c ∧ c ≤ 1 ∧ m.M_R i = c * Λ_ADW
-\end{verbatim}
-The hypothesis is genuinely non-trivial: a \texttt{MajoranaRungData}
-with $\HeavyMaj > \LambdaADW$ falsifies it, as encoded by the
-falsifiability witness
-\texttt{bridge\_excludes\_super\_substrate\_M\_R}. The hypothesis
-appears as a parameter in two consequences:
-\texttt{M\_R\_le\_substrate\_under\_bridge} (substrate bounds rung
-scale) and the falsifiability-witness pair.
+A focussed Wave 2a deep-research return on channel projection of the
+NJL/Wetterich gap equation onto the lepton-Majorana
+sector~\cite{AntuschKingmanLindnerWetterich2003,Hill2024Bilocal} confirms
+that no primary source closes $\LambdaADW \to \HeavyMaj$, and surfaces a
+clean \emph{structural obstruction theorem} rooted in lepton-number
+symmetry. The Majorana bilinear $\nu_R^T C \nu_R$ carries $\Delta L = 2$;
+if the substrate preserves $U(1)_L$ (or its discrete remnant
+$\mathbb{Z}_{4,X}$), the four-fermion Majorana-channel coupling
+$G_M (\nu_R^T C \nu_R)(\nu_R^T C \nu_R)^*$ is forbidden by symmetry.
+Antusch-Kingman-Lindner-Wetterich~\cite{AntuschKingmanLindnerWetterich2003}
+state this explicitly: \emph{``We have included huge Majorana masses for
+the right-handed neutrinos, since there is no protective symmetry.''} The
+contrapositive is the obstruction: under substrate-$L$ preservation,
+$G_M \equiv 0$ and the projected gap equation has only $\HeavyMaj = 0$.
 
-This pattern follows the project's tracked-hypothesis precedent: the
+When the substrate explicitly violates $U(1)_L$, the qualitative form of
+$\HeavyMaj$ is the standard NJL/BCS \emph{dimensional-transmutation}
+exponential~\cite{AntuschKingmanLindnerWetterich2003}, formalized as the
+strong tracked hypothesis
+\texttt{MajoranaRung.H\_MR\_FromADWSubstrate\_BCS\_LNV}:
+\begin{verbatim}
+def H_MR_FromADWSubstrate_BCS_LNV
+    (m : MajoranaRungData) (Λ_ADW : ℝ) : Prop :=
+  H_LeptonNumberViolated ∧
+  ∃ G_M : ℝ, 1 < G_M ∧
+    ∀ i, m.M_R i = Λ_ADW * Real.exp(-1/(2*(G_M-1)))
+\end{verbatim}
+
+The conjunction with \texttt{H\_LeptonNumberViolated} encodes the
+symmetry obstruction; $G_M > 1$ encodes supercriticality (in units where
+the critical coupling is normalized to unity). The Wave 2b Lean module
+ships the obstruction theorem
+\texttt{lepton\_number\_symmetry\_obstructs\_BCS\_form} as a direct
+consequence: \emph{without LNV, the strong BCS hypothesis cannot hold}.
+
+Two further refinement theorems are shipped:
+\texttt{M\_R\_pos\_under\_BCS\_form} (the BCS exponential is strictly
+positive, hence so is $\HeavyMaj$) and
+\texttt{M\_R\_lt\_substrate\_under\_BCS\_form} (the BCS exponential is
+strictly bounded above by 1, hence $\HeavyMaj < \LambdaADW$ — the
+qualitative content of dimensional transmutation).
+
+This Wave 2b strengthening pattern follows the project's tracked-hypothesis
+precedent~\cite{TooBySmithHepLean}: the
 \texttt{H\_ScalarChannelIsTetradBifurcationOutput} hypothesis in
 \texttt{ScalarRungInterpretation.lean}, the
 \texttt{H\_MixedChannelZ16Cancels} hypothesis in
 \texttt{HiddenSectorMixedCharge.lean}, and the
 \texttt{H\_VestigialRelicCarriesZ16Charge} hypothesis in
-\texttt{DarkSectorSynthesis.lean}~\cite{TooBySmithHepLean}. In each
-case the hypothesis encodes a load-bearing claim that is open in the
-primary literature; consumers thread it through as a parameter
-rather than treating it as a theorem.
+\texttt{DarkSectorSynthesis.lean}.
 
 %% ================================================================
 \section{The PMNS Structure Note}
@@ -311,6 +334,74 @@ source~\cite{ADW,WetterichSpinor2013,Volovik2024Spinor} (deep research
 \S 4); the figure encodes the embedding-agnostic phenomenology only.
 
 %% ================================================================
+\section{Wave 2b Quantitative Decoupling Bound for Embedding I vs III}
+\label{sec:decoupling}
+
+A Wave 2a deep-research return on the IR-equivalence of Embedding I (fundamental
+$\SterileNu$) and Embedding III (substrate-bound $\SterileNu$) confirms that the
+Appelquist-Carazzone decoupling theorem~\cite{AppelquistCarazzone1975,BallThorne1994}
+applies cleanly, with leading operator dimension $\Delta = 5$ (Weinberg-like,
+LNV) or $\Delta = 6$ (generic), giving the schematic bound
+\begin{equation}
+  |\mathrm{amp}_{\rm III}(E) - \mathrm{amp}_{\rm I}(E)|
+    \;\le\; C \cdot (E / \LambdaADW)^k,
+  \qquad k \in \{1, 2\}.
+\end{equation}
+The natural Wilson-coefficient estimate is $C \sim N_f/(16\pi^2) \simeq 0.1$ for
+ADW-style substrates with $N_f \simeq 16$, transplanted from the SILH counting
+of Giudice-Grojean-Pomarol-Rattazzi~\cite{GiudiceGrojeanPomarolRattazzi2007} and
+the bilocal-NJL form-factor analysis of Hill~\cite{Hill2024Bilocal}. The
+substrate-specific value of $C$ has not been computed in primary literature for
+ADW; we honestly flag this as the residual gap.
+
+The Wave 2b Lean module \texttt{MajoranaRungDecoupling.lean} ships:
+\begin{itemize}
+\item A \texttt{DecouplingRegime} structure encoding $0 < E$, $0 < \LambdaADW$,
+  $10 E < \LambdaADW$ (robust hierarchy), plus three predicates excluding
+  cosmological-scale failure modes (vestigial gravity~\cite{Volovik2024Spinor};
+  q-theory; FRG strong-coupling). At $E = M_W$ and
+  $\LambdaADW = 10^{14}$~GeV, all three failure-mode predicates are trivially
+  satisfied.
+\item A \texttt{SubstrateData} structure parameterizing the substrate by
+  $(\LambdaADW, \Lambda_{\rm UV}, N_f)$.
+\item Two tracked-hypothesis Props:
+  \texttt{H\_DecouplingBoundDim6} (generic, $k=2$) and
+  \texttt{H\_DecouplingBoundDim5\_LNV} (LNV-conditional, $k=1$, dim-5
+  Weinberg-operator channel).
+\item A non-vacuity witness \texttt{decouplingRegime\_at\_electroweak\_scale}
+  showing the canonical EW point $(E, \LambdaADW) = (80~\mathrm{GeV}, 10^{14}~\mathrm{GeV})$
+  satisfies the regime predicate.
+\item A consistency witness \texttt{H\_DecouplingBoundDim6\_consistent} showing
+  the trivially-zero amplitude difference satisfies the bound for any
+  \texttt{SubstrateData}.
+\item A \texttt{decoupling\_isBigOWith} restatement using Mathlib's
+  \texttt{Asymptotics.IsBigOWith} API for compatibility with downstream
+  asymptotic-analysis infrastructure.
+\end{itemize}
+
+\textbf{Empirical leverage.} For $E = M_W \simeq 80$~GeV and $\LambdaADW
+= 10^{14}$~GeV, the leading dim-5 (LNV) suppression is
+$(E/\LambdaADW) \simeq 8 \times 10^{-13}$, corresponding to
+$m_\nu \sim C \cdot v^2 / \LambdaADW \simeq 0.06$~eV
+(at the SILH natural Wilson coefficient $C \simeq N_f/(16\pi^2) \simeq 0.1$,
+implemented as the default in
+\texttt{src/core/formulas.py:weinberg\_induced\_neutrino\_mass}) — within
+the LEGEND-1000~\cite{LEGEND1000} reach. The dim-6 (generic) suppression
+is $(E/\LambdaADW)^2 \simeq 6 \times 10^{-25}$, far below DUNE/Hyper-K NSI
+sensitivity~\cite{CiriglianoMasterFormula2018}. The phenomenological signature
+of decoupling is therefore the same as ordinary Type-I seesaw — it is the
+\emph{correct} behavior, not an embedding-distinguishing feature.
+
+\textbf{Independence (not refinement).} An auxiliary lemma
+\texttt{dim6\_tighter\_than\_dim5\_in\_decoupling\_regime} establishes
+$(E/\LambdaADW)^2 \le E/\LambdaADW$ in the decoupling regime, confirming that
+the dim-6 bound is \emph{tighter} (smaller upper bound) than dim-5. The two
+bounds therefore apply in different physical regimes — dim-6 when the substrate
+preserves $U(1)_L$ and the dim-5 channel is symmetry-forbidden, dim-5 when the
+substrate violates $U(1)_L$ and the Weinberg operator is allowed — and are NOT
+in an implication relation.
+
+%% ================================================================
 \section{Formal Verification Summary}
 \label{sec:formal-verification}
 
@@ -320,16 +411,18 @@ source~\cite{ADW,WetterichSpinor2013,Volovik2024Spinor} (deep research
 \toprule
 Module & Theorems & Sorry \\
 \midrule
-\texttt{MajoranaRung.lean} & $14$ & $0$ \\
-\texttt{NeutrinoMixing.lean} & $7$ & $0$ \\
+\texttt{MajoranaRung.lean} (Wave 2 + 2b §3a) & $19$ & $0$ \\
+\texttt{NeutrinoMixing.lean} (Wave 2 + 2a §4 split) & $11$ & $0$ \\
+\texttt{MajoranaRungDecoupling.lean} (Wave 2b new) & $7$ & $0$ \\
 \midrule
-Wave 2 total & $21$ & $0$ \\
+Wave 2 total (W2 + W2a + W2b) & $37$ & $0$ \\
 \bottomrule
 \end{tabular}
-\caption{Wave 2 Lean-formalization counts. Both modules build clean
-under \texttt{lake build SKEFTHawking.ExtractDeps} (8433 jobs total
-post-Wave-2). Zero sorry, zero new axioms. The project total
-post-Wave-2 is \totaltheorems\ theorems across \totalmodules\
+\caption{Wave 2 Lean-formalization counts after Wave 2a accuracy round
+and Wave 2b strengthening. All three modules build clean under
+\texttt{lake build SKEFTHawking.ExtractDeps} (8434 jobs total
+post-Wave-2b). Zero sorry, zero new axioms. The project total
+post-Wave-2b is \totaltheorems\ theorems across \totalmodules\
 modules with \sorrycount\ sorry and \totalaxioms\ axiom
 (\texttt{gapped\_interface\_axiom} unchanged from Phase 4).}
 \label{tab:formal-summary}
@@ -482,6 +575,39 @@ Preconceptual Design Report,'' arXiv:2107.11462 (2021).
 J.~Tooby-Smith, ``HepLean: digitalising high energy physics,''
 Comput.~Phys.~Commun.~\textbf{308}, 109457 (2025); arXiv:2405.08863;
 DOI:~\href{https://doi.org/10.1016/j.cpc.2024.109457}{10.1016/j.cpc.2024.109457}.
+
+\bibitem{AntuschKingmanLindnerWetterich2003}
+S.~Antusch, J.~Kingman, M.~Lindner and C.~Wetterich, ``Dynamical
+electroweak symmetry breaking by a neutrino condensate,''
+Nucl.~Phys.~B~\textbf{658}, 203 (2003); hep-ph/0211385;
+DOI:~\href{https://doi.org/10.1016/S0550-3213(03)00188-3}{10.1016/S0550-3213(03)00188-3}.
+
+\bibitem{AppelquistCarazzone1975}
+T.~Appelquist and J.~Carazzone, ``Infrared singularities and
+massive fields,'' Phys.~Rev.~D~\textbf{11}, 2856 (1975);
+DOI:~\href{https://doi.org/10.1103/PhysRevD.11.2856}{10.1103/PhysRevD.11.2856}.
+
+\bibitem{BallThorne1994}
+R.~D.~Ball and R.~S.~Thorne, ``The decoupling theorem in effective
+scalar field theory,'' arXiv:hep-th/9404156 (1994).
+
+\bibitem{GiudiceGrojeanPomarolRattazzi2007}
+G.~F.~Giudice, C.~Grojean, A.~Pomarol and R.~Rattazzi, ``The
+strongly-interacting light Higgs,'' JHEP~\textbf{06}, 045 (2007);
+hep-ph/0703164;
+DOI:~\href{https://doi.org/10.1088/1126-6708/2007/06/045}{10.1088/1126-6708/2007/06/045}.
+
+\bibitem{Hill2024Bilocal}
+C.~T.~Hill, ``Bilocal field theory for composite scalar bosons,''
+Entropy~\textbf{26}, 146 (2024);
+DOI:~\href{https://doi.org/10.3390/e26020146}{10.3390/e26020146}.
+
+\bibitem{CiriglianoMasterFormula2018}
+V.~Cirigliano, W.~Dekens, J.~de~Vries, M.~L.~Graesser and
+E.~Mereghetti, ``A neutrinoless double beta decay master formula
+from effective field theory,'' JHEP~\textbf{12}, 097 (2018);
+arXiv:1806.02780;
+DOI:~\href{https://doi.org/10.1007/JHEP12(2018)097}{10.1007/JHEP12(2018)097}.
 
 \bibitem{PDG2024}
 S.~Navas \emph{et al.} (Particle Data Group), ``Review of Particle

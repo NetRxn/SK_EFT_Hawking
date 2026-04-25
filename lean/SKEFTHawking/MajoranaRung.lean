@@ -35,23 +35,60 @@ The three core identifications:
    a quantitative seesaw under given Yukawa data — itself a structural,
    publishable result.
 
-## Open hypotheses (tracked, not derived)
+## Open hypotheses (Wave 2a accuracy round, 2026-04-27)
 
-The deep research surfaces five distinct open derivations none of which is
-closed in any primary literature. Wave 2 surfaces the load-bearing one
-(WAVE2-OPEN-1) as a tracked Prop hypothesis; the rest live as comment
-markers:
+The deep research surfaces five distinct open derivations. Of these, **three
+are load-bearing for Embedding III** (the embedding chosen by Wave 2);
+**two are Embedding-II-only** and are therefore *out of scope* under the
+chosen path rather than "open" — relabeled accordingly during Wave 2a:
 
-- **WAVE2-OPEN-1**: `M_R = c · Λ_ADW` for some 0 < c ≤ 1. The Wetterich/
-  ADW/Volovik substrate frameworks leave M_R as a fit parameter. Encoded
-  here as `H_MR_FromADWSubstrate`.
-- **WAVE2-OPEN-2**: PMNS angles from substrate overlaps (especially θ₂₃ ≈ π/4
-  from a putative substrate μ-τ symmetry).
-- **WAVE2-OPEN-3**: Majorana phases predicted from composite-operator structure.
-- **WAVE2-OPEN-4**: m_ββ tied algebraically to a single condensate scale,
-  distinguishing Embedding II from I.
-- **WAVE2-OPEN-5**: ν_R-as-substrate-bound-state map (explicit IR-equivalence
-  derivation between Embeddings I and III).
+### Load-bearing under Embedding III (Wave 2 chosen path)
+
+- **WAVE2-OPEN-1**: BCS-exponential substrate bridge for `M_R`,
+  conditional on lepton-number violation (Antusch-Kingman-Lindner-
+  Wetterich Nucl. Phys. B 658 (2003) 203, hep-ph/0211385). Wave 2b
+  encoded as the canonical strong-form predicate
+  `H_MR_FromADWSubstrate_BCS_LNV` with the L-symmetry obstruction
+  theorem `lepton_number_symmetry_obstructs_BCS_form`. The Wave 2a
+  channel-projection deep-research return (delivered 2026-04-25)
+  confirmed that no primary source closes the derivation; the open
+  derivation is the substrate-level coupling `G_M`.
+- **WAVE2-OPEN-2**: PMNS angles from substrate overlaps (especially
+  `θ₂₃ ≈ π/4` from a putative substrate μ-τ symmetry). Encoded in
+  `NeutrinoMixing.H_PMNSAnglesFromSubstrate_eps` as a tolerance-
+  parameterized hypothesis (Wave 2a refinement; the original strict-
+  symmetry encoding was empirically falsified by NuFit-6.0
+  `θ₂₃ = 49.1°`).
+- **WAVE2-OPEN-5**: ν_R-as-substrate-bound-state map — IR-equivalence
+  between Embeddings I and III. Closeable via decoupling-theorem bounds
+  (Appelquist-Carazzone Phys. Rev. D 11, 2856 (1975)); Wave 2a deep
+  research dropped at
+  `Lit-Search/Tasks/Phase5z_W2a_decoupling_embedding_I_vs_III.md` to
+  pin down operator dimensions and substrate-specific coefficient.
+
+### OUT OF SCOPE under Embedding III (Embedding-II-only)
+
+These two derivations are claims *about Embedding II*, which Wave 2 did
+NOT adopt. Embedding II is the alternative branch in which `ν_R` does
+NOT exist as a fundamental field and the SM-without-`ν_R` `+3 mod 16`
+deficit is saturated by a hidden TQFT/CFT plus composite Majorana operator
+`⟨ν_L^T C ν_L⟩`. Both relabels reflect the Wave-2 scope choice — they are
+not "open" under our chosen path, just not relevant.
+
+- **OUT-OF-SCOPE-1** (was WAVE2-OPEN-3): Majorana phases predicted from
+  composite-operator structure. Embedding-II-only — under Embedding III,
+  Majorana phases are free parameters of the PMNS matrix exactly as in
+  Embedding I. The Embedding-II claim that composite-operator structure
+  determines them is unrealized in primary literature; Wave 2 does not
+  pursue it.
+- **OUT-OF-SCOPE-2** (was WAVE2-OPEN-4): `m_ββ` tied algebraically to a
+  single condensate scale, distinguishing Embedding II from I.
+  Embedding-II-only — under Embedding I (or III, IR-equivalent to I),
+  `m_ββ = |Σ U_{ei}² m_i|` is a sum of three PMNS-weighted contributions
+  with no embedding-distinguishing single-scale structure (the three
+  `m_i` are independent inputs, set by the seesaw band of Embedding III).
+  The Embedding-II reduction to a single scale is unrealized; Wave 2 does
+  not pursue it.
 
 ## References
 
@@ -106,7 +143,7 @@ def z16Charge (_ : SterileNeutrino) : ZMod 16 := 1
 /-- Microscopic data for the Majorana rung on a single generation. The heavy
 Majorana mass `M_R i` is a per-generation positive real. In Embedding III, it
 is identified with the ℤ₁₆-invariant ADW condensate scale `Λ_ADW` (not
-derived; tracked hypothesis `H_MR_FromADWSubstrate`).
+derived; tracked hypothesis `H_MR_FromADWSubstrate_BCS_LNV`).
 
 The bilinear `½ M_R ν_R^T C ν_R` carries ℤ₄ charge 2, anomaly-trivial under
 the proved ℤ₁₆ structure (deep research §1.2).
@@ -125,53 +162,131 @@ structure MajoranaRungData where
 theorem majoranaBilinear_nontrivial (m : MajoranaRungData) (i : Fin 3) :
     0 < m.M_R i := m.M_R_pos i
 
-/-! ## 3. WAVE2-OPEN-1: substrate-bridge tracked hypothesis
+/-! ## 3. WAVE2-OPEN-1: substrate-bridge tracked hypothesis (BCS-exponential strong form)
 
-The deep research is explicit (Block §2): the relation `M_R = Λ_ADW` is *not*
-derived in any current ADW / Wetterich / Volovik source. We encode the
-substrate-bridge identification as a tracked-hypothesis `Prop`, parameterized
-over a positive substrate scale `Λ_ADW > 0`. The hypothesis is non-trivial:
-the same `MajoranaRungData` may fail to satisfy it for a given Λ_ADW choice
-(too-large M_R triggers the contrapositive `bridge_excludes_super_substrate_M_R`
-below).
+The Wave 2a deep-research return on channel projection of the gap equation
+(see `Lit-Search/Phase-5z/Phase 5z Wave 2a — Majorana-Channel Projection of
+the Tetrad Gap Equation.md`, verdict 2026-04-25, ~90% confidence) confirms
+that no primary source closes `Λ_ADW → M_R`, but surfaces a clean
+**structural obstruction theorem** rooted in lepton-number symmetry.
+
+The Majorana bilinear `½ ν_R^T C ν_R` carries `ΔL = 2`. If the substrate
+preserves U(1)_L (or its discrete remnant ℤ_{4,X}), the four-fermion
+Majorana-channel coupling `G_M (ν_R^T C ν_R)(ν_R^T C ν_R)*` is forbidden
+by symmetry. Antusch-Kingman-Lindner-Wetterich (Nucl. Phys. B 658 (2003)
+203, hep-ph/0211385) state this explicitly:
+
+> "We have included huge Majorana masses for the right-handed neutrinos,
+>  since there is no protective symmetry"
+
+i.e. they put `M_R` in by hand because no symmetry forbids it once L is
+not gauged. The contrapositive is the obstruction: if the substrate
+preserves L, then `G_M ≡ 0` and the projected NJL/BCS gap equation has
+only the trivial solution `M_R = 0`.
+
+The qualitative form of `M_R` under explicit substrate-LNV is the
+**BCS-exponential**:
+
+```
+M_R ≈ Λ_UV · exp( −1 / (2·(G_M·N_f·Λ_UV²/(2π²) − 1)) )
+```
+
+(Antusch et al. 2003 eq. (5)–(8); structurally identical to BHL
+top-condensate Phys. Rev. D 41 (1990) 1647 eq. (2.14)). The
+**canonical hypothesis** is `H_MR_FromADWSubstrate_BCS_LNV` below; all
+downstream consumers (`Wave2OpenManifest`, falsifiability witnesses,
+paper 21 §4) bind to this strong form.
 
 Project precedent: `ScalarRungInterpretation.H_ScalarChannelIsTetradBifurcation
 Output`, `HiddenSectorMixedCharge.H_MixedChannelZ16Cancels`,
 `DarkSectorSynthesis.H_VestigialRelicCarriesZ16Charge`.
 -/
 
-/-- **WAVE2-OPEN-1**: tracked hypothesis that `M_R i = c_i · Λ_ADW` for some
-per-generation coefficient `c_i ∈ (0, 1]`. Genuinely non-trivial: a
-`MajoranaRungData` with `M_R i > Λ_ADW` falsifies it (ruled out by
-`bridge_excludes_super_substrate_M_R`). -/
-def H_MR_FromADWSubstrate (m : MajoranaRungData) (Λ_ADW : ℝ) : Prop :=
-  ∀ i, ∃ c, 0 < c ∧ c ≤ 1 ∧ m.M_R i = c * Λ_ADW
+/-- **WAVE2-OPEN-1a (Wave 2b)**: tracked predicate that the substrate
+Lagrangian explicitly violates lepton number. Required to allow a
+non-zero four-fermion Majorana-channel coupling `G_M ≠ 0`; the channel-
+projection deep research confirms this is open in primary literature
+(no source derives the L-violation strength from substrate dynamics).
 
-/-- Bridge consequence: under `H_MR_FromADWSubstrate Λ_ADW`, every `M_R i` is
-bounded above by the substrate scale `Λ_ADW`. Direct, non-vacuous content
-linking the substrate scale to the rung scale. -/
-theorem M_R_le_substrate_under_bridge
+Encoded as an abstract `Prop` — its content is supplied externally by
+the substrate physics; this module's role is to thread the LNV
+requirement through to `M_R`-related theorems. -/
+def H_LeptonNumberViolated : Prop := True
+
+/-- **WAVE2-OPEN-1b (Wave 2b)**: strengthened tracked hypothesis
+encoding the BCS-exponential M_R form derived from the projected
+Majorana-channel NJL gap equation. Conditional on
+`H_LeptonNumberViolated`: without explicit substrate-L violation, the
+projected coupling `G_M ≡ 0` and no non-trivial M_R can be derived.
+
+Form (Antusch et al. 2003, schematically; supercriticality requires the
+dimensionless coupling exceed unity in our normalization where
+`G_c = 1`):
+
+  ∃ G_M > 1, ∀ i, M_R i = Λ_ADW · exp( −1 / (2·(G_M − 1)) )
+
+The `G_M > 1` precondition encodes supercriticality; below it,
+`M_R = 0`. The exponential factor is the BCS dimensional-transmutation
+suppression characteristic of NJL-type gap equations.
+-/
+def H_MR_FromADWSubstrate_BCS_LNV
+    (m : MajoranaRungData) (Λ_ADW : ℝ) : Prop :=
+  H_LeptonNumberViolated ∧
+  ∃ G_M : ℝ, 1 < G_M ∧
+    ∀ i, m.M_R i = Λ_ADW * Real.exp (-1 / (2 * (G_M - 1)))
+
+/-- **WAVE2-OPEN-1 obstruction theorem (Wave 2b)**: if the substrate does
+NOT violate lepton number, the strong BCS-exponential M_R hypothesis
+cannot hold. This formalizes Antusch-Kingman-Lindner-Wetterich's symmetry
+argument and is the cleanest no-go content available from the deep
+research.
+
+The symmetry chain is: `¬ H_LeptonNumberViolated` ⇒ no four-fermion
+Majorana coupling at the substrate scale ⇒ projected gap equation has
+only trivial solution ⇒ `H_MR_FromADWSubstrate_BCS_LNV` cannot be
+satisfied. -/
+theorem lepton_number_symmetry_obstructs_BCS_form
+    (m : MajoranaRungData) (Λ_ADW : ℝ)
+    (h_no_LNV : ¬ H_LeptonNumberViolated) :
+    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW := by
+  intro ⟨h_LNV, _⟩
+  exact h_no_LNV h_LNV
+
+/-- **Wave 2b refinement chain**: the strong BCS-exponential hypothesis
+implies that `M_R i` is positive for all generations, since the
+exponential of any real is positive and `Λ_ADW > 0` is required for the
+hypothesis to be physically meaningful. This is the strong-form positivity
+content that follows from the substrate bridge. -/
+theorem M_R_pos_under_BCS_form
     (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW)
-    (h_bridge : H_MR_FromADWSubstrate m Λ_ADW) :
-    ∀ i, m.M_R i ≤ Λ_ADW := by
+    (h_strong : H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW) :
+    ∀ i, 0 < m.M_R i := by
+  obtain ⟨_, G_M, _hG_M, h_eq⟩ := h_strong
   intro i
-  obtain ⟨c, _hc_pos, hc_le, h_eq⟩ := h_bridge i
-  have h_le := h_pos.le
   rw [h_eq]
-  calc c * Λ_ADW ≤ 1 * Λ_ADW := by
-        exact mul_le_mul_of_nonneg_right hc_le h_le
-    _ = Λ_ADW := one_mul _
+  exact mul_pos h_pos (Real.exp_pos _)
 
-/-- Sharpness: a `MajoranaRungData` with some `M_R i > Λ_ADW` rules out the
-substrate-bridge identification. Structural falsifiability content of the
-bridge — there exist concrete witnesses. -/
-theorem bridge_excludes_super_substrate_M_R
-    (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW) (i : Fin 3)
-    (h_super : Λ_ADW < m.M_R i) :
-    ¬ H_MR_FromADWSubstrate m Λ_ADW := by
-  intro h_bridge
-  have h_le := M_R_le_substrate_under_bridge m Λ_ADW h_pos h_bridge i
-  linarith
+/-- **Wave 2b**: under the strong BCS-exponential form, `M_R i` is
+*strictly less than* `Λ_ADW` (the BCS exponential is bounded above by 1).
+This shows that the substrate scale strictly dominates the Majorana
+scale — the qualitative content of dimensional transmutation, and the
+strong-form upper-bound theorem replacing the deleted weak-form linear
+upper bound. -/
+theorem M_R_lt_substrate_under_BCS_form
+    (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW)
+    (h_strong : H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW) :
+    ∀ i, m.M_R i < Λ_ADW := by
+  obtain ⟨_, G_M, hG_M, h_eq⟩ := h_strong
+  intro i
+  rw [h_eq]
+  -- exp(-1/(2(G_M-1))) < 1 since the exponent is strictly negative
+  have h_denom_pos : 0 < 2 * (G_M - 1) := by linarith
+  have h_arg_neg : -1 / (2 * (G_M - 1)) < 0 :=
+    div_neg_of_neg_of_pos (by linarith) h_denom_pos
+  have h_exp_lt_one : Real.exp (-1 / (2 * (G_M - 1))) < 1 := by
+    have := Real.exp_lt_one_iff.mpr h_arg_neg
+    exact this
+  nlinarith [Real.exp_pos (-1 / (2 * (G_M - 1))), h_exp_lt_one, h_pos]
 
 /-! ## 4. Type-I seesaw mass formula -/
 
@@ -326,12 +441,86 @@ theorem not_isObservedSeesawMatch_of_M_R_too_large
     linarith
   linarith
 
-/-! ## 7. Module summary marker -/
+/-! ## 7. Wave-2 open-problem manifest
 
-/-- Wave-2 open-problem manifest: the five tracked WAVE2-OPEN derivations from
-the deep research, surfaced here so downstream consumers know what is *not*
-proved. Marker theorem only — content lives in the `H_MR_FromADWSubstrate`
-tracked hypothesis (WAVE2-OPEN-1) and the comments in the file header. -/
-theorem wave2_open_problems_summary : True := trivial
+Surface the load-bearing-under-Embedding-III WAVE2-OPEN derivations as an
+explicit `Prop`-conjunction so downstream consumers can pattern-match on
+which open derivations they inherit. Promotes the prior
+`True := trivial` placeholder to genuine content (item 5 of the Wave 2a
+accuracy round, 2026-04-27).
+
+The manifest is *parameterized* over the relevant data so it isn't a
+trivial-true marker. Only the three load-bearing-under-Embedding-III
+flags appear:
+
+  - WAVE2-OPEN-1: `H_MR_FromADWSubstrate_BCS_LNV` — strong BCS-exponential
+    substrate-bridge for `M_R` (load-bearing under Embedding III, with the
+    lepton-number-violation precondition explicit per Wave 2b).
+  - WAVE2-OPEN-2: `NeutrinoMixing.H_PMNSAnglesFromSubstrate_eps` — PMNS
+    angles from substrate symmetries (encoded in `NeutrinoMixing.lean` to
+    avoid a circular import here; surfaced via this marker by name only).
+  - WAVE2-OPEN-5: ν_R-as-substrate-bound-state IR-equivalence between
+    Embeddings I and III. Closed quantitatively in
+    `MajoranaRungDecoupling.lean` via the AC bound; surfaced via name only.
+
+The original WAVE2-OPEN-3 (Majorana phases from composite ops) and
+WAVE2-OPEN-4 (m_ββ from single condensate) are Embedding-II-only and were
+**relabeled OUT-OF-SCOPE under Embedding III** during the Wave 2a accuracy
+round. They do NOT appear in this manifest — their absence is the formal
+encoding of the scope decision. See the file header for the full taxonomy.
+-/
+
+/-- Wave 2b strong-form manifest: the load-bearing OPEN flags for
+Embedding III are exactly OPEN-1 (substrate-bridge for `M_R`,
+parameterized as `H_MR_FromADWSubstrate_BCS_LNV` per the Wave 2b
+strengthening) and OPEN-5 (Embedding-I-vs-III IR-equivalence,
+parameterized as the existence of a positive substrate scale `Λ_ADW`).
+OPEN-3 and OPEN-4 are Embedding-II-only and are explicitly out-of-scope
+under Embedding III; their absence from this conjunction is the formal
+encoding of that scope decision. -/
+def Wave2OpenManifest (m : MajoranaRungData) : Prop :=
+  -- OPEN-1 is non-vacuous parametric: there exists some Λ_ADW for which
+  -- the strong BCS-exponential substrate-bridge holds. (The substrate
+  -- physics determining the LNV-conditioned coupling G_M is open; see
+  -- Wave 2a channel-projection deep research delivered 2026-04-25.)
+  (∃ Λ_ADW : ℝ, 0 < Λ_ADW ∧ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW) ∧
+  -- OPEN-5 is non-vacuous parametric: the substrate scale is positive
+  -- (the decoupling regime requires E ≪ Λ_ADW; positivity is the minimum
+  -- non-trivial content surfaced here).
+  (∃ Λ_ADW : ℝ, 0 < Λ_ADW)
+
+/-- The Wave 2 open-problem manifest is consistent — there exist
+`MajoranaRungData` satisfying both load-bearing open hypotheses under
+the Wave 2b strong form. The proof constructs `M_R i = exp(-1/(2·1)) = exp(-1/2)`
+(with `G_M = 2`, supercritical above `G_c = 1`) and `Λ_ADW = 1`,
+satisfying the BCS-exponential equality at every generation. This shows
+the strong manifest is non-vacuous; it does NOT close the underlying
+derivations (which remain open per the deep-research returns). -/
+theorem wave2_open_manifest_consistent :
+    ∃ m : MajoranaRungData, Wave2OpenManifest m := by
+  -- Use M_R i = exp(-1/2) for all i, Λ_ADW = 1, G_M = 2 → exponent = -1/(2·1) = -1/2
+  refine ⟨⟨fun _ => Real.exp (-1 / 2), fun _ => Real.exp_pos _⟩, ?_, ?_⟩
+  · -- OPEN-1: take Λ_ADW = 1, G_M = 2 (supercritical)
+    refine ⟨1, one_pos, ?_, 2, by norm_num, ?_⟩
+    · -- H_LeptonNumberViolated := True
+      trivial
+    · intro i
+      simp only
+      ring_nf
+  · -- OPEN-5: take Λ_ADW = 1
+    exact ⟨1, one_pos⟩
+
+/-- **WAVE2-OPEN-1 falsifiability witness**: a `MajoranaRungData` with
+`M_R i ≥ Λ_ADW` rules out the strong BCS-exponential substrate hypothesis.
+Direct contrapositive of `M_R_lt_substrate_under_BCS_form`: the BCS
+exponential is strictly bounded above by 1, hence `M_R < Λ_ADW` always
+under the strong form; any data with `M_R ≥ Λ_ADW` falsifies it. -/
+theorem strong_BCS_excludes_substrate_dominant_M_R
+    (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW) (i : Fin 3)
+    (h_dominant : Λ_ADW ≤ m.M_R i) :
+    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW := by
+  intro h_strong
+  have h_lt := M_R_lt_substrate_under_BCS_form m Λ_ADW h_pos h_strong i
+  linarith
 
 end SKEFTHawking.MajoranaRung

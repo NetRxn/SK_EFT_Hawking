@@ -160,6 +160,14 @@ Shapes encode semantic roles — a visual dimension independent of color:
 
 **Write-path discipline (Wave 10b).** Human verification state + audit events are written EXCLUSIVELY via `scripts/sentence_state.py` CLI. No free-form JSON edits. The CLI enforces schema validation + file-lock + atomic writes. LLMs, dashboard backend, and ad-hoc scripts all route through the same mutation chokepoint. Corresponds to Wave 9f's JSON-canonical-at-rest architecture — PG+AGE is rebuildable mirror; no bidirectional pollution.
 
+**Cross-tab change-bus (Wave 10c).** Verification actions on artifacts (parameters / citations / axioms / hypotheses / aristotle runs / production runs — anything with a `node_id_for` mapping) flow through `scripts/verification_state.py` → `docs/verification_log.jsonl`. The library API (`record_event`, `read_events`, `latest_per_node`, `apply_to_graph`, `prune_log`) and CLI (`record / list / apply / prune`) are the sole writers; the dashboard's `/verify` (Parameters tab) and `/api/verification/event` (generic, used by Paper Provenance per-link verify buttons) both delegate to it. Each event lands `meta.last_modified_explicit` on the corresponding KG node, propagated upstream through `last_modified.annotate_last_modified` so dependent Sentence nodes flip to `NEEDS_RECHECK` when their backing artifacts are re-verified.
+
+**Cross-tab provenance via `triggered_by` (Wave 10 strengthening).** When a verification event originates from a sentence's per-link verify UI inside the chain inspector, the event carries `triggered_by: <source_sentence_id>` so the audit trail surfaces "this verification was fired from sentence X's chain inspector" vs. an opaque "Parameter X was confirmed". The dashboard's Audit Log DIFF table renders an inline `⚲ self` (self-triggered) or `↗ <other_sid>` (cross-sentence) badge. Field is null for events from the Parameters tab or ad-hoc CLI.
+
+**Replay-canonical recovery (Wave 10 strengthening).** The audit log is the canonical record of verification history. If `cmd_mark` succeeds in writing an audit event but fails to update `prose_state.json` (rare partial-failure), `scripts/sentence_state.py rebuild_prose_state --paper <id> --check` walks the audit log in timestamp order and reports drift; `--write` atomically replaces the prose_state file with the rebuilt content.
+
+**Retention policy.** `verification_log.jsonl` grows append-only. `read_events` emits a one-shot WARN to stderr when the file exceeds 1 MB recommending `scripts/verification_state.py prune --keep-days 90`. The prune subcommand requires at least one of `--keep-days N` / `--keep-records N` / `--before <ISO-8601>` — refuses to operate without a retention criterion. `--archive-to <path>` appends pruned events to a sidecar JSONL for recovery. Atomic flock+rename rewrite.
+
 ### Lean Node Metadata
 
 Lean declaration nodes carry additional metadata in `meta`:

@@ -1698,6 +1698,119 @@ CITATION_REGISTRY = {
                  'idiom mirrored by NeutrinoMixing.PMNSMatrix. doi_verified '
                  'pending Stage 13.',
     },
+
+    # ────────────────────────────────────────────────────────────────
+    # Phase 5z Wave 2b — strengthening citations
+    # All entries `doi_verified: None`. WebFetch verification deferred
+    # to Stage 13 paper-21 round per feedback_citation_verification_required.
+    # ────────────────────────────────────────────────────────────────
+    'AntuschKingmanLindnerWetterich2003': {
+        'authors': 'Antusch, S., Kingman, J., Lindner, M., Wetterich, C.',
+        'title': 'Dynamical electroweak symmetry breaking by a neutrino condensate',
+        'journal': 'Nucl. Phys. B',
+        'volume': 658,
+        'page': 203,
+        'year': 2003,
+        'doi': '10.1016/S0550-3213(03)00188-3',
+        'arxiv': 'hep-ph/0211385',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'lean/SKEFTHawking/MajoranaRung.lean'],
+        'provides': [],
+        'notes': 'Source for Wave 2b H_MR_FromADWSubstrate_BCS_LNV form: '
+                 'coupled Dirac-Majorana NJL gap equations with M_R as '
+                 'external input + supercritical bifurcation. Cited '
+                 'verbatim in MajoranaRung §3a for the lepton-number-symmetry '
+                 'obstruction theorem. doi_verified pending Stage 13.',
+    },
+    'AppelquistCarazzone1975': {
+        'authors': 'Appelquist, T., Carazzone, J.',
+        'title': 'Infrared singularities and massive fields',
+        'journal': 'Phys. Rev. D',
+        'volume': 11,
+        'page': 2856,
+        'year': 1975,
+        'doi': '10.1103/PhysRevD.11.2856',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
+        'provides': [],
+        'notes': 'Original Appelquist-Carazzone decoupling theorem. Source '
+                 'for Wave 2b WAVE2-OPEN-5 quantitative bound encoding via '
+                 'DecouplingRegime + H_DecouplingBoundDim6. doi_verified '
+                 'pending Stage 13.',
+    },
+    'BallThorne1994': {
+        'authors': 'Ball, R. D., Thorne, R. S.',
+        'title': 'The decoupling theorem in effective scalar field theory',
+        'journal': 'arXiv',
+        'volume': None,
+        'page': None,
+        'year': 1994,
+        'doi': '10.48550/arXiv.hep-th/9404156',
+        'arxiv': 'hep-th/9404156',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Wilsonian-EFT rigorous proof of AC decoupling with '
+                 'explicit (E/M)^k bounds. Cited as the post-2000 sharper '
+                 'AC version that the Wave 2b decoupling encoding follows. '
+                 'doi_verified pending Stage 13.',
+    },
+    'GiudiceGrojeanPomarolRattazzi2007': {
+        'authors': 'Giudice, G. F., Grojean, C., Pomarol, A., Rattazzi, R.',
+        'title': 'The strongly-interacting light Higgs',
+        'journal': 'JHEP',
+        'volume': '06',
+        'page': '045',
+        'year': 2007,
+        'doi': '10.1088/1126-6708/2007/06/045',
+        'arxiv': 'hep-ph/0703164',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
+        'provides': [],
+        'notes': 'SILH framework: source for naturalC = N_f / (16π²) '
+                 'estimate adopted in MajoranaRungDecoupling.naturalC. '
+                 'doi_verified pending Stage 13.',
+    },
+    'Hill2024Bilocal': {
+        'authors': 'Hill, C. T.',
+        'title': 'Bilocal field theory for composite scalar bosons',
+        'journal': 'Entropy',
+        'volume': 26,
+        'page': 146,
+        'year': 2024,
+        'doi': '10.3390/e26020146',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
+                    'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
+        'provides': [],
+        'notes': 'Bilocal NJL form-factor analysis: source for the bound-'
+                 'state coefficient form used in Wave 2b naturalC. Verifies '
+                 'the SILH counting C ~ N_f / (16π²) for ADW-style four-'
+                 'fermion substrates. doi_verified pending Stage 13.',
+    },
+    'CiriglianoMasterFormula2018': {
+        'authors': 'Cirigliano, V., Dekens, W., de Vries, J., Graesser, M. L., Mereghetti, E.',
+        'title': 'A neutrinoless double beta decay master formula from effective field theory',
+        'journal': 'JHEP',
+        'volume': '12',
+        'page': '097',
+        'year': 2018,
+        'doi': '10.1007/JHEP12(2018)097',
+        'arxiv': '1806.02780',
+        'doi_verified': None,
+        'used_in': ['papers/paper21_majorana_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'SMEFT master formula for 0νββ: rigorous EFT chain LNV → '
+                 'SMEFT → LEFT → χEFT → nuclear ME. Cited in Wave 2b '
+                 'paper 21 §6 as the canonical reference for the '
+                 'embedding-agnostic m_ββ phenomenology. doi_verified '
+                 'pending Stage 13.',
+    },
 }
 
 

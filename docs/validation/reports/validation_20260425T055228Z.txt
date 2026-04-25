@@ -1,0 +1,10 @@
+SK-EFT Hawking Validation Report
+Generated: 20260425T055228Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] claim_clusters_fresh
+  + staleness — stale: paper12_polariton/claims_review.json newer than claim_clusters.json
+  + regenerate — Wrote 0 clusters across 0 papers → /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/claim_clusters.json
+  + summary — 0 cluster(s) across 0 paper(s)
+
+Overall: 1/1 passed

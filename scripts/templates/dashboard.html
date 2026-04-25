@@ -297,10 +297,10 @@
            href="?tab=lean">
             Proof Architecture
         </a>
-        <a class="tab {% if tab == 'papers' %}active{% endif %}"
-           href="?tab=papers">
-            Paper Contributions ({{ papers|sum(attribute='claim_count') }} across {{ papers|length }} papers)
-        </a>
+        {# Wave 10g — Paper Contributions tab retired; subsumed by Paper
+           Provenance (which serves both v1 8-layer dossier and v2 sentence-
+           level views). The /?tab=papers URL still works as a 302 to the
+           replacement so old bookmarks resolve. #}
         <a class="tab {% if tab == 'citations' %}active{% endif %}"
            href="?tab=citations">
             Citation Registry

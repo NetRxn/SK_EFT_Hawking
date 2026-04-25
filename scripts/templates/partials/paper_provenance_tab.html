@@ -388,11 +388,468 @@
         max-width: 560px; margin: 120px auto; text-align: center;
         color: var(--pp-text-dim); font-style: italic; line-height: 1.6;
     }
+
+    /* ════════════════════════════════════════════════════════════════
+       Wave 10d v2 — 3-column sentence-level layout
+       ════════════════════════════════════════════════════════════════
+       Active when the v2 SSE handler patches into ``#pp-coverage-ribbon``,
+       ``#pp-sentence-inspector``, ``#pp-chain-inspector``. v1 papers
+       leave those targets empty + the existing 2-column split takes over.
+    */
+
+    /* Palette tokens — one per sentence/state class. Each renders as a
+       muted-gradient background on the inline sentence span and a solid
+       dot in the coverage chip. */
+    .pp-wrap {
+        --pp-pal-verified:        #166534;
+        --pp-pal-verified-bg:     rgba(22,101,52,0.10);
+        --pp-pal-interpretive:    #1e40af;
+        --pp-pal-interpretive-bg: rgba(30,64,175,0.10);
+        --pp-pal-needs_fix:       #b03030;
+        --pp-pal-needs_fix-bg:    rgba(176,48,48,0.10);
+        --pp-pal-needs_recheck:   #6b3fa0;
+        --pp-pal-needs_recheck-bg:rgba(107,63,160,0.10);
+        --pp-pal-ungrounded:      #b45309;
+        --pp-pal-ungrounded-bg:   rgba(180,83,9,0.10);
+        --pp-pal-agent_proposed:  #7a6b54;
+        --pp-pal-agent_proposed-bg: rgba(122,107,84,0.10);
+        --pp-pal-agent_proposed_warn: var(--pp-warn);
+        --pp-pal-agent_proposed_warn-bg: rgba(180,83,9,0.10);
+        --pp-pal-agent_proposed_fail: var(--pp-fail);
+        --pp-pal-agent_proposed_fail-bg: rgba(176,48,48,0.10);
+        --pp-pal-agent_proposed_info: var(--pp-info);
+        --pp-pal-agent_proposed_info-bg: rgba(30,64,175,0.10);
+        --pp-pal-ungrounded_unclaimed: #9c9178;
+        --pp-pal-ungrounded_unclaimed-bg: rgba(156,145,120,0.12);
+        --pp-pal-stale: var(--pp-stale);
+        --pp-pal-stale-bg: var(--pp-stale-bg);
+        --pp-pal-transition: #7a6b54;
+        --pp-pal-transition-bg: rgba(122,107,84,0.05);
+    }
+
+    /* Coverage ribbon — sits just under the filter row when v2 schema. */
+    .pp-coverage {
+        padding: 8px 28px 10px; background: var(--pp-bg);
+        border-bottom: 1px solid var(--pp-border);
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    .pp-coverage:empty { display: none; }
+    .pp-coverage__total {
+        font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--pp-text-dim); margin-bottom: 6px;
+    }
+    .pp-coverage__bar {
+        display: flex; height: 8px; border-radius: 3px; overflow: hidden;
+        background: var(--pp-paper-bg); border: 1px solid var(--pp-border);
+        margin-bottom: 6px;
+    }
+    .pp-coverage__seg { display: block; min-width: 2px; }
+    .pp-coverage__seg[data-pal="verified"]      { background: var(--pp-pal-verified); }
+    .pp-coverage__seg[data-pal="interpretive"]  { background: var(--pp-pal-interpretive); }
+    .pp-coverage__seg[data-pal="needs_fix"]     { background: var(--pp-pal-needs_fix); }
+    .pp-coverage__seg[data-pal="needs_recheck"] { background: var(--pp-pal-needs_recheck); }
+    .pp-coverage__seg[data-pal="stale"]         { background: var(--pp-pal-stale); }
+    .pp-coverage__seg[data-pal="agent_proposed"]{ background: var(--pp-pal-agent_proposed); }
+    .pp-coverage__seg[data-pal="ungrounded_unclaimed"] { background: var(--pp-pal-ungrounded_unclaimed); }
+    .pp-coverage__seg[data-pal="transition"]    { background: var(--pp-pal-transition); }
+    .pp-coverage__legend { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pp-coverage__chip {
+        font-size: 0.66rem; color: var(--pp-text-soft);
+        display: inline-flex; align-items: center; gap: 5px;
+    }
+    .pp-coverage__chip strong { color: var(--pp-text); font-weight: 700; }
+    .pp-coverage__dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        display: inline-block;
+    }
+    .pp-coverage__dot[data-pal="verified"]      { background: var(--pp-pal-verified); }
+    .pp-coverage__dot[data-pal="interpretive"]  { background: var(--pp-pal-interpretive); }
+    .pp-coverage__dot[data-pal="needs_fix"]     { background: var(--pp-pal-needs_fix); }
+    .pp-coverage__dot[data-pal="needs_recheck"] { background: var(--pp-pal-needs_recheck); }
+    .pp-coverage__dot[data-pal="stale"]         { background: var(--pp-pal-stale); }
+    .pp-coverage__dot[data-pal="agent_proposed"]{ background: var(--pp-pal-agent_proposed); }
+    .pp-coverage__dot[data-pal="ungrounded_unclaimed"] { background: var(--pp-pal-ungrounded_unclaimed); }
+    .pp-coverage__dot[data-pal="transition"]    { background: var(--pp-pal-transition); }
+
+    /* 3-column layout — collapses to 2-col on tablet, 1-col on phone. */
+    .pp-split--v2 {
+        display: grid; grid-template-columns: 2fr 1.1fr 1.1fr;
+        flex: 1; min-height: 0; overflow: hidden;
+    }
+    @media (max-width: 1280px) {
+        .pp-split--v2 { grid-template-columns: 1.4fr 1fr; }
+        #pp-chain-inspector { display: none; }  /* collapse to popover in 10d-followup */
+    }
+    @media (max-width: 900px) {
+        .pp-split--v2 { grid-template-columns: 1fr; }
+        #pp-sentence-inspector { display: none; }
+    }
+
+    /* Sentence inline anchors in the paper body. Each gets a palette
+       background tint + state-colored bottom border. */
+    .pp-sentence {
+        cursor: pointer; padding: 0 2px;
+        border-bottom: 2px solid transparent;
+        transition: background 0.12s, border-color 0.12s;
+    }
+    .pp-sentence:hover { background: rgba(46,134,171,0.08); }
+    .pp-sentence--active {
+        background: rgba(46,134,171,0.18) !important;
+        outline: 1px solid var(--pp-accent);
+    }
+    .pp-sentence--verified      { background: var(--pp-pal-verified-bg);     border-color: var(--pp-pal-verified); }
+    .pp-sentence--interpretive  { background: var(--pp-pal-interpretive-bg); border-color: var(--pp-pal-interpretive); }
+    .pp-sentence--needs_fix     { background: var(--pp-pal-needs_fix-bg);    border-color: var(--pp-pal-needs_fix); }
+    .pp-sentence--needs_recheck {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            var(--pp-pal-needs_recheck-bg) 0,
+            var(--pp-pal-needs_recheck-bg) 4px,
+            transparent 4px, transparent 9px);
+        border-color: var(--pp-pal-needs_recheck);
+    }
+    .pp-sentence--ungrounded_unclaimed { border-color: var(--pp-pal-ungrounded_unclaimed); }
+    .pp-sentence--agent_proposed_warn  { border-color: var(--pp-pal-agent_proposed_warn); border-style: dashed; }
+    .pp-sentence--agent_proposed_fail  { border-color: var(--pp-pal-agent_proposed_fail); border-style: solid; }
+    .pp-sentence--agent_proposed_info  { border-color: var(--pp-pal-agent_proposed_info); border-style: dotted; }
+    .pp-sentence--agent_proposed       { border-color: var(--pp-pal-agent_proposed); border-style: dotted; }
+    .pp-sentence--transition           { color: var(--pp-text-dim); border-color: transparent; }
+    .pp-sentence--stale {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            var(--pp-pal-needs_recheck-bg) 0,
+            var(--pp-pal-needs_recheck-bg) 4px,
+            transparent 4px, transparent 9px);
+    }
+
+    /* Inspector panes (middle + right) */
+    .pp-inspector {
+        overflow-y: auto; padding: 22px 22px 60px;
+        background: var(--pp-panel);
+        border-left: 1px solid var(--pp-border);
+        font-family: 'Instrument Sans', 'Inter', sans-serif;
+        font-size: 0.84rem; color: var(--pp-text);
+    }
+    .pp-inspector--right { background: var(--pp-paper-bg); }
+    .pp-inspector__empty {
+        max-width: 320px; margin: 90px auto; text-align: center;
+        color: var(--pp-text-dim); font-style: italic; line-height: 1.55;
+    }
+    .pp-inspector__hint kbd {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+        padding: 1px 4px; border: 1px solid var(--pp-border);
+        background: var(--pp-paper-bg); border-radius: 2px; margin: 0 1px;
+    }
+    .pp-inspector__head {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 8px; margin-bottom: 12px;
+    }
+    .pp-inspector__verdict {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+        font-weight: 700; padding: 3px 8px; border-radius: 2px;
+        letter-spacing: 0.05em;
+    }
+    .pp-inspector__verdict--pass        { background: var(--pp-pass);  color: var(--pp-paper-bg); }
+    .pp-inspector__verdict--warn        { background: var(--pp-warn);  color: var(--pp-paper-bg); }
+    .pp-inspector__verdict--fail        { background: var(--pp-fail);  color: var(--pp-paper-bg); }
+    .pp-inspector__verdict--info        { background: var(--pp-info);  color: var(--pp-paper-bg); }
+    .pp-inspector__verdict--ungrounded  { background: var(--pp-pal-ungrounded); color: var(--pp-paper-bg); }
+    .pp-inspector__verdict--transition  { background: var(--pp-pal-transition); color: var(--pp-paper-bg); }
+    .pp-inspector__palette {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        text-transform: uppercase; letter-spacing: 0.06em;
+        padding: 2px 6px; border-radius: 2px;
+    }
+    .pp-inspector__palette[data-pal="verified"]     { background: var(--pp-pal-verified-bg); color: var(--pp-pal-verified); }
+    .pp-inspector__palette[data-pal="interpretive"] { background: var(--pp-pal-interpretive-bg); color: var(--pp-pal-interpretive); }
+    .pp-inspector__palette[data-pal="needs_fix"]    { background: var(--pp-pal-needs_fix-bg); color: var(--pp-pal-needs_fix); }
+    .pp-inspector__palette[data-pal="needs_recheck"]{ background: var(--pp-pal-needs_recheck-bg); color: var(--pp-pal-needs_recheck); }
+    .pp-inspector__palette[data-pal^="agent_proposed"] { background: var(--pp-pal-agent_proposed-bg); color: var(--pp-pal-agent_proposed); }
+    .pp-inspector__quote {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 0.95rem; line-height: 1.5;
+        padding: 10px 12px; background: var(--pp-paper-bg);
+        border-left: 3px solid var(--pp-accent); border-radius: 2px;
+        margin-bottom: 10px;
+    }
+    .pp-inspector__id {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        color: var(--pp-text-dim); margin-bottom: 12px;
+        word-break: break-all;
+    }
+    .pp-inspector__id code { font-size: 0.66rem; }
+    .pp-inspector__row {
+        font-size: 0.78rem; line-height: 1.5; margin: 4px 0;
+        color: var(--pp-text-soft);
+    }
+    .pp-inspector__lbl {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        color: var(--pp-text-dim); text-transform: uppercase;
+        letter-spacing: 0.06em; margin-right: 4px;
+    }
+    .pp-inspector__notes {
+        font-size: 0.82rem; line-height: 1.5; color: var(--pp-text);
+        background: var(--pp-paper-bg); padding: 8px 10px; border-radius: 2px;
+        margin: 10px 0;
+    }
+    .pp-inspector__section-label {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--pp-text-dim); margin: 18px 0 6px;
+    }
+    .pp-finding-chip {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        font-weight: 700; padding: 1px 5px; border-radius: 2px;
+        background: var(--pp-warn-bg); color: var(--pp-warn);
+        border: 1px solid rgba(180,83,9,0.35); margin-right: 4px;
+    }
+
+    /* State buttons (verify/interpretive/needs_fix/needs_recheck) */
+    .pp-state-btns {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    }
+    .pp-state-btn {
+        font-family: 'Instrument Sans', sans-serif; font-size: 0.78rem;
+        padding: 7px 10px; border-radius: 3px;
+        background: var(--pp-paper-bg); color: var(--pp-text);
+        border: 1px solid var(--pp-border); cursor: pointer;
+        text-align: left; line-height: 1.2;
+    }
+    .pp-state-btn:hover { border-color: var(--pp-border-strong); }
+    .pp-state-btn kbd {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        padding: 0 5px; margin-right: 6px;
+        background: var(--pp-bg); border: 1px solid var(--pp-border);
+        border-radius: 2px;
+    }
+    .pp-state-btn--verified:hover     { border-color: var(--pp-pal-verified); }
+    .pp-state-btn--interpretive:hover { border-color: var(--pp-pal-interpretive); }
+    .pp-state-btn--needs_fix:hover    { border-color: var(--pp-pal-needs_fix); }
+    .pp-state-btn--needs_recheck:hover{ border-color: var(--pp-pal-needs_recheck); }
+
+    /* Chain link list (in middle column) */
+    .pp-chain-links {
+        list-style: none; padding: 0; margin: 0;
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .pp-chain-link {
+        display: grid; grid-template-columns: auto 1fr auto;
+        gap: 8px; padding: 6px 10px; align-items: center;
+        background: var(--pp-paper-bg); border-radius: 3px;
+        font-size: 0.76rem; cursor: pointer;
+        border: 1px solid transparent;
+    }
+    .pp-chain-link:hover { border-color: var(--pp-border-strong); }
+    .pp-chain-link__kind {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        color: var(--pp-text-dim); min-width: 64px;
+    }
+    .pp-chain-link__target {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+        color: var(--pp-text); word-break: break-all;
+    }
+    .pp-chain-link__state {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        padding: 1px 5px; border-radius: 2px;
+    }
+    .pp-chain-link[data-link-state="resolved"]         .pp-chain-link__state { background: rgba(22,101,52,0.10); color: var(--pp-pass); }
+    .pp-chain-link[data-link-state="human_verified"]   .pp-chain-link__state { background: var(--pp-pal-verified-bg); color: var(--pp-pal-verified); }
+    .pp-chain-link[data-link-state="llm_verified_only"].pp-chain-link__state { background: var(--pp-warn-bg); color: var(--pp-warn); }
+    .pp-chain-link[data-link-state="stale"]            .pp-chain-link__state { background: var(--pp-pal-stale-bg); color: var(--pp-pal-stale); }
+    .pp-chain-link[data-link-state="missing_target"]   .pp-chain-link__state { background: var(--pp-fail-bg); color: var(--pp-fail); }
+
+    /* Right column — chain inspector */
+    .pp-inspector__kind {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem;
+        font-weight: 700; letter-spacing: 0.08em;
+        color: var(--pp-accent);
+    }
+    .pp-link-state {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        padding: 2px 6px; border-radius: 2px;
+    }
+    .pp-link-state--resolved        { background: rgba(22,101,52,0.10); color: var(--pp-pass); }
+    .pp-link-state--human_verified  { background: var(--pp-pal-verified-bg); color: var(--pp-pal-verified); }
+    .pp-link-state--llm_verified_only { background: var(--pp-warn-bg); color: var(--pp-warn); }
+    .pp-link-state--stale           { background: var(--pp-pal-stale-bg); color: var(--pp-pal-stale); }
+    .pp-link-state--missing_target  { background: var(--pp-fail-bg); color: var(--pp-fail); }
+
+    .pp-inspector__target {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.92rem;
+        color: var(--pp-text); margin-bottom: 12px; word-break: break-all;
+    }
+    .pp-link-preview {
+        background: var(--pp-bg); padding: 10px 12px; border-radius: 3px;
+        font-size: 0.78rem; line-height: 1.5;
+        border: 1px solid var(--pp-border);
+    }
+    .pp-art__hdr {
+        font-family: 'IBM Plex Mono', monospace; font-weight: 700;
+        font-size: 0.84rem; color: var(--pp-text); margin-bottom: 6px;
+    }
+    .pp-art__row { font-size: 0.76rem; margin: 2px 0; line-height: 1.4; }
+    .pp-art__lbl {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        color: var(--pp-text-dim); text-transform: uppercase;
+        letter-spacing: 0.05em; margin-right: 4px;
+    }
+    .pp-link-verify-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pp-link-verify {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem;
+        padding: 6px 10px; border-radius: 3px;
+        background: var(--pp-paper-bg); color: var(--pp-text);
+        border: 1px solid var(--pp-border); cursor: pointer;
+        flex: 1;
+    }
+    .pp-link-verify--verified:hover     { border-color: var(--pp-pal-verified); color: var(--pp-pal-verified); }
+    .pp-link-verify--needs_fix:hover    { border-color: var(--pp-pal-needs_fix); color: var(--pp-pal-needs_fix); }
+    .pp-link-verify--needs_recheck:hover{ border-color: var(--pp-pal-needs_recheck); color: var(--pp-pal-needs_recheck); }
+
+    .pp-inspector__audit-toggle {
+        margin-top: 18px; width: 100%;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+        padding: 6px 10px; border-radius: 3px;
+        background: var(--pp-paper-bg); color: var(--pp-text-soft);
+        border: 1px dashed var(--pp-border); cursor: pointer;
+        text-align: center;
+    }
+    .pp-inspector__audit-toggle:hover { border-color: var(--pp-border-strong); }
+
+    /* Audit log drawer (full-width, bottom). Visibility controlled by
+       $showAudit signal in the template via data-show. */
+    .pp-audit {
+        background: var(--pp-bg); border-top: 1px solid var(--pp-border);
+        padding: 14px 28px 24px; max-height: 38vh; overflow-y: auto;
+        font-family: 'Instrument Sans', 'Inter', sans-serif;
+    }
+    .pp-audit__head {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+        letter-spacing: 0.14em; color: var(--pp-text-dim);
+        margin-bottom: 10px;
+    }
+    .pp-audit__head code { font-size: 0.66rem; color: var(--pp-text); }
+    .pp-audit__section-label {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--pp-text-dim); margin: 14px 0 6px;
+    }
+    .pp-audit__section-label code { font-size: 0.7rem; color: var(--pp-text-soft); }
+    .pp-audit__empty,
+    .pp-audit__nodiff {
+        font-style: italic; color: var(--pp-text-dim);
+        font-size: 0.78rem; margin: 6px 0 12px;
+    }
+    .pp-audit__log,
+    .pp-audit__diff {
+        width: 100%; border-collapse: collapse; font-size: 0.74rem;
+    }
+    .pp-audit__log th,
+    .pp-audit__diff th {
+        text-align: left; font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--pp-text-dim);
+        padding: 4px 8px; border-bottom: 1px solid var(--pp-border);
+    }
+    .pp-audit__log td,
+    .pp-audit__diff td {
+        padding: 5px 8px; border-bottom: 1px solid rgba(217,207,184,0.5);
+        vertical-align: top; line-height: 1.3;
+    }
+    .pp-audit__log code,
+    .pp-audit__diff code { font-size: 0.7rem; color: var(--pp-text); }
+    .pp-audit__diff tbody tr {
+        background: var(--pp-pal-stale-bg);
+    }
+    .pp-audit__triggered-by {
+        display: inline-block; margin-left: 6px; padding: 0 5px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+        background: var(--pp-bg); color: var(--pp-text-soft);
+        border-radius: 2px; border: 1px solid var(--pp-border);
+    }
+
+    /* Wave 10d-7 block-env placeholders (displayed math, lists, figures). */
+    .pp-displayed-math {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+        background: var(--pp-bg); border-left: 3px solid var(--pp-info);
+        padding: 8px 12px; margin: 8px 0; color: var(--pp-text);
+        white-space: pre-wrap; word-break: break-word;
+    }
+    .pp-figure-stub {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+        background: var(--pp-bg); border: 1px dashed var(--pp-border);
+        padding: 6px 12px; margin: 8px 0; color: var(--pp-text-soft);
+        font-style: italic;
+    }
+    .pp-itemize, .pp-enumerate {
+        margin: 6px 0 8px 24px; font-size: 0.86rem; line-height: 1.5;
+    }
+    .pp-itemize li, .pp-enumerate li { margin: 2px 0; }
+
+    /* Wave 10f — cross-paper cluster banner inside sentence inspector. */
+    .pp-cluster-banner {
+        margin: 12px 0; padding: 8px 10px; border-radius: 3px;
+        background: rgba(46,134,171,0.08);
+        border: 1px solid var(--pp-accent);
+        font-size: 0.78rem;
+    }
+    .pp-cluster-banner[data-match-kind="exact"] {
+        background: rgba(22,101,52,0.08);
+        border-color: var(--pp-pal-verified);
+    }
+    .pp-cluster-banner[data-match-kind="normalized"] {
+        background: rgba(180,83,9,0.08);
+        border-color: var(--pp-warn);
+    }
+    .pp-cluster-banner__head {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--pp-text-dim); margin-bottom: 4px;
+    }
+    .pp-cluster-banner__body {
+        font-size: 0.82rem; line-height: 1.5; color: var(--pp-text);
+        margin-bottom: 6px;
+    }
+    .pp-cluster-banner__btn {
+        display: inline-block; padding: 4px 10px; border-radius: 3px;
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+        background: var(--pp-paper-bg); color: var(--pp-text);
+        border: 1px solid var(--pp-accent); cursor: pointer;
+    }
+    .pp-cluster-banner__btn:hover {
+        background: var(--pp-accent); color: var(--pp-paper-bg);
+    }
+
+    /* Wave 10g — gate filter banner shown when an external deep-link
+       narrowed the body to a single gate's affected sentences. */
+    .pp-paper__filter-banner {
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem;
+        background: var(--pp-pal-needs_recheck-bg);
+        border: 1px solid var(--pp-pal-needs_recheck);
+        color: var(--pp-pal-needs_recheck);
+        padding: 6px 10px; border-radius: 3px;
+        margin: 0 0 14px 0;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .pp-paper__filter-clear {
+        margin-left: auto; padding: 2px 8px; border-radius: 2px;
+        font-family: inherit; font-size: 0.66rem;
+        background: var(--pp-paper-bg); border: 1px solid var(--pp-pal-needs_recheck);
+        color: var(--pp-pal-needs_recheck); cursor: pointer;
+    }
+    .pp-paper__filter-clear:hover { background: var(--pp-pal-needs_recheck); color: #faf7f0; }
 </style>
 
 {% set initial_paper = request.args.get('paper', '') %}
+{# Wave 10g — deep-link filter param `?filter=gate:<gate>` from Readiness
+   heatmap or Process Health QI cards. v2 papers honor this filter to show
+   only sentences whose gates_invoked includes the named gate. #}
+{% set initial_filter = request.args.get('filter', '') %}
+{% set initial_sentence = request.args.get('sentence', '') %}
 <div class="pp-wrap" id="pp-wrap"
-     data-signals="{activePaper: '{{ initial_paper }}', activeClaim: '', filterLayers: []}"
+     data-signals="{activePaper: '{{ initial_paper }}', activeClaim: '', filterLayers: [], activeSentence: '{{ initial_sentence }}', activeLinkIdx: -1, showAudit: false, schemaMode: 'v1', gateFilter: '{{ initial_filter }}'}"
      data-on-intersect__once="$activePaper && @get(`/api/papers/${$activePaper}/provenance`)">
 
     {# ── Top banner — select + 4 separate grid-cell morph targets ── #}
@@ -424,31 +881,62 @@
         <div class="pp-nav" id="pp-nav" style="display:none"></div>
     </div>
 
-    {# ── Split body: paper ⇔ dossier ── #}
-    <div class="pp-split">
+    {# Wave 10d v2 — coverage ribbon (empty in v1 mode; SSE patches it
+       only when the paper carries a sentence-keyed claims_review.json). #}
+    <div id="pp-coverage-ribbon"></div>
+
+    {# ── Body: 3-column for v2; 2-column dossier for v1.
+         Class flips driven by ``$schemaMode`` (set from SSE handlers). ── #}
+    <div class="pp-split" id="pp-body-grid"
+         data-class:pp-split--v2="$schemaMode == 'v2'">
         <div class="pp-paper-pane">
             <article id="pp-paper-body" class="pp-paper">
                 <div class="pp-paper__empty">
                     Select a paper from the dropdown above to view its abstract
-                    with inline claim provenance highlights.
+                    with inline claim/sentence provenance highlights.
                 </div>
             </article>
         </div>
-        <aside class="pp-dossier-pane">
+
+        {# Middle column: v2 sentence inspector OR v1 dossier (both target
+           ``#pp-detail`` / ``#pp-sentence-inspector`` respectively; only
+           one is patched per paper based on schema_version). #}
+        <aside class="pp-dossier-pane" id="pp-middle-pane">
+            {# v1 morph target #}
             <div id="pp-detail" class="pp-dossier">
                 <div class="pp-dossier__section-label">PROVENANCE DOSSIER</div>
                 <p class="pp-dossier__intro">
-                    Select a paper above. Blocking issues, non-blocking follow-ups, and
-                    per-claim 8-layer verdicts populate here.
+                    Select a paper above. Blocking issues, non-blocking follow-ups,
+                    and per-claim 8-layer verdicts populate here.
                 </p>
             </div>
+            {# v2 morph target — empty until SSE patches it. #}
+            <div id="pp-sentence-inspector"></div>
         </aside>
+
+        {# Right column: v2 chain inspector. Empty in v1 mode (CSS hides
+           the whole column via 1.1fr collapse). #}
+        <aside class="pp-dossier-pane pp-dossier-pane--right" id="pp-chain-inspector"></aside>
     </div>
 
-    {# Keyboard shortcuts (window-level). #}
+    {# Wave 10d audit log drawer. Visibility flips on $showAudit; content
+       is always patched fresh from SSE so toggling is instant. #}
+    <div id="pp-audit-pane" data-show="$showAudit"></div>
+
+    {# Keyboard shortcuts (window-level). v1 + v2 share the same surface;
+       v2 binds the sentence-level shortcuts. #}
     <div data-on:keydown__window__key.ArrowRight__prevent="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=next`)"></div>
     <div data-on:keydown__window__key.ArrowLeft__prevent="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=prev`)"></div>
+    {# v2 — link nav within the active sentence. #}
+    <div data-on:keydown__window__key.ArrowDown__prevent="$activePaper && $activeSentence && @get(`/api/papers/${$activePaper}/provenance?nav=link-next`)"></div>
+    <div data-on:keydown__window__key.ArrowUp__prevent="$activePaper && $activeSentence && @get(`/api/papers/${$activePaper}/provenance?nav=link-prev`)"></div>
+    {# v2 — sentence state shortcuts. Each shells out to the verify endpoint
+       on the currently-active sentence. #}
+    <div data-on:keydown__window__key.v="$activePaper && $activeSentence && @post(`/api/papers/${$activePaper}/sentences/${$activeSentence}/verify`, {contentType:'json', body: JSON.stringify({state:'verified', actor:'user:dashboard'})}); $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
+    <div data-on:keydown__window__key.i="$activePaper && $activeSentence && @post(`/api/papers/${$activePaper}/sentences/${$activeSentence}/verify`, {contentType:'json', body: JSON.stringify({state:'interpretive', actor:'user:dashboard'})}); $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
+    <div data-on:keydown__window__key.r="$activePaper && $activeSentence && @post(`/api/papers/${$activePaper}/sentences/${$activeSentence}/verify`, {contentType:'json', body: JSON.stringify({state:'needs_recheck', actor:'user:dashboard'})}); $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
+    {# v1 — fail/warn jumps. #}
     <div data-on:keydown__window__key.f="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=FAIL`)"></div>
     <div data-on:keydown__window__key.w="$activePaper && @get(`/api/papers/${$activePaper}/provenance?nav=WARN`)"></div>
-    <div data-on:keydown__window__key.Escape="$filterLayers = ($filterLayers && $filterLayers.length) ? [] : $filterLayers; $activeClaim = ''; $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
+    <div data-on:keydown__window__key.Escape="$filterLayers = ($filterLayers && $filterLayers.length) ? [] : $filterLayers; $activeClaim = ''; $activeSentence = ''; $activeLinkIdx = -1; $gateFilter = ''; $activePaper && @get(`/api/papers/${$activePaper}/provenance`)"></div>
 </div>

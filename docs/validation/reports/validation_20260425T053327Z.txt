@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260425T053327Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] graph_integrity
+  ERROR: 'name'
+
+Overall: 0/1 passed

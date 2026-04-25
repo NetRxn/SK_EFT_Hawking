@@ -20,6 +20,8 @@ from src.core.formulas import (
     pmns_unitary_matrix,
     m_beta_beta_effective,
     majorana_rung_z16_compatibility_index,
+    majorana_decoupling_suppression,
+    weinberg_induced_neutrino_mass,
 )
 
 
@@ -212,6 +214,64 @@ class TestZ16Compatibility:
     def test_negative_n_raises(self):
         with pytest.raises(ValueError):
             majorana_rung_z16_compatibility_index(-1)
+
+
+class TestWave2bDecouplingHelpers:
+    """Wave 2b numerical estimates that ground paper 21 §6 prose.
+
+    The dim-5 / dim-6 / Weinberg-mass numerical claims in the paper come
+    from `(M_W / Λ_ADW)^k` and `v² / Λ_ADW` — these tests verify the
+    formulas reproduce the paper-quoted values."""
+
+    def test_dim5_suppression_at_ew_scale(self):
+        # Paper 21 §6: dim-5 LNV suppression ≈ 8e-13 at E = M_W = 80 GeV,
+        # Λ_ADW = 10^14 GeV
+        result = majorana_decoupling_suppression(80.0, 1.0e14, k=1)
+        assert result == pytest.approx(8.0e-13, rel=1e-6)
+
+    def test_dim6_suppression_at_ew_scale(self):
+        # Paper 21 §6: dim-6 generic suppression ≈ 6e-25 at the same point
+        result = majorana_decoupling_suppression(80.0, 1.0e14, k=2)
+        assert result == pytest.approx(6.4e-25, rel=1e-6)
+
+    def test_dim6_tighter_than_dim5_in_decoupling_regime(self):
+        # Lean theorem: dim6_tighter_than_dim5_in_decoupling_regime
+        d5 = majorana_decoupling_suppression(80.0, 1.0e14, k=1)
+        d6 = majorana_decoupling_suppression(80.0, 1.0e14, k=2)
+        assert d6 < d5  # at E < Λ, (E/Λ)² < (E/Λ)
+
+    def test_weinberg_induced_neutrino_mass_at_canonical(self):
+        # Paper 21 §6: Weinberg op at v = 246.22 GeV, Λ_ADW = 10^14 GeV
+        # gives m_ν ≈ 0.0606 eV — atmospheric mass scale
+        m_nu_gev = weinberg_induced_neutrino_mass(246.22, 1.0e14)
+        m_nu_ev = m_nu_gev * 1e9
+        assert m_nu_ev == pytest.approx(0.0606, rel=1e-3)
+
+    def test_weinberg_at_canonical_within_LEGEND_reach_band(self):
+        # Cross-check: 0.0606 eV is within the inverted-ordering m_ββ
+        # band that LEGEND-1000 will probe
+        m_nu_ev = weinberg_induced_neutrino_mass(246.22, 1.0e14) * 1e9
+        # Atmospheric mass scale ≈ 50 meV; Weinberg estimate gives 60 meV
+        # — within an O(1) factor of √Δm²_atm
+        assert 0.04 < m_nu_ev < 0.08
+
+    def test_decoupling_suppression_invalid_k_raises(self):
+        with pytest.raises(ValueError):
+            majorana_decoupling_suppression(80.0, 1.0e14, k=3)
+        with pytest.raises(ValueError):
+            majorana_decoupling_suppression(80.0, 1.0e14, k=0)
+
+    def test_decoupling_suppression_negative_inputs_raise(self):
+        with pytest.raises(ValueError):
+            majorana_decoupling_suppression(-1.0, 1.0e14, k=1)
+        with pytest.raises(ValueError):
+            majorana_decoupling_suppression(80.0, 0.0, k=1)
+
+    def test_weinberg_negative_inputs_raise(self):
+        with pytest.raises(ValueError):
+            weinberg_induced_neutrino_mass(0.0, 1.0e14)
+        with pytest.raises(ValueError):
+            weinberg_induced_neutrino_mass(246.22, -1.0)
 
 
 class TestMajoranaRungParametersConsistency:

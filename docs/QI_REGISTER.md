@@ -1,6 +1,6 @@
 # Meta-process Quality Improvement Register
 
-**Auto-generated:** 2026-04-25T03:38:53+00:00
+**Auto-generated:** 2026-04-25T06:20:00+00:00
 **Generator:** `scripts/qi_register.py`
 **Reads from:** current ReviewFinding graph nodes + this file's `## Closed Items` section for status continuity
 

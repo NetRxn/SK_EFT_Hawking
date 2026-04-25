@@ -16,7 +16,7 @@ here is the formal structure type and the bridge to `MajoranaRung.lean`.
 
 The PMNS structure is *embedding-agnostic* — the same Lean signature
 applies to Embedding I, II, or III. The choice of embedding lives in
-`MajoranaRung.lean` (the `H_MR_FromADWSubstrate` tracked hypothesis); only
+`MajoranaRung.lean` (the `H_MR_FromADWSubstrate_BCS_LNV` tracked hypothesis); only
 its phenomenological *interpretation* of `[U_PMNS]_αi` differs.
 
 Numerical NuFit-6.0 best-fit values (`MAJORANA.THETA_*_DEG`,
@@ -141,27 +141,90 @@ mixing angles from an underlying substrate model. Closest is the texture-
 level statement `θ₂₃ ≈ π/4 from substrate μ-τ symmetry`, which is motivated
 by — but not derived from — composite-operator dynamics.
 
-Encoded as a tracked hypothesis predicate parameterized over a substrate
-scale; non-trivial, can fail for matrices with `[U]_μ3 ≠ [U]_τ3` (the
-empirical near-maximal θ₂₃ has `≈ 49.1°`, very close to but not exactly
-`π/4`).
+**Wave 2a accuracy round:** the original Wave 2 encoding demanded *exact*
+μ-τ row equality `‖[U]_μi‖ = ‖[U]_τi‖`, which the empirical NuFit-6.0
+best-fit PMNS at `θ_23 = 49.1°` does NOT satisfy (the rows differ by
+`|sin 49.1° - cos 49.1°| · cos θ_13 ≈ 0.10`). Encoding an exact-symmetry
+predicate as a "tracked hypothesis on the empirical PMNS" is therefore
+incorrect — the predicate is empirically falsified, not just open in
+primary literature.
+
+The corrected encoding splits the predicate into:
+
+1. The **exact-substrate-symmetry limit**, applicable to a hypothetical
+   PMNS at θ_23 = π/4 (a theoretical limit, not the empirical best fit).
+2. A **tolerance-parameterized version** which the empirical PMNS satisfies
+   for some `ε > 0` measuring substrate-symmetry breaking; the open
+   derivation question is whether substrate physics can predict the
+   leading-order value of `ε` from substrate-symmetry-breaking parameters.
+
+The tolerance-parameterized version is the load-bearing tracked hypothesis:
+the open question is "what determines `ε`?" — non-vacuously parameterized
+by the breaking scale.
 -/
 
-/-- **WAVE2-OPEN-2**: tracked hypothesis that the PMNS μ-τ exchange row is
-substrate-symmetric (`‖[U]_μi‖ = ‖[U]_τi‖` for every mass eigenstate `i`).
-Genuinely non-trivial: the empirical NuFit-6.0 best-fit `θ₂₃ ≈ 49.1°` is
-close to but not exactly `π/4`, so a PMNS matrix with strictly maximal
-`θ₂₃ = π/4` would satisfy the symmetry while the actual data has small
-deviations. -/
-def H_PMNSAnglesFromSubstrate (V : PMNSMatrix) : Prop :=
+/-- **WAVE2-OPEN-2 (exact-symmetry limit)**: a PMNS matrix exhibits *exact*
+substrate μ-τ row symmetry. This holds at the theoretical limit
+`θ_23 = π/4`; the NuFit-6.0 empirical best fit `θ_23 = 49.1°` does NOT
+satisfy this (the row magnitudes differ by `≈ 0.1`). The strict predicate
+encodes the *substrate-symmetry limit* — a theoretical reference point
+useful for stating the *deviation* (see `H_PMNSAnglesFromSubstrate_eps`
+below) — NOT a claim about the physical PMNS.
+
+Project precedent: the same exact-limit-vs-tolerance-parameterization split
+is used in `ScalarRungInterpretation.IsHiggsBilinearCandidate` (which is
+parameterized over a tolerance `tol`) and in
+`MajoranaRung.IsObservedSeesawMatch`.
+-/
+def H_PMNSAnglesFromExactSubstrate (V : PMNSMatrix) : Prop :=
   ∀ i : Fin 3, ‖get V 1 i‖ = ‖get V 2 i‖
 
-/-- Identity PMNS does NOT satisfy the substrate-overlap hypothesis. For
+/-- **WAVE2-OPEN-2 (tolerance-parameterized)**: a PMNS matrix exhibits
+substrate μ-τ row symmetry up to fractional tolerance `ε`. This is the
+load-bearing tracked hypothesis under Wave 2a: the empirical PMNS
+satisfies it for some `ε > 0`, and the open derivation question is whether
+substrate physics determines the leading-order value of `ε` from
+substrate-symmetry-breaking parameters.
+
+The exact-symmetry limit corresponds to `ε = 0`. -/
+def H_PMNSAnglesFromSubstrate_eps (V : PMNSMatrix) (ε : ℝ) : Prop :=
+  ∀ i : Fin 3, |‖get V 1 i‖ - ‖get V 2 i‖| ≤ ε
+
+/-- The exact-substrate hypothesis is the `ε = 0` special case of the
+tolerance-parameterized version. -/
+theorem H_PMNSAnglesFromExactSubstrate_iff_eps_zero
+    (V : PMNSMatrix) :
+    H_PMNSAnglesFromExactSubstrate V ↔
+      H_PMNSAnglesFromSubstrate_eps V 0 := by
+  unfold H_PMNSAnglesFromExactSubstrate H_PMNSAnglesFromSubstrate_eps
+  constructor
+  · intro h i
+    have h_eq := h i
+    rw [h_eq, sub_self, abs_zero]
+  · intro h i
+    have h_le := h i
+    -- |x| ≤ 0 → x = 0
+    have h_eq := abs_nonpos_iff.mp h_le
+    linarith [h_eq]
+
+/-- Refinement: the strict (exact-symmetry) hypothesis implies the
+tolerance-parameterized version for any non-negative tolerance. This is the
+expected monotonicity in `ε`. -/
+theorem H_PMNSAnglesFromExactSubstrate_imp_eps
+    (V : PMNSMatrix) (ε : ℝ) (h_eps : 0 ≤ ε)
+    (h_exact : H_PMNSAnglesFromExactSubstrate V) :
+    H_PMNSAnglesFromSubstrate_eps V ε := by
+  intro i
+  have h_eq := h_exact i
+  rw [h_eq, sub_self, abs_zero]
+  exact h_eps
+
+/-- Identity PMNS does NOT satisfy the exact-substrate hypothesis. For
 `i = 1`, the identity has `[I]_μμ = 1` and `[I]_τμ = 0`, so the predicate
-forces `1 = 0` — false. Confirms `H_PMNSAnglesFromSubstrate` is non-vacuous
-by exhibiting an explicit witness of failure. -/
-theorem identity_does_not_satisfy_substrate_hypothesis :
-    ¬ H_PMNSAnglesFromSubstrate PMNSMatrix.identity := by
+forces `1 = 0` — false. Confirms `H_PMNSAnglesFromExactSubstrate` is
+non-vacuous by exhibiting an explicit witness of failure. -/
+theorem identity_does_not_satisfy_exact_substrate_hypothesis :
+    ¬ H_PMNSAnglesFromExactSubstrate PMNSMatrix.identity := by
   intro h
   have h1 : ‖get PMNSMatrix.identity 1 1‖ = ‖get PMNSMatrix.identity 2 1‖ := h 1
   -- |[I]_μμ| = 1 (diagonal), |[I]_τμ| = 0 (off-diagonal)
@@ -170,6 +233,28 @@ theorem identity_does_not_satisfy_substrate_hypothesis :
     identity_offdiagonal (by decide : (2 : Fin 3) ≠ 1)
   rw [h_diag, h_off] at h1
   simp at h1
+
+/-- Identity PMNS does NOT satisfy the tolerance-parameterized hypothesis
+for any `ε < 1`. The diagonal `[I]_μμ = 1` and off-diagonal `[I]_τμ = 0`
+force the deviation `|‖[I]_μμ‖ - ‖[I]_τμ‖| = 1`. So any tolerance below
+unity is insufficient to accommodate the identity matrix — confirming the
+predicate's non-vacuity at every tolerance below 1. -/
+theorem identity_does_not_satisfy_eps_substrate_hypothesis
+    (ε : ℝ) (h_eps : ε < 1) :
+    ¬ H_PMNSAnglesFromSubstrate_eps PMNSMatrix.identity ε := by
+  intro h
+  have h1 := h 1
+  have h_diag : get PMNSMatrix.identity 1 1 = 1 := identity_diagonal 1
+  have h_off : get PMNSMatrix.identity 2 1 = 0 :=
+    identity_offdiagonal (by decide : (2 : Fin 3) ≠ 1)
+  rw [h_diag, h_off] at h1
+  -- h1 : |‖(1 : ℂ)‖ - ‖(0 : ℂ)‖| ≤ ε
+  -- ‖(1 : ℂ)‖ = 1 and ‖(0 : ℂ)‖ = 0, so |1 - 0| = 1 ≤ ε contradicts ε < 1
+  have h_norm_one : ‖(1 : ℂ)‖ = 1 := by simp
+  have h_norm_zero : ‖(0 : ℂ)‖ = 0 := by simp
+  rw [h_norm_one, h_norm_zero] at h1
+  norm_num at h1
+  linarith
 
 /-! ## 5. Module summary -/
 

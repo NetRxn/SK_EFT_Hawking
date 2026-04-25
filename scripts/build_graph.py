@@ -1854,6 +1854,7 @@ def extract_sentence_nodes() -> list[dict]:
             nodes.append({
                 'id': sid,
                 'type': 'Sentence',
+                'name': sid,  # graph_integrity orphan/conflict checks need this
                 'label': (s.get('quote') or '')[:80],
                 'meta': meta,
             })
@@ -1866,6 +1867,7 @@ def extract_sentence_nodes() -> list[dict]:
             nodes.append({
                 'id': sid,
                 'type': 'Sentence',
+                'name': sid,
                 'label': '(tombstoned)',
                 'meta': {
                     'paper_id': paper_key,
@@ -1897,6 +1899,7 @@ def extract_audit_event_nodes() -> list[dict]:
             nodes.append({
                 'id': eid,
                 'type': 'AuditEvent',
+                'name': eid,
                 'label': ev.get('label', 'audit'),
                 'meta': dict(ev.get('meta', {})),
             })
@@ -1929,6 +1932,7 @@ def extract_claim_cluster_nodes() -> list[dict]:
         nodes.append({
             'id': cid,
             'type': 'ClaimCluster',
+            'name': cid,
             'label': c.get('label', cid),
             'meta': {
                 'constructed_by': c.get('constructed_by'),
@@ -1983,8 +1987,10 @@ def extract_backed_by_edges(node_ids: set) -> list[dict]:
                 if kind == 'formula':
                     candidates = [f'formula:{target}']
                 elif kind in ('theorem', 'axiom'):
-                    # Prefer short-name resolution
-                    resolved = _resolve_lean_short(target)
+                    # Prefer short-name resolution. ``_resolve_lean_short``
+                    # also accepts already-qualified names like
+                    # ``SKEFTHawking.Module.thm`` and yields ``lean:<full>``.
+                    resolved = _resolve_lean_short(target, node_ids)
                     candidates = [resolved] if resolved else [f'lean:{target}']
                 elif kind == 'parameter':
                     candidates = [f'param:{target}']

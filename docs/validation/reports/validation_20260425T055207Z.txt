@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260425T055207Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] claim_clusters_fresh
+  + staleness — no v2 claims_review.json files
+
+Overall: 1/1 passed

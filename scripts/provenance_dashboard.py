@@ -1029,6 +1029,15 @@ def _format_value(val):
 @app.route("/")
 def index():
     """Main dashboard page."""
+    # Wave 10g — retire Paper Contributions tab. ``?tab=papers`` redirects
+    # to ``?tab=paper`` (Paper Provenance), preserving any ``paper=<id>``
+    # selector. Old bookmarks keep working.
+    if request.args.get('tab') == 'papers':
+        from flask import redirect
+        paper_arg = request.args.get('paper', '')
+        target = '/?tab=paper' + (f'&paper={paper_arg}' if paper_arg else '')
+        return redirect(target, code=302)
+
     params = load_parameters()
     formulas = load_formulas()
     theorems = load_lean_theorems()
@@ -1204,6 +1213,10 @@ def api_verification_event():
     actor = payload.get('actor') or 'user:dashboard'
     notes = payload.get('notes') or None
     node_id = payload.get('node_id') or None
+    # Wave 10 cross-tab provenance: when the event was triggered from a
+    # sentence's per-link verify UI, the client passes ``triggered_by``
+    # carrying the source sentence_id. Null for Parameters-tab events.
+    triggered_by = payload.get('triggered_by') or None
 
     if not (artifact_type and artifact_id and action):
         return jsonify({
@@ -1220,6 +1233,7 @@ def api_verification_event():
             actor=actor,
             notes=notes,
             node_id=node_id,
+            triggered_by=triggered_by,
         )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
@@ -2424,12 +2438,67 @@ def _pp_load_audit_log(paper_id: str, *, limit: int = 0) -> list[dict]:
     return events
 
 
+def _pp_load_claim_clusters() -> dict:
+    """Load ``papers/claim_clusters.json`` produced by cluster_detect.py.
+
+    Wave 10f. Returns ``{}`` if the file is missing or malformed.
+    """
+    path = PROJECT_ROOT / 'papers' / 'claim_clusters.json'
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except Exception as exc:
+        logger.warning("Failed to load claim_clusters.json: %s", exc)
+        return {}
+
+
+def _pp_clusters_by_sentence() -> dict[str, list[dict]]:
+    """Index ClaimCluster records by member sentence id.
+
+    Returns ``{sentence_id: [{cluster_id, match_kind, confidence,
+    other_members, member_papers, label}, ...]}``. Multiple clusters per
+    sentence are possible (e.g. exact + normalized hits collapse to one
+    sentence appearing in two cluster types).
+    """
+    data = _pp_load_claim_clusters()
+    out: dict[str, list[dict]] = {}
+    for c in data.get('clusters') or []:
+        cid = c.get('id')
+        members = c.get('members') or []
+        if not cid or len(members) < 2:
+            continue
+        for sid in members:
+            entry = {
+                'cluster_id': cid,
+                'match_kind': c.get('match_kind'),
+                'confidence': c.get('confidence'),
+                'other_members': [m for m in members if m != sid],
+                'member_papers': c.get('member_papers') or [],
+                'label': c.get('label'),
+                'human_confirmed_at': c.get('human_confirmed_at'),
+            }
+            out.setdefault(sid, []).append(entry)
+    return out
+
+
 def _pp_audit_events_by_sentence(events: list[dict]) -> dict[str, list[dict]]:
-    """Group audit events by their target sentence_id."""
+    """Group audit events by their target sentence_id.
+
+    sentence_state.py nests target_id/target_type under ``meta``; older
+    events may carry them at the top level. Tolerate both.
+    """
     out: dict[str, list[dict]] = {}
     for ev in events:
-        target = ev.get('target_id') or ev.get('target', {}).get('id')
-        ttype = ev.get('target_type') or ev.get('target', {}).get('type')
+        meta = ev.get('meta') or {}
+        target = (
+            meta.get('target_id') or ev.get('target_id')
+            or ev.get('target', {}).get('id')
+        )
+        ttype = (
+            meta.get('target_type') or ev.get('target_type')
+            or ev.get('target', {}).get('type')
+        )
         if ttype and ttype != 'Sentence':
             continue
         if not target:
@@ -2543,6 +2612,31 @@ def _pp_sentence_palette_key(
     return _PP_VERDICT_TO_DEFAULT_PALETTE.get(verdict, 'agent_proposed')
 
 
+def _pp_parse_ts(ts: str | None) -> datetime | None:
+    """Parse an ISO-8601 timestamp into a datetime. Tolerates both Zulu
+    suffix and ``+00:00`` form, both second and microsecond precision.
+    Returns None on failure.
+
+    Wave 10d-8: necessary because verification_state writes second-precision
+    timestamps (`...23Z`) and sentence_state writes microsecond-precision
+    (`...23.456789Z`); raw string compare orders the shorter form GREATER
+    when seconds match (because 'Z' > '.'), inverting reality.
+    """
+    if not ts:
+        return None
+    s = str(ts).strip()
+    if not s:
+        return None
+    # datetime.fromisoformat accepts +00:00 but not Z prior to 3.11
+    # — normalize to +00:00 first.
+    if s.endswith('Z'):
+        s = s[:-1] + '+00:00'
+    try:
+        return datetime.fromisoformat(s)
+    except ValueError:
+        return None
+
+
 def _pp_compute_sentence_stale(
     sentence: dict,
     prose_record: dict | None,
@@ -2552,18 +2646,15 @@ def _pp_compute_sentence_stale(
     the sentence's human_ratified_at."""
     if (prose_record or {}).get('human_state') is None:
         return False
-    ratified = (prose_record or {}).get('human_ratified_at')
-    if not ratified:
+    rat_dt = _pp_parse_ts((prose_record or {}).get('human_ratified_at'))
+    if rat_dt is None:
         return False
-    rat = str(ratified)
-    if rat.endswith('+00:00'):
-        rat = rat[:-6] + 'Z'
     for link in chain_links:
         ev = link.get('last_verification')
         if not ev:
             continue
-        ts = ev.get('timestamp', '')
-        if ts > rat:
+        ev_dt = _pp_parse_ts(ev.get('timestamp', ''))
+        if ev_dt is not None and ev_dt > rat_dt:
             return True
     return False
 
@@ -2589,6 +2680,8 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
     prose_state = _pp_load_prose_state(paper_id)
     audit_events = _pp_load_audit_log(paper_id)
     audit_by_sentence = _pp_audit_events_by_sentence(audit_events)
+    # Wave 10f — index cross-paper clusters keyed by sentence id
+    clusters_by_sentence = _pp_clusters_by_sentence()
 
     sentences_in = cr.get('sentences', [])
     sentences_out: list[dict] = []
@@ -2657,6 +2750,8 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
             'is_stale': stale,
             'palette': palette,
             'audit_event_count': len(audit_by_sentence.get(sid, [])),
+            # Wave 10f — cross-paper cluster memberships (zero-or-more)
+            'clusters': clusters_by_sentence.get(sid, []),
         })
 
     # Title parse — share with v1 path below
@@ -2805,6 +2900,105 @@ def api_paper_sentence_verify(paper_id: str, sentence_id: str):
             (s for s in (data.get('sentences') or []) if s.get('id') == sentence_id),
             None,
         ),
+    }), 200
+
+
+@app.route("/api/papers/<paper_id>/clusters/<path:cluster_id>/propagate",
+           methods=["POST"])
+def api_cluster_propagate(paper_id: str, cluster_id: str):
+    """Wave 10f: propagate a human verification state to all members of a
+    cross-paper ClaimCluster.
+
+    Body (JSON or form):
+      state            — verified | interpretive | needs_fix | needs_recheck
+      source_sentence  — the sentence_id the user is propagating FROM (annotated
+                          in audit log as ``propagated_from``)
+      actor            — user:<id> | agent:<name>:<ts> (default user:dashboard)
+
+    Iterates ``sentence_state.cmd_mark`` over each cluster member that
+    isn't the source sentence. Returns a summary listing per-member rc.
+    """
+    payload = request.get_json(silent=True) or request.form
+    state = payload.get('state')
+    source_sentence = payload.get('source_sentence', '')
+    actor = payload.get('actor') or 'user:dashboard'
+    notes = payload.get('notes', '')
+
+    if state not in ('verified', 'interpretive', 'needs_fix', 'needs_recheck'):
+        return jsonify({"error": "state must be one of: "
+                                  "verified | interpretive | needs_fix | needs_recheck"}), 400
+
+    clusters = _pp_load_claim_clusters().get('clusters') or []
+    cluster = next((c for c in clusters if c.get('id') == cluster_id), None)
+    if cluster is None:
+        return jsonify({"error": f"unknown cluster_id: {cluster_id}"}), 404
+
+    members = cluster.get('members') or []
+    if not members:
+        return jsonify({"error": "cluster has no members"}), 400
+
+    try:
+        from sentence_state import cmd_mark
+    except ImportError as exc:
+        return jsonify({"error": f"sentence_state not importable: {exc}"}), 500
+
+    # Append `(propagated from sentence_id)` to notes so the audit trail is
+    # readable. cmd_mark's argparse Namespace doesn't take propagated_from
+    # natively; we encode it in notes.
+    propagation_tag = (
+        f' (propagated from {source_sentence})' if source_sentence else ''
+    )
+    full_notes = (notes + propagation_tag).strip()
+
+    import argparse as _ap
+    import io as _io
+    import contextlib as _ctx
+
+    results: list[dict] = []
+    for sid in members:
+        if sid == source_sentence:
+            continue  # Don't re-mark the source sentence
+        if not sid.startswith(f'sentence:{paper_id.split("_")[0]}'):
+            # Cluster spans papers — propagation hits sentences in OTHER
+            # papers too. The endpoint URL pins paper_id to the source
+            # paper, but that's just for routing; cmd_mark figures out
+            # the target paper from the sentence_id.
+            pass
+        args = _ap.Namespace(
+            sentence_id=sid, state=state, actor=actor, notes=full_notes,
+        )
+        out_buf = _io.StringIO()
+        err_buf = _io.StringIO()
+        rc = -1
+        try:
+            with _ctx.redirect_stdout(out_buf), _ctx.redirect_stderr(err_buf):
+                rc = cmd_mark(args)
+        except SystemExit as exc:
+            rc = int(exc.code or 1)
+            err_buf.write(str(exc) + '\n')
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("cmd_mark unexpected failure for %s", sid)
+            rc = -1
+            err_buf.write(str(exc))
+        try:
+            evj = json.loads(out_buf.getvalue().strip().splitlines()[-1])
+        except Exception:
+            evj = {}
+        results.append({
+            'sentence': sid,
+            'rc': rc,
+            'event_id': evj.get('event_id'),
+            'stderr': err_buf.getvalue().strip() if rc != 0 else None,
+        })
+
+    _invalidate_graph_cache()
+    return jsonify({
+        'cluster_id': cluster_id,
+        'state_applied': state,
+        'source_sentence': source_sentence,
+        'propagated_count': sum(1 for r in results if r['rc'] == 0),
+        'failed_count': sum(1 for r in results if r['rc'] != 0),
+        'results': results,
     }), 200
 
 
@@ -3144,11 +3338,69 @@ def _render_math_inline(expr: str) -> str:
     return s
 
 
+_LATEX_BLOCK_ENV_RE = re.compile(
+    r'\\begin\{(equation|align|gather|multline|itemize|enumerate|figure|table|abstract)\*?\}'
+    r'(.*?)'
+    r'\\end\{\1\*?\}',
+    re.DOTALL,
+)
+
+
+def _latex_block_envs_extract(tex: str) -> tuple[str, dict[str, str]]:
+    """Pre-extract LaTeX block envs into HTML placeholders.
+
+    Wave 10d-7: returns (tex_with_markers, marker_to_html). Per-env
+    HTML is computed once; the inline renderer's per-char walker sees
+    only opaque markers (no LaTeX commands or HTML tags) so the markers
+    pass through unchanged + we sub them back at the end.
+    """
+    blocks: dict[str, str] = {}
+
+    def repl(m: re.Match) -> str:
+        env = m.group(1)
+        body = m.group(2)
+        if env in ('equation', 'align', 'gather', 'multline'):
+            inner = re.sub(r'\\label\{[^{}]*\}', '', body).strip()
+            inner = re.sub(r'\s+', ' ', inner)
+            if len(inner) > 240:
+                inner = inner[:240] + '…'
+            html = f'<div class="pp-displayed-math">[{esc(env)}] {esc(inner)}</div>'
+        elif env == 'itemize':
+            items = re.split(r'\\item\b\s*', body)
+            items = [it.strip() for it in items if it.strip()]
+            lis = ''.join(f'<li>{esc(it[:300])}</li>' for it in items)
+            html = f'<ul class="pp-itemize">{lis}</ul>'
+        elif env == 'enumerate':
+            items = re.split(r'\\item\b\s*', body)
+            items = [it.strip() for it in items if it.strip()]
+            lis = ''.join(f'<li>{esc(it[:300])}</li>' for it in items)
+            html = f'<ol class="pp-enumerate">{lis}</ol>'
+        elif env in ('figure', 'table'):
+            cap_m = re.search(r'\\caption\{(.+?)\}', body, re.DOTALL)
+            cap = cap_m.group(1).strip() if cap_m else '(no caption)'
+            cap = re.sub(r'\s+', ' ', cap)[:240]
+            html = f'<div class="pp-figure-stub">[{esc(env.title())}: {esc(cap)}]</div>'
+        else:
+            # abstract / unknown — reserve marker but emit body unchanged
+            html = esc(body)
+        marker = f'PPBLOCKMARKER{len(blocks):04d}END'
+        blocks[marker] = html
+        return marker
+
+    rewritten = _LATEX_BLOCK_ENV_RE.sub(repl, tex)
+    return rewritten, blocks
+
+
 def _latex_to_html(tex: str, citation_claims: dict[str, str] | None = None,
                    active_claim: str = '') -> str:
     """Render a paragraph of LaTeX to HTML. Conservative: passes unknown
     commands through unchanged. HTML-escapes text segments; math `$...$`
     goes through `_render_math_inline` which emits safe HTML.
+
+    Wave 10d-7: pre-runs ``_latex_block_envs_to_html`` so top-level
+    block environments (equation/align/itemize/enumerate/figure) are
+    folded into placeholder HTML before the per-character walker sees
+    them — otherwise they degenerate into raw `\\begin{...}` output.
 
     ``citation_claims`` maps bibkey → claim_id for the CIT layer — when
     present, `\\cite{Bibkey}` is rendered as an inline claim span so it
@@ -3156,6 +3408,11 @@ def _latex_to_html(tex: str, citation_claims: dict[str, str] | None = None,
     partial-heuristic fallback until Wave 9g-3 (`\\claim{id}{text}`
     authoring in the TeX source) gives every claim a canonical anchor.
     """
+    # Pre-process: fold block envs into opaque markers + an html lookup.
+    # Markers (alphanumeric only) pass cleanly through the per-char
+    # walker; we restore the rendered HTML in a single substitution at
+    # the end. No-op when the input is sentence-level (no envs).
+    tex, _ppblock_lookup = _latex_block_envs_extract(tex)
     citation_claims = citation_claims or {}
     out_parts: list[str] = []
     i = 0
@@ -3276,6 +3533,11 @@ def _latex_to_html(tex: str, citation_claims: dict[str, str] | None = None,
     html = ''.join(out_parts)
     # Collapse whitespace runs
     html = re.sub(r' {2,}', ' ', html).strip()
+    # Wave 10d-7: substitute block-env placeholders back. Markers are
+    # alphanumeric-only so they survived the per-char escape pass intact.
+    if _ppblock_lookup:
+        for marker, block_html in _ppblock_lookup.items():
+            html = html.replace(marker, block_html)
     return f'<p>{html}</p>'
 
 
@@ -3795,8 +4057,751 @@ def _pp_apply_nav(data: dict, signals: dict, payload_nav: str | None) -> str:
     return active
 
 
+# ──────────────────────────────────────────────────────────────────────
+# Wave 10d — v2 sentence-keyed UI renderers
+# ──────────────────────────────────────────────────────────────────────
+
+# State-button presets: (label, short token, hint)
+_PP_V2_STATE_BUTTONS = (
+    ('verified', 'Verified', 'V', 'Sentence is fully verified — chain holds.'),
+    ('interpretive', 'Interpretive', 'I', 'Sentence is informal interpretation; flag for downstream readers.'),
+    ('needs_fix', 'Needs Fix', 'F', 'A finding requires editorial change to the sentence or chain.'),
+    ('needs_recheck', 'Needs Recheck', 'R', 'Verification is uncertain; flag for re-examination.'),
+)
+
+_PP_V2_PALETTE_LABEL = {
+    'verified': ('Human verified', 'verified'),
+    'interpretive': ('Human interpretive', 'interpretive'),
+    'ungrounded': ('Human ungrounded', 'ungrounded'),
+    'needs_fix': ('Human needs fix', 'needs_fix'),
+    'needs_recheck': ('Needs recheck', 'needs_recheck'),
+    'agent_proposed': ('Agent proposed', 'agent_proposed'),
+    'agent_proposed_warn': ('Agent WARN', 'agent_proposed_warn'),
+    'agent_proposed_fail': ('Agent FAIL', 'agent_proposed_fail'),
+    'agent_proposed_info': ('Agent INFO', 'agent_proposed_info'),
+    'ungrounded_unclaimed': ('Ungrounded', 'ungrounded_unclaimed'),
+    'transition': ('Transition', 'transition'),
+}
+
+
+def _pp_v2_apply_nav(data: dict, signals: dict, payload_nav: str | None) -> tuple[str, int]:
+    """Update active sentence id from nav hint. Returns (new_active, link_idx).
+
+    Nav hints: prev | next | first-fail | first-warn | first-needs |
+                v|i|f|r (state shortcuts handled by client; not here).
+    """
+    sentences = data.get('sentences') or []
+    ids = [s['id'] for s in sentences]
+    active = signals.get('activeSentence') or ''
+    # NB: ``or -1`` fallback would coerce an explicit 0 to -1 (because
+    # 0 is falsy in Python). Use a None-aware coercion instead.
+    raw_link = signals.get('activeLinkIdx', -1)
+    link_idx = int(raw_link) if raw_link is not None and raw_link != '' else -1
+
+    if not ids:
+        return ('', -1)
+
+    if payload_nav in ('next', 'prev'):
+        if active not in ids:
+            return (ids[0] if payload_nav == 'next' else ids[-1], -1)
+        idx = ids.index(active)
+        if payload_nav == 'next':
+            return (ids[(idx + 1) % len(ids)], -1)
+        return (ids[(idx - 1) % len(ids)], -1)
+
+    if payload_nav in ('first-fail', 'first-warn', 'first-needs'):
+        verdict = {'first-fail': 'FAIL', 'first-warn': 'WARN'}.get(payload_nav)
+        if verdict:
+            for s in sentences:
+                if s.get('agent_verdict') == verdict:
+                    return (s['id'], -1)
+        else:  # first-needs
+            for s in sentences:
+                if s.get('is_stale') or s.get('agent_verdict') == 'UNGROUNDED':
+                    return (s['id'], -1)
+        return (active, link_idx)
+
+    if payload_nav == 'link-next' or payload_nav == 'link-prev':
+        s = next((s for s in sentences if s['id'] == active), None)
+        if not s:
+            return (active, -1)
+        n_links = len(s.get('chain_links') or [])
+        if n_links == 0:
+            return (active, -1)
+        if link_idx < 0:
+            return (active, 0 if payload_nav == 'link-next' else n_links - 1)
+        if payload_nav == 'link-next':
+            return (active, (link_idx + 1) % n_links)
+        return (active, (link_idx - 1) % n_links)
+
+    return (active, link_idx)
+
+
+def _pp_v2_coverage_ribbon_html(data: dict) -> str:
+    """Render the coverage ribbon: % verified / proposed / unclaimed /
+    stale / ungrounded. Morph target: ``#pp-coverage-ribbon``.
+    """
+    cov = data.get('coverage') or {}
+    total = cov.get('total', 0) or 1  # avoid div by zero
+    cells = [
+        ('Verified', cov.get('verified', 0), 'verified'),
+        ('Interpretive', cov.get('interpretive', 0), 'interpretive'),
+        ('Needs Fix', cov.get('needs_fix', 0), 'needs_fix'),
+        ('Needs Recheck', cov.get('needs_recheck', 0), 'needs_recheck'),
+        ('Stale (any link)', cov.get('stale', 0), 'stale'),
+        ('Agent only', cov.get('agent_proposed', 0), 'agent_proposed'),
+        ('Ungrounded', cov.get('ungrounded_agent', 0), 'ungrounded_unclaimed'),
+        ('Transition', cov.get('transition', 0), 'transition'),
+    ]
+    total_meaningful = sum(n for _, n, _ in cells)
+    parts: list[str] = [
+        '<div id="pp-coverage-ribbon" class="pp-coverage">',
+        f'<div class="pp-coverage__total">{cov.get("total", 0)} sentences</div>',
+        '<div class="pp-coverage__bar">',
+    ]
+    if total_meaningful > 0:
+        for label, n, key in cells:
+            if n == 0:
+                continue
+            pct = (n / total) * 100.0
+            parts.append(
+                f'<div class="pp-coverage__seg" data-pal="{esc(key)}" '
+                f'style="flex: {n};" title="{esc(label)}: {n}"></div>'
+            )
+    else:
+        parts.append('<div class="pp-coverage__empty">no sentences</div>')
+    parts.append('</div>')
+    parts.append('<div class="pp-coverage__legend">')
+    for label, n, key in cells:
+        if n == 0:
+            continue
+        parts.append(
+            f'<span class="pp-coverage__chip" data-pal="{esc(key)}">'
+            f'<span class="pp-coverage__dot" data-pal="{esc(key)}"></span>'
+            f'{esc(label)}: <strong>{n}</strong></span>'
+        )
+    parts.append('</div></div>')
+    return ''.join(parts)
+
+
+def _pp_filter_sentences_by_gate(
+    sentences: list[dict], gate_filter: str,
+) -> tuple[list[dict], int]:
+    """Wave 10g: when ``$gateFilter`` is set (e.g. ``gate:CitationIntegrity``
+    from a Readiness/Process-Health deep-link), keep only sentences whose
+    ``gates_invoked`` list includes the named gate. Returns (filtered, dropped).
+
+    Filter syntax: ``gate:<gate_name>`` (case-insensitive, partial-match).
+    Empty/missing filter returns all sentences. Falls through gracefully
+    (no filtering) when the syntax doesn't match.
+    """
+    if not gate_filter:
+        return (sentences, 0)
+    if not gate_filter.startswith('gate:'):
+        return (sentences, 0)
+    needle = gate_filter[5:].strip().lower()
+    if not needle:
+        return (sentences, 0)
+    kept: list[dict] = []
+    for s in sentences:
+        gates = [str(g).lower() for g in (s.get('gates_invoked') or [])]
+        if any(needle in g for g in gates):
+            kept.append(s)
+    return (kept, len(sentences) - len(kept))
+
+
+def _pp_v2_paper_body_html(data: dict, active_sentence: str,
+                           gate_filter: str = '') -> str:
+    """Render the abstract with each sentence wrapped in an interactive
+    span. Sentences in section "abstract" are rendered inline; other
+    sections appear in collapsed group headers (until Wave 10d-7 lands
+    full-body render).
+
+    Wave 10g: when ``gate_filter`` is set, only sentences whose
+    ``gates_invoked`` list includes the named gate are rendered, plus
+    a banner indicating the filter is active.
+    """
+    paper_id = data.get('paper_id', '')
+    full_title = data.get('title') or paper_id
+    title_main, _, subtitle = full_title.partition(':')
+    title_inner = _latex_to_html(title_main.strip()).removeprefix('<p>').removesuffix('</p>')
+    title_html = f'{title_inner}:' if subtitle else title_inner
+    subtitle_html = ''
+    if subtitle:
+        sub_inner = _latex_to_html(subtitle.strip()).removeprefix('<p>').removesuffix('</p>')
+        subtitle_html = f'<div class="pp-paper__subtitle">{sub_inner}</div>'
+
+    all_sentences = data.get('sentences') or []
+    sentences, dropped = _pp_filter_sentences_by_gate(all_sentences, gate_filter)
+
+    # Group sentences by section so each section header lists its sentences
+    by_section: dict[str, list[dict]] = {}
+    section_order: list[str] = []
+    for s in sentences:
+        sec = s.get('section') or 'untitled'
+        if sec not in by_section:
+            by_section[sec] = []
+            section_order.append(sec)
+        by_section[sec].append(s)
+
+    parts: list[str] = [
+        '<article id="pp-paper-body" class="pp-paper">',
+        '<div class="pp-paper__kicker">SK-EFT HAWKING · SENTENCE-LEVEL PROVENANCE</div>',
+        f'<h1 class="pp-paper__title">{title_html}</h1>',
+        subtitle_html,
+        '<div class="pp-paper__byline">SK-EFT Hawking Research Program</div>',
+        '<hr class="pp-paper__rule"/>',
+    ]
+    # Wave 10g — surface active gate filter so the user knows the body
+    # isn't showing every sentence. Cleared by Esc (also clears
+    # $gateFilter via the existing keyboard binding).
+    if gate_filter and dropped > 0:
+        clear_expr = (
+            "$gateFilter = ''; window.history.replaceState({}, '', "
+            "'?tab=paper&paper=' + encodeURIComponent($activePaper)); "
+            "@get(`/api/papers/${$activePaper}/provenance`)"
+        )
+        parts.append(
+            '<div class="pp-paper__filter-banner">'
+            f'Filter: <strong>{esc(gate_filter)}</strong> · showing '
+            f'{len(sentences)} of {len(all_sentences)} sentences '
+            f'<button class="pp-paper__filter-clear" '
+            f'data-on:click="{esc(clear_expr)}">clear (Esc)</button>'
+            '</div>'
+        )
+    elif gate_filter and dropped == 0 and not sentences:
+        parts.append(
+            '<div class="pp-paper__filter-banner">'
+            f'Filter <strong>{esc(gate_filter)}</strong> matched zero '
+            'sentences in this paper.'
+            '</div>'
+        )
+
+    for sec in section_order:
+        sec_sents = by_section[sec]
+        # Sort by section_ordinal if available, else preserve order
+        sec_sents = sorted(sec_sents, key=lambda s: s.get('section_ordinal') or 0)
+        sec_label = sec.replace('-', ' ').upper()
+        parts.append(f'<div class="pp-paper__section-label">{esc(sec_label)}</div>')
+        parts.append('<div class="pp-paper__abstract">')
+        for s in sec_sents:
+            sid = s['id']
+            quote_inner = _latex_to_html(s.get('quote', ''))
+            quote_inner = quote_inner.removeprefix('<p>').removesuffix('</p>')
+            palette_key = s.get('palette') or 'agent_proposed'
+            classes = ['pp-sentence', f'pp-sentence--{palette_key}']
+            if sid == active_sentence:
+                classes.append('pp-sentence--active')
+            if s.get('is_stale'):
+                classes.append('pp-sentence--stale')
+            click_expr = (
+                f"$activeSentence = '{esc(sid)}'; "
+                f"$activeLinkIdx = -1; "
+                f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+            )
+            verdict = esc(s.get('agent_verdict', ''))
+            parts.append(
+                f'<span class="{ " ".join(classes) }" '
+                f'data-sentence-id="{esc(sid)}" '
+                f'data-on:click="{esc(click_expr)}" '
+                f'title="{verdict} · {esc(palette_key)}">'
+                f'{quote_inner} </span>'
+            )
+        parts.append('</div>')
+    parts.append('</article>')
+    return ''.join(parts)
+
+
+def _pp_v2_sentence_inspector_html(data: dict, active_sentence: str) -> str:
+    """Middle column: per-sentence verdict + state machine + chain summary.
+
+    Morph target: ``#pp-sentence-inspector``.
+    """
+    sentences = data.get('sentences') or []
+    s = next((s for s in sentences if s['id'] == active_sentence), None)
+    if not s:
+        return (
+            '<aside id="pp-sentence-inspector" class="pp-inspector">'
+            '<div class="pp-inspector__empty">'
+            '<div class="pp-inspector__hint">Click any sentence in the paper '
+            '(or use <kbd>↑↓</kbd>) to inspect its chain + state.</div>'
+            '<div class="pp-inspector__hint">Keyboard: <kbd>v</kbd> verify · '
+            '<kbd>i</kbd> interpretive · <kbd>r</kbd> recheck · '
+            '<kbd>f</kbd> needs fix · <kbd>→</kbd> chain inspector · '
+            '<kbd>Esc</kbd> clear</div></div></aside>'
+        )
+
+    sid = s['id']
+    palette_key = s.get('palette') or 'agent_proposed'
+    palette_label = _PP_V2_PALETTE_LABEL.get(palette_key, (palette_key, palette_key))[0]
+    verdict = s.get('agent_verdict', '')
+    notes = s.get('agent_notes', '')
+
+    # State buttons — each posts to the verify endpoint, then refreshes panel
+    btn_html_parts: list[str] = []
+    for short, label, key, hint in _PP_V2_STATE_BUTTONS:
+        post_expr = (
+            f"@post(`/api/papers/${{$activePaper}}/sentences/{esc(sid)}/verify`, "
+            f"{{contentType:'json', body: JSON.stringify({{state:'{short}', "
+            f"actor:'user:dashboard'}})}}); "
+            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+        )
+        btn_html_parts.append(
+            f'<button class="pp-state-btn pp-state-btn--{esc(short)}" '
+            f'data-on:click="{esc(post_expr)}" '
+            f'title="{esc(hint)}">'
+            f'<kbd>{esc(key)}</kbd> {esc(label)}</button>'
+        )
+
+    chain_links = s.get('chain_links') or []
+    chain_link_html_parts: list[str] = []
+    for idx, link in enumerate(chain_links):
+        link_state = link.get('link_state', 'resolved')
+        link_kind = link.get('kind', '')
+        target = link.get('target', '')
+        click_expr = (
+            f"$activeLinkIdx = {idx}; "
+            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+        )
+        chain_link_html_parts.append(
+            f'<li class="pp-chain-link" data-link-state="{esc(link_state)}" '
+            f'data-on:click="{esc(click_expr)}">'
+            f'<span class="pp-chain-link__kind">{esc(link_kind)}</span>'
+            f'<span class="pp-chain-link__target">{esc(target)}</span>'
+            f'<span class="pp-chain-link__state">{esc(link_state)}</span>'
+            f'</li>'
+        )
+    if not chain_link_html_parts:
+        chain_html = (
+            '<div class="pp-inspector__empty-chain">'
+            'No chain links proposed (UNGROUNDED or TRANSITION sentence).'
+            '</div>'
+        )
+    else:
+        chain_html = (
+            f'<ul class="pp-chain-links">{ "".join(chain_link_html_parts) }</ul>'
+        )
+
+    finding_classes = s.get('finding_classes') or []
+    fc_html = ''
+    if finding_classes:
+        chips = ' '.join(
+            f'<span class="pp-finding-chip">{esc(c)}</span>' for c in finding_classes
+        )
+        fc_html = f'<div class="pp-inspector__row"><span class="pp-inspector__lbl">Finding classes:</span> {chips}</div>'
+
+    # Audit log summary (full pane in 10d-6; here just a count + link)
+    n_audit = s.get('audit_event_count', 0)
+    ratified_at = s.get('human_ratified_at')
+    ratified_by = s.get('human_ratified_by')
+    rat_html = ''
+    if ratified_at:
+        rat_html = (
+            f'<div class="pp-inspector__row"><span class="pp-inspector__lbl">Last ratified:</span> '
+            f'<code>{esc(ratified_at[:19])}</code> by <code>{esc(ratified_by or "")}</code></div>'
+        )
+
+    audit_toggle_expr = (
+        f"$showAudit = !$showAudit; "
+        f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+    )
+
+    # Wave 10f — cluster banner. If this sentence is a member of one or
+    # more cross-paper ClaimClusters, render a banner per cluster with
+    # a "propagate" button that fires the propagation endpoint.
+    cluster_html = ''
+    clusters_for_sid = s.get('clusters') or []
+    s_human_state = s.get('human_state')
+    cur_short_state = (
+        s_human_state.replace('human_', '') if s_human_state else 'verified'
+    )
+    for cluster in clusters_for_sid:
+        cid = cluster.get('cluster_id', '')
+        n_other = len(cluster.get('other_members') or [])
+        match_kind = cluster.get('match_kind', 'exact')
+        confidence = cluster.get('confidence', 1.0)
+        member_papers = cluster.get('member_papers') or []
+        # Prompt for the state (verified/interpretive/needs_fix/needs_recheck);
+        # default to the active sentence's current state. Advanced
+        # one-click UX with state pre-pick is a 10f-followup.
+        propagate_expr = (
+            "let st = prompt('Propagate which state to other "
+            "{n_other} member(s)?\\n\\nverified | interpretive | needs_fix | needs_recheck', "
+            "'{cur_state}'); "
+            "if (st && ['verified','interpretive','needs_fix','needs_recheck'].includes(st)) {{ "
+            "@post(`/api/papers/${{$activePaper}}/clusters/{cid}/propagate`, "
+            "{{contentType:'json', body: JSON.stringify({{state: st, "
+            "source_sentence: $activeSentence, actor: 'user:dashboard'}})}}); "
+            "@get(`/api/papers/${{$activePaper}}/provenance`); "
+            "}}"
+        ).format(
+            n_other=n_other,
+            cur_state=cur_short_state,
+            cid=cid,
+        )
+        # The active sentence belongs to the displayed paper, which is
+        # the data['paper_id']; show only the OTHER member papers.
+        active_paper_id = (s.get('id') or '').split(':')[1] if (s.get('id') or '').count(':') >= 1 else ''
+        member_papers_str = ', '.join(p for p in member_papers if p != active_paper_id) or '—'
+        cluster_html += (
+            '<div class="pp-cluster-banner" '
+            f'data-match-kind="{esc(match_kind)}">'
+            f'<div class="pp-cluster-banner__head">CROSS-PAPER CLAIM CLUSTER · '
+            f'{esc(match_kind)} ({confidence:.2f})</div>'
+            f'<div class="pp-cluster-banner__body">'
+            f'Same factual claim appears in <strong>{n_other}</strong> other paper'
+            f'{"s" if n_other != 1 else ""} '
+            f'(<code>{esc(member_papers_str)}</code>).</div>'
+            f'<button class="pp-cluster-banner__btn" '
+            f'data-on:click="{esc(propagate_expr)}" '
+            f'title="Apply current verification state to all other members">'
+            f'Propagate to {n_other} other member{"s" if n_other != 1 else ""}'
+            '</button>'
+            '</div>'
+        )
+
+    return (
+        '<aside id="pp-sentence-inspector" class="pp-inspector">'
+        '<div class="pp-inspector__head">'
+        f'<div class="pp-inspector__verdict pp-inspector__verdict--{esc(verdict.lower())}">{esc(verdict)}</div>'
+        f'<div class="pp-inspector__palette" data-pal="{esc(palette_key)}">{esc(palette_label)}</div>'
+        '</div>'
+        f'<div class="pp-inspector__quote">{ _latex_to_html(s.get("quote", "")).removeprefix("<p>").removesuffix("</p>") }</div>'
+        f'<div class="pp-inspector__id"><code>{esc(sid)}</code></div>'
+        f'{fc_html}'
+        f'<div class="pp-inspector__row"><span class="pp-inspector__lbl">Type:</span> {esc(s.get("type", ""))}</div>'
+        f'{rat_html}'
+        f'<div class="pp-inspector__notes">{esc(notes)}</div>'
+        f'{cluster_html}'
+        '<div class="pp-inspector__section-label">Verify</div>'
+        f'<div class="pp-state-btns">{ "".join(btn_html_parts) }</div>'
+        '<div class="pp-inspector__section-label">Chain '
+        f'({len(chain_links)} link{"s" if len(chain_links)!=1 else ""})</div>'
+        f'{chain_html}'
+        f'<button class="pp-inspector__audit-toggle" data-on:click="{esc(audit_toggle_expr)}">'
+        f'Audit log ({n_audit})</button>'
+        '</aside>'
+    )
+
+
+def _pp_v2_chain_inspector_html(data: dict, active_sentence: str,
+                                active_link_idx: int) -> str:
+    """Right column: per-link verification UI + in-place artifact preview.
+
+    Morph target: ``#pp-chain-inspector``.
+    """
+    sentences = data.get('sentences') or []
+    s = next((s for s in sentences if s['id'] == active_sentence), None)
+    if not s:
+        return (
+            '<aside id="pp-chain-inspector" class="pp-inspector pp-inspector--right">'
+            '<div class="pp-inspector__empty">'
+            '<div class="pp-inspector__hint">Select a sentence to expose '
+            'its chain. Click any link there (or use <kbd>↑↓</kbd>) to '
+            'preview the artifact in place.</div></div></aside>'
+        )
+
+    chain_links = s.get('chain_links') or []
+    if active_link_idx < 0 or active_link_idx >= len(chain_links):
+        return (
+            '<aside id="pp-chain-inspector" class="pp-inspector pp-inspector--right">'
+            '<div class="pp-inspector__empty">'
+            f'<div class="pp-inspector__hint">{len(chain_links)} chain '
+            f'link{"s" if len(chain_links)!=1 else ""} on this sentence. '
+            'Click one (or press <kbd>→</kbd>) to expand its artifact.</div>'
+            '</div></aside>'
+        )
+
+    link = chain_links[active_link_idx]
+    kind = link.get('kind', '')
+    target = link.get('target', '')
+    nid = link.get('node_id') or ''
+    link_state = link.get('link_state', '')
+    last_v = link.get('last_verification') or {}
+
+    # Per-link verify UI: three-state buttons. They post to the generic
+    # /api/verification/event endpoint so each tab type can land changes
+    # consistently.
+    artifact_type = {
+        'parameter': 'Parameter',
+        'citation': 'Citation',
+        'axiom': 'LeanAxiom',
+        'theorem': 'LeanTheorem',
+    }.get(kind, '')
+
+    verify_btns_html = ''
+    if artifact_type:
+        for short, color, label in (
+            ('confirm', 'verified', '✓ Confirm'),
+            ('reject', 'needs_fix', '✗ Wrong'),
+            ('flag', 'needs_recheck', '⚠ Uncertain'),
+        ):
+            # Wave 10 strengthening: forward $activeSentence as
+            # ``triggered_by`` so the audit trail surfaces "this
+            # verification was fired from sentence <id>'s per-link UI".
+            post_expr = (
+                f"@post('/api/verification/event', "
+                f"{{contentType:'json', body: JSON.stringify({{"
+                f"artifact_type:'{esc(artifact_type)}', "
+                f"artifact_id:'{esc(target)}', "
+                f"action:'{short}', actor:'user:dashboard', "
+                f"triggered_by: $activeSentence}})}}); "
+                f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+            )
+            verify_btns_html += (
+                f'<button class="pp-link-verify pp-link-verify--{esc(color)}" '
+                f'data-on:click="{esc(post_expr)}">{esc(label)}</button>'
+            )
+
+    # Artifact preview body — defer to in-place expander
+    preview_html = _pp_v2_artifact_preview_html(kind, target, link)
+
+    last_v_html = ''
+    if last_v:
+        last_v_html = (
+            '<div class="pp-inspector__row"><span class="pp-inspector__lbl">Last verification:</span> '
+            f'<code>{esc((last_v.get("timestamp") or "")[:19])}</code> · '
+            f'{esc(last_v.get("action", ""))} by <code>{esc(last_v.get("actor", ""))}</code></div>'
+        )
+
+    return (
+        '<aside id="pp-chain-inspector" class="pp-inspector pp-inspector--right">'
+        '<div class="pp-inspector__head">'
+        f'<div class="pp-inspector__kind">{esc(kind.upper())}</div>'
+        f'<div class="pp-link-state pp-link-state--{esc(link_state)}">{esc(link_state)}</div>'
+        '</div>'
+        f'<div class="pp-inspector__target"><code>{esc(target)}</code></div>'
+        f'<div class="pp-inspector__row"><span class="pp-inspector__lbl">Node:</span> '
+        f'<code>{esc(nid or "—")}</code></div>'
+        f'{last_v_html}'
+        f'<div class="pp-inspector__section-label">Artifact</div>'
+        f'<div class="pp-link-preview">{preview_html}</div>'
+        f'<div class="pp-inspector__section-label">Per-link verification</div>'
+        f'<div class="pp-link-verify-row">{verify_btns_html or "<em>No verify path for this link kind.</em>"}</div>'
+        '</aside>'
+    )
+
+
+def _pp_v2_artifact_preview_html(kind: str, target: str, link: dict) -> str:
+    """In-place artifact preview for the chain inspector. Pulls minimal
+    data from live registries (PARAMETER_PROVENANCE, CITATION_REGISTRY,
+    lean_deps.json). Best-effort — falls back to "(unable to load)".
+    """
+    try:
+        if kind == 'parameter':
+            from src.core.provenance import PARAMETER_PROVENANCE
+            entry = PARAMETER_PROVENANCE.get(target)
+            if not entry:
+                return f'<em>Parameter <code>{esc(target)}</code> not in PARAMETER_PROVENANCE.</em>'
+            value = entry.get('value')
+            unit = entry.get('unit', '')
+            tier = entry.get('tier', '')
+            source = entry.get('source', '')
+            llm_v = entry.get('llm_verified_date')
+            human_v = entry.get('human_verified_date')
+            return (
+                f'<div class="pp-art__hdr">{esc(target)}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">value:</span> '
+                f'<code>{esc(str(value))}</code> {esc(unit or "")}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">tier:</span> {esc(tier)}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">source:</span> {esc(source[:200])}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">llm verified:</span> {esc(str(llm_v))}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">human verified:</span> {esc(str(human_v))}</div>'
+            )
+        if kind == 'citation':
+            from src.core.citations import CITATION_REGISTRY
+            entry = CITATION_REGISTRY.get(target)
+            if not entry:
+                return f'<em>Citation <code>{esc(target)}</code> not in CITATION_REGISTRY.</em>'
+            return (
+                f'<div class="pp-art__hdr">{esc(target)}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">title:</span> {esc(entry.get("title", "")[:200])}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">authors:</span> {esc(entry.get("authors", "")[:200])}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">journal/year:</span> {esc(entry.get("journal", ""))} {esc(str(entry.get("year", "")))}</div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">doi:</span> <code>{esc(entry.get("doi", "—") or "—")}</code></div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">arxiv:</span> <code>{esc(entry.get("arxiv", "—") or "—")}</code></div>'
+                f'<div class="pp-art__row"><span class="pp-art__lbl">doi verified:</span> {esc(str(entry.get("doi_verified")))}</div>'
+            )
+        if kind in ('theorem', 'axiom', 'formula'):
+            return (
+                f'<div class="pp-art__hdr">{esc(target)}</div>'
+                f'<div class="pp-art__row"><em>Lean source preview is a Wave 10d-6 follow-up '
+                f'(reads ``lean_deps.json`` / declaration source for the named identifier).</em></div>'
+            )
+        return f'<em>Unknown link kind: {esc(kind)}</em>'
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("artifact preview failed for %s/%s: %s", kind, target, exc)
+        return f'<em>(unable to load preview: {esc(str(exc))})</em>'
+
+
+def _pp_v2_audit_log_html(data: dict, active_sentence: str) -> str:
+    """Bottom drawer audit log + diff-since-last-verified.
+
+    Morph target: ``#pp-audit-pane``. Visibility controlled by the
+    ``$showAudit`` signal in the template (data-show binding). We
+    always emit the content so toggling is instant — no extra fetch.
+    """
+    if not active_sentence:
+        return (
+            '<div id="pp-audit-pane" class="pp-audit">'
+            '<div class="pp-audit__head">AUDIT LOG</div>'
+            '<div class="pp-audit__empty">'
+            'Select a sentence to see its verification history.'
+            '</div></div>'
+        )
+
+    sentences = data.get('sentences') or []
+    s = next((x for x in sentences if x['id'] == active_sentence), None)
+    if not s:
+        return (
+            '<div id="pp-audit-pane" class="pp-audit">'
+            '<div class="pp-audit__head">AUDIT LOG</div>'
+            '<div class="pp-audit__empty">Active sentence not found.</div></div>'
+        )
+
+    audit_by = data.get('audit_events_by_sentence') or {}
+    events = audit_by.get(active_sentence) or []
+
+    # Diff-since-last-verified: walk chain_links, find any whose
+    # last_verification.timestamp > sentence.human_ratified_at.
+    # Use datetime parsing to avoid the cross-precision string-compare
+    # bug (verification_state second-precision vs sentence_state
+    # microsecond-precision; see _pp_parse_ts comment).
+    rat_raw = s.get('human_ratified_at') or ''
+    rat_dt = _pp_parse_ts(rat_raw)
+    diff_rows: list[str] = []
+    for link in s.get('chain_links') or []:
+        ev = link.get('last_verification') or {}
+        ts = ev.get('timestamp', '')
+        ev_dt = _pp_parse_ts(ts)
+        if rat_dt and ev_dt and ev_dt > rat_dt:
+            # Wave 10 strengthening — surface triggered_by so the user
+            # sees if a per-link verify came from THIS sentence's chain
+            # inspector vs from another sentence (cross-tab).
+            tb = ev.get('triggered_by') or ''
+            same_sentence = tb == s.get('id')
+            tb_html = ''
+            if tb:
+                marker = '⚲' if same_sentence else '↗'
+                title = ('triggered from this sentence'
+                         if same_sentence else
+                         f'triggered from {tb}')
+                tb_html = (
+                    f' <span class="pp-audit__triggered-by" '
+                    f'title="{esc(title)}">{esc(marker)} {esc(tb if not same_sentence else "self")}</span>'
+                )
+            diff_rows.append(
+                '<tr>'
+                f'<td>{esc(link.get("kind", ""))}</td>'
+                f'<td><code>{esc(link.get("target", ""))}</code></td>'
+                f'<td><code>{esc(ts[:19])}</code></td>'
+                f'<td>{esc(ev.get("action", ""))}{tb_html}</td>'
+                f'<td><code>{esc(ev.get("actor", ""))}</code></td>'
+                '</tr>'
+            )
+
+    diff_html = ''
+    if rat_dt and diff_rows:
+        diff_html = (
+            '<div class="pp-audit__section-label">DIFF SINCE LAST VERIFIED · '
+            f'<code>{esc(rat_raw[:19])}</code></div>'
+            '<table class="pp-audit__diff">'
+            '<thead><tr><th>kind</th><th>target</th><th>updated</th>'
+            '<th>action</th><th>by</th></tr></thead>'
+            f'<tbody>{ "".join(diff_rows) }</tbody>'
+            '</table>'
+        )
+    elif rat_dt:
+        diff_html = (
+            '<div class="pp-audit__section-label">DIFF SINCE LAST VERIFIED · '
+            f'<code>{esc(rat_raw[:19])}</code></div>'
+            '<div class="pp-audit__nodiff">No backing artifacts have been '
+            're-verified since this sentence was ratified.</div>'
+        )
+
+    # Event log — newest first.
+    # sentence_state.py nests fields under `meta`; tolerate flat events too.
+    rev_events = list(reversed(events))
+    log_rows: list[str] = []
+    for ev in rev_events:
+        meta = ev.get('meta') or {}
+        ts = meta.get('timestamp') or ev.get('timestamp', '')
+        actor = meta.get('actor') or ev.get('actor', '')
+        action = meta.get('action') or ev.get('action', '')
+        new_state = meta.get('new_state') or ev.get('new_state') or ''
+        prior_state = meta.get('prior_state', ev.get('prior_state'))
+        notes = meta.get('notes') or ev.get('notes', '') or ''
+        log_rows.append(
+            '<tr>'
+            f'<td><code>{esc(str(ts)[:19])}</code></td>'
+            f'<td>{esc(action)}</td>'
+            f'<td>{esc(str(prior_state) if prior_state is not None else "—")}</td>'
+            f'<td>{esc(new_state)}</td>'
+            f'<td><code>{esc(actor)}</code></td>'
+            f'<td>{esc(notes[:120])}</td>'
+            '</tr>'
+        )
+    log_html = ''
+    if log_rows:
+        log_html = (
+            '<div class="pp-audit__section-label">'
+            f'EVENTS ({len(events)})</div>'
+            '<table class="pp-audit__log">'
+            '<thead><tr><th>timestamp</th><th>action</th><th>prior</th>'
+            '<th>new</th><th>actor</th><th>notes</th></tr></thead>'
+            f'<tbody>{ "".join(log_rows) }</tbody>'
+            '</table>'
+        )
+    else:
+        log_html = '<div class="pp-audit__empty">No audit events recorded for this sentence yet.</div>'
+
+    return (
+        '<div id="pp-audit-pane" class="pp-audit">'
+        '<div class="pp-audit__head">AUDIT LOG · '
+        f'<code>{esc(active_sentence)}</code></div>'
+        f'{diff_html}'
+        f'{log_html}'
+        '</div>'
+    )
+
+
+def _pp_v2_sse_events(data: dict, signals: dict, payload_nav: str | None):
+    """Wave 10d v2 SSE handler — emits banner + coverage + 3-column body."""
+    # Tell the template we're in v2 mode so it adds ``pp-split--v2`` to
+    # the body grid (3-column layout).
+    if (signals.get('schemaMode') or 'v1') != 'v2':
+        yield SSE.patch_signals({'schemaMode': 'v2'})
+
+    new_active, new_link_idx = _pp_v2_apply_nav(data, signals, payload_nav)
+    if new_active != (signals.get('activeSentence') or ''):
+        yield SSE.patch_signals({'activeSentence': new_active})
+    raw_link = signals.get('activeLinkIdx', -1)
+    cur_link_idx = int(raw_link) if raw_link is not None and raw_link != '' else -1
+    if new_link_idx != cur_link_idx:
+        yield SSE.patch_signals({'activeLinkIdx': new_link_idx})
+
+    gate_filter = signals.get('gateFilter') or ''
+
+    yield SSE.patch_elements(_pp_banner_html(data))
+    yield SSE.patch_elements(_pp_v2_coverage_ribbon_html(data))
+    yield SSE.patch_elements(_pp_v2_paper_body_html(data, new_active, gate_filter))
+    yield SSE.patch_elements(_pp_v2_sentence_inspector_html(data, new_active))
+    yield SSE.patch_elements(_pp_v2_chain_inspector_html(data, new_active, new_link_idx))
+    yield SSE.patch_elements(_pp_v2_audit_log_html(data, new_active))
+
+
 def _pp_sse_events(data: dict, signals: dict, payload_nav: str | None):
-    # Apply nav hint (may update activeClaim)
+    # Wave 10d v2 — sentence-keyed schema gets the 3-column layout
+    if data.get('schema_version') == 'v2':
+        yield from _pp_v2_sse_events(data, signals, payload_nav)
+        return
+
+    # v1 (legacy 8-layer dossier) flow.
+    # Reset schemaMode so the template flips back to 2-column when the
+    # user switches from a v2 paper to a v1 paper.
+    if (signals.get('schemaMode') or 'v1') != 'v1':
+        yield SSE.patch_signals({'schemaMode': 'v1'})
+
     new_active = _pp_apply_nav(data, signals, payload_nav)
     filter_layers = list(signals.get('filterLayers') or [])
 
@@ -3920,9 +4925,21 @@ def _qi_items_html(data: dict, signals: dict) -> str:
         parts.append('<div class="qi-meta">' + ''.join(meta) + '</div>')
         papers = item.get('affected_papers') or []
         if papers:
-            parts.append('<div class="qi-papers">' +
-                         ''.join(f'<span class="paper-chip">{esc(p)}</span>' for p in papers) +
-                         '</div>')
+            # Wave 10g — each paper chip deep-links into Paper Provenance
+            # with a gate filter so the user lands on the offending sentences.
+            gate = item.get('gate_affected', '')
+            chips = []
+            for p in papers:
+                href = f'/?tab=paper&paper={esc(p)}'
+                if gate:
+                    href += f'&filter=gate:{esc(gate)}'
+                chips.append(
+                    f'<a class="paper-chip qi-paper-link" '
+                    f'href="{href}" '
+                    f'title="Open {esc(p)} in Paper Provenance"'
+                    f'>{esc(p)}</a>'
+                )
+            parts.append('<div class="qi-papers">' + ''.join(chips) + '</div>')
         rfs = item.get('representative_findings') or []
         if rfs:
             parts.append('<ul class="qi-findings">')
@@ -4186,6 +5203,13 @@ def _readiness_focus_html(data: dict, signals: dict) -> str:
     pstate = _classify_paper(states)
     passed = sum(1 for s in states if s == 'passed')
 
+    # Wave 10g — deep link from readiness focus pane to Paper Provenance,
+    # carrying the active gate as a filter so the Paper Provenance UI can
+    # surface only the sentences that invoke the failed gate.
+    pp_href = f'/?tab=paper&paper={active_paper}'
+    if active_gate:
+        pp_href += f'&filter=gate:{active_gate}'
+
     parts = [
         '<aside id="readiness-focus" class="focus-pane">',
         f'<h3>{esc(active_paper)}</h3>',
@@ -4193,6 +5217,10 @@ def _readiness_focus_html(data: dict, signals: dict) -> str:
         f'<span class="paper-state-{pstate}">{pstate}</span> ',
         f'{passed}/11 gates passed',
         '</div>',
+        f'<a class="readiness-pp-link" href="{esc(pp_href)}">'
+        '→ Open in Paper Provenance'
+        f'{(" · filter " + esc(active_gate)) if active_gate else ""}'
+        '</a>',
     ]
     for g in gate_list:
         expanded = (g['state'] != 'passed') or (active_gate == g['gate'])

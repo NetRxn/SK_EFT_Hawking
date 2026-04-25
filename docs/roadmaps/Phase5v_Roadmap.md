@@ -900,21 +900,38 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 
 **Effort:** ~0.5d (actuals matched estimate; +small bug fix to `_direct_last_modified`).
 
-### Wave 10d — Paper Provenance redesign (3-column layout + verification UX)
+### Wave 10d — Paper Provenance redesign (3-column layout + verification UX) — DONE 2026-04-26
 
-- [ ] Three-column layout: paper body | sentence inspector | chain-link inspector (collapses to popover on smaller screens)
-- [ ] Full-body render via extended minimal LaTeX renderer (sections, lists, displayed equations, figure stubs)
-- [ ] Per-sentence state machine UI: `UNCLAIMED` → `AGENT_PROPOSED` → `HUMAN_VERIFIED_{GROUNDED|INTERPRETIVE|UNGROUNDED}` / `NEEDS_RECHECK`
-- [ ] Per-link verification UI inside chain inspector: three-state `✓ verified | ⚠ uncertain | ✗ wrong` per BACKED_BY edge
-- [ ] **Keyboard-first nav**: `↑↓` sentence, `→` chain inspector, `↑↓` link, `v / i / u / r / n / Esc / Tab`
-- [ ] **In-place link expansion**: clicking a link shows artifact source inline (Lean theorem body, parameter card, citation bibitem + cached primary-source title) without leaving the page
-- [ ] **Diff-since-last-verified view**: when re-verifying, show only what changed since prior `human_verified_at`; one-click re-verify if changes are non-substantive
-- [ ] **Coverage ribbon**: % verified / agent-proposed / unclaimed / stale / ungrounded; submission-readiness gate count
-- [ ] **Audit log pane** (collapsible): per-sentence verification history from `audit_log.jsonl`
-- [ ] Cross-tab state preservation: `?from=` URL chain, deep-links return to originating sentence
-- [ ] Visual encoding (paper body): green/blue/red/amber/grey/purple-striped per state (per design doc §UX)
+- [x] **v2 schema detection** (`_pp_is_v2_schema`): `claims_review.json` carries `sentences[]` → routes to v2 builder; legacy `numerical_claims/citation_integrity/...` papers stay on the v1 8-layer dossier path. `_pp_build_data` dispatches; `data['schema_version']` stamped 'v1' / 'v2'.
+- [x] **`_pp_load_prose_state` + `_pp_load_audit_log` + `_pp_audit_events_by_sentence`** read sole-writer artifacts from `papers/<paper>/prose_state.json` + `papers/<paper>/audit_log.jsonl`. Tolerate both flat and `meta.*`-nested event schemas (sentence_state.py uses `meta` nesting).
+- [x] **`_pp_build_data_v2`**: per-sentence record carries `chain_links` (annotated with `node_id` / `link_state` / `last_verification`), `human_state`, `human_ratified_at`, `is_stale`, `palette` (priority: stale > human_state > agent_verdict). Coverage counter aggregates `verified / interpretive / needs_fix / needs_recheck / agent_proposed / transition / stale / ungrounded_agent / tombstone`. Emits unified data shape (banner + counts + sentences + audit_events_by_sentence).
+- [x] **Three-column layout** in `paper_provenance_tab.html`: paper body (left) | sentence inspector (middle) | chain inspector (right). Toggled via Datastar `data-class:pp-split--v2="$schemaMode == 'v2'"`; collapses to 2-col on tablet (chain inspector hidden) and 1-col on phone (sentence inspector hidden) via media queries.
+- [x] **Coverage ribbon** (`_pp_v2_coverage_ribbon_html`): per-state segmented bar + chip legend, palette-keyed colors. Empty in v1 mode (no v2 SSE patches).
+- [x] **Sentence inspector** (`_pp_v2_sentence_inspector_html`): verdict pill, palette label, sentence quote (LaTeX-rendered), id, finding-class chips, last-ratified timestamp + actor, agent notes, **state machine buttons** (verified / interpretive / needs_fix / needs_recheck — each posts to the new sentence-verify endpoint), chain link list (kind + target + link_state badge, click to populate chain inspector), audit log toggle.
+- [x] **Chain inspector** (`_pp_v2_chain_inspector_html`): per-link kind + target + link_state, last-verification metadata, **in-place artifact preview** for parameters / citations (full registry data: value, unit, tier, source, llm/human verified dates for parameters; title, authors, journal, DOI, arXiv for citations), **per-link three-state verify buttons** (`✓ Confirm` / `✗ Wrong` / `⚠ Uncertain`) that POST to the generic `/api/verification/event` change-bus endpoint.
+- [x] **Sentence-verify endpoint** (`POST /api/papers/<paper>/sentences/<sentence_id>/verify`): in-process call to `sentence_state.cmd_mark` (sole-writer pattern matches `/verify` Parameters + `/api/verification/event`), returns `{ok, event_id, sentence}` for client patch. Validates state enum + paper-id-in-sentence-id; invalidates graph cache. CLI sole-writer discipline preserved.
+- [x] **Keyboard-first nav** (Datastar window-level keydown bindings): `←/→` next/prev sentence, `↑/↓` next/prev chain link within active sentence, `v/i/r` shortcut to verified/interpretive/needs_recheck on active sentence, `f/w` jump to next FAIL/WARN, `Esc` clears selection. Unified surface across v1 + v2.
+- [x] **Audit log drawer** (`_pp_v2_audit_log_html`): bottom-spanning collapsible pane, visibility toggled by `$showAudit` signal. Renders **diff-since-last-verified** table (chain links whose `last_verification.timestamp > sentence.human_ratified_at`) PLUS append-only event stream (timestamp / action / prior→new state / actor / notes). All comparisons go through `_pp_parse_ts` (datetime-based) — fixed a cross-precision bug where `verification_state` second-precision timestamps string-compared GREATER than `sentence_state` microsecond-precision timestamps because 'Z' (90) > '.' (46).
+- [x] **Full-body LaTeX render extension** (`_latex_block_envs_extract`): equation/align/gather/multline/itemize/enumerate/figure/table/abstract environments fold into HTML placeholders (with caption extraction for figures + tables) before the per-char inline walker runs; opaque alphanumeric markers survive the per-char escape pass and substitute back at the end. New CSS for `pp-displayed-math`, `pp-figure-stub`, `pp-itemize`, `pp-enumerate`.
+- [x] **Visual encoding** per design doc §UX: green border on verified, blue on interpretive, red on needs_fix, dotted/dashed/solid on agent_proposed_info/warn/fail, purple diagonal-stripe on needs_recheck or stale, grey-text on transition. Active sentence picks up `pp-sentence--active` (blue accent).
+- [x] **Cross-tab state preservation**: existing `?paper=<id>` URL param drives `$activePaper` initial value (from Wave 9g); v2 adds `$activeSentence` + `$activeLinkIdx` + `$showAudit` to the signal set. Deep-link to specific sentence via the same shape works without round-trip.
+- [x] **Bug fixes** found during smoke test:
+  - `_direct_last_modified` was reading its own output `meta.last_modified` (Wave 10c surface); already fixed there.
+  - `0 or -1` short-circuited `activeLinkIdx=0` to -1 because Python falsy. Replaced with explicit None-check coercion (`int(raw) if raw is not None and raw != '' else -1`).
+  - Audit event field naming — `target_id` / `target_type` / `timestamp` / `actor` are nested under `meta` per sentence_state's `_make_audit_event`. Filter + renderer tolerate both flat and nested forms.
+- [x] **Smoke test on paper12_polariton v2** (56 sentences, 4 WARN):
+  - JSON path: `schema_version: v2`, sentences=56, coverage breakdown intact (49 agent_proposed + 7 transition).
+  - Verify endpoint: POST → 200, sentence palette flips agent_proposed → verified, prose_state.json + audit_log.jsonl written via cmd_mark.
+  - Stale flow: confirm citation @T0 → ratify sentence @T1 (palette=verified, is_stale=False) → re-verify citation @T2 (T2 > T1) → fetch shows palette=needs_recheck, is_stale=True, coverage stale=1.
+  - SSE response (with active sentence + activeLinkIdx=0): all 10 critical UI elements verified — schemaMode patch, NEEDS RECHECK verdict, DIFF SINCE LAST VERIFIED table, chain link entries, sentence inspector buttons, audit log table, artifact preview class + Falque2025 registry data (title, authors, journal/year, DOI, arXiv 2311.01392), per-link verify buttons.
+- [x] `validate.py --check graph_integrity` PASS in 1.8s. All 56 graph tests still pass.
 
-**Effort:** ~2.5d.
+**Effort:** ~2.5d (matched estimate).
+
+**Deferred follow-ups** (not blocking):
+- Lean theorem source preview in chain inspector (currently a placeholder; reads `lean_deps.json` for the named identifier + emits the body as a `<pre>` block).
+- ClaimCluster propagation prompt ("Apply to N other members?") — Wave 10f surface.
+- Deep-link to specific link via `?link=<idx>` URL param.
 
 ### Wave 10e — Adversarial-reviewer extension
 
@@ -924,7 +941,24 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 
 **Effort:** ~0.5d.
 
-### Wave 10f — Cross-paper ClaimCluster detection + propagation
+### Wave 10f — Cross-paper ClaimCluster detection + propagation — DONE 2026-04-26
+
+- [x] **`scripts/cluster_detect.py`** — sole producer of `papers/claim_clusters.json`. Walks every `papers/<paper>/claims_review.json` v2 schema, groups sentences by `raw_id_parts.quote_hash` (basic normalization, sha8 — matches sentence_state.py's `compute_sentence_id`) for `match_kind=exact` (confidence 1.0). Aggressive normalization (NFKC, drop punctuation) for `match_kind=normalized` (confidence 0.9). Cross-paper requirement: ≥2 distinct papers per cluster. CLI: `record` / `list` / `apply`-style flags + `--strategy {exact,normalized,all}` + `--min-quote-len`. Semantic-match (embedding-based) deferred — would need a model dep.
+- [x] **`extract_claim_cluster_nodes` + `extract_member_of_edges`** (Wave 10b infrastructure) consume the cluster file unchanged. Verified via the smoke fixture: 1 cluster (2 members, 2 papers) → 1 ClaimCluster node + 2 MEMBER_OF edges in the graph.
+- [x] **`graph_integrity.claim_cluster_inconsistency`** flags clusters whose ratified `human_state` values disagree across members (Gate 2 CrossPaperConsistency). The check reads `human_state` from each Sentence node's meta (already overlaid from `prose_state.json` in `extract_sentence_nodes`).
+- [x] **Sentence inspector cluster banner** — `_pp_v2_sentence_inspector_html` renders one banner per cluster the active sentence is a member of: cluster ID, match_kind, confidence, list of OTHER papers in the cluster (excluding the active paper), "Propagate to N other member(s)" button. Banner color-coded by match_kind (exact = green, normalized = amber).
+- [x] **`POST /api/papers/<paper>/clusters/<cluster_id>/propagate`** — propagation endpoint. Body: `{state, source_sentence, actor, notes?}`. Loads cluster, iterates `sentence_state.cmd_mark` over each non-source member with `notes` suffixed `(propagated from <source_sentence_id>)` so the audit trail surfaces the source. Returns per-member `{rc, event_id, stderr?}`. Cache invalidation on success.
+- [x] **Smoke test (synth two-paper fixture)**: built shared sentence in paper12_polariton + paper16_graphene_sk_eft → `cluster_detect` finds 1 exact-match cluster → SSE response surfaces banner + propagate button + member paper chip → POST propagate → paper16's `prose_state.json` gets `human_verified` with notes containing `(propagated from sentence:paper12_polariton:abstract:ab8d3346)` → graph rebuild emits 1 ClaimCluster + 2 MEMBER_OF edges → `validate.py --check graph_integrity` PASS in 1.7s.
+- [x] **Defensive `name` field added** to Sentence + AuditEvent + ClaimCluster extractors (graph_integrity orphan_nodes/conflicts checks rely on `n['name']`; previous Wave 10b extractors only emitted `label`, surfacing as a KeyError when v2 leftovers landed in any paper's claims_review.json).
+
+**Effort:** ~0.5d (matched estimate).
+
+**Deferred follow-ups** (not blocking):
+- Semantic-match strategy (`--strategy semantic`): needs an embedding model — sentence-transformers or local-only equivalent. Phase 6 candidate.
+- Cluster member browse UI: clicking a cluster banner opens a side-panel listing every member sentence with verdict + state across papers; Wave 10g+ enhancement.
+- Stable cluster IDs across reruns (current `claim_cluster:exact:<sha8>` is content-derived → stable for exact match; `claim_cluster:norm:<sha8>` is also content-derived but membership can shift if a single member's normalization changes). Add a deterministic-merge strategy when both strategies overlap.
+
+### Wave 10f — original spec (superseded by ship summary above)
 
 - [ ] New `claims-reviewer-cross-paper` pass: after individual paper reviews complete, find sentences making the same factual claim across papers (exact quote match → normalized match → semantic match)
 - [ ] Emit `ClaimCluster` nodes with `match_kind`, `confidence`, `constructed_by` metadata. Cluster sizes 2+ all handled uniformly via ClaimCluster (no pairwise SAME_CLAIM_AS edges)
@@ -935,15 +969,35 @@ A rigor-audit on three random papers (5, 10, 16) [results at `/tmp/paper{5,10,16
 
 **Effort:** ~0.5d.
 
-### Wave 10g — Retirement + deep-link cleanup
+### Wave 10g — Retirement + deep-link cleanup — DONE 2026-04-26
 
-- [ ] **Retire Paper Contributions tab**. URL `/?tab=papers` redirects to `/?tab=paper&paper=<id>` (Paper Provenance with same paper preselected)
-- [ ] Paper Readiness heatmap cells deep-link to `/?tab=paper&paper=<id>&filter=gate:<gate>` (Paper Provenance filtered to sentences invoking that gate)
-- [ ] KG node detail panel for `Sentence` nodes deep-links back to `/?tab=paper&paper=<id>&sentence=<id>`
-- [ ] Process Health QI cards deep-link to affected sentences in their paper(s)
-- [ ] Decide whether Research Status (chains) tab survives — if its L1 milestone DAG duplicates `KG?chain=<id>` view, fold into KG; otherwise keep as curated traversal
+- [x] **Paper Contributions tab retired**. `index()` (Flask) emits a 302 from `/?tab=papers` to `/?tab=paper`, preserving any `?paper=<id>` selector. Tab nav anchor removed from `dashboard.html`. Old bookmarks resolve via the redirect.
+- [x] **Paper Readiness heatmap → Paper Provenance**: `_readiness_focus_html` adds an `→ Open in Paper Provenance` button. When `$activeGate` is set, the link carries `&filter=gate:<gate>` so Paper Provenance v2 filters the body to sentences whose `gates_invoked` includes the named gate.
+- [x] **Paper Provenance honors gate filter**: new `_pp_filter_sentences_by_gate` + `gateFilter` Datastar signal (initialized from `?filter=` URL param). Filtered body shows a banner with count + clear button. The `Esc` keyboard binding now also clears `$gateFilter`.
+- [x] **KG Sentence/AuditEvent detail panel → Paper Provenance**: `showDetail` in `graph_tab.html` adds a `→ Open in Paper Provenance` anchor for `type === 'Sentence'` and `type === 'AuditEvent'` nodes. For Sentences, the link includes `&sentence=<id>`; the Paper Provenance template reads that and seeds `$activeSentence`.
+- [x] **Process Health QI cards → Paper Provenance**: `_qi_items_html` renders each affected paper as `<a class="qi-paper-link"...>` with `?tab=paper&paper=<id>&filter=gate:<gate_affected>`. Cluster of clicked papers each lands at the right filter.
+- [x] **Research Status (chains) tab kept** as a curated traversal — L1 milestone DAG with editorial `chain_overlays.yaml` headroom (Wave 9d-followup) is a different role than the KG tab's free-form filtering. Not folded.
 
-**Effort:** ~0.25d. (Structural validate.py checks `paper_lean_refs` + `paper_hypothesis_disclosure` previously listed here have moved to **Wave 1d** — same architectural class as Wave 1b's pipeline-plumbing CHECKs, doesn't need to gate on Wave 10's critical path.)
+**Effort:** ~0.25d (matched estimate). Structural validate.py checks `paper_lean_refs` + `paper_hypothesis_disclosure` were moved to **Wave 1d** (2026-04-26).
+
+### Wave 10 strengthening pass (post-ship audit) — DONE 2026-04-26
+
+Post-ship audit of Waves 10c/10d/10f/10g surfaced three real correctness issues; all fixed in this pass:
+
+- [x] **`last_modified.sentence_is_stale` + `compute_link_state` cross-precision string-compare bug.** Same class as the dashboard `_pp_compute_sentence_stale` fix. Lifted `_pp_parse_ts` into the library as `_parse_iso_dt` (UTC datetime parse, tolerant of Z / +00:00 / second / microsecond precision); both library functions now compare datetimes, not strings. Without this, a microsecond-precision ratification `...23.500000Z` string-compared GREATER than a second-precision artifact `...23Z` (because `.` < `Z`), inverting the staleness signal. Verified with five-case unit smoke test.
+- [x] **`verification_state.node_id_for` extended to cover `Hypothesis` / `AristotleRun` / `ProductionRun` artifact types.** The v2 schema's `chain_link.kind` enum allows these, and an agent recording change-bus events on (e.g.) a hypothesis verification would have its event silently dropped at apply-to-graph time because `node_id_for` returned None. `KNOWN_ARTIFACT_TYPES` extended; `node_id_for` now maps to `hyp:` / `aristotle:` / `production:` prefixes with passthrough for already-qualified ids.
+- [x] **`validate.py --check claim_clusters_fresh` (CHECK 15d).** Mirrors `counts_fresh` / `tables_fresh` for the cross-paper cluster file. Stale when any v2 `claims_review.json` mtime is newer than `papers/claim_clusters.json`, or when v2 papers exist but the cluster file does not. Auto-regenerates via `cluster_detect.py`. Verified with three-stage smoke test (initial regen → fresh → touch-then-regen). Default-suite check.
+
+**Foundation closure pass (2026-04-26 follow-up): all four follow-ups landed.**
+
+- [x] **`triggered_by` field on verification events.** Wave 10 cross-tab provenance. New optional kwarg on `verification_state.record_event` + new CLI flag `--triggered-by`. Threaded through `POST /api/verification/event` so the chain inspector's per-link verify buttons (Confirm/Wrong/Uncertain) carry `$activeSentence` as `triggered_by`. `apply_to_graph` propagates the field to `meta.last_verification_triggered_by`. Audit log DIFF table renders an inline badge with `⚲ self` (self-triggered) or `↗ <other_sid>` (cross-sentence) so the user can see which sentence's UI fired the event. Pytest verified: omit / set / propagate.
+- [x] **`verification_state.py prune` + size guard.** New CLI subcommand. Required at least one of `--keep-days N` / `--keep-records N` / `--before <ISO-8601>`; `--archive-to <path>` appends pruned events to a sidecar JSONL for recovery; `--dry-run` reports without writing. Atomic via the existing `flock + os.replace` pattern. Refuses to wipe without a criterion (raises `ValueError`) — protects against accidental truncation EVEN if the log doesn't yet exist. `read_events` emits a one-shot WARN to stderr when the log crosses 1MB recommending `prune --keep-days 90`. Pytest verified: refusal / dry-run / keep-records / keep-days.
+- [x] **`sentence_state.py rebuild_prose_state`.** Replay-canonical recovery. Walks `audit_log.jsonl` in timestamp order, replays Sentence-targeted events into a fresh `prose_state.json`. Modes: `--check` (default; print diff vs current, exit 1 on drift, exit 0 if consistent) and `--write` (atomic replace). Recovers from `cmd_mark` partial-failure (audit log written, prose_state write failed) — the explicit recovery path the design doc §9 always required. Pytest verified: no-drift case, post-deletion drift detection, post-write recovery.
+- [x] **`scripts/test_helpers.py` + `tests/test_paper_provenance_v2.py`.** Smoke-test brittleness eliminated. Three context managers (`isolated_papers_root`, `isolated_verification_log`, `isolated_v2_state`) swap module-level paths to tmp dirs; opt-in seeding via `seed_papers={paper_id: claims_review_dict}`. `make_v2_sentence` + `make_v2_review` build correctly-formed v2 fixtures from minimal inputs (computes content-hash IDs via the real `compute_sentence_id` so cluster detection lands on real hashes). New pytest module covers Wave 10b (mark / rebuild) + 10c (change-bus + triggered_by + node_id_for + prune) + 10f (cluster_detect exact + intra-paper-dup behavior) + cross-precision stale detection. **16 tests, all PASS in 30ms** (vs 7+ min for build_graph-dependent tests). The new fixtures never poke real `papers/` state — paper16-leak class of bug is now structurally impossible.
+
+**Edge-case caught by writing the tests:** `prune_log` was returning `{kept: 0, ...}` when called with no criterion AND no log file, silently succeeding. The test expected the safety net to fire unconditionally. Reordered checks so the criterion validation runs before the existence check.
+
+**graph_integrity PASS.**
 
 ### Wave 10h — Retrofit run
 
@@ -1074,10 +1128,10 @@ The honest `informal_lemma` markers proposed in deliverables 1–3 should map cl
 | 10a | 9c-followup-cache | 1.25d | claims-reviewer v2: sentence-keyed schema (no derived views) + **five** finding classes (IA / TP / SD / TN / HD) + decoupled verdicts + reconciliation protocol (not silent supersession) + content-hash sentence IDs |
 | 10b | 10a | 1.5d | KG schema delta: Sentence + AuditEvent + ClaimCluster nodes (ProseClaim retained), BACKED_BY (no human_state) + LOGGED_BY + MEMBER_OF edges (no pairwise SAME_CLAIM_AS), last_modified propagation, **`scripts/sentence_state.py` CLI as the only writer**, tombstone state |
 | 10c | 10b | 0 (done 2026-04-26) | Cross-tab change-bus: verification_state.py log + apply_to_graph; /verify + POST /api/verification/event wired; cascade via existing dep edges; purple-stripe `pp-claim-span--stale` indicator + verdict-pill state. Bug fix to `_direct_last_modified` non-idempotency. |
-| 10d | 10b, Wave 9g (renderer) | 2.5d | Paper Provenance redesign: 3-column layout, full-body LaTeX render, keyboard-first nav, per-link verification UI (power-mode toggle; default sentence-level), in-place link expansion, diff-since-last-verified, coverage ribbon, audit log pane with agent-identity chain |
+| 10d | 10b, Wave 9g (renderer) | 0 (done 2026-04-26) | Paper Provenance v2 redesign: 3-column layout, sentence-level state machine (mark/inspect/audit), per-link verification (in-place artifact preview + change-bus posting), keyboard-first nav, diff-since-last-verified table, coverage ribbon, audit log drawer. Full-body LaTeX block-env extraction. Bug fixes: `0 or -1` short-circuit, cross-precision string compare, audit-event meta nesting. |
 | 10e | 10b | 0.5d | Adversarial-reviewer extension: Location field cites sentence_id; findings overlay onto Paper Provenance inspector |
-| 10f | 10a × all-papers retrofit | 0.5d | Cross-paper ClaimCluster detection + MEMBER_OF edges + verify-once-propagate UX (cluster-membership traversal, no pairwise edges) |
-| 10g | 10d | 0.25d | Retire Paper Contributions tab; deep-link from Readiness/QI/KG into Paper Provenance. (Structural validate.py CHECKs moved to Wave 1d 2026-04-26.) |
+| 10f | 10a × all-papers retrofit | 0 (done 2026-04-26) | Cross-paper ClaimCluster detection: `cluster_detect.py` (exact + normalized match strategies), banner+propagate UI in sentence inspector, `POST /api/papers/<paper>/clusters/<id>/propagate` calling `sentence_state.cmd_mark` per member. Two-paper synth fixture verified end-to-end. Defensive `name` field added to Sentence/AuditEvent/ClaimCluster extractors. |
+| 10g | 10d | 0 (done 2026-04-26) | Paper Contributions tab retired (302 redirect); deep-links from Readiness focus pane / QI paper chips / KG Sentence + AuditEvent detail → Paper Provenance with `gateFilter` + `sentence` URL params honored. Research Status tab kept as curated traversal. (Structural validate.py CHECKs moved to Wave 1d 2026-04-26.) |
 | 10h | 10a | 2h wallclock + agent batch | Retrofit run: re-run claims-reviewer-v2 on all 18 papers |
 
 **Critical path:** Wave 1 → 2 → 3 → 4 → 5a → 4c → 6b → submission-gate functional. ~10 days focused work.

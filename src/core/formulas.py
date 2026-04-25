@@ -6633,6 +6633,91 @@ def m_beta_beta_effective(pmns_matrix, m_nu_diag):
     return float(np.abs(np.sum(pmns_matrix[0, :] ** 2 * m_nu)))
 
 
+def majorana_decoupling_suppression(energy_gev, lambda_adw_gev, k):
+    """Appelquist-Carazzone decoupling suppression factor (E/Λ_ADW)^k.
+
+    For Embedding I (fundamental ν_R) vs Embedding III (substrate-bound ν_R)
+    IR-amplitude difference at energy E with substrate scale Λ_ADW:
+
+        |amp_III(E) - amp_I(E)| ≤ C · (E / Λ_ADW)^k
+
+    where k = 1 for the dim-5 Weinberg-operator channel (substrate violates
+    U(1)_L) and k = 2 for the generic dim-6 four-fermion / kinetic form-factor
+    channel (substrate preserves U(1)_L). At E = M_W ≈ 80 GeV and
+    Λ_ADW ≈ 10^14 GeV: dim-5 ≈ 8e-13, dim-6 ≈ 6e-25.
+
+    Lean: MajoranaRungDecoupling.H_DecouplingBoundDim6 / _Dim5_LNV
+    Aristotle: pending
+    Source: Appelquist & Carazzone, PRD 11 (1975) 2856; Ball & Thorne,
+        hep-th/9404156; Phase 5z Wave 2a deep research (delivered 2026-04-25).
+
+    Parameters
+    ----------
+    energy_gev : float
+        Energy scale of interest [GeV]. Must be positive.
+    lambda_adw_gev : float
+        Substrate scale Λ_ADW [GeV]. Must be positive.
+    k : int
+        Decoupling exponent (1 or 2 for the load-bearing cases).
+
+    Returns
+    -------
+    float
+        Dimensionless suppression factor (energy_gev / lambda_adw_gev)**k.
+    """
+    if energy_gev <= 0:
+        raise ValueError("Energy must be positive.")
+    if lambda_adw_gev <= 0:
+        raise ValueError("Substrate scale must be positive.")
+    if k not in (1, 2):
+        raise ValueError(f"Decoupling exponent must be 1 or 2, got {k}.")
+    return (energy_gev / lambda_adw_gev) ** k
+
+
+def weinberg_induced_neutrino_mass(v_ew_gev, lambda_adw_gev, c_wilson=0.1):
+    """Light-neutrino mass induced by the dim-5 Weinberg operator at scale Λ_ADW.
+
+        m_ν ≈ c_wilson · v² / Λ_ADW
+
+    where ``c_wilson`` is the Weinberg-operator Wilson coefficient. The default
+    ``c_wilson = 0.1`` matches the SILH natural value
+    `C ~ N_f / (16π²) ~ 0.1` adopted in `MajoranaRungDecoupling.naturalC`
+    (Phase 5z Wave 2a deep research, Hill 2024 Entropy + Giudice-Grojean-
+    Pomarol-Rattazzi 2007 transplant). At v = 246.22 GeV, Λ_ADW = 10^14 GeV,
+    and c_wilson = 0.1: m_ν ≈ 0.0606 eV — the atmospheric mass scale.
+
+    Setting ``c_wilson = 1`` recovers the bare order-of-magnitude estimate
+    `v² / Λ_ADW ≈ 0.6 eV`.
+
+    Lean: NeutrinoMixing.PMNSMatrix (structural)
+    Aristotle: pending
+    Source: Weinberg, PRL 43 (1979) 1566; Phase 5z Wave 2a deep-research
+        return on AC decoupling bounds (Block §3, delivered 2026-04-25).
+
+    Parameters
+    ----------
+    v_ew_gev : float
+        Electroweak VEV v [GeV]. Must be positive.
+    lambda_adw_gev : float
+        Substrate scale Λ_ADW [GeV]. Must be positive.
+    c_wilson : float
+        Weinberg-operator Wilson coefficient (default 0.1, the SILH/NJL
+        natural value for ADW substrates with `N_f ~ 16`). Must be positive.
+
+    Returns
+    -------
+    float
+        Light-neutrino mass m_ν [GeV].
+    """
+    if v_ew_gev <= 0:
+        raise ValueError("EW VEV must be positive.")
+    if lambda_adw_gev <= 0:
+        raise ValueError("Substrate scale must be positive.")
+    if c_wilson <= 0:
+        raise ValueError("Wilson coefficient must be positive.")
+    return c_wilson * v_ew_gev ** 2 / lambda_adw_gev
+
+
 def majorana_rung_z16_compatibility_index(n_nu_r):
     """Z₁₆ index contribution of N right-handed sterile neutrinos.
 

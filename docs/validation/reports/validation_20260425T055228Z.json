@@ -1,0 +1,35 @@
+{
+  "timestamp": "20260425T055228Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "claim_clusters_fresh": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "staleness",
+          "passed": true,
+          "message": "stale: paper12_polariton/claims_review.json newer than claim_clusters.json",
+          "warning": true
+        },
+        {
+          "name": "regenerate",
+          "passed": true,
+          "message": "Wrote 0 clusters across 0 papers \u2192 /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/claim_clusters.json",
+          "warning": false
+        },
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "0 cluster(s) across 0 paper(s)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

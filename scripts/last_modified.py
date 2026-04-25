@@ -67,6 +67,32 @@ def _parse_iso(ts: str | None) -> str:
     return t
 
 
+def _parse_iso_dt(ts: str | None) -> datetime | None:
+    """Parse an ISO-8601 timestamp into a datetime (UTC).
+
+    Tolerates Z suffix, +00:00 suffix, second precision, microsecond
+    precision. Returns None on parse failure.
+
+    Why: string-comparing two ISO timestamps with different precision
+    inverts the order — ``'2026-04-25T04:51:23Z' > '2026-04-25T04:51:23.456Z'``
+    is True (because 'Z' > '.'), which falsely says the second-precision
+    timestamp is newer. ``sentence_is_stale`` and ``compute_link_state``
+    must use datetime ordering instead. (Same bug class as the dashboard
+    `_pp_compute_sentence_stale` fix, lifted here to the library.)
+    """
+    if not ts:
+        return None
+    s = str(ts).strip()
+    if not s:
+        return None
+    if s.endswith('Z'):
+        s = s[:-1] + '+00:00'
+    try:
+        return datetime.fromisoformat(s)
+    except ValueError:
+        return None
+
+
 def _direct_last_modified(node: dict) -> str:
     """Compute the node's own direct last_modified timestamp (no upstream).
 
@@ -166,6 +192,11 @@ def sentence_is_stale(
 
     A tombstoned sentence is never 'stale' in this sense — the prose is gone.
     An unratified sentence is never 'stale' — there's nothing to re-check.
+
+    Cross-precision-safe: uses datetime parsing rather than string compare
+    so a microsecond-precision ratification timestamp doesn't falsely
+    appear OLDER than a second-precision artifact timestamp at the same
+    second (where 'Z' > '.' inverts string ordering).
     """
     meta = sentence_node.get('meta', {}) or {}
     if meta.get('tombstone'):
@@ -173,7 +204,9 @@ def sentence_is_stale(
     ratified = meta.get('human_ratified_at')
     if not ratified:
         return False
-    ratified_iso = _parse_iso(ratified)
+    rat_dt = _parse_iso_dt(ratified)
+    if rat_dt is None:
+        return False
 
     for e in backed_by_edges:
         if e.get('type') != 'BACKED_BY':
@@ -181,8 +214,9 @@ def sentence_is_stale(
         tgt = id_to_node.get(e.get('target', ''))
         if not tgt:
             continue
-        tgt_lm = tgt.get('meta', {}).get('last_modified') or EPOCH_ZERO
-        if tgt_lm > ratified_iso:
+        tgt_lm = tgt.get('meta', {}).get('last_modified')
+        tgt_dt = _parse_iso_dt(tgt_lm)
+        if tgt_dt is not None and tgt_dt > rat_dt:
             return True
     return False
 
@@ -213,7 +247,10 @@ def compute_link_state(
     if kind in ('theorem', 'axiom', 'formula'):
         file_mtime = meta_tgt.get('file_mtime')
         if file_mtime and agent_run_at_iso:
-            if _parse_iso(file_mtime) > _parse_iso(agent_run_at_iso):
+            # datetime compare (string compare flips on cross-precision)
+            mtime_dt = _parse_iso_dt(file_mtime)
+            run_dt = _parse_iso_dt(agent_run_at_iso)
+            if mtime_dt is not None and run_dt is not None and mtime_dt > run_dt:
                 return 'stale'
 
     return 'resolved'

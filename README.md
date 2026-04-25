@@ -127,7 +127,7 @@ A finite-dimensional target completes the picture. `FermiHubbardDimer.lean` form
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (3021 theorems, 1 axiom, 133 modules, 0 sorry)
+├── lean/                              # Lean 4 formalization (4049 theorems, 1 axiom, 170 modules, 0 sorry)
 │   ├── lakefile.toml                  # Lake build config (pinned Mathlib 8850ed93)
 │   ├── lean-toolchain                 # Lean 4 v4.29.0
 │   ├── SKEFTHawking.lean              # Root module (imports all 131 theorem modules)
@@ -402,7 +402,7 @@ SK_EFT_Hawking/
 │   ├── aristotle_results/             # All 43+ Aristotle run archives
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (1635+ tests across 43 files)
+├── tests/                             # pytest suite (2841+ tests across 61 files)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -412,18 +412,47 @@ SK_EFT_Hawking/
 │   ├── test_lean_integrity.py         # Module structure + sorry-gap regression (9 tests)
 │   ├── test_vestigial.py             # MC, SU(2), TRG, 4D, NJL, susceptibility (159 tests)
 │   ├── test_gauge.py                 # SO(4) gauge, quaternion, Majorana (146 tests)
-│   └── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
+│   ├── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
+│   └── test_paper_provenance_v2.py    # Phase 5v Wave 10 sentence-level pipeline (16 tests)
 │
-├── figures/                           # 89 pipeline figures (PNG + HTML) + provenance_graph.json
+├── figures/                           # 113 pipeline figures (PNG + HTML) + provenance_graph.json
 ├── scripts/
 │   ├── submit_to_aristotle.py         # Aristotle submission + integration script
-│   ├── build_graph.py                 # Knowledge graph extraction (8 node types, 10 edge types)
-│   ├── graph_integrity.py             # Graph integrity queries (orphans, conflicts, chains)
-│   ├── provenance_dashboard.py        # Flask dashboard + /api/graph endpoints
+│   ├── validate.py                    # 17 cross-layer validation checks (incl. graph_integrity, claim_clusters_fresh)
+│   ├── build_graph.py                 # Knowledge graph extraction (25 node types, 25 edge types)
+│   ├── graph_integrity.py             # Graph integrity queries (orphans, conflicts, chains, sentence-level)
+│   ├── extract_lean_deps.py           # Lean declaration + axiom-deps registry extraction
+│   ├── update_counts.py               # Regenerate docs/counts.json + counts.tex
+│   ├── render_paper_tables.py         # Per-paper auto-generated tables/*.tex from spec
+│   ├── render_paper_html.py           # Pandoc-free LaTeX→HTML for paper bodies
+│   ├── readiness_gates.py             # Per-paper × per-gate state evaluators (11 gates × 18 papers)
+│   ├── citation_cache.py              # 90-day citation verification cache (Stage 13 amortizer)
+│   ├── qi_register.py                 # Auto-generate docs/QI_REGISTER.md
+│   ├── sync_graph_to_pg.py            # Idempotent PG+AGE sync (Wave 9f)
+│   │
+│   │  # — Phase 5v Wave 10 sentence-level provenance pipeline —
+│   ├── sentence_state.py              # Sole writer to prose_state.json + audit_log.jsonl;
+│   │                                  # mark / validate / ingest_agent_run / supersede / tombstone-sweep /
+│   │                                  # reconcile / rebuild_prose_state (replay-canonical recovery)
+│   ├── verification_state.py          # Sole writer to docs/verification_log.jsonl (cross-tab change-bus);
+│   │                                  # record (with optional triggered_by) / list / apply / prune
+│   ├── last_modified.py               # Cross-precision-safe freshness propagation across dependency edges
+│   ├── cluster_detect.py              # Cross-paper exact + normalized claim clusters → claim_clusters.json
+│   ├── test_helpers.py                # Isolated tmp_path fixtures (isolated_v2_state) + v2 builders
+│   │
+│   ├── datastar_helpers.py            # Flask glue for Datastar SSE
+│   ├── provenance_dashboard.py        # Datastar+Flask 10-tab dashboard
+│   │                                  # (Parameters / Formulas / Proof Architecture / Citations / KG /
+│   │                                  #  Paper Readiness / Process Health / Research Status /
+│   │                                  #  Paper Provenance v2 — sentence-level 3-column UI)
 │   └── templates/
-│       ├── dashboard.html             # Dashboard template (Datastar)
+│       ├── dashboard.html             # Dashboard shell (Datastar v1.0.1 CDN)
 │       └── partials/
-│           └── graph_tab.html         # D3 knowledge graph visualization
+│           ├── graph_tab.html         # D3 knowledge graph visualization
+│           ├── readiness_tab.html     # 11-gate × 18-paper heatmap + focus pane
+│           ├── qi_tab.html            # QI register cards
+│           ├── chains_tab.html        # Research Status (chain L0/L1)
+│           └── paper_provenance_tab.html  # 3-column sentence-level UI w/ keyboard nav
 ├── pyproject.toml                     # Unified Python dependencies
 └── .env                               # Aristotle API key (not committed)
 ```

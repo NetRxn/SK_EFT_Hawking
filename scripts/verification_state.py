@@ -63,7 +63,7 @@ import json
 import os
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
@@ -84,6 +84,10 @@ KNOWN_ARTIFACT_TYPES = {
     'Parameter', 'Citation', 'PrimarySource',
     'LeanAxiom', 'LeanTheorem', 'LeanDef',
     'Formula', 'PaperClaim', 'ProseClaim', 'Sentence',
+    # Wave 10c strengthening: v2 chain_link.kind values that agents may
+    # cite — without these, change-bus events get silently dropped at
+    # node_id_for time and apply_to_graph never propagates the timestamp.
+    'Hypothesis', 'AristotleRun', 'ProductionRun',
 }
 
 REQUIRED_FIELDS = ('artifact_type', 'artifact_id', 'action', 'actor', 'timestamp')
@@ -167,6 +171,18 @@ def node_id_for(artifact_type: str, artifact_id: str) -> str | None:
         if artifact_id.startswith('sentence:'):
             return artifact_id
         return f'sentence:{artifact_id}'
+    if artifact_type == 'Hypothesis':
+        if artifact_id.startswith('hyp:'):
+            return artifact_id
+        return f'hyp:{artifact_id}'
+    if artifact_type == 'AristotleRun':
+        if artifact_id.startswith('aristotle:'):
+            return artifact_id
+        return f'aristotle:{artifact_id}'
+    if artifact_type == 'ProductionRun':
+        if artifact_id.startswith('production:'):
+            return artifact_id
+        return f'production:{artifact_id}'
     return None
 
 
@@ -181,6 +197,7 @@ def record_event(
     timestamp: str | None = None,
     notes: str | None = None,
     node_id: str | None = None,
+    triggered_by: str | None = None,
     extra: dict[str, Any] | None = None,
     log_path: Path | None = None,
 ) -> dict:
@@ -189,6 +206,12 @@ def record_event(
     Atomic-append: takes an exclusive ``flock`` on the lock file, writes
     one line, releases. Concurrent writers serialize at the OS level —
     no readers ever see a partial line.
+
+    ``triggered_by`` (Wave 10 strengthening): when the event was fired
+    from a per-link verify UI inside a sentence inspector, this carries
+    the ``sentence:<paper>:<slug>:<hash>`` id of the source sentence so
+    the audit trail surfaces cross-tab provenance. Null for events that
+    originated from the Parameters tab, an ad-hoc CLI, or a script.
 
     Returns the event dict that was written (with normalized timestamp +
     auto-derived ``node_id`` if not supplied).
@@ -205,6 +228,8 @@ def record_event(
     }
     if notes:
         event['notes'] = notes
+    if triggered_by:
+        event['triggered_by'] = triggered_by
     if node_id is None:
         node_id = node_id_for(artifact_type, artifact_id)
     if node_id:
@@ -243,15 +268,45 @@ def record_event(
 
 # ── Reader ─────────────────────────────────────────────────────────────────
 
+_LOG_SIZE_WARN_BYTES = 1_048_576  # 1 MB
+_LOG_SIZE_WARN_EMITTED: set[str] = set()
+
+
+def _maybe_warn_log_size(log_path: Path) -> None:
+    """One-shot WARN to stderr when the log file crosses 1MB.
+
+    Triggers `prune --keep-days 90` as the standard remediation but
+    never auto-prunes — log loss should be a deliberate human act.
+    De-duplicates the warning per process so heavy readers don't spam.
+    """
+    key = str(log_path)
+    if key in _LOG_SIZE_WARN_EMITTED:
+        return
+    try:
+        size = log_path.stat().st_size
+    except OSError:
+        return
+    if size > _LOG_SIZE_WARN_BYTES:
+        sys.stderr.write(
+            f"[verification_state] WARN: {log_path.name} is "
+            f"{size/1_048_576:.1f}MB. Consider "
+            f"`scripts/verification_state.py prune --keep-days 90` "
+            f"to retain recent events only.\n"
+        )
+        _LOG_SIZE_WARN_EMITTED.add(key)
+
+
 def read_events(log_path: Path | None = None) -> Iterator[dict]:
     """Yield events from the log in file order (oldest first).
 
     Skips malformed lines with a warning to stderr. Returns an empty
-    iterator if the log doesn't exist yet.
+    iterator if the log doesn't exist yet. Warns once per process
+    when the log exceeds 1 MB.
     """
     log_path = log_path or LOG_PATH
     if not log_path.exists():
         return iter(())
+    _maybe_warn_log_size(log_path)
 
     def _gen() -> Iterator[dict]:
         with open(log_path, 'r', encoding='utf-8') as f:
@@ -267,6 +322,115 @@ def read_events(log_path: Path | None = None) -> Iterator[dict]:
                         f"malformed JSON; skipping ({exc})\n"
                     )
     return _gen()
+
+
+# ── Prune (retention) ─────────────────────────────────────────────────────
+
+def prune_log(
+    *,
+    keep_days: int | None = None,
+    keep_records: int | None = None,
+    before: str | None = None,
+    log_path: Path | None = None,
+    archive_to: Path | None = None,
+    dry_run: bool = False,
+) -> dict:
+    """Rewrite the verification log keeping only events that satisfy the
+    retention criteria. At least one of ``keep_days`` / ``keep_records`` /
+    ``before`` must be supplied.
+
+    Atomic: serializes through the same lock file as ``record_event``,
+    builds a new file at ``log_path.tmp``, then ``os.replace`` swaps it
+    in. Pruned events are optionally appended to ``archive_to`` so the
+    discarded events stay recoverable on disk.
+
+    Returns ``{kept, removed, total, oldest_kept, newest_kept}``.
+    Refuses to run if no criterion is supplied (don't accidentally wipe).
+    """
+    # Refuse to operate without a retention criterion REGARDLESS of log
+    # state — protects against an accidental wipe even when the log
+    # doesn't yet exist (a future record_event call would be discarded).
+    if keep_days is None and keep_records is None and before is None:
+        raise ValueError(
+            "prune_log requires at least one of "
+            "keep_days / keep_records / before — refusing to truncate "
+            "without a retention criterion"
+        )
+
+    log_path = log_path or LOG_PATH
+    if not log_path.exists():
+        return {'kept': 0, 'removed': 0, 'total': 0,
+                'oldest_kept': None, 'newest_kept': None}
+
+    cutoff_iso: str | None = None
+    if before:
+        cutoff_iso = _parse_iso(before)
+    elif keep_days is not None:
+        cutoff_dt = datetime.now(timezone.utc) - timedelta(days=int(keep_days))
+        cutoff_iso = cutoff_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    # Load all events
+    all_events: list[dict] = list(read_events(log_path))
+    total = len(all_events)
+
+    # Apply criteria. Both can apply jointly — keep events that satisfy
+    # the timestamp criterion AND fall within the most-recent N count.
+    surviving = list(all_events)
+    if cutoff_iso is not None:
+        surviving = [
+            e for e in surviving
+            if _parse_iso(e.get('timestamp', '')) >= cutoff_iso
+        ]
+    if keep_records is not None:
+        # Most-recent N by timestamp
+        surviving.sort(key=lambda e: e.get('timestamp', ''))
+        if len(surviving) > int(keep_records):
+            surviving = surviving[-int(keep_records):]
+
+    # Recover insertion order: file order = timestamp order normally, so
+    # sort surviving by timestamp.
+    surviving.sort(key=lambda e: e.get('timestamp', ''))
+
+    pruned = [
+        e for e in all_events
+        if e not in surviving  # NB: O(N²); acceptable for any realistic log
+    ]
+
+    result = {
+        'kept': len(surviving),
+        'removed': len(pruned),
+        'total': total,
+        'oldest_kept': surviving[0].get('timestamp') if surviving else None,
+        'newest_kept': surviving[-1].get('timestamp') if surviving else None,
+    }
+    if dry_run:
+        return result
+
+    # Atomic rewrite
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = log_path.with_suffix('.jsonl.tmp')
+    with open(LOCK_PATH, 'a+') as lock_f:
+        try:
+            fcntl.flock(lock_f.fileno(), fcntl.LOCK_EX)
+            with open(tmp, 'w', encoding='utf-8') as out:
+                for ev in surviving:
+                    out.write(json.dumps(ev, sort_keys=True, ensure_ascii=False))
+                    out.write('\n')
+            os.replace(tmp, log_path)
+            # Optionally archive pruned events to a sidecar for recovery
+            if archive_to and pruned:
+                archive_to.parent.mkdir(parents=True, exist_ok=True)
+                with open(archive_to, 'a', encoding='utf-8') as ar:
+                    for ev in pruned:
+                        ar.write(json.dumps(ev, sort_keys=True, ensure_ascii=False))
+                        ar.write('\n')
+        finally:
+            try:
+                fcntl.flock(lock_f.fileno(), fcntl.LOCK_UN)
+            except OSError:
+                pass
+
+    return result
 
 
 def latest_per_node(events: Iterable[dict] | None = None) -> dict[str, dict]:
@@ -320,6 +484,11 @@ def apply_to_graph(graph: dict, events: Iterable[dict] | None = None) -> int:
             meta['last_verification_action'] = ev.get('action')
             meta['last_verification_actor'] = ev.get('actor')
             meta['last_verification_notes'] = ev.get('notes')
+            # Wave 10 strengthening: cross-tab provenance — when the
+            # event originated from a sentence's per-link verify UI,
+            # carry the source sentence id forward so dashboard panes
+            # can render "verified from <sentence>".
+            meta['last_verification_triggered_by'] = ev.get('triggered_by')
             touched += 1
     return touched
 
@@ -335,6 +504,7 @@ def _cmd_record(args: argparse.Namespace) -> int:
         timestamp=args.timestamp,
         notes=args.notes,
         node_id=args.node_id,
+        triggered_by=getattr(args, 'triggered_by', None),
     )
     print(json.dumps(ev, sort_keys=True))
     return 0
@@ -413,6 +583,8 @@ def _build_parser() -> argparse.ArgumentParser:
     rec.add_argument('--notes', default=None)
     rec.add_argument('--node-id', default=None,
                      help='Override the auto-derived KG node id')
+    rec.add_argument('--triggered-by', default=None,
+                     help='Source sentence_id (Wave 10 cross-tab provenance)')
     rec.set_defaults(func=_cmd_record)
 
     lst = sub.add_parser('list', help='Dump events from the log')
@@ -432,7 +604,47 @@ def _build_parser() -> argparse.ArgumentParser:
                      help='Write annotated graph here (default: stdout)')
     app.set_defaults(func=_cmd_apply)
 
+    pr = sub.add_parser(
+        'prune',
+        help='Rewrite the log keeping only events matching retention criteria',
+    )
+    pr.add_argument('--keep-days', type=int, default=None,
+                    help='Keep events newer than N days')
+    pr.add_argument('--keep-records', type=int, default=None,
+                    help='Keep at most N most-recent events')
+    pr.add_argument('--before', default=None,
+                    help='Drop events older than ISO-8601 timestamp')
+    pr.add_argument('--archive-to', default=None,
+                    help='Append pruned events to this jsonl file (recovery)')
+    pr.add_argument('--dry-run', action='store_true',
+                    help='Report what would be removed; do not write')
+    pr.set_defaults(func=_cmd_prune)
+
     return p
+
+
+def _cmd_prune(args: argparse.Namespace) -> int:
+    if (args.keep_days is None and args.keep_records is None
+            and args.before is None):
+        sys.stderr.write(
+            "verification_state prune: refusing to wipe — supply at "
+            "least one of --keep-days / --keep-records / --before\n"
+        )
+        return 2
+    archive = Path(args.archive_to).resolve() if args.archive_to else None
+    try:
+        result = prune_log(
+            keep_days=args.keep_days,
+            keep_records=args.keep_records,
+            before=args.before,
+            archive_to=archive,
+            dry_run=args.dry_run,
+        )
+    except ValueError as exc:
+        sys.stderr.write(f"verification_state prune: {exc}\n")
+        return 2
+    print(json.dumps(result, sort_keys=True, indent=2))
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:

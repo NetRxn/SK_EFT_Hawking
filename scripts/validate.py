@@ -1317,6 +1317,106 @@ def check_tables_fresh() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 15d: Cross-paper ClaimCluster freshness (Phase 5v Wave 10f)
+# ═══════════════════════════════════════════════════════════════════════
+
+CLAIM_CLUSTERS_PATH = PROJECT_ROOT / "papers" / "claim_clusters.json"
+
+
+def _claim_clusters_is_stale() -> tuple[bool, str]:
+    """Stale if any v2 ``claims_review.json`` mtime is newer than
+    ``claim_clusters.json``, or if any v2 file exists but no cluster
+    file does.
+
+    A v2 ``claims_review.json`` carries a top-level ``sentences`` list;
+    files without that key are v1 and don't participate in cross-paper
+    clustering.
+    """
+    if not PAPERS_DIR.exists():
+        return False, "no papers/ dir"
+    v2_files: list[Path] = []
+    for p in PAPERS_DIR.iterdir():
+        if not p.is_dir() or not p.name.startswith('paper'):
+            continue
+        cr = p / 'claims_review.json'
+        if not cr.exists():
+            continue
+        try:
+            data = json.loads(cr.read_text())
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data.get('sentences'), list):
+            v2_files.append(cr)
+    if not v2_files:
+        return False, "no v2 claims_review.json files"
+    if not CLAIM_CLUSTERS_PATH.exists():
+        return True, f"{len(v2_files)} v2 paper(s), no claim_clusters.json"
+    cluster_mtime = CLAIM_CLUSTERS_PATH.stat().st_mtime
+    for f in v2_files:
+        if f.stat().st_mtime > cluster_mtime:
+            return True, f"{f.parent.name}/claims_review.json newer than claim_clusters.json"
+    return False, f"fresh ({len(v2_files)} v2 paper(s) tracked)"
+
+
+@register_check("claim_clusters_fresh",
+                "papers/claim_clusters.json is up-to-date vs. v2 claims_review.json files")
+def check_claim_clusters_fresh() -> CheckResult:
+    """CHECK 15d: Regenerate ``papers/claim_clusters.json`` if any v2
+    ``claims_review.json`` is newer.
+
+    Wave 10f. The cross-paper ClaimCluster + MEMBER_OF graph extractors
+    consume this file; out-of-date data means the dashboard misses
+    propagation prompts and ``graph_integrity.claim_cluster_inconsistency``
+    runs against stale member sets. Auto-regenerates via ``cluster_detect.py``.
+    Idempotent + safe on machines with zero v2 papers.
+    """
+    stale, reason = _claim_clusters_is_stale()
+    details = []
+    if stale:
+        details.append(Detail("staleness", True, f"stale: {reason}", warning=True))
+        try:
+            result = subprocess.run(
+                ["uv", "run", "python",
+                 str(SCRIPT_DIR / "cluster_detect.py")],
+                cwd=str(PROJECT_ROOT),
+                capture_output=True, text=True, timeout=120,
+            )
+            if result.returncode != 0:
+                details.append(Detail(
+                    "regenerate", False,
+                    f"cluster_detect.py failed (rc={result.returncode}): "
+                    f"{result.stderr[-200:].strip()}",
+                ))
+                return CheckResult(passed=False, details=details)
+            # cluster_detect prints summary on stderr (one-line)
+            tail = (result.stderr or '').strip().splitlines()
+            details.append(Detail("regenerate", True,
+                                  tail[-1] if tail else "cluster_detect.py succeeded"))
+        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+            details.append(Detail("regenerate", False,
+                                  f"cluster_detect.py not runnable: {exc}"))
+            return CheckResult(passed=False, details=details)
+    else:
+        details.append(Detail("staleness", True, reason))
+
+    # Summarize current cluster state when present
+    if CLAIM_CLUSTERS_PATH.exists():
+        try:
+            data = json.loads(CLAIM_CLUSTERS_PATH.read_text())
+            n_clusters = data.get('cluster_count', 0)
+            n_papers = len(data.get('paper_coverage') or [])
+            details.append(Detail(
+                "summary", True,
+                f"{n_clusters} cluster(s) across {n_papers} paper(s)",
+            ))
+        except (json.JSONDecodeError, OSError) as exc:
+            details.append(Detail("summary", False,
+                                  f"claim_clusters.json unreadable: {exc}"))
+            return CheckResult(passed=False, details=details)
+    return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 17b: Inline numerical literals outside \input{} blocks (Phase 5v)
 # ═══════════════════════════════════════════════════════════════════════
 
