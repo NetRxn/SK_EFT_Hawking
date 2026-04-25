@@ -1,10 +1,10 @@
 {
-  "generated": "2026-04-24T11:33:43.149638",
+  "generated": "2026-04-24T19:44:03.140400",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 7655,
-    "theorems_total": 3958,
-    "theorems_substantive": 3847,
+    "total_declarations": 7730,
+    "theorems_total": 3993,
+    "theorems_substantive": 3882,
     "theorems_placeholder": 111,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 166,
+    "modules": 167,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -142,6 +142,7 @@
       "SKEFTHawking.SU3k2FSymbols",
       "SKEFTHawking.SU3k2SMatrix",
       "SKEFTHawking.SU3kFusion",
+      "SKEFTHawking.ScalarRungInterpretation",
       "SKEFTHawking.SecondOrderSK",
       "SKEFTHawking.SphericalCategory",
       "SKEFTHawking.SpinBordism",
@@ -181,18 +182,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3260,
-    "structures": 161,
+    "definitions": 3297,
+    "structures": 164,
     "instances": 219,
     "inductives": 56
   },
   "python": {
-    "python_modules": 66,
-    "test_files": 58,
-    "pytest_cases": 2831,
-    "notebooks": 52,
-    "papers": 18,
-    "figures": 110
+    "python_modules": 68,
+    "test_files": 59,
+    "pytest_cases": 2836,
+    "notebooks": 54,
+    "papers": 19,
+    "figures": 111
   },
   "aristotle": {
     "aristotle_proved": 322,

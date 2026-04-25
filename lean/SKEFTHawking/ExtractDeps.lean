@@ -187,8 +187,10 @@ private def extractNameDepsEnabled : IO Bool := do
   let val ← IO.getEnv "EXTRACT_NAME_DEPS"
   match val with
   | some s =>
-    -- `trimAscii` replaces the deprecated `String.trim` in Lean 4.29
-    let s := s.trimAscii.toLower
+    -- `trimAscii` replaces the deprecated `String.trim` in Lean 4.29.
+    -- `trimAscii` returns `String.Slice` since a Lean toolchain bump; convert
+    -- to `String` before applying `toLower`.
+    let s := s.trimAscii.toString.toLower
     return s == "1" || s == "true" || s == "yes" || s == "on"
   | none => return false
 

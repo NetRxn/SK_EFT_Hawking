@@ -801,6 +801,23 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "U", "yaxis": "Eigenvalue"},
         physics_checks=[], color_keys=["steel_blue", "dissipative", "cross"],
     ),
+    FigureSpec(
+        name="fig_higgs_mass_parameter_scan",
+        function="fig_higgs_mass_parameter_scan",
+        caption=(
+            "Phase 5z Wave 1 — microscopic Higgs-mass prediction over the "
+            "(Λ_UV, G_c) plane at fiducial N_f=15 and λ_4=0.13. Heatmap shows "
+            "log₁₀ m_H [GeV] from the schematic Wetterich scalar-channel gap "
+            "equation. Gold contour: the m_H = 125.25 GeV target with the "
+            "EW.M_H_MATCH_TOLERANCE = 50% band overlay. Any region within "
+            "the gold band activates Gate Z.1 GO (quantitative scalar-rung "
+            "EWSB); absence over a wide natural range is the structural-only "
+            "Gate Z.1 NO-GO verdict. Lean: scalar_rung_quantitative_EWSB_iff_m_H_matches."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "Λ_UV", "yaxis": "G_c"},
+        physics_checks=[], color_keys=["amber"],
+    ),
 ]
 
 
@@ -887,6 +904,8 @@ def generate_figures() -> dict[str, Path]:
         fig_phase5x_empirical_hook_ranking,
         # Phase 5t Wave 9: doublon-gate spectrum + scaling
         fig_doublon_gate_spectrum,
+        # Phase 5z Wave 1: scalar-rung Higgs-mass parameter scan
+        fig_higgs_mass_parameter_scan,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1001,6 +1020,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
         "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
+        "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
     }
 
     paths = {}
@@ -1121,6 +1141,8 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_phase5x_empirical_hook_ranking,
         # Phase 5t Wave 9: doublon-gate spectrum + scaling
         fig_doublon_gate_spectrum,
+        # Phase 5z Wave 1: scalar-rung Higgs-mass parameter scan
+        fig_higgs_mass_parameter_scan,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1233,6 +1255,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
         "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
+        "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
     }
 
     issues: list[CheckIssue] = []

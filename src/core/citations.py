@@ -1322,6 +1322,174 @@ CITATION_REGISTRY = {
         'notes': 'Foundational Altland-Zirnbauer symmetry classification. '
                  'Original 10-fold way / BDI class definition used in Paper 18.',
     },
+
+    # ════════════════════════════════════════════════════════════════
+    # Phase 5z Wave 1 — Paper 20 (scalar-rung interpretation) bibkeys
+    # ════════════════════════════════════════════════════════════════
+
+    'ADW': {
+        'authors': 'Akama, K.',
+        'title': 'An attempt at pregeometry: gauge fields',
+        'journal': 'Prog. Theor. Phys.',
+        'volume': 60,
+        'page': '1900',
+        'year': 1978,
+        'doi': '10.1143/PTP.60.1900',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Original Akama pregeometry composite-metric paper. '
+                 'Foundational for the ADW mechanism in this project. '
+                 'doi_verified: pending arXiv/DOI WebFetch round.',
+    },
+    'WetterichSpinor2013': {
+        'authors': 'Wetterich, C.',
+        'title': 'Spinor gravity and diffeomorphism invariance on the lattice',
+        'journal': 'Lect. Notes Phys.',
+        'volume': 863,
+        'page': '67',
+        'year': 2013,
+        'doi': '10.1007/978-3-642-33036-0_4',
+        'arxiv': '1206.3392',
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Wetterich review chapter on spinor gravity. doi_verified: '
+                 'pending. Split from prior WetterichSpinor combined bibitem.',
+    },
+    'WetterichSpinor2022': {
+        'authors': 'Wetterich, C.',
+        'title': 'Pregeometry and spontaneous time-space asymmetry',
+        'journal': 'JHEP',
+        'volume': 2,
+        'page': '169',
+        'year': 2022,
+        'doi': '10.1007/JHEP02(2022)169',
+        'arxiv': '2110.13863',
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Wetterich pregeometry / spontaneous time-space asymmetry. '
+                 'doi_verified: pending. Split from prior WetterichSpinor.',
+    },
+    'WetterichNJL': {
+        'authors': 'Wetterich, C.',
+        'title': 'Spinor gravity from a fermionic four-vertex',
+        'journal': 'Phys. Lett. B',
+        'volume': 901,
+        'page': '136223',
+        'year': 2024,
+        'doi': '10.1016/j.physletb.2024.136223',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['lean/SKEFTHawking/WetterichNJL.lean',
+                    'papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Wetterich 4-fermion vertex spinor-gravity paper. '
+                 'Already referenced from WetterichNJL.lean module docstring; '
+                 'now formally registered. doi_verified: pending.',
+    },
+    'Fierz': {
+        'authors': 'Fierz, M.',
+        'title': 'Zur Fermischen Theorie des β-Zerfalls',
+        'journal': 'Z. Phys.',
+        'volume': 104,
+        'page': '553',
+        'year': 1937,
+        'doi': '10.1007/BF01330070',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Original Fierz rearrangement identity. Pre-arXiv era; '
+                 'DOI-only verification path.',
+    },
+    'NJL61': {
+        'authors': 'Nambu, Y., Jona-Lasinio, G.',
+        'title': 'Dynamical model of elementary particles based on an '
+                 'analogy with superconductivity I',
+        'journal': 'Phys. Rev.',
+        'volume': 122,
+        'page': '345',
+        'year': 1961,
+        'doi': '10.1103/PhysRev.122.345',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Original Nambu-Jona-Lasinio paper. Pre-arXiv; '
+                 'DOI-only verification path.',
+    },
+    'GiesScherer': {
+        'authors': 'Gies, H., Lippoldt, S.',
+        'title': 'Renormalization flow towards gravitational catalysis '
+                 'in the 3d Gross-Neveu model',
+        'journal': 'Phys. Rev. D',
+        'volume': 87,
+        'page': '104026',
+        'year': 2013,
+        'doi': '10.1103/PhysRevD.87.104026',
+        'arxiv': '1305.6940',
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Gies-Lippoldt RG-NJL companion. Bibkey is a project-local '
+                 'shorthand (not the literal author surname). doi_verified: '
+                 'pending. Consider renaming bibkey to GiesLippoldt2013 in '
+                 'paper-side cleanup.',
+    },
+    'BardeenHillLindner': {
+        'authors': 'Bardeen, W. A., Hill, C. T., Lindner, M.',
+        'title': 'Minimal dynamical symmetry breaking of the standard model',
+        'journal': 'Phys. Rev. D',
+        'volume': 41,
+        'page': '1647',
+        'year': 1990,
+        'doi': '10.1103/PhysRevD.41.1647',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Top-quark condensate / dynamical EWSB foundational paper. '
+                 'Pre-arXiv; DOI-only verification path.',
+    },
+    'PDG2024': {
+        'authors': 'Navas, S. et al. (Particle Data Group)',
+        'title': 'Review of particle physics',
+        'journal': 'Phys. Rev. D',
+        'volume': 110,
+        'page': '030001',
+        'year': 2024,
+        'doi': '10.1103/PhysRevD.110.030001',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex',
+                    'src/core/provenance.py'],
+        'provides': [],
+        'notes': 'PDG 2024 Review of Particle Physics. Source for '
+                 'EW.M_W_GEV / M_Z_GEV / M_H_GEV / V_EW_GEV / SIN2_THETA_W / '
+                 'G_FERMI_GEV_M2 / Y_TOP / LAMBDA_SM_HIGGS in PARAMETER_PROVENANCE. '
+                 'doi_verified: pending; review prose attribution should be '
+                 'cross-checked at the next WebFetch round.',
+    },
+    'PeskinSchroeder': {
+        'authors': 'Peskin, M. E., Schroeder, D. V.',
+        'title': 'An Introduction to Quantum Field Theory',
+        'journal': 'textbook',
+        'volume': None,
+        'page': None,
+        'year': 1995,
+        'doi': None,
+        'isbn': '978-0201503975',
+        'publisher': 'Westview Press',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Standard QFT textbook. ISBN-only verification path; '
+                 'DOI not applicable.',
+    },
 }
 
 

@@ -7330,5 +7330,120 @@ def fig_doublon_gate_spectrum():
     return fig
 
 
+# ============================================================
+# Phase 5z Wave 1: Scalar-rung interpretation figures
+# ============================================================
+
+def fig_higgs_mass_parameter_scan():
+    """Phase 5z Wave 1: microscopic m_H prediction over (Λ_UV, G_c) at fiducial
+    N_f and λ_4. Highlights the 125 GeV contour and the
+    M_H_MATCH_TOLERANCE-defined viable region.
+
+    The correctness-push anchor: any region where the prediction lies within
+    50% of the observed 125.25 GeV is a candidate quantitative-EWSB region
+    (Gate Z.1 GO). Absence over a wide natural parameter range is a
+    structural-only verdict (Gate Z.1 NO-GO).
+
+    viz-ref: Phase5z Paper 20 §scalar-rung-microscopic
+    """
+    import plotly.graph_objects as go
+    from src.core.constants import EW_PARAMS
+    from src.core.formulas import higgs_mass_from_condensate
+
+    # Fiducial scan: Λ_UV ∈ [10², 10¹⁹] GeV (EW scale to GUT scale),
+    #                G_c ∈ [10⁻², 10] (sub-critical to super-critical)
+    n_lam = 80
+    n_gc = 80
+    lam_uv_grid = np.logspace(2, 19, n_lam)    # GeV
+    gc_grid = np.logspace(-2, 1, n_gc)         # dimensionless
+    n_f = EW_PARAMS["N_F_FIDUCIAL"]
+    lam4 = EW_PARAMS["LAMBDA_4_FIDUCIAL"]
+    m_h_obs = EW_PARAMS["M_H_GEV"]
+    tol = EW_PARAMS["M_H_MATCH_TOLERANCE"]
+
+    M, G = np.meshgrid(lam_uv_grid, gc_grid, indexing="ij")
+    Z = np.zeros_like(M)
+    for i in range(n_lam):
+        for j in range(n_gc):
+            Z[i, j] = higgs_mass_from_condensate(
+                M[i, j], n_f, G[i, j], lam4
+            )
+
+    log10_Z = np.log10(np.maximum(Z, 1e-300))   # avoid log(0)
+
+    fig = go.Figure()
+    fig.add_trace(go.Heatmap(
+        x=np.log10(lam_uv_grid),
+        y=np.log10(gc_grid),
+        z=log10_Z.T,
+        colorscale="Viridis",
+        colorbar=dict(title="log₁₀ m_H [GeV]"),
+        showscale=True,
+    ))
+
+    # Highlight the 125 GeV target contour and tolerance band
+    log10_target = np.log10(m_h_obs)
+    log10_lower = np.log10(m_h_obs * (1 - tol))
+    log10_upper = np.log10(m_h_obs * (1 + tol))
+
+    fig.add_trace(go.Contour(
+        x=np.log10(lam_uv_grid),
+        y=np.log10(gc_grid),
+        z=log10_Z.T,
+        contours=dict(
+            start=log10_target,
+            end=log10_target,
+            size=0.1,
+            coloring="lines",
+            showlabels=False,
+        ),
+        line=dict(color=COLORS["amber"], width=3, dash="solid"),
+        showscale=False,
+        name=f"m_H = {m_h_obs:.2f} GeV",
+    ))
+    fig.add_trace(go.Contour(
+        x=np.log10(lam_uv_grid),
+        y=np.log10(gc_grid),
+        z=log10_Z.T,
+        contours=dict(
+            start=log10_lower,
+            end=log10_upper,
+            size=log10_upper - log10_lower,
+            coloring="lines",
+            showlabels=False,
+        ),
+        line=dict(color=COLORS["amber"], width=1.5, dash="dot"),
+        showscale=False,
+        name=f"±{int(tol*100)}% tolerance band",
+    ))
+
+    apply_layout(
+        fig,
+        xaxis=dict(
+            title="log₁₀ Λ_UV [GeV]",
+            tickmode="array",
+            tickvals=[2, 5, 8, 11, 14, 17],
+            ticktext=["10²", "10⁵", "10⁸", "10¹¹", "10¹⁴", "10¹⁷"],
+        ),
+        yaxis=dict(
+            title="log₁₀ G_c (dimensionless 4-fermion coupling)",
+            tickmode="array",
+            tickvals=[-2, -1, 0, 1],
+            ticktext=["10⁻²", "10⁻¹", "1", "10"],
+        ),
+        title=dict(
+            text=(
+                f"Phase 5z Wave 1 — microscopic m_H prediction over (Λ_UV, G_c)<br>"
+                f"<sub>Fiducial N_f={n_f}, λ_4={lam4:.2f}; gold contour = 125.25 GeV target ± "
+                f"{int(tol*100)}% (Lean: <i>scalar_rung_quantitative_EWSB_iff_m_H_matches</i>)</sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=900,
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

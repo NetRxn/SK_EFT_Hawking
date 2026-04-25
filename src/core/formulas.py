@@ -6163,7 +6163,7 @@ def mexican_hat_potential(phi, mu_sq, lam):
     branch, with real-scalar convention (matches Peskin-Schroeder §11.1 and
     the provenance note for ``EW.LAMBDA_SM_HIGGS = m_H² / (2 v²)``).
 
-    Lean: ScalarRungInterpretation.mexican_hat_is_tetrad_bifurcation
+    Lean: ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bridge
     Aristotle: pending
     Source: Nambu-Jona-Lasinio PR 122, 345 (1961), and the standard
         SSB literature. Peskin-Schroeder §11.1 uses this real-scalar
@@ -6416,7 +6416,7 @@ def scalar_rung_quantitative_match(m_h_pred, m_h_obs=125.25, tolerance=0.5):
     If True: scalar-rung framing is quantitative EWSB. If False: structural-only,
     flagship paper is reframed. Gate Z.1 in the Phase 5z roadmap.
 
-    Lean: ScalarRungInterpretation.scalar_rung_quantitative_EWSB_iff_m_H_matches
+    Lean: ScalarRungInterpretation.scalar_rung_match_excludes_far_predictions
     Aristotle: pending
     Source: Phase 5z Wave 1 operational threshold. Defined in
         ``EW.M_H_MATCH_TOLERANCE``.

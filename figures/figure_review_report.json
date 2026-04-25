@@ -1,5 +1,5 @@
 {
-  "review_date": "2026-04-08T12:00:00+00:00",
+  "review_date": "2026-04-25T00:38:32.841146+00:00",
   "reviewer": "Claude Opus 4.6 (1M context) — physics-qa:figure-reviewer",
   "figures_reviewed": 75,
   "structural_warnings": 30,
@@ -502,6 +502,24 @@
         "Left panel (toric code) has a red annotation marker that appears misplaced — it sits below the 'e (electric)' bar but is labeled 'e (m) -> e' which is confusing."
       ],
       "notes": "Physics correct: Z(Vec_{Z/2}) shows 4 anyons all with d=1 (toric code). Z(Vec_{S3}) shows 8 anyons with mixed dimensions d=1,2,3. D^2 values annotated. Blue/magenta/amber columns."
+    },
+    {
+      "name": "fig_higgs_mass_parameter_scan",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Phase 5z Wave 1 falsifiability anchor figure. Visual inspection: (1) Heatmap renders cleanly with Viridis colorscale spanning log10 m_H from ~ -10 to ~ +18 GeV across the (Lambda_UV, G_c) plane. (2) Solid gold/amber contour at m_H = 125.25 GeV is clearly visible, tracing a smooth hyperbolic curve from (Lambda_UV ~ 10^2 GeV, G_c ~ a few) down to (Lambda_UV ~ 10^17 GeV, G_c ~ 10^-2) -- the expected anti-correlation between UV cutoff and four-fermion coupling at fixed observed m_H. (3) Dotted +/-50% tolerance band flanks the solid contour on both sides as expected. (4) Title clearly identifies 'Phase 5z Wave 1'; subtitle names the Lean theorem 'scalar_rung_quantitative_EWSB_iff_m_H_matches'. (5) Subtitle states fiducial N_f=15, lambda_4=0.13, and the 50% tolerance -- all physics parameters traceable. (6) Axes labeled 'log10 Lambda_UV [GeV]' and 'log10 G_c (dimensionless 4-fermion coupling)' with Unicode superscript tick labels. (7) Colorbar labeled 'log10 m_H [GeV]'. (8) Color palette uses amber (#F18F01) for the gold contour per project convention; Viridis heatmap is colorblind-accessible. (9) No structural-check warnings or errors recorded for this figure in structural_checks.json. (10) Caption in review_manifest.json matches what is rendered. Falsifiability narrative is communicated effectively: the gold contour exists across a wide region of the (Lambda_UV, G_c) plane, demonstrating the schematic gap-equation can in principle hit the observed Higgs mass and making Gate Z.1 GO/NO-GO concrete. Minor observation (not flagged as issue): title is left-anchored rather than centered, consistent with other Plotly figures using apply_layout in this project."
     }
   ],
   "non_registry_figures": [

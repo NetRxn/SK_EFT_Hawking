@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-22T22:15:29.366087+00:00",
+  "generated": "2026-04-24T23:38:24.667900+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1970,6 +1970,58 @@
       "physics_checks": [],
       "color_keys": [
         "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_doublon_gate_spectrum",
+      "function": "fig_doublon_gate_spectrum",
+      "caption": "Phase 5t W9 \u2014 Fermi-Hubbard dimer singlet-sector spectrum vs U (\u0394=0) plus direct-vs-superexchange scaling. Left: three eigenvalues (E_plus, E_minus, U) cross-verified by numpy eigh vs Lean closed-form (W7l charpoly factorization). Right: superexchange gap J(t,U) with 4t\u00b2/U asymptote and the Lean W7i bound envelope \u00b116t\u2074/U\u00b3.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_doublon_gate_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_doublon_gate_spectrum.html",
+      "expected_traces": 5,
+      "expected_axes": {
+        "xaxis": "U",
+        "yaxis": "Eigenvalue"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "dissipative",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_higgs_mass_parameter_scan",
+      "function": "fig_higgs_mass_parameter_scan",
+      "caption": "Phase 5z Wave 1 \u2014 microscopic Higgs-mass prediction over the (\u039b_UV, G_c) plane at fiducial N_f=15 and \u03bb_4=0.13. Heatmap shows log\u2081\u2080 m_H [GeV] from the schematic Wetterich scalar-channel gap equation. Gold contour: the m_H = 125.25 GeV target with the EW.M_H_MATCH_TOLERANCE = 50% band overlay. Any region within the gold band activates Gate Z.1 GO (quantitative scalar-rung EWSB); absence over a wide natural range is the structural-only Gate Z.1 NO-GO verdict. Lean: scalar_rung_quantitative_EWSB_iff_m_H_matches.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higgs_mass_parameter_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higgs_mass_parameter_scan.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "\u039b_UV",
+        "yaxis": "G_c"
+      },
+      "physics_checks": [],
+      "color_keys": [
         "amber"
       ],
       "review_criteria": [

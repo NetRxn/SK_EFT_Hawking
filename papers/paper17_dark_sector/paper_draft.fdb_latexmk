@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1777048425.22572 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777048425.34178 2
-  "./paper_draftNotes.bib" 1777048424.8499 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1777075296.52127 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777075718.53251 2
+  "./paper_draftNotes.bib" 1777075718.27696 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1777048417.22443 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "paper_draft.aux" 1777075718.2757 14933 752c3a43491c537a699eccba7350f997 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1777048423.38497 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper17_dark_sector/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777048425.14386 2
-  "../../docs/counts.tex" 1777048423.15119 1002 977fdaa5eee64fc3e02ffed0974b8c8e ""
+["pdflatex"] 1777075716.93442 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper17_dark_sector/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777075718.53268 2
+  "../../docs/counts.tex" 1777075715.07908 1002 f397b926e245340b90b0c4e9b32c3e4a ""
   "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper17_dark_sector/paper_draft.tex" 1776958738.72536 46315 7f195e70feed339f5fd3e3bc33519d49 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -130,9 +130,9 @@
   "figures/fig_phase5x_empirical_hook_ranking.png" 1776895238.68561 166854 b0b63fb586934c273c469c1ae5c2dd2b ""
   "figures/fig_sfdm_stacked_kappa_profile.png" 1776895238.68163 232671 8095391f4aef369864222d115d73c81e ""
   "figures/fig_sfdm_velocity_threshold_step.png" 1776895238.67977 215269 a017b4a81bd9b7af03148abbe5c04ce4 ""
-  "paper_draft.aux" 1777048417.22443 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "paper_draft.bbl" 1777048425.34063 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
-  "paper_draft.out" 0 -1 0 "pdflatex"
+  "paper_draft.aux" 1777075718.2757 14933 752c3a43491c537a699eccba7350f997 "pdflatex"
+  "paper_draft.bbl" 1777075296.62703 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
+  "paper_draft.out" 1777075718.2768 3887 a12e4b1db127b1af27861995d8f8d974 "pdflatex"
   "paper_draft.tex" 1776958738.72536 46315 7f195e70feed339f5fd3e3bc33519d49 ""
   (generated)
   "paper_draft.aux"

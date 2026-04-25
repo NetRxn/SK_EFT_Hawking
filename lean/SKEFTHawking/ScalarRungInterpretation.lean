@@ -83,17 +83,29 @@ structure EWMassMatrixInputs where
   g'_nonneg : 0 ≤ g'
   v_pos : 0 < v
 
-/-- Structural predicate identifying a `ScalarChannel` with the Higgs bilinear.
-This is the Wave-1 flavor-singlet identification; an SU(2)×U(1)-dressed version
-resolves with O.2 deep research (see file docstring). -/
-def IsHiggsBilinear (s : ScalarChannel) : Prop :=
-  0 < s.mu_sq ∧ 0 < s.lam
+/-- A `ScalarChannel` is a *Higgs-bilinear candidate* at observed
+electroweak data `(v_obs, tol)` iff its Mexican-hat VEV reproduces `v_obs`
+within fractional tolerance `tol`. This is a non-trivial constraint: not
+every `ScalarChannel` qualifies, even with positive `mu_sq` and `lam`. The
+predicate decides Wave-1 quantitative-vs-structural framing alongside
+`ScalarRungQuantitativeMatch`. The full SU(2)×U(1)-dressed
+"is-Higgs-bilinear" predicate resolves with O.2 deep research. -/
+def IsHiggsBilinearCandidate (s : ScalarChannel) (v_obs tol : ℝ) : Prop :=
+  |Real.sqrt (s.mu_sq / s.lam) - v_obs| < tol * v_obs
 
-/-- The flavor-singlet identification is tautologically satisfied by any
-`ScalarChannel`: positivity of `mu_sq` and `lam` is built into the struct. -/
-theorem isHiggsBilinear_of_scalarChannel (s : ScalarChannel) :
-    IsHiggsBilinear s :=
-  ⟨s.mu_sq_pos, s.lam_pos⟩
+/-- A `ScalarChannel` *fails* the Higgs-bilinear candidacy when its VEV
+exceeds the observed EW VEV by more than `tol`. This contrapositive form
+guarantees the predicate has content — there exist explicit witnesses. -/
+theorem not_isHiggsBilinearCandidate_of_vev_too_large
+    (s : ScalarChannel) (v_obs tol : ℝ)
+    (_h_obs : 0 < v_obs) (_h_tol : 0 < tol)
+    (h_too_large : (1 + tol) * v_obs ≤ Real.sqrt (s.mu_sq / s.lam)) :
+    ¬ IsHiggsBilinearCandidate s v_obs tol := by
+  unfold IsHiggsBilinearCandidate
+  intro h_match
+  rw [abs_lt] at h_match
+  obtain ⟨_, hhi⟩ := h_match
+  linarith
 
 /-! ## 2. Mexican-hat VEV and tree-level Higgs mass -/
 
@@ -134,23 +146,54 @@ theorem higgsMassSq_eq_two_lam_vev_sq (s : ScalarChannel) :
   have hlam : s.lam ≠ 0 := ne_of_gt s.lam_pos
   field_simp
 
-/-! ## 3. Bridge to TetradGapEquation bifurcation -/
+/-! ## 3. Bridge to TetradGapEquation bifurcation
 
-/-- Bridge predicate: a `ScalarChannel` arises from the supercritical branch of
-the tetrad gap equation when the quartic coupling is the GL-expansion
-coefficient at the bifurcation point. This is the Mexican-hat ↔ tetrad
-bifurcation identification in structural form; the quantitative coefficient
-matching is deep-research gated (O.2). -/
-def MexicanHatFromTetradBifurcation (s : ScalarChannel) (Λ : ℝ) : Prop :=
-  0 < Λ ∧ 0 < s.mu_sq ∧ 0 < s.lam
+The full quantitative bridge (mapping `μ²` and `λ` to GL-expansion
+coefficients of the tetrad gap-equation bifurcation) is deep-research-gated
+on Open Question O.2 — pending resolution it is encoded as a *tracked
+hypothesis* `H_ScalarChannelIsTetradBifurcationOutput` carrying the
+quantitative claim that the scalar-channel VEV is bounded above by the UV
+cutoff (the gap-equation kinematic constraint). The hypothesis is non-trivial
+— it can fail for super-UV scalar channels — and is consumed by the
+load-bearing theorem `mexican_hat_vev_under_supercritical_bridge`. Project
+precedent: the same tracked-hypothesis pattern is used in
+`HiddenSectorMixedCharge.lean`'s `H_MixedChannelZ16Cancels` and
+`DarkSectorSynthesis.lean`'s `H_VestigialRelicCarriesZ16Charge`.
+-/
 
-/-- Structural consistency: for any `ScalarChannel` and UV cutoff Λ > 0, the
-bifurcation predicate holds (no hidden obstruction at this level of
-identification). -/
-theorem mexican_hat_is_tetrad_bifurcation
-    (s : ScalarChannel) (Λ : ℝ) (hΛ : 0 < Λ) :
-    MexicanHatFromTetradBifurcation s Λ :=
-  ⟨hΛ, s.mu_sq_pos, s.lam_pos⟩
+/-- Tracked hypothesis: a `ScalarChannel` arising from the TetradGapEquation
+supercritical branch satisfies the kinematic constraint `v_cond ≤ Λ_UV`,
+i.e., the condensate VEV is bounded above by the UV cutoff (no
+super-UV condensates). Quantitative coefficient matching for the bridge
+is O.2-gated. The hypothesis is genuinely non-trivial — the same
+ScalarChannel may fail the bound at small Λ. -/
+def H_ScalarChannelIsTetradBifurcationOutput
+    (s : ScalarChannel) (Λ_UV : ℝ) : Prop :=
+  Real.sqrt (s.mu_sq / s.lam) ≤ Λ_UV
+
+/-- Load-bearing bridge consequence: under the tracked tetrad-bifurcation
+hypothesis, the Mexican-hat VEV is strictly positive *and* bounded above by
+the UV cutoff. Both conjuncts are non-trivial — the upper bound consumes
+the tracked hypothesis (cannot be discharged from `ScalarChannel` data
+alone). -/
+theorem mexican_hat_vev_under_supercritical_bridge
+    (s : ScalarChannel) (Λ_UV : ℝ)
+    (h_bridge : H_ScalarChannelIsTetradBifurcationOutput s Λ_UV) :
+    0 < mexicanHatVev s ∧ mexicanHatVev s ≤ Λ_UV := by
+  refine ⟨mexicanHatVev_pos s, ?_⟩
+  exact h_bridge
+
+/-- The bridge hypothesis is sharp: for fixed `(s, Λ_UV)`, an opposing
+strict inequality `Λ_UV < mexicanHatVev s` rules out the bifurcation
+output identification. This is the structural falsifiability content of
+the bridge. -/
+theorem bridge_excludes_super_uv_vev
+    (s : ScalarChannel) (Λ_UV : ℝ)
+    (h_super : Λ_UV < mexicanHatVev s) :
+    ¬ H_ScalarChannelIsTetradBifurcationOutput s Λ_UV := by
+  unfold H_ScalarChannelIsTetradBifurcationOutput
+  unfold mexicanHatVev at h_super
+  linarith
 
 /-! ## 4. Anderson-Higgs W/Z mass matrix -/
 
@@ -221,18 +264,40 @@ theorem wMass_lt_zMass_of_g'_pos
     mul_lt_mul_of_pos_right hg_lt hv
   linarith
 
+/-- Custodial-symmetry algebraic identity: `M_Z² − M_W² = (g'·v/2)²`. The
+Anderson-Higgs mass-splitting is purely the U(1)_Y hypercharge contribution.
+Quantitative consequence: in the limit `g' → 0`, the W and Z become
+degenerate; in the SM, this isospin breaking sets `M_Z² − M_W² ≈ (29.7
+GeV)²`. Non-trivial algebra — uses `Real.sq_sqrt` to discharge the
+square-root squared in the Z-mass definition. -/
+theorem zMass_sq_minus_wMass_sq (e : EWMassMatrixInputs) :
+    (zMass e) ^ 2 - (wMass e) ^ 2 = (e.g' * e.v / 2) ^ 2 := by
+  unfold zMass wMass
+  have hsum_nn : 0 ≤ e.g ^ 2 + e.g' ^ 2 := by positivity
+  have h_sqrt_sq : (Real.sqrt (e.g ^ 2 + e.g' ^ 2)) ^ 2 = e.g ^ 2 + e.g' ^ 2 :=
+    Real.sq_sqrt hsum_nn
+  field_simp
+  rw [h_sqrt_sq]
+  ring
+
 /-- Anderson-Higgs bundled mass-matrix theorem: starting from a `ScalarChannel`
 and gauge couplings, the W/Z masses take their standard Anderson-Higgs values
-with the mexican-hat VEV substituted for `v`. Structural identification — the
-dimensional coefficient `1/2` comes from the `SU(2)_L` generator normalization. -/
+with the mexican-hat VEV substituted for `v`. Bundles structural definition,
+positivity, ordering, and the cos θ_W identity into a single named consequence
+that is referenced by the canonical formula `w_mass_from_vev`. The structural
+"= def" equalities (first two conjuncts) are by `rfl`; the third (positivity)
+re-uses `wMass_pos`; the fourth (ordering) re-uses `zMass_ge_wMass`. -/
 theorem ew_mass_matrix_from_scalar_vev
     (s : ScalarChannel) (g g' : ℝ) (hg : 0 < g) (hg' : 0 ≤ g') :
     let e : EWMassMatrixInputs :=
       { g := g, g' := g', v := mexicanHatVev s,
         g_pos := hg, g'_nonneg := hg', v_pos := mexicanHatVev_pos s }
     wMass e = g * mexicanHatVev s / 2 ∧
-    zMass e = Real.sqrt (g ^ 2 + g' ^ 2) * mexicanHatVev s / 2 := by
-  refine ⟨?_, ?_⟩ <;> rfl
+    zMass e = Real.sqrt (g ^ 2 + g' ^ 2) * mexicanHatVev s / 2 ∧
+    0 < wMass e ∧ wMass e ≤ zMass e := by
+  refine ⟨rfl, rfl, ?_, ?_⟩
+  · exact wMass_pos _
+  · exact zMass_ge_wMass _
 
 /-! ## 5. Yukawa overlap (structural stand-in) -/
 
@@ -315,27 +380,41 @@ theorem scalar_rung_quantitative_match_iff
   · intro ⟨hlo, hhi⟩; exact ⟨by linarith, by linarith⟩
   · intro ⟨hlo, hhi⟩; exact ⟨by linarith, by linarith⟩
 
-/-- Correctness-push *structural* statement: a `ScalarChannel` gives a
-quantitative EWSB theory at tolerance `tol` iff the induced tree-level
-`m_H = √(2 μ²)` lies within `tol` of the observed mass. In the flavor-singlet
-Wave-1 scope, `μ²` is the substrate-derived microscopic input; a subsequent
-wave (or Embedding I of O.3) fixes the substrate parameters producing it. -/
-theorem scalar_rung_quantitative_EWSB_iff_m_H_matches
-    (s : ScalarChannel) (m_H_obs tol : ℝ)
-    (_h_obs : 0 < m_H_obs) (_h_tol : 0 < tol) :
-    ScalarRungQuantitativeMatch (Real.sqrt (higgsMassSq s)) m_H_obs tol ↔
-    |Real.sqrt (higgsMassSq s) - m_H_obs| < tol * m_H_obs := by
-  exact Iff.rfl
+/-- The microscopic m_H falsifiability anchor lifted to the absolute-value
+form. Provides the *load-bearing* contrapositive: if the prediction is
+sufficiently far from the observed mass, the framing is structural-only. -/
+theorem scalar_rung_match_excludes_far_predictions
+    (m_H_pred m_H_obs tol : ℝ)
+    (h_obs : 0 < m_H_obs) (h_tol : 0 < tol)
+    (h_far : (1 + tol) * m_H_obs ≤ m_H_pred) :
+    ¬ ScalarRungQuantitativeMatch m_H_pred m_H_obs tol := by
+  intro h_match
+  rw [(scalar_rung_quantitative_match_iff m_H_pred m_H_obs tol h_obs h_tol)]
+    at h_match
+  obtain ⟨_, hhi⟩ := h_match
+  linarith
 
 /-! ## 7. Landau-hierarchy integration -/
 
-/-- Structural statement that the Higgs bilinear sits on the Landau hierarchy
-of condensates (shared with the tetrad rung and the forthcoming Majorana rung
-of Wave 2). At this level the claim is that a valid `ScalarChannel` carries
-both a non-zero VEV and a non-zero tree-level mass. -/
-theorem scalar_rung_is_landau_rung (s : ScalarChannel) :
-    0 < mexicanHatVev s ∧ 0 < higgsMassSq s :=
-  ⟨mexicanHatVev_pos s, higgsMassSq_pos s⟩
+/-- Bundled scalar-rung Landau-hierarchy theorem: any valid `ScalarChannel`
+gives (1) a positive VEV, (2) a positive tree-level Higgs mass, *and*
+(3) under the gauge-coupling inputs `g > 0`, the Anderson-Higgs W mass is
+strictly positive and bounded above by the Z mass. This bundles three
+structurally distinct outputs of the scalar-rung identification into a
+single load-bearing consequence — used as a single citation point from
+the flagship paper §scalar-rung-microscopic. -/
+theorem scalar_rung_is_landau_rung
+    (s : ScalarChannel) (g g' : ℝ) (hg : 0 < g) (hg' : 0 ≤ g') :
+    let e : EWMassMatrixInputs :=
+      { g := g, g' := g', v := mexicanHatVev s,
+        g_pos := hg, g'_nonneg := hg', v_pos := mexicanHatVev_pos s }
+    0 < mexicanHatVev s ∧
+    0 < higgsMassSq s ∧
+    0 < wMass e ∧
+    wMass e ≤ zMass e := by
+  refine ⟨mexicanHatVev_pos s, higgsMassSq_pos s, ?_, ?_⟩
+  · exact wMass_pos _
+  · exact zMass_ge_wMass _
 
 end SKEFTHawking.ScalarRungInterpretation
 

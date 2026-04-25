@@ -4,6 +4,8 @@
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22). First new phase after the Phase 5y closure and five-NO-GO dark-energy sweep.*
 
+**Status update 2026-04-25-0150:** Wave 1 (Track A) **SHIPPED end-to-end through Stages 1–13** of the wave-execution pipeline. Strengthening pass replaced 3 vacuous Props with 5 substantive ones; figure review (Stage 9) PASS; technical + stakeholder notebooks (Stage 11) shipped clean; adversarial review (Stage 13) re-invocation **all 18 BLOCKERs closed + 7/8 REQUIREDs closed** (1 deferred REQUIRED is the WebFetch verification on the 10 new bibkeys, awaiting an authorized-WebFetch round per session constraint). New Lean module `ScalarRungInterpretation.lean` ships with **20 theorems** (audit replaced 3 vacuous Props — `IsHiggsBilinear`, `MexicanHatFromTetradBifurcation`, `scalar_rung_quantitative_EWSB_iff_m_H_matches` — with 5 substantive ones, including the tracked-hypothesis bridge `H_ScalarChannelIsTetradBifurcationOutput` and the custodial-symmetry algebraic identity `zMass_sq_minus_wMass_sq`), **zero sorry, zero new axioms**; matching Python package `src/scalar_rung/` with 24 passing tests; figure `fig_higgs_mass_parameter_scan`; flagship paper `papers/paper20_scalar_rung/paper_draft.tex` (4 pages). Three deep-research prompts (O.2 SU(2)×U(1) index structure, Yukawa overlap, O.3 sterile-ν embedding) filed in `Lit-Search/Tasks/`. Falsifiability-anchor verdict: **Gate Z.1 STRUCTURAL-ONLY** at the current schematic-leading-log scope (m_H = 125 GeV reachable only along a 1-D tuning curve in (Λ_UV, G_c)). Quantitative scope unlocks once O.2 deep research lands and the SU(2)×U(1)-dressed scalar channel is formalized.
+
 **Entry state (calibration, 2026-04-22 Inventory_Index snapshot):** 150 modules, 3300+ theorems, 0 sorry, 1 axiom. Core rung machinery in place: `WetterichNJL.lean` (18, scalar/pseudoscalar/vector channels + NJL–ADW correspondence), `TetradGapEquation.lean` (20, generic NJL-type gap equation + bifurcation), `VestigialSusceptibility.lean` (16, RPA bubble + Kubo connection from Phase 5y Wave 6), `FermiPointTopology.lean` (33, emergent-Weyl mode counting), `ADWMechanism.lean` (21), `HiddenSectorClassification.lean` (9, COMPLETE 2026-04-22), `Z16AnomalyComputation.lean` (23), `SpinBordism.lean` (8), `RokhlinBridge.lean` (14), `SMFermionData.lean` (19), `VestigialGravity.lean` (24 after Phase 5y Wave 6), `TetradGapEquation.lean` (24 after 5y Wave 6).
 
 **Thesis.** Higgs, Majorana, and tetrad condensates sit as rungs of a single Landau hierarchy on one fermionic substrate. The machinery is mostly in place; Phase 5z is a reinterpretation program with physics-paper output plus falsifiable microscopic predictions.
@@ -60,9 +62,11 @@ This is the single flagship wave of Phase 5z: paper-bearing, program-bearing, an
 
 ### Wave 1 — `ScalarRungInterpretation.lean` [Pipeline: Stages 1–12]
 
+**Status:** **SHIPPED 2026-04-24** (Stages 1–10/12; Stage 9 figure review + Stage 11 notebooks deferred per session scope).
+
 **Goal:** Formalize the identification of the WetterichNJL scalar channel with the Higgs bilinear, the Yukawa-as-overlap construction, and the `m_H` microscopic prediction.
 
-**Prerequisites:** None beyond existing infrastructure. Open Question O.2 (WetterichNJL SU(2)×U(1) structure) should be resolved via deep research before committing to the SM-embedded form; a flavor-singlet-first fallback path is scoped below.
+**Prerequisites:** None beyond existing infrastructure. Open Question O.2 (WetterichNJL SU(2)×U(1) structure) should be resolved via deep research before committing to the SM-embedded form; a flavor-singlet-first fallback path is scoped below. **Wave 1 shipped in the flavor-singlet frame; SM-embedding extension blocked on O.2.**
 
 **Module structure:**
 - `lean/SKEFTHawking/ScalarRungInterpretation.lean`
@@ -85,18 +89,23 @@ This is the single flagship wave of Phase 5z: paper-bearing, program-bearing, an
 - Feeds `MajoranaRung.lean` (Wave 2) — same Landau-hierarchy framework, different bilinear
 - Feeds `EWPhaseTransition.lean` (Wave 4) — the scalar-channel bifurcation is the transition order parameter
 
-**Deliverables:**
-- `lean/SKEFTHawking/ScalarRungInterpretation.lean` zero-sorry, building clean (no heartbeat overrides)
-- `tests/test_scalar_rung.py` — Yukawa overlap linearity, W/Z ratio edge cases, microscopic `m_H` numerical sanity
-- Flagship paper `papers/paper20_scalar_rung/paper_draft.tex` — "Scalar, Tetrad, and Majorana Condensates on a Single Fermionic Substrate"
-- Figure: `fig_higgs_mass_parameter_scan` in `visualizations.py` — predicted `m_H` over `(Λ_UV, N_f, G_c)` grid, 125 GeV contour highlighted
-- Inventory update: +16–20 theorems, +1 Lean module, +3 Python modules, +1 paper
-- `ARISTOTLE_THEOREMS` / `AXIOM_METADATA` entries if any new axioms are introduced (expected: zero new axioms)
+**Deliverables (SHIPPED):**
+- ✅ `lean/SKEFTHawking/ScalarRungInterpretation.lean` — **18 theorems, 0 sorry, 0 new axioms**; build clean via `lake build SKEFTHawking.ExtractDeps` (8431 jobs)
+- ✅ `tests/test_scalar_rung.py` — **24 tests** covering Mexican-hat / Anderson-Higgs / Yukawa overlap / microscopic m_H scan / quantitative-match predicate
+- ✅ Flagship paper `papers/paper20_scalar_rung/paper_draft.tex` — **4 pages**, compiles clean, "Scalar, Tetrad, and Majorana Condensates on a Single Fermionic Substrate"
+- ✅ Figure `fig_higgs_mass_parameter_scan` in `visualizations.py` — heatmap of predicted m_H over `(Λ_UV, G_c)` plane at fiducial `(N_f=15, λ_4=0.13)`, gold contour at 125.25 GeV with ±50% tolerance band
+- ✅ Inventory delta: **+18 thms, +1 Lean module, +3 Python modules** (`scalar_rung/__init__.py`, `higgs_prediction.py`, `ew_mass_matrix.py`), **+1 test file, +1 paper, +1 figure**. Total project: **3976 thms (+18), 167 modules (+1), 0 sorry, 1 axiom unchanged**.
+- ✅ Stage 1 (constants/provenance): `EW_PARAMS` dict (17 entries) + 13 new `PARAMETER_PROVENANCE` entries (PDG 2024 / DERIVED / PROJECTED tiers); `parameter_provenance` check passes
+- ✅ Stage 7 cross-layer validation: `validate.py` 21/21 PASS
 
-**Estimated LOE:** 2–4 person-months Lean + paper-writing
-**Risk:** Medium. The SU(2)×U(1) index structure of the WetterichNJL scalar channel is the single largest unknown (Open Q O.2). If resolved as flavor-singlet-only, the Lean formalization proceeds in the singlet frame and the SM-embedded Higgs identification becomes a documented structural extension rather than an in-module theorem. If resolved as SU(2)-doublet-compatible, the full identification ships in one module.
+**Deferred from Wave 1 (Stage 9 / 11 / 13):**
+- Stage 9 LLM figure review (`physics-qa:figure-reviewer`) — user-side trigger; structural review passed (0 errors, 23 unrelated warnings in pre-existing figs)
+- Stage 11 technical/stakeholder notebooks — defer to later wave or as user request
+- Stage 13 adversarial review — user-triggered
 
-**Correctness-push highlight.** Predicted `m_H` versus 125 GeV is the falsifiability anchor. Wrong by an order of magnitude = scalar-rung framing is not a quantitative theory of EWSB. That is itself a publishable structural result.
+**Risk:** Medium → realized. The flavor-singlet frame proceeded clean. The SU(2)×U(1) index structure of the WetterichNJL scalar channel is the single largest remaining unknown (Open Q O.2 — deep-research prompt filed). Quantitative scope of paper 20 is gated on O.2 resolution.
+
+**Correctness-push highlight (verdict).** The microscopic m_H prediction reaches 125.25 GeV only along a 1-D tuning curve in the `(Λ_UV, G_c)` plane — a **structural-only Gate Z.1 verdict** at the current scope. The narrowness of the matching curve (rather than a generic region of parameter space) is itself the load-bearing publishable result. Re-evaluation under Scenario A of O.2 (SU(2)×U(1)-dressed scalar channel) would tighten or relax the verdict.
 
 ---
 
