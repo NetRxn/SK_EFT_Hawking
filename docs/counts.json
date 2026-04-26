@@ -1,19 +1,18 @@
 {
-  "generated": "2026-04-25T20:15:43.079393",
+  "generated": "2026-04-26T15:52:03.344743",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8129,
-    "theorems_total": 4162,
-    "theorems_substantive": 4140,
-    "theorems_placeholder": 22,
-    "axioms": 2,
+    "total_declarations": 8356,
+    "theorems_total": 4272,
+    "theorems_substantive": 4249,
+    "theorems_placeholder": 23,
+    "axioms": 1,
     "axiom_names": [
-      "SKEFTHawking.BHEntropyMicroscopic.gaussianSaddleAsymptotic",
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 176,
+    "modules": 180,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -23,6 +22,7 @@
       "SKEFTHawking.AlgebraicRokhlin",
       "SKEFTHawking.BHEntropyMicroscopic",
       "SKEFTHawking.BHLGaugeEmbedding",
+      "SKEFTHawking.BHThermodynamicsFourLaws",
       "SKEFTHawking.Basic",
       "SKEFTHawking.BdGHamiltonian",
       "SKEFTHawking.CGLTransform",
@@ -51,6 +51,8 @@
       "SKEFTHawking.E8Lattice",
       "SKEFTHawking.EWPhaseTransition",
       "SKEFTHawking.EmergentGravityBounds",
+      "SKEFTHawking.EnergyConditions",
+      "SKEFTHawking.EquivalencePrinciple",
       "SKEFTHawking.ExtBordismBridge",
       "SKEFTHawking.ExtractDeps",
       "SKEFTHawking.FKGappedInterface",
@@ -98,6 +100,7 @@
       "SKEFTHawking.KacWaltonFusion",
       "SKEFTHawking.KappaScaling",
       "SKEFTHawking.KerrSchild",
+      "SKEFTHawking.LaplaceMethod",
       "SKEFTHawking.LatticeHamiltonian",
       "SKEFTHawking.LinearizedEFE",
       "SKEFTHawking.MajoranaKramers",
@@ -192,18 +195,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3511,
-    "structures": 175,
-    "instances": 221,
-    "inductives": 57
+    "definitions": 3615,
+    "structures": 181,
+    "instances": 227,
+    "inductives": 60
   },
   "python": {
-    "python_modules": 81,
-    "test_files": 66,
-    "pytest_cases": 3098,
+    "python_modules": 86,
+    "test_files": 68,
+    "pytest_cases": 3205,
     "notebooks": 56,
-    "papers": 24,
-    "figures": 119
+    "papers": 26,
+    "figures": 121
   },
   "aristotle": {
     "aristotle_proved": 322,

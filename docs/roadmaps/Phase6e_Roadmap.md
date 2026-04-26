@@ -26,6 +26,7 @@
 >    - 6e.6 — 6e.1–6e.5, `VestigialGravity.lean`, Einstein-Cartan literature (Hehl+)
 > 5. Deep research prompts (likely needed): heat-kernel expansion coefficients for 8-fermion effective actions; nonlinear diff-invariance check strategies (path-b direct vs path-a symmetry-enhancement); CC problem in emergent-gravity contexts. Drop into `Lit-Search/Tasks/Phase6e_*` folders as needed.
 > 6. 6e is the heaviest phase. User must explicitly authorize each wave start. Do not speculate on 6e scope without user sign-off.
+> 7. **MANDATORY: Apply the preemptive-strengthening checklist before writing each Lean theorem statement** (see CLAUDE.md "Preemptive-strengthening discipline" + WAVE_EXECUTION_PIPELINE.md Stage 3 checklist). Five questions: (1) drop-conjunct test for bundle redundancy P2; (2) numerical-content connection (`norm_num`-backed comparisons to published constants); (3) cross-module bridge integrity P6 (docstring references → `import + call`); (4) trivial-discharge P3/P4/P5 check (no `rfl`/`decide`/`not_lt.mpr h_disagree` tautologies); (5) defining-the-conclusion check (vacuous when `f := <obvious target>`). The end-of-wave strengthening pass should produce **0 retroactive theorems** — if it produces 5+, log the failure mode and tighten the next wave's discipline.
 
 ---
 

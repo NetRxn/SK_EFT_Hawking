@@ -139,6 +139,93 @@ class TestVerlindeFormula:
         result = verlinde_dim_at_horizon(3, 2, [1, 1])
         assert result == pytest.approx(1.0, abs=1e-10)
 
+    def test_verlinde_dim_horizon_ising_4sigma_golden(self):
+        """Golden-identity test: direct call to `verlinde_dim_horizon` (not
+        the SU(2)_k wrapper) with the Ising S-matrix returns exactly 2 for
+        the four-σ correlator (the two Ising fusion channels 1 ⊕ ψ).
+
+        This is the auto-graph ComputationCorrectness golden test
+        addressing adversarial-review REQUIRED 7.1 — strict-tolerance
+        identity-style assertion rather than `bounds`-style coverage.
+        """
+        S = su2k_S_matrix(2)  # k=2 ↔ Ising (3 simple objects: 1, σ, ψ)
+        result = verlinde_dim_horizon(p=4, S_matrix=S, label_indices=[1, 1, 1, 1])
+        # Two-channel Ising fusion σ⊗σ⊗σ⊗σ → 2 dim invariants.
+        assert abs(result - 2.0) < 1e-12
+
+    def test_verlinde_dim_horizon_ising_psi_squared_identity(self):
+        """Golden-identity test: ψ⊗ψ Ising fusion gives exactly 1 (vacuum).
+
+        ψ is self-dual with ψ² = 1; Verlinde p=2 with label_indices=[2,2]
+        on the Ising S-matrix returns δ_{ψ, ψ̄} = 1.
+        """
+        S = su2k_S_matrix(2)
+        result = verlinde_dim_horizon(p=2, S_matrix=S, label_indices=[2, 2])
+        assert abs(result - 1.0) < 1e-12
+
+    def test_verlinde_dim_horizon_vacuum_pair_returns_one(self):
+        """Golden-identity test: two-vacuum punctures on any S-matrix
+        return exactly 1 (the global identity-channel count).
+
+        For any unitary S, Verlinde[2; 0, 0] = Σ_c (S_{0c}·S_{0c}) /
+        S_{0c}^{2-2} = Σ_c S_{0c}^2 = 1 (S unitarity).
+        """
+        for k in (2, 3, 4, 5):
+            S = su2k_S_matrix(k)
+            result = verlinde_dim_horizon(p=2, S_matrix=S, label_indices=[0, 0])
+            assert abs(result - 1.0) < 1e-12, f"SU(2)_{k} two-vacuum failed"
+
+
+class TestLogCorrectionPerMTC:
+    """Per-MTC log-correction coefficient table: golden-identity coverage
+    addressing adversarial-review REQUIRED 7.1 (auto-graph: previously
+    'no tests')."""
+
+    def test_log_correction_per_mtc_su2k_known_minus_three_halves(self):
+        """SU(2)_k case is the only `status: known` MTC entry; value = -3/2."""
+        entry = log_correction_coefficient_per_mtc("SU2k")
+        assert entry["value"] == -1.5
+        assert entry["status"] == "known"
+        assert entry["source"] == "KaulMajumdar2000"
+
+    def test_log_correction_per_mtc_sen_4d_known_212_over_45_minus_3(self):
+        """Sen 4D Schwarzschild: c_log = 212/45 - 3 ≈ 1.711, classified known."""
+        entry = log_correction_coefficient_per_mtc("Sen4DSchwarzschild")
+        # 212/45 - 3 = (212 - 135)/45 = 77/45 ≈ 1.71111
+        assert entry["value"] == pytest.approx(77.0 / 45.0, abs=1e-5)
+        assert entry["status"] == "known"
+        assert entry["source"] == "Sen2013Schwarzschild"
+
+    def test_log_correction_per_mtc_fibonacci_conjectural(self):
+        """Fibonacci has no published derivation per Wave 3 deep-research."""
+        entry = log_correction_coefficient_per_mtc("Fibonacci")
+        assert entry["value"] is None
+        assert entry["status"] == "conjectural"
+
+    def test_log_correction_per_mtc_ising_conjectural(self):
+        """Ising has no published derivation."""
+        entry = log_correction_coefficient_per_mtc("Ising")
+        assert entry["value"] is None
+        assert entry["status"] == "conjectural"
+
+    def test_log_correction_per_mtc_ds3_conjectural(self):
+        """D(S₃) has no published derivation."""
+        entry = log_correction_coefficient_per_mtc("DS3")
+        assert entry["value"] is None
+        assert entry["status"] == "conjectural"
+
+    def test_log_correction_per_mtc_toric_code_falsifier(self):
+        """Toric code triggers F2 falsifier (abelian: log d_max = 0)."""
+        entry = log_correction_coefficient_per_mtc("ToricCode")
+        assert entry["value"] is None
+        assert entry["status"] == "falsifier"
+        assert "Abelian" in entry["source"]
+
+    def test_log_correction_per_mtc_unknown_raises(self):
+        """Unknown MTC name raises KeyError with explanatory message."""
+        with pytest.raises(KeyError, match="Unknown MTC"):
+            log_correction_coefficient_per_mtc("FantasyMTC")
+
 
 class TestKaulMajumdarClosedForm:
     """Kaul-Majumdar closed-form entropy and log-correction structure."""
@@ -403,15 +490,21 @@ class TestStrengtheningPass:
         assert diff == pytest.approx(289 / 90, abs=1e-6)
         assert diff > 3.0
 
-    def test_implies_areaLawKappa_pos_anchor(self):
-        """Lean: `H_HorizonBoundaryCondition_implies_areaLawKappa_pos`. Bundle
-        consistency requires κ_C > 0 (non-vacuous via Fibonacci witness +
-        abelian falsifier)."""
-        # Fibonacci satisfies F1+F3+F4 with κ_C > 0 (bundle non-vacuous)
+    def test_implies_nonabelian_envelope_anchor(self):
+        """Lean: `H_HorizonBoundaryCondition_implies_nonabelian_envelope`.
+        Bundle consistency requires (i) ∃ d_a > 1 (non-abelian MTC, derived
+        from `0 < log d_max`) and (ii) a monotone non-negative entropy
+        envelope. Cross-checked numerically via Fibonacci witness
+        (log d_max = log φ > 0) + abelian falsifier (log d_max = 0)."""
+        # Fibonacci satisfies F1+F3 and is non-abelian: log d_max = log φ > 0,
+        # so by the Lean theorem there exists a quantum dim > 1 (which is φ).
         fib = fibonacci_instance()
+        assert fib.log_d_max > 0
         assert mtc_area_law_kappa(fib.log_d_max) > 0
-        # Abelian toric code FAILS F2 with κ_C = 0 (bundle unsatisfiable)
+        # Toric code is abelian: log d_max = 0, so no quantum dim exceeds 1.
+        # The bundle's areaLeading conjunct is then false, falsifying the bundle.
         toric = toric_code_instance()
+        assert toric.log_d_max == 0
         assert mtc_area_law_kappa(toric.log_d_max) == 0
 
 

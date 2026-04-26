@@ -173,6 +173,10 @@ import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.FLRWDynamics
 import SKEFTHawking.GravitationalWaves
 import SKEFTHawking.BHEntropyMicroscopic
+import SKEFTHawking.BHThermodynamicsFourLaws
+import SKEFTHawking.EnergyConditions
+import SKEFTHawking.LaplaceMethod
+import SKEFTHawking.EquivalencePrinciple
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

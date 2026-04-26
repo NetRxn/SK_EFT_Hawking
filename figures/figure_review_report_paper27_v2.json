@@ -1,0 +1,32 @@
+{
+  "review_date": "2026-04-26T00:00:00Z",
+  "figures_reviewed": 1,
+  "overall_status": "pass",
+  "figures": [
+    {
+      "name": "fig_T_H_evolution_regime_partition",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": [
+          "Right-panel annotation 'a_ADW = 1 (bare Sakharov-Adler: d_ADW vanishes)' uses font size 9 and is placed at y=-0.5, just below the visible y-axis baseline; it renders but is small and tight against the bottom margin. Consider raising it to y=+0.5 (above the baseline, in the linear-curve region) and increasing size to 10 for a publication-quality cushion. This is a polish/preference issue, not a defect."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Two-panel figure renders correctly. (1) Both panels are clearly present and labeled with subplot titles 'T_H(t) evaporation regime partition' (left) and 'd_ADW(a_ADW) substrate-response ansatz' (right). (2) Left-panel contrast is visually strong: amber dashed Schwarzschild curve rises sharply from T_H/T_H,0 = 1 toward a near-vertical asymptote at t ~ 4.5 (matches Hawking 1975 M(t) ~ (M_0^3 - Kt)^(1/3) with finite t_evap = 5); steel-blue solid BEC-acoustic curve decays exponentially from 1 toward 0 by t = 5 (matches Balbinot et al. PRD 71, 064019 (2005) Eq. Tsonic exp(-t/tau_cool)). The visual sign-flip in dT_H/dt is unmistakable. (3) Heat-capacity-sign annotations are physically correct AND placed in the correct quadrants: 'dT_H/dt > 0 (heats as evaporates, finite t-evap)' at (3.5, 2.5) sits next to and above the rising amber curve; 'dT_H/dt < 0 (cools toward asymptotic extremality, infinite t-evap)' at (2.0, 0.25) sits next to and below the falling steel-blue curve. No annotation/curve sign contradiction (the v1 'fig_T_H_vs_M_regime_partition' bug — annotation 'dT_H/dM > 0 (cooling toward extremality)' contradicting a cooling curve — is fully resolved by the new t-evolution framing). (4) Right-panel a_ADW = 1 vanishing point is clearly marked by a vertical grey dotted line crossing the linear curve exactly at d_ADW/Lambda_UV = 0; the linear ansatz d_ADW = (a_ADW - 1) Lambda_UV is plotted from a in [0.1, 10] reaching d_ADW/Lambda_UV ~ 9 at a = 10. Sign change across a = 1 is visible (curve passes through zero). (5) Header overlap: the previous CRITICAL issue (v1 had main title overlapping subplot titles) is resolved by margin=dict(t=110, b=80); the global title 'Phase 6a Wave 5 — BCH four-laws regime partition (Schwarzschild <-> BEC-acoustic)' renders at the top with adequate clearance from both subplot titles. (6) Color palette is the project's steel-blue / amber colorblind-accessible pair as specified in CLAUDE.md. Legend renders top-right with both branch labels and primary citations ('BEC-acoustic (Balbinot 2005)', 'Schwarzschild (Hawking 1975)') visible and non-overlapping. (7) Caption in paper_draft.tex Fig.1 (line 246-256) matches the figure's content one-to-one: panel layout, curve identifications, citations, regime-partition criterion, and a_ADW = 1 vanishing condition. (8) structural_checks.json has zero entries for this figure (zero errors, zero warnings). No new rendering issues or physics inconsistencies introduced by the rewrite. The rewrite cleanly retires the discredited Schottky-saturation framing of v1 and replaces it with a primary-source-grounded t-evolution contrast that is internally consistent and adversarially defensible."
+    }
+  ],
+  "summary": "The rewritten Phase 6a Wave 5 paper27 figure passes review. All three previously-flagged v1 issues (header overlap, x-axis units mislabel, annotation/curve sign contradiction) are resolved by construction via the t-evolution reframing. Physics is correct on both panels: rising amber-dashed Schwarzschild curve with dT_H/dt > 0 annotation in the upper-right quadrant; falling steel-blue solid BEC-acoustic curve with dT_H/dt < 0 annotation in the lower-left quadrant; right-panel a_ADW = 1 vanishing point crisply marked. Style matches project conventions (steel-blue / amber colorblind palette, Plotly subplot grid, legend top-right). Caption in paper_draft.tex matches figure content. Single minor polish opportunity: the right-panel a_ADW = 1 annotation is small (size 9) and placed just below the y-axis baseline at y = -0.5; works but tight.",
+  "recommendations": [
+    "OPTIONAL polish: in src/core/visualizations.py:fig_T_H_evolution_regime_partition (around line 8608-8614), consider moving the right-panel a_ADW = 1 annotation from y=-0.5 to y=+0.5 (placing it just above the zero crossing in the visible plot region) and increasing font size from 9 to 10. This raises legibility above 'tight but readable' to 'comfortable' and removes the dependence on Plotly's auto y-range allowing negative annotation space. Not blocking — figure is currently publication-acceptable as-is.",
+    "OPTIONAL: the left-panel x-axis title 'Time t / tau_cool (BEC-acoustic) or t / t_evap (Schwarzschild)' is descriptive but long. Consider abbreviating to 'normalized evaporation time t' with a footnote in the caption clarifying the per-branch normalization. Cosmetic only."
+  ]
+}

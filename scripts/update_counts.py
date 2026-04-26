@@ -275,6 +275,37 @@ def generate_tex(counts: dict, path: Path):
         lines.append(f"\\newcommand{{\\fhdWaveSixExtra}}{{{fhd_w6_extra}}}")
         lines.append(f"\\newcommand{{\\fhdWaveSeven}}{{{fhd_w7}}}")
         lines.append(f"\\newcommand{{\\fhdWaveEight}}{{{fhd_w8}}}")
+
+    # Per-module simple totals for Phase 6a Track C papers (paper26 + paper27).
+    # These avoid the "USES MACROS but N count-literal matches" warning for the
+    # per-module `N theorems` references in those papers' Lean Formalization
+    # sections + abstracts + conclusions.
+    def _module_thm_count(rel_path: str) -> int | None:
+        p = LEAN_DIR / "SKEFTHawking" / rel_path
+        if not p.exists():
+            return None
+        n = 0
+        for ln in p.read_text().splitlines():
+            s = ln.lstrip()
+            if s.startswith("theorem ") or s.startswith("lemma "):
+                n += 1
+        return n
+
+    bh_entropy_n = _module_thm_count("BHEntropyMicroscopic.lean")
+    bh_thermo_n = _module_thm_count("BHThermodynamicsFourLaws.lean")
+    if bh_entropy_n is not None or bh_thermo_n is not None:
+        lines.append(
+            "% --- Paper 26 / 27 per-module counts (BH entropy + four laws) ---"
+        )
+        if bh_entropy_n is not None:
+            lines.append(
+                f"\\newcommand{{\\bhEntropyTotal}}{{{bh_entropy_n}}}"
+            )
+        if bh_thermo_n is not None:
+            lines.append(
+                f"\\newcommand{{\\bhThermoTotal}}{{{bh_thermo_n}}}"
+            )
+
     path.write_text("\n".join(lines) + "\n")
 
 

@@ -1,0 +1,79 @@
+{
+  "review_date": "2026-04-26T00:00:00Z",
+  "scope": "paper27 / Phase 6a Track C Wave 5 / BHThermodynamicsFourLaws — single figure",
+  "figures_reviewed": 1,
+  "overall_status": "issues_found",
+  "figures": [
+    {
+      "name": "fig_T_H_vs_M_regime_partition",
+      "status": "warning",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "CRITICAL: Header region is heavily overlapped. The main figure title 'Phase 6a Wave 5 — BCH four-laws regime partition (Schwarzschild ↔ ADW-extremality)', the multi-line <sub> subtitle ('Left: Jacobson-Koike ...', 'Right: substrate-response ...'), and the two subplot titles ('T_H(M) regime-partition profile' and 'δ_ADW(α_ADW) substrate-response ansatz') all collide in the top ~10% of the canvas. Subplot titles are written through the subtitle text and are nearly illegible. Cause: make_subplots adds subplot_titles at the same vertical band where apply_layout's multi-line title+subtitle is placed, with no top margin reservation.",
+          "Left subplot title 'T_H(M) regime-partition profile' overlaps with the subtitle line beginning 'Left: Jacobson-Koike T_H(M) = T_H,0·(1−(M/M_c)²) below M_c'.",
+          "Right subplot title 'δ_ADW(α_ADW) substrate-response ansatz' overlaps with the main title text and the right-panel subtitle.",
+          "Top marker text ('M = M_c (boundary)' on left; 'α_ADW = 1 (bare Sakharov-Adler: δ_ADW vanishes)' on right) is small (font size 9) but legible; not a critical issue."
+        ]
+      },
+      "physics": {
+        "status": "issues",
+        "issues": [
+          "Left-panel x-axis units mislabel: the axis is titled 'Mass M (units of M_c)' but the plotted x-values are in absolute natural units, not M/M_c. With the defaults (alpha_ADW=1, lambda_UV=1, N_f=16) M_c = 16/(12π) ≈ 0.4244, and the M_c boundary line/annotation sits at x ≈ 0.42 — not at x = 1. To match the axis title the data should be normalized x → M/M_c (so the boundary is at x = 1, the Schottky branch covers [0,1], and the Schwarzschild branch covers [1, 4]). Either rescale the x-array (preferred) or change the axis label to 'Mass M (natural units, Λ_UV = 1)'.",
+          "Schwarzschild-branch normalization is illustrative-only (T_H = T_H_peak · M_c/M to anchor at the kink), which the docstring acknowledges. This is fine for a regime-partition cartoon but should be flagged in the caption as 'relative normalization for visual continuity, not the absolute T_H = ℏc³/(8πGMk_B)'. The current paper caption is silent on this normalization choice.",
+          "Both branches in the figure show dT_H/dM < 0 in the literal numerical reading (the Schottky T_H,0·(1−(M/M_c)²) is monotonically decreasing on [0, M_c]). The paper text in §3 explicitly acknowledges this and reframes the regime distinction as the heat-capacity-sign character (cooling-toward-extremality vs heating-as-evaporates), but the on-figure annotation 'dT_H/dM > 0 (cooling toward extremality)' on the left panel directly contradicts what is plotted. The annotation should read 'C(M) > 0 (cooling toward extremality)' or 'heat capacity > 0' to match the paper's reconciled framing — not 'dT_H/dM > 0', which is false on this curve."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": [
+          "Color palette is consistent: steel_blue (#2E86AB) for the ADW-extremality / Schottky branch, amber (#F18F01, dashed) for the Schwarzschild branch. Colorblind-accessible per project convention.",
+          "Annotation colors (steel_blue / amber) match their respective curves — good.",
+          "Right panel uses steel_blue alone (single trace, no color comparison needed) — appropriate.",
+          "M_c boundary and α_ADW = 1 vertical guide-lines are rendered as faint grey dotted lines — readable and not distracting."
+        ]
+      },
+      "caption_match": false,
+      "panel_specific_checks": {
+        "both_panels_present": true,
+        "left_panel_T_H_vs_M": true,
+        "right_panel_delta_ADW_vs_alpha": true,
+        "M_c_boundary_marker_visible": true,
+        "M_c_marker_at_correct_x": false,
+        "M_c_marker_x_observed": "≈ 0.42 (= M_c in natural units), not 1.0 as the axis label 'units of M_c' implies",
+        "alpha_eq_1_vanishing_marker_visible": true,
+        "slope_sign_flip_annotations_present": true,
+        "slope_sign_flip_annotations_correct": false,
+        "slope_sign_flip_annotation_issue": "Left annotation 'dT_H/dM > 0 (cooling toward extremality)' is inconsistent with the plotted Schottky branch (which has dT_H/dM ≤ 0 everywhere on [0, M_c]). The paper's reconciled framing is heat-capacity-sign-based (C(M) > 0 vs C(M) < 0), not dT_H/dM-based. Annotation must be reworded.",
+        "regime_dispersion_visually_clear": true,
+        "regime_dispersion_notes": "The kink-meet at M_c is clear; Schottky branch is solid steel_blue, Schwarzschild branch is dashed amber — strong visual distinction."
+      },
+      "manifest_warnings_assessment": {
+        "warning_1_xaxis": {
+          "manifest_expected": "M / α_ADW",
+          "figure_actual": "Mass M (units of M_c)",
+          "verdict": "manifest mis-specification",
+          "reasoning": "The manifest's expected_axes.xaxis string 'M / α_ADW' is the result of concatenating the two panels' x-axis variables (left 'M' / right 'α_ADW') with a literal slash, which is not a meaningful expected-substring for a single axis. The two-panel figure has two separate x-axes. The figure's own left-panel x-label 'Mass M (units of M_c)' is what is correct in spirit (modulo the units-rescaling issue noted in physics). Right-panel x-label 'α_ADW' is also correct. Recommend fixing the manifest, not the figure."
+        },
+        "warning_2_yaxis": {
+          "manifest_expected": "T_H / δ_ADW",
+          "figure_actual_left": "T_H / T_H,0",
+          "figure_actual_right": "δ_ADW (units of Λ_UV)",
+          "verdict": "manifest mis-specification",
+          "reasoning": "Same root cause: the manifest concatenated the two panels' y-axis variables ('T_H' and 'δ_ADW') with a slash. Both per-panel y-labels in the figure are correct. Recommend fixing the manifest."
+        },
+        "overall_recommendation": "Both structural-check warnings are MANIFEST mis-specifications (option b). For two-panel figures with independent axes, review_figures.py's expected_axes schema should be extended to support per-panel axis specs (e.g., expected_axes.left.xaxis / expected_axes.right.xaxis), or the manifest entry for this figure should drop the expected_axes field entirely and rely on per-trace and visual review. Do NOT change visualizations.py to make these warnings disappear — the current axis labels are physically meaningful per panel."
+      },
+      "notes": "Figure communicates the intended Phase 6a Wave 5 physics (regime partition + δ_ADW vanishing at α=1) and the colors/structure are publication-grade. Two substantive issues block paper-ready status: (1) the title/subtitle/subplot-title overlap in the header is a hard rendering bug that will look unprofessional in the paper PDF; (2) the left-panel x-axis label says 'units of M_c' but the data isn't normalized that way (M_c marker sits at ≈0.42, not 1.0), and the dT_H/dM > 0 annotation contradicts the plotted Schottky curve. Both must be fixed in visualizations.py before paper27 submission."
+    }
+  ],
+  "summary": "fig_T_H_vs_M_regime_partition delivers the right two-panel structure (Schottky+Schwarzschild T_H(M) on the left, δ_ADW vs α_ADW on the right) with correct colorblind-accessible palette and visible boundary markers. However: (a) header region has overlapping title/subtitle/subplot-titles — a rendering bug; (b) left-panel x-axis is mislabeled 'units of M_c' but data is in absolute natural units (M_c marker at ≈0.42, not 1.0); (c) the on-figure 'dT_H/dM > 0' annotation contradicts the literal Schottky monotonicity plotted and conflicts with the paper's own heat-capacity-sign framing in §3. Both manifest structural warnings (xaxis/yaxis substring miss) are manifest mis-specifications, not figure bugs — they arise from a single-axis schema applied to a two-panel figure.",
+  "recommendations": [
+    "FIX (visualizations.py): Increase top margin and/or move the multi-line subtitle into a footnote/annotation strip below the panels, so subplot_titles ('T_H(M) regime-partition profile' / 'δ_ADW(α_ADW) substrate-response ansatz') are no longer overwritten by the main title's <sub> block. Specifically, in apply_layout call: add `margin=dict(t=140)` (or split the title to remove the <sub> and place that content as a fig.add_annotation below the subplots). This is the highest-priority fix.",
+    "FIX (visualizations.py): Either (a) normalize the x-axis data on the left panel to M/M_c so the boundary sits at x=1 and the axis label 'units of M_c' is honest, or (b) change the axis label to 'Mass M (natural units, Λ_UV = 1)' and place the M_c marker label as 'M_c ≈ 0.42'. Option (a) is cleaner and matches the manifest's intent.",
+    "FIX (visualizations.py): Reword the left-panel annotation 'dT_H/dM > 0 (cooling toward extremality)' → 'C(M) > 0 (cooling toward extremality)' or 'heat capacity > 0', matching the paper §3 reconciled framing. The companion 'dT_H/dM < 0 (heating as evaporates)' should likewise become 'C(M) < 0 (heating as evaporates)'. This prevents the figure from contradicting the plotted curve.",
+    "FIX (review_figures.py manifest spec for this entry): The expected_axes schema concatenates two-panel axes with '/' which produces meaningless expected-substrings. Either (a) extend the schema to support per-panel axis dicts, or (b) drop expected_axes for this figure. Both structural_checks warnings are spurious as flagged.",
+    "OPTIONAL (paper27 caption / visualizations.py docstring): Mention that the Schwarzschild-branch curve in the left panel is a relative normalization (T_H_peak · M_c/M, anchored at the kink), not the absolute Schwarzschild T_H = ℏc³/(8πGMk_B). The docstring already says this; the paper caption should too, to avoid claims of 'absolute' T_H.",
+    "VERDICT: WARNING (not FAIL). Physics intent is correct, structure and colors are correct, but the header overlap + units mislabel + slope-sign annotation contradiction together prevent immediate paper inclusion. ~30 min of visualizations.py edits to clear all three; manifest fix is independent and trivial."
+  ]
+}

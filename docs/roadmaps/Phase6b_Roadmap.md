@@ -22,6 +22,7 @@
 >    - 6b.2 — Phase 5y closure modules (full read), Phase 6a.1 `LinearizedEFE.lean`, Phase 6a.4 `FLRWDynamics.lean`
 >    - 6b.3 — `VestigialSusceptibility.lean` (with 5y W6 extensions), Phase 6a.1 `LinearizedEFE.lean`; deep research on Koivisto-Nunes-Mulryne 3-form inflation (`Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md` §H3 notes where available)
 > 5. If 6b.3 proves intractable, de-escalate per Decision Gate B.3 — do not grind on Planck/BICEP-matching if microscopic dynamics fundamentally wrong. Document the failure as a publishable structural result and move to backlog.
+> 6. **MANDATORY: Apply the preemptive-strengthening checklist before writing each Lean theorem statement** (see CLAUDE.md "Preemptive-strengthening discipline" + WAVE_EXECUTION_PIPELINE.md Stage 3 checklist). Five questions: (1) drop-conjunct test for bundle redundancy P2; (2) numerical-content connection (`norm_num`-backed comparisons to published constants); (3) cross-module bridge integrity P6 (docstring references → `import + call`); (4) trivial-discharge P3/P4/P5 check (no `rfl`/`decide`/`not_lt.mpr h_disagree` tautologies); (5) defining-the-conclusion check (vacuous when `f := <obvious target>`). The end-of-wave strengthening pass should produce **0 retroactive theorems** — if it produces 5+, log the failure mode and tighten the next wave's discipline.
 
 ---
 

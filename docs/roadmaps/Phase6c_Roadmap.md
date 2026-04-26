@@ -24,6 +24,7 @@
 >    - 6c.4 — `IsingBraiding.lean`, `FibonacciMTC.lean`, `SU3k2FSymbols.lean`, `DrinfeldDouble.lean`, full MTC stack; published Hayden-Preskill 2007 + subsequent holographic-QEC literature
 >    - 6c.5 — Phase 6a.3 `BHEntropyMicroscopic.lean` (prerequisite), MTC stack, `StimulatedHawking.lean`; Ryu-Takayanagi 2006 + Casini-Huerta entropy-bound literature
 > 5. 6c is a "bridge phase": every wave is short (0.5–6 PM), but every wave REQUIRES that both pillars it bridges are already deep and zero-sorry. Do not start a 6c wave if either pillar has open sorrys on the relevant theorems.
+> 6. **MANDATORY: Apply the preemptive-strengthening checklist before writing each Lean theorem statement** (see CLAUDE.md "Preemptive-strengthening discipline" + WAVE_EXECUTION_PIPELINE.md Stage 3 checklist). Five questions: (1) drop-conjunct test for bundle redundancy P2; (2) numerical-content connection (`norm_num`-backed comparisons to published constants); (3) cross-module bridge integrity P6 (docstring references → `import + call`); (4) trivial-discharge P3/P4/P5 check (no `rfl`/`decide`/`not_lt.mpr h_disagree` tautologies); (5) defining-the-conclusion check (vacuous when `f := <obvious target>`). The end-of-wave strengthening pass should produce **0 retroactive theorems** — if it produces 5+, log the failure mode and tighten the next wave's discipline. **6c.3 strengthening pass cost (2026-04-27): 12 retroactive theorems** — that's the baseline to beat.
 
 ---
 
@@ -118,7 +119,18 @@
 
 ---
 
-## Track B: Equivalence Principle Abstraction (6c.3)
+## Track B: Equivalence Principle Abstraction (6c.3) — **SHIPPED 2026-04-27**
+
+**Status:** Wave 3 closed end-to-end. Pipeline through Stage 5.
+- `EquivalencePrinciple.lean`: 12 substantive theorems + 1 module-summary marker, 0 sorry, 0 new axioms (verified `propext, Classical.choice, Quot.sound` only on key theorems via `lean_verify`).
+- `src/equivalence_principle/`: 2 Python modules (`__init__.py`, `mechanism_classifier.py`) + 32 pytest cases (32/32 PASS in 0.03s).
+- `papers/paper34_equivalence_principle/`: short formalization paper, 4 pages, 433 KB, compiles clean, 11 bibitems.
+- `fig_ep_violation_matrix`: 6×3 mechanism × EP-level heatmap + η-scale comparison bar chart, registered in `review_figures.py`.
+- **Six mechanisms classified**: vestigialDifferentialCoupling (η=1 max, violates WEP), vestigialReliscSTEPClass (η~10⁻¹⁸ STEP-class, violates WEP), fangGuTorsionTrace + fractonSubdiffusion + sfdmThomasFermi + hiddenSectorZ16Singlet (all satisfy WEP/EEP/SEP).
+- **Structural punchline**: `ep_violation_is_vestigial_only` — among the six mechanisms, exactly the two vestigial-phase phenomena violate WEP. EP-violation surface is *vestigial-only*.
+- Cross-bridges: `vestigial_microscope_violation_consistent` (links to `ClassificationTableDark.MicroscopeStatus.violated`); `VestigialGravity.ep_violation_in_vestigial` consumed.
+- Numerical constants: MICROSCOPE_BOUND = 1e-15 (Touboul 2017), STEP_TARGET = 1e-18, VESTIGIAL_PHASE_ETA_MAX = 1.0, VESTIGIAL_RELICS_ETA = 1e-18.
+- Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
 
 ### Wave 3 — `EquivalencePrinciple.lean` (6c.3) [Pipeline: Stages 1–5]
 
@@ -262,7 +274,7 @@ Parallelism:
 |------|-------|-----|--------------|----------|
 | 6c.1 | `StrongCPTopologicalDE.lean` + PRL paper | 2–4 | 5x W3 + 5y closure | **TIER 1** |
 | 6c.2 | `EWBaryogenesisChiralityWall.lean` + PRL paper | 3–5 | 5z.3 | **TIER 1** |
-| 6c.3 | `EquivalencePrinciple.lean` + CPP paper | 0.5 | 5x W4–W7 | **TIER 0 — smallest self-contained win** |
+| 6c.3 | `EquivalencePrinciple.lean` + CPP paper | 0.5 | 5x W4–W7 | **SHIPPED 2026-04-27** |
 | 6c.4 | `QECHolographyBridge.lean` + Quantum/JHEP paper | 4–6 | MTC stack | **TIER 1** |
 | 6c.5 | `RTCasiniHuertaBounds.lean` + arXiv note | 2–3 | 6a.3 | **TIER 2** |
 

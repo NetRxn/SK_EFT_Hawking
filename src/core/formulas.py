@@ -7615,7 +7615,14 @@ def verlinde_dim_horizon(p, S_matrix, label_indices, vacuum_index=0):
     where S is the modular S-matrix of the MTC. This is the literal
     physical content the Wave 3 module needs at the horizon.
 
-    Lean: BHEntropyMicroscopic.verlindeDimHorizon
+    Lean: pending — Verlinde sum is not yet formalized at theorem level.
+          Wave 6a.7 (2026-04-27) restructured the abstract counterpart from
+          `opaque verlindeEntropy_SU2k` + `axiom gaussianSaddleAsymptotic`
+          into a concrete Laplace-saddle-limit definition + theorem
+          (`BHEntropyMicroscopic.verlindeEntropy_SU2k := kaulMajumdarS` at
+          the saddle limit; `gaussianSaddleAsymptotic` now a theorem).
+          The literal Verlinde-sum derivation via Hardy-Ramanujan is
+          tracked by `H_VerlindeKMLiteralSumDerivation` for future work.
     Aristotle: pending
     Source: Verlinde, Nucl. Phys. B 300, 360 (1988); Kaul SIGMA 8, 005 (2012),
             Eq. (24), arXiv:1201.6102.
@@ -7662,9 +7669,11 @@ def bh_entropy_kaul_majumdar(area, G_N=None, c0=0.0):
     (½ Gaussian saddle + 1 SU(2)-singlet projection); see
     `log_correction_coefficient_su2k` for the decomposition.
 
-    Lean: BHEntropyMicroscopic.kaulMajumdarClosedForm
+    Lean: BHEntropyMicroscopic.kaulMajumdarS (def);
+          structural log coefficient via `kaul_majumdar_log_coefficient` and
+          its decomposition via `kaul_majumdar_log_decomposition`.
     Aristotle: pending
-    Source: Kaul-Majumdar, PRL 84, 5255 (2000), arXiv:gr-qc/0002040;
+    Source: Kaul-Majumdar, PRL 84, 5255-5257 (2000), arXiv:gr-qc/0002040;
             Kaul SIGMA 8, 005 (2012), arXiv:1201.6102 §5.
 
     Parameters
@@ -7704,12 +7713,17 @@ def bh_entropy_leading_coefficient(gamma_immirzi=0.27392803876474):
     the tuning explicitly: feeding any other γ produces a deviation
     from 1/4 in proportion to γ_DL/γ.
 
-    Lean: BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi (field), discharge
-          via BHEntropyMicroscopic.IsHorizonBC.immirziTuned
+    Lean: BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi (structure field).
+          The 1/4-tuning hypothesis is documented at the prose level (Wave 3
+          paper §4) but is NOT yet a Lean predicate — there is no
+          `IsHorizonBC.immirziTuned` discharge in the shipped module. The
+          structural anchor consumed by Wave 3 is
+          `kaul_majumdar_leading_matches_G_N_emerg`, which bundles
+          `LinearizedEFE.G_N_emerg_pos` with `kaulMajumdar_S_at_4GN`.
     Aristotle: pending
     Source: Kaul SIGMA 8, 005 (2012) Table 2; Domagala-Lewandowski
-            CQG 21, 5233 (2004) gr-qc/0407051; Meissner CQG 21, 5245 (2004)
-            gr-qc/0407052.
+            CQG 21, 5233-5244 (2004) gr-qc/0407051; Meissner CQG 21,
+            5245-5252 (2004) gr-qc/0407052.
 
     Parameters
     ----------

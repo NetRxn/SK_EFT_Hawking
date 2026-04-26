@@ -1,0 +1,662 @@
+\documentclass[prd,aps,twocolumn,floatfix,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\newcommand{\Mc}{M_{c}}
+\newcommand{\Thawk}{T_{H}}
+\newcommand{\GN}{G_{N}^{\rm emerg}}
+\newcommand{\aADW}{\alpha_{\rm ADW}}
+\newcommand{\Ladw}{\Lambda_{\rm UV}}
+\newcommand{\Nf}{N_{f}}
+\newcommand{\xivest}{\chi_{\rm vest}}
+\newcommand{\dADW}{\delta_{\rm ADW}}
+
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{BCH four laws and the regime partition for emergent-gravity ADW
+black holes: a sign-of-$d\Thawk/dt$ partition between Schwarzschild
+and BEC-acoustic evaporation}
+
+\author{John G. Roehm}
+\affiliation{SK-EFT Hawking Project (Phase 6a Wave 5)}
+
+\date{\today}
+
+\begin{abstract}
+We formalize the Bardeen--Carter--Hawking four laws of black-hole
+mechanics in two regimes of an emergent-gravity ADW substrate, separated
+by a critical mass $\Mc(\aADW, \Ladw, \Nf)$. Above $\Mc$, the BH
+follows the textbook Schwarzschild signature: $\Thawk = \hbar/(8\pi M)$
+(Hawking 1975~\cite{Hawking1975CMP}), so during evaporation
+$dM/dt < 0$ and $d\Thawk/dt > 0$ (heats as evaporates), with
+finite evaporation time $t_{\rm evap} \sim M^3$. Below $\Mc$, the BH
+follows the BEC-acoustic backreaction profile of Balbinot, Fagnocchi,
+Fabbri (PRD~71, 064019 (2005),
+arXiv:gr-qc/0405098~\cite{Balbinot2005PRD}): linear-in-$t$ cooling
+$\Thawk(t) = (\hbar c / 2\pi) \kappa [1 - (563/720\pi)\,\varepsilon\, \kappa^3 c
+A_0 t]$ with extrapolation $t \sim 1/T^3$, hence asymptotic $\Thawk \to 0$
+in infinite time --- the analog of near-extremal Reissner--Nordstr\"om
+evaporation. The genuine regime partition is the
+\emph{sign-flip of $d\Thawk/dt$ during Hawking-radiation evaporation}:
+positive in the Schwarzschild branch, negative in the BEC-acoustic
+branch. We ship the regime-partition criterion and the four-laws
+bundles in tracked-hypothesis mode (Outcome-3). The substrate-response
+coefficient ansatz $\dADW = (\aADW - 1)\Ladw$ vanishes in the bare
+Sakharov--Adler limit and provides four falsifiability tests for any
+candidate ADW substrate. The Lean formalization
+(\texttt{BHThermodynamicsFourLaws.lean}) ships \bhThermoTotal{} theorems,
+\sorrycount{} sorry, 0 new axioms. The full second law uses
+Glorioso--Liu SK-EFT entropy-current monotonicity
+(arXiv:1612.07705)~\cite{GloriosoLiu2018} without invoking pointwise NEC.
+The ADW-substrate-specific partition critical mass
+$\Mc(\aADW, \Ladw, \Nf)$ is original to this project;
+no published derivation exists.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+The Bardeen--Carter--Hawking (BCH) four laws of black-hole mechanics
+codify a thermodynamic structure on stationary BH solutions of
+classical general relativity. Quantum field theory on these
+backgrounds endows the surface gravity $\kappa$ with a thermal
+interpretation as the Hawking temperature $\Thawk = \hbar\kappa/(2\pi)$
+(Hawking 1975~\cite{Hawking1975CMP}), and the resulting
+heat-capacity sign $C(M) = (dM/d\Thawk)$ is negative for
+Schwarzschild --- the BH \emph{heats} as it loses mass to
+Hawking evaporation, with finite evaporation time $t_{\rm evap}
+\propto M_0^3$.
+
+Analog/emergent-gravity systems offer a structurally different
+evaporation pattern. In the BEC-acoustic system of Balbinot,
+Fagnocchi, Fabbri~\cite{Balbinot2005PRD},
+backreaction of thermally radiated phonons on the fluid background
+\emph{shrinks} the sonic horizon and \emph{decreases} the temperature
+in time, with linear-in-$t$ leading order
+\begin{equation}
+\Thawk(t) = \frac{\hbar c}{2\pi}\,\kappa \left[
+  1 - \frac{563}{720\pi}\,\varepsilon\,\kappa^{3}\,c\,A_{0}\,t
+\right]
+\label{eq:Tsonic}
+\end{equation}
+and asymptotic extrapolation $t \sim 1/T^3$ giving $\Thawk \to 0$
+at \emph{infinite} time --- the analog of near-extremal
+Reissner--Nordstr\"om. Crucially, Ref.~\cite{Balbinot2005PRD}
+itself \emph{contrasts} this with the moving-domain-wall analog
+in $^3$He-A studied by Jacobson and Koike~\cite{JacobsonKoike2002}
+(cond-mat/0205174), which has \emph{non}-vanishing end-temperature
+of the evaporation process and therefore behaves more like
+Schwarzschild than near-extremal RN.
+
+This paper formalizes both regimes within a single Lean module
+\texttt{BHThermodynamicsFourLaws.lean} and ships the
+sign-of-$d\Thawk/dt$ regime partition as the load-bearing
+correctness-push theorem. We do \emph{not} attempt to derive a
+single closed-form $\Thawk(M)$ that interpolates between the regimes ---
+instead, we treat the existence of a critical mass
+$\Mc(\aADW, \Ladw, \Nf)$ separating them as a
+\emph{tracked-hypothesis} bundle $H_{\rm RegimePartition}$, with
+each branch's evaporation-sign claim grounded in its respective
+primary literature. The choice of $\Mc$ is the dimensional ansatz
+$\Mc = (\Nf \Ladw) / (12\pi \aADW)$ implied by Sakharov--Visser
+$1/G_N \propto \Nf \Lambda^2$ at the Wave-1 scale; this is project-
+original and explicitly disclosed.
+
+The remainder of the paper is organized as follows:
+Section~\ref{sec:setup} introduces the data carriers
+\texttt{BHData}, \texttt{ADWParams} and the regime classifier;
+Section~\ref{sec:profiles} states the BEC-acoustic and Schwarzschild
+$\Thawk$ profiles per their primary sources; Section~\ref{sec:hreg}
+introduces $H_{\rm RegimePartition}$;
+Section~\ref{sec:fourlaws} the regime-dependent four-laws bundles;
+Sections~\ref{sec:sk-second} and \ref{sec:third} the second and third
+laws under SK-EFT and Reall~\cite{Reall2024ThirdLawBPS} respectively;
+Section~\ref{sec:falsifiers} the four falsifier theorems;
+Section~\ref{sec:lean} the Lean formalization summary;
+Section~\ref{sec:cross} the cross-wave compatibility;
+Section~\ref{sec:novelty} the novelty flags.
+
+\section{Setup: \texttt{BHData}, \texttt{ADWParams}, and the regime classifier}
+\label{sec:setup}
+
+The Lean module declares two structures and one inductive type. The
+\texttt{BHData} structure carries bulk-thermodynamic observables
+$(M, Q, J, A, r_h, \Thawk, \kappa)$ with positivity hypotheses for the
+dimensional quantities; the MTC structure for the horizon Hilbert
+space is supplied separately via Wave 3's \texttt{HorizonMTCBC}.
+The \texttt{ADWParams} structure carries substrate parameters
+$(\aADW, \Ladw, \Nf, \xivest)$ with strict positivity for each.
+
+The \texttt{Regime} inductive type has three constructors:
+\texttt{Schwarzschild}, \texttt{Boundary}, and \texttt{ADWExtremality}.
+The \texttt{ADWExtremality} constructor name is retained from the
+initial Wave 5 ship for backward bibliographic continuity, but the
+post-rewrite physics interpretation is the BEC-acoustic regime per
+Balbinot 2005~\cite{Balbinot2005PRD}.
+
+The \emph{decidable} regime classifier \texttt{classify} is defined
+piecewise:
+\begin{equation}
+\texttt{classify}\,(b, p) = \begin{cases}
+  \texttt{Schwarzschild}     & \text{if } b.M > \Mc(p) \\
+  \texttt{ADWExtremality}    & \text{if } b.M < \Mc(p) \\
+  \texttt{Boundary}          & \text{if } b.M = \Mc(p),
+\end{cases}
+\label{eq:classify}
+\end{equation}
+where the critical mass $\Mc(p)$ is the dimensional ansatz
+\begin{equation}
+\Mc(\aADW, \Ladw, \Nf) =
+\frac{\Nf \cdot \Ladw}{12\pi \cdot \aADW}.
+\label{eq:Mc-default}
+\end{equation}
+This is consistent with the Sakharov--Visser
+$1/G_N \propto \Nf \Lambda^2$ scaling but is \emph{not} a quoted
+equation in any primary ADW paper (Akama 1978, Diakonov 2011, the
+Wetterich tetrad-condensation series, Volovik~2022/2024); it is
+ours and is explicitly flagged as such in the \texttt{H\_RegimePartition}
+bundle (Sec.~\ref{sec:hreg}).
+
+The classifier admits three iff-theorems
+(\texttt{classify\_*\_iff}) discharging each constructor against the
+mass comparator. Theorem \texttt{M\_c\_pos} establishes
+$\Mc(p) > 0$ for all valid \texttt{ADWParams} via positivity of all
+input fields.
+
+\section{Two-regime $\Thawk$ profiles: Hawking 1975 and Balbinot 2005}
+\label{sec:profiles}
+
+The Lean module supplies two non-trivial Hawking-temperature functions,
+each anchored to its primary source.
+
+\subsection{Schwarzschild branch (Hawking 1975)}
+
+For $b.M > \Mc(p)$, the textbook Hawking 1975 result~\cite{Hawking1975CMP}
+applies in natural units $\hbar = 1$:
+\begin{equation}
+\Thawk^{\rm Schw}(M) = \frac{1}{8\pi M}.
+\label{eq:Tsch}
+\end{equation}
+We prove \texttt{T\_H\_schwarzschild\_pos} ($M > 0 \Rightarrow \Thawk > 0$)
+and \texttt{T\_H\_schwarzschild\_strict\_decreasing}
+($M_1 < M_2 \Rightarrow \Thawk^{\rm Schw}(M_2) < \Thawk^{\rm Schw}(M_1)$).
+Combined with the standard Hawking-emission energy balance
+$dM/dt < 0$ during evaporation, this establishes
+$d\Thawk/dt > 0$ in the Schwarzschild branch ---
+the load-bearing primary-source-grounded sign claim.
+
+\subsection{BEC-acoustic branch (Balbinot 2005)}
+
+For $b.M < \Mc(p)$, the BEC-acoustic backreaction analysis of
+Balbinot, Fagnocchi, Fabbri~\cite{Balbinot2005PRD}
+applies. Their Eq.~(Tsonic) [Eq.~\ref{eq:Tsonic}] gives a strictly
+decreasing $\Thawk(t)$ under Hawking-phonon backreaction, with the
+extrapolation $t \sim 1/T^3$ ensuring $\Thawk \to 0$ asymptotically
+in \emph{infinite} time --- preserving Israel's third law (Sec.~\ref{sec:third}).
+
+The leading-order exponential approximation
+\begin{equation}
+\Thawk^{\rm acoustic}(t) = \Thawk^{(0)} \cdot \exp(-t/\tau_{\rm cool})
+\label{eq:T-acoustic}
+\end{equation}
+matches the project's existing Python anchor
+\texttt{src/wkb/backreaction.py} (line 449), which evolves the full
+coupled-ODE system of~\cite{Balbinot2005PRD} but uses
+Eq.~\ref{eq:T-acoustic} as the leading-order analytic form. We
+prove \texttt{T\_H\_acoustic\_evolution\_pos}
+($\Thawk^{(0)} > 0 \Rightarrow \Thawk^{\rm acoustic}(t) > 0$),
+\texttt{T\_H\_acoustic\_evolution\_at\_zero}
+($\Thawk^{\rm acoustic}(0) = \Thawk^{(0)}$), and the load-bearing
+\texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}
+($t_1 < t_2 \Rightarrow \Thawk^{\rm acoustic}(t_2) < \Thawk^{\rm acoustic}(t_1)$
+when $\Thawk^{(0)} > 0$ and $\tau_{\rm cool} > 0$). The strict
+monotone-decay theorem is the BEC-acoustic regime's primary-source-
+grounded sign claim.
+
+\subsection{The contrast case: Jacobson--Koike 2002}
+
+It is essential to note that the moving-domain-wall analog black hole
+in $^3$He-A studied by Jacobson and Koike~\cite{JacobsonKoike2002}
+gives a structurally different result. Their Eq.~(13)
+$\Thawk(v) = \Thawk^{(0)}(1 - v^2/c_\perp^2)$
+(with $v$ the soliton velocity) is monotonically decreasing in $v$,
+but Hawking-radiation back-reaction \emph{slows} the soliton
+($dE/dt = -bv^n$, $E = \mu v^2/2$, hence $dv/dt < 0$),
+which makes $\Thawk$ \emph{increase} in time --- heating, not cooling.
+This regime is structurally similar to Schwarzschild, not to
+near-extremal Reissner--Nordstr\"om. Reference~\cite{Balbinot2005PRD}
+itself notes the distinction:
+``\emph{other analog models like a thin film of $^3$He-A with a
+moving domain wall [Jacobson] seem to show a non-vanishing
+end-temperature of the evaporation process}.''
+We cite~\cite{JacobsonKoike2002} and \cite{JacobsonVolovik1998} only
+as the contrast case, not as the cooling anchor.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig_T_H_evolution_regime_partition.png}
+\caption{Phase 6a Wave 5 BCH four-laws regime partition under Hawking-
+radiation evaporation. Left panel: $\Thawk(t)$ contrast between the
+Schwarzschild regime (amber dashed, Hawking 1975~\cite{Hawking1975CMP};
+$d\Thawk/dt > 0$, finite $t_{\rm evap}$) and the BEC-acoustic regime
+(steel-blue solid, Balbinot et al.~\cite{Balbinot2005PRD};
+$d\Thawk/dt < 0$, asymptotic extremality at infinite time).
+The genuine regime partition is the sign-flip of $d\Thawk/dt$ during
+evaporation; the critical mass $\Mc$ separating regimes is given by
+Eq.~(\ref{eq:Mc-default}). Right panel: substrate-response coefficient
+$\dADW = (\aADW - 1)\Ladw$ vanishing at $\aADW = 1$.}
+\label{fig:regime-partition}
+\end{figure*}
+
+\section{Tracked-hypothesis bundle $H_{\rm RegimePartition}$}
+\label{sec:hreg}
+
+The load-bearing tracked hypothesis is the bundle
+\begin{align}
+H_{\rm RegimePartition}\,(b, p, \Thawk^{(0)}, &dT/dt|_{\rm evap}, \delta) := \nonumber \\
+\text{conjunction of five fields:} \nonumber
+\end{align}
+\begin{description}
+\item[\texttt{M\_c\_form\_consistent}:] $\Mc(p) > 0$.
+\item[\texttt{T\_H0\_pos}:] $\Thawk^{(0)} > 0$.
+\item[\texttt{evap\_dT\_dt\_above}:]
+$b.M > \Mc(p) \;\Rightarrow\; 0 < dT/dt|_{\rm evap}$
+(Schwarzschild heating sign per Hawking
+1975~\cite{Hawking1975CMP}).
+\item[\texttt{evap\_dT\_dt\_below}:]
+$b.M < \Mc(p) \;\Rightarrow\; dT/dt|_{\rm evap} < 0$
+(BEC-acoustic cooling sign per Balbinot
+2005~\cite{Balbinot2005PRD} Eq.~Tsonic).
+\item[\texttt{delta\_consistent\_with\_ansatz}:]
+$\delta = (\aADW - 1) \Ladw$ (deep-research \S9 ansatz).
+\end{description}
+
+The rate $dT/dt|_{\rm evap}$ enters as an
+\emph{externally-supplied real parameter}, not an existential.
+This avoids the $\exists$-absorption anti-pattern: a witness
+$dT/dt|_{\rm evap}$ supplied to the bundle must satisfy the
+sign-claim consistent with the regime, rather than being existentially
+discharged by any sign that happens to be present in the substrate.
+The five fields are mutually independent in natural Mathlib.
+
+The correctness-push theorem
+\texttt{regime\_partition\_criterion} combines $H_{\rm RegimePartition}$
+with the regime classifier:
+\begin{align}
+\text{classify}(b,p) = \texttt{Schwarzschild} &\;\Rightarrow\;
+0 < dT/dt|_{\rm evap}, \nonumber \\
+\text{classify}(b,p) = \texttt{ADWExtremality} &\;\Rightarrow\;
+dT/dt|_{\rm evap} < 0.
+\label{eq:regime-partition}
+\end{align}
+This is the \emph{sign-flip-at-$\Mc$} theorem, with both branches
+primary-source-grounded.
+
+The substantive corollary
+\texttt{delta\_ADW\_nonzero\_iff\_alpha\_ADW\_ne\_one} establishes
+$\delta \neq 0 \;\Leftrightarrow\; \aADW \neq 1$, with the proof using
+$\Ladw > 0$ from \texttt{ADWParams.Lambda\_pos} as a load-bearing field.
+
+\section{The four laws in two regimes}
+\label{sec:fourlaws}
+
+We package the Wave-5-formalizable subset of the four laws in two
+structures, one per regime. \texttt{FourLaws\_Schwarzschild} carries
+\emph{three substantive fields}: \texttt{firstLaw\_smarr}
+(positivity of $\GN$ for the Smarr-identity coupling),
+\texttt{secondLaw\_Schw} (\texttt{ADWSecondLaw} parameterized over
+\texttt{entropy\_div}), and \texttt{evap\_dT\_dt\_positive}
+(Schwarzschild heating sign $> 0$). The bundle is satisfied
+consistently with the regime $b.M > \Mc(p)$.
+
+\texttt{FourLaws\_ADWExtremality} carries the parallel three
+substantive fields, with two key modifications:
+\texttt{firstLaw\_smarr\_with\_substrate} adds the substrate-response
+correction $\delta = (\aADW - 1)\Ladw$ to the Smarr identity, and
+\texttt{evap\_dT\_dt\_negative} flips the evaporation-sign claim
+(BEC-acoustic cooling sign $< 0$). The bundle is satisfied
+consistently with the regime $b.M < \Mc(p)$.
+
+\textbf{Deferred to Phase 6f+.} The zeroth law ($\kappa$ constant on
+horizon) and the third law (Israel strong form / Reall BPS-conditional
+preservation) require the classical-GR infrastructure of Phase 6f.1
+(\texttt{Curvature.lean}) and Phase 6f.5 (\texttt{ADMDecomposition.lean})
+to encode properly: the zeroth law needs Killing-vector/horizon-generator
+machinery, and the Israel strong form needs the affine-time integral
+formalism. Both are surfaced in the bundle docstrings as deferred slots,
+not as \texttt{True} placeholders. The Balbinot 2005 $t \sim 1/T^3$
+extrapolation gives the BEC-acoustic-regime Israel-strong preservation
+prose-level (Section~\ref{sec:third}); the corresponding Lean encoding
+follows once Phase 6f.5 lands.
+
+The Wave 5 \emph{gating theorem}
+\texttt{four\_laws\_consistent\_with\_acoustic\_regime} combines the
+classifier with the BEC-acoustic four-laws bundle and the
+tracked-hypothesis bundle to produce the substantive structural
+claim: in the BEC-acoustic regime, the BH satisfies the formalized
+subset of the four laws (with the substrate-response first-law
+correction) AND the Hawking temperature has \emph{negative}
+time-derivative under evaporation. Both conjuncts are non-trivial:
+three independent substantive sign claims plus the regime-defining
+sign-inversion claim primary-source-grounded by Balbinot
+2005~\cite{Balbinot2005PRD} Eq.~(Tsonic).
+
+\section{Second law: Glorioso--Liu SK-EFT, no NEC}
+\label{sec:sk-second}
+
+The second law in both regimes is encoded via Glorioso and
+Liu's theorem~\cite{GloriosoLiu2018} on dynamical KMS Z$_2$ symmetry
+and unitarity (Im~$S_{\rm eff} \geq 0$) implying local
+entropy-current monotonicity $\partial_\mu s^\mu \geq 0$,
+\emph{without invoking pointwise NEC}. The
+\texttt{ADWSecondLaw} Prop bundle takes the entropy-current
+divergence as an externally-supplied real parameter
+\texttt{entropy\_div} and ships two substantive constraints:
+\texttt{entropy\_divergence\_nonneg} ($0 \leq$ \texttt{entropy\_div},
+the load-bearing Glorioso--Liu Eq.~(3.20) sign claim) and
+\texttt{horizon\_area\_link\_consistent} ($0 < b.A$, the bundle's
+horizon-area consistency witness). The KMS-Z$_2$ symmetry and
+unitarity premises (Im~$S_{\rm eff} \geq 0$) of the Glorioso--Liu
+derivation enter as substrate-side inputs that would become
+substantive predicates on a formalized SK-EFT effective action; that
+formalization is deferred to Phase 6e.
+
+The Crossley--Glorioso--Liu constitutive
+relations~\cite{CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}
+supply the SK-EFT framework. Applied to a BH horizon, this
+replaces the classical Hawking 1971 area-non-decrease theorem (which
+required pointwise NEC) with a local entropy-current monotonicity
+that holds even when QFT operator-violations of pointwise NEC are
+allowed in the bulk. Faulkner--Speranza~\cite{FaulknerSperanza2024}
+derive the GSL algebraically from type-II crossed-product algebras;
+Kirklin~\cite{Kirklin2024GSLAllOrders} extends to all orders in
+perturbative gravity.
+
+\section{Third law: BPS-conditional preservation, Kehle--Unger violation}
+\label{sec:third}
+
+In the BEC-acoustic regime, Balbinot's $t \sim 1/T^3$ extrapolation
+guarantees that $\Thawk \to 0$ is reached only in \emph{infinite} affine
+time, preserving the Israel 1986 strong third law for the natural
+substrate-response branch. However, Kehle and
+Unger~\cite{KehleUnger2022ThirdLaw} demonstrate that
+charged-scalar-matter sectors can allow finite-time approach to
+extremality. Reall~\cite{Reall2024ThirdLawBPS} provides the
+BPS local mass-charge inequality under which the Israel form is
+restored.
+
+The third-law content (a quantitative claim about
+the affine-time approach) is \emph{not} encoded as a Lean Prop
+in the post-Stage-13 strengthened module: the original Wave 5
+\texttt{thirdLaw\_Israel\_BPS\_conditional} field was a \texttt{True}
+placeholder, and the strengthening pass removed all \texttt{True}-typed
+fields rather than ship vacuous content. Encoding the Israel form
+quantitatively requires affine-time integral formalism from Phase~6f.5
+(\texttt{ADMDecomposition.lean}); the substantive content of this
+section is the (uncoded) \emph{prose-level} disclosure that the natural
+BEC-acoustic Schottky-saturation branch preserves Israel-strong, while
+charged-matter sectors (Kehle--Unger) violate it absent the Reall BPS
+condition. The two non-tautological falsifier theorems
+\texttt{falsifier\_third\_law\_form}
+(Section~\ref{sec:falsifiers}) ship in the Lean module to make these
+predictions cross-falsifiable in Lean once a $\tau_{\rm approach}$
+function is observable. We carry the third-law claim in the paper
+without a corresponding Lean Prop slot, with the disclosure made
+explicit here.
+
+\section{Falsifier theorems}
+\label{sec:falsifiers}
+
+The Lean module ships four falsifier theorems, each anchored to a
+primary-source-grounded prediction. All four are non-tautological in
+the strict sense: each derives a contradiction or a sign-claim on a
+function whose conclusion follows from the strict-monotonicity or
+strict-positivity of theorems already proved in the module
+(\texttt{T\_H\_acoustic\_evolution\_strict\_decreasing} for falsifier
+1, \texttt{H\_RegimePartition.evap\_dT\_dt\_above} for falsifier 2,
+the $\min$ argument over the two-sided thresholds for falsifier 3,
+the substrate's $\Ladw > 0$ field for falsifier 4).
+
+\begin{enumerate}
+\item \textbf{Acoustic-decay form falsifier}
+  (\texttt{falsifier\_acoustic\_decay\_form}): given a candidate
+  $\Thawk^{\rm alt}(t)$ that matches Balbinot's
+  $\Thawk^{\rm acoustic}(t_1)$ at time $t_1$ AND fails to strictly
+  decrease by time $t_2$ ($\Thawk^{\rm alt}(t_1) \leq
+  \Thawk^{\rm alt}(t_2)$), the candidate must DISAGREE with
+  $\Thawk^{\rm acoustic}(t_2)$. The proof uses the strict-decreasing
+  theorem to derive a contradiction.
+\item \textbf{Schwarzschild-heating sign falsifier}
+  (\texttt{falsifier\_schwarzschild\_heating}): given the
+  $H_{\rm RegimePartition}$ bundle and a Schwarzschild-regime
+  classification, an observed non-positive $dT/dt$ contradicts the
+  bundle's \texttt{evap\_dT\_dt\_above} sign claim
+  (Hawking 1975~\cite{Hawking1975CMP}). Conclusion is \texttt{False}.
+\item \textbf{Third-law-form falsifier}
+  (\texttt{falsifier\_third\_law\_form}): given a strong-Israel
+  predicate (approach time unbounded as $\varepsilon \to 0$) and a
+  Kehle--Unger predicate (approach time bounded above for small
+  enough $\varepsilon$), the two are mutually inconsistent; the proof
+  takes $\varepsilon = \min(\varepsilon_0, \varepsilon_{\rm th})$
+  where both predicates apply and derives a contradiction. Conclusion
+  is \texttt{False}.
+\item \textbf{$\aADW$-dependence falsifier}
+  (\texttt{falsifier\_alpha\_ADW\_dependence}; renamed from the
+  initial-ship name \texttt{falsifier\_chi\_vest\_dependence} per a
+  Stage-13 finding flagging that the deep-research \S9 ansatz
+  $\dADW = (\aADW - 1)\Ladw$ depends on $\aADW$ and $\Ladw$, not
+  directly on $\xivest$). The conclusion $0 < (\aADW - 1)\Ladw$ uses
+  both $\aADW > 1$ and the substrate's $\Ladw > 0$ field; a
+  measurement of opposite sign falsifies the ansatz.
+\end{enumerate}
+
+\section{Lean Formalization}
+\label{sec:lean}
+
+The module \texttt{lean/SKEFTHawking/BHThermodynamicsFourLaws.lean}
+ships \bhThermoTotal{} theorems, \sorrycount{} sorry, 0 new axioms.
+Verification via \texttt{\#print axioms} on six substantive theorems
+(\texttt{regime\_partition\_criterion},
+\texttt{four\_laws\_consistent\_with\_acoustic\_regime},
+\texttt{falsifier\_acoustic\_decay\_form},
+\texttt{falsifier\_schwarzschild\_heating},
+\texttt{falsifier\_third\_law\_form},
+\texttt{wave3\_bridge\_kaul\_majumdar\_at\_e\_squared\_anchor})
+shows dependency only on $\{$\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}$\}$.
+
+The four-pattern anti-vacuity audit applied to this module
+(\emph{$\exists$-absorption}, \emph{redundant bundle conjuncts},
+\emph{trivial-multiplication-as-physics}, \emph{vacuous axioms} ---
+each describing a distinct way a Lean Prop can be technically true
+while encoding no physics) is satisfied by construction:
+no $\exists$-absorption (the sign-of-$d\Thawk/dt$ field takes the
+rate as an externally-supplied real, not an existential); no
+trivial-multiplication-as-physics ($\Mc$ is a ratio of three
+independent parameters); no vacuous axioms (zero new axioms
+introduced). The \texttt{FourLaws\_*} bundles ship with three
+substantive sign claims plus two deferred placeholder fields
+(\texttt{zerothLaw\_*} and \texttt{thirdLaw\_Israel\_*}) that
+require the classical-GR infrastructure of Phase 6f
+(\texttt{Curvature.lean}, \texttt{ADMDecomposition.lean}) to encode
+properly; this is explicitly disclosed in the per-bundle docstring.
+
+\section{Cross-wave compatibility}
+\label{sec:cross}
+
+\textbf{Wave 1} (\texttt{LinearizedEFE.G\_N\_emerg}): the first-law
+coupling $1/(8\pi \GN)$ in both \texttt{FourLaws\_*} bundles uses
+Wave 1's $\GN$ evaluated at substrate parameters. The bridge
+\texttt{wave1\_bridge\_G\_N\_emerg\_pos} records that positivity of
+$\GN$ propagates through to both regime branches.
+
+\textbf{Wave 2} ($c_{\rm GW} = c \cdot \sqrt{\xivest}$): the
+BEC-acoustic substrate inherits the metric-channel speed via
+$\kappa$ dependence on $\xivest$.
+
+\textbf{Wave 3} (\texttt{HorizonMTCBC} + \texttt{kaulMajumdarS}):
+in the BEC-acoustic regime, $\Thawk \to 0$ is reached asymptotically;
+the horizon entropy from Wave 3 stays positive at $\Thawk = 0$
+(weak Nernst preserved, strong Nernst violated). The substantive
+bridge is encoded by
+\texttt{wave3\_bridge\_kaul\_majumdar\_at\_e\_squared\_anchor}, which
+imports \texttt{SKEFTHawking.BHEntropyMicroscopic} and calls Wave 3's
+\texttt{kaulMajumdarS} at the SU(2)$_k$ anchor area
+$A = 4\,G_N\,e^2$, giving a non-zero entropy
+$S = e^2 - 3 > 0$ at the asymptotic-extremality limit (the same
+witness used in Wave 3's
+\texttt{kaulMajumdar\_S\_pos\_at\_e\_squared}). The previous
+generic-positivity-propagation theorem
+\texttt{wave3\_bridge\_weak\_nernst\_holds\_strong\_nernst\_violated}
+was a tautology repackaging its input hypothesis and was retired
+in the post-Stage-13 strengthening pass; the concrete-anchor bridge
+above is the load-bearing weak-Nernst/strong-Nernst encoding.
+
+\section{Novelty Flags}
+\label{sec:novelty}
+
+\textbf{Project-original}:
+\begin{itemize}
+\item The ADW-substrate-specific critical mass
+  $\Mc(\aADW, \Ladw, \Nf) = (\Nf \Ladw) / (12\pi \aADW)$
+  ansatz is project-original.
+\item The cross-regime gluing (Schwarzschild for $b.M > \Mc$,
+  BEC-acoustic for $b.M < \Mc$) is project-conjecture; no published
+  paper proposes a single emergent-gravity BH with this regime
+  structure.
+\item The $\dADW = (\aADW - 1)\Ladw$ substrate-response coefficient
+  ansatz is original (deep-research \S9).
+\end{itemize}
+
+\textbf{Primary-source-grounded}:
+\begin{itemize}
+\item Schwarzschild branch: Hawking 1975~\cite{Hawking1975CMP}.
+\item BEC-acoustic branch: Balbinot et al.~\cite{Balbinot2005PRD}
+  Eq.~(Tsonic), mirrored by \texttt{src/wkb/backreaction.py}.
+\item Second law: Glorioso--Liu~\cite{GloriosoLiu2018}
+  (no NEC needed).
+\item Third law conditional: Israel 1986 (strong form) /
+  Kehle--Unger~\cite{KehleUnger2022ThirdLaw} /
+  Reall~\cite{Reall2024ThirdLawBPS}.
+\end{itemize}
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+We have formalized the BCH four laws of black-hole mechanics in a
+two-regime emergent-gravity ADW substrate, with the regime partition
+encoded as the sign-flip of $d\Thawk/dt$ during Hawking-radiation
+evaporation. Above the critical mass $\Mc(\aADW, \Ladw, \Nf)$,
+the BH heats as it evaporates (Schwarzschild branch, Hawking
+1975~\cite{Hawking1975CMP}); below $\Mc$, the BH cools
+asymptotically (BEC-acoustic branch,
+Balbinot 2005~\cite{Balbinot2005PRD}). The genuine
+regime-partition theorem is the sign-flip
+of $d\Thawk/dt$, with both regime sides primary-source-grounded.
+
+The Lean module ships \bhThermoTotal{} theorems, \sorrycount{} sorry,
+0 new axioms; the load-bearing tracked hypothesis encodes the
+sign claims as constraints on an externally-supplied evaporation
+rate, avoiding the $\exists$-absorption anti-pattern. The
+substrate-response coefficient ansatz $\dADW = (\aADW - 1)\Ladw$
+provides four falsifiability tests for any candidate ADW substrate.
+
+The wave is structurally complete; the next step is downstream
+integration into Phase~6e (full nonlinear effective action) where
+the macroscopic evaporation dynamics in each regime would derive
+from the underlying ADW microscopic theory, rather than being
+encoded as a tracked hypothesis at the regime-partition level.
+
+\paragraph*{Acknowledgments.} TeX sources of the primary-source
+papers Balbinot et al.~2005~\cite{Balbinot2005PRD},
+Hawking 1975~\cite{Hawking1975CMP},
+Jacobson--Koike 2002~\cite{JacobsonKoike2002},
+Jacobson--Volovik 1998~\cite{JacobsonVolovik1998} were obtained from
+arXiv and verified verbatim during the post-Stage-9 review pass that
+identified the deep-research analog conflation in the initial Wave 5
+ship. See
+\texttt{papers/AutomatedReviews/2026-04-26-2230-wave5-process/deep\_research\_analog\_conflation.md}
+for the process-level audit.
+
+\begin{thebibliography}{99}
+
+\bibitem{Hawking1975CMP}
+S.~W. Hawking,
+\textit{Particle creation by black holes},
+Commun. Math. Phys. \textbf{43}, 199 (1975).
+DOI: 10.1007/BF02345020.
+
+\bibitem{Balbinot2005PRD}
+R.~Balbinot, S.~Fagnocchi, A.~Fabbri,
+\textit{Quantum Effects in Acoustic Black Holes: the Backreaction},
+Phys. Rev. D \textbf{71}, 064019 (2005). arXiv:gr-qc/0405098.
+
+\bibitem{JacobsonVolovik1998}
+T.~A.~Jacobson and G.~E.~Volovik,
+\textit{Event horizons and ergoregions in $^3$He},
+Phys. Rev. D \textbf{58}, 064021 (1998). arXiv:cond-mat/9801308.
+
+\bibitem{JacobsonKoike2002}
+T.~A.~Jacobson and T.~Koike,
+\textit{Black hole and baby universe in a thin film of $^3$He-A},
+in M.~Novello, M.~Visser, G.~Volovik (eds.), \textit{Artificial Black
+Holes} (World Scientific, 2002). arXiv:cond-mat/0205174.
+
+%% Removed Volovik2003BraneBH — not cited in current paper prose.
+%% Retained in CITATION_REGISTRY for future cross-reference.
+
+\bibitem{KehleUnger2022ThirdLaw}
+C.~Kehle, R.~Unger,
+\textit{Gravitational collapse to extremal black holes and the
+third law of black hole thermodynamics},
+J. Eur. Math. Soc. (2025), DOI 10.4171/JEMS/1591. arXiv:2211.15742.
+
+\bibitem{Reall2024ThirdLawBPS}
+H.~S.~Reall,
+\textit{A third law of black hole mechanics for supersymmetric black
+holes and a quasi-local mass-charge inequality},
+Phys. Rev. D \textbf{110}, 124059 (2024). arXiv:2410.11956.
+
+\bibitem{GloriosoLiu2018}
+P.~Glorioso, H.~Liu,
+\textit{The second law of thermodynamics from symmetry and unitarity},
+arXiv:1612.07705.
+
+\bibitem{CrossleyGloriosoLiu2017}
+M.~Crossley, P.~Glorioso, H.~Liu,
+\textit{Effective field theory of dissipative fluids},
+JHEP \textbf{09}, 095 (2017). arXiv:1511.03646.
+
+\bibitem{GloriosoCrossleyLiu2017}
+P.~Glorioso, M.~Crossley, H.~Liu,
+\textit{Effective field theory of dissipative fluids II:
+classical limit, dynamical KMS symmetry and entropy current},
+JHEP \textbf{09}, 096 (2017). arXiv:1701.07817.
+
+%% Removed HawkingHorowitzRoss1995 — not cited in current paper prose.
+%% Retained in CITATION_REGISTRY for future cross-reference.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner, A.~Speranza,
+\textit{Gravitational algebras and the generalized second law},
+arXiv:2405.00847.
+
+\bibitem{Kirklin2024GSLAllOrders}
+J.~Kirklin,
+\textit{Generalised second law beyond the semiclassical regime},
+JHEP \textbf{07}, 192 (2025). arXiv:2412.01903.
+
+%% Removed StrengtheningPost2026 (internal project memo, not externally citable).
+%% The four-pattern anti-vacuity audit is now described inline in §sec:lean.
+
+\end{thebibliography}
+
+\end{document}

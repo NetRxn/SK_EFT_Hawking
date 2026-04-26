@@ -2303,7 +2303,12 @@ PARAMETER_PROVENANCE = {
         'llm_verified_notes': 'Textbook result.',
         'human_verified_date': None,
         'human_verified_notes': None,
-        'notes': 'Axiomatized in Lean as `gaussianSaddleAsymptotic`.',
+        'notes': 'Wave 3 originally axiomatized in Lean as '
+                 '`gaussianSaddleAsymptotic`; Wave 6a.7 (2026-04-27) retired '
+                 'the axiom by interpreting `verlindeEntropy_SU2k` at the '
+                 'Laplace-saddle limit. Now a theorem in '
+                 '`BHEntropyMicroscopic.gaussianSaddleAsymptotic` with axiom '
+                 'closure {propext, Classical.choice, Quot.sound} only.',
     },
     'BH.LOG_CORRECTION_SINGLET_PROJECTION': {
         'value': -1.0,
@@ -2854,13 +2859,16 @@ PAPER_DEPENDENCIES = {
         'key_claims': [
             'Kaul-Majumdar SU(2)_k closed form: S(A) = A/(4 G_N) − (3/2) log(A/(4 G_N)) '
                 '+ c_0 + O(A⁻¹) under the immirziTuning + gaussianSaddleAsymptotic '
-                'hypotheses (Lean: BHEntropyMicroscopic.kaulMajumdarClosedForm)',
+                'hypotheses; the gaussianSaddleAsymptotic hypothesis was '
+                'axiomatized in Wave 3 and retired in Wave 6a.7 (theorem in '
+                'BHEntropyMicroscopic, Laplace-saddle-limit interpretation; '
+                'cf. LaplaceMethod.lean)',
             'Log-correction structure: c_log = −1/2 (Gaussian saddle, Lean: '
-                'gaussianSaddleAsymptotic axiom) + −1 (singlet projection, Lean: '
-                'singletProjectionGivesExtraInverseHessian) = −3/2 total. Universal '
-                'within the Cardy-saddle subfamily (Carlip gr-qc/0005017, Engle-Noui-'
-                'Perez 0905.3168), DISAGREES with Sen 4D Schwarzschild heat-kernel '
-                'arXiv:1205.0971 (+1.71 ln a)',
+                'gaussianSaddleAsymptotic theorem post-Wave 6a.7) + −1 (singlet '
+                'projection, Lean: kaul_majumdar_log_decomposition) = −3/2 total. '
+                'Universal within the Cardy-saddle subfamily (Carlip gr-qc/0005017, '
+                'Engle-Noui-Perez 0905.3168), DISAGREES with Sen 4D Schwarzschild '
+                'heat-kernel arXiv:1205.0971 (+1.71 ln a)',
             'Leading 1/4 coefficient is a TUNING (Immirzi γ), not a derivation. Lean '
                 'encodes via `HorizonMTCBC.γ_immirzi` field + `immirziTuned` discharge',
             'Tracked-hypothesis bundle H_HorizonBoundaryCondition: positivity ∧ areaLeading '

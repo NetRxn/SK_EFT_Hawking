@@ -975,6 +975,55 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "scheme", "yaxis": "c_log"},
         physics_checks=[], color_keys=["amber", "steel_blue"],
     ),
+    FigureSpec(
+        name="fig_T_H_evolution_regime_partition",
+        function="fig_T_H_evolution_regime_partition",
+        caption=(
+            "Phase 6a Wave 5 — BCH four-laws regime-partition profile under "
+            "Hawking-radiation backreaction. Left: T_H(t) under evaporation in "
+            "the Schwarzschild regime (M > M_c, dT_H/dt > 0, heats as "
+            "evaporates, finite t-evap; Hawking 1975) and the BEC-acoustic "
+            "regime (M < M_c, dT_H/dt < 0, cools toward asymptotic "
+            "extremality at infinite time; Balbinot, Fagnocchi, Fabbri, "
+            "Procopio, PRD 71, 064019 (2005), gr-qc/0405098, Eq. Tsonic). "
+            "The genuine regime partition is the sign-flip of dT_H/dt "
+            "during evaporation; the critical mass M_c = (N_f · Λ_UV) / "
+            "(12π · α_ADW) is project-original ansatz (Wave 5 deep-research "
+            "§3 dimensional analysis). Right: substrate-response coefficient "
+            "ansatz δ_ADW = (α_ADW − 1)·Λ_UV (deep-research §9), vanishing "
+            "at α_ADW = 1 (bare Sakharov-Adler limit) and sign-determined by "
+            "α_ADW ⋛ 1. Lean: BHThermodynamicsFourLaws.regime_partition_criterion; "
+            "BHThermodynamicsFourLaws.delta_ADW_nonzero_iff_alpha_ADW_ne_one."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "Time", "yaxis": "T_H"},
+        physics_checks=[], color_keys=["amber", "steel_blue"],
+    ),
+    FigureSpec(
+        name="fig_ep_violation_matrix",
+        function="fig_ep_violation_matrix",
+        caption=(
+            "Phase 6c Wave 3 — Equivalence-Principle classification of six "
+            "Phase 5x DM-related mechanisms. Left: 6×3 mechanism × EP-level "
+            "matrix (WEP / EEP / SEP) showing two violators (both vestigial-"
+            "phase phenomena: differential coupling at η = 1 maximal, ruled "
+            "out at any current EP precision; relics at η ~ 10⁻¹⁸ STEP-class "
+            "satellite-detectable per W8 §5 ranking line 3) and four non-"
+            "violators (FangGu torsion DM, fracton subdiffusion, SFDM "
+            "Thomas-Fermi, hidden-sector ℤ₁₆ singlet). The structural "
+            "punchline: EP violation is *vestigial-only* in the project's "
+            "current dark-sector landscape. Right: η-scale comparison bar "
+            "chart (log₁₀ scale) showing vestigial-phase η_max = 1, the "
+            "MICROSCOPE bound η < 10⁻¹⁵ (Touboul et al., PRL 119, 231101, "
+            "2017) as a horizontal reference, vestigial-relics η ~ 10⁻¹⁸, "
+            "and the STEP-class satellite target η ~ 10⁻¹⁸. Lean: "
+            "EquivalencePrinciple.violatesAt + ep_violation_is_vestigial_only "
+            "+ vestigial_microscope_violation_consistent."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "level", "yaxis": "log10_eta"},
+        physics_checks=[], color_keys=["amber", "steel_blue"],
+    ),
 ]
 
 
@@ -1077,6 +1126,10 @@ def generate_figures() -> dict[str, Path]:
         # Phase 6a Wave 3: BH entropy from MTC counting
         fig_entropy_coefficient_vs_spectrum,
         fig_log_correction_signature,
+        # Phase 6a Wave 5: BH thermodynamics regime partition
+        fig_T_H_evolution_regime_partition,
+        # Phase 6c Wave 3: EP-violation matrix
+        fig_ep_violation_matrix,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1200,6 +1253,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
         "fig_log_correction_signature": fig_log_correction_signature,
+        "fig_T_H_evolution_regime_partition": fig_T_H_evolution_regime_partition,
     }
 
     paths = {}
@@ -1336,6 +1390,10 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 6a Wave 3: BH entropy from MTC counting
         fig_entropy_coefficient_vs_spectrum,
         fig_log_correction_signature,
+        # Phase 6a Wave 5: BH thermodynamics regime partition
+        fig_T_H_evolution_regime_partition,
+        # Phase 6c Wave 3: EP-violation matrix
+        fig_ep_violation_matrix,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1457,6 +1515,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
         "fig_log_correction_signature": fig_log_correction_signature,
+        "fig_T_H_evolution_regime_partition": fig_T_H_evolution_regime_partition,
+        "fig_ep_violation_matrix": fig_ep_violation_matrix,
     }
 
     issues: list[CheckIssue] = []

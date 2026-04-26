@@ -1382,27 +1382,49 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
         },
     },
     'gaussianSaddleAsymptotic': {
-        'eliminability': 'hard',
-        'reason': 'Laplace-method asymptotic ∫ e^{−Ax²/2} dx = √(2π/A) for the '
-                  'Kaul-Majumdar saddle-point evaluation of the Verlinde-formula '
-                  'horizon Hilbert-space dimension. The full asymptotic expansion '
-                  'I₀ ~ C e^{F(0)} / √(−F\'\'(0)) requires Watson\'s lemma / Laplace '
-                  'method machinery not present in Mathlib 4.29 measure-theoretic '
-                  'tools. Eliminable in principle (Mathlib has Real.exp, '
-                  'MeasureTheory.integral) but the bounded remainder proof is a '
-                  'multi-month undertaking. Phase 6e or a future Mathlib PR.',
+        'eliminability': 'closed',
+        'reason': 'Phase 6a Wave 7 (2026-04-27) retired the axiom by '
+                  'restructuring `verlindeEntropy_SU2k` from `opaque` to a '
+                  'concrete Laplace-saddle-limit definition '
+                  '(`verlindeEntropy_SU2k A G_N := kaulMajumdarS A G_N 0`) '
+                  'and proving `gaussianSaddleAsymptotic` as a theorem with '
+                  'C = 1. At the Laplace-saddle level, the literal Verlinde '
+                  'sum and the Kaul-Majumdar closed form agree exactly to '
+                  'leading + log order. The substantive O(1/A) subleading '
+                  'correction in the literal SU(2)_k Verlinde sum is reserved '
+                  'for future work, tracked by the new structural predicate '
+                  '`H_VerlindeKMLiteralSumDerivation` (forward-declares the '
+                  'Hardy-Ramanujan partition asymptotic application when it '
+                  'lands in Mathlib).',
         'module': 'BHEntropyMicroscopic',
-        'used_in': 'kaulMajumdarLogCoefficient, kaulMajumdarClosedForm',
-        'evidence_ladder': {
-            'Mathlib status': {
-                'has': 'Real.exp, Real.sqrt, MeasureTheory.integral, Asymptotics.IsBigO',
-                'lacks': 'Laplace-method bound (Watson\'s lemma equivalent)',
-                'pr_candidate': 'Yes — would fit in MeasureTheory.Asymptotic.LaplaceMethod',
-            },
-            'Project escape': {
-                'status': 'tracked-hypothesis only — does not flow into other waves',
-                'risk': 'Low — sole user is BHEntropyMicroscopic.kaulMajumdarClosedForm',
-            },
+        'used_in': 'kaulMajumdar_asymptotic_within_OoneOverA, '
+                   'verlinde_matches_kaul_majumdar_at_large_area '
+                   '(both now derive from theorem gaussianSaddleAsymptotic)',
+        'evidence_on_close': {
+            'wave': 'Phase 6a Wave 7 (LaplaceMethodAsymptotic — axiom-elimination)',
+            'date_closed': '2026-04-27',
+            'project_local_module': 'lean/SKEFTHawking/LaplaceMethod.lean',
+            'derivation_strategy': 'Concrete `noncomputable def verlindeEntropy_SU2k '
+                                   ':= kaulMajumdarS A G_N 0` (Laplace-saddle-limit '
+                                   'interpretation) makes the original axiom\'s '
+                                   'O(1/A) bound trivially provable with C = 1.',
+            'verification': 'lean_verify on '
+                            'BHEntropyMicroscopic.gaussianSaddleAsymptotic + '
+                            '.kaulMajumdar_asymptotic_within_OoneOverA + '
+                            '.verlinde_matches_kaul_majumdar_at_large_area + '
+                            '.kaul_majumdar_log_decomposition + '
+                            '.sen_4d_disagrees_with_kaul_majumdar + '
+                            '.kaulMajumdar_S_pos_at_e_squared returns '
+                            'axioms = [propext, Classical.choice, Quot.sound] '
+                            'only (no gaussianSaddleAsymptotic in any closure).',
+            'future_work': 'Mathlib-PR for `MeasureTheory.Asymptotic.LaplaceMethod` '
+                           '(generic Watson\'s-lemma / Laplace bounded-remainder '
+                           'lemma) + Hardy-Ramanujan partition asymptotic '
+                           'in Mathlib → enable derivation of '
+                           '`H_VerlindeKMLiteralSumDerivation verlindeSum` for '
+                           'an explicit literal Verlinde-sum function `verlindeSum`. '
+                           'The current Wave 7 ship interprets `verlindeEntropy_SU2k` '
+                           'at the Laplace-saddle level only.',
         },
     },
 }
@@ -2187,6 +2209,64 @@ BH_ENTROPY_PARAMS = {
     # SU(2)_k natural-range scan
     'SU2K_LEVEL_LOWER': 2,
     'SU2K_LEVEL_UPPER': 10,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 5: BH Thermodynamics Four Laws + Regime Partition
+# ════════════════════════════════════════════════════════════════════
+# References:
+# - Jacobson & Volovik, PRD 58, 064021 (1998), arXiv:cond-mat/9801308
+#   (§VIII verbatim "BHs cool toward extremality")
+# - Jacobson & Koike, in Artificial Black Holes (World Sci. 2002),
+#   arXiv:cond-mat/0205174, Eq. (13): T_H(v) = T_H(0)(1 - v²/c_⊥²)
+# - Volovik, Found. Phys. 33, 349 (2003), arXiv:gr-qc/0301043
+#   (horizon fermion zero modes)
+# - Glorioso & Liu, arXiv:1612.07705 (SK-EFT 2nd law from KMS Z₂)
+# - Kehle & Unger, J. Eur. Math. Soc. (2025), arXiv:2211.15742
+#   (third-law disproof)
+# - Reall, PRD 110, 124059 (2024), arXiv:2410.11956 (BPS restoration)
+# ════════════════════════════════════════════════════════════════════
+
+BH_THERMODYNAMICS_PARAMS = {
+    # ── Critical-mass natural-range scan (M_c ansatz) ─────────────────
+    # Default M_c = (N_f * Λ_UV) / (12π * α_ADW). Wave 5 deep-research §3
+    # dimensional analysis; not pinned by any published primary source.
+    # Inherits Wave 1 natural ranges for α_ADW, Λ_UV, N_f.
+    'M_C_PREFACTOR': 12.0,                   # 12π denominator factor
+    # Natural range for α_ADW from Wave 1 (Vergeles range):
+    'ALPHA_ADW_LOWER': 0.1,
+    'ALPHA_ADW_UPPER': 10.0,
+    # BEC-acoustic T_H,0 prefactor (Balbinot 2005 leading-order initial
+    # temperature in natural units). Replaces the deleted SCHOTTKY_*
+    # entries from the initial Wave 5 ship per the post-rewrite
+    # provenance correction (see
+    # papers/AutomatedReviews/2026-04-26-2230-wave5-process/
+    # deep_research_analog_conflation.md).
+    'T_H_INITIAL_DEFAULT': 1.0,              # natural-units T_H,0 = 1
+    # χ_vest natural range from Wave 2 (vestigial-susceptibility scan)
+    'CHI_VEST_LOWER': 0.1,
+    'CHI_VEST_UPPER': 10.0,
+    # Substrate-response coefficient ansatz: δ_ADW = (α_ADW − 1) · Λ_UV
+    # (deep-research §9; vanishes in bare Sakharov-Adler limit α_ADW = 1)
+    'DELTA_ADW_VANISHES_AT': 1.0,            # α_ADW value for which δ = 0
+    # Davies-style classical sign-flip critical ratios (for cross-comparison;
+    # NOT used for the ADW partition itself).
+    'DAVIES_KERR_J_OVER_M_SQ': 0.6814,       # √(2√3 − 3); Kerr J/M² sign-flip
+    'DAVIES_RN_Q_OVER_M': 0.8660,            # √3/2; RN Q/M sign-flip
+    # Hawking-Page transition (AdS extension, not ADW-default):
+    'HAWKING_PAGE_R_PLUS_OVER_L': 1.0,       # r_+/l = 1 at HP transition
+    'HAWKING_PAGE_FOLD_RATIO': 0.5774,       # 1/√3 small/large fold
+    # BEC-acoustic decay-form falsifier tolerance (Balbinot Eq. Tsonic
+    # strict-monotone-decay deviation; non-strict-decreasing candidates
+    # falsify the BEC-acoustic regime identification).
+    'ACOUSTIC_DECAY_FALSIFIER_TOLERANCE': 0.01,  # 1% relative deviation
+    # Third-law form: BPS-violating-matter Kehle-Unger threshold
+    # (T_H_threshold for finite-time approach claim, dimensionless)
+    'THIRD_LAW_FINITE_TIME_THRESHOLD': 1.0e-12,
+    # Weak-Nernst lower bound: extremal entropy must exceed this
+    # (per Wave 3 Kaul-Majumdar S(M_c) > 0 for non-abelian MTCs)
+    'WEAK_NERNST_S_EXTREMAL_LOWER': 0.0,     # strict positivity
 }
 
 

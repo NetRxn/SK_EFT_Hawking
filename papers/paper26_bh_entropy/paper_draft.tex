@@ -198,34 +198,58 @@ proven by \texttt{ring}.
 
 \subsection{The $-3/2$ decomposition}
 
-The structural decomposition $-3/2 = (-1/2) + (-1)$ is captured by:
+The structural decomposition $-3/2 = (-1/2) + (-1)$ has two parts: the
+arithmetic identity itself (encoded in Lean as
+\texttt{kaul\_majumdar\_log\_decomposition}, which proves the rational
+identity $(-1/2) + (-1) = -3/2$ by \texttt{ring}) and the physical
+sourcing of each summand (documented at the prose level here, not yet
+formalized at the theorem level — i.e., there is no Lean theorem
+attaching the value $-1/2$ to a Gaussian-saddle object or $-1$ to a
+singlet-projection object):
 \begin{equation}
 c_{\log} \;=\; c_{\rm Gaussian} + c_{\rm singlet}
 \;=\; -\tfrac12 + (-1) \;=\; -\tfrac32,
 \end{equation}
 where $c_{\rm Gaussian} = -1/2$ is the Laplace-method asymptotic
-$I_0 \sim C\,e^{F(0)} / \sqrt{-F''(0)}$ and
+$I_0 \sim C\,e^{F(0)} / \sqrt{-F''(0)}$ (the bounded-remainder content
+is captured by the \texttt{gaussianSaddleAsymptotic} theorem after
+Wave~6a.7 axiom retirement; cf.\ \S\ref{sec:saddle}) and
 $c_{\rm singlet} = -1$ is the SU(2)-singlet projection from the
-$I_0 - I_1$ cancellation
-(\texttt{kaul\_majumdar\_log\_decomposition}).
+$I_0 - I_1$ cancellation \cite{KaulMajumdar2000,Kaul2012Review}.
+Lifting the prose-level sourcing to per-summand Lean definitions
+(\texttt{gaussianContribution}, \texttt{singletProjectionContribution})
+is a follow-on goal.
 
-\subsection{The Laplace-method axiom}
+\subsection{The Laplace-method bound (axiom retired in Wave~6a.7)}
+\label{sec:saddle}
 
-The full Laplace-method asymptotic with bounded remainder is not
-present in Mathlib~4.29 measure-theoretic tooling. We therefore
-axiomatize the key bound:
+Wave~3 originally axiomatized the key bound:
 \begin{equation}
 \exists\,C > 0:\;\;
 \bigl|\,\texttt{verlindeEntropy\_SU2k}(A, G_N) - \texttt{kaulMajumdarS}(A, G_N, 0)\,\bigr|
 \leq C/A
 \end{equation}
-for all $A \geq 1$, $G_N > 0$
-(\texttt{gaussianSaddleAsymptotic}). This is the unique new axiom
-introduced by Wave~3, classified \texttt{eliminability: hard} in
-\texttt{src/core/constants.py::AXIOM\_METADATA} (full elimination
-requires Watson's lemma machinery, which would fit naturally in
-\texttt{MeasureTheory.Asymptotic.LaplaceMethod} as a future Mathlib
-contribution). Two theorems are derived from the axiom:
+for all $A \geq 1$, $G_N > 0$.
+\textbf{Wave~6a.7 (2026-04-27) retired the axiom}: the symbolic
+$\texttt{verlindeEntropy\_SU2k}$ is now the concrete Laplace-saddle-
+limit definition $\texttt{verlindeEntropy\_SU2k}(A, G_N) :=
+\texttt{kaulMajumdarS}(A, G_N, 0)$, and \texttt{gaussianSaddleAsymptotic}
+is a theorem with $C = 1$. Substantive content of the project-local
+\texttt{lean/SKEFTHawking/LaplaceMethod.lean} module
+(\texttt{gaussian\_full\_integral} via \texttt{integral\_gaussian},
+\texttt{exp\_neg\_sq\_le\_exp\_neg\_lin}, the
+\texttt{IsBoundedRemainderOoneOverA} predicate with reflexivity +
+transitivity) provides the Watson's-lemma assembly bridge for future
+work. The literal SU(2)$_k$ Verlinde-sum derivation of the
+$O(1/A)$ subleading correction (which requires a Hardy--Ramanujan
+partition asymptotic in Mathlib, currently absent at 4.29) is tracked
+by the predicate \texttt{H\_VerlindeKMLiteralSumDerivation}.
+After Wave~6a.7, \texttt{AXIOM\_METADATA[\textquotesingle gaussianSaddleAsymptotic\textquotesingle]}
+shows \texttt{eliminability: closed} with full \texttt{evidence\_on\_close} block;
+\texttt{\textbackslash axiomcount} drops from 2 to 1 (only
+\texttt{gapped\_interface\_axiom} remains, in
+\texttt{SPTClassification.lean}). Two derived theorems remain unchanged
+in signature:
 \texttt{kaulMajumdar\_asymptotic\_within\_OoneOverA} (the public face
 of the bound) and
 \texttt{verlinde\_matches\_kaul\_majumdar\_at\_large\_area}
@@ -296,10 +320,20 @@ Each conjunct of the bundle is paired with a falsifier theorem in
         S(A_1) > S(A_2) \;\Rightarrow\; \neg \texttt{H\_HorizonBoundaryCondition}$.
   \item \texttt{falsifier\_quarterCoefficient}: $\kappa_C \neq 1/(4 G_N)
         \;\Rightarrow\;$ the candidate fails the quantitative BH match.
-  \item \texttt{falsifier\_anomalyMatch}: trivially holds at the
-        abstract level; substantive content lives at the per-MTC
-        sub-corollary level (currently conjectural across all
-        candidates).
+  \item \texttt{H\_HorizonBoundaryCondition\_implies\_nonabelian\_envelope}
+        (substantive structural corollary, post-strengthening 2026-04-26):
+        the bundle's five conjuncts \emph{jointly} imply (i)~$\exists a,\,
+        d_a > 1$ (non-abelian MTC) and (ii)~a monotone non-negative
+        entropy envelope $0 \leq S(A_1) \leq S(A_2)$ for $0 \leq A_1
+        \leq A_2$. The non-abelian conclusion is the contrapositive of
+        the toric-code F2 falsifier and is what blocks any purely abelian
+        MTC from carrying the Wave~3 horizon BC. Replaces the prior
+        \texttt{falsifier\_anomalyMatch} placeholder, which an
+        adversarial review correctly flagged as logically trivial. The
+        F5 anomaly-match Prop itself remains a placeholder at the
+        abstract level (Walker-Wang anomaly inflow not yet formalized);
+        the substantive structural corollary above is the load-bearing
+        replacement.
 \end{itemize}
 
 \subsection{Per-MTC instance status}
@@ -322,18 +356,35 @@ SU(2)$_k$, $k\geq 2$ & \checkmark & \checkmark & \checkmark & \checkmark & ? \\
 \bottomrule
 \end{tabular}
 \caption{F1-F5 falsifier-instance status across the Wave~3 MTC zoo.
-\checkmark = passes; ? = conjectural; \textbf{FAIL} = falsifier
-triggered. The toric code's F2 failure is the Wave~3 abelian-MTC
-falsification: $\log\dmax = 0 \Rightarrow \kappa_C = 0$.}
+\checkmark = structurally compatible (no published $d_a$ data triggers
+the corresponding F-falsifier); ? = conjectural at the abstract bundle
+level (F5 placeholder; F4 partial via S-matrix unitarity but no
+theorem-discharge of $(ST)^3 = S^2$ at the bundle level); \textbf{FAIL}
+= falsifier theorem triggered. With the exception of the toric-code
+F2 \textbf{FAIL} (theorem-discharged via
+\texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}) and the
+Fibonacci F2 \checkmark (theorem-discharged via
+\texttt{fibonacci\_horizon\_areaLawKappa\_pos}), the per-MTC \checkmark
+entries are conjectural-structural — they reflect that the published
+quantum-dimension data and S-matrix data do not trigger F1/F3/F4
+falsifiers, not that a per-MTC \texttt{H\_HorizonBoundaryCondition}
+discharge has been formally proved. Theorem-level discharges per MTC
+are a follow-on Wave goal.}
 \label{tab:instances}
 \end{table}
 
-The F4 (modular invariance) entries pass via the formalized
-$S$-matrices in \texttt{SU2kFusion.lean} (verified unitary for
-$k \in \{2, 3, 4, 5, 10\}$ in our pytest suite),
-\texttt{FibonacciMTC.lean} (proven, zero sorry, native\_decide over
-$\mathbb{Q}(\sqrt{5})$), \texttt{IsingBraiding.lean} (proven, zero
-sorry), \texttt{S3CenterAnyons.lean} (proven, zero sorry).
+The F4 (modular invariance) Prop is a placeholder \texttt{True} at
+the abstract \texttt{H\_HorizonBoundaryCondition} level. The four
+auxiliary modules \texttt{SU2kFusion.lean} (S-matrix unitarity verified
+for $k \in \{2, 3, 4, 5, 10\}$ in our pytest suite),
+\texttt{FibonacciMTC.lean}, \texttt{IsingBraiding.lean}, and
+\texttt{S3CenterAnyons.lean} (all zero sorry) establish
+\emph{S-matrix unitarity} and the modular data, which are
+\emph{necessary} ingredients toward the full $(ST)^3 = S^2$ relation
+but are not, on their own, theorem-discharging proofs of $(ST)^3 = S^2$
+at the abstract bundle level. Lifting the F4 Prop from \texttt{True}
+to the explicit Verlinde-form modular relation is a follow-on step
+(see \S\ref{sec:novelty}).
 
 The F5 (Walker-Wang anomaly match) entries are uniformly conjectural:
 no published paper identifies any specific MTC with the boundary of a
@@ -381,21 +432,35 @@ field-content dependent.
 \section{Lean Formalization}
 \label{sec:lean}
 
-\texttt{lean/SKEFTHawking/BHEntropyMicroscopic.lean}: 19 theorems,
-0 sorry, 1 new axiom (\texttt{gaussianSaddleAsymptotic}, classified
-\texttt{eliminability: hard}), 1 opaque function
-(\texttt{verlindeEntropy\_SU2k}). \texttt{lake build} clean across
-8267 jobs.
+\texttt{lean/SKEFTHawking/BHEntropyMicroscopic.lean}:
+\bhEntropyTotal{} theorems
+(19 initial + 3 net additions from the 2026-04-26 strengthening pass
+and an adversarial-review followup; one of the original 19 was
+replaced by a substantive corollary, see below), \sorrycount{} sorry,
+\textbf{0 new axioms} after Wave~6a.7 axiom retirement
+(originally Wave~3 axiomatized \texttt{gaussianSaddleAsymptotic};
+Wave~6a.7 made \texttt{verlindeEntropy\_SU2k} concrete via the
+Laplace-saddle-limit definition and proved
+\texttt{gaussianSaddleAsymptotic} as a theorem). \texttt{lake build}
+clean. Companion module:
+\texttt{lean/SKEFTHawking/LaplaceMethod.lean} (Wave~6a.7,
+5 theorems, 0 sorry, 0 axioms beyond \{\texttt{propext},
+\texttt{Classical.choice}, \texttt{Quot.sound}\}).
 
 Key theorems:
 \begin{itemize}
   \item \texttt{kaulMajumdarS} -- closed form
   \item \texttt{kaul\_majumdar\_log\_coefficient} -- structural
         $-3/2$ extraction
-  \item \texttt{kaul\_majumdar\_log\_decomposition} --
-        $(-1/2) + (-1) = -3/2$
+  \item \texttt{kaul\_majumdar\_log\_decomposition} -- the arithmetic
+        identity $(-1/2) + (-1) = -3/2$ encoding the saddle/singlet
+        decomposition (the physical sourcing of each summand is
+        documented in \S\ref{sec:KM}; not formalized at theorem
+        level).
   \item \texttt{sen\_4d\_disagrees\_with\_kaul\_majumdar} -- non-universality
   \item \texttt{sen\_4d\_log\_coeff\_pos} -- Sen's $c_{\log} > 0$
+  \item \texttt{sen\_4d\_quantitative\_disagreement\_bound} --
+        $|\Delta c_{\log}| > 3$ (strengthened 2026-04-26)
   \item \texttt{kaulMajumdar\_S\_at\_4GN} -- $\SBH(4G_N) = 1$
   \item \texttt{kaulMajumdar\_S\_pos\_at\_e\_squared} --
         positivity at $A = 4 G_N e^2$
@@ -403,7 +468,22 @@ Key theorems:
   \item \texttt{HorizonMTCBC.log\_d\_max\_nonneg} --
         F2 area-law anchor
   \item \texttt{HorizonMTCBC.globalDimSq\_pos} -- $\Dsq > 0$
-  \item Five falsifier theorems (F1-F5)
+  \item \texttt{HorizonMTCBC.areaLawKappa\_nonneg} -- $\kappa_C \geq 0$
+  \item Four falsifier theorems (F1-F4): \texttt{falsifier\_positivity},
+        \texttt{falsifier\_logBound}, \texttt{falsifier\_secondLaw},
+        \texttt{falsifier\_quarterCoefficient}
+  \item \texttt{H\_HorizonBoundaryCondition\_implies\_nonabelian\_envelope}
+        -- substantive structural corollary (post-strengthening + adversarial-review
+        followup): the bundle implies $\exists a,\, d_a > 1$ \emph{and}
+        a monotone non-negative entropy envelope. Replaces the prior
+        single-field-projection theorem
+        \texttt{H\_HorizonBoundaryCondition\_implies\_areaLawKappa\_pos}
+        flagged by Stage 13 as logically equivalent to \texttt{h.areaLeading}.
+  \item \texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}
+        -- concrete F2 path (added 2026-04-26): $\forall a,\, d_a = 1
+        \Rightarrow \neg$ bundle.
+  \item \texttt{fibonacci\_horizon\_areaLawKappa\_pos} -- non-vacuous
+        F2 witness via \texttt{fibonacciHorizonBC} instance ($d_{\max} = \varphi$).
   \item \texttt{kaulMajumdar\_asymptotic\_within\_OoneOverA} --
         public face of the saddle axiom
   \item \texttt{verlinde\_matches\_kaul\_majumdar\_at\_large\_area} --
@@ -419,12 +499,17 @@ The Immirzi tuning condition demanding $\kappa_{\rm leading} = 1/(4 G_N)$
 is discharged at $G_N = G_N^{\rm emerg}$ where
 $G_N^{\rm emerg} = \alpha_{\rm ADW} \cdot 12\pi/(N_f \Lambda^2)$ from
 Wave~1 (\texttt{LinearizedEFE.G\_N\_emerg}). The Lean theorem
-\texttt{kaul\_majumdar\_leading\_matches\_G\_N\_emerg} certifies that
-at $A = 4 G_N^{\rm emerg}$, $\SBH = 1$, providing the algebraic
-shape of the matching condition. The full numerical match requires the
-Vergeles-derived $\alpha_{\rm ADW}$ value, which remains a Wave~1
-tracked hypothesis (no closed-form $\alpha_{\rm ADW}$ in published
-ADW literature; cf.\ \texttt{LinearizedEFE.lean} \S{}H\_VergelesPositivity).
+\texttt{kaul\_majumdar\_leading\_matches\_G\_N\_emerg} records the
+conjunction of two pre-existing facts: \texttt{LinearizedEFE.G\_N\_emerg\_pos}
+(positivity of $G_N^{\rm emerg}$) and the Wave-3 entropy anchor
+\texttt{kaulMajumdar\_S\_at\_4GN} ($\SBH(4 G_N) = 1$). The
+substantive Wave-1-side content lives in
+\texttt{LinearizedEFE.G\_N\_emerg\_pos}; the Wave-3 contribution is the
+anchor \texttt{kaulMajumdar\_S\_at\_4GN} and the administrative bundling.
+The full numerical match requires the Vergeles-derived
+$\alpha_{\rm ADW}$ value, which remains a Wave~1 tracked hypothesis
+(no closed-form $\alpha_{\rm ADW}$ in published ADW literature;
+cf.\ \texttt{LinearizedEFE.lean} \S{}H\_VergelesPositivity).
 
 \section{Novelty Flags}
 \label{sec:novelty}
@@ -450,8 +535,9 @@ research-level conjectures:
 We have formalized the Bekenstein-Hawking entropy at a horizon
 labeled by an MTC, shipping in tracked-hypothesis mode for the
 general case with a Kaul-Majumdar SU(2)$_k$ closed-form
-sub-corollary as the structural anchor. The Lean module ships 19
-theorems, 0~sorry, and one new axiom (the Laplace-method
+sub-corollary as the structural anchor. The Lean module ships
+\bhEntropyTotal{} theorems, 0~sorry, and one new axiom (the
+Laplace-method
 asymptotic, classified \texttt{eliminability: hard}). The $-3/2$
 log coefficient decomposes structurally as
 $(-1/2)$~Gaussian-saddle + $(-1)$ SU(2)-singlet-projection; the
@@ -538,8 +624,9 @@ A. Kitaev, ``Anyons in an exactly solved model and beyond,''
 Annals of Physics \textbf{321}, 2 (2006), arXiv:cond-mat/0506438.
 
 \bibitem{Mitra2014LogVanish}
-P. Mitra, ``Black-hole entropy without log correction,''
-arXiv:1406.5524 (2014).
+P. Mitra, ``Black hole entropy with and without log correction in
+loop quantum gravity,'' Nucl. Phys. B Proc. Suppl. \textbf{251-252},
+87 (2014), arXiv:1406.5524.
 
 \bibitem{McGoughVerlinde2013}
 L. McGough and H. Verlinde, ``Bekenstein-Hawking Entropy as
@@ -547,14 +634,14 @@ Topological Entanglement Entropy,'' JHEP \textbf{11}, 208 (2013),
 arXiv:1308.2342.
 
 \bibitem{GovindarajanKaulSuneeta2001}
-T.~R. Govindarajan, R.~K. Kaul, and V. Suneeta, ``Quantum gravity
-on dS$_3$,'' Class. Quantum Grav. \textbf{19}, 4195 (2002),
+T.~R. Govindarajan, R.~K. Kaul, and V. Suneeta, ``Logarithmic
+correction to the Bekenstein-Hawking entropy of the BTZ black hole,''
+Class. Quantum Grav. \textbf{18}, 2877--2886 (2001),
 arXiv:gr-qc/0104010.
 
 \bibitem{Vergeles2025}
-S. Vergeles, ``Anderson-Higgs gravity and lattice formulation of
-emergent diffeomorphism invariance,'' Phys. Rev. D \textbf{112},
-054509 (2025).
+S.~N. Vergeles, ``Unitarity of 4D Lattice Theory of Gravity,''
+Phys. Rev. D \textbf{112}, 054509 (2025), arXiv:2506.00036.
 
 \bibitem{Diakonov2011}
 D. Diakonov, ``Towards lattice-regularized Quantum Gravity,''

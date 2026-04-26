@@ -8482,5 +8482,314 @@ def fig_log_correction_signature():
     return fig
 
 
+def fig_T_H_evolution_regime_partition():
+    """Phase 6a Wave 5: T_H(t) evaporation regime partition.
+
+    Plots the time-evolution of Hawking temperature under Hawking-radiation
+    backreaction in two regimes:
+
+    - Schwarzschild branch (M > M_c): textbook Hawking 1975 result. As BH
+      evaporates (dM/dt < 0), T_H = 1/(8π M) increases ⇒ dT_H/dt > 0 (heats
+      as evaporates), finite t-evap. Plotted as a function of normalized
+      time using a representative evaporation trajectory.
+    - BEC-acoustic branch (M < M_c): Balbinot et al. PRD 71, 064019 (2005)
+      Eq. (Tsonic) gives strict monotone decay; leading-order exponential
+      `T_H(t) = T_H,0 · exp(-t/τ_cool)` per `wkb/backreaction.py`. T → 0
+      at infinite time (`t ~ 1/T³` extrapolation per Balbinot 2005).
+
+    The genuine regime partition is the **sign-flip of dT_H/dt during
+    evaporation**: positive in Schwarzschild (heats), negative in
+    BEC-acoustic (cools). Right panel overlays the substrate-response
+    coefficient `δ_ADW = (α_ADW − 1) · Λ_UV` showing the bare
+    Sakharov-Adler limit at α_ADW = 1.
+
+    Lean: BHThermodynamicsFourLaws.regime_partition_criterion +
+          T_H_acoustic_evolution + T_H_schwarzschild.
+    Source: Balbinot+2005 (gr-qc/0405098); Hawking 1975 (CMP 43, 199).
+    viz-ref: Phase 6a Paper 27 §3
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.bh_thermodynamics import (
+        ADWParams,
+        T_H_acoustic_evolution,
+        delta_ADW_ansatz,
+    )
+
+    # Time grid in units of τ_cool (BEC-acoustic side)
+    t_grid_acoustic = np.linspace(0.0, 5.0, 121)
+    T_H0 = 1.0  # natural-units initial temperature
+    tau_cool = 1.0
+    T_H_acoustic = np.array([
+        T_H_acoustic_evolution(T_H0, tau_cool, t) for t in t_grid_acoustic
+    ])
+
+    # Schwarzschild evaporation: M(t) ∝ (M_0³ - K·t)^(1/3) (Hawking 1975).
+    # We plot T_H(t)/T_H(0) using a normalized M_0³ - K·t with K chosen so
+    # t_evap = 5 in the same units (illustrative; relative shape is the
+    # load-bearing content).
+    t_grid_schw = np.linspace(0.0, 4.5, 121)  # cap before singularity at t=5
+    # M(t) = (M_0³ - K t)^(1/3); choose M_0=1, K=1/5 so M(5)=0
+    M_t = (1.0 - 0.2 * t_grid_schw) ** (1.0 / 3.0)
+    # Normalized T_H(t)/T_H(0) = M_0/M(t) = 1/M_t (since M_0=1)
+    T_H_schw_normalized = 1.0 / M_t
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "T_H(t) evaporation regime partition",
+            "δ_ADW(α_ADW) substrate-response ansatz",
+        ),
+        column_widths=[0.6, 0.4],
+        horizontal_spacing=0.12,
+    )
+
+    # Left panel: T_H(t) profile across both regimes
+    fig.add_trace(
+        go.Scatter(
+            x=t_grid_acoustic, y=T_H_acoustic,
+            mode="lines",
+            line=dict(color=COLORS["steel_blue"], width=3),
+            name="BEC-acoustic (Balbinot 2005)",
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t_grid_schw, y=T_H_schw_normalized,
+            mode="lines",
+            line=dict(color=COLORS["amber"], width=3, dash="dash"),
+            name="Schwarzschild (Hawking 1975)",
+        ),
+        row=1, col=1,
+    )
+    # Heat-capacity-sign annotations
+    fig.add_annotation(
+        x=2.0, y=0.25,
+        text="dT_H/dt < 0<br>(cools toward asymptotic<br>extremality, infinite t-evap)",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["steel_blue"]),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=3.5, y=2.5,
+        text="dT_H/dt > 0<br>(heats as evaporates,<br>finite t-evap)",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["amber"]),
+        row=1, col=1,
+    )
+
+    # Right panel: δ_ADW(α_ADW) over Wave-1 natural range
+    alpha_grid = np.linspace(0.1, 10.0, 100)
+    delta_grid = np.array([
+        delta_ADW_ansatz(ADWParams(
+            alpha_ADW=a, lambda_UV=1.0, N_f=16.0, chi_vest=1.0
+        ))
+        for a in alpha_grid
+    ])
+    fig.add_trace(
+        go.Scatter(
+            x=alpha_grid, y=delta_grid,
+            mode="lines",
+            line=dict(color=COLORS["steel_blue"], width=3),
+            name="δ_ADW = (α_ADW − 1)·Λ_UV",
+            showlegend=False,
+        ),
+        row=1, col=2,
+    )
+    # α=1 vanishing point
+    fig.add_shape(
+        type="line",
+        x0=1.0, x1=1.0, y0=-1.5, y1=10.0,
+        line=dict(color="rgba(80,80,80,0.6)", width=1, dash="dot"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=1.0, y=0.5,
+        text="α_ADW = 1<br>(bare Sakharov-Adler:<br>δ_ADW vanishes)",
+        showarrow=False,
+        font=dict(size=10, color="rgba(60,60,60,0.9)"),
+        row=1, col=2,
+    )
+    # Zero baseline
+    fig.add_shape(
+        type="line",
+        x0=0.1, x1=10.0, y0=0.0, y1=0.0,
+        line=dict(color="rgba(120,120,120,0.4)", width=1),
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(title_text="Time t / τ_cool (BEC-acoustic) or t / t_evap (Schwarzschild)", row=1, col=1)
+    fig.update_yaxes(title_text="T_H / T_H,0", row=1, col=1, range=[0, 4])
+    fig.update_xaxes(title_text="α_ADW", row=1, col=2)
+    fig.update_yaxes(title_text="δ_ADW / Λ_UV", row=1, col=2)
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6a Wave 5 — BCH four-laws regime partition "
+                "(Schwarzschild ↔ BEC-acoustic)"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=1100,
+        margin=dict(t=110, b=80),
+    )
+    return fig
+
+
+def fig_ep_violation_matrix():
+    """Phase 6c Wave 3: EP-violation matrix for six Phase 5x mechanisms.
+
+    Heatmap displaying which EP levels (WEP, EEP, SEP) are violated by each
+    of six Phase 5x DM-related mechanisms. Two violators (both vestigial-
+    phase phenomena, η = 1 maximal and η ~ 10⁻¹⁸ STEP-class), four
+    non-violators (FangGu torsion, fracton subdiffusion, SFDM Thomas-Fermi,
+    hidden-sector ℤ₁₆ singlet).
+
+    Right panel: η-scale comparison bar chart (vestigial-phase η = 1 max,
+    MICROSCOPE bound η < 10⁻¹⁵, STEP target η ~ 10⁻¹⁸, vestigial-relics η).
+    Surfaces the structural fact that EP violation is *vestigial-only* in
+    the project's current dark-sector landscape.
+
+    Lean: EquivalencePrinciple.violatesAt + ep_violation_is_vestigial_only.
+    Source: VestigialGravity.ep_violation_in_vestigial; Touboul et al. PRL
+            119, 231101 (2017); W8 §5 ranking line 3.
+    viz-ref: Phase 6c Paper 34 §3
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.equivalence_principle import (
+        EPLevel,
+        EPMechanism,
+        MICROSCOPE_BOUND,
+        STEP_TARGET,
+        VESTIGIAL_PHASE_ETA_MAX,
+        VESTIGIAL_RELICS_ETA,
+        violates_at,
+    )
+
+    mechanisms = [
+        EPMechanism.vestigialDifferentialCoupling,
+        EPMechanism.vestigialReliscSTEPClass,
+        EPMechanism.fangGuTorsionTrace,
+        EPMechanism.fractonSubdiffusion,
+        EPMechanism.sfdmThomasFermi,
+        EPMechanism.hiddenSectorZ16Singlet,
+    ]
+    mechanism_labels = [
+        "Vestigial differential<br>coupling (η=1 max)",
+        "Vestigial relics<br>(η~10⁻¹⁸ STEP)",
+        "FangGu torsion DM<br>(w_FG=1/3, kinematic)",
+        "Fracton subdiffusion<br>(universal mobility)",
+        "SFDM Thomas-Fermi<br>(single-field uniform)",
+        "Hidden-sector ℤ₁₆<br>(SM-singlet)",
+    ]
+    levels = [EPLevel.WEP, EPLevel.EEP, EPLevel.SEP]
+    level_labels = ["WEP", "EEP", "SEP"]
+
+    z_matrix = [
+        [1 if violates_at(m, L) else 0 for L in levels]
+        for m in mechanisms
+    ]
+    cell_text = [
+        ["✗ violates" if violates_at(m, L) else "✓ satisfies" for L in levels]
+        for m in mechanisms
+    ]
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "EP-violation matrix (mechanisms × levels)",
+            "η-scale comparison",
+        ),
+        column_widths=[0.6, 0.4],
+        horizontal_spacing=0.18,
+        specs=[[{"type": "heatmap"}, {"type": "bar"}]],
+    )
+
+    # Left panel: 6x3 heatmap
+    fig.add_trace(
+        go.Heatmap(
+            z=z_matrix,
+            x=level_labels,
+            y=mechanism_labels,
+            text=cell_text,
+            texttemplate="%{text}",
+            textfont={"size": 11},
+            colorscale=[
+                [0.0, "rgba(220, 220, 220, 1.0)"],  # gray = satisfies
+                [1.0, COLORS["amber"]],  # amber = violates
+            ],
+            showscale=False,
+            hovertemplate="<b>%{y}</b><br>%{x}: %{text}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+
+    # Right panel: log-scale η bars
+    eta_labels = [
+        "Vestigial phase<br>η_max",
+        "MICROSCOPE bound<br>(Touboul 2017)",
+        "Vestigial relics<br>η_STEP",
+        "STEP-class target",
+    ]
+    eta_values = [
+        VESTIGIAL_PHASE_ETA_MAX,
+        MICROSCOPE_BOUND,
+        VESTIGIAL_RELICS_ETA,
+        STEP_TARGET,
+    ]
+    eta_log = [np.log10(v) for v in eta_values]
+    eta_colors = [
+        COLORS["amber"],   # ruled out
+        COLORS["steel_blue"],  # current bound
+        COLORS["amber"],   # to-be-tested
+        COLORS["steel_blue"],  # future
+    ]
+
+    fig.add_trace(
+        go.Bar(
+            x=eta_labels,
+            y=eta_log,
+            marker_color=eta_colors,
+            text=[f"η = {v:.0e}" if v < 1 else f"η = {v}" for v in eta_values],
+            textposition="auto",
+            showlegend=False,
+            hovertemplate="<b>%{x}</b><br>log₁₀(η) = %{y:.1f}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    # MICROSCOPE bound horizontal line at log10(1e-15) = -15
+    fig.add_shape(
+        type="line",
+        x0=-0.5, x1=3.5,
+        y0=np.log10(MICROSCOPE_BOUND), y1=np.log10(MICROSCOPE_BOUND),
+        line=dict(color=COLORS["steel_blue"], width=1, dash="dot"),
+        row=1, col=2,
+    )
+
+    fig.update_yaxes(title_text="log₁₀(η)", row=1, col=2)
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6c Wave 3 — EP-violation matrix for Phase 5x DM "
+                "mechanisms (vestigial-only violators)"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=560,
+        width=1200,
+        margin=dict(t=110, b=80, l=180),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

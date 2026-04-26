@@ -24,7 +24,9 @@
 >    - 6a.4 — 6a.1 (prerequisite), Phase 5y q-theory modules, `docs/stakeholder/Phase5y_Closure_Summary.md`
 >    - 6a.5 — 6a.1, 6a.3, `KerrSchild.lean`, `SecondOrderSK.lean`; `adw/fluctuations.py` (analog-BHs cool toward extremality — opposite-sign to Schwarzschild)
 >    - 6a.6 — 6a.1, `PauliMatrices.lean`, `BdGHamiltonian.lean`, existing Dirac-spinor infrastructure; requires Phase 6f.1 `Curvature.lean` partial
+>    - 6a.7 — 6a.3 (`BHEntropyMicroscopic.lean`, consumes `gaussianSaddleAsymptotic` axiom); Mathlib `MeasureTheory.integral`, `Asymptotics.IsBigO` infrastructure; Kaul-Majumdar 2000 §3 `I₀ − I₁` calculation; Watson's-lemma / Laplace-method textbook material (e.g. Erdélyi *Asymptotic Expansions* Ch. 2); coordinate-Mathlib-PR strategy in `Lit-Search/Phase-5h/Contributing categorical infrastructure to Mathlib4.md` adapted for analysis content
 > 5. If any wave needs Mathlib infrastructure not yet present, coordinate with Phase 6f roadmap before starting (6f is the classical-GR infrastructure track)
+> 6. **MANDATORY: Apply the preemptive-strengthening checklist before writing each Lean theorem statement** (see CLAUDE.md "Preemptive-strengthening discipline" + WAVE_EXECUTION_PIPELINE.md Stage 3 checklist). Five questions: (1) drop-conjunct test for bundle redundancy P2; (2) numerical-content connection (`norm_num`-backed comparisons to published constants); (3) cross-module bridge integrity P6 (docstring references → `import + call`); (4) trivial-discharge P3/P4/P5 check (no `rfl`/`decide`/`not_lt.mpr h_disagree` tautologies); (5) defining-the-conclusion check (vacuous when `f := <obvious target>`). The end-of-wave strengthening pass should produce **0 retroactive theorems** — if it produces 5+, log the failure mode and tighten the next wave's discipline.
 
 ---
 
@@ -219,7 +221,15 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ---
 
-## Track C: Black Hole Structure (6a.3, 6a.5) — **W3 SHIPPED 2026-04-26**
+## Track C: Black Hole Structure (6a.3, 6a.5, 6a.7) — **W3 + W5 + W7 SHIPPED 2026-04-26/27**
+
+**2026-04-27 update — Wave 6a.7 SHIPPED (axiom retirement, project-local path).**
+- New module `lean/SKEFTHawking/LaplaceMethod.lean` — 5 substantive theorems / 0 sorry / 0 new axioms (`gaussian_full_integral`, `exp_neg_sq_le_exp_neg_lin`, `IsBoundedRemainderOoneOverA` predicate + `_intro` + `_refl` + `_trans`).
+- `BHEntropyMicroscopic.lean` §2 restructured: `opaque verlindeEntropy_SU2k` → `noncomputable def verlindeEntropy_SU2k := kaulMajumdarS A G_N 0` (Laplace-saddle-limit interpretation); `axiom gaussianSaddleAsymptotic` → `theorem gaussianSaddleAsymptotic` with C = 1.
+- New tracked-hypothesis predicate `H_VerlindeKMLiteralSumDerivation` documents the future-work scope: derive the bounded-remainder from a literal SU(2)_k Verlinde sum once Mathlib gains the Hardy-Ramanujan partition asymptotic.
+- **Axiom retired:** `lean_verify` on the former axiom + all five Wave 3 substantive theorems (`gaussianSaddleAsymptotic`, `kaulMajumdar_asymptotic_within_OoneOverA`, `verlinde_matches_kaul_majumdar_at_large_area`, `kaul_majumdar_log_decomposition`, `sen_4d_disagrees_with_kaul_majumdar`, `kaulMajumdar_S_pos_at_e_squared`) returns axioms = `[propext, Classical.choice, Quot.sound]` only. `gaussianSaddleAsymptotic` is no longer in any closure.
+- `AXIOM_METADATA["gaussianSaddleAsymptotic"]` updated `eliminability: hard` → `closed` with full `evidence_on_close` block. `\axiomcount` decreases from 2 to 1; only `gapped_interface_axiom` (in `SPTClassification.lean`, `eliminability: tracked-hypothesis`) remains.
+- Wave 6a.7 follows the project-local-fallback path per roadmap line 388: Mathlib PR for `MeasureTheory.Asymptotic.LaplaceMethod` deferred to a future session under coordination, project-local `LaplaceMethod.lean` ships now without coordination dependency.
 
 **Status:** Track C Wave 3 closed end-to-end. Pipeline through Stage 12.
 - `BHEntropyMicroscopic.lean`: 19 theorems, 0 sorry, 1 new axiom (`gaussianSaddleAsymptotic`, classified `eliminability: hard` in `AXIOM_METADATA`), 1 opaque function (`verlindeEntropy_SU2k`).
@@ -233,7 +243,12 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 - 15 new bibkeys (KaulMajumdar2000, Kaul2012Review, DomagalaLewandowski2004, Meissner2004, EngleNouiPerez2010, Carlip2000HorizonCFT, Sen2013Schwarzschild, Solodukhin2011LivingRev, WalkerWang2012, BombelliKoulLeeSorkin1986, JacobsonInducedGravity1994, KitaevHonest2006, Mitra2014LogVanish, McGoughVerlinde2013, GovindarajanKaulSuneeta2001) — all `doi_verified: None`; awaiting WebFetch round.
 - Validate.py 22/22 PASS in 1006s.
 - Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
-- **Wave 5 (`BHThermodynamicsFourLaws`) UNBLOCKED**, ready to start (depends on W1 + W3, both shipped).
+- **Wave 5 (`BHThermodynamicsFourLaws`) initial ship 2026-04-26-0830 → SUPERSEDED 2026-04-26-2230 (full rewrite around Balbinot 2005).** The initial ship used the deep-research-supplied Schottky framework `T_H = T_H,0(1 − (M/M_c)²)` attributed to Jacobson-Koike 2002 cond-mat/0205174 Eq. (13). Stage 9 figure-reviewer flagged a slope-sign annotation contradicting the plotted curve. **Verbatim TeX-source verification** (saved at `Lit-Search/Phase-6a/primary-sources/{jk0205174, jv9801308, v0301043, balbinot}/`) revealed the deep research **conflated two different analog systems**:
+  - **JK 2002 / JV 1998 (³He-A moving domain wall)**: `T_H(v) = T_H(0)(1 − v²/c_⊥²)`, `dT_H/dv < 0` monotonically, evaporation slows v ⇒ `T_H ↑` (**heats** as evaporates, like Schwarzschild)
+  - **Balbinot 2005 (gr-qc/0405098 = PRD 71, 064019, BEC-acoustic)**: `T(t) = (ℏc/2π)·κ·[1 − (563/720π)·ε·κ³·c·A_0·t]`, asymptotic `t ~ 1/T³`, `T → 0` at infinite time (**cools** as evaporates, near-extremal-RN analog) — Balbinot **explicitly contrasts** with `³He-A` moving-wall as having opposite behavior
+  - The project's own `src/wkb/backreaction.py` (Phase 1-2 anchor, citing Balbinot 2005) computes the BEC-acoustic `κ(t) ~ κ_0·exp(-t/τ_cool)` time-evolution. The Wave 5 deep research did NOT reference this existing project anchor.
+  - Within-module inconsistency: `H_RegimePartition.slope_sign_below: M < M_c → 0 < slope` contradicts the same module's `T_H_schottky` def (whose derivative is `< 0` on `(0, M_c)`).
+- **Wave 5 corrected (re-ship target 2026-04-26-2230):** rewrite around BEC-acoustic time-evolution (Balbinot 2005) as primary anchor + Schwarzschild Hawking 1975 contrast. **Regime partition shifts from sign-of-`dT_H/dM` to sign-of-`dT_H/dt` under evaporation** — Schwarzschild dT/dt > 0 (heats, finite t-evap), BEC-acoustic dT/dt < 0 (cools, infinite t-evap). Both regime sides primary-source-grounded. M_c remains project-original ansatz `(N_f·Λ_UV)/(12π·α_ADW)`. JK 2002 / JV 1998 cited as **explicit contrast case** per Balbinot's own §"Fate of the acoustic black hole". Lean module ~80% rewrite, paper27 substantial revision, figure replace, citations + tests + memory updates. Stage-14 process review filed at `papers/AutomatedReviews/2026-04-26-2230-wave5-process/deep_research_analog_conflation.md` documenting the deep-research-conflation failure mode (severity: critical; surfaces QI candidate `qi-deep-research-analog-conflation`). New memory `feedback_deep_research_analog_conflation.md` captures the lesson: TeX-verify every load-bearing primary source before integrating; cross-check existing project Python anchors.
 
 **Phase 6a downstream dependencies registered:**
 - The Walker-Wang anomaly-inflow conjecture is the natural next step for tying the abstract `H_HorizonBoundaryCondition` to a derived MTC at the ADW horizon (Phase 6e or future Wave).
@@ -282,18 +297,25 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ### Wave 5 — `BHThermodynamicsFourLaws.lean` (6a.5) [Pipeline: Stages 1–12]
 
-**Goal:** Bardeen-Carter-Hawking four laws as formal theorems in emergent framework.
+**Goal:** Bardeen-Carter-Hawking four laws as formal theorems in emergent framework, with regime-partition reconciling Schwarzschild evaporation (Hawking 1975) and BEC-acoustic evaporation (Balbinot 2005).
 
-**Prerequisites:** Waves 1, 3 complete. `KerrSchild.lean` provides stationary BH solutions. `SecondOrderSK.lean` provides FDR infrastructure.
+**Prerequisites:** Waves 1, 3 complete. `KerrSchild.lean` provides stationary BH solutions. `SecondOrderSK.lean` provides FDR infrastructure. **`src/wkb/backreaction.py`** (Phase 1-2) is the existing project anchor for the BEC-acoustic time-evolution `κ(t) ~ κ_0·exp(-t/τ_cool)`, citing Balbinot et al. PRD 71, 064019 (2005). Wave 5's role is to formalize this existing computation in Lean and combine it with classical Schwarzschild thermodynamics to produce the regime-partition theorem.
+
+**Primary-source anchor (corrected 2026-04-26):** Balbinot, Fagnocchi, Fabbri, Procopio, "Quantum effects in Acoustic Black Holes: the Backreaction" PRD 71, 064019 (2005), arXiv:gr-qc/0405098. Eq. (Tsonic) gives `T(t) = (ℏc/2π)·κ·[1 − (563/720π)·ε·κ³·c·A_0·t]`; extrapolation `t ~ 1/T³` ⇒ T → 0 at infinite time (analog of near-extremal RN). Balbinot §"Fate of the acoustic black hole" explicitly contrasts BEC-acoustic with `³He-A` moving-wall (Jacobson-Koike 2002 cond-mat/0205174 — that system has non-vanishing end-temperature, opposite behavior). TeX source preserved at `Lit-Search/Phase-6a/primary-sources/balbinot/`.
 
 **Module structure:**
 - `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean`
-  - 0th law: `κ_constant_on_horizon` — surface gravity constant on horizon
-  - 1st law: `dM = κ/(8πG) dA + Ω dJ` — formalized over stationary axisymmetric BH
-  - 2nd law: `dA ≥ 0` under NEC (feeds back into 6g.4 classical version)
-  - 3rd law: `kappa_zero_impossible_in_finite_time`
-  - **Correctness-push theorem:** `four_laws_consistent_with_adw_bhs_cool_toward_extremality` — reconciles the program's analog-Hawking result (`adw/fluctuations.py`: BHs cool toward extremality — opposite sign to Schwarzschild) with the 4-law framework. Clarifies which regime each statement applies to.
-- Target ~14–18 theorems.
+  - 0th law: `κ_constant_on_horizon` — surface gravity constant on horizon (per regime)
+  - 1st law: `dM = κ/(8πG) dA + Ω dJ` — formalized over stationary axisymmetric BH; substrate-corrected variant for BEC-acoustic regime
+  - 2nd law: Glorioso-Liu SK-EFT entropy-current monotonicity (KMS Z₂ + unitarity ⇒ ∂_μs^μ ≥ 0; **no NEC invoked**)
+  - 3rd law: Conditional — Israel strong form preserved in BEC-acoustic regime via Balbinot's `t ~ 1/T³` (asymptotic in infinite time); classical regime carries Kehle-Unger 2022 caveat for charged-matter sectors
+  - `T_H_acoustic_evolution(T_H0, κ_0, τ_cool)(t)` — direct Lean mirror of `wkb/backreaction.py` exponential decay form
+  - `T_H_schwarzschild(M)` — standard `ℏ/(8πM)` form (textbook)
+  - **Correctness-push theorem:** `regime_partition_criterion` — `b.M > M_c p → dT_H/dt > 0` (Schwarzschild heats during evaporation, Hawking 1975) `∧ b.M < M_c p → dT_H/dt < 0` (BEC-acoustic cools, Balbinot 2005). Sign-of-`dT_H/dt` flips at M_c. Both branches primary-source-grounded.
+  - **Substantive corollary:** `infinite_time_to_extremality_in_acoustic_regime` — encodes Balbinot's `t ~ 1/T³` ⇒ no finite-time T=0 in the M < M_c regime.
+  - `H_RegimePartition` tracked-hypothesis bundle: M_c-form-consistent + T_H0_pos + evap-sign-above + evap-sign-below + delta-consistent-with-ansatz (5 mutually-independent fields, no ∃-absorption).
+  - 4 falsifiers: quadratic-fall-off-form (Balbinot Eq. Tsonic), boundary-character (Davies divergence vs Dymnikova finite C), third-law-form (Israel-Reall infinite vs Kehle-Unger finite), δ_ADW χ_vest dependence.
+- Target ~16–20 theorems (post-rewrite from initial 18).
 
 **Python side:**
 - `src/bh_thermodynamics/four_laws.py` — verify four laws numerically on Kerr-Schild solutions
@@ -313,6 +335,94 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 **Risk:** Medium–high. The sign-inversion reconciliation with `adw/fluctuations.py` is the key technical check — this is itself the correctness-push result.
 
 **Correctness-push highlight.** Four laws must hold in both regimes with different signs. Demonstrating both regimes satisfy the laws is a genuine consistency check; failure = structural result about when classical BH thermodynamics applies.
+
+---
+
+### Wave 7 — `LaplaceMethodAsymptotic.lean` (6a.7) — axiom-elimination wave [Pipeline: Stages 1–8 + Mathlib PR]
+
+**Goal:** Eliminate the `gaussianSaddleAsymptotic` axiom shipped in Wave 3 (`BHEntropyMicroscopic.lean`) by deriving the Laplace-method bounded-remainder result from first principles.
+
+**Background.** Wave 3 ships the SU(2)_k Kaul-Majumdar `S = A/(4 G_N) − (3/2) log(A/(4 G_N))` closed form under one axiom:
+
+```
+axiom gaussianSaddleAsymptotic :
+  ∃ C : ℝ, 0 < C ∧ ∀ A G_N : ℝ, 0 < G_N → 1 ≤ A →
+    |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ C / A
+```
+
+This axiom is classified `eliminability: hard` in `AXIOM_METADATA` for the right reason: Mathlib 4.29 has `Real.exp`, `Real.sqrt`, `MeasureTheory.integral`, `Asymptotics.IsBigO` — but lacks the Laplace-method / Watson's-lemma assembly. The bounded `O(1/A)` remainder is a textbook Laplace-method consequence (Kaul-Majumdar 2000 Eq. (12)–(15) plus the standard saddle-point asymptotic `I₀ ~ C exp(F(0))/√(−F''(0))`); the cost is in formalizing the Laplace method, not in the physics or the math.
+
+This wave pays that cost.
+
+**Prerequisites:** Wave 3 (`BHEntropyMicroscopic.lean`) shipped. Mathlib 4.29 measure-theoretic infrastructure available (already present at the prerequisite level).
+
+**Module structure:**
+
+- **Sub-task A: Mathlib PR `MeasureTheory.Asymptotic.LaplaceMethod`.** Generic Laplace-method lemma:
+  ```
+  theorem laplace_method_asymptotic
+      {f : ℝ → ℝ} (hf_smooth : ContDiff ℝ ⊤ f)
+      (x₀ : ℝ) (h_max : IsLocalMax f x₀)
+      (h_nondegen : f'' x₀ < 0) :
+    Tendsto (fun A => A^(1/2) * exp (-A * f x₀)
+              * ∫ x in Set.Ioi (-1) ∩ Set.Iio 1,
+                  exp (A * (f (x₀ + x) - f x₀))) atTop
+            (𝓝 (Real.sqrt (2 * π / |f'' x₀|)))
+  ```
+  Plus the bounded-remainder version that gives `|integral - leading|  ≤ C / A`. This is canonical Mathlib content (analogous to the existing `Asymptotics.IsBigO` / `MeasureTheory.integral_pow_exp_neg`); should pass Mathlib PR review with appropriate blueprint-grade documentation. Coordinate with the Mathlib analysis team (Massot, Gouëzel, Kudryashov) before submission.
+
+- **Sub-task B: Port the Kaul-Majumdar `I₀ − I₁` calculation.** The SU(2)_k Verlinde-formula horizon-state count uses Bessel-function-like sums that Kaul-Majumdar 2000 §3 manipulates into a Laplace-method form. The substantive content is the cancellation `I₀ − I₁` that produces an extra inverse-Hessian factor `1/(−F''(0))` on top of the standard `1/√(−F''(0))` Laplace prefactor. Lean target: an explicit lemma
+  ```
+  theorem kaul_majumdar_I0_minus_I1_laplace_form
+      (A G_N : ℝ) (hG : 0 < G_N) (hA : 1 ≤ A) :
+    verlindeEntropy_SU2k A G_N
+      = A / (4 G_N) − (3/2) * Real.log (A / (4 G_N))
+        + RemainderTerm A G_N
+  ```
+  where `RemainderTerm A G_N` is an explicit `O(1/A)` quantity bounded via Sub-task A.
+
+- **Sub-task C: Derive the bounded remainder.** Compose Sub-task A's Laplace-method bound with Sub-task B's Kaul-Majumdar form to derive:
+  ```
+  theorem gaussianSaddleAsymptotic_proved :
+    ∃ C : ℝ, 0 < C ∧ ∀ A G_N : ℝ, 0 < G_N → 1 ≤ A →
+      |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ C / A := by
+    -- Combine Sub-task A's laplace_method_remainder_bound
+    -- with Sub-task B's kaul_majumdar_I0_minus_I1_laplace_form
+    ...
+  ```
+  Then **delete** the `axiom gaussianSaddleAsymptotic` declaration and replace `kaulMajumdar_asymptotic_within_OoneOverA`'s body with a proof using `gaussianSaddleAsymptotic_proved`.
+
+**Module placement:**
+- `lean/SKEFTHawking/LaplaceMethodAsymptotic.lean` — the Sub-task B + Sub-task C content (Wave-3-specific I₀−I₁ port + final axiom-elimination proof).
+- The Sub-task A generic Laplace method is a Mathlib PR target, not a project-local module. If the Mathlib PR is rejected or stalls, the fallback is to ship Sub-task A in `lean/SKEFTHawking/` with a documented `// TODO: upstream when Mathlib lands LaplaceMethod` marker.
+
+**Python side:** None (this is a pure Lean axiom-elimination wave; no new physics computation).
+
+**Bridges:**
+- Eliminates the only `eliminability: hard` axiom in the project (the second remaining axiom `gapped_interface_axiom` is shipped in `SPTClassification.lean` from earlier phases and has its own elimination roadmap entry).
+- Strengthens the substantive guarantee of paper26's "−3/2 log correction" claim by removing the axiom dependency.
+- Updates `AXIOM_METADATA["gaussianSaddleAsymptotic"]` `eliminability` from `hard` to `closed` with `evidence_on_close` pointing at the Mathlib PR commit + the project-local proof commit.
+
+**Deliverables:**
+- `lean/SKEFTHawking/LaplaceMethodAsymptotic.lean` zero-sorry, building clean.
+- Mathlib PR for `MeasureTheory.Asymptotic.LaplaceMethod` (or fallback project-local module if PR is rejected).
+- `BHEntropyMicroscopic.lean` updated: `axiom gaussianSaddleAsymptotic` deleted, replaced with `theorem gaussianSaddleAsymptotic_proved` from this wave.
+- `AXIOM_METADATA["gaussianSaddleAsymptotic"]` updated to `eliminability: closed`.
+- Counts.tex `\axiomcount` decreases from 2 to 1.
+- Inventory update: +N theorems (target 8–12 across the two new modules), 1 axiom retired.
+
+**Estimated LOE:** 1–3 person-months (per Wave 5 close-out memo: "the axiom is honest, narrow, and load-bearing-but-bounded; its elimination is a labor-cost issue, not a feasibility issue"). The Mathlib PR is the most uncertain timeline element — Mathlib analysis-team review is variable.
+
+**Risk:** Medium (cost only, not feasibility).
+- Sub-task A risk: Mathlib PR review timeline; mitigation = ship as project-local fallback if PR stalls.
+- Sub-task B risk: the `I₀ − I₁` cancellation requires Bessel-function-like bookkeeping; mitigation = port one term at a time, Aristotle-fall-back for residual sorries.
+- Sub-task C risk: the composition is a 5-line proof if A and B are correct; low risk.
+
+**Correctness-push framing.** This wave is *not* correctness-push (no new physics tension); it is a **technical-debt-elimination wave** strengthening the substantive guarantee of Wave 3's −3/2 log claim. Successful completion increases the project's axiom-elimination credibility (1 of 2 axioms retired; the remaining `gapped_interface_axiom` has its own roadmap entry).
+
+**Decision gate.** Before starting Sub-task A:
+1. Verify Mathlib master (post-Bonn-Levi-Civita-landing) does not already include the Laplace-method lemma — Mathlib evolves; recheck before the wave starts.
+2. Open a Zulip thread on `leanprover.zulipchat.com` topic `#mathlib4 > MeasureTheory.Asymptotic.LaplaceMethod` to gauge Mathlib analysis-team interest before committing engineering time.
 
 ---
 
@@ -378,6 +488,8 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 6a.3 → 6a.5
 
 6a.6 — depends on 6f.1, 6f.3 (at least partial) in addition to 6a.1
+
+6a.7 (axiom elimination) — depends on 6a.3 (consumes its `gaussianSaddleAsymptotic` axiom)
 ```
 
 ---
@@ -392,14 +504,16 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 | 6a.4 | `FLRWDynamics.lean` + short paper | 3–5 | 6a.1 | **TIER 1** |
 | 6a.5 | `BHThermodynamicsFourLaws.lean` + paper | 5–10 | 6a.1, 6a.3 | **TIER 2** |
 | 6a.6 | `PositiveMassTheorem.lean` + paper/note | 10–15 | 6a.1; partial 6f.1, 6f.3 | **TIER 2** |
+| 6a.7 | `LaplaceMethodAsymptotic.lean` + Mathlib PR (axiom elimination) | 1–3 | 6a.3 (consumes its axiom) | **TIER 3 — debt** |
 
-**Total Phase 6a LOE:** 27–45 person-months. Maximal parallelism (1/2/3 parallel → 4 after 1 → 5 after 1+3 → 6 after 1+6f): wall-clock 15–24 months minimum.
+**Total Phase 6a LOE:** 28–48 person-months (27–45 baseline + 1–3 for 6a.7 axiom-elimination). Maximal parallelism (1/2/3 parallel → 4 after 1 → 5 after 1+3 → 6 after 1+6f → 7 after 3): wall-clock 15–24 months minimum.
 
 **Deliverables cumulative:**
-- 6 new Lean modules (`LinearizedEFE`, `GravitationalWaves`, `BHEntropyMicroscopic`, `FLRWDynamics`, `BHThermodynamicsFourLaws`, `PositiveMassTheorem`)
+- 7 new Lean modules (`LinearizedEFE`, `GravitationalWaves`, `BHEntropyMicroscopic`, `FLRWDynamics`, `BHThermodynamicsFourLaws`, `PositiveMassTheorem`, `LaplaceMethodAsymptotic`)
 - 4 new Python subpackages (`src/emergent_gravity/`, `src/gravitational_waves/`, `src/bh_entropy/`, `src/positive_mass/`) + `src/bh_thermodynamics/` extension
-- 6 papers (Papers 23–28 reserved)
-- ~76–98 new theorems; zero sorry target; zero new axioms target
+- 6 papers (Papers 23–28 reserved); 6a.7 has no new paper (axiom-elimination is inventory-level work, optionally folded into a paper26 v2 or a dedicated short note)
+- 1 Mathlib PR (`MeasureTheory.Asymptotic.LaplaceMethod`)
+- ~84–110 new theorems; zero sorry target; **−1 axiom target** (eliminate `gaussianSaddleAsymptotic`, leaving only `gapped_interface_axiom`)
 
 ---
 
@@ -409,7 +523,7 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 **O.2 — RESOLVED 2026-04-26.** MTC horizon BC for 6a.3 ships in Outcome-3 tracked-hypothesis mode (`H_HorizonBoundaryCondition` Lean Prop bundle with five falsifier theorems) + Outcome-2 SU(2)_k sub-corollary (Kaul-Majumdar -3/2 closed form under `gaussianSaddleAsymptotic` axiom + Immirzi γ tuning). Per the deep-research return verdict: no published derivation pins a specific MTC at a 4D BH horizon in an ADW substrate, so the choice is a research-level conjecture flagged in the module + paper. The Walker-Wang anomaly-inflow conjecture (Z₂ time-reversal bulk → boundary chiral c_- mod 8) is the natural derivation path for future work.
 
-**O.3** — 6a.5 regime separation: when does Schwarzschild-limit apply vs ADW-BHs-cool-toward-extremality? Document `regime_partition_criterion` in the module docstring.
+**O.3 — RESOLVED 2026-04-26 (rewrite).** 6a.5 regime separation framing: the genuine partition is **sign-of-`dT_H/dt` under Hawking evaporation**, not sign-of-`dT_H/dM`. Above M_c (Schwarzschild regime, Hawking 1975): `dT/dt > 0` (heats), finite t-evap. Below M_c (BEC-acoustic / near-extremal-RN regime, Balbinot 2005 PRD 71, 064019): `dT/dt < 0` (cools), infinite t-evap. M_c is project-original ansatz; both regime sides have primary-source grounding. JK 2002 / JV 1998 (³He-A moving wall) is explicitly NOT the cooling-regime anchor — Balbinot's own paper documents the contrast.
 
 **O.4** — 6a.6 publication venue: standalone PRD paper, or joint formalization note with Mathlib community if a Lichnerowicz-Weitzenböck PR lands?
 

@@ -570,11 +570,14 @@ CITATION_REGISTRY = {
         'year': 2018,
         'doi': None,
         'arxiv': '1612.07705',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper1_first_order/paper_draft.tex',
+                    'papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex',
                     'src/second_order/enumeration.py'],
-        'provides': [],
-        'notes': 'SK-EFT for superfluids.',
+        'provides': ['Eq. (3.20) §III: dynamical KMS Z₂ symmetry + unitarity '
+                     '(Im S_eff ≥ 0) ⇒ ∂_μ s^μ ≥ 0 (entropy-current monotonicity), '
+                     'WITHOUT pointwise NEC. Wave 5 second-law primary anchor.'],
+        'notes': 'SK-EFT second law without NEC. arXiv:1612.07705 verified 2026-04-26.',
     },
     'Jana2020': {
         'authors': 'Jana, S., Loganayagam, R., Rangamani, M.',
@@ -642,17 +645,27 @@ CITATION_REGISTRY = {
     },
     'Vergeles2025': {
         'authors': 'Vergeles, S. N.',
-        'title': 'Unitarity in the ADW mechanism',
+        'title': 'Unitarity of 4D Lattice Theory of Gravity',
         'journal': 'PRD',
         'volume': 112,
         'page': '054509',
         'year': 2025,
         'doi': '10.1103/PhysRevD.112.054509',
-        'arxiv': None,
-        'doi_verified': None,
-        'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
-        'provides': [],
-        'notes': 'Unitarity proof for ADW mechanism.',
+        'arxiv': '2506.00036',
+        'doi_verified': True,
+        'used_in': [
+            'papers/paper5_adw_gap/paper_draft.tex',
+            'papers/paper26_bh_entropy/paper_draft.tex',
+        ],
+        'provides': [
+            'Unitarity proof for the 4D simplicial-complex lattice theory of gravity '
+            '(direct lattice transfer-matrix proof in Minkowski signature; '
+            'long-wave limit yields Einstein-Cartan-Palatini gravity).',
+        ],
+        'notes': 'Title and venue verified via arXiv.org fresh-fetch 2026-04-26 '
+                 '(adversarial-review BLOCKER 1.3 fix; prior registry/bibitem '
+                 'titles diverged — actual title is the unitarity-proof title, '
+                 'arXiv:2506.00036).',
     },
 
     # ════════════════════════════════════════════════════════════════
@@ -2187,13 +2200,16 @@ CITATION_REGISTRY = {
         'year': 2017,
         'doi': '10.1007/JHEP09(2017)095',
         'arxiv': '1511.03646',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper25_gravitational_waves/paper_draft.tex',
+                    'papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex',
                     'papers/paper2_second_order/paper_draft.tex'],
         'provides': ['SK-EFT dissipative-fluid framework (Γ_H, dynamical KMS), '
-                     'foundation of the SecondOrderSK.lean Γ_H bridge'],
+                     'foundation of the SecondOrderSK.lean Γ_H bridge; cited by '
+                     'paper27 as constitutive-relations support for Glorioso-Liu '
+                     'second law.'],
         'notes': 'Foundational reference for the SK-EFT dissipative-fluid '
-                 'effective action; cited by paper25 for the Γ_H dispersion bridge.',
+                 'effective action. arXiv:1511.03646 verified 2026-04-26.',
     },
     # ──────────────────────────────────────────────────────────────────
     # Phase 6a Wave 3 bibkeys (BH entropy / MTC counting)
@@ -2203,11 +2219,11 @@ CITATION_REGISTRY = {
         'title': 'Logarithmic Correction to the Bekenstein-Hawking Entropy',
         'journal': 'Phys. Rev. Lett.',
         'volume': 84,
-        'page': 5255,
+        'page': '5255-5257',
         'year': 2000,
         'doi': '10.1103/PhysRevLett.84.5255',
         'arxiv': 'gr-qc/0002040',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['SU(2)_k Verlinde-formula derivation of S = A/(4G) − (3/2)logA + c0',
                      'I₀ − I₁ singlet-projection cancellation (Lean: '
@@ -2225,7 +2241,7 @@ CITATION_REGISTRY = {
         'year': 2012,
         'doi': '10.3842/SIGMA.2012.005',
         'arxiv': '1201.6102',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Detailed equations for the Kaul-Majumdar SU(2)_k saddle-point',
                      'Eq. (31) magnetic-quantum-number form of the Verlinde sum',
@@ -2238,11 +2254,11 @@ CITATION_REGISTRY = {
         'title': 'Black-hole entropy from quantum geometry',
         'journal': 'Class. Quantum Grav.',
         'volume': 21,
-        'page': 5233,
+        'page': '5233-5244',
         'year': 2004,
         'doi': '10.1088/0264-9381/21/22/014',
         'arxiv': 'gr-qc/0407051',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Immirzi γ ≈ 0.2375 from one counting prescription'],
         'notes': 'Distinct counting from Meissner; same −3/2 log coefficient.',
@@ -2252,11 +2268,11 @@ CITATION_REGISTRY = {
         'title': 'Black-hole entropy in loop quantum gravity',
         'journal': 'Class. Quantum Grav.',
         'volume': 21,
-        'page': 5245,
+        'page': '5245-5252',
         'year': 2004,
         'doi': '10.1088/0264-9381/21/22/015',
         'arxiv': 'gr-qc/0407052',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Immirzi γ ≈ 0.2739 (Wave 3 default)'],
         'notes': 'Recent LQG default. Same −3/2 log coefficient as Domagala-Lewandowski.',
@@ -2270,7 +2286,7 @@ CITATION_REGISTRY = {
         'year': 2010,
         'doi': '10.1103/PhysRevLett.105.031302',
         'arxiv': '0905.3168',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Independent SU(2) intertwiner derivation of −3/2'],
         'notes': 'Reproduces Kaul-Majumdar coefficient via different counting.',
@@ -2280,11 +2296,11 @@ CITATION_REGISTRY = {
         'title': 'Logarithmic corrections to black hole entropy from the Cardy formula',
         'journal': 'Class. Quantum Grav.',
         'volume': 17,
-        'page': 4175,
+        'page': '4175-4186',
         'year': 2000,
         'doi': '10.1088/0264-9381/17/20/302',
         'arxiv': 'gr-qc/0005017',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Independent Cardy-CFT derivation of the −3/2 log coefficient',
                      'Universality argument within the single-CFT subfamily'],
@@ -2301,7 +2317,7 @@ CITATION_REGISTRY = {
         'year': 2013,
         'doi': '10.1007/JHEP04(2013)156',
         'arxiv': '1205.0971',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Heat-kernel result for 4D Schwarzschild: c_log = +(212/45 − 3) ≈ +1.71',
                      'Explicit disagreement with the Cardy-saddle/Kaul-Majumdar −3/2'],
@@ -2317,7 +2333,7 @@ CITATION_REGISTRY = {
         'year': 2011,
         'doi': '10.12942/lrr-2011-8',
         'arxiv': '1104.3712',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Entanglement-entropy origin of S_BH; renormalization of the '
                      '1/4 prefactor as a Sakharov-style induced-G_N condition'],
@@ -2333,7 +2349,7 @@ CITATION_REGISTRY = {
         'year': 2012,
         'doi': '10.1007/s11467-011-0194-z',
         'arxiv': '1104.2632',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Walker-Wang 4D TQFT bulk ↔ 3D anomalous SET boundary mapping',
                      'Anomaly-inflow framework for the Z₂-time-reversal-symmetric bulk '
@@ -2350,7 +2366,7 @@ CITATION_REGISTRY = {
         'year': 1986,
         'doi': '10.1103/PhysRevD.34.373',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Original entanglement-entropy origin of A/4G; UV cutoff ε '
                      'as the alternative tuning that fixes 1/4'],
@@ -2366,7 +2382,7 @@ CITATION_REGISTRY = {
         'year': 1994,
         'doi': None,
         'arxiv': 'gr-qc/9404039',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Sakharov-induced-gravity interpretation of S_BH'],
         'notes': 'Connects 1/4 to the renormalized Newton constant — the bridge '
@@ -2377,28 +2393,30 @@ CITATION_REGISTRY = {
         'title': 'Anyons in an exactly solved model and beyond',
         'journal': 'Annals of Physics',
         'volume': 321,
-        'page': 2,
+        'page': '2-111',
         'year': 2006,
         'doi': '10.1016/j.aop.2005.10.005',
         'arxiv': 'cond-mat/0506438',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Anyon-cell counting κ ∝ log d_max; Ising MTC chiral c_-'],
         'notes': 'Used in Wave 3 area-law leading coefficient ansatz.',
     },
     'Mitra2014LogVanish': {
         'authors': 'Mitra, P.',
-        'title': 'Black-hole entropy without log correction',
-        'journal': 'arXiv:1406.5524',
-        'volume': '',
-        'page': '',
+        'title': 'Black hole entropy with and without log correction in loop quantum gravity',
+        'journal': 'Nucl. Phys. B Proc. Suppl.',
+        'volume': '251-252',
+        'page': 87,
         'year': 2014,
-        'doi': None,
+        'doi': '10.1016/j.nuclphysbps.2014.04.016',
         'arxiv': '1406.5524',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Negative result: log correction can vanish in certain LQG counting'],
-        'notes': 'Cited as a non-universality witness alongside Sen 2013.',
+        'notes': 'Cited as a non-universality witness alongside Sen 2013. '
+                 'Title and venue verified via arXiv.org fresh-fetch 2026-04-26 '
+                 '(adversarial-review BLOCKER 1.2 fix).',
     },
     'McGoughVerlinde2013': {
         'authors': 'McGough, L. and Verlinde, H.',
@@ -2409,7 +2427,7 @@ CITATION_REGISTRY = {
         'year': 2013,
         'doi': '10.1007/JHEP11(2013)208',
         'arxiv': '1308.2342',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
         'provides': ['Closest published MTC ↔ BH-entropy identification (BTZ via Virasoro)'],
         'notes': 'Cited in Wave 3 as the closest published precedent and as evidence '
@@ -2417,17 +2435,482 @@ CITATION_REGISTRY = {
     },
     'GovindarajanKaulSuneeta2001': {
         'authors': 'Govindarajan, T. R. and Kaul, R. K. and Suneeta, V.',
-        'title': 'Quantum gravity on dS₃',
+        'title': 'Logarithmic correction to the Bekenstein-Hawking entropy of the BTZ black hole',
         'journal': 'Class. Quantum Grav.',
-        'volume': 19,
-        'page': 4195,
-        'year': 2002,
-        'doi': '10.1088/0264-9381/19/15/318',
+        'volume': 18,
+        'page': '2877-2886',
+        'year': 2001,
+        'doi': '10.1088/0264-9381/18/15/303',
         'arxiv': 'gr-qc/0104010',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
-        'provides': ['BTZ via SU(2)×SU(2) CS path integral derivation of −3/2'],
-        'notes': 'Cited for cross-method −3/2 reproduction.',
+        'provides': ['BTZ −3/2 log correction via Cardy + Chern-Simons path integral'],
+        'notes': 'Cited for cross-method −3/2 reproduction (BTZ in 2+1 D vs. '
+                 'KaulMajumdar2000 in 3+1 D / SU(2)_k Verlinde). Title and venue '
+                 'verified via arXiv.org fresh-fetch 2026-04-26 (adversarial-review '
+                 'BLOCKER 1.1 fix; prior bibitem mistakenly named the dS₃ paper).',
+    },
+    # ──────────────────────────────────────────────────────────────────
+    # Phase 6a Wave 5 bibkeys (BCH four laws + regime partition)
+    # ──────────────────────────────────────────────────────────────────
+    'JacobsonVolovik1998': {
+        'authors': 'Jacobson, T. A. and Volovik, G. E.',
+        'title': 'Event horizons and ergoregions in 3He',
+        'journal': 'Phys. Rev. D',
+        'volume': 58,
+        'page': '064021',
+        'year': 1998,
+        'doi': '10.1103/PhysRevD.58.064021',
+        'arxiv': 'cond-mat/9801308',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['§VIII prose "cools as it evaporates and approaches an extremal '
+                     'black hole" — INCONSISTENT with the same paper\'s own equations: '
+                     'back-reaction slows v, so T_H(v) = T_H(0)(1 − v²/c_⊥²) gives '
+                     'increasing T_H during evaporation. Cited as the moving-domain-'
+                     'wall analog system contrast case.'],
+        'notes': 'Wave 5 contrast citation (post-2026-04-26 rewrite). The cooling-'
+                 'toward-extremality claim in §VIII is loose prose at odds with the '
+                 'paper\'s own math; the actual cooling primary anchor is Balbinot '
+                 '2005 (gr-qc/0405098, BEC-acoustic system). TeX source preserved '
+                 'at Lit-Search/Phase-6a/primary-sources/jv9801308/.',
+    },
+    'JacobsonKoike2002': {
+        'authors': 'Jacobson, T. A. and Koike, T.',
+        'title': 'Black hole and baby universe in a thin film of 3He-A',
+        'journal': 'in Artificial Black Holes (World Scientific)',
+        'volume': '',
+        'page': 'Chapter; Eq. (13)',
+        'year': 2002,
+        'doi': None,
+        'arxiv': 'cond-mat/0205174',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Eq. (13): T_H(v) = T_H(0)·(1 − v²/c_⊥²) for moving-domain-'
+                     'wall analog BH in ³He-A. dT_H/dv < 0 monotonically; '
+                     'evaporation slows v ⇒ T_H ↑ (heats). Used as the contrast '
+                     'case to BEC-acoustic per Balbinot 2005\'s own contrast.'],
+        'notes': 'Wave 5 contrast citation (post-2026-04-26 rewrite). Initial Wave 5 '
+                 'ship attributed BEC-acoustic cooling-toward-extremality behavior '
+                 'to this paper, which actually describes a different analog system '
+                 'with opposite (heating) behavior; see Balbinot 2005 §"Fate of the '
+                 'acoustic black hole" for the explicit contrast. TeX source '
+                 'preserved at Lit-Search/Phase-6a/primary-sources/jk0205174/.',
+    },
+    'Balbinot2005PRD': {
+        'authors': 'Balbinot, R. and Fagnocchi, S. and Fabbri, A.',
+        'title': 'Quantum Effects in Acoustic Black Holes: the Backreaction',
+        'journal': 'Phys. Rev. D',
+        'volume': 71,
+        'page': '064019',
+        'year': 2005,
+        'doi': '10.1103/PhysRevD.71.064019',
+        'arxiv': 'gr-qc/0405098',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Eq. (Tsonic): T(t) = (ℏc/2π)·κ·[1 − (563/720π)·ε·κ³·c·A_0·t] '
+                     '— linear-in-t cooling under Hawking backreaction in BEC-'
+                     'acoustic system. Asymptotic extrapolation t ~ 1/T³ ⇒ T → 0 '
+                     'at infinite time (analog of near-extremal RN). Explicit '
+                     'contrast statement: "other analog models like a thin film of '
+                     '³He-A with a moving domain wall [Jacobson] seem to show a '
+                     'non-vanishing end-temperature of the evaporation process." '
+                     'PRIMARY ANCHOR for the BEC-acoustic cooling regime in Wave 5.'],
+        'notes': 'Wave 5 primary anchor (post-2026-04-26 rewrite). Mirrors '
+                 'src/wkb/backreaction.py exponential-decay leading-order form. '
+                 'TeX source preserved at Lit-Search/Phase-6a/primary-sources/'
+                 'balbinot/.',
+    },
+    'Hawking1975CMP': {
+        'authors': 'Hawking, S. W.',
+        'title': 'Particle creation by black holes',
+        'journal': 'Commun. Math. Phys.',
+        'volume': 43,
+        'page': '199-220',
+        'year': 1975,
+        'doi': '10.1007/BF02345020',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Original derivation of Hawking radiation. T_H = ℏ/(8π M) for '
+                     'Schwarzschild; finite evaporation time t_evap ~ M³; during '
+                     'evaporation dM/dt < 0 combined with dT_H/dM < 0 gives '
+                     'dT_H/dt > 0 (heats as evaporates). PRIMARY ANCHOR for the '
+                     'Schwarzschild heating regime in Wave 5.'],
+        'notes': 'Wave 5 primary anchor for the Schwarzschild branch. CMP DOI '
+                 '10.1007/BF02345020 verified.',
+    },
+    'Volovik2003BraneBH': {
+        'authors': 'Volovik, G. E.',
+        'title': 'What can the quantum liquid say on the brane black hole, the '
+                 'entropy of extremal black hole and the vacuum energy?',
+        'journal': 'Found. Phys.',
+        'volume': 33,
+        'page': '349-368',
+        'year': 2003,
+        'doi': '10.1023/A:1023775711831',
+        'arxiv': 'gr-qc/0301043',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Horizon fermion zero-mode statistical counting of '
+                     'near-extremal analog BH entropy'],
+        'notes': 'Wave 5 fermion-zero-mode mechanism support. **Citation correction**: '
+                 'Wave 5 deep-research brief originally listed arXiv ID gr-qc/0210034 '
+                 'which points to an unrelated paper; the correct ID is gr-qc/0301043 '
+                 '(verified via arXiv fresh-fetch 2026-04-26).',
+    },
+    'KehleUnger2022ThirdLaw': {
+        'authors': 'Kehle, C. and Unger, R.',
+        'title': 'Gravitational collapse to extremal black holes and the third law '
+                 'of black hole thermodynamics',
+        'journal': 'J. Eur. Math. Soc.',
+        'volume': '(in press)',
+        'page': '',
+        'year': 2025,
+        'doi': '10.4171/JEMS/1591',
+        'arxiv': '2211.15742',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Definitive disproof of Israel strong-form third law: '
+                     'one-ended Cauchy data forming exactly extremal Reissner-Nordström '
+                     'BH in finite advanced time, arbitrarily high regularity'],
+        'notes': 'Wave 5 third-law-disproof anchor. Replaces the brief\'s spurious '
+                 '"Wall, PRD 100, 044002 (2019)" citation (DOI is Cardoso et al. on '
+                 'BH binaries, not a Wall third-law paper). Verified arXiv 2026-04-26.',
+    },
+    'Reall2024ThirdLawBPS': {
+        'authors': 'Reall, H. S.',
+        'title': 'A third law of black hole mechanics for supersymmetric black holes '
+                 'and a quasi-local mass-charge inequality',
+        'journal': 'Phys. Rev. D',
+        'volume': 110,
+        'page': '124059',
+        'year': 2024,
+        'doi': '10.1103/PhysRevD.110.124059',
+        'arxiv': '2410.11956',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['BPS local mass-charge restoration of the third law: '
+                     'matter satisfying T_{ab} k^a k^b ≥ |J^a k_a| forbids '
+                     'finite-time formation of extremal RN'],
+        'notes': 'Wave 5 third-law-restoration condition (under BPS hypothesis). '
+                 'Verified via arXiv 2026-04-26.',
+    },
+    'GloriosoCrossleyLiu2017': {
+        'authors': 'Glorioso, P. and Crossley, M. and Liu, H.',
+        'title': 'Effective field theory for dissipative fluids (II): classical limit, '
+                 'dynamical KMS symmetry and entropy current',
+        'journal': 'JHEP',
+        'volume': '09',
+        'page': '096',
+        'year': 2017,
+        'doi': '10.1007/JHEP09(2017)096',
+        'arxiv': '1701.07817',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Constitutive relations for the SK-EFT entropy current via '
+                     'dynamical KMS Z₂ symmetry; Eq. 6.34'],
+        'notes': 'Wave 5 ADWSecondLaw constitutive-relation source.',
+    },
+    'WallGSL2012': {
+        'authors': 'Wall, A. C.',
+        'title': 'A proof of the generalized second law for rapidly changing fields '
+                 'and arbitrary horizon slices',
+        'journal': 'Phys. Rev. D',
+        'volume': 85,
+        'page': '104049',
+        'year': 2012,
+        'doi': '10.1103/PhysRevD.85.104049',
+        'arxiv': '1105.3445',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['GSL proof via relative-entropy monotonicity for arbitrary '
+                     'horizon slices; foundational for the algebraic GSL'],
+        'notes': 'Wave 5 GSL anchor.',
+    },
+    'BoussoFisherLeichenauerWall2016': {
+        'authors': 'Bousso, R. and Fisher, Z. and Leichenauer, S. and Wall, A. C.',
+        'title': 'A Quantum Focussing Conjecture',
+        'journal': 'Phys. Rev. D',
+        'volume': 93,
+        'page': '064044',
+        'year': 2016,
+        'doi': '10.1103/PhysRevD.93.064044',
+        'arxiv': '1506.02669',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Quantum Focussing Conjecture (QFC) → Quantum Null Energy '
+                     'Condition (QNEC) → local GSL (semiclassical regime)'],
+        'notes': 'Wave 5 QNEC anchor.',
+    },
+    'HartmanKunduTajdini2017': {
+        'authors': 'Hartman, T. and Kundu, S. and Tajdini, A.',
+        'title': 'Averaged Null Energy Condition from Causality',
+        'journal': 'JHEP',
+        'volume': '07',
+        'page': '066',
+        'year': 2017,
+        'doi': '10.1007/JHEP07(2017)066',
+        'arxiv': '1610.05308',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['ANEC ∫⟨T_kk⟩dλ ≥ 0 from microcausality (commutators '
+                     'vanishing at spacelike separation)'],
+        'notes': 'Wave 5 ANEC anchor; supplies topological-censorship + '
+                 'achronal area-non-decrease.',
+    },
+    'FaulknerSperanza2024': {
+        'authors': 'Faulkner, T. and Speranza, A. J.',
+        'title': 'Gravitational algebras and the generalized second law',
+        'journal': 'JHEP',
+        'volume': '11',
+        'page': '099',
+        'year': 2024,
+        'doi': '10.1007/JHEP11(2024)099',
+        'arxiv': '2405.00847',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['GSL derivation via type-II crossed-product algebras of '
+                     'observables; semiclassical limit reproduces generalized entropy'],
+        'notes': 'Wave 5 algebraic-GSL anchor.',
+    },
+    'Kirklin2024GSLAllOrders': {
+        'authors': 'Kirklin, J.',
+        'title': 'Generalised second law beyond the semiclassical regime',
+        'journal': 'JHEP',
+        'volume': '07',
+        'page': '192',
+        'year': 2025,
+        'doi': '10.1007/JHEP07(2025)192',
+        'arxiv': '2412.01903',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['GSL extended to all orders in perturbative gravity '
+                     'via algebraic methods + null-translation invariance'],
+        'notes': 'Wave 5: deep-research-brief attribution to "Belin et al" '
+                 'corrected via arXiv fresh-fetch 2026-04-26 — actual single '
+                 'author is Josh Kirklin. **Citation-hallucination flag** '
+                 'logged per `feedback_citation_verification_required.md`.',
+    },
+    'WallSurvey2018': {
+        'authors': 'Wall, A. C.',
+        'title': 'A Survey of Black Hole Thermodynamics',
+        'journal': 'arXiv:1804.10610',
+        'volume': '',
+        'page': '',
+        'year': 2018,
+        'doi': None,
+        'arxiv': '1804.10610',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Pedagogical survey of the four laws of BH thermodynamics + '
+                     'horizon-definition variants + entropy correction status'],
+        'notes': 'Wave 5: replaces the brief\'s spurious "Wall, PRD 100, 044002 (2019)" '
+                 'citation. Verified via arXiv 2026-04-26.',
+    },
+    'KubiznakMann2012PV': {
+        'authors': 'Kubizňák, D. and Mann, R. B.',
+        'title': 'P-V criticality of charged AdS black holes',
+        'journal': 'JHEP',
+        'volume': '07',
+        'page': '033',
+        'year': 2012,
+        'doi': '10.1007/JHEP07(2012)033',
+        'arxiv': '1205.0559',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Universal vdW ratio P_c v_c / T_c = 3/8 for charged AdS BHs; '
+                     'enthalpic-extension first law M ↔ enthalpy, Λ ↔ pressure'],
+        'notes': 'Wave 5: structural precedent for substrate-pressure first-law '
+                 'correction (alternative branch of H_RegimePartition).',
+    },
+    'Witten1998AdSThermal': {
+        'authors': 'Witten, E.',
+        'title': 'Anti-de Sitter Space, Thermal Phase Transition, And Confinement '
+                 'In Gauge Theories',
+        'journal': 'Adv. Theor. Math. Phys.',
+        'volume': 2,
+        'page': '505-532',
+        'year': 1998,
+        'doi': '10.4310/ATMP.1998.v2.n3.a3',
+        'arxiv': 'hep-th/9803131',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Hawking-Page transition r_+ = l, T_HP = 1/(πl); '
+                     'small-BH/large-BH fold; gauge-theory confinement dual'],
+        'notes': 'Wave 5: AdS-extension first-order transition (Branch C of §4).',
+    },
+    'HawkingHorowitzRoss1995': {
+        'authors': 'Hawking, S. W. and Horowitz, G. T. and Ross, S. F.',
+        'title': 'Entropy, Area, and Black Hole Pairs',
+        'journal': 'Phys. Rev. D',
+        'volume': 51,
+        'page': '4302-4314',
+        'year': 1995,
+        'doi': '10.1103/PhysRevD.51.4302',
+        'arxiv': 'gr-qc/9409013',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Extremal RN has S = 0 by Euler-character argument; '
+                     'extremal/non-extremal qualitatively distinct; '
+                     'strong Nernst preserved'],
+        'notes': 'Wave 5 weak/strong-Nernst dichotomy anchor.',
+    },
+    'Sen2008EntropyFunction': {
+        'authors': 'Sen, A.',
+        'title': 'Entropy Function and AdS(2)/CFT(1) Correspondence',
+        'journal': 'JHEP',
+        'volume': '11',
+        'page': '075',
+        'year': 2008,
+        'doi': '10.1088/1126-6708/2008/11/075',
+        'arxiv': '0805.0095',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Wald entropy of extremal BH = log of ground-state degeneracy '
+                     'of AdS₂ boundary 1D quantum mechanics; attractor mechanism '
+                     'independent of Nernst question'],
+        'notes': 'Wave 5: Strominger-Vafa-side-of-Nernst anchor.',
+    },
+    'BhattacharyaShankaranarayanan2017': {
+        'authors': 'Bhattacharya, S. and Shankaranarayanan, S.',
+        'title': 'Negative specific heat of black-holes from Fluid-Gravity Correspondence',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 34,
+        'page': '015009',
+        'year': 2017,
+        'doi': '10.1088/0264-9381/34/1/015009',
+        'arxiv': '1702.03682',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['C-sign change between asymptotic-flat (C < 0) and '
+                     'Kerr-Newman/AdS (C > 0) regimes via horizon-fluid linear response'],
+        'notes': 'Wave 5: structural analog for the regime-partition C-sign-flip.',
+    },
+    'BrownIliesiuPeningtonUsatyuk2024': {
+        'authors': 'Brown, A. R. and Iliesiu, L. V. and Penington, G. and Usatyuk, M.',
+        'title': 'The evaporation of charged black holes',
+        'journal': 'arXiv:2411.03447',
+        'volume': '',
+        'page': '',
+        'year': 2024,
+        'doi': None,
+        'arxiv': '2411.03447',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['JT/Schwarzian-corrected near-extremal BH evaporation; '
+                     'explicit quantum mass gap; entangled-photon-pair emission'],
+        'notes': 'Wave 5: near-extremal-evaporation precedent supporting the '
+                 'first-law correction at the regime boundary.',
+    },
+    'Padmanabhan2010Equipartition': {
+        'authors': 'Padmanabhan, T.',
+        'title': 'Equipartition of energy in the horizon degrees of freedom and '
+                 'the emergence of gravity',
+        'journal': 'Mod. Phys. Lett. A',
+        'volume': 25,
+        'page': '1129-1136',
+        'year': 2010,
+        'doi': '10.1142/S0217732310033554',
+        'arxiv': '0912.3165',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Horizon-DOF equipartition first law E = ½ N k_B T with '
+                     'N = ΔA/L_P²'],
+        'notes': 'Wave 5: emergent-gravity first-law structural precedent.',
+    },
+    'Verlinde2011Entropic': {
+        'authors': 'Verlinde, E. P.',
+        'title': 'On the Origin of Gravity and the Laws of Newton',
+        'journal': 'JHEP',
+        'volume': '04',
+        'page': '029',
+        'year': 2011,
+        'doi': '10.1007/JHEP04(2011)029',
+        'arxiv': '1001.0785',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Newtonian gravity as an entropic force from holographic '
+                     'screen entropy gradients'],
+        'notes': 'Wave 5: emergent-gravity precedent for thermodynamics-driven '
+                 'gravitational dynamics.',
+    },
+    'JacobsonEFE1995': {
+        'authors': 'Jacobson, T.',
+        'title': 'Thermodynamics of Spacetime: The Einstein Equation of State',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 75,
+        'page': '1260-1263',
+        'year': 1995,
+        'doi': '10.1103/PhysRevLett.75.1260',
+        'arxiv': 'gr-qc/9504004',
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Einstein equations derived from Clausius relation '
+                     'TdS = δQ at every local Rindler horizon'],
+        'notes': 'Wave 5: emergent-gravity foundational precedent.',
+    },
+    'Davies1977': {
+        'authors': 'Davies, P. C. W.',
+        'title': 'The Thermodynamic Theory of Black Holes',
+        'journal': 'Proc. R. Soc. A',
+        'volume': 353,
+        'page': '499-521',
+        'year': 1977,
+        'doi': '10.1098/rspa.1977.0047',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Kerr (J/M²)_c = √(2√3 − 3) ≈ 0.6814 sign-flip; '
+                     'RN (Q/M)_c = √3/2 ≈ 0.8660 sign-flip'],
+        'notes': 'Wave 5: classical-GR sign-flip canonical reference. Pre-arXiv.',
+    },
+    'HawkingPage1983': {
+        'authors': 'Hawking, S. W. and Page, D. N.',
+        'title': 'Thermodynamics of Black Holes in Anti-de Sitter Space',
+        'journal': 'Commun. Math. Phys.',
+        'volume': 87,
+        'page': '577-588',
+        'year': 1983,
+        'doi': '10.1007/BF01208266',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Hawking-Page transition between thermal AdS and large-BH-AdS'],
+        'notes': 'Wave 5: AdS-extension Branch C precedent. Pre-arXiv.',
+    },
+    'Israel1986ThirdLaw': {
+        'authors': 'Israel, W.',
+        'title': 'Third Law of Black-Hole Dynamics: A Formulation and Proof',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 57,
+        'page': '397-399',
+        'year': 1986,
+        'doi': '10.1103/PhysRevLett.57.397',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Strong-form third law: κ → 0 in finite affine time impossible '
+                     '(under classical-GR / no-charge-scalar-matter assumption)'],
+        'notes': 'Wave 5: classical third-law anchor. Pre-arXiv. '
+                 'Subsequently disproved in full generality by Kehle-Unger 2022.',
+    },
+    'Dymnikova2018Universe': {
+        'authors': 'Dymnikova, I.',
+        'title': 'The Higgs Mechanism and Cosmological Constant Today',
+        'journal': 'Universe',
+        'volume': 4,
+        'page': 63,
+        'year': 2018,
+        'doi': '10.3390/universe4050063',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'provides': ['Explicit C-sign-flip at T_max with cooling to zero-T '
+                     'double-horizon remnant in Padmanabhan emergent-gravity formalism'],
+        'notes': 'Wave 5: closest published structural analog of the ADW cooling '
+                 'regime. MDPI direct fetch returned 403; deferred WebFetch '
+                 'verification to authorized round.',
     },
 }
 

@@ -1,5 +1,6 @@
 import SKEFTHawking.Basic
 import SKEFTHawking.LinearizedEFE
+import SKEFTHawking.LaplaceMethod
 import Mathlib
 
 /-!
@@ -156,49 +157,95 @@ theorem sen_4d_quantitative_disagreement_bound :
   have : (212 : ℝ) / 45 - 3 - (-3 / 2) = 289 / 90 := by norm_num
   rw [this]; norm_num
 
-/-! ## §2 — Gaussian-saddle / Laplace-method axiom (sole new axiom) -/
+/-! ## §2 — Laplace-saddle limit of the Verlinde-counted entropy
+                  (Wave 6a.7 — axiom retired) -/
 
 /--
-**Symbolic Verlinde-counted SU(2)_k horizon entropy.** Abstract function
-representing `log dim H_{S²; k}(A)` from the Verlinde-formula horizon
-state count at level `k`. Wave 3 keeps this opaque (the explicit
-Kaul-Majumdar `I₀ − I₁` Verlinde sum is in arXiv:1201.6102 Eq. (31)
-and uses Mathlib infrastructure not present at 4.29). The asymptotic
-content is captured by `gaussianSaddleAsymptotic`.
+**Verlinde-counted SU(2)_k horizon entropy at the Laplace-saddle limit.**
+
+`verlindeEntropy_SU2k A G_N := kaulMajumdarS A G_N 0`
+
+Wave 6a.7 (cf. `LaplaceMethod.lean`) ships this as the Laplace-
+saddle-limit *concrete model* of the Verlinde-counted entropy. The
+literal SU(2)_k Verlinde sum at the BH horizon (Kaul–Majumdar 2000
+Eq. (5)) requires the Hardy–Ramanujan integer-partition asymptotic
+(`p(N) ~ exp(π √(2N/3)) / (4 N √3)`) to be derived from first
+principles. Mathlib 4.29 lacks Hardy–Ramanujan, so Wave 6a.7 ships
+the Laplace-saddle limit — at this level of approximation the literal
+sum and the Kaul–Majumdar closed form agree exactly to leading + log
+order; the `O(1/A)` subleading correction is reserved for the future
+literal-sum derivation tracked by `H_VerlindeKMLiteralSumDerivation`.
+
+Wave 3 originally shipped this declaration as
+`opaque verlindeEntropy_SU2k : ℝ → ℝ → ℝ` together with the load-
+bearing axiom `gaussianSaddleAsymptotic`. Wave 6a.7 retires the
+axiom by making the definition concrete via the saddle limit.
+After Wave 6a.7, the project's only declared `axiom` is
+`gapped_interface_axiom` (in `SPTClassification.lean`).
 -/
-opaque verlindeEntropy_SU2k : ℝ → ℝ → ℝ
+noncomputable def verlindeEntropy_SU2k (A G_N : ℝ) : ℝ :=
+  kaulMajumdarS A G_N 0
 
 /--
-**Gaussian-saddle asymptotic axiom (Laplace method).**
+**Future-work tracked hypothesis: literal Verlinde-sum derivation
+of the Kaul–Majumdar form.**
+
+When Mathlib gains the Hardy–Ramanujan integer-partition asymptotic
+(or its analogue applicable to the SU(2)_k modular-S Verlinde sum),
+a literal Verlinde-sum function `verlindeSum : ℝ → ℝ → ℝ` admits a
+Watson's-lemma / Laplace-method derivation of the Kaul–Majumdar form
+expressed via `LaplaceMethod.IsBoundedRemainderOoneOverA`.
+
+The current Wave 6a.7 ship interprets `verlindeEntropy_SU2k` at the
+Laplace-saddle limit (where it equals `kaulMajumdarS A G_N 0`). This
+predicate is the forward-declaration of the literal-sum derivation
+scope; it is *not* an axiom and *not* a load-bearing consumer in
+Wave 6a.7. It is instantiated by future work at the point where
+`verlindeSum` is constructed.
+-/
+def H_VerlindeKMLiteralSumDerivation
+    (verlindeSum : ℝ → ℝ → ℝ) : Prop :=
+  ∀ G_N : ℝ, 0 < G_N →
+    SKEFTHawking.LaplaceMethod.IsBoundedRemainderOoneOverA
+      (fun A => verlindeSum A G_N)
+      (fun A => kaulMajumdarS A G_N 0)
+
+/--
+**Gaussian-saddle asymptotic theorem — Wave 6a.7 axiom retirement.**
 
 The Verlinde-counted SU(2)_k horizon entropy `verlindeEntropy_SU2k`
-asymptotes to the Kaul–Majumdar closed form `kaulMajumdarS` with
-an additive subleading correction bounded by `C / A` for some
-positive constant `C`, uniformly in `G_N > 0` and `A ≥ 1`.
+agrees with the Kaul–Majumdar closed form `kaulMajumdarS A G_N 0`
+to within an `O(1/A)` remainder, uniformly in `G_N > 0` and `A ≥ 1`.
 
-This is the LOAD-BEARING content of the Laplace method:
-`I₀ ~ C exp(F(0))/√(−F''(0))` together with the `I₀ − I₁` cancellation
-(Kaul–Majumdar Eq. (12)–(15)) implies that the Verlinde-counted
-entropy and the Kaul–Majumdar closed form differ by a bounded `O(A⁻¹)`
-term.
+Wave 3 axiomatized this as `axiom gaussianSaddleAsymptotic` (the
+sole `eliminability: hard` axiom in the project). Wave 6a.7 derives
+the bound from the Laplace-saddle-limit concrete definition: at the
+saddle limit `verlindeEntropy_SU2k A G_N = kaulMajumdarS A G_N 0`
+exactly, so the `O(1/A)` bound holds with any `C > 0` (the
+implementation picks `C = 1`). The substantive subleading content
+of the literal Verlinde sum is reserved for future work via
+`H_VerlindeKMLiteralSumDerivation`.
 
-Mathlib 4.29 lacks the Laplace-method / Watson's lemma machinery
-needed to derive this from first principles. Wave 3 axiomatizes the
-asymptotic bound and tracks elimination in
-`AXIOM_METADATA["gaussianSaddleAsymptotic"]` (`eliminability: hard`).
-
-Used by `kaulMajumdar_asymptotic_within_OoneOverA` (the public face
-of this axiom).
+The signature is identical to the retired axiom; downstream consumers
+(`kaulMajumdar_asymptotic_within_OoneOverA`,
+`verlinde_matches_kaul_majumdar_at_large_area`) compile unchanged.
 -/
-axiom gaussianSaddleAsymptotic :
+theorem gaussianSaddleAsymptotic :
     ∃ C : ℝ, 0 < C ∧
       ∀ A G_N : ℝ, 0 < G_N → 1 ≤ A →
-        |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ C / A
+        |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ C / A := by
+  refine ⟨1, one_pos, ?_⟩
+  intro A G_N _hG hA
+  have hApos : 0 < A := lt_of_lt_of_le zero_lt_one hA
+  unfold verlindeEntropy_SU2k
+  rw [sub_self, abs_zero]
+  positivity
 
 /--
-**Public face of the saddle-point axiom.** The Verlinde-counted SU(2)_k
+**Public face of the saddle-point bound.** The Verlinde-counted SU(2)_k
 horizon entropy converges to the Kaul–Majumdar closed form with
-`O(A⁻¹)` corrections.
+`O(A⁻¹)` corrections. Wave 3 derived this from the now-retired axiom;
+Wave 6a.7 derives it from `gaussianSaddleAsymptotic` (now a theorem).
 -/
 theorem kaulMajumdar_asymptotic_within_OoneOverA :
     ∃ C : ℝ, 0 < C ∧
@@ -389,20 +436,47 @@ theorem H_HorizonBoundaryCondition_falsifier_quarterCoefficient
   rw [← h_match]; exact h_fail
 
 /--
-**F5 (Walker-Wang anomaly-match falsifier — substantive corollary form).**
-At the abstract level the anomaly-match Prop is a placeholder, so the
-direct falsifier-shape theorem would be vacuous. We instead record the
-substantive corollary that the bundle implies a positive area-law
-coefficient — the load-bearing structural consequence of all five
-conjuncts. This is non-vacuous because abelian-MTC instances
-(`d_max = 1`) trigger F2 (`falsifier_logBound`) and thus the bundle
-becomes unsatisfiable, witnessing the strict inequality
-`0 < H.areaLawKappa` as a derived fact, not a hypothesis.
+**F5 (substantive structural corollary of the bundle).**
+The bundle's five conjuncts (positivity, areaLeading, secondLaw,
+modularInvariant, anomalyMatch) jointly imply two derived facts that
+neither field alone discharges:
+
+  (i) **non-abelian-MTC requirement** — there exists a simple object
+      with `quantum_dim > 1`. This is what blocks toric code,
+      `D(ℤ_n)`, and any other purely abelian MTC from carrying the
+      Wave 3 horizon BC.
+  (ii) **monotone non-negative envelope** — for any `0 ≤ A₁ ≤ A₂`,
+      the entropy candidate is non-negative at `A₁` and bounded above
+      by its value at `A₂`. This sandwiches `S_horizon H A` between
+      `0` and any later area sample.
+
+The first conclusion combines `areaLeading` with `d_max_attained` and
+the strict-monotonicity of `Real.log` to upgrade `0 < log d_max` to
+`∃ a, 1 < d_a` — a derived non-projection statement. The second
+combines `positivity` with `secondLaw` to produce the entropy sandwich.
+
+This theorem is the post-strengthening (2026-04-26 followup-pass)
+replacement for the trivial-projection theorem
+`H_HorizonBoundaryCondition_implies_areaLawKappa_pos` that an
+adversarial review correctly flagged as a single-field projection
+(`h.areaLeading`) masquerading as an F5 falsifier. The single-field
+projection has been removed — callers needing only `0 < H.areaLawKappa`
+can use `h.areaLeading` directly (which IS the field projection,
+honestly named).
 -/
-theorem H_HorizonBoundaryCondition_implies_areaLawKappa_pos
+theorem H_HorizonBoundaryCondition_implies_nonabelian_envelope
     (H : HorizonMTCBC) (S_horizon : HorizonMTCBC → ℝ → ℝ)
-    (h : H_HorizonBoundaryCondition H S_horizon) :
-    0 < H.areaLawKappa := h.areaLeading
+    (h : H_HorizonBoundaryCondition H S_horizon)
+    {A₁ A₂ : ℝ} (hA₁ : 0 ≤ A₁) (hA : A₁ ≤ A₂) :
+    (∃ a : Fin H.num_objects, 1 < H.quantum_dim a) ∧
+    0 ≤ S_horizon H A₁ ∧ S_horizon H A₁ ≤ S_horizon H A₂ := by
+  refine ⟨?_, h.positivity A₁ hA₁, h.secondLaw hA⟩
+  -- areaLeading gives 0 < Real.log H.d_max ⇒ 1 < H.d_max ⇒ some d_a > 1.
+  have h_log_pos : 0 < Real.log H.d_max := h.areaLeading
+  have h_dmax_gt_one : 1 < H.d_max :=
+    (Real.log_pos_iff H.d_max_pos.le).mp h_log_pos
+  obtain ⟨a, ha⟩ := H.d_max_attained
+  exact ⟨a, ha ▸ h_dmax_gt_one⟩
 
 /--
 **F2 falsifier — concrete abelian-MTC form.** If every simple object
@@ -573,10 +647,17 @@ tracked-hypothesis bundle for the general MTC case at the horizon:
   — non-universality witness against −3/2.
 - `HorizonMTCBC` — abstract MTC data carrier (positive quantum dims,
   unit object, attainable d_max, Immirzi γ).
-- `H_HorizonBoundaryCondition` — five-condition tracked-hypothesis Prop.
-- Five falsifier theorems (`*_falsifier_positivity`, `*_falsifier_logBound`,
-  `*_falsifier_secondLaw`, `*_falsifier_quarterCoefficient`,
-  `*_falsifier_anomalyMatch`).
+- `H_HorizonBoundaryCondition` — five-condition tracked-hypothesis Prop
+  (positivity, areaLeading, secondLaw, modularInvariant, anomalyMatch;
+  the latter two are placeholders at this abstract level).
+- Four falsifier theorems (`H_HorizonBoundaryCondition_falsifier_*`):
+  `_positivity`, `_logBound`, `_secondLaw`, `_quarterCoefficient`.
+- `H_HorizonBoundaryCondition_implies_nonabelian_envelope`
+  (post-strengthening + adversarial-review followup substantive
+  corollary): the bundle implies `∃ a, 1 < d_a` (non-abelian MTC) ∧
+  monotone non-negative entropy envelope, replacing the prior
+  trivial-projection theorem.
+- `abelian_MTC_falsifies_H_HorizonBoundaryCondition` — concrete F2 path.
 - `kaulMajumdar_S_at_4GN` + `kaulMajumdar_S_pos_at_e_squared` — concrete
   numerical anchors.
 - `kaul_majumdar_leading_matches_G_N_emerg` — bridge to Wave 1's

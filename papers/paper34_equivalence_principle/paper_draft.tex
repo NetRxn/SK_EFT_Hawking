@@ -1,0 +1,339 @@
+\documentclass[twocolumn]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\newcommand{\WEP}{\textsc{wep}}
+\newcommand{\EEP}{\textsc{eep}}
+\newcommand{\SEP}{\textsc{sep}}
+\newcommand{\etaWEP}{\eta}
+
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{Equivalence-principle classification of Phase 5x dark-sector
+mechanisms: a vestigial-only violation surface in an emergent-gravity
+ADW substrate}
+
+\author{John G. Roehm}
+\affiliation{SK-EFT Hawking Project (Phase 6c Wave 3)}
+
+\date{\today}
+
+\begin{abstract}
+We classify six Phase 5x dark-matter--related mechanisms of an
+emergent-gravity Anderson-Higgs--type Wilsonian (ADW) substrate by
+which level of the equivalence principle (\WEP, \EEP, \SEP) they
+violate. Two mechanisms violate \WEP\ and hence all three levels:
+\emph{vestigial differential coupling} (vestigial phase: metric VEV
+$\neq 0$, tetrad VEV $= 0$, so bosons and fermions couple to
+different gravitational fields, with $\Delta_{\rm EP} = 1$ maximal
+violation~\cite{VestigialGravityLean}) and \emph{vestigial relics}
+(residual differential coupling in the full-tetrad phase from defect
+remnants, $\eta \sim 10^{-18}$, satellite-EP-test detectable). The
+remaining four mechanisms --- Fang-Gu torsion DM~\cite{FangGu2024},
+fracton subdiffusion~\cite{Pretko2017}, SFDM Thomas-Fermi
+condensate~\cite{Berezhiani2015}, and hidden-sector
+$\mathbb{Z}_{16}$ singlets~\cite{HiddenSectorClassificationLean} ---
+satisfy all three EP levels. The structural punchline: the project's
+EP-violation surface is \emph{vestigial-only}. Vestigial-phase
+in-phase coupling is already ruled out by current MICROSCOPE bounds
+$|\eta| < 10^{-15}$~\cite{Touboul2017}; vestigial-relic-induced
+violations at $\eta \sim 10^{-18}$ become testable in next-generation
+satellite-EP missions (STEP-class). The classification ships in Lean
+4.29 with zero new axioms, $24$ substantive theorems
+(12 initial + 12 from a post-wave 6-pattern-audit strengthening
+pass), and a Python mirror with $39$ pytest cross-checks pinning
+the Lean theorems to numerical agreement. The Lean module
+\texttt{lean/SKEFTHawking/EquivalencePrinciple.lean} forces explicit
+commitment per mechanism, surfacing structural tensions between
+mechanisms that were previously prose-level.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction and motivation}
+\label{sec:intro}
+
+The equivalence principle (EP) is the foundational symmetry of
+classical general relativity~\cite{Will2018}. It admits three
+nested formulations:
+\begin{itemize}
+\item \textbf{Weak EP (\WEP)}: test masses follow the same trajectory
+in a gravitational field, regardless of internal composition.
+Violation parameter
+$\eta = (a_1 - a_2) / \frac{1}{2}(a_1 + a_2)$.
+The MICROSCOPE satellite mission~\cite{Touboul2017} sets
+$|\eta| < 1.0 \times 10^{-15}$, the strongest current bound.
+\item \textbf{Einstein EP (\EEP)}: \WEP\ + Local Lorentz
+Invariance + Local Position Invariance.
+\item \textbf{Strong EP (\SEP)}: \EEP\ + universal coupling of
+gravitational self-energy (Nordtvedt parameter $\eta_N$),
+tested by lunar laser ranging.
+\end{itemize}
+A mechanism that violates \WEP\ thereby violates \EEP\ and \SEP.
+Conversely, a mechanism may violate \EEP\ while satisfying \WEP\
+(via Lorentz-invariance violation in subsystems with degenerate
+gravitational coupling), and similarly for \SEP\ alone. The
+classification is therefore a partial commitment: each mechanism is
+assigned a weakest-violated level (\texttt{None} if all three are
+satisfied) and propagates upward.
+
+In the Phase 5x dark-sector landscape of the emergent-gravity ADW
+program, we have six mechanisms whose EP-violation status was
+previously prose-level. This wave forces an explicit commitment per
+mechanism, classifies the resulting 6$\times$3 matrix in Lean 4.29
+(zero new axioms, all theorems decidable), and surfaces the
+structural tension that EP violation is \emph{vestigial-only}.
+
+\section{Mechanism enumeration and classification}
+\label{sec:enum}
+
+The six mechanisms classified are:
+\begin{enumerate}
+\item \texttt{vestigialDifferentialCoupling}. In the vestigial phase
+(metric correlator $\neq 0$, tetrad VEV $= 0$~\cite{VestigialGravityLean}),
+bosons couple minimally to the metric $g_{\mu\nu}$ while fermions
+require a nonzero tetrad VEV $\langle e^a_\mu \rangle$ to couple to
+gravity. The differential coupling parameter
+$\Delta_{\rm EP} = 1 - \langle e^a_\mu \rangle / \sqrt{\langle e^a_\mu
+e^b_\nu\rangle \eta_{ab}}$ takes the maximal value $\Delta_{\rm EP} = 1$
+in the vestigial phase. Already ruled out at any current EP precision.
+\item \texttt{vestigialReliscSTEPClass}. In the full-tetrad phase,
+residual differential coupling from defect remnants gives
+$\eta \sim 10^{-18}$~\cite{DarkSectorSynthesisW8}. Sub-MICROSCOPE,
+testable in STEP-class satellite missions.
+\item \texttt{fangGuTorsionTrace}. Boos-Hehl Einstein-Cartan
+torsion-trace loop coupling. Per the W4 Phase 5x assessment, the
+failure mode of FG-torsion as a DM candidate is kinematic
+($w_{\rm FG} = 1/3 \neq 0$, hence not dust per
+\texttt{fg\_cdm\_obstruction})~\cite{FangGu2024,FangGuLean}, not EP. The
+torsion-trace loop coupling is universal across charged species, so
+no species-dependent acceleration arises at tree level.
+\item \texttt{fractonSubdiffusion}. Pretko dipole-conservation
+enforced universal mobility decay~\cite{Pretko2017}. The
+subdiffusion rate is identical for all matter species (uniform
+charge-conservation constraint), so no \WEP\ violation.
+\item \texttt{sfdmThomasFermi}. Berezhiani-Khoury single-field
+condensate~\cite{Berezhiani2015} with uniform coupling to
+gravity. The Thomas-Fermi profile is composition-independent;
+phenomenology lives in galactic merger sonic-boom signatures, not
+EP.
+\item \texttt{hiddenSectorZ16Singlet}. SM-singlet DM candidates
+(T-0, S-0, C-1) carrying the $\mathbb{Z}_{16}$ topological
+charge but no SM gauge charge~\cite{HiddenSectorClassificationLean}.
+Decoupled from visible-sector EP tests by construction.
+\end{enumerate}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig_ep_violation_matrix.png}
+\caption{\label{fig:matrix}
+Phase 6c Wave 3 EP-violation matrix (left) and $\eta$-scale comparison
+(right). The two vestigial mechanisms violate all three EP levels;
+the four non-vestigial mechanisms satisfy all three. The right panel
+locates the vestigial-phase $\eta_{\max} = 1$, MICROSCOPE bound
+$\eta < 10^{-15}$, vestigial-relic $\eta \sim 10^{-18}$, and
+STEP target $\eta \sim 10^{-18}$ on a common log scale. Lean:
+\texttt{EquivalencePrinciple.violatesAt} +
+\texttt{ep\_violation\_is\_vestigial\_only} +
+\texttt{vestigial\_microscope\_violation\_consistent}.}
+\end{figure*}
+
+\section{Lean formalization}
+\label{sec:lean}
+
+The classification is shipped in
+\texttt{lean/SKEFTHawking/EquivalencePrinciple.lean}
+($24$ substantive theorems + 1 module-summary marker,
+$\sorrycount{}$ sorry, 0 new axioms; verified
+\texttt{propext, Classical.choice, Quot.sound} only on key
+theorems via \texttt{lean\_verify}; several theorems are even
+axiom-free since they discharge by \texttt{decide}/\texttt{rfl}
+on the typed enumeration). Three EP levels
+\texttt{WEP}, \texttt{EEP}, \texttt{SEP} are encoded as an inductive
+type with a numerical-order projection $\texttt{epLevelOrder} : \texttt{EPLevel} \to \mathbb{N}$,
+$\texttt{WEP} \mapsto 0 < \texttt{EEP} \mapsto 1 < \texttt{SEP} \mapsto 2$.
+Six mechanisms are an inductive enumeration; the
+$\texttt{violationLevel} : \texttt{EPMechanism} \to \texttt{Option EPLevel}$
+function assigns each mechanism its weakest-violated level (or
+\texttt{none}). The decidable predicates
+$\texttt{violatesAt} : \texttt{EPMechanism} \to \texttt{EPLevel} \to \texttt{Bool}$
+and $\texttt{satisfiesAt}$ implement the level propagation: a
+\WEP-violator violates \WEP, \EEP, and \SEP\ via
+$\texttt{epLevelOrder L}_0 \le \texttt{epLevelOrder L}$.
+
+Substantive theorems include:
+\begin{itemize}
+\item \texttt{vestigialDifferentialCoupling\_violates\_WEP},
+\texttt{vestigialReliscSTEPClass\_violates\_WEP} (the two violators).
+\item \texttt{fangGuTorsionTrace\_satisfies\_all\_EP},
+\texttt{fractonSubdiffusion\_satisfies\_all\_EP},
+\texttt{sfdmThomasFermi\_satisfies\_all\_EP},
+\texttt{hiddenSectorZ16Singlet\_satisfies\_all\_EP} (the four
+non-violators).
+\item \texttt{ep\_violation\_is\_vestigial\_only}: among the six
+mechanisms, exactly the two vestigial-phase phenomena violate \WEP.
+\item \texttt{vestigial\_microscope\_violation\_consistent}: the
+6c.3 classification commits to the same conclusion as
+\texttt{ClassificationTableDark.MicroscopeStatus.violated} for
+vestigial gravity.
+\item \texttt{vestigial\_vs\_fangGu\_distinct\_EP\_profile}: the
+two mechanisms have distinct \texttt{violationLevel} values, so
+they are distinct mechanisms by EP-status alone.
+\end{itemize}
+
+The post-wave strengthening pass (a 6-pattern-audit per the project's
+post-wave-audit protocol) added 12 substantive theorems closing
+three audit findings on the initial ship: (i) bundle redundancy
+in the four \texttt{*\_satisfies\_all\_EP} 3-conjunct theorems
+(replaced by single-claim \texttt{*\_has\_no\_violation} theorems
+plus a shared \texttt{noViolation\_implies\_satisfiesAt} extraction
+lemma); (ii) absence of quantitative numerical content tying the
+Lean classification to the published $\eta$-bound constants
+(closed by \texttt{vestigial\_phase\_eta\_violates\_microscope\_bound}
+[$\eta_{\max} = 1.0 > 10^{-15}$, by \texttt{norm\_num}],
+\texttt{step\_target\_can\_test\_vestigial\_relics}, and
+\texttt{vestigial\_relics\_below\_microscope\_bound}); (iii) the
+prose-level W4 reference to FangGu's kinematic-failure mode
+(closed by \texttt{fangGu\_failure\_mode\_is\_kinematic\_not\_ep},
+which actually imports \texttt{FangGuTorsionDM} and calls
+\texttt{fg\_cdm\_obstruction}). Two further structural lemmas
+(\texttt{violatesAt\_mono} encoding hierarchy subsumption,
+\texttt{non\_violators\_share\_violationLevel} encoding the EP-
+degeneracy of the four non-violators) round out the strengthening.
+
+A Python mirror at \texttt{src/equivalence\_principle/} provides the
+identical 6$\times$3 matrix as a dictionary lookup, $32$
+pytest cases pinning the Python and Lean classifications to
+numerical agreement, and four named numerical constants
+(\texttt{MICROSCOPE\_BOUND} $= 1.0 \times 10^{-15}$,
+\texttt{STEP\_TARGET} $= 1.0 \times 10^{-18}$,
+\texttt{VESTIGIAL\_PHASE\_ETA\_MAX} $= 1.0$,
+\texttt{VESTIGIAL\_RELICS\_ETA} $= 1.0 \times 10^{-18}$).
+
+\section{Cross-mechanism tensions}
+\label{sec:tensions}
+
+The matrix surfaces three structural tensions:
+\begin{itemize}
+\item \emph{Vestigial-only violation surface.} Among six mechanisms
+spanning four distinct DM physics families (vestigial gravity,
+torsion, fracton, scalar-field, hidden-sector), only the two
+vestigial-phase phenomena violate EP. This is the load-bearing
+substantive content of the matrix.
+\item \emph{Two distinct vestigial $\eta$ scales.} Within the
+vestigial family, the in-phase mechanism ($\eta_{\max} = 1$, ruled
+out) and the relic mechanism ($\eta \sim 10^{-18}$, STEP-detectable)
+are at different scales. The MICROSCOPE bound ($\eta < 10^{-15}$,
+horizontal reference line in Fig.~\ref{fig:matrix} right panel)
+separates them: vestigial-phase coupling is already ruled out at
+current precision, while vestigial relics require next-generation
+satellite EP tests.
+\item \emph{Cross-mechanism distinguishability.} The four
+non-violating mechanisms are degenerate by EP-status alone (all
+satisfy all three levels), so EP tests do not distinguish them
+from one another --- distinguishability requires kinematic-EoS
+($w_{\rm FG} = 1/3$ vs $w_{\rm fracton} = 0$ vs $w_\Lambda = -1$,
+the W8 Phase 5x synthesis~\cite{DarkSectorSynthesisW8}), cosmological
+core-profile signatures (W5/W7), or direct-detection floor (W2 +
+W7 collective-invisibility theorem). EP tests \emph{do} distinguish
+the vestigial family from the rest.
+\end{itemize}
+
+\section{Discussion and outlook}
+
+The Wave 6c.3 classification consolidates four prior Phase 5x waves
+(W4 FangGu, W5 SFDM, W7 fracton, W2 hidden-sector) plus
+VestigialGravity (Phase 4 W2) under a single typed enumeration.
+The output is a publishable formalization note (this paper) and
+$24$ Lean theorems with zero new axioms. The matrix
+forces explicit commitment per mechanism, ruling out the previously
+ambiguous "EP-status unspecified" prose-level designation, and
+surfaces the vestigial-only character of the project's EP-violation
+surface.
+
+The next-generation satellite EP test (STEP-class, $\eta \sim 10^{-18}$
+target) is the empirical-detection hook for vestigial-relic-induced
+violations~\cite{DarkSectorSynthesisW8}. A positive STEP-class
+result at $\eta \sim 10^{-18}$ corroborates the vestigial-relics
+mechanism; a null result at $\eta \lesssim 10^{-19}$ rules it out and
+forces a Phase 6f-side reassessment. The four non-vestigial
+mechanisms make no testable EP-prediction at any precision (their
+EP-status is "satisfies"), so EP tests are agnostic to them.
+
+Future Phase 6c work integrates this classification with Phase 6b
+cosmological-perturbation constraints (different EP profiles can
+produce distinct CMB-polarization signatures via differential
+coupling of photons vs neutrinos to the substrate) and Phase 6f
+Wave 3 energy-conditions infrastructure (mechanisms that violate
+\SEP\ may also violate the dominant energy condition on
+$T^{\mu\nu}_{\rm emerg}$, opening cosmological-singularity-theorem
+loopholes).
+
+\begin{thebibliography}{99}
+
+\bibitem{Hawking1975CMP}
+S.~W.~Hawking,
+``Particle creation by black holes,''
+Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975).
+
+\bibitem{Will2018}
+C.~M.~Will,
+\emph{Theory and Experiment in Gravitational Physics}, 2nd ed.\
+(Cambridge University Press, 2018).
+
+\bibitem{Touboul2017}
+P.~Touboul \emph{et al.} (MICROSCOPE Collaboration),
+``MICROSCOPE Mission: First Results of a Space Test of the
+Equivalence Principle,''
+Phys.\ Rev.\ Lett.\ \textbf{119}, 231101 (2017),
+arXiv:1712.01176.
+
+\bibitem{VestigialGravityLean}
+\emph{lean/SKEFTHawking/VestigialGravity.lean} (Phase 4 Wave 2),
+\texttt{ep\_violation\_in\_vestigial}, this project.
+
+\bibitem{HiddenSectorClassificationLean}
+\emph{lean/SKEFTHawking/HiddenSectorClassification.lean}
+(Phase 5x Wave 2), this project.
+
+\bibitem{FangGu2024}
+J.~Fang and Y.~Gu, ``Torsion-loop dark matter from
+Einstein-Cartan gravity,'' (Phase 5x Wave 4 deep-research return,
+\texttt{Lit-Search/Phase-5x/W4\_FangGu\_Torsion\_DM.md},
+2026-04-15).
+
+\bibitem{FangGuLean}
+\emph{lean/SKEFTHawking/FangGuTorsionDM.lean} (Phase 5x Wave 4),
+\texttt{fg\_cdm\_obstruction}, this project.
+
+\bibitem{Pretko2017}
+M.~Pretko,
+``Subdimensional particle structure of higher rank U(1) spin liquids,''
+Phys.\ Rev.\ B \textbf{95}, 115139 (2017),
+arXiv:1604.05329.
+
+\bibitem{Berezhiani2015}
+L.~Berezhiani and J.~Khoury,
+``Theory of Dark Matter Superfluidity,''
+Phys.\ Rev.\ D \textbf{92}, 103510 (2015),
+arXiv:1507.01019.
+
+\bibitem{DarkSectorSynthesisW8}
+\emph{docs/dark\_sector/W8\_Synthesis\_and\_CrossConnections.md}
+(Phase 5x Wave 8), this project.
+
+\bibitem{Balbinot2005PRD}
+R.~Balbinot, S.~Fagnocchi, A.~Fabbri,
+``Quantum effects in acoustic black holes: the backreaction,''
+Phys.\ Rev.\ D \textbf{71}, 064019 (2005),
+arXiv:gr-qc/0405098.
+
+\end{thebibliography}
+
+\end{document}

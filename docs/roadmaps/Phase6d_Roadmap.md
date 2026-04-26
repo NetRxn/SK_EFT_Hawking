@@ -22,6 +22,7 @@
 >    - 6d.2 — `WetterichNJL.lean`, `TetradGapEquation.lean`, Phase 5z.1 `ScalarRungInterpretation.lean` (parallel pattern)
 >    - 6d.3 — 6d.2, Hirono-Tanizaki ℤ₃ one-form symmetry literature, Son CFL chiral Lagrangian derivation (Son-Stephanov literature)
 > 5. If 6d.1 transport prediction (η/s vs KSS bound) becomes load-bearing for paper claims, coordinate with Phase 6B HPC roadmap (Walker-Wang transport is HPC-dependent)
+> 6. **MANDATORY: Apply the preemptive-strengthening checklist before writing each Lean theorem statement** (see CLAUDE.md "Preemptive-strengthening discipline" + WAVE_EXECUTION_PIPELINE.md Stage 3 checklist). Five questions: (1) drop-conjunct test for bundle redundancy P2; (2) numerical-content connection (`norm_num`-backed comparisons to published constants); (3) cross-module bridge integrity P6 (docstring references → `import + call`); (4) trivial-discharge P3/P4/P5 check (no `rfl`/`decide`/`not_lt.mpr h_disagree` tautologies); (5) defining-the-conclusion check (vacuous when `f := <obvious target>`). The end-of-wave strengthening pass should produce **0 retroactive theorems** — if it produces 5+, log the failure mode and tighten the next wave's discipline.
 
 ---
 
