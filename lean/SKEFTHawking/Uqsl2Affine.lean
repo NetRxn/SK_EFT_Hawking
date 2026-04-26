@@ -246,7 +246,8 @@ theorem oq_coideal_property_B0_statement :
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 Uqsl2Affine module: the quantum affine algebra U_q(sl_2 hat).
   - 8 generators: E_0, E_1, F_0, F_1, K_0, K_1, K_0^{-1}, K_1^{-1}
   - 22 relations: 4 invertibility, 1 Cartan commute, 8 KE/KF, 2 Serre,
@@ -257,6 +258,4 @@ Uqsl2Affine module: the quantum affine algebra U_q(sl_2 hat).
   - Cross commutation [E_i, F_j] = 0 for i != j (proved)
   - Coideal generators B_0, B_1 defined (q-Onsager embedding)
 -/
-theorem uqsl2_affine_summary : True := trivial
-
 end SKEFTHawking

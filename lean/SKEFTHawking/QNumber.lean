@@ -280,7 +280,8 @@ theorem qBinom_classical_limit : ∀ (n j : ℕ),
 
 /-! ## 8. Module summary -/
 
-/--
+/-! ## Module summary
+
 QNumber module: q-integers and q-binomials as Laurent polynomials.
   - qInt n: [n]_q = Σ T^{n-1-2i}, a Laurent polynomial (no division)
   - Explicit: [0]=0, [1]=1, [2]=T+T⁻¹, [3]=T²+1+T⁻²
@@ -291,6 +292,4 @@ QNumber module: q-integers and q-binomials as Laurent polynomials.
   - Classical limit: [n choose j]_1 = C(n,j)
   - Key: [2 choose 1]_q = [2]_q (simply-laced Serre), [3 choose 1]_q = [3]_q
 -/
-theorem qnumber_summary : True := trivial
-
 end SKEFTHawking

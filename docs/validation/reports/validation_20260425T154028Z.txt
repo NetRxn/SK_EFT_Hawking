@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260425T154028Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] tables_fresh
+  + staleness — fresh (11 output files across 8 papers)
+
+Overall: 1/1 passed

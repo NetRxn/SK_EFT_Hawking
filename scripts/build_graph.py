@@ -3074,10 +3074,25 @@ def extract_all_edges(node_ids: set) -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def _cypher_escape(s) -> str:
-    """Escape a string for use in AGE Cypher property values."""
+    """Escape a string for use in AGE Cypher property values.
+
+    Order matters:
+    - `\\` → `\\\\` first (escape literal backslashes)
+    - `'` → `\\'` (escape single quotes that would close the Cypher string)
+    - `$$` → `$ $` (PostgreSQL terminates the wrapping dollar-quoted
+      string `$$ ... $$` at the first inner `$$`; we cannot use `\\$`
+      because Cypher's string-escape grammar only accepts
+      `\\", \\', \\/, \\\\, \\b, \\f, \\n, \\r, \\t, \\uXXXX, \\UXXXXXXXX`.
+      The cheapest fix is to insert a single space between adjacent
+      dollar signs — visually equivalent for LaTeX-rendered labels and
+      preserves the SQL-level dollar-quote boundary.)
+    """
     if s is None:
         return ''
-    return str(s).replace("\\", "\\\\").replace("'", "\\'")
+    return (str(s)
+            .replace("\\", "\\\\")
+            .replace("'", "\\'")
+            .replace("$$", "$ $"))
 
 
 def _create_age_labels(conn, node_types: set, edge_types: set) -> None:

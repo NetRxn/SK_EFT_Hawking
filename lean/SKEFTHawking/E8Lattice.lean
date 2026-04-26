@@ -154,7 +154,8 @@ theorem serre_mod_8_for_E8 : 8 ∣ (8 : ℤ) := dvd_refl 8
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 E8Lattice module: verification of E8 Cartan matrix properties.
   - det(E8) = 1 PROVED (native_decide) — unimodular
   - All diagonal entries = 2 PROVED — even
@@ -166,6 +167,4 @@ E8Lattice module: verification of E8 Cartan matrix properties.
   - Classification σ = 8(a-b) PROVED — algebraic Serre bound
   - All proofs by native_decide/decide/omega — zero sorry, zero axioms, no Aristotle
 -/
-theorem e8_lattice_summary : True := trivial
-
 end SKEFTHawking

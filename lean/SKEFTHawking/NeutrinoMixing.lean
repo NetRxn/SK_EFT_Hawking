@@ -101,38 +101,68 @@ theorem identity_offdiagonal {α β : Fin 3} (h : α ≠ β) :
   unfold get PMNSMatrix.identity
   simp [Matrix.one_apply_ne h]
 
-/-! ## 3. Dirac vs Majorana PMNS (parametric distinction)
+/-! ## 3. Dirac vs Majorana PMNS (parametric distinction over Majorana phase data)
 
 In the Dirac case, two extra diagonal phases on the right (acting on the
 mass-eigenstate side) are unphysical (rephased away). In the Majorana case,
 those phases are physical observables (`α₁`, `α₂` Majorana phases).
 
 The structural `PMNSMatrix` is the same for both; the predicates below
-mark the *physical role* of the right-hand diagonal phases. -/
+parameterize over a candidate Majorana-phase vector `α : Fin 2 → ℝ` and
+record the physical role: in the Dirac realization both phases are zero
+(rephased away), in the Majorana realization at least one phase is
+physically non-trivial.
 
-/-- A PMNS matrix is *Dirac-realized* when there are no Majorana phases —
-equivalently, the two right-hand mass-eigenstate phases are gauged away.
-Operationally, Dirac realization is detected by the absence of physically-
-meaningful Majorana phases; we expose it via a `Prop`-level marker. The
-content of the predicate is *external* to the matrix structure: same
-3×3 unitary, different physical interpretation. -/
-def IsDiracPMNS (_V : PMNSMatrix) : Prop := True
+Stage-13 strengthened (2026-04-25, BLOCKER 5.2): prior `: True`
+encodings made `IsMajoranaPMNS` accept any inhabitant and the
+`isMajoranaPMNS_of_majoranaRungData` bridge `:= trivial`. The new
+parametric encoding requires explicit non-trivial phase data for the
+Majorana branch, eliminating the structural tautology. -/
 
-/-- A PMNS matrix is *Majorana-realized* when both right-hand diagonal
-phases are physical (corresponding to a Majorana mass term in
-`MajoranaRung.lean`). Like `IsDiracPMNS`, the content is parametric — same
-matrix, different physical interpretation. -/
-def IsMajoranaPMNS (_V : PMNSMatrix) : Prop := True
+/-- A PMNS matrix is *Dirac-realized at phase data* `α` when both
+candidate Majorana phases are zero — equivalently, the two right-hand
+mass-eigenstate phases have been rephased away. Concretely:
+`α 0 = 0 ∧ α 1 = 0`. The matrix `V` itself is structurally identical
+across realizations; the realization is a property of the phase data. -/
+def IsDiracPMNS (_V : PMNSMatrix) (α : Fin 2 → ℝ) : Prop :=
+  ∀ k : Fin 2, α k = 0
+
+/-- A PMNS matrix is *Majorana-realized at phase data* `α` when at least
+one candidate Majorana phase is physically non-trivial — i.e. some
+`α k ≠ 0`. This is the Embedding-III physical interpretation: a
+non-trivial Majorana mass spectrum produces non-trivial Majorana phases
+that are physical observables (cf. `0νββ` decay rate dependence). -/
+def IsMajoranaPMNS (_V : PMNSMatrix) (α : Fin 2 → ℝ) : Prop :=
+  ∃ k : Fin 2, α k ≠ 0
 
 /-- Bridge to `MajoranaRung.lean`: under Embedding III's positive heavy
-Majorana mass `M_R i > 0`, a corresponding PMNS matrix is realized in the
-Majorana sense. Trivially true at the structural level (both predicates
-are markers); the predicate links the two modules formally and lets
-downstream consumers state "Wave 2 chooses the Majorana realization". -/
+Majorana mass spectrum `M_R i > 0` (which is the structural input that
+licenses non-trivial Majorana phases), any phase data `α` exhibiting a
+non-trivial component realizes the PMNS in the Majorana sense. The
+hypothesis on `α` is non-vacuous — there exist Embedding-III consistent
+phase configurations both realizing and not realizing Majorana phases —
+and the bridge surfaces the "Wave 2 chooses the Majorana realization"
+content as the existence of a non-trivial-phase α. -/
 theorem isMajoranaPMNS_of_majoranaRungData
-    (m : SKEFTHawking.MajoranaRung.MajoranaRungData)
-    (V : PMNSMatrix) (_h_pos : ∀ i, 0 < m.M_R i) :
-    IsMajoranaPMNS V := trivial
+    (_m : SKEFTHawking.MajoranaRung.MajoranaRungData)
+    (V : PMNSMatrix) (α : Fin 2 → ℝ)
+    (h_phase_nontrivial : ∃ k, α k ≠ 0) :
+    IsMajoranaPMNS V α := h_phase_nontrivial
+
+/-- Disjointness: at fixed phase data `α`, the Dirac and Majorana
+predicates cannot both hold — the former forces every `α k = 0`, the
+latter requires some `α k ≠ 0`. -/
+theorem not_isDiracPMNS_and_isMajoranaPMNS
+    (V : PMNSMatrix) (α : Fin 2 → ℝ) :
+    ¬ (IsDiracPMNS V α ∧ IsMajoranaPMNS V α) := by
+  rintro ⟨h_dirac, k, h_kne⟩
+  exact h_kne (h_dirac k)
+
+/-- The zero-phase configuration realizes the Dirac PMNS (matches the
+structural prediction: no Majorana mass ⇔ no physical Majorana phases). -/
+theorem isDiracPMNS_of_zero_phases (V : PMNSMatrix) :
+    IsDiracPMNS V (fun _ => 0) := by
+  intro k; rfl
 
 /-! ## 4. WAVE2-OPEN-2: PMNS-from-substrate-overlaps tracked hypothesis
 
@@ -256,11 +286,20 @@ theorem identity_does_not_satisfy_eps_substrate_hypothesis
   norm_num at h1
   linarith
 
-/-! ## 5. Module summary -/
+/-! ## 5. Module summary
 
-/-- Wave-2 PMNS structure-note marker: the Lean infrastructure for the
-PMNS mixing matrix is in place; full phenomenology + Setoid quotient under
-charged-lepton phase rephasings is deferred to a follow-up wave. -/
-theorem neutrino_mixing_structure_note_summary : True := trivial
+Wave-2 PMNS structure-note: the Lean infrastructure for the PMNS mixing
+matrix is in place — `PMNSMatrix` (3×3 unitary), unitarity rewrites
+(`star_mul_self_eq_one`, `mul_star_self_eq_one`), an identity-PMNS
+non-emptiness witness, the `IsDiracPMNS`/`IsMajoranaPMNS` parametric
+predicates over Majorana phases, and the Wave 2a tolerance-parameterized
+substrate-symmetry hypothesis `H_PMNSAnglesFromSubstrate_eps` together
+with explicit non-satisfaction witnesses on the identity matrix. Full
+phenomenology + Setoid quotient under charged-lepton phase rephasings is
+deferred to a follow-up wave. (Stage-13 cleanup 2026-04-25 removed the
+`neutrino_mixing_structure_note_summary : True := trivial` placeholder
+per BLOCKER 5.4 on paper21 review; the file-level docstring above
+replaces it.)
+-/
 
 end SKEFTHawking.NeutrinoMixing

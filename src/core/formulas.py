@@ -334,9 +334,14 @@ def turning_point_shift(Gamma_H, kappa, c_s):
         x* ≈ -i·(c_s/κ)·(1 + Γ_H/(2κ))
 
     The Lean theorem `turning_point_shift_nonzero` proves that
-    Γ_H > 0, κ > 0, c_s > 0 imply δx > 0.
+    Γ_H > 0, κ > 0, c_s > 0 imply δx > 0. The structural binding
+    theorem `turning_point_shift_eq_decoherence` proves
+    δx_imag = c_s · δ_k / (4·κ), where δ_k = decoherenceParam,
+    so δx_imag is half the WKB localization length c_s/(2κ) times
+    δ_diss = Γ_H/κ.
 
-    Lean: turning_point_shift_nonzero, turning_point_shift
+    Lean: turning_point_shift_nonzero, turning_point_shift,
+          turningPointShift, turning_point_shift_eq_decoherence
     Aristotle: 518636d7, c4d73ca8
     Source: original (WKB analysis)
 
@@ -6441,6 +6446,161 @@ def scalar_rung_quantitative_match(m_h_pred, m_h_obs=125.25, tolerance=0.5):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 5z Wave 1b: BHL gauge embedding (BHLGaugeEmbedding.lean)
+# ════════════════════════════════════════════════════════════════════
+# Per O.2 verdict (Scenario A 3/5): Bardeen-Hill-Lindner / Miransky-
+# Tanabashi-Yamawaki / Hill 2025 transplant onto WetterichNJL Clifford-16
+# basis. Concrete leading-order BHL formula plus Hill 2025 bilocal
+# correction recovering m_H = 125 GeV.
+# ════════════════════════════════════════════════════════════════════
+
+
+def bhl_higgs_mass(m_t):
+    """BHL leading-order Higgs mass: ``m_H = sqrt(2) * m_t``.
+
+    The Nambu sum rule at leading large-N_c. At the BHL benchmark
+    (Λ = M_Pl, N_c = 3, IR Pendleton-Ross fixed point) yields
+    m_t ≈ 220 GeV, m_H ≈ 311 GeV.
+
+    Lean: BHLGaugeEmbedding.bhlHiggsMass_eq_sqrt2_times_top
+    Aristotle: manual
+    Source: Bardeen, Hill, Lindner, PRD 41, 1647 (1990), Eqs. (3.6)-(3.8);
+        Phase 5z Wave 1b correctness-push anchor.
+
+    Parameters
+    ----------
+    m_t : float
+        Top-quark mass [GeV].
+
+    Returns
+    -------
+    float
+        Predicted Higgs mass [GeV].
+    """
+    if m_t <= 0:
+        raise ValueError("Top-quark mass must be positive.")
+    return float(np.sqrt(2.0) * m_t)
+
+
+def bhl_minimal_overshoot_factor(m_h_pdg=125.20, m_t_bhl=220.0):
+    """BHL gap problem: ratio of BHL minimal m_H to PDG observed m_H.
+
+    Quantifies the failure of the *minimal* BHL embedding (without bilocal
+    correction). Approximately 2.48× overshoot motivates Hill 2025
+    bilocal mechanism.
+
+    Lean: BHLGaugeEmbedding.bhl_minimal_overshoots_pdg
+    Aristotle: manual
+    Source: PDG 2024 Higgs mass value + BHL formula. Phase 5z Wave 1b
+        falsifiability anchor.
+
+    Parameters
+    ----------
+    m_h_pdg : float
+        PDG observed m_H [GeV], default 125.20.
+    m_t_bhl : float
+        BHL benchmark top mass [GeV], default 220.
+
+    Returns
+    -------
+    float
+        ``m_H_BHL / m_H_PDG``.
+    """
+    return bhl_higgs_mass(m_t_bhl) / m_h_pdg
+
+
+def bilocal_correction_factor(phi_zero, phi_inf):
+    """Hill 2025 bilocal wave-function dilution factor: ``φ(0) / φ(∞)``.
+
+    The order parameter resolving the BHL gap problem. Near critical
+    coupling the dilution factor is exponentially suppressed; at the
+    Hill natural composite scale ~ 6 TeV the factor takes the value
+    that recovers m_H = 125 GeV from the BHL minimal m_H ≈ 311 GeV.
+
+    Lean: BHLGaugeEmbedding.bilocalDilution_pos
+    Aristotle: manual
+    Source: Hill, "Natural Top Quark Condensation (a Redux),"
+        arXiv:2503.21518 (2025), §3.
+
+    Parameters
+    ----------
+    phi_zero : float
+        Wave-function at zero separation, > 0.
+    phi_inf : float
+        Asymptotic wave-function value, > 0.
+
+    Returns
+    -------
+    float
+        Dilution factor in (0, 1) for spread bilocals; equals 1 in the
+        pointlike limit.
+    """
+    if phi_zero <= 0 or phi_inf <= 0:
+        raise ValueError("Wave-function values must be positive.")
+    return float(phi_zero / phi_inf)
+
+
+def bilocal_corrected_higgs_mass(dilution, m_t):
+    """Hill 2025 bilocal-corrected BHL Higgs mass:
+    ``m_H = (φ(0)/φ(∞)) * sqrt(2) * m_t``.
+
+    The mechanism by which BHL recovers m_H = 125 GeV: at dilution
+    ≈ 0.402 with m_t = 220 GeV, m_H ≈ 125 GeV.
+
+    Lean: BHLGaugeEmbedding.bilocalCorrectedHiggsMass_pos
+    Aristotle: manual
+    Source: Hill, arXiv:2503.21518 (2025); BHL Eq. (3.6)-(3.8) with
+        Hill bilocal correction. Phase 5z Wave 1b 125-GeV-recovery
+        mechanism.
+
+    Parameters
+    ----------
+    dilution : float
+        Wave-function dilution `φ(0)/φ(∞)` ∈ (0, 1].
+    m_t : float
+        Top-quark mass [GeV].
+
+    Returns
+    -------
+    float
+        Corrected Higgs mass [GeV].
+    """
+    if dilution <= 0 or m_t <= 0:
+        raise ValueError("Dilution and top mass must be positive.")
+    return float(dilution * bhl_higgs_mass(m_t))
+
+
+def pagels_stokar_vev_sq(n_c, m_t, lambda_uv):
+    """Pagels-Stokar formula for the EW VEV:
+    ``v² = (N_c / 8π²) m_t² ln(Λ²/m_t²)``.
+
+    Lean: BHLGaugeEmbedding.pagelsStokarVEVSq_pos
+    Aristotle: manual
+    Source: Pagels & Stokar, PRD 20, 2947 (1979); Miransky, Tanabashi,
+        Yamawaki, MPLA 4, 1043 (1989). Phase 5z Wave 1b infrastructure.
+
+    Parameters
+    ----------
+    n_c : int
+        Number of colors (N_c = 3 for SM).
+    m_t : float
+        Top-quark mass [GeV].
+    lambda_uv : float
+        UV cutoff [GeV], > m_t.
+
+    Returns
+    -------
+    float
+        Predicted v² [GeV²].
+    """
+    if n_c <= 0 or m_t <= 0 or lambda_uv <= m_t:
+        raise ValueError("N_c, m_t > 0; UV cutoff must exceed m_t.")
+    return float(
+        (n_c / (8.0 * np.pi ** 2)) * m_t ** 2 * np.log(lambda_uv ** 2 / m_t ** 2)
+    )
+
+
+# ════════════════════════════════════════════════════════════════════
 # Phase 5z Wave 2: Majorana-rung interpretation (MajoranaRung.lean +
 #                  NeutrinoMixing.lean)
 # ════════════════════════════════════════════════════════════════════
@@ -6747,3 +6907,983 @@ def majorana_rung_z16_compatibility_index(n_nu_r):
     if n_nu_r < 0:
         raise ValueError("Number of ν_R must be non-negative.")
     return int(n_nu_r) % 16
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 5z Wave 3: EW phase transition (EWPhaseTransition.lean)
+# ════════════════════════════════════════════════════════════════════
+# Direct SU(2)-indexed finite-T potential per O.2 Scenario A 3/5
+# (BHL-class daughter Higgs doublet). Implements the leading-order
+# high-T expansion: V_T(phi, T) = (1/2) (c_T T^2 - mu^2) phi^2
+#                                 - (1/3) E T phi^3
+#                                 + (1/4) lam phi^4
+# with order parameter `E` distinguishing first-order (E > 0) from
+# crossover (E = 0).
+# ════════════════════════════════════════════════════════════════════
+
+
+def ew_finite_t_potential(phi, T, mu_sq, lam, c_T, E):
+    """Finite-T effective potential V_T(phi, T) under the high-T expansion.
+
+    Lean: EWPhaseTransition.finiteTPotential
+    Aristotle: manual
+    Source: Anderson & Hall, PRD 64, 1995 (1995); Quiros lectures
+        (hep-ph/9901312). Phase 5z Wave 3.
+
+    Parameters
+    ----------
+    phi : float
+        Field magnitude [GeV].
+    T : float
+        Temperature [GeV].
+    mu_sq : float
+        Zero-T mass-squared (positive in EWSB convention).
+    lam : float
+        Quartic coupling.
+    c_T : float
+        Thermal-mass coefficient (positive).
+    E : float
+        Cubic coefficient (≥ 0; first-order if positive).
+
+    Returns
+    -------
+    float
+        V_T(phi, T) [GeV^4].
+    """
+    return float(
+        0.5 * (c_T * T ** 2 - mu_sq) * phi ** 2
+        - (1.0 / 3.0) * E * T * phi ** 3
+        + 0.25 * lam * phi ** 4
+    )
+
+
+def ew_thermal_mass_sq(T, mu_sq, c_T):
+    """Thermal mass-squared `mu^2(T) = c_T T^2 - mu^2`.
+
+    Lean: EWPhaseTransition.thermalMassSq
+    Aristotle: manual
+
+    Parameters
+    ----------
+    T : float
+        Temperature [GeV].
+    mu_sq : float
+        Zero-T mass-squared.
+    c_T : float
+        Thermal-mass coefficient.
+
+    Returns
+    -------
+    float
+        Thermal mass-squared at temperature T.
+    """
+    return float(c_T * T ** 2 - mu_sq)
+
+
+def ew_critical_temperature(mu_sq, c_T):
+    """Critical temperature `T_c = sqrt(mu^2 / c_T)` of the EW transition.
+
+    Lean: EWPhaseTransition.criticalTemperature_pos
+    Aristotle: manual
+
+    Parameters
+    ----------
+    mu_sq : float
+        Zero-T mass-squared, > 0.
+    c_T : float
+        Thermal-mass coefficient, > 0.
+
+    Returns
+    -------
+    float
+        Critical temperature [GeV].
+    """
+    if mu_sq <= 0 or c_T <= 0:
+        raise ValueError("mu_sq and c_T must be positive.")
+    return float(np.sqrt(mu_sq / c_T))
+
+
+def ew_latent_heat(E, mu_sq, lam, c_T):
+    """Latent heat at LO: `L = E^2 T_c^2 / (2 lambda)`.
+
+    Crossover (E = 0) yields zero latent heat; first-order (E > 0) yields
+    strictly positive latent heat. Order parameter directly controls
+    energy released at the transition.
+
+    Lean: EWPhaseTransition.latentHeat_nonneg, latentHeat_zero_iff_crossover
+    Aristotle: manual
+
+    Parameters
+    ----------
+    E : float
+        Cubic coefficient (≥ 0).
+    mu_sq, lam, c_T : float
+        Other potential parameters.
+
+    Returns
+    -------
+    float
+        Latent heat [GeV^4].
+    """
+    if mu_sq <= 0 or lam <= 0 or c_T <= 0:
+        raise ValueError("Mass-squared, lambda, and c_T must be positive.")
+    T_c = ew_critical_temperature(mu_sq, c_T)
+    return float(E ** 2 * T_c ** 2 / (2.0 * lam))
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 1: Linearized Einstein equations + emergent G_N
+# (LinearizedEFE.lean)
+# ════════════════════════════════════════════════════════════════════
+# Sakharov-Adler induced-gravity formula with ADW-specific coefficient
+# α_ADW. The closed-form microscopic expression for emergent Newton's
+# constant is
+#     G_N^emerg(Λ_UV, N_f, α_ADW) = α_ADW · 12π / (N_f · Λ_UV²)
+# in natural units (ℏ=c=1, [G_N] = GeV⁻²). At the Sakharov-Adler limit
+# α_ADW = 1, this reproduces the textbook one-loop free-fermion result
+# (Adler RMP 54, 729 (1982) Eq. 3.3).
+#
+# Linearized Einstein tensor in momentum space (de Donder gauge):
+#     G^(1)_μν(k) = -(1/2) k² h̄_μν       where h̄ = h - (1/2) η · trace(h)
+# is purely algebraic in k_μ and h_μν — sidesteps the calculus of
+# variations entirely.
+# ════════════════════════════════════════════════════════════════════
+
+
+def alpha_ADW_linear_ansatz(g_over_g_c):
+    """Linear-interpolation ansatz for the ADW microscopic coefficient:
+    ``α_ADW(x) = 1 − 1/x`` where ``x = G/G_c``.
+
+    NOT literature-endorsed. Per the Phase 6a Wave 1 deep research
+    (`Lit-Search/Phase-6a/6a-The Microscopic Coefficient α_ADW...md`),
+    no published paper computes α_ADW in closed form — Diakonov 2011,
+    Vladimirov-Diakonov 2012, Wetterich 2003/2022, and Vergeles 2025
+    set up the framework but stop short of extracting the prefactor.
+    The linear ansatz is the simplest interpolating function consistent
+    with three Vergeles-derived structural properties:
+
+    - **Positivity** (Vergeles 2025 PRD 112, 054509): α(x) > 0 for x > 1
+    - **Critical collapse** (Vladimirov-Diakonov 2012): α(x) → 0 as x → 1⁺
+    - **Deep-gap reduction** (Adler RMP 54, 729 (1982)): α(x) → 1 as x → ∞
+
+    At the natural-anchor x = 2 (i.e. G = 2 G_c), this gives α = 1/2.
+
+    Lean: LinearizedEFE.alphaADW_linear, _at_two, _positivity,
+        _critical_collapse, _deep_gap, _satisfies_all_three
+    Aristotle: manual
+
+    Parameters
+    ----------
+    g_over_g_c : float
+        Ratio G / G_c (dimensionless). Must be > 1 (broken phase).
+
+    Returns
+    -------
+    float
+        Ansatz value α_ADW = 1 − 1/(G/G_c).
+
+    Raises
+    ------
+    ValueError
+        If ``g_over_g_c <= 0`` (would diverge or be in unbroken phase).
+    """
+    if g_over_g_c <= 0:
+        raise ValueError("g_over_g_c must be positive (broken phase requires > 1).")
+    return float(1.0 - 1.0 / g_over_g_c)
+
+
+def G_N_emergent_at_coupling(lambda_uv_gev, n_f, g_over_g_c, alpha_func=None):
+    """ADW emergent G_N at a specified G/G_c ratio:
+    ``G_N^emerg(Λ, N_f, G/G_c) = α(G/G_c) · 12π / (N_f · Λ²)``.
+
+    Parameterized form using a user-supplied ``alpha_func`` (defaults to
+    the linear ansatz). At the natural anchor G/G_c = 2 with the linear
+    ansatz, this gives G_N^emerg = (1/2) · G_N_sakharov.
+
+    Lean: LinearizedEFE.G_N_emerg_at_coupling
+    Aristotle: pending
+
+    Parameters
+    ----------
+    lambda_uv_gev : float
+        UV cutoff in GeV. Must be positive.
+    n_f : float
+        Weyl species count. Must be positive.
+    g_over_g_c : float
+        G / G_c. Must be > 1 (broken phase).
+    alpha_func : callable, optional
+        Ansatz for α_ADW(G/G_c). Defaults to ``alpha_ADW_linear_ansatz``.
+
+    Returns
+    -------
+    float
+        G_N^emerg in GeV⁻².
+    """
+    if alpha_func is None:
+        alpha_func = alpha_ADW_linear_ansatz
+    return float(alpha_func(g_over_g_c) * G_N_sakharov(lambda_uv_gev, n_f))
+
+
+def G_N_sakharov(lambda_uv_gev, n_f):
+    """Sakharov-Adler induced-gravity formula: G_N = 12π / (N_f · Λ²).
+
+    The standard one-loop free-fermion result for the induced Newton
+    constant in natural units (ℏ=c=1, [G_N] = GeV⁻²). For N_f Dirac
+    fermions integrated at one loop with hard cutoff Λ, the leading-
+    order Einstein-Hilbert kinetic operator coefficient yields this
+    closed form.
+
+    Lean: LinearizedEFE.G_N_sakharov_pos
+    Aristotle: manual
+    Source: Sakharov, Sov. Phys. Dokl. 12, 1040 (1968); Adler,
+        Rev. Mod. Phys. 54, 729 (1982), Eq. (3.3).
+
+    Parameters
+    ----------
+    lambda_uv_gev : float
+        UV cutoff Λ_UV in GeV. Must be positive.
+    n_f : float
+        Number of Dirac fermion species N_f. Must be positive.
+
+    Returns
+    -------
+    float
+        Induced Newton constant in GeV⁻².
+    """
+    if lambda_uv_gev <= 0 or n_f <= 0:
+        raise ValueError("lambda_uv_gev and n_f must be positive.")
+    return float(12.0 * np.pi / (n_f * lambda_uv_gev ** 2))
+
+
+def G_N_emergent(lambda_uv_gev, n_f, alpha_adw=1.0):
+    """ADW emergent Newton constant: G_N^emerg = α_ADW · 12π / (N_f · Λ²).
+
+    The ADW-microscopic emergent Newton constant in natural units. At
+    α_ADW = 1, reduces to the Sakharov-Adler induced gravity baseline.
+    The ADW-specific α_ADW is currently a tracked-hypothesis parameter
+    pending Vergeles unitarity computation (deep research dropped
+    2026-04-25, Phase6a_W1_vergeles_GN_coefficient.md).
+
+    Lean: LinearizedEFE.G_N_emerg_pos, G_N_emerg_matches_sakharov_at_alpha_one
+    Aristotle: pending
+    Source: Sakharov, Sov. Phys. Dokl. 12, 1040 (1968); Adler RMP 54,
+        729 (1982); ADW correction pending Vergeles PRD 112, 054509 (2025).
+
+    Parameters
+    ----------
+    lambda_uv_gev : float
+        UV cutoff Λ_UV in GeV. Must be positive.
+    n_f : float
+        Number of Dirac fermion species N_f. Must be positive.
+    alpha_adw : float, default=1.0
+        ADW-specific dimensionless coefficient α_ADW. Sakharov-Adler
+        limit at α_ADW = 1.
+
+    Returns
+    -------
+    float
+        Emergent Newton constant in GeV⁻².
+    """
+    if lambda_uv_gev <= 0 or n_f <= 0:
+        raise ValueError("lambda_uv_gev and n_f must be positive.")
+    return float(alpha_adw * G_N_sakharov(lambda_uv_gev, n_f))
+
+
+def planck_mass_emergent_gev(lambda_uv_gev, n_f, alpha_adw=1.0):
+    """Emergent Planck mass M_P^emerg = √(N_f · Λ² / (12π · α_ADW)).
+
+    The inverse-square root of G_N^emerg. At Λ_UV = M_P^obs and α_ADW
+    such that α_ADW · 12π / N_f = 1 (i.e., α_ADW = N_f / (12π)), the
+    emergent Planck mass exactly matches the observed Planck mass.
+
+    Lean: LinearizedEFE.planck_mass_emerg_inverse_sq
+    Aristotle: manual
+    Source: Sakharov 1968 + ADW interpretation.
+
+    Parameters
+    ----------
+    lambda_uv_gev, n_f : float
+        Same as `G_N_emergent`.
+    alpha_adw : float, default=1.0
+        ADW microscopic coefficient.
+
+    Returns
+    -------
+    float
+        Emergent Planck mass M_P^emerg in GeV.
+    """
+    g_n = G_N_emergent(lambda_uv_gev, n_f, alpha_adw)
+    return float(g_n ** -0.5)
+
+
+def G_N_emergent_matches_observed(lambda_uv_gev, n_f, alpha_adw=1.0,
+                                  g_n_obs_gev_m2=6.70883e-39, tolerance=0.5):
+    """Correctness-push test: |G_N^emerg − G_N^obs| / G_N^obs < tolerance?
+
+    Returns True iff the emergent Newton constant matches the observed
+    value within the fractional tolerance. This is the operational
+    falsifiability test for the ADW emergent-gravity identification.
+
+    Lean: LinearizedEFE.G_N_emerg_matches_observed_iff_params_natural
+    Aristotle: pending
+
+    Parameters
+    ----------
+    lambda_uv_gev, n_f, alpha_adw : float
+        Microscopic parameters.
+    g_n_obs_gev_m2 : float, default=6.70883e-39
+        Observed Newton constant in natural units (GeV⁻²).
+    tolerance : float, default=0.5
+        Fractional tolerance |Δ G_N| / G_N^obs.
+
+    Returns
+    -------
+    bool
+        True iff emergent G_N matches observed within tolerance.
+    """
+    g_n_pred = G_N_emergent(lambda_uv_gev, n_f, alpha_adw)
+    fractional_dev = abs(g_n_pred - g_n_obs_gev_m2) / g_n_obs_gev_m2
+    return bool(fractional_dev < tolerance)
+
+
+def linearized_einstein_de_donder(k_sq, h_bar_munu):
+    """Linearized Einstein tensor in momentum space, de Donder gauge.
+
+    G^(1)_μν(k) = -(1/2) k² h̄_μν
+
+    where k² = η^αβ k_α k_β is the Minkowski-squared momentum and h̄_μν =
+    h_μν - (1/2) η_μν · trace(h) is the trace-reversed perturbation. In
+    de Donder (harmonic) gauge ∂^μ h̄_μν = 0, the off-diagonal terms
+    in the full G^(1) expression vanish, leaving the simple wave-
+    operator form. This is the canonical "spin-2 wave equation" of
+    linearized GR.
+
+    Lean: LinearizedEFE.linearized_einstein_de_donder_simplifies
+    Aristotle: manual
+    Source: Carroll, "Spacetime and Geometry" (2004) §6.1; MTW §35.4.
+
+    Parameters
+    ----------
+    k_sq : float
+        Minkowski-squared momentum k² = -k_0² + k_1² + k_2² + k_3².
+    h_bar_munu : np.ndarray, shape (4,4)
+        Trace-reversed metric perturbation h̄_μν.
+
+    Returns
+    -------
+    np.ndarray, shape (4,4)
+        Linearized Einstein tensor G^(1)_μν.
+    """
+    h_bar = np.asarray(h_bar_munu, dtype=float)
+    if h_bar.shape != (4, 4):
+        raise ValueError("h_bar_munu must be 4x4.")
+    return -0.5 * float(k_sq) * h_bar
+
+
+def trace_reverse_perturbation(h_munu):
+    """Trace-reverse a metric perturbation: h̄_μν = h_μν - (1/2) η_μν · h.
+
+    where h ≡ η^αβ h_αβ is the Minkowski trace and η = diag(-1,+1,+1,+1).
+    Trace-reversal is involutive (h̄̄ = h) and is the canonical
+    transformation under which the de Donder gauge condition takes its
+    simple form.
+
+    Lean: LinearizedEFE.trace_reverse_involutive
+    Aristotle: manual
+    Source: Carroll §6.1; MTW §35.
+
+    Parameters
+    ----------
+    h_munu : np.ndarray, shape (4,4)
+        Symmetric metric perturbation.
+
+    Returns
+    -------
+    np.ndarray, shape (4,4)
+        Trace-reversed perturbation h̄_μν.
+    """
+    h = np.asarray(h_munu, dtype=float)
+    if h.shape != (4, 4):
+        raise ValueError("h_munu must be 4x4.")
+    eta = np.diag([-1.0, 1.0, 1.0, 1.0])
+    # Minkowski trace: η^αβ h_αβ = -h_00 + h_11 + h_22 + h_33
+    h_trace = float(np.einsum('ab,ab->', eta, h))
+    return h - 0.5 * eta * h_trace
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 4: FLRW dynamics from linearized EFE
+# (FLRWDynamics.lean)
+# ════════════════════════════════════════════════════════════════════
+# Friedmann equations as ODE reduction of the linearized EFE on a
+# homogeneous-isotropic background:
+#     ds² = -dt² + a(t)² δ_ij dx^i dx^j        (flat FLRW)
+#     H ≡ ȧ/a
+#     Friedmann I:  H² = (8π G_N / 3) ρ - k/a²
+#     Friedmann II: ä/a = -(4π G_N / 3) (ρ + 3p)
+#     Conservation: ρ̇ + 3 H (ρ + p) = 0
+# ════════════════════════════════════════════════════════════════════
+
+
+def hubble_squared_flrw(rho, g_n, k=0.0, a=1.0):
+    """Friedmann I: H² = (8π G/3) ρ - k/a².
+
+    Squared Hubble rate from energy density ρ and (optional) spatial
+    curvature k. Flat FLRW (k=0, a=1 — present-day) is the default.
+
+    Lean: FLRWDynamics.friedmann_one
+    Aristotle: pending
+    Source: Carroll §8.4; Weinberg "Cosmology" (2008) §1.5.
+
+    Parameters
+    ----------
+    rho : float
+        Total energy density [GeV⁴ in natural units, or kg/m³ in SI].
+    g_n : float
+        Newton's constant in matching units.
+    k : float, default=0.0
+        Spatial curvature constant.
+    a : float, default=1.0
+        Scale factor.
+
+    Returns
+    -------
+    float
+        H² in matching units.
+    """
+    return float((8.0 * np.pi * g_n / 3.0) * rho - k / (a ** 2))
+
+
+def acceleration_flrw(rho, p, g_n):
+    """Friedmann II: ä/a = -(4π G/3) (ρ + 3p).
+
+    Acceleration of the scale factor from total energy density and
+    pressure. Negative for ordinary matter (ρ + 3p > 0); positive for
+    a cosmological constant (p = -ρ → ρ + 3p = -2ρ < 0).
+
+    Lean: FLRWDynamics.friedmann_two
+    Aristotle: pending
+    Source: Carroll §8.4; Weinberg §1.5.
+
+    Parameters
+    ----------
+    rho : float
+        Energy density.
+    p : float
+        Pressure (same units as ρ).
+    g_n : float
+        Newton's constant.
+
+    Returns
+    -------
+    float
+        ä/a (in inverse-time-squared units).
+    """
+    return float(-(4.0 * np.pi * g_n / 3.0) * (rho + 3.0 * p))
+
+
+def conservation_flrw_rate(rho, p, hubble):
+    """FLRW conservation: ρ̇ = -3 H (ρ + p).
+
+    The energy-conservation equation derived from Bianchi identity
+    applied to the linearized Einstein equations on an FLRW background.
+    Equivalent to T^μν;_ν = 0 with the perfect-fluid stress-energy
+    tensor.
+
+    Lean: FLRWDynamics.conservation_law
+    Aristotle: pending
+    Source: Carroll §8.4 Eq. (8.83); Weinberg §1.5.
+
+    Parameters
+    ----------
+    rho : float
+        Energy density.
+    p : float
+        Pressure.
+    hubble : float
+        Hubble rate H = ȧ/a.
+
+    Returns
+    -------
+    float
+        ρ̇ (energy density time derivative).
+    """
+    return float(-3.0 * hubble * (rho + p))
+
+
+def friedmann_consistency_residual(rho, p, hubble, hubble_dot, g_n, k=0.0, a=1.0):
+    """Residual of the Friedmann consistency identity:
+        Ḣ + H² = -(4π G / 3) (ρ + 3p)         (Friedmann II)
+        H² = (8π G / 3) ρ - k/a²              (Friedmann I)
+    The two equations imply the conservation law ρ̇ + 3 H (ρ + p) = 0
+    via the Bianchi identity. This function returns max|residual| for
+    both Friedmann equations as an ODE consistency check.
+
+    Lean: FLRWDynamics.friedmann_consistency_holds
+    Aristotle: pending
+
+    Parameters
+    ----------
+    rho, p, hubble, hubble_dot : float
+        Cosmological state at a given time.
+    g_n : float
+        Newton's constant.
+    k : float, default=0.0
+        Spatial curvature.
+    a : float, default=1.0
+        Scale factor.
+
+    Returns
+    -------
+    float
+        max(|residual_F1|, |residual_F2|).
+    """
+    res_f1 = hubble ** 2 - (8.0 * np.pi * g_n / 3.0) * rho + k / (a ** 2)
+    res_f2 = (
+        hubble_dot + hubble ** 2 + (4.0 * np.pi * g_n / 3.0) * (rho + 3.0 * p)
+    )
+    return float(max(abs(res_f1), abs(res_f2)))
+
+
+# =====================================================================
+# Phase 6a Wave 2: Gravitational waves
+#
+# c_GW from vestigial-phase susceptibility + dissipative correction
+# from SecondOrderSK Γ_H, plus the GW170817 correctness-push check.
+# =====================================================================
+
+
+def c_GW_from_chi_vest(chi_vest, c_light=2.99792458e8):
+    """Gravitational-wave propagation speed from vestigial-phase susceptibility.
+
+    In the linearized-EFE / vestigial-second-sound identification,
+    the GW propagation speed is
+
+        c_GW² = c² · (1 + δ_χ),  with δ_χ = (χ_vest − χ_vest^(c)) / χ_vest^(c)
+
+    where χ_vest is the metric-channel susceptibility (chi_RPA in
+    VestigialSusceptibility.lean) and χ_vest^(c) ≡ 1 is the natural
+    convention so the leading order matches c. Wave 2 ships the
+    leading-order identification: c_GW = c · √(1 + δ_χ).
+
+    Phase 5y H1 caveat: the second-sound mode is NOT derived as a
+    propagating DOF (negative-evidence finding). This formula assumes
+    the identification, which is a tracked-hypothesis bridge.
+
+    Lean: GravitationalWaves.c_GW_from_chi_vest
+    Aristotle: pending
+    Source: Volovik JETP Lett. 119, 564 (2024); Phase 5y H1 deep research.
+
+    Parameters
+    ----------
+    chi_vest : float
+        Vestigial-phase metric-channel susceptibility (dimensionless,
+        in units of inverse Λ²). χ_vest = 1 ⇒ c_GW = c at leading order.
+    c_light : float, default=2.99792458e8
+        Speed of light in m/s.
+
+    Returns
+    -------
+    float
+        c_GW in m/s (positive).
+    """
+    delta_chi = (chi_vest - 1.0)
+    return float(c_light * np.sqrt(1.0 + delta_chi))
+
+
+def c_GW_deviation_from_c(chi_vest):
+    """Dimensionless GW speed deviation from light: (c_GW − c)/c.
+
+    Returns the GW170817 comparison quantity. For χ_vest = 1
+    (default natural anchor), the deviation is exactly zero;
+    otherwise δ_c = √χ_vest − 1.
+
+    Lean: GravitationalWaves.c_GW_deviation_natural
+    Aristotle: pending
+    Source: Abbott et al. ApJL 848, L13 (2017) Eq. (5).
+
+    Parameters
+    ----------
+    chi_vest : float
+        Vestigial-phase susceptibility (dimensionless).
+
+    Returns
+    -------
+    float
+        (c_GW − c) / c. Zero at the natural anchor χ_vest = 1.
+    """
+    return float(np.sqrt(chi_vest) - 1.0)
+
+
+def dispersion_correction_from_GammaH(omega_hz, gamma_h_dimensionless):
+    """Leading dissipative dispersion correction at frequency ω.
+
+    From SecondOrderSK Γ_H = (γ₁ + γ₂)(κ/c_s)²: the dissipative
+    correction to the linear dispersion ω = c_GW · k is
+
+        δω/ω = Γ_H · ω / c_GW²       (leading order in ω/Λ_diss)
+
+    parameterized by the dimensionless coefficient
+    γ_H_dim ≡ Γ_H · ω / c_GW² evaluated at the probe frequency.
+
+    Lean: GravitationalWaves.dispersion_correction
+    Aristotle: pending
+    Source: Crossley-Glorioso-Liu JHEP 2017 (arXiv:1511.03646);
+            SecondOrderSK.lean Γ_H definition.
+
+    Parameters
+    ----------
+    omega_hz : float
+        GW probe frequency (Hz).
+    gamma_h_dimensionless : float
+        Dimensionless Γ_H · ω / c² evaluated at probe ω.
+
+    Returns
+    -------
+    float
+        Dimensionless dispersion correction δω/ω at probe ω.
+    """
+    return float(gamma_h_dimensionless * omega_hz / 1.0)
+
+
+def ligo_constraint_check(c_gw_deviation, two_sided_cap=3.0e-15):
+    """Check whether |Δc/c| satisfies the GW170817 two-sided cap.
+
+    Returns True iff |c_GW − c|/c ≤ two_sided_cap, where the default
+    cap 3e-15 is the symmetrized GW170817 bound. False = falsifying
+    deviation; the Wave 2 correctness-push theorem is a biconditional
+    on this predicate.
+
+    Lean: GravitationalWaves.ligo_constraint_satisfied
+    Aristotle: pending
+    Source: Abbott et al. ApJL 848, L13 (2017).
+
+    Parameters
+    ----------
+    c_gw_deviation : float
+        (c_GW − c) / c (signed).
+    two_sided_cap : float, default=3.0e-15
+        Symmetric two-sided falsification cap.
+
+    Returns
+    -------
+    bool
+        True iff |Δc/c| ≤ cap.
+    """
+    return bool(abs(float(c_gw_deviation)) <= float(two_sided_cap))
+
+
+def c_GW_natural_range(chi_vest_lower=0.1, chi_vest_upper=10.0):
+    """Wave 2 natural-range (c_GW − c)/c interval for χ_vest ∈ [lower, upper].
+
+    Computes the deviation interval over the natural χ_vest range.
+    The GW170817 cap (3e-15) is satisfied only by an exponentially
+    fine-tuned subset — Wave 2 paper documents this as the structural
+    constraint on the vestigial-second-sound identification.
+
+    Lean: GravitationalWaves.c_GW_natural_range_brackets_falsification
+    Aristotle: pending
+    Source: Phase 5y H1 deep research caveat + GW170817 bound.
+
+    Parameters
+    ----------
+    chi_vest_lower, chi_vest_upper : float
+        χ_vest natural-range bounds.
+
+    Returns
+    -------
+    tuple
+        (delta_min, delta_max) for (c_GW − c)/c.
+    """
+    delta_min = float(np.sqrt(chi_vest_lower) - 1.0)
+    delta_max = float(np.sqrt(chi_vest_upper) - 1.0)
+    return (delta_min, delta_max)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 3: Bekenstein-Hawking entropy from MTC state counting
+# ════════════════════════════════════════════════════════════════════
+
+def verlinde_dim_horizon(p, S_matrix, label_indices, vacuum_index=0):
+    """Verlinde formula for horizon Hilbert-space dimension.
+
+    For a horizon S² with p punctures carrying simple-object labels
+    a_1, ..., a_p, the Hilbert-space dimension is
+
+        dim H_{S²; a_1,...,a_p} = Σ_c [ Π_i S_{a_i,c} ] / S_{0,c}^{p-2}
+
+    where S is the modular S-matrix of the MTC. This is the literal
+    physical content the Wave 3 module needs at the horizon.
+
+    Lean: BHEntropyMicroscopic.verlindeDimHorizon
+    Aristotle: pending
+    Source: Verlinde, Nucl. Phys. B 300, 360 (1988); Kaul SIGMA 8, 005 (2012),
+            Eq. (24), arXiv:1201.6102.
+
+    Parameters
+    ----------
+    p : int
+        Number of punctures.
+    S_matrix : array_like
+        Real-valued (or complex) S-matrix of the MTC, shape (n,n).
+    label_indices : sequence of int
+        Length-p sequence indexing the simple objects at the p punctures.
+    vacuum_index : int
+        Index of the vacuum / unit object 0 (default 0).
+
+    Returns
+    -------
+    float
+        Verlinde state count.
+    """
+    S = np.asarray(S_matrix)
+    n = S.shape[0]
+    if p < 2:
+        raise ValueError(f"Verlinde formula requires p ≥ 2 punctures (got {p})")
+    total = 0.0
+    for c in range(n):
+        s0c = S[vacuum_index, c]
+        if abs(s0c) < 1e-300:
+            continue
+        prod = 1.0
+        for a in label_indices:
+            prod *= float(S[a, c])
+        total += prod / float(s0c) ** (p - 2)
+    return float(np.real(total))
+
+
+def bh_entropy_kaul_majumdar(area, G_N=None, c0=0.0):
+    """Bekenstein-Hawking entropy in the Kaul-Majumdar SU(2)_k closed form.
+
+        S(A) = A/(4 G_N) − (3/2) log(A/(4 G_N)) + c_0 + O(A⁻¹)
+
+    The 1/4 prefactor is a TUNING (Immirzi γ in Kaul-Majumdar gr-qc/0002040)
+    rather than a derivation. The −3/2 log coefficient IS structural
+    (½ Gaussian saddle + 1 SU(2)-singlet projection); see
+    `log_correction_coefficient_su2k` for the decomposition.
+
+    Lean: BHEntropyMicroscopic.kaulMajumdarClosedForm
+    Aristotle: pending
+    Source: Kaul-Majumdar, PRL 84, 5255 (2000), arXiv:gr-qc/0002040;
+            Kaul SIGMA 8, 005 (2012), arXiv:1201.6102 §5.
+
+    Parameters
+    ----------
+    area : float or array_like
+        Horizon area in Planck units (A / ℓ_P²).
+    G_N : float, optional
+        Newton's constant (in same units as area). Default uses the natural
+        unit convention G_N = 1 so A and S are dimensionless multiples of ℓ_P².
+    c0 : float
+        Subleading constant (scheme-dependent).
+
+    Returns
+    -------
+    float or array
+        Entropy in nats.
+    """
+    if G_N is None:
+        G_N = 1.0
+    A = np.asarray(area, dtype=float)
+    leading = A / (4.0 * float(G_N))
+    if np.any(leading <= 0.0):
+        raise ValueError("Kaul-Majumdar asymptotic requires A/(4 G_N) > 0")
+    return leading - 1.5 * np.log(leading) + float(c0)
+
+
+def bh_entropy_leading_coefficient(gamma_immirzi=0.27392803876474):
+    """Leading 1/4 coefficient as a function of the Immirzi γ tuning.
+
+    In the Kaul-Majumdar derivation, the leading coefficient is
+
+        κ_leading(γ) = γ_DL / γ · (1/4)
+
+    where γ_DL ≈ 0.2375 is the Domagala-Lewandowski reference. By
+    construction κ_leading(γ_DL) = 1/4 and κ_leading(γ_Meissner) = 1/4
+    when γ is set by demanding match to A/(4 G_N). The function exposes
+    the tuning explicitly: feeding any other γ produces a deviation
+    from 1/4 in proportion to γ_DL/γ.
+
+    Lean: BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi (field), discharge
+          via BHEntropyMicroscopic.IsHorizonBC.immirziTuned
+    Aristotle: pending
+    Source: Kaul SIGMA 8, 005 (2012) Table 2; Domagala-Lewandowski
+            CQG 21, 5233 (2004) gr-qc/0407051; Meissner CQG 21, 5245 (2004)
+            gr-qc/0407052.
+
+    Parameters
+    ----------
+    gamma_immirzi : float
+        Immirzi parameter (default Meissner ≈ 0.2739).
+
+    Returns
+    -------
+    float
+        Leading coefficient κ_leading(γ).
+    """
+    GAMMA_DL = 0.23753295796592
+    return float(GAMMA_DL / float(gamma_immirzi)) * 0.25
+
+
+def log_correction_coefficient_su2k():
+    """Kaul-Majumdar SU(2)_k structural log-correction coefficient: −3/2.
+
+    Decomposition
+    -------------
+        c_log = c_Gaussian + c_singletProjection
+              = −1/2 + (−1)
+              = −3/2
+
+    where c_Gaussian = −1/2 comes from the standard Laplace-method
+    asymptotic I_0 ~ C exp(F(0)) / √(−F''(0)), and c_singletProjection
+    = −1 comes from the I_0 − I_1 cancellation that produces an extra
+    inverse-Hessian factor (Kaul-Majumdar Eq. (12)−(15)).
+
+    Lean: BHEntropyMicroscopic.kaulMajumdarLogCoefficient
+    Aristotle: pending
+    Source: Kaul-Majumdar, PRL 84, 5255 (2000), arXiv:gr-qc/0002040, Eq. (15).
+
+    Returns
+    -------
+    float
+        −3/2 (exact).
+    """
+    return -1.5
+
+
+def log_correction_coefficient_per_mtc(mtc_name):
+    """Per-MTC log-correction coefficient — known values + open conjectures.
+
+    Returns the published log-A coefficient for a named MTC if known,
+    else None (with a status string indicating "conjectural" / "no public
+    derivation"). For SU(2)_k, the value is −3/2 (Kaul-Majumdar). For
+    Fibonacci, Ising, D(S₃), no published derivation pins the coefficient,
+    per the Wave 3 deep-research return. Wave 3 ships these as Outcome-3
+    tracked-hypothesis instances.
+
+    Lean: BHEntropyMicroscopic.HorizonMTCBC.logCorrection (per-instance)
+    Aristotle: pending
+    Source: Wave 3 deep-research return §4 Table; arXiv:1201.6102 §6.
+
+    Parameters
+    ----------
+    mtc_name : str
+        One of {'SU2k', 'Fibonacci', 'Ising', 'DS3', 'ToricCode',
+                'Sen4DSchwarzschild'}.
+
+    Returns
+    -------
+    dict
+        {'value': float or None, 'status': 'known' / 'conjectural' / 'falsifier',
+         'source': citation key}.
+    """
+    table = {
+        'SU2k': {'value': -1.5, 'status': 'known', 'source': 'KaulMajumdar2000'},
+        'Sen4DSchwarzschild': {'value': 1.7111111, 'status': 'known',
+                               'source': 'Sen2013Schwarzschild'},
+        'Fibonacci': {'value': None, 'status': 'conjectural',
+                      'source': 'Wave 3 deep-research §4: no public derivation'},
+        'Ising': {'value': None, 'status': 'conjectural',
+                  'source': 'Wave 3 deep-research §4: no public derivation'},
+        'DS3': {'value': None, 'status': 'conjectural',
+                'source': 'Wave 3 deep-research §4: no public derivation'},
+        'ToricCode': {'value': None, 'status': 'falsifier',
+                      'source': 'Abelian MTC ⇒ log d_max = 0 ⇒ F2 falsifier'},
+    }
+    if mtc_name not in table:
+        raise KeyError(f"Unknown MTC: {mtc_name!r}; expected one of {list(table)}")
+    return table[mtc_name]
+
+
+def mtc_area_law_kappa(log_d_max, prefactor=1.0):
+    """Area-law leading coefficient κ_C ∝ log d_max for an MTC.
+
+    Following Kitaev's anyon-cell counting (cond-mat/0506438), the leading
+    area coefficient for an MTC scales with the largest-quantum-dimension
+    anyon as κ_C = c · log d_max for some O(1) constant c (model-dependent).
+
+    Abelian MTCs (toric code, D(Z_n), all d_a = 1) give κ_C = 0 and fail
+    F2 (area-law leading scaling) — Wave 3 falsifier-instance check.
+
+    Lean: BHEntropyMicroscopic.areaLawKappaPositive_iff_nonAbelian
+    Aristotle: pending
+    Source: Kitaev, Annals of Physics 321, 2 (2006), arXiv:cond-mat/0506438.
+
+    Parameters
+    ----------
+    log_d_max : float
+        Log of the maximum quantum dimension across simple objects.
+    prefactor : float
+        Model-dependent O(1) prefactor (default 1.0 for naive cell counting).
+
+    Returns
+    -------
+    float
+        κ_C = prefactor · log d_max.
+    """
+    return float(prefactor) * float(log_d_max)
+
+
+def mtc_horizon_falsifier_status(mtc_name, log_d_max=None,
+                                  area_law_kappa_min=1.0e-12):
+    """Falsifier-instance status check for the H_HorizonBoundaryCondition bundle.
+
+    Returns the F1-F5 pass/fail/conjectural status for a named MTC at the
+    horizon. Implements the Wave 3 tracked-hypothesis falsifier checks:
+
+      F1 (positivity)         — universal: passes by construction
+      F2 (area-law κ > 0)     — fails if MTC is abelian (log d_max = 0)
+      F3 (2nd-law monotonicity) — universal under non-decreasing area
+      F4 (modular invariance) — testable via formalized S, T matrices
+                                (passes for Fib, Ising, SU(2)_k)
+      F5 (anomaly match mod 8) — conjectural across all MTCs (ADW bulk)
+
+    Lean: BHEntropyMicroscopic.H_HorizonBoundaryCondition.falsifier_*
+    Aristotle: pending
+    Source: Wave 3 deep-research §7.
+
+    Parameters
+    ----------
+    mtc_name : str
+        MTC tag.
+    log_d_max : float, optional
+        Override log d_max. If None, looked up from constants.
+    area_law_kappa_min : float
+        Threshold for F2 (numerical positivity floor).
+
+    Returns
+    -------
+    dict
+        Status per falsifier {'F1': str, ..., 'F5': str}.
+    """
+    table = {
+        'SU2k': {'log_d_max': None, 'F4': 'passes (Verlinde S-matrix)',
+                 'F5': 'conjectural (anomaly inflow not formalized)'},
+        'Fibonacci': {'log_d_max': 0.4812118250596034,
+                      'F4': 'passes (FibonacciMTC.lean)',
+                      'F5': 'conjectural'},
+        'Ising': {'log_d_max': 0.34657359027997264,
+                  'F4': 'passes (IsingBraiding.lean)',
+                  'F5': 'conjectural'},
+        'DS3': {'log_d_max': 1.0986122886681098,
+                'F4': 'passes (S3CenterAnyons.lean)',
+                'F5': 'conjectural'},
+        'ToricCode': {'log_d_max': 0.0,
+                      'F4': 'passes (abelian DZ2)',
+                      'F5': 'conjectural'},
+    }
+    if mtc_name not in table:
+        raise KeyError(f"Unknown MTC: {mtc_name!r}; expected one of {list(table)}")
+    entry = table[mtc_name]
+    log_d = entry['log_d_max'] if log_d_max is None else float(log_d_max)
+    kappa = float('nan') if log_d is None else mtc_area_law_kappa(log_d)
+    f2 = ('passes' if (log_d is not None and kappa > area_law_kappa_min)
+          else ('FAILS (abelian / log d_max = 0)' if log_d == 0.0
+                else 'free input (SU2_k k-dependent)'))
+    return {
+        'F1_positivity': 'passes (universal)',
+        'F2_areaLeading': f2,
+        'F3_secondLaw': 'passes (monotonicity in A)',
+        'F4_modularInvariance': entry['F4'],
+        'F5_anomalyMatch': entry['F5'],
+    }

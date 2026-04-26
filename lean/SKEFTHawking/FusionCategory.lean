@@ -146,10 +146,16 @@ theorem group_D_sq (G : Type*) [Group G] [Fintype G] :
 /-- GSD on sphere is always 1 (unique vacuum). -/
 theorem gsd_sphere_eq_one : (1 : ℕ) = 1 := rfl
 
-/-- Ocneanu rigidity: finitely many F-symbol solutions (placeholder). -/
-theorem ocneanu_rigidity_placeholder : True := trivial
+/-- TODO marker for Wave 4C: Ocneanu rigidity (finitely many F-symbol
+solutions for a fixed fusion ring) — full proof needs the Müger /
+Etingof-Nikshych-Ostrik infrastructure. Renamed `_TODO` so that the
+name cannot be confused with a proved Ocneanu rigidity theorem. -/
+theorem ocneanu_rigidity_TODO : True := trivial
 
-/-- Fusion → TQFT bridge (placeholder for Wave 4C). -/
-theorem fusion_to_tqft_placeholder : True := trivial
+/-- TODO marker for Wave 4C: Fusion → TQFT bridge (Reshetikhin-Turaev
+TQFT functor from a modular fusion category). Renamed `_TODO` to
+avoid the misleading "placeholder" label confusing this with a proved
+result. -/
+theorem fusion_to_tqft_TODO : True := trivial
 
 end SKEFTHawking

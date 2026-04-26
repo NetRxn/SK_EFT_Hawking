@@ -120,7 +120,8 @@ theorem yang_baxter_23 :
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 FibonacciQutrit module: 3×3 braiding for SU(3) universality.
   - Mat3K: 3×3 matrices over K = Q(ζ₅, √φ) with decidable equality
   - σ₁ = diag(R_τ, R₁, R_τ), σ₂ = R_τ ⊕ FRF, σ₃ = FRF ⊕ R_τ
@@ -132,6 +133,4 @@ FibonacciQutrit module: 3×3 braiding for SU(3) universality.
   - Dense in SU(3) by FLW theorem (σ₁≠σ₃ + braid relations → full B₄)
   - Zero sorry, zero axioms.
 -/
-theorem fibonacci_qutrit_summary : True := trivial
-
 end SKEFTHawking.FibonacciQutrit

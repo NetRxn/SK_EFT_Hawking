@@ -165,7 +165,8 @@ theorem fibonacci_qubit_density_data :
 
 /-! ## 4. Module Summary -/
 
-/--
+/-! ## Module summary
+
 FibonacciUniversality: Lie algebra proof of Fibonacci braiding universality.
   - [σ₁, σ₂] commutator computed over K
   - Commutator diagonal = 0 PROVED (traceless)
@@ -178,6 +179,4 @@ FibonacciUniversality: Lie algebra proof of Fibonacci braiding universality.
   - First self-contained universality verification for anyonic gates
   - Zero sorry, zero axioms. All by native_decide over K.
 -/
-theorem fibonacci_universality_summary : True := trivial
-
 end SKEFTHawking.FibonacciUniversality

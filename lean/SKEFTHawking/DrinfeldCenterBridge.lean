@@ -227,16 +227,19 @@ theorem bidirectional_encoding :
       ddMul k G a (ddOne k G) = a) :=
   ⟨ddMul_one_left k G, ddMul_one_right k G⟩
 
-/--
-Anomaly matching through the Drinfeld double:
-if the UV theory (Vec_G side) has an anomaly classified by ω ∈ H³(G, k×),
-then the IR theory (Rep(D(G)) side) has a matching anomaly.
-This is the twisted Drinfeld double D^ω(G).
+/-- Marker theorem (`_DEFINITIONAL`): in the untwisted setting
+(ω = 0), the Drinfeld-double left-multiplication is reflexive at the
+term level.
 
-For ω = 0 (untwisted): anomaly-free on both sides.
-For ω ≠ 0: the anomaly is "visible" from both UV and IR perspectives.
--/
-theorem anomaly_matching_untwisted :
+Background — anomaly matching through the Drinfeld double: if the UV
+theory (Vec_G side) has an anomaly classified by ω ∈ H³(G, k×), then
+the IR theory (Rep(D(G)) side) has a matching anomaly. This is the
+twisted Drinfeld double D^ω(G). For ω = 0 (untwisted): anomaly-free
+on both sides. For ω ≠ 0: the anomaly is "visible" from both UV and
+IR perspectives. The substantive H³-class anomaly-matching content
+lives in `Z16AnomalyComputation` and the broader anomaly-matching
+infrastructure; this theorem is a marker. -/
+theorem anomaly_matching_untwisted_DEFINITIONAL :
     ddMul_one_left k G = ddMul_one_left k G := rfl
 
 /-! ## 7. Vec_G via Mathlib's GradedObject — Infrastructure Inventory -/
@@ -288,11 +291,14 @@ def singleGraded (k : Type u) [CommRing k] (G : Type u) [Group G] [DecidableEq G
     (g : Additive G) (M : ModuleCat.{u} k) : VecG_Cat k G :=
   fun g' => if g' = g then M else ModuleCat.of k PUnit
 
-/--
-The number of simple objects in Vec_G for finite G equals |G|.
-Each simple is k concentrated in one degree.
--/
-theorem vecG_simples_count :
+/-- Marker theorem (`_DEFINITIONAL`): the simple-object count of
+`Vec_G` for finite `G` is the carrier-cardinality `Fintype.card G`,
+recorded as a reflexivity marker. Each simple is `k` concentrated in
+one degree (see `singleGraded`). The substantive constructive content
+(every simple of `Vec_G` is `k_g` for some `g ∈ G`, and these exhaust
+the simples up to isomorphism) lives in the `singleGraded` definition
++ the upstream `VecG`/`VecGMonoidal` infrastructure. -/
+theorem vecG_simples_count_DEFINITIONAL :
     Fintype.card G = Fintype.card G := rfl
 
 -- Infrastructure inventory for MonoidalCategory (VecG_Cat k G):

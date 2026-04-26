@@ -180,7 +180,11 @@ class TestEdgeIntegrity:
         assert len(edges) > 0
 
     def test_edges_reference_valid_node_ids(self):
-        """Every edge source and target exists in the node list."""
+        """Every edge source and target exists in the node list, except for
+        BACKED_BY edges intentionally emitted with `link_state: missing_target`
+        (per `extract_backed_by_edges` design at `build_graph.py:2008` —
+        these surface unresolvable claims-review chain links to the
+        graph-integrity check rather than silently dropping them)."""
         nodes = extract_all_nodes()
         node_ids = {n['id'] for n in nodes}
         edges = extract_all_edges(node_ids)
@@ -188,6 +192,12 @@ class TestEdgeIntegrity:
             assert edge['source'] in node_ids, (
                 f"Edge source {edge['source']} not in nodes (type={edge['type']})"
             )
+            # Skip intentionally-unresolved BACKED_BY edges; the
+            # graph-integrity report surfaces these as broken_chains.
+            meta = edge.get('meta') or {}
+            if (edge.get('type') == 'BACKED_BY'
+                    and meta.get('link_state') == 'missing_target'):
+                continue
             assert edge['target'] in node_ids, (
                 f"Edge target {edge['target']} not in nodes (type={edge['type']})"
             )

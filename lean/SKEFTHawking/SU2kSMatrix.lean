@@ -188,7 +188,8 @@ end Level5
 
 /-! ## 4. Module summary -/
 
-/--
+/-! ## Module summary
+
 SU2kSMatrix module: S-matrices and Verlinde formula for SU(2) at k=1,2,5.
   - k=1: 2x2 Hadamard, unitarity, det ≠ 0 (modularity)
   - k=2: 3x3 Ising (Q(√2)), unitarity, det ≠ 0
@@ -197,6 +198,4 @@ SU2kSMatrix module: S-matrices and Verlinde formula for SU(2) at k=1,2,5.
   - Modularity: det(S) ≠ 0 → Z₂ trivial (general theorem in ModularityTheorem.lean)
   - Character sum approach works for ALL k without algebraic number fields
 -/
-theorem su2k_smatrix_summary : True := trivial
-
 end SKEFTHawking

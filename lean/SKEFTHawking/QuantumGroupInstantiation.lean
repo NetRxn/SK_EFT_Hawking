@@ -615,7 +615,8 @@ end A2
 
 /-! ## Module Summary -/
 
-/--
+/-! ## Module summary
+
 QuantumGroupInstantiation: verifies the generic U_q(𝔤) framework recovers
 hand-written quantum groups.
   - QuantumGroup k cartanA1 ≃ₐ Uqsl2 k (4-generator bijection, full AlgEquiv)
@@ -624,6 +625,4 @@ hand-written quantum groups.
   - Roundtrip proofs via RingQuot.ringQuot_ext' + FreeAlgebra.hom_ext
   - Zero sorry.
 -/
-theorem quantum_group_instantiation_summary : True := trivial
-
 end SKEFTHawking

@@ -267,7 +267,8 @@ theorem constraints_without_nu_R :
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 RokhlinBridge module: the "16 convergence" and topological generation constraint.
   - Rokhlin enters via SpinBordismData hypothesis (NOT axiom), proved in SpinBordism.lean
   - Algebraic core: Ext computation over A(1) machine-checked (A1Ring/A1Resolution/A1Ext.lean)
@@ -278,6 +279,4 @@ RokhlinBridge module: the "16 convergence" and topological generation constraint
   - Rokhlin sharp (K3, σ=-16), strictly stronger than Hirzebruch (8)
   - dim Ext⁴_{A(1)} = 3 (CORRECTED from earlier "16" claim — see A1Ext.lean)
 -/
-theorem rokhlin_bridge_summary : True := trivial
-
 end SKEFTHawking

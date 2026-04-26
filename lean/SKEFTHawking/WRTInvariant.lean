@@ -113,7 +113,8 @@ Fibonacci: 2 objects {1,τ}, D²=(5+√5)/2, Z(S²×S¹) = 2
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 WRTInvariant module: surgery formula connecting MTC data to 3-manifold invariants.
   - MTCWithTwist: PreModularData + topological twists θ_i
   - Global dimension D², Gauss sums p₊/p₋
@@ -123,6 +124,4 @@ WRTInvariant module: surgery formula connecting MTC data to 3-manifold invariant
   - First WRT invariant formalization in any proof assistant
   - Phase 5k W3: Kirby invariance proof (handle slide + blow-up lemmas)
 -/
-theorem wrt_invariant_summary : True := trivial
-
 end SKEFTHawking

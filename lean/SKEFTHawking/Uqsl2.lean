@@ -162,7 +162,8 @@ theorem uq_serre :
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 Uqsl2 module: the Drinfeld-Jimbo quantum group U_q(sl₂).
   - Defined via FreeAlgebra + RingQuot (ZERO axioms)
   - First quantum group definition in any proof assistant
@@ -172,6 +173,4 @@ Uqsl2 module: the Drinfeld-Jimbo quantum group U_q(sl₂).
   - KE, KF, Serre relations PROVED
   - Ring and Algebra instances automatic from RingQuot
 -/
-theorem uqsl2_summary : True := trivial
-
 end SKEFTHawking

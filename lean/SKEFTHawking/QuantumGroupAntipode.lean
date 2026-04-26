@@ -797,7 +797,9 @@ theorem qgAntipode_Kinv
 
 /-! ## 9. Module summary -/
 
-/-- Generic antipode module: Phase 5m Wave 2 deliverable.
+/-! ## Module summary
+
+Generic antipode module: Phase 5m Wave 2 deliverable.
   - antipodeOnGenQG: S(E)=-EK⁻¹, S(F)=-KF, S(K)=K⁻¹, S(K⁻¹)=K
   - antipodeFreeAlgQG: lifted to free algebra via MulOpposite (anti-hom)
   - All 11 QGRel respect proofs: KKinv, KinvK, KK_comm, KE, KF,
@@ -805,7 +807,6 @@ theorem qgAntipode_Kinv
   - qgAntipode: descended to QuantumGroup k A quotient
   - qgAntipode_E/F/K/Kinv: quotient-level evaluation proved
   - First generic quantum group antipode in any proof assistant
-  - Zero sorry. Covers all symmetric Cartan matrices simultaneously. -/
-theorem quantum_group_antipode_summary : True := trivial
-
+  - Zero sorry. Covers all symmetric Cartan matrices simultaneously.
+-/
 end SKEFTHawking

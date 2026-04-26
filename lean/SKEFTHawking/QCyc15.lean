@@ -133,7 +133,8 @@ theorem omega3_sum_zero :
 
 /-! ## Module summary -/
 
-/--
+/-! ## Module summary
+
 QCyc15 module: Q(ζ₁₅) via generic PolyQuotQ construction.
 
 - Degree 8 over ℚ, minimal polynomial Φ₁₅
@@ -143,8 +144,6 @@ QCyc15 module: Q(ζ₁₅) via generic PolyQuotQ construction.
 - First instance of PolyQuotQ at degree 8 for a proper cyclotomic field
 - Enables SU(3)₂ S-matrix and T-matrix verification (SU3k2SMatrix.lean)
 -/
-theorem qcyc15_summary : True := trivial
-
 end QCyc15
 
 end SKEFTHawking

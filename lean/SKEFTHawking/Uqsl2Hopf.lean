@@ -1077,7 +1077,8 @@ theorem counit_comp_antipode (x : Uqsl2 k) :
 
 /-! ## 10. Module summary -/
 
-/--
+/-! ## Module summary
+
 Uqsl2Hopf module: HopfAlgebra structure on U_q(sl_2).
   - Coalgebra: Delta, epsilon defined via universal property of RingQuot
   - Bialgebra: via Bialgebra.ofAlgHom with coassociativity + counitality
@@ -1088,6 +1089,4 @@ Uqsl2Hopf module: HopfAlgebra structure on U_q(sl_2).
   - Structural: S^2 = Ad(K), grouplike K/Kinv, counit_comp_S = counit = 3
   - Total: 21 theorems + Bialgebra + HopfAlgebra instances
 -/
-theorem uqsl2_hopf_summary : True := trivial
-
 end SKEFTHawking

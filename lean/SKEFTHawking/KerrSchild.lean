@@ -100,7 +100,8 @@ theorem schwarzschild_horizon (M : ℝ) (hM : 0 < M) :
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 KerrSchild module: fracton-gravity extension to Kerr-Schild sector.
   - isNull: null vector definition
   - radial_null: radial null vector PROVED
@@ -109,6 +110,4 @@ KerrSchild module: fracton-gravity extension to Kerr-Schild sector.
   - schwarzschild_phi_pos, schwarzschild_horizon: Schwarzschild properties PROVED
   - Zero axioms.
 -/
-theorem kerr_schild_summary : True := trivial
-
 end SKEFTHawking.KerrSchild

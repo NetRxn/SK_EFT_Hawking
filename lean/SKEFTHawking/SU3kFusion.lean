@@ -288,7 +288,8 @@ end Level2
 
 /-! ## 3. Module Summary -/
 
-/--
+/-! ## Module summary
+
 SU3kFusion module: fusion rules for SU(3) Chern-Simons theory.
   - SU(3)_1: Z₃ fusion ring, 3 objects, all dimensions 1 (invertible)
   - SU(3)_2: 6 anyons with Fibonacci subcategory (τ⊗τ = 1+τ)
@@ -297,6 +298,4 @@ SU3kFusion module: fusion rules for SU(3) Chern-Simons theory.
   - First SU(3)_k fusion in any proof assistant
   - Zero sorry, zero axioms
 -/
-theorem su3k_fusion_summary : True := trivial
-
 end SKEFTHawking

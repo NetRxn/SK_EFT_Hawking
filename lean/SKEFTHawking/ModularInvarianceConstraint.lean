@@ -180,7 +180,8 @@ theorem twenty_four_decomposition :
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 ModularInvarianceConstraint module summary:
   - ζ₂₄ = e^{2πi/24}: 24th root of unity, ζ₂₄²⁴ = 1
   - q-parameter shift: 𝕢_h(z+1) = e^{2πi/h} · 𝕢_h(z)
@@ -189,6 +190,4 @@ ModularInvarianceConstraint module summary:
   - The "24" derived from Dedekind eta q^{1/24}, not axiomatized
   - Rokhlin connection: 24 = 8×3, coprime factorization
 -/
-theorem modular_invariance_summary : True := trivial
-
 end SKEFTHawking

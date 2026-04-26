@@ -93,15 +93,28 @@ structure DecouplingRegime (E Λ_ADW : ℝ) : Prop where
   posΛ : 0 < Λ_ADW
   /-- Robust hierarchy: `E < Λ_ADW / 10`. -/
   hierarchy : 10 * E < Λ_ADW
-  /-- Not in the vestigial-gravity regime (Volovik 2024).
-  At `E = M_W ≫ Λ_QCD ≈ 0.2 GeV`, this is trivially satisfied. -/
-  not_vestigial : True
+  /-- Not in the vestigial-gravity regime (Volovik 2024). The vestigial
+  regime applies only at `E ≲ Λ_QCD ≃ 0.2 GeV`; we require `E` strictly
+  above QCD confinement. At `E = M_W ≃ 80 GeV`, satisfied numerically.
+  Stage-13 strengthened (2026-04-25, BLOCKER 5.3): prior encoding
+  `not_vestigial : True` accepted any inhabitant; replaced by an
+  explicit hierarchy `0.2 < E` so the field encodes the regime
+  exclusion the prose claims. -/
+  not_vestigial : (0.2 : ℝ) < E
   /-- Not in the cosmological regime (Klinkhamer-Volovik q-theory).
-  At `E = M_W ≫ H_0`, this is trivially satisfied. -/
-  not_cosmological : True
-  /-- Substrate is not in the FRG strong-coupling regime. At natural
-  ADW four-fermion couplings, this is trivially satisfied. -/
-  weakly_coupled_matter : True
+  Cosmological corrections apply only at `E ≲ H_0 ≃ 1.4·10⁻⁴² GeV` (in
+  natural units); we require `E` strictly above the present-day Hubble
+  scale. At `E = M_W`, trivially numerically satisfied.
+  Stage-13 strengthened (2026-04-25, BLOCKER 5.3). -/
+  not_cosmological : (1.4e-42 : ℝ) < E
+  /-- Substrate is not in the FRG strong-coupling regime. The
+  Wetterich-Reuter-Saueressig analysis applies when the substrate four-
+  fermion coupling exceeds the strong-coupling unitarity bound, which
+  in this normalization corresponds to `Λ_ADW ≳ M_Pl ≃ 10¹⁹ GeV`. We
+  require the substrate scale to be sub-Planckian: `Λ_ADW < 10¹⁹` GeV.
+  At `Λ_ADW = 10¹⁴`, trivially numerically satisfied.
+  Stage-13 strengthened (2026-04-25, BLOCKER 5.3). -/
+  weakly_coupled_matter : Λ_ADW < (1e19 : ℝ)
 
 /-! ## 2. SubstrateData — substrate parameters needed for Wilson coefficient -/
 
@@ -187,10 +200,16 @@ def H_DecouplingBoundDim6
 /-- **WAVE2-OPEN-5a (k = 1, dim-5 LNV)**: stronger tracked hypothesis
 that, under explicit lepton-number violation, the amplitude difference
 is bounded by the natural coefficient times `(E / Λ_ADW)¹`. The dim-5
-Weinberg-operator channel saturates the AC bound when LNV is allowed. -/
+Weinberg-operator channel saturates the AC bound when LNV is allowed.
+
+Parameterized over the substrate L-violation coefficient `G_LV` (per the
+Stage-13 strengthening of `MajoranaRung.H_LeptonNumberViolated` to the
+non-trivial predicate `G_LV ≠ 0`). The dim-5 channel is selected when
+`G_LV ≠ 0`; absent LNV, `G_LV = 0` falsifies the predicate and the
+generic dim-6 bound `H_DecouplingBoundDim6` applies instead. -/
 def H_DecouplingBoundDim5_LNV
-    (amp_diff : ℝ → ℝ) (s : SubstrateData) : Prop :=
-  SKEFTHawking.MajoranaRung.H_LeptonNumberViolated ∧
+    (amp_diff : ℝ → ℝ) (s : SubstrateData) (G_LV : ℝ) : Prop :=
+  SKEFTHawking.MajoranaRung.H_LeptonNumberViolated G_LV ∧
   ∀ E : ℝ, DecouplingRegime E s.Λ_ADW →
     |amp_diff E| ≤ naturalC s * (E / s.Λ_ADW)
 
@@ -198,13 +217,21 @@ def H_DecouplingBoundDim5_LNV
 
 /-- Non-vacuity witness for `DecouplingRegime`: the canonical electroweak-
 scale point `E = M_W ≃ 80 GeV` and substrate scale `Λ_ADW = 10^14 GeV`
-satisfies the regime. Concretely we verify the hierarchy
-`10 · M_W < Λ_ADW` (`800 < 10^14`) and the three-failure-mode predicates
-(all currently `True` placeholders that downstream waves can sharpen
-without breaking compatibility). -/
+satisfies the regime. Concretely we verify:
+- the hierarchy `10·M_W < Λ_ADW` (`800 < 10^14`);
+- `not_vestigial`: `0.2 < 80` (M_W ≫ Λ_QCD);
+- `not_cosmological`: `1.4·10⁻⁴² < 80` (M_W ≫ H_0);
+- `weakly_coupled_matter`: `10^14 < 10^19` (Λ_ADW sub-Planckian).
+
+Stage-13 strengthened (2026-04-25): the three failure-mode predicates
+are now substantive numerical inequalities rather than `True`
+placeholders, and this proof discharges them via `norm_num`. -/
 theorem decouplingRegime_at_electroweak_scale :
     DecouplingRegime 80 (10 ^ 14) := by
-  refine ⟨?_, ?_, ?_, trivial, trivial, trivial⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · norm_num
+  · norm_num
+  · norm_num
   · norm_num
   · norm_num
   · norm_num
@@ -271,13 +298,19 @@ theorem H_DecouplingBoundDim6_isBigOWith
   rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos h_sq_pos]
   exact h E h_regime
 
-/-! ## 6. Wave 2b summary marker -/
+/-! ## 6. Wave 2b summary
 
-/-- Wave 2b decoupling-strengthening summary: surfaces that the AC
-decoupling-bound infrastructure for Embedding I vs III is in place at
-the tracked-hypothesis level, with regime predicates encoding the three
-known cosmological-scale failure modes. Substrate-specific coefficient
-`C` not yet derived in primary literature for ADW; honest gap. -/
-theorem wave2b_decoupling_summary : True := trivial
+The Wave 2b decoupling-strengthening infrastructure for Embedding I vs III
+is in place at the tracked-hypothesis level: `DecouplingRegime` encodes
+substantive numerical exclusions of the three known cosmological-scale
+failure modes (vestigial gravity, q-theory, FRG strong-coupling), and
+the dim-5/dim-6 AC bounds are parameterized via `H_DecouplingBoundDim5_LNV`
++ `H_DecouplingBoundDim6`. The substrate-specific Wilson coefficient `C`
+is not derived in primary literature for ADW; the natural-coefficient
+estimate `naturalC s = N_f / (16π²)` from SILH+Hill bilocal-NJL is the
+honest stand-in. (Stage-13 cleanup 2026-04-25 removed the
+`wave2b_decoupling_summary : True := trivial` placeholder per BLOCKER 5.4
+on paper21 review; the file-level docstring above replaces it.)
+-/
 
 end SKEFTHawking.MajoranaRungDecoupling

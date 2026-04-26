@@ -138,7 +138,8 @@ theorem vectorlike_anomaly_free (n : ℕ) (q : Fin n → ℤ) :
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 KMatrixAnomaly module: anomaly matching in 1+1D chiral gauge theories.
   - ChiralTheory1D: charge vectors for left/right movers
   - anomalyLeft/Right: Σ q² coefficients
@@ -150,6 +151,4 @@ KMatrixAnomaly module: anomaly matching in 1+1D chiral gauge theories.
   - vectorlike_anomaly_free: q_L=q_R always anomaly-free PROVED
   - Foundation for Phase 5n: Lagrangian sublattice → gapped boundary
 -/
-theorem k_matrix_anomaly_summary : True := trivial
-
 end SKEFTHawking

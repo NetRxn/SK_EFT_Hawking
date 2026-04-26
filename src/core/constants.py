@@ -1381,6 +1381,30 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
             },
         },
     },
+    'gaussianSaddleAsymptotic': {
+        'eliminability': 'hard',
+        'reason': 'Laplace-method asymptotic ∫ e^{−Ax²/2} dx = √(2π/A) for the '
+                  'Kaul-Majumdar saddle-point evaluation of the Verlinde-formula '
+                  'horizon Hilbert-space dimension. The full asymptotic expansion '
+                  'I₀ ~ C e^{F(0)} / √(−F\'\'(0)) requires Watson\'s lemma / Laplace '
+                  'method machinery not present in Mathlib 4.29 measure-theoretic '
+                  'tools. Eliminable in principle (Mathlib has Real.exp, '
+                  'MeasureTheory.integral) but the bounded remainder proof is a '
+                  'multi-month undertaking. Phase 6e or a future Mathlib PR.',
+        'module': 'BHEntropyMicroscopic',
+        'used_in': 'kaulMajumdarLogCoefficient, kaulMajumdarClosedForm',
+        'evidence_ladder': {
+            'Mathlib status': {
+                'has': 'Real.exp, Real.sqrt, MeasureTheory.integral, Asymptotics.IsBigO',
+                'lacks': 'Laplace-method bound (Watson\'s lemma equivalent)',
+                'pr_candidate': 'Yes — would fit in MeasureTheory.Asymptotic.LaplaceMethod',
+            },
+            'Project escape': {
+                'status': 'tracked-hypothesis only — does not flow into other waves',
+                'risk': 'Low — sole user is BHEntropyMicroscopic.kaulMajumdarClosedForm',
+            },
+        },
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
@@ -1401,9 +1425,12 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
 
 PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
     # === Content placeholders (mathematical claims, no proof) ===
-    # Total `True := trivial` in Lean: 71 (36 module summaries + 35 content).
+    # Total `True := trivial` in Lean: ~26 (post 2026-04-26 audit cleanup;
+    # was 95 before the project-wide Lean substance audit converted ~69
+    # `*_summary : True := trivial` markers to `/-! ## Module summary -/`
+    # markdown blocks via scripts/convert_summaries.py).
     # Only content placeholders with resolution plans are tracked here.
-    # Module summaries are documentation markers — non-load-bearing by design.
+    # Module summaries are now documentation markdown — non-load-bearing.
     # Full count is in docs/counts.json via update_counts.py.
     # DrinfeldEquivalence: categorical wrapping stubs
     'monoidal_structure_corresponds': {
@@ -1453,30 +1480,32 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
         'resolution': 'Requires explicit basis construction',
     },
     # FusionCategory: Ocneanu rigidity + TQFT placeholder
-    'ocneanu_rigidity_placeholder': {
+    # (renamed _placeholder → _TODO 2026-04-26 per Stage-13 audit)
+    'ocneanu_rigidity_TODO': {
         'category': 'content',
         'module': 'FusionCategory',
         'claim': 'Fusion categories are rigid (Ocneanu)',
         'resolution': 'Deep result; axiomatize or defer to Phase 6+',
     },
-    'fusion_to_tqft_placeholder': {
+    'fusion_to_tqft_TODO': {
         'category': 'content',
         'module': 'FusionCategory',
         'claim': 'Fusion category → TQFT via Turaev-Viro',
         'resolution': 'Statement-level; full construction requires cobordism infrastructure',
     },
     # CenterFunctor: monoidal/braided functor stubs
-    'center_functor_monoidal': {
+    # (renamed equivalence_is_* → _TODO 2026-04-26 per Stage-13 audit)
+    'equivalence_is_monoidal_TODO': {
         'category': 'content',
         'module': 'CenterFunctor',
-        'claim': 'Center functor is monoidal',
-        'resolution': 'Phase 6 categorical wrapping',
+        'claim': 'Z(Vec_G) ≌ Mod(D(G)) is monoidal',
+        'resolution': 'Phase 6 categorical wrapping (full functor construction)',
     },
-    'center_functor_braided': {
+    'equivalence_is_braided_TODO': {
         'category': 'content',
         'module': 'CenterFunctor',
-        'claim': 'Center functor is braided monoidal',
-        'resolution': 'Phase 6 categorical wrapping',
+        'claim': 'Z(Vec_G) ≌ Mod(D(G)) is braided monoidal',
+        'resolution': 'Phase 6 categorical wrapping (full functor construction)',
     },
 }
 
@@ -1572,6 +1601,20 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'source': 'Anderson-Brown-Peterson, Bull. AMS 72, 256 (1966)',
         'risk': 'Extremely low — standard result in algebraic topology.',
         'circularity_note': 'CAUTION: The ABP computation historically used facts equivalent to Rokhlin theorem. Using this to DERIVE Rokhlin creates a logical dependency chain where A proves B but A was originally proved using B. The mathematical content is not circular (ABP can be proved independently of Rokhlin via Adams spectral sequence), but the historical provenance is tangled. If used, should be clearly documented as an independent route, not as "proving" Rokhlin from more basic facts.',
+    },
+    'H_ScalarChannelIsTetradBifurcationOutput': {
+        'statement': 'For a ScalarChannel s arising from the TetradGapEquation supercritical branch and a UV cutoff Λ_UV, the condensate VEV satisfies √(μ²/λ) ≤ Λ_UV (no super-UV condensates).',
+        'status': 'active',
+        'eliminability': 'hard',
+        'elimination_path': 'Requires resolution of Open Question O.2: a quantitative bridge mapping the Wetterich scalar-channel parameters (μ², λ) to the GL-expansion coefficients of the tetrad gap-equation bifurcation. Once O.2 is closed (via deep-research derivation of the supercritical-branch coefficient identities), the kinematic bound √(μ²/λ) ≤ Λ_UV becomes a theorem of TetradGapEquation rather than an external hypothesis.',
+        'dependent_theorems': [
+            'SKEFTHawking.mexican_hat_vev_under_supercritical_bridge',
+            'SKEFTHawking.bridge_excludes_super_uv_vev',
+        ],
+        'module': 'ScalarRungInterpretation',
+        'source': 'Tracked external hypothesis pending Open Question O.2 (deep-research-gated). Disclosed in paper20 (papers/paper20_scalar_rung/paper_draft.tex L181, L368). Project precedent: same tracked-hypothesis pattern in HiddenSectorMixedCharge.H_MixedChannelZ16Cancels and DarkSectorSynthesis.H_VestigialRelicCarriesZ16Charge.',
+        'risk': 'Low — the kinematic constraint √(μ²/λ) ≤ Λ_UV is a generic effective-field-theory consistency requirement (no super-UV condensates) and is expected to hold for any ScalarChannel that genuinely emerges from the tetrad gap-equation supercritical branch. The hypothesis is genuinely non-trivial (can fail for super-UV scalar channels) but is structurally aligned with EFT validity. The contrapositive `bridge_excludes_super_uv_vev` provides explicit falsifiability.',
+        'circularity_note': 'None. The hypothesis cleanly separates the qualitative bifurcation-output identification (currently external) from the algebraic Mexican-hat consequences (proved in Lean). No circular dependency on any downstream theorem.',
     },
 }
 
@@ -1797,7 +1840,8 @@ EW_PARAMS = {
     # ── Measured SM electroweak parameters (PDG 2024) ───────────────
     'M_W_GEV': 80.3692,           # W boson mass (GeV/c²), PDG 2024
     'M_Z_GEV': 91.1876,           # Z boson mass (GeV/c²), PDG 2024
-    'M_H_GEV': 125.25,            # Higgs boson mass (GeV/c²), PDG 2024
+    'M_H_GEV': 125.20,            # Higgs boson mass (GeV/c²), PDG 2024 (S. Navas et al., PRD 110, 030001)
+    'M_TOP_GEV': 172.57,          # Top quark mass (GeV/c²), PDG 2024 single canonical entry
     'V_EW_GEV': 246.21965,        # EW vacuum expectation value (GeV)
     'SIN2_THETA_W': 0.23121,      # On-shell weak mixing angle sin²θ_W
     'G_FERMI_GEV_M2': 1.1663787e-5,  # Fermi constant (GeV⁻²)
@@ -1807,7 +1851,7 @@ EW_PARAMS = {
     'G_U1Y': 0.3489,              # g' = e/cos θ_W at M_Z (hypercharge)
     # SM Higgs sector phenomenology (tree level)
     'LAMBDA_SM_HIGGS': 0.129,     # λ_SM = m_H²/(2v²) at tree level
-    'Y_TOP': 0.9946,              # y_t = √2 m_t/v with m_t = 172.76 GeV
+    'Y_TOP': 0.9912,              # y_t = √2 m_t/v with m_t = 172.57 GeV (PDG 2024)
     # ── ADW-substrate fiducial values (Wave 1 parameter sweep) ──────
     # These are PROJECTED — not measured, but used as the natural
     # Wetterich / ADW substrate scale choices for the m_H microscopic
@@ -1862,6 +1906,287 @@ MAJORANA_PARAMS = {
     # ── Light neutrino mass scale anchors (from Δm² + lightest = 0) ──
     'M_NU_HEAVIEST_EV': 0.0501,           # √|Δm²_31| ≈ 0.05 eV (NO, m_lightest → 0)
     'M_NU_NEXT_EV': 0.00861,              # √Δm²_21 ≈ 8.61 meV
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 1: Linearized Einstein Equations + emergent G_N
+#
+# Microscopic G_N from ADW tetrad condensation (Sakharov-Adler induced
+# gravity coefficient with ADW-specific dimensionless prefactor α_ADW).
+#
+#   G_N^emerg = α_ADW · 12π / (N_f · Λ_UV²)         [natural units, GeV⁻²]
+#   M_Planck² = 1/G_N^emerg = N_f · Λ_UV² / (12π · α_ADW)
+#
+# α_ADW = 1 reproduces the textbook Sakharov-Adler one-loop free-fermion
+# result. The ADW-specific value awaits Vergeles unitarity computation
+# (Lit-Search/Tasks/submitted/Phase6a_W1_vergeles_GN_coefficient.md).
+# Until that returns, α_ADW is treated as a tracked-hypothesis parameter
+# scanned over the natural range [0.1, 10] (allows ±1 order of magnitude
+# from the Sakharov default).
+#
+# Phase 6a Wave 1 (LinearizedEFE.lean) consumes these via
+# src/emergent_gravity/.
+#
+# References:
+# - Sakharov, Sov. Phys. Dokl. 12, 1040 (1968) — induced gravity
+# - Adler, Rev. Mod. Phys. 54, 729 (1982) — induced-gravity review
+# - Diakonov, arXiv:1109.0091 (2011) — fermionic cosmological term
+# - Vladimirov-Diakonov, PRD 86, 104019 (2012) — lattice ADW phases
+# - Vergeles, PRD 112, 054509 (2025) — ADW unitarity proof
+# ════════════════════════════════════════════════════════════════════
+
+GRAV_PARAMS = {
+    # ── Observed Newton's constant (CODATA 2018) ──────────────────────
+    # G_N = 6.67430(15) × 10⁻¹¹ m³ kg⁻¹ s⁻² (CODATA 2018 recommended)
+    # In natural units (ℏ=c=1, [G_N] = GeV⁻²):
+    #   G_N^obs = 1 / M_Planck² = 1 / (1.220890e19 GeV)² ≈ 6.7088e-39 GeV⁻²
+    'G_N_OBS_M3_KGM1_S2': 6.67430e-11,    # SI units
+    'G_N_OBS_GEV_M2': 6.70883e-39,        # natural units (GeV⁻²)
+    'M_PLANCK_GEV': 1.220890e19,          # M_P = √(ℏc/G_N) (CODATA-derived)
+    'M_PLANCK_REDUCED_GEV': 2.435e18,     # M̄_P = M_P / √(8π) (reduced)
+    # ── Fiducial microscopic-parameter ranges for the G_N scan ───────
+    # Λ_UV: scan from 10¹⁰ GeV (intermediate) to 10¹⁹ GeV (super-Planck);
+    # natural anchors are GUT (10¹⁶ GeV) and reduced-Planck (2.435e18).
+    # Log10 range = 9 decades; finest at the M_Planck cluster.
+    'LAMBDA_UV_GEV_LOWER': 1.0e10,
+    'LAMBDA_UV_GEV_UPPER': 1.0e19,
+    'LAMBDA_UV_GUT_GEV': 1.0e16,          # GUT-adjacent canonical anchor
+    'LAMBDA_UV_PLANCK_GEV': 1.220890e19,  # M_P natural anchor
+    # N_f: SM Weyl fermion count (matches EW.N_F_FIDUCIAL = 15) with
+    # ν_R extension (16 = ℤ₁₆-anomaly-free per generation). For 3 generations,
+    # the total Weyl count is 45 or 48. Phase 6a uses per-generation by default.
+    'N_F_PER_GEN_NO_NU_R': 15,
+    'N_F_PER_GEN_WITH_NU_R': 16,
+    'N_F_THREE_GEN_NO_NU_R': 45,
+    'N_F_THREE_GEN_WITH_NU_R': 48,
+    'N_F_DEFAULT': 15,                    # Per-generation default
+    # α_ADW: ADW microscopic coefficient. Sakharov-Adler limit = 1.
+    # Vergeles-derived value pending deep research; current tracked
+    # hypothesis range [0.1, 10] = ±1 order of magnitude.
+    'ALPHA_ADW_SAKHAROV_DEFAULT': 1.0,
+    'ALPHA_ADW_LOWER': 0.1,
+    'ALPHA_ADW_UPPER': 10.0,
+    # ── Sakharov-Adler one-loop coefficient ───────────────────────────
+    # G_N = (12π) / (N_f Λ²) is the standard result for N_f Dirac
+    # fermions integrated at one loop with hard cutoff Λ. See Adler 1982
+    # Eq. (3.3) for the explicit derivation; modern treatment in Visser
+    # Mod. Phys. Lett. A17, 977 (2002).
+    'SAKHAROV_COEFFICIENT': 12.0 * float(np.pi),  # 12π ≈ 37.699
+    # ── Correctness-push tolerance ────────────────────────────────────
+    # Order-of-magnitude match: |G_N^emerg − G_N^obs| / G_N^obs < tolerance.
+    # 0.5 = ±50% allows for RG-running uncertainty + Vergeles α_ADW O(1).
+    # Same tolerance pattern as EW.M_H_MATCH_TOLERANCE.
+    'G_N_MATCH_TOLERANCE': 0.5,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 4: FLRW cosmological dynamics
+#
+# Friedmann equations as ODE reduction of the linearized EFE on a
+# homogeneous-isotropic background. Cosmological parameters from
+# Planck 2018 (TT,TE,EE+lowE+lensing+BAO) for sanity checks.
+#
+# Phase 6a Wave 4 (FLRWDynamics.lean) consumes these via
+# src/emergent_gravity/.
+#
+# References:
+# - Planck Collaboration, A&A 641, A6 (2020) — cosmological parameters
+# - Phase 5y Wave 1 q-theory → DESI fit (Lit-Search/Phase-5y/)
+# ════════════════════════════════════════════════════════════════════
+
+FLRW_PARAMS = {
+    # ── Hubble parameter (Planck 2018 TT,TE,EE+lowE+lensing+BAO) ──────
+    'H0_KM_S_MPC': 67.66,                 # km/s/Mpc (Planck 2018, base ΛCDM)
+    'H0_INV_S': 2.193e-18,                # H₀ in s⁻¹ (1 km/s/Mpc = 3.241e-20 /s)
+    # ── Density parameters (sum to 1 for flat universe) ──────────────
+    'OMEGA_M_PLANCK': 0.3111,             # matter
+    'OMEGA_LAMBDA_PLANCK': 0.6889,        # cosmological constant
+    'OMEGA_R_PLANCK': 9.2e-5,             # radiation (CMB + neutrinos)
+    'OMEGA_K_PLANCK': 0.0,                # curvature (flat ΛCDM)
+    # ── Critical density ─────────────────────────────────────────────
+    # ρ_crit = 3 H₀² / (8π G_N) ≈ 8.62e-27 kg/m³
+    'RHO_CRIT_KG_M3': 8.620e-27,
+    # ── Equation-of-state defaults (per fluid) ───────────────────────
+    'W_MATTER': 0.0,                      # dust
+    'W_RADIATION': 1.0/3.0,               # photons + relativistic neutrinos
+    'W_LAMBDA': -1.0,                     # cosmological constant
+    # ── DESI DR2 dark-energy fit anchor (for Phase 5y cross-reference) ─
+    # See Phase 5y QTheoryNoGoTheorem.lean / DESIComparison.lean
+    'W_DE_DESI_DR2_TODAY': -0.838,        # w₀ from DESI DR2 (DR2 + CMB + SN)
+    'W_A_DESI_DR2': -0.62,                # w_a = dw/dz at z=0 (DESI DR2)
+    # ── Friedmann tolerance (Wave 4 correctness checks) ──────────────
+    'FLRW_NUMERICAL_TOLERANCE': 1.0e-9,   # Friedmann ODE residual tolerance
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 2: Gravitational waves
+#
+# GW propagation speed and dispersion from the vestigial-phase
+# susceptibility (VestigialSusceptibility.lean) plus the SK-EFT
+# dissipative correction (SecondOrderSK.lean Γ_H). The correctness-
+# push anchor is the GW170817 multi-messenger constraint
+# |c_GW − c| / c ≲ 7e-16 (Abbott et al. 2017 ApJL 848:L13).
+#
+# Phase 5y H1 caveat: the second-sound mode of the vestigial fluid
+# is NOT derived as a propagating DOF (negative-evidence finding);
+# Wave 2 ships in "use-as-identified" mode with the bridge
+# encoded as a tracked-hypothesis Prop H_VestigialModeIsGraviton.
+#
+# Phase 6a Wave 2 (GravitationalWaves.lean) consumes these via
+# src/gravitational_waves/.
+#
+# References:
+# - Abbott et al. (LIGO+Virgo+EM), ApJL 848, L13 (2017) — GW170817 c_GW bound
+# - Volovik, JETP Lett. 119, 564 (2024) — vestigial second-sound framing
+# - Phase 5y H1 deep research (Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md)
+# ════════════════════════════════════════════════════════════════════
+
+GW_PARAMS = {
+    # ── Speed of light (natural units; SI separately for sanity checks) ─
+    'C_LIGHT_M_S': 2.99792458e8,           # SI (defined exactly)
+    # ── GW170817 deviation bound (Abbott et al. 2017) ────────────────
+    # Combined arrival-time analysis: −3 × 10⁻¹⁵ ≤ Δc/c ≤ +7 × 10⁻¹⁶.
+    # Conservative two-sided cap |Δc/c| ≤ 3e-15 used as the
+    # falsification ceiling in correctness-push theorems.
+    'C_GW_DEVIATION_UPPER_BOUND': 7.0e-16,    # most stringent (+) side
+    'C_GW_DEVIATION_LOWER_BOUND': -3.0e-15,   # (−) side
+    'C_GW_TWO_SIDED_CAP': 3.0e-15,            # symmetric falsification cap
+    # ── Vestigial-phase susceptibility natural ranges ─────────────────
+    # χ_vest is the metric-channel susceptibility from
+    # VestigialSusceptibility.lean (chi_RPA closed form).
+    # The "natural" range = within 1 order of magnitude of unity in
+    # dimensionless form χ_vest · Λ², i.e. consistent with the RPA
+    # bubble integral being O(Λ²/16π²) per Vergeles 2025.
+    'CHI_VEST_NATURAL_LOWER': 0.1,
+    'CHI_VEST_NATURAL_UPPER': 10.0,
+    'CHI_VEST_DEFAULT': 1.0,
+    # ── Frequency window (LIGO + cross-instrument) ───────────────────
+    # LIGO sensitivity: 10 Hz – 10 kHz. GW170817 inspiral peak ≈ 100 Hz.
+    'GW_FREQ_HZ_LOWER': 10.0,
+    'GW_FREQ_HZ_UPPER': 1.0e4,
+    'GW170817_PEAK_FREQ_HZ': 100.0,        # inspiral peak
+    'GW_FREQ_HZ_PROBE': 100.0,             # probe frequency for dispersion
+    # ── Dissipative correction scale (SK-EFT cross-link) ──────────────
+    # SecondOrderSK.lean Γ_H = (γ₁+γ₂)(κ/c_s)². For GW propagation,
+    # the analog κ is the inverse coherence scale of the vestigial
+    # background; c_s → c_GW. The ratio Γ_H · ω / c_GW² is the
+    # dimensionless dispersion correction at frequency ω.
+    'GAMMA_H_VESTIGIAL_DEFAULT': 1.0e-30,  # placeholder (vestigial regime, ≪ obs)
+    # ── Correctness-push tolerance ────────────────────────────────────
+    # Wave 2 correctness-push: |c_GW − c|/c ≤ tolerance.
+    # Tolerance set to GW170817 two-sided cap.
+    'C_GW_MATCH_TOLERANCE': 3.0e-15,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6a Wave 3: Bekenstein-Hawking entropy from MTC state counting
+#
+# S_BH = A/(4 G_N) − (3/2) log(A/(4 G_N)) + c_0 + O(A⁻¹)
+#
+# Wave 3 ships in Outcome-3 mode (tracked-hypothesis) for the general
+# MTC case, with a SU(2)_k Kaul-Majumdar specialization sub-corollary
+# (Outcome-2, Conditional). Per the Lit-Search/Phase-6a deep-research
+# return (2026-04-25), no published derivation pins a specific Modular
+# Tensor Category at a 4D BH horizon in an ADW substrate. The Kaul-
+# Majumdar SU(2)_k Verlinde-formula route is the only equation-level
+# closed form yielding the −3/2 log coefficient (½ Gaussian saddle +
+# 1 SU(2)-singlet projection); the leading 1/4 prefactor is a tuning
+# (Immirzi parameter γ), not a derivation. Sen 2013 (arXiv:1205.0971)
+# explicitly disagrees with −3/2 for 4D Schwarzschild pure gravity, so
+# −3/2 universality is restricted to the Cardy-saddle subfamily.
+#
+# Phase 6a Wave 3 (BHEntropyMicroscopic.lean) consumes these via
+# src/bh_entropy/.
+#
+# References:
+# - Kaul-Majumdar, PRL 84, 5255 (2000), arXiv:gr-qc/0002040
+# - Kaul, SIGMA 8, 005 (2012), arXiv:1201.6102 (review with full eqs)
+# - Domagala-Lewandowski, CQG 21, 5233 (2004), arXiv:gr-qc/0407051
+# - Meissner, CQG 21, 5245 (2004), arXiv:gr-qc/0407052
+# - Walker-Wang, Front. Phys. 7, 150 (2012), arXiv:1104.2632
+# - Sen, JHEP 04, 156 (2013), arXiv:1205.0971 (heat-kernel disagreement)
+# - Solodukhin, Living Rev. Rel. 14, 8 (2011), arXiv:1104.3712
+# - Bombelli-Koul-Lee-Sorkin, PRD 34, 373 (1986) (entanglement origin)
+# - Jacobson, arXiv:gr-qc/9404039 (induced gravity / BH entropy)
+# ════════════════════════════════════════════════════════════════════
+
+BH_ENTROPY_PARAMS = {
+    # ── Planck length (CODATA 2018) ───────────────────────────────────
+    # ℓ_P = √(ℏ G/c³) = 1.616255(18) × 10⁻³⁵ m. Sets the area scale
+    # in S_BH = A/(4 ℓ_P²) for the leading prefactor.
+    'PLANCK_LENGTH_M': 1.616255e-35,
+    'PLANCK_AREA_M2': 2.6121e-70,         # ℓ_P² (CODATA-derived)
+    # ── BH entropy leading coefficient (Bekenstein-Hawking) ──────────
+    # The 1/4 in S = A/(4 G_N) is Bekenstein 1973 + Hawking 1975. In the
+    # Kaul-Majumdar / Carlip / Solodukhin family it is a *tuning*: the
+    # Immirzi parameter γ, the periodicity β, or the entanglement cutoff
+    # ε is fixed by demanding the leading area coefficient equal 1/4.
+    # Wave 3 encodes 1/4 as a hypothesis-discharge (`immirziTuning`),
+    # NOT as a derived theorem.
+    'BH_ENTROPY_LEADING_COEFFICIENT': 0.25,
+    # ── Immirzi parameter values (Kaul-Majumdar / LQG literature) ────
+    # Distinct counting prescriptions yield distinct γ with the same
+    # −3/2 log coefficient. Per arXiv:1201.6102 §5 the −3/2 is structural
+    # while γ is scheme-dependent.
+    'IMMIRZI_GAMMA_DOMAGALA_LEWANDOWSKI': 0.23753295796592,  # gr-qc/0407051
+    'IMMIRZI_GAMMA_MEISSNER': 0.27392803876474,              # gr-qc/0407052
+    'IMMIRZI_GAMMA_DEFAULT': 0.27392803876474,               # Meissner (recent)
+    # ── Log-correction structural coefficient ────────────────────────
+    # c_log = −1/2 (Gaussian saddle) − 1 (SU(2) singlet projection from
+    # I_0 − I_1 cancellation) = −3/2. Universal within the Cardy-saddle
+    # / single-CFT / microcanonical / A-independent-c family. Sen 2013
+    # (arXiv:1205.0971) heat-kernel result for 4D Schwarzschild gives
+    # +(212/45 − 3) ln a ≈ +1.71 ln a — explicit disagreement.
+    'LOG_CORRECTION_KAUL_MAJUMDAR_SU2K': -1.5,
+    'LOG_CORRECTION_GAUSSIAN_SADDLE': -0.5,
+    'LOG_CORRECTION_SINGLET_PROJECTION': -1.0,
+    'LOG_CORRECTION_SEN_4D_SCHWARZSCHILD': 1.7111111,        # 212/45 - 3
+    # ── MTC zoo (formalized in SU2kFusion / IsingBraiding / ...) ─────
+    # Quantum dimensions + global dim D² used by the area-law leading
+    # coefficient ansatz κ_C ∝ log d_max^C.
+    # Fibonacci (FibonacciMTC.lean): φ = (1+√5)/2 ≈ 1.618
+    'FIBONACCI_PHI': 1.6180339887498948,
+    'FIBONACCI_GLOBAL_DIM_SQ': 3.6180339887498949,           # 1 + φ² = 2 + φ
+    'FIBONACCI_LOG_D_MAX': 0.4812118250596034,               # log φ
+    # Ising (IsingBraiding.lean): {1, σ, ψ}, d = {1, √2, 1}, D² = 4
+    'ISING_GLOBAL_DIM_SQ': 4.0,
+    'ISING_D_SIGMA': 1.4142135623730951,                     # √2
+    'ISING_LOG_D_MAX': 0.34657359027997264,                  # (1/2) log 2
+    'ISING_EDGE_C_MOD8': 0.5,                                # chiral c_-
+    # Toric code (abelian — falsifier instance: d_a = 1 ∀a)
+    'TORIC_CODE_GLOBAL_DIM_SQ': 4.0,
+    'TORIC_CODE_LOG_D_MAX': 0.0,                             # all d_a = 1
+    # D(S₃) (S3CenterAnyons.lean): 8 anyons, d = 1,1,2,3,3,2,2,2; D² = 36
+    'DS3_GLOBAL_DIM_SQ': 36.0,
+    'DS3_LOG_D_MAX': 1.0986122886681098,                     # log 3
+    # SU(2)_k for k ∈ {2, 3, 4} — k=2 reproduces Ising via SU(2)/Z₂.
+    # D²(SU(2)_k) = (k+2)/(2 sin²(π/(k+2))). Computed inline in tests.
+    # ── Falsifier thresholds ─────────────────────────────────────────
+    # F2 (area-law leading scaling): κ > 0 required. Abelian MTCs all
+    # have d_max = 1 ⇒ log d_max = 0 ⇒ κ = 0 ⇒ F2 falsifies.
+    'AREA_LAW_KAPPA_MIN_POSITIVE': 1.0e-12,                  # numerical pos cap
+    # F4 (modular invariance): horizon S, T must satisfy (ST)³ = S² and
+    # S² = (charge conjugation). Tested per-MTC via SU2kFusion.
+    # F5 (anomaly-match mod 8): bulk-Z₂ → boundary chiral c_- mod 8.
+    # ── Correctness-push tolerance ───────────────────────────────────
+    # Coefficient match: |κ_leading − 1/(4 G_N^emerg)| / [1/(4 G_N)] < tol.
+    # 0.10 = ±10% to absorb Immirzi-tuning O(1) ambiguity (DL vs Meissner).
+    'BH_ENTROPY_COEFFICIENT_MATCH_TOLERANCE': 0.10,
+    # Log-correction match: tolerance on c_log against −3/2 anchor.
+    # Tighter (0.01) because c_log is structural, not tuned.
+    'LOG_CORRECTION_MATCH_TOLERANCE': 0.01,
+    # ── Horizon-area natural anchors (for the asymptotic regime) ─────
+    # A/(4 ℓ_P²) ≫ 1 is required for the Kaul-Majumdar saddle to apply.
+    # Solar-mass Schwarzschild: r_s = 2.95 km, A ≈ 1.09e8 m², A/(4 ℓ_P²) ≈ 1.04e77.
+    'HORIZON_AREA_LOG_LOWER': 10.0,           # log(A/(4 ℓ_P²)) lower for asymptotic regime
+    'HORIZON_AREA_LOG_UPPER': 80.0,           # log(A/(4 ℓ_P²)) ≈ solar-mass BH
+    # SU(2)_k natural-range scan
+    'SU2K_LEVEL_LOWER': 2,
+    'SU2K_LEVEL_UPPER': 10,
 }
 
 

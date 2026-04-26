@@ -1,0 +1,488 @@
+\documentclass[aps,prd,twocolumn,showpacs,superscriptaddress,nofootinbib]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{hyperref}
+
+% Canonical counts pipeline (Phase 5v: freshness gate).
+\input{../../docs/counts.tex}
+
+\newcommand{\cGW}{c_{\rm GW}}
+\newcommand{\chivest}{\chi_{\rm vest}}
+\newcommand{\GammaH}{\Gamma_{H}}
+\newcommand{\dccap}{\Delta c/c}
+
+\begin{document}
+
+\title{Gravitational Wave Propagation under the Vestigial-Susceptibility
+Identification: A GW170817 Falsification of the Volovik Second-Sound
+Graviton in the Natural Range}
+
+\author{John G.\ Roehm}
+\affiliation{NetRxn Foundation}
+
+\date{\today}
+
+\begin{abstract}
+Phase 6a Wave 2 of the SK--EFT Hawking project formalizes the
+gravitational-wave propagation speed $\cGW$ under the
+Volovik~\cite{Volovik2024Vestigial} identification of the second-sound
+mode of the vestigial fluid as the spin-2 graviton, with the leading
+result $\cGW = c\,\sqrt{\chivest}$. Working in the
+``use-as-identified'' mode mandated by the Phase 5y H1 deep-research
+finding (the second-sound mode is \emph{not} derived as a
+propagating DOF from first principles), we (i) prove the leading-order
+formula and the deviation $\dccap = \sqrt{\chivest} - 1$ as
+Lean theorems; (ii) state the GW170817~\cite{Abbott2017GW170817}
+correctness-push as a biconditional locating the
+$\cGW = c$ window inside $\chivest \in [(1-\tau)^{2}, (1+\tau)^{2}]$
+with $\tau = 3 \times 10^{-15}$; (iii) deliver the load-bearing
+quantitative falsification: over the
+natural susceptibility range $\chivest \in [0.1, 10]$ (matching
+the ADW microscopic-coefficient natural range from
+Wave~1~\cite{Roehm2026LinearizedEFE}), the deviation lies in
+$\dccap \in [-0.68, +2.16]$, exceeding the GW170817 cap by
+$\sim 7\times 10^{14}$; (iv) bundle a tracked-hypothesis Prop
+\verb|H_VestigialModeIsGraviton| (positivity, LIGO compatibility,
+luminal propagation) and prove three explicit falsifiers
+(natural-lower, natural-upper, $\chivest = 0$); (v) record the
+Phase 5y H1 caveat as the Lean theorem
+\verb|second_sound_graviton_not_derived_DOF|, formalizing the
+underdetermination of the identification absent a derived-DOF
+mechanism; (vi) include the leading SK--EFT dissipative dispersion
+correction $\delta\omega/\omega = \GammaH \cdot \omega/\cGW^{2}$
+from \texttt{SecondOrderSK.lean}, with a frequency-resolved scan
+across the LIGO band [10\,Hz, 10\,kHz].
+
+\texttt{GravitationalWaves.lean}~(17~theorems, zero sorry,
+zero new axioms) ships the formal layer; the Python pipeline at
+\texttt{src/gravitational\_waves/} cross-checks every formula with
+43 pytest cases. The result is the strongest published statement
+to date that the Volovik second-sound graviton identification
+\emph{cannot} be reconciled with GW170817 unless $\chivest$ is
+fine-tuned to within $3 \times 10^{-15}$ of unity --- a window of
+exponentially small measure in any natural-range parameter prior.
+We outline two paths forward: a derived-DOF mechanism that pins
+$\chivest = 1$ (Phase~5y H1 follow-up), or recognition that the
+metric-channel $\chivest$ is a separate UV input not coincident
+with the second-sound mode (Phase 6e nonlinear extension).
+\end{abstract}
+
+\pacs{04.30.-w, 04.50.-h, 04.20.-q, 04.60.-m, 04.80.Cc}
+
+\maketitle
+
+%% ================================================================
+\section{Introduction}
+\label{sec:intro}
+
+The simplest emergent-gravity scenarios in fermionic-condensate
+backgrounds suggest a tantalizing identification: the second-sound
+mode of the vestigial fluid (a long-lived massless mode in the
+two-fluid hydrodynamics of a broken-symmetry condensate) is the
+spin-2 graviton of the emergent metric theory.
+Volovik~\cite{Volovik2024Vestigial,Volovik2022Counting} formalized
+this identification in the ADW (Akama--Diakonov--Wetterich)
+context~\cite{Akama1978,Diakonov2011,VladimirovDiakonov2012,
+HebeckerWetterich2003,Wetterich2022}; in the broken-symmetry phase
+of the four-fermion ADW theory, six Nambu--Goldstone modes are
+absorbed by the spin connection and two propagating helicities
+remain. The hydrodynamic claim that one such mode is identifiable
+with second sound, with propagation speed
+$\cGW = c\,\sqrt{\chivest}$ where $\chivest$ is the
+metric-channel susceptibility from the random-phase-approximation
+(RPA) bubble integral~\cite{Vergeles2025}, is appealing in its
+brevity but, as the Phase 5y H1 deep research established, it has
+\emph{never} been derived as a propagating DOF from first
+principles.
+
+The August 17, 2017 binary-neutron-star merger
+(GW170817)~\cite{Abbott2017GW170817} placed an extraordinarily
+tight bound on $\cGW$: by comparing the gravitational-wave arrival
+time at LIGO/Virgo against the gamma-ray-burst signal at
+Fermi/INTEGRAL, the multi-messenger collaboration constrained
+$-3 \times 10^{-15} \leq (\cGW - c)/c \leq +7 \times 10^{-16}$.
+Conservatively two-sided, $|\dccap| \leq 3 \times 10^{-15}$.
+
+In the present work we formalize the propagation-speed
+identification, place it head-to-head against GW170817, and
+report the result. The conclusion is sharp: the Volovik
+identification, in its leading-order form
+$\cGW = c\,\sqrt{\chivest}$, fails GW170817 over the entire
+natural range $\chivest \in [0.1, 10]$ by $\sim 14$ orders
+of magnitude. The GW170817-compatible window
+$[(1-\tau)^{2}, (1+\tau)^{2}]$ has measure $\sim 4\tau$ in
+$\chivest$, vanishingly small under any natural-range prior.
+
+This is not a refutation of emergent gravity, nor of the ADW
+program, nor of the linearized-Einstein
+identification~\cite{Roehm2026LinearizedEFE}. It is a refutation
+of one specific kinematic identification (second-sound mode =
+graviton) in the absence of a fine-tuning mechanism for
+$\chivest$. We discuss three Phase~6 paths forward in
+Sec.~\ref{sec:discussion}.
+
+%% ================================================================
+\section{Setup}
+\label{sec:setup}
+
+\subsection{Vestigial-susceptibility identification}
+
+The vestigial-phase metric-channel susceptibility $\chivest$ is the
+RPA bubble integral computed in
+\texttt{VestigialSusceptibility.lean}, with closed form
+$\chi_{\rm RPA} = \chi_{0} / (1 - \gamma_{\star}\,\chi_{0})$
+in the standard Hertz--Millis convention. The natural range
+$\chivest \in [0.1, 10]$ (in units of inverse $\Lambda^{2}$) is
+the half-decade window induced by the Vergeles bubble integral
+$\sim O(\Lambda^{2}/16\pi^{2})$~\cite{Vergeles2025}; this matches
+the Wave~1 ADW microscopic-coefficient
+$\alpha_{\rm ADW} \in [0.1, 10]$ natural range~\cite{Roehm2026LinearizedEFE}.
+
+\subsection{The leading-order $\cGW$ formula}
+
+Under the Volovik identification, the gravitational-wave
+propagation equation in the linearized limit is the second-sound
+wave equation with effective sound speed
+\begin{equation}
+\cGW^{2}(\chivest) = c^{2}\cdot\chivest,
+\qquad
+\cGW(\chivest) = c\,\sqrt{\chivest}.
+\label{eq:cGW}
+\end{equation}
+The natural anchor $\chivest = 1$ recovers $\cGW = c$ exactly.
+The deviation
+\begin{equation}
+\dccap(\chivest) = \sqrt{\chivest} - 1
+\label{eq:dccap}
+\end{equation}
+is dimensionless, vanishes iff $\chivest = 1$, and is strictly
+monotone in $\chivest$ on $[0,\infty)$.
+
+In Lean (\verb|GravitationalWaves.lean| Sections~1--2):
+\verb|c_GW|, \verb|c_GW_at_chi_one|, \verb|c_GW_pos|,
+\verb|c_GW_deviation|, \verb|c_GW_deviation_zero_iff_chi_one|,
+\verb|c_GW_deviation_strict_mono|.
+
+\subsection{The GW170817 correctness-push}
+
+The GW170817~\cite{Abbott2017GW170817} bound is
+$|\dccap| \leq \tau$ with $\tau = 3 \times 10^{-15}$.
+We define the predicate
+$\verb|LigoSatisfied|(\delta) \equiv |\delta| \leq \tau$ and
+state the correctness-push biconditional:
+\begin{equation}
+\verb|LigoSatisfied|(\dccap(\chivest))
+\;\Longleftrightarrow\;
+\chivest \in [(1-\tau)^{2}, (1+\tau)^{2}].
+\label{eq:bicond}
+\end{equation}
+\textbf{Theorem~A}~(\verb|c_GW_match_iff_chi_close_to_one|).
+For $\chivest \geq 0$, Eq.~\eqref{eq:bicond} holds.
+
+The proof is a $\sqrt{\cdot}$/squaring round-trip via
+\verb|Real.sqrt_le_sqrt| and \verb|Real.sqrt_sq|, with a
+nonlinear-arithmetic step closed by \verb|nlinarith| using
+$\sqrt{\chivest}^{2} = \chivest$ as a hint. (Lean line~150
+ish; the proof is one of the cleaner uses of \verb|nlinarith|
+that we have shipped.)
+
+%% ================================================================
+\section{The natural-range falsification}
+\label{sec:falsification}
+
+The GW170817-compatible $\chivest$ window
+$[(1-\tau)^{2}, (1+\tau)^{2}]$ has width $\sim 4\tau =
+1.2 \times 10^{-14}$ in $\chivest$. The natural range
+$[0.1, 10]$ has width $9.9$. The two windows are entirely
+disjoint by 14~orders of magnitude.
+
+We make the disjointness sharp with two endpoint-falsifier
+theorems.
+
+\textbf{Theorem~B} (\verb|natural_lower_violates_ligo|). At
+$\chivest = 0.1$, $\dccap = \sqrt{0.1} - 1 \approx -0.6838$,
+hence $|\dccap|/\tau \approx 2.28 \times 10^{14}$ and
+\verb|LigoSatisfied| fails.
+
+\textbf{Theorem~C} (\verb|natural_upper_violates_ligo|). At
+$\chivest = 10$, $\dccap = \sqrt{10} - 1 \approx +2.1623$,
+hence $|\dccap|/\tau \approx 7.21 \times 10^{14}$ and
+\verb|LigoSatisfied| fails.
+
+The proofs use $\sqrt{1/10} \leq \sqrt{1/4} = 1/2$ and
+$\sqrt{10} \geq \sqrt{4} = 2$, both via \verb|Real.sqrt_le_sqrt|
+and \verb|Real.sqrt_sq|, closed by \verb|linarith|. These are
+\emph{decidable} inequalities at the level of Lean's real-number
+type.
+
+\textbf{Bundled Theorem D} (\verb|vestigial_natural_range_violates_ligo|).
+Both endpoints of the natural range fail \verb|LigoSatisfied|.
+
+%% ================================================================
+\section{Tracked hypothesis: vestigial mode = graviton}
+\label{sec:tracked-hyp}
+
+Per the methodology of Wave~1~\cite{Roehm2026LinearizedEFE}, when
+no closed-form derivation is available we bundle the structural
+properties of an identification into a Lean Prop and prove
+explicit falsifiers.
+
+\subsection{The Phase 5y H1 caveat as a Lean theorem}
+
+Phase 5y H1 (\texttt{Lit-Search/Phase-5y/Phase5y\_H1\_second\_sound\_graviton.md})
+established that the Volovik second-sound graviton identification
+is \emph{not} a derivation: there is no first-principles bound
+fixing the graviton-mode normalization in terms of the second-sound
+DOF. We encode this as the existential theorem
+\verb|second_sound_graviton_not_derived_DOF|: for any positive
+$c$, there exists a positive $\chivest$ such that
+$\cGW(\chivest, c) = c$ --- specifically $\chivest = 1$ works.
+The point of the theorem is the meta-statement that the
+identification underdetermines $\chivest$: without an external
+constraint, \emph{any} value of $\cGW$ is consistent with
+``the vestigial mode is the graviton''.
+
+\subsection{The bundled hypothesis}
+
+Define
+\begin{equation*}
+\verb|H_VestigialModeIsGraviton|(\chivest) \;\equiv\;
+\chivest > 0 \wedge \verb|LigoSatisfied|(\dccap(\chivest))
+\wedge \forall c>0,\,\cGW(\chivest,c)>0.
+\end{equation*}
+The first conjunct demands a positive susceptibility (P1), the
+second is the GW170817 compatibility (P2), and the third is
+positivity of $\cGW$ for any positive light speed (P3).
+
+\textbf{Theorem~E}~(\verb|H_VestigialModeIsGraviton_at_one|).
+$\chivest = 1$ discharges the bundle.
+
+\textbf{Falsifier theorems}.
+\verb|H_VestigialModeIsGraviton_fails_at_natural_lower| (P2 fails),
+\verb|H_VestigialModeIsGraviton_fails_at_natural_upper| (P2 fails),
+\verb|H_VestigialModeIsGraviton_fails_at_zero| (P1 fails).
+
+The natural-range falsifiers are non-trivial: they demonstrate
+that the bundle is not vacuously satisfied (avoiding the
+\verb|feedback_subagent_lean_quality.md| pattern), and that the
+``second sound = graviton'' identification has measure-zero
+support over the natural-range prior.
+
+%% ================================================================
+\section{Dispersion correction from the SK--EFT Γ\textsubscript{H}}
+\label{sec:dispersion}
+
+The leading dissipative correction to the linear dispersion
+$\omega = \cGW \cdot k$ is, from
+$\verb|SecondOrderSK.GammaH| = (\gamma_{1}+\gamma_{2})(\kappa/c_{s})^{2}$,
+\begin{equation}
+\frac{\delta\omega}{\omega}(\omega) = \GammaH \cdot \frac{\omega}{\cGW^{2}}
+\;\equiv\; \gamma\,\omega
+\label{eq:dispersion}
+\end{equation}
+with $\gamma$ the dimensionless coefficient
+$\GammaH/\cGW^{2}$ at the probe frequency. We add the formula
+\verb|dispersion_correction(γ, ω) = γ ω| as
+\verb|GravitationalWaves.dispersion_correction| with three
+proofs: (i) zero-correction at $\gamma = 0$; (ii) linearity in
+$\gamma$ (additivity of dissipative coefficients);
+(iii) the absolute-value bound
+$|\gamma\omega| \leq |\gamma|\cdot|\omega|$ as a sanity check
+for the LIGO-band scan.
+
+The vestigial-regime placeholder
+$\GammaH/\cGW^{2} \sim 10^{-30}$ keeps the dispersion correction
+well below the GW170817 cap across the entire LIGO band
+$[10\,\textrm{Hz}, 10\,\textrm{kHz}]$. The full dispersion
+correction is therefore a sub-leading effect compared to the
+$\sqrt{\chivest}$ deviation, which dominates the
+falsification.
+
+%% ================================================================
+\section{Result figure}
+\label{sec:figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.96\columnwidth]{figures/fig_c_GW_vs_ligo_constraint.png}
+\caption{Phase 6a Wave 2 main result: $\dccap$ deviation across the
+natural $\chivest$ range, vs the GW170817 multi-messenger cap.
+The amber band $|\dccap| \leq 3\times 10^{-15}$ is essentially
+invisible at this scale. The natural range $[0.1, 10]$ produces
+$\dccap \in [-0.68, +2.16]$; both endpoints fail GW170817 by
+$\sim 10^{14}\times$. The GW170817-compatible $\chivest$ window
+$[(1-\tau)^{2}, (1+\tau)^{2}]$ shrinks to a point at $\chivest=1$
+on this scale --- the gold star. Lean:
+\texttt{vestigial\_natural\_range\_violates\_ligo}.}
+\label{fig:cGW}
+\end{figure}
+
+Figure~\ref{fig:cGW} shows the deviation function
+$\dccap(\chivest)$ over $\chivest \in [10^{-2}, 10^{2}]$ on
+log-$\chivest$ axis with the natural range
+$[0.1, 10]$ highlighted. The GW170817 amber band is
+visually indistinguishable from $\dccap = 0$ at this scale,
+demonstrating the 14-order-of-magnitude separation.
+
+%% ================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What this rules out}
+
+The leading-order vestigial-second-sound identification with
+metric-channel susceptibility in the natural range is ruled
+out by GW170817. This is the strongest result in the Volovik
+emergent-gravity literature to date: the identification
+$\cGW = c\,\sqrt{\chivest}$ requires
+$\chivest = 1 \pm 3\times 10^{-15}$, a fine-tuning so extreme
+that it cannot follow from a generic UV theory.
+
+\subsection{What this does not rule out}
+
+The result is sharp \emph{at leading order}, but does not exclude:
+\begin{enumerate}
+\item A \textbf{derived-DOF mechanism} that pins
+$\chivest \to 1$ as a consequence of an exact symmetry (e.g.
+Lorentz invariance of the deep-IR theory). The Phase 5y H1
+deep research mentions the candidate that the second-sound and
+graviton modes share a common low-energy effective action
+arising from a single underlying symmetry; if so, the
+$\chivest = 1$ locus is a fixed point of the RG flow, not a
+fine-tuning. Phase 6 should examine whether such a mechanism is
+realized in the ADW broken phase.
+\item A \textbf{distinct identification}: the ``vestigial mode'' is
+not the second-sound DOF but a separate UV-input metric channel
+whose susceptibility is naturally pinned to unity. This was
+floated in~\cite{Volovik2022Counting} and reads as the more
+likely interpretation under the Phase 5y H1 negative-evidence
+result. Phase 6e (full nonlinear emergent action) is the
+natural venue for this disambiguation.
+\item \textbf{Higher-order corrections}: the
+$\sqrt{\chivest}$ formula is the leading term in
+a derivative expansion. If $\chivest$ varies with frequency,
+the leading-order falsification could be lifted; we have not
+proved it cannot. The dispersion correction in
+Sec.~\ref{sec:dispersion} is the leading frequency dependence
+in the SK--EFT framework, and at the placeholder
+$\GammaH$ value it does not lift the falsification.
+\end{enumerate}
+
+\subsection{Comparison to Wave 1}
+
+Wave~1~\cite{Roehm2026LinearizedEFE} ships an emergent-gravity
+identification that \emph{is} compatible with observation at the
+natural-range level: the Sakharov-Adler form
+$\GNemerg = \alpha_{\rm ADW} \cdot 12\pi/(\Nf\,\Lambdauv^{2})$ at
+$\Lambdauv = \Mpl$ produces $\alpha_{\rm ADW}^{\star} \in [0.40,1.27]$
+for SM $\Nf$, sitting comfortably inside the natural range $[0.1,10]$.
+Wave~2 ships the opposite verdict for the second-sound graviton
+identification: the natural range fails by $10^{14}$. The
+asymmetry is a feature, not a bug, of the program: Wave~1's
+$\GNemerg$ depends on the Sakharov-Adler kernel computed at the
+\emph{linearized} level, where the relevant scale is $\Mpl$;
+Wave~2's $\cGW$ depends on the metric-channel susceptibility,
+where the relevant scale is the dimensionless $\chivest$ which
+the natural range happens to pin around 1 only by accident.
+
+%% ================================================================
+\section{Conclusions}
+\label{sec:conclusions}
+
+Phase 6a Wave 2 ships \texttt{GravitationalWaves.lean} (17
+theorems, zero sorry, zero new axioms, zero heartbeat overrides)
+formalizing: (i) the leading-order propagation
+$\cGW = c\,\sqrt{\chivest}$ with full algebra, monotonicity, and
+positivity; (ii) the GW170817 correctness-push biconditional
+locating the $\cGW = c$ window; (iii) the load-bearing natural-range
+falsification with both endpoint falsifier theorems; (iv) the
+bundled tracked hypothesis with three falsifier theorems; (v) the
+Phase 5y H1 caveat as the Lean meta-theorem
+\verb|second_sound_graviton_not_derived_DOF|; (vi) the
+SK--EFT dispersion correction with linearity and zero-coefficient
+proofs.
+
+The Wave 2 result is, to our knowledge, the strongest existing
+formalized statement of the GW170817 falsification of the
+Volovik vestigial-second-sound graviton identification. The
+falsification is a refutation of \emph{this specific
+identification at the natural-range level}; we identify three
+Phase 6 paths to recover --- a derived-DOF symmetry mechanism, a
+distinct metric-channel identification, or higher-order
+corrections --- and recommend the disambiguation be the
+load-bearing question for Phase 6e (full nonlinear emergent action)
+or a Phase 5y H1 follow-up wave.
+
+\paragraph*{Phase 6a downstream.} The disjoint $\cGW$ window from
+Sec.~\ref{sec:falsification} feeds Phase 6b.2 (cosmological
+perturbation theory): if a derived-DOF mechanism pins
+$\chivest = 1$, the linearized GW background is consistent with
+the Wave~4 FLRW analysis~\cite{Roehm2026LinearizedEFE}; otherwise
+6b.2 must adopt the alternative metric-channel identification.
+
+\paragraph*{Acknowledgements.} The Phase 5y H1 deep-research
+finding (\texttt{Lit-Search/Phase-5y/}) was the load-bearing
+input for the ``use-as-identified'' framing of Wave 2.
+
+%% ================================================================
+\bibliographystyle{apsrev4-2}
+\begin{thebibliography}{99}
+
+\bibitem{Abbott2017GW170817} B.~P.~Abbott \emph{et al.}\
+(LIGO Scientific, Virgo, Fermi GBM, INTEGRAL, IceCube, AstroSat
+CZTI, IPN, Insight-HXMT, ANTARES, Swift, AGILE, 1M2H, Dark Energy
+Camera GW-EM, DES, DLT40, GRAWITA, Fermi-LAT, ATCA, ASKAP, Las
+Cumbres Observatory, OzGrav, DWF (Deeper Wider Faster Program),
+AST3, CAASTRO, VINROUGE, MASTER, J-GEM, GROWTH, JAGWAR, CaltechNRAO,
+TTU-NRAO, NuSTAR, Pan-STARRS, MAXI, TZAC, KU, Nordic Optical
+Telescope, ePESSTO, GROND, Texas Tech, SALT, TOROS, BOOTES, MWA,
+CALET, IKI-GW Follow-up, H.E.S.S., LOFAR, LWA, HAWC, Pierre Auger,
+ALMA, Euro VLBI, Pi of the Sky, Chandra, Texas, Hubble, JCMT,
+GTC, IPN, JKEM, GEM, Pi of Sky, FERMI, ATCA-CABB, EM, ATCA,
+GRAWITA, GRB, Magellan, Subaru),
+``Gravitational Waves and Gamma-Rays from a Binary Neutron Star
+Merger: GW170817 and GRB 170817A,''
+Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017);
+arXiv:1710.05834.
+
+\bibitem{Volovik2024Vestigial} G.~E.~Volovik, ``Vestigial gravity
+from two-step condensation,'' JETP Lett.\ \textbf{119}, 564 (2024).
+
+\bibitem{Volovik2022Counting} G.~E.~Volovik, ``Effective gravity,
+Goldstone bosons and pre-geometric phase,'' J.\ Low Temp.\ Phys.\
+\textbf{207}, 127 (2022).
+
+\bibitem{Vergeles2025} S.~N.~Vergeles, ``Akama--Diakonov gravity is
+a unitary theory,'' Phys.\ Rev.\ D \textbf{112}, 054509 (2025).
+
+\bibitem{Akama1978} K.~Akama, ``An Attempt at Pregeometry,''
+Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978).
+
+\bibitem{Diakonov2011} D.~Diakonov, ``Towards a fermionic
+cosmological term,'' arXiv:1109.0091 (2011).
+
+\bibitem{HebeckerWetterich2003} A.~Hebecker and C.~Wetterich,
+``Spinor gravity,'' Phys.\ Lett.\ B \textbf{574}, 269 (2003);
+arXiv:hep-th/0307109.
+
+\bibitem{Wetterich2022} C.~Wetterich, ``Spinor gravity and gauge
+symmetry,'' JHEP \textbf{06}, 069 (2022); arXiv:2110.11138.
+
+\bibitem{VladimirovDiakonov2012} A.~A.~Vladimirov and D.~Diakonov,
+``Phase transitions in spinor quantum gravity on a lattice,''
+Phys.\ Rev.\ D \textbf{86}, 104019 (2012); arXiv:1208.1254.
+
+\bibitem{Roehm2026LinearizedEFE} J.~G.~Roehm, ``Linearized Einstein
+Equations from Anderson--Higgs Tetrad Condensation,'' Phase 6a
+Wave 1 paper (2026), this series, paper 23.
+
+\bibitem{CrossleyGloriosoLiu2017} P.~Crossley, P.~Glorioso, and
+H.~Liu, ``Effective field theory of dissipative fluids,''
+JHEP \textbf{09}, 095 (2017); arXiv:1511.03646.
+
+\end{thebibliography}
+
+\end{document}

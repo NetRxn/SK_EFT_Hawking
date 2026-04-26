@@ -301,7 +301,8 @@ end Level5
 
 /-! ## 7. Module summary -/
 
-/--
+/-! ## Module summary
+
 SU2kFusion module: SU(2)_k fusion rules at levels k=1,2,3,4,5.
   - Universal fusion rule su2kFusion as a computable Nat function
   - k=1: Z/2 fusion (semion)
@@ -313,6 +314,4 @@ SU2kFusion module: SU(2)_k fusion rules at levels k=1,2,3,4,5.
   - All proofs by native_decide (concrete finite computation)
   - First SU(2)_k fusion verification through k=5 in any proof assistant
 -/
-theorem su2k_fusion_summary : True := trivial
-
 end SKEFTHawking

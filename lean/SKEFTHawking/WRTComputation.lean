@@ -217,7 +217,8 @@ theorem ising_lens_16_num :
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 WRTComputation module: verified quantum 3-manifold invariant values.
   - Ising: D² = 4 PROVED, p₊ = 2ζ PROVED, Z(S²×S¹) = 3
   - Fibonacci: D² = 2+φ PROVED, θ_τ = ζ₅² PROVED, Z(S²×S¹) = 2
@@ -227,6 +228,4 @@ WRTComputation module: verified quantum 3-manifold invariant values.
   - ALL by native_decide over QCyc16 / QSqrt5 / QCyc5
   - First verified quantum 3-manifold invariant data in any proof assistant
 -/
-theorem wrt_computation_summary : True := trivial
-
 end SKEFTHawking

@@ -537,7 +537,9 @@ theorem swave_always_excluded :
 
 /-! ## 6. Module summary -/
 
-/-- Summary theorem for the Fracton Dark Matter module.
+/-! ## Module summary
+
+Summary theorem for the Fracton Dark Matter module.
 
     Ships the Wave 7 near-term target set (roadmap theorems 1, 2, 4,
     8, 9, 10, 11, 12 "Easy"/"Medium") plus the 13a/13c/13d drilldown
@@ -553,7 +555,6 @@ theorem swave_always_excluded :
       transport Mathlib module)
 
     All theorems closed interactively without Aristotle; no axioms
-    introduced. -/
-theorem fracton_dark_matter_summary : True := trivial
-
+    introduced.
+-/
 end SKEFTHawking.FractonDarkMatter

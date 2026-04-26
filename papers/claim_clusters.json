@@ -1,8 +1,56 @@
 {
-  "cluster_count": 0,
-  "clusters": [],
-  "constructed_at": "2026-04-25T07:41:00Z",
+  "cluster_count": 2,
+  "clusters": [
+    {
+      "confidence": 1.0,
+      "constructed_at": "2026-04-25T22:58:18Z",
+      "constructed_by": "cluster_detect.py:exact",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:exact:d2c6aaa3",
+      "label": "Lean~4 proofs verified by \\texttt{lake build} (v4.28.0, Mathlib \\texttt{8f9d9cff}).",
+      "match_kind": "exact",
+      "member_papers": [
+        "paper10_modular_generation",
+        "paper16_wrt_tqft",
+        "paper9_sm_anomaly_drinfeld"
+      ],
+      "members": [
+        "sentence:paper10_modular_generation:acknowledgments:d2c6aaa3",
+        "sentence:paper16_wrt_tqft:acknowledgments:d2c6aaa3",
+        "sentence:paper9_sm_anomaly_drinfeld:acknowledgments:d2c6aaa3"
+      ],
+      "normalized_hash": "d2c6aaa3"
+    },
+    {
+      "confidence": 1.0,
+      "constructed_at": "2026-04-25T22:58:18Z",
+      "constructed_by": "cluster_detect.py:exact",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:exact:ce92f4a9",
+      "label": "Automated proofs by the Aristotle theorem prover (Harmonic).",
+      "match_kind": "exact",
+      "member_papers": [
+        "paper10_modular_generation",
+        "paper11_quantum_group",
+        "paper16_wrt_tqft",
+        "paper9_sm_anomaly_drinfeld"
+      ],
+      "members": [
+        "sentence:paper10_modular_generation:acknowledgments:ce92f4a9",
+        "sentence:paper11_quantum_group:acknowledgments:ce92f4a9",
+        "sentence:paper16_wrt_tqft:acknowledgments:ce92f4a9",
+        "sentence:paper9_sm_anomaly_drinfeld:acknowledgments:ce92f4a9"
+      ],
+      "normalized_hash": "ce92f4a9"
+    }
+  ],
+  "constructed_at": "2026-04-25T22:58:18Z",
   "constructed_by": "cluster_detect.py:all",
-  "paper_coverage": [],
+  "paper_coverage": [
+    "paper10_modular_generation",
+    "paper11_quantum_group",
+    "paper16_wrt_tqft",
+    "paper9_sm_anomaly_drinfeld"
+  ],
   "version": 1
 }

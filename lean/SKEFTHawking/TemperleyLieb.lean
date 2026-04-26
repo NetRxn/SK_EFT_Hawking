@@ -118,7 +118,8 @@ theorem tl_far_commute (i j : Fin n)
 
 /-! ## 3. Module Summary -/
 
-/--
+/-! ## Module summary
+
 TemperleyLieb module: TL_n(δ) algebra.
   - n generators e_0, ..., e_{n-1} with loop parameter δ
   - 3 relation types: idempotent, Jones, far-commute
@@ -128,6 +129,4 @@ TemperleyLieb module: TL_n(δ) algebra.
   - Foundation for WRT TQFT surgery formula (Phase 5k W3)
   - First Temperley-Lieb algebra in any proof assistant
 -/
-theorem temperley_lieb_summary : True := trivial
-
 end SKEFTHawking

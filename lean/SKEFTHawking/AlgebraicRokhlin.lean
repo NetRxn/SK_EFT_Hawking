@@ -178,7 +178,8 @@ theorem rokhlin_from_serre_plus_topology
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 AlgebraicRokhlin module: the algebraic Serre theorem σ ≡ 0 mod 8.
   - IsUnimodular, IsEven, IsEvenUnimodular predicates DEFINED
   - IsCharacteristic (characteristic vector) DEFINED
@@ -192,8 +193,6 @@ AlgebraicRokhlin module: the algebraic Serre theorem σ ≡ 0 mod 8.
   - Zero axioms. One hypothesis (CharacteristicSquareModEight, eliminability: hard).
   - Concrete validations on E8 and H below.
 -/
-theorem algebraic_rokhlin_core_summary : True := trivial
-
 /--
 **Concrete validation: CharacteristicSquareModEight holds for E8.**
 
@@ -213,7 +212,6 @@ H is even → 0 is characteristic. selfPairing(H, 0) = 0.
 theorem char_sq_valid_H :
     selfPairing hyperbolicPlane (fun _ => 0) % 8 = (0 : Int) % 8 := by
   simp [selfPairing, mul_zero, zero_mul, Finset.sum_const_zero]
-
-theorem algebraic_rokhlin_summary : True := trivial
+-- (Module summary placeholder removed; see preceding sections.)
 
 end SKEFTHawking

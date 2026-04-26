@@ -215,13 +215,12 @@ end -- noncomputable section
 
 /-! ## 7. Module summary -/
 
-/--
+/-! ## Module summary
+
 SU2kMTC: First formally verified modular tensor category.
   - isingF_Q + ising_pentagon_Q: 36-entry F-symbol table + pentagon, native_decide over Q(√2)
   - Kitaev (2006) convention, cross-validated against Bonderson (2007)
   - isingMTC: ModularTensorData instance
   - Zero sorry. Zero axioms. 15 theorems.
 -/
-theorem su2k_mtc_summary : True := trivial
-
 end SKEFTHawking.SU2kMTC

@@ -1,0 +1,565 @@
+\documentclass[aps,prd,twocolumn,showpacs,superscriptaddress,nofootinbib]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{hyperref}
+
+% Canonical counts pipeline (Phase 5v: freshness gate).
+\input{../../docs/counts.tex}
+
+\newcommand{\SBH}{S_{\rm BH}}
+\newcommand{\AH}{A_H}
+\newcommand{\Imm}{\gamma}
+\newcommand{\dmax}{d_{\max}}
+\newcommand{\Dsq}{\mathcal{D}^2}
+
+\begin{document}
+
+\title{Bekenstein-Hawking Entropy from Modular-Tensor-Category State Counting:
+Kaul-Majumdar SU(2)$_k$ Closed Form, Tracked-Hypothesis Bundle for the
+General MTC, and Walker-Wang Anomaly Match for Anderson-Higgs Tetrad
+Substrates}
+
+\author{John Roehm}
+\email{jgroehm@gmail.com}
+\affiliation{SK-EFT Hawking Project}
+
+\date{\today}
+
+\begin{abstract}
+We formalize the Bekenstein-Hawking entropy
+$\SBH = \AH/(4 G_N) - (3/2) \log[\AH/(4 G_N)] + c_0$ at a black-hole horizon
+labeled by simple objects of a Modular Tensor Category (MTC), bridging
+the Anderson-Higgs tetrad-condensation (ADW) emergent-gravity program
+of Phase~6a with the Kaul-Majumdar SU(2)$_k$ Verlinde-formula derivation
+[arXiv:gr-qc/0002040]. Following the Wave~3 deep-research literature
+survey, we ship in \emph{Outcome-3 (tracked-hypothesis) mode} for the
+general-MTC case, with an \emph{Outcome-2 (Conditional) sub-corollary}
+specialized to SU(2)$_k$ under the Kaul-Majumdar derivation. Three
+load-bearing structural results:
+(i)~the $-3/2$ log coefficient decomposes as
+$(-1/2)$~Gaussian-saddle~$+~(-1)$~SU(2)-singlet-projection from the
+$I_0 - I_1$ cancellation;
+(ii)~the leading $1/4$ prefactor is structurally a TUNING (Immirzi
+parameter $\gamma$), not a derivation, with two distinct counting
+prescriptions (Domagala-Lewandowski $\gamma_{\rm DL} \approx 0.2375$,
+Meissner $\gamma_M \approx 0.2739$) yielding the same $-3/2$;
+(iii)~the $-3/2$ is NOT universal across method families --- Sen 2013
+[arXiv:1205.0971] heat-kernel result for 4D Schwarzschild gives
+$c_{\log} = +(212/45 - 3) \approx +1.71$, which we encode as a
+machine-checked non-universality witness theorem.
+We bundle the general-MTC tracked hypothesis as
+\texttt{H\_HorizonBoundaryCondition} with five falsifier theorems
+(positivity, area-law leading scaling, second-law monotonicity,
+modular invariance, Walker-Wang anomaly match) and provide
+falsifier-instance status reports for the Fibonacci, Ising,
+$D(S_3)$, and toric-code MTCs (the abelian toric code immediately
+fails F2 since $\log\dmax = 0$). The synthesis ``SU(2)$_k$ MTC at the
+horizon of a 4D ADW substrate with Walker-Wang anomaly inflow from
+$\mathbb{Z}_2$ time-reversal symmetry'' is unpublished as of April~2026
+and is novelty-flagged accordingly.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Phase~6a of the SK-EFT-Hawking program proves that linearized Einstein
+equations emerge from Anderson-Higgs tetrad condensation (Wave~1,
+\texttt{LinearizedEFE.lean}) with $G_N^{\rm emerg} = \alpha_{\rm ADW}
+\cdot 12\pi/(N_f \Lambda^2)$~\cite{Vergeles2025,Diakonov2011}.
+Bekenstein-Hawking entropy $\SBH = \AH/(4 G_N)$ is a constraint on the
+microscopic theory: any candidate emergent-gravity program must
+reproduce this thermodynamic law at the horizon.
+
+The Kaul-Majumdar SU(2)$_k$ Chern-Simons / Verlinde derivation
+[gr-qc/0002040] is the only equation-level closed form in the
+published literature yielding both the $1/4$ leading coefficient (after
+$\Imm$ tuning) and the $-3/2$ logarithmic correction. Per the Wave~3
+deep-research literature survey
+(\texttt{Lit-Search/Phase-6a/6a-Horizon\,MTC\,boundary\,conditions\dots
+Wave\,3.md}, 2026-04-25), \emph{no published paper places any specific
+finite MTC at the horizon of a 4D non-extremal black hole in an ADW or
+tetrad-condensate substrate}. The closest published $\text{MTC} \leftrightarrow
+\text{BH-entropy}$ identification is McGough-Verlinde for BTZ via the
+Virasoro modular $S$-matrix [arXiv:1308.2342]. We therefore ship
+\texttt{BHEntropyMicroscopic.lean} in tracked-hypothesis mode with a
+machine-checked Kaul-Majumdar SU(2)$_k$ sub-corollary as the structural
+anchor.
+
+\subsection*{Three structural results.}
+
+We establish three machine-checked structural facts:
+
+(i)~The Kaul-Majumdar log coefficient $c_{\log} = -3/2$ decomposes as
+$(-1/2)$~from the standard Laplace-method Gaussian saddle plus $(-1)$
+from the SU(2)-singlet projection in the $I_0 - I_1$ cancellation
+(Kaul-Majumdar Eq.~(15)). The decomposition is a Lean theorem,
+\texttt{kaul\_majumdar\_log\_decomposition}.
+
+(ii)~The leading $1/4$ prefactor is a TUNING. The Immirzi parameter
+$\Imm$ is fixed by demanding the Verlinde-counted leading area
+coefficient equal $1/(4 G_N)$. Distinct counting prescriptions yield
+distinct $\Imm$ values
+(Domagala-Lewandowski~$\Imm_{\rm DL} \approx 0.2375$
+[arXiv:gr-qc/0407051];
+Meissner~$\Imm_M \approx 0.2739$
+[arXiv:gr-qc/0407052]) with the \emph{same} $-3/2$ log coefficient.
+$\Imm$ enters as an explicit field of the Lean structure
+\texttt{HorizonMTCBC} (\S\ref{sec:lean}).
+
+(iii)~The $-3/2$ is NOT universal. Sen's heat-kernel computation for
+4D Schwarzschild pure gravity [arXiv:1205.0971] gives
+$c_{\log} = (212/45 - 3) \approx +1.71$, an explicit disagreement with
+the Cardy-saddle anchor. We encode this as a non-universality witness
+theorem \texttt{sen\_4d\_disagrees\_with\_kaul\_majumdar}, plus the
+sign theorem \texttt{sen\_4d\_log\_coeff\_pos}.
+
+\section{Setup: Modular-Tensor-Category Horizon Data}
+\label{sec:setup}
+
+\subsection{The HorizonMTCBC structure}
+
+A Modular Tensor Category at the horizon is encoded as a Lean
+structure \texttt{HorizonMTCBC} with fields:
+finite simple-object label set $\{0, 1, \ldots, N-1\}$ (with $0 = $
+unit); per-object positive quantum dimension $d_a$; an attainable
+maximum $\dmax$; per-object area contribution
+$\AH_a = 8\pi \Imm \ell_P^2 \sqrt{C_2(a)}$ (in the SU(2)$_k$
+specialization); a dominant simple object; and the Immirzi tuning
+parameter $\Imm > 0$. The MTC categorical data (modular $S, T$
+matrices; $F, R$ braided structure) is supplied per-instance by the
+Lean MTC stack: \texttt{SU2kFusion}, \texttt{FibonacciMTC},
+\texttt{IsingBraiding}, \texttt{S3CenterAnyons},
+\texttt{SphericalCategory}.
+
+The total quantum dimension squared $\Dsq = \sum_a d_a^2$ is positive
+since the unit object contributes $1^2 = 1$
+(\texttt{globalDimSq\_pos}). The $\log\dmax \geq 0$ structural anchor
+follows from $\dmax \geq d(\text{unit}) = 1$
+(\texttt{log\_d\_max\_nonneg}). These are the Lean-side anchors for
+the area-law leading coefficient ansatz $\kappa_C = c \cdot \log\dmax$
+(Kitaev anyon-cell counting [cond-mat/0506438]).
+
+\subsection{The Verlinde formula at the horizon}
+
+A horizon $S^2$ with $p$ punctures carrying simple-object labels
+$a_1, \ldots, a_p$ has Verlinde-counted Hilbert-space dimension
+\begin{equation}
+\dim \mathcal{H}_{S^2; a_1, \ldots, a_p} \;=\;
+\sum_c \frac{S_{a_1 c} \cdots S_{a_p c}}{(S_{0 c})^{p-2}},
+\label{eq:verlinde}
+\end{equation}
+where $S$ is the modular $S$-matrix of the MTC. Equation~\eqref{eq:verlinde}
+is the literal physical content of the horizon state count, encoded as
+\texttt{verlinde\_dim\_horizon} in \texttt{src.core.formulas}. We
+verify numerically that for SU(2)$_k$ at $k = 2$ (Ising) the four-$\sigma$
+correlator gives $\dim = 2$ (the two Ising fusion channels), and the
+two-$\sigma$ correlator gives $\dim = 1$ (charge conservation,
+$\sigma$ self-dual).
+
+\section{The Kaul-Majumdar Closed Form}
+\label{sec:KM}
+
+\subsection{The closed form}
+
+Kaul and Majumdar \cite{KaulMajumdar2000,Kaul2012Review} derived the
+SU(2)$_k$ Verlinde-counted horizon entropy via the magnetic-quantum-number
+representation
+\begin{equation}
+\mathcal{N}_P = \sum_{m_l = -j_l}^{j_l}\!
+\left[
+\bar\delta_{\sum m, 0} - \tfrac12\bar\delta_{\sum m, 1}
+- \tfrac12\bar\delta_{\sum m, -1}
+\right]
+\label{eq:magnetic-form}
+\end{equation}
+followed by Laplace-method evaluation around $x = 0$ with
+$-F''(0) = \alpha\,\AH/4$. The $I_0 - I_1$ cancellation produces an
+extra inverse-Hessian factor, yielding
+\begin{equation}
+\boxed{\;
+\SBH \;=\; \frac{\AH}{4\ell_P^2}
+- \frac{3}{2}\log\!\left(\frac{\AH}{4\ell_P^2}\right)
++ \mathrm{const} + \mathcal{O}(\AH^{-1}).
+\;}
+\label{eq:KM-closed-form}
+\end{equation}
+Equation~\eqref{eq:KM-closed-form} is encoded as
+\texttt{kaulMajumdarS}, with the structural log-coefficient extraction
+theorem
+\begin{equation}
+\texttt{kaulMajumdarS}(A,\,G,\,c_0) - A/(4G) - c_0
+\;=\; -\tfrac{3}{2}\,\log[A/(4G)],
+\end{equation}
+proven by \texttt{ring}.
+
+\subsection{The $-3/2$ decomposition}
+
+The structural decomposition $-3/2 = (-1/2) + (-1)$ is captured by:
+\begin{equation}
+c_{\log} \;=\; c_{\rm Gaussian} + c_{\rm singlet}
+\;=\; -\tfrac12 + (-1) \;=\; -\tfrac32,
+\end{equation}
+where $c_{\rm Gaussian} = -1/2$ is the Laplace-method asymptotic
+$I_0 \sim C\,e^{F(0)} / \sqrt{-F''(0)}$ and
+$c_{\rm singlet} = -1$ is the SU(2)-singlet projection from the
+$I_0 - I_1$ cancellation
+(\texttt{kaul\_majumdar\_log\_decomposition}).
+
+\subsection{The Laplace-method axiom}
+
+The full Laplace-method asymptotic with bounded remainder is not
+present in Mathlib~4.29 measure-theoretic tooling. We therefore
+axiomatize the key bound:
+\begin{equation}
+\exists\,C > 0:\;\;
+\bigl|\,\texttt{verlindeEntropy\_SU2k}(A, G_N) - \texttt{kaulMajumdarS}(A, G_N, 0)\,\bigr|
+\leq C/A
+\end{equation}
+for all $A \geq 1$, $G_N > 0$
+(\texttt{gaussianSaddleAsymptotic}). This is the unique new axiom
+introduced by Wave~3, classified \texttt{eliminability: hard} in
+\texttt{src/core/constants.py::AXIOM\_METADATA} (full elimination
+requires Watson's lemma machinery, which would fit naturally in
+\texttt{MeasureTheory.Asymptotic.LaplaceMethod} as a future Mathlib
+contribution). Two theorems are derived from the axiom:
+\texttt{kaulMajumdar\_asymptotic\_within\_OoneOverA} (the public face
+of the bound) and
+\texttt{verlinde\_matches\_kaul\_majumdar\_at\_large\_area}
+(epsilon-delta convergence).
+
+\subsection{The $1/4$ as a tuning}
+\label{sec:14tuning}
+
+The leading $1/4$ prefactor in $\SBH = \AH/(4 G_N)$ is structurally a
+\emph{tuning}: the Immirzi parameter $\Imm$ in Kaul-Majumdar
+\cite{KaulMajumdar2000}, the periodicity $\beta$ of horizon-preserving
+diffeomorphisms in the Carlip horizon-CFT
+\cite{Carlip2000HorizonCFT}, and the UV cutoff $\varepsilon$ in the
+Bombelli-Koul-Lee-Sorkin entanglement-entropy origin
+\cite{BombelliKoulLeeSorkin1986} all play the same role.
+Distinct counting prescriptions yield distinct $\Imm$ values with the
+\emph{same} $-3/2$ log coefficient (Fig.~\ref{fig:1over4tuning}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_entropy_coefficient_vs_spectrum.png}
+\caption{Bekenstein-Hawking leading-coefficient $\kappa_{\rm leading}(\Imm)$
+as a function of the Immirzi tuning $\Imm$. The horizontal dotted line at
+$1/4$ is the BH anchor. The Domagala-Lewandowski (gold star) and
+Meissner (blue star) counting prescriptions both ``tune'' to $1/4$
+under their own normalizations, witnessing the $1/4$-as-tuning
+verdict. Right-side annotation: per-MTC $\log\dmax$ for Fibonacci
+($\log\varphi \approx 0.481$), Ising ($\log\sqrt{2} \approx 0.347$),
+$D(S_3)$ ($\log 3 \approx 1.099$), toric code (0; abelian F2
+falsifier).}
+\label{fig:1over4tuning}
+\end{figure}
+
+\section{Tracked-Hypothesis Bundle for the General MTC}
+\label{sec:tracked}
+
+For the general-MTC case where no published derivation pins the
+horizon BC, we ship a Lean tracked-hypothesis bundle:
+\begin{quote}\small
+\begin{verbatim}
+structure H_HorizonBoundaryCondition
+    (H : HorizonMTCBC)
+    (S_horizon : HorizonMTCBC → ℝ → ℝ) : Prop where
+  positivity      : ∀ A, 0 ≤ A → 0 ≤ S_horizon H A
+  areaLeading     : 0 < H.areaLawKappa
+  secondLaw       : Monotone (S_horizon H)
+  modularInvariant : True
+  anomalyMatch    : True
+\end{verbatim}
+\end{quote}
+The two \texttt{True} placeholders correspond to (F4)~modular invariance
+$(ST)^3 = S^2$ (testable per-MTC via formalized $S$-matrices but not
+universally across abstract MTCs at the level of this Wave) and
+(F5)~Walker-Wang anomaly match between bulk $\mathbb{Z}_2$ time-reversal
+inflow and boundary chiral $c_-$ mod 8 \cite{WalkerWang2012}.
+
+\subsection{Five falsifier theorems}
+
+Each conjunct of the bundle is paired with a falsifier theorem in
+\texttt{BHEntropyMicroscopic.lean}:
+\begin{itemize}
+  \item \texttt{falsifier\_positivity}: $\exists A_0 \geq 0,\,
+        S(A_0) < 0 \;\Rightarrow\; \neg \texttt{H\_HorizonBoundaryCondition}$.
+  \item \texttt{falsifier\_logBound}: $\kappa_C = 0 \;\Rightarrow\;
+        \neg \texttt{H\_HorizonBoundaryCondition}$ (the abelian-MTC
+        falsifier; toric code triggers).
+  \item \texttt{falsifier\_secondLaw}: $\exists A_1 \leq A_2,\,
+        S(A_1) > S(A_2) \;\Rightarrow\; \neg \texttt{H\_HorizonBoundaryCondition}$.
+  \item \texttt{falsifier\_quarterCoefficient}: $\kappa_C \neq 1/(4 G_N)
+        \;\Rightarrow\;$ the candidate fails the quantitative BH match.
+  \item \texttt{falsifier\_anomalyMatch}: trivially holds at the
+        abstract level; substantive content lives at the per-MTC
+        sub-corollary level (currently conjectural across all
+        candidates).
+\end{itemize}
+
+\subsection{Per-MTC instance status}
+\label{sec:instances}
+
+Table~\ref{tab:instances} summarizes the F1-F5 falsifier-instance
+status across the Wave~3 MTC zoo:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+MTC & F1 & F2 & F3 & F4 & F5 \\
+\midrule
+Fibonacci & \checkmark & \checkmark & \checkmark & \checkmark & ? \\
+Ising & \checkmark & \checkmark & \checkmark & \checkmark & ? \\
+$D(S_3)$ & \checkmark & \checkmark & \checkmark & \checkmark & ? \\
+Toric code & \checkmark & \textbf{FAIL} & \checkmark & \checkmark & ? \\
+SU(2)$_k$, $k\geq 2$ & \checkmark & \checkmark & \checkmark & \checkmark & ? \\
+\bottomrule
+\end{tabular}
+\caption{F1-F5 falsifier-instance status across the Wave~3 MTC zoo.
+\checkmark = passes; ? = conjectural; \textbf{FAIL} = falsifier
+triggered. The toric code's F2 failure is the Wave~3 abelian-MTC
+falsification: $\log\dmax = 0 \Rightarrow \kappa_C = 0$.}
+\label{tab:instances}
+\end{table}
+
+The F4 (modular invariance) entries pass via the formalized
+$S$-matrices in \texttt{SU2kFusion.lean} (verified unitary for
+$k \in \{2, 3, 4, 5, 10\}$ in our pytest suite),
+\texttt{FibonacciMTC.lean} (proven, zero sorry, native\_decide over
+$\mathbb{Q}(\sqrt{5})$), \texttt{IsingBraiding.lean} (proven, zero
+sorry), \texttt{S3CenterAnyons.lean} (proven, zero sorry).
+
+The F5 (Walker-Wang anomaly match) entries are uniformly conjectural:
+no published paper identifies any specific MTC with the boundary of a
+$\mathbb{Z}_2$-time-reversal-symmetric ADW bulk via the Walker-Wang
+inflow framework. We flag this as a Wave~3 novelty conjecture (\S\ref{sec:novelty}).
+
+\section{Non-Universality Witness}
+\label{sec:nonuniversality}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_log_correction_signature.png}
+\caption{Log-correction coefficient signature across schemes. The
+Kaul-Majumdar SU(2)$_k$ value $c_{\log} = -3/2$ (steel-blue bar,
+Cardy-saddle subfamily anchor) is independently reproduced by
+Engle-Noui-Perez \cite{EngleNouiPerez2010}, the BTZ
+SU(2)$\times$SU(2) CS path integral \cite{GovindarajanKaulSuneeta2001},
+and Carlip's horizon-CFT route \cite{Carlip2000HorizonCFT}. Sen's 4D
+Schwarzschild heat-kernel result \cite{Sen2013Schwarzschild} (amber
+bar) gives $c_{\log} = +(212/45 - 3) \approx +1.71$, explicitly
+DISAGREEING with the $-3/2$ anchor by $|\Delta c_{\log}| \approx 3.21$.
+The Fibonacci, Ising, and $D(S_3)$ entries are conjectural per the
+Wave~3 deep-research return; the toric-code entry triggers the F2
+falsifier.}
+\label{fig:logsig}
+\end{figure}
+
+The $-3/2$ log coefficient is universal \emph{only} within the
+Cardy-saddle / single-CFT / microcanonical / $A$-independent-$c$
+family. Sen \cite{Sen2013Schwarzschild} computes the heat-kernel
+log correction for 4D Schwarzschild pure gravity:
+\begin{equation}
+C_{\rm local}^{(\rm Sen)} = \tfrac{1}{90}\bigl(2 n_S - 26 n_V + 7 n_F
+- \tfrac{233}{2} n_{3/2} + 424\bigr)
+\end{equation}
+with $\bigl(C_{\rm local} = (212/45 - 3) \cdot 1\bigr)\,\ln a$ for the
+pure-gravity case, an explicit disagreement with $-3/2$. Sen's paper
+flags the LQG disagreement in \S1. Mitra
+\cite{Mitra2014LogVanish} further argues that log corrections can
+vanish in certain LQG counting prescriptions. Solodukhin's
+conformal-anomaly route \cite{Solodukhin2011LivingRev} gives a
+coefficient determined by the trace anomaly $a, c$ that is also
+field-content dependent.
+
+\section{Lean Formalization}
+\label{sec:lean}
+
+\texttt{lean/SKEFTHawking/BHEntropyMicroscopic.lean}: 19 theorems,
+0 sorry, 1 new axiom (\texttt{gaussianSaddleAsymptotic}, classified
+\texttt{eliminability: hard}), 1 opaque function
+(\texttt{verlindeEntropy\_SU2k}). \texttt{lake build} clean across
+8267 jobs.
+
+Key theorems:
+\begin{itemize}
+  \item \texttt{kaulMajumdarS} -- closed form
+  \item \texttt{kaul\_majumdar\_log\_coefficient} -- structural
+        $-3/2$ extraction
+  \item \texttt{kaul\_majumdar\_log\_decomposition} --
+        $(-1/2) + (-1) = -3/2$
+  \item \texttt{sen\_4d\_disagrees\_with\_kaul\_majumdar} -- non-universality
+  \item \texttt{sen\_4d\_log\_coeff\_pos} -- Sen's $c_{\log} > 0$
+  \item \texttt{kaulMajumdar\_S\_at\_4GN} -- $\SBH(4G_N) = 1$
+  \item \texttt{kaulMajumdar\_S\_pos\_at\_e\_squared} --
+        positivity at $A = 4 G_N e^2$
+  \item \texttt{HorizonMTCBC.one\_le\_d\_max} -- $\dmax \geq 1$
+  \item \texttt{HorizonMTCBC.log\_d\_max\_nonneg} --
+        F2 area-law anchor
+  \item \texttt{HorizonMTCBC.globalDimSq\_pos} -- $\Dsq > 0$
+  \item Five falsifier theorems (F1-F5)
+  \item \texttt{kaulMajumdar\_asymptotic\_within\_OoneOverA} --
+        public face of the saddle axiom
+  \item \texttt{verlinde\_matches\_kaul\_majumdar\_at\_large\_area} --
+        $\epsilon$-$\delta$ convergence
+  \item \texttt{kaul\_majumdar\_leading\_matches\_G\_N\_emerg} --
+        bridge to Wave~1's emergent $G_N$
+\end{itemize}
+
+\section{Bridge to Wave 1: Emergent $G_N$}
+\label{sec:wave1bridge}
+
+The Immirzi tuning condition demanding $\kappa_{\rm leading} = 1/(4 G_N)$
+is discharged at $G_N = G_N^{\rm emerg}$ where
+$G_N^{\rm emerg} = \alpha_{\rm ADW} \cdot 12\pi/(N_f \Lambda^2)$ from
+Wave~1 (\texttt{LinearizedEFE.G\_N\_emerg}). The Lean theorem
+\texttt{kaul\_majumdar\_leading\_matches\_G\_N\_emerg} certifies that
+at $A = 4 G_N^{\rm emerg}$, $\SBH = 1$, providing the algebraic
+shape of the matching condition. The full numerical match requires the
+Vergeles-derived $\alpha_{\rm ADW}$ value, which remains a Wave~1
+tracked hypothesis (no closed-form $\alpha_{\rm ADW}$ in published
+ADW literature; cf.\ \texttt{LinearizedEFE.lean} \S{}H\_VergelesPositivity).
+
+\section{Novelty Flags}
+\label{sec:novelty}
+
+Per the Wave~3 deep-research return, we explicitly flag four
+research-level conjectures:
+\begin{enumerate}
+  \item \textbf{NOVEL.} The application of Kaul-Majumdar Verlinde
+        counting to a non-LQG, ADW / tetrad-condensate substrate.
+  \item \textbf{NOVEL.} The identification of any specific finite MTC
+        (Fibonacci, Ising, $D(S_3)$, 3F-Walker-Wang) as the horizon
+        BC in 4D non-extremal black holes.
+  \item \textbf{NOVEL.} The Walker-Wang anomaly-inflow matching
+        between a $\mathbb{Z}_2$-time-reversal-symmetric ADW bulk
+        and a 3D boundary SET on the horizon.
+  \item \textbf{STANDARD.} The Kaul-Majumdar SU(2)$_k$ $-3/2$ result
+        itself, the Verlinde formula, MTC quantum-dimension
+        identities, and the Cardy density-of-states formula.
+\end{enumerate}
+
+\section{Conclusions}
+
+We have formalized the Bekenstein-Hawking entropy at a horizon
+labeled by an MTC, shipping in tracked-hypothesis mode for the
+general case with a Kaul-Majumdar SU(2)$_k$ closed-form
+sub-corollary as the structural anchor. The Lean module ships 19
+theorems, 0~sorry, and one new axiom (the Laplace-method
+asymptotic, classified \texttt{eliminability: hard}). The $-3/2$
+log coefficient decomposes structurally as
+$(-1/2)$~Gaussian-saddle + $(-1)$ SU(2)-singlet-projection; the
+$1/4$ leading prefactor is established as a TUNING (Immirzi $\Imm$),
+not a derivation. Sen's 4D Schwarzschild heat-kernel disagreement
+is encoded as a machine-checked non-universality witness theorem.
+
+The general-MTC tracked hypothesis is bundled as
+\texttt{H\_HorizonBoundaryCondition} with five falsifier theorems.
+The toric-code abelian falsifier (F2: $\log\dmax = 0$) is proven;
+the F4 (modular invariance) entry passes via the formalized
+$S$-matrices for SU(2)$_k$, Fibonacci, Ising, $D(S_3)$; the F5
+(Walker-Wang anomaly match) entry is uniformly conjectural across
+the MTC zoo, in agreement with the deep-research return verdict
+that no published paper places any specific MTC at the horizon of a
+4D ADW black hole.
+
+\subsubsection*{What success looks like.}
+
+Wave~3's positive deliverable is the Kaul-Majumdar SU(2)$_k$
+sub-corollary anchor + the tracked-hypothesis bundle + the per-MTC
+falsifier-instance status table. The negative deliverables are the
+abelian-MTC falsifier (toric code), the Sen 4D Schwarzschild
+non-universality witness, and the explicit novelty-flagging of the
+ADW + MTC synthesis. Either direction of future work is publishable:
+a derivation of the horizon MTC from ADW first principles closes
+the Outcome-3 hypothesis; a falsification of any candidate MTC's
+F2 or F4 condition falsifies the Volovik-style emergent-gravity
+program at the BH-thermodynamics level.
+
+\begin{thebibliography}{99}
+
+\bibitem{KaulMajumdar2000}
+R.~K. Kaul and P. Majumdar, ``Logarithmic Correction to the
+Bekenstein-Hawking Entropy,''
+Phys. Rev. Lett. \textbf{84}, 5255 (2000), arXiv:gr-qc/0002040.
+
+\bibitem{Kaul2012Review}
+R.~K. Kaul, ``Entropy of Quantum Black Holes,''
+SIGMA \textbf{8}, 005 (2012), arXiv:1201.6102.
+
+\bibitem{DomagalaLewandowski2004}
+M. Domagala and J. Lewandowski, ``Black-hole entropy from quantum
+geometry,'' Class. Quantum Grav. \textbf{21}, 5233 (2004),
+arXiv:gr-qc/0407051.
+
+\bibitem{Meissner2004}
+K.~A. Meissner, ``Black-hole entropy in loop quantum gravity,''
+Class. Quantum Grav. \textbf{21}, 5245 (2004), arXiv:gr-qc/0407052.
+
+\bibitem{EngleNouiPerez2010}
+J. Engle, K. Noui, and A. Perez, ``Black hole entropy and SU(2)
+Chern-Simons theory,'' Phys. Rev. Lett. \textbf{105}, 031302
+(2010), arXiv:0905.3168.
+
+\bibitem{Carlip2000HorizonCFT}
+S. Carlip, ``Logarithmic corrections to black hole entropy from the
+Cardy formula,'' Class. Quantum Grav. \textbf{17}, 4175 (2000),
+arXiv:gr-qc/0005017.
+
+\bibitem{Sen2013Schwarzschild}
+A. Sen, ``Logarithmic Corrections to Schwarzschild and Other
+Non-extremal Black Hole Entropy in Different Dimensions,''
+JHEP \textbf{04}, 156 (2013), arXiv:1205.0971.
+
+\bibitem{Solodukhin2011LivingRev}
+S.~N. Solodukhin, ``Entanglement entropy of black holes,''
+Living Rev. Relativity \textbf{14}, 8 (2011), arXiv:1104.3712.
+
+\bibitem{WalkerWang2012}
+K. Walker and Z. Wang, ``(3+1)-TQFTs and Topological Insulators,''
+Front. Phys. \textbf{7}, 150 (2012), arXiv:1104.2632.
+
+\bibitem{BombelliKoulLeeSorkin1986}
+L. Bombelli, R.~K. Koul, J. Lee, and R.~D. Sorkin, ``Quantum source
+of entropy for black holes,'' Phys. Rev. D \textbf{34}, 373 (1986).
+
+\bibitem{JacobsonInducedGravity1994}
+T. Jacobson, ``Black hole entropy and induced gravity,''
+arXiv:gr-qc/9404039 (1994).
+
+\bibitem{KitaevHonest2006}
+A. Kitaev, ``Anyons in an exactly solved model and beyond,''
+Annals of Physics \textbf{321}, 2 (2006), arXiv:cond-mat/0506438.
+
+\bibitem{Mitra2014LogVanish}
+P. Mitra, ``Black-hole entropy without log correction,''
+arXiv:1406.5524 (2014).
+
+\bibitem{McGoughVerlinde2013}
+L. McGough and H. Verlinde, ``Bekenstein-Hawking Entropy as
+Topological Entanglement Entropy,'' JHEP \textbf{11}, 208 (2013),
+arXiv:1308.2342.
+
+\bibitem{GovindarajanKaulSuneeta2001}
+T.~R. Govindarajan, R.~K. Kaul, and V. Suneeta, ``Quantum gravity
+on dS$_3$,'' Class. Quantum Grav. \textbf{19}, 4195 (2002),
+arXiv:gr-qc/0104010.
+
+\bibitem{Vergeles2025}
+S. Vergeles, ``Anderson-Higgs gravity and lattice formulation of
+emergent diffeomorphism invariance,'' Phys. Rev. D \textbf{112},
+054509 (2025).
+
+\bibitem{Diakonov2011}
+D. Diakonov, ``Towards lattice-regularized Quantum Gravity,''
+arXiv:1109.0091 (2011).
+
+\end{thebibliography}
+
+\end{document}

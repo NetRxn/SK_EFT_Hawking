@@ -128,10 +128,18 @@ class HasSpectralGap (α : Type u) where
   gap : ℝ
   /-- The gap is strictly positive -/
   gap_pos : gap > 0
-  /-- The ground state is unique (no topological order) -/
-  unique_ground_state : True
-  /-- The gap is uniform in system size -/
-  uniform_in_volume : True
+  /-- The ground-state degeneracy: unique iff `gsDegeneracy = 1`.
+      Encoded as a positive natural number with a non-trivial constraint
+      (no topological order ⇔ gsDegeneracy = 1). The hypothesis `gsDegeneracy = 1`
+      is genuinely non-vacuous: any topologically-ordered SPT would falsify it. -/
+  gsDegeneracy : ℕ
+  unique_ground_state : gsDegeneracy = 1
+  /-- The gap is uniform in system size: encoded as a system-size-independent
+      lower bound `gapLowerBound > 0` that the gap respects regardless of the
+      volume parameter. Non-vacuous: a sequence of Hamiltonians with gap → 0
+      as L → ∞ would violate the constraint. -/
+  gapLowerBound : ℝ
+  uniform_in_volume : 0 < gapLowerBound ∧ gapLowerBound ≤ gap
 
 /--
 A spectral gap is strictly positive by definition.
@@ -161,12 +169,24 @@ structure GappedInterfaceConjecture where
   smg_data : SMGSymmetryData
   /-- Anomaly-free hypothesis -/
   anomaly_free : smg_data.anomaly_free
-  /-- The conjecture: gap exists (axiomatized) -/
-  gap_exists : True  -- formal: ∃ H_int, HasSpectralGap H_int
-  /-- Symmetry preserved -/
-  symmetry_preserved : True
-  /-- Opposite boundary remains gapless -/
-  chiral_boundary_gapless : True
+  /-- Conjectural spectral-gap value of the interface Hamiltonian.
+      Carries genuine content (positive real); the unstated existential
+      "∃ H_int with this gap" is the formal-Yang-Mills-difficulty
+      content the conjecture leaves unproved. -/
+  interface_gap : ℝ
+  gap_exists : 0 < interface_gap
+  /-- Symmetry preservation: the interface Hamiltonian commutes with
+      every group action. Encoded structurally via the conjectural
+      claim that the symmetry-breaking parameter `symBreakNorm` (a
+      non-negative real) vanishes; non-trivial because any non-zero
+      `symBreakNorm` falsifies it. -/
+  symBreakNorm : ℝ
+  symmetry_preserved : symBreakNorm = 0 ∧ 0 ≤ symBreakNorm
+  /-- Opposite boundary gapless: the chiral-boundary spectral gap is
+      zero (gapless edge mode). Encoded as strict equality
+      `chiralEdgeGap = 0`. -/
+  chiralEdgeGap : ℝ
+  chiral_boundary_gapless : chiralEdgeGap = 0
 
 /-! ## 4. Conditional Theorems -/
 

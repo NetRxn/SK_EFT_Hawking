@@ -132,13 +132,12 @@ theorem wang_sixteen_convergence :
 
 /-! ## 4. Module summary -/
 
-/--
+/-! ## Module summary
+
 WangBridge module: derives c₋ = 8N_f from SM fermion content.
   - 16 Weyl → c₋ = 8 (integral, well-defined)
   - 15 Weyl → c₋ = 15/2 (fractional, anomalous — forces ν_R)
   - Full chain: SM fermions → c₋ = 8N_f → (24|c₋ → 3|N_f)
   - "16 convergence": Weyl count = Z₁₆ modulus = Rokhlin = Kitaev
 -/
-theorem wang_bridge_summary : True := trivial
-
 end SKEFTHawking

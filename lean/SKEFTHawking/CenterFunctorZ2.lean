@@ -619,7 +619,8 @@ the hypothesis's imprecision rather than address it. -/
 
 /-! ## 14. Module summary -/
 
-/--
+/-! ## Module summary
+
 CenterFunctorZ2 module: Phase 5s Wave 9 scaffold.
 
   - 4 explicit characters `DG k G2 →ₐ[k] k` where `G2 = Multiplicative (ZMod 2)`:
@@ -642,8 +643,6 @@ CenterFunctorZ2 module: Phase 5s Wave 9 scaffold.
 
   Estimated additional LOC: ~300-400 (per deep research).
 -/
-theorem center_functor_z2_scaffold_summary : True := trivial
-
 end CenterFunctorZ2
 
 end SKEFTHawking

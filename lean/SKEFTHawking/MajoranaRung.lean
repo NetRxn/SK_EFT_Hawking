@@ -202,22 +202,30 @@ Output`, `HiddenSectorMixedCharge.H_MixedChannelZ16Cancels`,
 `DarkSectorSynthesis.H_VestigialRelicCarriesZ16Charge`.
 -/
 
-/-- **WAVE2-OPEN-1a (Wave 2b)**: tracked predicate that the substrate
-Lagrangian explicitly violates lepton number. Required to allow a
-non-zero four-fermion Majorana-channel coupling `G_M ≠ 0`; the channel-
-projection deep research confirms this is open in primary literature
-(no source derives the L-violation strength from substrate dynamics).
+/-- **WAVE2-OPEN-1a (Wave 2b, Stage-13 strengthened 2026-04-25)**:
+tracked predicate that the substrate Lagrangian explicitly violates
+lepton number. Parameterized over `G_LV : ℝ`, the substrate's
+ΔL = 2 four-fermion Wilson coefficient (the coupling of the
+Majorana-channel operator `(ν_R^T C ν_R)(ν_R^T C ν_R)*`). The predicate
+holds iff this coefficient is non-zero — the textbook content of
+"substrate violates U(1)_L" in the symmetry-current sense.
 
-Encoded as an abstract `Prop` — its content is supplied externally by
-the substrate physics; this module's role is to thread the LNV
-requirement through to `M_R`-related theorems. -/
-def H_LeptonNumberViolated : Prop := True
+Stage-13 history: the prior encoding `: Prop := True` was vacuous
+(Stage-13 BLOCKER 5.1, 2026-04-25 paper21 review) — `¬True`
+uninhabited, so `lepton_number_symmetry_obstructs_BCS_form` discharged
+no obstruction. Re-parameterizing over `G_LV` makes the no-go theorem
+genuinely non-vacuous: any substrate with `G_LV = 0` falsifies LNV and
+the BCS form cannot hold. The channel-projection deep research
+remains open on the *value* of `G_LV` from substrate microphysics; the
+predicate's role here is to thread that input through the module. -/
+def H_LeptonNumberViolated (G_LV : ℝ) : Prop := G_LV ≠ 0
 
 /-- **WAVE2-OPEN-1b (Wave 2b)**: strengthened tracked hypothesis
 encoding the BCS-exponential M_R form derived from the projected
 Majorana-channel NJL gap equation. Conditional on
-`H_LeptonNumberViolated`: without explicit substrate-L violation, the
-projected coupling `G_M ≡ 0` and no non-trivial M_R can be derived.
+`H_LeptonNumberViolated G_LV`: without explicit substrate-L violation
+(`G_LV = 0`), the projected coupling `G_M ≡ 0` and no non-trivial M_R
+can be derived.
 
 Form (Antusch et al. 2003, schematically; supercriticality requires the
 dimensionless coupling exceed unity in our normalization where
@@ -227,30 +235,45 @@ dimensionless coupling exceed unity in our normalization where
 
 The `G_M > 1` precondition encodes supercriticality; below it,
 `M_R = 0`. The exponential factor is the BCS dimensional-transmutation
-suppression characteristic of NJL-type gap equations.
--/
+suppression characteristic of NJL-type gap equations. The `G_LV`
+parameter threads the substrate L-violation coefficient through the
+hypothesis. -/
 def H_MR_FromADWSubstrate_BCS_LNV
-    (m : MajoranaRungData) (Λ_ADW : ℝ) : Prop :=
-  H_LeptonNumberViolated ∧
+    (m : MajoranaRungData) (Λ_ADW G_LV : ℝ) : Prop :=
+  H_LeptonNumberViolated G_LV ∧
   ∃ G_M : ℝ, 1 < G_M ∧
     ∀ i, m.M_R i = Λ_ADW * Real.exp (-1 / (2 * (G_M - 1)))
 
 /-- **WAVE2-OPEN-1 obstruction theorem (Wave 2b)**: if the substrate does
-NOT violate lepton number, the strong BCS-exponential M_R hypothesis
-cannot hold. This formalizes Antusch-Kersten-Lindner-Ratz's symmetry
-argument and is the cleanest no-go content available from the deep
-research.
+NOT violate lepton number (`G_LV = 0`), the strong BCS-exponential M_R
+hypothesis cannot hold. This formalizes Antusch-Kersten-Lindner-Ratz's
+symmetry argument and is the cleanest no-go content available from the
+deep research.
 
-The symmetry chain is: `¬ H_LeptonNumberViolated` ⇒ no four-fermion
+The symmetry chain is: `¬ H_LeptonNumberViolated G_LV` ⇒ no four-fermion
 Majorana coupling at the substrate scale ⇒ projected gap equation has
-only trivial solution ⇒ `H_MR_FromADWSubstrate_BCS_LNV` cannot be
-satisfied. -/
+only trivial solution ⇒ `H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW G_LV`
+cannot be satisfied.
+
+Stage-13 strengthening (2026-04-25): under the strengthened
+`H_LeptonNumberViolated G_LV := G_LV ≠ 0`, this theorem now has
+genuine content — every `G_LV = 0` substrate falsifies the strong
+form. -/
 theorem lepton_number_symmetry_obstructs_BCS_form
-    (m : MajoranaRungData) (Λ_ADW : ℝ)
-    (h_no_LNV : ¬ H_LeptonNumberViolated) :
-    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW := by
+    (m : MajoranaRungData) (Λ_ADW G_LV : ℝ)
+    (h_no_LNV : ¬ H_LeptonNumberViolated G_LV) :
+    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW G_LV := by
   intro ⟨h_LNV, _⟩
   exact h_no_LNV h_LNV
+
+/-- Direct corollary: a substrate with `G_LV = 0` can never satisfy the
+strong BCS-exponential M_R form. The non-vacuous instance of the no-go
+theorem at the obstruction-archetype point. -/
+theorem L_conserving_substrate_obstructs_BCS_form
+    (m : MajoranaRungData) (Λ_ADW : ℝ) :
+    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW 0 :=
+  lepton_number_symmetry_obstructs_BCS_form m Λ_ADW 0
+    (by unfold H_LeptonNumberViolated; simp)
 
 /-- **Wave 2b refinement chain**: the strong BCS-exponential hypothesis
 implies that `M_R i` is positive for all generations, since the
@@ -258,8 +281,8 @@ exponential of any real is positive and `Λ_ADW > 0` is required for the
 hypothesis to be physically meaningful. This is the strong-form positivity
 content that follows from the substrate bridge. -/
 theorem M_R_pos_under_BCS_form
-    (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW)
-    (h_strong : H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW) :
+    (m : MajoranaRungData) (Λ_ADW G_LV : ℝ) (h_pos : 0 < Λ_ADW)
+    (h_strong : H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW G_LV) :
     ∀ i, 0 < m.M_R i := by
   obtain ⟨_, G_M, _hG_M, h_eq⟩ := h_strong
   intro i
@@ -273,8 +296,8 @@ scale — the qualitative content of dimensional transmutation, and the
 strong-form upper-bound theorem replacing the deleted weak-form linear
 upper bound. -/
 theorem M_R_lt_substrate_under_BCS_form
-    (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW)
-    (h_strong : H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW) :
+    (m : MajoranaRungData) (Λ_ADW G_LV : ℝ) (h_pos : 0 < Λ_ADW)
+    (h_strong : H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW G_LV) :
     ∀ i, m.M_R i < Λ_ADW := by
   obtain ⟨_, G_M, hG_M, h_eq⟩ := h_strong
   intro i
@@ -479,11 +502,13 @@ OPEN-3 and OPEN-4 are Embedding-II-only and are explicitly out-of-scope
 under Embedding III; their absence from this conjunction is the formal
 encoding of that scope decision. -/
 def Wave2OpenManifest (m : MajoranaRungData) : Prop :=
-  -- OPEN-1 is non-vacuous parametric: there exists some Λ_ADW for which
-  -- the strong BCS-exponential substrate-bridge holds. (The substrate
+  -- OPEN-1 is non-vacuous parametric: there exist a substrate scale
+  -- `Λ_ADW > 0` and an L-violation coefficient `G_LV ≠ 0` for which the
+  -- strong BCS-exponential substrate-bridge holds. (The substrate
   -- physics determining the LNV-conditioned coupling G_M is open; see
   -- Wave 2a channel-projection deep research delivered 2026-04-25.)
-  (∃ Λ_ADW : ℝ, 0 < Λ_ADW ∧ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW) ∧
+  (∃ Λ_ADW G_LV : ℝ, 0 < Λ_ADW ∧
+      H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW G_LV) ∧
   -- OPEN-5 is non-vacuous parametric: the substrate scale is positive
   -- (the decoupling regime requires E ≪ Λ_ADW; positivity is the minimum
   -- non-trivial content surfaced here).
@@ -492,18 +517,19 @@ def Wave2OpenManifest (m : MajoranaRungData) : Prop :=
 /-- The Wave 2 open-problem manifest is consistent — there exist
 `MajoranaRungData` satisfying both load-bearing open hypotheses under
 the Wave 2b strong form. The proof constructs `M_R i = exp(-1/(2·1)) = exp(-1/2)`
-(with `G_M = 2`, supercritical above `G_c = 1`) and `Λ_ADW = 1`,
-satisfying the BCS-exponential equality at every generation. This shows
-the strong manifest is non-vacuous; it does NOT close the underlying
-derivations (which remain open per the deep-research returns). -/
+(with `G_M = 2`, supercritical above `G_c = 1`), `Λ_ADW = 1`, and a
+non-zero L-violation coefficient `G_LV = 1`, satisfying the
+BCS-exponential equality at every generation. This shows the strong
+manifest is non-vacuous; it does NOT close the underlying derivations
+(which remain open per the deep-research returns). -/
 theorem wave2_open_manifest_consistent :
     ∃ m : MajoranaRungData, Wave2OpenManifest m := by
-  -- Use M_R i = exp(-1/2) for all i, Λ_ADW = 1, G_M = 2 → exponent = -1/(2·1) = -1/2
+  -- Use M_R i = exp(-1/2) for all i, Λ_ADW = 1, G_LV = 1, G_M = 2 → exponent = -1/2
   refine ⟨⟨fun _ => Real.exp (-1 / 2), fun _ => Real.exp_pos _⟩, ?_, ?_⟩
-  · -- OPEN-1: take Λ_ADW = 1, G_M = 2 (supercritical)
-    refine ⟨1, one_pos, ?_, 2, by norm_num, ?_⟩
-    · -- H_LeptonNumberViolated := True
-      trivial
+  · -- OPEN-1: take Λ_ADW = 1, G_LV = 1 (L-violating), G_M = 2 (supercritical)
+    refine ⟨1, 1, one_pos, ?_, 2, by norm_num, ?_⟩
+    · -- H_LeptonNumberViolated 1 := (1 ≠ 0)
+      unfold H_LeptonNumberViolated; norm_num
     · intro i
       simp only
       ring_nf
@@ -511,16 +537,17 @@ theorem wave2_open_manifest_consistent :
     exact ⟨1, one_pos⟩
 
 /-- **WAVE2-OPEN-1 falsifiability witness**: a `MajoranaRungData` with
-`M_R i ≥ Λ_ADW` rules out the strong BCS-exponential substrate hypothesis.
-Direct contrapositive of `M_R_lt_substrate_under_BCS_form`: the BCS
-exponential is strictly bounded above by 1, hence `M_R < Λ_ADW` always
-under the strong form; any data with `M_R ≥ Λ_ADW` falsifies it. -/
+`M_R i ≥ Λ_ADW` rules out the strong BCS-exponential substrate hypothesis
+at *any* L-violation coefficient. Direct contrapositive of
+`M_R_lt_substrate_under_BCS_form`: the BCS exponential is strictly
+bounded above by 1, hence `M_R < Λ_ADW` always under the strong form;
+any data with `M_R ≥ Λ_ADW` falsifies it. -/
 theorem strong_BCS_excludes_substrate_dominant_M_R
-    (m : MajoranaRungData) (Λ_ADW : ℝ) (h_pos : 0 < Λ_ADW) (i : Fin 3)
+    (m : MajoranaRungData) (Λ_ADW G_LV : ℝ) (h_pos : 0 < Λ_ADW) (i : Fin 3)
     (h_dominant : Λ_ADW ≤ m.M_R i) :
-    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW := by
+    ¬ H_MR_FromADWSubstrate_BCS_LNV m Λ_ADW G_LV := by
   intro h_strong
-  have h_lt := M_R_lt_substrate_under_BCS_form m Λ_ADW h_pos h_strong i
+  have h_lt := M_R_lt_substrate_under_BCS_form m Λ_ADW G_LV h_pos h_strong i
   linarith
 
 end SKEFTHawking.MajoranaRung

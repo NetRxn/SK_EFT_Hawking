@@ -377,7 +377,8 @@ theorem cartanG2_symmetrizable :
 
 /-! ## 10. Module Summary -/
 
-/--
+/-! ## Module summary
+
 QuantumGroupGeneric module: U_q(𝔤) parameterized by Cartan matrix.
   - QGGen r: 4r generators (E_i, F_i, K_i, K_i⁻¹) for i ∈ Fin r
   - QGRel A: Chevalley-Serre relations from Cartan matrix A
@@ -393,6 +394,4 @@ QuantumGroupGeneric module: U_q(𝔤) parameterized by Cartan matrix.
   - Symmetrizability (DA symmetric): PROVED for B₂ and G₂
   - First parameterized quantum group in any proof assistant
 -/
-theorem quantum_group_generic_summary : True := trivial
-
 end SKEFTHawking

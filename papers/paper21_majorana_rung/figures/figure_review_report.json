@@ -1,0 +1,61 @@
+{
+  "review_date": "2026-04-25T00:00:00Z",
+  "figures_reviewed": 2,
+  "overall_status": "pass",
+  "scope": "Paper 21 (Majorana Rung) — 2 figures",
+  "figures": [
+    {
+      "name": "fig_seesaw_y_m_r_band",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": [
+          "Subtitle/sub-header line ('Contours of m_v via m_v = y^2 v^2 / M_R, NuFit-6.0 anchors. Lean: MajoranaRung.seesawNeutrinoMass_strictMono_inv_M_R') sits inside the plotting area near the top-left and is rendered in a small font; readable but visually crowded against the legend. Cosmetic only."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "All six expected traces present and correctly identified: three diagonal contours (m_3 = sqrt(Delta m^2_31) atmospheric anchor in NO; m_2 = sqrt(Delta m^2_21) solar anchor; m_v = 0.1 eV cosmology cap), the amber natural-seesaw band between m_3 and 0.1 eV, the GUT-scale top-Yukawa star at upper-right (y ~ 1, M_R ~ 10^15 GeV — canonical Type-I anchor), and the diamond lower-scan anchor at (y_NU_LOWER, M_R_LOWER). Diagonal slope on log-log axes is consistent with M_R proportional to y^2 / m_v (slope = 2 in log y vs log M_R, visually correct). X-range 10^-4 to 1 and Y-range ~10^7 to 10^15 GeV match the natural seesaw window. Color palette uses project amber (#F18F01-family) for the seesaw band and steel blue (#2E86AB-family) for contours — matches conventions and is colorblind-accessible. Legend non-overlapping. Caption in manifest and paper_draft.tex faithfully describe what is shown. Lean cross-reference present in subtitle."
+    },
+    {
+      "name": "fig_m_beta_beta_vs_m_lightest",
+      "status": "warning",
+      "rendering": {
+        "status": "pass",
+        "issues": [
+          "Subtitle line at top is cramped (' IO bands, KamLAND-Zen 800 (existing) + LEGEND-1000 (projected reach). Embedding-agnostic. Lean: NeutrinoMixing.PMNSMatrix') — readable but tight against the y-axis label area. Cosmetic only."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "warning",
+        "issues": [
+          "The KamLAND-Zen 800 horizontal exclusion band is rendered in light red/pink. Project convention is colorblind-accessible blue/amber and 'not red/green' (CLAUDE.md, Key Conventions). Recommend recoloring to amber/sandstone (e.g. #F18F01 with low alpha) or carmine (#E63946) used as an accent line, not a filled red region. The LEGEND-1000 reach band correctly uses light blue."
+        ]
+      },
+      "caption_match": true,
+      "notes": "Both expected band traces are present: NO band (steel blue) showing the characteristic cancellation funnel near m_lightest ~ 3-8 meV (Majorana-phase interference, physically expected) and IO band (amber) flat ~15-50 meV at small m_lightest then merging with NO at quasi-degenerate masses (m_lightest > ~50 meV) — qualitatively correct lobster plot. Y-range floor below 0.1 meV captures the deepest NO funnel dips; top reaches ~1000 meV which is sufficient for the cosmology cap region. X-range 0.01 to ~300 meV is appropriate. KamLAND-Zen 800 band sits at ~28-122 meV and LEGEND-1000 at ~9-21 meV, both consistent with manifest values and citations \\cite{KamLANDZen800}, \\cite{LEGEND1000} in paper_draft.tex. The qualitative Wave-2 conclusion (IO fully discoverable by LEGEND-1000; most of NO out of reach) is visually supported: IO band sits inside or above the LEGEND-1000 reach across all m_lightest, while a substantial portion of the NO band dips below 9 meV. Caption alignment with manifest and paper text is exact. Lean reference NeutrinoMixing.PMNSMatrix is present."
+    }
+  ],
+  "structural_checks_cross_reference": {
+    "source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/structural_checks.json",
+    "fig_seesaw_y_m_r_band_in_issues": false,
+    "fig_m_beta_beta_vs_m_lightest_in_issues": false,
+    "note": "Neither paper-21 figure appears in structural_checks.json issues. Confirms zero automated structural warnings/errors on this regen run."
+  },
+  "summary": "Both Paper 21 figures pass overall. fig_seesaw_y_m_r_band is publication-ready as-is (only a minor cosmetic note about the in-plot subtitle density). fig_m_beta_beta_vs_m_lightest is physics- and content-correct (qualitatively reproduces the canonical lobster plot with NO funnel and IO floor; both KamLAND-Zen and LEGEND-1000 horizontal reach bands correctly placed) but carries one style warning: the KamLAND-Zen current-bound band is rendered in red/pink, which violates the project's colorblind-accessible blue/amber convention (CLAUDE.md Key Conventions: 'not red/green'). Recommend recoloring this exclusion band before final submission. No physics or rendering blockers; no caption mismatches.",
+  "recommendations": [
+    "fig_m_beta_beta_vs_m_lightest: Recolor the KamLAND-Zen 800 horizontal exclusion band from red/pink to project amber (#F18F01 with low alpha) or another colorblind-accessible non-red option to comply with the 'blue/amber, not red/green' style convention. Keep LEGEND-1000 in light blue (already correct).",
+    "Optional cosmetic: For both figures, consider moving the subtitle line ('Lean: ...' provenance reference) below the title or into an annotation footer to declutter the top of the plotting area."
+  ]
+}

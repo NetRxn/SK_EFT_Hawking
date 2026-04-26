@@ -1,0 +1,14 @@
+SK-EFT Hawking Validation Report
+Generated: 20260425T160314Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] identities
+  + count(1)==2
+  + count(2)==2
+  + count(3)==3
+  + disp(0)==0
+  + 1st_order(0,kappa)==0
+  + Gamma(k,w,cs,0,0,0,0)==0
+  + delta2_acoustic_vanishes — value=0.000e+00
+
+Overall: 1/1 passed

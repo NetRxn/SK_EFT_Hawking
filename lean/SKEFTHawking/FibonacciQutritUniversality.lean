@@ -147,7 +147,8 @@ theorem su3_spanning_data :
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 FibonacciQutritUniversality: su(3) Lie algebra data for qutrit density.
   - [σ₁,σ₂] nonzero at (1,2): PROVED — from σ₂'s {e₂,e₃} block
   - [σ₂,σ₃] nonzero at (0,1): PROVED — from σ₂-σ₃ interaction
@@ -159,6 +160,4 @@ FibonacciQutritUniversality: su(3) Lie algebra data for qutrit density.
   - First verified SU(3) universality data for anyonic braiding
   - Zero sorry, zero axioms. All by native_decide over K.
 -/
-theorem fibonacci_qutrit_universality_summary : True := trivial
-
 end SKEFTHawking.FibonacciQutritUniversality

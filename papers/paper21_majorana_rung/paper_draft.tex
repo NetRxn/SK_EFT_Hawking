@@ -40,7 +40,7 @@ heavy Majorana mass $\HeavyMaj$ is identified with a
 $\mathbb{Z}_{16}$-invariant condensate scale of the Akama-Diakonov-Wetterich
 (ADW) substrate---an identification that no primary source closes, and
 that we therefore encode as a \emph{tracked Prop hypothesis}
-(\texttt{H\_MR\_FromADWSubstrate}) rather than a derived theorem. The
+(\texttt{H\_MR\_FromADWSubstrate\_BCS\_LNV}) rather than a derived theorem. The
 $\mathbb{Z}_{16}$ singlet-branch bridge to our prior
 \texttt{HiddenSectorClassification.lean} and \texttt{Z16AnomalyComputation.lean}
 infrastructure is proved directly: three fundamental
@@ -52,11 +52,14 @@ sector. The Type-I seesaw mass relation $\LightNu = y^2 v^2 / \HeavyMaj$
 is formalized algebraically with a strict-monotonicity-in-$\HeavyMaj$
 theorem and a falsifiability-anchor predicate
 \texttt{IsObservedSeesawMatch}. A companion module
-\texttt{NeutrinoMixing.lean} ($7$ theorems) provides a
+\texttt{NeutrinoMixing.lean} ($11$ theorems) provides a
 HepLean-style structure note for the PMNS matrix as a
-$3\!\times\!3$ unitary on $\mathbb{C}$, with a tracked hypothesis
-$H\_{\rm PMNSAnglesFromSubstrate}$ for the open
-$\theta_{23} \approx \pi/4$-from-substrate-symmetry conjecture. We
+$3\!\times\!3$ unitary on $\mathbb{C}$, with tracked hypotheses
+\texttt{H\_PMNSAnglesFromExactSubstrate} (exact-symmetry limit) and
+\texttt{H\_PMNSAnglesFromSubstrate\_eps} (tolerance-parameterized) for the open
+$\theta_{23} \approx \pi/4$-from-substrate-symmetry conjecture, plus
+parametric Dirac-vs-Majorana predicates over Majorana-phase data
+$\alpha : \mathrm{Fin}\, 2 \to \mathbb{R}$ with provable disjointness. We
 report two embedding-agnostic phenomenological figures: the seesaw
 $(y, \HeavyMaj)$-band against NuFit-6.0 oscillation anchors, and the
 $\mbb$-vs-$m_{\rm lightest}$ "lobster plot" for $0\nu\beta\beta$
@@ -217,21 +220,33 @@ When the substrate explicitly violates $U(1)_L$, the qualitative form of
 $\HeavyMaj$ is the standard NJL/BCS \emph{dimensional-transmutation}
 exponential~\cite{AntuschKerstenLindnerRatz2003}, formalized as the
 strong tracked hypothesis
-\texttt{MajoranaRung.H\_MR\_FromADWSubstrate\_BCS\_LNV}:
+\texttt{MajoranaRung.H\_MR\_FromADWSubstrate\_BCS\_LNV}, parameterized
+over the substrate $\Delta L = 2$ Wilson coefficient $G_{LV}$:
 \begin{verbatim}
+def H_LeptonNumberViolated (G_LV : ℝ) : Prop :=
+  G_LV ≠ 0
+
 def H_MR_FromADWSubstrate_BCS_LNV
-    (m : MajoranaRungData) (Λ_ADW : ℝ) : Prop :=
-  H_LeptonNumberViolated ∧
+    (m : MajoranaRungData) (Λ_ADW G_LV : ℝ) : Prop :=
+  H_LeptonNumberViolated G_LV ∧
   ∃ G_M : ℝ, 1 < G_M ∧
     ∀ i, m.M_R i = Λ_ADW * Real.exp(-1/(2*(G_M-1)))
 \end{verbatim}
 
-The conjunction with \texttt{H\_LeptonNumberViolated} encodes the
-symmetry obstruction; $G_M > 1$ encodes supercriticality (in units where
-the critical coupling is normalized to unity). The Wave 2b Lean module
-ships the obstruction theorem
+The L-violation predicate is genuinely non-trivial: it holds iff the
+substrate carries a non-vanishing $\Delta L = 2$ four-fermion coefficient,
+the textbook content of "substrate violates $U(1)_L$" in the
+symmetry-current sense. The conjunction with
+\texttt{H\_LeptonNumberViolated $G_{LV}$} encodes the symmetry obstruction;
+$G_M > 1$ encodes supercriticality (in units where the critical coupling
+is normalized to unity). The Wave 2b Lean module ships the obstruction
+theorem
 \texttt{lepton\_number\_symmetry\_obstructs\_BCS\_form} as a direct
-consequence: \emph{without LNV, the strong BCS hypothesis cannot hold}.
+consequence — \emph{without LNV, the strong BCS hypothesis cannot hold} —
+and the non-vacuous corollary
+\texttt{L\_conserving\_substrate\_obstructs\_BCS\_form} discharging the
+obstruction at the archetype point $G_{LV} = 0$ (no inhabitant exists
+because $0 \neq 0$ is false).
 
 Two further refinement theorems are shipped:
 \texttt{M\_R\_pos\_under\_BCS\_form} (the BCS exponential is strictly
@@ -263,12 +278,19 @@ structure PMNSMatrix where
 together with element accessors, the unitarity identities
 $\PMNSMatrix^\dagger \PMNSMatrix = \PMNSMatrix \PMNSMatrix^\dagger
 = \mathbb{1}$, and the identity-matrix non-emptiness witness. The
-Dirac-vs-Majorana physical interpretation is exposed as parametric
-\texttt{Prop} markers \texttt{IsDiracPMNS} and
-\texttt{IsMajoranaPMNS}; the PMNS matrix structure is identical in
-both cases, but the right-hand diagonal phases (two Majorana phases
-$\alpha_1, \alpha_2$) are physical observables in the Majorana case
-and unphysical phase-rephasings in the Dirac case.
+Dirac-vs-Majorana physical interpretation is exposed as
+\emph{parametric Prop predicates} over candidate Majorana-phase data
+$\alpha : \mathrm{Fin}\, 2 \to \mathbb{R}$:
+\texttt{IsDiracPMNS V $\alpha$} requires every $\alpha\, k = 0$
+(rephased away — the Dirac realization), while
+\texttt{IsMajoranaPMNS V $\alpha$} requires $\exists\, k,\ \alpha\, k \neq 0$
+(at least one phase is physically non-trivial — the Majorana
+realization). The PMNS matrix structure is identical in both cases;
+the realization is a property of the Majorana-phase data. We ship
+disjointness (\texttt{not\_isDiracPMNS\_and\_isMajoranaPMNS}) and the
+zero-phase witness for the Dirac realization
+(\texttt{isDiracPMNS\_of\_zero\_phases}), eliminating the structural
+tautology of an unparameterized \texttt{:= True} encoding.
 
 The full PMNS standard parameterization
 $U_{\rm PMNS} = R_{23}(\theta_{23}) U_\delta R_{13}(\theta_{13})
@@ -280,18 +302,26 @@ against $|U_{e3}|^2 = \sin^2\theta_{13}$ and unitarity to machine
 precision. The Lean construction of \texttt{standParam} with
 unitarity proof is a follow-up wave (Wave 2b or later).
 
-The \texttt{H\_PMNSAnglesFromSubstrate} hypothesis
+The Wave 2a refactor splits the substrate-symmetry hypothesis into an
+exact-limit form and a tolerance-parameterized form:
 \begin{verbatim}
-def H_PMNSAnglesFromSubstrate (V : PMNSMatrix) : Prop :=
+def H_PMNSAnglesFromExactSubstrate
+    (V : PMNSMatrix) : Prop :=
   ∀ i, ‖get V 1 i‖ = ‖get V 2 i‖
+
+def H_PMNSAnglesFromSubstrate_eps
+    (V : PMNSMatrix) (ε : ℝ) : Prop :=
+  ∀ i, |‖get V 1 i‖ - ‖get V 2 i‖| ≤ ε
 \end{verbatim}
-encodes the WAVE2-OPEN-2 conjecture: the PMNS $\mu$-$\tau$ row is
+These encode the WAVE2-OPEN-2 conjecture: the PMNS $\mu$-$\tau$ row is
 substrate-symmetric, motivating $\theta_{23} \approx \pi/4$ from a
 putative substrate $\mu$-$\tau$ exchange symmetry. The empirical
 NuFit-6.0 best fit $\theta_{23} \approx 49.1^\circ$ is close to but
-not exactly $\pi/4$, so the hypothesis is non-trivial; the lemma
-\texttt{identity\_does\_not\_satisfy\_substrate\_hypothesis} confirms
-non-vacuity by exhibiting an explicit failure on the identity PMNS.
+not exactly $\pi/4$, so the hypotheses are non-trivial; the lemmas
+\texttt{identity\_does\_not\_satisfy\_exact\_substrate\_hypothesis} and
+\texttt{identity\_does\_not\_satisfy\_eps\_substrate\_hypothesis} confirm
+non-vacuity by exhibiting explicit failures on the identity PMNS (the
+latter for any $\varepsilon < 1$).
 No primary source closes the derivation~\cite{Volovik2024Spinor}.
 
 %% ================================================================
@@ -357,11 +387,18 @@ ADW; we honestly flag this as the residual gap.
 The Wave 2b Lean module \texttt{MajoranaRungDecoupling.lean} ships:
 \begin{itemize}
 \item A \texttt{DecouplingRegime} structure encoding $0 < E$, $0 < \LambdaADW$,
-  $10 E < \LambdaADW$ (robust hierarchy), plus three predicates excluding
-  cosmological-scale failure modes (vestigial gravity~\cite{Volovik2024Spinor};
-  q-theory; FRG strong-coupling). At $E = M_W$ and
-  $\LambdaADW = 10^{14}$~GeV, all three failure-mode predicates are trivially
-  satisfied.
+  $10 E < \LambdaADW$ (robust hierarchy), plus three substantive
+  numerical-inequality predicates excluding cosmological-scale failure modes:
+  \texttt{not\_vestigial} ($\Lambda_{\rm QCD} \simeq 0.2~\mathrm{GeV} < E$,
+  excluding the vestigial-gravity regime~\cite{Volovik2024Spinor}),
+  \texttt{not\_cosmological} ($H_0 \simeq 1.4 \cdot 10^{-42}~\mathrm{GeV} < E$,
+  excluding the Klinkhamer-Volovik q-theory regime), and
+  \texttt{weakly\_coupled\_matter} ($\LambdaADW < M_{\rm Pl} \simeq 10^{19}~\mathrm{GeV}$,
+  sub-Planckian substrate scale, excluding the Wetterich/Reuter-Saueressig
+  FRG strong-coupling regime). At $E = M_W$ and
+  $\LambdaADW = 10^{14}$~GeV, all three failure-mode predicates are
+  numerically satisfied (discharged via \texttt{norm\_num} in
+  \texttt{decouplingRegime\_at\_electroweak\_scale}).
 \item A \texttt{SubstrateData} structure parameterizing the substrate by
   $(\LambdaADW, \Lambda_{\rm UV}, N_f)$.
 \item Two tracked-hypothesis Props:
@@ -374,7 +411,7 @@ The Wave 2b Lean module \texttt{MajoranaRungDecoupling.lean} ships:
 \item A consistency witness \texttt{H\_DecouplingBoundDim6\_consistent} showing
   the trivially-zero amplitude difference satisfies the bound for any
   \texttt{SubstrateData}.
-\item A \texttt{decoupling\_isBigOWith} restatement using Mathlib's
+\item A \texttt{H\_DecouplingBoundDim6\_isBigOWith} restatement using Mathlib's
   \texttt{Asymptotics.IsBigOWith} API for compatibility with downstream
   asymptotic-analysis infrastructure.
 \end{itemize}
@@ -411,19 +448,19 @@ in an implication relation.
 \toprule
 Module & Theorems & Sorry \\
 \midrule
-\texttt{MajoranaRung.lean} (Wave 2 + 2b §3a) & $19$ & $0$ \\
+\texttt{MajoranaRung.lean} (Wave 2 + 2b §3a) & $15$ & $0$ \\
 \texttt{NeutrinoMixing.lean} (Wave 2 + 2a §4 split) & $11$ & $0$ \\
-\texttt{MajoranaRungDecoupling.lean} (Wave 2b new) & $7$ & $0$ \\
+\texttt{MajoranaRungDecoupling.lean} (Wave 2b new) & $6$ & $0$ \\
 \midrule
-Wave 2 total (W2 + W2a + W2b) & $37$ & $0$ \\
+Wave 2 total (W2 + W2a + W2b) & $32$ & $0$ \\
 \bottomrule
 \end{tabular}
 \caption{Wave 2 Lean-formalization counts after Wave 2a accuracy round
 and Wave 2b strengthening. All three modules build clean under
 \texttt{lake build SKEFTHawking.ExtractDeps} (8434 jobs total
 post-Wave-2b). Zero sorry, zero new axioms. The project total
-post-Wave-2b is \totaltheorems\ theorems across \totalmodules\
-modules with \sorrycount\ sorry and \totalaxioms\ axiom
+post-Wave-2b is \totaltheorems\ theorems across \leanmodules\
+modules with \sorrycount\ sorry and \axiomcount\ axiom
 (\texttt{gapped\_interface\_axiom} unchanged from Phase 4).}
 \label{tab:formal-summary}
 \end{table}
@@ -432,27 +469,33 @@ The two new Lean modules are summarized in Table~\ref{tab:formal-summary}.
 Beyond the load-bearing $\mathbb{Z}_{16}$ singlet-branch bridge,
 the formalization includes: (i)~five seesaw theorems (positivity,
 nonzero-positivity, zero-iff, monotonicity, defining identity);
-(ii)~three substrate-bridge theorems (the \texttt{H\_MR\_FromADWSubstrate}
-tracked hypothesis, $\HeavyMaj \leq \LambdaADW$ under the bridge,
+(ii)~three substrate-bridge theorems (the \texttt{H\_MR\_FromADWSubstrate\_BCS\_LNV}
+tracked hypothesis, $\HeavyMaj < \LambdaADW$ under the bridge,
 and the bridge-falsifiability witness); (iii)~the
 \texttt{IsObservedSeesawMatch} falsifiability anchor with its
 $M_R$-too-large witness, mirroring Wave 1's $v$-too-large anchor for
 the Higgs prediction.
 
-The PMNS module ships seven theorems: two unitarity identities
-($\PMNSMatrix^\dagger \PMNSMatrix = \mathbb{1}$ both ways), two
-identity-PMNS structural lemmas, the
-\texttt{IsMajoranaPMNS\_of\_majoranaRungData} bridge to the
-\texttt{MajoranaRung} module, and the
-\texttt{identity\_does\_not\_satisfy\_substrate\_hypothesis} non-vacuity
-witness for WAVE2-OPEN-2. The full standard PMNS parameterization with
+The PMNS module ships eleven theorems: two unitarity identities
+($\PMNSMatrix^\dagger \PMNSMatrix = \mathbb{1}$ both ways), the
+identity-PMNS diagonal/off-diagonal structural pair, the parametric
+Dirac-vs-Majorana triple
+(\texttt{IsMajoranaPMNS\_of\_majoranaRungData} bridge to the
+\texttt{MajoranaRung} module given non-trivial Majorana-phase data,
+\texttt{not\_isDiracPMNS\_and\_isMajoranaPMNS} disjointness, and
+\texttt{isDiracPMNS\_of\_zero\_phases} for the rephased-away
+realization), the exact-vs-tolerance equivalence at $\varepsilon = 0$
+and the exact-implies-eps refinement, and the two non-vacuity witnesses
+(\texttt{identity\_does\_not\_satisfy\_exact\_substrate\_hypothesis} and
+\texttt{identity\_does\_not\_satisfy\_eps\_substrate\_hypothesis})
+for WAVE2-OPEN-2. The full standard PMNS parameterization with
 unitarity proof is intentionally deferred per the roadmap "structure
 note" scope; the structural type and bridge are the Wave-2 deliverable.
 
 \subsection*{Cross-validation layer}
 
 A Python cross-validation layer in
-\texttt{tests/test\_majorana\_rung.py} (32 tests across 6 classes)
+\texttt{tests/test\_majorana\_rung.py} (40 tests across 7 classes)
 exercises every Wave-2 formula against NuFit-6.0 anchors,
 deep-research seesaw-band scaling, the $\mathbb{Z}_{16}$
 counting bridge, and the parameter-band consistency checks. All
@@ -470,12 +513,13 @@ report; none of these is closed in primary literature.
   per-generation coefficient $c \in (0, 1]$. Substrate parameters
   $(\Lambda_{\rm UV}, N_f, G_c)$ leave $\HeavyMaj$ as a fit parameter
   in all current sources~\cite{ADW,WetterichSpinor2013,Volovik2024Spinor}.
-  Encoded as \texttt{H\_MR\_FromADWSubstrate}.
+  Encoded as \texttt{H\_MR\_FromADWSubstrate\_BCS\_LNV}.
 \item[\textbf{O-2}] PMNS angles from substrate overlaps. In particular
   $\theta_{23} \approx \pi/4$ from a substrate $\mu$-$\tau$ exchange
   symmetry. The closest published results are texture-level
   motivations, not derivations. Encoded as
-  \texttt{H\_PMNSAnglesFromSubstrate}.
+  \texttt{H\_PMNSAnglesFromExactSubstrate} (exact-symmetry limit) and
+  \texttt{H\_PMNSAnglesFromSubstrate\_eps} (tolerance-parameterized).
 \item[\textbf{O-3}] Majorana phases from composite-operator structure
   (Embedding II claim). Unrealized in any source we located.
 \item[\textbf{O-4}] $\mbb$ tied algebraically to a single condensate
@@ -524,12 +568,14 @@ Prog.~Theor.~Phys.~\textbf{60}, 1900 (1978);
 DOI:~\href{https://doi.org/10.1143/PTP.60.1900}{10.1143/PTP.60.1900}.
 
 \bibitem{WetterichSpinor2013}
-C.~Wetterich, ``Spinor gravity and gravitational anomaly,''
-Lect.~Notes~Phys.~\textbf{863}, 67 (2013); arXiv:1201.2871.
+C.~Wetterich, ``Spinor gravity and diffeomorphism invariance on the
+lattice,'' Lect.~Notes~Phys.~\textbf{863}, 67 (2013); arXiv:1201.2871;
+DOI:~\href{https://doi.org/10.1007/978-3-642-33036-0_4}{10.1007/978-3-642-33036-0\_4}.
 
 \bibitem{WetterichSpinor2022}
-C.~Wetterich, ``Spinor gravity flow equations,''
-JHEP~\textbf{06}, 069 (2022); arXiv:2101.11519.
+C.~Wetterich, ``Pregeometry and spontaneous time-space asymmetry,''
+JHEP~\textbf{06}, 069 (2022); arXiv:2101.11519;
+DOI:~\href{https://doi.org/10.1007/JHEP06(2022)069}{10.1007/JHEP06(2022)069}.
 
 \bibitem{Volovik2024Spinor}
 G.~E.~Volovik, ``Fermionic quartet and vestigial gravity,''
@@ -568,7 +614,8 @@ DOI:~\href{https://doi.org/10.1007/JHEP12(2024)216}{10.1007/JHEP12(2024)216}.
 \bibitem{KamLANDZen800}
 KamLAND-Zen Collaboration (S.~Abe \emph{et al.}), ``Search for
 Majorana neutrinos with the complete KamLAND-Zen dataset,''
-arXiv:2406.11438 (2024; v2 March 2026).
+Phys.~Rev.~Lett.~\textbf{135}, 262501 (2025); arXiv:2406.11438;
+DOI:~\href{https://doi.org/10.1103/jkf6-48j8}{10.1103/jkf6-48j8}.
 
 \bibitem{LEGEND1000}
 LEGEND Collaboration (N.~Abgrall \emph{et al.}), ``LEGEND-1000
@@ -602,7 +649,7 @@ DOI:~\href{https://doi.org/10.1088/1126-6708/2007/06/045}{10.1088/1126-6708/2007
 
 \bibitem{Hill2024Bilocal}
 C.~T.~Hill, ``Bilocal field theory for composite scalar bosons,''
-Entropy~\textbf{26}, 146 (2024);
+Entropy~\textbf{26}, 146 (2024); arXiv:2310.14750;
 DOI:~\href{https://doi.org/10.3390/e26020146}{10.3390/e26020146}.
 
 \bibitem{CiriglianoMasterFormula2018}

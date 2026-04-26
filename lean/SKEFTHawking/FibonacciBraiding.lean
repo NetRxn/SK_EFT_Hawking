@@ -280,7 +280,8 @@ theorem tr_s1s2_cu_is_double_scalar :
 
 /-! ## 8. Module Summary -/
 
-/--
+/-! ## Module summary
+
 FibonacciBraiding: First verified Fibonacci anyon braiding gates.
   - F-matrix in Q(ζ₅): F²=I PROVED, det(F)=-1 PROVED
   - σ₁ = diag(R₁, R_τ): det = -θ_τ PROVED
@@ -294,6 +295,4 @@ FibonacciBraiding: First verified Fibonacci anyon braiding gates.
   - Off-diagonal σ₂ entries need Q(ζ₅,√φ); traces stay in Q(ζ₅)
   - Zero sorry, zero axioms. All by native_decide over Q(ζ₅).
 -/
-theorem fibonacci_braiding_summary : True := trivial
-
 end SKEFTHawking.FibonacciBraiding

@@ -40,7 +40,7 @@ $\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)$,
 derived independently from Keldysh FDT and Landauer-B\"uttiker with
 Bogoliubov mixing, gives statistical integration times under one second
 for $5\sigma$ discovery. The greybody factor is computed in closed form
-as $\Gamma_0 = 4 c_R v/(c_R+v)^2 \approx 0.9994$ for the Dean nozzle
+as $\Gamma_0 = 4 c_R v/(c_R+v)^2 \approx 0.99994$ for the Dean nozzle
 (Anderson et al., PRD 87), with quasi-1D finite-width corrections
 bounded at $\le 1.8\%$ at $\omega_H$, making the measurement
 systematics-limited rather than statistics-limited.
@@ -52,8 +52,8 @@ the richer tensor structure of 2+1D. The giant Wiedemann-Franz violation
 ($L/L_0 > 200\times$, Majumdar~\textit{et~al.}, 2025) arises from two-channel
 transport: charge ($\sigma_Q$) and heat ($\kappa_{\rm th} \propto s^2/\sigma_Q$),
 consistent with the SK-EFT two-channel structure. All predictions are
-formally verified in Lean~4 (32~theorems, zero sorry) and derive from
-a computation pipeline with 99~tests.
+formally verified in Lean~4 (44~theorems, zero sorry) and derive from
+a computation pipeline with 103~tests.
 \end{abstract}
 
 \maketitle
@@ -354,7 +354,7 @@ zero-frequency limit is profile-independent and near unity,
 which contrasts with four-dimensional Schwarzschild
 ($\Gamma \propto \omega^2$). For the Dean bilayer nozzle
 ($v \approx 0.985\,c_s$, $c_R \approx c_s$) this gives
-$\Gamma_0 \approx 0.9994$. The frequency dependence in the adiabatic
+$\Gamma_0 \approx 0.99994$. The frequency dependence in the adiabatic
 regime ($D = \kappa\,l_{ee}/c_s = 0.23 < 1$) is
 $\Gamma(\omega) \approx \Gamma_0[1 - (\omega/\omega_{\max})^2]$ with
 $\omega_{\max} = \sqrt{\kappa c_s/l_{ee}}$ the dispersive UV cutoff, so
@@ -363,7 +363,7 @@ detection band. The quasi-1D finite-width correction
 $|\delta\Gamma/\Gamma| \le (l_{ee}/W)^2 + (\omega/\omega_\perp)^2
 e^{-2\pi L/W}$ bounds the 2D-to-1D deviation at $\le 1.8\%$ at
 $\omega_H$; formally verified in Lean module
-\texttt{QuasiOneDReduction} (theorems T1--T5). Numerical predictions
+\texttt{QuasiOneDReduction} (theorems T1--T5; 12 theorems total in the module). Numerical predictions
 below use this realistic $\Gamma(\omega)$ rather than the
 $\Gamma = 1$ upper bound, giving a corrected cumulative SNR of $98.8\%$
 of the step-horizon value.
@@ -372,7 +372,7 @@ The thermal background is Johnson-Nyquist:
 $S_{\rm thermal} = 4 k_B T_{\rm amb} \sigma_Q \approx
 \SI{1.3e-24}{\ampere\squared/\hertz}$.
 
-With the realistic $\Gamma(\omega) \approx \Gamma_0 \approx 0.9994$
+With the realistic $\Gamma(\omega) \approx \Gamma_0 \approx 0.99994$
 [Eq.~\eqref{eq:gamma0}], the Hawking signal $\Delta S_I \approx
 \SI{e-26}{\ampere\squared/\hertz}$ at the peak, sitting approximately
 two orders of magnitude below the thermal floor (Fig.~\ref{fig:spectrum}).
@@ -383,7 +383,7 @@ hydrodynamic regime). Correlation analysis exploits this shape difference.
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig104_graphene_noise_spectrum.png}
 \caption{Current noise power spectral density for the Dean bilayer
-nozzle (realistic greybody $\Gamma_0 \approx 0.9994$ per
+nozzle (realistic greybody $\Gamma_0 \approx 0.99994$ per
 Eq.~\eqref{eq:gamma0}).
 $\Delta S_I$ (blue) sits ${\sim}2$ orders below the Johnson-Nyquist
 background $S_{\rm thermal}$ (amber dashed). The Hawking signal is flat
@@ -396,7 +396,7 @@ above. Shaded region: detection band (\SIrange{0.5}{85}{\giga\hertz}).}
 
 The per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal} \approx
 \Gamma_0 T_H/(2T_{\rm amb})$ is approximately $8 \times 10^{-3}$
-(using $\Gamma_0 \approx 0.9994$) at low frequencies, independent of
+(using $\Gamma_0 \approx 0.99994$) at low frequencies, independent of
 $\sigma_Q$ (the conductance cancels in the ratio; Lean theorem
 \texttt{snr\_independent\_of\_sigma\_Q}).
 The cumulative SNR scales as
@@ -408,7 +408,7 @@ ${\sim}300$ independent bins) via bandwidth-cumulative integration.
 The radiometer equation gives the statistical integration time
 $t = [{\rm SNR}_{\rm target}^2] / [\sum_i {\rm SNR}_{{\rm bin},i}^2
 \cdot \Delta f]$.
-With the realistic $\Gamma_0 \approx 0.9994$
+With the realistic $\Gamma_0 \approx 0.99994$
 [Eq.~\eqref{eq:gamma0}, Lean
 \texttt{QuasiOneDReduction.greybody\_zero\_freq\_le\_one}]:
 $t_{5\sigma} < \SI{1}{\milli\second}$, essentially unchanged from the
@@ -439,7 +439,7 @@ within a single session.
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig105_graphene_snr_frequency.png}
 \caption{Per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal}$
 vs.\ frequency for the Dean bilayer nozzle (realistic
-$\Gamma_0 \approx 0.9994$, quasi-1D correction
+$\Gamma_0 \approx 0.99994$, quasi-1D correction
 $\le 1.8\%$). The ratio is
 ${\sim}8\times 10^{-3}$ below $\omega_H$ (approximately $T_H/2T_{\rm amb}$)
 and drops exponentially above. Detection is statistics-limited only for
@@ -572,8 +572,9 @@ Module & Theorems & Key result \\
 \texttt{GrapheneHawking} & 6 & $T_{\rm eff}$ positivity, EFT bound \\
 \texttt{DiracFluidSK} & 9 & Transport counting, WF, KSS \\
 \texttt{GrapheneNoiseFormula} & 8 & Noise PSD, FDT, greybody \\
+\texttt{QuasiOneDReduction} & 12 & Greybody $\Gamma_0$, quasi-1D bound \\
 \hline
-Total new & 32 & Zero sorry \\
+Total new & 44 & Zero sorry \\
 Reused (1+1D) & 109 of 119 available & 92\% unmodified \\
 \end{tabular}
 \end{ruledtabular}
@@ -634,7 +635,8 @@ of the thermal background, making detection statistics-limited only for
 greybody factors below ${\sim}10^{-3}$. Relative to BEC, graphene
 offers dramatically higher $T_H$ and subluminal dispersion but has a
 marginal dissipation window ($\omega_H/\Gamma_{\rm mr} \approx 1.6$) and
-an as-yet-uncomputed greybody factor (Table~\ref{tab:platforms}); the
+a greybody factor $\Gamma_0 \approx 0.99994$ derived in closed form
+[Eq.~\eqref{eq:gamma0}] (Table~\ref{tab:platforms}); the
 two platforms are complementary rather than competing.
 
 The deeper theoretical finding is that for graphene, the \emph{dispersive}
@@ -655,9 +657,9 @@ yield the device-specific noise spectrum predictions needed for
 experimental design.
 
 \begin{acknowledgments}
-Computation pipeline formally verified with 32~new Lean~4 theorems
+Computation pipeline formally verified with 44~new Lean~4 theorems
 (zero sorry), building on 109~reused theorems from the 1+1D BEC
-framework. All numerical predictions generated by a 99-test
+framework. All numerical predictions generated by a 103-test
 Python pipeline.
 \end{acknowledgments}
 

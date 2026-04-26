@@ -491,7 +491,8 @@ theorem gapIntegral_lower_bound (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
 
 /-! ## 10. Module summary -/
 
-/--
+/-! ## Module summary
+
 TetradGapEquation module: NJL-type gap equation for emergent gravity.
   - gapIntegral: I(Δ) — positive, decreasing, → 0 as Δ → ∞
   - criticalCoupling: G_c = 8π²/(N_f·Λ²) — matches V_eff
@@ -505,8 +506,6 @@ TetradGapEquation module: NJL-type gap equation for emergent gravity.
   - gapIntegral_le_I0, gapIntegral_lower_bound: two-sided bounds
   - Zero axioms. All inputs are theorem parameters.
 -/
-theorem tetrad_gap_equation_summary : True := trivial
-
 /-!
 ## Phase 5y Wave 6 extensions
 

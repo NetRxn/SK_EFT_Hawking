@@ -189,7 +189,8 @@ theorem sigma1_16_is_I :
 
 /-! ## 7. Module Summary -/
 
-/--
+/-! ## Module summary
+
 IsingGates: Complete Ising anyon quantum gate characterization.
   - σ₁ = diag(ζ⁻¹, ζ³): T-like phase gate, order 8 in SU(2)
   - σ₂ = FRF: Hadamard-rotated braiding, symmetric matrix
@@ -202,6 +203,4 @@ IsingGates: Complete Ising anyon quantum gate characterization.
   - σ₁² = Clifford S gate PROVED
   - Zero sorry, zero axioms. All by native_decide over Q(ζ₁₆).
 -/
-theorem ising_gates_summary : True := trivial
-
 end SKEFTHawking.IsingGates

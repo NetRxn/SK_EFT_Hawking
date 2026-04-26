@@ -203,7 +203,8 @@ theorem model3450_anomaly_1D : model3450_left.anomaly = (1 : ZMod 8) := by decid
 
 /-! ## 7. Module Summary -/
 
-/--
+/-! ## Module summary
+
 SPTStacking module: group structure on SPT phases via stacking.
   - SPTPhase as ℤ/16ℤ anomaly index
   - Stacking = addition, inverse = negation: ALL group axioms PROVED
@@ -214,6 +215,4 @@ SPTStacking module: group structure on SPT phases via stacking.
   - 1+1D 3450 model anomaly match PROVED
   - Zero sorry, zero axioms. All by decide/simp over ZMod 16.
 -/
-theorem spt_stacking_summary : True := trivial
-
 end SKEFTHawking

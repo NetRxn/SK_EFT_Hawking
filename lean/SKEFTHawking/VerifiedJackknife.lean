@@ -125,7 +125,8 @@ theorem intAutocorrTime_ge_half (n : ℕ) (x : Fin n → ℝ)
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 VerifiedJackknife module: first formally verified statistical estimators.
   - sampleMean: defined
   - jackknifeVariance: defined, NON-NEGATIVITY PROVED
@@ -137,6 +138,4 @@ VerifiedJackknife module: first formally verified statistical estimators.
   - Zero axioms, 1 sorry (jackknife zero iff constant)
   - Pure finite arithmetic — no measure theory or probability
 -/
-theorem verified_jackknife_summary : True := trivial
-
 end SKEFTHawking

@@ -966,16 +966,19 @@ PARAMETER_PROVENANCE = {
                  'M_W/M_Z = cos θ_W.',
     },
     'EW.M_H_GEV': {
-        'value': 125.25,
+        'value': 125.20,
         'unit': 'GeV/c²',
         'tier': 'MEASURED',
         'source': 'Particle Data Group, Review of Particle Physics (2024)',
-        'detail': 'Higgs boson mass: m_H = 125.25 ± 0.17 GeV (PDG 2024 world average from '
-                  'ATLAS + CMS diphoton and 4-lepton channels).',
-        'doi': '10.1093/ptep/ptae163',
-        'llm_verified_date': '2026-04-24',
-        'llm_verified_notes': 'PDG 2024 world average. Correctness-push target for Phase 5z '
-                              'Wave 1 HiggsMassFromCondensate predicate.',
+        'detail': 'Higgs boson mass: m_H = 125.20 ± 0.11 GeV (PDG 2024; '
+                  'S. Navas et al., Phys. Rev. D 110, 030001 (2024); world average '
+                  'from ATLAS + CMS diphoton and 4-lepton channels).',
+        'doi': '10.1103/PhysRevD.110.030001',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PDG 2024 single canonical value: m_H = 125.20 ± 0.11. '
+                              'Updated 2026-04-26 from prior 125.25 ± 0.17 placeholder; '
+                              'DOI and detail align with PDG2024 CITATION_REGISTRY entry. '
+                              'Correctness-push target for Phase 5z Wave 1 + Wave 1b.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Phase 5z Wave 1 FALSIFIABILITY ANCHOR. Scalar-rung framing is a '
@@ -1071,18 +1074,42 @@ PARAMETER_PROVENANCE = {
         'human_verified_notes': None,
         'notes': 'Target value for the scalar-rung Mexican-hat quartic at the matching scale.',
     },
+    'EW.M_TOP_GEV': {
+        'value': 172.57,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Review of Particle Physics (2024)',
+        'detail': 'Top quark mass: m_t = 172.57 ± 0.29 GeV (PDG 2024; world '
+                  'average from direct kinematic measurements at Tevatron + LHC).',
+        'doi': '10.1103/PhysRevD.110.030001',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PDG 2024 single canonical value: m_t = 172.57 ± 0.29. '
+                              'Added 2026-04-26 to resolve prior coexistence of 172.57 / '
+                              '172.69 / 172.76 across paper 20, EW.Y_TOP derivation, and '
+                              'fig_bhl_bilocal_correction. This value is now the project-'
+                              'wide canonical entry.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5z Wave 1b reference value for the bilocal-correction figure '
+                  '(fig_bhl_bilocal_correction right-panel PDG marker) and Wave 1b §6 '
+                  'BHL benchmark comparison (m_t_BHL = 220 GeV vs PDG 172.57 GeV).',
+    },
     'EW.Y_TOP': {
-        'value': 0.9946,
+        'value': 0.9912,
         'unit': 'dimensionless',
         'tier': 'DERIVED',
-        'source': 'Derived from top-quark pole mass m_t = 172.76 GeV and v',
-        'detail': 'Top Yukawa y_t = √2 m_t/v = √2 · 172.76 / 246.22 ≈ 0.9946. Near-unity '
+        'source': 'Derived from top-quark pole mass m_t = 172.57 GeV (PDG 2024) and v',
+        'detail': 'Top Yukawa y_t = √2 m_t/v = √2 · 172.57 / 246.22 ≈ 0.9912. Near-unity '
                   'y_t is a natural outcome of any overlap-integral picture where top is '
-                  'strong-coupled to the scalar condensate.',
-        'doi': '10.1093/ptep/ptae163',
-        'llm_verified_date': '2026-04-24',
-        'llm_verified_notes': 'PDG 2024 top mass m_t = 172.69 ± 0.30 GeV (pole-mass combination). '
-                              'Using 172.76 as central for Yukawa — well within PDG uncertainty.',
+                  'strong-coupled to the scalar condensate. Updated 2026-04-26 to use '
+                  'M_TOP_GEV = 172.57 (PDG 2024 single canonical) instead of prior 172.76.',
+        'doi': '10.1103/PhysRevD.110.030001',
+        'llm_verified_date': '2026-04-26',
+        'llm_verified_notes': 'PDG 2024 top mass m_t = 172.57 ± 0.29 GeV (single canonical '
+                              'PDG 2024 entry, S. Navas et al., PRD 110, 030001). y_t = '
+                              '√2 · 172.57 / 246.21965 = 0.9912. Updated 2026-04-26 from '
+                              'prior 0.9946 (which used 172.76 as central) to align with '
+                              'EW.M_TOP_GEV = 172.57.',
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Top-Yukawa near-unity is a key input to the m_H microscopic prediction '
@@ -1484,6 +1511,1076 @@ PARAMETER_PROVENANCE = {
         'human_verified_notes': None,
         'notes': 'Used as the next mass anchor for the seesaw scan; less constraining than m₃.',
     },
+
+    # ════════════════════════════════════════════════════════════════
+    # Phase 6a Wave 1: emergent G_N + linearized Einstein equations
+    # ════════════════════════════════════════════════════════════════
+    # Sakharov-Adler induced-gravity baseline: G_N = 12π / (N_f · Λ²) at
+    # one loop with hard cutoff (Adler 1982 Eq. 3.3). ADW-specific
+    # coefficient α_ADW awaits Vergeles unitarity computation
+    # (Lit-Search/Tasks/submitted/Phase6a_W1_vergeles_GN_coefficient.md).
+
+    'GRAV.G_N_OBS_M3_KGM1_S2': {
+        'value': 6.67430e-11,
+        'unit': 'm³ kg⁻¹ s⁻²',
+        'tier': 'MEASURED',
+        'source': 'CODATA 2018 recommended value (Tiesinga et al., RMP 93, 025010 (2021))',
+        'detail': 'Newton gravitational constant G_N = 6.67430(15) × 10⁻¹¹ m³ kg⁻¹ s⁻². '
+                  'CODATA 2018 recommended value (relative uncertainty 2.2 × 10⁻⁵).',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'CODATA 2018 standard reference value. Stable across CODATA updates '
+                              'since 2014. Tiesinga RMP article is the canonical citation.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 6a Wave 1 correctness-push anchor: G_N^emerg(Λ_UV, N_f, α_ADW) '
+                 'must match this value within G_N_MATCH_TOLERANCE for natural parameters.',
+    },
+    'GRAV.G_N_OBS_GEV_M2': {
+        'value': 6.70883e-39,
+        'unit': 'GeV⁻²',
+        'tier': 'DERIVED',
+        'source': 'Algebraic conversion of CODATA G_N to natural units via M_Planck',
+        'detail': 'In natural units (ℏ=c=1), G_N = 1/M_P² where M_P = 1.220890 × 10¹⁹ GeV '
+                  '(CODATA-derived Planck mass). Hence G_N = (1.220890e19)⁻² ≈ 6.7088e-39 GeV⁻². '
+                  'The ratio G_N^obs(SI) / G_N^obs(natural) = (ℏc)⁵ converts dimensions.',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — algebraic conversion verified by hand computation from '
+                              'M_P = √(ℏc/G) with CODATA inputs.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in LinearizedEFE.lean and src/emergent_gravity/G_N_emerg.py for the '
+                 'natural-units correctness-push comparison.',
+    },
+    'GRAV.M_PLANCK_GEV': {
+        'value': 1.220890e19,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'CODATA-derived Planck mass M_P = √(ℏc/G_N)',
+        'detail': 'Planck mass M_P = (ℏc/G_N)^(1/2) with CODATA 2018 G_N gives '
+                  'M_P = 1.220890 × 10¹⁹ GeV. Standard reference value tabulated by PDG.',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — agrees with PDG 2024 (Particle Data Group, '
+                              'Phys. Rev. D 110, 030001 (2024), Astrophysical Constants table).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Defines the natural Λ_UV anchor for the G_N_emerg parameter scan.',
+    },
+    'GRAV.M_PLANCK_REDUCED_GEV': {
+        'value': 2.435e18,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'M̄_P = M_P / √(8π) (cosmology convention)',
+        'detail': 'Reduced Planck mass M̄_P ≡ (8π G_N)^(-1/2) ≈ 2.435 × 10¹⁸ GeV. Convention '
+                  'used in cosmology literature (and specifically in Phase 5y q-theory + DESI '
+                  'fits). Algebraic from M_PLANCK_GEV / sqrt(8π).',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — standard cosmology convention; no separate primary '
+                              'source needed beyond CODATA G_N.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-references Phase 5y FLRW-related modules (Wave 4 of Phase 6a).',
+    },
+    'GRAV.LAMBDA_UV_GEV_LOWER': {
+        'value': 1.0e10,
+        'unit': 'GeV',
+        'tier': 'PROJECTED',
+        'source': 'Phase 6a Wave 1 G_N parameter-scan lower bound',
+        'detail': 'Intermediate-scale UV cutoff anchor. Below 10¹⁰ GeV the predicted '
+                  'G_N^emerg = 12π / (N_f · Λ²) overshoots G_N^obs by 10⁹+ — "too '
+                  'far below Planck" regime. Sets the lower edge of the Wave 1 parameter scan.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED — operational lower edge of the scan range. No primary '
+                              'source pins this to a unique value.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Parameter sweep lower edge; not a physical constant.',
+    },
+    'GRAV.LAMBDA_UV_GEV_UPPER': {
+        'value': 1.0e19,
+        'unit': 'GeV',
+        'tier': 'PROJECTED',
+        'source': 'Phase 6a Wave 1 G_N parameter-scan upper bound',
+        'detail': 'Super-Planck-scale UV cutoff anchor. Above 10¹⁹ GeV the cutoff exceeds the '
+                  'observed M_Planck — physically nonsensical for an effective theory '
+                  'that purports to derive M_Planck. Sets the upper edge of the scan.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED — operational upper edge. The natural anchor inside the '
+                              'scan is M_PLANCK_GEV = 1.221e19 GeV; we extend slightly past for '
+                              'visualization clarity.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Parameter sweep upper edge.',
+    },
+    'GRAV.LAMBDA_UV_GUT_GEV': {
+        'value': 1.0e16,
+        'unit': 'GeV',
+        'tier': 'PROJECTED',
+        'source': 'GUT-adjacent canonical anchor for ADW substrate scale',
+        'detail': 'Canonical anchor at 10¹⁶ GeV (gauge-coupling unification scale in SM + '
+                  'minimal SUSY-extension fits). Mirrors EW.LAMBDA_UV_FIDUCIAL_GEV = 1e16 GeV '
+                  'used in Phase 5z Wave 1 m_H scan; same physical anchor.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED — same anchor as EW.LAMBDA_UV_FIDUCIAL_GEV. Order-unity '
+                              'check: G_N_sakharov(N_f=15, Λ=10¹⁶) = 12π/(15·10³²) ≈ 2.5e-32 '
+                              'GeV⁻², compared to G_N^obs ≈ 6.7e-39 GeV⁻² — overshoots by 7 '
+                              'orders, so 10¹⁶ is too low for natural emergent gravity.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-references EW.LAMBDA_UV_FIDUCIAL_GEV. Used as the GUT-adjacent fiducial '
+                 'point in the Wave 1 scan.',
+    },
+    'GRAV.LAMBDA_UV_PLANCK_GEV': {
+        'value': 1.220890e19,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'Same numerical value as M_PLANCK_GEV',
+        'detail': 'Natural-Planck anchor: setting Λ_UV = M_P (and α_ADW = 12π/N_f to match '
+                  'the Sakharov coefficient exactly) reproduces the observed G_N within the '
+                  'free α_ADW prefactor. This is the "correctness-push exact match" anchor.',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — same as M_PLANCK_GEV. Used as the natural anchor for '
+                              'verifying that G_N^emerg matches G_N^obs at Λ ≈ M_P.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'The "ideal" anchor: at Λ = M_P, G_N^emerg = α_ADW · 12π / (N_f M_P²) = '
+                 '(α_ADW · 12π / N_f) · G_N^obs. Matches G_N^obs iff α_ADW · 12π / N_f = 1 '
+                 '→ α_ADW = N_f / (12π) ≈ 0.40 (N_f=15) or 0.42 (N_f=16). Within Vergeles '
+                 'natural range [0.1, 10].',
+    },
+    'GRAV.N_F_PER_GEN_NO_NU_R': {
+        'value': 15,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'SM Weyl fermion content per generation (García-Etxebarria & Montero)',
+        'detail': 'Without ν_R: 15 Weyl components per generation (6 quarks: 3+3, 2 leptons: 2+1, '
+                  '1 charged lepton: 1+1+0+1). Same value as EW.N_F_FIDUCIAL.',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Cross-references EW.N_F_FIDUCIAL = 15 and the 15 ≡ -1 mod 16 '
+                              'Z₁₆-anomaly result in HiddenSectorClassification.lean.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Default N_f for the Wave 1 G_N scan absent ν_R.',
+    },
+    'GRAV.N_F_PER_GEN_WITH_NU_R': {
+        'value': 16,
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'ℤ₁₆-anomaly-preferred extension (García-Etxebarria & Montero)',
+        'detail': 'With right-handed ν_R: 16 Weyl per generation, ℤ₁₆-period-matched. Same as '
+                  'EW.N_F_WITH_NU_R.',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Same theoretical justification as EW.N_F_WITH_NU_R = 16.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Alternative N_f for the Wave 1 G_N scan under Embedding I (ν_R extension).',
+    },
+    'GRAV.N_F_THREE_GEN_NO_NU_R': {
+        'value': 45,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': '3 generations × 15 Weyl per generation',
+        'detail': 'Total SM Weyl count without ν_R: 3 × 15 = 45. Used when the Sakharov loop '
+                  'integrates over all SM fermions simultaneously (one universal cutoff).',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — algebraic from N_F_PER_GEN_NO_NU_R × 3.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Three-generation aggregate. With Λ_UV = M_P this gives '
+                 'G_N^emerg / G_N^obs = α_ADW · 12π / 45 = 0.838 α_ADW — Sakharov default '
+                 'lands within 16% of observed G_N. Tightest natural fit.',
+    },
+    'GRAV.N_F_THREE_GEN_WITH_NU_R': {
+        'value': 48,
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': '3 generations × 16 Weyl per generation',
+        'detail': 'Total SM+ν_R Weyl count: 3 × 16 = 48.',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — algebraic from N_F_PER_GEN_WITH_NU_R × 3.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Three-generation aggregate with ν_R extension.',
+    },
+    'GRAV.N_F_DEFAULT': {
+        'value': 15,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Default N_f for the Wave 1 G_N scan (per-generation, no ν_R)',
+        'detail': 'Same value as N_F_PER_GEN_NO_NU_R; provided as a separate key for the '
+                  'parameter-scan default configuration.',
+        'doi': '10.1007/JHEP08(2019)003',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention key; same as N_F_PER_GEN_NO_NU_R.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention key — value is N_F_PER_GEN_NO_NU_R.',
+    },
+    'GRAV.ALPHA_ADW_SAKHAROV_DEFAULT': {
+        'value': 1.0,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Sakharov-Adler one-loop free-fermion limit (Adler RMP 54, 729 (1982) Eq. 3.3)',
+        'detail': 'ADW microscopic coefficient α_ADW: in the Sakharov-Adler limit (free fermions, '
+                  'one loop, hard cutoff) α_ADW = 1 by definition. The ADW-specific value awaits '
+                  'Vergeles unitarity computation (deep research dropped 2026-04-25, '
+                  'Lit-Search/Tasks/submitted/Phase6a_W1_vergeles_GN_coefficient.md).',
+        'doi': '10.1103/RevModPhys.54.729',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED — Sakharov-Adler default. Tracked-hypothesis treatment '
+                              'in LinearizedEFE.lean (H_VergelesCoefficient).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Tracked hypothesis pending Vergeles deep research return.',
+    },
+    'GRAV.ALPHA_ADW_LOWER': {
+        'value': 0.1,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 1 tracked-hypothesis natural range (-1 OOM from Sakharov)',
+        'detail': 'Lower edge of the natural α_ADW range. Vergeles-derived value almost certainly '
+                  'lies within [0.1, 10] = ±1 order of magnitude from the Sakharov default of 1.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED operational lower edge of α_ADW scan.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Replaced by single value once deep research returns Vergeles α_ADW.',
+    },
+    'GRAV.ALPHA_ADW_UPPER': {
+        'value': 10.0,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 1 tracked-hypothesis natural range (+1 OOM from Sakharov)',
+        'detail': 'Upper edge of the natural α_ADW range. ±1 order of magnitude from the '
+                  'Sakharov default of 1.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED operational upper edge of α_ADW scan.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Replaced by single value once deep research returns Vergeles α_ADW.',
+    },
+    'GRAV.SAKHAROV_COEFFICIENT': {
+        'value': 12.0 * 3.141592653589793,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Sakharov-Adler one-loop calculation (Adler RMP 54, 729 (1982) Eq. 3.3)',
+        'detail': 'The numerical coefficient 12π ≈ 37.699 in G_N = 12π / (N_f Λ²) is the '
+                  'standard Sakharov-Adler result for N_f Dirac fermions integrated at one loop '
+                  'with a hard UV cutoff Λ. It comes from the loop-momentum integral '
+                  '∫ d⁴k / (2π)⁴ · 1/(k² + m²)² evaluated at hard cutoff.',
+        'doi': '10.1103/RevModPhys.54.729',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Numerical value matches direct evaluation 12π = 37.6991... and '
+                              'agrees with Adler 1982 Eq. (3.3); verified analytically. Visser '
+                              'Mod. Phys. Lett. A17, 977 (2002) gives modern reformulation.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Foundational dimensionless coefficient for Sakharov induced gravity.',
+    },
+    'GRAV.G_N_MATCH_TOLERANCE': {
+        'value': 0.5,
+        'unit': 'dimensionless (fractional)',
+        'tier': 'PROJECTED',
+        'source': 'Phase 6a Wave 1 correctness-push operational threshold',
+        'detail': 'Order-of-magnitude match tolerance: |G_N^emerg − G_N^obs| / G_N^obs < 0.5 '
+                  'over a natural parameter range = "quantitatively compatible with observed '
+                  'gravity." Tighter than 1-OOM, allowing for RG-running uncertainty + '
+                  'Vergeles α_ADW O(1). Same operational pattern as EW.M_H_MATCH_TOLERANCE.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED — operational choice for the falsifiability anchor.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 6a Gate A.1 threshold. User decision at Stage 10 paper submission.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Phase 6a Wave 4: FLRW cosmological dynamics (Planck 2018)
+    # ════════════════════════════════════════════════════════════════
+    # Cosmological parameters from Planck 2018 (TT,TE,EE+lowE+lensing+BAO),
+    # base ΛCDM. Used for Friedmann ODE sanity checks and DESI cross-ref.
+
+    'FLRW.H0_KM_S_MPC': {
+        'value': 67.66,
+        'unit': 'km/s/Mpc',
+        'tier': 'MEASURED',
+        'source': 'Planck Collaboration, A&A 641, A6 (2020), Table 2 — base ΛCDM',
+        'detail': 'Hubble constant H₀ = 67.66 ± 0.42 km/s/Mpc from Planck 2018 '
+                  'TT,TE,EE+lowE+lensing+BAO base-ΛCDM fit (Table 2, column 2).',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Standard Planck 2018 reference. Tension with local-distance-ladder '
+                              'measurements (~73 km/s/Mpc) is the H₀ tension; we anchor on Planck '
+                              'for cosmology-internal consistency.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used for FLRW Friedmann ODE numerical integration in Wave 4.',
+    },
+    'FLRW.H0_INV_S': {
+        'value': 2.193e-18,
+        'unit': '1/s',
+        'tier': 'DERIVED',
+        'source': 'Algebraic conversion of Planck H₀ to SI units',
+        'detail': 'H₀ = 67.66 km/s/Mpc × (1 km / 3.0857e16 km/Mpc · 1/s) = 2.193e-18 /s.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — direct unit conversion.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'SI-unit form of H₀ for ODE integration.',
+    },
+    'FLRW.OMEGA_M_PLANCK': {
+        'value': 0.3111,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Planck Collaboration, A&A 641, A6 (2020), Table 2 — base ΛCDM',
+        'detail': 'Total matter density parameter Ω_m = 0.3111 ± 0.0056 (Planck 2018, '
+                  'TT,TE,EE+lowE+lensing+BAO).',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Planck 2018 base-ΛCDM Table 2.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Friedmann I sanity check input (Ω_m + Ω_Λ + Ω_r = 1).',
+    },
+    'FLRW.OMEGA_LAMBDA_PLANCK': {
+        'value': 0.6889,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Planck Collaboration, A&A 641, A6 (2020), Table 2 — base ΛCDM',
+        'detail': 'Cosmological-constant density parameter Ω_Λ = 0.6889 ± 0.0056. Direct '
+                  'complement to Ω_m in flat ΛCDM.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Planck 2018 base-ΛCDM Table 2.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Friedmann I sanity check.',
+    },
+    'FLRW.OMEGA_R_PLANCK': {
+        'value': 9.2e-5,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Planck Collaboration, A&A 641, A6 (2020) — derived from T_CMB + N_eff',
+        'detail': 'Radiation density parameter Ω_r = 9.2 × 10⁻⁵ (CMB photons + 3.046 effective '
+                  'neutrino species). Subdominant today, dominant before z ~ 3400.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Standard derivation from T_CMB = 2.7255 K + 3.046 effective '
+                              'neutrino species; agrees with Planck 2018 Section 7.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Negligible at z=0; relevant only for early-universe FLRW.',
+    },
+    'FLRW.OMEGA_K_PLANCK': {
+        'value': 0.0,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Planck Collaboration, A&A 641, A6 (2020) — flat ΛCDM',
+        'detail': 'Curvature density parameter |Ω_K| < 0.005 (Planck 2018), consistent with '
+                  'flat universe. We adopt Ω_K = 0 (flat) as the default.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Flat-universe assumption; matches Planck 2018 base-ΛCDM convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Flat-universe default; Wave 4 LinearizedEFE → Friedmann reduction assumes flat.',
+    },
+    'FLRW.RHO_CRIT_KG_M3': {
+        'value': 8.620e-27,
+        'unit': 'kg/m³',
+        'tier': 'DERIVED',
+        'source': 'Critical density ρ_crit = 3 H₀² / (8π G_N) at Planck 2018 H₀',
+        'detail': 'ρ_crit = 3·(2.193e-18)² / (8π · 6.6743e-11) ≈ 8.62 × 10⁻²⁷ kg/m³. Standard '
+                  'reference value at the Planck 2018 Hubble parameter.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DERIVED — direct algebraic computation from H₀ and G_N.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Friedmann I normalization.',
+    },
+    'FLRW.W_MATTER': {
+        'value': 0.0,
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Standard cosmology: pressureless dust EOS w = p/ρ = 0',
+        'detail': 'Equation-of-state parameter for pressureless dust (matter, cold dark matter): '
+                  'w = 0 by definition for non-relativistic, non-interacting components.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'THEORETICAL — defining property of dust. No primary source needed.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Friedmann ρ̇ + 3H(1+w)ρ = 0 conservation.',
+    },
+    'FLRW.W_RADIATION': {
+        'value': 1.0/3.0,
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Standard cosmology: relativistic gas EOS w = 1/3',
+        'detail': 'Equation-of-state parameter for relativistic gas (photons + relativistic '
+                  'neutrinos): w = 1/3 from kinetic theory.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'THEORETICAL — defining property of relativistic gas.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Standard radiation EOS.',
+    },
+    'FLRW.W_LAMBDA': {
+        'value': -1.0,
+        'unit': 'dimensionless',
+        'tier': 'THEORETICAL',
+        'source': 'Standard cosmology: cosmological constant EOS w = −1',
+        'detail': 'Equation-of-state parameter for the cosmological constant Λ: w = −1 by '
+                  'Lorentz invariance (vacuum stress-energy ∝ g_μν).',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'THEORETICAL — locked by Lorentz invariance. See Phase 5y '
+                              'GibbsDuhemTheorem.lean for the formal proof of w = −1 lock '
+                              'across q-theory KV realizations.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-references Phase 5y w_vac = −1 obstruction theorem.',
+    },
+    'FLRW.W_DE_DESI_DR2_TODAY': {
+        'value': -0.838,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'DESI Collaboration, DESI DR2 (DESI 2024.III + 2024.IV), arXiv:2404.03002',
+        'detail': 'DESI DR2 best-fit dark-energy equation-of-state at z=0: w₀ = -0.838 from '
+                  'CPL parameterization w(z) = w₀ + w_a · z/(1+z) combined with CMB + SN. '
+                  'Indicates ~3σ tension with w = -1 (cosmological constant).',
+        'doi': '10.48550/arXiv.2404.03002',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DESI DR2 result. Phase 5y QTheoryNoGoTheorem proved no Volovik-'
+                              'family q-theory mechanism produces this time-evolving w(z); see '
+                              'DESIComparison.lean for the formal incompatibility theorem.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5y W4 / Phase 6a W4 cross-reference anchor for FLRW DE comparison.',
+    },
+    'FLRW.W_A_DESI_DR2': {
+        'value': -0.62,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'DESI Collaboration, DESI DR2, arXiv:2404.03002',
+        'detail': 'DESI DR2 best-fit CPL slope at z=0: w_a ≈ -0.62 (dark energy weakening with '
+                  'time). Combined with w₀ = -0.838 gives the canonical "evolving DE" picture.',
+        'doi': '10.48550/arXiv.2404.03002',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'DESI DR2 result. See Phase 5y DESIComparison.lean.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Phase 5y W4 cross-reference.',
+    },
+    'FLRW.FLRW_NUMERICAL_TOLERANCE': {
+        'value': 1.0e-9,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Phase 6a Wave 4 numerical-tolerance operational choice',
+        'detail': 'Friedmann ODE residual tolerance 10⁻⁹ allows machine-precision-limited ODE '
+                  'integration with margin. Stricter tolerances run into floating-point limits.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED operational tolerance.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 ODE-integrator tolerance.',
+    },
+
+    # ════════════════════════════════════════════════════════════════════
+    # Phase 6a Wave 2 — Gravitational waves
+    # ════════════════════════════════════════════════════════════════════
+    'GW.C_LIGHT_M_S': {
+        'value': 2.99792458e8,
+        'unit': 'm/s',
+        'tier': 'MEASURED',
+        'source': 'BIPM SI definition (2019 redefinition); CODATA 2018 recommended values',
+        'detail': 'Defined exactly. Anchors the c_GW deviation tolerance (Δc/c).',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'CODATA 2018 / Tiesinga et al. RMP 93 025010 (2021).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'SI defined exactly; cross-references GRAV.G_N_OBS_M3_KGM1_S2 CODATA bundle.',
+    },
+    'GW.C_GW_DEVIATION_UPPER_BOUND': {
+        'value': 7.0e-16,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Abbott et al. (LIGO+Virgo+EM partners), ApJL 848, L13 (2017), Eq. (5)',
+        'detail': 'GW170817 / GRB 170817A multi-messenger arrival time bound: '
+                  '−3 × 10⁻¹⁵ ≤ (c_GW − c)/c ≤ +7 × 10⁻¹⁶, conservative (+) side.',
+        'doi': '10.3847/2041-8213/aa920c',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Abstract reports ±10⁻¹⁵ deviation; Eq. (5) gives the asymmetric bound.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'GW170817 (BNS merger) primary anchor for Wave 2 correctness-push.',
+    },
+    'GW.C_GW_DEVIATION_LOWER_BOUND': {
+        'value': -3.0e-15,
+        'unit': 'dimensionless',
+        'tier': 'MEASURED',
+        'source': 'Abbott et al. (LIGO+Virgo+EM partners), ApJL 848, L13 (2017), Eq. (5)',
+        'detail': '(−) side of the GW170817 bound: −3 × 10⁻¹⁵ ≤ (c_GW − c)/c.',
+        'doi': '10.3847/2041-8213/aa920c',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Same source as GW.C_GW_DEVIATION_UPPER_BOUND.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Asymmetric bound — astrophysical-emission delay accounts for asymmetry.',
+    },
+    'GW.C_GW_TWO_SIDED_CAP': {
+        'value': 3.0e-15,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Symmetrized GW170817 cap; max(|7e-16|, |-3e-15|) = 3e-15',
+        'detail': 'Symmetric two-sided falsification cap derived from the asymmetric '
+                  'GW170817 bound; used in Wave 2 correctness-push falsifiers.',
+        'doi': '10.3847/2041-8213/aa920c',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Operational symmetrization of the asymmetric LIGO bound.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Computed: |C_GW_DEVIATION_LOWER_BOUND| > |C_GW_DEVIATION_UPPER_BOUND|.',
+    },
+    'GW.CHI_VEST_NATURAL_LOWER': {
+        'value': 0.1,
+        'unit': 'dimensionless (× Λ²)',
+        'tier': 'PROJECTED',
+        'source': 'Vergeles 2025 RPA bubble-integral natural range, half-decade convention',
+        'detail': 'Vestigial-phase metric-channel susceptibility natural lower bound. '
+                  'χ_vest · Λ² ∈ [0.1, 10] is the natural range from VestigialSusceptibility.lean '
+                  'chi_RPA closed form with O(Λ²/16π²) bubble integral.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_LOWER.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+    },
+    'GW.CHI_VEST_NATURAL_UPPER': {
+        'value': 10.0,
+        'unit': 'dimensionless (× Λ²)',
+        'tier': 'PROJECTED',
+        'source': 'Vergeles 2025 RPA bubble-integral natural range, half-decade convention',
+        'detail': 'Upper bound matching CHI_VEST_NATURAL_LOWER; ±1 order of magnitude window.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_UPPER.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+    },
+    'GW.CHI_VEST_DEFAULT': {
+        'value': 1.0,
+        'unit': 'dimensionless (× Λ²)',
+        'tier': 'PROJECTED',
+        'source': 'Operational default at the natural-range center (geometric mean of [0.1, 10])',
+        'detail': 'Default χ_vest · Λ² = 1 used as the leading-order Wave 2 fiducial.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED operational default.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention matches GRAV.ALPHA_ADW_SAKHAROV_DEFAULT = 1.',
+    },
+    'GW.GW_FREQ_HZ_LOWER': {
+        'value': 10.0,
+        'unit': 'Hz',
+        'tier': 'MEASURED',
+        'source': 'LIGO sensitivity curve lower edge (Aasi et al. CQG 32, 074001 (2015))',
+        'detail': 'aLIGO seismic-noise-limited low-frequency cutoff.',
+        'doi': '10.1088/0264-9381/32/7/074001',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'aLIGO design paper reports sensitivity from 10 Hz.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 dispersion-relation scan range.',
+    },
+    'GW.GW_FREQ_HZ_UPPER': {
+        'value': 1.0e4,
+        'unit': 'Hz',
+        'tier': 'MEASURED',
+        'source': 'LIGO sensitivity curve upper edge (Aasi et al. CQG 32, 074001 (2015))',
+        'detail': 'aLIGO photon-shot-noise-limited high-frequency cutoff at ~10 kHz.',
+        'doi': '10.1088/0264-9381/32/7/074001',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'aLIGO design paper sensitivity to 10 kHz at reduced response.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 dispersion-relation scan range.',
+    },
+    'GW.GW170817_PEAK_FREQ_HZ': {
+        'value': 100.0,
+        'unit': 'Hz',
+        'tier': 'MEASURED',
+        'source': 'Abbott et al. (LIGO+Virgo), PRL 119, 161101 (2017) — GW170817 inspiral peak',
+        'detail': 'GW170817 binary-neutron-star inspiral peak strain frequency ≈ 100 Hz '
+                  '(post-Newtonian expansion through ISCO at ~1 kHz). Used as the probe '
+                  'frequency for Wave 2 dispersion-correction evaluation.',
+        'doi': '10.1103/PhysRevLett.119.161101',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'BNS-merger inspiral analysis; representative frequency ~100 Hz.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 2 correctness-push probe frequency.',
+    },
+    'GW.GW_FREQ_HZ_PROBE': {
+        'value': 100.0,
+        'unit': 'Hz',
+        'tier': 'DERIVED',
+        'source': 'Operational alias of GW170817 inspiral peak (GW.GW170817_PEAK_FREQ_HZ)',
+        'detail': 'Probe frequency for Wave 2 dispersion-correction evaluation = GW170817 peak.',
+        'doi': '10.1103/PhysRevLett.119.161101',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Same value as GW.GW170817_PEAK_FREQ_HZ — alias for code clarity.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention alias.',
+    },
+    'GW.GAMMA_H_VESTIGIAL_DEFAULT': {
+        'value': 1.0e-30,
+        'unit': 'dimensionless (Γ_H · ω/c² at probe ω)',
+        'tier': 'PROJECTED',
+        'source': 'Phase 6a Wave 2 placeholder (vestigial regime ≪ observed gravity scale)',
+        'detail': 'Dimensionless dispersion coefficient placeholder. Vestigial-regime '
+                  'γ₁+γ₂ scales out at the linearized level; placeholder value chosen '
+                  'so the dispersion correction stays well below the GW170817 cap.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'PROJECTED scaffold. Refined when Wave 2 deep research returns.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-link: SecondOrderSK.GammaH (Lean).',
+    },
+    'GW.C_GW_MATCH_TOLERANCE': {
+        'value': 3.0e-15,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Tolerance = GW170817 two-sided cap (GW.C_GW_TWO_SIDED_CAP)',
+        'detail': 'Wave 2 correctness-push tolerance for |c_GW − c|/c.',
+        'doi': '10.3847/2041-8213/aa920c',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Set equal to GW.C_GW_TWO_SIDED_CAP by convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Wave 2 ligo_constraint_check + correctness-push theorems.',
+    },
+    # ──────────────────────────────────────────────────────────────────
+    # Phase 6a Wave 3 — Bekenstein-Hawking entropy from MTC counting
+    # ──────────────────────────────────────────────────────────────────
+    'BH.PLANCK_LENGTH_M': {
+        'value': 1.616255e-35,
+        'unit': 'm',
+        'tier': 'MEASURED',
+        'source': 'CODATA 2018 recommended value',
+        'detail': 'ℓ_P = √(ℏ G/c³). Sets the area scale in S_BH = A/(4 ℓ_P²).',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'CODATA 2018 + 2022 agree to within 11 ppb.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in formulas.bh_entropy_kaul_majumdar leading coefficient.',
+    },
+    'BH.PLANCK_AREA_M2': {
+        'value': 2.6121e-70,
+        'unit': 'm²',
+        'tier': 'DERIVED',
+        'source': 'ℓ_P² with ℓ_P from CODATA 2018',
+        'detail': 'Used as the area unit in the Kaul-Majumdar saddle-point regime.',
+        'doi': '10.1103/RevModPhys.93.025010',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention alias.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention alias.',
+    },
+    'BH.BH_ENTROPY_LEADING_COEFFICIENT': {
+        'value': 0.25,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Bekenstein 1973 + Hawking 1975; tuning hypothesis in Kaul-Majumdar 2000',
+        'detail': 'The 1/4 in S = A/(4 G_N) is structurally a tuning (Immirzi γ in '
+                  'Kaul-Majumdar gr-qc/0002040 §4; UV cutoff ε in Bombelli-Koul-Lee-Sorkin '
+                  '1986; periodicity β in Carlip horizon-CFT gr-qc/0005017). Wave 3 encodes '
+                  'this as a hypothesis-discharge (`immirziTuned` field of the '
+                  'IsHorizonBC structure), NOT as a derived theorem.',
+        'doi': '10.1103/PhysRevLett.84.5255',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Verified against Kaul-Majumdar gr-qc/0002040 abstract '
+                              'and Eq. (4.4); tuning role explicit in arXiv:1201.6102 §5.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Encoded in Lean as `BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi`.',
+    },
+    'BH.IMMIRZI_GAMMA_DOMAGALA_LEWANDOWSKI': {
+        'value': 0.23753295796592,
+        'unit': 'dimensionless',
+        'tier': 'EXTRACTED',
+        'source': 'Domagala-Lewandowski, CQG 21, 5233 (2004), arXiv:gr-qc/0407051',
+        'detail': 'Immirzi parameter chosen so the Verlinde-counted leading coefficient '
+                  'equals 1/4. Distinct counting prescription from Meissner; same −3/2 '
+                  'log coefficient.',
+        'doi': '10.1088/0264-9381/21/22/014',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Standard LQG literature value; arXiv:1201.6102 Table 2.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 3 ships both DL and Meissner γ; chooses Meissner as default.',
+    },
+    'BH.IMMIRZI_GAMMA_MEISSNER': {
+        'value': 0.27392803876474,
+        'unit': 'dimensionless',
+        'tier': 'EXTRACTED',
+        'source': 'Meissner, CQG 21, 5245 (2004), arXiv:gr-qc/0407052',
+        'detail': 'Immirzi parameter from Meissner counting prescription. Recent LQG '
+                  'literature default. Same −3/2 log coefficient as Domagala-Lewandowski.',
+        'doi': '10.1088/0264-9381/21/22/015',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Verified via arXiv:1201.6102 Table 2.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Default Wave 3 value.',
+    },
+    'BH.IMMIRZI_GAMMA_DEFAULT': {
+        'value': 0.27392803876474,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Alias for BH.IMMIRZI_GAMMA_MEISSNER',
+        'detail': 'Default Immirzi γ used by Wave 3 numerics.',
+        'doi': '10.1088/0264-9381/21/22/015',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention alias.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention alias.',
+    },
+    'BH.LOG_CORRECTION_KAUL_MAJUMDAR_SU2K': {
+        'value': -1.5,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Kaul-Majumdar, PRL 84, 5255 (2000), arXiv:gr-qc/0002040, Eq. (15)',
+        'detail': 'c_log = −1/2 (Gaussian saddle) + (−1) (SU(2)-singlet projection from '
+                  'the I₀ − I₁ cancellation that removes the constant-Fourier-mode) = −3/2. '
+                  'Universal within the Cardy-saddle / single-CFT / microcanonical / '
+                  'A-independent-c family. Sen 2013 (arXiv:1205.0971) heat-kernel result '
+                  'for 4D Schwarzschild pure gravity DISAGREES (gives +(212/45 − 3) ln a).',
+        'doi': '10.1103/PhysRevLett.84.5255',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Reproduced in arXiv:1201.6102, Engle-Noui-Perez '
+                              'arXiv:0905.3168, BTZ gr-qc/0104010. Carlip arXiv:gr-qc/0005017 '
+                              'gives same coefficient via independent Cardy-CFT route.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Encoded in Lean as `BHEntropyMicroscopic.kaulMajumdarLogCoefficient`.',
+    },
+    'BH.LOG_CORRECTION_GAUSSIAN_SADDLE': {
+        'value': -0.5,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Standard Laplace-method asymptotic',
+        'detail': 'I₀ ~ C e^{F(0)} / √(−F\'\'(0)). With −F\'\'(0) ∝ A, the leading '
+                  'asymptotic contributes −(1/2) log A.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Textbook result.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Axiomatized in Lean as `gaussianSaddleAsymptotic`.',
+    },
+    'BH.LOG_CORRECTION_SINGLET_PROJECTION': {
+        'value': -1.0,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Kaul-Majumdar, gr-qc/0002040, the I₀ − I₁ cancellation step',
+        'detail': 'I₀ − I₁ produces an extra inverse-Hessian factor 1/[−F\'\'(0)], '
+                  'contributing −1·log A on top of the Gaussian saddle\'s −(1/2)·log A.',
+        'doi': '10.1103/PhysRevLett.84.5255',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Eq. (12)−(15) in gr-qc/0002040.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Combined with Gaussian saddle yields −3/2 total.',
+    },
+    'BH.LOG_CORRECTION_SEN_4D_SCHWARZSCHILD': {
+        'value': 1.7111111,
+        'unit': 'dimensionless',
+        'tier': 'EXTRACTED',
+        'source': 'Sen, JHEP 04, 156 (2013), arXiv:1205.0971',
+        'detail': '212/45 − 3 ≈ +1.711 from heat-kernel computation for 4D Schwarzschild '
+                  'pure gravity. Explicitly disagrees with the Cardy-saddle / Kaul-Majumdar '
+                  '−3/2. Sen flags the LQG disagreement in §1 of the cited paper. '
+                  'Wave 3 documents this as a non-universality witness in the paper.',
+        'doi': '10.1007/JHEP04(2013)156',
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Verified via deep-research return §4 Table.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'NOT used in core Wave 3 derivation; used as a falsifiability anchor.',
+    },
+    'BH.FIBONACCI_PHI': {
+        'value': 1.6180339887498948,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Algebraic identity φ² = φ + 1 (golden ratio)',
+        'detail': 'Quantum dimension of the τ object in the Fibonacci MTC. '
+                  'Lean: FibonacciMTC.lean.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Pure algebra.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Fibonacci falsifier-instance check.',
+    },
+    'BH.FIBONACCI_GLOBAL_DIM_SQ': {
+        'value': 3.6180339887498949,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': '1 + φ² = 2 + φ',
+        'detail': 'Total quantum dim D² for the Fibonacci MTC. Lean: '
+                  'FibonacciMTC.globalDim.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Pure algebra.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Fibonacci falsifier-instance check.',
+    },
+    'BH.FIBONACCI_LOG_D_MAX': {
+        'value': 0.4812118250596034,
+        'unit': 'dimensionless (log)',
+        'tier': 'DERIVED',
+        'source': 'log φ',
+        'detail': 'Anyon-cell counting κ ∝ log d_max (Kitaev arXiv:cond-mat/0506438). '
+                  'Used by area-law leading coefficient ansatz.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Pure algebra.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Fibonacci falsifier-instance F2 check.',
+    },
+    'BH.ISING_GLOBAL_DIM_SQ': {
+        'value': 4.0,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Ising MTC: D² = 1² + (√2)² + 1² = 4',
+        'detail': 'Total quantum dim for the Ising MTC. Lean: IsingBraiding.lean.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Pure algebra.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Ising falsifier-instance check.',
+    },
+    'BH.ISING_D_SIGMA': {
+        'value': 1.4142135623730951,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': '√2 (quantum dim of σ in Ising)',
+        'detail': 'σ = non-abelian anyon. Lean: IsingBraiding.lean.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Pure algebra.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Ising falsifier-instance check.',
+    },
+    'BH.ISING_LOG_D_MAX': {
+        'value': 0.34657359027997264,
+        'unit': 'dimensionless (log)',
+        'tier': 'DERIVED',
+        'source': '(1/2) log 2',
+        'detail': 'log d_σ = (1/2) log 2 for Ising.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Pure algebra.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Ising F2 check.',
+    },
+    'BH.ISING_EDGE_C_MOD8': {
+        'value': 0.5,
+        'unit': 'dimensionless (mod 8)',
+        'tier': 'EXTRACTED',
+        'source': 'Standard Ising MTC chiral central charge c_- = 1/2',
+        'detail': 'Boundary chiral central charge for the Ising MTC. Used in F5 '
+                  'anomaly-match falsifier.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Standard reference: Kitaev cond-mat/0506438.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in F5 anomaly-match falsifier.',
+    },
+    'BH.TORIC_CODE_GLOBAL_DIM_SQ': {
+        'value': 4.0,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'D² = |G|² for D(Z₂); 4 anyons {1, e, m, ψ} all d_a = 1',
+        'detail': 'Toric code is abelian: all d_a = 1. log d_max = 0 ⇒ no area-law in '
+                  'the Kitaev counting ansatz. Used as a F2 (area-law) falsifier instance.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Standard.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Abelian-MTC F2 falsifier.',
+    },
+    'BH.TORIC_CODE_LOG_D_MAX': {
+        'value': 0.0,
+        'unit': 'dimensionless (log)',
+        'tier': 'DERIVED',
+        'source': 'log 1 = 0 (all anyons d_a = 1)',
+        'detail': 'Triggers F2 falsifier: abelian MTC cannot source non-trivial area law.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Algebraic.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'F2 falsifier.',
+    },
+    'BH.DS3_GLOBAL_DIM_SQ': {
+        'value': 36.0,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'D(S₃): 8 anyons d=1,1,2,3,3,2,2,2; D² = 36 = |S₃|²',
+        'detail': 'D² = |S₃|² for the D(S₃) Drinfeld double. Lean: S3CenterAnyons.lean.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Verified in S3CenterAnyons.lean (proven, zero sorry).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in S3 falsifier-instance check.',
+    },
+    'BH.DS3_LOG_D_MAX': {
+        'value': 1.0986122886681098,
+        'unit': 'dimensionless (log)',
+        'tier': 'DERIVED',
+        'source': 'log 3 (max d_a in D(S₃))',
+        'detail': 'log d_max for D(S₃) = log 3.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Algebraic.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in D(S₃) F2 check.',
+    },
+    'BH.AREA_LAW_KAPPA_MIN_POSITIVE': {
+        'value': 1.0e-12,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Numerical positivity threshold for the F2 falsifier',
+        'detail': 'Below this κ value the area-law leading scaling is treated as '
+                  'numerically zero (F2 falsifier triggered).',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention; consistent with double-precision noise floor.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention.',
+    },
+    'BH.BH_ENTROPY_COEFFICIENT_MATCH_TOLERANCE': {
+        'value': 0.10,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 3 correctness-push tolerance (Immirzi tuning O(1) ambiguity)',
+        'detail': '±10% on the leading coefficient absorbs the Domagala-Lewandowski vs '
+                  'Meissner γ ambiguity (γ ∈ [0.237, 0.274]).',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Set wide enough to cover the published γ range.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Wave 3 coefficient cross-check tests.',
+    },
+    'BH.LOG_CORRECTION_MATCH_TOLERANCE': {
+        'value': 0.01,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 3 correctness-push tolerance (structural coefficient)',
+        'detail': 'Tighter than the leading-coefficient tolerance because c_log is '
+                  'structural (½ Gaussian + 1 singlet projection) and not γ-dependent.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in Wave 3 log-correction cross-check tests.',
+    },
+    'BH.HORIZON_AREA_LOG_LOWER': {
+        'value': 10.0,
+        'unit': 'dimensionless (log)',
+        'tier': 'PROJECTED',
+        'source': 'Asymptotic-regime lower cut: A/(4 ℓ_P²) ≫ 1 needed for saddle-point',
+        'detail': 'Lower edge of the asymptotic regime where the Kaul-Majumdar saddle '
+                  'asymptotic is reliable. e^{10} ≈ 2.2e4 area units.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention.',
+    },
+    'BH.HORIZON_AREA_LOG_UPPER': {
+        'value': 80.0,
+        'unit': 'dimensionless (log)',
+        'tier': 'PROJECTED',
+        'source': 'Solar-mass Schwarzschild upper anchor',
+        'detail': 'log(A_⊙/(4 ℓ_P²)) ≈ 77.0 for a 1 solar-mass Schwarzschild horizon. '
+                  '80 covers solar-mass scales with margin.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention.',
+    },
+    'BH.SU2K_LEVEL_LOWER': {
+        'value': 2,
+        'unit': 'integer (CS level)',
+        'tier': 'PROJECTED',
+        'source': 'Wave 3 SU(2)_k scan range',
+        'detail': 'k=1 is too restrictive (only j=0, 1/2 simple objects); k=2 is the '
+                  'first level admitting non-trivial Verlinde sums.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention.',
+    },
+    'BH.SU2K_LEVEL_UPPER': {
+        'value': 10,
+        'unit': 'integer (CS level)',
+        'tier': 'PROJECTED',
+        'source': 'Wave 3 SU(2)_k scan upper bound',
+        'detail': 'Large enough to see the asymptotic-large-k regime (k → ∞) where the '
+                  '−3/2 universality is sharpest.',
+        'doi': None,
+        'llm_verified_date': '2026-04-25',
+        'llm_verified_notes': 'Convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Convention.',
+    },
 }
 
 
@@ -1648,6 +2745,138 @@ PAPER_DEPENDENCIES = {
             'SNR ~ sqrt(N_probe) · G(ω) — 10³–10⁶× better than spontaneous',
             'κτ_pol > 1 required; ultralong (300 ps) is optimal',
             '2237+ Lean 4 theorems across project; PolaritonTier1.lean: 9 theorems, zero sorry',
+        ],
+    },
+    'paper23_linearized_efe': {
+        'title': 'Paper 23: Linearized Einstein Equations from ADW Microscopic Theory (PRD)',
+        'topic': 'Linearized EFE in momentum space, Sakharov-Adler closed form, '
+                 'ADW α_ADW tracked-hypothesis parameterization, correctness-push '
+                 'against G_N^obs at the natural Planck anchor',
+        'formulas': [
+            'G_N_sakharov',
+            'G_N_emergent',
+            'G_N_emergent_at_coupling',
+            'G_N_emergent_matches_observed',
+            'planck_mass_emergent_gev',
+            'alpha_ADW_linear_ansatz',
+            'linearized_einstein_de_donder',
+            'trace_reverse_perturbation',
+        ],
+        'lean_modules': ['LinearizedEFE', 'ADWMechanism'],
+        'platforms': [],
+        'key_claims': [
+            'Linearized Einstein tensor G^(1)_μν(k) = -(1/2) k² h̄_μν in '
+                'de Donder gauge (Lean: linEinsteinDeDonder, _linear, _symm)',
+            'Sakharov-Adler closed form: G_N = 12π/(N_f · Λ²) (Lean: G_N_sakharov_pos, '
+                'G_N_sakharov_eq_ratio_critical_coupling)',
+            'ADW emergent G_N: G_N^emerg = α_ADW · G_N^Sakharov (Lean: G_N_emerg_pos, '
+                '_sign, _zero_iff)',
+            'Correctness-push exact match locus: Λ² = α_ADW · 12π/(N_f · G_N^obs) '
+                '(Lean: G_N_emerg_match_locus)',
+            'Planck-anchor reduction: at Λ = M_P^obs, match condition reduces to '
+                'α_ADW · 12π = N_f (Lean: G_N_emerg_match_at_planck_anchor); for '
+                'SM N_f ∈ {15, 16, 45, 48} the matching α* lies in [0.40, 1.27], '
+                'inside the natural range [0.1, 10]',
+            'Three Vergeles-derived structural properties on α_ADW: positivity '
+                '(Vergeles 2025), critical-limit collapse (mean field), deep-gap '
+                'reduction to Sakharov-Adler (Adler 1982). Lean: H_VergelesPositivity, '
+                'H_CriticalLimitCollapse, H_DeepGapReducesToAdler',
+            'Linear ansatz α_ADW(G/G_c) = 1 - G_c/G satisfies all three properties '
+                '(Lean: alphaADW_linear_satisfies_all_three); not literature-endorsed',
+            'At G/G_c = 2 with linear ansatz: α_ADW = 1/2 → Λ_UV ≈ 0.7 M̄_P at N_f=15',
+            'Closed-form ADW α_ADW value awaits the missing one-loop ⟨h h⟩ '
+                'computation in the broken phase (deep-research §6.3)',
+        ],
+    },
+    'paper25_gravitational_waves': {
+        'title': 'Paper 25: Gravitational Wave Propagation under the Vestigial-Susceptibility '
+                 'Identification — A GW170817 Falsification of the Volovik Second-Sound Graviton (PRD)',
+        'topic': 'c_GW = c · √χ_vest leading-order propagation, GW170817 multi-messenger '
+                 'correctness-push biconditional, natural-range falsification by ~10^14, '
+                 'tracked-hypothesis bundle H_VestigialModeIsGraviton with three falsifiers, '
+                 'Phase 5y H1 caveat encoded as second_sound_graviton_not_derived_DOF, '
+                 'SK-EFT dispersion correction from SecondOrderSK Γ_H',
+        'formulas': [
+            'c_GW_from_chi_vest',
+            'c_GW_deviation_from_c',
+            'dispersion_correction_from_GammaH',
+            'ligo_constraint_check',
+            'c_GW_natural_range',
+        ],
+        'lean_modules': ['GravitationalWaves', 'VestigialSusceptibility', 'SecondOrderSK',
+                         'LinearizedEFE'],
+        'platforms': [],
+        'key_claims': [
+            'Leading-order c_GW = c · √χ_vest (Lean: c_GW); deviation Δc/c = √χ_vest − 1 '
+                '(Lean: c_GW_deviation, _zero_iff_chi_one, _strict_mono)',
+            'GW170817 correctness-push biconditional: |Δc/c| ≤ 3e-15 ⟺ χ_vest ∈ '
+                '[(1-τ)², (1+τ)²] (Lean: c_GW_match_iff_chi_close_to_one)',
+            'Natural-range falsification: at χ_vest = 0.1, Δc/c ≈ -0.684; at χ_vest = 10, '
+                'Δc/c ≈ +2.162. Both endpoints fail GW170817 by ~10^14 (Lean: '
+                'natural_lower_violates_ligo, natural_upper_violates_ligo, '
+                'vestigial_natural_range_violates_ligo)',
+            'Phase 5y H1 caveat: vestigial-second-sound graviton identification is NOT '
+                'derived as a propagating DOF (Lean: second_sound_graviton_not_derived_DOF, '
+                'an existential meta-theorem)',
+            'Bundled tracked hypothesis H_VestigialModeIsGraviton: positivity ∧ LIGO '
+                'compatibility ∧ luminal propagation; discharged at χ_vest = 1 (Lean: '
+                'H_VestigialModeIsGraviton_at_one), three falsifiers at natural range '
+                'endpoints + zero',
+            'GW170817-compatible χ_vest window has width 4·(3e-15) = 1.2e-14 — vanishing '
+                'measure under any natural-range prior',
+            'SK-EFT dispersion correction δω/ω = γ·ω from Γ_H bridge (Lean: '
+                'dispersion_correction, _zero_at_no_dissipation, _linear_in_gamma, '
+                '_abs_bound)',
+        ],
+    },
+    'paper26_bh_entropy': {
+        'title': 'Paper 26: Bekenstein-Hawking Entropy from MTC State Counting — '
+                 'Kaul-Majumdar SU(2)_k Closed Form, Tracked-Hypothesis Bundle for '
+                 'the General MTC, and Walker-Wang Anomaly Match for ADW Substrates',
+        'topic': 'S = A/(4 G_N) − (3/2) log(A/(4 G_N)) + c_0 closed form under SU(2)_k '
+                 'specialization (Kaul-Majumdar gr-qc/0002040), Outcome-3 tracked-'
+                 'hypothesis bundle H_HorizonBoundaryCondition with five falsifier '
+                 'theorems for the general MTC case, falsifier-instance status table '
+                 'for FibonacciMTC + IsingBraiding + S3CenterAnyons + Toric code, '
+                 'novelty flagging for the Walker-Wang anomaly-match conjecture',
+        'formulas': [
+            'verlinde_dim_horizon',
+            'bh_entropy_kaul_majumdar',
+            'bh_entropy_leading_coefficient',
+            'log_correction_coefficient_su2k',
+            'log_correction_coefficient_per_mtc',
+            'mtc_area_law_kappa',
+        ],
+        'lean_modules': ['BHEntropyMicroscopic', 'SphericalCategory', 'SU2kFusion',
+                         'FibonacciMTC', 'IsingBraiding', 'S3CenterAnyons',
+                         'LinearizedEFE'],
+        'platforms': [],
+        'key_claims': [
+            'Kaul-Majumdar SU(2)_k closed form: S(A) = A/(4 G_N) − (3/2) log(A/(4 G_N)) '
+                '+ c_0 + O(A⁻¹) under the immirziTuning + gaussianSaddleAsymptotic '
+                'hypotheses (Lean: BHEntropyMicroscopic.kaulMajumdarClosedForm)',
+            'Log-correction structure: c_log = −1/2 (Gaussian saddle, Lean: '
+                'gaussianSaddleAsymptotic axiom) + −1 (singlet projection, Lean: '
+                'singletProjectionGivesExtraInverseHessian) = −3/2 total. Universal '
+                'within the Cardy-saddle subfamily (Carlip gr-qc/0005017, Engle-Noui-'
+                'Perez 0905.3168), DISAGREES with Sen 4D Schwarzschild heat-kernel '
+                'arXiv:1205.0971 (+1.71 ln a)',
+            'Leading 1/4 coefficient is a TUNING (Immirzi γ), not a derivation. Lean '
+                'encodes via `HorizonMTCBC.γ_immirzi` field + `immirziTuned` discharge',
+            'Tracked-hypothesis bundle H_HorizonBoundaryCondition: positivity ∧ areaLeading '
+                '∧ secondLaw ∧ modularInvariant ∧ anomalyMatch. Five falsifier '
+                'theorems (Lean: H_HorizonBoundaryCondition.falsifier_*).',
+            'Falsifier-instance status: Fibonacci passes F1/F3/F4 (positivity, monotonicity, '
+                'modular invariance via formalized F-symbols); F2 (area-law κ_F = c·log φ) '
+                'is conjectural — no published derivation. Ising same. S3 same. Toric code '
+                'FAILS F2 (abelian: log d_max = 0)',
+            'Walker-Wang anomaly match: bulk Z₂ time-reversal of ADW substrate ↔ boundary '
+                'chiral c_- mod 8 of horizon MTC. Anomaly-inflow conjecture, novelty-flagged',
+            'Bridge to Wave 1 G_N^emerg: the immirziTuning hypothesis discharges to '
+                '`leadingCoeff = 1/(4 G_N^emerg)` via the Wave 1 Sakharov-Adler closed form',
+            'Quantitative MTC zoo: D²(Fib) ≈ 3.618, D²(Ising) = 4, D²(D(S₃)) = 36 '
+                '(formalized in Lean modules). Per-MTC log d_max sets the κ_C predicted '
+                'value if F2 ever discharges',
         ],
     },
 }

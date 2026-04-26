@@ -91,7 +91,8 @@ theorem w_ne_zero : w ≠ 0 := by native_decide
 
 /-! ## Module summary -/
 
-/--
+/-! ## Module summary
+
 QCyc15SqrtPhi module: first non-cyclotomic number field in the project.
 
   - `PolyQuotOver QCyc15 2` with reduction ![φ, 0] encoding w² = φ
@@ -104,8 +105,6 @@ QCyc15SqrtPhi module: first non-cyclotomic number field in the project.
 First proof-assistant formalization of a non-cyclotomic algebraic number
 field built via the generic tower construction.
 -/
-theorem qcyc15_sqrtphi_summary : True := trivial
-
 end QCyc15SqrtPhi
 
 end SKEFTHawking

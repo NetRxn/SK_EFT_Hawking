@@ -180,7 +180,8 @@ theorem fib_hopf_value : fib_hopf_trace = ⟨-1, 0, 0, 0⟩ := by native_decide
 
 /-! ## Module Summary -/
 
-/--
+/-! ## Module summary
+
 QCyc5 module: Q(ζ₅) for Fibonacci braiding.
   - All arithmetic exact over Q⁴ with DecidableEq
   - ζ⁵ = 1 PROVED (native_decide)
@@ -192,8 +193,6 @@ QCyc5 module: Q(ζ₅) for Fibonacci braiding.
   - φ² = φ+1 PROVED (golden ratio)
   - Zero sorry, zero axioms.
 -/
-theorem qcyc5_summary : True := trivial
-
 end QCyc5
 
 end SKEFTHawking

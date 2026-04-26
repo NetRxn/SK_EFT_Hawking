@@ -204,7 +204,8 @@ theorem small_uq_to_su2k_connection :
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 RestrictedUq module: the small quantum group u_q(sl_2).
   - Defined via FreeAlgebra + RingQuot with Chevalley + nilpotency relations
   - E^ell = 0 PROVED, F^ell = 0 PROVED, K^ell = 1 PROVED
@@ -214,6 +215,4 @@ RestrictedUq module: the small quantum group u_q(sl_2).
   - dim = ell^3 and simple module count: statement-level (PBW theorem)
   - Zero axioms, zero sorry (all proofs are constructive!)
 -/
-theorem restricted_uq_summary : True := trivial
-
 end SKEFTHawking

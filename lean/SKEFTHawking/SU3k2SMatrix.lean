@@ -203,7 +203,8 @@ theorem S_00 : S 0 0 = sA := by native_decide
 
 /-! ## 7. Module summary -/
 
-/--
+/-! ## Module summary
+
 SU(3)₂ modular data: first rank-6 MTC in a proof assistant.
 
   - All 9 S-matrix entry classes (A-I) as QCyc15 values (×15 scaling)
@@ -222,8 +223,6 @@ SU(3)₂ modular data: first rank-6 MTC in a proof assistant.
 First rank-6 MTC modular data in any proof assistant. Enables downstream
 modular invariance checks and SU(3)₂-based RT invariants.
 -/
-theorem su3k2_smatrix_summary : True := trivial
-
 end SU3k2
 
 end SKEFTHawking

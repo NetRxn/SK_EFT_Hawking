@@ -5219,7 +5219,8 @@ noncomputable instance : HopfAlgebra (LaurentPolynomial k) (Uqsl3 k) where
 
 /-! ## 11. Module Summary -/
 
-/--
+/-! ## Module summary
+
 Uqsl3Hopf module: Hopf algebra structure on U_q(sl₃). **Status: 0 sorries.**
   - Coproduct Δ defined via FreeAlgebra.lift + RingQuot.liftAlgHom; all 21 relation-respects proven.
   - Counit ε defined and descended; relation-respect proven via simp+ring.
@@ -5230,6 +5231,4 @@ Uqsl3Hopf module: Hopf algebra structure on U_q(sl₃). **Status: 0 sorries.**
   - S² = Ad(K₁²K₂²) per generator (Drinfeld theorem, Jantzen GSM 6 §4.9).
   - Bialgebra/HopfAlgebra typeclass instance wiring: pending Tranche E (stretch goal).
 -/
-theorem uqsl3_hopf_summary : True := trivial
-
 end SKEFTHawking

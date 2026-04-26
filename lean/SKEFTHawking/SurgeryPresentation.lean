@@ -308,7 +308,8 @@ end SurgeryEquivalent
 
 /-! ## 8. Module Summary -/
 
-/--
+/-! ## Module summary
+
 SurgeryPresentation module: combinatorial 3-manifold data for WRT TQFT.
   - SurgeryPresentation: framed link as symmetric linking matrix
   - Standard manifolds: S³ (empty), S²×S¹ (0-unknot), L(p,1), Hopf link
@@ -336,6 +337,4 @@ admits a surgery presentation) and Kirby's theorem (two presentations are
 Kirby-equivalent iff diffeomorphic) — both require smooth 3-manifold
 infrastructure absent from Mathlib. Phase 6 item.
 -/
-theorem surgery_presentation_summary : True := trivial
-
 end SKEFTHawking

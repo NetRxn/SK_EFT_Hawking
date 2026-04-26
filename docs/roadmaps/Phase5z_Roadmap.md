@@ -4,7 +4,11 @@
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22). First new phase after the Phase 5y closure and five-NO-GO dark-energy sweep.*
 
-**Status update 2026-04-25-0210:** Wave 1 (Track A) **SHIPPED end-to-end through Stages 1–13** of the wave-execution pipeline, and **all three Phase 5z deep-research deliverables have landed** in `Lit-Search/Phase-5z/`.
+**Status update 2026-04-26-1340:** Phase 5z is now **FOUR WAVES SHIPPED**. Wave 1 (Track A flavor-singlet `ScalarRungInterpretation`), Wave 1b (Track A BHL gauge embedding `BHLGaugeEmbedding`), Wave 2 (Track B `MajoranaRung` + `NeutrinoMixing`), and Wave 3 (Track C `EWPhaseTransition`) all shipped end-to-end through Stages 1–8 + 10 (Stages 9 + 13 user-triggered). **Wave 3 shipped 2026-04-26**: `EWPhaseTransition.lean` 19 theorems + 1 structure + 12 defs, zero sorry, zero new axioms. Implements the LO high-T finite-T potential (Anderson-Hall, Quiros), critical temperature `T_c = √(μ²/c_T)`, latent-heat order parameter, first-order/crossover predicate (cubic-coefficient sign), SM benchmark (`m_H = 125.20`, `λ = 0.13`, `c_T = 0.4`, `E ≈ 0.01`, `T_c ≈ 139` GeV), KLRS 1996 lattice crossover threshold (m_H = 72 GeV), `crossover_excludes_baryogenesis` load-bearing exclusion theorem (Phase 6c.2 input). Tracked hypotheses: `H_VacuumStableUnderRG` (Buttazzo+ 2013 metastability) + `H_HierarchyEWLambdaUV` (Λ_UV ≫ v_EW). Adds figure `fig_ew_transition_phase_diagram` (5 traces, 2-panel V_T(φ) profiles + (m_H, E) phase partition) + 36 pytest in `tests/test_ew_phase_transition.py` + Python `src/ew_phase_transition/` (3 modules) + 4 `formulas.py` additions (`ew_finite_t_potential`, `ew_thermal_mass_sq`, `ew_critical_temperature`, `ew_latent_heat`) + 3 new bibkeys (`KLRS1996`, `ButtazzoEtAl2013`, `ShaposhnikovWetterich2010`). New paper `papers/paper22_ew_phase_transition/paper_draft.tex` (PRD format, 4 pages, 372 KB).
+
+**Status update 2026-04-26-1300:** Wave 1b (`BHLGaugeEmbedding.lean`) shipped through Stages 1–8 + 10: 23 theorems + 3 structures + 15 defs, zero sorry, zero new axioms. Implements the BHL gauge-embedding transplant per O.2 verdict (Scenario A 3/5): extended Fierz basis dim count, gauge-covariance tracked hypotheses, concrete BHL `m_H = √2 m_t`, BHL gap problem (`bhl_minimal_overshoots_pdg`), Hill 2025 bilocal correction recovery (`bilocal_correction_can_match_pdg` at dilution 0.402). Adds figure `fig_bhl_bilocal_correction` (4 traces, 2-panel) + 24 pytest in `tests/test_bhl_embedding.py` + Python `src/scalar_rung/bhl_embedding.py` + 5 `formulas.py` additions + 4 new bibkeys (MTY1989, Hill2025Redux, AAA2020, Cvetic1999). Paper 20 expanded with §6 BHL Gauge Embedding (6 pages, 611 KB). Stages 9 (figure review) + 13 (adversarial) are user-triggered.
+
+**Earlier status update 2026-04-25-0210:** Wave 1 (Track A) **SHIPPED end-to-end through Stages 1–13** of the wave-execution pipeline, and **all three Phase 5z deep-research deliverables have landed** in `Lit-Search/Phase-5z/`.
 
 Wave 1 summary:
 - Strengthening pass replaced 3 vacuous Props with 5 substantive ones (including tracked-hypothesis bridge `H_ScalarChannelIsTetradBifurcationOutput` + custodial-symmetry identity `zMass_sq_minus_wMass_sq`)
@@ -256,9 +260,10 @@ Parallelism:
 
 | Wave | Track | Scope | PM | Dependencies | Priority |
 |------|-------|-------|-----|--------------|----------|
-| Wave 1 | A | `ScalarRungInterpretation.lean` + flagship paper + Python scalar-rung package | 2–4 | None (Gate Z.2 before EW in Wave 3) | **TIER 0 — flagship** |
-| Wave 2 | B | `MajoranaRung.lean` + `NeutrinoMixing.lean` + PRD paper + short note | 2.5–4 | None; parallel with Wave 1 | **TIER 1** |
-| Wave 3 | C | `EWPhaseTransition.lean` + conference paper + Python ew_phase_transition package | 3–5 | Wave 1 complete; Gate Z.2 | **TIER 1** |
+| Wave 1 | A | `ScalarRungInterpretation.lean` + flagship paper + Python scalar-rung package | 2–4 | None (Gate Z.2 before EW in Wave 3) | **TIER 0 — flagship** ✅ SHIPPED |
+| Wave 1b | A | `BHLGaugeEmbedding.lean` (BHL transplant: gauge-indexed scalar channel + Hill bilocal correction) + paper 20 §6 | 1–2 | Wave 1 complete; O.2 verdict | **TIER 0 — quantitative-scope follow-up** ✅ SHIPPED 2026-04-26 |
+| Wave 2 | B | `MajoranaRung.lean` + `NeutrinoMixing.lean` + PRD paper + short note | 2.5–4 | None; parallel with Wave 1 | **TIER 1** ✅ SHIPPED |
+| Wave 3 | C | `EWPhaseTransition.lean` + conference paper + Python ew_phase_transition package | 3–5 | Wave 1 complete; Gate Z.2 | **TIER 1** ✅ SHIPPED 2026-04-26 |
 
 **Total Phase 5z LOE:** 7.5–13 person-months Lean + paper-writing. Parallel execution: wall-clock 4–7 months minimum.
 

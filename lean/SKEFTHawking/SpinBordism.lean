@@ -243,7 +243,8 @@ theorem anomaly_dimension_ladder :
 
 /-! ## 7. Module summary -/
 
-/--
+/-! ## Module summary
+
 SpinBordism module: Rokhlin's theorem from spin bordism hypotheses.
   - SpinBordismData structure: packages Ω^Spin_4 ≅ Z + σ(K3) = -16
   - rokhlin_from_bordism: 16 | σ(M) for all M — PROVED
@@ -254,6 +255,4 @@ SpinBordism module: Rokhlin's theorem from spin bordism hypotheses.
   - **Spin vs Pin comparison**: mod-16 reduction PROVED
   - Zero axioms. Bordism enters as structure parameter.
 -/
-theorem spin_bordism_summary : True := trivial
-
 end SKEFTHawking

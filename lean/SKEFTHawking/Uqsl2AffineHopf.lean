@@ -5978,15 +5978,15 @@ theorem uqAff_antipode_squared_K0inv :
     affAntipodeLM k (affAntipodeLM k (uqAffK0inv k)) = uqAffK0inv k := by
   rw [uqAff_antipode_K0inv, uqAff_antipode_K0]
 
-/-- `S²(K₁⁻¹) = K₁⁻¹`. -/
+/-! ## Module summary
+
+`S²(K₁⁻¹) = K₁⁻¹`. -/
 theorem uqAff_antipode_squared_K1inv :
     affAntipodeLM k (affAntipodeLM k (uqAffK1inv k)) = uqAffK1inv k := by
   rw [uqAff_antipode_K1inv, uqAff_antipode_K1]
 
-/-! ## 9. Module summary -/
-
-theorem uqsl2_affine_hopf_summary : True := trivial
-
+/-! ## 9. Module summary
+-/
 end SKEFTHawking
 
 end

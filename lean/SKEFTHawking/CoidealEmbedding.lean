@@ -187,7 +187,8 @@ theorem dolan_grady_from_chevalley :
 
 /-! ## 4. Chain summary -/
 
-/--
+/-! ## Module summary
+
 CoidealEmbedding: completes the Onsager → O_q → U_q(ŝl₂) chain.
   - B₀ = F₀ + E₀K₀⁻¹, B₁ = F₁ + E₁K₁⁻¹ (defined in Uqsl2Affine.lean)
   - Coideal property: Δ(B_i) = B_i ⊗ 1 + K_i⁻¹ ⊗ B_i (sorry, Aristotle)
@@ -195,8 +196,6 @@ CoidealEmbedding: completes the Onsager → O_q → U_q(ŝl₂) chain.
   - Chain: OnsagerAlgebra (24 thms) → Uqsl2Affine (9 thms) → CoidealEmbedding
   - Zero axioms.
 -/
-theorem coideal_embedding_summary : True := trivial
-
 end SKEFTHawking.CoidealEmbedding
 
 end

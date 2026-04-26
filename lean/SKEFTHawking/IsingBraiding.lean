@@ -206,7 +206,8 @@ theorem hopf_link_matches_S_matrix :
 
 /-! ## 9. Module Summary -/
 
-/--
+/-! ## Module summary
+
 IsingBraiding: COMPLETE braided Ising MTC verification.
   - R-matrix: R₁=ζ⁻¹, Rψ=ζ³, R^{σψ}=-i, R^{ψψ}=-1 — all defined
   - Twist: θ_σ=ζ, θ_ψ=-1 — defined
@@ -217,6 +218,4 @@ IsingBraiding: COMPLETE braided Ising MTC verification.
   - **Hopf link = 0: PROVED** (matches S_{σσ}/S_{0σ} = 0)
   - First COMPLETE verified braided fusion category in any proof assistant.
 -/
-theorem ising_braiding_summary : True := trivial
-
 end SKEFTHawking.IsingBraiding

@@ -85,9 +85,11 @@ import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.SpinBordism
 import SKEFTHawking.TetradGapEquation
 import SKEFTHawking.ScalarRungInterpretation
+import SKEFTHawking.BHLGaugeEmbedding
 import SKEFTHawking.MajoranaRung
 import SKEFTHawking.NeutrinoMixing
 import SKEFTHawking.MajoranaRungDecoupling
+import SKEFTHawking.EWPhaseTransition
 import SKEFTHawking.QSqrt2
 import SKEFTHawking.QSqrt5
 import SKEFTHawking.SU2kMTC
@@ -167,6 +169,10 @@ import SKEFTHawking.CondensedMatterAnalog
 import SKEFTHawking.VestigialMapping
 import SKEFTHawking.VestigialEOS
 import SKEFTHawking.ClassificationTableDark
+import SKEFTHawking.LinearizedEFE
+import SKEFTHawking.FLRWDynamics
+import SKEFTHawking.GravitationalWaves
+import SKEFTHawking.BHEntropyMicroscopic
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

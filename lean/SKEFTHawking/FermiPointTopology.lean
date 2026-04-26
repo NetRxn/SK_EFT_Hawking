@@ -495,7 +495,8 @@ theorem coupling_deficit_downgrades_step5 :
 
 /-! ## 14. Module Summary -/
 
-/--
+/-! ## Module summary
+
 FermiPointTopology module: Volovik-Zubkov Fermi-point gauge emergence.
 
 Wave 1 (complete):
@@ -515,6 +516,4 @@ Wave 2-3 (this extension):
   - Bridge theorems: EmergentGravityBounds, GaugingStep, SPTClassification
   - ALL proved by native_decide/decide/rfl/norm_num — zero sorry, zero axioms
 -/
-theorem fermi_point_summary : True := trivial
-
 end SKEFTHawking

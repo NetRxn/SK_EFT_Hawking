@@ -375,7 +375,8 @@ theorem uq3_SerreF21 :
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 Uqsl3 module: the Drinfeld-Jimbo quantum group U_q(sl₃) of type A₂.
   - Defined via FreeAlgebra + RingQuot (ZERO axioms)
   - First rank-2 quantum group definition in any proof assistant
@@ -388,6 +389,4 @@ Uqsl3 module: the Drinfeld-Jimbo quantum group U_q(sl₃) of type A₂.
   - Quantum Serre (4 relations) PROVED via simp [map_mul, map_add, AlgHom.commutes]
   - Ring and Algebra instances automatic from RingQuot
 -/
-theorem uqsl3_summary : True := trivial
-
 end SKEFTHawking

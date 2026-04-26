@@ -1334,14 +1334,15 @@ theorem qgComul_Kinv
 
 /-! ## 8. Module summary -/
 
-/-- Generic coproduct module: Phase 5m Wave 2 deliverable.
+/-! ## Module summary
+
+Generic coproduct module: Phase 5m Wave 2 deliverable.
   - comulOnGenQG: pattern-match on QGGen r → tensor product
   - comulFreeAlgQG: lifted to FreeAlgebra via FreeAlgebra.lift
   - 11/11 QGRel respect proofs (fully proved)
   - qgComul: descended to QuantumGroup k A quotient
   - qgComul_E/F/K/Kinv: quotient-level evaluation proved
   - First generic quantum group coproduct in any proof assistant
-  - Zero sorry. Covers all symmetric Cartan matrices simultaneously. -/
-theorem qg_coproduct_summary : True := trivial
-
+  - Zero sorry. Covers all symmetric Cartan matrices simultaneously.
+-/
 end SKEFTHawking

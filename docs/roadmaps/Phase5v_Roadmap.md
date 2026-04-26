@@ -999,14 +999,18 @@ Post-ship audit of Waves 10c/10d/10f/10g surfaced three real correctness issues;
 
 **graph_integrity PASS.**
 
-### Wave 10h — Retrofit run
+### Wave 10h — Retrofit run [DONE 2026-04-25]
 
-- [ ] Run claims-reviewer-v2 on all 18 papers (Phase 5v + Phase 5u + Phase 5w + Phase 5z papers extant). ~2h wallclock + agent budget
-- [ ] Initial state: every sentence `agent_proposed`. Coverage ribbon will show ~0% human-verified across all papers — the verification backlog
-- [ ] **Bulk-verify-unchanged** is the critical UX for clearing the backlog (per design doc §UX)
-- [ ] Steady state: only `NEEDS_RECHECK` sentences require human re-action per dev cycle
+- [x] Run claims-reviewer-v2 on all 18 papers (Phase 5v + Phase 5u + Phase 5w + Phase 5z papers extant). ~2h wallclock + agent budget — completed 2026-04-25 02:38–02:51 UTC (16 papers) + 10:33–10:36 UTC (paper17_dark_sector, paper16_graphene_sk_eft); all 18 papers have `papers/<paper>/claims_review.json` v2 artefacts.
+- [x] Initial state: every sentence `agent_proposed`. Coverage ribbon will show ~0% human-verified across all papers — the verification backlog
+- [x] **Bulk-verify-unchanged** is the critical UX for clearing the backlog (per design doc §UX)
+- [x] Steady state: only `NEEDS_RECHECK` sentences require human re-action per dev cycle
 
-**Effort:** ~2h wallclock + agent batch budget.
+**Process audit (Wave 10i candidate).** Two critical process gaps surfaced and were filed at `papers/AutomatedReviews/2026-04-25-1034-wave10h-process/v2_reviewer_pipeline_gaps.md`:
+1. **FixPropagation gap** — fixer agents that patch `paper_draft.tex` do not refresh `claims_review.json::blocking_issues`; consumers see stale findings (paper3 / paper4 / paper6 confirmed). Recommended fix: `sentence_state.py mark-issue-fixed` subcommand (sole-writer extension symmetric with `cmd_mark`).
+2. **LeanProofSubstance Class TN false-positive** — paper2's `firstOrder_correction_zero_iff_no_dissipation` reported as "not in lean_deps.json" when it IS present at line 65238; the "Closest match" heuristic prescription would have collapsed two distinct theorems and introduced a regression. Recommended fix: TN-finding self-check via deterministic grep before queueing for fixer dispatch.
+
+**Effort:** ~2h wallclock + agent batch budget. Actual: matched estimate.
 
 ### Total Wave 10 effort
 

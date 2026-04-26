@@ -295,7 +295,8 @@ def H_DispersiveUVCutoff
 
 /-! ## 7. Module summary -/
 
-/--
+/-! ## Module summary
+
 Summary theorem for the Quasi-1D Reduction module. Records the fact that
 we have 5 formalized algebraic bounds (T1 three parts + T2 + T3 + T4 + T5)
 plus 2 tracked hypotheses (H_AdiabaticRegimeCorrection,
@@ -308,7 +309,5 @@ Paper-claim mapping:
   - "Quasi-1D correction ≤ few percent" → T5 + Python-evaluated numerics
   - "Dispersive T_H correction is O(D⁴)" → H_AdiabaticRegimeCorrection
 -/
-theorem quasi_one_d_reduction_summary : True := trivial
-
 end QuasiOneDReduction
 end SKEFTHawking

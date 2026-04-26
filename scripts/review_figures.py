@@ -819,6 +819,47 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[], color_keys=["amber"],
     ),
     FigureSpec(
+        name="fig_ew_transition_phase_diagram",
+        function="fig_ew_transition_phase_diagram",
+        caption=(
+            "Phase 5z Wave 3 — EW phase transition. Left panel: V_T(φ) "
+            "at three temperatures (T = 0 broken phase, T = T_c/2, "
+            "T = 1.5 T_c symmetric phase) at the SM benchmark "
+            "(m_H = 125 GeV, λ = 0.13, c_T = 0.4, E = 0.01); "
+            "T_c ≈ 139 GeV. Curves normalized to unit max-abs for clarity. "
+            "Right panel: first-order vs crossover partition over the "
+            "(m_H, E) plane: shaded region (E > 0) is first-order; "
+            "white line at E = 0 is crossover. Star: SM benchmark "
+            "(m_H = 125.20, E = 0.01). Vertical dashed line at m_H = 72 GeV "
+            "(Kajantie-Laine-Rummukainen-Shaposhnikov 1996 lattice "
+            "crossover threshold). Lean: thermalMassSq_neg_below_T_c, "
+            "first_order_and_crossover_disjoint, "
+            "crossover_excludes_baryogenesis."
+        ),
+        needs_experiments=False, expected_traces=5,
+        expected_axes={"xaxis": "φ", "yaxis": "V_T"},
+        physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
+    ),
+    FigureSpec(
+        name="fig_bhl_bilocal_correction",
+        function="fig_bhl_bilocal_correction",
+        caption=(
+            "Phase 5z Wave 1b — BHL gap problem and Hill 2025 bilocal "
+            "correction. Left panel: bilocal-corrected m_H = (φ(0)/φ(∞)) "
+            "√2 m_t versus dilution at the BHL benchmark m_t = 220 GeV. "
+            "BHL minimal (dilution = 1) overshoots PDG (125.20 GeV) by "
+            "~2.5×; Hill 2025 dilution ≈ 0.402 recovers PDG within 1 GeV. "
+            "Right panel: required dilution to match PDG m_H as function "
+            "of m_t. BHL benchmark m_t = 220 GeV (dashed cross) vs. "
+            "PDG m_t = 172.57 GeV (dotted amber) frame the natural BHL "
+            "dilution range. Lean: bhl_minimal_overshoots_pdg, "
+            "bilocal_correction_can_match_pdg."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "dilution", "yaxis": "m_H"},
+        physics_checks=[], color_keys=["steel_blue", "amber", "cross"],
+    ),
+    FigureSpec(
         name="fig_seesaw_y_m_r_band",
         function="fig_seesaw_y_m_r_band",
         caption=(
@@ -851,6 +892,88 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=2,
         expected_axes={"xaxis": "m_lightest", "yaxis": "m_ββ"},
         physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
+    ),
+    FigureSpec(
+        name="fig_G_N_emerg_parameter_scan",
+        function="fig_G_N_emerg_parameter_scan",
+        caption=(
+            "Phase 6a Wave 1 — emergent Newton constant from ADW microscopic "
+            "theory. Heatmap shows log₁₀(G_N^emerg / G_N^obs) over the "
+            "(Λ_UV, α_ADW) plane at fiducial N_f = 15 (SM Weyl per generation, "
+            "no ν_R), with G_N^emerg = α_ADW · 12π / (N_f · Λ²) (Sakharov-Adler "
+            "form, Adler RMP 54, 729 (1982) Eq. 3.3). Gold contour: exact match "
+            "G_N^emerg = G_N^obs = 6.71 × 10⁻³⁹ GeV⁻²; dotted gold: ±50% "
+            "tolerance band. Vertical dashed: GUT (10¹⁶ GeV) and Planck-mass "
+            "(1.221 × 10¹⁹ GeV) cutoffs. Stars: Planck-anchor matching α* = "
+            "N_f/(12π) for N_f ∈ {15, 16, 45, 48}; α* falls between 0.40 and "
+            "1.27, all inside the natural range [0.1, 10]. Lean: "
+            "LinearizedEFE.G_N_emerg_match_locus, "
+            "G_N_emerg_match_at_planck_anchor."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "Λ_UV", "yaxis": "α_ADW"},
+        physics_checks=[], color_keys=["amber"],
+    ),
+    FigureSpec(
+        name="fig_c_GW_vs_ligo_constraint",
+        function="fig_c_GW_vs_ligo_constraint",
+        caption=(
+            "Phase 6a Wave 2 — gravitational-wave propagation speed deviation "
+            "Δc/c = √χ_vest − 1 across the natural vestigial-susceptibility "
+            "range, vs the GW170817 multi-messenger bound (Abbott et al. ApJL "
+            "848, L13 (2017), Eq. (5)): |Δc/c| ≤ 3 × 10⁻¹⁵. The Volovik "
+            "vestigial-second-sound graviton identification produces "
+            "Δc/c ∈ [−0.68, +2.16] over the natural χ_vest range "
+            "[0.1, 10] — failing the GW170817 cap by 14+ orders of "
+            "magnitude. The GW170817-compatible χ_vest window is "
+            "[(1 − 3e-15)², (1 + 3e-15)²] — fine-tuning to within "
+            "3 × 10⁻¹⁵ of unity. Lean: "
+            "GravitationalWaves.vestigial_natural_range_violates_ligo, "
+            "c_GW_match_iff_chi_close_to_one."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "χ_vest", "yaxis": "Δc/c"},
+        physics_checks=[], color_keys=["amber", "steel_blue"],
+    ),
+    FigureSpec(
+        name="fig_entropy_coefficient_vs_spectrum",
+        function="fig_entropy_coefficient_vs_spectrum",
+        caption=(
+            "Phase 6a Wave 3 — Bekenstein-Hawking leading-coefficient κ_leading(γ) "
+            "as a function of the Immirzi tuning γ. The 1/4 prefactor in S = A/(4G_N) "
+            "is structurally a TUNING (not a derivation): distinct counting "
+            "prescriptions produce distinct γ values that 'tune' to 1/4 under their "
+            "own normalizations. Domagala-Lewandowski γ ≈ 0.2375 (gr-qc/0407051) "
+            "and Meissner γ ≈ 0.2739 (gr-qc/0407052) are both shown. The MTC zoo "
+            "in the right panel records log d_max for Fibonacci, Ising, D(S₃), "
+            "and toric code (the abelian falsifier with log d_max = 0 ⇒ F2 fail). "
+            "Lean: BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi field; "
+            "BHEntropyMicroscopic.kaul_majumdar_log_coefficient."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "γ", "yaxis": "κ_leading"},
+        physics_checks=[], color_keys=["amber", "steel_blue"],
+    ),
+    FigureSpec(
+        name="fig_log_correction_signature",
+        function="fig_log_correction_signature",
+        caption=(
+            "Phase 6a Wave 3 — log-correction coefficient signature across "
+            "schemes. The Kaul-Majumdar SU(2)_k value c_log = −3/2 "
+            "decomposes structurally as (−1/2 from the Gaussian saddle) + "
+            "(−1 from the SU(2)-singlet projection via the I₀ − I₁ cancellation, "
+            "Kaul-Majumdar Eq. (15)). The Sen 4D Schwarzschild heat-kernel result "
+            "(arXiv:1205.0971) gives c_log = +(212/45 − 3) ≈ +1.71, explicitly "
+            "DISAGREEING with the −3/2 anchor — universality fails outside the "
+            "Cardy-saddle subfamily. Per the Wave 3 deep-research return, no "
+            "published derivation pins c_log for Fibonacci, Ising, or D(S₃) "
+            "(Outcome-3 conjectural). Toric code fails F2 (abelian, log d_max = 0). "
+            "Lean: BHEntropyMicroscopic.sen_4d_disagrees_with_kaul_majumdar; "
+            "BHEntropyMicroscopic.kaul_majumdar_log_decomposition."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={"xaxis": "scheme", "yaxis": "c_log"},
+        physics_checks=[], color_keys=["amber", "steel_blue"],
     ),
 ]
 
@@ -940,9 +1063,20 @@ def generate_figures() -> dict[str, Path]:
         fig_doublon_gate_spectrum,
         # Phase 5z Wave 1: scalar-rung Higgs-mass parameter scan
         fig_higgs_mass_parameter_scan,
+        # Phase 5z Wave 1b: BHL gap problem + Hill bilocal correction
+        fig_bhl_bilocal_correction,
+        # Phase 5z Wave 3: EW phase transition phase diagram
+        fig_ew_transition_phase_diagram,
         # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
         fig_seesaw_y_m_r_band,
         fig_m_beta_beta_vs_m_lightest,
+        # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
+        fig_G_N_emerg_parameter_scan,
+        # Phase 6a Wave 2: gravitational waves vs GW170817
+        fig_c_GW_vs_ligo_constraint,
+        # Phase 6a Wave 3: BH entropy from MTC counting
+        fig_entropy_coefficient_vs_spectrum,
+        fig_log_correction_signature,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1058,8 +1192,14 @@ def generate_figures() -> dict[str, Path]:
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
         "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
         "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
+        "fig_bhl_bilocal_correction": fig_bhl_bilocal_correction,
+        "fig_ew_transition_phase_diagram": fig_ew_transition_phase_diagram,
         "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
+        "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
+        "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
+        "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
+        "fig_log_correction_signature": fig_log_correction_signature,
     }
 
     paths = {}
@@ -1182,9 +1322,20 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_doublon_gate_spectrum,
         # Phase 5z Wave 1: scalar-rung Higgs-mass parameter scan
         fig_higgs_mass_parameter_scan,
+        # Phase 5z Wave 1b: BHL gap problem + Hill bilocal correction
+        fig_bhl_bilocal_correction,
+        # Phase 5z Wave 3: EW phase transition phase diagram
+        fig_ew_transition_phase_diagram,
         # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
         fig_seesaw_y_m_r_band,
         fig_m_beta_beta_vs_m_lightest,
+        # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
+        fig_G_N_emerg_parameter_scan,
+        # Phase 6a Wave 2: gravitational waves vs GW170817
+        fig_c_GW_vs_ligo_constraint,
+        # Phase 6a Wave 3: BH entropy from MTC counting
+        fig_entropy_coefficient_vs_spectrum,
+        fig_log_correction_signature,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1298,8 +1449,14 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_phase5x_empirical_hook_ranking": fig_phase5x_empirical_hook_ranking,
         "fig_doublon_gate_spectrum": fig_doublon_gate_spectrum,
         "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
+        "fig_bhl_bilocal_correction": fig_bhl_bilocal_correction,
+        "fig_ew_transition_phase_diagram": fig_ew_transition_phase_diagram,
         "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
+        "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
+        "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
+        "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
+        "fig_log_correction_signature": fig_log_correction_signature,
     }
 
     issues: list[CheckIssue] = []

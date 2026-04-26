@@ -7445,6 +7445,262 @@ def fig_higgs_mass_parameter_scan():
     return fig
 
 
+def fig_bhl_bilocal_correction():
+    """Phase 5z Wave 1b: BHL gap problem + Hill 2025 bilocal correction.
+
+    Shows the BHL leading-order m_H = sqrt(2)*m_t prediction overshooting
+    the PDG observed m_H = 125.20 GeV at the BHL benchmark m_t = 220 GeV
+    (the Pendleton-Ross IR fixed point), and the Hill 2025 bilocal
+    correction recovering 125 GeV at dilution phi(0)/phi(infty) ~ 0.402.
+
+    Two panels:
+    - Left: bilocal-corrected m_H as function of dilution, with PDG band
+      and BHL benchmark marked
+    - Right: required dilution to match arbitrary m_H_target as function
+      of m_t (highlighting the m_t = 220 GeV BHL benchmark + range
+      m_t = 165-185 GeV (covers PDG ± several sigma))
+
+    viz-ref: Phase5z Paper 20 §bhl-extension
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.formulas import bhl_higgs_mass, bilocal_corrected_higgs_mass
+    from src.core.constants import EW_PARAMS
+
+    m_h_pdg = EW_PARAMS["M_H_GEV"]
+
+    # Panel 1: corrected m_H vs dilution at m_t = 220 GeV (BHL benchmark)
+    dilutions = np.linspace(0.01, 1.0, 200)
+    m_t_bhl = 220.0
+    m_h_corrected = np.array(
+        [bilocal_corrected_higgs_mass(d, m_t_bhl) for d in dilutions]
+    )
+    bhl_minimal = bhl_higgs_mass(m_t_bhl)
+    dilution_at_pdg = m_h_pdg / bhl_minimal
+
+    # Panel 2: required dilution as function of m_t for fixed m_H = 125 GeV
+    m_t_range = np.linspace(150.0, 250.0, 100)
+    bhl_at_mt = np.array([bhl_higgs_mass(mt) for mt in m_t_range])
+    dilution_required = m_h_pdg / bhl_at_mt
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Hill bilocal: corrected m_H vs dilution at BHL benchmark",
+            "Required dilution to match PDG m_H, vs top mass",
+        ),
+        horizontal_spacing=0.13,
+    )
+
+    # Panel 1 — main curve
+    fig.add_trace(go.Scatter(
+        x=dilutions,
+        y=m_h_corrected,
+        mode="lines",
+        line=dict(color=COLORS["steel_blue"], width=3),
+        name="m_H corrected",
+        showlegend=False,
+    ), row=1, col=1)
+    # PDG band: dotted horizontal line at 125.20 GeV (annotation moved off corner)
+    fig.add_hline(y=m_h_pdg, line=dict(color=COLORS["amber"], width=2, dash="dash"),
+                  annotation_text=f"PDG m_H = {m_h_pdg:.2f} GeV",
+                  annotation_position="top",
+                  annotation_x=0.4,
+                  row=1, col=1)
+    # BHL benchmark: marker only; label below to avoid top-edge clip
+    fig.add_trace(go.Scatter(
+        x=[1.0], y=[bhl_minimal],
+        mode="markers+text",
+        marker=dict(color=COLORS["cross"], size=12, symbol="circle"),
+        text=[f"BHL benchmark {bhl_minimal:.0f} GeV"],
+        textposition="middle left",
+        showlegend=False,
+    ), row=1, col=1)
+    # Hill recovery point — label to the left so it doesn't collide with PDG line
+    fig.add_trace(go.Scatter(
+        x=[dilution_at_pdg], y=[m_h_pdg],
+        mode="markers+text",
+        marker=dict(color=COLORS["amber"], size=12, symbol="diamond"),
+        text=[f"Hill recovery (dilution = {dilution_at_pdg:.3f})"],
+        textposition="middle right",
+        showlegend=False,
+    ), row=1, col=1)
+
+    # Panel 2 — main curve
+    fig.add_trace(go.Scatter(
+        x=m_t_range,
+        y=dilution_required,
+        mode="lines",
+        line=dict(color=COLORS["steel_blue"], width=3),
+        name="dilution required",
+        showlegend=False,
+    ), row=1, col=2)
+    fig.add_vline(x=220.0, line=dict(color=COLORS["cross"], width=2, dash="dash"),
+                  annotation_text="m_t = 220 (BHL)",
+                  annotation_position="top right",
+                  row=1, col=2)
+    fig.add_vline(x=172.57, line=dict(color=COLORS["amber"], width=2, dash="dot"),
+                  annotation_text="m_t PDG = 172.57",
+                  annotation_position="bottom right",
+                  row=1, col=2)
+
+    fig.update_xaxes(title_text="dilution φ(0)/φ(∞)", range=[0, 1.05], row=1, col=1)
+    # Explicit y-range pinned to data: 50–400 GeV brackets PDG (125), Hill, BHL (311)
+    fig.update_yaxes(title_text="m_H corrected [GeV]", type="log",
+                     range=[np.log10(50), np.log10(400)], row=1, col=1)
+    fig.update_xaxes(title_text="m_t [GeV]", row=1, col=2)
+    fig.update_yaxes(title_text="dilution required for PDG match", row=1, col=2)
+
+    apply_layout(
+        fig,
+        margin=dict(t=110, b=70, l=80, r=40),
+        title=dict(
+            text=(
+                "Phase 5z Wave 1b — BHL gap problem and Hill 2025 bilocal correction<br>"
+                "<sub>Lean: <i>bhl_minimal_overshoots_pdg</i>, "
+                "<i>bilocal_correction_can_match_pdg</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=520,
+        width=1100,
+    )
+    return fig
+
+
+# ============================================================
+# Phase 5z Wave 3: EW phase transition figures
+# ============================================================
+
+def fig_ew_transition_phase_diagram():
+    """Phase 5z Wave 3: EW phase transition order classifier.
+
+    Two panels:
+    - Left: V_T(phi, T) at three temperatures (T = 0, T = T_c/2, T = 1.5*T_c)
+      showing the symmetric → broken transition for the SM benchmark
+    - Right: first-order vs crossover partition over the (E, m_H) plane
+      with the SM (m_H = 125 GeV, E ≈ 0.01) marked, plus the
+      Kajantie-Laine-Rummukainen-Shaposhnikov crossover threshold m_H ≈ 72 GeV
+      as horizontal reference
+
+    viz-ref: Phase5z Paper 22 §transition-order
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.formulas import (
+        ew_finite_t_potential,
+        ew_critical_temperature,
+    )
+
+    # SM benchmark
+    mu_sq = 88.0 ** 2
+    lam = 0.13
+    c_T = 0.4
+    E = 0.01
+    T_c = ew_critical_temperature(mu_sq, c_T)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            f"V_T(φ, T) at three T values; T_c ≈ {T_c:.1f} GeV",
+            "First-order vs crossover partition",
+        ),
+        horizontal_spacing=0.13,
+    )
+
+    # Panel 1: V_T(phi) at three temperatures, extended to ±300 GeV so the
+    # broken-phase wells (located at ~±180 GeV at the SM benchmark) are
+    # fully visible and don't clip at the panel edge.
+    phi_grid = np.linspace(-300.0, 300.0, 240)
+    T_values = [(0.0, "T = 0 (broken)", COLORS["amber"]),
+                (0.5 * T_c, f"T = T_c/2 (≈{0.5*T_c:.0f} GeV)", COLORS["steel_blue"]),
+                (1.5 * T_c, f"T = 1.5 T_c (symmetric)", COLORS["cross"])]
+    for T, label, color in T_values:
+        v_grid = np.array([ew_finite_t_potential(p, T, mu_sq, lam, c_T, E)
+                           for p in phi_grid])
+        v_norm = v_grid / max(abs(v_grid.max()), abs(v_grid.min()), 1e-12)
+        fig.add_trace(go.Scatter(
+            x=phi_grid, y=v_norm,
+            mode="lines",
+            line=dict(color=color, width=2.5),
+            name=label,
+        ), row=1, col=1)
+
+    fig.update_xaxes(title_text="φ [GeV]", range=[-300, 300], row=1, col=1)
+    fig.update_yaxes(title_text="V_T(φ) (normalized)", row=1, col=1)
+
+    # Panel 2: phase-order partition over (m_H, E) plane.
+    # Use a 3-stop colorscale: white (E < threshold) → amber band (E > threshold).
+    # The narrow eps band centred on E_threshold = 0.005 makes the boundary visible.
+    n_grid = 60
+    E_grid = np.linspace(0.0, 1.0, n_grid)
+    m_h_grid = np.linspace(50.0, 200.0, n_grid)
+    E_threshold = 0.005
+    Z = np.zeros((n_grid, n_grid))
+    for i, e_val in enumerate(E_grid):
+        for j, _ in enumerate(m_h_grid):
+            Z[i, j] = 1.0 if e_val > E_threshold else 0.0
+
+    fig.add_trace(go.Heatmap(
+        x=m_h_grid, y=E_grid, z=Z,
+        colorscale=[[0, "rgb(245,245,245)"],
+                    [0.499, "rgb(245,245,245)"],
+                    [0.5, "rgba(241, 143, 1, 0.45)"],
+                    [1, "rgba(241, 143, 1, 0.45)"]],
+        showscale=False,
+        name="first-order region (E > threshold)",
+        showlegend=True,
+    ), row=1, col=2)
+
+    # Explicit horizontal line at E = E_threshold so the crossover boundary
+    # (white-on-white in heatmap above) is unambiguously visible.
+    fig.add_hline(
+        y=E_threshold,
+        line=dict(color=COLORS["steel_blue"], width=2, dash="solid"),
+        annotation_text=f"E = {E_threshold:g} (crossover boundary)",
+        annotation_position="bottom right",
+        row=1, col=2,
+    )
+
+    # SM marker: m_H = 125.20, E ≈ 0.01 — just above the crossover boundary
+    fig.add_trace(go.Scatter(
+        x=[125.20], y=[0.01],
+        mode="markers+text",
+        marker=dict(color=COLORS["amber"], size=14, symbol="star"),
+        text=["  SM (LO first-order; lattice → crossover)"],
+        textposition="middle right",
+        showlegend=False,
+    ), row=1, col=2)
+
+    # CFH 1999 lattice crossover endpoint (m_H = 72 GeV)
+    fig.add_vline(x=72.0, line=dict(color=COLORS["cross"], width=2, dash="dash"),
+                  annotation_text="CFH 1999 endpoint m_H = 72 GeV",
+                  annotation_position="top left",
+                  row=1, col=2)
+
+    fig.update_xaxes(title_text="m_H [GeV]", range=[50, 200], row=1, col=2)
+    # y-range extends slightly below 0 so the E_threshold = 0.005 line is fully
+    # visible inside the panel rather than clipping the bottom edge.
+    fig.update_yaxes(title_text="cubic coefficient E", range=[-0.05, 1.0], row=1, col=2)
+
+    apply_layout(
+        fig,
+        margin=dict(t=120, b=70, l=80, r=40),
+        title=dict(
+            text=(
+                "Phase 5z Wave 3 — EW phase transition: V_T(φ) profiles + (m_H, E) phase partition<br>"
+                "<sub>Lean: <i>thermalMassSq_neg_below_T_c</i>, "
+                "<i>first_order_and_crossover_disjoint</i>, "
+                "<i>crossover_excludes_baryogenesis</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=560,
+        width=1100,
+    )
+    return fig
+
+
 # ============================================================
 # Phase 5z Wave 2: Majorana-rung seesaw figures
 # ============================================================
@@ -7652,14 +7908,17 @@ def fig_m_beta_beta_vs_m_lightest():
         name="Normal ordering (NO)",
     ))
 
-    # KamLAND-Zen band (excluded region)
+    # KamLAND-Zen band (excluded region) — amber per project colorblind-
+    # accessible blue/amber convention (CLAUDE.md), distinguishing the
+    # current excluded band (amber) from the LEGEND-1000 projected reach
+    # band (light blue) below.
     kz_lo = MAJORANA_PARAMS["M_BB_KAMLAND_ZEN_MEV_LOWER"]
     kz_hi = MAJORANA_PARAMS["M_BB_KAMLAND_ZEN_MEV_UPPER"]
     fig.add_shape(type="rect",
                   x0=1e-2, x1=1e3,
                   y0=kz_lo, y1=kz_hi,
-                  fillcolor="rgba(255, 224, 224, 0.55)",
-                  line=dict(color=COLORS["cross"], width=1, dash="dash"),
+                  fillcolor="rgba(241, 143, 1, 0.30)",
+                  line=dict(color=COLORS["amber"], width=1, dash="dash"),
                   layer="below")
     fig.add_annotation(x=200, y=np.sqrt(kz_lo * kz_hi),
                        text="KamLAND-Zen 800 (28–122 meV)",
@@ -7703,6 +7962,517 @@ def fig_m_beta_beta_vs_m_lightest():
                 "Phase 5z Wave 2 — m_ββ vs m_lightest (NuFit-6.0 angles, Majorana phases swept)<br>"
                 "<sub>NO + IO bands; KamLAND-Zen 800 (existing) + LEGEND-1000 (projected reach). "
                 "Embedding-agnostic. Lean: <i>NeutrinoMixing.PMNSMatrix</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=900,
+    )
+    return fig
+
+
+def fig_G_N_emerg_parameter_scan():
+    """Phase 6a Wave 1: ADW emergent G_N over (Λ_UV, α_ADW) at SM N_f.
+
+    Heatmap shows log₁₀(G_N^emerg / G_N^obs), so 0 = exact match. Gold
+    contour: G_N^emerg = G_N^obs locus (Lean:
+    `LinearizedEFE.G_N_emerg_match_locus`). Stars: Planck-anchor α*
+    values for N_f ∈ {15, 16, 45, 48} (Lean:
+    `G_N_emerg_match_at_planck_anchor`). Vertical dashed: GUT (10¹⁶
+    GeV) and Planck (1.221 × 10¹⁹ GeV) cutoffs. Horizontal band:
+    natural α_ADW range [0.1, 10] from deep-research §6
+    (Lit-Search/Phase-6a/, 2026-04-25).
+
+    viz-ref: Phase 6a Paper 23 §correctness-push
+    """
+    import plotly.graph_objects as go
+    from src.core.constants import GRAV_PARAMS
+    from src.emergent_gravity import G_N_emerg_grid
+
+    n_lam = 80
+    n_alpha = 80
+    lam_uv_grid = np.logspace(
+        np.log10(GRAV_PARAMS["LAMBDA_UV_GEV_LOWER"]),
+        np.log10(GRAV_PARAMS["LAMBDA_UV_GEV_UPPER"]),
+        n_lam,
+    )
+    alpha_grid = np.logspace(
+        np.log10(GRAV_PARAMS["ALPHA_ADW_LOWER"]),
+        np.log10(GRAV_PARAMS["ALPHA_ADW_UPPER"]),
+        n_alpha,
+    )
+    n_f = GRAV_PARAMS["N_F_DEFAULT"]
+    g_n_obs = GRAV_PARAMS["G_N_OBS_GEV_M2"]
+
+    G = G_N_emerg_grid(lam_uv_grid, n_f, alpha_grid)
+    log10_ratio = np.log10(np.maximum(G / g_n_obs, 1e-300))
+
+    fig = go.Figure()
+    # Heatmap on log axes
+    fig.add_trace(go.Heatmap(
+        x=np.log10(lam_uv_grid),
+        y=np.log10(alpha_grid),
+        z=log10_ratio.T,
+        zmin=-6.0, zmax=6.0,
+        colorscale="RdBu_r",
+        colorbar=dict(title="log₁₀(G_N^emerg / G_N^obs)"),
+        showscale=True,
+    ))
+
+    # Gold contour: exact match locus log10_ratio = 0
+    fig.add_trace(go.Contour(
+        x=np.log10(lam_uv_grid),
+        y=np.log10(alpha_grid),
+        z=log10_ratio.T,
+        contours=dict(
+            start=0.0, end=0.0, size=0.5,
+            coloring="lines",
+            showlabels=False,
+        ),
+        line=dict(color=COLORS["amber"], width=3, dash="solid"),
+        showscale=False,
+        name="G_N^emerg = G_N^obs",
+    ))
+
+    # ±50% tolerance band (log10 ratio ∈ [-0.301, +0.301] ≈ ±50%)
+    tol = GRAV_PARAMS["G_N_MATCH_TOLERANCE"]
+    log_lo = np.log10(1 - tol)
+    log_hi = np.log10(1 + tol)
+    fig.add_trace(go.Contour(
+        x=np.log10(lam_uv_grid),
+        y=np.log10(alpha_grid),
+        z=log10_ratio.T,
+        contours=dict(
+            start=log_lo, end=log_hi, size=log_hi - log_lo,
+            coloring="lines",
+            showlabels=False,
+        ),
+        line=dict(color=COLORS["amber"], width=1.5, dash="dot"),
+        showscale=False,
+        name=f"±{int(tol*100)}% match band",
+    ))
+
+    # Vertical dashed lines at canonical Λ_UV anchors
+    log_gut = np.log10(GRAV_PARAMS["LAMBDA_UV_GUT_GEV"])
+    log_planck = np.log10(GRAV_PARAMS["LAMBDA_UV_PLANCK_GEV"])
+    for log_lam, label in [(log_gut, "GUT (10¹⁶)"),
+                           (log_planck, "M_Planck")]:
+        fig.add_shape(
+            type="line",
+            x0=log_lam, x1=log_lam,
+            y0=np.log10(alpha_grid[0]), y1=np.log10(alpha_grid[-1]),
+            line=dict(color=COLORS.get("steel_blue", "#4A90E2"),
+                      width=1, dash="dash"),
+        )
+        fig.add_annotation(
+            x=log_lam, y=np.log10(alpha_grid[-1]) - 0.15,
+            text=label, showarrow=False,
+            font=dict(size=10, color=COLORS.get("steel_blue", "#4A90E2")),
+            bgcolor="rgba(255,255,255,0.65)",
+        )
+
+    # Planck-anchor α* stars for SM N_f values
+    import math
+    for nf, marker_label in [
+        (15, "N_f=15"),
+        (16, "N_f=16"),
+        (45, "N_f=45"),
+        (48, "N_f=48"),
+    ]:
+        alpha_star = nf / (12.0 * math.pi)
+        fig.add_trace(go.Scatter(
+            x=[log_planck], y=[np.log10(alpha_star)],
+            mode="markers+text",
+            marker=dict(symbol="star", size=14,
+                        color=COLORS.get("amber", "#F5A623"),
+                        line=dict(width=1, color="black")),
+            text=[f"{marker_label}: α*={alpha_star:.2f}"],
+            textposition="middle right",
+            textfont=dict(size=9),
+            showlegend=False,
+        ))
+
+    apply_layout(
+        fig,
+        xaxis=dict(
+            title="log₁₀ Λ_UV [GeV]",
+            tickmode="array",
+            tickvals=[10, 12, 14, 16, 18],
+            ticktext=["10¹⁰", "10¹²", "10¹⁴", "10¹⁶", "10¹⁸"],
+        ),
+        yaxis=dict(
+            title="log₁₀ α_ADW (ADW microscopic coefficient)",
+            tickmode="array",
+            tickvals=[-1, -0.5, 0, 0.5, 1],
+            ticktext=["10⁻¹", "10⁻⁰·⁵", "1", "10⁰·⁵", "10"],
+        ),
+        title=dict(
+            text=(
+                f"Phase 6a Wave 1 — emergent G_N(Λ_UV, α_ADW) at N_f={n_f}<br>"
+                f"<sub>Sakharov-Adler form G_N^emerg = α_ADW · 12π/(N_f · Λ²); "
+                f"gold contour = G_N^obs = 6.71×10⁻³⁹ GeV⁻²; stars = "
+                f"Planck-anchor α* values per SM N_f. "
+                f"Lean: <i>LinearizedEFE.G_N_emerg_match_locus</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=620,
+        width=920,
+    )
+    return fig
+
+
+def fig_c_GW_vs_ligo_constraint():
+    """Phase 6a Wave 2: c_GW deviation across the natural χ_vest range, vs the
+    GW170817 constraint.
+
+    The key Wave 2 finding: the Volovik vestigial-second-sound graviton
+    identification is *quantitatively falsified* under GW170817 unless χ_vest
+    is fine-tuned to within 3e-15 of unity. The natural range [0.1, 10]
+    fails by 14+ orders of magnitude.
+
+    Lean: GravitationalWaves.vestigial_natural_range_violates_ligo
+    Source: Abbott et al. ApJL 848, L13 (2017).
+    viz-ref: Phase 6a Paper 25 §main result
+    """
+    import plotly.graph_objects as go
+    from src.core.constants import GW_PARAMS
+    from src.gravitational_waves import (
+        c_GW_grid,
+        chi_vest_window_compatible_with_ligo,
+        ligo_falsification_summary,
+    )
+
+    chi_grid, _, deviations = c_GW_grid(0.01, 100.0, n_points=200)
+    cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
+
+    fig = go.Figure()
+
+    # Δc/c curve over χ_vest
+    fig.add_trace(go.Scatter(
+        x=chi_grid,
+        y=deviations,
+        mode="lines",
+        line=dict(color=COLORS["steel_blue"], width=3),
+        name="Δc/c = √χ_vest − 1",
+    ))
+
+    # Zero line (Δc = 0 ↔ c_GW = c)
+    fig.add_shape(
+        type="line",
+        x0=chi_grid[0], x1=chi_grid[-1],
+        y0=0.0, y1=0.0,
+        line=dict(color="black", width=1, dash="dot"),
+    )
+
+    # GW170817 cap band (essentially zero on this scale)
+    fig.add_trace(go.Scatter(
+        x=[chi_grid[0], chi_grid[-1], chi_grid[-1], chi_grid[0]],
+        y=[cap, cap, -cap, -cap],
+        fill="toself",
+        fillcolor="rgba(245, 166, 35, 0.30)",
+        line=dict(color=COLORS["amber"], width=1, dash="dash"),
+        name=f"GW170817 cap |Δc/c| ≤ {cap:.0e}",
+    ))
+
+    # Natural-range vertical band [0.1, 10]
+    chi_lo_nat = GW_PARAMS["CHI_VEST_NATURAL_LOWER"]
+    chi_hi_nat = GW_PARAMS["CHI_VEST_NATURAL_UPPER"]
+    y_min, y_max = float(deviations.min()), float(deviations.max())
+    fig.add_shape(
+        type="rect",
+        x0=chi_lo_nat, x1=chi_hi_nat,
+        y0=y_min - 0.1, y1=y_max + 0.1,
+        line=dict(color=COLORS["steel_blue"], width=1, dash="dash"),
+        fillcolor="rgba(74, 144, 226, 0.10)",
+    )
+    fig.add_annotation(
+        x=(chi_lo_nat * chi_hi_nat) ** 0.5,
+        y=y_max + 0.05,
+        text="Natural χ_vest range [0.1, 10]",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["steel_blue"]),
+        bgcolor="rgba(255,255,255,0.7)",
+    )
+
+    # Compatible χ_vest window endpoints (essentially χ = 1)
+    chi_lo_lig, chi_hi_lig = chi_vest_window_compatible_with_ligo(cap)
+    fig.add_trace(go.Scatter(
+        x=[1.0],
+        y=[0.0],
+        mode="markers+text",
+        marker=dict(symbol="star", size=18,
+                    color=COLORS["amber"],
+                    line=dict(width=1, color="black")),
+        text=["GW170817-compatible<br>(χ_vest = 1 ± 3×10⁻¹⁵)"],
+        textposition="bottom right",
+        textfont=dict(size=10),
+        showlegend=False,
+    ))
+
+    # Endpoint annotations: violation factors
+    summary = ligo_falsification_summary()
+    fig.add_annotation(
+        x=chi_lo_nat, y=summary["delta_lower"],
+        text=(
+            f"χ=0.1<br>Δc/c≈{summary['delta_lower']:.3f}<br>"
+            f"Violates LIGO by<br>{summary['violation_ratio_lower']:.1e}×"
+        ),
+        showarrow=True, arrowhead=2,
+        ax=60, ay=30,
+        font=dict(size=9, color=COLORS["amber"]),
+        bgcolor="rgba(255,255,255,0.85)",
+        bordercolor=COLORS["amber"], borderwidth=1,
+    )
+    fig.add_annotation(
+        x=chi_hi_nat, y=summary["delta_upper"],
+        text=(
+            f"χ=10<br>Δc/c≈{summary['delta_upper']:.3f}<br>"
+            f"Violates LIGO by<br>{summary['violation_ratio_upper']:.1e}×"
+        ),
+        showarrow=True, arrowhead=2,
+        ax=-80, ay=-30,
+        font=dict(size=9, color=COLORS["amber"]),
+        bgcolor="rgba(255,255,255,0.85)",
+        bordercolor=COLORS["amber"], borderwidth=1,
+    )
+
+    apply_layout(
+        fig,
+        xaxis=dict(
+            title="χ_vest (vestigial-phase metric-channel susceptibility, dimensionless)",
+            type="log",
+        ),
+        yaxis=dict(
+            title="Δc/c = (c_GW − c)/c",
+            range=[y_min - 0.2, y_max + 0.2],
+        ),
+        title=dict(
+            text=(
+                "Phase 6a Wave 2 — vestigial-second-sound graviton ID vs GW170817<br>"
+                "<sub>Δc/c = √χ_vest − 1; "
+                "GW170817 amber band |Δc/c| ≤ 3 × 10⁻¹⁵; "
+                "natural range fails by ~10¹⁴; "
+                "Lean: <i>GravitationalWaves.vestigial_natural_range_violates_ligo</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=620,
+        width=920,
+    )
+    return fig
+
+
+def fig_entropy_coefficient_vs_spectrum():
+    """Phase 6a Wave 3: BH-entropy leading coefficient over the Immirzi γ
+    scan + per-MTC d_max/anyon-spectrum overlay.
+
+    Demonstrates the Wave 3 deep-research verdict: the 1/4 prefactor is
+    a γ tuning, not a derivation. Distinct counting prescriptions
+    (Domagala-Lewandowski γ ≈ 0.237, Meissner γ ≈ 0.274) both 'tune' to 1/4
+    under their own normalizations; the universal piece is the −3/2 log
+    coefficient, NOT the 1/4 leading coefficient.
+
+    Lean: BHEntropyMicroscopic.kaul_majumdar_log_coefficient
+    Source: Kaul SIGMA 8, 005 (2012), arXiv:1201.6102 §5.
+    viz-ref: Phase 6a Paper 26 §3
+    """
+    import plotly.graph_objects as go
+    from src.bh_entropy import (
+        falsifier_status_table,
+        leading_coefficient_vs_immirzi,
+    )
+
+    γs, κs, anchors = leading_coefficient_vs_immirzi(
+        gamma_lower=0.05, gamma_upper=1.0, n_points=300
+    )
+    table = falsifier_status_table()
+
+    fig = go.Figure()
+
+    # Main κ(γ) curve
+    fig.add_trace(go.Scatter(
+        x=γs, y=κs,
+        mode="lines",
+        line=dict(color=COLORS["steel_blue"], width=3),
+        name="κ_leading(γ) = γ_DL/γ · 1/4",
+    ))
+
+    # 1/4 horizontal line
+    fig.add_shape(
+        type="line",
+        x0=γs[0], x1=γs[-1], y0=0.25, y1=0.25,
+        line=dict(color="black", width=1, dash="dot"),
+    )
+    fig.add_annotation(
+        x=γs[-1], y=0.25,
+        text="1/4 (Bekenstein-Hawking)",
+        showarrow=False, xanchor="right", yanchor="bottom",
+        font=dict(size=10),
+    )
+
+    # Domagala-Lewandowski + Meissner anchors
+    fig.add_trace(go.Scatter(
+        x=[anchors["DL"]],
+        y=[0.25],
+        mode="markers+text",
+        marker=dict(symbol="star", size=18,
+                    color=COLORS["amber"],
+                    line=dict(width=1, color="black")),
+        text=[f"γ_DL ≈ {anchors['DL']:.4f}"],
+        textposition="top center",
+        textfont=dict(size=10),
+        name="Domagala-Lewandowski",
+    ))
+    κ_M = 0.25 * anchors["DL"] / anchors["Meissner"]
+    fig.add_trace(go.Scatter(
+        x=[anchors["Meissner"]],
+        y=[κ_M],
+        mode="markers+text",
+        marker=dict(symbol="star", size=16,
+                    color=COLORS["steel_blue"],
+                    line=dict(width=1, color="black")),
+        text=[f"γ_M ≈ {anchors['Meissner']:.4f}<br>(κ ≈ {κ_M:.3f})"],
+        textposition="bottom right",
+        textfont=dict(size=9),
+        name="Meissner",
+    ))
+
+    # Annotate MTC zoo via right-side text (log d_max bar)
+    zoo_names = ["Fibonacci", "Ising", "DS3", "ToricCode"]
+    annotation_text = "<b>MTC zoo (log d_max):</b><br>" + "<br>".join(
+        f"  {name}: log d_max = {table[name]['log_d_max']:.3f}"
+        + (" (abelian — F2 falsifier)" if table[name]['is_abelian'] else "")
+        for name in zoo_names
+    )
+    fig.add_annotation(
+        x=0.98, y=0.05,
+        xref="paper", yref="paper",
+        text=annotation_text,
+        showarrow=False,
+        align="left",
+        bgcolor="rgba(255,255,255,0.85)",
+        bordercolor="black", borderwidth=1,
+        font=dict(size=9),
+    )
+
+    apply_layout(
+        fig,
+        xaxis=dict(title="Immirzi γ (dimensionless)"),
+        yaxis=dict(
+            title="κ_leading (BH-entropy leading coefficient)",
+            range=[0, max(κs.max() * 1.1, 0.6)],
+        ),
+        title=dict(
+            text=(
+                "Phase 6a Wave 3 — BH-entropy leading coefficient as Immirzi γ tuning<br>"
+                "<sub>The 1/4 prefactor is a TUNING, not a derivation; "
+                "DL & Meissner are distinct counting prescriptions; "
+                "Lean: <i>BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=620,
+        width=920,
+    )
+    return fig
+
+
+def fig_log_correction_signature():
+    """Phase 6a Wave 3: −3/2 log-correction structural anchor + per-MTC zoo +
+    Sen 4D Schwarzschild non-universality witness.
+
+    Three structural facts displayed:
+    1. The Kaul-Majumdar SU(2)_k value: c_log = −3/2 (½ Gaussian + 1 singlet).
+    2. The Sen 4D heat-kernel disagreement: c_log = +1.71 (universality fails).
+    3. The per-MTC tracked-hypothesis status (Fib/Ising/DS3 = conjectural,
+       Toric code = F2 falsifier).
+
+    Lean: BHEntropyMicroscopic.sen_4d_disagrees_with_kaul_majumdar
+    Source: Kaul-Majumdar gr-qc/0002040 + Sen 1205.0971 + deep-research §4.
+    viz-ref: Phase 6a Paper 26 §4
+    """
+    import plotly.graph_objects as go
+    from src.bh_entropy import log_correction_zoo, sen_disagreement_witness
+
+    zoo = log_correction_zoo()
+    witness = sen_disagreement_witness()
+
+    # x-axis: ordered status categories
+    categories = [
+        ("SU2k", -1.5, "known\n(Kaul-Majumdar)"),
+        ("Sen4DSchwarzschild", witness.c_log_sen_4d, "known\n(Sen heat-kernel)"),
+        ("Fibonacci", 0.0, "conjectural"),
+        ("Ising", 0.0, "conjectural"),
+        ("DS3", 0.0, "conjectural"),
+        ("ToricCode", 0.0, "F2 falsifier\n(abelian)"),
+    ]
+    names = [c[0] for c in categories]
+    values = [c[1] for c in categories]
+    statuses = [c[2] for c in categories]
+    bar_colors = [
+        COLORS["steel_blue"],     # KM known
+        COLORS["amber"],          # Sen disagreement
+        "rgba(180,180,180,0.5)",  # Fib conj
+        "rgba(180,180,180,0.5)",  # Ising conj
+        "rgba(180,180,180,0.5)",  # DS3 conj
+        "rgba(220,80,80,0.6)",    # Toric F2
+    ]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=names, y=values,
+        marker_color=bar_colors,
+        text=[
+            (f"{v:+.3f}" if statuses[i].startswith("known") else statuses[i])
+            for i, v in enumerate(values)
+        ],
+        textposition="outside",
+        showlegend=False,
+    ))
+
+    # −3/2 anchor line
+    fig.add_shape(
+        type="line",
+        x0=-0.5, x1=len(names) - 0.5,
+        y0=-1.5, y1=-1.5,
+        line=dict(color=COLORS["steel_blue"], width=1, dash="dash"),
+    )
+    fig.add_annotation(
+        x=len(names) - 0.5, y=-1.5,
+        text="−3/2 anchor (Kaul-Majumdar SU(2)_k)",
+        showarrow=False, xanchor="right", yanchor="bottom",
+        font=dict(size=10, color=COLORS["steel_blue"]),
+    )
+
+    # Sen disagreement annotation
+    fig.add_annotation(
+        x="Sen4DSchwarzschild", y=witness.c_log_sen_4d,
+        text=(
+            f"Disagrees with KM:<br>"
+            f"|Δc_log| = {abs(witness.disagreement):.2f}<br>"
+            f"⇒ universality fails"
+        ),
+        showarrow=True, arrowhead=2,
+        ax=80, ay=-40,
+        font=dict(size=9, color=COLORS["amber"]),
+        bgcolor="rgba(255,255,255,0.85)",
+        bordercolor=COLORS["amber"], borderwidth=1,
+    )
+
+    apply_layout(
+        fig,
+        xaxis=dict(title="MTC / counting scheme"),
+        yaxis=dict(title="c_log (log-A correction coefficient)",
+                   range=[-2.2, witness.c_log_sen_4d * 1.6]),
+        title=dict(
+            text=(
+                "Phase 6a Wave 3 — Log-correction signature: "
+                "Kaul-Majumdar −3/2 anchor + Sen 4D non-universality + MTC zoo<br>"
+                "<sub>−3/2 = (−1/2 Gaussian saddle) + (−1 SU(2) singlet projection); "
+                "Sen 1205.0971 disagrees; "
+                "Fib/Ising/DS3 conjectural; toric-code F2 falsifier; "
+                "Lean: <i>sen_4d_disagrees_with_kaul_majumdar</i></sub>"
             ),
             font=TITLE_FONT,
         ),

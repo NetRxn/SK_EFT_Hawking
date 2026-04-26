@@ -77,7 +77,8 @@ theorem jonesWenzl_one (c : ℕ → k) (h1 : 1 ≤ n) :
 
 /-! ## 3. Module Summary -/
 
-/--
+/-! ## Module summary
+
 JonesWenzl module: Jones-Wenzl idempotents f^(m) in TL_n(δ).
   - Wenzl recurrence with abstract coefficient function c : ℕ → k
   - jonesWenzl_zero: f^(0) = 1
@@ -87,6 +88,4 @@ JonesWenzl module: Jones-Wenzl idempotents f^(m) in TL_n(δ).
   - Foundation for: colored Jones polynomials, Kirby color, WRT invariant
   - Phase 5k W2: prove idempotency f² = f and absorption e_i·f = 0
 -/
-theorem jones_wenzl_summary : True := trivial
-
 end SKEFTHawking

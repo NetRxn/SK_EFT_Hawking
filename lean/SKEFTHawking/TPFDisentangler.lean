@@ -148,7 +148,8 @@ theorem lightlike_iff_anomaly_free (N : ℕ) (c : ONNCharge N) :
 
 /-! ## 5. Module Summary -/
 
-/--
+/-! ## Module summary
+
 TPFDisentangler module: algebraic skeleton of the TPF construction.
   - ChargeData with mixed anomaly and cubic anomaly
   - charge3450 anomaly-free: PROVED (native_decide)
@@ -161,6 +162,4 @@ TPFDisentangler module: algebraic skeleton of the TPF construction.
   - Lightlike ↔ anomaly-free equivalence PROVED
   - Zero sorry, zero axioms.
 -/
-theorem tpf_disentangler_summary : True := trivial
-
 end SKEFTHawking.TPFDisentangler

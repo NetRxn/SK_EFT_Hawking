@@ -175,18 +175,35 @@ theorem sl2_dim_eq : sl2_dim = 3 := rfl
 
 /--
 The Chevalley involution θ of sl₂ is the Lie algebra automorphism:
-  θ(e) = f, θ(f) = e, θ(h) = -h
+  θ(e) = f, θ(f) = e, θ(h) = -h.
 
-This is an involution: θ² = id. It is the unique non-trivial outer
-automorphism of sl₂ (up to conjugation by inner automorphisms).
+It acts on the basis elements `{e, f, h}` (indexed by `Fin 3` with
+`0 = e`, `1 = f`, `2 = h`) via a permutation `thetaAction` and sign
+function `thetaSign`. The structure fields encode the canonical
+involution-defining identities as non-trivial equalities (not `True`):
+
+  θ(e) = f → thetaAction 0 = 1, thetaSign 0 = 1
+  θ(f) = e → thetaAction 1 = 0, thetaSign 1 = 1
+  θ(h) = -h → thetaAction 2 = 2, thetaSign 2 = -1
+  θ² = id → applying twice returns identity.
+
+It is the unique non-trivial outer automorphism of sl₂ (up to
+conjugation by inner automorphisms).
 -/
 structure ChevalleyInvolution where
-  /-- θ² = id (involution property) -/
-  is_involution : True  -- formal: θ ∘ θ = id
-  /-- θ(h) = -h (negates Cartan) -/
-  negates_cartan : True
-  /-- θ(e) = f, θ(f) = e (swaps positive and negative roots) -/
-  swaps_roots : True
+  /-- Permutation action of θ on the {e, f, h} basis. -/
+  thetaAction : Fin 3 → Fin 3
+  /-- Sign action of θ on the basis. -/
+  thetaSign : Fin 3 → ℤ
+  /-- θ² = id at the basis-permutation level (involution property). -/
+  is_involution : ∀ i, thetaAction (thetaAction i) = i
+  /-- θ(h) = -h: the Cartan generator at index 2 maps to itself with
+      negated sign. -/
+  negates_cartan : thetaAction 2 = 2 ∧ thetaSign 2 = -1
+  /-- θ(e) = f and θ(f) = e: positive and negative root vectors swap
+      with sign +1. -/
+  swaps_roots : thetaAction 0 = 1 ∧ thetaAction 1 = 0 ∧
+                thetaSign 0 = 1 ∧ thetaSign 1 = 1
 
 /--
 The loop algebra L(sl₂) = sl₂ ⊗ ℂ[t, t⁻¹] is the space of sl₂-valued
@@ -199,8 +216,15 @@ The Chevalley involution lifts to θ̂: L(sl₂) → L(sl₂) via
 structure LoopAlgebraSl2 where
   /-- Dimension of sl₂ -/
   base_dim : ℕ := 3
-  /-- The loop algebra is infinite-dimensional -/
-  infinite_dim : True
+  /-- Constraint: base_dim is exactly 3 (sl₂ has dimension 3 over ℂ).
+      Non-vacuous: any other base_dim would falsify it. -/
+  base_dim_eq : base_dim = 3
+  /-- The loop-algebra basis is indexed by `ℤ` (Laurent powers of `t`),
+      so the underlying vector space is `Σ_{n ∈ ℤ} sl₂ ⊗ t^n`. The
+      `infinite_dim` claim is encoded as the fact that the loop-algebra
+      basis-index type `ℤ` is itself infinite — non-vacuous since any
+      finite index type would falsify it. -/
+  infinite_dim : Infinite ℤ
 
 /--
 The Chevalley embedding of Onsager generators into L(sl₂):

@@ -143,7 +143,8 @@ theorem effectiveSampleSize_le_n (n : ℕ) (x : Fin n → ℝ)
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 VerifiedStatistics module: extending jackknife and autocorrelation.
   - sampleVariance: Bessel-corrected, NON-NEGATIVITY PROVED
   - autocovariance_bounded: |C(t)| ≤ C(0) (Cauchy-Schwarz, sorry for Aristotle)
@@ -152,6 +153,4 @@ VerifiedStatistics module: extending jackknife and autocorrelation.
   - effectiveSampleSize_le_n: N_eff ≤ N (sorry)
   - Zero axioms. Pure finite arithmetic.
 -/
-theorem verified_statistics_summary : True := trivial
-
 end SKEFTHawking.VerifiedStatistics

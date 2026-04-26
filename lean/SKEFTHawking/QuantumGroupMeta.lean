@@ -205,7 +205,8 @@ theorem f4k1_alcove :
 
 /-! ## 5. Module Summary -/
 
-/--
+/-! ## Module summary
+
 QuantumGroupMeta module: exceptional types + named generators.
   - Exceptional Cartan matrices: E₆, E₇, E₈, F₄ with symmetry verification
   - CartanTypeData: all exceptional types with h∨ consistency
@@ -215,6 +216,4 @@ QuantumGroupMeta module: exceptional types + named generators.
   - First E₆/E₇/E₈ quantum group generators in any proof assistant
   - Zero sorry.
 -/
-theorem quantum_group_meta_summary : True := trivial
-
 end SKEFTHawking

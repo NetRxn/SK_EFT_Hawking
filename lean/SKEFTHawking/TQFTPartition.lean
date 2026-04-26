@@ -176,7 +176,8 @@ def fibTQFT : TQFTData where
 
 /-! ## 5. Module Summary -/
 
-/--
+/-! ## Module summary
+
 TQFTPartition: first verified TQFT partition functions.
   - Ising: g=0..4 ALL PROVED (1, 3, 10, 36, 136), recurrence verified
   - Fibonacci: g=0..5 ALL PROVED (1, 2, 5, 15, 50, 175)
@@ -186,6 +187,4 @@ TQFTPartition: first verified TQFT partition functions.
   - First TQFT partition functions in any proof assistant
   - Zero sorry, zero axioms.
 -/
-theorem tqft_partition_summary : True := trivial
-
 end SKEFTHawking.TQFTPartition

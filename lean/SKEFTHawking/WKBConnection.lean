@@ -321,46 +321,78 @@ The dissipation shifts the WKB turning point into the complex plane:
 
   x_tp = x_H + i · δx_imag
 
-where δx_imag = Γ_H / (κ · c_s).
+where δx_imag = c_s · Γ_H / (2 · κ²). Equivalently, in terms of the
+decoherence parameter δ_k = 2 · Γ_H / κ:
 
-The imaginary shift is proportional to δ_diss and inversely proportional
-to c_s. This is the mechanism by which dissipation modifies the Hawking
-temperature: the WKB action integral along the Stokes line picks up an
-additional imaginary contribution from the contour deformation around
-the shifted turning point.
+  δx_imag = c_s · δ_k / (4 · κ)
+
+The base WKB turning point sits at x_H ≈ -i·c_s/κ (set by the analog
+Hawking eikonal saddle); dissipation perturbs it to
+x_tp = -i·(c_s/κ)·(1 + δ_diss/2). The mechanism by which dissipation
+modifies the Hawking temperature: the WKB action integral along the
+Stokes line picks up an additional imaginary contribution from the
+contour deformation around the shifted turning point.
+
+Dimensions: c_s has units [L/T], Γ_H and κ have units [1/T], so
+δx_imag has units [L]. ✓
 -/
 
 /-- The imaginary shift of the turning point.
 
-    δx_imag = Γ_H / (κ · c_s) -/
+    δx_imag = c_s · Γ_H / (2 · κ²)
+
+    Equivalently, (c_s / (4 · κ)) · decoherenceParam — see
+    `turning_point_shift_eq_decoherence` for the structural binding. -/
 noncomputable def turningPointShift (p : ExactWKBParams) : ℝ :=
-  p.Gamma_H / (p.kappa * p.cs)
+  p.cs * p.Gamma_H / (2 * p.kappa^2)
 
 /-- The turning point shift is non-negative. -/
 theorem turning_point_shift_nonneg (p : ExactWKBParams) :
     0 ≤ turningPointShift p := by
   unfold turningPointShift
-  exact div_nonneg p.Gamma_H_nonneg (le_of_lt (mul_pos p.kappa_pos p.cs_pos))
+  have hden : (0 : ℝ) < 2 * p.kappa^2 :=
+    mul_pos (by norm_num) (pow_pos p.kappa_pos 2)
+  exact div_nonneg
+    (mul_nonneg (le_of_lt p.cs_pos) p.Gamma_H_nonneg)
+    (le_of_lt hden)
 
-/-- The turning point shift is positive iff Γ_H > 0. -/
+/-- The turning point shift is positive iff Γ_H > 0.
+    The c_s and 2κ² factors are positive, so positivity reduces to Γ_H > 0. -/
 theorem turning_point_shift_pos_iff (p : ExactWKBParams) :
     0 < turningPointShift p ↔ 0 < p.Gamma_H := by
   unfold turningPointShift
-  rw [div_pos_iff_of_pos_right (mul_pos p.kappa_pos p.cs_pos)]
+  have hden : (0 : ℝ) < 2 * p.kappa^2 :=
+    mul_pos (by norm_num) (pow_pos p.kappa_pos 2)
+  rw [div_pos_iff_of_pos_right hden, mul_pos_iff_of_pos_left p.cs_pos]
 
-/-- The turning point shift vanishes iff there is no dissipation. -/
+/-- The turning point shift vanishes iff there is no dissipation.
+    Since c_s > 0 and 2κ² > 0, the shift is zero iff Γ_H = 0. -/
 theorem turning_point_shift_zero_iff (p : ExactWKBParams) :
     turningPointShift p = 0 ↔ p.Gamma_H = 0 := by
   unfold turningPointShift
-  rw [div_eq_zero_iff]
+  have hden : (0 : ℝ) < 2 * p.kappa^2 :=
+    mul_pos (by norm_num) (pow_pos p.kappa_pos 2)
+  rw [div_eq_zero_iff, mul_eq_zero]
   constructor
+  · rintro (⟨hcs | hG⟩ | hden_eq)
+    · exact absurd hcs p.cs_pos.ne'
+    · exact hG
+    · exact absurd hden_eq hden.ne'
   · intro h
-    cases h with
-    | inl h => exact h
-    | inr h => exact absurd h (mul_pos p.kappa_pos p.cs_pos).ne'
-  · intro h
-    left
-    exact h
+    left; right; exact h
+
+/-- Structural binding: the turning point shift equals
+    (c_s / (4 · κ)) · decoherenceParam.
+
+    This ties δx_imag to the open-system unitarity deficit:
+    larger decoherence ⇒ larger imaginary turning-point shift,
+    coupled by the WKB localization length c_s/κ. -/
+theorem turning_point_shift_eq_decoherence (p : ExactWKBParams) :
+    turningPointShift p = p.cs * decoherenceParam p / (4 * p.kappa) := by
+  unfold turningPointShift decoherenceParam
+  have hk : p.kappa ≠ 0 := p.kappa_pos.ne'
+  field_simp
+  ring
 
 /-!
 ## Critical Frequency (UV Cutoff)

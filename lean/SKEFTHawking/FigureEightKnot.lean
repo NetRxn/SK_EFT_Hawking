@@ -129,7 +129,8 @@ theorem sigma2_inv_check : sigma2 * sigma2_inv = Mat2.one := by native_decide
 
 /-! ## 5. Module Summary -/
 
-/--
+/-! ## Module summary
+
 FigureEightKnot: first 3-strand knot invariant from verified MTC data.
   - Mat2: 2×2 matrix type over QCyc16 with DecidableEq
   - F² = I: Hadamard self-inverse PROVED
@@ -138,6 +139,4 @@ FigureEightKnot: first 3-strand knot invariant from verified MTC data.
   - Normalized: RT(4₁, σ) = -1/√2 PROVED
   - Zero sorry, zero axioms. All native_decide over QCyc16.
 -/
-theorem figure_eight_summary : True := trivial
-
 end SKEFTHawking.FigureEightKnot

@@ -114,8 +114,8 @@ either:
 Both routes are deferred to a follow-up; the concrete cases below are
 the deliverable for Phase 5p Wave 6. -/
 
-/-- **The unified Wave 6 witness**: both Drinfeld centers we have formalized
-    satisfy the categorical dimension formula. -/
+/-- **The unified Wave 6 witness**: both Drinfeld centers we have
+formalized satisfy the categorical dimension formula. -/
 theorem drinfeld_center_dimension_witness :
     -- Abelian case: Z(Vec_{ℤ/2}) = toric code, D² = 4 = 2²
     toric_global_dim = vecZ2_global_dim_sq ∧
@@ -127,7 +127,5 @@ theorem drinfeld_center_dimension_witness :
   ⟨drinfeld_center_dim_Z2, drinfeld_center_dim_S3⟩
 
 /-! ## 4. Module summary -/
-
-theorem d2_formula_summary : True := trivial
 
 end SKEFTHawking

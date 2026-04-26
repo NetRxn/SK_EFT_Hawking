@@ -197,7 +197,8 @@ example :
 
 /-! ## 6. Module summary -/
 
-/--
+/-! ## Module summary
+
 PolyQuotOver module: Generic tower extension K[w]/(p(w)).
 
 - `PolyQuotOver K m`: coefficient-tuple representation over base ring K
@@ -214,7 +215,5 @@ some other `PolyQuotQ n`).
 - Sanity checks at degree 2 over ℚ pass native_decide
 - First user: QCyc5Ext = Q(ζ₅)[w]/(w² − φ) via `mulReduce2`
 -/
-theorem polyquotover_summary : True := trivial
-
 end PolyQuotOver
 end SKEFTHawking

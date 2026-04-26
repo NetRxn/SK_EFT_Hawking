@@ -98,8 +98,7 @@ theorem zeta16_one :
     let z4 := z2 * z2
     let z8 := z4 * z4
     z8 * z8 = 1 := by native_decide
-
-theorem qcyc16_summary : True := trivial
+-- (Module summary placeholder removed; see preceding sections.)
 
 end QCyc16
 

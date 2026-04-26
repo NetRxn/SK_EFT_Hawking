@@ -61,7 +61,23 @@
 
 ---
 
-## Track A: Linearized Einstein + Cosmology (6a.1, 6a.4)
+## Track A: Linearized Einstein + Cosmology (6a.1, 6a.4) — **SHIPPED 2026-04-25**
+
+**Status:** Track A closed end-to-end. Wave 1 + Wave 4 ship full pipeline through Stage 12.
+- `LinearizedEFE.lean`: 37 theorems, 0 sorry, 0 new axioms.
+- `FLRWDynamics.lean`: 14 theorems, 0 sorry, 0 new axioms.
+- `src/emergent_gravity/`: 4 Python modules (incl. `__init__`) + 50 pytest cases.
+- `papers/paper23_linearized_efe/`: PRD draft, 5 pages, 476 KB, compiles clean, P1 readiness gates pass.
+- `fig_G_N_emerg_parameter_scan`: shipped to `figures/`, registered in `review_figures.py`.
+- Deep research integrated: `Lit-Search/Phase-6a/6a-The Microscopic Coefficient α_ADW...md` returned 2026-04-25 mid-session; verdict NO CLOSED FORM in published literature; Wave 1 ships option (b) tracked-hypothesis with positivity / critical-limit / deep-gap-Adler structural Props.
+- Validate.py 22/22 PASS.
+- Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
+
+**Phase 6a downstream dependencies registered:**
+- The missing one-loop ⟨h h⟩ broken-phase 2-pt computation — natural follow-up paper, target Phase 6e or Wave 1+ refinement.
+- Phase 6b.2 (cosmological perturbation theory) discharges `H_DESICompatibility` from Wave 4.
+
+
 
 ### Motivation
 
@@ -143,7 +159,25 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ---
 
-## Track B: Gravitational Waves (6a.2)
+## Track B: Gravitational Waves (6a.2) — **SHIPPED 2026-04-25**
+
+**Status:** Track B Wave 2 closed end-to-end. Pipeline through Stage 12.
+- `GravitationalWaves.lean`: 17 theorems, 0 sorry, 0 new axioms.
+- `src/gravitational_waves/`: 4 Python modules + 43 pytest cases.
+- `papers/paper25_gravitational_waves/`: PRD draft, 4 pages, 421 KB, compiles clean.
+- `fig_c_GW_vs_ligo_constraint`: shipped to `figures/`, registered in `review_figures.py`.
+- **Load-bearing falsification result.** Natural χ_vest range [0.1, 10] gives Δc/c ∈ [-0.68, +2.16], failing GW170817 cap (3e-15) by ~7×10¹⁴. Both endpoint falsifiers proven in Lean: `natural_lower_violates_ligo`, `natural_upper_violates_ligo`, bundled `vestigial_natural_range_violates_ligo`.
+- Phase 5y H1 caveat encoded as the existential meta-theorem `second_sound_graviton_not_derived_DOF`.
+- Tracked-hypothesis bundle `H_VestigialModeIsGraviton` (positivity ∧ LigoSatisfied ∧ luminal) with three falsifier theorems (lower, upper, zero).
+- 2 new bibkeys: `Abbott2017GW170817`, `CrossleyGloriosoLiu2017`.
+- Validate.py 22/22 PASS in 1003s.
+- Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
+
+**Phase 6a downstream dependencies registered:**
+- Phase 6e or Phase 5y H1 follow-up wave: derived-DOF mechanism for χ_vest = 1 (or alternate metric-channel identification), needed to convert Wave 2's natural-range falsification into a positive identification.
+- Phase 6b.2 (cosmological perturbation theory): GW background calibration depends on resolution of the vestigial identification.
+
+
 
 ### Wave 2 — `GravitationalWaves.lean` [Pipeline: Stages 1–12]
 
@@ -185,7 +219,25 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ---
 
-## Track C: Black Hole Structure (6a.3, 6a.5)
+## Track C: Black Hole Structure (6a.3, 6a.5) — **W3 SHIPPED 2026-04-26**
+
+**Status:** Track C Wave 3 closed end-to-end. Pipeline through Stage 12.
+- `BHEntropyMicroscopic.lean`: 19 theorems, 0 sorry, 1 new axiom (`gaussianSaddleAsymptotic`, classified `eliminability: hard` in `AXIOM_METADATA`), 1 opaque function (`verlindeEntropy_SU2k`).
+- `src/bh_entropy/`: 4 Python modules + 43 pytest cases.
+- `papers/paper26_bh_entropy/`: PRD draft, 5 pages, 596 KB, compiles clean, 16 bibitems.
+- Two figures shipped: `fig_entropy_coefficient_vs_spectrum` (κ_leading(γ) Immirzi tuning scan + DL/Meissner anchors + MTC zoo log d_max overlay) + `fig_log_correction_signature` (-3/2 anchor bar chart + Sen non-universality witness annotation).
+- **Outcome-3 tracked-hypothesis bundle** `H_HorizonBoundaryCondition` with five falsifier theorems for the general MTC case (positivity, areaLeading, secondLaw, modularInvariance placeholder, anomalyMatch placeholder).
+- **Outcome-2 sub-corollary** specialized to SU(2)_k: Kaul-Majumdar closed form derived under `gaussianSaddleAsymptotic` axiom + Immirzi `γ_immirzi` tuning hypothesis.
+- **Three structural results.** (1) `kaul_majumdar_log_decomposition`: -3/2 = (-1/2 Gaussian saddle) + (-1 SU(2) singlet projection); (2) Immirzi γ as TUNING (Domagala-Lewandowski 0.2375 vs Meissner 0.2739 yield same -3/2); (3) `sen_4d_disagrees_with_kaul_majumdar` non-universality witness (Sen 1205.0971: c_log = +(212/45-3) ≈ +1.71 ≠ -3/2).
+- **MTC zoo falsifier-instance status.** Fibonacci/Ising/D(S₃)/SU(2)_k pass F1+F3+F4 (modular invariance via formalized S-matrix); F5 (Walker-Wang anomaly inflow) uniformly conjectural. **Toric code FAILS F2** (abelian: log d_max = 0 ⇒ κ_C = 0).
+- 15 new bibkeys (KaulMajumdar2000, Kaul2012Review, DomagalaLewandowski2004, Meissner2004, EngleNouiPerez2010, Carlip2000HorizonCFT, Sen2013Schwarzschild, Solodukhin2011LivingRev, WalkerWang2012, BombelliKoulLeeSorkin1986, JacobsonInducedGravity1994, KitaevHonest2006, Mitra2014LogVanish, McGoughVerlinde2013, GovindarajanKaulSuneeta2001) — all `doi_verified: None`; awaiting WebFetch round.
+- Validate.py 22/22 PASS in 1006s.
+- Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
+- **Wave 5 (`BHThermodynamicsFourLaws`) UNBLOCKED**, ready to start (depends on W1 + W3, both shipped).
+
+**Phase 6a downstream dependencies registered:**
+- The Walker-Wang anomaly-inflow conjecture is the natural next step for tying the abstract `H_HorizonBoundaryCondition` to a derived MTC at the ADW horizon (Phase 6e or future Wave).
+- The `gaussianSaddleAsymptotic` axiom is `eliminability: hard` — Mathlib PR candidate for `MeasureTheory.Asymptotic.LaplaceMethod` is registered as a future-Mathlib opportunity, not blocking Phase 6a.
 
 ### Wave 3 — `BHEntropyMicroscopic.lean` (6a.3) [Pipeline: Stages 1–12]
 
@@ -353,9 +405,9 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ## Open Questions
 
-**O.1 — LOAD-BEARING for 6a.2.** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. 6a.2 operates in "use-as-identified" mode with explicit caveat theorem. Confirm this scope with user before Wave 2 Stage 10.
+**O.1 — RESOLVED 2026-04-25.** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in "use-as-identified" mode with explicit caveat theorem `second_sound_graviton_not_derived_DOF`. The natural-range falsification result is the load-bearing finding: Wave 2 *negatively* resolves the identification at leading order, opening Phase 6e (full nonlinear emergent action) or a Phase 5y H1 follow-up wave to provide a derived-DOF χ_vest = 1 mechanism.
 
-**O.2** — MTC horizon boundary condition for 6a.3: which anyon-spectrum ansatz at horizon? Drop deep-research prompt `Lit-Search/Tasks/Phase6a_mtc_horizon_boundary_condition.md` before Wave 3 Stage 3a.
+**O.2 — RESOLVED 2026-04-26.** MTC horizon BC for 6a.3 ships in Outcome-3 tracked-hypothesis mode (`H_HorizonBoundaryCondition` Lean Prop bundle with five falsifier theorems) + Outcome-2 SU(2)_k sub-corollary (Kaul-Majumdar -3/2 closed form under `gaussianSaddleAsymptotic` axiom + Immirzi γ tuning). Per the deep-research return verdict: no published derivation pins a specific MTC at a 4D BH horizon in an ADW substrate, so the choice is a research-level conjecture flagged in the module + paper. The Walker-Wang anomaly-inflow conjecture (Z₂ time-reversal bulk → boundary chiral c_- mod 8) is the natural derivation path for future work.
 
 **O.3** — 6a.5 regime separation: when does Schwarzschild-limit apply vs ADW-BHs-cool-toward-extremality? Document `regime_partition_criterion` in the module docstring.
 

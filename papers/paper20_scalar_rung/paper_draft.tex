@@ -46,7 +46,7 @@ microscopic overlap-integral form (deep-research-gated, see Open Question
 O.2). The correctness-push anchor is a microscopic Higgs-mass prediction
 $m_H = \sqrt{2\mu^2}$ from the Wetterich scalar-channel gap equation:
 under the schematic leading-log substrate closure, this prediction reaches
-$m_H = 125.25$~GeV only along a one-parameter curve in the
+$m_H = 125.20$~GeV only along a one-parameter curve in the
 $(\Lambda_{\rm UV},\,G_c)$ plane, requiring tuning rather than emerging
 from a generic substrate---a structural-only verdict at the current
 formalization scope. The complete formalization lives in a single new
@@ -62,7 +62,7 @@ transition (\texttt{EWPhaseTransition.lean}) are addressed in subsequent
 waves. We formulate the falsifiability anchor as a decidable Lean
 predicate and report that, in the flavor-singlet frame, the scalar-rung
 framing is a \emph{structural} identification of EWSB rather than a
-quantitative prediction of the observed $125.25$~GeV Higgs mass.
+quantitative prediction of the observed $125.20$~GeV Higgs mass.
 \end{abstract}
 
 \maketitle
@@ -76,13 +76,13 @@ project formalizes a Landau hierarchy of fermion-bilinear condensates
 on a single fermionic substrate~\cite{ADW,WetterichSpinor2013,WetterichSpinor2022,Volovik2024}.
 Two rungs of this hierarchy have been formalized in prior phases:
 the disordered $\to$ vestigial-metric transition
-(\texttt{VestigialSusceptibility.lean}, $16$ theorems) and the
+(\texttt{VestigialSusceptibility.lean}, $24$ theorems) and the
 vestigial-metric $\to$ tetrad transition
-(\texttt{TetradGapEquation.lean}, $20$ theorems;
+(\texttt{TetradGapEquation.lean}, $24$ theorems;
 \texttt{ADWMechanism.lean}, $21$ theorems). Both rungs share the
 Wetterich-NJL four-fermion infrastructure
 (\texttt{WetterichNJL.lean}, $18$ theorems) and the FermiPointTopology
-emergent-Weyl substrate (\texttt{FermiPointTopology.lean}, $33$ theorems).
+emergent-Weyl substrate (\texttt{FermiPointTopology.lean}, $29$ theorems).
 
 In this paper we add a third rung: the \emph{scalar rung}, identified
 with the Higgs bilinear of the electroweak Standard Model. The
@@ -116,7 +116,7 @@ mass-matrix theorem, and the Yukawa-overlap-linear lemma.
 (iii)~A decidable Lean predicate
 \texttt{ScalarRungQuantitativeMatch} encoding the Phase 5z Gate~Z.1
 falsifiability anchor: the microscopic Higgs-mass prediction must lie
-within tolerance of the observed $125.25$~GeV for the scalar-rung framing
+within tolerance of the observed $125.20$~GeV for the scalar-rung framing
 to constitute a quantitative theory of EWSB.
 (iv)~A Python parameter-scan layer
 (\texttt{src/scalar\_rung/}) and a 24-test pytest suite covering every
@@ -124,7 +124,7 @@ Lean theorem, with the canonical
 $\cos\theta_W = M_W/M_Z$ identity reproducing the PDG~2024 value.
 (v)~A heatmap visualization
 (Fig.~\ref{fig:scalar_rung_scan}) showing that, under the schematic
-leading-log substrate closure, $m_H = 125.25$~GeV is attained only along
+leading-log substrate closure, $m_H = 125.20$~GeV is attained only along
 a 1D tuning curve in the natural $(\Lambda_{\rm UV},\,G_c)$ parameter
 plane---a structural-only Gate~Z.1 verdict at the current scope.
 
@@ -203,7 +203,7 @@ Higgs mass-squared $m_H^2 = 2\mu^2$
 identities. The Python implementation \texttt{higgs\_mass\_from\_vev}
 matches PDG~2024 within RG-running uncertainty:
 $\mu^2 = \lambda v^2$ with $\lambda = 0.129$ and $v = 246.22$~GeV gives
-$m_H = 125.06$~GeV, against the observed $125.25 \pm 0.17$~GeV.
+$m_H = 125.06$~GeV, against the observed $125.20 \pm 0.11$~GeV.
 
 %% ================================================================
 \section{The Anderson-Higgs $W$/$Z$ Mass Matrix}
@@ -316,7 +316,7 @@ $(1-\tau) m_H^{\rm obs} < m_H^{\rm pred} < (1+\tau) m_H^{\rm obs}$.
 
 Figure~\ref{fig:scalar_rung_scan} shows the microscopic prediction
 heatmap over the natural $(\Lambda_{\rm UV},\,G_c)$ plane at
-$N_f = 15$, $\lambda_4 = 0.13$. The 125.25 GeV target traces a curve
+$N_f = 15$, $\lambda_4 = 0.13$. The 125.20 GeV target traces a curve
 through the plane: at $\Lambda_{\rm UV} = $~TeV-scale,
 $G_c \sim 0.5\text{--}2$ (super-critical); at $\Lambda_{\rm UV} = $~GUT
 scale, $G_c \sim 0.05\text{--}0.1$ (sub-critical). The $\pm 50\%$
@@ -328,7 +328,7 @@ generic region.
 \includegraphics[width=\columnwidth]{figures/fig_higgs_mass_parameter_scan.png}
 \caption{Microscopic Higgs-mass prediction heatmap over the
 $(\Lambda_{\rm UV},\,G_c)$ plane at fiducial $N_f = 15$,
-$\lambda_4 = 0.13$. The gold contour traces $m_H = 125.25$ GeV;
+$\lambda_4 = 0.13$. The gold contour traces $m_H = 125.20$ GeV;
 dotted lines mark the $\pm 50\%$ tolerance band defining
 \texttt{EW.M\_H\_MATCH\_TOLERANCE}. The narrow curve indicates that the
 scalar-rung framing requires substrate-parameter tuning rather than
@@ -347,39 +347,167 @@ subsequent deep-research questions whose resolution would either tighten
 or relax the verdict.
 
 %% ================================================================
+\section{BHL Gauge Embedding (Wave 1b Quantitative Scope)}
+\label{sec:bhl-extension}
+
+The Wave 1 verdict above is structural rather than quantitative. The
+Wave 1b BHL gauge embedding lifts the analysis to a quantitative branch
+without abandoning the flavor-singlet
+\texttt{ScalarRungInterpretation.lean} foundation. Per the
+Phase~5z O.2 deep-research verdict (Scenario A, structural-analogy strength
+$3/5$~\cite{BardeenHillLindner,MiranskyTanabashiYamawaki1989,Hill2025Redux,Cvetic1999}),
+the WetterichNJL scalar channel admits a Higgs-compatible
+$SU(2)_L \times U(1)_Y$ extension via the Bardeen-Hill-Lindner
+auxiliary-field bridge: the $\Gamma=1$, $\bar L R$ subchannel
+$\sigma = H^i \equiv \bar\psi_R \psi_L^i$ carries the SM
+$(1,2)_{+1/2}$ Higgs-doublet quantum numbers exactly. The bridge is not
+Wetterich-native; it requires a transplant of the BHL gauge-indexing
+onto the Clifford-16 Fierz basis, which we encode in
+\texttt{BHLGaugeEmbedding.lean} via the tracked-hypothesis pattern.
+
+\subsection{Extended Fierz basis and Higgs identification}
+
+For the minimal BHL configuration (one $SU(2)_L$ doublet, one singlet,
+one color, one generation), the gauge-indexed Clifford basis is
+$68$-dimensional ($2 + 2 + 4 + 4 + 12 + 4 + 12 + 4 + 12 + 12$, summing
+the explicit ten representation-theoretic block sizes per O.2 §3.2),
+with the scalar-LR + scalar-RL subspace forming the $2$-component
+complex Higgs doublet. The Lean theorem \texttt{fierzBlockSum\_eq\_68}
+verifies the arithmetic by \texttt{decide}; the value $68$ corrects an
+arithmetic typo in the deep-research note (the listed blocks sum to
+$68$, not the document's stated $66$). The tracked hypothesis
+\texttt{H\_FierzCompletenessExtended (cfg) (dim\_fn)} parameterizes
+over an abstract dimension function and asserts
+$\texttt{dim\_fn cfg} = \texttt{fierzBlockSum} \cdot (n_d \cdot n_s
+\cdot n_c \cdot n_g)$. The witness theorem
+\texttt{fierz\_completeness\_holds\_for\_bhl\_dim} discharges this for
+the canonical \texttt{bhlBilinearBasisDim}; the falsifier
+\texttt{fierz\_completeness\_fails\_for\_zero\_dim} confirms the
+hypothesis is non-vacuous (the all-zero dim function fails it).
+The Hubbard-Stratonovich covariance hypothesis
+\texttt{H\_HSCovariantBosonisation} asserts that the auxiliary field
+inherits hypercharge $+1/2$ (the $\bar\psi_R \psi_L^i$ source current);
+\texttt{not\_higgs\_bilinear\_of\_wrong\_hypercharge} confirms its
+falsifiability.
+
+\subsection{BHL leading-order $m_H$ and the gap problem}
+
+The BHL leading-order formula
+$m_H = \sqrt{2}\,m_t$ (Nambu sum rule at large $N_c$) is formalized as
+\texttt{bhlHiggsMass\_eq\_sqrt2\_times\_top}, with the squared form
+$m_H^2 = 2 m_t^2$ (\texttt{bhlHiggsMass\_sq}). At the BHL
+benchmark $\Lambda = M_{\rm Pl}$, $N_c = 3$, the IR
+Pendleton-Ross fixed point yields $m_t^{\rm BHL} \approx 220$~GeV
+and hence $m_H^{\rm BHL} \approx 311$~GeV. The Lean theorem
+\texttt{bhl\_minimal\_overshoots\_pdg} certifies the strict bound
+$m_H^{\rm BHL} > 250$~GeV, formalizing the well-known BHL gap problem
+against PDG~2024 $m_H = 125.20\pm 0.11$~GeV~\cite{PDG2024} as a
+$\sim 2.5\times$ overshoot.
+
+\subsection{Hill 2025 bilocal correction}
+
+The bilocal extension $H^i(x,y) \sim \bar\psi_R(x)\psi_L^i(y)$ with
+internal wave-function $\phi(r)$ resolves the gap
+problem~\cite{Hill2025Redux}. The dilution factor
+$\phi(0)/\phi(\infty)$ enters multiplicatively
+($m_H = (\phi(0)/\phi(\infty)) \cdot \sqrt{2} m_t$) and is
+exponentially suppressed near critical coupling. We formalize the
+bilocal Higgs as a structure \texttt{BilocalHiggs} with positive
+wave-function values; the pointlike-limit tracked hypothesis
+\texttt{H\_BilocalPointlikeLimit} asserts dilution~$=1$, with
+\texttt{not\_pointlike\_of\_strict\_dilution} certifying its
+falsifiability when $\phi(0) < \phi(\infty)$.
+
+The load-bearing existential
+\texttt{bilocal\_correction\_can\_match\_pdg} provides a concrete
+witness: at dilution $\phi(0)/\phi(\infty) \approx 0.402$ with the BHL
+benchmark $m_t = 220$~GeV, the corrected Higgs mass matches PDG within
+$1$~GeV. This is the quantitative-branch recovery of $m_H = 125$~GeV
+from the BHL minimal overshoot, without abandoning the substrate
+identification of the scalar rung.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_bhl_bilocal_correction.png}
+\caption{\textbf{Phase 5z Wave 1b — BHL gap problem and Hill 2025 bilocal
+correction.} Left panel: bilocal-corrected
+$m_H = (\phi(0)/\phi(\infty)) \sqrt{2} m_t$ versus dilution at the BHL
+benchmark $m_t = 220$~GeV. The BHL minimal point at dilution $= 1$
+(circle, $311$~GeV) overshoots PDG (dashed gold) by $\sim 2.5\times$;
+the Hill 2025 dilution $\approx 0.402$ (diamond) recovers PDG within
+$1$~GeV. Right panel: required dilution to match PDG $m_H$ as a function
+of $m_t$. The BHL benchmark $m_t = 220$~GeV (dashed cross) and PDG
+$m_t = 172.57$~GeV (dotted amber) frame the natural BHL dilution range.
+Lean: \texttt{bhl\_minimal\_overshoots\_pdg} (left circle position),
+\texttt{bilocal\_correction\_can\_match\_pdg} (left diamond position).}
+\label{fig:bhl_bilocal_correction}
+\end{figure}
+
+\subsection{Tetrad back-reaction (open)}
+
+The ADW tetrad back-reaction $\Delta_{\rm tetrad}(\langle e\rangle)$ to
+$m_H$ is not closed in the Diakonov-Volovik-Wetterich
+literature~\cite{ADW,WetterichSpinor2022}. The Lean module flags
+\texttt{H\_TetradBackreactionShift} as a parametric open hypothesis with
+the corrected mass \texttt{tetradCorrectedHiggsMass}~$=$~$\sqrt{2} m_t + \Delta$;
+positivity holds for $\Delta > -\sqrt{2}\,m_t$. Closing this hypothesis
+quantitatively is a Phase~6 deliverable.
+
+\subsection{Updated Gate Z.1 verdict}
+
+With Wave 1b in place, the Gate Z.1 verdict refines from
+\emph{structural-only} to \emph{structural at the minimal-BHL scope,
+quantitative under the Hill 2025 bilocal mechanism}. The minimal BHL
+embedding is excluded by $m_H^{\rm BHL} \approx 311$~GeV; the bilocal
+extension recovers 125~GeV at a single dilution value, which, like the
+Wave 1 1-D tuning curve, is a falsifiable narrowness rather than
+generic emergence. The Wave 1b transplant is a strict refinement of
+Wave 1 (theorem
+\texttt{bhl\_compatible\_with\_scalar\_rung} certifies that any
+Wave 1 \texttt{ScalarChannel} retains its Mexican-hat positivity in
+the Wave 1b framework).
+
+%% ================================================================
 \section{Formal Verification Summary}
 \label{sec:formal-verification}
 
-The formalization comprises one new Lean module:
+The formalization comprises two new Lean modules:
 \begin{center}
 \begin{tabular}{ll}
 \toprule
 Module & Theorems \\
 \midrule
-\texttt{ScalarRungInterpretation.lean} & 20 \\
+\texttt{ScalarRungInterpretation.lean} (Wave~1) & 20 \\
+\texttt{BHLGaugeEmbedding.lean} (Wave~1b) & 23 \\
 \bottomrule
 \end{tabular}
 \end{center}
-plus three structures (\texttt{ScalarChannel},
-\texttt{EWMassMatrixInputs}, \texttt{WeylOverlap}), nine
-non-computable definitions for VEV / mass / Yukawa formulas, and three
-Prop-level definitions (\texttt{IsHiggsBilinearCandidate},
-\texttt{ScalarRungQuantitativeMatch}, and the tracked-hypothesis
-\texttt{H\_ScalarChannelIsTetradBifurcationOutput}). The module is
-zero-sorry, introduces zero new axioms, and adds zero heartbeat
-overrides (Phase~3 pipeline invariant 10).
+plus six structures (\texttt{ScalarChannel}, \texttt{EWMassMatrixInputs},
+\texttt{WeylOverlap}, \texttt{BHLConfig}, \texttt{BHLAuxField},
+\texttt{BilocalHiggs}), $24$ non-computable definitions, and seven
+tracked-hypothesis Props (the four Wave 1 hypotheses plus three new
+Wave 1b: \texttt{H\_FierzCompletenessExtended},
+\texttt{H\_HSCovariantBosonisation},
+\texttt{H\_BilocalPointlikeLimit}, plus the parametric open
+\texttt{H\_TetradBackreactionShift} and the bundled
+\texttt{Wave1bOpenManifest}). Both modules are zero-sorry, introduce
+zero new axioms, and add zero heartbeat overrides (Phase~3 pipeline
+invariant 10).
 
-The module integrates with three prior-phase modules:
-\texttt{WetterichNJL.lean} (Fierz infrastructure),
-\texttt{TetradGapEquation.lean} (gap-equation bifurcation), and
-\texttt{ADWMechanism.lean} (NG-mode counting + critical coupling).
-A Python companion package \texttt{src/scalar\_rung/} provides
-numerical wrappers for the Anderson-Higgs mass matrix
-(\texttt{anderson\_higgs\_w\_z\_masses}), the
-$\cos\theta_W$ consistency check, and the parameter-scan grid for the
-microscopic $m_H$ prediction. A 24-test pytest suite covers every Lean
-theorem; full-project pytest passes (excluding torch-dependent tests
-unrelated to this work).
+The Wave 1b module integrates with Wave 1 (\texttt{ScalarRungInterpretation.lean})
+plus three prior-phase modules: \texttt{WetterichNJL.lean} (Fierz
+infrastructure), \texttt{TetradGapEquation.lean} (gap-equation
+bifurcation), and \texttt{ADWMechanism.lean} (NG-mode counting + critical
+coupling). The Python companion \texttt{src/scalar\_rung/} adds
+\texttt{bhl\_embedding.py} on top of the existing
+\texttt{higgs\_prediction.py} and \texttt{ew\_mass\_matrix.py}; concrete
+formulas \texttt{bhl\_higgs\_mass}, \texttt{bilocal\_correction\_factor},
+\texttt{bilocal\_corrected\_higgs\_mass}, and
+\texttt{pagels\_stokar\_vev\_sq} live in \texttt{src/core/formulas.py}
+following the canonical-formulas invariant. A 48-test pytest suite
+covers every Lean theorem (24 Wave 1 + 24 Wave 1b);
+full-project pytest passes (excluding torch-dependent tests unrelated to
+this work).
 
 The full project status remains: zero sorry across $\totaltheorems{}$
 theorems, $\substantivetheorems{}$ substantive (excluding placeholder
@@ -512,7 +640,22 @@ Phys.~Rev.~D~\textbf{82}, 085018 (2010).
 \bibitem{BardeenHillLindner}
 W.~A.~Bardeen, C.~T.~Hill, and M.~Lindner,
 \emph{Minimal dynamical symmetry breaking of the standard model},
-Phys.~Rev.~D~\textbf{41}, 1647 (1990).
+Phys.~Rev.~D~\textbf{41}, 1647 (1990); DOI:~\href{https://doi.org/10.1103/PhysRevD.41.1647}{10.1103/PhysRevD.41.1647}.
+
+\bibitem{MiranskyTanabashiYamawaki1989}
+V.~A.~Miransky, M.~Tanabashi, and K.~Yamawaki,
+\emph{Is the t-quark responsible for the mass of W and Z bosons?},
+Mod.~Phys.~Lett.~A~\textbf{4}, 1043 (1989); DOI:~\href{https://doi.org/10.1142/S0217732389001210}{10.1142/S0217732389001210}.
+
+\bibitem{Hill2025Redux}
+C.~T.~Hill,
+\emph{Natural top quark condensation (a redux)},
+arXiv:2503.21518 (2025); \url{https://arxiv.org/abs/2503.21518}.
+
+\bibitem{Cvetic1999}
+G.~Cvetic,
+\emph{Top quark condensation},
+Rev.~Mod.~Phys.~\textbf{71}, 513 (1999); arXiv:hep-ph/9702381; DOI:~\href{https://doi.org/10.1103/RevModPhys.71.513}{10.1103/RevModPhys.71.513}.
 
 \bibitem{PDG2024}
 S.~Navas \textit{et al.}~(Particle Data Group),

@@ -1,18 +1,19 @@
 {
-  "generated": "2026-04-25T02:41:00.023769",
+  "generated": "2026-04-25T20:15:43.079393",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 7843,
-    "theorems_total": 4049,
-    "theorems_substantive": 3936,
-    "theorems_placeholder": 113,
-    "axioms": 1,
+    "total_declarations": 8129,
+    "theorems_total": 4162,
+    "theorems_substantive": 4140,
+    "theorems_placeholder": 22,
+    "axioms": 2,
     "axiom_names": [
+      "SKEFTHawking.BHEntropyMicroscopic.gaussianSaddleAsymptotic",
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 170,
+    "modules": 176,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -20,6 +21,8 @@
       "SKEFTHawking.ADWMechanism",
       "SKEFTHawking.AcousticMetric",
       "SKEFTHawking.AlgebraicRokhlin",
+      "SKEFTHawking.BHEntropyMicroscopic",
+      "SKEFTHawking.BHLGaugeEmbedding",
       "SKEFTHawking.Basic",
       "SKEFTHawking.BdGHamiltonian",
       "SKEFTHawking.CGLTransform",
@@ -46,10 +49,12 @@
       "SKEFTHawking.DrinfeldDoubleRing",
       "SKEFTHawking.DrinfeldEquivalence",
       "SKEFTHawking.E8Lattice",
+      "SKEFTHawking.EWPhaseTransition",
       "SKEFTHawking.EmergentGravityBounds",
       "SKEFTHawking.ExtBordismBridge",
       "SKEFTHawking.ExtractDeps",
       "SKEFTHawking.FKGappedInterface",
+      "SKEFTHawking.FLRWDynamics",
       "SKEFTHawking.FPDimension",
       "SKEFTHawking.FangGuTorsionDM",
       "SKEFTHawking.FermiHubbardDimer",
@@ -79,6 +84,7 @@
       "SKEFTHawking.GoltermanShamir",
       "SKEFTHawking.GrapheneHawking",
       "SKEFTHawking.GrapheneNoiseFormula",
+      "SKEFTHawking.GravitationalWaves",
       "SKEFTHawking.HawkingUniversality",
       "SKEFTHawking.HiddenSectorClassification",
       "SKEFTHawking.HiddenSectorMixedCharge",
@@ -93,6 +99,7 @@
       "SKEFTHawking.KappaScaling",
       "SKEFTHawking.KerrSchild",
       "SKEFTHawking.LatticeHamiltonian",
+      "SKEFTHawking.LinearizedEFE",
       "SKEFTHawking.MajoranaKramers",
       "SKEFTHawking.MajoranaRung",
       "SKEFTHawking.MajoranaRungDecoupling",
@@ -185,18 +192,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3347,
-    "structures": 169,
+    "definitions": 3511,
+    "structures": 175,
     "instances": 221,
-    "inductives": 56
+    "inductives": 57
   },
   "python": {
-    "python_modules": 68,
-    "test_files": 61,
-    "pytest_cases": 2892,
+    "python_modules": 81,
+    "test_files": 66,
+    "pytest_cases": 3098,
     "notebooks": 56,
-    "papers": 20,
-    "figures": 113
+    "papers": 24,
+    "figures": 119
   },
   "aristotle": {
     "aristotle_proved": 322,

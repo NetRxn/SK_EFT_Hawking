@@ -181,7 +181,8 @@ end -- noncomputable section
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 FibonacciMTC: Second formally verified modular tensor category.
   - fibF: F-symbols in Q(√5), identity-type admissibility correct
   - fib_pentagon: pentagon PROVED (native_decide, 512 cases, seconds)
@@ -189,6 +190,4 @@ FibonacciMTC: Second formally verified modular tensor category.
   - fib_dim_consistency: φ² = 1+φ (PROVED both Q(√5) and ℝ)
   - Zero sorry. Zero axioms.
 -/
-theorem fibonacci_mtc_summary : True := trivial
-
 end SKEFTHawking.FibonacciMTC

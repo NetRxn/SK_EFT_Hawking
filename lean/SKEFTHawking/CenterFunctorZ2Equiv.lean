@@ -252,7 +252,8 @@ theorem num_anyons_equals_card_squared :
 
 /-! ## 6. Status and module summary -/
 
-/--
+/-! ## Module summary
+
 CenterFunctorZ2Equiv module: Phase 5s Wave 9 session 2 deliverable.
 
 **Shipped:**
@@ -288,8 +289,6 @@ CenterFunctorZ2Equiv module: Phase 5s Wave 9 session 2 deliverable.
 
 **Zero sorry. Zero axioms.**
 -/
-theorem center_functor_z2_equiv_session2_summary : True := trivial
-
 /-! ## 7. Explicit Center objects — 4 toric anyons with half-braidings
 
 The canonical functor + equivalence require explicit `Center.Obj` values for

@@ -196,7 +196,8 @@ theorem detection_threshold (G : ℝ) (hG : G > 0) (n_probe : ℝ)
 
 /-! ## 8. Module summary -/
 
-/--
+/-! ## Module summary
+
 StimulatedHawking module: formal properties of stimulated Hawking detection.
   - boseEinstein_pos: n_BE(x) > 0 for x > 0 — PROVED
   - stimGain_pos: G(ω) > 0 — PROVED
@@ -210,6 +211,4 @@ StimulatedHawking module: formal properties of stimulated Hawking detection.
   - detection_threshold: N_probe ≥ 25/G² → SNR ≥ 5 — sorry (Aristotle)
   - Zero axioms.
 -/
-theorem stimulated_hawking_summary : True := trivial
-
 end SKEFTHawking.StimulatedHawking

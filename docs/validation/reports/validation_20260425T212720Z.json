@@ -1,0 +1,35 @@
+{
+  "timestamp": "20260425T212720Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "lean_build": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "lake_bin",
+          "passed": true,
+          "message": "/Users/johnroehm/.elan/bin/lake",
+          "warning": false
+        },
+        {
+          "name": "lean_root",
+          "passed": true,
+          "message": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean",
+          "warning": false
+        },
+        {
+          "name": "lake_build",
+          "passed": false,
+          "message": "error: build failed\n",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

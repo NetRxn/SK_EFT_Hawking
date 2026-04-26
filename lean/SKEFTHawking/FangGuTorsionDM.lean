@@ -203,7 +203,8 @@ theorem witness_radiation_poisson_doubled :
 
 /-! ## Module summary -/
 
-/--
+/-! ## Module summary
+
 Module summary. Ships the kinematic obstruction (5 main theorems + 1
 converse + 3 witnesses) for the Fang-Gu perfect-fluid trace condition.
 Not a full Wave 4 formalization — Wave 4 remains an assessment wave
@@ -212,6 +213,4 @@ CDM" claim load-bearing (formal, not narrative). Quantitative
 treatments of the literature escape hatches (loop-gas averaging,
 velocity dispersion) are outside Phase 5x scope.
 -/
-theorem fang_gu_torsion_dm_summary : True := trivial
-
 end SKEFTHawking.FangGuTorsionDM

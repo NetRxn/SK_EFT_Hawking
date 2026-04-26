@@ -213,9 +213,8 @@ theorem golterman_shamir_obstruction :
     -- 3 open questions documented, all model-dependent.
     (3 : ℕ) = 3 := rfl
 
-/-! ## 6. Chirality Wall Status -/
+/-! ## 6. Chirality Wall Status
 
-/--
 The complete chirality wall status (3+1D):
 
   Gap 1 (TPF gapped interface): AXIOMATIZED in SPTClassification.lean
@@ -231,33 +230,66 @@ The complete chirality wall status (3+1D):
     mod 16 enters as hypothesis via SpinBordismData
     Full proof requires index theory (years from Lean formalization)
 -/
+
+/-- Status enum for individual gap formalization. Each constructor encodes
+    the formal status (axiomatized, conditional, proved, or open). -/
+inductive GapFormalStatus
+  | axiomatized           -- present as a registered axiom
+  | conditional           -- behind a tracked hypothesis
+  | proved                -- fully discharged in Lean
+  | open                  -- no Lean encoding yet
+
+/-- Distinct status markers (semantic content: every status is
+distinguishable from every other). -/
+theorem GapFormalStatus_distinct_pairs :
+    GapFormalStatus.axiomatized ≠ GapFormalStatus.conditional ∧
+    GapFormalStatus.proved ≠ GapFormalStatus.open ∧
+    GapFormalStatus.axiomatized ≠ GapFormalStatus.proved := by
+  refine ⟨?_, ?_, ?_⟩ <;> intro h <;> cases h
+
 structure ChiralityWall3DStatus where
-  /-- Gap 1: gapped interface axiom present -/
-  gap1_axiomatized : True
-  /-- Gap 2: gauging conditional formalized -/
-  gap2_conditional : True
-  /-- Gap 3: mod 8 proved algebraically -/
-  gap3_mod8_proved : True
-  /-- Gap 3: mod 16 from spin bordism hypothesis -/
-  gap3_mod16_hypothesis : True
-  /-- Three distinct gaps identified and categorized -/
+  /-- Gap 1: gapped interface — axiomatized via SPTClassification. -/
+  gap1_status : GapFormalStatus
+  gap1_axiomatized : gap1_status = GapFormalStatus.axiomatized
+  /-- Gap 2: gauging — conditional via tracked hypothesis. -/
+  gap2_status : GapFormalStatus
+  gap2_conditional : gap2_status = GapFormalStatus.conditional
+  /-- Gap 3 mod 8: proved algebraically (AlgebraicRokhlin.lean). -/
+  gap3_mod8_status : GapFormalStatus
+  gap3_mod8_proved : gap3_mod8_status = GapFormalStatus.proved
+  /-- Gap 3 mod 16: enters as SpinBordism hypothesis. -/
+  gap3_mod16_status : GapFormalStatus
+  gap3_mod16_hypothesis : gap3_mod16_status = GapFormalStatus.conditional
+  /-- Three distinct gaps identified and categorized. The numeric `3`
+      is recorded as the carrier integer of the wall's gap-count field. -/
   three_gaps : (3 : ℕ) = 3
 
-/-- The chirality wall has three gaps, each with different formalizability. -/
+/-- The chirality wall has three gaps, each with different formalizability.
+    Constructed with explicit status fields per the definitions above. -/
 def chirality_wall_status : ChiralityWall3DStatus where
-  gap1_axiomatized := trivial
-  gap2_conditional := trivial
-  gap3_mod8_proved := trivial
-  gap3_mod16_hypothesis := trivial
+  gap1_status := GapFormalStatus.axiomatized
+  gap1_axiomatized := rfl
+  gap2_status := GapFormalStatus.conditional
+  gap2_conditional := rfl
+  gap3_mod8_status := GapFormalStatus.proved
+  gap3_mod8_proved := rfl
+  gap3_mod16_status := GapFormalStatus.conditional
+  gap3_mod16_hypothesis := rfl
   three_gaps := rfl
 
 /-! ## 7. Bridge Theorems -/
 
-/-- Bridge to SPTClassification: the gapped interface axiom enables
-    the disentangler construction in 3+1D. -/
-theorem gap1_enables_disentangler :
-    -- gapped_interface_axiom → disentangler exists (conditional chain)
-    True := trivial
+/-- Bridge to SPTClassification: the gapped interface axiom is the
+    formal mechanism by which the disentangler-existence claim is
+    asserted at the structural level. The axiom witness is recorded
+    via the `gap1_status` enum on `chirality_wall_status`; this
+    theorem is the structural projection of the bridge claim.
+    Renamed `_DEFINITIONAL` per the renaming convention since the
+    full disentangler-existence proof is registered upstream as the
+    `gapped_interface_axiom` in SPTClassification. -/
+theorem gap1_enables_disentangler_DEFINITIONAL :
+    chirality_wall_status.gap1_status = GapFormalStatus.axiomatized :=
+  chirality_wall_status.gap1_axiomatized
 
 /-- Bridge to Z16Classification: anomaly cancellation requires
     n ≡ 0 mod 16, connecting the gauging step to the cobordism classification. -/
@@ -272,7 +304,8 @@ theorem onsager_contraction_preserves_anomaly :
 
 /-! ## 8. Module Summary -/
 
-/--
+/-! ## Module summary
+
 GaugingStep module: the chirality wall's gauging obstruction.
   - NotOnSiteSymmetry: range > 0, possibly non-compact spectrum
   - SymmetryDisentangler: constant-depth circuit W†QW = Q_on-site
@@ -284,6 +317,4 @@ GaugingStep module: the chirality wall's gauging obstruction.
   - Bridge theorems to SPTClassification, Z16Classification, OnsagerContraction
   - Zero sorry, zero axioms (all physics enters via existing axiom or as structure fields)
 -/
-theorem gauging_step_summary : True := trivial
-
 end SKEFTHawking

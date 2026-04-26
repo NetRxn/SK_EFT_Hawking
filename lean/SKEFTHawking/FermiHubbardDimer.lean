@@ -578,14 +578,16 @@ theorem H_singlet_U0_spectrum_is_three_eigenvalues (t Δ : ℝ) :
            (X + C (Real.sqrt (Δ^2 + 4*t^2))) from by rw [hdiff, hCsq]]
   ring
 
-/-- Summary marker for the Phase 5t Wave 2 shipment (non-load-bearing;
-placeholder for graph integrity). -/
-theorem fermi_hubbard_dimer_wave2_summary : True := trivial
+/-! ## Module summary
 
-/-- Summary marker for the Phase 5t Wave 3 shipment (non-load-bearing;
-placeholder for graph integrity). -/
-theorem fermi_hubbard_dimer_wave3_summary : True := trivial
+Summary marker for the Phase 5t Wave 2 shipment (non-load-bearing;
+placeholder for graph integrity).
+-/
+/-! ## Module summary
 
+Summary marker for the Phase 5t Wave 3 shipment (non-load-bearing;
+placeholder for graph integrity).
+-/
 /-! ### Section 7. Linear independence of the U=0 eigenvectors
 (Phase 5t W4 strengthening)
 
@@ -715,7 +717,9 @@ theorem H_singlet_U0_mem_spectrum_iff (t Δ μ : ℝ) :
   rw [charpoly_H_singlet_U0_roots]
   simp [Multiset.mem_singleton]
 
-/-- Summary marker for the Phase 5t Wave 4 shipment (non-load-bearing;
+/-! ## Module summary
+
+Summary marker for the Phase 5t Wave 4 shipment (non-load-bearing;
 placeholder for graph integrity). Wave 4 delivers the strong-form U=0
 spectrum theorem: θ-parametrized dark state, explicit bright
 eigenvectors via `Real.sqrt`, positive gap, fully-factored
@@ -723,9 +727,8 @@ characteristic polynomial at U=0 plus the general-U cubic, the
 linear-independence witness via nonzero determinant of the
 eigenvector matrix, pairwise-orthogonality of the three eigenvectors,
 and the canonical `Polynomial.roots` / `Matrix.spectrum`
-API-bridge form. -/
-theorem fermi_hubbard_dimer_wave4_summary : True := trivial
-
+API-bridge form.
+-/
 /-! ### Section 10. Chiral conjugation + BDI spectrum pairing
 (Phase 5t W5)
 
@@ -881,7 +884,9 @@ theorem H_singlet_real_anti_unitary_trivial (t Δ U : ℝ) :
   ext i j
   simp
 
-/-- Summary marker for the Phase 5t Wave 5 core shipment
+/-! ## Module summary
+
+Summary marker for the Phase 5t Wave 5 core shipment
 (non-load-bearing; placeholder for graph integrity). Wave 5 core
 delivers the BDI symmetry-protection layer on top of W2 T4/T5 and
 W4p: chiral conjugation Γ·H·Γ = -H (W5a); eigenvector pairing
@@ -892,9 +897,8 @@ eigenvector chiral image pairing W5g/g'; and the paper-facing
 real-symmetric-anti-unitary framing marker (W5h). Together these
 encode the full "real meridian path + chiral-protected zero mode"
 story from the Phase 5t roadmap W5 spec, without touching the
-adiabatic theorem or Berry-phase holonomy machinery. -/
-theorem fermi_hubbard_dimer_wave5_summary : True := trivial
-
+adiabatic theorem or Berry-phase holonomy machinery.
+-/
 /-! ### Section 11. W5 strengthening (chiral-invariance + projectors +
 zero-mode uniqueness) — Phase 5t W5 round 2
 
@@ -1143,16 +1147,17 @@ theorem zero_mode_unique_up_to_scalar {t Δ : ℝ} (h : t ≠ 0 ∨ Δ ≠ 0)
       simp [darkVec]
       field_simp
 
-/-- Summary marker for the Phase 5t Wave 5 round-2 strengthening
+/-! ## Module summary
+
+Summary marker for the Phase 5t Wave 5 round-2 strengthening
 (non-load-bearing; placeholder for graph integrity). Round-2
 delivers chiral invariance of ker(H) (W5i); Γ preserves nonzero (W5j);
 multiset-level spectrum pairing (W5k); the chiral sublattice
 projector algebra (W5l–W5o2: idempotent, orthogonal, complete, with
 Γ acting as ±1 on the ±1 eigenspaces); and zero-mode uniqueness up to
 scalar (W5p — the kernel of `H_singlet t Δ 0` is exactly
-`ℝ · darkVec`). -/
-theorem fermi_hubbard_dimer_wave5_round2_summary : True := trivial
-
+`ℝ · darkVec`).
+-/
 /-! ### Section 12. Phase 5t W6A: EuclideanSpace infrastructure +
 normalized eigenvectors + orthonormality
 
@@ -1416,7 +1421,9 @@ theorem eigenvector_triple_orthonormal {t Δ : ℝ} (h : t ≠ 0 ∨ Δ ≠ 0) :
       fin_cases j
       exact absurd rfl hij
 
-/-- Summary marker for Phase 5t W6A infrastructure shipment
+/-! ## Module summary
+
+Summary marker for Phase 5t W6A infrastructure shipment
 (non-load-bearing). W6A delivers: `darkVecE`/`brightVecPlusE`/
 `brightVecMinusE` as `EuclideanSpace ℝ (Fin 3)` versions of the W4
 eigenvectors; componentwise bridge lemmas; explicit L2 norm formulas
@@ -1426,9 +1433,8 @@ versions `darkVecNorm`/`brightVecPlusNorm`/`brightVecMinusNorm`;
 (W6A-I1/I2/I3 + I1'/I2'/I3'); and the `Orthonormal` predicate on the
 normalized triple. Foundation for W6B (OrthonormalBasis construction
 + unitarity via `toMatrix_orthonormalBasis_mem_unitary`) and W6C
-(SWAP gate action on computational basis). -/
-theorem fermi_hubbard_dimer_wave6A_summary : True := trivial
-
+(SWAP gate action on computational basis).
+-/
 /-! ### Section 13. Phase 5t W6B: OrthonormalBasis construction +
 unitarity of change-of-basis
 
@@ -1515,7 +1521,9 @@ theorem eigenBasis_change_of_basis_transpose_mul_self {t Δ : ℝ}
         (eigenBasis h)).conjTranspose = 1 :=
   OrthonormalBasis.toMatrix_orthonormalBasis_self_mul_conjTranspose _ _
 
-/-- Summary marker for Phase 5t W6B shipment (non-load-bearing).
+/-! ## Module summary
+
+Summary marker for Phase 5t W6B shipment (non-load-bearing).
 W6B delivers: `eigenBasisModule` as a `Module.Basis` from the W6A
 orthonormal triple; `eigenBasis` as the promoted `OrthonormalBasis`;
 componentwise apply lemmas (W6B-B2/B3/B4: `eigenBasis 0 = darkVecNorm`,
@@ -1523,9 +1531,8 @@ componentwise apply lemmas (W6B-B2/B3/B4: `eigenBasis 0 = darkVecNorm`,
 and the change-of-basis matrix unitarity (W6B-U1) and its
 `M · Mᵀ = 1` form (W6B-U2) via Mathlib's
 `OrthonormalBasis.toMatrix_orthonormalBasis_mem_unitary`. Foundation
-for W6C (SWAP operator + action on computational basis). -/
-theorem fermi_hubbard_dimer_wave6B_summary : True := trivial
-
+for W6C (SWAP operator + action on computational basis).
+-/
 /-! ### Section 14. Phase 5t W6C: Geometric SWAP operator + action
 on the singlet sector
 
@@ -1696,7 +1703,9 @@ theorem U_SWAP_singlet_trace {t Δ : ℝ} (h : t ≠ 0 ∨ Δ ≠ 0) :
   field_simp
   ring
 
-/-- Summary marker for Phase 5t W6C shipment (non-load-bearing).
+/-! ## Module summary
+
+Summary marker for Phase 5t W6C shipment (non-load-bearing).
 W6C delivers: the geometric SWAP operator `U_SWAP_singlet` as a
 Householder reflection `I - (2/gap²) · darkVec ⊗ darkVec`;
 eigenvalue actions W6C-A1/A2/A3 (sign-flip on dark, identity on
@@ -1707,9 +1716,8 @@ consistency. Together with W6A/B, this completes the
 finite-dimensional algebraic core of the Kiefer et al. doublon
 geometric SWAP gate — as a "pure matrix computation" in the spirit
 of the Phase 5t roadmap, without touching the adiabatic theorem
-or Berry-phase holonomy machinery. -/
-theorem fermi_hubbard_dimer_wave6C_summary : True := trivial
-
+or Berry-phase holonomy machinery.
+-/
 /-! ### Section 15. Wave 6 round-2 strengthening (2026-04-26 session 9)
 
 This section adds three strengthening theorems on top of W6A/B/C:
@@ -1781,12 +1789,13 @@ theorem U_SWAP_singlet_on_kernel {t Δ : ℝ} (h : t ≠ 0 ∨ Δ ≠ 0)
   obtain ⟨c, hc⟩ := zero_mode_unique_up_to_scalar h v hv
   rw [hc, U_SWAP_singlet_smul_darkVec c h]
 
-/-- Summary marker for W6 round-2 strengthening (non-load-bearing).
+/-! ## Module summary
+
+Summary marker for W6 round-2 strengthening (non-load-bearing).
 Adds: W6C-A1s/A2s/A3s scalar-multiple eigenvector actions, W6C-U1
 unitary-group membership in canonical Mathlib form, W6C-K1 kernel-action
-theorem combining W5p uniqueness with W6C-A1s. -/
-theorem fermi_hubbard_dimer_wave6_round2_summary : True := trivial
-
+theorem combining W5p uniqueness with W6C-A1s.
+-/
 /-! ### Section 16. Wave 7 — Direct Exchange vs Superexchange Scaling
 (2026-04-26 session 9)
 
@@ -2043,7 +2052,9 @@ theorem J_superexchange_bound {t U : ℝ} (ht : t ≠ 0) (hU : 4 * |t| ≤ U) :
     linarith
   linarith
 
-/-- Summary marker for Phase 5t W7 shipment (non-load-bearing).
+/-! ## Module summary
+
+Summary marker for Phase 5t W7 shipment (non-load-bearing).
 W7 delivers the direct-exchange-vs-superexchange scaling distinction
 as a bundle of real-analysis properties of the explicit functions
 `E_plus(t, U) = (U + √(U² + 16·t²))/2` and `J(t, U) = E_plus − U`:
@@ -2054,9 +2065,8 @@ identities `E_plus + E_minus = U` and `E_plus · E_minus = −4·t²`
 at U=0 (W7g), AM-GM sqrt bound (W7h), and the superexchange
 approximation bound `|J − 4·t²/U| ≤ 16·t⁴/U³` for `U ≥ 4·|t| > 0`
 (W7i). Bridges the Phase-5t doublon-gate matrix story to the
-paper-level scaling narrative. -/
-theorem fermi_hubbard_dimer_wave7_summary : True := trivial
-
+paper-level scaling narrative.
+-/
 /-! ### Section 17. Wave 7 round-2 strengthening — matrix bridge + Lipschitz
 (2026-04-26 session 9)
 
@@ -2263,13 +2273,14 @@ theorem E_plus_lipschitz (t U₁ U₂ : ℝ) :
         apply div_le_div_of_nonneg_right h_double h2_pos.le
     _ = |U₁ - U₂| := by ring
 
-/-- Summary marker for W7 round-2 strengthening (non-load-bearing).
+/-! ## Module summary
+
+Summary marker for W7 round-2 strengthening (non-load-bearing).
 Adds: W7j/k characteristic equations, W7l charpoly factorization at
 `Δ = 0`, W7m/n/o explicit eigenvectors (E_plus, E_minus, antisymmetric
 doublon U), W7p `E_minus(t, 0) = −2·|t|` (mirror of W7a), W7q global
-1-Lipschitz bound `|E_plus(t, U₁) − E_plus(t, U₂)| ≤ |U₁ − U₂|`. -/
-theorem fermi_hubbard_dimer_wave7_round2_summary : True := trivial
-
+1-Lipschitz bound `|E_plus(t, U₁) − E_plus(t, U₂)| ≤ |U₁ − U₂|`.
+-/
 /-! ### Section 18. W6-deferred — 6×6 geometric SWAP lift to the
 symmetry-adapted basis (2026-04-26 session 9)
 
@@ -2386,16 +2397,17 @@ theorem U_SWAP_adapted_on_inr (t Δ : ℝ) (w : Fin 3 → ℝ) :
   · simp [Sum.elim_comp_inl, Sum.elim_comp_inr, Matrix.mulVec]
   · simp [Sum.elim_comp_inl, Sum.elim_comp_inr, Matrix.one_mulVec]
 
-/-- Summary marker for W6-deferred 6×6 SWAP lift shipment
+/-! ## Module summary
+
+Summary marker for W6-deferred 6×6 SWAP lift shipment
 (non-load-bearing). Adds: `U_SWAP_adapted` definition (block-diagonal
 6×6 lift), W6D-S1/S2/S3/S3' symmetry + involution + orthogonality in
 the 6×6 basis, W6D-U1 Mathlib unitary-group membership, W6D-A1
 singlet-block action agreement with `U_SWAP_singlet`, W6D-A2 triplet
 block identity action. Does **not** claim SWAP on
 `{|↑,↓⟩, |↓,↑⟩}` — that is W8 / Phase 6 territory (Berry-phase
-holonomy). -/
-theorem fermi_hubbard_dimer_wave6_deferred_summary : True := trivial
-
+holonomy).
+-/
 /-! ### Section 19. Wave 8 Target A — Minimal Geometric Phase Theorem
 (2026-04-26 session 9 round-3)
 
@@ -2541,7 +2553,9 @@ theorem geometric_phase_minus_one_on_pi_loop (t Δ θ : ℝ)
     dotProduct (darkStateθ θ) ((H_singlet t Δ 0).mulVec (darkStateθ θ)) = 0 :=
   geometric_phase_necessary_conditions_on_pi_loop t Δ θ hθ
 
-/-- Summary marker for Phase 5t Wave 8 Target A shipment
+/-! ## Module summary
+
+Summary marker for Phase 5t Wave 8 Target A shipment
 (non-load-bearing). Adds: W8a `π`-angle sign flip, W8b `2π`
 periodicity, W8c dark-state L² normalization, W8d
 dynamical-phase-vanishes along the U=0 kernel-angle path, W8e
@@ -2551,7 +2565,6 @@ theorem.
 Completes Phase 5t as the **finite-dimensional algebraic core**
 of the Kiefer et al. doublon geometric SWAP gate. Target B
 (full adiabatic holonomy, Berry connection over parameterized
-eigenbundle) remains Phase 6 territory. -/
-theorem fermi_hubbard_dimer_wave8_summary : True := trivial
-
+eigenbundle) remains Phase 6 territory.
+-/
 end SKEFTHawking.FermiHubbardDimer

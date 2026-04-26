@@ -1490,6 +1490,144 @@ CITATION_REGISTRY = {
                  'title, authors (W. A. Bardeen, C. T. Hill, M. Lindner), '
                  'journal, volume, page, year all match.',
     },
+    'MiranskyTanabashiYamawaki1989': {
+        'authors': 'Miransky, V. A., Tanabashi, M., Yamawaki, K.',
+        'title': 'Is the t-quark responsible for the mass of W and Z bosons?',
+        'journal': 'Mod. Phys. Lett. A',
+        'volume': 4,
+        'page': '1043',
+        'year': 1989,
+        'doi': '10.1142/S0217732389001210',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'MTY second paper — explicit SU(2)_L × U(1)_R 4-fermion '
+                 'operator (ψ̄_L t_R)(t̄_R ψ_L) with σ = H ∼ ψ̄_R ψ_L '
+                 'identified as SM (1,2)_{+1/2} Higgs doublet. Primary '
+                 'precedent for Scenario A in Phase 5z O.2 verdict. '
+                 'Pre-arXiv. doi_verified pending — World Scientific MPLA '
+                 'CrossRef route, awaiting fetch round.',
+    },
+    'Hill2025Redux': {
+        'authors': 'Hill, C. T.',
+        'title': 'Natural top quark condensation (a redux)',
+        'journal': 'arXiv preprint',
+        'volume': None,
+        'page': None,
+        'year': 2025,
+        'doi': None,
+        'arxiv': '2503.21518',
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex',
+                    'lean/SKEFTHawking/BHLGaugeEmbedding.lean'],
+        'provides': [],
+        'notes': 'Hill 2025 redux: bilocal H^i(x,y) ∼ ψ̄_R(x) ψ_L^i(y) with '
+                 'internal wave-function ϕ(r). The dilution factor '
+                 'ϕ(0)/ϕ(∞) is the order parameter resolving the BHL gap '
+                 'problem; natural composite scale ~ 6 TeV with quartic λ '
+                 'consistent with m_H = 125 GeV at few-percent fine-tuning. '
+                 'Most recent load-bearing anchor for Scenario A. '
+                 'doi_verified pending — arXiv abstract fetch round.',
+    },
+    # AndrianovAndrianovAfonin2020 entry REMOVED 2026-04-26 after Stage 13
+    # adversarial round verified arXiv:1906.09579 actually resolves to
+    # Osipov, Hiller, Blin, Palanca, Moreira, Sampaio, EPJC 80:1135 (DOI
+    # …08716-y) — title-only coincidence. The deep research had a wrong-arXiv
+    # hallucination similar to documented 5z W2 cases. Hill 2025 + Cvetic
+    # 1999 already cover the 125 GeV recovery branch; removed to avoid risk.
+    'CsikorFodorHeitger1999': {
+        'authors': 'Csikor, F., Fodor, Z., Heitger, J.',
+        'title': 'Endpoint of the hot electroweak phase transition',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 82,
+        'page': '21',
+        'year': 1999,
+        'doi': '10.1103/PhysRevLett.82.21',
+        'arxiv': 'hep-ph/9809291',
+        'doi_verified': None,
+        'used_in': ['papers/paper22_ew_phase_transition/paper_draft.tex'],
+        'provides': [],
+        'notes': 'CFH 1999 lattice analysis: refined the KLRS96 SM EWPT '
+                 'crossover threshold to m_H = 72.4 ± 1.7 GeV. The 72 GeV '
+                 'value cited in paper 22 is from this paper, NOT from KLRS96 '
+                 '(which gave a broader 70-95 GeV range). doi_verified pending — '
+                 'APS PRL CrossRef + arXiv hep-ph/9809291 fetch round.',
+    },
+    'KLRS1996': {
+        'authors': 'Kajantie, K., Laine, M., Rummukainen, K., Shaposhnikov, M.',
+        'title': 'Is there a hot electroweak phase transition at m_H >~ m_W?',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 77,
+        'page': '2887',
+        'year': 1996,
+        'doi': '10.1103/PhysRevLett.77.2887',
+        'arxiv': 'hep-ph/9605288',
+        'doi_verified': None,
+        'used_in': ['papers/paper22_ew_phase_transition/paper_draft.tex'],
+        'provides': [],
+        'notes': 'KLRS 1996 lattice analysis: SM EW phase transition is '
+                 'crossover for m_H >~ 72 GeV. Sets the canonical '
+                 'crossover threshold m_H_crit = 72 ± 2 GeV via 3D effective '
+                 'theory + lattice Monte Carlo. Phase 5z Wave 3 cite for the '
+                 'SM-as-crossover verdict. doi_verified pending — APS PRL '
+                 'CrossRef + arXiv hep-ph/9605288 fetch round.',
+    },
+    'ButtazzoEtAl2013': {
+        'authors': 'Buttazzo, D., Degrassi, G., Giardino, P. P., Giudice, G. F., Sala, F., Salvio, A., Strumia, A.',
+        'title': 'Investigating the near-criticality of the Higgs boson',
+        'journal': 'JHEP',
+        'volume': '12',
+        'page': '089',
+        'year': 2013,
+        'doi': '10.1007/JHEP12(2013)089',
+        'arxiv': '1307.3536',
+        'doi_verified': None,
+        'used_in': ['papers/paper22_ew_phase_transition/paper_draft.tex'],
+        'provides': [],
+        'notes': 'SM Higgs vacuum stability under RG: lambda_SM dips near '
+                 'zero at ~10^11 GeV, placing SM in metastable regime. '
+                 'Phase 5z Wave 3 motivation for the H_VacuumStableUnderRG '
+                 'tracked hypothesis. doi_verified pending — Springer JHEP '
+                 'CrossRef + arXiv 1307.3536 fetch round.',
+    },
+    'ShaposhnikovWetterich2010': {
+        'authors': 'Shaposhnikov, M., Wetterich, C.',
+        'title': 'Asymptotic safety of gravity and the Higgs boson mass',
+        'journal': 'Phys. Lett. B',
+        'volume': 683,
+        'page': '196',
+        'year': 2010,
+        'doi': '10.1016/j.physletb.2009.12.022',
+        'arxiv': '0912.0208',
+        'doi_verified': None,
+        'used_in': ['papers/paper22_ew_phase_transition/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Asymptotic safety of gravity at NGFP yields m_H = 126 ± few '
+                 'GeV via gravitational IR fixed-point on lambda. Phase 5z '
+                 'Wave 3 cite as a Wetterich-native (elementary Higgs) '
+                 'alternative to BHL composite Higgs mechanism. '
+                 'doi_verified pending — Elsevier PLB CrossRef + arXiv '
+                 '0912.0208 fetch round.',
+    },
+    'Cvetic1999': {
+        'authors': 'Cvetic, G.',
+        'title': 'Top quark condensation',
+        'journal': 'Rev. Mod. Phys.',
+        'volume': 71,
+        'page': '513',
+        'year': 1999,
+        'doi': '10.1103/RevModPhys.71.513',
+        'arxiv': 'hep-ph/9702381',
+        'doi_verified': None,
+        'used_in': ['papers/paper20_scalar_rung/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Canonical review of top-quark condensation (BHL/MTY/topcolor). '
+                 'Documents that the (1,2)_{+1/2} Higgs identification is generic '
+                 'to the BHL-class embedding; surveys two-doublet and '
+                 'neutrino-condensate extensions. doi_verified pending — APS '
+                 'RMP CrossRef + arXiv hep-ph/9702381 fetch round.',
+    },
     'PDG2024': {
         'authors': 'Navas, S. et al. (Particle Data Group)',
         'title': 'Review of particle physics',
@@ -1571,20 +1709,23 @@ CITATION_REGISTRY = {
     'KamLANDZen800': {
         'authors': 'KamLAND-Zen Collaboration (Abe, S. et al.)',
         'title': 'Search for Majorana Neutrinos with the Complete KamLAND-Zen Dataset',
-        'journal': 'arXiv',
-        'volume': None,
-        'page': None,
-        'year': 2024,
-        'doi': '10.48550/arXiv.2406.11438',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 135,
+        'page': 262501,
+        'year': 2025,
+        'doi': '10.1103/jkf6-48j8',
         'arxiv': '2406.11438',
         'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'src/core/provenance.py'],
         'provides': [],
         'notes': 'KamLAND-Zen 800 full-dataset 0νββ search. T_{1/2} > 3.8 × 10²⁶ '
-                 'yr at 90% CL; m_ββ < 28-122 meV depending on NME. v2 March '
-                 '2026. Source for MAJORANA.M_BB_KAMLAND_ZEN_*. Verified via '
-                 'arXiv abstract page 2026-04-25.',
+                 'yr at 90% CL; m_ββ < 28-122 meV depending on NME. Published '
+                 'as PRL 135, 262501 (2025); arXiv preprint 2406.11438 v2 '
+                 '(March 2026). Source for MAJORANA.M_BB_KAMLAND_ZEN_*. '
+                 'Verified via arXiv + INSPIRE 2026-04-25 (corrected: prior '
+                 'registry entry listed journal=arXiv before PRL publication '
+                 'was confirmed in Stage-13 adversarial round).',
     },
     'LEGEND1000': {
         'authors': 'LEGEND Collaboration (Abgrall, N. et al.)',
@@ -1807,7 +1948,7 @@ CITATION_REGISTRY = {
         'page': 146,
         'year': 2024,
         'doi': '10.3390/e26020146',
-        'arxiv': None,
+        'arxiv': '2310.14750',
         'doi_verified': True,
         'used_in': ['papers/paper21_majorana_rung/paper_draft.tex',
                     'lean/SKEFTHawking/MajoranaRungDecoupling.lean'],
@@ -1816,7 +1957,8 @@ CITATION_REGISTRY = {
                  'state coefficient form used in Wave 2b naturalC. Verifies '
                  'the SILH counting C ~ N_f / (16π²) for ADW-style four-'
                  'fermion substrates. Verified via CrossRef DOI lookup '
-                 '2026-04-25.',
+                 '2026-04-25; arXiv ID added 2026-04-25 from INSPIRE-HEP '
+                 'after Stage-13 round flagged its omission.',
     },
     'CiriglianoMasterFormula2018': {
         'authors': 'Cirigliano, V., Dekens, W., de Vries, J., Graesser, M. L., Mereghetti, E.',
@@ -1835,6 +1977,457 @@ CITATION_REGISTRY = {
                  'paper 21 §6 as the canonical reference for the '
                  'embedding-agnostic m_ββ phenomenology. Verified via '
                  'CrossRef DOI lookup 2026-04-25.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Phase 6a Wave 1 (Linearized EFE / induced gravity / classical GR)
+    # ════════════════════════════════════════════════════════════════
+
+    'Sakharov1968': {
+        'authors': 'Sakharov, A. D.',
+        'title': 'Vacuum quantum fluctuations in curved space and the theory of gravitation',
+        'journal': 'Sov. Phys. Dokl.',
+        'volume': 12,
+        'page': '1040',
+        'year': 1968,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Original induced-gravity reference. G_N from vacuum fluctuations, '
+                 'G_N⁻¹ ∝ Λ². Foundational; no DOI (Soviet Doklady 1968).',
+    },
+    'Adler1982': {
+        'authors': 'Adler, S. L.',
+        'title': 'Einstein gravity as a symmetry-breaking effect in quantum field theory',
+        'journal': 'Rev. Mod. Phys.',
+        'volume': 54,
+        'page': '729',
+        'year': 1982,
+        'doi': '10.1103/RevModPhys.54.729',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': ['Sakharov-Adler one-loop coefficient: G_N = 12π/(N_f Λ²) '
+                     '(Eq. 3.3, hard-cutoff Dirac fermions)'],
+        'notes': 'Canonical induced-gravity review. Sets the 12π normalization '
+                 'used as the Sakharov-Adler reference value for the ADW α_ADW '
+                 'coefficient.',
+    },
+    'Visser2002': {
+        'authors': 'Visser, M.',
+        'title': "Sakharov's induced gravity: a modern perspective",
+        'journal': 'Mod. Phys. Lett. A',
+        'volume': 17,
+        'page': '977',
+        'year': 2002,
+        'doi': '10.1142/S0217732302007289',
+        'arxiv': 'gr-qc/0204062',
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Modern review of Sakharov induced gravity. Emphasizes that the '
+                 'numerical coefficient is regulator-dependent; only the existence '
+                 'of a finite, sign-definite induced G_N is universal.',
+    },
+    'Carroll2004': {
+        'authors': 'Carroll, S. M.',
+        'title': 'Spacetime and Geometry: An Introduction to General Relativity',
+        'journal': 'Pearson Addison-Wesley',
+        'volume': '',
+        'page': 'Ch. 6, 8',
+        'year': 2004,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Standard graduate GR textbook. §6.1 linearized GR (h_μν, '
+                 'de Donder gauge, linearized Einstein tensor). §8.4 FLRW '
+                 'cosmology / Friedmann equations.',
+    },
+    'MTW1973': {
+        'authors': 'Misner, C. W., Thorne, K. S., Wheeler, J. A.',
+        'title': 'Gravitation',
+        'journal': 'W. H. Freeman',
+        'volume': '',
+        'page': 'Ch. 35',
+        'year': 1973,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Canonical GR textbook ("MTW"). Ch. 35 linearized gravity, '
+                 'spin-2 wave equation, de Donder gauge.',
+    },
+    'Tiesinga2021CODATA': {
+        'authors': 'Tiesinga, E., Mohr, P. J., Newell, D. B., Taylor, B. N.',
+        'title': 'CODATA recommended values of the fundamental physical constants: 2018',
+        'journal': 'Rev. Mod. Phys.',
+        'volume': 93,
+        'page': '025010',
+        'year': 2021,
+        'doi': '10.1103/RevModPhys.93.025010',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
+                    'src/core/provenance.py'],
+        'provides': ['G_N = 6.67430(15) × 10⁻¹¹ m³ kg⁻¹ s⁻² '
+                     '(GRAV.G_N_OBS_M3_KGM1_S2)',
+                     'M_Planck = 1.220890 × 10¹⁹ GeV (GRAV.M_PLANCK_GEV)'],
+        'notes': 'CODATA 2018 recommended values. Source for all fundamental '
+                 'constants in the Phase 6a Wave 1 G_N comparison.',
+    },
+    'Akama1978': {
+        'authors': 'Akama, K.',
+        'title': 'An Attempt at Pregeometry',
+        'journal': 'Prog. Theor. Phys.',
+        'volume': 60,
+        'page': '1900',
+        'year': 1978,
+        'doi': '10.1143/PTP.60.1900',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Original ADW reference: composite metric from fermion bilinear. '
+                 'The "A" in ADW (Akama-Diakonov-Wetterich).',
+    },
+    'HebeckerWetterich2003': {
+        'authors': 'Hebecker, A., Wetterich, C.',
+        'title': 'Spinor gravity',
+        'journal': 'Phys. Lett. B',
+        'volume': 574,
+        'page': '269',
+        'year': 2003,
+        'doi': '10.1016/j.physletb.2003.09.010',
+        'arxiv': 'hep-th/0307109',
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Spinor-gravity continuum theory. Identifies new global-Lorentz '
+                 'invariants (parameter τ); the absolute prefactor of R/(16πG_N) '
+                 'is not extracted in closed form.',
+    },
+    'Wetterich2022': {
+        'authors': 'Wetterich, C.',
+        'title': 'Spinor gravity and gauge symmetry',
+        'journal': 'JHEP',
+        'volume': '06',
+        'page': '069',
+        'year': 2022,
+        'doi': '10.1007/JHEP06(2022)069',
+        'arxiv': '2110.11138',
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Modern Wetterich spinor-gravity formulation; framework setup '
+                 'but no closed-form α_ADW.',
+    },
+    'Volovik2022Counting': {
+        'authors': 'Volovik, G. E.',
+        'title': 'Effective gravity, Goldstone bosons and pre-geometric phase',
+        'journal': 'J. Low Temp. Phys.',
+        'volume': 207,
+        'page': '127',
+        'year': 2022,
+        'doi': '10.1007/s10909-022-02694-z',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'provides': [],
+        'notes': 'NG-mode counting for ADW symmetry breaking: 16 tetrad components → '
+                 '6 absorbed + 4 diffeo gauge + 2 graviton + 4 massive Higgs.',
+    },
+    'Volovik2024Vestigial': {
+        'authors': 'Volovik, G. E.',
+        'title': 'Vestigial gravity from two-step condensation',
+        'journal': 'JETP Lett.',
+        'volume': 119,
+        'page': '330',
+        'year': 2024,
+        'doi': '10.1134/S002136402460006X',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
+                    'papers/paper25_gravitational_waves/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Vestigial gravity: composite ⟨ē e⟩ condenses before tetrad ⟨e⟩. '
+                 'Phase 6a Wave 1 derivation is in the fully-condensed phase '
+                 'where this distinction is irrelevant. Wave 2 cites for the '
+                 'second-sound graviton identification.',
+    },
+    'Abbott2017GW170817': {
+        'authors': 'Abbott, B. P. et al. (LIGO+Virgo+EM partners)',
+        'title': 'Gravitational Waves and Gamma-Rays from a Binary Neutron Star '
+                 'Merger: GW170817 and GRB 170817A',
+        'journal': 'Astrophys. J. Lett.',
+        'volume': 848,
+        'page': 'L13',
+        'year': 2017,
+        'doi': '10.3847/2041-8213/aa920c',
+        'arxiv': '1710.05834',
+        'doi_verified': None,
+        'used_in': ['papers/paper25_gravitational_waves/paper_draft.tex'],
+        'provides': ['c_GW deviation bound (|Δc/c| ≤ 7e-16/3e-15) '
+                     '(GW.C_GW_DEVIATION_UPPER_BOUND, GW.C_GW_DEVIATION_LOWER_BOUND, '
+                     'GW.C_GW_TWO_SIDED_CAP)'],
+        'notes': 'GW170817 multi-messenger constraint on the GW propagation speed; '
+                 'load-bearing for the Phase 6a Wave 2 falsification of the Volovik '
+                 'vestigial-second-sound graviton identification.',
+    },
+    'CrossleyGloriosoLiu2017': {
+        'authors': 'Crossley, M. and Glorioso, P. and Liu, H.',
+        'title': 'Effective field theory of dissipative fluids',
+        'journal': 'JHEP',
+        'volume': '09',
+        'page': '095',
+        'year': 2017,
+        'doi': '10.1007/JHEP09(2017)095',
+        'arxiv': '1511.03646',
+        'doi_verified': None,
+        'used_in': ['papers/paper25_gravitational_waves/paper_draft.tex',
+                    'papers/paper2_second_order/paper_draft.tex'],
+        'provides': ['SK-EFT dissipative-fluid framework (Γ_H, dynamical KMS), '
+                     'foundation of the SecondOrderSK.lean Γ_H bridge'],
+        'notes': 'Foundational reference for the SK-EFT dissipative-fluid '
+                 'effective action; cited by paper25 for the Γ_H dispersion bridge.',
+    },
+    # ──────────────────────────────────────────────────────────────────
+    # Phase 6a Wave 3 bibkeys (BH entropy / MTC counting)
+    # ──────────────────────────────────────────────────────────────────
+    'KaulMajumdar2000': {
+        'authors': 'Kaul, R. K. and Majumdar, P.',
+        'title': 'Logarithmic Correction to the Bekenstein-Hawking Entropy',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 84,
+        'page': 5255,
+        'year': 2000,
+        'doi': '10.1103/PhysRevLett.84.5255',
+        'arxiv': 'gr-qc/0002040',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['SU(2)_k Verlinde-formula derivation of S = A/(4G) − (3/2)logA + c0',
+                     'I₀ − I₁ singlet-projection cancellation (Lean: '
+                     'singletProjectionGivesExtraInverseHessian)'],
+        'notes': 'Load-bearing for Wave 3 Kaul-Majumdar SU(2)_k specialization. '
+                 'The −3/2 log coefficient is the structural physics result; the '
+                 '1/4 prefactor is a γ tuning (`immirziTuning` hypothesis).',
+    },
+    'Kaul2012Review': {
+        'authors': 'Kaul, R. K.',
+        'title': 'Entropy of Quantum Black Holes',
+        'journal': 'SIGMA',
+        'volume': 8,
+        'page': '005',
+        'year': 2012,
+        'doi': '10.3842/SIGMA.2012.005',
+        'arxiv': '1201.6102',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Detailed equations for the Kaul-Majumdar SU(2)_k saddle-point',
+                     'Eq. (31) magnetic-quantum-number form of the Verlinde sum',
+                     'Table 2: Domagala-Lewandowski + Meissner γ values'],
+        'notes': 'Comprehensive review with all equations needed for the Wave 3 '
+                 'closed-form sub-corollary. Cross-referenced with Kaul-Majumdar 2000.',
+    },
+    'DomagalaLewandowski2004': {
+        'authors': 'Domagala, M. and Lewandowski, J.',
+        'title': 'Black-hole entropy from quantum geometry',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 21,
+        'page': 5233,
+        'year': 2004,
+        'doi': '10.1088/0264-9381/21/22/014',
+        'arxiv': 'gr-qc/0407051',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Immirzi γ ≈ 0.2375 from one counting prescription'],
+        'notes': 'Distinct counting from Meissner; same −3/2 log coefficient.',
+    },
+    'Meissner2004': {
+        'authors': 'Meissner, K. A.',
+        'title': 'Black-hole entropy in loop quantum gravity',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 21,
+        'page': 5245,
+        'year': 2004,
+        'doi': '10.1088/0264-9381/21/22/015',
+        'arxiv': 'gr-qc/0407052',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Immirzi γ ≈ 0.2739 (Wave 3 default)'],
+        'notes': 'Recent LQG default. Same −3/2 log coefficient as Domagala-Lewandowski.',
+    },
+    'EngleNouiPerez2010': {
+        'authors': 'Engle, J. and Noui, K. and Perez, A.',
+        'title': 'Black hole entropy and SU(2) Chern-Simons theory',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 105,
+        'page': '031302',
+        'year': 2010,
+        'doi': '10.1103/PhysRevLett.105.031302',
+        'arxiv': '0905.3168',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Independent SU(2) intertwiner derivation of −3/2'],
+        'notes': 'Reproduces Kaul-Majumdar coefficient via different counting.',
+    },
+    'Carlip2000HorizonCFT': {
+        'authors': 'Carlip, S.',
+        'title': 'Logarithmic corrections to black hole entropy from the Cardy formula',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 17,
+        'page': 4175,
+        'year': 2000,
+        'doi': '10.1088/0264-9381/17/20/302',
+        'arxiv': 'gr-qc/0005017',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Independent Cardy-CFT derivation of the −3/2 log coefficient',
+                     'Universality argument within the single-CFT subfamily'],
+        'notes': 'Establishes the Cardy-saddle subfamily as the universality class '
+                 'where −3/2 holds. Cited for the universality-restriction discussion.',
+    },
+    'Sen2013Schwarzschild': {
+        'authors': 'Sen, A.',
+        'title': 'Logarithmic Corrections to Schwarzschild and Other Non-extremal '
+                 'Black Hole Entropy in Different Dimensions',
+        'journal': 'JHEP',
+        'volume': '04',
+        'page': 156,
+        'year': 2013,
+        'doi': '10.1007/JHEP04(2013)156',
+        'arxiv': '1205.0971',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Heat-kernel result for 4D Schwarzschild: c_log = +(212/45 − 3) ≈ +1.71',
+                     'Explicit disagreement with the Cardy-saddle/Kaul-Majumdar −3/2'],
+        'notes': 'Falsifiability anchor — establishes that −3/2 is NOT universal. '
+                 'Wave 3 cites this as the witness against universal applicability.',
+    },
+    'Solodukhin2011LivingRev': {
+        'authors': 'Solodukhin, S. N.',
+        'title': 'Entanglement entropy of black holes',
+        'journal': 'Living Rev. Relativity',
+        'volume': 14,
+        'page': 8,
+        'year': 2011,
+        'doi': '10.12942/lrr-2011-8',
+        'arxiv': '1104.3712',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Entanglement-entropy origin of S_BH; renormalization of the '
+                     '1/4 prefactor as a Sakharov-style induced-G_N condition'],
+        'notes': 'Key reference for the Sakharov interpretation of the 1/4 leading '
+                 'coefficient as a renormalization condition.',
+    },
+    'WalkerWang2012': {
+        'authors': 'Walker, K. and Wang, Z.',
+        'title': '(3+1)-TQFTs and Topological Insulators',
+        'journal': 'Frontiers of Physics',
+        'volume': 7,
+        'page': 150,
+        'year': 2012,
+        'doi': '10.1007/s11467-011-0194-z',
+        'arxiv': '1104.2632',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Walker-Wang 4D TQFT bulk ↔ 3D anomalous SET boundary mapping',
+                     'Anomaly-inflow framework for the Z₂-time-reversal-symmetric bulk '
+                     '↔ chiral c_- boundary mod 8'],
+        'notes': 'Source of the Z₂-time-reversal anomaly-match conjecture for the '
+                 'ADW bulk ↔ horizon MTC inflow. Novelty-flagged in Wave 3 paper.',
+    },
+    'BombelliKoulLeeSorkin1986': {
+        'authors': 'Bombelli, L. and Koul, R. K. and Lee, J. and Sorkin, R. D.',
+        'title': 'Quantum source of entropy for black holes',
+        'journal': 'Phys. Rev. D',
+        'volume': 34,
+        'page': 373,
+        'year': 1986,
+        'doi': '10.1103/PhysRevD.34.373',
+        'arxiv': None,
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Original entanglement-entropy origin of A/4G; UV cutoff ε '
+                     'as the alternative tuning that fixes 1/4'],
+        'notes': 'Foundational. Establishes 1/4 as a UV-cutoff tuning condition '
+                 '(parallel to the Immirzi-γ tuning in Kaul-Majumdar).',
+    },
+    'JacobsonInducedGravity1994': {
+        'authors': 'Jacobson, T.',
+        'title': 'Black hole entropy and induced gravity',
+        'journal': 'arXiv:gr-qc/9404039',
+        'volume': '',
+        'page': '',
+        'year': 1994,
+        'doi': None,
+        'arxiv': 'gr-qc/9404039',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Sakharov-induced-gravity interpretation of S_BH'],
+        'notes': 'Connects 1/4 to the renormalized Newton constant — the bridge '
+                 'used by Wave 3 to connect immirziTuning ↔ Wave 1 G_N^emerg.',
+    },
+    'KitaevHonest2006': {
+        'authors': 'Kitaev, A.',
+        'title': 'Anyons in an exactly solved model and beyond',
+        'journal': 'Annals of Physics',
+        'volume': 321,
+        'page': 2,
+        'year': 2006,
+        'doi': '10.1016/j.aop.2005.10.005',
+        'arxiv': 'cond-mat/0506438',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Anyon-cell counting κ ∝ log d_max; Ising MTC chiral c_-'],
+        'notes': 'Used in Wave 3 area-law leading coefficient ansatz.',
+    },
+    'Mitra2014LogVanish': {
+        'authors': 'Mitra, P.',
+        'title': 'Black-hole entropy without log correction',
+        'journal': 'arXiv:1406.5524',
+        'volume': '',
+        'page': '',
+        'year': 2014,
+        'doi': None,
+        'arxiv': '1406.5524',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Negative result: log correction can vanish in certain LQG counting'],
+        'notes': 'Cited as a non-universality witness alongside Sen 2013.',
+    },
+    'McGoughVerlinde2013': {
+        'authors': 'McGough, L. and Verlinde, H.',
+        'title': 'Bekenstein-Hawking Entropy as Topological Entanglement Entropy',
+        'journal': 'JHEP',
+        'volume': '11',
+        'page': 208,
+        'year': 2013,
+        'doi': '10.1007/JHEP11(2013)208',
+        'arxiv': '1308.2342',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['Closest published MTC ↔ BH-entropy identification (BTZ via Virasoro)'],
+        'notes': 'Cited in Wave 3 as the closest published precedent and as evidence '
+                 'that the 4D + ADW + MTC synthesis remains unpublished.',
+    },
+    'GovindarajanKaulSuneeta2001': {
+        'authors': 'Govindarajan, T. R. and Kaul, R. K. and Suneeta, V.',
+        'title': 'Quantum gravity on dS₃',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 19,
+        'page': 4195,
+        'year': 2002,
+        'doi': '10.1088/0264-9381/19/15/318',
+        'arxiv': 'gr-qc/0104010',
+        'doi_verified': None,
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'provides': ['BTZ via SU(2)×SU(2) CS path integral derivation of −3/2'],
+        'notes': 'Cited for cross-method −3/2 reproduction.',
     },
 }
 

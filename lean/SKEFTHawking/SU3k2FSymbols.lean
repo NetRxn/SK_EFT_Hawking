@@ -98,7 +98,8 @@ theorem fibonacci_equation :
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 SU3k2FSymbols module: SU(3)_2 Fibonacci F-matrix over Q(ζ₁₅, √φ).
 
   - 4 Fibonacci F-matrix entries defined over the non-cyclotomic
@@ -117,8 +118,6 @@ sub-F-matrix which is the core algebraic content.
 computation from `alatc` or SageMath's FusionRing); pentagon equation
 verification beyond the Fibonacci sub-block.
 -/
-theorem su3k2_fsymbols_summary : True := trivial
-
 end SU3k2FSymbols
 
 end SKEFTHawking

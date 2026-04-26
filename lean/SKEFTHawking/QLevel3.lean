@@ -145,7 +145,8 @@ theorem quantum_dim_golden : t * t - t * s - s * s = 0 := by native_decide
 
 /-! ## Module Summary -/
 
-/--
+/-! ## Module summary
+
 QLevel3 + SU(2)₃ S-matrix unitarity:
   - Q[x]/(20x⁴-10x²+1): degree 4, conductor 40
   - S-matrix entries: s = x, t = -10x³+3x
@@ -155,8 +156,6 @@ QLevel3 + SU(2)₃ S-matrix unitarity:
   - Connects to Fibonacci: quantum dims d₁=d₂=φ (golden ratio in Q(√5) ⊂ Q(s))
   - Zero sorry, zero axioms. All native_decide.
 -/
-theorem qlevel3_summary : True := trivial
-
 end QLevel3
 
 end SKEFTHawking

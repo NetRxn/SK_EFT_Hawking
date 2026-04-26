@@ -206,7 +206,8 @@ theorem fullBraid_11 :
 
 /-! ## 7. Module Summary -/
 
-/--
+/-! ## Module summary
+
 QCyc5Ext module: K = Q(ζ₅, √φ), the degree-8 number field for Fibonacci universality.
   - QCyc5Ext: pairs (a,b) ∈ Q(ζ₅)² with w² = φ = -ζ²-ζ³
   - w² = φ PROVED, φ⁻¹/² squared = φ⁻¹ PROVED
@@ -218,8 +219,6 @@ QCyc5Ext module: K = Q(ζ₅, √φ), the degree-8 number field for Fibonacci un
   - First Fibonacci braiding over the correct number field in any proof assistant
   - Zero sorry, zero axioms.
 -/
-theorem qcyc5ext_summary : True := trivial
-
 end QCyc5Ext
 
 end SKEFTHawking

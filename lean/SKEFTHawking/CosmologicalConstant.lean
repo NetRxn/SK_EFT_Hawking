@@ -220,14 +220,15 @@ theorem lambda_magnitude_ratio_exact {T : ℝ} (hT : 0 < T) :
 
 /-! ## 4. Module summary -/
 
-/-- Summary theorem for the Cosmological Constant module.
+/-! ## Module summary
+
+Summary theorem for the Cosmological Constant module.
 
     Ships the algebraic backbone of roadmap T1 (double-temperature)
     and T3 (quartic CW critical point) plus the Λ magnitude-ratio
     utilities for W1b-corrected claims. Full T2 (Volovik equilibrium)
     and the numerical T3 specialization to the ADW `V_eff` require
     thermodynamic / RG infrastructure not in Mathlib; tracked as
-    Phase 6 deferred work in the Phase 5x roadmap. -/
-theorem cosmological_constant_summary : True := trivial
-
+    Phase 6 deferred work in the Phase 5x roadmap.
+-/
 end SKEFTHawking

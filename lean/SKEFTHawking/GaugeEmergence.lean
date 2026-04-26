@@ -160,15 +160,18 @@ combined with the non-trivial conjugacy classes).
 theorem Z_vecS3_anyons :
     3 + 2 + 3 = (8 : ℕ) := by norm_num
 
-/--
-The fusion rules of Z(Vec_G) for abelian G are completely determined
-by G and its character group Ĝ: the anyons (g, χ) fuse as
-(g₁, χ₁) ⊗ (g₂, χ₂) = (g₁g₂, χ₁χ₂).
+/-- Marker theorem (`_DEFINITIONAL`): the multiplicative reflexivity
+of `CommGroup` elements at the term level — i.e., the trivial fact
+that `g₁ * g₂ = g₁ * g₂` in any commutative group.
 
-This is the abelian DW gauge theory, equivalent to ℤ_N gauge theory
-for G = ℤ/N.
--/
-theorem abelian_dw_fusion [CommGroup G] (g₁ g₂ : G) :
+The substantive abelian Dijkgraaf-Witten content — that the fusion
+rules of `Z(Vec_G)` for abelian `G` are completely determined by `G`
+and its character group `Ĝ`, with anyons `(g, χ)` fusing as
+`(g₁, χ₁) ⊗ (g₂, χ₂) = (g₁g₂, χ₁χ₂)` — lives in
+`DrinfeldCenterBridge` and `VecGMonoidal`. This abelian DW gauge
+theory is equivalent to `ℤ_N` gauge theory for `G = ℤ/N`. The
+present theorem is a re-export marker, not a proof. -/
+theorem abelian_dw_fusion_DEFINITIONAL [CommGroup G] (g₁ g₂ : G) :
     g₁ * g₂ = g₁ * g₂ := rfl
 
 -- Fracton connection: stacking layers of Z(Vec_G) and gauging a diagonal

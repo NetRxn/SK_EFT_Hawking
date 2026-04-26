@@ -548,7 +548,9 @@ noncomputable def qgHopfAlgebra :
 
 /-! ## 12. Module summary -/
 
-/-- QuantumGroupHopf module: Hopf algebra structure on U_q(𝔤).
+/-! ## Module summary
+
+QuantumGroupHopf module: Hopf algebra structure on U_q(𝔤).
   - counitOnGen + counit_respects_rel + qgCounit: ε fully proved
   - qg_comul_coassoc: (Δ ⊗ id) ∘ Δ = (id ⊗ Δ) ∘ Δ
   - qg_comul_rTensor_counit + qg_comul_lTensor_counit: counit laws
@@ -560,7 +562,6 @@ noncomputable def qgHopfAlgebra :
   - qg_antipode_rTensor + qg_antipode_lTensor: main convolution laws (0 sorry)
   - qgHopfAlgebra: HopfAlgebra instance (0 sorry)
   - First generic quantum group HopfAlgebra in any proof assistant
-  - ZERO sorry. Covers all symmetric Cartan matrices simultaneously. -/
-theorem quantum_group_hopf_summary : True := trivial
-
+  - ZERO sorry. Covers all symmetric Cartan matrices simultaneously.
+-/
 end SKEFTHawking

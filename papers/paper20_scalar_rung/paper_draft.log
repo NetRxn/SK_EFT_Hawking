@@ -1,12 +1,46 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  24 APR 2026 22:09
-entering extended mode
- restricted \write18 enabled.
- %&-line parsing enabled.
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.3.22)  25 APR 2026 16:08
+ restricted system commands enabled.
 **paper_draft.tex
 (./paper_draft.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
-(/usr/local/texlive/2026/texmf-dist/tex/latex/revtex/revtex4-2.cls
+Lua module: luaotfload 2024-12-03 v3.29 Lua based OpenType font support
+Lua module: lualibs 2023-07-13 v2.76 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2023-07-13 v2.76 ConTeXt Lua libraries -- extended 
+collection.
+luaotfload | conf : Root cache directory is "/Users/johnroehm/Library/texlive/20
+26/texmf-var/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2023-12-28.lua" from kpse-res
+olved path "/usr/local/texlive/2026/texmf-dist/tex/luatex/luaotfload/fontloader-
+2023-12-28.lua".
+Lua-only attribute luaotfload@noligature = 1
+luaotfload | init : Context OpenType loader version 3.134
+Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' in `define_font'.
+Lua-only attribute luaotfload_color_attribute = 2
+luaotfload | conf : Root cache directory is "/Users/johnroehm/Library/texlive/20
+26/texmf-var/luatex-cache/generic/names".
+Inserting `luaotfload.harf.strip_prefix' in `find_opentype_file'.
+Inserting `luaotfload.harf.strip_prefix' in `find_truetype_file'.
+Removing  `luaotfload.glyph_stream' from `glyph_stream_provider'.
+Inserting `luaotfload.harf.glyphstream' in `glyph_stream_provider'.
+Inserting `luaotfload.harf.finalize_vlist' in `post_linebreak_filter'.
+Inserting `luaotfload.harf.finalize_hlist' in `hpack_filter'.
+Inserting `luaotfload.cleanup_files' in `wrapup_run'.
+Inserting `luaotfload.harf.finalize_unicode' in `finish_pdffile'.
+Inserting `luaotfload.glyphinfo' in `glyph_info'.
+Lua-only attribute luaotfload.letterspace_done = 3
+Inserting `luaotfload.aux.set_sscale_dimens' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_font_index' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.patch_cambria_domh' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.fixup_fontdata' in `luaotfload.patch_font_unsafe'.
+Inserting `luaotfload.aux.set_capheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.aux.set_xheight' in `luaotfload.patch_font'.
+Inserting `luaotfload.rewrite_fontname' in `luaotfload.patch_font'.
+Inserting `tracingstacklevels' in `input_level_string'. (/usr/local/texlive/202
+6/texmf-dist/tex/latex/revtex/revtex4-2.cls
 Document Class: revtex4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for
  documentation)
  Copyright (c) 2019 American Physical Society.
@@ -23,18 +57,18 @@ LaTeX Info: Redefining \@centercr on input line 356.
 Class revtex4-2 Info: Repairing hyperref-unfriendly LaTeX definition of \mpfoot
 note on input line 492.
 Class revtex4-2 Info: Repairing broken LateX \@sect on input line 814.
-\intertabularlinepenalty=\count275
-\@tbpen=\count276
+\intertabularlinepenalty=\count273
+\@tbpen=\count274
 \@arstrutbox@hline=\box53
 Class revtex4-2 Info: Repairing broken LaTeX \@xbitor on input line 1845.
 Class revtex4-2 Info: Making \typeout \long on input line 2110.
 ltxfront[2022/06/05 4.2f frontmatter package (AO,DPC,MD)]
-\c@affil=\count277
-\c@collab=\count278
+\c@affil=\count275
+\c@collab=\count276
 \absbox=\box54
 ltxgrid[2022/06/05 4.2f page grid package (portions licensed from W. E. Baxter 
 web at superscript.com)]
-\c@linecount=\count279
+\c@linecount=\count277
 \output@latex=\toks17
 \box@size@1=\box55
 \box@size@2=\box56
@@ -45,22 +79,22 @@ web at superscript.com)]
 \column@recovered=\box60
 \pagesofar=\box61
 \footsofar=\box62
-\pagegrid@col=\count280
+\pagegrid@col=\count278
 Class revtex4-2 Info: Overriding \@vspace, \@vspacer, \@no@pgbk, \@newline, and
  \\  on input line 5676.
-\c@part=\count281
-\c@section=\count282
-\c@subsection=\count283
-\c@subsubsection=\count284
-\c@paragraph=\count285
-\c@subparagraph=\count286
+\c@part=\count279
+\c@section=\count280
+\c@subsection=\count281
+\c@subsubsection=\count282
+\c@paragraph=\count283
+\c@subparagraph=\count284
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
-\c@figure=\count287
+\c@figure=\count285
 \fbox@1=\box63
-\c@table=\count288
+\c@table=\count286
 \fbox@2=\box64
-\c@video=\count289
+\c@video=\count287
 \fbox@4=\box65
 \@bibdataout=\write3
 \widetext@top=\box66
@@ -95,7 +129,7 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip51
 \bibsep=\skip52
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count290
+\c@NAT@ctr=\count288
 )
 Class revtex4-2 Info: Repairing natbib's \BibitemShut on input line 7676.
 
@@ -103,7 +137,9 @@ Class revtex4-2 Info: Repairing natbib's \BibitemShut on input line 7676.
 Package: revsymb4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for docum
 entation)
 LaTeX Info: Redefining \REV@mathfrak on input line 128.
-))
+)
+luaotfload | db : Font names database loaded from /Users/johnroehm/Library/texli
+ve/2026/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip53
@@ -115,25 +151,25 @@ Package: amstext 2024/11/17 v2.01 AMS text
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks19
-\ex@=\dimen148
+\ex@=\dimen147
 )
 LaTeX Info: Redefining \text on input line 28.
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen149
+\pmbraise@=\dimen148
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count291
-LaTeX Info: Redefining \frac on input line 233.
-\uproot@=\count292
-\leftroot@=\count293
+\inf@bad=\count289
+LaTeX Info: Redefining \frac on input line 235.
+\uproot@=\count290
+\leftroot@=\count291
 LaTeX Info: Redefining \overline on input line 398.
 LaTeX Info: Redefining \colon on input line 409.
-\classnum@=\count294
-\DOTSCASE@=\count295
+\classnum@=\count292
+\DOTSCASE@=\count293
 LaTeX Info: Redefining \ldots on input line 495.
 LaTeX Info: Redefining \dots on input line 498.
 LaTeX Info: Redefining \cdots on input line 619.
@@ -143,30 +179,30 @@ LaTeX Info: Redefining \big on input line 721.
 LaTeX Info: Redefining \Big on input line 722.
 LaTeX Info: Redefining \bigg on input line 723.
 LaTeX Info: Redefining \Bigg on input line 724.
-\big@size=\dimen150
+\big@size=\dimen149
 LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
-\macc@depth=\count296
+\macc@depth=\count294
 LaTeX Info: Redefining \bmod on input line 904.
 LaTeX Info: Redefining \pmod on input line 909.
 LaTeX Info: Redefining \smash on input line 939.
 LaTeX Info: Redefining \relbar on input line 969.
 LaTeX Info: Redefining \Relbar on input line 970.
-\c@MaxMatrixCols=\count297
+\c@MaxMatrixCols=\count295
 \dotsspace@=\muskip18
-\c@parentequation=\count298
-\dspbrk@lvl=\count299
+\c@parentequation=\count296
+\dspbrk@lvl=\count297
 \tag@help=\toks20
-\row@=\count300
-\column@=\count301
-\maxfields@=\count302
+\row@=\count298
+\column@=\count299
+\maxfields@=\count300
 \andhelp@=\toks21
-\eqnshift@=\dimen151
-\alignsep@=\dimen152
-\tagshift@=\dimen153
-\tagwidth@=\dimen154
-\totwidth@=\dimen155
-\lineht@=\dimen156
+\eqnshift@=\dimen150
+\alignsep@=\dimen151
+\tagshift@=\dimen152
+\tagwidth@=\dimen153
+\totwidth@=\dimen154
+\lineht@=\dimen155
 \@envbody=\toks22
 \multlinegap=\skip54
 \multlinetaggap=\skip55
@@ -203,50 +239,50 @@ Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: pdftex.def on input line 106.
+Package graphics Info: Driver file: luatex.def on input line 106.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/pdftex.def
-File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/luatex.def
+File: luatex.def 2025/09/29 v1.2f Graphics/color driver for luatex
 ))
-\Gin@req@height=\dimen157
-\Gin@req@width=\dimen158
+\Gin@req@height=\dimen156
+\Gin@req@width=\dimen157
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen159
-\lightrulewidth=\dimen160
-\cmidrulewidth=\dimen161
-\belowrulesep=\dimen162
-\belowbottomsep=\dimen163
-\aboverulesep=\dimen164
-\abovetopsep=\dimen165
-\cmidrulesep=\dimen166
-\cmidrulekern=\dimen167
-\defaultaddspace=\dimen168
-\@cmidla=\count303
-\@cmidlb=\count304
-\@aboverulesep=\dimen169
-\@belowrulesep=\dimen170
-\@thisruleclass=\count305
-\@lastruleclass=\count306
-\@thisrulewidth=\dimen171
+\heavyrulewidth=\dimen158
+\lightrulewidth=\dimen159
+\cmidrulewidth=\dimen160
+\belowrulesep=\dimen161
+\belowbottomsep=\dimen162
+\aboverulesep=\dimen163
+\abovetopsep=\dimen164
+\cmidrulesep=\dimen165
+\cmidrulekern=\dimen166
+\defaultaddspace=\dimen167
+\@cmidla=\count301
+\@cmidlb=\count302
+\@aboverulesep=\dimen168
+\@belowrulesep=\dimen169
+\@thisruleclass=\count303
+\@lastruleclass=\count304
+\@thisrulewidth=\dimen170
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/siunitx/siunitx.sty
 Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
-\l__siunitx_number_uncert_offset_int=\count307
-\l__siunitx_number_exponent_fixed_int=\count308
-\l__siunitx_number_min_decimal_int=\count309
-\l__siunitx_number_min_integer_int=\count310
-\l__siunitx_number_round_precision_int=\count311
-\l__siunitx_number_lower_threshold_int=\count312
-\l__siunitx_number_upper_threshold_int=\count313
-\l__siunitx_number_group_first_int=\count314
-\l__siunitx_number_group_size_int=\count315
-\l__siunitx_number_group_minimum_int=\count316
-\l__siunitx_angle_tmp_dim=\dimen172
+\l__siunitx_number_uncert_offset_int=\count305
+\l__siunitx_number_exponent_fixed_int=\count306
+\l__siunitx_number_min_decimal_int=\count307
+\l__siunitx_number_min_integer_int=\count308
+\l__siunitx_number_round_precision_int=\count309
+\l__siunitx_number_lower_threshold_int=\count310
+\l__siunitx_number_upper_threshold_int=\count311
+\l__siunitx_number_group_first_int=\count312
+\l__siunitx_number_group_size_int=\count313
+\l__siunitx_number_group_minimum_int=\count314
+\l__siunitx_angle_tmp_dim=\dimen171
 \l__siunitx_angle_marker_box=\box70
 \l__siunitx_angle_unit_box=\box71
-\l__siunitx_compound_count_int=\count317
+\l__siunitx_compound_count_int=\count315
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations.sty
 Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
@@ -254,7 +290,7 @@ Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count318
+\etb@tempcnta=\count316
 )
 (/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
@@ -272,27 +308,28 @@ Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
+\pdftexcmds@toks=\toks25
 ))
 \l__siunitx_table_tmp_box=\box72
-\l__siunitx_table_tmp_dim=\dimen173
-\l__siunitx_table_column_width_dim=\dimen174
+\l__siunitx_table_tmp_dim=\dimen172
+\l__siunitx_table_column_width_dim=\dimen173
 \l__siunitx_table_integer_box=\box73
 \l__siunitx_table_decimal_box=\box74
 \l__siunitx_table_uncert_box=\box75
 \l__siunitx_table_before_box=\box76
 \l__siunitx_table_after_box=\box77
-\l__siunitx_table_before_dim=\dimen175
-\l__siunitx_table_carry_dim=\dimen176
-\l__siunitx_unit_tmp_int=\count319
-\l__siunitx_unit_position_int=\count320
-\l__siunitx_unit_total_int=\count321
+\l__siunitx_table_before_dim=\dimen174
+\l__siunitx_table_carry_dim=\dimen175
+\l__siunitx_unit_tmp_int=\count317
+\l__siunitx_unit_position_int=\count318
+\l__siunitx_unit_total_int=\count319
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
-\col@sep=\dimen177
+\col@sep=\dimen176
 \ar@mcellbox=\box78
-\extrarowheight=\dimen178
-\NC@list=\toks25
+\extrarowheight=\dimen177
+\NC@list=\toks26
 \extratabsurround=\skip56
 \backup@length=\skip57
 \ar@cellbox=\box79
@@ -330,29 +367,25 @@ Package nameref Warning: The definition of \label has changed!
 (nameref)                Replacing it with the kernel definition on input line 
 161.
 
-\c@section@level=\count322
+\c@section@level=\count320
 ) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen179
-\Hy@linkcounter=\count323
-\Hy@pagecounter=\count324
+\@linkdim=\dimen178
+\Hy@linkcounter=\count321
+\Hy@pagecounter=\count322
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
-Now handling font encoding PD1 ...
-... no UTF-8 mapping file for font encoding PD1
 )
 (/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count325
+\Hy@SavedSpaceFactor=\count323
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
-Now handling font encoding PU ...
-... no UTF-8 mapping file for font encoding PU
 )
 Package hyperref Info: Hyper figures OFF on input line 4201.
 Package hyperref Info: Link nesting OFF on input line 4206.
@@ -362,9 +395,9 @@ Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4468.
 LaTeX Info: Redefining \href on input line 4718.
-\c@Hy@tempcnt=\count326
+\c@Hy@tempcnt=\count324
 LaTeX Info: Redefining \url on input line 4807.
-\XeTeXLinkMargin=\dimen180
+\XeTeXLinkMargin=\dimen179
 
 (/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -373,9 +406,9 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count327
-\Field@Width=\dimen181
-\Fld@charsize=\dimen182
+\Fld@menulength=\count325
+\Field@Width=\dimen180
+\Fld@charsize=\dimen181
 Package hyperref Info: Hyper figures OFF on input line 6084.
 Package hyperref Info: Link nesting OFF on input line 6089.
 Package hyperref Info: Hyper index ON on input line 6092.
@@ -383,16 +416,16 @@ Package hyperref Info: backreferencing OFF on input line 6099.
 Package hyperref Info: Link coloring OFF on input line 6104.
 Package hyperref Info: Link coloring with OCG OFF on input line 6109.
 Package hyperref Info: PDF/A mode OFF on input line 6114.
-\Hy@abspage=\count328
-\c@Item=\count329
-\c@Hfootnote=\count330
+\Hy@abspage=\count326
+\c@Item=\count327
+\c@Hfootnote=\count328
 )
-Package hyperref Info: Driver (autodetected): hpdftex.
+Package hyperref Info: Driver (autodetected): hluatex.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2026-01-29 v7.01p Hyperref driver for pdfTeX
-\Fld@listcount=\count331
-\c@bookmark@seq@number=\count332
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hluatex.def
+File: hluatex.def 2026-01-29 v7.01p Hyperref driver for luaTeX
+\Fld@listcount=\count329
+\c@bookmark@seq@number=\count330
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
@@ -419,15 +452,15 @@ Package: color 2025/01/14 v1.3e Standard LaTeX Color (DPC)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
-Package color Info: Driver file: pdftex.def on input line 149.
+Package color Info: Driver file: luatex.def on input line 149.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count333
-)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-luatex.def
+File: l3backend-luatex.def 2025-10-09 L3 backend support: PDF output (LuaTeX)
+\l__color_backend_stack_int=\count331
+Inserting `l3color' in `luaotfload.parse_color'.)
 (./paper_draft.aux)
-\openout1 = `paper_draft.aux'.
+\openout1 = paper_draft.aux
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
@@ -438,6 +471,8 @@ LaTeX Font Info:    ... okay on input line 17.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
 LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
@@ -450,17 +485,17 @@ LaTeX Font Info:    ... okay on input line 17.
 
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count334
-\scratchdimen=\dimen183
+\scratchcounter=\count332
+\scratchdimen=\dimen182
 \scratchbox=\box80
-\nofMPsegments=\count335
-\nofMParguments=\count336
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count337
-\MPscratchDim=\dimen184
-\MPnumerator=\count338
-\makeMPintoPDFobject=\count339
-\everyMPtoPDFconversion=\toks27
+\nofMPsegments=\count333
+\nofMParguments=\count334
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count335
+\MPscratchDim=\dimen183
+\MPnumerator=\count336
+\makeMPintoPDFobject=\count337
+\everyMPtoPDFconversion=\toks28
 ) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -480,11 +515,11 @@ or `english'. on input line 17.
 Package hyperref Info: Link coloring OFF on input line 17.
  (./paper_draft.out) (./paper_draft.out)
 \@outlinefile=\write4
-\openout4 = `paper_draft.out'.
 
+\openout4 = paper_draft.out
 Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 17.
-\openout3 = `paper_draftNotes.bib'.
 
+\openout3 = paper_draftNotes.bib
 LaTeX Font Info:    Trying to load font information for U+msa on input line 35.
 
 
@@ -506,211 +541,203 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 metric tran-si-tion (\OT1/cmtt/m/n/10 VestigialSusceptibility.l
-ean\OT1/cmr/m/n/10 ,
+\TU/lmr/m/n/10 metric tran-si-tion (\TU/lmtt/m/n/10 VestigialSusceptibility.lean
+\TU/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 5985) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 16$ the-o-rems) and the vestigial-metric $\OMS/cmsy/m/n/10 !$ \
-OT1/cmr/m/n/10 tetrad
+Underfull \hbox (badness 6016) in paragraph at lines 74--86
+\OT1/cmr/m/n/10 24$ \TU/lmr/m/n/10 the-o-rems) and the vestigial-metric $\OMS/c
+msy/m/n/10 !$ \TU/lmr/m/n/10 tetrad
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 tran-si-tion (\OT1/cmtt/m/n/10 TetradGapEquation.lean\OT1/cmr/m
-/n/10 , $20$ the-o-
+\TU/lmr/m/n/10 tran-si-tion (\TU/lmtt/m/n/10 TetradGapEquation.lean\TU/lmr/m/n/
+10 , $\OT1/cmr/m/n/10 24$ \TU/lmr/m/n/10 the-o-
  []
 
 
-Underfull \hbox (badness 3965) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 rems; \OT1/cmtt/m/n/10 ADWMechanism.lean\OT1/cmr/m/n/10 , $21$ 
-the-o-rems). Both
+Underfull \hbox (badness 3989) in paragraph at lines 74--86
+\TU/lmr/m/n/10 rems; \TU/lmtt/m/n/10 ADWMechanism.lean\TU/lmr/m/n/10 , $\OT1/cm
+r/m/n/10 21$ \TU/lmr/m/n/10 the-o-rems). Both
  []
 
 
 Underfull \hbox (badness 1924) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 rungs share the Wetterich-NJL four-fermion in-fras-
+\TU/lmr/m/n/10 rungs share the Wetterich-NJL four-fermion in-fras-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 truc-ture (\OT1/cmtt/m/n/10 WetterichNJL.lean\OT1/cmr/m/n/10 , 
-$18$ the-o-rems) and
+\TU/lmr/m/n/10 truc-ture (\TU/lmtt/m/n/10 WetterichNJL.lean\TU/lmr/m/n/10 , $\O
+T1/cmr/m/n/10 18$ \TU/lmr/m/n/10 the-o-rems) and
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 74--86
-\OT1/cmr/m/n/10 the Fer-mi-Point-Topol-ogy emergent-Weyl sub-strate
+\TU/lmr/m/n/10 the Fer-mi-Point-Topol-ogy emergent-Weyl sub-strate
  []
 
 
-Underfull \hbox (badness 1755) in paragraph at lines 99--108
-[]\OT1/cmr/m/n/10 The iden-ti-fi-ca-tion is at struc-tural scope be-cause
+Underfull \hbox (badness 1533) in paragraph at lines 99--108
+\TU/lmr/m/n/10 Higgs iden-ti-fi-ca-tion is struc-tural in the sense that
  []
 
 
-Underfull \hbox (badness 1648) in paragraph at lines 99--108
-\OT1/cmr/m/n/10 dices; the Higgs iden-ti-fi-ca-tion is struc-tural in the
+Underfull \hbox (badness 3815) in paragraph at lines 99--108
+\TU/lmr/m/n/10 it com-mutes with the gauge-singlet pro-jec-tion of
  []
 
 
-Underfull \hbox (badness 3942) in paragraph at lines 99--108
-\OT1/cmr/m/n/10 ex-ten-sion is doc-u-mented as a Wave 1 follow-up
- []
-
-
-Overfull \hbox (72.20284pt too wide) in paragraph at lines 99--108
-\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 Lit-Search/Tasks/Phase5z[]wetterich[]njl[]ew[
-]index[]structure.md\OT1/cmr/m/n/10 ). 
+Overfull \hbox (54.67pt too wide) in paragraph at lines 99--108
+\TU/lmtt/m/n/10 Search/Tasks/Phase5z_wetterich_njl_ew_index_structure.md\TU/lmr
+/m/n/10 ). 
  []
 
 [1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 Underfull \hbox (badness 4242) in paragraph at lines 141--149
-\OT1/cmr/m/n/10 with $^^@[] \OMS/cmsy/m/n/10 2 f\U/msb/m/n/10 1\OML/cmm/m/it/10
- ; ^^M[]; ^^M[]; ^^M[]^^M[]; ^^[[]\OMS/cmsy/m/n/10 g$ \OT1/cmr/m/n/10 and the F
-ierz-
+\TU/lmr/m/n/10 with $\OT1/cmr/m/n/10 ^^@[] \OMS/cmsy/m/n/10 2 f\U/msb/m/n/10 1\
+OML/cmm/m/it/10 ; []; []; [][]; []\OMS/cmsy/m/n/10 g$ \TU/lmr/m/n/10 and th
+e Fierz-
  []
 
 
-Overfull \hbox (57.5111pt too wide) detected at line 156
-[][][][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^[\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10
- v[]; ^^\\OT1/cmr/m/n/10 )  \OMS/cmsy/m/n/10 ([])  [][] ^^@ \OML/cmm/m/it/10 v[
-][] < ^^\ v[]:
+Overfull \hbox (57.51219pt too wide) detected at line 156
+[][][][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 \OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 v[]; \OT1/cmr/m/n/10 )  \OMS/cmsy/m/n/10 ([])  [][] ^^@ \OML/cmm/m/it/10 v[][] <  v[]:
  []
 
 
-Underfull \hbox (badness 7326) in paragraph at lines 156--166
-\OT1/cmr/m/n/10 VEV re-pro-duces $\OML/cmm/m/it/10 v[]$ \OT1/cmr/m/n/10 within 
-frac-tional tol-er-ance
+Underfull \hbox (badness 7344) in paragraph at lines 156--166
+\TU/lmr/m/n/10 VEV re-pro-duces $\OML/cmm/m/it/10 v[]$ \TU/lmr/m/n/10 within fra
+c-tional tol-er-ance
  []
 
 
-Underfull \hbox (badness 1237) in paragraph at lines 156--166
-\OML/cmm/m/it/10 ^^\$\OT1/cmr/m/n/10 . The pred-i-cate is gen-uinely non-trivia
-l: super-
+Underfull \hbox (badness 1242) in paragraph at lines 156--166
+\OML/cmm/m/it/10 $\TU/lmr/m/n/10 . The pred-i-cate is gen-uinely non-trivial: 
+super-
  []
 
 
-Underfull \hbox (badness 1975) in paragraph at lines 156--166
-\OT1/cmr/m/n/10 VEV scalar chan-nels fail it. The Lean the-o-rem
+Underfull \hbox (badness 1983) in paragraph at lines 156--166
+\TU/lmr/m/n/10 VEV scalar chan-nels fail it. The Lean the-o-rem
  []
 
 
-Overfull \hbox (114.14679pt too wide) in paragraph at lines 156--166
-\OT1/cmtt/m/n/10 ScalarRungInterpretation.not[]isHiggsBilinearCandidate[]of[]ve
-v[]too[]large
+Overfull \hbox (121.5pt too wide) in paragraph at lines 156--166
+\TU/lmtt/m/n/10 ScalarRungInterpretation.not_isHiggsBilinearCandidate_of_vev_too
+_large
  []
 
 
-Overfull \hbox (95.88338pt too wide) detected at line 183
-[][][][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^[; \OT1/cmr/m/n/10 ^^C[])  \OMS/cms
-y/m/n/10 ([])  [] ^^T \OT1/cmr/m/n/10 ^^C[]\OML/cmm/m/it/10 :
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 The hy-poth-e-sis is gen-uinely non-trivial
+Overfull \hbox (97.35521pt too wide) detected at line 183
+[][][][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 [])  \OMS/cmsy/m/
+n/10 ([])  []  \OT1/cmr/m/n/10 []\OML/cmm/m/it/10 :
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 | it can fail for super-UV con-den-sates.
+\TU/lmr/m/n/10 The hy-poth-e-sis is gen-uinely non-trivial
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 The load-bearing con-se-quence the-o-rem
+\TU/lmr/m/n/10 — it can fail for super-UV con-den-sates.
  []
 
 
-Overfull \hbox (98.39693pt too wide) in paragraph at lines 183--197
-\OT1/cmtt/m/n/10 ScalarRungInterpretation.mexican[]hat[]vev[]under[]supercritic
-al[]bridge
+Underfull \hbox (badness 10000) in paragraph at lines 183--197
+\TU/lmr/m/n/10 The load-bearing con-se-quence the-o-rem
+ []
+
+
+Overfull \hbox (105.75pt too wide) in paragraph at lines 183--197
+\TU/lmtt/m/n/10 ScalarRungInterpretation.mexican_hat_vev_under_supercritical_bri
+dge
  []
 
 
 Underfull \hbox (badness 3568) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 de-rives, un-der the hy-poth-e-sis, both $0 \OML/cmm/m/it/10 < 
-v[]$
+\TU/lmr/m/n/10 de-rives, un-der the hy-poth-e-sis, both $\OT1/cmr/m/n/10 0 \OML
+/cmm/m/it/10 < v[]$
  []
 
 
-Underfull \hbox (badness 4429) in paragraph at lines 183--197
-\OT1/cmr/m/it/10 and $\OML/cmm/m/it/10 v[] \OMS/cmsy/m/n/10 ^^T \OT1/cmr/m/n/10
- ^^C[]$. The sharp con-tra-pos-i-tive
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 183--197
-\OT1/cmtt/m/n/10 bridge[]excludes[]super[]uv[]vev \OT1/cmr/m/n/10 es-tab-lishes
- struc-
- []
-
-
-Underfull \hbox (badness 5217) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 tural fal-si-fi-a-bil-ity. The same tracked-hypothesis
- []
-
-
-Underfull \hbox (badness 1137) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 pat-tern is used else-where in the project for cross-
+Underfull \hbox (badness 4531) in paragraph at lines 183--197
+\TU/lmr/m/it/10 and $\OML/cmm/m/it/10 v[] \OMS/cmsy/m/n/10  \OT1/cmr/m/n/10 [
+]$\TU/lmr/m/n/10 . The sharp con-tra-pos-i-tive
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 pillar bridges where the quan-ti-ta-tive co-ef-fi-cient
+\TU/lmtt/m/n/10 bridge_excludes_super_uv_vev \TU/lmr/m/n/10 es-tab-lishes struc-
+
  []
 
 
-Underfull \hbox (badness 5637) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 match-ing is not yet for-mal-ized | for ex-am-ple
+Underfull \hbox (badness 5231) in paragraph at lines 183--197
+\TU/lmr/m/n/10 tural fal-si-fi-a-bil-ity. The same tracked-hypothesis
  []
 
 
-Overfull \hbox (4.5278pt too wide) in paragraph at lines 183--197
-\OT1/cmtt/m/n/10 HiddenSectorMixedCharge.H[]MixedChannelZ16Cancels
+Underfull \hbox (badness 1178) in paragraph at lines 183--197
+\TU/lmr/m/n/10 pat-tern is used else-where in the project for cross-
  []
 
 
-Overfull \hbox (46.63878pt too wide) in paragraph at lines 183--197
-\OT1/cmr/m/n/10 and \OT1/cmtt/m/n/10 DarkSectorSynthesis.H[]VestigialRelicCarri
-esZ16Charge\OT1/cmr/m/n/10 .
+Underfull \hbox (badness 10000) in paragraph at lines 183--197
+\TU/lmr/m/n/10 pillar bridges where the quan-ti-ta-tive co-ef-fi-cient
  []
 
 
-Underfull \hbox (badness 6396) in paragraph at lines 198--207
-[]\OT1/cmr/m/n/10 The vac-uum ex-pec-ta-tion value $\OML/cmm/m/it/10 v \OT1/cmr
-/m/n/10 = []$
+Underfull \hbox (badness 5667) in paragraph at lines 183--197
+\TU/lmr/m/n/10 match-ing is not yet for-mal-ized — for ex-am-ple
+ []
+
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 183--197
+\TU/lmtt/m/n/10 HiddenSectorMixedCharge.H_MixedChannelZ16Cancels
+ []
+
+
+Overfull \hbox (48.12pt too wide) in paragraph at lines 183--197
+\TU/lmr/m/n/10 and \TU/lmtt/m/n/10 DarkSectorSynthesis.H_VestigialRelicCarriesZ1
+6Charge\TU/lmr/m/n/10 .
+ []
+
+
+Underfull \hbox (badness 6412) in paragraph at lines 198--207
+[]\TU/lmr/m/n/10 The vac-uum ex-pec-ta-tion value $\OML/cmm/m/it/10 v \OT1/cmr/
+m/n/10 = []$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 198--207
-\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 ScalarRungInterpretation.mexicanHatVev[]sq\OT
-1/cmr/m/n/10 )
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 ScalarRungInterpretation.mexicanHatVev_sq\TU/lm
+r/m/n/10 )
  []
 
 
-Underfull \hbox (badness 1242) in paragraph at lines 198--207
-\OT1/cmr/m/n/10 and the tree-level Higgs mass-squared $\OML/cmm/m/it/10 m[] \OT
-1/cmr/m/n/10 = 2\OML/cmm/m/it/10 ^^V[]$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 198--207
-\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 ScalarRungInterpretation.higgsMassSq[]pos\OT1
-/cmr/m/n/10 ,
+Underfull \hbox (badness 1248) in paragraph at lines 198--207
+\TU/lmr/m/n/10 and the tree-level Higgs mass-squared $\OML/cmm/m/it/10 m[] \OT1
+/cmr/m/n/10 = 2\OML/cmm/m/it/10 []$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 198--207
-\OT1/cmtt/m/n/10 higgsMassSq[]eq[]two[]lam[]vev[]sq\OT1/cmr/m/n/10 ) re-pro-duc
-e the
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 ScalarRungInterpretation.higgsMassSq_pos\TU/lmr
+/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 1540) in paragraph at lines 198--207
-\OT1/cmr/m/n/10 stan-dard SM iden-ti-ties. The Python im-ple-men-ta-
+Underfull \hbox (badness 10000) in paragraph at lines 198--207
+\TU/lmtt/m/n/10 higgsMassSq_eq_two_lam_vev_sq\TU/lmr/m/n/10 ) re-pro-duce the
+ []
+
+
+Underfull \hbox (badness 7047) in paragraph at lines 198--207
+\TU/lmtt/m/n/10 higgs_mass_from_vev \TU/lmr/m/n/10 matches PDG 2024 within
  []
 
 
@@ -731,114 +758,112 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 212--216
-[]\OT1/cmr/m/n/10 The scalar-channel VEV pro-vides the sin-
+[]\TU/lmr/m/n/10 The scalar-channel VEV pro-vides the sin-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 212--216
-\OT1/cmr/m/n/10 gle di-men-sion-ful in-put to the Anderson-
+\TU/lmr/m/n/10 gle di-men-sion-ful in-put to the Anderson-
  []
 
 
-Underfull \hbox (badness 5274) in paragraph at lines 212--216
-\OT1/cmr/m/n/10 Higgs $\OML/cmm/m/it/10 W$\OT1/cmr/m/n/10 /$\OML/cmm/m/it/10 Z$
- \OT1/cmr/m/n/10 mass ma-trix. The Lean the-o-rem
+Underfull \hbox (badness 5302) in paragraph at lines 212--216
+\TU/lmr/m/n/10 Higgs $\OML/cmm/m/it/10 W$\TU/lmr/m/n/10 /$\OML/cmm/m/it/10 Z$ \
+TU/lmr/m/n/10 mass ma-trix. The Lean the-o-rem
  []
 
 
-Overfull \hbox (35.39748pt too wide) in paragraph at lines 212--216
-\OT1/cmtt/m/n/10 ScalarRungInterpretation.ew[]mass[]matrix[]from[]scalar[]vev
+Overfull \hbox (42.75pt too wide) in paragraph at lines 212--216
+\TU/lmtt/m/n/10 ScalarRungInterpretation.ew_mass_matrix_from_scalar_vev
  []
 
 
-Underfull \hbox (badness 1454) in paragraph at lines 219--225
-\OT1/cmr/m/n/10 with $\OML/cmm/m/it/10 g$ \OT1/cmr/m/n/10 the $\OML/cmm/m/it/10
- SU\OT1/cmr/m/n/10 (2)[]$ gauge cou-pling, $\OML/cmm/m/it/10 g[]$ \OT1/cmr/m/n/
-10 the $\OML/cmm/m/it/10 U\OT1/cmr/m/n/10 (1)[]$
+Underfull \hbox (badness 1460) in paragraph at lines 219--225
+\TU/lmr/m/n/10 with $\OML/cmm/m/it/10 g$ \TU/lmr/m/n/10 the $\OML/cmm/m/it/10 SU
+\OT1/cmr/m/n/10 (2)[]$ \TU/lmr/m/n/10 gauge cou-pling, $\OML/cmm/m/it/10 g[]$ \
+TU/lmr/m/n/10 the $\OML/cmm/m/it/10 U\OT1/cmr/m/n/10 (1)[]$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 219--225
-\OT1/cmr/m/n/10 hy-per-charge cou-pling, and $\OML/cmm/m/it/10 v$ \OT1/cmr/m/n/
-10 the scalar-channel
+\TU/lmr/m/n/10 hy-per-charge cou-pling, and $\OML/cmm/m/it/10 v$ \TU/lmr/m/n/10
+ the scalar-channel
  []
 
 
-Underfull \hbox (badness 4792) in paragraph at lines 219--225
-\OT1/cmr/m/n/10 VEV. The Lean sig-na-ture is pa-ram-e-ter-ized over
+Underfull \hbox (badness 4805) in paragraph at lines 219--225
+\TU/lmr/m/n/10 VEV. The Lean sig-na-ture is pa-ram-e-ter-ized over
  []
 
 
-Underfull \hbox (badness 4595) in paragraph at lines 219--225
-\OT1/cmr/m/n/10 the \OT1/cmtt/m/n/10 EWMassMatrixInputs \OT1/cmr/m/n/10 struc-t
-ure; the pos-i-tiv-ity
+Underfull \hbox (badness 4608) in paragraph at lines 219--225
+\TU/lmr/m/n/10 the \TU/lmtt/m/n/10 EWMassMatrixInputs \TU/lmr/m/n/10 struc-ture;
+ the pos-i-tiv-ity
  []
 
 
 Underfull \hbox (badness 3219) in paragraph at lines 230--239
-\OT1/cmr/m/n/10 es-tab-lishes the weak in-equal-ity $\OML/cmm/m/it/10 M[] \OMS/
-cmsy/m/n/10 ^^U \OML/cmm/m/it/10 M[]$ \OT1/cmr/m/n/10 for
+\TU/lmr/m/n/10 es-tab-lishes the weak in-equal-ity $\OML/cmm/m/it/10 M[] \OMS/c
+msy/m/n/10  \OML/cmm/m/it/10 M[]$ \TU/lmr/m/n/10 for
  []
 
 [2]
 Underfull \hbox (badness 10000) in paragraph at lines 262--267
-\OT1/cmr/m/n/10 Linearity in the over-lap den-sity (Lean:
+\TU/lmr/m/n/10 Lin-ear-ity in the over-lap den-sity (Lean:
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 262--267
-\OT1/cmtt/m/n/10 yukawaCoupling[]additive\OT1/cmr/m/n/10 ) and the zero-couplin
-g
+\TU/lmtt/m/n/10 yukawaCoupling_additive\TU/lmr/m/n/10 ) and the zero-coupling
  []
 
 
-Underfull \hbox (badness 5475) in paragraph at lines 268--279
-[]\OT1/cmr/m/n/10 The \OT1/cmr/m/it/10 mi-cro-scopic \OT1/cmr/m/n/10 form of $\
-OML/cmm/m/it/10 ^^Z[]$ \OT1/cmr/m/n/10 as $[] \OML/cmm/m/it/10 d[]x [] ^^[  []$
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 268--279
-\OT1/cmr/m/n/10 on the emer-gent Weyl modes is deep-research-
+Underfull \hbox (badness 5607) in paragraph at lines 268--279
+[]\TU/lmr/m/n/10 The \TU/lmr/m/it/10 mi-cro-scopic \TU/lmr/m/n/10 form of $\OML
+/cmm/m/it/10 []$ \TU/lmr/m/n/10 as $[] \OML/cmm/m/it/10 d[]x []   []$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 268--279
-\OT1/cmr/m/n/10 gated; we have filed the open ques-tion
+\TU/lmr/m/n/10 on the emer-gent Weyl modes is deep-research-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 268--279
-\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 Phase5z[]yukawa[]overlap[]emergent[]weyl[]mod
-es.md\OT1/cmr/m/n/10 )
+\TU/lmr/m/n/10 gated; we have filed the open ques-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 268--279
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 Phase5z_yukawa_overlap_emergent_weyl_modes.md\T
+U/lmr/m/n/10 )
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 280--286
-[]\OT1/cmr/m/n/10 The phe-nomeno-log-i-cal ob-ser-va-tion that the
+[]\TU/lmr/m/n/10 The phe-nomeno-log-i-cal ob-ser-va-tion that the
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 280--286
-\OT1/cmr/m/n/10 top Yukawa $\OML/cmm/m/it/10 y[] \OMS/cmsy/m/n/10 ^^Y \OT1/cmr/
-m/n/10 1$ is nat-u-rally re-al-ized
+\TU/lmr/m/n/10 top Yukawa $\OML/cmm/m/it/10 y[] \OMS/cmsy/m/n/10  \OT1/cmr/m/n
+/10 1$ \TU/lmr/m/n/10 is nat-u-rally re-al-ized
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 280--286
-\OT1/cmr/m/n/10 by an over-lap den-sity of or-der unity sup-
+\TU/lmr/m/n/10 by an over-lap den-sity of or-der unity sup-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 280--286
-\OT1/cmr/m/n/10 ports the in-ter-pre-ta-tion; we record this in
+\TU/lmr/m/n/10 ports the in-ter-pre-ta-tion; we record this in
  []
 
 
-Overfull \hbox (2.89558pt too wide) in paragraph at lines 280--286
-\OT1/cmtt/m/n/10 TestYukawaOverlap::test[]top[]yukawa[]unity[]natural\OT1/cmr/m
-/n/10 ,
+Overfull \hbox (8.78pt too wide) in paragraph at lines 280--286
+\TU/lmtt/m/n/10 TestYukawaOverlap::test_top_yukawa_unity_natural\TU/lmr/m/n/10 
+,
  []
 
 
@@ -855,212 +880,429 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 305--307
-[]\OT1/cmr/m/n/10 The de-cid-able Lean pred-i-cate
+[]\TU/lmr/m/n/10 The de-cid-able Lean pred-i-cate
  []
 
 
-Underfull \hbox (badness 6625) in paragraph at lines 305--307
-\OT1/cmtt/m/n/10 ScalarRungQuantitativeMatch \OT1/cmr/m/n/10 en-codes the fal-s
-i-fi-
+Underfull \hbox (badness 6658) in paragraph at lines 305--307
+\TU/lmtt/m/n/10 ScalarRungQuantitativeMatch \TU/lmr/m/n/10 en-codes the fal-si-f
+i-
  []
 
-<figures/fig_higgs_mass_parameter_scan.png, id=100, 2409.0pt x 1606.0pt>
+
+Underfull \hbox (badness 1406) in paragraph at lines 309--316
+\TU/lmr/m/n/10 The \TU/lmtt/m/n/10 scalar_rung_quantitative_match_iff \TU/lmr/m
+/n/10 the-o-rem
+ []
+
+<figures/fig_higgs_mass_parameter_scan.png, id=128, 2409.0pt x 1606.0pt>
 File: figures/fig_higgs_mass_parameter_scan.png Graphic file (type png)
 <use figures/fig_higgs_mass_parameter_scan.png>
-Package pdftex.def Info: figures/fig_higgs_mass_parameter_scan.png  used on inp
+Package luatex.def Info: figures/fig_higgs_mass_parameter_scan.png  used on inp
 ut line 328.
-(pdftex.def)             Requested size: 246.0pt x 163.99117pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmr/m/n/10 plus three struc-tures (\OT1/cmtt/m/n/10 ScalarChannel\OT1/cmr/
-m/n/10 ,
+(luatex.def)             Requested size: 246.0pt x 163.99117pt.
+[3<./figures/fig_higgs_mass_parameter_scan.png>]
+Underfull \hbox (badness 1005) in paragraph at lines 370--392
+[]\TU/lmr/m/n/10 For the min-i-mal BHL con-fig-u-ra-tion (one $\OML/cmm/m/it/10
+ SU\OT1/cmr/m/n/10 (2)[]$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmtt/m/n/10 EWMassMatrixInputs\OT1/cmr/m/n/10 , \OT1/cmtt/m/n/10 WeylOverl
-ap\OT1/cmr/m/n/10 ), nine
+Underfull \hbox (badness 3884) in paragraph at lines 370--392
+\TU/lmr/m/n/10 dou-blet, one sin-glet, one color, one gen-er-a-tion),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmr/m/n/10 non-computable def-i-ni-tions for VEV / mass
+Underfull \hbox (badness 3568) in paragraph at lines 370--392
+\TU/lmr/m/n/10 the gauge-indexed Clif-ford ba-sis is $\OT1/cmr/m/n/10 68$\TU/lm
+r/m/n/10 -dimensional
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmr/m/n/10 / Yukawa for-mu-las, and three Prop-level
+Underfull \hbox (badness 1635) in paragraph at lines 370--392
+\TU/lmr/m/n/10 ming the ex-plicit ten representation-theoretic block
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmr/m/n/10 def-i-ni-tions (\OT1/cmtt/m/n/10 IsHiggsBilinearCandidate\OT1/c
-mr/m/n/10 ,
+Underfull \hbox (badness 3482) in paragraph at lines 370--392
+\TU/lmr/m/n/10 sub-space form-ing the $\OT1/cmr/m/n/10 2$\TU/lmr/m/n/10 -compone
+nt com-plex Higgs
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmtt/m/n/10 ScalarRungQuantitativeMatch\OT1/cmr/m/n/10 ,
+Underfull \hbox (badness 1097) in paragraph at lines 370--392
+\TU/lmr/m/n/10 dou-blet. The Lean the-o-rem \TU/lmtt/m/n/10 fierzBlockSum_eq_68
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--371
-\OT1/cmr/m/n/10 and the tracked-hypothesis
- []
+Underfull \hbox (badness 10000) in paragraph at lines 370--392
+\TU/lmr/m/n/10 tracked hy-poth-e-sis \TU/lmtt/m/n/10 H_FierzCompletenessExtended
 
-[3 <./figures/fig_higgs_mass_parameter_scan.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 372--383
-[]\OT1/cmr/m/n/10 The mod-ule in-te-grates with three prior-phase
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 mod-ules: \OT1/cmtt/m/n/10 WetterichNJL.lean \OT1/cmr/m/n/10 (F
-ierz in-fras-truc-
+Underfull \hbox (badness 10000) in paragraph at lines 370--392
+\TU/lmtt/m/n/10 (cfg) (dim_fn) \TU/lmr/m/n/10 pa-ram-e-ter-izes over an ab-strac
+t
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 ture), \OT1/cmtt/m/n/10 TetradGapEquation.lean \OT1/cmr/m/n/10 
-(gap-equation
+Underfull \hbox (badness 10000) in paragraph at lines 370--392
+\TU/lmr/m/n/10 di-men-sion func-tion and as-serts $[] \OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 bi-fur-ca-tion), and \OT1/cmtt/m/n/10 ADWMechanism.lean \OT1/cm
-r/m/n/10 (NG-mode
+Underfull \hbox (badness 10000) in paragraph at lines 370--392
+\TU/lmtt/m/n/10 fierz_completeness_holds_for_bhl_dim \TU/lmr/m/n/10 dis-charges
  []
 
 
-Underfull \hbox (badness 1072) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 count-ing + crit-i-cal cou-pling). A Python com-pan-
+Underfull \hbox (badness 10000) in paragraph at lines 370--392
+\TU/lmtt/m/n/10 fierz_completeness_fails_for_zero_dim \TU/lmr/m/n/10 con-firms
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 ion pack-age \OT1/cmtt/m/n/10 src/scalar[]rung/ \OT1/cmr/m/n/10
- pro-vides nu-mer-i-
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 393.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 393.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 393.
+
+
+Underfull \hbox (badness 2772) in paragraph at lines 395--406
+[]\TU/lmr/m/n/10 The BHL leading-order for-mula $\OML/cmm/m/it/10 m[] \OT1/cmr/
+m/n/10 = [] \OML/cmm/m/it/10 m[]$
  []
 
 
-Underfull \hbox (badness 2343) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 cal wrap-pers for the Anderson-Higgs mass ma-trix
+Underfull \hbox (badness 3189) in paragraph at lines 395--406
+\TU/lmr/m/n/10 (Nambu sum rule at large $\OML/cmm/m/it/10 N[]$\TU/lmr/m/n/10 ) 
+is for-mal-ized as
  []
 
 
-Underfull \hbox (badness 1478) in paragraph at lines 372--383
-\OT1/cmr/m/n/10 Lean the-o-rem; full-project pytest passes (ex-clud-ing
+Underfull \hbox (badness 3118) in paragraph at lines 395--406
+\TU/lmr/m/n/10 form $\OML/cmm/m/it/10 m[] \OT1/cmr/m/n/10 = 2\OML/cmm/m/it/10 m[]$ \TU/lmr/m/n/10 (\TU/lmtt/m/n/10 bhlHiggsMass_sq\TU/lmr/m/n/10 ). At the
  []
 
 
-Underfull \hbox (badness 2903) in paragraph at lines 384--392
-\OT1/cmr/m/n/10 3993[]$ the-o-rems, $3882[]$ sub-stan-tive (ex-clud-ing place-
- []
-
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 400.
-
-Underfull \hbox (badness 1371) in paragraph at lines 400--407
-\OT1/cmr/m/n/10 dau hi-er-ar-chy, bridg-ing sterile-neutrino see-saw phe-
+Underfull \hbox (badness 2781) in paragraph at lines 395--406
+\TU/lmr/m/n/10 BHL bench-mark $\OT1/cmr/m/n/10  = \OML/cmm/m/it/10 M[]$\TU/lmr
+/m/n/10 , $\OML/cmm/m/it/10 N[] \OT1/cmr/m/n/10 = 3$\TU/lmr/m/n/10 , the IR
  []
 
 
-Underfull \hbox (badness 6094) in paragraph at lines 408--413
-\OT1/cmr/m/n/10 elec-troweak phase tran-si-tion or-der (first-order vs
+Underfull \hbox (badness 1199) in paragraph at lines 395--406
+\TU/lmr/m/n/10 and hence $\OML/cmm/m/it/10 m[] \OMS/cmsy/m/n/10  \OT1/cmr/m/n/
+10 311$ \TU/lmr/m/n/10 GeV. The Lean the-o-rem
  []
 
 
-Underfull \hbox (badness 1558) in paragraph at lines 414--419
-\OT1/cmr/m/n/10 embedded Higgs iden-ti-fi-ca-tion ships at quan-ti-ta-tive
+Underfull \hbox (badness 10000) in paragraph at lines 421--428
+[]\TU/lmr/m/n/10 The load-bearing ex-is-ten-tial
  []
 
 
-Underfull \hbox (badness 1874) in paragraph at lines 420--424
-\OT1/cmr/m/n/10 Both deep-research ques-tions are filed as tasks in
+Underfull \hbox (badness 10000) in paragraph at lines 421--428
+\TU/lmtt/m/n/10 bilocal_correction_can_match_pdg \TU/lmr/m/n/10 pro-vides a
+ []
+
+<figures/fig_bhl_bilocal_correction.png, id=143, 2409.0pt x 1606.0pt>
+File: figures/fig_bhl_bilocal_correction.png Graphic file (type png)
+<use figures/fig_bhl_bilocal_correction.png>
+Package luatex.def Info: figures/fig_bhl_bilocal_correction.png  used on input 
+line 431.
+(luatex.def)             Requested size: 246.0pt x 163.99117pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 448--455
+[]\TU/lmr/m/n/10 The ADW tetrad back-reaction $\OT1/cmr/m/n/10 [](\OMS/cmsy/m/
+n/10 h\OML/cmm/m/it/10 e\OMS/cmsy/m/n/10 i\OT1/cmr/m/n/10 )$
  []
 
 
-Underfull \hbox (badness 3039) in paragraph at lines 427--443
-\OT1/cmr/m/n/10 in-ter-ac-tive proof as-sis-tant iden-ti-fies the Higgs bi-
+Underfull \hbox (badness 6859) in paragraph at lines 448--455
+\TU/lmr/m/n/10 to $\OML/cmm/m/it/10 m[]$ \TU/lmr/m/n/10 is not closed in the Dia
+konov-Volovik-
  []
 
 
-Underfull \hbox (badness 2035) in paragraph at lines 427--443
-\OT1/cmr/m/n/10 lin-ear with a Wetterich-NJL scalar chan-nel. We
+Underfull \hbox (badness 5345) in paragraph at lines 448--455
+\TU/lmr/m/n/10 Wetterich lit-er-a-ture [[], []]. The Lean mod-ule
  []
 
 
-Underfull \hbox (badness 2875) in paragraph at lines 427--443
-\OT1/cmtt/m/n/10 HepLean/StandardModel\OT1/cmr/m/n/10 ; the ex-ist-ing for-mal-
-iza-tion
+Underfull \hbox (badness 10000) in paragraph at lines 448--455
+\TU/lmr/m/n/10 flags \TU/lmtt/m/n/10 H_TetradBackreactionShift \TU/lmr/m/n/10 as
+ a para-
  []
 
 
-Underfull \hbox (badness 3838) in paragraph at lines 454--465
-\OT1/cmr/m/n/10 the Mexican-hat $\OMS/cmsy/m/n/10 $$ \OT1/cmr/m/n/10 tetrad-bif
-urcation bridge, the
+Underfull \hbox (badness 4995) in paragraph at lines 448--455
+\TU/lmr/m/n/10 met-ric open hy-poth-e-sis with the cor-rected mass
  []
 
 
-Underfull \hbox (badness 1067) in paragraph at lines 454--465
-\OT1/cmr/m/n/10 Yukawa-overlap lin-ear-ity lemma---constitute the first
+Underfull \hbox (badness 1629) in paragraph at lines 448--455
+\TU/lmtt/m/n/10 tetradCorrectedHiggsMass $\OT1/cmr/m/n/10 =$ $[]\OML/cmm/m/it/1
+0 m[] \OT1/cmr/m/n/10 + $\TU/lmr/m/n/10 ; pos-i-tiv-
  []
 
-[4]
-Underfull \hbox (badness 2285) in paragraph at lines 491--494
- []\OT1/cmr/m/n/9 C. Wet-terich, \OT1/cmr/m/it/9 Ge-om-e-try and sym-me-tries i
-n lat-tice
+[4<./figures/fig_bhl_bilocal_correction.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmr/m/n/10 plus six struc-tures (\TU/lmtt/m/n/10 ScalarChannel\TU/lmr/m/n/1
+0 ,
  []
 
 
-Underfull \hbox (badness 2913) in paragraph at lines 496--499
- []\OT1/cmr/m/n/9 M. Fierz, \OT1/cmr/m/it/9 Zur Fer-mis-chen The-o-rie des $\OM
-L/cmm/m/it/9 ^^L$\OT1/cmr/m/it/9 -Zerfalls\OT1/cmr/m/n/9 ,
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmtt/m/n/10 EWMassMatrixInputs\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 WeylOverlap\
+TU/lmr/m/n/10 , \TU/lmtt/m/n/10 BHLConfig\TU/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmtt/m/n/10 BHLAuxField\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 BilocalHiggs\TU/lmr
+/m/n/10 ), $\OT1/cmr/m/n/10 24$ \TU/lmr/m/n/10 non-computable
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmr/m/n/10 def-i-ni-tions, and seven tracked-hypothesis Props
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmr/m/n/10 (the four Wave 1 hy-pothe-ses plus three new
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmr/m/n/10 Wave 1b: \TU/lmtt/m/n/10 H_FierzCompletenessExtended\TU/lmr/m/n/
+10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmtt/m/n/10 H_HSCovariantBosonisation\TU/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 485--496
+\TU/lmtt/m/n/10 H_BilocalPointlikeLimit\TU/lmr/m/n/10 , plus the para-met-ric
+ []
+
+
+Underfull \hbox (badness 1270) in paragraph at lines 485--496
+\TU/lmr/m/n/10 open \TU/lmtt/m/n/10 H_TetradBackreactionShift \TU/lmr/m/n/10 and
+ the bun-dled
+ []
+
+
+Underfull \hbox (badness 3657) in paragraph at lines 497--511
+[]\TU/lmr/m/n/10 The Wave 1b mod-ule in-te-grates with Wave 1
+ []
+
+
+Underfull \hbox (badness 1178) in paragraph at lines 497--511
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 ScalarRungInterpretation.lean\TU/lmr/m/n/10 ) pl
+us three prior-
+ []
+
+
+Underfull \hbox (badness 2884) in paragraph at lines 497--511
+\TU/lmr/m/n/10 phase mod-ules: \TU/lmtt/m/n/10 WetterichNJL.lean \TU/lmr/m/n/10
+ (Fierz in-fras-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--511
+\TU/lmr/m/n/10 truc-ture), \TU/lmtt/m/n/10 TetradGapEquation.lean \TU/lmr/m/n/1
+0 (gap-equation
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--511
+\TU/lmr/m/n/10 bi-fur-ca-tion), and \TU/lmtt/m/n/10 ADWMechanism.lean \TU/lmr/m
+/n/10 (NG-mode
+ []
+
+
+Underfull \hbox (badness 1939) in paragraph at lines 497--511
+\TU/lmr/m/n/10 count-ing + crit-i-cal cou-pling). The Python com-
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 497--511
+\TU/lmr/m/n/10 pan-ion \TU/lmtt/m/n/10 src/scalar_rung/ \TU/lmr/m/n/10 adds \TU
+/lmtt/m/n/10 bhl_embedding.py
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--511
+\TU/lmr/m/n/10 on top of the ex-ist-ing \TU/lmtt/m/n/10 higgs_prediction.py
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--511
+\TU/lmr/m/n/10 and \TU/lmtt/m/n/10 ew_mass_matrix.py\TU/lmr/m/n/10 ; con-crete 
+for-mu-las
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--511
+\TU/lmtt/m/n/10 bhl_higgs_mass\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 bilocal_correctio
+n_factor\TU/lmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 497--511
+\TU/lmtt/m/n/10 bilocal_corrected_higgs_mass\TU/lmr/m/n/10 , and
+ []
+
+
+Underfull \hbox (badness 2913) in paragraph at lines 512--520
+\OT1/cmr/m/n/10 4165[]$ \TU/lmr/m/n/10 the-o-rems, $\OT1/cmr/m/n/10 4054[]$ \TU
+/lmr/m/n/10 sub-stan-tive (ex-clud-ing place-
+ []
+
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 528.
+
+Underfull \hbox (badness 1377) in paragraph at lines 528--535
+\TU/lmr/m/n/10 dau hi-er-ar-chy, bridg-ing sterile-neutrino see-saw phe-
+ []
+
+
+Underfull \hbox (badness 6110) in paragraph at lines 536--541
+\TU/lmr/m/n/10 elec-troweak phase tran-si-tion or-der (first-order vs
+ []
+
+
+Underfull \hbox (badness 1558) in paragraph at lines 542--547
+\TU/lmr/m/n/10 embedded Higgs iden-ti-fi-ca-tion ships at quan-ti-ta-tive
+ []
+
+
+Underfull \hbox (badness 3049) in paragraph at lines 555--571
+\TU/lmr/m/n/10 in-ter-ac-tive proof as-sis-tant iden-ti-fies the Higgs bi-
+ []
+
+
+Underfull \hbox (badness 2042) in paragraph at lines 555--571
+\TU/lmr/m/n/10 lin-ear with a Wetterich-NJL scalar chan-nel. We
+ []
+
+
+Underfull \hbox (badness 2884) in paragraph at lines 555--571
+\TU/lmtt/m/n/10 HepLean/StandardModel\TU/lmr/m/n/10 ; the ex-ist-ing for-mal-iza
+-tion
+ []
+
+[5]
+Underfull \hbox (badness 3838) in paragraph at lines 582--593
+\TU/lmr/m/n/10 the Mexican-hat $\OMS/cmsy/m/n/10 $$ \TU/lmr/m/n/10 tetrad-bifurc
+ation bridge, the
+ []
+
+
+Underfull \hbox (badness 1701) in paragraph at lines 619--622
+ []\TU/lmr/m/n/9 C. Wet-terich, \TU/lmr/m/it/9 Ge-om-e-try and sym-me-tries in 
+lat-tice
+ []
+
+
+Underfull \hbox (badness 2103) in paragraph at lines 624--627
+ []\TU/lmr/m/n/9 M. Fierz, \TU/lmr/m/it/9 Zur Fer-mis-chen The-o-rie des $\OML/
+cmm/m/it/9 $\TU/lmr/m/it/9 -Zerfalls\TU/lmr/m/n/9 ,
+ []
+
+
+Underfull \hbox (badness 1009) in paragraph at lines 646--649
+ \TU/lmr/m/it/9 Is the t-quark re-spon-si-ble for the mass of W and
+ []
+
+
+Underfull \hbox (badness 2582) in paragraph at lines 646--649
+ \TU/lmr/m/it/9 Z bosons?\TU/lmr/m/n/9 , Mod. Phys. Lett. A \TU/lmr/bx/n/9 4\TU
+/lmr/m/n/9 , 1043 (1989);
+ []
+
+
+Underfull \hbox (badness 1117) in paragraph at lines 651--654
+ []\TU/lmr/m/n/9 C. T. Hill, \TU/lmr/m/it/9 Nat-u-ral top quark con-den-sa-tion (a re-
+ []
+
+
+Underfull \hbox (badness 1838) in paragraph at lines 651--654
+ \TU/lmr/m/it/9 dux)\TU/lmr/m/n/9 , arXiv:2503.21518 (2025); []$\TU/lmtt/m/n/9 
+https://arxiv.org/
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 656--659
+ []\TU/lmr/m/n/9 G. Cvetic, \TU/lmr/m/it/9 Top quark con-den-sa-tion\TU/lmr/m/n
+/9 ,
  []
 
 No file paper_draft.bbl.
-[5] (./paper_draft.aux)
+[6] (./paper_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `paper_draft.out' has not changed.
-(rerunfilecheck)             Checksum: 27A3E46BAC1D539F2209AC7214A4B105;2854.
- ) 
-Here is how much of TeX's memory you used:
- 15734 strings out of 467525
- 297852 string characters out of 5418982
- 707688 words of memory out of 5000000
- 44457 multiletter control sequences out of 15000+600000
- 635105 words of font info for 70 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 75i,6n,80p,929b,1161s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
-usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
-sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb>
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></u
-sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
-/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/l
-ocal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
-al/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
-texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
-live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texliv
-e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
-/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2
-026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/202
-6/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-
-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on paper_draft.pdf (5 pages, 515198 bytes).
-PDF statistics:
- 229 PDF objects out of 1000 (max. 8388607)
- 173 compressed objects within 2 object streams
- 39 named destinations out of 1000 (max. 500000)
- 94 words of extra memory for PDF output out of 10000 (max. 10000000)
+(rerunfilecheck)             Checksum: F5DBB4B35B62E56816274A0D191BE089;4338.
+)
+
+Here is how much of LuaTeX's memory you used:
+ 16034 strings out of 476076
+ 195334,794899 words of node,token memory allocated
+ 655 words of node memory still in use:
+   10 hlist, 2 vlist, 2 rule, 1 glue, 4 kern, 1 glyph, 33 attribute, 57 glue_spe
+c, 33 attribute_list, 2 pdf_action nodes
+   avail lists: 1:3,2:682,3:804,4:128,5:1008,6:68,7:20136,8:45,9:979,10:27,11:13
+99
+ 38216 multiletter control sequences out of 65536+600000
+ 59 fonts using 4400303 bytes
+ 73i,6n,76p,915b,993s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmonolt10-bold.otf
+></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf
+></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.o
+tf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono10-regular
+.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman9-bold.
+otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman9-italic
+.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono9-regula
+r.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman9-regu
+lar.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman10-r
+egular.otf></usr/local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman1
+2-bold.otf></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+ex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cmextra
+/cmex9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.p
+fb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb>
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
+sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/l
+ocal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local
+/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/tex
+live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
+ve/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/
+2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/202
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/t
+exmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on paper_draft.pdf (6 pages, 613909 bytes).
+
+PDF statistics: 293 PDF objects out of 1000 (max. 8388607)
+ 232 compressed objects within 3 object streams
+ 50 named destinations out of 1000 (max. 1048576)
+ 137 words of extra memory for PDF output out of 10000 (max. 100000000)
 

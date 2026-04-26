@@ -566,6 +566,4 @@ Zero sorry, zero new axioms. One tracked `Prop` hypothesis
 connection (CC6); discharge path documented inline and registered in
 `docs/roadmaps/Phase6_Deferred_Targets.md`.
 -/
-theorem dark_sector_synthesis_summary : True := trivial
-
 end SKEFTHawking.DarkSectorSynthesis

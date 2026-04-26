@@ -254,14 +254,15 @@ theorem mixed_channel_orthogonal_to_singlet :
 
 /-! ## 7. Module summary -/
 
-/-- Summary theorem for the Mixed-Charge Hidden Sector module.
+/-! ## Module summary
+
+Summary theorem for the Mixed-Charge Hidden Sector module.
 
     This module adds 6 substantive targets (X1-X6) formalizing the
     mixed-charge channel of Phase 5x Wave 2b Track X. Combined with
     `HiddenSectorClassification` (singlet channel) this covers two of
     the three channels in the Wan / Wan-Wang / García-Etxebarria
     taxonomy; the topological channel (T-0, K-gauge TQFT) is deferred
-    to Track Y pending Mathlib bordism infrastructure. -/
-theorem hidden_sector_mixed_charge_summary : True := trivial
-
+    to Track Y pending Mathlib bordism infrastructure.
+-/
 end SKEFTHawking

@@ -82,10 +82,18 @@ class TestIntegrityReportStructure:
                 assert isinstance(val, int), f"summary[{key}] should be int, got {type(val)}"
                 assert val >= 0, f"summary[{key}] should be non-negative"
 
-        # total_issues is the sum of all issue counts
+        # total_issues is the sum of all issue counts (Phase 5v Wave 10b
+        # added 5 categories: sentence_chain_incomplete, sentence_id_collisions,
+        # audit_event_missing_logged_by, audit_event_malformed_actor,
+        # claim_cluster_inconsistency).
         assert summary['total_issues'] == (
             summary['orphans'] + summary['conflicts'] + summary['ungrounded']
             + summary['broken_chains'] + summary['missing_provenance']
+            + summary.get('sentence_chain_incomplete', 0)
+            + summary.get('sentence_id_collisions', 0)
+            + summary.get('audit_event_missing_logged_by', 0)
+            + summary.get('audit_event_malformed_actor', 0)
+            + summary.get('claim_cluster_inconsistency', 0)
         )
 
 

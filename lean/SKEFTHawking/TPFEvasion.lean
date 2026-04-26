@@ -49,16 +49,37 @@ TPF acknowledges as an open problem whether rotor modes can be gapped.
 If gapless, they produce massless bosons → C3 violated.
 -/
 
-/-- Whether the TPF rotor modes are gapped (open physics question). -/
-def RotorModesGapped : Prop := True  -- axiomatized: open question in TPF paper
+/-- Whether the TPF rotor modes are gapped, parameterized over the
+explicit spectral gap `Δ` (in mass units). The TPF paper leaves the
+existence of a positive `Δ` as an open physics question. The hypothesis
+is genuinely non-trivial: setting `Δ = 0` falsifies it, encoding the
+gapless branch on which C3 fails.
 
-/-- **If rotor modes are gapless, C3 (no massless bosons) is violated.**
-    TPF introduces compact boson rotors on S¹. If the rotor spectrum
-    remains gapless after gauging, the asymptotic theory contains
-    massless bosonic excitations, violating C3. -/
-theorem tpf_c3_conditional :
-    ¬RotorModesGapped → True := by  -- C3 violated when rotors gapless
-  intro _; trivial
+Following the `H_LeptonNumberViolated` parameterization pattern from
+Wave 2b: the predicate carries content (`Δ > 0`), not just the abstract
+property name. -/
+def RotorModesGapped (Δ : ℝ) : Prop := 0 < Δ
+
+/-- **If the rotor-mode spectral gap is non-positive, C3 (no massless
+bosons) is violated.** TPF introduces compact boson rotors on S¹. If
+the gap `Δ ≤ 0`, the asymptotic theory contains massless bosonic
+excitations, violating C3 (encoded here as the negation of `Δ > 0`).
+The implication is non-vacuous because `RotorModesGapped Δ` can be
+explicitly falsified by `Δ = 0` or any negative `Δ`. -/
+theorem tpf_c3_conditional (Δ : ℝ) :
+    ¬RotorModesGapped Δ → Δ ≤ 0 := by
+  intro h
+  unfold RotorModesGapped at h
+  push_neg at h
+  exact h
+
+/-- The gapless-branch witness: `Δ = 0` falsifies `RotorModesGapped`. -/
+theorem rotor_modes_not_gapped_at_zero : ¬ RotorModesGapped 0 := by
+  unfold RotorModesGapped; exact lt_irrefl 0
+
+/-- The gapped-branch witness: any positive `Δ` realises `RotorModesGapped`. -/
+theorem rotor_modes_gapped_at_positive {Δ : ℝ} (hΔ : 0 < Δ) :
+    RotorModesGapped Δ := hΔ
 
 /-!
 ## Violation Counting

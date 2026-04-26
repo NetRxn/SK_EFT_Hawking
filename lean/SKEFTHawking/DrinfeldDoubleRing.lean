@@ -182,7 +182,8 @@ theorem DG.basis_mul (a b g1 g2 : G) :
 
 /-! ## 6. Module Summary -/
 
-/--
+/-! ## Module summary
+
 DrinfeldDoubleRing module: D(G) is a Ring and k-Algebra.
   - Newtype DG wrapping G × G → k (avoids Pi.instMul conflict)
   - Additive: pointwise (AddCommGroup)
@@ -191,6 +192,4 @@ DrinfeldDoubleRing module: D(G) is a Ring and k-Algebra.
   - Algebra k: scalar embedding r ↦ (a,g) ↦ if g=e then r else 0
   - Basis multiplication matches DrinfeldDouble.ddMul
 -/
-theorem DG.ring_algebra_summary : True := trivial
-
 end SKEFTHawking

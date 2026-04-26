@@ -1,6 +1,6 @@
 # Meta-process Quality Improvement Register
 
-**Auto-generated:** 2026-04-25T06:20:00+00:00
+**Auto-generated:** 2026-04-25T16:07:17+00:00
 **Generator:** `scripts/qi_register.py`
 **Reads from:** current ReviewFinding graph nodes + this file's `## Closed Items` section for status continuity
 
@@ -8,20 +8,20 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 
 ## Summary
 
-- **107** ReviewFinding nodes currently in the graph
+- **119** ReviewFinding nodes currently in the graph
 - **8** QI items detected
 - **8** open, **0** closed
 
 ## Open Items
 
-### qi-assumptiondisclosure — Recurring AssumptionDisclosure findings across 4 papers
+### qi-assumptiondisclosure — Recurring AssumptionDisclosure findings across 5 papers
 
 - **Gate affected:** `AssumptionDisclosure`
-- **Occurrences:** 6 findings across 4 papers
+- **Occurrences:** 7 findings across 4 papers
 - **Affected papers:** paper10_modular_generation, paper12_polariton, paper17_dark_sector, paper20_scalar_rung
-- **Severity mix:** 3 advisory, 2 major, 1 critical
+- **Severity mix:** 3 advisory, 2 major, 2 critical
 - **First observed:** 2026-04-12
-- **Last observed:** 2026-04-25-0135-internal-adversarial
+- **Last observed:** 2026-04-25-1530-internal-adversarial
 - **Owner:** _(unassigned)_
 - **Target date:** _(unset)_
 
@@ -33,12 +33,12 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - `review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:6.1` — 6.1 🟡 REQUIRED — Hypothesis `H_MixedChannelZ16Cancels` (papers/AutomatedReviews/2026-04-23-1500-internal-adversarial/paper17_dark_sector.md)
 - `review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:3.1` — 3.1 🔴 BLOCKER — Paper cites removed Lean predicate `Is (papers/AutomatedReviews/2026-04-25-0135-internal-adversarial/paper20_scalar_rung.md)
 
-### qi-citationintegrity — Recurring CitationIntegrity findings across 12 papers
+### qi-citationintegrity — Recurring CitationIntegrity findings across 13 papers
 
 - **Gate affected:** `CitationIntegrity`
-- **Occurrences:** 41 findings across 11 papers
-- **Affected papers:** paper10_modular_generation, paper12_polariton, paper17_dark_sector, paper18_doublon_gate, paper1_first_order, paper20_scalar_rung, paper3_gauge_erasure, paper5_adw_gap, paper7_chirality_formal, paper8, paper9_sm_anomaly_drinfeld
-- **Severity mix:** 20 advisory, 16 critical, 3 major, 2 minor
+- **Occurrences:** 45 findings across 12 papers
+- **Affected papers:** paper10_modular_generation, paper12_polariton, paper17_dark_sector, paper18_doublon_gate, paper1_first_order, paper20_scalar_rung, paper21_majorana_rung, paper3_gauge_erasure, paper5_adw_gap, paper7_chirality_formal, paper8, paper9_sm_anomaly_drinfeld
+- **Severity mix:** 20 advisory, 18 critical, 4 major, 3 minor
 - **First observed:** 2026-04-12
 - **Last observed:** 2026-04-26-0130-citation-verification
 - **Owner:** _(unassigned)_
@@ -71,14 +71,14 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - `review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:9.3` — 9.3 "First formally verified X in any proof assistant" (papers/AutomatedReviews/2026-04-12/SK_EFT_Hawking — Master Systematic Update Checklist.md)
 - `review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:7.1` — 7.1 🟡 REQUIRED — 11 inline count-literals flagged by ` (papers/AutomatedReviews/2026-04-23-1500-internal-adversarial/paper17_dark_sector.md)
 
-### qi-countfreshness — Recurring CountFreshness findings across 3 papers
+### qi-countfreshness — Recurring CountFreshness findings across 4 papers
 
 - **Gate affected:** `CountFreshness`
-- **Occurrences:** 4 findings across 2 papers
-- **Affected papers:** paper18_doublon_gate, paper20_scalar_rung
-- **Severity mix:** 2 advisory, 2 major
+- **Occurrences:** 5 findings across 3 papers
+- **Affected papers:** paper18_doublon_gate, paper20_scalar_rung, paper3_gauge_erasure
+- **Severity mix:** 2 advisory, 2 major, 1 critical
 - **First observed:** 2026-04-12
-- **Last observed:** 2026-04-25-0135-internal-adversarial
+- **Last observed:** 2026-04-25-1034-wave10h-process
 - **Owner:** _(unassigned)_
 - **Target date:** _(unset)_
 
@@ -88,13 +88,14 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - `review:2026-04-23-2153-internal-adversarial:paper18_doublon_gate:9.1` — 9.1 🟡 REQUIRED — Two raw count literals outside the ma (papers/AutomatedReviews/2026-04-23-2153-internal-adversarial/paper18_doublon_gate.md)
 - `review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:7.2` — 7.2 🟡 REQUIRED — Definition count inconsistent: paper  (papers/AutomatedReviews/2026-04-25-0135-internal-adversarial/paper20_scalar_rung.md)
 - `review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION:C7` — C7 Count Freshness (3/3 closed) (papers/AutomatedReviews/2026-04-25-0135-internal-adversarial/paper20_scalar_rung_REINVOCATION.md)
+- `review:2026-04-25-1034-wave10h-process:v2_reviewer_pipeline_gaps:1.1` — 1.1 🔴 BLOCKER — Stale blocking_issues snapshot after p (papers/AutomatedReviews/2026-04-25-1034-wave10h-process/v2_reviewer_pipeline_gaps.md)
 
-### qi-crosspaperconsistency — Recurring CrossPaperConsistency findings across 3 papers
+### qi-crosspaperconsistency — Recurring CrossPaperConsistency findings across 4 papers
 
 - **Gate affected:** `CrossPaperConsistency`
-- **Occurrences:** 6 findings across 2 papers
-- **Affected papers:** paper17_dark_sector, paper7_chirality_formal
-- **Severity mix:** 4 advisory, 1 minor, 1 critical
+- **Occurrences:** 7 findings across 3 papers
+- **Affected papers:** paper17_dark_sector, paper20, paper7_chirality_formal
+- **Severity mix:** 4 advisory, 1 minor, 2 critical
 - **First observed:** 2026-04-12
 - **Last observed:** 2026-04-26-0130-citation-verification
 - **Owner:** _(unassigned)_
@@ -108,14 +109,14 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - `review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:9.1` — 9.1 Papers 7 and 8 contradict each other on author nam (papers/AutomatedReviews/2026-04-12/SK_EFT_Hawking — Master Systematic Update Checklist.md)
 - `review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:2.2` — 2.2 🔵 RECOMMENDED — Paper 17 is the sole citer of 4 hi (papers/AutomatedReviews/2026-04-23-1500-internal-adversarial/paper17_dark_sector.md)
 
-### qi-leanproofsubstance — Recurring LeanProofSubstance findings across 4 papers
+### qi-leanproofsubstance — Recurring LeanProofSubstance findings across 5 papers
 
 - **Gate affected:** `LeanProofSubstance`
-- **Occurrences:** 6 findings across 3 papers
-- **Affected papers:** paper15_methodology, paper17_dark_sector, paper20_scalar_rung
-- **Severity mix:** 3 advisory, 1 critical, 1 minor, 1 major
+- **Occurrences:** 10 findings across 4 papers
+- **Affected papers:** paper15_methodology, paper17_dark_sector, paper20_scalar_rung, paper2_second_order
+- **Severity mix:** 3 advisory, 4 critical, 1 minor, 2 major
 - **First observed:** 2026-04-12
-- **Last observed:** 2026-04-25-0135-internal-adversarial
+- **Last observed:** 2026-04-25-1530-internal-adversarial
 - **Owner:** _(unassigned)_
 - **Target date:** _(unset)_
 
@@ -149,11 +150,11 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 ### qi-parameterprovenance — Recurring ParameterProvenance findings across 4 papers
 
 - **Gate affected:** `ParameterProvenance`
-- **Occurrences:** 7 findings across 3 papers
+- **Occurrences:** 8 findings across 3 papers
 - **Affected papers:** paper12_polariton, paper17_dark_sector, paper20_scalar_rung
-- **Severity mix:** 3 advisory, 3 major, 1 minor
+- **Severity mix:** 3 advisory, 4 major, 1 minor
 - **First observed:** 2026-04-12
-- **Last observed:** 2026-04-25-0135-internal-adversarial
+- **Last observed:** 2026-04-25-1530-internal-adversarial
 - **Owner:** _(unassigned)_
 - **Target date:** _(unset)_
 

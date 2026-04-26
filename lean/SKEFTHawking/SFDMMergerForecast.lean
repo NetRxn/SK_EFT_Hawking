@@ -491,9 +491,8 @@ DM-galaxy offset observable — the step opens strictly above `M = 1`. -/
 theorem sonic_no_offset :
     produces_dm_galaxy_offset .Sonic = false := by decide
 
-/-! ## 10. Module summary -/
+/-! ## 10. Module summary
 
-/-- Sanity marker for the module. -/
-theorem sfdm_merger_forecast_summary : True := trivial
+Sanity marker for the module. -/
 
 end SKEFTHawking.SFDMMergerForecast

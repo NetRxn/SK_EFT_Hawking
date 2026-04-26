@@ -102,12 +102,21 @@ the Witten anomaly of this emanant SU(2) protects gaplessness.
 
 The classification hierarchy: Z₁₆ ⊃ Z₂ (Witten) ⊃ Z₈ (mod 8 chirality). -/
 
-/-- Pillar 3a: Onsager algebra has DG coefficient 16 = 4².
-    This connects the lattice UV structure to the anomaly classification. -/
-theorem pillar3_onsager_dg : DG_COEFF = 16 := rfl
+/-- Pillar 3a (definitional): Onsager DG coefficient equals 16 = 4².
+    This is a definitional unfolding of the named upstream constant
+    `OnsagerAlgebra.DG_COEFF`; the substantive claim that `DG_COEFF = 16`
+    in the actual algebra-cohomology computation is in
+    `OnsagerAlgebra.lean`. Marked `_DEFINITIONAL` to flag that this
+    Lean theorem is a re-export of the constant for downstream
+    cross-reference, not a fresh proof. -/
+theorem pillar3_onsager_dg_DEFINITIONAL : DG_COEFF = 16 := rfl
 
-/-- Pillar 3b: Onsager contracts to su(2), dim = 3 (OnsagerContraction.lean). -/
-theorem pillar3_contraction_target : sl2_dim = 3 := rfl
+/-- Pillar 3b (definitional): Onsager → su(2) contraction target
+    dimension equals 3. Re-exports `OnsagerContraction.sl2_dim`;
+    the substantive contraction proof is in
+    `OnsagerContraction.lean` (and beyond — full IR-fixed-point
+    derivation is in scope of the Onsager–su(2) chain). -/
+theorem pillar3_contraction_target_DEFINITIONAL : sl2_dim = 3 := rfl
 
 /-- Pillar 3c: Z₁₆ strengthens the mod-8 chirality limitation to mod-16
     (Z16Classification.lean). String-nets give c ≡ 0 (mod 8); Pin⁺ bordism

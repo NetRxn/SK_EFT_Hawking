@@ -690,7 +690,9 @@ theorem su5k1_fund_fourth :
     fusionMultiplicity dataA4 1 100 ![1, 0, 0, 0] ![0, 0, 0, 1]
       (buildWeightDiagram cartanA4 ![0, 0, 1, 0] 10) = 1 := by native_decide
 
-/-- **SU(5)_1: ∧⁴fund ⊗ fund = trivial.** Z₅ fifth power = identity. -/
+/-! ## Module summary
+
+**SU(5)_1: ∧⁴fund ⊗ fund = trivial.** Z₅ fifth power = identity. -/
 theorem su5k1_fund_fifth :
     fusionMultiplicity dataA4 1 100 ![1, 0, 0, 0] ![0, 0, 0, 0]
       (buildWeightDiagram cartanA4 ![0, 0, 0, 1] 10) = 1 := by native_decide
@@ -706,8 +708,6 @@ KacWaltonFusion module:
 - Generated WDs cross-validated against all hardcoded results
 - SU(5)_1 Z₅ fusion ring verified via generated WDs (new: Phase 5m W3)
 - 15+ original fusion theorems + 15 generated-WD theorems, all native_decide
-- First Kac-Walton + building-up WD implementation in any proof assistant -/
-
-theorem kac_walton_module_summary : True := trivial
-
+- First Kac-Walton + building-up WD implementation in any proof assistant
+-/
 end SKEFTHawking.KacWaltonFusion

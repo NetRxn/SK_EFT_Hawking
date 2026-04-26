@@ -195,7 +195,9 @@ theorem generation_independent_z16 :
 
 /-! ## 7. Module summary -/
 
-/-- Summary theorem for the Hidden Sector Classification module.
+/-! ## Module summary
+
+Summary theorem for the Hidden Sector Classification module.
 
     This module adds 7 substantive theorems (T1, T2, T3, T3-corollary,
     T10, T10-sanity, T11, T12) to the SK-EFT Lean formalization,
@@ -205,7 +207,6 @@ theorem generation_independent_z16 :
     Deferred to Phase 6 (require infrastructure beyond current Mathlib):
     T4 (APS η-invariant), T5 (4d gauge TQFT), T6 (bordism deformation
     classes), T7 (SMG 16-Weyl threshold), T9 (uniqueness via B+L
-    faithfulness). -/
-theorem hidden_sector_classification_summary : True := trivial
-
+    faithfulness).
+-/
 end SKEFTHawking

@@ -162,7 +162,8 @@ theorem peter_weyl_classical (k : ℕ) :
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 RepUqFusion module: data-level bridge from quantum groups to MTCs.
   - restricted_uq_dim: dim(u_q) = (k+2)³ — PROVED for k=1,2,3
   - n_simples: k+1 simple modules — PROVED
@@ -172,6 +173,4 @@ RepUqFusion module: data-level bridge from quantum groups to MTCs.
   - Bridges: RestrictedUq.lean → SU2kFusion.lean → SU2kMTC/FibonacciMTC
   - Zero axioms.
 -/
-theorem rep_uq_fusion_summary : True := trivial
-
 end SKEFTHawking.RepUqFusion

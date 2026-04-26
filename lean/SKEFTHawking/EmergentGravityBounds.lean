@@ -196,7 +196,8 @@ theorem metric_independent_components : (4 * (4 + 1)) / 2 = (10 : ℕ) := by nor
 
 /-! ## 8. Module Summary -/
 
-/--
+/-! ## Module summary
+
 EmergentGravityBounds: physics bounds on emergent gravity program.
   - Coupling deficit: G₄f < G_c/1000 (sorry, Aristotle target)
   - Instanton vertex: 2|qn|N_f = 8 for ADW (PROVED)
@@ -207,6 +208,4 @@ EmergentGravityBounds: physics bounds on emergent gravity program.
   - Three obstacles enumerated
   - 2 sorry (coupling deficit bounds — need Real.pi bounds from Aristotle)
 -/
-theorem emergent_gravity_bounds_summary : True := trivial
-
 end SKEFTHawking.EmergentGravityBounds

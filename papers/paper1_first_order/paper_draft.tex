@@ -44,19 +44,19 @@ where $\delta_{\text{diss}} = O(\Gamma_H / \kappa)$ depends on the Schwinger--Ke
 
 The black hole information paradox and the nature of trans-Planckian physics remain central open questions in theoretical physics. Hawking's discovery that black holes radiate at a temperature $T_H = \hbar \kappa / (2\pi k_B)$---where $\kappa$ is the surface gravity---represents one of the deepest results linking gravity, thermodynamics, and quantum mechanics \cite{Hawking1974}.
 
-However, the standard calculation relies on free-field quantum field theory on a fixed curved background. The high-frequency modes that determine the Hawking temperature receive trans-Planckian corrections---modifications from unknown ultraviolet (UV, i.e., short-distance/high-energy) physics at or beyond the Planck scale ($E_P \sim 10^{19}$~GeV). In the analog context, ``trans-Planckian'' refers to wavelengths shorter than the healing length $\xi$, where the continuum fluid description breaks down and atomic-scale physics dominates. Understanding these corrections requires either (i) a complete theory of quantum gravity, or (ii) systems where the short-distance physics is known and can be studied \cite{Corley1996,Jacobson:1996}.
+However, the standard calculation relies on free-field quantum field theory on a fixed curved background. The high-frequency modes that determine the Hawking temperature receive trans-Planckian corrections---modifications from unknown ultraviolet (UV, i.e., short-distance/high-energy) physics at or beyond the Planck scale ($E_P \sim 10^{19}$~GeV). In the analog context, ``trans-Planckian'' refers to wavelengths shorter than the healing length $\xi$, where the continuum fluid description breaks down and atomic-scale physics dominates. Understanding these corrections requires either (i) a complete theory of quantum gravity, or (ii) systems where the short-distance physics is known and can be studied \cite{Corley1996,Jacobson1996}.
 
-Analog gravity systems---particularly Bose--Einstein condensates in the acoustic regime---provide precisely this laboratory. In these systems, sound waves propagate according to an emergent metric, permitting controlled studies of Hawking radiation without the gravitational complications \cite{Unruh1981}. Steinhauer and collaborators have observed signatures of Hawking radiation in $^{87}$Rb BEC experiments \cite{Steinhauer:2019}, opening the possibility of high-precision measurements.
+Analog gravity systems---particularly Bose--Einstein condensates in the acoustic regime---provide precisely this laboratory. In these systems, sound waves propagate according to an emergent metric, permitting controlled studies of Hawking radiation without the gravitational complications \cite{Unruh1981}. Steinhauer and collaborators have observed signatures of Hawking radiation in $^{87}$Rb BEC experiments \cite{Steinhauer2019}, opening the possibility of high-precision measurements.
 
-To date, analog gravity studies have primarily focused on \textit{conservative} (dispersive) corrections to Hawking radiation \cite{Coutant:2014,Berti2025}. These arise from the microscopic wave-particle dispersion relations of phonons in real condensates. Yet all real systems are dissipative: viscosity, thermal conductivity, and quantum decoherence introduce \textit{dissipative} corrections that damp excitations over time.
+To date, analog gravity studies have primarily focused on \textit{conservative} (dispersive) corrections to Hawking radiation \cite{Coutant2014,Berti2025}. These arise from the microscopic wave-particle dispersion relations of phonons in real condensates. Yet all real systems are dissipative: viscosity, thermal conductivity, and quantum decoherence introduce \textit{dissipative} corrections that damp excitations over time.
 
 The present work addresses this gap by computing the \textit{first} dissipative corrections to the Hawking temperature using the Schwinger--Keldysh (SK) effective field theory formalism. We show that in the long-wavelength limit, dissipation enters at a suppressed order $O(\Gamma_H / \kappa)$, where $\Gamma_H$ is the damping rate near the Hawking frequency. This provides further evidence for the universality of Hawking radiation: dissipative trans-Planckian physics also decouples at macroscopic scales.
 
 Our approach combines three recent developments:
 \begin{enumerate}
-\item \textbf{Son's superfluid EFT} \cite{Son:2002}: the symmetry-breaking and EFT framework for phonons in superfluids valid in the hydrodynamic regime. Son (hep-ph/0204199) constructs this action for a \emph{relativistic} superfluid; the non-relativistic adaptation used here---the Madelung/Galilean form---follows Endlich \textit{et al.}~(\emph{Phys.\ Rev.\ D} \textbf{88}, 105001, 2013).
+\item \textbf{Son's superfluid EFT} \cite{Son2002}: the symmetry-breaking and EFT framework for phonons in superfluids valid in the hydrodynamic regime. Son (hep-ph/0204199) constructs this action for a \emph{relativistic} superfluid; the non-relativistic adaptation used here---the Madelung/Galilean form---follows Endlich \textit{et al.}~(\emph{Phys.\ Rev.\ D} \textbf{88}, 105001, 2013).
 \item \textbf{Schwinger--Keldysh formalism for dissipative media} \cite{Crossley2017,Jana2020}: A general framework for systematically including dissipation via gradient expansion and transport coefficients.
-\item \textbf{Analog Hawking radiation in BECs} \cite{Coutant:2014,Steinhauer:2019}: Controlled experiments where surface gravity, flow profiles, and microscopic properties are tunable.
+\item \textbf{Analog Hawking radiation in BECs} \cite{Coutant2014,Steinhauer2019}: Controlled experiments where surface gravity, flow profiles, and microscopic properties are tunable.
 \end{enumerate}
 
 The plan of the paper is as follows. In \S\ref{sec:son}, we review Son's superfluid action and derive the acoustic metric in phonon form. In \S\ref{sec:sk}, we extend to the Schwinger--Keldysh framework and write the dissipative superfluid action in first-order form. In \S\ref{sec:background}, we establish the transonic background (sonic black hole) and derive the modified wave equation for phonons near the Hawking frequency. In \S\ref{sec:results}, we present the main analytical and numerical results. Finally, in \S\ref{sec:discussion}, we discuss implications for universality and future experiments.
@@ -66,9 +66,9 @@ The plan of the paper is as follows. In \S\ref{sec:son}, we review Son's superfl
 
 \subsection{The Superfluid Action}
 
-Following Son's EFT framework \cite{Son:2002}---originally formulated for
+Following Son's EFT framework \cite{Son2002}---originally formulated for
 a relativistic superfluid---and its non-relativistic Madelung adaptation
-\cite{Son:2002}, the action of a non-relativistic superfluid starts from the
+\cite{Son2002}, the action of a non-relativistic superfluid starts from the
 Galilean-invariant structure of the superfluid phase and density:
 \begin{equation}
 \label{eq:son_action}
@@ -144,7 +144,7 @@ where $\Box = \partial_t^2 - c_s^2 \nabla^2$ is the d'Alembertian (the wave oper
 
 \subsection{Physical Interpretation: Gradient Viscosity and Thermal Effects}
 
-The coefficient $\gamma_1$ represents \textit{bulk viscous damping} at the phonon level: it damps all modes uniformly. The coefficient $\gamma_2$ encodes \textit{anisotropic dissipation} along the flow direction---related to shear viscosity in the hydrodynamic description. For a BEC with magnetic trap confinement, these transport coefficients are related to the microscopic two-body collision cross-section and the temperature via kinetic theory \cite{Zaremba:1999}.
+The coefficient $\gamma_1$ represents \textit{bulk viscous damping} at the phonon level: it damps all modes uniformly. The coefficient $\gamma_2$ encodes \textit{anisotropic dissipation} along the flow direction---related to shear viscosity in the hydrodynamic description. For a BEC with magnetic trap confinement, these transport coefficients are related to the microscopic two-body collision cross-section and the temperature via kinetic theory \cite{Zaremba1999}.
 
 In the regime of interest (low temperature, large occupation number), we have
 \begin{equation}
@@ -307,7 +307,7 @@ $\delta_{\text{diss}} \sim 10^{-5}$.
 
 \paragraph*{Zaremba regime ($T \gtrsim T_c/10$).}
 At non-zero temperature, binary collisions between phonons and the
-thermal cloud~\cite{Zaremba:1999} dominate. Kinetic theory gives the
+thermal cloud~\cite{Zaremba1999} dominate. Kinetic theory gives the
 phonon damping \emph{rate} at relevant frequencies directly:
 \begin{equation}
 \label{eq:gamma_estimates_expanded}
@@ -507,21 +507,21 @@ We thank the developers of Lean~4 and Mathlib for the formal verification infras
 
 \bibitem{Corley1996} S.~Corley and T.~Jacobson, \textit{Phys.\ Rev.\ D} \textbf{54}, 1568 (1996).
 
-\bibitem{Jacobson:1996} T.~Jacobson, \textit{Phys.\ Rev.\ D} \textbf{53}, 7082 (1996).
+\bibitem{Jacobson1996} T.~Jacobson, \textit{Phys.\ Rev.\ D} \textbf{53}, 7082 (1996).
 
-\bibitem{Son:2002} D.~T.~Son, hep-ph/0204199; see also S.~Endlich, A.~Nicolis, R.~A.~Porto, and J.~Wang, \textit{Phys.\ Rev.\ D} \textbf{88}, 105001 (2013).
+\bibitem{Son2002} D.~T.~Son, hep-ph/0204199; see also S.~Endlich, A.~Nicolis, R.~A.~Porto, and J.~Wang, \textit{Phys.\ Rev.\ D} \textbf{88}, 105001 (2013).
 
-\bibitem{Coutant:2014} O.~Coutant and R.~Parentani, \textit{Phys.\ Rev.\ D} \textbf{90}, 121501(R) (2014).
+\bibitem{Coutant2014} O.~Coutant and R.~Parentani, \textit{Phys.\ Rev.\ D} \textbf{90}, 121501(R) (2014).
 
 \bibitem{Crossley2017} M.~Crossley, P.~Glorioso, and H.~Liu, \textit{JHEP} \textbf{1709}, 095 (2017).
 
 \bibitem{Jana2020} S.~Jana, R.~Loganayagam, and M.~Rangamani, \textit{JHEP} \textbf{2005}, 064 (2020).
 
-\bibitem{Steinhauer:2019} J.~Steinhauer, \textit{Nat.\ Phys.} \textbf{12}, 959 (2016); J.~R.~Mu\~noz de Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer, \textit{Nature} \textbf{569}, 688 (2019).
+\bibitem{Steinhauer2019} J.~Steinhauer, \textit{Nat.\ Phys.} \textbf{12}, 959 (2016); J.~R.~Mu\~noz de Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer, \textit{Nature} \textbf{569}, 688 (2019).
 
 \bibitem{Berti2025} A.~Berti, J.~Fernandes, S.~Butera, A.~Recati, M.~Wouters, and I.~Carusotto, Comptes Rendus Physique \textbf{25}, 1--21 (2025); arXiv:2408.17292.
 
-\bibitem{Zaremba:1999} E.~Zaremba, T.~Nikuni, and A.~Griffin, \textit{J.\ Low Temp.\ Phys.} \textbf{116}, 277 (1999). [Kinetic theory for BEC.]
+\bibitem{Zaremba1999} E.~Zaremba, T.~Nikuni, and A.~Griffin, \textit{J.\ Low Temp.\ Phys.} \textbf{116}, 277 (1999). [Kinetic theory for BEC.]
 
 \end{thebibliography}
 

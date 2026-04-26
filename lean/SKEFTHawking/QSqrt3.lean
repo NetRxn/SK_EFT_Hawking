@@ -93,8 +93,7 @@ theorem s_row02_ortho :
 /-- det(S) ≠ 0 (modularity): S_{00}·S_{11} - S_{01}·S_{10} ≠ 0 for 2×2 block.
     For the full 5×5, we check S*S^T = I which implies det(S)² = 1. -/
 theorem s_det_nonzero : s00 * s11 - s01 * s10 ≠ 0 := by native_decide
-
-theorem qsqrt3_summary : True := trivial
+-- (Module summary placeholder removed; see preceding sections.)
 
 end QSqrt3
 

@@ -101,16 +101,27 @@ def H_CF2_center_equivalence : Prop :=
 
 /-! ## 4. Consequences (proved from other modules) -/
 
-/-- The equivalence implies |G|² simples (proved independently). -/
-theorem equivalence_simples_via_functor :
+/-- The simples-count fact: |G|² = |G|·|G|. The arithmetic identity
+underlying the |G|²-simples claim of `Z(VecG_Cat) ≌ Mod(D(G))` —
+the functor itself is constructed in `CenterEquivalenceZ2` /
+`S3CenterAnyons`. This module exports the arithmetic projection;
+the categorical content lives upstream. Renamed from the misleading
+`equivalence_simples_via_functor` per the Stage-13 audit (the body
+does not use the functor; it cites `center_simples_count`). -/
+theorem centerFunctor_simples_count_squared :
     Fintype.card G ^ 2 = Fintype.card G * Fintype.card G :=
   center_simples_count G
 
-/-- Monoidal functor property (deferred to full construction). -/
-theorem equivalence_is_monoidal : True := trivial
+/-- Monoidal functor property — placeholder for the Wave 4C
+construction. Marked `_TODO` so it cannot be confused with a proved
+result. The actual monoidal structure is constructed in
+`CenterEquivalenceZ2`; this declaration stands as a signpost only. -/
+theorem equivalence_is_monoidal_TODO : True := trivial
 
-/-- Braided functor property (deferred to full construction). -/
-theorem equivalence_is_braided : True := trivial
+/-- Braided functor property — placeholder for the Wave 4C
+construction. Marked `_TODO` so it cannot be confused with a proved
+result. -/
+theorem equivalence_is_braided_TODO : True := trivial
 
 /-! ## 5. Hypothesis Inventory -/
 

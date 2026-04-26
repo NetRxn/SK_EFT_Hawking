@@ -170,7 +170,8 @@ theorem su2k2_modular : su2k2_data.modular := by
 
 /-! ## 5. Module summary -/
 
-/--
+/-! ## Module summary
+
 RibbonCategory module: FIRST ribbon/MTC definitions in any proof assistant.
   - BalancedCategory: braided + twist with balancing axiom
   - RibbonCategory: balanced + rigid + twist-dual compatibility
@@ -180,6 +181,4 @@ RibbonCategory module: FIRST ribbon/MTC definitions in any proof assistant.
   - Modularity stated for k=1,2
   - Verlinde formula and dimension consistency predicates defined
 -/
-theorem ribbon_mtc_summary : True := trivial
-
 end SKEFTHawking

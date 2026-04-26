@@ -130,9 +130,12 @@ theorem lorenz_ratio_monotone_in_entropy (v_F s₁ s₂ sigma_Q T : ℝ)
     This is the quantum FDR. The 2 transport coefficients (η, σ_Q) are
     both needed — FDR relates their noise sector, not their values.
 
-    This theorem states that the CGL FDR constraint preserves the
-    transport coefficient count: input count = output count. -/
-theorem fdr_preserves_transport_count (n_transport : ℕ) :
+    The CGL FDR constraint preserves the transport coefficient count:
+    input count = output count. The substantive content (FDR ↔ Kubo
+    ↔ noise-sector relations between η and σ_Q) lives in
+    `CGLTransform.lean` and `VestigialSusceptibility.lean`; this theorem
+    is a re-export marker, marked `_DEFINITIONAL`. -/
+theorem fdr_preserves_transport_count_DEFINITIONAL (n_transport : ℕ) :
     n_transport = n_transport := rfl
 
 /-!

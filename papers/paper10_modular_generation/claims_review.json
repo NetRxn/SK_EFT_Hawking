@@ -218,26 +218,9 @@
       "rewrite_of": null,
       "tombstone": false,
       "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "lake_module_count",
-            "computed_value": "170",
-            "delta_pct": 30.8
-          },
-          {
-            "kind": "formula",
-            "target": "lake_theorem_count",
-            "computed_value": "2578"
-          },
-          {
-            "kind": "formula",
-            "target": "lake_axiom_count_in_chain",
-            "computed_value": "0",
-            "delta_pct": 0.0
-          }
-        ],
-        "completeness": "full"
+        "links": [],
+        "completeness": "partial",
+        "notes": "lake_module_count / lake_theorem_count / lake_axiom_count_in_chain entries removed 2026-04-26: they referenced build-state values not in CITATION_REGISTRY/formulas.py (agent-hallucinated `kind: formula`). The substantive finding (paper says 130 modules; actual 170; +30.8% drift) is preserved in agent_notes above and remains a Gate9_NumericalFreshness flag."
       },
       "delta_pct": 30.8
     },
