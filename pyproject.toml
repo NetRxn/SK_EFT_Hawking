@@ -73,6 +73,13 @@ sk-eft-rhmc = { path = "rust/", editable = true }
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# Default behaviour: skip tests marked `slow` (Lean ExtractDeps re-runs,
+# graph rebuilds, anything that shells out to lake / pdflatex / aristotle).
+# Run them explicitly with `-m slow` or `-m ""` to include everything.
+addopts = "-m 'not slow'"
+markers = [
+    "slow: marks tests that trigger Lean re-extraction, graph rebuilds, or external subprocess calls (run with `-m slow` or `-m ''` to include)",
+]
 
 [dependency-groups]
 dev = [

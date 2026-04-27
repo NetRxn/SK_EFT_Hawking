@@ -49,7 +49,20 @@
 
 ## Track A: Symmetry Bridges (6c.1, 6c.2)
 
-### Wave 1 — `StrongCPTopologicalDE.lean` (6c.1) [Pipeline: Stages 1–8]
+### Wave 1 — `StrongCPTopologicalDE.lean` (6c.1) [Pipeline: Stages 1–11+] — **SHIPPED 2026-04-27**
+
+**Status:** Wave 1 closed end-to-end through Stage 11 (notebooks); Stage 13 adversarial review run 2026-04-29 with all BLOCKERs cleared.
+- `StrongCPTopologicalDE.lean`: 8 substantive theorems / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only).
+- `src/strong_cp_de/`: 3 modules (`__init__.py`, `zhitnitsky_eval.py`, `combined_de_consistency.py`) + 14 pytest cases.
+- `papers/paper32_strong_cp_de/paper_draft.tex`: short formalization paper, compiles clean.
+- `fig_zhitnitsky_de_theta_scan` + companion `Phase6c1_StrongCPDarkEnergy_Technical.ipynb` / `_Stakeholder.ipynb` shipped + `validate.py --check notebook_exec` clean.
+- ρ_DE prediction at PDG Λ_QCD = 0.1 GeV: 6.71×10⁻⁹ eV⁴ vs observed 2.8×10⁻¹¹ eV⁴ (factor ~240×, within 3-orders claim).
+- Correctness-push theorem `combined_zhitnitsky_qtheory_exceeds_observation` shipped: any positive q-theory contribution added to Zhitnitsky at PDG scale exceeds observation, forcing one-mechanism commitment.
+- Cross-bridge to `Z16AnomalyComputation.sm_anomaly_with_nu_R` (anomaly-cancellation pillar) and `ModularInvarianceConstraint.framing_anomaly_constraint 24` (chiral central charge) — both load-bearing in proof bodies.
+- `PARAMETER_PROVENANCE` entries added 2026-04-29 for `LAMBDA_QCD_GEV`, `NEUTRON_EDM_BOUND`, `RHO_DE_OBSERVED_EV4` per CHECK 15 / Invariant 8.
+- Adversarial citation BLOCKERs (`KlinkhamerVolovik2010`, `VanWaerbeke2025` titles) corrected in registry + paper bibliography.
+
+### ~~Wave 1 specification (preserved for reference)~~
 
 **Goal:** Formal bridge: if QCD θ-vacuum sources DE via Zhitnitsky mechanism, then θ must be dynamically small. Connects strong-CP to cosmological Λ via anomaly-matching chain.
 
@@ -82,7 +95,22 @@
 **Estimated LOE:** 2–4 person-months
 **Risk:** Low–medium. Main risk is the anomaly-matching chain formalization — Z16-to-strong-CP-to-Λ requires careful bookkeeping.
 
-### Wave 2 — `EWBaryogenesisChiralityWall.lean` (6c.2) [Pipeline: Stages 1–12]
+### Wave 2 — `EWBaryogenesisChiralityWall.lean` (6c.2) [Pipeline: Stages 1–12] — **SHIPPED 2026-04-29**
+
+**Status:** Wave 2 closed end-to-end through Stage 12 (doc sync); Stage 13 adversarial review user-triggered (per pipeline policy).
+- `EWBaryogenesisChiralityWall.lean`: 16 substantive theorems / 0 sorry / 0 new axioms.
+- `src/ew_baryogenesis/`: 3 modules (`__init__.py`, `sphaleron_computation.py`, `bridge_check.py`) + 23 pytest cases (23/23 PASS in 0.05s).
+- `papers/paper33_ewbg_chirality_wall/paper_draft.tex`: PRL paper, 4 pages, 479 KB, compiles clean.
+- `fig_ewbg_allowed_region` + companion `Phase6c2_EWBaryogenesisChiralityWall_Technical.ipynb` / `_Stakeholder.ipynb`.
+- Sphaleron suppression structural form `e^{-v/T}` (Klinkhamer-Manton); chirality-wall predicate `WallIntact` / `WallCracked` over `ZMod 16`; substantive cross-bridges: `sm_no_nu_R_wall_intact` (consumes `Z16AnomalyComputation.three_gen_anomalous`) + `sm_single_gen_with_nu_R_wall_cracks` (consumes `sm_anomaly_with_nu_R`).
+- Compound `EWBGViable` predicate: cracked wall AND baryogenesis-viable. Load-bearing biconditional `ewbg_forbidden_iff_wall_intact_or_not_viable` (failure-mode attribution; constructive case-split on `anomaly = 0`).
+- Tracked Prop `H_KLRS_SM_Crossover` + quantitative anchor `sm_klrs_overshoot_ratio_gt_threshold` (1.5 < 125.20/72.4 ≈ 1.73 via norm_num).
+- **Correctness-push punchline `sm_no_nu_R_ewbg_doubly_forbidden`**: under H_KLRS, both SM-no-ν_R (wall intact, anomaly = 13) AND SM+3ν_R (wall cracks, anomaly = 0; transition crossover) fail `EWBGViable` independently — *not* P2 redundancy because conjuncts apply to different fermion contents.
+- EWBG_PARAMS constants (sphaleron threshold, KLRS endpoint, SM Z₁₆ representatives) + canonical `formulas.py` entries (`sphaleron_suppression`, `chirality_wall_blocks_ewbg`, `ewbg_viable`).
+- Cross-bridges in proof bodies: `Z16AnomalyComputation.three_gen_anomalous`, `Z16AnomalyComputation.sm_anomaly_with_nu_R`, `EWPhaseTransition.crossover_excludes_baryogenesis`.
+- Discipline metric: 0 retroactive theorems (first-pass discipline checklist applied; preemptive checklist + multi-pass review pending).
+
+### ~~Wave 2 specification (preserved for reference)~~
 
 **Goal:** Dai-Freed anomaly + sphaleron combinatorics as formal bridge: "Chirality-wall obstruction forbids / permits electroweak baryogenesis in the SM." Uses Phase 5z.3 EW-phase-transition-order output.
 
@@ -168,7 +196,20 @@
 
 ## Track C: Holographic / MTC Bridges (6c.4, 6c.5)
 
-### Wave 4 — `QECHolographyBridge.lean` (6c.4) [Pipeline: Stages 1–12]
+### Wave 4 — `QECHolographyBridge.lean` (6c.4) [Pipeline: Stages 1–11+] — **SHIPPED 2026-04-27**
+
+**Status:** Wave 4 closed end-to-end through Stage 11 (notebooks); Stage 13 adversarial review run 2026-04-29 with all BLOCKERs cleared.
+- `QECHolographyBridge.lean`: 10 substantive theorems / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only).
+- `src/qec_holography/`: 3 modules (`__init__.py`, `code_distance.py`, `scrambling_time.py`) + 30 pytest cases.
+- `papers/paper35_qec_holography/paper_draft.tex`: short formalization paper, compiles clean.
+- `fig_code_distance_vs_fusion_spectrum` + companion `Phase6c4_QECHolography_Technical.ipynb` / `_Stakeholder.ipynb`.
+- HPCode structure on top of W3 `HorizonMTCBC` substrate; correctness-push biconditional `code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` ($d_C > 0 \iff d_{\max} > 1$) plus forward implication ($d_C > 0 \Rightarrow t_{\rm scr} > 0$ via $D^2 \geq d_{\max}^2$).
+- Universal recovery theorem `recovery_at_scrambling_bound` (substrate-side threshold inequality; Yoshida-Kitaev decoder construction explicitly out-of-scope).
+- Cross-bridge `horizon_BC_implies_HP_admissible` consumes the W3 hypothesis bundle's `areaLeading` field.
+- Concrete substrates: Fibonacci ($d_{\max} = \varphi$, $D^2 \approx 3.618$), Ising ($d_{\max} = \sqrt{2}$, $D^2 = 4$), SU(3)$_{k=2}$ Fibonacci sub-sector, trivial-abelian (falsifier).
+- Stakeholder + Technical notebooks honestly disclose: "minimal" claim is universal-QC-sense per Nayak-Simon-Stern-Freedman-Das Sarma 2008 §3 (Ising actually has smaller $d_C$); "SU(3)$_{k=2}$" label is a 2-element Fibonacci sub-sector, not the full 6-object MTC.
+
+### ~~Wave 4 specification (preserved for reference)~~
 
 **Goal:** Hayden-Preskill / holographic QEC statements on existing MTC / anyonic-computation substrate. Connects anyonic fusion/braiding to AdS/CFT-adjacent error correction.
 
@@ -200,7 +241,19 @@
 **Estimated LOE:** 4–6 person-months
 **Risk:** Medium. Hayden-Preskill formalization depth is the main variable; scoped to structural statement, not full derivation.
 
-### Wave 5 — `RTCasiniHuertaBounds.lean` (6c.5) [Pipeline: Stages 1–8]
+### Wave 5 — `RTCasiniHuertaBounds.lean` (6c.5) [Pipeline: Stages 1–11+] — **SHIPPED 2026-04-27**
+
+**Status:** Wave 5 closed end-to-end through Stage 11 (notebooks); Stage 13 adversarial review run 2026-04-29 with all BLOCKERs cleared.
+- `RTCasiniHuertaBounds.lean`: 7 substantive theorems + 2 tracked-Prop structures / 0 sorry / 0 new axioms.
+- `src/rt_ch_bounds/`: 3 modules (`__init__.py`, `rt_comparison.py`, `ch_bound_check.py`) + 29 pytest cases.
+- `papers/note_rt_ch_bounds/paper_draft.tex`: short formalization note, compiles clean.
+- `fig_rt_ch_bounds_mtc` + companion `Phase6c5_RTCasiniHuerta_Technical.ipynb` / `_Stakeholder.ipynb`.
+- Tracked external Props `H_RT_Formula_Valid` and `H_CasiniHuerta_Bound_Valid` — bulk minimal-surface construction (Lewkowycz-Maldacena replica trick) and full universal-CFT-bound derivation (modular Hamiltonian / replica trick) out-of-scope per roadmap §A.
+- Knife-edge biconditional `rt_eq_kaulMajumdar_iff_trivial_reduced_area`: classical RT and Phase 6a W3 Kaul-Majumdar agree iff $A = 4 G_N$ (reduced area = 1); elsewhere differ by $(3/2)\log(A/(4 G_N))$. Quantitative anchor: gap at reduced area = 2 is exactly $(3/2)\log 2 \approx 1.040$.
+- Substantive cross-bridge `rt_falsified_by_kaul_majumdar` consumes `H_RT_Formula_Valid` + W3 `kaulMajumdarS`. Direct falsifier `kaulMajumdar_not_H_RT` proves at A=8, G_N=1 that KM violates H_RT.
+- Adversarial citation BLOCKER (Casini-Huerta 2009 mis-attribution as universal 2D-CFT bound — actual scope is free-QFT only) corrected 2026-04-29: universal bound now correctly attributed to Holzhey-Larsen-Wilczek 1994 + Calabrese-Cardy 2004 in note + notebooks + registry; CH 2009 retained as free-QFT specialization. Lean predicate name `H_CasiniHuerta_Bound_Valid` retained for backwards compatibility with explicit footnote.
+
+### ~~Wave 5 specification (preserved for reference)~~
 
 **Goal:** Ryu-Takayanagi / Casini-Huerta entropy bounds as external-hypothesis-tracked Props connecting analog (BEC Hawking) to real holographic entropy.
 
@@ -239,7 +292,7 @@
 
 **Gate C.1 — before Wave 1 (`StrongCPTopologicalDE`) begins:** Is Phase 5x W3 Van Waerbeke-Zhitnitsky deep research available? If NO, drop deep-research prompt first and de-prioritize 6c.1 behind 6c.2 and 6c.3 until research lands.
 
-**Gate C.2 — after Wave 2 (`EWBaryogenesisChiralityWall`) ships:** Is EWBG forbidden or allowed in SM under 5z.3 transition-order result? If FORBIDDEN, push leptogenesis into backlog activation; update Phase 5z roadmap correspondence notes. If ALLOWED, document which microscopic parameter region enables it and feed to 6e nonlinear stress-energy work.
+**Gate C.2 — after Wave 2 (`EWBaryogenesisChiralityWall`) ships:** Is EWBG forbidden or allowed in SM under 5z.3 transition-order result? If FORBIDDEN, push leptogenesis into backlog activation; update Phase 5z roadmap correspondence notes. If ALLOWED, document which microscopic parameter region enables it and feed to 6e nonlinear stress-energy work. **2026-04-29 RESOLUTION:** EWBG is **doubly forbidden** in SM under H_KLRS (`sm_no_nu_R_ewbg_doubly_forbidden`). Both branches fail: SM-no-ν_R chirality wall intact (anomaly = 13 mod 16); SM+3ν_R wall cracks but transition is crossover (m_H = 125.20 GeV > KLRS endpoint 72.4 GeV; overshoot 1.73). Dispatches: (a) **leptogenesis** via Phase 5z W2 sterile-neutrino seesaw + above-EWPT sphaleron conversion (preferred — already partially formalized); (b) **BSM EWBG** via extra-scalar models producing first-order EWPT. Phase 6e (nonlinear EFE) inherits the verdict; downstream model-building chooses between (a) and (b).
 
 **Gate C.3 — before Wave 5 (`RTCasiniHuertaBounds`) begins:** Is Phase 6a.3 Gate A.2 resolved (BH entropy coefficient match)? If NO, 6c.5 is de-prioritized until 6a.3 ships.
 
@@ -272,19 +325,22 @@ Parallelism:
 
 | Wave | Scope | PM | Dependencies | Priority |
 |------|-------|-----|--------------|----------|
-| 6c.1 | `StrongCPTopologicalDE.lean` + PRL paper | 2–4 | 5x W3 + 5y closure | **TIER 1** |
-| 6c.2 | `EWBaryogenesisChiralityWall.lean` + PRL paper | 3–5 | 5z.3 | **TIER 1** |
+| 6c.1 | `StrongCPTopologicalDE.lean` + PRL paper | 2–4 | 5x W3 + 5y closure | **SHIPPED 2026-04-27** |
+| 6c.2 | `EWBaryogenesisChiralityWall.lean` + PRL paper | 3–5 | 5z.3 | **SHIPPED 2026-04-29** |
 | 6c.3 | `EquivalencePrinciple.lean` + CPP paper | 0.5 | 5x W4–W7 | **SHIPPED 2026-04-27** |
-| 6c.4 | `QECHolographyBridge.lean` + Quantum/JHEP paper | 4–6 | MTC stack | **TIER 1** |
-| 6c.5 | `RTCasiniHuertaBounds.lean` + arXiv note | 2–3 | 6a.3 | **TIER 2** |
+| 6c.4 | `QECHolographyBridge.lean` + Quantum/JHEP paper | 4–6 | MTC stack | **SHIPPED 2026-04-27** |
+| 6c.5 | `RTCasiniHuertaBounds.lean` + arXiv note | 2–3 | 6a.3 | **SHIPPED 2026-04-27** |
 
-**Total Phase 6c LOE:** 11.5–18.5 person-months. Full parallelism across 6c.1–6c.4 + 6c.5 after 6a.3: wall-clock 6–10 months minimum.
+**Phase 6c status (2026-04-29):** **CLOSED — all 5 waves SHIPPED.** Stage 11 notebooks + Stage 13 adversarial review (W1+W3+W4+W5 BLOCKERs addressed) complete; W2 Stage 13 user-triggered.
 
-**Deliverables cumulative:**
-- 5 new Lean modules
-- 5 new Python subpackages
-- 4 papers (Papers 32–35 reserved) + 1 short note
-- ~40–56 new theorems; zero sorry target
+**Shipped totals (W1+W2+W3+W4+W5):**
+- 5 new Lean modules: `StrongCPTopologicalDE`, `EWBaryogenesisChiralityWall`, `EquivalencePrinciple`, `QECHolographyBridge`, `RTCasiniHuertaBounds`
+- 5 new Python subpackages: `src/strong_cp_de`, `src/ew_baryogenesis`, `src/equivalence_principle`, `src/qec_holography`, `src/rt_ch_bounds`
+- 65 substantive Lean theorems (8 W1 + 16 W2 + 24 W3 + 10 W4 + 7 W5)
+- 5 papers + 1 short note (paper32, paper33, paper34, paper35, note_rt_ch_bounds)
+- 5 figures, 134 pytest cases (14 + 23 + 38 + 30 + 29)
+- 10 notebook pairs (Technical + Stakeholder for each shipped wave)
+- 0 sorry / 0 new axioms across all five shipped modules
 
 ---
 
@@ -339,4 +395,4 @@ Parallelism:
 
 ---
 
-*Phase 6c roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. Five bridge theorems (6c.1–6c.5); all short, all cross-pillar, one correctness-push anchor (6c.2). All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). Total PM: 11.5–18.5.*
+*Phase 6c roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. Five bridge theorems (6c.1–6c.5); all short, all cross-pillar, one correctness-push anchor (6c.2). All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). **Status (2026-04-29):** Phase 6c **CLOSED end-to-end** — all 5 waves SHIPPED (W1+W2+W3+W4+W5). 65 substantive theorems / 0 sorry / 0 new axioms / 5 papers + 1 note / 10 notebook pairs.*

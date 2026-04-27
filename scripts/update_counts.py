@@ -306,6 +306,78 @@ def generate_tex(counts: dict, path: Path):
                 f"\\newcommand{{\\bhThermoTotal}}{{{bh_thermo_n}}}"
             )
 
+    # Per-module + per-test counts for Phase 6 papers (paper32, paper34,
+    # paper35, paper36, paper37, paper38, note_rt_ch_bounds). Each paper
+    # cites its module's substantive theorem count + the companion
+    # pytest case count; macroising them avoids the count-literal drift
+    # the claims-reviewer flagged.
+    def _module_thm_count_strict(rel_path: str) -> int | None:
+        """Count `theorem ` / `lemma ` declarations at column 0 only.
+
+        The lstrip-based variant `_module_thm_count` above can over-count
+        because docstring prose containing the word "lemma" at any indent
+        matches. For paper-claim macros we want the exact declaration
+        count, so anchor to BOL — and skip `/- ... -/` block-comment
+        spans so a word-wrapped docstring continuation that happens to
+        start with "theorem" / "lemma" at column 0 cannot false-positive
+        (caught by claims-reviewer 2026-04-29-0100 on
+        EquivalencePrinciple.lean line 538).
+        """
+        p = LEAN_DIR / "SKEFTHawking" / rel_path
+        if not p.exists():
+            return None
+        n = 0
+        in_block = False
+        for ln in p.read_text().splitlines():
+            stripped = ln.lstrip()
+            if in_block:
+                if "-/" in ln:
+                    in_block = False
+                continue
+            if stripped.startswith("/-"):
+                if "-/" not in stripped[2:]:
+                    in_block = True
+                continue
+            if ln.startswith("theorem ") or ln.startswith("lemma "):
+                n += 1
+        return n
+
+    def _pytest_count(rel_path: str) -> int | None:
+        p = PROJECT_ROOT / "tests" / rel_path
+        if not p.exists():
+            return None
+        n = 0
+        for ln in p.read_text().splitlines():
+            s = ln.lstrip()
+            if s.startswith("def test_"):
+                n += 1
+        return n
+
+    phase6_modules = [
+        # (macro_prefix, lean_module, test_module)
+        ("strongCpDe",  "StrongCPTopologicalDE.lean",   "test_strong_cp_de.py"),
+        ("ep",          "EquivalencePrinciple.lean",    "test_equivalence_principle.py"),
+        ("qecHolography","QECHolographyBridge.lean",    "test_qec_holography.py"),
+        ("centerSymm",  "CenterSymmetryConfinement.lean","test_center_symmetry.py"),
+        ("chiralSsb",   "ChiralSSB_QCD.lean",           "test_chiral_ssb.py"),
+        ("cfl",         "CFLChiralLagrangian.lean",     "test_cfl.py"),
+        ("rtCh",        "RTCasiniHuertaBounds.lean",    "test_rt_ch_bounds.py"),
+    ]
+    phase6_lines = []
+    for prefix, lean_mod, test_mod in phase6_modules:
+        thms = _module_thm_count_strict(lean_mod)
+        tests_n = _pytest_count(test_mod)
+        if thms is not None:
+            phase6_lines.append(f"\\newcommand{{\\{prefix}Thms}}{{{thms}}}")
+        if tests_n is not None:
+            phase6_lines.append(f"\\newcommand{{\\{prefix}Tests}}{{{tests_n}}}")
+    if phase6_lines:
+        lines.append(
+            "% --- Phase 6 per-module + pytest counts "
+            "(paper32 / paper34-38 / note_rt_ch_bounds) ---"
+        )
+        lines.extend(phase6_lines)
+
     path.write_text("\n".join(lines) + "\n")
 
 

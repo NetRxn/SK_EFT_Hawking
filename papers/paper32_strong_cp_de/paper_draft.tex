@@ -43,7 +43,7 @@ and approximately $120$ orders of magnitude below the Planck-natural
 estimate $\MP^4 \approx 10^{112}\,\mathrm{eV}^4$. We encode the
 $\theta$-vacuum as a Lean structure carrying the experimental neutron-EDM
 constraint as a load-bearing invariant, prove that the
-Planck-natural value $\theta = 1$ violates this invariant by nine orders
+naturally-$O(1)$ value $\theta = 1$ violates this invariant by nine orders
 of magnitude, and derive a structural inconsistency theorem stating that
 \emph{both} the Zhitnitsky topological mechanism \emph{and} a residual
 Klinkhamer--Volovik q-theory contribution~\cite{KlinkhamerVolovik2010}
@@ -75,13 +75,14 @@ cosmological-constant scale is dynamically driven to the QCD scale.
 Van Waerbeke and Zhitnitsky~\cite{VanWaerbeke2025} sharpened this
 picture into a parameter-free prediction
 \begin{equation}
-  \rhoDE \;\sim\; \frac{\Lqcd^6}{\MP^2} \;\simeq\; (1.4\,\mathrm{meV})^4,
+  \rhoDE \;\sim\; \frac{\Lqcd^6}{\MP^2}
+  \;\simeq\; 6.7 \times 10^{-9}\,\mathrm{eV}^4,
   \label{eq:zhitnitsky}
 \end{equation}
 which sits within roughly $240\times$ of the observed
-$\rhoDE \approx (2.3\,\mathrm{meV})^4$ from Planck~\cite{Planck2018}
-and DESI~\cite{DESI2024} --- a striking match given that no parameters
-are tuned. Both proposals identify QCD topological structure as the
+$\rhoDE \approx (2.3\,\mathrm{meV})^4 \approx 2.8 \times 10^{-11}\,\mathrm{eV}^4$
+from Planck~\cite{Planck2018} and DESI~\cite{DESI2024} --- a striking
+match given that no parameters are tuned. Both proposals identify QCD topological structure as the
 common origin: the $\theta$-vacuum that suppresses the neutron EDM also
 generates the cosmological constant.
 
@@ -114,7 +115,7 @@ neutron-EDM bound~\cite{Pendlebury2015}. The CP-symmetric vacuum at
 $\theta = 0$ is a witness for this structure; it is the canonical
 no-CP-violation reference.
 
-A first falsification result rules out the Planck-natural value:
+A first falsification result rules out the naturally-$O(1)$ value $\theta = 1$ one would expect absent a tuning mechanism:
 
 \paragraph*{Theorem (\texttt{theta\_planck\_natural\_violates\_edm\_bound}).}
 Any inhabitant with $\theta = 1$ violates the structural invariant by
@@ -148,9 +149,12 @@ that contains no tuneable parameters.
 
 The formalization carries this result as a numerical anchor theorem
 \verb|zhitnitsky_DE_at_lambda_qcd_within_3_orders|, asserting
-$|\rhoDE^{\mathrm{pred}} / \rhoDE^{\mathrm{obs}} - 240| < 10^{-7}$ at
-the Particle-Data-Group reference scale; this is a falsifiable
-\verb|norm_num|-backed inequality, not a qualitative claim. A
+$\rhoDE^{\mathrm{pred}}(\Lqcd = 0.1\,\mathrm{GeV}) < 10^{-7}\,\mathrm{eV}^4$
+at the Particle-Data-Group reference scale; this is a falsifiable
+\verb|norm_num|-backed inequality bounding the prediction itself
+above the observed scale by no more than four orders of magnitude
+(the realised value $6.71 \times 10^{-9}\,\mathrm{eV}^4$ sits two
+orders below the asserted upper bound). A
 companion theorem
 \verb|zhitnitsky_DE_far_below_planck| confirms that the prediction
 sits approximately $120$ orders of magnitude below the Planck-natural
@@ -197,7 +201,7 @@ A witness ships at the Particle-Data-Group QCD scale
 $\Lqcd = 0.1\,\mathrm{GeV}$ with the CP-symmetric vacuum $\theta = 0$;
 the proof of pillar (a) invokes the Standard-Model anomaly-content
 calculation at the level of generators, not as a primitive. A
-companion falsifier rules out the Planck-natural $\theta = 1$ branch:
+companion falsifier rules out the naturally-$O(1)$ value $\theta = 1$ branch:
 the second pillar already fails on a structural invariant.
 
 A separate consistency check links the framing-anomaly constraint
@@ -218,8 +222,14 @@ active.}
 Concretely, the theorem
 \verb|combined_zhitnitsky_qtheory_exceeds_observation| shows that
 \emph{any} positive q-theory contribution $\rho_{q} > 0$ added to the
-Zhitnitsky prediction at the Particle-Data-Group QCD scale exceeds the
-observed dark-energy density by more than a factor of three. The
+Zhitnitsky prediction at the Particle-Data-Group QCD scale strictly
+exceeds the Zhitnitsky-alone saturation point (which itself
+already lies within ~240$\times$ of observation). The structural
+inconsistency is encoded as a tracked-hypothesis predicate
+\verb|H_BothActiveGivesInconsistency| --- a load-bearing
+\texttt{Prop} that downstream theorems can consume; positivity of
+$\rho_{q}$ is genuinely required in the proof, so the predicate is
+not vacuous. The
 implication for theory selection is direct: the project must commit to
 one dark-energy mechanism, and the Zhitnitsky topological proposal is
 preferred on parameter-economy grounds (it predicts the order of
@@ -229,13 +239,13 @@ magnitude with no tuneable inputs).
 \label{sec:formalization}
 
 The Lean module
-\texttt{lean/SKEFTHawking/StrongCPTopologicalDE.lean} ships eight
+\texttt{lean/SKEFTHawking/StrongCPTopologicalDE.lean} ships \strongCpDeThms{}
 substantive theorems, zero \texttt{sorry} statements, and zero new
 axioms beyond the Lean~4 kernel's standard
 \texttt{propext, Classical.choice, Quot.sound}. A Python mirror in
 \texttt{src/strong\_cp\_de/} provides numerical evaluation of the
 Zhitnitsky prediction across $\Lqcd$, the combined-mechanism
-falsifier, and a $14$-case \texttt{pytest} suite cross-checking the
+falsifier, and a \strongCpDeTests{}-case \texttt{pytest} suite cross-checking the
 Lean theorems against numerical agreement. The full source, including
 this paper's figure-generation code, is available at the project
 repository.
@@ -246,7 +256,7 @@ repository.
 Treating the strong-CP problem and the cosmological-constant problem
 as a structurally connected bridge --- rather than two independent
 fine-tunings --- yields a falsifiable formal account that pins down
-two precise consequences. First, the Planck-natural value $\theta = 1$
+two precise consequences. First, the naturally-$O(1)$ value $\theta = 1$
 is structurally excluded by the experimental neutron-EDM bound. Second,
 the Klinkhamer--Volovik q-theory mechanism and the Van
 Waerbeke--Zhitnitsky topological mechanism cannot both be active
@@ -262,12 +272,12 @@ the bridge.
 
 \bibitem{VanWaerbeke2025}
 L.~Van Waerbeke and A.~R.~Zhitnitsky,
-\emph{Topological dark energy from QCD vacuum},
+\emph{DESI results and Dark Energy from QCD topological sectors},
 arXiv:2506.14182 (2025).
 
 \bibitem{KlinkhamerVolovik2010}
 F.~R.~Klinkhamer and G.~E.~Volovik,
-\emph{Cosmological constant from gravitating Skyrmions},
+\emph{Towards a solution of the cosmological constant problem},
 JETP Lett. \textbf{91}, 259 (2010); arXiv:0907.4887.
 
 \bibitem{Pendlebury2015}

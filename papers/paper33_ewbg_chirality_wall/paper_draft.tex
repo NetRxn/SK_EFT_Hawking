@@ -1,0 +1,445 @@
+\documentclass[aps,prl,twocolumn,showpacs,superscriptaddress,nofootinbib]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{hyperref}
+
+% Canonical counts pipeline (Phase 5v: freshness gate).
+\input{../../docs/counts.tex}
+
+\newcommand{\WallIntact}{\mathsf{WallIntact}}
+\newcommand{\WallCracked}{\mathsf{WallCracked}}
+\newcommand{\EWBGViable}{\mathsf{EWBGViable}}
+\newcommand{\Zsixteen}{\mathbb{Z}_{16}}
+
+\begin{document}
+
+\title{Electroweak baryogenesis is doubly forbidden in the Standard
+Model: a Lean-formalized two-pillar bridge to the chirality wall}
+
+\author{John G.\ Roehm}
+\affiliation{NetRxn Foundation}
+
+\date{\today}
+
+\begin{abstract}
+We formalize the verdict that electroweak baryogenesis is forbidden in
+the Standard Model under \emph{two independent} obstructions:
+\textit{(i)} the chirality-wall obstruction at the gauging step, and
+\textit{(ii)} the crossover nature of the SM electroweak phase
+transition. The first reflects the Wang $\Zsixteen$ anomaly
+classification~\cite{WangWanYou2022}: the SM-no-$\nu_R$ fermion content
+gives $3 \times 15 = 45 \equiv 13 \not\equiv 0 \pmod{16}$, blocking
+non-perturbative lattice gauging~\cite{Wang2020} and depriving the
+sphaleron rate of a first-principles regulator. The second is a
+lattice result: the resummed-thermal-corrections endpoint at
+$m_H = 72.4 \pm 1.7$~GeV (Csikor, Fodor, and
+Heitger~\cite{CsikorFodorHeitger1999}, refining
+Kajantie--Laine--Rummukainen--Shaposhnikov~\cite{KLRS1996}) sits well
+below the PDG value $m_H = 125.20$~GeV~\cite{PDG2024}; the SM
+electroweak transition is a crossover, blocking sphaleron decoupling
+(Sakharov's third condition).
+
+We ship \texttt{EWBaryogenesisChiralityWall.lean}: $16$ theorems
+formalizing the sphaleron-suppression structural form, the chirality-
+wall predicate \WallIntact{} / \WallCracked{} over $\Zsixteen$,
+substantive cross-bridges to
+\texttt{Z16AnomalyComputation.three\_gen\_anomalous} and
+\texttt{sm\_anomaly\_with\_nu\_R}, the compound \EWBGViable{}
+predicate, the load-bearing biconditional
+$\neg \EWBGViable{} \leftrightarrow (\WallIntact \vee \neg
+\mathsf{IsBaryogenesisViable})$, and the punchline
+\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden}: under the
+KLRS-crossover hypothesis, the SM-as-is fails \emph{both} conditions
+simultaneously. The key insight is that the two failure modes are
+\emph{independent}: SM-no-$\nu_R$ fails the wall regardless of the
+transition; SM with three right-handed neutrinos cracks the wall but
+fails the transition. Either failure suffices to forbid SM EWBG. The
+formalization invokes Phase 5z.3
+\texttt{crossover\_excludes\_baryogenesis} and Phase 5e
+\texttt{three\_gen\_anomalous} in proof bodies; it is zero-sorry,
+introduces zero new axioms, and is consistent with the existing
+project axiom budget.
+\end{abstract}
+
+\pacs{12.15.-y, 11.30.-j, 98.80.Cq, 11.10.Wx}
+
+\maketitle
+
+%% ================================================================
+\section{Introduction}
+\label{sec:intro}
+
+The Standard Model has two well-known obstructions to electroweak
+baryogenesis (EWBG). The first is dynamical: insufficient CP violation
+in the Cabibbo--Kobayashi--Maskawa phase, by approximately ten orders
+of magnitude relative to what the observed baryon asymmetry
+requires~\cite{Gavela1994,Huet1994}. The second is thermodynamic: the
+electroweak phase transition is a crossover for the physical Higgs
+mass~\cite{KLRS1996,CsikorFodorHeitger1999}, leaving Sakharov's third
+condition (departure from thermal equilibrium) unrealized. We formalize
+these results and add a third obstruction --- the
+\emph{chirality-wall obstruction} from non-perturbative
+$\Zsixteen$-anomaly classification~\cite{WangWanYou2022,Wang2020} ---
+inside a single Lean module that bridges the chirality-wall pillar
+(Phases 5a, 5e, 5p) and the phase-transition pillar (Phase 5z.3).
+
+The two obstructions our paper formalizes act independently. The
+SM-no-$\nu_R$ fermion content carries a $\Zsixteen$ anomaly of $13$ mod
+$16$ (= $-3$); cancellation is required for the gauging step
+(Phase 5p \texttt{gauging\_requires\_z16\_cancellation}), so the
+SM-as-is is non-perturbatively obstructed before the question of
+transition order even applies. Adding three right-handed neutrinos
+brings the anomaly to $48 \equiv 0$ mod $16$, cracking the wall, but
+under the KLRS hypothesis the resummed transition is still a crossover
+and the exclusion stands.
+
+Our load-bearing theorem is the biconditional
+\begin{equation}
+\label{eq:biconditional}
+\neg \EWBGViable{}(a, p, c)
+\;\;\Leftrightarrow\;\;
+\bigl( \WallIntact{}(a) \;\vee\;
+\neg\, \mathsf{IsBaryogenesisViable}(p, c) \bigr),
+\end{equation}
+where $a \in \Zsixteen$ is the fermion-content anomaly,
+$p \in \mathsf{EWFiniteTParams}$ encodes the finite-$T$ effective
+potential parameters, and $c \in \mathbb{R}$ is the Cohen--Kaplan--Nelson
+sphaleron-decoupling threshold~\cite{CohenKaplanNelson1993}. The proof
+is a de Morgan unfolding with case analysis on $a = 0$ and is
+substantive: the LHS-to-RHS direction requires constructive case
+splits (mere classical de Morgan would not suffice in the dependent-
+type setting). The corollary
+\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden} packages the two
+independent failure modes for SM-as-is (intact wall) and
+SM-with-$3\nu_R$ (crossover under KLRS) as a conjunction; this is the
+formal statement of ``SM EWBG is doubly forbidden.''
+
+The remainder of this paper is organized as follows. Section
+\ref{sec:sphaleron} introduces the sphaleron-suppression structural
+form and the Cohen--Kaplan--Nelson decoupling predicate. Section
+\ref{sec:wall} formalizes the chirality-wall predicate and its
+substantive cross-bridges to
+\texttt{Z16AnomalyComputation}. Section \ref{sec:bridge} states the
+compound \EWBGViable{} and the load-bearing biconditional
+\eqref{eq:biconditional}. Section \ref{sec:sm-verdict} applies the
+biconditional to the SM with and without right-handed neutrinos under
+the KLRS hypothesis and concludes with the doubly-forbidden punchline.
+Section \ref{sec:formal-verification} surveys the formalization.
+Section \ref{sec:outlook} dispatches baryogenesis to leptogenesis or
+BSM mechanisms.
+
+%% ================================================================
+\section{Sphaleron Suppression and Decoupling}
+\label{sec:sphaleron}
+
+We model the dimensionless Boltzmann suppression of the sphaleron rate
+in the broken phase as
+\begin{equation}
+\label{eq:sphaleron-suppression}
+\Sigma(v, T) = e^{-v/T},
+\end{equation}
+the load-bearing structural form embedded in the
+Klinkhamer--Manton sphaleron rate $\Gamma_\mathrm{sphal} \sim
+(\alpha_W T)^4 e^{-E_\mathrm{sph}/T}$ with sphaleron energy
+$E_\mathrm{sph} \sim 4\pi v / g_W$. The Lean theorem
+\texttt{sphaleronSuppression\_pos} establishes
+$\Sigma(v, T) > 0$ at any finite $(v, T)$, and
+\texttt{sphaleronSuppression\_le\_one} gives the broken-phase bound
+$\Sigma \le 1$ when $v/T \ge 0$. Sphaleron decoupling is the
+predicate \texttt{SphaleronsDecoupled} encoding $v(T_c)/T_c > c$
+with $c = 1$ (Cohen--Kaplan--Nelson~\cite{CohenKaplanNelson1993}).
+The threshold is identical to the strong-first-order condition
+$E/(\lambda T_c) > c$ used by
+\texttt{EWPhaseTransition.IsBaryogenesisViable} (Phase 5z.3).
+
+%% ================================================================
+\section{The Chirality-Wall Predicate}
+\label{sec:wall}
+
+The chirality wall is a non-perturbative obstruction at the gauging
+step: lattice formulations of chiral gauge theory require
+$\Zsixteen$-anomaly cancellation~\cite{WangWanYou2022,Wang2020}, an
+anomaly-matching constraint formalized as
+\texttt{GaugingStep.gauging\_requires\_z16\_cancellation} in Phase 5p.
+We define
+\begin{align}
+\label{eq:wall-intact}
+\WallIntact{}(a) &\equiv (a \ne 0 \in \Zsixteen), \\
+\label{eq:wall-cracked}
+\WallCracked{}(a) &\equiv (a = 0 \in \Zsixteen).
+\end{align}
+\texttt{wall\_intact\_xor\_cracked} and \texttt{wall\_intact\_or\_cracked}
+establish disjointness and exhaustivity over $\Zsixteen$.
+
+The substantive cross-bridges to \texttt{Z16AnomalyComputation}
+identify the wall predicate with the project's existing $\Zsixteen$
+classification:
+\begin{itemize}
+\item \texttt{sm\_no\_nu\_R\_wall\_intact} consumes
+\texttt{three\_gen\_anomalous} ($45 \ne 0 \in \Zsixteen$) directly
+to produce the wall-intact verdict for the SM-no-$\nu_R$ fermion
+content (3 generations $\times$ 15 components per generation, per
+\texttt{SMFermionData.total\_components\_without\_nu\_R}).
+\item \texttt{sm\_no\_nu\_R\_anomaly\_eq\_neg\_three} (substantive
+cross-bridge) composes the natural-representative identity
+$45 \equiv 13 \pmod{16}$ with the upstream
+\texttt{three\_gen\_is\_neg3} (Phase 5e) to identify the SM-no-$\nu_R$
+$\Zsixteen$ anomaly with the canonical $-3$ form used in Wang's
+classification.
+\item \texttt{sm\_single\_gen\_with\_nu\_R\_wall\_cracks} consumes
+\texttt{sm\_anomaly\_with\_nu\_R} ($16 \equiv 0 \in \Zsixteen$) to
+produce the cracked-wall verdict at the single-generation
+right-handed-neutrino-completed fermion content (16 components per
+generation).
+\item \texttt{sm\_with\_3nu\_R\_wall\_cracks} extends to three
+generations: $48 \equiv 0 \pmod{16}$.
+\end{itemize}
+
+The substantive content is the \emph{identification} of the
+chirality-wall obstruction with the $\Zsixteen$-anomaly nonzero
+condition --- not merely the modular arithmetic.
+
+%% ================================================================
+\section{Bridge Theorem and Load-Bearing Biconditional}
+\label{sec:bridge}
+
+The compound \EWBGViable{} predicate
+\begin{equation}
+\label{eq:viability}
+\EWBGViable{}(a, p, c) \;\equiv\; \WallCracked{}(a) \wedge
+\mathsf{IsBaryogenesisViable}(p, c)
+\end{equation}
+expresses the two-pillar EWBG necessary condition: cracked wall
+\emph{and} sphaleron-decoupling-strength first-order transition. The
+elementary bridge theorems are
+\begin{itemize}
+\item \texttt{ewbg\_forbidden\_if\_wall\_intact}: a non-zero
+$\Zsixteen$ anomaly forbids EWBG independent of transition order.
+\item \texttt{ewbg\_forbidden\_if\_transition\_crossover}: a crossover
+transition forbids EWBG independent of wall integrity. Substantive
+cross-bridge --- the proof body invokes
+\texttt{EWPhaseTransition.crossover\_excludes\_baryogenesis} from
+Phase 5z.3.
+\end{itemize}
+
+The load-bearing correctness-push is the biconditional
+\eqref{eq:biconditional}, formalized as
+\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}: every
+breakdown of EWBG must be attributed to either the wall or the phase
+transition, with no third failure mode in this two-pillar
+decomposition. The proof is non-trivial: it requires a constructive
+case split on $a = 0$ (decidable on $\Zsixteen$). The structural
+content makes failure-mode attribution exhaustive in a way that
+either elementary bridge alone does not.
+
+%% ================================================================
+\section{The SM Verdict: Doubly Forbidden}
+\label{sec:sm-verdict}
+
+The KLRS lattice analysis~\cite{KLRS1996,CsikorFodorHeitger1999}
+establishes that, after thermal-loop resummation, the SM electroweak
+transition is a crossover for $m_H > 72.4 \pm 1.7$~GeV. With the PDG
+observed $m_H = 125.20$~GeV~\cite{PDG2024}, the SM is well above the
+endpoint. The Lean theorem
+\texttt{sm\_klrs\_overshoot\_ratio\_gt\_threshold}
+encodes the explicit bound $1.5 < 125.20 / 72.4 \approx 1.73$ via
+\texttt{norm\_num}, providing the load-bearing physics input for the
+tracked-Prop hypothesis $H_\mathrm{KLRS}$:
+\begin{equation}
+H_\mathrm{KLRS}(p) \equiv \mathsf{IsCrossoverEW}(p),
+\end{equation}
+the assertion that the full thermal-resummed SM is a crossover. The
+hypothesis is encoded as a tracked Prop because the lattice result is
+not derived in our framework; the strict-LO
+\texttt{smBenchmarkParams} of Phase 5z.3 is first-order
+(\texttt{sm\_benchmark\_is\_first\_order}, $E = 0.01 > 0$). The full
+thermal correction drives $E \to 0$ for the resummed SM at the
+physical $m_H$.
+
+We then prove:
+\begin{itemize}
+\item \texttt{sm\_no\_nu\_R\_ewbg\_blocked}: SM-no-$\nu_R$ fails
+\EWBGViable{} unconditionally, regardless of transition order
+(consequence of \texttt{ewbg\_forbidden\_if\_wall\_intact} and
+\texttt{sm\_no\_nu\_R\_wall\_intact}).
+\item \texttt{sm\_with\_3nu\_R\_ewbg\_iff\_first\_order\_strong}:
+SM with $3\nu_R$ has \EWBGViable{} iff the transition is
+baryogenesis-viable (the wall conjunct discharges via
+\texttt{sm\_with\_3nu\_R\_wall\_cracks}).
+\item \texttt{sm\_with\_3nu\_R\_ewbg\_forbidden\_under\_klrs}: under
+$H_\mathrm{KLRS}$, even SM with $3\nu_R$ fails \EWBGViable{}.
+\end{itemize}
+
+The correctness-push punchline is
+\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden}: under the KLRS
+hypothesis, both the SM-no-$\nu_R$ and SM-with-$3\nu_R$ branches fail
+\EWBGViable{} via independent failure modes. The two conjuncts are
+\emph{not} P2 bundle-redundant: they are statements about \emph{different}
+fermion contents (45 vs 48 mod 16) blocked by \emph{different}
+mechanisms (wall vs transition). This is the formal statement of
+``SM EWBG is doubly forbidden.''
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.96\textwidth]{figures/fig_ewbg_allowed_region.png}
+\caption{EWBG verdict over the (chirality wall $\times$ transition
+order) decomposition. \textbf{Left:} 2$\times$2 outcome matrix.
+SM-as-is sits at (intact wall + crossover under $H_\mathrm{KLRS}$);
+\textbf{doubly forbidden}. SM-with-$3\nu_R$ sits at (cracked wall +
+crossover); transition-blocked. BSM target (extra scalars producing
+strong first-order EWPT) sits at (cracked wall + first-order strong);
+allowed. \textbf{Right:} the $(m_H, E)$ phase diagram with the
+KLRS / CFH lattice endpoint at $m_H = 72.4$~GeV. The PDG SM at
+$m_H = 125.20$~GeV sits well to the right of the endpoint (overshoot
+ratio $\approx 1.73 > 1.5$), placing the resummed transition firmly
+in the crossover region. Lean: \texttt{ewbg\_forbidden\_iff\_wall\_
+intact\_or\_not\_viable}, \texttt{sm\_no\_nu\_R\_ewbg\_doubly\_
+forbidden}, \texttt{sm\_klrs\_overshoot\_ratio\_gt\_threshold}.}
+\label{fig:ewbg-allowed-region}
+\end{figure*}
+
+%% ================================================================
+\section{Formal Verification Summary}
+\label{sec:formal-verification}
+
+The Wave 2 formalization comprises one new Lean module:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Module & Theorems \\
+\midrule
+\texttt{EWBaryogenesisChiralityWall.lean} & 16 \\
+\bottomrule
+\end{tabular}
+\end{center}
+plus three definitions
+(\texttt{sphaleronSuppression}, \texttt{SphaleronsDecoupled},
+\texttt{EWBGViable}), two predicate definitions (\texttt{WallIntact},
+\texttt{WallCracked}), and one tracked-Prop hypothesis
+(\texttt{H\_KLRS\_SM\_Crossover}). The module is zero-sorry,
+introduces zero new axioms, and adds zero heartbeat overrides
+(Phase 3 pipeline invariant 10). Cross-bridges to four prior modules
+in proof bodies:
+\begin{itemize}
+\item Phase 5e \texttt{Z16AnomalyComputation.three\_gen\_anomalous}
++ \texttt{sm\_anomaly\_with\_nu\_R}: chirality-wall integrity at
+SM-no-$\nu_R$ and SM-with-$\nu_R$ fermion contents.
+\item Phase 5p \texttt{GaugingStep.gauging\_requires\_z16\_cancellation}:
+gauging step requires anomaly cancellation (referenced in §5.1).
+\item Phase 5a Wave 4 \texttt{ChiralityWallMaster}: three-pillar
+synthesis.
+\item Phase 5z.3 \texttt{EWPhaseTransition.crossover\_excludes\_
+baryogenesis}: crossover blocks sphaleron decoupling.
+\end{itemize}
+
+A Python companion \texttt{src/ew\_baryogenesis/} (3 modules, 23-test
+pytest suite, $100\%$ pass) wraps the canonical formulas
+\texttt{sphaleron\_suppression}, \texttt{chirality\_wall\_blocks\_ewbg},
+and \texttt{ewbg\_viable} (in \texttt{src/core/formulas.py}) plus the
+structured \texttt{SMEWBGVerdict} dataclass; the Lean and Python
+predicate evaluations agree across all SM benchmarks. EWBG-related
+constants live in \texttt{EWBG\_PARAMS} in \texttt{src/core/constants.py}
+(sphaleron decoupling threshold, KLRS endpoint, SM Higgs mass,
+$\Zsixteen$ anomaly representatives).
+
+%% ================================================================
+\section{Outlook}
+\label{sec:outlook}
+
+EW baryogenesis is doubly forbidden in the SM: by the chirality-wall
+obstruction without right-handed neutrinos, and by the crossover
+nature of the resummed-thermal SM electroweak transition with or
+without right-handed neutrinos. The dispatch is to leptogenesis or
+BSM electroweak Higgs sectors with extra scalars producing a strong
+first-order transition.
+
+For leptogenesis, the natural connection is the Phase 5z Wave 2
+\texttt{MajoranaRung.lean} sterile-neutrino seesaw: with
+$M_R \sim 10^{14}$~GeV from the substrate-anchored hypothesis
+\texttt{H\_MR\_FromADWSubstrate\_BCS\_LNV} (constrained by Antusch
+\textit{et al.}~\cite{Antusch2003} lepton-number-symmetry obstruction),
+out-of-equilibrium decays of right-handed neutrinos
+generate a lepton asymmetry that is converted to baryon asymmetry by
+electroweak sphalerons \emph{above} the EW phase transition (where
+sphalerons are unsuppressed). The crossover transition is then no
+longer a problem; the wall is cracked by the $\nu_R$ completion;
+leptogenesis succeeds at high $T$.
+
+For BSM EWBG, the requirement is the cracked-wall + first-order-strong
+quadrant of Fig.~\ref{fig:ewbg-allowed-region}. Two-Higgs-doublet
+models, MSSM (with light stops), or extended-scalar singlets can
+produce a strong first-order transition by raising the cubic
+coefficient at the physical $m_H$~\cite{ProfumoRamsey2007}. The
+Lean formalization of this paper is robust to the specific BSM
+mechanism: the biconditional \eqref{eq:biconditional} continues to
+hold, the wall must crack (anomaly cancellation extends naturally to
+BSM with vector-like additions), and the transition order is the
+load-bearing input. Phase 6e (nonlinear stress-energy) inherits the
+verdict and may need to choose between leptogenesis and BSM EWBG as
+the program's preferred baryogenesis mechanism.
+
+%% ================================================================
+\begin{thebibliography}{99}
+
+\bibitem{WangWanYou2022}
+J.~Wang, X.-G.~Wen, and S.-T.~Yau,
+\emph{Anomaly and cobordism constraints beyond the Standard Model:
+Topological force},
+Phys.~Rev.~D~\textbf{106}, 045013 (2022); arXiv:2112.14765.
+
+\bibitem{Wang2020}
+J.~Wang,
+\emph{Anomaly and cobordism constraints beyond grand unification:
+Energy hierarchy},
+Nucl.~Phys.~B~\textbf{980}, 115798 (2022); arXiv:2008.06499.
+
+\bibitem{KLRS1996}
+K.~Kajantie, M.~Laine, K.~Rummukainen, and M.~Shaposhnikov,
+\emph{Is there a hot electroweak phase transition at $m_H \gtrsim m_W$?},
+Phys.~Rev.~Lett.~\textbf{77}, 2887 (1996); arXiv:hep-ph/9605288;
+DOI:~\href{https://doi.org/10.1103/PhysRevLett.77.2887}{10.1103/PhysRevLett.77.2887}.
+
+\bibitem{CsikorFodorHeitger1999}
+F.~Csikor, Z.~Fodor, and J.~Heitger,
+\emph{Endpoint of the hot electroweak phase transition},
+Phys.~Rev.~Lett.~\textbf{82}, 21 (1999); arXiv:hep-ph/9809291;
+DOI:~\href{https://doi.org/10.1103/PhysRevLett.82.21}{10.1103/PhysRevLett.82.21}.
+
+\bibitem{CohenKaplanNelson1993}
+A.~G.~Cohen, D.~B.~Kaplan, and A.~E.~Nelson,
+\emph{Progress in electroweak baryogenesis},
+Annu.~Rev.~Nucl.~Part.~Sci.~\textbf{43}, 27 (1993);
+DOI:~\href{https://doi.org/10.1146/annurev.ns.43.120193.000331}{10.1146/annurev.ns.43.120193.000331}.
+
+\bibitem{Gavela1994}
+M.~B.~Gavela, P.~Hernandez, J.~Orloff, and O.~Pene,
+\emph{Standard Model CP-violation and baryon asymmetry},
+Mod.~Phys.~Lett.~A~\textbf{9}, 795 (1994); arXiv:hep-ph/9312215.
+
+\bibitem{Huet1994}
+P.~Huet and E.~Sather,
+\emph{Electroweak baryogenesis and Standard Model CP violation},
+Phys.~Rev.~D~\textbf{51}, 379 (1995); arXiv:hep-ph/9404302.
+
+\bibitem{ProfumoRamsey2007}
+S.~Profumo, M.~J.~Ramsey-Musolf, and G.~Shaughnessy,
+\emph{Singlet Higgs phenomenology and the electroweak phase transition},
+JHEP \textbf{08} (2007) 010; arXiv:0705.2425.
+
+\bibitem{Antusch2003}
+S.~Antusch, J.~Kersten, M.~Lindner, and M.~Ratz,
+\emph{Running neutrino masses, mixings and CP phases: Analytical
+results and phenomenological consequences},
+Nucl.~Phys.~B~\textbf{674}, 401 (2003); arXiv:hep-ph/0305273.
+
+\bibitem{PDG2024}
+S.~Navas \textit{et al.}~(Particle Data Group),
+\emph{Review of particle physics},
+Phys.~Rev.~D~\textbf{110}, 030001 (2024).
+
+\end{thebibliography}
+
+\end{document}

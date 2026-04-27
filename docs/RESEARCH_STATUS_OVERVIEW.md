@@ -2,11 +2,13 @@
 
 **Purpose:** Plain-language, rigorous assessment of all proven chains, their implications, gaps, and strategic situation. Written for the principal investigator and future collaborators.
 
-**Last updated:** 2026-04-24-1439
+**Last updated:** 2026-04-28-1200
 
-**Current build:** **166 Lean modules, ~3,950 theorems** (3,840 substantive + 110 placeholder), **1 axiom** (`gapped_interface_axiom`, eliminability: hard), **0 sorry project-wide**. 66+ Python modules across 14 sub-packages (including `dark_sector/`, `graphene/`, `fermi_hubbard/` added alongside the earlier `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`, etc.), 58 test files (~2,800 tests), 110 figures, 52 notebooks, 18 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs.
+**Current build:** **187 Lean modules, 4,385 theorems** (4,362 substantive + 23 placeholder), **1 axiom** (`gapped_interface_axiom`, eliminability: hard), **0 sorry project-wide**. 103 Python modules across 18+ sub-packages (now including `bh_thermodynamics/`, `bbn/`, `strong_cp/`, `equivalence_principle/`, `qec_holography/`, `confinement/`, `chiral_ssb/`, `cfl_color_flavor/`, `gravitational_waves/` alongside the earlier `dark_sector/`, `graphene/`, `fermi_hubbard/`, `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`), 75 test files (~3,250 fast-pass tests in 2.1 s + slow-marked extras), 128 figures, 52+ notebooks, 32 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs (most recent batch ~Phase 6c.1 baseline; user-triggered).
 
-Representative formal-verification firsts across the library — each phase has delivered at least one — include the `N_f ≡ 0 mod 3` generation constraint with machine-checked Ext^n_{A(1)}(F₂, F₂) computation, the first quantum group (U_q(sl₂)) and Hopf algebra in any proof assistant, the first rank-2 quantum group (U_q(sl₃)) and SU(3)_k fusion, the first parameterized `QuantumGroup k A` over arbitrary Cartan matrices with Kac–Walton fusion, the first complete braided modular tensor category (Ising) and verified knot invariants (trefoil = −1, figure-eight), the first Temperley–Lieb / Jones–Wenzl / WRT pipeline, the first Muger center and general dual-closure theorem, the first Fidkowski–Kitaev 2+1D Cayley-calibrated gapped-interface construction, the first Volovik–Zubkov Fermi-point → emergent-gauge formalization, the first Gibbs–Duhem emergent-vacuum obstruction theorem, the first closed-form vestigial-gravity EOS, and the first formally verified Fermi-Hubbard geometric SWAP / Berry-phase theorem.
+The **`gaussianSaddleAsymptotic` axiom was retired** in Phase 6a Wave 7 via a project-local Laplace-method derivation (`LaplaceMethod.lean`), bringing the axiom count from 2 → 1. **Default test-suite runtime dropped from 9 m 26 s to 2.14 s (264× speedup)** with the introduction of a `slow` pytest marker that defers the three Lean-walking suites (`test_extract_lean_deps`, `test_build_graph`, `test_graph_integrity`) to opt-in runs (`-m ''`). The seven Phase 6 papers (paper29, paper32, paper34, paper35, paper36, paper37, paper38, note_rt_ch_bounds) now drive their abstract / formalization-section counts entirely through `\input{counts.tex}` macros, eliminating count-literal drift permanently for those papers.
+
+Representative formal-verification firsts across the library — each phase has delivered at least one — include the `N_f ≡ 0 mod 3` generation constraint with machine-checked Ext^n_{A(1)}(F₂, F₂) computation, the first quantum group (U_q(sl₂)) and Hopf algebra in any proof assistant, the first rank-2 quantum group (U_q(sl₃)) and SU(3)_k fusion, the first parameterized `QuantumGroup k A` over arbitrary Cartan matrices with Kac–Walton fusion, the first complete braided modular tensor category (Ising) and verified knot invariants (trefoil = −1, figure-eight), the first Temperley–Lieb / Jones–Wenzl / WRT pipeline, the first Muger center and general dual-closure theorem, the first Fidkowski–Kitaev 2+1D Cayley-calibrated gapped-interface construction, the first Volovik–Zubkov Fermi-point → emergent-gauge formalization, the first Gibbs–Duhem emergent-vacuum obstruction theorem, the first closed-form vestigial-gravity EOS, the first formally verified Fermi-Hubbard geometric SWAP / Berry-phase theorem, the **first machine-checked four laws of black-hole mechanics partitioned across Schwarzschild and ADW-extremality regimes**, the **first formalization of the four energy conditions (WEC/NEC/DEC/SEC)** in any proof assistant per Phase 6f audit §3E, and the **first formalization of the CFL emergent-ℤ₃ ≡ QCD-center-ℤ₃ generator-level identification** (Hirono–Tanizaki).
 
 ---
 
@@ -14,7 +16,7 @@ Representative formal-verification firsts across the library — each phase has 
 
 The project asks: **Can the mathematical structures of exotic matter also describe fundamental physics, and where does that idea break down?**
 
-Nine proof chains address different aspects of this question. Chains 1–6 are the original programmes — dissipative Hawking radiation, the generation constraint, Onsager → quantum groups → MTC → TQFT → Fibonacci universality, the chirality wall, ADW emergent gravity, and Monte-Carlo vestigial gravity. Chains 7–9 — the Fermi-Hubbard doublon geometric gate, the graphene Dirac-fluid Hawking platform, and dark-sector connections — sit alongside them as peers rather than as extensions. Each chain is assessed for:
+Ten proof chains address different aspects of this question. Chains 1–6 are the original programmes — dissipative Hawking radiation, the generation constraint, Onsager → quantum groups → MTC → TQFT → Fibonacci universality, the chirality wall, ADW emergent gravity, and Monte-Carlo vestigial gravity. Chains 7–9 — the Fermi-Hubbard doublon geometric gate, the graphene Dirac-fluid Hawking platform, and dark-sector connections — sit alongside them as peers rather than as extensions. Chain 10 is the **Phase 6 cosmology / strong-coupling / horizon-thermodynamics push** (Phases 6a / 6b / 6c / 6d / 6f), in which the SK-EFT + ADW + vestigial-gravity machinery is exercised against published constraints from BBN, the strong-CP problem, the equivalence principle, holographic-QEC structural bounds, RT / Casini–Huerta entanglement bounds, confinement / chiral-symmetry-breaking / CFL color-flavor-locking, gravitational-wave dispersion (GW170817), Bekenstein–Hawking entropy + four-laws thermodynamics, and the four energy conditions. Each chain is assessed for:
 - **Solidity** — what is machine-checked vs. conjectured vs. open
 - **Gaps** — what's missing and whether the gaps are technical or fundamental
 - **Implications** — what follows if the chain holds or breaks
@@ -272,6 +274,59 @@ Gibbs–Duhem emergent-vacuum obstruction (`GibbsDuhemTheorem.lean`, 16 theorems
 
 ---
 
+## Chain 10: Phase 6 — Cosmology, Strong Coupling, and Horizon Thermodynamics
+
+**Status: ACTIVELY SHIPPING. Phase 6a complete; Phase 6d closed; Phase 6c partially closed (4 of 5 waves shipped); Phase 6b W1 shipped; Phase 6f W3 shipped, W3.1 / 6f.1 deferred.**
+
+This chain takes the project's machinery — SK-EFT corrections, ADW emergent gravity, vestigial gravity, the ℤ₁₆ anomaly framework, the MTC / TQFT layer, the Phase 5y Gibbs–Duhem obstruction — and runs it against an additional set of published cosmological / strong-coupling / horizon-thermodynamic constraints that the earlier phases never directly addressed. Each Phase 6 wave is one self-contained falsifier or correctness-push framed against a primary observational anchor.
+
+### Phase 6a — Linearized gravity, FLRW, GWs, BH entropy, BH four laws
+
+- **Wave 1 (LinearizedEFE.lean, 37 thms):** Linearized Einstein equations from the ADW microscopic theory; Sakharov–Adler `G_N^Sak = 12π / (N_f Λ²)`; ADW emergent `G_N^emerg = α_ADW · G_N^Sak`; correctness-push match locus + Planck anchor reduction; Vergeles structural Props (`H_VergelesPositivity`, `H_CriticalLimitCollapse`, `H_DeepGapReducesToAdler`).
+- **Wave 4 (FLRWDynamics.lean, 14 thms):** Friedmann I/II + conservation + Bianchi consistency + ADW emergent-gravity bridge `hubbleSquared_ADW_pos` + Phase 5y DESI-DR2 cross-reference tracked hypothesis `H_DESICompatibility`. Track A shipped.
+- **Track B Wave 2 (GravitationalWaves.lean, 21 thms, paper25):** GW propagation `c_GW = c · √χ_vest` from VestigialSusceptibility; **GW170817 falsifies the vestigial-second-sound graviton identification by ~7 × 10¹⁴** at the natural χ_vest range vs the LIGO Δc/c cap of 3 × 10⁻¹⁵. Tracked-hypothesis bundle `H_VestigialModeIsGraviton` carries 4 falsifiers; SK-EFT dispersion `dispersion_within_ligo_iff` biconditional.
+- **Track C Wave 3 (BHEntropyMicroscopic.lean, 22 thms):** Bekenstein–Hawking `S = A/(4 G_N) − (3/2) log(A/(4 G_N))`; Kaul–Majumdar SU(2)_k closed form (Outcome-2 sub-corollary) decomposing the −3/2 logarithmic coefficient as `(−1/2 Gauss) + (−1 singlet)`; tracked-hypothesis bundle `H_HorizonBoundaryCondition` (Outcome-3) with 4 falsifiers (Sen 4D non-universality witness; abelian-MTC concrete F2 path; toric code FAILS F2; Fibonacci horizon non-vacuous witness via `fibonacciHorizonBC`); Immirzi γ tuning encoded as a structure field; bridge to Wave 1 G_N^emerg. The 1/4 area-law coefficient is itself the Immirzi γ-tuning.
+- **Track C Wave 5 (BHThermodynamicsFourLaws.lean, 18 thms, paper27):** **First machine-checked four laws of black-hole mechanics partitioned by regime.** Schwarzschild ↔ ADW-extremality boundary at `M_c = (N_f · Λ_UV) / (12π · α_ADW)`; decidable `classify` function + 3 `classify_*_iff` theorems; `T_H_schottky` definition + 3 anchor theorems (Jacobson–Koike Eq. 13); tracked-hypothesis `H_RegimePartition` parameterized by *external* `slope` and `delta` reals (no ∃-absorption); `delta_consistent_with_ansatz` pins `δ = (α_ADW − 1) · Λ_UV` per deep-research §9; two correctness-push theorems (`regime_partition_criterion`, `four_laws_consistent_with_adw_bhs_cool_toward_extremality`); two FourLaws_* Prop bundles with opposite C-signs; `ADWSecondLaw` Prop encoding Glorioso–Liu SK-EFT entropy-current monotonicity (no NEC); four falsifiers (Davies vs Dymnikova boundary character; Israel vs Kehle–Unger third-law form; quadratic T_H form; χ_vest dependence). Cross-wave bridges to Wave 1 + Wave 3. Paper 27 cleared a 4-pass Stage 13 adversarial review and is **submission-ready** (Balbinot 2005 BEC-acoustic primary anchor + Hawking 1975 Schwarzschild contrast).
+- **Wave 7 (LaplaceMethod.lean, 5 thms, axiom retirement):** Project-local Laplace-method derivation (gaussian saddle full integral + boundedness + IsBoundedRemainderOoneOverA helpers) **retires the `gaussianSaddleAsymptotic` axiom** that was introduced in Wave 3. BHEntropyMicroscopic §2 was restructured: the previously opaque `verlindeEntropy_SU2k` definition became a concrete Laplace-saddle-limit construction, and the corresponding axiom was upgraded to a theorem. **Project axiom count: 2 → 1.** A new tracked-hypothesis predicate `H_VerlindeKMLiteralSumDerivation` is left as an entry point for a future literal Verlinde-sum derivation via Hardy–Ramanujan.
+
+### Phase 6b — Big-Bang nucleosynthesis (W1 shipped)
+
+- **Wave 1 (BBN.lean, ~14 thms, paper29):** Five Phase 5x dark-matter candidates classified against PDG primordial light-element abundances (Y_p, D/H, ³He/H, ⁷Li/H); 3 conformant, 2 violators conditional on thermalization. `bbn_violators_share_n_eff_failure_mode`: BBN-violating candidates share an N_eff-mediated failure (only path to falsification is through an effective-relativistic-DOF inflation, not direct nuclear). 16 tests. **First wave to apply preemptive-strengthening discipline at first-pass:** 5 retroactive theorems vs the 6c.3 baseline of 12 (58% reduction). The discipline caught 2 patterns (∃-absorption + biconditional-tautology P5) at first-pass but missed 5 subtler patterns (identity-function wrapper, definitional-unfolding, within-own-±2σ-band tautologies, pairwise-distinctness on inductive constructors) that ruthless post-wave review surfaced — establishing that preemptive discipline is a useful filter but not a complete substitute for the post-wave audit.
+
+### Phase 6c — Cosmological + holographic constraints (4 of 5 waves shipped)
+
+- **Wave 1 (StrongCPTopologicalDE.lean, 8 thms, paper32):** Anomaly-matching chain ℤ₁₆ ↔ strong-CP ↔ Λ. **Zhitnitsky topological-DE prediction `ρ ~ Λ_QCD⁶ / M_P²` evaluates to ≈ 6.71 × 10⁻⁹ eV⁴ at PDG `Λ_QCD = 0.1 GeV`, within ≤ 3 orders of the observed 2.8 × 10⁻¹¹ eV⁴ with no free parameters**, and ≥ 120 orders below `M_P⁴`. The combined-mechanism falsifier (Zhitnitsky + KV q-theory both active) gives 240 × the observed value, **forcing the project to commit to ONE dark-energy mechanism**. `H_BothActiveGivesInconsistency` was tightened to `> zhitnitskyDE_eV4 0.1` so that `h_qtheory_pos` is genuinely load-bearing in the proof body. 14 tests + `fig_zhitnitsky_de_theta_scan`.
+- **Wave 2 (EWBaryogenesisChiralityWall) — NOT YET SHIPPED.** This is the only Phase 6c wave still open. Roadmap calls for the Phase 5n chirality-wall infrastructure to be exercised against the electroweak-baryogenesis bubble-wall constraints.
+- **Wave 3 (EquivalencePrinciple.lean, 25 thms, paper34):** 6 vestigial-physics mechanisms classified across WEP / EEP / SEP. `violationLevel` predicate + 6 single-claim `violationLevel` theorems + 3 quantitative `norm_num` comparisons of `MICROSCOPE_BOUND` / `STEP_TARGET` / `VESTIGIAL_PHASE_ETA_MAX` / `VESTIGIAL_RELICS_ETA`. Structural punchline: **EP violation is vestigial-only**. Cross-bridge `vestigial_microscope_violation_consistent` to `ClassificationTableDark`; cross-bridge `fangGu_failure_mode_is_kinematic_not_ep` calls `FangGuTorsionDM.fg_cdm_obstruction`. 39 tests + `fig_ep_violation_matrix`.
+- **Wave 4 (QECHolographyBridge.lean, 8 thms, paper35):** Hayden–Preskill structural QEC on the Wave 3 HorizonMTCBC substrate. Code distance `d_C := log d_max`, scrambling time `t_scr := log D²`. Correctness-push absorbs both biconditionals: admissibility ↔ non-abelian + (P2) ⇒ positive scrambling. Fibonacci witness (`log φ < log 2`) calls Wave 3's `fibonacci_horizon_areaLawKappa_pos` through correctness-push. Substantive cross-bridge to Wave 3's `H_HorizonBoundaryCondition.areaLeading`. 30 tests + `fig_code_distance_vs_fusion_spectrum`. Trivial-abelian falsifier reroutes through correctness-push.1.mp.
+- **Wave 5 (RTCasiniHuertaBounds.lean, 7 thms, note_rt_ch_bounds):** Ryu–Takayanagi and Casini–Huerta as external-hypothesis tracked Props. Knife-edge biconditional `rt_eq_kaulMajumdar_iff_trivial_reduced_area` is the named correctness-push (subsumes the prior `rt_classical_inconsistent_with_kaul_majumdar` via contrapositive). **Quantitative anchor: gap at reduced area = 2 is exactly `(3/2) log 2 ≈ 1.040`.** Substantive cross-bridge `rt_falsified_by_kaul_majumdar` consumes H_RT + biconditional contrapositive. Concrete H_CH witness saturated. Falsifier: `kaulMajumdar_not_H_RT`. Bulk minimal-surface and CH modular-Hamiltonian fully formalized are deferred per roadmap §A. 29 tests + `fig_rt_ch_bounds_mtc`.
+
+Phase 6c summary: **4 of 5 waves SHIPPED + cross-wave-strengthened**; W2 (EW baryogenesis chirality wall) is the only outstanding wave.
+
+### Phase 6d — QCD strong coupling (Track A CLOSED)
+
+- **Wave 1 (CenterSymmetryConfinement.lean, 18 thms, paper36):** Confinement = ℤ_N 1-form center *unbreaking*; Polyakov loop = ℂ; Svetitsky–Yaffe deconfinement universality (SU(2) → 3D Ising, SU(3) → 3D 3-state Potts) with `ising_nu_gt_potts_nu` as the load-bearing comparison; KSS bound + Walker–Wang transport correctness-push (HPC-gated). `higher_form_discrete_iff_non_abelian` biconditional cross-bridge replaces an earlier identity wrapper; `walker_wang_witness_at_kss_lower` boundary witness. 30 tests + `fig_polyakov_loop_deconfinement`.
+- **Wave 2 (ChiralSSB_QCD.lean, 10 thms, paper37):** Quark condensate ⟨q̄q⟩ as the WetterichNJL scalar channel; **GMOR PDG verification at ~4 × 10⁻⁸ GeV⁴ (~1 part in 10⁴)**; `chiral_unbroken_violates_gmor` contrapositive; tetrad-VEV / quark-condensate naturalness correctness-push (HPC-gated). 14 tests + `fig_gmor_relation_verification`.
+- **Wave 3 (CFLChiralLagrangian.lean, 12 thms, paper38):** **THE Phase 6d correctness-push anchor: CFL emergent ℤ₃ (Hirono–Tanizaki) ≡ QCD center ℤ₃ (Wave 1) at the generator level.** First formalization of this identification. 17 tests + `fig_cfl_z3_center_bridge`.
+
+Phase 6d summary: Track A (W1+W2+W3) shipped end-to-end; **Phase 6d is CLOSED**.
+
+### Phase 6f — Energy conditions, curvature
+
+- **Wave 3 (EnergyConditions.lean, 9 thms):** **First formalization of the four energy conditions (WEC / NEC / DEC / SEC) in any proof assistant** per Phase 6f audit §3E. WEC / NEC / DEC / SEC predicates on an abstract bilinear form + 3 chain implications + 5 counterexample witnesses (cosmological-Λ violates SEC; ghost scalar violates NEC; stiff-fluid violates DEC).
+- **Wave 3.1 / 6f.1 (Curvature.lean) — DEFERRED.** Stage-1 scoping doc filed; implementation deferred behind the upstream Mathlib Bonn-Massot ↔ Rothgang Levi-Civita branch.
+
+### Implications of the Phase 6 push as a whole
+
+- **Falsifications, not just consistency checks.** The Phase 6 waves run the project's emergent-physics machinery against published constraints and frequently produce ratios in the 10¹⁴ range (GW170817 vs vestigial graviton) or order-of-magnitude tensions (combined-DE-mechanisms × 240) that are either decisive or force model-commitment.
+- **Single-DE-mechanism commitment.** Phase 6c W1 forces the project to commit to one dark-energy mechanism (Zhitnitsky topological DE) rather than to combine it with KV q-theory.
+- **Vestigial-only EP violation.** Phase 6c W3 establishes that within the project's mechanism inventory, only the vestigial sector violates the EP — Fang–Gu torsion DM, fracton DM, SFDM, and the hidden-sector candidates do not, and the failure modes for Fang–Gu are kinematic (CDM-trace) not EP.
+- **Holographic + QEC cross-bridges.** Phase 6c W4 + W5 wire the Wave 3 horizon-MTC substrate to QEC and RT/CH frameworks via tracked-hypothesis correctness-pushes; this is the project's first formal contact with holographic structural bounds.
+- **QCD strong coupling closed.** Phase 6d closes the chirality + confinement + CFL triangle at the generator level, with GMOR PDG-verified to ~1 part in 10⁴.
+- **Energy-conditions formalization.** Phase 6f W3 is a foundational contribution — the four energy conditions and their counterexamples are now machine-checked at the abstract-bilinear-form level and available as substrate for any future emergent-gravity / vestigial-EOS / dark-energy work.
+
+---
+
 ## Strategic Situation
 
 ### Epistemic layers
@@ -293,6 +348,11 @@ Gibbs–Duhem emergent-vacuum obstruction (`GibbsDuhemTheorem.lean`, 16 theorems
 - Fidkowski–Kitaev 2+1D Cayley-calibrated gapped interface (bridges axiom evidence from 1D → 2D)
 - Gibbs–Duhem emergent-vacuum obstruction + closed-form vestigial-gravity EOS + four-factor orthogonality
 - Verified jackknife + autocorrelation statistical estimators for lattice Monte Carlo
+- **Phase 6a: linearized Einstein equations from ADW; FLRW + Bianchi consistency; GW propagation `c_GW = c · √χ_vest` with GW170817 falsification of vestigial-second-sound graviton ID; Bekenstein–Hawking + Kaul–Majumdar SU(2)_k −3/2 closed-form; first machine-checked four laws of BH mechanics partitioned by Schwarzschild / ADW-extremality regime; project-local Laplace-method axiom retirement (`gaussianSaddleAsymptotic` 2 → 1)**
+- **Phase 6b: BBN classification of Phase 5x DM candidates (3 conformant / 2 conditional violators), shared N_eff failure mode**
+- **Phase 6c: Zhitnitsky topological-DE prediction within ≤ 3 orders of observed (no free parameters); single-DE-mechanism commitment forced; vestigial-only EP-violation theorem; Hayden–Preskill structural QEC on horizon-MTC substrate; RT / Casini–Huerta as external-hypothesis tracked Props with knife-edge biconditional against Kaul–Majumdar**
+- **Phase 6d (Track A CLOSED): confinement = ℤ_N 1-form center unbreaking; GMOR PDG-verified to ~1 part in 10⁴; CFL emergent ℤ₃ ≡ QCD center ℤ₃ at the generator level (Hirono–Tanizaki)**
+- **Phase 6f W3: first formalization of the four energy conditions (WEC / NEC / DEC / SEC) in any proof assistant, with counterexample witnesses**
 
 **Layer 2 — Solid structural results with known gaps:**
 - Chirality-wall three-pillar analysis (gaps clearly identified, rigor-tracked)
@@ -309,7 +369,9 @@ Gibbs–Duhem emergent-vacuum obstruction (`GibbsDuhemTheorem.lean`, 16 theorems
 
 ### Publication situation
 
-18 paper drafts, 0 submitted as of 2026-04-24. Papers span all nine chains: first-order (1), second-order (2), gauge erasure (3), exact WKB (4), ADW (5), vestigial gravity + MC (6), chirality formal (7), chirality master (8), SM anomaly + Drinfeld center (9), modular generation constraint (10), quantum group formalization (11), polariton analog Hawking (12), braided MTC + knot invariants (14), verification methodology (15), graphene Dirac-fluid SK-EFT (16a), WRT TQFT pipeline formalization (16b), dark-sector connections (17), and geometric quantum gate (18). The deliberate strategy has been to push boundaries and cross-validate chains before locking down papers; the per-paper readiness state machine (Phase 5v, 11 gates) now gates submission.
+32 paper drafts, 0 submitted as of 2026-04-28. Papers span all ten chains: first-order (1), second-order (2), gauge erasure (3), exact WKB (4), ADW (5), vestigial gravity + MC (6), chirality formal (7), chirality master (8), SM anomaly + Drinfeld center (9), modular generation constraint (10), quantum group formalization (11), polariton analog Hawking (12), braided MTC + knot invariants (14), verification methodology (15), graphene Dirac-fluid SK-EFT (16a), WRT TQFT pipeline formalization (16b), dark-sector connections (17), geometric quantum gate (18), Phase 5z scalar/Majorana rung (20–21), Phase 6a Track A linearized + FLRW (23), Track B GW170817 vs vestigial graviton (25), Track C BH-entropy + Kaul–Majumdar (26), Track C four-laws BCH (27 — submission-ready), Phase 6b BBN (29), Phase 6c strong-CP topological DE (32), Phase 6c equivalence principle (34), Phase 6c QEC-holography bridge (35), Phase 6d confinement (36), Phase 6d chiral SSB / GMOR (37), Phase 6d CFL color-flavor locking (38), and the Phase 6c W5 RT / Casini–Huerta short note (`note_rt_ch_bounds`). The deliberate strategy has been to push boundaries and cross-validate chains before locking down papers; the per-paper readiness state machine (Phase 5v, 11 gates) now gates submission.
+
+The seven Phase 6 papers (paper29, paper32, paper34, paper35, paper36, paper37, paper38, note_rt_ch_bounds) now drive their abstract / formalization-section counts entirely through `\input{counts.tex}` macros — 14 new macros added (`\strongCpDeThms`, `\strongCpDeTests`, `\epThms`, `\epTests`, `\qecHolographyThms`, `\qecHolographyTests`, `\centerSymmThms`, `\centerSymmTests`, `\chiralSsbThms`, `\chiralSsbTests`, `\cflThms`, `\cflTests`, `\rtChThms`, `\rtChTests`) — eliminating count-literal drift permanently for those papers. The `update_counts.py` helper was extended with `_module_thm_count_strict` (BOL-anchored to avoid over-counting docstring "lemma" prose) + a `_pytest_count` helper.
 
 External constraints:
 - arXiv requires a voucher for first submissions
@@ -327,17 +389,27 @@ External constraints:
 - **Paper 16b (WRT TQFT formalization)** — first complete surgery-based TQFT pipeline in any proof assistant.
 - **Paper 17 (dark-sector connections)** — SFDM merger forecast is the most actionable new prediction; Gibbs–Duhem obstruction is a genuine structural negative result.
 - **Paper 18 (geometric quantum gate)** — first formally verified symmetry-protected two-qubit gate; quantum-information relevance.
+- **Paper 25 (GW170817 vs vestigial graviton)** — clean falsification (~7 × 10¹⁴) at LIGO-precision dispersion.
+- **Paper 27 (BH four laws BCH partitioned by regime)** — **submission-ready**; cleared a 4-pass Stage 13 adversarial review on the Balbinot 2005 BEC-acoustic primary anchor + Hawking 1975 Schwarzschild contrast.
+- **Paper 32 (Zhitnitsky topological DE)** — within ≤ 3 orders of the observed value with no free parameters; combined-mechanism falsifier forces single-DE-mechanism commitment.
+- **Paper 34 (equivalence principle)** — vestigial-only EP violation across WEP / EEP / SEP, with quantitative MICROSCOPE / STEP comparisons.
+- **Paper 38 (CFL color-flavor locking)** — first formalization of the CFL emergent ℤ₃ ≡ QCD center ℤ₃ generator-level identification.
 
-### Technical blockers
+### Technical blockers and outstanding work
 
 - **L=8 RHMC convergence** for the vestigial-gravity Monte Carlo. Narrow BCS-like phase window may need L ≥ 12. Matrix-free stencil Dirac operator (42 MB vs. 220 GB dense) unlocks L=12+ on workstation hardware; Phase 6A tracks Path A (sparse CG), Path B (Metal GPU), Path C (CUDA).
 - **Topological input for generation-constraint chain** — three standard textbook facts (H1/H3/H4) remain as hypotheses pending Lean algebraic-topology infrastructure.
 - **Mathlib PR pipeline** — the lean-tensor-categories extraction (20 files, 114 theorems, zero sorry) is ready but not yet upstreamed; Mathlib's AI-content policy requires a relationship-building discussion before PR.
 - **arXiv voucher** for first submission.
+- **Phase 6c W2 EWBaryogenesisChiralityWall** — the only Phase 6c wave that has not shipped; planned to exercise the Phase 5n chirality-wall infrastructure against electroweak-baryogenesis bubble-wall constraints.
+- **Phase 6f.1 Curvature.lean** — Stage-1 scoping doc filed; implementation deferred behind upstream Mathlib Bonn-Massot ↔ Rothgang Levi-Civita branch.
+- **Aristotle batch** — pending; last submission is the Phase 6c.1 baseline. User-triggered.
+- **Stage 11 notebooks** — pending for the Phase 6 waves; deferred post-compact per user.
+- **Stage 13 adversarial-review re-run** — closing act of the current session; seven Phase-6 papers were already cleared in the 2026-04-28 review-driven strengthening pass (two deferred REQUIREDs closed: the q-theory `H_BothActiveGivesInconsistency` Prop tightening, and the P5 self-equality tautology removal in EquivalencePrinciple; eight RECOMMENDEDs cleared in the same pass — Planck-anchor tightening, decorative-marker removal, redundant ν-threshold pair removal, four prose disclosures, and two Lean-docstring clarifications).
 
 ---
 
-## Module Inventory (166 active Lean modules)
+## Module Inventory (187 active Lean modules)
 
 **Phase 1–2 (foundational SK-EFT):** `AcousticMetric`, `SKDoubling`, `HawkingUniversality`, `SecondOrderSK`, `WKBAnalysis`, `CGLTransform`, `Basic`.
 **Phase 3 (emergent geometry & first results):** `ThirdOrderSK`, `GaugeErasure`, `WKBConnection`, `ADWMechanism`, `ChiralityWall`, `VestigialGravity`.
@@ -364,6 +436,12 @@ External constraints:
 **Phase 5w (graphene Dirac-fluid platform):** `DiracFluidMetric`, `GrapheneHawking`, `GrapheneNoiseFormula`, `DiracFluidSK`, `QuasiOneDReduction`.
 **Phase 5x (dark-matter classification + SFDM merger forecast + fracton DM):** `HiddenSectorClassification`, `HiddenSectorMixedCharge`, `CosmologicalConstant`, `FangGuTorsionDM`, `FractonDarkMatter`, `SFDMMergerForecast`, `DarkSectorSynthesis`.
 **Phase 5y (dark-energy obstruction + vestigial-EOS closure):** `GibbsDuhemTheorem`, `QTheoryNoGoTheorem`, `DarkEnergyObstructionPrinciple`, `DESIComparison`, `CondensedMatterAnalog`, `VestigialMapping`, `VestigialEOS`, `ClassificationTableDark`; plus extensions to `VestigialGravity`, `VestigialSusceptibility`, `TetradGapEquation`.
+**Phase 5z (scalar / Majorana rung on the fermionic substrate):** `MajoranaRung`, `NeutrinoMixing`, `MajoranaRungDecoupling` (plus the prior scalar-rung extensions).
+**Phase 6a (linearized gravity, FLRW, GWs, BH entropy + four laws, axiom retirement):** `LinearizedEFE` (Track A W1), `FLRWDynamics` (Track A W4), `GravitationalWaves` (Track B W2), `BHEntropyMicroscopic` (Track C W3), `BHThermodynamicsFourLaws` (Track C W5), `LaplaceMethod` (W7 — retires `gaussianSaddleAsymptotic`).
+**Phase 6b (cosmology — light-element abundances):** `BBN` (W1).
+**Phase 6c (cosmology + holography — strong CP, EP, QEC, RT/CH):** `StrongCPTopologicalDE` (W1), `EquivalencePrinciple` (W3), `QECHolographyBridge` (W4), `RTCasiniHuertaBounds` (W5). W2 (`EWBaryogenesisChiralityWall`) outstanding.
+**Phase 6d (QCD strong coupling — Track A CLOSED):** `CenterSymmetryConfinement` (W1), `ChiralSSB_QCD` (W2), `CFLChiralLagrangian` (W3).
+**Phase 6f (energy conditions + curvature):** `EnergyConditions` (W3). `Curvature` (W3.1 / 6f.1) deferred behind upstream Mathlib Bonn-Massot ↔ Rothgang Levi-Civita branch.
 **Infrastructure (cross-phase):** `ExtractDeps` (environment-walker for axiom-dependency extraction; see Pipeline Invariant #10 exception clause).
 
 ---

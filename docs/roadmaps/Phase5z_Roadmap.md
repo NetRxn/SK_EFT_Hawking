@@ -4,6 +4,8 @@
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22). First new phase after the Phase 5y closure and five-NO-GO dark-energy sweep.*
 
+**Status update 2026-04-27:** Phase 5z is now **FOUR WAVES SHIPPED + ONE WAVE OPEN (Wave 4)**. Wave 1 (Track A flavor-singlet `ScalarRungInterpretation`), Wave 1b (Track A BHL gauge embedding `BHLGaugeEmbedding`), Wave 2 (Track B `MajoranaRung` + `NeutrinoMixing` + `MajoranaRungDecoupling`), and Wave 3 (Track C `EWPhaseTransition`) all shipped end-to-end through Stages 1–8 + 10 (Stages 9 + 13 user-triggered). **Wave 4 (Track B continuation — Symmetric Mass Generation route to the Majorana rung)** is **OPEN** as a follow-up to the Wave 2 BCS-bridge no-go theorem (`lepton_number_symmetry_obstructs_BCS_form` in `MajoranaRung.lean`). Wave 4 motivation, scope, and pre-read package are documented in [§Wave 4 below](#wave-4--majoranarungsmglean-5zw4-pipeline-stages-18--10). If Wave 4 closes positively, escalate to standalone **Phase 6h (Substrate Phase Diagram and Symmetric Mass Generation)** per `docs/roadmaps/Phase6h_Roadmap.md`.
+
 **Status update 2026-04-26-1340:** Phase 5z is now **FOUR WAVES SHIPPED**. Wave 1 (Track A flavor-singlet `ScalarRungInterpretation`), Wave 1b (Track A BHL gauge embedding `BHLGaugeEmbedding`), Wave 2 (Track B `MajoranaRung` + `NeutrinoMixing`), and Wave 3 (Track C `EWPhaseTransition`) all shipped end-to-end through Stages 1–8 + 10 (Stages 9 + 13 user-triggered). **Wave 3 shipped 2026-04-26**: `EWPhaseTransition.lean` 19 theorems + 1 structure + 12 defs, zero sorry, zero new axioms. Implements the LO high-T finite-T potential (Anderson-Hall, Quiros), critical temperature `T_c = √(μ²/c_T)`, latent-heat order parameter, first-order/crossover predicate (cubic-coefficient sign), SM benchmark (`m_H = 125.20`, `λ = 0.13`, `c_T = 0.4`, `E ≈ 0.01`, `T_c ≈ 139` GeV), KLRS 1996 lattice crossover threshold (m_H = 72 GeV), `crossover_excludes_baryogenesis` load-bearing exclusion theorem (Phase 6c.2 input). Tracked hypotheses: `H_VacuumStableUnderRG` (Buttazzo+ 2013 metastability) + `H_HierarchyEWLambdaUV` (Λ_UV ≫ v_EW). Adds figure `fig_ew_transition_phase_diagram` (5 traces, 2-panel V_T(φ) profiles + (m_H, E) phase partition) + 36 pytest in `tests/test_ew_phase_transition.py` + Python `src/ew_phase_transition/` (3 modules) + 4 `formulas.py` additions (`ew_finite_t_potential`, `ew_thermal_mass_sq`, `ew_critical_temperature`, `ew_latent_heat`) + 3 new bibkeys (`KLRS1996`, `ButtazzoEtAl2013`, `ShaposhnikovWetterich2010`). New paper `papers/paper22_ew_phase_transition/paper_draft.tex` (PRD format, 4 pages, 372 KB).
 
 **Status update 2026-04-26-1300:** Wave 1b (`BHLGaugeEmbedding.lean`) shipped through Stages 1–8 + 10: 23 theorems + 3 structures + 15 defs, zero sorry, zero new axioms. Implements the BHL gauge-embedding transplant per O.2 verdict (Scenario A 3/5): extended Fierz basis dim count, gauge-covariance tracked hypotheses, concrete BHL `m_H = √2 m_t`, BHL gap problem (`bhl_minimal_overshoots_pdg`), Hill 2025 bilocal correction recovery (`bilocal_correction_can_match_pdg` at dilution 0.402). Adds figure `fig_bhl_bilocal_correction` (4 traces, 2-panel) + 24 pytest in `tests/test_bhl_embedding.py` + Python `src/scalar_rung/bhl_embedding.py` + 5 `formulas.py` additions + 4 new bibkeys (MTY1989, Hill2025Redux, AAA2020, Cvetic1999). Paper 20 expanded with §6 BHL Gauge Embedding (6 pages, 611 KB). Stages 9 (figure review) + 13 (adversarial) are user-triggered.
@@ -228,6 +230,161 @@ The order of the electroweak phase transition (first-order vs crossover) is a mi
 
 ---
 
+## Track B continued — SMG Alternative for the Majorana Rung (5z.W4)
+
+### Wave 4 — `MajoranaRungSMG.lean` [5z.W4] [Pipeline: Stages 1–8 + 10]
+
+**Status (2026-04-27):** **OPEN** — proposed follow-up to Wave 2 conditional on the Wave 2a/2b deep-research returns. **Triggered by the structural observation** that the BCS-exponential substrate-bridge for `M_R` (`H_MR_FromADWSubstrate_BCS_LNV`, `MajoranaRung.lean`) carries an L-symmetry obstruction (`lepton_number_symmetry_obstructs_BCS_form`) that no published source closes. **Symmetric Mass Generation (SMG)** is a structurally distinct mechanism that gaps fermions *without* requiring lepton-number violation, and recent lattice evidence (Hasenfratz-Witzel arXiv:2412.10322 + arXiv:2511.22678, 2024-2025) confirms an SMG phase exists for SU(3) with N_f=8 fundamental fermions in the **continuum limit**. Wave 4 ships the parallel SMG-route substrate-bridge as a tracked-hypothesis alternative to the BCS form, with quantitative anchoring from the Hasenfratz-Witzel lattice results.
+
+**Goal:** Add a parallel SMG-route substrate-bridge tracked hypothesis to the Majorana-rung infrastructure, demonstrate that the SMG mechanism is *not* obstructed by lepton-number symmetry, and predict `M_R` from the substrate's SMG-gap scale `Λ_SMG` using Hasenfratz-Witzel-style lattice anchors.
+
+**Prerequisites (all SHIPPED):**
+- Wave 2 (`MajoranaRung.lean`) — the BCS branch we're paralleling
+- Wave 2b (`MajoranaRungDecoupling.lean`) — IR-equivalence framework (SMG and Embedding I must agree in the decoupling regime)
+- Phase 5x Wave 2 (`HiddenSectorClassification.lean`) — Catterall's 16-Weyl-per-generation lattice manifestation of ℤ₁₆
+- Wave 1b (`BHLGaugeEmbedding.lean`) — Fierz-complete substrate-channel infrastructure (Braun-Leonhardt-Pawlowski I/II/III diquark channel transplant)
+
+**Module structure:**
+- `lean/SKEFTHawking/MajoranaRungSMG.lean`
+  - `structure SMGSubstrateData` — substrate parameters in the SMG window: `(Λ_UV, N_f, G_c, c_SMG)` plus positivity / ordering constraints
+  - `def H_SubstrateNearSMGFixedPoint (s : SMGSubstrateData) (Λ_SMG : ℝ) : Prop` — tracked hypothesis that substrate parameters sit in a Hasenfratz-Witzel-style SMG window with a definite gap scale `Λ_SMG > 0`. Non-vacuous: requires `0.1 < c_SMG < 1` (Hasenfratz-Witzel band) and `Λ_SMG = c_SMG · Λ_UV / strong_coupling_factor(N_f, G_c)`
+  - `def H_MR_FromSMGGap (m : MajoranaRungData) (Λ_SMG : ℝ) : Prop` — `∀ i, ∃ c_i ∈ (0, 1], M_R i = c_i · Λ_SMG`. **No `H_LeptonNumberViolated` precondition** (compare with `H_MR_FromADWSubstrate_BCS_LNV` which conjoins `H_LeptonNumberViolated G_LV`).
+  - **Bypass theorem (load-bearing):** `theorem smg_route_does_not_require_LNV` — explicit statement that `H_MR_FromSMGGap` is independent of `H_LeptonNumberViolated`. Discharges by structural inspection: the predicate's conjunction does NOT include `H_LeptonNumberViolated`. Mirror of `lepton_number_symmetry_obstructs_BCS_form` showing the BCS branch *requires* it.
+  - **ℤ₁₆ compatibility theorem:** `theorem smg_route_consistent_with_z16_singlet` — the Catterall-Kähler-Dirac 16-Weyl-per-generation lattice manifestation (`Z16AnomalyComputation.three_nu_R_cancel_three_gen` + `HiddenSectorClassification.three_singlets_satisfy_hidden_sector`) is structurally compatible with the SMG mechanism. Explicit cross-bridge call.
+  - **Disjointness theorem:** `theorem smg_and_BCS_apply_in_distinct_substrate_regimes` — under `H_LeptonNumberViolated G_LV = false` (substrate L-symmetric), only the SMG branch is admissible; under `H_LeptonNumberViolated G_LV = true` *and* `G_M > G_c`, only the BCS branch is admissible. Two non-overlapping sufficient conditions.
+  - **Quantitative anchor (Hasenfratz-Witzel scaling):** `theorem smg_window_predicts_M_R_in_seesaw_band` — under `H_SubstrateNearSMGFixedPoint` with Hasenfratz-Witzel-band `c_SMG ∈ [0.1, 1.0]` and `Λ_UV = M_Pl`, the predicted `Λ_SMG ∈ [10^9, 10^15]` GeV — exactly the Type-I seesaw `M_R` band. `norm_num`-backed.
+  - **Falsifiability witness:** `theorem not_isObservedSeesawMatch_under_SMG_below_band` — if a substrate's predicted `Λ_SMG < 10^9` GeV (below the lower seesaw band), `seesawNeutrinoMass` exceeds the NuFit-6.0 m_ν band → SMG-route falsified at that parameter point.
+  - **IR-equivalence cross-bridge:** `theorem smg_amplitude_difference_satisfies_AC_bound` — calls `MajoranaRungDecoupling.H_DecouplingBoundDim6_consistent` to show SMG-route Embedding III predictions satisfy the same Appelquist-Carazzone bound vs Embedding I that the BCS-route does.
+  - `def Wave4OpenManifest (m : MajoranaRungData) : Prop` — non-vacuous parametric bundle of OPEN-W4-{1,2,3} (analogous to Wave 2's `Wave2OpenManifest`):
+    - OPEN-W4-1: `H_SubstrateNearSMGFixedPoint` (substrate sits in SMG window — open until lattice MC of ADW substrate near Hasenfratz-Witzel parameters)
+    - OPEN-W4-2: `H_MR_FromSMGGap` (M_R coefficient `c_i` per generation — open until Catterall-mirror-decoupling geometry computed for ADW substrate)
+    - OPEN-W4-3: Catterall-Pati-Salam structure on ADW substrate (lattice MC verification)
+  - `theorem wave4_open_manifest_consistent` — non-vacuity construction at archetype `c_SMG = 0.5`, `Λ_UV = 10^16` GeV, `Λ_SMG = 5·10^15` GeV
+- Target: **10–14 substantive theorems**, 0 sorry, 0 new axioms
+
+**Python side:**
+- `src/majorana_rung/smg.py` — Λ_SMG numerical estimation
+  - `smg_gap_from_substrate_params(Lambda_UV, N_f, G_c, c_SMG=0.5)` — Λ_SMG estimator (Hasenfratz-Witzel scaling)
+  - `m_r_from_smg_gap(Lambda_SMG, c_i=1.0)` — M_R from SMG mechanism (parallels `seesaw_m_r_from_observed`)
+  - Hasenfratz-Witzel anchor: SU(3) N_f=8 → Λ_D ≈ 13 GeV (their reported strong-coupling SMG window) → m_baryon ≈ 3Λ_D ≈ 40 GeV
+  - Mapping to ADW substrate: `Λ_SMG = c_SMG · Λ_UV` (scope-locked dimensional ansatz; substrate-specific dimensionless coefficient `c_SMG` is OPEN-W4-1)
+- `src/core/formulas.py` additions:
+  - `smg_gap_substrate(Lambda_UV, c_SMG)` with `Lean: MajoranaRungSMG.H_SubstrateNearSMGFixedPoint` ref
+  - `m_r_smg_from_gap(Lambda_SMG, c_i)` with `Lean: MajoranaRungSMG.H_MR_FromSMGGap` ref
+- `src/core/constants.py` additions to `MAJORANA_PARAMS`:
+  - `'C_SMG_HASENFRATZ_WITZEL_LOWER': 0.1` (tracked, lattice-anchored)
+  - `'C_SMG_HASENFRATZ_WITZEL_UPPER': 1.0` (tracked, lattice-anchored)
+  - `'C_SMG_FIDUCIAL': 0.5` (PROJECTED tier in `PARAMETER_PROVENANCE`)
+- `tests/test_majorana_rung_smg.py` — ~12 pytest covering SMG-route algebra, Hasenfratz-Witzel band consistency, BCS-vs-SMG disjointness round-trip, falsifiability witnesses
+
+**Bridges:**
+- Mirrors Wave 2 (`MajoranaRung.lean`) — same target observable (`M_R` per generation), structurally distinct mechanism
+- Reuses Wave 2b (`MajoranaRungDecoupling.lean`) — IR predictions converge in the decoupling regime via Appelquist-Carazzone bound
+- Cross-bridges to Phase 5x `HiddenSectorClassification.lean` via Catterall's 16-Weyl unit (Catterall arXiv:2311.02487, SciPost Phys. 16, 108, 2024)
+- Sets up **Phase 6h** (Substrate Phase Diagram and Symmetric Mass Generation) — escalation path if Wave 4 closes positively
+
+**Deliverables:**
+- Module zero-sorry, building clean
+- 10–14 substantive theorems, 0 new axioms
+- `tests/test_majorana_rung_smg.py` (~12 tests)
+- Either a §-extension of Paper 21 (preferred — Paper 21 already covers the BCS branch and the no-go; SMG would be a new §7 "Alternative Mechanism via Symmetric Mass Generation") OR a new short note `papers/note_smg_majorana_rung/`
+- Inventory update: +10–14 theorems, +1 Lean module (`MajoranaRungSMG.lean`), +1 Python module (`src/majorana_rung/smg.py`), +1 paper extension or short note
+- 4–6 new bibkeys in CITATION_REGISTRY (all `doi_verified: True` after Stage 13 WebFetch round):
+  - HasenfratzWitzel2024 (arXiv:2412.10322)
+  - HasenfratzWitzel2025 (arXiv:2511.22678)
+  - Catterall2024 (arXiv:2311.02487, SciPost Phys. 16 108 2024)
+  - RazamatTong2021 (PRX 11 011063 2021)
+  - WanWang2025 (arXiv:2512.25038) — K-gauge TQFT anomaly tables
+  - BraunLeonhardtPospiech2017 (PRD 96 076003 2017) [if not already from Wave 1b]
+
+**Estimated LOE:** **3–5 person-months**
+**Risk:** **medium**. **Two failure modes are publishable:**
+- **(a) Positive closure:** `Λ_SMG → M_R` works under Hasenfratz-Witzel band, predicts phenomenologically reasonable `M_R` band → SMG branch becomes preferred substrate-bridge mechanism, **escalates to Phase 6h** for the full multi-sector story (substrate phase diagram, light-fermion hierarchy, Pati-Salam emergence).
+- **(b) Second no-go:** the substrate's natural parameter range does NOT include the Hasenfratz-Witzel SMG window, OR the lattice scaling does NOT extrapolate to `M_R` in the seesaw band → ships as a strengthened obstruction note covering both BCS *and* SMG branches. That's a harder no-go, more structurally informative — closes the substrate-bridge derivation as impossible-in-current-substrate-models.
+
+**Correctness-push highlight.** SMG potentially recovers `M_R` *without* the L-symmetry obstruction and with Hasenfratz-Witzel lattice quantitative anchoring. If validated, `M_R` becomes a *prediction* (computed from substrate parameters via lattice-anchored scaling) rather than a *fit* (set externally to match neutrino masses). This completes the seesaw correctness-push that Wave 2 left as structural-only.
+
+---
+
+#### Pre-read package for an agent picking up Wave 4 with a fresh context
+
+> **Read these in order, end-to-end (no subagent depth-reading per CLAUDE.md):**
+>
+> 1. **Mandatory project bootstrap (CLAUDE.md §"Mandatory References"):**
+>    - `CLAUDE.md`
+>    - `SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md` (14-stage pipeline; Stages 1–8 + 10 mandatory for Wave 4, Stages 9 + 13 user-triggered)
+>    - `SK_EFT_Hawking/SK_EFT_Hawking_Inventory_Index.md` (current state)
+>    - `SK_EFT_Hawking/README.MD`
+>    - `temporary/working-docs/brainstorm/20260413-context-lean-dev/Lean-Development-Optimization.txt` — read before MCP Lean session
+>    - `SK_EFT_Hawking/docs/references/Theorm_Proving_Aristotle_Lean.md` — read if Aristotle session anticipated
+>
+> 2. **This roadmap (Phase 5z, this file):**
+>    - Wave 2 section above (the structural baseline this wave parallels)
+>    - Wave 4 (this section)
+>    - Decision Gate Z.4 (below)
+>
+> 3. **Existing Lean modules (read directly with `Read` tool, full files):**
+>    - `lean/SKEFTHawking/MajoranaRung.lean` — Wave 2 BCS branch (load-bearing structural baseline)
+>    - `lean/SKEFTHawking/MajoranaRungDecoupling.lean` — Wave 2b decoupling-regime infrastructure
+>    - `lean/SKEFTHawking/NeutrinoMixing.lean` — Wave 2 PMNS structure note
+>    - `lean/SKEFTHawking/Z16AnomalyComputation.lean` — `three_nu_R_cancel_three_gen` (cross-bridge target)
+>    - `lean/SKEFTHawking/HiddenSectorClassification.lean` — `three_singlets_satisfy_hidden_sector` (cross-bridge target)
+>    - `lean/SKEFTHawking/WetterichNJL.lean` + `lean/SKEFTHawking/BHLGaugeEmbedding.lean` — substrate Fierz-channel infrastructure (Braun-Leonhardt-Pawlowski transplant template)
+>
+> 4. **Existing Python (read directly):**
+>    - `src/core/formulas.py:6612-6900` — neutrino formula block (seesaw, PMNS, decoupling, Weinberg)
+>    - `src/core/constants.py:1908` (`MAJORANA_PARAMS` dict)
+>    - `src/core/provenance.py` — `PARAMETER_PROVENANCE` registry pattern
+>    - `tests/test_majorana_rung.py` — existing 40 tests (template for SMG test file)
+>
+> 5. **Critical deep-research dossiers (read directly, not via subagent — per CLAUDE.md):**
+>    - `Lit-Search/Phase-5x/ℤ₁₆ Anomaly-Forced Hidden Sector  Dark Matter Candidate Constraints.md` — **load-bearing.** §2.10 Razamat-Tong s-confinement (gaps 16 Weyl preserving Spin × ℤ₄), §2.11 SMG phase as dark sector, §2.6-2.8 Hasenfratz-Witzel SU(3) N_f=8 lattice evidence (continuum-limit confirmation in EPS-HEP2025).
+>    - `Lit-Search/Phase-5b/Formalizing bidirectional anomaly constraints in theoretical physics.md` — **load-bearing.** §6 Catterall Kähler-Dirac → Pati-Salam structure from SMG mirror decoupling.
+>    - `Lit-Search/Phase-5z/Phase 5z Wave 2a — Majorana-Channel Projection of the Tetrad Gap Equation.md` — **load-bearing.** §3 Q1 (FRG-NJL Fierz-complete machinery from Braun-Leonhardt-Pawlowski I/II/III, includes diquark channels needed for SMG projection); §6 Q5 publishability assessment (BCS no-go is Scenario B, SMG would be a new Scenario D).
+>    - `Lit-Search/Phase-5z/Phase 5z, Wave 2 — Sterile-Neutrino Embedding for the Majorana Rung.md` — Embedding III recommendation context.
+>    - `Lit-Search/Phase-5f/Two-loop NJL gap equation for tetrad condensation.md` — NJL/FRG infrastructure context (CJT scheme dependence; tetrad-channel structural advantages).
+>    - `Lit-Search/Phase-3/The ADW mean-field gap equation for tetrad condensation with emergent Dirac fermions.md` — substrate Hubbard-Stratonovich landscape (no published HS for ADW 8-fermion action).
+>    - `Lit-Search/Phase-5/Phase_5_follow-up_Effective nearest-neighbor action in ADW tetrad condensation after SO(4) Haar integration.md` — **load-bearing for OPEN-W4-1.** Vladimirov-Diakonov 5 8-fermion + 3 4-fermion couplings; Peter-Weyl decomposition.
+>
+> 6. **Key external papers (titles + arXiv IDs; fetch via WebFetch at Stage 13 verification):**
+>    - Hasenfratz & Witzel, "Investigating SU(3) with Nf=8 fundamental fermions at strong coupling," arXiv:2412.10322 (2024)
+>    - Hasenfratz & Witzel, "Symmetric Mass Generation," arXiv:2511.22678 (2025) — EPS-HEP2025 proceedings, continuum-limit confirmation
+>    - Catterall, "From the bottom up: a Pati-Salam GUT in 4D from a single fermion field," arXiv:2311.02487, SciPost Phys. 16 108 (2024)
+>    - Razamat & Tong, "Gapped Chiral Fermions," PRX 11 011063 (2021)
+>    - Wan & Wang, "Anomalous (3+1)d fermionic topological quantum field theories via symmetry extension," arXiv:2512.25038 (2025)
+>    - Braun, Leonhardt & Pospiech, "Fierz-complete NJL model study," PRD 96 076003 (2017); II PRD 97 076010 (2018); III PRD 101 036004 (2020)
+>
+> 7. **Open task to file at Stage 0 of Wave 4** (deep research; user-triggered async):
+>    - `Lit-Search/Tasks/complete/Phase5z_W4_smg_substrate_phase_diagram.md` (filed; deep-research return delivered 2026-04-27 with verdict OPEN-AT-LITERATURE-FRONTIER, negative tilt — see file itself for full §6 falsifier list) — **two pinned questions:**
+>      - (a) Does the ADW substrate (Vladimirov-Diakonov 4D simplicial action with 8 dimensionless couplings λ_k) sit in or near the Hasenfratz-Witzel SU(3) N_f=8 SMG window? Specifically, is there a region of the Vladimirov-Diakonov coupling space (λ_1, ..., λ_8) where the substrate flows to the merged UV-IR fixed point characteristic of SMG?
+>      - (b) What is the analog of Λ_D (Hasenfratz-Witzel SU(3) lattice scale) for ADW-style multi-channel substrates after SO(4) Haar integration? Specifically, applying the Peter-Weyl decomposition (Phase-5 nearest-neighbor effective action deep research) to the SMG-channel projection — is there a closed-form Λ_SMG = f(λ_1, ..., λ_8, Λ_UV)?
+>      - Cite Hasenfratz-Witzel arXiv:2412.10322 + arXiv:2511.22678, Catterall arXiv:2311.02487, Razamat-Tong PRX 11 011063 2021, Vladimirov-Diakonov PRD 86 104019 2012.
+>
+> 8. **Pre-write checklist (CLAUDE.md "Preemptive-strengthening discipline" — 5 questions before each theorem):**
+>    - (1) Bundle redundancy P2 — drop-conjunct test
+>    - (2) Quantitative connection — `norm_num`-backed comparisons (Hasenfratz-Witzel band 0.1 < c_SMG < 1.0; seesaw band 10^9 < Λ_SMG < 10^15 GeV)
+>    - (3) Cross-module bridge integrity P6 — every docstring reference must `import` + call the cited theorem
+>    - (4) Trivial-discharge P3/P4/P5 — no `rfl`/`decide`/`not_lt.mpr` tautologies
+>    - (5) Defining-the-conclusion check — vacuous when `f := <obvious target>`
+>
+> 9. **Pipeline reminders (per CLAUDE.md):**
+>    - Use MCP Lean tools (`lean_goal`, `lean_multi_attempt`) for interactive development; reserve `lake build SKEFTHawking.ExtractDeps` for finalization
+>    - Never use `ring` / `ring_nf` on non-commutative ring expressions
+>    - Never add `set_option maxHeartbeats N` to a proof body
+>    - Use `lake build SKEFTHawking.ExtractDeps` (NOT bare `lake build`) for trustworthy rebuilds
+>    - Do NOT delegate Lean theorem proving to subagents
+>    - Aristotle is fallback only after MCP loop is fully exhausted on a sorry; user gets first/last call on submissions
+>
+> **Wave 4 success criteria:**
+> - 10–14 substantive theorems shipped, zero sorry, zero new axioms
+> - `validate.py` 21/21 PASS (or current count)
+> - `lake build SKEFTHawking.ExtractDeps` clean
+> - Python tests all pass; `pytest -m ''` (full suite) all pass
+> - Stage 13 adversarial review: zero unaddressed BLOCKERs
+> - End-of-wave strengthening pass produces ≤ 2 retroactive theorems (per CLAUDE.md preemptive-strengthening discipline goal)
+
+---
+
 ## Decision Gates
 
 **Gate Z.1 — after Wave 1 ships:** ✅ **RESOLVED (STRUCTURAL-ONLY branch locked in 2026-04-25).** The microscopic `m_H` prediction reaches 125 GeV only along a 1-D tuning curve in the natural (Λ_UV, G_c) plane under the schematic leading-log closure. Under the current flavor-singlet frame, the scalar-rung framing is therefore *structural-only*. The O.2 deep research (delivered 2026-04-25, verdict Scenario A strength 3/5) shows that a quantitative extension via the BHL auxiliary-field bridge is available; the activated quantitative-scope follow-up would be Wave 1b (`BHLGaugeEmbedding` transplant). Paper 20 is reframed as "structural identification" per roadmap's NO-branch fallback.
@@ -236,22 +393,42 @@ The order of the electroweak phase transition (first-order vs crossover) is a mi
 
 **Gate Z.3 — optional paper gate:** If all three flagship deliverables produce consistent predictions, consider a unified Annals-length review paper bundling Waves 1–3 as a single "Scalar Condensate Ladder" paper rather than three independent papers. User decision — defer until Wave 2 + Wave 3 actually ship.
 
+**Gate Z.4 — after Wave 4 ships (escalation gate to Phase 6h):** Did Wave 4 close positively (Λ_SMG → M_R lands in the 10⁹–10¹⁵ GeV seesaw band under Hasenfratz-Witzel scaling AND the substrate parameters plausibly sit in the SMG window per OPEN-W4-1)? If **YES** → escalate to **Phase 6h (Substrate Phase Diagram and Symmetric Mass Generation)** per `docs/roadmaps/Phase6h_Roadmap.md`. If **NO (second no-go)** → ship the strengthened obstruction paper (BCS *and* SMG ruled out for this substrate framing) and close the substrate-bridge derivation as impossible-in-current-substrate-models.
+
+**Status update (2026-04-27 deep-research return):** **Gate Z.4 closes NEGATIVE.** The Wave 4 deep research at `Lit-Search/Phase-5z/Phase 5z Wave 4 — SMG Substrate Phase Diagram.md` (verdict 2026-04-27) returned OPEN-AT-LITERATURE-FRONTIER on all three sub-questions, with literature-attested negative tilt: Vladimirov-Diakonov's own mean-field (PRD 86 104019, 2012) finds chiral-SSB and trivially-gapped phases but NO SMG phase in the published 2-parameter slice. Wave 4 ships as a **second structural no-go** parallel to Wave 2's BCS no-go. Phase 6h does NOT activate.
+
+**Gate Z.4 reactivation criteria (concrete closure paths):** Phase 6h activation becomes ship-eligible if any of the following published research events occurs (per Wave 4 deep research §6 falsifiers):
+
+- **(F-a-1) Lattice MC of V&D 8-coupling action identifies a chirally symmetric massive phase.** A 4D lattice Monte Carlo simulation of the Vladimirov-Diakonov (PRD 86 104019, 2012) 8-fermion action — currently un-simulated in any published work — identifies a chirally-symmetric massive phase (the SMG signature) with a 2nd-order transition into the massless phase. This is the most direct positive-closure path; difficulty is high (4D lattice MC of a non-gauge-theory action with 8 dimensionless couplings is a substantial computational effort, but no obstacle in principle).
+
+- **(F-a-3) Kähler-Dirac extension of V&D reduces to KD SMG.** A theoretical demonstration that the V&D substrate, after augmentation to a full Kähler-Dirac multiplet (vertex + edge + face + tetrahedron + 4-cell components per Catterall-Laiho-Unmuth-Yockey PRD 98 114503, 2018), reduces to two copies of the Kähler-Dirac SMG action of Butt-Catterall-Pradhan-Toga (PRD 104 094504, 2021) in some limit. This would establish the SMG eligibility of ADW indirectly through the K-D bridge. Difficulty: medium (algebraic / representation-theoretic; the lattice content must fit Catterall's 4-reduced-KD = 16-Weyl framework).
+
+- **(F-c-1) 4D analog of Fidkowski-Kitaev rigour for 16-Majorana SMG.** A 4D analog of the Fidkowski-Kitaev rigorous proof (PRB 81 134509, 2010) — currently the only rigorous mirror-decoupling proof, valid only in 2D — that proves 16-Majorana SMG gapping is rigorous in 4D rather than merely conjectural (Catterall arXiv:2311.02487 §4 explicitly conjectures this). This is the central open problem in lattice chiral gauge theory. Difficulty: very high (a major theoretical result that would close a decades-open problem).
+
+If any one of these three events publishes, the Wave 4 ship verdict re-evaluates and Phase 6h becomes ship-eligible per its own roadmap. Until then Phase 6h remains a documented latent option. Two additional closure paths from the deep-research falsifier list (F-a-2 FRG analysis of V&D, F-a-4 anomaly-matching argument for V&D Razamat-Tong compatibility, F-b-1/2/3 Λ_SMG closed-form determinations, F-c-2/3 substrate-specific demonstrations) would each independently flip parts of Gate Z.4 — see `Lit-Search/Tasks/complete/Phase5z_W4_smg_substrate_phase_diagram.md` §6 for the full falsifier list.
+
 ---
 
 ## Dependencies
 
 ```
 Track A: Wave 1 (ScalarRungInterpretation) → Gate Z.1
+        Wave 1b (BHLGaugeEmbedding) — depends on Wave 1; activated by O.2 verdict
 
-Track B: Wave 2 (MajoranaRung + NeutrinoMixing)
+Track B: Wave 2 (MajoranaRung + NeutrinoMixing + MajoranaRungDecoupling)
   — independent of Track A; can run in parallel
+
+Track B continuation: Wave 4 (MajoranaRungSMG)
+  — depends on Wave 2 + Wave 1b; gated by Gate Z.4 → escalation to Phase 6h
 
 Track C: Wave 3 (EWPhaseTransition)
   — depends on Wave 1; Gate Z.2 before start
 
 Parallelism:
   Waves 1 and 2 independent → parallel execution possible
+  Wave 1b after Wave 1 (quantitative follow-up)
   Wave 3 blocked on Wave 1 completion (not just start)
+  Wave 4 after Wave 2 + Wave 1b (parallel with Wave 3 if execution warrants)
 ```
 
 ---
@@ -262,16 +439,17 @@ Parallelism:
 |------|-------|-------|-----|--------------|----------|
 | Wave 1 | A | `ScalarRungInterpretation.lean` + flagship paper + Python scalar-rung package | 2–4 | None (Gate Z.2 before EW in Wave 3) | **TIER 0 — flagship** ✅ SHIPPED |
 | Wave 1b | A | `BHLGaugeEmbedding.lean` (BHL transplant: gauge-indexed scalar channel + Hill bilocal correction) + paper 20 §6 | 1–2 | Wave 1 complete; O.2 verdict | **TIER 0 — quantitative-scope follow-up** ✅ SHIPPED 2026-04-26 |
-| Wave 2 | B | `MajoranaRung.lean` + `NeutrinoMixing.lean` + PRD paper + short note | 2.5–4 | None; parallel with Wave 1 | **TIER 1** ✅ SHIPPED |
-| Wave 3 | C | `EWPhaseTransition.lean` + conference paper + Python ew_phase_transition package | 3–5 | Wave 1 complete; Gate Z.2 | **TIER 1** ✅ SHIPPED 2026-04-26 |
+| Wave 2 | B | `MajoranaRung.lean` + `NeutrinoMixing.lean` + `MajoranaRungDecoupling.lean` + PRD paper 21 + 2 figures + 2 notebooks | 2.5–4 | None; parallel with Wave 1 | **TIER 1** ✅ SHIPPED 2026-04-26 |
+| Wave 3 | C | `EWPhaseTransition.lean` + conference paper 22 + Python ew_phase_transition package | 3–5 | Wave 1 complete; Gate Z.2 | **TIER 1** ✅ SHIPPED 2026-04-26 |
+| **Wave 4** | **B-cont.** | **`MajoranaRungSMG.lean` + Paper 21 §-extension OR new short note + Python `src/majorana_rung/smg.py`** | **3–5** | **Wave 2 + Wave 1b complete; Gate Z.4 = escalation to Phase 6h** | **TIER 1 — substrate-bridge alternative; bypasses BCS no-go** **OPEN** |
 
-**Total Phase 5z LOE:** 7.5–13 person-months Lean + paper-writing. Parallel execution: wall-clock 4–7 months minimum.
+**Total Phase 5z LOE:** **10.5–18 person-months** Lean + paper-writing. Parallel execution: wall-clock 5–9 months minimum.
 
-**Deliverables cumulative:**
-- 4 new Lean modules (`ScalarRungInterpretation`, `MajoranaRung`, `NeutrinoMixing`, `EWPhaseTransition`)
-- 3 new Python subpackages (`src/scalar_rung/`, `src/majorana_rung/`, `src/ew_phase_transition/`)
-- 3 papers (flagship, PRD Majorana, conference EW) + 1 short PMNS structure note
-- ~41–54 new theorems
+**Deliverables cumulative (Waves 1–4):**
+- 5 new Lean modules under Phase 5z scope on Wave-4 close: `ScalarRungInterpretation`, `BHLGaugeEmbedding`, `MajoranaRung` (+ `NeutrinoMixing`, `MajoranaRungDecoupling`), `EWPhaseTransition`, `MajoranaRungSMG`
+- 4 new Python subpackages (`src/scalar_rung/`, `src/majorana_rung/`, `src/majorana_rung/smg.py` extension, `src/ew_phase_transition/`)
+- 3 papers (Paper 20 flagship+§6 BHL, Paper 21 PRD Majorana with §7 SMG extension on W4 close, Paper 22 conference EW) + 1 short PMNS structure note
+- ~51–68 new theorems
 - Zero new axioms target; zero sorry target
 
 ---
@@ -310,10 +488,18 @@ Parallelism:
 - Conference/review paper `papers/paper22_ew_phase_transition/` shipped
 - **Program-level value:** baryogenesis-viability feeds directly to 6c.2 bridge theorem
 
-**Cumulative program deliverables:**
-- 4 new Lean modules, 3 new Python subpackages, 3 papers + 1 short note
-- ~41–54 new theorems, zero sorry target maintained, zero new axioms target
-- Correctness-push anchors: `m_H` vs 125 GeV (5z.1), ℤ₁₆ singlet-mass compatibility (5z.2), transition-order (5z.3)
+**Wave 4 (SMG Alternative for Majorana Rung) — OPEN:**
+- `MajoranaRungSMG.lean` with 10–14 theorems, zero sorry
+- Tracked-hypothesis SMG bypass of the Wave-2 BCS L-symmetry obstruction
+- Hasenfratz-Witzel-anchored quantitative `M_R` prediction OR strengthened second no-go
+- Paper 21 §7 extension OR new short note `papers/note_smg_majorana_rung/`
+- **Program-level value:** if positive, escalates to **Phase 6h** for full substrate-phase-diagram + light-fermion-hierarchy-from-SMG program; if negative, closes substrate-bridge derivation as impossible-in-current-substrate-models
+- **Correctness-push anchor:** `M_R` from substrate-SMG-gap (lattice-anchored prediction rather than fit) — completes the seesaw correctness-push that Wave 2 left as structural-only
+
+**Cumulative program deliverables (Waves 1–4):**
+- 5 new Lean modules (after W4), 4 new Python subpackages, 3 papers + 1 short note + 1 paper §-extension or short note (W4)
+- ~51–68 new theorems, zero sorry target maintained, zero new axioms target
+- Correctness-push anchors: `m_H` vs 125 GeV (5z.1), ℤ₁₆ singlet-mass compatibility (5z.2), transition-order (5z.3), substrate-anchored `M_R` from SMG (5z.4 OPEN)
 
 ---
 
@@ -337,6 +523,7 @@ Parallelism:
 - Phase 6a (linearized gravity) — scalar rung provides no direct GR input but Yukawa-overlap machinery reused
 - Phase 6c.2 (EW baryogenesis ↔ chirality wall) — transition-order output from 5z.3 is the primary input
 - Phase 6d.2 (chiral SSB for QCD) — WetterichNJL scalar-channel identification is parallel to the QCD quark-condensate identification; Wave 1's identification theorem generalizes
+- **Phase 6h (Substrate Phase Diagram and Symmetric Mass Generation) — conditional on Wave 4 positive close per Gate Z.4.** Phase 6h roadmap at `docs/roadmaps/Phase6h_Roadmap.md`. Wave 4 of Phase 5z becomes Wave 3 of Phase 6h (`MajoranaRungSMG.lean` promoted, with PMNS via Catterall-Pati-Salam structure added).
 
 **Source strategy document:**
 - `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22) §3
@@ -346,4 +533,4 @@ Parallelism:
 
 ---
 
-*Phase 5z roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. First new phase after Phase 5y closure. Three waves (scalar rung, Majorana rung, EW phase transition), three correctness-push anchors, three papers + one short note. All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). Total PM: 7.5–13 Lean + paper-writing.*
+*Phase 5z roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. First new phase after Phase 5y closure. Originally three waves (scalar rung, Majorana rung, EW phase transition), three correctness-push anchors, three papers + one short note. **Updated 2026-04-27 with Wave 4 (`MajoranaRungSMG.lean`) — OPEN follow-up to Wave 2 BCS no-go via Symmetric Mass Generation alternative; conditional Gate Z.4 escalation to Phase 6h.** All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). Total PM: 10.5–18 Lean + paper-writing including Wave 4.*

@@ -1,10 +1,18 @@
-"""Tests for scripts/extract_lean_deps.py — Lean declaration extraction wrapper."""
+"""Tests for scripts/extract_lean_deps.py — Lean declaration extraction wrapper.
+
+Marked `slow`: `load_lean_deps()` invokes `lake env lean --run
+SKEFTHawking/ExtractDeps.lean` whenever the cached hash is stale,
+which is a 5-10 minute walk over the full Lean environment. Default
+pytest skips this module; run with `-m slow` to include.
+"""
 
 import json
 import sys
 from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.slow
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))

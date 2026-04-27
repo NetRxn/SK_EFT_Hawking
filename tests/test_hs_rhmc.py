@@ -386,6 +386,8 @@ class TestHFieldMeasurements:
 # PyTorch backend (hs_rhmc_torch.py)
 # ════════════════════════════════════════════════════════════════════
 
+torch = pytest.importorskip("torch")
+
 
 class TestTorchFermionMatrix:
     """Verify torch backend fermion matrix properties."""

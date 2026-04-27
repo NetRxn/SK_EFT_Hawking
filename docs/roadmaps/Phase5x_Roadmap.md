@@ -2,7 +2,23 @@
 
 ## Technical Roadmap — April 2026 (Updated post-Deep-Research)
 
-*Prepared 2026-04-16 | Updated 2026-04-16 post-deep-research | Updated 2026-07-20 post-Wave-1b | Updated post-Fracton-DM-Kinetic-Stability-Drilldown | Triggered by: brainstorm session identifying 10 concrete-to-speculative connections between the fluid-based physics / SK-EFT-Hawking research program and dark matter (DM) / dark energy (DE). Updated after completion of all 6 Wave 1 deep research tasks and 3 Wave 1b follow-up tasks.*
+*Prepared 2026-04-16 | Updated 2026-04-16 post-deep-research | Updated 2026-07-20 post-Wave-1b | Updated post-Fracton-DM-Kinetic-Stability-Drilldown | Updated 2026-04-29 post-Phase-6c.3-closure | Triggered by: brainstorm session identifying 10 concrete-to-speculative connections between the fluid-based physics / SK-EFT-Hawking research program and dark matter (DM) / dark energy (DE). Updated after completion of all 6 Wave 1 deep research tasks and 3 Wave 1b follow-up tasks.*
+
+---
+
+## ⚡ Phase 6c.3 Closure (2026-04-29) — EP-violation classification unified
+
+`SKEFTHawking/EquivalencePrinciple.lean` (Phase 6c Wave 3, shipped 2026-04-27) **unifies the EP-violation surface across Phase 5x Waves 4/5/6/7**. Six dark-sector mechanisms are formally classified against WEP/EEP/SEP, with quantitative `norm_num` comparisons against the published `MICROSCOPE_BOUND` (Touboul et al. 2017, η < 10⁻¹⁵) and `STEP_TARGET` (η ~ 10⁻¹⁸).
+
+**Structural punchline:** `ep_violation_is_vestigial_only` — among the six classified mechanisms (Fang-Gu torsion-trace, fracton subdiffusion, SFDM Thomas-Fermi, hidden-sector ℤ₁₆ singlet, vestigial differential coupling, vestigial-relics STEP-class), **only the two vestigial-phase phenomena violate WEP**. EP violation is vestigial-only; the rest of the dark sector is EP-conformant at the kinematic level.
+
+**Phase 5x roadmap items now closed by 6c.3 (Lean-formalized, not just memo-level):**
+- W4 Priority Gap #4 ("EP-violation signature of vestigial-phase DM") — closed via `vestigial_microscope_violation_consistent` cross-bridge into `ClassificationTableDark`
+- W4 §3.1 kinematic-obstruction interaction — `fangGu_failure_mode_is_kinematic_not_ep` imports `FangGuTorsionDM` and calls `fg_cdm_obstruction` directly, formally separating FG's `w = 1/3` obstruction from EP violation
+- W6b Lean target #3 (`ep_violation_bound`) — superseded by `vestigial_phase_eta_violates_microscope_bound` + `vestigial_relics_eta_below_microscope_bound` (norm_num against published bounds)
+- W8 cross-connection #6 ("ℤ₁₆ × vestigial relics") — refined: vestigial relics violate EP, ℤ₁₆ singlets do not; cross-tension surfaced via `non_violators_share_violationLevel`
+
+**What 6c.3 does NOT close:** the underlying mechanism derivations remain Phase 5x scope. Specifically, η_vestigial as a function of (ΔG/G, f_DM, ρ_DM/ρ_nuclear) is taken as an external constant `VESTIGIAL_PHASE_ETA_MAX = 1.0`, not derived from the ADW gap-equation parameters. W6a MC extension and the W6b `kz_relic_density` derivation still gate the quantitative η prediction. The classification work formalizes *which* mechanism violates *which* level; it does not derive the magnitudes from microscopic theory.
 
 **Scope:** Investigate how the emergent gravity, anomaly, and dissipative EFT infrastructure developed in Phases 1-5w connects to dark matter and dark energy. Three tracks: (A) anomaly-forced hidden sector + cosmological constant from condensation equilibrium (highest priority — builds on machine-verified theorems), (B) torsion dark matter + vestigial gravity relics (leverages ADW/MC infrastructure), (C) superfluid dark matter + fracton dark matter (new calculation territory, applies SK-EFT framework to DM phenomenology).
 
@@ -371,7 +387,7 @@ Lean Formalization Targets:
 1. FG-DM mass distribution and cosmological relic density computation (requires microscopic loop condensation model — currently unavailable)
 2. Reconciliation of FG "no torsion from fermions" with standard EC/ADW fermion-torsion coupling
 3. Gravitino-pair condensate DM candidates from 2023 supergravity construction (arXiv:2312.17196)
-4. EP-violation signature of vestigial-phase DM in precision cosmological observables
+4. ~~EP-violation signature of vestigial-phase DM in precision cosmological observables~~ — **CLOSED 2026-04-27 via Phase 6c.3** (`EquivalencePrinciple.lean`). FG torsion-trace mechanism formally classified as EP-conformant (satisfies WEP/EEP/SEP); the kinematic obstruction `w = 1/3` is *not* EP violation but a separate kinematic failure mode. See `fangGu_failure_mode_is_kinematic_not_ep`.
 
 **Deliverables:**
 - [x] Deep research gap analysis (completed)
@@ -469,7 +485,7 @@ Lean Formalization Targets:
 - **GUT-scale transition (T_c ~ 10¹⁵ GeV)** required for correct relic abundance via KZ mechanism. Planck-scale → DM overproduction + domain wall problem.
 - **Relic type:** Point-like topological solitons (monopoles, skyrmions from GL(4)/SO(3,1) coset) rather than domain walls. Domain wall route viable only with rapid annihilation mechanism (requires explicit Z₂ breaking at collision interface).
 - **Relic mass:** m ~ x_c · T_c ~ 10-50 × T_c ~ 10¹⁶-10¹⁷ GeV (super-heavy, cold).
-- **EP violation is the UNIQUE distinguishing signature**: bosons and fermions see different effective metrics. Differential coupling to spin-connection sector.
+- **EP violation is the UNIQUE distinguishing signature**: bosons and fermions see different effective metrics. Differential coupling to spin-connection sector. ⚡**Formalized 2026-04-27 in Phase 6c.3 `EquivalencePrinciple.lean`**: `vestigial_phase_eta_violates_microscope_bound` (vestigialDifferentialCoupling, η_max = 1.0 > MICROSCOPE_BOUND = 1e-15) + `vestigial_relics_eta_below_microscope_bound` (vestigialReliscSTEPClass, η = 1e-18 < MICROSCOPE_BOUND = 1e-15, but ≥ STEP_TARGET = 1e-18). Structural punchline `ep_violation_is_vestigial_only` proves no other Phase 5x mechanism violates WEP.
   - MICROSCOPE: η < 2.7 × 10⁻¹⁵ (2σ) — **below sensitivity** for diffuse relic halo (η_vestigial ~ 10⁻²¹ for ΔG/G ~ 1)
   - Proposed STEP mission: η ~ 10⁻¹⁸ — would probe ΔG/G ~ 10⁻³
 - **Homotopy groups of GL(4,ℝ)/SO(3,1)**: determines topological defect spectrum (strings, monopoles, skyrmions). Not yet computed for this specific coset — **natural Lean formalization target** using existing ADWMechanism + SO4Weingarten.
@@ -499,7 +515,7 @@ Lean Formalization Targets:
 |----|--------|-----------|-----------|
 | 1 | `adw_coset_homotopy` | Compute π₀, π₁, π₂, π₃ of GL(4,ℝ)/SO(3,1) | Medium (pure math, existing Lean group theory) |
 | 2 | `kz_relic_density` | KZ mechanism density: n_relic ~ (τ_Q/τ₀)^{-dν/(1+zν)} | Medium |
-| 3 | `ep_violation_bound` | η_vestigial ≤ (ΔG/G) × f_DM × (ρ_DM/ρ_nuclear) | Easy |
+| 3 | ~~`ep_violation_bound`~~ | ~~η_vestigial ≤ (ΔG/G) × f_DM × (ρ_DM/ρ_nuclear)~~ | ~~Easy~~ — **CLOSED 2026-04-27 via Phase 6c.3** as `vestigial_phase_eta_violates_microscope_bound` + `vestigial_relics_eta_below_microscope_bound` (norm_num against published bounds) |
 | 4 | `skyrmion_lifetime` | τ ~ 8π M_GUT⁴/m⁵ >> t_Hubble for m < 10 TeV | Easy |
 | 5 | `relic_self_int_bound` | σ/m < Bullet Cluster bound for m > 10¹⁵ GeV (trivially satisfied) | Easy |
 

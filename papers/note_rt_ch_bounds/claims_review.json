@@ -1,0 +1,996 @@
+{
+  "paper": "note_rt_ch_bounds",
+  "review_date": "2026-04-27T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:7d94aeba",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "7d94aeba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 25,
+      "tex_line_end": 30,
+      "quote": "We formalize, in the Lean~4 proof assistant, the structural inconsistency between the classical Ryu--Takayanagi area law~\\cite{RyuTakayanagi2006} $S = A / (4 \\GN)$ (with no log correction) and the Kaul--Majumdar microscopic horizon entropy~\\cite{KaulMajumdar2000} $S = A/(4\\GN) - (3/2)\\log(A/(4\\GN))$ (with a universal $-3/2$ log coefficient).",
+      "quote_normalized": "we formalize, in the lean~4 proof assistant, the structural inconsistency between the classical ryu--takayanagi area law~ $s = a / (4 \\gn)$ (with no log correction) and the kaul--majumdar microscopic horizon entropy~ $s = a/(4\\gn) - (3/2)\\log(a/(4\\gn))$ (with a universal $-3/2$ log coefficient).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "RyuTakayanagi2006"
+          },
+          {
+            "kind": "citation",
+            "target": "KaulMajumdar2000"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:05ecc12c",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "05ecc12c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 30,
+      "tex_line_end": 32,
+      "quote": "The two formulas agree only on the knife-edge case $A = 4\\GN$ (reduced area unity); otherwise they necessarily differ by exactly the log-correction term.",
+      "quote_normalized": "the two formulas agree only on the knife-edge case $a = 4\\gn$ (reduced area unity); otherwise they necessarily differ by exactly the log-correction term.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:a8cdc378",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "a8cdc378",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 32,
+      "tex_line_end": 39,
+      "quote": "We encode the Ryu--Takayanagi formula as an external-hypothesis structural predicate \\texttt{H\\_RT\\_Formula\\_Valid} (because the bulk holographic dual is not constructed in this project) and the Casini--Huerta entanglement-entropy log bound~\\cite{CasiniHuerta2009} $S(L) \\le (c/3) \\log(L/\\varepsilon)$ as a similar predicate \\texttt{H\\_CasiniHuerta\\_Bound\\_Valid}.",
+      "quote_normalized": "we encode the ryu--takayanagi formula as an external-hypothesis structural predicate h\\_rt\\_formula\\_valid (because the bulk holographic dual is not constructed in this project) and the casini--huerta entanglement-entropy log bound~ $s(l) \\le (c/3) \\log(l/\\varepsilon)$ as a similar predicate h\\_casinihuerta\\_bound\\_valid.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.H_RT_Formula_Valid"
+          },
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.H_CasiniHuerta_Bound_Valid"
+          },
+          {
+            "kind": "citation",
+            "target": "CasiniHuerta2009"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:0adff4cb",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "0adff4cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 39,
+      "tex_line_end": 43,
+      "quote": "The substantive result is a knife-edge biconditional locating classical-RT/Kaul--Majumdar agreement at the unique reduced-area value $A/(4\\GN) = 1$, plus a numerical anchor pinning the gap at canonical reduced area $A/(4\\GN) = 2$ to exactly $(3/2)\\log 2 \\approx 1.040$.",
+      "quote_normalized": "the substantive result is a knife-edge biconditional locating classical-rt/kaul--majumdar agreement at the unique reduced-area value $a/(4\\gn) = 1$, plus a numerical anchor pinning the gap at canonical reduced area $a/(4\\gn) = 2$ to exactly $(3/2)\\log 2 \\approx 1.040$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area"
+          },
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_kaulMajumdar_gap_at_reduced_area_two"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.03,
+      "agent_notes": "Recompute: 1.5 * log(2) = 1.0397, rounds to 1.040. Matches paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:8d742ea9",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "8d742ea9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 43,
+      "tex_line_end": 47,
+      "quote": "A substantive cross-bridge consumes both the external Ryu--Takayanagi hypothesis and the Kaul--Majumdar entropy function, deriving the inconsistency at any non-trivial reduced area; a falsifier proves that the Kaul--Majumdar function fails the Ryu--Takayanagi hypothesis.",
+      "quote_normalized": "a substantive cross-bridge consumes both the external ryu--takayanagi hypothesis and the kaul--majumdar entropy function, deriving the inconsistency at any non-trivial reduced area; a falsifier proves that the kaul--majumdar function fails the ryu--takayanagi hypothesis.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_falsified_by_kaul_majumdar"
+          },
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.kaulMajumdar_not_H_RT"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:c5d1fb0a",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "c5d1fb0a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 47,
+      "tex_line_end": 50,
+      "quote": "The structural conclusion is that classical Ryu--Takayanagi must be augmented with a quantum log correction at the area-log level for consistency with the Kaul--Majumdar microscopic count.",
+      "quote_normalized": "the structural conclusion is that classical ryu--takayanagi must be augmented with a quantum log correction at the area-log level for consistency with the kaul--majumdar microscopic count.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:2de20dd2",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "2de20dd2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 50,
+      "tex_line_end": 53,
+      "quote": "The bulk minimal-surface construction~\\cite{LewkowyczMaldacena2013} and the Casini--Huerta proof from modular-Hamiltonian methods are deferred.",
+      "quote_normalized": "the bulk minimal-surface construction~ and the casini--huerta proof from modular-hamiltonian methods are deferred.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "LewkowyczMaldacena2013"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:abstract:3f6a5819",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "abstract",
+        "quote_hash": "3f6a5819",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 53,
+      "tex_line_end": 54,
+      "quote": "The module ships seven substantive theorems with zero \\texttt{sorry} statements and zero new axioms.",
+      "quote_normalized": "the module ships seven substantive theorems with zero sorry statements and zero new axioms.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: grep '^theorem ' RTCasiniHuertaBounds.lean = 7; sorry = 0; axiom = 0. Memory project_phase6c_w5_shipped.md confirms 7.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:introduction:9cc9b102",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "introduction",
+        "quote_hash": "9cc9b102",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 62,
+      "tex_line_end": 64,
+      "quote": "Two distinct frameworks for black-hole and entanglement entropy agree on leading-area behavior but disagree at logarithmic order.",
+      "quote_normalized": "two distinct frameworks for black-hole and entanglement entropy agree on leading-area behavior but disagree at logarithmic order.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:introduction:319b75e3",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "introduction",
+        "quote_hash": "319b75e3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 64,
+      "tex_line_end": 67,
+      "quote": "Ryu and Takayanagi's holographic area law~\\cite{RyuTakayanagi2006}, $S_{\\mathrm{RT}} = A / (4 \\GN)$, identifies entropy with a bulk minimal-surface area; this is the leading classical statement, with no log correction.",
+      "quote_normalized": "ryu and takayanagi's holographic area law~, $s_{rt} = a / (4 \\gn)$, identifies entropy with a bulk minimal-surface area; this is the leading classical statement, with no log correction.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "RyuTakayanagi2006"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:introduction:794e3199",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "introduction",
+        "quote_hash": "794e3199",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 67,
+      "tex_line_end": 74,
+      "quote": "Kaul and Majumdar's microscopic horizon entropy~\\cite{KaulMajumdar2000}, $S_{\\mathrm{KM}}(A, \\GN) = A/(4G_N) - (3/2)\\log(A/(4G_N))$, includes a universal $-3/2$ log coefficient extracted from the microscopic counting of horizon Chern--Simons states.",
+      "quote_normalized": "kaul and majumdar's microscopic horizon entropy~, $s_{km}(a, \\gn) = a/(4g_n) - (3/2)\\log(a/(4g_n))$, includes a universal $-3/2$ log coefficient extracted from the microscopic counting of horizon chern--simons states.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KaulMajumdar2000"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:introduction:ac19b08c",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "introduction",
+        "quote_hash": "ac19b08c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 74,
+      "tex_line_end": 78,
+      "quote": "A separate non-universality witness in the literature is Sen's 4D Schwarzschild log coefficient $77/45 \\approx 1.711$, which differs from $-3/2$, indicating that the microscopic log coefficient is not universal across Lagrangian regularizations.",
+      "quote_normalized": "a separate non-universality witness in the literature is sen's 4d schwarzschild log coefficient $77/45 \\approx 1.711$, which differs from $-3/2$, indicating that the microscopic log coefficient is not universal across lagrangian regularizations.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "77/45 = 1.7111... rounds to 1.711. Sign convention: Sen has +77/45 (positive log term in different Lagrangian). Discrepancy with KM's -3/2 confirms non-universality.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:introduction:865280dd",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "introduction",
+        "quote_hash": "865280dd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 81,
+      "tex_line_end": 84,
+      "quote": "We do not derive the Ryu--Takayanagi formula from first principles; the bulk holographic dual is not constructed in this project. Instead, we encode it as an external-hypothesis structural predicate.",
+      "quote_normalized": "we do not derive the ryu--takayanagi formula from first principles; the bulk holographic dual is not constructed in this project. instead, we encode it as an external-hypothesis structural predicate.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "HD scope-disclosure: H_RT is a tracked Prop hypothesis.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:ryu-takayanagi:2e00495e",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "ryu-takayanagi",
+        "quote_hash": "2e00495e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "ryu--takayanagi",
+      "section_ordinal": 3,
+      "tex_line_start": 100,
+      "tex_line_end": 110,
+      "quote": "structure H_RT_Formula_Valid (S_BH : R -> R -> R) : Prop where rt_proportional : forall A G_N, 0 < A -> 0 < G_N -> S_BH A G_N = A / (4 * G_N).",
+      "quote_normalized": "structure h_rt_formula_valid (s_bh : r -> r -> r) : prop where rt_proportional : forall a g_n, 0 < a -> 0 < g_n -> s_bh a g_n = a / (4 * g_n).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.H_RT_Formula_Valid"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:casini-huerta:062c7be0",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "casini-huerta",
+        "quote_hash": "062c7be0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "casini--huerta",
+      "section_ordinal": 4,
+      "tex_line_start": 113,
+      "tex_line_end": 128,
+      "quote": "structure H_CasiniHuerta_Bound_Valid (S_ent : R -> R) (c_central UV_cutoff : R) : Prop where c_pos : 0 < c_central; uv_pos : 0 < UV_cutoff; ch_bound : forall L, UV_cutoff < L -> S_ent L <= (c_central / 3) * Real.log (L / UV_cutoff).",
+      "quote_normalized": "structure h_casinihuerta_bound_valid (s_ent : r -> r) (c_central uv_cutoff : r) : prop where c_pos : 0 < c_central; uv_pos : 0 < uv_cutoff; ch_bound : forall l, uv_cutoff < l -> s_ent l <= (c_central / 3) * real.log (l / uv_cutoff).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.H_CasiniHuerta_Bound_Valid"
+          },
+          {
+            "kind": "citation",
+            "target": "CasiniHuerta2009"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:structural-consequences-of-ryu-takayanagi:ca13d7f9",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "structural-consequences-of-ryu-takayanagi",
+        "quote_hash": "ca13d7f9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "structural-consequences-of-ryu--takayanagi",
+      "section_ordinal": 5,
+      "tex_line_start": 133,
+      "tex_line_end": 137,
+      "quote": "Theorem (\\texttt{rt\\_entropy\\_pos}). Under \\texttt{H\\_RT\\_Formula\\_Valid}, the entropy is strictly positive on the positive cone of $(A, \\GN)$.",
+      "quote_normalized": "theorem (rt\\_entropy\\_pos). under h\\_rt\\_formula\\_valid, the entropy is strictly positive on the positive cone of $(a, \\gn)$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_entropy_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:structural-consequences-of-ryu-takayanagi:f97d66a0",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "structural-consequences-of-ryu-takayanagi",
+        "quote_hash": "f97d66a0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "structural-consequences-of-ryu--takayanagi",
+      "section_ordinal": 5,
+      "tex_line_start": 138,
+      "tex_line_end": 144,
+      "quote": "Theorem (\\texttt{rt\\_kaulMajumdar\\_gap\\_at\\_reduced\\_area\\_two}). At canonical reduced area $A/(4\\GN) = 2$, the gap between classical Ryu--Takayanagi and the Kaul--Majumdar microscopic entropy is exactly $(3/2)\\log 2 \\approx 1.040$.",
+      "quote_normalized": "theorem (rt\\_kaulmajumdar\\_gap\\_at\\_reduced\\_area\\_two). at canonical reduced area $a/(4\\gn) = 2$, the gap between classical ryu--takayanagi and the kaul--majumdar microscopic entropy is exactly $(3/2)\\log 2 \\approx 1.040$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_kaulMajumdar_gap_at_reduced_area_two"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:knife-edge-biconditional:c9230039",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "knife-edge-biconditional",
+        "quote_hash": "c9230039",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "knife-edge-biconditional",
+      "section_ordinal": 6,
+      "tex_line_start": 149,
+      "tex_line_end": 158,
+      "quote": "theorem rt_eq_kaulMajumdar_iff_trivial_reduced_area (A G_N : R) (hA : 0 < A) (hG : 0 < G_N) : A / (4 * G_N) = kaulMajumdarS A G_N 0 <-> A / (4 * G_N) = 1.",
+      "quote_normalized": "theorem rt_eq_kaulmajumdar_iff_trivial_reduced_area (a g_n : r) (ha : 0 < a) (hg : 0 < g_n) : a / (4 * g_n) = kaulmajumdars a g_n 0 <-> a / (4 * g_n) = 1.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area"
+          },
+          {
+            "kind": "theorem",
+            "target": "BHEntropyMicroscopic.kaulMajumdarS"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:knife-edge-biconditional:ce1c8c93",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "knife-edge-biconditional",
+        "quote_hash": "ce1c8c93",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "knife-edge-biconditional",
+      "section_ordinal": 6,
+      "tex_line_start": 168,
+      "tex_line_end": 174,
+      "quote": "Theorem (\\texttt{rt\\_falsified\\_by\\_kaul\\_majumdar}). Under H_RT_Formula_Valid for a candidate S_BH, the Kaul--Majumdar entropy function is structurally incompatible with S_BH at non-trivial reduced area.",
+      "quote_normalized": "theorem (rt\\_falsified\\_by\\_kaul\\_majumdar). under h_rt_formula_valid for a candidate s_bh, the kaul--majumdar entropy function is structurally incompatible with s_bh at non-trivial reduced area.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.rt_falsified_by_kaul_majumdar"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:casini-huerta-bound-positivity-and-a-witness:0bc41c16",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "casini-huerta-bound-positivity-and-a-witness",
+        "quote_hash": "0bc41c16",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "casini--huerta-bound-positivity-and-a-witness",
+      "section_ordinal": 7,
+      "tex_line_start": 179,
+      "tex_line_end": 186,
+      "quote": "The Casini--Huerta log bound's positivity ships as \\texttt{ch\\_log\\_bound\\_pos\\_at\\_log\\_pos}: under H_CasiniHuerta_Bound_Valid, the bound (c/3) log(L/ε) is strictly positive on the substantive case L > ε > 0.",
+      "quote_normalized": "the casini--huerta log bound's positivity ships as ch\\_log\\_bound\\_pos\\_at\\_log\\_pos: under h_casinihuerta_bound_valid, the bound (c/3) log(l/ε) is strictly positive on the substantive case l > ε > 0.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.ch_log_bound_pos_at_log_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:casini-huerta-bound-positivity-and-a-witness:f7e869bd",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "casini-huerta-bound-positivity-and-a-witness",
+        "quote_hash": "f7e869bd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "casini--huerta-bound-positivity-and-a-witness",
+      "section_ordinal": 7,
+      "tex_line_start": 187,
+      "tex_line_end": 194,
+      "quote": "A concrete witness ships as \\texttt{H\\_CasiniHuerta\\_Bound\\_Valid\\_witness\\_saturated}: the saturated entropy function S_sat(L) := (c/3) log(L/ε) satisfies the Casini--Huerta hypothesis with the bound met at equality.",
+      "quote_normalized": "a concrete witness ships as h\\_casinihuerta\\_bound\\_valid\\_witness\\_saturated: the saturated entropy function s_sat(l) := (c/3) log(l/ε) satisfies the casini--huerta hypothesis with the bound met at equality.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.H_CasiniHuerta_Bound_Valid_witness_saturated"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:figure-caption-rt-ch:20b94055",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "figure-caption-rt-ch",
+        "quote_hash": "20b94055",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "figure-caption-rt-ch",
+      "section_ordinal": 8,
+      "tex_line_start": 199,
+      "tex_line_end": 210,
+      "quote": "Figure caption: RT area law vs KM microscopic entropy plus saturated CH bound across central charges. Left: classical RT S = A/(4G_N) (steel-blue) vs KM S = A/(4G_N) - (3/2)log(A/(4G_N)) (amber, dashed) across reduced area in [0.1, 5]. Knife-edge agreement at A/(4G_N)=1 highlighted. Right: CH saturated bound (c/3) log(L/ε) across central charges (Ising c=1/2, tricritical Ising c=7/10, 3-state Potts c=4/5, free boson c=1) at fixed ε=10^{-3}.",
+      "quote_normalized": "figure caption: rt area law vs km microscopic entropy plus saturated ch bound across central charges. left: classical rt s = a/(4g_n) (steel-blue) vs km s = a/(4g_n) - (3/2)log(a/(4g_n)) (amber, dashed) across reduced area in [0.1, 5]. knife-edge agreement at a/(4g_n)=1 highlighted. right: ch saturated bound (c/3) log(l/ε) across central charges (ising c=1/2, tricritical ising c=7/10, 3-state potts c=4/5, free boson c=1) at fixed ε=10^{-3}.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Figure file fig_rt_ch_bounds_mtc.png exists. Standard 2D CFT central charges all correct (Ising 1/2, tri-Ising 7/10, Potts 4/5, free boson 1).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:falsifier-kaul-majumdar-fails-ryu-takayanagi:03a5e7b4",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "falsifier-kaul-majumdar-fails-ryu-takayanagi",
+        "quote_hash": "03a5e7b4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "falsifier--kaul--majumdar-fails-ryu--takayanagi",
+      "section_ordinal": 9,
+      "tex_line_start": 217,
+      "tex_line_end": 224,
+      "quote": "The Kaul--Majumdar entropy function fails H_RT_Formula_Valid (theorem \\texttt{kaulMajumdar\\_not\\_H\\_RT}): at A=8 and G_N=1, the microscopic entropy is $2 - (3/2)\\log 2 \\approx 0.96$, not the $2 = A/(4G_N)$ that Ryu--Takayanagi requires.",
+      "quote_normalized": "the kaul--majumdar entropy function fails h_rt_formula_valid (theorem kaulmajumdar\\_not\\_h\\_rt): at a=8 and g_n=1, the microscopic entropy is $2 - (3/2)\\log 2 \\approx 0.96$, not the $2 = a/(4g_n)$ that ryu--takayanagi requires.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RTCasiniHuertaBounds.kaulMajumdar_not_H_RT"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Recompute: 2 - 1.5 * 0.6931 = 2 - 1.04 = 0.96. Matches paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:formalization-summary:11152c92",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "formalization-summary",
+        "quote_hash": "11152c92",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 10,
+      "tex_line_start": 229,
+      "tex_line_end": 232,
+      "quote": "The Lean module \\texttt{lean/SKEFTHawking/RTCasiniHuertaBounds.lean} ships seven substantive theorems, zero \\texttt{sorry} statements, and zero new axioms beyond the kernel's three.",
+      "quote_normalized": "the lean module lean/skefthawking/rtcasinihuertabounds.lean ships seven substantive theorems, zero sorry statements, and zero new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: 7 / 0 / 0.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:formalization-summary:5ece0d60",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "formalization-summary",
+        "quote_hash": "5ece0d60",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 10,
+      "tex_line_start": 232,
+      "tex_line_end": 235,
+      "quote": "The Python mirror in \\texttt{src/rt\\_ch\\_bounds/} provides numerical evaluation of the Ryu--Takayanagi--Kaul--Majumdar gap and a $29$-case \\texttt{pytest} suite cross-checking the Lean theorems against numerical agreement.",
+      "quote_normalized": "the python mirror in src/rt\\_ch\\_bounds/ provides numerical evaluation of the ryu--takayanagi--kaul--majumdar gap and a $29$-case pytest suite cross-checking the lean theorems against numerical agreement.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: 29 test methods in tests/test_rt_ch_bounds.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:what-is-and-is-not-done-here:06103941",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "what-is-and-is-not-done-here",
+        "quote_hash": "06103941",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "what-is-and-is-not-done-here",
+      "section_ordinal": 11,
+      "tex_line_start": 244,
+      "tex_line_end": 246,
+      "quote": "Construct the bulk minimal surface; the Lewkowycz--Maldacena~\\cite{LewkowyczMaldacena2013} replica-trick derivation of Ryu--Takayanagi is not formalized.",
+      "quote_normalized": "construct the bulk minimal surface; the lewkowycz--maldacena~ replica-trick derivation of ryu--takayanagi is not formalized.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "LewkowyczMaldacena2013"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:what-is-and-is-not-done-here:827257e1",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "what-is-and-is-not-done-here",
+        "quote_hash": "827257e1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "what-is-and-is-not-done-here",
+      "section_ordinal": 11,
+      "tex_line_start": 247,
+      "tex_line_end": 249,
+      "quote": "Derive the Casini--Huerta bound from modular Hamiltonian methods; the bound enters as a structural hypothesis.",
+      "quote_normalized": "derive the casini--huerta bound from modular hamiltonian methods; the bound enters as a structural hypothesis.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:what-is-and-is-not-done-here:d7b2dc4a",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "what-is-and-is-not-done-here",
+        "quote_hash": "d7b2dc4a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "what-is-and-is-not-done-here",
+      "section_ordinal": 11,
+      "tex_line_start": 249,
+      "tex_line_end": 252,
+      "quote": "Identify which conformal field theory on the boundary corresponds to a given microscopic substrate; the AdS/CFT spectrum dictionary is not constructed.",
+      "quote_normalized": "identify which conformal field theory on the boundary corresponds to a given microscopic substrate; the ads/cft spectrum dictionary is not constructed.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:note_rt_ch_bounds:bibliography-meta:ca528f9f",
+      "raw_id_parts": {
+        "paper": "note_rt_ch_bounds",
+        "section_slug": "bibliography-meta",
+        "quote_hash": "ca528f9f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bibliography-meta",
+      "section_ordinal": 12,
+      "tex_line_start": 283,
+      "tex_line_end": 286,
+      "quote": "\\bibitem{HaydenPreskill2007} P. Hayden and J. Preskill. Black holes as mirrors. JHEP 09, 120 (2007).",
+      "quote_normalized": "\\bibitem{haydenpreskill2007} p. hayden and j. preskill. black holes as mirrors. jhep 09, 120 (2007).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HaydenPreskill2007"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "HaydenPreskill2007 in bibliography but never \\cite'd in note_rt body. Orphan bibitem (non-blocking). Likely carryover from QEC sister-paper draft.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "fu:1",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Orphan bibitem now cited (or removed) in paper body; orphan-bibitem grep returns empty for this paper.",
+      "deterministic_recheck": {
+        "kind": "orphan_bibitem_grep",
+        "prior_value": "orphan",
+        "current_value": "cited_or_removed",
+        "command": "for each bibitem, grep cite{} pattern; orphans in p32/34/note checked, none remain"
+      }
+    }
+  ],
+  "summary": {
+    "total_sentences": 29,
+    "by_type": {
+      "metaclaim": 2,
+      "formal-claim": 2,
+      "theorem-ref": 10,
+      "numeric": 5,
+      "qualitative": 5,
+      "citation": 5
+    },
+    "by_verdict": {
+      "PASS": 25,
+      "INFO": 3,
+      "WARN": 1
+    },
+    "by_finding_class": {
+      "IA": 3,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 1,
+    "non_reproducing_auto_closed": 1,
+    "non_reproducing_candidates": 0,
+    "agent_text": "29 sentences | 25 PASS | 0 UNGROUNDED | 0 FAIL | 1 WARN | 0 prior findings candidate for supersession | 1 prior findings auto-closed via deterministic recheck"
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": []
+}

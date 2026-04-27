@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex paper_draft"] 1777296127.79527 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777296128.70518 0
-  "./paper_draftNotes.bib" 1777296128.48621 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1777315549.75982 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777319498.00127 0
+  "./paper_draftNotes.bib" 1777319497.80203 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1777296128.48536 5434 25006ac1b217c92af9a4d63364186c57 "pdflatex"
+  "paper_draft.aux" 1777319497.80116 5588 979406749520c490a9e81c2b69d7a72f "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1777296127.90519 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777296128.70528 0
-  "../../docs/counts.tex" 1777250385.48975 1133 4ae84644f815958ac7e807e8606868de ""
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" 1777296063.77167 12997 c7da471e70c071ed46b06626abc12d92 ""
+["pdflatex"] 1777319497.2037 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777319498.0014 0
+  "../../docs/counts.tex" 1777319497.01485 1651 898dead63188e74e2fafd122eadea8cd ""
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" 1777315314.3826 14234 ad852caf24e134ab272c3e6281e5f7ac ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -31,6 +31,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmr9.tfm" 1136768653 1292 6b21b9c2c7bebb38aa2273f7ca0fb3af ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1136768653 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmsy9.tfm" 1136768653 1116 25a7bf822c58caf309a702ef79f4afbb ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmti10.tfm" 1136768653 1480 aa8e34af0eb6a2941b776984cf1dfdc4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmti9.tfm" 1136768653 1476 cccc6cc4935c18ec3d5623b77ecb8b74 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm" 1136768653 768 1321e9409b4137d6fb428ac9dc956269 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm" 1136768653 768 d7b9a2629a0c353102ad947dc9221d49 ""
@@ -49,6 +50,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1248133631 32442 c975af247b6702f7ca0c299af3616b80 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1248133631 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb" 1248133631 36310 f5ddc6715cc60deb16d9db5ded6a9391 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb" 1248133631 31099 c85edf1dd5b9e826d67c9c7293b6786c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb" 1248133631 29078 718ea4567ceff944262b0f5b0800e1d9 ""
@@ -112,11 +114,11 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1775585593 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "figures/fig_polyakov_loop_deconfinement.png" 1777294750.13802 245753 a347f15a3b9f5b8bde6d55855f1de2ed ""
-  "paper_draft.aux" 1777296128.48536 5434 25006ac1b217c92af9a4d63364186c57 "pdflatex"
-  "paper_draft.bbl" 1777296127.90365 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
-  "paper_draft.out" 1777296128.48603 3479 6c92e40e7b5624ad5f3ef30e1b52523a "pdflatex"
-  "paper_draft.tex" 1777296063.77167 12997 c7da471e70c071ed46b06626abc12d92 ""
+  "figures/fig_polyakov_loop_deconfinement.png" 1777299035.7703 267937 73798440c6b32cf600c9bfcf5651891f ""
+  "paper_draft.aux" 1777319497.80116 5588 979406749520c490a9e81c2b69d7a72f "pdflatex"
+  "paper_draft.bbl" 1777315549.68662 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
+  "paper_draft.out" 1777319497.80192 3479 6c92e40e7b5624ad5f3ef30e1b52523a "pdflatex"
+  "paper_draft.tex" 1777315314.3826 14234 ad852caf24e134ab272c3e6281e5f7ac ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

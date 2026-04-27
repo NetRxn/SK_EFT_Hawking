@@ -25,7 +25,7 @@ formalization}
 
 \begin{abstract}
 The color-flavor-locked (\CFL) phase of dense quark
-matter~\cite{AlfordRajagopalWilczek1999,Hatsuda2008} carries an
+matter~\cite{AlfordRajagopalWilczek1999,AlfordSchmittRajagopalSchaefer2008} carries an
 emergent one-form $\Zthree$ symmetry, identified by Hirono and
 Tanizaki~\cite{HironoTanizaki2018} as the algebraic origin of the
 quark--hadron continuity~\cite{SchaeferWilczek1999} between the
@@ -46,7 +46,7 @@ chiral-limit Goldstone behavior ($m_q = 0$ vanishes the mass term) and
 the in-\CFL-phase positivity. The Hirono--Tanizaki
 topological-order-beyond-Landau--Ginzburg framing is encoded as a
 structural assumption over $\Zthree$ charges $\{0, 1, 2\}$. The module
-ships $13$ substantive theorems with zero \texttt{sorry} statements
+ships \cflThms{} substantive theorems with zero \texttt{sorry} statements
 and zero new axioms.
 \end{abstract}
 
@@ -58,7 +58,7 @@ and zero new axioms.
 The color-flavor-locked phase of dense quark matter is a paradigm
 example of a phase in which a nontrivial color-flavor symmetry pattern
 is locked by a diquark condensate~\cite{AlfordRajagopalWilczek1999,
-Hatsuda2008}. The phenomenology has been worked out in detail
+AlfordSchmittRajagopalSchaefer2008}. The phenomenology has been worked out in detail
 ~\cite{SonStephanov2001,SchaeferWilczek1999}, and a more recent
 development by Hirono and Tanizaki~\cite{HironoTanizaki2018} reframes
 the quark--hadron continuity in higher-form-symmetry
@@ -102,7 +102,18 @@ The structural anchor of this paper is the theorem
 \;}
 \end{equation}
 shipped as \texttt{CFL\_emergent\_Z3\_matches\_QCD\_center\_Z3}.
-The proof reduces both definitions to their common closed form.
+The proof reduces both definitions to their common closed form,
+i.e.\ the equality is \emph{definitional} once we have committed to
+$e^{2\pi i / 3}$ for both generators. The substantive content is
+therefore the modeling choice itself --- justified independently
+on the QCD side by the center-symmetry construction of
+W1~\cite{Polyakov1978,SvetitskyYaffe1982} and on the CFL side by
+the Hirono--Tanizaki algebraic
+identification~\cite{HironoTanizaki2018} --- not a non-trivial
+algebraic theorem. The downstream consequences below
+(\texttt{emergentZ3\_pow\_3}, \texttt{emergentZ3\_norm\_one},
+\texttt{emergentZ3\_sum\_cube\_roots}) inherit this status:
+they restate properties of $e^{2\pi i / 3}$ in the diquark sector.
 
 The structural significance is that the algebraic consequences derive
 \emph{through} the identification:
@@ -209,11 +220,11 @@ load-bearing in the proof body.
 \label{sec:formalization}
 
 The Lean module
-\texttt{lean/SKEFTHawking/CFLChiralLagrangian.lean} ships $13$
+\texttt{lean/SKEFTHawking/CFLChiralLagrangian.lean} ships \cflThms{}
 substantive theorems, zero \texttt{sorry} statements, and zero new
 axioms beyond the kernel's three. The Python mirror in
 \texttt{src/cfl/} provides numerical evaluation of the cross-derivation
-identity: a $17$-case \texttt{pytest} suite includes a check that the
+identity: a \cflTests{}-case \texttt{pytest} suite includes a check that the
 \CFL\ emergent generator and the \QCD\ center generator agree to
 machine precision via independent code paths.
 
@@ -253,7 +264,7 @@ Y.~Hirono and Y.~Tanizaki,
 ``Quark-hadron continuity beyond the Ginzburg-Landau paradigm,''
 Phys.\ Rev.\ Lett.\ \textbf{122}, 212001 (2019); arXiv:1811.10608.
 
-\bibitem{Hatsuda2008}
+\bibitem{AlfordSchmittRajagopalSchaefer2008}
 M.~G.~Alford, A.~Schmitt, K.~Rajagopal, and T.~Sch\"afer,
 ``Color superconductivity in dense quark matter,''
 Rev.\ Mod.\ Phys.\ \textbf{80}, 1455 (2008); arXiv:0709.4635.

@@ -31,11 +31,14 @@ and the associated Gell-Mann--Oakes--Renner
 relation~\cite{GMOR1968} in Lean~4. The quark
 condensate $\qbarq$ is encoded as a structure carrying its
 load-bearing sign constraint $\qbarq < 0$ as a structural invariant.
-The chiral-broken phase then follows from the Gell-Mann--Oakes--Renner
-relation $\mpi^2 \fpi^2 = -2\,\mq\,\qbarq$ as a structural consequence:
-the left-hand side is strictly positive for non-vanishing pion mass
-and decay constant, the right-hand side is strictly positive when
-$\mq > 0$, so the equation forces $\qbarq < 0$. We pin the numerical
+The chiral-broken phase is encoded as a structural sign assumption
+on $\qbarq$, with the Gell-Mann--Oakes--Renner relation
+$\mpi^2 \fpi^2 = -2\,\mq\,\qbarq$ then serving as a falsifier:
+parametric over a raw scalar $\sigma \ge 0$, we prove
+contrapositively that the relation forces a contradiction with
+non-vanishing pion mass and decay constant for positive quark
+mass. The forward direction (constructing $\qbarq < 0$ from
+GMOR alone) is left as a corollary at the prose level. We pin the numerical
 agreement at PDG/FLAG central values
 ($\mpi = 0.137~\mathrm{GeV}$~\cite{PDG2022},
 $\fpi = 0.092~\mathrm{GeV}$~\cite{PDG2022},
@@ -46,7 +49,7 @@ shipped as a \texttt{norm\_num}-backed theorem. A contrapositive theorem
 parametric over the raw scalar variable proves that the
 chiral-unbroken phase is inconsistent with the relation for positive
 quark mass and a non-trivial pion sector. The formalization ships
-$11$ substantive theorems, zero \texttt{sorry} statements, and zero
+\chiralSsbThms{} substantive theorems, zero \texttt{sorry} statements, and zero
 new axioms.
 \end{abstract}
 
@@ -184,7 +187,7 @@ mass~\cite{PDG2022}) confirms the consistent point. Sources:
 \label{sec:naturalness}
 
 A natural follow-on question is whether the quark-condensate scale
-($\sim 0.6~\mathrm{GeV}$, set by $|\qbarq|^{1/3}$) can be related to
+($|\qbarq|^{1/3} \approx 0.283~\mathrm{GeV} \approx 283~\mathrm{MeV}$) can be related to
 an emergent-gravity tetrad-VEV scale within the broader Anderson--Higgs
 Wilsonian program of the project. We encode a structural assumption
 \begin{equation}
@@ -216,11 +219,11 @@ upstream theorem by name; the cross-bridge is not phantom.
 \label{sec:formalization}
 
 The Lean module \texttt{lean/SKEFTHawking/ChiralSSB\_QCD.lean} ships
-$11$ substantive theorems, zero \texttt{sorry} statements, and zero
+\chiralSsbThms{} substantive theorems, zero \texttt{sorry} statements, and zero
 new axioms beyond the kernel's three. The Python mirror in
 \texttt{src/chiral\_ssb/} provides numerical evaluation of both sides
 of the Gell-Mann--Oakes--Renner relation across PDG ranges and a
-$14$-case \texttt{pytest} suite pinning the Lean theorems to numerical
+\chiralSsbTests{}-case \texttt{pytest} suite pinning the Lean theorems to numerical
 agreement.
 
 \section{Outlook}

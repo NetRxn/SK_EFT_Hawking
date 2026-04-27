@@ -32,10 +32,15 @@ only on the knife-edge case $A = 4\GN$ (reduced area unity); otherwise
 they necessarily differ by exactly the log-correction term. We encode
 the Ryu--Takayanagi formula as an external-hypothesis structural
 predicate \texttt{H\_RT\_Formula\_Valid} (because the bulk holographic
-dual is not constructed in this project) and the
-Casini--Huerta entanglement-entropy log
-bound~\cite{CasiniHuerta2009} $S(L) \le (c/3) \log(L/\varepsilon)$ as
-a similar predicate \texttt{H\_CasiniHuerta\_Bound\_Valid}. The
+dual is not constructed in this project) and the universal 2D-CFT
+entanglement-entropy log bound $S(L) \le (c/3) \log(L/\varepsilon)$
+of Holzhey--Larsen--Wilczek~\cite{HolzheyLarsenWilczek1994} and
+Calabrese--Cardy~\cite{CalabreseCardy2004}---with
+Casini--Huerta~\cite{CasiniHuerta2009} as the free-QFT
+specialization---as a similar predicate
+\texttt{H\_CasiniHuerta\_Bound\_Valid} (the predicate name retains
+the historical \texttt{H\_CasiniHuerta\_*} prefix used in the Lean
+module; see footnote~\ref{fn:ch-name}). The
 substantive result is a knife-edge biconditional locating
 classical-RT/Kaul--Majumdar agreement at the unique reduced-area
 value $A/(4\GN) = 1$, plus a numerical anchor pinning the gap at
@@ -50,7 +55,7 @@ log correction at the area-log level for consistency with the
 Kaul--Majumdar microscopic count. The bulk minimal-surface
 construction~\cite{LewkowyczMaldacena2013} and the
 Casini--Huerta proof from modular-Hamiltonian methods are deferred.
-The module ships seven substantive theorems with zero \texttt{sorry}
+The module ships \rtChThms{} substantive theorems with zero \texttt{sorry}
 statements and zero new axioms.
 \end{abstract}
 
@@ -73,7 +78,8 @@ S_{\mathrm{KM}}(A, \GN) \;=\; \redArea \,-\, \tfrac{3}{2}\,\log\!\redArea,
 includes a universal $-3/2$ log coefficient extracted from the
 microscopic counting of horizon Chern--Simons states. A separate
 non-universality witness in the literature is Sen's 4D Schwarzschild
-log coefficient $77/45 \approx 1.711$, which differs from $-3/2$,
+log coefficient $77/45 \approx 1.711$~\cite{Sen2013Schwarzschild},
+which differs from $-3/2$,
 indicating that the microscopic log coefficient is not universal
 across Lagrangian regularizations.
 
@@ -122,10 +128,15 @@ structure H_CasiniHuerta_Bound_Valid
       (c_central / 3) * Real.log (L / UV_cutoff)
 \end{verbatim}
 For a 2D conformal-field-theory entanglement entropy with central
-charge $c$ and UV cutoff $\varepsilon$, the Casini--Huerta
-bound~\cite{CasiniHuerta2009} asserts
+charge $c$ and UV cutoff $\varepsilon$, the universal log
+bound~\cite{HolzheyLarsenWilczek1994,CalabreseCardy2004} asserts
 $S_{\mathrm{ent}}(L) \le (c/3) \log(L / \varepsilon)$ on the
-substantive case $L > \varepsilon$.
+substantive case $L > \varepsilon$%
+\footnote{\label{fn:ch-name}The Lean predicate retains the historical
+\texttt{H\_CasiniHuerta\_Bound\_Valid} name from earlier project
+documents; the universal 2D-CFT result is from Holzhey--Larsen--Wilczek
+1994 and Calabrese--Cardy 2004. Casini--Huerta~\cite{CasiniHuerta2009}
+is the rigorous free-QFT specialization.}.
 
 \section{Structural consequences of Ryu--Takayanagi}
 \label{sec:rt-consequences}
@@ -227,11 +238,11 @@ entropy and classical-area-law entropy.
 \label{sec:formalization}
 
 The Lean module
-\texttt{lean/SKEFTHawking/RTCasiniHuertaBounds.lean} ships seven
+\texttt{lean/SKEFTHawking/RTCasiniHuertaBounds.lean} ships \rtChThms{}
 substantive theorems, zero \texttt{sorry} statements, and zero new
 axioms beyond the kernel's three. The Python mirror in
 \texttt{src/rt\_ch\_bounds/} provides numerical evaluation of the
-Ryu--Takayanagi--Kaul--Majumdar gap and a $29$-case \texttt{pytest}
+Ryu--Takayanagi--Kaul--Majumdar gap and a \rtChTests{}-case \texttt{pytest}
 suite cross-checking the Lean theorems against numerical agreement.
 
 \section{What is and is not done here}
@@ -265,6 +276,16 @@ space/conformal field theory correspondence,''
 Phys.\ Rev.\ Lett.\ \textbf{96}, 181602 (2006);
 arXiv:hep-th/0603001.
 
+\bibitem{HolzheyLarsenWilczek1994}
+C.~Holzhey, F.~Larsen, and F.~Wilczek,
+``Geometric and renormalized entropy in conformal field theory,''
+Nucl.\ Phys.\ B \textbf{424}, 443 (1994); arXiv:hep-th/9403108.
+
+\bibitem{CalabreseCardy2004}
+P.~Calabrese and J.~Cardy,
+``Entanglement entropy and quantum field theory,''
+J.\ Stat.\ Mech.\ \textbf{0406}, P06002 (2004); arXiv:hep-th/0405152.
+
 \bibitem{CasiniHuerta2009}
 H.~Casini and M.~Huerta,
 ``Entanglement entropy in free quantum field theory,''
@@ -280,10 +301,10 @@ A.~Lewkowycz and J.~Maldacena,
 ``Generalized gravitational entropy,''
 JHEP \textbf{08}, 090 (2013); arXiv:1304.4926.
 
-\bibitem{HaydenPreskill2007}
-P.~Hayden and J.~Preskill,
-``Black holes as mirrors: quantum information in random subsystems,''
-JHEP \textbf{09}, 120 (2007); arXiv:0708.4025.
+\bibitem{Sen2013Schwarzschild}
+A.~Sen,
+``Logarithmic corrections to Schwarzschild and other non-extremal black hole entropy in different dimensions,''
+JHEP \textbf{04}, 156 (2013); arXiv:1205.0971.
 
 \end{thebibliography}
 

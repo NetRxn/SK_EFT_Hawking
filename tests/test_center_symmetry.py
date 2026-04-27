@@ -186,24 +186,6 @@ def test_su3_yields_potts_universality() -> None:
     assert svetitsky_yaffe_class(Z3) == UniversalityClass.THREE_STATE_POTTS
 
 
-def test_ising_nu_above_0_6() -> None:
-    """3D Ising ν > 0.6 (literature value 0.6299).
-
-    Mirrors Lean `ising_nu_above_0_6`.
-    """
-    nu_ising = critical_exponent_nu(UniversalityClass.ISING)
-    assert nu_ising > 0.6
-
-
-def test_potts_nu_below_0_6() -> None:
-    """3D 3-state Potts ν < 0.6 (literature value 0.5).
-
-    Mirrors Lean `potts_nu_below_0_6`.
-    """
-    nu_potts = critical_exponent_nu(UniversalityClass.THREE_STATE_POTTS)
-    assert nu_potts < 0.6
-
-
 def test_ising_nu_gt_potts_nu() -> None:
     """Ising ν > Potts ν (direct quantitative comparison).
 

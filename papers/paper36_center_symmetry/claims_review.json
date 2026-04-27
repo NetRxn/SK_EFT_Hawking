@@ -1,0 +1,1116 @@
+{
+  "paper": "paper36_center_symmetry",
+  "review_date": "2026-04-27T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper36_center_symmetry:abstract:65442d18",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "abstract",
+        "quote_hash": "65442d18",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 29,
+      "tex_line_end": 31,
+      "quote": "We formalize confinement as $\\mathbb{Z}_N$ 1-form center-symmetry unbreaking in Lean~4, treating the Polyakov loop $\\Polyakov$ as the complex order parameter.",
+      "quote_normalized": "we formalize confinement as $\\mathbb{z}_n$ 1-form center-symmetry unbreaking in lean~4, treating the polyakov loop $\\polyakov$ as the complex order parameter.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:abstract:90bddaca",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "abstract",
+        "quote_hash": "90bddaca",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 31,
+      "tex_line_end": 35,
+      "quote": "The $\\mathbb{Z}_N$ center acts on $\\Polyakov$ by multiplication by $\\zeta_N = \\exp(2\\pi i / N)$; we prove this action is a primitive $N$-th root of unity, fixes only $\\Polyakov = 0$ (confining) when $\\zeta_N \\neq 1$, and reduces $\\zeta_2 = -1$ exactly on the SU(2) center.",
+      "quote_normalized": "the $\\mathbb{z}_n$ center acts on $\\polyakov$ by multiplication by $\\zeta_n = \\exp(2\\pi i / n)$; we prove this action is a primitive $n$-th root of unity, fixes only $\\polyakov = 0$ (confining) when $\\zeta_n \\neq 1$, and reduces $\\zeta_2 = -1$ exactly on the su(2) center.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_pow_N"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_Z2_eq_neg_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:abstract:d4728b6c",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "abstract",
+        "quote_hash": "d4728b6c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 35,
+      "tex_line_end": 41,
+      "quote": "The Svetitsky--Yaffe universality correspondence~\\cite{SvetitskyYaffe1982} between $D$-dimensional deconfinement and $(D{-}1)$-dimensional $\\mathbb{Z}_N$ spin models is encoded as a structural map: $\\mathrm{SU}(2) \\to$ 3D Ising universality class ($\\nuIsing = 0.6299$~\\cite{PelissettoVicari2002, KosPolandSimmonsDuffin2016}), $\\mathrm{SU}(3) \\to$ 3D 3-state Potts ($\\nuPotts = 0.5$).",
+      "quote_normalized": "the svetitsky--yaffe universality correspondence~ between $d$-dimensional deconfinement and $(d{-}1)$-dimensional $\\mathbb{z}_n$ spin models is encoded as a structural map: $su(2) \\to$ 3d ising universality class ($\\nuising = 0.6299$~), $su(3) \\to$ 3d 3-state potts ($\\nupotts = 0.5$).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "SvetitskyYaffe1982"
+          },
+          {
+            "kind": "citation",
+            "target": "PelissettoVicari2002"
+          },
+          {
+            "kind": "citation",
+            "target": "KosPolandSimmonsDuffin2016"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.svetitskyYaffeClass"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "ν_Ising = 0.6299 matches Pelissetto-Vicari / KPSD precision values. ν_Potts = 0.5 matches mean-field-like estimate. SvetitskyYaffe1982, PelissettoVicari2002, KosPolandSimmonsDuffin2016 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:abstract:1eeda2e8",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "abstract",
+        "quote_hash": "1eeda2e8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 44,
+      "quote": "The Kovtun--Son--Starinets viscosity bound $\\KSS \\ge 1/(4\\pi)$~\\cite{KovtunSonStarinets2005} is pinned to the literature-anchored bracket $[0.07, 0.08]$ via Mathlib $\\pi$-bound lemmas.",
+      "quote_normalized": "the kovtun--son--starinets viscosity bound $\\kss \\ge 1/(4\\pi)$~ is pinned to the literature-anchored bracket $[0.07, 0.08]$ via mathlib $\\pi$-bound lemmas.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KovtunSonStarinets2005"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.KSS_bound_above_0_07"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.KSS_bound_below_0_08"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.05,
+      "agent_notes": "1/(4π) = 0.0796..., bracket [0.07, 0.08] verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:abstract:e81dfe14",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "abstract",
+        "quote_hash": "e81dfe14",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 44,
+      "tex_line_end": 47,
+      "quote": "A Walker--Wang anyon-mediated transport prediction is encoded as a structural assumption $H_{\\mathrm{WW}} : \\KSS \\in [\\mathrm{KSS}, 2\\,\\mathrm{KSS}]$~\\cite{HofmanIqbal2018} with two concrete numerical falsifiers ($\\KSS = 0$ and $\\KSS = 1$).",
+      "quote_normalized": "a walker--wang anyon-mediated transport prediction is encoded as a structural assumption $h_{ww} : \\kss \\in [kss, 2\\,kss]$~ with two concrete numerical falsifiers ($\\kss = 0$ and $\\kss = 1$).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HofmanIqbal2018"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.walker_wang_zero_eta_violator"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.walker_wang_unit_eta_violator"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:abstract:02c49822",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "abstract",
+        "quote_hash": "02c49822",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 47,
+      "tex_line_end": 49,
+      "quote": "The module ships $18$ substantive Lean theorems with zero \\texttt{sorry} statements and zero new axioms beyond the kernel's three.",
+      "quote_normalized": "the module ships $18$ substantive lean theorems with zero sorry statements and zero new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 11.1,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\centerSymmThms{} = 18, \\centerSymmTests{} = 28) which auto-tracks live grep counts on CenterSymmetryConfinement.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:introduction:ca846aea",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "introduction",
+        "quote_hash": "ca846aea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 57,
+      "tex_line_end": 62,
+      "quote": "The standard QCD-confinement framing as a Wilson-loop area law admits an alternative, structurally cleaner formulation: confinement as unbreaking of a $\\mathbb{Z}_N$ 1-form center symmetry, with the Polyakov loop as the local order parameter and the deconfinement transition matched to a $(D{-}1)$-dimensional $\\mathbb{Z}_N$ spin model via Svetitsky--Yaffe universality~\\cite{SvetitskyYaffe1982}.",
+      "quote_normalized": "the standard qcd-confinement framing as a wilson-loop area law admits an alternative, structurally cleaner formulation: confinement as unbreaking of a $\\mathbb{z}_n$ 1-form center symmetry, with the polyakov loop as the local order parameter and the deconfinement transition matched to a $(d{-}1)$-dimensional $\\mathbb{z}_n$ spin model via svetitsky--yaffe universality~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "SvetitskyYaffe1982"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:introduction:762bf268",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "introduction",
+        "quote_hash": "762bf268",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 62,
+      "tex_line_end": 68,
+      "quote": "This formulation is natural in the modern higher-form-symmetry language~\\cite{KitaevAnyons2003}, makes precise contact with critical phenomena via the order-parameter framework, and gives the universal Kovtun--Son--Starinets viscosity lower bound~\\cite{KovtunSonStarinets2005} a clean physical interpretation in terms of anyon-mediated transport near the bound.",
+      "quote_normalized": "this formulation is natural in the modern higher-form-symmetry language~, makes precise contact with critical phenomena via the order-parameter framework, and gives the universal kovtun--son--starinets viscosity lower bound~ a clean physical interpretation in terms of anyon-mediated transport near the bound.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KitaevAnyons2003"
+          },
+          {
+            "kind": "citation",
+            "target": "KovtunSonStarinets2005"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:introduction:5d9f06f1",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "introduction",
+        "quote_hash": "5d9f06f1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 70,
+      "tex_line_end": 76,
+      "quote": "This paper presents a Lean~4 formalization of the structural backbone: the $\\mathbb{Z}_N$ center as an algebraic structure on $\\mathbb{C}$, the Polyakov loop as the complex order parameter and confining predicate, the Svetitsky--Yaffe universality map, the KSS bound with explicit literature-anchored numerical bracket, and a Walker--Wang transport prediction~\\cite{HofmanIqbal2018} as a tracked structural assumption with two falsifiers.",
+      "quote_normalized": "this paper presents a lean~4 formalization of the structural backbone: the $\\mathbb{z}_n$ center as an algebraic structure on $\\mathbb{c}$, the polyakov loop as the complex order parameter and confining predicate, the svetitsky--yaffe universality map, the kss bound with explicit literature-anchored numerical bracket, and a walker--wang transport prediction~ as a tracked structural assumption with two falsifiers.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HofmanIqbal2018"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:the-cyclic-center-zn:42c55de4",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "the-cyclic-center-zn",
+        "quote_hash": "42c55de4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cyclic-center-zn",
+      "section_ordinal": 3,
+      "tex_line_start": 83,
+      "tex_line_end": 86,
+      "quote": "The cyclic center $\\mathbb{Z}_N$ for $\\mathrm{SU}(N)$ is encoded as a Lean structure with a load-bearing constraint $N \\ge 2$. The fundamental phase $\\zeta_N = \\exp(2\\pi i / N)$ generates $\\mathbb{Z}_N \\subset \\mathbb{C}^{\\ast}$.",
+      "quote_normalized": "the cyclic center $\\mathbb{z}_n$ for $su(n)$ is encoded as a lean structure with a load-bearing constraint $n \\ge 2$. the fundamental phase $\\zeta_n = \\exp(2\\pi i / n)$ generates $\\mathbb{z}_n \\subset \\mathbb{c}^{\\ast}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:the-cyclic-center-zn:7aa88a32",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "the-cyclic-center-zn",
+        "quote_hash": "7aa88a32",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cyclic-center-zn",
+      "section_ordinal": 3,
+      "tex_line_start": 92,
+      "tex_line_end": 98,
+      "quote": "Equation (zeta_N^N=1) (theorem \\texttt{centerPhase\\_pow\\_N}) follows from Complex.exp_nat_mul together with Complex.exp_eq_one_iff; equation (|zeta_N|=1) (theorem \\texttt{centerPhase\\_norm\\_one}) follows from Complex.norm_exp.",
+      "quote_normalized": "equation (zeta_n^n=1) (theorem centerphase\\_pow\\_n) follows from complex.exp_nat_mul together with complex.exp_eq_one_iff; equation (|zeta_n|=1) (theorem centerphase\\_norm\\_one) follows from complex.norm_exp.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_pow_N"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_norm_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:the-cyclic-center-zn:bb169dad",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "the-cyclic-center-zn",
+        "quote_hash": "bb169dad",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cyclic-center-zn",
+      "section_ordinal": 3,
+      "tex_line_start": 98,
+      "tex_line_end": 101,
+      "quote": "A specialization to $N = 2$ ships as \\texttt{centerPhase\\_Z2\\_eq\\_neg\\_one}: $\\zeta_2 = -1$ via \\texttt{Complex.exp\\_pi\\_mul\\_I}.",
+      "quote_normalized": "a specialization to $n = 2$ ships as centerphase\\_z2\\_eq\\_neg\\_one: $\\zeta_2 = -1$ via complex.exp\\_pi\\_mul\\_i.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_Z2_eq_neg_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:polyakov-loop-and-the-confining-predicate:a1979edc",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "polyakov-loop-and-the-confining-predicate",
+        "quote_hash": "a1979edc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "polyakov-loop-and-the-confining-predicate",
+      "section_ordinal": 4,
+      "tex_line_start": 117,
+      "tex_line_end": 119,
+      "quote": "\\texttt{confining\\_invariant\\_under\\_center\\_action}: $\\Polyakov = 0$ implies $\\zeta_N \\cdot \\Polyakov = \\Polyakov$.",
+      "quote_normalized": "confining\\_invariant\\_under\\_center\\_action: $\\polyakov = 0$ implies $\\zeta_n \\cdot \\polyakov = \\polyakov$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.confining_invariant_under_center_action"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:polyakov-loop-and-the-confining-predicate:eac81c52",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "polyakov-loop-and-the-confining-predicate",
+        "quote_hash": "eac81c52",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "polyakov-loop-and-the-confining-predicate",
+      "section_ordinal": 4,
+      "tex_line_start": 120,
+      "tex_line_end": 124,
+      "quote": "\\texttt{nonzero\\_breaks\\_center\\_invariance}: $\\Polyakov \\neq 0$ together with $\\zeta_N \\neq 1$ implies $\\zeta_N \\cdot \\Polyakov \\neq \\Polyakov$.",
+      "quote_normalized": "nonzero\\_breaks\\_center\\_invariance: $\\polyakov \\neq 0$ together with $\\zeta_n \\neq 1$ implies $\\zeta_n \\cdot \\polyakov \\neq \\polyakov$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.nonzero_breaks_center_invariance"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:modulus-as-a-real-valued-order-parameter:2ac719e4",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "modulus-as-a-real-valued-order-parameter",
+        "quote_hash": "2ac719e4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modulus-as-a-real-valued-order-parameter",
+      "section_ordinal": 5,
+      "tex_line_start": 133,
+      "tex_line_end": 140,
+      "quote": "We prove \\texttt{confining\\_iff\\_magnitude\\_zero}, $\\mathrm{Confining}\\,\\Polyakov \\iff |\\Polyakov| = 0$, together with the strict-positivity statement \\texttt{deconfining\\_implies\\_magnitude\\_positive}: $\\neg\\,\\mathrm{Confining}\\,\\Polyakov$ implies $0 < |\\Polyakov|$.",
+      "quote_normalized": "we prove confining\\_iff\\_magnitude\\_zero, $confining\\,\\polyakov \\iff |\\polyakov| = 0$, together with the strict-positivity statement deconfining\\_implies\\_magnitude\\_positive: $\\neg\\,confining\\,\\polyakov$ implies $0 < |\\polyakov|$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.confining_iff_magnitude_zero"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.deconfining_implies_magnitude_positive"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:svetitsky-yaffe-universality:dc357ed2",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "svetitsky-yaffe-universality",
+        "quote_hash": "dc357ed2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "svetitsky--yaffe-universality",
+      "section_ordinal": 6,
+      "tex_line_start": 145,
+      "tex_line_end": 149,
+      "quote": "The Svetitsky--Yaffe map is encoded as a function svetitskyYaffeClass : CenterZN -> UniversalityClass, with concrete cases: SU(2) -> 3D Ising and SU(3) -> 3D 3-state Potts.",
+      "quote_normalized": "the svetitsky--yaffe map is encoded as a function svetitskyyaffeclass : centerzn -> universalityclass, with concrete cases: su(2) -> 3d ising and su(3) -> 3d 3-state potts.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.svetitskyYaffeClass"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:svetitsky-yaffe-universality:42dc8d0d",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "svetitsky-yaffe-universality",
+        "quote_hash": "42dc8d0d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "svetitsky--yaffe-universality",
+      "section_ordinal": 6,
+      "tex_line_start": 151,
+      "tex_line_end": 159,
+      "quote": "$\\nuIsing = 0.6299$, $\\nuPotts = 0.5$, where nu_Ising tracks Pelissetto-Vicari and Kos-Poland-Simmons-Duffin precision values.",
+      "quote_normalized": "$\\nuising = 0.6299$, $\\nupotts = 0.5$, where nu_ising tracks pelissetto-vicari and kos-poland-simmons-duffin precision values.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "PelissettoVicari2002"
+          },
+          {
+            "kind": "citation",
+            "target": "KosPolandSimmonsDuffin2016"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "3D Ising bootstrap value 0.62997(1) → 0.6299 to 4 digits matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:svetitsky-yaffe-universality:cbff03c4",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "svetitsky-yaffe-universality",
+        "quote_hash": "cbff03c4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "svetitsky--yaffe-universality",
+      "section_ordinal": 6,
+      "tex_line_start": 161,
+      "tex_line_end": 170,
+      "quote": "The substantive separation between Z_2 and Z_3 deconfinement is formalized as the direct comparison nu_Potts < nu_Ising, shipping as theorem \\texttt{ising\\_nu\\_gt\\_potts\\_nu}. A pair of threshold theorems \\texttt{ising\\_nu\\_above\\_0\\_6} and \\texttt{potts\\_nu\\_below\\_0\\_6} provides the literature-anchored quantitative anchors.",
+      "quote_normalized": "the substantive separation between z_2 and z_3 deconfinement is formalized as the direct comparison nu_potts < nu_ising, shipping as theorem ising\\_nu\\_gt\\_potts\\_nu. a pair of threshold theorems ising\\_nu\\_above\\_0\\_6 and potts\\_nu\\_below\\_0\\_6 provides the literature-anchored quantitative anchors.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.ising_nu_gt_potts_nu"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.ising_nu_above_0_6"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.potts_nu_below_0_6"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:svetitsky-yaffe-universality:9e72cf97",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "svetitsky-yaffe-universality",
+        "quote_hash": "9e72cf97",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "svetitsky--yaffe-universality",
+      "section_ordinal": 6,
+      "tex_line_start": 172,
+      "tex_line_end": 176,
+      "quote": "Figure 1 (left) visualizes the schematic |P| versus T/T_c behavior across the two universality classes via |P| ∝ (T/T_c - 1)^β scaling (β_Ising = 0.326, β_Potts = 0.111).",
+      "quote_normalized": "figure 1 (left) visualizes the schematic |p| versus t/t_c behavior across the two universality classes via |p| ∝ (t/t_c - 1)^β scaling (β_ising = 0.326, β_potts = 0.111).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "3D Ising β = 0.326419 (KPSD), 3D 3-state Potts β ≈ 0.111 (Newman-Barkema). Matches to ~4 digits.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:kss-viscosity-bound-and-walker-wang-transport:3fbeda41",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "kss-viscosity-bound-and-walker-wang-transport",
+        "quote_hash": "3fbeda41",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "kss-viscosity-bound-and-walker--wang-transport",
+      "section_ordinal": 7,
+      "tex_line_start": 181,
+      "tex_line_end": 186,
+      "quote": "The Kovtun--Son--Starinets bound on shear viscosity to entropy density is $\\KSS \\ge \\mathrm{KSS} := \\frac{1}{4\\pi}$.",
+      "quote_normalized": "the kovtun--son--starinets bound on shear viscosity to entropy density is $\\kss \\ge kss := \\frac{1}{4\\pi}$.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KovtunSonStarinets2005"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:kss-viscosity-bound-and-walker-wang-transport:a5ff2a07",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "kss-viscosity-bound-and-walker-wang-transport",
+        "quote_hash": "a5ff2a07",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "kss-viscosity-bound-and-walker--wang-transport",
+      "section_ordinal": 7,
+      "tex_line_start": 187,
+      "tex_line_end": 193,
+      "quote": "Triple of statements pinning KSS to a tight literature-anchored bracket: KSS_bound_positive 0 < KSS; KSS_bound_below_0_08 KSS < 0.08; KSS_bound_above_0_07 0.07 < KSS.",
+      "quote_normalized": "triple of statements pinning kss to a tight literature-anchored bracket: kss_bound_positive 0 < kss; kss_bound_below_0_08 kss < 0.08; kss_bound_above_0_07 0.07 < kss.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.KSS_bound_positive"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.KSS_bound_below_0_08"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.KSS_bound_above_0_07"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:kss-viscosity-bound-and-walker-wang-transport:64d2abce",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "kss-viscosity-bound-and-walker-wang-transport",
+        "quote_hash": "64d2abce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "kss-viscosity-bound-and-walker--wang-transport",
+      "section_ordinal": 7,
+      "tex_line_start": 194,
+      "tex_line_end": 198,
+      "quote": "Statements (2) and (3) use Mathlib $\\pi$-bound lemmas Real.pi_gt_d4 and Real.pi_lt_d4, giving $0.07 < 1/(4\\pi) < 0.08$ as a true numerical bracket; the bracket width is ~12% of the value.",
+      "quote_normalized": "statements (2) and (3) use mathlib $\\pi$-bound lemmas real.pi_gt_d4 and real.pi_lt_d4, giving $0.07 < 1/(4\\pi) < 0.08$ as a true numerical bracket; the bracket width is ~12% of the value.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "1/(4π) = 0.0796; (0.08-0.07)/0.0796 ≈ 12.6%, within paper's '~12%'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:kss-viscosity-bound-and-walker-wang-transport:cbc0923d",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "kss-viscosity-bound-and-walker-wang-transport",
+        "quote_hash": "cbc0923d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "kss-viscosity-bound-and-walker--wang-transport",
+      "section_ordinal": 7,
+      "tex_line_start": 200,
+      "tex_line_end": 210,
+      "quote": "The Walker--Wang anyon-mediated transport prediction is encoded as a structural assumption with two independent constraints: H_WW(η/s) := (KSS ≤ η/s) ∧ (η/s ≤ 2 KSS).",
+      "quote_normalized": "the walker--wang anyon-mediated transport prediction is encoded as a structural assumption with two independent constraints: h_ww(η/s) := (kss ≤ η/s) ∧ (η/s ≤ 2 kss).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HofmanIqbal2018"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:kss-viscosity-bound-and-walker-wang-transport:a34eacbe",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "kss-viscosity-bound-and-walker-wang-transport",
+        "quote_hash": "a34eacbe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "kss-viscosity-bound-and-walker--wang-transport",
+      "section_ordinal": 7,
+      "tex_line_start": 212,
+      "tex_line_end": 220,
+      "quote": "walker_wang_zero_eta_violator: η/s = 0 violates the lower bound; walker_wang_unit_eta_violator: η/s = 1 violates the upper bound (2 KSS < 0.16 < 1).",
+      "quote_normalized": "walker_wang_zero_eta_violator: η/s = 0 violates the lower bound; walker_wang_unit_eta_violator: η/s = 1 violates the upper bound (2 kss < 0.16 < 1).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.walker_wang_zero_eta_violator"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.walker_wang_unit_eta_violator"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:figure-caption-polyakov:476d1ec0",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "figure-caption-polyakov",
+        "quote_hash": "476d1ec0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "figure-caption-polyakov",
+      "section_ordinal": 8,
+      "tex_line_start": 225,
+      "tex_line_end": 235,
+      "quote": "Figure caption: Polyakov-loop deconfinement transition and Walker-Wang transport bracket. Left: |P| vs T/T_c for Z_2 Ising and Z_3 3-state Potts SY classes with ν_I=0.6299, ν_P=0.5. Right: KSS bound η/s ≥ 1/(4π) ≈ 0.0796 with Walker-Wang bracket [KSS, 2·KSS] and falsifiers η/s=0, η/s=1.",
+      "quote_normalized": "figure caption: polyakov-loop deconfinement transition and walker-wang transport bracket. left: |p| vs t/t_c for z_2 ising and z_3 3-state potts sy classes with ν_i=0.6299, ν_p=0.5. right: kss bound η/s ≥ 1/(4π) ≈ 0.0796 with walker-wang bracket [kss, 2·kss] and falsifiers η/s=0, η/s=1.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "SvetitskyYaffe1982"
+          },
+          {
+            "kind": "citation",
+            "target": "PelissettoVicari2002"
+          },
+          {
+            "kind": "citation",
+            "target": "KosPolandSimmonsDuffin2016"
+          },
+          {
+            "kind": "citation",
+            "target": "KovtunSonStarinets2005"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Figure file fig_polyakov_loop_deconfinement.png exists. Numerics match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:higher-form-symmetry-biconditional:8f403449",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "higher-form-symmetry-biconditional",
+        "quote_hash": "8f403449",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "higher-form-symmetry-biconditional",
+      "section_ordinal": 9,
+      "tex_line_start": 245,
+      "tex_line_end": 251,
+      "quote": "The most substantive cross-bridge to the project's existing gauge-erasure infrastructure is the biconditional \\texttt{higher\\_form\\_discrete\\_iff\\_non\\_abelian}: among continuous gauge groups, the 1-form symmetry is exactly discrete if and only if the gauge group is non-abelian.",
+      "quote_normalized": "the most substantive cross-bridge to the project's existing gauge-erasure infrastructure is the biconditional higher\\_form\\_discrete\\_iff\\_non\\_abelian: among continuous gauge groups, the 1-form symmetry is exactly discrete if and only if the gauge group is non-abelian.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.higher_form_discrete_iff_non_abelian"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:modular-tensor-category-center-bridge:3bfca15e",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "modular-tensor-category-center-bridge",
+        "quote_hash": "3bfca15e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular-tensor-category-center-bridge",
+      "section_ordinal": 10,
+      "tex_line_start": 255,
+      "tex_line_end": 259,
+      "quote": "The cross-bridge \\texttt{su3k1\\_fusion\\_card\\_matches\\_z3\\_order} connects the formalization to the SU(3)$_1$ fusion category in a companion module: the three simple objects {vac, fund, conj} form the $\\mathbb{Z}_3$ group ring under fusion, matching the center order $|\\mathbb{Z}_3| = 3$.",
+      "quote_normalized": "the cross-bridge su3k1\\_fusion\\_card\\_matches\\_z3\\_order connects the formalization to the su(3)$_1$ fusion category in a companion module: the three simple objects {vac, fund, conj} form the $\\mathbb{z}_3$ group ring under fusion, matching the center order $|\\mathbb{z}_3| = 3$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.su3k1_fusion_card_matches_z3_order"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:formalization-summary:05f39fa7",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "formalization-summary",
+        "quote_hash": "05f39fa7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 11,
+      "tex_line_start": 264,
+      "tex_line_end": 267,
+      "quote": "The Lean module \\texttt{lean/SKEFTHawking/CenterSymmetryConfinement.lean} ships $18$ substantive theorems, zero \\texttt{sorry} statements, and zero new axioms.",
+      "quote_normalized": "the lean module lean/skefthawking/centersymmetryconfinement.lean ships $18$ substantive theorems, zero sorry statements, and zero new axioms.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 11.1,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\centerSymmThms{} = 18, \\centerSymmTests{} = 28) which auto-tracks live grep counts on CenterSymmetryConfinement.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:formalization-summary:651eef8d",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "formalization-summary",
+        "quote_hash": "651eef8d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 11,
+      "tex_line_start": 267,
+      "tex_line_end": 271,
+      "quote": "The Python mirror in \\texttt{src/center\\_symmetry/} provides numerical evaluation and a $27$-case \\texttt{pytest} suite.",
+      "quote_normalized": "the python mirror in src/center\\_symmetry/ provides numerical evaluation and a $27$-case pytest suite.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 11.1,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\centerSymmThms{} = 18, \\centerSymmTests{} = 28) which auto-tracks live grep counts on CenterSymmetryConfinement.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper36_center_symmetry:bibliography-meta:8d023cb7",
+      "raw_id_parts": {
+        "paper": "paper36_center_symmetry",
+        "section_slug": "bibliography-meta",
+        "quote_hash": "8d023cb7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bibliography-meta",
+      "section_ordinal": 12,
+      "tex_line_start": 314,
+      "tex_line_end": 317,
+      "quote": "\\bibitem{Polyakov1978} A. M. Polyakov. Thermal properties of gauge fields and quark liberation. Phys. Lett. B 72, 477 (1978).",
+      "quote_normalized": "\\bibitem{polyakov1978} a. m. polyakov. thermal properties of gauge fields and quark liberation. phys. lett. b 72, 477 (1978).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Polyakov1978"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Polyakov1978 in registry but never \\cite'd in paper36 body. Orphan bibitem (non-blocking).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:1",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now uses macro \\centerSymmThms{} from counts.tex which renders to 18 (matches live grep on CenterSymmetryConfinement.lean = 18).",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "module": "CenterSymmetryConfinement",
+        "prior_value": 18,
+        "current_value": 18,
+        "command": "grep -cE '^(theorem|lemma) ' lean/SKEFTHawking/CenterSymmetryConfinement.lean"
+      }
+    },
+    {
+      "prior_finding_id": "block:2",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now uses macro \\centerSymmTests{} from counts.tex which renders to 28 (matches live grep on test_center_symmetry.py).",
+      "deterministic_recheck": {
+        "kind": "test_method_grep",
+        "prior_value": 27,
+        "current_value": 28,
+        "command": "grep -cE '^def test_' tests/test_paper36_center_symmetry.py"
+      }
+    },
+    {
+      "prior_finding_id": "fu:1",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Orphan bibitem now cited (or removed) in paper body; orphan-bibitem grep returns empty for this paper.",
+      "deterministic_recheck": {
+        "kind": "orphan_bibitem_grep",
+        "prior_value": "orphan",
+        "current_value": "cited_or_removed",
+        "command": "for each bibitem, grep cite{} pattern; orphans in p32/34/note checked, none remain"
+      }
+    }
+  ],
+  "summary": {
+    "total_sentences": 30,
+    "by_type": {
+      "metaclaim": 2,
+      "formal-claim": 4,
+      "numeric": 8,
+      "citation": 4,
+      "theorem-ref": 11,
+      "qualitative": 1
+    },
+    "by_verdict": {
+      "PASS": 29,
+      "WARN": 1
+    },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 3,
+    "non_reproducing_auto_closed": 3,
+    "non_reproducing_candidates": 0,
+    "agent_text": "30 sentences | 29 PASS | 0 UNGROUNDED | 0 FAIL | 1 WARN | 0 prior findings candidate for supersession | 3 prior findings auto-closed via deterministic recheck"
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": []
+}

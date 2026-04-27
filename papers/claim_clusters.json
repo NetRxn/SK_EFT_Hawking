@@ -3,7 +3,7 @@
   "clusters": [
     {
       "confidence": 1.0,
-      "constructed_at": "2026-04-25T22:58:18Z",
+      "constructed_at": "2026-04-27T17:56:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:d2c6aaa3",
@@ -23,7 +23,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-04-25T22:58:18Z",
+      "constructed_at": "2026-04-27T17:56:39Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:ce92f4a9",
@@ -44,7 +44,7 @@
       "normalized_hash": "ce92f4a9"
     }
   ],
-  "constructed_at": "2026-04-25T22:58:18Z",
+  "constructed_at": "2026-04-27T17:56:39Z",
   "constructed_by": "cluster_detect.py:all",
   "paper_coverage": [
     "paper10_modular_generation",

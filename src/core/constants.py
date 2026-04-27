@@ -1928,6 +1928,62 @@ MAJORANA_PARAMS = {
     # ── Light neutrino mass scale anchors (from Δm² + lightest = 0) ──
     'M_NU_HEAVIEST_EV': 0.0501,           # √|Δm²_31| ≈ 0.05 eV (NO, m_lightest → 0)
     'M_NU_NEXT_EV': 0.00861,              # √Δm²_21 ≈ 8.61 meV
+    # ── Wave 4: Symmetric-Mass-Generation (SMG) substrate-bridge parameters ─
+    # Deep-research-anchored values per Lit-Search/Phase-5z/Phase 5z Wave 4 —
+    # SMG Substrate Phase Diagram.md §2 (verdict 2026-04-27).
+    #
+    # The dimensionless ratio c_SMG = Λ_SMG/Λ_UV is the PHYSICAL substrate
+    # gap-to-UV-cutoff ratio (NOT the Hasenfratz-Witzel lattice ratio
+    # Λ_D/a⁻¹ ≈ 0.13, which is in lattice units). After the project-internal
+    # Fierz-translation of HW's g²_GF ≳ 25 onto the V&D 8-coupling NJL
+    # scaling (deep research §1.3 + §2.2), the physical c_SMG band lands in:
+    #   - Broad NJL envelope:        c_SMG ∈ [10⁻¹², 10⁻³]   (g_eff − g_c ∈ [0.3, 3])
+    #   - Seesaw-restricted band:    c_SMG ∈ [10⁻¹⁰, 10⁻⁴]   (requires fine-tuning of
+    #                                                          (λ_i) of order 10–30%)
+    # Substrate UV anchor: Λ_UV ≈ M_Pl ≈ 10¹⁹ GeV (most natural for ADW substrate).
+    # Status: OPEN-AT-LITERATURE-FRONTIER (deep research §1.7, §2.4) — no published
+    # source establishes that ADW substrate sits in the HW window; V&D's own
+    # mean-field (PRD 86 104019, 2012) tilts NEGATIVE.
+    'C_SMG_BROAD_LOWER': 1.0e-12,         # NJL-broad-band lower
+    'C_SMG_BROAD_UPPER': 1.0e-3,          # NJL-broad-band upper
+    'C_SMG_SEESAW_LOWER': 1.0e-10,        # Seesaw-restricted lower (requires fine-tuning)
+    'C_SMG_SEESAW_UPPER': 1.0e-4,         # Seesaw-restricted upper
+    'C_SMG_FIDUCIAL': 1.0e-7,             # Geometric mid-band of seesaw-restricted
+    'LAMBDA_UV_SMG_FIDUCIAL_GEV': 1.0e19, # M_Pl substrate UV anchor
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6c Wave 2: EW Baryogenesis ↔ Chirality Wall bridge parameters
+#
+# Bridges 5z.3 EWPhaseTransition (transition order) + ChiralityWallMaster
+# (Z₁₆ anomaly cancellation) to the SM EWBG verdict.
+#
+# Sphaleron decoupling threshold: v(T_c)/T_c > 1 (Cohen-Kaplan-Nelson 1993).
+# KLRS lattice m_H crossover threshold: m_H = 72.4 ± 1.7 GeV (Csikor-Fodor-
+# Heitger 1999, refining KLRS 1996 m_H = 72 ± 2 GeV).
+# SM Z₁₆ anomaly representatives:
+#   No ν_R: 3 × 15 = 45 ≡ 13 (mod 16) ≠ 0       → wall intact (SMFermionData)
+#   With ν_R: 3 × 16 = 48 ≡ 0 (mod 16)          → wall cracks (Z16AnomalyComputation)
+# ════════════════════════════════════════════════════════════════════
+
+EWBG_PARAMS = {
+    # ── Sphaleron decoupling threshold (Cohen-Kaplan-Nelson) ─────────
+    'SPHALERON_DECOUPLING_THRESHOLD': 1.0,    # v(T_c)/T_c > 1 for B-violation freeze-out
+    # ── KLRS / CFH lattice EW crossover boundary ─────────────────────
+    'KLRS_M_H_CROSSOVER_THRESHOLD_GEV': 72.4, # CFH 1999, refining KLRS 1996
+    'KLRS_M_H_CROSSOVER_UNCERTAINTY_GEV': 1.7,
+    # ── SM observed Higgs mass (PDG 2024, redundant with EW_PARAMS for EWBG access) ─
+    'SM_M_H_GEV': 125.20,
+    # ── Z₁₆ anomaly representatives ──────────────────────────────────
+    # SM-no-ν_R: 3 generations × 15 components each = 45; 45 mod 16 = 13 (= -3 mod 16).
+    'SM_Z16_ANOMALY_NO_NU_R': 13,             # = 3 × 15 mod 16; chirality wall intact
+    # SM+3ν_R: 3 × 16 = 48; 48 mod 16 = 0. Chirality wall cracks.
+    'SM_Z16_ANOMALY_WITH_3NU_R': 0,
+    # ── EWBG verdict thresholds ──────────────────────────────────────
+    # SM m_H (125.20 GeV) > KLRS threshold (72.4 GeV) by ~73% → SM transition
+    # is crossover at full thermal corrections (KLRS 1996 lattice).
+    'M_H_OVERSHOOT_RATIO': 125.20 / 72.4,    # ≈ 1.73; well into crossover
 }
 
 

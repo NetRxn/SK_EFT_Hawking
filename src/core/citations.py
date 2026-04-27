@@ -1063,17 +1063,18 @@ CITATION_REGISTRY = {
     },
     'VanWaerbeke2025': {
         'authors': 'Van Waerbeke, L., Zhitnitsky, A. R.',
-        'title': 'QCD topological dark energy',
+        'title': 'DESI results and Dark Energy from QCD topological sectors',
         'journal': None,
         'volume': None,
         'page': None,
         'year': 2025,
         'doi': None,
         'arxiv': '2506.14182',
-        'doi_verified': None,
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'doi_verified': '2026-04-29',  # WebFetch arXiv:2506.14182 confirmed title match (paper32 adversarial 2026-04-29)
+        'used_in': ['papers/paper17_dark_sector/paper_draft.tex',
+                    'papers/paper32_strong_cp_de/paper_draft.tex'],
         'provides': [],
-        'notes': 'QCD topological DE — 0 free params, phantom crossing. arXiv verified.',
+        'notes': 'QCD topological DE — 0 free params, phantom crossing. Title corrected 2026-04-29 (was "QCD topological dark energy") per WebFetch verification.',
     },
     'Planck2018': {
         'authors': 'Planck Collaboration',
@@ -2966,8 +2967,40 @@ CITATION_REGISTRY = {
         'used_in': [
             'papers/note_rt_ch_bounds/paper_draft.tex',
         ],
-        'provides': ['CH log bound: S(L) <= (c/3) log(L/eps)'],
-        'notes': '2D CFT entanglement entropy log bound from modular Hamiltonian.',
+        'provides': ['Free-QFT specialization of the (c/3) log(L/eps) entanglement bound'],
+        'notes': 'Rigorous free-QFT specialization of the universal 2D-CFT entanglement bound. SCOPE NOTE (added 2026-04-29): the universal 2D-CFT bound for arbitrary CFTs is from Holzhey-Larsen-Wilczek 1994 and Calabrese-Cardy 2004; this paper derives the rigorous result for free QFTs. The Lean predicate H_CasiniHuerta_Bound_Valid retains the historical "Casini-Huerta" naming for compatibility but the universal-bound attribution belongs to HolzheyLarsenWilczek1994 + CalabreseCardy2004.',
+    },
+    'HolzheyLarsenWilczek1994': {
+        'authors': 'Holzhey, C., Larsen, F., Wilczek, F.',
+        'title': 'Geometric and renormalized entropy in conformal field theory',
+        'journal': 'Nucl. Phys. B',
+        'volume': 424,
+        'page': '443',
+        'year': 1994,
+        'doi': '10.1016/0550-3213(94)90402-2',
+        'arxiv': 'hep-th/9403108',
+        'doi_verified': '2026-04-29',  # Added 2026-04-29 to correct CH-attribution; arXiv hep-th/9403108 confirmed
+        'used_in': [
+            'papers/note_rt_ch_bounds/paper_draft.tex',
+        ],
+        'provides': ['Universal 2D-CFT entanglement-entropy log bound: S(L) <= (c/3) log(L/eps)'],
+        'notes': 'Original derivation of the universal 2D-CFT entanglement-entropy log bound. Added 2026-04-29 to correct earlier mis-attribution of this bound to CasiniHuerta2009.',
+    },
+    'CalabreseCardy2004': {
+        'authors': 'Calabrese, P., Cardy, J.',
+        'title': 'Entanglement entropy and quantum field theory',
+        'journal': 'J. Stat. Mech.',
+        'volume': '0406',
+        'page': 'P06002',
+        'year': 2004,
+        'doi': '10.1088/1742-5468/2004/06/P06002',
+        'arxiv': 'hep-th/0405152',
+        'doi_verified': '2026-04-29',  # Added 2026-04-29 to correct CH-attribution; arXiv hep-th/0405152 confirmed
+        'used_in': [
+            'papers/note_rt_ch_bounds/paper_draft.tex',
+        ],
+        'provides': ['Universal 2D-CFT entanglement-entropy log bound: S(L) <= (c/3) log(L/eps)'],
+        'notes': 'Independent derivation of the universal 2D-CFT entanglement-entropy log bound via replica trick. Added 2026-04-29 to correct earlier mis-attribution of this bound to CasiniHuerta2009.',
     },
     'LewkowyczMaldacena2013': {
         'authors': 'Lewkowycz, A., Maldacena, J.',
@@ -3092,19 +3125,19 @@ CITATION_REGISTRY = {
 
     'KlinkhamerVolovik2010': {
         'authors': 'Klinkhamer, F. R., Volovik, G. E.',
-        'title': 'Cosmological constant from gravitating Skyrmions',
+        'title': 'Towards a solution of the cosmological constant problem',
         'journal': 'JETP Lett.',
         'volume': 91,
         'page': '259',
         'year': 2010,
         'doi': '10.1134/S0021364010050094',
         'arxiv': '0907.4887',
-        'doi_verified': None,
+        'doi_verified': '2026-04-29',  # WebFetch arXiv:0907.4887 confirmed title (paper32 adversarial 2026-04-29)
         'used_in': [
             'papers/paper32_strong_cp_de/paper_draft.tex',
         ],
         'provides': [],
-        'notes': 'q-theory equilibrium relaxation mechanism for cosmological constant.',
+        'notes': 'q-theory framework for cosmological-constant relaxation. Title corrected 2026-04-29 (was "Cosmological constant from gravitating Skyrmions" — that is a different paper) per WebFetch verification of arXiv:0907.4887.',
     },
     'Pendlebury2015': {
         'authors': 'Pendlebury, J. M., et al.',
@@ -3232,20 +3265,20 @@ CITATION_REGISTRY = {
         'notes': 'Standard reference for critical exponents in 3D Ising and Potts universality classes.',
     },
     'KosPolandSimmonsDuffin2016': {
-        'authors': 'Kos, F., Poland, D., Simmons-Duffin, D.',
-        'title': 'Bootstrapping the O(N) archipelago',
+        'authors': 'Kos, F., Poland, D., Simmons-Duffin, D., Vichi, A.',
+        'title': 'Precision islands in the Ising and O(N) models',
         'journal': 'JHEP',
-        'volume': '03',
-        'page': '086',
+        'volume': '08',
+        'page': '036',
         'year': 2016,
-        'doi': '10.1007/JHEP03(2016)086',
+        'doi': '10.1007/JHEP08(2016)036',
         'arxiv': '1603.04436',
-        'doi_verified': None,
+        'doi_verified': '2026-04-29',  # WebFetch arXiv:1603.04436 confirmed (paper36 adversarial 2026-04-29)
         'used_in': [
             'papers/paper36_center_symmetry/paper_draft.tex',
         ],
-        'provides': [],
-        'notes': 'Conformal bootstrap precision values for 3D Ising universality class.',
+        'provides': ['3D Ising nu = 0.6299709 (KPSDV bootstrap, 2016)'],
+        'notes': 'Conformal bootstrap precision values for 3D Ising universality class. Title + author count + venue corrected 2026-04-29 (was wrongly listed as 3-author "Bootstrapping the O(N) archipelago" JHEP 03:086) per WebFetch verification of arXiv:1603.04436. Bibkey retained for backwards compatibility despite missing fourth-author Vichi.',
     },
     'KovtunSonStarinets2005': {
         'authors': 'Kovtun, P., Son, D. T., Starinets, A. O.',
@@ -3265,19 +3298,35 @@ CITATION_REGISTRY = {
     },
     'HofmanIqbal2018': {
         'authors': 'Hofman, D. M., Iqbal, N.',
-        'title': 'Goldstone modes and photonization for higher form symmetries',
+        'title': 'Generalized global symmetries and holography',
         'journal': 'SciPost Phys.',
         'volume': '4',
         'page': '005',
         'year': 2018,
         'doi': '10.21468/SciPostPhys.4.1.005',
         'arxiv': '1707.08577',
-        'doi_verified': None,
+        'doi_verified': '2026-04-29',  # WebFetch arXiv:1707.08577 confirmed (paper36 adversarial 2026-04-29)
         'used_in': [
             'papers/paper36_center_symmetry/paper_draft.tex',
         ],
         'provides': [],
-        'notes': 'Higher-form-symmetry Goldstone-mode framework relevant to Walker-Wang transport.',
+        'notes': 'Holographic generalized global symmetries; framework for higher-form symmetries in transport. Title corrected 2026-04-29 (was "Goldstone modes and photonization for higher form symmetries" — that is a different/related paper) per WebFetch verification of arXiv:1707.08577.',
+    },
+    'WalkerWang2012': {
+        'authors': 'Walker, K., Wang, Z.',
+        'title': '(3+1)-TQFTs and topological insulators',
+        'journal': 'Front. Phys.',
+        'volume': 7,
+        'page': '150',
+        'year': 2012,
+        'doi': '10.1007/s11467-011-0194-z',
+        'arxiv': '1104.2632',
+        'doi_verified': '2026-04-29',  # WebFetch arXiv:1104.2632 confirmed (newly added 2026-04-29)
+        'used_in': [
+            'papers/paper36_center_symmetry/paper_draft.tex',
+        ],
+        'provides': ['Walker-Wang TQFTs hosting (3+1)-D anyon-line excitations'],
+        'notes': 'Walker-Wang (3+1)-dimensional TQFT framework: provides the topological-phase context the paper invokes for the Walker-Wang anyon-mediated transport modelling assumption (no transport prediction is derived from this reference; the [KSS, 2*KSS] bracket is project-originated).',
     },
     'NambuJonaLasinio1961': {
         'authors': 'Nambu, Y., Jona-Lasinio, G.',
@@ -3324,7 +3373,7 @@ CITATION_REGISTRY = {
         'used_in': [
             'papers/paper37_chiral_ssb/paper_draft.tex',
         ],
-        'provides': ['Lattice quark condensate <q-bar q> = -(272 MeV)^3 ~= -0.0227 GeV^3'],
+        'provides': ['Lattice quark condensate <q-bar q> ≈ -(283 MeV)^3 ≈ -0.0227 GeV^3'],
         'notes': 'Lattice-QCD averages including chiral condensate and decay constants.',
     },
     'PDG2022': {
@@ -3425,7 +3474,7 @@ CITATION_REGISTRY = {
         'notes': 'Foundational paper on higher-form (1-form) global symmetries; '
                  'machinery for Z_N center symmetry analysis.',
     },
-    'Hatsuda2008': {
+    'AlfordSchmittRajagopalSchaefer2008': {
         'authors': 'Alford, M. G., Schmitt, A., Rajagopal, K., Schäfer, T.',
         'title': 'Color superconductivity in dense quark matter',
         'journal': 'Rev. Mod. Phys.',
@@ -3434,12 +3483,12 @@ CITATION_REGISTRY = {
         'year': 2008,
         'doi': '10.1103/RevModPhys.80.1455',
         'arxiv': '0709.4635',
-        'doi_verified': None,
+        'doi_verified': '2026-04-29',  # WebFetch arXiv:0709.4635 confirmed (paper38 adversarial 2026-04-29)
         'used_in': [
             'papers/paper38_cfl/paper_draft.tex',
         ],
         'provides': [],
-        'notes': 'Comprehensive review of color superconductivity and CFL phase.',
+        'notes': 'Comprehensive review of color superconductivity and CFL phase. Renamed 2026-04-29 from the misnomer "Hatsuda2008" (paper has no Hatsuda authorship); paper38 .tex updated correspondingly.',
     },
 }
 

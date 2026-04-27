@@ -2,12 +2,20 @@
 Tests for scripts/graph_integrity.py — Knowledge Graph integrity checker.
 
 Tests structural query results and conflict detection.
+
+Marked `slow`: `run_integrity_checks` builds the full knowledge
+graph via `build_graph.py`, which calls `load_lean_deps()` and
+re-runs `lake env lean --run SKEFTHawking/ExtractDeps.lean` if the
+cached hash is stale (5-10 min). Default pytest skips this module;
+run with `-m slow` to include.
 """
 
 import sys
 from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.slow
 
 # Ensure project root is on sys.path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

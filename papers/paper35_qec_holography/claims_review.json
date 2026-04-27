@@ -1,0 +1,1065 @@
+{
+  "paper": "paper35_qec_holography",
+  "review_date": "2026-04-27T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper35_qec_holography:abstract:9612a5b6",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "9612a5b6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 27,
+      "tex_line_end": 31,
+      "quote": "We formalize, in the Lean~4 proof assistant, the structural content of the Hayden--Preskill (2007) information-recovery protocol~\\cite{HaydenPreskill2007} on the modular-tensor-category (MTC) horizon-boundary-condition substrate previously developed for black-hole microstate counting in this project.",
+      "quote_normalized": "we formalize, in the lean~4 proof assistant, the structural content of the hayden--preskill (2007) information-recovery protocol~ on the modular-tensor-category (mtc) horizon-boundary-condition substrate previously developed for black-hole microstate counting in this project.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HaydenPreskill2007"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:abstract:0c418279",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "0c418279",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 31,
+      "tex_line_end": 38,
+      "quote": "The formalization defines two information-theoretic observables on top of the existing horizon data: a code-distance proxy $\\dC := \\log\\dmax$ identifying the topological-shielding scale of an encoded logical qubit, and a Hayden--Preskill scrambling-time bound $\\Tscr := \\log\\Dsq = \\log\\sum_a d_a^2$ giving the substrate-only part of $(\\beta/2\\pi)\\,S_{\\mathrm{BH}}$ after the area law is pulled out.",
+      "quote_normalized": "the formalization defines two information-theoretic observables on top of the existing horizon data: a code-distance proxy $\\dc := \\log\\dmax$ identifying the topological-shielding scale of an encoded logical qubit, and a hayden--preskill scrambling-time bound $\\tscr := \\log\\dsq = \\log\\sum_a d_a^2$ giving the substrate-only part of $(\\beta/2\\pi)\\,s_{bh}$ after the area law is pulled out.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:abstract:a2070707",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "a2070707",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 41,
+      "quote": "The central structural theorem proves that positive code distance is equivalent to non-abelian fusion ($\\dmax > 1$) and that admissibility of the substrate forces a positive scrambling-time bound, via the sum-bound $\\Dsq \\ge \\dmax^2$.",
+      "quote_normalized": "the central structural theorem proves that positive code distance is equivalent to non-abelian fusion ($\\dmax > 1$) and that admissibility of the substrate forces a positive scrambling-time bound, via the sum-bound $\\dsq \\ge \\dmax^2$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:abstract:f3798655",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "f3798655",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 43,
+      "quote": "The Fibonacci substrate is the concrete non-abelian witness ($\\dC = \\log\\varphi \\approx 0.481 < \\log 2$), and the singleton (vacuum-only) substrate is the falsifier.",
+      "quote_normalized": "the fibonacci substrate is the concrete non-abelian witness ($\\dc = \\log\\varphi \\approx 0.481 < \\log 2$), and the singleton (vacuum-only) substrate is the falsifier.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.fibonacci_HPCode_codeDistance_lt_log_two"
+          },
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.trivialAbelian_violates_admissibility"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.025,
+      "agent_notes": "log(φ) = 0.4812..., log(2) = 0.6931... Matches paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:abstract:d29ca4d9",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "d29ca4d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 43,
+      "tex_line_end": 46,
+      "quote": "Hayden--Preskill recovery at the scrambling-time bound is established universally over encoding choices, by case-splitting on the encoding anyon's quantum dimension.",
+      "quote_normalized": "hayden--preskill recovery at the scrambling-time bound is established universally over encoding choices, by case-splitting on the encoding anyon's quantum dimension.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode.recovery_at_scrambling_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:abstract:88d08dbf",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "88d08dbf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 46,
+      "tex_line_end": 47,
+      "quote": "The module ships ten substantive theorems with zero \\texttt{sorry} statements and no new axioms beyond the kernel's three.",
+      "quote_normalized": "the module ships ten substantive theorems with zero sorry statements and no new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA recheck: grep '^theorem' QECHolographyBridge.lean = 10; sorry = 0; axiom = 0. All match.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:abstract:3e95cdcd",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "abstract",
+        "quote_hash": "3e95cdcd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 48,
+      "tex_line_end": 50,
+      "quote": "The full holographic-dictionary side --- AdS/CFT spectrum identification and explicit Yoshida--Kitaev decoder construction~\\cite{YoshidaKitaev2017} --- is intentionally deferred.",
+      "quote_normalized": "the full holographic-dictionary side --- ads/cft spectrum identification and explicit yoshida--kitaev decoder construction~ --- is intentionally deferred.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "YoshidaKitaev2017"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:87bae191",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "87bae191",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 58,
+      "tex_line_end": 62,
+      "quote": "The Hayden--Preskill protocol~\\cite{HaydenPreskill2007} establishes that information thrown into an old (more-than-half-evaporated) black hole can be recovered by an observer with access to the early Hawking radiation, on a scrambling timescale $t_{\\mathrm{scr}} \\simeq (\\beta/2\\pi)\\log S_{\\mathrm{BH}}$.",
+      "quote_normalized": "the hayden--preskill protocol~ establishes that information thrown into an old (more-than-half-evaporated) black hole can be recovered by an observer with access to the early hawking radiation, on a scrambling timescale $t_{scr} \\simeq (\\beta/2\\pi)\\log s_{bh}$.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HaydenPreskill2007"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:96762d25",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "96762d25",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 62,
+      "tex_line_end": 67,
+      "quote": "This result, together with subsequent work on holographic quantum error correction~\\cite{AlmheiriDongHarlow2015,PYHP2015}, established a quantum-information-theoretic interpretation of black-hole horizons that has become foundational to modern approaches to the information puzzle.",
+      "quote_normalized": "this result, together with subsequent work on holographic quantum error correction~, established a quantum-information-theoretic interpretation of black-hole horizons that has become foundational to modern approaches to the information puzzle.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AlmheiriDongHarlow2015"
+          },
+          {
+            "kind": "citation",
+            "target": "PYHP2015"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:da09ebcf",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "da09ebcf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 69,
+      "tex_line_end": 71,
+      "quote": "Anyonic substrates --- modular tensor categories arising in fault-tolerant topological quantum computation~\\cite{KitaevAnyons2003,NayakAnyons2008} --- provide a natural setting for the bulk side of this story.",
+      "quote_normalized": "anyonic substrates --- modular tensor categories arising in fault-tolerant topological quantum computation~ --- provide a natural setting for the bulk side of this story.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KitaevAnyons2003"
+          },
+          {
+            "kind": "citation",
+            "target": "NayakAnyons2008"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:7af3bdb9",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "7af3bdb9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 72,
+      "tex_line_end": 75,
+      "quote": "Topological entanglement entropy~\\cite{KitaevPreskill2006} identifies the universal sub-leading area-law contribution as $\\gamma = \\log D$, where $D = \\sqrt{\\sum_a d_a^2}$ is the total quantum dimension.",
+      "quote_normalized": "topological entanglement entropy~ identifies the universal sub-leading area-law contribution as $\\gamma = \\log d$, where $d = \\sqrt{\\sum_a d_a^2}$ is the total quantum dimension.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KitaevPreskill2006"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:7ec28222",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "7ec28222",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 75,
+      "tex_line_end": 79,
+      "quote": "Recent project work uses the abstract MTC horizon-boundary-condition data --- per-object positive quantum dimensions, an attainable maximum dmax, and the Immirzi tuning parameter --- as the substrate for emergent black-hole microstate counting.",
+      "quote_normalized": "recent project work uses the abstract mtc horizon-boundary-condition data --- per-object positive quantum dimensions, an attainable maximum dmax, and the immirzi tuning parameter --- as the substrate for emergent black-hole microstate counting.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:39b00677",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "39b00677",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 87,
+      "tex_line_end": 89,
+      "quote": "A code-distance proxy $\\dC := \\log \\dmax$ measuring the fusion-channel entropy that shields an encoded logical qubit from boundary errors.",
+      "quote_normalized": "a code-distance proxy $\\dc := \\log \\dmax$ measuring the fusion-channel entropy that shields an encoded logical qubit from boundary errors.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:fe397b76",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "fe397b76",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 90,
+      "tex_line_end": 91,
+      "quote": "A scrambling-time bound $\\Tscr := \\log \\Dsq$ measuring the substrate-only part of the Hayden--Preskill scrambling time.",
+      "quote_normalized": "a scrambling-time bound $\\tscr := \\log \\dsq$ measuring the substrate-only part of the hayden--preskill scrambling time.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:introduction:f5103f3e",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "introduction",
+        "quote_hash": "f5103f3e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 96,
+      "tex_line_end": 98,
+      "quote": "We do not derive the AdS/CFT dictionary or construct explicit decoders; the Yoshida--Kitaev protocol~\\cite{YoshidaKitaev2017} remains outside the scope.",
+      "quote_normalized": "we do not derive the ads/cft dictionary or construct explicit decoders; the yoshida--kitaev protocol~ remains outside the scope.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "YoshidaKitaev2017"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:hayden-preskill-code-structure:1c7d37f8",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "hayden-preskill-code-structure",
+        "quote_hash": "1c7d37f8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hayden-preskill-code-structure",
+      "section_ordinal": 3,
+      "tex_line_start": 106,
+      "tex_line_end": 113,
+      "quote": "The Hayden--Preskill code on an MTC horizon boundary condition is encoded as structure HPCode { horizon : HorizonMTCBC; encoding_obj : Fin horizon.num_objects } augmenting the substrate with a single encoding anyon.",
+      "quote_normalized": "the hayden--preskill code on an mtc horizon boundary condition is encoded as structure hpcode { horizon : horizonmtcbc; encoding_obj : fin horizon.num_objects } augmenting the substrate with a single encoding anyon.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:hayden-preskill-code-structure:289913f6",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "hayden-preskill-code-structure",
+        "quote_hash": "289913f6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hayden-preskill-code-structure",
+      "section_ordinal": 3,
+      "tex_line_start": 113,
+      "tex_line_end": 119,
+      "quote": "The MTC categorical data ($S$, $T$ modular matrices; $F$, $R$ braided data) is not required at this abstract level; concrete witnesses live in the Fibonacci instance \\texttt{fibonacciHorizonBC} (used for the witness theorems below) and the singleton instance \\texttt{trivialAbelianHorizonBC} (used for the falsifier).",
+      "quote_normalized": "the mtc categorical data ($s$, $t$ modular matrices; $f$, $r$ braided data) is not required at this abstract level; concrete witnesses live in the fibonacci instance fibonaccihorizonbc (used for the witness theorems below) and the singleton instance trivialabelianhorizonbc (used for the falsifier).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "BHEntropyMicroscopic.fibonacciHorizonBC"
+          },
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.trivialAbelianHorizonBC"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "fibonacciHorizonBC defined in BHEntropyMicroscopic, imported into QECHolographyBridge. trivialAbelianHorizonBC in QECHolographyBridge.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:code-distance-and-scrambling-time:15dc8a78",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "code-distance-and-scrambling-time",
+        "quote_hash": "15dc8a78",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "code-distance-and-scrambling-time",
+      "section_ordinal": 4,
+      "tex_line_start": 139,
+      "tex_line_end": 144,
+      "quote": "The minimal substantive content needed to upgrade $0 < \\Dsq$ to $1 \\le \\Dsq$ ships as the lemma \\texttt{one\\_le\\_globalDimSq}: the unit object's contribution $d_{\\mathrm{unit}}^2 = 1$ to the sum gives the lower bound.",
+      "quote_normalized": "the minimal substantive content needed to upgrade $0 < \\dsq$ to $1 \\le \\dsq$ ships as the lemma one\\_le\\_globaldimsq: the unit object's contribution $d_{unit}^2 = 1$ to the sum gives the lower bound.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode.one_le_globalDimSq"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "QECHolographyBridge.HPCode.one_le_globalDimSq exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:admissibility-theorem:c68a672b",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "admissibility-theorem",
+        "quote_hash": "c68a672b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "admissibility-theorem",
+      "section_ordinal": 5,
+      "tex_line_start": 149,
+      "tex_line_end": 159,
+      "quote": "The wave's named structural anchor is theorem code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class : (0 < H.codeDistance <-> 1 < H.horizon.d_max) AND (0 < H.codeDistance -> 0 < H.scramblingTimeBound).",
+      "quote_normalized": "the wave's named structural anchor is theorem code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class : (0 < h.codedistance <-> 1 < h.horizon.d_max) and (0 < h.codedistance -> 0 < h.scramblingtimebound).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Theorem exists as QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:admissibility-theorem:f1bc855f",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "admissibility-theorem",
+        "quote_hash": "f1bc855f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "admissibility-theorem",
+      "section_ordinal": 5,
+      "tex_line_start": 160,
+      "tex_line_end": 167,
+      "quote": "Both halves are load-bearing. The biconditional connects the information-theoretic observable $\\dC > 0$ to the structural fusion-class condition $\\dmax > 1$ via $\\log_{>0}$ monotonicity. The forward implication shows that admissible substrates force a positive scrambling-time bound, via $\\Dsq \\ge \\dmax^2$.",
+      "quote_normalized": "both halves are load-bearing. the biconditional connects the information-theoretic observable $\\dc > 0$ to the structural fusion-class condition $\\dmax > 1$ via $\\log_{>0}$ monotonicity. the forward implication shows that admissible substrates force a positive scrambling-time bound, via $\\dsq \\ge \\dmax^2$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:hayden-preskill-recovery:eeb2afa7",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "hayden-preskill-recovery",
+        "quote_hash": "eeb2afa7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hayden--preskill-recovery",
+      "section_ordinal": 6,
+      "tex_line_start": 181,
+      "tex_line_end": 185,
+      "quote": "Theorem (\\texttt{recovery\\_at\\_scrambling\\_bound}). For every \\texttt{HPCode}, recovery is information-theoretically possible when boundary entropy reaches the substrate scrambling-time bound: $\\log d_{\\mathrm{encode}} \\le \\log \\Dsq$.",
+      "quote_normalized": "theorem (recovery\\_at\\_scrambling\\_bound). for every hpcode, recovery is information-theoretically possible when boundary entropy reaches the substrate scrambling-time bound: $\\log d_{encode} \\le \\log \\dsq$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode.recovery_at_scrambling_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:hayden-preskill-recovery:a8ad0bf4",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "hayden-preskill-recovery",
+        "quote_hash": "a8ad0bf4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hayden--preskill-recovery",
+      "section_ordinal": 6,
+      "tex_line_start": 187,
+      "tex_line_end": 188,
+      "quote": "The proof case-splits on $d_{\\mathrm{encode}} \\ge 1$ versus $d_{\\mathrm{encode}} < 1$.",
+      "quote_normalized": "the proof case-splits on $d_{encode} \\ge 1$ versus $d_{encode} < 1$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:witnesses-and-falsifier:70dfd4d7",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "witnesses-and-falsifier",
+        "quote_hash": "70dfd4d7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "witnesses-and-falsifier",
+      "section_ordinal": 7,
+      "tex_line_start": 200,
+      "tex_line_end": 213,
+      "quote": "Figure caption: Hayden-Preskill QEC observables across MTC substrates. Left: code-distance proxy log d_max for Fibonacci (d_τ=φ≈1.618, dC≈0.481), Ising (d_σ=√2, dC≈0.347), Fibonacci sub-sector of SU(3)_{k=2}, and singleton (d_max=1, dC=0). Reference line at log 2 ≈ 0.693. Right: scrambling-time bound log D^2.",
+      "quote_normalized": "figure caption: hayden-preskill qec observables across mtc substrates. left: code-distance proxy log d_max for fibonacci (d_τ=φ≈1.618, dc≈0.481), ising (d_σ=√2, dc≈0.347), fibonacci sub-sector of su(3)_{k=2}, and singleton (d_max=1, dc=0). reference line at log 2 ≈ 0.693. right: scrambling-time bound log d^2.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Recompute: log(1.618)=0.481, log(sqrt(2))=0.347, log(2)=0.693. All match. Figure file fig_code_distance_vs_fusion_spectrum.png exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:witnesses-and-falsifier:025d9038",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "witnesses-and-falsifier",
+        "quote_hash": "025d9038",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "witnesses-and-falsifier",
+      "section_ordinal": 7,
+      "tex_line_start": 218,
+      "tex_line_end": 223,
+      "quote": "The Fibonacci substrate is the concrete non-abelian witness ($d_\\tau = \\varphi$, $\\dC = \\log\\varphi \\approx 0.481 < \\log 2$). The quantitative bound \\texttt{fibonacci\\_HPCode\\_codeDistance\\_lt\\_log\\_two} proves $\\dC < \\log 2$ via $\\varphi < 2 \\Leftrightarrow \\sqrt{5} < 3 \\Leftrightarrow 5 < 9$.",
+      "quote_normalized": "the fibonacci substrate is the concrete non-abelian witness ($d_\\tau = \\varphi$, $\\dc = \\log\\varphi \\approx 0.481 < \\log 2$). the quantitative bound fibonacci\\_hpcode\\_codedistance\\_lt\\_log\\_two proves $\\dc < \\log 2$ via $\\varphi < 2 \\leftrightarrow \\sqrt{5} < 3 \\leftrightarrow 5 < 9$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.fibonacci_HPCode_codeDistance_lt_log_two"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:witnesses-and-falsifier:42f98659",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "witnesses-and-falsifier",
+        "quote_hash": "42f98659",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "witnesses-and-falsifier",
+      "section_ordinal": 7,
+      "tex_line_start": 225,
+      "tex_line_end": 229,
+      "quote": "The scrambling-time witness \\texttt{fibonacci\\_HPCode\\_scramblingTimeBound\\_pos} forwards the substrate's positive code distance through the admissibility theorem to obtain $\\Tscr > 0$, making the admissibility theorem load-bearing.",
+      "quote_normalized": "the scrambling-time witness fibonacci\\_hpcode\\_scramblingtimebound\\_pos forwards the substrate's positive code distance through the admissibility theorem to obtain $\\tscr > 0$, making the admissibility theorem load-bearing.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.fibonacci_HPCode_scramblingTimeBound_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:witnesses-and-falsifier:92b49f73",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "witnesses-and-falsifier",
+        "quote_hash": "92b49f73",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "witnesses-and-falsifier",
+      "section_ordinal": 7,
+      "tex_line_start": 231,
+      "tex_line_end": 234,
+      "quote": "The singleton-substrate falsifier \\texttt{trivialAbelian\\_violates\\_admissibility} disposes of the $\\dmax = 1$ MTC: the proof invokes the admissibility biconditional to extract $1 < 1$, contradicting irreflexivity.",
+      "quote_normalized": "the singleton-substrate falsifier trivialabelian\\_violates\\_admissibility disposes of the $\\dmax = 1$ mtc: the proof invokes the admissibility biconditional to extract $1 < 1$, contradicting irreflexivity.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.trivialAbelian_violates_admissibility"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:cross-bridge-to-the-substrate-hypothesis:02a56c7e",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "cross-bridge-to-the-substrate-hypothesis",
+        "quote_hash": "02a56c7e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-bridge-to-the-substrate-hypothesis",
+      "section_ordinal": 8,
+      "tex_line_start": 239,
+      "tex_line_end": 249,
+      "quote": "The substantive cross-bridge \\texttt{horizon\\_BC\\_implies\\_HP\\_admissible} takes a hypothesis instance of the project's \\texttt{H\\_HorizonBoundaryCondition} structural assumption and returns $1 < \\dmax$. The proof body invokes the structural assumption's area-law field ($0 < \\log\\dmax$).",
+      "quote_normalized": "the substantive cross-bridge horizon\\_bc\\_implies\\_hp\\_admissible takes a hypothesis instance of the project's h\\_horizonboundarycondition structural assumption and returns $1 < \\dmax$. the proof body invokes the structural assumption's area-law field ($0 < \\log\\dmax$).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "QECHolographyBridge.HPCode.horizon_BC_implies_HP_admissible"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "H_HorizonBoundaryCondition"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "HD context: H_HorizonBoundaryCondition is a tracked Prop hypothesis disclosed in body — disclosure satisfies Class HD.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:formalization-summary:78efe76d",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "formalization-summary",
+        "quote_hash": "78efe76d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 9,
+      "tex_line_start": 254,
+      "tex_line_end": 257,
+      "quote": "The Lean module \\texttt{lean/SKEFTHawking/QECHolographyBridge.lean} ships ten substantive theorems, zero \\texttt{sorry} statements, and zero new axioms beyond the kernel's three.",
+      "quote_normalized": "the lean module lean/skefthawking/qecholographybridge.lean ships ten substantive theorems, zero sorry statements, and zero new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: 10 / 0 / 0.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:formalization-summary:3c9494fd",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "formalization-summary",
+        "quote_hash": "3c9494fd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 9,
+      "tex_line_start": 257,
+      "tex_line_end": 261,
+      "quote": "The Python mirror in \\texttt{src/qec\\_holography/} provides numerical evaluation across four concrete MTC substrates (Fibonacci, Ising, $SU(3)_{k=2}$ sub-sector, singleton) and a 30-case \\texttt{pytest} suite pinning the Lean theorems to numerical agreement.",
+      "quote_normalized": "the python mirror in src/qec\\_holography/ provides numerical evaluation across four concrete mtc substrates (fibonacci, ising, $su(3)_{k=2}$ sub-sector, singleton) and a 30-case pytest suite pinning the lean theorems to numerical agreement.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: 30 test methods in test_qec_holography.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:what-is-and-is-not-done-here:07d38cce",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "what-is-and-is-not-done-here",
+        "quote_hash": "07d38cce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "what-is-and-is-not-done-here",
+      "section_ordinal": 10,
+      "tex_line_start": 270,
+      "tex_line_end": 272,
+      "quote": "Identify which conformal field theory on the boundary corresponds to a given MTC; the AdS/CFT spectrum dictionary is not constructed.",
+      "quote_normalized": "identify which conformal field theory on the boundary corresponds to a given mtc; the ads/cft spectrum dictionary is not constructed.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Honest scope-disclosure.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:what-is-and-is-not-done-here:97b9f396",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "what-is-and-is-not-done-here",
+        "quote_hash": "97b9f396",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "what-is-and-is-not-done-here",
+      "section_ordinal": 10,
+      "tex_line_start": 273,
+      "tex_line_end": 277,
+      "quote": "Construct an explicit decoder for the Hayden--Preskill recovery in the sense of Yoshida--Kitaev~\\cite{YoshidaKitaev2017}; the existence of recovery at the scrambling-time threshold is the information-theoretic statement we prove, not the algorithm that realizes it.",
+      "quote_normalized": "construct an explicit decoder for the hayden--preskill recovery in the sense of yoshida--kitaev~; the existence of recovery at the scrambling-time threshold is the information-theoretic statement we prove, not the algorithm that realizes it.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "YoshidaKitaev2017"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper35_qec_holography:what-is-and-is-not-done-here:08547bcb",
+      "raw_id_parts": {
+        "paper": "paper35_qec_holography",
+        "section_slug": "what-is-and-is-not-done-here",
+        "quote_hash": "08547bcb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "what-is-and-is-not-done-here",
+      "section_ordinal": 10,
+      "tex_line_start": 278,
+      "tex_line_end": 280,
+      "quote": "Reproduce the Page curve quantitatively; the formalization records the threshold but not the dynamics.",
+      "quote_normalized": "reproduce the page curve quantitatively; the formalization records the threshold but not the dynamics.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 32,
+    "by_type": {
+      "metaclaim": 1,
+      "qualitative": 7,
+      "formal-claim": 2,
+      "numeric": 5,
+      "citation": 7,
+      "theorem-ref": 9,
+      "methodology": 1
+    },
+    "by_verdict": {
+      "PASS": 29,
+      "INFO": 3
+    },
+    "by_finding_class": {
+      "IA": 3,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "32 sentences | 29 PASS | 0 UNGROUNDED | 0 FAIL | 0 WARN | 0 prior findings candidate for supersession | 0 prior findings auto-closed via deterministic recheck"
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": []
+}

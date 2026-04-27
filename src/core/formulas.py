@@ -6910,6 +6910,107 @@ def majorana_rung_z16_compatibility_index(n_nu_r):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 5z Wave 4: Symmetric-Mass-Generation route to the Majorana rung
+#                  (MajoranaRungSMG.lean)
+# ════════════════════════════════════════════════════════════════════
+# Parallel substrate-bridge to the Wave 2 BCS-exponential form, anchored
+# in Hasenfratz-Witzel SU(3) N_f=8 lattice SMG evidence (arXiv:2412.10322
+# + 2511.22678). SMG gaps fermions WITHOUT requiring lepton-number
+# violation, structurally bypassing the Wave 2a no-go theorem
+# `lepton_number_symmetry_obstructs_BCS_form`. Substrate-specific c_SMG
+# closed form is OPEN-W4-1 (Lit-Search/Tasks/Phase5z_W4_smg_substrate_phase_diagram.md).
+# ════════════════════════════════════════════════════════════════════
+
+
+def smg_gap_substrate(lambda_uv_gev, c_smg=1.0e-7):
+    """NJL-scaling-anchored substrate SMG gap scale.
+
+        Λ_SMG = c_SMG · Λ_UV
+
+    where c_SMG ∈ [10⁻¹⁰, 10⁻⁴] is the **seesaw-restricted band** of
+    the dimensionless ratio Λ_SMG/Λ_UV per the deep-research-derived
+    NJL scaling (Lit-Search/Phase-5z/Phase 5z Wave 4 — SMG Substrate
+    Phase Diagram.md §2, verdict 2026-04-27). The fiducial mid-band
+    value c_SMG = 10⁻⁷ + Λ_UV = M_Pl ≈ 10¹⁹ GeV gives
+    Λ_SMG ≈ 10¹² GeV — central seesaw band.
+
+    Note: c_SMG is the PHYSICAL ratio (Λ_SMG/Λ_UV), NOT the lattice
+    ratio Λ_D/a⁻¹ ≈ 0.13 reported by Hasenfratz-Witzel directly. The
+    physical band is project-internal Fierz-translation of HW's
+    g²_GF ≳ 25 onto V&D's 8-coupling NJL scaling. Substrate-specific
+    c_SMG for ADW remains OPEN-W4-1 at the literature frontier.
+
+    Lean: MajoranaRungSMG.H_SubstrateNearSMGFixedPoint
+    Aristotle: pending
+    Source: Wave 4 deep research §2 (verdict 2026-04-27);
+        Hasenfratz & Witzel, arXiv:2412.10322 (2024); Braun-Leonhardt-Pospiech
+        Fierz-complete NJL III, PRD 101 036004 (2020).
+
+    Parameters
+    ----------
+    lambda_uv_gev : float
+        Substrate UV cutoff Λ_UV [GeV]. Must be positive. Natural anchor
+        is M_Pl ≈ 10¹⁹ GeV.
+    c_smg : float
+        Dimensionless ratio Λ_SMG/Λ_UV. Default 10⁻⁷ (NJL-band mid-fiducial).
+        Seesaw-restricted band is [10⁻¹⁰, 10⁻⁴]; broad NJL envelope is
+        [10⁻¹², 10⁻³]. Must be in (0, 1].
+
+    Returns
+    -------
+    float
+        SMG gap scale Λ_SMG [GeV].
+    """
+    if lambda_uv_gev <= 0:
+        raise ValueError("Substrate UV cutoff Λ_UV must be positive.")
+    if not (0 < c_smg <= 1):
+        raise ValueError(f"c_SMG must be in (0, 1], got {c_smg}.")
+    return c_smg * lambda_uv_gev
+
+
+def m_r_smg_from_gap(lambda_smg_gev, c_i=1.0):
+    """Per-generation Majorana mass M_R from SMG gap scale Λ_SMG.
+
+        M_R_i = c_i · Λ_SMG,    c_i ∈ (0, 1]
+
+    The c_i ∈ (0, 1] generation-dependent weighting reflects that the
+    SMG-induced Majorana scale is bounded above by Λ_SMG (the gap
+    saturates at c_i = 1) and may be suppressed for lighter generations.
+    Substrate-specific c_i are OPEN-W4-2; default c_i = 1 returns the
+    saturated upper-edge value.
+
+    Crucially: this formula does NOT require lepton-number violation as
+    input — SMG gaps fermions through composite-fermion condensates that
+    are SM-symmetric (Razamat-Tong 2021, Catterall 2024). This is the
+    structural bypass of the Wave 2 BCS L-symmetry obstruction theorem
+    `lepton_number_symmetry_obstructs_BCS_form`.
+
+    Lean: MajoranaRungSMG.H_MR_FromSMGGap
+    Aristotle: pending
+    Source: Razamat & Tong, PRX 11:011063 (2021); Catterall, SciPost Phys.
+        16:108 (2024); Hasenfratz & Witzel, arXiv:2412.10322 (2024).
+        Phase 5z Wave 4 roadmap §"Track B continued".
+
+    Parameters
+    ----------
+    lambda_smg_gev : float
+        SMG gap scale Λ_SMG [GeV]. Must be positive.
+    c_i : float
+        Per-generation coefficient in (0, 1]. Default 1 (saturated).
+
+    Returns
+    -------
+    float
+        Heavy Majorana mass M_R_i [GeV].
+    """
+    if lambda_smg_gev <= 0:
+        raise ValueError("SMG gap scale Λ_SMG must be positive.")
+    if not (0 < c_i <= 1):
+        raise ValueError(f"c_i must be in (0, 1], got {c_i}.")
+    return c_i * lambda_smg_gev
+
+
+# ════════════════════════════════════════════════════════════════════
 # Phase 5z Wave 3: EW phase transition (EWPhaseTransition.lean)
 # ════════════════════════════════════════════════════════════════════
 # Direct SU(2)-indexed finite-T potential per O.2 Scenario A 3/5
@@ -7029,6 +7130,108 @@ def ew_latent_heat(E, mu_sq, lam, c_T):
         raise ValueError("Mass-squared, lambda, and c_T must be positive.")
     T_c = ew_critical_temperature(mu_sq, c_T)
     return float(E ** 2 * T_c ** 2 / (2.0 * lam))
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6c Wave 2: EW Baryogenesis ↔ Chirality Wall
+# (EWBaryogenesisChiralityWall.lean)
+# ════════════════════════════════════════════════════════════════════
+# Bridges the chirality-wall pillar (Z₁₆ anomaly cancellation) and the
+# EW phase-transition pillar (Phase 5z.3) to the SM EWBG verdict.
+# ════════════════════════════════════════════════════════════════════
+
+
+def sphaleron_suppression(v, T):
+    """Sphaleron-rate Boltzmann suppression factor (structural form).
+
+    Schematically the Klinkhamer-Manton sphaleron rate per unit volume
+    scales as ``Γ_sphal ~ (α_W T)^4 exp(-E_sph/T)`` with sphaleron
+    energy ``E_sph ~ 4π v / g_W``. Project models the dimensionless
+    suppression factor as ``exp(-v/T)``: → 0 in broken phase
+    (sphalerons frozen out), → 1 in symmetric phase (unsuppressed).
+
+    Lean: EWBaryogenesisChiralityWall.sphaleronSuppression_pos,
+          sphaleronSuppression_le_one
+    Aristotle: manual
+    Source: Klinkhamer & Manton, PRD 30, 2212 (1984)
+
+    Parameters
+    ----------
+    v : float
+        Broken-phase Higgs VEV [GeV].
+    T : float
+        Temperature [GeV].
+
+    Returns
+    -------
+    float
+        Dimensionless suppression factor in (0, 1] when v/T ≥ 0.
+    """
+    import math
+    return float(math.exp(-v / T))
+
+
+def chirality_wall_blocks_ewbg(z16_anomaly):
+    """Whether the chirality-wall obstruction blocks EWBG.
+
+    Returns True iff the Z₁₆ anomaly is nontrivial (mod 16). The
+    chirality-wall cancellation requirement (Phase 5p
+    `gauging_requires_z16_cancellation`) demands ``z16_anomaly ≡ 0
+    (mod 16)`` for the lattice gauging step to proceed.
+
+    Lean: EWBaryogenesisChiralityWall.WallIntact,
+          ewbg_forbidden_if_wall_intact
+    Aristotle: manual
+    Source: Wang et al., PRD 106, 045013 (2022) — Z₁₆ classification
+
+    Parameters
+    ----------
+    z16_anomaly : int
+        Total Z₁₆ anomaly contribution (mod 16). For SM-no-ν_R:
+        45 → 13 (mod 16) ≠ 0. For SM+3ν_R: 48 → 0 (mod 16).
+
+    Returns
+    -------
+    bool
+        True if the wall is intact (anomaly ≠ 0 mod 16); False if
+        the wall cracks (anomaly cancels).
+    """
+    return (int(z16_anomaly) % 16) != 0
+
+
+def ewbg_viable(z16_anomaly, E, mu_sq, lam, c_T, threshold=None):
+    """Compound EWBG viability predicate: chirality wall cracks AND
+    transition is baryogenesis-viable (first-order, sphaleron-decoupled).
+
+    Bridges the chirality-wall pillar (Z₁₆ anomaly cancellation) and
+    the phase-transition pillar (`is_baryogenesis_viable`). EWBG fails
+    if either condition fails.
+
+    Lean: EWBaryogenesisChiralityWall.EWBGViable,
+          ewbg_forbidden_iff_wall_intact_or_not_viable
+    Aristotle: manual
+
+    Parameters
+    ----------
+    z16_anomaly : int
+        Total Z₁₆ anomaly contribution.
+    E, mu_sq, lam, c_T : float
+        EW phase-transition potential parameters.
+    threshold : float, optional
+        Sphaleron decoupling threshold, default 1.0.
+
+    Returns
+    -------
+    bool
+        True iff the wall cracks AND the transition is
+        baryogenesis-viable.
+    """
+    from src.ew_phase_transition.baryogenesis_compatibility import (
+        is_baryogenesis_viable,
+    )
+    if chirality_wall_blocks_ewbg(z16_anomaly):
+        return False
+    return bool(is_baryogenesis_viable(E, mu_sq, lam, c_T, threshold=threshold))
 
 
 # ════════════════════════════════════════════════════════════════════

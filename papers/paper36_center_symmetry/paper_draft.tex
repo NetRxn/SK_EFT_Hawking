@@ -27,7 +27,8 @@ transport bracket}
 
 \begin{abstract}
 We formalize confinement as $\mathbb{Z}_N$ 1-form center-symmetry
-unbreaking in Lean~4, treating the Polyakov loop $\Polyakov$ as the
+unbreaking in Lean~4, treating the Polyakov loop~\cite{Polyakov1978}
+$\Polyakov$ as the
 complex order parameter. The $\mathbb{Z}_N$ center acts on $\Polyakov$
 by multiplication by $\zeta_N = \exp(2\pi i / N)$; we prove this action
 is a primitive $N$-th root of unity, fixes only $\Polyakov = 0$
@@ -44,7 +45,7 @@ literature-anchored bracket $[0.07, 0.08]$ via Mathlib $\pi$-bound
 lemmas. A Walker--Wang anyon-mediated transport prediction is encoded
 as a structural assumption $H_{\mathrm{WW}} : \KSS \in [\mathrm{KSS},
 2\,\mathrm{KSS}]$~\cite{HofmanIqbal2018} with two concrete numerical
-falsifiers ($\KSS = 0$ and $\KSS = 1$). The module ships $18$
+falsifiers ($\KSS = 0$ and $\KSS = 1$). The module ships \centerSymmThms{}
 substantive Lean theorems with zero \texttt{sorry} statements and zero
 new axioms beyond the kernel's three.
 \end{abstract}
@@ -152,11 +153,17 @@ the conformal-bootstrap and renormalization-group literature:
 \nuIsing = 0.6299, \qquad \nuPotts = 0.5,
 \label{eq:nu}
 \end{equation}
-where $\nuIsing$ tracks the Pelissetto--Vicari and Kos--Poland--
-Simmons-Duffin precision values~\cite{PelissettoVicari2002,
-KosPolandSimmonsDuffin2016} and $\nuPotts \approx 1/2$ reflects the
-mean-field-like / weakly-first-order nature of the 3D 3-state Potts
-transition.
+where the literal $\nuIsing = 0.6299$ matches the Kos--Poland--
+Simmons-Duffin--Vichi 4-decimal conformal-bootstrap
+value~\cite{KosPolandSimmonsDuffin2016}; the earlier
+Pelissetto--Vicari renormalization-group calculation gives
+$\nuIsing = 0.6301(4)$~\cite{PelissettoVicari2002}, consistent at
+that precision. $\nuPotts \approx 1/2$ is a
+mean-field placeholder: the 3D 3-state Potts transition is
+weakly first order, so $\nuPotts$ is not a measured exponent and the
+literal value is illustrative only. What is load-bearing is the
+\emph{ordering} $\nuPotts < \nuIsing$, which separates the two
+universality classes regardless of the precise Potts value.
 
 The substantive separation between Z$_2$ and Z$_3$ deconfinement is
 formalized as the direct comparison
@@ -164,10 +171,10 @@ formalized as the direct comparison
 \nuPotts < \nuIsing,
 \label{eq:ising-gt-potts}
 \end{equation}
-shipping as theorem \texttt{ising\_nu\_gt\_potts\_nu}. A pair of
-threshold theorems \texttt{ising\_nu\_above\_0\_6} and
-\texttt{potts\_nu\_below\_0\_6} provides the literature-anchored
-quantitative anchors.
+shipping as theorem \texttt{ising\_nu\_gt\_potts\_nu}. We use the
+direct ordering rather than threshold-pair theorems against an
+arbitrary value (e.g.\ $0.6$): the load-bearing physics content is
+the comparison itself, not the threshold.
 
 Figure~\ref{fig:polyakov} (left) visualizes the schematic $|\Polyakov|$
 versus $T/\Tc$ behavior across the two universality classes via
@@ -198,18 +205,29 @@ width is $\sim 12\%$ of the value, well outside the trivial
 within-own-tolerance regime.
 
 The Walker--Wang anyon-mediated transport prediction is encoded as a
-structural assumption with two independent constraints:
+\emph{project-originated} structural assumption (tracked Prop, not a
+derived theorem) with two independent constraints:
 \begin{equation}
 H_{\mathrm{WW}}(\KSS) :=
 (\mathrm{KSS} \le \KSS) \,\wedge\, (\KSS \le 2\,\mathrm{KSS}).
 \label{eq:H-ww}
 \end{equation}
 The two conjuncts are independent (each can fail). The lower bound is
-the universal KSS constraint; the upper bound is the prediction that
-non-Abelian anyon-mediated transport stays within a factor of two of
-the universal lower bound~\cite{HofmanIqbal2018}.
+the universal KSS constraint; the upper bound is a \emph{modelling
+threshold} of this paper, motivated by viewing the deconfined-side
+transport as carried by Walker--Wang anyon-line
+excitations~\cite{WalkerWang2012} of a (3+1)-dimensional topological
+phase, with higher-form-symmetry hydrodynamics
+machinery~\cite{HofmanIqbal2018} as the natural EFT scaffold. We do
+\emph{not} derive the factor-of-two upper bound from
+ref.~\cite{WalkerWang2012} or~\cite{HofmanIqbal2018}; the bound is a
+falsifiable hypothesis whose truth is to be tested by HPC validation
+in Phase~6B.
 
-Two concrete numerical falsifiers ship as theorems:
+A boundary witness theorem
+\texttt{walker\_wang\_witness\_at\_kss\_lower} confirms that the
+predicate is non-vacuous: $\eta/s = \KSS$ saturates the lower
+bound. Two concrete numerical falsifiers complete the bracket:
 \begin{itemize}
 \item \texttt{walker\_wang\_zero\_eta\_violator}: $\KSS = 0$ violates
 the lower bound of equation~\eqref{eq:H-ww}, via the load-bearing
@@ -262,11 +280,11 @@ $|\mathbb{Z}_3| = 3$. This realizes the categorified center symmetry.
 \label{sec:formalization}
 
 The Lean module
-\texttt{lean/SKEFTHawking/CenterSymmetryConfinement.lean} ships $18$
+\texttt{lean/SKEFTHawking/CenterSymmetryConfinement.lean} ships \centerSymmThms{}
 substantive theorems, zero \texttt{sorry} statements, and zero new
 axioms beyond the kernel's three. The Python mirror in
 \texttt{src/center\_symmetry/} provides numerical evaluation and a
-$27$-case \texttt{pytest} suite; the figure
+\centerSymmTests{}-case \texttt{pytest} suite; the figure
 \texttt{fig\_polyakov\_loop\_deconfinement} renders both panels of
 Fig.~\ref{fig:polyakov}.
 
@@ -298,8 +316,13 @@ Phys.\ Rev.\ Lett.\ \textbf{94}, 111601 (2005); arXiv:hep-th/0405231.
 
 \bibitem{HofmanIqbal2018}
 D.~M.~Hofman and N.~Iqbal,
-``Goldstone modes and photonization for higher form symmetries,''
+``Generalized global symmetries and holography,''
 SciPost Phys.\ \textbf{4}, 005 (2018); arXiv:1707.08577.
+
+\bibitem{WalkerWang2012}
+K.~Walker and Z.~Wang,
+``(3+1)-TQFTs and topological insulators,''
+Front.\ Phys.\ \textbf{7}, 150 (2012); arXiv:1104.2632.
 
 \bibitem{PelissettoVicari2002}
 A.~Pelissetto and E.~Vicari,
@@ -307,9 +330,9 @@ A.~Pelissetto and E.~Vicari,
 Phys.\ Rep.\ \textbf{368}, 549 (2002); arXiv:cond-mat/0012164.
 
 \bibitem{KosPolandSimmonsDuffin2016}
-F.~Kos, D.~Poland, and D.~Simmons-Duffin,
-``Bootstrapping the O($N$) archipelago,''
-JHEP \textbf{03}, 086 (2016); arXiv:1603.04436.
+F.~Kos, D.~Poland, D.~Simmons-Duffin, and A.~Vichi,
+``Precision islands in the Ising and O($N$) models,''
+JHEP \textbf{08}, 036 (2016); arXiv:1603.04436.
 
 \bibitem{Polyakov1978}
 A.~M.~Polyakov,

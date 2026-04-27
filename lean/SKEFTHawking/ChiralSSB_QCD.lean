@@ -184,7 +184,7 @@ theorem gmor_lhs_pos_iff (m_pi f_pi : ℝ) :
     a factor of 10 of each other for the NJL-ADW correspondence to hold
     "naturally" (no fine-tuning).
 
-    Two independent constraints (drop-conjunct test passes):
+    Three independent constraints (drop-conjunct test passes per conjunct):
       (a) `sigma_scale > 0` (positivity precondition)
       (b) `sigma_scale / 10 ≤ v_tetrad` (lower factor-10 bound)
       (c) `v_tetrad ≤ 10 * sigma_scale` (upper factor-10 bound) -/

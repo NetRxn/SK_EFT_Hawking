@@ -373,7 +373,12 @@ mechanism classification commits to the same conclusion via
 the structural agreement: both bookkeepings classify vestigial-phase
 phenomenology as MICROSCOPE-failing / WEP-violating.
 
-Both sides decide; the bridge is the conjunction.
+The first conjunct closes by `rfl` (a bookkeeping consistency check
+on the `ClassificationTableDark` enumeration); the substantive
+content lives in the second conjunct, which decides via the
+EP-violation enumeration. The bridge is therefore non-trivial only
+on the second conjunct — the first is a sanity check that the two
+modules' enumerations agree on the vestigial mechanism's row.
 -/
 theorem vestigial_microscope_violation_consistent :
     (ClassificationTableDark.classification
@@ -398,8 +403,8 @@ findings on the initial Wave 6c.3 ship:
    lemma derives the bundle when needed.
 2. **No quantitative numerical content**: the η-scale comparison was
    prose-only. `vestigial_phase_eta_violates_microscope_bound` and
-   `step_target_can_test_vestigial_relics` add Lean-formal numerical
-   comparisons against the published constants.
+   `vestigial_relics_below_microscope_bound` add Lean-formal
+   numerical comparisons against the published constants.
 3. **Phantom W4 reference (P6)**: the docstring claim that "FangGu's
    failure mode is kinematic, not EP" was prose-only.
    `fangGu_failure_mode_is_kinematic_not_ep` actually imports
@@ -491,18 +496,6 @@ theorem vestigial_phase_eta_violates_microscope_bound :
     (1.0 : ℝ) > 1.0e-15 := by norm_num
 
 /--
-**Quantitative bound: STEP-class target reaches vestigial-relics scale.**
-
-Numerical Lean theorem: `STEP_TARGET = 1e-18 ≤ VESTIGIAL_RELICS_ETA = 1e-18`.
-Encodes the empirical-detection design margin: a STEP-class satellite
-mission with η-sensitivity at 10⁻¹⁸ can detect vestigial relics at
-that scale, providing the empirical-detection hook line 3 of
-DarkSectorSynthesis W8 §5 ranking.
--/
-theorem step_target_can_test_vestigial_relics :
-    (1.0e-18 : ℝ) ≤ (1.0e-18 : ℝ) := le_refl _
-
-/--
 **Quantitative bound: vestigial-relics η is below MICROSCOPE bound.**
 
 `VESTIGIAL_RELICS_ETA = 1e-18 < MICROSCOPE_BOUND = 1e-15`. Encodes
@@ -540,9 +533,9 @@ theorem non_violators_share_violationLevel :
 
 Forces a real Lean-level link from the 6c.3 EP-classification of
 `fangGuTorsionTrace` to Phase 5x Wave 4's `fg_cdm_obstruction`
-theorem. Per memory `feedback_python_lean_refs_drift.md`, docstring
+declaration. Per memory `feedback_python_lean_refs_drift.md`, docstring
 references to other modules must be backed by actual Lean calls; this
-theorem provides that.
+declaration provides that.
 
 Given the FangGu construction (`PerfectFluidData s` with traceless
 stress-energy `mink_trace s = 0` and `0 < s.rho`), `fg_cdm_obstruction`
@@ -558,10 +551,5 @@ theorem fangGu_failure_mode_is_kinematic_not_ep
     ¬ SKEFTHawking.FangGuTorsionDM.is_dust s ∧
     violationLevel EPMechanism.fangGuTorsionTrace = none :=
   ⟨(SKEFTHawking.FangGuTorsionDM.fg_cdm_obstruction hρ htrace).1, rfl⟩
-
-/-! ## §8 — Module-summary marker -/
-
-/-- Module-summary marker (non-substantive). -/
-theorem module_summary_marker : True := trivial
 
 end SKEFTHawking.EquivalencePrinciple

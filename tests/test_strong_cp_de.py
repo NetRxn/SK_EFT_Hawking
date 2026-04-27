@@ -112,11 +112,13 @@ def test_anomaly_matching_chain_witness_at_cp_symmetric() -> None:
 
 
 def test_both_active_inconsistency_witness() -> None:
-    """Combined Zhitnitsky + small q-theory contribution gives ρ > 1e-10.
+    """Combined Zhitnitsky + ANY positive q-theory contribution strictly
+    exceeds Zhitnitsky alone at PDG Λ_QCD.
 
     Mirrors Lean `combined_zhitnitsky_qtheory_exceeds_observation`.
+    Threshold tightened so that q-theory positivity is load-bearing.
     """
-    # Even tiny q-theory addition pushes combined above threshold
+    # Any positive q-theory addition pushes combined above Zhitnitsky alone
     assert combined_zhitnitsky_qtheory_exceeds_observation(rho_qtheory=1.0e-12)
     assert combined_zhitnitsky_qtheory_exceeds_observation(rho_qtheory=1.0e-10)
 
@@ -130,11 +132,22 @@ def test_both_active_combined_far_exceeds_observation() -> None:
 
 
 def test_both_active_holds_predicate() -> None:
-    """Tracked predicate `H_BothActiveGivesInconsistency` returns True
-    when combined ρ exceeds 1e-10 eV⁴.
+    """Tracked predicate `H_BothActiveGivesInconsistency` returns True iff
+    combined ρ strictly exceeds Zhitnitsky alone at PDG Λ_QCD.
+
+    Critically: Zhitnitsky alone (with ZERO q-theory) does NOT satisfy
+    the predicate — q-theory positivity is load-bearing.
     """
-    h = H_BothActiveGivesInconsistency(rho_de_combined=1.0e-9)
-    assert h.holds
+    rho_zhit_alone = zhitnitsky_de_eV4(LAMBDA_QCD_GEV)
+    # Combined STRICTLY ABOVE Zhitnitsky alone: holds.
+    h_above = H_BothActiveGivesInconsistency(
+        rho_de_combined=rho_zhit_alone + 1.0e-12
+    )
+    assert h_above.holds
+    # Zhitnitsky alone (no q-theory addition): does NOT hold.
+    h_at = H_BothActiveGivesInconsistency(rho_de_combined=rho_zhit_alone)
+    assert not h_at.holds
+    # Below Zhitnitsky alone: does NOT hold.
     h_below = H_BothActiveGivesInconsistency(rho_de_combined=1.0e-12)
     assert not h_below.holds
 

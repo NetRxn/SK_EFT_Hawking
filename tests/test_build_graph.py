@@ -2,6 +2,11 @@
 Tests for scripts/build_graph.py — Knowledge Graph extraction pipeline.
 
 Tests all 8 node extractors, edge integrity, and full graph export.
+
+Marked `slow`: `extract_lean_*_nodes` calls `load_lean_deps()` which
+invokes `lake env lean --run SKEFTHawking/ExtractDeps.lean` when the
+cached hash is stale (5-10 min). Default pytest skips this module;
+run with `-m slow` to include.
 """
 
 import json
@@ -10,6 +15,8 @@ from pathlib import Path
 from collections import Counter
 
 import pytest
+
+pytestmark = pytest.mark.slow
 
 # Ensure project root is on sys.path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

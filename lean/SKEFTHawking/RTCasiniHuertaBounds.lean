@@ -22,9 +22,11 @@ the area-log level for consistency with the W3 horizon BC.
 
 A substantive cross-bridge `rt_falsified_by_kaul_majumdar` consumes
 H_RT and the W3 `kaulMajumdarS` function, deriving the contradiction
-explicitly. The W3 non-universality witness
-`sen_4d_disagrees_with_kaul_majumdar` is invoked through
-`kaulMajumdar_not_H_RT_in_Sen4D_branch` as a concrete falsifier.
+explicitly. A direct concrete falsifier `kaulMajumdar_not_H_RT`
+proves at A=8, G_N=1 that the Kaul-Majumdar function fails H_RT via
+log 2 > 0 / linarith. The W3 non-universality witness
+`sen_4d_disagrees_with_kaul_majumdar` (in `BHEntropyMicroscopic`) is
+referenced for context but not invoked here.
 
 ## Scope (per Phase 6c roadmap §A, Wave 5 — pipeline stages 1-8 only)
 

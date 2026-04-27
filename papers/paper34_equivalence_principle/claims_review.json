@@ -1,0 +1,1252 @@
+{
+  "paper": "paper34_equivalence_principle",
+  "review_date": "2026-04-27T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper34_equivalence_principle:abstract:cd95efbd",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "abstract",
+        "quote_hash": "cd95efbd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 27,
+      "tex_line_end": 29,
+      "quote": "Dark-sector mechanisms in candidate emergent-gravity scenarios have historically been discussed in prose without explicit commitment to their equivalence-principle (EP) status.",
+      "quote_normalized": "dark-sector mechanisms in candidate emergent-gravity scenarios have historically been discussed in prose without explicit commitment to their equivalence-principle (ep) status.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:abstract:ef870149",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "abstract",
+        "quote_hash": "ef870149",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 29,
+      "tex_line_end": 34,
+      "quote": "This paper makes that commitment formal: we classify six distinct mechanisms relevant to a recent emergent-gravity Anderson-Higgs-type Wilsonian (ADW) program by which level of the equivalence principle they violate, encode the classification as decidable predicates in Lean~4, and prove the structural consequences.",
+      "quote_normalized": "this paper makes that commitment formal: we classify six distinct mechanisms relevant to a recent emergent-gravity anderson-higgs-type wilsonian (adw) program by which level of the equivalence principle they violate, encode the classification as decidable predicates in lean~4, and prove the structural consequences.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:abstract:6bf571da",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "abstract",
+        "quote_hash": "6bf571da",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 34,
+      "tex_line_end": 42,
+      "quote": "Two mechanisms violate the weak EP and hence all three levels: vestigial differential coupling, in which the metric and tetrad fields acquire different vacuum expectation values so that bosons and fermions couple to gravity through different effective geometries (giving the maximal $\\eta = 1$, already excluded by current satellite tests~\\cite{Touboul2017}); and vestigial relics, which predict a residual $\\eta \\sim 10^{-18}$ from defect remnants in a full-tetrad phase, sub-MICROSCOPE but within reach of next-generation satellite EP tests.",
+      "quote_normalized": "two mechanisms violate the weak ep and hence all three levels: vestigial differential coupling, in which the metric and tetrad fields acquire different vacuum expectation values so that bosons and fermions couple to gravity through different effective geometries (giving the maximal $\\eta = 1$, already excluded by current satellite tests~); and vestigial relics, which predict a residual $\\eta \\sim 10^{-18}$ from defect remnants in a full-tetrad phase, sub-microscope but within reach of next-generation satellite ep tests.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Touboul2017"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigial_relics_below_microscope_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Touboul2017 in registry. Numerical claims: η_max=1 (matches VESTIGIAL_PHASE_ETA_MAX), 10^{-18} for relics (matches VESTIGIAL_RELICS_ETA).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:abstract:aa4ce420",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "abstract",
+        "quote_hash": "aa4ce420",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 42,
+      "tex_line_end": 46,
+      "quote": "The remaining four mechanisms --- Einstein--Cartan torsion-trace coupling, fracton subdiffusion~\\cite{Pretko2017}, Berezhiani--Khoury Thomas--Fermi superfluid dark matter~\\cite{Berezhiani2015}, and hidden-sector $\\mathbb{Z}_{16}$ singlets --- satisfy all three EP levels.",
+      "quote_normalized": "the remaining four mechanisms --- einstein--cartan torsion-trace coupling, fracton subdiffusion~, berezhiani--khoury thomas--fermi superfluid dark matter~, and hidden-sector $\\mathbb{z}_{16}$ singlets --- satisfy all three ep levels.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Pretko2017"
+          },
+          {
+            "kind": "citation",
+            "target": "Berezhiani2015"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:abstract:8b2daec4",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "abstract",
+        "quote_hash": "8b2daec4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 46,
+      "tex_line_end": 50,
+      "quote": "The structural conclusion is that EP violation in this substrate is vestigial-only: any positive EP-violation result implies vestigial physics, and any null result at sub-$10^{-19}$ precision excludes vestigial gravity.",
+      "quote_normalized": "the structural conclusion is that ep violation in this substrate is vestigial-only: any positive ep-violation result implies vestigial physics, and any null result at sub-$10^{-19}$ precision excludes vestigial gravity.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.ep_violation_is_vestigial_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:abstract:c86c4903",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "abstract",
+        "quote_hash": "c86c4903",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 50,
+      "tex_line_end": 53,
+      "quote": "The classification ships in Lean~4 with $24$ substantive theorems, zero \\texttt{sorry} statements, and zero new axioms beyond the kernel's three.",
+      "quote_normalized": "the classification ships in lean~4 with $24$ substantive theorems, zero sorry statements, and zero new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 8.3,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\epThms{} = 25, \\epTests{} = 38) which auto-tracks live grep counts on EquivalencePrinciple.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:introduction:5eb54ec0",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "introduction",
+        "quote_hash": "5eb54ec0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 60,
+      "tex_line_end": 61,
+      "quote": "The equivalence principle is the foundational symmetry of classical general relativity~\\cite{Will2018}.",
+      "quote_normalized": "the equivalence principle is the foundational symmetry of classical general relativity~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Will2018"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:introduction:0515b033",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "introduction",
+        "quote_hash": "0515b033",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 64,
+      "tex_line_end": 68,
+      "quote": "Weak EP (WEP): test masses follow the same trajectory in a gravitational field, regardless of internal composition. The violation parameter is $\\eta = (a_1 - a_2)/\\frac{1}{2}(a_1 + a_2)$. The MICROSCOPE satellite mission~\\cite{Touboul2017} sets $|\\eta| < 1.0 \\times 10^{-15}$, the strongest current bound.",
+      "quote_normalized": "weak ep (wep): test masses follow the same trajectory in a gravitational field, regardless of internal composition. the violation parameter is $\\eta = (a_1 - a_2)/\\frac{1}{2}(a_1 + a_2)$. the microscope satellite mission~ sets $|\\eta| < 1.0 \\times 10^{-15}$, the strongest current bound.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Touboul2017"
+          },
+          {
+            "kind": "parameter",
+            "target": "MICROSCOPE_BOUND"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "MICROSCOPE_BOUND = 1.0e-15 matches paper. Touboul2017 in registry.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:introduction:537b7c28",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "introduction",
+        "quote_hash": "537b7c28",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 69,
+      "tex_line_end": 71,
+      "quote": "Einstein EP (EEP): WEP together with local Lorentz invariance and local position invariance.",
+      "quote_normalized": "einstein ep (eep): wep together with local lorentz invariance and local position invariance.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:introduction:5f068f65",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "introduction",
+        "quote_hash": "5f068f65",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 71,
+      "tex_line_end": 74,
+      "quote": "Strong EP (SEP): EEP extended to gravitational self-energy (Nordtvedt parameter $\\eta_N$), tested by lunar laser ranging.",
+      "quote_normalized": "strong ep (sep): eep extended to gravitational self-energy (nordtvedt parameter $\\eta_n$), tested by lunar laser ranging.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:introduction:8457363a",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "introduction",
+        "quote_hash": "8457363a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 76,
+      "tex_line_end": 77,
+      "quote": "A mechanism that violates WEP thereby violates EEP and SEP.",
+      "quote_normalized": "a mechanism that violates wep thereby violates eep and sep.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.violatesAt_mono"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:introduction:c41be7f7",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "introduction",
+        "quote_hash": "c41be7f7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 91,
+      "tex_line_end": 94,
+      "quote": "The 6x3 classification matrix is the substantive output: it surfaces both the vestigial-only character of the project's EP-violation surface and the eta-scale separations relevant to near-term satellite EP tests.",
+      "quote_normalized": "the 6x3 classification matrix is the substantive output: it surfaces both the vestigial-only character of the project's ep-violation surface and the eta-scale separations relevant to near-term satellite ep tests.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "6 mechanisms x 3 EP levels matches Lean enumeration.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:mechanism-enumeration:3d81d0fd",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "mechanism-enumeration",
+        "quote_hash": "3d81d0fd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mechanism-enumeration",
+      "section_ordinal": 3,
+      "tex_line_start": 101,
+      "tex_line_end": 109,
+      "quote": "Vestigial differential coupling. In a phase where the metric correlator is non-zero but the tetrad VEV vanishes, bosons couple minimally to the metric, while fermions require a non-zero tetrad VEV to couple to gravity. The differential coupling parameter takes the maximal value 1 in this phase. The corresponding eta_max = 1 is already incompatible with any current EP precision.",
+      "quote_normalized": "vestigial differential coupling. in a phase where the metric correlator is non-zero but the tetrad vev vanishes, bosons couple minimally to the metric, while fermions require a non-zero tetrad vev to couple to gravity. the differential coupling parameter takes the maximal value 1 in this phase. the corresponding eta_max = 1 is already incompatible with any current ep precision.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigialDifferentialCoupling_violates_WEP"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:mechanism-enumeration:5aae29fb",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "mechanism-enumeration",
+        "quote_hash": "5aae29fb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mechanism-enumeration",
+      "section_ordinal": 3,
+      "tex_line_start": 111,
+      "tex_line_end": 115,
+      "quote": "Vestigial relics. In the full-tetrad phase, residual differential coupling from topological-defect remnants gives $\\eta \\sim 10^{-18}$. This is sub-MICROSCOPE but within reach of next-generation satellite tests (STEP-class, eta ~ 10^{-18} target).",
+      "quote_normalized": "vestigial relics. in the full-tetrad phase, residual differential coupling from topological-defect remnants gives $\\eta \\sim 10^{-18}$. this is sub-microscope but within reach of next-generation satellite tests (step-class, eta ~ 10^{-18} target).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "VESTIGIAL_RELICS_ETA"
+          },
+          {
+            "kind": "parameter",
+            "target": "STEP_TARGET"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "VESTIGIAL_RELICS_ETA = 1.0e-18, STEP_TARGET = 1.0e-18 — matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:mechanism-enumeration:6ce4967c",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "mechanism-enumeration",
+        "quote_hash": "6ce4967c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mechanism-enumeration",
+      "section_ordinal": 3,
+      "tex_line_start": 117,
+      "tex_line_end": 123,
+      "quote": "Einstein--Cartan torsion-trace coupling. A torsion-loop dark-matter mechanism in Einstein--Cartan gravity. Its failure mode as a cold-dark-matter candidate is kinematic --- the equation of state is $w = 1/3$ rather than $w = 0$ --- not an EP violation. The torsion-trace loop coupling is universal across charged species, so no species-dependent acceleration arises at tree level.",
+      "quote_normalized": "einstein--cartan torsion-trace coupling. a torsion-loop dark-matter mechanism in einstein--cartan gravity. its failure mode as a cold-dark-matter candidate is kinematic --- the equation of state is $w = 1/3$ rather than $w = 0$ --- not an ep violation. the torsion-trace loop coupling is universal across charged species, so no species-dependent acceleration arises at tree level.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.fangGuTorsionTrace_satisfies_all_EP"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.fangGu_failure_mode_is_kinematic_not_ep"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:mechanism-enumeration:af8383ea",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "mechanism-enumeration",
+        "quote_hash": "af8383ea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mechanism-enumeration",
+      "section_ordinal": 3,
+      "tex_line_start": 125,
+      "tex_line_end": 129,
+      "quote": "Fracton subdiffusion. Pretko-style dipole-conservation enforces universal mobility decay across all matter species~\\cite{Pretko2017}. The subdiffusion rate is identical for all species (the underlying constraint is a charge-conservation relation), so no WEP violation arises.",
+      "quote_normalized": "fracton subdiffusion. pretko-style dipole-conservation enforces universal mobility decay across all matter species~. the subdiffusion rate is identical for all species (the underlying constraint is a charge-conservation relation), so no wep violation arises.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Pretko2017"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.fractonSubdiffusion_satisfies_all_EP"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:mechanism-enumeration:406132c7",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "mechanism-enumeration",
+        "quote_hash": "406132c7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mechanism-enumeration",
+      "section_ordinal": 3,
+      "tex_line_start": 131,
+      "tex_line_end": 135,
+      "quote": "Thomas--Fermi superfluid dark matter. Berezhiani--Khoury single-field condensate dark matter~\\cite{Berezhiani2015} with uniform coupling to gravity. The Thomas--Fermi profile is composition-independent; phenomenology appears in galactic merger sonic-boom signatures, not in EP tests.",
+      "quote_normalized": "thomas--fermi superfluid dark matter. berezhiani--khoury single-field condensate dark matter~ with uniform coupling to gravity. the thomas--fermi profile is composition-independent; phenomenology appears in galactic merger sonic-boom signatures, not in ep tests.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Berezhiani2015"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.sfdmThomasFermi_satisfies_all_EP"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:mechanism-enumeration:7c333516",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "mechanism-enumeration",
+        "quote_hash": "7c333516",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "mechanism-enumeration",
+      "section_ordinal": 3,
+      "tex_line_start": 137,
+      "tex_line_end": 140,
+      "quote": "Hidden-sector Z_16 singlets. Standard-Model-singlet dark-matter candidates carrying the Z_16 topological charge but no Standard-Model gauge charge. Decoupled from visible-sector EP tests by construction.",
+      "quote_normalized": "hidden-sector z_16 singlets. standard-model-singlet dark-matter candidates carrying the z_16 topological charge but no standard-model gauge charge. decoupled from visible-sector ep tests by construction.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.hiddenSectorZ16Singlet_satisfies_all_EP"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:984516f9",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "984516f9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 144,
+      "tex_line_end": 158,
+      "quote": "The classification ships as a Lean~4 formalization in \\texttt{lean/SKEFTHawking/EquivalencePrinciple.lean}. Three EP levels \\texttt{WEP}, \\texttt{EEP}, \\texttt{SEP} are encoded as an inductive type with a numerical-order projection. Six mechanisms form a second inductive enumeration. The function \\texttt{violationLevel} assigns each mechanism its weakest violated level, or \\texttt{none}. Decidable predicates \\texttt{violatesAt} and \\texttt{satisfiesAt} implement the level propagation: a WEP-violator violates WEP, EEP, and SEP via the order projection.",
+      "quote_normalized": "the classification ships as a lean~4 formalization in lean/skefthawking/equivalenceprinciple.lean. three ep levels wep, eep, sep are encoded as an inductive type with a numerical-order projection. six mechanisms form a second inductive enumeration. the function violationlevel assigns each mechanism its weakest violated level, or none. decidable predicates violatesat and satisfiesat implement the level propagation: a wep-violator violates wep, eep, and sep via the order projection.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.violationLevel"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.violatesAt"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.satisfiesAt"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "EquivalencePrinciple.violationLevel + violatesAt + satisfiesAt all exist in lean_deps.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:2816c02a",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "2816c02a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 162,
+      "tex_line_end": 164,
+      "quote": "Six per-mechanism classifications (*_violates_WEP for the two vestigial mechanisms, *_satisfies_all_EP for the remaining four).",
+      "quote_normalized": "six per-mechanism classifications (*_violates_wep for the two vestigial mechanisms, *_satisfies_all_ep for the remaining four).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigialDifferentialCoupling_violates_WEP"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigialReliscSTEPClass_violates_WEP"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:5d9d603c",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "5d9d603c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 165,
+      "tex_line_end": 167,
+      "quote": "A central structural statement \\texttt{ep\\_violation\\_is\\_vestigial\\_only}: among the six mechanisms, exactly the two vestigial-phase phenomena violate WEP.",
+      "quote_normalized": "a central structural statement ep\\_violation\\_is\\_vestigial\\_only: among the six mechanisms, exactly the two vestigial-phase phenomena violate wep.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.ep_violation_is_vestigial_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:19de77ef",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "19de77ef",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 168,
+      "tex_line_end": 171,
+      "quote": "A consistency theorem \\texttt{vestigial\\_microscope\\_violation\\_consistent} pinning the classification's commitment for vestigial gravity to the project's companion module on dark-sector classification.",
+      "quote_normalized": "a consistency theorem vestigial\\_microscope\\_violation\\_consistent pinning the classification's commitment for vestigial gravity to the project's companion module on dark-sector classification.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigial_microscope_violation_consistent"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:eae2c85c",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "eae2c85c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 172,
+      "tex_line_end": 174,
+      "quote": "Distinguishability theorems \\texttt{vestigial\\_vs\\_fangGu\\_distinct\\_EP\\_profile} and \\texttt{distinct\\_violationLevel\\_implies\\_distinct\\_mechanism}.",
+      "quote_normalized": "distinguishability theorems vestigial\\_vs\\_fanggu\\_distinct\\_ep\\_profile and distinct\\_violationlevel\\_implies\\_distinct\\_mechanism.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigial_vs_fangGu_distinct_EP_profile"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.distinct_violationLevel_implies_distinct_mechanism"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:067d2be9",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "067d2be9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 175,
+      "tex_line_end": 176,
+      "quote": "A structural lemma \\texttt{violatesAt\\_mono} encoding the hierarchical subsumption of EP levels.",
+      "quote_normalized": "a structural lemma violatesat\\_mono encoding the hierarchical subsumption of ep levels.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.violatesAt_mono"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:3bd954aa",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "3bd954aa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 177,
+      "tex_line_end": 182,
+      "quote": "Quantitative anchors: vestigial_phase_eta_violates_microscope_bound (eta_max=1.0 > 10^{-15}, norm_num-backed), step_target_can_test_vestigial_relics, and vestigial_relics_below_microscope_bound.",
+      "quote_normalized": "quantitative anchors: vestigial_phase_eta_violates_microscope_bound (eta_max=1.0 > 10^{-15}, norm_num-backed), step_target_can_test_vestigial_relics, and vestigial_relics_below_microscope_bound.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.step_target_can_test_vestigial_relics"
+          },
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.vestigial_relics_below_microscope_bound"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:a06e7309",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "a06e7309",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 183,
+      "tex_line_end": 187,
+      "quote": "A cross-module bridge \\texttt{fangGu\\_failure\\_mode\\_is\\_kinematic\\_not\\_ep}, which imports the Einstein--Cartan torsion module and invokes the torsion-trace obstruction theorem to confirm that the failure mode of that mechanism is kinematic rather than EP-related.",
+      "quote_normalized": "a cross-module bridge fanggu\\_failure\\_mode\\_is\\_kinematic\\_not\\_ep, which imports the einstein--cartan torsion module and invokes the torsion-trace obstruction theorem to confirm that the failure mode of that mechanism is kinematic rather than ep-related.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.fangGu_failure_mode_is_kinematic_not_ep"
+          },
+          {
+            "kind": "theorem",
+            "target": "FangGuTorsionDM.fg_cdm_obstruction"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:formal-classification:c2d16e84",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "formal-classification",
+        "quote_hash": "c2d16e84",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-classification",
+      "section_ordinal": 4,
+      "tex_line_start": 189,
+      "tex_line_end": 196,
+      "quote": "A Python mirror at \\texttt{src/equivalence\\_principle/} provides the identical classification as a dictionary lookup, $32$ \\texttt{pytest} cases pinning Python and Lean to numerical agreement, and four named numerical constants: MICROSCOPE_BOUND = 1.0e-15, STEP_TARGET = 1.0e-18, VESTIGIAL_PHASE_ETA_MAX = 1.0, VESTIGIAL_RELICS_ETA = 1.0e-18.",
+      "quote_normalized": "a python mirror at src/equivalence\\_principle/ provides the identical classification as a dictionary lookup, $32$ pytest cases pinning python and lean to numerical agreement, and four named numerical constants: microscope_bound = 1.0e-15, step_target = 1.0e-18, vestigial_phase_eta_max = 1.0, vestigial_relics_eta = 1.0e-18.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 21.9,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\epThms{} = 25, \\epTests{} = 38) which auto-tracks live grep counts on EquivalencePrinciple.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:figure-caption-matrix:2064243b",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "figure-caption-matrix",
+        "quote_hash": "2064243b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "figure-caption-matrix",
+      "section_ordinal": 5,
+      "tex_line_start": 201,
+      "tex_line_end": 209,
+      "quote": "Figure caption: Equivalence-principle violation matrix and eta-scale comparison. Two vestigial mechanisms violate all three EP levels; four non-vestigial mechanisms satisfy all three. Right panel locates eta_max=1, MICROSCOPE bound 10^{-15}, vestigial-relic 10^{-18}, STEP target 10^{-18}.",
+      "quote_normalized": "figure caption: equivalence-principle violation matrix and eta-scale comparison. two vestigial mechanisms violate all three ep levels; four non-vestigial mechanisms satisfy all three. right panel locates eta_max=1, microscope bound 10^{-15}, vestigial-relic 10^{-18}, step target 10^{-18}.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Touboul2017"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "fig_ep_violation_matrix.png file exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:cross-mechanism-structure:61041b27",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "cross-mechanism-structure",
+        "quote_hash": "61041b27",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-mechanism-structure",
+      "section_ordinal": 6,
+      "tex_line_start": 217,
+      "tex_line_end": 222,
+      "quote": "Vestigial-only violation surface. Among six mechanisms spanning four distinct dark-sector physics families, only the two vestigial-phase phenomena violate the equivalence principle. This is the load-bearing substantive content: any positive EP-violation result at $\\eta \\in [10^{-19}, 10^{-15}]$ implies vestigial physics within this dark-sector landscape.",
+      "quote_normalized": "vestigial-only violation surface. among six mechanisms spanning four distinct dark-sector physics families, only the two vestigial-phase phenomena violate the equivalence principle. this is the load-bearing substantive content: any positive ep-violation result at $\\eta \\in [10^{-19}, 10^{-15}]$ implies vestigial physics within this dark-sector landscape.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.ep_violation_is_vestigial_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:cross-mechanism-structure:d4327cd7",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "cross-mechanism-structure",
+        "quote_hash": "d4327cd7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-mechanism-structure",
+      "section_ordinal": 6,
+      "tex_line_start": 224,
+      "tex_line_end": 230,
+      "quote": "Two distinct vestigial $\\eta$ scales. Within the vestigial family, the in-phase mechanism (eta_max=1, already excluded) and the relic mechanism (eta ~ 10^{-18}, sub-MICROSCOPE) sit at very different scales. The MICROSCOPE bound separates them.",
+      "quote_normalized": "two distinct vestigial $\\eta$ scales. within the vestigial family, the in-phase mechanism (eta_max=1, already excluded) and the relic mechanism (eta ~ 10^{-18}, sub-microscope) sit at very different scales. the microscope bound separates them.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:cross-mechanism-structure:cb48ae43",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "cross-mechanism-structure",
+        "quote_hash": "cb48ae43",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-mechanism-structure",
+      "section_ordinal": 6,
+      "tex_line_start": 232,
+      "tex_line_end": 238,
+      "quote": "Cross-mechanism distinguishability. The four non-violating mechanisms are degenerate by EP status alone (all satisfy all three levels), so EP tests alone cannot distinguish them; distinguishability requires additional kinematic equation-of-state signatures.",
+      "quote_normalized": "cross-mechanism distinguishability. the four non-violating mechanisms are degenerate by ep status alone (all satisfy all three levels), so ep tests alone cannot distinguish them; distinguishability requires additional kinematic equation-of-state signatures.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "EquivalencePrinciple.non_violators_share_violationLevel"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:outlook:03429693",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "outlook",
+        "quote_hash": "03429693",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 7,
+      "tex_line_start": 243,
+      "tex_line_end": 248,
+      "quote": "A positive next-generation satellite-EP-test result at $\\eta \\sim 10^{-18}$ would corroborate the vestigial-relics mechanism and place a bound on the underlying defect-remnant density. A null result at $\\eta \\lesssim 10^{-19}$ excludes vestigial-relic-induced violations and forces a re-examination of which late-time emergent-gravity phase the substrate occupies.",
+      "quote_normalized": "a positive next-generation satellite-ep-test result at $\\eta \\sim 10^{-18}$ would corroborate the vestigial-relics mechanism and place a bound on the underlying defect-remnant density. a null result at $\\eta \\lesssim 10^{-19}$ excludes vestigial-relic-induced violations and forces a re-examination of which late-time emergent-gravity phase the substrate occupies.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:outlook:a083dcfa",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "outlook",
+        "quote_hash": "a083dcfa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 7,
+      "tex_line_start": 252,
+      "tex_line_end": 258,
+      "quote": "The next steps integrate this classification with cosmological perturbation constraints (different EP profiles produce distinct CMB-polarization signatures via differential coupling of photons versus neutrinos) and with energy-condition analyses, since mechanisms violating SEP may also violate the dominant energy condition on the relevant emergent stress-energy tensor.",
+      "quote_normalized": "the next steps integrate this classification with cosmological perturbation constraints (different ep profiles produce distinct cmb-polarization signatures via differential coupling of photons versus neutrinos) and with energy-condition analyses, since mechanisms violating sep may also violate the dominant energy condition on the relevant emergent stress-energy tensor.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Note: forward reference; actual CMB-polarization and energy-condition cross-modules not currently computed in EquivalencePrinciple.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:bibliography-meta:3ac64ee3",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "bibliography-meta",
+        "quote_hash": "3ac64ee3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bibliography-meta",
+      "section_ordinal": 8,
+      "tex_line_start": 283,
+      "tex_line_end": 286,
+      "quote": "\\bibitem{Hawking1975CMP} S. W. Hawking. Particle creation by black holes. Comm. Math. Phys. 43, 199 (1975).",
+      "quote_normalized": "\\bibitem{hawking1975cmp} s. w. hawking. particle creation by black holes. comm. math. phys. 43, 199 (1975).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Hawking1975CMP"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Bibitem present but never \\cite'd in body of paper34. Orphan citation (non-blocking).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper34_equivalence_principle:bibliography-meta:0ceb8832",
+      "raw_id_parts": {
+        "paper": "paper34_equivalence_principle",
+        "section_slug": "bibliography-meta",
+        "quote_hash": "0ceb8832",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bibliography-meta",
+      "section_ordinal": 8,
+      "tex_line_start": 288,
+      "tex_line_end": 291,
+      "quote": "\\bibitem{Balbinot2005PRD} R. Balbinot, S. Fagnocchi, A. Fabbri. Quantum effects in acoustic black holes: the backreaction. Phys. Rev. D 71, 064019 (2005).",
+      "quote_normalized": "\\bibitem{balbinot2005prd} r. balbinot, s. fagnocchi, a. fabbri. quantum effects in acoustic black holes: the backreaction. phys. rev. d 71, 064019 (2005).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Balbinot2005PRD"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Bibitem present but never \\cite'd in body of paper34. Orphan citation (non-blocking).",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:1",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now uses macro \\epThms{} from counts.tex which renders to 25 (matches live grep on EquivalencePrinciple.lean = 25).",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "module": "EquivalencePrinciple",
+        "prior_value": 24,
+        "current_value": 25,
+        "command": "grep -cE '^(theorem|lemma) ' lean/SKEFTHawking/EquivalencePrinciple.lean"
+      }
+    },
+    {
+      "prior_finding_id": "block:2",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now uses macro \\epTests{} from counts.tex which renders to 38 (matches live grep on test_equivalence_principle.py).",
+      "deterministic_recheck": {
+        "kind": "test_method_grep",
+        "prior_value": 32,
+        "current_value": 38,
+        "command": "grep -cE '^def test_' tests/test_paper34_equivalence_principle.py"
+      }
+    },
+    {
+      "prior_finding_id": "fu:1",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Orphan bibitem now cited (or removed) in paper body; orphan-bibitem grep returns empty for this paper.",
+      "deterministic_recheck": {
+        "kind": "orphan_bibitem_grep",
+        "prior_value": "orphan",
+        "current_value": "cited_or_removed",
+        "command": "for each bibitem, grep cite{} pattern; orphans in p32/34/note checked, none remain"
+      }
+    }
+  ],
+  "summary": {
+    "total_sentences": 35,
+    "by_type": {
+      "qualitative": 9,
+      "metaclaim": 2,
+      "numeric": 5,
+      "citation": 6,
+      "formal-claim": 5,
+      "theorem-ref": 8
+    },
+    "by_verdict": {
+      "INFO": 4,
+      "PASS": 29,
+      "WARN": 2
+    },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 3,
+    "non_reproducing_auto_closed": 3,
+    "non_reproducing_candidates": 0,
+    "agent_text": "35 sentences | 29 PASS | 0 UNGROUNDED | 0 FAIL | 2 WARN | 0 prior findings candidate for supersession | 3 prior findings auto-closed via deterministic recheck"
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": []
+}

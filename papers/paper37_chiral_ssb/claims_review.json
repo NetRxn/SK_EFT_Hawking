@@ -1,0 +1,864 @@
+{
+  "paper": "paper37_chiral_ssb",
+  "review_date": "2026-04-27T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper37_chiral_ssb:abstract:3ea5e40b",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "abstract",
+        "quote_hash": "3ea5e40b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 28,
+      "tex_line_end": 31,
+      "quote": "We formalize the QCD chiral-symmetry-breaking pattern $\\mathrm{SU}(N_f)_L \\times \\mathrm{SU}(N_f)_R \\to \\mathrm{SU}(N_f)_V$ and the associated Gell-Mann--Oakes--Renner relation~\\cite{GMOR1968} in Lean~4.",
+      "quote_normalized": "we formalize the qcd chiral-symmetry-breaking pattern $su(n_f)_l \\times su(n_f)_r \\to su(n_f)_v$ and the associated gell-mann--oakes--renner relation~ in lean~4.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GMOR1968"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:abstract:0e61e219",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "abstract",
+        "quote_hash": "0e61e219",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 32,
+      "tex_line_end": 34,
+      "quote": "The quark condensate $\\qbarq$ is encoded as a structure carrying its load-bearing sign constraint $\\qbarq < 0$ as a structural invariant.",
+      "quote_normalized": "the quark condensate $\\qbarq$ is encoded as a structure carrying its load-bearing sign constraint $\\qbarq < 0$ as a structural invariant.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.QuarkCondensate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:abstract:e3e8ca88",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "abstract",
+        "quote_hash": "e3e8ca88",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 34,
+      "tex_line_end": 38,
+      "quote": "The chiral-broken phase then follows from the Gell-Mann--Oakes--Renner relation $\\mpi^2 \\fpi^2 = -2\\,\\mq\\,\\qbarq$ as a structural consequence: the left-hand side is strictly positive for non-vanishing pion mass and decay constant, the right-hand side is strictly positive when $\\mq > 0$, so the equation forces $\\qbarq < 0$.",
+      "quote_normalized": "the chiral-broken phase then follows from the gell-mann--oakes--renner relation $\\mpi^2 \\fpi^2 = -2\\,\\mq\\,\\qbarq$ as a structural consequence: the left-hand side is strictly positive for non-vanishing pion mass and decay constant, the right-hand side is strictly positive when $\\mq > 0$, so the equation forces $\\qbarq < 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.gmor_rhs_pos_of_quark_mass_pos"
+          },
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.chiral_unbroken_violates_gmor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:abstract:835b2232",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "abstract",
+        "quote_hash": "835b2232",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 45,
+      "quote": "We pin the numerical agreement at PDG/FLAG central values ($\\mpi = 0.137$ GeV, $\\fpi = 0.092$ GeV, $\\mq \\approx 3.5$ MeV, $\\qbarq \\approx -0.0227$ GeV^3) to within $\\sim 4 \\times 10^{-8}$ GeV^4, shipped as a norm_num-backed theorem.",
+      "quote_normalized": "we pin the numerical agreement at pdg/flag central values ($\\mpi = 0.137$ gev, $\\fpi = 0.092$ gev, $\\mq \\approx 3.5$ mev, $\\qbarq \\approx -0.0227$ gev^3) to within $\\sim 4 \\times 10^{-8}$ gev^4, shipped as a norm_num-backed theorem.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.gmor_pdg_match"
+          },
+          {
+            "kind": "citation",
+            "target": "PDG2022"
+          },
+          {
+            "kind": "citation",
+            "target": "FLAG2021"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.05,
+      "agent_notes": "Recompute LHS = (0.137)^2 * (0.092)^2 = 1.5886e-4; RHS = -2 * 0.0035 * (-0.0227) = 1.5890e-4; residual = 3.92e-8. Matches paper's 4e-8 to 0.5%.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:abstract:9cb6be10",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "abstract",
+        "quote_hash": "9cb6be10",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 45,
+      "tex_line_end": 49,
+      "quote": "A contrapositive theorem parametric over the raw scalar variable proves that the chiral-unbroken phase is inconsistent with the relation for positive quark mass and a non-trivial pion sector.",
+      "quote_normalized": "a contrapositive theorem parametric over the raw scalar variable proves that the chiral-unbroken phase is inconsistent with the relation for positive quark mass and a non-trivial pion sector.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.chiral_unbroken_violates_gmor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:abstract:27d140ab",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "abstract",
+        "quote_hash": "27d140ab",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 48,
+      "tex_line_end": 50,
+      "quote": "The formalization ships $11$ substantive theorems, zero \\texttt{sorry} statements, and zero new axioms.",
+      "quote_normalized": "the formalization ships $11$ substantive theorems, zero sorry statements, and zero new axioms.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 10.0,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\chiralSsbThms{} = 10, \\chiralSsbTests{} = 14) which auto-tracks live grep counts on ChiralSSB_QCD.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:introduction:bb5606f4",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "introduction",
+        "quote_hash": "bb5606f4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 58,
+      "tex_line_end": 62,
+      "quote": "The QCD quark condensate $\\qbarq$ is the textbook order parameter for chiral-symmetry breaking, with the SU(N_f)_L x SU(N_f)_R -> SU(N_f)_V pattern producing the eight Goldstone bosons of QCD~\\cite{NambuJonaLasinio1961}.",
+      "quote_normalized": "the qcd quark condensate $\\qbarq$ is the textbook order parameter for chiral-symmetry breaking, with the su(n_f)_l x su(n_f)_r -> su(n_f)_v pattern producing the eight goldstone bosons of qcd~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "NambuJonaLasinio1961"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:introduction:8e6256e8",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "introduction",
+        "quote_hash": "8e6256e8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 62,
+      "tex_line_end": 68,
+      "quote": "The Gell-Mann--Oakes--Renner relation~\\cite{GMOR1968} $\\mpi^2 \\fpi^2 = -2\\,\\mq\\,\\qbarq$ ties the pion mass-decay-constant product to the bare quark mass and the condensate value.",
+      "quote_normalized": "the gell-mann--oakes--renner relation~ $\\mpi^2 \\fpi^2 = -2\\,\\mq\\,\\qbarq$ ties the pion mass-decay-constant product to the bare quark mass and the condensate value.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GMOR1968"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:introduction:04cac31a",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "introduction",
+        "quote_hash": "04cac31a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 69,
+      "tex_line_end": 72,
+      "quote": "The negativity of $\\qbarq$ is then a structural consequence of the equation: with $\\mq > 0$ and the pion sector non-trivial, the left-hand side is strictly positive, so the right-hand side forces $\\qbarq < 0$.",
+      "quote_normalized": "the negativity of $\\qbarq$ is then a structural consequence of the equation: with $\\mq > 0$ and the pion sector non-trivial, the left-hand side is strictly positive, so the right-hand side forces $\\qbarq < 0$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:the-quarkcondensate-structure:3f58aed1",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "the-quarkcondensate-structure",
+        "quote_hash": "3f58aed1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-quarkcondensate-structure",
+      "section_ordinal": 3,
+      "tex_line_start": 87,
+      "tex_line_end": 92,
+      "quote": "The Lean encoding is structure QuarkCondensate { sigma : R; sigma_neg : sigma < 0 } with sigma carrying units of GeV^3.",
+      "quote_normalized": "the lean encoding is structure quarkcondensate { sigma : r; sigma_neg : sigma < 0 } with sigma carrying units of gev^3.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.QuarkCondensate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:the-quarkcondensate-structure:c9dd5cbf",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "the-quarkcondensate-structure",
+        "quote_hash": "c9dd5cbf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-quarkcondensate-structure",
+      "section_ordinal": 3,
+      "tex_line_start": 96,
+      "tex_line_end": 101,
+      "quote": "A FLAG-2021 lattice-anchored~\\cite{FLAG2021} witness ships as def flagLatticeValue : QuarkCondensate := <-0.0227, by norm_num>.",
+      "quote_normalized": "a flag-2021 lattice-anchored~ witness ships as def flaglatticevalue : quarkcondensate := <-0.0227, by norm_num>.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.flagLatticeValue"
+          },
+          {
+            "kind": "citation",
+            "target": "FLAG2021"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:the-quarkcondensate-structure:0267a61c",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "the-quarkcondensate-structure",
+        "quote_hash": "0267a61c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-quarkcondensate-structure",
+      "section_ordinal": 3,
+      "tex_line_start": 103,
+      "tex_line_end": 107,
+      "quote": "A predicate \\texttt{IsQuarkCondensateCandidate} tests fractional-tolerance agreement with an observed lattice value: $|\\sigma - \\sigma_{\\mathrm{obs}}| < \\tau \\cdot |\\sigma_{\\mathrm{obs}}|$.",
+      "quote_normalized": "a predicate isquarkcondensatecandidate tests fractional-tolerance agreement with an observed lattice value: $|\\sigma - \\sigma_{obs}| < \\tau \\cdot |\\sigma_{obs}|$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.IsQuarkCondensateCandidate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:the-quarkcondensate-structure:16061969",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "the-quarkcondensate-structure",
+        "quote_hash": "16061969",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-quarkcondensate-structure",
+      "section_ordinal": 3,
+      "tex_line_start": 108,
+      "tex_line_end": 112,
+      "quote": "A falsifier theorem rules out $\\sigma$ values too negative compared to the FLAG central, using \\texttt{abs\\_of\\_neg} on $\\sigma_{\\mathrm{obs}} < 0$ to convert $|\\sigma_{\\mathrm{obs}}|$ to $-\\sigma_{\\mathrm{obs}}$.",
+      "quote_normalized": "a falsifier theorem rules out $\\sigma$ values too negative compared to the flag central, using abs\\_of\\_neg on $\\sigma_{obs} < 0$ to convert $|\\sigma_{obs}|$ to $-\\sigma_{obs}$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:gell-mann-oakes-renner-relation:c973e669",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "gell-mann-oakes-renner-relation",
+        "quote_hash": "c973e669",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "gell-mann--oakes--renner-relation",
+      "section_ordinal": 4,
+      "tex_line_start": 117,
+      "tex_line_end": 122,
+      "quote": "The Gell-Mann--Oakes--Renner relation is encoded as a real-valued equation between two definitions: gmor_lhs := mπ^2 fπ^2; gmor_rhs := -2 m_q ⟨q̄q⟩.",
+      "quote_normalized": "the gell-mann--oakes--renner relation is encoded as a real-valued equation between two definitions: gmor_lhs := mπ^2 fπ^2; gmor_rhs := -2 m_q ⟨q̄q⟩.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.gmor_lhs"
+          },
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.gmor_rhs"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:gell-mann-oakes-renner-relation:c3ae1ef3",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "gell-mann-oakes-renner-relation",
+        "quote_hash": "c3ae1ef3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "gell-mann--oakes--renner-relation",
+      "section_ordinal": 4,
+      "tex_line_start": 123,
+      "tex_line_end": 129,
+      "quote": "The PDG/FLAG numerical agreement check ships as the theorem \\texttt{gmor\\_pdg\\_match}: |gmor_lhs(0.137,0.092) - gmor_rhs(0.0035, -0.0227)| < 10^{-4}.",
+      "quote_normalized": "the pdg/flag numerical agreement check ships as the theorem gmor\\_pdg\\_match: |gmor_lhs(0.137,0.092) - gmor_rhs(0.0035, -0.0227)| < 10^{-4}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.gmor_pdg_match"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:gell-mann-oakes-renner-relation:f428d4f5",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "gell-mann-oakes-renner-relation",
+        "quote_hash": "f428d4f5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "gell-mann--oakes--renner-relation",
+      "section_ordinal": 4,
+      "tex_line_start": 130,
+      "tex_line_end": 132,
+      "quote": "The actual residual is $\\sim 4 \\times 10^{-8}~\\mathrm{GeV}^4$, well within one part in $10^4$ of the central values.",
+      "quote_normalized": "the actual residual is $\\sim 4 \\times 10^{-8}~gev^4$, well within one part in $10^4$ of the central values.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 2.0,
+      "agent_notes": "Recomputed: |LHS-RHS|=3.9184e-8; matches '~4e-8'.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:gell-mann-oakes-renner-relation:a5d28e21",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "gell-mann-oakes-renner-relation",
+        "quote_hash": "a5d28e21",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "gell-mann--oakes--renner-relation",
+      "section_ordinal": 4,
+      "tex_line_start": 136,
+      "tex_line_end": 139,
+      "quote": "A positivity theorem \\texttt{gmor\\_rhs\\_pos\\_of\\_quark\\_mass\\_pos} ships as a structural auxiliary: the right-hand side $-2\\,\\mq\\,\\qbarq$ is positive whenever $\\mq > 0$, via the structural negativity invariant.",
+      "quote_normalized": "a positivity theorem gmor\\_rhs\\_pos\\_of\\_quark\\_mass\\_pos ships as a structural auxiliary: the right-hand side $-2\\,\\mq\\,\\qbarq$ is positive whenever $\\mq > 0$, via the structural negativity invariant.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.gmor_rhs_pos_of_quark_mass_pos"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:chiral-unbroken-phase-ruled-out:ad2bcdd7",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "chiral-unbroken-phase-ruled-out",
+        "quote_hash": "ad2bcdd7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chiral-unbroken-phase-ruled-out",
+      "section_ordinal": 5,
+      "tex_line_start": 143,
+      "tex_line_end": 157,
+      "quote": "The contrapositive theorem \\texttt{chiral\\_unbroken\\_violates\\_gmor} is parametric over a raw scalar variable $\\sigma$ (not a structure-invariant lookup). Given mq>0, mπ≠0, fπ≠0, σ≥0, and the GMOR equation, the proof derives False via positivity composition.",
+      "quote_normalized": "the contrapositive theorem chiral\\_unbroken\\_violates\\_gmor is parametric over a raw scalar variable $\\sigma$ (not a structure-invariant lookup). given mq>0, mπ≠0, fπ≠0, σ≥0, and the gmor equation, the proof derives false via positivity composition.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.chiral_unbroken_violates_gmor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:figure-caption-gmor:55b29c6d",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "figure-caption-gmor",
+        "quote_hash": "55b29c6d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "figure-caption-gmor",
+      "section_ordinal": 6,
+      "tex_line_start": 168,
+      "tex_line_end": 178,
+      "quote": "Figure caption: Gell-Mann-Oakes-Renner relation at PDG/FLAG central values. Left: side-by-side bars at LHS ≈ 1.589e-4 GeV^4 and RHS ≈ 1.589e-4 GeV^4; visually indistinguishable; residual ~4e-8 GeV^4. Right: relative residual swept across PDG quark mass range; minimum at mq ≈ 3.5 MeV.",
+      "quote_normalized": "figure caption: gell-mann-oakes-renner relation at pdg/flag central values. left: side-by-side bars at lhs ≈ 1.589e-4 gev^4 and rhs ≈ 1.589e-4 gev^4; visually indistinguishable; residual ~4e-8 gev^4. right: relative residual swept across pdg quark mass range; minimum at mq ≈ 3.5 mev.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GMOR1968"
+          },
+          {
+            "kind": "citation",
+            "target": "FLAG2021"
+          },
+          {
+            "kind": "citation",
+            "target": "PDG2022"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Numerics confirmed: LHS=1.5886e-4, RHS=1.5890e-4, both ~1.589e-4. Figure file fig_gmor_relation_verification.png exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:tetrad-vev-quark-condensate-scale-naturalness:9b4b09e3",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "tetrad-vev-quark-condensate-scale-naturalness",
+        "quote_hash": "9b4b09e3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "tetrad-vev--quark-condensate-scale-naturalness",
+      "section_ordinal": 7,
+      "tex_line_start": 186,
+      "tex_line_end": 197,
+      "quote": "We encode a structural assumption $H_{\\mathrm{nat}}(t,q) : 0<t \\wedge 0<q \\wedge t/q \\in [0.1, 10]$, asserting that the tetrad-VEV scale and the quark-condensate scale agree to within an order of magnitude.",
+      "quote_normalized": "we encode a structural assumption $h_{nat}(t,q) : 0<t \\wedge 0<q \\wedge t/q \\in [0.1, 10]$, asserting that the tetrad-vev scale and the quark-condensate scale agree to within an order of magnitude.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:tetrad-vev-quark-condensate-scale-naturalness:c2459ed9",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "tetrad-vev-quark-condensate-scale-naturalness",
+        "quote_hash": "c2459ed9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "tetrad-vev--quark-condensate-scale-naturalness",
+      "section_ordinal": 7,
+      "tex_line_start": 199,
+      "tex_line_end": 201,
+      "quote": "This naturalness assumption is gated for numerical validation: the present formalization records its structure as a tracked hypothesis without committing to its truth.",
+      "quote_normalized": "this naturalness assumption is gated for numerical validation: the present formalization records its structure as a tracked hypothesis without committing to its truth.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Honest scope-disclosure of tracked-Prop hypothesis.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:cross-bridge-to-wetterich-nambu-jona-lasinio-infrastructure:3e99fe90",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "cross-bridge-to-wetterich-nambu-jona-lasinio-infrastructure",
+        "quote_hash": "3e99fe90",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-bridge-to-wetterich--nambu--jona-lasinio-infrastructure",
+      "section_ordinal": 8,
+      "tex_line_start": 206,
+      "tex_line_end": 213,
+      "quote": "The formalization includes a substantive cross-bridge to the project's Wetterich--Nambu--Jona-Lasinio scalar-channel module: \\texttt{njl\\_scalar\\_bounded\\_consistent\\_with\\_chiral\\_broken} combines the upstream NJL scalar-channel bound with the structural negativity invariant of the quark condensate.",
+      "quote_normalized": "the formalization includes a substantive cross-bridge to the project's wetterich--nambu--jona-lasinio scalar-channel module: njl\\_scalar\\_bounded\\_consistent\\_with\\_chiral\\_broken combines the upstream njl scalar-channel bound with the structural negativity invariant of the quark condensate.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.njl_scalar_bounded_consistent_with_chiral_broken"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:formalization-summary:3ddc5b20",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "formalization-summary",
+        "quote_hash": "3ddc5b20",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 9,
+      "tex_line_start": 218,
+      "tex_line_end": 220,
+      "quote": "The Lean module \\texttt{lean/SKEFTHawking/ChiralSSB\\_QCD.lean} ships $11$ substantive theorems, zero \\texttt{sorry} statements, and zero new axioms beyond the kernel's three.",
+      "quote_normalized": "the lean module lean/skefthawking/chiralssb\\_qcd.lean ships $11$ substantive theorems, zero sorry statements, and zero new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 10.0,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\chiralSsbThms{} = 10, \\chiralSsbTests{} = 14) which auto-tracks live grep counts on ChiralSSB_QCD.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:formalization-summary:65a63cbf",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "formalization-summary",
+        "quote_hash": "65a63cbf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 9,
+      "tex_line_start": 220,
+      "tex_line_end": 224,
+      "quote": "The Python mirror in \\texttt{src/chiral\\_ssb/} provides numerical evaluation of both sides of the Gell-Mann--Oakes--Renner relation across PDG ranges and a $14$-case \\texttt{pytest} suite pinning the Lean theorems to numerical agreement.",
+      "quote_normalized": "the python mirror in src/chiral\\_ssb/ provides numerical evaluation of both sides of the gell-mann--oakes--renner relation across pdg ranges and a $14$-case pytest suite pinning the lean theorems to numerical agreement.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: 14 test methods in tests/test_chiral_ssb.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper37_chiral_ssb:outlook:a872c4a4",
+      "raw_id_parts": {
+        "paper": "paper37_chiral_ssb",
+        "section_slug": "outlook",
+        "quote_hash": "a872c4a4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 10,
+      "tex_line_start": 229,
+      "tex_line_end": 236,
+      "quote": "The structural identification of the quark condensate as a chiral-symmetry-breaking order parameter, the Gell-Mann--Oakes--Renner relation as the structural consequence forcing its sign, and the PDG/FLAG numerical agreement at the central values pinned to one part in $10^4$ together provide a clean foundation for downstream chiral-symmetry-breaking analyses --- including the color-flavor-locked dense-quark-matter phase covered in a companion paper.",
+      "quote_normalized": "the structural identification of the quark condensate as a chiral-symmetry-breaking order parameter, the gell-mann--oakes--renner relation as the structural consequence forcing its sign, and the pdg/flag numerical agreement at the central values pinned to one part in $10^4$ together provide a clean foundation for downstream chiral-symmetry-breaking analyses --- including the color-flavor-locked dense-quark-matter phase covered in a companion paper.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:1",
+      "prior_run_date": "2026-04-27T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Paper now uses macro \\chiralSsbThms{} from counts.tex which renders to 10 (matches live grep on ChiralSSB_QCD.lean = 10).",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep",
+        "module": "ChiralSSB_QCD",
+        "prior_value": 11,
+        "current_value": 10,
+        "command": "grep -cE '^(theorem|lemma) ' lean/SKEFTHawking/ChiralSSB_QCD.lean"
+      }
+    }
+  ],
+  "summary": {
+    "total_sentences": 25,
+    "by_type": {
+      "metaclaim": 2,
+      "formal-claim": 5,
+      "numeric": 6,
+      "citation": 2,
+      "theorem-ref": 8,
+      "qualitative": 2
+    },
+    "by_verdict": {
+      "PASS": 25
+    },
+    "by_finding_class": {
+      "IA": 1,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 1,
+    "non_reproducing_auto_closed": 1,
+    "non_reproducing_candidates": 0,
+    "agent_text": "25 sentences | 25 PASS | 0 UNGROUNDED | 0 FAIL | 0 WARN | 0 prior findings candidate for supersession | 1 prior findings auto-closed via deterministic recheck"
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": []
+}

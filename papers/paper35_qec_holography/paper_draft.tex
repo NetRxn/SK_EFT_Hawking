@@ -43,7 +43,7 @@ non-abelian witness ($\dC = \log\varphi \approx 0.481 < \log 2$), and
 the singleton (vacuum-only) substrate is the falsifier. Hayden--Preskill
 recovery at the scrambling-time bound is established universally over
 encoding choices, by case-splitting on the encoding anyon's quantum
-dimension. The module ships ten substantive theorems with zero
+dimension. The module ships \qecHolographyThms{} substantive theorems with zero
 \texttt{sorry} statements and no new axioms beyond the kernel's three.
 The full holographic-dictionary side --- AdS/CFT spectrum identification
 and explicit Yoshida--Kitaev decoder construction~\cite{YoshidaKitaev2017}
@@ -86,7 +86,11 @@ emerge:
 \begin{itemize}
 \item A \emph{code-distance proxy} $\dC := \log \dmax$ measuring the
 fusion-channel entropy that shields an encoded logical qubit from
-boundary errors.
+boundary errors. We use ``proxy'' deliberately: $\dC$ is a
+\emph{substrate-level} quantity --- it depends only on the MTC
+spectrum, not on the specific encoding-anyon choice ---
+upper-bounding any per-encoding code distance one would obtain from
+an explicit Yoshida--Kitaev decoder.
 \item A \emph{scrambling-time bound} $\Tscr := \log \Dsq$ measuring
 the substrate-only part of the Hayden--Preskill scrambling time.
 \end{itemize}
@@ -241,7 +245,13 @@ The substantive cross-bridge
 instance of the project's
 \texttt{H\_HorizonBoundaryCondition} structural assumption (which
 captures the area-law / second-law / non-abelian envelope on a
-horizon-MTC boundary condition) and returns $1 < \dmax$. The proof
+horizon-MTC boundary condition) and returns $1 < \dmax$. The
+assumption bundle is parametrized by an abstract horizon-entropy
+function \texttt{S\_horizon} (instantiated downstream by the
+project's $S$-horizon candidates such as Kaul--Majumdar or
+Verlinde); the proof here uses only the bundle's
+\verb|areaLeading| field, so the bridge does not depend on any
+specific entropy-function choice. The proof
 body invokes the structural assumption's area-law field
 ($0 < \log\dmax$) and rewrites it via logarithm-positivity. This
 ensures the named cross-reference is not phantom: the body literally
@@ -253,11 +263,11 @@ step.
 
 The Lean module
 \texttt{lean/SKEFTHawking/QECHolographyBridge.lean}
-ships ten substantive theorems, zero \texttt{sorry} statements, and
+ships \qecHolographyThms{} substantive theorems, zero \texttt{sorry} statements, and
 zero new axioms beyond the kernel's three. The Python mirror in
 \texttt{src/qec\_holography/} provides numerical evaluation across
 four concrete MTC substrates (Fibonacci, Ising, $SU(3)_{k=2}$
-sub-sector, singleton) and a 30-case \texttt{pytest} suite pinning
+sub-sector, singleton) and a \qecHolographyTests{}-case \texttt{pytest} suite pinning
 the Lean theorems to numerical agreement.
 
 \section{What is and is not done here}

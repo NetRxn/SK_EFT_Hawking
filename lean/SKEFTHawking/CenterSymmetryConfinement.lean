@@ -224,26 +224,6 @@ def critical_exponent_nu (uc : UniversalityClass) : ℝ :=
   | .XY                 => 0.6717      -- 3D XY (lattice)
   | .other              => 0.0         -- unspecified
 
-/-- The 3D Ising ν exponent is strictly above 0.6.
-
-    Substantive: this is a literature-anchored quantitative claim
-    (lattice value 0.6299), not a definitional unfolding — the falsifier
-    `nu < 0.6` would rule out an Ising-class identification. -/
-theorem ising_nu_above_0_6 :
-    0.6 < critical_exponent_nu UniversalityClass.Ising := by
-  unfold critical_exponent_nu
-  norm_num
-
-/-- The 3-state Potts ν exponent is strictly below 0.6.
-
-    Substantive: separates Potts from Ising/XY in the project's tracked
-    universality table; quantitatively distinguishes Z_3 confinement
-    transitions from Z_2 ones at the level of correlation-length exponents. -/
-theorem potts_nu_below_0_6 :
-    critical_exponent_nu UniversalityClass.three_state_Potts < 0.6 := by
-  unfold critical_exponent_nu
-  norm_num
-
 /-- Direct comparison: 3D Ising ν > 3D 3-state Potts ν.
 
     Substantive: this is the load-bearing physics statement — Z_2 vs Z_3

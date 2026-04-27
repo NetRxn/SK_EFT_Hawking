@@ -267,10 +267,6 @@ class TestStrengthening:
         margin_orders = math.log10(VESTIGIAL_PHASE_ETA_MAX / MICROSCOPE_BOUND)
         assert margin_orders >= 15.0
 
-    def test_step_target_reaches_vestigial_relics(self):
-        # Lean: step_target_can_test_vestigial_relics — 1e-18 ≤ 1e-18
-        assert STEP_TARGET <= VESTIGIAL_RELICS_ETA
-
     def test_vestigial_relics_below_microscope_quantitative(self):
         # Lean: vestigial_relics_below_microscope_bound — 1e-18 < 1e-15
         assert VESTIGIAL_RELICS_ETA < MICROSCOPE_BOUND

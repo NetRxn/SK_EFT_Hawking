@@ -1,0 +1,988 @@
+{
+  "paper": "paper38_cfl",
+  "review_date": "2026-04-27T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper38_cfl:abstract:3f17afe1",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "3f17afe1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 27,
+      "tex_line_end": 32,
+      "quote": "The color-flavor-locked (\\CFL) phase of dense quark matter~\\cite{AlfordRajagopalWilczek1999,Hatsuda2008} carries an emergent one-form $\\Zthree$ symmetry, identified by Hirono and Tanizaki~\\cite{HironoTanizaki2018} as the algebraic origin of the quark--hadron continuity~\\cite{SchaeferWilczek1999} between the \\CFL\\ phase and confined hadronic matter.",
+      "quote_normalized": "the color-flavor-locked (\\cfl) phase of dense quark matter~ carries an emergent one-form $\\zthree$ symmetry, identified by hirono and tanizaki~ as the algebraic origin of the quark--hadron continuity~ between the \\cfl\\ phase and confined hadronic matter.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AlfordRajagopalWilczek1999"
+          },
+          {
+            "kind": "citation",
+            "target": "Hatsuda2008"
+          },
+          {
+            "kind": "citation",
+            "target": "HironoTanizaki2018"
+          },
+          {
+            "kind": "citation",
+            "target": "SchaeferWilczek1999"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:abstract:0e9dc518",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "0e9dc518",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 32,
+      "tex_line_end": 36,
+      "quote": "We formalize this emergent symmetry in Lean~4 and prove that its cyclic generator $\\omega = \\exp(2\\pi i / 3)$ coincides with the bare-gauge \\QCD\\ center $\\Zthree$ generator established in a companion Lean module on center-symmetry confinement.",
+      "quote_normalized": "we formalize this emergent symmetry in lean~4 and prove that its cyclic generator $\\omega = \\exp(2\\pi i / 3)$ coincides with the bare-gauge \\qcd\\ center $\\zthree$ generator established in a companion lean module on center-symmetry confinement.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:abstract:16607d10",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "16607d10",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 39,
+      "quote": "The two derivations --- one from the ultraviolet side (bare-gauge center symmetry of \\QCD), the other from the infrared side (emergent diquark-sector one-form symmetry of the \\CFL\\ phase) --- yield the same generator.",
+      "quote_normalized": "the two derivations --- one from the ultraviolet side (bare-gauge center symmetry of \\qcd), the other from the infrared side (emergent diquark-sector one-form symmetry of the \\cfl\\ phase) --- yield the same generator.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:abstract:09c66ebd",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "09c66ebd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 39,
+      "tex_line_end": 43,
+      "quote": "Algebraic consequences ($\\omega^3 = 1$, $|\\omega| = 1$, and the cube-root sum $1 + \\omega + \\omega^2 = 0$ that distinguishes $\\Zthree$ from $\\mathbb{Z}_2$) are derived through the cross-derivation identification rather than by direct computation.",
+      "quote_normalized": "algebraic consequences ($\\omega^3 = 1$, $|\\omega| = 1$, and the cube-root sum $1 + \\omega + \\omega^2 = 0$ that distinguishes $\\zthree$ from $\\mathbb{z}_2$) are derived through the cross-derivation identification rather than by direct computation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.emergentZ3_pow_3"
+          },
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.emergentZ3_norm_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.emergentZ3_sum_cube_roots"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:abstract:67a9d38a",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "67a9d38a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 43,
+      "tex_line_end": 46,
+      "quote": "The \\CFL\\ chiral Lagrangian skeleton (kinetic plus mass terms) is encoded with the chiral-limit Goldstone behavior ($m_q = 0$ vanishes the mass term) and the in-\\CFL-phase positivity.",
+      "quote_normalized": "the \\cfl\\ chiral lagrangian skeleton (kinetic plus mass terms) is encoded with the chiral-limit goldstone behavior ($m_q = 0$ vanishes the mass term) and the in-\\cfl-phase positivity.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cflKineticTerm_nonneg"
+          },
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cflMassTerm_chiral_limit"
+          },
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cflMassTerm_pos_in_cfl_phase"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:abstract:4b51d38a",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "4b51d38a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 46,
+      "tex_line_end": 48,
+      "quote": "The Hirono--Tanizaki topological-order-beyond-Landau--Ginzburg framing is encoded as a structural assumption over $\\Zthree$ charges $\\{0, 1, 2\\}$.",
+      "quote_normalized": "the hirono--tanizaki topological-order-beyond-landau--ginzburg framing is encoded as a structural assumption over $\\zthree$ charges $\\{0, 1, 2\\}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:abstract:8b875a23",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "abstract",
+        "quote_hash": "8b875a23",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 48,
+      "tex_line_end": 50,
+      "quote": "The module ships $13$ substantive theorems with zero \\texttt{sorry} statements and zero new axioms.",
+      "quote_normalized": "the module ships $13$ substantive theorems with zero sorry statements and zero new axioms.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 8.3,
+      "agent_notes": "Re-scan 2026-04-27T23:30:00Z: Paper now uses macro from counts.tex (\\cflThms{} = 12, \\cflTests{} = 17) which auto-tracks live grep counts on CFLChiralLagrangian.lean. Drift resolved by macroization. Prior IA blocker auto-closed.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:introduction:f6dee485",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "introduction",
+        "quote_hash": "f6dee485",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 58,
+      "tex_line_end": 61,
+      "quote": "The color-flavor-locked phase of dense quark matter is a paradigm example of a phase in which a nontrivial color-flavor symmetry pattern is locked by a diquark condensate~\\cite{AlfordRajagopalWilczek1999,Hatsuda2008}.",
+      "quote_normalized": "the color-flavor-locked phase of dense quark matter is a paradigm example of a phase in which a nontrivial color-flavor symmetry pattern is locked by a diquark condensate~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AlfordRajagopalWilczek1999"
+          },
+          {
+            "kind": "citation",
+            "target": "Hatsuda2008"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:introduction:5c11719f",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "introduction",
+        "quote_hash": "5c11719f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 61,
+      "tex_line_end": 68,
+      "quote": "The phenomenology has been worked out in detail~\\cite{SonStephanov2001,SchaeferWilczek1999}, and a more recent development by Hirono and Tanizaki~\\cite{HironoTanizaki2018} reframes the quark--hadron continuity in higher-form-symmetry language~\\cite{GaiottoKapustinSeibergWillett2015}: the \\CFL\\ phase exhibits an emergent one-form $\\Zthree$ symmetry, and that symmetry matches the bare \\QCD\\ center symmetry of confined hadronic matter at the level of the algebraic generator.",
+      "quote_normalized": "the phenomenology has been worked out in detail~, and a more recent development by hirono and tanizaki~ reframes the quark--hadron continuity in higher-form-symmetry language~: the \\cfl\\ phase exhibits an emergent one-form $\\zthree$ symmetry, and that symmetry matches the bare \\qcd\\ center symmetry of confined hadronic matter at the level of the algebraic generator.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "SonStephanov2001"
+          },
+          {
+            "kind": "citation",
+            "target": "SchaeferWilczek1999"
+          },
+          {
+            "kind": "citation",
+            "target": "HironoTanizaki2018"
+          },
+          {
+            "kind": "citation",
+            "target": "GaiottoKapustinSeibergWillett2015"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:introduction:c5394bdf",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "introduction",
+        "quote_hash": "c5394bdf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 70,
+      "tex_line_end": 75,
+      "quote": "This paper presents a Lean~4 formalization of the structural content of that match. The substantive output is a single load-bearing theorem identifying the \\CFL\\ emergent $\\Zthree$ generator with the \\QCD\\ center $\\Zthree$ generator at the level of the cyclic phase $\\omega = \\exp(2\\pi i / 3)$.",
+      "quote_normalized": "this paper presents a lean~4 formalization of the structural content of that match. the substantive output is a single load-bearing theorem identifying the \\cfl\\ emergent $\\zthree$ generator with the \\qcd\\ center $\\zthree$ generator at the level of the cyclic phase $\\omega = \\exp(2\\pi i / 3)$.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:introduction:ef529d1a",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "introduction",
+        "quote_hash": "ef529d1a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 75,
+      "tex_line_end": 78,
+      "quote": "The match is non-trivial because the two generators arise from structurally distinct constructions: one from the bare-gauge center symmetry of the ultraviolet \\QCD\\ Lagrangian~\\cite{Polyakov1978}, the other from the emergent diquark-sector one-form symmetry of the infrared \\CFL\\ phase.",
+      "quote_normalized": "the match is non-trivial because the two generators arise from structurally distinct constructions: one from the bare-gauge center symmetry of the ultraviolet \\qcd\\ lagrangian~, the other from the emergent diquark-sector one-form symmetry of the infrared \\cfl\\ phase.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Polyakov1978"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:the-cross-derivation-identity:8244483c",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "the-cross-derivation-identity",
+        "quote_hash": "8244483c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cross-derivation-identity",
+      "section_ordinal": 3,
+      "tex_line_start": 85,
+      "tex_line_end": 90,
+      "quote": "The \\CFL\\ emergent $\\Zthree$ generator is defined independently of the \\QCD\\ center $\\Zthree$ generator: $\\omega_\\CFL := e^{2 \\pi i / 3}$.",
+      "quote_normalized": "the \\cfl\\ emergent $\\zthree$ generator is defined independently of the \\qcd\\ center $\\zthree$ generator: $\\omega_\\cfl := e^{2 \\pi i / 3}$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:the-cross-derivation-identity:5d070f7e",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "the-cross-derivation-identity",
+        "quote_hash": "5d070f7e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cross-derivation-identity",
+      "section_ordinal": 3,
+      "tex_line_start": 91,
+      "tex_line_end": 97,
+      "quote": "The bare-gauge \\QCD\\ center $\\Zthree$ generator is the $N = 3$ specialization of $\\zeta_N$ from the companion module on center-symmetry confinement, $\\omega_\\QCD := \\texttt{centerPhase}(\\Zthree) = e^{2 \\pi i / 3}$.",
+      "quote_normalized": "the bare-gauge \\qcd\\ center $\\zthree$ generator is the $n = 3$ specialization of $\\zeta_n$ from the companion module on center-symmetry confinement, $\\omega_\\qcd := centerphase(\\zthree) = e^{2 \\pi i / 3}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:the-cross-derivation-identity:911de2fe",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "the-cross-derivation-identity",
+        "quote_hash": "911de2fe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cross-derivation-identity",
+      "section_ordinal": 3,
+      "tex_line_start": 98,
+      "tex_line_end": 105,
+      "quote": "The structural anchor of this paper is the theorem $\\omega_\\CFL = \\omega_\\QCD$ shipped as \\texttt{CFL\\_emergent\\_Z3\\_matches\\_QCD\\_center\\_Z3}. The proof reduces both definitions to their common closed form.",
+      "quote_normalized": "the structural anchor of this paper is the theorem $\\omega_\\cfl = \\omega_\\qcd$ shipped as cfl\\_emergent\\_z3\\_matches\\_qcd\\_center\\_z3. the proof reduces both definitions to their common closed form.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:the-cross-derivation-identity:b072c0ba",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "the-cross-derivation-identity",
+        "quote_hash": "b072c0ba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cross-derivation-identity",
+      "section_ordinal": 3,
+      "tex_line_start": 110,
+      "tex_line_end": 113,
+      "quote": "Theorem (\\texttt{emergentZ3\\_pow\\_3}). $\\omega_\\CFL^3 = 1$, derived by rewriting via the identity above and invoking the companion module's \\texttt{centerPhase\\_pow\\_N} at $N = 3$.",
+      "quote_normalized": "theorem (emergentz3\\_pow\\_3). $\\omega_\\cfl^3 = 1$, derived by rewriting via the identity above and invoking the companion module's centerphase\\_pow\\_n at $n = 3$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.emergentZ3_pow_3"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_pow_N"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:the-cross-derivation-identity:c38de89a",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "the-cross-derivation-identity",
+        "quote_hash": "c38de89a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cross-derivation-identity",
+      "section_ordinal": 3,
+      "tex_line_start": 115,
+      "tex_line_end": 117,
+      "quote": "Theorem (\\texttt{emergentZ3\\_norm\\_one}). $|\\omega_\\CFL| = 1$, derived analogously through the companion module's \\texttt{centerPhase\\_norm\\_one}.",
+      "quote_normalized": "theorem (emergentz3\\_norm\\_one). $|\\omega_\\cfl| = 1$, derived analogously through the companion module's centerphase\\_norm\\_one.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.emergentZ3_norm_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterSymmetryConfinement.centerPhase_norm_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:the-cross-derivation-identity:c45ff36c",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "the-cross-derivation-identity",
+        "quote_hash": "c45ff36c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "the-cross-derivation-identity",
+      "section_ordinal": 3,
+      "tex_line_start": 119,
+      "tex_line_end": 124,
+      "quote": "Theorem (\\texttt{emergentZ3\\_sum\\_cube\\_roots}). $1 + \\omega_\\CFL + \\omega_\\CFL^2 = 0$, the algebraic fingerprint distinguishing $\\Zthree$ from $\\mathbb{Z}_2$.",
+      "quote_normalized": "theorem (emergentz3\\_sum\\_cube\\_roots). $1 + \\omega_\\cfl + \\omega_\\cfl^2 = 0$, the algebraic fingerprint distinguishing $\\zthree$ from $\\mathbb{z}_2$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.emergentZ3_sum_cube_roots"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:cfl-chiral-lagrangian-skeleton:3bdec079",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "cfl-chiral-lagrangian-skeleton",
+        "quote_hash": "3bdec079",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cfl-chiral-lagrangian-skeleton",
+      "section_ordinal": 4,
+      "tex_line_start": 133,
+      "tex_line_end": 134,
+      "quote": "\\texttt{cflKineticTerm\\_nonneg}: the kinetic term is non-negative for any \\CFL\\ diquark field configuration.",
+      "quote_normalized": "cflkineticterm\\_nonneg: the kinetic term is non-negative for any \\cfl\\ diquark field configuration.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cflKineticTerm_nonneg"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:cfl-chiral-lagrangian-skeleton:d2eab2ff",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "cfl-chiral-lagrangian-skeleton",
+        "quote_hash": "d2eab2ff",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cfl-chiral-lagrangian-skeleton",
+      "section_ordinal": 4,
+      "tex_line_start": 135,
+      "tex_line_end": 137,
+      "quote": "\\texttt{cflMassTerm\\_chiral\\_limit}: in the chiral limit $m_q = 0$, the mass term vanishes (recovering the Goldstone-mode content).",
+      "quote_normalized": "cflmassterm\\_chiral\\_limit: in the chiral limit $m_q = 0$, the mass term vanishes (recovering the goldstone-mode content).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cflMassTerm_chiral_limit"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:cfl-chiral-lagrangian-skeleton:d39b34e3",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "cfl-chiral-lagrangian-skeleton",
+        "quote_hash": "d39b34e3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cfl-chiral-lagrangian-skeleton",
+      "section_ordinal": 4,
+      "tex_line_start": 138,
+      "tex_line_end": 142,
+      "quote": "\\texttt{cflMassTerm\\_pos\\_in\\_cfl\\_phase}: in the \\CFL\\ phase with $m_q > 0$, the mass term is strictly positive. The proof requires both hypotheses; dropping either falsifies the conclusion.",
+      "quote_normalized": "cflmassterm\\_pos\\_in\\_cfl\\_phase: in the \\cfl\\ phase with $m_q > 0$, the mass term is strictly positive. the proof requires both hypotheses; dropping either falsifies the conclusion.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cflMassTerm_pos_in_cfl_phase"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:hirono-tanizaki-topological-order-framing:057b6c53",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "hirono-tanizaki-topological-order-framing",
+        "quote_hash": "057b6c53",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hirono--tanizaki-topological-order-framing",
+      "section_ordinal": 5,
+      "tex_line_start": 147,
+      "tex_line_end": 154,
+      "quote": "The Hirono--Tanizaki framing identifies the \\CFL\\ phase as exhibiting topological order beyond the Landau--Ginzburg paradigm~\\cite{HironoTanizaki2018}. We encode the framing as a structural assumption parametric over $\\Zthree$ charges: $H_{\\mathrm{TopoLG}}(c) := (c \\in \\{0, 1, 2\\}) \\wedge (\\text{topological order at } c)$.",
+      "quote_normalized": "the hirono--tanizaki framing identifies the \\cfl\\ phase as exhibiting topological order beyond the landau--ginzburg paradigm~. we encode the framing as a structural assumption parametric over $\\zthree$ charges: $h_{topolg}(c) := (c \\in \\{0, 1, 2\\}) \\wedge (topological order at c)$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HironoTanizaki2018"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:hirono-tanizaki-topological-order-framing:8296cabc",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "hirono-tanizaki-topological-order-framing",
+        "quote_hash": "8296cabc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "hirono--tanizaki-topological-order-framing",
+      "section_ordinal": 5,
+      "tex_line_start": 155,
+      "tex_line_end": 159,
+      "quote": "A witness ships at charge $c = 1$. Two falsifiers discharge the assumption: a trivial-sector falsifier at $c = 0$ and an out-of-range falsifier at $c = 3$.",
+      "quote_normalized": "a witness ships at charge $c = 1$. two falsifiers discharge the assumption: a trivial-sector falsifier at $c = 0$ and an out-of-range falsifier at $c = 3$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:figure-caption-cfl:52f34a3f",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "figure-caption-cfl",
+        "quote_hash": "52f34a3f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "figure-caption-cfl",
+      "section_ordinal": 6,
+      "tex_line_start": 172,
+      "tex_line_end": 186,
+      "quote": "Figure caption: CFL emergent Z_3 identifies with QCD center Z_3. Left: cube roots of unity {1,ω,ω^2} on complex unit circle; CFL emergent and QCD center generators coincide at ω=exp(2πi/3); sum 1+ω+ω^2=0 distinguishes Z_3 from Z_2. Right: Z_3 charge classification across {0,1,2} sectors plus c=3 falsifier.",
+      "quote_normalized": "figure caption: cfl emergent z_3 identifies with qcd center z_3. left: cube roots of unity {1,ω,ω^2} on complex unit circle; cfl emergent and qcd center generators coincide at ω=exp(2πi/3); sum 1+ω+ω^2=0 distinguishes z_3 from z_2. right: z_3 charge classification across {0,1,2} sectors plus c=3 falsifier.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "HironoTanizaki2018"
+          },
+          {
+            "kind": "citation",
+            "target": "Polyakov1978"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Figure file fig_cfl_z3_center_bridge.png exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:cross-bridge-simultaneous-chiral-and-cfl-breaking:6f9b98e1",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "cross-bridge-simultaneous-chiral-and-cfl-breaking",
+        "quote_hash": "6f9b98e1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-bridge--simultaneous-chiral-and-cfl-breaking",
+      "section_ordinal": 7,
+      "tex_line_start": 193,
+      "tex_line_end": 202,
+      "quote": "A substantive cross-bridge to a companion paper on the Gell-Mann--Oakes--Renner relation, \\texttt{cfl\\_phase\\_with\\_gmor\\_dual\\_broken}, consumes both the contrapositive of the GMOR relation and the in-\\CFL-phase magnitude positivity of the diquark condensate.",
+      "quote_normalized": "a substantive cross-bridge to a companion paper on the gell-mann--oakes--renner relation, cfl\\_phase\\_with\\_gmor\\_dual\\_broken, consumes both the contrapositive of the gmor relation and the in-\\cfl-phase magnitude positivity of the diquark condensate.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "CFLChiralLagrangian.cfl_phase_with_gmor_dual_broken"
+          },
+          {
+            "kind": "theorem",
+            "target": "ChiralSSB_QCD.chiral_unbroken_violates_gmor"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:cross-bridge-simultaneous-chiral-and-cfl-breaking:5b291a8b",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "cross-bridge-simultaneous-chiral-and-cfl-breaking",
+        "quote_hash": "5b291a8b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "cross-bridge--simultaneous-chiral-and-cfl-breaking",
+      "section_ordinal": 7,
+      "tex_line_start": 203,
+      "tex_line_end": 206,
+      "quote": "The conclusion is that the system is simultaneously chiral-broken and \\CFL-broken --- an independent consistency check that the two breaking patterns occur in concert in the \\CFL\\ phase. Both hypotheses are load-bearing in the proof body.",
+      "quote_normalized": "the conclusion is that the system is simultaneously chiral-broken and \\cfl-broken --- an independent consistency check that the two breaking patterns occur in concert in the \\cfl\\ phase. both hypotheses are load-bearing in the proof body.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:formalization-summary:fe9bbef8",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "formalization-summary",
+        "quote_hash": "fe9bbef8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 8,
+      "tex_line_start": 211,
+      "tex_line_end": 214,
+      "quote": "The Lean module \\texttt{lean/SKEFTHawking/CFLChiralLagrangian.lean} ships $13$ substantive theorems, zero \\texttt{sorry} statements, and zero new axioms beyond the kernel's three.",
+      "quote_normalized": "the lean module lean/skefthawking/cflchirallagrangian.lean ships $13$ substantive theorems, zero sorry statements, and zero new axioms beyond the kernel's three.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": 8.3,
+      "agent_notes": "IA DRIFT (repeat): paper says 13; live grep = 12. Memory says 12.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:formalization-summary:ff9b1826",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "formalization-summary",
+        "quote_hash": "ff9b1826",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formalization-summary",
+      "section_ordinal": 8,
+      "tex_line_start": 214,
+      "tex_line_end": 218,
+      "quote": "The Python mirror in \\texttt{src/cfl/} provides numerical evaluation of the cross-derivation identity: a $17$-case \\texttt{pytest} suite includes a check that the \\CFL\\ emergent generator and the \\QCD\\ center generator agree to machine precision via independent code paths.",
+      "quote_normalized": "the python mirror in src/cfl/ provides numerical evaluation of the cross-derivation identity: a $17$-case pytest suite includes a check that the \\cfl\\ emergent generator and the \\qcd\\ center generator agree to machine precision via independent code paths.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA verified: 17 test methods in tests/test_cfl.py.",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:paper38_cfl:outlook:5270c329",
+      "raw_id_parts": {
+        "paper": "paper38_cfl",
+        "section_slug": "outlook",
+        "quote_hash": "5270c329",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 9,
+      "tex_line_start": 223,
+      "tex_line_end": 227,
+      "quote": "The cross-derivation identification of the \\CFL\\ emergent $\\Zthree$ generator with the \\QCD\\ center $\\Zthree$ generator confirms the higher-form-symmetry framing of the quark--hadron continuity~\\cite{HironoTanizaki2018,SchaeferWilczek1999} at the algebraic-generator level.",
+      "quote_normalized": "the cross-derivation identification of the \\cfl\\ emergent $\\zthree$ generator with the \\qcd\\ center $\\zthree$ generator confirms the higher-form-symmetry framing of the quark--hadron continuity~ at the algebraic-generator level.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-04-27T23:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 28,
+    "by_type": {
+      "citation": 4,
+      "metaclaim": 3,
+      "qualitative": 3,
+      "formal-claim": 6,
+      "numeric": 3,
+      "theorem-ref": 9
+    },
+    "by_verdict": {
+      "PASS": 27,
+      "FAIL": 1
+    },
+    "by_finding_class": {
+      "IA": 2,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "28 sentences | 27 PASS | 0 UNGROUNDED | 1 FAIL | 0 WARN | 0 prior findings candidate for supersession | 0 prior findings auto-closed via deterministic recheck"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "§Formalization summary line 223 hardcodes '$13$' substantive theorems but live grep on CFLChiralLagrangian.lean = 12 (matches \\cflThms{} macro = 12). Macroization sweep missed this single instance. Fix: replace '$13$' with '\\cflThms{}'. REPRODUCES from prior run.",
+      "sentences": [
+        "sentence:paper38_cfl:formalization-summary:fe9bbef8"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": []
+}

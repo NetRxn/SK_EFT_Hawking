@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  27 APR 2026 08:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  27 APR 2026 14:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -393,138 +393,143 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 81.
+(hyperref)                removing `math shift' on input line 82.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 81.
+(hyperref)                removing `subscript' on input line 82.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 81.
+(hyperref)                removing `math shift' on input line 82.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--102
+Underfull \hbox (badness 10000) in paragraph at lines 92--103
 \OT1/cmr/m/n/10 Equation [] (the-o-rem \OT1/cmtt/m/n/10 centerPhase[]pow[]N\OT1/cmr/m/n/10 ) fol-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--102
+Underfull \hbox (badness 10000) in paragraph at lines 92--103
 \OT1/cmr/m/n/10 lows from \OT1/cmtt/m/n/10 Complex.exp[]nat[]mul \OT1/cmr/m/n/10 to-gether with
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--102
+Underfull \hbox (badness 10000) in paragraph at lines 92--103
 \OT1/cmtt/m/n/10 Complex.exp[]eq[]one[]iff\OT1/cmr/m/n/10 ; equa-tion [] (the-o-rem
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 117--120
+Underfull \hbox (badness 10000) in paragraph at lines 118--121
  []\OT1/cmtt/m/n/10 confining[]invariant[]under[]center[]action\OT1/cmr/m/n/10 :
  []
 
 
-Underfull \hbox (badness 3895) in paragraph at lines 126--129
+Underfull \hbox (badness 3895) in paragraph at lines 127--130
 []\OT1/cmr/m/n/10 These to-gether for-mal-ize the order-parameter /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--141
+Underfull \hbox (badness 10000) in paragraph at lines 138--142
 \OT1/cmr/m/n/10 together with the strict-positivity state-ment
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--141
+Underfull \hbox (badness 10000) in paragraph at lines 138--142
 \OT1/cmtt/m/n/10 deconfining[]implies[]magnitude[]positive\OT1/cmr/m/n/10 :
  []
 
 [1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 145--151
+Underfull \hbox (badness 10000) in paragraph at lines 146--152
 []\OT1/cmr/m/n/10 The Svetitsky--Yaffe map is en-coded as a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 145--151
+Underfull \hbox (badness 10000) in paragraph at lines 146--152
 \OT1/cmr/m/n/10 func-tion $[] : [] \OMS/cmsy/m/n/10 !
  []
 
 
-Underfull \hbox (badness 6910) in paragraph at lines 145--151
+Underfull \hbox (badness 6910) in paragraph at lines 146--152
 \OT1/cmr/m/n/10 the conformal-bootstrap and renormalization-group
  []
 
 
-Underfull \hbox (badness 2005) in paragraph at lines 154--160
-\OT1/cmr/m/n/10 where $\OML/cmm/m/it/10 ^^W[]$ \OT1/cmr/m/n/10 tracks the Pelissetto--Vicari and Kos--
+Underfull \hbox (badness 5133) in paragraph at lines 155--167
+\OT1/cmr/m/n/10 where the lit-eral $\OML/cmm/m/it/10 ^^W[] \OT1/cmr/m/n/10 = 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 6299$ matches the
  []
 
 
-Underfull \hbox (badness 6825) in paragraph at lines 166--171
-\OT1/cmr/m/n/10 shipping as the-o-rem \OT1/cmtt/m/n/10 ising[]nu[]gt[]potts[]nu\OT1/cmr/m/n/10 . A
+Underfull \hbox (badness 10000) in paragraph at lines 155--167
+\OT1/cmr/m/n/10 Kos--Poland-- Simmons-Duffin--Vichi 4-decimal
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 166--171
-\OT1/cmr/m/n/10 pair of thresh-old the-o-rems \OT1/cmtt/m/n/10 ising[]nu[]above[]0[]6 \OT1/cmr/m/n/10 and
+Underfull \hbox (badness 10000) in paragraph at lines 155--167
+\OT1/cmr/m/n/10 Vicari renormalization-group cal-cu-la-tion gives
  []
 
 
-Underfull \hbox (badness 2269) in paragraph at lines 166--171
-\OT1/cmtt/m/n/10 potts[]nu[]below[]0[]6 \OT1/cmr/m/n/10 pro-vides the literature-anchored
- []
-
-
-Underfull \hbox (badness 1360) in paragraph at lines 194--199
+Underfull \hbox (badness 1360) in paragraph at lines 201--206
 \OT1/cmr/m/n/10 Statements (2) and (3) use Math-lib $\OML/cmm/m/it/10 ^^Y$\OT1/cmr/m/n/10 -bound lem-
  []
 
 
-Underfull \hbox (badness 1436) in paragraph at lines 217--220
+Underfull \hbox (badness 10000) in paragraph at lines 227--231
+[]\OT1/cmr/m/n/10 A bound-ary wit-ness the-o-rem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--231
+\OT1/cmtt/m/n/10 walker[]wang[]witness[]at[]kss[]lower \OT1/cmr/m/n/10 con-firms that
+ []
+
+
+Underfull \hbox (badness 1436) in paragraph at lines 235--238
  \OT1/cmr/m/n/10 o-lates the up-per bound, via the load-bearing
  []
 
-<figures/fig_polyakov_loop_deconfinement.png, id=114, 2609.75pt x 1124.2pt>
+<figures/fig_polyakov_loop_deconfinement.png, id=119, 2409.0pt x 1606.0pt>
 File: figures/fig_polyakov_loop_deconfinement.png Graphic file (type png)
 <use figures/fig_polyakov_loop_deconfinement.png>
-Package pdftex.def Info: figures/fig_polyakov_loop_deconfinement.png  used on input line 224.
-(pdftex.def)             Requested size: 469.19907pt x 202.10712pt.
+Package pdftex.def Info: figures/fig_polyakov_loop_deconfinement.png  used on input line 242.
+(pdftex.def)             Requested size: 469.19907pt x 312.78891pt.
 
-Underfull \hbox (badness 1264) in paragraph at lines 245--252
+Underfull \hbox (badness 1264) in paragraph at lines 263--270
 \OT1/cmr/m/n/10 tin-u-ous gauge groups, the 1-form sym-me-try is ex-
  []
 
-LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 257.
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 275.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2024/11/19 v2.5n Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 257.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 275.
 
-Overfull \hbox (8.64851pt too wide) in paragraph at lines 255--260
+Overfull \hbox (8.64851pt too wide) in paragraph at lines 273--278
 []\OT1/cmr/m/n/10 The cross-bridge \OT1/cmtt/m/n/10 su3k1[]fusion[]card[]matches[]z3[]order
  []
 
 
-Underfull \hbox (badness 1303) in paragraph at lines 255--260
+Underfull \hbox (badness 1303) in paragraph at lines 273--278
 \OT1/cmr/m/n/10 in a com-pan-ion mod-ule: the three sim-ple ob-jects
  []
 
 
-Overfull \hbox (93.08127pt too wide) in paragraph at lines 264--272
+Overfull \hbox (93.08127pt too wide) in paragraph at lines 282--290
 []\OT1/cmr/m/n/10 The Lean mod-ule \OT1/cmtt/m/n/10 lean/SKEFTHawking/CenterSymmetryConfinement.lean
  []
 
 
-Underfull \hbox (badness 5050) in paragraph at lines 264--272
+Underfull \hbox (badness 5050) in paragraph at lines 282--290
 \OT1/cmr/m/n/10 Python mir-ror in \OT1/cmtt/m/n/10 src/center[]symmetry/ \OT1/cmr/m/n/10 pro-vides
  []
 
 [2]
-Underfull \hbox (badness 1655) in paragraph at lines 305--308
+Underfull \hbox (badness 1655) in paragraph at lines 328--331
  \OT1/cmr/m/n/9 renormalization-group the-ory,'' Phys. Rep. \OT1/cmr/bx/n/9 368\OT1/cmr/m/n/9 , 549
  []
 
-(./paper_draft.bbl) [3 <./figures/fig_polyakov_loop_deconfinement.png>] (./paper_draft.aux)
+[3 <./figures/fig_polyakov_loop_deconfinement.png>] (./paper_draft.bbl) [4] (./paper_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -533,18 +538,18 @@ Package rerunfilecheck Info: File `paper_draft.out' has not changed.
 (rerunfilecheck)             Checksum: 6C92E40E7B5624AD5F3EF30E1B52523A;3479.
  ) 
 Here is how much of TeX's memory you used:
- 12256 strings out of 467525
- 182209 string characters out of 5418982
- 633951 words of memory out of 5000000
- 40986 multiletter control sequences out of 15000+600000
- 634954 words of font info for 70 fonts, out of 8000000 for 9000
+ 12272 strings out of 467525
+ 182440 string characters out of 5418982
+ 635021 words of memory out of 5000000
+ 40999 multiletter control sequences out of 15000+600000
+ 635300 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,979b,523s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (3 pages, 378441 bytes).
+ 75i,8n,79p,979b,604s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on paper_draft.pdf (4 pages, 407836 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 184 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 500000)
+ 250 PDF objects out of 1000 (max. 8388607)
+ 195 compressed objects within 2 object streams
+ 39 named destinations out of 1000 (max. 500000)
  126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

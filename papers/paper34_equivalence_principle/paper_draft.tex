@@ -38,8 +38,8 @@ that bosons and fermions couple to gravity through different effective
 geometries (giving the maximal $\eta = 1$, already excluded by current
 satellite tests~\cite{Touboul2017}); and \emph{vestigial relics}, which
 predict a residual $\eta \sim 10^{-18}$ from defect remnants in a
-full-tetrad phase, sub-MICROSCOPE but within reach of next-generation
-satellite EP tests. The remaining four mechanisms --- Einstein--Cartan
+full-tetrad phase, sub-MICROSCOPE and at the projected design
+sensitivity discussed for STEP-class satellite missions. The remaining four mechanisms --- Einstein--Cartan
 torsion-trace coupling, fracton subdiffusion~\cite{Pretko2017},
 Berezhiani--Khoury Thomas--Fermi superfluid dark
 matter~\cite{Berezhiani2015}, and hidden-sector $\mathbb{Z}_{16}$
@@ -47,7 +47,7 @@ singlets --- satisfy all three EP levels. The structural conclusion is
 that EP violation in this substrate is \emph{vestigial-only}: any
 positive EP-violation result implies vestigial physics, and any
 null result at sub-$10^{-19}$ precision excludes vestigial gravity. The
-classification ships in Lean~4 with $24$ substantive theorems, zero
+classification ships in Lean~4 with \epThms{} substantive theorems, zero
 \texttt{sorry} statements, and zero new axioms beyond the kernel's
 three.
 \end{abstract}
@@ -111,8 +111,8 @@ $\eta_{\max} = 1$ is already incompatible with any current EP precision.
 \paragraph*{Vestigial relics.}
 In the full-tetrad phase, residual differential coupling from
 topological-defect remnants gives $\eta \sim 10^{-18}$. This is
-sub-MICROSCOPE but within reach of next-generation satellite tests
-(STEP-class, $\eta \sim 10^{-18}$ target).
+sub-MICROSCOPE and at the projected design sensitivity discussed for
+STEP-class satellite missions ($\eta \sim 10^{-18}$ target).
 
 \paragraph*{Einstein--Cartan torsion-trace coupling.}
 A torsion-loop dark-matter mechanism in Einstein--Cartan gravity. Its
@@ -177,9 +177,9 @@ hierarchical subsumption of EP levels.
 \item Quantitative anchors tying the classification to the published
 $\eta$-bound constants:
 \texttt{vestigial\_phase\_eta\_violates\_microscope\_bound}
-($\eta_{\max} = 1.0 > 10^{-15}$, \texttt{norm\_num}-backed),
-\texttt{step\_target\_can\_test\_vestigial\_relics}, and
-\texttt{vestigial\_relics\_below\_microscope\_bound}.
+($\eta_{\max} = 1.0 > 10^{-15}$, \texttt{norm\_num}-backed) and
+\texttt{vestigial\_relics\_below\_microscope\_bound}
+($\eta_{\mathrm{relic}} = 10^{-18} < 10^{-15}$, also \texttt{norm\_num}-backed).
 \item A cross-module bridge \texttt{fangGu\_failure\_mode\_is\_kinematic\_not\_ep},
 which imports the Einstein--Cartan torsion module and invokes the
 torsion-trace obstruction theorem to confirm that the failure mode
@@ -187,7 +187,7 @@ of that mechanism is kinematic rather than EP-related.
 \end{itemize}
 
 A Python mirror at \texttt{src/equivalence\_principle/} provides the
-identical classification as a dictionary lookup, $32$ \texttt{pytest}
+identical classification as a dictionary lookup, \epTests{} \texttt{pytest}
 cases pinning Python and Lean to numerical agreement, and four named
 numerical constants:
 \texttt{MICROSCOPE\_BOUND} $= 1.0 \times 10^{-15}$,
@@ -279,16 +279,6 @@ Phys.\ Rev.\ B \textbf{95}, 115139 (2017); arXiv:1604.05329.
 L.~Berezhiani and J.~Khoury,
 ``Theory of dark matter superfluidity,''
 Phys.\ Rev.\ D \textbf{92}, 103510 (2015); arXiv:1507.01019.
-
-\bibitem{Hawking1975CMP}
-S.~W.~Hawking,
-``Particle creation by black holes,''
-Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975).
-
-\bibitem{Balbinot2005PRD}
-R.~Balbinot, S.~Fagnocchi, and A.~Fabbri,
-``Quantum effects in acoustic black holes: the backreaction,''
-Phys.\ Rev.\ D \textbf{71}, 064019 (2005); arXiv:gr-qc/0405098.
 
 \end{thebibliography}
 

@@ -7702,6 +7702,182 @@ def fig_ew_transition_phase_diagram():
 
 
 # ============================================================
+# Phase 6c Wave 2: EW Baryogenesis ↔ Chirality Wall
+# ============================================================
+
+def fig_ewbg_allowed_region():
+    """Phase 6c Wave 2: EW baryogenesis allowed-region under
+    chirality-wall × phase-transition decomposition.
+
+    Two panels:
+    - Left: 2×2 outcome matrix over (chirality wall × transition order)
+      with EWBG verdict per quadrant. SM-as-is (intact wall +
+      crossover under H_KLRS) marker on the doubly-forbidden quadrant;
+      SM+3ν_R (cracked wall + crossover) on the transition-blocked
+      quadrant; BSM (cracked wall + first-order strong) on the
+      allowed quadrant.
+    - Right: (m_H, cubic E) phase diagram with the KLRS lattice
+      crossover endpoint at m_H = 72.4 GeV. SM marker at
+      (m_H = 125.20, E = 0.01) — strict-LO first-order but full SM
+      under H_KLRS is to the right of the endpoint, hence crossover.
+
+    viz-ref: Phase6c Paper 33 §ewbg-allowed-region
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.constants import EW_PARAMS, EWBG_PARAMS
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "EWBG verdict over (wall × transition)",
+            "(m_H, E) phase diagram with KLRS endpoint",
+        ),
+        horizontal_spacing=0.15,
+        column_widths=[0.45, 0.55],
+    )
+
+    # ── Panel 1: 2×2 outcome matrix ────────────────────────────────
+    # Row index 0 = wall intact, 1 = wall cracked
+    # Col index 0 = crossover, 1 = first-order strong
+    # Z = 0 (forbidden, gray), 1 (allowed, amber)
+    Z = np.array([
+        [0.0, 0.0],  # intact + crossover (doubly forbidden) | intact + FO (wall blocks)
+        [0.0, 1.0],  # cracked + crossover (transition blocks) | cracked + FO (allowed)
+    ])
+
+    fig.add_trace(go.Heatmap(
+        x=["crossover", "first-order strong"],
+        y=["wall intact", "wall cracked"],
+        z=Z,
+        colorscale=[[0, "rgba(108, 117, 125, 0.30)"],
+                    [0.5, "rgba(108, 117, 125, 0.30)"],
+                    [0.501, "rgba(241, 143, 1, 0.55)"],
+                    [1, "rgba(241, 143, 1, 0.55)"]],
+        showscale=False,
+        hoverinfo="text",
+        text=[["DOUBLY<br>FORBIDDEN", "WALL BLOCKS"],
+              ["TRANSITION<br>BLOCKS", "EWBG<br>ALLOWED"]],
+        texttemplate="%{text}",
+        textfont=dict(size=14, color="black"),
+    ), row=1, col=1)
+
+    # SM-as-is marker (wall intact + crossover under H_KLRS)
+    fig.add_trace(go.Scatter(
+        x=["crossover"], y=["wall intact"],
+        mode="markers+text",
+        marker=dict(color="rgb(196, 30, 58)", size=18, symbol="x"),
+        text=["  SM-as-is"], textposition="middle right",
+        showlegend=True, name="SM-as-is",
+        hoverinfo="text",
+        hovertext="SM-no-ν_R: Z₁₆ ≡ 13 (mod 16) ≠ 0 + KLRS crossover",
+    ), row=1, col=1)
+
+    # SM+3ν_R marker (wall cracked + crossover under H_KLRS)
+    fig.add_trace(go.Scatter(
+        x=["crossover"], y=["wall cracked"],
+        mode="markers+text",
+        marker=dict(color=COLORS["steel_blue"], size=18, symbol="diamond"),
+        text=["  SM+3ν_R"], textposition="middle right",
+        showlegend=True, name="SM+3ν_R (under H_KLRS)",
+        hoverinfo="text",
+        hovertext="SM+3ν_R: Z₁₆ ≡ 0 (mod 16), wall cracks, but KLRS crossover blocks",
+    ), row=1, col=1)
+
+    # BSM target (wall cracked + first-order strong)
+    fig.add_trace(go.Scatter(
+        x=["first-order strong"], y=["wall cracked"],
+        mode="markers+text",
+        marker=dict(color=COLORS["amber"], size=18, symbol="star"),
+        text=["  BSM target"], textposition="middle right",
+        showlegend=True, name="BSM target",
+        hoverinfo="text",
+        hovertext="BSM with extra scalar(s) producing strong first-order EWPT",
+    ), row=1, col=1)
+
+    fig.update_xaxes(title_text="Phase transition order", row=1, col=1)
+    fig.update_yaxes(title_text="Chirality wall", row=1, col=1)
+
+    # ── Panel 2: (m_H, E) plane with KLRS endpoint ─────────────────
+    n_grid = 60
+    m_h_grid = np.linspace(50.0, 200.0, n_grid)
+    E_grid = np.linspace(0.0, 0.05, n_grid)
+    # Roughly: at m_H > 72.4, lattice corrections drive E → 0 (crossover);
+    # at m_H < 72.4, the cubic survives → first-order. Visualize as a
+    # threshold partition.
+    m_h_klrs = EWBG_PARAMS['KLRS_M_H_CROSSOVER_THRESHOLD_GEV']
+
+    # Crossover region: m_H > m_h_klrs (any E becomes ineffective at full thermal corrections)
+    # First-order region: m_H < m_h_klrs (E > E_threshold)
+    Z2 = np.zeros((n_grid, n_grid))
+    E_threshold = 0.005
+    for i, e_val in enumerate(E_grid):
+        for j, m_val in enumerate(m_h_grid):
+            # First-order if BOTH m_H < endpoint AND E > threshold
+            if m_val < m_h_klrs and e_val > E_threshold:
+                Z2[i, j] = 1.0
+
+    fig.add_trace(go.Heatmap(
+        x=m_h_grid, y=E_grid, z=Z2,
+        colorscale=[[0, "rgba(108, 117, 125, 0.20)"],
+                    [0.499, "rgba(108, 117, 125, 0.20)"],
+                    [0.5, "rgba(241, 143, 1, 0.50)"],
+                    [1, "rgba(241, 143, 1, 0.50)"]],
+        showscale=False,
+        showlegend=True, name="first-order strong (full thermal)",
+    ), row=1, col=2)
+
+    # KLRS endpoint
+    fig.add_vline(
+        x=m_h_klrs,
+        line=dict(color=COLORS["cross"], width=2, dash="dash"),
+        annotation_text=f"KLRS endpoint m_H = {m_h_klrs} GeV",
+        annotation_position="top",
+        row=1, col=2,
+    )
+
+    # SM marker (m_H = 125.20, E_LO = 0.01) — to the right of KLRS endpoint
+    sm_m_h = EW_PARAMS['M_H_GEV']
+    fig.add_trace(go.Scatter(
+        x=[sm_m_h], y=[0.01],
+        mode="markers+text",
+        marker=dict(color="rgb(196, 30, 58)", size=14, symbol="x"),
+        text=[f"  SM (m_H = {sm_m_h})"], textposition="middle right",
+        showlegend=True, name="SM (LO first-order, full → crossover)",
+    ), row=1, col=2)
+
+    # Annotation showing overshoot ratio
+    overshoot = EWBG_PARAMS['M_H_OVERSHOOT_RATIO']
+    fig.add_annotation(
+        x=160, y=0.04,
+        text=f"SM overshoot: {overshoot:.2f}× KLRS<br>(>1.5×, well into crossover)",
+        showarrow=False,
+        font=dict(size=11, color=COLORS["cross"]),
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(title_text="m_H [GeV]", range=[50, 200], row=1, col=2)
+    fig.update_yaxes(title_text="cubic coefficient E", range=[0, 0.05], row=1, col=2)
+
+    apply_layout(
+        fig,
+        margin=dict(t=120, b=70, l=110, r=40),
+        title=dict(
+            text=(
+                "Phase 6c Wave 2 — EWBG verdict: chirality-wall × transition decomposition<br>"
+                "<sub>Lean: <i>EWBGViable</i>, "
+                "<i>ewbg_forbidden_iff_wall_intact_or_not_viable</i>, "
+                "<i>sm_no_nu_R_ewbg_doubly_forbidden</i></sub>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=560,
+        width=1200,
+    )
+    return fig
+
+
+# ============================================================
 # Phase 5z Wave 2: Majorana-rung seesaw figures
 # ============================================================
 
@@ -9001,21 +9177,23 @@ def fig_polyakov_loop_deconfinement():
     nu_ising = critical_exponent_nu(UniversalityClass.ISING)
     nu_potts = critical_exponent_nu(UniversalityClass.THREE_STATE_POTTS)
     # Schematic order parameter: |P| ∝ (T/T_c - 1)^β for T > T_c, 0 below.
-    # Use β ≈ 0.326 (Ising) and β ≈ 0.111 (3-state Potts) as illustrative
-    # mean-field-vs-Ising-vs-Potts scaling.
+    # The 3D 3-state Potts deconfinement transition is weakly first-order, so
+    # β is not strictly defined for it. We plot the SU(2) Ising curve with the
+    # genuine 3D-Ising β ≈ 0.326, and the SU(3) curve with the 2D-Potts β = 1/9
+    # ≈ 0.111 as a CONTRASTING illustrative shape (NOT a 3D-Potts prediction).
+    # Both curves are explicitly labelled "(illustrative)" in the legend.
     t_over_tc = np.linspace(0.5, 2.0, 200)
     beta_ising = 0.326
-    beta_potts = 0.111
-    # np.maximum avoids fractional-power-of-negative warning before masking
+    beta_potts_2d = 0.111  # 2D 3-state Potts β = 1/9, used as illustrative contrast
     delta = np.maximum(t_over_tc - 1.0, 0.0)
     p_ising = np.where(t_over_tc < 1.0, 0.0, delta ** beta_ising)
-    p_potts = np.where(t_over_tc < 1.0, 0.0, delta ** beta_potts)
+    p_potts = np.where(t_over_tc < 1.0, 0.0, delta ** beta_potts_2d)
 
     fig.add_trace(
         go.Scatter(
             x=t_over_tc, y=p_ising,
             mode="lines",
-            name=f"Z_2 / Ising (ν = {nu_ising:.4f})",
+            name=f"Z_2 / Ising  (ν = {nu_ising:.4f}, β = 0.326, 3D)",
             line=dict(color=COLORS["steel_blue"], width=2.5),
         ),
         row=1, col=1,
@@ -9024,7 +9202,8 @@ def fig_polyakov_loop_deconfinement():
         go.Scatter(
             x=t_over_tc, y=p_potts,
             mode="lines",
-            name=f"Z_3 / 3-state Potts (ν = {nu_potts:.4f})",
+            name=(f"Z_3 / 3-state Potts  (ν = {nu_potts:.4f} mean-field;  "
+                  "β = 1/9 from 2D Potts, illustrative — 3D deconfinement is weakly 1st-order)"),
             line=dict(color=COLORS["amber"], width=2.5, dash="dash"),
         ),
         row=1, col=1,
@@ -9292,7 +9471,7 @@ def fig_cfl_z3_center_bridge():
           H_TopologicalOrderBeyondLG_witness +
           H_TopologicalOrderBeyondLG_falsifier_trivial.
     Source: Alford-Rajagopal-Wilczek NPB 537 (1999); Son-Stephanov PRL
-            86 (2001); Hirono-Tanizaki JHEP 12 (2018);
+            86 (2001); Hirono-Tanizaki PRL 122, 212001 (2019) [arXiv:1811.10608];
             CenterSymmetryConfinement Lean (W1).
     viz-ref: Phase 6d Paper 38 §3
     """

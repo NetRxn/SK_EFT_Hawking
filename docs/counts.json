@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-26T19:39:45.487238",
+  "generated": "2026-04-27T14:51:37.012106",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8523,
-    "theorems_total": 4349,
-    "theorems_substantive": 4325,
-    "theorems_placeholder": 24,
+    "total_declarations": 8648,
+    "theorems_total": 4416,
+    "theorems_substantive": 4393,
+    "theorems_placeholder": 23,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 184,
+    "modules": 189,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -53,6 +53,7 @@
       "SKEFTHawking.DrinfeldDoubleRing",
       "SKEFTHawking.DrinfeldEquivalence",
       "SKEFTHawking.E8Lattice",
+      "SKEFTHawking.EWBaryogenesisChiralityWall",
       "SKEFTHawking.EWPhaseTransition",
       "SKEFTHawking.EmergentGravityBounds",
       "SKEFTHawking.EnergyConditions",
@@ -110,6 +111,7 @@
       "SKEFTHawking.MajoranaKramers",
       "SKEFTHawking.MajoranaRung",
       "SKEFTHawking.MajoranaRungDecoupling",
+      "SKEFTHawking.MajoranaRungSMG",
       "SKEFTHawking.ModularInvarianceConstraint",
       "SKEFTHawking.ModularityTheorem",
       "SKEFTHawking.MugerCenter",
@@ -126,6 +128,7 @@
       "SKEFTHawking.QCyc3",
       "SKEFTHawking.QCyc5",
       "SKEFTHawking.QCyc5Ext",
+      "SKEFTHawking.QECHolographyBridge",
       "SKEFTHawking.QLevel3",
       "SKEFTHawking.QNumber",
       "SKEFTHawking.QSqrt2",
@@ -140,6 +143,7 @@
       "SKEFTHawking.QuantumGroupMeta",
       "SKEFTHawking.QuasiOneDReduction",
       "SKEFTHawking.QuaternionGauge",
+      "SKEFTHawking.RTCasiniHuertaBounds",
       "SKEFTHawking.RepUqFusion",
       "SKEFTHawking.RestrictedUq",
       "SKEFTHawking.RibbonCategory",
@@ -166,6 +170,7 @@
       "SKEFTHawking.SteenrodA1",
       "SKEFTHawking.StimulatedHawking",
       "SKEFTHawking.StringNet",
+      "SKEFTHawking.StrongCPTopologicalDE",
       "SKEFTHawking.SurgeryPresentation",
       "SKEFTHawking.TPFDisentangler",
       "SKEFTHawking.TPFEvasion",
@@ -199,18 +204,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3699,
-    "structures": 184,
+    "definitions": 3752,
+    "structures": 189,
     "instances": 229,
     "inductives": 61
   },
   "python": {
-    "python_modules": 97,
-    "test_files": 72,
-    "pytest_cases": 3282,
-    "notebooks": 56,
-    "papers": 30,
-    "figures": 125
+    "python_modules": 105,
+    "test_files": 77,
+    "pytest_cases": 3364,
+    "notebooks": 72,
+    "papers": 33,
+    "figures": 129
   },
   "aristotle": {
     "aristotle_proved": 322,

@@ -13,7 +13,9 @@ Key invariants tested:
 """
 
 import pytest
-import torch
+
+torch = pytest.importorskip("torch")
+
 import numpy as np
 
 from src.vestigial.stencil_dirac import (

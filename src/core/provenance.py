@@ -1512,6 +1512,107 @@ PARAMETER_PROVENANCE = {
         'notes': 'Used as the next mass anchor for the seesaw scan; less constraining than m₃.',
     },
 
+    # ── Phase 5z Wave 4: SMG-route substrate-bridge constants ──────────
+    # Deep-research-anchored values per Lit-Search/Phase-5z/Phase 5z Wave 4 —
+    # SMG Substrate Phase Diagram.md §2 (verdict 2026-04-27).
+    # The dimensionless ratio c_SMG = Λ_SMG/Λ_UV is the PHYSICAL substrate
+    # gap-to-UV-cutoff ratio after Fierz-translation of HW's g²_GF onto V&D's
+    # 8-coupling NJL scaling. NOT the lattice ratio Λ_D/a⁻¹ ≈ 0.13 (which HW
+    # report directly). Status: OPEN-AT-LITERATURE-FRONTIER on three sub-
+    # questions; V&D's own mean-field (PRD 86 104019) tilts NEGATIVE.
+    'MAJORANA.C_SMG_BROAD_LOWER': {
+        'value': 1.0e-12,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 4 deep research §2.2 (NJL-derived broad envelope, g_eff − g_c ∈ [0.3, 3])',
+        'detail': 'Lower edge of the broad NJL-scaling envelope for c_SMG = Λ_SMG/Λ_UV under '
+                  'Fierz-translated Hasenfratz-Witzel strong coupling. Computed as '
+                  'exp(-2π²/(g_eff − g_c)) at the wide end (g_eff − g_c ≈ 0.3). Substrate-'
+                  'specific value for ADW remains OPEN-W4-1.',
+        'doi': '10.48550/arXiv.2412.10322',
+        'llm_verified_date': '2026-04-27',
+        'llm_verified_notes': 'PROJECTED — Wave 4 deep-research-derived NJL envelope.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 broad-band lower bound for the H_SubstrateInBroadSMGBand predicate.',
+    },
+    'MAJORANA.C_SMG_BROAD_UPPER': {
+        'value': 1.0e-3,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 4 deep research §2.2 (NJL-derived broad envelope upper)',
+        'detail': 'Upper edge of the broad NJL-scaling envelope for c_SMG. Corresponds to '
+                  'g_eff − g_c ≈ 3. Above this band, NJL scaling fails (non-perturbative regime).',
+        'doi': '10.48550/arXiv.2412.10322',
+        'llm_verified_date': '2026-04-27',
+        'llm_verified_notes': 'PROJECTED — Wave 4 deep-research-derived NJL envelope upper edge.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 broad-band upper bound.',
+    },
+    'MAJORANA.C_SMG_SEESAW_LOWER': {
+        'value': 1.0e-10,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 4 deep research §2.3 (seesaw-restricted band lower)',
+        'detail': 'Lower edge of the seesaw-restricted c_SMG band. At Λ_UV = M_Pl ≈ 10¹⁹ GeV, '
+                  'c_SMG = 10⁻¹⁰ produces Λ_SMG = 10⁹ GeV — seesaw band lower edge. Requires '
+                  'g_eff − g_c ≈ 2.15 in NJL scaling, a fine-tuning of (λ_i) of order 10–30%.',
+        'doi': '10.48550/arXiv.2412.10322',
+        'llm_verified_date': '2026-04-27',
+        'llm_verified_notes': 'PROJECTED — derived from seesaw band consistency at M_Pl UV anchor.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 H_SubstrateNearSMGFixedPoint band lower bound (seesaw-restricted).',
+    },
+    'MAJORANA.C_SMG_SEESAW_UPPER': {
+        'value': 1.0e-4,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Wave 4 deep research §2.3 (seesaw-restricted band upper)',
+        'detail': 'Upper edge of the seesaw-restricted c_SMG band. At Λ_UV = M_Pl, c_SMG = 10⁻⁴ '
+                  'produces Λ_SMG = 10¹⁵ GeV — seesaw band upper edge. Requires g_eff − g_c '
+                  '≈ 0.86 in NJL scaling.',
+        'doi': '10.48550/arXiv.2412.10322',
+        'llm_verified_date': '2026-04-27',
+        'llm_verified_notes': 'PROJECTED — derived from seesaw band consistency at M_Pl UV anchor.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 H_SubstrateNearSMGFixedPoint band upper bound (seesaw-restricted).',
+    },
+    'MAJORANA.C_SMG_FIDUCIAL': {
+        'value': 1.0e-7,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Geometric mid-band of seesaw-restricted band [10⁻¹⁰, 10⁻⁴]',
+        'detail': 'Fiducial mid-band value of c_SMG = Λ_SMG/Λ_UV. Geometric mean '
+                  '√(10⁻¹⁰ · 10⁻⁴) = 10⁻⁷. At Λ_UV = M_Pl, this gives Λ_SMG ≈ 10¹² GeV — '
+                  'central seesaw scale, matching M_R_FIDUCIAL_GEV = 10¹⁴ GeV order.',
+        'doi': None,
+        'llm_verified_date': '2026-04-27',
+        'llm_verified_notes': 'PROJECTED — operational scan choice. Substrate-specific value '
+                              'is OPEN-W4-1.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 default fiducial for src/core/formulas.py smg_gap_substrate.',
+    },
+    'MAJORANA.LAMBDA_UV_SMG_FIDUCIAL_GEV': {
+        'value': 1.0e19,
+        'unit': 'GeV',
+        'tier': 'PROJECTED',
+        'source': 'Wave 4 deep research §2.3 (Planck-scale substrate UV anchor)',
+        'detail': 'Substrate UV cutoff fiducial at the Planck scale Λ_UV ≈ M_Pl ≈ 10¹⁹ GeV. '
+                  'Most natural choice for the ADW substrate: the substrate is a discretization '
+                  'of the spinor-gravity action at the Planck scale, so its UV cutoff is naturally '
+                  'identified with M_Pl.',
+        'doi': None,
+        'llm_verified_date': '2026-04-27',
+        'llm_verified_notes': 'PROJECTED — natural substrate UV anchor per Wave 4 deep research §2.3.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 4 substrate UV fiducial; consumes M_Pl natural UV anchor.',
+    },
+
     # ════════════════════════════════════════════════════════════════
     # Phase 6a Wave 1: emergent G_N + linearized Einstein equations
     # ════════════════════════════════════════════════════════════════
@@ -2585,6 +2686,60 @@ PARAMETER_PROVENANCE = {
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': 'Convention.',
+    },
+
+    # ── Phase 6c Wave 1 — Strong-CP / topological dark energy ──────
+    # (Added 2026-04-29 to close paper32 adversarial REQUIRED F-3.)
+
+    'STRONG_CP_DE.LAMBDA_QCD_GEV': {
+        'value': 0.1,
+        'unit': 'GeV',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group 2022, Λ_QCD ≈ 100 MeV (MS-bar, 3-flavor)',
+        'detail': 'Project working value for the QCD scale used in the Zhitnitsky '
+                  'topological-DE prediction ρ_DE ~ Λ_QCD^6 / M_P^2. PDG quotes '
+                  '~210 MeV for the 5-flavor Λ_QCD and varies by scheme; our 0.1 GeV '
+                  'is the rounded 3-flavor MS-bar value typical in cosmological '
+                  'estimates.',
+        'doi': '10.1093/ptep/ptac097',
+        'llm_verified_date': '2026-04-29',
+        'llm_verified_notes': 'PDG 2022 Workman et al. Prog. Theor. Exp. Phys. 2022, 083C01.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.strong_cp_de.LAMBDA_QCD_GEV; consumed by Zhitnitsky-prediction theorems.',
+    },
+    'STRONG_CP_DE.NEUTRON_EDM_BOUND': {
+        'value': 1.0e-9,
+        'unit': 'dimensionless (radians)',
+        'tier': 'MEASURED',
+        'source': 'Pendlebury et al., Phys. Rev. D 92, 092003 (2015)',
+        'detail': 'Conservative upper bound on the QCD topological angle |θ| from '
+                  'neutron-EDM measurements. The actual 2015 result is |d_n| < 3e-26 e·cm '
+                  '(90% CL), translating to |θ| ≲ 1e-10 in standard chiral-perturbation '
+                  'estimates; we use the conservative 1e-9 as the load-bearing structural '
+                  'bound (Lean ThetaVacuum.theta_small invariant).',
+        'doi': '10.1103/PhysRevD.92.092003',
+        'llm_verified_date': '2026-04-29',
+        'llm_verified_notes': 'Pendlebury et al. arXiv:1509.04411, PRD 92, 092003 (2015).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.strong_cp_de.NEUTRON_EDM_BOUND; consumed by ThetaVacuum constructor.',
+    },
+    'STRONG_CP_DE.RHO_DE_OBSERVED_EV4': {
+        'value': 2.8e-11,
+        'unit': 'eV⁴',
+        'tier': 'DERIVED',
+        'source': 'Planck 2018 + DESI 2024 cosmological-constant measurements',
+        'detail': 'Observed dark-energy density ρ_Λ ≈ (2.3 meV)⁴ ≈ 2.8e-11 eV⁴, derived '
+                  'from Planck 2018 + DESI Year-1 BAO measurements of the cosmological '
+                  'constant under flat-ΛCDM. Used as the falsification anchor for the '
+                  'Zhitnitsky topological-DE prediction.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-29',
+        'llm_verified_notes': 'Planck 2018 results VI (A&A 641, A6, 2020) and DESI Year-1 BAO release 2024.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.strong_cp_de.RHO_DE_OBSERVED_EV4; consumed by Zhitnitsky-prediction within-3-orders predicate.',
     },
 }
 

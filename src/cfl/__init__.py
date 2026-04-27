@@ -20,7 +20,7 @@ Cross-references:
 Primary references:
 - Alford-Rajagopal-Wilczek, NPB 537 (1999): CFL phase.
 - Son-Stephanov, PRL 86 (2001): CFL chiral Lagrangian.
-- Hirono-Tanizaki, JHEP 12 (2018): emergent ℤ_3 one-form symmetry.
+- Hirono-Tanizaki, Phys. Rev. Lett. 122, 212001 (2019), arXiv:1811.10608: emergent ℤ_3 one-form symmetry.
 - Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md §7 (6d.3).
 """
 

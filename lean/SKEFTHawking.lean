@@ -89,7 +89,9 @@ import SKEFTHawking.BHLGaugeEmbedding
 import SKEFTHawking.MajoranaRung
 import SKEFTHawking.NeutrinoMixing
 import SKEFTHawking.MajoranaRungDecoupling
+import SKEFTHawking.MajoranaRungSMG
 import SKEFTHawking.EWPhaseTransition
+import SKEFTHawking.EWBaryogenesisChiralityWall
 import SKEFTHawking.QSqrt2
 import SKEFTHawking.QSqrt5
 import SKEFTHawking.SU2kMTC

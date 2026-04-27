@@ -841,6 +841,32 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
     ),
     FigureSpec(
+        name="fig_ewbg_allowed_region",
+        function="fig_ewbg_allowed_region",
+        caption=(
+            "Phase 6c Wave 2 — EW baryogenesis verdict over the "
+            "(chirality wall × transition order) decomposition. Left "
+            "panel: 2×2 outcome matrix. Wall × transition combinations "
+            "give one allowed quadrant (cracked wall + first-order "
+            "strong, BSM target marker, gold star) and three forbidden "
+            "quadrants (gray): SM-as-is sits at (intact wall + "
+            "crossover), doubly forbidden (red ✗); SM+3ν_R at (cracked "
+            "wall + crossover), transition-blocked under H_KLRS "
+            "(steel-blue diamond). Right panel: the (m_H, cubic E) "
+            "phase diagram with the KLRS lattice endpoint at "
+            "m_H = 72.4 GeV (CFH 1999, refining KLRS 1996). The full "
+            "SM at m_H = 125.20 GeV sits to the right of the endpoint "
+            "(overshoot ratio ≈ 1.73); strict-LO E = 0.01 first-order "
+            "is moot because lattice corrections drive E → 0 for "
+            "m_H > endpoint. Lean: ewbg_forbidden_iff_wall_intact_or_"
+            "not_viable, sm_no_nu_R_ewbg_doubly_forbidden, "
+            "sm_klrs_overshoot_ratio_gt_threshold."
+        ),
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "m_H", "yaxis": "E"},
+        physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
+    ),
+    FigureSpec(
         name="fig_bhl_bilocal_correction",
         function="fig_bhl_bilocal_correction",
         caption=(
@@ -1275,6 +1301,8 @@ def generate_figures() -> dict[str, Path]:
         fig_bhl_bilocal_correction,
         # Phase 5z Wave 3: EW phase transition phase diagram
         fig_ew_transition_phase_diagram,
+        # Phase 6c Wave 2: EWBG ↔ chirality wall verdict
+        fig_ewbg_allowed_region,
         # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
         fig_seesaw_y_m_r_band,
         fig_m_beta_beta_vs_m_lightest,
@@ -1418,6 +1446,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
         "fig_bhl_bilocal_correction": fig_bhl_bilocal_correction,
         "fig_ew_transition_phase_diagram": fig_ew_transition_phase_diagram,
+        "fig_ewbg_allowed_region": fig_ewbg_allowed_region,
         "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
@@ -1558,6 +1587,8 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_bhl_bilocal_correction,
         # Phase 5z Wave 3: EW phase transition phase diagram
         fig_ew_transition_phase_diagram,
+        # Phase 6c Wave 2: EWBG ↔ chirality wall verdict
+        fig_ewbg_allowed_region,
         # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
         fig_seesaw_y_m_r_band,
         fig_m_beta_beta_vs_m_lightest,
@@ -1699,6 +1730,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_higgs_mass_parameter_scan": fig_higgs_mass_parameter_scan,
         "fig_bhl_bilocal_correction": fig_bhl_bilocal_correction,
         "fig_ew_transition_phase_diagram": fig_ew_transition_phase_diagram,
+        "fig_ewbg_allowed_region": fig_ewbg_allowed_region,
         "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,

@@ -23,7 +23,7 @@ References:
   Alford-Rajagopal-Wilczek, NPB 537 (1999): CFL phase
   Son-Stephanov, PRL 86 (2001): CFL chiral Lagrangian
   Schaefer-Wilczek, PRL 82 (1999): color-flavor locking
-  Hirono-Tanizaki, JHEP 12 (2018): quark-hadron continuity beyond
+  Hirono-Tanizaki, PRL 122, 212001 (2019) [arXiv:1811.10608]: quark-hadron continuity beyond
     Landau-Ginzburg paradigm via ℤ_3 one-form symmetry
 
   Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md §7 (6d.3)
@@ -69,7 +69,7 @@ theorem isCFLPhase_iff_magnitude_pos (Φ : CFLDiquark) :
 /-! ## §2. Emergent ℤ_3 one-form symmetry (Hirono-Tanizaki) -/
 
 /-- The emergent ℤ_3 one-form symmetry generator in the CFL phase
-    (Hirono-Tanizaki, JHEP 12, 2018). Defined independently from the
+    (Hirono-Tanizaki, PRL 122, 212001, 2019). Defined independently from the
     QCD center generator — the equality is proved (not assumed) below
     in the correctness-push theorem. -/
 noncomputable def emergentZ3Phase : ℂ := cexp (2 * π * I / 3)
@@ -227,8 +227,12 @@ theorem H_TopologicalOrderBeyondLG_witness :
 
 /-- Falsifier: trivial charge (0) does NOT exhibit topological order.
 
-    Substantive: the trivial-vacuum sector lies outside the
-    Hirono-Tanizaki framing. -/
+    The proof is decidable on `Nat`'s inductive structure (charge ≠ 0
+    fails for `0`); the substantive content is the *modeling
+    assumption* that ℤ_3 charges parametrize the topological-order-
+    beyond-Landau-Ginzburg sectors per Hirono-Tanizaki, not the
+    decidability of the falsifier itself. The trivial-vacuum sector
+    lies outside the Hirono-Tanizaki framing. -/
 theorem H_TopologicalOrderBeyondLG_falsifier_trivial :
     ¬ H_TopologicalOrderBeyondLG 0 := by
   intro ⟨_, h_ne⟩
@@ -236,7 +240,10 @@ theorem H_TopologicalOrderBeyondLG_falsifier_trivial :
 
 /-- Falsifier: charge ≥ 3 is not a Z_3 charge.
 
-    Substantive: enforces the cyclic structure ℤ_3 = {0, 1, 2}. -/
+    The proof is decidable on `Nat`'s inductive structure (3 < 3 is
+    false); the substantive content is the modeling commitment that
+    the cyclic structure ℤ_3 = {0, 1, 2} (rather than ℤ_4 or ℤ_5)
+    parametrizes the CFL diquark sector. -/
 theorem H_TopologicalOrderBeyondLG_falsifier_too_large :
     ¬ H_TopologicalOrderBeyondLG 3 := by
   intro ⟨h_lt, _⟩
