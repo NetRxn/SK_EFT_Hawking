@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-26T15:45:00.830633+00:00",
+  "generated": "2026-04-27T14:10:23.895902+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -2260,6 +2260,192 @@
       "color_keys": [
         "amber",
         "steel_blue"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_ep_violation_matrix",
+      "function": "fig_ep_violation_matrix",
+      "caption": "Phase 6c Wave 3 \u2014 Equivalence-Principle classification of six Phase 5x DM-related mechanisms. Left: 6\u00d73 mechanism \u00d7 EP-level matrix (WEP / EEP / SEP) showing two violators (both vestigial-phase phenomena: differential coupling at \u03b7 = 1 maximal, ruled out at any current EP precision; relics at \u03b7 ~ 10\u207b\u00b9\u2078 STEP-class satellite-detectable per W8 \u00a75 ranking line 3) and four non-violators (FangGu torsion DM, fracton subdiffusion, SFDM Thomas-Fermi, hidden-sector \u2124\u2081\u2086 singlet). The structural punchline: EP violation is *vestigial-only* in the project's current dark-sector landscape. Right: \u03b7-scale comparison bar chart (log\u2081\u2080 scale) showing vestigial-phase \u03b7_max = 1, the MICROSCOPE bound \u03b7 < 10\u207b\u00b9\u2075 (Touboul et al., PRL 119, 231101, 2017) as a horizontal reference, vestigial-relics \u03b7 ~ 10\u207b\u00b9\u2078, and the STEP-class satellite target \u03b7 ~ 10\u207b\u00b9\u2078. Lean: EquivalencePrinciple.violatesAt + ep_violation_is_vestigial_only + vestigial_microscope_violation_consistent.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ep_violation_matrix.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ep_violation_matrix.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "level",
+        "yaxis": "log10_eta"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "steel_blue"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_zhitnitsky_de_theta_scan",
+      "function": "fig_zhitnitsky_de_theta_scan",
+      "caption": "Phase 6c Wave 1 \u2014 Zhitnitsky topological dark-energy prediction (Van Waerbeke-Zhitnitsky 2025, arXiv:2506.14182) vs observed \u03c1_DE. Left: \u03c1_DE = \u039b_QCD\u2076/M_P\u00b2 scan over \u039b_QCD \u2208 [1 MeV, 1 GeV] on log-log axes; observed band (2.3 meV)\u2074 \u2248 2.8e-11 eV\u2074 from Planck 2018 + DESI DR2 shown as amber stripe; PDG \u039b_QCD \u2248 100 MeV vertical reference shows the no-free-parameter Zhitnitsky prediction sits ~240\u00d7 above observed (within 3 orders). Right: cosmological-constant-problem suppression bar chart comparing Planck-natural M_P\u2074 \u2248 10\u00b9\u00b9\u00b2 eV\u2074, Zhitnitsky QCD-topological prediction \u2248 7e-9 eV\u2074, and observed \u2248 3e-11 eV\u2074 \u2014 Zhitnitsky realizes ~120 orders of magnitude of the hierarchy suppression. Lean: StrongCPTopologicalDE.zhitnitsky_DE_at_lambda_qcd_within_3_orders + zhitnitsky_DE_far_below_planck + combined_zhitnitsky_qtheory_exceeds_observation.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_zhitnitsky_de_theta_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_zhitnitsky_de_theta_scan.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u039b_QCD",
+        "yaxis": "\u03c1_DE"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_cfl_z3_center_bridge",
+      "function": "fig_cfl_z3_center_bridge",
+      "caption": "Phase 6d Wave 3 \u2014 CFL emergent \u2124_3 (Hirono-Tanizaki) \u2261 QCD center \u2124_3 (W1) correctness-push identification. Left: cube roots of unity {1, \u03c9, \u03c9\u00b2} on the complex unit circle, with the CFL emergent generator (Hirono-Tanizaki JHEP 12, 2018) and the QCD center generator from CenterSymmetryConfinement.Z3 BOTH at the same point \u03c9 = exp(2\u03c0i/3). The sum rule 1 + \u03c9 + \u03c9\u00b2 = 0 is the algebraic fingerprint distinguishing \u2124_3 from \u2124_2. Right: bar chart showing the three \u2124_3 charges (0, 1, 2) plus the out-of-range 3, classified by Hirono-Tanizaki topological-order-beyond-Landau-Ginzburg sector. Charge 0 (vacuum) and charge 3 (out of \u2124_3) are falsifiers; charges 1, 2 are the topologically ordered sectors. Lean: CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3 + emergentZ3_pow_3 + emergentZ3_sum_cube_roots + H_TopologicalOrderBeyondLG_witness/falsifier_trivial.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_cfl_z3_center_bridge.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_cfl_z3_center_bridge.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "Re",
+        "yaxis": "Im"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_gmor_relation_verification",
+      "function": "fig_gmor_relation_verification",
+      "caption": "Phase 6d Wave 2 \u2014 GMOR relation `m_\u03c0\u00b2 \u00b7 f_\u03c0\u00b2 = \u22122 m_q \u00b7 \u27e8q\u0304q\u27e9` numerical verification at PDG/FLAG central values. Left: side-by-side bars at LHS \u2248 1.589e-4 GeV\u2074 and RHS \u2248 1.589e-4 GeV\u2074 \u2014 visually indistinguishable, confirming GMOR holds to ~1 part in 10\u2074 (|LHS \u2212 RHS| \u2248 4e-8 GeV\u2074). Right: relative residual |LHS \u2212 RHS|/LHS as the input quark mass m_q is swept; the residual minimum at m_q \u2248 3.5 MeV (PDG average u+d) confirms the GMOR-consistent point. Sources: Gell-Mann-Oakes-Renner PR 175 (1968); FLAG 2021 \u27e8q\u0304q\u27e9 \u2248 \u22120.0227 GeV\u00b3 (EPJC 81); PDG 2022 m_\u03c0 = 0.137 GeV, f_\u03c0 = 0.092 GeV. Lean: ChiralSSB_QCD.gmor_pdg_match + gmor_rhs_pos_of_quark_mass_pos + chiral_unbroken_violates_gmor.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_gmor_relation_verification.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_gmor_relation_verification.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "m_q",
+        "yaxis": "residual"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_rt_ch_bounds_mtc",
+      "function": "fig_rt_ch_bounds_mtc",
+      "caption": "Phase 6c Wave 5 \u2014 Ryu-Takayanagi vs W3 Kaul-Majumdar microscopic entropy + Casini-Huerta saturated bound across 2D CFTs. Left: classical RT entropy S = A/(4 G_N) (steel blue, solid) vs W3 Kaul-Majumdar S = A/(4 G_N) - (3/2) log(A/(4 G_N)) (amber, dashed) across reduced area; knife-edge agreement at reduced area = 1 (W5 biconditional rt_eq_kaulMajumdar_iff_trivial_reduced_area); discrepancy (3/2) log 2 \u2248 1.040 at reduced area = 2 (W5 quantitative anchor rt_kaulMajumdar_gap_at_reduced_area_two). Right: Casini-Huerta saturated bound (c/3) log(L/UV) across central charges (Ising c = 1/2, tricritical Ising c = 7/10, 3-state Potts c = 4/5, free boson c = 1) at fixed UV cutoff 1e-3; concrete witness for H_CasiniHuerta_Bound_Valid_witness_saturated. Sources: Ryu-Takayanagi PRL 96, 181602 (2006), hep-th/0603001; Casini-Huerta J. Phys. A 42, 504007 (2009), arXiv:0905.2562; Kaul-Majumdar PRL 84, 5255 (2000); Sen JHEP 1205, 0971 (2012) (non-universality witness). Lean: RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area + rt_falsified_by_kaul_majumdar + rt_eq_kaulMajumdar_iff_trivial_reduced_area + ch_log_bound_pos_at_log_pos + H_CasiniHuerta_Bound_Valid_witness_saturated + kaulMajumdar_not_H_RT.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_rt_ch_bounds_mtc.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_rt_ch_bounds_mtc.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "reduced area / region L",
+        "yaxis": "entropy"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "sage",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_code_distance_vs_fusion_spectrum",
+      "function": "fig_code_distance_vs_fusion_spectrum",
+      "caption": "Phase 6c Wave 4 \u2014 Hayden-Preskill structural QEC across MTC spectra. Left: code-distance proxy d_C := log d_max for Fibonacci (d_\u03c4 = \u03c6 \u2248 1.618; d_C \u2248 0.481), Ising (d_\u03c3 = \u221a2; d_C \u2248 0.347), SU(3)_k=2 Fibonacci sub-sector, and trivial-abelian (d_max = 1; d_C = 0 \u2014 falsifies the W4 admissibility criterion). The W4 quantitative theorem fibonacci_HPCode_codeDistance_lt_log_two locates Fibonacci below log 2 \u2248 0.693, the minimal non-abelian threshold. Right: scrambling-time bound t_scr := log D\u00b2 for the same substrates, demonstrating the W4 correctness-push (positive code distance \u21d2 positive scrambling time via D\u00b2 \u2265 d_max\u00b2 > 1). Trivial-abelian has t_scr = 0, the vacuum scrambling-time falsifier. Sources: Hayden-Preskill JHEP 2007/9/120 (arXiv:0708.4025); Almheiri-Dong-Harlow JHEP 2015/4/163 (arXiv:1411.7041); Pastawski-Yoshida-Harlow-Preskill JHEP 2015/6/149 (arXiv:1503.06237). Lean: QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class + code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class + fibonacci_HPCode_codeDistance_lt_log_two + fibonacci_HPCode_scramblingTimeBound_pos + trivialAbelian_violates_admissibility.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_code_distance_vs_fusion_spectrum.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_code_distance_vs_fusion_spectrum.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "MTC spectrum",
+        "yaxis": "d_C / t_scr"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "sage",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_polyakov_loop_deconfinement",
+      "function": "fig_polyakov_loop_deconfinement",
+      "caption": "Phase 6d Wave 1 \u2014 Polyakov-loop order parameter and Walker-Wang transport window. Left: |P| vs T/T_c showing the deconfinement transition for Z_2 (Ising) and Z_3 (3-state Potts) Svetitsky-Yaffe universality classes with \u03bd = 0.6299 and 0.5 respectively (Pelissetto-Vicari Phys. Rep. 368, 2002; Kos-Poland-Simmons-Duffin JHEP 03, 2016). Confining phase has |P| = 0; deconfining |P| > 0. Right: KSS bound \u03b7/s \u2265 1/(4\u03c0) \u2248 0.0796 (Kovtun-Son-Starinets PRL 94, 2005) with the Walker-Wang transport correctness-push window [KSS, 2\u00b7KSS]. Both numerical falsifiers (\u03b7/s = 0 and \u03b7/s = 1) lie outside the window. Lean: CenterSymmetryConfinement.confining_iff_magnitude_zero + deconfining_implies_magnitude_positive + ising_nu_gt_potts_nu + KSS_bound_below_0_08 + walker_wang_zero_eta_violator + walker_wang_unit_eta_violator.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_polyakov_loop_deconfinement.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_polyakov_loop_deconfinement.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "T/T_c",
+        "yaxis": "|P|"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

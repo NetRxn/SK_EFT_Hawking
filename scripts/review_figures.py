@@ -1098,6 +1098,38 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[], color_keys=["steel_blue", "amber"],
     ),
     FigureSpec(
+        name="fig_rt_ch_bounds_mtc",
+        function="fig_rt_ch_bounds_mtc",
+        caption=(
+            "Phase 6c Wave 5 — Ryu-Takayanagi vs W3 Kaul-Majumdar "
+            "microscopic entropy + Casini-Huerta saturated bound across "
+            "2D CFTs. Left: classical RT entropy S = A/(4 G_N) (steel "
+            "blue, solid) vs W3 Kaul-Majumdar S = A/(4 G_N) - (3/2) "
+            "log(A/(4 G_N)) (amber, dashed) across reduced area; "
+            "knife-edge agreement at reduced area = 1 (W5 biconditional "
+            "rt_eq_kaulMajumdar_iff_trivial_reduced_area); discrepancy "
+            "(3/2) log 2 ≈ 1.040 at reduced area = 2 (W5 quantitative "
+            "anchor rt_kaulMajumdar_gap_at_reduced_area_two). Right: "
+            "Casini-Huerta saturated bound (c/3) log(L/UV) across "
+            "central charges (Ising c = 1/2, tricritical Ising c = 7/10, "
+            "3-state Potts c = 4/5, free boson c = 1) at fixed UV cutoff "
+            "1e-3; concrete witness for H_CasiniHuerta_Bound_Valid_witness_saturated. "
+            "Sources: Ryu-Takayanagi PRL 96, 181602 (2006), hep-th/0603001; "
+            "Casini-Huerta J. Phys. A 42, 504007 (2009), arXiv:0905.2562; "
+            "Kaul-Majumdar PRL 84, 5255 (2000); Sen JHEP 1205, 0971 (2012) "
+            "(non-universality witness). Lean: "
+            "RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area "
+            "+ rt_falsified_by_kaul_majumdar + "
+            "rt_eq_kaulMajumdar_iff_trivial_reduced_area + "
+            "ch_log_bound_pos_at_log_pos + "
+            "H_CasiniHuerta_Bound_Valid_witness_saturated + "
+            "kaulMajumdar_not_H_RT."
+        ),
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "reduced area / region L", "yaxis": "entropy"},
+        physics_checks=[], color_keys=["steel_blue", "amber", "sage", "carmine"],
+    ),
+    FigureSpec(
         name="fig_code_distance_vs_fusion_spectrum",
         function="fig_code_distance_vs_fusion_spectrum",
         caption=(
@@ -1117,7 +1149,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
             "JHEP 2007/9/120 (arXiv:0708.4025); Almheiri-Dong-Harlow "
             "JHEP 2015/4/163 (arXiv:1411.7041); Pastawski-Yoshida-"
             "Harlow-Preskill JHEP 2015/6/149 (arXiv:1503.06237). Lean: "
-            "QECHolographyBridge.codeDistance_pos_iff_non_abelian + "
+            "QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class + "
             "code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class "
             "+ fibonacci_HPCode_codeDistance_lt_log_two + "
             "fibonacci_HPCode_scramblingTimeBound_pos + "
@@ -1267,6 +1299,8 @@ def generate_figures() -> dict[str, Path]:
         fig_zhitnitsky_de_theta_scan,
         # Phase 6c Wave 4: Hayden-Preskill QEC code-distance / scrambling
         fig_code_distance_vs_fusion_spectrum,
+        # Phase 6c Wave 5: RT vs W3 microscopic + CH saturated bound
+        fig_rt_ch_bounds_mtc,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1391,6 +1425,13 @@ def generate_figures() -> dict[str, Path]:
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
         "fig_log_correction_signature": fig_log_correction_signature,
         "fig_T_H_evolution_regime_partition": fig_T_H_evolution_regime_partition,
+        "fig_ep_violation_matrix": fig_ep_violation_matrix,
+        "fig_polyakov_loop_deconfinement": fig_polyakov_loop_deconfinement,
+        "fig_gmor_relation_verification": fig_gmor_relation_verification,
+        "fig_cfl_z3_center_bridge": fig_cfl_z3_center_bridge,
+        "fig_zhitnitsky_de_theta_scan": fig_zhitnitsky_de_theta_scan,
+        "fig_code_distance_vs_fusion_spectrum": fig_code_distance_vs_fusion_spectrum,
+        "fig_rt_ch_bounds_mtc": fig_rt_ch_bounds_mtc,
     }
 
     paths = {}
@@ -1541,6 +1582,8 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_zhitnitsky_de_theta_scan,
         # Phase 6c Wave 4: Hayden-Preskill QEC code-distance / scrambling
         fig_code_distance_vs_fusion_spectrum,
+        # Phase 6c Wave 5: RT vs W3 microscopic + CH saturated bound
+        fig_rt_ch_bounds_mtc,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1669,6 +1712,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_cfl_z3_center_bridge": fig_cfl_z3_center_bridge,
         "fig_zhitnitsky_de_theta_scan": fig_zhitnitsky_de_theta_scan,
         "fig_code_distance_vs_fusion_spectrum": fig_code_distance_vs_fusion_spectrum,
+        "fig_rt_ch_bounds_mtc": fig_rt_ch_bounds_mtc,
     }
 
     issues: list[CheckIssue] = []

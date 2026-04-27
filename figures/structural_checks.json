@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-26T15:45:04.018570+00:00",
+  "timestamp": "2026-04-27T14:10:27.132779+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -138,10 +138,58 @@
       "severity": "warning",
       "check": "axis_label",
       "message": "yaxis title '' missing expected 'hook'"
+    },
+    {
+      "figure": "fig_ep_violation_matrix",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title '' missing expected 'level'"
+    },
+    {
+      "figure": "fig_ep_violation_matrix",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title '' missing expected 'log10_eta'"
+    },
+    {
+      "figure": "fig_gmor_relation_verification",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title '' missing expected 'm_q'"
+    },
+    {
+      "figure": "fig_gmor_relation_verification",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title 'GeV\u2074' missing expected 'residual'"
+    },
+    {
+      "figure": "fig_rt_ch_bounds_mtc",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title 'reduced area A/(4 G_N)' missing expected 'reduced area / region L'"
+    },
+    {
+      "figure": "fig_code_distance_vs_fusion_spectrum",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title '' missing expected 'MTC spectrum'"
+    },
+    {
+      "figure": "fig_code_distance_vs_fusion_spectrum",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title 'code distance d_C' missing expected 'd_C / t_scr'"
+    },
+    {
+      "figure": "fig_polyakov_loop_deconfinement",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title 'T / T_c' missing expected 'T/T_c'"
     }
   ],
   "summary": {
     "errors": 0,
-    "warnings": 23
+    "warnings": 31
   }
 }

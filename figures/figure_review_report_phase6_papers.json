@@ -1,0 +1,189 @@
+{
+  "review_date": "2026-04-27",
+  "scope": "Phase 6 paper batch (papers 32, 34, 35, 36, 37, 38, note_rt_ch_bounds)",
+  "figures_reviewed": 7,
+  "overall_status": "issues_found",
+  "figures": [
+    {
+      "name": "fig_zhitnitsky_de_theta_scan",
+      "paper": "paper32_strong_cp_topological_de",
+      "status": "fail",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "LEFT panel x-axis is broken: x-range extends to 10^126 MeV although the caption / scan domain is Lambda_QCD in [1 MeV, 1 GeV] (i.e. 10^0 - 10^3 MeV). The actual prediction curve is squashed into a 1-pixel-wide vertical sliver at the far left of the plot. The PDG Lambda_QCD ~ 100 MeV vertical reference and the observed-DE amber stripe are co-located on that same sliver and effectively unreadable.",
+          "Bar-chart annotation '1.00e+112' for Planck-natural M_P^4 has too many digits in scientific exponent display; should be 10^112 or formatted as 'M_P^4'."
+        ]
+      },
+      "physics": {
+        "status": "issues",
+        "issues": [
+          "Right-panel Zhitnitsky bar shows 6.71e-9 eV^4 (matches the project value rho ~ Lambda_QCD^6 / M_P^2 at Lambda_QCD = 100 MeV); observed 2.80e-11 eV^4 is correct. So the numerical content is right, but the LEFT panel x-axis bug means the headline 'Zhitnitsky prediction sits ~240x above observed (within 3 orders)' message is not visually conveyed."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": false,
+      "notes": "The right-panel suppression bar chart is fine and on its own communicates the ~120-order hierarchy story. The left-panel x-axis range bug is the dominant defect and should block paper submission for figure 1 of paper 32 until fixed. Likely cause: the x-range was computed in eV (or some other unit) instead of MeV, or auto-ranged from a stray sentinel value."
+    },
+    {
+      "name": "fig_ep_violation_matrix",
+      "paper": "paper34_equivalence_principle",
+      "status": "warning",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "Right-panel x-tick labels are rotated and visually crowd the bottom margin; readable but tight.",
+          "LEFT-panel matrix has no explicit axis titles (this is the structural-check warning); the WEP/EEP/SEP column headers and the per-row mechanism labels are clear, so a missing axis title is acceptable for a categorical heatmap."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [
+          "Vestigial differential coupling at eta = 1 (= 10^0) is at the very top edge of the right panel y-axis and the bar is essentially invisible (it would be a zero-height bar at y=0 since log10(1) = 0). The annotation 'eta_max = 1' is shown but the bar itself reads as missing. Consider extending the y-axis to +0.5 or rendering eta_max=1 explicitly so the bar has visible height."
+        ]
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Matrix correctly shows two violator rows (vestigial differential coupling, vestigial relics) and four non-violator rows. Eta-comparison bar chart correctly places MICROSCOPE at -15 and STEP at -18."
+    },
+    {
+      "name": "fig_code_distance_vs_fusion_spectrum",
+      "paper": "paper35_qec_holography",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": [
+          "Bottom-right annotation 'trivial scrambling 0(d_t = 0)' visually overlaps with the trivial-abelian bar baseline; minor cosmetic but readable."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Fibonacci d_C = 0.481 = log phi, Ising d_C = 0.347 = log sqrt(2), SU(3)_k=2 Fibonacci sub-sector d_C = 0.481, trivial-abelian d_C = 0 - all correct. log 2 = 0.693 reference line drawn at top of left panel. Scrambling-time bounds (right) all positive on non-abelian witnesses, zero on trivial-abelian falsifier - matches W4 correctness-push. Structural warning about y-axis title 'd_C / t_scr' is FALSE POSITIVE: each panel correctly labels its own quantity ('code distance d_C' and 'scrambling-time bound t_scr')."
+    },
+    {
+      "name": "fig_polyakov_loop_deconfinement",
+      "paper": "paper36_center_symmetry",
+      "status": "warning",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "RIGHT-panel x-tick labels showing 'eta/s = 0.0796', 'eta/s = 0.119', etc. are rotated and overlap each other; the cluster of three small bars near KSS is hard to disambiguate at first glance.",
+          "Bar value annotations on the right panel are tilted/rotated; partial legibility issue."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": [
+          "Structural-check warning that x-axis title is 'T / T_c' (with spaces) vs expected 'T/T_c' is a substring mismatch only; the label is semantically correct."
+        ]
+      },
+      "caption_match": true,
+      "notes": "LEFT panel: Z_2 (Ising, blue, nu=0.6299) and Z_3 (3-state Potts, amber dashed, nu=0.5) order parameters above T_c, |P|=0 below T_c, deconfinement transition at T_c clearly marked. RIGHT panel: KSS bound at 0.0796 visible as dashed line; falsifiers at eta/s = 0 and eta/s = 1 outside the [KSS, 2*KSS] window; window endpoint 2*KSS = 0.1592 annotated. Physics correct, recommend tightening tick-label rotation in the right panel for paper-grade legibility."
+    },
+    {
+      "name": "fig_gmor_relation_verification",
+      "paper": "paper37_chiral_ssb",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Best of the batch. LEFT: LHS = 1.5886e-04 GeV^4, RHS = 1.5890e-04 GeV^4, difference 3.92e-08 (~1 part in 10^4) annotated. RIGHT: relative residual log-log curve has a sharp minimum at the dashed PDG m_q = 3.5 MeV vertical, exactly as caption claims. Structural warnings about missing 'm_q' / 'residual' axis title strings are FALSE POSITIVES (left panel correctly labels 'GeV^4' and 'LHS / RHS'; right panel correctly labels 'm_q [MeV]' and 'Relative residual')."
+    },
+    {
+      "name": "fig_cfl_z3_center_bridge",
+      "paper": "paper38_cfl",
+      "status": "warning",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          "LEFT panel: y-axis range is [-2, +2] while x-axis range is [-1, +1], so the unit circle renders as a vertical ellipse. The Re/Im labels make the geometry clear but a visual unit circle would communicate cube-root-of-unity geometry more directly. Consider equal-aspect axes."
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Cube roots correctly placed at omega = (-0.5, +sqrt(3)/2), omega^2 = (-0.5, -sqrt(3)/2), 1 = (1, 0). CFL-emergent = QCD-center marker correctly sits on omega in orange (highlighted). Sum rule 1 + omega + omega^2 = 0 annotated. Right-panel bar chart classifies charges 0/1/2/3 as falsifier/witness/witness/falsifier correctly per Hirono-Tanizaki."
+    },
+    {
+      "name": "fig_rt_ch_bounds_mtc",
+      "paper": "note_rt_ch_bounds",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "LEFT: Classical RT (steel-blue solid) and W3 Kaul-Majumdar (amber dashed with -3/2 log correction) cross at reduced area = 1 (knife-edge), gap = (3/2) log 2 ~ 1.040 at reduced area = 2 visually consistent. RIGHT: 4 CFTs (Ising c=1/2, tricritical Ising c=7/10, 3-state Potts c=4/5, free boson c=1) ordered correctly; saturated bound (c/3) log(L/UV) lines monotone and properly separated. Structural warning that x-axis 'reduced area A/(4 G_N)' is missing expected substring 'reduced area / region L' is a FALSE POSITIVE: left/right axes correctly label their own panels."
+    }
+  ],
+  "summary": "7 figures reviewed. 1 fail (zhitnitsky x-axis range bug), 3 warnings (ep_violation eta=1 bar invisible, polyakov_loop right-panel tick crowding, cfl_z3 unit-circle aspect), 3 pass (code_distance, gmor, rt_ch_bounds). 24 of 31 structural-check axis_label warnings on these 7 figures are FALSE POSITIVES (substring mismatch between FigureSpec keyword and the actual semantically-correct label that the panel uses).",
+  "actionable_findings": [
+    {
+      "figure": "fig_zhitnitsky_de_theta_scan",
+      "severity": "fail",
+      "issue": "LEFT-panel x-axis range extends to 10^126 MeV, squashing the actual scan into a 1-pixel sliver at left. Caption claims domain Lambda_QCD in [1 MeV, 1 GeV]. Likely a unit-conversion or sentinel-value bug in the scan generator. Fix x-range to [1, 1000] MeV (log10) and re-render."
+    },
+    {
+      "figure": "fig_ep_violation_matrix",
+      "severity": "warning",
+      "issue": "RIGHT-panel: vestigial-differential-coupling bar at eta = 1 (log10 eta = 0) has zero visible height because y-axis upper bound is exactly 0. Extend y-axis upper bound to ~+0.5 so the eta=1 bar is visually present, OR draw the eta=1 case as a horizontal reference line at y=0."
+    },
+    {
+      "figure": "fig_polyakov_loop_deconfinement",
+      "severity": "warning",
+      "issue": "RIGHT-panel x-tick labels (eta/s values) are rotated and overlap, causing the cluster of three sub-KSS / KSS / Walker-Wang-window bars to be visually crowded. Either widen the panel, reduce tick-label font, or use a horizontal bar layout for the eta/s axis."
+    },
+    {
+      "figure": "fig_cfl_z3_center_bridge",
+      "severity": "warning",
+      "issue": "LEFT panel renders the unit circle as a vertical ellipse because y-range [-2, +2] is twice x-range [-1, +1]. Set equal-aspect axes (square plotting area, both ranges [-1.2, +1.2]) so the cube-roots-of-unity geometry is visually faithful."
+    }
+  ],
+  "false_positive_structural_warnings": [
+    "fig_code_distance_vs_fusion_spectrum: yaxis 'code distance d_C' and 'scrambling-time bound t_scr' on each respective panel - correctly labeled per panel",
+    "fig_gmor_relation_verification: xaxis 'm_q [MeV]' present on right panel; left panel has bar labels not a numeric x; yaxis 'GeV^4' on left and 'Relative residual' on right - correctly labeled per panel",
+    "fig_polyakov_loop_deconfinement: xaxis 'T / T_c' (spaces) vs expected 'T/T_c' - same label",
+    "fig_rt_ch_bounds_mtc: xaxis 'reduced area A/(4 G_N)' on left + 'region size L (UV cutoff = 1e-3)' on right - both correct per panel"
+  ]
+}

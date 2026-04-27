@@ -1,0 +1,290 @@
+\documentclass[twocolumn]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\newcommand{\GN}{G_{\mathrm{N}}}
+\newcommand{\redArea}{A/(4\GN)}
+
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{Ryu--Takayanagi area law versus a microscopic horizon entropy
+with $-(3/2)\,\log(A/4 G_N)$ correction: a Lean~4 inconsistency note}
+
+\author{John G. Roehm}
+\affiliation{Independent Researcher; \texttt{NetRxn137@gmail.com}}
+
+\date{\today}
+
+\begin{abstract}
+We formalize, in the Lean~4 proof assistant, the structural
+inconsistency between the classical Ryu--Takayanagi area
+law~\cite{RyuTakayanagi2006} $S = A / (4 \GN)$ (with no log
+correction) and the Kaul--Majumdar microscopic horizon
+entropy~\cite{KaulMajumdar2000} $S = A/(4\GN) - (3/2)\log\!\redArea$
+(with a universal $-3/2$ log coefficient). The two formulas agree
+only on the knife-edge case $A = 4\GN$ (reduced area unity); otherwise
+they necessarily differ by exactly the log-correction term. We encode
+the Ryu--Takayanagi formula as an external-hypothesis structural
+predicate \texttt{H\_RT\_Formula\_Valid} (because the bulk holographic
+dual is not constructed in this project) and the
+Casini--Huerta entanglement-entropy log
+bound~\cite{CasiniHuerta2009} $S(L) \le (c/3) \log(L/\varepsilon)$ as
+a similar predicate \texttt{H\_CasiniHuerta\_Bound\_Valid}. The
+substantive result is a knife-edge biconditional locating
+classical-RT/Kaul--Majumdar agreement at the unique reduced-area
+value $A/(4\GN) = 1$, plus a numerical anchor pinning the gap at
+canonical reduced area $A/(4\GN) = 2$ to exactly
+$(3/2)\log 2 \approx 1.040$. A substantive cross-bridge consumes
+both the external Ryu--Takayanagi hypothesis and the Kaul--Majumdar
+entropy function, deriving the inconsistency at any non-trivial
+reduced area; a falsifier proves that the Kaul--Majumdar function
+fails the Ryu--Takayanagi hypothesis. The structural conclusion is
+that classical Ryu--Takayanagi must be augmented with a quantum
+log correction at the area-log level for consistency with the
+Kaul--Majumdar microscopic count. The bulk minimal-surface
+construction~\cite{LewkowyczMaldacena2013} and the
+Casini--Huerta proof from modular-Hamiltonian methods are deferred.
+The module ships seven substantive theorems with zero \texttt{sorry}
+statements and zero new axioms.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Two distinct frameworks for black-hole and entanglement entropy
+agree on leading-area behavior but disagree at logarithmic order.
+Ryu and Takayanagi's holographic area law~\cite{RyuTakayanagi2006},
+$S_{\mathrm{RT}} = A / (4 \GN)$, identifies entropy with a bulk
+minimal-surface area; this is the leading classical statement, with
+no log correction. Kaul and Majumdar's microscopic horizon
+entropy~\cite{KaulMajumdar2000},
+\begin{equation}
+S_{\mathrm{KM}}(A, \GN) \;=\; \redArea \,-\, \tfrac{3}{2}\,\log\!\redArea,
+\label{eq:km}
+\end{equation}
+includes a universal $-3/2$ log coefficient extracted from the
+microscopic counting of horizon Chern--Simons states. A separate
+non-universality witness in the literature is Sen's 4D Schwarzschild
+log coefficient $77/45 \approx 1.711$, which differs from $-3/2$,
+indicating that the microscopic log coefficient is not universal
+across Lagrangian regularizations.
+
+This paper presents a Lean~4 formalization of the structural content
+of this disagreement. We do \emph{not} derive the Ryu--Takayanagi
+formula from first principles; the bulk holographic dual is not
+constructed in this project. Instead, we encode it as an
+external-hypothesis structural predicate and ask: what structural
+consequences follow when it is combined with a microscopic horizon
+entropy carrying a log correction?
+
+The output is a small but precise theorem set: a knife-edge
+biconditional locating the unique reduced area where the two
+formulas agree, a numerical anchor pinning the gap at canonical
+reduced area $A/(4\GN) = 2$ to $(3/2)\log 2 \approx 1.040$, a
+cross-bridge proving inconsistency at every non-trivial reduced area,
+and a falsifier proving that the Kaul--Majumdar function fails the
+Ryu--Takayanagi hypothesis directly.
+
+\section{External-hypothesis predicates}
+\label{sec:tracked}
+
+\paragraph{Ryu--Takayanagi.}
+\begin{verbatim}
+structure H_RT_Formula_Valid
+    (S_BH : R -> R -> R) : Prop where
+  rt_proportional :
+    forall A G_N, 0 < A -> 0 < G_N ->
+    S_BH A G_N = A / (4 * G_N)
+\end{verbatim}
+A candidate entropy function $S_{\mathrm{BH}} : \mathbb{R} \times
+\mathbb{R} \to \mathbb{R}$ satisfies \texttt{H\_RT\_Formula\_Valid} if
+and only if it equals $\redArea$ on the positive cone of
+$(A, \GN)$.
+
+\paragraph{Casini--Huerta.}
+\begin{verbatim}
+structure H_CasiniHuerta_Bound_Valid
+    (S_ent : R -> R)
+    (c_central UV_cutoff : R) : Prop where
+  c_pos : 0 < c_central
+  uv_pos : 0 < UV_cutoff
+  ch_bound :
+    forall L, UV_cutoff < L ->
+      S_ent L <=
+      (c_central / 3) * Real.log (L / UV_cutoff)
+\end{verbatim}
+For a 2D conformal-field-theory entanglement entropy with central
+charge $c$ and UV cutoff $\varepsilon$, the Casini--Huerta
+bound~\cite{CasiniHuerta2009} asserts
+$S_{\mathrm{ent}}(L) \le (c/3) \log(L / \varepsilon)$ on the
+substantive case $L > \varepsilon$.
+
+\section{Structural consequences of Ryu--Takayanagi}
+\label{sec:rt-consequences}
+
+\paragraph*{Theorem (\texttt{rt\_entropy\_pos}).}
+Under \texttt{H\_RT\_Formula\_Valid}, the entropy is strictly positive
+on the positive cone of $(A, \GN)$. The proof rewrites via the
+hypothesis and applies positivity of division.
+
+\paragraph*{Theorem
+(\texttt{rt\_kaulMajumdar\_gap\_at\_reduced\_area\_two}).}
+At canonical reduced area $A / (4 \GN) = 2$ (equivalently
+$A = 8\GN$), the gap between classical Ryu--Takayanagi and the
+Kaul--Majumdar microscopic entropy is exactly $(3/2)\log 2
+\approx 1.040$. The proof unfolds the Kaul--Majumdar definition,
+normalizes the reduced-area arithmetic, and applies \texttt{ring}.
+
+\section{Knife-edge biconditional}
+\label{sec:correctness_push}
+
+The structural anchor of this paper is the knife-edge biconditional
+\begin{verbatim}
+theorem
+  rt_eq_kaulMajumdar_iff_trivial_
+   reduced_area
+    (A G_N : R) (hA : 0 < A) (hG : 0 < G_N) :
+  A / (4 * G_N) = kaulMajumdarS A G_N 0
+   <-> A / (4 * G_N) = 1
+\end{verbatim}
+locating classical-Ryu--Takayanagi / Kaul--Majumdar agreement at the
+unique reduced area $A / (4\GN) = 1$. By contrapositive, the two
+formulas necessarily disagree at every non-trivial reduced area.
+
+The forward direction proceeds by extracting
+$\log\!\redArea = 0$ from the assumed equality, applying
+$\exp \circ \log = \mathrm{id}$ on positives to derive
+$\redArea = 1$, and discharging. The reverse direction collapses
+via $\log 1 = 0$.
+
+\paragraph*{Theorem (\texttt{rt\_falsified\_by\_kaul\_majumdar}).}
+Under \texttt{H\_RT\_Formula\_Valid} for a candidate $S_{\mathrm{BH}}$,
+the Kaul--Majumdar entropy function is structurally incompatible
+with $S_{\mathrm{BH}}$ at non-trivial reduced area. The proof body
+invokes both the hypothesis (rewriting $S_{\mathrm{BH}}$ to $\redArea$)
+and the contrapositive of the biconditional (deriving the
+inconsistency).
+
+\section{Casini--Huerta bound positivity and a witness}
+\label{sec:ch}
+
+The Casini--Huerta log bound's positivity ships as
+\texttt{ch\_log\_bound\_pos\_at\_log\_pos}: under
+\texttt{H\_CasiniHuerta\_Bound\_Valid}, the bound
+$(c/3) \log(L / \varepsilon)$ is strictly positive on the substantive
+case $L > \varepsilon > 0$. The proof combines the structural
+hypothesis fields ($c > 0$, $\varepsilon > 0$) with logarithm
+positivity and multiplication of positives.
+
+A concrete witness ships as
+\texttt{H\_CasiniHuerta\_Bound\_Valid\_witness\_saturated}:
+the saturated entropy function
+\begin{equation}
+S_{\mathrm{sat}}(L) := (c/3) \log(L / \varepsilon)
+\end{equation}
+satisfies the Casini--Huerta hypothesis with the bound met at
+equality. This pins the hypothesis as non-vacuous.
+
+\begin{figure*}[ht]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/fig_rt_ch_bounds_mtc.png}
+\caption{
+\emph{Ryu--Takayanagi area law versus Kaul--Majumdar microscopic
+entropy plus the saturated Casini--Huerta bound across central
+charges.} Left: classical Ryu--Takayanagi $S = \redArea$ (steel-blue,
+solid) versus Kaul--Majumdar $S = \redArea - (3/2)\log\!\redArea$
+(amber, dashed) across reduced area $A/(4\GN) \in [0.1, 5]$. The
+knife-edge agreement at $A/(4\GN) = 1$ is highlighted; outside this
+point, the formulas necessarily disagree. Right: Casini--Huerta
+saturated bound $(c/3) \log(L / \varepsilon)$ across central charges
+(2D Ising $c = 1/2$, tricritical Ising $c = 7/10$, 3-state Potts
+$c = 4/5$, free boson $c = 1$) at fixed $\varepsilon = 10^{-3}$.
+}
+\label{fig:rt_ch}
+\end{figure*}
+
+\section{Falsifier: Kaul--Majumdar fails Ryu--Takayanagi}
+\label{sec:falsifier}
+
+The Kaul--Majumdar entropy function fails
+\texttt{H\_RT\_Formula\_Valid} (theorem
+\texttt{kaulMajumdar\_not\_H\_RT}): at $A = 8$ and $\GN = 1$, the
+microscopic entropy is $2 - (3/2)\log 2 \approx 0.96$, not the
+$2 = A / (4\GN)$ that Ryu--Takayanagi requires. The proof extracts
+the discrepancy via $\log 2 > 0$ and a linear-arithmetic step. This
+is the sharp distinction between microscopic-quantum-corrected
+entropy and classical-area-law entropy.
+
+\section{Formalization summary}
+\label{sec:formalization}
+
+The Lean module
+\texttt{lean/SKEFTHawking/RTCasiniHuertaBounds.lean} ships seven
+substantive theorems, zero \texttt{sorry} statements, and zero new
+axioms beyond the kernel's three. The Python mirror in
+\texttt{src/rt\_ch\_bounds/} provides numerical evaluation of the
+Ryu--Takayanagi--Kaul--Majumdar gap and a $29$-case \texttt{pytest}
+suite cross-checking the Lean theorems against numerical agreement.
+
+\section{What is and is not done here}
+\label{sec:scope}
+
+The formalization deliberately stays on the structural side. It does
+not:
+
+\begin{itemize}
+\item Construct the bulk minimal surface; the
+Lewkowycz--Maldacena~\cite{LewkowyczMaldacena2013} replica-trick
+derivation of Ryu--Takayanagi is not formalized.
+\item Derive the Casini--Huerta bound from modular Hamiltonian
+methods; the bound enters as a structural hypothesis.
+\item Identify which conformal field theory on the boundary
+corresponds to a given microscopic substrate; the AdS/CFT spectrum
+dictionary is not constructed.
+\end{itemize}
+
+These are natural extensions but require substantial additional
+infrastructure (replica-trick formalization, modular-Hamiltonian
+machinery, holographic-dictionary entries) that we leave for future
+work.
+
+\begin{thebibliography}{99}
+
+\bibitem{RyuTakayanagi2006}
+S.~Ryu and T.~Takayanagi,
+``Holographic derivation of entanglement entropy from anti-de Sitter
+space/conformal field theory correspondence,''
+Phys.\ Rev.\ Lett.\ \textbf{96}, 181602 (2006);
+arXiv:hep-th/0603001.
+
+\bibitem{CasiniHuerta2009}
+H.~Casini and M.~Huerta,
+``Entanglement entropy in free quantum field theory,''
+J.\ Phys.\ A \textbf{42}, 504007 (2009); arXiv:0905.2562.
+
+\bibitem{KaulMajumdar2000}
+R.~K.~Kaul and P.~Majumdar,
+``Logarithmic correction to the Bekenstein-Hawking entropy,''
+Phys.\ Rev.\ Lett.\ \textbf{84}, 5255 (2000).
+
+\bibitem{LewkowyczMaldacena2013}
+A.~Lewkowycz and J.~Maldacena,
+``Generalized gravitational entropy,''
+JHEP \textbf{08}, 090 (2013); arXiv:1304.4926.
+
+\bibitem{HaydenPreskill2007}
+P.~Hayden and J.~Preskill,
+``Black holes as mirrors: quantum information in random subsystems,''
+JHEP \textbf{09}, 120 (2007); arXiv:0708.4025.
+
+\end{thebibliography}
+
+\end{document}

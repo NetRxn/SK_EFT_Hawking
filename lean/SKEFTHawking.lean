@@ -183,6 +183,7 @@ import SKEFTHawking.ChiralSSB_QCD
 import SKEFTHawking.CFLChiralLagrangian
 import SKEFTHawking.StrongCPTopologicalDE
 import SKEFTHawking.QECHolographyBridge
+import SKEFTHawking.RTCasiniHuertaBounds
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

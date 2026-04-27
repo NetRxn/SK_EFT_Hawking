@@ -125,19 +125,6 @@ noncomputable def scramblingTimeBound : ℝ :=
 theorem scramblingTimeBound_nonneg : 0 ≤ H.scramblingTimeBound :=
   Real.log_nonneg H.one_le_globalDimSq
 
-/--
-**Scrambling-time positivity ↔ non-trivial substrate.**
-
-The biconditional is load-bearing: it connects the QEC observable
-(positive scrambling time) to the structural non-triviality of the
-MTC substrate (`Σ d_a² > 1`, i.e. *some* non-unit object exists or
-the unit's d > 1 — but the latter is excluded by `quantum_dim_unit = 1`).
--/
-theorem scramblingTimeBound_pos_iff_nontrivial :
-    0 < H.scramblingTimeBound ↔ 1 < H.horizon.globalDimSq := by
-  unfold scramblingTimeBound
-  exact Real.log_pos_iff H.horizon.globalDimSq_pos.le
-
 /-! ## §4 — Code distance -/
 
 /--
@@ -154,19 +141,6 @@ noncomputable def codeDistance : ℝ := H.horizon.areaLawKappa
 /-- Code distance is non-negative on any MTC substrate (W3 inherited). -/
 theorem codeDistance_nonneg : 0 ≤ H.codeDistance :=
   H.horizon.areaLawKappa_nonneg
-
-/--
-**Code-distance positivity ↔ non-abelian fusion class.**
-
-Load-bearing biconditional: the code distance is strictly positive iff
-the MTC supports at least one anyon with quantum dimension exceeding the
-unit (`d_max > 1`).  The "admissibility" criterion of the W4
-correctness-push.
--/
-theorem codeDistance_pos_iff_non_abelian :
-    0 < H.codeDistance ↔ 1 < H.horizon.d_max := by
-  unfold codeDistance HorizonMTCBC.areaLawKappa
-  exact Real.log_pos_iff H.horizon.d_max_pos.le
 
 /-! ## §5 — Hayden-Preskill recovery -/
 
@@ -215,28 +189,31 @@ theorem recovery_at_scrambling_bound :
 /--
 **Phase 6c W4 correctness-push.**
 
-Two equivalences and one forward implication, packaged as the named
-target from Phase 6c roadmap §A:
+Packages the wave's structural anchor (per Phase 6c roadmap §A):
+admissibility of an MTC for fault-tolerant logical operation =
+existence of any non-abelian anyon class.
+
+Two equivalences and one forward implication:
 
 * `(P1)` Code distance is positive iff the MTC supports at least one
   anyon with `d > 1` (non-abelian fusion).
 * `(P2)` Positive code distance forces a positive scrambling-time
   bound — the substrate is information-theoretically "scrambling".
 
-The implication `(P2)` is the load-bearing structural content: it
-follows from `D² ≥ d_max² > 1` (since d_max > 1 squared exceeds 1),
-hence `log D² > 0`.
-
-The named theorem is the wave's anchor (per roadmap §A): admissibility
-of an MTC for fault-tolerant logical operation = existence of any
-non-abelian anyon class.
+The biconditional `(P1)` reduces to `Real.log_pos_iff` after unfolding
+`codeDistance := log d_max`.  The implication `(P2)` is the
+load-bearing structural content: it follows from `D² ≥ d_max² > 1`
+(via the sum bound from `d_max_attained`), hence `log D² > 0`.
 -/
 theorem code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class :
     (0 < H.codeDistance ↔ 1 < H.horizon.d_max) ∧
     (0 < H.codeDistance → 0 < H.scramblingTimeBound) := by
-  refine ⟨H.codeDistance_pos_iff_non_abelian, ?_⟩
+  have h_iff : 0 < H.codeDistance ↔ 1 < H.horizon.d_max := by
+    unfold HPCode.codeDistance HorizonMTCBC.areaLawKappa
+    exact Real.log_pos_iff H.horizon.d_max_pos.le
+  refine ⟨h_iff, ?_⟩
   intro h
-  rw [H.codeDistance_pos_iff_non_abelian] at h
+  rw [h_iff] at h
   -- h : 1 < d_max.  Need: 0 < log globalDimSq.
   -- Step 1: d_max² ≤ globalDimSq via attainment of d_max.
   obtain ⟨a₀, ha₀⟩ := H.horizon.d_max_attained
@@ -250,7 +227,8 @@ theorem code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_cl
   have h_dmax_pos : 0 < H.horizon.d_max := H.horizon.d_max_pos
   have h_one_lt_sq : 1 < H.horizon.d_max ^ 2 := by nlinarith
   have h_one_lt_gdsq : 1 < H.horizon.globalDimSq := lt_of_lt_of_le h_one_lt_sq h_dmax_sq_le
-  exact (H.scramblingTimeBound_pos_iff_nontrivial).mpr h_one_lt_gdsq
+  unfold HPCode.scramblingTimeBound
+  exact (Real.log_pos_iff H.horizon.globalDimSq_pos.le).mpr h_one_lt_gdsq
 
 /-! ## §7 — Bridge from BHEntropyMicroscopic non-abelian envelope -/
 
@@ -288,8 +266,8 @@ theorem nonabelian_anyon_implies_codeDistance_pos
     (h_exists : ∃ a, 1 < H.horizon.quantum_dim a) :
     0 < H.codeDistance := by
   obtain ⟨a, ha⟩ := h_exists
-  rw [H.codeDistance_pos_iff_non_abelian]
-  exact lt_of_lt_of_le ha (H.horizon.d_max_upper a)
+  exact (H.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class.1).mpr
+    (lt_of_lt_of_le ha (H.horizon.d_max_upper a))
 
 end HPCode
 
@@ -394,7 +372,7 @@ theorem trivialAbelian_violates_admissibility :
     ¬ (0 < trivialAbelianHPCode.codeDistance) := by
   intro h
   have h_dmax_gt_one : 1 < trivialAbelianHPCode.horizon.d_max :=
-    (trivialAbelianHPCode.codeDistance_pos_iff_non_abelian).mp h
+    (trivialAbelianHPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class.1).mp h
   -- trivialAbelianHorizonBC.d_max = 1, so 1 < 1, contradiction.
   unfold trivialAbelianHPCode trivialAbelianHorizonBC at h_dmax_gt_one
   simp at h_dmax_gt_one

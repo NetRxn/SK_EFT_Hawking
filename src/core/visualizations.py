@@ -8935,7 +8935,7 @@ def fig_ep_violation_matrix():
         row=1, col=2,
     )
 
-    fig.update_yaxes(title_text="log₁₀(η)", row=1, col=2)
+    fig.update_yaxes(title_text="log₁₀(η)", range=[-22, 2], row=1, col=2)
 
     apply_layout(
         fig,
@@ -9070,7 +9070,7 @@ def fig_polyakov_loop_deconfinement():
     bar_colors = [
         COLORS["steel_blue"] if w else COLORS["amber"] for w in in_window
     ]
-    labels = [f"η/s = {e:.3g}" for e in eta_grid]
+    labels = [f"{e:.3g}" for e in eta_grid]
     fig.add_trace(
         go.Bar(
             x=labels, y=eta_grid,
@@ -9078,10 +9078,11 @@ def fig_polyakov_loop_deconfinement():
             text=[f"{e:.3g}" for e in eta_grid],
             textposition="auto",
             showlegend=False,
-            hovertemplate="%{x}<br>η/s = %{y:.4g}<extra></extra>",
+            hovertemplate="η/s = %{x}<br>value = %{y:.4g}<extra></extra>",
         ),
         row=1, col=2,
     )
+    fig.update_xaxes(title_text="η/s value", row=1, col=2)
     # KSS line
     fig.add_shape(
         type="line",
@@ -9220,8 +9221,16 @@ def fig_zhitnitsky_de_theta_scan():
         xanchor="left",
         row=1, col=1,
     )
-    fig.update_xaxes(title_text="Λ_QCD [MeV]", type="log", row=1, col=1)
-    fig.update_yaxes(title_text="ρ_DE [eV⁴]", type="log", row=1, col=1)
+    fig.update_xaxes(
+        title_text="Λ_QCD [MeV]", type="log",
+        range=[0, 3],  # 1 MeV (10^0) to 1 GeV (10^3)
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="ρ_DE [eV⁴]", type="log",
+        range=[-15, -2],  # 10^-15 to 10^-2 eV⁴
+        row=1, col=1,
+    )
 
     # ---------- Right: CC-problem suppression bar chart ----------
     labels = [
@@ -9543,7 +9552,7 @@ def fig_code_distance_vs_fusion_spectrum():
     substrate, demonstrating that admissibility (positive code distance)
     forces a positive scrambling time — the W4 correctness-push.
 
-    Lean: QECHolographyBridge.codeDistance_pos_iff_non_abelian,
+    Lean: QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class,
           code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class,
           fibonacci_HPCode_codeDistance_lt_log_two,
           trivialAbelian_violates_admissibility.
@@ -9663,6 +9672,142 @@ def fig_code_distance_vs_fusion_spectrum():
         ),
         height=560,
         width=1300,
+        margin=dict(t=110, b=80),
+    )
+    return fig
+
+
+def fig_rt_ch_bounds_mtc():
+    """Phase 6c Wave 5: Ryu-Takayanagi vs Phase 6a W3 Kaul-Majumdar
+    microscopic entropy + Casini-Huerta saturated bound across MTC
+    central charges.
+
+    Left panel: classical RT entropy `S = A/(4 G_N)` (linear) vs W3
+    Kaul-Majumdar microscopic entropy `S = A/(4 G_N) - (3/2) log(A/(4 G_N))`
+    (linear minus log) across reduced area. The knife-edge agreement
+    point at reduced area = 1 is highlighted; outside this, the two
+    formulas disagree by `(3/2) log(A/(4 G_N))`.
+
+    Right panel: Casini-Huerta saturated bound `S(L) = (c/3) log(L/UV)`
+    across central charges (Ising c=1/2, free boson c=1, tricritical
+    Ising c=7/10, 3-state Potts c=4/5, free Dirac fermion c=1) at fixed
+    UV cutoff. Ising 2D CFT is the minimal-c witness; higher-c models
+    saturate higher entropies.
+
+    Lean: RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area,
+          rt_kaulMajumdar_gap_at_reduced_area_two,
+          rt_eq_kaulMajumdar_iff_trivial_reduced_area,
+          ch_log_bound_pos_at_log_pos,
+          H_CasiniHuerta_Bound_Valid_witness_saturated,
+          kaulMajumdar_not_H_RT.
+    Source: Ryu-Takayanagi PRL 96, 181602 (2006); Casini-Huerta J. Phys.
+            A 42, 504007 (2009); Kaul-Majumdar PRL 84 5255 (2000); Sen
+            JHEP 1205 0971 (2012) (non-universality witness).
+    viz-ref: Phase 6c Paper note_rt_ch_bounds §3
+    """
+    import math
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.rt_ch_bounds import (
+        classical_rt_entropy,
+        kaul_majumdar_entropy,
+        saturated_ch_entropy,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "RT vs W3 Kaul-Majumdar entropy (W5 correctness-push)",
+            "Casini-Huerta saturated bound across 2D CFT central charges",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.16,
+    )
+
+    # ---------- Left: classical RT vs Kaul-Majumdar across reduced area ----------
+    G_N = 1.0
+    reduced_areas = np.linspace(0.1, 5.0, 100)
+    areas = reduced_areas * 4.0 * G_N
+    rt_vals = [classical_rt_entropy(A, G_N) for A in areas]
+    km_vals = [kaul_majumdar_entropy(A, G_N) for A in areas]
+
+    fig.add_trace(
+        go.Scatter(
+            x=reduced_areas,
+            y=rt_vals,
+            mode="lines",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            name="Classical RT (S = A/4 G_N)",
+            hovertemplate="A/(4 G_N) = %{x:.2f}<br>S_RT = %{y:.3f}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=reduced_areas,
+            y=km_vals,
+            mode="lines",
+            line=dict(color=COLORS["amber"], width=2.5, dash="dash"),
+            name="W3 Kaul-Majumdar (with -3/2 log)",
+            hovertemplate="A/(4 G_N) = %{x:.2f}<br>S_KM = %{y:.3f}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    # Mark knife-edge crossing at reduced area = 1
+    fig.add_vline(
+        x=1.0,
+        line=dict(color="black", width=1.5, dash="dot"),
+        annotation_text="knife-edge<br>agreement<br>(A = 4 G_N)",
+        annotation_position="top right",
+        row=1, col=1,
+    )
+    fig.update_xaxes(title_text="reduced area A/(4 G_N)", row=1, col=1)
+    fig.update_yaxes(title_text="entropy S", row=1, col=1)
+
+    # ---------- Right: Casini-Huerta saturated bound across central charges ----------
+    cft_models = [
+        ("Ising (c=1/2)", 0.5, COLORS["steel_blue"]),
+        ("Tricritical Ising (c=7/10)", 0.7, COLORS["sage"]),
+        ("3-state Potts (c=4/5)", 0.8, COLORS["amber"]),
+        ("Free boson (c=1)", 1.0, COLORS["carmine"]),
+    ]
+    UV = 1e-3
+    L_grid = np.logspace(-2, 1, 80)
+    for name, c, color in cft_models:
+        S_vals = [saturated_ch_entropy(L, c, UV) for L in L_grid]
+        fig.add_trace(
+            go.Scatter(
+                x=L_grid,
+                y=S_vals,
+                mode="lines",
+                line=dict(color=color, width=2.0),
+                name=name,
+                hovertemplate=f"c = {c}<br>L = %{{x:.3f}}<br>S = %{{y:.3f}}<extra></extra>",
+            ),
+            row=1, col=2,
+        )
+    fig.update_xaxes(
+        title_text="region size L (UV cutoff = 1e-3)",
+        type="log",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="saturated CH entropy (c/3) log(L/UV)",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6c Wave 5 — RT/CH entropy bounds: classical vs W3 microscopic, "
+                "and CH saturation across 2D CFTs</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1400,
         margin=dict(t=110, b=80),
     )
     return fig

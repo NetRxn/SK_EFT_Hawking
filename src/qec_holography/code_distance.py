@@ -90,6 +90,8 @@ def code_distance(spectrum: MTCSpectrum) -> float:
 def code_distance_admissible(spectrum: MTCSpectrum) -> bool:
     """Admissibility check: `d_C > 0` iff `d_max > 1` (non-abelian).
 
-    Mirrors `HPCode.codeDistance_pos_iff_non_abelian` from the Lean module.
+    Mirrors `HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class.1`
+    from the Lean module (the biconditional is now the first conjunct of the
+    correctness-push, post-2026-04-28 cross-wave strengthening).
     """
     return code_distance(spectrum) > 0.0
