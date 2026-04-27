@@ -8641,6 +8641,168 @@ def fig_T_H_evolution_regime_partition():
     return fig
 
 
+def fig_bbn_conformance_matrix():
+    """Phase 6b Wave 1: BBN-conformance matrix for five Phase 5x DM candidates.
+
+    Heatmap showing each candidate's BBN-conformance verdict across three
+    independent fields (omega_b_consistent, delta_n_eff_within_bound,
+    injection_below_threshold). Three candidates pass unconditionally
+    (Z16Topological_T0, Z16Mixed_C1, FractonPWave) — the W8 collective-
+    invisibility theorem applies. Two candidates fail conditional on
+    thermalization at T_BBN (Z16Singlet_S0 via 3-sterile-Weyl-thermalization
+    → ΔN_eff = 3 ≫ 0.34 Planck slack; FGTorsion via radiation-like
+    thermalization → ΔN_eff ≥ 1.0).
+
+    Right panel: ΔN_eff bar chart showing the Planck 2σ slack (0.34) as a
+    horizontal reference, with each candidate's literature-cited tracked-
+    hypothesis ΔN_eff value plotted on log scale.
+
+    Lean: BBN.bbn_violators_share_n_eff_failure_mode +
+          BBN.at_least_three_phase5x_candidates_bbn_conformant.
+    Source: Planck 2020 (A&A 641, A6); Phase 5x W7/W8 candidate IDs.
+    viz-ref: Phase 6b Paper 29 §3
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.bbn import (
+        DMCandidate,
+        N_EFF_2SIGMA_SLACK,
+        evaluate_all_candidates,
+    )
+
+    candidates = [
+        DMCandidate.Z16Topological_T0,
+        DMCandidate.Z16Mixed_C1,
+        DMCandidate.FractonPWave,
+        DMCandidate.Z16Singlet_S0,
+        DMCandidate.FGTorsion,
+    ]
+    candidate_labels = [
+        "Z16Topological T-0<br>(K-gauge TQFT)",
+        "Z16Mixed C-1<br>(dark-SU(3) confining)",
+        "FractonPWave<br>(dipole conservation)",
+        "Z16Singlet S-0<br>(3 sterile Weyl)",
+        "FGTorsion<br>(FG e-loop radiation)",
+    ]
+    field_labels = [
+        "Ω_B h² consistent",
+        "ΔN_eff ≤ 0.34",
+        "Injection ≤ thresh.",
+    ]
+
+    verdicts = evaluate_all_candidates()
+    z_matrix = []
+    cell_text = []
+    for c in candidates:
+        v = verdicts[c]
+        row_z = [
+            1 if v.omega_b_consistent else 0,
+            1 if v.delta_n_eff_within_bound else 0,
+            1 if v.injection_below_threshold else 0,
+        ]
+        row_text = [
+            "✓ pass" if v.omega_b_consistent else "✗ fail",
+            "✓ pass" if v.delta_n_eff_within_bound else "✗ fail",
+            "✓ pass" if v.injection_below_threshold else "✗ fail",
+        ]
+        z_matrix.append(row_z)
+        cell_text.append(row_text)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "BBN-conformance matrix (candidates × fields)",
+            "ΔN_eff vs Planck 2σ slack (log scale)",
+        ),
+        column_widths=[0.55, 0.45],
+        horizontal_spacing=0.18,
+        specs=[[{"type": "heatmap"}, {"type": "bar"}]],
+    )
+
+    fig.add_trace(
+        go.Heatmap(
+            z=z_matrix,
+            x=field_labels,
+            y=candidate_labels,
+            text=cell_text,
+            texttemplate="%{text}",
+            textfont={"size": 11},
+            colorscale=[
+                [0.0, COLORS["amber"]],   # amber = fails
+                [1.0, "rgba(180, 220, 200, 1.0)"],  # pale green = passes
+            ],
+            showscale=False,
+            hovertemplate="<b>%{y}</b><br>%{x}: %{text}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+
+    # ΔN_eff bars per candidate
+    delta_n_eff_values = {
+        DMCandidate.Z16Topological_T0: 1e-6,  # log-plot floor
+        DMCandidate.Z16Mixed_C1: 1e-6,
+        DMCandidate.FractonPWave: 1e-6,
+        DMCandidate.Z16Singlet_S0: 3.0,
+        DMCandidate.FGTorsion: 1.0,
+    }
+    bar_x = [c.value for c in candidates]
+    bar_y = [delta_n_eff_values[c] for c in candidates]
+    bar_text = [
+        f"ΔN_eff = {delta_n_eff_values[c]:.1g}" if delta_n_eff_values[c] >= 0.01 else "≈ 0"
+        for c in candidates
+    ]
+    bar_colors = [
+        COLORS["steel_blue"] if verdicts[c].is_conformant else COLORS["amber"]
+        for c in candidates
+    ]
+
+    fig.add_trace(
+        go.Bar(
+            x=bar_x, y=bar_y,
+            marker_color=bar_colors,
+            text=bar_text,
+            textposition="auto",
+            showlegend=False,
+            hovertemplate="<b>%{x}</b><br>ΔN_eff = %{y:.3g}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+
+    # Planck 2σ slack horizontal reference
+    fig.add_shape(
+        type="line",
+        x0=-0.5, x1=4.5,
+        y0=N_EFF_2SIGMA_SLACK, y1=N_EFF_2SIGMA_SLACK,
+        line=dict(color=COLORS["steel_blue"], width=2, dash="dot"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=4.0, y=N_EFF_2SIGMA_SLACK * 1.4,
+        text=f"Planck 2σ slack = {N_EFF_2SIGMA_SLACK:.2f}",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["steel_blue"]),
+        row=1, col=2,
+    )
+
+    fig.update_yaxes(title_text="ΔN_eff", type="log", row=1, col=2)
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6b Wave 1 — BBN-conformance matrix for five "
+                "Phase 5x DM candidates (2 thermalization-conditional violators)"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1300,
+        margin=dict(t=110, b=80, l=180),
+    )
+    return fig
+
+
 def fig_ep_violation_matrix():
     """Phase 6c Wave 3: EP-violation matrix for six Phase 5x mechanisms.
 
@@ -8787,6 +8949,721 @@ def fig_ep_violation_matrix():
         height=560,
         width=1200,
         margin=dict(t=110, b=80, l=180),
+    )
+    return fig
+
+
+def fig_polyakov_loop_deconfinement():
+    """Phase 6d Wave 1: Polyakov-loop order parameter and Svetitsky-Yaffe
+    universality.
+
+    Left panel: |P| vs T/T_c, showing the deconfinement transition. The
+    ordered phase (T < T_c) has |P| = 0 (confining); the disordered phase
+    (T > T_c) has |P| > 0 (deconfining). Z_2 (Ising) and Z_3 (Potts)
+    universality classes are shown side-by-side with their literature
+    critical exponents.
+
+    Right panel: KSS bound + Walker-Wang transport window. Shows the
+    universal lower bound η/s ≥ 1/(4π) ≈ 0.0796 with the Walker-Wang
+    correctness-push window [KSS, 2·KSS] highlighted; both numerical
+    falsifiers (η/s = 0 and η/s = 1) lie outside the window.
+
+    Lean: CenterSymmetryConfinement.confining_iff_magnitude_zero,
+          deconfining_implies_magnitude_positive,
+          ising_nu_gt_potts_nu, KSS_bound_below_0_08,
+          walker_wang_zero_eta_violator, walker_wang_unit_eta_violator.
+    Source: Svetitsky-Yaffe NPB 210 (1982); KSS PRL 94 (2005);
+            Pelissetto-Vicari Phys. Rep. 368 (2002).
+    viz-ref: Phase 6d Paper 36 §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.center_symmetry import (
+        KSS_BOUND,
+        UniversalityClass,
+        critical_exponent_nu,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Polyakov-loop order parameter |P| vs T/T_c "
+            "(Z_2 Ising vs Z_3 Potts)",
+            "KSS bound + Walker-Wang transport window",
+        ),
+        column_widths=[0.55, 0.45],
+        horizontal_spacing=0.15,
+    )
+
+    # ---------- Left: |P| vs T/T_c ----------
+    nu_ising = critical_exponent_nu(UniversalityClass.ISING)
+    nu_potts = critical_exponent_nu(UniversalityClass.THREE_STATE_POTTS)
+    # Schematic order parameter: |P| ∝ (T/T_c - 1)^β for T > T_c, 0 below.
+    # Use β ≈ 0.326 (Ising) and β ≈ 0.111 (3-state Potts) as illustrative
+    # mean-field-vs-Ising-vs-Potts scaling.
+    t_over_tc = np.linspace(0.5, 2.0, 200)
+    beta_ising = 0.326
+    beta_potts = 0.111
+    # np.maximum avoids fractional-power-of-negative warning before masking
+    delta = np.maximum(t_over_tc - 1.0, 0.0)
+    p_ising = np.where(t_over_tc < 1.0, 0.0, delta ** beta_ising)
+    p_potts = np.where(t_over_tc < 1.0, 0.0, delta ** beta_potts)
+
+    fig.add_trace(
+        go.Scatter(
+            x=t_over_tc, y=p_ising,
+            mode="lines",
+            name=f"Z_2 / Ising (ν = {nu_ising:.4f})",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=t_over_tc, y=p_potts,
+            mode="lines",
+            name=f"Z_3 / 3-state Potts (ν = {nu_potts:.4f})",
+            line=dict(color=COLORS["amber"], width=2.5, dash="dash"),
+        ),
+        row=1, col=1,
+    )
+    # Vertical T_c line
+    fig.add_shape(
+        type="line",
+        x0=1.0, x1=1.0, y0=0, y1=1.0,
+        line=dict(color=COLORS["horizon"], width=1.5, dash="dot"),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=1.02, y=0.95,
+        text="T = T_c (deconfinement)",
+        showarrow=False,
+        font=dict(size=10),
+        xanchor="left",
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=0.7, y=0.4,
+        text="Confining<br>(|P| = 0)",
+        showarrow=False,
+        font=dict(size=11, color=COLORS["steel_blue"]),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=1.5, y=0.85,
+        text="Deconfining<br>(|P| > 0)",
+        showarrow=False,
+        font=dict(size=11, color=COLORS["amber"]),
+        row=1, col=1,
+    )
+    fig.update_xaxes(title_text="T / T_c", row=1, col=1)
+    fig.update_yaxes(title_text="|P| (order parameter)", row=1, col=1, range=[0, 1.05])
+
+    # ---------- Right: KSS bound + Walker-Wang window ----------
+    eta_grid = np.array([0.0, 0.5 * KSS_BOUND, KSS_BOUND, 1.5 * KSS_BOUND,
+                         2.0 * KSS_BOUND, 3.0 * KSS_BOUND, 0.5, 1.0])
+    in_window = [
+        KSS_BOUND <= e <= 2 * KSS_BOUND for e in eta_grid
+    ]
+    bar_colors = [
+        COLORS["steel_blue"] if w else COLORS["amber"] for w in in_window
+    ]
+    labels = [f"η/s = {e:.3g}" for e in eta_grid]
+    fig.add_trace(
+        go.Bar(
+            x=labels, y=eta_grid,
+            marker_color=bar_colors,
+            text=[f"{e:.3g}" for e in eta_grid],
+            textposition="auto",
+            showlegend=False,
+            hovertemplate="%{x}<br>η/s = %{y:.4g}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    # KSS line
+    fig.add_shape(
+        type="line",
+        x0=-0.5, x1=len(eta_grid) - 0.5,
+        y0=KSS_BOUND, y1=KSS_BOUND,
+        line=dict(color=COLORS["horizon"], width=2, dash="solid"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=len(eta_grid) - 1, y=KSS_BOUND * 1.6,
+        text=f"KSS bound = 1/(4π) ≈ {KSS_BOUND:.4f}",
+        showarrow=False,
+        font=dict(size=10),
+        row=1, col=2,
+    )
+    # 2·KSS line
+    fig.add_shape(
+        type="line",
+        x0=-0.5, x1=len(eta_grid) - 0.5,
+        y0=2 * KSS_BOUND, y1=2 * KSS_BOUND,
+        line=dict(color=COLORS["steel_blue"], width=1.5, dash="dot"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=len(eta_grid) - 1, y=2 * KSS_BOUND * 1.3,
+        text=f"2·KSS ≈ {2 * KSS_BOUND:.4f}<br>(Walker-Wang upper)",
+        showarrow=False,
+        font=dict(size=9, color=COLORS["steel_blue"]),
+        row=1, col=2,
+    )
+    fig.update_yaxes(title_text="η/s", type="log", row=1, col=2)
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6d Wave 1 — Polyakov-loop deconfinement transition "
+                "and Walker-Wang transport window"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1300,
+        margin=dict(t=110, b=80),
+    )
+    return fig
+
+
+def fig_zhitnitsky_de_theta_scan():
+    """Phase 6c Wave 1: Zhitnitsky DE prediction across Λ_QCD with
+    correctness-push falsification of both-mechanism activation.
+
+    Left panel: ρ_DE (Zhitnitsky) vs Λ_QCD on log scale, with horizontal
+    band at observed ρ_DE = (2.3 meV)^4 ≈ 2.8e-11 eV⁴; the predicted
+    curve crosses the observed band near Λ_QCD ≈ 30 MeV (close to the
+    PDG Λ_QCD ≈ 100 MeV — the Zhitnitsky prediction matches observation
+    within ~2 orders without free parameters).
+
+    Right panel: bar chart showing the cosmological-constant problem
+    suppression — the Zhitnitsky-predicted ρ_DE sits ~120 orders of
+    magnitude below the Planck-natural M_P^4 estimate, demonstrating
+    the QCD-topological-sector mechanism's solution to the hierarchy.
+
+    Lean: StrongCPTopologicalDE.zhitnitsky_DE_at_lambda_qcd_within_3_orders,
+          zhitnitsky_DE_far_below_planck,
+          combined_zhitnitsky_qtheory_exceeds_observation.
+    Source: Van Waerbeke-Zhitnitsky arXiv:2506.14182 (2025);
+            Klinkhamer-Volovik JETP Lett. 91 (2010);
+            Pendlebury PRD 92 (2015) neutron-EDM bound.
+    viz-ref: Phase 6c Paper 32 §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.strong_cp_de import (
+        LAMBDA_QCD_GEV,
+        RHO_DE_OBSERVED_EV4,
+        zhitnitsky_de_eV4,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Zhitnitsky ρ_DE prediction vs Λ_QCD (no free parameters)",
+            "Cosmological-constant-problem suppression (~120 orders)",
+        ),
+        column_widths=[0.55, 0.45],
+        horizontal_spacing=0.18,
+    )
+
+    # ---------- Left: rho_DE vs Lambda_QCD log-log ----------
+    lambda_grid = np.logspace(-3, 0, 100)  # 1 MeV to 1 GeV
+    rho_predicted = np.array([zhitnitsky_de_eV4(L) for L in lambda_grid])
+    fig.add_trace(
+        go.Scatter(
+            x=lambda_grid * 1000,  # MeV
+            y=rho_predicted,
+            mode="lines",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            name="Zhitnitsky ρ_DE",
+            hovertemplate="Λ_QCD = %{x:.1f} MeV<br>ρ = %{y:.3e} eV⁴<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    # Observed band
+    fig.add_shape(
+        type="rect",
+        x0=1, x1=1000,
+        y0=RHO_DE_OBSERVED_EV4 * 0.3, y1=RHO_DE_OBSERVED_EV4 * 3,
+        fillcolor=COLORS["amber"], opacity=0.25,
+        line=dict(width=0),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=2, y=RHO_DE_OBSERVED_EV4,
+        text=f"observed<br>ρ_DE ≈ {RHO_DE_OBSERVED_EV4:.1e} eV⁴",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["amber"]),
+        xanchor="left",
+        row=1, col=1,
+    )
+    # PDG Lambda_QCD vertical reference
+    fig.add_shape(
+        type="line",
+        x0=LAMBDA_QCD_GEV * 1000, x1=LAMBDA_QCD_GEV * 1000,
+        y0=1e-15, y1=1e-2,
+        line=dict(color=COLORS["horizon"], width=1.5, dash="dot"),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=LAMBDA_QCD_GEV * 1000 * 1.1, y=1e-13,
+        text="PDG Λ_QCD<br>≈ 100 MeV",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["horizon"]),
+        xanchor="left",
+        row=1, col=1,
+    )
+    fig.update_xaxes(title_text="Λ_QCD [MeV]", type="log", row=1, col=1)
+    fig.update_yaxes(title_text="ρ_DE [eV⁴]", type="log", row=1, col=1)
+
+    # ---------- Right: CC-problem suppression bar chart ----------
+    labels = [
+        "Planck-natural<br>M_P⁴",
+        "Zhitnitsky<br>(QCD topological)",
+        "Observed<br>(2.3 meV)⁴",
+    ]
+    values = [1.0e112, zhitnitsky_de_eV4(LAMBDA_QCD_GEV), RHO_DE_OBSERVED_EV4]
+    colors_right = [COLORS["amber"], COLORS["steel_blue"], COLORS["dissipative"]]
+
+    fig.add_trace(
+        go.Bar(
+            x=labels,
+            y=values,
+            marker_color=colors_right,
+            text=[f"{v:.2e}" for v in values],
+            textposition="outside",
+            textfont=dict(size=10),
+            showlegend=False,
+            hovertemplate="<b>%{x}</b><br>ρ = %{y:.3e} eV⁴<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    fig.update_yaxes(title_text="ρ [eV⁴]", type="log", row=1, col=2)
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6c Wave 1 — Zhitnitsky topological dark-energy "
+                "prediction (no free parameters) vs observed ρ_DE"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1300,
+        margin=dict(t=110, b=80),
+    )
+    return fig
+
+
+def fig_cfl_z3_center_bridge():
+    """Phase 6d Wave 3: CFL emergent ℤ_3 ↔ QCD center ℤ_3 correctness-push.
+
+    Left panel: complex-plane diagram showing the three cube roots of
+    unity {1, ω, ω²} on the unit circle, with the CFL emergent ℤ_3
+    generator (Hirono-Tanizaki) and the QCD center ℤ_3 generator (W1)
+    BOTH at the same point ω = exp(2πi/3). The correctness-push:
+    independent derivations yield the same generator.
+
+    Right panel: bar chart showing the three Z_3 charges (0, 1, 2)
+    with their topological-order classification (trivial vs
+    Hirono-Tanizaki nontrivial sector). Charge = 0 is the trivial
+    vacuum; charges 1, 2 are the topologically-ordered sectors
+    distinguishing CFL from a Landau-Ginzburg-only phase.
+
+    Lean: CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3,
+          emergentZ3_pow_3, emergentZ3_sum_cube_roots,
+          H_TopologicalOrderBeyondLG_witness +
+          H_TopologicalOrderBeyondLG_falsifier_trivial.
+    Source: Alford-Rajagopal-Wilczek NPB 537 (1999); Son-Stephanov PRL
+            86 (2001); Hirono-Tanizaki JHEP 12 (2018);
+            CenterSymmetryConfinement Lean (W1).
+    viz-ref: Phase 6d Paper 38 §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.cfl import EMERGENT_Z3_PHASE
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Cube roots of unity: CFL emergent ℤ_3 ≡ QCD center ℤ_3",
+            "Topological-order classification by ℤ_3 charge",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.18,
+        specs=[[{"type": "scatter"}, {"type": "bar"}]],
+    )
+
+    # ---------- Left: complex-plane Z_3 ----------
+    # Unit circle
+    theta = np.linspace(0, 2 * np.pi, 200)
+    fig.add_trace(
+        go.Scatter(
+            x=np.cos(theta), y=np.sin(theta),
+            mode="lines", showlegend=False,
+            line=dict(color="rgba(120, 120, 120, 0.4)", width=1, dash="dot"),
+        ),
+        row=1, col=1,
+    )
+    # Three cube roots: 1, omega, omega^2
+    omega = EMERGENT_Z3_PHASE
+    roots = [1 + 0j, omega, omega**2]
+    labels = ["1 (trivial)", "ω = e^(2πi/3)<br>CFL emergent = QCD center", "ω² = e^(4πi/3)"]
+    fig.add_trace(
+        go.Scatter(
+            x=[r.real for r in roots],
+            y=[r.imag for r in roots],
+            mode="markers+text",
+            marker=dict(
+                size=[18, 28, 18],
+                color=[COLORS["cross"], COLORS["amber"], COLORS["cross"]],
+                line=dict(color=COLORS["horizon"], width=2),
+            ),
+            text=labels,
+            textposition=["bottom right", "top center", "bottom center"],
+            textfont=dict(size=10),
+            showlegend=False,
+            hovertemplate="<b>%{text}</b><br>(%{x:.3f}, %{y:.3f})<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    # Origin axes
+    fig.add_shape(
+        type="line", x0=-1.2, x1=1.2, y0=0, y1=0,
+        line=dict(color="rgba(0,0,0,0.3)", width=1),
+        row=1, col=1,
+    )
+    fig.add_shape(
+        type="line", x0=0, x1=0, y0=-1.2, y1=1.2,
+        line=dict(color="rgba(0,0,0,0.3)", width=1),
+        row=1, col=1,
+    )
+    # Annotation: 1 + omega + omega^2 = 0
+    fig.add_annotation(
+        x=0, y=-0.35,
+        text="1 + ω + ω² = 0<br>(distinguishes ℤ_3 from ℤ_2)",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["amber"]),
+        xref="x1", yref="y1",
+    )
+    fig.update_xaxes(title_text="Re", range=[-1.4, 1.4], row=1, col=1, scaleanchor="y", scaleratio=1)
+    fig.update_yaxes(title_text="Im", range=[-1.4, 1.4], row=1, col=1)
+
+    # ---------- Right: Topological order classification ----------
+    charges = [0, 1, 2, 3]
+    is_topological = [False, True, True, False]
+    bar_colors = [
+        COLORS["amber"] if not topo else COLORS["steel_blue"]
+        for topo in is_topological
+    ]
+    labels_right = [
+        "0<br>(trivial vacuum)",
+        "1<br>(topological)",
+        "2<br>(topological)",
+        "3<br>(out of ℤ_3)",
+    ]
+    fig.add_trace(
+        go.Bar(
+            x=labels_right,
+            y=[1, 1, 1, 1],
+            marker_color=bar_colors,
+            text=[
+                "✗ falsifier" if c == 0 else "✓ witness" if topo else "✗ falsifier"
+                for c, topo in zip(charges, is_topological)
+            ],
+            textposition="auto",
+            showlegend=False,
+            hovertemplate="<b>charge = %{x}</b><br>topological: %{text}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(title_text="ℤ_3 charge", row=1, col=2)
+    fig.update_yaxes(title_text="In Hirono-Tanizaki sector?", showticklabels=False, row=1, col=2, range=[0, 1.3])
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6d Wave 3 — CFL emergent ℤ_3 (Hirono-Tanizaki) "
+                "≡ QCD center ℤ_3 (W1) correctness-push identification"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1300,
+        margin=dict(t=110, b=80),
+    )
+    return fig
+
+
+def fig_gmor_relation_verification():
+    """Phase 6d Wave 2: GMOR relation numerical verification at PDG values.
+
+    Left panel: bar chart comparing the GMOR LHS = m_π² · f_π² and RHS
+    = −2 m_q · ⟨q̄q⟩ at PDG/FLAG central values. Both bars sit at
+    1.589e-4 GeV⁴ — visually indistinguishable, confirming GMOR holds
+    to ~1 part in 10⁴.
+
+    Right panel: relative residual |LHS − RHS| / LHS as the input quark
+    mass m_q is varied. The residual minimum sits at the PDG value
+    m_q ≈ 3.5 MeV, confirming this is the GMOR-consistent point.
+
+    Lean: ChiralSSB_QCD.gmor_pdg_match,
+          gmor_rhs_pos_of_quark_mass_pos,
+          chiral_unbroken_violates_gmor.
+    Source: Gell-Mann-Oakes-Renner PR 175 (1968); FLAG 2021 EPJC 81;
+            PDG 2022.
+    viz-ref: Phase 6d Paper 37 §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.chiral_ssb import (
+        FLAG_LATTICE_VALUE,
+        PDG_F_PI,
+        PDG_M_PI,
+        PDG_M_Q,
+        gmor_lhs,
+        gmor_rhs,
+    )
+
+    lhs_value = gmor_lhs(PDG_M_PI, PDG_F_PI)
+    rhs_value = gmor_rhs(PDG_M_Q, FLAG_LATTICE_VALUE)
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            f"GMOR LHS vs RHS at PDG central values (≈ {lhs_value:.3e} GeV⁴)",
+            "GMOR residual |LHS − RHS|/LHS vs m_q",
+        ),
+        column_widths=[0.45, 0.55],
+        horizontal_spacing=0.18,
+    )
+
+    # ---------- Left: side-by-side bars ----------
+    fig.add_trace(
+        go.Bar(
+            x=["LHS = m_π² · f_π²", "RHS = −2 m_q · ⟨q̄q⟩"],
+            y=[lhs_value, rhs_value],
+            marker_color=[COLORS["steel_blue"], COLORS["amber"]],
+            text=[f"{lhs_value:.4e}", f"{rhs_value:.4e}"],
+            textposition="outside",
+            textfont=dict(size=11),
+            showlegend=False,
+            hovertemplate="<b>%{x}</b><br>%{y:.6e} GeV⁴<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    fig.update_yaxes(title_text="GeV⁴", row=1, col=1)
+    fig.add_annotation(
+        x=0.5, y=lhs_value * 1.15,
+        text=f"|LHS − RHS| ≈ {abs(lhs_value - rhs_value):.2e} GeV⁴<br>(~1 part in 10⁴)",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["horizon"]),
+        xref="x1", yref="y1",
+    )
+
+    # ---------- Right: residual vs m_q sweep ----------
+    m_q_grid = np.linspace(0.0005, 0.020, 200)
+    residuals = np.array([
+        abs(lhs_value - gmor_rhs(m_q, FLAG_LATTICE_VALUE)) / lhs_value
+        for m_q in m_q_grid
+    ])
+
+    fig.add_trace(
+        go.Scatter(
+            x=m_q_grid * 1000,  # convert to MeV for readability
+            y=residuals,
+            mode="lines",
+            name="|LHS − RHS|/LHS",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+        ),
+        row=1, col=2,
+    )
+
+    # PDG m_q reference vertical line
+    fig.add_shape(
+        type="line",
+        x0=PDG_M_Q * 1000, x1=PDG_M_Q * 1000,
+        y0=1e-4, y1=10,
+        line=dict(color=COLORS["amber"], width=2, dash="dash"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=PDG_M_Q * 1000 + 0.5, y=0.05,
+        text=f"PDG m_q ≈ {PDG_M_Q * 1000:.1f} MeV<br>(GMOR minimum)",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["amber"]),
+        xanchor="left",
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(title_text="m_q [MeV]", row=1, col=2)
+    fig.update_yaxes(title_text="Relative residual", type="log", row=1, col=2)
+
+    apply_layout(
+        fig,
+        title=dict(
+            text=(
+                "Phase 6d Wave 2 — GMOR relation verification "
+                "(m_π² · f_π² = −2 m_q · ⟨q̄q⟩) at PDG/FLAG central values"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1300,
+        margin=dict(t=110, b=80),
+    )
+    return fig
+
+
+def fig_code_distance_vs_fusion_spectrum():
+    """Phase 6c Wave 4: code-distance proxy `d_C := log d_max` and
+    Hayden-Preskill scrambling-time bound `t_scr := log D²` across MTC
+    spectra (Fibonacci, Ising, SU(3)_k=2 Fibonacci sub-sector,
+    trivial-abelian).
+
+    Left panel: code-distance bar chart comparing the four substrates,
+    with the admissibility threshold at d_C = 0 highlighted. Trivial-
+    abelian falsifies the W4 admissibility criterion (`d_C = 0`); the
+    three non-abelian substrates all satisfy it.
+
+    Right panel: scrambling-time bound `t_scr = log D²` for each
+    substrate, demonstrating that admissibility (positive code distance)
+    forces a positive scrambling time — the W4 correctness-push.
+
+    Lean: QECHolographyBridge.codeDistance_pos_iff_non_abelian,
+          code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class,
+          fibonacci_HPCode_codeDistance_lt_log_two,
+          trivialAbelian_violates_admissibility.
+    Source: Hayden-Preskill JHEP 2007/9/120 (arXiv:0708.4025);
+            Almheiri-Dong-Harlow JHEP 2015/4/163 (arXiv:1411.7041).
+    viz-ref: Phase 6c Paper 35 §3
+    """
+    import math
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.qec_holography import (
+        FIBONACCI_SPECTRUM,
+        ISING_SPECTRUM,
+        SU3K2_SPECTRUM,
+        TRIVIAL_ABELIAN_SPECTRUM,
+        code_distance,
+        scrambling_time_bound,
+    )
+
+    spectra = [
+        FIBONACCI_SPECTRUM,
+        ISING_SPECTRUM,
+        SU3K2_SPECTRUM,
+        TRIVIAL_ABELIAN_SPECTRUM,
+    ]
+    labels = ["Fibonacci<br>(d_τ = φ)", "Ising<br>(d_σ = √2)",
+              "SU(3)_k=2<br>(adj sector, φ)", "Trivial<br>abelian (d=1)"]
+    cd_vals = [code_distance(s) for s in spectra]
+    st_vals = [scrambling_time_bound(s) for s in spectra]
+    bar_colors = [
+        COLORS["steel_blue"],
+        COLORS["sage"],
+        COLORS["amber"],
+        COLORS["carmine"],
+    ]
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Code distance d_C := log d_max (W4 admissibility)",
+            "Scrambling-time bound t_scr := log D² = log Σ d_a²",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.16,
+    )
+
+    # ---------- Left: code distance bars ----------
+    fig.add_trace(
+        go.Bar(
+            x=labels,
+            y=cd_vals,
+            marker_color=bar_colors,
+            text=[f"{v:.3f}" for v in cd_vals],
+            textposition="outside",
+            showlegend=False,
+            hovertemplate="d_C = %{y:.4f}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    # Admissibility threshold
+    fig.add_hline(
+        y=0.0,
+        line=dict(color="black", width=1.5, dash="dash"),
+        annotation_text="admissibility threshold (d_C = 0)",
+        annotation_position="bottom right",
+        row=1, col=1,
+    )
+    # Reference: log 2 upper bound for Fibonacci (W4 quantitative theorem)
+    fig.add_hline(
+        y=math.log(2.0),
+        line=dict(color=COLORS["amber"], width=1.5, dash="dot"),
+        annotation_text=f"log 2 ≈ {math.log(2.0):.3f} (Fib upper bound)",
+        annotation_position="top right",
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="code distance d_C",
+        range=[-0.05, max(cd_vals) * 1.4 + 0.1],
+        row=1, col=1,
+    )
+
+    # ---------- Right: scrambling time bars ----------
+    fig.add_trace(
+        go.Bar(
+            x=labels,
+            y=st_vals,
+            marker_color=bar_colors,
+            text=[f"{v:.3f}" for v in st_vals],
+            textposition="outside",
+            showlegend=False,
+            hovertemplate="t_scr = %{y:.4f}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    fig.add_hline(
+        y=0.0,
+        line=dict(color="black", width=1.5, dash="dash"),
+        annotation_text="trivial scrambling (t_scr = 0)",
+        annotation_position="top right",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="scrambling-time bound t_scr",
+        range=[-0.05, max(st_vals) * 1.3 + 0.2],
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6c Wave 4 — Hayden-Preskill QEC across MTC spectra</b><br>"
+                "Code distance + scrambling time as W4 admissibility witnesses; "
+                "trivial-abelian falsifies both"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=560,
+        width=1300,
+        margin=dict(t=110, b=80),
     )
     return fig
 

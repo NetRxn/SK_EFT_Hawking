@@ -1024,6 +1024,133 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "level", "yaxis": "log10_eta"},
         physics_checks=[], color_keys=["amber", "steel_blue"],
     ),
+    FigureSpec(
+        name="fig_zhitnitsky_de_theta_scan",
+        function="fig_zhitnitsky_de_theta_scan",
+        caption=(
+            "Phase 6c Wave 1 — Zhitnitsky topological dark-energy "
+            "prediction (Van Waerbeke-Zhitnitsky 2025, arXiv:2506.14182) "
+            "vs observed ρ_DE. Left: ρ_DE = Λ_QCD⁶/M_P² scan over "
+            "Λ_QCD ∈ [1 MeV, 1 GeV] on log-log axes; observed band "
+            "(2.3 meV)⁴ ≈ 2.8e-11 eV⁴ from Planck 2018 + DESI DR2 "
+            "shown as amber stripe; PDG Λ_QCD ≈ 100 MeV vertical "
+            "reference shows the no-free-parameter Zhitnitsky "
+            "prediction sits ~240× above observed (within 3 orders). "
+            "Right: cosmological-constant-problem suppression bar chart "
+            "comparing Planck-natural M_P⁴ ≈ 10¹¹² eV⁴, Zhitnitsky "
+            "QCD-topological prediction ≈ 7e-9 eV⁴, and observed "
+            "≈ 3e-11 eV⁴ — Zhitnitsky realizes ~120 orders of magnitude "
+            "of the hierarchy suppression. Lean: "
+            "StrongCPTopologicalDE.zhitnitsky_DE_at_lambda_qcd_within_3_orders "
+            "+ zhitnitsky_DE_far_below_planck + "
+            "combined_zhitnitsky_qtheory_exceeds_observation."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "Λ_QCD", "yaxis": "ρ_DE"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_cfl_z3_center_bridge",
+        function="fig_cfl_z3_center_bridge",
+        caption=(
+            "Phase 6d Wave 3 — CFL emergent ℤ_3 (Hirono-Tanizaki) ≡ "
+            "QCD center ℤ_3 (W1) correctness-push identification. "
+            "Left: cube roots of unity {1, ω, ω²} on the complex unit "
+            "circle, with the CFL emergent generator (Hirono-Tanizaki "
+            "JHEP 12, 2018) and the QCD center generator from "
+            "CenterSymmetryConfinement.Z3 BOTH at the same point ω = "
+            "exp(2πi/3). The sum rule 1 + ω + ω² = 0 is the algebraic "
+            "fingerprint distinguishing ℤ_3 from ℤ_2. Right: bar chart "
+            "showing the three ℤ_3 charges (0, 1, 2) plus the "
+            "out-of-range 3, classified by Hirono-Tanizaki topological-"
+            "order-beyond-Landau-Ginzburg sector. Charge 0 (vacuum) "
+            "and charge 3 (out of ℤ_3) are falsifiers; charges 1, 2 "
+            "are the topologically ordered sectors. Lean: "
+            "CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3 "
+            "+ emergentZ3_pow_3 + emergentZ3_sum_cube_roots + "
+            "H_TopologicalOrderBeyondLG_witness/falsifier_trivial."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "Re", "yaxis": "Im"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_gmor_relation_verification",
+        function="fig_gmor_relation_verification",
+        caption=(
+            "Phase 6d Wave 2 — GMOR relation `m_π² · f_π² = "
+            "−2 m_q · ⟨q̄q⟩` numerical verification at PDG/FLAG "
+            "central values. Left: side-by-side bars at LHS ≈ "
+            "1.589e-4 GeV⁴ and RHS ≈ 1.589e-4 GeV⁴ — visually "
+            "indistinguishable, confirming GMOR holds to ~1 part in "
+            "10⁴ (|LHS − RHS| ≈ 4e-8 GeV⁴). Right: relative residual "
+            "|LHS − RHS|/LHS as the input quark mass m_q is swept; "
+            "the residual minimum at m_q ≈ 3.5 MeV (PDG average u+d) "
+            "confirms the GMOR-consistent point. Sources: Gell-Mann-"
+            "Oakes-Renner PR 175 (1968); FLAG 2021 ⟨q̄q⟩ ≈ −0.0227 "
+            "GeV³ (EPJC 81); PDG 2022 m_π = 0.137 GeV, f_π = 0.092 "
+            "GeV. Lean: ChiralSSB_QCD.gmor_pdg_match + "
+            "gmor_rhs_pos_of_quark_mass_pos + "
+            "chiral_unbroken_violates_gmor."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "m_q", "yaxis": "residual"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_code_distance_vs_fusion_spectrum",
+        function="fig_code_distance_vs_fusion_spectrum",
+        caption=(
+            "Phase 6c Wave 4 — Hayden-Preskill structural QEC across "
+            "MTC spectra. Left: code-distance proxy d_C := log d_max "
+            "for Fibonacci (d_τ = φ ≈ 1.618; d_C ≈ 0.481), Ising "
+            "(d_σ = √2; d_C ≈ 0.347), SU(3)_k=2 Fibonacci sub-sector, "
+            "and trivial-abelian (d_max = 1; d_C = 0 — falsifies the "
+            "W4 admissibility criterion). The W4 quantitative theorem "
+            "fibonacci_HPCode_codeDistance_lt_log_two locates Fibonacci "
+            "below log 2 ≈ 0.693, the minimal non-abelian threshold. "
+            "Right: scrambling-time bound t_scr := log D² for the "
+            "same substrates, demonstrating the W4 correctness-push "
+            "(positive code distance ⇒ positive scrambling time via "
+            "D² ≥ d_max² > 1). Trivial-abelian has t_scr = 0, the "
+            "vacuum scrambling-time falsifier. Sources: Hayden-Preskill "
+            "JHEP 2007/9/120 (arXiv:0708.4025); Almheiri-Dong-Harlow "
+            "JHEP 2015/4/163 (arXiv:1411.7041); Pastawski-Yoshida-"
+            "Harlow-Preskill JHEP 2015/6/149 (arXiv:1503.06237). Lean: "
+            "QECHolographyBridge.codeDistance_pos_iff_non_abelian + "
+            "code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class "
+            "+ fibonacci_HPCode_codeDistance_lt_log_two + "
+            "fibonacci_HPCode_scramblingTimeBound_pos + "
+            "trivialAbelian_violates_admissibility."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "MTC spectrum", "yaxis": "d_C / t_scr"},
+        physics_checks=[], color_keys=["steel_blue", "sage", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="fig_polyakov_loop_deconfinement",
+        function="fig_polyakov_loop_deconfinement",
+        caption=(
+            "Phase 6d Wave 1 — Polyakov-loop order parameter and "
+            "Walker-Wang transport window. Left: |P| vs T/T_c showing "
+            "the deconfinement transition for Z_2 (Ising) and Z_3 "
+            "(3-state Potts) Svetitsky-Yaffe universality classes "
+            "with ν = 0.6299 and 0.5 respectively (Pelissetto-Vicari "
+            "Phys. Rep. 368, 2002; Kos-Poland-Simmons-Duffin JHEP 03, "
+            "2016). Confining phase has |P| = 0; deconfining |P| > 0. "
+            "Right: KSS bound η/s ≥ 1/(4π) ≈ 0.0796 (Kovtun-Son-"
+            "Starinets PRL 94, 2005) with the Walker-Wang transport "
+            "correctness-push window [KSS, 2·KSS]. Both numerical "
+            "falsifiers (η/s = 0 and η/s = 1) lie outside the window. "
+            "Lean: CenterSymmetryConfinement.confining_iff_magnitude_zero "
+            "+ deconfining_implies_magnitude_positive + ising_nu_gt_potts_nu "
+            "+ KSS_bound_below_0_08 + walker_wang_zero_eta_violator "
+            "+ walker_wang_unit_eta_violator."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "T/T_c", "yaxis": "|P|"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
 ]
 
 
@@ -1130,6 +1257,16 @@ def generate_figures() -> dict[str, Path]:
         fig_T_H_evolution_regime_partition,
         # Phase 6c Wave 3: EP-violation matrix
         fig_ep_violation_matrix,
+        # Phase 6d Wave 1: Polyakov-loop deconfinement + Walker-Wang
+        fig_polyakov_loop_deconfinement,
+        # Phase 6d Wave 2: GMOR PDG verification
+        fig_gmor_relation_verification,
+        # Phase 6d Wave 3: CFL Z_3 ↔ QCD center Z_3 correctness-push
+        fig_cfl_z3_center_bridge,
+        # Phase 6c Wave 1: Zhitnitsky topological DE
+        fig_zhitnitsky_de_theta_scan,
+        # Phase 6c Wave 4: Hayden-Preskill QEC code-distance / scrambling
+        fig_code_distance_vs_fusion_spectrum,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1394,6 +1531,16 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_T_H_evolution_regime_partition,
         # Phase 6c Wave 3: EP-violation matrix
         fig_ep_violation_matrix,
+        # Phase 6d Wave 1: Polyakov-loop deconfinement + Walker-Wang
+        fig_polyakov_loop_deconfinement,
+        # Phase 6d Wave 2: GMOR PDG verification
+        fig_gmor_relation_verification,
+        # Phase 6d Wave 3: CFL Z_3 ↔ QCD center Z_3 correctness-push
+        fig_cfl_z3_center_bridge,
+        # Phase 6c Wave 1: Zhitnitsky topological DE
+        fig_zhitnitsky_de_theta_scan,
+        # Phase 6c Wave 4: Hayden-Preskill QEC code-distance / scrambling
+        fig_code_distance_vs_fusion_spectrum,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -1517,6 +1664,11 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_log_correction_signature": fig_log_correction_signature,
         "fig_T_H_evolution_regime_partition": fig_T_H_evolution_regime_partition,
         "fig_ep_violation_matrix": fig_ep_violation_matrix,
+        "fig_polyakov_loop_deconfinement": fig_polyakov_loop_deconfinement,
+        "fig_gmor_relation_verification": fig_gmor_relation_verification,
+        "fig_cfl_z3_center_bridge": fig_cfl_z3_center_bridge,
+        "fig_zhitnitsky_de_theta_scan": fig_zhitnitsky_de_theta_scan,
+        "fig_code_distance_vs_fusion_spectrum": fig_code_distance_vs_fusion_spectrum,
     }
 
     issues: list[CheckIssue] = []

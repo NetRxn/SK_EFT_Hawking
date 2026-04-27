@@ -1,0 +1,409 @@
+\documentclass[twocolumn]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\newcommand{\Tc}{T_{\rm c}}
+\newcommand{\Polyakov}{P}
+\newcommand{\KSS}{\eta/s}
+\newcommand{\nuIsing}{\nu_{\rm Ising}}
+\newcommand{\nuPotts}{\nu_{\rm Potts}}
+
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{Center-symmetry confinement, Polyakov-loop order parameter, and the
+Walker--Wang transport correctness-push: a formalized Svetitsky--Yaffe spine}
+
+\author{John G. Roehm}
+\affiliation{SK-EFT Hawking Project (Phase 6d Wave 1)}
+
+\date{\today}
+
+\begin{abstract}
+We formalize confinement as $\mathbb{Z}_N$ 1-form center-symmetry
+unbreaking in Lean 4.29, treating the Polyakov loop $\Polyakov$ as the
+complex order parameter. The $\mathbb{Z}_N$ center acts on $\Polyakov$
+by multiplication by $\zeta_N = \exp(2\pi i/N)$; we prove this action
+is a primitive $N$-th root of unity, fixes only $\Polyakov = 0$
+(confining) when $\zeta_N \neq 1$, and reduces $\zeta_2 = -1$ exactly.
+Svetitsky--Yaffe universality
+($D$-dim deconfinement $=$ $(D{-}1)$-dim $\mathbb{Z}_N$ spin model)
+is encoded as a structural map: $\mathrm{SU}(2) \to$ Ising
+($\nuIsing = 0.6299$), $\mathrm{SU}(3) \to$ 3-state Potts
+($\nuPotts = 0.5$). The KSS bound $\KSS \ge 1/(4\pi) \approx 0.0796$
+is pinned to a tight bracket $[0.07, 0.08]$ via Mathlib
+$\pi$-bound lemmas, and the Walker--Wang transport prediction --- the
+Phase~6d.1 correctness-push, HPC-gated for numerical validation in the
+Phase~6B HPC roadmap --- is encoded as a tracked hypothesis
+$H_{\rm WW} : \KSS \in [{\rm KSS}, 2\,{\rm KSS}]$ with two concrete
+numerical falsifiers ($\KSS = 0$ and $\KSS = 1$). The module ships
+$18$ substantive Lean theorems with $0$ sorry and $0$ new axioms, a
+Python mirror with $27$ pytest cross-checks ($27/27$ pass), and two
+substantive cross-bridges: a genuine biconditional
+\verb|higher_form_discrete_iff_non_abelian| (not an identity wrapper of
+the upstream gauge-erasure theorem), and a card-of-fusion-ring bridge
+to the SU(3)$_1$ fusion category in \verb|SU3kFusion.lean|. Three
+post-wave-strengthening corrections were applied under the ruthless
+review pass (Section~\ref{sec:strengthening}); the discipline reduced
+first-pass strengthening to a single ruthless-review iteration.
+\end{abstract}
+
+\maketitle
+
+\section{Motivation and scope}
+\label{sec:intro}
+
+The standard QCD-confinement framing as a Wilson-loop area law admits
+an alternative, structurally cleaner formulation: confinement as
+$\mathbb{Z}_N$ 1-form center symmetry unbreaking, with the Polyakov
+loop as the order parameter and the
+deconfinement transition matched to a $(D{-}1)$-dim $\mathbb{Z}_N$
+spin model via Svetitsky--Yaffe universality~\cite{SvetitskyYaffe1982}.
+The framing connects naturally to the project's existing higher-form
+symmetry infrastructure in
+\verb|GaugeErasure.lean|~\cite{GaugeErasureLean}, which already
+classifies the
+$\mathrm{SU}(N)$ continuous gauge sector as producing a
+\emph{discrete} 1-form symmetry --- but stops short of identifying the
+discrete symmetry as $\mathbb{Z}_N$.
+
+This Wave 1 supplies that identification, the Polyakov-loop order
+parameter, the Svetitsky--Yaffe map, the Kovtun--Son--Starinets (KSS)
+viscosity lower bound~\cite{KovtunSonStarinets2005}, and the
+Walker--Wang anyon-mediated transport prediction~\cite{HofmanIqbal}
+--- the project's $6\textrm{d}.1$ correctness-push (analytical only;
+HPC-gated numerical validation is in Phase~6B).
+
+\section{Center symmetry, Polyakov loop, and confinement}
+\label{sec:center}
+
+\subsection{The cyclic center $\mathbb{Z}_N$}
+
+The cyclic center $\mathbb{Z}_N$ for $\mathrm{SU}(N)$ is encoded as a
+Lean structure
+\verb|CenterZN| with a load-bearing constraint $N \ge 2$
+(the $N = 1$ case is trivial). The fundamental phase
+$\zeta_N = \exp(2\pi i / N)$ generates $\mathbb{Z}_N \subset
+\mathbb{C}^\ast$. Two algebraic properties are proved:
+\begin{align}
+  \zeta_N^N &= 1, \label{eq:zeta-pow}\\
+  |\zeta_N| &= 1. \label{eq:zeta-norm}
+\end{align}
+Equation~\eqref{eq:zeta-pow}
+(\verb|centerPhase_pow_N|) follows from
+\verb|Complex.exp_nat_mul| and
+\verb|Complex.exp_eq_one_iff|;
+Equation~\eqref{eq:zeta-norm}
+(\verb|centerPhase_norm_one|) follows from
+\verb|Complex.norm_exp| and the vanishing real part of $2\pi i / N$.
+A concrete computation specializes
+$\zeta_2 = -1$ via \verb|Complex.exp_pi_mul_I|
+(\verb|centerPhase_Z2_eq_neg_one|) --- the SU(2) center is the
+multiplicative group $\{+1, -1\}$ acting on the Polyakov loop.
+
+\subsection{Polyakov loop and the confining predicate}
+
+The Polyakov loop is encoded as
+\verb|abbrev PolyakovLoop : Type := |$\mathbb{C}$, with
+\begin{equation}
+  \mathrm{Confining}\,\Polyakov \iff \Polyakov = 0,
+  \label{eq:confining}
+\end{equation}
+and the center action
+$\mathrm{centerAction}\,Z\,\Polyakov := \zeta_N \cdot \Polyakov$.
+Two substantive theorems link the order parameter to the symmetry-
+breaking structure:
+\begin{itemize}
+\item \verb|confining_invariant_under_center_action|:
+  $\Polyakov = 0 \Rightarrow \zeta_N \cdot \Polyakov = \Polyakov$
+  (confining configurations are center-invariant).
+\item \verb|nonzero_breaks_center_invariance|:
+  $\Polyakov \neq 0 \,\wedge\, \zeta_N \neq 1 \Rightarrow
+   \zeta_N \cdot \Polyakov \neq \Polyakov$
+  (non-zero Polyakov loops are NOT center-fixed).
+\end{itemize}
+Together these formalize the order-parameter $\leftrightarrow$
+symmetry-breaking link: $\Polyakov = 0$ is the unique fixed point of
+the (non-trivial) $\mathbb{Z}_N$ center action on $\mathbb{C}$.
+
+\subsection{Magnitude as a real-valued order parameter}
+
+The conventional lattice order parameter is the modulus
+$|\Polyakov|$. We prove
+\verb|confining_iff_magnitude_zero|, the
+qualitative-$\leftrightarrow$-quantitative link
+\begin{equation}
+  \mathrm{Confining}\,\Polyakov \iff |\Polyakov| = 0,
+\end{equation}
+and the strict-positivity statement \verb|deconfining_implies_magnitude_positive|:
+$\neg\,\mathrm{Confining}\,\Polyakov \Rightarrow 0 < |\Polyakov|$.
+
+\section{Svetitsky--Yaffe universality}
+\label{sec:svetitsky-yaffe}
+
+The Svetitsky--Yaffe map is encoded as a function
+\verb|svetitskyYaffeClass : CenterZN| $\to$
+\verb|UniversalityClass|, with concrete cases
+$\mathrm{SU}(2) \to$ Ising and $\mathrm{SU}(3) \to$
+$3$-state Potts (per
+Refs.~\cite{SvetitskyYaffe1982,PelissettoVicari2002}). The 3D
+correlation-length critical exponents are anchored to literature:
+\begin{equation}
+  \nuIsing = 0.6299, \quad \nuPotts = 0.5,
+  \label{eq:nu}
+\end{equation}
+where $\nuIsing$ tracks the Pelissetto--Vicari and Kos--Poland--
+Simmons-Duffin conformal-bootstrap value~\cite{KosPolandSimmonsDuffin2016}
+and $\nuPotts \approx 1/2$ reflects the mean-field-like / weakly-first-order
+nature of 3D 3-state Potts.
+
+The substantive separation between Z$_2$ and Z$_3$ deconfinement is
+formalized as the direct comparison
+\begin{equation}
+  \nuPotts < \nuIsing
+  \label{eq:ising-gt-potts}
+\end{equation}
+(\verb|ising_nu_gt_potts_nu|, a strengthening-pass result replacing
+the somewhat-arbitrary 0.6 threshold of the first-pass theorems
+\verb|ising_nu_above_0_6| and \verb|potts_nu_below_0_6|). The pair of
+threshold theorems is preserved as quantitative literature anchors;
+the direct comparison is the load-bearing physics statement.
+
+Figure~\ref{fig:polyakov} (left) visualizes the $|\Polyakov|$ vs $T/\Tc$
+behavior across the Z$_2$ and Z$_3$ universality classes via a schematic
+$|\Polyakov| \propto (T/\Tc - 1)^\beta$ scaling
+($\beta_{\rm Ising} = 0.326$, $\beta_{\rm Potts} = 0.111$).
+
+\section{KSS bound and the Walker--Wang transport correctness-push}
+\label{sec:walker-wang}
+
+The Kovtun--Son--Starinets bound on shear viscosity to entropy density
+is~\cite{KovtunSonStarinets2005}
+\begin{equation}
+  \KSS \,\ge\, \mathrm{KSS} := \frac{1}{4\pi}.
+  \label{eq:kss}
+\end{equation}
+We prove a triple of statements pinning $\mathrm{KSS}$ to a tight
+literature-anchored bracket:
+\begin{enumerate}
+\item \verb|KSS_bound_positive|: $0 < \mathrm{KSS}$.
+\item \verb|KSS_bound_below_0_08|: $\mathrm{KSS} < 0.08$.
+\item \verb|KSS_bound_above_0_07|: $0.07 < \mathrm{KSS}$.
+\end{enumerate}
+Statements~(2) and~(3) use Mathlib $\pi$-bound lemmas
+\verb|Real.pi_gt_d4| and \verb|Real.pi_lt_d4|, giving $0.07 < 1/(4\pi)
+< 0.08$ as a true numerical bracket (NOT a within-own-band tautology
+in the Phase~6b.1 sense --- the bracket width is $\sim$12\% of the
+value, not $\pm 2\sigma$).
+
+The Walker--Wang anyon-mediated transport prediction is encoded as a
+tracked hypothesis with two independent constraints:
+\begin{equation}
+  H_{\rm WW}(\KSS) :=
+  (\mathrm{KSS} \le \KSS) \,\wedge\, (\KSS \le 2\,\mathrm{KSS}).
+  \label{eq:H-ww}
+\end{equation}
+The two conjuncts pass the drop-conjunct test (each can fail
+independently). The lower bound is the universal KSS constraint; the
+upper bound is the Walker--Wang prediction that non-Abelian anyon
+transport stays within a factor of 2 of the universal lower bound.
+
+Two concrete numerical falsifiers ship as theorems:
+\begin{itemize}
+\item \verb|walker_wang_zero_eta_violator|:
+  $\KSS = 0$ violates (1) of Eq.~\eqref{eq:H-ww} via the load-bearing
+  \verb|KSS_bound_positive|.
+\item \verb|walker_wang_unit_eta_violator|:
+  $\KSS = 1$ violates (2) via the load-bearing
+  \verb|KSS_bound_below_0_08| ($2\,\mathrm{KSS} < 0.16 < 1$).
+\end{itemize}
+Neither falsifier is a P5 structural-tautology repackaging --- both
+proofs use a load-bearing theorem from Section~\ref{sec:walker-wang}'s
+KSS spine, not just \verb|not_le.mpr h|.
+
+The HPC-gated numerical validation of $\KSS$ for Walker--Wang
+transport is tracked in the Phase~6B HPC roadmap; this paper carries
+only the analytical bracket.
+
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/fig_polyakov_loop_deconfinement.png}
+  \caption{
+    \emph{Phase 6d Wave 1 --- Polyakov-loop deconfinement transition
+    and Walker-Wang transport window.} Left: $|\Polyakov|$ vs $T/\Tc$
+    showing the Z$_2$ Ising and Z$_3$ 3-state Potts Svetitsky-Yaffe
+    universality classes with $\nu_{\rm Ising} = 0.6299$ and
+    $\nu_{\rm Potts} = 0.5$. Confining phase has $|\Polyakov| = 0$;
+    deconfining $|\Polyakov| > 0$. Right: KSS bound $\KSS \ge 1/(4\pi)
+    \approx 0.0796$ with the Walker-Wang transport correctness-push
+    window $[\mathrm{KSS}, 2\,\mathrm{KSS}]$ and both falsifiers
+    ($\KSS = 0$ and $\KSS = 1$) labeled.}
+  \label{fig:polyakov}
+\end{figure*}
+
+\section{Cross-bridges and structural punchline}
+\label{sec:bridges}
+
+\subsection{Higher-form symmetry biconditional}
+
+The most substantive cross-bridge is
+\verb|higher_form_discrete_iff_non_abelian|: among continuous gauge
+groups, the 1-form symmetry is \emph{exactly} discrete iff the group
+is non-Abelian. This is a true biconditional, not an identity wrapper
+of the upstream
+\verb|GaugeErasure.non_abelian_gives_discrete| theorem (which only
+provided the forward direction). The strengthening pass
+(Section~\ref{sec:strengthening}) replaced the original wrapper with
+this dichotomy --- which is the precise statement that
+center-symmetry confinement is the gauge-erasure dichotomy specialized
+to non-Abelian groups.
+
+\subsection{MTC center bridge: SU(3)$_1$ $\leftrightarrow$ $\mathbb{Z}_3$}
+
+The cross-bridge \verb|su3k1_fusion_card_matches_z3_order| connects to
+the SU(3)$_1$ fusion category in
+\verb|SU3kFusion.lean|~\cite{SU3kFusionLean}: the 3 simple objects
+\{vac, fund, conj\} of SU(3)$_1$ form the $\mathbb{Z}_3$ group ring under
+fusion, matching the center order $|\mathbb{Z}_3| = 3$. This realizes
+the categorified center symmetry.
+
+\subsection{Structural punchline}
+
+The center-symmetry framing of confinement aligns with the project's
+gauge-erasure infrastructure (continuous non-Abelian
+$\to$ discrete 1-form $\to$ Polyakov-loop order parameter), and
+\emph{specializes} the upstream dichotomy via the
+biconditional in \verb|higher_form_discrete_iff_non_abelian|. The
+correctness-push (Walker--Wang transport near KSS) is now an
+analytical bracket; HPC validation is in Phase~6B.
+
+\section{Strengthening pass and discipline metric}
+\label{sec:strengthening}
+
+The preemptive-strengthening discipline (CLAUDE.md, Stage~3 of
+\verb|WAVE_EXECUTION_PIPELINE.md|) was applied at first-pass writing.
+Per the Phase~6b.1 honest empirical finding, the discipline is a
+useful filter but \emph{not} complete; a ruthless post-wave review pass
+remains necessary. This wave's review found three patterns that
+shipped past the discipline at first-pass:
+
+\begin{enumerate}
+\item \emph{Identity-function wrapper.} The first-pass cross-bridge
+  \verb|gauge_erasure_yields_discrete_center| had a proof body that was
+  literally a call to the upstream
+  \verb|non_abelian_gives_discrete| with renamed parameters. \emph{Fix:}
+  replaced with \verb|higher_form_discrete_iff_non_abelian|, a
+  genuine biconditional adding the converse direction (Abelian
+  continuous $\Rightarrow$ NOT discrete 1-form). The biconditional
+  is the precise statement and was not present upstream.
+
+\item \emph{Somewhat-arbitrary numerical threshold.} The first-pass
+  pair \verb|ising_nu_above_0_6| and \verb|potts_nu_below_0_6| chose
+  $0.6$ as a Z$_2$-vs-Z$_3$ separator. This is a literature-anchored
+  numerical bracket, not vacuous, but the substantive content is the
+  direct comparison
+  $\nuPotts < \nuIsing$. \emph{Fix:} added
+  \verb|ising_nu_gt_potts_nu| stating the comparison directly; the
+  threshold pair is preserved as quantitative anchors but is no longer
+  load-bearing.
+
+\item \emph{Concrete computation deferred.} The first-pass module had
+  $\zeta_2$ as an abstract \verb|centerPhase Z2| without a concrete
+  reduction to $-1$. \emph{Fix:} added
+  \verb|centerPhase_Z2_eq_neg_one| via
+  \verb|Complex.exp_pi_mul_I|; this is the concrete SU(2) center
+  acting as $\{+1, -1\}$ on Polyakov loops.
+\end{enumerate}
+
+The discipline metric for this wave: \emph{3 retroactive strengthening
+theorems} after first-pass + ruthless review. Compared with the
+Phase~6b.1 baseline of $5$ retroactive theorems, this wave's discipline
+adherence is improved (the discipline + review now produces fewer
+retroactive corrections), but the empirical
+gap remains: discipline alone is not sufficient and ruthless review is
+mandatory. The strengthened module ships $18$ substantive theorems.
+
+\section{Output and project hygiene}
+\label{sec:output}
+
+The complete output of this wave:
+\begin{itemize}
+\item \verb|lean/SKEFTHawking/CenterSymmetryConfinement.lean| --
+  $18$ substantive theorems, $0$ sorry, $0$ new axioms (verified via
+  \verb|lean_verify| --- only \verb|propext|,
+  \verb|Classical.choice|, \verb|Quot.sound|).
+\item \verb|src/center_symmetry/| -- $3$ Python modules
+  (\verb|polyakov_loop|, \verb|svetitsky_yaffe|,
+  \verb|eta_over_s_prediction|).
+\item \verb|tests/test_center_symmetry.py| -- $27$ pytest cases
+  ($27/27$ pass) covering all $18$ Lean theorems plus an anti-pattern
+  audit.
+\item \verb|fig_polyakov_loop_deconfinement| -- registered in
+  \verb|review_figures.py|; rendered via
+  \verb|src/core/visualizations.py|.
+\end{itemize}
+
+\paragraph*{Phase 6d post-Wave-1 status.}
+Wave~1 (\verb|CenterSymmetryConfinement|) ships. Wave~2
+(\verb|ChiralSSB_QCD|) is independent and unblocked. Wave~3
+(\verb|CFLChiralLagrangian|) blocks on Wave~1 and Wave~2 (the
+correctness-push anchor: CFL emergent $\mathbb{Z}_3$ one-form vs
+QCD center $\mathbb{Z}_3$ from this wave).
+
+\begin{thebibliography}{99}
+
+\bibitem{SvetitskyYaffe1982}
+B.~Svetitsky and L.~G.~Yaffe,
+\emph{Critical behavior at finite-temperature confinement transitions},
+Nucl. Phys. B \textbf{210}, 423 (1982).
+
+\bibitem{KovtunSonStarinets2005}
+P.~Kovtun, D.~T.~Son, and A.~O.~Starinets,
+\emph{Viscosity in strongly interacting quantum field theories from
+black hole physics}, Phys. Rev. Lett. \textbf{94}, 111601 (2005).
+
+\bibitem{HofmanIqbal}
+D.~M.~Hofman and N.~Iqbal,
+\emph{Generalized global symmetries and dissipative magnetohydrodynamics},
+Phys. Rev. D \textbf{99}, 065003 (2019).
+
+\bibitem{PelissettoVicari2002}
+A.~Pelissetto and E.~Vicari,
+\emph{Critical phenomena and renormalization-group theory},
+Phys. Rep. \textbf{368}, 549 (2002).
+
+\bibitem{KosPolandSimmonsDuffin2016}
+F.~Kos, D.~Poland, and D.~Simmons-Duffin,
+\emph{Precision islands in the Ising and O($N$) models},
+JHEP \textbf{08}, 036 (2016).
+
+\bibitem{GaugeErasureLean}
+\emph{Lean module} \verb|lean/SKEFTHawking/GaugeErasure.lean|
+(SK-EFT Hawking project, 2026).
+
+\bibitem{SU3kFusionLean}
+\emph{Lean module} \verb|lean/SKEFTHawking/SU3kFusion.lean|
+(SK-EFT Hawking project, Phase 5i Wave 3, 2026).
+
+\bibitem{Phase6dRoadmap}
+\emph{Phase 6d Roadmap} \verb|docs/roadmaps/Phase6d_Roadmap.md|
+(SK-EFT Hawking project, 2026).
+
+\bibitem{Polyakov1978}
+A.~M.~Polyakov,
+\emph{Thermal properties of gauge fields and quark liberation},
+Phys. Lett. B \textbf{72}, 477 (1978).
+
+\bibitem{Hirono2021}
+Y.~Hirono and Y.~Tanizaki,
+\emph{Quark-hadron continuity beyond Landau-Ginzburg paradigm},
+JHEP \textbf{12}, 062 (2018).
+
+\end{thebibliography}
+
+\end{document}

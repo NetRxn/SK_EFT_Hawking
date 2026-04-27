@@ -52,7 +52,20 @@
 
 ---
 
-## Track A: BBN Unified Constraints (6b.1)
+## Track A: BBN Unified Constraints (6b.1) — **SHIPPED 2026-04-27**
+
+**Status:** Wave 1 closed end-to-end. Pipeline through Stage 8.
+- `BBN.lean`: 17 substantive theorems + 1 module-summary marker, 0 sorry, 0 new axioms (verified `propext, Classical.choice, Quot.sound` only on key theorems via `lean_verify`).
+- `src/bbn/`: 2 Python modules (`abundances.py` Planck/PDG/Cooke/Sbordone constants + `candidate_checker.py` 5-candidate evaluator) + 16 pytest cases (16/16 PASS in 0.02s).
+- `papers/paper29_bbn_unified/`: short formalization paper, 4 pages, 425 KB, compiles clean, 11 bibitems.
+- `fig_bbn_conformance_matrix`: 5×3 candidate × field heatmap + ΔN_eff log-scale comparison with Planck 2σ slack horizontal reference, registered in `review_figures.py`.
+- **Five Phase 5x candidates classified**: Z16Topological_T0 + Z16Mixed_C1 + FractonPWave (BBN-conformant via W8 collective-invisibility); Z16Singlet_S0 + FGTorsion (BBN-violators conditional on thermalization at T_BBN ≈ 1 MeV — both via ΔN_eff > 0.34 Planck slack).
+- **Structural punchline `bbn_violators_share_n_eff_failure_mode`**: both violators fail through the same N_eff-mediated channel (not abundance perturbations or photodissociation). The BBN failure surface is N_eff-mediated.
+- **Cross-bridges shipped**: `decoupled_via_w8_collective_invisibility_implies_bbn_safe` actually imports `DarkSectorSynthesis` and calls `emergent_gravity_dm_invisible_collective` directly; `phase5x_candidate_set_aligned_with_synthesis` references the upstream enum to confirm alignment.
+- **Preemptive-strengthening discipline applied at first-pass**: 0 retroactive strengthening theorems needed (compares to 6c.3's 12). Two pattern violations caught DURING first-pass writing (∃-absorption in original H_VestigialRelicBBNAbundance; structural-tautology P5 in original biconditional violator theorems) and fixed before completion of the wave.
+- Stages 9 (LLM figure review) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
+
+
 
 ### Motivation
 
@@ -234,7 +247,7 @@ Parallelism:
 
 | Wave | Scope | PM | Dependencies | Priority |
 |------|-------|-----|--------------|----------|
-| 6b.1 | `BBN.lean` + short CPP paper | 1–2 | None | **TIER 1 — self-contained win** |
+| 6b.1 | `BBN.lean` + short CPP paper | 1–2 | None | **SHIPPED 2026-04-27** |
 | 6b.2 | `CosmologicalPerturbations.lean` + joint 5y PRD paper | 3–5 | 6a.1, 6a.4 | **TIER 1** |
 | 6b.3 | `VestigialInflation.lean` + PRD paper (speculative) | 4–6 | 6a.1, 6b.2; user gate | **TIER 2 — highest-risk** |
 

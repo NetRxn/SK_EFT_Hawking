@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-26T15:52:03.344743",
+  "generated": "2026-04-26T19:39:45.487238",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8356,
-    "theorems_total": 4272,
-    "theorems_substantive": 4249,
-    "theorems_placeholder": 23,
+    "total_declarations": 8523,
+    "theorems_total": 4349,
+    "theorems_substantive": 4325,
+    "theorems_placeholder": 24,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 180,
+    "modules": 184,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -20,17 +20,21 @@
       "SKEFTHawking.ADWMechanism",
       "SKEFTHawking.AcousticMetric",
       "SKEFTHawking.AlgebraicRokhlin",
+      "SKEFTHawking.BBN",
       "SKEFTHawking.BHEntropyMicroscopic",
       "SKEFTHawking.BHLGaugeEmbedding",
       "SKEFTHawking.BHThermodynamicsFourLaws",
       "SKEFTHawking.Basic",
       "SKEFTHawking.BdGHamiltonian",
+      "SKEFTHawking.CFLChiralLagrangian",
       "SKEFTHawking.CGLTransform",
       "SKEFTHawking.CenterEquivalenceZ2",
       "SKEFTHawking.CenterFunctor",
       "SKEFTHawking.CenterFunctorZ2",
       "SKEFTHawking.CenterFunctorZ2Equiv",
+      "SKEFTHawking.CenterSymmetryConfinement",
       "SKEFTHawking.ChangeOfRings",
+      "SKEFTHawking.ChiralSSB_QCD",
       "SKEFTHawking.ChiralityWall",
       "SKEFTHawking.ChiralityWallMaster",
       "SKEFTHawking.ClassificationTableDark",
@@ -195,18 +199,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3615,
-    "structures": 181,
-    "instances": 227,
-    "inductives": 60
+    "definitions": 3699,
+    "structures": 184,
+    "instances": 229,
+    "inductives": 61
   },
   "python": {
-    "python_modules": 86,
-    "test_files": 68,
-    "pytest_cases": 3205,
+    "python_modules": 97,
+    "test_files": 72,
+    "pytest_cases": 3282,
     "notebooks": 56,
-    "papers": 26,
-    "figures": 121
+    "papers": 30,
+    "figures": 125
   },
   "aristotle": {
     "aristotle_proved": 322,

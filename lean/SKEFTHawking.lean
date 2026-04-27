@@ -177,6 +177,12 @@ import SKEFTHawking.BHThermodynamicsFourLaws
 import SKEFTHawking.EnergyConditions
 import SKEFTHawking.LaplaceMethod
 import SKEFTHawking.EquivalencePrinciple
+import SKEFTHawking.BBN
+import SKEFTHawking.CenterSymmetryConfinement
+import SKEFTHawking.ChiralSSB_QCD
+import SKEFTHawking.CFLChiralLagrangian
+import SKEFTHawking.StrongCPTopologicalDE
+import SKEFTHawking.QECHolographyBridge
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
