@@ -1,0 +1,106 @@
+{
+  "_schema_version": 1,
+  "_purpose": "Project-level ReviewFinding supersession ledger. Each entry overrides the inferred 'status' field on a ReviewFinding node when build_graph runs. Used to flip status='open' → 'fixed' for findings whose underlying issue has been remediated by a later wave, without editing the original review .md file (which is treated as immutable history).",
+  "_entry_format": {
+    "finding_id": "string — the canonical ReviewFinding node ID, format `review:{date}:{review_name}:{section_num}` (matches the ID minted by extract_review_finding_nodes)",
+    "status": "string — the new status, one of 'fixed', 'accepted', 'reopened'",
+    "superseded_by": "string|null — review_id of the re-review that confirmed the fix, OR a Wave close-doc path",
+    "evidence": "string — short human-readable note on what / where / when",
+    "date": "ISO-8601 date the supersession was applied"
+  },
+  "_consumed_by": "scripts/build_graph.py:extract_review_finding_nodes",
+  "_introduced_by": "Phase 6i Wave 2 Stage 13 Finding 11.1 + qi-fixpropagation-tracking QI candidate (2026-04-28)",
+  "supersessions": [
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-2048-phase6i-w1-reverification:paper40_higher_curvature",
+      "evidence": "Bibkey renamed CalmetCapozzielloPryer2019 → CalmetCapozzielloPryer2017 with correct EPJC 77:589 (2017) DOI 10.1140/epjc/s10052-017-5172-3 + arXiv 1708.08253; primary-source cache at Lit-Search/Phase-6e/primary-sources/CalmetCapozzielloPryer2017.pdf. Confirmed structurally fixed by both Wave 1 and Wave 2 re-reviews.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:1.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-2048-phase6i-w1-reverification:paper40_higher_curvature",
+      "evidence": "Berti2015 venue corrected to Class. Quantum Grav. 32:243001 (2015), DOI 10.1088/0264-9381/32/24/243001, arXiv 1501.07274. Verified via Crossref. Confirmed by both Wave 1 and Wave 2 re-reviews.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:1.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "All paper40 bibitems have doi_verified: True post-Wave-2. Final entry Abbott2017GW170817 flipped None→True in Wave 2 Stage 13 follow-up session (2026-04-28). Verified via fresh Crossref + 4 cache appends to docs/citation_verifications.jsonl.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:2.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature",
+      "evidence": "CrossPaperConsistency gate verifies sampled cross-paper bibitems match character-for-character on load-bearing fields (arXiv ID, journal, volume, page). Wave 2 re-review §Class 4 confirmed.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "Phase 6i Wave 2: all four HC_BOUND_*_C_SQ entries now in PARAMETER_PROVENANCE with primary-source narratives, cited_bibkeys cross-references (Abbott2017GW170817 / Kapner2007 / WeisbergHuang2016 / BertottiIessTortora2003), all four bibkeys cached at Lit-Search/Phase-{6a,6e}/primary-sources/.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:5.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-2048-phase6i-w1-reverification:paper40_higher_curvature",
+      "evidence": "Calmet 2021 vs 2019 inconsistency resolved by canonical rename to CalmetCapozzielloPryer2017 (the actual EPJC paper); all docstrings + bibitems now use the same key. Confirmed by Wave 1 + Wave 2 re-reviews.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:6.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature",
+      "evidence": "paper40 §5 explicitly discloses H_HigherCurvatureWithinObservationalBounds as a tracked-Prop forward-compatibility hook (per Wave 1 round-1 6.1 closure). Wave 2 re-review §Class 6 (AssumptionDisclosure) confirmed gate state 'passed'.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper40_higher_curvature:7.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature",
+      "evidence": "paper40 §5 paragraph 'Anchoring the 62 orders below claim' added with explicit |c_Riem(27)| = 27/(180·(4π)²) calculation. Numerical anchors moved to autogenerated tables/c_riem_anchor_at_Nf_27.tex + c_riem_pulsar_orders_below.tex (Wave 2 Stage 13 Finding 7.1 follow-up).",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0158-internal-adversarial-reinvocation:paper40_higher_curvature:1.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "Stale Calmet/Berti references in src/core/constants.py block-comment header have been corrected; CITATION_REGISTRY HC_BOUND_*_C_SQ entries reference the canonical CalmetCapozzielloPryer2017 + Berti2015. No remaining 2019/2021 stale strings.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0158-internal-adversarial-reinvocation:paper40_higher_curvature:1.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "Stale Calmet/Berti references in src/core/visualizations.py figure docstring corrected to canonical 2017 / CQG 32:243001. Confirmed by grep + Wave 2 re-review.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-0158-internal-adversarial-reinvocation:paper40_higher_curvature:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "Phase 6i Wave 2: all four HC_BOUND_*_C_SQ entries flipped to human_verified_date: '2026-04-28' with substantive primary-source narratives (Kapner Table I; Weisberg-Huang Table 2 0.13% precision; Bertotti |γ_PPN-1| ~ 2.1×10⁻⁵; GW170817 multimessenger speed-of-graviton bound).",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-2048-phase6i-w1-reverification:paper40_higher_curvature:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature",
+      "evidence": "Phase 6i Wave 2: 3 new bibkeys added (Kapner2007 PRL 98:021101, WeisbergHuang2016 ApJ 829:55, BertottiIessTortora2003 Nature 425:374) with doi_verified: True; Abbott2017GW170817.used_in extended to paper40. All cached under Lit-Search/Phase-6e/primary-sources/. Wave 2 re-review §W1 1.1 confirmed.",
+      "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-2048-phase6i-w1-reverification:paper40_higher_curvature:3.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature",
+      "evidence": "Phase 6i Wave 2: all four HC_BOUND_*_C_SQ entries now carry human_verified_date: '2026-04-28' + cited_bibkeys field. Wave 2 re-review §W1 3.1 confirmed.",
+      "date": "2026-04-28"
+    }
+  ]
+}

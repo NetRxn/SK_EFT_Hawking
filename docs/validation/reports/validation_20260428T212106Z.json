@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260428T212106Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "provenance_doi_in_registry": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": false,
+          "message": "70 provenance DOIs resolved / 29 missing / 75 entries without DOI (internal derivation); 8 cited_bibkeys resolved / 0 missing",
+          "warning": false
+        },
+        {
+          "name": "missing_dois",
+          "passed": true,
+          "message": "29 provenance DOIs absent from CITATION_REGISTRY: Na23.a_s(10.1103/PhysRevA.83.042704), V_FERMI_GRAPHENE(10.1103/RevModPhys.81.109), ALPHA_GRAPHENE_HBN(10.1088/1361-648X/aaa274), Monolayer_100nm.c_s(10.1038/s41586-022-05619-8), MAJORANA_J2(10.1103/PhysRevLett.116.250601) + 24 more",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

@@ -1,0 +1,25 @@
+SK-EFT Hawking Validation Report
+Generated: 20260428T204915Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] citation_primary_sources_present
+  - summary — 302 bibkeys cited across 40 papers — 196 cached / 7 inprep-exempt / 99 need cache / 0 missing-from-registry
+  - missing_cache:Phase-1-and-Background — 5 bibkeys lack primary-source cache: Coutant2014, Jacobson1996, Son2002, Steinhauer2019, Zaremba1999
+  - missing_cache:Phase-2 — 2 bibkeys lack primary-source cache: Crossley:2017, PaperI
+  - missing_cache:Phase-3 — 7 bibkeys lack primary-source cache: Adler2024, GKSW2015, GrozdanovHofmanIqbal, HofmanIqbal, Torrieri2020 + 2 more
+  - missing_cache:Phase-4 — 2 bibkeys lack primary-source cache: Berry1989, Heading1962
+  - missing_cache:Phase-5b — 5 bibkeys lack primary-source cache: DPR1991, GioiaThorngrenPRL2026, Kitaev2003, Stolz1993, fidkowski2010
+  - missing_cache:Phase-5c — 4 bibkeys lack primary-source cache: Drinfeld1986, Jimbo1986, Paper10, Paper9
+  - missing_cache:Phase-5d — 7 bibkeys lack primary-source cache: Kondo1989, Oertel2000, Roy2016, Selch2025, Vladimirov2012 + 2 more
+  - missing_cache:Phase-5e — 10 bibkeys lack primary-source cache: ABP1967, Adams1974, AlvarezGaumeWitten1984, GrossJackiw1972, Nielsen1981a + 5 more
+  - missing_cache:Phase-5h — 11 bibkeys lack primary-source cache: Aristotle2025, BruillardGRW2017, CriticalReview2026, Davies1990, DolanGrady1982 + 6 more
+  - missing_cache:Phase-5o — 7 bibkeys lack primary-source cache: aristotle, bhmv1995, flw2002, hietala2021, mss2024 + 2 more
+  - missing_cache:Phase-5p — 5 bibkeys lack primary-source cache: paper14, rt1991, turaev2010, wenzl1988, witten1989
+  - missing_cache:Phase-5w — 20 bibkeys lack primary-source cache: AnantramDatta1996, AndersonBFP2013, Aristotle, BRSSS2008, Bilic1999 + 15 more
+  - missing_cache:Phase-5x — 1 bibkeys lack primary-source cache: Sola2023
+  - missing_cache:Phase-6a — 4 bibkeys lack primary-source cache: Carroll2004, MTW1973, Roehm2026LinearizedEFE, Sakharov1968
+  - missing_cache:Phase-6b — 6 bibkeys lack primary-source cache: DarkSectorSynthesisLean, FangGu2024, FangGuLean, FractonDarkMatterLean, HiddenSectorClassificationLean + 1 more
+  - missing_cache:Phase-6c — 1 bibkeys lack primary-source cache: CohenKaplanNelson1993
+  - missing_cache:Phase-6e — 2 bibkeys lack primary-source cache: Gilkey1995, Trautman1973
+
+Overall: 0/1 passed

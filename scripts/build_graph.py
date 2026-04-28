@@ -1288,6 +1288,30 @@ def _infer_paper_key_from_text(text: str) -> str | None:
     return None
 
 
+def _load_supersession_ledger() -> dict[str, dict]:
+    """Load `docs/review_finding_supersessions.json` and return a dict
+    mapping `finding_id` → entry. Phase 6i Wave 2: lets Wave-N close
+    docs flip prior-review findings to `status: fixed` without editing
+    the original review .md (which is treated as immutable history).
+    Closes the qi-fixpropagation-tracking QI candidate.
+    """
+    path = PROJECT_ROOT / "docs" / "review_finding_supersessions.json"
+    if not path.exists():
+        return {}
+    try:
+        import json as _json
+        data = _json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, _json.JSONDecodeError) as exc:
+        logger.warning("review_finding_supersessions.json unreadable: %s", exc)
+        return {}
+    out: dict[str, dict] = {}
+    for entry in data.get("supersessions", []):
+        fid = entry.get("finding_id")
+        if fid:
+            out[fid] = entry
+    return out
+
+
 def extract_review_finding_nodes() -> list[dict]:
     """ReviewFinding — findings from adversarial reviews.
 
@@ -1302,10 +1326,18 @@ def extract_review_finding_nodes() -> list[dict]:
     section_index, inferred_paper (if any). FLAGS edges to target
     artifacts (Paper/Formula/LeanTheorem) are emitted in
     extract_flags_edges.
+
+    Phase 6i Wave 2 addition: if `docs/review_finding_supersessions.json`
+    contains an entry for a given finding_id, the entry's `status` field
+    overrides the parser-inferred status, and `superseded_by`/`evidence`
+    are added to the node's meta. This is the project-level analogue of
+    the SUPERSEDES edge type — it lets later waves flip prior findings
+    to `fixed` without rewriting the original review .md.
     """
     reviews_dir = PROJECT_ROOT / "papers" / "AutomatedReviews"
     if not reviews_dir.exists():
         return []
+    supersessions = _load_supersession_ledger()
 
     nodes = []
     seen_ids: set[str] = set()
@@ -1371,6 +1403,22 @@ def extract_review_finding_nodes() -> list[dict]:
                 continue
             seen_ids.add(finding_id)
 
+            meta = {
+                'severity': severity,
+                'status': status,
+                'review_file': str(md_path.relative_to(PROJECT_ROOT)),
+                'review_date': date_dir,
+                'review_name': review_name,
+                'section': section_num,
+                'inferred_paper': inferred_paper,
+            }
+            ledger = supersessions.get(finding_id)
+            if ledger:
+                meta['status'] = ledger.get('status', status)
+                meta['superseded_by'] = ledger.get('superseded_by')
+                meta['supersession_evidence'] = ledger.get('evidence')
+                meta['supersession_date'] = ledger.get('date')
+
             nodes.append({
                 'id': finding_id,
                 'type': 'ReviewFinding',
@@ -1378,15 +1426,7 @@ def extract_review_finding_nodes() -> list[dict]:
                 'name': heading[:200],
                 'verification': 'verified',
                 'detail': body[:400].replace("\n", " "),
-                'meta': {
-                    'severity': severity,
-                    'status': status,
-                    'review_file': str(md_path.relative_to(PROJECT_ROOT)),
-                    'review_date': date_dir,
-                    'review_name': review_name,
-                    'section': section_num,
-                    'inferred_paper': inferred_paper,
-                },
+                'meta': meta,
             })
 
     if nodes:

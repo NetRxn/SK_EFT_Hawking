@@ -36,6 +36,8 @@ dependencies = [
     "datastar-py>=0.5",
     # Provenance knowledge graph (database connectivity)
     "psycopg[binary]>=3.2",
+    # HTTP client (citation primary-source fetcher; arXiv + Crossref + ADS)
+    "httpx>=0.28",
 ]
 
 [project.optional-dependencies]

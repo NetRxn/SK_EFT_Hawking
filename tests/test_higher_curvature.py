@@ -329,3 +329,38 @@ class TestObservationalBandFormula:
         # |c_Riemann²(24)| ≈ 8.4e-4 — should NOT be ≤ 1e-10
         assert not higher_curvature_predicted_in_observational_band(
             24.0, 1.0e-10)
+
+    def test_observational_band_anchor_value_at_Nf_27(self):
+        """Golden test: pin the load-bearing largest-coefficient value
+        consumed by `higher_curvature_predicted_in_observational_band`
+        at SM-with-νᴿ count N_f=27. The Riemann² coefficient dominates
+        the max:
+
+            |c_Riem(27)| = 27 / (180 (4π)²) ≈ 9.498861×10⁻⁴
+
+        This is the explicit ``9.49×10⁻⁴`` numerical anchor cited in
+        paper40 §5 ("Anchoring the '62 orders below' claim"). The
+        ratio against the tightest observational ceiling
+        HC_BOUND_PULSAR_C_SQ = 10⁵⁹ then sits at ≈ 1.054×10⁻⁶² — the
+        "~62 orders of magnitude below" feasibility headline.
+
+        Test_kind: golden (math.isclose). Pairs the boolean-shape
+        bounds tests above with a numeric-shape pin so Gate 4
+        (ComputationCorrectness) sees a substantive verification of
+        the formula's load-bearing internal value, not just the
+        boolean output. Phase 6i Wave 2 Stage 13 Finding 4.1 fix.
+        """
+        largest = max(
+            abs(higher_curvature_R_sq_coefficient(27)),
+            abs(higher_curvature_Ricci_sq_coefficient(27)),
+            abs(higher_curvature_Riemann_sq_coefficient(27)),
+        )
+        # Closed form: -N_f / (180 (4π)²) at N_f=27.
+        expected = 27.0 / (180.0 * (4.0 * math.pi) ** 2)
+        assert math.isclose(largest, expected, rel_tol=1e-12)
+        # Cross-pin against the paper40 §5 stated anchor (4 sig fig):
+        assert math.isclose(largest, 9.498861e-4, rel_tol=1e-6)
+        # Confirm the formula consumed by paper40 returns True at the
+        # tightest published ceiling:
+        assert higher_curvature_predicted_in_observational_band(
+            27, HIGHER_CURVATURE_PARAMS['HC_BOUND_PULSAR_C_SQ'])

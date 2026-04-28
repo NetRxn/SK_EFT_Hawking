@@ -60,6 +60,15 @@ Stage 14: META-PROCESS QI                  → Advisory: systemic findings logge
 **AND** `python scripts/validate.py --check parameter_provenance` passes
 (all LLM-verified, zero MISSING, zero NULL values).
 
+**Citation Provenance:** When a wave introduces new bibitems, run
+`scripts/extract_missing_bibkeys.py` (extracts stubs from `\bibitem` blocks
+in modified papers), then `scripts/back_fill_primary_sources.py --fetch`
+(populates per-bibkey cache files under `Lit-Search/Phase-X/primary-sources/`),
+then `scripts/promote_primary_sources.py` (writes results back into
+`CITATION_REGISTRY`). The check `validate.py --check
+citation_primary_sources_present` confirms every cited bibkey resolves to
+a cache file; it is mandatory at Stage 13. See Pipeline Invariant #11.
+
 **Paper Submission Gate:** `python scripts/validate.py --check parameter_provenance --strict`
 passes (all parameters human-verified). Checked before arXiv/journal submission, not at Stage 1.
 
@@ -555,7 +564,9 @@ This stage exists because the April 2026 external adversarial-review round found
 **Rules:**
 
 - One agent invocation = one paper per report file. Do not batch across papers.
-- Citation findings of any kind are **BLOCKER** at submission time, no exceptions. The `docs/citation_verifications.jsonl` cache + `scripts/citation_cache.py` helpers amortize re-fetch cost across rounds so every arXiv / DOI resolve gets verified at most once per 90 days per (bibkey, bibitem_hash) pair.
+- Citation findings of any kind are **BLOCKER** at submission time, no exceptions. Two layers of citation infrastructure back this:
+  - `docs/citation_verifications.jsonl` (metadata cache) + `scripts/citation_cache.py` — amortizes Crossref / arXiv resolution at most once per 90 days per (bibkey, bibitem_hash) pair.
+  - `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}` (content cache) + `scripts/back_fill_primary_sources.py` — grounds every external bibitem in the actual primary source, structurally preventing the hallucinated-citation failure mode (e.g., the paper40 round-1 incident where a wrong-target arXiv ID was cited). Enforced by `validate.py --check citation_primary_sources_present`.
 - Findings marked `fixed` by the author must pass a **re-invocation** showing no new BLOCKERs in the affected class before the gate flips back to `passed`. "The author says it's fixed" is not evidence; the re-run is evidence.
 - If the agent surfaces a systemic finding (a failure class that affects multiple papers or indicates a pipeline gap), it emits a `## QI Candidate` section — that feeds Stage 14.
 
@@ -615,6 +626,8 @@ These must hold at ALL times, not just at wave completion:
     `ExtractDeps.lean` is currently the only such file in this project. It walks all 2,237+ declarations in the `SKEFTHawking` namespace, runs `collectAxioms` on each to compute transitive axiom closures, and pretty-prints every type signature — total work is O(declarations × per-declaration metadata cost), intrinsically exceeding the default 200K heartbeat budget. Its `maxHeartbeats := 0` lives in the `Lean.Core.Context` for its own `IO Unit` main function and does not leak to any theorem or proof in the project (it is a separate `lean_exe`, not part of `lean_lib SKEFTHawking`).
 
     Any new file claiming this exception must: (a) be a metaprogram, not contain tactic-generated proofs; (b) demonstrate that its work is intrinsically project-size-bound; (c) justify why no decomposition is possible coordinate with user for approval. When in doubt, assume the rule applies and do not add the override.
+
+11. **Every external bibitem has a primary-source cache file.** Each non-`inprep` entry in `CITATION_REGISTRY` carries a `primary_source_path` pointing to a file under `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,abstract.txt,json}` (per the convention in `Lit-Search/Phase-6e/primary-sources/README.md`). The cache routes via `paper_phase()` from the bibkey's first `used_in` paper. Enforced by `validate.py --check citation_primary_sources_present` and mandatory at every Stage 13. In-prep self-cites (`inprep: True`, e.g., `Roehm2026Wave*`) are exempt — they have no external primary source. The script `scripts/back_fill_primary_sources.py` (with sidecar state at `docs/primary_sources_state.json`) populates the cache; `scripts/promote_primary_sources.py` writes successful fetch results back into the registry. This invariant exists because the paper40 round-1 incident (a hallucinated `CalmetCapozzielloPryer2019` arXiv ID pointing to an unrelated graph-NN paper) revealed that without a content-layer cache, agents can confabulate plausible-but-wrong citations from training-data context.
 
 ---
 

@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 0 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777397319.28208 -1
-  "./paper_draftNotes.bib" 1777397319.06348 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1777409496.76781 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777409498.55942 0
+  "./paper_draftNotes.bib" 1777409498.35071 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1777397319.06241 6049 ea57a5c1538d7de36554b2293d855d0f "pdflatex"
+  "paper_draft.aux" 1777409498.35002 6049 ea57a5c1538d7de36554b2293d855d0f "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1777397318.45652 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper43_einstein_cartan/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777397319.28225 2
-  "../../docs/counts.tex" 1777397317.22457 2135 8e600bb3c36c64e1122eb0035b0cb96a ""
+["pdflatex"] 1777409497.77396 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper43_einstein_cartan/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777409498.55957 2
+  "../../docs/counts.tex" 1777409496.51844 2135 3790088c3428e04084c8885c80cb2b5b ""
   "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper43_einstein_cartan/paper_draft.tex" 1777395985.41153 18315 c6525c570ab041bbfa5a7c9622677375 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -115,9 +115,9 @@
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/fig_torsion_obs_bound.png" 1777395855.32551 298714 05f65bfb381f8a65fceb6625e50c4888 ""
-  "paper_draft.aux" 1777397319.06241 6049 ea57a5c1538d7de36554b2293d855d0f "pdflatex"
-  "paper_draft.bbl" 0 -1 0 "bibtex paper_draft"
-  "paper_draft.out" 1777397319.06328 4075 a6d903f073eebaff6d3611401750cf95 "pdflatex"
+  "paper_draft.aux" 1777409498.35002 6049 ea57a5c1538d7de36554b2293d855d0f "pdflatex"
+  "paper_draft.bbl" 1777409496.86776 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
+  "paper_draft.out" 1777409498.35056 4075 a6d903f073eebaff6d3611401750cf95 "pdflatex"
   "paper_draft.tex" 1777395985.41153 18315 c6525c570ab041bbfa5a7c9622677375 ""
   (generated)
   "paper_draft.aux"

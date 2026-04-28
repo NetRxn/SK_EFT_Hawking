@@ -171,6 +171,9 @@ INPUT ./figures/fig_torsion_obs_bound.png
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+INPUT ./paper_draft.bbl
+INPUT ./paper_draft.bbl
+INPUT paper_draft.bbl
 INPUT paper_draft.aux
 INPUT ./paper_draft.out
 INPUT ./paper_draft.out

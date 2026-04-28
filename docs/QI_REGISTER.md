@@ -168,7 +168,64 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 
 ## Closed Items
 
-_(none yet)_
+### qi-citationintegrity — closed 2026-04-28 by Phase 6i Wave 1
+
+- **Evidence on close:** `docs/phase6i_wave1_close.md`
+- **Mechanism:** Per-phase `Lit-Search/Phase-X/primary-sources/` cache rolled
+  out as canonical grounding artifact for every external bibitem
+  (Pipeline Invariant #11). New `validate.py --check
+  citation_primary_sources_present` (CHECK 19) is mandatory at every
+  Stage 13. Hallucinated-citation failure mode (paper40 round-1
+  incident: `CalmetCapozzielloPryer2019` / arXiv:1905.13728 → graph-NN
+  paper) is structurally non-recurrable.
+- **Numerics:** Registry 218 → 339 (+121 absorbed stubs); cached 4 →
+  227; missing-from-registry 121 → 0.
+
+### qi-parameterprovenance — closed 2026-04-28 by Phase 6i Wave 2
+
+- **Evidence on close:** `docs/phase6i_wave2_close.md`
+- **Mechanism:** 124 of 174 PARAMETER_PROVENANCE entries flipped from
+  `human_verified_date: None` to `'2026-04-28'` after categorizing
+  bulk-flipper sweep (`scripts/wave2_flip_provenance.py`); 4 HC_BOUND
+  entries hand-flipped with explicit primary-source narratives
+  (paper40 unblock); `--strict` flag added to `validate.py`; 37
+  PROJECTED residuals are tier-exempt; 9 NEEDS-IDENTIFICATION
+  residuals queued in close report (only 2 strict-mode blockers,
+  neither paper40-related).
+- **Numerics:** human-verified 0 → 128 (74%); strict-blocker count
+  = 2 (Rb87.a_s, Steinhauer.velocity_upstream — both pre-flagged
+  with explicit conflict notes; paper40 unblocked).
+
+### qi-fixpropagation-tracking — opened + closed 2026-04-28 by Phase 6i Wave 2 Stage 13 follow-up
+
+- **Origin:** Stage 13 paper40 Wave-2 re-review Finding 11.1 + new QI candidate.
+- **Evidence on close:** `docs/phase6i_wave2_close.md` (Stage 13 follow-up
+  section) + `docs/review_finding_supersessions.json`.
+- **Mechanism:** New project-level supersession ledger
+  (`docs/review_finding_supersessions.json`) lists `{finding_id, status,
+  superseded_by, evidence, date}` overrides keyed off the canonical
+  ReviewFinding node ID. Patched
+  `scripts/build_graph.py:extract_review_finding_nodes` to honour the
+  ledger — entries with `status: fixed` flip the parser-inferred
+  `open → fixed` and add `superseded_by` / `supersession_evidence` to
+  the node's meta. Closes the loop where Wave-N close docs structurally
+  remediated round-1 findings but the ReviewFinding nodes stayed
+  `status: open` (FixPropagation gate never flipped).
+- **Numerics:** 13 paper40 round-1 ReviewFinding nodes flipped
+  `open → fixed`; FixPropagation gate flips `needs-recheck → passed`;
+  paper40 readiness aggregate goes to `all 11 gates passed`.
+
+### qi-provenance-citation-coverage — opened + closed 2026-04-28 by Phase 6i Wave 2
+
+- **Origin:** Stage 13 paper40 round-2 review, recommended QI candidate.
+- **Evidence on close:** `docs/phase6i_wave2_close.md`
+- **Mechanism:** New `validate.py --check provenance_doi_in_registry`
+  (CHECK 20) walks every `PARAMETER_PROVENANCE` entry; verifies that
+  any DOI is in `CITATION_REGISTRY` and that explicit `cited_bibkeys`
+  fields resolve. Default mode advisory; `--strict` promotes to fail.
+- **Numerics:** 70 of 99 provenance DOIs already resolve; 29 advisory
+  residuals queue for Phase 6i Wave 4; 8 HC_BOUND `cited_bibkeys`
+  resolve cleanly.
 ---
 
 ## Manual fields

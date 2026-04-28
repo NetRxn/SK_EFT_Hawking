@@ -115,6 +115,11 @@ class CheckSpec:
 # Global registry
 _CHECKS: List[CheckSpec] = []
 
+# Strict mode flag — set by CLI --strict. Tightens advisory warnings to hard
+# failures for paper-submission gating (currently used by parameter_provenance
+# and provenance_doi_in_registry).
+STRICT_MODE: bool = False
+
 
 def register_check(name: str, description: str):
     """Decorator to register a validation check."""
@@ -1061,13 +1066,29 @@ def check_parameter_provenance() -> CheckResult:
         details.append(Detail("llm_verification", True,
                               "All parameters LLM-verified"))
 
-    # --- 3. Human verification (advisory — gates paper submission) ---
+    # --- 3. Human verification (advisory by default; hard fail in --strict) ---
+    # PROJECTED tier is exempt from human_verified — these are explicit estimates
+    # for not-yet-performed experiments, not measurements requiring verification.
     not_human = [k for k, v in PARAMETER_PROVENANCE.items()
                  if v.get('human_verified_date') is None]
-    if not_human:
+    not_human_required = [
+        k for k in not_human
+        if PARAMETER_PROVENANCE[k].get('tier') != 'PROJECTED'
+    ]
+    if STRICT_MODE and not_human_required:
+        all_pass = False
+        sample = ', '.join(not_human_required[:8])
+        more = f" + {len(not_human_required) - 8} more" if len(not_human_required) > 8 else ""
+        details.append(Detail(
+            "human_verification", False,
+            f"[strict] {len(not_human_required)} non-PROJECTED params lack "
+            f"human_verified_date (paper-submission blocker): {sample}{more}"
+        ))
+    elif not_human:
         details.append(Detail(
             "human_verification", True,
-            f"{len(not_human)} params not yet human-verified (blocks paper submission)",
+            f"{len(not_human)} params not yet human-verified "
+            f"({len(not_human_required)} non-PROJECTED; blocks paper submission)",
             warning=True
         ))
     else:
@@ -1967,6 +1988,227 @@ def archive_results(results: Dict[str, CheckResult]) -> Path:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 19: Citation primary-source cache present (Phase 6i Wave 1)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("citation_primary_sources_present",
+                "Every external bibitem cited in papers has a primary-source cache file")
+def check_citation_primary_sources_present() -> CheckResult:
+    """For every \\cite{<bibkey>} in any papers/*/paper_draft.tex, verify a
+    primary-source artifact exists on disk under
+    `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,tex,abstract.txt,json}`.
+
+    `inprep: True` entries are exempt (no external primary source to cache).
+    Bibkeys absent from CITATION_REGISTRY surface as FAIL — that's already a
+    CitationIntegrity violation, not a Wave 1 concern, but worth reporting.
+    """
+    import re
+    from src.core.citations import CITATION_REGISTRY, bibkey_phase
+
+    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
+    LIT_SEARCH = PROJECT_ROOT_LOCAL / "Lit-Search"
+    FALLBACK = "Phase-1-and-Background"
+    EXTENSIONS = ["pdf", "tex", "abstract.txt", "json"]
+
+    # Match \cite, \citep, \citet, \citeauthor, etc., with optional star,
+    # optional [opt-args], then {key1,key2,...}
+    CITE_RE = re.compile(r"\\cite[a-zA-Z]*\*?\s*(?:\[[^\]]*\])*\s*\{([^}]+)\}")
+
+    details: List[Detail] = []
+    all_pass = True
+
+    paper_tex_files = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
+    if not paper_tex_files:
+        return CheckResult(passed=False, error="No papers/*/paper_draft.tex found")
+
+    # First pass: collect (bibkey, paper_key) usage across all papers
+    usage: dict[str, set[str]] = {}
+    for tex_path in paper_tex_files:
+        paper_key = tex_path.parent.name
+        text = tex_path.read_text(encoding="utf-8", errors="replace")
+        # Strip TeX-comment lines so commented-out \cite{} are not gated
+        text_uncommented = "\n".join(
+            line.split("%", 1)[0] for line in text.splitlines()
+        )
+        for m in CITE_RE.finditer(text_uncommented):
+            for raw_key in m.group(1).split(","):
+                key = raw_key.strip()
+                if key:
+                    usage.setdefault(key, set()).add(paper_key)
+
+    # Second pass: classify each cited bibkey
+    missing_from_registry: list[str] = []
+    inprep_exempt: list[str] = []
+    cached: list[str] = []
+    not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
+
+    for bibkey in sorted(usage):
+        entry = CITATION_REGISTRY.get(bibkey)
+        if entry is None:
+            missing_from_registry.append(bibkey)
+            continue
+        if entry.get("inprep"):
+            inprep_exempt.append(bibkey)
+            continue
+        # Resolve phase: prefer canonical (used_in[0] paper), else fallback
+        phase = bibkey_phase(entry) or FALLBACK
+        target_dir = LIT_SEARCH / phase / "primary-sources"
+        found = False
+        for ext in EXTENSIONS:
+            candidate = target_dir / f"{bibkey}.{ext}"
+            if candidate.is_file() and candidate.stat().st_size > 0:
+                found = True
+                break
+        if found:
+            cached.append(bibkey)
+        else:
+            not_cached.append((bibkey, phase, sorted(usage[bibkey])))
+
+    # Report
+    n_cited = len(usage)
+    n_cached = len(cached)
+    n_inprep = len(inprep_exempt)
+    n_missing = len(missing_from_registry)
+    n_uncached = len(not_cached)
+
+    details.append(Detail(
+        "summary",
+        n_uncached == 0 and n_missing == 0,
+        f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
+        f"{n_cached} cached / {n_inprep} inprep-exempt / "
+        f"{n_uncached} need cache / {n_missing} missing-from-registry"
+    ))
+
+    if missing_from_registry:
+        all_pass = False
+        sample = ", ".join(missing_from_registry[:8])
+        more = f" (and {len(missing_from_registry) - 8} more)" if len(missing_from_registry) > 8 else ""
+        details.append(Detail(
+            "missing_from_registry",
+            False,
+            f"{n_missing} cited bibkeys absent from CITATION_REGISTRY: {sample}{more}"
+        ))
+
+    if not_cached:
+        all_pass = False
+        # Group by phase for compactness
+        by_phase: dict[str, list[str]] = {}
+        for bibkey, phase, _ in not_cached:
+            by_phase.setdefault(phase, []).append(bibkey)
+        for phase in sorted(by_phase):
+            keys = by_phase[phase]
+            sample = ", ".join(keys[:5])
+            more = f" + {len(keys) - 5} more" if len(keys) > 5 else ""
+            details.append(Detail(
+                f"missing_cache:{phase}",
+                False,
+                f"{len(keys)} bibkeys lack primary-source cache: {sample}{more}"
+            ))
+
+    if all_pass:
+        details.append(Detail(
+            "all_cached",
+            True,
+            "Every cited external bibkey has a primary-source cache file"
+        ))
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 20: Provenance DOI ↔ CITATION_REGISTRY coverage
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("provenance_doi_in_registry",
+                "PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys")
+def check_provenance_doi_in_registry() -> CheckResult:
+    """For every PARAMETER_PROVENANCE entry whose `doi` is non-null, verify
+    that DOI is present in CITATION_REGISTRY. This is the
+    `qi-provenance-citation-coverage` QI item recommended by the Stage 13
+    paper40 re-review (round 2): primary-experimental papers cited in
+    PARAMETER_PROVENANCE should themselves be in CITATION_REGISTRY so that
+    the Phase 6i Wave 1 primary-source cache covers them.
+
+    Each entry may also carry a `cited_bibkeys` field listing the registry
+    keys it relies on; if present, those keys must exist in CITATION_REGISTRY.
+
+    Strict mode promotes both findings to hard failures; default mode keeps
+    them as warnings (advisory during the rolling Phase 6i remediation).
+    """
+    from src.core.citations import CITATION_REGISTRY
+    from src.core.provenance import PARAMETER_PROVENANCE
+
+    reg_dois = {
+        (e.get('doi') or '').lower(): k
+        for k, e in CITATION_REGISTRY.items() if e.get('doi')
+    }
+
+    details: List[Detail] = []
+    all_pass = True
+
+    missing_doi: list[tuple[str, str]] = []  # (prov_key, doi)
+    missing_bibkey: list[tuple[str, str]] = []  # (prov_key, bibkey)
+    resolved_doi = 0
+    resolved_bibkey = 0
+    no_doi = 0
+
+    for prov_key, entry in PARAMETER_PROVENANCE.items():
+        doi = entry.get('doi')
+        if doi:
+            if doi.lower() in reg_dois:
+                resolved_doi += 1
+            else:
+                missing_doi.append((prov_key, doi))
+        else:
+            no_doi += 1
+
+        for bibkey in entry.get('cited_bibkeys', []) or []:
+            if bibkey in CITATION_REGISTRY:
+                resolved_bibkey += 1
+            else:
+                missing_bibkey.append((prov_key, bibkey))
+
+    n_total = len(PARAMETER_PROVENANCE)
+    details.append(Detail(
+        "summary", not (missing_doi or missing_bibkey),
+        f"{resolved_doi} provenance DOIs resolved / {len(missing_doi)} missing "
+        f"/ {no_doi} entries without DOI (internal derivation); "
+        f"{resolved_bibkey} cited_bibkeys resolved / "
+        f"{len(missing_bibkey)} missing"
+    ))
+
+    if missing_doi:
+        sample = ', '.join(f"{k}({d})" for k, d in missing_doi[:5])
+        more = f" + {len(missing_doi) - 5} more" if len(missing_doi) > 5 else ""
+        msg = (f"{len(missing_doi)} provenance DOIs absent from "
+               f"CITATION_REGISTRY: {sample}{more}")
+        if STRICT_MODE:
+            all_pass = False
+            details.append(Detail("missing_dois", False, f"[strict] {msg}"))
+        else:
+            details.append(Detail("missing_dois", True, msg, warning=True))
+
+    if missing_bibkey:
+        sample = ', '.join(f"{k}({b})" for k, b in missing_bibkey[:5])
+        more = f" + {len(missing_bibkey) - 5} more" if len(missing_bibkey) > 5 else ""
+        all_pass = False  # cited_bibkeys MUST resolve — these are explicit refs
+        details.append(Detail(
+            "missing_cited_bibkeys", False,
+            f"{len(missing_bibkey)} cited_bibkeys absent from "
+            f"CITATION_REGISTRY: {sample}{more}"
+        ))
+
+    if not (missing_doi or missing_bibkey):
+        details.append(Detail(
+            "all_resolved", True,
+            "Every provenance DOI and cited_bibkey resolves to a "
+            "CITATION_REGISTRY entry"
+        ))
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -1988,7 +2230,16 @@ Examples:
     parser.add_argument("--no-archive", action="store_true",
                         help="Skip saving timestamped report (default: always archive)")
     parser.add_argument("--list", action="store_true", help="List available checks")
+    parser.add_argument(
+        "--strict", action="store_true",
+        help=("Promote paper-submission advisory warnings to hard failures "
+              "(parameter_provenance, provenance_doi_in_registry). Used at the "
+              "paper-submission gate, not at Stage-1 development.")
+    )
     args = parser.parse_args()
+
+    global STRICT_MODE
+    STRICT_MODE = args.strict
 
     if args.list:
         print("Available checks:")

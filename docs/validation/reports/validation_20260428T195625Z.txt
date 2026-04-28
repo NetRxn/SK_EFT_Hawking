@@ -1,0 +1,21 @@
+SK-EFT Hawking Validation Report
+Generated: 20260428T195625Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] citation_primary_sources_present
+  - summary — 302 bibkeys cited across 40 papers — 4 cached / 7 inprep-exempt / 170 need cache / 121 missing-from-registry
+  - missing_from_registry — 121 cited bibkeys absent from CITATION_REGISTRY: ABP1967, Adams1974, Adler2024, AlvarezGaumeWitten1984, AnantramDatta1996, AndersonBFP2013, Antusch2003, Aristotle (and 113 more)
+  - missing_cache:Phase-1-and-Background — 10 bibkeys lack primary-source cache: Berti2025, Corley1996, Crossley2017, GloriosoLiu2018, Grisins2016 + 5 more
+  - missing_cache:Phase-3 — 1 bibkeys lack primary-source cache: Kolobov2021
+  - missing_cache:Phase-5d — 5 bibkeys lack primary-source cache: Diakonov2011, LevinWen2006, Vergeles2025, Volovik2024, Wetterich2004
+  - missing_cache:Phase-5e — 1 bibkeys lack primary-source cache: GoltermanShamir2026
+  - missing_cache:Phase-5q — 6 bibkeys lack primary-source cache: AltlandZirnbauer, Berry1984, Kiefer2026, Kitaev2009, Leek2007 + 1 more
+  - missing_cache:Phase-5w — 12 bibkeys lack primary-source cache: Amelio2020, Burkhard2025, Claude2023, Estrecho2021, Falque2025 + 7 more
+  - missing_cache:Phase-5x — 29 bibkeys lack primary-source cache: ADW2019, BK2015, BK2025, BKWang2017, CGL2017a + 24 more
+  - missing_cache:Phase-5z — 31 bibkeys lack primary-source cache: ADW, AntuschKerstenLindnerRatz2003, AppelquistCarazzone1975, BallThorne1994, BardeenHillLindner + 26 more
+  - missing_cache:Phase-6a — 31 bibkeys lack primary-source cache: Abbott2017GW170817, Adler1982, Akama1978, Balbinot2005PRD, BombelliKoulLeeSorkin1986 + 26 more
+  - missing_cache:Phase-6c — 17 bibkeys lack primary-source cache: AlmheiriDongHarlow2015, Berezhiani2015, CalabreseCardy2004, CasiniHuerta2009, HaydenPreskill2007 + 12 more
+  - missing_cache:Phase-6d — 17 bibkeys lack primary-source cache: AlfordRajagopalWilczek1999, AlfordSchmittRajagopalSchaefer2008, FLAG2021, GMOR1968, GaiottoKapustinSeibergWillett2015 + 12 more
+  - missing_cache:Phase-6e — 10 bibkeys lack primary-source cache: Berti2015, BertiCardosoStarinets2009, CalmetCapozzielloPryer2017, Gilkey1995, Hehl1976 + 5 more
+
+Overall: 0/1 passed
