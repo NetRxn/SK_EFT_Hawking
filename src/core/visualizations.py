@@ -10701,5 +10701,402 @@ def fig_T_emerg_vs_matter():
     return fig
 
 
+def fig_lambda_emerg_parameter_scan():
+    """Phase 6e Wave 5: Λ^emerg parameter scan + Decision Gate E.4 verdict.
+
+    Left panel: log-log Λ^emerg vs Λ_UV at fixed N_f curves (N_f ∈
+    {1, 4, 16, 100}).  Λ_obs (Planck 2018) drawn as horizontal anchor;
+    M_Pl drawn as vertical anchor.  Lean witness:
+    ``lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed``
+    — the SM N_f=16 curve at Λ_UV=M_Pl exceeds Λ_obs by 122 orders of
+    magnitude (CC problem reproduced in emergent form).
+
+    Right panel: Decision-Gate-E.4 verdict band map.  log10(Λ^emerg/Λ_obs)
+    over the (Λ_UV, N_f) plane, with three verdict bands shaded:
+    ``cc_resolved`` (|log10 ratio| < 1, narrow band near the resolution
+    locus), ``cc_intermediate`` (intermediate band), ``cc_reproduced``
+    (log10 ratio > 60, broad upper-right region — encompasses the entire
+    natural high-energy theory band).
+
+    Lean: MicroscopicCoefficientMatch.lambdaEmergMicroscopic,
+          MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed.
+    Source: Sakharov 1968; Vassilevich 2003 Eq. (4.37); Weinberg RMP 61
+            (1989) — CC problem; Planck 2018 (Aghanim et al., A&A 641, A6).
+    viz-ref: Phase 6e Paper 42b §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.constants import MICRO_MACRO_PARAMS
+    from src.core.formulas import lambda_emerg_microscopic
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Λ^emerg(Λ_UV, N_f) — natural cutoff CC problem reproduction",
+            "Decision Gate E.4: log10(Λ^emerg / Λ_obs) verdict bands",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.15,
+    )
+
+    # Common scan grid
+    lo = MICRO_MACRO_PARAMS["LAMBDA_UV_SCAN_MIN_GEV"]
+    hi = MICRO_MACRO_PARAMS["LAMBDA_UV_SCAN_MAX_GEV"]
+    n_pts = MICRO_MACRO_PARAMS["LAMBDA_UV_SCAN_POINTS"]
+    Lambda_UV_grid = np.logspace(np.log10(lo), np.log10(hi), num=int(n_pts))
+    M_Pl = MICRO_MACRO_PARAMS["M_PLANCK_GEV"]
+    Lambda_obs = MICRO_MACRO_PARAMS["LAMBDA_OBSERVED_GEV4"]
+    locus = MICRO_MACRO_PARAMS["LAMBDA_UV_RESOLUTION_LOCUS_DIAGNOSTIC_GEV"]
+
+    # ---------- Left panel: Λ^emerg vs Λ_UV at fixed N_f ----------
+    N_f_values = [1, 4, 16, 100]
+    nf_colors = [
+        COLORS["steel_blue"],
+        COLORS["amber"],
+        COLORS.get("emerald", "#2ca02c"),
+        COLORS.get("plum", "#9467bd"),
+    ]
+    for N_f, c in zip(N_f_values, nf_colors):
+        Lambda_emerg_curve = np.array([
+            lambda_emerg_microscopic(L, N_f) for L in Lambda_UV_grid
+        ])
+        fig.add_trace(
+            go.Scatter(
+                x=Lambda_UV_grid, y=Lambda_emerg_curve,
+                mode="lines",
+                name=f"N_f={N_f}",
+                line=dict(color=c, width=2.5),
+                hovertemplate=(
+                    "Λ_UV=%{x:.2e} GeV<br>"
+                    "Λ^emerg=%{y:.2e} GeV⁴<extra></extra>"
+                ),
+            ),
+            row=1, col=1,
+        )
+    # Λ_obs reference line
+    fig.add_hline(
+        y=Lambda_obs,
+        line=dict(color="black", dash="dot", width=2),
+        annotation_text=f"Λ_obs ≃ {Lambda_obs:.1e} GeV⁴ (Planck 2018)",
+        annotation_position="top right",
+        row=1, col=1,
+    )
+    # M_Pl anchor
+    fig.add_vline(
+        x=M_Pl,
+        line=dict(color=COLORS.get("burgundy", "#a02050"),
+                  dash="dash", width=2),
+        annotation_text="M_Pl",
+        annotation_position="top",
+        row=1, col=1,
+    )
+    # Resolution locus
+    fig.add_vline(
+        x=locus,
+        line=dict(color=COLORS.get("emerald", "#2ca02c"),
+                  dash="dashdot", width=1),
+        annotation_text="locus",
+        annotation_position="bottom",
+        row=1, col=1,
+    )
+    fig.update_xaxes(
+        title_text="Λ_UV (GeV, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="Λ^emerg (GeV⁴, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=1,
+    )
+
+    # ---------- Right panel: log10 ratio verdict bands ----------
+    band_resolved = MICRO_MACRO_PARAMS["CC_RESOLVED_LOG10_BAND"]
+    band_reproduced_floor_log = float(np.log10(
+        MICRO_MACRO_PARAMS["CC_REPRODUCED_RATIO_FLOOR"]
+    ))
+    # 2D grid: Λ_UV × N_f → log10 ratio
+    N_f_axis = np.linspace(1.0, 100.0, 60)
+    Lam_axis = np.logspace(np.log10(lo), np.log10(hi), num=int(n_pts))
+    Z = np.zeros((len(N_f_axis), len(Lam_axis)))
+    for i, n in enumerate(N_f_axis):
+        for j, L in enumerate(Lam_axis):
+            le = lambda_emerg_microscopic(L, n)
+            Z[i, j] = np.log10(le / Lambda_obs) if le > 0 else np.nan
+
+    fig.add_trace(
+        go.Heatmap(
+            x=Lam_axis, y=N_f_axis, z=Z,
+            colorscale="Cividis",
+            colorbar=dict(
+                title="log₁₀(Λ^emerg/Λ_obs)",
+                tickvals=[-50, 0, band_reproduced_floor_log, 100],
+                ticktext=["−50", "0", "60", "100"],
+                x=1.10,
+            ),
+            hovertemplate=(
+                "Λ_UV=%{x:.2e} GeV<br>"
+                "N_f=%{y:.1f}<br>"
+                "log10 ratio=%{z:.2f}<extra></extra>"
+            ),
+        ),
+        row=1, col=2,
+    )
+    # Verdict-band contours: |log10 ratio| = 1 (resolved boundary),
+    # log10 ratio = 60 (reproduced boundary)
+    fig.add_trace(
+        go.Contour(
+            x=Lam_axis, y=N_f_axis, z=Z,
+            contours=dict(
+                start=-band_resolved,
+                end=band_resolved,
+                size=2.0 * band_resolved,
+                coloring="lines",
+                showlabels=True,
+            ),
+            line=dict(color=COLORS.get("emerald", "#2ca02c"), width=2),
+            showscale=False,
+            name="cc_resolved boundary",
+            hoverinfo="skip",
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Contour(
+            x=Lam_axis, y=N_f_axis, z=Z,
+            contours=dict(
+                start=band_reproduced_floor_log,
+                end=band_reproduced_floor_log,
+                size=1.0,
+                coloring="lines",
+                showlabels=True,
+            ),
+            line=dict(color=COLORS["amber"], width=2),
+            showscale=False,
+            name="cc_reproduced boundary",
+            hoverinfo="skip",
+        ),
+        row=1, col=2,
+    )
+    fig.add_vline(
+        x=M_Pl,
+        line=dict(color=COLORS.get("burgundy", "#a02050"),
+                  dash="dash", width=2),
+        annotation_text="M_Pl",
+        annotation_position="top",
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="Λ_UV (GeV, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="N_f (Dirac species)",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6e Wave 5 — Λ^emerg parameter scan and Decision "
+                "Gate E.4 verdict (CC problem reproduced in emergent form)</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=1400,
+        margin=dict(t=110, b=120, r=120),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.30,
+                    xanchor="center", x=0.5),
+    )
+    return fig
+
+
+def fig_torsion_obs_bound():
+    """Phase 6e Wave 6: Einstein-Cartan torsion vs observational bounds.
+
+    Left panel: log-log |T_EC|(Λ_UV) at fixed N_f curves at α_EC = 1
+    (Sakharov-Adler calibration).  Kostelecky and Hughes-Drever bounds
+    drawn as horizontal anchors.  M_Pl drawn as a vertical anchor where
+    the natural-cutoff prediction lands.  Lean witness:
+    ``torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky``
+    — at (Λ_UV, N_f, α_EC) = (M_Pl, 16, 1) the prediction sits ~46 orders
+    of magnitude below Kostelecky.
+
+    Right panel: log10(bound / |T_EC|) — orders of magnitude of headroom
+    below Kostelecky — over the (Λ_UV, N_f) plane for α_EC = 1.  All
+    natural-parameter points land in the deep-margin region; the entire
+    verdict surface is `torsion_below_bound`.
+
+    Lean: EinsteinCartanExtension.torsionAtCosmologicalBackground,
+          torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky,
+          torsionBoundKostelecky_lt_hughesDrever.
+    Source: Hehl-Heyde-Kerlick-Nester, Rev. Mod. Phys. 48, 393 (1976);
+            Kostelecky-Russell-Tasson, PRL 100, 111102 (2008);
+            Lammerzahl, PRD 64, 084014 (2001).
+    viz-ref: Phase 6e Paper 43 §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.constants import EINSTEIN_CARTAN_PARAMS
+    from src.core.formulas import torsion_amplitude_at_cosmological_background
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "|T_EC|(Λ_UV, N_f) at α_EC = 1 vs published torsion bounds",
+            "log₁₀(Kostelecky / |T_EC|) — orders of magnitude of headroom",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.15,
+    )
+
+    # Common scan grid (TeV → M_Pl)
+    lo = EINSTEIN_CARTAN_PARAMS["LAMBDA_UV_SCAN_MIN_GEV"]
+    hi = EINSTEIN_CARTAN_PARAMS["LAMBDA_UV_SCAN_MAX_GEV"]
+    n_pts = EINSTEIN_CARTAN_PARAMS["LAMBDA_UV_SCAN_POINTS"]
+    Lambda_UV_grid = np.logspace(np.log10(lo), np.log10(hi), num=int(n_pts))
+    bound_K = EINSTEIN_CARTAN_PARAMS["TORSION_BOUND_KOSTELECKY_GEV"]
+    bound_HD = EINSTEIN_CARTAN_PARAMS["TORSION_BOUND_HUGHES_DREVER_GEV"]
+    M_Pl = 1.221e19
+
+    # ---------- Left panel: |T_EC| vs Λ_UV at fixed N_f ----------
+    N_f_values = [1, 4, 16, 100]
+    nf_colors = [
+        COLORS["steel_blue"],
+        COLORS["amber"],
+        COLORS.get("emerald", "#2ca02c"),
+        COLORS.get("plum", "#9467bd"),
+    ]
+    for N_f, c in zip(N_f_values, nf_colors):
+        T_curve = np.array([
+            torsion_amplitude_at_cosmological_background(L, N_f, 1.0)
+            for L in Lambda_UV_grid
+        ])
+        fig.add_trace(
+            go.Scatter(
+                x=Lambda_UV_grid, y=T_curve,
+                mode="lines",
+                name=f"N_f={N_f}",
+                line=dict(color=c, width=2.5),
+                hovertemplate=(
+                    "Λ_UV=%{x:.2e} GeV<br>"
+                    "|T_EC|=%{y:.2e} GeV<extra></extra>"
+                ),
+            ),
+            row=1, col=1,
+        )
+    # Kostelecky bound
+    fig.add_hline(
+        y=bound_K,
+        line=dict(color="black", dash="dot", width=2),
+        annotation_text=f"Kostelecky bound = {bound_K:.0e} GeV",
+        annotation_position="top right",
+        row=1, col=1,
+    )
+    # Hughes-Drever bound
+    fig.add_hline(
+        y=bound_HD,
+        line=dict(color="gray", dash="dashdot", width=1.5),
+        annotation_text=f"Hughes-Drever = {bound_HD:.0e} GeV",
+        annotation_position="bottom right",
+        row=1, col=1,
+    )
+    # M_Pl anchor
+    fig.add_vline(
+        x=M_Pl,
+        line=dict(color=COLORS.get("burgundy", "#a02050"),
+                  dash="dash", width=2),
+        annotation_text="M_Pl",
+        annotation_position="top",
+        row=1, col=1,
+    )
+    fig.update_xaxes(
+        title_text="Λ_UV (GeV, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="|T_EC| (GeV, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=1,
+    )
+
+    # ---------- Right panel: log10(bound / |T_EC|) heatmap ----------
+    N_f_axis = np.linspace(1.0, 100.0, 60)
+    Lam_axis = np.logspace(np.log10(lo), np.log10(hi), num=int(n_pts))
+    Z = np.zeros((len(N_f_axis), len(Lam_axis)))
+    for i, n in enumerate(N_f_axis):
+        for j, L in enumerate(Lam_axis):
+            T = torsion_amplitude_at_cosmological_background(L, n, 1.0)
+            Z[i, j] = np.log10(bound_K / T) if T > 0 else np.nan
+
+    fig.add_trace(
+        go.Heatmap(
+            x=Lam_axis, y=N_f_axis, z=Z,
+            colorscale="Cividis",
+            colorbar=dict(
+                title="log₁₀(K / |T_EC|)",
+                x=1.05, xanchor="left",
+            ),
+            hovertemplate=(
+                "Λ_UV=%{x:.2e} GeV<br>"
+                "N_f=%{y:.1f}<br>"
+                "headroom=%{z:.1f} dec<extra></extra>"
+            ),
+        ),
+        row=1, col=2,
+    )
+    # Annotate natural point
+    fig.add_trace(
+        go.Scatter(
+            x=[M_Pl], y=[16.0],
+            mode="markers+text",
+            marker=dict(color="white", size=11, symbol="star",
+                        line=dict(color="black", width=1.5)),
+            text=["natural (M_Pl, 16)"],
+            textposition="middle right",
+            textfont=dict(color="white", size=11),
+            showlegend=False,
+            hovertemplate=(
+                "natural point<br>"
+                "Λ_UV=M_Pl, N_f=16, α_EC=1<br>"
+                "|T_EC| ≃ 2×10⁻⁷⁷ GeV<extra></extra>"
+            ),
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="Λ_UV (GeV, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="N_f (Dirac species)",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6e Wave 6 — Einstein-Cartan torsion at "
+                "natural microscopic params is below all published bounds</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=1400,
+        margin=dict(t=110, b=120, r=120),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.30,
+                    xanchor="center", x=0.5),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

@@ -176,6 +176,8 @@ import SKEFTHawking.HeatKernelExpansion
 import SKEFTHawking.HigherCurvatureStructure
 import SKEFTHawking.NonlinearDiffInvariance
 import SKEFTHawking.NonlinearEFE
+import SKEFTHawking.MicroscopicCoefficientMatch
+import SKEFTHawking.EinsteinCartanExtension
 import SKEFTHawking.FLRWDynamics
 import SKEFTHawking.GravitationalWaves
 import SKEFTHawking.BHEntropyMicroscopic

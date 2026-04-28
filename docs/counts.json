@@ -1,10 +1,10 @@
 {
-  "generated": "2026-04-28T09:17:49.790986",
+  "generated": "2026-04-28T12:28:37.220599",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8776,
-    "theorems_total": 4482,
-    "theorems_substantive": 4459,
+    "total_declarations": 8813,
+    "theorems_total": 4504,
+    "theorems_substantive": 4481,
     "theorems_placeholder": 23,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 193,
+    "modules": 195,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -55,6 +55,7 @@
       "SKEFTHawking.E8Lattice",
       "SKEFTHawking.EWBaryogenesisChiralityWall",
       "SKEFTHawking.EWPhaseTransition",
+      "SKEFTHawking.EinsteinCartanExtension",
       "SKEFTHawking.EmergentGravityBounds",
       "SKEFTHawking.EnergyConditions",
       "SKEFTHawking.EquivalencePrinciple",
@@ -114,6 +115,7 @@
       "SKEFTHawking.MajoranaRung",
       "SKEFTHawking.MajoranaRungDecoupling",
       "SKEFTHawking.MajoranaRungSMG",
+      "SKEFTHawking.MicroscopicCoefficientMatch",
       "SKEFTHawking.ModularInvarianceConstraint",
       "SKEFTHawking.ModularityTheorem",
       "SKEFTHawking.MugerCenter",
@@ -208,18 +210,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3812,
+    "definitions": 3827,
     "structures": 191,
     "instances": 229,
     "inductives": 61
   },
   "python": {
-    "python_modules": 116,
-    "test_files": 81,
-    "pytest_cases": 3584,
-    "notebooks": 78,
-    "papers": 37,
-    "figures": 133
+    "python_modules": 122,
+    "test_files": 83,
+    "pytest_cases": 3683,
+    "notebooks": 84,
+    "papers": 39,
+    "figures": 135
   },
   "aristotle": {
     "aristotle_proved": 322,

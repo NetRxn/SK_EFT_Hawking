@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-28T14:08:56.249542+00:00",
+  "timestamp": "2026-04-28T16:52:25.178623+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -170,6 +170,36 @@
       "message": "Color #2ca02c not in COLORS dict"
     },
     {
+      "figure": "fig_lambda_emerg_parameter_scan",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #2ca02c not in COLORS dict"
+    },
+    {
+      "figure": "fig_lambda_emerg_parameter_scan",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #9467bd not in COLORS dict"
+    },
+    {
+      "figure": "fig_lambda_emerg_parameter_scan",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #2ca02c not in COLORS dict"
+    },
+    {
+      "figure": "fig_torsion_obs_bound",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #2ca02c not in COLORS dict"
+    },
+    {
+      "figure": "fig_torsion_obs_bound",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #9467bd not in COLORS dict"
+    },
+    {
       "figure": "fig_ewbg_allowed_region",
       "severity": "warning",
       "check": "axis_label",
@@ -232,6 +262,6 @@
   ],
   "summary": {
     "errors": 0,
-    "warnings": 38
+    "warnings": 43
   }
 }

@@ -221,6 +221,176 @@
 
 ---
 
+## Track E: Paper Strategy Integration (6i.7)
+
+*Track added 2026-04-28 in response to the program-wide paper-strategy reframe documented in `docs/PAPER_STRATEGY.md` and `docs/PAPER_DRAFT_MAPPING.md`. This track is **append-only** and does not modify Tracks A–D; it consumes the citation-integrity, parameter-provenance, narrative-grounding, Lean-substance, and assumption-disclosure infrastructure those tracks ship as inputs to a bundle-aware review process.*
+
+### Wave 7 — Paper Strategy Integration into the Review Process [Pipeline: Stages 1, 10, 12–14, plus per-affected-paper Stage 13]
+
+**Goal.** Wire the new paper-bundle architecture (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 2 Tier 3 infrastructure + 2 Tier 4 experimental, per `PAPER_STRATEGY.md`) into the existing review-pipeline infrastructure so that every prior-tracks artifact (citation cache, sentence-level provenance, claim clusters, Lean-substance audit, assumption disclosure) operates correctly on bundles rather than only on per-wave drafts. The existing per-wave drafts in `papers/paperN_*/` are *not* deleted — they are retained as historical / source material whose content lifts into bundles per the mapping in `PAPER_DRAFT_MAPPING.md`. Phase 6i Wave 7 makes the rebundling tractable for the review pipeline.
+
+**Trigger condition (light gate):** Phase 6i Waves 1–6 substantially complete (citation cache populated, parameter provenance closed, narrative grounding swept, Lean substance audited, assumption disclosure consistent). Wave 7 inherits the hardened pipeline from Tracks A–D and applies it to the new bundle layer.
+
+**Status (2026-04-28):** **OPEN**, awaiting user authorization Gate I.7 + Phase 6i Wave 1 close.
+
+**Prerequisites:**
+- `docs/PAPER_STRATEGY.md` (created 2026-04-28; the canonical bundle-architecture document)
+- `docs/PAPER_DRAFT_MAPPING.md` (created 2026-04-28; the per-draft → per-bundle assignment table)
+- Phase 6i Track A–D substantially complete (so the bundle-level review uses the hardened citation + provenance + Lean-substance + assumption infrastructure)
+- `docs/CLAUDE.md` (Mandatory References §) acknowledged: `PAPER_STRATEGY.md` and `PAPER_DRAFT_MAPPING.md` are added as project-level reference documents in CLAUDE.md as part of this wave.
+
+### Sub-waves
+
+#### Sub-wave 7.1 — Bundle-aware schema + migration
+
+**Goal.** Extend the v2 sentence-state and verification-log schemas to track bundle assignment per sentence/claim. Run the migration script that reads `PAPER_DRAFT_MAPPING.md` and populates the new fields across all existing draft sentences.
+
+**Schema additions:**
+- `prose_state.json` v2: each sentence acquires
+  - `bundle_destination`: enum `["F", "D1", "D2", "D3", "D4", "D5", "L1", "L2", "L3", "I1", "I2", "E1", "E2"]` or list-of-enum (for sentences that lift to multiple bundles, e.g., L1 + D3).
+  - `bundle_section_hint`: free-form section label within the bundle (e.g., `"§5"` or `"introduction"`).
+  - `lift_action`: enum `["Lift-section", "Lift-letter", "Lift-companion", "Lift-flagship", "Retain-in-place", "Retire"]` per the mapping document conventions.
+- `verification_log.jsonl`: each verification event acquires `bundle_destination` (mirrored from the underlying sentence/claim).
+- `claim_clusters.json`: cross-paper claim clusters acquire a `cross_bundle: bool` flag. The Phase 5v cluster-detection script is updated to compute cross-bundle clusters.
+
+**Migration script:**
+- New: `scripts/bundle_migration.py` — reads `PAPER_DRAFT_MAPPING.md` Table 1, walks `prose_state.json`, populates the three new fields per sentence. Writes audit-log entries via `sentence_state.py`'s `ingest_agent_run` interface (preserves the existing replay-canonical recovery property).
+- New: `scripts/bundle_clusters.py` — extends `cluster_detect.py` to compute and tag cross-bundle clusters. Output: `claim_clusters.json` updated with `cross_bundle: true` for any cluster spanning two or more `bundle_destination`s.
+
+**Tests:**
+- `tests/test_bundle_migration.py` — verifies migration correctness on a fixture covering all six `lift_action` types. Specifically: every `Lift-section` sentence has exactly one `bundle_destination`; every `Lift-letter` sentence has two (the splash + the deep paper); every `Retire` sentence is tombstoned with `tombstoned_reason: "consolidated_into_bundle"`.
+- `tests/test_bundle_clusters.py` — verifies cross-bundle cluster computation for a fixture mirroring the mapping (e.g., GW170817 vs vestigial-graviton claim appears in both L1 and D3 §6 and is detected as cross-bundle).
+
+**Output.** Schema migrated. All 32+ existing-draft sentences carry bundle metadata. Cross-bundle clusters identified.
+
+#### Sub-wave 7.2 — Stage 13 reviewer prompt update
+
+**Goal.** Update the `physics-qa:claims-reviewer` and `physics-qa:figure-reviewer` plugin prompts to accept a `bundle_target` argument and execute the bundle-level review checklist defined in `PAPER_STRATEGY.md` §3 (per-bundle Stage-13 review scope).
+
+**Updated reviewer behavior:**
+- Stand-alone PRL bundles (L1, L2, L3): single-paper depth. Reviewer does not penalize the absence of broader-scope content — each PRL is judged stand-alone. Reviewer carries a specific Stage-13 anchor per PRL (e.g., LIGO Δc/c bound for L1; 24 | c₋ chain for L2; Balbinot 2005 + Hawking 1975 for L3).
+- Deep bundles (D1–D5): bundle-level review. Reviewer checks (a) intra-bundle consistency across lifted sections, (b) cross-bundle consistency for any cross-bridge claim using the cross-bundle cluster registry from Sub-wave 7.1, (c) the architectural-scope sidebar is correctly slice-restricted (the sidebar is a per-bundle summary of `ARCHITECTURE_SCOPE.md` content relevant to the bundle's slice).
+- Flagship bundle (F): review-paper-style review against the *published* forms of L1–L3 and D1–D5. Specifically the reviewer pulls the published-version DOIs/arXiv-IDs from the citation-cache (Phase 6i Wave 1 infrastructure) and verifies each cited claim resolves correctly.
+- Methodology + software bundles (I1, I2): standard review with software-paper reviewer pattern; Stage 13 is lighter than physics-claim depth but enforces reproducibility checks (each worked-case in I1 must trace to a reproducible Aristotle run ID or commit-pinned counterexample; each software function in I2 must trace to a passing test).
+- Experimental letters (E1, E2): lightweight review plus a device-parameter audit pass against the experimental team's published device specs.
+
+**Implementation:**
+- Update `.claude/plugins/physics-qa/agents/claims-reviewer.md` (or its current location) to accept `bundle_target` argument.
+- Add `tools/review_runner.py --bundle <target>` that orchestrates the bundle-level review.
+- Add `docs/agents/claims-reviewer-bundle-prompts.md` documenting the per-bundle anchor list (which Stage-13 anchors to enforce per bundle).
+
+**Tests:**
+- `tests/test_claims_reviewer_bundle.py` — fixture-driven test that the bundle reviewer correctly distinguishes bundle types and applies the right review depth.
+
+**Output.** Reviewer plugin operates on bundles. Per-bundle review prompts documented. Each bundle has a documented Stage-13 anchor list.
+
+#### Sub-wave 7.3 — Cross-bundle consistency check + new validate.py check
+
+**Goal.** Wire a new `validate.py` check that enforces bundle-level cross-paper consistency, leveraging the cross-bundle cluster registry from Sub-wave 7.1.
+
+**New check:**
+- `validate.py --check bundle_consistency`: walks every cross-bundle cluster in `claim_clusters.json` and verifies that every member sentence within the cluster carries the same numerical value / claim within tolerance. Specifically: for every cluster whose `cross_bundle: true`, all member sentences across all `bundle_destination`s must carry the same primary source citation, the same numerical value (within `±2σ` of the citation's reported uncertainty), and the same Lean theorem reference. Mismatches are flagged as `BundleConsistencyMismatch` ReviewFinding nodes (which then flow into Stage 14 QI register).
+- This check is added to the `--check all` aggregation introduced in Phase 6i Wave 6.
+- The check runs against the *bundle-level* claim, so a sentence that ships in both L1 and D3 must say the same numerical thing in both — a regression that drifts the claim is caught here.
+
+**Implementation:**
+- New: `scripts/check_bundle_consistency.py` — implements the check.
+- Update: `validate.py` to register the new check in the dispatch table.
+- Update: Phase 5v sentence-state writer rules to refuse a write that would create a `BundleConsistencyMismatch` (early-fail at sentence-state-write time, not just at validation time).
+
+**Tests:**
+- `tests/test_bundle_consistency.py` — fixture-driven test of the check, including a deliberate mismatch case (L1 says "7×10¹⁴" while D3 says "5×10¹⁴" → check FAILS).
+
+**Output.** New `validate.py` check operational. Regression on cross-bundle claim drift impossible.
+
+#### Sub-wave 7.4 — Per-bundle Stage 13 sweep on existing material
+
+**Goal.** Run the Sub-wave 7.2 bundle reviewer against each bundle's currently-lifted source material, producing a per-bundle "Stage-13 readiness" report. This is the first concrete benefit of the rebundling — surfaces which bundles are submission-ready (cleared adversarial review) and which need additional work.
+
+**Execution:**
+- For each of the 13 bundles, run `tools/review_runner.py --bundle <target>` against the lifted source material from `PAPER_DRAFT_MAPPING.md`.
+- Each bundle gets a `papers/AutomatedReviews/<DATE>-bundle-stage13/<bundle>.md` review document (analog of the existing `papers/AutomatedReviews/<DATE>-internal-adversarial/<paper>.md` pattern).
+- Findings are summarized in a per-bundle status row in `docs/READINESS_GATES.md` (or its bundle-aware successor). The 11-gate × 18-paper readiness heatmap from Phase 5v is replaced/augmented by an N-gate × 13-bundle heatmap.
+- Critical findings (BLOCKER + REQUIRED) drive content additions or revisions before the bundle's Stage 13 close. RECOMMENDED findings are queued for the bundle's pre-submission re-invocation pass.
+
+**Output.** 13 bundle review documents. Updated readiness heatmap. Per-bundle BLOCKER/REQUIRED list ready for execution.
+
+#### Sub-wave 7.5 — Provenance dashboard bundle tab
+
+**Goal.** Extend the Datastar+Flask provenance dashboard (`scripts/provenance_dashboard.py`, port 8050) to add a "Bundles" tab, parallel to the existing Paper Provenance v2 tab, but at the bundle granularity.
+
+**Dashboard additions:**
+- New tab "Bundles" showing the 13 publication targets, each with:
+  - Tier (0–4) and target journal.
+  - Lifted-source sentence count (from sentence-state).
+  - Cross-bundle cluster count.
+  - Stage-13 readiness flag (from Sub-wave 7.4).
+  - Submission status (from a new `submission_state.json` tracking arXiv/journal-submission events per bundle).
+  - Cross-link to the bundle's review document.
+- Per-bundle drill-down: click a bundle → shows the lifted sentences with their `bundle_section_hint`, primary source, and Lean theorem reference.
+- Cross-bundle cluster view: click a cluster → shows all member sentences across bundles, flagging any `BundleConsistencyMismatch`.
+
+**Implementation:**
+- New: `templates/partials/bundles_tab.html`.
+- New: `scripts/datastar_bundles.py` — Flask SSE endpoint feeding bundle status.
+- Update: `scripts/provenance_dashboard.py` to register the new tab and endpoint.
+- Schema: `submission_state.json` — append-only log of `{bundle, action: "drafted" | "stage13_pass" | "submitted" | "accepted" | "published", date, evidence}`.
+
+**Output.** Dashboard "Bundles" tab live. Per-bundle status visible at a glance.
+
+#### Sub-wave 7.6 — CLAUDE.md and pipeline doc updates
+
+**Goal.** Update top-level project documentation so that future agents know to read `PAPER_STRATEGY.md` and `PAPER_DRAFT_MAPPING.md`, and so that `WAVE_EXECUTION_PIPELINE.md` reflects the bundle-aware review process.
+
+**Doc updates:**
+- `CLAUDE.md` "Mandatory References" §: add `PAPER_STRATEGY.md` and `PAPER_DRAFT_MAPPING.md` as Tier-2 references (read after the existing Tier-1 four documents). Specifically: agents working on a draft in `papers/paperN_*/` should also read `PAPER_DRAFT_MAPPING.md` to understand the bundle the draft lifts into, so that any new content authored is bundle-aware from inception.
+- `CLAUDE.md` "Important documents" §: add the two strategy documents.
+- `WAVE_EXECUTION_PIPELINE.md` Stage 1 ("Wave Scoping"): add bundle-target identification — Stage 1 of any wave that produces paper-shaped output now identifies which Tier 1/Tier 2/etc. bundle the wave's content lifts into, and writes that bundle assignment into `PAPER_DRAFT_MAPPING.md` (append-only) at Stage 12.
+- `WAVE_EXECUTION_PIPELINE.md` Stage 13 ("Adversarial Review"): document the bundle-level reviewer pattern from Sub-wave 7.2; reference the per-bundle anchor list documented in `docs/agents/claims-reviewer-bundle-prompts.md`.
+- `WAVE_EXECUTION_PIPELINE.md` Pipeline Invariants: add Invariant #11 — "Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle. No new stand-alone paper drafts are created without explicit user authorization to add a 14th-or-higher bundle target."
+
+**Output.** Top-level docs updated. The bundle architecture is the canonical paper organization for the project going forward.
+
+### Strengthening checklist (cross-sub-wave)
+
+- (P6 cross-module bridge): every reviewer prompt update must reference the `PAPER_DRAFT_MAPPING.md` table directly; no implicit reliance on "the agent will figure it out."
+- (Quantitative): `validate.py --check bundle_consistency` must surface mismatches at the `±2σ` numerical-tolerance level; tighter than the per-paper ±5% prior tolerance because cross-bundle drift is a higher-stakes failure mode.
+- (P5 trivial-discharge): the bundle-aware sentence-state schema migration must not introduce schema fields that are tautologically equal to the existing `paper_id` field; specifically, `bundle_destination` must derive non-trivially from the `lift_action` and the existing `paper_id`.
+
+### Total LOE estimate
+
+- Sub-wave 7.1 (schema + migration): 1 PM
+- Sub-wave 7.2 (Stage 13 reviewer prompt update): 1 PM
+- Sub-wave 7.3 (validate.py check): 0.5 PM
+- Sub-wave 7.4 (per-bundle Stage-13 sweep): 1–2 PM (depends on bundle BLOCKER count)
+- Sub-wave 7.5 (dashboard tab): 0.5 PM
+- Sub-wave 7.6 (doc updates): 0.5 PM
+- **Total: 4.5–5.5 PM** (purely Python / docs / pipeline; no new Lean)
+
+### Dependencies on Phase 6i Tracks A–D
+
+- Sub-wave 7.1 reads citation-cache from Phase 6i Wave 1 (citation-integrity foundation) when populating the `primary_source_path` field per cross-bundle cluster.
+- Sub-wave 7.2 reuses the Stage-13 reviewer infrastructure hardened in Phase 6i Tracks A–D (citation primary-source verification, parameter provenance, narrative grounding, Lean substance, assumption disclosure).
+- Sub-wave 7.3's `bundle_consistency` check builds on the Phase 6i Wave 1 `citation_primary_sources_present` and Phase 5v `claim_clusters_fresh` checks.
+- Sub-wave 7.4 should not run until Tracks A–D are substantially complete; otherwise the Stage-13 sweeps surface findings that are really Track A–D blockers in disguise.
+
+### Decision Gate I.7
+
+At Sub-wave 7.6 close, Phase 6i Wave 7 is CLOSED. The bundle architecture is operational in the review pipeline. Per-bundle Stage-13 readiness is visible in the dashboard. Cross-bundle consistency is enforced by `validate.py`. Future paper-shaped output is bundle-aware by default.
+
+### Cross-references
+
+- `docs/PAPER_STRATEGY.md` — canonical bundle-architecture document.
+- `docs/PAPER_DRAFT_MAPPING.md` — per-draft → per-bundle assignment.
+- `docs/WAVE_EXECUTION_PIPELINE.md` — updated by Sub-wave 7.6 Stage 1 + Stage 13 + Invariants amendments.
+- `CLAUDE.md` — updated by Sub-wave 7.6 Mandatory References + Important documents §§.
+- `docs/READINESS_GATES.md` — updated by Sub-wave 7.4 (per-bundle replaces per-paper).
+- `scripts/sentence_state.py`, `scripts/cluster_detect.py`, `scripts/verification_state.py` — extended by Sub-wave 7.1.
+- `scripts/validate.py` — extended by Sub-wave 7.3.
+- `scripts/provenance_dashboard.py` — extended by Sub-wave 7.5.
+
+---
+
 ## Decision Gates (summary)
 
 **Gate I.0 — before Wave 1 begins:** User explicit authorization. Phase 6i opens with a project-wide convention change (CITATION_REGISTRY field additions); needs sign-off before mass edits.
@@ -229,7 +399,9 @@
 
 **Gate I.2 — after Wave 2:** All submission-pending papers' Pipeline Invariant 8 gate passes strict mode. paper40 unblocked for submission.
 
-**Gate I.6 — after Wave 6:** All 8 entry-state QI items closed; Phase 6i CLOSED.
+**Gate I.6 — after Wave 6:** All 8 entry-state QI items closed; Phase 6i CLOSED (Track A–D scope).
+
+**Gate I.7 — after Wave 7:** Bundle-aware review pipeline operational. `validate.py --check bundle_consistency` enforced. Per-bundle Stage-13 readiness visible in dashboard. Phase 6i Track E CLOSED.
 
 ---
 
@@ -247,10 +419,13 @@
   ↓ → 6i.5 (Assumption disclosure)  — independent
   ↓
 6i.6 (Closure + process wiring) — depends on 6i.1–6i.5
+  ↓
+6i.7 (Paper Strategy Integration — Track E) — depends on 6i.1–6i.6 substantially complete; user gate I.7
 
 Parallelism:
   6i.2, 6i.3, 6i.4, 6i.5 all run after 6i.1 and can overlap freely.
-  6i.6 closes the programme.
+  6i.6 closes Tracks A–D.
+  6i.7 (Track E) runs after 6i.6 close and integrates the new paper-bundle architecture.
 ```
 
 ---
@@ -264,18 +439,22 @@ Parallelism:
 | 6i.3 | Narrative grounding + cross-paper consistency sweep (~10 papers) | 0 | 3–5 | 6i.1 | **TIER 1** |
 | 6i.4 | Lean proof substance audit (~5 papers + scripts/audit_paper_lean_refs.py) | 0 | 3–5 | 6i.1 | **TIER 1** |
 | 6i.5 | Assumption disclosure (derived vs tracked-Prop, ~12 papers) | 0 | 2–4 | None | **TIER 2** |
-| 6i.6 | Computation/production health + closure + process wiring | 0 | 1–2 | 6i.1–6i.5 | **TIER 1** (closes phase) |
+| 6i.6 | Computation/production health + closure + process wiring | 0 | 1–2 | 6i.1–6i.5 | **TIER 1** (closes Tracks A–D) |
+| 6i.7 | Paper Strategy Integration — bundle-aware review pipeline (Track E) | 0 | 4.5–5.5 | 6i.6 substantially complete; user gate I.7 | **TIER 1** (closes Track E) |
 
-**Total Phase 6i LOE:** 15–28 person-months Python (no new Lean physics). Serial-with-parallel: 6i.1 first (~1–2 wks wall-clock); then 6i.2/3/4/5 in parallel (~2–3 wks); then 6i.6 (~3–5 days). Estimated wall-clock 4–6 weeks if pursued continuously, longer if interleaved with Phase 6e Wave 4+.
+**Total Phase 6i LOE:** 19.5–33.5 person-months Python (no new Lean physics). Serial-with-parallel: 6i.1 first (~1–2 wks wall-clock); then 6i.2/3/4/5 in parallel (~2–3 wks); then 6i.6 (~3–5 days); then 6i.7 (~3–4 wks). Estimated wall-clock 6–9 weeks if pursued continuously, longer if interleaved with Phase 6e Wave 4+ or Phase 6j–6m roll-out.
 
 **Deliverables cumulative:**
 - 0 new Lean modules
 - 2 new Python helpers (`back_fill_primary_sources.py`, `audit_paper_lean_refs.py`)
-- 2+ new `validate.py` checks
+- 2+ new `validate.py` checks (incl. `bundle_consistency` from Wave 7)
 - 1 extended script (`scripts/citation_cache.py`)
 - ~190+ files added under `Lit-Search/Phase-*/primary-sources/`
-- Pipeline doc updates (WAVE_EXECUTION_PIPELINE.md Stages 1 + 10 + 13)
-- All 8 entry-state QI items closed
+- Pipeline doc updates (WAVE_EXECUTION_PIPELINE.md Stages 1 + 10 + 13 + Pipeline Invariant #11)
+- All 8 entry-state QI items closed (Tracks A–D)
+- Bundle-aware review pipeline operational (Track E, Wave 7): schema migration, reviewer prompt update, validate.py check, per-bundle Stage-13 sweep, dashboard tab, CLAUDE.md/pipeline doc updates
+- 4 new Python scripts from Wave 7 (`bundle_migration.py`, `bundle_clusters.py`, `check_bundle_consistency.py`, `datastar_bundles.py`)
+- New `submission_state.json` log + `templates/partials/bundles_tab.html`
 - 0 new sorry (no new Lean), 0 new axioms
 
 ---

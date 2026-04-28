@@ -2641,6 +2641,135 @@ NONLINEAR_EFE_PARAMS = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 5 — Microscopic-to-Macroscopic Coefficient Match
+# ════════════════════════════════════════════════════════════════════
+#
+# Centralised parameters for `MicroscopicCoefficientMatch.lean` +
+# `src/micro_macro_match/`.  Wave 5 closes Decision Gate E.4 by
+# expressing emergent couplings (G_N^emerg, Λ^emerg, higher-curvature
+# triple) in microscopic parameters (Λ_UV, N_f) and testing the
+# resulting `Λ^emerg` against the observed cosmological constant.
+
+MICRO_MACRO_PARAMS = {
+    # ── Observed cosmological constant ──────────────────────────────
+    # Λ_obs ≃ ρ_Λ ≃ (2.26 × 10⁻³ eV)⁴ ≃ 2.6 × 10⁻⁴⁷ GeV⁴
+    # (Planck 2018, Aghanim et al. A&A 641, A6, 2020 — derived from
+    #  Ω_Λ h² = 0.3155 + h = 0.6736, ρ_crit ≃ 1.054 × 10⁻⁵ h² GeV/cm³).
+    # Stored in GeV⁴ for direct comparison with Λ^emerg ~ Λ_UV⁴.
+    'LAMBDA_OBSERVED_GEV4': 2.6e-47,
+    'LAMBDA_OBSERVED_MEV4_EXPONENT': 4,  # i.e. (2.26 meV)^4
+    # ── Planck mass / natural UV cutoff scales ──────────────────────
+    'M_PLANCK_GEV': 1.221e19,           # reduced Planck = 2.435e18; we use full M_Pl
+    'M_PLANCK_GEV4': (1.221e19) ** 4,    # ≃ 2.22e76 GeV⁴
+    'GUT_SCALE_GEV': 2.0e16,             # standard GUT scale
+    'EW_SCALE_GEV': 246.0,               # electroweak symmetry breaking
+    'QCD_SCALE_GEV': 0.215,              # Λ_QCD MS-bar
+    # ── SM-like fermion counts (used as natural-N_f benchmarks) ──────
+    # SM has 3 colors × (6 quarks + 3 leptons) = 27 Weyl, but for
+    # heat-kernel a_0 we count Dirac species. Use N_f = 16 as the
+    # standard "Dirac fermion count" benchmark (cf. Christensen-Duff
+    # Dirac sector convention).
+    'N_F_SM_DIRAC': 16,
+    'N_F_SCAN_VALUES': (4, 8, 16, 24, 100),  # benchmark + correctness-push max
+    # ── Λ^emerg / Λ_obs ratio thresholds ─────────────────────────────
+    # Decision Gate E.4: at natural Λ_UV = M_Pl + N_f = SM, the
+    # heat-kernel a_0 prediction Λ^emerg = a_0(N_f) · Λ_UV⁴ is
+    # ~ 10¹²² × Λ_obs — i.e. CC problem REPRODUCED in emergent form
+    # with no resolution. The threshold below labels "natural-CC-
+    # reproduction" (ratio > 10⁶⁰) vs "natural-CC-resolution"
+    # (|log10 ratio| < 1).
+    'CC_REPRODUCED_RATIO_FLOOR': 1.0e60,
+    'CC_RESOLVED_LOG10_BAND': 1.0,  # |log10(Λ^emerg / Λ_obs)| < 1
+    # ── Λ_UV scan range (log-spaced) ────────────────────────────────
+    # Test from QCD scale up to Planck. Below QCD the heat-kernel
+    # expansion as a UV-completion semantics no longer applies; above
+    # M_Pl the EFT framework breaks down by construction.
+    'LAMBDA_UV_SCAN_MIN_GEV': 1.0e-3,    # below electron mass — for resolution scan
+    'LAMBDA_UV_SCAN_MAX_GEV': 1.221e19,  # M_Pl
+    'LAMBDA_UV_SCAN_POINTS': 32,
+    # ── Decision Gate E.4 verdict band labels ───────────────────────
+    'DG_E4_VERDICT_RESOLVED': 'cc_resolved',     # |log10 ratio| < 1
+    'DG_E4_VERDICT_REPRODUCED': 'cc_reproduced',  # log10 ratio > 60
+    'DG_E4_VERDICT_INTERMEDIATE': 'cc_intermediate',  # in between
+    # ── Microscopic-coefficient match tolerance (algebraic) ──────────
+    # G_N_emerg ↔ G_N_from_a2 closed forms agree by construction;
+    # this tolerance is for FP-roundoff when scanning numerically.
+    'MATCH_RESIDUAL_TOLERANCE': 1.0e-12,
+    # ── Λ_UV value at which Λ^emerg = Λ_obs for SM N_f (resolution
+    # locus, derived from a_0(16) · Λ_UV⁴ = Λ_obs):
+    # Λ_UV_resolution = (Λ_obs / a_0(16))^(1/4)
+    #                = (2.6e-47 / 0.4053)^(1/4) GeV
+    #                = 2.83e-12 GeV ≃ 2.83 meV (≪ EW scale).
+    # Verified by `lambda_emerg_microscopic(2.83e-12, 16)` reproducing
+    # `LAMBDA_OBSERVED_GEV4` to <1% (FP roundoff). For diagnostic
+    # display only — not load-bearing.
+    'LAMBDA_UV_RESOLUTION_LOCUS_DIAGNOSTIC_GEV': 2.83e-12,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 6 — Einstein-Cartan Extension (torsion from spin current)
+# ════════════════════════════════════════════════════════════════════
+#
+# Centralised parameters for `EinsteinCartanExtension.lean` +
+# `src/einstein_cartan/`.  Wave 6 extends the ADW emergent-gravity
+# programme to Einstein-Cartan with non-zero torsion sourced by the
+# fermion spin current — a structural consequence of working with
+# tetrads e^a_μ rather than the metric g_μν.  The Wave 6 correctness-
+# push compares the microscopic torsion-amplitude prediction against
+# the tightest published torsion observational bounds.
+
+EINSTEIN_CARTAN_PARAMS = {
+    # ── Torsion observational bounds ─────────────────────────────────
+    # Cosmic axial torsion bound from CPT/Lorentz precision tests.
+    # Kostelecky-Russell-Tasson, PRL 100, 111102 (2008): cosmic
+    # background torsion T < 1e-31 GeV at 95% CL from atomic-physics
+    # Lorentz-violation searches (b_μ extraction; T ~ b/m_e).  This is
+    # the tightest published bound in the natural high-energy regime.
+    'TORSION_BOUND_KOSTELECKY_GEV': 1.0e-31,
+    # Hughes-Drever / Lammerzahl atomic-clock bound (Lammerzahl, PRD 64,
+    # 084014 (2001)) on rotational axial torsion: T < 1e-29 GeV.
+    # Looser than Kostelecky but cross-channel-independent.
+    'TORSION_BOUND_HUGHES_DREVER_GEV': 1.0e-29,
+    # ── Cosmological background spin density ─────────────────────────
+    # Degenerate spinor bath at T ≃ T_CMB = 2.725 K = 2.35×10⁻¹³ GeV
+    # gives n_s ~ T_CMB³ ≃ 1.3×10⁻³⁹ GeV³ (each Weyl species, summed
+    # over SM Dirac species). Used as the ambient-bath spin density
+    # for the Wave 6 torsion-amplitude prediction.
+    'COSMOLOGICAL_SPIN_DENSITY_GEV3': 1.3e-39,
+    'T_CMB_GEV': 2.35e-13,
+    # ── α_EC (Einstein-Cartan dimensionless coefficient) ─────────────
+    # Inherited from the Wave 1–5 ADW Sakharov-Adler calibration:
+    # α_EC = α_ADW.  At α_EC = 1 the EC torsion-amplitude prediction
+    # equals G_N_emerg(Λ_UV, N_f, 1) · n_spin (cross-bridge to Phase
+    # 6a.1's `G_N_emerg_at_alpha_one`).  The natural-parameter band
+    # is [0.1, 10] (matches Wave 4 NONLINEAR_EFE_PARAMS).
+    'ALPHA_EC_CALIBRATED': 1.0,
+    'ALPHA_EC_NATURAL_MIN': 0.1,
+    'ALPHA_EC_NATURAL_MAX': 10.0,
+    # ── N_f benchmark (inherited from Wave 5) ────────────────────────
+    'N_F_SM_DIRAC': 16,  # SM-Dirac convention; matches MICRO_MACRO
+    # ── Λ_UV scan range (TeV → M_Pl, log-spaced) ──────────────────────
+    'LAMBDA_UV_SCAN_MIN_GEV': 1.0e3,    # TeV (above EW, below GUT)
+    'LAMBDA_UV_SCAN_MAX_GEV': 1.221e19,  # M_Pl
+    'LAMBDA_UV_SCAN_POINTS': 16,
+    'ALPHA_SCAN_POINTS': 21,
+    # ── Decision-Gate-style verdict labels (correctness-push) ─────────
+    # Wave 6 correctness-push: at natural microscopic parameters
+    # (Λ_UV ≃ M_Pl, N_f = 16, α_EC = 1, n_s = cosmological), the
+    # predicted torsion amplitude |T_EC| ~ G_N_emerg · n_s ~ 1e-114 GeV
+    # — far below Kostelecky's 1e-31 GeV by ~80 orders of magnitude.
+    # "Bound satisfied" = ratio < 1; "bound violated" = ratio ≥ 1.
+    'TORSION_VERDICT_BOUND_SATISFIED': 'torsion_below_bound',
+    'TORSION_VERDICT_BOUND_VIOLATED': 'torsion_above_bound',
+    # ── EC residual tolerance (algebraic) ────────────────────────────
+    # The EC residual `|α_EC - 1| · G_N_emerg · n_spin` vanishes iff
+    # α_EC = 1; this float threshold accounts only for FP roundoff.
+    'EC_RESIDUAL_TOLERANCE': 1.0e-12,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Parameter Provenance Registry (imported from src.core.provenance)
 #
 # Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS must have

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-28T14:08:52.876989+00:00",
+  "generated": "2026-04-28T16:52:21.840533+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -2160,6 +2160,62 @@
         "steel_blue",
         "amber",
         "emerald"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_lambda_emerg_parameter_scan",
+      "function": "fig_lambda_emerg_parameter_scan",
+      "caption": "Phase 6e Wave 5 \u2014 \u039b^emerg parameter scan and Decision Gate E.4 verdict. Left panel: log-log \u039b^emerg(\u039b_UV, N_f) curves at fixed N_f \u2208 {1, 4, 16, 100}; the Planck-2018 observed CC value \u039b_obs \u2243 2.6\u00d710\u207b\u2074\u2077 GeV\u2074 is drawn as a horizontal anchor; the natural cutoff M_Pl \u2243 1.2\u00d710\u00b9\u2079 GeV is drawn as a vertical anchor. The diagnostic resolution locus \u039b_UV \u2243 4.5\u00d710\u207b\u00b9\u00b2 GeV (where the SM N_f curve crosses \u039b_obs) is marked. Right panel: 2D verdict map of log10(\u039b^emerg/\u039b_obs) over the (\u039b_UV, N_f) plane with verdict-band contour boundaries (cc_resolved at |log10 ratio|=1, cc_reproduced at log10 ratio=60). Decision Gate E.4 verdict: the entire natural high-energy theory band (\u039b_UV \u2265 EW_SCALE, N_f \u2265 1) sits in the cc_reproduced region \u2014 the classical CC problem is reproduced in the emergent-gravity formulation. Lean: lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed, lambdaEmergMicroscopic_eq_zero_iff, dirac_H_MicroscopicCoefficientMatch_at_alpha_one. Source: Sakharov 1968; Vassilevich 2003 Eq. (4.37); Weinberg RMP 61 (1989) \u2014 CC problem; Planck 2018.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_lambda_emerg_parameter_scan.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_lambda_emerg_parameter_scan.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u039b_UV",
+        "yaxis": "\u039b^emerg"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "emerald",
+        "burgundy"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_torsion_obs_bound",
+      "function": "fig_torsion_obs_bound",
+      "caption": "Phase 6e Wave 6 \u2014 Einstein-Cartan torsion at natural microscopic params is below all published bounds. Left panel: log-log |T_EC|(\u039b_UV, N_f) curves at \u03b1_EC = 1 (Sakharov-Adler calibration) for N_f \u2208 {1, 4, 16, 100}; the Kostelecky-Russell-Tasson bound 1\u00d710\u207b\u00b3\u00b9 GeV (PRL 100, 111102 (2008)) and the Hughes-Drever bound 1\u00d710\u207b\u00b2\u2079 GeV (Lammerzahl, PRD 64, 084014 (2001)) are drawn as horizontal anchors; the natural cutoff M_Pl \u2243 1.2\u00d710\u00b9\u2079 GeV is drawn as a vertical anchor where the natural-parameter prediction lands. Right panel: 2D headroom heatmap of log10(Kostelecky / |T_EC|) over the (\u039b_UV, N_f) plane at \u03b1_EC = 1; the natural point (M_Pl, N_f=16) is marked with a star \u2014 the prediction sits ~46 orders of magnitude below Kostelecky. Wave 6 correctness-push: torsion-bound matched at all natural microscopic parameter points. Lean: torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky, torsionBoundKostelecky_lt_hughesDrever, dirac_H_EinsteinCartanExtensionHolds_at_alpha_one. Source: Hehl et al RMP 48 (1976) \u2014 EC formulation; Kostelecky PRL 100 (2008) \u2014 cosmic torsion bound; Lammerzahl PRD 64 (2001) \u2014 Hughes-Drever update; Trautman APP B5 (1973).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_torsion_obs_bound.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_torsion_obs_bound.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u039b_UV",
+        "yaxis": "|T_EC|"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "emerald",
+        "burgundy"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

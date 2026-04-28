@@ -366,6 +366,8 @@ def generate_tex(counts: dict, path: Path):
         ("higherCurvature", "HigherCurvatureStructure.lean",  "test_higher_curvature.py"),
         ("diffInvariance",  "NonlinearDiffInvariance.lean",   "test_diff_invariance.py"),
         ("nonlinearEFE",    "NonlinearEFE.lean",              "test_nonlinear_efe.py"),
+        ("microscopicCoefficientMatch", "MicroscopicCoefficientMatch.lean", "test_micro_macro_match.py"),
+        ("einsteinCartanExtension", "EinsteinCartanExtension.lean", "test_einstein_cartan.py"),
     ]
     phase6_lines = []
     for prefix, lean_mod, test_mod in phase6_modules:

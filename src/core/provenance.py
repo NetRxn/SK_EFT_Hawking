@@ -2842,6 +2842,167 @@ PARAMETER_PROVENANCE = {
         'notes': 'Used in src.core.constants.HIGHER_CURVATURE_PARAMS["HC_BOUND_CASSINI_C_SQ"] '
                  'and src.higher_curvature.HC_OBS_BOUNDS["cassini_C_sq"].',
     },
+    # ── Phase 6e Wave 5 — Microscopic-to-Macroscopic Coefficient Match ─
+    'MICRO_MACRO.LAMBDA_OBSERVED_GEV4': {
+        'value': 2.6e-47,
+        'unit': 'GeV^4',
+        'tier': 'MEASURED',
+        'source': 'Planck Collaboration (Aghanim et al.), A&A 641, A6 (2020), Table 2',
+        'detail': 'Observed cosmological constant Λ_obs ≃ ρ_Λ ≃ (2.26 meV)⁴ '
+                  '≃ 2.6×10⁻⁴⁷ GeV⁴. Derived from Ω_Λ h² = 0.3155 (Planck 2018 '
+                  'TT,TE,EE+lowE+lensing+BAO base ΛCDM) and h = 0.6736.',
+        'doi': '10.1051/0004-6361/201833910',
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Planck 2018 results VI, Table 2. Standard ΛCDM derived value.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.MICRO_MACRO_PARAMS["LAMBDA_OBSERVED_GEV4"] '
+                 'and as the Decision-Gate-E.4 anchor for paper42b.',
+    },
+    'MICRO_MACRO.M_PLANCK_GEV': {
+        'value': 1.221e19,
+        'unit': 'GeV',
+        'tier': 'MEASURED',
+        'source': 'Particle Data Group, Workman et al., PTEP 2022, 083C01 (2022) — '
+                  'CODATA 2018 derived',
+        'detail': 'Full Planck mass M_Pl = (ℏc/G)^(1/2) ≃ 1.221×10¹⁹ GeV. '
+                  'Used as the natural UV cutoff anchor for the Decision-Gate-E.4 '
+                  'quantitative theorem. (Reduced Planck = M_Pl/√(8π) ≃ 2.435×10¹⁸ '
+                  'GeV is the alternative convention; this project uses full M_Pl.)',
+        'doi': '10.1093/ptep/ptac097',
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Standard CODATA-derived Planck mass. PDG 2022 Table 8.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.MICRO_MACRO_PARAMS["M_PLANCK_GEV"] + Lean '
+                 'theorem MicroscopicCoefficientMatch.planckMassGeV (encoded as '
+                 'conservative under-estimate 12·10¹⁸ for `norm_num`-friendly form).',
+    },
+    'MICRO_MACRO.N_F_SM_DIRAC': {
+        'value': 16,
+        'unit': 'dimensionless',
+        'tier': 'EXTRACTED',
+        'source': 'Standard Model Dirac fermion species count convention; '
+                  'Christensen-Duff, Nucl. Phys. B154, 301 (1979)',
+        'detail': 'Number of Dirac fermion species used in the Christensen-Duff '
+                  'heat-kernel a_0 convention: 16 = 6 quark Dirac species '
+                  '× counting + 3 charged-lepton Dirac species + neutrino species. '
+                  'Used as the SM-Dirac benchmark in heat-kernel scans. '
+                  '(Convention: Vassilevich Phys. Rep. 388, 279 (2003) Eq. (4.37) '
+                  'uses Dirac-species count, not Weyl-component count.)',
+        'doi': '10.1016/0550-3213(79)90516-4',
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Standard heat-kernel benchmark; consistent with '
+                              'Christensen-Duff (1979) Dirac convention.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.MICRO_MACRO_PARAMS["N_F_SM_DIRAC"] + paper42b §3.',
+    },
+    'MICRO_MACRO.LAMBDA_UV_RESOLUTION_LOCUS_DIAGNOSTIC_GEV': {
+        'value': 2.83e-12,
+        'unit': 'GeV',
+        'tier': 'DERIVED',
+        'source': 'Closed-form solve of a_0(16) · Λ_UV⁴ = Λ_obs',
+        'detail': 'Diagnostic resolution-locus cutoff at SM N_f: Λ_UV = '
+                  '(Λ_obs / a_0(16))^(1/4) = (2.6×10⁻⁴⁷ / (4/π²))^(1/4) GeV '
+                  '≃ 2.83×10⁻¹² GeV ≃ 2.83 meV. Far sub-electroweak — physically '
+                  'unattainable as a UV-completion cutoff. Used as the diagnostic '
+                  'reference line on the Decision-Gate-E.4 figure.',
+        'doi': None,
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Derived numerically from LAMBDA_OBSERVED_GEV4 + '
+                              'seeley_dewitt_a0(16); cross-checked in '
+                              'tests/test_micro_macro_match.py::TestLeanBridge.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.MICRO_MACRO_PARAMS["LAMBDA_UV_RESOLUTION_LOCUS_DIAGNOSTIC_GEV"]; '
+                 'diagnostic-only, not load-bearing.',
+    },
+    # ── Phase 6e Wave 6 — Einstein-Cartan Extension ────────────────────
+    'EINSTEIN_CARTAN.TORSION_BOUND_KOSTELECKY_GEV': {
+        'value': 1.0e-31,
+        'unit': 'GeV',
+        'tier': 'MEASURED',
+        'source': 'Kostelecký, Russell, Tasson, Phys. Rev. Lett. 100, 111102 (2008)',
+        'detail': 'Tightest published cosmic-background axial-torsion bound. '
+                  'Constructed from Lorentz-invariance precision-tests on '
+                  'atomic-physics Standard-Model Extension (SME) coefficients '
+                  'b_μ; for a static spacetime torsion T_μ ≃ (b_μ/m_e), the '
+                  'measured CPT-odd ε_b bounds T < 1×10⁻³¹ GeV at 95% CL.',
+        'doi': '10.1103/PhysRevLett.100.111102',
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'PRL 100, 111102; abstract + Table I confirm bound '
+                              'on b_μ-equivalent torsion at 1e-31 GeV.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in EINSTEIN_CARTAN_PARAMS["TORSION_BOUND_KOSTELECKY_GEV"] '
+                 'and Lean theorem `torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky` '
+                 '(paper43 §3 Decision-Gate-E.6 anchor).',
+    },
+    'EINSTEIN_CARTAN.TORSION_BOUND_HUGHES_DREVER_GEV': {
+        'value': 1.0e-29,
+        'unit': 'GeV',
+        'tier': 'MEASURED',
+        'source': 'Lämmerzahl, Phys. Lett. A 228, 223 (1997) — Hughes-Drever '
+                  'atomic-clock anisotropy bound on space-time torsion',
+        'detail': 'Cross-channel-independent rotational-axial-torsion bound: '
+                  'T < 1×10⁻²⁹ GeV from atomic-clock anisotropy null result. '
+                  'Looser than Kostelecky but probes a different SME-coefficient '
+                  'channel (rotational vs. cosmic-isotropic).',
+        'doi': '10.1016/S0375-9601(97)00127-8',
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Phys. Lett. A 228, 223 (1997). DOI corrected in '
+                              'Stage 13: prior PRD 64, 084014 (2001) attribution '
+                              'was wrong-target (Crossref resolves to Maluf-da-'
+                              'Rocha-Neto teleparallel-GR Hamiltonian formulation, '
+                              'unrelated). The canonical load-bearing source is '
+                              'Lämmerzahl 1997 PLA — Hughes-Drever atomic-clock '
+                              'anisotropy bound updated via SME-style framework.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in EINSTEIN_CARTAN_PARAMS["TORSION_BOUND_HUGHES_DREVER_GEV"] '
+                 'as the cross-channel comparator in paper43 §3. Stage 13 BLOCKER '
+                 '2.1 fix: DOI changed from wrong-target 10.1103/PhysRevD.64.084014 '
+                 'to canonical 10.1016/S0375-9601(97)00127-8.',
+    },
+    'EINSTEIN_CARTAN.COSMOLOGICAL_SPIN_DENSITY_GEV3': {
+        'value': 1.3e-39,
+        'unit': 'GeV^3',
+        'tier': 'DERIVED',
+        'source': 'CMB temperature scaling: n_s ~ T_CMB³ at degenerate-spinor bath',
+        'detail': 'Cosmological background spin density at T = T_CMB = 2.725 K '
+                  '= 2.35×10⁻¹³ GeV: n_s ≃ T_CMB³ ≃ 1.3×10⁻³⁹ GeV³ (per Weyl '
+                  'species, summed over SM Dirac species at the photon-decoupling '
+                  'epoch).  Derived from the Stefan-Boltzmann-like phase-space '
+                  'density estimate (Kolb-Turner Eq. 3.59) with no thermal '
+                  'redshift correction (current-epoch CMB).',
+        'doi': None,
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Standard cosmological-background-fermion phase-'
+                              'space estimate; no fine-tuned parameter dependence.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in EINSTEIN_CARTAN_PARAMS["COSMOLOGICAL_SPIN_DENSITY_GEV3"]. '
+                 'Order-of-magnitude estimate; the load-bearing physics is the '
+                 'parametric scaling, not the prefactor.',
+    },
+    'EINSTEIN_CARTAN.T_CMB_GEV': {
+        'value': 2.35e-13,
+        'unit': 'GeV',
+        'tier': 'MEASURED',
+        'source': 'Fixsen, ApJ 707, 916 (2009) — COBE/FIRAS T_CMB = 2.7255 K',
+        'detail': 'CMB monopole temperature converted to GeV via k_B/c² = '
+                  '8.617×10⁻⁵ eV/K → T_CMB = 2.7255 K × 8.617×10⁻⁵ eV/K '
+                  '= 2.348×10⁻⁴ eV = 2.348×10⁻¹³ GeV (rounded to 2.35e-13).',
+        'doi': '10.1088/0004-637X/707/2/916',
+        'llm_verified_date': '2026-04-28',
+        'llm_verified_notes': 'Standard COBE/FIRAS measurement; numerical '
+                              'conversion verified in tests/test_einstein_cartan.py.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in EINSTEIN_CARTAN_PARAMS["T_CMB_GEV"] as the bath-'
+                 'temperature anchor for the cosmological-spin-density derivation.',
+    },
 }
 
 

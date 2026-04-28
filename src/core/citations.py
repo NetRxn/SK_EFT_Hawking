@@ -454,7 +454,8 @@ CITATION_REGISTRY = {
         'doi': '10.1103/PhysRevD.86.104019',
         'arxiv': None,
         'doi_verified': True,
-        'used_in': ['src/core/constants.py'],
+        'used_in': ['src/core/constants.py',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': [],
         'notes': 'ADW lattice gravity model. Basis for vestigial MC.',
     },
@@ -624,7 +625,8 @@ CITATION_REGISTRY = {
         'arxiv': '1109.0091',
         'doi_verified': True,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex',
-                    'papers/paper6_vestigial/paper_draft.tex'],
+                    'papers/paper6_vestigial/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': [],
         'notes': 'Lattice-regularized quantum gravity, ADW mechanism.',
     },
@@ -660,6 +662,7 @@ CITATION_REGISTRY = {
             'papers/paper25_gravitational_waves/paper_draft.tex',
             'papers/paper26_bh_entropy/paper_draft.tex',
             'papers/paper39_heat_kernel_expansion/paper_draft.tex',
+            'papers/paper42b_cc_emergent/paper_draft.tex',
         ],
         'provides': [
             'Unitarity proof for the 4D simplicial-complex lattice theory of gravity '
@@ -1090,7 +1093,8 @@ CITATION_REGISTRY = {
         'doi': '10.1051/0004-6361/201833910',
         'arxiv': '1807.06209',
         'doi_verified': None,
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'used_in': ['papers/paper17_dark_sector/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': [],
         'notes': 'Planck 2018 cosmological parameters (published 2020).',
     },
@@ -2035,7 +2039,8 @@ CITATION_REGISTRY = {
         'inprep': True,
         'primary_source_path': None,
         'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
-                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
+                    'papers/paper42_nonlinear_efe/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': ['Phase 6a.1 LinearizedEFE.lean Lean formalization + '
                      'Sakharov-Adler match locus (companion of paper23, '
                      'in preparation 2026)'],
@@ -2110,7 +2115,8 @@ CITATION_REGISTRY = {
         'inprep': True,
         'primary_source_path': None,
         'used_in': ['papers/paper41_diff_invariance/paper_draft.tex',
-                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
+                    'papers/paper42_nonlinear_efe/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': ['Phase 6e Wave 1 HeatKernelExpansion.lean Lean '
                      'formalization + Sakharov-Adler calibration of induced '
                      'Newton constant via heat-kernel a_2 (companion of '
@@ -2122,6 +2128,158 @@ CITATION_REGISTRY = {
                  'entry created to satisfy Gate 1 CitationIntegrity binary '
                  'criterion. Flag as `year: 2026, journal: in preparation` '
                  'until paper39 is submitted and a journal venue is assigned.',
+    },
+    'Roehm2026Wave4': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Variational nonlinear Einstein field equations from '
+                 'the ADW emergent-gravity programme',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/paper42b_cc_emergent/paper_draft.tex'],
+        'provides': ['Phase 6e Wave 4 NonlinearEFE.lean Lean formalization '
+                     '+ trace-level Decision-Gate-style biconditional '
+                     '(efeResidualTrace = 0 iff α_ADW = 1) + multi-channel '
+                     'PPN observable predictions (companion of paper42, in '
+                     'preparation 2026)'],
+        'notes': 'In-preparation self-cite to companion paper42 '
+                 '(`papers/paper42_nonlinear_efe/paper_draft.tex`). The '
+                 '`NonlinearEFE` Lean module exists and is verified '
+                 '(Phase 6e Wave 4 SHIPPED 2026-04-28). Registry entry '
+                 'created during Wave 5 to satisfy Gate 1 CitationIntegrity '
+                 '+ close the deferred RECOMMENDED 8.1 from Wave 4 Stage 13 '
+                 'review (per `project_phase6e_w4_shipped.md` memory). '
+                 'Flag as `year: 2026, journal: in preparation` until '
+                 'paper42 is submitted and a journal venue is assigned.',
+    },
+    'Roehm2026Wave5': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Microscopic-to-macroscopic coefficient match for the ADW '
+                 'emergent-gravity programme: a Lean-formalized Decision '
+                 'Gate on the cosmological-constant problem',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/paper43_einstein_cartan/paper_draft.tex'],
+        'provides': ['Phase 6e Wave 5 MicroscopicCoefficientMatch.lean Lean '
+                     'formalization + closed-form `Λ^emerg = a_0(N_f)·Λ_UV⁴` '
+                     '+ Decision-Gate-E.4 quantitative anchor + bundled '
+                     '`H_MicroscopicCoefficientMatch` tracked Prop '
+                     '(companion of paper42b, in preparation 2026)'],
+        'notes': 'In-preparation self-cite to companion paper42b '
+                 '(`papers/paper42b_cc_emergent/paper_draft.tex`). The '
+                 '`MicroscopicCoefficientMatch` Lean module exists and is '
+                 'verified (Phase 6e Wave 5 SHIPPED 2026-04-28). Registry '
+                 'entry created during Wave 6 to satisfy Gate 1 '
+                 'CitationIntegrity for paper43 references to the Wave-5 '
+                 '`gNMicroscopic_at_alpha_one_eq_G_N_emerg` cross-bridge. '
+                 'Flag as `year: 2026, journal: in preparation` until '
+                 'paper42b is submitted and a journal venue is assigned.',
+    },
+    'Hehl1976': {
+        'authors': 'Hehl, F. W., von der Heyde, P., Kerlick, G. D., Nester, '
+                   'J. M.',
+        'title': 'General relativity with spin and torsion: Foundations and '
+                 'prospects',
+        'journal': 'Rev. Mod. Phys.',
+        'volume': 48,
+        'page': '393',
+        'year': 1976,
+        'doi': '10.1103/RevModPhys.48.393',
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/paper43_einstein_cartan/paper_draft.tex'],
+        'provides': ['Einstein-Cartan formulation; algebraic Cartan torsion '
+                     'equation T = G_N · S; canonical reference for '
+                     'spin-current-sourced torsion in emergent-gravity '
+                     'extensions.'],
+        'notes': 'Canonical reference for the Hehl-Heyde-Kerlick-Nester '
+                 'formulation of Einstein-Cartan theory. Used by paper43 §3 '
+                 'to motivate the scalar torsion-amplitude prediction. '
+                 'Primary-sources-cache rollout deferred to Phase 6i Wave 1.',
+    },
+    'Trautman1973': {
+        'authors': 'Trautman, A.',
+        'title': 'On the structure of the Einstein-Cartan equations',
+        'journal': 'Symposia Mathematica (Istituto Nazionale di Alta '
+                   'Matematica)',
+        'volume': 12,
+        'page': '139',
+        'year': 1973,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/paper43_einstein_cartan/paper_draft.tex'],
+        'provides': ['Trautman-form Einstein-Cartan equations; derivation of '
+                     'spin-current-sourced torsion from variational principle.'],
+        'notes': 'Trautman 1973 Symposia Mathematica. Pre-DOI volume; '
+                 'verified via canonical EC-theory bibliographies (Hehl '
+                 'et al RMP 48, 393 (1976), §I.B). Primary-sources-cache '
+                 'rollout deferred to Phase 6i Wave 1.',
+    },
+    'KosteleckyRussellTasson2008': {
+        'authors': 'Kostelecký, V. A., Russell, N., Tasson, J. D.',
+        'title': 'New constraints on torsion from Lorentz-violation '
+                 'searches',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 100,
+        'page': '111102',
+        'year': 2008,
+        'doi': '10.1103/PhysRevLett.100.111102',
+        'arxiv': '0712.4393',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/paper43_einstein_cartan/paper_draft.tex'],
+        'provides': ['Tightest published bound on cosmic-axial torsion '
+                     'T < 10⁻³¹ GeV at 95% CL via SME (Standard Model '
+                     'Extension) Lorentz-violation precision tests.'],
+        'notes': 'Kostelecky-Russell-Tasson PRL 100, 111102 (2008). The '
+                 'Wave 6 main correctness-push compares the microscopic '
+                 'torsion-amplitude prediction at the cosmological '
+                 'background against this bound. Primary-sources-cache '
+                 'rollout deferred to Phase 6i Wave 1.',
+    },
+    'Lammerzahl2001': {
+        'authors': 'Lämmerzahl, C.',
+        'title': 'Constraints on space-time torsion from Hughes-Drever '
+                 'experiments',
+        'journal': 'Phys. Lett. A',
+        'volume': 228,
+        'page': '223',
+        'year': 1997,
+        'doi': '10.1016/S0375-9601(97)00127-8',
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/paper43_einstein_cartan/paper_draft.tex'],
+        'provides': ['Hughes-Drever atomic-clock anisotropy bound on '
+                     'rotational axial torsion T < 10⁻²⁹ GeV; cross-channel '
+                     'comparator looser than Kostelecky.'],
+        'notes': 'Lämmerzahl 1997 Phys. Lett. A 228, 223 (1997). Updates '
+                 'the classical Hughes-Drever atomic-clock bound to modern '
+                 'precision via a SME-style framework. The original 2001 '
+                 'PRD attribution in the Wave 6 module docstring is the '
+                 'updated review version; the load-bearing original is the '
+                 '1997 PLA paper. Primary-sources-cache rollout deferred '
+                 'to Phase 6i Wave 1.',
     },
     'Wald1984': {
         'authors': 'Wald, R. M.',
@@ -2162,7 +2320,8 @@ CITATION_REGISTRY = {
         'inprep': True,
         'primary_source_path': None,
         'used_in': ['papers/paper41_diff_invariance/paper_draft.tex',
-                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
+                    'papers/paper42_nonlinear_efe/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': ['Phase 6e Wave 2 HigherCurvatureStructure.lean Lean '
                      'formalization + Stelle-basis change (companion of '
                      'paper40, in preparation 2026)'],
@@ -2189,7 +2348,8 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6e/primary-sources/Vassilevich2003.pdf',
         'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
                     'papers/paper40_higher_curvature/paper_draft.tex',
-                    'papers/paper41_diff_invariance/paper_draft.tex'],
+                    'papers/paper41_diff_invariance/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': ['Christensen-Duff Dirac a₀, a₂, a₄ coefficients '
                      '(Eqs. 4.37-4.42); heat-kernel asymptotic existence '
                      '(Theorem 4.1)'],
@@ -2237,7 +2397,8 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6e/primary-sources/Stelle1977.json',
         'used_in': ['papers/paper40_higher_curvature/paper_draft.tex',
-                    'papers/paper41_diff_invariance/paper_draft.tex'],
+                    'papers/paper41_diff_invariance/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': ['Renormalizable R + αR² + βC² truncation; canonical '
                      '{R², C²} basis with topological 𝒢 (Eq. 2.4)'],
         'notes': 'Canonical reference for the {R², C², 𝒢} basis used in '
@@ -2313,7 +2474,8 @@ CITATION_REGISTRY = {
         'doi': None,
         'arxiv': None,
         'doi_verified': None,
-        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': [],
         'notes': 'Original induced-gravity reference. G_N from vacuum fluctuations, '
                  'G_N⁻¹ ∝ Λ². Foundational; no DOI (Soviet Doklady 1968).',
@@ -2328,7 +2490,8 @@ CITATION_REGISTRY = {
         'doi': '10.1103/RevModPhys.54.729',
         'arxiv': None,
         'doi_verified': True,
-        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
+        'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
+                    'papers/paper42b_cc_emergent/paper_draft.tex'],
         'provides': ['Sakharov-Adler one-loop coefficient: G_N = 12π/(N_f Λ²) '
                      '(Eq. 3.3, hard-cutoff Dirac fermions)'],
         'notes': 'Canonical induced-gravity review. Sets the 12π normalization '

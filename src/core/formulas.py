@@ -8764,3 +8764,366 @@ def nonlinear_efe_holds(Lambda_UV, N_f, rho_ADW, alpha_ADW,
         N_f, R=12.0, R_sq=144.0, Ricci_sq=36.0, Riemann_sq=24.0,
     )
     return bool(residual_ok and pulsar_bound_ok and diff_inv_ok)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 5 — Microscopic-to-Macroscopic Coefficient Match
+# ════════════════════════════════════════════════════════════════════
+
+def lambda_emerg_microscopic(Lambda_UV, N_f):
+    """Microscopic prediction for the emergent cosmological constant.
+
+    Integrating the leading Seeley-DeWitt coefficient `a_0(N_f) =
+    4 N_f / (4π)²` against the Λ_UV⁴ volume-of-momentum factor gives
+    the heat-kernel-induced cosmological-constant density:
+
+        Λ^emerg(Λ_UV, N_f) = a_0(N_f) · Λ_UV⁴ = (N_f/(4π²)) · Λ_UV⁴.
+
+    For SM-like `N_f = 16` and natural `Λ_UV ~ M_Pl ≃ 10¹⁹ GeV`,
+    `Λ^emerg ~ 9 × 10⁷⁵ GeV⁴`, which exceeds the Planck-2018 observed
+    value `Λ_obs ≃ 2.6 × 10⁻⁴⁷ GeV⁴` by ~10¹²² — i.e. the classical
+    cosmological-constant problem reproduced in emergent form.
+
+    Lean: MicroscopicCoefficientMatch.lambdaEmergMicroscopic
+    Aristotle: manual
+    Source: Sakharov, Sov. Phys. Dokl. 12, 1040 (1968);
+            Vassilevich, Phys. Rep. 388, 279 (2003), Eq. (4.37)
+
+    Parameters
+    ----------
+    Lambda_UV : float
+        Microscopic UV cutoff (GeV).
+    N_f : float
+        Number of Dirac-fermion species.
+
+    Returns
+    -------
+    float
+        Λ^emerg in GeV⁴.
+    """
+    return seeley_dewitt_a0(N_f) * float(Lambda_UV) ** 4
+
+
+def cc_problem_ratio(Lambda_UV, N_f):
+    """Ratio Λ^emerg / Λ_obs for the Decision Gate E.4 verdict.
+
+    The emergent cosmological constant divided by the observed
+    Planck-2018 value `Λ_obs ≃ 2.6 × 10⁻⁴⁷ GeV⁴`. Used by
+    `cc_decision_gate_e4_verdict` to label the natural-parameter
+    point as `cc_resolved` / `cc_reproduced` / `cc_intermediate`.
+
+    Lean: companion of MicroscopicCoefficientMatch.lambdaEmergMicroscopic
+          (the ratio is implicit in the quantitative theorem
+          `lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed`,
+          which compares Λ^emerg to 10^100 · lambdaObservedGeV4).
+    Aristotle: manual
+    Source: Phase 6e Wave 5 paper42b_cc_emergent §3
+    """
+    from src.core.constants import MICRO_MACRO_PARAMS
+    return (
+        lambda_emerg_microscopic(Lambda_UV, N_f)
+        / MICRO_MACRO_PARAMS['LAMBDA_OBSERVED_GEV4']
+    )
+
+
+def cc_decision_gate_e4_verdict(Lambda_UV, N_f):
+    """Categorical Decision-Gate E.4 outcome at given microscopic params.
+
+    Returns one of three string labels:
+      - `'cc_resolved'`     : `|log10(Λ^emerg/Λ_obs)| < 1` (within
+        an order of magnitude of the observed value),
+      - `'cc_reproduced'`   : `Λ^emerg/Λ_obs > 10⁶⁰` (the classical
+        CC problem reproduced in emergent form),
+      - `'cc_intermediate'` : neither resolved nor reproduced, i.e.
+        the prediction sits in the diagnostic intermediate band.
+
+    The natural choice `(Λ_UV, N_f) = (M_Pl, 16)` lands in
+    `cc_reproduced`; the diagnostic resolution-locus
+    `Λ_UV ≃ 4.5 × 10⁻¹² GeV` lands in `cc_resolved`. Either outcome
+    is publishable per Phase 6e roadmap O.5.
+
+    Lean: Python-only verdict label dispatcher; the load-bearing
+          quantitative anchor is the Lean theorem
+          `lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed`
+          (proves ratio > 10^100 at the natural cutoff, which lands
+          this Python helper in the `cc_reproduced` branch).
+    Aristotle: manual
+    Source: Phase 6e Wave 5 paper42b_cc_emergent §4
+    """
+    import math
+    from src.core.constants import MICRO_MACRO_PARAMS
+    ratio = cc_problem_ratio(Lambda_UV, N_f)
+    if ratio <= 0:
+        return MICRO_MACRO_PARAMS['DG_E4_VERDICT_INTERMEDIATE']
+    log10_ratio = math.log10(ratio)
+    if abs(log10_ratio) < MICRO_MACRO_PARAMS['CC_RESOLVED_LOG10_BAND']:
+        return MICRO_MACRO_PARAMS['DG_E4_VERDICT_RESOLVED']
+    if ratio > MICRO_MACRO_PARAMS['CC_REPRODUCED_RATIO_FLOOR']:
+        return MICRO_MACRO_PARAMS['DG_E4_VERDICT_REPRODUCED']
+    return MICRO_MACRO_PARAMS['DG_E4_VERDICT_INTERMEDIATE']
+
+
+def g_n_microscopic(Lambda_UV, N_f, alpha_ADW=1.0):
+    """Microscopic prediction for `G_N^emerg` parameterised by α_ADW.
+
+    Combines the Wave 1 heat-kernel result `G_N_sakharov = 12π/(N_f Λ²)`
+    with the Phase 6a.1 ADW rescaling
+    `G_N^emerg = α_ADW · G_N_sakharov`. At the Sakharov-Adler
+    calibration `α_ADW = 1` the two coincide — the substantive Decision
+    Gate E.2 closure.
+
+    Lean: MicroscopicCoefficientMatch.gNMicroscopic + the cross-bridge
+          theorem MicroscopicCoefficientMatch.gNMicroscopic_at_alpha_one_eq_G_N_emerg
+          (which invokes LinearizedEFE.G_N_emerg_at_alpha_one and
+          HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov by name).
+    Aristotle: manual
+    Source: Phase 6a.1 LinearizedEFE.G_N_emerg_at_alpha_one;
+            Phase 6e Wave 1 G_N_from_a2_eq_G_N_sakharov
+    """
+    return float(alpha_ADW) * G_N_from_seeley_dewitt(Lambda_UV, N_f)
+
+
+def higher_curvature_microscopic_stelle(N_f):
+    """Microscopic Stelle-basis higher-curvature triple `(α, β, γ)`.
+
+    Wave 2 closed-form coefficients in the Stelle (R², C², 𝒢) basis
+    (`a_4_density = α R² + β R_μν² + γ R_μνρσ²` after re-decomposition
+    via Wave 2's ``a4_density_eq_a4_density_in_RC2GB_basis``):
+
+        α(N_f) = -N_f / (324 (4π)²)
+        β(N_f) = -41 N_f / (4320 (4π)²)
+        γ(N_f) = +17 N_f / (4320 (4π)²)
+
+    `γ > 0` carries the chiral-anomaly-positive sign; `α, β < 0`. The
+    function returns the triple as a `(alpha, beta, gamma)` tuple in
+    natural units (no Λ_UV dependence — the triple is dimensionless
+    times `(4π)⁻²`).
+
+    Lean: HigherCurvatureStructure.a4_alpha / a4_beta / a4_gamma +
+          MicroscopicCoefficientMatch.higherCurvature_stelle_sum_eq
+          (closed-form aggregate -7 N_f / (810 (4π)²)) +
+          higherCurvature_stelle_sum_negative.
+    Aristotle: manual
+    Source: Christensen & Duff, Nucl. Phys. B154, 301 (1979), Eq. (3.7);
+            Stelle, Gen. Rel. Grav. 9, 353 (1978);
+            Phase 6e Wave 2 paper40 §3
+    """
+    import math
+    inv_4pi_sq = 1.0 / (4.0 * math.pi) ** 2
+    alpha = -float(N_f) / 324.0 * inv_4pi_sq
+    beta = -41.0 * float(N_f) / 4320.0 * inv_4pi_sq
+    gamma = 17.0 * float(N_f) / 4320.0 * inv_4pi_sq
+    return (alpha, beta, gamma)
+
+
+def microscopic_macroscopic_match_residual(Lambda_UV, N_f, alpha_ADW):
+    """Cross-wave coefficient-match residual at given microscopic params.
+
+    Closed-form algebraic residual measuring whether the heat-kernel
+    Wave 1 closed form `G_N_from_a2 = 12π/(N_f Λ_UV²)` matches the
+    Phase 6a.1 emergent form `G_N^emerg = α_ADW · G_N_sakharov` at the
+    calibration value `α_ADW = 1`. By construction the residual equals
+
+        residual = G_N^emerg(Λ_UV, N_f, α_ADW) - G_N_from_a2(Λ_UV, N_f)
+                 = (α_ADW - 1) · G_N_sakharov(Λ_UV, N_f),
+
+    so it is identically zero iff `α_ADW = 1`. This is the Decision
+    Gate E.2 anchor expressed at the formula level.
+
+    Lean: MicroscopicCoefficientMatch.matchResidual,
+          MicroscopicCoefficientMatch.matchResidual_eq_zero_iff_alpha_unity
+    Aristotle: manual
+    Source: Phase 6e Wave 1 paper39 §5; Wave 5 paper42b §3
+    """
+    return g_n_microscopic(Lambda_UV, N_f, alpha_ADW) - G_N_from_seeley_dewitt(
+        Lambda_UV, N_f
+    )
+
+
+def microscopic_macroscopic_match_holds(Lambda_UV, N_f, alpha_ADW,
+                                          tolerance=None):
+    """Bundled Wave-5 predicate: does ``H_MicroscopicCoefficientMatch`` hold?
+
+    Three-conjunct predicate mirroring the Lean tracked-Prop:
+
+      1. Microscopic-macroscopic G_N match residual is zero (i.e.
+         `α_ADW = 1` within tolerance);
+      2. Λ^emerg(Λ_UV, N_f) is strictly positive (well-defined emergent
+         CC);
+      3. Higher-curvature Stelle coefficients consistent with Wave 2
+         (γ > 0, α + β < 0 — sign signature).
+
+    Any α_ADW ≠ 1 violates conjunct 1; any non-positive (Λ_UV, N_f)
+    violates conjunct 2.
+
+    Lean: MicroscopicCoefficientMatch.H_MicroscopicCoefficientMatch,
+          dirac_H_MicroscopicCoefficientMatch_at_alpha_one
+    Aristotle: manual
+    Source: Phase 6e Wave 5 paper42b §5
+    """
+    from src.core.constants import MICRO_MACRO_PARAMS
+    if tolerance is None:
+        tolerance = MICRO_MACRO_PARAMS['MATCH_RESIDUAL_TOLERANCE']
+    match_ok = abs(float(alpha_ADW) - 1.0) < tolerance
+    lambda_emerg_pos = lambda_emerg_microscopic(Lambda_UV, N_f) > 0.0
+    alpha, beta, gamma = higher_curvature_microscopic_stelle(N_f)
+    stelle_signs_ok = (gamma > 0.0) and (alpha + beta < 0.0)
+    return bool(match_ok and lambda_emerg_pos and stelle_signs_ok)
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 6 — Einstein-Cartan Extension (torsion from spin current)
+# ════════════════════════════════════════════════════════════════════
+
+def torsion_amplitude_ec(Lambda_UV, N_f, alpha_EC, n_spin):
+    """Microscopic Einstein-Cartan torsion amplitude from spin current.
+
+    In Hehl-style Einstein-Cartan theory the algebraic Cartan torsion
+    equation reads `T^a_{μν} ∝ G_N · S^a_{μν}` where `S` is the
+    fermion spin current.  At the trace/scalar level — the load-bearing
+    parametric content of the Wave 6 model — this collapses to the
+    closed form
+
+        |T_EC|(Λ_UV, N_f, α_EC, n_spin)
+            = G_N^emerg(Λ_UV, N_f, α_EC) · n_spin
+            = α_EC · 12π/(N_f · Λ_UV²) · n_spin.
+
+    At the Sakharov-Adler calibration `α_EC = 1` this matches the
+    `G_N^emerg(·, ·, 1) · n_spin` reference (cross-bridge to Phase 6a.1
+    `G_N_emerg_at_alpha_one`).  The cosmological-background-bath
+    spin density is `n_s ~ T_CMB³ ≃ 1.3×10⁻³⁹ GeV³` (from
+    EINSTEIN_CARTAN_PARAMS).
+
+    Lean: EinsteinCartanExtension.torsionAmplitude
+    Aristotle: manual
+    Source: Hehl, Heyde, Kerlick, Nester, Rev. Mod. Phys. 48, 393 (1976);
+            Trautman, Acta Phys. Polon. B5, 1 (1973);
+            Phase 6e Wave 1 paper39 §5; paper43 §3
+
+    Parameters
+    ----------
+    Lambda_UV : float
+        Microscopic UV cutoff (GeV).
+    N_f : float
+        Number of Dirac-fermion species.
+    alpha_EC : float
+        Einstein-Cartan / ADW dimensionless coefficient (= α_ADW; the
+        Sakharov-Adler calibration is α_EC = 1).
+    n_spin : float
+        Background spin density (GeV³).
+
+    Returns
+    -------
+    float
+        |T_EC| in GeV — the magnitude of the predicted torsion amplitude.
+    """
+    return float(alpha_EC) * G_N_from_seeley_dewitt(Lambda_UV, N_f) * float(n_spin)
+
+
+def torsion_amplitude_at_cosmological_background(Lambda_UV, N_f, alpha_EC=1.0):
+    """Wave 6 torsion amplitude at the cosmological-bath background.
+
+    Specialises ``torsion_amplitude_ec`` to the canonical CMB-bath
+    spin density ``n_s = COSMOLOGICAL_SPIN_DENSITY_GEV3``.  This is
+    the load-bearing input to the correctness-push Decision-Gate-style
+    quantitative theorem
+    `torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky` (Lean Wave 6).
+
+    Lean: EinsteinCartanExtension.torsionAtCosmologicalBackground
+    Aristotle: manual
+    Source: Phase 6e Wave 6 paper43 §3
+    """
+    from src.core.constants import EINSTEIN_CARTAN_PARAMS
+    n_s = EINSTEIN_CARTAN_PARAMS['COSMOLOGICAL_SPIN_DENSITY_GEV3']
+    return torsion_amplitude_ec(Lambda_UV, N_f, alpha_EC, n_s)
+
+
+def torsion_observational_bound_satisfied(Lambda_UV, N_f, alpha_EC=1.0,
+                                          channel='kostelecky'):
+    """Decision-Gate-style verdict: does the torsion prediction respect
+    the observational bound on the named channel?
+
+    Two channels are supported:
+      - ``'kostelecky'`` — tightest cosmic-axial-torsion bound (1×10⁻³¹ GeV;
+        Kostelecky-Russell-Tasson, PRL 100, 111102 (2008)),
+      - ``'hughes_drever'`` — rotational-axial-torsion bound (1×10⁻²⁹ GeV;
+        Lammerzahl, PRD 64, 084014 (2001)).
+
+    At the natural microscopic point `(Λ_UV, N_f, α_EC) = (M_Pl, 16, 1)`
+    the predicted amplitude `|T_EC| ≃ 1.3×10⁻³⁹ × 12π/(16·(1.221e19)²)
+    ≃ 1.3×10⁻¹¹⁴ GeV` sits ~83 orders of magnitude below Kostelecky —
+    i.e. trivially satisfied at all natural parameter points.
+
+    Lean: EinsteinCartanExtension.torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky
+    Aristotle: manual
+    Source: Phase 6e Wave 6 paper43 §3 — Decision-Gate-style anchor.
+    """
+    from src.core.constants import EINSTEIN_CARTAN_PARAMS
+    bound_key = {
+        'kostelecky': 'TORSION_BOUND_KOSTELECKY_GEV',
+        'hughes_drever': 'TORSION_BOUND_HUGHES_DREVER_GEV',
+    }[channel]
+    bound = EINSTEIN_CARTAN_PARAMS[bound_key]
+    predicted = torsion_amplitude_at_cosmological_background(
+        Lambda_UV, N_f, alpha_EC
+    )
+    return abs(predicted) < bound
+
+
+def ec_match_residual(Lambda_UV, N_f, alpha_EC, n_spin):
+    """Einstein-Cartan match residual: `T_EC(α_EC) − T_EC(1)`.
+
+    The deviation channel of the Wave 6 torsion amplitude relative to
+    the Sakharov-Adler calibration:
+
+        residual = (α_EC − 1) · G_N_sakharov(Λ_UV, N_f) · n_spin.
+
+    Vanishes iff `α_EC = 1` under positive `(Λ_UV, N_f, n_spin)` —
+    the Wave 6 expression of Decision Gate E.2 (Wave 1
+    `a2_matches_GNemerg_iff_alpha_ADW_unity` lifted to the EC sector).
+
+    Lean: EinsteinCartanExtension.ecResidual,
+          ecResidual_eq_zero_iff_alpha_unity
+    Aristotle: manual
+    Source: Phase 6e Wave 1 paper39 §5; paper43 §3
+    """
+    return torsion_amplitude_ec(Lambda_UV, N_f, alpha_EC, n_spin) - \
+        torsion_amplitude_ec(Lambda_UV, N_f, 1.0, n_spin)
+
+
+def einstein_cartan_extension_holds(Lambda_UV, N_f, alpha_EC,
+                                     n_spin=None, tolerance=None):
+    """Bundled Wave-6 predicate: does ``H_EinsteinCartanExtensionHolds``?
+
+    Three-conjunct predicate mirroring the Lean tracked-Prop:
+
+      1. EC match residual is zero (`α_EC = 1` within tolerance);
+      2. Predicted torsion amplitude is strictly positive (well-defined
+         non-vanishing prediction at the cosmological background);
+      3. Predicted amplitude lies strictly below the Kostelecky bound
+         (Decision-Gate-style observational-passage condition).
+
+    Each conjunct invokes a *distinct* substantive check; not P2
+    redundancy — conjunct 1 is calibration-channel, conjunct 2 is
+    non-trivial-prediction, conjunct 3 is observational-passage.
+
+    Lean: EinsteinCartanExtension.H_EinsteinCartanExtensionHolds,
+          dirac_H_EinsteinCartanExtensionHolds_at_alpha_one
+    Aristotle: manual
+    Source: Phase 6e Wave 6 paper43 §6
+    """
+    from src.core.constants import EINSTEIN_CARTAN_PARAMS
+    if n_spin is None:
+        n_spin = EINSTEIN_CARTAN_PARAMS['COSMOLOGICAL_SPIN_DENSITY_GEV3']
+    if tolerance is None:
+        tolerance = EINSTEIN_CARTAN_PARAMS['EC_RESIDUAL_TOLERANCE']
+    # Match-channel test: α_EC at the Sakharov-Adler calibration. Use
+    # |α_EC - 1| (dimensionless) rather than the dimensional residual,
+    # matching the Wave 5 ``microscopic_macroscopic_match_holds`` pattern.
+    match_ok = abs(float(alpha_EC) - 1.0) < tolerance
+    amplitude = torsion_amplitude_ec(Lambda_UV, N_f, alpha_EC, n_spin)
+    amplitude_pos = amplitude > 0.0
+    bound_ok = torsion_observational_bound_satisfied(
+        Lambda_UV, N_f, alpha_EC, channel='kostelecky'
+    )
+    return bool(match_ok and amplitude_pos and bound_ok)

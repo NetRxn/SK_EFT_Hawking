@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1777315549.75982 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777385870.81137 0
-  "./paper_draftNotes.bib" 1777385870.60463 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1777315549.75982 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777390523.21995 0
+  "./paper_draftNotes.bib" 1777390522.96205 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1777385870.60371 5588 979406749520c490a9e81c2b69d7a72f "pdflatex"
+  "paper_draft.aux" 1777390522.96137 5588 979406749520c490a9e81c2b69d7a72f "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1777385869.98219 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777385870.81152 0
-  "../../docs/counts.tex" 1777385869.79451 1941 8cb8a885ee3a9cdb1b919fb388a502b6 ""
+["pdflatex"] 1777390522.2889 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777390523.2201 0
+  "../../docs/counts.tex" 1777390521.95054 2042 84f1e58365cf0291badcf6cb6c430fae ""
   "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper36_center_symmetry/paper_draft.tex" 1777315314.3826 14234 ad852caf24e134ab272c3e6281e5f7ac ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -115,9 +115,9 @@
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/fig_polyakov_loop_deconfinement.png" 1777299035.7703 267937 73798440c6b32cf600c9bfcf5651891f ""
-  "paper_draft.aux" 1777385870.60371 5588 979406749520c490a9e81c2b69d7a72f "pdflatex"
+  "paper_draft.aux" 1777390522.96137 5588 979406749520c490a9e81c2b69d7a72f "pdflatex"
   "paper_draft.bbl" 1777315549.68662 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
-  "paper_draft.out" 1777385870.6045 3479 6c92e40e7b5624ad5f3ef30e1b52523a "pdflatex"
+  "paper_draft.out" 1777390522.96192 3479 6c92e40e7b5624ad5f3ef30e1b52523a "pdflatex"
   "paper_draft.tex" 1777315314.3826 14234 ad852caf24e134ab272c3e6281e5f7ac ""
   (generated)
   "paper_draft.aux"

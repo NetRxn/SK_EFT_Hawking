@@ -943,6 +943,66 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         color_keys=["steel_blue", "amber", "emerald"],
     ),
     FigureSpec(
+        name="fig_lambda_emerg_parameter_scan",
+        function="fig_lambda_emerg_parameter_scan",
+        caption=(
+            "Phase 6e Wave 5 — Λ^emerg parameter scan and Decision Gate "
+            "E.4 verdict. Left panel: log-log Λ^emerg(Λ_UV, N_f) curves "
+            "at fixed N_f ∈ {1, 4, 16, 100}; the Planck-2018 observed "
+            "CC value Λ_obs ≃ 2.6×10⁻⁴⁷ GeV⁴ is drawn as a horizontal "
+            "anchor; the natural cutoff M_Pl ≃ 1.2×10¹⁹ GeV is drawn as "
+            "a vertical anchor. The diagnostic resolution locus "
+            "Λ_UV ≃ 4.5×10⁻¹² GeV (where the SM N_f curve crosses Λ_obs) "
+            "is marked. Right panel: 2D verdict map of "
+            "log10(Λ^emerg/Λ_obs) over the (Λ_UV, N_f) plane with "
+            "verdict-band contour boundaries (cc_resolved at "
+            "|log10 ratio|=1, cc_reproduced at log10 ratio=60). Decision "
+            "Gate E.4 verdict: the entire natural high-energy theory "
+            "band (Λ_UV ≥ EW_SCALE, N_f ≥ 1) sits in the cc_reproduced "
+            "region — the classical CC problem is reproduced in the "
+            "emergent-gravity formulation. Lean: "
+            "lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed, "
+            "lambdaEmergMicroscopic_eq_zero_iff, "
+            "dirac_H_MicroscopicCoefficientMatch_at_alpha_one. "
+            "Source: Sakharov 1968; Vassilevich 2003 Eq. (4.37); "
+            "Weinberg RMP 61 (1989) — CC problem; Planck 2018."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "Λ_UV", "yaxis": "Λ^emerg"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "emerald", "burgundy"],
+    ),
+    FigureSpec(
+        name="fig_torsion_obs_bound",
+        function="fig_torsion_obs_bound",
+        caption=(
+            "Phase 6e Wave 6 — Einstein-Cartan torsion at natural "
+            "microscopic params is below all published bounds. Left panel: "
+            "log-log |T_EC|(Λ_UV, N_f) curves at α_EC = 1 (Sakharov-Adler "
+            "calibration) for N_f ∈ {1, 4, 16, 100}; the Kostelecky-Russell-"
+            "Tasson bound 1×10⁻³¹ GeV (PRL 100, 111102 (2008)) and the "
+            "Hughes-Drever bound 1×10⁻²⁹ GeV (Lammerzahl, PRD 64, 084014 "
+            "(2001)) are drawn as horizontal anchors; the natural cutoff "
+            "M_Pl ≃ 1.2×10¹⁹ GeV is drawn as a vertical anchor where the "
+            "natural-parameter prediction lands. Right panel: 2D headroom "
+            "heatmap of log10(Kostelecky / |T_EC|) over the (Λ_UV, N_f) "
+            "plane at α_EC = 1; the natural point (M_Pl, N_f=16) is marked "
+            "with a star — the prediction sits ~46 orders of magnitude "
+            "below Kostelecky. Wave 6 correctness-push: torsion-bound "
+            "matched at all natural microscopic parameter points. Lean: "
+            "torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky, "
+            "torsionBoundKostelecky_lt_hughesDrever, "
+            "dirac_H_EinsteinCartanExtensionHolds_at_alpha_one. "
+            "Source: Hehl et al RMP 48 (1976) — EC formulation; Kostelecky "
+            "PRL 100 (2008) — cosmic torsion bound; Lammerzahl PRD 64 "
+            "(2001) — Hughes-Drever update; Trautman APP B5 (1973)."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "Λ_UV", "yaxis": "|T_EC|"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "emerald", "burgundy"],
+    ),
+    FigureSpec(
         name="fig_ewbg_allowed_region",
         function="fig_ewbg_allowed_region",
         caption=(
@@ -1416,6 +1476,10 @@ def generate_figures() -> dict[str, Path]:
         fig_diff_invariance_order_check,
         # Phase 6e Wave 4: T_emerg vs matter + multi-channel PPN observables
         fig_T_emerg_vs_matter,
+        # Phase 6e Wave 5: Λ^emerg parameter scan + Decision Gate E.4 verdict
+        fig_lambda_emerg_parameter_scan,
+        # Phase 6e Wave 6: Einstein-Cartan torsion vs Kostelecky/Hughes-Drever
+        fig_torsion_obs_bound,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1563,6 +1627,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_higher_curvature_obs_bounds": fig_higher_curvature_obs_bounds,
         "fig_diff_invariance_order_check": fig_diff_invariance_order_check,
         "fig_T_emerg_vs_matter": fig_T_emerg_vs_matter,
+        "fig_lambda_emerg_parameter_scan": fig_lambda_emerg_parameter_scan,
+        "fig_torsion_obs_bound": fig_torsion_obs_bound,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
@@ -1714,6 +1780,10 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_diff_invariance_order_check,
         # Phase 6e Wave 4: T_emerg vs matter + multi-channel PPN observables
         fig_T_emerg_vs_matter,
+        # Phase 6e Wave 5: Λ^emerg parameter scan + Decision Gate E.4 verdict
+        fig_lambda_emerg_parameter_scan,
+        # Phase 6e Wave 6: Einstein-Cartan torsion vs Kostelecky/Hughes-Drever
+        fig_torsion_obs_bound,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1859,6 +1929,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_higher_curvature_obs_bounds": fig_higher_curvature_obs_bounds,
         "fig_diff_invariance_order_check": fig_diff_invariance_order_check,
         "fig_T_emerg_vs_matter": fig_T_emerg_vs_matter,
+        "fig_lambda_emerg_parameter_scan": fig_lambda_emerg_parameter_scan,
+        "fig_torsion_obs_bound": fig_torsion_obs_bound,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
