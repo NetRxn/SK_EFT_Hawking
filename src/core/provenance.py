@@ -2925,13 +2925,13 @@ PARAMETER_PROVENANCE = {
                   'Used as the SM-Dirac benchmark in heat-kernel scans. '
                   '(Convention: Vassilevich Phys. Rep. 388, 279 (2003) Eq. (4.37) '
                   'uses Dirac-species count, not Weyl-component count.)',
-        'doi': '10.1016/0550-3213(79)90516-4',
+        'doi': '10.1016/0550-3213(79)90516-9',
         'llm_verified_date': '2026-04-28',
         'llm_verified_notes': 'Standard heat-kernel benchmark; consistent with '
                               'Christensen-Duff (1979) Dirac convention.',
         'human_verified_date': '2026-04-28',
-        'human_verified_notes': 'Phase 6i Wave 2 closure: auto-flipped after categorization sweep. DOI populated and LLM-verified against the primary source. Bibkey not yet present in CITATION_REGISTRY; queued for Phase 6i Wave 4 (Lean-substance / paper-cited-bibkey audit) sweep.',
-        'notes': 'Used in src.core.constants.MICRO_MACRO_PARAMS["N_F_SM_DIRAC"] + paper42b §3.',
+        'human_verified_notes': 'Phase 6i Wave 4 fix: DOI typo corrected from .90516-4 → .90516-9, matching CITATION_REGISTRY[ChristensenDuff1979] (already present). Wave 2 had populated the wrong DOI suffix; Wave 4 audit_paper_lean_refs.py / CHECK 20 surfaced the typo.',
+        'notes': 'Used in src.core.constants.MICRO_MACRO_PARAMS["N_F_SM_DIRAC"] + paper42b §3. Bibkey ChristensenDuff1979 in CITATION_REGISTRY since Phase 6e Wave 1.',
     },
     'MICRO_MACRO.LAMBDA_UV_RESOLUTION_LOCUS_DIAGNOSTIC_GEV': {
         'value': 2.83e-12,

@@ -1,0 +1,257 @@
+{
+  "timestamp": "20260428T223118Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "readiness_submission_gate": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "1 green / 17 yellow / 21 red across 39 papers",
+          "warning": false
+        },
+        {
+          "name": "paper40_higher_curvature",
+          "passed": true,
+          "message": "all 11 gates passed",
+          "warning": false
+        },
+        {
+          "name": "paper15_methodology",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, CrossPaperConsistency, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper18_doublon_gate",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper20_scalar_rung",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper21_majorana_rung",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper22_ew_phase_transition",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper27_bh_thermodynamics_four_laws",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper29_bbn_unified",
+          "passed": true,
+          "message": "all P1 passed; advisory on: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper32_strong_cp_de",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper33_ewbg_chirality_wall",
+          "passed": true,
+          "message": "all P1 passed; advisory on: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper34_equivalence_principle",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper35_qec_holography",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper36_center_symmetry",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper37_chiral_ssb",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper38_cfl",
+          "passed": true,
+          "message": "all P1 passed; advisory on: FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper39_heat_kernel_expansion",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation",
+          "warning": true
+        },
+        {
+          "name": "paper42b_cc_emergent",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper43_einstein_cartan",
+          "passed": true,
+          "message": "all P1 passed; advisory on: NumericalFreshness, FixPropagation, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper10_modular_generation",
+          "passed": true,
+          "message": "1 blocked: NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper11_quantum_group",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper12_polariton",
+          "passed": true,
+          "message": "3 blocked: ParameterProvenance, ComputationCorrectness, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper14_braided_mtc",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper16_graphene_sk_eft",
+          "passed": true,
+          "message": "1 blocked: CitationIntegrity",
+          "warning": true
+        },
+        {
+          "name": "paper16_wrt_tqft",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper17_dark_sector",
+          "passed": true,
+          "message": "1 blocked: ProductionRunHealth",
+          "warning": true
+        },
+        {
+          "name": "paper1_first_order",
+          "passed": true,
+          "message": "2 blocked: ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper23_linearized_efe",
+          "passed": true,
+          "message": "1 blocked: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper25_gravitational_waves",
+          "passed": true,
+          "message": "1 blocked: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper26_bh_entropy",
+          "passed": true,
+          "message": "1 blocked: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper2_second_order",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper3_gauge_erasure",
+          "passed": true,
+          "message": "1 blocked: ParameterProvenance",
+          "warning": true
+        },
+        {
+          "name": "paper41_diff_invariance",
+          "passed": true,
+          "message": "1 blocked: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper42_nonlinear_efe",
+          "passed": true,
+          "message": "1 blocked: ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper4_wkb_connection",
+          "passed": true,
+          "message": "3 blocked: CitationIntegrity, ParameterProvenance, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper5_adw_gap",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, ComputationCorrectness",
+          "warning": true
+        },
+        {
+          "name": "paper6_vestigial",
+          "passed": true,
+          "message": "3 blocked: ComputationCorrectness, NarrativeGrounding, ProductionRunHealth",
+          "warning": true
+        },
+        {
+          "name": "paper7_chirality_formal",
+          "passed": true,
+          "message": "2 blocked: ComputationCorrectness, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper8_chirality_master",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        },
+        {
+          "name": "paper9_sm_anomaly_drinfeld",
+          "passed": true,
+          "message": "2 blocked: CitationIntegrity, NarrativeGrounding",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

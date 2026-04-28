@@ -16,7 +16,7 @@ Cross-bridges:
 References:
   Nambu-Jona-Lasinio, PR 122, 345 (1961): 4-fermion model + chiral SSB
   Gell-Mann, Oakes, Renner, PR 175, 2195 (1968): GMOR relation
-  FLAG Working Group, EPJC 81, 869 (2021): ⟨q̄q⟩ lattice average
+  FLAG Working Group (FLAG Review 2021), EPJC 82, 869 (2022): ⟨q̄q⟩ lattice average
   PDG 2022: m_π, f_π, light-quark mass averages
   Hofman-Iqbal: higher-form symmetry hydrodynamics
 
@@ -51,7 +51,7 @@ def IsQuarkCondensateCandidate (qc : QuarkCondensate) (sigma_obs tol : ℝ) : Pr
   |qc.sigma - sigma_obs| < tol * |sigma_obs|
 
 /-- Concrete FLAG-2021 lattice-anchored witness: ⟨q̄q⟩ ≈ −(283 MeV)³
-    ≈ −0.0227 GeV³ (FLAG Working Group, EPJC 81, 869, 2021).
+    ≈ −0.0227 GeV³ (FLAG Working Group, FLAG Review 2021, EPJC 82, 869, 2022).
 
     Substantive: ships an existence-witness for QuarkCondensate. The
     `sigma_neg` invariant is verified by `norm_num` on the literal value. -/

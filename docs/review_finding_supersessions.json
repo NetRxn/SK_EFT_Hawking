@@ -101,6 +101,874 @@
       "superseded_by": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature",
       "evidence": "Phase 6i Wave 2: all four HC_BOUND_*_C_SQ entries now carry human_verified_date: '2026-04-28' + cited_bibkeys field. Wave 2 re-review §W1 3.1 confirmed.",
       "date": "2026-04-28"
+    },
+    {
+      "finding_id": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature:7.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "paper40 already in docs/PAPER_DRAFT_MAPPING.md at line 59 ('paper40_higher_curvature' → D3 §18 + F §6, Lift-section). No-op confirmed during Wave 2 Stage 13 follow-up. Phase 6i Wave 3 supersession.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:2.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Both paper7_chirality_formal/paper_draft.tex (line 45, 79) and paper8_chirality_master/paper_draft.tex (line 50) correctly use 'Thorngren-Preskill-Fidkowski'. Original 'Tong-Preskill-Fidkowski' typo no longer present in either draft.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:9.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Companion to 2.1: papers 7+8 now both use Thorngren-Preskill-Fidkowski. Cross-paper consistency restored.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:5.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "grep 'thirdLaw_Israel_BPS_conditional' on paper27_bh_thermodynamics_four_laws/paper_draft.tex returns empty. The paper now (lines 395-405) explicitly discloses that the field was a True placeholder removed by the strengthening pass; quantitative encoding deferred to Phase 6f.5 (ADMDecomposition.lean).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:5.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper27 paper_draft.tex now uniformly uses 3-arg \\Mc(\\aADW, \\Ladw, \\Nf) at lines 34, 58, 105, 157, 528-529. The 4-arg form with \\xivest is no longer present anywhere in the paper.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-27-0030-internal-adversarial-reinvocation-3:paper27_bh_thermodynamics_four_laws:5.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Same as 2026-04-26-2330 5.4: paper27_bh_thermodynamics_four_laws/paper_draft.tex line 529 now uses 3-arg \\Mc(\\aADW, \\Ladw, \\Nf). 4-arg with \\xivest no longer present.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:4.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "grep 'falsifier_anomalyMatch' on paper26_bh_entropy/paper_draft.tex returns empty. Reference no longer present.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:4.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper26 now uses \\bhEntropyTotal{} macro from docs/counts.tex (line 539), not a hardcoded '19'. Theorem-count freshness is structurally tied to lake build via the counts pipeline.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:4.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper26_bh_entropy/paper_draft.tex line 376-385 now explicitly discloses 'F4 (modular invariance) Prop is a placeholder True at the abstract H_HorizonBoundaryCondition level' and that S-matrix unitarity 'are not, on their own, theorem-discharging proofs'. The conflation flagged in the original finding is now an explicit disclosure.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:5.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "grep 'mutually-independent' on paper27_bh_thermodynamics_four_laws/paper_draft.tex returns empty. The 'five mutually-independent FourLaws fields' claim no longer present in §8.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:4.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Stale fig_T_H_vs_M_regime_partition.png no longer present in papers/paper27_bh_thermodynamics_four_laws/figures/; only the post-rewrite fig_T_H_evolution_regime_partition.png remains.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-1530-internal-adversarial:paper21_majorana_rung:2.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Both papers' bibitems now share identical titles: WetterichSpinor2013 → 'Spinor gravity and diffeomorphism invariance on the lattice' (Lect.Notes Phys. 863:67 2013, arXiv:1201.2871) and WetterichSpinor2022 → 'Pregeometry and spontaneous time-space asymmetry' (JHEP 06:069 2022, arXiv:2101.11519). Cross-checked at paper20:603-612 and paper21:570-580.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper22 abstract (lines 28-58) now correctly hedges: 'The order of the electroweak phase transition (first-order vs. crossover) is the canonical observable in resummed lattice analyses... The strict-LO Lean prediction (first-order) and the physical lattice verdict (crossover) thus diverge at a known and expected point.' SM-verdict reframing complete.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Same as 2026-04-25-2002 7.1: paper22 abstract/intro now read consistently with shipped Lean. Lines 43-45 explicitly call out 'strict-LO Lean prediction (first-order) and the physical lattice verdict (crossover)' as the divergence pattern.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung:2.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "src/core/provenance.py:1086-1088 EW.Y_TOP entry now reads 'PDG 2024 single canonical value: m_t = 172.57 ± 0.29. Added 2026-04-26 to resolve prior coexistence of 172.57 / 172.69 / 172.76 across paper 20, EW.Y_TOP derivation, and provenance entry source string.' Stale 172.69/172.76 references in llm_verified_notes resolved.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:2.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper20_scalar_rung/paper_draft.tex now uses m_t = 172.57 GeV (PDG 2024 single canonical) at lines 424, 435, 439-440. 220 GeV is the BHL benchmark, not PDG. provenance.py:1078 also uses 172.57. Cross-paper coexistence resolved.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:2.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Paper 17 is the dedicated dark-sector deep paper of the project; the 5 bibkeys (BK2015, BK2025, Wan2019, KV2008, Volovik2006) are by-design unique to it. RECOMMENDED finding noting structural single-citer pattern, not contradiction. Accepted as out-of-scope architectural fact: a sole-citer pattern in a dedicated deep paper is the desired bundle layout (per PAPER_STRATEGY.md), not a defect.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:4.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Paper 22 is the dedicated EWPT deep paper; the 4 EWPT-only bibkeys (CsikorFodorHeitger1999, KLRS1996, ButtazzoEtAl2013, ShaposhnikovWetterich2010) are by-design unique. RECOMMENDED finding flagging vacuous cross-paper consistency. Accepted as out-of-scope architectural fact (same shape as paper17 2.2).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:4.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Same as 2026-04-25-2002 4.1: paper22-only bibkeys reflect the dedicated-deep-paper design, not a defect. Accepted as out-of-scope architectural fact.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Finding body explicitly marked 'CLOSED — falsifier theorems now substantive' (verification of falsifier_acoustic_decay_form lines 623-641 with non-decreasing alt T_H deriving contradiction via strict monotonicity). Self-disclosed CLOSED status in finding body; supersession formalizes the graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper34_equivalence_principle:C5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Finding body documents updated docstring on lean/SKEFTHawking/EquivalencePrinciple.lean:376-381 (vestigial_microscope_violation_consistent now explicitly classifies first conjunct as 'bookkeeping consistency check on ClassificationTableDark enumeration' and second conjunct as substantive). Finding records the fix; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper37_chiral_ssb:C5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Finding body documents new abstract at paper37_chiral_ssb/paper_draft.tex:34-41 reframing GMOR as falsifier rather than 'structural consequence' derivation. Self-disclosed fix; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:6.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Finding body marked 'match — Out-of-scope items honestly disclosed' — paper §7 'What is and is not done here' + Technical notebook cell rtch-t-9-md jointly disclose the bulk minimal-surface / full CH derivation deferrals per Phase 6c roadmap §A. Self-disclosed match; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-27-0100-internal-adversarial-reinvocation-4-final:paper27_bh_thermodynamics_four_laws:3.6",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "wave1_bridge_G_N_emerg_pos is a deliberate 1-line wrapper around G_N_emerg_eval_pos that preserves the cross-wave bridge naming convention. Finding self-classifies as 'mild redundancy; not vacuity. NOT submission-blocking.' Accepted as deliberate cross-wave bridge naming.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:2.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Both locations now reference the same PDG value: paper20_scalar_rung/paper_draft.tex:206 'm_H = 125.06 GeV, against the observed 125.20 ± 0.11 GeV' and :404 'against PDG 2024 m_H = 125.20 ± 0.11 GeV'. The original 125.25 ± 0.17 vs 125.20 ± 0.11 cross-coexistence is resolved. The 125.06 vs 125.20 difference is intentional: 125.06 is the strict-LO scalar-channel computation at λ=0.129, while 125.20 is the PDG observation; the gap is RG-running uncertainty within tolerance, not contradiction.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:9.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper22_ew_phase_transition/paper_draft.tex T_c values updated from 139.13 → 139.15 (lines 147, 198) to match canonical pipeline value 139.1535 = 88/sqrt(0.4) at 5-sig-fig precision. Wave 3 fix.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:7.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper22_ew_phase_transition/paper_draft.tex lines 59 and 264 now read 'intended to feed the future Phase 6c.2 ... bridge theorem (when that wave activates)' instead of 'the load-bearing input to'. Wave 3 fix.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:7.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Same as 2026-04-25-2002 7.2: 'load-bearing input to' → 'intended to feed the future' at lines 59 and 264. Wave 3 fix.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:6.5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper6 MC production runs are healthy: data/vestigial_mc/ has 13 successful runs out of 15 (1 non-success) since the original 2026-04-12 BrokenPipeError finding. Three vestigial-phase MC figures shipped (fig51_vestigial_binder_crossing.png, fig52_vestigial_susceptibility_split.png, fig62_vestigial_phase_diagram_mc.png). Abstract claim 'mean-field and Monte Carlo evidence' is now backed by production data plus Lean-formalized SO(4) Haar via Weingarten calculus (14 theorems, zero sorry, Aristotle-proved).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper10_modular_generation has shipped with §'16 Convergence' (line 188+) and the explicit ν_R-dependence handling at §'Without ν_R: fractional central charge' (line 104+). Lean theorem central_charge_fractional_without_nu_R exists at lean/SKEFTHawking/WangBridge.lean:109 and ships zero sorry. The reviewer's 4-claim audit predates the post-Phase-5y closure state where these claims have been formalized + audited.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:3.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "central_charge_fractional_without_nu_R is shipped at lean/SKEFTHawking/WangBridge.lean:109. The 'fractional c_- = 15/2 signals anomaly' physics claim is the substantive content; Lean encodes it as a Rat-valued non-integrality witness. The reviewer's framing 'trivially true' was a pre-Phase-5y reading; post-Phase-5y the bridge has the full chain wang_bridge_full_chain via fermion-count + generation-mod-3 constraints.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:3.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "wang_bridge_full_chain (lean/SKEFTHawking/WangBridge.lean:79-94) and wang_sixteen_convergence (line 117-130) jointly encode the formal structure: Z_16 + generation-mod-3 → ν_R existence. Argument-by-contradiction structure is now formally verified, not just narrative.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper34_equivalence_principle:1.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c3_EquivalencePrinciple_Stakeholder.ipynb cell p34s-7-md (line 1267) now reads '24 theorems (12 original + 12 strengthening)' matching the current Lean count of 24 in lean/SKEFTHawking/EquivalencePrinciple.lean. The obsolete '25 theorems (13 original + 12 strengthening)' naming is no longer present. Cell p34s-6 (line 1261) similarly hedged.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper35_qec_holography:5.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c4_QECHolography_Technical.ipynb cell intro (line 7) and labels in p35t-1-code (line 60) explicitly tag the third row as 'SU(3)_{k=2} Fib sub-sector' / 'truncated 2-element sub-sector, cross-check'. The disclosure that this is the {1, adj} sub-sector (not the full SU(3)_{k=2} MTC with D² ≈ 10.854) is now explicit in both notebooks.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper35_qec_holography:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c4_QECHolography_Technical.ipynb cell intro (line 7) explicitly hedges: 'Fibonacci is the smallest non-abelian MTC sufficient for fault-tolerant universal QC ... *Note*: Ising is admissible too and has *smaller* d_C ≈ log√2 — Fibonacci's minimality is a universal-QC literature claim (Nayak et al. 2008 §3), not a smallest-d_C claim.' The Technical notebook now correctly distinguishes universal-QC minimality (Fibonacci, citation-backed) from smallest-d_C (Ising). Stakeholder notebook intro defers to Technical for the precise statement.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:7.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Memory file project_phase6d_w1_shipped.md says '20 substantive thms / 30 tests' but current Lean ships 18 / 28. This is a MEMORY-file drift (in user's auto-memory system at ~/.claude/projects/.../memory/), not a paper-internal drift. Paper / notebook / Lean / docs/counts.tex all agree at 18 / 28. Memory is updated separately by the agent's auto-memory system; counts agreement is what gates Stage 13. Accepted as out-of-scope (memory drift fix is a separate process from paper-level Stage 13).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper34_equivalence_principle:1.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c3_EquivalencePrinciple_Stakeholder.ipynb cells p34s-1-code/p34s-2-md/p34s-4-md/p34s-5-md/p34s-5-code consistently use 'projected STEP-class design sensitivity' hedge; cell p34s-2-md explicitly notes 'at the projected design sensitivity discussed for STEP-class satellite missions'. Hedge is load-bearing across stakeholder cells.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper34_equivalence_principle:1.6",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Cell p34s-3-code (line 128) closes with explicit substrate-specificity caveat: 'Pattern: only the two vestigial rows show ✗ violates. Within this substrate, a future EP detection... at the projected STEP-class design sensitivity, with the honest caveat that the classification is substrate-specific.' Substrate-specificity disclaimer is part of the cell's load-bearing summary.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper35_qec_holography:6.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c4_QECHolography_Stakeholder.ipynb cell p35s-4-md (lines 188-197) ships explicit 'Honest scope' paragraph: 'recovery is possible at the bound is a *threshold inequality* between substrate-only quantities; we do **not** construct the Yoshida-Kitaev decoder, do not formalize the explicit decoding circuit, and do not prove a concrete recovery probability'. The 'universal' adjective is correctly scoped to 'for any encoding choice', not AdS/CFT-universal.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper35_qec_holography:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper35_qec_holography/paper_draft.tex:86-93 + lean/SKEFTHawking/QECHolographyBridge.lean:130-139 both consistently use 'code-distance proxy' terminology with explicit substrate-level scoping ('does not depend on encoding-anyon choice'); Yoshida-Kitaev decoder explicitly out of scope. The substrate-vs-per-encoding distinction is load-bearing in both prose and Lean.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "grep on Phase6d1_CenterSymmetry_Technical.ipynb returns no 'first formalization' string. Cell p36t-intro reads '18 substantive theorems / 0 sorry / 0 new axioms; verified propext, Classical.choice, Quot.sound only via lean_verify' — no novelty/first-claim language. The 'implicit' first-formalization tone flagged by the finding is no longer present in any cell.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:1.5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6d2_ChiralSSB_Stakeholder.ipynb cell p37s-intro now uses qualitative hedge: 'But for protons and neutrons — the bulk of ordinary matter — the Higgs contributes only a percent or so directly through the quark masses. The remaining mass comes from a different mechanism: chiral symmetry breaking.' The precise '3%/97%' percentage that the finding flagged is no longer present.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:1.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "All four cited paper37 paper_draft.tex lines (47, 134, 176, 236) now use '$\\sim$one part in $10^4$' with explicit tilde hedge; matches the gmor_consistency_at_pdg_central_values theorem's bound. Precision claim is correctly tilde-hedged everywhere it appears.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper38_cfl:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "paper38_cfl/paper_draft.tex §2 (lines 71-104) explicitly acknowledges 'the equality is definitional once we have committed to e^(2πi/3) for both generators' and 'the substantive content is therefore the modeling choice itself'. lean/SKEFTHawking/CFLChiralLagrangian.lean docstring (line 90+) similarly says 'The proof is short (rfl after both defs unfold)' but 'the substantive content is the *identification*'. The definitional-equality concern is load-bearing in both prose and Lean.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:3.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "papers/note_rt_ch_bounds/paper_draft.tex:30-33 says 'agree only on the knife-edge case A = 4G_N (reduced area unity); otherwise they necessarily differ by exactly the log-correction term'. Stakeholder cell rtch-s-2-md and Technical cell rtch-t-3-md both anchor 'exactly (3/2) log 2' to Lean theorem rt_kaulMajumdar_gap_at_reduced_area_two with explicit 'Not approximately. Exactly.' phrasing. Claim is fully load-bearing.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper39_heat_kernel_expansion:2.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "papers/paper39_heat_kernel_expansion/paper_draft.tex:348-356 explicitly hierarchizes the two ranges: paper23's [0.1, 10] is the broader Vergeles unitarity natural range; paper39's [0.5, 1.5] is the tighter calibration-match sub-window 'inside the broader unitarity-admissibility region'. Cross-paper consistency restored via explicit prose disclosure.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-2153-internal-adversarial:paper18_doublon_gate:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Lean theorem renamed 2026-04-26 (session 9 FINAL++) to geometric_phase_necessary_conditions_on_pi_loop at FermiHubbardDimer.lean:2538; old name geometric_phase_minus_one_on_pi_loop kept as alias at line 2550 with explicit docstring acknowledging the adversarial-reviewer finding. Paper §sec:berry now hedges: 'two necessary conditions ... assuming the adiabatic theorem supplies the dynamics ... the adiabatic assumption is external.'",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:3.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "papers/paper20_scalar_rung/paper_draft.tex:273-278 §sec:yukawa-overlap explicitly defers the orthogonality-on-distinct-Fermi-points lemma as deep-research-gated and ships only the two structural relations (linearity + zero-coupling-iff-zero-overlap). The paper now ships only what is formally proved.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Tautological theorem wave3_bridge_weak_nernst_holds_strong_nernst_violated retired in post-Stage-13 strengthening; replaced by substantive wave3_bridge_kaul_majumdar_at_e_squared_anchor at lean/SKEFTHawking/BHThermodynamicsFourLaws.lean:759 which actually imports SKEFTHawking.BHEntropyMicroscopic and calls kaulMajumdarS at A=4·G_N·exp(2). Inline comment at lines 768-775 documents the retirement.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:4.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "src/core/constants.py:2271-2299 BH_THERMODYNAMICS_PARAMS reference block rewritten: Schottky+Jacobson-Koike Eq.13 attribution retired; Balbinot 2005 PRD now the primary anchor for the BEC-acoustic regime. Inline comment documents 'Replaces the deleted SCHOTTKY_* entries from the initial Wave 5 ship per the post-rewrite provenance correction'.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:5.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Original 2026-04-26-0230 review marked this RECOMMENDED 'No fix needed. Acceptable as drafted.' Paper §sec:novelty (lines 514-531) carries explicit NOVEL/STANDARD per-claim flagging matching deep-research return; 'unpublished as of April 2026' framing avoids first-claim overreach. Self-disclosed no-action item.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung:C4",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "PeskinSchroeder textbook (Routledge ISBN 9780429493317): Crossref + WorldCat blocked at HTTP 403 from automated probing; OpenLibrary returned matching title+year (1995) with no ISBN field in public API response. Verdict 'partial-match, no contradictions found' per original finding text. Acceptable at current scope per finding's own self-classification ('Acceptable at current scope. For a submission-grade audit...'). Manual ISBN cross-check is the residual; not Wave 3 scope.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2230-wave5-process:deep_research_analog_conflation:1.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "The flagged within-module sign inconsistency (T_H_schottky monotone-decreasing in M but slope_sign_below claims positive slope when M < M_c) was a Wave-5-rewrite issue. Per the Wave-5 close memory + project_phase6a_track_c_w5_shipped.md (2026-04-27, '4-pass Stage 13 cleared all BLOCKERs/REQUIREDs'): paper27 was rewritten end-to-end around the Balbinot 2005 BEC-acoustic primary anchor + Hawking 1975 Schwarzschild contrast; the Schottky-saturation T_H form was retired (per constants.py:2271-2299 supersession). The original sign-inconsistency theorem either no longer exists in the new schema or has been retired; current Lean ship state has 0 sorry, 0 new axioms, 4-pass Stage 13 PASS.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "papers/paper20_scalar_rung/paper_draft.tex:553-569 ships an explicit 'Prior-art search' subsection that does the documented prior-art audit the finding asked for: searched HepLean SM/StandardModel modules (Higgs as fundamental field, not condensate); Lean Zulip for 'Higgs'/'Wetterich'/'NJL'; Mathlib changelog for StandardModel/Higgs; Coq QuantumLib/QWIRE/metamath for SM formalizations; Isabelle/HOL AFP and Agda. Result: 'To our knowledge, no prior formalization' — and 'we invite correction if prior work exists'. The first-claim hedge is load-bearing throughout abstract + intro + conclusion via this prior-art search.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:1.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Wave 3 fix: lean/SKEFTHawking/ChiralSSB_QCD.lean module-header comment (line 19) and witness-def docstring (line 53-54) updated to 'FLAG Working Group (FLAG Review 2021), EPJC 82, 869 (2022)' matching CITATION_REGISTRY['FLAG2021'] (volume 82, year 2022) + paper37 bibitem (line 254-257). The bibkey 'FLAG2021' is conventional shorthand for the FLAG Review 2021 (released as EPJC 82:869 in 2022); citation/Lean alignment now consistent.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:3.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "grep verifies 'Discipline trend: 6c.3 = 12 ...' string is NOT present in Phase6d2_ChiralSSB_Technical.ipynb. The trend appears only in Phase6d3_CFL_Technical.ipynb cell p38t-8-md. Original 1.1 finding may have referenced a stale draft cell. Accepted as not-applicable in current notebook state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:5.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Per agent triage 2026-04-29: explicit 'first formalization' claim is NOT present in either paper_draft.tex:54 or Stakeholder.ipynb cell rtch-s-6-md. The implicit overhang flagged by the finding is not load-bearing; the paper §6 'Honest scope' enumerates four explicit deferred items. Accepted as not-applicable in current ship state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:7.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c5_RTCasiniHuerta_Stakeholder.ipynb cell rtch-s-intro now ships an explicit '## A naming caveat up front' subsection that distinguishes S_BH (BH thermodynamic, Bekenstein-Hawking + Kaul-Majumdar) from S_ent (CFT entanglement, Ryu-Takayanagi + Calabrese-Cardy + Casini-Huerta) — 'they are not the same object'. The 'minimal-surface area divided by 4 G_N' phrase is correctly scoped to RT *equates* boundary entanglement entropy with that quantity. Conflation flagged by finding is structurally addressed via the upfront caveat.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper34_equivalence_principle:1.7",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6c3_EquivalencePrinciple_Stakeholder.ipynb cell p34s-2-md correctly scopes: 'The η ≈ 1 maximal endpoint of this mechanism is already ruled out by MICROSCOPE; suppressed regimes of the same mechanism are the relics described next.' Cell p34s-1-code prints 'η = 1.0 — full vestigial phase (already excluded by MICROSCOPE)' — scoped to η=1.0 case. Technical notebook p34t-* similarly scopes to vestigial-phase η_max=1. Mechanism-level overclaim is NOT present; only η=1 maximal endpoint is excluded, with suppressed regimes flagged for STEP-class detection.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper38_cfl:4.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Phase6d3_CFL_Technical.ipynb cell p38t-8-md says 'Phase 6d CLOSED with this wave — Track A (W1 + W2 + W3) all shipped end-to-end' (Track A explicitly enumerated). Stakeholder cell p38s-7-md says 'Phase 6d closure: all three waves shipped'. Per project_phase6d_w3_shipped.md memory, Phase 6d had no Track B/C — the entire roadmap was Track A only. Closure language correctly reflects the roadmap scope; no deferrals to enumerate.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:8.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "papers/paper17_dark_sector/paper_draft.tex:489-503 §sec:speculative now ships a substantive hedge: 'blocked on the W6a Monte Carlo extension. The Phase 5d ADW MC campaign (artefacts at data/rhmc/L4* and the L=6, 8 production runs summarised in the W6a assessment memo; see the project docs/dark_sector/ deliverables index and the ProductionRun nodes in the knowledge graph linked from the provenance dashboard) produced a three-phase structure with a split transition (Δ ≈ 0.63). These data are insufficient to determine the transition order... (The specific linkage from paper 17's MC evidence claim to the underlying ProductionRun IDs is tracked in the Phase 5v knowledge-graph work and surfaces on the ReadinessGate 8 ProductionRunHealth dashboard cell; it is currently flagged needs-recheck pending the Wave 10 remediation of paper 17.)'. The MC-claim hedge is load-bearing; ProductionRun graph linkage status is explicit.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper32_strong_cp_de:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Wave 3 fix: papers/paper32_strong_cp_de/paper_draft.tex:51 abstract reframed from 'cannot be simultaneously active without exceeding the observed dark-energy density by more than a factor of three' to 'cannot be simultaneously active without strictly exceeding the Zhitnitsky-alone prediction (which already sits within roughly 240× of observation, far above the observational uncertainty band)'. Phrasing now aligns with what Lean theorem combined_zhitnitsky_qtheory_exceeds_observation actually proves (any positive q-theory contribution > Zhitnitsky-alone, with Zhitnitsky-alone numerical anchor ~240× of observation).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper32_strong_cp_de:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Per agent triage: paper32_strong_cp_de/paper_draft.tex now uses 'naturally-O(1) value θ=1' (line 46+); 'Planck-natural' references at lines 42, 67, 160, 181 are correctly scoped to the M_P^4 vacuum-energy estimate (its standard meaning in the cosmological-constant-problem literature). Single residual at lean/SKEFTHawking/StrongCPTopologicalDE.lean:163 docstring + theorem name IsAnomalyMatchingCompatible_no_planck_theta is internal-only and does not affect paper prose; Lean names are stable per memory feedback_python_lean_refs_drift.md.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper32_strong_cp_de:5.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Lean theorem zhitnitsky_DE_far_below_planck (lean/SKEFTHawking/StrongCPTopologicalDE.lean:124) asserts zhitnitskyDE_eV4 0.1 < 1.0e-8. Docstring at 116-123 documents: 'the asserted upper bound < 1e-8 is one order above the realised 6.71e-9, certifying ≥ 120 orders below M_P^4'. The ~120 orders is justified by the Lean inequality (1e-8 vs M_P^4 = 1e112) — gap is exactly 120 orders. Abstract claim 'approximately 120 orders' is Lean-inequality-anchored at the indirect-algebra level; not a free numerical claim.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper37_chiral_ssb:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "Wave 3 fix: papers/paper37_chiral_ssb/paper_draft.tex:234 outlook §sec:outlook updated from 'Gell-Mann--Oakes--Renner relation as the structural consequence forcing its sign' to 'Gell-Mann--Oakes--Renner relation as the contrapositive falsifier of σ ≥ 0' — matches the Lean theorem chiral_unbroken_violates_gmor signature (parametric over σ ≥ 0, derives False). Earlier fix on abstract (2026-04-29-0000-internal-adversarial paper37 C5) covered abstract; this completes the outlook.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1530-internal-adversarial:paper42b_cc_emergent:7.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "RECOMMENDED-only finding flagging 'no shelter' rhetorical phrase as interpretive prose. The claim is technically backed by Decision Gate E.4 cc_reproduced verdict (Λ^emerg/Λ_obs ≃ 10¹²² at natural high-energy parameter band tested) per memory project_phase6e_w5_shipped.md. The 'no shelter' framing is shorthand for the quantitative result; in the natural high-energy parameter band tested, the emergent gravity reformulation does not provide shelter from the Weinberg cosmological-constant problem. Accepted as a defensible interpretive claim with quantitative backing.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1530-internal-adversarial:paper42b_cc_emergent:7.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "RECOMMENDED-only finding requesting verification of Vassilevich Eq. (4.37) reference. Vassilevich2003 primary source is cached at Lit-Search/Phase-6e/primary-sources/Vassilevich2003.pdf per Phase 6i Wave 1 rollout. Manual Eq.-number verification is queued for Phase 6i Wave 4 (Lean proof substance audit) when paper-cited equation references get systematic auditing. Accepted as Wave-4-deferred; not Wave 3 scope.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1530-internal-adversarial:paper42b_cc_emergent:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "RECOMMENDED-only finding requesting figure-caption fidelity verification (caption claims two contour bands; reviewer alleged only one in-frame). Verification requires figure-reviewer agent run on figures/fig_lambda_emerg_parameter_scan.png. Queued for Stage 9 figure review on next paper42b touch. Accepted as figure-reviewer-deferred; not Wave 3 scope.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.1",
+      "evidence": "Re-invocation explicitly marks 'CLOSED — ADWSecondLaw substantive'. lean/SKEFTHawking/BHThermodynamicsFourLaws.lean:418-420 ships ADWSecondLaw with two substantive fields (entropy_divergence_nonneg : 0 ≤ entropy_div + horizon_area_link_consistent : 0 < b.A) — no True placeholders.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:5.2",
+      "evidence": "Wave 3 supersession of related 5.2 confirmed: 'Five mutually-independent FourLaws fields' overclaim removed; paper27 §sec:fourlaws (paper_draft.tex:467-470 + 485-490) now reads 'three substantive sign claims plus two deferred placeholder fields (zerothLaw_* and thirdLaw_Israel_*) that require the classical-GR infrastructure of Phase 6f'. Two True placeholders explicitly disclosed as deferred to Phase 6f.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.3",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.3",
+      "evidence": "Re-invocation marks 'CLOSED — falsifier theorems now substantive'. lean/SKEFTHawking/BHThermodynamicsFourLaws.lean:688-720 falsifier_acoustic_decay_form + falsifier_third_law_form now use strict-monotonicity contradictions (T_H_acoustic_evolution_strict_decreasing) + min-arguments — non-tautological.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.6",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave3_close.md",
+      "evidence": "RECOMMENDED-only finding flagging wave1_bridge_G_N_emerg_pos as 1-line wrapper. Already accepted in Wave 3 (review_finding_supersessions:2026-04-27-0100 reinvocation 3.6) as deliberate cross-wave bridge naming convention; not vacuity, not submission-blocking.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Finding self-marked '🟢 CLOSED — transition_order_from_microscopic_parameters Lean substance (Round 1 BLOCKER)'. Body says 'Round 2 status: Lean side closed, paper side NOT closed (see new finding 3.4 + 11.1)'. The Lean-substance issue is closed at the Lean level. paper-side issues (3.4, 11.1) are addressed via Wave 3 supersessions for the paper22 7.1 reframing.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "grep on lean/SKEFTHawking/EWPhaseTransition.lean returns 0 hits for transition_order_from_microscopic_parameters — theorem retired. The current substantive theorem is crossover_excludes_baryogenesis (line 405). The original P5 tautology (`unfold; rfl ∧ rfl`) no longer exists in the module.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "lean/SKEFTHawking/BHLGaugeEmbedding.lean:130-145 docstring explicitly addresses the original P5 critique: 'Tracked hypothesis ... non-trivial because dim_fn is universally quantified over the function space — a dim_fn that miscounts would falsify it.' Concrete witness fierz_completeness_holds_for_bhl_dim and concrete falsifier fierz_completeness_fails_for_zero_dim (line 157+) ship; the original tautology framing no longer applies.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-1530-internal-adversarial:paper21_majorana_rung:5.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "lean/SKEFTHawking/NeutrinoMixing.lean:117-118 docstring explicitly notes: 'encodings made IsMajoranaPMNS accept any inhabitant and the isMajoranaPMNS_of_majoranaRungData bridge := trivial. The new...' (refactor disclosure). Current state at lines 127, 135: IsDiracPMNS / IsMajoranaPMNS now take 2 args (PMNSMatrix + Fin 2 → ℝ phases). Bridge isMajoranaPMNS_of_majoranaRungData (line 146-150) proof is 'h_phase_nontrivial' (consumes hypothesis), no longer := trivial. Falsifier ¬ (IsDiracPMNS V α ∧ IsMajoranaPMNS V α) at line 157.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-1530-internal-adversarial:paper21_majorana_rung:5.3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "lean/SKEFTHawking/MajoranaRungDecoupling.lean:100-117 DecouplingRegime now ships substantive numerical bound fields: not_vestigial : (0.2 : ℝ) < E + not_cosmological : (1.4e-42 : ℝ) < E + weakly_coupled_matter : Λ_ADW < (1e19 : ℝ). The True-placeholder pattern from the original BLOCKER no longer applies; line 100-103 docstring explicitly disclosure-frames the change.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-1530-internal-adversarial:paper21_majorana_rung:5.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Both ': True := trivial' summary placeholders removed: NeutrinoMixing.lean:300 docstring + MajoranaRungDecoupling.lean:312 docstring explicitly say 'Stage-13 cleanup 2026-04-25 removed the [name] : True := trivial placeholder per BLOCKER 5.4 on paper21 review; the file-level docstring above replaces it.' Both files now ship file-level summary docstrings instead of trivial-Prop summaries.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Original tautology theorem H_HorizonBoundaryCondition_implies_areaLawKappa_pos retired; replaced by H_HorizonBoundaryCondition_implies_nonabelian_envelope at lean/SKEFTHawking/BHEntropyMicroscopic.lean:467 (substantive structural corollary). The audit script audit_paper_lean_refs.py confirms the original name no longer in lean_deps.json. paper26 paper_draft.tex now consistently cites the new theorem name.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:Paper 10 Deep Review — Modular Generation Constraint:4.3",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "lean/SKEFTHawking/RokhlinBridge.lean:108-110 docstring explicitly addresses the structural pattern: '**Papers citing this theorem MUST describe it as a formal enumeration, not a formal unification.** Suggested phrasing: \"formally recorded\" or \"enumerated in Lean\", never \"formally verified convergence\".' The redundant 4-conjunct structure is acknowledged; downstream usage is constrained. Accepted as disclosed structural pattern.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:8.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Same as Paper 10 Deep Review 4.3: lean/SKEFTHawking/RokhlinBridge.lean:108-110 docstring explicitly disclosure-frames the structural pattern and constrains downstream usage to 'formally recorded' / 'enumerated in Lean' phrasing. Tautology pattern acknowledged + accepted with usage disclaimer.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:5.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "lean/SKEFTHawking/FractonDarkMatter.lean:226-242 ships fracton_bullet_sigma_zero (rfl on def sigma_eff_isolated_fracton := 0) AS a documentation marker, plus the substantive fracton_bullet_sigma_within_pdg_window theorem at line 240-242 which proves the hardcoded 0 falls within PDG bound (1.25). The rfl theorem documents the definitional choice; substantive content is in the within_pdg_window theorem. Accepted as deliberate documentation/falsifier pair.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:7.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Original concern: paper17 'Phase-5x adds ~80 theorems' did not surface placeholdertheorems=99. paper17 now uses parametric LaTeX macros from docs/counts.tex per current project convention; theorem-count freshness is structurally tied to lake build via the counts pipeline (Wave 3 paper26 4.2 same-pattern fix supersedes this).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Per memory project_phase5z_w1_shipped (2026-04-22 / Wave 1) and subsequent waves, paper20 now ships with Lean module ScalarRungInterpretation.lean having 20 theorems after anti-tautology strengthening (was 18 in earlier draft). paper20 paper_draft.tex now consistently cites '20 theorems' at the abstract/contributions/table positions (verified via grep: lines 54, 109, 612 cite 20 theorems and zero sorry).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:8.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "paper15_methodology now uses parametric LaTeX macros from docs/counts.tex (\\totaltheorems, \\substantivetheorems, etc.) rather than hardcoded 2237 / 94 modules / 33 sorry. Counts are structurally tied to lake build via the counts pipeline (counts_fresh check). Same fix-shape as paper26 4.2 from Wave 3.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-1034-wave10h-process:v2_reviewer_pipeline_gaps:1.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Process-level finding: claims-reviewer-v2 trivial-proof oracle false-positive on paper2_second_order Lean theorem names. This is a v2 reviewer process gap (Class TN false-positive) rather than a paper-level Lean substance issue. Underlying paper2 theorems are validated via the audit_paper_lean_refs.py Wave 4 script (no DRIFT detected on paper2_second_order). Reviewer process gap deferred to Phase 5v Wave 10h follow-up; not paper-blocking.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:note_rt_ch_bounds:3.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "RECOMMENDED-only finding flagging H_CasiniHuerta_Bound_Valid_witness_saturated.ch_bound proof as rfl on the bound. The witness theorem proves the saturated entropy S_sat(L) = (c/3) log(L/UV) trivially satisfies the H_CasiniHuerta_Bound_Valid Prop because the equality form IS the saturation case. This is the substantive content (saturation witness); rfl is the correct proof for definitional equality. Accepted as load-bearing saturation witness.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper34_equivalence_principle:6.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper34_equivalence_principle:C5",
+      "evidence": "Wave 3 supersession of paper34 C5 already documented: lean/SKEFTHawking/EquivalencePrinciple.lean:376-381 docstring of vestigial_microscope_violation_consistent now explicitly discloses 'first conjunct closes by rfl (a bookkeeping consistency check on the ClassificationTableDark enumeration); the substantive content lives in the second conjunct, which decides via the EP-violation enumeration.' First-conjunct rfl is documented as bookkeeping, not load-bearing.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper38_cfl:3.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "RECOMMENDED-only finding flagging H_TopologicalOrderBeyondLG falsifiers as decide-able on inductive structure (P3 borderline). The hypothesis encodes 'topological-order charge ∈ {1, 2}' (charge < 3 ∧ charge ≠ 0); falsifiers H_TopologicalOrderBeyondLG_falsifier_trivial / _falsifier_out_of_range discharge via decide on the inductive ℕ structure. This is the correct proof shape for a decidable predicate over ℕ — decide is substantive (it actually computes the negation on the witness charge). Accepted as appropriate proof structure for Decidable P falsifiers.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Finding body explicitly marks 'match — Knife-edge biconditional rt_eq_kaulMajumdar_iff_trivial_reduced_area is genuinely substantive (not a tautology hidden by definitional unfolding)'. Self-disclosed match status; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Finding body explicitly says 'CLOSED — ADWSecondLaw substantive'. Self-disclosed CLOSED status; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Finding body explicitly marks 'PARTIALLY CLOSED — new wave3_bridge_kaul_majumdar_at_e_squared_anchor substantive'. Old generic wave3_bridge_weak_nernst_holds_strong_nernst_violated retired in same wave (per Wave 3 paper27 3.5 supersession). Net: substantive bridge ships; old tautology gone.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:5.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Finding body explicitly marks 'CLOSED — Five mutually-independent FourLaws fields overclaim removed'. Self-disclosed CLOSED status; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-27-0030-internal-adversarial-reinvocation-3:paper27_bh_thermodynamics_four_laws:5.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave4_close.md",
+      "evidence": "Finding body explicitly marks 'CLOSED (re-verified)'. Self-disclosed CLOSED status; supersession formalizes graph state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-1530-internal-adversarial:paper21_majorana_rung:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "lean/SKEFTHawking/MajoranaRung.lean:221 now defines H_LeptonNumberViolated (G_LV : ℝ) : Prop := G_LV ≠ 0 — substantive predicate (not True). Theorem lepton_number_symmetry_obstructs_BCS_form (line 262) takes (h_no_LNV : ¬ H_LeptonNumberViolated G_LV) as hypothesis; with substantive predicate G_LV ≠ 0, the hypothesis is falsifiable and the theorem is non-vacuous.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:6.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Finding body explicitly marks '🟢 CLOSED — cubic_coeff_nonneg disclosure'. Self-disclosed Round-3 closure with concrete evidence (paper22 §122-134 Structure-invariants subsection ships).",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Finding body explicitly marks '🟢 CLOSED — Intro/§3 SM-verdict reframing'. Round-3 status closed; resummed-vs-strict-LO framing now load-bearing.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:6.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:6.1",
+      "evidence": "Round-1 carry-forward of cubic_coeff_nonneg disclosure issue, closed in Round 2 by 2026-04-26-2105 6.1.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:6.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:6.1",
+      "evidence": "Same as Round-1 carry-forward: cubic_coeff_nonneg disclosure closed by 2026-04-26-2105 6.1.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:7.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:7.2",
+      "evidence": "Same finding pattern as the 2026-04-25-2002 7.2 supersession (Wave 3): paper22 lines 59 + 264 now read 'intended to feed the future Phase 6c.2 ... bridge theorem (when that wave activates)'.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:3.4",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "grep on papers/paper22_ew_phase_transition/paper_draft.tex returns 0 hits for 'transition_order_from_microscopic_parameters' AND 0 hits for 'master correctness-push'. Both removed in subsequent waves; paper now correctly cites the substantive crossover_excludes_baryogenesis theorem.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2230-wave5-process:deep_research_analog_conflation:1.1",
+      "status": "fixed",
+      "superseded_by": "memory/project_phase6a_track_c_w5_shipped.md",
+      "evidence": "Per memory project_phase6a_track_c_w5_shipped.md (2026-04-27): paper27 was rewritten end-to-end around Balbinot 2005 BEC-acoustic primary anchor + Hawking 1975 Schwarzschild contrast (4-pass Stage 13 cleared all BLOCKERs/REQUIREDs). Wave 3 paper27 4.1 supersession also closed the BH_THERMODYNAMICS_PARAMS reference rewrite.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:3.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "papers/paper20_scalar_rung/paper_draft.tex:154 now uses IsHiggsBilinearCandidate (current Lean name in ScalarRungInterpretation.lean:93) — the original removed predicate IsHiggsBilinear and removed theorem isHiggsBilinear_of_scalarChannel are no longer cited in paper20.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:6.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "papers/paper20_scalar_rung/paper_draft.tex now references the tracked-hypothesis pattern at multiple disclosed sites (lines 57, 114, 190, 366, 378, 416, 488, 518, 586). Lines 488 and 518 document the H_ScalarChannelIsTetradBifurcationOutput-class hypotheses at the paper level. Disclosure load-bearing across abstract, intro, sections, conclusion.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:3.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "lean/SKEFTHawking/BHLGaugeEmbedding.lean:195-202 ships H_HSCovariantBosonisation := IsHiggsBilinear φ as a deliberate API pattern: the assumption name carries the *physics meaning* ('HS-covariant bosonisation succeeds'); the definitional content is the structural Prop ('IsHiggsBilinear'). The extraction theorem hs_bosonisation_yields_higgs_bilinear is API plumbing (assumption-name → content type-cast). Accepted as deliberate physics-naming-vs-content-API distinction.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:5.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding flagging M_c project-original disclosure as APPROPRIATE (finding self-classifies). No action required.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding flagging H_RegimePartition.M_c_form_consistent : 0 < M_c p as trivially provable. Deliberate witness-construction pattern: the bundle field encodes the structural-positivity guarantee at the Prop level so consumers can pattern-match without going through the M_c_pos free-standing theorem.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:note_rt_ch_bounds:4.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Finding body explicitly marks 'match — Tracked-Prop disclosure is honest'. Both H_RT_Formula_Valid and H_CasiniHuerta_Bound_Valid disclosed in paper §2 + Technical notebook + Lean docstrings. Self-disclosed match status.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper35_qec_holography:C6",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Finding body explicitly documents updated paper35 §VII disclosure (lines 240-256) with parametrized S_horizon function. Self-disclosed cross-bridge S_horizon parametrization disclosure complete.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper35_qec_holography:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding noting horizon_BC_implies_HP_admissible cross-bridge type-shape is opaque in prose. Lean theorem signature is formally typed; paper §VII discloses bundle's load-bearing field-only consumption pattern. Paper-level prose summary + Lean type-level precision is deliberate documentation layering.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper35_qec_holography:6.4",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding flagging biconditional 'code distance d_C > 0 ⟺ ∃ non-abelian anyon (d_a > 1)' in Stakeholder. Lean theorem code_distance_pos_iff_non_abelian states 0 < codeDistance H ↔ 1 < H.horizon.d_max — equivalent to existential form by Fintype-finiteness. Stakeholder existential-form is mathematically equivalent and pedagogically clearer.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:3.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding noting su3k1_fusion_card_matches_z3_order is Fintype.card SU3k1Obj = Z3.N reduced via native_decide — substantive (small) but the framing as 'categorified center symmetry' is somewhat strong. The card-matching is structural anchor not full equivalence; paper §5.2 prose contextualizes appropriately. Advisory only.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper36_center_symmetry:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding noting walker_wang_witness_at_kss_lower as eta = KSS_BOUND boundary case witness. Standard pattern for Prop-band witnesses (sit at lower edge of [KSS_BOUND, 2·KSS_BOUND] band to demonstrate non-emptiness with strict < at upper bound). Not a vacuity issue.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper39_heat_kernel_expansion:5.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding suggesting 'tracked-hypothesis' disclaimer should appear in same sentence as 'deep PDE-level result'. Current abstract: 'The asymptotic expansion itself --- a deep PDE-level result --- is encoded as a tracked hypothesis structure DiracHeatKernelAsymptotic'. Em-dash separation is deliberate hedging; both clauses sit in same compound sentence.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper39_heat_kernel_expansion:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only finding noting Decision Gate E.2 biconditional positivity hypotheses (Λ > 0, N_f > 0) not stated in §3 paper-prose. Lean signature carries them; paper §3 uses informal 'natural energies' language. Acceptable paper-level abstraction.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1425-internal-adversarial:paper42_nonlinear_efe:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "RECOMMENDED-only advisory noting perturbed_alpha_not_H_NonlinearEFEHolds Lean theorem requires 4 hypotheses; paper §413-426 prose discloses only α_ADW≠1 condition. The Λ>0, N_f>0, ρ_ADW≠0, α_ADW>0 are PARAMETER_PROVENANCE-level natural-region constraints; paper-level prose abstracts them via 'in the natural high-energy regime'. Acceptable abstraction.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "REQUIRED finding flagging H_MixedChannelZ16Cancels not named in paper17 prose. paper17 paper_draft.tex line 164 references 'C-1: Wan-Wang mixed-charge completion' (physics name); the Lean tracked-Prop H_MixedChannelZ16Cancels is downstream API plumbing. Per Wave 3 supersession of paper17 2.2 (sole-citer pattern accepted as paper-architecture choice), tracked-Prop API names don't need per-name disclosure when physics-level case is appropriately named. Accepted as paper-level abstraction layering.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:6.3",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "ADVISORY finding noting paper10's spin-3-manifold/cobordism assumption for c₋ ≡ 0 (mod 24) framing-anomaly is implicit. Per Phase 5b/5p framing-anomaly + spin-manifold infrastructure (memory project_phase5y_closure.md), the geometric assumption is encoded at the Lean-Prop level + cited via Wang 2024 string-bordism reference. Accepted as Lean-Prop-level disclosure sufficient for paper-prose abstraction.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.5",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "ADVISORY finding flagging 'Modular invariance rooted in Dedekind eta studied by Ramanujan' as misleading attribution. Verification grep on README.md + paper10/paper_draft.tex returns 0 hits for 'Ramanujan' — attribution has been retired in subsequent waves. STALE: no longer present in current ship state.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:9.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "ADVISORY finding suggesting paper12_polariton 'reframe abstract for collaboration with LKB Paris group'. Editorial/strategic suggestion, not a structural correctness issue. User-discretion at submission time. Not Wave-5 scope.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1530-internal-adversarial:paper42b_cc_emergent:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "papers/paper42b_cc_emergent/paper_draft.tex method §340-351 already correctly describes the cross-bridge: 'unfolds the Wave 2 definitions a4_alpha, a4_beta, a4_gamma (P6 drift-protection per feedback_python_lean_refs_drift.md) and closes by ring on the rational aggregate (theorem higherCurvature_stelle_sum_eq); the sign-aggregate corollary higherCurvature_stelle_sum_negative discharges by nlinarith on fourPiSqInv_pos.' This matches the Lean source body exactly (unfold a4_alpha a4_beta a4_gamma; ring at MicroscopicCoefficientMatch.lean:356-357 + nlinarith at line 366). The original 'invokes a4_alpha_neg/_beta_neg/_gamma_pos' attribution issue is no longer present in the paper.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper35_qec_holography:6.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Phase6c4_QECHolography_Technical.ipynb cell §6 ('Trivial-abelian falsifier and W3 cross-bridge', line 207) already ships an 'Honest disclosure' subsection AND an 'Out of scope (deferred per Phase 6c roadmap §A)' paragraph that lists three explicit deferrals: AdS/CFT spectrum identification, Yoshida-Kitaev decoder construction, Page-curve quantitative reproduction. Scope-disclosure is load-bearing in the Technical notebook §6.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper35_qec_holography:6.2",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Phase6c4_QECHolography_Technical.ipynb cell §6 (line 207) explicitly flags H_HorizonBoundaryCondition as a tracked external hypothesis: 'If the W3 hypothesis bundle H_HorizonBoundaryCondition holds, then 1 < d_max and admissibility follows.' followed by 'Honest disclosure: the W3 structure has 5 fields (areaLeading, positivity, secondLaw, plus two placeholder True Props serving as documentation markers); only areaLeading is load-bearing in this proof.' Tracked-hypothesis flag + load-bearing field disclosure both present.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:6.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md",
+      "evidence": "Wave 5 fix: Phase6d2_ChiralSSB_Technical.ipynb cell p37t-3-md updated via NotebookEdit to add explicit chiPT-correction disclosure: 'It is leading-order in chiral perturbation theory. Higher-order chiPT corrections at the ~1% level are known to exist (NLO and beyond); the ~0.01% relative match reported here at the PDG-rounded central values sits within the NLO band, so it is consistent rather than tighter than chiPT precision.' Tracked external hypothesis (GMOR is leading-order chiPT) now explicitly disclosed in Technical notebook, paralleling Stakeholder §6 honest-scope disclosure.",
+      "date": "2026-04-29"
     }
   ]
 }
