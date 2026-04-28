@@ -1,10 +1,10 @@
 {
-  "generated": "2026-04-27T20:18:08.488602",
+  "generated": "2026-04-28T09:17:49.790986",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8715,
-    "theorems_total": 4453,
-    "theorems_substantive": 4430,
+    "total_declarations": 8776,
+    "theorems_total": 4482,
+    "theorems_substantive": 4459,
     "theorems_placeholder": 23,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 191,
+    "modules": 193,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -118,6 +118,8 @@
       "SKEFTHawking.ModularityTheorem",
       "SKEFTHawking.MugerCenter",
       "SKEFTHawking.NeutrinoMixing",
+      "SKEFTHawking.NonlinearDiffInvariance",
+      "SKEFTHawking.NonlinearEFE",
       "SKEFTHawking.OnsagerAlgebra",
       "SKEFTHawking.OnsagerContraction",
       "SKEFTHawking.PauliMatrices",
@@ -206,18 +208,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3781,
-    "structures": 190,
+    "definitions": 3812,
+    "structures": 191,
     "instances": 229,
     "inductives": 61
   },
   "python": {
-    "python_modules": 111,
-    "test_files": 79,
-    "pytest_cases": 3440,
-    "notebooks": 76,
-    "papers": 35,
-    "figures": 131
+    "python_modules": 116,
+    "test_files": 81,
+    "pytest_cases": 3584,
+    "notebooks": 78,
+    "papers": 37,
+    "figures": 133
   },
   "aristotle": {
     "aristotle_proved": 322,

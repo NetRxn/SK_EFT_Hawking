@@ -890,6 +890,59 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         color_keys=["steel_blue", "amber", "emerald", "carmine", "horizon"],
     ),
     FigureSpec(
+        name="fig_diff_invariance_order_check",
+        function="fig_diff_invariance_order_check",
+        caption=(
+            "Phase 6e Wave 3 — Path-(b) diff-invariance check at order "
+            "a₄. Left panel: log-scale max-residual on a 16-point "
+            "curvature grid for the Christensen-Duff Dirac bundle "
+            "(δ=0, at machine ε) vs perturbed bundles with single "
+            "coefficient shifted by δ ∈ {10⁻⁹, 10⁻⁶, 10⁻³}. The dashed "
+            "reference line marks the path-b tolerance 10⁻¹². Dirac "
+            "sits below tolerance; every nonzero perturbation is "
+            "detectable above it. Right panel: linearity demonstration "
+            "— at unit R², the perturbed-bundle residual equals exactly "
+            "δ (Lean theorem `perturbed_pathB_residual_a4_at_unit_R_sq`). "
+            "Lean: pathB_residual_a4_dirac_eq_zero, "
+            "diff_invariance_a4_iff_dirac_basis_consistent, "
+            "dirac_H_NonlinearDiffInvariance."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "δ", "yaxis": "residual"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "carmine", "emerald"],
+    ),
+    FigureSpec(
+        name="fig_T_emerg_vs_matter",
+        function="fig_T_emerg_vs_matter",
+        caption=(
+            "Phase 6e Wave 4 — Emergent vs matter stress-energy and "
+            "multi-channel PPN observable deviations under the ADW "
+            "α_ADW rescaling. Left panel: the linear-in-(α−1) deviation "
+            "channel ``T_emerg − T_matter = (α − 1) · ρ_ADW`` at unit "
+            "ρ; vanishes at the Sakharov-Adler calibration α = 1 (Lean "
+            "theorem `emergentStressEnergyTrace_eq_matter_iff_alpha_unity`). "
+            "The amber band marks the 5×10⁻³ detection floor. Right "
+            "panel: log-log relative-deviation for three observables — "
+            "deflection (|α−1|), perihelion precession ((2/3)|α−1|), "
+            "ringdown (|α−1|) — over the natural Vergeles band α ∈ "
+            "[0.1, 10]. Cross-channel structural claim: precession_dev "
+            "= (2/3) × deflection_dev (Lean theorem "
+            "`precession_dev_eq_two_thirds_deflection_dev`). Observation "
+            "floors (VLBI 3×10⁻⁴, MESSENGER 1×10⁻⁴, GWTC-3 5×10⁻²) "
+            "drawn as dashed lines. "
+            "Lean: efeResidualTrace_eq_zero_iff_alpha_unity, "
+            "deflectionRatio_minus_one_eq, "
+            "deflectionRatio_deviation_exceeds_VLBI_floor, "
+            "precessionRatio_eq_one_iff_alpha_unity, "
+            "dirac_H_NonlinearEFEHolds_at_alpha_one."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "α_ADW", "yaxis": "deviation"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "emerald"],
+    ),
+    FigureSpec(
         name="fig_ewbg_allowed_region",
         function="fig_ewbg_allowed_region",
         caption=(
@@ -1359,6 +1412,10 @@ def generate_figures() -> dict[str, Path]:
         fig_a2_vs_linearized_G_N,
         # Phase 6e Wave 2: higher-curvature predictions vs observational ceilings
         fig_higher_curvature_obs_bounds,
+        # Phase 6e Wave 3: nonlinear diff-invariance order-by-order check
+        fig_diff_invariance_order_check,
+        # Phase 6e Wave 4: T_emerg vs matter + multi-channel PPN observables
+        fig_T_emerg_vs_matter,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1504,6 +1561,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
         "fig_a2_vs_linearized_G_N": fig_a2_vs_linearized_G_N,
         "fig_higher_curvature_obs_bounds": fig_higher_curvature_obs_bounds,
+        "fig_diff_invariance_order_check": fig_diff_invariance_order_check,
+        "fig_T_emerg_vs_matter": fig_T_emerg_vs_matter,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
@@ -1651,6 +1710,10 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_a2_vs_linearized_G_N,
         # Phase 6e Wave 2: higher-curvature predictions vs observational ceilings
         fig_higher_curvature_obs_bounds,
+        # Phase 6e Wave 3: nonlinear diff-invariance order-by-order check
+        fig_diff_invariance_order_check,
+        # Phase 6e Wave 4: T_emerg vs matter + multi-channel PPN observables
+        fig_T_emerg_vs_matter,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1794,6 +1857,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
         "fig_a2_vs_linearized_G_N": fig_a2_vs_linearized_G_N,
         "fig_higher_curvature_obs_bounds": fig_higher_curvature_obs_bounds,
+        "fig_diff_invariance_order_check": fig_diff_invariance_order_check,
+        "fig_T_emerg_vs_matter": fig_T_emerg_vs_matter,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,

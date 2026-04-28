@@ -10354,5 +10354,352 @@ def fig_higher_curvature_obs_bounds():
     return fig
 
 
+def fig_diff_invariance_order_check():
+    """Phase 6e Wave 3: order-by-order path-b diff-invariance anomaly check.
+
+    Left panel: log-scale bar chart of the maximum order-``a_4`` anomaly
+    residual over a 16-point curvature grid for the Christensen-Duff
+    Dirac bundle (at machine ε) versus a perturbed bundle (single
+    coefficient shifted by δ ∈ {1e-9, 1e-6, 1e-3}).  The path-b
+    tolerance ``DIFF_INVARIANCE_PARAMS['PATH_B_RESIDUAL_TOLERANCE'] = 1e-12``
+    is drawn as a dashed reference line.  The Dirac bundle sits below
+    tolerance; every nonzero perturbation is detectable above it
+    — the **falsifier** witness.
+
+    Right panel: linearity demonstration.  At unit ``R_sq`` and zero
+    ``Ricci_sq, Riemann_sq``, the perturbed-bundle residual equals
+    exactly ``δ`` (Lean theorem
+    ``perturbed_pathB_residual_a4_at_unit_R_sq``).  The diagonal line
+    ``residual = δ`` confirms the falsifier is non-tautological — a
+    nonzero perturbation produces a nonzero, *predictable* anomaly.
+
+    Lean: NonlinearDiffInvariance.pathB_residual_a4_dirac_eq_zero,
+          perturbed_pathB_residual_a4_at_unit_R_sq,
+          dirac_H_NonlinearDiffInvariance,
+          diff_invariance_a4_iff_dirac_basis_consistent.
+    Source: Wald, *General Relativity*, App. E.1 (path-b framework);
+            Phase 6e Wave 1 HeatKernelExpansion.lean (Dirac coefs);
+            Phase 6e Wave 2 HigherCurvatureStructure.lean
+            (basis-change identity).
+    viz-ref: Phase 6e Paper 41 §3
+    """
+    import plotly.graph_objects as go
+    import numpy as np
+    from plotly.subplots import make_subplots
+    from src.core.constants import DIFF_INVARIANCE_PARAMS
+    from src.diff_invariance import (
+        max_residual_over_grid,
+        pathB_residual_at_order,
+        perturbed_coefficient_bundle,
+    )
+
+    tol = float(DIFF_INVARIANCE_PARAMS['PATH_B_RESIDUAL_TOLERANCE'])
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Max grid residual: Dirac vs perturbed (log scale)",
+            "Falsifier linearity: residual = δ at unit R²",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.15,
+    )
+
+    # ---------- Left: max residual on grid for several bundles ----------
+    deltas = [0.0, 1e-9, 1e-6, 1e-3]
+    superscripts = {-9: "⁻⁹", -6: "⁻⁶", -3: "⁻³"}
+    bundle_labels = ["Dirac (δ=0)"] + [
+        f"δ=10{superscripts[int(np.log10(d))]}" for d in deltas[1:]
+    ]
+    max_res = [max_residual_over_grid(24.0, 'dirac')] + [
+        max_residual_over_grid(24.0, 'perturbed', delta=d) for d in deltas[1:]
+    ]
+    # Floor at 1e-20 for log scale (machine eps may produce 0)
+    max_res_plot = [max(v, 1e-20) for v in max_res]
+    bar_colors = [COLORS["steel_blue"]] + [COLORS["amber"],
+                                              COLORS.get("carmine", "#E63946"),
+                                              COLORS.get("emerald", "#2ca02c")]
+    fig.add_trace(
+        go.Bar(
+            x=bundle_labels, y=max_res_plot,
+            marker_color=bar_colors,
+            text=[f"{v:.1e}" for v in max_res],
+            textposition="outside",
+            hovertemplate="%{x}<br>max |residual| = %{y:.2e}<extra></extra>",
+            showlegend=False,
+        ),
+        row=1, col=1,
+    )
+    # Path-b tolerance line
+    fig.add_hline(
+        y=tol,
+        line=dict(color=COLORS.get("carmine", "#E63946"),
+                  dash="dash", width=2),
+        annotation_text=f"path-b tolerance = {tol:.0e}",
+        annotation_position="bottom right",
+        row=1, col=1,
+    )
+    fig.update_xaxes(title_text="Coefficient bundle", row=1, col=1,
+                       tickangle=0, automargin=True)
+    fig.update_yaxes(
+        title_text="max |path-b residual|, dimensionless (grid)",
+        type="log",
+        exponentformat="power",
+        row=1, col=1,
+    )
+
+    # ---------- Right: residual vs δ on log-log plot ----------
+    delta_grid = np.logspace(-9, 0, 30)
+    residuals = np.array([
+        pathB_residual_at_order(
+            4, perturbed_coefficient_bundle(24.0, d),
+            24.0, 0.0, 1.0, 0.0, 0.0)
+        for d in delta_grid
+    ])
+    fig.add_trace(
+        go.Scatter(
+            x=delta_grid, y=residuals,
+            mode="markers+lines",
+            name="numerical",
+            marker=dict(color=COLORS["amber"], size=8),
+            line=dict(color=COLORS["amber"], width=1.5),
+            hovertemplate="δ = %{x:.2e}<br>residual = %{y:.2e}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=delta_grid, y=delta_grid,
+            mode="lines",
+            name="theory: residual = δ",
+            line=dict(color=COLORS["steel_blue"], dash="dot", width=2),
+            hoverinfo="skip",
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="Perturbation δ",
+        type="log",
+        exponentformat="power",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="path-b residual at R²=1, dimensionless",
+        type="log",
+        exponentformat="power",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6e Wave 3 — Path-b diff-invariance check at "
+                "order a₄ (Dirac vs perturbed)</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1400,
+        margin=dict(t=110, b=110),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.30,
+                    xanchor="center", x=0.78),
+    )
+    return fig
+
+
+def fig_T_emerg_vs_matter():
+    """Phase 6e Wave 4: emergent vs matter stress-energy + multi-channel
+    PPN observable signatures under the ADW α_ADW rescaling.
+
+    Left panel: linear-in-(α-1) deviation channel.  ``T_emerg − T_matter
+    = (α_ADW − 1) · ρ_ADW``: vanishes at the Sakharov-Adler calibration
+    α=1 (Lean theorem
+    ``emergentStressEnergyTrace_eq_matter_iff_alpha_unity``).  The
+    detection floor (``T_EMERG_DEVIATION_DETECT_FLOOR = 5×10⁻³``) is
+    marked as a horizontal band; non-zero deviation rules out the
+    calibrated reading.
+
+    Right panel: multi-channel PPN observable deviations vs α_ADW on a
+    log-spaced grid covering the natural Vergeles band [0.1, 10].  Three
+    curves:
+
+    - **Deflection** (``δθ/δθ_GR − 1 = α − 1``) — direct G_N rescaling
+    - **Precession** (``δφ/δφ_GR − 1 = (2α + 1)/3 − 1 = (2/3)(α − 1)``)
+      — PPN-mixed; *2/3 times* the deflection deviation (testable
+      cross-channel structural claim, Lean theorem
+      ``precession_dev_eq_two_thirds_deflection_dev``)
+    - **Ringdown** (``ω/ω_GR − 1 = α − 1``) — linearized Schwarzschild
+
+    Observation floors (VLBI 3×10⁻⁴, MESSENGER 1×10⁻⁴, GWTC-3 5×10⁻²)
+    drawn as horizontal lines: any predicted deviation above its floor
+    is detectable.
+
+    Lean: NonlinearEFE.emergentStressEnergyTrace_minus_matter_eq,
+          NonlinearEFE.deflectionRatio_minus_one_eq,
+          NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity,
+          NonlinearEFE.precession_dev_eq_two_thirds_deflection_dev,
+          NonlinearEFE.deflectionRatio_deviation_exceeds_VLBI_floor.
+    Source: Will, *Theory and Experiment in Gravitational Physics*
+            (2nd ed., 2018), §4.1, §4.2; Berti et al. CQG 26:163001 (2009).
+    viz-ref: Phase 6e Paper 42 §4
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.constants import NONLINEAR_EFE_PARAMS
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Linear deviation channel: T_emerg − T_matter = (α−1) ρ",
+            "Multi-channel PPN observable deviations vs α_ADW",
+        ),
+        column_widths=[0.45, 0.55],
+        horizontal_spacing=0.15,
+    )
+
+    # ---------- Left: T_emerg − T_matter at fixed ρ ----------
+    rho = 1.0  # unit density; deviation is linear in ρ
+    alpha_grid_lin = np.linspace(0.1, 2.5, 80)
+    deviation_lin = (alpha_grid_lin - 1.0) * rho
+    detect_floor = float(
+        NONLINEAR_EFE_PARAMS['T_EMERG_DEVIATION_DETECT_FLOOR']
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=alpha_grid_lin, y=deviation_lin,
+            mode="lines",
+            name="T_emerg − T_matter",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            hovertemplate="α=%{x:.2f}<br>Δ=%{y:.3f}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    # Detection floor band
+    fig.add_hrect(
+        y0=-detect_floor, y1=detect_floor,
+        fillcolor=COLORS["amber"], opacity=0.20,
+        line_width=0,
+        row=1, col=1,
+    )
+    fig.add_hline(
+        y=0, line=dict(color="black", dash="dot", width=1),
+        row=1, col=1,
+    )
+    fig.add_vline(
+        x=1.0,
+        line=dict(color=COLORS.get("emerald", "#2ca02c"),
+                  dash="dash", width=2),
+        annotation_text="α=1 (calib)",
+        annotation_position="top left",
+        row=1, col=1,
+    )
+    fig.update_xaxes(title_text="α_ADW (dimensionless)", row=1, col=1)
+    fig.update_yaxes(
+        title_text="T_emerg − T_matter at ρ=1 (dimensionless)",
+        row=1, col=1,
+    )
+
+    # ---------- Right: multi-channel observable deviations ----------
+    alpha_grid_log = np.logspace(np.log10(0.1), np.log10(10.0), 50)
+    defl_dev = alpha_grid_log - 1.0
+    prec_dev = (2.0 * alpha_grid_log + 1.0) / 3.0 - 1.0
+    ring_dev = alpha_grid_log - 1.0
+    abs_defl = np.abs(defl_dev)
+    abs_prec = np.abs(prec_dev)
+    abs_ring = np.abs(ring_dev)
+
+    fig.add_trace(
+        go.Scatter(
+            x=alpha_grid_log, y=abs_defl,
+            mode="lines",
+            name="Deflection |δθ/δθ_GR − 1| = |α−1|",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            hovertemplate="α=%{x:.2f}<br>|dev|=%{y:.3e}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=alpha_grid_log, y=abs_prec,
+            mode="lines",
+            name="Precession |δφ/δφ_GR − 1| = (2/3)|α−1|",
+            line=dict(color=COLORS["amber"], width=2.5, dash="dash"),
+            hovertemplate="α=%{x:.2f}<br>|dev|=%{y:.3e}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=alpha_grid_log, y=abs_ring,
+            mode="lines",
+            name="Ringdown |ω/ω_GR − 1| = |α−1|",
+            line=dict(color=COLORS.get("emerald", "#2ca02c"),
+                       width=2, dash="dot"),
+            hovertemplate="α=%{x:.2f}<br>|dev|=%{y:.3e}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    # Observation floors
+    floors = {
+        "VLBI (deflection)": NONLINEAR_EFE_PARAMS[
+            'DEFLECTION_OBS_RELATIVE_PRECISION'
+        ],
+        "MESSENGER (perihelion)": NONLINEAR_EFE_PARAMS[
+            'PERIHELION_OBS_RELATIVE_PRECISION'
+        ],
+        "GWTC-3 (ringdown)": NONLINEAR_EFE_PARAMS[
+            'RINGDOWN_OBS_RELATIVE_PRECISION'
+        ],
+    }
+    floor_colors = [
+        COLORS["steel_blue"], COLORS["amber"],
+        COLORS.get("emerald", "#2ca02c"),
+    ]
+    for (label, val), c in zip(floors.items(), floor_colors):
+        fig.add_hline(
+            y=val,
+            line=dict(color=c, dash="dashdot", width=1),
+            annotation_text=label,
+            annotation_position="bottom right",
+            annotation_font=dict(size=10),
+            row=1, col=2,
+        )
+    fig.add_vline(
+        x=1.0, line=dict(color="black", dash="dot", width=1),
+        annotation_text="α=1",
+        annotation_position="top",
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="α_ADW (log scale)",
+        type="log", exponentformat="power",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="|relative deviation| (dimensionless)",
+        type="log", exponentformat="power",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6e Wave 4 — Emergent vs matter stress-energy "
+                "and multi-channel PPN observable deviations</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=600,
+        width=1400,
+        margin=dict(t=110, b=120),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.35,
+                    xanchor="center", x=0.5),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

@@ -183,7 +183,32 @@
 
 ## Track C: Diff-Invariance Check (6e.3)
 
-### Wave 3 — `NonlinearDiffInvariance.lean` (6e.3) [Pipeline: Stages 1–12]
+### Wave 3 — `NonlinearDiffInvariance.lean` (6e.3) [SHIPPED 2026-04-28 — Stages 1–13 closed + cross-wave strengthened]
+
+**Status:** SHIPPED end-to-end. Decision Gate E.3 returns **PASS** through order a₄ — Wave 4 NonlinearEFE.lean and Waves 5–6 proceed at full scope. Path-(a) symmetry-enhancement remains backlogged per O.3 (no need to promote). Stage 13 adversarial-reviewer 1 BLOCKER + 3 REQUIRED + 3 RECOMMENDED all addressed; cross-wave strengthening pass added 3 substantive theorems (10 → 13).
+
+**Final state:**
+- Lean module `lean/SKEFTHawking/NonlinearDiffInvariance.lean`: **13 substantive theorems** / 0 sorry / 0 new axioms (10 originally shipped + 3 strengthening additions: bundle-generic biconditional, generalized linearity falsifier, Lean↔Python tolerance bridge).
+- Python: `src/diff_invariance/{__init__, variational_check, anomaly_hunt}.py` + 5 new functions in `formulas.py` (`diff_invariance_anomaly_residual_a0/a2/a4`, `diff_invariance_holds_at_order`, `diff_invariance_holds_order_by_order`).
+- Tests: `tests/test_diff_invariance.py` — 36 method definitions / 78 parametrized cases (78/78 PASS in 0.08 s).
+- Figure: `fig_diff_invariance_order_check` (2-panel: max grid residual Dirac vs 3 perturbed bundles + log-log residual = δ linearity demonstration). Figure-reviewer 5 PASS / 0 FAIL / 4 MINOR (all 4 polish items fixed same session).
+- Paper: `papers/paper41_diff_invariance/paper_draft.tex` (4 pages, 394 KB), 6 bibitems (Wald 1984, Christensen-Duff 1979, Vassilevich 2003, Stelle 1977 + in-prep Roehm2026Wave1 + HigherCurvature2026 self-cites; all `doi_verified: True`). Claims-reviewer 19 PASS / 1 WARN / 2 FAIL — both FAILs fixed in-session.
+- Notebooks: `Phase6e3_NonlinearDiffInvariance_{Technical,Stakeholder}.ipynb` (22+10 cells; both execute clean per validate.py notebook_exec).
+- New constants: `DIFF_INVARIANCE_PARAMS` (order list (0,2,4); path-b tolerance 1e-12; 16-point parameter scan grid).
+
+**Discipline metric:** **2 retroactive theorems** (post-write audit cut `pathB_residual_a0_eq_zero` + `pathB_residual_a2_eq_zero` rfl-tautology wrappers; inlined into `dirac_diffInvariantAt_zero`/`_two`). Trend: 6c.3=12, 6b.1=5, 6d.1=6, 6d.2=4, 6d.3=1, 6c.1=2, 6c.4=3, 6c.5=3, 6c.2=2, 6e.1=2, 6e.2=1, **6e.3=2**.
+
+**Highlights:**
+- `EffectiveLagrangianCoefs` 5-tuple bundle (a₀, a₂_R, a₄_R², a₄_Ricci², a₄_Riemann²) with `density` + `density_a4` evaluators; canonical `diracCoefBundle` invokes Wave 1 coefficient defs by name (P6 cross-module bridge integrity).
+- Bridge `diracCoefBundle_density_a4_eq_wave2_a4_density` ties Wave 3 bundle to Wave 2's `a4_density`.
+- **MAIN load-bearing theorem `pathB_residual_a4_dirac_eq_zero`**: order-a₄ residual vanishes for the Dirac bundle. Proof body invokes Wave 2's `a4_density_eq_a4_density_in_RC2GB_basis` after the bridge — substantive cross-module Wave 2↔3 dependency.
+- **CORRECTNESS-PUSH biconditional `diff_invariance_a4_iff_dirac_basis_consistent`**: order-a₄ path-(b) invariance ⇔ Wave 2 basis-change identity at every curvature input. Both directions reduce algebraically to the Wave 2 main theorem — exposes the load-bearing content as an algebraic equivalence rather than a smuggled hypothesis.
+- **Falsifier `perturbed_pathB_residual_a4_at_unit_R_sq`**: at R²=1, perturbed-bundle residual equals exactly δ (linear-in-δ response). `perturbed_not_diffInvariantAt_four`: nonzero δ ⇒ NOT order-a₄ path-(b) diff-invariant.
+- Tracked-Prop `H_NonlinearDiffInvariance` bundles all three order witnesses; discharged for Dirac (`dirac_H_NonlinearDiffInvariance`), falsified for perturbed bundle (`perturbed_not_H_NonlinearDiffInvariance`).
+
+---
+
+### Wave 3 specification (preserved for reference) — `NonlinearDiffInvariance.lean` (6e.3) [Pipeline: Stages 1–12]
 
 **Goal:** At each order in expansion, effective action must be diff-invariant. Path-(b) direct check: compute variation under infinitesimal coordinate change, verify it vanishes. Path-(a) symmetry-enhancement emergence theorem deferred to backlog.
 

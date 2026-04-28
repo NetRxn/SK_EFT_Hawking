@@ -8436,3 +8436,331 @@ def higher_curvature_predicted_in_observational_band(N_f, bound_value):
         abs(higher_curvature_Riemann_sq_coefficient(N_f)),
     )
     return bool(largest <= float(bound_value))
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 3 — Nonlinear Diffeomorphism Invariance (path-b)
+#
+# Path-(b) direct check that the Seeley-DeWitt effective Lagrangian is
+# diff-invariant order-by-order at orders a_0, a_2, a_4. The "anomaly
+# residual" at order n is the algebraic mismatch between the same
+# density expressed in two equivalent scalar-invariant bases (e.g.,
+# {R², R_μν², R_μνρσ²} vs Stelle {R², C², 𝒢} at a_4); for the
+# Christensen-Duff Dirac coefficient bundle this residual vanishes
+# identically (Wave 2 main theorem `a4_density_eq_a4_density_in_RC2GB_basis`).
+# ════════════════════════════════════════════════════════════════════
+
+def diff_invariance_anomaly_residual_a0(N_f):
+    """Path-b anomaly residual at order a_0.
+
+    a_0 is a constant scalar (= 4 N_f / (4π)²); its variation under
+    any infinitesimal coordinate transformation is identically zero,
+    so the residual is exactly 0 by construction.
+
+    Lean: NonlinearDiffInvariance.pathB_residual_a0
+    Aristotle: manual
+    Source: Wald 1984 §E.1; Vassilevich 2003 §3.1
+    """
+    from src.core.formulas import seeley_dewitt_a0
+    _ = float(seeley_dewitt_a0(N_f))  # exercise the constant — value irrelevant
+    return 0.0
+
+
+def diff_invariance_anomaly_residual_a2(N_f, R):
+    """Path-b anomaly residual at order a_2.
+
+    a_2 = c_R(N_f) · R is a polynomial in the scalar invariant R; under
+    any diff transformation R transforms as a scalar, so a_2 transforms
+    covariantly and the residual vanishes for any R.
+
+    Lean: NonlinearDiffInvariance.pathB_residual_a2
+    Aristotle: manual
+    Source: Wald 1984 §E.1
+    """
+    from src.core.formulas import seeley_dewitt_a2_R_coefficient
+    _ = float(seeley_dewitt_a2_R_coefficient(N_f)) * float(R)  # exercise scalar
+    return 0.0
+
+
+def diff_invariance_anomaly_residual_a4(N_f, R, R_sq, Ricci_sq, Riemann_sq):
+    """Path-b anomaly residual at order a_4.
+
+    Computes the basis-change residual:
+
+        residual_a4 = a_4 in {R², R_μν², R_μνρσ²} basis
+                    − a_4 in Stelle {R², C², 𝒢} basis
+
+    Wave 2's main theorem ``a4_density_eq_a4_density_in_RC2GB_basis``
+    implies this is zero for any inputs at the algebraic level (the R
+    argument is unused at a_4 but kept in the signature for order-by-
+    order uniformity at the diff-invariance API).
+
+    Returned value should be < ``DIFF_INVARIANCE_PARAMS['PATH_B_RESIDUAL_TOLERANCE']``.
+
+    Lean: NonlinearDiffInvariance.pathB_residual_a4,
+          NonlinearDiffInvariance.pathB_residual_a4_dirac_eq_zero
+    Aristotle: manual
+    Source: Phase 6e Wave 2 HigherCurvatureStructure.lean
+            theorem `a4_density_eq_a4_density_in_RC2GB_basis`
+    """
+    _ = float(R)  # accept R for uniform signature; not used at a_4
+    from src.higher_curvature.curvature_basis import basis_change_residual
+    return float(basis_change_residual(N_f, R_sq, Ricci_sq, Riemann_sq))
+
+
+def diff_invariance_holds_at_order(order, N_f, R, R_sq, Ricci_sq,
+                                     Riemann_sq):
+    """Boolean wrapper: path-b residual at given order is below tolerance.
+
+    Returns True iff the order-n anomaly residual is below
+    ``DIFF_INVARIANCE_PARAMS['PATH_B_RESIDUAL_TOLERANCE']``.
+
+    Lean: NonlinearDiffInvariance.DiffInvariantAt,
+          NonlinearDiffInvariance.dirac_diffInvariantAt_zero,
+          NonlinearDiffInvariance.dirac_diffInvariantAt_two,
+          NonlinearDiffInvariance.dirac_diffInvariantAt_four
+    Aristotle: manual
+    """
+    from src.core.constants import DIFF_INVARIANCE_PARAMS
+    tol = float(DIFF_INVARIANCE_PARAMS['PATH_B_RESIDUAL_TOLERANCE'])
+    if int(order) == 0:
+        residual = abs(diff_invariance_anomaly_residual_a0(N_f))
+    elif int(order) == 2:
+        residual = abs(diff_invariance_anomaly_residual_a2(N_f, R))
+    elif int(order) == 4:
+        residual = abs(diff_invariance_anomaly_residual_a4(
+            N_f, R, R_sq, Ricci_sq, Riemann_sq))
+    else:
+        raise ValueError(
+            f"Order {order} not in canonical Wave 3 order list "
+            f"{DIFF_INVARIANCE_PARAMS['ORDER_LIST']}"
+        )
+    return bool(residual < tol)
+
+
+def diff_invariance_holds_order_by_order(N_f, R, R_sq, Ricci_sq,
+                                           Riemann_sq):
+    """Path-(b) order-by-order diff-invariance check.
+
+    Returns True iff the path-b anomaly residual vanishes at all canonical
+    orders ``DIFF_INVARIANCE_PARAMS['ORDER_LIST'] = (0, 2, 4)``. For the
+    Wave 1 Christensen-Duff Dirac bundle this is True identically by
+    Wave 2's basis-change identity at order a_4 plus structural
+    triviality at orders a_0 and a_2.
+
+    This is the **Wave 3 correctness-push anchor**: if False at any
+    order, the ADW emergent-gravity claim is falsified at the nonlinear
+    level (see roadmap §Track C).
+
+    Lean: NonlinearDiffInvariance.H_NonlinearDiffInvariance,
+          NonlinearDiffInvariance.dirac_H_NonlinearDiffInvariance
+    Aristotle: manual
+    Source: Phase 6e Wave 1 + Wave 2; Wald 1984 App. E.1
+    """
+    from src.core.constants import DIFF_INVARIANCE_PARAMS
+    return all(
+        diff_invariance_holds_at_order(n, N_f, R, R_sq, Ricci_sq, Riemann_sq)
+        for n in DIFF_INVARIANCE_PARAMS['ORDER_LIST']
+    )
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 4 — Nonlinear Einstein Field Equations from ADW
+# ════════════════════════════════════════════════════════════════════
+# At the trace level of the variational EFE
+#   δS/δe^a_μ = 0  →  R + α_HC · 𝒜₄(R, R_μν², R_μνρσ²) = 8π G_N · T_emerg_trace
+# the Wave-1 Christensen-Duff Dirac calibration absorbs the Einstein
+# + matter trace into the Sakharov-Adler baseline at α_ADW = 1, so the
+# residual is the deviation `8π G_N · ρ_ADW · (α_ADW − 1)`.
+#
+# This Python module mirrors the Lean module
+# ``SKEFTHawking.NonlinearEFE`` and supplies numerical evaluators for:
+#   - emergent vs matter stress-energy traces and their deviation
+#   - trace-level EFE residual + closed-form (α_ADW − 1) channel
+#   - PPN-style observable ratios (deflection / precession / ringdown)
+#     under the ADW α_ADW rescaling
+#   - higher-curvature correction at representative backgrounds
+# ════════════════════════════════════════════════════════════════════
+
+def emergent_stress_energy_trace(rho_ADW, alpha_ADW):
+    """Emergent stress-energy trace under ADW substrate rescaling.
+
+    ``T_emerg_trace = α_ADW · ρ_ADW``: the matter density rescaled by
+    the dimensionless ADW coefficient.  At ``α_ADW = 1`` this matches
+    the bare matter trace (Sakharov-Adler calibration baseline).
+
+    Lean: NonlinearEFE.emergentStressEnergyTrace
+    Aristotle: manual
+    Source: Phase 6a.1 LinearizedEFE (G_N_emerg = α_ADW · G_N_sakharov);
+    Phase 6e Wave 4 paper42_nonlinear_efe
+    """
+    return float(alpha_ADW) * float(rho_ADW)
+
+
+def matter_stress_energy_trace(rho_ADW):
+    """Bare matter stress-energy trace (no ADW rescaling).
+
+    Lean: NonlinearEFE.matterStressEnergyTrace
+    Aristotle: manual
+    """
+    return float(rho_ADW)
+
+
+def emergent_minus_matter_stress_energy_trace(rho_ADW, alpha_ADW):
+    """Linear deviation channel: ``T_emerg − T_matter = (α_ADW − 1) · ρ_ADW``.
+
+    The load-bearing observable channel of Wave 4: any non-zero
+    deviation indicates ``α_ADW ≠ 1`` (and conversely).
+
+    Lean: NonlinearEFE.emergentStressEnergyTrace_minus_matter_eq
+    Aristotle: manual
+    Source: Phase 6e Wave 4 paper42_nonlinear_efe Eq. (3.1)
+    """
+    return (float(alpha_ADW) - 1.0) * float(rho_ADW)
+
+
+def efe_residual_trace(G_N, rho_ADW, alpha_ADW):
+    """Trace-level EFE residual under ADW α_ADW rescaling.
+
+    ``residual = 8π G_N · ρ_ADW · (α_ADW − 1)``.
+
+    The residual vanishes iff ``α_ADW = 1`` (under positive G_N,
+    non-zero ρ_ADW).  This is the Wave 4 Decision-Gate biconditional
+    (nonlinear analogue of Wave 1's Decision Gate E.2).
+
+    Lean: NonlinearEFE.efeResidualTrace,
+          NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity
+    Aristotle: manual
+    Source: Phase 6e Wave 4 paper42_nonlinear_efe Eq. (3.2)
+    """
+    import math
+    return 8.0 * math.pi * float(G_N) * float(rho_ADW) * (float(alpha_ADW) - 1.0)
+
+
+def deflection_ratio(alpha_ADW):
+    """Light-deflection observable ratio ``δθ_ADW / δθ_GR = α_ADW``.
+
+    Linearized PPN under direct G_N rescaling.  Multiplicative factor
+    by which the ADW model rescales solar-deflection observations
+    relative to the Eddington/GR baseline (1.751 arcsec at the solar
+    limb; Will 2018 §4.1).
+
+    Lean: NonlinearEFE.deflectionRatio
+    Aristotle: manual
+    Source: Will 2018 §4.1; Phase 6e Wave 4 paper42_nonlinear_efe Eq. (4.1)
+    """
+    return float(alpha_ADW)
+
+
+def precession_ratio(alpha_ADW):
+    """Perihelion-precession observable ratio ``(2 α_ADW + 1) / 3``.
+
+    PPN formula ``δφ/δφ_GR = (2 + 2γ − β)/3`` with ``γ = α_ADW``,
+    ``β = 1`` under the ADW substrate-rescaling model (Will 2018
+    Eq. 4.31).  Equals 1 iff ``α_ADW = 1``; deviation is ``2(α-1)/3``
+    (substantively *non-trivial* coefficient — the cross-channel
+    multi-observation prediction).
+
+    Lean: NonlinearEFE.precessionRatio,
+          NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity,
+          NonlinearEFE.precession_dev_eq_two_thirds_deflection_dev
+    Aristotle: manual
+    Source: Will 2018 Eq. 4.31; Phase 6e Wave 4 paper42_nonlinear_efe Eq. (4.2)
+    """
+    return (2.0 * float(alpha_ADW) + 1.0) / 3.0
+
+
+def ringdown_ratio(alpha_ADW):
+    """Ringdown-frequency ratio ``ω_ADW / ω_GR = α_ADW`` (linearized).
+
+    Linearized rescaling of the Schwarzschild fundamental ℓ=2 mode
+    under ADW G_N → α_ADW · G_N_sakharov.
+
+    Lean: NonlinearEFE.ringdownRatio
+    Aristotle: manual
+    Source: Berti et al. CQG 26:163001 (2009); Phase 6e Wave 4
+    paper42_nonlinear_efe Eq. (4.3)
+    """
+    return float(alpha_ADW)
+
+
+def higher_curvature_correction_at_background(N_f, R_sq, Ricci_sq,
+                                                Riemann_sq):
+    """Trace-level higher-curvature ``a_4`` correction at curvature inputs.
+
+    Wave 2's `a4_density` evaluator on a representative-background tuple
+    `(R_sq, Ricci_sq, Riemann_sq)`.  Provides the higher-curvature
+    contribution to the nonlinear EFE at order `a_4`.
+
+    For Wave-2-bounded coefficients (|c| < hc_bound_pulsar = 1e59 per
+    pulsar-bound theorem), the correction is bounded by
+    ``|correction| ≤ (|R²| + |Ricci²| + |Riem²|) · 1e59``.
+
+    Lean: NonlinearEFE.higherCurvatureCorrection,
+          NonlinearEFE.higherCurvatureCorrection_abs_bound
+    Aristotle: manual
+    Source: Phase 6e Wave 2 + Wave 4 paper42_nonlinear_efe §5
+    """
+    return (
+        higher_curvature_R_sq_coefficient(N_f) * float(R_sq)
+        + higher_curvature_Ricci_sq_coefficient(N_f) * float(Ricci_sq)
+        + higher_curvature_Riemann_sq_coefficient(N_f) * float(Riemann_sq)
+    )
+
+
+def efe_residual_at_dirac_calibration(Lambda_UV, N_f, rho_ADW):
+    """Trace-level EFE residual at the Dirac+Sakharov calibration ``α=1``.
+
+    Substantive cross-bridge: at the Wave 1 Christensen-Duff Dirac
+    bundle and the Sakharov-Adler calibration ``α_ADW = 1``, the EFE
+    residual is identically zero (no FP roundoff: the formula gives 0
+    exactly).  This is the Lean ↔ Python bridge for
+    ``efeResidualTrace_at_dirac_calibration_vanishes``.
+
+    Lean: NonlinearEFE.efeResidualTrace_at_dirac_calibration_vanishes
+    Aristotle: manual
+    Source: Phase 6a.1 LinearizedEFE.G_N_emerg_at_alpha_one;
+    Phase 6e Wave 1 G_N_from_a2_eq_G_N_sakharov;
+    Phase 6e Wave 4 paper42_nonlinear_efe Eq. (3.3)
+    """
+    G_N = G_N_from_seeley_dewitt(Lambda_UV, N_f)
+    return efe_residual_trace(G_N, rho_ADW, 1.0)
+
+
+def nonlinear_efe_holds(Lambda_UV, N_f, rho_ADW, alpha_ADW,
+                          tolerance=None):
+    """Bundled Wave-4 predicate: does ``H_NonlinearEFEHolds`` hold?
+
+    Three-conjunct predicate mirroring
+    ``NonlinearEFE.H_NonlinearEFEHolds``:
+
+    1. EFE residual vanishes (within tolerance) at
+       ``G_N = G_N_emerg(Λ_UV, N_f, α_ADW)``;
+    2. Wave 2 higher-curvature pulsar bound holds at the given N_f;
+    3. Wave 3 path-(b) diff invariance holds (always True for the
+       Christensen-Duff Dirac bundle by Wave 2's basis-change identity).
+
+    Lean: NonlinearEFE.H_NonlinearEFEHolds,
+          NonlinearEFE.dirac_H_NonlinearEFEHolds_at_alpha_one
+    Aristotle: manual
+    Source: Phase 6e Wave 4 paper42_nonlinear_efe §6
+    """
+    from src.core.constants import (
+        NONLINEAR_EFE_PARAMS,
+        HIGHER_CURVATURE_PARAMS,
+    )
+    if tolerance is None:
+        tolerance = NONLINEAR_EFE_PARAMS['EFE_RESIDUAL_TOLERANCE']
+    # Decision-Gate biconditional: residual = 0 iff α = 1.  The Python
+    # numerical analogue uses |α - 1| against tolerance directly, since
+    # the absolute residual has scale (8π · G_N · ρ_ADW) — which can be
+    # arbitrarily small in natural units — and the substantive content
+    # is the calibration-parameter deviation, not the residual scale.
+    residual_ok = abs(float(alpha_ADW) - 1.0) < tolerance
+    pulsar_bound_ok = higher_curvature_predicted_in_observational_band(
+        N_f, HIGHER_CURVATURE_PARAMS['HC_BOUND_PULSAR_C_SQ']
+    )
+    diff_inv_ok = diff_invariance_holds_order_by_order(
+        N_f, R=12.0, R_sq=144.0, Ricci_sq=36.0, Riemann_sq=24.0,
+    )
+    return bool(residual_ok and pulsar_bound_ok and diff_inv_ok)

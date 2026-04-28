@@ -2032,7 +2032,10 @@ CITATION_REGISTRY = {
         'doi': None,
         'arxiv': None,
         'doi_verified': True,
-        'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex'],
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
+                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
         'provides': ['Phase 6a.1 LinearizedEFE.lean Lean formalization + '
                      'Sakharov-Adler match locus (companion of paper23, '
                      'in preparation 2026)'],
@@ -2043,6 +2046,133 @@ CITATION_REGISTRY = {
                  'to satisfy Gate 1 CitationIntegrity binary criterion '
                  '(every cited bibkey must be in registry). Flag as '
                  '`year: 2026, journal: in preparation` until paper23 '
+                 'is submitted and a journal venue is assigned. '
+                 '`inprep: True` discriminator marks this entry as '
+                 'exempt from primary-source-cache requirement.',
+    },
+    'DiffInvariance2026': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Path-(b) order-by-order diffeomorphism invariance of '
+                 'the Seeley-DeWitt heat-kernel effective action',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/paper42_nonlinear_efe/paper_draft.tex'],
+        'provides': ['Phase 6e Wave 3 NonlinearDiffInvariance.lean Lean '
+                     'formalization + Decision Gate E.3 PASS verdict '
+                     '(companion of paper41, in preparation 2026)'],
+        'notes': 'In-preparation self-cite to companion paper41 '
+                 '(`papers/paper41_diff_invariance/paper_draft.tex`). The '
+                 '`NonlinearDiffInvariance` Lean module exists and is '
+                 'verified (Phase 6e Wave 3 SHIPPED 2026-04-28). Registry '
+                 'entry created to satisfy Gate 1 CitationIntegrity binary '
+                 'criterion. Flag as `year: 2026, journal: in preparation` '
+                 'until paper41 is submitted and a journal venue is assigned. '
+                 '`inprep: True` discriminator marks this entry as exempt '
+                 'from primary-source-cache requirement.',
+    },
+    'BertiCardosoStarinets2009': {
+        'authors': 'Berti, E., Cardoso, V., Starinets, A. O.',
+        'title': 'Quasinormal modes of black holes and black branes',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 26,
+        'page': '163001',
+        'year': 2009,
+        'doi': '10.1088/0264-9381/26/16/163001',
+        'arxiv': '0905.2975',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/paper42_nonlinear_efe/paper_draft.tex'],
+        'provides': ['Schwarzschild fundamental ℓ=2 ringdown frequency '
+                     'ω·GM/c³ = 0.3737 (Table III); QNM spectrum review'],
+        'notes': 'Wave 4 ringdown-frequency GR baseline. Tracked-Prop notes '
+                 'cite Table III value for ℓ=2 fundamental Schwarzschild '
+                 'mode (Φ_R · GM/c³ = 0.3737).',
+    },
+    'Roehm2026Wave1': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Formal heat-kernel calibration of induced Newton\'s constant '
+                 'from the ADW Dirac substrate',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/paper41_diff_invariance/paper_draft.tex',
+                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
+        'provides': ['Phase 6e Wave 1 HeatKernelExpansion.lean Lean '
+                     'formalization + Sakharov-Adler calibration of induced '
+                     'Newton constant via heat-kernel a_2 (companion of '
+                     'paper39, in preparation 2026)'],
+        'notes': 'In-preparation self-cite to companion paper39 '
+                 '(`papers/paper39_heat_kernel_expansion/paper_draft.tex`). '
+                 'The `HeatKernelExpansion` Lean module exists and is '
+                 'verified (Phase 6e Wave 1 SHIPPED 2026-04-27). Registry '
+                 'entry created to satisfy Gate 1 CitationIntegrity binary '
+                 'criterion. Flag as `year: 2026, journal: in preparation` '
+                 'until paper39 is submitted and a journal venue is assigned.',
+    },
+    'Wald1984': {
+        'authors': 'Wald, R. M.',
+        'title': 'General Relativity',
+        'journal': 'University of Chicago Press (book)',
+        'volume': None,
+        'page': None,
+        'year': 1984,
+        'doi': '10.7208/chicago/9780226870373.001.0001',
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6e/primary-sources/Wald1984.json',
+        'used_in': ['papers/paper41_diff_invariance/paper_draft.tex',
+                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
+        'provides': ['Path-(b) diff-invariance framework via Lie '
+                     'derivatives + total divergences (App. E.1); '
+                     'canonical reference for general-relativistic '
+                     'variational calculus; §4.2 variational EFE '
+                     'derivation; §6.1 Schwarzschild Kretschmann scalar'],
+        'notes': 'Book reference, ISBN 978-0-226-87033-5; primary '
+                 'mathematical-relativity textbook. DOI 10.7208/chicago/'
+                 '9780226870373.001.0001 resolves to U. Chicago Press '
+                 'electronic edition. Wave 3 path-b framework grounded '
+                 'in this reference.',
+    },
+    'HigherCurvature2026': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Higher-curvature structure from the Dirac heat kernel: '
+                 'microscopic predictions and observational ceilings',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/paper41_diff_invariance/paper_draft.tex',
+                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
+        'provides': ['Phase 6e Wave 2 HigherCurvatureStructure.lean Lean '
+                     'formalization + Stelle-basis change (companion of '
+                     'paper40, in preparation 2026)'],
+        'notes': 'In-preparation self-cite to companion paper40 '
+                 '(`papers/paper40_higher_curvature/paper_draft.tex`). '
+                 'The `HigherCurvatureStructure` Lean module exists and '
+                 'is verified (Phase 6e Wave 2 SHIPPED 2026-04-30). '
+                 'Registry entry created to satisfy Gate 1 '
+                 'CitationIntegrity binary criterion. Flag as '
+                 '`year: 2026, journal: in preparation` until paper40 '
                  'is submitted and a journal venue is assigned.',
     },
     'Vassilevich2003': {
@@ -2055,13 +2185,19 @@ CITATION_REGISTRY = {
         'doi': '10.1016/j.physrep.2003.09.002',
         'arxiv': 'hep-th/0306138',
         'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6e/primary-sources/Vassilevich2003.pdf',
         'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
-                    'papers/paper40_higher_curvature/paper_draft.tex'],
+                    'papers/paper40_higher_curvature/paper_draft.tex',
+                    'papers/paper41_diff_invariance/paper_draft.tex'],
         'provides': ['Christensen-Duff Dirac a₀, a₂, a₄ coefficients '
                      '(Eqs. 4.37-4.42); heat-kernel asymptotic existence '
                      '(Theorem 4.1)'],
         'notes': 'Canonical heat-kernel reference. Underlies Wave 1 + Wave 2 '
-                 'closed-form Christensen-Duff coefficients.',
+                 'closed-form Christensen-Duff coefficients; Wave 3 path-(b) '
+                 'diff-invariance check inherits the same coefficient bundle. '
+                 'Full PDF cached in `Lit-Search/Phase-6e/primary-sources/` via '
+                 'arXiv hep-th/0306138.',
     },
     'ChristensenDuff1979': {
         'authors': 'Christensen, S. M., and Duff, M. J.',
@@ -2073,12 +2209,20 @@ CITATION_REGISTRY = {
         'doi': '10.1016/0550-3213(79)90516-9',
         'arxiv': None,
         'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6e/primary-sources/ChristensenDuff1979.json',
         'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
-                    'papers/paper40_higher_curvature/paper_draft.tex'],
+                    'papers/paper40_higher_curvature/paper_draft.tex',
+                    'papers/paper41_diff_invariance/paper_draft.tex'],
         'provides': ['Spin-1/2 Dirac a₄ rational coefficients '
                      '(Eq. 3.8)'],
         'notes': 'Original explicit a₄ for spin-1/2 Dirac fermion; pre-Vassilevich '
-                 'review.',
+                 'review. Wave 3 path-(b) diff-invariance check inherits the same '
+                 'coefficient bundle. Title spelling note: Crossref renders the '
+                 'title with a space ("super theorems"); project bibliographies '
+                 'follow the more common no-space convention ("supertheorems") '
+                 'used in heat-kernel review literature (Vassilevich 2003, '
+                 'Gilkey 1995). Both forms refer to the same DOI-resolved paper.',
     },
     'Stelle1977': {
         'authors': 'Stelle, K. S.',
@@ -2090,11 +2234,14 @@ CITATION_REGISTRY = {
         'doi': '10.1103/PhysRevD.16.953',
         'arxiv': None,
         'doi_verified': True,
-        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex'],
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6e/primary-sources/Stelle1977.json',
+        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex',
+                    'papers/paper41_diff_invariance/paper_draft.tex'],
         'provides': ['Renormalizable R + αR² + βC² truncation; canonical '
                      '{R², C²} basis with topological 𝒢 (Eq. 2.4)'],
         'notes': 'Canonical reference for the {R², C², 𝒢} basis used in '
-                 'Wave 2 HigherCurvatureStructure.lean.',
+                 'Wave 2 HigherCurvatureStructure.lean and inherited by Wave 3.',
     },
     'Lovelock1971': {
         'authors': 'Lovelock, D.',
@@ -2144,11 +2291,13 @@ CITATION_REGISTRY = {
         'doi': '10.1088/0264-9381/32/24/243001',
         'arxiv': '1501.07274',
         'doi_verified': True,
-        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex'],
+        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex',
+                    'papers/paper42_nonlinear_efe/paper_draft.tex'],
         'provides': ['Comprehensive review of GR tests including binary-pulsar '
                      'period-decay precision (Hulse-Taylor, Damour-Taylor 1991; '
                      'Weisberg-Huang 2016) and projected sensitivities for '
-                     'future GW observations'],
+                     'future GW observations; ringdown frequency baseline '
+                     '(Berti-Cardoso-Starinets review CQG 26:163001 (2009))'],
         'notes': 'Wave 2 correctness-push reference. Verified via Crossref API '
                  '2026-04-30: title + authors + CQG 32:243001 (2015) match. '
                  'Earlier draft of paper40 mis-cited venue as Living Rev. '
@@ -3346,9 +3495,15 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'used_in': [
             'papers/paper34_equivalence_principle/paper_draft.tex',
+            'papers/paper42_nonlinear_efe/paper_draft.tex',
         ],
-        'provides': [],
-        'notes': 'Standard reference for EP-test taxonomy and PPN parameter framework.',
+        'provides': ['PPN parameter framework (§4.1, §4.2); light-deflection '
+                     'GR baseline 1.751 arcsec at solar limb; perihelion '
+                     'precession formula (Eq. 4.31); VLBI + MESSENGER '
+                     'precision floors (Table 3)'],
+        'notes': 'Standard reference for EP-test taxonomy and PPN parameter '
+                 'framework. Wave 4 paper42 cites §4.1 (deflection) + §4.2 '
+                 '(perihelion) + Table 3 (observation floors).',
     },
     'Berezhiani2015': {
         'authors': 'Berezhiani, L., Khoury, J.',

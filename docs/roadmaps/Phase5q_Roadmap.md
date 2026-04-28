@@ -352,3 +352,90 @@ Wave 1 (deep research) ──COMPLETE──→ Wave 2 (A(1) Ring + SageMath)
 ---
 
 *Phase 5q roadmap. Created 2026-04-08. Updated 2026-04-08 (deep research COMPLETE — brute-force approach confirmed, resolution data extracted, key correction: Ext^4 = F_2^3 not Z/16, minimality simplifies Ext dimension computation, RREF witness approach for exactness). All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md).*
+
+---
+
+## Append-only Wave: H1/H3/H4 Topological-Hypothesis Finalization
+
+*Appended 2026-04-28 | Trigger: post-Phase 6 gap analysis (`temporary/Research-Overview/research_overview_analysis.md`, 2026-04-28). Status: **LATENT — Mathlib-blocked**.*
+
+### Wave H — `ThreeGenerationsTopologicalClosure.lean` [5q.H] [Pipeline: Stages 1–13]
+
+**Goal.** Discharge the three remaining textbook-topology hypotheses (H1 ko cohomology, H3 Adams spectral sequence collapses at E_2, H4 Anderson–Brown–Peterson splitting) that gate the generation-constraint chain. Once shipped, the chain `SM 16 Weyl → c₋ = 8 N_f → 24 | c₋ → 3 | N_f` becomes fully axiom-free (currently axiom-free in the *algebraic* layer machine-checked in 5q + 5r, with H1/H3/H4 documented as textbook-topology hypotheses pending Lean's algebraic-topology infrastructure).
+
+**Trigger condition (Mathlib gate):** This wave activates only when Mathlib4 ships:
+- (M1) Spectrum theory + cohomology spectra, including `ko` (real connective K-theory spectrum).
+- (M2) Adams spectral sequence machinery — long-horizon Mathlib milestone, estimated 1–3 years from 2026-04-28.
+- (M3) Anderson–Brown–Peterson splitting or equivalent infrastructure for `pi_n(MSpin)` — also a Mathlib long-horizon target.
+
+If any one of M1/M2/M3 lands, the corresponding sub-wave (H.1 / H.3 / H.4) becomes ship-eligible. The full wave H ships only when all three sub-waves ship.
+
+**Status (2026-04-28):** **GATED — awaiting Mathlib milestones M1/M2/M3.** The Phase 6 gap-analysis (2026-04-28) elevated this from "deferred indefinitely" to "tracked-and-watched": each Mathlib release should be checked against M1/M2/M3 triggers.
+
+**Sub-waves:**
+
+#### Sub-wave H.1 — `KoCohomologyHypothesis.lean` (gated on Mathlib M1)
+
+**Goal.** Formalize H1: `H*(ko; F_2) ≅ A ⊗_{A(1)} F_2` (Adams 1974, Ch. 16). Discharges the connection between `Ext^n_{A(1)}(F_2, F_2)` (machine-checked in Phase 5q `A1Ext.lean`) and the E_2 page of the Adams spectral sequence for `ko`.
+
+**Module structure:**
+- `lean/SKEFTHawking/KoCohomologyHypothesis.lean` — ~10 substantive theorems target.
+- Consumes: Mathlib `ko` spectrum + cohomology API (M1 prerequisite).
+- Cross-bridge to `A1Ext.lean` Phase 5q.
+
+**Stage 13 anchors:** Adams, *Stable Homotopy and Generalised Homology*, Ch. 16 (1974); Milnor, "On the Stiefel-Whitney numbers of complex manifolds," Topology 4, 53 (1965).
+
+#### Sub-wave H.3 — `AdamsSpectralSequenceCollapse.lean` (gated on Mathlib M2)
+
+**Goal.** Formalize H3: the Adams spectral sequence for `ko` collapses at `E_2`. The potential differential `d_3(h_1²) → v` is ruled out by knowledge of `pi_*(ko)` (Bott periodicity).
+
+**Module structure:**
+- `lean/SKEFTHawking/AdamsSpectralSequenceCollapse.lean` — ~12 substantive theorems target.
+- Consumes: Mathlib spectral-sequence + Bott-periodicity infrastructure (M2 prerequisite).
+- Cross-bridge to `RokhlinBridge.lean` Phase 5b.
+
+**Stage 13 anchors:** Ravenel, *Complex Cobordism and the Stable Homotopy Groups of Spheres*, Ch. 3 (2003); Bott, "The stable homotopy of the classical groups," Ann. Math. 70, 313 (1959).
+
+#### Sub-wave H.4 — `AndersonBrownPetersonSplitting.lean` (gated on Mathlib M3)
+
+**Goal.** Formalize H4: `pi_n(MSpin) ≅ pi_n(ko)` for `n < 8` via Anderson–Brown–Peterson splitting (ABP 1967). Discharges the connection between `MSpin` and `ko` at low degree.
+
+**Circularity caveat (documented in HYPOTHESIS_REGISTRY):** ABP historically used Rokhlin-equivalent facts. The discharge must establish that the formal proof does not implicitly cite Rokhlin's theorem (which is what we're trying to derive). If the discharge requires Rokhlin, H4 graduates from "textbook hypothesis" to "circular dependency" and the chain stays at the Phase 5q + 5r algebraic-layer machine-checked level with H4 formally retained as a hypothesis.
+
+**Module structure:**
+- `lean/SKEFTHawking/AndersonBrownPetersonSplitting.lean` — ~10 substantive theorems target.
+- Consumes: Mathlib `MSpin` spectrum + low-degree splitting infrastructure (M3 prerequisite).
+- Documents circularity check.
+
+**Stage 13 anchors:** Anderson, Brown, Peterson, "The structure of the Spin cobordism ring," Ann. Math. 86, 271 (1967); Stong, *Notes on Cobordism Theory*, Princeton (1968).
+
+#### Sub-wave H.5 — `ThreeGenerationsAxiomFree.lean` (gated on H.1 + H.3 + H.4 all shipped)
+
+**Goal.** Combine H.1 + H.3 + H.4 with the existing algebraic chain (Phase 5q `A1Ext.lean` + Phase 5r `ChangeOfRings.lean` + Phase 5b `RokhlinBridge.lean` + Phase 5b `WangBridge.lean` + Phase 5b `ModularInvarianceConstraint.lean` + Phase 5b `GenerationConstraint.lean`) into a single `three_generations_axiom_free` master theorem. The project's headline `N_f ≡ 0 mod 3` result becomes fully axiom-free.
+
+**Module structure:**
+- `lean/SKEFTHawking/ThreeGenerationsAxiomFree.lean` — ~6 substantive theorems target (master synthesis).
+
+**Output:** Project-level result: the only remaining axiom in the entire codebase becomes `gapped_interface_axiom` (Phase 5h), which is independent of the generation-constraint chain. The "16 convergence" chain is fully closed.
+
+### Strengthening checklist (sub-wave-level)
+
+- (P6 cross-module bridge): every sub-wave H.X must `import` and `call` the relevant Mathlib infrastructure (not just reference docstring-style).
+- (Anti-circularity): H.4's discharge must not implicitly use Rokhlin's theorem — explicit non-Rokhlin chain required.
+
+### Total LOE estimate (post-Mathlib trigger)
+
+- Sub-wave H.1: 2–4 PM Lean (post-M1)
+- Sub-wave H.3: 4–8 PM Lean (post-M2; the heaviest sub-wave — Adams spectral sequence is sophisticated)
+- Sub-wave H.4: 2–4 PM Lean (post-M3)
+- Sub-wave H.5 (master synthesis): 1 PM Lean
+- **Total: 9–17 PM** (post-trigger)
+
+### Cross-phase impact
+
+- Phase 5q + 5r modules: unchanged.
+- Phase 5b chain modules (`RokhlinBridge`, `WangBridge`, `ModularInvarianceConstraint`, `GenerationConstraint`): unchanged; sub-wave H.5 consumes them.
+- `HYPOTHESIS_REGISTRY`: each shipped sub-wave moves an entry from "tracked-hypothesis" to "discharged."
+- Paper 10 (modular generation constraint): can re-claim "fully axiom-free" status post-H.5 ship.
+
+*Append-only addition 2026-04-28. Status: GATED on Mathlib M1/M2/M3 milestones. Tracking only — no active work until trigger.*

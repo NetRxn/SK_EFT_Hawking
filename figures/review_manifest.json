@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-28T00:17:03.480805+00:00",
+  "generated": "2026-04-28T14:08:52.876989+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -2105,6 +2105,61 @@
         "emerald",
         "carmine",
         "horizon"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_diff_invariance_order_check",
+      "function": "fig_diff_invariance_order_check",
+      "caption": "Phase 6e Wave 3 \u2014 Path-(b) diff-invariance check at order a\u2084. Left panel: log-scale max-residual on a 16-point curvature grid for the Christensen-Duff Dirac bundle (\u03b4=0, at machine \u03b5) vs perturbed bundles with single coefficient shifted by \u03b4 \u2208 {10\u207b\u2079, 10\u207b\u2076, 10\u207b\u00b3}. The dashed reference line marks the path-b tolerance 10\u207b\u00b9\u00b2. Dirac sits below tolerance; every nonzero perturbation is detectable above it. Right panel: linearity demonstration \u2014 at unit R\u00b2, the perturbed-bundle residual equals exactly \u03b4 (Lean theorem `perturbed_pathB_residual_a4_at_unit_R_sq`). Lean: pathB_residual_a4_dirac_eq_zero, diff_invariance_a4_iff_dirac_basis_consistent, dirac_H_NonlinearDiffInvariance.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_diff_invariance_order_check.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_diff_invariance_order_check.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "\u03b4",
+        "yaxis": "residual"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine",
+        "emerald"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_T_emerg_vs_matter",
+      "function": "fig_T_emerg_vs_matter",
+      "caption": "Phase 6e Wave 4 \u2014 Emergent vs matter stress-energy and multi-channel PPN observable deviations under the ADW \u03b1_ADW rescaling. Left panel: the linear-in-(\u03b1\u22121) deviation channel ``T_emerg \u2212 T_matter = (\u03b1 \u2212 1) \u00b7 \u03c1_ADW`` at unit \u03c1; vanishes at the Sakharov-Adler calibration \u03b1 = 1 (Lean theorem `emergentStressEnergyTrace_eq_matter_iff_alpha_unity`). The amber band marks the 5\u00d710\u207b\u00b3 detection floor. Right panel: log-log relative-deviation for three observables \u2014 deflection (|\u03b1\u22121|), perihelion precession ((2/3)|\u03b1\u22121|), ringdown (|\u03b1\u22121|) \u2014 over the natural Vergeles band \u03b1 \u2208 [0.1, 10]. Cross-channel structural claim: precession_dev = (2/3) \u00d7 deflection_dev (Lean theorem `precession_dev_eq_two_thirds_deflection_dev`). Observation floors (VLBI 3\u00d710\u207b\u2074, MESSENGER 1\u00d710\u207b\u2074, GWTC-3 5\u00d710\u207b\u00b2) drawn as dashed lines. Lean: efeResidualTrace_eq_zero_iff_alpha_unity, deflectionRatio_minus_one_eq, deflectionRatio_deviation_exceeds_VLBI_floor, precessionRatio_eq_one_iff_alpha_unity, dirac_H_NonlinearEFEHolds_at_alpha_one.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_T_emerg_vs_matter.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_T_emerg_vs_matter.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "\u03b1_ADW",
+        "yaxis": "deviation"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "emerald"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

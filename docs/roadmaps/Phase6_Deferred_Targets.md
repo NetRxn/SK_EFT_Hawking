@@ -382,3 +382,49 @@ parked there have explicit discharge paths registered below.
 ---
 
 *Updated April 6, 2026. 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. Zero heartbeat overrides. Phases 5e-5f COMPLETE. Phase 5g W1-2 COMPLETE. Phase 5h W1-2 + W3-4 COMPLETE (GaugingStep, 34 thms, 0 sorry). Phase 5i W1 COMPLETE (Uqsl3 — first rank-2 QG, 21 thms, 0 sorry), W2 Stage 3 (Uqsl3Hopf — 4 sorry), W3 COMPLETE (SU3kFusion — first SU(3)_k fusion, 99 thms, 0 sorry), W4 partial (PolyQuotQ — 15 thms, 0 sorry). Phase 5j W1 COMPLETE (FermiPointTopology — 28 thms, 0 sorry). Aristotle Batch 2 in flight.*
+
+---
+
+## Append-only addendum: 2026-04-28 Phase 6 gap-analysis register
+
+*Appended 2026-04-28 | Source: `temporary/Research-Overview/research_overview_analysis.md` (2026-04-28 program-wide gap analysis). The 2026-04-28 Phase 6 gap analysis surfaced six items missing from active roadmaps; four were spun out as new Phase 6{j,k,l,m} roadmaps and three were appended to existing phases. This addendum documents the new register.*
+
+### New roadmaps created 2026-04-28
+
+| Phase | Title | Scope | Trigger |
+|-------|-------|-------|---------|
+| **6j** | Holographic Correspondence Deepening | RT bulk minimal-surface (Lewkowycz-Maldacena replica trick) on MTC substrate; CH modular Hamiltonian DERIVATION from MTC; HP scrambling-time quantitative tightening; holographic c-function | Phase 6c.5 tracked-Props promote to derived theorems |
+| **6k** | Quark Rung — CKM and Flavor Constraints on the SK-EFT Substrate | Top in scalar-rung; b/c/s in intermediate bands; light-quark hierarchy fall-through; CKM unitarity-triangle apex; CP-violating phase δ_CKM | Phase 5z architecture extended to quarks (parallel to W1 scalar / W2 Majorana) |
+| **6l** | Strong-CP θ̄ Direct Dynamics | ℤ_16-anomaly route to θ̄ smallness; substrate-derived axion (PQ analog); substrate instanton spectrum; θ-vacuum thermodynamics | Sharpens Phase 6c.1's Zhitnitsky absorption ("θ must be small") to derivation ("θ becomes small via mechanism Y") |
+| **6m** | Untested Dark-Energy Mechanism Probes | Causal-set DE (Track A); entropic-gravity DE (Track B); Jacobson-thermodynamic-GR DE (Track C); each as a Phase-5y-style 6-round probe | Extends `ARCHITECTURE_SCOPE.md` Layer 3 dark-sector boundary beyond Volovik-family closure |
+
+### Append-only waves added to existing phases 2026-04-28
+
+| Phase | Wave label | Goal | Status |
+|-------|-----------|------|--------|
+| **5q** | Wave H (sub-waves H.1, H.3, H.4, H.5) | Discharge H1 ko-cohomology, H3 Adams-spectral-sequence collapse, H4 Anderson-Brown-Peterson splitting; final master-synthesis theorem `three_generations_axiom_free` | GATED on Mathlib milestones M1/M2/M3 |
+| **5o** | Wave 5 (sub-waves 5.1–5.6) | Mathlib upstream PR cycle for the 114-theorem lean-tensor-categories library | GATED on Mathlib relationship-building (Zulip introduction + AI-content disclosure conversation) |
+| **5u** | Wave 21 (sub-waves 21.1–21.4) | Polariton experimental-partnership formalization with Paris LKB group (device-parameter audit, 1-page experimental proposal, outreach loop, conditional joint paper) | OPEN — awaiting user authorization Gate U.21 |
+
+### Items not given roadmap homes (Tier 3 register, no roadmap planned)
+
+These remain in the deferred-targets register but have no active roadmap:
+- Cosmic censorship conjecture itself (may become Phase 6g.7 if pursued).
+- Quantum-corrected effective action two-loop + higher fermion-determinant corrections (Phase 6e out-of-scope).
+- Anthropic / cosmological-selection mechanisms for fundamental constants (outside SK-EFT scope by design).
+- Tensor-network holographic codes (MERA) — adjacent literature; only touched obliquely by Phase 6j.
+- Dark-energy "modified gravity" routes (f(R), DGP, massive gravity) — outside SK-EFT substrate scope.
+
+### Reading order for the new roadmaps
+
+A reasonable execution priority — though all four new roadmaps can run autonomously after their respective gates open:
+
+1. **Phase 5o Wave 5** (Mathlib upstream) — highest leverage outreach; multi-month elapsed; start asynchronously now.
+2. **Phase 5u Wave 21** (polariton outreach) — second highest leverage; multi-month elapsed; start asynchronously after Paper 12 is at the readability bar.
+3. **Phase 6j** (holographic deepening) — natural continuation of shipped Phase 6c.4-6c.5; estimated 17–25 PM.
+4. **Phase 6l** (strong-CP θ̄ dynamics) — sharpens Phase 6c.1; estimated 12–18 PM.
+5. **Phase 6k** (quark rung) — extends Phase 5z architecture; estimated 14–22 PM.
+6. **Phase 6m** (untested DE mechanisms) — extends Phase 5y methodology; estimated 18–26 PM (review-paper-flavored).
+7. **Phase 5q Wave H** (three-generations finalization) — passive tracking; activates only on Mathlib milestones.
+
+*2026-04-28 addendum closes here. Original Phase 6 Deferred Targets register continues unchanged above.*

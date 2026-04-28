@@ -1,0 +1,851 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  28 APR 2026 09:32
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**paper_draft.tex
+(./paper_draft.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(/usr/local/texlive/2026/texmf-dist/tex/latex/revtex/revtex4-2.cls
+Document Class: revtex4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for
+ documentation)
+ Copyright (c) 2019 American Physical Society.
+ mailto:revtex@aps.org
+ Licensed under the LPPL:
+http://www.ctan.org/tex-archive/macros/latex/base/lppl.txt
+ Arthur Ogawa <arthur_ogawa at sbcglobal dot net>
+ Based on work by David Carlisle <david at dcarlisle.demon.co.uk>
+ Version (4.2d--4.2f): Modified by Mark Doyle and Phelype Oleinik
+ .
+ltxutil[2022/06/05 4.2f utilities package (portions licensed from W. E. Baxter 
+web at superscript.com)]
+LaTeX Info: Redefining \@centercr on input line 356.
+Class revtex4-2 Info: Repairing hyperref-unfriendly LaTeX definition of \mpfoot
+note on input line 492.
+Class revtex4-2 Info: Repairing broken LateX \@sect on input line 814.
+\intertabularlinepenalty=\count275
+\@tbpen=\count276
+\@arstrutbox@hline=\box53
+Class revtex4-2 Info: Repairing broken LaTeX \@xbitor on input line 1845.
+Class revtex4-2 Info: Making \typeout \long on input line 2110.
+ltxfront[2022/06/05 4.2f frontmatter package (AO,DPC,MD)]
+\c@affil=\count277
+\c@collab=\count278
+\absbox=\box54
+ltxgrid[2022/06/05 4.2f page grid package (portions licensed from W. E. Baxter 
+web at superscript.com)]
+\c@linecount=\count279
+\output@latex=\toks17
+\box@size@1=\box55
+\box@size@2=\box56
+\@protection@box=\box57
+\@topmark@saved=\toks18
+\footins@saved=\box58
+\footins@recovered=\box59
+\column@recovered=\box60
+\pagesofar=\box61
+\footsofar=\box62
+\pagegrid@col=\count280
+Class revtex4-2 Info: Overriding \@vspace, \@vspacer, \@no@pgbk, \@newline, and
+ \\  on input line 5676.
+\c@part=\count281
+\c@section=\count282
+\c@subsection=\count283
+\c@subsubsection=\count284
+\c@paragraph=\count285
+\c@subparagraph=\count286
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\c@figure=\count287
+\fbox@1=\box63
+\c@table=\count288
+\fbox@2=\box64
+\c@video=\count289
+\fbox@4=\box65
+\@bibdataout=\write3
+\widetext@top=\box66
+\widetext@bot=\box67
+
+Class revtex4-2 Warning: No Society specified, using default society aps.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/revtex/aps4-2.rtx
+File: aps4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for documentatio
+n)
+Class revtex4-2 Info: RevTeX society APS selected on input line 40.
+)
+
+Class revtex4-2 Warning: No journal specified, using default pra.
+
+Class revtex4-2 Info: APS journal PRA selected on input line 7672.
+
+Class revtex4-2 Warning: No type size specified, using default 10.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/revtex/aps10pt4-2.rtx
+File: aps10pt4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for document
+ation)
+Class revtex4-2 Info: RevTeX pointsize 10pt selected on input line 39.
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/textcase/textcase.sty
+Package: textcase 2025/02/16 v1.05 Text only upper/lower case changing (DPC)
+Package textcase Info: Defining Legacy names on input line 20.
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip51
+\bibsep=\skip52
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count290
+)
+Class revtex4-2 Info: Repairing natbib's \BibitemShut on input line 7676.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/revtex/revsymb4-2.sty
+Package: revsymb4-2 2022/06/05 4.2f (https://journals.aps.org/revtex/ for docum
+entation)
+LaTeX Info: Redefining \REV@mathfrak on input line 128.
+))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip53
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen148
+)
+LaTeX Info: Redefining \text on input line 28.
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen149
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count291
+LaTeX Info: Redefining \frac on input line 233.
+\uproot@=\count292
+\leftroot@=\count293
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count294
+\DOTSCASE@=\count295
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box68
+\strutbox@=\box69
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen150
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count296
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count297
+\dotsspace@=\muskip18
+\c@parentequation=\count298
+\dspbrk@lvl=\count299
+\tag@help=\toks20
+\row@=\count300
+\column@=\count301
+\maxfields@=\count302
+\andhelp@=\toks21
+\eqnshift@=\dimen151
+\alignsep@=\dimen152
+\tagshift@=\dimen153
+\tagwidth@=\dimen154
+\totwidth@=\dimen155
+\lineht@=\dimen156
+\@envbody=\toks22
+\multlinegap=\skip54
+\multlinetaggap=\skip55
+\mathdisplay@stack=\toks23
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+LaTeX Info: Redefining \frak on input line 111.
+LaTeX Info: Redefining \Bbb on input line 113.
+))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2020/05/29 v2.20.6
+\thm@style=\toks24
+\thm@bodyfont=\toks25
+\thm@headfont=\toks26
+\thm@notefont=\toks27
+\thm@headpunct=\toks28
+\thm@preskip=\skip56
+\thm@postskip=\skip57
+\thm@headsep=\skip58
+\dth@everypar=\toks29
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks30
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen157
+\Gin@req@width=\dimen158
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen159
+\lightrulewidth=\dimen160
+\cmidrulewidth=\dimen161
+\belowrulesep=\dimen162
+\belowbottomsep=\dimen163
+\aboverulesep=\dimen164
+\abovetopsep=\dimen165
+\cmidrulesep=\dimen166
+\cmidrulekern=\dimen167
+\defaultaddspace=\dimen168
+\@cmidla=\count303
+\@cmidlb=\count304
+\@aboverulesep=\dimen169
+\@belowrulesep=\dimen170
+\@thisruleclass=\count305
+\@lastruleclass=\count306
+\@thisrulewidth=\dimen171
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+
+Package nameref Warning: The definition of \label has changed! 
+(nameref)                Check your packages! 
+(nameref)                Replacing it with the kernel definition on input line 
+161.
+
+\c@section@level=\count307
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count308
+)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
+)
+)
+\@linkdim=\dimen172
+\Hy@linkcounter=\count309
+\Hy@pagecounter=\count310
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count311
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4201.
+Package hyperref Info: Link nesting OFF on input line 4206.
+Package hyperref Info: Hyper index ON on input line 4209.
+Package hyperref Info: Plain pages OFF on input line 4216.
+Package hyperref Info: Backreferencing OFF on input line 4221.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4468.
+LaTeX Info: Redefining \href on input line 4718.
+\c@Hy@tempcnt=\count312
+LaTeX Info: Redefining \url on input line 4807.
+\XeTeXLinkMargin=\dimen173
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count313
+\Field@Width=\dimen174
+\Fld@charsize=\dimen175
+Package hyperref Info: Hyper figures OFF on input line 6084.
+Package hyperref Info: Link nesting OFF on input line 6089.
+Package hyperref Info: Hyper index ON on input line 6092.
+Package hyperref Info: backreferencing OFF on input line 6099.
+Package hyperref Info: Link coloring OFF on input line 6104.
+Package hyperref Info: Link coloring with OCG OFF on input line 6109.
+Package hyperref Info: PDF/A mode OFF on input line 6114.
+\Hy@abspage=\count314
+\c@Item=\count315
+\c@Hfootnote=\count316
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2026-01-29 v7.01p Hyperref driver for pdfTeX
+\Fld@listcount=\count317
+\c@bookmark@seq@number=\count318
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+84.
+)
+\Hy@SectionHShift=\skip59
+)
+\c@theorem=\count319
+ (../../docs/counts.tex)
+Class revtex4-2 Info: Unrecognized LaTeX tabular. Please update this document c
+lass! (Proceeding with fingers crossed.) on input line 30.
+Class revtex4-2 Info: cite was not loaded (OK!) on input line 30.
+Class revtex4-2 Info: mcite was not loaded (OK!) on input line 30.
+Class revtex4-2 Info: multicol was not loaded (OK!) on input line 30.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count320
+)
+(./paper_draft.aux)
+\openout1 = `paper_draft.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+
+(/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count321
+\scratchdimen=\dimen176
+\scratchbox=\box70
+\nofMPsegments=\count322
+\nofMParguments=\count323
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count324
+\MPscratchDim=\dimen177
+\MPnumerator=\count325
+\makeMPintoPDFobject=\count326
+\everyMPtoPDFconversion=\toks32
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package hyperref Info: Link coloring OFF on input line 30.
+
+(./paper_draft.out) (./paper_draft.out)
+\@outlinefile=\write4
+\openout4 = `paper_draft.out'.
+
+Class revtex4-2 Info: Taking \maketitle back from hyperref on input line 30.
+\openout3 = `paper_draftNotes.bib'.
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 43.
+
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 43.
+
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Underfull \hbox (badness 1571) in paragraph at lines 87--90
+ []\OT1/cmr/m/n/10 the path-(b) dif-feo-mor-phism in-vari-ance of the
+ []
+
+
+Underfull \hbox (badness 5331) in paragraph at lines 87--90
+ \OT1/cmr/m/n/10 re-sult-ing ef-fec-tive La-grangian, with De-ci-sion
+ []
+
+
+Underfull \hbox (badness 1107) in paragraph at lines 102--112
+\OT1/cmr/m/n/10 substrate-sourced emer-gent stress-energy. Manifold-
+ []
+
+
+Underfull \hbox (badness 1810) in paragraph at lines 102--112
+\OT1/cmr/m/n/10 level for-mal-iza-tion of this ten-sor equa-tion re-quires
+ []
+
+
+Underfull \hbox (badness 1983) in paragraph at lines 131--133
+ []\OT1/cmr/m/n/10 Linear de-vi-a-tion chan-nel $\OML/cmm/m/it/10 T[] \OMS/cmsy
+/m/n/10 ^^@ \OML/cmm/m/it/10 T[] \OT1/cmr/m/n/10 =
+ []
+
+
+Underfull \hbox (badness 2521) in paragraph at lines 133--136
+ \OT1/cmr/m/n/10 i-he-lion pre-ces-sion, ring-down fre-quency) un-der
+ []
+
+
+Underfull \hbox (badness 1264) in paragraph at lines 152--156
+[]\OT1/cmr/m/n/10 The ADW sub-strate sources grav-ity through the
+ []
+
+[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
+ocal/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+Underfull \hbox (badness 2103) in paragraph at lines 158--163
+\OT1/cmr/m/n/10 where $\OML/cmm/m/it/10 G[] \OT1/cmr/m/n/10 = 12\OML/cmm/m/it/1
+0 ^^Y=\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 N[]\OT1/cmr/m/n/10 ^^C[])$ is the Sakha
+rov--
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--187
+\OT1/cmr/m/n/10 is the sub-stan-tive con-tent of the-o-rem
+ []
+
+
+Overfull \hbox (17.17545pt too wide) in paragraph at lines 182--187
+\OT1/cmtt/m/n/10 emergentStressEnergyTrace[]eq[]matter[]iff[]alpha[]unity\OT1/c
+mr/m/n/10 ;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--187
+\OT1/cmr/m/n/10 the linear-response form of Eq. ([]6[]) is
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 200--204
+\OT1/cmr/m/n/10 which by con-struc-tion \OT1/cmr/m/it/10 van-ishes iden-ti-call
+y at
+ []
+
+
+Underfull \hbox (badness 4859) in paragraph at lines 200--204
+\OT1/cmr/m/it/10 the cal-i-bra-tion $\OML/cmm/m/it/10 [] \OT1/cmr/m/n/10 = 1$ 
+\OT1/cmr/m/it/10 for all $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 G[]; ^^Z[]\OT1/cmr/
+m/n/10 )$
+ []
+
+
+Underfull \hbox (badness 4713) in paragraph at lines 211--213
+[][]\OT1/cmr/bx/n/10 Theorem 1 \OT1/cmr/m/n/10 (Wave 4 cor-rect-ness--push)\OT1
+/cmr/bx/n/10 . []\OT1/cmr/m/it/10 For all
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--224
+\OT1/cmr/m/n/10 The Lean proof of the bi-con-di-tional
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--224
+\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 efeResidualTrace[]eq[]zero[]iff[]alpha[]unity
+\OT1/cmr/m/n/10 ) re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 225--231
+[]\OT1/cmr/m/n/10 This is the non-lin-ear ana-logue of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 225--231
+\OT1/cmr/m/n/10 Wave 1's De-ci-sion Gate E.2 bi-con-di-tional
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 225--231
+\OT1/cmtt/m/n/10 a2[]matches[]GNemerg[]iff[]alpha[]ADW[]unity \OT1/cmr/m/n/10 [
+[]]; to-
+ []
+
+
+Overfull \hbox (65.34026pt too wide) in paragraph at lines 239--245
+\OT1/cmr/m/n/10 The Lean proof (\OT1/cmtt/m/n/10 efeResidualTrace[]at[]dirac[]c
+alibration[]vanishes\OT1/cmr/m/n/10 )
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 239--245
+\OT1/cmr/m/n/10 in-vokes \OT1/cmtt/m/n/10 LinearizedEFE.G[]N[]emerg[]at[]alpha[
+]one
+ []
+
+
+Overfull \hbox (64.54132pt too wide) in paragraph at lines 239--245
+\OT1/cmr/m/n/10 (Phase 6a.1) and \OT1/cmtt/m/n/10 HeatKernelExpansion.G[]N[]fro
+m[]a2[]eq[]G[]N[]sakharov
+ []
+
+
+Underfull \hbox (badness 3189) in paragraph at lines 262--267
+\OT1/cmr/m/n/10 The de-vi-a-tion $\OML/cmm/m/it/10 [] \OMS/cmsy/m/n/10 ^^@ \OT
+1/cmr/m/n/10 1$ is testable against the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 262--267
+\OT1/cmr/m/n/10 any $\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 [] \OMS/cmsy/m/n/10 ^^
+@ \OT1/cmr/m/n/10 1\OMS/cmsy/m/n/10 j \OML/cmm/m/it/10 > \OT1/cmr/m/n/10 3 \OMS
+/cmsy/m/n/10 ^^B \OT1/cmr/m/n/10 10[]$ is de-tectable
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 283--288
+\OT1/cmr/m/n/10 The bi-con-di-tional in Lean is gen-uinely non-
+ []
+
+
+Underfull \hbox (badness 1681) in paragraph at lines 283--288
+\OT1/cmr/m/n/10 trivial: $(2\OML/cmm/m/it/10 [] \OT1/cmr/m/n/10 + 1)\OML/cmm/m
+/it/10 =\OT1/cmr/m/n/10 3 = 1$ re-quires the linear-
+ []
+
+
+Underfull \hbox (badness 1215) in paragraph at lines 291--294
+[]\OT1/cmr/m/n/10 The Schwarzschild fun-da-men-tal $\OML/cmm/m/it/10 ` \OT1/cmr
+/m/n/10 = 2$ ring-down
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--322
+\OT1/cmr/m/n/10 This is the load-bearing testable
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--322
+\OT1/cmr/m/n/10 struc-tural pre-dic-tion of Wave 4
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--322
+\OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 precession[]dev[]eq[]two[]thirds[]deflection[
+]dev\OT1/cmr/m/n/10 ):
+ []
+
+
+Underfull \hbox (badness 1303) in paragraph at lines 308--322
+\OT1/cmr/m/n/10 com-bin-ing all three chan-nels (de-flec-tion, per-i-he-lion,
+ []
+
+<figures/fig_T_emerg_vs_matter.png, id=189, 2409.0pt x 1606.0pt>
+File: figures/fig_T_emerg_vs_matter.png Graphic file (type png)
+<use figures/fig_T_emerg_vs_matter.png>
+Package pdftex.def Info: figures/fig_T_emerg_vs_matter.png  used on input line 
+336.
+(pdftex.def)             Requested size: 484.49844pt x 322.98322pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 361--368
+[]\OT1/cmr/m/n/10 The trace-level higher-curvature cor-rec-tion
+ []
+
+
+Underfull \hbox (badness 7397) in paragraph at lines 361--368
+\OMS/cmsy/m/n/10 A[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 R[]; R[]; R[]\OT1/cmr/m/n
+/10 )$ in-her-its Wave 2's correctness-
+ []
+
+
+Overfull \hbox (10.53076pt too wide) in paragraph at lines 372--376
+\OT1/cmr/m/n/10 The Lean proof (\OT1/cmtt/m/n/10 higherCurvatureCorrection[]abs
+[]bound\OT1/cmr/m/n/10 )
+ []
+
+
+Underfull \hbox (badness 1810) in paragraph at lines 379--385
+\OML/cmm/m/it/10 a[]$ \OT1/cmr/m/n/10 [[]]. Wave 4 con-sumes the bun-dled track
+ed-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 379--385
+\OT1/cmr/m/n/10 di-rectly through the-o-rem
+ []
+
+
+Overfull \hbox (177.13046pt too wide) detected at line 398
+[][][]\OML/cmm/m/it/10 H[]\OT1/cmr/m/n/10 (^^C\OML/cmm/m/it/10 ; N[]; ^^Z[]; [
+]\OT1/cmr/m/n/10 ) :\OMS/cmsy/m/n/10 ^^Q []
+ []
+
+
+Underfull \hbox (badness 4036) in paragraph at lines 404--406
+[][]\OT1/cmr/bx/n/10 Theorem 2 \OT1/cmr/m/n/10 (Dirac cal-i-bra-tion wit-ness)\
+OT1/cmr/bx/n/10 . []\OT1/cmr/m/it/10 For all
+ []
+
+
+Underfull \hbox (badness 1231) in paragraph at lines 404--406
+\OT1/cmr/m/n/10 (^^C\OML/cmm/m/it/10 ; N[]; ^^Z[]\OT1/cmr/m/n/10 )$\OT1/cmr/m/i
+t/10 , the bun-dled Prop is sat-is-fied at the
+ []
+
+
+Overfull \hbox (21.87062pt too wide) in paragraph at lines 410--416
+\OT1/cmr/m/n/10 The Lean proof (\OT1/cmtt/m/n/10 dirac[]H[]NonlinearEFEHolds[]a
+t[]alpha[]one\OT1/cmr/m/n/10 )
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 410--416
+\OT1/cmtt/m/n/10 efeResidualTrace[]at[]dirac[]calibration[]vanishes\OT1/cmr/m/n
+/10 ,
+ []
+
+
+Overfull \hbox (48.83739pt too wide) in paragraph at lines 410--416
+\OT1/cmtt/m/n/10 H[]HigherCurvatureWithinObservationalBounds[]pulsar[]witness
+ []
+
+
+Underfull \hbox (badness 5741) in paragraph at lines 410--416
+\OT1/cmr/m/n/10 (Wave 2), and \OT1/cmtt/m/n/10 dirac[]H[]NonlinearDiffInvarianc
+e
+ []
+
+[3]
+Overfull \hbox (28.59058pt too wide) in paragraph at lines 424--435
+\OT1/cmr/m/n/10 The Lean proof (\OT1/cmtt/m/n/10 perturbed[]alpha[]not[]H[]Nonl
+inearEFEHolds\OT1/cmr/m/n/10 )
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 424--435
+\OT1/cmtt/m/n/10 LinearizedEFE.G[]N[]emerg[]pos \OT1/cmr/m/n/10 (con-sum-ing Ve
+rge-les
+ []
+
+
+Underfull \hbox (badness 1655) in paragraph at lines 424--435
+\OT1/cmr/m/n/10 pred-i-cate \OT1/cmr/m/it/10 gen-uinely \OT1/cmr/m/n/10 sin-gle
+s out the Sakharov--Adler
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 444--448
+ []\OT1/cmtt/m/n/10 emergentStressEnergyTrace\OT1/cmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 4403) in paragraph at lines 444--448
+ \OT1/cmtt/m/n/10 matterStressEnergyTrace\OT1/cmr/m/n/10 , \OT1/cmtt/m/n/10 efe
+ResidualTrace\OT1/cmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 7203) in paragraph at lines 444--448
+ \OT1/cmtt/m/n/10 precessionRatio\OT1/cmr/m/n/10 , \OT1/cmtt/m/n/10 ringdownRat
+io \OT1/cmr/m/n/10 (def-i-ni-tions
+ []
+
+
+Underfull \hbox (badness 1210) in paragraph at lines 450--453
+ \OT1/cmr/m/n/10 MAIN Decision-Gate bi-con-di-tional; sub-stan-tive
+ []
+
+[4 <./figures/fig_T_emerg_vs_matter.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 463--470
+[]\OT1/cmr/m/n/10 The mod-ule im-ports \OT1/cmtt/m/n/10 LinearizedEFE
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 463--470
+\OT1/cmr/m/n/10 (Phase 6a.1), \OT1/cmtt/m/n/10 HeatKernelExpansion \OT1/cmr/m/n
+/10 (Wave 1),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 463--470
+\OT1/cmtt/m/n/10 HigherCurvatureStructure \OT1/cmr/m/n/10 (Wave 2), and
+ []
+
+
+Underfull \hbox (badness 5245) in paragraph at lines 463--470
+\OT1/cmtt/m/n/10 NonlinearDiffInvariance \OT1/cmr/m/n/10 (Wave 3) for its sub-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 463--470
+\OT1/cmr/m/n/10 the project's \OT1/cmtt/m/n/10 feedback[]python[]lean[]refs[]dr
+ift.md
+ []
+
+
+Underfull \hbox (badness 1867) in paragraph at lines 480--492
+\OT1/cmr/m/n/10 at the trace level, the Decision-Gate bi-con-di-tional
+ []
+
+
+Underfull \hbox (badness 1577) in paragraph at lines 480--492
+\OT1/cmr/m/n/10 pins $\OML/cmm/m/it/10 [] \OT1/cmr/m/n/10 = 1$ as the \OT1/cmr
+/m/it/10 unique \OT1/cmr/m/n/10 ADW cal-i-bra-tion
+ []
+
+No file paper_draft.bbl.
+[5] (./paper_draft.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+ ***********
+Package rerunfilecheck Info: File `paper_draft.out' has not changed.
+(rerunfilecheck)             Checksum: 00F9BF722C262B2B4F44C1A716C99898;5062.
+ ) 
+Here is how much of TeX's memory you used:
+ 12421 strings out of 467525
+ 184205 string characters out of 5418982
+ 637052 words of memory out of 5000000
+ 41121 multiletter control sequences out of 15000+600000
+ 635913 words of font info for 72 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 75i,9n,79p,1325b,526s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
+usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></
+usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></u
+sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/
+local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/lo
+cal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loca
+l/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/te
+xlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texli
+ve/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/
+2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/202
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fon
+ts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist
+/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2026/texmf-dist/f
+onts/type1/public/cm-super/sfrm1000.pfb>
+Output written on paper_draft.pdf (5 pages, 536845 bytes).
+PDF statistics:
+ 353 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
+ 67 named destinations out of 1000 (max. 500000)
+ 182 words of extra memory for PDF output out of 10000 (max. 10000000)
+

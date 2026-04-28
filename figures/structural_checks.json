@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-28T00:17:06.702036+00:00",
+  "timestamp": "2026-04-28T14:08:56.249542+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -152,6 +152,24 @@
       "message": "Color #2ca02c not in COLORS dict"
     },
     {
+      "figure": "fig_diff_invariance_order_check",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title 'Coefficient bundle' missing expected '\u03b4'"
+    },
+    {
+      "figure": "fig_T_emerg_vs_matter",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title 'T_emerg \u2212 T_matter at \u03c1=1 (dimensionless)' missing expected 'deviation'"
+    },
+    {
+      "figure": "fig_T_emerg_vs_matter",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #2ca02c not in COLORS dict"
+    },
+    {
       "figure": "fig_ewbg_allowed_region",
       "severity": "warning",
       "check": "axis_label",
@@ -214,6 +232,6 @@
   ],
   "summary": {
     "errors": 0,
-    "warnings": 35
+    "warnings": 38
   }
 }

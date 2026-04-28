@@ -174,6 +174,8 @@ import SKEFTHawking.ClassificationTableDark
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.HeatKernelExpansion
 import SKEFTHawking.HigherCurvatureStructure
+import SKEFTHawking.NonlinearDiffInvariance
+import SKEFTHawking.NonlinearEFE
 import SKEFTHawking.FLRWDynamics
 import SKEFTHawking.GravitationalWaves
 import SKEFTHawking.BHEntropyMicroscopic

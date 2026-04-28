@@ -364,6 +364,8 @@ def generate_tex(counts: dict, path: Path):
         ("rtCh",        "RTCasiniHuertaBounds.lean",    "test_rt_ch_bounds.py"),
         ("heatKernel",      "HeatKernelExpansion.lean",       "test_heat_kernel.py"),
         ("higherCurvature", "HigherCurvatureStructure.lean",  "test_higher_curvature.py"),
+        ("diffInvariance",  "NonlinearDiffInvariance.lean",   "test_diff_invariance.py"),
+        ("nonlinearEFE",    "NonlinearEFE.lean",              "test_nonlinear_efe.py"),
     ]
     phase6_lines = []
     for prefix, lean_mod, test_mod in phase6_modules:

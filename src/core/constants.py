@@ -2472,6 +2472,175 @@ HIGHER_CURVATURE_PARAMS = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 3 — Nonlinear Diffeomorphism Invariance (path-b)
+# ════════════════════════════════════════════════════════════════════
+# Parameters for the path-b direct check that the heat-kernel effective
+# Lagrangian is diffeomorphism-invariant order-by-order in the
+# Seeley-DeWitt expansion (orders a_0, a_2, a_4).
+#
+# Path-(b) framework (Wald, *General Relativity*, App. E.1):
+#   For any scalar density L built from polynomial scalar curvature
+#   invariants {1, R, R², R_μν R^μν, R_μνρσ R^μνρσ} (equivalently
+#   {1, R, R², C², 𝒢} in Stelle's basis), the variation under an
+#   infinitesimal coordinate transformation x^μ → x^μ + ξ^μ is a total
+#   divergence:
+#       δ_ξ (√g L) = ∂_μ(ξ^μ √g L)
+#   so the action ∫ √g L is diff-invariant on a closed manifold.
+#
+# The "path-b anomaly residual" at order n is the algebraic mismatch
+# between the same density expressed in two equivalent scalar-invariant
+# bases (Wave 2 main identity for order a_4):
+#       residual_n(L, B₁, B₂)
+#         := L_density_in_B₁ - L_density_in_B₂
+# For a Wave 1 Christensen-Duff Dirac coefficient bundle, residual_n
+# vanishes identically at orders 0, 2, 4 (Wave 2 basis-change theorem
+# `a4_density_eq_a4_density_in_RC2GB_basis` for order 4).
+#
+# References:
+# - Wald, *General Relativity*, App. E.1 — diff invariance via Lie
+#   derivatives + total divergences
+# - Vassilevich, Phys. Rep. 388, 279 (2003), §3.1 — covariance of
+#   heat-kernel coefficients under coordinate transformations
+# - Phase 6e Wave 1 HeatKernelExpansion.lean — Christensen-Duff
+#   Dirac coefficient bundle (input)
+# - Phase 6e Wave 2 HigherCurvatureStructure.lean — Stelle basis
+#   change at order a_4 (path-b consistency at the basis-change level)
+# ════════════════════════════════════════════════════════════════════
+
+DIFF_INVARIANCE_PARAMS = {
+    # ── Order list at which path-b diff invariance is checked ─────────
+    # Heat-kernel orders covered by Wave 1 (a_0, a_2) + Wave 2 (a_4).
+    # Higher orders (a_6, …) are out of scope for the mean-field 6e
+    # program (see strategy doc §15).
+    'ORDER_LIST': (0, 2, 4),
+    # ── Path-b anomaly residual tolerance ─────────────────────────────
+    # The residual is exactly zero algebraically; the float threshold
+    # accommodates numerical evaluation only (machine ε margin).
+    'PATH_B_RESIDUAL_TOLERANCE': 1.0e-12,
+    # ── Test-grid extent for parameter-scan diff-invariance check ─────
+    # Curvature-invariant inputs span ranges representative of the
+    # heat-kernel τ → 0 regime (small curvature at the cutoff scale).
+    # The Ricci scalar R itself is exercised structurally at order a₂
+    # but contributes nothing to the order-a₄ residual computation —
+    # so no R grid range is declared here.
+    'TEST_GRID_RICCI_SQ_RANGE':  (0.0, 50.0),
+    'TEST_GRID_RIEMANN_SQ_RANGE':(0.0, 25.0),
+    'TEST_GRID_N_F_RANGE':       (1, 27),
+    'PARAMETER_SCAN_POINTS':     16,
+    # ── Falsifier offset for the anomaly-hunt check ───────────────────
+    # The path-b "anomaly hunt" probe shifts a single coefficient by
+    # ANOMALY_PROBE_OFFSET to verify the path-b residual responds
+    # linearly: a non-admissible bundle yields nonzero residual.
+    'ANOMALY_PROBE_OFFSET': 1.0e-6,
+    # ── Admissible-class predicate ────────────────────────────────────
+    # An "admissible" effective Lagrangian (in the Wave 3 sense) is one
+    # whose density is a polynomial in the canonical scalar curvature
+    # invariants {1, R, R², R_μν², R_μνρσ²}.  All Wave 1 + Wave 2
+    # objects fall in this class; the falsifier deliberately places a
+    # coefficient outside it.
+    'ADMISSIBLE_BASIS_CARDINALITY': 5,  # |{1, R, R², R_μν², R_μνρσ²}|
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 4 — Nonlinear Einstein Field Equations from ADW
+# ════════════════════════════════════════════════════════════════════
+# Parameters for the variational EFE
+#   δS/δe^a_μ = 0  →  G_μν + α_HC · (a_4-correction)_μν = 8π G_N · T_emerg_μν
+# at the *trace level* (each side a scalar formed from curvature
+# invariants; restriction of the full tensor EFE that preserves the
+# substantive content while fitting the project's algebraic-coefficient
+# Lean infrastructure — manifold/index machinery deferred to Phase 6f).
+#
+# Wave 1 supplies G_N and the a_4 coefficients; Wave 2 supplies the
+# sign-definite higher-curvature basis; Wave 3 confirms diff invariance
+# (Decision Gate E.3 PASS) — so the variational EOM is well-posed.
+# This wave produces:
+#   1. Closed-form trace-level EFE residual on the Dirac bundle
+#   2. Emergent stress-energy `T_emerg(ρ_ADW, p_ADW, α_ADW)` parametrised
+#      by the ADW substrate density / pressure and the Vergeles α_ADW
+#   3. Observable signatures:
+#        - light deflection δθ = 4 G_N M / b · α_ADW
+#        - perihelion precession ratio
+#        - ringing-frequency shift δω/ω
+#      All proportional to (α_ADW − 1) · GR baseline; vanishes at α_ADW = 1.
+#
+# References:
+# - Wald, *General Relativity*, §4.2 — variational derivation of EFE
+# - Will, *Theory and Experiment in Gravitational Physics* (2nd ed., 2018)
+#   — observational tests, post-Newtonian formalism, deflection +
+#   perihelion + ringing constraints
+# - Vergeles, PRD 112, 054509 (2025) — α_ADW positivity (P1, P2, P3 of 6a.1)
+# - Phase 6a.1 LinearizedEFE.lean — G_N_emerg, G_N_emerg_at_alpha_one
+# - Phase 6e Wave 1 HeatKernelExpansion.lean — G_N from a_2, a_4 basis
+# - Phase 6e Wave 2 HigherCurvatureStructure.lean — Stelle (α, β, γ) basis
+# - Phase 6e Wave 3 NonlinearDiffInvariance.lean — well-posedness guarantee
+# ════════════════════════════════════════════════════════════════════
+
+NONLINEAR_EFE_PARAMS = {
+    # ── α_ADW calibration band ───────────────────────────────────────
+    # Per LinearizedEFE.G_N_emerg: G_N_emerg = α_ADW · G_N_sakharov.
+    # Decision Gate E.2 anchored α_ADW = 1 as the Sakharov-Adler
+    # baseline (heat-kernel a_2 ↔ G_N_emerg agreement). Wave 4
+    # observable signatures vanish at α_ADW = 1 by construction;
+    # the natural-parameter band is [0.1, 10] (covers SM N_f).
+    'ALPHA_ADW_CALIBRATED': 1.0,
+    'ALPHA_ADW_NATURAL_MIN': 0.1,
+    'ALPHA_ADW_NATURAL_MAX': 10.0,
+    # ── EFE residual tolerance ───────────────────────────────────────
+    # Algebraic identity at the closed form; float threshold accounts
+    # only for FP roundoff in trace-level scans. Same scale as
+    # PATH_B_RESIDUAL_TOLERANCE for cross-wave consistency.
+    'EFE_RESIDUAL_TOLERANCE': 1.0e-12,
+    # ── T_emerg vs T_matter deviation channel ────────────────────────
+    # At α_ADW ≠ 1, T_emerg_trace − T_matter_trace = (α_ADW − 1) · ρ_ADW
+    # (substrate-amplitude channel). The "observable detection" band
+    # rejects detections smaller than 0.5% — sets the resolution floor
+    # for any post-Newtonian constraint test.
+    'T_EMERG_DEVIATION_DETECT_FLOOR': 5.0e-3,  # 0.5% deviation floor
+    # ── Observable-signature scales (representative astrophysical) ────
+    # Light deflection at solar limb (Eddington 1919 + GW170817 calib):
+    #   δθ_GR_solar = 4 G_N M_sun / b_sun = 1.751 arcsec
+    # We store as a dimensionless ratio (δθ / δθ_GR) so the prediction
+    # depends only on α_ADW in the Wave 4 formula.
+    'DEFLECTION_GR_BASELINE_ARCSEC': 1.751,  # Will 2018 §4.1
+    'DEFLECTION_OBS_RELATIVE_PRECISION': 3.0e-4,  # Will 2018 Table 3 (radio VLBI)
+    # Perihelion precession of Mercury (per orbit, GR baseline):
+    #   δφ_GR = 6π G_N M_sun / [a (1 - e²) c²] = 42.98 arcsec/century
+    'PERIHELION_GR_BASELINE_ARCSEC_PER_CENTURY': 42.98,  # Will 2018 §4.2
+    'PERIHELION_OBS_RELATIVE_PRECISION': 1.0e-4,  # MESSENGER + planetary radar
+    # GW ringdown frequency (Schwarzschild fundamental ℓ=2 mode):
+    #   ω_R · GM/c³ = 0.3737  (Berti et al. CQG 26:163001 (2009), Table III)
+    'RINGDOWN_GR_BASELINE_DIMENSIONLESS': 0.3737,
+    'RINGDOWN_OBS_RELATIVE_PRECISION': 0.05,  # GWTC-3 spectroscopy (Isi et al.)
+    # ── Representative-background test list ──────────────────────────
+    # Trace-level EFE evaluated at three benchmark backgrounds. Each
+    # contributes a different (R, R², R_μν², R_μνρσ²) tuple; the EFE
+    # residual must vanish on all three for the Dirac-bundle-balanced
+    # configuration.
+    'BENCHMARK_BACKGROUNDS': ('Schwarzschild', 'de_Sitter', 'FLRW_radiation'),
+    # Schwarzschild vacuum: R = R² = R_μν² = 0; R_μνρσ² = 48 (G M)²/r⁶
+    # at radius r. Use unit normalisation r = 2GM (horizon scale): K = 3.
+    'SCHWARZSCHILD_KRETSCHMANN_AT_HORIZON': 3.0,  # Wald §6.1
+    # de Sitter: R = 12 H², R² = 144 H⁴, R_μν² = 36 H⁴, R_μνρσ² = 24 H⁴.
+    # Unit H = 1.
+    'DE_SITTER_R_AT_UNIT_H': 12.0,
+    'DE_SITTER_R_SQ_AT_UNIT_H': 144.0,
+    'DE_SITTER_RICCI_SQ_AT_UNIT_H': 36.0,
+    'DE_SITTER_RIEMANN_SQ_AT_UNIT_H': 24.0,
+    # FLRW radiation: w = 1/3, traceless T → R = 0; R_μν² and R_μνρσ²
+    # set by Hubble rate. Unit H = 1: R_μν² = 12 H⁴, R_μνρσ² = 12 H⁴.
+    'FLRW_RAD_R_AT_UNIT_H': 0.0,
+    'FLRW_RAD_R_SQ_AT_UNIT_H': 0.0,
+    'FLRW_RAD_RICCI_SQ_AT_UNIT_H': 12.0,
+    'FLRW_RAD_RIEMANN_SQ_AT_UNIT_H': 12.0,
+    # ── Parameter scan grid (T_emerg vs T_matter visualisation) ──────
+    'ALPHA_SCAN_POINTS': 21,  # α ∈ [0.1, 10.0], log-spaced
+    'PARAMETER_SCAN_POINTS': 16,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Parameter Provenance Registry (imported from src.core.provenance)
 #
 # Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS must have

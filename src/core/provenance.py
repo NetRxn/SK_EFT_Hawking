@@ -3108,6 +3108,132 @@ PAPER_DEPENDENCIES = {
                 '(Lean: H_HigherCurvatureWithinObservationalBounds_pulsar_witness)',
         ],
     },
+    'paper41_diff_invariance': {
+        'title': 'Paper 41: Path-(b) order-by-order diffeomorphism invariance of '
+                 'the Seeley-DeWitt heat-kernel effective action (formalization, '
+                 'Phase 6e Wave 3)',
+        'topic': 'Algebraic path-(b) anomaly residual at orders a_0, a_2, a_4 of '
+                 'the Seeley-DeWitt expansion; correctness-push biconditional '
+                 'identifies order-a_4 invariance with Wave 2 basis-change identity '
+                 'pointwise; Dirac coefficient bundle satisfies the predicate '
+                 'order-by-order; deliberately perturbed bundle has residual = δ '
+                 'at unit R² (linear-in-δ falsifier); Decision Gate E.3 returns '
+                 'PASS through order a_4',
+        'formulas': [
+            'diff_invariance_anomaly_residual_a0',
+            'diff_invariance_anomaly_residual_a2',
+            'diff_invariance_anomaly_residual_a4',
+            'diff_invariance_holds_at_order',
+            'diff_invariance_holds_order_by_order',
+        ],
+        'lean_modules': ['NonlinearDiffInvariance', 'HigherCurvatureStructure',
+                          'HeatKernelExpansion'],
+        'platforms': [],
+        'key_claims': [
+            'EffectiveLagrangianCoefs 5-tuple bundle through a_4 order '
+                '(Lean: EffectiveLagrangianCoefs); diracCoefBundle invokes Wave 1 '
+                'coefs by name (P6 cross-module bridge integrity)',
+            'Bridge identity: diracCoefBundle.density_a4 = Wave 2 a4_density '
+                '(Lean: diracCoefBundle_density_a4_eq_wave2_a4_density)',
+            'Order-a_0 path-b residual is definitionally 0 (constant scalar)',
+            'Order-a_2 path-b residual is definitionally 0 (single scalar invariant R)',
+            'MAIN order-a_4 zero-residual theorem for the Dirac bundle: '
+                'pathB_residual_a4(diracCoefBundle N_f, ...) = 0 '
+                '(Lean: pathB_residual_a4_dirac_eq_zero — load-bearing Wave 2 '
+                'cross-bridge via a4_density_eq_a4_density_in_RC2GB_basis)',
+            'Order-by-order Dirac diff-invariance witnesses: orders 0, 2, 4 '
+                '(Lean: dirac_diffInvariantAt_zero/two/four)',
+            'CORRECTNESS-PUSH biconditional: order-a_4 path-b invariance ↔ Wave 2 '
+                'basis-change identity at every curvature input '
+                '(Lean: diff_invariance_a4_iff_dirac_basis_consistent — both '
+                'directions reduce algebraically to the Wave 2 main theorem)',
+            'Falsifier with linear response: at unit R²=1, the perturbed-bundle '
+                'residual equals exactly δ '
+                '(Lean: perturbed_pathB_residual_a4_at_unit_R_sq)',
+            'Falsifier-witness: nonzero δ ⇒ perturbed bundle is NOT order-a_4 '
+                'path-b diff-invariant (Lean: perturbed_not_diffInvariantAt_four)',
+            'Tracked Prop H_NonlinearDiffInvariance bundles all three order witnesses; '
+                'discharged for the Dirac bundle '
+                '(Lean: dirac_H_NonlinearDiffInvariance) and falsified for the '
+                'perturbed bundle (Lean: perturbed_not_H_NonlinearDiffInvariance)',
+            'Decision Gate E.3 verdict: PASS through order a_4 — Phase 6e Wave 4 '
+                'NonlinearEFE.lean and beyond proceed at full scope',
+        ],
+    },
+    'paper42_nonlinear_efe': {
+        'title': 'Paper 42: Variational nonlinear Einstein field equations '
+                 'from the ADW emergent-gravity programme: a Lean-formalized '
+                 'trace-level Decision Gate (Phase 6e Wave 4)',
+        'topic': 'Trace-level variational EFE residual under the ADW α_ADW '
+                 'rescaling; Decision-Gate-style biconditional (residual = 0 '
+                 'iff α = 1) consuming Wave 1 G_N + Wave 2 a_4 + Wave 3 diff '
+                 'invariance + Phase 6a.1 G_N_emerg cross-bridges; '
+                 'PPN-style multi-channel observable predictions (deflection, '
+                 'perihelion precession, ringdown frequency) with the '
+                 'project-specific 2:3 cross-channel ratio as testable '
+                 'structural claim; bundled tracked-Prop H_NonlinearEFEHolds',
+        'formulas': [
+            'emergent_stress_energy_trace',
+            'matter_stress_energy_trace',
+            'emergent_minus_matter_stress_energy_trace',
+            'efe_residual_trace',
+            'deflection_ratio',
+            'precession_ratio',
+            'ringdown_ratio',
+            'higher_curvature_correction_at_background',
+            'efe_residual_at_dirac_calibration',
+            'nonlinear_efe_holds',
+        ],
+        'lean_modules': ['NonlinearEFE', 'NonlinearDiffInvariance',
+                          'HigherCurvatureStructure', 'HeatKernelExpansion',
+                          'LinearizedEFE'],
+        'platforms': [],
+        'key_claims': [
+            'Emergent stress-energy trace T_emerg = α_ADW · ρ_ADW '
+                '(Lean: emergentStressEnergyTrace)',
+            'Linear deviation channel: T_emerg − T_matter = (α_ADW − 1) · ρ_ADW '
+                '(Lean: emergentStressEnergyTrace_minus_matter_eq)',
+            'T_emerg = T_matter biconditional: at non-zero ρ_ADW, the emergent '
+                'and bare-matter traces coincide iff α_ADW = 1 '
+                '(Lean: emergentStressEnergyTrace_eq_matter_iff_alpha_unity)',
+            'Trace-level EFE residual closed form: '
+                'efeResidualTrace = 8π G_N · ρ_ADW · (α_ADW − 1) '
+                '(Lean: efeResidualTrace; vanishes at α=1: efeResidualTrace_at_alpha_one)',
+            'MAIN Decision-Gate-style biconditional: under hG > 0, hρ ≠ 0, '
+                'efeResidualTrace = 0 iff α_ADW = 1 '
+                '(Lean: efeResidualTrace_eq_zero_iff_alpha_unity — Wave 4 '
+                'correctness-push, nonlinear analogue of Wave 1 Decision Gate E.2)',
+            'Substantive cross-bridge to Wave 1 + Phase 6a.1: at the Dirac+Sakharov '
+                'calibration α=1, the EFE residual at G_N = G_N_emerg(Λ, N_f, 1) '
+                '= G_N_from_a2(Λ, N_f) is identically zero '
+                '(Lean: efeResidualTrace_at_dirac_calibration_vanishes — invokes '
+                'G_N_emerg_at_alpha_one + G_N_from_a2_eq_G_N_sakharov by name)',
+            'Light deflection ratio: δθ_ADW/δθ_GR = α_ADW '
+                '(Lean: deflectionRatio); deviation linear in (α-1) '
+                '(Lean: deflectionRatio_minus_one_eq)',
+            'Perihelion precession ratio: δφ_ADW/δφ_GR = (2α + 1)/3 — non-trivial '
+                'PPN combination ((2 + 2γ - β)/3 at γ=α, β=1, Will 2018 Eq. 4.31); '
+                'equals 1 iff α = 1 '
+                '(Lean: precessionRatio_eq_one_iff_alpha_unity — non-rfl '
+                'biconditional requires linarith)',
+            'Cross-channel structural claim: precession deviation = 2/3 × deflection '
+                'deviation (testable multi-observation prediction; Lean: '
+                'precession_dev_eq_two_thirds_deflection_dev)',
+            'Quantitative VLBI floor falsifier: |α-1| > 3×10⁻⁴ ⇒ deflection '
+                'deviation detectable '
+                '(Lean: deflectionRatio_deviation_exceeds_VLBI_floor)',
+            'Substantive cross-bridge to Wave 2: |𝒜₄(R², R_μν², R_μνρσ²)| ≤ '
+                '(|R²| + |R_μν²| + |R_μνρσ²|) · 10⁵⁹ at SM-relevant N_f, '
+                'consuming Wave 2 higher_curvature_below_pulsar_bound '
+                '(Lean: higherCurvatureCorrection_abs_bound)',
+            'Bundled Prop H_NonlinearEFEHolds combines (C1) EFE residual = 0, '
+                '(C2) Wave 2 H_HigherCurvatureWithinObservationalBounds at the '
+                'pulsar bound, (C3) Wave 3 H_NonlinearDiffInvariance for the '
+                'Dirac bundle. Discharged at α=1 by '
+                'dirac_H_NonlinearEFEHolds_at_alpha_one; falsified for any '
+                'α ≠ 1 by perturbed_alpha_not_H_NonlinearEFEHolds.',
+        ],
+    },
     'paper23_linearized_efe': {
         'title': 'Paper 23: Linearized Einstein Equations from ADW Microscopic Theory (PRD)',
         'topic': 'Linearized EFE in momentum space, Sakharov-Adler closed form, '

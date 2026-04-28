@@ -723,3 +723,103 @@ All tracks are independent; maximum parallelism.
 ---
 
 *Phase 5u roadmap. Created 2026-04-13. All items trace to IndependentVerification-02.md. Follows [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md).*
+
+---
+
+## Append-only Wave: Polariton Experimental-Partnership Formalization
+
+*Appended 2026-04-28 | Trigger: post-Phase 6 gap analysis (`temporary/Research-Overview/research_overview_analysis.md`, 2026-04-28). Status: **OPEN — outreach gate**.*
+
+### Wave 21 — `Polariton_Experimental_Partnership` [5u.21] [Pipeline: Stages 1, 7, 13 + outreach]
+
+**Goal.** Convert the Paris LKB (Falque / Bramati / Giacobino) polariton-Hawking observation track from passive monitoring into an active experimental-partnership engagement. Produce a 1-page experimental proposal piggybacking Paper 12 (polariton analog Hawking) that gives the Paris group concrete predictions consumable in their next experimental run, and establish a feedback channel for adjusting the predictions to match their device parameters.
+
+**Rationale (Phase 6 gap-analysis).** The Paris polariton group has the most promising near-term Hawking-detection track (negative-energy-partner modes already observed; spontaneous Hawking detection plausible within 1–2 years per Phase 6 gap-analysis). The SK-EFT program has the only formal noise-floor prediction (`n_noise = δ_k/2` from Phase 1–3 exact WKB), the only formal stimulated-Hawking amplification analysis (Phase 5d `StimulatedHawking.lean`, 11 thms, 7 sorry), and the only formal Tier-A polariton platform-comparison data (Phase 5 `PolaritonTier1.lean`). Closing this loop with a concrete experimental proposal is highest-leverage outreach for Paper 12.
+
+**Trigger condition (outreach gate):** This wave activates after:
+- (P1) Paper 12 (polariton analog Hawking) drafted to the standard reachable for an experimentally-actionable cover letter.
+- (P2) Paris LKB group identified as the lead-collaboration target (already established per Phase 6 deferred-targets memo).
+- (P3) User authorization to dispatch a 1-page experimental proposal cover letter.
+
+**Status (2026-04-28):** Paper 12 substantively drafted; Paris LKB group identified; awaiting user authorization Gate U.21 for the cover letter draft.
+
+### Sub-waves
+
+#### Sub-wave 21.1 — Device-parameter audit + prediction band
+
+**Goal.** Audit the Paris LKB polariton device parameters (cavity Q, polariton lifetime, photonic-component fraction, pump/probe-beam configuration) from their public papers (Falque et al., e.g., PRL 2023, PRB 2024) and compute the SK-EFT predicted Hawking-spectrum + noise-floor band restricted to their device's parameter regime.
+
+**Module structure:**
+- New: `src/polariton/paris_lkb_predictions.py` — device-specific prediction band; uses existing `PolaritonTier1.lean` infrastructure + `WKBConnection.lean` formulas.
+- New: `tests/test_paris_lkb_predictions.py` — 6+ tests verifying the band against published Paris-LKB device parameters.
+- New figure: `figures/fig_paris_lkb_hawking_prediction_band.{png,html}` — predicted spectrum + noise floor for the Paris LKB device.
+
+**No new Lean module** — reuses `PolaritonTier1.lean`. Parameter audit is Python-side.
+
+**Output:** Closed prediction band: predicted T_H, n_noise, ω-spectrum range, signal-to-noise estimate at the Paris-LKB device parameters with explicit error budget.
+
+#### Sub-wave 21.2 — 1-page experimental proposal draft
+
+**Goal.** Draft a 1-page cover letter / proposal piggybacking Paper 12 that gives the Paris LKB group:
+- The SK-EFT predicted Hawking spectrum + noise floor at *their* device parameters (sub-wave 21.1 output).
+- The signal-to-noise estimate for spontaneous detection given their cavity Q.
+- The stimulated-Hawking amplification factor if they run a stimulated-mode experiment.
+- The specific frequency window where the SK-EFT noise-floor formula (`n_noise = δ_k/2`) makes the cleanest falsifiable prediction.
+- A request for current device-parameter values + planned experimental schedule, to allow the prediction band to be tightened.
+
+**Module structure:**
+- New file: `papers/paper12_polariton/experimental_proposal_paris_lkb.tex` (1-page LaTeX cover letter).
+- Cross-references: Paper 12 main draft.
+
+**Output:** 1-page proposal ready to send to the Paris LKB PI.
+
+#### Sub-wave 21.3 — Outreach + initial response loop
+
+**Goal.** Send the cover letter; document responses; iterate on the prediction band based on their actual device parameters; produce a cross-validation figure showing the SK-EFT prediction band overlaid on their measurement (when their data lands).
+
+**Module structure:**
+- Working memo: `temporary/working-docs/phase5u_W21_paris_lkb_correspondence.md` documenting the exchange.
+- If they respond with new device parameters, sub-wave 21.1 prediction band is tightened.
+- If they share preliminary data, the cross-validation figure compares prediction to data.
+
+**Output:** Working relationship established; bi-directional feedback loop active; documented exchange.
+
+#### Sub-wave 21.4 — Joint-paper or commentary if observation lands
+
+**Goal.** If the Paris group reports a positive Hawking-detection observation, produce a follow-up commentary or joint analysis paper that connects their result to the SK-EFT prediction. If the observation falls within the predicted band, this is a publication-grade validation of the SK-EFT framework (potential PRL companion to their PRL).
+
+**Module structure:**
+- Conditional on Paris-LKB outcome.
+- Potential new paper draft (target: PRL companion).
+
+**Output:** If positive observation: joint paper / commentary draft. If negative or null: structural analysis of why the SK-EFT prediction band did not match (also publishable as a calibration result).
+
+### Strengthening checklist
+
+- (Numerical content): every prediction-band number must trace to `formulas.py` + `constants.py` + `PARAMETER_PROVENANCE`; no ad-hoc fits.
+- (Falsifiability): the cover letter must state explicitly the falsifiable signal — frequency window, expected count rate, deviation that would falsify the SK-EFT prediction.
+- (Tone): the cover letter must be respectful of the Paris group's experimental autonomy — predictions are offered as falsifiable theoretical input, not as instructions.
+
+### Total LOE estimate
+
+- Sub-wave 21.1 (device-parameter audit + prediction band): 1–2 PM
+- Sub-wave 21.2 (cover letter draft): 0.5 PM
+- Sub-wave 21.3 (outreach + iteration): 1 PM (multi-month elapsed)
+- Sub-wave 21.4 (joint paper, conditional): 2–3 PM (only if observation lands)
+- **Total: 2.5–6.5 PM**, spread over 12–18 months elapsed (collaboration-pace)
+
+### Cross-phase impact
+
+- **Paper 12** (polariton analog Hawking): becomes more actionable; the cover letter is a companion artifact.
+- **`PolaritonTier1.lean`**: not modified; consumed by sub-wave 21.1.
+- **`StimulatedHawking.lean`** (Phase 5d, 7 sorry currently): if the Paris group expresses interest in stimulated-mode predictions, the 7 active sorries become a reprioritized closure target.
+- **Phase 6_Deferred_Targets.md**: "Paris LKB outreach" entry advances from passive to active status.
+
+### Deliverables
+
+- `src/polariton/paris_lkb_predictions.py` + tests + figure (sub-wave 21.1).
+- `papers/paper12_polariton/experimental_proposal_paris_lkb.tex` (sub-wave 21.2).
+- Outreach memo (sub-wave 21.3).
+- Joint-paper draft (sub-wave 21.4, conditional).
+
+*Append-only addition 2026-04-28. Status: OPEN, awaiting user authorization Gate U.21 for the cover letter draft. Highest-leverage near-term experimental-partnership action per Phase 6 gap-analysis.*

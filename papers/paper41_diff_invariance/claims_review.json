@@ -1,0 +1,150 @@
+{
+  "paper": "paper41_diff_invariance",
+  "reviewer": "physics-qa:claims-reviewer",
+  "review_date": "2026-04-28",
+  "wave": "Phase 6e Wave 3 (Path-(b) order-by-order diffeomorphism invariance)",
+  "summary": "Paper 41 cleanly maps to NonlinearDiffInvariance.lean: every Lean theorem cited in the paper text exists with the stated name, and the order-by-order substantive content (a_0/a_2 def-zero, a_4 = Wave 2 basis-change identity) matches both the Lean module and the Python mirror. Numerical claims (max |residual| at machine epsilon for Dirac, exactly delta-linear for perturbed bundle, max grid residual delta * R_sq_max = 5e-5 at delta=1e-6) reconcile with constants and the falsifier theorem. Counts macros (10 thms / 36 tests) match the canonical Lean source and pytest collection. ARISTOTLE_THEOREMS has no paper41 entry, consistent with the paper's claim that all theorems are MCP-proved manually. Two FAILs found: (1) the Roehm2026Wave1 bibkey cited in the paper is NOT present in CITATION_REGISTRY (Wald1984/ChristensenDuff1979/Vassilevich2003/Stelle1977/HigherCurvature2026 are all present and DOI-verified, but Roehm2026Wave1 has no registry entry); (2) formulas.py Lean docstring lines for the five Wave 3 numerical formulas reference Lean theorem names that do not exist in NonlinearDiffInvariance.lean (P6 drift per feedback_python_lean_refs_drift.md) -- the names are stale relative to the actual ship names (pathB_residual_a0/a2/a4, DiffInvariantAt, H_NonlinearDiffInvariance). Both are pipeline-integrity issues that should block submission until fixed but do not falsify any physics claim in the paper itself.",
+  "pass_count": 18,
+  "warn_count": 1,
+  "fail_count": 2,
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "FAIL",
+      "category": "citation_registry_missing",
+      "claim": "Paper bibitem \\bibitem{Roehm2026Wave1} cites 'J.G. Roehm, Formal heat-kernel calibration of induced Newton's constant from the ADW Dirac substrate (in preparation, Phase 6e Wave 1)'",
+      "finding": "Bibkey 'Roehm2026Wave1' is NOT present in src/core/citations.py CITATION_REGISTRY. Companion in-prep self-cites HigherCurvature2026 and LinearizedEFE2026 are registered with doi_verified=True; Roehm2026Wave1 is missing. Wave 1 paper directory papers/paper39_heat_kernel_expansion/ does exist on disk, so the cite target is real, but the registry entry has not been created.",
+      "remediation": "Add a Roehm2026Wave1 entry to CITATION_REGISTRY mirroring HigherCurvature2026's structure (authors='Roehm, J. G.', title='Formal heat-kernel calibration of induced Newton's constant from the ADW Dirac substrate', journal='in preparation', year=2026, doi=None, doi_verified=True with notes pointing to paper39 directory)."
+    },
+    {
+      "id": "F2",
+      "severity": "FAIL",
+      "category": "python_lean_ref_drift",
+      "claim": "src/core/formulas.py Wave 3 functions diff_invariance_anomaly_residual_a0/a2/a4, diff_invariance_holds_at_order, diff_invariance_holds_order_by_order have 'Lean:' docstring lines naming Lean theorems",
+      "finding": "Five docstring Lean references do NOT resolve to any declaration in NonlinearDiffInvariance.lean: 'a0_diffInvariance_residual_eq_zero' (does not exist; a_0 residual is the defzero def pathB_residual_a0), 'a2_diffInvariance_residual_eq_zero' (does not exist; closest is def pathB_residual_a2), 'a4_diffInvariance_residual_eq_zero' (does not exist; load-bearing theorem is pathB_residual_a4_dirac_eq_zero), 'diffInvariantAt' (lowercase d -- actual is DiffInvariantAt with capital D), 'diffInvariant_orderByOrder' (does not exist; the order-by-order bundle is H_NonlinearDiffInvariance / dirac_H_NonlinearDiffInvariance). This is exactly the P6 drift pattern catalogued in feedback_python_lean_refs_drift.md.",
+      "remediation": "Update the five docstring 'Lean:' lines in formulas.py (lines ~8460, ~8476, ~8500, ~8517, ~8551) to the actual ship names: pathB_residual_a0 / pathB_residual_a2 / pathB_residual_a4_dirac_eq_zero / DiffInvariantAt / dirac_H_NonlinearDiffInvariance. Recommend running validate.py --check formula_lean_refs_resolve once the QI script lands."
+    },
+    {
+      "id": "W1",
+      "severity": "WARN",
+      "category": "in_prep_self_cite",
+      "claim": "HigherCurvature2026 and (after F1 fix) Roehm2026Wave1 are 'in preparation' self-cites with doi=None and doi_verified=True",
+      "finding": "Both companion citations rely on doi_verified=True without an actual DOI. This is the documented Gate-1 binary-criterion pattern for in-prep self-cites and is not a citation hallucination. Audit memory feedback_citation_verification_required.md notes that doi_verified=True without a DOI must be used only for genuine in-prep work; both targets are real (paper39 + paper40 exist on disk). Flagging for human verification before journal submission per CHECK 15.",
+      "remediation": "Before paper submission: replace 'in preparation' with the arXiv ID once paper39 + paper40 are posted, and flip doi=<arXiv DOI> with doi_verified=True after CrossRef resolution."
+    },
+    {
+      "id": "P1",
+      "severity": "PASS",
+      "claim": "Lean theorem pathB_residual_a4_dirac_eq_zero exists and has zero sorry",
+      "evidence": "lean/SKEFTHawking/NonlinearDiffInvariance.lean line 242. Proof unfolds pathB_residual_a4, rewrites via diracCoefBundle_density_a4_eq_wave2_a4_density and a4_density_eq_a4_density_in_RC2GB_basis, closes with ring."
+    },
+    {
+      "id": "P2",
+      "severity": "PASS",
+      "claim": "Lean theorems dirac_diffInvariantAt_zero, dirac_diffInvariantAt_two, dirac_diffInvariantAt_four exist",
+      "evidence": "lean/SKEFTHawking/NonlinearDiffInvariance.lean lines 256, 264, 273; all three discharged."
+    },
+    {
+      "id": "P3",
+      "severity": "PASS",
+      "claim": "Correctness-push biconditional diff_invariance_a4_iff_dirac_basis_consistent exists",
+      "evidence": "Line 302; substantively bridges DiffInvariantAt at n=4 to the pointwise Wave 2 basis identity in both directions."
+    },
+    {
+      "id": "P4",
+      "severity": "PASS",
+      "claim": "Falsifier perturbed_pathB_residual_a4_at_unit_R_sq exists and proves residual = delta",
+      "evidence": "Line 349; ring closes after unfolding perturbedCoefBundle and substituting Wave 2 basis identity."
+    },
+    {
+      "id": "P5",
+      "severity": "PASS",
+      "claim": "Falsifier perturbed_not_diffInvariantAt_four exists",
+      "evidence": "Line 367; specializes universal residual hypothesis to the (1,0,0) curvature input."
+    },
+    {
+      "id": "P6",
+      "severity": "PASS",
+      "claim": "Tracked-Prop H_NonlinearDiffInvariance, dirac witness, and perturbed-bundle falsifier exist",
+      "evidence": "Lines 388, 402, 416. Three-conjunct bundle; dirac witness is the conjunction of three order-by-order lemmas."
+    },
+    {
+      "id": "P7",
+      "severity": "PASS",
+      "claim": "EffectiveLagrangianCoefs structure with five fields (a0, a2_R, a4_R_sq, a4_Ricci_sq, a4_Riemann_sq) exists",
+      "evidence": "Line 99; matches the paper's Sec III.A 5-tuple definition exactly."
+    },
+    {
+      "id": "P8",
+      "severity": "PASS",
+      "claim": "diracCoefBundle invokes Wave 1 named coefficients (P6 cross-module bridge integrity)",
+      "evidence": "Line 142 diracCoefBundle field assignments call a0_dirac, a2_R_coefficient, a4_R_sq_coef, a4_Ricci_sq_coef, a4_Riemann_sq_coef. All five are confirmed in HeatKernelExpansion.lean (lines 102, 128, 322, 328, 334)."
+    },
+    {
+      "id": "P9",
+      "severity": "PASS",
+      "claim": "diracCoefBundle_density_a4_eq_wave2_a4_density bridge theorem exists",
+      "evidence": "Line 153; closes by rfl after unfolding."
+    },
+    {
+      "id": "P10",
+      "severity": "PASS",
+      "claim": "DiffInvariantAt predicate exists with case-split semantics over n in {0,2,4}",
+      "evidence": "Line 206; matches paper's Sec III.B definition. Predicate body forces residual=0 universally over curvature inputs at n=4."
+    },
+    {
+      "id": "P11",
+      "severity": "PASS",
+      "claim": "pathB_residual_a0/a2/a4 definitions exist",
+      "evidence": "Lines 188, 184, 174 respectively. a_0 and a_2 are def-zero (paper's claim of 'definitionally zero'); a_4 references a4_density_in_RC2GB_basis from Wave 2."
+    },
+    {
+      "id": "P12",
+      "severity": "PASS",
+      "claim": "perturbedCoefBundle definition exists",
+      "evidence": "Line 329; identical to diracCoefBundle except a4_R_sq is shifted by delta. Matches paper's Sec IV.B description."
+    },
+    {
+      "id": "P13",
+      "severity": "PASS",
+      "claim": "Counts macros diffInvarianceThms=10 and diffInvarianceTests=36",
+      "evidence": "docs/counts.tex lines 51-52: \\diffInvarianceThms{10} and \\diffInvarianceTests{36}. Lean file has exactly 10 'theorem' top-level declarations; test_diff_invariance.py has exactly 36 test functions."
+    },
+    {
+      "id": "P14",
+      "severity": "PASS",
+      "claim": "Path-b tolerance 10^-12 referenced in paper",
+      "evidence": "constants.py DIFF_INVARIANCE_PARAMS['PATH_B_RESIDUAL_TOLERANCE'] = 1.0e-12 (line 2519)."
+    },
+    {
+      "id": "P15",
+      "severity": "PASS",
+      "claim": "Parameter scan grid R^2 in [0,50], Ricci^2 in [0,50], Riemann^2 in [0,25], 16 points, N_f in {1,24,27}",
+      "evidence": "constants.py DIFF_INVARIANCE_PARAMS: TEST_GRID_RICCI_SQ_RANGE=(0,50), TEST_GRID_RIEMANN_SQ_RANGE=(0,25), PARAMETER_SCAN_POINTS=16. Test parametrize lists in test_diff_invariance.py lines 92, 225, 230 use [1.0, 24.0, 27.0]. Note paper says 'R^2 in [0,50]' = TEST_GRID_RICCI_SQ_RANGE reused in anomaly_hunt.py line 56 (R_sq_grid = _grid_points(*DI['TEST_GRID_RICCI_SQ_RANGE'], n_pts))."
+    },
+    {
+      "id": "P16",
+      "severity": "PASS",
+      "claim": "Maximum perturbed residual at delta=10^-6 is 5x10^-5",
+      "evidence": "Falsifier theorem proves residual = delta at unit R^2; over the grid the order-a_4 residual is linear in R_sq with the perturbed coefficient, so max residual = delta * R_sq_max = 10^-6 * 50 = 5x10^-5. Matches paper exactly. Constants confirm ANOMALY_PROBE_OFFSET=1.0e-6."
+    },
+    {
+      "id": "P17",
+      "severity": "PASS",
+      "claim": "Cited bibitems Wald1984, ChristensenDuff1979, Vassilevich2003, Stelle1977, HigherCurvature2026 are in CITATION_REGISTRY with doi_verified=True",
+      "evidence": "src/core/citations.py: Wald1984 (line 2048, DOI 10.7208/chicago/9780226870373.001.0001), ChristensenDuff1979 (line 2111, DOI 10.1016/0550-3213(79)90516-9), Vassilevich2003 (line 2093, DOI 10.1016/j.physrep.2003.09.002), Stelle1977 (line 2128, DOI 10.1103/PhysRevD.16.953), HigherCurvature2026 (line 2069, in-prep self-cite)."
+    },
+    {
+      "id": "P18",
+      "severity": "PASS",
+      "claim": "ARISTOTLE_THEOREMS contains no paper41 entries (paper claims all manual MCP proofs)",
+      "evidence": "constants.py grep finds no 'paper41' or 'NonlinearDiffInvariance' references in ARISTOTLE_THEOREMS. Paper text Sec V correctly omits any 'formally verified by Aristotle' claim."
+    },
+    {
+      "id": "P19",
+      "severity": "PASS",
+      "claim": "PAPER_DEPENDENCIES['paper41_diff_invariance'] in src/core/provenance.py is well-formed",
+      "evidence": "Lines 3111-3162. Contains 5 formulas, 3 lean_modules (NonlinearDiffInvariance, HigherCurvatureStructure, HeatKernelExpansion), 11 key claims that map cleanly to paper sections; no missing fields."
+    }
+  ]
+}
