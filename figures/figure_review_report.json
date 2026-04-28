@@ -1,97 +1,57 @@
 {
-  "review_date": "2026-04-25T00:00:00Z",
-  "reviewer": "Claude Opus 4.7 (1M context) — physics-qa:figure-reviewer",
-  "scope": "Phase 5z Wave 1 / 1b / 3 — Round 3 focused polish verification of fig_ew_transition_phase_diagram",
-  "figures_reviewed": 3,
+  "review_date": "2026-04-27T23:54:21Z",
+  "reviewer": "Claude Opus 4.7 (1M context) - physics-qa:figure-reviewer",
+  "scope": "Phase 6e Wave 1 - Stage 9 LLM figure review of fig_a2_vs_linearized_G_N (Heat Kernel Expansion / Decision Gate E.2)",
+  "figures_reviewed": 1,
   "overall_status": "issues_found",
-  "round": 3,
-  "round_3_date": "2026-04-25T00:00:00Z",
-  "round_1_report_archived": false,
-  "structural_checks_cross_ref": {
-    "source": "figures/structural_checks.json",
-    "note": "Round 3 focused only on fig_ew_transition_phase_diagram. Other figures' verdicts unchanged from Round 2."
-  },
+  "previous_review_archived_in_git_history": true,
+  "note_on_previous_report": "Earlier report covering fig_bhl_bilocal_correction / fig_ew_transition_phase_diagram / fig_higgs_mass_parameter_scan superseded by this Phase 6e Wave 1 single-figure review. Prior verdicts on those Phase 5z figures unchanged and recoverable from git history.",
   "figures": [
     {
-      "name": "fig_bhl_bilocal_correction",
-      "status": "pass",
-      "rendering": {
-        "status": "pass",
-        "issues": []
-      },
-      "physics": {
-        "status": "pass",
-        "issues": []
-      },
-      "style": {
-        "status": "pass",
-        "issues": []
-      },
-      "caption_match": true,
-      "notes": "Round 2 verification: master title 'Phase 5z Wave 1b — BHL gap problem and Hill 2025 bilocal correction' now sits cleanly above subplot titles (margin t=110 took effect). Left-panel y-axis is bounded [50, 400] GeV — the spurious 10^126 autoscale is gone. BHL-benchmark 311 GeV label sits next to the curve top without colliding with the PDG line. Hill-recovery dashed line at 125 GeV with the 'Hill recovery (dilution ≈0.403)' tag is unambiguous. Right panel: 'm_t = 220 (BHL)' annotation is clear of the title; 'm_t PDG = 172.57' label sits at the bottom of the panel and no longer collides with x-tick '200'. All four flagged Round-1 issues resolved."
-    },
-    {
-      "name": "fig_ew_transition_phase_diagram",
-      "status": "pass",
-      "round_3_verification": true,
-      "round_3_date": "2026-04-25T00:00:00Z",
-      "rendering": {
-        "status": "pass",
-        "issues": [
-          "Right-panel y-range extended to [-0.05, 1.0] (verified at src/core/visualizations.py:7684) — the E_threshold = 0.005 horizontal blue line and the 'E = 0.005 (crossover boundary)' annotation now sit cleanly inside the panel rather than clipping the bottom edge. SM star at (125.20, 0.01) and threshold line are both clearly visible.",
-          "Cosmetic nit (non-blocking): the 'CFH 1999 endpoint m_H = 72 GeV' annotation at top-left of panel 2 visually butts up against the right-edge legend; text remains fully legible — does not warrant another polish pass."
-        ]
-      },
-      "physics": {
-        "status": "pass",
-        "issues": [
-          "Left panel: broken-phase wells at φ ≈ ±174 GeV (= 246/√2) fully visible with ±300 GeV x-range; T=0 broken, T=T_c/2 (≈70 GeV), T=1.5T_c symmetric curves render with correct qualitative ordering. T_c ≈ 139.1 GeV.",
-          "Right panel: amber first-order shaded region + explicit blue E=0.005 crossover-boundary line both visible inside the panel; SM star at (125.20, 0.01) sits just above the boundary as expected; CFH 1999 vertical dashed reference at m_H = 72 GeV correctly placed.",
-          "Citation correction confirmed: KLRS 1996 → CFH 1999 (Csikor-Fodor-Heitger) attribution for the 72 GeV refined endpoint matches paper 22's corrected attribution (annotation source visualizations.py:7677)."
-        ]
-      },
-      "style": {
-        "status": "pass",
-        "issues": [
-          "Legend now includes the amber 'first-order region (E > threshold)' entry alongside the three V_T(φ) traces (verified at src/core/visualizations.py:7651-7652 with showlegend=True). Round-2 missing-legend-entry recommendation resolved.",
-          "Color palette consistent with project conventions (amber, steel_blue, sage cross). Master title + subtitles cleanly separated."
-        ]
-      },
-      "caption_match": true,
-      "notes": "Round-3 verification: both Round-2 polish recommendations have landed cleanly in src/core/visualizations.py:fig_ew_transition_phase_diagram — (1) y-range extended to [-0.05, 1.0] so E_threshold line sits inside the panel; (2) legend entry added for the amber first-order region. KLRS→CFH 1999 citation correction also confirmed in figure annotation. Status promoted WARNING → PASS. Figure is publication-ready for paper 22."
-    },
-    {
-      "name": "fig_higgs_mass_parameter_scan",
+      "name": "fig_a2_vs_linearized_G_N",
       "status": "warning",
       "rendering": {
         "status": "issues",
         "issues": [
-          "Master title 'Phase 5z Wave 1 — microscopic m_H prediction over (Λ_UV, G_c)' and the Fiducial subline still sit very close to the top of the heatmap; the subline 'Fiducial N_f=15, λ_4=0.13; gold contour = 125.25 GeV target ± 50% (Lean: scalar_rung_quantitative_EWSB_iff_m_H_matches)' touches the top edge of the plot area. Title margin should be increased by ~30 px to fully clear the heatmap edge.",
-          "X-axis tick text now renders as '10^0, 10^5, 10^4, 10^-2, 10^-4, 10^-7' which is monotonically wrong — the labels are out of physical order on a Λ_UV axis that physically runs 1 GeV → 10^17 GeV. The Round-1 superscript-clipping diagnosis (kaleido font fallback) appears to remain. Recommend `type='log'` axis OR ASCII `10^N` ticktext OR LaTeX-style `\\text{10}^{17}`."
+          "Left panel x-axis (log α_ADW): Plotly is rendering BOTH major and minor tick labels, producing a confusing tick string '5, 0.1, 2, 5, 1, 2, 5, 10, 2' instead of clean major-only labels at {0.1, 1, 10}. Recommend setting `dtick=1` (one decade per major tick) or `tickvals=[0.05, 0.1, 0.5, 1, 2, 5]` with `tickformat` on the x-axis update at src/core/visualizations.py:10097-10101.",
+          "Left panel: the V-shaped relative-error curve clips the top of the panel at the left edge (rel_err > 1.05 for very small alpha_ADW) and exits the panel without indication of where it is going. Either extend y-range to ~[0, 2] OR add an annotation 'rel err diverges as alpha_ADW -> 0' near the top-left where the curve leaves the frame.",
+          "Right panel x-axis: tick labels are rendered with mixed SI-prefix abbreviations and scientific notation: '10B, 1T, 100T, 10^16, 10^18'. '10B' = 10^10 GeV and '1T' = 10^12 GeV are the kaleido SI prefixer kicking in - inappropriate for a physics figure where Lambda_UV runs over decades. Force `exponentformat='power'` and `tickformat=''` (or `'~e'`) on the right-panel x-axis (src/core/visualizations.py:10157-10161) to get uniform '10^10, 10^12, ..., 10^18' labels.",
+          "Right panel y-axis: similar SI-prefix-vs-power mixing on tick labels ('1u, 1p, 10^-18, 10^-24, 10^-30, ...'). Force `exponentformat='power'` on the y-axis at src/core/visualizations.py:10162-10166 for consistent '10^-N' labeling.",
+          "Right panel y-axis title: source code reads `'G_N [GeV-2]'` (Unicode superscript-minus + 2) but in the rendered PNG the superscript-minus appears to be stripped by kaleido's font fallback - the label visually reads 'GeV^2' which is the WRONG dimensional unit. Replace with ASCII `'G_N [GeV^-2]'` or HTML `'G_N [GeV<sup>-2</sup>]'` to guarantee correct rendering.",
+          "Right panel: the M_Pl annotation text 'M_Pl ~= 1.22 x 10^19 GeV' sits at xanchor='right' against the dotted Planck-mass vertical line, putting the text very close to the panel right edge. Consider moving the annotation to xanchor='left' just to the left of the M_Pl line, or shrinking the x-axis upper bound to 5e19 to give the label breathing room."
         ]
       },
       "physics": {
         "status": "pass",
-        "issues": []
+        "issues": [
+          "Left panel: V-shape correctly hits zero at alpha_ADW = 1 (Sakharov-Adler exact baseline). Verified against a2_calibration_relative_error formula in src/heat_kernel/a2_computation.py:40-50: rel_err = |1 - alpha| / alpha, which gives exact zero at alpha=1, ~0.5 at alpha=2, and diverges as alpha->0 - the rendered curve matches.",
+          "Pass-band [0, 0.5] correctly aligned with HEAT_KERNEL_PARAMS['A2_GN_MATCH_TOLERANCE'] = 0.5 (constants.py:2392). Natural-parameter band alpha_ADW in [0.5, 1.5] sits inside the green pass region as the docstring claims.",
+          "Right panel: log-log slope is monotonic and visually consistent with G_N proportional to 1/Lambda_UV^2 (Sakharov scaling). At Lambda_UV = M_Pl = 1.22e19 GeV with N_f = 15, G_N_from_a2 = 12*pi/(15*(1.22e19)^2) ~= 1.7e-38 GeV^-2; CODATA reference is 6.7e-39 GeV^-2. The two lines do NOT cross in the rendered panel - they sit within a factor ~2.5 at Lambda_UV = M_Pl. This is physically correct because the figure uses N_f = 15 (one generation of quarks-only or anchor convention), whereas an exact CODATA crossing would require N_f = 45 (three generations no nu_R). The docstring statement 'The curve crosses the observed line near Lambda_UV ~= M_Pl' is slightly overstated for N_f=15: the curve approaches but does not cross. Either clarify the docstring + figure caption to say 'approaches within a factor ~3' OR re-anchor the figure to N_f = 45 for a true crossing.",
+          "Planck-mass vertical anchor at LAMBDA_UV_PLANCK_GEV correctly placed at the right edge of the x-range as expected.",
+          "CODATA reference line G_N_OBS_GEV_M2 ~= 6.71e-39 GeV^-2 placed at correct y-position."
+        ]
       },
       "style": {
-        "status": "issues",
+        "status": "pass",
         "issues": [
-          "Title/subline crowding at top of plot.",
-          "Tick label glyph rendering still problematic on x-axis."
+          "Color palette is on-brand: steel_blue (#2E86AB) for the main curves, amber (#F18F01) for Sakharov-Adler reference + CODATA dashed line, emerald for the pass-band shading, horizon (black) dotted for the Planck-mass anchor. Colorblind-safe (no red/green together).",
+          "Master title 'Phase 6e Wave 1 - Seeley-DeWitt a_2 calibration to Sakharov-Adler G_N (Decision Gate E.2)' renders cleanly above subplot titles with margin t=110 (visualizations.py:10178). No title/subplot crowding.",
+          "Two-panel layout (column_widths=[0.55, 0.45], horizontal_spacing=0.18) gives both panels enough width; no overlap between left-panel right edge and right-panel left edge."
         ]
       },
       "caption_match": true,
-      "notes": "User flagged this figure as low-priority WARNING and explicitly out-of-scope for the Round-2 fix pass. Heatmap, gold ±50% contour band, and viridis colorbar render correctly; physics is unchanged. Carrying forward as WARNING (status = warning, blocking = false)."
+      "notes": "Physics content is correct - this is a publishable Decision Gate E.2 calibration figure. Two non-blocking style/rendering polish issues remain: (1) tick-label SI-prefix abbreviation on both right-panel axes (10B/1T/100T/1u/1p), which is unprofessional for a physics figure; (2) rendered y-axis label may have lost the superscript-minus, making 'GeV^-2' look like 'GeV^2'. Both are kaleido font-fallback artifacts fixable with explicit `exponentformat='power'` on the axes and ASCII `[GeV^-2]` in the y-axis title. Left-panel x-axis minor-tick clutter is the third polish item. Marking WARNING (not FAIL) because none of these affect the physics correctness of the calibration result, and an attentive reader can still decode the panels - but they should be fixed before paper 39 final submission."
     }
   ],
-  "summary": "Round 2: 1 of 2 FAIL → PASS (fig_bhl_bilocal_correction). 1 of 2 FAIL → WARNING (fig_ew_transition_phase_diagram — both blocking issues fixed; minor annotation overlap remains). fig_higgs_mass_parameter_scan unchanged WARNING (out-of-scope this round). No physics-correctness regressions introduced by the fixes; in fact the EW phase-diagram broken-phase wells are now physically visible for the first time. | Round 3 (2026-04-25): fig_ew_transition_phase_diagram promoted WARNING→PASS after both Round-2 polish recommendations landed (right-panel y-range [-0.05, 1.0] making the E_threshold line visible inside the panel + legend entry for amber first-order region) plus citation correction KLRS 1996 → CFH 1999. 2/3 figures now PASS; only fig_higgs_mass_parameter_scan remains WARNING (deferred / out-of-scope).",
+  "summary": "fig_a2_vs_linearized_G_N is physics-correct and on-brand stylistically, but has three rendering-polish issues (left x-axis log-tick clutter, right-panel SI-prefix tick labels on both axes, and a likely lost superscript-minus on the right-panel y-axis title that makes 'GeV^-2' look like 'GeV^2'). Status WARNING - non-blocking for internal review and Stage 13 adversarial pass, but should be polished before paper 39 submission. Also flagged: docstring slightly overstates 'curve crosses CODATA at M_Pl' - at N_f = 15 the curve approaches CODATA within a factor ~3 but does not literally cross.",
   "recommendations": [
-    "fig_ew_transition_phase_diagram is paper-ready as-is (Round 3 verified).",
-    "Optional (deferred): for fig_higgs_mass_parameter_scan, switch x-axis to plotly `type='log'` native ticks to fix the kaleido superscript clipping; bump margin=dict(t=130) to clear the subline from the heatmap edge.",
-    "fig_bhl_bilocal_correction is paper-ready as-is."
+    "Fix left-panel x-axis tick clutter: at src/core/visualizations.py:10097-10101, set `tickvals=[0.05, 0.1, 0.5, 1, 2, 5]` with `ticktext=['0.05', '0.1', '0.5', '1', '2', '5']` (or simply `dtick=1, tick0=0` on the log axis to get major-only ticks at decades).",
+    "Force scientific-notation tick labels on right-panel x-axis (visualizations.py:10157-10161): add `exponentformat='power'` and `dtick=2` to get clean '10^10, 10^12, 10^14, 10^16, 10^18' ticks instead of '10B/1T/100T'.",
+    "Force scientific-notation tick labels on right-panel y-axis (visualizations.py:10162-10166): add `exponentformat='power'`.",
+    "Replace y-axis title at visualizations.py:10163 from `'G_N [GeV-2]'` (Unicode) to `'G_N [GeV<sup>-2</sup>]'` (HTML) to guarantee the superscript-minus survives kaleido PNG rendering.",
+    "Either re-anchor the right-panel figure to N_f = 45 (three generations no nu_R, true CODATA crossing at M_Pl) OR soften the docstring claim from 'crosses' to 'approaches CODATA within ~ factor 3' for the N_f=15 case.",
+    "Optional: extend left-panel y-range to [0, 2] (or add a 'diverges as alpha->0' annotation) so the V-curve does not silently leave the frame at small alpha_ADW."
   ],
   "blocking_for_paper_submission": false,
-  "round_2_verdict": "Both Round-1 FAIL figures are now non-blocking. fig_bhl_bilocal_correction is fully clean. fig_ew_transition_phase_diagram has minor cosmetic friction but is publishable. The Higgs-mass scan WARNING remains as previously scoped.",
-  "round_3_verdict": "fig_ew_transition_phase_diagram: PASS. Both Round-2 polish recommendations (y-range [-0.05, 1.0] for visible E_threshold line + legend entry for amber first-order region) landed cleanly in src/core/visualizations.py. KLRS 1996 → CFH 1999 citation correction also confirmed in figure annotation. Figure is publication-ready for paper 22. fig_higgs_mass_parameter_scan unchanged (deferred). fig_bhl_bilocal_correction unchanged PASS."
+  "next_step": "User to decide whether to apply polish fixes now or carry as known-cosmetic-issue into Stage 13 adversarial review for paper 39."
 }

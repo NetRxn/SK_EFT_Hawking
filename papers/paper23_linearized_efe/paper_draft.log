@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  25 APR 2026 16:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  27 APR 2026 20:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -426,7 +426,7 @@ Package color Info: Driver file: pdftex.def on input line 149.
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count333
 )
-No file paper_draft.aux.
+(./paper_draft.aux)
 \openout1 = `paper_draft.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -447,6 +447,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
+
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count334
@@ -477,6 +478,7 @@ nslations-basic-dictionary')
 Package translations Info: loading dictionary `translations-basic-dictionary' f
 or `english'. on input line 22.
 Package hyperref Info: Link coloring OFF on input line 22.
+ (./paper_draft.out) (./paper_draft.out)
 \@outlinefile=\write4
 \openout4 = `paper_draft.out'.
 
@@ -496,18 +498,6 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 38.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-Package natbib Warning: Citation `Vergeles2025' on page 1 undefined on input li
-ne 62.
-
-
-Package natbib Warning: Citation `VladimirovDiakonov2012' on page 1 undefined o
-n input line 64.
-
-
-Package natbib Warning: Citation `Adler1982' on page 1 undefined on input line 
-66.
-
-
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\\' on input line 81.
 
@@ -526,30 +516,6 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 81.
-
-
-Package natbib Warning: Citation `Akama1978' on page 1 undefined on input line 
-88.
-
-
-Package natbib Warning: Citation `Diakonov2011' on page 1 undefined on input li
-ne 88.
-
-
-Package natbib Warning: Citation `HebeckerWetterich2003' on page 1 undefined on
- input line 88.
-
-
-Package natbib Warning: Citation `Wetterich2022' on page 1 undefined on input l
-ine 88.
-
-
-Package natbib Warning: Citation `VladimirovDiakonov2012' on page 1 undefined o
-n input line 88.
-
-
-Package natbib Warning: Citation `Volovik2022Counting' on page 1 undefined on i
-nput line 94.
 
 
 Underfull \hbox (badness 3758) in paragraph at lines 96--105
@@ -595,38 +561,10 @@ Underfull \hbox (badness 1038) in paragraph at lines 106--108
  []
 
 
-Package natbib Warning: Citation `Carroll2004' on page 1 undefined on input lin
-e 113.
-
-
-Package natbib Warning: Citation `MTW1973' on page 1 undefined on input line 11
-3.
-
-
-Package natbib Warning: Citation `Sakharov1968' on page 1 undefined on input li
-ne 128.
-
-
-Package natbib Warning: Citation `Adler1982' on page 1 undefined on input line 
-128.
-
-
 Underfull \hbox (badness 1596) in paragraph at lines 125--132
 \OT1/cmr/m/n/10 where the pref-ac-tor $12\OML/cmm/m/it/10 ^^Y=\OT1/cmr/m/n/10 (
 \OML/cmm/m/it/10 N[] \OT1/cmr/m/n/10 ^^C[])$ is the stan-dard
  []
-
-
-Package natbib Warning: Citation `Vergeles2025' on page 1 undefined on input li
-ne 137.
-
-
-Package natbib Warning: Citation `Volovik2022Counting' on page 1 undefined on i
-nput line 138.
-
-
-Package natbib Warning: Citation `Visser2002' on page 1 undefined on input line
- 142.
 
 [1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 Underfull \hbox (badness 2799) in paragraph at lines 148--161
@@ -634,28 +572,10 @@ Underfull \hbox (badness 2799) in paragraph at lines 148--161
  []
 
 
-LaTeX Warning: Reference `sec:linearized-tensor' on page 2 undefined on input l
-ine 163.
-
-
-LaTeX Warning: Reference `sec:sakharov-adler' on page 2 undefined on input line
- 164.
-
-
-LaTeX Warning: Reference `sec:adw-emerg' on page 2 undefined on input line 166.
-
-
-
-LaTeX Warning: Reference `sec:correctness-push' on page 2 undefined on input li
-ne 168.
-
-
-LaTeX Warning: Reference `sec:vergeles-structure' on page 2 undefined on input 
-line 170.
-
-
-LaTeX Warning: Reference `sec:open-computation' on page 2 undefined on input li
-ne 172.
+Underfull \hbox (badness 1152) in paragraph at lines 163--176
+ []\OT1/cmr/m/it/10 Organization.[] \OT1/cmr/m/n/10 Sec-tion []II[] for-mal-ize
+s the lin-earized
+ []
 
 
 Underfull \hbox (badness 4454) in paragraph at lines 194--201
@@ -664,37 +584,9 @@ tt/m/n/10 trace[]reverse[]negates[]trace\OT1/cmr/m/n/10 ).
  []
 
 
-LaTeX Warning: Reference `eq:gone-deDonder' on page 2 undefined on input line 2
-05.
-
-
-Package natbib Warning: Citation `Carroll2004' on page 2 undefined on input lin
-e 205.
-
-
-Package natbib Warning: Citation `MTW1973' on page 2 undefined on input line 20
-5.
-
-
-Package natbib Warning: Citation `Sakharov1968' on page 2 undefined on input li
-ne 244.
-
-
-Package natbib Warning: Citation `Adler1982' on page 2 undefined on input line 
-244.
-
-
-Package natbib Warning: Citation `Visser2002' on page 2 undefined on input line
- 244.
-
-
 Underfull \hbox (badness 4872) in paragraph at lines 242--245
 []\OT1/cmr/m/n/10 The Sakharov--Adler one-loop in-duced Einstein--
  []
-
-
-Package natbib Warning: Citation `Visser2002' on page 2 undefined on input line
- 251.
 
 
 Underfull \hbox (badness 5607) in paragraph at lines 248--255
@@ -711,12 +603,6 @@ Underfull \hbox (badness 6016) in paragraph at lines 257--259
 \OT1/cmr/m/it/10 rem.[] \OT1/cmr/m/n/10 The ADW crit-i-cal cou-pling, for-mal-i
 zed in
  []
-
-
-LaTeX Warning: Reference `eq:Gsakharov' on page 2 undefined on input line 263.
-
-
-LaTeX Warning: Reference `eq:Gcrit' on page 2 undefined on input line 263.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 269--273
@@ -778,30 +664,10 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 281.
 
 
-LaTeX Warning: Reference `eq:GNemerg-def' on page 3 undefined on input line 285
-.
-
-
-LaTeX Warning: Reference `sec:vergeles-structure' on page 3 undefined on input 
-line 287.
-
-
-LaTeX Warning: Reference `sec:vergeles-structure' on page 3 undefined on input 
-line 306.
-
-
 Underfull \hbox (badness 2310) in paragraph at lines 304--311
  []\OT1/cmr/m/it/10 Vanishing.[] $\OML/cmm/m/it/10 G[] \OT1/cmr/m/n/10 = 0$ iff
  $\OML/cmm/m/it/10 [] \OT1/cmr/m/n/10 = 0$ when
  []
-
-
-Package natbib Warning: Citation `Tiesinga2021CODATA' on page 3 undefined on in
-put line 318.
-
-
-LaTeX Warning: Reference `eq:match-locus' on page 3 undefined on input line 334
-.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 338--342
@@ -814,28 +680,12 @@ Underfull \hbox (badness 1881) in paragraph at lines 338--342
 tan-dard
  []
 
-
-LaTeX Warning: Reference `sec:vergeles-structure' on page 3 undefined on input 
-line 351.
-
-
-LaTeX Warning: Reference `fig:GN-emerg-scan' on page 3 undefined on input line 
-356.
-
-<figures/fig_G_N_emerg_parameter_scan.png, id=56, 2409.0pt x 1606.0pt>
+<figures/fig_G_N_emerg_parameter_scan.png, id=137, 2409.0pt x 1606.0pt>
 File: figures/fig_G_N_emerg_parameter_scan.png Graphic file (type png)
 <use figures/fig_G_N_emerg_parameter_scan.png>
 Package pdftex.def Info: figures/fig_G_N_emerg_parameter_scan.png  used on inpu
 t line 363.
 (pdftex.def)             Requested size: 246.0pt x 163.99117pt.
-
-Package natbib Warning: Citation `Tiesinga2021CODATA' on page 3 undefined on in
-put line 376.
-
-
-Package natbib Warning: Citation `Tiesinga2021CODATA' on page 3 undefined on in
-put line 376.
-
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 380.
@@ -853,63 +703,20 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 380.
 
 
-Package natbib Warning: Citation `Diakonov2011' on page 3 undefined on input li
-ne 385.
-
-
-Package natbib Warning: Citation `VladimirovDiakonov2012' on page 3 undefined o
-n input line 385.
-
-
-Package natbib Warning: Citation `HebeckerWetterich2003' on page 3 undefined on
- input line 385.
-
-
-Package natbib Warning: Citation `Wetterich2022' on page 3 undefined on input l
-ine 385.
-
-
-Package natbib Warning: Citation `Vergeles2025' on page 3 undefined on input li
-ne 385.
-
-
-Package natbib Warning: Citation `Volovik2022Counting' on page 3 undefined on i
-nput line 385.
-
-
-Package natbib Warning: Citation `Volovik2024Vestigial' on page 3 undefined on 
-input line 385.
-
-
-Package natbib Warning: Citation `Sakharov1968' on page 3 undefined on input li
-ne 385.
-
-
-Package natbib Warning: Citation `Adler1982' on page 3 undefined on input line 
-385.
-
-
-Package natbib Warning: Citation `Visser2002' on page 3 undefined on input line
- 385.
-
-
-Package natbib Warning: Citation `Vergeles2025' on page 3 undefined on input li
-ne 392.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 391--395
  []\OT1/cmr/m/it/10 P1. Verge-les pos-i-tiv-ity.[] \OT1/cmr/m/n/10 Osterwalder-
 -Schrader
  []
 
 
-Underfull \hbox (badness 1635) in paragraph at lines 391--395
-\OT1/cmr/m/n/10 im-plies a positive-definite spec-tral mea-sure for the
+Underfull \hbox (badness 1762) in paragraph at lines 391--395
+\OT1/cmr/m/n/10 reflection-positivity on the lat-tice ADW the-ory [[]]
  []
 
 
-Package natbib Warning: Citation `VladimirovDiakonov2012' on page 3 undefined o
-n input line 405.
+Underfull \hbox (badness 1635) in paragraph at lines 391--395
+\OT1/cmr/m/n/10 im-plies a positive-definite spec-tral mea-sure for the
+ []
 
 [3{/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 } <./figures/fig_G_N_emerg_parameter_scan.png>]
@@ -923,14 +730,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 409--412
 \OT1/cmtt/m/n/10 Filter.Tendsto $\OML/cmm/m/it/10 []$ \OT1/cmtt/m/n/10 (nhdsWi
 thin 1 (Set.Ioi
  []
-
-
-Package natbib Warning: Citation `Adler1982' on page 4 undefined on input line 
-417.
-
-
-Package natbib Warning: Citation `Visser2002' on page 4 undefined on input line
- 417.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 421--424
@@ -967,93 +766,56 @@ Underfull \hbox (badness 10000) in paragraph at lines 438--443
 \OT1/cmtt/m/n/10 alphaADW[]linear[]critical[]collapse\OT1/cmr/m/n/10 , and
  []
 
-
-LaTeX Warning: Reference `eq:planck-anchor' on page 4 undefined on input line 4
-51.
-
-
-Package natbib Warning: Citation `Volovik2024Vestigial' on page 4 undefined on 
-input line 460.
-
-
-Package natbib Warning: Citation `Volovik2022Counting' on page 4 undefined on i
-nput line 481.
-
-
-Package natbib Warning: Citation `Adler1982' on page 4 undefined on input line 
-483.
-
-
-LaTeX Warning: Reference `LastBibItem' on page 4 undefined on input line 529.
-
 [4]
+Underfull \hbox (badness 1122) in paragraph at lines 559--562
+ []\OT1/cmr/m/n/9 A. D. Sakharov, ``Vac-uum quan-tum fluc-tu-a-tions in
+ []
+
 No file paper_draft.bbl.
-
-Package natbib Warning: There were undefined citations.
-
-[5] (./paper_draft.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-)
+[5] (./paper_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `paper_draft.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `paper_draft.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  3FE3D3D6A4738F0F729B92CA87F42B84;2864.
+Package rerunfilecheck Info: File `paper_draft.out' has not changed.
+(rerunfilecheck)             Checksum: 3FE3D3D6A4738F0F729B92CA87F42B84;2864.
  ) 
 Here is how much of TeX's memory you used:
- 15782 strings out of 467525
- 298477 string characters out of 5418982
- 713697 words of memory out of 5000000
- 44472 multiletter control sequences out of 15000+600000
- 637894 words of font info for 80 fonts, out of 8000000 for 9000
+ 15820 strings out of 467525
+ 299009 string characters out of 5418982
+ 716312 words of memory out of 5000000
+ 44505 multiletter control sequences out of 15000+600000
+ 637586 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,80p,950b,1159s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
-usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
-sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr
-/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/l
-ocal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loc
-al/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local
-/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/t
-exlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texl
-ive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive
-/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/20
-26/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/fonts
-/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/f
-onts/type1/public/cm-super/sfrm1000.pfb>
-Output written on paper_draft.pdf (5 pages, 475792 bytes).
+ 75i,6n,80p,966b,1161s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><
+/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
+usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
+sr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></us
+r/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/
+local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
+cal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/loca
+l/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/tex
+live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texliv
+e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2
+026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist/font
+s/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/
+fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on paper_draft.pdf (5 pages, 468878 bytes).
 PDF statistics:
- 239 PDF objects out of 1000 (max. 8388607)
- 178 compressed objects within 2 object streams
+ 316 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
  72 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 94 words of extra memory for PDF output out of 10000 (max. 10000000)
 

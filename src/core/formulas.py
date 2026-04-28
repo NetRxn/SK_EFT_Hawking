@@ -8104,3 +8104,335 @@ def mtc_horizon_falsifier_status(mtc_name, log_d_max=None,
         'F4_modularInvariance': entry['F4'],
         'F5_anomalyMatch': entry['F5'],
     }
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 1: Seeley-DeWitt heat-kernel coefficients
+# ════════════════════════════════════════════════════════════════════
+
+
+def seeley_dewitt_a0(N_f):
+    """Leading Seeley-DeWitt coefficient a_0 for N_f free Dirac fermions.
+
+    From the τ → 0+ asymptotic expansion of the Dirac heat kernel,
+    ``Tr exp(-τ D̸²) ~ Σ_n a_n(x) τ^{(n-d)/2}``, the leading term in
+    4D is a constant per fermion species times the Dirac trace dim 4:
+
+        a_0(x) = N_f · 4 / (4π)²
+
+    Integrated against the volume measure with hard UV cutoff Λ this
+    contributes to the cosmological-constant scale Λ_emerg^4.
+
+    Lean: HeatKernelExpansion.a0_dirac, a0_dirac_pos
+    Aristotle: manual
+    Source: Vassilevich, Phys. Rep. 388, 279 (2003), Eq. (4.37)
+
+    Parameters
+    ----------
+    N_f : float
+        Number of Dirac-fermion species (dimensionless).
+
+    Returns
+    -------
+    float
+        The local a_0 density.
+    """
+    import math
+    return float(N_f) * 4.0 / (4.0 * math.pi) ** 2
+
+
+def seeley_dewitt_a2_R_coefficient(N_f):
+    """Seeley-DeWitt a_2 coefficient of R for N_f free Dirac fermions.
+
+    The a_2 density carries one power of the Ricci scalar:
+
+        a_2(x) = - N_f / (12 (4π)²) · R(x)
+
+    Integrating Λ² · a_2 over volume reproduces the Einstein-Hilbert
+    action with coefficient ``-1/(16 π G_N)``, fixing the Sakharov-Adler
+    induced Newton constant ``G_N^Sakharov = 12 π / (N_f Λ²)``.
+    The minus sign is the spin-1/2 Lichnerowicz convention; see
+    Christensen-Duff 1979.
+
+    Lean: HeatKernelExpansion.a2_R_coefficient, a2_R_coefficient_neg
+    Aristotle: manual
+    Source: Vassilevich, Phys. Rep. 388, 279 (2003), Eq. (4.38);
+            Christensen & Duff, Nucl. Phys. B154, 301 (1979), Eq. (3.7)
+
+    Parameters
+    ----------
+    N_f : float
+        Number of Dirac species.
+
+    Returns
+    -------
+    float
+        Coefficient C such that a_2 = C · R(x).
+    """
+    import math
+    return - float(N_f) / (12.0 * (4.0 * math.pi) ** 2)
+
+
+def G_N_from_seeley_dewitt(Lambda_UV, N_f):
+    """Newton constant from integrating the Λ²·a_2 mass-dimension term.
+
+    Setting the EH action ``-1/(16 π G_N) ∫ R √g d⁴x`` equal to the
+    Λ²-divergent part of the heat-kernel effective action gives
+
+        1/(16 π G_N) = N_f Λ²/(12 · (4π)²) = N_f Λ²/(192 π²)
+
+    so
+
+        G_N = 12 π / (N_f Λ²)
+
+    in exact agreement with ``LinearizedEFE.G_N_sakharov`` from Phase
+    6a.1. This is the Decision Gate E.2 calibration: the heat-kernel
+    nonlinear derivation reproduces the linearized Sakharov-Adler
+    coefficient, fixing the mean-field validity boundary.
+
+    Lean: HeatKernelExpansion.G_N_from_a2,
+          G_N_from_a2_eq_G_N_sakharov
+    Aristotle: manual
+    Source: Sakharov, Sov. Phys. Dokl. 12, 1040 (1968);
+            Adler, RMP 54, 729 (1982), Eq. (3.3)
+
+    Parameters
+    ----------
+    Lambda_UV : float
+        UV cutoff [GeV].
+    N_f : float
+        Number of Dirac species.
+
+    Returns
+    -------
+    float
+        Induced Newton constant in [GeV⁻²].
+    """
+    import math
+    return 12.0 * math.pi / (float(N_f) * float(Lambda_UV) ** 2)
+
+
+def seeley_dewitt_a4_basis(N_f):
+    """Seeley-DeWitt a_4 coefficients in the (R², Ricci², Riemann²) basis.
+
+    The a_4 density for a free Dirac spinor in 4D is
+
+        a_4(x) = N_f / (4π)² · (
+                    -5/(12·180) · R² +
+                    7/(12·180) · R_μν R^μν +
+                    -12/(12·180) · R_μνρσ R^μνρσ )
+
+    These rational coefficients are independent of microscopic
+    parameters; only the overall N_f / (4π)² prefactor depends on the
+    species count. The Gauss-Bonnet combination
+    ``𝒢 = R² − 4 R_μν R^μν + R_μνρσ R^μνρσ`` is topological in 4D.
+
+    Lean: HeatKernelExpansion.a4_R_sq_coef, a4_Ricci_sq_coef,
+          a4_Riemann_sq_coef
+    Aristotle: manual
+    Source: Christensen & Duff, Nucl. Phys. B154, 301 (1979), Eq. (3.8);
+            Gilkey 1995, Theorem 4.8.16
+
+    Parameters
+    ----------
+    N_f : float
+        Number of Dirac species.
+
+    Returns
+    -------
+    dict
+        Keys ``R_sq``, ``Ricci_sq``, ``Riemann_sq`` mapping to the
+        respective scalar coefficients (densities, before contraction
+        with curvature invariants).
+    """
+    import math
+    prefactor = float(N_f) / (4.0 * math.pi) ** 2
+    return {
+        'R_sq': prefactor * (-5.0 / (12.0 * 180.0)),
+        'Ricci_sq': prefactor * (7.0 / (12.0 * 180.0)),
+        'Riemann_sq': prefactor * (-12.0 / (12.0 * 180.0)),
+    }
+
+
+def gauss_bonnet_density(R_sq, Ricci_sq, Riemann_sq):
+    """Topological Gauss-Bonnet density in 4D.
+
+    ``𝒢 = R² − 4 R_μν R^μν + R_μνρσ R^μνρσ``
+
+    Integrates to the Euler characteristic on a closed 4-manifold;
+    contributes nothing to local equations of motion. Used as a sanity
+    check on the heat-kernel a_4 decomposition.
+
+    Lean: HeatKernelExpansion.gaussBonnetDensity
+    Aristotle: manual
+    Source: Gauss-Bonnet theorem, see e.g. Wald 1984 §E.1
+    """
+    return float(R_sq) - 4.0 * float(Ricci_sq) + float(Riemann_sq)
+
+
+def heat_kernel_a2_matches_GN_sakharov(Lambda_UV, N_f, alpha_ADW=1.0,
+                                        tolerance=None):
+    """Decision Gate E.2 calibration check.
+
+    Compare ``G_N_from_seeley_dewitt(Λ, N_f)`` with the 6a.1 linearized
+    ``α_ADW · G_N_sakharov(Λ, N_f)`` at the mean-field α_ADW = 1
+    baseline. Returns True iff the relative difference is within
+    ``HEAT_KERNEL_PARAMS['A2_GN_MATCH_TOLERANCE']`` (default 0.5 = ±50%,
+    matching ``GRAV_PARAMS.G_N_MATCH_TOLERANCE``).
+
+    At α_ADW = 1 the match is mathematically exact (rel diff = 0).
+    Tolerance permits the natural-parameter band α_ADW ∈ [0.5, 1.5].
+
+    Lean: HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov,
+          a2_matches_GNemerg_at_natural_params
+    Aristotle: manual
+
+    Parameters
+    ----------
+    Lambda_UV : float
+    N_f : float
+    alpha_ADW : float, optional
+        ADW dimensionless coefficient; default 1.0 (Sakharov baseline).
+    tolerance : float, optional
+        Override default match tolerance.
+
+    Returns
+    -------
+    bool
+    """
+    from src.core.constants import HEAT_KERNEL_PARAMS
+    if tolerance is None:
+        tolerance = HEAT_KERNEL_PARAMS['A2_GN_MATCH_TOLERANCE']
+    G_hk = G_N_from_seeley_dewitt(Lambda_UV, N_f)
+    G_lin = float(alpha_ADW) * 12.0 * 3.141592653589793 / (
+        float(N_f) * float(Lambda_UV) ** 2
+    )
+    rel_diff = abs(G_hk - G_lin) / G_lin
+    return bool(rel_diff <= float(tolerance))
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 2 — Higher-Curvature Structure
+#
+# 3-scalar curvature basis at a_4 order: {R², R_μν², R_μνρσ²}.
+# In 4D the Gauss-Bonnet density is topological, so two physical
+# combinations remain — Stelle's {R², C²} basis is canonical.
+# ════════════════════════════════════════════════════════════════════
+
+def higher_curvature_R_sq_coefficient(N_f):
+    """a_4 coefficient of R² for N_f Dirac fermions, including (4π)⁻²:
+
+        c_R(N_f) = N_f / (4π)² · (-5 / (12·180)) = -N_f / (432 (4π)²)
+
+    Sign reflects the canonical Christensen-Duff convention (the heat
+    kernel measure carries a global sign chosen so a_2 gives the
+    Sakharov-Adler positive G_N).
+
+    Mirrors Lean ``HigherCurvatureStructure.a4_R_sq_coef`` (= Wave 1's
+    ``HeatKernelExpansion.a4_R_sq_coef``).
+
+    Lean: HeatKernelExpansion.a4_R_sq_coef
+    Aristotle: manual
+    Source: Gilkey 1995, Eq. (4.8.18); Vassilevich 2003, Eq. (5.30)
+    """
+    from src.core.constants import HIGHER_CURVATURE_PARAMS, HEAT_KERNEL_PARAMS
+    return (float(N_f) * HIGHER_CURVATURE_PARAMS['A4_R_SQ_PER_NF']
+            / HEAT_KERNEL_PARAMS['FOUR_PI_SQ'])
+
+
+def higher_curvature_Ricci_sq_coefficient(N_f):
+    """a_4 coefficient of R_μν R^μν for N_f Dirac fermions, including (4π)⁻²:
+
+        c_Ricci(N_f) = N_f / (4π)² · (7 / (12·180)) = 7 N_f / (2160 (4π)²)
+
+    Mirrors Lean ``HigherCurvatureStructure.a4_Ricci_sq_coef``.
+
+    Lean: HeatKernelExpansion.a4_Ricci_sq_coef
+    Aristotle: manual
+    Source: Gilkey 1995, Eq. (4.8.18); Vassilevich 2003, Eq. (5.30)
+    """
+    from src.core.constants import HIGHER_CURVATURE_PARAMS, HEAT_KERNEL_PARAMS
+    return (float(N_f) * HIGHER_CURVATURE_PARAMS['A4_RICCI_SQ_PER_NF']
+            / HEAT_KERNEL_PARAMS['FOUR_PI_SQ'])
+
+
+def higher_curvature_Riemann_sq_coefficient(N_f):
+    """a_4 coefficient of R_μνρσ R^μνρσ for N_f Dirac fermions, including (4π)⁻²:
+
+        c_Riem(N_f) = N_f / (4π)² · (-12 / (12·180)) = -N_f / (180 (4π)²)
+
+    Mirrors Lean ``HigherCurvatureStructure.a4_Riemann_sq_coef``.
+
+    Lean: HeatKernelExpansion.a4_Riemann_sq_coef
+    Aristotle: manual
+    Source: Gilkey 1995, Eq. (4.8.18); Vassilevich 2003, Eq. (5.30)
+    """
+    from src.core.constants import HIGHER_CURVATURE_PARAMS, HEAT_KERNEL_PARAMS
+    return (float(N_f) * HIGHER_CURVATURE_PARAMS['A4_RIEMANN_SQ_PER_NF']
+            / HEAT_KERNEL_PARAMS['FOUR_PI_SQ'])
+
+
+def gauss_bonnet_4D_identity(R_sq, Ricci_sq, Riemann_sq):
+    """Gauss-Bonnet density 𝒢 = R² − 4 R_μν² + R_μνρσ² in 4D.
+
+    On any closed 4-manifold ∫𝒢 = 32π² χ(M) (Euler characteristic),
+    so 𝒢 contributes nothing to local EOM and acts as a topological
+    surface term. Equivalently: any two of {R², R_μν², R_μνρσ²} plus
+    𝒢 give a complete basis. Conventional reduction picks {R², C²}.
+
+    Lean: HigherCurvatureStructure.gaussBonnet4D, HeatKernelExpansion.a4_gauss_bonnet_combination
+    Aristotle: manual
+    Source: Lovelock 1971; Wald 1984 §E.1
+    """
+    from src.core.constants import HIGHER_CURVATURE_PARAMS
+    p = HIGHER_CURVATURE_PARAMS
+    return (p['GB_R_SQ_COEF'] * float(R_sq)
+            + p['GB_RICCI_SQ_COEF'] * float(Ricci_sq)
+            + p['GB_RIEMANN_SQ_COEF'] * float(Riemann_sq))
+
+
+def weyl_squared_4D(R_sq, Ricci_sq, Riemann_sq):
+    """Weyl-tensor squared in 4D from the trace decomposition.
+
+    C² = R_μνρσ² − 2 R_μν² + (1/3) R²
+
+    Equivalently, the orthogonal complement of the Ricci pieces in the
+    Riemann tensor — gives the trace-free part of the curvature, which
+    is the "pure tidal" sector. In Stelle's renormalizable {R, R², C²}
+    truncation the Weyl² coefficient β controls the spin-2 ghost mass.
+
+    Lean: HigherCurvatureStructure.weylSquared4D, weylSquared4D_eq_zero_iff_conformally_flat
+    Aristotle: manual
+    Source: Stelle, Phys. Rev. D 16, 953 (1977), Eq. (2.4)
+    """
+    from src.core.constants import HIGHER_CURVATURE_PARAMS
+    p = HIGHER_CURVATURE_PARAMS
+    return (p['WEYL_SQ_FROM_RIEMANN_SQ'] * float(Riemann_sq)
+            + p['WEYL_SQ_FROM_RICCI_SQ'] * float(Ricci_sq)
+            + p['WEYL_SQ_FROM_R_SQ'] * float(R_sq))
+
+
+def higher_curvature_predicted_in_observational_band(N_f, bound_value):
+    """Microscopic-vs-observational consistency check (correctness-push).
+
+    Returns True iff |c_pred(N_f)| <= bound_value, where c_pred is the
+    largest dimensionless higher-curvature coefficient predicted by
+    Wave 1's Dirac heat kernel for N_f species. The Wave-1 prediction
+    is always O(N_f / 180·(4π)²) ≈ O(10⁻³); observational bounds from
+    LIGO/pulsar/SRG/Cassini are O(10⁵⁹) or looser. Result is therefore
+    True for all sensible N_f.
+
+    The "physical" content: SK-EFT-Hawking's microscopic predictions
+    are far below all current observational ceilings — no tension.
+
+    Lean: HigherCurvatureStructure.higher_curvature_below_pulsar_bound
+    Aristotle: manual
+    Source: Calmet, Capozziello & Pryer 2017, EPJC 77:589 (arXiv:1708.08253) (bounds);
+            Wave 1 HeatKernelExpansion.lean (predictions)
+    """
+    largest = max(
+        abs(higher_curvature_R_sq_coefficient(N_f)),
+        abs(higher_curvature_Ricci_sq_coefficient(N_f)),
+        abs(higher_curvature_Riemann_sq_coefficient(N_f)),
+    )
+    return bool(largest <= float(bound_value))

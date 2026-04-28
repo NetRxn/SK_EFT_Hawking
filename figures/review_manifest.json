@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27T14:10:23.895902+00:00",
+  "generated": "2026-04-28T00:17:03.480805+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -2044,6 +2044,88 @@
       "expected_axes": {
         "xaxis": "\u03c6",
         "yaxis": "V_T"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "steel_blue",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_a2_vs_linearized_G_N",
+      "function": "fig_a2_vs_linearized_G_N",
+      "caption": "Phase 6e Wave 1 \u2014 Heat-kernel a\u2082 calibration to Sakharov-Adler G_N (Decision Gate E.2). Left panel: relative error |G_N_HK \u2212 G_N_lin| / G_N_lin as a function of \u03b1_ADW over [0.05, 5.0] at GUT-anchor parameters (\u039b_UV, N_f) = (10\u00b9\u2076 GeV, 15). Exact zero at \u03b1_ADW = 1 (Sakharov-Adler baseline); \u00b150% pass band shaded green; the natural-parameter band \u03b1_ADW \u2208 [0.5, 1.5] sits inside. Right panel: log-log G_N(\u039b_UV) at fixed N_f = 15 over [10\u00b9\u2070, 10\u00b9\u2079] GeV with horizontal CODATA G_N^obs reference and M_Pl vertical anchor (1.22 \u00d7 10\u00b9\u2079 GeV). The heat-kernel G_N(\u039b_UV) crosses CODATA near M_Pl, confirming the Sakharov-Adler scale anchor. Lean: G_N_from_a2_eq_G_N_sakharov, a2_matches_GNemerg_iff_alpha_ADW_unity, G_N_from_a2_at_GUT_inverse, G_N_from_a2_inverse_at_GUT_below_planck_squared.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a2_vs_linearized_G_N.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_a2_vs_linearized_G_N.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u03b1_ADW",
+        "yaxis": "rel err"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "steel_blue"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_higher_curvature_obs_bounds",
+      "function": "fig_higher_curvature_obs_bounds",
+      "caption": "Phase 6e Wave 2 \u2014 Microscopic Dirac a\u2084 predictions vs observational ceilings on dimensionless higher-curvature couplings. Left panel: |c_R\u00b2|, |c_Ricci\u00b2|, |c_Riemann\u00b2| from the Christensen-Duff Dirac a\u2084 at SM-relevant fermion counts N_f \u2208 {24, 27, 100} (with the (4\u03c0)\u207b\u00b2 heat-kernel measure). The Riemann\u00b2 coefficient dominates. Right panel: log-scale comparison to the four canonical observational ceilings (LIGO/Virgo, E\u00f6t-Wash short-range gravity, Hulse-Taylor binary pulsar, Cassini post-Newtonian). The pulsar bound is tightest at |\u03b2| \u2272 10\u2075\u2079; the predicted O(10\u207b\u00b3) coefficient sits ~62 orders of magnitude below. Lean: higher_curvature_below_pulsar_bound, higher_curvature_predictions_strictly_positive, H_HigherCurvatureWithinObservationalBounds_pulsar_witness.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higher_curvature_obs_bounds.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_higher_curvature_obs_bounds.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "N_f",
+        "yaxis": "Predicted"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "emerald",
+        "carmine",
+        "horizon"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_ewbg_allowed_region",
+      "function": "fig_ewbg_allowed_region",
+      "caption": "Phase 6c Wave 2 \u2014 EW baryogenesis verdict over the (chirality wall \u00d7 transition order) decomposition. Left panel: 2\u00d72 outcome matrix. Wall \u00d7 transition combinations give one allowed quadrant (cracked wall + first-order strong, BSM target marker, gold star) and three forbidden quadrants (gray): SM-as-is sits at (intact wall + crossover), doubly forbidden (red \u2717); SM+3\u03bd_R at (cracked wall + crossover), transition-blocked under H_KLRS (steel-blue diamond). Right panel: the (m_H, cubic E) phase diagram with the KLRS lattice endpoint at m_H = 72.4 GeV (CFH 1999, refining KLRS 1996). The full SM at m_H = 125.20 GeV sits to the right of the endpoint (overshoot ratio \u2248 1.73); strict-LO E = 0.01 first-order is moot because lattice corrections drive E \u2192 0 for m_H > endpoint. Lean: ewbg_forbidden_iff_wall_intact_or_not_viable, sm_no_nu_R_ewbg_doubly_forbidden, sm_klrs_overshoot_ratio_gt_threshold.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ewbg_allowed_region.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_ewbg_allowed_region.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "m_H",
+        "yaxis": "E"
       },
       "physics_checks": [],
       "color_keys": [

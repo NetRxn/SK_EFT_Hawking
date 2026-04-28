@@ -2327,6 +2327,151 @@ BH_THERMODYNAMICS_PARAMS = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 1: Seeley-DeWitt Heat-Kernel Expansion
+#
+# Coefficients of the asymptotic expansion of the Dirac heat kernel
+# Tr exp(-τ D̸²) ~ Σ_n a_n(x) τ^{(n-d)/2} as τ → 0+ on a 4D Riemannian
+# manifold. Standard textbook values for a free Dirac fermion with no
+# gauge field, no torsion (the bare ADW substrate at mean field):
+#
+#   a_0 = 4 N_f / (4π)²                         [coefficient of Λ⁴ → Λ_emerg]
+#   a_2 = - N_f R / (12 (4π)²)                  [coefficient of Λ² → 1/(16π G_N)]
+#   a_4 = N_f / (180 (4π)²) ·                   [order log(Λ) — 4D Weyl-anomaly]
+#         (-12 R_μνρσ R^μνρσ + 7 R_μν R^μν - 5 R²)/12
+#                                               [Christensen-Duff convention]
+#
+# Cross-calibration: integrating Λ²·a_2 over volume gives the
+# Einstein-Hilbert coefficient -(1/(16π G_N)) ∫ R √g d⁴x, fixing
+#   G_N^Sakharov = 12π / (N_f Λ²)
+# in exact agreement with Phase 6a.1 LinearizedEFE.G_N_sakharov.
+# The structural identity is the load-bearing correctness-push anchor
+# (Decision Gate E.2): a_2 ↔ G_N^emerg consistency at 6a.1's α_ADW = 1
+# baseline ⇒ mean-field validity within the natural-parameter band.
+#
+# References:
+# - Gilkey, "Invariance Theory, the Heat Equation, and the Atiyah-Singer
+#   Index Theorem" (CRC Press, 2nd ed., 1995) — canonical reference,
+#   Theorem 3.3.1 (Dirac coefficients), Corollary 4.8.16 (4D coefficients)
+# - Vassilevich, Phys. Rep. 388, 279 (2003) — modern review, §4 (Dirac
+#   spinors), Eqs. (4.37)–(4.42)
+# - Christensen-Duff, Nucl. Phys. B154, 301 (1979) — explicit a_4 for
+#   spin-1/2
+# - Avramidi, Heat Kernel and Quantum Gravity (Springer, 2000) — physics
+#   conventions used here
+# - Adler, Rev. Mod. Phys. 54, 729 (1982) — induced-gravity coefficient
+#   matching to Sakharov-Adler
+# - Phase 6a.1 LinearizedEFE.lean — calibration target G_N_sakharov
+# ════════════════════════════════════════════════════════════════════
+
+HEAT_KERNEL_PARAMS = {
+    # ── Dirac trace dimension ─────────────────────────────────────────
+    # tr 𝟙_4 = 4 (Dirac-spinor index in 4D); per fermion species the
+    # leading a_0 term carries this multiplicity.
+    'DIRAC_TRACE_DIM': 4,
+    # ── Seeley-DeWitt coefficients for a free Dirac spinor ────────────
+    # In 4D vacuum, with E = R/4 endomorphism in D̸² = -∇² + R/4 - …
+    # (Lichnerowicz), the standard rational coefficients are:
+    'A0_DIRAC_RATIONAL': 4.0,                # tr 𝟙_4 = 4
+    'A2_DIRAC_R_COEF': -1.0/12.0,            # coef of N_f R / (4π)² in a_2
+    'A4_DIRAC_R_SQ_COEF': -5.0/(12.0*180.0), # = -1/432 (R² piece)
+    'A4_DIRAC_RICCI_SQ_COEF': 7.0/(12.0*180.0),    # = 7/2160 (R_μν R^μν)
+    'A4_DIRAC_RIEMANN_SQ_COEF': -12.0/(12.0*180.0),# = -1/180 (R_μνρσ R^μνρσ)
+    # ── (4π)² normalization (canonical heat-kernel measure) ───────────
+    # The (4π)^(-d/2) factor in the τ → 0 asymptotic comes from the
+    # Gaussian integral on the cotangent space.  In 4D this is (4π)².
+    'FOUR_PI_SQ': float((4.0 * np.pi) ** 2),  # (4π)² ≈ 157.91367
+    # ── Sakharov-Adler calibration factor ─────────────────────────────
+    # G_N^Sakharov = 12π / (N_f Λ²) (cf. GRAV_PARAMS.SAKHAROV_COEFFICIENT)
+    # appears here as the value 1/(16π G_N) = N_f Λ² / (12 · 16π²) =
+    # N_f Λ² / (192 π²); the prefactor 192 π² = 12 (4π)² is the link.
+    'EH_PREFACTOR_TWELVE_FOUR_PI_SQ': 12.0 * float((4.0 * np.pi) ** 2),
+    # ── Mean-field validity band on a_2 vs G_N^emerg (correctness-push) ─
+    # Decision Gate E.2: a_2 calibration matches 6a.1 G_N_sakharov *exactly*
+    # at α_ADW = 1; the "natural-parameter band" matches within ±50%
+    # (matches GRAV_PARAMS.G_N_MATCH_TOLERANCE).
+    'A2_GN_MATCH_TOLERANCE': 0.5,
+    # ── Gauss-Bonnet sanity coefficient ───────────────────────────────
+    # In 4D the Euler density 𝒢 = R² - 4 R_μν R^μν + R_μνρσ R^μνρσ is
+    # topological; checking the Dirac a_4 contains it with the right
+    # rational coefficient is a structural sanity test.
+    'GAUSS_BONNET_R_SQ': 1.0,
+    'GAUSS_BONNET_RICCI_SQ': -4.0,
+    'GAUSS_BONNET_RIEMANN_SQ': 1.0,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
+# Phase 6e Wave 2 — Higher-Curvature Structure
+# ════════════════════════════════════════════════════════════════════
+# Parameters for the 3-scalar curvature basis at a_4 order:
+#   {R², R_μν R^μν, R_μνρσ R^μνρσ}
+# In 4D, the Gauss-Bonnet density
+#   𝒢 = R² − 4 R_μν R^μν + R_μνρσ R^μνρσ
+# is topological (Euler density), so only TWO physical combinations
+# survive in the local effective Lagrangian.  Conventional choices:
+#   {R², C²}  with  C² = R_μνρσ² − 2 R_μν² + (1/3) R²  (Weyl-squared)
+# We use C² + (R²/3) basis.
+#
+# References:
+# - Stelle, Phys. Rev. D 16, 953 (1977) — renormalizable R + αR² + βC²
+# - Donoghue, Phys. Rev. D 50, 3874 (1994) — leading-log effective
+#   action coefficients
+# - Calmet, Capozziello & Pryer, EPJC 77, 589 (2017) [arXiv:1708.08253]
+#   — EFT framework for translating Eöt-Wash + Cassini constraints to
+#   dimensionless α, β bounds in the Stelle truncation
+# - Berti et al., Class. Quantum Grav. 32, 243001 (2015) [arXiv:1501.07274]
+#   — GW & binary-pulsar bounds in modified gravity
+# - Phase 6e Wave 1 HeatKernelExpansion.lean — supplies the
+#   microscopic Dirac a_4 coefficients (input to this wave)
+# ════════════════════════════════════════════════════════════════════
+
+HIGHER_CURVATURE_PARAMS = {
+    # ── 3-scalar curvature basis indices ─────────────────────────────
+    # Each entry maps a basis-element name to its rational coefficient
+    # in Wave 1's Dirac a_4 (per N_f fermion species, in units of the
+    # canonical (4π)² heat-kernel measure).  These reproduce the values
+    # in HEAT_KERNEL_PARAMS — duplicated here for downstream clarity.
+    'A4_R_SQ_PER_NF':       -5.0/(12.0*180.0),  # = -1/432  (R² piece)
+    'A4_RICCI_SQ_PER_NF':    7.0/(12.0*180.0),  # =  7/2160 (R_μν² piece)
+    'A4_RIEMANN_SQ_PER_NF': -12.0/(12.0*180.0), # = -1/180  (R_μνρσ² piece)
+    # ── Gauss-Bonnet 4D coefficients ─────────────────────────────────
+    # 𝒢 = R² - 4 R_μν² + R_μνρσ²  (Euler density, topological in 4D)
+    'GB_R_SQ_COEF':       1.0,
+    'GB_RICCI_SQ_COEF':  -4.0,
+    'GB_RIEMANN_SQ_COEF': 1.0,
+    # ── Weyl-squared decomposition (4D) ──────────────────────────────
+    # C² = R_μνρσ² - 2 R_μν² + (1/3) R²
+    # Equivalently:  R_μνρσ² = C² + 2 R_μν² - (1/3) R²
+    'WEYL_SQ_FROM_RIEMANN_SQ': 1.0,
+    'WEYL_SQ_FROM_RICCI_SQ': -2.0,
+    'WEYL_SQ_FROM_R_SQ':      1.0/3.0,
+    # ── SM-fermion count for predicted-coefficient evaluation ────────
+    # Standard Model: 6 quarks × 3 colors + 6 leptons + 3 ν_R = 27.
+    # Conservative reference: 24 (no ν_R).  The microscopic prediction
+    # depends linearly on N_f.
+    'N_F_STANDARD_MODEL':       24,
+    'N_F_STANDARD_MODEL_NU_R':  27,
+    # ── Observational upper bounds on dimensionless higher-curvature
+    #     coefficients in the EFT Lagrangian
+    #         L = (1/16π G_N) [ R + α R² + β C² ]
+    #     Bounds expressed as |α|, |β| ≲ <value> after dimensional
+    #     reduction and converting Yukawa-mediator masses to
+    #     dimensionless coefficients in natural units.  Values are
+    #     order-of-magnitude — exact numeric anchors used by the
+    #     correctness-push theorem.
+    'HC_BOUND_LIGO_C_SQ':    1.0e62,  # GW170817 + LIGO/Virgo speed-of-graviton
+    'HC_BOUND_PULSAR_C_SQ':  1.0e59,  # binary pulsar period decay (Hulse-Taylor)
+    'HC_BOUND_SRG_R_SQ':     1.0e61,  # Eöt-Wash short-range gravity (50 μm)
+    'HC_BOUND_CASSINI_C_SQ': 1.0e62,  # post-Newtonian solar-system
+    # ── Microscopic-vs-observational pass band (correctness-push) ────
+    # Predicted coefficients from Wave 1 with N_f ∈ [SM, SM+ν_R] are
+    # O(N_f / (180·(4π)²)) ≈ O(10⁻³).  The pass band rejects any
+    # microscopic prediction exceeding the loosest observational bound.
+    'HC_PASS_BAND_FACTOR': 0.5,  # consistent with GRAV_PARAMS / HEAT_KERNEL_PARAMS
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Parameter Provenance Registry (imported from src.core.provenance)
 #
 # Every value in EXPERIMENTS, ATOMS, and POLARITON_PLATFORMS must have

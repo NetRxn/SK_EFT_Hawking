@@ -841,6 +841,55 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[], color_keys=["amber", "steel_blue", "cross"],
     ),
     FigureSpec(
+        name="fig_a2_vs_linearized_G_N",
+        function="fig_a2_vs_linearized_G_N",
+        caption=(
+            "Phase 6e Wave 1 — Heat-kernel a₂ calibration to Sakharov-"
+            "Adler G_N (Decision Gate E.2). Left panel: relative error "
+            "|G_N_HK − G_N_lin| / G_N_lin as a function of α_ADW over "
+            "[0.05, 5.0] at GUT-anchor parameters (Λ_UV, N_f) = "
+            "(10¹⁶ GeV, 15). Exact zero at α_ADW = 1 (Sakharov-Adler "
+            "baseline); ±50% pass band shaded green; the natural-"
+            "parameter band α_ADW ∈ [0.5, 1.5] sits inside. Right "
+            "panel: log-log G_N(Λ_UV) at fixed N_f = 15 over [10¹⁰, "
+            "10¹⁹] GeV with horizontal CODATA G_N^obs reference and "
+            "M_Pl vertical anchor (1.22 × 10¹⁹ GeV). The heat-kernel "
+            "G_N(Λ_UV) crosses CODATA near M_Pl, confirming the "
+            "Sakharov-Adler scale anchor. Lean: "
+            "G_N_from_a2_eq_G_N_sakharov, "
+            "a2_matches_GNemerg_iff_alpha_ADW_unity, "
+            "G_N_from_a2_at_GUT_inverse, "
+            "G_N_from_a2_inverse_at_GUT_below_planck_squared."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "α_ADW", "yaxis": "rel err"},
+        physics_checks=[], color_keys=["amber", "steel_blue"],
+    ),
+    FigureSpec(
+        name="fig_higher_curvature_obs_bounds",
+        function="fig_higher_curvature_obs_bounds",
+        caption=(
+            "Phase 6e Wave 2 — Microscopic Dirac a₄ predictions vs "
+            "observational ceilings on dimensionless higher-curvature "
+            "couplings. Left panel: |c_R²|, |c_Ricci²|, |c_Riemann²| "
+            "from the Christensen-Duff Dirac a₄ at SM-relevant fermion "
+            "counts N_f ∈ {24, 27, 100} (with the (4π)⁻² heat-kernel "
+            "measure). The Riemann² coefficient dominates. Right panel: "
+            "log-scale comparison to the four canonical observational "
+            "ceilings (LIGO/Virgo, Eöt-Wash short-range gravity, "
+            "Hulse-Taylor binary pulsar, Cassini post-Newtonian). The "
+            "pulsar bound is tightest at |β| ≲ 10⁵⁹; the predicted "
+            "O(10⁻³) coefficient sits ~62 orders of magnitude below. "
+            "Lean: higher_curvature_below_pulsar_bound, "
+            "higher_curvature_predictions_strictly_positive, "
+            "H_HigherCurvatureWithinObservationalBounds_pulsar_witness."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "N_f", "yaxis": "Predicted"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "emerald", "carmine", "horizon"],
+    ),
+    FigureSpec(
         name="fig_ewbg_allowed_region",
         function="fig_ewbg_allowed_region",
         caption=(
@@ -1306,6 +1355,10 @@ def generate_figures() -> dict[str, Path]:
         # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
         fig_seesaw_y_m_r_band,
         fig_m_beta_beta_vs_m_lightest,
+        # Phase 6e Wave 1: heat-kernel a₂ ↔ Sakharov-Adler G_N
+        fig_a2_vs_linearized_G_N,
+        # Phase 6e Wave 2: higher-curvature predictions vs observational ceilings
+        fig_higher_curvature_obs_bounds,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1449,6 +1502,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_ewbg_allowed_region": fig_ewbg_allowed_region,
         "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
+        "fig_a2_vs_linearized_G_N": fig_a2_vs_linearized_G_N,
+        "fig_higher_curvature_obs_bounds": fig_higher_curvature_obs_bounds,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
@@ -1592,6 +1647,10 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 5z Wave 2: Majorana-rung seesaw + m_ββ
         fig_seesaw_y_m_r_band,
         fig_m_beta_beta_vs_m_lightest,
+        # Phase 6e Wave 1: heat-kernel a₂ ↔ Sakharov-Adler G_N
+        fig_a2_vs_linearized_G_N,
+        # Phase 6e Wave 2: higher-curvature predictions vs observational ceilings
+        fig_higher_curvature_obs_bounds,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1733,6 +1792,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_ewbg_allowed_region": fig_ewbg_allowed_region,
         "fig_seesaw_y_m_r_band": fig_seesaw_y_m_r_band,
         "fig_m_beta_beta_vs_m_lightest": fig_m_beta_beta_vs_m_lightest,
+        "fig_a2_vs_linearized_G_N": fig_a2_vs_linearized_G_N,
+        "fig_higher_curvature_obs_bounds": fig_higher_curvature_obs_bounds,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,

@@ -9992,5 +9992,367 @@ def fig_rt_ch_bounds_mtc():
     return fig
 
 
+def fig_a2_vs_linearized_G_N():
+    """Phase 6e Wave 1: heat-kernel a_2 calibration to Phase 6a.1
+    LinearizedEFE.G_N_sakharov.
+
+    Left panel: relative error |G_N_HK − G_N_lin| / G_N_lin as a
+    function of α_ADW over [0.05, 5.0] for the GUT-anchor parameters
+    (Λ_UV, N_f) = (10¹⁶ GeV, 15). Exact zero at α_ADW = 1 (Sakharov-
+    Adler baseline); ±50 % tolerance band shaded; the natural-parameter
+    band α_ADW ∈ [0.5, 1.5] (per `GRAV_PARAMS.G_N_MATCH_TOLERANCE`)
+    sits inside the green pass region.
+
+    Right panel: log-log plot of G_N(Λ_UV) at fixed N_f = 15 over the
+    GRAV_PARAMS Λ_UV range [10¹⁰, 10¹⁹] GeV, with horizontal line at
+    G_N^obs (CODATA 2018). At N_f = 15 the curve passes within
+    ~factor 3 of the observed line at Λ_UV ≈ M_Pl, confirming the
+    heat-kernel calibration reproduces Sakharov's induced-gravity scale
+    anchor up to the species-multiplicity prefactor.
+
+    Lean: HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov,
+          a2_matches_GNemerg_iff_alpha_ADW_unity,
+          G_N_from_a2_at_GUT_inverse,
+          G_N_from_a2_inverse_at_GUT_below_planck_squared.
+    Source: Vassilevich Phys. Rep. 388, 279 (2003) Eq. (4.38);
+            Sakharov, Sov. Phys. Dokl. 12, 1040 (1968);
+            Adler, RMP 54, 729 (1982) Eq. (3.3);
+            Phase 6a.1 LinearizedEFE.lean (calibration target).
+    viz-ref: Phase 6e Paper 39 §3
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.core.constants import GRAV_PARAMS, HEAT_KERNEL_PARAMS
+    from src.heat_kernel import (
+        a2_calibration_relative_error,
+    )
+    from src.heat_kernel.a2_computation import (
+        G_N_from_a2,
+        G_N_linearized_at_alpha,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Heat-kernel a₂ calibration error vs α_ADW (Decision Gate E.2)",
+            "Heat-kernel G_N(Λ_UV) vs CODATA G_N^obs (anchor at Planck)",
+        ),
+        column_widths=[0.55, 0.45],
+        horizontal_spacing=0.18,
+    )
+
+    # ---------- Left: rel error vs alpha ----------
+    alphas = np.logspace(np.log10(0.05), np.log10(5.0), 200)
+    Lambda_anchor = 1.0e16
+    N_f_anchor = 15
+    rel_err = np.array([
+        a2_calibration_relative_error(Lambda_anchor, N_f_anchor, a)
+        for a in alphas
+    ])
+    tol = HEAT_KERNEL_PARAMS["A2_GN_MATCH_TOLERANCE"]
+
+    # Tolerance band (rel err <= tol = pass)
+    fig.add_shape(
+        type="rect",
+        x0=0.05, x1=5.0,
+        y0=0, y1=tol,
+        fillcolor=COLORS.get("emerald", "#2ca02c"), opacity=0.18,
+        line=dict(width=0),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=alphas, y=rel_err,
+            mode="lines",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            name="|ΔG/G|",
+            hovertemplate="α_ADW = %{x:.3f}<br>rel err = %{y:.3f}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    # Sakharov-Adler reference (alpha = 1)
+    fig.add_shape(
+        type="line",
+        x0=1.0, x1=1.0, y0=0, y1=1.05,
+        line=dict(color=COLORS["amber"], width=1.5, dash="dot"),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=1.0, y=0.02,
+        text="α_ADW = 1<br>Sakharov-Adler",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["amber"]),
+        xanchor="left",
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=0.07, y=tol * 0.95,
+        text=f"pass band<br>±{int(tol*100)}%",
+        showarrow=False,
+        font=dict(size=10, color=COLORS.get("emerald", "#2ca02c")),
+        xanchor="left",
+        row=1, col=1,
+    )
+    fig.update_xaxes(
+        title_text="α_ADW",
+        type="log",
+        tickvals=[0.05, 0.1, 0.5, 1.0, 2.0, 5.0],
+        ticktext=["0.05", "0.1", "0.5", "1.0", "2.0", "5.0"],
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="|G_N_HK − G_N_lin| / G_N_lin",
+        range=[0, 1.05],
+        row=1, col=1,
+    )
+
+    # ---------- Right: G_N vs Lambda_UV ----------
+    lam_grid = np.logspace(10, 19, 80)
+    G_curve = np.array([G_N_from_a2(L, N_f_anchor) for L in lam_grid])
+    G_obs = GRAV_PARAMS["G_N_OBS_GEV_M2"]
+
+    fig.add_trace(
+        go.Scatter(
+            x=lam_grid, y=G_curve,
+            mode="lines",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            name="G_N(Λ_UV) at N_f = 15",
+            hovertemplate=(
+                "Λ_UV = %{x:.2e} GeV<br>G_N = %{y:.3e} GeV⁻²<extra></extra>"
+            ),
+        ),
+        row=1, col=2,
+    )
+    fig.add_shape(
+        type="line",
+        x0=1e10, x1=1e19,
+        y0=G_obs, y1=G_obs,
+        line=dict(color=COLORS["amber"], width=1.5, dash="dash"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=1e11, y=G_obs * 1.5,
+        text=f"CODATA<br>G_N^obs = {G_obs:.2e} GeV⁻²",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["amber"]),
+        xanchor="left",
+        row=1, col=2,
+    )
+    fig.add_shape(
+        type="line",
+        x0=GRAV_PARAMS["LAMBDA_UV_PLANCK_GEV"],
+        x1=GRAV_PARAMS["LAMBDA_UV_PLANCK_GEV"],
+        y0=1e-50, y1=1e-15,
+        line=dict(color=COLORS["horizon"], width=1.5, dash="dot"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=GRAV_PARAMS["LAMBDA_UV_PLANCK_GEV"] * 0.85,
+        y=1e-45,
+        text="M_Pl<br>≈ 1.22 × 10¹⁹ GeV",
+        showarrow=False,
+        font=dict(size=10, color=COLORS["horizon"]),
+        xanchor="right",
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="Λ_UV [GeV]",
+        type="log",
+        exponentformat="power",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="G_N [GeV<sup>-2</sup>]",
+        type="log",
+        exponentformat="power",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6e Wave 1 — Seeley-DeWitt a₂ calibration to "
+                "Sakharov-Adler G_N (Decision Gate E.2)</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1400,
+        margin=dict(t=110, b=80),
+        showlegend=False,
+    )
+    return fig
+
+
+def fig_higher_curvature_obs_bounds():
+    """Phase 6e Wave 2: microscopic Dirac a_4 predictions vs
+    observational ceilings on dimensionless higher-curvature couplings.
+
+    Left panel: bar-chart of |c_R²|, |c_Ricci²|, |c_Riemann²| from the
+    Wave 1 Christensen-Duff Dirac a_4 evaluated at SM-relevant fermion
+    counts N_f ∈ {24, 27, 100} (with the (4π)⁻² heat-kernel measure
+    included).  The Riemann² coefficient dominates at every N_f.
+
+    Right panel: log-scale "ceiling" plot showing the four canonical
+    observational bounds (LIGO/Virgo, Eöt-Wash short-range gravity,
+    Hulse-Taylor binary pulsar, Cassini post-Newtonian) and the
+    largest predicted coefficient from the left panel (at N_f = 27).
+    The pulsar bound is the tightest by ~3 orders of magnitude over
+    LIGO/Cassini/SRG; even so the predicted O(10⁻³) value sits ~62
+    orders of magnitude below the ceiling — the **correctness-push**
+    Lean theorem ``higher_curvature_below_pulsar_bound`` formalises
+    this passage at the bounded fermion-count window 0 < N_f ≤ 100.
+
+    Lean: HigherCurvatureStructure.higher_curvature_below_pulsar_bound,
+          higher_curvature_predictions_strictly_positive,
+          H_HigherCurvatureWithinObservationalBounds_pulsar_witness,
+          a4_density_eq_a4_density_in_RC2GB_basis.
+    Source: Calmet, Capozziello & Pryer, EPJC 77, 589 (2017)
+            [arXiv:1708.08253] (EFT translation framework);
+            Berti et al, Class. Quantum Grav. 32, 243001 (2015)
+            [arXiv:1501.07274] (pulsar timing);
+            Phase 6e Wave 1 HeatKernelExpansion.lean (predictions).
+    viz-ref: Phase 6e Paper 40 §4
+    """
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.core.formulas import (
+        higher_curvature_R_sq_coefficient,
+        higher_curvature_Ricci_sq_coefficient,
+        higher_curvature_Riemann_sq_coefficient,
+    )
+    from src.higher_curvature import HC_OBS_BOUNDS
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Wave 1 a₄ Dirac coefficients (per (4π)⁻²) vs N_f",
+            "Predicted vs observational ceilings (log scale)",
+        ),
+        column_widths=[0.55, 0.45],
+        horizontal_spacing=0.18,
+    )
+
+    # ---------- Left: predicted coefficients vs N_f ----------
+    Nf_grid = [24, 27, 100]
+    coef_R = [abs(higher_curvature_R_sq_coefficient(n)) for n in Nf_grid]
+    coef_Ricci = [abs(higher_curvature_Ricci_sq_coefficient(n))
+                  for n in Nf_grid]
+    coef_Riem = [abs(higher_curvature_Riemann_sq_coefficient(n))
+                 for n in Nf_grid]
+
+    fig.add_trace(
+        go.Bar(
+            x=[f"N_f = {n}" for n in Nf_grid], y=coef_R,
+            marker_color=COLORS["steel_blue"],
+            name="|c_R²|", text=[f"{v:.2e}" for v in coef_R],
+            textposition="outside",
+            hovertemplate="N_f = %{x}<br>|c_R²| = %{y:.3e}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Bar(
+            x=[f"N_f = {n}" for n in Nf_grid], y=coef_Ricci,
+            marker_color=COLORS["amber"],
+            name="|c_Ricci²|", text=[f"{v:.2e}" for v in coef_Ricci],
+            textposition="outside",
+            hovertemplate=("N_f = %{x}<br>|c_Ricci²| = %{y:.3e}"
+                           "<extra></extra>"),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Bar(
+            x=[f"N_f = {n}" for n in Nf_grid], y=coef_Riem,
+            marker_color=COLORS.get("emerald", "#2ca02c"),
+            name="|c_Riemann²|", text=[f"{v:.2e}" for v in coef_Riem],
+            textposition="outside",
+            hovertemplate=("N_f = %{x}<br>|c_Riemann²| = %{y:.3e}"
+                           "<extra></extra>"),
+        ),
+        row=1, col=1,
+    )
+    fig.update_xaxes(title_text="Fermion count N_f", row=1, col=1)
+    fig.update_yaxes(
+        title_text="Predicted |c|",
+        type="log",
+        exponentformat="power",
+        row=1, col=1,
+    )
+
+    # ---------- Right: ceilings vs prediction ----------
+    bound_labels = [
+        "LIGO/Virgo<br>(C²)",
+        "Eöt-Wash SRG<br>(R²)",
+        "Hulse-Taylor<br>pulsar (C²)",
+        "Cassini PN<br>(C²)",
+        "Predicted max<br>(N_f = 27)",
+    ]
+    bound_values = [
+        HC_OBS_BOUNDS["LIGO_C_sq"],
+        HC_OBS_BOUNDS["SRG_R_sq"],
+        HC_OBS_BOUNDS["pulsar_C_sq"],
+        HC_OBS_BOUNDS["cassini_C_sq"],
+        max(coef_Riem[1], coef_Ricci[1], coef_R[1]),  # at N_f=27
+    ]
+    bound_colors = [
+        COLORS["steel_blue"], COLORS["amber"],
+        COLORS.get("carmine", "#E63946"), COLORS["horizon"],
+        COLORS.get("emerald", "#2ca02c"),
+    ]
+
+    fig.add_trace(
+        go.Bar(
+            x=bound_labels, y=bound_values,
+            marker_color=bound_colors,
+            text=[f"{v:.0e}" for v in bound_values],
+            textposition="outside",
+            hovertemplate="%{x}<br>value = %{y:.3e}<extra></extra>",
+        ),
+        row=1, col=2,
+    )
+    # Highlight pulsar as tightest
+    fig.add_annotation(
+        x="Hulse-Taylor<br>pulsar (C²)", y=HC_OBS_BOUNDS["pulsar_C_sq"] * 5,
+        text="<i>tightest<br>ceiling</i>",
+        showarrow=False,
+        font=dict(size=10,
+                  color=COLORS.get("carmine", "#E63946")),
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="Bound or prediction",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="|coupling|",
+        type="log",
+        exponentformat="power",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6e Wave 2 — Higher-curvature predictions vs "
+                "observational ceilings (correctness-push)</b>"
+            ),
+            font=TITLE_FONT,
+        ),
+        height=580,
+        width=1400,
+        margin=dict(t=110, b=80),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.20,
+                    xanchor="center", x=0.275),
+        barmode="group",
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

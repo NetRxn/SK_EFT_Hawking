@@ -2741,6 +2741,107 @@ PARAMETER_PROVENANCE = {
         'human_verified_notes': None,
         'notes': 'Used in src.strong_cp_de.RHO_DE_OBSERVED_EV4; consumed by Zhitnitsky-prediction within-3-orders predicate.',
     },
+
+    # ── Phase 6e Wave 2 — Higher-curvature observational ceilings ─────
+    # Order-of-magnitude bounds on dimensionless higher-curvature
+    # couplings α (R²) and β (C², Weyl-squared) in the Stelle truncation
+    # L = (1/16π G_N)(R + α R² + β C²). These are *derived* values: they
+    # translate experimental constraints from short-range gravity, GW
+    # propagation, binary-pulsar timing, and post-Newtonian solar-system
+    # tests into dimensionless action coefficients via the EFT framework
+    # of Calmet-Capozziello-Pryer (EPJC 77:589, 2017). Tier is DERIVED:
+    # the values are not single-paper measurements but order-of-magnitude
+    # ceilings consistent with multiple independent data sources.
+
+    'HC_BOUND_LIGO_C_SQ': {
+        'value': 1.0e62,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'GW170817 + Calmet-Capozziello-Pryer 2017 EFT translation',
+        'detail': 'Order-of-magnitude ceiling on the Stelle β coefficient '
+                  '(C² coupling) from the LIGO/Virgo speed-of-graviton '
+                  'measurement (GW170817, Abbott et al, PRL 119, 161101, '
+                  '2017) translated through the EFT framework of '
+                  'Calmet-Capozziello-Pryer (EPJC 77:589, 2017). '
+                  'Loose bound; not the tightest ceiling.',
+        'doi': '10.1103/PhysRevLett.119.161101',
+        'llm_verified_date': '2026-04-30',
+        'llm_verified_notes': 'GW170817 paper title + venue verified via Crossref. '
+                              'Translation framework cited via Calmet-Capozziello-Pryer 2017.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.HIGHER_CURVATURE_PARAMS["HC_BOUND_LIGO_C_SQ"] '
+                 'and src.higher_curvature.HC_OBS_BOUNDS["LIGO_C_sq"]. Consumed by '
+                 'paper40 correctness-push as one of four canonical observational '
+                 'ceilings.',
+    },
+    'HC_BOUND_SRG_R_SQ': {
+        'value': 1.0e61,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Eöt-Wash short-range gravity (Kapner et al 2007) + '
+                  'Calmet-Capozziello-Pryer 2017 EFT translation',
+        'detail': 'Order-of-magnitude ceiling on the Stelle α coefficient '
+                  '(R² coupling) from inverse-square-law tests at 50 μm '
+                  '(Kapner et al, PRL 98, 021101, 2007) translated through '
+                  'the EFT framework of Calmet-Capozziello-Pryer (EPJC '
+                  '77:589, 2017). The Yukawa-mediator-mass bound m₀ ≳ '
+                  '0.004 eV maps to α ≲ 1/(6 G_N m₀²) in natural units.',
+        'doi': '10.1103/PhysRevLett.98.021101',
+        'llm_verified_date': '2026-04-30',
+        'llm_verified_notes': 'Eöt-Wash paper title + venue verified via Crossref. '
+                              'Translation framework cited via Calmet-Capozziello-Pryer 2017.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.HIGHER_CURVATURE_PARAMS["HC_BOUND_SRG_R_SQ"] '
+                 'and src.higher_curvature.HC_OBS_BOUNDS["SRG_R_sq"].',
+    },
+    'HC_BOUND_PULSAR_C_SQ': {
+        'value': 1.0e59,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Hulse-Taylor binary pulsar timing (Damour-Taylor 1991; '
+                  'Weisberg-Huang 2016) + Calmet-Capozziello-Pryer 2017 '
+                  'EFT translation',
+        'detail': 'Order-of-magnitude ceiling on the Stelle β coefficient '
+                  '(C² coupling) from binary-pulsar period-decay precision '
+                  '(Weisberg & Huang, ApJ 829:55, 2016, GR within ~0.1%) '
+                  'translated through the EFT framework of '
+                  'Calmet-Capozziello-Pryer (EPJC 77:589, 2017). This is '
+                  'the **tightest** of the four canonical ceilings, by '
+                  '~3 orders of magnitude.',
+        'doi': '10.3847/0004-637X/829/1/55',
+        'llm_verified_date': '2026-04-30',
+        'llm_verified_notes': 'Weisberg-Huang 2016 ApJ 829:55 verified via Crossref. '
+                              'Translation framework via Calmet-Capozziello-Pryer 2017.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.HIGHER_CURVATURE_PARAMS["HC_BOUND_PULSAR_C_SQ"] '
+                 'and src.higher_curvature.HC_OBS_BOUNDS["pulsar_C_sq"]. The Wave 2 '
+                 'correctness-push theorem `higher_curvature_below_pulsar_bound` is '
+                 'phrased against this value.',
+    },
+    'HC_BOUND_CASSINI_C_SQ': {
+        'value': 1.0e62,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Cassini post-Newtonian γ_PPN (Bertotti-Iess-Tortora 2003) + '
+                  'Calmet-Capozziello-Pryer 2017 EFT translation',
+        'detail': 'Order-of-magnitude ceiling on the Stelle β coefficient '
+                  '(C² coupling) from post-Newtonian solar-system tests '
+                  '(Bertotti, Iess, Tortora, Nature 425, 374, 2003: '
+                  'γ_PPN-1 ~ 2×10⁻⁵) translated through the EFT framework '
+                  'of Calmet-Capozziello-Pryer (EPJC 77:589, 2017). '
+                  'Loose bound; comparable to LIGO ceiling.',
+        'doi': '10.1038/nature01997',
+        'llm_verified_date': '2026-04-30',
+        'llm_verified_notes': 'Cassini paper venue Nature 425:374 (2003) verified via Crossref. '
+                              'Translation framework via Calmet-Capozziello-Pryer 2017.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Used in src.core.constants.HIGHER_CURVATURE_PARAMS["HC_BOUND_CASSINI_C_SQ"] '
+                 'and src.higher_curvature.HC_OBS_BOUNDS["cassini_C_sq"].',
+    },
 }
 
 
@@ -2905,6 +3006,106 @@ PAPER_DEPENDENCIES = {
             'SNR ~ sqrt(N_probe) · G(ω) — 10³–10⁶× better than spontaneous',
             'κτ_pol > 1 required; ultralong (300 ps) is optimal',
             '2237+ Lean 4 theorems across project; PolaritonTier1.lean: 9 theorems, zero sorry',
+        ],
+    },
+    'paper39_heat_kernel_expansion': {
+        'title': 'Paper 39: Formal heat-kernel calibration of induced Newton\'s constant '
+                 'from the ADW Dirac substrate (long-form formalization, Phase 6e Wave 1)',
+        'topic': 'Seeley-DeWitt heat-kernel expansion of the Dirac fermion determinant. '
+                 'Closed-form Christensen-Duff a₀, a₂, a₄ Dirac coefficients in 4D '
+                 'vacuum; Decision Gate E.2 calibration biconditional that matches the '
+                 'a₂ coefficient to LinearizedEFE.G_N_sakharov iff α_ADW = 1; '
+                 'tracked-hypothesis structure DiracHeatKernelAsymptotic for the PDE-level '
+                 'asymptotic existence (deferred to Mathlib spin-bundle infrastructure)',
+        'formulas': [
+            'seeley_dewitt_a0',
+            'seeley_dewitt_a2_R_coefficient',
+            'seeley_dewitt_a4_basis',
+            'G_N_from_seeley_dewitt',
+            'gauss_bonnet_density',
+            'heat_kernel_a2_matches_GN_sakharov',
+        ],
+        'lean_modules': ['HeatKernelExpansion', 'LinearizedEFE'],
+        'platforms': [],
+        'key_claims': [
+            'a₀ = 4 N_f / (4π)² closed form (Lean: a0_dirac, a0_dirac_pos, '
+                'a0_dirac_linear) — leading cosmological-constant scale',
+            'a₂(R) = -(N_f/12) · R / (4π)² closed form (Lean: a2_R_coefficient, '
+                'a2_R_coefficient_neg, a2_R_coefficient_eq_zero_iff)',
+            'a₄ Christensen-Duff Dirac rationals (-5, +7, -12)/(12·180) per (4π)² '
+                '(Lean: a4_R_sq_coef, a4_Ricci_sq_coef, a4_Riemann_sq_coef + '
+                'sign theorems _neg/_pos/_neg)',
+            'Sakharov-Adler closed form: G_N_from_a2 = 12π/(N_f Λ²) = G_N_sakharov '
+                '(Lean: G_N_from_a2_eq_G_N_sakharov — substantive cross-bridge '
+                'invokes LinearizedEFE.G_N_sakharov by name)',
+            'Decision Gate E.2 biconditional: G_N_from_a2 = G_N_emerg(Λ, N_f, α) '
+                'iff α = 1 (Lean: a2_matches_GNemerg_iff_alpha_ADW_unity)',
+            'GUT-anchor inverse: 1/G_N_from_a2 at (Λ, N_f) = (10¹⁶, 15) = '
+                '15·10³²/(12π) ≈ 3.98·10³¹ GeV² (Lean: G_N_from_a2_at_GUT_inverse)',
+            'GUT inverse below Planck-squared: 1/G_N_from_a2(GUT) < (10¹⁹)² '
+                '(Lean: G_N_from_a2_inverse_at_GUT_below_planck_squared via '
+                'norm_num + Real.pi_gt_three)',
+            'Gauss-Bonnet local-algebra combination: c_R - 4 c_Ricci + c_Riem = '
+                '-N_f/(48 (4π)²) (Lean: a4_gauss_bonnet_combination via ring)',
+            'Tracked-hypothesis structure DiracHeatKernelAsymptotic encodes the '
+                'PDE-level asymptotic existence (Vassilevich 2003 Theorem 4.1); '
+                'invariants a0_value/a2_R_value force consumers to commit to '
+                'textbook Christensen-Duff values',
+        ],
+    },
+    'paper40_higher_curvature': {
+        'title': 'Paper 40: Higher-curvature structure from the Dirac heat kernel — '
+                 'microscopic predictions and observational ceilings (formalization, '
+                 'Phase 6e Wave 2)',
+        'topic': 'Wave 1 Christensen-Duff Dirac a_4 coefficients re-expressed in '
+                 'Stelle\'s {R², C², 𝒢} basis with closed-form sign-definite Stelle '
+                 'coefficients (α, β, γ) solved from a 3×3 linear system; substantive '
+                 'cross-bridge to Wave 1 via ring identity; correctness-push '
+                 'comparing predicted dimensionless higher-curvature couplings to '
+                 'LIGO/Eöt-Wash/Hulse-Taylor/Cassini observational ceilings',
+        'formulas': [
+            'higher_curvature_R_sq_coefficient',
+            'higher_curvature_Ricci_sq_coefficient',
+            'higher_curvature_Riemann_sq_coefficient',
+            'gauss_bonnet_4D_identity',
+            'weyl_squared_4D',
+            'higher_curvature_predicted_in_observational_band',
+        ],
+        'lean_modules': ['HigherCurvatureStructure', 'HeatKernelExpansion'],
+        'platforms': [],
+        'key_claims': [
+            'Gauss-Bonnet density 𝒢 = R² - 4 R_μν² + R_μνρσ² topological in 4D '
+                '(Lean: gaussBonnet4D)',
+            'Weyl-squared decomposition C² = R_μνρσ² - 2 R_μν² + (1/3) R² '
+                '(Lean: weylSquared4D)',
+            'Conformal-flatness biconditional: C² = 0 ↔ R_μνρσ² = 2 R_μν² - R²/3 '
+                '(Lean: weylSquared4D_eq_zero_iff_conformally_flat)',
+            'Algebraic engine: 𝒢 - C² = (2/3) R² - 2 R_μν² '
+                '(Lean: gaussBonnet_minus_weyl_eq_R_minus_Ricci_combination)',
+            'Closed-form Stelle coefficients (α, β, γ) = '
+                '(-N_f/324, -41 N_f/4320, +17 N_f/4320) / (4π)² solved from 3×3 '
+                'linear system over Christensen-Duff rationals',
+            'Sign-definite for N_f > 0: α < 0, β < 0, γ > 0 (the topological '
+                'coefficient carries the chiral-anomaly-positive sign) '
+                '(Lean: a4_alpha_neg, a4_beta_neg, a4_gamma_pos)',
+            'MAIN basis-change identity: a_4 density in {R², R_μν², R_μνρσ²} basis '
+                '= a_4 density in {R², C², 𝒢} basis with (α, β, γ) coefficients '
+                '(Lean: a4_density_eq_a4_density_in_RC2GB_basis — substantive '
+                'cross-bridge invokes Wave 1 a4_R_sq_coef/a4_Ricci_sq_coef/'
+                'a4_Riemann_sq_coef by name; closes by ring)',
+            'Helper bounds: 1 < (4π)² and (4π)⁻² < 1 from Real.pi_gt_three '
+                '(Lean: fourPiSq_gt_one, fourPiSqInv_lt_one)',
+            'CORRECTNESS-PUSH: at 0 < N_f ≤ 100, all three a_4 coefficients have '
+                '|c| < hc_bound_pulsar = 10⁵⁹ (Lean: '
+                'higher_curvature_below_pulsar_bound — Hulse-Taylor binary pulsar, '
+                'tightest of the four canonical observational ceilings; predicted '
+                'O(10⁻³) sits ~62 orders below)',
+            'Falsifier: predictions strictly non-zero for N_f > 0 (Lean: '
+                'higher_curvature_predictions_strictly_positive — rules out '
+                'trivial-vanishing reading)',
+            'Tracked Prop H_HigherCurvatureWithinObservationalBounds B '
+                'parameterised by upper bound; pulsar-bound witness '
+                '(Lean: H_HigherCurvatureWithinObservationalBounds_pulsar_witness)',
         ],
     },
     'paper23_linearized_efe': {

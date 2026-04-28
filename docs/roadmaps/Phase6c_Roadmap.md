@@ -108,7 +108,7 @@
 - **Correctness-push punchline `sm_no_nu_R_ewbg_doubly_forbidden`**: under H_KLRS, both SM-no-ν_R (wall intact, anomaly = 13) AND SM+3ν_R (wall cracks, anomaly = 0; transition crossover) fail `EWBGViable` independently — *not* P2 redundancy because conjuncts apply to different fermion contents.
 - EWBG_PARAMS constants (sphaleron threshold, KLRS endpoint, SM Z₁₆ representatives) + canonical `formulas.py` entries (`sphaleron_suppression`, `chirality_wall_blocks_ewbg`, `ewbg_viable`).
 - Cross-bridges in proof bodies: `Z16AnomalyComputation.three_gen_anomalous`, `Z16AnomalyComputation.sm_anomaly_with_nu_R`, `EWPhaseTransition.crossover_excludes_baryogenesis`.
-- Discipline metric: 0 retroactive theorems (first-pass discipline checklist applied; preemptive checklist + multi-pass review pending).
+- Discipline metric: 2 retroactive theorems (post-wave ruthless audit 2026-04-29 caught two `decide`-only wrappers: `sm_no_nu_R_anomaly_canonical` strengthened to substantive cross-bridge `sm_no_nu_R_anomaly_eq_neg_three` invoking `three_gen_is_neg3`; `sm_with_3nu_R_wall_cracks` strengthened to invoke `sm_anomaly_with_nu_R` + `mul_zero` rather than collapse to `decide`). Trend: 6c.3=12, 6b.1=5, 6d.1=6, 6d.2=4, 6d.3=1, 6c.1=2, 6c.4=3, 6c.5=3, **6c.2=2**.
 
 ### ~~Wave 2 specification (preserved for reference)~~
 
@@ -150,8 +150,8 @@
 ## Track B: Equivalence Principle Abstraction (6c.3) — **SHIPPED 2026-04-27**
 
 **Status:** Wave 3 closed end-to-end. Pipeline through Stage 5.
-- `EquivalencePrinciple.lean`: 12 substantive theorems + 1 module-summary marker, 0 sorry, 0 new axioms (verified `propext, Classical.choice, Quot.sound` only on key theorems via `lean_verify`).
-- `src/equivalence_principle/`: 2 Python modules (`__init__.py`, `mechanism_classifier.py`) + 32 pytest cases (32/32 PASS in 0.03s).
+- `EquivalencePrinciple.lean`: 24 substantive theorems (12 first-pass + 12 from post-discipline strengthening 2026-04-27 closing 3 audit findings: bundle redundancy P2, missing quantitative content, phantom W4 reference P6) + 1 module-summary marker, 0 sorry, 0 new axioms (verified `propext, Classical.choice, Quot.sound` only on key theorems via `lean_verify`).
+- `src/equivalence_principle/`: 2 Python modules (`__init__.py`, `mechanism_classifier.py`) + 38 pytest cases (38/38 PASS in 0.03s; +6 from strengthening: `violatesAt_mono`, satisfaction-equivalence, 3 quantitative `norm_num` bound comparisons (MICROSCOPE_BOUND, STEP_TARGET, VESTIGIAL_PHASE_ETA_MAX/RELICS_ETA), non-violators degeneracy, FangGu W4 cross-bridge).
 - `papers/paper34_equivalence_principle/`: short formalization paper, 4 pages, 433 KB, compiles clean, 11 bibitems.
 - `fig_ep_violation_matrix`: 6×3 mechanism × EP-level heatmap + η-scale comparison bar chart, registered in `review_figures.py`.
 - **Six mechanisms classified**: vestigialDifferentialCoupling (η=1 max, violates WEP), vestigialReliscSTEPClass (η~10⁻¹⁸ STEP-class, violates WEP), fangGuTorsionTrace + fractonSubdiffusion + sfdmThomasFermi + hiddenSectorZ16Singlet (all satisfy WEP/EEP/SEP).

@@ -1,10 +1,10 @@
 {
-  "generated": "2026-04-27T14:51:37.012106",
+  "generated": "2026-04-27T20:18:08.488602",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8648,
-    "theorems_total": 4416,
-    "theorems_substantive": 4393,
+    "total_declarations": 8715,
+    "theorems_total": 4453,
+    "theorems_substantive": 4430,
     "theorems_placeholder": 23,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 189,
+    "modules": 191,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -93,8 +93,10 @@
       "SKEFTHawking.GrapheneNoiseFormula",
       "SKEFTHawking.GravitationalWaves",
       "SKEFTHawking.HawkingUniversality",
+      "SKEFTHawking.HeatKernelExpansion",
       "SKEFTHawking.HiddenSectorClassification",
       "SKEFTHawking.HiddenSectorMixedCharge",
+      "SKEFTHawking.HigherCurvatureStructure",
       "SKEFTHawking.HubbardStratonovichRHMC",
       "SKEFTHawking.InstantonZeroModes",
       "SKEFTHawking.IsingBraiding",
@@ -204,18 +206,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3752,
-    "structures": 189,
+    "definitions": 3781,
+    "structures": 190,
     "instances": 229,
     "inductives": 61
   },
   "python": {
-    "python_modules": 105,
-    "test_files": 77,
-    "pytest_cases": 3364,
-    "notebooks": 72,
-    "papers": 33,
-    "figures": 129
+    "python_modules": 111,
+    "test_files": 79,
+    "pytest_cases": 3440,
+    "notebooks": 76,
+    "papers": 35,
+    "figures": 131
   },
   "aristotle": {
     "aristotle_proved": 322,

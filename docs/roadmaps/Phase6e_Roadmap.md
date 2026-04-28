@@ -59,7 +59,22 @@
 
 ## Track A: Heat-Kernel Expansion (6e.1)
 
-### Wave 1 — `HeatKernelExpansion.lean` (6e.1) [Pipeline: Stages 1–12]
+### Wave 1 — `HeatKernelExpansion.lean` (6e.1) [Pipeline: Stages 1–10] — **SHIPPED 2026-04-27** (Stage 11 notebooks user-triggered)
+
+**Status:** Wave 1 closed end-to-end through Stage 10 (paper). Stages 11 (notebooks) and 13 (adversarial review) deferred per pipeline policy (user-triggered).
+- `HeatKernelExpansion.lean`: **19 substantive theorems** / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only).
+- `src/heat_kernel/`: 3 modules (`__init__.py`, `seeley_dewitt.py`, `a2_computation.py`, `a4_computation.py` — 4 files; subpackage shape matches Phase 6c standard) + 36 pytest cases (36/36 PASS in 0.04s).
+- `papers/paper39_heat_kernel_expansion/paper_draft.tex`: long-form formalization paper, 4 pages, 368 KB, compiles clean, 9 bibitems (Sakharov 1968, Adler 1982, Diakonov 2011, Vladimirov-Diakonov 2012, Vergeles 2025, Gilkey 1995, Vassilevich 2003, Christensen-Duff 1979 + LinearizedEFE in-prep).
+- `fig_a2_vs_linearized_G_N`: 2-panel calibration figure (rel-err vs α_ADW + G_N(Λ_UV) log-log), registered in `review_figures.py`.
+- Closed-form Christensen-Duff Dirac coefficients `a_0(N_f) = 4 N_f / (4π)²`, `a_2(N_f, R) = -(N_f/12)·R / (4π)²`, `a_4` triple at rational `(-5, +7, -12) / (12·180)` per Vassilevich Eq. (4.37–4.42).
+- Tracked-hypothesis structure `DiracHeatKernelAsymptotic` encodes the PDE-level asymptotic existence (Vassilevich Theorem 4.1, requires Mathlib spin-bundle infrastructure not yet available); structure invariants `a0_value` + `a2_R_value` force consumers to commit to the textbook coefficient table.
+- **Decision Gate E.2 anchor**: load-bearing cross-bridge `G_N_from_a2_eq_G_N_sakharov` invokes `LinearizedEFE.G_N_sakharov` by name in proof body — drift-protection for the heat-kernel ↔ 6a.1 cross-module reference.
+- **Correctness-push biconditional `a2_matches_GNemerg_iff_alpha_ADW_unity`**: heat-kernel `G_N(Λ, N_f)` matches linearized `G_N_emerg(Λ, N_f, α)` iff `α = 1` (Sakharov-Adler baseline). Forward direction uses `mul_right_cancel₀` against `G_N_sakharov_pos`; reverse invokes `LinearizedEFE.G_N_emerg_at_alpha_one`.
+- Quantitative anchors: `G_N_from_a2_at_GUT_inverse` (closed-form `15·10³²/(12π)`); `G_N_from_a2_inverse_at_GUT_below_planck_squared` (norm_num via `Real.pi_gt_three`, showing GUT-cutoff gives `1/G_N < M_Pl²`).
+- Gauss-Bonnet local-algebra identity `a4_gauss_bonnet_combination`: `c_R² − 4 c_Ricci² + c_Riem² = -N_f/(48 (4π)²)` via `ring`. Topological vanishing at the integral level deferred to Phase 6f.1.
+- Discipline metric: **2 retroactive theorems** (post-wave audit caught: `fourPiSq_mul_inv` unused identity wrapper deleted; `dirac_heat_kernel_yields_G_N_sakharov` defining-the-conclusion P5 strengthened to `DiracHeatKernelAsymptotic.a2_eq_closed_form` consuming `a2_R_value`; `G_N_from_a2_at_GUT_anchor` rfl-tautology replaced with substantive `G_N_from_a2_at_GUT_inverse` exposing `one_div_div`). Trend: 6c.3=12, 6b.1=5, 6d.1=6, 6d.2=4, 6d.3=1, 6c.1=2, 6c.4=3, 6c.5=3, 6c.2=2, **6e.1=2**.
+
+### ~~Wave 1 specification (preserved for reference)~~
 
 **Goal:** Systematic Seeley-DeWitt heat-kernel expansion of `det(γ^a Ê^a_μ D^μ)` organized by mass dimension. Produces coefficients `a_0, a_2, a_4, …` entering the effective action.
 
@@ -104,7 +119,32 @@
 
 ## Track B: Higher-Curvature Structure (6e.2)
 
-### Wave 2 — `HigherCurvatureStructure.lean` (6e.2) [Pipeline: Stages 1–8]
+### Wave 2 — `HigherCurvatureStructure.lean` (6e.2) [SHIPPED 2026-04-30 — Stages 1–12 closed]
+
+**Status:** SHIPPED (Stages 1–12 closed; Stages 11 notebooks + 13 adversarial review deferred per pipeline policy). Phase 6 mid-program: 6e Wave 2 ships in parallel with reviewer-fix pass on Wave 1's `fig_a2_vs_linearized_G_N` (figure-reviewer 4 polish items resolved; claims-reviewer 6 WARNs deferred to a hygiene wave).
+
+**Final state:**
+- Lean module `lean/SKEFTHawking/HigherCurvatureStructure.lean`: **11 substantive theorems** / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only on the main basis-change identity, correctness-push, and tracked-Prop witness).
+- Python: `src/higher_curvature/{__init__, curvature_basis, gauss_bonnet_check, observational_bound_check}.py` + 6 new functions in `formulas.py` (`higher_curvature_R_sq_coefficient`, `higher_curvature_Ricci_sq_coefficient`, `higher_curvature_Riemann_sq_coefficient`, `gauss_bonnet_4D_identity`, `weyl_squared_4D`, `higher_curvature_predicted_in_observational_band`).
+- Tests: `tests/test_higher_curvature.py` — 40/40 PASS in 0.06 s.
+- Figure: `fig_higher_curvature_obs_bounds` (2-panel: predictions across N_f bars + ceiling-comparison log scale).
+- Paper: `papers/paper40_higher_curvature/paper_draft.tex` (3 pages, 446 KB, 7 bibitems).
+- Inventory: +11 thms / +1 module / +40 tests / +1 figure / +1 paper.
+
+**Discipline metric:** **1 retroactive theorem** (post-wave audit cut `gaussBonnet4D_vacuum_eq_riemann_sq` — trivial-after-unfold P3 with no downstream consumer). Trend: 6c.3=12, 6b.1=5, 6d.1=6, 6d.2=4, 6d.3=1, 6c.1=2, 6c.4=3, 6c.5=3, 6c.2=2, 6e.1=2, **6e.2=1** (best yet).
+
+**Highlights:**
+- Closed-form Stelle-basis coefficients `(α, β, γ) = (-N_f/324, -41 N_f/4320, +17 N_f/4320) / (4π)²` solved from a 3×3 linear system over the Wave 1 Christensen-Duff rationals.
+- **Sign-definite for N_f > 0**: α < 0, β < 0, **γ > 0** (the topological coefficient carries the chiral-anomaly-positive sign).
+- **Main basis-change identity `a4_density_eq_a4_density_in_RC2GB_basis`**: substantive cross-bridge to Wave 1; proof body unfolds Wave 1 coefs by name (P6 drift-protection per `feedback_python_lean_refs_drift.md`); closes by `ring`.
+- **Conformal-flatness biconditional `weylSquared4D_eq_zero_iff_conformally_flat`** + algebraic identity `gaussBonnet_minus_weyl_eq_R_minus_Ricci_combination`: 𝒢 − C² = (2/3) R² − 2 R_μν².
+- **Correctness-push `higher_curvature_below_pulsar_bound`**: at 0 < N_f ≤ 100, all 3 a_4 coefficients sit strictly below `hc_bound_pulsar = 10⁵⁹` (Hulse-Taylor binary pulsar, tightest ceiling). Proof structure: `1 < (4π)²` from `Real.pi_gt_three` → `fourPiSqInv < 1` → numerical estimate `100 · 12/2160 · 1 < 1` → `1 < 10⁵⁹` (norm_num).
+- **Falsifier `higher_curvature_predictions_strictly_positive`**: predictions strictly non-zero — rules out the trivial reading "all bounds passed because all predictions are zero."
+- **Tracked Prop predicate `H_HigherCurvatureWithinObservationalBounds B`** parameterised by upper bound; pulsar-bound witness theorem follows from correctness-push.
+
+---
+
+### Wave 2 specification (preserved for reference) — `HigherCurvatureStructure.lean` (6e.2) [Pipeline: Stages 1–8]
 
 **Goal:** `R², Ricci², Riemann²` coefficients at `a_4` order assembled into basis (Gauss-Bonnet `𝒢` topological in 4D; 2 remaining combinations physical). Coefficients predicted from microscopic parameters.
 

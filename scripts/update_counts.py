@@ -362,6 +362,8 @@ def generate_tex(counts: dict, path: Path):
         ("chiralSsb",   "ChiralSSB_QCD.lean",           "test_chiral_ssb.py"),
         ("cfl",         "CFLChiralLagrangian.lean",     "test_cfl.py"),
         ("rtCh",        "RTCasiniHuertaBounds.lean",    "test_rt_ch_bounds.py"),
+        ("heatKernel",      "HeatKernelExpansion.lean",       "test_heat_kernel.py"),
+        ("higherCurvature", "HigherCurvatureStructure.lean",  "test_higher_curvature.py"),
     ]
     phase6_lines = []
     for prefix, lean_mod, test_mod in phase6_modules:

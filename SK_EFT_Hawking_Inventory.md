@@ -301,29 +301,25 @@ Current scale: **4385 theorems** (4362 substantive + 23 placeholder as tracked i
 
 ---
 
-## 2. LEAN FORMAL VERIFICATION (187 modules, 4385 theorems, 1 axiom, **0 sorry**)
+## 2. LEAN FORMAL VERIFICATION (191 modules, 4453 theorems, 1 axiom, **0 sorry**)
 
-> **2026-04-28 PHASE 6 STRENGTHENING + RETROFIT.** Section 2 module table re-synced
-> 2026-04-28 to add the Phase 6a/6b/6c/6d/6f cohort and apply post-strengthening
-> theorem counts. New rows: Phase 6a Track A (`LinearizedEFE`, `FLRWDynamics`),
-> Track B (`GravitationalWaves`), Track C (`BHEntropyMicroscopic`,
-> `BHThermodynamicsFourLaws`), Phase 6b (`BBN`), Phase 6c
-> (`StrongCPTopologicalDE`, `EquivalencePrinciple`, `QECHolographyBridge`,
-> `RTCasiniHuertaBounds`), Phase 6d (`CenterSymmetryConfinement`,
-> `ChiralSSB_QCD`, `CFLChiralLagrangian`), Phase 6f (`EnergyConditions`),
-> plus the `LaplaceMethod` Mathlib-PR-track helper module that retired the
-> `gaussianSaddleAsymptotic` axiom (project axioms 2 → 1). Post-strengthening
-> Phase-6c/6d counts (verified by `_module_thm_count_strict`): W1
-> StrongCPTopologicalDE 8, W3 EquivalencePrinciple 25 (was 27 — removed P5
-> tautology + decorative marker), W4 QECHolographyBridge 10, W1d
+> **2026-04-29 PHASE 6e WAVE 1 + EARLIER.** Counts re-synced via
+> `scripts/update_counts.py`: **4442 theorems** (4419 substantive + 23
+> placeholder), **0 sorry**, **1 axiom**, **190 modules**. Phase 6e Wave 1
+> (`HeatKernelExpansion.lean`) shipped through Stage 11 (notebooks) on
+> 2026-04-29 with 19 substantive theorems / 0 sorry / 0 new axioms (verified
+> `propext, Classical.choice, Quot.sound` only). Earlier Phase 6c Wave 2
+> (`EWBaryogenesisChiralityWall.lean`, 16 substantive theorems) and Phase
+> 5z Wave 4 (`MajoranaRungSMG.lean`, 11 substantive theorems) shipped
+> 2026-04-29; Phase 6c CLOSED end-to-end. Pre-existing 2026-04-28 sync
+> covered Phase 6a/6b/6c/6d/6f cohort; post-strengthening per-wave counts
+> (verified via `_module_thm_count_strict`):
+> W1 StrongCPTopologicalDE 8, W3 EquivalencePrinciple 25 (was 27 — removed
+> P5 tautology + decorative marker), W4 QECHolographyBridge 10, W1d
 > CenterSymmetryConfinement 18 (was 20 — removed redundant
 > `ising_nu_above_0_6` + `potts_nu_below_0_6` threshold pair), W2d
 > ChiralSSB_QCD 10, W3d CFLChiralLagrangian 12, W5 RTCasiniHuertaBounds 7.
-> Counts (via `scripts/update_counts.py`): **4385 theorems** (4362
-> substantive + 23 placeholder), **0 sorry**, **1 axiom**, **187 modules**.
-> Earlier 2026-04-26 sync (33 module rows for Phase 5f/5h/5i/5l/5m/5s/5t/5w/5x/5z
-> + `ExtractDeps`) and Phase 5y closure rows remain in-table; see
-> `docs/counts.json` for ground truth.
+> See `docs/counts.json` for ground truth.
 
 ### Lean 4.29.0, Mathlib pinned to commit `8850ed93`
 
@@ -516,6 +512,8 @@ Current scale: **4385 theorems** (4362 substantive + 23 placeholder as tracked i
 | CenterSymmetryConfinement | 432 | 18 | 0 | **6d W1** | **Phase 6d Wave 1** (DOUBLE-strengthened 2026-04-27-1845 — 6 retroactive theorems across two reviews; further strengthened 2026-04-28-1130 — removed redundant `ising_nu_above_0_6` + `potts_nu_below_0_6` threshold pair, load-bearing comparison `ising_nu_gt_potts_nu` survives, threshold-pair was P3 against an arbitrary 0.6): Confinement formalized as **ℤ_N 1-form center-symmetry unbreaking**. `CenterZN` structure with `N ≥ 2`; `centerPhase Z := exp(2πi/N)`; `centerPhase_pow_N`, `centerPhase_norm_one`, `centerPhase_Z2_eq_neg_one` (concrete SU(2): ζ_2 = −1 via `Complex.exp_pi_mul_I`). Polyakov loop = ℂ; `Confining P := P = 0`; `confining_iff_magnitude_zero`. Svetitsky-Yaffe map: SU(2) → Ising, SU(3) → 3-state Potts; `ising_nu_gt_potts_nu` direct comparison. KSS bound 1/(4π): `KSS_bound_positive` + quantitative bracket `[0.07, 0.08]`. Walker-Wang transport correctness-push (HPC-gated): `H_WalkerWangTransportNearKSS` 2-conjunct tracked Prop + concrete numerical falsifiers. Cross-bridges: `higher_form_discrete_iff_non_abelian` genuine biconditional, `su3k1_fusion_card_matches_z3_order` calls `SKEFTHawking.su3k1_object_count` from `SU3kFusion.lean`. (**ALL PROVED, zero sorry**) |
 | ChiralSSB_QCD | 310 | 10 | 0 | **6d W2** | **Phase 6d Wave 2** (multi-pass-strengthened 2026-04-27-1930; 4 retroactive across three passes): WetterichNJL scalar channel = quark condensate `⟨q̄q⟩` encoded as `QuarkCondensate` structure with load-bearing `sigma_neg` invariant; FLAG-2021 lattice witness (−0.0227 GeV³). GMOR relation `m_π² · f_π² = −2 m_q · ⟨q̄q⟩` with literature-anchored numerical verification `gmor_pdg_match` shows `|LHS − RHS| < 1e-4 GeV⁴` at PDG/FLAG central values (actual agreement ~4e-8, ~1 part in 10⁴). Chiral-unbroken-phase-violates-GMOR contrapositive `chiral_unbroken_violates_gmor` parametric over raw σ. Tetrad-VEV/quark-condensate naturalness correctness-push `H_TetradQuarkScalesNatural` 3-conjunct tracked Prop + unit-ratio existence witness + 2 order-of-magnitude falsifiers. Substantive cross-bridge `njl_scalar_bounded_consistent_with_chiral_broken` consumes `WetterichNJL.njl_scalar_upper_bound`. (**ALL PROVED, zero sorry**) |
 | CFLChiralLagrangian | 317 | 12 | 0 | **6d W3** | **Phase 6d Wave 3 — Phase 6d CLOSED** (multi-pass-strengthened; 1 retroactive). THE Phase 6d correctness-push anchor delivered in the AGREEMENT branch: independent derivations (bare-gauge QCD center via W1's `CenterZN.Z3` vs. emergent CFL diquark-sector one-form symmetry via Hirono-Tanizaki) yield the SAME generator ω = exp(2πi/3). Load-bearing theorem `CFL_emergent_Z3_matches_QCD_center_Z3`. Cross-module identification consumed by `emergentZ3_pow_3` (calls W1's `centerPhase_pow_N`) + `emergentZ3_norm_one` (calls W1's `centerPhase_norm_one`) + `emergentZ3_sum_cube_roots` (`1 + ω + ω² = 0` distinguishing ℤ_3 from ℤ_2). CFL chiral Lagrangian skeleton: `cflKineticTerm_nonneg`, `cflMassTerm_chiral_limit`, `cflMassTerm_pos_in_cfl_phase`. Hirono-Tanizaki topological-order beyond Landau-Ginzburg: `H_TopologicalOrderBeyondLG` 2-conjunct tracked Prop + witness + 2 falsifiers. Cross-bridge `cfl_phase_with_gmor_dual_broken` consumes BOTH W2's `chiral_unbroken_violates_gmor` AND W3's `isCFLPhase_iff_magnitude_pos`. (**ALL PROVED, zero sorry**) |
+| HeatKernelExpansion | 351 | 19 | 0 | **6e W1** | **Phase 6e Wave 1** (preemptive-strengthening discipline applied at first-pass; 2 retroactive — deleted unused `fourPiSq_mul_inv` identity wrapper, restructured `dirac_heat_kernel_yields_G_N_sakharov` defining-the-conclusion P5 into substantive `DiracHeatKernelAsymptotic.a2_eq_closed_form` consuming `a2_R_value`, replaced `G_N_from_a2_at_GUT_anchor` rfl-tautology with `G_N_from_a2_at_GUT_inverse` exposing `one_div_div`): Seeley-DeWitt heat-kernel expansion of the Dirac fermion determinant. Closed-form Christensen-Duff coefficients `a_0(N_f) = 4 N_f / (4π)²`, `a_2(N_f, R) = -(N_f/12)·R/(4π)²`, `a_4` triple at rationals `(-5,+7,-12)/(12·180)` (Vassilevich Phys. Rep. 388 Eq. 4.37–4.42). Tracked-hypothesis `DiracHeatKernelAsymptotic` structure (PDE-level asymptotic existence per Vassilevich Theorem 4.1 — Mathlib spin-bundle infrastructure not yet available); structure invariants `a0_value`/`a2_R_value` force consumers to commit to textbook values. **Decision Gate E.2 anchor** `G_N_from_a2_eq_G_N_sakharov` substantive cross-bridge (proof body invokes `LinearizedEFE.G_N_sakharov` by name) — drift-protection for heat-kernel ↔ 6a.1 reference. **Correctness-push biconditional `a2_matches_GNemerg_iff_alpha_ADW_unity`** uses `mul_right_cancel₀` against `LinearizedEFE.G_N_sakharov_pos` (forward) and `LinearizedEFE.G_N_emerg_at_alpha_one` (reverse). Quantitative anchors `G_N_from_a2_at_GUT_inverse` + `G_N_from_a2_inverse_at_GUT_below_planck_squared` (norm_num + `Real.pi_gt_three`). Gauss-Bonnet local-algebra `a4_gauss_bonnet_combination = -N_f/(48 (4π)²)` via `ring`. (**ALL PROVED, zero sorry**) |
+| HigherCurvatureStructure | 354 | 11 | 0 | **6e W2** | **Phase 6e Wave 2** (preemptive-strengthening discipline applied at first-pass; 1 retroactive — cut `gaussBonnet4D_vacuum_eq_riemann_sq` trivial-after-unfold P3 with no downstream consumer): Wave 1 a_4 Christensen-Duff coefficients re-expressed in Stelle's `{R², C², 𝒢}` basis with closed-form sign-definite Stelle coefficients `(α, β, γ) = (-N_f/324, -41 N_f/4320, +17 N_f/4320) / (4π)²` solved from a 3×3 linear system. Definitions `gaussBonnet4D R Ricci Riem := R - 4 Ricci + Riem` (Lovelock 1971 topological in 4D), `weylSquared4D := Riem - 2 Ricci + R/3` (Stelle 1977 trace-free). **Conformal-flatness biconditional `weylSquared4D_eq_zero_iff_conformally_flat`**: C² = 0 ↔ Riem = 2 Ricci - R/3. **Algebraic engine `gaussBonnet_minus_weyl_eq_R_minus_Ricci_combination`**: 𝒢 - C² = (2/3) R - 2 Ricci. **Sign-definite `a4_alpha_neg`/`a4_beta_neg`/`a4_gamma_pos`** for N_f > 0 (γ > 0 = chiral-anomaly-positive topological sign). **Helper bounds `fourPiSq_gt_one`, `fourPiSqInv_lt_one`** from `Real.pi_gt_three` + `nlinarith`. **MAIN cross-bridge identity `a4_density_eq_a4_density_in_RC2GB_basis`**: substantive cross-bridge to Wave 1 — proof body unfolds Wave 1's `a4_R_sq_coef`/`a4_Ricci_sq_coef`/`a4_Riemann_sq_coef` directly (P6 drift-protection per `feedback_python_lean_refs_drift.md`), closes by `ring`. Observational ceilings as `def`s `hc_bound_LIGO/SRG/pulsar/cassini` (Calmet-Capozziello-Pryer 2019; Berti et al 2015). **CORRECTNESS-PUSH `higher_curvature_below_pulsar_bound`**: at 0 < N_f ≤ 100, all 3 a_4 coef abs values strictly below `hc_bound_pulsar = 10^59` (Hulse-Taylor binary pulsar, tightest ceiling). 3-conjunct bundle is *not* P2-redundant (different coefs, different `abs_neg` vs `abs_of_pos` branches). **Falsifier `higher_curvature_predictions_strictly_positive`**: predictions strictly non-zero (rules out trivial-vanishing reading). **Tracked Prop predicate `H_HigherCurvatureWithinObservationalBounds B`** parameterised by upper bound; pulsar-bound witness theorem `H_HigherCurvatureWithinObservationalBounds_pulsar_witness` follows from correctness-push. (**ALL PROVED, zero sorry**) |
 | BHLGaugeEmbedding | 492 | 23 | 0 | 6 supp | Phase 6 supporting module: BH gauge-embedding bridge (anomaly inflow + Z₁₆ embedding cross-check). (**ALL PROVED, zero sorry**) |
 | EWPhaseTransition | 414 | 21 | 0 | 6 supp | Phase 6 supporting module: electroweak phase-transition substrate-bridge (paper22 anchor). (**ALL PROVED, zero sorry**) |
 | ExtractDeps | 323 | 0 | 0 | infra | **Infrastructure metaprogram**: Lean 4 environment walker / axiom-closure extractor; emits the SKEFTHawking declaration taxonomy (kind, signature, axiom dependencies, structure fields) consumed by the graph pipeline / `validate.py` / provenance dashboard / `update_counts.py`. **Only file in project that invokes Pipeline-Invariant-#10 metaprogram exception** (sets unlimited heartbeats locally to walk all 4385+ declarations) — see CLAUDE.md heartbeat policy. Required target of `lake build SKEFTHawking.ExtractDeps` for trustworthy clean baseline. |
@@ -581,7 +579,7 @@ Current scale: **4385 theorems** (4362 substantive + 23 placeholder as tracked i
 
 ---
 
-## 4. JUPYTER NOTEBOOKS (70 total: 35 Technical + 35 Stakeholder)
+## 4. JUPYTER NOTEBOOKS (76 total: 38 Technical + 38 Stakeholder)
 
 | Notebook | Phase | Topic |
 |----------|-------|-------|
@@ -645,12 +643,16 @@ Current scale: **4385 theorems** (4362 substantive + 23 placeholder as tracked i
 | Phase6d2_ChiralSSB_Stakeholder | 6d.2 | Where the proton's mass actually comes from + GMOR identity |
 | Phase6d3_CFL_Technical | 6d.3 | CFL emergent ℤ_3 ≡ QCD center ℤ_3 correctness-push (THE Phase 6d anchor) |
 | Phase6d3_CFL_Stakeholder | 6d.3 | Color-flavor-locked dense-matter phase + cross-derivation ℤ_3 coincidence |
+| Phase6e1_HeatKernelExpansion_Technical | 6e.1 | Seeley-DeWitt a₀/a₂/a₄ Christensen-Duff; Decision-Gate-E.2 calibration to 6a.1 G_N_sakharov; biconditional vs α_ADW |
+| Phase6e1_HeatKernelExpansion_Stakeholder | 6e.1 | "How Newton's constant arises from a fermion fluid" — heat-kernel intuition + Sakharov-Adler scale anchor |
+| Phase6e2_HigherCurvatureStructure_Technical | 6e.2 | Stelle (α, β, γ) basis change from Wave 1 a₄ Christensen-Duff; correctness-push vs LIGO/SRG/pulsar/Cassini observational ceilings |
+| Phase6e2_HigherCurvatureStructure_Stakeholder | 6e.2 | "Why the next-order curvature corrections are tiny" — basis-change intuition + 62-orders-below-pulsar narrative |
 
 **Convention:** Technical mirrors paper structure. Stakeholder teaches the physics. All import from `src/` modules (no inline formula redefinition). All figure cells tagged `# viz-ref: fig_<name>`.
 
 ---
 
-## 5. PAPER DRAFTS (32 papers + 1 short formalization note + prediction tables)
+## 5. PAPER DRAFTS (34 papers + 1 short formalization note + prediction tables)
 
 > **2026-04-28 Phase 6 retrofit.** All seven Phase-6 papers (paper32, paper34,
 > paper35, paper36, paper37, paper38, note_rt_ch_bounds) now use the
@@ -712,6 +714,8 @@ Current scale: **4385 theorems** (4362 substantive + 23 placeholder as tracked i
 | paper37_chiral_ssb | note (3p) | Chiral SSB / GMOR: WetterichNJL scalar = ⟨q̄q⟩, PDG/FLAG numerical match at ~1 part in 10⁴ (Phase 6d Wave 2) |
 | paper38_cfl | note (3p) | CFL chiral Lagrangian: emergent ℤ_3 ≡ QCD-center ℤ_3 generator agreement (Phase 6d Wave 3 — Phase 6d CLOSED) |
 | note_rt_ch_bounds | short note (3p) | Ryu-Takayanagi + Casini-Huerta as external-hypothesis tracked Props; structural inconsistency with W3 Kaul-Majumdar (Phase 6c Wave 5) |
+| paper39_heat_kernel_expansion | long-form (4p) | Heat-kernel a₀/a₂/a₄ Christensen-Duff coefficients; Decision-Gate-E.2 calibration `G_N_from_a2_eq_G_N_sakharov`; biconditional vs α_ADW (Phase 6e Wave 1) |
+| paper40_higher_curvature | formalization (3p) | Higher-curvature structure: Wave 1 a₄ → Stelle `{R², C², 𝒢}` basis change; sign-definite (α, β, γ); correctness-push vs LIGO/pulsar/SRG/Cassini observational ceilings (Phase 6e Wave 2) |
 | experimental_predictions | Tables | Platform spectral predictions |
 | AutomatedReviews/ | Stage 13 outputs | Per-paper adversarial-reviewer findings (Opus fresh context); auto-ingested as ReviewFinding nodes by `scripts/build_graph` |
 
@@ -729,7 +733,7 @@ Current scale: **4385 theorems** (4362 substantive + 23 placeholder as tracked i
 
 ---
 
-## 6. TEST FILES (75 files, 3254 fast + 66 slow tests)
+## 6. TEST FILES (79 files, 3374 fast + 66 slow tests)
 
 > **2026-04-28 `slow` marker retrofit.** Three modules tagged
 > `pytestmark = pytest.mark.slow` because they each call `load_lean_deps()`
@@ -995,9 +999,9 @@ Infrastructure/process phases are covered by a single retrospective memo: `Phase
 
 ---
 
-**Project Status (2026-04-28-1200):** Phase 6 strengthening + retrofit pass shipped end-to-end. **4385 theorems** (4362 substantive + 23 placeholder), **1 axiom**, **0 sorry project-wide** across **187 modules**. 322 Aristotle-proved (44 runs, all complete; no Aristotle calls in Phase 6 — interactive MCP closure throughout). 75 test files (3254 fast + 66 slow tests; default suite 2.14 s), 128 figure functions in `visualizations.py` (114 PNGs in `figures/`), 103 Python modules, 32 papers + 1 short formalization note, 56 notebooks. Build CLEAN (8451/8451 jobs).
+**Project Status (2026-04-30-0000):** Phase 6e Wave 2 (`HigherCurvatureStructure.lean`) shipped through Stage 12 + Wave 1 figure-reviewer fix pass applied. **4453 theorems** (4430 substantive + 23 placeholder), **1 axiom**, **0 sorry project-wide** across **191 modules**. 322 Aristotle-proved (44 runs; no Aristotle calls since Phase 6 — interactive MCP closure throughout). 79 test files (3374 fast + 66 slow tests; default suite ~2.7 s), 131 figure functions in `visualizations.py` (115+ PNGs in `figures/`), 111 Python modules, 35 papers + 1 short formalization note, 74 notebooks. Build CLEAN (8455/8455 jobs).
 
-**Phase 6 closure metrics:** Phase 6a four tracks shipped (W1+W2+W3+W4+W5+W7); Phase 6b W1 shipped; Phase 6c W1+W3+W4+W5 shipped (W2 EWBaryogenesisChiralityWall remains); Phase 6d CLOSED (W1+W2+W3); Phase 6f W3 shipped (Stage 1–2). Preemptive-strengthening discipline trend (8 waves; first-pass retroactive count): 6c.3 = 12 (no discipline) → 6b.1 = 5 (58 % reduction) → 6d.1 = 6 → 6d.2 = 4 → 6d.3 = 1 → 6c.1 = 2 → 6c.4 = 3 → 6c.5 = 3. The discipline catches obvious P2 / ∃-absorption / biconditional-tautology patterns; multi-pass review until two consecutive clean passes catches subtler P3 / P5 patterns (identity-function wrappers, within-own-±2σ-band tautologies, pairwise-distinctness on inductive constructors, definitional-unfolding-as-physics).
+**Phase 6 closure metrics:** Phase 6a four tracks shipped (W1+W2+W3+W4+W5+W7); Phase 6b W1 shipped; Phase 6c CLOSED (W1+W2+W3+W4+W5); Phase 6d CLOSED (W1+W2+W3); Phase 6e W1+W2 shipped (`HeatKernelExpansion.lean`, `HigherCurvatureStructure.lean`); Phase 6f W3 shipped (Stage 1–2). Preemptive-strengthening discipline trend (11 waves; first-pass retroactive count): 6c.3 = 12 (no discipline) → 6b.1 = 5 (58 % reduction) → 6d.1 = 6 → 6d.2 = 4 → 6d.3 = 1 → 6c.1 = 2 → 6c.4 = 3 → 6c.5 = 3 → 6c.2 = 2 → 6e.1 = 2 → **6e.2 = 1** (best yet). The discipline catches obvious P2 / ∃-absorption / biconditional-tautology patterns; multi-pass review until two consecutive clean passes catches subtler P3 / P5 patterns (identity-function wrappers, within-own-±2σ-band tautologies, pairwise-distinctness on inductive constructors, definitional-unfolding-as-physics).
 
 **Earlier project status (2026-04-15) — preserved for historical context:** Phase 5p Waves 1–5 (Direction 1) + **Wave 6 (concrete instances)** **COMPLETE** + Phase 5e Waves 7–8 **COMPLETE**. **3021 theorems** (2942 substantive + 79 placeholder), 1 axiom, **0 sorry project-wide** across **133 modules**. 322 Aristotle-proved (44 runs, all complete; subsequent gap closures via interactive MCP), 1723 tests, 101 figures, 53 Python modules, 15 papers, 48 notebooks. Build CLEAN (8397 jobs, 132 oleans + 1 lean_exe). validate.py 16/16 pass.
 

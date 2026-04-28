@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  25 APR 2026 18:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  27 APR 2026 20:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -426,7 +426,7 @@ Package color Info: Driver file: pdftex.def on input line 149.
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count333
 )
-No file paper_draft.aux.
+(./paper_draft.aux)
 \openout1 = `paper_draft.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
@@ -447,6 +447,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 17.
 LaTeX Font Info:    ... okay on input line 17.
+
 (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count334
@@ -477,6 +478,7 @@ nslations-basic-dictionary')
 Package translations Info: loading dictionary `translations-basic-dictionary' f
 or `english'. on input line 17.
 Package hyperref Info: Link coloring OFF on input line 17.
+ (./paper_draft.out) (./paper_draft.out)
 \@outlinefile=\write4
 \openout4 = `paper_draft.out'.
 
@@ -495,55 +497,6 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 30.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-Package natbib Warning: Citation `Volovik2024Vestigial' on page 1 undefined on 
-input line 31.
-
-
-Package natbib Warning: Citation `Abbott2017GW170817' on page 1 undefined on in
-put line 38.
-
-
-Package natbib Warning: Citation `Roehm2026LinearizedEFE' on page 1 undefined o
-n input line 45.
-
-
-Package natbib Warning: Citation `Volovik2024Vestigial' on page 1 undefined on 
-input line 86.
-
-
-Package natbib Warning: Citation `Volovik2022Counting' on page 1 undefined on i
-nput line 86.
-
-
-Package natbib Warning: Citation `Akama1978' on page 1 undefined on input line 
-89.
-
-
-Package natbib Warning: Citation `Diakonov2011' on page 1 undefined on input li
-ne 89.
-
-
-Package natbib Warning: Citation `VladimirovDiakonov2012' on page 1 undefined o
-n input line 89.
-
-
-Package natbib Warning: Citation `HebeckerWetterich2003' on page 1 undefined on
- input line 89.
-
-
-Package natbib Warning: Citation `Wetterich2022' on page 1 undefined on input l
-ine 89.
-
-
-Package natbib Warning: Citation `Vergeles2025' on page 1 undefined on input li
-ne 96.
-
-
-Package natbib Warning: Citation `Abbott2017GW170817' on page 1 undefined on in
-put line 102.
-
-
 Underfull \hbox (badness 1675) in paragraph at lines 101--108
 []\OT1/cmr/m/n/10 The Au-gust 17, 2017 binary-neutron-star merger
  []
@@ -552,22 +505,6 @@ Underfull \hbox (badness 1675) in paragraph at lines 101--108
 Underfull \hbox (badness 3514) in paragraph at lines 109--118
 \OT1/cmr/m/n/10 speed iden-ti-fi-ca-tion, place it head-to-head against
  []
-
-
-Package natbib Warning: Citation `Roehm2026LinearizedEFE' on page 1 undefined o
-n input line 121.
-
-
-LaTeX Warning: Reference `sec:discussion' on page 1 undefined on input line 125
-.
-
-
-Package natbib Warning: Citation `Vergeles2025' on page 1 undefined on input li
-ne 140.
-
-
-Package natbib Warning: Citation `Roehm2026LinearizedEFE' on page 1 undefined o
-n input line 142.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 133--143
@@ -613,10 +550,6 @@ s[]\OT1/cmr/m/n/10 ,
  []
 
 
-Package natbib Warning: Citation `Abbott2017GW170817' on page 2 undefined on in
-put line 171.
-
-
 Overfull \hbox (16.51149pt too wide) detected at line 181
 [][][][]\OT1/cmr/m/n/10 (^^A\OML/cmm/m/it/10 c=c\OT1/cmr/m/n/10 (\OML/cmm/m/it/
 10 ^^_[]\OT1/cmr/m/n/10 ))  \OMS/cmsy/m/n/10 ([])  \OML/cmm/m/it/10 ^^_[] \OMS/
@@ -624,9 +557,6 @@ cmsy/m/n/10 2 \OT1/cmr/m/n/10 [(1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^\\OT1
 /cmr/m/n/10 )[]\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 (1 + \OML/cmm/m/it/10 ^^\\OT1
 /cmr/m/n/10 )[]]\OML/cmm/m/it/10 :
  []
-
-
-LaTeX Warning: Reference `eq:bicond' on page 2 undefined on input line 183.
 
 
 Underfull \hbox (badness 3590) in paragraph at lines 181--184
@@ -667,10 +597,6 @@ Underfull \hbox (badness 2818) in paragraph at lines 221--223
 \OT1/cmr/m/n/10 ([][]\OT1/cmtt/m/n/10 vestigial_natural_range_violates_ligo[]\O
 T1/cmr/m/n/10 ). Both
  []
-
-
-Package natbib Warning: Citation `Roehm2026LinearizedEFE' on page 2 undefined o
-n input line 228.
 
 
 Overfull \hbox (109.83981pt too wide) in paragraph at lines 235--247
@@ -824,27 +750,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 285--295
  with
  []
 
-<figures/fig_c_GW_vs_ligo_constraint.png, id=47, 2409.0pt x 1606.0pt>
+<figures/fig_c_GW_vs_ligo_constraint.png, id=135, 2409.0pt x 1606.0pt>
 File: figures/fig_c_GW_vs_ligo_constraint.png Graphic file (type png)
 <use figures/fig_c_GW_vs_ligo_constraint.png>
 Package pdftex.def Info: figures/fig_c_GW_vs_ligo_constraint.png  used on input
  line 310.
 (pdftex.def)             Requested size: 236.16165pt x 157.42369pt.
-
-LaTeX Warning: Reference `fig:cGW' on page 3 undefined on input line 323.
-
-
-Package natbib Warning: Citation `Volovik2022Counting' on page 3 undefined on i
-nput line 360.
-
-
-LaTeX Warning: Reference `sec:dispersion' on page 3 undefined on input line 369
-.
-
-
-Package natbib Warning: Citation `Roehm2026LinearizedEFE' on page 3 undefined o
-n input line 376.
-
 ! Undefined control sequence.
 <recently read> \GNemerg 
                          
@@ -950,69 +861,37 @@ vi) the
  []
 
 
-LaTeX Warning: Reference `sec:falsification' on page 4 undefined on input line 
-420.
-
-
-Package natbib Warning: Citation `Roehm2026LinearizedEFE' on page 4 undefined o
-n input line 423.
-
-
-LaTeX Warning: Reference `LastBibItem' on page 4 undefined on input line 432.
-
-
-Underfull \hbox (badness 1215) in paragraph at lines 434--450
+Underfull \hbox (badness 1377) in paragraph at lines 434--450
  \OT1/cmr/m/n/9 GBM, IN-TE-GRAL, Ice-Cube, As-troSat CZTI, IPN,
  []
 
 
-Underfull \hbox (badness 2368) in paragraph at lines 434--450
+Underfull \hbox (badness 2828) in paragraph at lines 434--450
  \OT1/cmr/m/n/9 GROWTH, JAG-WAR, Cal-tech-N-RAO, TTU-NRAO,
  []
 
 
-Underfull \hbox (badness 1057) in paragraph at lines 478--481
+Underfull \hbox (badness 1184) in paragraph at lines 479--482
  []\OT1/cmr/m/n/9 J. G. Roehm, ``Lin-earized Ein-stein Equa-tions from
  []
 
 No file paper_draft.bbl.
-
-Package natbib Warning: There were undefined citations.
-
-[4] (./paper_draft.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-)
+[4] (./paper_draft.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `paper_draft.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `paper_draft.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  DFFF7141864A3B555ACF556565E82382;4089.
+Package rerunfilecheck Info: File `paper_draft.out' has not changed.
+(rerunfilecheck)             Checksum: DFFF7141864A3B555ACF556565E82382;4089.
  ) 
 Here is how much of TeX's memory you used:
- 15719 strings out of 467525
- 297727 string characters out of 5418982
- 704638 words of memory out of 5000000
- 44442 multiletter control sequences out of 15000+600000
+ 15767 strings out of 467525
+ 298379 string characters out of 5418982
+ 705812 words of memory out of 5000000
+ 44484 multiletter control sequences out of 15000+600000
  635380 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,80p,723b,1100s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,80p,965b,1100s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb></
@@ -1035,10 +914,10 @@ st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/
 fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/f
 onts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on paper_draft.pdf (4 pages, 421487 bytes).
+Output written on paper_draft.pdf (4 pages, 423345 bytes).
 PDF statistics:
- 188 PDF objects out of 1000 (max. 8388607)
- 134 compressed objects within 2 object streams
+ 270 PDF objects out of 1000 (max. 8388607)
+ 214 compressed objects within 3 object streams
  44 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 158 words of extra memory for PDF output out of 10000 (max. 10000000)
 

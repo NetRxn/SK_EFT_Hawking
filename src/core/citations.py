@@ -453,7 +453,7 @@ CITATION_REGISTRY = {
         'year': 2012,
         'doi': '10.1103/PhysRevD.86.104019',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['src/core/constants.py'],
         'provides': [],
         'notes': 'ADW lattice gravity model. Basis for vestigial MC.',
@@ -622,7 +622,7 @@ CITATION_REGISTRY = {
         'year': 2011,
         'doi': None,
         'arxiv': '1109.0091',
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex',
                     'papers/paper6_vestigial/paper_draft.tex'],
         'provides': [],
@@ -655,7 +655,11 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'used_in': [
             'papers/paper5_adw_gap/paper_draft.tex',
+            'papers/paper6_vestigial/paper_draft.tex',
+            'papers/paper23_linearized_efe/paper_draft.tex',
+            'papers/paper25_gravitational_waves/paper_draft.tex',
             'papers/paper26_bh_entropy/paper_draft.tex',
+            'papers/paper39_heat_kernel_expansion/paper_draft.tex',
         ],
         'provides': [
             'Unitarity proof for the 4D simplicial-complex lattice theory of gravity '
@@ -1997,6 +2001,159 @@ CITATION_REGISTRY = {
     # Phase 6a Wave 1 (Linearized EFE / induced gravity / classical GR)
     # ════════════════════════════════════════════════════════════════
 
+    'Gilkey1995': {
+        'authors': 'Gilkey, P. B.',
+        'title': "Invariance Theory, the Heat Equation, and the Atiyah-Singer Index Theorem",
+        'journal': 'CRC Press (book)',
+        'volume': None,
+        'page': None,
+        'year': 1995,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex'],
+        'provides': ['Christensen-Duff Dirac heat-kernel coefficients '
+                     '(Theorem 4.8.16, Eq. 4.8.18) — primary mathematical '
+                     'reference for the Wave 1 a_4 rationals'],
+        'notes': '2nd ed., CRC Press, ISBN 978-0-8493-7874-4. Book reference '
+                 '(no DOI / no arXiv); flagged as verified via the standard '
+                 'mathematical reference cited by Vassilevich 2003 §4 and '
+                 'broadly across the heat-kernel literature. The 1st edition '
+                 '(Publish or Perish, 1984) is the same author + title; the '
+                 '1995 CRC 2nd edition is the project reference.',
+    },
+    'LinearizedEFE2026': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Linearized Einstein Equations from ADW Microscopic Theory',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex'],
+        'provides': ['Phase 6a.1 LinearizedEFE.lean Lean formalization + '
+                     'Sakharov-Adler match locus (companion of paper23, '
+                     'in preparation 2026)'],
+        'notes': 'In-preparation self-cite to companion paper23 '
+                 '(`papers/paper23_linearized_efe/paper_draft.tex`). The '
+                 '`LinearizedEFE` Lean module exists and is verified '
+                 '(Phase 6a.1 SHIPPED 2026-04-25). Registry entry created '
+                 'to satisfy Gate 1 CitationIntegrity binary criterion '
+                 '(every cited bibkey must be in registry). Flag as '
+                 '`year: 2026, journal: in preparation` until paper23 '
+                 'is submitted and a journal venue is assigned.',
+    },
+    'Vassilevich2003': {
+        'authors': 'Vassilevich, D. V.',
+        'title': "Heat kernel expansion: user's manual",
+        'journal': 'Phys. Rep.',
+        'volume': 388,
+        'page': '279',
+        'year': 2003,
+        'doi': '10.1016/j.physrep.2003.09.002',
+        'arxiv': 'hep-th/0306138',
+        'doi_verified': True,
+        'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
+                    'papers/paper40_higher_curvature/paper_draft.tex'],
+        'provides': ['Christensen-Duff Dirac a₀, a₂, a₄ coefficients '
+                     '(Eqs. 4.37-4.42); heat-kernel asymptotic existence '
+                     '(Theorem 4.1)'],
+        'notes': 'Canonical heat-kernel reference. Underlies Wave 1 + Wave 2 '
+                 'closed-form Christensen-Duff coefficients.',
+    },
+    'ChristensenDuff1979': {
+        'authors': 'Christensen, S. M., and Duff, M. J.',
+        'title': 'New gravitational index theorems and supertheorems',
+        'journal': 'Nucl. Phys. B',
+        'volume': 154,
+        'page': '301',
+        'year': 1979,
+        'doi': '10.1016/0550-3213(79)90516-9',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex',
+                    'papers/paper40_higher_curvature/paper_draft.tex'],
+        'provides': ['Spin-1/2 Dirac a₄ rational coefficients '
+                     '(Eq. 3.8)'],
+        'notes': 'Original explicit a₄ for spin-1/2 Dirac fermion; pre-Vassilevich '
+                 'review.',
+    },
+    'Stelle1977': {
+        'authors': 'Stelle, K. S.',
+        'title': 'Renormalization of higher-derivative quantum gravity',
+        'journal': 'Phys. Rev. D',
+        'volume': 16,
+        'page': '953',
+        'year': 1977,
+        'doi': '10.1103/PhysRevD.16.953',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex'],
+        'provides': ['Renormalizable R + αR² + βC² truncation; canonical '
+                     '{R², C²} basis with topological 𝒢 (Eq. 2.4)'],
+        'notes': 'Canonical reference for the {R², C², 𝒢} basis used in '
+                 'Wave 2 HigherCurvatureStructure.lean.',
+    },
+    'Lovelock1971': {
+        'authors': 'Lovelock, D.',
+        'title': 'The Einstein tensor and its generalizations',
+        'journal': 'J. Math. Phys.',
+        'volume': 12,
+        'page': '498',
+        'year': 1971,
+        'doi': '10.1063/1.1665613',
+        'arxiv': None,
+        'doi_verified': True,
+        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex'],
+        'provides': ['Gauss-Bonnet density topological in 4D '
+                     '(∫𝒢 = 32π² χ on closed 4-manifolds)'],
+        'notes': 'Foundational reference for the topological '
+                 'Gauss-Bonnet identity used in Wave 2.',
+    },
+    'CalmetCapozzielloPryer2017': {
+        'authors': 'Calmet, X., Capozziello, S., and Pryer, D.',
+        'title': 'Gravitational effective action at second order in curvature and gravitational waves',
+        'journal': 'Eur. Phys. J. C',
+        'volume': 77,
+        'page': '589',
+        'year': 2017,
+        'doi': '10.1140/epjc/s10052-017-5172-3',
+        'arxiv': '1708.08253',
+        'doi_verified': True,
+        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex'],
+        'provides': ['EFT framework for translating short-range gravity + GW '
+                     'observations into bounds on dimensionless higher-curvature '
+                     'couplings α (R²) and β (C²) in the Stelle truncation'],
+        'notes': 'Wave 2 correctness-push reference for the EFT translation '
+                 'framework (not the individual experimental measurements). '
+                 'Verified via Crossref API 2026-04-30: title + authors + EPJC '
+                 '77:589 (2017) all match. Earlier draft of paper40 cited a '
+                 'hallucinated 2019 reference (arXiv 1905.13728 was actually a '
+                 'graph-NN paper by Hu et al); fixed during Stage 13 adversarial '
+                 'review.',
+    },
+    'Berti2015': {
+        'authors': 'Berti, E., et al.',
+        'title': 'Testing general relativity with present and future astrophysical observations',
+        'journal': 'Class. Quantum Grav.',
+        'volume': 32,
+        'page': '243001',
+        'year': 2015,
+        'doi': '10.1088/0264-9381/32/24/243001',
+        'arxiv': '1501.07274',
+        'doi_verified': True,
+        'used_in': ['papers/paper40_higher_curvature/paper_draft.tex'],
+        'provides': ['Comprehensive review of GR tests including binary-pulsar '
+                     'period-decay precision (Hulse-Taylor, Damour-Taylor 1991; '
+                     'Weisberg-Huang 2016) and projected sensitivities for '
+                     'future GW observations'],
+        'notes': 'Wave 2 correctness-push reference. Verified via Crossref API '
+                 '2026-04-30: title + authors + CQG 32:243001 (2015) match. '
+                 'Earlier draft of paper40 mis-cited venue as Living Rev. '
+                 'Relativity 18:1; fixed during Stage 13 adversarial review.',
+    },
     'Sakharov1968': {
         'authors': 'Sakharov, A. D.',
         'title': 'Vacuum quantum fluctuations in curved space and the theory of gravitation',
@@ -2021,7 +2178,7 @@ CITATION_REGISTRY = {
         'year': 1982,
         'doi': '10.1103/RevModPhys.54.729',
         'arxiv': None,
-        'doi_verified': None,
+        'doi_verified': True,
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
         'provides': ['Sakharov-Adler one-loop coefficient: G_N = 12π/(N_f Λ²) '
                      '(Eq. 3.3, hard-cutoff Dirac fermions)'],

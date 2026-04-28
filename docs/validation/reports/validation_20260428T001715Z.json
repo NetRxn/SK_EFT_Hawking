@@ -1,0 +1,125 @@
+{
+  "timestamp": "20260428T001715Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "physical_bounds": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "steinhauer/T_H > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/kappa > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/0 < D < 1",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/0 < delta_diss < 1",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/n_noise >= 0",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "steinhauer/shots > 10^4 (delta=6.0e-07)",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/T_H > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/kappa > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/0 < D < 1",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/0 < delta_diss < 1",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/n_noise >= 0",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "heidelberg/shots > 10^4 (delta=4.0e-05)",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/T_H > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/kappa > 0",
+          "passed": true,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/0 < D < 1",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/0 < delta_diss < 1",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/n_noise >= 0",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        },
+        {
+          "name": "trento/shots > 10^4 (delta=3.6e-07)",
+          "passed": 1.0,
+          "message": "OK",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

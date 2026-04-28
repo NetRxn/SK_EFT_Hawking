@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-27T14:10:27.132779+00:00",
+  "timestamp": "2026-04-28T00:17:06.702036+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -140,6 +140,30 @@
       "message": "yaxis title '' missing expected 'hook'"
     },
     {
+      "figure": "fig_a2_vs_linearized_G_N",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title '|G_N_HK \u2212 G_N_lin| / G_N_lin' missing expected 'rel err'"
+    },
+    {
+      "figure": "fig_higher_curvature_obs_bounds",
+      "severity": "warning",
+      "check": "color_palette",
+      "message": "Color #2ca02c not in COLORS dict"
+    },
+    {
+      "figure": "fig_ewbg_allowed_region",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title 'Phase transition order' missing expected 'm_H'"
+    },
+    {
+      "figure": "fig_ewbg_allowed_region",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title 'Chirality wall' missing expected 'E'"
+    },
+    {
       "figure": "fig_ep_violation_matrix",
       "severity": "warning",
       "check": "axis_label",
@@ -190,6 +214,6 @@
   ],
   "summary": {
     "errors": 0,
-    "warnings": 31
+    "warnings": 35
   }
 }
