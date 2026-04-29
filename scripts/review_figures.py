@@ -751,13 +751,20 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         needs_experiments=False, expected_traces=7,
         expected_axes={}, physics_checks=[], color_keys=["steinhauer"],
     ),
-    # Phase 5s: FK gapped interface
+    # Phase 5s: FK gapped interface (Cayley calibration)
     FigureSpec(
         name="fig_fk_spectrum",
         function="fig_fk_spectrum",
-        caption="FK 8-Majorana spectrum: eigenvalues -7,-5,-1,+1,+3 with multiplicities 1,1,4,7,3. Gap Delta=2.",
-        needs_experiments=False, expected_traces=5,
-        expected_axes={"yaxis": "energy"}, physics_checks=[], color_keys=["dissipative"],
+        caption="FK 8-Majorana spectrum (Cayley): eigenvalues -14,0,+2 with Spin(7) multiplicities 1,8,7. Gap Delta=14.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"yaxis": "energy"}, physics_checks=[], color_keys=["trento"],
+    ),
+    FigureSpec(
+        name="fig_fk_dimensional_ladder",
+        function="fig_fk_dimensional_ladder",
+        caption="Phase 5s Wave 4 bridge theorem: dimensional-ladder evidence for gapped_interface_axiom (1+1D and 2+1D PROVED, 3+1D AXIOMATIZED).",
+        needs_experiments=False, expected_traces=0,
+        expected_axes={}, physics_checks=[], color_keys=["sage", "amber"],
     ),
     # Phase 5x Wave 5: SFDM cluster-merger money plot (two panels)
     FigureSpec(
@@ -1032,6 +1039,177 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "k", "yaxis": "G"},
         physics_checks=[],
         color_keys=["steel_blue", "amber", "sage"],
+    ),
+    FigureSpec(
+        name="fig_constant_K_riemann_dimension_factor",
+        function="fig_constant_K_riemann_dimension_factor",
+        caption=(
+            "Phase 6f Wave 1 — Constant-sectional-curvature Riemann "
+            "tensor: dimension factor n(n−1) and load-bearing role of "
+            "metric symmetry. Left panel: scalar curvature R_trace = "
+            "Σ_μ Ric_{μμ} versus K for n = 2, 3, 4, with slopes 2, 6, "
+            "12 — the n = 4 slope of 12 matches the Lean-proven "
+            "`constantSectional_diag_trace_eq` exactly. Reference "
+            "anchors: de Sitter (K = 1, R = 12), AdS (K = -1, R = "
+            "-12), Minkowski (K = 0). Right panel: log₁₀(first-Bianchi "
+            "residual) heatmap on the (K, metric-asymmetry) plane. "
+            "Symmetric-metric axis (asymmetry = 0) gives identically "
+            "zero residual — confirms the load-bearing role of "
+            "`MetricSymmetric` in `constantSectional_FirstBianchi`. "
+            "Off-axis residuals grow with both K and asymmetry, "
+            "demonstrating the predicate is non-vacuous. Lean: "
+            "constantSectional_diag_trace_eq, "
+            "constantSectional_FirstBianchi, "
+            "constantSectional_Ricci_eq. Source: Wald, "
+            "*General Relativity* (1984) §3.2."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "K", "yaxis": "R"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "sage"],
+    ),
+    FigureSpec(
+        name="fig_einstein_tensor_trace_identity",
+        function="fig_einstein_tensor_trace_identity",
+        caption=(
+            "Phase 6f Wave 2 — Einstein-tensor trace identity "
+            "G^μ_μ = -R in 4D and de Sitter Λ = 3K relation. Left "
+            "panel: trace of constant-K Einstein tensor on Minkowski "
+            "background versus scalar curvature R = 12K. Lean "
+            "`einsteinTensor_trace_eq_neg_scalar` proves the line "
+            "G^μ_μ = -R (slope -1). Reference anchors: de Sitter "
+            "(R=12, G_trace=-12), AdS (R=-12, G_trace=12), Minkowski "
+            "(0,0). Right panel: log₁₀ of Λ-vacuum sup-norm residual "
+            "|G + Λg|_∞ on the (K, Λ-3K) plane. The horizontal locus "
+            "Λ - 3K = 0 (de Sitter) gives identically zero residual; "
+            "off-locus deviations grow linearly with |Λ - 3K|, "
+            "confirming the load-bearing role of the cosmological-"
+            "constant relation in `constantSectional_lambda_vacuum_iff`. "
+            "Lean: einsteinTensor_trace_eq_neg_scalar, "
+            "constantSectional_einsteinTensor_eq, "
+            "constantSectional_lambda_vacuum_iff. "
+            "Source: Wald, *General Relativity* (1984) §3.2; MTW, "
+            "*Gravitation* (1973) §17.2."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "R", "yaxis": "G"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_energy_conditions_perfect_fluid_regions",
+        function="fig_energy_conditions_perfect_fluid_regions",
+        caption=(
+            "Phase 6f Wave 3 — Perfect-fluid energy-condition regions "
+            "in (ρ, p) plane (Minkowski rest frame, signature −+++). "
+            "Four-panel grid for NEC (ρ + p ≥ 0), WEC "
+            "(ρ ≥ 0 AND ρ + p ≥ 0), DEC (ρ ≥ |p|), SEC "
+            "(ρ + 3p ≥ 0 AND ρ + p ≥ 0). Steel-blue = condition holds; "
+            "amber-orange = violated; dotted black = boundary. The two "
+            "named Lean counterexample witnesses are marked: ★ "
+            "cosmologicalLambda at (ρ, p) = (1, -1) — satisfies NEC, "
+            "WEC, DEC and violates SEC (Lean witness for "
+            "`cosmologicalLambda_violates_SEC`); ◆ stiff fluid at "
+            "(ρ, p) = (1, 2) — satisfies NEC, WEC, SEC and violates "
+            "DEC (Lean witness for `stiff_fluid_violates_DEC`). The "
+            "ghost-scalar NEC violator lives outside the perfect-fluid "
+            "(ρ, p) plane (its T_μν = -n_μ n_ν is rank-1, not "
+            "diagonal), so it appears as a separate rank-1 region not "
+            "marked here. Lean: NEC, WEC, DEC, SEC, "
+            "cosmologicalLambda_violates_SEC, stiff_fluid_violates_DEC. "
+            "Source: Hawking & Ellis 1973 Table I §4.3; Carroll 2004 "
+            "§4.6 Fig 4.7."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "ρ", "yaxis": "p"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_exact_solutions_catalog",
+        function="fig_exact_solutions_catalog",
+        caption=(
+            "Phase 6f Wave 4 — Exact solutions of the Einstein field "
+            "equations: three-panel catalog visualization. Left panel: "
+            "Schwarzschild g_tt(r) = -(1 - 2M/r) showing the t-direction "
+            "character flip at the horizon r = 2M (g_tt < 0 timelike "
+            "outside, g_tt = 0 null at horizon, g_tt > 0 spacelike "
+            "inside). Center panel: cosmological constant Λ vs sectional "
+            "curvature K showing the linear Λ = 3K branch with three "
+            "anchored solutions: dS₄ at (K=1, Λ=3) blue star, Minkowski "
+            "at (K=0, Λ=0) black diamond (the unique Λ=0 vacuum), AdS₄ "
+            "at (K=-1, Λ=-3) orange star. Right panel: Schwarzschild "
+            "BH thermodynamic invariants vs mass on log-log axes: T_H = "
+            "1/(8πM) (slope -1), A_H = 16πM² (slope +2), S_BH = 4πM² "
+            "(slope +2, dotted = A_H/4). Lean: deSitter_lambda_vacuum_iff, "
+            "minkowski_lambda_zero_iff_K_zero, schwarzschild_horizon_iff, "
+            "schwarzschild_g_tt_outside_horizon_neg / _at_horizon_zero / "
+            "_inside_horizon_pos, schwarzschild_T_H_times_M, "
+            "schwarzschild_area_eq_16pi_M_sq, "
+            "schwarzschild_S_BH_eq_4pi_M_sq. Source: Wald 1984 §5.2, "
+            "§6.1; MTW 1973 §17.2, §31; Hawking 1975."
+        ),
+        needs_experiments=False, expected_traces=8,
+        expected_axes={"xaxis": "M", "yaxis": "T_H"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "sage"],
+    ),
+    FigureSpec(
+        name="fig_adm_constraint_surface",
+        function="fig_adm_constraint_surface",
+        caption=(
+            "Phase 6f Wave 5 — ADM (3+1) constraint visualization. "
+            "Two-panel figure. Left panel: Yamabe-form Hamiltonian "
+            "constraint at moment-of-time-symmetry (K = 0): the "
+            "load-bearing line ³R = 16πGρ in (³R, ρ) plane (Lean: "
+            "hamiltonianConstraint_moment_of_time_symmetry_iff). "
+            "Coloring: blue/red diverging contour map of "
+            "H_constraint = ³R - 16πGρ; black dashed line = H = 0 "
+            "Yamabe locus; ★ Minkowski at (³R=0, ρ=0); ◆ Schwarzschild "
+            "moment-of-time-symmetry sample (³R sourced by mass with "
+            "matching ρ). Right panel: dS flat-slicing Λ-H balance: "
+            "Λ = 3H² parabola (Lean: "
+            "deSitter_flat_slicing_hamiltonian_iff). The ADM "
+            "Hamiltonian constraint at flat slicing balances iff "
+            "Λ = 3H², recovering the 6f.4 cross-bridge "
+            "deSitter_lambda_eq_three_H_squared at the ADM level. "
+            "Markers ★ H=1/Λ=3 + ◆ H=2/Λ=12 anchor the parabola. "
+            "Lean: hamiltonianConstraint_moment_of_time_symmetry_iff, "
+            "deSitter_flat_slicing_hamiltonian_iff. Source: Wald 1984 "
+            "§10.2 + §11.2; MTW 1973 §21."
+        ),
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "³R", "yaxis": "ρ"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_tetrad_metric_equivalence",
+        function="fig_tetrad_metric_equivalence",
+        caption=(
+            "Phase 6f Wave 6 — Tetrad-metric formalism equivalence. "
+            "Two-panel figure (closes Phase 6f). Left panel: tetrad-"
+            "induced metric heatmap for the Minkowski tetrad e^a_μ "
+            "= δ^a_μ visualizing the named identity g_μν = η_{ab} "
+            "e^a_μ e^b_ν = η_μν componentwise (red diagonal at "
+            "(0,0)=-1, blue spatial diagonals (i,i)=+1, white "
+            "off-diagonals = 0). Right panel: |EC residual| vs α_EC "
+            "on log-y axis showing the Levi-Civita reduction at "
+            "α_EC = 1 (vertical anchor); the residual vanishes at "
+            "α_EC = 1 and grows linearly with α_EC - 1 in the "
+            "deviation region. Cross-bridge to Phase 6e.6 "
+            "EinsteinCartanExtension: tetrad formalism reduces to "
+            "metric formalism iff the Einstein-Cartan rescaling "
+            "parameter α_EC equals 1 (torsion-free Levi-Civita "
+            "connection). Lean: minkowskiTetrad_induces_minkowski_metric, "
+            "tetrad_levi_civita_iff_alpha_unity. Source: Ortín "
+            "*Gravity and Strings* (2015) §1.4; Hehl et al. *Rev. "
+            "Mod. Phys.* **48**, 393 (1976)."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "α_EC", "yaxis": "EC residual"},
+        physics_checks=[],
+        color_keys=["amber"],
     ),
     FigureSpec(
         name="fig_ewbg_allowed_region",
@@ -1480,6 +1658,7 @@ def generate_figures() -> dict[str, Path]:
         fig_ext_chart,
         fig_a1_resolution_structure,
         fig_fk_spectrum,
+        fig_fk_dimensional_ladder,
         # Phase 5x Wave 5: SFDM merger money plot
         fig_sfdm_velocity_threshold_step,
         fig_sfdm_stacked_kappa_profile,
@@ -1513,6 +1692,18 @@ def generate_figures() -> dict[str, Path]:
         fig_torsion_obs_bound,
         # Phase 6b Wave 2: vestigial perturbation amplitude vs Planck CV ceiling
         fig_cmb_spectrum_planck_comparison,
+        # Phase 6f Wave 1: constant-K Riemann dimension factor + Bianchi residual
+        fig_constant_K_riemann_dimension_factor,
+        # Phase 6f Wave 2: Einstein-tensor trace identity + de Sitter Λ relation
+        fig_einstein_tensor_trace_identity,
+        # Phase 6f Wave 3: perfect-fluid energy-condition regions (ρ, p) plane
+        fig_energy_conditions_perfect_fluid_regions,
+        # Phase 6f Wave 4: exact-solutions catalog (Schwarzschild + Λ-K + thermo)
+        fig_exact_solutions_catalog,
+        # Phase 6f Wave 5: ADM constraint surface (Yamabe + dS flat slicing)
+        fig_adm_constraint_surface,
+        # Phase 6f Wave 6: tetrad-metric equivalence (closes Phase 6f)
+        fig_tetrad_metric_equivalence,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1645,6 +1836,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_ext_chart": fig_ext_chart,
         "fig_a1_resolution_structure": fig_a1_resolution_structure,
         "fig_fk_spectrum": fig_fk_spectrum,
+        "fig_fk_dimensional_ladder": fig_fk_dimensional_ladder,
         "fig_sfdm_velocity_threshold_step": fig_sfdm_velocity_threshold_step,
         "fig_sfdm_stacked_kappa_profile": fig_sfdm_stacked_kappa_profile,
         "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
@@ -1663,6 +1855,12 @@ def generate_figures() -> dict[str, Path]:
         "fig_lambda_emerg_parameter_scan": fig_lambda_emerg_parameter_scan,
         "fig_torsion_obs_bound": fig_torsion_obs_bound,
         "fig_cmb_spectrum_planck_comparison": fig_cmb_spectrum_planck_comparison,
+        "fig_constant_K_riemann_dimension_factor": fig_constant_K_riemann_dimension_factor,
+        "fig_einstein_tensor_trace_identity": fig_einstein_tensor_trace_identity,
+        "fig_energy_conditions_perfect_fluid_regions": fig_energy_conditions_perfect_fluid_regions,
+        "fig_exact_solutions_catalog": fig_exact_solutions_catalog,
+        "fig_adm_constraint_surface": fig_adm_constraint_surface,
+        "fig_tetrad_metric_equivalence": fig_tetrad_metric_equivalence,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
@@ -1787,6 +1985,7 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_a1_resolution_structure,
         # Phase 5s: FK gapped interface
         fig_fk_spectrum,
+        fig_fk_dimensional_ladder,
         # Phase 5x Wave 5: SFDM merger money plot
         fig_sfdm_velocity_threshold_step,
         fig_sfdm_stacked_kappa_profile,
@@ -1820,6 +2019,18 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_torsion_obs_bound,
         # Phase 6b Wave 2: vestigial perturbation amplitude vs Planck CV ceiling
         fig_cmb_spectrum_planck_comparison,
+        # Phase 6f Wave 1: constant-K Riemann dimension factor + Bianchi residual
+        fig_constant_K_riemann_dimension_factor,
+        # Phase 6f Wave 2: Einstein-tensor trace identity + de Sitter Λ relation
+        fig_einstein_tensor_trace_identity,
+        # Phase 6f Wave 3: perfect-fluid energy-condition regions (ρ, p) plane
+        fig_energy_conditions_perfect_fluid_regions,
+        # Phase 6f Wave 4: exact-solutions catalog (Schwarzschild + Λ-K + thermo)
+        fig_exact_solutions_catalog,
+        # Phase 6f Wave 5: ADM constraint surface (Yamabe + dS flat slicing)
+        fig_adm_constraint_surface,
+        # Phase 6f Wave 6: tetrad-metric equivalence (closes Phase 6f)
+        fig_tetrad_metric_equivalence,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1950,6 +2161,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_ext_chart": fig_ext_chart,
         "fig_a1_resolution_structure": fig_a1_resolution_structure,
         "fig_fk_spectrum": fig_fk_spectrum,
+        "fig_fk_dimensional_ladder": fig_fk_dimensional_ladder,
         "fig_sfdm_velocity_threshold_step": fig_sfdm_velocity_threshold_step,
         "fig_sfdm_stacked_kappa_profile": fig_sfdm_stacked_kappa_profile,
         "fig_phase5x_candidate_viability_matrix": fig_phase5x_candidate_viability_matrix,
@@ -1968,6 +2180,12 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_lambda_emerg_parameter_scan": fig_lambda_emerg_parameter_scan,
         "fig_torsion_obs_bound": fig_torsion_obs_bound,
         "fig_cmb_spectrum_planck_comparison": fig_cmb_spectrum_planck_comparison,
+        "fig_constant_K_riemann_dimension_factor": fig_constant_K_riemann_dimension_factor,
+        "fig_einstein_tensor_trace_identity": fig_einstein_tensor_trace_identity,
+        "fig_energy_conditions_perfect_fluid_regions": fig_energy_conditions_perfect_fluid_regions,
+        "fig_exact_solutions_catalog": fig_exact_solutions_catalog,
+        "fig_adm_constraint_surface": fig_adm_constraint_surface,
+        "fig_tetrad_metric_equivalence": fig_tetrad_metric_equivalence,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,

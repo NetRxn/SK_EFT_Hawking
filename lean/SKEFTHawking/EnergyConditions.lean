@@ -517,25 +517,40 @@ theorem stiff_fluid_violates_DEC :
 formalization** (per the Phase 6f deep-research audit §3E) of the
 four classical-GR energy conditions WEC/NEC/DEC/SEC as predicates on
 an abstract bilinear form, with chain implications and explicit
-counterexample witnesses (cosmological-Λ violates SEC; ghost-scalar
-violates NEC).
+counterexample witnesses (cosmological-Λ violates SEC; stiff-fluid
+violates DEC; ghost-scalar violates NEC).
 
-Theorem roster: 7 substantive theorems, 0 sorry, 0 new axioms.
+Theorem roster: 8 substantive theorems + 1 marker, 0 sorry,
+0 new axioms.
 
 - `DEC_implies_WEC` (chain implication, direct projection)
 - `WEC_implies_NEC_under_continuity` (chain via continuity)
 - `DEC_implies_NEC_under_continuity` (composition)
 - `cosmologicalLambda_WEC` (Λ ≥ 0 satisfies WEC)
-- `cosmologicalLambda_NEC` (Λ at any value satisfies NEC vacuously)
 - `cosmologicalLambda_violates_SEC` (Λ > 0 violates SEC, explicit witness)
+- `cosmologicalLambda_NEC` (Λ at any value satisfies NEC vacuously)
 - `ghostScalar_violates_NEC` (NEC violation via explicit non-zero
   gradient and explicit null vector)
+- `stiff_fluid_violates_DEC` (DEC violation for ρ=1, p=2 with
+  explicit witness pair v=(1,9/10,0,0), w=(1,-9/10,0,0))
 
 **Anti-pattern audit (4-pattern check):** all counterexample
 witnesses are explicit (no ∃-absorption); WEC predicate has
 load-bearing timelike restriction (no P4 vacuous); chain
 implications carry continuity hypothesis explicitly; counterexample
 proofs use explicit numerical witnesses + `norm_num` / `nlinarith`.
+
+**Cross-layer Python pipeline (Phase 6f W3 backfill 2026-04-29):**
+`tests/test_energy_conditions.py` mirrors the 8 substantive theorems
+(38 pytest cases / 7 test classes). `formulas.py` ships predicate
+helpers (`is_null_vec`, `is_timelike`, `is_future_directed_timelike`)
+and condition checks (`nec_check`, `wec_check`, `dec_check`,
+`sec_check`) plus the three named tensor witnesses
+(`cosmological_lambda_stress_energy`, `ghost_scalar_stress_energy`,
+`perfect_fluid_stress_energy`). Figure
+`fig_energy_conditions_perfect_fluid_regions` visualizes the four
+condition regions in the (ρ, p) plane with the cos-Λ + stiff-fluid
+witnesses marked.
 -/
 theorem _phase6f_w3_module_summary_marker : True := trivial
 

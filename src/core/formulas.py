@@ -5653,62 +5653,302 @@ def bordism_hypothesis_count():
 
 
 # =============================================================================
-# Phase 5s: FK Gapped Interface + Modularity Theorem
+# Phase 5s: FK Gapped Interface (Cayley calibration) + Modularity Theorem
+#
+# The Fidkowski-Kitaev quartic interaction for 8 Majorana fermions is the
+# Spin(7)-invariant Hamiltonian W = Σ Ω_{abcd} γ_a γ_b γ_c γ_d where Ω is
+# the Cayley self-dual 4-form on R⁸. The 14 nonzero quartets and their
+# signs are determined by the octonion multiplication table.
+#
+# Spectrum (machine-checked via native_decide in FKGappedInterface.lean):
+#   eigenvalues   : {-14, 0, +2}   (from minimal polynomial x(x-2)(x+14)=0)
+#   multiplicities: {1, 8, 7}      (from tr(W)=0, tr(W²)=224, dim=16)
+#   spectral gap  : Δ = 14         (E₀=-14 unique → E₁=0)
+#
+# After projection onto the 8-dim even-parity (Γ=+1) sector, W has only
+# 10 nonzero entries — the Lean encoding `FK.W` stores these directly.
+# This module rebuilds W constructively from the 8 Majorana matrices and
+# the 14 Cayley quartets, then cross-validates against the sparse form.
+#
+# References:
+#   Fidkowski-Kitaev, PRB 81, 134509 (2010), Eq. 8 (arXiv:0904.2197)
+#   Fidkowski-Kitaev, PRB 83, 075103 (2011)
+#   Joyce, "Compact Manifolds with Special Holonomy", §10.5 (Cayley 4-form)
+#   Deep research: Lit-Search/Phase-5s/Fidkowski-Kitaev interaction-...md
 # =============================================================================
 
-def fk_hamiltonian():
-    """Build the 16×16 Fidkowski-Kitaev Hamiltonian.
 
-    H = W₁ + W₂ where W₁ is the 6-term intra-pair quartic interaction
-    (diagonal) and W₂ = γ₁γ₃γ₅γ₇ is the inter-pair term (anti-diagonal).
+def fk_majorana_operators():
+    """Eight Majorana operators γ₁..γ₈ as 16×16 complex matrices.
 
-    Eigenvalues: -7 (×1), -5 (×1), -1 (×4), +1 (×7), +3 (×3)
-    Ground state: (|0000⟩ - |1111⟩)/√2, unique, E₀ = -7
-    Spectral gap: Δ = E₁ - E₀ = 2
+    Built via the Jordan-Wigner tensor product representation:
+      γ₁ = σx ⊗ I ⊗ I ⊗ I       γ₅ = σz⊗σz⊗σx⊗I
+      γ₂ = σy ⊗ I ⊗ I ⊗ I       γ₆ = σz⊗σz⊗σy⊗I
+      γ₃ = σz ⊗ σx ⊗ I ⊗ I       γ₇ = σz⊗σz⊗σz⊗σx
+      γ₄ = σz ⊗ σy ⊗ I ⊗ I       γ₈ = σz⊗σz⊗σz⊗σy
+    Each γₐ is Hermitian, γₐ² = I, and {γₐ, γ_b} = 2δ_{ab}.
 
-    Lean: FKGappedInterface.lean (20 theorems, zero sorry)
-    Aristotle: N/A (native_decide)
-    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010)
+    Lean: not directly formalized — Lean's `FK.W` is the projected sparse
+    form after JW expansion; this Python helper exposes the JW γₐ for
+    Spin(7)-structure cross-validation.
+    Aristotle: N/A (linear-algebra cross-check, not a Lean theorem)
+    Source: Lit-Search/Phase-5s/Fidkowski-Kitaev interaction-...md, §Q1
+
+    Returns:
+        Length-8 list of (16, 16) complex numpy arrays.
     """
     import numpy as np
+    sx = np.array([[0, 1], [1, 0]], dtype=complex)
+    sy = np.array([[0, -1j], [1j, 0]], dtype=complex)
+    sz = np.array([[1, 0], [0, -1]], dtype=complex)
+    I2 = np.eye(2, dtype=complex)
 
-    # W1: diagonal
-    diag = np.zeros(16, dtype=int)
-    for k in range(16):
-        N = bin(k).count('1')
-        diag[k] = -2 * (2 - N) ** 2 + 2
-    W1 = np.diag(diag)
+    def kron4(a, b, c, d):
+        return np.kron(np.kron(np.kron(a, b), c), d)
 
-    # W2: anti-diagonal with sign (-1)^{b1+b3}
-    W2 = np.zeros((16, 16), dtype=int)
-    for k in range(16):
-        b1 = (k >> 3) & 1
-        b3 = (k >> 1) & 1
-        W2[k, 15 - k] = (-1) ** (b1 + b3)
+    return [
+        kron4(sx, I2, I2, I2),     # γ₁
+        kron4(sy, I2, I2, I2),     # γ₂
+        kron4(sz, sx, I2, I2),     # γ₃
+        kron4(sz, sy, I2, I2),     # γ₄
+        kron4(sz, sz, sx, I2),     # γ₅
+        kron4(sz, sz, sy, I2),     # γ₆
+        kron4(sz, sz, sz, sx),     # γ₇
+        kron4(sz, sz, sz, sy),     # γ₈
+    ]
 
-    return W1 + W2
+
+def fk_cayley_quartets():
+    """The 14 signed quartets of the Cayley self-dual 4-form on R⁸.
+
+    Joyce convention with orientation ε₁₂₃₄₅₆₇₈ = +1. Each row is a
+    Hodge-dual pair; the left and right entries have the same sign.
+
+    Lean: encoded implicitly inside `FK.W`'s sparse 10-entry definition.
+    Aristotle: N/A (input data, not a Lean theorem).
+    Source: Lit-Search/Phase-5s/Fidkowski-Kitaev interaction-...md, §Q1
+    Joyce, Compact Manifolds with Special Holonomy, §10.5
+
+    Returns:
+        List of 14 tuples (a, b, c, d, sign) with 1 ≤ a < b < c < d ≤ 8.
+    """
+    return [
+        (1, 2, 3, 4, +1), (5, 6, 7, 8, +1),
+        (1, 2, 5, 6, +1), (3, 4, 7, 8, +1),
+        (1, 2, 7, 8, +1), (3, 4, 5, 6, +1),
+        (1, 3, 5, 7, +1), (2, 4, 6, 8, +1),
+        (1, 3, 6, 8, -1), (2, 4, 5, 7, -1),
+        (1, 4, 5, 8, -1), (2, 3, 6, 7, -1),
+        (1, 4, 6, 7, -1), (2, 3, 5, 8, -1),
+    ]
+
+
+def fk_hamiltonian():
+    """Build the 16×16 FK Cayley-calibration Hamiltonian from γ₁..γ₈.
+
+    W = Σ_{(a,b,c,d,Ω)} Ω · γ_a γ_b γ_c γ_d  (14 quartic terms)
+
+    Each quartic monomial has an even number of even-indexed γ operators,
+    so the imaginary unit factors pair-cancel and W is a real integer
+    matrix. The result is symmetric (W = W^T), commutes with fermion
+    parity Γ = γ₁γ₂…γ₈, and has spectrum {-14, 0, +2} with multiplicities
+    {1, 8, 7} — verified by `fk_eigenvalues()` and matched against the
+    Lean sparse encoding `FK.W` via `fk_hamiltonian_sparse()`.
+
+    Lean: SKEFTHawking.FK.W (FKGappedInterface.lean — 12 theorems, zero
+    sorry, all native_decide). The Lean encoding stores only the 10
+    nonzero matrix entries that survive Spin(7) projection; this Python
+    helper reconstructs the same matrix from γ matrices for independent
+    cross-validation.
+    Aristotle: N/A (native_decide on integer matrix arithmetic)
+    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010), Eq. 8
+
+    Returns:
+        (16, 16) numpy int array.
+    """
+    import numpy as np
+    gammas = fk_majorana_operators()
+    W = np.zeros((16, 16), dtype=complex)
+    for a, b, c, d, sign in fk_cayley_quartets():
+        monomial = gammas[a-1] @ gammas[b-1] @ gammas[c-1] @ gammas[d-1]
+        W += sign * monomial
+    # All factors of i cancel pairwise → cast to integer.
+    assert np.allclose(W.imag, 0), "FK Cayley quartic must be real"
+    return np.round(W.real).astype(int)
+
+
+def fk_hamiltonian_sparse():
+    """Sparse 10-entry form of W matching Lean's `FK.W` definition.
+
+    The Spin(7) symmetry collapses W to 10 nonzero entries on the 8-dim
+    even-parity sector:
+      diagonal: -6 at indices {0, 15}, +2 at indices {3, 5, 6, 9, 10, 12}
+      off-diag: +8 at (0, 15) and (15, 0)
+
+    Lean: SKEFTHawking.FK.W (literal definition).
+    Aristotle: N/A.
+    Source: FKGappedInterface.lean §1, derived from full Cayley form.
+
+    Returns:
+        (16, 16) numpy int array — must equal `fk_hamiltonian()`.
+    """
+    import numpy as np
+    W = np.zeros((16, 16), dtype=int)
+    # Diagonal: |0000⟩ = -6, |1111⟩ = -6, the six |..⟩ with two 1-bits = +2
+    diag_minus_six = [0, 15]                       # parity-+ extremes
+    diag_plus_two = [3, 5, 6, 9, 10, 12]            # 6 even-parity 2-1bit states
+    for i in diag_minus_six:
+        W[i, i] = -6
+    for i in diag_plus_two:
+        W[i, i] = 2
+    W[0, 15] = 8
+    W[15, 0] = 8
+    return W
 
 
 def fk_eigenvalues():
-    """Eigenvalues and multiplicities of the FK Hamiltonian.
+    """Eigenvalues and Spin(7)-irrep multiplicities of W.
 
-    Lean: complete_spectrum, multiplicity_trace_check, multiplicity_frobenius_check
+    The Cayley calibration's Spin(7) symmetry decomposes the 16-dim
+    Fock space as
+       Γ=+1 (even parity, 8-dim) → 1 ⊕ 7  (Spin(7) singlet + vector)
+       Γ=-1 (odd parity, 8-dim)  → 8      (Spin(7) spinor)
+    with W eigenvalues {-14, +2, 0} on these reps respectively. The
+    minimal polynomial x(x-2)(x+14) = 0 plus tr(W) = 0 plus tr(W²) = 224
+    uniquely determine the multiplicities.
+
+    Lean: SKEFTHawking.FK.W_minimal_poly + W_trace + W_frobenius +
+    multiplicity_system (FKGappedInterface.lean).
+    Aristotle: N/A (native_decide).
+    Source: Lit-Search/Phase-5s/Fidkowski-Kitaev interaction-...md, §Q2
+
+    Returns:
+        Dict mapping eigenvalue (int) to multiplicity (int). Sums to 16.
     """
-    return {
-        -7: 1,   # unique ground state
-        -5: 1,   # first excited
-        -1: 4,
-        1: 7,
-        3: 3,
-    }
+    return {-14: 1, 0: 8, +2: 7}
 
 
 def fk_spectral_gap():
-    """Spectral gap of the FK Hamiltonian: Δ = E₁ - E₀ = -5 - (-7) = 2.
+    """Spectral gap Δ = E₁ - E₀ = 0 - (-14) = 14.
 
-    Lean: spectral_gap_positive (FKGappedInterface.lean)
+    The ground state at E₀ = -14 is unique (multiplicity 1, the Spin(7)
+    singlet); the first excited level at E₁ = 0 is 8-fold degenerate
+    (the odd-parity sector annihilated by W).
+
+    Lean: SKEFTHawking.FK.spectral_gap + spectral_gap_pos (norm_num).
+    Aristotle: N/A.
+    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010), §III.
+
+    Returns:
+        Spectral gap (int): 14.
     """
-    return 2
+    return 14
+
+
+def fk_ground_state_vector():
+    """The unique ground-state eigenvector of W, eigenvalue -14.
+
+    |GS⟩ = (|0000⟩ - |1111⟩)/√2  — the Spin(7) singlet in the
+    even-parity sector. Returned in unnormalised integer form to match
+    Lean's `FK.gs_vec` (so W·gs_vec = -14·gs_vec is an exact integer
+    identity provable by native_decide).
+
+    Lean: SKEFTHawking.FK.gs_vec + eigenvalue_ground.
+    Aristotle: N/A.
+    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010), §III.
+
+    Returns:
+        (16,) numpy int array with v[0] = +1, v[15] = -1, else 0.
+    """
+    import numpy as np
+    v = np.zeros(16, dtype=int)
+    v[0] = 1
+    v[15] = -1
+    return v
+
+
+def fk_parity_matrix():
+    """Fermion parity (-1)^F = γ₁γ₂…γ₈ = σz⊗σz⊗σz⊗σz.
+
+    Diagonal 16×16 with +1 on the 8 even-parity states and -1 on the
+    8 odd-parity states (where parity = popcount mod 2).
+
+    Lean: SKEFTHawking.FK.parity (FKGappedInterface.lean).
+    Aristotle: N/A.
+    Source: Lit-Search/Phase-5s/Fidkowski-Kitaev interaction-...md, §Q3.
+
+    Returns:
+        (16, 16) numpy int array.
+    """
+    import numpy as np
+    return np.diag([(-1) ** bin(k).count('1') for k in range(16)])
+
+
+def fk_minimal_polynomial_residual(W):
+    """Compute W³ + 12W² - 28W; should equal the zero matrix.
+
+    The minimal polynomial p(x) = x(x-2)(x+14) = x³ + 12x² - 28x has
+    the three eigenvalues {-14, 0, +2} as its only roots, so any
+    matrix with this spectrum satisfies p(W) = 0.
+
+    Lean: SKEFTHawking.FK.W_minimal_poly (native_decide).
+    Aristotle: N/A.
+    Source: Lit-Search/Phase-5s/Fidkowski-Kitaev interaction-...md, §Q2.
+
+    Args:
+        W: 16×16 integer matrix (e.g., output of `fk_hamiltonian()`).
+
+    Returns:
+        16×16 numpy int array — should be all zeros.
+    """
+    import numpy as np
+    return W @ W @ W + 12 * (W @ W) - 28 * W
+
+
+def fk_dimensional_ladder_evidence():
+    """Summary of the gapped-interface dimensional-ladder evidence stack.
+
+    The `gapped_interface_axiom` (SPTClassification.lean) is the project's
+    sole load-bearing axiom. The Phase-5s ladder strengthens it with two
+    machine-checked dimensional analogs and one open conjecture:
+      1+1D: VillainHamiltonian.k3450_gappable (3450 model, K-matrix)
+      2+1D: SKEFTHawking.FK.fk_summary (FK 8-Majorana, Cayley calibration)
+      3+1D: gapped_interface_axiom (still axiomatized — the conjecture)
+
+    The bridge theorem `gapped_interface_dimensional_ladder` in
+    SPTClassification.lean § "Dimensional ladder of evidence for
+    gapped_interface_axiom" compiles the 1+1D witnesses into a single
+    bundled statement consumed by AXIOM_METADATA's `evidence_ladder`
+    field for the dashboard's Proof Architecture tab.
+
+    Lean: SKEFTHawking.SPTClassification.gapped_interface_dimensional_ladder.
+    Aristotle: N/A.
+    Source: Phase 5s Wave 4 ship memo (2026-04-18).
+
+    Returns:
+        Dict with one entry per dimension: status, witness theorem name,
+        framework, gap value (where defined).
+    """
+    return {
+        '1+1D': {
+            'status': 'PROVED',
+            'witness': 'VillainHamiltonian.k3450_gappable',
+            'framework': 'K-matrix gappability (3450 model)',
+            'gap': None,    # K-matrix theory; no single integer gap
+        },
+        '2+1D': {
+            'status': 'PROVED',
+            'witness': 'SKEFTHawking.FK.fk_summary',
+            'framework': 'Cayley-calibration Spin(7) interaction (FK 2010)',
+            'gap': 14,
+        },
+        '3+1D': {
+            'status': 'AXIOMATIZED',
+            'witness': 'gapped_interface_axiom',
+            'framework': 'TPF conjecture — open at literature frontier',
+            'gap': None,
+        },
+    }
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -9302,3 +9542,845 @@ def einstein_cartan_extension_holds(Lambda_UV, N_f, alpha_EC,
         Lambda_UV, N_f, alpha_EC, channel='kostelecky'
     )
     return bool(match_ok and amplitude_pos and bound_ok)
+
+
+# ============================================================================
+# Phase 6f Wave 1 — Classical-GR Curvature Algebra
+# ============================================================================
+#
+# Coordinate-based (Fin 4 → ℝ matrix-form) Riemann/Ricci/scalar curvature
+# numerical layer that mirrors the Lean Curvature.lean module. Pure-algebraic
+# infrastructure — no new physical constants. Used for cross-layer agreement
+# checks (Stage 6 tests verify that Python evaluation of the Lean theorems
+# produces the right numerical values, e.g., constant-sectional-curvature
+# space has Ric = (n-1) K g and R = n(n-1) K).
+
+
+def riemann_constant_sectional_curvature(K, g):
+    """Riemann (1,3)-tensor of a constant-sectional-curvature space.
+
+    Returns ``R^ρ_{σμν} = K (g_{σν} δ^ρ_μ − g_{σμ} δ^ρ_ν)`` as a 4-D
+    nested list ``R[ρ][σ][μ][ν]`` (each index ranging over 0..3).
+
+    Args:
+        K: scalar sectional curvature
+        g: 4×4 metric matrix (callable g(i,j) or list-of-lists)
+
+    Lean: SKEFTHawking.Curvature.constantSectionalRiemann
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §3.2
+    """
+    def gv(i, j):
+        return g[i][j] if hasattr(g, '__getitem__') else g(i, j)
+    R = [[[[0.0] * 4 for _ in range(4)] for _ in range(4)] for _ in range(4)]
+    for rho in range(4):
+        for sig in range(4):
+            for mu in range(4):
+                for nu in range(4):
+                    delta_rho_mu = 1.0 if rho == mu else 0.0
+                    delta_rho_nu = 1.0 if rho == nu else 0.0
+                    R[rho][sig][mu][nu] = float(
+                        K * (gv(sig, nu) * delta_rho_mu
+                             - gv(sig, mu) * delta_rho_nu)
+                    )
+    return R
+
+
+def ricci_from_riemann(R):
+    """Ricci tensor by tracing first and third Riemann indices.
+
+    ``Ric_{μν} = Σ_α R^α_{μαν}`` over ``α ∈ Fin 4``.
+
+    Lean: SKEFTHawking.Curvature.ricciOf
+    Aristotle: manual
+    Source: Carroll, *Spacetime and Geometry* (2004) §3.6
+    """
+    Ric = [[0.0] * 4 for _ in range(4)]
+    for mu in range(4):
+        for nu in range(4):
+            Ric[mu][nu] = float(sum(R[a][mu][a][nu] for a in range(4)))
+    return Ric
+
+
+def scalar_curvature_from_ricci(Ric, g_inv):
+    """Scalar curvature ``R = Σ_{μν} g^{μν} Ric_{μν}`` (4-D sum).
+
+    Lean: SKEFTHawking.Curvature.scalarOf
+    Aristotle: manual
+    Source: Carroll, *Spacetime and Geometry* (2004) §3.6
+    """
+    def gi(i, j):
+        return g_inv[i][j] if hasattr(g_inv, '__getitem__') else g_inv(i, j)
+    return float(sum(
+        gi(mu, nu) * Ric[mu][nu] for mu in range(4) for nu in range(4)
+    ))
+
+
+def constant_sectional_ricci_predicted(K, g, dim=4):
+    """Predicted Ricci ``Ric_{μν} = (n−1) K g_{μν}`` for a constant-K space.
+
+    Returned as a 4×4 list. Sanity-check companion to
+    ``ricci_from_riemann(riemann_constant_sectional_curvature(K, g))``;
+    the two must agree pointwise (used in cross-layer test).
+
+    Lean: SKEFTHawking.Curvature.ricci_constantSectional_eq
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §3.2
+    """
+    def gv(i, j):
+        return g[i][j] if hasattr(g, '__getitem__') else g(i, j)
+    coeff = float(dim - 1) * float(K)
+    return [[coeff * gv(i, j) for j in range(4)] for i in range(4)]
+
+
+def constant_sectional_scalar_predicted(K, dim=4):
+    """Predicted scalar curvature ``R = n(n−1) K`` for a constant-K space.
+
+    Lean: SKEFTHawking.Curvature.scalar_constantSectional_eq
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §3.2
+    """
+    return float(dim) * float(dim - 1) * float(K)
+
+
+def first_bianchi_residual(R):
+    """Cyclic-sum residual of the first algebraic Bianchi identity.
+
+    Returns the maximum absolute value of
+    ``R^ρ_{σμν} + R^ρ_{μνσ} + R^ρ_{νσμ}`` over all index choices.
+    For a torsion-free connection this equals 0; non-zero residuals
+    indicate either non-zero torsion or a bug.
+
+    Lean: SKEFTHawking.Curvature.FirstBianchi (predicate)
+    Aristotle: manual
+    Source: Kobayashi & Nomizu, *Foundations of Differential Geometry*
+            Vol. I, Thm III.5.3
+    """
+    worst = 0.0
+    for rho in range(4):
+        for sig in range(4):
+            for mu in range(4):
+                for nu in range(4):
+                    s = R[rho][sig][mu][nu] + R[rho][mu][nu][sig] + \
+                        R[rho][nu][sig][mu]
+                    if abs(s) > worst:
+                        worst = abs(s)
+    return float(worst)
+
+
+def antisym_last_two_residual(R):
+    """Antisymmetry-in-last-two-indices residual: ``R^ρ_{σμν} + R^ρ_{σνμ}``.
+
+    Returns the max absolute value over all index choices. Audit-flagged
+    P3-trivial when Riemann is built from a connection commutator —
+    surfaces here for sanity-check use only.
+
+    Lean: SKEFTHawking.Curvature.AntisymLastTwo (predicate)
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §3.2
+    """
+    worst = 0.0
+    for rho in range(4):
+        for sig in range(4):
+            for mu in range(4):
+                for nu in range(4):
+                    s = R[rho][sig][mu][nu] + R[rho][sig][nu][mu]
+                    if abs(s) > worst:
+                        worst = abs(s)
+    return float(worst)
+
+
+def einstein_tensor_from_ricci(Ric, R_scalar, g):
+    """Einstein tensor ``G_{μν} := Ric_{μν} − (1/2) R g_{μν}``.
+
+    Returns a 4×4 list. ``R_scalar`` is the scalar curvature; physical
+    content arises by setting ``R_scalar = scalar_curvature_from_ricci(Ric, g_inv)``.
+
+    Lean: SKEFTHawking.EinsteinTensor.einsteinTensor
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §3.2
+    """
+    def gv(i, j):
+        return g[i][j] if hasattr(g, '__getitem__') else g(i, j)
+    return [
+        [float(Ric[mu][nu] - 0.5 * R_scalar * gv(mu, nu))
+         for nu in range(4)]
+        for mu in range(4)
+    ]
+
+
+def einstein_tensor_trace(G, g_inv):
+    """Trace of Einstein tensor ``G^μ_μ = Σ_{μν} g^{μν} G_{μν}``.
+
+    For ``R_scalar = scalar_curvature_from_ricci(Ric, g_inv)`` and
+    ``Σ_{μν} g^{μν} g_{μν} = 4`` (4D), this equals ``-R_scalar``.
+
+    Lean: SKEFTHawking.EinsteinTensor.einsteinTensor_trace_eq_neg_scalar
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §3.2
+    """
+    def gi(i, j):
+        return g_inv[i][j] if hasattr(g_inv, '__getitem__') else g_inv(i, j)
+    return float(sum(
+        gi(mu, nu) * G[mu][nu] for mu in range(4) for nu in range(4)
+    ))
+
+
+def constant_sectional_einstein_tensor_predicted(K, g):
+    """Predicted ``G_{μν} = -3K · g_{μν}`` for a constant-K space in 4D.
+
+    Sanity-check companion: must agree pointwise with
+    ``einstein_tensor_from_ricci(constant_sectional_ricci_predicted(K, g),
+    constant_sectional_scalar_predicted(K), g)``.
+
+    Lean: SKEFTHawking.EinsteinTensor.constantSectional_einsteinTensor_eq
+    Aristotle: manual
+    Source: MTW, *Gravitation* (1973) §17.2
+    """
+    def gv(i, j):
+        return g[i][j] if hasattr(g, '__getitem__') else g(i, j)
+    coeff = -3.0 * float(K)
+    return [[coeff * gv(i, j) for j in range(4)] for i in range(4)]
+
+
+def de_sitter_lambda_from_K(K):
+    """De Sitter cosmological constant from sectional curvature: ``Λ = 3K``.
+
+    Algebraic relation arising from the Λ-vacuum equation
+    ``G_{μν} + Λ g_{μν} = 0`` on a constant-K Riemann witness in 4D.
+    In physics notation, ``H² = K = Λ/3`` with ``H`` the de Sitter
+    Hubble parameter.
+
+    Lean: SKEFTHawking.EinsteinTensor.constantSectional_lambda_vacuum_iff
+    Aristotle: manual
+    Source: MTW, *Gravitation* (1973) §17.2; Carroll §4.2
+    """
+    return 3.0 * float(K)
+
+
+def minkowski_dim_contraction_value():
+    """Self-inverse contraction of Minkowski metric: ``Σ_{μν} η^{μν} η_{μν}``.
+
+    For the (-,+,+,+) Minkowski metric with ``η^{μν} = η_{μν}``,
+    this equals 4 (= dimension of spacetime).
+
+    Lean: SKEFTHawking.EinsteinTensor.minkowski_dim_contraction
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §2 (Minkowski conventions)
+    """
+    return 4.0
+
+
+# ============================================================================
+# Phase 6f Wave 3 — Classical-GR Energy Conditions
+# ============================================================================
+#
+# Coordinate-based (Vec4 = Fin 4 → ℝ) numerical layer mirroring the Lean
+# EnergyConditions.lean module. Provides predicate helpers (null,
+# timelike, future-directed-timelike), per-witness energy-condition
+# checks (NEC/WEC/DEC/SEC), and three canonical stress-energy tensor
+# witnesses (cosmological-Λ, ghost-scalar, perfect-fluid) used by the
+# Lean module's counterexample theorems. Pure-algebraic infrastructure
+# — no new physical constants. Used for cross-layer agreement checks
+# (Stage 6 tests reproduce the Lean predicates and witness numerics).
+
+
+def apply_bilinear(T, u, v):
+    """Evaluate a bilinear form ``T_{μν}`` on vectors u, v.
+
+    ``T(u, v) = Σ_{μν} T[μ][ν] · u[μ] · v[ν]``
+
+    Lean: bilinear-form evaluation is point-wise application in
+    SKEFTHawking.EnergyConditions; this helper realizes that pointwise
+    application for matrix-encoded T (and metric g).
+    Aristotle: manual
+    Source: Hawking & Ellis, *The Large Scale Structure of Space-Time*
+            (1973) §4.3 (bilinear-form encoding of stress-energy).
+    """
+    return float(sum(
+        T[mu][nu] * u[mu] * v[nu] for mu in range(4) for nu in range(4)
+    ))
+
+
+def is_null_vec(g, k, atol=1e-12):
+    """Predicate ``IsNull g k``: g(k,k) = 0 AND k ≠ 0.
+
+    The non-zero-vector clause is load-bearing: the zero vector is
+    metric-null in any signature but is not a physical null direction.
+
+    Lean: SKEFTHawking.EnergyConditions.IsNull
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    g_kk = apply_bilinear(g, k, k)
+    return abs(g_kk) < atol and any(abs(ki) > atol for ki in k)
+
+
+def is_timelike(g, v):
+    """Predicate ``IsTimelike g v``: g(v,v) < 0 (signature (-,+,+,+)).
+
+    Lean: SKEFTHawking.EnergyConditions.IsTimelike
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    return apply_bilinear(g, v, v) < 0.0
+
+
+def is_future_directed_timelike(g, t, v):
+    """Predicate ``IsFutureDirectedTimelike g t v``: timelike AND g(t,v) < 0.
+
+    The time-direction parameter t is supplied externally so the
+    definition is signature-agnostic and orientation-explicit (no
+    implicit choice of "the" time direction).
+
+    Lean: SKEFTHawking.EnergyConditions.IsFutureDirectedTimelike
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    return is_timelike(g, v) and apply_bilinear(g, t, v) < 0.0
+
+
+def nec_check(T, k):
+    """Pointwise NEC realization: T(k,k) ≥ 0 at the given null witness k.
+
+    Caller is responsible for checking ``is_null_vec(g, k)``; this
+    helper realizes the predicate body at a single witness (the form
+    used by the Lean counterexample theorems).
+
+    Lean: SKEFTHawking.EnergyConditions.NEC
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    return apply_bilinear(T, k, k) >= 0.0
+
+
+def wec_check(T, v):
+    """Pointwise WEC realization: T(v,v) ≥ 0 at the given future-directed
+    timelike witness v.
+
+    Lean: SKEFTHawking.EnergyConditions.WEC
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    return apply_bilinear(T, v, v) >= 0.0
+
+
+def dec_check(T, v, w):
+    """Pointwise DEC realization at (v, w): T(v,v) ≥ 0 AND T(w,w) ≥ 0
+    AND T(v, w) ≥ 0 (the future-directed-causal flux condition encoded
+    via the bilinear pairing on a second future-directed timelike w).
+
+    Lean: SKEFTHawking.EnergyConditions.DEC
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.2.
+    """
+    return (apply_bilinear(T, v, v) >= 0.0
+            and apply_bilinear(T, w, w) >= 0.0
+            and apply_bilinear(T, v, w) >= 0.0)
+
+
+def sec_check(T, g, trT, v):
+    """Pointwise SEC realization: ``(T - (1/2) trT g)(v, v) ≥ 0`` at the
+    given future-directed timelike witness v.
+
+    Lean: SKEFTHawking.EnergyConditions.SEC
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    return (apply_bilinear(T, v, v)
+            - 0.5 * float(trT) * apply_bilinear(g, v, v)) >= 0.0
+
+
+def cosmological_lambda_stress_energy(Lambda, g):
+    """Cosmological-Λ stress-energy: ``T_μν = -Λ g_μν``.
+
+    Returns a 4×4 list (matrix encoding of the bilinear form).
+    De Sitter equation of state: ρ = Λ, p = -Λ. Satisfies WEC/NEC/DEC
+    for Λ ≥ 0; violates SEC for Λ > 0.
+
+    Lean: SKEFTHawking.EnergyConditions.cosmologicalLambdaTensor
+    Aristotle: manual
+    Source: Carroll, *Spacetime and Geometry* (2004) §4.6.
+    """
+    def gv(i, j):
+        return g[i][j] if hasattr(g, '__getitem__') else g(i, j)
+    return [[float(-Lambda) * gv(i, j) for j in range(4)] for i in range(4)]
+
+
+def ghost_scalar_stress_energy(n):
+    """Ghost-scalar stress-energy: ``T_μν = -n_μ n_ν``.
+
+    Simplified ghost-scalar form (drops the (1/2) g(...) Lagrangian
+    term; both forms vanish on null vectors so the NEC-violation
+    content is preserved). Returns a 4×4 list.
+
+    Canonical NEC violator: at any non-zero null k with ⟨n, k⟩ ≠ 0,
+    T(k, k) = -⟨n, k⟩² < 0.
+
+    Lean: SKEFTHawking.EnergyConditions.ghostScalarTensor
+    Aristotle: manual
+    Source: Carroll, *Spacetime and Geometry* (2004) §4.6.
+    """
+    return [[float(-1.0) * float(n[mu]) * float(n[nu])
+             for nu in range(4)] for mu in range(4)]
+
+
+def perfect_fluid_stress_energy(rho, p):
+    """Perfect-fluid stress-energy in rest frame ``u = (1,0,0,0)``,
+    signature (-,+,+,+): ``T = diag(ρ, p, p, p)``.
+
+    For arbitrary 4-velocity u the formula is
+    ``T_μν = (ρ + p) u_μ u_ν + p g_μν``; we specialize to the rest
+    frame here for explicitness (matching the Lean witness).
+
+    Lean: SKEFTHawking.EnergyConditions.perfectFluidTensor
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3 (Type I stress-energy).
+    """
+    rho_f = float(rho)
+    p_f = float(p)
+    return [
+        [rho_f, 0.0, 0.0, 0.0],
+        [0.0, p_f, 0.0, 0.0],
+        [0.0, 0.0, p_f, 0.0],
+        [0.0, 0.0, 0.0, p_f],
+    ]
+
+
+def perfect_fluid_trace_minkowski(rho, p):
+    """Trace of perfect-fluid stress-energy in Minkowski signature
+    (-,+,+,+): ``tr(T) = g^{μν} T_μν = -ρ + 3p``.
+
+    For ``T = diag(ρ, p, p, p)`` and ``η^{μν} = diag(-1, +1, +1, +1)``
+    (Minkowski self-inverse), the trace is ``-ρ + 3p`` directly.
+    This is the trT parameter consumed by ``sec_check`` for the
+    canonical SEC counterexamples.
+
+    Lean: trace appears as the trT parameter on
+    SKEFTHawking.EnergyConditions.SEC; the cosmological-Λ case
+    cosmologicalLambda_violates_SEC uses trT = -4Λ explicitly.
+    Aristotle: manual
+    Source: Hawking & Ellis 1973 §4.3.
+    """
+    return float(-rho + 3.0 * p)
+
+
+# ============================================================================
+# Phase 6f Wave 4 — Exact Solutions of the Einstein Field Equations
+# ============================================================================
+#
+# Coordinate-based numerical layer mirroring the Lean ExactSolutions.lean
+# module. Provides named-quantity helpers for Minkowski, de Sitter,
+# Anti-de Sitter, and Schwarzschild solutions. Pure-algebraic
+# infrastructure — no new physical constants. Used for cross-layer
+# agreement checks (Stage 6 tests reproduce the Lean named identities).
+
+
+def deSitter_lambda_from_K(K):
+    """De Sitter cosmological constant from sectional curvature: ``Λ = 3K``.
+
+    For physical de Sitter at Hubble parameter H (so K = H²),
+    ``Λ = 3 H²``.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitter_lambda_vacuum_iff,
+          SKEFTHawking.ExactSolutions.deSitter_lambda_eq_three_H_squared
+    Aristotle: manual
+    Source: Wald, *General Relativity* (1984) §5.2; Carroll §8.3.
+    """
+    return 3.0 * float(K)
+
+
+def deSitter_Ricci_predicted(K):
+    """Predicted de Sitter Ricci tensor: ``Ric_μν = 3K η_μν`` (4×4 list).
+
+    Specialization of constant-sectional-curvature `Ric = (n-1) K g`
+    to `n = 4` and Minkowski metric η.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitter_Ricci_eq
+    Aristotle: manual
+    Source: Wald 1984 §5.2.
+    """
+    eta = [
+        [-1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]
+    coeff = 3.0 * float(K)
+    return [[coeff * eta[i][j] for j in range(4)] for i in range(4)]
+
+
+def deSitter_scalar_predicted(K):
+    """Predicted de Sitter scalar curvature: ``R = 12K``.
+
+    Specialization of `R = n(n-1) K` to n = 4. For physical
+    de Sitter at Hubble H, R = 12 H².
+
+    Lean: SKEFTHawking.ExactSolutions.deSitter_scalar_eq
+    Aristotle: manual
+    Source: Wald 1984 §5.2.
+    """
+    return 12.0 * float(K)
+
+
+def deSitter_einsteinTensor_predicted(K):
+    """Predicted de Sitter Einstein tensor: ``G_μν = -3K η_μν``.
+
+    Specialization of constantSectional_einsteinTensor_eq to η.
+    Returns a 4×4 list.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitter_einsteinTensor_eq
+    Aristotle: manual
+    Source: MTW *Gravitation* (1973) §17.2.
+    """
+    eta = [
+        [-1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]
+    coeff = -3.0 * float(K)
+    return [[coeff * eta[i][j] for j in range(4)] for i in range(4)]
+
+
+def deSitter_hubble_radius(H):
+    """De Sitter cosmological horizon (Hubble) radius: ``r_H = 1/H``.
+
+    Gibbons-Hawking 1977 §III. For dS₄ at Hubble parameter H > 0.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitterHubbleRadius (def)
+    Aristotle: manual
+    Source: G.W. Gibbons & S.W. Hawking, *Phys. Rev. D* **15**, 2738
+            (1977).
+    """
+    return 1.0 / float(H)
+
+
+def deSitter_surface_gravity(H):
+    """De Sitter surface gravity: ``κ_dS = H``. The Hubble parameter
+    doubles as the dS surface gravity at the cosmological horizon.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitterKappa (def)
+    Aristotle: manual
+    Source: Gibbons-Hawking 1977.
+    """
+    return float(H)
+
+
+def deSitter_hawking_temp(H):
+    """De Sitter Hawking temperature: ``T_H_dS = H / (2π)``.
+    Gibbons-Hawking 1977 universal result.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitterHawkingTemp (def),
+          SKEFTHawking.ExactSolutions.deSitter_T_H_eq_kappa_over_2pi
+    Aristotle: manual
+    Source: Gibbons-Hawking 1977.
+    """
+    import math
+    return float(H) / (2.0 * math.pi)
+
+
+def ads_lambda_from_radius(ell):
+    """Anti-de Sitter cosmological constant from AdS radius:
+    ``Λ_AdS = -3/ℓ²``.
+
+    Setting K = -1/ℓ² gives Λ = 3K = -3/ℓ² < 0.
+
+    Lean: SKEFTHawking.ExactSolutions.ads_lambda_eq_neg_three_over_ell_sq
+    Aristotle: manual
+    Source: AdS/CFT review literature (e.g., Maldacena 1998).
+    """
+    return -3.0 / (float(ell) ** 2)
+
+
+def schwarzschild_horizon_radius(M):
+    """Schwarzschild horizon radius: ``r_H = 2M``.
+
+    Lean: SKEFTHawking.ExactSolutions.schwarzschildHorizonRadius (def)
+    Aristotle: manual
+    Source: K. Schwarzschild, 1916.
+    """
+    return 2.0 * float(M)
+
+
+def schwarzschild_kappa(M):
+    """Schwarzschild surface gravity: ``κ = 1/(4M)``.
+
+    Bardeen-Carter-Hawking 1973.
+
+    Lean: SKEFTHawking.ExactSolutions.schwarzschildKappa (def),
+          SKEFTHawking.ExactSolutions.schwarzschild_kappa_eq
+    Aristotle: manual
+    Source: Bardeen, Carter, Hawking, *Commun. Math. Phys.* **31**,
+            161 (1973).
+    """
+    return 1.0 / (4.0 * float(M))
+
+
+def schwarzschild_hawking_temp(M):
+    """Schwarzschild Hawking temperature: ``T_H = 1/(8πM)``.
+
+    Hawking 1975. The universal Hawking-Unruh formula T_H = κ/(2π)
+    applied to Schwarzschild surface gravity κ = 1/(4M).
+
+    Lean: SKEFTHawking.ExactSolutions.schwarzschildHawkingTemp (def),
+          SKEFTHawking.ExactSolutions.schwarzschild_T_H_times_M,
+          SKEFTHawking.ExactSolutions.schwarzschild_T_H_eq_kappa_over_2pi
+    Aristotle: manual
+    Source: S.W. Hawking, *Commun. Math. Phys.* **43**, 199 (1975).
+    """
+    import math
+    return 1.0 / (8.0 * math.pi * float(M))
+
+
+def schwarzschild_horizon_area(M):
+    """Schwarzschild event-horizon area: ``A_H = 16π M²``.
+
+    The horizon is a 2-sphere of radius r_H = 2M:
+    ``A = 4π · (2M)² = 16π M²``.
+
+    Lean: SKEFTHawking.ExactSolutions.schwarzschildArea (def),
+          SKEFTHawking.ExactSolutions.schwarzschild_area_eq_16pi_M_sq
+    Aristotle: manual
+    Source: Hawking 1975.
+    """
+    import math
+    return 16.0 * math.pi * float(M) ** 2
+
+
+def schwarzschild_bekenstein_hawking_entropy(M):
+    """Schwarzschild Bekenstein-Hawking entropy: ``S_BH = 4π M²``.
+
+    From the area formula and Bekenstein's S = A/4 (geometric units):
+    ``S_BH = (16π M²) / 4 = 4π M²``.
+
+    Lean: SKEFTHawking.ExactSolutions.schwarzschildBHEntropy (def),
+          SKEFTHawking.ExactSolutions.schwarzschild_S_BH_eq_4pi_M_sq
+    Aristotle: manual
+    Source: J.D. Bekenstein, *Phys. Rev. D* **7**, 2333 (1973);
+            S.W. Hawking, *Phys. Rev. D* **13**, 191 (1976).
+    """
+    import math
+    return 4.0 * math.pi * float(M) ** 2
+
+
+def schwarzschild_g_tt(M, r):
+    """Schwarzschild g_tt component: ``g_tt(r) = -(1 - 2M/r)``.
+
+    Returns the time-time component of the Schwarzschild metric in
+    static coordinates (signature −+++). Sign characterizes the
+    causal nature of the t-coordinate:
+    - r > 2M: g_tt < 0 (t timelike)
+    - r = 2M: g_tt = 0 (t null at horizon)
+    - 0 < r < 2M: g_tt > 0 (t spacelike inside horizon)
+
+    Lean: SKEFTHawking.ExactSolutions.schwarzschild_g_tt_outside_horizon_neg,
+          SKEFTHawking.ExactSolutions.schwarzschild_g_tt_at_horizon_zero,
+          SKEFTHawking.ExactSolutions.schwarzschild_g_tt_inside_horizon_pos
+    Aristotle: manual
+    Source: Wald 1984 §6.1.
+    """
+    return -1.0 + 2.0 * float(M) / float(r)
+
+
+# ============================================================================
+# Phase 6f Wave 5 — ADM (3+1) Formalism
+# ============================================================================
+#
+# Coordinate-based numerical layer mirroring the Lean ADMFormalism.lean
+# module. Provides ADM block-decomposition helpers + Hamiltonian and
+# momentum constraint evaluators + ADM mass extraction for representative
+# spacetimes. Pure-algebraic infrastructure.
+
+
+def adm_four_metric_g00(N, gamma, N_shift):
+    """ADM 4-metric `g_{00}` component:
+    ``g_{00} = -N² + γ_{ij} N^i N^j``
+
+    Args:
+        N: lapse function (scalar)
+        gamma: 3×3 spatial metric γ_{ij} (list of lists)
+        N_shift: shift vector N^i (length-3 list)
+
+    Lean: SKEFTHawking.ADMFormalism.admFourMetric_00
+    Aristotle: manual
+    Source: Wald 1984 §10.2; MTW 1973 §21.
+    """
+    N = float(N)
+    contraction = sum(
+        N_shift[i] * sum(gamma[i][j] * N_shift[j] for j in range(3))
+        for i in range(3)
+    )
+    return float(-N ** 2 + contraction)
+
+
+def adm_four_metric_g0i(gamma, N_shift, i):
+    """ADM 4-metric `g_{0i}` component (i = 0, 1, 2 for spatial):
+    ``g_{0i} = γ_{ij} N^j``
+
+    Lean: SKEFTHawking.ADMFormalism.admFourMetric_0i
+    Aristotle: manual
+    Source: Wald 1984 §10.2.
+    """
+    return float(sum(gamma[i][j] * N_shift[j] for j in range(3)))
+
+
+def extrinsic_curvature_trace(K, gamma_inv):
+    """Mean curvature (trace of extrinsic curvature):
+    ``tr K = γ^{ij} K_{ij}``
+
+    Lean: SKEFTHawking.ADMFormalism.extrinsicCurvatureTrace
+    Aristotle: manual
+    Source: Wald 1984 §10.2.
+    """
+    return float(sum(
+        gamma_inv[i][j] * K[i][j] for i in range(3) for j in range(3)
+    ))
+
+
+def extrinsic_curvature_squared(K, gamma_inv):
+    """K-squared contraction: ``K_{ij} K^{ij} = γ^{ik} γ^{jl} K_{ij} K_{kl}``
+
+    Lean: SKEFTHawking.ADMFormalism.extrinsicCurvatureSquared
+    Aristotle: manual
+    Source: Wald 1984 §10.2.
+    """
+    total = 0.0
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                for l_idx in range(3):
+                    total += (gamma_inv[i][k] * gamma_inv[j][l_idx]
+                              * K[i][j] * K[k][l_idx])
+    return float(total)
+
+
+def hamiltonian_constraint(R3, trK, K_sq, rho):
+    """ADM Hamiltonian constraint (Wald 1984 Eq. 10.2.28):
+    ``H = ^(3)R + (tr K)² - K_{ij} K^{ij} - 16π G ρ``
+
+    For G = 1 (geometric units).
+
+    Lean: SKEFTHawking.ADMFormalism.hamiltonianConstraint
+    Aristotle: manual
+    Source: Wald 1984 §10.2 Eq. 10.2.28.
+    """
+    import math
+    return float(R3 + trK ** 2 - K_sq - 16.0 * math.pi * rho)
+
+
+def momentum_constraint(divK_trace_free, j_i):
+    """ADM momentum constraint at spatial index i (Wald 1984 Eq. 10.2.29):
+    ``M^i = D_j(K^{ij} - γ^{ij} K) - 8π G j^i``
+
+    Args:
+        divK_trace_free: D_j(K^{ij} - γ^{ij} K) at index i (externally
+            supplied since computing ∇ requires ∂_μ machinery)
+        j_i: matter momentum density at index i
+
+    Lean: SKEFTHawking.ADMFormalism.momentumConstraint_i
+    Aristotle: manual
+    Source: Wald 1984 §10.2 Eq. 10.2.29.
+    """
+    import math
+    return float(divK_trace_free - 8.0 * math.pi * j_i)
+
+
+def schwarzschild_adm_mass(M):
+    """Schwarzschild ADM mass: equals the metric parameter M.
+
+    At constant-t slicing (moment-of-time-symmetry, K = 0), the ADM
+    mass extracted from the asymptotic falloff equals M directly
+    (Wald 1984 §11.2 Eq. 11.2.14).
+
+    Lean: SKEFTHawking.ADMFormalism.schwarzschildADMMass (def),
+          SKEFTHawking.ADMFormalism.schwarzschild_adm_mass_eq_M
+    Aristotle: manual
+    Source: Wald 1984 §11.2.
+    """
+    return float(M)
+
+
+def desitter_adm_mass():
+    """De Sitter ADM mass: vanishes (cosmological-Λ vacuum has no
+    isolated point-mass source).
+
+    Lean: SKEFTHawking.ADMFormalism.deSitterADMMass (def),
+          SKEFTHawking.ADMFormalism.deSitter_adm_mass_eq_zero
+    Aristotle: manual
+    Source: Wald 1984 §11.2.
+    """
+    return 0.0
+
+
+# ============================================================================
+# Phase 6f Wave 6 — Tetrad (Vierbein) Formalism
+# ============================================================================
+#
+# Coordinate-based numerical layer mirroring the Lean TetradFormalism.lean
+# module. Provides tetrad-induced metric construction + Minkowski tetrad +
+# tetrad determinant. Pure-algebraic infrastructure.
+
+
+def tetrad_induced_metric(e, mu, nu):
+    """Tetrad-induced metric: ``g_μν = η_{ab} e^a_μ e^b_ν``.
+
+    Args:
+        e: 4×4 tetrad matrix `e[a][μ]`
+        mu, nu: coordinate indices (0..3)
+
+    Lean: SKEFTHawking.TetradFormalism.tetradInducedMetric
+    Aristotle: manual
+    Source: Ortín, *Gravity and Strings* (2015) §1.4.
+    """
+    eta = [
+        [-1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]
+    return float(sum(
+        eta[a][b] * e[a][mu] * e[b][nu]
+        for a in range(4) for b in range(4)
+    ))
+
+
+def minkowski_tetrad():
+    """Minkowski (Lorentz-frame) tetrad: ``e^a_μ = δ^a_μ`` (identity matrix).
+
+    Lean: SKEFTHawking.TetradFormalism.minkowskiTetrad
+    Aristotle: manual
+    Source: Ortín 2015 §1.4.
+    """
+    return [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]
+
+
+def diagonal_tetrad_det(e):
+    """Diagonal-tetrad determinant: ``det(e) = e^0_0 e^1_1 e^2_2 e^3_3``.
+
+    For the Minkowski tetrad (identity), this equals 1.
+
+    Lean: SKEFTHawking.TetradFormalism.diagonalTetradDet
+    Aristotle: manual
+    Source: Ortín 2015 §1.4.
+    """
+    return float(e[0][0] * e[1][1] * e[2][2] * e[3][3])
+
+
+def torsion_residual(amplitude):
+    """Tetrad torsion residual (algebraic level — scalar parameter).
+
+    The full Cartan structure equation T^a = de^a + ω^a_b ∧ e^b
+    requires differential-form machinery; we encode the torsion
+    amplitude as an external scalar input.
+
+    Lean: SKEFTHawking.TetradFormalism.torsionResidual
+    Aristotle: manual
+    Source: Ortín 2015 §1.4 (Cartan structure equations).
+    """
+    return float(amplitude)

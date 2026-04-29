@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-29T13:35:47.857287+00:00",
+  "timestamp": "2026-04-29T17:00:44.878507+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -200,6 +200,12 @@
       "message": "Color #9467bd not in COLORS dict"
     },
     {
+      "figure": "fig_exact_solutions_catalog",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title 'g<sub>tt</sub>' missing expected 'T_H'"
+    },
+    {
       "figure": "fig_ewbg_allowed_region",
       "severity": "warning",
       "check": "axis_label",
@@ -262,6 +268,6 @@
   ],
   "summary": {
     "errors": 0,
-    "warnings": 43
+    "warnings": 44
   }
 }

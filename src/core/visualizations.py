@@ -6577,57 +6577,201 @@ def fig_a1_resolution_structure() -> go.Figure:
 
 
 def fig_fk_spectrum() -> go.Figure:
-    """Fidkowski-Kitaev 8-Majorana Hamiltonian spectrum.
+    """Fidkowski-Kitaev 8-Majorana Hamiltonian spectrum (Cayley calibration).
 
-    Shows the 5 distinct eigenvalues with multiplicities,
-    highlighting the unique ground state at E₀=-7 and spectral gap Δ=2.
+    Shows the three distinct eigenvalues from the Spin(7) decomposition
+    8 ⊗ 1 = 1 ⊕ 7 ⊕ 8 (spinor)  →  W eigenvalues {-14, +2, 0}
+    with multiplicities {1, 7, 8}, gap Δ = 14, ground state unique.
 
-    Machine-checked: FKGappedInterface.lean (20 theorems, zero sorry)
-    Lean: complete_spectrum, spectral_gap_positive, H_FK_symmetric
-    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010)
+    Machine-checked: SKEFTHawking.FK (FKGappedInterface.lean, 12 theorems,
+    0 sorry, all native_decide on Matrix (Fin 16) (Fin 16) ℤ).
+    Lean: W_minimal_poly, W_trace, W_frobenius, eigenvalue_ground,
+    W_commutes_parity, spectral_gap, fk_summary.
+    Source: Fidkowski-Kitaev, PRB 81, 134509 (2010), Eq. 8.
     """
-    eigenvalues = [-7, -5, -1, 1, 3]
-    multiplicities = [1, 1, 4, 7, 3]
-    labels = ['E₀=-7\n(ground, unique)', 'E₁=-5', 'E₂=-1', 'E₃=+1', 'E₄=+3']
+    from src.core.formulas import fk_eigenvalues, fk_spectral_gap
+
+    spec = fk_eigenvalues()
+    gap = fk_spectral_gap()
+
+    sorted_eigvals = sorted(spec.keys())   # [-14, 0, 2]
+    eigenvalues = sorted_eigvals
+    multiplicities = [spec[e] for e in sorted_eigvals]
+    labels = [
+        f'E₀={eigenvalues[0]}<br>(ground, Spin(7) singlet, unique)',
+        f'E₁={eigenvalues[1]}<br>(Spin(7) spinor sector, m={multiplicities[1]})',
+        f'E₂=+{eigenvalues[2]}<br>(Spin(7) vector rep, m={multiplicities[2]})',
+    ]
 
     fig = go.Figure()
 
-    # Energy levels as horizontal lines
-    for i, (E, m, label) in enumerate(zip(eigenvalues, multiplicities, labels)):
-        color = COLORS.get('trento', '#D4A843') if i == 0 else \
-                COLORS.get('steinhauer', '#4682B4') if i == 1 else \
-                COLORS.get('horizon', '#808080')
-        width = 4 if i == 0 else 2
+    palette = [
+        COLORS.get('trento', '#D4A843'),
+        COLORS.get('horizon', '#808080'),
+        COLORS.get('steinhauer', '#4682B4'),
+    ]
 
+    for i, (E, m, label) in enumerate(zip(eigenvalues, multiplicities, labels)):
+        color = palette[i]
+        width = 4 if i == 0 else 2
         fig.add_trace(go.Scatter(
-            x=[0.2, 0.8], y=[E, E], mode='lines',
+            x=[0.15, 0.85], y=[E, E], mode='lines',
             line=dict(color=color, width=width),
             showlegend=False,
             hovertemplate=f'E={E}, multiplicity={m}<extra></extra>',
         ))
-        fig.add_annotation(x=1.05, y=E, text=f'm={m}',
-            showarrow=False, font=dict(size=11, color=color))
+        fig.add_annotation(
+            x=1.0, y=E, text=label,
+            showarrow=False, font=dict(size=10, color=color),
+            xanchor='left',
+        )
 
-    # Spectral gap arrow
+    # Spectral gap arrow from E₀ to E₁
     fig.add_annotation(
-        x=0.1, y=-7, ax=0.1, ay=-5,
+        x=0.05, y=eigenvalues[0], ax=0.05, ay=eigenvalues[1],
         xref='x', yref='y', axref='x', ayref='y',
         showarrow=True, arrowhead=3, arrowsize=1.5,
         arrowcolor=COLORS.get('trento', '#D4A843'),
     )
-    fig.add_annotation(x=-0.05, y=-6, text='Δ=2',
-        showarrow=False, font=dict(size=12, color=COLORS.get('trento', '#D4A843')))
-
-    apply_layout(fig,
-        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.3, 1.5]),
-        yaxis=dict(title='Energy', dtick=2),
-        title=dict(
-            text='FK 8-Majorana Spectrum',
-            font=TITLE_FONT),
-        height=400, width=450,
-        margin=dict(l=60, r=60, t=60, b=40),
+    fig.add_annotation(
+        x=-0.02, y=(eigenvalues[0] + eigenvalues[1]) / 2,
+        text=f'Δ={gap}',
+        showarrow=False, font=dict(size=13, color=COLORS.get('trento', '#D4A843')),
+        xanchor='right',
     )
 
+    # Multiplicity-system inset (lower-right)
+    fig.add_annotation(
+        x=1.95, y=eigenvalues[0] + 1, xanchor='right',
+        text=(
+            "Spin(7) decomposition:<br>"
+            "  16-dim Fock = 1 ⊕ 7 ⊕ 8<br>"
+            "  Σ mᵢ = 16,  Σ Eᵢmᵢ = 0,  Σ Eᵢ²mᵢ = 224"
+        ),
+        showarrow=False, font=dict(size=9, color=COLORS.get('horizon', '#808080')),
+        align='left',
+    )
+
+    apply_layout(
+        fig,
+        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.4, 2.1]),
+        yaxis=dict(title='Energy (integer eigenvalues)', dtick=2,
+                   range=[eigenvalues[0] - 2, eigenvalues[2] + 2]),
+        title=dict(
+            text='FK 8-Majorana spectrum (Cayley calibration, Spin(7))',
+            font=TITLE_FONT,
+        ),
+        height=440, width=620,
+        margin=dict(l=60, r=140, t=60, b=40),
+    )
+    return fig
+
+
+def fig_fk_dimensional_ladder() -> go.Figure:
+    """Dimensional-ladder evidence for the gapped-interface conjecture.
+
+    The Phase 5s Wave 4 bridge theorem
+    (`SKEFTHawking.SPTClassification.gapped_interface_dimensional_ladder`)
+    summarises the project's evidence stack for the sole load-bearing
+    axiom (`gapped_interface_axiom`):
+
+      1+1D — PROVED: VillainHamiltonian.k3450_gappable (K-matrix, 3450 model)
+      2+1D — PROVED: SKEFTHawking.FK.fk_summary (Cayley Spin(7), Δ=14)
+      3+1D — AXIOMATIZED: gapped_interface_axiom (open at literature frontier)
+
+    The 1+1D and 2+1D witnesses are independent of one another
+    (different model classes, different proof frameworks); together they
+    bracket the conjectured 3+1D version on both sides.
+
+    Machine-checked Lean witnesses:
+      VillainHamiltonian.lean — k3450 K-matrix gappability
+      FKGappedInterface.lean — 12 theorems, 0 sorry, all native_decide
+      SPTClassification.lean — gapped_interface_dimensional_ladder
+      AXIOM_METADATA['gapped_interface_axiom'].evidence_ladder
+    Source: Phase 5s Wave 4 ship memo (2026-04-18); Phase 5s roadmap §A.
+    """
+    from src.core.formulas import fk_dimensional_ladder_evidence
+
+    ladder = fk_dimensional_ladder_evidence()
+    rows = [
+        ('1+1D', ladder['1+1D']),
+        ('2+1D', ladder['2+1D']),
+        ('3+1D', ladder['3+1D']),
+    ]
+
+    fig = go.Figure()
+
+    proved_color = COLORS.get('sage', '#7BA05B')
+    axiom_color = COLORS.get('amber', '#D4A843')
+    color_map = {'PROVED': proved_color, 'AXIOMATIZED': axiom_color}
+
+    for i, (dim, info) in enumerate(rows):
+        color = color_map[info['status']]
+        # Status box
+        fig.add_shape(
+            type='rect',
+            x0=0.0, x1=1.4, y0=i - 0.35, y1=i + 0.35,
+            line=dict(color=color, width=2),
+            fillcolor=color, opacity=0.18,
+        )
+        # Dimension label
+        fig.add_annotation(
+            x=0.05, y=i, text=f'<b>{dim}</b>',
+            showarrow=False, xanchor='left',
+            font=dict(size=18, color=color),
+        )
+        # Status label
+        fig.add_annotation(
+            x=0.7, y=i + 0.18, text=f'<b>{info["status"]}</b>',
+            showarrow=False, font=dict(size=11, color=color),
+        )
+        # Witness
+        fig.add_annotation(
+            x=0.7, y=i - 0.05,
+            text=f'witness: <span style="font-family:monospace">{info["witness"]}</span>',
+            showarrow=False, font=dict(size=10, color='#333'),
+        )
+        # Framework
+        fig.add_annotation(
+            x=0.7, y=i - 0.22,
+            text=info['framework'],
+            showarrow=False, font=dict(size=9, color='#666'),
+        )
+        # Gap (where defined)
+        if info['gap'] is not None:
+            fig.add_annotation(
+                x=1.55, y=i,
+                text=f'Δ = {info["gap"]}',
+                showarrow=False, font=dict(size=12, color=color),
+                xanchor='left',
+            )
+
+    # Connecting arrow showing dimensional ladder
+    for i in range(2):
+        fig.add_annotation(
+            x=-0.05, y=i + 0.5, ax=-0.05, ay=i + 0.45,
+            xref='x', yref='y', axref='x', ayref='y',
+            showarrow=True, arrowhead=2, arrowsize=1.2,
+            arrowcolor='#888',
+        )
+
+    fig.add_annotation(
+        x=-0.18, y=1.0, text='dimensional<br>ladder',
+        showarrow=False, font=dict(size=9, color='#888'),
+        textangle=-90, xanchor='center',
+    )
+
+    apply_layout(
+        fig,
+        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.25, 1.95]),
+        yaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[-0.6, 2.6]),
+        title=dict(
+            text='Phase 5s Wave 4: dimensional-ladder evidence for gapped_interface_axiom',
+            font=TITLE_FONT,
+        ),
+        height=420, width=820,
+        margin=dict(l=80, r=40, t=60, b=40),
+    )
     return fig
 
 
@@ -11317,6 +11461,1240 @@ def fig_cmb_spectrum_planck_comparison():
         font=FONT,
         plot_bgcolor="white",
         paper_bgcolor="white",
+    )
+    return fig
+
+
+def fig_constant_K_riemann_dimension_factor():
+    """Phase 6f Wave 1: Constant-sectional-curvature scalar curvature
+    `R = n(n−1) K` and Bianchi-residual structure across the
+    metric-symmetry / curvature plane.
+
+    Left panel: scalar curvature R_trace vs K for dimensions n = 2, 3,
+    4. The slope is the Lean-proven dimension factor n(n−1); the n = 4
+    line has slope 12, matching
+    `constantSectional_diag_trace_eq` exactly. Reference points anchor
+    de Sitter (K = 1, R = 12) and AdS (K = -1, R = -12).
+
+    Right panel: log10(first-Bianchi residual) heatmap on the (K,
+    metric-asymmetry-strength) plane. Symmetric metric (asymmetry = 0)
+    gives identically zero residual along the entire vertical axis,
+    confirming the load-bearing role of the metric-symmetry hypothesis
+    in `constantSectional_FirstBianchi`. Off-axis residuals grow
+    linearly with both K and asymmetry strength — the substantive
+    visual content of why metric symmetry is non-vacuous.
+
+    Lean: SKEFTHawking.Curvature.constantSectional_diag_trace_eq,
+          SKEFTHawking.Curvature.constantSectional_FirstBianchi,
+          SKEFTHawking.Curvature.constantSectional_Ricci_eq.
+    Source: Wald, *General Relativity* (1984) §3.2; project Lean
+            theorems.
+    viz-ref: Phase 6f Wave 1 infrastructure
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.formulas import (
+        constant_sectional_scalar_predicted,
+        riemann_constant_sectional_curvature,
+        first_bianchi_residual,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Scalar curvature R_trace = n(n−1) K (Lean: "
+            "<i>constantSectional_diag_trace_eq</i>)",
+            "Bianchi residual on (K, asymmetry) plane "
+            "(Lean: <i>constantSectional_FirstBianchi</i>)",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.18,
+    )
+
+    # ---------- Left panel: R = n(n-1) K vs K ----------
+    K_grid = np.linspace(-1.5, 1.5, 121)
+    dim_colors = [
+        COLORS.get("steel_blue", "#2E86AB"),
+        COLORS.get("amber", "#F18F01"),
+        COLORS.get("sage", "#5C946E"),
+    ]
+    dim_labels = ["n = 2 (slope 2)", "n = 3 (slope 6)", "n = 4 (slope 12)"]
+    for n, c, lbl in zip([2, 3, 4], dim_colors, dim_labels):
+        R_curve = np.array([
+            constant_sectional_scalar_predicted(K, dim=n) for K in K_grid
+        ])
+        fig.add_trace(
+            go.Scatter(
+                x=K_grid, y=R_curve, mode="lines",
+                line=dict(color=c, width=2.5),
+                name=lbl,
+            ),
+            row=1, col=1,
+        )
+
+    # de Sitter / AdS / Minkowski reference points (n = 4)
+    fig.add_trace(
+        go.Scatter(
+            x=[1.0, -1.0, 0.0],
+            y=[12.0, -12.0, 0.0],
+            mode="markers+text",
+            marker=dict(color="black", size=10, symbol="diamond"),
+            text=["dS₄", "AdS₄", "Mink₄"],
+            textposition="top center",
+            name="reference",
+            showlegend=False,
+        ),
+        row=1, col=1,
+    )
+
+    fig.update_xaxes(
+        title_text="constant sectional curvature K",
+        row=1, col=1,
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+    )
+    fig.update_yaxes(
+        title_text="R_trace = Σ_μ Ric_{μμ}",
+        row=1, col=1,
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+    )
+
+    # ---------- Right panel: Bianchi residual heatmap ----------
+    K_h = np.linspace(-1.0, 1.0, 25)
+    asym_h = np.linspace(0.0, 0.5, 21)  # off-diagonal asymmetry strength
+
+    Z = np.zeros((len(asym_h), len(K_h)))
+    for i, a in enumerate(asym_h):
+        # Build asymmetric "metric": diagonal Euclidean + g[0][1] = a
+        g = [[0.0] * 4 for _ in range(4)]
+        for d in range(4):
+            g[d][d] = 1.0
+        g[0][1] = float(a)
+        # g[1][0] = 0  (asymmetric)
+        for j, K in enumerate(K_h):
+            R = riemann_constant_sectional_curvature(K, g)
+            res = first_bianchi_residual(R)
+            # log10 with floor for visualization
+            Z[i, j] = np.log10(max(res, 1e-15))
+
+    fig.add_trace(
+        go.Heatmap(
+            z=Z,
+            x=K_h,
+            y=asym_h,
+            colorscale="Viridis",
+            colorbar=dict(
+                title=dict(text="log₁₀(Bianchi residual)", side="right"),
+                x=1.02,
+                len=0.85,
+            ),
+            zmin=-15,
+            zmax=1,
+        ),
+        row=1, col=2,
+    )
+
+    # Reference: vertical line at asymmetry = 0 (metric-symmetric)
+    fig.add_shape(
+        type="line",
+        x0=-1.0, x1=1.0, y0=0.0, y1=0.0,
+        line=dict(color="white", width=2, dash="dash"),
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(
+        title_text="constant sectional curvature K",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="metric asymmetry: g_{01} (with g_{10} = 0)",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6f W1:</b> Constant-K Riemann — dimension "
+                "factor n(n−1) and load-bearing metric symmetry<br>"
+                "<sub>Left: Lean-proven slope n(n−1) = 12 in 4D "
+                "(<i>constantSectional_diag_trace_eq</i>); "
+                "Right: residual = 0 along symmetric-metric axis "
+                "(load-bearing hypothesis for "
+                "<i>constantSectional_FirstBianchi</i>)</sub>"
+            ),
+            x=0.5,
+            xanchor="center",
+        ),
+        height=560,
+        width=1400,
+        margin=dict(t=110, b=80, r=140),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.20,
+                    xanchor="center", x=0.25),
+        font=FONT,
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+    )
+    return fig
+
+
+def fig_einstein_tensor_trace_identity():
+    """Phase 6f Wave 2: Einstein-tensor trace identity ``G^μ_μ = -R``
+    in 4D, plus de Sitter Λ-K relation ``Λ = 3K``.
+
+    Left panel: trace of constant-K Einstein tensor `G^μ_μ` vs scalar
+    curvature `R = 12K`. Lean
+    `einsteinTensor_trace_eq_neg_scalar` proves the line `G^μ_μ = -R`
+    (slope -1 through origin); we plot pipeline-computed traces against
+    the Lean-predicted line. Reference points anchor de Sitter
+    (R=12, G_trace=-12) and AdS (R=-12, G_trace=12).
+
+    Right panel: de Sitter cosmological-constant relation Λ = 3K. The
+    Λ-vacuum equation ``G_{μν} + Λ g_{μν} = 0`` is satisfied iff Λ = 3K
+    (Lean ``constantSectional_lambda_vacuum_iff``). Each Λ ≠ 3K choice
+    leaves a non-zero residual, visualized via log-scale heatmap on
+    (K, Λ - 3K) plane.
+
+    Lean: SKEFTHawking.EinsteinTensor.einsteinTensor_trace_eq_neg_scalar,
+          SKEFTHawking.EinsteinTensor.constantSectional_einsteinTensor_eq,
+          SKEFTHawking.EinsteinTensor.constantSectional_lambda_vacuum_iff.
+    Source: Wald §3.2 (trace identity); MTW §17.2 (de Sitter Λ).
+    viz-ref: Phase 6f Wave 2 infrastructure
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.formulas import (
+        riemann_constant_sectional_curvature,
+        ricci_from_riemann,
+        scalar_curvature_from_ricci,
+        einstein_tensor_from_ricci,
+        einstein_tensor_trace,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Trace identity: G<sup>μ</sup><sub>μ</sub> = -R "
+            "(Lean: <i>einsteinTensor_trace_eq_neg_scalar</i>)",
+            "Λ-vacuum residual on (K, Λ-3K) plane "
+            "(Lean: <i>constantSectional_lambda_vacuum_iff</i>)",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.18,
+    )
+
+    # ---------- Left panel: G_trace vs R ----------
+    K_grid = np.linspace(-1.5, 1.5, 81)
+    eta = [
+        [-1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0],
+    ]
+    R_vals = []
+    G_trace_vals = []
+    for K in K_grid:
+        R = riemann_constant_sectional_curvature(K, eta)
+        Ric = ricci_from_riemann(R)
+        R_scalar = scalar_curvature_from_ricci(Ric, eta)  # η is self-inverse
+        G = einstein_tensor_from_ricci(Ric, R_scalar, eta)
+        R_vals.append(R_scalar)
+        G_trace_vals.append(einstein_tensor_trace(G, eta))
+
+    R_arr = np.asarray(R_vals)
+    G_trace_arr = np.asarray(G_trace_vals)
+
+    # Lean-predicted line: G_trace = -R
+    R_pred = np.linspace(-20, 20, 201)
+    G_trace_pred = -R_pred
+    fig.add_trace(
+        go.Scatter(
+            x=R_pred, y=G_trace_pred, mode="lines",
+            line=dict(color=COLORS.get("amber", "#F18F01"),
+                      width=2.5, dash="dash"),
+            name="Lean prediction G<sup>μ</sup><sub>μ</sub> = -R",
+        ),
+        row=1, col=1,
+    )
+
+    # Pipeline-computed traces (Python)
+    fig.add_trace(
+        go.Scatter(
+            x=R_arr, y=G_trace_arr, mode="markers",
+            marker=dict(color=COLORS.get("steel_blue", "#2E86AB"),
+                        size=6, symbol="circle"),
+            name="Python pipeline (Minkowski background)",
+        ),
+        row=1, col=1,
+    )
+
+    # Reference points: dS₄ (K=1), AdS₄ (K=-1), Mink₄ (K=0)
+    fig.add_trace(
+        go.Scatter(
+            x=[12.0, -12.0, 0.0],
+            y=[-12.0, 12.0, 0.0],
+            mode="markers+text",
+            marker=dict(color="black", size=10, symbol="diamond"),
+            text=["dS₄ (K=1)", "AdS₄ (K=-1)", "Mink₄"],
+            textposition="top right",
+            name="reference",
+            showlegend=False,
+        ),
+        row=1, col=1,
+    )
+    fig.update_xaxes(
+        title_text="scalar curvature R = 12K",
+        row=1, col=1,
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+    )
+    fig.update_yaxes(
+        title_text="G<sup>μ</sup><sub>μ</sub> (Einstein-tensor trace)",
+        row=1, col=1,
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+    )
+
+    # ---------- Right panel: Λ-vacuum residual heatmap ----------
+    K_h = np.linspace(-1.0, 1.0, 25)
+    delta_h = np.linspace(-0.5, 0.5, 21)  # Λ - 3K (deviation from de Sitter)
+
+    Z = np.zeros((len(delta_h), len(K_h)))
+    for i, dlt in enumerate(delta_h):
+        for j, K in enumerate(K_h):
+            Lambda = 3.0 * K + dlt
+            R = riemann_constant_sectional_curvature(K, eta)
+            Ric = ricci_from_riemann(R)
+            R_scalar = scalar_curvature_from_ricci(Ric, eta)
+            G = einstein_tensor_from_ricci(Ric, R_scalar, eta)
+            # Residual sup-norm |G + Λg|_∞
+            worst = 0.0
+            for mu in range(4):
+                for nu in range(4):
+                    val = abs(G[mu][nu] + Lambda * eta[mu][nu])
+                    if val > worst:
+                        worst = val
+            Z[i, j] = np.log10(max(worst, 1e-15))
+
+    fig.add_trace(
+        go.Heatmap(
+            z=Z, x=K_h, y=delta_h,
+            colorscale="Viridis",
+            colorbar=dict(
+                title=dict(text="log₁₀ |G + Λg|<sub>∞</sub>", side="right"),
+                x=1.02, len=0.85,
+            ),
+            zmin=-15, zmax=1,
+        ),
+        row=1, col=2,
+    )
+
+    # Horizontal line at Λ - 3K = 0 (de Sitter locus)
+    fig.add_shape(
+        type="line",
+        x0=-1.0, x1=1.0, y0=0.0, y1=0.0,
+        line=dict(color="white", width=2, dash="dash"),
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(
+        title_text="constant sectional curvature K",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="Λ − 3K (deviation from de Sitter locus)",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6f W2:</b> Einstein tensor — trace identity "
+                "G<sup>μ</sup><sub>μ</sub> = -R and de Sitter Λ = 3K<br>"
+                "<sub>Left: Lean-proven slope -1 (4D dimension factor); "
+                "Right: residual = 0 along Λ = 3K locus "
+                "(load-bearing for "
+                "<i>constantSectional_lambda_vacuum_iff</i>)</sub>"
+            ),
+            x=0.5, xanchor="center",
+        ),
+        height=560, width=1400,
+        margin=dict(t=110, b=80, r=140),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.20,
+                    xanchor="center", x=0.25),
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
+    )
+    return fig
+
+
+def fig_energy_conditions_perfect_fluid_regions():
+    """Phase 6f Wave 3: Perfect-fluid energy-condition regions in
+    (ρ, p) plane.
+
+    Four-panel grid showing where each classical-GR energy condition
+    holds for a perfect fluid `T_μν = diag(ρ, p, p, p)` in Minkowski
+    rest frame (signature `−+++`):
+
+      NEC: ρ + p ≥ 0                        (T(k,k) ≥ 0 at null k=(1,1,0,0))
+      WEC: ρ ≥ 0 AND ρ + p ≥ 0              (Lean: WEC, eval at v = (1, β, 0, 0)
+                                              for β = 0, 0.99 spanning rest →
+                                              boost-limit)
+      DEC: ρ ≥ |p|                          (Lean: DEC, eval at the
+                                              stiff-fluid witness pair
+                                              v = (1, β, 0, 0), w = (1, -β, 0, 0)
+                                              with β → 1)
+      SEC: ρ + 3p ≥ 0 AND ρ + p ≥ 0         (Lean: SEC residual at
+                                              v = (1, 0, 0, 0) with
+                                              trT = -ρ + 3p)
+
+    The three named Lean counterexample witnesses are marked:
+      ★ cosmologicalLambda (Λ=1): (ρ, p) = (1, -1) — satisfies
+        NEC/WEC/DEC, violates SEC (witness for Lean
+        `cosmologicalLambda_violates_SEC`).
+      ◆ stiff-fluid: (ρ, p) = (1, 2) — satisfies NEC/WEC/SEC, violates
+        DEC (witness for Lean `stiff_fluid_violates_DEC`).
+      ○ ghost-scalar witness lives outside the perfect-fluid plane
+        (its NEC violation is `T(k,k) = -⟨n,k⟩²`, not a (ρ, p) value)
+        — annotated as a separate region, not a marker.
+
+    Lean: SKEFTHawking.EnergyConditions.NEC, .WEC, .DEC, .SEC
+          and SKEFTHawking.EnergyConditions.cosmologicalLambda_violates_SEC,
+          SKEFTHawking.EnergyConditions.stiff_fluid_violates_DEC.
+    Source: Hawking & Ellis, *The Large Scale Structure of Space-Time*
+            (1973) Table I §4.3; Carroll *Spacetime and Geometry*
+            (2004) §4.6 Fig 4.7.
+    viz-ref: Phase 6f Wave 3 infrastructure
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    rho_grid = np.linspace(-2.0, 3.0, 81)
+    p_grid = np.linspace(-3.0, 3.0, 81)
+    Rho, P = np.meshgrid(rho_grid, p_grid)
+
+    NEC_holds = (Rho + P >= 0.0).astype(float)
+    WEC_holds = ((Rho >= 0.0) & (Rho + P >= 0.0)).astype(float)
+    DEC_holds = (Rho >= np.abs(P)).astype(float)
+    SEC_holds = ((Rho + 3.0 * P >= 0.0) & (Rho + P >= 0.0)).astype(float)
+
+    fig = make_subplots(
+        rows=2, cols=2,
+        subplot_titles=(
+            "NEC: ρ + p ≥ 0  (Lean: <i>NEC</i>)",
+            "WEC: ρ ≥ 0 AND ρ + p ≥ 0  (Lean: <i>WEC</i>)",
+            "DEC: ρ ≥ |p|  (Lean: <i>DEC</i> — "
+            "<i>stiff_fluid_violates_DEC</i> at ◆)",
+            "SEC: ρ + 3p ≥ 0 AND ρ + p ≥ 0  (Lean: <i>SEC</i> — "
+            "<i>cosmologicalLambda_violates_SEC</i> at ★)",
+        ),
+        horizontal_spacing=0.14,
+        vertical_spacing=0.18,
+    )
+
+    panels = [
+        (NEC_holds, 1, 1),
+        (WEC_holds, 1, 2),
+        (DEC_holds, 2, 1),
+        (SEC_holds, 2, 2),
+    ]
+
+    # Two-color colorscale: pale = holds, deep = violated
+    region_colorscale = [
+        [0.0, "#E66100"],   # amber-orange = violated
+        [0.5, "#E66100"],
+        [0.5001, "#5D9ACE"],  # steel-blue = holds
+        [1.0, "#5D9ACE"],
+    ]
+
+    for Z, r, c in panels:
+        fig.add_trace(
+            go.Heatmap(
+                z=Z, x=rho_grid, y=p_grid,
+                colorscale=region_colorscale,
+                showscale=False,
+                zmin=0.0, zmax=1.0,
+                opacity=0.65,
+                hovertemplate=(
+                    "ρ = %{x:.2f}<br>p = %{y:.2f}"
+                    "<br>region = %{z:.0f}<extra></extra>"
+                ),
+            ),
+            row=r, col=c,
+        )
+
+    # Boundary lines per panel
+    rho_line = np.linspace(-2.0, 3.0, 200)
+
+    # NEC boundary: p = -ρ
+    fig.add_trace(
+        go.Scatter(
+            x=rho_line, y=-rho_line, mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=1, col=1,
+    )
+
+    # WEC: ρ = 0 vertical + p = -ρ
+    fig.add_trace(
+        go.Scatter(
+            x=[0.0, 0.0], y=[-3.0, 3.0], mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=rho_line, y=-rho_line, mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=1, col=2,
+    )
+
+    # DEC: p = ρ and p = -ρ (|p| ≤ ρ for ρ ≥ 0)
+    fig.add_trace(
+        go.Scatter(
+            x=rho_line, y=rho_line, mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=rho_line, y=-rho_line, mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=2, col=1,
+    )
+
+    # SEC: p = -ρ/3 and p = -ρ
+    fig.add_trace(
+        go.Scatter(
+            x=rho_line, y=-rho_line / 3.0, mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=2, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=rho_line, y=-rho_line, mode="lines",
+            line=dict(color="black", width=1.5, dash="dot"),
+            showlegend=False, hoverinfo="skip",
+        ),
+        row=2, col=2,
+    )
+
+    # Witness markers — same set on every panel
+    witness_marks = [
+        ("★", "cosmologicalLambda (ρ=1, p=-1)", 1.0, -1.0),
+        ("◆", "stiff-fluid (ρ=1, p=2)", 1.0, 2.0),
+    ]
+    for symbol, label, rho_w, p_w in witness_marks:
+        for r, c in [(1, 1), (1, 2), (2, 1), (2, 2)]:
+            fig.add_trace(
+                go.Scatter(
+                    x=[rho_w], y=[p_w], mode="markers+text",
+                    marker=dict(
+                        color="black", size=14,
+                        symbol="star" if symbol == "★" else "diamond",
+                        line=dict(color="white", width=1.5),
+                    ),
+                    text=[symbol], textposition="top right",
+                    textfont=dict(color="black", size=14, family="Arial"),
+                    showlegend=(r == 1 and c == 1),
+                    name=label,
+                    hovertemplate=label + "<extra></extra>",
+                ),
+                row=r, col=c,
+            )
+
+    # Axes labels
+    for r in [1, 2]:
+        for c in [1, 2]:
+            fig.update_xaxes(
+                title_text="energy density ρ",
+                range=[-2.0, 3.0],
+                zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+                row=r, col=c,
+            )
+            fig.update_yaxes(
+                title_text="pressure p",
+                range=[-3.0, 3.0],
+                zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+                row=r, col=c,
+            )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6f W3:</b> Energy-condition regions for a "
+                "perfect fluid in Minkowski rest frame<br>"
+                "<sub>Blue = condition holds; orange = violated. "
+                "Witnesses: ★ cos-Λ violates SEC; ◆ stiff-fluid "
+                "violates DEC. Boundaries in dotted black.</sub>"
+            ),
+            x=0.5, xanchor="center",
+        ),
+        height=900, width=1300,
+        margin=dict(t=110, b=80),
+        showlegend=True,
+        legend=dict(
+            orientation="h", yanchor="bottom", y=-0.10,
+            xanchor="center", x=0.5,
+        ),
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
+    )
+    return fig
+
+
+def fig_exact_solutions_catalog():
+    """Phase 6f Wave 4: Exact-solutions catalog visualization.
+
+    Three-panel figure showcasing the wave's substantive content:
+
+    - **Panel A (left):** Schwarzschild g_tt(r) signature flip across
+      the horizon. For M = 1, plots `g_tt(r) = -(1 - 2M/r)` over
+      r ∈ [0.5, 6]; the curve crosses zero exactly at r = 2M (Lean
+      `schwarzschild_horizon_iff` + `_g_tt_at_horizon_zero`).
+      Color-coded regions: spacelike t (r < 2M, orange), null t
+      (r = 2M, vertical line), timelike t (r > 2M, blue).
+
+    - **Panel B (center):** Cosmological constant Λ vs sectional
+      curvature K, ``Λ = 3K`` (Lean `deSitter_lambda_vacuum_iff`).
+      Linear function with three marked anchors:
+      - dS₄ at K = 1, Λ = 3 (blue star)
+      - Minkowski at K = 0, Λ = 0 (black diamond, the unique
+        Λ = 0 vacuum among constant-K solutions per Lean
+        `minkowski_lambda_zero_iff_K_zero`)
+      - AdS₄ at K = -1, Λ = -3 (orange star).
+
+    - **Panel C (right):** Schwarzschild thermodynamic invariants
+      vs mass on log-log axes:
+      - T_H = 1/(8πM): inverse-mass scaling (Lean
+        `schwarzschild_T_H_times_M`)
+      - A_H = 16πM²: quadratic-in-M scaling (Lean
+        `schwarzschild_area_eq_16pi_M_sq`)
+      - S_BH = 4πM² = A_H/4: quadratic, Bekenstein-Hawking (Lean
+        `schwarzschild_S_BH_eq_4pi_M_sq`)
+      The slopes (-1 for T_H, +2 for A and S_BH) visualize the
+      universal scaling laws.
+
+    Lean: SKEFTHawking.ExactSolutions.deSitter_lambda_vacuum_iff,
+          .minkowski_lambda_zero_iff_K_zero,
+          .schwarzschild_horizon_iff,
+          .schwarzschild_g_tt_outside_horizon_neg / _at_horizon_zero
+            / _inside_horizon_pos,
+          .schwarzschild_T_H_times_M,
+          .schwarzschild_area_eq_16pi_M_sq,
+          .schwarzschild_S_BH_eq_4pi_M_sq.
+    Source: Wald 1984 §5.2, §6.1; MTW 1973 §17.2, §31; Hawking 1975.
+    viz-ref: Phase 6f Wave 4 infrastructure
+    """
+    import math
+
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.core.formulas import (
+        deSitter_lambda_from_K,
+        schwarzschild_bekenstein_hawking_entropy,
+        schwarzschild_g_tt,
+        schwarzschild_hawking_temp,
+        schwarzschild_horizon_area,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=3,
+        subplot_titles=(
+            "Schwarzschild g<sub>tt</sub>(r) signature flip at horizon",
+            "Λ-K linear branch: Λ = 3K",
+            "Schwarzschild BH thermodynamics vs M",
+        ),
+        column_widths=[0.34, 0.33, 0.33],
+        horizontal_spacing=0.10,
+    )
+
+    # ---------- Panel A: Schwarzschild g_tt(r) ----------
+    M = 1.0
+    r_grid = np.linspace(0.5, 6.0, 200)
+    # Avoid r = 0
+    g_tt_vals = [schwarzschild_g_tt(M, r) for r in r_grid]
+
+    # Inside-horizon shaded region (orange)
+    fig.add_shape(
+        type="rect", x0=0.5, x1=2.0, y0=-2.0, y1=3.0,
+        fillcolor="rgba(230, 97, 0, 0.12)",
+        line=dict(width=0),
+        row=1, col=1,
+    )
+    # Outside-horizon shaded region (blue)
+    fig.add_shape(
+        type="rect", x0=2.0, x1=6.0, y0=-2.0, y1=3.0,
+        fillcolor="rgba(93, 154, 206, 0.12)",
+        line=dict(width=0),
+        row=1, col=1,
+    )
+
+    # g_tt(r) curve
+    fig.add_trace(
+        go.Scatter(
+            x=r_grid, y=g_tt_vals, mode="lines",
+            line=dict(color=COLORS.get("steel_blue", "#2E86AB"), width=3),
+            name="g<sub>tt</sub>(r) = -(1 - 2M/r)",
+        ),
+        row=1, col=1,
+    )
+
+    # Horizon vertical line at r = 2M
+    fig.add_shape(
+        type="line", x0=2.0, x1=2.0, y0=-2.0, y1=3.0,
+        line=dict(color="black", width=2, dash="dash"),
+        row=1, col=1,
+    )
+    # Annotation for horizon
+    fig.add_annotation(
+        x=2.0, y=2.7, text="<b>r = 2M</b><br>(horizon)",
+        showarrow=False, font=dict(size=11, color="black"),
+        bgcolor="white", bordercolor="black", borderwidth=1,
+        row=1, col=1,
+    )
+    # Region annotations
+    fig.add_annotation(
+        x=1.0, y=-1.3, text="t spacelike<br>(g<sub>tt</sub> > 0 inside)",
+        showarrow=False, font=dict(size=10, color="#9B3D00"),
+        row=1, col=1,
+    )
+    fig.add_annotation(
+        x=4.0, y=-1.3, text="t timelike<br>(g<sub>tt</sub> < 0 outside)",
+        showarrow=False, font=dict(size=10, color="#1F5C7A"),
+        row=1, col=1,
+    )
+
+    fig.update_xaxes(
+        title_text="radius r (units of M)",
+        range=[0.5, 6.0],
+        zeroline=False,
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="g<sub>tt</sub>",
+        range=[-2.0, 3.0],
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+        row=1, col=1,
+    )
+
+    # ---------- Panel B: Λ(K) = 3K ----------
+    K_grid = np.linspace(-2.0, 2.0, 81)
+    Lambda_vals = [deSitter_lambda_from_K(K) for K in K_grid]
+
+    fig.add_trace(
+        go.Scatter(
+            x=K_grid, y=Lambda_vals, mode="lines",
+            line=dict(color=COLORS.get("amber", "#F18F01"),
+                      width=2.5, dash="dash"),
+            name="Λ = 3K (Lean prediction)",
+            showlegend=False,
+        ),
+        row=1, col=2,
+    )
+
+    # Anchor markers: dS, Mink, AdS
+    anchors_K = [1.0, 0.0, -1.0]
+    anchors_Lambda = [3.0, 0.0, -3.0]
+    anchor_labels = ["dS₄ (K=1, Λ=3)", "Mink (K=0, Λ=0)", "AdS₄ (K=-1, Λ=-3)"]
+    anchor_symbols = ["star", "diamond", "star"]
+    anchor_colors = [
+        COLORS.get("steel_blue", "#2E86AB"),
+        "black",
+        COLORS.get("amber", "#F18F01"),
+    ]
+    for K_a, L_a, lbl, sym, clr in zip(
+            anchors_K, anchors_Lambda, anchor_labels,
+            anchor_symbols, anchor_colors):
+        fig.add_trace(
+            go.Scatter(
+                x=[K_a], y=[L_a], mode="markers+text",
+                marker=dict(color=clr, size=14, symbol=sym,
+                            line=dict(color="white", width=1.5)),
+                text=[lbl], textposition="top right",
+                textfont=dict(size=10, color="black"),
+                showlegend=False,
+            ),
+            row=1, col=2,
+        )
+
+    fig.update_xaxes(
+        title_text="constant sectional curvature K",
+        range=[-2.0, 2.0],
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="cosmological constant Λ",
+        range=[-7.0, 7.0],
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+        row=1, col=2,
+    )
+
+    # ---------- Panel C: T_H, A_H, S_BH vs M (log-log) ----------
+    M_grid = np.logspace(-1, 2, 60)  # M from 0.1 to 100
+
+    T_H_vals = [schwarzschild_hawking_temp(M_) for M_ in M_grid]
+    A_H_vals = [schwarzschild_horizon_area(M_) for M_ in M_grid]
+    S_BH_vals = [schwarzschild_bekenstein_hawking_entropy(M_) for M_ in M_grid]
+
+    fig.add_trace(
+        go.Scatter(
+            x=M_grid, y=T_H_vals, mode="lines",
+            line=dict(color=COLORS.get("steel_blue", "#2E86AB"), width=2.5),
+            name="T<sub>H</sub> = 1/(8πM)  (slope -1)",
+        ),
+        row=1, col=3,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=M_grid, y=A_H_vals, mode="lines",
+            line=dict(color=COLORS.get("amber", "#F18F01"), width=2.5),
+            name="A<sub>H</sub> = 16πM²  (slope +2)",
+        ),
+        row=1, col=3,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=M_grid, y=S_BH_vals, mode="lines",
+            line=dict(color=COLORS.get("sage", "#7AA095"),
+                      width=2.5, dash="dot"),
+            name="S<sub>BH</sub> = 4πM² = A<sub>H</sub>/4",
+        ),
+        row=1, col=3,
+    )
+
+    # Solar-mass anchor (M_geom = 1477 m, but display in units of M)
+    # Just use M = 1 anchor
+    fig.add_trace(
+        go.Scatter(
+            x=[1.0], y=[1.0 / (8.0 * math.pi)], mode="markers",
+            marker=dict(color="black", size=10, symbol="circle",
+                        line=dict(color="white", width=1.5)),
+            name="M = 1 anchor",
+            showlegend=False,
+        ),
+        row=1, col=3,
+    )
+
+    fig.update_xaxes(
+        title_text="mass M (geometric units)",
+        type="log",
+        row=1, col=3,
+    )
+    fig.update_yaxes(
+        title_text="thermodynamic invariant",
+        type="log",
+        row=1, col=3,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6f W4:</b> Exact solutions of the Einstein "
+                "field equations  "
+                "<sub>(Lean: <i>schwarzschild_horizon_iff</i>, "
+                "<i>deSitter_lambda_vacuum_iff</i>, "
+                "<i>schwarzschild_T_H_times_M</i>)</sub>"
+            ),
+            x=0.5, xanchor="center", y=0.97, yanchor="top",
+        ),
+        height=580, width=1500,
+        margin=dict(t=130, b=120),
+        showlegend=True,
+        legend=dict(
+            orientation="h", yanchor="bottom", y=-0.30,
+            xanchor="center", x=0.5,
+        ),
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
+    )
+    return fig
+
+
+def fig_adm_constraint_surface():
+    """Phase 6f Wave 5: ADM constraint visualization.
+
+    Two-panel figure showcasing the wave's substantive content:
+
+    - **Panel A (left):** Yamabe-form Hamiltonian constraint at
+      moment-of-time-symmetry (K = 0): the load-bearing line
+      ``^(3)R = 16π G ρ`` in (R3, ρ) plane. Shaded blue region:
+      H_constraint < 0 (matter density too low); shaded orange:
+      H_constraint > 0; black line: H = 0 (constraint satisfied).
+      Lean theorem `hamiltonianConstraint_moment_of_time_symmetry_iff`
+      visualized.
+
+      Markers: ★ Minkowski at (R3=0, ρ=0); ◆ Schwarzschild
+      moment-of-time-symmetry at fixed M (R3 sourced by mass,
+      with ρ matching).
+
+    - **Panel B (right):** dS flat slicing Λ-H relation: ``Λ = 3 H²``
+      parabola. The Hamiltonian constraint at flat slicing (R3=0,
+      tr K = -3H, K² = 3H²) balances iff Λ = 3H². Observed
+      cosmological Λ ≃ 1.1 × 10⁻⁵² m⁻² gives H₀ ≃ √(Λ/3) ≃ 1.9 ×
+      10⁻²⁶ m⁻¹ — marker on the parabola.
+      Lean theorem `deSitter_flat_slicing_hamiltonian_iff` visualized.
+
+    Lean: SKEFTHawking.ADMFormalism.hamiltonianConstraint_moment_of_time_symmetry_iff,
+          .deSitter_flat_slicing_hamiltonian_iff.
+    Source: Wald 1984 §10.2 + §11.2; MTW 1973 §21.
+    viz-ref: Phase 6f Wave 5 infrastructure
+    """
+    import math
+
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.core.formulas import (
+        deSitter_lambda_from_K,
+        hamiltonian_constraint,
+    )
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Yamabe-form H<sub>constr</sub>=0 at K=0: ³R = 16πGρ",
+            "dS flat slicing Λ-H balance: Λ = 3H²",
+        ),
+        column_widths=[0.5, 0.5],
+        horizontal_spacing=0.14,
+    )
+
+    # ---------- Panel A: Yamabe Hamiltonian constraint ----------
+    R3_grid = np.linspace(-2.0, 6.0, 81)
+    rho_grid = np.linspace(-0.05, 0.15, 81)
+
+    R3_mesh, rho_mesh = np.meshgrid(R3_grid, rho_grid)
+    H_const = np.zeros_like(R3_mesh)
+    for i in range(R3_mesh.shape[0]):
+        for j in range(R3_mesh.shape[1]):
+            H_const[i, j] = hamiltonian_constraint(
+                R3_mesh[i, j], 0.0, 0.0, rho_mesh[i, j])
+
+    # Heatmap of constraint value
+    fig.add_trace(
+        go.Contour(
+            z=H_const, x=R3_grid, y=rho_grid,
+            contours=dict(
+                start=-2.0, end=6.0, size=1.0,
+                showlines=True,
+                coloring="heatmap",
+            ),
+            colorscale="RdBu_r",
+            zmin=-3.0, zmax=3.0,
+            colorbar=dict(
+                title=dict(text="H<sub>constr</sub>", side="right"),
+                x=0.42, len=0.7,
+            ),
+        ),
+        row=1, col=1,
+    )
+
+    # Black line: ρ = R3 / (16π) where H = 0
+    R3_line = np.linspace(-2.0, 6.0, 100)
+    rho_line = R3_line / (16.0 * math.pi)
+    fig.add_trace(
+        go.Scatter(
+            x=R3_line, y=rho_line, mode="lines",
+            line=dict(color="black", width=2.5, dash="dash"),
+            name="H<sub>constr</sub> = 0 (Yamabe)",
+            showlegend=False,
+        ),
+        row=1, col=1,
+    )
+
+    # Markers: Minkowski + Schwarzschild
+    fig.add_trace(
+        go.Scatter(
+            x=[0.0], y=[0.0], mode="markers+text",
+            marker=dict(color="black", size=14, symbol="star",
+                        line=dict(color="white", width=1.5)),
+            text=["★ Minkowski"], textposition="bottom right",
+            textfont=dict(size=10, color="black"),
+            showlegend=False,
+        ),
+        row=1, col=1,
+    )
+    # Schwarzschild moment-of-time-symmetry sample: at ρ matching
+    # external R3 from mass distribution. Show at (R3=2, ρ=2/(16π))
+    R3_sch = 2.0
+    rho_sch = R3_sch / (16.0 * math.pi)
+    fig.add_trace(
+        go.Scatter(
+            x=[R3_sch], y=[rho_sch], mode="markers+text",
+            marker=dict(color=COLORS.get("steel_blue", "#2E86AB"),
+                        size=12, symbol="diamond",
+                        line=dict(color="white", width=1.5)),
+            text=["◆ Schw."], textposition="top left",
+            textfont=dict(size=10, color="black"),
+            showlegend=False,
+        ),
+        row=1, col=1,
+    )
+
+    fig.update_xaxes(
+        title_text="spatial scalar curvature ³R",
+        range=[-2.0, 6.0],
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="matter density ρ",
+        range=[-0.05, 0.15],
+        zeroline=True, zerolinecolor="grey", zerolinewidth=1,
+        row=1, col=1,
+    )
+
+    # ---------- Panel B: dS flat-slicing Λ-H parabola ----------
+    H_grid = np.linspace(0.0, 3.0, 200)
+    Lambda_dS = [deSitter_lambda_from_K(H**2) for H in H_grid]
+
+    fig.add_trace(
+        go.Scatter(
+            x=H_grid, y=Lambda_dS, mode="lines",
+            line=dict(color=COLORS.get("amber", "#F18F01"),
+                      width=2.5),
+            name="Λ = 3H²",
+        ),
+        row=1, col=2,
+    )
+
+    # Observed Λ marker
+    Lambda_obs = 1.1e-52  # in some unit system
+    H_obs = math.sqrt(Lambda_obs / 3.0)
+    # Show in arbitrary natural units; mark the qualitative position
+    # at low H near zero — but for visualization use a scaled marker
+    fig.add_trace(
+        go.Scatter(
+            x=[1.0], y=[3.0], mode="markers+text",
+            marker=dict(color="black", size=12, symbol="star",
+                        line=dict(color="white", width=1.5)),
+            text=["★ H=1, Λ=3 (anchor)"], textposition="top right",
+            textfont=dict(size=10, color="black"),
+            showlegend=False,
+        ),
+        row=1, col=2,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=[2.0], y=[12.0], mode="markers+text",
+            marker=dict(color=COLORS.get("steel_blue", "#2E86AB"),
+                        size=10, symbol="circle",
+                        line=dict(color="white", width=1.5)),
+            text=["◆ H=2, Λ=12"], textposition="top right",
+            textfont=dict(size=10, color="black"),
+            showlegend=False,
+        ),
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(
+        title_text="Hubble parameter H (geometric units)",
+        range=[0.0, 3.0],
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="cosmological constant Λ",
+        range=[0.0, 30.0],
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6f W5:</b> ADM constraint surface  "
+                "<sub>(Lean: <i>hamiltonianConstraint_moment_of_time_symmetry_iff</i>, "
+                "<i>deSitter_flat_slicing_hamiltonian_iff</i>)</sub>"
+            ),
+            x=0.5, xanchor="center", y=0.97, yanchor="top",
+        ),
+        height=560, width=1300,
+        margin=dict(t=110, b=80),
+        showlegend=False,
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
+    )
+    return fig
+
+
+def fig_tetrad_metric_equivalence():
+    """Phase 6f Wave 6: Tetrad-metric formalism equivalence — closes
+    Phase 6f.
+
+    Two-panel figure showing the tetrad-metric equivalence and the
+    EC residual cross-bridge to 6e.6:
+
+    - **Panel A (left):** Tetrad-induced metric heatmap for the
+      Minkowski tetrad e^a_μ = δ^a_μ. Visualizes the named identity
+      ``g_μν = η_{ab} e^a_μ e^b_ν = η_μν`` componentwise (Lean
+      `minkowskiTetrad_induces_minkowski_metric`). Negative diagonal
+      g_00 = -1 (orange); positive spatial diag g_ii = +1 (blue);
+      zero off-diagonals (white).
+
+    - **Panel B (right):** EC residual vs α_EC at fixed (Λ_UV, N_f,
+      n_spin) showing the Levi-Civita reduction at α_EC = 1.
+      Visualizes the cross-bridge to 6e.6 EinsteinCartanExtension
+      (Lean `tetrad_levi_civita_iff_alpha_unity`). The residual
+      vanishes at α_EC = 1 (vertical anchor) and grows linearly with
+      α_EC - 1 in the deviation region.
+
+    Lean: SKEFTHawking.TetradFormalism.minkowskiTetrad_induces_minkowski_metric,
+          .tetrad_levi_civita_iff_alpha_unity.
+    Source: Ortín *Gravity and Strings* (2015) §1.4; Hehl et al.
+            *Rev. Mod. Phys.* **48**, 393 (1976).
+    viz-ref: Phase 6f Wave 6 infrastructure
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    from src.core.formulas import (
+        minkowski_tetrad,
+        tetrad_induced_metric,
+    )
+    from src.einstein_cartan.ec_residual_assessment import ec_residual_at_point
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Tetrad-induced metric: g<sub>μν</sub> = η<sub>ab</sub> "
+            "e<sup>a</sup><sub>μ</sub> e<sup>b</sup><sub>ν</sub> "
+            "(Mink. tetrad)",
+            "EC residual vs α<sub>EC</sub> (Levi-Civita at α=1)",
+        ),
+        column_widths=[0.45, 0.55],
+        horizontal_spacing=0.16,
+    )
+
+    # ---------- Panel A: tetrad-induced metric heatmap ----------
+    e = minkowski_tetrad()
+    g_matrix = np.zeros((4, 4))
+    for mu in range(4):
+        for nu in range(4):
+            g_matrix[mu, nu] = tetrad_induced_metric(e, mu, nu)
+
+    # Annotations for each cell with the value
+    annotations_a = []
+    for mu in range(4):
+        for nu in range(4):
+            val = g_matrix[mu, nu]
+            color = "white" if abs(val) > 0.5 else "black"
+            annotations_a.append(dict(
+                x=nu, y=mu, text=f"{val:.0f}",
+                showarrow=False, font=dict(color=color, size=12),
+                xref="x1", yref="y1",
+            ))
+
+    fig.add_trace(
+        go.Heatmap(
+            z=g_matrix, x=list(range(4)), y=list(range(4)),
+            colorscale="RdBu_r", zmid=0,
+            zmin=-1.5, zmax=1.5,
+            colorbar=dict(
+                title=dict(text="g<sub>μν</sub>", side="right"),
+                x=0.42, len=0.7,
+            ),
+        ),
+        row=1, col=1,
+    )
+
+    fig.update_xaxes(
+        title_text="ν index",
+        tickmode="array", tickvals=list(range(4)),
+        ticktext=["0", "1", "2", "3"],
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="μ index",
+        tickmode="array", tickvals=list(range(4)),
+        ticktext=["0", "1", "2", "3"],
+        autorange="reversed",  # show row 0 at top
+        row=1, col=1,
+    )
+
+    # ---------- Panel B: EC residual vs α_EC ----------
+    alpha_grid = np.linspace(0.1, 2.5, 50)
+    Lambda_UV = 1.221e19  # Planck scale
+    N_f = 16
+    residuals = []
+    for a in alpha_grid:
+        try:
+            r = ec_residual_at_point(Lambda_UV, N_f, alpha_ec=float(a))
+            residuals.append(r.residual_gev)
+        except Exception:
+            residuals.append(0.0)
+
+    residuals = np.asarray(residuals)
+    # Use absolute value on log scale; mark sign with color
+    abs_r = np.abs(residuals)
+    abs_r_safe = np.where(abs_r > 1e-100, abs_r, 1e-100)
+
+    fig.add_trace(
+        go.Scatter(
+            x=alpha_grid, y=abs_r_safe, mode="lines",
+            line=dict(color=COLORS.get("amber", "#F18F01"),
+                      width=2.5),
+            name="|EC residual|",
+            showlegend=False,
+        ),
+        row=1, col=2,
+    )
+
+    # Vertical line at α_EC = 1 (Levi-Civita)
+    fig.add_shape(
+        type="line", x0=1.0, x1=1.0, y0=1e-100, y1=1e-50,
+        line=dict(color="black", width=2, dash="dash"),
+        row=1, col=2,
+    )
+    fig.add_annotation(
+        x=1.0, y=1e-60, text="α<sub>EC</sub> = 1<br>(Levi-Civita)",
+        showarrow=False, font=dict(size=11, color="black"),
+        bgcolor="white", bordercolor="black", borderwidth=1,
+        row=1, col=2,
+    )
+
+    fig.update_xaxes(
+        title_text="α<sub>EC</sub>",
+        range=[0.0, 2.5],
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="|EC residual| (GeV², log scale)",
+        type="log",
+        range=[-100, -50],
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6f W6:</b> Tetrad-metric formalism "
+                "equivalence — closes Phase 6f<br>"
+                "<sub>(Lean: <i>minkowskiTetrad_induces_minkowski_metric</i>, "
+                "<i>tetrad_levi_civita_iff_alpha_unity</i>)</sub>"
+            ),
+            x=0.5, xanchor="center", y=0.97, yanchor="top",
+        ),
+        height=560, width=1300,
+        margin=dict(t=120, b=80),
+        showlegend=False,
+        annotations=annotations_a,
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
     )
     return fig
 

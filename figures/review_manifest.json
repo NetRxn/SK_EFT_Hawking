@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-29T13:35:44.528726+00:00",
+  "generated": "2026-04-29T15:33:00.630349+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -2243,6 +2243,59 @@
         "steel_blue",
         "amber",
         "sage"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_constant_K_riemann_dimension_factor",
+      "function": "fig_constant_K_riemann_dimension_factor",
+      "caption": "Phase 6f Wave 1 \u2014 Constant-sectional-curvature Riemann tensor: dimension factor n(n\u22121) and load-bearing role of metric symmetry. Left panel: scalar curvature R_trace = \u03a3_\u03bc Ric_{\u03bc\u03bc} versus K for n = 2, 3, 4, with slopes 2, 6, 12 \u2014 the n = 4 slope of 12 matches the Lean-proven `constantSectional_diag_trace_eq` exactly. Reference anchors: de Sitter (K = 1, R = 12), AdS (K = -1, R = -12), Minkowski (K = 0). Right panel: log\u2081\u2080(first-Bianchi residual) heatmap on the (K, metric-asymmetry) plane. Symmetric-metric axis (asymmetry = 0) gives identically zero residual \u2014 confirms the load-bearing role of `MetricSymmetric` in `constantSectional_FirstBianchi`. Off-axis residuals grow with both K and asymmetry, demonstrating the predicate is non-vacuous. Lean: constantSectional_diag_trace_eq, constantSectional_FirstBianchi, constantSectional_Ricci_eq. Source: Wald, *General Relativity* (1984) \u00a73.2.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_constant_K_riemann_dimension_factor.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_constant_K_riemann_dimension_factor.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "K",
+        "yaxis": "R"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "sage"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_einstein_tensor_trace_identity",
+      "function": "fig_einstein_tensor_trace_identity",
+      "caption": "Phase 6f Wave 2 \u2014 Einstein-tensor trace identity G^\u03bc_\u03bc = -R in 4D and de Sitter \u039b = 3K relation. Left panel: trace of constant-K Einstein tensor on Minkowski background versus scalar curvature R = 12K. Lean `einsteinTensor_trace_eq_neg_scalar` proves the line G^\u03bc_\u03bc = -R (slope -1). Reference anchors: de Sitter (R=12, G_trace=-12), AdS (R=-12, G_trace=12), Minkowski (0,0). Right panel: log\u2081\u2080 of \u039b-vacuum sup-norm residual |G + \u039bg|_\u221e on the (K, \u039b-3K) plane. The horizontal locus \u039b - 3K = 0 (de Sitter) gives identically zero residual; off-locus deviations grow linearly with |\u039b - 3K|, confirming the load-bearing role of the cosmological-constant relation in `constantSectional_lambda_vacuum_iff`. Lean: einsteinTensor_trace_eq_neg_scalar, constantSectional_einsteinTensor_eq, constantSectional_lambda_vacuum_iff. Source: Wald, *General Relativity* (1984) \u00a73.2; MTW, *Gravitation* (1973) \u00a717.2.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_einstein_tensor_trace_identity.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_einstein_tensor_trace_identity.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "R",
+        "yaxis": "G"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
       ],
       "review_criteria": [
         "Axes labels readable and correct",
