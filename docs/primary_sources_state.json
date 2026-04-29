@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-04-28T21:42:59+00:00",
+  "generated_at": "2026-04-28T23:53:38+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -698,13 +698,13 @@
     "CohenKaplanNelson1993": {
       "bibkey": "CohenKaplanNelson1993",
       "phase": "Phase-6c",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "fetch-failed",
-      "fetched_at": "2026-04-28T20:11:38+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "crossref: Crossref fetch HTTP 404: https://api.crossref.org/works/10.1146/annurev.ns.43.120193.000331}{10.1146/annurev.ns.43.120193.000331}; arxiv: no arxiv id"
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-6c/primary-sources/CohenKaplanNelson1993.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-04-28T23:53:38+00:00",
+      "size_bytes": 387413,
+      "url_used": "https://arxiv.org/pdf/hep-ph/9302210",
+      "note": null
     },
     "Cooke2018": {
       "bibkey": "Cooke2018",

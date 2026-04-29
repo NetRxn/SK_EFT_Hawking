@@ -39,6 +39,46 @@ def load_review_findings() -> list[dict]:
     return extract_review_finding_nodes()
 
 
+_CLOSED_QI_RE = re.compile(r"^### (qi-[a-z0-9-]+)\b", re.MULTILINE)
+
+
+def load_closed_qi_ids() -> tuple[set[str], dict[str, str]]:
+    """Parse the existing QI_REGISTER.md `## Closed Items` section to get
+    the set of QI item IDs that have been manually closed (with their
+    closure block as evidence). Wave 6 addition: the auto-regenerated
+    Open Items section must NOT re-open a QI item already documented as
+    closed in the manually-curated Closed Items section, since some
+    QI items close via structural prevention (e.g. qi-citationintegrity
+    closed via Wave 1 primary-sources cache + CHECK 19) without
+    necessarily flipping every individual ReviewFinding's status.
+
+    Returns (closed_ids, closure_blocks_by_id)."""
+    if not REGISTER_PATH.exists():
+        return set(), {}
+    text = REGISTER_PATH.read_text()
+    # Find the "## Closed Items" section
+    m_closed = re.search(r"^## Closed Items\b", text, re.MULTILINE)
+    if not m_closed:
+        return set(), {}
+    closed_section = text[m_closed.end():]
+    # Stop at the next "## " heading (manual fields, etc.)
+    m_next = re.search(r"^## ", closed_section, re.MULTILINE)
+    if m_next:
+        closed_section = closed_section[: m_next.start()]
+    closed_ids = set()
+    closure_blocks = {}
+    # Each `### qi-<id>` heading starts a closure block
+    for m in re.finditer(r"^### (qi-[a-z0-9-]+)[^\n]*\n", closed_section, re.MULTILINE):
+        qi_id = m.group(1)
+        start = m.end()
+        # Block ends at next ### or end of section
+        m_next_sub = re.search(r"^### ", closed_section[start:], re.MULTILINE)
+        end = start + m_next_sub.start() if m_next_sub else len(closed_section)
+        closed_ids.add(qi_id)
+        closure_blocks[qi_id] = closed_section[m.start():end].rstrip() + "\n"
+    return closed_ids, closure_blocks
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # Pattern clustering
 # ═══════════════════════════════════════════════════════════════════════
@@ -94,6 +134,16 @@ def cluster_findings(findings: list[dict]) -> list[dict]:
       (b) A finding's body carries an explicit "## QI Candidate" section
           → author-flagged systemic issue
 
+    Findings whose `meta.status` resolves to 'fixed' or 'accepted' (via the
+    project supersession ledger at docs/review_finding_supersessions.json,
+    consumed by build_graph.extract_review_finding_nodes) are excluded
+    from the open-cluster aggregate — only `status == 'open'` (or missing)
+    counts toward an open QI item. This is the Wave-6 fix to the
+    Wave-4/Wave-5 issue where the clusterer counted all findings
+    regardless of supersession status, making the auto-regenerated
+    Open-Items section diverge from the manually-curated Closed-Items
+    section.
+
     Returns a list of QI item dicts with id, pattern_summary,
     gate_affected, occurrences, affected_papers, severity, first_observed.
     """
@@ -101,17 +151,24 @@ def cluster_findings(findings: list[dict]) -> list[dict]:
     by_gate_findings: dict[str, list[dict]] = defaultdict(list)
 
     for f in findings:
+        status = (f.get('meta', {}) or {}).get('status', 'open')
+        if status != 'open':
+            continue  # Wave-6 status filter: skip superseded findings
         gate = classify_finding(f)
         paper = f.get('meta', {}).get('inferred_paper') or '(unknown)'
         by_gate_and_paper[gate].add(paper)
         by_gate_findings[gate].append(f)
 
+    closed_ids, _ = load_closed_qi_ids()
     items = []
     for gate, papers in sorted(by_gate_and_paper.items()):
         if gate == 'unclassified':
             continue
         if len(papers) < 2:
             continue  # not cross-paper → not a QI candidate
+        qi_id = f'qi-{gate.lower()}'
+        if qi_id in closed_ids:
+            continue  # Wave-6: already closed in QI_REGISTER.md ## Closed Items
         gate_findings = by_gate_findings[gate]
         dates = [f.get('meta', {}).get('review_date', '') for f in gate_findings]
         severities = Counter(f.get('meta', {}).get('severity', 'advisory')
@@ -146,7 +203,9 @@ def render_register(items: list[dict], findings_total: int) -> str:
     so the document is diff-friendly across regenerations."""
     generated = datetime.now(timezone.utc).isoformat(timespec='seconds')
     open_count = sum(1 for it in items if it['status'] == 'open')
-    closed_count = sum(1 for it in items if it['status'] == 'closed')
+    closed_ids_set, _ = load_closed_qi_ids()
+    closed_count = len(closed_ids_set)
+    total_qi_count = len(items) + closed_count
 
     lines = []
     lines.append("# Meta-process Quality Improvement Register")
@@ -160,13 +219,14 @@ def render_register(items: list[dict], findings_total: int) -> str:
     lines.append("## Summary")
     lines.append("")
     lines.append(f"- **{findings_total}** ReviewFinding nodes currently in the graph")
-    lines.append(f"- **{len(items)}** QI items detected")
+    lines.append(f"- **{total_qi_count}** QI items tracked ({len(items)} auto-detected open + {closed_count} closed via `## Closed Items` section)")
     lines.append(f"- **{open_count}** open, **{closed_count}** closed")
     lines.append("")
     lines.append("## Open Items")
     lines.append("")
     if not items or all(it['status'] == 'closed' for it in items):
         lines.append("_(none)_")
+        lines.append("")
     else:
         for item in items:
             if item['status'] != 'open':
@@ -192,13 +252,17 @@ def render_register(items: list[dict], findings_total: int) -> str:
             lines.append("")
     lines.append("## Closed Items")
     lines.append("")
-    closed_items = [it for it in items if it['status'] == 'closed']
-    if not closed_items:
+    # Wave-6: preserve manually-curated Closed Items section verbatim so
+    # re-running the regen does NOT wipe evidence_on_close blocks. The
+    # set of closed QI IDs is sourced from the existing register and
+    # those IDs are excluded from the Open Items aggregate above.
+    _, closure_blocks = load_closed_qi_ids()
+    if not closure_blocks:
         lines.append("_(none yet)_")
     else:
-        for item in closed_items:
-            lines.append(f"### {item['id']} — {item['pattern_summary']}")
-            lines.append(f"- **Closed:** {item.get('evidence_on_close', '_(undocumented)_')}")
+        # Stable ordering by qi-id
+        for qi_id in sorted(closure_blocks.keys()):
+            lines.append(closure_blocks[qi_id].rstrip())
             lines.append("")
     lines.append("---")
     lines.append("")

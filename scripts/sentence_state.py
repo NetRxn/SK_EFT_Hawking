@@ -189,8 +189,33 @@ _SENTENCE_OPTIONAL = {
     'raw_id_parts', 'section_ordinal', 'quote_normalized',
     'chain_proposed', 'delta_pct', 'agent_notes',
     'gates_invoked', 'rewrite_of', 'meta',
+    # Phase 6i Wave 7 bundle-aware schema additions
+    'bundle_destination', 'bundle_section_hint', 'lift_action',
 }
 _SENTENCE_KNOWN = _SENTENCE_REQUIRED | _SENTENCE_OPTIONAL
+
+
+# Phase 6i Wave 7 — bundle-aware schema additions
+# Bundle target enum per docs/PAPER_STRATEGY.md (1 flagship + 5 deep + 3 PRL +
+# 2 infrastructure + 2 experimental). A sentence can carry a single bundle
+# target (the common case for Lift-section) or a list of targets (for
+# Lift-letter, Lift-companion, Lift-flagship — the splash + the deep paper, etc.).
+_VALID_BUNDLE_TARGETS = {
+    'F',                                # Tier 0 flagship review
+    'D1', 'D2', 'D3', 'D4', 'D5',       # Tier 1 deep papers
+    'L1', 'L2', 'L3',                   # Tier 2 PRL splashes
+    'I1', 'I2',                         # Tier 3 infrastructure
+    'E1', 'E2',                         # Tier 4 experimental letters
+}
+# Lift-action enum per docs/PAPER_DRAFT_MAPPING.md conventions table.
+_VALID_LIFT_ACTIONS = {
+    'Lift-section',     # content lifts as §section of one bundle
+    'Lift-letter',      # PRL splash + deep paper §section (two bundles)
+    'Lift-companion',   # 2-3pp experimental letter paired with deep paper
+    'Lift-flagship',    # summarized in flagship + fully covered in deep
+    'Retain-in-place',  # ships as-is on existing path (rare)
+    'Retire',           # tombstoned; consolidated_into_bundle
+}
 
 
 def validate_claims_review(data: dict) -> list[str]:
@@ -303,6 +328,45 @@ def validate_claims_review(data: dict) -> list[str]:
         ts = s.get('tombstone')
         if ts is not None and not isinstance(ts, bool):
             errors.append(f"sentences[{i}].tombstone must be bool, got {type(ts).__name__}")
+
+        # Phase 6i Wave 7 bundle-aware schema (optional fields)
+        bd = s.get('bundle_destination')
+        if bd is not None:
+            if isinstance(bd, str):
+                if bd not in _VALID_BUNDLE_TARGETS:
+                    errors.append(
+                        f"sentences[{i}].bundle_destination invalid: {bd!r} "
+                        f"(must be one of {sorted(_VALID_BUNDLE_TARGETS)})"
+                    )
+            elif isinstance(bd, list):
+                for j, t in enumerate(bd):
+                    if t not in _VALID_BUNDLE_TARGETS:
+                        errors.append(
+                            f"sentences[{i}].bundle_destination[{j}] invalid: {t!r}"
+                        )
+                if len(set(bd)) != len(bd):
+                    errors.append(
+                        f"sentences[{i}].bundle_destination has duplicates"
+                    )
+            else:
+                errors.append(
+                    f"sentences[{i}].bundle_destination must be str or list, "
+                    f"got {type(bd).__name__}"
+                )
+
+        la = s.get('lift_action')
+        if la is not None and la not in _VALID_LIFT_ACTIONS:
+            errors.append(
+                f"sentences[{i}].lift_action invalid: {la!r} "
+                f"(must be one of {sorted(_VALID_LIFT_ACTIONS)})"
+            )
+
+        bsh = s.get('bundle_section_hint')
+        if bsh is not None and not isinstance(bsh, str):
+            errors.append(
+                f"sentences[{i}].bundle_section_hint must be str, "
+                f"got {type(bsh).__name__}"
+            )
 
     # non_reproducing_prior_findings[] (optional)
     nrpf = data.get('non_reproducing_prior_findings', [])

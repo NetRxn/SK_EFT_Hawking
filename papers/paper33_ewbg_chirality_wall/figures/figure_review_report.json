@@ -1,0 +1,153 @@
+{
+  "review_date": "2026-04-28T00:00:00Z",
+  "reviewer": "physics-qa:figure-reviewer (Stage 13)",
+  "phase": "Phase 6c Wave 2",
+  "paper": "paper33_ewbg_chirality_wall",
+  "bundle_target": "D3",
+  "bundle_section_hint": "D3 §13.5",
+  "figures_reviewed": 1,
+  "overall_status": "issues_found",
+  "verdict": "warning",
+  "manifest_present": false,
+  "structural_checks_present": false,
+  "figures": [
+    {
+      "name": "fig_ewbg_allowed_region",
+      "file": "papers/paper33_ewbg_chirality_wall/figures/fig_ewbg_allowed_region.png",
+      "size_bytes": 274409,
+      "layout": "1 row x 2 cols (45% / 55% column widths, horizontal_spacing=0.15)",
+      "status": "warning",
+      "rendering": {
+        "status": "issues",
+        "issues": [
+          {
+            "severity": "BLOCKER",
+            "id": "R1",
+            "location": "right panel, subplot-title band (top of panel 2)",
+            "description": "The right-panel subplot title 'm_H, E) phase diagram with KLRS endpoint' is rendered on top of the KLRS-endpoint vline annotation 'KLRS endpoint m_H = 72.4 GeV'. Because the annotation is anchored at x=m_h_klrs=72.4 with annotation_position='top', and the subplot title is auto-placed in the same band, the two strings collide and produce the visible garbled text 'KLRS endpoint m_H E) phase diagram with KLRS endpoint' at the top of panel 2. The leading parenthesis '(' of the subplot title is also clipped by the annotation. This makes the right-panel title illegible and is a publication-blocker for paper33."
+          },
+          {
+            "severity": "REQUIRED",
+            "id": "R2",
+            "location": "right panel, top-left corner",
+            "description": "The right-panel y-axis tick label '0.05' sits inside the same crowded region as the subplot title and the KLRS annotation, contributing to the visual clutter and making the upper-left of panel 2 hard to parse."
+          },
+          {
+            "severity": "REQUIRED",
+            "id": "R3",
+            "location": "right panel, x=160, y=0.04 (in-axes annotation)",
+            "description": "The 'SM overshoot: 1.73x KLRS / (>1.5x, well into crossover)' annotation sits in the upper-right of panel 2 in a low-contrast grey (font color = COLORS['cross'] = #8D99AE) on the grey-fill crossover region. Readable on a high-DPI screen but loses contrast at journal column-width PNG embedding. Recommend a darker color or a faint white-translucent background bbox."
+          },
+          {
+            "severity": "REQUIRED",
+            "id": "R4",
+            "location": "left panel, all three marker labels",
+            "description": "On the 2x2 verdict matrix the three marker text-labels ('  SM-as-is', '  SM+3nu_R', '  BSM target') are placed via textposition='middle right' and partially overlap the bold quadrant text-block labels ('DOUBLY FORBIDDEN', 'TRANSITION BLOCKS', 'EWBG ALLOWED'). On render the marker labels visibly sit ON TOP of the quadrant labels (e.g. 'SM-as-is' overlays 'DOUBLY FORBIDDEN'). Both pieces of information are intelligible only because the quadrant labels are larger and bolder, but the visual layering is messy."
+          },
+          {
+            "severity": "RECOMMENDED",
+            "id": "R5",
+            "location": "figure title (top of figure)",
+            "description": "The two-line figure title carries a long sub-line listing three underscored Lean identifiers ('EWBGViable, ewbg_forbidden_iff_wall_intact_or_not_viable, sm_no_nu_R_ewbg_doubly_forbidden') which renders as a single dense line in italic. Acceptable but dense; consider line-wrapping or moving Lean cross-refs to figure caption only (the LaTeX caption already lists the same three theorem names)."
+          }
+        ]
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "verified_values": [
+          "KLRS endpoint m_H = 72.4 GeV  -> matches EWBG_PARAMS['KLRS_M_H_CROSSOVER_THRESHOLD_GEV']=72.4 (CFH 1999, refining KLRS 1996)",
+          "SM Higgs mass m_H = 125.20 GeV -> matches EW_PARAMS['M_H_GEV']=125.20 (PDG 2024 S. Navas et al. PRD 110, 030001)",
+          "Overshoot ratio 1.73x -> matches EWBG_PARAMS['M_H_OVERSHOOT_RATIO'] = 125.20/72.4 = 1.7293",
+          "2x2 verdict matrix sectoring: SM-as-is in (wall intact, crossover) = doubly-forbidden; SM+3nu_R in (wall cracked, crossover) = transition-blocked; BSM target in (wall cracked, first-order strong) = allowed -- consistent with paper33 §caption and Lean theorems ewbg_forbidden_iff_wall_intact_or_not_viable / sm_no_nu_R_ewbg_doubly_forbidden / sm_klrs_overshoot_ratio_gt_threshold",
+          "Right-panel partition Z2: first-order if (m_H < 72.4 AND E > 0.005); SM marker at (125.20, 0.01) is to the right of the dashed KLRS line and falls inside the grey crossover region as expected."
+        ]
+      },
+      "style": {
+        "status": "issues",
+        "issues": [
+          {
+            "severity": "RECOMMENDED",
+            "id": "S1",
+            "description": "SM marker color is hard-coded as 'rgb(196, 30, 58)' (carmine red) rather than drawing from COLORS palette. This is consistent within the figure (same color in both panels) but inconsistent with project convention to use COLORS['carmine']=#E63946 or COLORS['Heidelberg']/COLORS['K39']=#A23B72. Cosmetic only."
+          },
+          {
+            "severity": "RECOMMENDED",
+            "id": "S2",
+            "description": "Title font renders as a sans-serif fallback in this PNG render (CMU Serif/Computer Modern not available in the renderer). Consistent across the figure but inconsistent with PRL serif convention used elsewhere. Likely a renderer-environment issue, not a code issue."
+          }
+        ],
+        "verified": [
+          "Color palette uses amber (#F18F01) for 'allowed' regions and gray for 'forbidden' regions -- consistent with project conventions and colorblind-safe.",
+          "No red/green pairing -- complies with CLAUDE.md visualization invariant.",
+          "Plotly used (not matplotlib) -- complies with CLAUDE.md Pipeline Invariant 3.",
+          "Heatmap colorscales use rgba with explicit alpha for visual hierarchy."
+        ]
+      },
+      "caption_match": true,
+      "caption_check_notes": [
+        "Caption claims 'SM-as-is sits at (intact wall + crossover under H_KLRS); doubly forbidden' -- figure shows red X marker at (crossover, wall intact) inside DOUBLY FORBIDDEN quadrant. MATCH.",
+        "Caption claims 'SM-with-3nu_R sits at (cracked wall + crossover); transition-blocked' -- figure shows blue diamond at (crossover, wall cracked) inside TRANSITION BLOCKS quadrant. MATCH.",
+        "Caption claims 'BSM target ... (cracked wall + first-order strong); allowed' -- figure shows amber star at (first-order strong, wall cracked) inside EWBG ALLOWED quadrant. MATCH.",
+        "Caption claims 'KLRS / CFH lattice endpoint at m_H = 72.4 GeV' -- vertical dashed line at x=72.4 confirmed in panel 2. MATCH (but endpoint annotation is the source of the BLOCKER R1 collision).",
+        "Caption claims 'PDG SM at m_H = 125.20 GeV sits well to the right of the endpoint (overshoot ratio approximately 1.73 > 1.5), placing the resummed transition firmly in the crossover region' -- SM marker at (125.20, 0.01) confirmed in panel 2 inside grey crossover region; '1.73x KLRS' annotation confirmed. MATCH."
+      ],
+      "lean_cross_refs": {
+        "status": "pass",
+        "verified": [
+          "Caption references three Lean theorems: ewbg_forbidden_iff_wall_intact_or_not_viable, sm_no_nu_R_ewbg_doubly_forbidden, sm_klrs_overshoot_ratio_gt_threshold. The first two appear in the figure title sub-line. The third (overshoot threshold) is implicitly visualized via the 1.73x annotation. Lean module path: SK_EFT_Hawking/lean/SKEFTHawking/EWBaryogenesisChiralityWall.lean (per memory)."
+        ]
+      },
+      "notes": "Figure correctly encodes the doubly-forbidden physics (chirality wall x phase transition decomposition) and the SM-vs-KLRS-endpoint phase-diagram overshoot. Physics content is correct and matches both the LaTeX caption and the constants in EWBG_PARAMS / EW_PARAMS. The blocking issue is purely a rendering / annotation-placement bug in the right panel header band -- a fix to the KLRS-endpoint vline annotation positioning resolves it."
+    }
+  ],
+  "blocker_count": 1,
+  "required_count": 3,
+  "recommended_count": 3,
+  "summary": "fig_ewbg_allowed_region encodes correct physics and matches the paper33 caption verbatim across all five testable claims (SM-as-is quadrant, SM+3nu_R quadrant, BSM target quadrant, KLRS endpoint at 72.4 GeV, SM overshoot 1.73x). However a 1 BLOCKER + 3 REQUIRED rendering / placement defect cluster in the right-panel header band makes the figure not-publication-ready as-is: the KLRS-endpoint vline annotation collides with the right subplot title producing a garbled top-of-panel string. This is a pure visualization bug fixable by repositioning the vline annotation (and/or the subplot title); no physics or Lean changes are required.",
+  "recommendations": [
+    {
+      "priority": 1,
+      "fix_id": "R1-fix",
+      "description": "Resolve the KLRS-endpoint annotation vs. right-subplot-title collision. Recommended approach: change `fig.add_vline(... annotation_position='top', ...)` to `annotation_position='top right'` (or `'bottom'`/`'top left'`) so the annotation does not occupy the subplot-title band. Alternatively replace the auto vline-annotation with an explicit `fig.add_annotation(x=72.4, y=0.052, text='KLRS endpoint 72.4 GeV', xanchor='left', yanchor='bottom', showarrow=False, ...)` placed outside the data area. A third option is to bump the figure top margin from t=120 to t=160 and re-anchor the vline annotation BELOW the subplot title.",
+      "code_location": "src/core/visualizations.py:7831-7837 (fig.add_vline call inside fig_ewbg_allowed_region)",
+      "test": "After fix, regenerate via `uv run python scripts/review_figures.py` and visually re-inspect; confirm 'KLRS endpoint m_H = 72.4 GeV' is fully readable and does NOT overlap with '(m_H, E) phase diagram with KLRS endpoint'."
+    },
+    {
+      "priority": 2,
+      "fix_id": "R2-fix",
+      "description": "Same fix as R1 (re-anchoring the KLRS annotation off the subplot-title band). The y-tick '0.05' overlap is a side-effect of the same congestion -- expanding the right-panel y-range to e.g. [0, 0.055] or moving the annotation y-anchor will free the corner.",
+      "code_location": "src/core/visualizations.py:7860 (fig.update_yaxes range=[0, 0.05]) and 7831-7837"
+    },
+    {
+      "priority": 3,
+      "fix_id": "R4-fix",
+      "description": "On the left panel, separate marker labels from quadrant labels. Two viable approaches: (a) move marker labels OUT of the heatmap cell via `textposition='top center'` or `'bottom right'` so they sit on the cell border; (b) keep textposition but restyle marker labels with a white bgcolor box (`textfont=dict(...), text=['<b>SM-as-is</b>']` plus an annotation with `bgcolor='rgba(255,255,255,0.85)'`). Approach (a) is simpler.",
+      "code_location": "src/core/visualizations.py:7766-7796 (three Scatter traces inside panel 1)"
+    },
+    {
+      "priority": 4,
+      "fix_id": "R3-fix",
+      "description": "Improve contrast of the 'SM overshoot: 1.73x KLRS' annotation. Either (a) change `font=dict(color=COLORS['cross'])` to a darker `'#333333'` or to the SM-marker carmine, or (b) add `bgcolor='rgba(255,255,255,0.7)'` and `bordercolor='#888'` to the annotation so the text reads cleanly against the grey crossover fill.",
+      "code_location": "src/core/visualizations.py:7849-7857 (fig.add_annotation 'SM overshoot ...')"
+    },
+    {
+      "priority": 5,
+      "fix_id": "S1-fix",
+      "description": "(Cosmetic, optional) Replace the hard-coded 'rgb(196, 30, 58)' SM marker color with `COLORS['carmine']` (#E63946) for project palette consistency. Two occurrences (left panel SM-as-is marker; right panel SM marker).",
+      "code_location": "src/core/visualizations.py:7769 and 7844"
+    },
+    {
+      "priority": 6,
+      "fix_id": "infra-fix",
+      "description": "(Infrastructure, optional) The figures directory contains no `review_manifest.json` or `structural_checks.json`. Wave 2 should have produced these via `scripts/review_figures.py`. Recommend running `uv run python scripts/review_figures.py` for paper33 so future Stage 13 reviews can cross-check against an automated structural manifest."
+    }
+  ],
+  "stage13_status": {
+    "decision": "block_pending_R1_R2_R3_R4",
+    "rationale": "BLOCKER R1 is a publication-killer (illegible subplot title); the same code edit (re-anchoring the vline annotation) resolves both R1 and R2. R3 and R4 are low-effort cosmetic tightening. Once R1+R2+R4 are addressed, this figure is publication-ready for paper33 and for D3 §13.5.",
+    "physics_blockers": 0,
+    "rendering_blockers": 1,
+    "estimated_fix_cost": "0.5 PH (single visualization function edit + figure regen + re-review)"
+  }
+}

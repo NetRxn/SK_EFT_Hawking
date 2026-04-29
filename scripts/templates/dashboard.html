@@ -325,6 +325,10 @@
            href="?tab=paper">
             Paper Provenance
         </a>
+        <a class="tab {% if tab == 'bundles' %}active{% endif %}"
+           href="?tab=bundles">
+            Bundles
+        </a>
     </div>
 </div>
 
@@ -978,6 +982,13 @@
     {% if tab == 'paper' %}
     <div class="tab-content active">
         {% include 'partials/paper_provenance_tab.html' %}
+    </div>
+    {% endif %}
+
+    <!-- ═══ BUNDLES TAB (Phase 6i Wave 7.5) ═══ -->
+    {% if tab == 'bundles' %}
+    <div class="tab-content active">
+        {% include 'partials/bundles_tab.html' %}
     </div>
     {% endif %}
 

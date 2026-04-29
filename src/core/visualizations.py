@@ -7756,40 +7756,60 @@ def fig_ewbg_allowed_region():
                     [1, "rgba(241, 143, 1, 0.55)"]],
         showscale=False,
         hoverinfo="text",
-        text=[["DOUBLY<br>FORBIDDEN", "WALL BLOCKS"],
-              ["TRANSITION<br>BLOCKS", "EWBG<br>ALLOWED"]],
-        texttemplate="%{text}",
-        textfont=dict(size=14, color="black"),
+        text=[["DOUBLY FORBIDDEN", "WALL BLOCKS"],
+              ["TRANSITION BLOCKS", "EWBG ALLOWED"]],
+        showlegend=False,
     ), row=1, col=1)
 
-    # SM-as-is marker (wall intact + crossover under H_KLRS)
+    # Quadrant labels as top-of-cell annotations (Stage-13 R4 fix —
+    # frees the cell center for the SM / SM+3ν_R / BSM markers).
+    quadrant_labels = [
+        ("crossover",          "wall cracked", "TRANSITION BLOCKS"),
+        ("first-order strong", "wall cracked", "EWBG ALLOWED"),
+        ("crossover",          "wall intact",  "DOUBLY FORBIDDEN"),
+        ("first-order strong", "wall intact",  "WALL BLOCKS"),
+    ]
+    for x_label, y_label, text_label in quadrant_labels:
+        fig.add_annotation(
+            x=x_label, y=y_label,
+            text=f"<b>{text_label}</b>",
+            yshift=42,
+            showarrow=False,
+            font=dict(size=12, color="black"),
+            xref="x1", yref="y1",
+        )
+
+    # Marker-only mode (Stage-13 R4 fix). The bold quadrant labels
+    # (DOUBLY FORBIDDEN / TRANSITION BLOCKS / WALL BLOCKS / EWBG
+    # ALLOWED) already occupy each cell center; placing in-figure
+    # textlabels alongside the SM / SM+3ν_R / BSM markers caused
+    # bleed-over into adjacent cells. The legend on the right names
+    # each marker.
     fig.add_trace(go.Scatter(
         x=["crossover"], y=["wall intact"],
-        mode="markers+text",
-        marker=dict(color="rgb(196, 30, 58)", size=18, symbol="x"),
-        text=["  SM-as-is"], textposition="middle right",
+        mode="markers",
+        marker=dict(color="rgb(196, 30, 58)", size=22, symbol="x",
+                    line=dict(color="black", width=2)),
         showlegend=True, name="SM-as-is",
         hoverinfo="text",
         hovertext="SM-no-ν_R: Z₁₆ ≡ 13 (mod 16) ≠ 0 + KLRS crossover",
     ), row=1, col=1)
 
-    # SM+3ν_R marker (wall cracked + crossover under H_KLRS)
     fig.add_trace(go.Scatter(
         x=["crossover"], y=["wall cracked"],
-        mode="markers+text",
-        marker=dict(color=COLORS["steel_blue"], size=18, symbol="diamond"),
-        text=["  SM+3ν_R"], textposition="middle right",
+        mode="markers",
+        marker=dict(color=COLORS["steel_blue"], size=20, symbol="diamond",
+                    line=dict(color="black", width=1.5)),
         showlegend=True, name="SM+3ν_R (under H_KLRS)",
         hoverinfo="text",
         hovertext="SM+3ν_R: Z₁₆ ≡ 0 (mod 16), wall cracks, but KLRS crossover blocks",
     ), row=1, col=1)
 
-    # BSM target (wall cracked + first-order strong)
     fig.add_trace(go.Scatter(
         x=["first-order strong"], y=["wall cracked"],
-        mode="markers+text",
-        marker=dict(color=COLORS["amber"], size=18, symbol="star"),
-        text=["  BSM target"], textposition="middle right",
+        mode="markers",
+        marker=dict(color=COLORS["amber"], size=22, symbol="star",
+                    line=dict(color="black", width=1.5)),
         showlegend=True, name="BSM target",
         hoverinfo="text",
         hovertext="BSM with extra scalar(s) producing strong first-order EWPT",
@@ -7827,12 +7847,19 @@ def fig_ewbg_allowed_region():
         showlegend=True, name="first-order strong (full thermal)",
     ), row=1, col=2)
 
-    # KLRS endpoint
+    # KLRS endpoint. annotation_position="bottom right" places the
+    # endpoint label inside the axes and away from the subplot title
+    # band — clears the Stage-13 R1 collision (subplot title vs vline
+    # annotation) and the R2 y-tick crowding side-effect.
     fig.add_vline(
         x=m_h_klrs,
         line=dict(color=COLORS["cross"], width=2, dash="dash"),
-        annotation_text=f"KLRS endpoint m_H = {m_h_klrs} GeV",
-        annotation_position="top",
+        annotation_text=f"KLRS endpoint<br>m_H = {m_h_klrs} GeV",
+        annotation_position="bottom right",
+        annotation=dict(
+            font=dict(size=10, color="black"),
+            bgcolor="rgba(255,255,255,0.85)",
+        ),
         row=1, col=2,
     )
 
@@ -7842,17 +7869,23 @@ def fig_ewbg_allowed_region():
         x=[sm_m_h], y=[0.01],
         mode="markers+text",
         marker=dict(color="rgb(196, 30, 58)", size=14, symbol="x"),
-        text=[f"  SM (m_H = {sm_m_h})"], textposition="middle right",
+        text=[f"SM (m_H = {sm_m_h})"], textposition="top right",
+        textfont=dict(size=10, color="black"),
         showlegend=True, name="SM (LO first-order, full → crossover)",
     ), row=1, col=2)
 
-    # Annotation showing overshoot ratio
+    # Annotation showing overshoot ratio. Black text + white bgcolor
+    # (Stage-13 R3 fix) — original COLORS["cross"] light-grey on grey
+    # crossover fill was low-contrast.
     overshoot = EWBG_PARAMS['M_H_OVERSHOOT_RATIO']
     fig.add_annotation(
         x=160, y=0.04,
         text=f"SM overshoot: {overshoot:.2f}× KLRS<br>(>1.5×, well into crossover)",
         showarrow=False,
-        font=dict(size=11, color=COLORS["cross"]),
+        font=dict(size=11, color="black"),
+        bgcolor="rgba(255,255,255,0.85)",
+        bordercolor=COLORS["cross"],
+        borderwidth=1,
         row=1, col=2,
     )
 

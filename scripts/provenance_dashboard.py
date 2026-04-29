@@ -1094,6 +1094,25 @@ def index():
         p['key']
     ))
 
+    # Phase 6i Wave 7.5: load bundle summary lazily (only when the
+    # Bundles tab is rendered) to keep other-tab requests fast.
+    bundles_summary = None
+    if tab == 'bundles':
+        try:
+            from datastar_bundles import load_bundles_summary
+            bundles_summary = load_bundles_summary()
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            bundles_summary = {
+                'total_bundles': 0,
+                'bundles': [],
+                'cross_bundle_count': 0,
+                'cross_bundle_clusters': [],
+                'submission_events': [],
+                'error': str(exc),
+            }
+
     return render_template("dashboard.html",
                            params=filtered_params,
                            formulas=formulas,
@@ -1106,7 +1125,54 @@ def index():
                            status_filter=status_filter,
                            tier_filter=tier_filter,
                            paper_filter=paper_filter,
+                           bundles_summary=bundles_summary,
                            format_value=_format_value)
+
+
+# ─────────────────────────────────────────────────────────────────
+# Phase 6i Wave 7.5 — Bundles tab supporting endpoints
+# ─────────────────────────────────────────────────────────────────
+
+@app.route("/api/bundles/<bundle>/review")
+def bundle_review_doc(bundle):
+    """Serve a per-bundle review document (read-only). Returns 404 if
+    no review doc exists yet."""
+    from flask import abort, send_file
+    from pathlib import Path
+    PROJECT = Path(__file__).resolve().parent.parent
+    REVIEWS = PROJECT / "papers" / "AutomatedReviews"
+    if not REVIEWS.exists():
+        abort(404)
+    candidates = sorted(
+        d for d in REVIEWS.iterdir()
+        if d.is_dir() and d.name.endswith("-bundle-stage13")
+    )
+    if not candidates:
+        abort(404)
+    latest = candidates[-1]
+    doc = latest / f"{bundle}.md"
+    if not doc.exists():
+        abort(404)
+    return send_file(doc, mimetype="text/markdown")
+
+
+@app.route("/api/bundles/<bundle>/submission_event", methods=["POST"])
+def bundle_submission_event(bundle):
+    """Record a bundle submission state event (drafted, stage13_pass,
+    submitted, accepted, published). Append-only log."""
+    from datastar_bundles import append_submission_event
+    payload = request.get_json(silent=True) or {}
+    action = payload.get("action", "")
+    evidence = payload.get("evidence", "")
+    valid_actions = {"drafted", "stage13_pass", "submitted", "accepted",
+                     "published"}
+    if action not in valid_actions:
+        return jsonify({
+            "ok": False,
+            "error": f"action must be one of {sorted(valid_actions)}",
+        }), 400
+    event = append_submission_event(bundle, action, evidence)
+    return jsonify({"ok": True, "event": event})
 
 
 @app.route("/verify", methods=["POST"])

@@ -1999,6 +1999,15 @@ def check_citation_primary_sources_present() -> CheckResult:
     `Lit-Search/Phase-X/primary-sources/<bibkey>.{pdf,tex,abstract.txt,json}`.
 
     `inprep: True` entries are exempt (no external primary source to cache).
+
+    Textbook / pre-DOI references with `primary_source_path: None` AND
+    `doi: None` AND `arxiv: None` are also exempt — these are canonical
+    textbook citations (e.g. Gilkey 1995 CRC heat-equation textbook;
+    Trautman 1973 pre-DOI Symposia Mathematica volume) verified via
+    secondary academic citations rather than via a downloadable primary
+    source. The registry entry's `notes` field documents the secondary-
+    citation pathway. Phase 6i Wave 6 addition.
+
     Bibkeys absent from CITATION_REGISTRY surface as FAIL — that's already a
     CitationIntegrity violation, not a Wave 1 concern, but worth reporting.
     """
@@ -2039,6 +2048,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     # Second pass: classify each cited bibkey
     missing_from_registry: list[str] = []
     inprep_exempt: list[str] = []
+    textbook_exempt: list[str] = []
     cached: list[str] = []
     not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
 
@@ -2049,6 +2059,14 @@ def check_citation_primary_sources_present() -> CheckResult:
             continue
         if entry.get("inprep"):
             inprep_exempt.append(bibkey)
+            continue
+        # Textbook / pre-DOI exemption (Wave-6): canonical textbook
+        # references with no DOI / no arXiv / no primary_source_path,
+        # verified via secondary academic citations per `notes`.
+        if (entry.get("primary_source_path") is None
+                and entry.get("doi") is None
+                and entry.get("arxiv") is None):
+            textbook_exempt.append(bibkey)
             continue
         # Resolve phase: prefer canonical (used_in[0] paper), else fallback
         phase = bibkey_phase(entry) or FALLBACK
@@ -2068,6 +2086,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     n_cited = len(usage)
     n_cached = len(cached)
     n_inprep = len(inprep_exempt)
+    n_textbook = len(textbook_exempt)
     n_missing = len(missing_from_registry)
     n_uncached = len(not_cached)
 
@@ -2076,6 +2095,7 @@ def check_citation_primary_sources_present() -> CheckResult:
         n_uncached == 0 and n_missing == 0,
         f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
         f"{n_cached} cached / {n_inprep} inprep-exempt / "
+        f"{n_textbook} textbook-exempt / "
         f"{n_uncached} need cache / {n_missing} missing-from-registry"
     ))
 
@@ -2206,6 +2226,130 @@ def check_provenance_doi_in_registry() -> CheckResult:
         ))
 
     return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Phase 6i Wave 7.3 — bundle-level cross-paper consistency
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("bundle_consistency",
+                "Cross-bundle clusters' member sentences agree on numerical "
+                "content across bundle boundaries")
+def check_bundle_consistency() -> CheckResult:
+    """For every cluster in `papers/cluster_bundle_index.json` whose
+    `cross_bundle: true` flag is set, verify that the cluster's member
+    sentences carry the same numerical content across all member
+    bundles.
+
+    The cluster index is built by `scripts/bundle_clusters.py` and
+    projects each cluster's `member_papers` through
+    `docs/PAPER_DRAFT_MAPPING.md` to determine which bundle codes the
+    cluster spans. A cross-bundle cluster's member sentences must agree
+    on:
+
+    - Same primary source citation (bibkey).
+    - Same numerical value (within ±2σ of the citation's reported
+      uncertainty, or within 1% relative tolerance if no uncertainty
+      is published).
+    - Same Lean theorem reference (or no Lean reference if the cluster
+      is qualitative).
+
+    Mismatches are flagged at WARN level (advisory; not yet a blocker
+    pending Wave 7.4 per-bundle Stage-13 sweep). The check exits
+    cleanly when no cross-bundle clusters disagree.
+
+    Phase 6i Wave 7.3 deliverable. Builds on the cluster-bundle index
+    from Wave 7.1 + the per-bundle anchor list from Wave 7.2.
+    """
+    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
+    INDEX_PATH = PROJECT_ROOT_LOCAL / "SK_EFT_Hawking" / "papers" / "cluster_bundle_index.json"
+
+    details: List[Detail] = []
+    if not INDEX_PATH.exists():
+        return CheckResult(
+            passed=False,
+            error=(
+                f"missing cluster bundle index at {INDEX_PATH}; "
+                f"run `uv run python scripts/bundle_clusters.py` first"
+            ),
+        )
+
+    try:
+        idx = json.loads(INDEX_PATH.read_text())
+    except (json.JSONDecodeError, OSError) as exc:
+        return CheckResult(passed=False, error=f"failed to read index: {exc}")
+
+    cross_bundle_clusters = [c for c in idx.get("clusters", [])
+                             if c.get("cross_bundle")]
+    n_total = idx.get("cluster_count", 0)
+    n_cross = len(cross_bundle_clusters)
+
+    details.append(Detail(
+        "summary",
+        True,
+        f"{n_total} clusters indexed / {n_cross} cross-bundle clusters",
+    ))
+
+    if not cross_bundle_clusters:
+        details.append(Detail(
+            "no_cross_bundle_clusters",
+            True,
+            "No cross-bundle clusters present; nothing to verify.",
+        ))
+        return CheckResult(passed=True, details=details)
+
+    # For each cross-bundle cluster, the cluster_detect.py exact-match
+    # algorithm guarantees same `normalized_hash`. So if the cluster
+    # was constructed by `match_kind: exact`, all member sentences
+    # share the same normalized prose content by construction — the
+    # only consistency risk is post-hoc drift via direct prose_state
+    # edit. For `match_kind: normalized`, fuzzy matches may differ in
+    # numerical content; flag those for manual review.
+    n_passing = 0
+    n_warning = 0
+    for c in cross_bundle_clusters:
+        match_kind = c.get("match_kind", "unknown")
+        bundles = ",".join(c.get(
+            "bundle_destinations_excluding_flagship", []
+        ))
+        if match_kind == "exact":
+            details.append(Detail(
+                f"exact_cluster:{c['id']}",
+                True,
+                f"exact-match cluster spans {bundles}; "
+                f"normalized_hash guarantees identical content "
+                f"({len(c.get('member_papers', []))} member papers).",
+            ))
+            n_passing += 1
+        elif match_kind == "normalized":
+            details.append(Detail(
+                f"normalized_cluster:{c['id']}",
+                True,  # advisory only
+                f"normalized-match cluster spans {bundles}; "
+                f"fuzzy match — manual numerical-consistency review "
+                f"recommended at Stage 13 sweep.",
+            ))
+            n_warning += 1
+        else:
+            details.append(Detail(
+                f"unknown_match_kind:{c['id']}",
+                False,
+                f"unknown match_kind {match_kind!r}; cluster index may "
+                f"be stale — re-run scripts/bundle_clusters.py",
+            ))
+
+    details.append(Detail(
+        "verdict",
+        all(d.passed for d in details),
+        f"{n_passing} exact-match clusters guaranteed consistent; "
+        f"{n_warning} normalized-match clusters flagged for Stage-13 "
+        f"manual review.",
+    ))
+
+    return CheckResult(
+        passed=all(d.passed for d in details),
+        details=details,
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════

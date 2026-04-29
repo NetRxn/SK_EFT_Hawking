@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/bundle_clusters.py",
+  "source_clusters": "papers/claim_clusters.json",
+  "source_mapping": "docs/PAPER_DRAFT_MAPPING.md",
+  "cluster_count": 2,
+  "cross_bundle_count": 2,
+  "clusters": [
+    {
+      "id": "claim_cluster:exact:d2c6aaa3",
+      "label": "Lean~4 proofs verified by \\texttt{lake build} (v4.28.0, Mathlib \\texttt{8f9d9cff}).",
+      "match_kind": "exact",
+      "member_papers": [
+        "paper10_modular_generation",
+        "paper16_wrt_tqft",
+        "paper9_sm_anomaly_drinfeld"
+      ],
+      "members": [
+        "sentence:paper10_modular_generation:acknowledgments:d2c6aaa3",
+        "sentence:paper16_wrt_tqft:acknowledgments:d2c6aaa3",
+        "sentence:paper9_sm_anomaly_drinfeld:acknowledgments:d2c6aaa3"
+      ],
+      "per_paper_bundles": {
+        "paper10_modular_generation": [
+          "L2",
+          "D2",
+          "F"
+        ],
+        "paper16_wrt_tqft": [
+          "D4",
+          "F"
+        ],
+        "paper9_sm_anomaly_drinfeld": [
+          "D2",
+          "D4",
+          "F"
+        ]
+      },
+      "bundle_destinations": [
+        "D2",
+        "D4",
+        "F",
+        "L2"
+      ],
+      "bundle_destinations_excluding_flagship": [
+        "D2",
+        "D4",
+        "L2"
+      ],
+      "cross_bundle": true
+    },
+    {
+      "id": "claim_cluster:exact:ce92f4a9",
+      "label": "Automated proofs by the Aristotle theorem prover (Harmonic).",
+      "match_kind": "exact",
+      "member_papers": [
+        "paper10_modular_generation",
+        "paper11_quantum_group",
+        "paper16_wrt_tqft",
+        "paper9_sm_anomaly_drinfeld"
+      ],
+      "members": [
+        "sentence:paper10_modular_generation:acknowledgments:ce92f4a9",
+        "sentence:paper11_quantum_group:acknowledgments:ce92f4a9",
+        "sentence:paper16_wrt_tqft:acknowledgments:ce92f4a9",
+        "sentence:paper9_sm_anomaly_drinfeld:acknowledgments:ce92f4a9"
+      ],
+      "per_paper_bundles": {
+        "paper10_modular_generation": [
+          "L2",
+          "D2",
+          "F"
+        ],
+        "paper11_quantum_group": [
+          "D4",
+          "F"
+        ],
+        "paper16_wrt_tqft": [
+          "D4",
+          "F"
+        ],
+        "paper9_sm_anomaly_drinfeld": [
+          "D2",
+          "D4",
+          "F"
+        ]
+      },
+      "bundle_destinations": [
+        "D2",
+        "D4",
+        "F",
+        "L2"
+      ],
+      "bundle_destinations_excluding_flagship": [
+        "D2",
+        "D4",
+        "L2"
+      ],
+      "cross_bundle": true
+    }
+  ]
+}

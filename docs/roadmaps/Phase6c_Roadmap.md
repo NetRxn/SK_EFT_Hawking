@@ -95,9 +95,9 @@
 **Estimated LOE:** 2–4 person-months
 **Risk:** Low–medium. Main risk is the anomaly-matching chain formalization — Z16-to-strong-CP-to-Λ requires careful bookkeeping.
 
-### Wave 2 — `EWBaryogenesisChiralityWall.lean` (6c.2) [Pipeline: Stages 1–12] — **SHIPPED 2026-04-29**
+### Wave 2 — `EWBaryogenesisChiralityWall.lean` (6c.2) [Pipeline: Stages 1–14] — **SHIPPED + Stage-13-cleared 2026-04-29**
 
-**Status:** Wave 2 closed end-to-end through Stage 12 (doc sync); Stage 13 adversarial review user-triggered (per pipeline policy).
+**Status:** Wave 2 closed end-to-end through Stage 14. Originally shipped 2026-04-29 through Stage 12; Stage 13 was deferred under (then-current) pipeline policy. Per `feedback_stages_11_13_reflexive.md` (2026-04-30) Stages 11+13 are reflexive, and Stage 13 was run + cleared 2026-04-29 in the Phase 6c W2 reflexive re-close (`docs/phase6c_wave2_stage13_close.md`).
 - `EWBaryogenesisChiralityWall.lean`: 16 substantive theorems / 0 sorry / 0 new axioms.
 - `src/ew_baryogenesis/`: 3 modules (`__init__.py`, `sphaleron_computation.py`, `bridge_check.py`) + 23 pytest cases (23/23 PASS in 0.05s).
 - `papers/paper33_ewbg_chirality_wall/paper_draft.tex`: PRL paper, 4 pages, 479 KB, compiles clean.
@@ -109,6 +109,13 @@
 - EWBG_PARAMS constants (sphaleron threshold, KLRS endpoint, SM Z₁₆ representatives) + canonical `formulas.py` entries (`sphaleron_suppression`, `chirality_wall_blocks_ewbg`, `ewbg_viable`).
 - Cross-bridges in proof bodies: `Z16AnomalyComputation.three_gen_anomalous`, `Z16AnomalyComputation.sm_anomaly_with_nu_R`, `EWPhaseTransition.crossover_excludes_baryogenesis`.
 - Discipline metric: 2 retroactive theorems (post-wave ruthless audit 2026-04-29 caught two `decide`-only wrappers: `sm_no_nu_R_anomaly_canonical` strengthened to substantive cross-bridge `sm_no_nu_R_anomaly_eq_neg_three` invoking `three_gen_is_neg3`; `sm_with_3nu_R_wall_cracks` strengthened to invoke `sm_anomaly_with_nu_R` + `mul_zero` rather than collapse to `decide`). Trend: 6c.3=12, 6b.1=5, 6d.1=6, 6d.2=4, 6d.3=1, 6c.1=2, 6c.4=3, 6c.5=3, **6c.2=2**.
+
+**Stage 13 reflexive re-close (2026-04-29):**
+- Figure-reviewer on `fig_ewbg_allowed_region`: 1 BLOCKER + 3 REQUIRED — all fixed in-session via single `src/core/visualizations.py` edit (KLRS-vline annotation re-anchored bottom-right with bgcolor; SM-overshoot annotation contrast-fixed; quadrant labels lifted to top-of-cell annotations so SM/SM+3ν_R/BSM markers occupy cell centers cleanly).
+- Claims-reviewer (sentence-walker v2) on paper33: 83 sentences, 53 PASS / 19 TRANSITION / 7 INFO / 3 FAIL / 1 WARN. **3 FAILs were the single Wang2020 bibkey collision** (paper bibitem text claimed Nucl. Phys. B 980 / arXiv 2008.06499 — a different Wang paper than CITATION_REGISTRY['Wang2020'] = PRR 2 013189 / arXiv 1910.14664). Fixed by repointing the bibitem to match the registry; substantive content (Z₁₆-anomaly classification of the SM) is exactly what the registry's Wang2020 covers. **1 HD finding** (`H_KLRS_SM_Crossover` not in HYPOTHESIS_REGISTRY) — closed by adding the entry with full schema (status=active, eliminability=hard, dependent_theorems=[`sm_with_3nu_R_ewbg_forbidden_under_klrs`, `sm_no_nu_R_ewbg_doubly_forbidden`]).
+- Wave 7 gap closed: paper33 added to `docs/PAPER_DRAFT_MAPPING.md` (Lift-section: D3 §13.5 + F §6, §10). Total mapping 39→40. Bundle infra refreshed (`scripts/bundle_clusters.py`, `scripts/bundle_readiness.py`); CHECK 21 PASS; heatmap verdicts unchanged (4 GREEN / 4 YELLOW / 5 RED).
+- All 5 Phase 6i validate.py checks PASS post-fix.
+- Decision Gate C.2 PASS reaffirmed (content unchanged).
 
 ### ~~Wave 2 specification (preserved for reference)~~
 
@@ -331,7 +338,7 @@ Parallelism:
 | 6c.4 | `QECHolographyBridge.lean` + Quantum/JHEP paper | 4–6 | MTC stack | **SHIPPED 2026-04-27** |
 | 6c.5 | `RTCasiniHuertaBounds.lean` + arXiv note | 2–3 | 6a.3 | **SHIPPED 2026-04-27** |
 
-**Phase 6c status (2026-04-29):** **CLOSED — all 5 waves SHIPPED.** Stage 11 notebooks + Stage 13 adversarial review (W1+W3+W4+W5 BLOCKERs addressed) complete; W2 Stage 13 user-triggered.
+**Phase 6c status (2026-04-29):** **CLOSED — all 5 waves SHIPPED + Stage 13 cleared.** Stage 11 notebooks + Stage 13 adversarial review complete for all five waves (W1+W2+W3+W4+W5). W2 Stage 13 cleared in the 2026-04-29 reflexive re-close (`docs/phase6c_wave2_stage13_close.md`).
 
 **Shipped totals (W1+W2+W3+W4+W5):**
 - 5 new Lean modules: `StrongCPTopologicalDE`, `EWBaryogenesisChiralityWall`, `EquivalencePrinciple`, `QECHolographyBridge`, `RTCasiniHuertaBounds`

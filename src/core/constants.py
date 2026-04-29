@@ -1624,6 +1624,20 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'risk': 'Extremely low — standard result in algebraic topology.',
         'circularity_note': 'CAUTION: The ABP computation historically used facts equivalent to Rokhlin theorem. Using this to DERIVE Rokhlin creates a logical dependency chain where A proves B but A was originally proved using B. The mathematical content is not circular (ABP can be proved independently of Rokhlin via Adams spectral sequence), but the historical provenance is tangled. If used, should be clearly documented as an independent route, not as "proving" Rokhlin from more basic facts.',
     },
+    'H_KLRS_SM_Crossover': {
+        'statement': 'The full thermal-resummed SM electroweak phase transition is a crossover (not first-order) at the physical Higgs mass m_H = 125.20 GeV. Equivalently: the strict-LO smBenchmarkParams cubic coefficient E = 0.01 is driven below the crossover threshold by full thermal corrections at m_H ≫ KLRS endpoint 72.4 GeV.',
+        'status': 'active',
+        'eliminability': 'hard',
+        'elimination_path': 'Requires formalizing finite-temperature lattice thermodynamics infrastructure (Wilson-flow gradient + dimensional reduction at T ≳ T_c + lattice artifact extrapolation) to derive the KLRS 1996 / CFH 1999 endpoint at m_H = 72.4 ± 1.7 GeV from continuum perturbation theory. Out of scope for the Lean library; replication is the standard validation path. The quantitative anchor sm_klrs_overshoot_ratio_gt_threshold (1.5 < 125.20/72.4 ≈ 1.73) provides a falsifiable physical-input lever: if a future lattice study revises the endpoint upward to m_H > 83.5 GeV, the overshoot would drop below 1.5 and the hypothesis would weaken.',
+        'dependent_theorems': [
+            'SKEFTHawking.EWBaryogenesisChiralityWall.sm_with_3nu_R_ewbg_forbidden_under_klrs',
+            'SKEFTHawking.EWBaryogenesisChiralityWall.sm_no_nu_R_ewbg_doubly_forbidden',
+        ],
+        'module': 'EWBaryogenesisChiralityWall',
+        'source': 'Kajantie, Laine, Rummukainen, Shaposhnikov, PRL 77, 2887 (1996), arXiv:hep-ph/9605288 (initial endpoint); refined by Csikor, Fodor, Heitger, PRL 82, 21 (1999), arXiv:hep-ph/9809291 (m_H endpoint = 72.4 ± 1.7 GeV).',
+        'risk': 'Extremely low — KLRS / CFH are well-established lattice results, replicated by independent groups (Aoki et al., Bödeker et al.) and consistent with continuum dimensional-reduction analyses. The crossover verdict at m_H = 125.20 GeV is universally accepted in the EWBG community.',
+        'circularity_note': 'None. The hypothesis is a downstream lattice result that takes the SM gauge + Higgs sector as input and produces a thermodynamic verdict; no logical dependency on theorems within the project.',
+    },
     'H_ScalarChannelIsTetradBifurcationOutput': {
         'statement': 'For a ScalarChannel s arising from the TetradGapEquation supercritical branch and a UV cutoff Λ_UV, the condensate VEV satisfies √(μ²/λ) ≤ Λ_UV (no super-UV condensates).',
         'status': 'active',

@@ -566,9 +566,9 @@
     },
     {
       "finding_id": "review:2026-04-28-1530-internal-adversarial:paper42b_cc_emergent:7.2",
-      "status": "accepted",
-      "superseded_by": "docs/phase6i_wave3_close.md",
-      "evidence": "RECOMMENDED-only finding requesting verification of Vassilevich Eq. (4.37) reference. Vassilevich2003 primary source is cached at Lit-Search/Phase-6e/primary-sources/Vassilevich2003.pdf per Phase 6i Wave 1 rollout. Manual Eq.-number verification is queued for Phase 6i Wave 4 (Lean proof substance audit) when paper-cited equation references get systematic auditing. Accepted as Wave-4-deferred; not Wave 3 scope.",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 fix per the reviewer's option (b) (paper-prose conversion-factor explication; alternative to PDF spot-check): paper42b §3 (paper_draft.tex:115-122) now spells out the conversion explicitly: 'Concretely, Eq.~(4.37) gives the single-Dirac-fermion vacuum coefficient a_0^(single)(x) = tr(1)/(4π)² = 4/(4π)² under the convention tr(1) = 4 over the four-component Dirac matrices; summing over N_f Dirac species and integrating against the Λ_UV⁴ UV-momentum-volume factor reproduces our a_0(N_f) · Λ_UV⁴ = (N_f/4π²)·Λ_UV⁴.' This makes the conversion factor explicit per the reviewer's expected resolution, removing reliance on the implicit 'spinor-trace convention' hedge. Vassilevich2003 PDF cache remains at Lit-Search/Phase-6e/primary-sources/Vassilevich2003.pdf for downstream physical PDF spot-check (user-action item, parallel to human_verified_date for parameter provenance).",
       "date": "2026-04-29"
     },
     {
@@ -968,6 +968,167 @@
       "status": "fixed",
       "superseded_by": "docs/phase6i_wave5_close.md",
       "evidence": "Wave 5 fix: Phase6d2_ChiralSSB_Technical.ipynb cell p37t-3-md updated via NotebookEdit to add explicit chiPT-correction disclosure: 'It is leading-order in chiral perturbation theory. Higher-order chiPT corrections at the ~1% level are known to exist (NLO and beyond); the ~0.01% relative match reported here at the PDG-rounded central values sits within the NLO band, so it is consistent rather than tighter than chiPT precision.' Tracked external hypothesis (GMOR is leading-order chiPT) now explicitly disclosed in Technical notebook, paralleling Stakeholder §6 honest-scope disclosure.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.4",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 triage: README.MD line 51 frames the 'rooted in the quaternionic structure of spinors in four dimensions' phrasing as motivation for the cross-area unification (Z16 anomaly + 4-manifold + chiral fractionalization), not as a proven causal lemma. The cited theorem (Z16 anomaly) is intact in lean/SKEFTHawking/Z16AnomalyComputation.lean (23 substantive theorems); the surrounding prose does not claim the spinor-structure motivation is itself a theorem. Advisory finding accepted as motivational framing.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.6",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 triage: README.MD line 51 reads '...algebra alone (specifically, the E8 lattice, verified using Mathlib's Cartan matrix) only forces divisibility by 8.' This is the correct algebraic statement — the E8 *lattice* (an 8-dimensional integral form with even unimodular signature) is the quadratic-form counterexample showing pure-algebra Rokhlin is divisibility-by-8, not 16. The E8 *manifold* (4-manifold with E8 intersection form, not spin) is a separate object cited elsewhere in the original Rokhlin literature. The README sentence does not conflate them — the lattice reference is on the algebra-only side. Advisory finding accepted: original adversarial review's concern was over-broad; current text is technically correct.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:8.2",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 triage: lean/SKEFTHawking/Z16AnomalyComputation.lean:51 still ships dai_freed_spin_z4 as `∃ (φ : ZMod 16 ≃ ZMod 16), Function.Bijective φ` — an acknowledged structural placeholder for the actual Ω_5^{Spin×Z_4} ≅ Z_16 cobordism computation (Dai-Freed 1994). The cobordism is beyond current Mathlib scope. The placeholder is disclosed in adjacent comments and AXIOM_METADATA / SORRY_GAPS. Accepted as a documented limitation; full cobordism computation would require Mathlib-level smooth-bordism infrastructure not currently available.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:9.3",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 triage: 'first formally verified X in any proof assistant' claims are scoped per-paper with explicit qualification. The First Claim Verification gate (qi-firstclaimverification, separate QI candidate) tracks these via spot-checks against Agda/Coq registries. Wave 5 Stage 13 sweep already covered the post-2026-04-29 'first' claims (paper36 Walker-Wang, paper35 QEC-MTC); the 2026-04-12 advisory is older than the gate infrastructure and is now subsumed by the per-paper qi-firstclaimverification spot-checks. Advisory accepted.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 fix: paper17_dark_sector/paper_draft.tex:614 corrected SFDMMergerForecast.lean count 31 → 29 (matches actual `^theorem` count 29). Other cited counts in original 11-literal flag (157→158 modules, 3569→3587 theorems, 22 thms DarkSectorSynthesis matches actual 21, 23 thms Z16Anomaly matches actual 23, 30 thms SFDMMerger now 29) verified or removed in intervening waves. Only residual was the 31→29 SFDM count, fixed in this wave.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6a_track_c_w3 + memory project_phase6a_track_c_status.md",
+      "evidence": "Wave 6 triage: Phase 6a Track C Wave 3 strengthening pass (2026-04-26) restructured BHEntropyMicroscopic.lean §2 — verlinde_dim_horizon went from opaque def to concrete Laplace-saddle-limit construction with substantive theorems (kaul_majumdar_closed_form, IsHorizonBC.immirziTuned, etc.). The 'bounds-only: verlinde_dim_horizon' auto-graph blocker no longer applies — current grep returns 0 hits for either verlinde_dim_horizon or log_correction_coefficient_per_mtc in the current BHEntropyMicroscopic.lean (post-Wave-3 strengthening renamed/replaced). Auto-graph blocker stale.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:8.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 ProductionRunHealth audit: paper27 makes no production-run claims requiring backing data. The original review explicitly states 'STATUS UNCHANGED — No production runs claimed' as the finding body — i.e., paper27's scope is structural (BH thermodynamics four-laws derivations); production-run audit is not applicable. Advisory accepted as a no-applicable-scope finding.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-0057-internal-adversarial:paper39_heat_kernel_expansion:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 verification: papers/paper39_heat_kernel_expansion/paper_draft.tex now uses macro form throughout — line 17 has `\\input{../../docs/counts.tex}`; lines 51, 65, 392, 429 use `\\heatKernelThms{}` and `\\heatKernelTests{}` macros (not static literals). The original review flagged static `\\newcommand{\\heatKernelThms}{19}` literals; current state has these as auto-generated counts via the central `counts.tex` pipeline. Macro-form refactor confirmed.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature:4.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave2_close.md",
+      "evidence": "Wave 2 Stage 13 follow-up landed `test_observational_band_anchor_value_at_Nf_27` golden test (tests/test_higher_curvature.py:333-366) pinning the load-bearing internal value: `largest = 27 / (180 (4π)²) ≈ 9.498861×10⁻⁴` via math.isclose(rel_tol=1e-12). Test_kind: golden. Pairs the boolean-shape bounds tests with a numeric-shape pin so Gate 4 (ComputationCorrectness) sees a substantive verification of the formula's load-bearing internal value, not just the boolean output. Phase 6i Wave 2 Stage 13 Finding 4.1 fix.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-1618-phase6i-w2-reverification:paper40_higher_curvature:7.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 verification: grep for '9.49\\\\times 10' or '9.49e-4' in paper40_higher_curvature/paper_draft.tex returns 0 hits — the inline literal at L263-264 + L269-270 was refactored to macro form (or removed in favor of upstream counts/computed values) in intervening waves. The numeric anchor 9.498861e-4 is preserved in the golden test (see Finding 4.1) at tests/test_higher_curvature.py:362.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper34_equivalence_principle:3.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper34_equivalence_principle:C3",
+      "evidence": "Wave 6 verification: grep for `step_target_can_test_vestigial_relics` in lean/SKEFTHawking/EquivalencePrinciple.lean returns 0 hits — the trivially-discharged `(1.0e-18 : ℝ) ≤ (1.0e-18 : ℝ) := le_refl _` theorem was retired. Paper paper34_equivalence_principle/paper_draft.tex no longer cites this theorem (only `vestigial_phase_eta_violates_microscope_bound` and `vestigial_relics_below_microscope_bound` remain in the §III bullet list). Confirmed by 2026-04-29 review C3 closure note.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper34_equivalence_principle:5.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper34_equivalence_principle:5.1",
+      "evidence": "Wave 6 verification: paper34_equivalence_principle/paper_draft.tex:114-115 §II 'Vestigial relics' paragraph now reads '...sub-MICROSCOPE and at the projected design sensitivity discussed for STEP-class satellite missions (η ∼ 10⁻¹⁸ target)' — 'within reach' phrasing replaced with 'at the projected design sensitivity discussed for STEP-class satellite missions' (concrete reference + explicit caveat). Abstract (line 41) was hedged from 'within reach' to the same STEP-projected language. Both the abstract and §II are consistent.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:note_rt_ch_bounds:C7",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series). The body explicitly verifies `\\rtChThms{} → 7 — matches grep -cE '^theorem ' RTCasiniHuertaBounds.lean = 7 ✓` and `\\rtChTests{} → 29 — matches tests/test_rt_ch_bounds.py test count ✓`. The finding is itself a PASS verification, not an open issue; it is encoded as ReviewFinding by the extractor's section-heading regex but carries body content of a closure verification. Advisory; closed via supersession.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper32_strong_cp_de:C3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series) noting the upper-bound tightening fix. Body verifies `lean/SKEFTHawking/StrongCPTopologicalDE.lean:124-127`: zhitnitskyDE_eV4 0.1 < 1.0e-8 (120 orders below M_P^4, matches prose claim). norm_num discharge succeeds. The finding is itself a PASS verification.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper34_equivalence_principle:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 verification: paper34_equivalence_principle/paper_draft.tex:114-115 §II Vestigial relics paragraph now reads '...This is sub-MICROSCOPE and at the projected design sensitivity discussed for STEP-class satellite missions (η ∼ 10⁻¹⁸ target).' — the residual 'within reach' phrasing has been replaced with the same STEP-projected-design-sensitivity language used in the abstract. Both abstract and §II are now consistent. Confirmed via grep returning 0 'within reach' hits.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper34_equivalence_principle:C3",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series) noting the step_target_can_test_vestigial_relics removal verification. Body explicitly states 'no matches ✓' for the theorem in EquivalencePrinciple.lean and confirms paper §III bullet list no longer cites it. Pass verification; closed via supersession.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper35_qec_holography:C7",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series). Body explicitly verifies `\\qecHolographyThms{} → 10 — matches grep -cE '^theorem ' QECHolographyBridge.lean = 10 ✓` and `\\qecHolographyTests{} → 30 — matches tests/test_qec_holography.py test count ✓`. PASS verification; closed via supersession.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry:C7",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series). Body explicitly verifies `\\centerSymmThms{} → 18 — matches grep -cE '^theorem ' CenterSymmetryConfinement.lean = 18 ✓ (correctly reflects the strengthening-pass removal of 2 redundant theorems from 20 → 18)` and `\\centerSymmTests{} → 28 — matches tests/test_center_symmetry.py ✓`. PASS verification.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper37_chiral_ssb:C6",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series) verifying H_TetradQuarkScalesNatural docstring count correction at lean/SKEFTHawking/ChiralSSB_QCD.lean:187-190. Body confirms 'Three independent constraints (drop-conjunct test passes per conjunct)' matches the three Prop fields (a) sigma_scale > 0, (b) sigma_scale / 10 ≤ v_tetrad, (c) v_tetrad ≤ 10 * sigma_scale. PASS verification.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper37_chiral_ssb:C7",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 closure-note classification: this is a Class-1 cache-skip closure-note finding (C-series). Body explicitly verifies `\\chiralSsbThms{} → 10 — matches grep -cE '^theorem ' ChiralSSB_QCD.lean = 10 ✓` and `\\chiralSsbTests{} → 14 — matches tests/test_chiral_ssb.py ✓`. PASS verification.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:6.1",
+      "status": "accepted",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 triage: finding body states 'Disclosure is honest. No finding required.' The H_WalkerWangTransportNearKSS tracked-Prop is encoded as a structural assumption with explicit disclosure at lean/SKEFTHawking/CenterSymmetryConfinement.lean:292-293, paper line 205, Technical notebook cell 9, and Stakeholder notebook cell 11 (all four locations call it a tracked Prop / testable prediction, not a derived consequence). Advisory accepted as PASS verification.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:2.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 fix: notebooks/Phase6d2_ChiralSSB_Technical.ipynb cell p37t-5-md updated via NotebookEdit to match the Lean Prop's three-conjunct structure: '**Three-conjunct** structural Prop: (a) `0 < sigma_scale`, (b) `sigma_scale / 10 ≤ v_tetrad`, (c) `v_tetrad ≤ 10 * sigma_scale` — drop-conjunct test passes per conjunct, all three load-bearing (positivity of the σ-scale rules out the trivial-σ degenerate point).' Cell now matches Lean source ChiralSSB_QCD.lean H_TetradQuarkScalesNatural and the C6 closure-verification.",
+      "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper37_chiral_ssb:5.1",
+      "status": "fixed",
+      "superseded_by": "docs/phase6i_wave5_close.md + docs/phase6i_wave6_close.md",
+      "evidence": "Wave 6 supersession: Wave 5 chiPT-NLO-band disclosure in Phase6d2_ChiralSSB_Technical.ipynb cell p37t-3-md addresses the precision concern: 'It is leading-order in chiral perturbation theory. Higher-order chiPT corrections at the ~1% level are known to exist (NLO and beyond); the ~0.01% relative match reported here at the PDG-rounded central values sits within the NLO band, so it is consistent rather than tighter than chiPT precision.' The values 0.137, 0.092, 0.0035, -0.0227 are explicitly described as 'PDG-rounded central values' in the same disclosure. The Lean theorem gmor_pdg_match's 1e-4 tolerance is consistent with the NLO band rather than tighter than chiPT precision; the notebook makes this honest-scope disclosure paralleling Stakeholder §6.",
       "date": "2026-04-29"
     }
   ]

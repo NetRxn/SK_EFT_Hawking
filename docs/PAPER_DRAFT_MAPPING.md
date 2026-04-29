@@ -46,9 +46,10 @@ The 32 existing drafts in `papers/paperN_*/`. For each: title, status before str
 | `paper23_linearized_efe` (Phase 6a W1+W4) | Linearized EFE + FLRW | PRD | **D3 §5** (linearized EFE + FLRW) + **F §6** | Lift-section |
 | `paper25_gravitational_waves` (Phase 6a W2) | GW170817 vs vestigial graviton | PRD | **L1** (PRL splash, voucher candidate) + **D3 §6** (GW propagation full content) + **F §6, §10** | Lift-letter |
 | `paper26_bh_entropy` (Phase 6a W3) | BH entropy from MTC counting | Annals | **D3 §7** (Bekenstein-Hawking + Kaul-Majumdar) + **F §6** | Lift-section |
-| `paper27_bh_four_laws` (Phase 6a W5) | BCH four laws by regime | PRD (submission-ready) | **L3** (PRL splash, ships first wave with L1) + **D3 §8** (BCH four laws + regime partition full content) + **F §6** | Lift-letter |
+| `paper27_bh_thermodynamics_four_laws` (Phase 6a W5) | BCH four laws by regime | PRD (submission-ready) | **L3** (PRL splash, ships first wave with L1) + **D3 §8** (BCH four laws + regime partition full content) + **F §6** | Lift-letter |
 | `paper29_bbn` (Phase 6b W1) | BBN classification | (draft) | **D5 §4** (BBN classification of Phase 5x DM candidates) + **F §8** | Lift-section |
 | `paper32_strong_cp_topological_de` (Phase 6c W1) | Strong-CP + topological DE | (draft) | **D5 §5** (Zhitnitsky topological-DE absorption + combined-mechanism falsifier) + **F §8, §10** | Lift-section |
+| `paper33_ewbg_chirality_wall` (Phase 6c W2) | EW baryogenesis ↔ chirality wall (doubly forbidden) | PRL | **D3 §13.5** (EWBG-doubly-forbidden bridge: chirality-wall × crossover, extending §13 EWPT) + **F §6, §10** | Lift-section |
 | `paper34_equivalence_principle` (Phase 6c W3) | Equivalence-principle classification | (draft) | **D5 §6** (EP-violation matrix; vestigial-only verdict) + **F §8** | Lift-section |
 | `paper35_qec_holography` (Phase 6c W4) | QEC-Holography bridge | (draft) | **D4 §7** (QEC + scrambling on horizon-MTC) + **D3 §9** (cross-bridge to BH entropy) + **F §6, §7** | Lift-section (split) |
 | `paper36_confinement` (Phase 6d W1) | Confinement (center symmetry) | (draft) | **D3 §14** (confinement + Polyakov loop + Svetitsky-Yaffe) + **F §6** | Lift-section |
@@ -62,7 +63,7 @@ The 32 existing drafts in `papers/paperN_*/`. For each: title, status before str
 | `paper42b_cc_emergent` (Phase 6e W5) | Cosmological constant in emergent form (Decision Gate E.4) | (draft) | **D3 §21** (Λ^emerg microscopic prediction + CC-problem reproduction) + **D5 §7** (CC-channel constraint: heat-kernel a₀ does not produce Λ_obs naturally) + **F §6, §8** | Lift-section (split) |
 | `paper43_einstein_cartan` (Phase 6e W6) | Einstein-Cartan torsion from ADW spin current — observational-bound passage | (draft) | **D3 §22** (EC torsion microscopic prediction + Kostelecky/Hughes-Drever bound passage) + **F §6** | Lift-section |
 
-**Total: 39 existing draft directories** mapping to 13 publication targets.
+**Total: 40 existing draft directories** mapping to 13 publication targets.
 
 ---
 
@@ -91,7 +92,7 @@ Sources: paper7, paper8, paper9 (anomaly portion), paper10 (full derivation as p
 Plus Phase 5b/5c/5q/5r/5h material.
 
 **D3. Emergent gravity through BH thermodynamics** (heaviest deep paper; Phase 6e adds the §17–§22 nonlinear-effective-action chain through Einstein-Cartan)
-Sources: paper3, paper5, paper6 (conditional), paper20, paper21, paper22, paper23, paper25, paper26, paper27, paper35 (cross-bridge portion), paper36, paper37, paper38, paper39 (heat-kernel calibration), paper40 (higher-curvature Stelle), paper41 (diff invariance), paper42 (nonlinear EFE + PPN), paper42b (CC reproduction; primary in D3 §21), paper43 (EC torsion + bound passage; primary in D3 §22).
+Sources: paper3, paper5, paper6 (conditional), paper20, paper21, paper22, paper33 (EWBG-doubly-forbidden bridge as §13.5, downstream of paper22 §13), paper23, paper25, paper26, paper27, paper35 (cross-bridge portion), paper36, paper37, paper38, paper39 (heat-kernel calibration), paper40 (higher-curvature Stelle), paper41 (diff invariance), paper42 (nonlinear EFE + PPN), paper42b (CC reproduction; primary in D3 §21), paper43 (EC torsion + bound passage; primary in D3 §22).
 Plus Phase 3 + Phase 5d + Phase 5f + Phase 5z + Phase 6a + Phase 6d + Phase 6e material.
 
 **D4. Topological quantum computation foundations**
