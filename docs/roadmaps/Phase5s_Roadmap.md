@@ -30,7 +30,7 @@ The gapped_interface_axiom is the project's single load-bearing assumption. We p
 
 **Goal:** Extract the explicit 16×16 FK Hamiltonian, symmetry matrices, eigenvalues, and spectral gap. Assess native_decide feasibility.
 
-**Status:** Prompt written. Ready for execution.
+**Status:** **DR COMPLETE** — submitted prompt `Lit-Search/Tasks/complete/Phase5s_fidkowski_kitaev_2plus1D_gapped_interface.md`; two deliverables returned: `Lit-Search/Phase-5s/Fidkowski-Kitaev interaction- explicit matrices and Lean 4 formalization path.md` + `Lit-Search/Phase-5s/Gapping 8 Majorana fermions- explicit matrices for Lean 4.md`. Wave 2 unblocked.
 
 ---
 

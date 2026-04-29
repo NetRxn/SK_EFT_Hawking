@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-28T20:04:41.991554",
+  "generated": "2026-04-29T08:42:02.375324",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8813,
-    "theorems_total": 4504,
-    "theorems_substantive": 4481,
-    "theorems_placeholder": 23,
+    "total_declarations": 8864,
+    "theorems_total": 4529,
+    "theorems_substantive": 4505,
+    "theorems_placeholder": 24,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 195,
+    "modules": 196,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -41,6 +41,7 @@
       "SKEFTHawking.CoidealEmbedding",
       "SKEFTHawking.CondensedMatterAnalog",
       "SKEFTHawking.CosmologicalConstant",
+      "SKEFTHawking.CosmologicalPerturbations",
       "SKEFTHawking.D2Formula",
       "SKEFTHawking.DESIComparison",
       "SKEFTHawking.DarkEnergyObstructionPrinciple",
@@ -210,18 +211,18 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3827,
-    "structures": 191,
-    "instances": 229,
+    "definitions": 3848,
+    "structures": 192,
+    "instances": 233,
     "inductives": 61
   },
   "python": {
-    "python_modules": 122,
-    "test_files": 87,
-    "pytest_cases": 3729,
-    "notebooks": 84,
+    "python_modules": 125,
+    "test_files": 88,
+    "pytest_cases": 3772,
+    "notebooks": 86,
     "papers": 39,
-    "figures": 135
+    "figures": 136
   },
   "aristotle": {
     "aristotle_proved": 322,

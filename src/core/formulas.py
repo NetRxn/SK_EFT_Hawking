@@ -7649,6 +7649,181 @@ def friedmann_consistency_residual(rho, p, hubble, hubble_dot, g_n, k=0.0, a=1.0
 
 
 # =====================================================================
+# Phase 6b Wave 2: Linear cosmological perturbations
+# (CosmologicalPerturbations.lean)
+# =====================================================================
+#
+# Linear scalar perturbation theory around an FRW background with
+# `VestigialEOS`-type perfect-fluid stress-energy. Sub-horizon modes of
+# the density contrast δ in conformal time obey
+#
+#     δ̈ + 2 H δ̇ + c_s² k² δ = 0       (Mukhanov §7.4)
+#
+# with the Jeans-like dispersion relation ω_J² ≡ c_s² k². The sign of
+# c_s² determines the regime:
+#
+#   c_s² > 0  →  oscillatory (cos / sin)         — admissible
+#   c_s² < 0  →  exponential (cosh / sinh)       — gradient instability
+#
+# Phase 5y H4 closed form (VestigialEOS.cs_sq_vest_at_zero) yields
+# c_s²(τ=0) = -1/3, placing the natural vestigial branch in the
+# instability regime. Wave 2 transmutes this into a CMB-ℓ falsification.
+
+
+def jeans_frequency_sq(cs_sq, k_wavenumber):
+    """Jeans-like squared frequency for a linear perturbation:
+
+        ω_J²(c_s², k) = c_s² · k²
+
+    Lean: CosmologicalPerturbations.jeansFrequencySq
+    Aristotle: manual
+
+    Parameters
+    ----------
+    cs_sq : float
+        Sound speed squared of the background fluid (dimensionless).
+    k_wavenumber : float
+        Comoving wavenumber (1/Mpc).
+
+    Returns
+    -------
+    float
+        ω_J² = c_s² · k² (units of 1/Mpc²).
+    """
+    return float(cs_sq * (k_wavenumber ** 2))
+
+
+def linear_growth_factor(cs_sq, k_wavenumber, eta):
+    """Linear-perturbation growth factor at conformal time `eta`:
+
+        G(η) = cos(√(c_s²) · k · η)        if c_s² > 0   (oscillatory)
+        G(η) = cosh(√|c_s²| · k · η)       if c_s² < 0   (exponential growth)
+        G(η) = 1                           if c_s² = 0   (frozen)
+
+    The c_s² < 0 branch reproduces the catastrophic-clustering behavior
+    of the natural vestigial-EOS background: a mode of comoving
+    wavenumber k grows as cosh(√(1/3) · k · η).
+
+    Lean: CosmologicalPerturbations.linearGrowthFactor
+    Aristotle: manual
+
+    Parameters
+    ----------
+    cs_sq : float
+        Sound speed squared.
+    k_wavenumber : float
+        Comoving wavenumber (1/Mpc).
+    eta : float
+        Conformal time (Mpc).
+
+    Returns
+    -------
+    float
+        Mode amplitude relative to its initial value.
+    """
+    arg = np.sqrt(abs(cs_sq)) * k_wavenumber * eta
+    if cs_sq > 0:
+        return float(np.cos(arg))
+    if cs_sq < 0:
+        return float(np.cosh(arg))
+    return 1.0
+
+
+def is_admissible_background(cs_sq, threshold=0.0):
+    """Spectrum-admissibility predicate for a perfect-fluid background:
+
+        admissible ⇔ c_s² > threshold
+
+    A background is admissible iff its sound speed squared exceeds the
+    admissibility threshold (default 0.0 — the algebraic boundary
+    between oscillatory and exponentially-unstable modes).
+
+    Lean: CosmologicalPerturbations.IsAdmissibleBackground
+    Aristotle: manual
+
+    Parameters
+    ----------
+    cs_sq : float
+        Background sound speed squared.
+    threshold : float, default=0.0
+        Admissibility threshold. The boundary c_s² > 0 is the strictest
+        requirement; raising the threshold corresponds to demanding a
+        strict positivity margin.
+
+    Returns
+    -------
+    bool
+        True iff c_s² > threshold.
+    """
+    return bool(cs_sq > threshold)
+
+
+def cmb_growth_amplitude(cs_sq, k_wavenumber, eta_window):
+    """Maximum growth amplitude over a conformal-time window
+    (η_decoupling, η_today):
+
+        max_amplitude = max(|G(η)| : η ∈ window)
+
+    For an admissible background (c_s² > 0) this is bounded by 1
+    (cosine oscillation). For the gradient-instability branch
+    (c_s² < 0) it grows as cosh(|c_s| k η_max) — unbounded as
+    k → ∞ for any fixed η_max > 0.
+
+    Lean: CosmologicalPerturbations.cmbGrowthAmplitude
+    Aristotle: manual
+
+    Parameters
+    ----------
+    cs_sq : float
+        Background sound speed squared.
+    k_wavenumber : float
+        Comoving wavenumber (1/Mpc).
+    eta_window : tuple[float, float]
+        (η_min, η_max) in Mpc.
+
+    Returns
+    -------
+    float
+        Maximum growth amplitude over the window.
+    """
+    eta_min, eta_max = eta_window
+    arg_max = np.sqrt(abs(cs_sq)) * k_wavenumber * max(abs(eta_min), abs(eta_max))
+    if cs_sq > 0:
+        return 1.0  # bounded oscillator
+    if cs_sq < 0:
+        return float(np.cosh(arg_max))
+    return 1.0
+
+
+def vestigial_pertubation_growth_at_zero(k_wavenumber, eta):
+    """Vestigial-EOS-specific growth factor at the deep-vestigial limit τ=0:
+
+        G_vest(η) = cosh(√(1/3) · k · η)
+
+    Direct specialization of `linear_growth_factor(cs_sq=-1/3, k, η)`,
+    matching the Phase 5y H4 closed form via
+    `VestigialEOS.cs_sq_vest_at_zero`. Used by the CMB-ℓ falsification
+    diagnostic.
+
+    Lean: CosmologicalPerturbations.vestigial_growth_factor_at_zero
+    Aristotle: manual
+
+    Parameters
+    ----------
+    k_wavenumber : float
+        Comoving wavenumber (1/Mpc).
+    eta : float
+        Conformal time (Mpc).
+
+    Returns
+    -------
+    float
+        cosh(k η / √3).
+    """
+    return float(np.cosh(k_wavenumber * eta / np.sqrt(3.0)))
+
+
+# =====================================================================
 # Phase 6a Wave 2: Gravitational waves
 #
 # c_GW from vestigial-phase susceptibility + dissipative correction

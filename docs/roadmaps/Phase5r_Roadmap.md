@@ -38,7 +38,7 @@ The change-of-rings theorem requires: A is free as a right A(1)-module. For the 
 **Deliverables:**
 - `Lit-Search/Phase-5r/Steenrod algebra as free A(1)-module in low degrees.md`
 
-**Status:** Not started. Blocked on Phase 5q deep research.
+**Status:** **DR COMPLETE** — submitted prompt `Lit-Search/Tasks/complete/Phase5r_steenrod_algebra_A1_freeness.md`; deliverable returned at `Lit-Search/Phase-5s/The Steenrod algebra as a free A(1)-module- explicit computations for Lean 4 formalization.md` (filed under Phase-5s/ rather than Phase-5r/ — content matches Phase 5r W1 spec). Verdict: **algebraic bypass recommended** (~3-4K lines via abstract change-of-rings vs 12K+ explicit). Wave 2 unblocked.
 
 ---
 

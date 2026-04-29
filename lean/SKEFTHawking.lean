@@ -186,6 +186,7 @@ import SKEFTHawking.EnergyConditions
 import SKEFTHawking.LaplaceMethod
 import SKEFTHawking.EquivalencePrinciple
 import SKEFTHawking.BBN
+import SKEFTHawking.CosmologicalPerturbations
 import SKEFTHawking.CenterSymmetryConfinement
 import SKEFTHawking.ChiralSSB_QCD
 import SKEFTHawking.CFLChiralLagrangian

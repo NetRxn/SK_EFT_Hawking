@@ -231,7 +231,7 @@
 
 **Trigger condition (light gate):** Phase 6i Waves 1–6 substantially complete (citation cache populated, parameter provenance closed, narrative grounding swept, Lean substance audited, assumption disclosure consistent). Wave 7 inherits the hardened pipeline from Tracks A–D and applies it to the new bundle layer.
 
-**Status (2026-04-28):** **OPEN**, awaiting user authorization Gate I.7 + Phase 6i Wave 1 close.
+**Status (2026-04-29):** **SHIPPED — Phase 6i FULLY CLOSED across all 5 tracks (A–E).** Six sub-waves (7.1–7.6) shipped end-to-end through Stages 1, 7, 12–14: bundle-aware schema + migration (sentence_state.py + bundle_migration.py + cluster_bundle_index.json), per-bundle anchor list + reviewer plugin updates (claims-reviewer / figure-reviewer accept `bundle_target`), CHECK 21 `bundle_consistency` (6 tests PASS), bundle readiness aggregator + 13 per-bundle review docs at `papers/AutomatedReviews/2026-04-29-bundle-stage13/<bundle>.md` + N-gate × 13-bundle heatmap at `docs/BUNDLE_READINESS_HEATMAP.md` (4 GREEN: E2/I1/I2/L1; 4 YELLOW: D1/D2/E1/L2; 5 RED: D3/D4/D5/F/L3), Bundles dashboard tab, CLAUDE.md Tier-2 refs + Pipeline Invariant #14. 32 new tests ALL PASS; all 5 Phase 6i validate.py checks PASS. Decision Gate I.7 PASS. **Final state:** 12/12 QI items closed (8 entry-state + 4 wave-surfaced); 14 Pipeline Invariants; supersession ledger 13→160 (+147 closures across 5 waves); 4 new validate.py checks. Memory: `project_phase6i_w7_shipped.md`.
 
 **Prerequisites:**
 - `docs/PAPER_STRATEGY.md` (created 2026-04-28; the canonical bundle-architecture document)

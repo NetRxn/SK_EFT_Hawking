@@ -218,7 +218,7 @@
 - [x] Tests in `tests/test_gt_model.py` (26 tests) + `tests/test_gioia_thorngren.py` (25 tests)
 - [x] Pipeline Stages 1-7, 12 complete. Stages 8-11 deferred to Wave 4.
 
-**Status: IN PROGRESS** — 22 theorems written, 3 sorry (Aristotle in flight). All Python complete.
+**Status: SHIPPED** — `GTCommutation` (10 thms) + `GTWeylDoublet` (12 thms) = 22 theorems, **0 sorry, ALL PROVED** (Aristotle run `18969de2` filled the 3 prior sorrys). All Python complete.
 **Actual:** 22 theorems (within 18-25 estimate for GTCommutation+GTWeylDoublet). Domain module + 51 tests.
 
 **Key Aristotle targets:**

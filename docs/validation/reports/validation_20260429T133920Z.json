@@ -1,0 +1,533 @@
+{
+  "timestamp": "20260429T133920Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "viz_consistency": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "Phase1_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase1_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 6 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase2_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 9 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3a_ThirdOrder_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3b_GaugeErasure_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3c_WKBConnection_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase3d_ADW_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4a_ExperimentalPredictions_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase4b_Vestigial_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase4b_Vestigial_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 4 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5a_ChiralityWall_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5a_ChiralityWall_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5a_GTChiralFermion_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 3 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5a_GTChiralFermion_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 5 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5b_ModularGeneration_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_ModularGeneration_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5b_QuantumGroup_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_QuantumGroup_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_SMAnomalyDrinfeld_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_Synthesis_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5b_Synthesis_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_E8Rokhlin_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_E8Rokhlin_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_HopfAlgebra_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_HopfAlgebra_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_SU2kFusion_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5c_SU2kFusion_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_MTC_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_MTC_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_Polariton_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_Polariton_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_TetradGap_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5d_TetradGap_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5e_BraidedMTC_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5e_BraidedMTC_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5h_ChiralityWall3D_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5h_ChiralityWall3D_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5i_RankTwoQuantumGroups_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5i_RankTwoQuantumGroups_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5j_FermiPointEmergence_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5j_FermiPointEmergence_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5t_DoublonGate_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5t_DoublonGate_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5w_GrapheneDiracFluid_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5w_GrapheneDiracFluid_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 2 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase5z_MajoranaRung_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5z_MajoranaRung_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5z_ScalarRung_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase5z_ScalarRung_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6b2_CosmologicalPerturbations_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6b2_CosmologicalPerturbations_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6c1_StrongCPDarkEnergy_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c1_StrongCPDarkEnergy_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c2_EWBaryogenesisChiralityWall_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6c2_EWBaryogenesisChiralityWall_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6c3_EquivalencePrinciple_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c3_EquivalencePrinciple_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c4_QECHolography_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c4_QECHolography_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c5_RTCasiniHuerta_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6c5_RTCasiniHuerta_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6d1_CenterSymmetry_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6d1_CenterSymmetry_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6d2_ChiralSSB_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6d2_ChiralSSB_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6d3_CFL_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6d3_CFL_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6e1_HeatKernelExpansion_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6e1_HeatKernelExpansion_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6e2_HigherCurvatureStructure_Stakeholder.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6e2_HigherCurvatureStructure_Technical.ipynb",
+          "passed": true,
+          "message": "clean",
+          "warning": false
+        },
+        {
+          "name": "Phase6e3_NonlinearDiffInvariance_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e3_NonlinearDiffInvariance_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e4_NonlinearEFE_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e4_NonlinearEFE_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e5_MicroscopicMatch_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e5_MicroscopicMatch_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e6_EinsteinCartanExtension_Stakeholder.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        },
+        {
+          "name": "Phase6e6_EinsteinCartanExtension_Technical.ipynb",
+          "passed": true,
+          "message": "WARN: 1 untagged .show() call(s)",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

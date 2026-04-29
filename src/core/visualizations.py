@@ -11131,5 +11131,195 @@ def fig_torsion_obs_bound():
     return fig
 
 
+def fig_cmb_spectrum_planck_comparison():
+    """Phase 6b Wave 2: CMB-ℓ spectrum amplitude vs Planck cosmic-variance ceiling.
+
+    Two-panel figure transmuting the Phase 5y H4 closed-form NO-GO into
+    a CMB-ℓ falsification.
+
+    Left panel: log-log growth-amplitude squared `|G(k η_today)|²`
+    versus comoving wavenumber `k` for ΛCDM (cs² = 1, oscillatory,
+    bounded by 1) and the vestigial-EOS-at-τ=0 branch (cs² = -1/3,
+    cosh-form, exponentially divergent). Planck cosmic-variance ceiling
+    at the falsification pivot drawn as a horizontal anchor.
+
+    Right panel: heatmap of log₁₀|G(k, η)|² over the (k, η) plane for
+    the vestigial branch — the entire sub-horizon plane is colored at
+    the divergence-saturated ceiling. The exact origin (`k → 0`,
+    `η → 0`) reduces to G = 1 by construction.
+
+    Lean: CosmologicalPerturbations.vestigial_growth_unbounded_at_zero,
+          CosmologicalPerturbations.vestigial_growth_exceeds_planck_cv_cap_under_kη_threshold,
+          CosmologicalPerturbations.lambda_cdm_in_oscillatory_regime,
+          CosmologicalPerturbations.joint_phase5y_6b_no_go_natural_branch.
+    Source: Mukhanov §7.4; Planck 2018, A&A 641, A6 (2020), Tab. 2;
+            Phase 5y H4 closed form.
+    viz-ref: Phase 6b W2 / D5 §7 (joint-Phase 5y/6b NO-GO bundle)
+    """
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from src.core.constants import COSMOLOGICAL_PERTURBATIONS_PARAMS
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "Linear-perturbation growth amplitude<br>vs Planck cosmic-variance ceiling",
+            "log₁₀|G(k, η)|² over (k, η) plane<br>vestigial-EOS at τ=0 branch",
+        ),
+        column_widths=[0.55, 0.45],
+        horizontal_spacing=0.15,
+    )
+
+    eta_dec = COSMOLOGICAL_PERTURBATIONS_PARAMS["ETA_DECOUPLING_MPC"]
+    eta_today = COSMOLOGICAL_PERTURBATIONS_PARAMS["ETA_TODAY_MPC"]
+    cv_ceiling = 100.0  # Planck 1% cosmic-variance fractional cap
+
+    # ---------- Left panel: |G|² vs k for ΛCDM and vestigial ----------
+    # Range: k_min = 1/η_today (largest mode horizon-scale today),
+    # k_max where the cosh argument hits ~700 (float overflow regime).
+    k_grid = np.logspace(-4.5, -1.5, 240)  # 1/Mpc
+
+    # ΛCDM oscillatory amplitude — bounded by 1 (we plot the squared
+    # envelope at η_today as a constant 1 for clarity).
+    lambda_cdm_amplitude_sq = np.ones_like(k_grid)
+    fig.add_trace(
+        go.Scatter(
+            x=k_grid,
+            y=lambda_cdm_amplitude_sq,
+            mode="lines",
+            name="ΛCDM (cs² = 1, oscillatory)",
+            line=dict(color=COLORS["steel_blue"], width=2.5),
+            hovertemplate="k=%{x:.3e} 1/Mpc<br>|G|²≤%{y:.1f}<extra></extra>",
+        ),
+        row=1, col=1,
+    )
+
+    # Vestigial branch — cosh-form amplitude evaluated at η_today.
+    # Use np.clip to cap above the float-overflow regime; mark the
+    # divergence with an explicit annotation below.
+    cs_sq_vest = COSMOLOGICAL_PERTURBATIONS_PARAMS[
+        "OMEGA_J_SQ_OVER_K_SQ_VESTIGIAL_AT_ZERO"
+    ]
+    growth_rate = np.sqrt(abs(cs_sq_vest))
+    arg_at_today = growth_rate * k_grid * eta_today
+    arg_capped = np.clip(arg_at_today, 0.0, 700.0)  # float-safe
+    vest_amplitude_sq = np.cosh(arg_capped) ** 2
+    fig.add_trace(
+        go.Scatter(
+            x=k_grid,
+            y=vest_amplitude_sq,
+            mode="lines",
+            name="Vestigial-EOS τ=0 (cs² = -1/3, instability)",
+            line=dict(color=COLORS["amber"], width=2.5),
+            hovertemplate=(
+                "k=%{x:.3e} 1/Mpc<br>"
+                "|G|²=%{y:.3e}<extra></extra>"
+            ),
+        ),
+        row=1, col=1,
+    )
+
+    # Planck CV ceiling — horizontal anchor.
+    fig.add_hline(
+        y=cv_ceiling,
+        line=dict(color="black", dash="dot", width=2),
+        annotation_text=f"Planck CV ceiling ({cv_ceiling:.0f})",
+        annotation_position="top right",
+        row=1, col=1,
+    )
+
+    # ℓ_pivot vertical anchor: k_pivot = ℓ_pivot / η_dec ≈ 1500/280
+    ell_pivot = COSMOLOGICAL_PERTURBATIONS_PARAMS[
+        "ELL_PIVOT_FOR_FALSIFICATION"
+    ]
+    k_pivot = ell_pivot / eta_dec
+    if 10 ** -4.5 <= k_pivot <= 10 ** -1.5:
+        fig.add_vline(
+            x=k_pivot,
+            line=dict(color=COLORS["sage"], dash="dash", width=2),
+            annotation_text=f"ℓ={int(ell_pivot)} pivot",
+            annotation_position="top",
+            row=1, col=1,
+        )
+
+    fig.update_xaxes(
+        title_text="comoving k (1/Mpc, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=1,
+    )
+    fig.update_yaxes(
+        title_text="|G|² at η₀ (log scale)",
+        type="log", exponentformat="power",
+        range=[-1, 25],  # cap rendered range; actual values diverge
+        row=1, col=1,
+    )
+
+    # ---------- Right panel: log10|G(k, η)|² heatmap ----------
+    k_axis = np.logspace(-4.5, -1.5, 80)
+    eta_axis = np.linspace(eta_dec, eta_today, 80)
+    K, ETA = np.meshgrid(k_axis, eta_axis)
+    arg_grid = growth_rate * K * ETA
+    arg_grid_capped = np.clip(arg_grid, 0.0, 700.0)
+    log_amp_sq = 2.0 * np.log10(np.cosh(arg_grid_capped))
+    # Cap at log10 = 24 for color-bar legibility.
+    log_amp_sq_capped = np.clip(log_amp_sq, 0.0, 24.0)
+
+    fig.add_trace(
+        go.Heatmap(
+            x=k_axis,
+            y=eta_axis,
+            z=log_amp_sq_capped,
+            colorscale="YlOrRd",
+            colorbar=dict(
+                title=dict(text="log₁₀|G|²", side="right"),
+                len=0.8,
+                x=1.02,
+            ),
+            hovertemplate=(
+                "k=%{x:.3e} 1/Mpc<br>"
+                "η=%{y:.2e} Mpc<br>"
+                "log₁₀|G|²=%{z:.1f}<extra></extra>"
+            ),
+            zmin=0.0,
+            zmax=24.0,
+        ),
+        row=1, col=2,
+    )
+    fig.update_xaxes(
+        title_text="comoving k (1/Mpc, log scale)",
+        type="log", exponentformat="power",
+        row=1, col=2,
+    )
+    fig.update_yaxes(
+        title_text="conformal time η (Mpc)",
+        row=1, col=2,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=(
+                "<b>Phase 6b W2:</b> Vestigial-EOS perturbations diverge "
+                "across the Planck-CMB regime<br>"
+                "<sub>Cross-bridge to <i>VestigialEOS.cs_sq_vest_negative_at_zero</i> "
+                "(Phase 5y H4); the cs² = −1/3 closed form drives "
+                "exponential cosh-form growth at all sub-horizon scales</sub>"
+            ),
+            x=0.5,
+            xanchor="center",
+        ),
+        height=560,
+        width=1400,
+        margin=dict(t=110, b=120, r=120),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.18,
+                    xanchor="center", x=0.5),
+        font=FONT,
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

@@ -1003,6 +1003,37 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         color_keys=["steel_blue", "amber", "emerald", "burgundy"],
     ),
     FigureSpec(
+        name="fig_cmb_spectrum_planck_comparison",
+        function="fig_cmb_spectrum_planck_comparison",
+        caption=(
+            "Phase 6b Wave 2 — Vestigial-EOS perturbations diverge across "
+            "the Planck-CMB regime. Left panel: log-log growth-amplitude-"
+            "squared |G(k η₀)|² versus comoving wavenumber k for ΛCDM "
+            "(cs² = 1, oscillatory, bounded by 1) and the vestigial-EOS-at-"
+            "τ=0 branch (cs² = -1/3, cosh-form, exponentially divergent). "
+            "Planck cosmic-variance ceiling ≈ 100 drawn as horizontal "
+            "anchor; the falsification pivot ℓ = 1500 (k_pivot ≈ 5.4 1/Mpc, "
+            "off-axis at this k-range) drawn as a vertical anchor. Right "
+            "panel: 2D heatmap of log₁₀|G(k, η)|² over the (k, η) plane "
+            "for the vestigial branch — saturated to 24 orders of "
+            "magnitude across nearly the entire sub-horizon plane "
+            "(only the very-largest-scale, very-near-decoupling "
+            "corner produces sub-saturating amplitudes). Wave 2 "
+            "correctness-push: the Phase 5y H4 closed-form `cs_sq_vest_at_zero "
+            "= -1/3 < 0` transmutes to a CMB-ℓ falsification at every "
+            "Planck-accessible mode. Lean: "
+            "vestigial_growth_unbounded_at_zero, "
+            "vestigial_growth_exceeds_planck_cv_cap_under_kη_threshold, "
+            "joint_phase5y_6b_no_go_natural_branch. Source: Mukhanov §7.4; "
+            "Planck 2018, A&A 641, A6 (2020) Tab. 2; Phase 5y H4 closed "
+            "form (Lit-Search/Phase-5y/)."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "k", "yaxis": "G"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "sage"],
+    ),
+    FigureSpec(
         name="fig_ewbg_allowed_region",
         function="fig_ewbg_allowed_region",
         caption=(
@@ -1480,6 +1511,8 @@ def generate_figures() -> dict[str, Path]:
         fig_lambda_emerg_parameter_scan,
         # Phase 6e Wave 6: Einstein-Cartan torsion vs Kostelecky/Hughes-Drever
         fig_torsion_obs_bound,
+        # Phase 6b Wave 2: vestigial perturbation amplitude vs Planck CV ceiling
+        fig_cmb_spectrum_planck_comparison,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1629,6 +1662,7 @@ def generate_figures() -> dict[str, Path]:
         "fig_T_emerg_vs_matter": fig_T_emerg_vs_matter,
         "fig_lambda_emerg_parameter_scan": fig_lambda_emerg_parameter_scan,
         "fig_torsion_obs_bound": fig_torsion_obs_bound,
+        "fig_cmb_spectrum_planck_comparison": fig_cmb_spectrum_planck_comparison,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,
@@ -1784,6 +1818,8 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_lambda_emerg_parameter_scan,
         # Phase 6e Wave 6: Einstein-Cartan torsion vs Kostelecky/Hughes-Drever
         fig_torsion_obs_bound,
+        # Phase 6b Wave 2: vestigial perturbation amplitude vs Planck CV ceiling
+        fig_cmb_spectrum_planck_comparison,
         # Phase 6a Wave 1: emergent G_N from ADW microscopic theory
         fig_G_N_emerg_parameter_scan,
         # Phase 6a Wave 2: gravitational waves vs GW170817
@@ -1931,6 +1967,7 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_T_emerg_vs_matter": fig_T_emerg_vs_matter,
         "fig_lambda_emerg_parameter_scan": fig_lambda_emerg_parameter_scan,
         "fig_torsion_obs_bound": fig_torsion_obs_bound,
+        "fig_cmb_spectrum_planck_comparison": fig_cmb_spectrum_planck_comparison,
         "fig_G_N_emerg_parameter_scan": fig_G_N_emerg_parameter_scan,
         "fig_c_GW_vs_ligo_constraint": fig_c_GW_vs_ligo_constraint,
         "fig_entropy_coefficient_vs_spectrum": fig_entropy_coefficient_vs_spectrum,

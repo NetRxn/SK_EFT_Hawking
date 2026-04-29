@@ -2114,6 +2114,70 @@ FLRW_PARAMS = {
 
 
 # ════════════════════════════════════════════════════════════════════
+# Phase 6b Wave 2: Cosmological perturbation theory
+#
+# Linear scalar perturbation theory around an FRW background sourced by
+# a `VestigialEOS`-type perfect fluid. The central physical content is
+# that perturbations of a fluid with c_s² < 0 grow exponentially
+# (`cosh(|c_s|kη)`) rather than oscillating (`cos(c_s kη)`), producing a
+# divergent CMB-ℓ angular power spectrum. The Phase 5y H4 result
+# `cs_sq_vest(0) = -1/3 < 0` (VestigialEOS.cs_sq_vest_negative_at_zero)
+# is the load-bearing input — perturbation theory transmutes the
+# DESI-level no-go into a CMB-level falsification.
+#
+# Phase 6b Wave 2 (CosmologicalPerturbations.lean) consumes these via
+# src/cosmological_perturbations/.
+#
+# References:
+# - Planck 2018, A&A 641, A6 (2020) — base ΛCDM cosmological parameters
+# - Planck 2018, A&A 641, A6 (2020) Tab. 1 — TT/TE/EE pivot k = 0.05 Mpc⁻¹
+# - Mukhanov, *Physical Foundations of Cosmology* (2005), §7-§9
+# - Weinberg, *Cosmology* (2008), §6 — linear perturbation theory
+# - Lit-Search/Phase-5y/ — VestigialEOS H4 closed-form derivation
+# ════════════════════════════════════════════════════════════════════
+
+COSMOLOGICAL_PERTURBATIONS_PARAMS = {
+    # ── Planck 2018 CMB pivot + headline parameters (TT,TE,EE+lowE+lensing+BAO) ─
+    'K_PIVOT_PLANCK_INV_MPC': 0.05,        # k_pivot = 0.05 Mpc⁻¹ (Planck 2018 Tab. 1)
+    'N_S_PLANCK': 0.9649,                  # scalar spectral tilt
+    'A_S_PLANCK': 2.10e-9,                 # primordial scalar amplitude at k_pivot
+    'SIGMA_8_PLANCK': 0.8120,              # σ₈ from Planck base ΛCDM
+    'TAU_REIO_PLANCK': 0.0544,             # optical depth to reionization
+    # ── ℓ-space CMB grid for the falsification check ─────────────────
+    'ELL_MIN_PLANCK_TT': 2,                # Planck TT covers ℓ ∈ [2, 2500]
+    'ELL_MAX_PLANCK_TT': 2500,
+    'ELL_PIVOT_FOR_FALSIFICATION': 1500,   # mid-high-ℓ regime where divergence dominates
+    # ── Conformal-time anchors (decoupling + today; Mpc) ─────────────
+    # η_dec ≈ 280 Mpc / c (recombination), η_0 ≈ 1.4 × 10⁴ Mpc / c (today).
+    'ETA_DECOUPLING_MPC': 280.0,           # Mpc (Planck 2018 cosmology)
+    'ETA_TODAY_MPC': 1.4e4,                # Mpc
+    # ── Sound-speed admissibility threshold (correctness-push anchor) ─
+    # A background EOS is "admissible" for a stable CMB spectrum iff
+    # c_s² > 0 throughout the relevant evolution window. The vestigial
+    # EOS has c_s²(τ=0) = -1/3, so it is non-admissible at the
+    # deep-vestigial limit (which is the DESI-relevant regime).
+    'CS_SQ_ADMISSIBILITY_THRESHOLD': 0.0,
+    # ── Vestigial Jeans frequency (squared) at τ=0 per unit k² ───────
+    # ω_J²/k² = c_s²(τ=0) = -1/3 (VestigialEOS.cs_sq_vest_at_zero).
+    # Negative ⇒ exponential growth at all sub-horizon scales.
+    'OMEGA_J_SQ_OVER_K_SQ_VESTIGIAL_AT_ZERO': -1.0/3.0,
+    # ── Growth-rate per unit (k η) for vestigial at τ=0 ──────────────
+    # The instability growth rate is √|c_s²| = √(1/3) ≈ 0.5774, so a
+    # mode of comoving wavenumber k grows as cosh(0.5774 · k η).
+    'GROWTH_RATE_VESTIGIAL_AT_ZERO': (1.0/3.0)**0.5,
+    # ── ΛCDM reference: c_s² = 1 (relativistic), oscillatory regime ──
+    'CS_SQ_LAMBDA_CDM': 1.0,
+    # ── Tolerances ────────────────────────────────────────────────────
+    'PERTURBATION_NUMERICAL_TOLERANCE': 1.0e-9,
+    # ── Falsification cap (Planck TT cosmic-variance ceiling) ─────────
+    # The Planck cosmic-variance-limited fractional uncertainty on
+    # ℓ(ℓ+1)C_ℓ/2π at ℓ ~ 1500 is roughly 1%. A growth factor exceeding
+    # this ratio at any sub-horizon mode falsifies admissibility.
+    'PLANCK_TT_FRACTIONAL_TOLERANCE': 1.0e-2,
+}
+
+
+# ════════════════════════════════════════════════════════════════════
 # Phase 6a Wave 2: Gravitational waves
 #
 # GW propagation speed and dispersion from the vestigial-phase

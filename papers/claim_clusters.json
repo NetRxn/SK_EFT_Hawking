@@ -1,9 +1,9 @@
 {
-  "cluster_count": 2,
+  "cluster_count": 3,
   "clusters": [
     {
       "confidence": 1.0,
-      "constructed_at": "2026-04-27T17:56:39Z",
+      "constructed_at": "2026-04-29T13:13:30Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:d2c6aaa3",
@@ -23,7 +23,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-04-27T17:56:39Z",
+      "constructed_at": "2026-04-29T13:13:30Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:ce92f4a9",
@@ -42,14 +42,34 @@
         "sentence:paper9_sm_anomaly_drinfeld:acknowledgments:ce92f4a9"
       ],
       "normalized_hash": "ce92f4a9"
+    },
+    {
+      "confidence": 0.9,
+      "constructed_at": "2026-04-29T13:13:30Z",
+      "constructed_by": "cluster_detect.py:normalized",
+      "human_confirmed_at": null,
+      "id": "claim_cluster:norm:fb60352a",
+      "label": "The module is zero-sorry, introduces zero new axioms, and adds zero heartbeat overrides (Phase~3 pipeline invariant 10).",
+      "match_kind": "normalized",
+      "member_papers": [
+        "paper20_scalar_rung",
+        "paper33_ewbg_chirality_wall"
+      ],
+      "members": [
+        "sentence:paper20_scalar_rung:formal-verification-summary:2362ebe5",
+        "sentence:paper33_ewbg_chirality_wall:formal-verification:85511263"
+      ],
+      "normalized_hash": "fb60352a"
     }
   ],
-  "constructed_at": "2026-04-27T17:56:39Z",
+  "constructed_at": "2026-04-29T13:13:30Z",
   "constructed_by": "cluster_detect.py:all",
   "paper_coverage": [
     "paper10_modular_generation",
     "paper11_quantum_group",
     "paper16_wrt_tqft",
+    "paper20_scalar_rung",
+    "paper33_ewbg_chirality_wall",
     "paper9_sm_anomaly_drinfeld"
   ],
   "version": 1

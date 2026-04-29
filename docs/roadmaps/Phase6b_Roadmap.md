@@ -125,7 +125,22 @@ Phase 5y proved structurally that Volovik-family emergent-DE mechanisms cannot p
 
 This wave is **joint with Phase 5y** — specifically, it closes the "what can this framework predict at the linear level" loop that 5y's NO-GOs left open. (5y proved the backgrounds don't work for DESI; 6b.2 asks whether even the perturbations are sensible at the Planck/CMB-scale.)
 
-### Wave 2 — Cosmological Perturbation Theory [Pipeline: Stages 1–8]
+### Wave 2 — Cosmological Perturbation Theory [Pipeline: Stages 1–9, 11–12 — SHIPPED 2026-04-29]
+
+**Status:** **SHIPPED 2026-04-29 end-to-end** through Stages 1–9 + 11–12. Stages 10 (paper draft) and 13 (adversarial review) deferred per user policy 2026-04-29 — wave-specific paper deliverables that don't fit `PAPER_STRATEGY.md` / `PAPER_DRAFT_MAPPING.md` are auto-deferred; W2 content lifts into D5 §7 (Dark Sector under Substrate Constraints) per the joint Phase 5y/6b NO-GO bundle. The wave's Lean + Python + figure + notebooks are complete and the joint-Phase 5y/6b structural NO-GO is formally in place.
+
+- `lean/SKEFTHawking/CosmologicalPerturbations.lean`: **22 substantive theorems** (16 first-pass + 6 strengthening) / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only via `lean_verify`). Strengthening pass added: `self_lt_cosh_of_pos` (reusable cosh-self-bound helper); `vestigial_growth_exceeds_planck_cv_cap_under_kη_threshold` (quantitative Planck-anchored falsifier — for any `k·η ≥ 200`, vestigial growth exceeds Planck CV cap of 100); `instability_implies_not_admissible` (general lemma); `vestigial_at_zero_falsifies_H_StableSpectrum_via_amplitude` (independent witness for the bundled-Prop falsification); `H_VestigialNaturalBranchPasses` + `H_VestigialNaturalBranchPasses_falsified` + `joint_phase5y_6b_no_go_natural_branch` (joint Phase 5y/6b structural NO-GO bundle — **the load-bearing close of the "joint with Phase 5y" claim**). Cross-bridges to Phase 5y `VestigialEOS` consumed by name in 6 theorems; cross-bridge to `DESIComparison` in the joint NO-GO.
+- `src/cosmological_perturbations/`: 4 Python modules (`__init__`, `linear_perturbations`, `cmb_spectrum`, `planck_comparison`) with `LinearPerturbation` / `PerturbationRegime` / `PlanckReference` / `AdmissibilityVerdict` dataclasses + 5 `formulas.py` additions (`jeans_frequency_sq`, `linear_growth_factor`, `is_admissible_background`, `cmb_growth_amplitude`, `vestigial_pertubation_growth_at_zero`).
+- `tests/test_cosmological_perturbations.py`: **43 pytest cases** (35 first-pass + 8 strengthening), all PASS in 0.07s.
+- `figures/fig_cmb_spectrum_planck_comparison.png`: 2-panel figure (log-log |G|² vs k for ΛCDM bounded vs vestigial divergent + 2D log₁₀|G(k,η)|² heatmap saturated at 24 orders) — registered in `review_figures.py`.
+- `notebooks/Phase6b2_CosmologicalPerturbations_{Technical,Stakeholder}.ipynb`: 17+11 cells, both execute clean (`viz_consistency` + `notebook_exec` PASS).
+- 16 new `PARAMETER_PROVENANCE` entries (Planck 2018 base-ΛCDM cosmology pivots + falsification thresholds + vestigial-EOS-derived growth-rate constants). validate.py `parameter_provenance` PASS.
+- **Joint Phase 5y / 6b structural NO-GO**: the natural vestigial-DE branch (`τ² ∈ (0, 1/5)`) is **doubly-falsified by independent observations** — DESI 1σ region (Phase 5y `VestigialEOS.vestigial_not_in_desi_region`) AND CMB-ℓ admissibility (Phase 6b CP12 `vestigial_at_zero_not_admissible`). Two-witness structure: if either observational constraint individually relaxes, the other still falsifies the natural branch.
+- **Discipline metric: 0 retroactive theorems** at first-pass + ruthless review (best yet, matches 6e.5). Strengthening pass added 6 substantive theorems but none were retroactive — they were proactively-targeted gap fills (Planck-anchored quantitative claim, joint-bundle Prop, generalization of vestigial-specific lemma to universal statement). Trend: 6c.3=12, 6b.1=5, 6d.1=6, 6d.2=4, 6d.3=1, 6c.1=2, 6c.4=3, 6c.5=3, 6c.2=2, 6e.1=2, 6e.2=1, 6e.3=2, 6e.4=3, 6e.5=0, 6e.6=2, **6b.2=0 (best yet)**.
+
+**Project totals after 6b.2 ship:** 4505 substantive theorems (+22), 196 modules (+1), 86 notebooks (+2), 136 figures (+1), 88 test files (+1), 1 axiom (unchanged), 0 sorry. validate.py 25/25 PASS.
+
+#### Original Wave 2 specification (preserved for reference)
 
 **Goal:** Formalize linear perturbation theory around q-theory / two-fluid / vestigial FRW backgrounds; derive CMB ℓ-space power spectrum emergence.
 
