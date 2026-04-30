@@ -206,6 +206,11 @@ import SKEFTHawking.CFLChiralLagrangian
 import SKEFTHawking.StrongCPTopologicalDE
 import SKEFTHawking.QECHolographyBridge
 import SKEFTHawking.RTCasiniHuertaBounds
+import SKEFTHawking.LorentzianMetric
+import SKEFTHawking.RiemannianConnection
+import SKEFTHawking.RiemannCoordinate
+import SKEFTHawking.RiemannDifferentialBianchi
+import SKEFTHawking.BundleRiemannAux
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

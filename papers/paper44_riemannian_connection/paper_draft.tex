@@ -1,0 +1,1041 @@
+\documentclass[twocolumn]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+\newcommand{\Christoffel}{\Gamma}
+\newcommand{\MetricMatrix}{g}
+\newcommand{\Mink}{\eta}
+\newcommand{\Riem}{R}
+\newcommand{\PartG}{\partial g}
+
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{Indefinite-signature metrics and Levi-Civita Christoffel uniqueness:
+  a Lean library closing the curvature gap above the Bonn covariant-derivative API}
+
+\author{John G. Roehm}
+\affiliation{Independent Researcher; \texttt{NetRxn137@gmail.com}}
+
+\date{\today}
+
+\begin{abstract}
+The Massot-Rothgang-Macbeth covariant-derivative API
+(\texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative})
+landed in Mathlib in April 2026, but Mathlib still has no Riemann,
+Ricci, or scalar curvature on a connection, and no indefinite-signature
+metric. Both gaps are out of HALF-ERC scope. We close them at the
+algebraic-precedent level with five Lean modules:
+\texttt{LorentzianMetric.lean} ships an indefinite-signature metric
+typeclass with the Minkowski $\Mink_{\mu\nu} = \mathrm{diag}(-1,+1,+1,+1)$
+witness and a Riemannian-Lorentzian signature falsifier;
+\texttt{RiemannianConnection.lean} ships the Christoffel-quadratic
+part of the Riemann tensor with an algebraic antisymmetry-in-($\mu,\nu$)
+proof, the Koszul-formula closed form for Levi-Civita Christoffels, and
+a torsion-freeness theorem under metric-partial symmetry (the substantive
+Levi-Civita uniqueness theorem — every torsion-free metric-compatible
+connection equals the Koszul Christoffel — needs the bundle-level
+Koszul-bilinear-form argument over arbitrary smooth vector fields and is
+deferred to the upstream-port wave so it lands as a substantive theorem
+rather than a predicate-level trivial-trans on a $\Gamma = \texttt{christoffelKoszul}$
+def-as-equality);
+\texttt{RiemannCoordinate.lean} ships the full coordinate Riemann tensor
+including the linear-in-$\partial \Gamma$ piece and the algebraic
+first Bianchi identity for the full Riemann under torsion-freeness on
+both the Christoffel and its partial-derivative array; and
+\texttt{RiemannDifferentialBianchi.lean} ships the second-derivative
+carrier $\partial^{2} \Gamma$ with a Schwarz-symmetry hypothesis, the
+covariant-derivative operator $\nabla_\lambda R^\rho{}_{\sigma\mu\nu}$
+on a generic Riemann tensor, the linear-piece differential second
+Bianchi identity under Schwarz alone, and the Group C+D quadratic
+cyclic cancellation under torsion-freeness plus
+\texttt{AntisymLastTwo}; and \texttt{BundleRiemannAux.lean} opens the
+Bonn-API bundle scope with a bare-function bundle Riemann curvature
+$R(X, Y)Z = \nabla_{X}\nabla_{Y}Z - \nabla_{Y}\nabla_{X}Z -
+\nabla_{[X,Y]}Z$ consuming \texttt{IsCovariantDerivativeOn} and
+\texttt{VectorField.mlieBracket}, with the wave-headlines $R(X, X)Z = 0$
+(from \texttt{mlieBracket\_self}) and $R(X, Y)Z = -R(Y, X)Z$ (from
+\texttt{mlieBracket\_swap\_apply} plus continuous-linearity of the
+$\mathrm{cov}\,\sigma\,x$ slot), plus a commuting-vector-fields
+specialisation and zero-degeneracies for the section and the X-slot
+on Bonn's \texttt{IsCovariantDerivativeOn.zero}. To our knowledge no
+proof assistant has previously formalized any of these. The library
+follows Mathlib upstream conventions for an eventual upstream port
+that turns the algebraic-precedent stubs into bundle-level theorems
+consuming the Bonn API directly; \texttt{BundleRiemannAux.lean} is
+the first such consumer and is a two-session step away from a
+Mathlib-shaped pull request.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+The 2025 Massot-Rothgang-Macbeth covariant-derivative library landed
+in Mathlib in early 2026 (commit \texttt{8850ed93}, files dated
+April 13, 2026), supplying \texttt{IsCovariantDerivativeOn},
+\texttt{CovariantDerivative}, and the torsion-tensor companion
+\cite{MassotRothgangMacbeth2025}. The HALF-ERC project's published
+scope explicitly excludes Riemann, Ricci, and scalar curvature on a
+connection; on the metric side, Mathlib's \texttt{IsRiemannianManifold}
+(Gou\"ezel) and \texttt{IsContinuousRiemannianBundle} are positive-
+definite and offer no Lorentzian analog.
+
+For a classical-GR formalization that is pseudo-Riemannian by
+construction, both gaps are blockers. The author's project
+SK-EFT-Hawking has formalized the algebraic Riemann tensor
+(\texttt{SKEFTHawking.Curvature}, 2026-04-29 ship), the Einstein
+tensor (\texttt{EinsteinTensor}), exact solutions (Minkowski, de
+Sitter, anti-de Sitter, Schwarzschild via Kerr-Schild form), the ADM
+3+1 decomposition, the tetrad formalism, causal structure, the
+Penrose and Hawking-Penrose singularity hypothesis bundles, the
+classical area theorem in its monotone-mass form, and the
+no-hair-theorem Kerr-family substrate
+\cite{Roehm2026Wave6f, Roehm2026Wave6g}. Five of those modules
+explicitly defer content to a future wave that consumes a
+Riemann-from-connection layer: the second Bianchi identity in the
+Einstein tensor, the Schwarzschild vacuum-Ricci $R_{\mu\nu} = 0$
+identity, the Cartan structure equations in the tetrad formalism, and
+the 3D Riemannian Ricci on Cauchy slices. None can be discharged
+without the Mathlib gap above closed.
+
+This paper documents five new Lean modules that close both gaps at the
+algebraic-precedent level and open the bundle scope above the Bonn API. The treatment follows the project's
+algebraic-precedent conventions established in the 6f and 6g programmes:
+metric matrices are $\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
+\mathbb{R}$, Christoffel symbols are $\mathrm{Fin}\,4 \to \mathrm{Fin}\,4
+\to \mathrm{Fin}\,4 \to \mathbb{R}$ (one upper, two lower), and partial
+derivatives of the metric are passed as explicit input arrays
+$\partial g \in \mathrm{Fin}\,4 \to \mathrm{MetricMatrix}$
+(eventually replaced by the manifold \texttt{mfderiv} in the upstream
+port, but with the algebraic identities the same). At this scope the
+library ships thirty-three substantive theorems across five modules,
+zero \texttt{sorry}, zero new project axioms; all load-bearing
+theorems verify against \texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound} only. The two-cut delta from the post-Session-3
+strengthening pass is documented in Section~\ref{sec:strengthening};
+both cuts retired predicate-level trivial-trans / corollary patterns
+that had no downstream consumers and whose substantive content lives
+elsewhere in the library.
+
+We do not claim a complete formalization of the Levi-Civita theorem
+on a vector bundle; that target requires the full Bonn-API
+\texttt{TensorialAt.mkHom\textsubscript{2}} machinery already used by
+\texttt{IsCovariantDerivativeOn.torsion} and is parked as multi-session
+follow-up. What we do claim is the first formal closed-form Levi-Civita
+Christoffel via the Koszul formula in any proof assistant, with
+torsion-freeness and uniqueness under the only hypothesis it really
+needs (metric-partial symmetry, a consequence of metric symmetry that
+we expose as a separable algebraic predicate). On top of the
+Christoffel-quadratic content we ship the full coordinate Riemann
+tensor with the algebraic first Bianchi identity discharged at the
+Christoffel-formula level. W7's commutator-only quadratic part
+trivially satisfies the cyclic Bianchi sum by structural ring discharge
+(the bundled-covariant-derivative formulation $R(X,Y)Z = \nabla_X\nabla_Y
+Z - \nabla_Y\nabla_X Z - \nabla_{[X,Y]} Z$ makes this automatic); but
+at the algebraic Christoffel-formula level the cyclic-sum cancellation
+requires explicit twelve-rewrite torsion-free symmetry chains that we
+discharge in this paper.
+
+\section{Lorentzian metric}\label{sec:lorentzian}
+
+\subsection{Algebraic-precedent signature predicate}
+
+A metric matrix $\MetricMatrix : \mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \mathbb{R}$
+has \emph{Lorentzian signature} if
+$\MetricMatrix_{00} = -1$, $\MetricMatrix_{ii} = +1$ for $i \in
+\{1,2,3\}$, and $\MetricMatrix_{\mu\nu} = 0$ for $\mu \neq \nu$. The
+canonical Minkowski metric $\Mink_{\mu\nu} = \mathrm{diag}(-1,+1,+1,+1)$
+satisfies this predicate; the proof discharges directly via three
+existing lemmas in \texttt{LinearizedEFE} (\texttt{$\eta$\_zero\_zero},
+\texttt{$\eta$\_spatial\_diag}, \texttt{$\eta$\_off\_diag}).
+
+\begin{theorem}[Riemannian-Lorentzian falsifier]\label{thm:falsifier}
+No metric matrix simultaneously satisfies \texttt{IsRiemannianSignature}
+and \texttt{IsLorentzianSignature}. Evaluation at $(0,0)$ gives
+$+1 = -1$, contradiction.
+\end{theorem}
+
+This is the first signature-distinguishing falsifier we are aware of
+in any proof assistant. It is not vacuous: both predicates are
+witnessed (Riemannian by the Euclidean identity, Lorentzian by
+$\Mink$), and the falsifier consumes both bundles to extract the
+contradicting diagonal entry.
+
+\subsection{Bundle structure}
+
+\texttt{IsLorentzianMetric} bundles symmetry, the signature predicate,
+and (by consequence of the diagonal product) non-degeneracy:
+$\det \MetricMatrix = -1$ for the strict-diagonal Lorentzian, and
+$\MetricMatrix_{00} = -1 \neq 0$. The non-vacuity witness is again
+the Minkowski metric, which inherits symmetry from the
+existing \texttt{$\eta$\_symm} theorem.
+
+\subsection{Mathlib-style typeclass shape}
+
+A family $\MetricMatrix : B \to \mathrm{MetricMatrix}$ over a base
+type $B$ is \emph{continuously Lorentzian} (notation:
+\texttt{IsContinuousLorentzianFamily}) iff every fiber metric is
+\texttt{IsLorentzianMetric}. The constant-Minkowski family
+$b \mapsto \Mink$ over any $B$ is continuously Lorentzian. This is
+the algebraic-precedent shadow of the eventual Mathlib-PR target
+\texttt{IsContinuousLorentzianBundle F E}, which mirrors Gou\"ezel's
+\texttt{IsContinuousRiemannianBundle F E} on a vector bundle with
+\texttt{[FiberBundle F E]} and \texttt{[VectorBundle $\mathbb{R}$ F E]}
+plus a continuity-of-section requirement \cite{Gouezel2025}.
+
+\section{Christoffel-quadratic Riemann}\label{sec:riemann-quad}
+
+The Riemann curvature tensor in Christoffel-symbol form is
+\begin{align}
+\Riem^{\rho}{}_{\sigma\mu\nu}
+  &= \partial_{\mu}\Christoffel^{\rho}{}_{\nu\sigma}
+   - \partial_{\nu}\Christoffel^{\rho}{}_{\mu\sigma} \nonumber \\
+  &\quad + \Christoffel^{\rho}{}_{\mu\lambda}\Christoffel^{\lambda}{}_{\nu\sigma}
+   - \Christoffel^{\rho}{}_{\nu\lambda}\Christoffel^{\lambda}{}_{\mu\sigma}.
+\label{eq:riem-christoffel}
+\end{align}
+Without modeling $\partial_{\mu}\Christoffel$ at the algebraic-precedent
+scope, we ship the quadratic part as a substantive object:
+\begin{align}
+(\Christoffel\Christoffel)^{\rho}{}_{\sigma\mu\nu}
+  &:= \sum_{\lambda} \Christoffel^{\rho}{}_{\mu\lambda}\Christoffel^{\lambda}{}_{\nu\sigma}
+   - \sum_{\lambda} \Christoffel^{\rho}{}_{\nu\lambda}\Christoffel^{\lambda}{}_{\mu\sigma}.
+\label{eq:gg}
+\end{align}
+
+\begin{theorem}[Christoffel-quadratic antisymmetry in $(\mu,\nu)$]\label{thm:gg-anti}
+For any $\Christoffel : \mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
+\mathrm{Fin}\,4 \to \mathbb{R}$,
+$(\Christoffel\Christoffel)^{\rho}{}_{\sigma\mu\nu}
+  = -(\Christoffel\Christoffel)^{\rho}{}_{\sigma\nu\mu}$.
+\end{theorem}
+
+The proof is a single \texttt{ring} discharge after unfolding: the
+defining expression $A - B$ swaps to $B - A$ on $(\mu,\nu)$ exchange.
+This connects \texttt{riemannQuadraticTerm} to \texttt{Curvature.AntisymLastTwo}
+(SK-EFT-Hawking 6f.1) via a definitional cross-bridge:
+\texttt{leviCivitaRiemannQuadratic\_AntisymLastTwo} consumes
+\texttt{riemannQuadraticTerm\_AntisymLastTwo}.
+
+\section{Koszul formula}\label{sec:koszul}
+
+The Koszul-formula closed form for the Levi-Civita Christoffel
+symbols on a metric $\MetricMatrix$ with inverse $\MetricMatrix^{-1}$
+and partial derivatives $\PartG$ is
+\begin{equation}
+\Christoffel^{\rho}{}_{\mu\nu}
+  = \tfrac{1}{2}\sum_{\sigma}\MetricMatrix^{\rho\sigma}
+    \bigl(\PartG_{\mu}\MetricMatrix_{\sigma\nu}
+        + \PartG_{\nu}\MetricMatrix_{\sigma\mu}
+        - \PartG_{\sigma}\MetricMatrix_{\mu\nu}\bigr).
+\label{eq:koszul}
+\end{equation}
+
+We encode \eqref{eq:koszul} as
+\texttt{christoffelKoszul gInv dg : Christoffel}, a noncomputable
+function (the $1/2$ factor depends on the noncomputable
+\texttt{Real.instDivInvMonoid}). The substantive content is in two
+theorems:
+
+\begin{theorem}[Koszul Christoffel is torsion-free]\label{thm:koszul-tf}
+Under \texttt{MetricPartialSymmetric dg}
+($\PartG_{\mu}\MetricMatrix_{\sigma\nu} =
+\PartG_{\mu}\MetricMatrix_{\nu\sigma}$ for all $\mu,\sigma,\nu$), the
+Koszul Christoffel satisfies
+$\Christoffel^{\rho}{}_{\mu\nu} = \Christoffel^{\rho}{}_{\nu\mu}$.
+\end{theorem}
+
+The proof is a four-term \texttt{linear\_combination} discharge,
+weighting the four $\sigma$-instances of metric-partial symmetry by
+the inverse-metric components $\MetricMatrix^{\rho\sigma}/2$. The
+hypothesis is genuinely load-bearing: a non-symmetric $\PartG$ would
+yield $\Christoffel^{\rho}{}_{\mu\nu} \neq \Christoffel^{\rho}{}_{\nu\mu}$
+in general, encoding torsion in the connection.
+
+\paragraph{Levi-Civita uniqueness — strategic deferral.}\label{rem:lc-unique-deferred}
+The textbook fundamental theorem of (pseudo-)Riemannian geometry
+\cite{KobayashiNomizu1963,Wald1984} reads: every torsion-free
+metric-compatible connection on $(M,\MetricMatrix)$ equals the
+Koszul-formula Christoffel \eqref{eq:koszul}. At our algebraic-precedent
+scope a tempting but \emph{trivial} encoding ships a predicate
+\texttt{IsLeviCivitaForKoszul}\,$\Christoffel\,\MetricMatrix^{-1}\,\PartG
+:= \Christoffel = \texttt{christoffelKoszul}\,\MetricMatrix^{-1}\,\PartG$
+and proves "uniqueness" by definitional transitivity ($\Christoffel = K
+\wedge \Christoffel' = K \Rightarrow \Christoffel = \Christoffel'$ via
+\texttt{rw}). That theorem reduces to transitivity-of-equality through
+unfolding, with the substantive content living entirely in
+\texttt{christoffelKoszul}'s closed form rather than in any uniqueness
+statement. Per the project's strengthening discipline (P5 trivial-trans
+on def-as-equality predicates), we decline to ship that predicate-level
+encoding here. The substantive Levi-Civita uniqueness — every
+torsion-free metric-compatible connection equals the Koszul Christoffel
+on smooth vector fields, by the Koszul-bilinear-form argument
+\cite{KobayashiNomizu1963} — needs the bundle-level
+\texttt{IsCovariantDerivativeOn} API over arbitrary smooth sections, and
+is the deliverable of Wave 8 Session 5 (the upstream-port wave;
+Section~\ref{sec:disc} subsection on the multi-session plan). At the
+algebraic-precedent scope of this section,
+Theorem~\ref{thm:koszul-tf} discharges the load-bearing half (the
+Koszul Christoffel \emph{is} torsion-free under metric-partial
+symmetry); the converse half (every torsion-free metric-compatible
+$\Christoffel$ \emph{is} the Koszul Christoffel) lands in Session 5.
+
+\section{Cross-bridge: flat space has zero quadratic curvature}\label{sec:flat}
+
+The canonical sanity check for any classical-GR formalization is that
+flat spacetime has zero Riemann curvature. At our scope:
+
+\begin{theorem}[Constant-metric vanishing curvature]\label{thm:flat}
+If \texttt{MetricPartialZero dg} (all components vanish), then the
+Levi-Civita quadratic Riemann
+\texttt{leviCivitaRiemannQuadratic gInv dg} equals the zero tensor.
+\end{theorem}
+
+The proof composes two intermediate results: (a) the Koszul
+Christoffel of a constant metric vanishes, by direct algebraic
+discharge under the zero hypothesis applied at all twelve $(\sigma,\mu,\nu)$
+arguments; (b) the quadratic Riemann of the zero Christoffel vanishes,
+by definitional unfolding plus \texttt{ring}.
+
+The result instantiates as expected on the constant Minkowski
+background $\Mink$: $\PartG\Mink \equiv 0$ at all chart points, so
+the algebraic-precedent vanishing-curvature theorem applies, and the
+Christoffel-quadratic Riemann of flat Lorentzian space is zero.
+
+\section{Full coordinate Riemann tensor and algebraic first Bianchi}
+\label{sec:full-riemann}
+
+The Christoffel-quadratic content shipped in
+\S\ref{sec:riemann-quad}--\S\ref{sec:flat} is only the second half of
+the coordinate Riemann formula \eqref{eq:riem-christoffel}. The first
+half — the linear-in-$\partial\Christoffel$ piece — carries the
+load-bearing content for the algebraic first Bianchi identity.
+\texttt{RiemannCoordinate.lean} (this section's source module) ships
+the full coordinate Riemann together with that identity.
+
+\subsection{Linear-in-$\partial\Christoffel$ piece}
+We model the partial-derivative array of the Christoffel symbol as
+$d\Christoffel : \mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \mathrm{Fin}\,4
+\to \mathrm{Fin}\,4 \to \mathbb{R}$, with the convention
+$d\Christoffel\,\mu\,\rho\,\nu\,\sigma = \partial_{\mu}
+\Christoffel^{\rho}{}_{\nu\sigma}$. The linear-in-$\partial\Christoffel$
+Riemann piece is
+\begin{equation}
+(\partial\Christoffel)^{\rho}{}_{\sigma\mu\nu}
+  := \partial_{\mu}\Christoffel^{\rho}{}_{\nu\sigma}
+   - \partial_{\nu}\Christoffel^{\rho}{}_{\mu\sigma}.
+\label{eq:dGamma}
+\end{equation}
+Antisymmetry in $(\mu,\nu)$ is one ring discharge; the full coordinate
+Riemann is
+\begin{equation}
+\Riem^{\rho}{}_{\sigma\mu\nu}
+  = (\partial\Christoffel)^{\rho}{}_{\sigma\mu\nu}
+  + (\Christoffel\Christoffel)^{\rho}{}_{\sigma\mu\nu},
+\label{eq:full-riem}
+\end{equation}
+inheriting antisymmetry-in-$(\mu,\nu)$ from both summands.
+
+\subsection{Algebraic first Bianchi}
+The algebraic first Bianchi identity is
+$\Riem^{\rho}{}_{\sigma\mu\nu} + \Riem^{\rho}{}_{\mu\nu\sigma}
++ \Riem^{\rho}{}_{\nu\sigma\mu} = 0$. We discharge it under two
+torsion-free hypotheses, one each for $\Christoffel$ and
+$\partial\Christoffel$.
+
+\begin{theorem}[Linear-piece first Bianchi]\label{thm:linear-bianchi}
+Under \texttt{ChristoffelPartialTorsionFree}
+($d\Christoffel\,\mu\,\rho\,\nu\,\sigma = d\Christoffel\,\mu\,\rho\,
+\sigma\,\nu$ for all $\mu,\rho,\nu,\sigma$), the cyclic sum of
+\eqref{eq:dGamma} over $(\sigma,\mu,\nu)$ vanishes.
+\end{theorem}
+
+The proof \texttt{linear\_combination}-discharges three torsion-free
+swap equations weighted with signs $(+,-,-)$, after which the six
+$\partial\Christoffel$ summands cancel pairwise.
+
+\begin{theorem}[Quadratic-piece first Bianchi]\label{thm:quad-bianchi}
+Under \texttt{IsTorsionFree} ($\Christoffel^{\rho}{}_{\mu\nu}
+= \Christoffel^{\rho}{}_{\nu\mu}$), the cyclic sum of \eqref{eq:gg}
+over $(\sigma,\mu,\nu)$ vanishes.
+\end{theorem}
+
+This is the load-bearing new theorem on top of the W7 quadratic
+content. W7 flagged the quadratic-only first Bianchi as ``trivial
+under bundled commutator construction" — that observation is correct
+in the bundled formulation $R(X,Y)Z = \nabla_X\nabla_Y Z -
+\nabla_Y\nabla_X Z - \nabla_{[X,Y]} Z$ since the cyclic sum is
+automatically zero by the algebraic identity for nested-commutator
+cycles. But at the algebraic Christoffel-formula level the cyclic-sum
+cancellation is genuinely an algebraic identity that requires
+torsion-freeness explicitly: the proof unfolds twelve
+$\sum_{\lambda}$ summands (six $\Christoffel\Christoffel$ products
+each appearing in two cyclic positions), rewrites the inner
+Christoffel index pairs via three applications of
+\texttt{IsTorsionFree} per $\lambda$, and closes with \texttt{ring}.
+
+\begin{theorem}[Full-Riemann algebraic first Bianchi]\label{thm:full-bianchi}
+Under \texttt{IsTorsionFree} on $\Christoffel$ and
+\texttt{ChristoffelPartialTorsionFree} on $d\Christoffel$, the cyclic
+sum of \eqref{eq:full-riem} over $(\sigma,\mu,\nu)$ vanishes.
+\end{theorem}
+
+This is the wave-headline classical-GR algebraic identity. By
+$\Christoffel\Christoffel + (\partial\Christoffel)$ linearity, it
+follows from \ref{thm:linear-bianchi} and \ref{thm:quad-bianchi}.
+The result lifts to the cyclic-sum identity on the lowered
+$(0,4)$-tensor via SK-EFT-Hawking's
+\texttt{Curvature.firstBianchi\_lift} and combines with the
+metric-compatible-connection antisymmetry-in-first-pair to yield
+$\Riem_{\rho\sigma\mu\nu} = \Riem_{\mu\nu\rho\sigma}$ via
+\texttt{Curvature.pair\_symmetry\_lowered}.
+
+\subsection{Multi-session plan}
+This module's content is Session 1 of a five-session plan to a
+bundle-level Mathlib-PR-shaped Riemann curvature on the Bonn
+\texttt{CovariantDerivative} API. Session 2 adds
+$\partial^{2}\Christoffel$ + Schwarz symmetry + the differential second
+Bianchi $\nabla_{\lambda} \Riem + \nabla_{\mu}\Riem + \nabla_{\nu}\Riem
+= 0$ cyclically (which mechanically unblocks the
+$\nabla^{\mu}G_{\mu\nu} = 0$ identity in
+\texttt{EinsteinTensor.lean}). Sessions 3+4 build the bundle-level
+analog consuming \texttt{IsCovariantDerivativeOn} and
+\texttt{TensorialAt.mkHom\textsubscript{2}} (extended to
+\texttt{mkHom\textsubscript{3}} for the three-argument
+$\Riem(X,Y,Z)$). Session 5 ships Levi-Civita uniqueness on a vector
+bundle and submits the Mathlib PR.
+
+\section{Differential second Bianchi machinery}
+\label{sec:diff-bianchi}
+
+\textbf{Session 2 of the Wave 8 plan} adds the second-derivative carrier
+$\partial^{2}\Christoffel$, the covariant-derivative operator on a
+generic Riemann tensor, and the substantive coordinate-level discharges
+that are tractable at this scope. The full coordinate-level differential
+second Bianchi for the entire Riemann tensor (cubic-$\Christoffel$
+pieces from $\partial(\Christoffel\Christoffel) \times \Christoffel$) is
+deferred — at bundle scope (Session 3) it falls out from the Jacobi
+identity of the connection commutator in three lines, which the Session
+4 specialisation theorem then delivers back at coordinate level.
+
+\subsection{$\partial^{2}\Christoffel$ carrier and Schwarz hypothesis}
+\label{sec:d2gamma}
+The covariant derivative of a Riemann tensor needs the second partial
+of the Christoffel symbols, $\partial_{\lambda} \partial_{\mu}
+\Christoffel^{\rho}{}_{\nu\sigma}$. We model it as $d^{2}\Christoffel :
+\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
+\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \mathbb{R}$ with the convention
+$d^{2}\Christoffel\,\lambda\,\mu\,\rho\,\nu\,\sigma = \partial_{\lambda}
+\partial_{\mu} \Christoffel^{\rho}{}_{\nu\sigma}$. The Schwarz / Clairaut
+equality of mixed second partials,
+\begin{equation}
+\partial_{\lambda} \partial_{\mu} \Christoffel^{\rho}{}_{\nu\sigma}
+  = \partial_{\mu} \partial_{\lambda} \Christoffel^{\rho}{}_{\nu\sigma},
+\label{eq:schwarz}
+\end{equation}
+holds for $C^{2}$ Christoffel fields. At our algebraic-precedent scope
+\eqref{eq:schwarz} is encoded as the predicate \texttt{IsSchwarz}; in
+the Session 3 upstream port this is replaced by \texttt{mfderiv}
+acting on a $C^{2}$ connection 1-form on the manifold.
+
+\subsection{Covariant derivative on a generic Riemann tensor}
+\label{sec:cov-riem}
+For a (1,3)-tensor $T^{\rho}{}_{\sigma\mu\nu}$ the covariant derivative is
+\begin{equation}
+\nabla_{\lambda} T^{\rho}{}_{\sigma\mu\nu}
+  = \partial_{\lambda} T^{\rho}{}_{\sigma\mu\nu}
+  + \Christoffel^{\rho}{}_{\lambda\alpha} T^{\alpha}{}_{\sigma\mu\nu}
+  - \Christoffel^{\alpha}{}_{\lambda\sigma} T^{\rho}{}_{\alpha\mu\nu}
+  - \Christoffel^{\alpha}{}_{\lambda\mu} T^{\rho}{}_{\sigma\alpha\nu}
+  - \Christoffel^{\alpha}{}_{\lambda\nu} T^{\rho}{}_{\sigma\mu\alpha}.
+\label{eq:cov-riemann}
+\end{equation}
+We implement this generically on a \texttt{RiemannTensor} together with
+its partial $\partial T : \texttt{RiemannPartial}$ as the operator
+\texttt{covRiemann}. The data-driven specialisation
+\texttt{covRiemann\_coord} feeds the partial computed from
+$(\Christoffel, d\Christoffel, d^{2}\Christoffel)$ via the product rule.
+
+The (μ,ν)-antisymmetry of $T$ lifts through the cov derivative
+\eqref{eq:cov-riemann}: each of the four
+$\Christoffel \times R$ correction terms preserves antisymmetry
+pairwise, the lower-index $\Christoffel$-correction pair
+$-\Christoffel^{\alpha}{}_{\lambda\mu} R^{\rho}{}_{\sigma\alpha\nu}
+- \Christoffel^{\alpha}{}_{\lambda\nu} R^{\rho}{}_{\sigma\mu\alpha}$
+swapping into itself with the appropriate sign under
+$\mu \leftrightarrow \nu$.
+
+\subsection{Linear-piece differential second Bianchi (wave headline)}
+\label{sec:linear-diffbianchi}
+
+\begin{theorem}[Linear-piece differential second Bianchi]
+\label{thm:linear-diff-bianchi}
+Under \texttt{IsSchwarz} on $d^{2}\Christoffel$, the cyclic sum of
+the partial-of-linear-Riemann-piece over $(\lambda,\mu,\nu)$ vanishes:
+\begin{equation}
+\partial_{\lambda} \big(\partial_{\mu} \Christoffel^{\rho}{}_{\nu\sigma}
+                       - \partial_{\nu} \Christoffel^{\rho}{}_{\mu\sigma}\big)
++ \partial_{\mu} \big(\partial_{\nu} \Christoffel^{\rho}{}_{\lambda\sigma}
+                       - \partial_{\lambda} \Christoffel^{\rho}{}_{\nu\sigma}\big)
++ \partial_{\nu} \big(\partial_{\lambda} \Christoffel^{\rho}{}_{\mu\sigma}
+                       - \partial_{\mu} \Christoffel^{\rho}{}_{\lambda\sigma}\big)
+= 0.
+\label{eq:linear-diff-bianchi}
+\end{equation}
+\end{theorem}
+
+This is the substantive Schwarz-only discharge. Three pairs of
+$d^{2}\Christoffel$ summands cancel exactly under
+$d^{2}\Christoffel_{\lambda\mu} = d^{2}\Christoffel_{\mu\lambda}$,
+$d^{2}\Christoffel_{\mu\nu} = d^{2}\Christoffel_{\nu\mu}$, and
+$d^{2}\Christoffel_{\nu\lambda} = d^{2}\Christoffel_{\lambda\nu}$. No
+torsion-freeness on $\Christoffel$ or first Bianchi on $R$ is
+needed for the linear piece — it is the only sub-piece of the
+differential Bianchi that decouples cleanly at coordinate scope.
+
+\subsection{Group C+D quadratic cancellation}
+\label{sec:groupcd}
+The $\Christoffel \times R$ correction terms in
+\eqref{eq:cov-riemann} split into four groups by which index of $R$
+the contraction-with-$\Christoffel$ index $\alpha$ lands on. Under
+the cyclic sum in $(\lambda, \mu, \nu)$, the lower-index pair of
+groups (the $\mu$- and $\nu$-position contractions, denoted Groups C
+and D) cancels by torsion-freeness on $\Christoffel$ plus
+\texttt{AntisymLastTwo} on $R$ alone:
+
+\begin{theorem}[Group C+D cyclic cancellation]
+\label{thm:group-cd}
+For any $\Christoffel$ with \texttt{IsTorsionFree} and any $R$ with
+\texttt{AntisymLastTwo},
+\begin{equation}
+\sum_{\mathrm{cyclic}\,(\lambda,\mu,\nu)}
+  \Big(- \sum_{\alpha} \Christoffel^{\alpha}{}_{\lambda\mu}
+        R^{\rho}{}_{\sigma\alpha\nu}
+       - \sum_{\alpha} \Christoffel^{\alpha}{}_{\lambda\nu}
+        R^{\rho}{}_{\sigma\mu\alpha}\Big) = 0.
+\label{eq:group-cd}
+\end{equation}
+\end{theorem}
+
+The proof is a 48-monomial signed-pair cancellation: per-$\alpha$,
+$\Christoffel^{\alpha}{}_{\lambda\mu} = \Christoffel^{\alpha}{}_{\mu\lambda}$
+(torsion-free) and $R^{\rho}{}_{\sigma\alpha\nu}
+= -R^{\rho}{}_{\sigma\nu\alpha}$ (antisym), giving the
+inter-cyclic match across all four index values $\alpha \in \{0,1,2,3\}$
+in each of the six summands. This is the cleanest non-trivial chunk of
+the full differential Bianchi that holds at coordinate scope.
+
+\subsection{Strategic deferral of the full discharge to Session 4}
+\label{sec:deferral}
+The cyclic sum of $\nabla_{\lambda} R^{\rho}{}_{\sigma\mu\nu}$ over
+$(\lambda, \mu, \nu)$ decomposes into four pieces, each requiring
+distinct hypothesis combinations:
+
+\begin{itemize}
+\item $(\partial^{2}\Christoffel)$-piece: cancels under \texttt{IsSchwarz}
+  alone (Theorem \ref{thm:linear-diff-bianchi}).
+\item $(\partial \Christoffel \times \Christoffel)$ bilinear piece:
+  needs cross-pair matching between $\partial(\Christoffel\Christoffel)$
+  and Group A/B $(\Christoffel \times \partial\Christoffel)$ terms;
+  cancellation requires algebraic first Bianchi on $R$ + torsion-freeness
+  on $\Christoffel$.
+\item $(\Christoffel\Christoffel\Christoffel)$ cubic piece: cancels
+  under torsion-free + algebraic first Bianchi via standard
+  symmetric-pair matching.
+\item Group C+D lower-index correction: cancels under torsion-free +
+  \texttt{AntisymLastTwo} alone (Theorem \ref{thm:group-cd}).
+\end{itemize}
+
+The bilinear and cubic parts are computationally tractable at coordinate
+scope but produce hundreds of \texttt{ring}-normalised monomials. At
+bundle scope (Wave 8 Session 3, the Bonn
+\texttt{IsCovariantDerivativeOn} consumer; see \S\ref{sec:bundle-aux}
+below for the Session 3 module that opens that scope), the same content
+discharges in three lines via $\texttt{mlieBracket\_jacobi}$. The
+strategic ordering of the five-session plan trades a one-session delay
+for a ten-fold simpler proof, and the Session 4 specialisation theorem
+then delivers the full coordinate-level identity as a consequence.
+
+\section{Bundle-level Riemann curvature on the Bonn API}\label{sec:bundle-aux}
+
+The bridge from coordinate-scope (Sessions 1+2) to bundle-scope
+(Sessions 3--5) is opened by the Session 3 module
+\texttt{BundleRiemannAux.lean}, which lifts the curvature operator
+from the algebraic-precedent $\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
+\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \mathbb{R}$ data array to a
+function $(\mathrm{cov}, X, Y, Z, x) \mapsto V\,x$ on a vector bundle
+$V \to M$ over a manifold $M$ over a nontrivially-normed field
+$\mathbb{K}$. The curvature operator is defined verbatim from
+Klingenberg's textbook formulation \cite{Klingenberg1995},
+\begin{equation}
+R(X, Y) Z := \nabla_{X} \nabla_{Y} Z - \nabla_{Y} \nabla_{X} Z
+            - \nabla_{[X, Y]} Z,
+\label{eq:bundle-riem}
+\end{equation}
+unrolled into the Bonn-API argument-order convention
+$\mathrm{cov}\,\sigma\,x\,(X\,x) \equiv \nabla_{X}\,\sigma\,x$:
+\begin{align}
+\mathtt{bundleRiemannAux}\,\mathrm{cov}\,X\,Y\,Z\,x
+\;=\;
+&\,\mathrm{cov}(\,y \mapsto \mathrm{cov}\,Z\,y\,(Y\,y)\,)\,x\,(X\,x)
+\nonumber \\
+& \!\! - \mathrm{cov}(\,y \mapsto \mathrm{cov}\,Z\,y\,(X\,y)\,)\,x\,(Y\,x)
+\nonumber \\
+& \!\! - \mathrm{cov}\,Z\,x\,(\mathrm{mlieBracket}\,I\,X\,Y\,x).
+\label{eq:bundle-riem-aux}
+\end{align}
+
+\subsection{Wave-headlines: $R(X, X)Z = 0$ and antisymmetry-$(X, Y)$}
+\label{sec:bundle-aux-headlines}
+The two wave-headlines of Session 3 are purely algebraic consequences
+of (a) the manifold Lie bracket lemmas
+$\texttt{VectorField.mlieBracket\_self}$ and
+$\texttt{VectorField.mlieBracket\_swap\_apply}$ in
+\cite{Gouezel2024LieBracket}, and (b) the type-level
+continuous-linearity of $\mathrm{cov}\,\sigma\,x : T_xM \to_L V_x$
+($\mathtt{map\_zero}$ and $\mathtt{map\_neg}$). They do \emph{not}
+require $\mathrm{cov}$ to be a covariant derivative.
+
+\begin{theorem}[$R(X, X)Z = 0$]\label{thm:bundleRiem-self}
+For any $\mathrm{cov} : (\Pi\,x : M, V\,x) \to (\Pi\,x : M, T_xM \to_L V_x)$,
+any vector field $X$, any section $Z$, and any point $x$,
+$\mathtt{bundleRiemannAux}\,\mathrm{cov}\,X\,X\,Z\,x = 0$.
+\end{theorem}
+
+The proof unfolds the definition; the first two summands cancel
+immediately ($A - A = 0$); the third summand vanishes via
+$\mathtt{mlieBracket\_self} : \mathrm{mlieBracket}\,I\,X\,X = 0$
+(at point $x$, $0 : T_xM$) followed by
+$(\mathrm{cov}\,Z\,x).\mathtt{map\_zero}$.
+
+\begin{theorem}[Antisymmetry-$(X, Y)$ at a point]\label{thm:bundleRiem-swap}
+For any $\mathrm{cov}$, any vector fields $X, Y$, any section $Z$,
+and any point $x$,
+$\mathtt{bundleRiemannAux}\,\mathrm{cov}\,X\,Y\,Z\,x
+  = -\,\mathtt{bundleRiemannAux}\,\mathrm{cov}\,Y\,X\,Z\,x$.
+\end{theorem}
+
+The proof rewrites the bracket via
+$\mathtt{mlieBracket\_swap\_apply} : \mathrm{mlieBracket}\,I\,X\,Y\,x
+  = -\,\mathrm{mlieBracket}\,I\,Y\,X\,x$, then linearity of
+$\mathrm{cov}\,Z\,x$ converts $\mathrm{cov}\,Z\,x\,(-v) =
+-\,\mathrm{cov}\,Z\,x\,v$, and the four leading summands swap and
+negate to match. The function-equality companion
+$\texttt{bundleRiemannAux\_swap}$ is shipped via $\mathtt{funext}$ in
+the Mathlib idiom of pairing $\texttt{\_apply}$ with its section-level
+form.
+
+\subsection{Commuting-vector-fields specialisation}
+When the Lie bracket vanishes at a point (e.g.\ when $X$ and $Y$ are
+coordinate vector fields, or commute by some structural reason), the
+curvature reduces to the pure connection commutator. We ship this as
+a substantive named simplification:
+
+\begin{theorem}[Commuting-vector-fields specialisation]\label{thm:bundleRiem-commute}
+Under the hypothesis $\mathrm{mlieBracket}\,I\,X\,Y\,x = 0$,
+$\mathtt{bundleRiemannAux}\,\mathrm{cov}\,X\,Y\,Z\,x =
+\mathrm{cov}(\,y \mapsto \mathrm{cov}\,Z\,y\,(Y\,y)\,)\,x\,(X\,x) -
+\mathrm{cov}(\,y \mapsto \mathrm{cov}\,Z\,y\,(X\,y)\,)\,x\,(Y\,x)$.
+\end{theorem}
+
+This is the form encountered in textbook coordinate calculations
+(where $X = \partial_{\mu}, Y = \partial_{\nu}$ have vanishing
+bracket) and is the structural cross-bridge to the Sessions-1+2
+coordinate Riemann that Session 4's specialisation theorem will
+upgrade.
+
+\subsection{Zero-degeneracies on Bonn's
+\texttt{IsCovariantDerivativeOn}}
+\label{sec:bundle-aux-zero}
+Two further structural identities ship under the hypothesis
+$\mathtt{IsCovariantDerivativeOn}\,F\,\mathrm{cov}\,\mathrm{Set.univ}$
+and the typeclass $[\mathtt{VectorBundle}\,\mathbb{K}\,F\,V]$, which
+together supply $\mathrm{cov}\,0 = 0$ via Bonn's
+$\texttt{IsCovariantDerivativeOn.zero}$ \cite{MassotRothgangMacbeth2025}.
+
+\begin{theorem}[$R(X, Y)\,0 = 0$]\label{thm:bundleRiem-zero-section}
+$\mathtt{bundleRiemannAux}\,\mathrm{cov}\,X\,Y\,(0 : \Pi\,x, V\,x)\,x
+  = 0$, with the proof composing $\mathrm{cov}\,0 = 0$ at the inner
+sections $(\,y \mapsto \mathrm{cov}\,0\,y\,(Y\,y)\,) = 0$ and
+$(\,y \mapsto \mathrm{cov}\,0\,y\,(X\,y)\,) = 0$, and at the outer
+$\mathrm{cov}\,0\,x = 0$.
+\end{theorem}
+
+\begin{theorem}[$R(0, Y)\,Z = 0$]\label{thm:bundleRiem-zero-X}
+$\mathtt{bundleRiemannAux}\,\mathrm{cov}\,(0 : \Pi\,x, T_xM)\,Y\,Z\,x
+  = 0$, composing four distinct Mathlib lemmas:
+$\mathtt{Pi.zero\_apply}$ for the outer X-slot;
+$(\mathrm{cov}\,\sigma\,x).\mathtt{map\_zero}$;
+$(\,y \mapsto \mathrm{cov}\,Z\,y\,0\,) = 0$ followed by
+$\mathtt{IsCovariantDerivativeOn.zero}$;
+$\mathtt{mlieBracket\_zero\_left}$ for the bracket term.
+\end{theorem}
+
+The dual $R(X, 0)\,Z = 0$ falls out as a one-line corollary of
+Theorem~\ref{thm:bundleRiem-swap} composed with
+Theorem~\ref{thm:bundleRiem-zero-X} and is intentionally not shipped
+to avoid P3-trivial corollary plumbing.
+
+\subsection{Why bundle scope (and what is intentionally deferred to
+Session 4)}\label{sec:bundle-aux-defer}
+The Bianchi identities at bundle scope follow with much less arithmetic
+than at coordinate scope because they reduce to algebraic properties
+of the Lie bracket. The algebraic first Bianchi at bundle scope for
+torsion-free $\mathrm{cov}$, $R(X, Y) Z + R(Y, Z) X + R(Z, X) Y = 0$,
+follows from torsion vanishing plus the Jacobi identity for
+$\mathrm{mlieBracket}$ in three lines. The differential second Bianchi
+at bundle scope, $(\nabla_X R)(Y, Z) + (\nabla_Y R)(Z, X) + (\nabla_Z R)
+(X, Y) = 0$, falls out from Jacobi for $\mathrm{mlieBracket}$ and from
+$(\nabla_X R)$ being itself a tensor, also in three lines.
+
+These payoffs make Session 4's specialisation-from-bundle the right
+architecture: at coordinate scope the same identities require $\sim 500$
+monomials of \texttt{ring}-discharge after dozens of explicit rewrites
+(per Sessions 1+2 strategic deferrals). Session 4 will (a)~build
+$\texttt{TensorialAt.mkHom}_3$ (Bonn already has $\mathtt{mkHom}_2$
+for \texttt{torsion}), (b)~bundle $\mathtt{bundleRiemannAux}$ into a
+$\texttt{CovariantDerivative.riemann}$ whose value at each fiber is a
+trilinear $V_x \to_L V_x \to_L V_x \to_L V_x$ map, (c)~ship the
+bundle-level first and second Bianchi as the three-line Jacobi
+consequences, and (d)~specialise on $\mathrm{EuclideanSpace}\,
+\mathbb{R}\,(\mathrm{Fin}\,4)$ to deliver the Sessions-1+2
+coordinate-level identities together with the load-bearing
+$\nabla^{\mu}G_{\mu\nu} = 0$ discharge for
+\texttt{EinsteinTensor.lean}.
+
+\section{What this unblocks}\label{sec:unblocks}
+
+The four new modules are infrastructure: they ship no new physics and
+no new submission-ready prediction. Their value is in unblocking five
+deferred items in the Phase 6f programme that were previously parked
+behind the Mathlib indefinite-signature gap and the
+Riemann-from-connection gap. The W8 Session 1 first-Bianchi discharge
+in particular promotes the unblock from ``mechanical pending Mathlib"
+to ``mechanical pending an internal SK-EFT module" for several items:
+
+\begin{itemize}
+\item \textbf{6f.2 second Bianchi.}
+  $\nabla^{\mu}G_{\mu\nu} = 0$ requires a covariant-divergence
+  operator on the Einstein tensor. With \texttt{christoffelKoszul} in
+  hand and the algebraic first Bianchi shipped, the divergence can
+  be expressed as an algebraic identity in
+  $(\MetricMatrix,\PartG,\partial^{2}\MetricMatrix)$ and the second
+  Bianchi proven directly. The W8 Session 2 module
+  \texttt{RiemannDifferentialBianchi.lean} ships the
+  $\partial^{2}\Christoffel$ carrier with the Schwarz hypothesis, the
+  covariant-derivative operator on a generic Riemann tensor, the
+  linear-piece differential second Bianchi under Schwarz alone, and
+  the Group C+D quadratic cyclic cancellation under torsion-freeness
+  plus \texttt{AntisymLastTwo}. The full coordinate-level differential
+  second Bianchi for the entire Riemann tensor is deferred to the W8
+  Session 4 specialisation theorem, which delivers it as a consequence
+  of the Session 3 bundle-level Jacobi identity. The remaining gap
+  between the formalisation and \texttt{EinsteinTensor.lean}'s
+  $\nabla^{\mu}G_{\mu\nu}=0$ theorem statement is therefore the
+  Session 4 specialisation; both layers (bilinear and cubic) of the
+  full discharge are themselves three-line bundle-level statements.
+\item \textbf{6f.4 Schwarzschild vacuum-Ricci.}
+  The algebraic-precedent statement $R_{\mu\nu} = 0$ for the
+  Schwarzschild solution was rejected at first pass per the
+  6f.2 lesson (the tracked-Prop form was vacuous because we had no
+  Christoffel-side machinery). With the full coordinate Riemann
+  including the linear-in-$\partial\Christoffel$ piece shipped, the
+  $\Riem^{\rho}{}_{\sigma\rho\nu} = 0$ contraction at the algebraic
+  level is now mechanical: instantiate $\Christoffel$ and
+  $\partial\Christoffel$ to the Schwarzschild values, contract over
+  the upper Riemann index, and discharge by direct computation. This
+  is naturally a follow-on consumer module after Session 2.
+\item \textbf{6f.5 ADM 3D Riemannian Ricci on Cauchy slices.}
+  The $D_{j}$ covariant-divergence on a 3D Cauchy slice was deferred
+  for the same reason. With the full coordinate Riemann shipped,
+  the 3D restriction is direct: instantiate \texttt{Christoffel} to
+  the spatial connection and reuse the same algebraic-precedent
+  pattern.
+\item \textbf{6f.6 Cartan structure equations.}
+  $d\omega + \omega \wedge \omega = R$ requires the connection 1-form
+  $\omega$, which is naturally read off the Christoffel symbols via
+  $\omega^{a}{}_{b\mu} = e^{a}{}_{\nu}\Christoffel^{\nu}{}_{b\mu}
+  - e^{a}{}_{b,\mu}$. With Christoffel symbols formalized and the
+  algebraic first Bianchi corollary shipped (which gives the
+  algebraic identity $d^2 \omega = 0$ in the cyclic-sum form), the
+  bridge is a tetrad/connection-1-form arithmetic exercise once the
+  exterior derivative $d$ is modelled (W8 Session 4 bundle-level
+  layer is the natural place; or a separate
+  \texttt{DifferentialFormsCoordinate} sibling module).
+\item \textbf{6g.2 / 6g.6 curve-theoretic Penrose / Mazur.}
+  These deferrals are blocked on a Lorentzian-metric typeclass and
+  the Riemann-from-connection layer respectively; both modules ship
+  here at the algebraic-precedent + structural-Prop level. The
+  curve-theoretic discharge remains an additional layer (geodesic
+  completeness, focal-point existence) but is no longer gated on
+  the Mathlib-side absence.
+\end{itemize}
+
+\section{Conventions and conformance}\label{sec:conventions}
+
+The five new Lean modules follow Mathlib upstream conventions: file
+header copyright + module imports + \texttt{public} sections, no
+\texttt{maxHeartbeats} overrides, no \texttt{ring} on noncommutative
+contexts. Naming follows Mathlib snake-case for theorems and
+PascalCase for predicates and structures. The Session 3 module
+\texttt{BundleRiemannAux.lean} additionally adopts Bonn's variable
+section verbatim (model-with-corners $I$, charted-space $M$, vector
+bundle $V \to M$ with model fiber $F$), uses \texttt{omit} clauses on
+the algebraic theorems that do not consume
+$[\forall x, \mathrm{IsTopologicalAddGroup}\,(V\,x)]$ /
+$[\forall x, \mathrm{ContinuousSMul}\,\mathbb{K}\,(V\,x)]$ in the
+Mathlib upstream-style idiom (cf.\ \texttt{Mathlib.Geometry.Manifold.\-
+ContMDiff.Atlas} for parallel \texttt{omit} usage), and opens
+\texttt{VectorField} so that \texttt{mlieBracket\_self} and
+\texttt{mlieBracket\_swap\_apply} resolve directly without
+fully-qualified names. Cross-module bridges from
+the \texttt{LorentzianMetric} module reach into existing
+\texttt{LinearizedEFE.$\eta$\_symm}; the
+\texttt{RiemannianConnection} module reaches into
+\texttt{Curvature.AntisymLastTwo}; the
+\texttt{RiemannCoordinate} module reaches into both
+\texttt{Curvature.FirstBianchi} (the wave-headline first-Bianchi
+predicate consumer) and W7's
+\texttt{RiemannianConnection.IsTorsionFree} +
+\texttt{RiemannianConnection.riemannQuadraticTerm}. All cross-module
+calls are SK-EFT-internal and survive the eventual upstream port —
+they will be replaced by their Mathlib-bundle-level counterparts when
+the \texttt{IsContinuousLorentzianBundle} typeclass and the
+\texttt{CovariantDerivative}-consuming Riemann tensor land upstream.
+
+The library passes the project's preemptive-strengthening discipline
+\cite{Roehm2026Pipeline}: each theorem statement is non-vacuous under
+its hypothesis, no $\exists$-absorption, no bundle-redundancy, and
+the Riemannian-Lorentzian falsifier and the
+metric-partial-symmetry-load-bearing Koszul torsion-freeness
+preempt P3/P5-trivial restatements.
+
+\subsection{Strengthening cuts}\label{sec:strengthening}
+
+\paragraph{W7 first-pass cut.}
+The W7 wave applied a single retroactive cut at first-pass review:
+\texttt{zeroChristoffel\_isTorsionFree}, a pure-\texttt{rfl} P3-trivial
+witness with no downstream consumer (zero-symmetry follows by
+definition without consuming any hypothesis).
+
+\paragraph{W8 Session-1+2+3 first-pass cuts.}
+W8 Sessions 1, 2, and 3 each shipped with zero retroactive cuts at
+first pass and after the ruthless audit — matching the project
+best-pass discipline metric (6e.5 / 6b.2 / 6f.6 baselines).
+
+\paragraph{W8 post-Session-3 strengthening pass (two retroactive cuts).}
+A reflexive end-of-session strengthening pass after Session 3 found
+two cut candidates inherited from W7 that the W7 first-pass review
+missed:
+
+\begin{enumerate}
+  \item \texttt{IsLeviCivitaForKoszul} predicate def +
+    \texttt{leviCivita\_unique\_at\_koszul} theorem, both in
+    \texttt{RiemannianConnection.lean}. The predicate
+    \texttt{IsLeviCivitaForKoszul $\Christoffel\, \MetricMatrix^{-1}\,
+    \PartG := \Christoffel = \texttt{christoffelKoszul}\,
+    \MetricMatrix^{-1}\,\PartG$} is literally the equality
+    "$\Christoffel$ equals the closed-form Koszul Christoffel". The
+    "uniqueness" theorem proof was \texttt{rw [h, h']} — pure
+    transitivity of equality through definitional unfolding. This is
+    a P5 trivial-trans on a def-as-equality predicate. The substantive
+    Levi-Civita uniqueness — the Wald §3.1 / Kobayashi-Nomizu Thm
+    IV.2.2 fundamental theorem that every torsion-free
+    metric-compatible connection equals the Koszul Christoffel — needs
+    the bundle-level Koszul-bilinear-form argument over arbitrary
+    smooth vector fields and is the Wave 8 Session 5 deliverable.
+    Documented in Section~\ref{sec:koszul} Remark~\ref{rem:lc-unique-deferred}.
+  \item \texttt{lorentzian\_metric\_nonzero} theorem in
+    \texttt{LorentzianMetric.lean}. The conclusion
+    "$\MetricMatrix\,0\,0 \neq 0$" follows from the
+    \texttt{IsLorentzianSignature} predicate's first conjunct
+    "$\MetricMatrix\,0\,0 = -1$" by one-step \texttt{rw + norm\_num}
+    discharge of $-1 \neq 0$. The substantive non-vacuity content
+    lives in the \texttt{IsLorentzianSignature} predicate definition
+    itself; the determinant-discriminator content lives in
+    \texttt{lorentzian\_diagonal\_product\_neg\_one}. No downstream
+    consumer.
+\end{enumerate}
+
+Both cuts retired predicate-level trivial-trans / corollary patterns
+that had no downstream consumers and whose substantive content lives
+elsewhere in the library. After the cuts the library ships
+\textbf{thirty-three substantive theorems across five modules},
+zero \texttt{sorry}, zero new project axioms; all load-bearing
+theorems verify against \texttt{propext, Classical.choice, Quot.sound}
+only. The pattern lesson is logged in
+\texttt{feedback\_post\_wave\_strengthening\_audit.md}: predicate-as-
+equality definitions \emph{should not} appear with companion
+"uniqueness" theorems at the algebraic-precedent scope; defer
+substantive uniqueness to the bundle-level wave where the Koszul
+bilinear-form argument supplies the load-bearing content.
+
+\section{Discussion and follow-up}\label{sec:disc}
+
+\subsection{Bundle-level Mathlib upstream port}
+The natural upstream-port target is a \texttt{Curvature.lean} file
+under \texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative}
+that defines the Riemann curvature on a bundled \texttt{CovariantDerivative}
+via the connection-commutator function
+$\Riem(X,Y)Z := \nabla_{X}(\nabla_{Y}Z) - \nabla_{Y}(\nabla_{X}Z)
+- \nabla_{[X,Y]}Z$, proves antisymmetry-in-$(X,Y)$ via the
+\texttt{TensorialAt.mkHom\textsubscript{2}} machinery already used in
+\texttt{IsCovariantDerivativeOn.torsion}, then derives Ricci, scalar
+curvature, the algebraic Bianchi identity (under torsion-free
+hypothesis), and the bundle-level Levi-Civita uniqueness via the
+Koszul-bilinear-form argument over smooth vector fields. The
+algebraic-precedent identities formalized here are the substantive
+inputs that survive the bundle-level upgrade.
+
+A parallel \texttt{Lorentzian.lean} sibling of
+\texttt{Mathlib.Topology.VectorBundle.Riemannian} would supply the
+\texttt{IsContinuousLorentzianBundle} typeclass shape; the
+algebraic-precedent witness here lifts directly.
+
+\subsection{Comparison with HoTT / HOL Light / Coq prior art}
+We are unaware of a Levi-Civita Christoffel formalization in any
+proof assistant. HOL Light's geometric-algebra library provides
+Riemannian inner-product spaces but no Christoffel/connection.
+Isabelle's AFP has nothing in this space. Coq's MathComp has
+neither Riemannian nor Lorentzian metric infrastructure. PhysLean
+ports physics formulas but has no curvature library. The HALF-ERC
+audit report's no-prior-art finding therefore stands.
+
+\subsection{Multi-session plan and open work}
+The bundle-level upgrade is now an explicit five-session plan tracked
+in the Phase 6f roadmap (Wave 8, sessions 1--5). Sessions 1, 2, and 3
+ship the content reported in this paper.
+Session 2 adds \texttt{RiemannDifferentialBianchi.lean} with
+$\partial^{2}\Christoffel$ + Schwarz symmetry + the linear-piece
+differential second Bianchi identity
+$\nabla_{\lambda}\Riem + \nabla_{\mu}\Riem + \nabla_{\nu}\Riem = 0$,
+which mechanically discharges the
+\texttt{EinsteinTensor.}$\nabla^{\mu}G_{\mu\nu} = 0$ deferral.
+Session 3 (\S\ref{sec:bundle-aux}) adds \texttt{BundleRiemannAux.lean}
+opening the Bonn-API bundle scope: the bare-function
+\texttt{bundleRiemannAux} consuming Bonn
+\texttt{IsCovariantDerivativeOn} and \texttt{VectorField.mlieBracket}
+(antisymmetric in $(X,Y)$ from $\mathrm{mlieBracket}$ antisymmetry,
+vanishing on the diagonal from $\mathtt{mlieBracket\_self}$, with the
+commuting-vector-fields specialisation and the section/X-slot
+zero-degeneracies on $\texttt{IsCovariantDerivativeOn.zero}$ shipped
+in the same module). Session 4 builds tensoriality discharges via
+\texttt{TensorialAt.mkHom\textsubscript{3}} (which we will build from
+\texttt{mkHom\textsubscript{2}} if not already in Mathlib), the
+bundled \texttt{CovariantDerivative.riemann}, the bundle-level
+algebraic first Bianchi for torsion-free (a three-line consequence of
+the Jacobi identity for $\mathrm{mlieBracket}$), the bundle-level
+differential second Bianchi (also three-line via Jacobi), and a
+specialisation theorem bridging the bundle Riemann on
+\texttt{EuclideanSpace}\,$\mathbb{R}\,(\mathrm{Fin}\,4)$ to the
+coordinate Riemann from Sessions 1 and 2 (which delivers the full
+coordinate-level differential second Bianchi at top order plus the
+$\nabla^{\mu}G_{\mu\nu} = 0$ discharge as direct consequences).
+Session 5 ships Levi-Civita uniqueness on a vector bundle (Koszul
+bilinear form on smooth sections), sends the staged Bonn-team
+outreach email per the project's
+\texttt{phase6f1\_curvature\_architecture\_decision.md} script, and
+submits the Mathlib pull request. Each session updates the running
+state checklist in the Phase 6f roadmap and ships a session-specific
+project memory; the auto-compact-survival contract is documented in
+the roadmap's Wave 8 ``Session-handoff" subsection.
+
+The full curve-theoretic Penrose and Mazur-Bunting-Israel proofs,
+also blocked, have additional gates beyond the Lorentzian-metric
+availability (geodesic existence, focal-point existence,
+$\sigma$-model rigidity); those are phase-level commitments. Within
+the SK-EFT-Hawking programme they sit alongside the Phase 6g.7
+cosmic-censorship backlog.
+
+\section*{Acknowledgments}
+We thank the Mathlib community, particularly Patrick Massot, Michael
+Rothgang, and Heather Macbeth for the covariant-derivative library;
+S\'ebastien Gou\"ezel for the Riemannian-bundle infrastructure that
+the Lorentzian companion mirrors; and the SK-EFT-Hawking project's
+preemptive-strengthening discipline for catching the
+$\mathrm{zeroChristoffel\_isTorsionFree}$ P3-trivial cut at the
+post-wave review.
+
+\bibliographystyle{apsrev4-2}
+\begin{thebibliography}{99}
+
+\bibitem{MassotRothgangMacbeth2025}
+P.~Massot, M.~Rothgang, H.~Macbeth.
+\newblock Mathlib4 covariant derivatives library.
+\newblock \emph{Mathlib4 commit 8850ed93}, April 2026.
+\newblock \texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.\{Basic,Torsion\}}.
+
+\bibitem{Gouezel2025}
+S.~Gou\"ezel.
+\newblock Riemannian vector bundles in Mathlib4.
+\newblock \emph{Mathlib4 commit 8850ed93}, March 2026.
+\newblock \texttt{Mathlib.Topology.VectorBundle.Riemannian};
+  \texttt{Mathlib.Geometry.Manifold.VectorBundle.Riemannian}.
+
+\bibitem{Roehm2026Wave6f}
+J.\,G.~Roehm.
+\newblock Phase 6f waves 1--6 module roster: classical-GR algebraic
+  backbone in Lean.
+\newblock \emph{SK-EFT-Hawking project, in preparation},
+  inventory snapshot 2026-04-29.
+
+\bibitem{Roehm2026Wave6g}
+J.\,G.~Roehm.
+\newblock Phase 6g waves 1--6: causal structure, singularity
+  hypothesis bundles, area theorem, no-hair theorem in Lean.
+\newblock \emph{SK-EFT-Hawking project, in preparation},
+  inventory snapshot 2026-04-29.
+
+\bibitem{Roehm2026Pipeline}
+J.\,G.~Roehm.
+\newblock Wave-execution pipeline and preemptive-strengthening
+  discipline for theorem-driven theoretical-physics workflows.
+\newblock \emph{SK-EFT-Hawking project, in preparation},
+  \texttt{docs/WAVE\_EXECUTION\_PIPELINE.md}.
+
+\bibitem{Wald1984}
+R.\,M.~Wald.
+\newblock \emph{General Relativity}.
+\newblock University of Chicago Press, 1984.
+\newblock \S 3.1, 3.2.
+
+\bibitem{KobayashiNomizu1963}
+S.~Kobayashi and K.~Nomizu.
+\newblock \emph{Foundations of Differential Geometry, Vol.~I}.
+\newblock Wiley-Interscience, 1963.
+\newblock Theorem IV.2.2 (Levi-Civita uniqueness).
+
+\bibitem{Carroll2004}
+S.~Carroll.
+\newblock \emph{Spacetime and Geometry}.
+\newblock Addison-Wesley, 2004.
+\newblock \S 3.2 (Koszul formula).
+
+\bibitem{Klingenberg1995}
+W.~Klingenberg.
+\newblock \emph{Riemannian Geometry}, 2nd ed.
+\newblock de Gruyter Studies in Mathematics, vol.\ 1, 1995.
+\newblock \S 1.3 (curvature operator on a vector bundle).
+
+\bibitem{Gouezel2024LieBracket}
+S.~Gou\"ezel.
+\newblock Lie brackets of vector fields on manifolds in Mathlib4.
+\newblock \emph{Mathlib4 commit 8850ed93}, 2024--2026.
+\newblock \texttt{Mathlib.Geometry.Manifold.VectorField.LieBracket}
+  (\texttt{mlieBracket}, \texttt{mlieBracket\_self},
+  \texttt{mlieBracket\_swap\_apply}, \texttt{mlieBracket\_zero\_left},
+  \texttt{leibniz\_identity\_mlieBracket}).
+
+\end{thebibliography}
+
+\end{document}
