@@ -6,7 +6,19 @@
 
 **Trigger condition (no gate — autonomous):** Phase 6l can dispatch any time. It builds on shipped Phase 5b and Phase 6c.1 infrastructure and is independent of any latent phase.
 
-**Status (2026-04-28):** **OPEN** for user authorization Gate L.1 (Wave 1 dispatch).
+**Status (2026-04-30):** **Phase 6l FULLY CLOSED — All 4 waves SHIPPED.** Branch γ verdicts across the board (substrate-silent on θ̄ + cannot host PQ axion + χ_top reproduces lattice + thermal stability of cos(0)=1 minimum). 4 modules / 61 substantive thms / 40 defs / 8 structures / 1 inductive / 1151 LOC / 0 sorry / 0 new axioms. Library 8503 jobs PASS clean.
+
+**Final state table:**
+
+| Wave | Module | Thms | Defs | Structs | LOC | Verdict |
+|------|--------|------|------|---------|-----|---------|
+| W1 | `Z16AnomalyForcesThetaBar` | 13 | 4 | 2 | 266 | **Branch γ** — ℤ₁₆ silent on θ̄ |
+| W2 | `SubstrateAxion` | 18 | 10 | 3+1ind | 329 | **Branch γ** — no substrate PQ axion |
+| W3 | `SubstrateInstantonSpectrum` | 12 | 17 | 1 | 260 | χ_top reproduces lattice (~75.5 MeV) |
+| W4 | `ThetaVacuumFiniteT` | 18 | 9 | 2 | 296 | F(0,T)=−χ_top global min |
+| **Total** | **4 modules** | **61** | **40** | **8+1** | **1151** | **Phase 6l CLOSED** |
+
+**Honest negative result.** The strong-CP problem is the unique remaining BSM hierarchy that the SK-EFT substrate's ℤ₁₆ machinery does not natively explain — in contrast with the family-number puzzle (N_f ≡ 0 mod 3) and ν_R puzzle which the same machinery DOES fix. Phase 6c.1's Zhitnitsky absorption stays as an EXTERNAL `Prop`, structurally encoded by W1's `toThetaVacuum` lift requiring |θ̄| ≤ 10⁻⁹ as hypothesis.
 
 **Scope reframing vs Phase 6c.1.** Phase 6c Wave 1 (`StrongCPTopologicalDE.lean`) shipped the Zhitnitsky topological-DE *absorption* mechanism: "if QCD θ-vacuum sources DE via Zhitnitsky mechanism, then θ must be dynamically small," with the structural punchline that combined Zhitnitsky + KV q-theory exceeds observation by ×240 (forcing single-DE-mechanism commitment). Phase 6c.1 does *not* derive how θ̄ becomes small (the underlying dynamics — axion misalignment, Peccei-Quinn relaxation, anthropic selection, symmetry-based suppression). Phase 6l fills this gap: Direct Strong-CP Dynamics on the SK-EFT substrate.
 
@@ -88,7 +100,32 @@ The SK-EFT substrate offers a possible *fourth* route: **θ̄ smallness from sub
 
 ---
 
-## Wave 1 — `Z16AnomalyForcesThetaBar.lean` [6l.1] [Pipeline: Stages 1–13]
+## Wave 1 — `Z16AnomalyForcesThetaBar.lean` [6l.1] **SHIPPED 2026-04-30**
+
+**Final state.** 13 substantive thms / 4 defs / 2 structs / 266 LOC / 0 sorry / 0 new axioms. Library 8500 jobs PASS clean. **Verdict: Branch γ — substrate-silent on θ̄.**
+
+**Verdict source.** Per the deep-research dossier `Lit-Search/Phase-6l/6l-Z₁₆ Anomaly and θ̄ Smallness.md` (Wave-1 dispatch), the literature sweep returns ZERO derivations of θ̄ smallness from the ℤ₁₆ machinery. Two structural reasons: (i) sector orthogonality — ℤ₁₆ lives in `Ω₅^{Spin × ℤ₄}` (fermion-measure phase) while θ̄ lives in `Ω₄^{Spin × G_gauge}` (Pontryagin-density sector); (ii) no anomaly-inflow identity converts the 5d Pin⁺-η-invariant to a 4d θ-quantization. Branches α (forces θ̄=0) and α' (forces θ̄∈{0,π}) are both unsupported; α' is additionally falsified empirically by neutron EDM (~10¹¹ exceedance).
+
+**Wave-1 deliverables (shipped):**
+- `SubstrateConfig` structure: ℤ₁₆ class + θ̄ topological coupling (orthogonal-sector encoding).
+- `Z16AnomalyCancels` predicate; `z16_anomaly_cancels_via_phase5b` (calls Phase 5b `sm_anomaly_with_nu_R`).
+- Substantive non-uniqueness: `z16_cancellation_admits_distinct_theta_bar` + `theta_bar_not_forced_by_z16` + `theta_bar_modulus_covers_real`.
+- CDVW + 2020 PSI nEDM falsifier of Branch α': `branch_alpha_prime_falsified_by_neutron_edm` (`c_CDVW · π > 10⁹ · d_n_bound`, via `Real.pi_gt_three`).
+- Concrete CDVW window: `small_theta_bar_satisfies_neutron_edm` (|θ̄| ≤ 3 × 10⁻¹¹ ⇒ |d_n| < bound).
+- Inferred θ̄ ceiling: `theta_bar_upper_bound_inferred` (`d_n_bound / c_CDVW < 3.5 × 10⁻¹¹`).
+- Cross-bridge to Phase 5b: `phase5b_cancellation_with_theta_bar_freedom` (P2-clean conjunction).
+- Cross-bridge to Phase 6c.1 `ThetaVacuum`: `toThetaVacuum` lift consumes external |θ̄| ≤ 10⁻⁹ bound; `substrate_consistent_with_neutron_edm` parametric existence + window.
+- Cross-bridge to Phase 6k Wave 5: `branch_gamma_consistent_with_phase6k_w5_silence` (calls W5's `thetaBar_independent_of_deltaCKM`).
+- Verdict bundle: `Phase6lW1Verdict` 4-conjunct Prop + `phase6l_w1_verdict` witness.
+
+**Strengthening discipline applied.** Preemptive checklist + post-write pass:
+- Cut `c_CDVW_pos` (no consumer; P3 trivial).
+- Cut `toThetaVacuum_preserves_theta` (rfl-rename of `toThetaVacuum` projection).
+- Replaced cuts with substantive: `theta_bar_upper_bound_inferred` (concrete CDVW ceiling) + `substrate_consistent_with_neutron_edm` (parametric Branch γ existence bundle).
+
+**Stages 6-13 (Python cross-layer + figures + paper-44 drafting + adversarial review) DEFERRED** per Phase 6j/6k precedent (negative-result waves; Lean ship is the substantive deliverable; paper preparation pending future user authorization).
+
+**Original wave plan (now closed):**
 
 **Goal.** Investigate whether the ℤ_16 anomaly framework + the SK-EFT substrate's tetrad-channel structure forces θ̄ to a fixed (small or zero) value, analogously to how it forces N_f ≡ 0 mod 3. Three sub-branches: (α) substrate forces θ̄ = 0; (α') substrate forces θ̄ ∈ {0, π} discrete (and π is excluded by experiment); (γ) substrate-silent.
 
@@ -132,7 +169,28 @@ The SK-EFT substrate offers a possible *fourth* route: **θ̄ smallness from sub
 
 ---
 
-## Wave 2 — `SubstrateAxion.lean` [6l.2] [Pipeline: Stages 1–13]
+## Wave 2 — `SubstrateAxion.lean` [6l.2] **SHIPPED 2026-04-30**
+
+**Final state.** 18 substantive thms / 10 defs / 3 structs (+1 inductive `ADWGoldstoneMode`) / 329 LOC / 0 sorry / 0 new axioms. **Verdict: Branch γ — substrate cannot host PQ axion.**
+
+**Three substantive obstructions encoded:**
+1. ℤ₁₆ Pin⁺ class is finite (cardinality 16) ≇ continuous ℝ phase moduli (`z16_not_continuous_phase_remnant` via `Finite.of_equiv` + `Infinite ℝ`).
+2. ADW Goldstone modes enumerated as 6-element inductive (ω01..ω23), all spin-2 / no pseudoscalar (`adw_goldstones_no_pseudoscalar`).
+3. `SubstrateStructuralWalls` Prop bundle with both above conjuncts machine-checkable.
+
+**Conditional KSVZ predictions (require external U(1)_PQ above substrate):**
+- `axion_mass_at_Planck` ∈ (2.3, 2.4) × 10⁻¹² eV via `m_a = 5.70 μeV × 10¹² GeV / f_a`.
+- `axion_mass_at_GUT` ∈ (5.6, 5.8) × 10⁻¹⁰ eV.
+- `axion_mass_inverse_decay` — substantive 2× scaling identity.
+- `axion_g_a_gamma_KSVZ_neg` — KSVZ negative-coupling sign distinguishing from DFSZ.
+
+**Phenomenological exclusion windows:**
+- `axion_at_Planck_in_superradiance_window` — Planck-scale axion EXCLUDED as DM (Stott-Marsh 2018).
+- `axion_at_GUT_in_dmradio_band` — GUT-scale axion in DMRadio-GUT discovery band (Brouwer et al. 2022).
+
+**Cross-bridges:** Phase 5b `sm_anomaly_with_nu_R` + Phase 6l W1 `theta_bar_not_forced_by_z16` (combined-strong-CP-unsolved verdict).
+
+**Original wave plan (now closed):**
 
 **Goal.** Investigate whether the SK-EFT substrate produces an axion-like field (Peccei-Quinn analog) emergent from the substrate's vestigial gravity / ADW tetrad / ℤ_16 structure. If so, derive substrate-predicted axion mass `m_a` and decay constant `f_a`, falsifiable against ADMX bounds + cosmological constraints + recent CASPEr / DM Radio searches.
 
@@ -170,7 +228,21 @@ The SK-EFT substrate offers a possible *fourth* route: **θ̄ smallness from sub
 
 ---
 
-## Wave 3 — `SubstrateInstantonSpectrum.lean` [6l.3] [Pipeline: Stages 1–13]
+## Wave 3 — `SubstrateInstantonSpectrum.lean` [6l.3] **SHIPPED 2026-04-30**
+
+**Final state.** 12 substantive thms / 17 defs / 1 struct / 260 LOC / 0 sorry / 0 new axioms. **Verdict: substrate-derived χ_top reproduces lattice QCD anchors.**
+
+**Two independent χ_top derivations (both norm_num-checked):**
+1. **Witten-Veneziano (quenched)**: `chi_top_WV_in_quenched_lattice_band` — full pseudoscalar form `f_π²/(2N_f) · (m_η'² + m_η² − 2m_K²)` ∈ [(175 MeV)⁴, (185 MeV)⁴], matching pure-SU(3) lattice 175(5)-200(18) MeV.
+2. **Leutwyler-Smilga (full QCD chiral suppression)**: `chi_top_LS_in_lattice_band` — `Σ³ · m_u m_d m_s / (m_u m_d + m_u m_s + m_d m_s)` ∈ [(73 MeV)⁴, (74 MeV)⁴], matching PDG/Borsanyi 75.5(5) MeV within ~2.5%.
+
+**Chiral suppression structural identity:** `chi_top_LS_strictly_below_WV` (full < quenched).
+
+**Multi-instanton zero modes:** `n_zero_modes_per_flavor (q : ℤ) := 2 |q|` Weyl. `zero_modes_phase5s_consistency` calls Phase 5s's `adw_vertex_fermion_count` (q=1, N_f=4 → 8 Weyl modes). `multi_instanton_vertex_legs` generalizes: q-instanton vertex has 2N_f|q| legs.
+
+**ρ_DE Zhitnitsky-form arithmetic:** `rho_DE_Zhitnitsky_eV4 = H₀ · Λ_QCD³ ≈ 1.2 × 10⁻⁸ eV⁴` — DIMENSIONALLY CONSISTENT (unlike schematic `χ_top/M_P²` which has dimension [energy]² not [energy]⁴, flagged in dossier §2.b.4). Cross-bridge to Phase 6c.1: `phase6c1_zhitnitsky_consistency` invokes `zhitnitsky_DE_at_lambda_qcd_within_3_orders`.
+
+**Original wave plan (now closed):**
 
 **Goal.** Derive the instanton spectrum on the lattice ADW substrate; cross-validate against Phase 5s `InstantonZeroModes.lean` zero-mode counting (which already proves 2|qn| = 4 zero modes per flavor for N_f=4, machine-checked via Cl(4) ≅ Cl(2) ⊗̂ Cl(2)). Wave 3 extends to: (a) instanton density spectrum (1-instanton, 2-instanton, ..., n-instanton sectors); (b) θ-vacuum susceptibility `χ_top = ⟨θ̄⟩/V`; (c) cross-bridge to Phase 6c.1 Zhitnitsky topological DE (Zhitnitsky uses `χ_top` as the load-bearing quantity).
 
@@ -203,7 +275,34 @@ The SK-EFT substrate offers a possible *fourth* route: **θ̄ smallness from sub
 
 ---
 
-## Wave 4 — `ThetaVacuumFiniteT.lean` [6l.4] [Pipeline: Stages 1–13]
+## Wave 4 — `ThetaVacuumFiniteT.lean` [6l.4] **SHIPPED 2026-04-30 — closes Phase 6l**
+
+**Final state.** 18 substantive thms / 9 defs / 2 structs / 296 LOC / 0 sorry / 0 new axioms. **Verdict: F(θ̄, T) = -χ_top(T) cos(θ̄) has global minimum at θ̄ = 0 with χ_top(T) ≥ 0; Branch α structurally favored, Branch α' structurally falsified.**
+
+**Substantive cos-based identities:**
+- `freeEnergy_at_zero` — F(0, T) = -χ_top(T) (global min, uses `Real.cos_zero`).
+- `freeEnergy_at_pi` — F(π, T) = +χ_top(T) (global max — Branch α' falsified).
+- `freeEnergy_zero_is_minimum` — F(0, T) ≤ F(θ, T) for all θ (uses `Real.cos_le_one` + nlinarith).
+- `freeEnergy_pi_minus_zero` — Branch α'-α gap is exactly 2 χ_top(T).
+
+**DIGA scaling:** `chi_top_DIGA chi_zero T_c T b = chi_zero (T_c/T)^b` definition.
+- `chi_top_DIGA_at_Tc` — continuity at chiral crossover (uses `Real.one_rpow`).
+- `chi_top_DIGA_pos` — positivity preserved at high T (uses `Real.rpow_pos_of_pos`).
+
+**Branch β post-inflationary anchors:**
+- `theta_i_squared_avg_gt_three` — `⟨θ_i²⟩ = π²/3 > 3` (uses `Real.pi_gt_three`).
+- `theta_i_squared_avg_lt_pi_squared` — upper bound.
+
+**Cosmological window non-empty:**
+- `cosmological_window_non_empty` — SN1987A 10⁸ GeV < Planck-DM 3×10¹¹ GeV (Branch β open).
+- `cosmological_window_width` — width ≈ 3 × 10¹¹ GeV.
+
+**Cross-bridges (substantive):**
+- `branch_gamma_persists_at_finite_T` — calls W1's `theta_bar_not_forced_by_z16`.
+- `substrate_walls_hold_at_finite_T` — calls W2's `substrate_structural_walls`.
+- `chi_top_zero_anchor_via_W3` — calls W3's `chi_top_LS_in_lattice_band`.
+
+**Original wave plan (now closed):**
 
 **Goal.** θ-vacuum thermodynamics on substrate at finite temperature: how does the θ̄ smallness mechanism interact with thermal evolution? At early-universe temperatures, was θ̄ randomized or fixed? Cross-bridge to Phase 5z W3 EW phase transition (which proved EW transition is a crossover) — the analogous QCD chiral-restoration transition at T ≈ 150 MeV affects θ-vacuum dynamics.
 

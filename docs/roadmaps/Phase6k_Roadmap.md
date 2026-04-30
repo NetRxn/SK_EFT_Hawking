@@ -6,7 +6,16 @@
 
 **Trigger condition (no gate — autonomous):** Phase 6k can dispatch any time. It builds on shipped Phase 5b infrastructure (`SMFermionData`, `Z16AnomalyComputation`) and is independent of any latent phase (6h SMG).
 
-**Status (2026-04-28):** **OPEN** for user authorization Gate K.1 (Wave 1 dispatch).
+**Status (2026-04-30):** **SHIPPED at Lean level across all 5 waves + Tier-1 strengthening pass (+5 thms).** 5 modules / 69 substantive theorems / 7 structures+inductives / 1894 LOC / 0 sorry / 0 new axioms / 0 retroactive cuts / library 8499 jobs PASS clean. Strengthening additions: `AS_closer_to_PDG_than_BHL_pure` (W1, empirical UV-completion comparison) + `ratio_b_over_c_tight` (W2, [3.28, 3.29] tighter PDG anchor) + `A_W_in_PDG_band` (W4, Wolfenstein A falsifier) + `V_cb_consistent_with_A_lambda_squared` (W4, Wolfenstein leading-order consistency) + `thetaBar_zero_iff_PQ_cancellation` (W5, Peccei-Quinn structural setup biconditional, Phase 6l entry-point). Cross-layer Python / figures / Paper 43 drafting / Stage 13 adversarial review remain DEFERRED to a future paper-bundle preparation cycle (per Phase 6j precedent — "Lean module SHIPPED; Python cross-layer pending").
+
+**Verdicts achieved per dossier-grounded Lean encoding:**
+1. **W1** (top quark scalar-rung): PARTIAL → CLOSED-POSITIVE under AS UV completion. m_t ∈ [170, 175] GeV strict band. Pure BHL with Λ_UV = M_Pl ruled out (overshoots > 200 GeV).
+2. **W2** (b/c/s/u/d): CLOSED-NEGATIVE NO-GO. b not in Majorana band (8 orders below); all non-top quarks outside both substrate channel bands; PDG ratios falsify any geometric three-band hypothesis.
+3. **W3** (light-quark fall-through): CLOSED-NEGATIVE on substrate-alone closed form; tracked-Prop bundle for Phase 6h hypercharge-splitting supersession path.
+4. **W4** (CKM apex): BRANCH 3a structural NO-GO via channel-flavor orthogonality. CliffordChannel (26) ≇ FlavorGen × FlavorGen (9). Vindicates Phase 5z deferral to HepLean.
+5. **W5** (δ_CKM): BRANCH B substrate-silent + BRANCH C′ vacuous-for-δ. θ̄ = θ_QCD + det_phase IS substrate-predicted (positive, Phase 6l entry-point). J ⫫ det_phase blocks θ̄ → δ chain.
+
+
 
 **Scope reframing vs Phase 5z OUT-OF-SCOPE statement.** Phase 5z explicitly defers "Full flavor program (CKM phases, FCNC, CP-violation fitting, mass hierarchy) — HepLean handles CKM." Phase 6k is *not* a duplication of HepLean's CKM database / parametrization. Phase 6k asks a different question: **does the SK-EFT substrate predict any structural constraint on the quark mass hierarchy or CKM angles, beyond what HepLean catalogs?** The answer may be NO (a structural no-go like Phase 5y), YES with a falsifiable bound, or partial (e.g., the substrate constrains `|V_cb|/|V_ub|` ratio but not absolute values). Each outcome is a publishable result.
 
@@ -87,7 +96,9 @@
 
 ---
 
-## Wave 1 — `QuarkRungScalarChannel.lean` [6k.1] [Pipeline: Stages 1–13]
+## Wave 1 — `QuarkRungScalarChannel.lean` [6k.1] [Pipeline: Stages 1–5 SHIPPED 2026-04-30; 6–13 deferred]
+
+**Status: SHIPPED Lean (20 substantive thms / 17 defs / 3 structs+inductives / 508 LOC / 0 sorry / 0 new axioms).**
 
 **Goal.** Identify the top quark with the substrate's scalar-rung mass band. Derive `m_t` from substrate G_c via the analog of Phase 5z W1's Higgs identification (`m_H ≈ 125 GeV` from substrate scalar channel). Test falsifiability: does the substrate scalar-rung band include `m_t = 172.7 ± 0.4 GeV` (PDG 2024)?
 
@@ -121,7 +132,9 @@
 
 ---
 
-## Wave 2 — `QuarkRungMajoranaChannel.lean` [6k.2] [Pipeline: Stages 1–13]
+## Wave 2 — `QuarkRungMajoranaChannel.lean` [6k.2] [Pipeline: Stages 1–5 SHIPPED 2026-04-30; 6–13 deferred]
+
+**Status: SHIPPED Lean (14 substantive thms / 7 defs / 1 inductive / 309 LOC / 0 sorry / 0 new axioms).**
 
 **Goal.** Test whether the bottom-quark fits a Majorana-channel-derived mass band. Test the next-heaviest quarks (charm, strange) similarly. Identify the substrate channel each quark "lives in," or falsify the channel decomposition for quarks if no consistent assignment exists.
 
@@ -156,7 +169,9 @@
 
 ---
 
-## Wave 3 — `LightQuarkHierarchyFallthrough.lean` [6k.3] [Pipeline: Stages 1–13]
+## Wave 3 — `LightQuarkHierarchyFallthrough.lean` [6k.3] [Pipeline: Stages 1–5 SHIPPED 2026-04-30; 6–13 deferred]
+
+**Status: SHIPPED Lean (8 substantive thms / 4 defs / 1 struct / 264 LOC / 0 sorry / 0 new axioms).**
 
 **Goal.** Treat the light-quark mass hierarchy `m_u : m_d : m_s` in the substrate-without-SMG case. If Phase 6h activates, Wave 3 is partially superseded by Phase 6h W4; if Phase 6h stays latent (current state), Wave 3 is the standalone fall-through derivation.
 
@@ -187,7 +202,9 @@
 
 ---
 
-## Wave 4 — `CKMApexSubstrateConstraint.lean` [6k.4] [Pipeline: Stages 1–13]
+## Wave 4 — `CKMApexSubstrateConstraint.lean` [6k.4] [Pipeline: Stages 1–5 SHIPPED 2026-04-30; 6–13 deferred]
+
+**Status: SHIPPED Lean (10 substantive thms / 11 defs / 1 inductive / 379 LOC / 0 sorry / 0 new axioms).** Verdict: BRANCH 3a structural NO-GO (channel-flavor orthogonality). HepLean coordination NOT needed at Stages 1–5 (no API consumption).
 
 **Goal.** Test whether the SK-EFT substrate predicts a non-trivial constraint on the CKM unitarity-triangle apex `(ρ̄, η̄)` or on the Wolfenstein parameters (λ, A) beyond what HepLean catalogs. Three possible verdicts: (1) substrate forces an apex locus, (2) substrate constrains one ratio, (3) substrate is structurally silent (no-go).
 
@@ -231,7 +248,9 @@
 
 ---
 
-## Wave 5 — `CPPhaseSubstrate.lean` [6k.5] [Pipeline: Stages 1–13]
+## Wave 5 — `CPPhaseSubstrate.lean` [6k.5] [Pipeline: Stages 1–5 SHIPPED 2026-04-30; 6–13 deferred]
+
+**Status: SHIPPED Lean (12 substantive thms / 9 defs / 1 struct / 358 LOC / 0 sorry / 0 new axioms).** Verdict: BRANCH B substrate-silent on δ_CKM + BRANCH C′ vacuous-for-δ cross-bridge θ̄ ↔ arg det(Y_u Y_d). The cross-bridge IS a positive substrate prediction for θ̄, entry-point for Phase 6l strong-CP investigation.
 
 **Goal.** Test whether the SK-EFT substrate's ℤ_16 anomaly framework predicts a non-zero CKM CP-violating phase δ_CKM, or whether δ_CKM is structurally unconstrained.
 
@@ -304,4 +323,24 @@
 
 ---
 
-*Last updated: 2026-04-28. Status: OPEN, awaiting Wave 1 deep-research dispatch + user authorization Gate K.1.*
+*Last updated: 2026-04-30. Status: Lean modules SHIPPED across all 5 waves; Python cross-layer / figures / paper-43 drafting / Stage 13 deferred to a future paper-bundle preparation cycle (per Phase 6j precedent).*
+
+## Final Lean state summary (2026-04-30, post-strengthening)
+
+| Wave | Module                                  | Thms | Defs | Structs/Ind | LOC  |
+|------|-----------------------------------------|-----:|-----:|------------:|-----:|
+| W1   | QuarkRungScalarChannel.lean             |   21 |   17 |           3 |  526 |
+| W2   | QuarkRungMajoranaChannel.lean           |   15 |    7 |           1 |  319 |
+| W3   | LightQuarkHierarchyFallthrough.lean     |    8 |    4 |           1 |  264 |
+| W4   | CKMApexSubstrateConstraint.lean         |   12 |   11 |           1 |  405 |
+| W5   | CPPhaseSubstrate.lean                   |   13 |    9 |           1 |  380 |
+| **TOTAL** |                                    |  **69** | **48** |       **7** | **1894** |
+
+**Library:** 8499 jobs PASS clean. **Sorry:** 0. **New axioms:** 0.
+
+Strengthening pass (2026-04-30) added 5 substantive theorems on top of the
+64-theorem baseline, raising the count to 69 and substantively distinguishing
+the AS UV completion from BHL pure at the empirical-comparison level (W1),
+tightening the b/c ratio band (W2), encoding Wolfenstein A and `V_cb ≈ A·λ²`
+consistency (W4), and shipping the Peccei-Quinn structural-setup biconditional
+as Phase 6l's entry point (W5).

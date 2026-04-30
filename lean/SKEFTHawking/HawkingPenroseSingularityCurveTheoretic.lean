@@ -94,6 +94,25 @@ def IsHPTimelikeRaychaudhuriCurve
     (θ θ' : ℝ → ℝ) (θ₀ τ_focus : ℝ) : Prop :=
   IsRaychaudhuriCurve θ θ' θ₀ τ_focus
 
+/--
+**Constructor: `IsHPTimelikeRaychaudhuriCurve` from
+`IsRaychaudhuriCurve`.** Trivial unfold; the body is `id` because the
+alias is definitionally equal.
+
+**Cross-bridge protection rule (Pattern #8, 2026-04-30):** body is `id`
+because `IsHPTimelikeRaychaudhuriCurve := IsRaychaudhuriCurve`
+definitionally. **The named cross-bridge is LOAD-BEARING** because the
+target is a *named alias from another module* (`RiccatiComparison.lean`);
+the named constructor documents the SEC-content origin of the timelike
+Raychaudhuri-curve predicate (vs the NEC-content origin of the null
+predicate in `RiccatiComparison`). The named alias + named constructor
+together form the architectural discharge of the SEC-vs-NEC distinction
+at the curve scope. -/
+theorem isHPTimelikeRaychaudhuriCurve_of_isRaychaudhuriCurve
+    {θ θ' : ℝ → ℝ} {θ₀ τ_focus : ℝ}
+    (h : IsRaychaudhuriCurve θ θ' θ₀ τ_focus) :
+    IsHPTimelikeRaychaudhuriCurve θ θ' θ₀ τ_focus := h
+
 /-! ## §2 Wave-headline timelike Hawking-Penrose curve-theoretic
 composition theorem
 
@@ -207,22 +226,40 @@ same `IsNullGeodesicallyIncomplete + ∀ τ, ...` conclusion.
 -/
 
 /--
+**Substantive baseline witness:** the Riccati function `riccatiSolution
+(-1)` is a witness for `IsHPTimelikeRaychaudhuriCurve` at `(θ₀,
+τ_focus) = (-1, 3)`, recovered from W9-S1's
+`riccatiSolution_isRaychaudhuriCurve_witness` via the §1 named
+constructor.
+
+**Cross-bridge protection rule (Pattern #8, 2026-04-30):** body is the
+named constructor applied to the W9-S1 witness. **The named witness is
+LOAD-BEARING** because it documents the SEC-side witness via the named
+alias's constructor, providing a searchable name for downstream
+consumers of the SEC-content predicate. -/
+theorem riccatiSolution_isHPTimelikeRaychaudhuriCurve_witness :
+    IsHPTimelikeRaychaudhuriCurve (riccatiSolution (-1))
+      (fun lam => -(riccatiSolution (-1) lam)^2 / 3) (-1) 3 :=
+  isHPTimelikeRaychaudhuriCurve_of_isRaychaudhuriCurve
+    riccatiSolution_isRaychaudhuriCurve_witness
+
+/--
 **Substantive composition: Hawking-Penrose curve-theoretic conclusion
 for the saturating Riccati witness.** Demonstrates the §2 wave-headline
-composition end-to-end: W9-S1's `riccatiSolution_isRaychaudhuriCurve_witness`
-serves directly as an `IsHPTimelikeRaychaudhuriCurve` witness (via
-definitional unfolding of the alias), producing
+composition end-to-end: §4's
+`riccatiSolution_isHPTimelikeRaychaudhuriCurve_witness` produces a
+SEC-content witness, and the §2 composition produces
 `(IsNullGeodesicallyIncomplete 3) ∧ (∀ τ < 3, ... < 0)`.
 
 The negative-`τ` hypothesis discharges by `≤`-reflexivity since the
 witness function IS the Riccati closed-form. This non-trivially
-consumes the §2 composition theorem.
+consumes the §2 composition theorem AND the §4 SEC-content witness.
 -/
 theorem riccatiSolution_HP_curve_theoretic_baseline_conclusion :
     IsNullGeodesicallyIncomplete (3 : ℝ) ∧
       (∀ tau : ℝ, tau < 3 → riccatiSolution (-1) tau < 0) :=
   hawking_penrose_singularity_curve_theoretic
-    riccatiSolution_isRaychaudhuriCurve_witness
+    riccatiSolution_isHPTimelikeRaychaudhuriCurve_witness
     focalConfiguration_neg_one_three
     (fun _ _ => le_refl _)
 

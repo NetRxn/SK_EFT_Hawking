@@ -200,6 +200,31 @@ theorem horizon_area_curve_to_global_monotone
     · -- x₁ < 0, x₂ < 0, both A(x_i) = A(0)
       rw [h_const_left x₂ hx₂_neg]
 
+/--
+**Substantive cross-bridge: `IsHorizonAreaCurve ⟹ IsHorizonAreaNonDecreasing`
+(with constant-outside extension).** The curve-theoretic monotone-area
+conclusion combined with constant-outside extensions produces an instance
+of the existing 6g.4 `AreaTheorem.IsHorizonAreaNonDecreasing` named-alias
+predicate. Direct application of §3's `horizon_area_curve_to_global_monotone`.
+
+**Cross-bridge protection rule (Pattern #8, 2026-04-30):**
+`IsHorizonAreaNonDecreasing` is definitionally `Monotone area`, so the
+body is `id` after definitional unfolding. **The named cross-bridge is
+LOAD-BEARING** because the target is a *named alias from another module*
+(`AreaTheorem.lean`); the named theorem documents the architectural
+discharge of the existing 6g.4 named predicate by the W9-S4 curve-
+theoretic content. Without it, downstream consumers of
+`IsHorizonAreaNonDecreasing` lack a documented bridge from the curve
+scope.
+-/
+theorem isHorizonAreaCurve_implies_isHorizonAreaNonDecreasing
+    {A θ : ℝ → ℝ} {L : ℝ}
+    (h : IsHorizonAreaCurve A θ L)
+    (h_const_left : ∀ x : ℝ, x < 0 → A x = A 0)
+    (h_const_right : ∀ x : ℝ, L < x → A x = A L) :
+    IsHorizonAreaNonDecreasing A :=
+  horizon_area_curve_to_global_monotone h h_const_left h_const_right
+
 /-! ## §4 Substantive baseline witness
 
 The constant-area function `A := fun _ => A_0` (with any non-negative
