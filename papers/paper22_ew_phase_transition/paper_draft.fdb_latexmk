@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1777474377.26561 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777485753.01536 2
-  "./paper_draftNotes.bib" 1777485752.78103 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1777491557.01245 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777491557.10406 2
+  "./paper_draftNotes.bib" 1777491556.72463 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1777485752.78033 5422 1cffead8680d0896c78cbe1efca34383 "pdflatex"
+  "paper_draft.aux" 1777491549.01123 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1777485752.17666 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper22_ew_phase_transition/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777485753.01554 2
-  "../../docs/counts.tex" 1777485751.07144 2135 d47a48bfa4a8201e1574d18385692a2f ""
+["pdflatex"] 1777491556.15647 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper22_ew_phase_transition/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777491556.9401 2
+  "../../docs/counts.tex" 1777491555.95812 2135 c6b1346d5da452ea2d5bbeb23ef92c69 ""
   "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper22_ew_phase_transition/paper_draft.tex" 1777414027.60301 19406 b5490b2a083dfce2f699c2e3373d5190 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -125,9 +125,9 @@
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/fig_ew_transition_phase_diagram.png" 1777146654.42283 109289 10b749d43487773323fd42647cfd7d33 ""
-  "paper_draft.aux" 1777485752.78033 5422 1cffead8680d0896c78cbe1efca34383 "pdflatex"
-  "paper_draft.bbl" 1777474377.38264 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
-  "paper_draft.out" 1777485752.7809 3306 4ccadea2d41e8506705baf5632d4695d "pdflatex"
+  "paper_draft.aux" 1777491549.01123 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "paper_draft.bbl" 1777491557.1032 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
+  "paper_draft.out" 0 -1 0 "pdflatex"
   "paper_draft.tex" 1777414027.60301 19406 b5490b2a083dfce2f699c2e3373d5190 ""
   (generated)
   "paper_draft.aux"

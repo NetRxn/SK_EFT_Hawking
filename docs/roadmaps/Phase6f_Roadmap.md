@@ -4,6 +4,13 @@
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22) §9. Classical-GR infrastructure in Lean that Phases 6e and 6g depend on. Mostly sits on top of Bonn's differential-geometry formalization and does not require condensate-side input. External Mathlib progress is the main risk.*
 
+**2026-04-29 catch-up update — Bonn `CovariantDerivative` HAS LANDED in our pinned commit.** Verified via local audit of `lean/.lake/packages/mathlib/Mathlib/Geometry/Manifold/VectorBundle/CovariantDerivative/{Basic.lean,Torsion.lean}`. Authors: Massot, Rothgang, Macbeth (2025). Files dated 2026-04-13 in `.lake`. The branch shipped: `IsCovariantDerivativeOn`, `CovariantDerivative` (bundled), `ContMDiffCovariantDerivative` typeclass, `addOneForm`/`difference`/`affine_combination`, plus `Torsion` with `torsion_self = 0`, `torsion_antisymm`, `torsion_eq_zero_iff` (`∇_X Y - ∇_Y X = [X, Y]`). The branch did NOT include `LeviCivita` as such, nor curvature objects — those remain SK-EFT-owned per audit §4.
+
+What this changes:
+- Phase 6f docstrings claiming "Bonn in flight, awaiting review since mid-2025" are now stale and have been corrected (EinsteinTensor.lean, Curvature.lean, ExactSolutions.lean, ADMFormalism.lean, TetradFormalism.lean).
+- The "second Bianchi `∇^μG_{μν} = 0` is a one-line consequence once Bonn lands" claim in EinsteinTensor.lean was over-optimistic — Mathlib still lacks Riemann/Ricci/scalar curvature on a connection. Project-local Riemann-from-connection lands together with the Lorentzian metric in Phase 6g.1.
+- Phase 6f waves remain SHIPPED at the algebraic / point-wise level. The connection-based companion layer is queued for 6g.1 alongside Lorentzian metric and causal structure.
+
 **2026-04-26 update: Phase 6f deep-research audit landed.** See [`Lit-Search/Phase-6f/Phase 6f audit — Classical GR Lean infrastructure.md`](../../../Lit-Search/Phase-6f/Phase%206f%20audit%20%E2%80%94%20Classical%20GR%20Lean%20infrastructure.md). Confirmed verbatim findings:
 
 - **Mathlib4 master @ 8850ed93 (April 2026) has zero curvature objects and zero GR content.** Reaches up to smooth manifolds, tangent/vector bundles, Lie groups, integral curves, and a brand-new positive-definite Riemannian-metric typeclass (`IsRiemannianManifold`, 2025) with `Bundle.RiemannianMetric` on vector bundles. **No** connection, Christoffel, Riemann/Ricci/scalar/sectional/Weyl/Einstein, Bianchi, exponential map, parallel transport, manifold-side differential forms, Lorentzian signature, energy conditions, ADM, or named GR solutions.

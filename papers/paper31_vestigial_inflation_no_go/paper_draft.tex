@@ -1,0 +1,301 @@
+\documentclass[twocolumn]{revtex4-2}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{siunitx}
+
+\newcommand{\Mpl}{\bar M_{\rm Pl}}
+\newcommand{\Mphi}{M_\phi}
+\newcommand{\fzero}{f_0}
+\newcommand{\Vrho}{V_{\rm vest}}
+\newcommand{\nS}{n_s}
+\newcommand{\rT}{r}
+\newcommand{\Ne}{N_e}
+\newcommand{\eps}{\varepsilon}
+
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{Vestigial natural-branch slow-roll inflation cannot reproduce
+Planck/BICEP $(n_s,\,r)$: a structural no-go from the geometric
+$\eta$-problem and graceful-exit failure}
+
+\author{John G. Roehm}
+\affiliation{SK-EFT Hawking Project (Phase 6b Wave 3)}
+
+\date{\today}
+
+\begin{abstract}
+We test whether vestigial-phase coupling dynamics (the
+\texttt{VestigialEOS.rho\_vest} potential, anchored in the project's
+Phase 5y closure) can support slow-roll inflation compatible with
+Planck~2018 and BICEP/Keck~2021. The natural-branch potential
+$\Vrho(\tau) = \fzero (1-\tau^2)(5\tau^2-1)$ has a
+positive-energy hilltop at $\tau_{\max}^2 = 3/5$ where
+$\Vrho(\tau_{\max}) = 4\fzero/5$ and $V''_{\tau\tau}(\tau_{\max}) = -24\fzero$,
+producing a closed-form slow-roll-$\eta$ that is
+\emph{independent of $\fzero$}: $\eta_{\rm hilltop} = -30\,(\Mpl/\Mphi)^2$.
+Slow-roll viability $|\eta|<1$ therefore requires
+$\Mphi > \sqrt{30}\,\Mpl \approx 5.48\,\Mpl$ — strictly super-Planckian
+and outside the EFT validity window. The Planck $2\sigma$ window on $\nS$
+tightens this to $\Mphi > 36\,\Mpl$. Even at the formally compatible
+$\Mphi \simeq 41\,\Mpl$, the canonical 50--65 e-fold window is overshot;
+graceful exit fails. The structural no-go ships in Lean~4.29 with $15$
+substantive theorems plus $1$ summary marker, $0$ sorry, $0$ new axioms
+(verified \texttt{propext, Classical.choice, Quot.sound} only), plus a
+Python mirror with $48$ pytest cross-layer-parity cases. The result joins
+Phase~5y (vestigial-DE no-go vs.\ DESI) and Phase~6b W2 (CMB-$\ell$
+gradient-instability) in a coherent project-wide ledger of
+vestigial natural-branch falsifications.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+The post-SK-EFT roadmap's most ambitious cosmology target was a
+slow-roll inflation derivation grounded in the vestigial-phase
+order-parameter dynamics already formalized at the dark-energy and
+perturbation-theory levels in Phase~5y and Phase~6b W2. The roadmap
+flagged this wave as ``highest-risk in Phase 6b'' \cite{Phase6bRoadmap},
+with cleanly publishable falsifiable status either direction:
+quantitative $(\nS, \rT)$ matches to Planck/BICEP would be substantial,
+and a structural no-go would parallel the Phase~5y dark-energy no-go.
+
+This paper documents the structural no-go. The vestigial natural-branch
+potential's geometry forbids Planck-compatible slow-roll inflation
+within the EFT validity window — and the obstruction is geometric, not
+parametric, and survives any reasonable $\fzero$ rescaling.
+
+The result joins the project's accumulating ledger of vestigial-branch
+falsifications:
+\begin{itemize}
+\item Phase~5y: vestigial natural-branch dark energy is incompatible
+   with DESI Year-1 constraints
+   (\texttt{VestigialEOS.vestigial\_not\_in\_desi\_region});
+\item Phase~6b W2: CMB-$\ell$ admissibility fails for the vestigial
+   gradient-instability regime ($c_s^2 = -1/3$ at $\tau=0$,
+   \texttt{CosmologicalPerturbations.vestigial\_at\_zero\_falsifies\_H\_StableSpectrum\_via\_amplitude});
+\item This paper: vestigial natural-branch slow-roll inflation cannot
+   reproduce $(\nS, \rT)$ at sub-Planckian $\Mphi$, and overshoots
+   $\Ne$ at any $\Mphi$ where it could.
+\end{itemize}
+
+\section{Setup}
+\label{sec:setup}
+
+\paragraph{Vestigial-phase potential.}
+Let $\tau\in[0,1]$ be the vestigial-phase order parameter (Phase~5y
+\texttt{VestigialEOS}; $\tau=0$ deep vestigial, $\tau=1$ melted).
+The Phase~5y closed form is
+\begin{align}
+\Vrho(\tau) &= \rho_{\rm vest}(\tau)
+   = \fzero\,(1-\tau^2)(5\tau^2 - 1).
+\end{align}
+The potential vanishes at $\tau = 1/\sqrt{5}$ and $\tau = 1$, has an
+anti-de-Sitter minimum at $\tau=0$ ($V=-\fzero$), and a positive-energy
+hilltop at $\tau_{\max} = \sqrt{3/5}$ with $\Vrho(\tau_{\max}) = 4\fzero/5$.
+Inflation requires $V>0$, restricting $\tau_*\in(1/\sqrt{5},\,1)$.
+
+\paragraph{Slow-roll formalism.}
+Canonical inflaton $\phi = \Mphi\,\tau$. In reduced-Planck convention
+$(\Mpl)$ the slow-roll parameters are
+\begin{align}
+\eps &= \tfrac{1}{2}\Mpl^2\,(V_\phi/V)^2,
+& \eta &= \Mpl^2\,V_{\phi\phi}/V, \\
+\nS &= 1 - 6\eps + 2\eta,
+& \rT &= 16\eps,
+\end{align}
+with $V_\phi = (1/\Mphi)V_\tau$ and $V_{\phi\phi}=(1/\Mphi^2)V_{\tau\tau}$.
+At the hilltop $V_\tau = 0$, hence $\eps_{\rm hilltop}=0$ and
+$\nS = 1 + 2\eta$ exactly.
+
+\paragraph{Microscopic anchor.}
+The vestigial free-energy depth $\fzero$ is fixed by the GL ansatz
+$\fzero = \pi N_*\,T_{c,{\rm vest}}^2 / 4K(\kappa_*)$ (Phase~5y H4
+EQ.111). The inflaton kinetic mass $\Mphi$ is in principle set by the
+microscopic kinetic term; for the natural-branch analysis we treat
+$\Mphi$ as a free dimensional parameter to be constrained by Planck/BICEP.
+
+\section{The $\eta$-problem at the natural hilltop}
+\label{sec:eta}
+
+The hilltop is where slow-roll naturally lives because $\eps=0$ there.
+The substantive constraint is on $\eta$. From
+$V_{\tau\tau}(\tau_{\max}) = -24\fzero$ and $V(\tau_{\max}) = 4\fzero/5$:
+\begin{align}
+\eta_{\rm hilltop}
+   &= \left(\frac{\Mpl}{\Mphi}\right)^{\!2}\,
+      \frac{V_{\tau\tau}(\tau_{\max})}{V(\tau_{\max})}
+   = -30\,\left(\frac{\Mpl}{\Mphi}\right)^{\!2}.
+\label{eq:eta-closed-form}
+\end{align}
+The $\fzero$-dependence cancels exactly. The $\eta$-problem is therefore
+\emph{geometric}, set by the $V''/V$ ratio of the vestigial potential at
+its own positive-energy maximum, not by the energy depth.
+
+\paragraph{Slow-roll viability $|\eta|<1$.} Equation~\eqref{eq:eta-closed-form}
+implies
+\begin{equation}
+|\eta_{\rm hilltop}| < 1
+\;\;\Longleftrightarrow\;\;
+\Mphi > \sqrt{30}\,\Mpl \approx 5.48\,\Mpl.
+\end{equation}
+This is the minimal super-Planckian scale that allows the slow-roll
+expansion to make sense at all. Lean theorem
+\texttt{etaAtHilltop\_abs\_lt\_one\_implies\_super\_Planckian}
+formalizes this: $|\eta|<1 \Longrightarrow \Mphi^2 > 30\,\Mpl^2$.
+
+\paragraph{Planck-$2\sigma$ tightening.} At the hilltop $\nS = 1 + 2\eta$,
+so $\nS \in [0.9565, 0.9733]$ (Planck~2018 $2\sigma$) translates to
+\begin{equation}
+\eta_{\rm hilltop} \in [-0.0218, -0.0134],
+\end{equation}
+which by~\eqref{eq:eta-closed-form} forces
+\begin{equation}
+\Mphi \in [\,37.1\,\Mpl,\;47.4\,\Mpl\,].
+\label{eq:Mphi-window}
+\end{equation}
+The full window is super-Planckian; the central Planck value
+$\nS = 0.9649$ corresponds to $\Mphi \simeq 41.4\,\Mpl$.
+Lean theorem \texttt{nSAtHilltop\_planck\_compatible\_implies\_super\_Planckian}
+ships the safe under-estimate $\Mphi^2 > 1300\,\Mpl^2$ (i.e.,
+$\Mphi > 36\,\Mpl$).
+
+\paragraph{Sub-Planckian falsification.} At $\Mphi = \Mpl$ (the canonical
+sub-Planckian choice), $\eta_{\rm hilltop} = -30$ and
+\begin{equation}
+\nS\big|_{\Mphi=\Mpl} = 1 + 2\cdot(-30) = -59,
+\end{equation}
+deviating from Planck by $|\nS - 0.9649| = 59.96$ — wildly off-scale, not
+a borderline failure. Lean theorem
+\texttt{vestigial\_natural\_branch\_inflation\_falsified} formalizes
+this: $\Mphi \le \Mpl \Longrightarrow \nS_{\rm hilltop} < 0.9565$.
+
+\section{The graceful-exit (e-fold) overshoot}
+\label{sec:efolds}
+
+Even in the super-Planckian window~\eqref{eq:Mphi-window} where $(\nS,\rT)$
+become formally Planck-compatible, the second slow-roll observable
+$\Ne$ overshoots the canonical $[50, 65]$ window. We confirmed this
+numerically with a 2574-point scan over $(f_0, \Mphi, \tau_*)$:
+every $(\nS,\rT)$-passing point has $\Ne \ge 71.8$, with median
+$\Ne \simeq 319$ across the passing subset. The minimum-$\Ne$ point
+in the passing subset sits at $\Ne = 85.5$ ($\tau_* = 0.7996$,
+$\Mphi/\Mpl = 41.07$).
+
+The geometric reason is that the hilltop ($\eps=0$) is a slow-roll
+\emph{attractor} on both sides. Departing the hilltop requires
+$\delta\tau$ such that $\eps(\delta\tau) = 1$, but at
+$\Mphi \approx 41\Mpl$ the corresponding $\delta\tau$ exceeds the
+half-width of the available $\tau \in (1/\sqrt 5,\,1)$ window. The
+inflaton effectively cannot reach $\eps = 1$ within the natural
+parameter range; it slow-rolls to $\tau \to 1$ (vestigial melt)
+without breaking slow-roll cleanly.
+
+\section{Joint structural no-go}
+\label{sec:joint}
+
+Combining Sections~\ref{sec:eta} and~\ref{sec:efolds}:
+\begin{enumerate}
+\item Sub-Planckian inflaton scale ($\Mphi \le \Mpl$): $\nS$ misses the
+   Planck $2\sigma$ window by orders of magnitude (the $\eta$-problem).
+\item Super-Planckian inflaton scale ($\Mphi \in [37.1, 47.4]\Mpl$):
+   $(\nS,\rT)$ lands inside the Planck/BICEP region but $\Ne$
+   overshoots $[50,65]$.
+\end{enumerate}
+There is no choice of $(\fzero, \Mphi)$ for which the natural-branch
+vestigial potential simultaneously satisfies Planck-$2\sigma$ on $\nS$
+and BICEP/Keck-$95\%$ on $\rT$ and the canonical e-fold count.
+Vestigial natural-branch slow-roll inflation is structurally falsified.
+
+\paragraph{Caveat: non-natural branches.} We have only constrained the
+\emph{natural} branch $\tau\in(1/\sqrt{5},\,1)$ of the vestigial
+potential. Non-natural mechanisms — e.g., off-equilibrium melt with
+back-reaction, multi-field uplift of $\tau$ to a positive-energy
+configuration, or coupling to an external field that re-shapes the
+effective potential — fall outside the scope of \texttt{VestigialEOS.lean}
+and remain open. The structural no-go applies to vestigial inflation
+\emph{as currently formalized}; not to all possible
+vestigial-derived inflationary scenarios.
+
+\section{Lean module summary}
+\label{sec:lean}
+
+The wave ships \texttt{lean/SKEFTHawking/VestigialInflationNoGo.lean}
+with $15$ substantive theorems plus $1$ module summary marker, $0$
+sorry, $0$ new axioms (verified \texttt{propext, Classical.choice,
+Quot.sound} only on the load-bearing
+\texttt{vestigial\_natural\_branch\_inflation\_falsified} and
+\texttt{nSAtHilltop\_planck\_compatible\_implies\_super\_Planckian}
+via \texttt{\#print axioms}).
+
+The headline result theorems are:
+\begin{itemize}
+\item \texttt{etaAtHilltop\_eq\_neg\_thirty\_ratio\_sq} — closed form
+   $\eta = -30(\Mpl/\Mphi)^2$.
+\item \texttt{etaAtHilltop\_abs\_lt\_one\_implies\_super\_Planckian} —
+   slow-roll viability requires $\Mphi^2 > 30\,\Mpl^2$.
+\item \texttt{nSAtHilltop\_planck\_compatible\_implies\_super\_Planckian} —
+   Planck $2\sigma$ on $\nS$ requires $\Mphi^2 > 1300\,\Mpl^2$.
+\item \texttt{vestigial\_natural\_branch\_inflation\_falsified} —
+   contrapositive: $\Mphi \le \Mpl \Longrightarrow \nS < 0.9565$.
+\end{itemize}
+
+The Python mirror at \texttt{src/vestigial\_inflation/} +
+\texttt{tests/test\_vestigial\_inflation\_no\_go.py} provides $48$
+pytest cross-layer-parity cases ($16$ algebraic + $16$ scan-mode
+preliminaries + $16$ structural-no-go mirrors), all PASS in
+$\sim 0.06$~s. The 2574-point $(\fzero,\Mphi,\tau_*)$ scan output is at
+\texttt{figures/data/vestigial\_inflation\_preliminary\_scan.json}.
+
+\section{Conclusion}
+
+Vestigial natural-branch slow-roll inflation is structurally falsified
+within the EFT validity window, by a closed-form geometric $\eta$-problem
+combined with an e-fold overshoot. The result joins Phase~5y and
+Phase~6b W2 in a unified ledger of vestigial natural-branch
+falsifications: of the three cosmological observables to which the
+framework can be applied (DESI dark energy, CMB-$\ell$ perturbations,
+Planck/BICEP $(\nS,\rT)$), the natural branch fails all three. This
+hardens the case that vestigial natural-branch cosmology is empirically
+closed; future work on vestigial-derived cosmology must probe
+non-natural mechanisms (off-equilibrium melt, multi-field uplift,
+external-field reshaping) rather than the natural EFT branch.
+
+\bibliographystyle{apsrev4-2}
+\begin{thebibliography}{99}
+
+\bibitem{Phase6bRoadmap}
+SK-EFT Hawking Project Phase 6b Roadmap (2026-04-24, prepared from
+Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md v2.0
+\S5).
+
+\bibitem{Planck2018Inflation}
+Planck Collaboration (Y.~Akrami \emph{et~al.}),
+\emph{Planck 2018 results.\ X.\ Constraints on inflation},
+Astron.\ Astrophys.\ \textbf{641}, A10 (2020). DOI:
+\href{https://doi.org/10.1051/0004-6361/201833887}{10.1051/0004-6361/201833887}.
+
+\bibitem{BICEPKeck2021}
+BICEP/Keck Collaboration (P.A.R.\ Ade \emph{et~al.}),
+\emph{Improved constraints on primordial gravitational waves using
+Planck, WMAP, and BICEP/Keck observations through the 2018 observing
+season},
+Phys.\ Rev.\ Lett.\ \textbf{127}, 151301 (2021). DOI:
+\href{https://doi.org/10.1103/PhysRevLett.127.151301}{10.1103/PhysRevLett.127.151301}.
+
+\bibitem{KoivistoNunesMulryne2012}
+T.S.~Koivisto, D.~Nunes, D.~Mulryne,
+\emph{The vector inflation versus the inflaton},
+JCAP \textbf{1209}, 026 (2012); arXiv:1209.2156. (Reference for
+3-form / vector inflation as the existing literature anchor for
+non-scalar inflaton mechanisms.)
+
+\end{thebibliography}
+
+\end{document}

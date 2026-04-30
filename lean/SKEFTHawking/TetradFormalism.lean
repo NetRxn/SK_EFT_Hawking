@@ -46,10 +46,16 @@ connection and reduces tetrad GR to metric GR.
 
 This module ships at the algebraic / point-wise level following
 the 6f.1-6f.5 precedent. The exterior-derivative `d` and wedge `∧`
-machinery for the Cartan structure equations require differential-
-form infrastructure not yet in the project's algebraic layer; once
-that lands, the structure equations will be discharged
-constructively. We encode:
+machinery for the Cartan structure equations is **partially**
+available in Mathlib: `Mathlib.Analysis.Calculus.DifferentialForm`
+(Kudryashov-Lindauer 2025) provides `d` and `d² = 0` on **normed
+spaces**, but a manifold-level differential-form library has not yet
+landed in either Mathlib or the Bonn `CovariantDerivative` branch
+(which delivered `Torsion` separately as a (1,2)-tensor on a covariant
+derivative, not as a 2-form). The structure equations will be
+discharged constructively when manifold-level forms land — likely
+alongside Phase 6g.1's Lorentzian metric, since causal-structure work
+benefits from the same machinery. We encode:
 
 1. **Tetrad and inverse-tetrad types** (4×4 matrices).
 2. **Tetrad-metric equivalence** as a named identity

@@ -1,18 +1,18 @@
 {
-  "generated": "2026-04-29T13:24:43.635816",
+  "generated": "2026-04-29T16:26:33.190361",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 8966,
-    "theorems_total": 4583,
-    "theorems_substantive": 4559,
-    "theorems_placeholder": 24,
+    "total_declarations": 9042,
+    "theorems_total": 4626,
+    "theorems_substantive": 4601,
+    "theorems_placeholder": 25,
     "axioms": 1,
     "axiom_names": [
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 201,
+    "modules": 203,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -50,6 +50,7 @@
       "SKEFTHawking.DarkSectorSynthesis",
       "SKEFTHawking.DiracFluidMetric",
       "SKEFTHawking.DiracFluidSK",
+      "SKEFTHawking.DiracFluidWKB",
       "SKEFTHawking.DrinfeldCenterBridge",
       "SKEFTHawking.DrinfeldDouble",
       "SKEFTHawking.DrinfeldDoubleAlgebra",
@@ -203,6 +204,7 @@
       "SKEFTHawking.VerifiedStatistics",
       "SKEFTHawking.VestigialEOS",
       "SKEFTHawking.VestigialGravity",
+      "SKEFTHawking.VestigialInflationNoGo",
       "SKEFTHawking.VestigialMapping",
       "SKEFTHawking.VestigialSusceptibility",
       "SKEFTHawking.VillainHamiltonian",
@@ -216,17 +218,17 @@
       "SKEFTHawking.Z16AnomalyComputation",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 3896,
-    "structures": 192,
+    "definitions": 3927,
+    "structures": 194,
     "instances": 233,
     "inductives": 61
   },
   "python": {
-    "python_modules": 125,
-    "test_files": 94,
-    "pytest_cases": 3977,
-    "notebooks": 86,
-    "papers": 39,
+    "python_modules": 128,
+    "test_files": 96,
+    "pytest_cases": 4075,
+    "notebooks": 87,
+    "papers": 40,
     "figures": 143
   },
   "aristotle": {

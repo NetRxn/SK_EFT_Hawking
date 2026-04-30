@@ -28,11 +28,16 @@ a Riemann tensor `R : Fin 4 → Fin 4 → Fin 4 → Fin 4 → ℝ` (read as
 `R^ρ_{σμν}`) over a fixed 4-dimensional coordinate frame, with a
 metric `g : Fin 4 → Fin 4 → ℝ` to lower the first index. The
 manifold- and connection-based version (`R(X,Y)Z = ∇_X∇_Y Z − ∇_Y∇_X Z −
-∇_{[X,Y]} Z` on a vector bundle) requires the Bonn Massot-Rothgang
-`CovariantDerivative` API which is in review for Mathlib but has not
-yet landed; per the user's "build-locally" policy, we develop the
-algebraic content here and follow Mathlib conventions for eventual
-upstream port.
+∇_{[X,Y]} Z` on a vector bundle) is **not** in Mathlib: although
+Massot-Rothgang-Macbeth `CovariantDerivative` + `Torsion` HAVE landed
+in our pinned commit `8850ed93`, Riemann/Ricci/scalar curvature on a
+connection are explicitly out of HALF ERC scope and SK-EFT is
+positioned as the upstream contributor for them. The connection-based
+companion layer is therefore deferred to Phase 6g.1, where it lands
+together with the project-local Lorentzian metric needed by 6g
+causal-structure work. The algebraic content here remains the
+load-bearing entry point and follows Mathlib upstream-style
+conventions for eventual upstream port.
 
 The abstract version captures the load-bearing physical content per
 the audit §5.6f.1:
@@ -110,12 +115,15 @@ the audit §5.6f.1:
 No proof assistant has formalized the algebraic Riemann tensor with
 its symmetries and Ricci-symmetry corollary. Mathlib4 master
 (commit 8850ed93, April 2026) reaches `IsRiemannianManifold` (Gouëzel
-2025, positive-definite only) but has zero curvature objects.
-The Bonn Massot-Rothgang Mathlib branch (~6,000 lines, in review since
-mid-2025) ships `CovariantDerivative`, `Torsion`, `LeviCivita` but
-**not** Riemann/Ricci/scalar/Bianchi — those are explicitly out of
-HALF ERC scope. PhysLean has neither. **First formalization claim
-defensible.**
+2025, positive-definite only) and now (verified 2026-04-29) **has**
+the Massot-Rothgang-Macbeth `CovariantDerivative` + `Torsion` modules
+in `Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative`. It
+still has zero **curvature** objects: no Riemann tensor, no Ricci, no
+scalar, no Bianchi, no Levi-Civita-existence (LeviCivita as such was
+not part of the landed branch — it remains in the design space). The
+audit assigns Riemann-and-downward to SK-EFT as the upstream
+contributor; HALF ERC scope explicitly excludes them. PhysLean has
+neither. **First formalization claim defensible.**
 
 This module also serves as the algebraic foundation for downstream
 Phase 6f waves:
@@ -126,10 +134,13 @@ Phase 6f waves:
   `linearizedEFE_η_metricSymmetric` validates the metric carrier.
 - **6f.4 ExactSolutions.lean** — Schwarzschild/Kerr/dS/FLRW will
   consume `constantSectionalRiemann` for de Sitter (constant K).
-- **Mathlib upstream port (later):** when Bonn's `CovariantDerivative`
-  lands, this module's algebraic content (the symmetries + pair-
-  symmetry derivation + Ricci-symmetry corollary) ports directly to
-  the connection-based formulation; the carrier types adapt.
+- **Mathlib upstream port (later):** Bonn's `CovariantDerivative` HAS
+  landed in pinned commit `8850ed93`; the connection-based companion
+  layer (Riemann from `∇_X∇_Y - ∇_Y∇_X - ∇_{[X,Y]}` + algebraic
+  Bianchi + symmetry corollaries) lands in 6g.1 alongside the
+  Lorentzian metric. This module's algebraic content (the symmetries
+  + pair-symmetry derivation + Ricci-symmetry corollary) ports
+  directly to that formulation; the carrier types adapt.
 -/
 
 namespace SKEFTHawking.Curvature

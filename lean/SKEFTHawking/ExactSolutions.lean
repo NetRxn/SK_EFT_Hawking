@@ -39,13 +39,17 @@ and the BH thermodynamics cross-bridges from Phase 6a Wave 5.
 
 The full Lorentzian-manifold version (g(x) as a metric field on a
 globally hyperbolic spacetime, derived from coordinates with full
-Christoffel symbols and ∂_μ machinery) is deferred to a future wave
-once Bonn's `CovariantDerivative` API lands. For Schwarzschild
-specifically, the vacuum-Ricci verification `Ric(g_Schw) = 0` outside
-r = 2M intrinsically requires ∂_μ machinery and is **not** encoded
+Christoffel symbols and ∂_μ machinery) is deferred to Phase 6g.1+.
+**Status (2026-04-29 catch-up):** Bonn's `CovariantDerivative` HAS
+landed in pinned commit `8850ed93`, but Mathlib still lacks
+Riemann/Ricci/scalar curvature on a connection — those are
+SK-EFT-owned per the audit. For Schwarzschild specifically, the
+vacuum-Ricci verification `Ric(g_Schw) = 0` outside r = 2M
+intrinsically requires Lorentzian-metric infrastructure +
+Ricci-from-connection (both built in 6g.1+) and is **not** encoded
 here as a tracked Prop (per 6f.2 lesson on rejecting vacuous tracked
 Props with trivial discharge); it will ship as substantive content
-in a future wave.
+in 6g.1 or a follow-on wave.
 
 ## References
 
@@ -501,14 +505,14 @@ than rfl-rename theorems, so the cut surface area was small).
   Wave 5.
 - 6f.1-carry-forward: no zero-witness-trivial-plumbing. The
   Schwarzschild vacuum-Ricci tracked Prop was REJECTED at first-
-  pass (would be vacuous tracked Prop with `True` body); future
-  wave with ∂_μ machinery will ship the substantive vacuum-EFE
-  verification.
+  pass (would be vacuous tracked Prop with `True` body); the
+  6g.1+ Lorentzian-metric + Ricci-from-connection infrastructure
+  will ship the substantive vacuum-EFE verification.
 
 **Cuts at first-pass (6f.2 best-practice, applied prospectively):**
 - `ads_lambda_vacuum_iff` — pure rename of dS biconditional (CUT).
 - `H_SchwarzschildRicciVanishesOutside` — vacuous tracked Prop
-  (CUT; defer until ∂_μ machinery lands).
+  (CUT; defer until 6g.1+ Lorentzian + connection-Ricci land).
 - `schwarzschild_T_H_eq_inverse_eight_pi_M` — P3 trivial positivity
   (CUT; substantive content captured by `schwarzschild_T_H_times_M`).
 -/

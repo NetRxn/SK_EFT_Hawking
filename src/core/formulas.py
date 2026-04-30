@@ -5978,8 +5978,9 @@ def dirac_fluid_sound_speed(v_F):
 
     Confirmed experimentally by Zhao et al. (Nature 614, 688, 2023).
 
-    Lean: diracFluidSoundSpeed (DiracFluidMetric.lean) — pending
-    Aristotle: pending
+    Lean: SKEFTHawking.DiracFluidMetric.diracFluidSoundSpeedSq (squared form);
+          SKEFTHawking.DiracFluidWKB.soundSpeed, soundSpeed_sq, soundSpeed_lt_vF
+          (Phase 5w Wave 4 binding to ExactWKBParams + subluminal property)
     Source: Lucas & Fong, JPCM 30, 053001 (2018), Eq. (2.7)
 
     Args:
@@ -6069,8 +6070,8 @@ def dirac_fluid_horizon_velocity(v_F):
     This is LOWER than v_F — the electron fluid must reach c_s, not v_F.
     The Dean group (Geurs 2025) achieved v > c_s in bilayer graphene.
 
-    Lean: diracFluidHorizon_velocity (DiracFluidMetric.lean) — pending
-    Aristotle: pending
+    Lean: SKEFTHawking.DiracFluidMetric.diracFluidHorizon_condition;
+          SKEFTHawking.DiracFluidMetric.diracFluidMetric_gtt_vanishes
     Source: Deep research §2a, §3
 
     Args:
@@ -6181,8 +6182,8 @@ def graphene_hawking_noise_psd(omega, sigma_Q_SI, T_H_K, greybody=1.0):
     The error is the substitution ℏ → e²/π, introducing an extraneous
     conductance quantum 2e²/h ≈ 77.5 μS.
 
-    Lean: grapheneNoisePSD_dimensional (GrapheneNoiseFormula.lean)
-    Aristotle: pending
+    Lean: SKEFTHawking.GrapheneNoiseFormula.grapheneNoisePSD_dimensional;
+          SKEFTHawking.GrapheneNoiseFormula.hawkingNoisePSD_pos
     Source: Derived in Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md
             Keldysh route: Callen-Welton FDT + mode-resolved F_u(ω)
             Landauer route: Büttiker multichannel + Bogoliubov mixing
@@ -6200,6 +6201,80 @@ def graphene_hawking_noise_psd(omega, sigma_Q_SI, T_H_K, greybody=1.0):
     from src.core.constants import HBAR, K_B
     n_H = 1.0 / (np.exp(HBAR * omega / (K_B * T_H_K)) - 1.0)
     return 2 * HBAR * omega * sigma_Q_SI * greybody * n_H
+
+
+def graphene_transverse_momentum(n, W):
+    """Transverse momentum of the n-th confined channel: k_n = (n+1)π / W.
+
+    Dirichlet boundary conditions on a quasi-1D channel of width W select
+    the discrete transverse momenta k_n with n = 0, 1, 2, ...
+
+    Lean: SKEFTHawking.DiracFluidWKB.transverseMomentum,
+          transverseMomentum_pos, transverseMomentum_strictMono,
+          transverseMomentum_zero
+    Source: Phase 5w deep research §4 (transverse modes); standard Helmholtz
+            quantization on a strip.
+
+    Args:
+        n: Channel index (non-negative integer).
+        W: Channel width [m].
+
+    Returns:
+        Transverse momentum k_n [m⁻¹].
+    """
+    return (n + 1) * np.pi / W
+
+
+def graphene_channel_cutoff_energy(n, W, c_s):
+    """Energy gap below which the n-th transverse channel is closed:
+    ω_⊥(n) = c_s · k_n = c_s · (n+1)π / W.
+
+    For ω < ω_⊥(0) only the longitudinal sector contributes — the n-th
+    channel is evanescent.  For the Dean bilayer-graphene de Laval nozzle
+    (W = 1 μm, c_s = 4.4×10⁵ m/s), ω_⊥(0) ≈ 1.38×10¹² s⁻¹, well above the
+    Hawking frequency ω_H ≈ 3.14×10¹¹ s⁻¹ at T_H ≈ 2.4 K.
+
+    Lean: SKEFTHawking.DiracFluidWKB.channelCutoffEnergy,
+          channelCutoffEnergy_pos, channelCutoffEnergy_strictMono,
+          dean_lowest_channel_above_four_omega_H
+    Source: Phase 5w deep research §4; quasi-1D mode quantization with
+            acoustic dispersion ω² = c_s²(k_x² + k_y²).
+
+    Args:
+        n: Channel index (non-negative integer).
+        W: Channel width [m].
+        c_s: Sound speed [m/s].
+
+    Returns:
+        Channel-cutoff angular frequency ω_⊥(n) [s⁻¹].
+    """
+    return c_s * graphene_transverse_momentum(n, W)
+
+
+def graphene_channel_spectrum_sum(beta, greybody):
+    """Total occupation summed over open transverse channels.
+
+    Each open channel n contributes β_n · Γ_n(ω) to the total Hawking
+    occupation:
+
+        n_total(ω) = Σ_{n: ω > ω_⊥(n)} β_n(ω) · Γ_n(ω)
+
+    The result is non-negative when all β_n and Γ_n are non-negative,
+    and bounded by Γ_max · Σ β_n when each Γ_n ≤ Γ_max.
+
+    Lean: SKEFTHawking.DiracFluidWKB.channelSpectrumSum,
+          channelSpectrumSum_nonneg, channelSpectrumSum_bounded_uniform
+    Source: Sum-over-channels structural form consumed by
+            src/graphene/wkb_spectrum.py.
+
+    Args:
+        beta: |β_n|² array (per-channel Bogoliubov, non-negative).
+        greybody: Γ_n array (per-channel transmission factor ≤ 1).
+
+    Returns:
+        Σ_n β_n · Γ_n (scalar).
+    """
+    return float(np.sum(np.asarray(beta) * np.asarray(greybody)))
 
 
 # ════════════════════════════════════════════════════════════════════

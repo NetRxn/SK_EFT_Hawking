@@ -14,10 +14,10 @@ with algebraic identities (linearity-of-trace, dimension-4 trace
 vacuum `G = 0 ↔ Ric = 0`, and de Sitter `G + Λg = 0 ↔ Λ = 3K`).
 
 The carrier matches Phase 6f Wave 1's `RicciTensor`/`MetricMatrix`
-(`Fin 4 → Fin 4 → ℝ`); upstream port to a connection-based form will
-follow when the Bonn `CovariantDerivative` API lands in Mathlib.
+(`Fin 4 → Fin 4 → ℝ`); a manifold/connection-based companion layer is
+introduced in Phase 6g.1 alongside the project-local Lorentzian metric.
 
-## Second Bianchi `∇^μ G_{μν} = 0` — DEFERRED
+## Second Bianchi `∇^μ G_{μν} = 0` — DEFERRED to Phase 6g.1+
 
 The classical contracted second Bianchi `∇^μ G_{μν} = 0` requires a
 covariant divergence operator, which we do not model in this
@@ -26,14 +26,19 @@ algebraic-only formulation. Three options were considered:
   REJECTED per Phase 6f.1's strengthening lesson
   (zero-witness-as-trivial-plumbing pattern would absorb a retroactive
   cut at the strengthening pass);
-- (b) defer to a future wave once Bonn's `CovariantDerivative` API
-  lands — CHOSEN;
+- (b) defer to a future wave once a manifold-level Riemann curvature
+  exists in our Lean ecosystem — CHOSEN;
 - (c) coordinate-`∂_α` finite-difference placeholder — REJECTED
   (heavy bookkeeping, not Mathlib-PR shape).
 
-When the Bonn API lands the second Bianchi is a one-line consequence
-of the contracted-second-Bianchi identity on Riemann via metric
-compatibility — the deferral is structural, not a content gap.
+**Status (2026-04-29 catch-up):** Bonn's
+`Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.{Basic,Torsion}`
+HAS landed in our pinned Mathlib commit `8850ed93`. However, Mathlib
+still lacks Riemann/Ricci/scalar curvature on a connection (the audit
+explicitly assigns those to SK-EFT as upstream contributor). Second
+Bianchi is therefore not a "one-line consequence" — it requires
+project-local Riemann-from-connection infrastructure first, which is
+naturally placed alongside the Lorentzian metric work in 6g.1+.
 
 ## Anti-pattern audit (per project preemptive-strengthening discipline
    + Phase 6f.1 carry-forward "is the witness-existence statement

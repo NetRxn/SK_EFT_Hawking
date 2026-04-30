@@ -156,6 +156,8 @@ import SKEFTHawking.DiracFluidMetric
 import SKEFTHawking.GrapheneHawking
 import SKEFTHawking.DiracFluidSK
 import SKEFTHawking.GrapheneNoiseFormula
+import SKEFTHawking.DiracFluidWKB
+import SKEFTHawking.VestigialInflationNoGo
 import SKEFTHawking.QuantumGroupInstantiation
 import SKEFTHawking.QuantumGroupMeta
 import SKEFTHawking.FractonDarkMatter
@@ -188,6 +190,12 @@ import SKEFTHawking.EinsteinTensor
 import SKEFTHawking.ExactSolutions
 import SKEFTHawking.ADMFormalism
 import SKEFTHawking.TetradFormalism
+import SKEFTHawking.CausalStructure
+import SKEFTHawking.PenroseSingularity
+import SKEFTHawking.HawkingPenroseSingularity
+import SKEFTHawking.AreaTheorem
+import SKEFTHawking.NoHairTheorem
+import SKEFTHawking.CauchyProblem
 import SKEFTHawking.LaplaceMethod
 import SKEFTHawking.EquivalencePrinciple
 import SKEFTHawking.BBN

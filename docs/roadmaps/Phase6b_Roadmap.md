@@ -187,7 +187,29 @@ This wave is **joint with Phase 5y** — specifically, it closes the "what can t
 
 Slow-roll inflation from vestigial-phase coupling dynamics is the alternative-to-standard-inflaton framing. **Highest-risk wave in Phase 6b.** `(n_s, r)` from Planck/BICEP are extremely tight — if the microscopic model cannot reproduce them, vestigial inflation is falsified as a quantitative theory of early-universe physics. That falsification is itself cleanly publishable.
 
-### Wave 3 — `VestigialInflation.lean` (6b.3) [Pipeline: Stages 1–12]
+### Wave 3 — `VestigialInflationNoGo.lean` (6b.3) [Pipeline: Stages 1–13 SHIPPED 2026-04-29 as structural NO-GO]
+
+**Status: SHIPPED 2026-04-29 as structural NO-GO** (de-escalated per Gate B.3, user decision 2026-04-29). Stage 3a preliminary numerics scan produced **0 viable points / 2574** for the Planck/BICEP admissibility region. Two structural failures formalized:
+
+1. **η-problem (closed form):** `η_hilltop = -30·(M̄_P/M_φ)²` (f_0-independent, geometric); slow-roll `|η|<1` requires super-Planckian `M_φ > √30 M̄_P`; Planck-2σ on n_s tightens to `M_φ > 36 M̄_P` (formalized via `nSAtHilltop_planck_compatible_implies_super_Planckian`).
+2. **e-fold overshoot:** at the formally compatible `M_φ ≈ 41 M̄_P`, every (n_s, r)-passing point in the scan has `N_e ≥ 71.8` — graceful exit fails.
+
+**Deliverables shipped:**
+- `lean/SKEFTHawking/VestigialInflationNoGo.lean`: 15 substantive thms + 1 marker / 0 sorry / 0 new axioms (verified `propext, Classical.choice, Quot.sound` only on load-bearing `vestigial_natural_branch_inflation_falsified` + `nSAtHilltop_planck_compatible_implies_super_Planckian` + `etaAtHilltop_eq_neg_thirty_ratio_sq`).
+- `src/vestigial_inflation/`: 4 Python modules (`slow_roll`, `ns_r_prediction`, `planck_bicep_check`, `__init__`), 108 LOC.
+- `tests/test_vestigial_inflation_no_go.py`: 48 pytest cases (cross-layer parity), all PASS in 0.06s.
+- `papers/paper31_vestigial_inflation_no_go/paper_draft.tex`: 3-page structural-NO-GO note, compiles clean.
+- `figures/data/vestigial_inflation_preliminary_scan.json` + `figures/fig_ns_r_microscopic_vs_planck_bicep.{png,html}`: 2574-point scan + diagnostic figure.
+- `temporary/working-docs/todo/phase6b_w3_gate_b3_preliminary.md`: gate-decision memo.
+
+**Joint NO-GO ledger (Phase 5y + 6b W2 + 6b W3):**
+- Phase 5y: `VestigialEOS.vestigial_not_in_desi_region` — vestigial natural branch fails DESI Year-1.
+- Phase 6b W2: `CosmologicalPerturbations.vestigial_at_zero_falsifies_H_StableSpectrum_via_amplitude` — CMB-ℓ admissibility fails (gradient-instability `c_s² = -1/3`).
+- Phase 6b W3 (this wave): `VestigialInflationNoGo.vestigial_natural_branch_inflation_falsified` — Planck-2σ on n_s requires super-Planckian M_φ.
+
+**Discipline metric: 0 retroactive cuts.** Preemptive checklist applied at first pass; minor tactic-level fixes only during build.
+
+#### Original Wave 3 specification (preserved for reference)
 
 **Goal:** Formalize slow-roll inflation from vestigial-phase coupling dynamics; compute `(n_s, r)` from microscopic parameters.
 

@@ -58,9 +58,15 @@ algebraic functions of the geometric input data
 `(γ, K, ^(3)R, ρ)` and the supplied divergence
 `divKtraceFree^i := D_j (K^{ij} - γ^{ij} K)`. The full machinery
 of computing `^(3)R` and `D_j` from the spatial metric `γ` requires
-coordinate ∂_μ derivatives not yet in the project's algebraic
-infrastructure; once Bonn's `CovariantDerivative` API lands, those
-geometric inputs will be discharged constructively.
+coordinate ∂_μ derivatives. **Status (2026-04-29 catch-up):** Bonn's
+`CovariantDerivative` HAS landed in pinned commit `8850ed93`,
+providing the connection substrate, but Mathlib still lacks
+Riemann/Ricci/scalar curvature on a connection (SK-EFT-owned per
+audit), which is what `^(3)R` and `D_j` actually need. Constructive
+discharge therefore lands together with the 6g.1+
+Lorentzian-and-connection-curvature build-out, where a Riemannian
+connection on the spatial slice provides `D_j` and the spatial
+Ricci scalar.
 
 Our substantive content:
 
